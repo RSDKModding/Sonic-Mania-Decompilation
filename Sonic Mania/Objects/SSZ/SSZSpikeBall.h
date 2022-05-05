@@ -12,7 +12,7 @@ typedef enum {
     SSZSPIKEBALL_MOVEBALL_DOWN,
     SSZSPIKEBALL_MOVEBALL_LEFT,
     SSZSPIKEBALL_MOVEBALL_RIGHT,
-}SSZSpikeBallTypes;
+} SSZSpikeBallTypes;
 
 // Object Class
 struct ObjectSSZSpikeBall {
@@ -46,7 +46,7 @@ void SSZSpikeBall_Update(void);
 void SSZSpikeBall_LateUpdate(void);
 void SSZSpikeBall_StaticUpdate(void);
 void SSZSpikeBall_Draw(void);
-void SSZSpikeBall_Create(void* data);
+void SSZSpikeBall_Create(void *data);
 void SSZSpikeBall_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SSZSpikeBall_EditorDraw(void);
@@ -55,7 +55,7 @@ void SSZSpikeBall_EditorLoad(void);
 void SSZSpikeBall_Serialize(void);
 
 // Extra Entity Functions
-void SSZSpikeBall_State_Setup(void);
+void SSZSpikeBall_State_AwaitInterval(void);
 void SSZSpikeBall_State_H(void);
 void SSZSpikeBall_State_V(void);
 void SSZSpikeBall_State_H_Launch(void);
@@ -64,4 +64,4 @@ void SSZSpikeBall_State_Ball_MoveOut(void);
 void SSZSpikeBall_State_Ball_Stopped(void);
 void SSZSpikeBall_State_Ball_MoveBack(void);
 
-#endif //!OBJ_SSZSPIKEBALL_H
+#endif //! OBJ_SSZSPIKEBALL_H

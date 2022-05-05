@@ -36,7 +36,7 @@ void GreenScreen_Update(void);
 void GreenScreen_LateUpdate(void);
 void GreenScreen_StaticUpdate(void);
 void GreenScreen_Draw(void);
-void GreenScreen_Create(void* data);
+void GreenScreen_Create(void *data);
 void GreenScreen_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GreenScreen_EditorDraw(void);
@@ -49,4 +49,4 @@ void GreenScreen_DrawBG(int32 x, int32 y, uint8 bgID, int32 parallaxFactor);
 void GreenScreen_DrawBackgrounds(void);
 void GreenScreen_DrawSprites(void);
 
-#endif //!OBJ_GREENSCREEN_H
+#endif //! OBJ_GREENSCREEN_H

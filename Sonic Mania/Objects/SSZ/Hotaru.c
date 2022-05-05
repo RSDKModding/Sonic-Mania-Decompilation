@@ -25,11 +25,11 @@ void Hotaru_Draw(void)
     Vector2 drawPos;
 
     self->direction = self->hotaruDir;
-    if (self->attackState == 2) {
+    if (self->attackState == HOTARU_ATTACK_ATTACKING) {
         self->inkEffect = INK_ADD;
         self->alpha     = 0x80;
-        drawPos.x       = self->position.x + self->offset2.x;
-        drawPos.y       = self->offset2.y + 0xC0000 + self->position.y;
+        drawPos.x       = self->offset2.x + self->position.x;
+        drawPos.y       = self->offset2.y + self->position.y + 0xC0000;
 
         drawPos.x += self->electricityOffset.x;
         drawPos.y += self->electricityOffset.y;
@@ -50,25 +50,30 @@ void Hotaru_Draw(void)
     if (!(self->destroyedHotarus & 1)) {
         drawPos.x = self->position.x + self->offset1.x;
         drawPos.y = self->position.y + self->offset1.y;
+
         if (self->alpha > 0 && (((Zone->timer & 1) << (self->state == Hotaru_State_FinishedAttacking)) & 0x7FFFFFFF)) {
             self->inkEffect = INK_ADD;
             RSDK.DrawSprite(&self->bulbAnimator, &drawPos, false);
 
             self->inkEffect = INK_NONE;
         }
+
         RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
     }
 
     if (!(self->destroyedHotarus & 2)) {
         self->direction ^= FLIP_X;
+
         drawPos.x = self->position.x + self->offset2.x;
         drawPos.y = self->position.y + self->offset2.y;
+
         if (self->alpha > 0 && (((Zone->timer & 1) << (self->state == Hotaru_State_FinishedAttacking)) & 0x7FFFFFFF)) {
             self->inkEffect = INK_ADD;
             RSDK.DrawSprite(&self->bulbAnimator, &drawPos, false);
 
             self->inkEffect = INK_NONE;
         }
+
         RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
     }
 }
@@ -76,20 +81,19 @@ void Hotaru_Draw(void)
 void Hotaru_Create(void *data)
 {
     RSDK_THIS(Hotaru);
+
     if (!SceneInfo->inEditor) {
         self->distX1 <<= 16;
         self->distX2 <<= 16;
         self->speed <<= 15;
-        self->offset2.x = -self->dist.x;
-        self->offset2.y = -self->dist.y;
-        self->offset1   = self->dist;
-        self->visible   = true;
-        self->drawOrder = Zone->objectDrawLow;
-        self->active    = ACTIVE_BOUNDS;
-        if (self->distX1 <= self->distX2)
-            self->updateRange.x = self->distX2 + 0x400000;
-        else
-            self->updateRange.x = self->distX1 + 0x400000;
+
+        self->offset2.x     = -self->dist.x;
+        self->offset2.y     = -self->dist.y;
+        self->offset1       = self->dist;
+        self->visible       = true;
+        self->drawOrder     = Zone->objectDrawLow;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = maxVal(self->distX1, self->distX2) + 0x400000;
         self->updateRange.y = self->dist.y + 0x400000;
 
         self->drawFX     = FX_ROTATE | FX_FLIP;
@@ -99,6 +103,7 @@ void Hotaru_Create(void *data)
         RSDK.SetSpriteAnimation(Hotaru->aniFrames, self->quality, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(Hotaru->aniFrames, 2, &self->bulbAnimator, true, 0);
         RSDK.SetSpriteAnimation(Hotaru->aniFrames, 3, &self->electricityAnimator, true, 0);
+
         self->state = Hotaru_State_Setup;
     }
 }
@@ -131,6 +136,7 @@ void Hotaru_StageLoad(void)
 void Hotaru_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Hotaru, NULL, self->position.x, self->position.y);
 }
 
@@ -154,8 +160,9 @@ void Hotaru_CheckPlayerCollisions(void)
             self->position.y += self->offset1.y;
             if (Player_CheckBadnikTouch(player, self, &Hotaru->hitboxBadnik) && Player_CheckBadnikBreak(player, self, false)) {
                 self->destroyedHotarus |= 1;
-                self->attackState = 0;
+                self->attackState = HOTARU_ATTACK_IDLE;
             }
+
             self->position.x = storeX;
             self->position.y = storeY;
         }
@@ -165,8 +172,9 @@ void Hotaru_CheckPlayerCollisions(void)
             self->position.y += self->offset2.y;
             if (Player_CheckBadnikTouch(player, self, &Hotaru->hitboxBadnik) && Player_CheckBadnikBreak(player, &self, false)) {
                 self->destroyedHotarus |= 2;
-                self->attackState = 0;
+                self->attackState = HOTARU_ATTACK_IDLE;
             }
+
             self->position.x = storeX;
             self->position.y = storeY;
         }
@@ -179,11 +187,10 @@ void Hotaru_CheckOffScreen(void)
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->speed >>= 15;
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->distX1     = (self->distX1 >> 16);
-        self->distX2     = (self->distX2 >> 16);
-        self->direction  = self->startDir;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
+        self->distX1    = self->distX1 >> 16;
+        self->distX2    = self->distX2 >> 16;
         Hotaru_Create(NULL);
     }
 }
@@ -194,9 +201,10 @@ void Hotaru_State_Setup(void)
 
     self->active      = ACTIVE_NORMAL;
     self->hotaruDir   = FLIP_NONE;
-    self->alpha       = 0;
-    self->attackState = 0;
-    self->state       = Hotaru_State_CheckPlayerInRange;
+    self->alpha       = 0x00;
+    self->attackState = HOTARU_ATTACK_IDLE;
+
+    self->state = Hotaru_State_CheckPlayerInRange;
     Hotaru_State_CheckPlayerInRange();
 }
 
@@ -225,8 +233,8 @@ void Hotaru_State_CheckPlayerInRange(void)
 
     Hotaru_CheckPlayerCollisions();
 
-    int storeX = self->position.x;
-    int storeY = self->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
     foreach_active(Player, player)
     {
         bool32 inRange = false;
@@ -234,25 +242,25 @@ void Hotaru_State_CheckPlayerInRange(void)
         if (!(self->destroyedHotarus & 1)) {
             self->position.x += self->offset1.x;
             self->position.y += self->offset1.y;
+
             if (Player_CheckCollisionTouch(player, self, &Hotaru->hitboxTrigger))
                 inRange = true;
         }
+
         self->position.x = storeX;
         self->position.y = storeY;
 
         if (!(self->destroyedHotarus & 2) && !inRange) {
             self->position.x += self->offset2.x;
             self->position.y += self->offset2.y;
+
             if (Player_CheckCollisionTouch(player, self, &Hotaru->hitboxTrigger))
                 inRange = true;
         }
 
         if (inRange) {
             self->playerPtr = player;
-            if (player->sidekick)
-                self->screenID = 0;
-            else
-                self->screenID = player->camera->screenID;
+            self->screenID  = player->sidekick ? 0 : player->camera->screenID;
 
             self->position.x = storeX;
             self->position.y = storeY;
@@ -268,6 +276,7 @@ void Hotaru_State_CheckPlayerInRange(void)
 void Hotaru_State_FoundPlayer(void)
 {
     RSDK_THIS(Hotaru);
+
     self->state = Hotaru_State_FlyOnScreen;
     Hotaru_State_FlyOnScreen();
 }
@@ -275,6 +284,7 @@ void Hotaru_State_FoundPlayer(void)
 void Hotaru_State_FlyOnScreen(void)
 {
     RSDK_THIS(Hotaru);
+
     EntityPlayer *player   = self->playerPtr;
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
@@ -315,15 +325,18 @@ void Hotaru_State_FlyOnScreen(void)
 void Hotaru_State_AttachedToScreen(void)
 {
     RSDK_THIS(Hotaru);
+
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
     self->position.x = (screen->position.x + screen->centerX) << 16;
     self->position.y = (screen->position.y + screen->centerY) << 16;
+
     if (++self->rotation == 128) {
         self->rotation             = 0;
         self->mainAnimator.frameID = 1;
         self->state                = Hotaru_State_Charging;
     }
+
     Hotaru_CheckPlayerCollisions();
     Hotaru_CheckOffScreen();
 }
@@ -333,29 +346,29 @@ void Hotaru_State_Charging(void)
     RSDK_THIS(Hotaru);
 
     if (self->alpha >= 0x80) {
-        Hitbox hitbox;
+        Hitbox hitboxCharge;
         if (self->offset2.x >= self->offset1.x) {
-            hitbox.left  = self->offset1.x >> 16;
-            hitbox.right = self->offset2.x >> 16;
+            hitboxCharge.left  = self->offset1.x >> 16;
+            hitboxCharge.right = self->offset2.x >> 16;
         }
         else {
-            hitbox.left  = self->offset2.x >> 16;
-            hitbox.right = self->offset1.x >> 16;
+            hitboxCharge.left  = self->offset2.x >> 16;
+            hitboxCharge.right = self->offset1.x >> 16;
         }
 
         if (self->offset2.y >= self->offset1.y) {
-            hitbox.top    = self->offset1.y >> 16;
-            hitbox.bottom = self->offset2.y >> 16;
+            hitboxCharge.top    = self->offset1.y >> 16;
+            hitboxCharge.bottom = self->offset2.y >> 16;
         }
         else {
-            hitbox.top    = self->offset2.y >> 16;
-            hitbox.bottom = self->offset1.y >> 16;
+            hitboxCharge.top    = self->offset2.y >> 16;
+            hitboxCharge.bottom = self->offset1.y >> 16;
         }
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-                self->attackState = 1;
+            if (Player_CheckCollisionTouch(player, self, &hitboxCharge)) {
+                self->attackState = HOTARU_ATTACK_CHARGING;
             }
         }
     }
@@ -363,13 +376,17 @@ void Hotaru_State_Charging(void)
     self->alpha += 2;
     if (self->alpha == 0x100) {
         self->timer = 128;
+
         if (!self->destroyedHotarus && !self->quality) {
             ++self->attackState;
+
             self->electricityOffset.x = (self->offset1.x - self->offset2.x) >> 2;
             self->electricityOffset.y = (self->offset1.y - self->offset2.y) >> 2;
         }
+
         self->state = Hotaru_State_Attacking;
     }
+
     Hotaru_CheckPlayerCollisions();
     Hotaru_CheckOffScreen();
 }
@@ -380,14 +397,14 @@ void Hotaru_State_Attacking(void)
 
     RSDK.ProcessAnimation(&self->electricityAnimator);
     if (--self->timer <= 0) {
-        self->attackState = 0;
+        self->attackState = HOTARU_ATTACK_IDLE;
         self->alpha       = 0xC0;
         self->state       = Hotaru_State_FinishedAttacking;
     }
 
     Hotaru_CheckPlayerCollisions();
 
-    if (self->attackState == 2) {
+    if (self->attackState == HOTARU_ATTACK_ATTACKING) {
         int32 storeX = self->position.x;
         int32 storeY = self->position.y;
 
@@ -395,17 +412,20 @@ void Hotaru_State_Attacking(void)
         {
             self->position.x += self->offset2.x;
             self->position.y += self->offset2.y;
+
             for (int32 i = 0; i < 3; ++i) {
                 self->position.x += self->electricityOffset.x;
                 self->position.y += self->electricityOffset.y;
-                if (Player_CheckCollisionTouch(player, self, &Hotaru->hitboxElectricity)) {
+
+                if (Player_CheckCollisionTouch(player, self, &Hotaru->hitboxElectricity))
                     Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
-                }
             }
+
             self->position.x = storeX;
             self->position.y = storeY;
         }
     }
+
     Hotaru_CheckOffScreen();
 }
 
@@ -414,6 +434,7 @@ void Hotaru_State_FinishedAttacking(void)
     RSDK_THIS(Hotaru);
 
     self->position.y -= 0x20000;
+
     Hotaru_CheckPlayerCollisions();
     Hotaru_CheckOffScreen();
 }
@@ -423,23 +444,57 @@ void Hotaru_EditorDraw(void)
 {
     RSDK_THIS(Hotaru);
 
-    self->drawOrder = Zone->objectDrawLow;
-    self->active    = ACTIVE_BOUNDS;
-    if (self->distX1 <= self->distX2)
-        self->updateRange.x = (self->distX2 << 16) + 0x400000;
-    else
-        self->updateRange.x = (self->distX1 << 16) + 0x400000;
+    self->drawOrder     = Zone->objectDrawLow;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = maxVal(self->distX1 << 16, self->distX2 << 16) + 0x400000;
     self->updateRange.y = self->dist.y + 0x400000;
 
     self->drawFX    = FX_ROTATE | FX_FLIP;
     self->offset2.x = -self->dist.x;
     self->offset2.y = -self->dist.y;
     self->offset1   = self->dist;
+
     RSDK.SetSpriteAnimation(Hotaru->aniFrames, self->quality, &self->mainAnimator, true, 0);
     RSDK.SetSpriteAnimation(Hotaru->aniFrames, 2, &self->bulbAnimator, true, 0);
     RSDK.SetSpriteAnimation(Hotaru->aniFrames, 3, &self->electricityAnimator, true, 0);
 
     Hotaru_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        // Left Hotaru
+        self->offset1.x = -(self->distX1 << 16);
+        self->offset2.x = (self->distX1 << 16);
+        self->hotaruDir = FLIP_X;
+        self->inkEffect = INK_BLEND;
+        Hotaru_Draw();
+
+        // Right Hotaru
+        self->offset1.x = (self->distX2 << 16);
+        self->offset2.x = -(self->distX2 << 16);
+        self->hotaruDir = FLIP_NONE;
+        self->inkEffect = INK_BLEND;
+        Hotaru_Draw();
+
+        self->inkEffect = INK_NONE;
+
+        if (self->distX1 && self->distX2) {
+            // Left Hotaru
+            DrawHelpers_DrawArrow(self->position.x - (self->distX1 << 16), self->position.y, self->position.x - (self->distX2 << 16),
+                                  self->position.y, 0x00FF00, INK_NONE, 0xFF);
+            DrawHelpers_DrawArrow(self->position.x - (self->distX2 << 16), self->position.y, self->position.x - (self->distX1 << 16),
+                                  self->position.y, 0x00FF00, INK_NONE, 0xFF);
+
+            // Right Hotaru
+            DrawHelpers_DrawArrow(self->position.x + (self->distX1 << 16), self->position.y, self->position.x + (self->distX2 << 16),
+                                  self->position.y, 0x00FF00, INK_NONE, 0xFF);
+            DrawHelpers_DrawArrow(self->position.x + (self->distX2 << 16), self->position.y, self->position.x + (self->distX1 << 16),
+                                  self->position.y, 0x00FF00, INK_NONE, 0xFF);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void Hotaru_EditorLoad(void)
@@ -454,7 +509,7 @@ void Hotaru_EditorLoad(void)
     RSDK_ENUM_VAR("Bad", HOTARU_BAD);
 
     RSDK_ACTIVE_VAR(Hotaru, preset);
-    RSDK_ENUM_VAR("unused", 0);
+    RSDK_ENUM_VAR("(Unused)", 0);
 }
 #endif
 

@@ -243,7 +243,7 @@ void ERZMystic_State_MoveCupsDownwards(void)
     self->mysticPos.y += self->mysticVelY;
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x380000, true))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x380000, true))
         self->velocity.y = 0;
 
     if (self->mysticPos.y >= self->position.y - 0x180000) {
@@ -261,7 +261,7 @@ void ERZMystic_State_RotateMiddleCup(void)
     // This does continue to move the side cups downwards too if they're not on the ground yet
     self->velocity.y += 0x4000;
     self->position.y += self->velocity.y;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x380000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x380000, true)) {
         if (!self->onGround)
             Camera_ShakeScreen(0, 0, 4);
         self->velocity.y = 0;

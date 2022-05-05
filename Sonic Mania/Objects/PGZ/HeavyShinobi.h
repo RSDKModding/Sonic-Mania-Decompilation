@@ -9,7 +9,7 @@ typedef enum {
     SHINOBI_ASTERON,
     SHINOBI_ASTERONSPIKE,
     SHINOBI_BOUNDS,
-}HeavyShinobiTypes;
+} HeavyShinobiTypes;
 
 // Object Class
 struct ObjectHeavyShinobi {
@@ -65,7 +65,7 @@ void HeavyShinobi_Update(void);
 void HeavyShinobi_LateUpdate(void);
 void HeavyShinobi_StaticUpdate(void);
 void HeavyShinobi_Draw(void);
-void HeavyShinobi_Create(void* data);
+void HeavyShinobi_Create(void *data);
 void HeavyShinobi_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HeavyShinobi_EditorDraw(void);
@@ -75,7 +75,7 @@ void HeavyShinobi_Serialize(void);
 
 // Extra Entity Functions
 void HeavyShinobi_HandleAfterFX(void);
-void HeavyShinobi_HandleSlash(void *p);
+void HeavyShinobi_HandleSlash(EntityPlayer *player);
 void HeavyShinobi_StartJump(void);
 void HeavyShinobi_Explode(void);
 
@@ -110,4 +110,4 @@ void HeavyShinobi_StateBounds_WaitForPlayer(void);
 void HeavyShinobi_StateBounds_Active(void);
 void HeavyShinobi_Draw_Bounds(void);
 
-#endif //!OBJ_HEAVYSHINOBI_H
+#endif //! OBJ_HEAVYSHINOBI_H

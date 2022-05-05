@@ -12,8 +12,10 @@ ObjectCaterkillerJr *CaterkillerJr;
 void CaterkillerJr_Update(void)
 {
     RSDK_THIS(CaterkillerJr);
+
     self->active = ACTIVE_NORMAL;
     StateMachine_Run(self->state);
+
     if (self->objectID == CaterkillerJr->objectID && !RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position = self->startPos;
         CaterkillerJr_SetupPositions();
@@ -29,7 +31,7 @@ void CaterkillerJr_Draw(void)
     RSDK_THIS(CaterkillerJr);
     int32 storeDir = self->direction;
 
-    for (int32 i = CaterkillerJr_SegmentCount - 1; i >= 0; --i) {
+    for (int32 i = CATERKILLERJR_SEGMENT_COUNT - 1; i >= 0; --i) {
         self->direction = self->bodyDirection[i];
         RSDK.DrawSprite(&self->bodyAnimators[i], &self->bodyPosition[i], false);
     }
@@ -49,15 +51,16 @@ void CaterkillerJr_Draw(void)
 void CaterkillerJr_Create(void *data)
 {
     RSDK_THIS(CaterkillerJr);
+
     if (!SceneInfo->inEditor) {
         self->visible           = true;
         self->drawOrder         = Zone->objectDrawHigh;
-        self->startPos.x        = self->position.x;
-        self->startPos.y        = self->position.y;
+        self->startPos          = self->position;
         self->drawFX            = FX_FLIP;
         self->updateRange.x     = 0x800000;
         self->updateRange.y     = 0x800000;
         self->bodyVelocity[0].x = (2 * (self->direction != FLIP_NONE) - 1) << 16;
+
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 0, &self->bodyAnimators[0], true, 6);
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &self->bodyAnimators[1], true, 6);
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &self->bodyAnimators[2], true, 6);
@@ -68,6 +71,7 @@ void CaterkillerJr_Create(void *data)
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 4, &self->smokePuffAnimators[0], true, 0);
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 4, &self->smokePuffAnimators[1], true, 0);
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 4, &self->smokePuffAnimators[2], true, 0);
+
         CaterkillerJr_SetupPositions();
     }
 }
@@ -98,13 +102,15 @@ void CaterkillerJr_DebugDraw(void)
 void CaterkillerJr_DebugSpawn(void)
 {
     RSDK_THIS(CaterkillerJr);
+
     CREATE_ENTITY(CaterkillerJr, NULL, self->position.x, self->position.y);
 }
 
 void CaterkillerJr_SetupPositions(void)
 {
     RSDK_THIS(CaterkillerJr);
-    for (int32 i = 0; i < CaterkillerJr_SegmentCount; ++i) {
+
+    for (int32 i = 0; i < CATERKILLERJR_SEGMENT_COUNT; ++i) {
         self->bodyPosition[i].x = self->position.x;
         self->bodyPosition[i].y = self->position.y;
         self->bodyVelocity[i].x = 0;
@@ -114,32 +120,35 @@ void CaterkillerJr_SetupPositions(void)
     }
 
     if (self->direction) {
-        self->boundL = self->position.x - 0x3C0000;
-        self->boundR = self->position.x + 0xBC0000;
+        self->boundsL = self->position.x - 0x3C0000;
+        self->boundsR = self->position.x + 0xBC0000;
     }
     else {
-        self->boundL = self->position.x - 0xBC0000;
-        self->boundR = self->position.x + 0x3C0000;
+        self->boundsL = self->position.x - 0xBC0000;
+        self->boundsR = self->position.x + 0x3C0000;
     }
 
-    self->timer                         = 0;
+    self->timer = 0;
+
     self->smokePuffAnimators[0].timer   = 14;
     self->smokePuffAnimators[1].timer   = 10;
     self->smokePuffAnimators[2].timer   = 6;
     self->smokePuffAnimators[0].frameID = 8;
     self->smokePuffAnimators[1].frameID = 8;
     self->smokePuffAnimators[2].frameID = 8;
-    self->bodyVelocity[0].x             = (2 * (self->direction != FLIP_NONE) - 1) << 16;
-    self->active                        = ACTIVE_BOUNDS;
-    self->state                         = CaterkillerJr_State_SetupVelocities;
+
+    self->bodyVelocity[0].x = (2 * (self->direction != FLIP_NONE) - 1) << 16;
+    self->active            = ACTIVE_BOUNDS;
+
+    self->state = CaterkillerJr_State_SetupVelocities;
 }
 
 void CaterkillerJr_State_SetupVelocities(void)
 {
     RSDK_THIS(CaterkillerJr);
 
-    int32 velocity = 2 * (self->direction != FLIP_NONE) - 1;
-    velocity <<= 16;
+    int32 velocity = (2 * (self->direction != FLIP_NONE) - 1) << 16;
+
     switch (++self->timer) {
         case 12: self->bodyVelocity[1].x = velocity; break;
         case 24: self->bodyVelocity[2].x = velocity; break;
@@ -152,31 +161,34 @@ void CaterkillerJr_State_SetupVelocities(void)
             self->state             = CaterkillerJr_State_Move;
             break;
     }
+
     CaterkillerJr_State_Move();
 }
 
 void CaterkillerJr_State_Move(void)
 {
     RSDK_THIS(CaterkillerJr);
-    for (int32 i = 0; i < CaterkillerJr_SegmentCount; ++i) {
+
+    for (int32 i = 0; i < CATERKILLERJR_SEGMENT_COUNT; ++i) {
         RSDK.ProcessAnimation(&self->bodyAnimators[i]);
+
         self->bodyPosition[i].x += self->bodyVelocity[i].x;
-        if (self->bodyDirection[i] && self->bodyPosition[i].x >= self->boundR - 0x80000) {
+        if (self->bodyDirection[i] && self->bodyPosition[i].x >= self->boundsR - 0x80000) {
             self->bodyDirection[i] ^= FLIP_X;
             self->bodyAnimators[i].timer   = 0;
             self->bodyAnimators[i].frameID = 0;
         }
-        else if (!self->bodyDirection[i] && self->bodyPosition[i].x <= self->boundL + 0x80000) {
+        else if (!self->bodyDirection[i] && self->bodyPosition[i].x <= self->boundsL + 0x80000) {
             self->bodyDirection[i] ^= FLIP_X;
             self->bodyAnimators[i].timer   = 0;
             self->bodyAnimators[i].frameID = 0;
         }
 
-        if (self->bodyVelocity[i].x <= 0 && self->bodyPosition[i].x <= self->boundL) {
+        if (self->bodyVelocity[i].x <= 0 && self->bodyPosition[i].x <= self->boundsL) {
             self->bodyVelocity[i].x = -self->bodyVelocity[i].x;
             self->bodyTimer[i]      = 0xA00;
         }
-        else if (self->bodyVelocity[i].x >= 0 && self->bodyPosition[i].x >= self->boundR) {
+        else if (self->bodyVelocity[i].x >= 0 && self->bodyPosition[i].x >= self->boundsR) {
             self->bodyVelocity[i].x = -self->bodyVelocity[i].x;
             self->bodyTimer[i]      = 0xA00;
         }
@@ -204,15 +216,15 @@ void CaterkillerJr_State_Move(void)
     {
         self->position = self->bodyPosition[0];
         if (Player_CheckBadnikTouch(player, self, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(player, self, false)) {
-            for (int32 i = 1; i < CaterkillerJr_SegmentCount; ++i) {
-                EntityDebris *debris  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPosition[i].x, self->bodyPosition[i].y);
-                debris->animator      = self->bodyAnimators[i];
-                debris->velocity.x    = RSDK.Rand(-16, 16) << 14;
-                debris->velocity.y    = RSDK.Rand(-8, 8) << 14;
-                debris->gravityStrength       = 0x3800;
-                debris->drawOrder     = Zone->objectDrawLow;
-                debris->updateRange.x = 0x400000;
-                debris->updateRange.y = 0x400000;
+            for (int32 i = 1; i < CATERKILLERJR_SEGMENT_COUNT; ++i) {
+                EntityDebris *debris    = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPosition[i].x, self->bodyPosition[i].y);
+                debris->animator        = self->bodyAnimators[i];
+                debris->velocity.x      = RSDK.Rand(-16, 16) << 14;
+                debris->velocity.y      = RSDK.Rand(-8, 8) << 14;
+                debris->gravityStrength = 0x3800;
+                debris->drawOrder       = Zone->objectDrawLow;
+                debris->updateRange.x   = 0x400000;
+                debris->updateRange.y   = 0x400000;
             }
 
             destroyEntity(self);
@@ -221,7 +233,7 @@ void CaterkillerJr_State_Move(void)
         }
 
         if (self->objectID != TYPE_BLANK) {
-            for (int32 i = 1; i < CaterkillerJr_SegmentCount; ++i) {
+            for (int32 i = 1; i < CATERKILLERJR_SEGMENT_COUNT; ++i) {
                 self->position.x = self->bodyPosition[i].x;
                 self->position.y = self->bodyPosition[i].y;
                 if (Player_CheckCollisionTouch(player, self, &CaterkillerJr->hitbox)) {
@@ -238,11 +250,11 @@ void CaterkillerJr_State_Move(void)
 void CaterkillerJr_EditorDraw(void)
 {
     RSDK_THIS(CaterkillerJr);
-    self->visible = true;
-    self->drawFX  = FX_FLIP;
 
-    self->startPos.x = self->position.x;
-    self->startPos.y = self->position.y;
+    self->visible  = true;
+    self->drawFX   = FX_FLIP;
+    self->startPos = self->position;
+
     RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 0, &self->bodyAnimators[0], true, 6);
     RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &self->bodyAnimators[1], true, 6);
     RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &self->bodyAnimators[2], true, 6);
@@ -268,8 +280,8 @@ void CaterkillerJr_EditorLoad(void)
 #endif
 
     RSDK_ACTIVE_VAR(CaterkillerJr, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 }
 #endif
 

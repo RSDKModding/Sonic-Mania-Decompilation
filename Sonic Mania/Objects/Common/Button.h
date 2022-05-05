@@ -22,17 +22,9 @@ struct ObjectButton {
 
 // Entity Class
 struct EntityButton {
-    RSDK_ENTITY
-    int32 type;
-    bool32 walkOnto;
-    uint8 tag;
-    bool32 down;            // 64
-    bool32 toggled;         // 68
-    bool32 currentlyActive; // 6B
-    bool32 activated;       // 70
-    bool32 wasActivated;    // 74
-    int32 pressPos;         // 78
-    Hitbox hitbox;
+    MANIA_BUTTON_BASE
+
+    Hitbox hitboxButton;
     Animator buttonAnimator;
     Animator baseAnimator;
 };
@@ -57,9 +49,9 @@ void Button_Serialize(void);
 void Button_CheckEggmanCollisions(void);
 void Button_CheckPRiderCollisions(void);
 
-void Button_TypeFloor(void);
-void Button_TypeRoof(void);
-void Button_TypeRWall(void);
-void Button_TypeLWall(void);
+void Button_HandleFloor(void);
+void Button_HandleRoof(void);
+void Button_HandleRWall(void);
+void Button_HandleLWall(void);
 
 #endif //! OBJ_BUTTON_H

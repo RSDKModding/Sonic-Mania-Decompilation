@@ -65,7 +65,7 @@ struct UserCore {
     virtual bool32 GetConfirmButtonFlip(void) { return false; }
     virtual void LaunchManual(void) {}
     virtual void ExitGame(void) {}
-    virtual int32 GetDefaultGamepadType(void) { return 0; }
+    virtual int32 GetDefaultGamepadType(void) { return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); }
     virtual bool32 IsOverlayEnabled(uint32 inputID) { return false; }
     virtual bool32 CheckDLC(byte id)
     {
@@ -127,48 +127,34 @@ inline void EpicUnknown4(int a1) { userCore->EpicUnknown4(a1); }
 inline void RegisterHIDDevice(void) { userCore->RegisterHIDDevice(); }
 #endif
 
+} // namespace SKU
+
 struct SettingsStorage {
-    byte windowed;
-    byte bordered;
-    byte exclusiveFS;
-    byte vsync;
-    byte shaderSupport;
-    int fsWidth;
-    int fsHeight;
-    int gameHeight;
-    int windowActive;
-    int shaderID;
-    int screenCount;
-    int dimTimer;
-    int dimLimit;
+    uint8 windowed;
+    uint8 bordered;
+    uint8 exclusiveFS;
+    uint8 vsync;
+    uint8 tripleBuffered;
+    uint8 shaderSupport;
+    int32 fsWidth;
+    int32 fsHeight;
+    int32 refreshRate;
+    int32 windowWidth;
+    int32 windowHeight;
+    int32 pixWidth;
+    int32 pixHeight;
+    int32 windowState;
+    int32 shaderID;
+    int32 screenCount;
+    uint32 dimTimer;
+    int32 dimLimit;
     float dimMax;
     float dimPercent;
-    int refreshRate;
-    int windowWidth;
-    int windowHeight;
-    int pixWidth;
-    int mouseX;
-    int mouseY;
-    int field_8;
-    int field_C;
+    float viewportW;
+    float viewportH;
+    float viewportX;
+    float viewportY;
 };
-
-struct GamePadButtonMap {
-    int maskVal;
-    short mappingType;
-    short offset;
-};
-
-struct GamePadMappings {
-    char name[0x40];
-    GamePadButtonMap buttons[24];
-    int vendorID;
-    int productID;
-    int type;
-};
-
-extern GamePadMappings *gamePadMappings;
-extern int gamePadCount;
 
 enum SettingsValues {
     SETTINGS_WINDOWED,
@@ -197,6 +183,7 @@ enum SettingsValues {
     SETTINGS_WRITE,
 };
 
+extern SettingsStorage gameSettings;
 extern SettingsStorage settingsStorage;
 extern bool32 settingsChanged;
 
@@ -218,8 +205,6 @@ inline void writeText(FileIO *file, const char *string, ...)
 
     fWrite(buffer, sizeof(char), strlen(buffer), file);
 }
-
-} // namespace SKU
 
 } // namespace RSDK
 

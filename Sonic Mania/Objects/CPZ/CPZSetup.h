@@ -8,27 +8,33 @@ typedef enum {
     CPZ_BG_CPZ1,
 } BGSwitchIDsCPZ;
 
-typedef enum { CPZ_DECOR_WARNSIGN } DecorTypesCPZ;
+typedef enum { CPZ_DECORATION_WARNSIGN } DecorationTypesCPZ;
+
+typedef enum {
+    CPZ_PARALLAXSPRITE_GIRDER,
+    CPZ_PARALLAXSPRITE_CHEMICAL1,
+    CPZ_PARALLAXSPRITE_CHEMICAL2,
+} ParallaxSpriteAniIDsCPZ;
 
 // Object Class
 struct ObjectCPZSetup {
     RSDK_OBJECT
     uint16 aniTiles;
-    TileLayer *cpz1BG;
+    TileLayer *background;
     TABLE(int32 deformation[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
-                                 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
-    int32 palAnimFrameA;
-    int32 palAnimFrameB;
-    int32 palAnimFrameC;
-    int32 palAnimFrameD;
-    int32 palAnimFrameE;
+                                   1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
+    int32 bgTowerLightPalIndex;
+    int32 rainbowLightPalIndex;
+    int32 chemLiquidPalIndex1;
+    int32 chemLiquidPalIndex2;
+    int32 chemLiquidPalIndex3;
     uint16 aniTileFrame;
-    Entity* outro;
+    EntityCPZ2Outro *outro;
 };
 
 // Entity Class
 struct EntityCPZSetup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -39,7 +45,7 @@ void CPZSetup_Update(void);
 void CPZSetup_LateUpdate(void);
 void CPZSetup_StaticUpdate(void);
 void CPZSetup_Draw(void);
-void CPZSetup_Create(void* data);
+void CPZSetup_Create(void *data);
 void CPZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CPZSetup_EditorDraw(void);
@@ -50,7 +56,7 @@ void CPZSetup_Serialize(void);
 // Extra Entity Functions
 void CPZSetup_BGSwitchCB_Act2BG(void);
 void CPZSetup_BGSwitchCB_Act1BG(void);
-void CPZSetup_StageFinishCBAct1(void);
-void CPZSetup_StageFinishCBAct2(void);
+void CPZSetup_StageFinishCB_Act1(void);
+void CPZSetup_StageFinishCB_Act2(void);
 
-#endif //!OBJ_CPZSETUP_H
+#endif //! OBJ_CPZSETUP_H

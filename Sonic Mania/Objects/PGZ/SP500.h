@@ -7,9 +7,9 @@
 struct ObjectSP500 {
     RSDK_OBJECT
     uint16 printLayerID;
-    Hitbox hitbox1;
-    Hitbox hitboxBody;
-    Hitbox hitboxEntry;
+    Hitbox hitboxSideL;
+    Hitbox hitboxSideR;
+    Hitbox hitboxBottom;
     uint16 aniFrames;
     uint16 sfxBeep4;
     uint16 sfxFail;
@@ -30,7 +30,7 @@ struct EntitySP500 {
     Vector2 srcM;
     Vector2 srcY;
     int32 printRowID;
-    int32 offset;
+    int32 rowPrintPos;
     int32 timer;
     uint8 activePlayers;
     uint8 playerTimers[2];

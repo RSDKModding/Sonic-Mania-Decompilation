@@ -12,21 +12,28 @@ ObjectDoorTrigger *DoorTrigger;
 void DoorTrigger_Update(void)
 {
     RSDK_THIS(DoorTrigger);
+
     RSDK.ProcessAnimation(&self->baseAnimator);
+
     if (self->bulbAnimator.frameID) {
         if (!--self->id) {
-            self->id   = RSDK.Rand(15, 121);
+            self->id = RSDK.Rand(15, 121);
+
             int32 anim = 0;
             switch (self->orientation) {
                 case DOORTRIGGER_ORIENATION_L:
                 case DOORTRIGGER_ORIENATION_R: anim = 3; break;
+
                 case DOORTRIGGER_ORIENATION_U:
                 case DOORTRIGGER_ORIENATION_D: anim = 4; break;
+
                 default: break;
             }
 
-            EntityDebris *shard =
-                CREATE_ENTITY(Debris, NULL, (RSDK.Rand(-4, 5) << 16) + self->position.x, (RSDK.Rand(-4, 5) << 16) + self->position.y);
+            int32 x             = self->position.x + (RSDK.Rand(-4, 5) << 16);
+            int32 y             = self->position.y + (RSDK.Rand(-4, 5) << 16);
+            EntityDebris *shard = CREATE_ENTITY(Debris, NULL, x, y);
+
             shard->state     = Debris_State_Move;
             shard->drawFX    = FX_FLIP;
             shard->direction = self->direction;
@@ -38,7 +45,7 @@ void DoorTrigger_Update(void)
         foreach_active(Player, player)
         {
             if (!player->sidekick && Player_CheckAttacking(player, self)) {
-                if (Player_CheckCollisionTouch(player, self, &DoorTrigger->hitboxes[self->baseAnimator.frameID])) {
+                if (Player_CheckCollisionTouch(player, self, &DoorTrigger->hitboxBulb[self->baseAnimator.frameID])) {
                     self->bulbAnimator.frameID = 1;
                     if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
                         player->velocity.x = -player->velocity.x >> 1;
@@ -49,6 +56,7 @@ void DoorTrigger_Update(void)
                         int32 x = 0, y = 0;
                         if (self->baseAnimator.frameID) {
                             x = player->position.x - self->position.x;
+
                             if (self->direction)
                                 y = (player->position.y - self->position.y) - 0xE0000;
                             else
@@ -59,6 +67,7 @@ void DoorTrigger_Update(void)
                                 x = (player->position.x - self->position.x) - 0xE0000;
                             else
                                 x = (player->position.x - self->position.x) + 0xE0000;
+
                             y = player->position.y - self->position.y;
                         }
 
@@ -75,9 +84,11 @@ void DoorTrigger_Update(void)
 #if RETRO_USE_PLUS
                         }
 #endif
+
                         player->applyJumpCap = false;
-                        player->onGround    = false;
+                        player->onGround     = false;
                     }
+
                     RSDK.PlaySfx(DoorTrigger->sfxShatter, false, 255);
 
                     int32 spawnX = self->position.x;
@@ -89,12 +100,13 @@ void DoorTrigger_Update(void)
                         case DOORTRIGGER_ORIENATION_D: spawnY += 0x100000; break;
                         default: break;
                     }
+
                     for (int32 i = 0; i < 8; ++i) {
                         EntityDebris *shard =
                             CREATE_ENTITY(Debris, NULL, spawnX + RSDK.Rand(-0xA0000, 0xA0000), spawnY + RSDK.Rand(-0xA0000, 0xA0000));
-                        shard->state      = Debris_State_Fall;
-                        shard->gravityStrength    = 0x4000;
-                        shard->velocity.x = RSDK.Rand(0, 0x20000);
+                        shard->state           = Debris_State_Fall;
+                        shard->gravityStrength = 0x4000;
+                        shard->velocity.x      = RSDK.Rand(0, 0x20000);
                         if (shard->position.x < self->position.x)
                             shard->velocity.x = -shard->velocity.x;
                         shard->velocity.y = RSDK.Rand(-0x40000, -0x10000);
@@ -103,11 +115,12 @@ void DoorTrigger_Update(void)
                         shard->drawOrder  = Zone->objectDrawHigh;
                         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &shard->animator, true, RSDK.Rand(0, 4));
                     }
+
                     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), spawnX, spawnY)->drawOrder = Zone->objectDrawHigh;
                 }
             }
             else {
-                Player_CheckCollisionBox(player, self, &DoorTrigger->hitboxes[self->baseAnimator.frameID]);
+                Player_CheckCollisionBox(player, self, &DoorTrigger->hitboxBulb[self->baseAnimator.frameID]);
             }
         }
     }
@@ -123,10 +136,11 @@ void DoorTrigger_Draw(void)
 
     RSDK.DrawSprite(&self->baseAnimator, NULL, false);
     RSDK.DrawSprite(&self->bulbAnimator, NULL, false);
+
     if (!self->bulbAnimator.frameID && !(Zone->timer & 1)) {
         self->inkEffect            = INK_ADD;
         self->bulbAnimator.frameID = 2;
-        self->alpha                = ((56 * RSDK.Sin256(Zone->timer)) >> 8) + 184;
+        self->alpha                = 0xB8 + ((56 * RSDK.Sin256(Zone->timer)) >> 8);
         RSDK.DrawSprite(&self->bulbAnimator, NULL, false);
 
         self->bulbAnimator.frameID = 3;
@@ -142,6 +156,7 @@ void DoorTrigger_Create(void *data)
     RSDK_THIS(DoorTrigger);
 
     self->drawFX = FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
@@ -166,21 +181,27 @@ void DoorTrigger_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
         DoorTrigger->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/DoorTrigger.bin", SCOPE_STAGE);
-    DoorTrigger->hitboxes[0].top    = -10;
-    DoorTrigger->hitboxes[0].left   = -26;
-    DoorTrigger->hitboxes[0].bottom = 10;
-    DoorTrigger->hitboxes[0].right  = 0;
-    DoorTrigger->hitboxes[1].top    = -26;
-    DoorTrigger->hitboxes[1].left   = -10;
-    DoorTrigger->hitboxes[1].bottom = 0;
-    DoorTrigger->hitboxes[1].right  = 10;
-    DoorTrigger->sfxShatter         = RSDK.GetSfx("Stage/WindowShatter.wav");
+
+    // Active
+    DoorTrigger->hitboxBulb[0].top    = -10;
+    DoorTrigger->hitboxBulb[0].left   = -26;
+    DoorTrigger->hitboxBulb[0].bottom = 10;
+    DoorTrigger->hitboxBulb[0].right  = 0;
+
+    // Busted
+    DoorTrigger->hitboxBulb[1].top    = -26;
+    DoorTrigger->hitboxBulb[1].left   = -10;
+    DoorTrigger->hitboxBulb[1].bottom = 0;
+    DoorTrigger->hitboxBulb[1].right  = 10;
+
+    DoorTrigger->sfxShatter = RSDK.GetSfx("Stage/WindowShatter.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR
 void DoorTrigger_EditorDraw(void)
 {
     RSDK_THIS(DoorTrigger);
+
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawHigh;

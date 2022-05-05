@@ -37,7 +37,7 @@ void UIOptionPanel_Update(void);
 void UIOptionPanel_LateUpdate(void);
 void UIOptionPanel_StaticUpdate(void);
 void UIOptionPanel_Draw(void);
-void UIOptionPanel_Create(void* data);
+void UIOptionPanel_Create(void *data);
 void UIOptionPanel_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIOptionPanel_EditorDraw(void);
@@ -48,4 +48,4 @@ void UIOptionPanel_Serialize(void);
 // Extra Entity Functions
 void UIOptionPanel_DrawBG(void);
 
-#endif //!OBJ_UIOPTIONPANEL_H
+#endif //! OBJ_UIOPTIONPANEL_H

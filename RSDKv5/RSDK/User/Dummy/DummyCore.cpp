@@ -181,7 +181,7 @@ void RSDK::SKU::DummyCore::LaunchManual()
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
 #endif
 }
-void RSDK::SKU::DummyCore::ExitGame() { engine.running = false; }
+void RSDK::SKU::DummyCore::ExitGame() { RenderDevice::isRunning = false; }
 
 int RSDK::SKU::DummyCore::GetDefaultGamepadType()
 {
@@ -192,10 +192,10 @@ int RSDK::SKU::DummyCore::GetDefaultGamepadType()
 #endif
 
     switch (platform) {
-        case PLATFORM_SWITCH: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+        case PLATFORM_SWITCH: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
         case PLATFORM_PC:
         case PLATFORM_DEV:
-        default: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+        default: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
     }
 }
 

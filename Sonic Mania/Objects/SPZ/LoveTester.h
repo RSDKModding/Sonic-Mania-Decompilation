@@ -33,7 +33,7 @@ struct EntityLoveTester {
     StateMachine(state);
     StateMachine(stateLights);
     uint8 activePlayers;
-    Vector2 storedPos;
+    Vector2 startPos;
     EntityPlayer *playerPtr;
     bool32 matchingFinished;
     bool32 isTVActiveTop;
@@ -57,7 +57,7 @@ void LoveTester_Update(void);
 void LoveTester_LateUpdate(void);
 void LoveTester_StaticUpdate(void);
 void LoveTester_Draw(void);
-void LoveTester_Create(void* data);
+void LoveTester_Create(void *data);
 void LoveTester_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LoveTester_EditorDraw(void);
@@ -70,8 +70,8 @@ void LoveTester_SetupHitboxes(void);
 void LoveTester_SetupLightOffsets(void);
 void LoveTester_DrawSprites(void);
 void LoveTester_DrawTVDisplay(uint8 displayList, uint8 frame, bool32 isTVActive);
-void LoveTester_CheckPlayerCollisions(void);
-void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick);
+void LoveTester_CheckPlayerCollisions_Solid(void);
+void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick);
 void LoveTester_GiveScore(EntityPlayer *player);
 void LoveTester_CreateHeartParticles(void);
 
@@ -90,4 +90,4 @@ void LoveTester_StateLights_FlashSlow(void);
 void LoveTester_StateLights_FlashMed(void);
 void LoveTester_StateLights_FlashFast(void);
 
-#endif //!OBJ_LOVETESTER_H
+#endif //! OBJ_LOVETESTER_H

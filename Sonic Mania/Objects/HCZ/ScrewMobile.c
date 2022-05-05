@@ -223,7 +223,7 @@ void ScrewMobile_State_PlayerRiding(void)
         if (self->velocity.x) {
             if (self->velocity.x <= 0) {
                 self->direction = FLIP_NONE;
-                if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
+                if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
                     if (self->velocity.x <= -0x20000)
                         RSDK.PlaySfx(ScrewMobile->sfxImpact, false, 255);
                     self->velocity.x = 0;
@@ -231,7 +231,7 @@ void ScrewMobile_State_PlayerRiding(void)
             }
             else {
                 self->direction = FLIP_X;
-                if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)) {
+                if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x200000, 0, true)) {
                     if (self->velocity.x >= 0x20000)
                         RSDK.PlaySfx(ScrewMobile->sfxImpact, false, 255);
                     self->velocity.x = 0;
@@ -382,7 +382,7 @@ void ScrewMobile_State_BossFinished(void)
     Zone->cameraBoundsL[0] = ScreenInfo->position.x;
     Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x200000, 0, true)) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         Zone->cameraBoundsL[0] += 2;
         ScreenInfo->position.x = Zone->cameraBoundsL[0];

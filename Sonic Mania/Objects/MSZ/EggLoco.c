@@ -214,7 +214,7 @@ void EggLoco_State_Tooting(void)
 
     if (self->tootPullPos >= 0x10000 && !(Zone->timer & 3)) {
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, self->position.x - 0x240000, self->position.y - 0x4E0000);
-        dust->state      = Dust_State_MoveGravity;
+        dust->state      = Dust_State_MoveFriction;
         dust->velocity.x = 0x20000;
         dust->velocity.y = -0x18000;
         dust->drawOrder  = Zone->objectDrawLow;

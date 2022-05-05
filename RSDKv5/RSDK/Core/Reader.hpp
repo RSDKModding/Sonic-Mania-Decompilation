@@ -321,6 +321,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
 {
     if (!buffer || !cBuffer)
         return 0;
+
     uLongf complen = cSize;
     uLongf destLen = size;
 

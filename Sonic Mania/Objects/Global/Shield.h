@@ -48,10 +48,10 @@ void Shield_Serialize(void);
 
 // Extra Entity Functions
 void Shield_State_Generic(void);
-void Shield_State_Bubble(void);
-void Shield_State_BubbleAlt(void);
-void Shield_State_Fire(void);
-void Shield_State_Lightning(void);
+void Shield_State_StartBubbleBounce(void);
+void Shield_State_BubbleBounced(void);
+void Shield_State_FireDash(void);
+void Shield_State_LightningJump(void);
 void Shield_State_Insta(void);
 
 #endif //!OBJ_SHIELD_H

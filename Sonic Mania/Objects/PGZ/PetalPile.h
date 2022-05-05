@@ -25,7 +25,7 @@ struct ObjectPetalPile {
     TABLE(int32 pattern2[12], { -0x10000, 0x10000, -0x5555, -0x5555, 0x10000, -0x10000, 0, 0xAAAA, 0xAAAA, 0, 0x10000, 0x10000 });
     TABLE(int32 pattern3[12], { 0x10000, 0x10000, 0x5555, -0x5555, -0x10000, -0x10000, 0, 0xAAAA, -0xAAAA, 0, -0x10000, 0x10000 });
     TABLE(int32 pattern4[20], { -0x10000, 0x10000,  -0x8000, -0x10000, -0x5555, 0x10000, 0, -0x10000, 0x5555, 0x10000,
-                              0x8000,   -0x10000, 0x10000, 0x10000,  -0xAAAA, 0,       0, 0,        0xAAAA, 0 });
+                                0x8000,   -0x10000, 0x10000, 0x10000,  -0xAAAA, 0,       0, 0,        0xAAAA, 0 });
     TABLE(int32 pattern5[6], { 0, -0x10000, -0x10000, 0x10000, 0x10000, 0x10000 });
     uint16 aniFrames;
     uint16 sfxPetals;
@@ -44,7 +44,7 @@ struct EntityPetalPile {
     bool32 emitterMode;
     uint8 layerID;
     Vector2 velStore;
-    Vector2 distance; //dunno if this is actually a vec2 but the .y is always set to 0 so maybe?
+    Vector2 distance; // dunno if this is actually a vec2 but the .y is always set to 0 so maybe?
     int32 petalVel;
     int32 unused;
     int8 petalDir;

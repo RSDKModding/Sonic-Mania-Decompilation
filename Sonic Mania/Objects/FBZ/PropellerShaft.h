@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectPropellerShaft {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -13,8 +13,8 @@ struct EntityPropellerShaft {
     RSDK_ENTITY
     int32 size;
     int32 activePlayers;
-    int32 playerTimers[4];
-    int32 unused1[4];
+    int32 playerTimers[PLAYER_MAX];
+    int32 unused1[PLAYER_MAX];
     Hitbox hitbox;
     Animator animator;
 };
@@ -27,7 +27,7 @@ void PropellerShaft_Update(void);
 void PropellerShaft_LateUpdate(void);
 void PropellerShaft_StaticUpdate(void);
 void PropellerShaft_Draw(void);
-void PropellerShaft_Create(void* data);
+void PropellerShaft_Create(void *data);
 void PropellerShaft_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PropellerShaft_EditorDraw(void);
@@ -37,5 +37,4 @@ void PropellerShaft_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_PROPELLERSHAFT_H
+#endif //! OBJ_PROPELLERSHAFT_H

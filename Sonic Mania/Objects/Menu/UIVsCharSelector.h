@@ -20,7 +20,7 @@ struct ObjectUIVsCharSelector {
 
 // Entity Class
 struct EntityUIVsCharSelector {
-	MANIA_UI_ITEM_BASE
+    MANIA_UI_ITEM_BASE
     uint8 playerID;
     bool32 prevSelected;
     int32 frameID;
@@ -48,7 +48,7 @@ void UIVsCharSelector_Update(void);
 void UIVsCharSelector_LateUpdate(void);
 void UIVsCharSelector_StaticUpdate(void);
 void UIVsCharSelector_Draw(void);
-void UIVsCharSelector_Create(void* data);
+void UIVsCharSelector_Create(void *data);
 void UIVsCharSelector_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIVsCharSelector_EditorDraw(void);
@@ -71,4 +71,4 @@ void UIVsCharSelector_State_HandlePlayerJoin(void);
 #endif
 void UIVsCharSelector_State_Selected(void);
 
-#endif //!OBJ_UIVSCHARSELECTOR_H
+#endif //! OBJ_UIVSCHARSELECTOR_H

@@ -4,12 +4,13 @@
 #include "SonicMania.h"
 
 // (Old) Object Class
-// NOTE: this struct is not used anywhere in the game, it was recreated from the data inside the "static object" file and is here only for preservation purposes
-// This struct is a remnamt from a time when SPZ1 & SPZ2 likely shared a setup object much earlier in dev, the proper SPZ2Setup (which is the final version) can be found below
+// NOTE: this struct is not used anywhere in the game, it was recreated from the data inside the "static object" file
+// and is here only for preservation purposes, this struct is a remnant from a time when SPZ1 & SPZ2 likely shared a setup object much earlier in dev
+// the proper SPZ2Setup (the final version) can be found below as "SPZ2Setup"
 struct ObjectSPZSetup {
     RSDK_OBJECT
     int32 palTimer;
-    int32 palFadePercent;
+    int32 pulsePercent;
     STATIC(int32 speakerTimer, 12);
     int32 speakerFrame;
     TABLE(int32 speakerDelays[8], { 11, 2, 2, 2, 2, 2, 2, 2 });
@@ -23,7 +24,7 @@ struct ObjectSPZSetup {
 struct ObjectSPZ2Setup {
     RSDK_OBJECT
     int32 palTimer;
-    int32 palFadePercent;
+    int32 pulsePercent;
     STATIC(int32 speakerTimer, 12);
     int32 speakerFrame;
     TABLE(int32 speakerDelays[8], { 11, 2, 2, 2, 2, 2, 2, 2 });
@@ -39,9 +40,9 @@ struct ObjectSPZ2Setup {
     int32 musicSndDisplayFrameV;
     TileLayer *fgLow;
     TileLayer *fgHigh;
-    uint16 aniTiles;
+    uint16 aniTiles1;
     uint16 aniTiles2;
-    EntitySPZ2Outro* outroPtr;
+    EntitySPZ2Outro *outro;
 };
 
 // Entity Class
@@ -59,7 +60,7 @@ void SPZ2Setup_Update(void);
 void SPZ2Setup_LateUpdate(void);
 void SPZ2Setup_StaticUpdate(void);
 void SPZ2Setup_Draw(void);
-void SPZ2Setup_Create(void* data);
+void SPZ2Setup_Create(void *data);
 void SPZ2Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SPZ2Setup_EditorDraw(void);
@@ -70,4 +71,4 @@ void SPZ2Setup_Serialize(void);
 // Extra Entity Functions
 void SPZ2Setup_SetupOutro(void);
 
-#endif //!OBJ_SPZ2SETUP_H
+#endif //! OBJ_SPZ2SETUP_H

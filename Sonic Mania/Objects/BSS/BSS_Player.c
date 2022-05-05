@@ -12,9 +12,11 @@ ObjectBSS_Player *BSS_Player;
 void BSS_Player_Update(void)
 {
     RSDK_THIS(BSS_Player);
+
     EntityBSS_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
 
     StateMachine_Run(self->stateInput);
+
     if (self->onGround) {
         if (self->jumpPress) {
             self->velocity.y = -0x100000;
@@ -25,17 +27,17 @@ void BSS_Player_Update(void)
     }
     else {
         self->gravityStrength += self->velocity.y;
-        int32 speed = setup->maxSpeed;
-        if (!speed)
-            speed = 16;
 
+        int32 speed = !setup->maxSpeed ? 16 : setup->maxSpeed;
         self->velocity.y += (speed << 12);
         if (self->gravityStrength >= 0) {
             self->gravityStrength = 0;
             self->onGround        = true;
+
             if (!self->sidekick) {
                 if (self->animator.animationID == 3)
                     setup->globeSpeed >>= 1;
+
                 setup->globeSpeedInc = 2;
             }
 
@@ -47,10 +49,7 @@ void BSS_Player_Update(void)
     }
 
     self->position.y = (self->gravityStrength >> 1) - (self->gravityStrength >> 4);
-    if (SceneInfo->entitySlot)
-        self->position.y += 0xBA0000;
-    else
-        self->position.y += 0xAA0000;
+    self->position.y += SceneInfo->entitySlot ? 0xBA0000 : 0xAA0000;
 
     if (self->animator.animationID == 1) {
         self->animator.timer += abs(setup->globeSpeed);
@@ -58,6 +57,7 @@ void BSS_Player_Update(void)
 
         if (self->animator.timer > 0x1F) {
             self->animator.timer &= 0x1F;
+
             if (setup->globeSpeed <= 0) {
                 if (--self->animator.frameID < 0)
                     self->animator.frameID = 11;
@@ -83,10 +83,10 @@ void BSS_Player_StaticUpdate(void) {}
 void BSS_Player_Draw(void)
 {
     RSDK_THIS(BSS_Player);
+
     Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
     drawPos.x = ScreenInfo->centerX << 16;
+    drawPos.y = self->position.y;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 
     // if we're tails, draw his tail
@@ -102,6 +102,7 @@ void BSS_Player_Draw(void)
 void BSS_Player_Create(void *data)
 {
     RSDK_THIS(BSS_Player);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
@@ -110,6 +111,9 @@ void BSS_Player_Create(void *data)
         self->updateRange.y = 0x800000;
 
         switch (globals->playerID & 0xFF) {
+            default:
+            case ID_SONIC: self->aniFrames = BSS_Player->sonicFrames; break;
+
             case ID_TAILS:
                 self->aniFrames = BSS_Player->tailsFrames;
                 RSDK.SetSpriteAnimation(self->aniFrames, 4, &self->tailAnimator, true, 0);
@@ -125,8 +129,6 @@ void BSS_Player_Create(void *data)
                 RSDK.SetSpriteAnimation(self->aniFrames, 4, &self->tailAnimator, true, 0);
                 break;
 #endif
-            case ID_SONIC:
-            default: self->aniFrames = BSS_Player->sonicFrames; break;
         }
 
         // The BSS Player gets reset into P1 slot, no other player entities ever get set, so sidekick BSS player behaviour goes unused...
@@ -139,6 +141,7 @@ void BSS_Player_Create(void *data)
             self->controllerID = CONT_P1;
             self->sidekick     = false;
         }
+
         RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
     }
 }
@@ -162,6 +165,7 @@ void BSS_Player_StageLoad(void)
 void BSS_Player_ProcessP1Input(void)
 {
     RSDK_THIS(BSS_Player);
+
     if (self->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
@@ -277,6 +281,7 @@ void BSS_Player_ProcessP1Input(void)
 void BSS_Player_ProcessP2Input(void)
 {
     RSDK_THIS(BSS_Player);
+
     // EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
     BSS_Player->jumpPressState <<= 1;
     BSS_Player->jumpPressState |= self->jumpPress;
@@ -286,9 +291,16 @@ void BSS_Player_ProcessP2Input(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BSS_Player_EditorDraw(void) {}
+void BSS_Player_EditorDraw(void)
+{
+    RSDK_THIS(BSS_Player);
 
-void BSS_Player_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(BSS_Player->sonicFrames, 0, &self->animator, false, 0);
+
+    RSDK.DrawSprite(&self->animator, NULL, true);
+}
+
+void BSS_Player_EditorLoad(void) { BSS_Player->sonicFrames = RSDK.LoadSpriteAnimation("SpecialBS/Sonic.bin", SCOPE_STAGE); }
 #endif
 
 void BSS_Player_Serialize(void) {}

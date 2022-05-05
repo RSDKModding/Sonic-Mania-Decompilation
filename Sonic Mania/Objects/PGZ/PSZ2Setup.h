@@ -8,9 +8,9 @@ typedef enum { GENERICTRIGGER_PSZ2_PETALSINACTIVE, GENERICTRIGGER_PSZ2_PETALSACT
 // Object Class
 struct ObjectPSZ2Setup {
     RSDK_OBJECT
-    TABLE(int32 aniTileDelays[8], { 9, 7, 6, 7, 9, 7, 6, 7 });
-    int32 aniTileDelay;
-    int32 aniTileFrame;
+    TABLE(int32 petalAniDurationTable[8], { 9, 7, 6, 7, 9, 7, 6, 7 });
+    int32 petalAniDuration;
+    int32 petalAniFrame;
     bool32 petalBehaviourActive;
     int16 petalTimer;
     uint16 aniTiles1;
@@ -19,7 +19,7 @@ struct ObjectPSZ2Setup {
 
 // Entity Class
 struct EntityPSZ2Setup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -30,7 +30,7 @@ void PSZ2Setup_Update(void);
 void PSZ2Setup_LateUpdate(void);
 void PSZ2Setup_StaticUpdate(void);
 void PSZ2Setup_Draw(void);
-void PSZ2Setup_Create(void* data);
+void PSZ2Setup_Create(void *data);
 void PSZ2Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PSZ2Setup_EditorDraw(void);
@@ -44,4 +44,4 @@ void PSZ2Setup_TriggerCB_DeactivatePetalBehaviour(void);
 void PSZ2Setup_ActTransitionLoad(void);
 void PSZ2Setup_StageFinishCB(void);
 
-#endif //!OBJ_PSZ2SETUP_H
+#endif //! OBJ_PSZ2SETUP_H

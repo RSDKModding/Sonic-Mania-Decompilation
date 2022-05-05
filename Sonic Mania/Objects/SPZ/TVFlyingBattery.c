@@ -12,11 +12,13 @@ ObjectTVFlyingBattery *TVFlyingBattery;
 void TVFlyingBattery_Update(void)
 {
     RSDK_THIS(TVFlyingBattery);
+
     RSDK.ProcessAnimation(&self->bladeLAnimator);
     RSDK.ProcessAnimation(&self->bladeRAnimator);
 
     self->position.x += 0x10000;
     self->position.y += RSDK.Sin256(2 * self->oscillation) << 6;
+
     self->oscillation = (self->oscillation + 1) & 0x7FFF;
 }
 
@@ -51,6 +53,7 @@ void TVFlyingBattery_Draw(void)
     int32 x                    = (weatherTV->position.x >> 16) - ScreenInfo->position.x;
     int32 y                    = (weatherTV->position.y >> 16) - ScreenInfo->position.y;
     RSDK.SetClipBounds(0, x - 96, y - 64, x + 96, y + 64);
+
     TVFlyingBattery_DrawSprites();
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
@@ -58,6 +61,7 @@ void TVFlyingBattery_Draw(void)
 void TVFlyingBattery_Create(void *data)
 {
     RSDK_THIS(TVFlyingBattery);
+
     self->active        = ACTIVE_NEVER;
     self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
@@ -72,8 +76,10 @@ void TVFlyingBattery_Create(void *data)
 
 void TVFlyingBattery_StageLoad(void)
 {
-    TVFlyingBattery->active     = ACTIVE_ALWAYS;
-    TVFlyingBattery->aniFrames  = RSDK.LoadSpriteAnimation("SPZ2/TVFlyingBattery.bin", SCOPE_STAGE);
+    TVFlyingBattery->active = ACTIVE_ALWAYS;
+
+    TVFlyingBattery->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/TVFlyingBattery.bin", SCOPE_STAGE);
+
     TVFlyingBattery->sfxFlyover = RSDK.GetSfx("SPZ/Flyover.wav");
 
     TVFlyingBattery->weatherTV = NULL;
@@ -109,25 +115,26 @@ void TVFlyingBattery_DrawSection(Vector2 drawPos, bool32 flipBlades)
 void TVFlyingBattery_DrawSprites(void)
 {
     RSDK_THIS(TVFlyingBattery);
-    Vector2 drawPos, drawPos2;
+    Vector2 drawPos;
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     RSDK.SetSpriteAnimation(TVFlyingBattery->aniFrames, 0, &self->shipAnimator, true, 1);
     RSDK.DrawSprite(&self->shipAnimator, &drawPos, false);
 
-    for (int32 i = 0; i < 3; ++i) {
-        drawPos2.x = drawPos.x;
-        drawPos2.y = drawPos.y;
+    for (int32 s = 0; s < 3; ++s) {
+        Vector2 sectionDrawPos;
+        sectionDrawPos.x = drawPos.x;
+        sectionDrawPos.y = drawPos.y;
 
         RSDK.SetSpriteAnimation(TVFlyingBattery->aniFrames, 0, &self->shipAnimator, true, 0);
-        RSDK.DrawSprite(&self->shipAnimator, &drawPos2, false);
+        RSDK.DrawSprite(&self->shipAnimator, &sectionDrawPos, false);
 
-        drawPos2.x -= 0x300000;
-        TVFlyingBattery_DrawSection(drawPos2, false);
+        sectionDrawPos.x -= 0x300000;
+        TVFlyingBattery_DrawSection(sectionDrawPos, false);
 
-        drawPos2.x -= 0x600000;
-        TVFlyingBattery_DrawSection(drawPos2, true);
+        sectionDrawPos.x -= 0x600000;
+        TVFlyingBattery_DrawSection(sectionDrawPos, true);
 
         drawPos.x -= 0xC00000;
     }

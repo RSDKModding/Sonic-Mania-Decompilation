@@ -287,12 +287,16 @@ void BuzzBomber_EditorDraw(void)
     BuzzBomber_Draw();
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
         self->hitboxRange.right  = self->shotRange;
         self->hitboxRange.left   = -self->shotRange;
         self->hitboxRange.top    = -256;
         self->hitboxRange.bottom = 256;
 
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxRange, FLIP_NONE, 0xFF0000);
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

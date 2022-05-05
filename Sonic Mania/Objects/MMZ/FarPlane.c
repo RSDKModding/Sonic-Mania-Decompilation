@@ -295,26 +295,11 @@ void FarPlane_EditorDraw(void)
     self->updateRange.x = self->size.x << 1;
     self->updateRange.y = self->size.y << 1;
 
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 
-    drawPos.x = self->origin.x;
-    drawPos.y = self->origin.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    DrawHelpers_DrawRectOutline(self->origin.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 
-    DrawHelpers_DrawArrow(self->position.x, self->position.y, self->origin.x, self->origin.y, 0x00FF00);
+    DrawHelpers_DrawArrow(self->position.x, self->position.y, self->origin.x, self->origin.y, 0x00FF00, INK_NONE, 0xFF);
 }
 
 void FarPlane_EditorLoad(void) {}

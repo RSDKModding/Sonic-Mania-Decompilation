@@ -4,7 +4,9 @@
 namespace RSDK
 {
 
-#define SPRFILE_COUNT (0x400)
+#define SPRFILE_COUNT     (0x400)
+#define SPRITEFRAME_COUNT (0x400)
+#define SPRITEANIM_COUNT  (0x40)
 
 #define FRAMEHITBOX_COUNT (0x8)
 
@@ -129,7 +131,7 @@ inline void SetSpriteAnimation(uint16 aniFrames, uint16 animationID, Animator *a
     if (animator->frames == frames && !forceApply)
         return;
 
-    animator->frames       = frames;
+    animator->frames          = frames;
     animator->timer           = 0;
     animator->frameID         = frameID;
     animator->frameCount      = anim->frameCount;

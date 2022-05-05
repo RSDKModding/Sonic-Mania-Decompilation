@@ -20,6 +20,7 @@ void DNARiser_Update(void)
         self->sfxTimer--;
 
     StateMachine_Run(self->state);
+
     if (self->popped) {
         if (self->popAnimator.frameID == self->popAnimator.loopIndex)
             self->popped = false;
@@ -38,6 +39,7 @@ void DNARiser_StaticUpdate(void)
 void DNARiser_Draw(void)
 {
     RSDK_THIS(DNARiser);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -48,6 +50,7 @@ void DNARiser_Create(void *data)
     self->active    = ACTIVE_BOUNDS;
     self->drawOrder = Zone->objectDrawLow + 1;
     self->amplitude = 0x2E0000;
+
     if (SceneInfo->inEditor) {
         self->speed.x = 0;
         if (!self->speed.y)
@@ -55,6 +58,7 @@ void DNARiser_Create(void *data)
         if (!self->height)
             self->height = 128;
     }
+
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->state         = DNARiser_State_Setup;
@@ -63,11 +67,14 @@ void DNARiser_Create(void *data)
 void DNARiser_StageLoad(void)
 {
     DNARiser->aniFrames     = RSDK.LoadSpriteAnimation("CPZ/DNARiser.bin", SCOPE_STAGE);
+
     DNARiser->hitbox.top    = -16;
     DNARiser->hitbox.bottom = 16;
     DNARiser->hitbox.left   = -16;
     DNARiser->hitbox.right  = 16;
+
     DNARiser->active        = ACTIVE_ALWAYS;
+
     DNARiser->sfxBurst      = RSDK.GetSfx("CPZ/DNABurst.wav");
     DNARiser->sfxGrab       = RSDK.GetSfx("CPZ/DNAGrab.wav");
     DNARiser->sfxScan       = RSDK.GetSfx("CPZ/DNAScan.wav");
@@ -82,7 +89,9 @@ void DNARiser_StageLoad(void)
 void DNARiser_State_BubbleBurst(void)
 {
     RSDK_THIS(DNARiser);
+
     RSDK.PlaySfx(DNARiser->sfxBurst, false, 255);
+
     self->popPos = self->position;
     self->popped = true;
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &self->popAnimator, true, 0);
@@ -91,10 +100,9 @@ void DNARiser_State_BubbleBurst(void)
 void DNARiser_SetupBurst(void)
 {
     RSDK_THIS(DNARiser);
-    RSDK.PlaySfx(DNARiser->sfxBurst, false, 255);
-    self->popPos = self->position;
-    self->popped = true;
-    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &self->popAnimator, true, 0);
+
+    DNARiser_State_BubbleBurst();
+
     self->maxSpeed        = self->speed;
     self->noBubbleScaling = true;
     self->velocity.x      = 0;
@@ -125,6 +133,7 @@ Vector2 DNARiser_CalculateScale(Vector2 *scalePtr)
 void DNARiser_State_Setup(void)
 {
     RSDK_THIS(DNARiser);
+
     self->startPos        = self->position;
     self->active          = ACTIVE_BOUNDS;
     self->speed.x         = 0;
@@ -144,7 +153,7 @@ void DNARiser_State_Setup(void)
     self->velocity.y      = 0;
     self->stateDraw       = DNARiser_Draw_Main;
     self->state           = DNARiser_State_HandleInteractions;
-    self->bubbleScale     = 512;
+    self->bubbleScale     = 0x200;
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &self->bubbleAnimator, true, 0);
     DNARiser_State_HandleInteractions();
 }
@@ -201,12 +210,10 @@ void DNARiser_State_HelixRise(void)
         DNARiser_SetupBurst();
     }
     else {
-        if (self->velocity.y >= abs(self->speed.y)) {
+        if (self->velocity.y >= abs(self->speed.y))
             self->velocity.y = abs(self->speed.y);
-        }
-        else {
+        else
             self->velocity.y += 0x1200;
-        }
 
         self->risePos += self->velocity.y;
         if (self->height << 16 < self->risePos)
@@ -228,38 +235,30 @@ void DNARiser_State_HelixRise(void)
                 if (!self->sfxTimer) {
                     int32 sfxID = 0;
                     if (!self->lastSfxID) {
-                        do
-#if RETRO_USE_PLUS
-                            sfxID = RSDK.RandSeeded(0, 5, &Zone->randSeed);
-#else
-                            sfxID = RSDK.Rand(0, 5);
-#endif
-                        while (sfxID == self->lastSfxID);
+                        while (sfxID == self->lastSfxID) sfxID = ZONE_RAND(0, 5);
                     }
+
                     RSDK.PlaySfx(DNARiser->sfxTiny[sfxID], false, 255);
                     self->lastSfxID = sfxID;
-#if RETRO_USE_PLUS
-                    self->sfxTimer = RSDK.RandSeeded(2, 8, &Zone->randSeed);
-#else
-                    self->sfxTimer = RSDK.Rand(2, 8);
-#endif
+                    self->sfxTimer  = ZONE_RAND(2, 8);
                 }
+
                 EntityDNARiser *child = CREATE_ENTITY(DNARiser, self, self->startPos.x, self->startPos.y - (self->helixPos << 18));
                 child->state          = DNARiser_State_OrbSetup;
                 child->active         = ACTIVE_NORMAL;
                 child->startHelixPos  = self->helixPos;
-                child->parent         = (Entity *)self;
+                child->parent         = self;
                 child->angle          = (((0x57262 * (4 * self->helixPos)) >> 16) + 100) & 0x3FF;
                 child->amplitude      = 0x2E0000;
                 child->drawOrder      = self->drawOrder - 1;
                 if (!self->firstChild)
-                    self->firstChild = (Entity *)child;
+                    self->firstChild = child;
 
                 if (self->child) {
-                    child->lastChild                         = self->child;
-                    ((EntityDNARiser *)self->child)->sibling = (Entity *)child;
+                    child->lastChild     = self->child;
+                    self->child->sibling = child;
                 }
-                self->child = (Entity *)child;
+                self->child = child;
             }
         }
     }
@@ -342,7 +341,7 @@ void DNARiser_State_HelixBurst(void)
     if (self->timer <= 0) {
         if (!self->timer) {
             if (!self->canDestroySelf) {
-                EntityDNARiser *child = (EntityDNARiser *)self->child;
+                EntityDNARiser *child = self->child;
                 if (child) {
                     self->canDestroySelf = true;
                     child->timer         = 0;
@@ -377,6 +376,7 @@ void DNARiser_State_HelixBurst(void)
 void DNARiser_State_ResetRiser(void)
 {
     RSDK_THIS(DNARiser);
+
     if (!self->firstChild) {
         if (self->timer <= 0) {
             if (RSDK.CheckOnScreen(self, &self->updateRange)) {
@@ -397,6 +397,7 @@ void DNARiser_State_ResetRiser(void)
 void DNARiser_State_OrbSetup(void)
 {
     RSDK_THIS(DNARiser);
+
     self->active    = ACTIVE_NORMAL;
     self->stateDraw = DNARiser_Draw_Helix;
     self->state     = DNARiser_State_OrbIdle;
@@ -407,7 +408,7 @@ void DNARiser_State_OrbIdle(void) {}
 void DNARiser_State_OrbFall(void)
 {
     RSDK_THIS(DNARiser);
-    EntityDNARiser *parent = (EntityDNARiser *)self->parent;
+    EntityDNARiser *parent = self->parent;
 
     if (self->timer <= 0) {
         if (self->canDestroySelf) {
@@ -415,7 +416,7 @@ void DNARiser_State_OrbFall(void)
                 destroyEntity(self);
         }
         else {
-            EntityDNARiser *child = (EntityDNARiser *)self->lastChild;
+            EntityDNARiser *child = self->lastChild;
             self->canDestroySelf  = true;
             if (child) {
                 while (true) {
@@ -429,10 +430,12 @@ void DNARiser_State_OrbFall(void)
                         break;
                     }
                     else {
-                        EntityDNARiser *grandChild = (EntityDNARiser *)child->lastChild;
-                        if (child == (EntityDNARiser *)parent->child)
-                            parent->child = (Entity *)grandChild;
+                        EntityDNARiser *grandChild = child->lastChild;
+
+                        if (child == parent->child)
+                            parent->child = grandChild;
                         destroyEntity(child);
+
                         child = grandChild;
                         if (!grandChild)
                             break;
@@ -440,9 +443,8 @@ void DNARiser_State_OrbFall(void)
                 }
             }
 
-            if (!child) {
+            if (!child)
                 parent->firstChild = NULL;
-            }
 
             if (self->canDestroySelf) {
                 if (!RSDK.CheckOnScreen(self, &self->updateRange))
@@ -453,6 +455,7 @@ void DNARiser_State_OrbFall(void)
     else {
         self->timer--;
     }
+
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
     self->amplitude += 0x20000;
@@ -504,6 +507,7 @@ void DNARiser_Draw_Main(void)
             self->scale = DNARiser_CalculateScale(&scale);
             RSDK.DrawSprite(&self->bubbleAnimator, &drawPos, false);
         }
+
         if (self->popped) {
             drawPos         = self->popPos;
             self->scale.x   = 0x200;
@@ -533,7 +537,7 @@ void DNARiser_Draw_Helix(void)
     RSDK_THIS(DNARiser);
 
     bool32 isYellowBig     = false;
-    EntityDNARiser *parent = (EntityDNARiser *)self->parent;
+    EntityDNARiser *parent = self->parent;
 
     Animator orbAnimator;
     memset(&orbAnimator, 0, sizeof(orbAnimator));
@@ -629,7 +633,7 @@ void DNARiser_EditorDraw(void)
     self->velocity.x      = 0;
     self->speed.y         = -abs(self->speed.y);
     self->timer           = 0;
-    self->risePos         = 0;
+    self->risePos         = self->height << 16;
     self->canDestroySelf  = false;
     self->firstChild      = NULL;
     self->child           = 0;
@@ -643,7 +647,30 @@ void DNARiser_EditorDraw(void)
     self->bubbleScale     = 0x200;
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &self->bubbleAnimator, true, 0);
 
+    int32 group = SceneInfo->currentDrawGroup;
+
+    SceneInfo->currentDrawGroup = -1;
     DNARiser_Draw_Main();
+
+    SceneInfo->currentDrawGroup = Zone->objectDrawHigh;
+    DNARiser_Draw_Main();
+
+    SceneInfo->currentDrawGroup = group;
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        Vector2 drawPos;
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y - self->risePos;
+
+        RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &self->bubbleAnimator, true, 0);
+        RSDK.DrawSprite(&self->bubbleAnimator, &drawPos, false);
+
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, drawPos.x, drawPos.y, 0xFFFF00, INK_NONE, 0xFF);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void DNARiser_EditorLoad(void) { DNARiser->aniFrames = RSDK.LoadSpriteAnimation("CPZ/DNARiser.bin", SCOPE_STAGE); }

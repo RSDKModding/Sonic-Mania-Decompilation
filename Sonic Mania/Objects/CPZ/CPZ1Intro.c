@@ -12,6 +12,7 @@ ObjectCPZ1Intro *CPZ1Intro;
 void CPZ1Intro_Update(void)
 {
     RSDK_THIS(CPZ1Intro);
+
     if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
             destroyEntity(CPZ1Intro->fxRuby);
@@ -22,6 +23,7 @@ void CPZ1Intro_Update(void)
             CutsceneSeq_StartSequence(self, CPZ1Intro_Cutscene_RubyWarp, CPZ1Intro_Cutscene_PostWarpDrop, CPZ1Intro_Cutscene_Waiting,
                                       CPZ1Intro_Cutscene_ChemicalDrop, CPZ1Intro_Cutscene_PlayerChemicalReact, CPZ1Intro_Cutscene_ReadyStage,
                                       StateMachine_None);
+
 #if RETRO_USE_PLUS
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             if (seq->objectID)
@@ -43,35 +45,35 @@ void CPZ1Intro_Create(void *data)
 
     INIT_ENTITY(self);
     CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
-    self->active        = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
 }
 
 void CPZ1Intro_StageLoad(void)
 {
-    CPZ1Intro->playerFrames        = RSDK.LoadSpriteAnimation("Players/CutsceneCPZ.bin", SCOPE_STAGE);
+    CPZ1Intro->playerFrames   = RSDK.LoadSpriteAnimation("Players/CutsceneCPZ.bin", SCOPE_STAGE);
     CPZ1Intro->particleFrames = RSDK.LoadSpriteAnimation("CPZ/Particles.bin", SCOPE_STAGE);
+
     foreach_all(FXRuby, fxRuby)
     {
-        CPZ1Intro->fxRuby = (Entity *)fxRuby;
+        CPZ1Intro->fxRuby = fxRuby;
         foreach_break;
     }
+
     CPZ1Intro->sfxChemDrop = RSDK.GetSfx("CPZ/ChemDrop.wav");
     CPZ1Intro->sfxDNABurst = RSDK.GetSfx("CPZ/DNABurst.wav");
 }
 
-void CPZ1Intro_Particle_CB(Entity *d)
+void CPZ1Intro_Particle_CB(EntityDebris *debris)
 {
-    EntityDebris *debris = (EntityDebris *)d;
     debris->velocity.y += RSDK.Rand(-0x28000, -0x20000);
     RSDK.SetSpriteAnimation(CPZ1Intro->particleFrames, 1, &debris->animator, true, 0);
 }
 
-void CPZ1Intro_HandleRubyHover(Entity *player1, Entity *cutSeq, Entity *player2, int32 targetY)
+void CPZ1Intro_HandleRubyHover(EntityCutsceneSeq *cutsceneSequence, EntityPlayer *player1, EntityPlayer *player2, int32 targetY)
 {
     EntityPlayer *players[2];
-    players[0]             = (EntityPlayer *)player1;
-    players[1]             = (EntityPlayer *)player2;
-    EntityCutsceneSeq *seq = (EntityCutsceneSeq *)cutSeq;
+    players[0] = player1;
+    players[1] = player2;
 
     int32 id = 0;
     for (int32 angle = 0; angle < 0x80; angle += 0x40) {
@@ -79,11 +81,11 @@ void CPZ1Intro_HandleRubyHover(Entity *player1, Entity *cutSeq, Entity *player2,
         if (!player)
             break;
 
-        int32 valX = (player->position.x - player->position.x) >> 3;
-        int32 valY = (targetY + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->storedTimer)) - player->position.y) >> 3;
+        int32 velX = (player->position.x - player->position.x) >> 3;
+        int32 velY = (targetY + 0xA00 * RSDK.Sin256(2 * (angle + cutsceneSequence->timer - cutsceneSequence->storedTimer)) - player->position.y) >> 3;
+        player->position.x += velX;
+        player->position.y += velY;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-        player->position.x += valX;
-        player->position.y += valY;
         player->state = Player_State_None;
     }
 }
@@ -111,6 +113,7 @@ bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
         return true;
     }
 #else
+    // Same Code as 2P AI, it's unknown why tails' anim was cut in pre-plus, but it's in plus so hooray
     if (timer == 60) {
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
         player1->up = false;
@@ -149,17 +152,16 @@ bool32 CPZ1Intro_CheckRayAnimFinish(void)
 }
 #endif
 
-bool32 CPZ1Intro_Cutscene_RubyWarp(void *h)
+bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
 
-    Entity *ent          = host->activeEntity;
-    EntityFXRuby *fxRuby = (EntityFXRuby *)CPZ1Intro->fxRuby;
+    Entity *entity       = host->activeEntity;
+    EntityFXRuby *fxRuby = CPZ1Intro->fxRuby;
     if (!host->timer) {
         player1->camera = NULL;
         camera->position.y -= 0x40000;
-        camera->target   = 0;
+        camera->target      = 0;
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         player1->velocity.x = 0;
@@ -186,7 +188,7 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(void *h)
             if (!host->values[0]) {
                 PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                 host->values[0] = 1;
-                fxRuby->state     = FXRuby_State_ShrinkRing;
+                fxRuby->state   = FXRuby_State_ShrinkRing;
             }
 
             if (!fxRuby->outerRadius) {
@@ -198,18 +200,17 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(void *h)
             }
         }
     }
-    CPZ1Intro_HandleRubyHover((Entity *)player1, (Entity *)host, (Entity *)player2, ent->position.y - 0x200000);
+
+    CPZ1Intro_HandleRubyHover(host, player1, player2, host->activeEntity->position.y - 0x200000);
 
     return false;
 }
 
-bool32 CPZ1Intro_Cutscene_PostWarpDrop(void *h)
+bool32 CPZ1Intro_Cutscene_PostWarpDrop(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(host);
     unused(camera);
-
 
     if (player2->objectID == Player->objectID) {
         if (player1->onGround && player2->onGround)
@@ -219,12 +220,12 @@ bool32 CPZ1Intro_Cutscene_PostWarpDrop(void *h)
         if (player1->onGround)
             return true;
     }
+
     return false;
 }
 
-bool32 CPZ1Intro_Cutscene_Waiting(void *h)
+bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
@@ -242,30 +243,29 @@ bool32 CPZ1Intro_Cutscene_Waiting(void *h)
         else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED1, &player1->animator, false, 0);
     }
+
     return host->timer == 60;
 }
 
-bool32 CPZ1Intro_Cutscene_ChemicalDrop(void *h)
+bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-
     if (!host->timer) {
         RSDK.PlaySfx(CPZ1Intro->sfxChemDrop, false, 255);
-        EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, player1->position.x + 0x20000, (ScreenInfo->position.y - 8) << 16);
-        debris->updateRange.x = 0x800000;
-        debris->updateRange.y = 0x800000;
-        debris->active        = ACTIVE_NORMAL;
-        debris->drawOrder     = Zone->playerDrawHigh;
-        debris->state         = Debris_State_Fall;
-        debris->gravityStrength       = 0x3800;
+        EntityDebris *debris    = CREATE_ENTITY(Debris, NULL, player1->position.x + 0x20000, (ScreenInfo->position.y - 8) << 16);
+        debris->updateRange.x   = 0x800000;
+        debris->updateRange.y   = 0x800000;
+        debris->active          = ACTIVE_NORMAL;
+        debris->drawOrder       = Zone->playerDrawHigh;
+        debris->state           = Debris_State_Fall;
+        debris->gravityStrength = 0x3800;
         RSDK.SetSpriteAnimation(CPZ1Intro->particleFrames, 0, &debris->animator, true, 0);
-        CPZ1Intro->debris = (Entity *)debris;
+        CPZ1Intro->debris = debris;
     }
 
-    EntityDebris *debris = (EntityDebris *)CPZ1Intro->debris;
+    EntityDebris *debris = CPZ1Intro->debris;
     Hitbox *playerHitbox = Player_GetHitbox(player1);
 
     int32 playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
@@ -273,17 +273,18 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(void *h)
         RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, false, 255);
         ParticleHelpers_SetupFallingParticles(debris->position.x, playerY);
         destroyEntity(debris);
+
         if (checkPlayerID(ID_TAILS, 2))
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);
+
         return true;
     }
 
     return false;
 }
 
-bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
+bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
@@ -295,8 +296,8 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
-            case ID_TAILS: 
-                CPZ1Intro->playerAnimID = 1;
+
+            case ID_TAILS: CPZ1Intro->playerAnimID = 1;
 #if RETRO_USE_PLUS
                 player1->state          = Player_State_None;
                 player1->tileCollisions = false;
@@ -305,10 +306,12 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
                 player1->animator.animationID     = 0xFF;
                 player1->animator.prevAnimationID = 0xFF;
 #else
+                // Same Code as 2P AI, it's unknown why tails' anim was cut in pre-plus, but it's in plus so hooray
                 RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, true, 0);
                 player1->up    = true;
                 player1->state = Player_State_LookUp;
 #endif
+
                 break;
             case ID_KNUCKLES:
                 CPZ1Intro->playerAnimID = 2;
@@ -316,6 +319,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
+
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
                 CPZ1Intro->playerAnimID = 3;
@@ -323,6 +327,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
+
             case ID_RAY:
                 CPZ1Intro->playerAnimID = 4;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
@@ -349,16 +354,17 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
 #endif
         default: break;
     }
+
     return false;
 }
 
-bool32 CPZ1Intro_Cutscene_ReadyStage(void *h)
+bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
+
         if (player2->objectID == Player->objectID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             player2->up = false;
@@ -371,7 +377,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(void *h)
         player1->onGround       = true;
         player1->state          = Player_State_Ground;
         player1->camera         = camera;
-        camera->target       = (Entity *)player1;
+        camera->target          = (Entity *)player1;
         camera->state           = Camera_State_Follow;
         if (player2->objectID == Player->objectID) {
             player2->stateInput     = Player_ProcessP2Input_AI;
@@ -383,11 +389,12 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(void *h)
         foreach_all(TitleCard, titlecard)
         {
             titlecard->active    = ACTIVE_NORMAL;
-            titlecard->state     = TitleCard_State_Initial;
+            titlecard->state     = TitleCard_State_SetupBGElements;
             titlecard->stateDraw = TitleCard_Draw_SlideIn;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;
         }
+
         return true;
     }
 

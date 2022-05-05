@@ -32,9 +32,9 @@ struct ObjectUIKeyBinder {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFail;
-    Entity *activeBinder;
-    int32 curInputID;
-    int32 curMappings;
+    EntityUIKeyBinder *activeBinder;
+    int32 activeInputID;
+    int32 activeButtonID;
     bool32 isSelected;
 };
 
@@ -68,7 +68,7 @@ void UIKeyBinder_Update(void);
 void UIKeyBinder_LateUpdate(void);
 void UIKeyBinder_StaticUpdate(void);
 void UIKeyBinder_Draw(void);
-void UIKeyBinder_Create(void* data);
+void UIKeyBinder_Create(void *data);
 void UIKeyBinder_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIKeyBinder_EditorDraw(void);
@@ -97,4 +97,4 @@ void UIKeyBinder_State_Selected(void);
 void UIKeyBinder_MoveKeyToActionCB_No(void);
 void UIKeyBinder_MoveKeyToActionCB_Yes(void);
 
-#endif //!OBJ_UIKEYBINDER_H
+#endif //! OBJ_UIKEYBINDER_H

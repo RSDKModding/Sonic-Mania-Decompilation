@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define PAUSEMENU_BUTTON_COUNT (3)
+
 // Object Class
 struct ObjectPauseMenu {
     RSDK_OBJECT
@@ -11,7 +13,7 @@ struct ObjectPauseMenu {
     bool32 disableEvents;
     bool32 controllerDisconnect;
     bool32 forcedDisconnect;
-    bool32 signoutDetected;
+    bool32 signOutDetected;
 #if RETRO_USE_PLUS
     bool32 plusChanged;
 #endif
@@ -34,15 +36,15 @@ struct EntityPauseMenu {
     uint8 triggerPlayer;
     bool32 disableRestart;
     int32 buttonCount;
-    uint8 buttonIDs[3];
-    void (*buttonActions[3])(void);
-    EntityUIButton* buttonPtrs[3];
+    uint8 buttonIDs[PAUSEMENU_BUTTON_COUNT];
+    void (*buttonActions[PAUSEMENU_BUTTON_COUNT])(void);
+    EntityUIButton *buttonPtrs[PAUSEMENU_BUTTON_COUNT];
     int32 paused;
     int32 fadeTimer;
     bool32 (*disconnectCheck)(void);
     int32 forcePaused;
     Animator animator;
-    void (*fadeCB)(void);
+    void (*fadeoutCB)(void);
     int32 unused1;
     int32 unused2; // these may possibly be leftover or editor things 
 };
@@ -111,12 +113,12 @@ void PauseMenu_State_ForcedResumeCompetition(void);
 
 void PauseMenu_State_SetupTitleFade(void);
 void PauseMenu_State_FadeToTitle(void);
-void PauseMenu_State_FadeToCB(void);
+void PauseMenu_State_HandleFadeout(void);
 
 // Draw States
-void PauseMenu_DrawPauseQuads(void);
-void PauseMenu_Draw_Default(void);
+void PauseMenu_DrawPauseMenu(void);
+void PauseMenu_Draw_RegularPause(void);
 
-void PauseMenu_Draw_JustTint(void);
+void PauseMenu_Draw_ForcePause(void);
 
 #endif //!OBJ_PAUSEMENU_H

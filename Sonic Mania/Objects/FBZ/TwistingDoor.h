@@ -8,7 +8,7 @@ typedef enum {
     TWISTINGDOOR_H_SHORT,
     TWISTINGDOOR_H_LONG,
     TWISTINGDOOR_V_LONG,
-}TwistingDoorTypes;
+} TwistingDoorTypes;
 
 // Object Class
 struct ObjectTwistingDoor {
@@ -54,7 +54,7 @@ void TwistingDoor_Update(void);
 void TwistingDoor_LateUpdate(void);
 void TwistingDoor_StaticUpdate(void);
 void TwistingDoor_Draw(void);
-void TwistingDoor_Create(void* data);
+void TwistingDoor_Create(void *data);
 void TwistingDoor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TwistingDoor_EditorDraw(void);
@@ -68,4 +68,4 @@ void TwistingDoor_State_Opening(void);
 void TwistingDoor_State_Opened(void);
 void TwistingDoor_State_Closing(void);
 
-#endif //!OBJ_TWISTINGDOOR_H
+#endif //! OBJ_TWISTINGDOOR_H

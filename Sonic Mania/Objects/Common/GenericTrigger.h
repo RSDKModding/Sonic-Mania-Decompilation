@@ -5,7 +5,7 @@
 
 typedef enum {
     GENERICTRIGGER_NONE,
-}GenericTriggerIDs;
+} GenericTriggerIDs;
 
 // Object Class
 struct ObjectGenericTrigger {
@@ -32,7 +32,7 @@ void GenericTrigger_Update(void);
 void GenericTrigger_LateUpdate(void);
 void GenericTrigger_StaticUpdate(void);
 void GenericTrigger_Draw(void);
-void GenericTrigger_Create(void* data);
+void GenericTrigger_Create(void *data);
 void GenericTrigger_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GenericTrigger_EditorDraw(void);
@@ -42,5 +42,4 @@ void GenericTrigger_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_GENERICTRIGGER_H
+#endif //! OBJ_GENERICTRIGGER_H

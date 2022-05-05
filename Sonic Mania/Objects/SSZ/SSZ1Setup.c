@@ -25,13 +25,15 @@ void SSZ1Setup_Create(void *data) {}
 
 void SSZ1Setup_StageLoad(void)
 {
+    // The low lake style bg
     SSZ1Setup->background2 = RSDK.GetSceneLayer(1);
-    int32 id               = 0;
+
+    int32 id = 0;
     for (int32 i = 0; i < 0x200; ++i) {
         SSZ1Setup->background2->deformationData[i] = (8 * RSDK.Sin1024(id)) >> 10;
         id += 8;
     }
-    memcpy(SSZ1Setup->background2->deformationData + 0x200, SSZ1Setup->background2->deformationData, 0x200 * sizeof(int32));
+    memcpy(&SSZ1Setup->background2->deformationData[0x200], &SSZ1Setup->background2->deformationData[0], 0x200 * sizeof(int32));
 
     Animals->animalTypes[0]      = ANIMAL_FLICKY;
     Animals->animalTypes[1]      = ANIMAL_RICKY;
@@ -49,7 +51,7 @@ void SSZ1Setup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         foreach_all(SSZ1Outro, outro)
         {
-            SSZ1Setup->outroPtr = outro;
+            SSZ1Setup->outro = outro;
             foreach_break;
         }
         Zone->stageFinishCallback = SSZ1Setup_StageFinishCB;
@@ -63,7 +65,7 @@ void SSZ1Setup_StageLoad(void)
 #endif
 }
 
-void SSZ1Setup_StageFinishCB(void) { SSZ1Setup->outroPtr->active = ACTIVE_NORMAL; }
+void SSZ1Setup_StageFinishCB(void) { SSZ1Setup->outro->active = ACTIVE_NORMAL; }
 
 #if RETRO_INCLUDE_EDITOR
 void SSZ1Setup_EditorDraw(void) {}

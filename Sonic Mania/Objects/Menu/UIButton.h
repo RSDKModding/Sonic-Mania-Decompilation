@@ -3,10 +3,15 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UIBUTTON_ALIGN_LEFT,
+    UIBUTTON_ALIGN_CENTER,
+    UIBUTTON_ALIGN_RIGHT,
+} UIButtonAlignments;
 
 // Object Class
 struct ObjectUIButton {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -48,7 +53,7 @@ void UIButton_Update(void);
 void UIButton_LateUpdate(void);
 void UIButton_StaticUpdate(void);
 void UIButton_Draw(void);
-void UIButton_Create(void* data);
+void UIButton_Create(void *data);
 void UIButton_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIButton_EditorDraw(void);
@@ -58,9 +63,9 @@ void UIButton_Serialize(void);
 
 // Extra Entity Functions
 void UIButton_ManageChoices(EntityUIButton *button);
-EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 a2);
-void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 a2);
-void UIButton_SetChoiceSelection(EntityUIButton *button, int32 a2);
+EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 selection);
+void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection);
+void UIButton_SetChoiceSelection(EntityUIButton *button, int32 selection);
 void *UIButton_GetActionCB(void);
 void UIButton_FailCB(void);
 void UIButton_ProcessButtonCB_Scroll(void);
@@ -76,4 +81,4 @@ void UIButton_State_HandleButtonLeave(void);
 void UIButton_State_HandleButtonEnter(void);
 void UIButton_State_Selected(void);
 
-#endif //!OBJ_UIBUTTON_H
+#endif //! OBJ_UIBUTTON_H

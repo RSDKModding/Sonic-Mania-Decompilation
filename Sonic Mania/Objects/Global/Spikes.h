@@ -46,7 +46,7 @@ struct EntitySpikes {
     int32 stateMove;
     int32 moveOffset;
     Vector2 collisionOffset;
-    int16 timer2;
+    int16 glintTimer;
     uint8 shatterTimer;
     Hitbox hitbox;
     Animator animator;
@@ -60,7 +60,7 @@ void Spikes_Update(void);
 void Spikes_LateUpdate(void);
 void Spikes_StaticUpdate(void);
 void Spikes_Draw(void);
-void Spikes_Create(void* data);
+void Spikes_Create(void *data);
 void Spikes_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Spikes_EditorDraw(void);
@@ -77,4 +77,4 @@ void Spikes_Shatter(int32 velX, int32 velY);
 void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY);
 #endif
 
-#endif //!OBJ_SPIKES_H
+#endif //! OBJ_SPIKES_H

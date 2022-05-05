@@ -27,7 +27,7 @@ void ForceUnstick_Update(void);
 void ForceUnstick_LateUpdate(void);
 void ForceUnstick_StaticUpdate(void);
 void ForceUnstick_Draw(void);
-void ForceUnstick_Create(void* data);
+void ForceUnstick_Create(void *data);
 void ForceUnstick_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ForceUnstick_EditorDraw(void);
@@ -38,5 +38,4 @@ void ForceUnstick_Serialize(void);
 // Extra Entity Functions
 void ForceUnstick_DrawSprites(void);
 
-
-#endif //!OBJ_FORCEUNSTICK_H
+#endif //! OBJ_FORCEUNSTICK_H

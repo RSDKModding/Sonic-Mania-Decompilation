@@ -12,15 +12,15 @@ struct ObjectShiversaw {
     uint8 invincibilityTimer;
     int32 timer;
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBoss;
+    Hitbox hitboxSaw;
     Hitbox hitboxR;
     Hitbox hitboxB;
     Hitbox hitboxT;
     Hitbox hitboxL;
 #if RETRO_USE_PLUS
-    Hitbox hitbox7;
-    Hitbox hitbox8;
+    Hitbox hitboxEntryTrigger;
+    Hitbox hitboxEntryBounds;
 #endif
     uint16 sfxHit;
     uint16 sfxExplosion2;

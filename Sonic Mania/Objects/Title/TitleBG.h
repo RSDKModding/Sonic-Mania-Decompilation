@@ -9,7 +9,7 @@ typedef enum {
     TITLEBG_REFLECTION,
     TITLEBG_WATERSPARKLE,
     TITLEBG_WINGSHINE,
-}TitleBGTypes;
+} TitleBGTypes;
 
 // Object Class
 struct ObjectTitleBG {
@@ -36,7 +36,7 @@ void TitleBG_Update(void);
 void TitleBG_LateUpdate(void);
 void TitleBG_StaticUpdate(void);
 void TitleBG_Draw(void);
-void TitleBG_Create(void* data);
+void TitleBG_Create(void *data);
 void TitleBG_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TitleBG_EditorDraw(void);
@@ -46,7 +46,7 @@ void TitleBG_Serialize(void);
 
 // Extra Entity Functions
 void TitleBG_SetupFX(void);
-void TitleBG_Clouds_ScanlineCB(ScanlineInfo *scanlines);
-void TitleBG_Island_ScanlineCB(ScanlineInfo *scanlines);
+void TitleBG_ScanlineCB_Clouds(ScanlineInfo *scanlines);
+void TitleBG_ScanlineCB_Island(ScanlineInfo *scanlines);
 
-#endif //!OBJ_TITLEBG_H
+#endif //! OBJ_TITLEBG_H

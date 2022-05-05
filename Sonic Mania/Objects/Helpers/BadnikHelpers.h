@@ -5,12 +5,12 @@
 
 // Object Class
 struct ObjectBadnikHelpers {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityBadnikHelpers {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Entity
@@ -21,7 +21,7 @@ void BadnikHelpers_Update(void);
 void BadnikHelpers_LateUpdate(void);
 void BadnikHelpers_StaticUpdate(void);
 void BadnikHelpers_Draw(void);
-void BadnikHelpers_Create(void* data);
+void BadnikHelpers_Create(void *data);
 void BadnikHelpers_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BadnikHelpers_EditorDraw(void);
@@ -30,12 +30,12 @@ void BadnikHelpers_EditorLoad(void);
 void BadnikHelpers_Serialize(void);
 
 // Extra Entity Functions
-//Handles oscillations
-int BadnikHelpers_Oscillate(int origin, int speed, int power);
+// Handles oscillations
+int BadnikHelpers_Oscillate(int origin, int speed, int amplitude);
 
-//Handles Boss Explosions
+// Handles Boss Explosions
 void BadnikHelpers_HandleExplode(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder);
 // Handles Boss Explosions (but assumes minMax is 16bit-shifted)
 void BadnikHelpers_HandleExplode16(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder);
 
-#endif //!OBJ_BADNIKHELPERS_H
+#endif //! OBJ_BADNIKHELPERS_H

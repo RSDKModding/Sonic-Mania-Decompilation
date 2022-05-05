@@ -8,7 +8,7 @@ typedef enum {
     EXPLOSION_ENEMY,
     EXPLOSION_BOSS,
     EXPLOSION_BOSSPUFF,
-}ExplosionTypes;
+} ExplosionTypes;
 
 // Object Class
 struct ObjectExplosion {
@@ -32,7 +32,7 @@ void Explosion_Update(void);
 void Explosion_LateUpdate(void);
 void Explosion_StaticUpdate(void);
 void Explosion_Draw(void);
-void Explosion_Create(void* data);
+void Explosion_Create(void *data);
 void Explosion_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Explosion_EditorDraw(void);
@@ -42,5 +42,4 @@ void Explosion_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_EXPLOSION_H
+#endif //! OBJ_EXPLOSION_H

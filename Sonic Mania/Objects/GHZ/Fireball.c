@@ -164,7 +164,7 @@ void Fireball_StateFireball_LauncherStatic(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(0x200 - self->rotation) << 10,
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, RSDK.Sin512(0x200 - self->rotation) << 10,
                                  RSDK.Cos512(0x200 - self->rotation) << 10, true)) {
         self->state = Fireball_StateFireball_Dissipate;
         RSDK.SetSpriteAnimation(Fireball->aniFrames, 1, &self->animator, true, 0);
@@ -190,7 +190,7 @@ void Fireball_StateFireball_LauncherGravity(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(0x200 - self->rotation) << 10,
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, RSDK.Sin512(0x200 - self->rotation) << 10,
                                  RSDK.Cos512(0x200 - self->rotation) << 10, true)) {
         self->state = Fireball_StateFireball_Dissipate;
         RSDK.SetSpriteAnimation(Fireball->aniFrames, 1, &self->animator, true, 0);

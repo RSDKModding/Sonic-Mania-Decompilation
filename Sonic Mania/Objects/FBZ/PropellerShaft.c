@@ -12,33 +12,33 @@ ObjectPropellerShaft *PropellerShaft;
 void PropellerShaft_Update(void)
 {
     RSDK_THIS(PropellerShaft);
+
     foreach_active(Player, player)
     {
-        int32 pID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
-        if (((1 << pID) & self->activePlayers)) {
+        if ((1 << playerID) & self->activePlayers) {
             if (!Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                player->state             = Player_State_Air;
-                self->playerTimers[pID] = 30;
-                self->activePlayers &= ~(1 << pID);
+                player->state                = Player_State_Air;
+                self->playerTimers[playerID] = 30;
+                self->activePlayers &= ~(1 << playerID);
             }
             else {
                 if (player->up) {
                     if (player->position.y > self->position.y - (self->size << 16) + 0x80000)
                         player->position.y -= 0x10000;
                 }
+
                 if (player->down) {
                     if (player->position.y < self->position.y + ((self->size - 8) << 16))
                         player->position.y += 0x10000;
                 }
+
                 if (player->jumpPress) {
-                    self->activePlayers &= ~(1 << pID);
-                    self->playerTimers[pID] = 30;
-                    if (player->left)
-                        player->velocity.x = -0x100000;
-                    else
-                        player->velocity.x = 0x100000;
-                    player->velocity.y = -0x18000;
+                    self->activePlayers &= ~(1 << playerID);
+                    self->playerTimers[playerID] = 30;
+                    player->velocity.x           = player->left ? -0x100000 : 0x100000;
+                    player->velocity.y           = -0x18000;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->drawOrder = Zone->playerDrawLow;
                     player->state     = Player_State_Air;
@@ -46,21 +46,24 @@ void PropellerShaft_Update(void)
             }
         }
         else {
-            if (self->playerTimers[pID]) {
-                self->playerTimers[pID]--;
+            if (self->playerTimers[playerID]) {
+                self->playerTimers[playerID]--;
             }
             else {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                    self->activePlayers |= 1 << pID;
+                    self->activePlayers |= 1 << playerID;
                     RSDK.PlaySfx(Player->sfxGrab, false, 255);
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;
+
                     player->position.x = self->position.x;
                     if (player->position.y < self->position.y - (self->size << 16) + 0x90000)
                         player->position.y = self->position.y - (self->size << 16) + 0x90000;
+
                     if (player->position.y > ((self->size - 9) << 16) + self->position.y)
                         player->position.y = ((self->size - 9) << 16) + self->position.y;
+
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHAFTSWING, &player->animator, false, 0);
                     player->rotation        = 0;
                     player->direction       = FLIP_NONE;
@@ -78,6 +81,7 @@ void PropellerShaft_Update(void)
 void PropellerShaft_LateUpdate(void)
 {
     RSDK_THIS(PropellerShaft);
+
     foreach_active(Player, player)
     {
         if (((1 << RSDK.GetEntityID(player)) & self->activePlayers)) {
@@ -96,14 +100,16 @@ void PropellerShaft_Draw(void) {}
 void PropellerShaft_Create(void *data)
 {
     RSDK_THIS(PropellerShaft);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawHigh;
-        self->updateRange.y = self->size << 16;
         self->updateRange.x = 0x400000;
-        self->hitbox.top    = -self->size;
+        self->updateRange.y = self->size << 16;
+
         self->hitbox.left   = -8;
+        self->hitbox.top    = -self->size;
         self->hitbox.right  = 8;
         self->hitbox.bottom = self->size;
     }
@@ -117,9 +123,7 @@ void PropellerShaft_EditorDraw(void)
     RSDK_THIS(PropellerShaft);
     self->drawOrder = Zone->objectDrawHigh;
 
-    if (showGizmos()) {
-        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, 16 << 16, self->size << 17, 0xFFFF00);
-    }
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, 16 << 16, self->size << 17, 0xFFFF00);
 }
 
 void PropellerShaft_EditorLoad(void) {}

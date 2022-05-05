@@ -13,7 +13,7 @@ void TitleBG_Update(void)
 {
     RSDK_THIS(TitleBG);
 
-    if (self->type == 4) {
+    if (self->type == TITLEBG_WINGSHINE) {
         self->position.y += 0x10000;
 
         ++self->timer;
@@ -59,13 +59,16 @@ void TitleBG_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(TitleBG->aniFrames, self->type, &self->animator, true, 0);
+
         self->active    = ACTIVE_NORMAL;
         self->visible   = false;
         self->drawOrder = 1;
         self->alpha     = 0xFF;
         self->drawFX    = FX_FLIP;
+
         switch (self->type) {
             case TITLEBG_MOUNTAIN2: self->inkEffect = INK_BLEND; break;
+
             case TITLEBG_REFLECTION:
             case TITLEBG_WATERSPARKLE:
                 self->inkEffect = INK_ADD;
@@ -84,6 +87,7 @@ void TitleBG_Create(void *data)
 void TitleBG_StageLoad(void)
 {
     TitleBG->aniFrames = RSDK.LoadSpriteAnimation("Title/Background.bin", SCOPE_STAGE);
+
     RSDK.SetPaletteEntry(0, 55, 0x202030);
 }
 
@@ -94,31 +98,33 @@ void TitleBG_SetupFX(void)
 
     TileLayer *cloudLayer        = RSDK.GetSceneLayer(2);
     cloudLayer->drawLayer[0]     = 0;
-    cloudLayer->scanlineCallback = TitleBG_Clouds_ScanlineCB;
+    cloudLayer->scanlineCallback = TitleBG_ScanlineCB_Clouds;
 
     TileLayer *islandLayer        = RSDK.GetSceneLayer(3);
     islandLayer->drawLayer[0]     = 1;
-    islandLayer->scanlineCallback = TitleBG_Island_ScanlineCB;
+    islandLayer->scanlineCallback = TitleBG_ScanlineCB_Island;
 
-    foreach_all(TitleBG, titleBG) titleBG->visible                   = true;
-    foreach_all(Title3DSprite, title3DSprite) title3DSprite->visible = true;
+    foreach_all(TitleBG, titleBG) { titleBG->visible = true; }
+    foreach_all(Title3DSprite, title3DSprite) { title3DSprite->visible = true; }
 
     RSDK.SetPaletteEntry(0, 55, 0x00FF00);
     RSDK.SetPaletteMask(0x00FF00);
     RSDK.SetDrawLayerProperties(2, true, NULL);
 }
 
-void TitleBG_Clouds_ScanlineCB(ScanlineInfo *scanlines)
+void TitleBG_ScanlineCB_Clouds(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, SCREEN_YSIZE / 2);
+
     int32 sine   = RSDK.Sin256(0);
     int32 cosine = RSDK.Cos256(0);
 
     int32 off = 0x1000000;
     for (int32 i = 0xA0; i > 0x20; --i) {
-        int32 id              = off / (8 * i);
-        int32 sin             = sine * id;
-        int32 cos             = cosine * id;
+        int32 id  = off / (8 * i);
+        int32 sin = sine * id;
+        int32 cos = cosine * id;
+
         scanlines->deform.x   = (-cos >> 7);
         scanlines->deform.y   = sin >> 7;
         scanlines->position.x = sin - ScreenInfo->centerX * (-cos >> 7);
@@ -129,22 +135,24 @@ void TitleBG_Clouds_ScanlineCB(ScanlineInfo *scanlines)
     }
 }
 
-void TitleBG_Island_ScanlineCB(ScanlineInfo *scanlines)
+void TitleBG_ScanlineCB_Island(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 168, ScreenInfo->width, SCREEN_YSIZE);
-    int32 sine          = RSDK.Sin1024(-TitleBG->angle) >> 2;
-    int32 cosine        = RSDK.Cos1024(-TitleBG->angle) >> 2;
-    ScanlineInfo *scnln = &scanlines[168];
 
+    int32 sine   = RSDK.Sin1024(-TitleBG->angle) >> 2;
+    int32 cosine = RSDK.Cos1024(-TitleBG->angle) >> 2;
+
+    ScanlineInfo *scanlinePtr = &scanlines[168];
     for (int32 i = 16; i < 88; ++i) {
-        int32 id         = 0xA00000 / (8 * i);
-        int32 sin        = sine * id;
-        int32 cos        = cosine * id;
-        scnln->deform.y   = sin >> 7;
-        scnln->deform.x   = -cos >> 7;
-        scnln->position.y = cos - ScreenInfo->centerX * scnln->deform.y - 0xA000 * cosine + 0x2000000;
-        scnln->position.x = sin - ScreenInfo->centerX * scnln->deform.x - 0xA000 * sine + 0x2000000;
-        ++scnln;
+        int32 id  = 0xA00000 / (8 * i);
+        int32 sin = sine * id;
+        int32 cos = cosine * id;
+
+        scanlinePtr->deform.y   = sin >> 7;
+        scanlinePtr->deform.x   = -cos >> 7;
+        scanlinePtr->position.y = cos - ScreenInfo->centerX * scanlinePtr->deform.y - 0xA000 * cosine + 0x2000000;
+        scanlinePtr->position.x = sin - ScreenInfo->centerX * scanlinePtr->deform.x - 0xA000 * sine + 0x2000000;
+        ++scanlinePtr;
     }
 }
 
@@ -152,12 +160,15 @@ void TitleBG_Island_ScanlineCB(ScanlineInfo *scanlines)
 void TitleBG_EditorDraw(void)
 {
     RSDK_THIS(TitleBG);
+
     RSDK.SetSpriteAnimation(TitleBG->aniFrames, self->type, &self->animator, true, 0);
     self->alpha     = 0xFF;
     self->drawFX    = FX_FLIP;
     self->inkEffect = INK_NONE;
+
     switch (self->type) {
         case TITLEBG_MOUNTAIN2: self->inkEffect = INK_BLEND; break;
+
         case TITLEBG_REFLECTION:
         case TITLEBG_WATERSPARKLE:
             self->inkEffect = INK_ADD;

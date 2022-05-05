@@ -26,7 +26,7 @@ void PlayerProbe_Update(void);
 void PlayerProbe_LateUpdate(void);
 void PlayerProbe_StaticUpdate(void);
 void PlayerProbe_Draw(void);
-void PlayerProbe_Create(void* data);
+void PlayerProbe_Create(void *data);
 void PlayerProbe_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PlayerProbe_EditorDraw(void);
@@ -39,4 +39,4 @@ void PlayerProbe_Print(EntityPlayer *player);
 void PlayerProbe_DrawSprites(void);
 void PlayerProbe_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color);
 
-#endif //!OBJ_PLAYERPROBE_H
+#endif //! OBJ_PLAYERPROBE_H

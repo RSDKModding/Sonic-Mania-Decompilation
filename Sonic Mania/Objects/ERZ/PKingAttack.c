@@ -244,7 +244,7 @@ void PKingAttack_State_SmallBullet(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     PKingAttack_CheckPlayerCollisions();
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
         self->position.y += 0x40000;
         destroyEntity(self);
     }

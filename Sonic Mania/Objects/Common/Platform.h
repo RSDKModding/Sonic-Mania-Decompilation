@@ -108,7 +108,7 @@ void Platform_State_Pushable_FallingL(void);
 void Platform_State_Pushable_FallingR(void);
 void Platform_State_Pushable_Falling(void);
 void Platform_State_Controlled(void);
-void Platform_State_WaitForControl(void);
+void Platform_State_AwaitControlCommand(void);
 void Platform_State_Track(void);
 void Platform_State_Wait(void);
 void Platform_State_WaitOscillating(void);

@@ -16,20 +16,24 @@ typedef enum {
     FBZ_DECORATION_BLUEPRINT2,
 } DecorationTypesFBZ;
 
+typedef enum {
+    FBZ_PARALLAXSPRITE_CLOUDS,
+} ParallaxSpriteAniIDsFBZ;
+
 // Object Class
 struct ObjectFBZSetup {
     RSDK_OBJECT
     int32 unused;
-    int32 frameA;
-    int32 frameC;
-    int32 frameD;
-    int32 frameB;
-    int32 deformX[0x400];
+    int32 cylinderAniFrame;
+    int32 propellerShaftAniFrame;
+    int32 spiralPlatformAniFrame;
+    int32 propellerShaftAniFrameUnused;
+    int32 scanlineDeformX[0x400];
     int32 positionYMove[0x400];
-    int32 positionY[0x400];
+    int32 scanlinePosY[0x400];
     uint16 aniTiles;
-    uint16 bgOutsideLayer;
-    EntityFBZ1Outro *outroPtr;
+    uint16 backgroundOutside;
+    EntityFBZ1Outro *outro;
 };
 
 // Entity Class
@@ -56,8 +60,8 @@ void FBZSetup_Serialize(void);
 // Extra Entity Functions
 void FBZSetup_ActTransitionLoad(void);
 
-void FBZSetup_HandleScanlines(ScanlineInfo *scanlines, int32 a1, int32 a3, int32 a4, int32 a5, int32 a6);
-void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines);
+void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32 parallaxFactorY, int32 startLine, int32 lineCount, int32 sourcePosY);
+void FBZSetup_ScanlineCB_BGInside(ScanlineInfo *scanlines);
 
 void FBZSetup_BGSwitchCB_ShowInside1(void);
 void FBZSetup_BGSwitchCB_ShowInside2(void);

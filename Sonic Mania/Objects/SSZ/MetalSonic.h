@@ -18,11 +18,17 @@ typedef enum {
     MS_ANI_BOOSTER_WEAK,
     MS_ANI_BOOSTER_STRONG,
     MS_ANI_BOOSTER_INTRO,
-}MetalSonicAniIDs;
+} MetalSonicAniIDs;
+
+typedef enum {
+    MS_ATTACK_DASH,
+    MS_ATTACK_ELECTRIC,
+    MS_ATTACK_BALL,
+} MetalSonicAttackIDs;
 
 // Object Class
 struct ObjectMetalSonic {
-    RSDK_OBJECT 
+    RSDK_OBJECT
     int32 unused;
     int32 invincibilityTimerPanel;
     uint16 finishedAttacks;
@@ -65,12 +71,12 @@ struct EntityMetalSonic {
     uint8 attackType;
     int32 unused4;
     int32 invincibilityTimer;
-    EntityMSPanel* panel;
+    EntityMSPanel *panel;
     Vector2 unusedVec1;
     Vector2 unusedVec2;
     Vector2 unusedVec3;
-    Hitbox* outerBox;
-    Hitbox* innerBox;
+    Hitbox *outerBox;
+    Hitbox *innerBox;
     Animator metalSonicAnimator;
     Animator boosterAnimator;
 };
@@ -83,7 +89,7 @@ void MetalSonic_Update(void);
 void MetalSonic_LateUpdate(void);
 void MetalSonic_StaticUpdate(void);
 void MetalSonic_Draw(void);
-void MetalSonic_Create(void* data);
+void MetalSonic_Create(void *data);
 void MetalSonic_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MetalSonic_EditorDraw(void);
@@ -133,7 +139,7 @@ void MetalSonic_State_PanelExplosion(void);
 void MetalSonic_State_ExitFactory(void);
 void MetalSonic_State_PrepareFinalChase(void);
 
-#if RETRO_USE_PLUS //Phase 3 (VS GigaMetal)
+#if RETRO_USE_PLUS // Phase 3 (VS GigaMetal)
 void MetalSonic_State_WaitForRuby(void);
 void MetalSonic_State_ObtainRuby(void);
 void MetalSonic_State_Transform(void);
@@ -163,4 +169,4 @@ void MetalSonic_StateWall_Fall(void);
 void MetalSonic_StateWall_Move(void);
 #endif
 
-#endif //!OBJ_METALSONIC_H
+#endif //! OBJ_METALSONIC_H

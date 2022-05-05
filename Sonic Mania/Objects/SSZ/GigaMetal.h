@@ -17,7 +17,7 @@ typedef enum {
     GIGAMETAL_LASEREDGE,
     GIGAMETAL_LASERBEAM,
     GIGAMETAL_SHARD,
-}GigaMetalAniIDs;
+} GigaMetalAniIDs;
 
 // Object Class
 struct ObjectGigaMetal {
@@ -72,7 +72,7 @@ void GigaMetal_Update(void);
 void GigaMetal_LateUpdate(void);
 void GigaMetal_StaticUpdate(void);
 void GigaMetal_Draw(void);
-void GigaMetal_Create(void* data);
+void GigaMetal_Create(void *data);
 void GigaMetal_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GigaMetal_EditorDraw(void);
@@ -93,7 +93,7 @@ void GigaMetal_HandleCameraMovement(void);
 void GigaMetal_CheckPlayerCollisions(void);
 void GigaMetal_Hit(void);
 
-void GigaMetal_StateBody_SetupArena(void);
+void GigaMetal_StateBody_AwaitPlayer(void);
 void GigaMetal_StateBody_SetupComponents(void);
 void GigaMetal_StateBody_Transformed(void);
 void GigaMetal_StateBody_Roar(void);
@@ -123,7 +123,6 @@ void GigaMetal_HandleArmCollisions(void);
 void GigaMetal_StateArm_Idle_Front(void);
 void GigaMetal_StateArm_Idle_Behind(void);
 void GigaMetal_StateArm_Marching(void);
-
 #endif
 
-#endif //!OBJ_GIGAMETAL_H
+#endif //! OBJ_GIGAMETAL_H

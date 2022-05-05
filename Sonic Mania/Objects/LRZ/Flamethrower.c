@@ -220,10 +220,10 @@ void Flamethrower_HandleTileCollisions(void)
     if (self->timer >= 15) {
         Hitbox hitbox = Flamethrower_GetHitbox();
 
-        if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, hitbox.bottom << 13, 4)
-            || RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, hitbox.right << 13, 0, 4)
-            || RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_ROOF, 0, 0, hitbox.top << 13, 4)
-            || RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, hitbox.left << 13, 0, 4)) {
+        if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, hitbox.bottom << 13, 4)
+            || RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, hitbox.right << 13, 0, 4)
+            || RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, hitbox.top << 13, 4)
+            || RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, hitbox.left << 13, 0, 4)) {
             destroyEntity(self);
         }
     }

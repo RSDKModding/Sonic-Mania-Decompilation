@@ -19,6 +19,7 @@ void SparkRail_Update(void)
         if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->onGround) {
             if (abs(player->groundVel) > 0x80000) {
                 RSDK.PlaySfx(SparkRail->sfxPon, false, 255);
+
                 EntityDebris *spark = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &spark->animator, true, 0);
                 spark->drawFX     = FX_FLIP;
@@ -54,6 +55,7 @@ void SparkRail_Create(void *data)
 
     if (!self->size.x)
         self->size.x = 128 << 16;
+
     if (!self->size.y)
         self->size.y = 32 << 16;
 }
@@ -72,6 +74,7 @@ void SparkRail_StageLoad(void)
 void SparkRail_EditorDraw(void)
 {
     RSDK_THIS(SparkRail);
+
     Animator animator;
     RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &animator, true, 0);
 

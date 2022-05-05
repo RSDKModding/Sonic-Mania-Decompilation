@@ -4,11 +4,11 @@
 #include "SonicMania.h"
 
 #if !RETRO_USE_PLUS
-//preplus was always 2P
-#define competition_PlayerCount (2)
+// preplus was always 2P
+#define COMPETITION_PLAYER_COUNT (2)
 #endif
 
-#define Competition_StageCount (12)
+#define COMPETITION_STAGE_COUNT (12)
 
 typedef enum {
     FINISHFLAG_NOTFINISHED,
@@ -16,7 +16,17 @@ typedef enum {
     FINISHFLAG_FINISHED,
 } vsFinishFlags;
 
-//created so I can easily set up times in an array
+typedef enum {
+    VS_BORDER_NONE,
+    VS_BORDER_BOTTOMRIGHT,
+    VS_BORDER_BOTTOM,
+    VS_BORDER_BOTTOMLEFT,
+    VS_BORDER_TOPRIGHT,
+    VS_BORDER_TOP,
+    VS_BORDER_TOPLEFT,
+} vsScreenBorderTypes;
+
+// created so I can easily set up times in an array
 typedef struct {
     int32 minutes;
     int32 seconds;
@@ -25,12 +35,12 @@ typedef struct {
 
 // Object Class
 struct ObjectCompetitionSession {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityCompetitionSession {
-	RSDK_ENTITY
+    RSDK_ENTITY
     bool32 inMatch;
     int32 playerCount;
     int32 stageIndex;
@@ -42,9 +52,9 @@ struct EntityCompetitionSession {
 #if RETRO_USE_PLUS
     int32 swapType;
 #endif
-    bool32 completedStages[Competition_StageCount];
+    bool32 completedStages[COMPETITION_STAGE_COUNT];
     uint8 playerID[PLAYER_MAX];
-    uint8 matchWinner[Competition_StageCount];
+    uint8 matchWinner[COMPETITION_STAGE_COUNT];
     int32 rings[PLAYER_MAX];
     int32 score[PLAYER_MAX];
     int32 items[PLAYER_MAX];
@@ -54,7 +64,7 @@ struct EntityCompetitionSession {
     int32 wins[PLAYER_MAX];
     int32 lives[PLAYER_MAX];
 #if RETRO_USE_PLUS
-    int32 splitScreenMode[SCREEN_MAX];
+    int32 screenBorderType[SCREEN_MAX];
     int32 displayMode;
     int32 controllerIDs[PLAYER_MAX];
     int32 prevMatchID;
@@ -69,7 +79,7 @@ void CompetitionSession_Update(void);
 void CompetitionSession_LateUpdate(void);
 void CompetitionSession_StaticUpdate(void);
 void CompetitionSession_Draw(void);
-void CompetitionSession_Create(void* data);
+void CompetitionSession_Create(void *data);
 void CompetitionSession_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CompetitionSession_EditorDraw(void);
@@ -85,5 +95,4 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 flags);
 void CompetitionSession_WinMatchFor(int32 player);
 #endif
 
-
-#endif //!OBJ_COMPETITIONSESSION_H
+#endif //! OBJ_COMPETITIONSESSION_H

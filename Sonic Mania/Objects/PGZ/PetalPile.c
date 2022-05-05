@@ -12,7 +12,9 @@ ObjectPetalPile *PetalPile;
 void PetalPile_Update(void)
 {
     RSDK_THIS(PetalPile);
+
     StateMachine_Run(self->state);
+
     if (!self->animator.animationID)
         RSDK.ProcessAnimation(&self->animator);
 }
@@ -30,15 +32,18 @@ void PetalPile_Draw(void)
 void PetalPile_Create(void *data)
 {
     RSDK_THIS(PetalPile);
+
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawHigh;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x100000;
     self->updateRange.y = 0x100000;
+
     if (SceneInfo->inEditor) {
         if (!self->maxSpeed.x)
             self->maxSpeed.x = 0x18000;
+
         if (!self->pileSize.x && !self->pileSize.y) {
             self->pileSize.x = 0x300000;
             self->pileSize.y = 0x80000;
@@ -50,6 +55,7 @@ void PetalPile_Create(void *data)
         else
             self->layerID = RSDK.GetSceneLayerID("FG High");
     }
+
     RSDK.SetSpriteAnimation(PetalPile->aniFrames, 0, &self->animator, true, 0);
     self->state = PetalPile_State_Setup;
 }
@@ -85,6 +91,7 @@ int32 PetalPile_GetLeafPattern(Vector2 *patternPtr)
         patternPtr[i].x = pattern[(i * 2) + 0] * (sizeX >> 17);
         patternPtr[i].y = pattern[(i * 2) + 1] * (sizeY >> 17);
     }
+
     return count;
 }
 
@@ -127,11 +134,13 @@ void PetalPile_State_HandleInteractions(void)
                         self->petalRadius = 0xF5555;
                     else
                         self->petalRadius = 0xB5555;
+
                     self->petalVel   = player->groundVel >> 1;
                     self->distance.x = player->position.x - self->position.x;
                     self->distance.y = 0;
                     RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                     self->state = PetalPile_State_SetupEmitter;
+
                     foreach_break;
                 }
             }
@@ -148,6 +157,7 @@ void PetalPile_State_HandleInteractions(void)
         hitbox.top    = -8;
         hitbox.right  = 8;
         hitbox.bottom = 8;
+
         foreach_active(Explosion, explosion)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, explosion, &hitbox)) {
@@ -157,6 +167,7 @@ void PetalPile_State_HandleInteractions(void)
                 self->distance.y  = 0;
                 RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                 self->state = PetalPile_State_SetupEmitter;
+
                 foreach_break;
             }
         }
@@ -173,13 +184,13 @@ void PetalPile_State_SetupEmitter(void)
 
     int32 offsetX = 0, offsetY = 0;
     switch (self->petalDir) {
-        case 0:
-            offsetX = self->position.x + self->distance.x;
+        case -1:
+            offsetX = self->position.x + ((self->hitbox.right + 16) << 16);
             offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
             break;
 
-        case -1:
-            offsetX = self->position.x + ((self->hitbox.right + 16) << 16);
+        case 0:
+            offsetX = self->position.x + self->distance.x;
             offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
             break;
 
@@ -209,19 +220,12 @@ void PetalPile_State_SetupEmitter(void)
             petal->timer     = (pos - abs(spawnX - offsetX)) >> 18;
         }
         else {
-#if RETRO_USE_PLUS
-            petal->direction = RSDK.RandSeeded(FLIP_NONE, FLIP_X, &Zone->randSeed);
-#else
-            petal->direction = RSDK.Rand(FLIP_NONE, FLIP_X);
-#endif
+            petal->direction = ZONE_RAND(FLIP_NONE, FLIP_X);
         }
 
         petal->velStore.x = (radius >> 8) * RSDK.Cos256(angle);
         petal->velStore.y = (radius >> 9) * RSDK.Sin256(angle) - 0x20000;
-        if (self->tileLayer)
-            petal->drawOrder = Zone->objectDrawLow;
-        else
-            petal->drawOrder = Zone->objectDrawHigh;
+        petal->drawOrder  = self->tileLayer ? Zone->objectDrawLow : Zone->objectDrawHigh;
     }
 
     if (self->emitterMode) {
@@ -242,6 +246,7 @@ void PetalPile_State_SetupEmitter(void)
                 }
             }
         }
+
         destroyEntity(self);
     }
 }
@@ -253,27 +258,28 @@ void PetalPile_State_Emitter(void)
     bool32 collided = false;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox))
             collided = true;
-        }
     }
 
-    if (!collided) {
+    if (!collided)
         self->state = PetalPile_State_Setup;
-    }
 }
 
 void PetalPile_StateLeaf_Setup(void)
 {
     RSDK_THIS(PetalPile);
+
     self->hitbox.left   = -1;
     self->hitbox.top    = -1;
     self->hitbox.right  = 1;
     self->hitbox.bottom = 1;
+
     self->active        = ACTIVE_NORMAL;
     self->updateRange.x = 0x10000;
     self->updateRange.y = 0x10000;
     RSDK.SetSpriteAnimation(PetalPile->aniFrames, 0, &self->animator, true, 0);
+
     self->state = PetalPile_StateLeaf_Delay;
     PetalPile_StateLeaf_Delay();
 }
@@ -309,34 +315,31 @@ void PetalPile_StateLeaf_HandleVelocity(void)
         if (self->petalVel > 0)
             self->petalVel = 0;
     }
+
     self->position.x += self->petalVel;
 
-    self->velocity.y += 0x4000;
     if (self->velocity.x <= 0)
         self->velocity.x += minVal(abs(self->velocity.x), 0x8000);
     else
         self->velocity.x -= minVal(abs(self->velocity.x), 0x8000);
+    self->velocity.y += 0x4000;
+
     if (self->velocity.y > 0)
         self->velocity.y = 0;
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (++self->timer > 2) {
-#if RETRO_USE_PLUS
-        if (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 6)
-#else
-        if (RSDK.Rand(0, 10) > 6)
-#endif
+        if (ZONE_RAND(0, 10) > 6)
             self->direction = self->direction == FLIP_NONE;
+
         self->timer = 0;
     }
+
     if (self->velocity.y >= 0 && !self->velocity.x) {
-#if RETRO_USE_PLUS
-        self->petalOffset = RSDK.RandSeeded(0, 255, &Zone->randSeed);
-#else
-        self->petalOffset = RSDK.Rand(0, 255);
-#endif
-        self->state = PetalPile_StateLeaf_Fall;
+        self->petalOffset = ZONE_RAND(0, 255);
+        self->state       = PetalPile_StateLeaf_Fall;
     }
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
@@ -357,11 +360,13 @@ void PetalPile_StateLeaf_Fall(void)
         if (self->petalVel > 0)
             self->petalVel = 0;
     }
+
     self->position.x += self->petalVel;
 
     self->velocity.y += 0x4000;
     if (self->velocity.y > 0x10000)
         self->velocity.y = 0x10000;
+
     self->velocity.x = RSDK.Sin256(4 * self->petalOffset) << 8;
 
     self->position.x += self->velocity.x;
@@ -369,12 +374,9 @@ void PetalPile_StateLeaf_Fall(void)
 
     ++self->timer;
     if (self->timer > 3) {
-#if RETRO_USE_PLUS
-        if (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 6)
-#else
-        if (RSDK.Rand(0, 10) > 6)
-#endif
+        if (ZONE_RAND(0, 10) > 6)
             self->direction = self->direction == FLIP_NONE;
+
         self->timer = 0;
     }
 
@@ -387,6 +389,7 @@ void PetalPile_StateLeaf_Fall(void)
 void PetalPile_Draw_Leaf(void)
 {
     RSDK_THIS(PetalPile);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -394,6 +397,7 @@ void PetalPile_Draw_Leaf(void)
 void PetalPile_EditorDraw(void)
 {
     RSDK_THIS(PetalPile);
+
     DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->pileSize.x, self->pileSize.y, 0xFFFF00);
 }
 

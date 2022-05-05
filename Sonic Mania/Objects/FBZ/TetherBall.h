@@ -26,7 +26,7 @@ struct EntityTetherBall {
     int32 size;
     int32 swingSpeed;
     Vector2 ballPos;
-    EntityPlayer *playerPtr;
+    EntityPlayer *player;
 };
 
 // Object Struct
@@ -37,7 +37,7 @@ void TetherBall_Update(void);
 void TetherBall_LateUpdate(void);
 void TetherBall_StaticUpdate(void);
 void TetherBall_Draw(void);
-void TetherBall_Create(void* data);
+void TetherBall_Create(void *data);
 void TetherBall_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TetherBall_EditorDraw(void);
@@ -50,5 +50,4 @@ void TetherBall_State_CheckPlayerAttach(void);
 void TetherBall_State_SwingBall(void);
 void TetherBall_State_FinishedSwing(void);
 
-
-#endif //!OBJ_TETHERBALL_H
+#endif //! OBJ_TETHERBALL_H

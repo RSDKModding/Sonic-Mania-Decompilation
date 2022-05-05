@@ -3,7 +3,14 @@
 
 #include "SonicMania.h"
 
-#define Zone_AddVSSwapCallback(callback)                                                                                                                   \
+// Macro to reduce ifdefs needed when calling RandSeeded with Zone->randSeed, ensures easy pre-plus compatibility
+#if RETRO_USE_PLUS
+#define ZONE_RAND(min, max) RSDK.RandSeeded(min, max, &Zone->randSeed)
+#else
+#define ZONE_RAND(min, max) RSDK.Rand(min, max)
+#endif
+
+#define Zone_AddVSSwapCallback(callback)                                                                                                             \
     if (Zone->vsSwapCBCount < 0x10) {                                                                                                                \
         Zone->vsSwapCB[Zone->vsSwapCBCount] = callback;                                                                                              \
         ++Zone->vsSwapCBCount;                                                                                                                       \
@@ -27,8 +34,11 @@ typedef enum {
 #if RETRO_USE_PLUS
     ZONE_AIZ,
 #endif
-    ZONE_COUNT,
-}ZoneIDs;
+    // total zone count
+    ZONE_COUNT, 
+    // zone count for save files
+    ZONE_COUNT_SAVEFILE = ZONE_ERZ + 1,
+} ZoneIDs;
 
 // Object Class
 struct ObjectZone {
@@ -51,7 +61,7 @@ struct ObjectZone {
     int32 prevListPos;
     int32 ringFrame;
     int32 timer;
-    int32 timer2;
+    int32 persistentTimer;
     int32 cameraBoundsL[PLAYER_MAX];
     int32 cameraBoundsR[PLAYER_MAX];
     int32 cameraBoundsT[PLAYER_MAX];
@@ -69,16 +79,16 @@ struct ObjectZone {
     bool32 setATLBounds;
     bool32 gotTimeOver;
     StateMachine(timeOverCallback);
-    uint16 fgLayers;
+    uint16 collisionLayers;
     uint16 fgLow;
     uint16 fgHigh;
     uint16 moveLayer;
 #if RETRO_USE_PLUS
     uint16 scratchLayer;
 #endif
-    uint16 fgLowID;
-    uint16 fgHighID;
-    uint16 moveID;
+    uint16 fgLowMask;
+    uint16 fgHighMask;
+    uint16 moveMask;
     uint8 fgLayerLow;
     uint8 fgLayerHigh;
     uint8 objectDrawLow;
@@ -88,7 +98,7 @@ struct ObjectZone {
     uint8 hudDrawOrder;
     uint16 sfxFail;
 #if RETRO_USE_PLUS
-    uint8 entityData[16][ENTITY_SIZE];
+    uint8 entityStorage[16][ENTITY_SIZE];
     int32 screenPosX[PLAYER_MAX];
     int32 screenPosY[PLAYER_MAX];
     bool32 swapGameMode;
@@ -138,8 +148,10 @@ void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);
 
 bool32 Zone_IsZoneLastAct(void);
+#if RETRO_USE_PLUS
 int32 Zone_GetEncoreStageID(void);
 int32 Zone_GetManiaStageID(void);
+#endif
 
 // Draw States
 void Zone_Draw_Fade(void);

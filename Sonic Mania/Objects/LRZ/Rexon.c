@@ -200,13 +200,10 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
         int32 y           = rexon->position.y;
         rexon->position.x = rexon->positions[0].x;
         rexon->position.y = rexon->positions[0].y;
-#if RETRO_USE_PLUS
-        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), rexon->position.x,
-                      rexon->position.y);
-#else
-        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), rexon->position.x, rexon->position.y);
-#endif
+
+        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), rexon->position.x, rexon->position.y);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), rexon->position.x, rexon->position.y)->drawOrder = Zone->objectDrawHigh;
+
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         rexon->position.x = x;
         rexon->position.y = y;
@@ -386,10 +383,10 @@ void Rexon_State_Projectile(void)
         }
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, Rexon->hitboxProjectile.bottom << 13, 4)
-        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, Rexon->hitboxProjectile.left << 13, 0, 4)
-        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, Rexon->hitboxProjectile.top << 13, 4)
-        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, Rexon->hitboxProjectile.right << 13, 0, 4)
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, Rexon->hitboxProjectile.bottom << 13, 4)
+        || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, Rexon->hitboxProjectile.left << 13, 0, 4)
+        || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, Rexon->hitboxProjectile.top << 13, 4)
+        || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, Rexon->hitboxProjectile.right << 13, 0, 4)
         || !RSDK.CheckOnScreen(self, NULL)) {
         destroyEntity(self);
     }

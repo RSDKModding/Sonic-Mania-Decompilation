@@ -6,7 +6,7 @@
 typedef enum {
     UISAVESLOT_REGULAR,
     UISAVESLOT_NOSAVE,
-}UISaveSlotTypes;
+} UISaveSlotTypes;
 
 // Object Class
 struct ObjectUISaveSlot {
@@ -80,7 +80,7 @@ void UISaveSlot_Update(void);
 void UISaveSlot_LateUpdate(void);
 void UISaveSlot_StaticUpdate(void);
 void UISaveSlot_Draw(void);
-void UISaveSlot_Create(void* data);
+void UISaveSlot_Create(void *data);
 void UISaveSlot_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UISaveSlot_EditorDraw(void);
@@ -128,5 +128,4 @@ void UISaveSlot_StateInput_NewSave(void);
 void UISaveSlot_State_CompletedSave(void);
 void UISaveSlot_State_Selected(void);
 
-
-#endif //!OBJ_UISAVESLOT_H
+#endif //! OBJ_UISAVESLOT_H

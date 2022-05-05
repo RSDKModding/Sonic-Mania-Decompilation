@@ -23,8 +23,8 @@ struct EntityContinueSetup {
     int32 unused1;
     int32 numberColor;
     bool32 showContinues;
+    Matrix matTemp;
     Matrix matTranslate;
-    Matrix matTranslateFinal;
     Matrix matRotateX;
     Matrix matRotateY;
     Matrix matFinal;
@@ -38,7 +38,7 @@ void ContinueSetup_Update(void);
 void ContinueSetup_LateUpdate(void);
 void ContinueSetup_StaticUpdate(void);
 void ContinueSetup_Draw(void);
-void ContinueSetup_Create(void* data);
+void ContinueSetup_Create(void *data);
 void ContinueSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ContinueSetup_EditorDraw(void);
@@ -52,4 +52,4 @@ void ContinueSetup_State_HandleCountdown(void);
 void ContinueSetup_State_ContinueGame(void);
 void ContinueSetup_State_ReturnToMenu(void);
 
-#endif //!OBJ_CONTINUESETUP_H
+#endif //! OBJ_CONTINUESETUP_H

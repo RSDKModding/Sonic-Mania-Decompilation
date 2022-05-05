@@ -186,16 +186,13 @@ void PopcornMachine_LinkPlayer(EntityPlayer *player)
     player->nextGroundState = StateMachine_None;
     player->state           = Player_State_None;
     player->onGround        = false;
-    if (player->position.x < self->position.x)
-        player->velocity.x = 0xA0000;
-    else
-        player->velocity.x = -0xA0000;
-    player->tileCollisions = false;
+    player->velocity.x      = player->position.x < self->position.x ? 0xA0000 : -0xA0000;
+    player->tileCollisions  = false;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
     EntityPopcornMachine *machine = CREATE_ENTITY(PopcornMachine, player, self->position.x, self->position.y);
     machine->isPermanent          = true;
-    machine->parent               = (Entity *)self;
+    machine->parent               = self;
     if (!player->sidekick)
         machine->bounds[player->playerID] = Zone->cameraBoundsB[player->playerID];
 }
@@ -208,6 +205,7 @@ void PopcornMachine_CheckPlayerCollisions(void)
         Player_CheckCollisionBox(player, self, &self->hitboxSideL);
         Player_CheckCollisionBox(player, self, &self->hitboxSideR);
         Player_CheckCollisionPlatform(player, self, &self->hitboxTop);
+
         if (player->state != Player_State_None) {
 
             switch (self->type) {
@@ -256,6 +254,7 @@ void PopcornMachine_State_ShowDispenser(void)
     RSDK_THIS(PopcornMachine);
 
     PopcornMachine_CheckPlayerCollisions();
+
     self->dispenserHolderPos.y -= 0x8000;
     if (self->dispenserHolderPos.y <= -0x200000)
         self->dispenserHolderPos.y = -0x200000;
@@ -273,10 +272,12 @@ void PopcornMachine_State_Shaking(void)
     RSDK_THIS(PopcornMachine);
 
     PopcornMachine_CheckPlayerCollisions();
+
     self->dispenserHolderPos.x = RSDK.Rand(-0x20000, 0x20000);
     self->dispenserHolderPos.y = RSDK.Rand(-0x20000, 0x20000) - 0x1E0000;
-    self->dispenserPos.x       = RSDK.Rand(-0x20000, 0x20000);
-    self->dispenserPos.y       = self->dispenserHolderPos.y - 0x1E0000 + RSDK.Rand(-0x20000, 0x20000);
+
+    self->dispenserPos.x = RSDK.Rand(-0x20000, 0x20000);
+    self->dispenserPos.y = self->dispenserHolderPos.y - 0x1E0000 + RSDK.Rand(-0x20000, 0x20000);
 
     self->timer++;
     if (self->timer >= 25 && self->timer < 160) {
@@ -301,6 +302,7 @@ void PopcornMachine_State_Shaking(void)
             kernel->velocity.y = RSDK.Rand(-0xA0000, -0x60000);
             kernel->maxY       = self->position.y - (0xA00000 * self->height) - 0xD00000;
         }
+
         RSDK.PlaySfx(PopcornMachine->sfxPopcornLaunch, false, 255);
         self->state = PopcornMachine_State_HideDispenser;
     }
@@ -326,7 +328,8 @@ void PopcornMachine_State_HideDispenser(void)
 void PopcornMachine_StateController_ReadyPlayer(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
+
+    EntityPopcornMachine *parent = self->parent;
     EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {
@@ -339,6 +342,7 @@ void PopcornMachine_StateController_ReadyPlayer(void)
         if (!Player_CheckValidState(player)) {
             if (!player->sidekick)
                 Zone->cameraBoundsB[player->playerID] = self->bounds[player->playerID];
+
             destroyEntity(self);
         }
     }
@@ -351,6 +355,7 @@ void PopcornMachine_StateController_ReadyPlayer(void)
         player->groundVel  = 0;
         player->velocity.x = 0;
         player->velocity.y = -0x80000;
+
         if (!player->sidekick)
             Zone->cameraBoundsB[player->playerID] = (self->position.y >> 16) + 32;
 
@@ -358,12 +363,14 @@ void PopcornMachine_StateController_ReadyPlayer(void)
             parent->state = PopcornMachine_State_ShowDispenser;
             RSDK.PlaySfx(PopcornMachine->sfxFanStart, false, 255);
         }
+
         self->state = PopcornMachine_StateController_RisePlayer;
     }
 
     if (!Player_CheckValidState(player)) {
         if (!player->sidekick)
             Zone->cameraBoundsB[player->playerID] = self->bounds[player->playerID];
+
         destroyEntity(self);
     }
 }
@@ -371,6 +378,7 @@ void PopcornMachine_StateController_ReadyPlayer(void)
 void PopcornMachine_StateController_RisePlayer(void)
 {
     RSDK_THIS(PopcornMachine);
+
     EntityPlayer *player = self->player;
 
     if (Player_CheckValidState(player)) {
@@ -395,7 +403,7 @@ void PopcornMachine_StateController_RisePlayer(void)
 void PopcornMachine_StateController_FirePlayer(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
+    EntityPopcornMachine *parent = self->parent;
     EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {
@@ -404,9 +412,11 @@ void PopcornMachine_StateController_FirePlayer(void)
             player->gravityStrength = 0x80;
             player->velocity.y      = -0xD8000 - (parent->height << 16);
             player->position.y += player->velocity.y;
+
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             if (!player->sidekick)
                 Zone->cameraBoundsB[player->playerID] = self->bounds[player->playerID];
+
             self->state = PopcornMachine_StateController_HandleFinish;
         }
     }
@@ -418,7 +428,7 @@ void PopcornMachine_StateController_FirePlayer(void)
 void PopcornMachine_StateController_HandleFinish(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
+    EntityPopcornMachine *parent = self->parent;
     EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {
@@ -447,7 +457,77 @@ void PopcornMachine_EditorDraw(void)
     self->dispenserPos.y       = -0x100000;
     RSDK.SetSpriteAnimation(PopcornMachine->aniFrames, 0, &self->animator, true, 0);
 
-    PopcornMachine_Draw();
+    // Draw !!
+    Vector2 drawPos;
+
+    // Draw Dispenser
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x += self->dispenserPos.x;
+    drawPos.y              = drawPos.y - 0x200000 + self->dispenserPos.y;
+    self->animator.frameID = 9;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
+
+    // Draw Dispenser Holder
+    drawPos = self->position;
+    drawPos.x += self->dispenserHolderPos.x;
+    drawPos.y              = drawPos.y - 0x200000 + self->dispenserHolderPos.y;
+    self->animator.frameID = 10;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
+
+    // Draw Sign
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, NULL, false);
+
+    // Draw Top
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, NULL, false);
+
+    // Draw Entries
+    switch (self->type) {
+        case POPCORNMACHINE_LEFT:
+            self->animator.frameID = 2;
+            RSDK.DrawSprite(&self->animator, NULL, false);
+            break;
+        case POPCORNMACHINE_RIGHT:
+            self->animator.frameID = 3;
+            RSDK.DrawSprite(&self->animator, NULL, false);
+            break;
+        case POPCORNMACHINE_BOTH:
+            self->animator.frameID = 2;
+            RSDK.DrawSprite(&self->animator, NULL, false);
+
+            self->animator.frameID = 3;
+            RSDK.DrawSprite(&self->animator, NULL, false);
+            break;
+    }
+
+    // Draw Top
+    drawPos = self->position;
+    drawPos.y += -0xD00000 - 0xA00000 * self->height;
+    int32 storeY1          = drawPos.y;
+    int32 storeY2          = self->position.y - 0x300000;
+    self->animator.frameID = 4;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
+
+    self->animator.frameID = 5;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
+
+    // Draw (Initial) Machine Glass Edges
+    self->animator.frameID = 6;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
+
+    self->animator.frameID = 7;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
+
+    // Draw Machine Glass Edges
+    for (int32 y = 0; y < self->height; ++y) {
+        drawPos.y += 0xA00000;
+        self->animator.frameID = 6;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        self->animator.frameID = 7;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+    }
 }
 
 void PopcornMachine_EditorLoad(void)

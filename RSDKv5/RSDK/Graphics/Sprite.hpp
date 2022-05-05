@@ -11,7 +11,7 @@ struct Image {
         width   = 0;
         height  = 0;
         palette = NULL;
-        dataPtr = NULL;
+        pixels  = NULL;
     }
 
     virtual bool32 Load(const char *fileName, bool32 loadHeader) { return false; }
@@ -30,7 +30,7 @@ struct Image {
     int32 height;
     int32 depth;
     color *palette;
-    uint8 *dataPtr;
+    uint8 *pixels;
 };
 
 struct GifDecoder {

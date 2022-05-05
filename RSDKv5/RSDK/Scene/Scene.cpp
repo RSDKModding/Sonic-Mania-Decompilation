@@ -387,9 +387,8 @@ void LoadSceneFile()
             }
 
 #if !RETRO_USE_ORIGINAL_CODE
-            if (!objID && i >= TYPE_DEFAULTCOUNT) {
+            if (!objID && i >= TYPE_DEFAULTCOUNT)
                 PrintLog(PRINT_NORMAL, "Object %d is unimplimented!", i);
-            }
 #endif
 
             ObjectInfo *obj          = &objectList[stageObjectIDs[objID]];
@@ -812,7 +811,7 @@ void LoadStageGIF(char *filepath)
     RSDK::ImageGIF tileset;
 
     if (tileset.Load(filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x400 * TILE_SIZE) {
-        tileset.dataPtr = tilesetGFXData;
+        tileset.pixels = tilesetGFXData;
         tileset.Load(NULL, false);
 
         for (int32 r = 0; r < 0x10; ++r) {
@@ -861,7 +860,7 @@ void LoadStageGIF(char *filepath)
 
         tileset.palette = NULL;
         tileset.decoder = NULL;
-        tileset.dataPtr = NULL;
+        tileset.pixels = NULL;
     }
 }
 
@@ -881,6 +880,7 @@ void ProcessParallax(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     int32 pixelWidth            = TILE_SIZE * layer->xsize;
     int32 pixelHeight           = TILE_SIZE * layer->ysize;
     ScanlineInfo *scanlinePtr = scanlines;
@@ -928,10 +928,10 @@ void ProcessParallax(TileLayer *layer)
             deformationData = &layer->deformationDataW[(posY + (uint16)layer->deformationOffsetW) & 0x1FF];
             for (int32 i = currentScreen->waterDrawPos; i < currentScreen->size.y; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
-                if (layer->scrollInfo[*lineScrollPtr].deform) {
+                if (layer->scrollInfo[*lineScrollPtr].deform) 
                     scanlinePtr->position.x += *deformationData << 0x10;
-                }
                 deformationData++;
+
                 scanlinePtr->position.y = posY++;
                 scanlinePtr->position.y <<= 0x10;
                 scanlinePtr->deform.x = 0x10000;
@@ -1073,7 +1073,7 @@ void ProcessSceneTimer()
                     sceneInfo.minutes = 0;
             }
         }
-        sceneInfo.milliseconds = sceneInfo.timeCounter / engine.refreshRate;
+        sceneInfo.milliseconds = sceneInfo.timeCounter / RSDK::gameSettings.refreshRate;
     }
 }
 
@@ -1105,29 +1105,24 @@ void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcL
         TileLayer *dstLayer = &tileLayers[dstLayerID];
         TileLayer *srcLayer = &tileLayers[srcLayerID];
 
-        if (startX1 >= 0 && startX1 < dstLayer->xsize) {
-            if (startY1 >= 0 && startY1 < dstLayer->ysize) {
-                if (startX2 >= 0 && startX2 < srcLayer->xsize) {
-                    if (startY2 >= 0 && startY2 < srcLayer->ysize) {
+        if (startX1 >= 0 && startX1 < dstLayer->xsize && startY1 >= 0 && startY1 < dstLayer->ysize) {
+            if (startX2 >= 0 && startX2 < srcLayer->xsize && startY2 >= 0 && startY2 < srcLayer->ysize) {
+                if (startX1 + countX > dstLayer->xsize)
+                    countX = dstLayer->xsize - startX1;
 
-                        if (startX1 + countX > dstLayer->xsize) 
-                            countX = dstLayer->xsize - startX1;
+                if (startY1 + countY > dstLayer->ysize)
+                    countY = dstLayer->ysize - startY1;
 
-                        if (startY1 + countY > dstLayer->ysize) 
-                            countY = dstLayer->ysize - startY1;
+                if (startX2 + countX > srcLayer->xsize)
+                    countX = srcLayer->xsize - startX2;
 
-                        if (startX2 + countX > srcLayer->xsize) 
-                            countX = srcLayer->xsize - startX2;
+                if (startY2 + countY > srcLayer->ysize)
+                    countY = srcLayer->ysize - startY2;
 
-                        if (startY2 + countY > srcLayer->ysize) 
-                            countY = srcLayer->ysize - startY2;
-
-                        for (int32 y = 0; y < countY; ++y) {
-                            for (int32 x = 0; x < countX; ++x) {
-                                uint16 tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
-                                dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
-                            }
-                        }
+                for (int32 y = 0; y < countY; ++y) {
+                    for (int32 x = 0; x < countX; ++x) {
+                        uint16 tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
+                        dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
                     }
                 }
             }
@@ -1139,6 +1134,7 @@ void DrawLayerHScroll(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     int32 lineTileCount         = (currentScreen->pitch >> 4) - 1;
     uint8 *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
@@ -1158,7 +1154,7 @@ void DrawLayerHScroll(TileLayer *layer)
         int32 cnt        = TILE_SIZE - ((x >> 0x10) & 0xF);
         int32 cntX       = (x >> 16) & 0xF;
         int32 cntY       = TILE_SIZE * ((y >> 0x10) & 0xF);
-        int32 lineRemain = currentScreen->size.x;
+        int32 lineRemain = currentScreen->pitch;
 
         int32 tx         = (x >> 20);
         uint16 *layout = &layer->layout[tx + ((y >> 20) << layer->widthShift)];
@@ -1285,6 +1281,7 @@ void DrawLayerVScroll(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     int32 lineTileCount       = (currentScreen->size.y >> 4) - 1;
     uint16 *frameBuffer     = &currentScreen->frameBuffer[currentScreen->clipBound_X1];
     ScanlineInfo *scanLines = &scanlines[currentScreen->clipBound_X1];
@@ -1419,6 +1416,7 @@ void DrawLayerRotozoom(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     uint16 *layout            = layer->layout;
     uint8 *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
@@ -1480,7 +1478,7 @@ void DrawLayerBasic(TileLayer *layer)
         int32 cnt        = TILE_SIZE - ((x >> 0x10) & 0xF);
         int32 cntX       = (x >> 16) & 0xF;
         int32 cntY       = TILE_SIZE * ((y >> 0x10) & 0xF);
-        int32 lineRemain = currentScreen->size.x;
+        int32 lineRemain = currentScreen->pitch;
 
         int32 tx         = (x >> 20);
         uint16 *layout = &layer->layout[tx + ((y >> 20) << layer->widthShift)];

@@ -12,8 +12,10 @@ ObjectShuriken *Shuriken;
 void Shuriken_Update(void)
 {
     RSDK_THIS(Shuriken);
+
     if (self->state) {
         StateMachine_Run(self->state);
+
         if (self->animator.animationID == 1 || self->animator.animationID == 2 || self->animator.animationID == 4)
             RSDK.ProcessAnimation(&self->animator);
     }
@@ -23,21 +25,21 @@ void Shuriken_LateUpdate(void) {}
 
 void Shuriken_StaticUpdate(void)
 {
-    EntityShuriken *groups[255];
-    memset(groups, 0, sizeof(groups));
+    EntityShuriken *activeGroups[255];
+    memset(activeGroups, 0, sizeof(activeGroups));
 
     foreach_active(Shuriken, shuriken)
     {
         if (shuriken->timerGroup) {
-            if (!groups[shuriken->timerGroup - 1]) {
-                groups[shuriken->timerGroup - 1] = shuriken;
+            if (!activeGroups[shuriken->timerGroup - 1]) {
+                activeGroups[shuriken->timerGroup - 1] = shuriken;
                 ++Shuriken->timerGroups[shuriken->timerGroup - 1];
             }
         }
     }
 
     for (int32 i = 0; i < 0xFF; ++i) {
-        if (groups[i] == NULL && Shuriken->timerGroups[i])
+        if (activeGroups[i] == NULL && Shuriken->timerGroups[i])
             Shuriken->timerGroups[i] = 0;
     }
 }
@@ -45,12 +47,14 @@ void Shuriken_StaticUpdate(void)
 void Shuriken_Draw(void)
 {
     RSDK_THIS(Shuriken);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Shuriken_Create(void *data)
 {
     RSDK_THIS(Shuriken);
+
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -112,6 +116,7 @@ void Shuriken_CheckPlayerCollisions(void)
 void Shuriken_HandleSolidCollisions(void)
 {
     RSDK_THIS(Shuriken);
+
     self->activePlayers = 0;
 
     foreach_active(Player, player)
@@ -119,6 +124,7 @@ void Shuriken_HandleSolidCollisions(void)
         if (Player_CheckCollisionPlatform(player, self, &Shuriken->hitboxPlatform)) {
             if (!player->onGround && !player->sidekick && !self->dropTimer)
                 self->dropTimer = 1;
+
             self->activePlayers |= 1 << RSDK.GetEntityID(player);
             player->position.y &= 0xFFFF0000;
         }
@@ -128,23 +134,23 @@ void Shuriken_HandleSolidCollisions(void)
 void Shuriken_State_Setup(void)
 {
     RSDK_THIS(Shuriken);
+
     self->timer  = 0;
     self->active = ACTIVE_BOUNDS;
     RSDK.SetSpriteAnimation(Shuriken->aniFrames, 0, &self->animator, true, 0);
     self->drawOrder = Zone->objectDrawHigh;
-    self->state     = Shuriken_State_WaitForActive;
-    Shuriken_State_WaitForActive();
+
+    self->state = Shuriken_State_AwaitActivate;
+    Shuriken_State_AwaitActivate();
 }
 
-void Shuriken_State_WaitForActive(void)
+void Shuriken_State_AwaitActivate(void)
 {
     RSDK_THIS(Shuriken);
+
     if (self->timerMode) {
-        int32 timer = 0;
-        if (self->timerGroup)
-            timer = Shuriken->timerGroups[(self->timerGroup - 1)];
-        else
-            timer = Zone->timer;
+        int32 group = self->timerGroup - 1;
+        int32 timer = self->timerGroup ? Shuriken->timerGroups[group] : Zone->timer;
 
         if (!((timer + self->intervalOffset) % self->interval)) {
             RSDK.SetSpriteAnimation(Shuriken->aniFrames, 2, &self->animator, false, 0);
@@ -186,6 +192,7 @@ void Shuriken_State_CheckPlayerInRange(void)
 void Shuriken_State_ShootDelay(void)
 {
     RSDK_THIS(Shuriken);
+
     if (self->timer) {
         self->timer--;
     }
@@ -199,18 +206,17 @@ void Shuriken_State_ShootDelay(void)
 void Shuriken_State_FireArrow(void)
 {
     RSDK_THIS(Shuriken);
+
     if (self->timer >= 15) {
         RSDK.PlaySfx(Shuriken->sfxArrowLaunch, false, 255);
         RSDK.SetSpriteAnimation(Shuriken->aniFrames, 3, &self->animator, false, 0);
-        self->state              = Shuriken_State_ArrowFired;
+        self->state = Shuriken_State_ArrowFired;
+
         EntityShuriken *shuriken = CREATE_ENTITY(Shuriken, self, self->position.x, self->position.y);
         shuriken->state          = Shuriken_State_ArrowSetup;
         shuriken->direction      = self->direction;
         shuriken->active         = ACTIVE_NORMAL;
-        if (self->direction == FLIP_NONE)
-            shuriken->velocity.x = 0x40000;
-        else
-            shuriken->velocity.x = -0x40000;
+        shuriken->velocity.x     = self->direction == FLIP_NONE ? 0x40000 : -0x40000;
     }
     else {
         self->timer++;
@@ -242,6 +248,7 @@ void Shuriken_State_ArrowFired(void)
 void Shuriken_State_Deactivate(void)
 {
     RSDK_THIS(Shuriken);
+
     if (self->timer >= 10)
         self->state = Shuriken_State_Setup;
     else
@@ -251,11 +258,13 @@ void Shuriken_State_Deactivate(void)
 void Shuriken_State_ArrowSetup(void)
 {
     RSDK_THIS(Shuriken);
+
     self->timer     = 0;
     self->dropTimer = 0;
     self->active    = ACTIVE_NORMAL;
     self->drawOrder = Zone->objectDrawHigh - 1;
     RSDK.SetSpriteAnimation(Shuriken->aniFrames, 5, &self->animator, true, 0);
+
     self->state = Shuriken_State_ArrowInAir;
     Shuriken_State_ArrowInAir();
 }
@@ -263,17 +272,21 @@ void Shuriken_State_ArrowSetup(void)
 void Shuriken_State_ArrowInAir(void)
 {
     RSDK_THIS(Shuriken);
+
     RSDK.ProcessAnimation(&self->animator);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
+
     Shuriken_CheckPlayerCollisions();
+
     self->position.x += self->velocity.x;
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
 
     if (collided) {
         foreach_active(Shuriken, shuriken)
@@ -285,6 +298,7 @@ void Shuriken_State_ArrowInAir(void)
                 }
             }
         }
+
         self->velocity.x = 0;
         RSDK.PlaySfx(Shuriken->sfxArrowHit, false, 255);
         self->state = Shuriken_State_ArrowOnWall;
@@ -294,18 +308,21 @@ void Shuriken_State_ArrowInAir(void)
 void Shuriken_State_ArrowOnWall(void)
 {
     RSDK_THIS(Shuriken);
+
     if (self->timer < 300)
         self->timer++;
 
     if (self->dropTimer > 0 && self->dropTimer < 60)
         self->dropTimer++;
+
     Shuriken_HandleSolidCollisions();
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+
     if (!collided || self->timer >= 300 || self->dropTimer >= 60) {
         self->updateRange.x = 0x4000000;
         self->updateRange.y = 0x4000000;
@@ -317,10 +334,12 @@ void Shuriken_State_ArrowOnWall(void)
 void Shuriken_State_ArrowFall(void)
 {
     RSDK_THIS(Shuriken);
+
     if (self->velocity.y >= 0x40000)
         self->velocity.y = 0x40000;
     else
         self->velocity.y += 0x4000;
+
     self->position.y += self->velocity.y;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
@@ -331,9 +350,11 @@ void Shuriken_State_ArrowFall(void)
 void Shuriken_State_ArrowDebris(void)
 {
     RSDK_THIS(Shuriken);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     self->visible ^= true;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
@@ -345,6 +366,7 @@ void Shuriken_State_ArrowDebris(void)
 void Shuriken_EditorDraw(void)
 {
     RSDK_THIS(Shuriken);
+
     RSDK.SetSpriteAnimation(Shuriken->aniFrames, 0, &self->animator, true, 0);
     self->drawOrder = Zone->objectDrawHigh;
 
@@ -356,8 +378,8 @@ void Shuriken_EditorLoad(void)
     Shuriken->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shuriken.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Shuriken, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 

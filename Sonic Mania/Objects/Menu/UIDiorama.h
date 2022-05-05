@@ -179,7 +179,6 @@ typedef struct {
 // STATE-STRUCTS END
 //=======================
 
-
 // Object Class
 struct ObjectUIDiorama {
     RSDK_OBJECT
@@ -228,7 +227,7 @@ void UIDiorama_Update(void);
 void UIDiorama_LateUpdate(void);
 void UIDiorama_StaticUpdate(void);
 void UIDiorama_Draw(void);
-void UIDiorama_Create(void* data);
+void UIDiorama_Create(void *data);
 void UIDiorama_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIDiorama_EditorDraw(void);
@@ -262,4 +261,4 @@ void UIDiorama_Draw_Exit(void);
 
 #endif
 
-#endif //!OBJ_UIDIORAMA_H
+#endif //! OBJ_UIDIORAMA_H

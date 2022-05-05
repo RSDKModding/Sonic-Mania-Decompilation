@@ -2,22 +2,22 @@
 
 using namespace RSDK;
 
-const int LOADING_IMAGE = 0;
-const int LOAD_COMPLETE = 1;
-const int LZ_MAX_CODE   = 4095;
-const int LZ_BITS       = 12;
-const int FIRST_CODE    = 4097;
-const int NO_SUCH_CODE  = 4098;
+const int32 LOADING_IMAGE = 0;
+const int32 LOAD_COMPLETE = 1;
+const int32 LZ_MAX_CODE   = 4095;
+const int32 LZ_BITS       = 12;
+const int32 FIRST_CODE    = 4097;
+const int32 NO_SUCH_CODE  = 4098;
 
-int codeMasks[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095 };
+int32 codeMasks[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095 };
 
-int ReadGifCode(RSDK::ImageGIF *image);
-byte ReadGifByte(RSDK::ImageGIF *image);
-byte TraceGifPrefix(uint *prefix, int code, int clearCode);
+int32 ReadGifCode(RSDK::ImageGIF *image);
+uint8 ReadGifByte(RSDK::ImageGIF *image);
+uint8 TraceGifPrefix(uint32 *prefix, int32 code, int32 clearCode);
 
 void InitGifDecoder(RSDK::ImageGIF *image)
 {
-    byte val                       = ReadInt8(&image->info);
+    uint8 val                      = ReadInt8(&image->info);
     image->decoder->fileState      = LOADING_IMAGE;
     image->decoder->position       = 0;
     image->decoder->bufferSize     = 0;
@@ -32,15 +32,15 @@ void InitGifDecoder(RSDK::ImageGIF *image)
     image->decoder->prevCode       = NO_SUCH_CODE;
     image->decoder->shiftState     = 0;
     image->decoder->shiftData      = 0u;
-    for (int i = 0; i <= LZ_MAX_CODE; ++i) image->decoder->prefix[i] = (byte)NO_SUCH_CODE;
+    for (int32 i = 0; i <= LZ_MAX_CODE; ++i) image->decoder->prefix[i] = (uint8)NO_SUCH_CODE;
 }
-void ReadGifLine(RSDK::ImageGIF *image, byte *line, int length, int offset)
+void ReadGifLine(RSDK::ImageGIF *image, uint8 *line, int32 length, int32 offset)
 {
-    int i         = 0;
-    int stackPtr  = image->decoder->stackPtr;
-    int eofCode   = image->decoder->eofCode;
-    int clearCode = image->decoder->clearCode;
-    int prevCode  = image->decoder->prevCode;
+    int32 i         = 0;
+    int32 stackPtr  = image->decoder->stackPtr;
+    int32 eofCode   = image->decoder->eofCode;
+    int32 clearCode = image->decoder->clearCode;
+    int32 prevCode  = image->decoder->prevCode;
     if (stackPtr != 0) {
         while (stackPtr != 0) {
             if (i >= length) {
@@ -51,7 +51,7 @@ void ReadGifLine(RSDK::ImageGIF *image, byte *line, int length, int offset)
         }
     }
     while (i < length) {
-        int gifCode = ReadGifCode(image);
+        int32 gifCode = ReadGifCode(image);
         if (gifCode == eofCode) {
             if (i != length - 1 | image->decoder->pixelCount != 0) {
                 return;
@@ -60,7 +60,7 @@ void ReadGifLine(RSDK::ImageGIF *image, byte *line, int length, int offset)
         }
         else {
             if (gifCode == clearCode) {
-                for (int j = 0; j <= LZ_MAX_CODE; j++) {
+                for (int32 j = 0; j <= LZ_MAX_CODE; j++) {
                     image->decoder->prefix[j] = NO_SUCH_CODE;
                 }
                 image->decoder->runningCode    = image->decoder->eofCode + 1;
@@ -70,14 +70,14 @@ void ReadGifLine(RSDK::ImageGIF *image, byte *line, int length, int offset)
             }
             else {
                 if (gifCode < clearCode) {
-                    line[offset++] = (byte)gifCode;
+                    line[offset++] = (uint8)gifCode;
                     i++;
                 }
                 else {
                     if (gifCode<0 | gifCode> LZ_MAX_CODE) {
                         return;
                     }
-                    int code;
+                    int32 code;
                     if (image->decoder->prefix[gifCode] == NO_SUCH_CODE) {
                         if (gifCode != image->decoder->runningCode - 2) {
                             return;
@@ -89,7 +89,7 @@ void ReadGifLine(RSDK::ImageGIF *image, byte *line, int length, int offset)
                     else {
                         code = gifCode;
                     }
-                    int c = 0;
+                    int32 c = 0;
                     while (c++ <= LZ_MAX_CODE && code > clearCode && code <= LZ_MAX_CODE) {
                         image->decoder->stack[stackPtr++] = image->decoder->suffix[code];
                         code                              = image->decoder->prefix[code];
@@ -97,7 +97,7 @@ void ReadGifLine(RSDK::ImageGIF *image, byte *line, int length, int offset)
                     if (c >= LZ_MAX_CODE | code > LZ_MAX_CODE) {
                         return;
                     }
-                    image->decoder->stack[stackPtr++] = (byte)code;
+                    image->decoder->stack[stackPtr++] = (uint8)code;
                     while (stackPtr != 0 && i++ < length) {
                         line[offset++] = image->decoder->stack[--stackPtr];
                     }
@@ -122,14 +122,14 @@ void ReadGifLine(RSDK::ImageGIF *image, byte *line, int length, int offset)
     image->decoder->stackPtr = stackPtr;
 }
 
-int ReadGifCode(RSDK::ImageGIF *image)
+int32 ReadGifCode(RSDK::ImageGIF *image)
 {
     while (image->decoder->shiftState < image->decoder->runningBits) {
-        byte b = ReadGifByte(image);
-        image->decoder->shiftData |= (uint)((uint)b << image->decoder->shiftState);
+        uint8 b = ReadGifByte(image);
+        image->decoder->shiftData |= (uint32)((uint32)b << image->decoder->shiftState);
         image->decoder->shiftState += 8;
     }
-    int result = (int)((unsigned long)image->decoder->shiftData & (unsigned long)(codeMasks[image->decoder->runningBits]));
+    int32 result = (int32)((unsigned long)image->decoder->shiftData & (unsigned long)(codeMasks[image->decoder->runningBits]));
     image->decoder->shiftData >>= image->decoder->runningBits;
     image->decoder->shiftState -= image->decoder->runningBits;
     if (++image->decoder->runningCode > image->decoder->maxCodePlusOne && image->decoder->runningBits < LZ_BITS) {
@@ -139,16 +139,16 @@ int ReadGifCode(RSDK::ImageGIF *image)
     return result;
 }
 
-byte ReadGifByte(RSDK::ImageGIF *image)
+uint8 ReadGifByte(RSDK::ImageGIF *image)
 {
-    byte c = '\0';
+    uint8 c = '\0';
     if (image->decoder->fileState == LOAD_COMPLETE)
         return c;
 
-    byte b;
+    uint8 b;
     if (image->decoder->position == image->decoder->bufferSize) {
         b                          = ReadInt8(&image->info);
-        image->decoder->bufferSize = (int)b;
+        image->decoder->bufferSize = (int32)b;
         if (image->decoder->bufferSize == 0) {
             image->decoder->fileState = LOAD_COMPLETE;
             return c;
@@ -163,33 +163,34 @@ byte ReadGifByte(RSDK::ImageGIF *image)
     return b;
 }
 
-byte TraceGifPrefix(uint *prefix, int code, int clearCode)
+uint8 TraceGifPrefix(uint32 *prefix, int32 code, int32 clearCode)
 {
-    int i = 0;
+    int32 i = 0;
     while (code > clearCode && i++ <= LZ_MAX_CODE) code = prefix[code];
 
     return code;
 }
-void ReadGifPictureData(RSDK::ImageGIF *image, int width, int height, bool32 interlaced, byte *gfxData)
+void ReadGifPictureData(RSDK::ImageGIF *image, int32 width, int32 height, bool32 interlaced, uint8 *gfxData)
 {
-    int array[]  = { 0, 4, 2, 1 };
-    int array2[] = { 8, 8, 4, 2 };
+    int32 array[]  = { 0, 4, 2, 1 };
+    int32 array2[] = { 8, 8, 4, 2 };
     InitGifDecoder(image);
     if (interlaced) {
-        for (int i = 0; i < 4; ++i) {
-            for (int j = array[i]; j < height; j += array2[i]) {
+        for (int32 i = 0; i < 4; ++i) {
+            for (int32 j = array[i]; j < height; j += array2[i]) {
                 ReadGifLine(image, gfxData, width, j * width);
             }
         }
         return;
     }
-    for (int h = 0; h < height; ++h) ReadGifLine(image, gfxData, width, h * width);
+    for (int32 h = 0; h < height; ++h) ReadGifLine(image, gfxData, width, h * width);
 }
 
 bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
 {
     if (!decoder)
         return false;
+
     if (fileName) {
         if (!LoadFile(&info, fileName, FMODE_RB))
             return false;
@@ -200,31 +201,31 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
             return true;
     }
 
-    int data = ReadInt8(&info);
-    // int has_pallete  = (data & 0x80) >> 7;
-    // int colors       = ((data & 0x70) >> 4) + 1;
-    int palette_size = (data & 0x7) + 1;
+    int32 data = ReadInt8(&info);
+    // int32 has_pallete  = (data & 0x80) >> 7;
+    // int32 colors       = ((data & 0x70) >> 4) + 1;
+    int32 palette_size = (data & 0x7) + 1;
     if (palette_size > 0)
         palette_size = 1 << palette_size;
 
     Seek_Cur(&info, 2);
 
     if (!palette)
-        AllocateStorage(0x100 * sizeof(int), (void **)&palette, DATASET_TMP, true);
+        AllocateStorage(0x100 * sizeof(int32), (void **)&palette, DATASET_TMP, true);
 
-    if (!dataPtr)
-        AllocateStorage(width * height, (void **)&dataPtr, DATASET_TMP, false);
+    if (!pixels)
+        AllocateStorage(width * height, (void **)&pixels, DATASET_TMP, false);
 
-    if (palette && dataPtr) {
-        byte clr[3];
-        int c = 0;
+    if (palette && pixels) {
+        uint8 clr[3];
+        int32 c = 0;
         do {
             ReadBytes(&info, clr, 3);
             palette[c] = (clr[0] << 16) | (clr[1] << 8) | (clr[2] << 0);
             ++c;
         } while (c != palette_size);
 
-        byte buf = ReadInt8(&info);
+        uint8 buf = ReadInt8(&info);
         while (buf != ',') buf = ReadInt8(&info); // gif image start identifier
 
         ReadInt16(&info);
@@ -234,7 +235,7 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
         data              = ReadInt8(&info);
         bool32 interlaced = (data & 0x40) >> 6;
         if (data >> 7 == 1) {
-            int c = 0x80;
+            int32 c = 0x80;
             do {
                 ++c;
                 ReadBytes(&info, clr, 3);
@@ -242,7 +243,7 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
             } while (c != 0x100);
         }
 
-        ReadGifPictureData(this, width, height, interlaced, dataPtr);
+        ReadGifPictureData(this, width, height, interlaced, pixels);
 
         CloseFile(&info);
         return true;
@@ -251,14 +252,14 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
 }
 
 #if RETRO_REV02
-void PNGUnpackGreyscale(RSDK::ImagePNG *image, byte *pixelData)
+void PNGUnpackGreyscale(RSDK::ImagePNG *image, uint8 *pixelData)
 {
-    byte *pixels = image->dataPtr;
-    for (int c = 0; c < image->width * image->height; ++c) {
-        int brightness = *pixelData++;
-        int alpha      = *pixelData++;
+    uint8 *pixels = image->pixels;
+    for (int32 c = 0; c < image->width * image->height; ++c) {
+        int32 brightness = *pixelData++;
+        int32 alpha      = *pixelData++;
 
-        uint color = 0;
+        uint32 color = 0;
 
         color = brightness << 16;
         pixelData++;
@@ -273,13 +274,13 @@ void PNGUnpackGreyscale(RSDK::ImagePNG *image, byte *pixelData)
     }
 }
 
-void PNGUnpackGreyscaleA(RSDK::ImagePNG *image, byte *pixelData)
+void PNGUnpackGreyscaleA(RSDK::ImagePNG *image, uint8 *pixelData)
 {
-    color *pixels = (color *)image->dataPtr;
-    for (int c = 0; c < image->width * image->height; ++c) {
-        int brightness = *pixelData++;
+    color *pixels = (color *)image->pixels;
+    for (int32 c = 0; c < image->width * image->height; ++c) {
+        int32 brightness = *pixelData++;
 
-        uint color = 0;
+        uint32 color = 0;
 
         color = brightness << 16;
         pixelData++;
@@ -294,11 +295,11 @@ void PNGUnpackGreyscaleA(RSDK::ImagePNG *image, byte *pixelData)
     }
 }
 
-void PNGUnpackRGB(RSDK::ImagePNG *image, byte *pixelData)
+void PNGUnpackRGB(RSDK::ImagePNG *image, uint8 *pixelData)
 {
-    color *pixels = (color *)image->dataPtr;
-    for (int c = 0; c < image->width * image->height; ++c) {
-        uint color = 0;
+    color *pixels = (color *)image->pixels;
+    for (int32 c = 0; c < image->width * image->height; ++c) {
+        uint32 color = 0;
 
         color = *pixelData << 16;
         pixelData++;
@@ -313,11 +314,11 @@ void PNGUnpackRGB(RSDK::ImagePNG *image, byte *pixelData)
     }
 }
 
-void PNGUnpackRGBA(RSDK::ImagePNG *image, byte *pixelData)
+void PNGUnpackRGBA(RSDK::ImagePNG *image, uint8 *pixelData)
 {
-    color *pixels = (color *)image->dataPtr;
-    for (int c = 0; c < image->width * image->height; ++c) {
-        uint color = 0;
+    color *pixels = (color *)image->pixels;
+    for (int32 c = 0; c < image->width * image->height; ++c) {
+        uint32 color = 0;
 
         color |= *pixelData << 16;
         pixelData++;
@@ -332,75 +333,75 @@ void PNGUnpackRGBA(RSDK::ImagePNG *image, byte *pixelData)
     }
 }
 
-void DecodePNGData(RSDK::ImagePNG *image, byte *dataPtr)
+void DecodePNGData(RSDK::ImagePNG *image, uint8 *dataPtr)
 {
-    int colorSize = (image->bitDepth + 7) >> 3;
+    int32 colorSize = (image->bitDepth + 7) >> 3;
     switch (image->clrType) {
         case 2: colorSize *= 3; break;
         case 4: colorSize *= 2; break;
         case 6: colorSize *= 4; break;
     }
 
-    int pitch         = colorSize * image->width;
+    int32 pitch       = colorSize * image->width;
     uint8 *dataBuffer = dataPtr + 1;
 
     if (*dataPtr == 1 || *dataPtr == 3) {
-        for (int c = 0; c < colorSize; ++c) {
+        for (int32 c = 0; c < colorSize; ++c) {
             *dataPtr++ = *dataBuffer++;
         }
 
         if (colorSize < pitch) {
             uint8 *buf = &dataPtr[-colorSize];
-            for (int c = 0; c < pitch - colorSize; ++c) {
+            for (int32 c = 0; c < pitch - colorSize; ++c) {
                 *dataPtr++ = *buf++ + *dataBuffer++;
             }
         }
     }
     else if (*dataPtr == 4) {
-        for (int c = 0; c < colorSize; ++c) {
+        for (int32 c = 0; c < colorSize; ++c) {
             *dataPtr++ = *dataBuffer++;
         }
 
         if (colorSize < pitch) {
             uint8 *buf = &dataPtr[-colorSize];
-            for (int c = 0; c < pitch - colorSize; ++c) {
+            for (int32 c = 0; c < pitch - colorSize; ++c) {
                 *dataPtr++ = *buf++ + *dataBuffer++;
             }
         }
     }
     else if (pitch > 0) {
-        for (int c = 0; c < colorSize * image->width; ++c) {
+        for (int32 c = 0; c < colorSize * image->width; ++c) {
             *dataPtr++ = *dataBuffer++;
         }
     }
 
-    for (int h = 1; h < image->height; ++h) {
-        int type = *dataBuffer++;
+    for (int32 h = 1; h < image->height; ++h) {
+        int32 type = *dataBuffer++;
         switch (type) {
             case 1:
-                for (int c = 0; c < colorSize; ++c) *dataPtr++ = *dataBuffer++;
+                for (int32 c = 0; c < colorSize; ++c) *dataPtr++ = *dataBuffer++;
 
                 if (colorSize < pitch) {
                     uint8 *buf = &dataPtr[-colorSize];
-                    for (int c = 0; c < pitch - colorSize; ++c) {
+                    for (int32 c = 0; c < pitch - colorSize; ++c) {
                         *dataPtr++ = *buf++ + *dataBuffer++;
                     }
                 }
                 break;
             case 2: {
                 uint8 *buf = &dataPtr[-pitch];
-                for (int c = 0; c < pitch; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
+                for (int32 c = 0; c < pitch; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
                 break;
             }
             case 3: {
                 uint8 *buf = &dataPtr[-pitch];
-                for (int c = 0; c < colorSize; ++c) *dataPtr++ = *dataBuffer++ + (*buf++ >> 1);
+                for (int32 c = 0; c < colorSize; ++c) *dataPtr++ = *dataBuffer++ + (*buf++ >> 1);
 
                 if (colorSize < pitch) {
-                    uint8 *buf = &dataPtr[-colorSize];
-                    int count  = colorSize - pitch;
+                    uint8 *buf  = &dataPtr[-colorSize];
+                    int32 count = colorSize - pitch;
 
-                    for (int c = 0; c < pitch - colorSize; ++c) {
+                    for (int32 c = 0; c < pitch - colorSize; ++c) {
                         *dataPtr++ = *dataBuffer++ + ((*(buf - 1) + (buf++)[count]) >> 1);
                     }
                 }
@@ -408,28 +409,28 @@ void DecodePNGData(RSDK::ImagePNG *image, byte *dataPtr)
             }
             case 4: {
                 uint8 *buf = &dataPtr[-pitch];
-                for (int c = 0; c < colorSize; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
+                for (int32 c = 0; c < colorSize; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
 
                 if (colorSize < pitch) {
-                    buf         = &dataPtr[-pitch];
-                    int count   = pitch - colorSize;
-                    int countv2 = pitch - (pitch + colorSize);
+                    buf           = &dataPtr[-pitch];
+                    int32 count   = pitch - colorSize;
+                    int32 countv2 = pitch - (pitch + colorSize);
 
-                    for (int c = 0; c < pitch - colorSize; ++c) {
+                    for (int32 c = 0; c < pitch - colorSize; ++c) {
                         uint8 val1 = buf[count];
                         uint8 val2 = *buf;
                         uint8 val3 = buf[countv2];
-                        int dif    = val1 - val3 + val2;
+                        int32 dif  = val1 - val3 + val2;
 
-                        int count1 = val3 - val2;
+                        int32 count1 = val3 - val2;
                         if (dif > val1)
                             count1 = val2 - val3;
 
-                        int count2 = val1 - val3;
+                        int32 count2 = val1 - val3;
                         if (dif <= val2)
                             count2 = val3 - val1;
 
-                        int count3 = val3 - dif;
+                        int32 count3 = val3 - dif;
                         if (dif > val3)
                             count3 = dif - val3;
 
@@ -446,7 +447,7 @@ void DecodePNGData(RSDK::ImagePNG *image, byte *dataPtr)
                 break;
             }
             default: {
-                for (int c = 0; c < pitch; ++c) *dataPtr++ = *dataBuffer++;
+                for (int32 c = 0; c < pitch; ++c) *dataPtr++ = *dataBuffer++;
                 break;
             }
         }
@@ -489,26 +490,27 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         endFlag = true;
                     }
                     else if (chunkHeader == PNG_SIG_PALETTE) {
-                        int colorCnt = chunkSize / 3;
+                        int32 colorCnt = chunkSize / 3;
                         if (!(chunkSize % 3)) {
                             chunkSize = colorCnt;
                             if (colorCnt <= 0x100) {
                                 if (!palette)
-                                    AllocateStorage(sizeof(uint) * colorCnt, (void **)&palette, DATASET_TMP, true);
+                                    AllocateStorage(sizeof(uint32) * colorCnt, (void **)&palette, DATASET_TMP, true);
 
-                                byte clr[3];
-                                for (int c = 0; c < colorCnt; ++c) {
-                                    ReadBytes(&info, clr, 3 * sizeof(byte));
+                                uint8 clr[3];
+                                for (int32 c = 0; c < colorCnt; ++c) {
+                                    ReadBytes(&info, clr, 3 * sizeof(uint8));
                                     palette[c] = clr[2] + ((clr[1] + (clr[0] << 8)) << 8);
                                 }
                             }
                         }
                     }
                     else if (chunkHeader == PNG_SIG_DATA) {
-                        dataSize = sizeof(uint) * height * (width + 1);
-                        if (!dataPtr) {
-                            AllocateStorage(dataSize, (void **)&dataPtr, DATASET_TMP, false);
-                            if (!dataPtr) {
+                        dataSize = sizeof(uint32) * height * (width + 1);
+                        if (!pixels) {
+                            AllocateStorage(dataSize, (void **)&pixels, DATASET_TMP, false);
+
+                            if (!pixels) {
                                 CloseFile(&info);
                                 return false;
                             }
@@ -516,33 +518,41 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         AllocateStorage(chunkSize, (void **)&chunkBuffer, DATASET_TMP, false);
                         ReadBytes(&info, chunkBuffer, chunkSize);
 
-                        byte *dataPtr = NULL;
+                        uint8 *pixelsPtr = NULL;
                         switch (clrType) {
                             case 0:
-                            case 3: dataPtr = &dataPtr[3 * width * height]; break;
-                            case 2: dataPtr = &dataPtr[width * height]; break;
-                            case 4: dataPtr = &dataPtr[2 * width * height]; break;
-                            default: dataPtr = dataPtr; break;
+                            case 3: pixelsPtr = &this->pixels[width * height * 3]; break;
+
+                            case 2: pixelsPtr = &this->pixels[width * height * 1]; break;
+
+                            case 4: pixelsPtr = &this->pixels[width * height * 2]; break;
+
+                            default: pixelsPtr = &this->pixels[0]; break;
                         }
 
-                        ReadZLib(&info, (byte **)&chunkBuffer, chunkSize, (byte **)&dataPtr, dataSize);
-                        DecodePNGData(this, dataPtr);
+                        ReadZLib(&info, (uint8 **)&chunkBuffer, chunkSize, (uint8 **)&this->pixels, dataSize);
+                        DecodePNGData(this, pixelsPtr);
+
                         switch (clrType) {
-                            case 0: PNGUnpackGreyscale(this, dataPtr); break;
-                            case 2: PNGUnpackRGB(this, dataPtr); break;
+                            case 0: PNGUnpackGreyscale(this, pixelsPtr); break;
+
+                            case 2: PNGUnpackRGB(this, pixelsPtr); break;
+
                             case 3:
-                                for (int c = 0; c < width * height; ++c) {
-                                    dataPtr[c] = palette[*dataPtr++] | 0xFF000000;
-                                }
+                                for (int32 c = 0; c < width * height; ++c) this->pixels[c] = palette[*this->pixels++] | 0xFF000000;
                                 break;
-                            case 4: PNGUnpackGreyscaleA(this, dataPtr); break;
-                            case 6: PNGUnpackRGBA(this, dataPtr); break;
+
+                            case 4: PNGUnpackGreyscaleA(this, pixelsPtr); break;
+
+                            case 6: PNGUnpackRGBA(this, pixelsPtr); break;
+
                             default: break;
                         }
                     }
                     else {
                         Seek_Cur(&info, chunkSize);
                     }
+
                     chunkCRC = ReadInt32(&info, false);
 
                     if (endFlag) {
@@ -565,67 +575,69 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
 bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
 {
     if (LoadFile(&info, fileName, FMODE_RB)) {
-        byte startOffset      = ReadInt8(&info);
-        byte colormaptype    = ReadInt8(&info);
-        byte datatypecode     = ReadInt8(&info);
-        short colormaporigin = ReadInt16(&info);
-        short colormaplength = ReadInt16(&info);
-        byte colormapdepth   = ReadInt8(&info);
-        short originX         = ReadInt16(&info);
-        short originY         = ReadInt16(&info);
+        uint8 startOffset     = ReadInt8(&info);
+        uint8 colormaptype    = ReadInt8(&info);
+        uint8 datatypecode    = ReadInt8(&info);
+        int16 colormaporigin  = ReadInt16(&info);
+        int16 colormaplength  = ReadInt16(&info);
+        uint8 colormapdepth   = ReadInt8(&info);
+        int16 originX         = ReadInt16(&info);
+        int16 originY         = ReadInt16(&info);
         width                 = ReadInt16(&info);
         height                = ReadInt16(&info);
-        byte imageBPP         = ReadInt8(&info);
-        byte imagedescriptor  = ReadInt8(&info);
+        uint8 imageBPP        = ReadInt8(&info);
+        uint8 imagedescriptor = ReadInt8(&info);
         bool32 reverse        = (~imagedescriptor >> 4) & 1;
         if (imageBPP >= 0x10) {
             if (startOffset)
                 Seek_Cur(&info, startOffset);
 
-            AllocateStorage(sizeof(uint) * height * width, (void **)&dataPtr, DATASET_TMP, false);
-            uint *imageData = (uint *)dataPtr;
+            AllocateStorage(sizeof(uint32) * height * width, (void **)&pixels, DATASET_TMP, false);
+            uint32 *pixelsPtr = (uint32 *)pixels;
             if (reverse)
-                imageData += (height * width) - width;
+                pixelsPtr += (height * width) - width;
 
-            int x = 0;
+            int32 x = 0;
             if (datatypecode == 2) {
                 switch (imageBPP) {
-                    case 0x10:
-                        for (int i = 0; i < height * width; ++i) {
-                            byte bytes[2];
-                            ReadBytes(&info, bytes, sizeof(ushort));
+                    case 16:
+                        for (int32 i = 0; i < height * width; ++i) {
+                            uint8 bytes[2];
+                            ReadBytes(&info, bytes, sizeof(uint16));
                             if (bytes[0] + (bytes[1] << 8) < 0)
-                                *imageData++ = 8 * (bytes[0] & 0x1F | 8 * ((bytes[0] + (bytes[1] << 8)) & 0x3E0 | 0x3FC00));
+                                *pixelsPtr++ = 8 * (bytes[0] & 0x1F | 8 * ((bytes[0] + (bytes[1] << 8)) & 0x3E0 | 0x3FC00));
                             else
-                                *imageData++ = 0;
+                                *pixelsPtr++ = 0;
 
                             if (reverse && ++x == width) {
                                 x = 0;
-                                imageData -= width << 1;
+                                pixelsPtr -= width << 1;
                             }
                         }
                         break;
-                    case 0x18:
-                        for (int i = 0; i < height * width; ++i) {
-                            byte channels[3];
+
+                    case 24:
+                        for (int32 i = 0; i < height * width; ++i) {
+                            uint8 channels[3];
                             ReadBytes(&info, channels, sizeof(color) - 1);
-                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
+                            *pixelsPtr++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
 
                             if (reverse && ++x == width) {
                                 x = 0;
-                                imageData -= width << 1;
+                                pixelsPtr -= width << 1;
                             }
                         }
                         break;
-                    case 0x20:
-                        for (int i = 0; i < height * width; ++i) {
-                            byte channels[4];
+
+                    case 32:
+                        for (int32 i = 0; i < height * width; ++i) {
+                            uint8 channels[4];
                             ReadBytes(&info, channels, sizeof(color));
-                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
+                            *pixelsPtr++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
 
                             if (reverse && ++x == width) {
                                 x = 0;
-                                imageData -= width << 1;
+                                pixelsPtr -= width << 1;
                             }
                         }
                         break;
@@ -633,48 +645,49 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
             }
             else if (datatypecode == 10) {
                 switch (imageBPP) {
-                    case 0x10: {
-                        ushort color16 = 0;
-                        byte count = 0, flag = 0;
-                        byte bytes[2];
+                    case 16: {
+                        uint16 color16 = 0;
+                        uint8 count = 0, flag = 0;
+                        uint8 bytes[2];
 
-                        for (int i = 0; i < height * width; ++i) {
+                        for (int32 i = 0; i < height * width; ++i) {
                             if (count) {
                                 if (!flag) {
-                                    byte val[2];
-                                    ReadBytes(&info, val, sizeof(ushort));
+                                    uint8 val[2];
+                                    ReadBytes(&info, val, sizeof(uint16));
                                 }
                                 --count;
                             }
                             else {
-                                byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                uint8 flags = 0;
+                                ReadBytes(&info, &flags, sizeof(uint8));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
 
-                                ReadBytes(&info, bytes, sizeof(ushort));
+                                ReadBytes(&info, bytes, sizeof(uint16));
                             }
 
                             color16 = bytes[0] + (bytes[1] << 8);
                             if (color16 < 0)
-                                *imageData++ = 8 * (color16 & 0x1F | 8 * (color16 & 0x3E0 | 0x3FC00));
+                                *pixelsPtr++ = 8 * (color16 & 0x1F | 8 * (color16 & 0x3E0 | 0x3FC00));
                             else
-                                *imageData++ = 0;
+                                *pixelsPtr++ = 0;
 
-                            ++imageData;
+                            ++pixelsPtr;
                             if (reverse && ++x == width) {
                                 x = 0;
-                                imageData -= width << 1;
+                                pixelsPtr -= width << 1;
                             }
                         }
                         break;
                     }
-                    case 0x18: {
-                        byte channels[3];
+
+                    case 24: {
+                        uint8 channels[3];
                         memset(channels, 0, sizeof(channels));
-                        byte count = 0, flag = 0;
-                        for (int i = 0; i < height * width; ++i) {
+                        uint8 count = 0, flag = 0;
+                        for (int32 i = 0; i < height * width; ++i) {
                             if (count) {
                                 if (!flag) {
                                     ReadBytes(&info, channels, sizeof(color) - 1);
@@ -682,77 +695,81 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                                 --count;
                             }
                             else {
-                                byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                uint8 flags = 0;
+                                ReadBytes(&info, &flags, sizeof(uint8));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
 
                                 ReadBytes(&info, channels, sizeof(color) - 1);
                             }
-                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
+                            *pixelsPtr++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
 
                             if (reverse && ++x == width) {
                                 x = 0;
-                                imageData -= width << 1;
+                                pixelsPtr -= width << 1;
                             }
                         }
                         break;
                     }
-                    case 0x20: {
-                        byte channels[sizeof(color)];
+
+                    case 32: {
+                        uint8 channels[sizeof(color)];
                         memset(channels, 0, sizeof(channels));
-                        byte count = 0, flag = 0;
-                        for (int i = 0; i < height * width; ++i) {
+                        uint8 count = 0, flag = 0;
+
+                        for (int32 i = 0; i < height * width; ++i) {
                             if (count) {
                                 if (!flag) {
-                                    ReadBytes(&info, channels, sizeof(uint));
+                                    ReadBytes(&info, channels, sizeof(uint32));
                                 }
                                 --count;
                             }
                             else {
-                                byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                uint8 flags = 0;
+                                ReadBytes(&info, &flags, sizeof(uint8));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
 
                                 ReadBytes(&info, channels, sizeof(color));
                             }
-                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
+                            *pixelsPtr++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
 
                             if (reverse && ++x == width) {
                                 x = 0;
-                                imageData -= width << 1;
+                                pixelsPtr -= width << 1;
                             }
                         }
                         break;
                     }
                 }
             }
+
             CloseFile(&info);
             return true;
         }
     }
+
     return false;
 }
 #endif
 
-ushort RSDK::LoadSpriteSheet(const char *filename, Scopes scope)
+uint16 RSDK::LoadSpriteSheet(const char *filename, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);
 
-    uint hash[4];
+    uint32 hash[4];
     GEN_HASH(filename, hash);
 
-    for (int i = 0; i < SURFACE_MAX; ++i) {
+    for (int32 i = 0; i < SURFACE_MAX; ++i) {
         if (HASH_MATCH(gfxSurface[i].hash, hash)) {
             return i;
         }
     }
 
-    ushort id = -1;
+    uint16 id = -1;
     for (id = 0; id < SURFACE_MAX; ++id) {
         if (gfxSurface[id].scope == SCOPE_NONE)
             break;
@@ -769,11 +786,11 @@ ushort RSDK::LoadSpriteSheet(const char *filename, Scopes scope)
         surface->width    = image.width;
         surface->height   = image.height;
         surface->lineSize = 0;
-        memcpy(surface->hash, hash, 4 * sizeof(int));
+        memcpy(surface->hash, hash, 4 * sizeof(int32));
 
-        int w = surface->width;
+        int32 w = surface->width;
         if (w > 1) {
-            int ls = 0;
+            int32 ls = 0;
             do {
                 w >>= 1;
                 ++ls;
@@ -783,7 +800,7 @@ ushort RSDK::LoadSpriteSheet(const char *filename, Scopes scope)
 
         surface->dataPtr = NULL;
         AllocateStorage(surface->width * surface->height, (void **)&surface->dataPtr, DATASET_STG, false);
-        image.dataPtr = surface->dataPtr;
+        image.pixels = surface->dataPtr;
         image.Load(NULL, false);
 
         image.palette = NULL;
@@ -794,7 +811,7 @@ ushort RSDK::LoadSpriteSheet(const char *filename, Scopes scope)
     }
     else {
         image.palette = NULL;
-        image.dataPtr = NULL;
+        image.pixels  = NULL;
         image.decoder = NULL;
         CloseFile(&image.info);
         return -1;
@@ -816,20 +833,20 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 #if RETRO_REV02
     if (image.Load(buffer, false)) {
         if (image.width == 1024 && image.height == 512)
-            SetImageTexture(image.width, image.height, image.dataPtr);
+            SetImageTexture(image.width, image.height, image.pixels);
 
-        engine.displayTime    = displayLength;
-        engine.prevShaderID   = engine.shaderID;
-        engine.prevEngineMode = sceneInfo.state;
-        engine.dimMax         = 0.0;
-        engine.shaderID       = SHADER_RGB_IMAGE;
-        engine.screenCount    = 0;
-        engine.skipCallback   = skipCallback;
-        sceneInfo.state       = ENGINESTATE_SHOWPNG;
-        engine.imageDelta     = speed / 60.0;
+        engine.displayTime             = displayLength;
+        RenderDevice::lastShaderID     = RSDK::gameSettings.shaderID;
+        engine.prevEngineMode          = sceneInfo.state;
+        RSDK::gameSettings.dimMax      = 0.0;
+        RSDK::gameSettings.shaderID    = SHADER_RGB_IMAGE;
+        RSDK::gameSettings.screenCount = 0;
+        engine.skipCallback            = skipCallback;
+        sceneInfo.state                = ENGINESTATE_SHOWPNG;
+        engine.imageDelta              = speed / 60.0;
 
         image.palette = NULL;
-        image.dataPtr = NULL;
+        image.pixels  = NULL;
         CloseFile(&image.info);
         return true;
     }
@@ -856,7 +873,7 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 #endif
     else {
         image.palette = NULL;
-        image.dataPtr = NULL;
+        image.pixels  = NULL;
         CloseFile(&image.info);
     }
     return false;

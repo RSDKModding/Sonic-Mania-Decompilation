@@ -35,7 +35,7 @@ void PathInverter_Update(void);
 void PathInverter_LateUpdate(void);
 void PathInverter_StaticUpdate(void);
 void PathInverter_Draw(void);
-void PathInverter_Create(void* data);
+void PathInverter_Create(void *data);
 void PathInverter_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PathInverter_EditorDraw(void);
@@ -48,4 +48,4 @@ void PathInverter_HandlePathSwitch(EntityPlayer *player);
 void PathInverter_State_Horizontal(void);
 void PathInverter_State_Vertical(void);
 
-#endif //!OBJ_PATHINVERTER_H
+#endif //! OBJ_PATHINVERTER_H

@@ -6,10 +6,10 @@
 // Object Class
 struct ObjectTimeAttackGate {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxGate;
     uint16 aniFrames;
-    Entity *activeEntity;
-    EntityPlayer *playerPtr;
+    EntityTimeAttackGate *restartManager;
+    EntityPlayer *triggerPlayer;
     bool32 started;
     int32 isFinished;
     int32 unused1;
@@ -68,8 +68,8 @@ void TimeAttackGate_HandleSpin(void);
 void TimeAttackGate_HandleStart(void);
 #if RETRO_USE_PLUS
 void TimeAttackGate_AddRecord(void);
-#endif
 void TimeAttackGate_LeaderboardCB(bool32 success);
+#endif
 void TimeAttackGate_CheckTouch(void);
 
 // States

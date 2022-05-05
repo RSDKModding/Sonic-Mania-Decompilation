@@ -3,13 +3,13 @@
 
 #include "SonicMania.h"
 
-#define Kabasira_SegmentCount (4)
+#define KABASIRA_BODY_COUNT (4)
 
 // Object Class
 struct ObjectKabasira {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Vector2 checkRange;
+    Hitbox hitboxBadnik;
+    Vector2 onScreenRange;
     uint16 aniFrames;
     uint16 sfxPon;
     uint16 sfxExplosion2;
@@ -37,7 +37,7 @@ void Kabasira_Update(void);
 void Kabasira_LateUpdate(void);
 void Kabasira_StaticUpdate(void);
 void Kabasira_Draw(void);
-void Kabasira_Create(void* data);
+void Kabasira_Create(void *data);
 void Kabasira_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Kabasira_EditorDraw(void);
@@ -52,9 +52,10 @@ void Kabasira_DebugDraw(void);
 bool32 Kabasira_HandleAnimations(uint8 angle);
 void Kabasira_DrawSegment(int32 angle, int32 alpha);
 void Kabasira_CheckPlayerCollisions(void);
+void Kabasira_CheckOffScreen(void);
 
 void Kabasira_State_Setup(void);
 void Kabasira_State_Moving(void);
 void Kabasira_State_LaunchedAttack(void);
 
-#endif //!OBJ_KABASIRA_H
+#endif //! OBJ_KABASIRA_H

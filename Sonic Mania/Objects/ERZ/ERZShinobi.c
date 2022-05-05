@@ -60,7 +60,7 @@ void ERZShinobi_Create(void *data)
         self->active          = ACTIVE_NORMAL;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;
-        self->collisionLayers = Zone->fgLayers;
+        self->collisionLayers = Zone->collisionLayers;
         self->tileCollisions  = true;
         self->finRadius       = 0x1600;
         self->state           = ERZShinobi_State_Moving;

@@ -12,6 +12,7 @@ ObjectDango *Dango;
 void Dango_Update(void)
 {
     RSDK_THIS(Dango);
+
     StateMachine_Run(self->state);
 
     if (self->rollDelay > 0)
@@ -25,12 +26,14 @@ void Dango_StaticUpdate(void) {}
 void Dango_Draw(void)
 {
     RSDK_THIS(Dango);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Dango_Create(void *data)
 {
     RSDK_THIS(Dango);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
@@ -39,6 +42,7 @@ void Dango_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     RSDK.SetSpriteAnimation(Dango->aniFrames, 1, &self->animator, true, 0);
     self->state = Dango_State_Setup;
 }
@@ -72,11 +76,8 @@ void Dango_DebugSpawn(void)
     EntityDango *dango = CREATE_ENTITY(Dango, NULL, self->position.x, self->position.y);
     RSDK.SetSpriteAnimation(Dango->aniFrames, 2, &dango->animator, true, 0);
 
-    dango->state = Dango_State_Falling_Curled;
-    if (dango->direction == FLIP_NONE)
-        dango->groundVel = -0x20000;
-    else
-        dango->groundVel = 0x20000;
+    dango->state     = Dango_State_Falling_Curled;
+    dango->groundVel = dango->direction == FLIP_NONE ? -0x20000 : 0x20000;
 }
 
 void Dango_DebugDraw(void)
@@ -88,10 +89,10 @@ void Dango_DebugDraw(void)
 void Dango_CheckOffScreen(void)
 {
     RSDK_THIS(Dango);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->direction  = self->startDir;
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Dango_Create(NULL);
     }
 }
@@ -129,7 +130,9 @@ void Dango_CheckPlayerCollisions(void)
                     if (self->groundVel < 0x20000)
                         self->groundVel = 0x20000;
                 }
+
                 self->velocity.x = self->groundVel;
+
 #if RETRO_USE_PLUS
                 if (!(player->characterID == ID_MIGHTY && player->jumpAbilityState > 1)) {
 #endif
@@ -166,11 +169,11 @@ bool32 Dango_HandleMovement(StateMachine(nextState), uint8 anim)
 
     bool32 collidedWall = false;
     if (self->groundVel <= 0)
-        collidedWall = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, Dango->hitboxBadnik.left << 16, 0, 4);
+        collidedWall = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, Dango->hitboxBadnik.left << 16, 0, 4);
     else
-        collidedWall = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, Dango->hitboxBadnik.right << 16, 0, 4);
+        collidedWall = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, Dango->hitboxBadnik.right << 16, 0, 4);
 
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, 2)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, 2)) {
         uint16 tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 16, (self->position.y + 0xD0000) >> 16);
         self->angle = RSDK.GetTileAngle(tile, 0, 0);
 
@@ -201,6 +204,7 @@ bool32 Dango_HandleMovement(StateMachine(nextState), uint8 anim)
         self->position.x = storeX;
         self->position.y = storeY;
         RSDK.SetSpriteAnimation(Dango->aniFrames, anim, &self->animator, true, 0);
+
         self->state              = nextState;
         self->preventStateChange = true;
     }
@@ -212,13 +216,11 @@ void Dango_State_Setup(void)
 {
     RSDK_THIS(Dango);
 
-    self->active = ACTIVE_NORMAL;
-    if (self->direction == FLIP_NONE)
-        self->groundVel = -0x6000;
-    else
-        self->groundVel = 0x6000;
+    self->active     = ACTIVE_NORMAL;
+    self->groundVel  = self->direction == FLIP_NONE ? -0x6000 : 0x6000;
     self->velocity.y = 0;
-    self->state      = Dango_State_Walking;
+
+    self->state = Dango_State_Walking;
     Dango_State_Walking();
 }
 
@@ -226,8 +228,9 @@ void Dango_State_Walking(void)
 {
     RSDK_THIS(Dango);
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
         RSDK.ProcessAnimation(&self->animator);
+
         Dango_CheckPlayerCollisions();
         Dango_CheckOffScreen();
 
@@ -258,7 +261,8 @@ void Dango_State_Turning(void)
         self->preventStateChange = false;
         self->groundVel          = -self->groundVel;
         self->velocity.x         = -self->velocity.x;
-        self->state              = Dango_State_Walking;
+
+        self->state = Dango_State_Walking;
         self->direction ^= FLIP_X;
     }
     else {
@@ -277,9 +281,10 @@ void Dango_State_Falling_Uncurled(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Dango->aniFrames, 1, &self->animator, true, 0);
+
         self->state = Dango_State_Walking;
     }
     else {
@@ -295,11 +300,8 @@ void Dango_State_Curling(void)
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Dango->aniFrames, 2, &self->animator, true, 0);
-        self->state = Dango_State_Rolling;
-        if (self->direction == FLIP_NONE)
-            self->groundVel = -0x20000;
-        else
-            self->groundVel = 0x20000;
+        self->state     = Dango_State_Rolling;
+        self->groundVel = self->direction == FLIP_NONE ? -0x20000 : 0x20000;
     }
     else {
         Dango_CheckPlayerCollisions();
@@ -312,9 +314,11 @@ void Dango_State_Rolling(void)
     RSDK_THIS(Dango);
 
     RSDK.ProcessAnimation(&self->animator);
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
+
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
         Dango_CheckPlayerCollisions();
         Dango_CheckOffScreen();
+
         Dango_HandleMovement(Dango_State_Uncurling, 4);
     }
     else {
@@ -333,7 +337,7 @@ void Dango_State_Falling_Curled(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
         self->velocity.y = 0;
         self->state      = Dango_State_Rolling;
     }
@@ -348,15 +352,13 @@ void Dango_State_Uncurling(void)
     RSDK_THIS(Dango);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Dango->aniFrames, 1, &self->animator, true, 0);
         self->preventStateChange = false;
         self->rollDelay          = 30;
-        if (self->direction == FLIP_NONE)
-            self->groundVel = -0x6000;
-        else
-            self->groundVel = 0x6000;
-        self->state = Dango_State_Walking;
+        self->groundVel          = self->direction == FLIP_NONE ? -0x6000 : 0x6000;
+        self->state              = Dango_State_Walking;
     }
     else {
         Dango_CheckPlayerCollisions();
@@ -373,6 +375,7 @@ void Dango_StateTaunt_Setup(void)
         self->timer     = 0;
         self->groundVel = 0x60000;
         self->state     = Dango_StateTaunt_RollIn;
+
         RSDK.SetSpriteAnimation(Dango->aniFrames, 2, &self->animator, true, 0);
     }
 }
@@ -384,7 +387,7 @@ void Dango_StateTaunt_RollIn(void)
     RSDK.ProcessAnimation(&self->animator);
 
     self->position.x += self->groundVel;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xE0000, 14);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xE0000, 14);
 
     foreach_active(PhantomRuby, ruby)
     {
@@ -394,6 +397,7 @@ void Dango_StateTaunt_RollIn(void)
             ruby->state      = PhantomRuby_State_MoveGravity;
             ruby->velocity.x = self->groundVel;
             ruby->velocity.y = -0x80000;
+
             RSDK.SetSpriteAnimation(Dango->aniFrames, 4, &self->animator, true, 0);
         }
     }
@@ -419,6 +423,7 @@ void Dango_StateTaunt_Taunting(void)
     RSDK_THIS(Dango);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == self->animator.frameCount - 1)
         ++self->timer;
 
@@ -434,6 +439,7 @@ void Dango_StateTaunt_Turning(void)
     RSDK_THIS(Dango);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Dango->aniFrames, 3, &self->animator, true, 0);
         self->direction = FLIP_NONE;
@@ -446,6 +452,7 @@ void Dango_StateTaunt_RollOut(void)
     RSDK_THIS(Dango);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.animationID == 3) {
         if (self->animator.frameID == self->animator.frameCount - 1)
             RSDK.SetSpriteAnimation(Dango->aniFrames, 2, &self->animator, true, 0);

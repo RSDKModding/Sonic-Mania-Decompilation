@@ -107,7 +107,7 @@ void Motobug_State_Fall(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         self->wasTurning = true;
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &self->animator, true, 0);
@@ -125,15 +125,15 @@ void Motobug_State_Move(void)
 
     self->position.x += self->velocity.x;
 
-    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
+    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         RSDK.SetSpriteAnimation(Motobug->aniFrames, 1, &self->animator, true, 0);
         self->turnTimer = 0;
 
         bool32 collided = false;
         if (self->direction)
-            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
+            collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
         else
-            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
+            collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
 
         if (collided)
             self->state = Motobug_State_Idle;
@@ -163,9 +163,9 @@ void Motobug_State_Idle(void)
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
 
     if (collided) {
         ++self->turnTimer;
@@ -213,9 +213,9 @@ void Motobug_State_Turn(void)
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
 
     if (collided) {
         if (self->animator.frameID == self->animator.frameCount - 1) {

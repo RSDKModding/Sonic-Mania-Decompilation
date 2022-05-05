@@ -13,7 +13,7 @@ struct ObjectPSZ1Intro {
 struct EntityPSZ1Intro {
     RSDK_ENTITY
     int32 timer;
-    EntityHangGlider *gliders[4];
+    EntityHangGlider *gliders[PLAYER_MAX];
 };
 
 // Object Struct

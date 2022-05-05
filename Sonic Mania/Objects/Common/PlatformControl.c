@@ -12,13 +12,15 @@ ObjectPlatformControl *PlatformControl;
 void PlatformControl_Update(void)
 {
     RSDK_THIS(PlatformControl);
+
     self->active = ACTIVE_NORMAL;
-    int32 nodeSlot  = RSDK.GetEntityID(self) + 1;
-    int32 platSlot   = nodeSlot + self->nodeCount;
+
+    int32 startNodeSlot = RSDK.GetEntityID(self) + 1;
+    int32 platformSlot  = startNodeSlot + self->nodeCount;
 
     if (self->isActive) {
         for (int32 c = 0; c < self->childCount; ++c) {
-            EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
+            EntityPlatform *platform = RSDK_GET_ENTITY(platformSlot, Platform);
             EntityPlatformNode *node = RSDK_GET_ENTITY(platform->speed, PlatformNode);
 
             int32 finishDir = 0;
@@ -42,64 +44,71 @@ void PlatformControl_Update(void)
 
             if (finishDir == (1 | 2)) {
                 platform->timer = node->nodeFlag;
-                if (platform->direction < 4) {
-                    if (++platform->speed - nodeSlot >= self->nodeCount) {
-                        switch (self->type) {
-                            case 0: platform->speed = nodeSlot; break;
 
-                            case 1:
+                if (platform->direction < 4) {
+                    int32 nodeID = ++platform->speed - startNodeSlot;
+                    if (nodeID >= self->nodeCount) {
+                        switch (self->type) {
+                            case PLATFORMCONTROL_LOOP: platform->speed = startNodeSlot; break;
+
+                            case PLATFORMCONTROL_PINGPONG:
                                 --platform->speed;
                                 platform->direction = platform->direction ^ 4;
                                 break;
 
-                            case 2: {
-                                Entity *ent         = RSDK.GetEntityByID(nodeSlot);
+                            case PLATFORMCONTROL_TOSTART: {
+                                Entity *ent         = RSDK.GetEntityByID(startNodeSlot);
                                 platform->drawPos.x = ent->position.x;
                                 platform->drawPos.y = ent->position.y;
-                                platform->speed     = nodeSlot + 1;
+                                platform->speed     = startNodeSlot + 1;
                                 break;
                             }
 
-                            case 3: self->speed = 0; break;
+                            case PLATFORMCONTROL_STOP: self->speed = 0; break;
                         }
                     }
                 }
                 else {
-                    if (--platform->speed - nodeSlot < 0) {
+                    int32 nodeID = --platform->speed - startNodeSlot;
+                    if (nodeID < 0) {
                         switch (self->type) {
-                            case 0: platform->speed = nodeSlot + (self->nodeCount - 1); break;
+                            default:
+                            case PLATFORMCONTROL_STOP: break;
 
-                            case 1:
+                            case PLATFORMCONTROL_LOOP: platform->speed = startNodeSlot + (self->nodeCount - 1); break;
+
+                            case PLATFORMCONTROL_PINGPONG:
                                 platform->direction = platform->direction ^ 4;
                                 platform->speed     = platform->speed + 1;
                                 break;
 
-                            case 2: {
-                                Entity *ent         = RSDK.GetEntityByID(nodeSlot + self->nodeCount - 1);
+                            case PLATFORMCONTROL_TOSTART: {
+                                Entity *ent         = RSDK.GetEntityByID(startNodeSlot + self->nodeCount - 1);
                                 platform->drawPos.x = ent->position.x;
                                 platform->drawPos.y = ent->position.y;
-                                platform->speed     = nodeSlot + (self->nodeCount - 2);
+                                platform->speed     = startNodeSlot + (self->nodeCount - 2);
                                 break;
                             }
                         }
                     }
                 }
-                PlatformControl_ManagePlatformVelocity(platform, (Entity*)RSDK_GET_ENTITY(platform->speed, PlatformNode));
+
+                PlatformControl_ManagePlatformVelocity(platform, RSDK_GET_ENTITY(platform->speed, PlatformNode));
             }
 
-            platSlot += platform->childCount + 1;
+            platformSlot += platform->childCount + 1;
         }
     }
     else {
-        EntityButton *button = (EntityButton *)self->taggedButton;
+        EntityButton *button = self->taggedButton;
 
         if (button && button->currentlyActive)
             self->setActive = true;
 
         if (self->setActive) {
             for (int32 c = 0; c < self->childCount; ++c) {
-                EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
-                if (platform->state == Platform_State_WaitForControl)
+                EntityPlatform *platform = RSDK_GET_ENTITY(platformSlot, Platform);
+                if (platform->state == Platform_State_AwaitControlCommand)
                     platform->state = Platform_State_Controlled;
 
                 if (platform->state == Platform_State_ActivateControlOnStood) {
@@ -107,27 +116,30 @@ void PlatformControl_Update(void)
                     return;
                 }
 
-                platform->speed += nodeSlot;
+                platform->speed += startNodeSlot;
                 platform->active = ACTIVE_NORMAL;
-                PlatformControl_ManagePlatformVelocity(platform, (Entity *)RSDK_GET_ENTITY(platform->speed, PlatformNode));
-                platSlot += platform->childCount + 1;
+                PlatformControl_ManagePlatformVelocity(platform, RSDK_GET_ENTITY(platform->speed, PlatformNode));
+                platformSlot += platform->childCount + 1;
             }
+
             self->isActive = true;
         }
     }
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         self->active = ACTIVE_BOUNDS;
-        int32 slot       = nodeSlot + self->nodeCount;
+
+        int32 slot = startNodeSlot + self->nodeCount;
         for (int32 c = 0; c < self->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
             if (platform->state == Platform_State_Controlled) {
-                platform->speed -= nodeSlot;
-                platform->state  = Platform_State_WaitForControl;
+                platform->speed -= startNodeSlot;
+                platform->state  = Platform_State_AwaitControlCommand;
                 platform->active = ACTIVE_BOUNDS;
             }
             slot += platform->childCount + 1;
         }
+
         self->isActive = false;
     }
 }
@@ -141,15 +153,17 @@ void PlatformControl_Draw(void) {}
 void PlatformControl_Create(void *data)
 {
     RSDK_THIS(PlatformControl);
+
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_BOUNDS;
-        int32 id         = RSDK.GetEntityID(self) + 1;
+
+        int32 id = RSDK.GetEntityID(self) + 1;
         for (int32 i = 0; i < self->nodeCount; ++i) {
             Entity *node = RSDK.GetEntityByID(id++);
-            if (abs(node->position.x - self->position.x) > self->updateRange.x) 
+            if (abs(node->position.x - self->position.x) > self->updateRange.x)
                 self->updateRange.x = abs(node->position.x - self->position.x);
 
-            if (abs(node->position.y - self->position.y) > self->updateRange.y) 
+            if (abs(node->position.y - self->position.y) > self->updateRange.y)
                 self->updateRange.y = abs(node->position.y - self->position.y);
         }
 
@@ -159,25 +173,27 @@ void PlatformControl_Create(void *data)
         self->updateRange.x += 0x800000;
         self->updateRange.y += 0x800000;
 
-        self->taggedButton   = NULL;
-        Entity *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
-
+        self->taggedButton         = NULL;
+        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
         if (self->buttonTag > 0) {
+            bool32 foundButton = false;
             if (Button) {
                 foreach_all(Button, button)
                 {
                     if (button->tag == self->buttonTag) {
-                        taggedButton = (Entity *)button;
+                        taggedButton = button;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
             }
 
-            if (SDashWheel && !taggedButton) {
+            if (SDashWheel && !foundButton) {
                 foreach_all(SDashWheel, wheel)
                 {
                     if (wheel->tag == self->buttonTag) {
-                        taggedButton = (Entity *)wheel;
+                        taggedButton = (EntityButton *)wheel;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
@@ -187,7 +203,8 @@ void PlatformControl_Create(void *data)
                 foreach_all(PullChain, chain)
                 {
                     if (chain->tag == self->buttonTag) {
-                        taggedButton = (Entity *)chain;
+                        taggedButton = (EntityButton *)chain;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
@@ -211,20 +228,24 @@ void PlatformControl_Create(void *data)
 
 void PlatformControl_StageLoad(void) {}
 
-void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, Entity *node)
+void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, EntityPlatformNode *node)
 {
     RSDK_THIS(PlatformControl);
+
     int32 distX = abs((node->position.x - platform->drawPos.x) >> 16);
     int32 distY = abs((node->position.y - platform->drawPos.y) >> 16);
+
     if (distY >= distX) {
         if (distY)
             platform->velocity.x = self->speed * (((distX << 16) / distY) >> 2);
         else
             platform->velocity.x = 0;
+
         platform->velocity.y = self->speed << 14;
     }
     else {
         platform->velocity.x = self->speed << 14;
+
         if (distX)
             platform->velocity.y = self->speed * (((distY << 16) / distX) >> 2);
         else
@@ -242,28 +263,38 @@ void PlatformControl_EditorDraw(void)
 {
     RSDK_THIS(PlatformControl);
 
+    if (HUD) {
+        Animator animator;
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 0, &animator, false, 7);
+        RSDK.DrawSprite(&animator, NULL, false);
+    }
+
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
     if (showGizmos()) {
-        self->taggedButton   = NULL;
-        Entity *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
 
+        self->taggedButton         = NULL;
+        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
         if (self->buttonTag > 0) {
+            bool32 foundButton = false;
             if (Button) {
                 foreach_all(Button, button)
                 {
                     if (button->tag == self->buttonTag) {
-                        taggedButton = (Entity *)button;
+                        taggedButton = button;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
             }
-            if (SDashWheel && !taggedButton) {
+
+            if (SDashWheel && !foundButton) {
                 foreach_all(SDashWheel, wheel)
                 {
                     if (wheel->tag == self->buttonTag) {
-                        taggedButton = (Entity *)wheel;
+                        taggedButton = (EntityButton *)wheel;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
@@ -273,7 +304,8 @@ void PlatformControl_EditorDraw(void)
                 foreach_all(PullChain, chain)
                 {
                     if (chain->tag == self->buttonTag) {
-                        taggedButton = (Entity *)chain;
+                        taggedButton = (EntityButton *)chain;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
@@ -294,13 +326,55 @@ void PlatformControl_EditorDraw(void)
         }
 
         RSDK_DRAWING_OVERLAY(true);
-        if (self->taggedButton)
-            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00);
+        if (self->taggedButton) {
+            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00,
+                                  INK_NONE, 0xFF);
+        }
+
+        int32 startNodeSlot = RSDK.GetEntityID(self) + 1;
+
+        EntityPlatformNode *lastNode = RSDK_GET_ENTITY(startNodeSlot, PlatformNode);
+        for (int32 n = 1; n < self->nodeCount; ++n) {
+            EntityPlatformNode *node = RSDK_GET_ENTITY(startNodeSlot + n, PlatformNode);
+
+            if (lastNode && node) {
+                DrawHelpers_DrawArrow(lastNode->position.x, lastNode->position.y, node->position.x, node->position.y, 0xFF0000, INK_NONE, 0xFF);
+            }
+            lastNode = node;
+        }
+
+        if (lastNode) {
+            EntityPlatformNode *node = RSDK_GET_ENTITY(startNodeSlot, PlatformNode);
+            if (node && self->type != PLATFORMCONTROL_STOP) {
+                DrawHelpers_DrawArrow(lastNode->position.x, lastNode->position.y, node->position.x, node->position.y, 0xFF0000, INK_NONE, 0xFF);
+            }
+        }
+
+        int32 platformSlot  = startNodeSlot + self->nodeCount;
+        for (int32 c = 0; c < self->childCount; ++c) {
+            EntityPlatform *platform = RSDK_GET_ENTITY(platformSlot, Platform);
+            platformSlot++;
+
+            if (platform) {
+                platformSlot += platform->childCount;
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFFFF, INK_NONE, 0xFF);
+            }
+        }
+
+
         RSDK_DRAWING_OVERLAY(false);
     }
 }
 
-void PlatformControl_EditorLoad(void) {}
+void PlatformControl_EditorLoad(void)
+{
+
+    RSDK_ACTIVE_VAR(PlatformControl, type);
+    RSDK_ENUM_VAR("Loop around", PLATFORMCONTROL_LOOP);
+    RSDK_ENUM_VAR("Ping-Pong back and forth", PLATFORMCONTROL_PINGPONG);
+    RSDK_ENUM_VAR("Goto Starting node", PLATFORMCONTROL_TOSTART);
+    RSDK_ENUM_VAR("Stop", PLATFORMCONTROL_STOP);
+}
 #endif
 
 void PlatformControl_Serialize(void)

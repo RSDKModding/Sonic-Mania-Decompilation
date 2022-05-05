@@ -38,7 +38,7 @@ void WoodChipper_Update(void);
 void WoodChipper_LateUpdate(void);
 void WoodChipper_StaticUpdate(void);
 void WoodChipper_Draw(void);
-void WoodChipper_Create(void* data);
+void WoodChipper_Create(void *data);
 void WoodChipper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void WoodChipper_EditorDraw(void);
@@ -52,4 +52,4 @@ void WoodChipper_HandlePlayerCollisions(void);
 void WoodChipper_State_Chipper(void);
 void WoodChipper_State_Debris(void);
 
-#endif //!OBJ_WOODCHIPPER_H
+#endif //! OBJ_WOODCHIPPER_H

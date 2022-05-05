@@ -25,13 +25,13 @@ typedef enum {
     ITEMBOX_STOCK,
 #endif
     ITEMBOX_COUNT
-}ItemBoxTypes;
+} ItemBoxTypes;
 
 // Object Class
 struct ObjectItemBox {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Hitbox hiddenHitbox;
+    Hitbox hitboxItemBox;
+    Hitbox hitboxHidden;
     int32 brokenFrame;
     uint16 aniFrames;
     uint16 sfxDestroy;
@@ -75,7 +75,7 @@ void ItemBox_Update(void);
 void ItemBox_LateUpdate(void);
 void ItemBox_StaticUpdate(void);
 void ItemBox_Draw(void);
-void ItemBox_Create(void* data);
+void ItemBox_Create(void *data);
 void ItemBox_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ItemBox_EditorDraw(void);
@@ -88,12 +88,12 @@ void ItemBox_DebugDraw(void);
 void ItemBox_DebugSpawn(void);
 void ItemBox_CheckHit(void);
 void ItemBox_GivePowerup(void);
-void ItemBox_Break(EntityItemBox *itemBox, void *p);
+void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player);
 bool32 ItemBox_HandleFallingCollision(void);
-bool32 ItemBox_HandlePlatformCollision(void *p);
+bool32 ItemBox_HandlePlatformCollision(void *platform);
 void ItemBox_HandleObjectCollisions(void);
 
-//Entity States
+// Entity States
 void ItemBox_State_Broken(void);
 void ItemBox_State_ContentsShown(void);
 void ItemBox_State_ContentsDisappear(void);
@@ -101,4 +101,4 @@ void ItemBox_State_Normal(void);
 void ItemBox_State_Falling(void);
 void ItemBox_State_Conveyor(void);
 
-#endif //!OBJ_ITEMBOX_H
+#endif //! OBJ_ITEMBOX_H

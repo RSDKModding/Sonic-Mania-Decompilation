@@ -71,7 +71,7 @@ void PhantomRider_Create(void *data)
             RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 6, &self->thrustAnimator, true, 0);
             self->direction       = FLIP_X;
             self->collisionPlane  = 1;
-            self->collisionLayers = Zone->fgLayers;
+            self->collisionLayers = Zone->collisionLayers;
             self->startPos        = self->position;
             self->hitbox.left     = -24;
             self->hitbox.top      = 0;

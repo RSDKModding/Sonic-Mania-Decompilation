@@ -8,11 +8,11 @@
 struct ObjectDialogRunner {
     RSDK_OBJECT
     int32 authForbidden;
-    bool32 signedout;
+    bool32 signedOut;
     int32 unused1;
     int32 unused2;
     bool32 isAutoSaving;
-    void *entityPtr;
+    void *activeCallback;
     int32 unused3;
     int32 unused4;
 };
@@ -66,7 +66,7 @@ bool32 DialogRunner_CheckUnreadNotifs(void);
 bool32 DialogRunner_NotifyAutosave(void);
 void DialogRunner_GetUserAuthStatus(void);
 void DialogRunner_PromptSavePreference(int32 id);
-void DialogRunner_SignedOutCB(void);
+void DialogRunner_CheckUserAuth_OK(void);
 #endif
 
 #endif //! OBJ_DIALOGRUNNER_H

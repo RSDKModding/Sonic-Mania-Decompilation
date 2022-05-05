@@ -86,31 +86,37 @@ void ColorHelpers_Unknown2(int32 a1, int32 a2, int32 brightness, uint32 *r, uint
                 newG = brightness - (val * (60 - a2 % 60)) / 60;
                 newB = brightness - val;
                 break;
+
             case 1:
                 newR = brightness - a2 % 60 * val / 60;
                 newG = brightness;
                 newB = brightness - val;
                 break;
+
             case 2:
                 newR = brightness - val;
                 newG = brightness;
                 newB = brightness - (val * (60 - a2 % 60)) / 60;
                 break;
+
             case 3:
                 newG = brightness - a2 % 60 * val / 60;
                 newR = (brightness - val);
                 newB = brightness;
                 break;
+
             case 4:
                 newG = brightness - val;
                 newB = brightness;
                 newR = *g;
                 break;
+
             case 5:
                 newG = brightness - val;
                 newR = brightness;
                 newB = brightness - a2 % 60 * val / 60;
                 break;
+
             default:
                 newG = *g;
                 newB = *g;
@@ -123,6 +129,7 @@ void ColorHelpers_Unknown2(int32 a1, int32 a2, int32 brightness, uint32 *r, uint
         newG = brightness;
         newB = brightness;
     }
+
     if (g)
         *g = newR;
     if (r)

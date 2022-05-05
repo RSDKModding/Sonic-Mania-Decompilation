@@ -12,6 +12,7 @@ ObjectCPZ2Outro *CPZ2Outro;
 void CPZ2Outro_Update(void)
 {
     RSDK_THIS(CPZ2Outro);
+
     if (!self->activated) {
         CPZ2Outro_SetupCutscene();
         self->activated = true;
@@ -35,10 +36,10 @@ void CPZ2Outro_Create(void *data)
 
 void CPZ2Outro_StageLoad(void)
 {
-    CPZ2Outro->prisonPtr = NULL;
+    CPZ2Outro->eggPrison = NULL;
     foreach_all(EggPrison, prison)
     {
-        CPZ2Outro->prisonPtr = (Entity *)prison;
+        CPZ2Outro->eggPrison = prison;
         foreach_break;
     }
 }
@@ -49,6 +50,7 @@ void CPZ2Outro_SetupCutscene(void)
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
 
     CutsceneSeq_StartSequence(self, CPZ2Outro_Cutscene_Outro, StateMachine_None);
+
 #if RETRO_USE_PLUS
     if (seq->objectID)
         seq->skipType = SKIPTYPE_RELOADSCN;
@@ -57,10 +59,8 @@ void CPZ2Outro_SetupCutscene(void)
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
-bool32 CPZ2Outro_Cutscene_Outro(void *h)
+bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
-
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
@@ -68,18 +68,19 @@ bool32 CPZ2Outro_Cutscene_Outro(void *h)
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
 
     if (!host->timer) {
-        ((EntityEggPrison *)CPZ2Outro->prisonPtr)->notSolid = true;
-        Zone->cameraBoundsT[0]                              = 0;
-        Zone->cameraBoundsT[1]                              = 0;
-        Zone->cameraBoundsR[0]                              = size.x;
-        Zone->cameraBoundsR[1]                              = size.x;
-        Zone->playerBoundActiveR[0]                         = 0;
-        Zone->playerBoundActiveR[1]                         = 0;
+        CPZ2Outro->eggPrison->notSolid = true;
+        Zone->cameraBoundsT[0]         = 0;
+        Zone->cameraBoundsT[1]         = 0;
+        Zone->cameraBoundsR[0]         = size.x;
+        Zone->cameraBoundsR[1]         = size.x;
+        Zone->playerBoundActiveR[0]    = 0;
+        Zone->playerBoundActiveR[1]    = 0;
         CutsceneSeq_LockAllPlayerControl();
         player1->stateInput = StateMachine_None;
         player1->state      = Player_State_Ground;
         player1->groundVel  = 0;
         player1->right      = true;
+
         if (player2->objectID == Player->objectID) {
             player2->state      = Player_State_Ground;
             player2->stateInput = Player_ProcessP2Input_AI;
@@ -92,7 +93,7 @@ bool32 CPZ2Outro_Cutscene_Outro(void *h)
 
     if (player1->onGround && player1->position.x >= host->activeEntity->position.x && !host->values[0]) {
         player1->jumpPress = true;
-        host->values[0]    = 1;
+        host->values[0]    = true;
     }
 
     if (player1->position.x > size.x << 16) {

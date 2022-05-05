@@ -10,7 +10,7 @@ typedef enum {
     EGGPRISON_RINGS,
     EGGPRISON_TRAP,
     EGGPRISON_SPRING,
-}EggPrisonTypes;
+} EggPrisonTypes;
 
 // Object Class
 struct ObjectEggPrison {
@@ -47,7 +47,7 @@ void EggPrison_Update(void);
 void EggPrison_LateUpdate(void);
 void EggPrison_StaticUpdate(void);
 void EggPrison_Draw(void);
-void EggPrison_Create(void* data);
+void EggPrison_Create(void *data);
 void EggPrison_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EggPrison_EditorDraw(void);
@@ -57,6 +57,7 @@ void EggPrison_Serialize(void);
 
 // Extra Entity Functions
 void EggPrison_HandleMovement(void);
+
 void EggPrison_State_Activated(void);
 void EggPrison_State_Setup(void);
 void EggPrison_State_HandleBounds(void);
@@ -64,4 +65,4 @@ void EggPrison_State_Explode(void);
 void EggPrison_State_SetupActClear(void);
 void EggPrison_State_FlyOffScreen(void);
 
-#endif //!OBJ_EGGPRISON_H
+#endif //! OBJ_EGGPRISON_H

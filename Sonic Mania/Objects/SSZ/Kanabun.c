@@ -12,6 +12,7 @@ ObjectKanabun *Kanabun;
 void Kanabun_Update(void)
 {
     RSDK_THIS(Kanabun);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void Kanabun_StaticUpdate(void) {}
 void Kanabun_Draw(void)
 {
     RSDK_THIS(Kanabun);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -40,6 +42,7 @@ void Kanabun_Create(void *data)
     }
 
     self->drawFX = FX_FLIP | FX_ROTATE | FX_SCALE;
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
@@ -60,10 +63,10 @@ void Kanabun_StageLoad(void)
     else if (RSDK.CheckStageFolder("SSZ2"))
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Kanabun.bin", SCOPE_STAGE);
 
-    Kanabun->hitbox.left   = -6;
-    Kanabun->hitbox.top    = -6;
-    Kanabun->hitbox.right  = 6;
-    Kanabun->hitbox.bottom = 6;
+    Kanabun->hitboxBadnik.left   = -6;
+    Kanabun->hitboxBadnik.top    = -6;
+    Kanabun->hitboxBadnik.right  = 6;
+    Kanabun->hitboxBadnik.bottom = 6;
 
     DEBUGMODE_ADD_OBJ(Kanabun);
 }
@@ -71,6 +74,7 @@ void Kanabun_StageLoad(void)
 void Kanabun_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Kanabun, NULL, self->position.x, self->position.y);
 }
 
@@ -86,7 +90,7 @@ void Kanabun_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Kanabun->hitbox))
+        if (Player_CheckBadnikTouch(player, self, &Kanabun->hitboxBadnik))
             Player_CheckBadnikBreak(player, self, true);
     }
 }
@@ -94,10 +98,10 @@ void Kanabun_CheckPlayerCollisions(void)
 void Kanabun_CheckOffScreen(void)
 {
     RSDK_THIS(Kanabun);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Kanabun_Create(NULL);
     }
 }
@@ -108,10 +112,12 @@ void Kanabun_HandleMovement(void)
 
     self->position.x += self->velocity.x;
     self->position.y = ((self->bobDist * RSDK.Sin512(self->angle)) << 8) + self->startPos.y;
+
     self->angle += self->angleVel;
 
     self->scale.x = (abs(RSDK.Sin512(((self->angle >> 1) + 0x80) & 0x1FF)) >> 1) + 0x100;
     self->scale.y = self->scale.x;
+
     if (((uint32)(self->angle - 0x80) & 0x1FF) >= 0x100)
         self->drawOrder = Zone->objectDrawHigh;
     else
@@ -125,6 +131,7 @@ void Kanabun_State_Setup(void)
     self->velocity.x = self->hVel;
     if (self->direction == FLIP_NONE)
         self->velocity.x = -self->velocity.x;
+
     self->active = ACTIVE_NORMAL;
 
     self->state = Kanabun_State_Moving;
@@ -141,13 +148,15 @@ void Kanabun_State_Moving(void)
         if (self->groundVel == 1)
             self->groundVel = 0;
     }
-    else if (!self->groundVel) {
-        self->groundVel = 1;
+    else {
+        if (!self->groundVel)
+            self->groundVel = 1;
     }
 
-    int32 vel = self->hVel * self->hDist * (0x100 / self->angleVel);
-    if ((self->direction == FLIP_NONE && self->position.x <= (self->startPos.x - vel))
-        || (self->direction == FLIP_X && self->position.x >= (self->startPos.x + vel))) {
+    int32 offset = self->hVel * self->hDist * (0x100 / self->angleVel);
+
+    if ((self->direction == FLIP_NONE && self->position.x <= (self->startPos.x - offset))
+        || (self->direction == FLIP_X && self->position.x >= (self->startPos.x + offset))) {
         RSDK.SetSpriteAnimation(Kanabun->aniFrames, 1, &self->animator, true, 0);
         self->state = Kanabun_State_Turning;
     }
@@ -163,7 +172,9 @@ void Kanabun_State_Moving(void)
 void Kanabun_State_Turning(void)
 {
     RSDK_THIS(Kanabun);
+
     Kanabun_HandleMovement();
+
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
@@ -176,6 +187,7 @@ void Kanabun_State_Turning(void)
     else {
         if (self->drawOrder == Zone->objectDrawHigh)
             Kanabun_CheckPlayerCollisions();
+
         Kanabun_CheckOffScreen();
     }
 }
@@ -184,6 +196,7 @@ void Kanabun_State_Turning(void)
 void Kanabun_EditorDraw(void)
 {
     RSDK_THIS(Kanabun);
+
     RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &self->animator, false, 0);
     self->scale.x = 0x200;
     self->scale.y = 0x200;
@@ -199,8 +212,8 @@ void Kanabun_EditorLoad(void)
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Kanabun.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Kanabun, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 }
 #endif
 

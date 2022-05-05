@@ -14,18 +14,19 @@ void LightBarrier_Update(void) {}
 void LightBarrier_LateUpdate(void)
 {
     RSDK_THIS(LightBarrier);
+
     if (self->enabled) {
-        if (self->alphaTimer < 160)
-            self->alphaTimer += 4;
+        if (self->barrierAlpha < 0xA0)
+            self->barrierAlpha += 4;
 
         foreach_active(Player, player)
         {
-            if (self->position.x > (ScreenInfo->position.x + ScreenInfo->centerX) << 16 || player->velocity.x < 0) {
-                Player_CheckCollisionBox(player, self, &self->hitbox);
-            }
+            if (self->position.x > (ScreenInfo->position.x + ScreenInfo->centerX) << 16 || player->velocity.x < 0)
+                Player_CheckCollisionBox(player, self, &self->hitboxBarrier);
         }
+
         self->timer = (self->timer + 2) & 0x3F;
-        self->alpha = (RSDK.Sin256(2 * Zone->timer) >> 3) + self->alphaTimer;
+        self->alpha = self->barrierAlpha + (RSDK.Sin256(2 * Zone->timer) >> 3);
     }
 }
 
@@ -34,6 +35,7 @@ void LightBarrier_StaticUpdate(void) {}
 void LightBarrier_Draw(void)
 {
     RSDK_THIS(LightBarrier);
+
     Vector2 drawPos = self->position;
     self->inkEffect = INK_NONE;
     self->direction = FLIP_NONE;
@@ -51,17 +53,20 @@ void LightBarrier_Draw(void)
         int32 timer        = self->timer;
         SpriteFrame *frame = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
         drawPos.y += 0x80000;
-        for (int32 i = 8; i < self->size - 8;) {
+
+        int32 size = self->size - 8;
+        for (int32 i = 8; i < size;) {
             int32 height = 64 - timer;
-            if (64 - timer + i > (self->size - 8))
-                height = (self->size - 8) - i;
+            if (64 - timer + i > size)
+                height = size - i;
+
             frame->sprY   = timer + (self->sprY & 0xFFFF);
             frame->height = height;
             RSDK.DrawSprite(&self->barrierAnimator, &drawPos, false);
 
             i += height;
             drawPos.y += height << 16;
-            timer = (height + timer) & 0x3F;
+            timer = (timer + height) & 0x3F;
         }
     }
 }
@@ -75,18 +80,21 @@ void LightBarrier_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawHigh;
-        self->updateRange.y = self->size << 15;
         self->updateRange.x = 0x800000;
+        self->updateRange.y = self->size << 15;
+
         RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->emitterAnimator, true, 0);
         RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->barrierAnimator, true, 1);
-        SpriteFrame *frame  = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
-        self->sprY          = frame->sprY;
-        self->hitbox.left   = -8;
-        self->hitbox.top    = -(self->size >> 1);
-        self->hitbox.right  = 8;
-        self->hitbox.bottom = self->size >> 1;
+        SpriteFrame *frame = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
+        self->sprY         = frame->sprY;
+
+        self->hitboxBarrier.left   = -8;
+        self->hitboxBarrier.top    = -(self->size >> 1);
+        self->hitboxBarrier.right  = 8;
+        self->hitboxBarrier.bottom = self->size >> 1;
+
         if (self->enabled)
-            self->alphaTimer = 160;
+            self->barrierAlpha = 0xA0;
     }
 }
 
@@ -96,10 +104,11 @@ void LightBarrier_StageLoad(void) { LightBarrier->aniFrames = RSDK.LoadSpriteAni
 void LightBarrier_EditorDraw(void)
 {
     RSDK_THIS(LightBarrier);
-    self->alpha = 160;
+    self->alpha = 0xA0;
 
-    self->updateRange.y = self->size << 15;
     self->updateRange.x = 0x800000;
+    self->updateRange.y = self->size << 15;
+
     RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->emitterAnimator, true, 0);
     RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->barrierAnimator, true, 1);
     SpriteFrame *frame = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);

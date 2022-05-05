@@ -13,7 +13,7 @@ struct ObjectChemicalPool {
     int32 surfaceDeformation[0x1000];
     int32 deformTable[0x1000];
     int32 impactTable[0x1000];
-    uint16 unused; //exists, it's in the static object, but never used
+    uint16 unused; // exists, it's in the static object, but never used
     uint16 sfxChemYellow;
     uint16 sfxChemRed;
     uint16 sfxChemChange;
@@ -33,8 +33,8 @@ struct EntityChemicalPool {
     int32 r;
     int32 g;
     int32 b;
-    int32 startX;
-    int32 endX;
+    int32 leftEdge;
+    int32 rightEdge;
     int32 impactPower;
     int32 impactPowerSides;
     Hitbox hitbox;
@@ -51,7 +51,7 @@ void ChemicalPool_Update(void);
 void ChemicalPool_LateUpdate(void);
 void ChemicalPool_StaticUpdate(void);
 void ChemicalPool_Draw(void);
-void ChemicalPool_Create(void* data);
+void ChemicalPool_Create(void *data);
 void ChemicalPool_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ChemicalPool_EditorDraw(void);
@@ -65,10 +65,10 @@ void ChemicalPool_ProcessDeformations(void);
 void ChemicalPool_SetDeform(int32 impactX, int32 impactVelocity);
 void ChemicalPool_SpawnDebris(int32 x, int32 y);
 void ChemicalPool_SetupColors(void);
-//States
+// States
 void ChemicalPool_State_HarmfulBlue(void);
 void ChemicalPool_State_Green(void);
 void ChemicalPool_State_Cyan(void);
-void ChemicalPool_State_Change(void);
+void ChemicalPool_State_Changing(void);
 
-#endif //!OBJ_CHEMICALPOOL_H
+#endif //! OBJ_CHEMICALPOOL_H

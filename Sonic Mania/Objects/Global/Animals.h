@@ -41,11 +41,11 @@ struct ObjectAnimals {
 struct EntityAnimals {
     RSDK_ENTITY
     StateMachine(state);
-    int32 delay;
+    int32 timer;
     AnimalTypes type;
     AnimalBehaviours behaviour;
     Animator animator;
-    Hitbox hitbox;
+    Hitbox hitboxAnimal;
 };
 
 // Object Struct
@@ -66,7 +66,7 @@ void Animals_Serialize(void);
 
 // Extra Entity Functions
 void Animals_CheckPlayerPos(void);
-bool32 Animals_CheckPlatformCollision(void *plat);
+bool32 Animals_CheckPlatformCollision(void *platform);
 bool32 Animals_CheckGroundCollision(void);
 
 void Animals_State_Freed(void);

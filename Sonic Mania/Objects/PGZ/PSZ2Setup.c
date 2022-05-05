@@ -15,34 +15,32 @@ void PSZ2Setup_LateUpdate(void) {}
 
 void PSZ2Setup_StaticUpdate(void)
 {
-    if (--PSZ2Setup->aniTileDelay < 1) {
-        ++PSZ2Setup->aniTileFrame;
-        PSZ2Setup->aniTileFrame &= 7;
-        PSZ2Setup->aniTileDelay = PSZ2Setup->aniTileDelays[PSZ2Setup->aniTileFrame];
+    if (--PSZ2Setup->petalAniDuration < 1) {
+        ++PSZ2Setup->petalAniFrame;
+        PSZ2Setup->petalAniFrame &= 7;
+        PSZ2Setup->petalAniDuration = PSZ2Setup->petalAniDurationTable[PSZ2Setup->petalAniFrame];
 
-        int32 tileY = 32 * PSZ2Setup->aniTileFrame;
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 260, 0, tileY, 64, 32);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 268, 80, tileY, 48, 16);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 271, 64, tileY + 16, 64, 16);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 159, 0, tileY, 16, 32);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 276, 16, tileY, 32, 16);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 281, 16, tileY + 16, 32, 16);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 279, 48, tileY, 32, 16);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 286, 48, tileY + 16, 32, 16);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 284, 80, tileY, 32, 16);
-        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 289, 80, tileY + 16, 32, 16);
+        int32 sheetY = 32 * PSZ2Setup->petalAniFrame;
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 260, 0, sheetY, 64, 32);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 268, 80, sheetY, 48, 16);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 271, 64, sheetY + 16, 64, 16);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 159, 0, sheetY, 16, 32);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 276, 16, sheetY, 32, 16);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 281, 16, sheetY + 16, 32, 16);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 279, 48, sheetY, 32, 16);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 286, 48, sheetY + 16, 32, 16);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 284, 80, sheetY, 32, 16);
+        RSDK.DrawAniTiles(PSZ2Setup->aniTiles2, 289, 80, sheetY + 16, 32, 16);
     }
 
-    if (RSDK.Sin256(16 * Zone->timer) < 0)
-        RSDK.SetLimitedFade(0, 1, 2, -RSDK.Sin256(16 * Zone->timer), 224, 227);
-    else
-        RSDK.SetLimitedFade(0, 1, 2, -RSDK.Sin256(16 * Zone->timer), 224, 227);
+    RSDK.SetLimitedFade(0, 1, 2, abs(RSDK.Sin256(16 * Zone->timer)), 224, 227);
 
     if (PSZ2Setup->petalBehaviourActive) {
         if (PSZ2Setup->petalTimer <= 0) {
             foreach_active(Player, player)
             {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
+
                 uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                 bool32 isLowLayer = true;
                 if (tile == (uint16)-1) {
@@ -52,7 +50,8 @@ void PSZ2Setup_StaticUpdate(void)
 
                 if (RSDK.GetTileFlags(tile, player->collisionPlane)) {
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
-                        RSDK_THIS_GEN();
+                        RSDK_THIS(PSZ2Setup); // not sure what this is meant to be since this is a StaticUpdate event...
+
                         EntityPetalPile *pile = CREATE_ENTITY(PetalPile, self, player->position.x, player->position.y + (playerHitbox->bottom << 16));
                         pile->leafPattern     = PETALPILE_PATTERN_4;
                         pile->tileLayer       = isLowLayer;
@@ -79,11 +78,13 @@ void PSZ2Setup_Create(void *data) {}
 
 void PSZ2Setup_StageLoad(void)
 {
-    PSZ2Setup->petalBehaviourActive                               = false;
+    PSZ2Setup->petalBehaviourActive = false;
+
     GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSINACTIVE] = PSZ2Setup_TriggerCB_DeactivatePetalBehaviour;
     GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSACTIVE]   = PSZ2Setup_TriggerCB_ActivatePetalBehaviour;
-    PSZ2Setup->aniTiles1         = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
-    PSZ2Setup->aniTiles2         = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
+
+    PSZ2Setup->aniTiles1 = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
+    PSZ2Setup->aniTiles2 = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
 
     if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
         Zone->cameraBoundsL[0] = 1024;
@@ -106,6 +107,8 @@ void PSZ2Setup_StageLoad(void)
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE)
         RSDK.LoadPalette(0, "EncorePSZ2.act", 0b0000000011111111);
+
+    // Fun Fact: Pre-Plus didn't have animal types set for PGZ! It'd always be flickies due to that being the default value!
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_BECKY;
 #endif
@@ -119,6 +122,7 @@ void PSZ2Setup_ActTransitionLoad(void)
 {
     SaveGame_LoadPlayerState();
     Zone_ReloadStoredEntities(472 << 16, 1556 << 16, false);
+
     globals->recallEntities      = false;
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;

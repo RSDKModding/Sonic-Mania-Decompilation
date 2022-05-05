@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectMagSpikeBall {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxSpikeBall;
     uint16 aniFrames;
 };
 

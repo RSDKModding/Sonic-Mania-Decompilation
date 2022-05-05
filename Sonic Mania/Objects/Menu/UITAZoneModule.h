@@ -69,7 +69,7 @@ void UITAZoneModule_Update(void);
 void UITAZoneModule_LateUpdate(void);
 void UITAZoneModule_StaticUpdate(void);
 void UITAZoneModule_Draw(void);
-void UITAZoneModule_Create(void* data);
+void UITAZoneModule_Create(void *data);
 void UITAZoneModule_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UITAZoneModule_EditorDraw(void);
@@ -106,7 +106,7 @@ void UITAZoneModule_State_StartTimeAttackAttempt(void);
 void UITAZoneModule_TouchCB_Left(void);
 void UITAZoneModule_TouchCB_Right(void);
 void UITAZoneModule_ProcessButtonCB_Expanded(void);
-void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, int32 a4, void (*callback)(void));
+void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32 isUser, void (*callback)(void));
 void UITAZoneModule_SetStartupModule(EntityUIControl *control, uint8 characterID, uint32 zoneID, uint8 actID, int32 score);
 void UITAZoneModule_State_ExpandModule(void);
 void UITAZoneModule_State_ContractModule(void);
@@ -115,4 +115,4 @@ void UITAZoneModule_State_Inactive(void);
 void UITAZoneModule_State_ComeBackOnScreen(void);
 #endif
 
-#endif //!OBJ_UITAZONEMODULE_H
+#endif //! OBJ_UITAZONEMODULE_H

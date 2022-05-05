@@ -31,7 +31,7 @@ struct EntityWoodrow {
     int32 rangeMask;
     Vector2 startPos;
     uint8 startDir;
-    Entity *parent;
+    EntityWoodrow *parent;
     Animator animator;
 };
 
@@ -43,7 +43,7 @@ void Woodrow_Update(void);
 void Woodrow_LateUpdate(void);
 void Woodrow_StaticUpdate(void);
 void Woodrow_Draw(void);
-void Woodrow_Create(void* data);
+void Woodrow_Create(void *data);
 void Woodrow_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Woodrow_EditorDraw(void);
@@ -65,4 +65,4 @@ void Woodrow_State_MoveDown(void);
 void Woodrow_State_Bomb(void);
 void Woodrow_State_BombSpawner(void);
 
-#endif //!OBJ_WOODROW_H
+#endif //! OBJ_WOODROW_H

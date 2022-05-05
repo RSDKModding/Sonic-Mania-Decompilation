@@ -16,8 +16,8 @@ struct EntityLightBarrier {
     bool32 enabled;
     int32 timer;
     int32 sprY;
-    int32 alphaTimer;
-    Hitbox hitbox;
+    int32 barrierAlpha;
+    Hitbox hitboxBarrier;
     Animator emitterAnimator;
     Animator barrierAnimator;
 };
@@ -30,7 +30,7 @@ void LightBarrier_Update(void);
 void LightBarrier_LateUpdate(void);
 void LightBarrier_StaticUpdate(void);
 void LightBarrier_Draw(void);
-void LightBarrier_Create(void* data);
+void LightBarrier_Create(void *data);
 void LightBarrier_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LightBarrier_EditorDraw(void);
@@ -40,5 +40,4 @@ void LightBarrier_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_LIGHTBARRIER_H
+#endif //! OBJ_LIGHTBARRIER_H

@@ -16,11 +16,13 @@ void GreenScreen_LateUpdate(void) {}
 void GreenScreen_StaticUpdate(void)
 {
     int32 count = 0;
+
     foreach_active(GreenScreen, screen)
     {
         RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(screen));
         ++count;
     }
+
     GreenScreen->greenScreenActive = count > 0;
 }
 
@@ -32,16 +34,17 @@ void GreenScreen_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->showBG        = true;
+
     if (!self->paraYFactor)
         self->paraYFactor = 32;
 
+    // A... Secondary Setup....?
     GreenScreen->hitbox.left   = -104;
     GreenScreen->hitbox.top    = -64;
     GreenScreen->hitbox.right  = 104;
@@ -129,7 +132,23 @@ void GreenScreen_DrawSprites(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void GreenScreen_EditorDraw(void) { GreenScreen_DrawSprites(); }
+void GreenScreen_EditorDraw(void)
+{
+    RSDK_THIS(GreenScreen);
+
+    self->active        = ACTIVE_BOUNDS;
+    self->startPos      = self->position;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->showBG        = false;
+
+    if (!self->paraYFactor)
+        self->paraYFactor = 32;
+
+    GreenScreen_DrawSprites();
+}
 
 void GreenScreen_EditorLoad(void)
 {

@@ -17,8 +17,7 @@ struct EntityReagent {
     StateMachine(state);
     int32 type;
     int32 timer;
-    int32 startX;
-    int32 unused;
+    Vector2 originPos;
     int32 r;
     int32 g;
     int32 b;

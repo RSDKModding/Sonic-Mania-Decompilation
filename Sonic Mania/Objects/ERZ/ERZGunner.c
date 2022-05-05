@@ -434,7 +434,7 @@ void ERZGunner_State_Mortar(void)
 
     ERZGunner_CheckPlayerMissileCollisions();
     if (self->objectID) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == ERZGUNNER_NAPALM) {
                 EntityERZGunner *child = CREATE_ENTITY(ERZGunner, intToVoid(ERZGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
                 if (self->velocity.y > 0x20000)
@@ -462,7 +462,7 @@ void ERZGunner_State_Napalm(void)
 
     ERZGunner_CheckPlayerMissileCollisions();
     if (self->objectID) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == ERZGUNNER_NAPALM) {
                 EntityERZGunner *child = CREATE_ENTITY(ERZGunner, intToVoid(ERZGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
                 if (self->velocity.y > 0x20000)

@@ -3,16 +3,6 @@
 
 #include "SonicMania.h"
 
-typedef enum {
-    TAEMERALD_GREEN,
-    TAEMERALD_YELLOW,
-    TAEMERALD_BLUE,
-    TAEMERALD_PURPLE,
-    TAEMERALD_GRAY,
-    TAEMERALD_CYAN,
-    TAEMERALD_RED,
-}TAEmeraldColors;
-
 // Object Class
 struct ObjectTAEmerald {
     RSDK_OBJECT
@@ -25,7 +15,7 @@ struct EntityTAEmerald {
     StateMachine(state);
     uint8 color;
     int32 timer;
-    Vector2 startPos;
+    Vector2 originPos;
     Animator animator;
 };
 
@@ -37,7 +27,7 @@ void TAEmerald_Update(void);
 void TAEmerald_LateUpdate(void);
 void TAEmerald_StaticUpdate(void);
 void TAEmerald_Draw(void);
-void TAEmerald_Create(void* data);
+void TAEmerald_Create(void *data);
 void TAEmerald_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TAEmerald_EditorDraw(void);
@@ -49,4 +39,4 @@ void TAEmerald_Serialize(void);
 void TAEmerald_State_Oscillate(void);
 void TAEmerald_State_MoveCircle(void);
 
-#endif //!OBJ_TAEMERALD_H
+#endif //! OBJ_TAEMERALD_H

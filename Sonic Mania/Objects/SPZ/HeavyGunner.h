@@ -126,7 +126,7 @@ void HeavyGunner_StateMissile_ReturnToSender(void);
 void HeavyGunner_StateMissile_AttackRobo(void);
 void HeavyGunner_StateMissile_AttackGunner(void);
 
-void HeavyGunner_StateHeli_WaitForPlayer(void);
+void HeavyGunner_StateHeli_AwaitPlayer(void);
 void HeavyGunner_StateHeli_WooshIn(void);
 void HeavyGunner_StateHeli_FindFloor(void);
 void HeavyGunner_StateHeli_HandleAttacks(void);

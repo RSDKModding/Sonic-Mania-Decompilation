@@ -35,21 +35,21 @@ extern uint16 tintLookupTable[0x10000];
 #define PACK_RGB888(r, g, b) RGB888_TO_RGB565(r, g, b)
 
 #if RETRO_REV02
-void LoadPalette(uint8 paletteID, const char *filePath, uint16 rowFlags);
+void LoadPalette(uint8 bankID, const char *filePath, uint16 rowFlags);
 #endif
 
-inline void SetActivePalette(uint8 newActivePal, int32 startLine, int32 endLine)
+inline void SetActivePalette(uint8 newActiveBank, int32 startLine, int32 endLine)
 {
-    if (newActivePal < PALETTE_COUNT)
-        for (int32 l = startLine; l < endLine && l < SCREEN_YSIZE; l++) gfxLineBuffer[l] = newActivePal;
+    if (newActiveBank < PALETTE_COUNT)
+        for (int32 l = startLine; l < endLine && l < SCREEN_YSIZE; l++) gfxLineBuffer[l] = newActiveBank;
 }
 
-inline uint32 GetPaletteEntry(uint8 paletteID, uint8 index)
+inline uint32 GetPaletteEntry(uint8 bankID, uint8 index)
 {
     // 0xF800 = 1111 1000 0000 0000 = R
     // 0x7E0  = 0000 0111 1110 0000 = G
     // 0x1F   = 0000 0000 0001 1111 = B
-    uint16 clr = fullPalette[paletteID & 7][index];
+    uint16 clr = fullPalette[bankID & 7][index];
 
     int32 R = (clr & 0xF800) << 8;
     int32 G = (clr & 0x7E0) << 5;
@@ -57,9 +57,9 @@ inline uint32 GetPaletteEntry(uint8 paletteID, uint8 index)
     return R | G | B;
 }
 
-inline void SetPaletteEntry(uint8 paletteID, uint8 index, uint32 color)
+inline void SetPaletteEntry(uint8 bankID, uint8 index, uint32 color)
 {
-    fullPalette[paletteID][index] = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
+    fullPalette[bankID][index] = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 }
 
 inline void SetPaletteMask(uint32 color)
@@ -73,36 +73,32 @@ inline void SetTintLookupTable(uint16 *lookupTable) { tintLookupTable = lookupTa
 inline uint16 *GetTintLookupTable() { return tintLookupTable; }
 #endif
 
-inline void CopyPalette(uint8 sourcePalette, uint8 srcPaletteStart, uint8 destinationPalette, uint8 destPaletteStart, uint16 count)
+inline void CopyPalette(uint8 sourceBank, uint8 srcBankStart, uint8 destinationBank, uint8 destBankStart, uint16 count)
 {
-    if (sourcePalette < PALETTE_COUNT && destinationPalette < PALETTE_COUNT) {
+    if (sourceBank < PALETTE_COUNT && destinationBank < PALETTE_COUNT) {
         for (int32 i = 0; i < count; ++i) {
-            fullPalette[destinationPalette][destPaletteStart + i] = fullPalette[sourcePalette][srcPaletteStart + i];
+            fullPalette[destinationBank][destBankStart + i] = fullPalette[sourceBank][srcBankStart + i];
         }
     }
 }
 
-inline void RotatePalette(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 right)
+inline void RotatePalette(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32 right)
 {
     if (right) {
-        uint16 startClr = fullPalette[palID][endIndex];
-        for (int32 i = endIndex; i > startIndex; --i) {
-            fullPalette[palID][i] = fullPalette[palID][i - 1];
-        }
-        fullPalette[palID][startIndex] = startClr;
+        uint16 startClr = fullPalette[bankID][endIndex];
+        for (int32 i = endIndex; i > startIndex; --i) fullPalette[bankID][i] = fullPalette[bankID][i - 1];
+        fullPalette[bankID][startIndex] = startClr;
     }
     else {
-        uint16 startClr = fullPalette[palID][startIndex];
-        for (int32 i = startIndex; i < endIndex; ++i) {
-            fullPalette[palID][i] = fullPalette[palID][i + 1];
-        }
-        fullPalette[palID][endIndex] = startClr;
+        uint16 startClr = fullPalette[bankID][startIndex];
+        for (int32 i = startIndex; i < endIndex; ++i) fullPalette[bankID][i] = fullPalette[bankID][i + 1];
+        fullPalette[bankID][endIndex] = startClr;
     }
 }
 
-void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, short blendAmount, int32 startIndex, int32 endIndex);
+void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
-void BlendColors(byte paletteID, byte *colorsA, byte *colorsB, int32 alpha, int32 index, int32 count);
+void BlendColors(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 alpha, int32 index, int32 count);
 #endif
 
 #endif

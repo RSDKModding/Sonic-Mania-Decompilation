@@ -59,7 +59,7 @@ void UIVsZoneButton_Update(void);
 void UIVsZoneButton_LateUpdate(void);
 void UIVsZoneButton_StaticUpdate(void);
 void UIVsZoneButton_Draw(void);
-void UIVsZoneButton_Create(void* data);
+void UIVsZoneButton_Create(void *data);
 void UIVsZoneButton_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIVsZoneButton_EditorDraw(void);
@@ -84,4 +84,4 @@ void UIVsZoneButton_State_HandleButtonLeave(void);
 void UIVsZoneButton_State_HandleButtonEnter(void);
 void UIVsZoneButton_State_Selected(void);
 
-#endif //!OBJ_UIVSZONEBUTTON_H
+#endif //! OBJ_UIVSZONEBUTTON_H

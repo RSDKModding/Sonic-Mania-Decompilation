@@ -188,16 +188,16 @@ void MechaBu_State_Moving(void)
     }
 
     self->position.x += self->velocity.x;
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         bool32 collidedWall  = false;
         bool32 collidedFloor = false;
         if (self->velocity.x <= 0) {
-            collidedWall  = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x120000, 0, true);
-            collidedFloor = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x20000, 0x100000, false);
+            collidedWall  = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x120000, 0, true);
+            collidedFloor = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x20000, 0x100000, false);
         }
         else {
-            collidedWall  = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x120000, 0, true);
-            collidedFloor = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x20000, 0x100000, false);
+            collidedWall  = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x120000, 0, true);
+            collidedFloor = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x20000, 0x100000, false);
         }
 
         if (!collidedFloor || collidedWall) {
@@ -211,9 +211,9 @@ void MechaBu_State_Moving(void)
 
         bool32 collided = false;
         if (self->velocity.x >= 0)
-            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
+            collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
         else
-            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
+            collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
 
         if (collided)
             self->state = MechaBu_State_Stopped;
@@ -252,7 +252,7 @@ void MechaBu_State_Falling(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(MechaBu->aniFrames, 0, &self->badnikAnimator, true, 0);
         self->state = MechaBu_State_Moving;
@@ -261,9 +261,9 @@ void MechaBu_State_Falling(void)
     else {
         bool32 collided = false;
         if (self->velocity.x <= 0)
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x120000, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x120000, 0, true);
         else
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x120000, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x120000, 0, true);
 
         if (collided)
             self->velocity.x = 0;

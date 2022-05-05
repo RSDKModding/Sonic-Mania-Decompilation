@@ -40,7 +40,7 @@ void UITABanner_Update(void);
 void UITABanner_LateUpdate(void);
 void UITABanner_StaticUpdate(void);
 void UITABanner_Draw(void);
-void UITABanner_Create(void* data);
+void UITABanner_Create(void *data);
 void UITABanner_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UITABanner_EditorDraw(void);
@@ -57,4 +57,4 @@ void UITABanner_DrawBannerInfo(uint8 actID, uint8 zoneID, uint8 characterID, boo
 
 #endif
 
-#endif //!OBJ_UITABANNER_H
+#endif //! OBJ_UITABANNER_H

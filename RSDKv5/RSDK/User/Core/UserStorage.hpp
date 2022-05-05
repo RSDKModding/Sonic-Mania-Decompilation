@@ -33,24 +33,46 @@ struct UserStorage {
     int32 noSaveActive  = false;
 };
 
+static char dbVarTypes[18][16] = {
+    "unknown", // unused (in Sonic Mania)
+    "bool",    // unused (in Sonic Mania)
+    "uint8",   // used (in Sonic Mania)
+    "uint16",  // unused (in Sonic Mania)
+    "uint32",  // used (in Sonic Mania)
+    "uint64",  // unimplemented in RSDKv5
+    "int8",    // unused (in Sonic Mania)
+    "int16",   // unused (in Sonic Mania)
+    "int32",   // unused (in Sonic Mania)
+    "int64",   // unimplemented in RSDKv5
+    "float",   // unused (in Sonic Mania)
+    "double",  // unimplemented in RSDKv5
+    "Vector2", // unimplemented in RSDKv5
+    "Vector3", // unimplemented in RSDKv5
+    "Vector4", // unimplemented in RSDKv5
+    "Color",   // unused (in Sonic Mania)
+    "String",  // unused (in Sonic Mania)
+    "HashMD5"  // unimplemented in RSDKv5
+};
+
 enum DBVarTypes {
-    DBVAR_INVALID,
-    DBVAR_BOOL8, // may not actually be "bool8" since I've never seen that type, but I don't have any better ideas so...
-    DBVAR_UINT8,
-    DBVAR_UINT16,
-    DBVAR_UINT32,
-    DBVAR_UNUSED1,
-    DBVAR_INT8,
-    DBVAR_INT16,
-    DBVAR_INT32,
-    DBVAR_UNUSED2,
-    DBVAR_FLOAT,
-    DBVAR_UNUSED3,
-    DBVAR_UNUSED4,
-    DBVAR_UNUSED5,
-    DBVAR_UNUSED6,
-    DBVAR_BOOL32, // not 100% sure that this is bool32, but that's what fit the best so that's what it'll be labeled as
-    DBVAR_STRING,
+    DBVAR_UNKNOWN, // unused (in Sonic Mania)
+    DBVAR_BOOL,    // unused (in Sonic Mania)
+    DBVAR_UINT8,   // used (in Sonic Mania)
+    DBVAR_UINT16,  // unused (in Sonic Mania)
+    DBVAR_UINT32,  // used (in Sonic Mania)
+    DBVAR_UINT64,  // unimplemented in RSDKv5
+    DBVAR_INT8,    // unused (in Sonic Mania)
+    DBVAR_INT16,   // unused (in Sonic Mania)
+    DBVAR_INT32,   // unused (in Sonic Mania)
+    DBVAR_INT64,   // unimplemented in RSDKv5
+    DBVAR_FLOAT,   // unused (in Sonic Mania)
+    DBVAR_DOUBLE,  // unimplemented in RSDKv5
+    DBVAR_VECTOR2, // unimplemented in RSDKv5
+    DBVAR_VECTOR3, // unimplemented in RSDKv5
+    DBVAR_VECTOR4, // unimplemented in RSDKv5
+    DBVAR_COLOR,   // unused (in Sonic Mania)
+    DBVAR_STRING,  // unused (in Sonic Mania)
+    DBVAR_HASHMD5, // unimplemented in RSDKv5
 };
 
 extern UserStorage *userStorage;

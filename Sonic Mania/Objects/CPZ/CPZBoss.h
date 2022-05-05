@@ -11,7 +11,7 @@ typedef enum {
 // Object Class
 struct ObjectCPZBoss {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxPlayerTrigger;
     EntityPuyoMatch* managers[2];
     uint16 hudSlotID;
     uint16 aniFrames;
@@ -29,7 +29,7 @@ struct EntityCPZBoss {
     Vector2 explosionPos;
     Animator panelAnimator;
     Animator enterAnimator;
-    Animator playerAnimator;
+    Animator characterAnimator;
 };
 
 // Object Struct
@@ -49,8 +49,8 @@ void CPZBoss_EditorLoad(void);
 void CPZBoss_Serialize(void);
 
 // Extra Entity Functions
-void CPZBoss_DrawLayerCB_SetupPuyoDropperClip(void);
-void CPZBoss_DrawLayerCB_RemovePuyoDropperClip(void);
+void CPZBoss_DrawLayerCB_SetupPuyoHUD(void);
+void CPZBoss_DrawLayerCB_RemovePuyoHUD(void);
 
 void CPZBoss_Explode_Eggman(void);
 void CPZBoss_Explode_Player(void);

@@ -32,7 +32,7 @@ struct EntityLottoBall {
     Vector2 bounds;
     int32 gravityStrength;
     int32 angleVel;
-    Entity *parent;
+    EntityLottoMachine *parent;
     int32 isVisible[PLAYER_MAX];
     bool32 isUIBall;
     Animator ballAnimator;

@@ -13,8 +13,9 @@ ObjectNoSwap *NoSwap;
 void NoSwap_Update(void)
 {
     RSDK_THIS(NoSwap);
+
     if (Player->playerCount) {
-        int32 cnt      = 0;
+        int32 cnt = 0;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
@@ -76,6 +77,7 @@ void NoSwap_Draw(void)
 void NoSwap_Create(void *data)
 {
     RSDK_THIS(NoSwap);
+
     if (!SceneInfo->inEditor) {
         self->updateRange.x = 16 * self->size.x;
         self->updateRange.y = 16 * self->size.y;
@@ -94,6 +96,7 @@ void NoSwap_StageLoad(void) { NoSwap->active = ACTIVE_ALWAYS; }
 void NoSwap_EditorDraw(void)
 {
     RSDK_THIS(NoSwap);
+
     self->updateRange.x = TILE_SIZE * self->size.x;
     self->updateRange.y = TILE_SIZE * self->size.y;
 

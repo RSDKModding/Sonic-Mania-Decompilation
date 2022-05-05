@@ -314,7 +314,7 @@ bool32 EncoreIntro_Cutscene_BeginAIZEncore(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active    = ACTIVE_NORMAL;
-            titleCard->state     = TitleCard_State_Initial;
+            titleCard->state     = TitleCard_State_SetupBGElements;
             titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
@@ -1042,7 +1042,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
         if (!SceneInfo->minutes && !SceneInfo->seconds) {
             EntityTitleCard *titleCard = (EntityTitleCard *)CutsceneSeq_GetEntity(TitleCard->objectID);
             titleCard->active          = ACTIVE_NORMAL;
-            titleCard->state           = TitleCard_State_Initial;
+            titleCard->state           = TitleCard_State_SetupBGElements;
             titleCard->stateDraw       = TitleCard_Draw_SlideIn;
         }
 

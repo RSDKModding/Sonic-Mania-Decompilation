@@ -326,12 +326,10 @@ bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch)
 {
     if (textA->length != textB->length)
         return false;
-    ushort *textPtrA = textA->text;
-    ushort *textPtrB = textB->text;
 
     if (exactMatch) { //each character has to match
         for (int i = 0; i < textA->length; ++i) {
-            if (textPtrA[i] != textPtrB[i])
+            if (textA->text[i] != textB->text[i])
                 return false;
         }
         return true;
@@ -341,10 +339,9 @@ bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch)
             return true;
 
         for (int i = 0; i < textA->length; ++i) {
-            if (textPtrA[i] != textPtrB[i]) {
-                if (textPtrA[i] != textPtrB[i] + 0x20 && textPtrA[i] != textPtrB[i] - 0x20) {
+            if (textA->text[i] != textB->text[i]) {
+                if (textA->text[i] != textB->text[i] + 0x20 && textA->text[i] != textB->text[i] - 0x20)
                     return false;
-                }
             }
         }
         return true;

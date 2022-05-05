@@ -14,6 +14,7 @@ void ImageTrail_Update(void) {}
 void ImageTrail_LateUpdate(void)
 {
     RSDK_THIS(ImageTrail);
+
     EntityPlayer *player = self->player;
 
     // Check for fadeouts/destroy triggers
@@ -79,12 +80,10 @@ void ImageTrail_LateUpdate(void)
         self->currentScale = player->scale.x;
 
     // Check if we have enough speed to be visible
-    if (abs(player->velocity.x) >= 0x10000 || abs(player->velocity.y) >= 0x10000) {
+    if (abs(player->velocity.x) >= 0x10000 || abs(player->velocity.y) >= 0x10000)
         self->currentVisible = player->visible;
-    }
-    else {
+    else 
         self->currentVisible = false;
-    }
 }
 
 void ImageTrail_StaticUpdate(void) {}
@@ -92,9 +91,10 @@ void ImageTrail_StaticUpdate(void) {}
 void ImageTrail_Draw(void)
 {
     RSDK_THIS(ImageTrail);
+
     //int32 alpha[3] = { 0xA0 * self->baseAlpha >> 8, self->baseAlpha >> 1, 0x60 * self->baseAlpha >> 8 };
     int32 alpha = 0x60 * self->baseAlpha >> 8;
-    int32 inc      = 0x40 / (ImageTrail_TrackCount / 3);
+    int32 inc   = 0x40 / (ImageTrail_TrackCount / 3);
 
     for (int32 i = (ImageTrail_TrackCount / 3); i >= 0; --i) {
         int32 id = (i * 3) - (i - 1);
@@ -117,15 +117,16 @@ void ImageTrail_Draw(void)
 void ImageTrail_Create(void *data)
 {
     RSDK_THIS(ImageTrail);
+
     if (!SceneInfo->inEditor) {
         EntityPlayer *player = (EntityPlayer *)data;
-        self->active       = ACTIVE_ALWAYS;
-        self->visible      = true;
-        self->player       = player;
-        self->playerObjID  = player->objectID;
-        self->baseAlpha    = 0x100;
-        self->drawFX       = FX_FLIP | FX_SCALE | FX_ROTATE;
-        self->inkEffect    = INK_ALPHA;
+        self->active         = ACTIVE_ALWAYS;
+        self->visible        = true;
+        self->player         = player;
+        self->playerClassID  = player->objectID; // dunno what this is for, maybe a v4 leftover where frames were per-object?
+        self->baseAlpha      = 0x100;
+        self->drawFX         = FX_FLIP | FX_SCALE | FX_ROTATE;
+        self->inkEffect      = INK_ALPHA;
 
         for (int32 i = ImageTrail_TrackCount - 1; i >= 0; --i) {
             self->statePos[i].x     = player->position.x;

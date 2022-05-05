@@ -346,13 +346,9 @@ void Fan_HandlePlayerInteractions_Top(void)
 
     if (Water) {
         if (self->position.y > Water->waterLevel && !(Zone->timer & 3)) {
-            EntityWater *water = CREATE_ENTITY(Water, intToVoid(7), self->position.x, self->position.y - 0x100000);
+            EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y - 0x100000);
             water->isPermanent = false;
-#if RETRO_USE_PLUS
-            water->position.x += RSDK.RandSeeded(-6, 7, &Zone->randSeed) << 16;
-#else
-            water->position.x += RSDK.Rand(-6, 7) << 16;
-#endif
+            water->position.x += ZONE_RAND(-6, 7) << 16;
             water->bubbleX    = water->position.x;
             water->velocity.y = -0x40000;
             water->childPtr   = NULL;
@@ -533,8 +529,10 @@ void Fan_EditorDraw(void)
             Fan_SetupTagLink();
 
             RSDK_DRAWING_OVERLAY(true);
-            if (self->taggedButton)
-                DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00);
+            if (self->taggedButton) {
+                DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00,
+                                      INK_NONE, 0xFF);
+            }
             RSDK_DRAWING_OVERLAY(false);
         }
     }

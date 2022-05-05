@@ -1360,7 +1360,7 @@ void Drillerdroid_EditorDraw(void)
                 EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot++, CollapsingPlatform);
 
                 if (platform && platform->objectID == CollapsingPlatform->objectID)
-                    DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00);
+                    DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00, INK_NONE, 0xFF);
             }
         }
 

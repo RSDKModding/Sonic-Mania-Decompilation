@@ -8,16 +8,16 @@
 struct ObjectReplayDB {
     RSDK_OBJECT
     Entity *loadEntity;
-    void (*loadCallback)(bool32);
+    void (*loadCallback)(bool32 success);
     Entity *saveEntity;
-    void (*saveCallback)(bool32);
+    void (*saveCallback)(bool32 success);
     Entity *deleteEntity;
-    void (*deleteCallback)(bool32);
+    void (*deleteCallback)(bool32 success);
 };
 
 // Entity Class
 struct EntityReplayDB {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -28,7 +28,7 @@ void ReplayDB_Update(void);
 void ReplayDB_LateUpdate(void);
 void ReplayDB_StaticUpdate(void);
 void ReplayDB_Draw(void);
-void ReplayDB_Create(void* data);
+void ReplayDB_Create(void *data);
 void ReplayDB_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ReplayDB_EditorDraw(void);
@@ -41,4 +41,4 @@ int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed);
 int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed);
 #endif
 
-#endif //!OBJ_REPLAYDB_H
+#endif //! OBJ_REPLAYDB_H

@@ -121,7 +121,7 @@ enum FunctionTableIDs {
     FunctionTable_ClearCameras,
     FunctionTable_AddCamera,
 #if !RETRO_REV02
-    FunctionTable_GetFuncPtr,
+    FunctionTable_GetAPIFunction,
 #endif
     FunctionTable_GetSettingsValue,
     FunctionTable_SetSettingsValue,
@@ -169,7 +169,7 @@ enum FunctionTableIDs {
     FunctionTable_SetScreenSize,
     FunctionTable_SetClipBounds,
 #if RETRO_REV02
-    FunctionTable_SetScreenSplitVerticies,
+    FunctionTable_SetScreenRenderVertices,
 #endif
     FunctionTable_LoadSpriteSheet,
     FunctionTable_SetTintLookupTable,
@@ -507,11 +507,11 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ClearCameras, ClearCameras);
     addToRSDKFunctionTable(FunctionTable_AddCamera, AddCamera);
 #if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_GetFuncPtr, GetAPIFunction);
+    addToRSDKFunctionTable(FunctionTable_GetAPIFunction, GetAPIFunction);
 #endif
     addToRSDKFunctionTable(FunctionTable_GetSettingsValue, GetSettingsValue);
     addToRSDKFunctionTable(FunctionTable_SetSettingsValue, SetSettingsValue);
-    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateWindow);
+    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateGameWindow);
     addToRSDKFunctionTable(FunctionTable_Sin1024, sin1024);
     addToRSDKFunctionTable(FunctionTable_Cos1024, cos1024);
     addToRSDKFunctionTable(FunctionTable_ATan1024, tan1024);
@@ -531,16 +531,16 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_RandSeeded, GetSeededRandomValue);
     addToRSDKFunctionTable(FunctionTable_SetRandSeed, SetRandSeed);
     addToRSDKFunctionTable(FunctionTable_ATan2, ArcTanLookup);
-    addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, setIdentityMatrix);
-    addToRSDKFunctionTable(FunctionTable_MatrixMultiply, matrixMultiply);
-    addToRSDKFunctionTable(FunctionTable_MatrixTranslateXYZ, matrixTranslateXYZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixScaleXYZ, matrixScaleXYZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateX, matrixRotateX);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateY, matrixRotateY);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateZ, matrixRotateZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateXYZ, matrixRotateXYZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixInverse, matrixInverse);
-    addToRSDKFunctionTable(FunctionTable_MatrixCopy, matrixCopy);
+    addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, SetIdentityMatrix);
+    addToRSDKFunctionTable(FunctionTable_MatrixMultiply, MatrixMultiply);
+    addToRSDKFunctionTable(FunctionTable_MatrixTranslateXYZ, MatrixTranslateXYZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixScaleXYZ, MatrixScaleXYZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateX, MatrixRotateX);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateY, MatrixRotateY);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateZ, MatrixRotateZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateXYZ, MatrixRotateXYZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixInverse, MatrixInverse);
+    addToRSDKFunctionTable(FunctionTable_MatrixCopy, MatrixCopy);
     addToRSDKFunctionTable(FunctionTable_SetText, SetText);
     addToRSDKFunctionTable(FunctionTable_CopyString, CopyString);
     addToRSDKFunctionTable(FunctionTable_PrependText, PrependText);
@@ -555,7 +555,7 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_SetScreenSize, SetScreenSize);
     addToRSDKFunctionTable(FunctionTable_SetClipBounds, SetClipBounds);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_SetScreenSplitVerticies, SetScreenSplitVerticies);
+    addToRSDKFunctionTable(FunctionTable_SetScreenRenderVertices, SetScreenRenderVertices);
 #endif
     addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, RSDK::LoadSpriteSheet);
 #if RETRO_REV02
@@ -585,7 +585,7 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_DrawBlendedFace, DrawBlendedFace);
     addToRSDKFunctionTable(FunctionTable_DrawSprite, DrawSprite);
     addToRSDKFunctionTable(FunctionTable_DrawDeformed, DrawDeformedSprite);
-    addToRSDKFunctionTable(FunctionTable_DrawText, DrawText);
+    addToRSDKFunctionTable(FunctionTable_DrawText, DrawString);
     addToRSDKFunctionTable(FunctionTable_DrawTile, DrawTile);
     addToRSDKFunctionTable(FunctionTable_CopyTile, CopyTile);
     addToRSDKFunctionTable(FunctionTable_DrawAniTile, DrawAniTile);

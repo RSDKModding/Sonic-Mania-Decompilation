@@ -12,12 +12,13 @@ typedef enum {
     CYLINDER_UNUSED1,
     CYLINDER_UNUSED2,
     CYLINDER_PILLAR,
-}CylinderTypes;
+} CylinderTypes;
 
 // Object Class
 struct ObjectCylinder {
     RSDK_OBJECT
-    TABLE(int32 frameArray[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
+    // unused, all frames are calculated on the fly
+    TABLE(int32 frameTable[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
     Animator animator;
     uint16 aniFrames;
 };
@@ -30,8 +31,8 @@ struct EntityCylinder {
     int32 length;
     int32 radius;
     int32 unused1;
-    int32 playerStatuses[4];
-    int32 playerAngles[4];
+    int32 playerStatus[PLAYER_MAX];
+    int32 playerAngles[PLAYER_MAX];
     Hitbox hitboxRange;
     Hitbox hitboxSize;
     Hitbox hitboxL;
@@ -46,7 +47,7 @@ void Cylinder_Update(void);
 void Cylinder_LateUpdate(void);
 void Cylinder_StaticUpdate(void);
 void Cylinder_Draw(void);
-void Cylinder_Create(void* data);
+void Cylinder_Create(void *data);
 void Cylinder_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Cylinder_EditorDraw(void);
@@ -61,9 +62,9 @@ void Cylinder_State_Spiral(void);
 void Cylinder_State_InkRoller(void);
 void Cylinder_State_Pillar(void);
 
-void Cylinder_Player_State_InkRoller_Stand(void);
-void Cylinder_Player_State_InkRoller_Roll(void);
-void Cylinder_Player_State_Pillar(void);
-void Cylinder_Player_State_Spiral(void);
+void Cylinder_PlayerState_InkRoller_Stand(void);
+void Cylinder_PlayerState_InkRoller_Roll(void);
+void Cylinder_PlayerState_Pillar(void);
+void Cylinder_PlayerState_Spiral(void);
 
-#endif //!OBJ_CYLINDER_H
+#endif //! OBJ_CYLINDER_H

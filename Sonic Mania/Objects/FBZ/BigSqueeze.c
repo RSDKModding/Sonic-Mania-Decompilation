@@ -12,6 +12,7 @@ ObjectBigSqueeze *BigSqueeze;
 void BigSqueeze_Update(void)
 {
     RSDK_THIS(BigSqueeze);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void BigSqueeze_StaticUpdate(void) {}
 void BigSqueeze_Draw(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (self->stateDraw) {
         StateMachine_Run(self->stateDraw);
     }
@@ -33,36 +35,45 @@ void BigSqueeze_Draw(void)
 void BigSqueeze_Create(void *data)
 {
     RSDK_THIS(BigSqueeze);
+
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->active = ACTIVE_BOUNDS;
+
             switch (self->type) {
                 case BIGSQUEEZE_MANAGER:
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
                     self->visible       = false;
+
                     self->hitbox.left   = -256;
                     self->hitbox.top    = 0;
                     self->hitbox.right  = 256;
                     self->hitbox.bottom = 32;
-                    self->state         = BigSqueeze_StateManager_SetupIntro;
+
+                    self->state = BigSqueeze_StateManager_SetupIntro;
                     break;
+
                 case BIGSQUEEZE_BOSS:
                     self->updateRange.x = 0x8000000;
                     self->updateRange.y = 0x1000000;
                     self->visible       = true;
                     self->drawOrder     = Zone->objectDrawHigh;
+
                     self->hitbox.left   = -32;
                     self->hitbox.top    = -16;
                     self->hitbox.right  = 32;
                     self->hitbox.bottom = 16;
-                    self->timer         = 6;
+
+                    self->timer = 6;
                     RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 1, &self->animator, true, 0);
                     RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 2, &self->domeAnimator, true, 0);
                     RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 3, &self->prongsAnimator, true, 0);
                     RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 4, &self->wheelAnimator, true, 0);
+
                     self->stateDraw = BigSqueeze_Draw_Boss;
                     break;
+
                 case BIGSQUEEZE_CRUSHER_L:
                 case BIGSQUEEZE_CRUSHER_R:
                     if (self->type == BIGSQUEEZE_CRUSHER_R) {
@@ -73,13 +84,17 @@ void BigSqueeze_Create(void *data)
                     self->updateRange.y = 0x1000000;
                     self->visible       = true;
                     self->drawOrder     = Zone->objectDrawHigh;
+
                     RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 0, &self->animator, true, 0);
+
                     self->hitbox.left   = -24;
                     self->hitbox.top    = -120;
                     self->hitbox.right  = 24;
                     self->hitbox.bottom = 120;
-                    self->stateDraw     = BigSqueeze_Draw_Crusher;
+
+                    self->stateDraw = BigSqueeze_Draw_Crusher;
                     break;
+
                 default: break;
             }
         }
@@ -91,14 +106,18 @@ void BigSqueeze_Create(void *data)
 
 void BigSqueeze_StageLoad(void)
 {
-    BigSqueeze->active        = ACTIVE_ALWAYS;
-    BigSqueeze->aniFrames     = RSDK.LoadSpriteAnimation("FBZ/BigSqueeze.bin", SCOPE_STAGE);
+    BigSqueeze->active = ACTIVE_ALWAYS;
+
+    BigSqueeze->aniFrames = RSDK.LoadSpriteAnimation("FBZ/BigSqueeze.bin", SCOPE_STAGE);
+
     BigSqueeze->sfxBossHit    = RSDK.GetSfx("Stage/BossHit.wav");
     BigSqueeze->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
     BigSqueeze->sfxMagnet     = RSDK.GetSfx("FBZ/Magnet.wav");
     BigSqueeze->sfxOrbinaut   = RSDK.GetSfx("FBZ/Orbinaut.wav");
-    BigSqueeze->crushTimer        = 0;
-    BigSqueeze->isCrushing    = false;
+
+    BigSqueeze->crushTimer = 0;
+    BigSqueeze->isCrushing = false;
+
     Soundboard_LoadSFX("Stage/Rumble.wav", true, BigSqueeze_RumbleCheckCB, NULL);
 }
 
@@ -107,9 +126,11 @@ bool32 BigSqueeze_RumbleCheckCB(void) { return BigSqueeze->isCrushing && SceneIn
 void BigSqueeze_HandleWallCollisions(void)
 {
     RSDK_THIS(BigSqueeze);
+
     foreach_active(Player, player)
     {
         int32 side = Player_CheckCollisionBox(player, self, &self->hitbox);
+
         if (side == C_RIGHT)
             player->collisionFlagH |= 2;
         else if (side == C_LEFT)
@@ -120,12 +141,12 @@ void BigSqueeze_HandleWallCollisions(void)
     {
         if (signPost->state == SignPost_State_Fall) {
             if (signPost->velocity.x >= 0) {
-                if (signPost->position.x > self->position.x + ((self->hitbox.left - 24) << 16) && signPost->position.x < self->position.x) {
+                if (signPost->position.x > self->position.x + ((self->hitbox.left - 24) << 16) && signPost->position.x < self->position.x)
                     signPost->velocity.x = -signPost->velocity.x;
-                }
             }
-            else if (signPost->position.x < self->position.x + ((self->hitbox.right + 24) << 16) && signPost->position.x > self->position.x) {
-                signPost->velocity.x = -signPost->velocity.x;
+            else {
+                if (signPost->position.x < self->position.x + ((self->hitbox.right + 24) << 16) && signPost->position.x > self->position.x)
+                    signPost->velocity.x = -signPost->velocity.x;
             }
         }
     }
@@ -134,15 +155,15 @@ void BigSqueeze_HandleWallCollisions(void)
 void BigSqueeze_CheckPlayerCollisions_Vulnerable(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (!self->invincible) {
         if (self->invincibilityTimer > 0)
             self->invincibilityTimer--;
 
         foreach_active(Player, player)
         {
-            if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
+            if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self))
                 BigSqueeze_Hit();
-            }
         }
     }
 }
@@ -150,6 +171,7 @@ void BigSqueeze_CheckPlayerCollisions_Vulnerable(void)
 void BigSqueeze_CheckPlayerCollisions_Electrified(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (!self->invincible) {
         if (self->invincibilityTimer > 0)
             self->invincibilityTimer--;
@@ -172,6 +194,7 @@ void BigSqueeze_CheckPlayerCollisions_Electrified(void)
 void BigSqueeze_Hit(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (--self->timer <= 0) {
         foreach_active(BigSqueeze, boss)
         {
@@ -211,6 +234,7 @@ void BigSqueeze_Explode(void)
 void BigSqueeze_HandleBossMovement(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (BigSqueeze->crushTimer < 10)
         self->position.x += self->velocity.x;
 
@@ -229,31 +253,32 @@ void BigSqueeze_HandleBossMovement(void)
     RSDK.ProcessAnimation(&self->wheelAnimator);
 }
 
-// debrisData info:
+// debrisInfo format:
 // - count
 // <for count entries>
 // - frameID
 // - velocityX
 // - velocityY
 
-void BigSqueeze_SpawnDebris(int32 *debrisData)
+void BigSqueeze_SpawnDebris(int32 *debrisInfo)
 {
     RSDK_THIS(BigSqueeze);
-    if (debrisData) {
-        int32 count = debrisData[0];
-        debrisData++;
+    if (debrisInfo) {
+        int32 count = debrisInfo[0];
+        debrisInfo++;
 
         for (int32 i = 0; i < count; ++i) {
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
-            RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 6, &debris->animator, true, debrisData[0]);
-            debris->velocity.x    = debrisData[1];
-            debris->velocity.y    = debrisData[2];
-            debris->gravityStrength       = 0x3800;
-            debris->drawOrder     = Zone->objectDrawHigh;
-            debris->updateRange.x = 0x800000;
-            debris->updateRange.y = 0x800000;
 
-            debrisData += 3;
+            RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 6, &debris->animator, true, debrisInfo[0]);
+            debris->velocity.x      = debrisInfo[1];
+            debris->velocity.y      = debrisInfo[2];
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->updateRange.x   = 0x800000;
+            debris->updateRange.y   = 0x800000;
+
+            debrisInfo += 3;
         }
     }
 }
@@ -267,10 +292,12 @@ void BigSqueeze_Draw_Boss(void)
         RSDK.SetPaletteEntry(0, 156, 0xE0E0E0);
         RSDK.SetPaletteEntry(0, 33, 0xE0E0E0);
     }
+
     RSDK.DrawSprite(&self->animator, NULL, false);
     RSDK.DrawSprite(&self->domeAnimator, NULL, false);
     RSDK.DrawSprite(&self->prongsAnimator, NULL, false);
     RSDK.DrawSprite(&self->electricAnimator, NULL, false);
+
     RSDK.SetPaletteEntry(0, 156, 0x202020);
     RSDK.SetPaletteEntry(0, 33, 0x303840);
     drawPos.x = self->position.x;
@@ -286,6 +313,7 @@ void BigSqueeze_Draw_Boss(void)
 void BigSqueeze_Draw_Crusher(void)
 {
     RSDK_THIS(BigSqueeze);
+
     self->animator.frameID = 0;
     RSDK.DrawSprite(&self->animator, NULL, false);
 
@@ -299,6 +327,7 @@ void BigSqueeze_Draw_Crusher(void)
 void BigSqueeze_StateManager_SetupIntro(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (++self->setupTimer >= 8) {
         self->setupTimer = 0;
         foreach_all(CollapsingPlatform, platform)
@@ -306,6 +335,7 @@ void BigSqueeze_StateManager_SetupIntro(void)
             platform->collapseDelay = 1;
             platform->active        = ACTIVE_NEVER;
         }
+
         foreach_active(Eggman, eggman) { eggman->direction = FLIP_X; }
 
         Zone->playerBoundActiveL[0] = true;
@@ -319,11 +349,14 @@ void BigSqueeze_StateManager_SetupIntro(void)
 void BigSqueeze_StateManager_SetupEggman(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (self->setupTimer) {
         self->setupTimer++;
-        EntityEggman *eggmanPtr = (EntityEggman *)self->eggman;
+        EntityEggman *eggmanPtr = self->eggman;
+
         if (self->setupTimer == 104)
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 5, &eggmanPtr->animator, true, 0);
+
         if (self->setupTimer == 120) {
             self->setupTimer      = 0;
             self->state           = BigSqueeze_StateManager_SetupArena;
@@ -338,11 +371,12 @@ void BigSqueeze_StateManager_SetupEggman(void)
         if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
             Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
             ++self->setupTimer;
+
             foreach_active(LightBarrier, barrier) { barrier->enabled = true; }
 
             foreach_active(Eggman, eggman)
             {
-                self->eggman = (Entity *)eggman;
+                self->eggman = eggman;
                 RSDK.SetSpriteAnimation(Eggman->aniFrames, 2, &eggman->animator, true, 0);
                 eggman->state  = Eggman_State_ProcessThenSet;
                 eggman->animID = 0;
@@ -354,7 +388,8 @@ void BigSqueeze_StateManager_SetupEggman(void)
 void BigSqueeze_StateManager_SetupArena(void)
 {
     RSDK_THIS(BigSqueeze);
-    EntityEggman *eggman = (EntityEggman *)self->eggman;
+
+    EntityEggman *eggman = self->eggman;
     if (eggman->state == Eggman_State_ProcessAnimation) {
         foreach_all(CollapsingPlatform, platform) { platform->active = ACTIVE_BOUNDS; }
 
@@ -362,34 +397,35 @@ void BigSqueeze_StateManager_SetupArena(void)
         Zone->cameraBoundsB[0] = 1792;
         Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
 
-        BigSqueeze->boundB = (Zone->cameraBoundsB[0] - 16) << 16;
-        eggman->state      = Eggman_State_ProcessThenSet;
-        eggman->animID     = 0;
-        self->state        = BigSqueeze_StateManager_SetupBoss;
+        BigSqueeze->boundsB = (Zone->cameraBoundsB[0] - 16) << 16;
+        eggman->state       = Eggman_State_ProcessThenSet;
+        eggman->animID      = 0;
+        self->state         = BigSqueeze_StateManager_SetupBoss;
     }
 }
 
 void BigSqueeze_StateManager_SetupBoss(void)
 {
     RSDK_THIS(BigSqueeze);
+
     if (++self->setupTimer == 48) {
         foreach_active(BigSqueeze, boss)
         {
             switch (boss->type) {
                 default: break;
-                    
+
                 case BIGSQUEEZE_BOSS:
                     boss->invincible = true;
                     boss->state      = BigSqueeze_StateBoss_Idle;
                     boss->velocity.x = -0x10000;
                     break;
-                    
+
                 case BIGSQUEEZE_CRUSHER_L:
                     boss->state      = BigSqueeze_StateCrusher_BeginCrushing;
                     boss->velocity.x = 0x8000;
                     boss->hitbox.top = -0x7FFF;
                     break;
-                    
+
                 case BIGSQUEEZE_CRUSHER_R:
                     boss->state      = BigSqueeze_StateCrusher_BeginCrushing;
                     boss->velocity.x = -0x8000;
@@ -397,6 +433,7 @@ void BigSqueeze_StateManager_SetupBoss(void)
                     break;
             }
         }
+
         self->state = BigSqueeze_StateManager_HandleBoss;
     }
 }
@@ -407,12 +444,14 @@ void BigSqueeze_StateBoss_Idle(void)
 
     if (self->setupTimer > 30)
         BigSqueeze_HandleBossMovement();
+
     if (++self->setupTimer == 180) {
         self->invincible = false;
         self->setupTimer = 0;
         RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 5, &self->electricAnimator, true, 0);
         self->state = BigSqueeze_StateBoss_Electrified;
     }
+
     BigSqueeze_CheckPlayerCollisions_Vulnerable();
 }
 
@@ -421,23 +460,29 @@ void BigSqueeze_StateBoss_Electrified(void)
     RSDK_THIS(BigSqueeze);
 
     RSDK.ProcessAnimation(&self->domeAnimator);
+
     // Uncomment this line if you want the prongs to animate when the boss is attacking
-    // This is all that's needed to get them animating with no issues, so I assume this line being absent was prolly an oversight
+    // This is all that's needed to get them animating with no issues, so I assume this line being absent was prolly an oversight?
     // RSDK.ProcessAnimation(&self->prongsAnimator);
+
     RSDK.ProcessAnimation(&self->electricAnimator);
 
     if (!self->setupTimer)
         RSDK.PlaySfx(BigSqueeze->sfxOrbinaut, false, 255);
+
     if (++self->setupTimer == 16)
         FBZTrash_SummonOrbinaut(self->position.x, self->position.y + 0x300000);
+
     if (self->setupTimer == 120) {
         self->setupTimer = 0;
         RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 2, &self->domeAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, true, 0);
         self->state = BigSqueeze_StateBoss_Idle;
     }
+
     if (!(Zone->timer & 0xF))
         RSDK.PlaySfx(BigSqueeze->sfxMagnet, false, 255);
+
     BigSqueeze_CheckPlayerCollisions_Electrified();
 }
 
@@ -454,20 +499,23 @@ void BigSqueeze_StateBoss_Destroyed(void)
                 BigSqueeze_SpawnDebris(BigSqueeze->prongDebrisInfo);
                 RSDK.SetSpriteAnimation(-1, 0, &self->prongsAnimator, true, 0);
                 break;
+
             case 40:
                 BigSqueeze_SpawnDebris(BigSqueeze->domeDebrisInfo);
                 RSDK.SetSpriteAnimation(-1, 0, &self->domeAnimator, true, 0);
                 break;
+
             case 60:
                 BigSqueeze_SpawnDebris(BigSqueeze->baseDebrisInfo);
                 RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
                 RSDK.SetSpriteAnimation(-1, 0, &self->wheelAnimator, true, 0);
                 break;
+
             case 80:
                 Music_TransitionTrack(TRACK_STAGE, 0.0125);
                 self->setupTimer = 0;
                 self->visible    = false;
-                self->state      = BigSqueeze_StateBoss_SpawnSignPost;
+                self->state      = BigSqueeze_StateBoss_DropSignPost;
                 foreach_active(FBZTrash, trash)
                 {
                     if (trash->state != FBZTrash_State_LooseTrash) {
@@ -484,9 +532,10 @@ void BigSqueeze_StateBoss_Destroyed(void)
     }
 }
 
-void BigSqueeze_StateBoss_SpawnSignPost(void)
+void BigSqueeze_StateBoss_DropSignPost(void)
 {
     RSDK_THIS(BigSqueeze);
+
     BigSqueeze->isCrushing = false;
     if (++self->setupTimer == 48) {
         foreach_all(SignPost, signPost)
@@ -504,35 +553,38 @@ void BigSqueeze_StateBoss_SpawnSignPost(void)
 void BigSqueeze_StateManager_HandleOutro(void)
 {
     RSDK_THIS(BigSqueeze);
-    self->position.y = BigSqueeze->boundB;
+
+    self->position.y = BigSqueeze->boundsB;
 }
 
 void BigSqueeze_StateManager_HandleBoss(void)
 {
     RSDK_THIS(BigSqueeze);
-    self->position.y = BigSqueeze->boundB;
+
+    self->position.y = BigSqueeze->boundsB;
 
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
             if (abs(player->groundVel) > 0x20000 && !(Zone->timer & 7)) {
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                     player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
+                int32 x              = player->position.x + RSDK.Rand(-0x40000, 0x40000);
+                int32 y              = player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
 
                 RSDK.SetSpriteAnimation(FBZTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
-                debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
-                debris->velocity.y    = -0x20000;
-                debris->gravityStrength       = 0x3800;
-                debris->drawOrder     = Zone->objectDrawLow;
-                debris->updateRange.x = 0x200000;
-                debris->updateRange.y = 0x200000;
+                debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+                debris->velocity.y      = -0x20000;
+                debris->gravityStrength = 0x3800;
+                debris->drawOrder       = Zone->objectDrawLow;
+                debris->updateRange.x   = 0x200000;
+                debris->updateRange.y   = 0x200000;
             }
         }
     }
 
     foreach_active(FBZSinkTrash, sinkTrash)
     {
-        sinkTrash->position.y = BigSqueeze->boundB + (sinkTrash->size.y >> 1);
+        sinkTrash->position.y = BigSqueeze->boundsB + (sinkTrash->size.y >> 1);
         sinkTrash->size.x     = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L];
     }
 }
@@ -540,7 +592,9 @@ void BigSqueeze_StateManager_HandleBoss(void)
 void BigSqueeze_StateCrusher_BeginCrushing(void)
 {
     RSDK_THIS(BigSqueeze);
+
     BigSqueeze_HandleWallCollisions();
+
     BigSqueeze->crusherX[self->type] = self->position.x;
     if (++self->setupTimer == 8) {
         BigSqueeze->isCrushing = false;
@@ -558,21 +612,21 @@ void BigSqueeze_StateCrusher_BeginCrushing(void)
 void BigSqueeze_StateCrusher_Crushing(void)
 {
     RSDK_THIS(BigSqueeze);
+
     BigSqueeze_HandleWallCollisions();
+
     self->position.x += self->velocity.x;
     BigSqueeze->crusherX[self->type] = self->position.x;
 
     if (!(Zone->timer & 3))
         Camera_ShakeScreen(0, 0, 4);
-    if (self->type == BIGSQUEEZE_CRUSHER_L) {
-        BigSqueeze->boundB -= 0x4000;
-    }
 
-    if (++self->setupTimer == 32) {
-        if (BigSqueeze->crushTimer < 10) {
-            self->setupTimer = 0;
-            self->state      = BigSqueeze_StateCrusher_BeginCrushing;
-        }
+    if (self->type == BIGSQUEEZE_CRUSHER_L)
+        BigSqueeze->boundsB -= 0x4000;
+
+    if (++self->setupTimer == 32 && BigSqueeze->crushTimer < 10) {
+        self->setupTimer = 0;
+        self->state      = BigSqueeze_StateCrusher_BeginCrushing;
     }
 }
 
@@ -580,11 +634,16 @@ void BigSqueeze_StateCrusher_Crushing(void)
 void BigSqueeze_EditorDraw(void)
 {
     RSDK_THIS(BigSqueeze);
+
     switch (self->type) {
         case BIGSQUEEZE_MANAGER:
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
+
+            RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 4, &self->wheelAnimator, true, 0);
+            RSDK.DrawSprite(&self->wheelAnimator, NULL, false); // an odd sprite, but it beats no sprite
             break;
+
         case BIGSQUEEZE_BOSS:
             self->updateRange.x = 0x8000000;
             self->updateRange.y = 0x1000000;
@@ -595,6 +654,7 @@ void BigSqueeze_EditorDraw(void)
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 4, &self->wheelAnimator, true, 0);
             BigSqueeze_Draw_Boss();
             break;
+
         case BIGSQUEEZE_CRUSHER_L:
         case BIGSQUEEZE_CRUSHER_R:
             if (self->type == BIGSQUEEZE_CRUSHER_R) {
@@ -607,6 +667,7 @@ void BigSqueeze_EditorDraw(void)
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 0, &self->animator, true, 0);
             BigSqueeze_Draw_Crusher();
             break;
+
         default: break;
     }
 }

@@ -7,7 +7,7 @@
 struct ObjectFlowerPod {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxPod;
     int32 unused;
     uint16 sfxExplosion;
     uint16 sfxTwinkle;
@@ -31,7 +31,7 @@ void FlowerPod_Update(void);
 void FlowerPod_LateUpdate(void);
 void FlowerPod_StaticUpdate(void);
 void FlowerPod_Draw(void);
-void FlowerPod_Create(void* data);
+void FlowerPod_Create(void *data);
 void FlowerPod_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FlowerPod_EditorDraw(void);
@@ -50,4 +50,4 @@ void FlowerPod_State_SpawnBeanstalk(void);
 void FlowerPod_State_FlowerGrow(void);
 void FlowerPod_State_Flower(void);
 
-#endif //!OBJ_FLOWERPOD_H
+#endif //! OBJ_FLOWERPOD_H

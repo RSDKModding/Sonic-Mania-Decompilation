@@ -54,8 +54,8 @@ void UIChoice_EditorLoad(void);
 void UIChoice_Serialize(void);
 
 // Extra Entity Functions
-void UIChoice_SetChoiceActive(EntityUIChoice *entity);
-void UIChoice_SetChoiceInactive(EntityUIChoice *entity);
+void UIChoice_SetChoiceActive(EntityUIChoice *choice);
+void UIChoice_SetChoiceInactive(EntityUIChoice *choice);
 void UIChoice_TouchedCB_Left(void);
 void UIChoice_TouchedCB_Right(void);
 bool32 UIChoice_CheckTouch(void);

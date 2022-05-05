@@ -12,6 +12,7 @@ ObjectTitleLogo *TitleLogo;
 void TitleLogo_Update(void)
 {
     RSDK_THIS(TitleLogo);
+
 #if RETRO_USE_PLUS
     StateMachine_Run(self->state);
 #else
@@ -34,9 +35,11 @@ void TitleLogo_StaticUpdate(void) {}
 void TitleLogo_Draw(void)
 {
     RSDK_THIS(TitleLogo);
+
     switch (self->type) {
         case TITLELOGO_EMBLEM:
             RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+
             self->direction = FLIP_NONE;
             RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
@@ -76,9 +79,11 @@ void TitleLogo_Create(void *data)
     RSDK_THIS(TitleLogo);
 
     self->drawFX = FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         switch (self->type) {
             case TITLELOGO_EMBLEM: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 0, &self->mainAnimator, true, 0); break;
+
             case TITLELOGO_RIBBON:
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 1, &self->mainAnimator, true, 0);
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->ribbonCenterAnimator, true, 0);
@@ -89,7 +94,7 @@ void TitleLogo_Create(void *data)
 
             case TITLELOGO_PRESSSTART:
 #if RETRO_USE_PLUS
-                self->state = TitleLogo_State_PressStart;
+                self->state = TitleLogo_State_PressButton;
 #else
                 TitleLogo_SetupPressStart();
 #endif
@@ -150,9 +155,11 @@ void TitleLogo_StageLoad(void)
 void TitleLogo_SetupPressStart(void)
 {
     RSDK_THIS(TitleLogo);
+
     switch (Localization->language) {
         case LANGUAGE_EN:
         case LANGUAGE_JP: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 0); break;
+
         case LANGUAGE_FR:
             if (sku_platform == PLATFORM_SWITCH)
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 2);
@@ -181,6 +188,7 @@ void TitleLogo_SetupPressStart(void)
         case LANGUAGE_SC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 9); break;
         case LANGUAGE_TC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 10); break;
 #endif
+
         default: break;
     }
 }
@@ -191,12 +199,14 @@ void TitleLogo_State_Ribbon(void)
     RSDK_THIS(TitleLogo);
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     if (self->showRibbonCenter)
         RSDK.ProcessAnimation(&self->ribbonCenterAnimator);
 }
-void TitleLogo_State_PressStart(void)
+void TitleLogo_State_PressButton(void)
 {
     RSDK_THIS(TitleLogo);
+
     ++self->timer;
 }
 void TitleLogo_State_HandleSetup(void)
@@ -207,26 +217,24 @@ void TitleLogo_State_HandleSetup(void)
     self->velocity.y += 0x3800;
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     if (self->showRibbonCenter)
         RSDK.ProcessAnimation(&self->ribbonCenterAnimator);
 
     if (self->velocity.y > 0) {
         if (self->position.y >= self->storeY) {
             --self->timer;
+
             self->position.y = self->storeY;
             self->velocity.y = -(self->velocity.y >> 1);
-            if (self->timer <= 0) {
 
+            if (self->timer <= 0) {
                 self->timer = 0;
-                if (self->type == TITLELOGO_PLUS) {
+
+                if (self->type == TITLELOGO_PLUS)
                     self->state = TitleLogo_State_PlusLogo;
-                }
-                else {
-                    if (self->type == TITLELOGO_RIBBON)
-                        self->state = TitleLogo_State_Ribbon;
-                    else
-                        self->state = StateMachine_None;
-                }
+                else
+                    self->state = self->type == TITLELOGO_RIBBON ? TitleLogo_State_Ribbon : StateMachine_None;
             }
         }
     }
@@ -235,8 +243,10 @@ void TitleLogo_State_HandleSetup(void)
 void TitleLogo_State_PlusLogo(void)
 {
     RSDK_THIS(TitleLogo);
+
     if (self->timer <= 0) {
         self->timer = RSDK.Rand(120, 240);
+
         RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 1, &self->plusAnimator, true, 0);
         self->state = TitleLogo_State_PlusShine;
     }

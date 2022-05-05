@@ -3,12 +3,6 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
-#define checkNoSave API.GetNoSave()
-#else
-#define checkNoSave globals->noSave
-#endif
-
 typedef enum {
     SAVEGAME_BLANK,
     SAVEGAME_INPROGRESS,

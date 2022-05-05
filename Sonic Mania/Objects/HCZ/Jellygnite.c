@@ -232,7 +232,7 @@ bool32 Jellygnite_CheckInWater(EntityPlayer *player)
 
     foreach_active(Water, water)
     {
-        if (water->type == WATER_RECT) {
+        if (water->type == WATER_TINT) {
             if (Player_CheckCollisionTouch(player, self, &water->hitbox)
                 && RSDK.CheckObjectCollisionTouchBox(self, &Jellygnite->hitbox, water, &water->hitbox)) {
                 return true;

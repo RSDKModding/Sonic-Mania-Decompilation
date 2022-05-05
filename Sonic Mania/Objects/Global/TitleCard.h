@@ -19,28 +19,29 @@ struct EntityTitleCard {
     int32 actionTimer;
     int32 timer;
     Vector2 decorationPos;
-    int32 barPos[4];
-    Vector2 points0[4];
-    Vector2 points1[4];
-    Vector2 points2[4];
-    Vector2 points3[4];
-    Vector2 points4[4];
-    Vector2 points5[4];
-    Vector2 points6[4];
-    Vector2 points7[4];
-    Vector2 points8[4];
-    Vector2 points9[4];
+    int32 stripPos[4];
+    Vector2 vertMovePos[2];
+    Vector2 vertTargetPos[2];
+    Vector2 word2DecorVerts[4];
+    Vector2 word1DecorVerts[4];
+    Vector2 zoneDecorVerts[4];
+    Vector2 stripVertsBlue[4];   // Using Mania Mode colour names since its better than anything else we did
+    Vector2 stripVertsRed[4];    // Using Mania Mode colour names since its better than anything else we did
+    Vector2 stripVertsOrange[4]; // Using Mania Mode colour names since its better than anything else we did
+    Vector2 stripVertsGreen[4];  // Using Mania Mode colour names since its better than anything else we did
+    Vector2 bgLCurtainVerts[4];
+    Vector2 bgRCurtainVerts[4];
     TextInfo zoneName;
     int32 zoneCharPos[4];
-    int32 zoneCharSpeed[4];
-    int32 zoneStopPos;
+    int32 zoneCharVel[4];
+    int32 zoneXPos;
     Vector2 charPos[20];
-    int32 charSpeeds[20];
-    int32 word2Offset;
-    int32 topWordOffset;
-    int32 bottomWordOffset;
-    int32 currentWordPos;
-    int32 wordStopPos;
+    int32 charVel[20];
+    int32 titleCardWord2;
+    int32 word1Width;
+    int32 word2Width;
+    int32 word1XPos;
+    int32 word2XPos;
     uint8 actID;
     int32 actNumScale;
     Vector2 actNumPos;
@@ -69,18 +70,18 @@ void TitleCard_EditorLoad(void);
 void TitleCard_Serialize(void);
 
 // Extra Entity Functions
-void TitleCard_SetColors(void);
-void TitleCard_SetPoints(void);
-void TitleCard_SetWordPositions(void);
-void TitleCard_CheckPointBoundaries(void);
-void TitleCard_HandleZoneCharacters(void);
-void TitleCard_SetCamera(void);
+void TitleCard_SetupColors(void);
+void TitleCard_SetupVertices(void);
+void TitleCard_SetupTitleWords(void);
+void TitleCard_HandleWordMovement(void);
+void TitleCard_HandleZoneCharMovement(void);
+void TitleCard_HandleCamera(void);
 
 // States
-void TitleCard_State_Initial(void);
+void TitleCard_State_SetupBGElements(void);
 void TitleCard_State_OpeningBG(void);
-void TitleCard_State_ShowTitle(void);
-void TitleCard_State_Idle(void);
+void TitleCard_State_EnterTitle(void);
+void TitleCard_State_ShowingTitle(void);
 void TitleCard_State_SlideAway(void);
 void TitleCard_State_Supressed(void);
 

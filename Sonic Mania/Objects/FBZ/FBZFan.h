@@ -7,9 +7,9 @@
 struct ObjectFBZFan {
     RSDK_OBJECT
     int32 activePlayers;
-    Hitbox fanHitbox;
-    Hitbox solidHitbox;
-    Hitbox playerHitbox;
+    Hitbox hitboxFan;
+    Hitbox hitboxSolid;
+    Hitbox hitboxPlayer;
     uint16 aniFrames;
     Animator baseAnimator;
     Animator fanAnimator;
@@ -20,7 +20,7 @@ struct ObjectFBZFan {
 // Entity Class
 struct EntityFBZFan {
     RSDK_ENTITY
-    Hitbox hitbox;
+    Hitbox hitboxTrigger;
     uint8 activePlayers;
 };
 
@@ -32,7 +32,7 @@ void FBZFan_Update(void);
 void FBZFan_LateUpdate(void);
 void FBZFan_StaticUpdate(void);
 void FBZFan_Draw(void);
-void FBZFan_Create(void* data);
+void FBZFan_Create(void *data);
 void FBZFan_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FBZFan_EditorDraw(void);
@@ -42,5 +42,4 @@ void FBZFan_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_FBZFAN_H
+#endif //! OBJ_FBZFAN_H

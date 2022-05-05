@@ -14,7 +14,7 @@ struct ObjectStarPost {
     uint8 storedMinutes;
     uint8 storedSeconds;
     uint8 storedMS;
-    uint8 activePlayers;
+    uint8 interactablePlayers;
     uint16 aniFrames;
     uint16 sfxStarPost;
     uint16 sfxWarp;
@@ -37,8 +37,8 @@ struct EntityStarPost {
     Animator poleAnimator;
     Animator ballAnimator;
     Animator starAnimator;
-    Hitbox starHitbox;
-    uint8 activated;
+    Hitbox hitboxStars;
+    uint8 interactedPlayers;
 };
 
 // Object Struct

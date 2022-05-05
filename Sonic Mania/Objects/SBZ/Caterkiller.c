@@ -115,7 +115,7 @@ void Caterkiller_CheckTileCollisions(void)
         storeY = self->position.y;
     }
     else {
-        if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
+        if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
             self->direction ^= FLIP_X;
         storeX = self->position.x;
         storeY = self->position.y;
@@ -127,7 +127,7 @@ void Caterkiller_CheckTileCollisions(void)
         if (self->state != Caterkiller_State_LowerHead || i != (Caterkiller_BodyCount - 1)) {
             self->position.x = self->bodyPosition[i].x;
             self->position.y = self->bodyPosition[i].y;
-            if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
+            if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
                 self->bodyDirection[i] = self->direction;
             self->bodyPosition[i].y = self->position.y;
             if (Caterkiller_CheckTileAngle(self->bodyPosition[i].x, self->bodyPosition[i].y, self->bodyDirection[i]))
@@ -348,7 +348,7 @@ void Caterkiller_StateSplit_Head(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
+        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
             self->velocity.y = -0x40000;
         }
 
@@ -372,7 +372,7 @@ void Caterkiller_StateSplit_Body(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
+        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
             self->velocity.y = -0x40000;
         }
 

@@ -5,12 +5,12 @@
 
 // Object Class
 struct ObjectPlayerHelpers {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityPlayerHelpers {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Entity
@@ -21,7 +21,7 @@ void PlayerHelpers_Update(void);
 void PlayerHelpers_LateUpdate(void);
 void PlayerHelpers_StaticUpdate(void);
 void PlayerHelpers_Draw(void);
-void PlayerHelpers_Create(void* data);
+void PlayerHelpers_Create(void *data);
 void PlayerHelpers_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PlayerHelpers_EditorDraw(void);
@@ -37,4 +37,4 @@ bool32 PlayerHelpers_CheckAct1Regular(void);
 bool32 PlayerHelpers_CheckStageReload(void);
 bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2);
 
-#endif //!OBJ_PLAYERHELPERS_H
+#endif //! OBJ_PLAYERHELPERS_H

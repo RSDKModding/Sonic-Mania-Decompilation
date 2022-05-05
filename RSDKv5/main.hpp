@@ -1,5 +1,5 @@
-#ifndef MAIN_HPP
-#define MAIN_HPP
+#ifndef MAIN_H
+#define MAIN_H
 
 #if !RETRO_STANDALONE
 #ifdef _MSC_VER
@@ -15,4 +15,4 @@ DLLExport int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void *info))
 int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void *info));
 #endif
 
-#endif
+#endif // !ifdef MAIN_H

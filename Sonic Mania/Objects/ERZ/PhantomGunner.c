@@ -470,7 +470,7 @@ void PhantomGunner_State_Mortar(void)
 
     PhantomGunner_CheckPlayerMissileCollisions();
     if (self->objectID) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == PHANTOMGUNNER_NAPALM) {
                 EntityPhantomGunner *child =
                     CREATE_ENTITY(PhantomGunner, intToVoid(PHANTOMGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
@@ -499,7 +499,7 @@ void PhantomGunner_State_Napalm(void)
 
     PhantomGunner_CheckPlayerMissileCollisions();
     if (self->objectID) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == PHANTOMGUNNER_NAPALM) {
                 EntityPhantomGunner *child =
                     CREATE_ENTITY(PhantomGunner, intToVoid(PHANTOMGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);

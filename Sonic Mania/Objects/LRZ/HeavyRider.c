@@ -1024,22 +1024,22 @@ void HeavyRider_State_PlaneSwitch(void)
                     player->collisionPlane = (self->flags >> 3) & 1;
                     if (!(self->flags & 4)) {
                         player->collisionLayers = 1 << Zone->fgLow;
-                        Zone->fgLayers          = 1 << Zone->fgLow;
+                        Zone->collisionLayers          = 1 << Zone->fgLow;
                     }
                     else {
                         player->collisionLayers = 1 << Zone->fgHigh;
-                        Zone->fgLayers          = 1 << Zone->fgHigh;
+                        Zone->collisionLayers          = 1 << Zone->fgHigh;
                     }
                 }
                 else {
                     player->collisionPlane = (self->flags >> 1) & 1;
                     if (!(self->flags & 1)) {
                         player->collisionLayers = 1 << Zone->fgLow;
-                        Zone->fgLayers          = 1 << Zone->fgLow;
+                        Zone->collisionLayers          = 1 << Zone->fgLow;
                     }
                     else {
                         player->collisionLayers = 1 << Zone->fgHigh;
-                        Zone->fgLayers          = 1 << Zone->fgHigh;
+                        Zone->collisionLayers          = 1 << Zone->fgHigh;
                     }
                 }
             }

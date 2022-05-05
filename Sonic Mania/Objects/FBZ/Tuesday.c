@@ -12,6 +12,7 @@ ObjectTuesday *Tuesday;
 void Tuesday_Update(void)
 {
     RSDK_THIS(Tuesday);
+
     StateMachine_Run(self->state);
 }
 
@@ -30,9 +31,11 @@ void Tuesday_StaticUpdate(void)
 void Tuesday_Draw(void)
 {
     RSDK_THIS(Tuesday);
+
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
         RSDK.DrawSprite(&self->nodeAnimator, &self->drawPos, false);
-        if (!self->type)
+
+        if (self->type == TUESDAY_GONDOLA)
             RSDK.DrawSprite(&self->gondolaAnimator, &self->drawPos, false);
     }
     else {
@@ -43,12 +46,14 @@ void Tuesday_Draw(void)
 void Tuesday_Create(void *data)
 {
     RSDK_THIS(Tuesday);
+
     self->visible = true;
     self->drawFX |= FX_FLIP;
     self->drawOrder     = Zone->objectDrawLow + 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (data) {
         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 3, &self->nodeAnimator, true, 0);
         self->active = ACTIVE_NORMAL;
@@ -57,12 +62,11 @@ void Tuesday_Create(void *data)
     else {
         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 1, &self->nodeAnimator, true, 0);
         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 0, &self->gondolaAnimator, true, 0);
+
         if (!SceneInfo->inEditor) {
-            self->health = 1;
-            if (!self->type)
-                self->state = Tuesday_State_Controller;
-            else
-                self->state = Tuesday_State_Node;
+            self->health = 1; // why does this have health??? this is the ONLY non-boss object to have health...
+            self->state  = self->type == TUESDAY_GONDOLA ? Tuesday_State_Controller : Tuesday_State_Node;
+
             self->linkNodes[0] = NULL;
             self->linkNodes[1] = NULL;
             self->linkNodes[2] = NULL;
@@ -71,15 +75,16 @@ void Tuesday_Create(void *data)
             self->linkNodes[5] = NULL;
             self->linkNodes[6] = NULL;
             self->linkNodes[7] = NULL;
-            if (!self->type)
+            if (self->type == TUESDAY_GONDOLA)
                 self->parent = self;
+
             self->linkMask = 0xFF;
-            int32 minX      = 0x7FFFFFFF;
-            int32 minY      = 0x7FFFFFFF;
-            int32 maxX      = 0;
-            int32 maxY      = 0;
-            self->drawPos   = self->position;
-            if (self->type && self->parent) {
+            int32 minX     = 0x7FFFFFFF;
+            int32 minY     = 0x7FFFFFFF;
+            int32 maxX     = 0;
+            int32 maxY     = 0;
+            self->drawPos  = self->position;
+            if (self->type != TUESDAY_GONDOLA && self->parent) {
                 self->position    = self->parent->position;
                 self->updateRange = self->parent->updateRange;
             }
@@ -89,15 +94,19 @@ void Tuesday_Create(void *data)
             while (child->objectID == Tuesday->objectID || child->objectID == Platform->objectID) {
                 if (child != self && child->objectID == Tuesday->objectID) {
                     ++self->linkCount;
-                    if (!self->type) {
+
+                    if (self->type == TUESDAY_GONDOLA) {
                         child->parent = self;
+
                         if (child->position.x < minX)
                             minX = child->position.x;
+
                         if (child->position.x > maxX)
                             maxX = child->position.x;
 
                         if (child->position.y < minY)
                             minY = child->position.y;
+
                         if (child->position.y > maxY)
                             maxY = child->position.y;
                     }
@@ -127,6 +136,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[7];
                                     if (!tuesday || child->drawPos.y > tuesday->drawPos.y) {
                                         self->linkNodes[7] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 0x08;
                                         else if (child->linkMask)
@@ -140,6 +150,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[6];
                                     if (!tuesday || child->drawPos.y > tuesday->drawPos.y) {
                                         self->linkNodes[6] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 0x04;
                                         else if (child->linkMask)
@@ -153,6 +164,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[5];
                                     if (!tuesday || child->drawPos.x < tuesday->drawPos.x) {
                                         self->linkNodes[5] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 0x02;
                                         else if (child->linkMask)
@@ -166,6 +178,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[0];
                                     if (!tuesday || child->drawPos.x > tuesday->drawPos.x) {
                                         self->linkNodes[0] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 0x10;
                                         else if (child->linkMask)
@@ -179,6 +192,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[4];
                                     if (!tuesday || child->drawPos.x < tuesday->drawPos.x) {
                                         self->linkNodes[4] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 1;
                                         else if (child->linkMask)
@@ -192,6 +206,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[1];
                                     if (!tuesday || child->drawPos.x > tuesday->drawPos.x) {
                                         self->linkNodes[1] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 0x20;
                                         else if (child->linkMask)
@@ -205,6 +220,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[2];
                                     if (!tuesday || child->drawPos.y < tuesday->drawPos.y) {
                                         self->linkNodes[2] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 0x40;
                                         else if (child->linkMask)
@@ -218,6 +234,7 @@ void Tuesday_Create(void *data)
                                     EntityTuesday *tuesday = self->linkNodes[3];
                                     if (!tuesday || child->drawPos.y < tuesday->drawPos.y) {
                                         self->linkNodes[3] = child;
+
                                         if (self->linkMask)
                                             child->linkMask |= 0x80;
                                         else if (child->linkMask)
@@ -230,10 +247,11 @@ void Tuesday_Create(void *data)
                         }
                     }
                 }
+
                 child = RSDK_GET_ENTITY(++slotID, Tuesday);
             }
 
-            if (!self->type) {
+            if (self->type == TUESDAY_GONDOLA) {
                 self->position.x    = ((maxX - minX) >> 1) + minX;
                 self->position.y    = ((maxY - minY) >> 1) + minY;
                 self->updateRange.x = 0x800000 + ((maxX - minX) >> 1);
@@ -248,20 +266,63 @@ void Tuesday_StageLoad(void)
     if (RSDK.CheckStageFolder("FBZ"))
         Tuesday->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Tuesday.bin", SCOPE_STAGE);
 
-    Tuesday->hitbox1.left   = -16;
-    Tuesday->hitbox1.top    = -16;
-    Tuesday->hitbox1.right  = 16;
-    Tuesday->hitbox1.bottom = 16;
-    Tuesday->hitbox2.left   = -40;
-    Tuesday->hitbox2.top    = -8;
-    Tuesday->hitbox2.right  = 40;
-    Tuesday->hitbox2.bottom = 80;
+    Tuesday->hitboxNode.left   = -16;
+    Tuesday->hitboxNode.top    = -16;
+    Tuesday->hitboxNode.right  = 16;
+    Tuesday->hitboxNode.bottom = 16;
+
+    Tuesday->hitboxGondola.left   = -40;
+    Tuesday->hitboxGondola.top    = -8;
+    Tuesday->hitboxGondola.right  = 40;
+    Tuesday->hitboxGondola.bottom = 80;
 
     Tuesday->sfxElecCharge = RSDK.GetSfx("Stage/ElecCharge.wav");
     Tuesday->sfxZap        = RSDK.GetSfx("Stage/Zap.wav");
     Tuesday->sfxBossHit    = RSDK.GetSfx("Stage/BossHit.wav");
     Tuesday->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
     Tuesday->sfxDrop       = RSDK.GetSfx("Stage/Drop.wav");
+}
+
+void Tuesday_Hit(void)
+{
+    RSDK_THIS(Tuesday);
+
+    if (!--self->health) {
+        self->state           = Tuesday_State_Destroyed;
+        self->invincibleTimer = self->type == TUESDAY_GONDOLA ? 48 : 16;
+    }
+    else {
+        self->invincibleTimer = 30;
+        RSDK.PlaySfx(Tuesday->sfxBossHit, false, 255);
+    }
+}
+
+void Tuesday_Explode(void)
+{
+    RSDK_THIS(Tuesday);
+
+    if (!(Zone->timer % 3)) {
+        RSDK.PlaySfx(Tuesday->sfxExplosion, false, 255);
+
+        if (Zone->timer & 4) {
+            int32 data = ((RSDK.Rand(0, 256) > 192) + 2);
+
+            int32 xOffset = 0, yOffset = 0;
+            if (self->type != TUESDAY_GONDOLA) {
+                xOffset = RSDK.Rand(-12, 12);
+                yOffset = RSDK.Rand(-12, 12);
+            }
+            else {
+                xOffset = RSDK.Rand(-32, 33);
+                yOffset = RSDK.Rand(-8, 73);
+            }
+
+            int32 x                    = self->drawPos.x + (xOffset << 16);
+            int32 y                    = self->drawPos.y + (yOffset << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(data), x, y);
+            explosion->drawOrder       = Zone->objectDrawHigh;
+        }
+    }
 }
 
 void Tuesday_DrawElectricity(void)
@@ -280,8 +341,9 @@ void Tuesday_DrawElectricity(void)
         Animator animator;
         for (int32 i = 0; i < 8; ++i) {
             if (((1 << i) & self->shockFlags) && self->linkNodes[i]) {
-                drawPos.x           = self->drawPos.x;
-                drawPos.y           = self->drawPos.y;
+                drawPos.x = self->drawPos.x;
+                drawPos.y = self->drawPos.y;
+
                 EntityTuesday *link = self->linkNodes[i];
                 switch (i) {
                     case 0:
@@ -292,6 +354,7 @@ void Tuesday_DrawElectricity(void)
                             drawPos.x -= 0x100000;
                         }
                         break;
+
                     case 1:
                         drawPos.y += 0x100000;
                         drawPos.x -= 0x100000;
@@ -302,6 +365,7 @@ void Tuesday_DrawElectricity(void)
                             drawPos.y += 0xC0000;
                         }
                         break;
+
                     case 2:
                         drawPos.y += 0x200000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 4, &animator, true, frameID);
@@ -310,6 +374,7 @@ void Tuesday_DrawElectricity(void)
                             drawPos.y += 0x100000;
                         }
                         break;
+
                     case 3:
                         self->direction = FLIP_X;
                         drawPos.x += 0x100000;
@@ -322,6 +387,7 @@ void Tuesday_DrawElectricity(void)
                         }
                         self->direction = FLIP_NONE;
                         break;
+
                     case 4:
                         drawPos.x += 0x200000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 5, &animator, true, frameID);
@@ -330,6 +396,7 @@ void Tuesday_DrawElectricity(void)
                             drawPos.x += 0x100000;
                         }
                         break;
+
                     case 5:
                         drawPos.y -= 0x100000;
                         drawPos.x += 0x100000;
@@ -340,6 +407,7 @@ void Tuesday_DrawElectricity(void)
                             drawPos.y -= 0xC0000;
                         }
                         break;
+
                     case 6:
                         drawPos.y -= 0x200000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 4, &animator, true, frameID);
@@ -348,6 +416,7 @@ void Tuesday_DrawElectricity(void)
                             drawPos.y -= 0x100000;
                         }
                         break;
+
                     case 7:
                         self->direction = FLIP_X;
                         drawPos.x -= 0x100000;
@@ -360,10 +429,12 @@ void Tuesday_DrawElectricity(void)
                         }
                         self->direction = FLIP_NONE;
                         break;
+
                     default: break;
                 }
             }
         }
+
         self->drawFX &= ~FX_FLIP;
     }
 }
@@ -371,9 +442,11 @@ void Tuesday_DrawElectricity(void)
 void Tuesday_State_Controller(void)
 {
     RSDK_THIS(Tuesday);
+
     if (++self->shockTimer == 240) {
         RSDK.PlaySfx(Tuesday->sfxElecCharge, false, 255);
-        self->timer            = 120;
+        self->timer = 120;
+
         int32 slotID           = SceneInfo->entitySlot + 1;
         EntityTuesday *tuesday = RSDK_GET_ENTITY(slotID, Tuesday);
         int32 count            = self->linkCount;
@@ -391,11 +464,13 @@ void Tuesday_State_Controller(void)
                 self->shockFlags     = 0b10101010;
                 self->shockType      = 1;
                 break;
+
             case 1:
                 self->nextShockFlags = 0b00010001;
                 self->shockFlags     = 0b00010001;
                 self->shockType      = 2;
                 break;
+
             case 2:
                 self->nextShockFlags = 0b01000100;
                 self->shockFlags     = 0b01000100;
@@ -405,14 +480,17 @@ void Tuesday_State_Controller(void)
 
         self->shockTimer = 0;
     }
+
     if (self->timer == 60)
         RSDK.PlaySfx(Tuesday->sfxZap, false, 255);
+
     Tuesday_State_Node();
 }
 
 void Tuesday_State_Node(void)
 {
     RSDK_THIS(Tuesday);
+
     EntityPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Platform);
     if (platform->objectID == Platform->objectID && platform->childCount > 0) {
         self->position.x -= platform->collisionOffset.x;
@@ -426,6 +504,7 @@ void Tuesday_State_Node(void)
             RSDK.SetSpriteAnimation(Tuesday->aniFrames, 2, &self->nodeAnimator, false, 0);
         else
             RSDK.SetSpriteAnimation(Tuesday->aniFrames, 1, &self->nodeAnimator, false, 0);
+
         RSDK.ProcessAnimation(&self->nodeAnimator);
     }
     else {
@@ -441,27 +520,18 @@ void Tuesday_State_Node(void)
     {
         if (!self->invincibleTimer) {
             bool32 hit = false;
-            if (self->type)
-                hit = Player_CheckBadnikTouch(player, self, &Tuesday->hitbox1);
+            if (self->type != TUESDAY_GONDOLA)
+                hit = Player_CheckBadnikTouch(player, self, &Tuesday->hitboxNode);
             else
-                hit = Player_CheckBadnikTouch(player, self, &Tuesday->hitbox2);
+                hit = Player_CheckBadnikTouch(player, self, &Tuesday->hitboxGondola);
+
             if (hit) {
                 if (!player->invincibleTimer && player->shield != SHIELD_LIGHTNING && player->blinkTimer <= 0 && self->timer && self->timer <= 60
-                    && (self->type || Player_CheckCollisionTouch(player, self, &Tuesday->hitbox1))) {
+                    && (self->type != TUESDAY_GONDOLA || Player_CheckCollisionTouch(player, self, &Tuesday->hitboxNode))) {
                     Player_CheckHit(player, self);
                 }
                 else if (Player_CheckBossHit(player, self)) {
-                    if (!--self->health) {
-                        self->state = Tuesday_State_Destroyed;
-                        if (!self->type)
-                            self->invincibleTimer = 48;
-                        else
-                            self->invincibleTimer = 16;
-                    }
-                    else {
-                        self->invincibleTimer = 30;
-                        RSDK.PlaySfx(Tuesday->sfxBossHit, false, 255);
-                    }
+                    Tuesday_Hit();
                 }
             }
             else {
@@ -631,28 +701,7 @@ void Tuesday_State_Destroyed(void)
 {
     RSDK_THIS(Tuesday);
 
-    if (!(Zone->timer % 3)) {
-        RSDK.PlaySfx(Tuesday->sfxExplosion, false, 255);
-
-        if (Zone->timer & 4) {
-            int32 data = ((RSDK.Rand(0, 256) > 192) + 2);
-
-            int32 xOffset = 0, yOffset = 0;
-            if (self->type) {
-                xOffset = RSDK.Rand(-12, 12);
-                yOffset = RSDK.Rand(-12, 12);
-            }
-            else {
-                xOffset = RSDK.Rand(-32, 33);
-                yOffset = RSDK.Rand(-8, 73);
-            }
-
-            int32 x                    = self->drawPos.x + (xOffset << 16);
-            int32 y                    = self->drawPos.y + (yOffset << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(data), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh;
-        }
-    }
+    Tuesday_Explode();
 
     if (!--self->invincibleTimer) {
         --self->parent->linkCount;
@@ -711,7 +760,7 @@ void Tuesday_State_Destroyed(void)
         child->nodeAnimator.frameID = 0;
         child->velocity.x           = -0x20000;
         child->velocity.y           = -0x40000;
-        child->type                 = 1;
+        child->type                 = TUESDAY_NODE;
 
         child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
         child->drawPos.x            = child->position.x;
@@ -719,7 +768,7 @@ void Tuesday_State_Destroyed(void)
         child->nodeAnimator.frameID = 1;
         child->velocity.x           = 0x20000;
         child->velocity.y           = -0x40000;
-        child->type                 = 1;
+        child->type                 = TUESDAY_NODE;
 
         child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
         child->drawPos.x            = child->position.x;
@@ -727,7 +776,7 @@ void Tuesday_State_Destroyed(void)
         child->nodeAnimator.frameID = 2;
         child->velocity.x           = -0x10000;
         child->velocity.y           = -0x20000;
-        child->type                 = 1;
+        child->type                 = TUESDAY_NODE;
 
         child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
         child->drawPos.x            = child->position.x;
@@ -735,9 +784,9 @@ void Tuesday_State_Destroyed(void)
         child->nodeAnimator.frameID = 3;
         child->velocity.x           = 0x10000;
         child->velocity.y           = -0x20000;
-        child->type                 = 1;
+        child->type                 = TUESDAY_NODE;
 
-        if (!self->type) {
+        if (self->type == TUESDAY_GONDOLA) {
             RSDK.SetSpriteAnimation(-1, 0, &self->gondolaAnimator, true, 0);
             child = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
             RSDK.SetSpriteAnimation(Tuesday->aniFrames, 0, &child->nodeAnimator, true, 0);
@@ -763,14 +812,16 @@ void Tuesday_State_Destroyed(void)
 void Tuesday_State_Debris(void)
 {
     RSDK_THIS(Tuesday);
+
     self->drawPos.x += self->velocity.x;
     self->drawPos.y += self->velocity.y;
+
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
     self->velocity.y += 0x3800;
 
     if (RSDK.CheckOnScreen(self, NULL)) {
-        if (self->type) {
+        if (self->type != TUESDAY_GONDOLA) {
             self->visible ^= true;
         }
         else if (self->velocity.y == 0x8000) {
@@ -789,42 +840,53 @@ void Tuesday_EditorDraw(void)
     self->drawPos = self->position;
 
     RSDK.DrawSprite(&self->nodeAnimator, &self->drawPos, false);
-    if (!self->type)
+    if (self->type == TUESDAY_GONDOLA)
         RSDK.DrawSprite(&self->gondolaAnimator, &self->drawPos, false);
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
         // connection area
         RSDK.DrawRect(self->position.x - 0x1000000, self->position.y - 0x1000000, 0x2000000, 0x2000000, 0xFFFF00, 0x10, INK_ALPHA, false);
 
         // active links
         if (self->links & 0x80) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0xA0) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0xA0) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0xA0) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x40) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x300000, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x300000, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x20) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0xE0) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0xE0) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0xE0) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x1) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x300000, self->position.y, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x300000, self->position.y, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x10) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x300000, self->position.y, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x300000, self->position.y, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x2) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0x60) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0x60) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0x60) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x4) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x300000, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x300000, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x8) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0x20) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0x20) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0x20) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

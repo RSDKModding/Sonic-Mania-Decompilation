@@ -29,7 +29,7 @@ void MSBomb_Update(void);
 void MSBomb_LateUpdate(void);
 void MSBomb_StaticUpdate(void);
 void MSBomb_Draw(void);
-void MSBomb_Create(void* data);
+void MSBomb_Create(void *data);
 void MSBomb_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSBomb_EditorDraw(void);
@@ -45,4 +45,4 @@ void MSBomb_State_Projectile(void);
 
 #endif
 
-#endif //!OBJ_MSBOMB_H
+#endif //! OBJ_MSBOMB_H

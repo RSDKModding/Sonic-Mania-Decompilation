@@ -12,15 +12,20 @@ ObjectTurntable *Turntable;
 void Turntable_Update(void)
 {
     RSDK_THIS(Turntable);
+
     self->angle += self->angleVel;
+
     if (self->angle < 0)
         self->angle += 0x400;
     self->angle %= 0x3FF;
+
     foreach_active(Player, player)
     {
-        int32 pID = RSDK.GetEntityID(player);
-        if (!((1 << pID) & self->activePlayers)) {
+        int32 playerID = RSDK.GetEntityID(player);
+
+        if (!((1 << playerID) & self->activePlayers)) {
             if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
+
 #if RETRO_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop || player->state == Player_State_BubbleBounce)
                     continue;
@@ -28,8 +33,9 @@ void Turntable_Update(void)
                 if (player->state == Player_State_BubbleBounce)
                     continue;
 #endif
-                self->active          = ACTIVE_NORMAL;
-                self->activePlayers   = self->activePlayers | (1 << pID);
+
+                self->active = ACTIVE_NORMAL;
+                self->activePlayers |= (1 << playerID);
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 player->velocity.x      = 0;
@@ -42,59 +48,60 @@ void Turntable_Update(void)
 
                 if (dist >= 0x10) {
                     if (player->position.x <= self->position.x) {
-                        self->playerAngles[pID] = 512;
-                        self->playerFrames[pID] = 12;
+                        self->playerAngles[playerID] = 0x200;
+                        self->playerFrames[playerID] = 12;
                     }
                     else {
-                        self->playerAngles[pID] = 0;
-                        self->playerFrames[pID] = 0;
+                        self->playerAngles[playerID] = 0x000;
+                        self->playerFrames[playerID] = 0;
                     }
                 }
                 else {
                     int32 distY = 16 * (0x10000 - dist / 16);
                     int32 angY  = -16 * (0x10000 - dist / 16);
+
                     if (player->drawOrder != Zone->playerDrawLow)
                         angY = distY;
+
                     int32 distX = player->position.x - self->position.x;
-                    int32 angX  = -distX;
-                    if (player->position.x >= self->position.x)
-                        angX = distX;
-                    dist                  = 0x10;
-                    self->playerAngles[pID] = 4 * RSDK.ATan2(angX, angY);
-                    self->playerFrames[pID] = 0;
+                    int32 angX  = player->position.x >= self->position.x ? distX : -distX;
+
+                    dist                         = 0x10;
+                    self->playerAngles[playerID] = 4 * RSDK.ATan2(angX, angY);
+                    self->playerFrames[playerID] = 0;
                 }
-                self->playerDistance[pID] = dist;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, true, self->playerFrames[pID]);
+
+                self->playerDistance[playerID] = dist;
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, true, self->playerFrames[playerID]);
                 Hitbox *hitbox     = Player_GetHitbox(player);
                 player->position.y = self->position.y - (hitbox->bottom << 16) - (self->size.y >> 1);
             }
         }
-        if ((1 << pID) & self->activePlayers) {
-            player->velocity.x    = 0;
-            player->velocity.y    = 0;
-            player->groundVel     = 0;
-            self->playerAngles[pID] = (self->angleVel + self->playerAngles[pID]) & 0x3FF;
-            player->position.x    = self->position.x;
-            player->position.x += (RSDK.Cos1024(self->playerAngles[pID]) << 6) * self->playerDistance[pID];
+
+        if ((1 << playerID) & self->activePlayers) {
+            player->velocity.x           = 0;
+            player->velocity.y           = 0;
+            player->groundVel            = 0;
+            self->playerAngles[playerID] = (self->angleVel + self->playerAngles[playerID]) & 0x3FF;
+            player->position.x           = self->position.x;
+            player->position.x += (RSDK.Cos1024(self->playerAngles[playerID]) << 6) * self->playerDistance[playerID];
 
             int32 frame = 0;
             if (player->direction)
-                frame = 24 - self->playerAngles[pID] / 42;
+                frame = 24 - self->playerAngles[playerID] / 42;
             else
-                frame = self->playerAngles[pID] / 42 % 24;
+                frame = self->playerAngles[playerID] / 42 % 24;
 
-            if (self->playerAngles[pID] < 512)
-                player->drawOrder = Zone->playerDrawHigh;
-            else
-                player->drawOrder = Zone->playerDrawLow;
-            player->animator.frameID = (self->playerFrames[pID] + frame) % -24;
-            if (player->jumpPress) {
+            player->drawOrder = self->playerAngles[playerID] < 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
+
+            player->animator.frameID = (self->playerFrames[playerID] + frame) % -24;
+
+            if (player->jumpPress)
                 Player_StartJump(player);
-            }
-            else if (player->animator.animationID == ANI_TWISTER && player->state == Player_State_None) {
+            else if (player->animator.animationID == ANI_TWISTER && player->state == Player_State_None)
                 continue;
-            }
-            self->activePlayers &= ~(1 << pID);
+
+            self->activePlayers &= ~(1 << playerID);
         }
     }
 }
@@ -106,27 +113,33 @@ void Turntable_StaticUpdate(void) {}
 void Turntable_Draw(void)
 {
     RSDK_THIS(Turntable);
+
     RSDK.SetSpriteAnimation(Turntable->aniFrames, self->type, &self->animator, true, 13 - (self->angle >> 1) / 9 % 14);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Turntable_Create(void *data)
 {
     RSDK_THIS(Turntable);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
-    self->origin.x      = self->position.x;
-    self->origin.y      = self->position.y;
+    self->origin        = self->position;
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (!self->angleVel)
         self->angleVel = 6;
+
     Turntable_SetupSize();
+
     self->hitbox.right  = (self->size.x >> 17);
     self->hitbox.left   = -(self->size.x >> 17);
     self->hitbox.bottom = (self->size.y >> 17);
     self->hitbox.top    = -(self->size.y >> 17);
+
     RSDK.SetSpriteAnimation(Turntable->aniFrames, 0, &self->animator, true, 6);
 }
 
@@ -135,14 +148,16 @@ void Turntable_StageLoad(void) { Turntable->aniFrames = RSDK.LoadSpriteAnimation
 void Turntable_SetupSize(void)
 {
     RSDK_THIS(Turntable);
+
     RSDK.SetSpriteAnimation(Turntable->aniFrames, self->type, &self->animator, true, 0);
 
     switch (self->type) {
-        case 0:
+        case TURNTABLE_SMALL:
             self->size.x = 0x6A0000;
             self->size.y = 0x200000;
             break;
-        case 1:
+
+        case TURNTABLE_LARGE:
             self->size.x = 0xD40000;
             self->size.y = 0x300000;
             break;
@@ -157,12 +172,13 @@ void Turntable_EditorLoad(void)
     Turntable->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Turntable.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Turntable, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("(Unused)", FLIP_NONE); // FX_FLIP isn't even active on the animator
+    // RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    // RSDK_ENUM_VAR("Flip X", FLIP_X);
 
     RSDK_ACTIVE_VAR(Turntable, type);
-    RSDK_ENUM_VAR("Small", FLIP_NONE);
-    RSDK_ENUM_VAR("Large", FLIP_X);
+    RSDK_ENUM_VAR("Small", TURNTABLE_SMALL);
+    RSDK_ENUM_VAR("Large", TURNTABLE_LARGE);
 }
 #endif
 

@@ -348,12 +348,11 @@ void SignPost_CheckTouch(void)
                         }
 
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-                        EntityCompetition *manager        = (EntityCompetition *)Competition->activeEntity;
-                        if (!manager) {
-                            Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);
-                            manager                   = (EntityCompetition *)Competition->activeEntity;
-                        }
-                        manager->playerFinished[player->playerID]       = true;
+                        EntityCompetition *manager        = Competition->sessionManager;
+                        if (!manager)
+                            manager = Competition->sessionManager = CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);
+
+                        manager->playerFinished[player->playerID]    = true;
                         session->rings[player->playerID]             = player->rings;
                         session->time[player->playerID].minutes      = SceneInfo->minutes;
                         session->time[player->playerID].seconds      = SceneInfo->seconds;
@@ -514,7 +513,7 @@ void SignPost_State_Fall(void)
         if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 32) << 16) {
             self->velocity.x = -self->velocity.x;
         }
-        else if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
+        else if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
             self->velocity.x = -self->velocity.x;
         }
     }
@@ -522,17 +521,17 @@ void SignPost_State_Fall(void)
         if (self->position.x < (ScreenInfo->position.x + 32) << 16) {
             self->velocity.x = -self->velocity.x;
         }
-        else if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x180000, 0, true)) {
+        else if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x180000, 0, true)) {
             self->velocity.x = -self->velocity.x;
         }
     }
 
     self->velocity.y += 0xC00;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
         foreach_active(ItemBox, itemBox)
         {
             if (itemBox->hidden) {
-                if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, self, &SignPost->hitboxItemBox)) {
+                if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hitboxHidden, self, &SignPost->hitboxItemBox)) {
                     RSDK.PlaySfx(SignPost->sfxBubbleBounce, false, 255);
                     itemBox->velocity.y = -0x50000;
                     itemBox->hidden     = 0;

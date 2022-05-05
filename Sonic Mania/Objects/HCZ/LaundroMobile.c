@@ -93,7 +93,7 @@ void LaundroMobile_Create(void *data)
                     LaundroMobile->rocketSpeeds[1] = 0;
                     LaundroMobile->isUnderwater    = false;
                     self->tileCollisions           = true;
-                    self->collisionLayers          = Zone->fgLayers;
+                    self->collisionLayers          = Zone->collisionLayers;
                     self->collisionPlane           = 0;
                     self->state                    = LaundroMobile_StateBoss_AwaitPlayer_Phase1;
                     self->stateDraw                = LaundroMobile_Draw_Boss;
@@ -342,7 +342,7 @@ void LaundroMobile_HandleStageWrap(void)
                     player->onGround        = false;
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
-                    player->state           = Current_Player_State_CurrentRight;
+                    player->state           = Current_PlayerState_CurrentRight;
                     if (player->animator.animationID != ANI_CLING && player->animator.animationID != ANI_SHAFTSWING) {
                         if (player->position.x >= boss->position.x + 0xC00000) {
                             player->velocity.x = LaundroMobile->currentVelocity;
@@ -557,22 +557,22 @@ void LaundroMobile_HandleTileCollisions(void)
     RSDK_THIS(LaundroMobile);
 
     uint8 collisionLevel = 0xFF;
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x200000, 0x200000, false) && collisionLevel >= 0) {
+    while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x200000, 0x200000, false) && collisionLevel >= 0) {
         self->position.y -= 0x10000;
         collisionLevel = 0;
     }
 
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0x200000, -0x200000, false) && collisionLevel >= 1) {
+    while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0x200000, -0x200000, false) && collisionLevel >= 1) {
         self->position.y += 0x10000;
         collisionLevel = 1;
     }
 
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x200000, 0x200000, false) && collisionLevel >= 2) {
+    while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x200000, 0x200000, false) && collisionLevel >= 2) {
         self->position.y -= 0x10000;
         collisionLevel = 2;
     }
 
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, -0x200000, -0x200000, false) && collisionLevel >= 3) {
+    while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, -0x200000, -0x200000, false) && collisionLevel >= 3) {
         self->position.y += 0x10000;
         collisionLevel = 3;
     }

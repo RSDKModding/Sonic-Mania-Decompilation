@@ -13,6 +13,7 @@ ObjectFBZ2Outro *FBZ2Outro;
 void FBZ2Outro_Update(void)
 {
     RSDK_THIS(FBZ2Outro);
+
     FBZ2Outro_StartCutscene(self);
     self->active = ACTIVE_NEVER;
 }
@@ -26,6 +27,7 @@ void FBZ2Outro_Draw(void) {}
 void FBZ2Outro_Create(void *data)
 {
     RSDK_THIS(FBZ2Outro);
+
     self->active      = ACTIVE_NORMAL;
     self->isPermanent = true;
 }
@@ -57,12 +59,14 @@ bool32 FBZ2Outro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
     size.x -= 128;
+
     for (int32 p = 0; p < Player->playerCount; ++p) {
         Zone->cameraBoundsR[p]      = size.x;
         Zone->playerBoundActiveR[p] = false;
     }
 
     foreach_all(HangGlider, glider) { glider->active = ACTIVE_NORMAL; }
+
     return true;
 }
 
@@ -71,6 +75,7 @@ bool32 FBZ2Outro_Cutscene_RunToGlider(EntityCutsceneSeq *host)
     foreach_active(Player, player)
     {
         player->jumpPress = false;
+
         if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
@@ -105,11 +110,11 @@ bool32 FBZ2Outro_Cutscene_RunToGlider(EntityCutsceneSeq *host)
         }
     }
     else {
-        for (int32 p = 0; p < Player->playerCount; ++p) {
-            Zone->cameraBoundsT[p] = Zone->cameraBoundsB[p] - ScreenInfo->height;
-        }
+        for (int32 p = 0; p < Player->playerCount; ++p) Zone->cameraBoundsT[p] = Zone->cameraBoundsB[p] - ScreenInfo->height;
+
         return true;
     }
+
     return false;
 }
 
@@ -124,11 +129,14 @@ bool32 FBZ2Outro_Cutscene_GlideAway(EntityCutsceneSeq *host)
             if (abs(fan->position.x - glider->position.x) < 0x400000 && fan->position.y - glider->position.y < 0xA00000)
                 glider->velocity.y -= 0x3000;
         }
-        if (glider->playerPtr == player1 && !glider->activeScreens) {
+
+        if (glider->attachedPlayer == player1 && !glider->activeScreens) {
             Zone_StartFadeOut(10, 0x000000);
+
             return true;
         }
     }
+
     return false;
 }
 

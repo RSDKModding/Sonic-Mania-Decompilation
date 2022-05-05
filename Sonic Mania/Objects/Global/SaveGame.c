@@ -10,10 +10,15 @@
 ObjectSaveGame *SaveGame;
 
 void SaveGame_Update(void) {}
+
 void SaveGame_LateUpdate(void) {}
+
 void SaveGame_StaticUpdate(void) {}
+
 void SaveGame_Draw(void) {}
+
 void SaveGame_Create(void *data) {}
+
 void SaveGame_StageLoad(void)
 {
 #if !RETRO_USE_PLUS
@@ -45,6 +50,7 @@ int32 *SaveGame_GetDataPtr(int32 slot)
 void SaveGame_LoadSaveData(void)
 {
     int32 slot = globals->saveSlotID;
+
     if (slot == NO_SAVE_SLOT)
         SaveGame->saveRAM = (EntitySaveGame *)globals->noSaveSlot;
     else
@@ -53,13 +59,14 @@ void SaveGame_LoadSaveData(void)
 #else
         SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot);
 #endif
+
     LogHelpers_Print("dataPtr: %X", SaveGame->saveRAM);
+
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     if (!saveRAM->lives)
         saveRAM->lives = 3;
-    while (saveRAM->score1UP <= saveRAM->score) {
-        saveRAM->score1UP += 50000;
-    }
+
+    while (saveRAM->score1UP <= saveRAM->score) saveRAM->score1UP += 50000;
 
     if (Player) {
         if (!TitleCard || TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
@@ -103,6 +110,7 @@ void SaveGame_LoadSaveData(void)
             globals->restartRings    = 0;
             globals->restart1UP      = 100;
             globals->restartPowerups = 0;
+
             LogHelpers_Print("RecallCollectedEntities");
 
             for (int32 e = 0x40; e < 0x840; ++e) {
@@ -136,10 +144,12 @@ void SaveGame_LoadSaveData(void)
                 StarPost->playerDirections[p]  = FLIP_NONE;
                 StarPost->postIDs[p]           = 0;
             }
+
             StarPost->storedMS      = 0;
             StarPost->storedSeconds = 0;
             StarPost->storedMinutes = 0;
         }
+
         globals->tempMilliseconds = 0;
         globals->tempSeconds      = 0;
         globals->tempMinutes      = 0;
@@ -152,10 +162,12 @@ void SaveGame_LoadFile(void)
         SaveGame_SaveLoadedCB(false);
         return;
     }
+
     if (globals->saveLoaded == STATUS_OK) {
         SaveGame_SaveLoadedCB(true);
         return;
     }
+
     globals->saveLoaded     = STATUS_CONTINUE;
     SaveGame->loadEntityPtr = SceneInfo->entity;
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
@@ -163,7 +175,7 @@ void SaveGame_LoadFile(void)
 }
 void SaveGame_SaveFile(void (*callback)(bool32 success))
 {
-    if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
+    if (API_GetNoSave() || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
             callback(false);
     }
@@ -185,21 +197,21 @@ void SaveGame_SaveLoadedCB(bool32 success)
         foreach_all(UISaveSlot, entity)
         {
             if (!entity->type) {
-                Entity* store                     = SceneInfo->entity;
+                Entity *store     = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)entity;
                 UISaveSlot_LoadSaveInfo();
                 UISaveSlot_HandleSaveIcons();
                 SceneInfo->entity = store;
             }
         }
+
         GameProgress_ShuffleBSSID();
         GameProgress_PrintSaveProgress();
     }
 
 #if RETRO_USE_PLUS
-    if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE) {
+    if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE)
         TimeAttackData_LoadTimeAttackDB(NULL);
-    }
 #endif
 }
 
@@ -259,38 +271,35 @@ void SaveGame_SaveGameState(void)
 void SaveGame_SaveProgress(void)
 {
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
-    saveRAM->lives          = Player->savedLives;
-    saveRAM->score          = Player->savedScore;
-    saveRAM->score1UP       = Player->savedScore1UP;
+
+    saveRAM->lives    = Player->savedLives;
+    saveRAM->score    = Player->savedScore;
+    saveRAM->score1UP = Player->savedScore1UP;
 #if RETRO_USE_PLUS
     saveRAM->continues      = globals->continues;
     saveRAM->characterFlags = globals->characterFlags;
     saveRAM->stock          = globals->stock;
     saveRAM->playerID       = globals->playerID;
+
     if (!ActClear || ActClear->displayedActID <= 0) {
         if (globals->saveSlotID != NO_SAVE_SLOT) {
+#else
+
+    if (globals->gameMode == MODE_MANIA) {
+#endif
             if (Zone_IsZoneLastAct()) {
                 if (saveRAM->zoneID < Zone_GetZoneID() + 1)
                     saveRAM->zoneID = Zone_GetZoneID() + 1;
+
                 if (saveRAM->zoneID >= ZONE_ERZ) {
                     saveRAM->saveState = SAVEGAME_COMPLETE;
-                    saveRAM->zoneID = ZONE_ERZ;
+                    saveRAM->zoneID    = ZONE_ERZ;
                 }
             }
+#if RETRO_USE_PLUS
         }
-    }
-#else
-    if (globals->gameMode == MODE_MANIA) {
-        if (Zone_IsZoneLastAct()) {
-            if (saveRAM->zoneID < Zone_GetZoneID() + 1)
-                saveRAM->zoneID = Zone_GetZoneID() + 1;
-            if (saveRAM->zoneID >= ZONE_ERZ) {
-                saveRAM->saveState = SAVEGAME_COMPLETE;
-                saveRAM->zoneID    = ZONE_ERZ;
-            }
-        }
-    }
 #endif
+    }
 }
 void SaveGame_ClearRestartData(void)
 {
@@ -298,42 +307,49 @@ void SaveGame_ClearRestartData(void)
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
     globals->restartMinutes      = 0;
+
     memset(globals->atlEntityData, 0, (RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT) * sizeof(int32));
 }
 void SaveGame_SavePlayerState(void)
 {
-    EntitySaveGame *saveRAM      = SaveGame->saveRAM;
-    globals->restartSlot[0]      = 0;
-    globals->restartSlot[1]      = 0;
-    globals->restartSlot[2]      = 0;
-    globals->restartSlot[3]      = 0;
-    EntityPlayer *player         = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
+    globals->restartSlot[0] = 0;
+    globals->restartSlot[1] = 0;
+    globals->restartSlot[2] = 0;
+    globals->restartSlot[3] = 0;
+
     globals->restartMilliseconds = SceneInfo->milliseconds;
     globals->restartSeconds      = SceneInfo->seconds;
     globals->restartMinutes      = SceneInfo->minutes;
+
     if (saveRAM && TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
-        saveRAM->lives = player->lives;
-        saveRAM->score = player->score;
+        saveRAM->lives    = player->lives;
+        saveRAM->score    = player->score;
         saveRAM->score1UP = player->score1UP;
 #if RETRO_USE_PLUS
-        saveRAM->continues = globals->continues;
+        saveRAM->continues      = globals->continues;
         saveRAM->characterFlags = globals->characterFlags;
-        saveRAM->stock = globals->stock;
-        saveRAM->playerID = globals->playerID;
+        saveRAM->stock          = globals->stock;
+        saveRAM->playerID       = globals->playerID;
 #endif
     }
+
     globals->restartRings    = player->rings;
     globals->restart1UP      = player->ringExtraLife;
     globals->restartPowerups = player->shield | (player->hyperRing << 6);
 }
 void SaveGame_LoadPlayerState(void)
 {
-    SceneInfo->milliseconds  = globals->restartMilliseconds;
-    SceneInfo->seconds       = globals->restartSeconds;
-    SceneInfo->minutes       = globals->restartMinutes;
-    Player->rings            = globals->restartRings;
-    Player->ringExtraLife    = globals->restart1UP;
-    Player->powerups         = globals->restartPowerups;
+    SceneInfo->milliseconds = globals->restartMilliseconds;
+    SceneInfo->seconds      = globals->restartSeconds;
+    SceneInfo->minutes      = globals->restartMinutes;
+
+    Player->rings         = globals->restartRings;
+    Player->ringExtraLife = globals->restart1UP;
+    Player->powerups      = globals->restartPowerups;
+
     globals->restartRings    = 0;
     globals->restart1UP      = 100;
     globals->restartPowerups = 0;
@@ -346,6 +362,7 @@ void SaveGame_ResetPlayerState(void)
     globals->restartRings        = 0;
     globals->restart1UP          = 0;
     globals->restartPowerups     = 0;
+
     if (Player) {
         Player->rings         = globals->restartRings;
         Player->ringExtraLife = globals->restart1UP;
@@ -369,7 +386,8 @@ void SaveGame_LoadFile_CB(int32 status)
         if (SaveGame->loadEntityPtr)
             SceneInfo->entity = SaveGame->loadEntityPtr;
         SaveGame->loadCallback(success);
-        SceneInfo->entity  = store;
+        SceneInfo->entity = store;
+
         SaveGame->loadCallback  = NULL;
         SaveGame->loadEntityPtr = NULL;
     }
@@ -380,8 +398,9 @@ void SaveGame_SaveFile_CB(int32 status)
         Entity *store = SceneInfo->entity;
         if (SaveGame->saveEntityPtr)
             SceneInfo->entity = SaveGame->saveEntityPtr;
-        SaveGame->saveCallback(status == 200);
-        SceneInfo->entity  = store;
+        SaveGame->saveCallback(status == STATUS_OK);
+        SceneInfo->entity = store;
+
         SaveGame->saveCallback  = NULL;
         SaveGame->saveEntityPtr = NULL;
     }
@@ -389,6 +408,8 @@ void SaveGame_SaveFile_CB(int32 status)
 
 #if RETRO_INCLUDE_EDITOR
 void SaveGame_EditorDraw(void) {}
+
 void SaveGame_EditorLoad(void) {}
 #endif
+
 void SaveGame_Serialize(void) {}

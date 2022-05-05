@@ -45,7 +45,7 @@ void Firework_Update(void);
 void Firework_LateUpdate(void);
 void Firework_StaticUpdate(void);
 void Firework_Draw(void);
-void Firework_Create(void* data);
+void Firework_Create(void *data);
 void Firework_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Firework_EditorDraw(void);
@@ -77,4 +77,4 @@ void Firework_State_ResetOffScreen(void);
 void Firework_State_SparkSetup(void);
 void Firework_State_Spark(void);
 
-#endif //!OBJ_FIREWORK_H
+#endif //! OBJ_FIREWORK_H

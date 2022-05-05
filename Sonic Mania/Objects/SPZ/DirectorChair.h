@@ -6,7 +6,7 @@
 typedef enum {
     DIRECTORCHAIR_CLOSED,
     DIRECTORCHAIR_STRETCHED,
-}DirectorChairTypes;
+} DirectorChairTypes;
 
 // Object Class
 struct ObjectDirectorChair {
@@ -24,6 +24,7 @@ struct ObjectDirectorChair {
 
 // Entity Class
 struct EntityDirectorChair {
+    // Platform "Inherit"
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -61,7 +62,7 @@ void DirectorChair_Update(void);
 void DirectorChair_LateUpdate(void);
 void DirectorChair_StaticUpdate(void);
 void DirectorChair_Draw(void);
-void DirectorChair_Create(void* data);
+void DirectorChair_Create(void *data);
 void DirectorChair_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DirectorChair_EditorDraw(void);
@@ -78,4 +79,4 @@ void DirectorChair_State_Extend(void);
 void DirectorChair_State_StartRetract(void);
 void DirectorChair_State_Retract(void);
 
-#endif //!OBJ_DIRECTORCHAIR_H
+#endif //! OBJ_DIRECTORCHAIR_H

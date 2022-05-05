@@ -155,7 +155,7 @@ void OrbitSpike_EditorLoad(void)
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(OrbitSpike, direction);
-    RSDK_ENUM_VAR("Unused", 0);
+    RSDK_ENUM_VAR("(Unused)", 0);
 }
 #endif
 

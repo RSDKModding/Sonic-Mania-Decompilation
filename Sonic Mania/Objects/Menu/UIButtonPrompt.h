@@ -17,7 +17,24 @@ typedef enum {
     UIBUTTONPROMPT_KEYBOARD_IT,
     UIBUTTONPROMPT_KEYBOARD_GE,
     UIBUTTONPROMPT_KEYBOARD_SP,
-}UIButtonPromptTypes;
+} UIButtonPromptTypes;
+
+typedef enum {
+    UIBUTTONPROMPT_ANCHOR_NONE,
+    UIBUTTONPROMPT_ANCHOR_TOPLEFT,
+    UIBUTTONPROMPT_ANCHOR_TOPRIGHT,
+    UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT,
+    UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT,
+} UIButtonPromptAnchors;
+
+typedef enum {
+    UIBUTTONPROMPT_BUTTON_A,
+    UIBUTTONPROMPT_BUTTON_B,
+    UIBUTTONPROMPT_BUTTON_X,
+    UIBUTTONPROMPT_BUTTON_Y,
+    UIBUTTONPROMPT_BUTTON_START,
+    UIBUTTONPROMPT_BUTTON_SELECT,
+} UIButtonPromptButtons;
 
 // Object Class
 struct ObjectUIButtonPrompt {
@@ -62,7 +79,7 @@ void UIButtonPrompt_Update(void);
 void UIButtonPrompt_LateUpdate(void);
 void UIButtonPrompt_StaticUpdate(void);
 void UIButtonPrompt_Draw(void);
-void UIButtonPrompt_Create(void* data);
+void UIButtonPrompt_Create(void *data);
 void UIButtonPrompt_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIButtonPrompt_EditorDraw(void);
@@ -80,4 +97,4 @@ void UIButtonPrompt_SetButtonSprites(void);
 void UIButtonPrompt_State_CheckIfSelected(void);
 void UIButtonPrompt_State_Selected(void);
 
-#endif //!OBJ_UIBUTTONPROMPT_H
+#endif //! OBJ_UIBUTTONPROMPT_H

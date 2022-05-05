@@ -51,7 +51,7 @@ void Canista_Update(void);
 void Canista_LateUpdate(void);
 void Canista_StaticUpdate(void);
 void Canista_Draw(void);
-void Canista_Create(void* data);
+void Canista_Create(void *data);
 void Canista_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Canista_EditorDraw(void);
@@ -74,4 +74,4 @@ void Canista_CheckPlayerProjectileCollisions(void);
 void Canista_StateProjectile_Shot(void);
 void Canista_StateProjectile_Fall(void);
 
-#endif //!OBJ_CANISTA_H
+#endif //! OBJ_CANISTA_H

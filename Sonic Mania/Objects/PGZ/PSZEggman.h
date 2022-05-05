@@ -31,7 +31,7 @@ void PSZEggman_Update(void);
 void PSZEggman_LateUpdate(void);
 void PSZEggman_StaticUpdate(void);
 void PSZEggman_Draw(void);
-void PSZEggman_Create(void* data);
+void PSZEggman_Create(void *data);
 void PSZEggman_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PSZEggman_EditorDraw(void);
@@ -42,5 +42,4 @@ void PSZEggman_Serialize(void);
 // Extra Entity Functions
 void PSZEggman_State_TurnRound(void);
 
-
-#endif //!OBJ_PSZEGGMAN_H
+#endif //! OBJ_PSZEGGMAN_H

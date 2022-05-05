@@ -8,7 +8,7 @@ typedef enum { CHEMICALBALL_ARC, CHEMICALBALL_VERTICAL } ChemicalBallTypes;
 // Object Class
 struct ObjectChemicalBall {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBall;
     TABLE(int32 arcOffsets[196],
           { -0x320000, 0,         -0x320000, -0x48000,  -0x31F500, -0x8E800,  -0x31DF00, -0xD3800,  -0x31BE00, -0x117000, -0x319200, -0x159000,
             -0x315B00, -0x199800, -0x311900, -0x1D8800, -0x30CC00, -0x216000, -0x307400, -0x252000, -0x301100, -0x28C800, -0x2FA300, -0x2C5800,

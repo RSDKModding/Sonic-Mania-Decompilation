@@ -7,8 +7,8 @@
 struct ObjectElectroMagnet {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
-    Vector2 onScreenRange;
+    Hitbox hitboxPlayer;
+    Vector2 sfxRange;
     uint8 magnetSfxTimer;
     bool32 playingMagnetSFX;
     uint16 sfxMagnet;
@@ -26,8 +26,8 @@ struct EntityElectroMagnet {
     int32 shieldRange;
     int32 timer;
     bool32 invisible;
-    Hitbox hitbox;
-    Hitbox playerHitbox;
+    Hitbox hitboxMagnetRange;
+    Hitbox hitboxShieldRange;
 };
 
 // Object Struct
@@ -38,7 +38,7 @@ void ElectroMagnet_Update(void);
 void ElectroMagnet_LateUpdate(void);
 void ElectroMagnet_StaticUpdate(void);
 void ElectroMagnet_Draw(void);
-void ElectroMagnet_Create(void* data);
+void ElectroMagnet_Create(void *data);
 void ElectroMagnet_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ElectroMagnet_EditorDraw(void);
@@ -47,7 +47,7 @@ void ElectroMagnet_EditorLoad(void);
 void ElectroMagnet_Serialize(void);
 
 // Extra Entity Functions
-void ElectroMagnet_State_DurationWait(void);
+void ElectroMagnet_State_AwaitInterval(void);
 void ElectroMagnet_State_MagnetActive(void);
 
-#endif //!OBJ_ELECTROMAGNET_H
+#endif //! OBJ_ELECTROMAGNET_H

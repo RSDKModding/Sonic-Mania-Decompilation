@@ -11,7 +11,12 @@ typedef enum {
     SSONIC_ANI_ARMATTACK,
     SSONIC_ANI_JUMP,
     SSONIC_ANI_SPINDASH,
-}SilverSonicAniIDs;
+} SilverSonicAniIDs;
+
+typedef enum {
+    SSONIC_ATTACK_BOOST,
+    SSONIC_ATTACK_ROLL,
+} SilverSonicAttackIDs;
 
 // Object Class
 struct ObjectSilverSonic {
@@ -45,7 +50,7 @@ void SilverSonic_Update(void);
 void SilverSonic_LateUpdate(void);
 void SilverSonic_StaticUpdate(void);
 void SilverSonic_Draw(void);
-void SilverSonic_Create(void* data);
+void SilverSonic_Create(void *data);
 void SilverSonic_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SilverSonic_EditorDraw(void);
@@ -74,4 +79,4 @@ void SilverSonic_State_Boost_Ground(void);
 void SilverSonic_State_FinishedBoost(void);
 void SilverSonic_State_Explode(void);
 
-#endif //!OBJ_SILVERSONIC_H
+#endif //! OBJ_SILVERSONIC_H

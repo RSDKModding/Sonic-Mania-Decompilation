@@ -231,7 +231,7 @@ void SchrodingersCapsule_State_Explode(void)
         buddy1->scale.x         = 0x200;
         buddy1->scale.y         = 0x200;
         buddy1->state           = Player_State_Ground;
-        buddy1->collisionLayers = Zone->fgLayers;
+        buddy1->collisionLayers = Zone->collisionLayers;
         buddy1->drawFX          = FX_ROTATE | FX_FLIP;
         buddy1->velocity.x      = 0x1C000;
         buddy1->velocity.y      = -0x40000;
@@ -253,7 +253,7 @@ void SchrodingersCapsule_State_Explode(void)
         buddy2->scale.x         = 0x200;
         buddy2->scale.y         = 0x200;
         buddy2->state           = Player_State_Ground;
-        buddy2->collisionLayers = Zone->fgLayers;
+        buddy2->collisionLayers = Zone->collisionLayers;
         buddy2->drawFX          = FX_ROTATE | FX_FLIP;
         buddy2->velocity.x      = -0x24000;
         buddy2->velocity.y      = -0x40000;

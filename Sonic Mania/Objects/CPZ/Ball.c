@@ -12,6 +12,7 @@ ObjectBall *Ball = NULL;
 void Ball_Update(void)
 {
     RSDK_THIS(Ball);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,17 +23,20 @@ void Ball_StaticUpdate(void) {}
 void Ball_Draw(void)
 {
     RSDK_THIS(Ball);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Ball_Create(void *data)
 {
     RSDK_THIS(Ball);
+
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (data) {
         RSDK.SetSpriteAnimation(Ball->aniFrames, 2, &self->animator, true, 0);
         self->state = Ball_State_Splash;
@@ -64,14 +68,15 @@ void Ball_StageLoad(void)
     Ball->hitboxRange.right  = 128;
     Ball->hitboxRange.bottom = 128;
 
-    Ball->sfxSplash      = RSDK.GetSfx("Stage/Splash2.wav");
-    DEBUGMODE_ADD_OBJ(Ball);
+    Ball->sfxSplash = RSDK.GetSfx("Stage/Splash2.wav");
 
+    DEBUGMODE_ADD_OBJ(Ball);
 }
 
 void Ball_DebugSpawn(void)
 {
     RSDK_THIS(Ball);
+
     CREATE_ENTITY(Ball, NULL, self->position.x, self->position.y);
 }
 
@@ -84,15 +89,18 @@ void Ball_DebugDraw(void)
 void Ball_HandleInteractions(void)
 {
     RSDK_THIS(Ball);
+
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Ball->hitboxBall)) {
             Player_CheckHit(player, self);
+
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
+
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);
-            self->state = Ball_State_Chemical;
+            self->state = Ball_State_ChemicalDrop;
         }
     }
 }
@@ -100,6 +108,7 @@ void Ball_HandleInteractions(void)
 void Ball_CheckOffScreen(void)
 {
     RSDK_THIS(Ball);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position   = self->startPos;
         self->direction  = FLIP_NONE;
@@ -112,32 +121,39 @@ void Ball_CheckOffScreen(void)
 void Ball_SpawnSplashes(void)
 {
     RSDK_THIS(Ball);
+
     RSDK.PlaySfx(Ball->sfxSplash, false, 255);
+
     for (int32 i = 0; i < 5; ++i) {
         EntityBall *ball = CREATE_ENTITY(Ball, intToVoid(true), self->position.x, self->position.y);
         ball->drawOrder  = Zone->objectDrawHigh;
         ball->velocity.x = RSDK.Rand(-0x100, 0x100) << 10;
         if (ball->velocity.x < 0)
             ball->velocity.x += 0x20000;
+
         ball->velocity.x -= 0x10000;
         if (i > 0)
             ball->velocity.y = RSDK.Rand(-0x400, 0x400) << 8;
         ball->velocity.y -= self->velocity.y >> 1;
     }
+
     destroyEntity(self);
 }
 
 void Ball_State_Setup(void)
 {
     RSDK_THIS(Ball);
+
     self->active = ACTIVE_NORMAL;
-    self->state  = Ball_State_LookForPlayer;
-    Ball_State_LookForPlayer();
+
+    self->state = Ball_State_AwaitPlayer;
+    Ball_State_AwaitPlayer();
 }
 
-void Ball_State_LookForPlayer(void)
+void Ball_State_AwaitPlayer(void)
 {
     RSDK_THIS(Ball);
+
     if (self->direction == FLIP_X) {
         self->velocity.y += 0x800;
         if (self->velocity.y >= 0xC000)
@@ -149,15 +165,17 @@ void Ball_State_LookForPlayer(void)
             self->direction = FLIP_X;
     }
     self->position.y += self->velocity.y;
+
     RSDK.ProcessAnimation(&self->animator);
 
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Ball->hitboxRange)) {
-            self->playerPtr = (Entity *)player;
-            self->state     = Ball_State_TargetingPlayer;
+            self->targetPlayer = player;
+            self->state        = Ball_State_TargetingPlayer;
         }
     }
+
     Ball_HandleInteractions();
     Ball_CheckOffScreen();
 }
@@ -165,8 +183,9 @@ void Ball_State_LookForPlayer(void)
 void Ball_State_TargetingPlayer(void)
 {
     RSDK_THIS(Ball);
-    Entity *playerPtr = self->playerPtr;
-    if (self->position.x <= playerPtr->position.x) {
+
+    EntityPlayer *targetPlayer = self->targetPlayer;
+    if (self->position.x <= targetPlayer->position.x) {
         self->velocity.x += 0x1000;
         if (self->velocity.x > 0x20000)
             self->velocity.x = 0x20000;
@@ -176,7 +195,8 @@ void Ball_State_TargetingPlayer(void)
         if (self->velocity.x < -0x20000)
             self->velocity.x = -0x20000;
     }
-    if (self->position.y <= playerPtr->position.y - 0x400000) {
+
+    if (self->position.y <= targetPlayer->position.y - 0x400000) {
         self->velocity.y += 0x1000;
         if (self->velocity.y > 0x20000)
             self->velocity.y = 0x20000;
@@ -186,37 +206,45 @@ void Ball_State_TargetingPlayer(void)
         if (self->velocity.y < -0x20000)
             self->velocity.y = -0x20000;
     }
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (abs(self->position.x - playerPtr->position.x) < 0x100000) {
-        if (abs(0x500000 + self->position.y - playerPtr->position.y) < 0x100000 && RSDK.CheckOnScreen(self, &self->updateRange)) {
+    if (abs(self->position.x - targetPlayer->position.x) < 0x100000 && abs(0x500000 + self->position.y - targetPlayer->position.y) < 0x100000) {
+        if (RSDK.CheckOnScreen(self, &self->updateRange)) {
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
+
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);
-            self->state = Ball_State_Chemical;
+            self->state = Ball_State_ChemicalDrop;
         }
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     Ball_HandleInteractions();
     Ball_CheckOffScreen();
 }
 
-void Ball_State_Chemical(void)
+void Ball_State_ChemicalDrop(void)
 {
     RSDK_THIS(Ball);
+
     RSDK.ProcessAnimation(&self->animator);
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xB0000, false)) {
+
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xB0000, false)) {
         Ball_SpawnSplashes();
     }
     else {
         self->position.y += self->velocity.y;
         self->velocity.y += 0x3800;
+
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Ball->hitboxBall)) {
                 Player_CheckElementalHit(player, self, SHIELD_BUBBLE);
+
                 Ball_SpawnSplashes();
             }
         }
@@ -233,6 +261,7 @@ void Ball_State_Splash(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
@@ -240,6 +269,7 @@ void Ball_State_Splash(void)
 void Ball_State_StraightMovement(void)
 {
     RSDK_THIS(Ball);
+
     RSDK.ProcessAnimation(&self->animator);
 
     self->position.x += self->velocity.x;
@@ -258,14 +288,16 @@ void Ball_State_StraightMovement(void)
     if (!self->velocity.x && !self->velocity.y) {
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
-        self->state      = Ball_State_LookForPlayer;
+        self->state      = Ball_State_AwaitPlayer;
     }
+
     Ball_HandleInteractions();
 }
 
 void Ball_State_Spawner(void)
 {
     RSDK_THIS(Ball);
+
     EntityBall *child = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Ball);
     if (child->objectID != Ball->objectID) {
         RSDK.ResetEntityPtr(child, Ball->objectID, NULL);
@@ -296,17 +328,21 @@ void Ball_EditorDraw(void)
     if (showGizmos()) {
         switch (self->type) {
             case BALL_SPAWN_LEFT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             case BALL_SPAWN_UP:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             case BALL_SPAWN_RIGHT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             case BALL_SPAWN_DOWN:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             default: break;
         }
     }

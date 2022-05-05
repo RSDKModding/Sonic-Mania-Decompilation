@@ -18,23 +18,28 @@ void BSS_Horizon_StaticUpdate(void) {}
 void BSS_Horizon_Draw(void)
 {
     RSDK_THIS(BSS_Horizon);
+
     Vector2 drawPos;
     drawPos.x = ScreenInfo->centerX << 16;
     drawPos.y = 0;
 
+    // Draw Sky Horizon (Left)
     self->horizonAnimator.frameID = 0;
     self->alpha                   = BSS_Palette->skyAlpha;
     self->direction               = FLIP_NONE;
     RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
+    // Draw Sky Horizon (Right)
     self->direction = FLIP_X;
     RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
+    // Draw Globe Horizon (Left)
     self->horizonAnimator.frameID = 1;
     self->alpha                   = BSS_Palette->globeAlpha;
     self->direction               = FLIP_NONE;
     RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
+    // Draw Globe Horizon (Right)
     self->direction = FLIP_X;
     RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 }
@@ -49,6 +54,7 @@ void BSS_Horizon_Create(void *data)
         self->visible   = true;
         self->drawOrder = 2;
         self->drawFX    = FX_FLIP;
+
         RSDK.SetSpriteAnimation(BSS_Horizon->aniFrames, 0, &self->horizonAnimator, true, 0);
     }
 }
@@ -56,7 +62,8 @@ void BSS_Horizon_Create(void *data)
 void BSS_Horizon_StageLoad(void)
 {
     BSS_Horizon->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/Horizon.bin", SCOPE_STAGE);
-    RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, 0);
+
+    RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, NULL);
 }
 
 #if RETRO_INCLUDE_EDITOR

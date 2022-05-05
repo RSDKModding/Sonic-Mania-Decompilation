@@ -12,6 +12,7 @@ ObjectUIPicture *UIPicture;
 void UIPicture_Update(void)
 {
     RSDK_THIS(UIPicture);
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -22,15 +23,23 @@ void UIPicture_StaticUpdate(void) {}
 void UIPicture_Draw(void)
 {
     RSDK_THIS(UIPicture);
+
+    // Bug Details:
+    // This should use zoneID in the CopyPalette params right?
+    // using zonePalette would just be 0 or 1 instead of 0-12 or so that you'd expect...
+
     if (self->zonePalette)
         RSDK.CopyPalette((self->zonePalette >> 3) + 1, 32 * self->zonePalette, 0, 224, 32);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void UIPicture_Create(void *data)
 {
     RSDK_THIS(UIPicture);
+
     RSDK.SetSpriteAnimation(UIPicture->aniFrames, self->listID, &self->animator, true, self->frameID);
+
     if (!SceneInfo->inEditor) {
         if (RSDK.CheckStageFolder("Menu")) {
             self->active    = ACTIVE_BOUNDS;
@@ -57,9 +66,9 @@ void UIPicture_Create(void *data)
 
 void UIPicture_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("Menu")) 
+    if (RSDK.CheckStageFolder("Menu"))
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Logos")) 
+    else if (RSDK.CheckStageFolder("Logos"))
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 }
 
@@ -67,6 +76,7 @@ void UIPicture_StageLoad(void)
 void UIPicture_EditorDraw(void)
 {
     RSDK_THIS(UIPicture);
+
     RSDK.SetSpriteAnimation(UIPicture->aniFrames, self->listID, &self->animator, true, self->frameID);
 
     RSDK.DrawSprite(&self->animator, NULL, false);
@@ -78,6 +88,14 @@ void UIPicture_EditorLoad(void)
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Logos"))
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
+
+    // Never used afaik
+    RSDK_ACTIVE_VAR(UIPicture, tag);
+    RSDK_ENUM_VAR("(Unused)", 0);
+
+    // Also never used (afaik, see notes in UIPicture_Draw)
+    RSDK_ACTIVE_VAR(UIPicture, zoneID);
+    RSDK_ENUM_VAR("(Unused)", 0);
 }
 #endif
 

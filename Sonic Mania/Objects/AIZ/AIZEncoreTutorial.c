@@ -80,7 +80,7 @@ void AIZEncoreTutorial_State_ShowTutBubble(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
     if (self->bubbleAnimator.frameID == 6) {
-        HUD_GetKeyFrame(&self->buttonAnimator, KEY_Y);
+        HUD_GetButtonFrame(&self->buttonAnimator, KEY_Y);
         self->state = AIZEncoreTutorial_State_EnterTutorial;
     }
 }
@@ -100,7 +100,7 @@ void AIZEncoreTutorial_State_ShowSwapTutorial(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
     RSDK.ProcessAnimation(&self->buttonPressAnimator);
-    HUD_GetKeyFrame(&self->buttonAnimator, KEY_Y);
+    HUD_GetButtonFrame(&self->buttonAnimator, KEY_Y);
 
     if (self->timer >= 60) {
         self->angle += 4;

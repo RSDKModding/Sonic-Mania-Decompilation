@@ -111,27 +111,34 @@ void MonkeyDude_StageLoad(void)
 {
 #if RETRO_USE_PLUS
     MonkeyDude->aniFrames            = RSDK.LoadSpriteAnimation("AIZ/MonkeyDude.bin", SCOPE_STAGE);
+
     MonkeyDude->hitboxBadnik.left    = -10;
     MonkeyDude->hitboxBadnik.top     = -21;
     MonkeyDude->hitboxBadnik.right   = 7;
     MonkeyDude->hitboxBadnik.bottom  = 4;
+
     MonkeyDude->hitboxCoconut.left   = -4;
     MonkeyDude->hitboxCoconut.top    = -4;
     MonkeyDude->hitboxCoconut.right  = 4;
     MonkeyDude->hitboxCoconut.bottom = 4;
 #else
     MonkeyDude->aniFrames      = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);
-    MonkeyDude->hitbox.left    = -8;
-    MonkeyDude->hitbox.top     = -8;
-    MonkeyDude->hitbox.right   = 8;
-    MonkeyDude->hitbox.bottom  = 8;
+
+    // strange hitbox, doesn't match either one above lol
+    MonkeyDude->hitboxBadnik.left    = -8;
+    MonkeyDude->hitboxBadnik.top     = -8;
+    MonkeyDude->hitboxBadnik.right   = 8;
+    MonkeyDude->hitboxBadnik.bottom  = 8;
 #endif
+
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 2, &MonkeyDude->armAnimator, true, 0);
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 1, &MonkeyDude->tailAnimator, true, 0);
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 4, &MonkeyDude->coconutAnimator, true, 0);
+
 #if RETRO_USE_PLUS
     MonkeyDude->sfxDrop = RSDK.GetSfx("Stage/Drop.wav");
 #endif
+
     DEBUGMODE_ADD_OBJ(MonkeyDude);
 }
 
@@ -139,6 +146,7 @@ void MonkeyDude_DebugDraw(void)
 {
 #if RETRO_USE_PLUS
     RSDK_THIS(MonkeyDude);
+
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 #endif
@@ -148,6 +156,7 @@ void MonkeyDude_DebugSpawn(void)
 {
 #if RETRO_USE_PLUS
     RSDK_THIS(MonkeyDude);
+
     EntityMonkeyDude *monkeyDude = CREATE_ENTITY(MonkeyDude, NULL, self->position.x, self->position.y);
     monkeyDude->direction        = self->direction;
     monkeyDude->startDir         = self->direction;

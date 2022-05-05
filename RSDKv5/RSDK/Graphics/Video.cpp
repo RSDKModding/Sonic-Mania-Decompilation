@@ -71,16 +71,20 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         videoAR = float(videoWidth) / float(videoHeight);
 
         SetupVideoBuffer(videoWidth, videoHeight);
+#if RETRO_USING_SDL1 || RETRO_USING_SDL2
         vidBaseticks = SDL_GetTicks();
-        vidFrameMS   = (videoFrameData->fps == 0.0) ? 0 : ((Uint32)(1000.0 / videoFrameData->fps));
+#else
+        vidBaseticks = 0;
+#endif
+        vidFrameMS   = (videoFrameData->fps == 0.0) ? 0 : ((uint32)(1000.0 / videoFrameData->fps));
         videoPlaying = true;
 
         engine.displayTime = 0.0;
         /*engine.videoUnknown = 0.0;
         if (dword_66B80C == 1)
             engine.videoUnknown = a2;*/
-        engine.prevShaderID   = engine.shaderID;
-        engine.screenCount    = 0;
+        RenderDevice::lastShaderID     = RSDK::gameSettings.shaderID;
+        RSDK::gameSettings.screenCount  = 0;
         engine.prevEngineMode = sceneInfo.state;
         // if (yuv_mode)
         //    gameSettings.shaderID = (yuv_mode != 2) + SHADER_YUV_422;
@@ -89,7 +93,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         engine.skipCallback = NULL;
         ProcessVideo();
         engine.skipCallback = skipCallback;
-        RSDK::SKU::settingsChanged = false;
+        RSDK::settingsChanged = false;
         sceneInfo.state     = ENGINESTATE_VIDEOPLAYBACK;
     }
 }
@@ -110,7 +114,11 @@ int32 ProcessVideo() {
 
         // Don't pause or it'll go wild
         if (videoPlaying) {
-            const Uint32 now = (SDL_GetTicks() - vidBaseticks);
+#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+            const uint32 now = (SDL_GetTicks() - vidBaseticks);
+#else
+            const uint32 now = 0;
+#endif
 
             if (!videoFrameData)
                 videoFrameData = THEORAPLAY_getVideo(videoDecoder);
@@ -120,15 +128,15 @@ int32 ProcessVideo() {
                 //Removed the lagging handler code, so if its lagging the uh oh, but it should make everything else smoother
 
                 int half_w     = videoFrameData->width / 2;
-                const Uint8 *y = (const Uint8 *)videoFrameData->pixels;
-                const Uint8 *u = y + (videoFrameData->width * videoFrameData->height);
-                const Uint8 *v = u + (half_w * (videoFrameData->height / 2));
+                const uint8 *y = (const uint8 *)videoFrameData->pixels;
+                const uint8 *u = y + (videoFrameData->width * videoFrameData->height);
+                const uint8 *v = u + (half_w * (videoFrameData->height / 2));
 
 #if RETRO_USING_SDL2
-                SDL_UpdateYUVTexture(engine.videoBuffer, NULL, y, videoFrameData->width, u, half_w, v, half_w);
+                SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, y, videoFrameData->width, u, half_w, v, half_w);
 #endif
 #if RETRO_USING_SDL1
-                uint *videoFrameBuffer = (uint *)Engine.videoBuffer->pixels;
+                uint *videoFrameBuffer = (uint *)RenderDevice::imageTexture->pixels;
                 memcpy(videoFrameBuffer, videoFrameData->pixels, videoFrameData->xsize * videoFrameData->ysize * sizeof(uint));
 #endif
 
@@ -158,22 +166,17 @@ void StopVideoPlayback()
         CloseVideoBuffer();
         videoPlaying = false;
 
-        engine.shaderID    = engine.prevShaderID;
+        RSDK::gameSettings.shaderID = RenderDevice::lastShaderID;
         sceneInfo.state    = engine.prevEngineMode;
-        engine.screenCount = 1;
+        RSDK::gameSettings.screenCount = 1;
     }
 }
 
 void SetupVideoBuffer(int32 width, int32 height)
 {
-#if RETRO_USING_SDL1
-    engine.videoBuffer = SDL_CreateRGBSurface(0, xsize, ysize, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-#endif
-#if RETRO_USING_SDL2
-    engine.videoBuffer = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
-#endif
+    SetImageTexture(width, height, NULL);
 
-    if (!engine.videoBuffer)
+    if (!RenderDevice::imageTexture)
         PrintLog(PRINT_ERROR, "Failed to create video buffer!");
 }
 
@@ -181,11 +184,11 @@ void CloseVideoBuffer()
 {
     if (videoPlaying) {
 #if RETRO_USING_SDL1
-        SDL_FreeSurface(engine.videoBuffer);
+        SDL_FreeSurface(RenderDevice::imageTexture);
 #endif
 #if RETRO_USING_SDL2
-        SDL_DestroyTexture(engine.videoBuffer);
+        SDL_DestroyTexture(RenderDevice::imageTexture);
 #endif
-        engine.videoBuffer = nullptr;
+        RenderDevice::imageTexture = nullptr;
     }
 }

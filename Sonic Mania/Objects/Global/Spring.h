@@ -10,6 +10,7 @@ typedef enum {
     SPRING_HORIZ_RED,
     SPRING_DIAG_YELLOW,
     SPRING_DIAG_RED,
+    SPRING_TUBESPRING = 0xFF,
 } SpringTypes;
 
 // Object Class
@@ -26,7 +27,7 @@ struct EntitySpring {
     SpringTypes type;
     FlipFlags flipFlag;
     uint8 planeFilter;
-    int32 timer;
+    int32 sfxTimer;
     Animator animator;
     Hitbox hitbox;
 };
@@ -39,7 +40,7 @@ void Spring_Update(void);
 void Spring_LateUpdate(void);
 void Spring_StaticUpdate(void);
 void Spring_Draw(void);
-void Spring_Create(void* data);
+void Spring_Create(void *data);
 void Spring_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Spring_EditorDraw(void);
@@ -52,4 +53,4 @@ void Spring_State_Vertical(void);
 void Spring_State_Horizontal(void);
 void Spring_State_Diagonal(void);
 
-#endif //!OBJ_SPRING_H
+#endif //! OBJ_SPRING_H

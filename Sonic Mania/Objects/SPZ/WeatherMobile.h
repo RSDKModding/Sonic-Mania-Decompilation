@@ -50,7 +50,7 @@ struct EntityWeatherMobile {
     int32 health;
     int32 lightsTimer;
     Vector2 origin;
-    Entity *parent;
+    EntityWeatherMobile *parent;
     EntityWeatherTV *weatherTV;
     Animator mainAnimator;
     Animator seatAnimator;
@@ -81,6 +81,8 @@ void WeatherMobile_Serialize(void);
 // Extra Entity Functions
 void WeatherMobile_HandleAnimations(void);
 void WeatherMobile_CheckPlayerCollisions(void);
+void WeatherMobile_Hit(void);
+void WeatherMobile_Explode(void);
 void WeatherMobile_HandleDefeat(void);
 
 void WeatherMobile_Draw_Eggman(void);

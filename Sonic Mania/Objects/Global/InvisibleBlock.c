@@ -12,6 +12,7 @@ ObjectInvisibleBlock *InvisibleBlock;
 void InvisibleBlock_Update(void)
 {
     RSDK_THIS(InvisibleBlock);
+
     foreach_active(Player, player)
     {
         if ((self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) && (!self->noChibi || !player->isChibi)) {
@@ -20,22 +21,27 @@ void InvisibleBlock_Update(void)
                     if (!self->noCrush)
                         player->collisionFlagV |= 1;
                     break;
+
                 case C_LEFT:
                     if (!self->noCrush)
                         player->collisionFlagH |= 1;
                     break;
+
                 case C_RIGHT:
                     if (!self->noCrush)
                         player->collisionFlagH |= 2;
                     break;
+
                 case C_BOTTOM:
                     if (!self->noCrush)
                         player->collisionFlagV |= 2;
                     break;
+
                 default: break;
             }
         }
     }
+
     self->visible = DebugMode->debugActive;
 }
 
@@ -48,10 +54,11 @@ void InvisibleBlock_Draw(void) { InvisibleBlock_DrawSprites(); }
 void InvisibleBlock_Create(void *data)
 {
     RSDK_THIS(InvisibleBlock);
+
     if (!SceneInfo->inEditor) {
-        if (self->timeAttackOnly && globals->gameMode < MODE_TIMEATTACK) {
+        if (self->timeAttackOnly && globals->gameMode < MODE_TIMEATTACK)
             destroyEntity(self);
-        }
+
         self->visible = false;
         self->active  = self->activeNormal ? ACTIVE_NORMAL : ACTIVE_BOUNDS;
 
@@ -69,6 +76,7 @@ void InvisibleBlock_Create(void *data)
 void InvisibleBlock_StageLoad(void)
 {
     InvisibleBlock->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+
     RSDK.SetSpriteAnimation(InvisibleBlock->aniFrames, 2, &InvisibleBlock->animator, true, 0);
     InvisibleBlock->animator.frameID = 10;
 }
@@ -76,17 +84,17 @@ void InvisibleBlock_StageLoad(void)
 void InvisibleBlock_DrawSprites(void)
 {
     RSDK_THIS(InvisibleBlock);
+
     Vector2 drawPos;
-    drawPos.x                    = self->position.x;
-    drawPos.y                    = self->position.y;
-    drawPos.x -= self->width << 19;
-    drawPos.y -= self->height << 19;
+    drawPos.x = self->position.x - (self->width << 19);
+    drawPos.y = self->position.y - (self->height << 19);
 
     for (int32 y = 0; y <= self->height; ++y) {
         for (int32 x = 0; x <= self->width; ++x) {
             RSDK.DrawSprite(&InvisibleBlock->animator, &drawPos, false);
             drawPos.x += 0x100000;
         }
+
         drawPos.x += -0x100000 - (self->width << 20);
         drawPos.y += 0x100000;
     }
@@ -96,6 +104,7 @@ void InvisibleBlock_DrawSprites(void)
 void InvisibleBlock_EditorDraw(void)
 {
     RSDK_THIS(InvisibleBlock);
+
     self->updateRange.x = (self->width + 5) << 19;
     self->updateRange.y = (self->height + 5) << 19;
 

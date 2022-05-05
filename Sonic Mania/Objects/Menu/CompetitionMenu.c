@@ -61,51 +61,52 @@ void CompetitionMenu_Initialize(void)
     Hitbox hitbox;
     foreach_all(UIInfoLabel, label)
     {
-        EntityUIControl *roundControl = (EntityUIControl *)CompetitionMenu->compRoundControl;
-        hitbox.right                  = roundControl->size.x >> 17;
-        hitbox.left                   = -(roundControl->size.x >> 17);
-        hitbox.bottom                 = roundControl->size.y >> 17;
-        hitbox.top                    = -(roundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(roundControl->startPos.x - roundControl->cameraOffset.x,
-                                      roundControl->startPos.y - roundControl->cameraOffset.y, label->position.x, label->position.y, FLIP_NONE,
-                                      &hitbox))
+        EntityUIControl *roundControl = CompetitionMenu->compRoundControl;
+        int32 x                       = roundControl->startPos.x - roundControl->cameraOffset.x;
+        int32 y                       = roundControl->startPos.y - roundControl->cameraOffset.y;
+
+        hitbox.right  = roundControl->size.x >> 17;
+        hitbox.left   = -(roundControl->size.x >> 17);
+        hitbox.bottom = roundControl->size.y >> 17;
+        hitbox.top    = -(roundControl->size.y >> 17);
+        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
             CompetitionMenu->resultsLabel_Round = label;
 
-        EntityUIControl *totalControl = (EntityUIControl *)CompetitionMenu->compTotalControl;
-        hitbox.right                  = totalControl->size.x >> 17;
-        hitbox.left                   = -(totalControl->size.x >> 17);
-        hitbox.bottom                 = totalControl->size.y >> 17;
-        hitbox.top                    = -(totalControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(totalControl->startPos.x - totalControl->cameraOffset.x,
-                                      totalControl->startPos.y - totalControl->cameraOffset.y, label->position.x, label->position.y, FLIP_NONE,
-                                      &hitbox))
+        EntityUIControl *totalControl = CompetitionMenu->compTotalControl;
+        x                             = totalControl->startPos.x - totalControl->cameraOffset.x;
+        y                             = totalControl->startPos.y - totalControl->cameraOffset.y;
+
+        hitbox.right  = totalControl->size.x >> 17;
+        hitbox.left   = -(totalControl->size.x >> 17);
+        hitbox.bottom = totalControl->size.y >> 17;
+        hitbox.top    = -(totalControl->size.y >> 17);
+        if (MathHelpers_PointInHitbox(x, y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
             CompetitionMenu->resultsLabel_Total = label;
     }
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        EntityUIControl *compControl = (EntityUIControl *)CompetitionMenu->competitionControl;
-        hitbox.right                 = compControl->size.x >> 17;
-        hitbox.left                  = -(compControl->size.x >> 17);
-        hitbox.bottom                = compControl->size.y >> 17;
-        hitbox.top                   = -(compControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(compControl->startPos.x - compControl->cameraOffset.x, compControl->startPos.y - compControl->cameraOffset.y,
-                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
-            && prompt->buttonID == 5) {
+        EntityUIControl *compControl = CompetitionMenu->competitionControl;
+        int32 x                      = compControl->startPos.x - compControl->cameraOffset.x;
+        int32 y                      = compControl->startPos.y - compControl->cameraOffset.y;
+
+        hitbox.right  = compControl->size.x >> 17;
+        hitbox.left   = -(compControl->size.x >> 17);
+        hitbox.bottom = compControl->size.y >> 17;
+        hitbox.top    = -(compControl->size.y >> 17);
+        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 5)
             CompetitionMenu->startCompPrompt = prompt;
-        }
-        EntityUIControl *compControl_Legacy = (EntityUIControl *)CompetitionMenu->competitionControl_Legacy;
+
+        EntityUIControl *compControl_Legacy = CompetitionMenu->competitionControl_Legacy;
+        x                                   = compControl_Legacy->startPos.x - compControl_Legacy->cameraOffset.x;
+        y                                   = compControl_Legacy->startPos.y - compControl_Legacy->cameraOffset.y;
 
         hitbox.right  = compControl_Legacy->size.x >> 17;
         hitbox.left   = -(compControl_Legacy->size.x >> 17);
         hitbox.bottom = compControl_Legacy->size.y >> 17;
         hitbox.top    = -(compControl_Legacy->size.y >> 17);
-        if (MathHelpers_PointInHitbox(compControl_Legacy->startPos.x - compControl_Legacy->cameraOffset.x,
-                                      compControl_Legacy->startPos.y - compControl_Legacy->cameraOffset.y, prompt->position.x, prompt->position.y,
-                                      FLIP_NONE, &hitbox)) {
-            if (prompt->buttonID == 5)
-                CompetitionMenu->startCompPrompt_Legacy = prompt;
-        }
+        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 5)
+            CompetitionMenu->startCompPrompt_Legacy = prompt;
     }
 }
 
@@ -119,15 +120,16 @@ void CompetitionMenu_SetupActions(void)
 
     foreach_all(UIButton, button)
     {
+        int32 x = rulesControl->startPos.x - rulesControl->cameraOffset.x;
+        int32 y = rulesControl->startPos.y - rulesControl->cameraOffset.y;
+
         Hitbox hitbox;
         hitbox.right  = rulesControl->size.x >> 17;
         hitbox.left   = -(rulesControl->size.x >> 17);
         hitbox.bottom = rulesControl->size.y >> 17;
         hitbox.top    = -(rulesControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(rulesControl->startPos.x - rulesControl->cameraOffset.x,
-                                      rulesControl->startPos.y - rulesControl->cameraOffset.y, button->position.x, button->position.y, FLIP_NONE,
-                                      &hitbox)
-            && button->listID == 9 && button->frameID == 2)
+        if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 9
+            && button->frameID == 2)
             button->actionCB = CompetitionMenu_RulesButton_ActionCB;
     }
 
@@ -179,10 +181,8 @@ void CompetitionMenu_HandleMenuReturn(void)
                         case ID_SONIC: selector->frameID = 0; break;
                         case ID_TAILS: selector->frameID = 1; break;
                         case ID_KNUCKLES: selector->frameID = 2; break;
-#if RETRO_USE_PLUS
                         case ID_MIGHTY: selector->frameID = 3; break;
                         case ID_RAY: selector->frameID = 4; break;
-#endif
                         default: break;
                     }
                 }
@@ -198,7 +198,8 @@ void CompetitionMenu_HandleMenuReturn(void)
                 EntityUIVsRoundPicker *picker = (EntityUIVsRoundPicker *)UIButton_GetChoicePtr(control->buttons[1], control->buttons[1]->selection);
                 if (picker)
                     picker->val = session->matchCount;
-                UIButton_SetChoiceSelectionWithCB(control->buttons[2], session->splitScreenMode[2]);
+
+                UIButton_SetChoiceSelectionWithCB(control->buttons[2], session->screenBorderType[2]);
                 CompetitionMenu_SetupSplitScreenChoices(session->playerCount);
             }
 
@@ -215,22 +216,24 @@ void CompetitionMenu_HandleMenuReturn(void)
 
 int32 CompetitionMenu_HandleUnlocks(void)
 {
-    int32 count = 0;
+    int32 maxRounds = 0;
+
     foreach_all(UIVsZoneButton, zoneButton)
     {
         zoneButton->xOut      = !GameProgress_GetZoneUnlocked(zoneButton->zoneID);
         zoneButton->obfuscate = zoneButton->xOut;
 
         if (!zoneButton->xOut)
-            ++count;
+            ++maxRounds;
     }
-    return count;
+
+    return maxRounds;
 }
 
 void CompetitionMenu_HandleStartCompPrompt(void)
 {
     int32 readyCount  = CompetitionMenu_GetReadyPlayerCount();
-    int32 activeCount = CompetitionMenu_GetActivePlayerCount();
+    int32 activeCount = CompetitionMenu_GetTotalPlayerCount();
 
     EntityUIButtonPrompt *startComp = CompetitionMenu->startCompPrompt;
     if (startComp)
@@ -250,16 +253,17 @@ int32 CompetitionMenu_GetReadyPlayerCount(void)
     if (!control)
         return 0;
 
-    int32 count = 0;
+    int32 readyPlayers = 0;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
         if (button->ready && !button->isSelected)
-            ++count;
+            ++readyPlayers;
     }
-    return count;
+
+    return readyPlayers;
 }
 
-int32 CompetitionMenu_GetActivePlayerCount(void)
+int32 CompetitionMenu_GetTotalPlayerCount(void)
 {
     EntityUIControl *control = CompetitionMenu->competitionControl;
     if (!API.CheckDLC(DLC_PLUS))
@@ -268,13 +272,14 @@ int32 CompetitionMenu_GetActivePlayerCount(void)
     if (!control)
         return 0;
 
-    int32 count = 0;
+    int32 activePlayers = 0;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
         if (button->ready || button->isSelected)
-            ++count;
+            ++activePlayers;
     }
-    return count;
+
+    return activePlayers;
 }
 
 void CompetitionMenu_ResetControllerAssignments(void)
@@ -283,19 +288,22 @@ void CompetitionMenu_ResetControllerAssignments(void)
     EntityUIControl *control = CompetitionMenu->competitionControl;
 
     int32 playerID = 0;
-    for (int32 i = 0; i < PLAYER_MAX; ++i) buttons[i] = (EntityUIVsCharSelector *)control->buttons[i];
+    for (int32 p = 0; p < PLAYER_MAX; ++p) buttons[p] = (EntityUIVsCharSelector *)control->buttons[p];
 
-    for (int32 i = 0; i < PLAYER_MAX; ++i) {
-        EntityUIVsCharSelector *selector = buttons[i];
-        int32 id                         = RSDK.ControllerIDForInputID(i + 1);
+    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+        EntityUIVsCharSelector *selector = buttons[p];
+        int32 id                         = API_ControllerIDForInputID(p + 1);
 
         if (id && id != CONT_AUTOASSIGN) {
-            if (playerID < i)
-                RSDK.AssignControllerID(i, CONT_ANY);
-            RSDK.AssignControllerID(playerID + 1, id);
+            if (playerID < p)
+                API_AssignControllerID(p, CONT_ANY);
+
+            API_AssignControllerID(playerID + 1, id);
+
             buttons[playerID]->frameID = selector->frameID;
-            if (playerID < i)
+            if (playerID < p)
                 selector->frameID = selector->playerID;
+
             ++playerID;
         }
     }
@@ -308,17 +316,20 @@ void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount)
     EntityUIButton *screenLayoutChoice = CompetitionMenu->compRulesControl->buttons[2];
 
     bool32 choices[5];
+
     choices[0] = playerCount == 2;
-    choices[1] = choices[0];
+    choices[1] = playerCount == 2;
+
     choices[2] = playerCount == 3;
-    choices[3] = choices[2];
+    choices[3] = playerCount == 3;
+
     choices[4] = playerCount == 4;
 
     for (int32 c = 0; c < screenLayoutChoice->choiceCount; ++c) {
         EntityUIChoice *choice = (EntityUIChoice *)UIButton_GetChoicePtr(screenLayoutChoice, c);
-        if (choice) {
+
+        if (choice)
             choice->disabled = !choices[c];
-        }
     }
 
     EntityUIChoice *choice = (EntityUIChoice *)UIButton_GetChoicePtr(screenLayoutChoice, screenLayoutChoice->selection);
@@ -337,72 +348,95 @@ void CompetitionMenu_SetupSplitScreen(int32 mode)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     int32 startVert_3P[15];
-    char startVert_2P[10];
+    uint8 startVert_2P[10];
 
     memset(startVert_2P, 0, sizeof(startVert_2P));
     memset(startVert_3P, 0, sizeof(startVert_3P));
 
-    startVert_2P[0] = 18;
-    startVert_2P[1] = 6;
-    startVert_2P[5] = 24;
-    startVert_2P[6] = 12;
+    startVert_2P[(0 * 5) + 0] = 18;
+    startVert_2P[(0 * 5) + 1] = 6;
+    startVert_2P[(0 * 5) + 2] = 0;
+    startVert_2P[(0 * 5) + 3] = 0;
+    startVert_2P[(0 * 5) + 4] = 0;
 
-    startVert_3P[2]  = 30;
-    startVert_3P[3]  = 6;
-    startVert_3P[7]  = 36;
-    startVert_3P[8]  = 42;
-    startVert_3P[12] = 12;
-    startVert_3P[13] = 48;
-    RSDK.SetScreenSplitVerticies(startVert_2P[mode], startVert_2P[mode + 5], startVert_3P[mode], startVert_3P[mode + 5], startVert_3P[mode + 10]);
+    startVert_2P[(1 * 5) + 0] = 24;
+    startVert_2P[(1 * 5) + 1] = 12;
+    startVert_2P[(1 * 5) + 2] = 0;
+    startVert_2P[(1 * 5) + 3] = 0;
+    startVert_2P[(1 * 5) + 4] = 0;
+
+    startVert_3P[(0 * 5) + 0] = 0;
+    startVert_3P[(0 * 5) + 1] = 0;
+    startVert_3P[(0 * 5) + 2] = 30;
+    startVert_3P[(0 * 5) + 3] = 6;
+    startVert_3P[(0 * 5) + 4] = 0;
+
+    startVert_3P[(1 * 5) + 0] = 0;
+    startVert_3P[(1 * 5) + 1] = 0;
+    startVert_3P[(1 * 5) + 2] = 36;
+    startVert_3P[(1 * 5) + 3] = 42;
+    startVert_3P[(1 * 5) + 4] = 0;
+
+    startVert_3P[(2 * 5) + 0] = 0;
+    startVert_3P[(2 * 5) + 1] = 0;
+    startVert_3P[(2 * 5) + 2] = 12;
+    startVert_3P[(2 * 5) + 3] = 48;
+    startVert_3P[(2 * 5) + 4] = 0;
+
+    RSDK.SetScreenRenderVertices(startVert_2P[mode], startVert_2P[5 + mode], startVert_3P[mode], startVert_3P[5 + mode], startVert_3P[10 + mode]);
 
     switch (mode) {
-        case 0:
-        case 1:
-            session->splitScreenMode[0] = 2;
-            session->splitScreenMode[1] = 5;
+        case 0: // 2P (Streched)
+        case 1: // 2P (Bordered)
+            session->screenBorderType[0] = VS_BORDER_BOTTOM;
+            session->screenBorderType[1] = VS_BORDER_TOP;
             break;
-        case 2:
-            session->splitScreenMode[2] = 5;
-            session->splitScreenMode[1] = 3;
-            session->splitScreenMode[0] = 1;
+
+        case 2: // 3P (P1 & P2 top, P3 bottom)
+            session->screenBorderType[0] = VS_BORDER_BOTTOMRIGHT;
+            session->screenBorderType[1] = VS_BORDER_BOTTOMLEFT;
+            session->screenBorderType[2] = VS_BORDER_TOP;
             break;
-        case 3:
-            session->splitScreenMode[0] = 2;
-            session->splitScreenMode[1] = 4;
-            session->splitScreenMode[2] = 6;
+
+        case 3: // 3P (P1 top, P2 & P3 bottom)
+            session->screenBorderType[0] = VS_BORDER_BOTTOM;
+            session->screenBorderType[1] = VS_BORDER_TOPRIGHT;
+            session->screenBorderType[2] = VS_BORDER_TOPLEFT;
             break;
-        case 4:
-            session->splitScreenMode[0] = 1;
-            session->splitScreenMode[1] = 3;
-            session->splitScreenMode[2] = 4;
-            session->splitScreenMode[3] = 6;
+
+        case 4: // 4P
+            session->screenBorderType[0] = VS_BORDER_BOTTOMRIGHT;
+            session->screenBorderType[1] = VS_BORDER_BOTTOMLEFT;
+            session->screenBorderType[2] = VS_BORDER_TOPRIGHT;
+            session->screenBorderType[3] = VS_BORDER_TOPLEFT;
             break;
+
         default: break;
     }
 }
 
-void CompetitionMenu_SetupResultsUI(void *control)
+void CompetitionMenu_SetupResultsUI(EntityUIControl *roundControl)
 {
-    EntityUIControl *roundControl     = control;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+
     int32 offsets[] = { -580000, 0x580000, 0x0, 0x0, -0x7A0000, 0x000000, 0x7A0000, 0x000000, -0x9C0000, -0x340000, 0x340000, 0x9C0000 };
 
     int32 offsetPtr = 4 * (session->playerCount - 2);
-    for (int32 i = 0; i < PLAYER_MAX; ++i) {
-        EntityUIButton *button = roundControl->buttons[i];
-        if (session->playerCount <= i) {
+    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+        EntityUIButton *button = roundControl->buttons[p];
+        if (session->playerCount <= p) {
             button->visible = false;
         }
         else {
             button->visible    = true;
-            button->position.x = roundControl->position.x + offsets[offsetPtr + i];
+            button->position.x = roundControl->position.x + offsets[offsetPtr + p];
         }
     }
 }
 
 void CompetitionMenu_GotoCompRules(void)
 {
-    CompetitionMenu_SetupSplitScreenChoices(CompetitionMenu_GetActivePlayerCount());
+    CompetitionMenu_SetupSplitScreenChoices(CompetitionMenu_GetTotalPlayerCount());
     UIControl_MatchMenuTag("Competition Rules");
 }
 
@@ -410,40 +444,41 @@ void CompetitionMenu_GotoCompZones(void) { UIControl_MatchMenuTag("Competition Z
 
 void CompetitionMenu_VS_ProcessInputCB(void)
 {
-    EntityUIControl *control       = (EntityUIControl *)CompetitionMenu->competitionControl;
-    EntityUIControl *legacyControl = (EntityUIControl *)CompetitionMenu->competitionControl_Legacy;
+    EntityUIControl *control = CompetitionMenu->competitionControl;
     if (!API.CheckDLC(DLC_PLUS))
-        control = legacyControl;
+        control = CompetitionMenu->competitionControl_Legacy;
 
     if (control) {
         for (int32 i = 0; i < control->buttonCount; ++i) {
-            EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
+            EntityUIVsCharSelector *charSel = (EntityUIVsCharSelector *)control->buttons[i];
 
             Entity *entStore  = SceneInfo->entity;
-            SceneInfo->entity = (Entity *)button;
-            StateMachine_Run(button->processButtonCB);
+            SceneInfo->entity = (Entity *)charSel;
+            StateMachine_Run(charSel->processButtonCB);
             SceneInfo->entity = entStore;
 
-            RSDK.ControllerIDForInputID(button->playerID + 1);
+            RSDK.ControllerIDForInputID(charSel->playerID + 1);
         }
 
-        EntityUIButtonPrompt *promptPtr = NULL;
+        EntityUIButtonPrompt *goPrompt = NULL;
         for (int32 i = 0; i < control->promptCount; ++i) {
             EntityUIButtonPrompt *prompt = control->prompts[i];
+
             if (prompt->buttonID == 4)
-                promptPtr = prompt;
+                goPrompt = prompt;
         }
 
-        int32 count1 = CompetitionMenu_GetReadyPlayerCount();
-        if (count1 > 1 && count1 == CompetitionMenu_GetActivePlayerCount()) {
+        int32 readyPlayers = CompetitionMenu_GetReadyPlayerCount();
+        if (readyPlayers > 1 && readyPlayers == CompetitionMenu_GetTotalPlayerCount()) {
             if (UIControl->startPress[0] || UIControl->startPress[1] || UIControl->startPress[2] || UIControl->startPress[3]) {
                 control->selectionDisabled = true;
                 UITransition_StartTransition(CompetitionMenu_GotoCompRules, 0);
             }
-            promptPtr->visible = true;
+
+            goPrompt->visible = true;
         }
         else {
-            promptPtr->visible = false;
+            goPrompt->visible = false;
         }
     }
 }
@@ -454,18 +489,19 @@ void CompetitionMenu_VS_MenuSetupCB(void)
 
     self->childHasFocus = false;
     for (int32 i = 0; i < self->buttonCount; ++i) {
-        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)self->buttons[i];
+        EntityUIVsCharSelector *charSel = (EntityUIVsCharSelector *)self->buttons[i];
 
-        button->isSelected      = true;
-        button->ready           = false;
-        button->processButtonCB = UIVsCharSelector_ProcessButtonCB;
+        charSel->isSelected      = true;
+        charSel->ready           = false;
+        charSel->processButtonCB = UIVsCharSelector_ProcessButtonCB;
 
-        if (!RSDK.ControllerIDForInputID(button->playerID + 1))
-            RSDK.AssignControllerID(button->playerID + 1, CONT_AUTOASSIGN);
+        if (!API_ControllerIDForInputID(charSel->playerID + 1))
+            API_AssignControllerID(charSel->playerID + 1, CONT_AUTOASSIGN);
     }
 
     for (int32 i = 0; i < self->promptCount; ++i) {
         EntityUIButtonPrompt *prompt = self->prompts[i];
+
         if (prompt->buttonID == 4)
             prompt->visible = false;
     }
@@ -483,13 +519,14 @@ void CompetitionMenu_StartMatch(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
 
     sprintf(param->menuTag, "Competition Round");
-    session->stageIndex  = ((EntityUIControl *)CompetitionMenu->compZoneControl)->buttonID;
+    session->stageIndex  = CompetitionMenu->compZoneControl->buttonID;
     session->zoneID      = param->vsZoneID;
     session->actID       = param->vsActID;
     session->prevMatchID = session->matchID;
-    for (int32 i = 0; i < session->playerCount; ++i) {
-        if (!session->lives[i])
-            session->lives[i] = 1;
+
+    for (int32 p = 0; p < session->playerCount; ++p) {
+        if (!session->lives[p])
+            session->lives[p] = 1;
     }
 
     if (globals->gameMode == MODE_ENCORE)
@@ -497,17 +534,25 @@ void CompetitionMenu_StartMatch(void)
     else
         RSDK.SetScene("Mania Mode", "");
     SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, param->vsActID, 0);
+
     SaveGame_ResetPlayerState();
+
+    // Bug Details(?):
+    // sizeof(globals->noSaveSlot) and sizeof(saveData) is 4096 (sizeof(int32) * 0x400)
+    // but the memset size is only 1024 (sizeof(uint8) * 0x400)
+    // so only about 1/4th of the save slot is cleared, though nothin uses the extra space so it's not a big deal
     memset(globals->noSaveSlot, 0, 0x400);
 
     globals->continues  = 0;
-    globals->saveSlotID = 255;
+    globals->saveSlotID = NO_SAVE_SLOT;
     globals->gameMode   = MODE_COMPETITION;
     globals->medalMods  = 0;
 
     globals->playerID = ID_NONE;
-    for (int32 i = 0; i < session->playerCount; ++i) globals->playerID |= session->playerID[i] << (8 * i);
+    for (int32 p = 0; p < session->playerCount; ++p) globals->playerID |= session->playerID[p] << (8 * p);
+
     globals->itemMode = session->itemMode;
+
     RSDK.LoadScene();
 }
 
@@ -515,6 +560,10 @@ void CompetitionMenu_ZoneButtonActionCB(void) { MenuSetup_StartTransition(Compet
 
 void CompetitionMenu_RulesButton_ActionCB(void)
 {
+    EntityUIControl *control = CompetitionMenu->competitionControl;
+    if (!API.CheckDLC(DLC_PLUS))
+        control = CompetitionMenu->competitionControl_Legacy;
+
     EntityUIControl *rulesControl     = CompetitionMenu->compRulesControl;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
@@ -532,25 +581,22 @@ void CompetitionMenu_RulesButton_ActionCB(void)
         case 1: itemMode = ITEMS_TELEPORT; break;
         case 2: itemMode = ITEMS_RANDOM; break;
     }
+
     Competition_ResetOptions();
 
     session->matchCount = matchCount;
     session->inMatch    = true;
     session->itemMode   = itemMode;
+
     CompetitionMenu_SetupSplitScreen(rulesControl->buttons[2]->selection);
     session->displayMode = rulesControl->buttons[2]->selection;
 
-    EntityUIControl *control       = CompetitionMenu->competitionControl;
-    EntityUIControl *legacyControl = CompetitionMenu->competitionControl_Legacy;
-    if (!API.CheckDLC(DLC_PLUS))
-        control = legacyControl;
-
     session->playerCount = 0;
     for (int32 i = 0; i < control->buttonCount; ++i) {
-        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
-        int32 id                       = RSDK.ControllerIDForInputID(i + 1);
+        EntityUIVsCharSelector *charSel = (EntityUIVsCharSelector *)control->buttons[i];
+        int32 id                        = RSDK.ControllerIDForInputID(i + 1);
         if (id && id != CONT_UNASSIGNED) {
-            switch (button->frameID) {
+            switch (charSel->frameID) {
                 case 0: session->playerID[i] = ID_SONIC; break;
                 case 1: session->playerID[i] = ID_TAILS; break;
                 case 2: session->playerID[i] = ID_KNUCKLES; break;
@@ -560,6 +606,7 @@ void CompetitionMenu_RulesButton_ActionCB(void)
 #endif
                 default: break;
             }
+
             session->controllerIDs[i] = id;
             session->playerCount++;
         }
@@ -570,7 +617,9 @@ void CompetitionMenu_RulesButton_ActionCB(void)
     zoneControl->targetPos.x     = zoneControl->startPos.x;
     zoneControl->targetPos.y     = zoneControl->startPos.y;
     zoneControl->buttonID        = 0;
+
     CompetitionMenu_HandleUnlocks();
+
     UIControl_MatchMenuTag("Competition Zones");
 }
 
@@ -592,7 +641,7 @@ void CompetitionMenu_Round_ProcessInputCB(void)
         }
 
         EntityUIControl *zoneControl = CompetitionMenu->compZoneControl;
-        int32 remainingZones                 = 0;
+        int32 remainingZones         = 0;
         for (int32 i = 0; i < 12; ++i) {
             if (zoneControl->buttons[i]) {
                 EntityUIVsZoneButton *zoneButton = (EntityUIVsZoneButton *)zoneControl->buttons[i];
@@ -601,12 +650,10 @@ void CompetitionMenu_Round_ProcessInputCB(void)
             }
         }
 
-        if (toCompTotal || activePlayers < 2 || session->matchID >= session->matchCount || !remainingZones) {
+        if (toCompTotal || activePlayers < 2 || session->matchID >= session->matchCount || !remainingZones)
             UITransition_StartTransition(CompetitionMenu_GotoCompTotal, 0);
-        }
-        else {
+        else
             UITransition_StartTransition(CompetitionMenu_GotoCompZones, 0);
-        }
 
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
@@ -619,18 +666,21 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     EntityUIControl *roundControl     = CompetitionMenu->compRoundControl;
     CompetitionMenu_SetupResultsUI(roundControl);
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
-    char textBuffer[0x100];
-    memset(textBuffer, 0, sizeof(textBuffer));
-    Localization_GetZoneName(&info, session->zoneID);
+    TextInfo roundLabelStr;
+    INIT_TEXTINFO(roundLabelStr);
+
+    char roundLabel[0x100];
+    memset(roundLabel, 0, sizeof(roundLabel));
+
+    Localization_GetZoneName(&roundLabelStr, session->zoneID);
     if (session->zoneID < 12) {
         char buf[16];
         sprintf(buf, " ZONE %d", session->actID + 1);
-        RSDK.AppendText(&info, buf);
+        RSDK.AppendText(&roundLabelStr, buf);
     }
-    RSDK.GetCString(textBuffer, &info);
-    UIInfoLabel_SetText(CompetitionMenu->resultsLabel_Round, textBuffer);
+
+    RSDK.GetCString(roundLabel, &roundLabelStr);
+    UIInfoLabel_SetText(CompetitionMenu->resultsLabel_Round, roundLabel);
 
     uint32 bestRings      = 0;
     uint32 bestTotalRings = 0;
@@ -666,8 +716,10 @@ void CompetitionMenu_Round_MenuSetupCB(void)
 
         results->isWinner = session->matchWinner[match] & (1 << p);
         results->isLoser  = session->matchWinner[match] & (1 << p);
+
         if (session->matchWinner[match] & (1 << p))
             winnerCount++;
+
         results->trophyCount = session->wins[p];
         memset(buffer, 0, sizeof(buffer));
 
@@ -720,12 +772,14 @@ void CompetitionMenu_Round_MenuSetupCB(void)
         }
 
         LogHelpers_Print("Announce_CharWins(%d)", session->playerID[winner]);
+
         EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
         announcer->state           = Announcer_State_AnnounceWinPlayer;
         announcer->playerID        = session->playerID[winner];
     }
     else {
         LogHelpers_Print("Announce_ItsADraw(%d)", 0);
+
         EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
         announcer->state           = Announcer_State_AnnounceDraw;
         announcer->playerID        = 0;
@@ -733,13 +787,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     }
 }
 
-void CompetitionMenu_GotoCompetition(void)
-{
-    const char *tag = "Competition";
-    if (!API.CheckDLC(DLC_PLUS))
-        tag = "Competition Legacy";
-    UIControl_MatchMenuTag(tag);
-}
+void CompetitionMenu_GotoCompetition(void) { UIControl_MatchMenuTag(API.CheckDLC(DLC_PLUS) ? "Competition" : "Competition Legacy"); }
 
 void CompetitionMenu_Results_ProcessInputCB(void)
 {
@@ -764,6 +812,7 @@ void CompetitionMenu_Results_ProcessInputCB(void)
             Competition_ResetOptions();
             UITransition_StartTransition(CompetitionMenu_GotoCompetition, 0);
         }
+
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
     }
@@ -780,12 +829,12 @@ void CompetitionMenu_Results_MenuSetupCB(void)
     totalControl->targetPos.y = totalControl->startPos.y;
     totalControl->position.y  = totalControl->startPos.y;
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    TextInfo message;
+    INIT_TEXTINFO(message);
 
     EntityUIInfoLabel *label = CompetitionMenu->resultsLabel_Total;
-    Localization_GetString(&info, STR_COMPTOTAL);
-    UIInfoLabel_SetString(label, &info);
+    Localization_GetString(&message, STR_COMPTOTAL);
+    UIInfoLabel_SetString(label, &message);
 
     int32 highestScore = 0;
     for (int32 p = 0; p < session->playerCount; ++p) {
@@ -802,18 +851,20 @@ void CompetitionMenu_Results_MenuSetupCB(void)
         }
     }
 
-    if (winnerCount <= 1) {
-        LogHelpers_Print("Announce_WinnerIs(%d)", winnerID);
-        EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
-        announcer->state           = Announcer_State_AnnounceWinner;
-        announcer->playerID        = winnerID;
-    }
-    else {
+    if (winnerCount >= 2) {
         LogHelpers_Print("Announce_ItsADraw(%d)", 1);
+
         EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
         announcer->state           = Announcer_State_AnnounceDraw;
         announcer->playerID        = 1;
         announcer->timer           = 0;
+    }
+    else {
+        LogHelpers_Print("Announce_WinnerIs(%d)", winnerID);
+
+        EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
+        announcer->state           = Announcer_State_AnnounceWinner;
+        announcer->playerID        = winnerID;
     }
 
     for (int32 p = 0; p < session->playerCount; ++p) {
@@ -823,13 +874,16 @@ void CompetitionMenu_Results_MenuSetupCB(void)
         results->numRows     = session->matchCount;
         results->isWinner    = session->wins[p] == highestScore;
         results->trophyCount = session->wins[p];
+
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
             sprintf(buffer, "%d", session->matchWinner[r]);
+
             if (!SceneInfo->inEditor) {
                 RSDK.SetText(&results->rowText[r], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
             }
+
             highlight[r] = ((1 << p) & session->matchWinner[r]);
         }
     }
@@ -842,15 +896,16 @@ void CompetitionMenu_Results_MenuUpdateCB(void)
     if (totalControl->active == ACTIVE_ALWAYS) {
         if (totalControl->position.y == totalControl->targetPos.y) {
             if (CompetitionMenu->timer <= 0) {
-                int32 pos = totalControl->startPos.y;
+                int32 targetPos = totalControl->startPos.y;
                 if (totalControl->targetPos.y == totalControl->startPos.y) {
                     EntityUIVsResults *button = (EntityUIVsResults *)totalControl->buttons[0];
-                    if (button) {
-                        if (button->size.y + button->position.y - 0x708000 > totalControl->startPos.y)
-                            pos = button->size.y + button->position.y - 0x708000;
+
+                    if (button && button->size.y + button->position.y - 0x708000 > totalControl->startPos.y) {
+                        targetPos = button->size.y + button->position.y - 0x708000;
                     }
                 }
-                totalControl->targetPos.y = pos;
+
+                totalControl->targetPos.y = targetPos;
                 CompetitionMenu->timer    = 120;
             }
             else {
@@ -862,16 +917,17 @@ void CompetitionMenu_Results_MenuUpdateCB(void)
 
 void CompetitionMenu_ExitComp_TransitionCB(void)
 {
-    EntityUIControl *control       = CompetitionMenu->competitionControl;
-    EntityUIControl *legacyControl = CompetitionMenu->competitionControl_Legacy;
-    EntityUIControl *zoneControl   = CompetitionMenu->compZoneControl;
+    EntityUIControl *zoneControl = CompetitionMenu->compZoneControl;
+    EntityUIControl *control     = CompetitionMenu->competitionControl;
     if (!API.CheckDLC(DLC_PLUS))
-        control = legacyControl;
+        control = CompetitionMenu->competitionControl_Legacy;
 
     UIControl_SetInactiveMenu(zoneControl);
     UIControl_SetActiveMenu(control);
     Competition_ResetOptions();
+
     zoneControl->childHasFocus = false;
+
     CompetitionMenu_HandleUnlocks();
 }
 
@@ -879,24 +935,21 @@ void CompetitionMenu_ExitComp_YesCB(void) { UITransition_StartTransition(Competi
 
 bool32 CompetitionMenu_CompRules_BackPressCB(void)
 {
-    if (!API.CheckDLC(DLC_PLUS)) {
-        UITransition_SetNewTag("Competition Legacy");
-        return true;
-    }
-    else {
+    if (API.CheckDLC(DLC_PLUS))
         UITransition_SetNewTag("Competition");
-        return true;
-    }
-    return false;
+    else
+        UITransition_SetNewTag("Competition Legacy");
+
+    return true;
 }
 
 bool32 CompetitionMenu_CompZones_BackPressCB(void)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    TextInfo message;
+    INIT_TEXTINFO(message);
 
-    Localization_GetString(&info, STR_EXITCOMP);
-    UIDialog_CreateDialogYesNo(&info, CompetitionMenu_ExitComp_YesCB, StateMachine_None, true, true);
+    Localization_GetString(&message, STR_EXITCOMP);
+    UIDialog_CreateDialogYesNo(&message, CompetitionMenu_ExitComp_YesCB, StateMachine_None, true, true);
     return true;
 }
 
@@ -905,10 +958,12 @@ void CompetitionMenu_GotoPuyoVS(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
     TimeAttackData_Clear();
+
     param->puyoSelection = PUYO_SELECTION_TIE_BREAKER;
     globals->gameMode    = MODE_COMPETITION;
     strcpy(param->menuTag, "Competition Total");
     param->menuSelection = 0;
+
     RSDK.SetScene("Extras", "Puyo Puyo");
     RSDK.LoadScene();
 }

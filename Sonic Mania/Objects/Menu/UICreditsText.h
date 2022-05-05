@@ -36,7 +36,7 @@ void UICreditsText_Update(void);
 void UICreditsText_LateUpdate(void);
 void UICreditsText_StaticUpdate(void);
 void UICreditsText_Draw(void);
-void UICreditsText_Create(void* data);
+void UICreditsText_Create(void *data);
 void UICreditsText_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UICreditsText_EditorDraw(void);
@@ -57,4 +57,4 @@ void UICreditsText_State_Idle(void);
 void UICreditsText_State_ScaleOut(void);
 void UICreditsText_State_FadeOut(void);
 
-#endif //!OBJ_UICREDITSTEXT_H
+#endif //! OBJ_UICREDITSTEXT_H

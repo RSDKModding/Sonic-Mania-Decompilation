@@ -29,7 +29,7 @@ void PopcornKernel_Update(void);
 void PopcornKernel_LateUpdate(void);
 void PopcornKernel_StaticUpdate(void);
 void PopcornKernel_Draw(void);
-void PopcornKernel_Create(void* data);
+void PopcornKernel_Create(void *data);
 void PopcornKernel_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PopcornKernel_EditorDraw(void);
@@ -42,4 +42,4 @@ void PopcornKernel_State_BounceAround(void);
 void PopcornKernel_State_RiseUp(void);
 void PopcornKernel_State_FallDown(void);
 
-#endif //!OBJ_POPCORNKERNEL_H
+#endif //! OBJ_POPCORNKERNEL_H

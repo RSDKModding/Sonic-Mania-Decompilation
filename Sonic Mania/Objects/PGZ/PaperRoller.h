@@ -45,7 +45,7 @@ void PaperRoller_Serialize(void);
 
 // Extra Entity Functions
 void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 deformX, int32 deformY,
-                                  int32 len, uint32 color);
+                                  int32 len, uint32 *color);
 void PaperRoller_DrawPaperLines(void);
 void PaperRoller_DrawRollers(void);
 void PaperRoller_HandleRollerCollisions(void);

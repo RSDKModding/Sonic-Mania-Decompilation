@@ -12,6 +12,7 @@ ObjectRockemSockem *RockemSockem;
 void RockemSockem_Update(void)
 {
     RSDK_THIS(RockemSockem);
+
     RSDK.ProcessAnimation(&self->ballAnimator);
 
     if (self->bounceTimer > 0) {
@@ -63,6 +64,7 @@ void RockemSockem_Update(void)
                     player->velocity.y -= player->velocity.y >> 5;
                 else
                     player->velocity.y -= player->velocity.y >> 4;
+
                 self->active = ACTIVE_NORMAL;
             }
             else if (player->velocity.y < 0) {
@@ -120,9 +122,8 @@ void RockemSockem_Update(void)
         self->bounceTimer = 16;
     }
 
-    if (abs(self->startPos.x - self->position.x) <= 0x10000)
-        self->angleVel = 0;
-    else
+    self->angleVel = 0;
+    if (abs(self->startPos.x - self->position.x) > 0x10000)
         self->angleVel = (self->startPos.x - self->position.x) >> 17;
 
     RockemSockem_HandleJointPositions();
@@ -135,7 +136,8 @@ void RockemSockem_StaticUpdate(void) {}
 void RockemSockem_Draw(void)
 {
     RSDK_THIS(RockemSockem);
-    for (int32 i = 0; i < RockemSockem_coilCount; ++i) {
+
+    for (int32 i = 0; i < ROCKEMSOCKEM_COIL_COUNT; ++i) {
         self->rotation = self->jointRotations[i];
         RSDK.DrawSprite(&self->jointAnimator, &self->jointPositions[i], false);
     }
@@ -158,11 +160,9 @@ void RockemSockem_Create(void *data)
     RSDK.SetSpriteAnimation(RockemSockem->aniFrames, 2, &self->ballAnimator, true, 0);
 
     if (!SceneInfo->inEditor) {
-        self->drawPos.x = self->position.x;
-        self->drawPos.y = self->position.y;
-        self->position.y -= (0xE0000 + (0x50000 * RockemSockem_coilCount));
-        self->startPos.x    = self->position.x;
-        self->startPos.y    = self->position.y;
+        self->drawPos = self->position;
+        self->position.y -= (0xE0000 + (0x50000 * ROCKEMSOCKEM_COIL_COUNT));
+        self->startPos      = self->position;
         self->angle         = 0x80;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -191,8 +191,10 @@ void RockemSockem_StageLoad(void)
 void RockemSockem_HandleJointPositions(void)
 {
     RSDK_THIS(RockemSockem);
-    int32 x    = (RSDK.Sin256(self->angle) << 11) + self->drawPos.x;
-    int32 y    = (RSDK.Cos256(self->angle) << 11) + self->drawPos.y;
+
+    int32 x = (RSDK.Sin256(self->angle) << 11) + self->drawPos.x;
+    int32 y = (RSDK.Cos256(self->angle) << 11) + self->drawPos.y;
+
     int32 ang  = RSDK.ATan2(y - self->position.y, (RSDK.Sin256(self->angle) << 11) + self->drawPos.x - self->position.x);
     int32 posX = (0xC00 * RSDK.Sin256(ang) + self->position.x) & 0xFFFF0000;
     int32 posY = (0xC00 * RSDK.Cos256(ang) + self->position.y) & 0xFFFF0000;
@@ -238,11 +240,9 @@ void RockemSockem_EditorDraw(void)
 {
     RSDK_THIS(RockemSockem);
 
-    self->drawPos.x = self->position.x;
-    self->drawPos.y = self->position.y;
-    self->position.y -= (0xE0000 + (0x50000 * RockemSockem_coilCount));
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->drawPos = self->position;
+    self->position.y -= (0xE0000 + (0x50000 * ROCKEMSOCKEM_COIL_COUNT));
+    self->startPos      = self->position;
     self->angle         = 0x80;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -251,10 +251,10 @@ void RockemSockem_EditorDraw(void)
     self->drawOrder     = Zone->objectDrawLow;
     self->drawFX        = FX_ROTATE | FX_FLIP;
 
-    if (abs(self->startPos.x - self->position.x) <= 0x10000)
-        self->angleVel = 0;
-    else
+    self->angleVel = 0;
+    if (abs(self->startPos.x - self->position.x) > 0x10000)
         self->angleVel = (self->startPos.x - self->position.x) >> 17;
+
     RockemSockem_HandleJointPositions();
 
     RockemSockem_Draw();

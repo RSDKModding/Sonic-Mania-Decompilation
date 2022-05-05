@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectLottoMachine {
     RSDK_OBJECT
-    Hitbox hitbox1;
+    Hitbox hitboxBottom;
     Hitbox hitboxMotor;
     uint8 activePlayers;
     uint16 sfxPimPom;
@@ -47,7 +47,7 @@ void LottoMachine_Update(void);
 void LottoMachine_LateUpdate(void);
 void LottoMachine_StaticUpdate(void);
 void LottoMachine_Draw(void);
-void LottoMachine_Create(void* data);
+void LottoMachine_Create(void *data);
 void LottoMachine_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LottoMachine_EditorDraw(void);
@@ -58,7 +58,7 @@ void LottoMachine_Serialize(void);
 // Extra Entity Functions
 void LottoMachine_VSSwapCB(void);
 void LottoMachine_CheckPlayerCollisions(void);
-void LottoMachine_CheckPlayerCollisions2(void);
+void LottoMachine_CheckPlayerCollisions_Bottom(void);
 void LottoMachine_HandleMotor(void);
 void LottoMachine_SetupBalls(void);
 void LottoMachine_SetupUIBalls(void);
@@ -72,4 +72,4 @@ void LottoMachine_State_DropPlayers(void);
 void LottoMachine_State_ReleasePlayers(void);
 void LottoMachine_State_StopSpinning(void);
 
-#endif //!OBJ_LOTTOMACHINE_H
+#endif //! OBJ_LOTTOMACHINE_H

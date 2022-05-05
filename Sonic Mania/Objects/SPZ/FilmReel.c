@@ -17,15 +17,17 @@ void FilmReel_Update(void)
     self->velocity.y = (self->spinSpeed * RSDK.Sin256(self->angle)) >> 9;
     self->lastPos.x += self->velocity.x;
     self->lastPos.y += self->velocity.y;
-    self->pathFlags = 0;
 
+    int32 prevPathFlags = self->pathFlags;
+    self->pathFlags     = 0;
     switch (self->pathDir) {
         case 0:
             if (self->drawPos.x != self->endPos.x) {
                 if (self->lastPos.x <= self->drawPos.x) {
                     self->lastPos.x = self->drawPos.x;
-                    self->pathFlags   = 1;
+                    self->pathFlags = 1;
                 }
+
                 if (self->lastPos.x >= self->endPos.x) {
                     self->pathFlags |= 2;
                     self->lastPos.x = self->endPos.x;
@@ -37,6 +39,7 @@ void FilmReel_Update(void)
                     self->pathFlags |= 1;
                     self->lastPos.y = self->drawPos.y;
                 }
+
                 if (self->lastPos.y >= self->endPos.y) {
                     self->pathFlags |= 2;
                     self->lastPos.y = self->lastPos.y;
@@ -48,8 +51,9 @@ void FilmReel_Update(void)
             if (self->drawPos.x != self->endPos.x) {
                 if (self->lastPos.x <= self->endPos.x) {
                     self->lastPos.x = self->endPos.x;
-                    self->pathFlags   = 2;
+                    self->pathFlags = 2;
                 }
+
                 if (self->lastPos.x >= self->endPos.x) {
                     self->pathFlags |= 1;
                     self->lastPos.x = self->drawPos.x;
@@ -61,6 +65,7 @@ void FilmReel_Update(void)
                     self->pathFlags |= 1;
                     self->lastPos.y = self->drawPos.y;
                 }
+
                 if (self->lastPos.y >= self->endPos.y) {
                     self->pathFlags |= 2;
                     self->lastPos.y = self->lastPos.y;
@@ -72,8 +77,9 @@ void FilmReel_Update(void)
             if (self->drawPos.x != self->endPos.x) {
                 if (self->lastPos.x <= self->endPos.x) {
                     self->lastPos.x = self->endPos.x;
-                    self->pathFlags   = 2;
+                    self->pathFlags = 2;
                 }
+
                 if (self->lastPos.x >= self->drawPos.x) {
                     self->pathFlags |= 1;
                     self->lastPos.x = self->drawPos.x;
@@ -85,6 +91,7 @@ void FilmReel_Update(void)
                     self->pathFlags |= 2;
                     self->lastPos.y = self->endPos.y;
                 }
+
                 if (self->lastPos.y >= self->drawPos.y) {
                     self->pathFlags |= 1;
                     self->lastPos.y = self->drawPos.y;
@@ -96,8 +103,9 @@ void FilmReel_Update(void)
             if (self->drawPos.x != self->endPos.x) {
                 if (self->lastPos.x <= self->drawPos.x) {
                     self->lastPos.x = self->drawPos.x;
-                    self->pathFlags   = 1;
+                    self->pathFlags = 1;
                 }
+
                 if (self->lastPos.x >= self->endPos.x) {
                     self->pathFlags |= 2;
                     self->lastPos.x = self->endPos.x;
@@ -109,6 +117,7 @@ void FilmReel_Update(void)
                     self->pathFlags |= 2;
                     self->lastPos.y = self->endPos.y;
                 }
+
                 if (self->lastPos.y >= self->drawPos.y) {
                     self->pathFlags |= 1;
                     self->lastPos.y = self->drawPos.y;
@@ -120,9 +129,10 @@ void FilmReel_Update(void)
     }
 
     if (self->pathFlags) {
-        if (!self->pathFlags) {
+        if (!prevPathFlags) {
             RSDK.PlaySfx(FilmReel->sfxLanding, false, 255);
             RSDK.StopSfx(FilmReel->sfxUnravel);
+
             if (self->pathFlags == 1)
                 self->active = ACTIVE_BOUNDS;
         }
@@ -130,16 +140,19 @@ void FilmReel_Update(void)
     else {
         if (!(Zone->timer & 7))
             RSDK.PlaySfx(FilmReel->sfxUnravel, false, 255);
+
         self->active = ACTIVE_NORMAL;
     }
 
     self->spinSpeed -= 0x2000;
     self->moveOffset.x = (self->lastPos.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
     self->moveOffset.y = (self->lastPos.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
+
     if (!self->spinDirection)
         FilmReel_SpinLeft();
     else
         FilmReel_SpinRight();
+
     self->spinSpeed = clampVal(self->spinSpeed, -0x80000, 0x80000);
 
     self->position = self->lastPos;
@@ -148,23 +161,21 @@ void FilmReel_Update(void)
             self->spinAngle -= self->spinSpeed;
         else
             self->spinAngle += self->spinSpeed;
+
         self->rotation = (self->spinAngle >> 16) & 0x1FF;
     }
 
     if (abs(self->pathSize.x) <= abs(self->pathSize.y)) {
-        int32 scale = (abs(self->endPos.y - self->position.y) >> 8) / (abs(self->pathSize.x) >> 16) + 256;
-        if (scale > 0x200)
-            scale = 0x200;
+        int32 scale   = minVal((abs(self->endPos.y - self->position.y) >> 8) / (abs(self->pathSize.x) >> 16) + 0x100, 0x200);
         self->scale.x = scale;
         self->scale.y = scale;
     }
     else {
-        int32 scale = (abs(self->endPos.x - self->position.x) >> 8) / (abs(self->pathSize.x) >> 16) + 256;
-        if (scale > 0x200)
-            scale = 0x200;
+        int32 scale   = minVal((abs(self->endPos.x - self->position.x) >> 8) / (abs(self->pathSize.x) >> 16) + 0x100, 0x200);
         self->scale.x = scale;
         self->scale.y = scale;
     }
+
     self->lineDir = abs(self->position.x - self->drawPos.x) <= abs(self->pathSize.y - self->drawPos.y);
 }
 
@@ -182,13 +193,8 @@ void FilmReel_Draw(void)
 
     self->celluoidAnimator.frameID = (self->rotation >> 4) & 1;
 
-    color color1 = 0x3868A8;
-    if (self->celluoidAnimator.frameID)
-        color1 = 0x204078;
-
-    color color2 = 0x204078;
-    if (self->celluoidAnimator.frameID)
-        color2 = 0x182850;
+    color color1 = self->celluoidAnimator.frameID ? 0x204078 : 0x3868A8;
+    color color2 = self->celluoidAnimator.frameID ? 0x182850 : 0x204078;
 
     if (self->lineDir) {
         RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, color1, 255, INK_NONE, false);
@@ -198,6 +204,7 @@ void FilmReel_Draw(void)
         RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, color1, 255, INK_NONE, false);
         RSDK.DrawLine(self->drawPos.x - 0x18000, self->drawPos.y, x2 - 0x18000, y2, color2, 255, INK_NONE, false);
     }
+
     RSDK.DrawSprite(&self->pinAnimator, &self->drawPos, false);
 
     self->drawFX = FX_SCALE;
@@ -220,10 +227,11 @@ void FilmReel_Create(void *data)
     RSDK.SetSpriteAnimation(FilmReel->aniFrames, 3, &self->pinAnimator, true, 0);
 
     if (!SceneInfo->inEditor) {
-        self->lastPos      = self->position;
-        self->drawPos       = self->position;
-        self->endPos.x      = self->pathSize.x + self->drawPos.x;
-        self->endPos.y      = self->pathSize.y + self->drawPos.y;
+        self->lastPos  = self->position;
+        self->drawPos  = self->position;
+        self->endPos.x = self->drawPos.x + self->pathSize.x;
+        self->endPos.y = self->drawPos.y + self->pathSize.y;
+
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0xC00000;
         self->updateRange.y = 0xC00000;
@@ -231,8 +239,8 @@ void FilmReel_Create(void *data)
         self->scale.y       = 0x200;
 
         self->angle     = RSDK.ATan2(self->pathSize.x, self->pathSize.y);
-        self->pathDir  = self->angle >> 6;
-        self->pathFlags  = 1;
+        self->pathDir   = self->angle >> 6;
+        self->pathFlags = 1;
         self->visible   = true;
         self->drawOrder = Zone->objectDrawLow;
     }
@@ -245,16 +253,16 @@ void FilmReel_StageLoad(void)
     else
         FilmReel->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/FilmReel.bin", SCOPE_STAGE);
 
-    FilmReel->hitbox.left   = -64;
-    FilmReel->hitbox.top    = -64;
-    FilmReel->hitbox.right  = 64;
-    FilmReel->hitbox.bottom = 64;
+    FilmReel->hitboxWheel.left   = -64;
+    FilmReel->hitboxWheel.top    = -64;
+    FilmReel->hitboxWheel.right  = 64;
+    FilmReel->hitboxWheel.bottom = 64;
 
-    FilmReel->offsetPos.x   = 0x800000;
-    FilmReel->offsetPos.y   = 0x800000;
+    FilmReel->offsetPos.x = 0x800000;
+    FilmReel->offsetPos.y = 0x800000;
 
-    FilmReel->sfxUnravel    = RSDK.GetSfx("Stage/Unravel.wav");
-    FilmReel->sfxLanding    = RSDK.GetSfx("Stage/Landing.wav");
+    FilmReel->sfxUnravel = RSDK.GetSfx("Stage/Unravel.wav");
+    FilmReel->sfxLanding = RSDK.GetSfx("Stage/Landing.wav");
 }
 
 void FilmReel_SpinLeft(void)
@@ -263,10 +271,11 @@ void FilmReel_SpinLeft(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
-            player->collisionLayers |= Zone->moveID;
+        if (Player_CheckCollisionTouch(player, self, &FilmReel->hitboxWheel)) {
+            player->collisionLayers |= Zone->moveMask;
             player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
             player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
+
             if (!player->sidekick) {
                 if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(self, 0x400000, player, 0x100000)) {
 
@@ -323,6 +332,7 @@ void FilmReel_SpinLeft(void)
                         player->camera->position.x += self->moveOffset.x + ((self->position.x - player->camera->position.x) >> 3);
                         player->camera->position.y += self->moveOffset.y + ((self->position.y - player->camera->position.y - 0x200000) >> 3);
                     }
+
                     player->position.x += self->moveOffset.x;
                     player->position.y += self->moveOffset.y;
                 }
@@ -340,8 +350,8 @@ void FilmReel_SpinRight(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
-            player->collisionLayers |= Zone->moveID;
+        if (Player_CheckCollisionTouch(player, self, &FilmReel->hitboxWheel)) {
+            player->collisionLayers |= Zone->moveMask;
             player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
             player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
             if (!player->sidekick) {
@@ -417,10 +427,10 @@ void FilmReel_EditorDraw(void)
 {
     RSDK_THIS(FilmReel);
 
-    self->lastPos      = self->position;
+    self->lastPos       = self->position;
     self->drawPos       = self->position;
-    self->endPos.x      = self->pathSize.x + self->drawPos.x;
-    self->endPos.y      = self->pathSize.y + self->drawPos.y;
+    self->endPos.x      = self->position.x + self->pathSize.x;
+    self->endPos.y      = self->position.y + self->pathSize.y;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0xC00000;
     self->updateRange.y = 0xC00000;
@@ -428,12 +438,33 @@ void FilmReel_EditorDraw(void)
     self->scale.y       = 0x200;
 
     self->angle     = RSDK.ATan2(self->pathSize.x, self->pathSize.y);
-    self->pathDir  = self->angle >> 6;
-    self->pathFlags  = 1;
+    self->pathDir   = self->angle >> 6;
+    self->pathFlags = 1;
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
-    
+
     FilmReel_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        self->inkEffect = INK_BLEND;
+        self->drawPos   = self->endPos;
+        FilmReel_Draw();
+
+        self->drawFX = FX_SCALE;
+        RSDK.DrawSprite(&self->celluoidAnimator, &self->drawPos, false);
+
+        self->drawFX = FX_ROTATE;
+        RSDK.DrawSprite(&self->reelAnimator, &self->drawPos, false);
+
+        self->drawFX = FX_NONE;
+        RSDK.DrawSprite(&self->edgeAnimator, &self->drawPos, false);
+
+        self->inkEffect = INK_NONE;
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void FilmReel_EditorLoad(void)
@@ -442,6 +473,10 @@ void FilmReel_EditorLoad(void)
         FilmReel->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/FilmReel.bin", SCOPE_STAGE);
     else
         FilmReel->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/FilmReel.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(FilmReel, spinDirection);
+    RSDK_ENUM_VAR("Clockwise", FLIP_NONE);
+    RSDK_ENUM_VAR("Counter-Clockwise", FLIP_X);
 }
 #endif
 

@@ -13,7 +13,7 @@ void LEDPanel_Update(void)
 {
     RSDK_THIS(LEDPanel);
 
-    for (self->row = 0; self->row < LEDPanel_RowCount; ++self->row) {
+    for (self->row = 0; self->row < LEDPANEL_ROW_COUNT; ++self->row) {
         StateMachine_Run(self->stateRow[self->row]);
     }
 }
@@ -27,7 +27,7 @@ void LEDPanel_Draw(void)
     RSDK_THIS(LEDPanel);
 
     RSDK.DrawRect(self->position.x - (self->size.x >> 1) + 0x80000, self->position.y - (self->size.y >> 1), self->size.x - 0x100000, self->size.y,
-                  LEDPanel->storedColor, 512, INK_NONE, false);
+                  LEDPanel->panelColor, 512, INK_NONE, false);
 
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
@@ -43,9 +43,8 @@ void LEDPanel_Draw(void)
 
     RSDK.SetClipBounds(SceneInfo->currentScreenID, clipBound_X1, clipBound_Y1, clipBound_X2, clipBound_Y2);
 
-    for (int32 r = 0; r < LEDPanel_RowCount; ++r) {
-        RSDK.DrawText(&self->animatorText, &self->textPos[r], &self->activeText[r], 0, self->activeText[r].length, ALIGN_RIGHT, 0, 0, NULL, false);
-    }
+    for (int32 r = 0; r < LEDPANEL_ROW_COUNT; ++r)
+        RSDK.DrawText(&self->animatorText, &self->textPos[r], &self->activeText[r], 0, self->activeText[r].length, ALIGN_CENTER, 0, 0, NULL, false);
 
     screen->clipBound_X1 = clipX1;
     screen->clipBound_X2 = clipX2;
@@ -65,7 +64,7 @@ void LEDPanel_Create(void *data)
     RSDK.SetSpriteAnimation(LEDPanel->aniFrames, 0, &self->animatorText, true, 0);
 
     if (!SceneInfo->inEditor) {
-        for (int i = 0; i < LEDPanel_TextCount; ++i) {
+        for (int32 i = 0; i < LEDPANEL_TEXT_COUNT; ++i) {
             RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &self->text[i]);
             self->textPtrs[i] = &self->text[i];
         }
@@ -88,7 +87,7 @@ void LEDPanel_Create(void *data)
         self->boundsMoveSpeed.y = 0x10000;
 
         int32 offset = 0;
-        for (int r = 0; r < LEDPanel_RowCount; ++r) {
+        for (int32 r = 0; r < LEDPANEL_ROW_COUNT; ++r) {
             LEDPanel_SetupActiveText(r, self->textPtrs[r]);
 
             self->seqPtrs[r]       = &self->seq[r];
@@ -111,7 +110,7 @@ void LEDPanel_Create(void *data)
             offset += 0x200000;
         }
 
-        for (self->row = 0; self->row < LEDPanel_RowCount; ++self->row) LEDPanel_HandleCharacters();
+        for (self->row = 0; self->row < LEDPANEL_ROW_COUNT; ++self->row) LEDPanel_HandleCharacters();
     }
 }
 
@@ -122,10 +121,10 @@ void LEDPanel_StageLoad(void)
 
     RSDK.SetText(&LEDPanel->text, " ", 0);
 
-    LEDPanel->storedColor = RSDK.GetPaletteEntry(0, 190);
+    LEDPanel->panelColor = RSDK.GetPaletteEntry(0, 190);
 }
 
-void LEDPanel_SetupActiveText(int row, TextInfo *src)
+void LEDPanel_SetupActiveText(int32 row, TextInfo *src)
 {
     RSDK_THIS(LEDPanel);
 
@@ -140,7 +139,7 @@ void LEDPanel_SetupActiveText(int row, TextInfo *src)
     }
 
     self->activeTextLen[row] = 0;
-    for (int i = self->activeText[row].length - 1; i >= 0; --i) {
+    for (int32 i = self->activeText[row].length - 1; i >= 0; --i) {
         if (self->activeText[row].text[i] != 27) {
             self->activeTextLen[row] = i;
             break;
@@ -148,7 +147,7 @@ void LEDPanel_SetupActiveText(int row, TextInfo *src)
     }
 }
 
-void LEDPanel_SetupTextPos(int row, int x, int y)
+void LEDPanel_SetupTextPos(int32 row, int32 x, int32 y)
 {
     RSDK_THIS(LEDPanel);
 
@@ -164,62 +163,75 @@ void LEDPanel_HandleCharacters(void)
     bool32 finished              = false;
 
     while (!finished) {
-        int32 charID = -1;
-        if (self->rowSeqPos[self->row] < self->seqPtrs[self->row]->length)
-            charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
+        int32 action    = -1;
+        int32 subAction = -1;
 
-        switch (charID) {
+        if (self->rowSeqPos[self->row] < self->seqPtrs[self->row]->length)
+            action = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
+
+        switch (action) {
             case 'A':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
-                switch (charID) {
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                switch (subAction) {
                     case 0:
                         self->textMovePos[self->row].x   = -0x100000 * self->activeText[self->row].length;
                         self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
+
                     case 1:
                         self->textMovePos[self->row].x   = 0;
                         self->textTargetPos[self->row].x = 0;
                         break;
+
                     case 2:
                         self->textMovePos[self->row].x   = (self->size.x >> 1) - (self->activeText[self->row].length << 19) - 0x80000;
                         self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
+
                     case 3:
                         self->textMovePos[self->row].x   = self->size.x - (self->activeText[self->row].length << 20) - 0x100000;
                         self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
+
                     case 4:
                         self->textMovePos[self->row].x   = self->size.x;
                         self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
+
                     default: break;
                 }
+
                 LEDPanel_SetupTextPos(self->row, self->textMovePos[self->row].x, self->textMovePos[self->row].y);
                 break;
 
             case 'B':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
-                switch (charID) {
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                switch (subAction) {
                     case 0:
                         self->textMovePos[self->row].y   = -0x200000;
                         self->textTargetPos[self->row].y = -0x200000;
                         break;
+
                     case 1:
                         self->textMovePos[self->row].y   = 0;
                         self->textTargetPos[self->row].y = 0;
                         break;
+
                     case 2:
                         self->textMovePos[self->row].y   = (self->size.y >> 1) - 0x100000;
                         self->textTargetPos[self->row].y = self->textMovePos[self->row].y;
                         break;
+
                     case 3:
                         self->textMovePos[self->row].y   = self->size.y - 0x200000;
                         self->textTargetPos[self->row].y = self->textMovePos[self->row].y;
                         break;
+
                     case 4:
                         self->textMovePos[self->row].y   = self->size.y;
                         self->textTargetPos[self->row].y = self->textMovePos[self->row].y;
                         break;
+
                     default: break;
                 }
 
@@ -227,8 +239,8 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'C':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
-                switch (charID) {
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                switch (subAction) {
                     case 0: self->textTargetPos[self->row].x = -0x100000 * self->activeText[self->row].length; break;
                     case 1: self->textTargetPos[self->row].x = 0; break;
                     case 2: self->textTargetPos[self->row].x = (self->size.x >> 1) - (self->activeText[self->row].length << 19) - 0x80000; break;
@@ -239,8 +251,9 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'D':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
-                switch (charID) {
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+
+                switch (subAction) {
                     case 0: self->textTargetPos[self->row].y = -0x200000; break;
                     case 1: self->textTargetPos[self->row].y = 0; break;
                     case 2: self->textTargetPos[self->row].y = (self->size.y >> 1) - 0x100000; break;
@@ -257,30 +270,37 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'F':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                if (charID == 0) {
-                    ++self->activeTextLen[self->row];
-                    LEDPanel->text.text[0] = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
-                    RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &LEDPanel->text);
-                    self->activeText[self->row].text[self->activeTextLen[self->row]] = LEDPanel->text.text[0];
-                }
-                else if (charID == 1) {
-                    --self->activeTextSize[self->row];
-                    LEDPanel->text.text[0] = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
-                    RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &LEDPanel->text);
-                    self->activeText[self->row].text[self->activeTextSize[self->row]] = LEDPanel->text.text[0];
-                }
+                switch (subAction) {
+                    default: break;
 
+                    case 0:
+                        ++self->activeTextLen[self->row];
+                        LEDPanel->text.text[0] = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
+                        RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &LEDPanel->text);
+                        self->activeText[self->row].text[self->activeTextLen[self->row]] = LEDPanel->text.text[0];
+                        break;
+
+                    case 1:
+                        --self->activeTextSize[self->row];
+                        LEDPanel->text.text[0] = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
+                        RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &LEDPanel->text);
+                        self->activeText[self->row].text[self->activeTextSize[self->row]] = LEDPanel->text.text[0];
+                        break;
+                }
                 break;
 
             case 'G':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                if (charID == 0)
-                    self->activeText[self->row].text[self->activeTextLen[self->row]--] = 27;
-                else if (charID == 1)
-                    self->activeText[self->row].text[self->activeTextSize[self->row]++] = 27;
+                switch (subAction) {
+                    default: break;
+
+                    case 0: self->activeText[self->row].text[self->activeTextLen[self->row]--] = 27; break;
+
+                    case 1: self->activeText[self->row].text[self->activeTextSize[self->row]++] = 27; break;
+                }
                 break;
 
             case 'H':
@@ -296,8 +316,8 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'J':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
-                LEDPanel_SetupActiveText(self->row, self->textPtrs[charID]);
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                LEDPanel_SetupActiveText(self->row, self->textPtrs[subAction]);
                 break;
 
             case 'K':
@@ -312,20 +332,23 @@ void LEDPanel_HandleCharacters(void)
             case 'O': self->boundsMoveSpeed.y = (self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '/') << 15; break;
 
             case 'P':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
+
                     case 1:
                         self->newXBoundaryL = -(self->size.x >> 1);
                         self->curXBoundaryL = -(self->size.x >> 1);
                         self->left          = self->curXBoundaryL >> 16;
                         break;
+
                     case 2:
                         self->curXBoundaryL = 0;
                         self->newXBoundaryL = 0;
                         self->left          = 0;
                         break;
+
                     case 3:
                         self->newXBoundaryL = self->size.x >> 1;
                         self->curXBoundaryL = self->size.x >> 1;
@@ -335,20 +358,23 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'Q':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
+
                     case 1:
                         self->newYBoundaryT = -(self->size.y >> 1);
                         self->curYBoundaryT = -(self->size.y >> 1);
                         self->top           = self->curYBoundaryT >> 16;
                         break;
+
                     case 2:
                         self->curYBoundaryT = 0;
                         self->newYBoundaryT = 0;
                         self->top           = 0;
                         break;
+
                     case 3:
                         self->newYBoundaryT = self->size.y >> 1;
                         self->curYBoundaryT = self->size.y >> 1;
@@ -358,20 +384,23 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'R':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
+
                     case 1:
                         self->newXBoundaryR = -(self->size.x >> 1);
                         self->curXBoundaryR = -(self->size.x >> 1);
                         self->right         = self->curXBoundaryR >> 16;
                         break;
+
                     case 2:
                         self->curXBoundaryR = 0;
                         self->newXBoundaryR = 0;
                         self->right         = 0;
                         break;
+
                     case 3:
                         self->newXBoundaryR = self->size.x >> 1;
                         self->curXBoundaryR = self->size.x >> 1;
@@ -381,9 +410,9 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'S':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
                     case 1:
                         self->newYBoundaryB = -(self->size.y >> 1);
@@ -404,9 +433,9 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'T':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
                     case 1: self->newXBoundaryL = -(self->size.x >> 1); break;
                     case 2: self->newXBoundaryL = 0; break;
@@ -415,9 +444,9 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'U':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
                     case 1: self->newYBoundaryT = -(self->size.y >> 1); break;
                     case 2: self->newYBoundaryT = 0; break;
@@ -426,9 +455,9 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'V':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
                     case 1: self->newXBoundaryR = -(self->size.x >> 1); break;
                     case 2: self->newXBoundaryR = 0; break;
@@ -437,9 +466,9 @@ void LEDPanel_HandleCharacters(void)
                 break;
 
             case 'W':
-                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                subAction = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
-                switch (charID) {
+                switch (subAction) {
                     default: break;
                     case 1: self->newYBoundaryB = -(self->size.y >> 1); break;
                     case 2: self->newYBoundaryB = 0; break;
@@ -606,12 +635,26 @@ void LEDPanel_EditorDraw(void)
 
     drawPos.x -= 4 * 0x100000;
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         self->animatorText.frameID = text[i] - 'A';
 
         RSDK.DrawSprite(&self->animatorText, &drawPos, false);
 
         drawPos.x += 0x100000;
+    }
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        Hitbox hitbox;
+        hitbox.left   = -(self->size.x >> 17);
+        hitbox.right  = self->size.x >> 17;
+        hitbox.top    = -(self->size.y >> 17);
+        hitbox.bottom = self->size.y >> 17;
+
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &hitbox, FLIP_NONE, 0xFFFF00);
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 
@@ -620,7 +663,7 @@ void LEDPanel_EditorLoad(void) { LEDPanel->aniFrames = RSDK.LoadSpriteAnimation(
 
 void LEDPanel_Serialize(void)
 {
-    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, text, LEDPanel_TextCount, TextInfo);
-    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, seq, LEDPanel_RowCount, TextInfo);
+    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, text, LEDPANEL_TEXT_COUNT, TextInfo);
+    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, seq, LEDPANEL_ROW_COUNT, TextInfo);
     RSDK_EDITABLE_VAR(LEDPanel, VAR_VECTOR2, size);
 }

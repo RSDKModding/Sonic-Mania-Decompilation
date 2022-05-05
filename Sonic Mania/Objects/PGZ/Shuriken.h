@@ -39,7 +39,7 @@ void Shuriken_Update(void);
 void Shuriken_LateUpdate(void);
 void Shuriken_StaticUpdate(void);
 void Shuriken_Draw(void);
-void Shuriken_Create(void* data);
+void Shuriken_Create(void *data);
 void Shuriken_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Shuriken_EditorDraw(void);
@@ -53,7 +53,7 @@ void Shuriken_HandleSolidCollisions(void);
 
 // Shooter States
 void Shuriken_State_Setup(void);
-void Shuriken_State_WaitForActive(void);
+void Shuriken_State_AwaitActivate(void);
 void Shuriken_State_CheckPlayerInRange(void);
 void Shuriken_State_ShootDelay(void);
 void Shuriken_State_FireArrow(void);
@@ -69,4 +69,4 @@ void Shuriken_State_ArrowFall(void);
 void Shuriken_State_ArrowDebris(void);
 #endif
 
-#endif //!OBJ_SHURIKEN_H
+#endif //! OBJ_SHURIKEN_H

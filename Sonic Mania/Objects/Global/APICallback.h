@@ -11,9 +11,13 @@
 #define API_GetConfirmButtonFlip         API.GetConfirmButtonFlip
 #define API_UnlockAchievement            API.UnlockAchievement
 #define API_SetRichPresence              API.SetRichPresence
+#define API_LaunchManual                 API.LaunchManual
 #define API_LoadUserFile                 API.LoadUserFile
 #define API_SaveUserFile                 API.SaveUserFile
+#define API_GetNoSave()                  API.GetNoSave()
+#define API_SetNoSave(status)            API.SetNoSave(status)
 #define API_GetUserAuthStatus            API.GetUserAuthStatus
+#define API_ClearPrerollErrors           API.ClearPrerollErrors
 #define API_ControllerIDForInputID       RSDK.ControllerIDForInputID
 #define API_AssignControllerID           RSDK.AssignControllerID
 #define API_InputIDIsDisconnected        RSDK.InputIDIsDisconnected
@@ -30,9 +34,13 @@
 #define API_GetConfirmButtonFlip         APICallback_GetConfirmButtonFlip
 #define API_UnlockAchievement            APICallback_UnlockAchievement
 #define API_SetRichPresence              APICallback_SetRichPresence
+#define API_LaunchManual                 APICallback_LaunchManual
 #define API_LoadUserFile                 APICallback_LoadUserFile
 #define API_SaveUserFile                 APICallback_SaveUserFile
+#define API_GetNoSave()                  globals->noSave
+#define API_SetNoSave(status)            globals->noSave = status
 #define API_GetUserAuthStatus            APICallback_GetUserAuthStatus
+#define API_ClearPrerollErrors           APICallback_ClearPrerollErrors
 #define API_ControllerIDForInputID       APICallback_ControllerIDForInputID
 #define API_AssignControllerID           APICallback_AssignControllerID
 #define API_InputIDIsDisconnected        APICallback_InputIDIsDisconnected
@@ -43,46 +51,46 @@
 #define API_ReadLeaderboardEntry         APICallback_ReadLeaderboardEntry
 #endif
 
-//90% sure this is "DialogRunner" in plus/1.05
+// 90% sure this is "DialogRunner" in plus/1.05
 #if !RETRO_USE_PLUS
 // Object Class
 struct ObjectAPICallback {
     RSDK_OBJECT
-    int32(*LaunchManual)(void);
+    int32 (*LaunchManual)(void);
     int32 (*ExitGame)(void);
     void (*ClearAchievements)(void);
-    int32(*UnlockAchievement)(const char *);
-    int32(*SetRichPresence)(int32, TextInfo *);
-    int32 (*LoadUserFile)(const char *, void *, size_t, void(*)(int32));
-    int32 (*SaveUserFile)(const char *, void *, size_t, void(*)(int32));
+    int32 (*UnlockAchievement)(const char *);
+    int32 (*SetRichPresence)(int32, TextInfo *);
+    int32 (*LoadUserFile)(const char *, void *, size_t, void (*)(int32));
+    int32 (*SaveUserFile)(const char *, void *, size_t, void (*)(int32));
     void (*SaveSettingsINI)(void);
     int32 (*GetUserLanguage)(void);
     int32 (*GetConfirmButtonFlip)(void);
-    int32(*FetchLeaderboard)(uint8, uint8, int32, int32, int32, int32);
+    int32 (*FetchLeaderboard)(uint8, uint8, int32, int32, int32, int32);
     int32 (*LeaderboardStatus)(void);
     int32 (*LeaderboardEntryCount)(void);
     LeaderboardEntry *(*LeaderboardReadEntry)(int32);
-    void(*TrackActClear)(uint8, uint8, uint8, int32, int32, int32);
-    void(*TrackTAClear)(int32, int32, int32, int32);
+    void (*TrackActClear)(uint8, uint8, uint8, int32, int32, int32);
+    void (*TrackTAClear)(int32, int32, int32, int32);
     void (*TrackEnemyDefeat)(uint8 zoneID, uint8 actID, uint8 playerID, int32 entityX, int32 entityY);
-    void(*TrackGameProgress)(int32);
+    void (*TrackGameProgress)(int32);
     int32 (*ClearPrerollErrors)(void);
     int32 (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
-    int32(*GetUsername)(TextInfo *info);
+    int32 (*GetUsername)(TextInfo *info);
     int32 (*TryInitStorage)(void);
-    int32(*GetStorageStatus)(int32);
-    int32(*ControllerIDForInputID)(int32);
-    int32(*MostRecentActiveControllerID)(int32);
-    void(*AssignControllerID)(int32, int32);
+    int32 (*GetStorageStatus)(int32);
+    int32 (*ControllerIDForInputID)(int32);
+    int32 (*MostRecentActiveControllerID)(int32);
+    void (*AssignControllerID)(int32, int32);
     void (*ResetControllerAssignments)(void);
-    int32(*InputIDIsDisconnected)(int32);
+    int32 (*InputIDIsDisconnected)(int32);
     void *GetInputType;
     int32 (*GetControllerType)(int32 id, int32);
-    int32(*ShowSteamControllerOverlay)(int32);
+    int32 (*ShowSteamControllerOverlay)(int32);
     int32 saveStatus;
     bool32 authForbidden;
-    bool32 signedout;
+    bool32 signedOut;
     int32 prevLeaderboardEntry;
     int32 unused;
     int32 isAutoSaving;
@@ -110,7 +118,7 @@ struct EntityAPICallback {
     const char *fileName;
     void *fileBuffer;
     uint32 fileSize;
-    void(*fileCallback)(int32);
+    void (*fileCallback)(int32);
     int32 unused;
     int32 minVelocity;
     int32 inputID;
@@ -126,7 +134,7 @@ void APICallback_Update(void);
 void APICallback_LateUpdate(void);
 void APICallback_StaticUpdate(void);
 void APICallback_Draw(void);
-void APICallback_Create(void* data);
+void APICallback_Create(void *data);
 void APICallback_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void APICallback_EditorDraw(void);
@@ -158,7 +166,7 @@ int32 APICallback_GetUserAuthStatus(void);
 int32 APICallback_GetStorageStatus(void);
 int32 APICallback_GetSaveStatus(void);
 int32 APICallback_GetControllerType(int32 id);
-int32 APICallback_FetchLeaderboardData(uint8 a1, uint8 a2, int32 a3, int32 a4, int32 a5, bool32 isUser);
+int32 APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int32 playerID, int32 start, int32 end, bool32 isUser);
 void APICallback_ExitGame(void);
 void APICallback_ClearPrerollErrors(void);
 bool32 APICallback_CheckInputDisconnected(void);
@@ -188,4 +196,4 @@ bool32 APICallback_CheckUnreadNotifs(void);
 bool32 APICallback_NotifyAutosave(void);
 #endif
 
-#endif //!OBJ_APICALLBACK_H
+#endif //! OBJ_APICALLBACK_H

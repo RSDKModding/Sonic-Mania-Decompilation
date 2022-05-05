@@ -783,7 +783,7 @@ void HeavyKing_State_Leaping(void)
 
     if (self->bodyAnimator.frameID >= 5) {
         HeavyKing_HandleAnimators();
-        RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, HeavyKing->hitboxBody.bottom >> 15, true);
+        RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, HeavyKing->hitboxBody.bottom >> 15, true);
 
         if (!self->onGround) {
             int32 vel = self->velocity.y;
@@ -1072,7 +1072,7 @@ void HeavyKing_State_Destroyed(void)
         }
     }
 
-    RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, HeavyKing->hitboxBody.bottom >> 15, true);
+    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, HeavyKing->hitboxBody.bottom >> 15, true);
     if (!self->onGround) {
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;

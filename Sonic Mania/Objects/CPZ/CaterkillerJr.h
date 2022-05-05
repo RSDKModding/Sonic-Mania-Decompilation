@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define CaterkillerJr_SegmentCount (7)
+#define CATERKILLERJR_SEGMENT_COUNT (7)
 
 // Object Class
 struct ObjectCaterkillerJr {
@@ -22,9 +22,9 @@ struct EntityCaterkillerJr {
     Vector2 bodyVelocity[8];
     int32 bodyDirection[8];
     int32 bodyTimer[8];
-    int32 boundL;
-    int32 boundR;
-    Animator bodyAnimators[CaterkillerJr_SegmentCount];
+    int32 boundsL;
+    int32 boundsR;
+    Animator bodyAnimators[CATERKILLERJR_SEGMENT_COUNT];
     Animator smokePuffAnimators[3];
 };
 
@@ -36,7 +36,7 @@ void CaterkillerJr_Update(void);
 void CaterkillerJr_LateUpdate(void);
 void CaterkillerJr_StaticUpdate(void);
 void CaterkillerJr_Draw(void);
-void CaterkillerJr_Create(void* data);
+void CaterkillerJr_Create(void *data);
 void CaterkillerJr_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CaterkillerJr_EditorDraw(void);
@@ -52,4 +52,4 @@ void CaterkillerJr_SetupPositions(void);
 void CaterkillerJr_State_SetupVelocities(void);
 void CaterkillerJr_State_Move(void);
 
-#endif //!OBJ_CATERKILLERJR_H
+#endif //! OBJ_CATERKILLERJR_H

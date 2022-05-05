@@ -57,6 +57,7 @@ void UIDiorama_StaticUpdate(void)
 void UIDiorama_Draw(void)
 {
     RSDK_THIS(UIDiorama);
+
     if (self->timer <= 0) {
         if (SceneInfo->currentDrawGroup == self->drawOrder) {
             RSDK.DrawSprite(&self->maskAnimator, NULL, false);
@@ -82,10 +83,13 @@ void UIDiorama_Draw(void)
 void UIDiorama_Create(void *data)
 {
     RSDK_THIS(UIDiorama);
+
     if (!SceneInfo->inEditor) {
         self->lastDioramaID = -1;
+
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 0, &self->maskAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 1, &self->staticAnimator, true, 0);
+
         self->active    = ACTIVE_BOUNDS;
         self->visible   = true;
         self->drawOrder = 2;
@@ -94,9 +98,11 @@ void UIDiorama_Create(void *data)
 
 void UIDiorama_StageLoad(void)
 {
-    UIDiorama->active    = ACTIVE_ALWAYS;
-    UIDiorama->aniFrames = RSDK.LoadSpriteAnimation("UI/Diorama.bin", SCOPE_STAGE);
+    UIDiorama->active = ACTIVE_ALWAYS;
+
     RSDK.SetPaletteMask(0x00FF00);
+
+    UIDiorama->aniFrames       = RSDK.LoadSpriteAnimation("UI/Diorama.bin", SCOPE_STAGE);
     UIDiorama->capsuleFrames   = RSDK.LoadSpriteAnimation("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE);
     UIDiorama->sonicFrames     = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE);
     UIDiorama->tailsFrames     = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
@@ -108,7 +114,8 @@ void UIDiorama_StageLoad(void)
     UIDiorama->speedGateFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
     UIDiorama->bssSonicFrames  = RSDK.LoadSpriteAnimation("SpecialBS/Sonic.bin", SCOPE_STAGE);
     UIDiorama->bssFrames       = RSDK.LoadSpriteAnimation("SpecialBS/StageObjects.bin", SCOPE_STAGE);
-    UIDiorama->dioramaAlt      = UIDIORAMA_ALT_JOG;
+
+    UIDiorama->dioramaAlt = UIDIORAMA_ALT_JOG;
     RSDK.SetDebugValue("Diorama Alt", &UIDiorama->dioramaAlt, DTYPE_UINT8, 0, 2);
 }
 
@@ -127,6 +134,7 @@ void UIDiorama_ChangeDiorama(uint8 dioramaID)
     switch (dioramaID) {
         case UIDIORAMA_MANIAMODE:
             self->stateDraw = UIDiorama_Draw_ManiaMode;
+
             switch (UIDiorama->dioramaAlt) {
                 default:
                 case UIDIORAMA_ALT_RUN: self->state = UIDiorama_State_ManiaMode_Alt_Run; break;
@@ -134,34 +142,42 @@ void UIDiorama_ChangeDiorama(uint8 dioramaID)
                 case UIDIORAMA_ALT_LOOP: self->state = UIDiorama_State_ManiaMode_Alt_Loop; break;
             }
             break;
+
         case UIDIORAMA_PLUSUPSELL:
             self->stateDraw = UIDiorama_Draw_PlusUpsell;
             self->state     = UIDiorama_State_PlusUpsell;
             break;
+
         case UIDIORAMA_ENCOREMODE:
             self->stateDraw = UIDiorama_Draw_EncoreMode;
             self->state     = UIDiorama_State_EncoreMode;
             break;
+
         case UIDIORAMA_TIMEATTACK:
             self->stateDraw = UIDiorama_Draw_TimeAttack;
             self->state     = UIDiorama_State_TimeAttack;
             break;
+
         case UIDIORAMA_COMPETITION:
             self->stateDraw = UIDiorama_Draw_Competition;
             self->state     = UIDiorama_State_Competition;
             break;
+
         case UIDIORAMA_OPTIONS:
             self->stateDraw = UIDiorama_Draw_Options;
             self->state     = UIDiorama_State_Options;
             break;
+
         case UIDIORAMA_EXTRAS:
             self->stateDraw = UIDiorama_Draw_Extras;
             self->state     = UIDiorama_State_Extras;
             break;
+
         case UIDIORAMA_EXIT:
             self->stateDraw = UIDiorama_Draw_Exit;
             self->state     = UIDiorama_State_Exit;
             break;
+
         default: break;
     }
 }
@@ -437,10 +453,9 @@ void UIDiorama_State_Competition(void)
         info->tailsAngle = (info->tailsAngle + 1) & 0xFF;
 
         info->knuxPos.x = info->platformPos.x;
-        info->knuxPos.y = info->platformPos.y;
+        info->knuxPos.y = info->platformPos.y - 0x180000;
         if (API.CheckDLC(DLC_PLUS))
             info->knuxPos.x -= 0x100000;
-        info->knuxPos.y -= 0x180000;
 
         info->rayPos.x = self->position.x + 0x360000;
         info->rayPos.y = self->position.y - 0x350000;
@@ -550,6 +565,7 @@ void UIDiorama_State_Exit(void)
             info->sonicAnimator.loopIndex  = 14;
             info->sonicAnimator.frameCount = 15;
         }
+
         if (info->sonicAnimator.frameID == 14 && !info->processVelocity && !info->isOffScreen) {
             info->processVelocity = true;
             info->sonicVelocity.y = -0x40000;
@@ -560,11 +576,13 @@ void UIDiorama_State_Exit(void)
             info->sonicPos.x += info->sonicVelocity.x;
             info->sonicPos.y += info->sonicVelocity.y;
             info->sonicVelocity.y += 0x3800;
+
             if (info->sonicPos.y > 0x800000) {
                 info->processVelocity = false;
                 info->isOffScreen     = true;
             }
         }
+
         RSDK.ProcessAnimation(&info->sonicAnimator);
     }
 }
@@ -639,18 +657,12 @@ void UIDiorama_Draw_PlusUpsell(void)
         drawPos.y += info->plusPos.y;
         RSDK.DrawSprite(&info->plusAnimator, &drawPos, false);
 
-        color rectColor = 0x000000;
-        if (info->showFlash) {
-            rectColor = 0x01D870;
-        }
-        else {
-            rectColor = 0xF0C801;
-        }
-        RSDK.DrawRect(self->dioramaPos.x, self->dioramaPos.y, self->dioramaSize.x, self->dioramaSize.y, rectColor, 255, INK_MASKED, false);
+        color rectColor = info->showFlash ? 0x01D870 : 0xF0C801;
+        RSDK.DrawRect(self->dioramaPos.x, self->dioramaPos.y, self->dioramaSize.x, self->dioramaSize.y, rectColor, 0xFF, INK_MASKED, false);
     }
     else {
         self->inkEffect = INK_ADD;
-        self->alpha     = 255;
+        self->alpha     = 0xFF;
         if (info->showFlash) {
             drawPos.x = self->position.x + 0x500000;
             drawPos.y = self->position.y + 0x2E0000;
@@ -672,9 +684,9 @@ void UIDiorama_Draw_PlusUpsell(void)
         for (int32 i = 0; i < lineCount + 1; ++i) {
             int32 start = 0;
             int32 end   = 0;
-            if (i > 0) {
+            if (i > 0)
                 start = length[i] + 1;
-            }
+
             if (i >= lineCount)
                 end = self->texts[0].length;
             else
@@ -682,7 +694,7 @@ void UIDiorama_Draw_PlusUpsell(void)
 
             int32 width = -0x8000 * RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->texts[0], start, end, 0);
             drawPos.x += width;
-            RSDK.DrawText(&info->textAnimator, &drawPos, &self->texts[0], start, end, ALIGN_LEFT, 0, 0, 0, false);
+            RSDK.DrawText(&info->textAnimator, &drawPos, &self->texts[0], start, end, ALIGN_LEFT, 0, NULL, NULL, false);
 
             drawPos.x -= width;
             drawPos.y += 0x120000;
@@ -919,8 +931,8 @@ void UIDiorama_Draw_Options(void)
 void UIDiorama_Draw_Extras(void)
 {
     RSDK_THIS(UIDiorama);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     // Using this makes these states FAR more readable
     UIDiorama_StateInfo_Extras *info = (UIDiorama_StateInfo_Extras *)self->values;
 
@@ -944,8 +956,8 @@ void UIDiorama_Draw_Extras(void)
 void UIDiorama_Draw_Exit(void)
 {
     RSDK_THIS(UIDiorama);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     // Using this makes these states FAR more readable
     UIDiorama_StateInfo_Exit *info = (UIDiorama_StateInfo_Exit *)self->values;
 
@@ -968,6 +980,7 @@ void UIDiorama_Draw_Exit(void)
 void UIDiorama_EditorDraw(void)
 {
     RSDK_THIS(UIDiorama);
+
     RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 0, &self->maskAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 1, &self->staticAnimator, true, 0);
 

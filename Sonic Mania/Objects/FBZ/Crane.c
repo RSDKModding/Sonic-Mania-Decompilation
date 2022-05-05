@@ -12,7 +12,9 @@ ObjectCrane *Crane;
 void Crane_Update(void)
 {
     RSDK_THIS(Crane);
+
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->frontAnimator);
     RSDK.ProcessAnimation(&self->backAnimator);
 }
@@ -27,9 +29,10 @@ void Crane_StaticUpdate(void)
 void Crane_Draw(void)
 {
     RSDK_THIS(Crane);
+
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
         SpriteFrame *frame = RSDK.GetFrame(Crane->aniFrames, 4, 0);
-        int32 height         = (self->position.y - self->startPos.y) >> 16;
+        int32 height       = (self->position.y - self->startPos.y) >> 16;
         frame->sprY        = 230 - height;
         frame->height      = height;
         frame->pivotY      = -16 - height;
@@ -44,6 +47,7 @@ void Crane_Draw(void)
 void Crane_Create(void *data)
 {
     RSDK_THIS(Crane);
+
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
@@ -52,7 +56,9 @@ void Crane_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->drawFX        = FX_FLIP;
+
     // Frame 3???? that doesn't exist
+    // Note: it *does* for anim 0 & 1 though, likely where the cause stems from
     RSDK.SetSpriteAnimation(Crane->aniFrames, 2, &self->frontAnimator, true, 3);
     RSDK.SetSpriteAnimation(Crane->aniFrames, 3, &self->backAnimator, true, 3);
     RSDK.SetSpriteAnimation(Crane->aniFrames, 4, &self->chainAnimator, true, 0);
@@ -61,27 +67,34 @@ void Crane_Create(void *data)
 
 void Crane_StageLoad(void)
 {
-    Crane->aniFrames      = RSDK.LoadSpriteAnimation("FBZ/Crane.bin", SCOPE_STAGE);
-    Crane->hitbox1.left   = -8;
-    Crane->hitbox1.top    = -8;
-    Crane->hitbox1.right  = 8;
-    Crane->hitbox1.bottom = 8;
-    Crane->hitbox3.left   = -8;
-    Crane->hitbox3.top    = 0;
-    Crane->hitbox3.right  = 8;
-    Crane->hitbox3.bottom = 128;
-    Crane->hitbox2.left   = -8;
-    Crane->hitbox2.top    = 0;
-    Crane->hitbox2.right  = 8;
-    Crane->hitbox2.bottom = 16;
-    Crane->active         = ACTIVE_ALWAYS;
-    Crane->sfxGrab        = RSDK.GetSfx("Global/Grab.wav");
+    Crane->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Crane.bin", SCOPE_STAGE);
+
+    Crane->hitboxUnused.left   = -8;
+    Crane->hitboxUnused.top    = -8;
+    Crane->hitboxUnused.right  = 8;
+    Crane->hitboxUnused.bottom = 8;
+
+    Crane->hitboxRange.left   = -8;
+    Crane->hitboxRange.top    = 0;
+    Crane->hitboxRange.right  = 8;
+    Crane->hitboxRange.bottom = 128;
+
+    Crane->hitboxGrab.left   = -8;
+    Crane->hitboxGrab.top    = 0;
+    Crane->hitboxGrab.right  = 8;
+    Crane->hitboxGrab.bottom = 16;
+
+    Crane->active = ACTIVE_ALWAYS;
+
+    Crane->sfxGrab = RSDK.GetSfx("Global/Grab.wav");
+
     DEBUGMODE_ADD_OBJ(Crane);
 }
 
 void Crane_DebugSpawn(void)
 {
     RSDK_THIS(Crane);
+
     EntityCrane *crane = CREATE_ENTITY(Crane, NULL, self->position.x, self->position.y);
     crane->direction   = self->direction;
     crane->startDir    = self->direction;
@@ -100,14 +113,14 @@ void Crane_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (!self->grabbedPlayer) {
-            if ((self->playerType || !player->sidekick) && (self->playerType != 1 || player->sidekick)) {
-                if (Player_CheckCollisionTouch(player, self, &Crane->hitbox2)) {
+            if ((self->playerType != CRANE_PLAYER1_ONLY || !player->sidekick) && (self->playerType != CRANE_PLAYER2_ONLY || player->sidekick)) {
+                if (Player_CheckCollisionTouch(player, self, &Crane->hitboxGrab)) {
                     RSDK.PlaySfx(Crane->sfxGrab, false, 255);
                     self->state       = Crane_State_RiseUp;
                     self->isPermanent = true;
                     RSDK.SetSpriteAnimation(Crane->aniFrames, 0, &self->frontAnimator, true, 0);
                     RSDK.SetSpriteAnimation(Crane->aniFrames, 1, &self->backAnimator, true, 0);
-                    self->grabbedPlayer   = (Entity *)player;
+                    self->grabbedPlayer     = player;
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
                     player->groundVel       = 0;
@@ -127,9 +140,10 @@ void Crane_HandlePlayerInteractions(void)
 void Crane_CheckOffScreen(void)
 {
     RSDK_THIS(Crane);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
-        int32 x              = self->position.x;
-        int32 y              = self->position.y;
+        int32 x          = self->position.x;
+        int32 y          = self->position.y;
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
         if (RSDK.CheckOnScreen(self, &self->updateRange)) {
@@ -138,7 +152,7 @@ void Crane_CheckOffScreen(void)
         }
         else {
             self->grabbedPlayer = NULL;
-            self->timer2        = 0;
+            self->delay         = 0;
             self->timer         = 0;
             self->direction     = self->startDir;
             self->visible       = false;
@@ -150,6 +164,7 @@ void Crane_CheckOffScreen(void)
 void Crane_State_CheckOffScreen(void)
 {
     RSDK_THIS(Crane);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->state = Crane_State_Setup;
         Crane_Create(NULL);
@@ -169,6 +184,7 @@ void Crane_State_Setup(void)
         self->position.y += 0x400000;
         self->timer = -1;
         self->state = Crane_State_CheckGrab;
+
         Crane_HandlePlayerInteractions();
         Crane_CheckOffScreen();
     }
@@ -177,21 +193,25 @@ void Crane_State_Setup(void)
 void Crane_State_CheckForPlayers(void)
 {
     RSDK_THIS(Crane);
+
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Crane->hitbox3)) {
+        if (Player_CheckCollisionTouch(player, self, &Crane->hitboxRange)) {
             self->timer = 32;
             self->state = Crane_State_LowerToGrab;
         }
     }
+
     Crane_CheckOffScreen();
 }
 
 void Crane_State_LowerToGrab(void)
 {
     RSDK_THIS(Crane);
+
     Crane_HandlePlayerInteractions();
     Crane_CheckOffScreen();
+
     --self->timer;
     if (self->state == Crane_State_LowerToGrab) {
         if (self->timer >= 0)
@@ -212,12 +232,13 @@ void Crane_State_RiseUp(void)
     RSDK_THIS(Crane);
     if (++self->timer < 32) {
         self->position.y -= 0x20000;
-        EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
+
+        EntityPlayer *player = self->grabbedPlayer;
         if (player) {
             if (Player_CheckValidState(player)) {
                 player->animator.speed = 0;
-                player->position.x                    = self->position.x;
-                player->position.y                    = self->position.y;
+                player->position.x     = self->position.x;
+                player->position.y     = self->position.y;
                 if (self->direction) {
                     player->position.x += 0x20000;
                     player->position.y += 0xE0000;
@@ -233,11 +254,12 @@ void Crane_State_RiseUp(void)
         }
     }
     else {
-        self->timer2     = 1;
+        self->delay      = 1;
         self->timer      = 16;
         self->velocity.x = 0;
         self->state      = Crane_State_ToDest1stHalf;
     }
+
     Crane_CheckOffScreen();
 }
 
@@ -257,12 +279,12 @@ void Crane_State_ToDest1stHalf(void)
             self->state = Crane_State_ToDest2ndHalf;
     }
 
-    EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
+    EntityPlayer *player = self->grabbedPlayer;
     if (player) {
         if (Player_CheckValidState(player)) {
             player->animator.speed = 0;
-            player->position.x                    = self->position.x;
-            player->position.y                    = self->position.y;
+            player->position.x     = self->position.x;
+            player->position.y     = self->position.y;
             if (self->direction) {
                 player->position.x += 0x20000;
                 player->position.y += 0xE0000;
@@ -276,6 +298,7 @@ void Crane_State_ToDest1stHalf(void)
             self->grabbedPlayer = NULL;
         }
     }
+
     Crane_CheckOffScreen();
 }
 
@@ -283,12 +306,14 @@ void Crane_State_ToDest2ndHalf(void)
 {
     RSDK_THIS(Crane);
 
-    EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
+    EntityPlayer *player = self->grabbedPlayer;
+
     self->velocity.x -= 0x1000;
     if (self->direction == FLIP_NONE)
         self->position.x += self->velocity.x;
     else
         self->position.x -= self->velocity.x;
+
     if (self->velocity.x <= 0) {
         if (player) {
             if (Player_CheckValidState(player))
@@ -296,9 +321,10 @@ void Crane_State_ToDest2ndHalf(void)
             else
                 self->grabbedPlayer = NULL;
         }
+
         RSDK.SetSpriteAnimation(Crane->aniFrames, 2, &self->frontAnimator, true, 0);
         RSDK.SetSpriteAnimation(Crane->aniFrames, 3, &self->backAnimator, true, 0);
-        self->timer2      = 30;
+        self->delay       = 30;
         self->state       = Crane_State_DropDelay;
         self->isPermanent = false;
     }
@@ -306,8 +332,8 @@ void Crane_State_ToDest2ndHalf(void)
     if (player) {
         if (Player_CheckValidState(player)) {
             player->animator.speed = 0;
-            player->position.x                    = self->position.x;
-            player->position.y                    = self->position.y;
+            player->position.x     = self->position.x;
+            player->position.y     = self->position.y;
             if (self->direction) {
                 player->position.x += 0x20000;
                 player->position.y += 0xE0000;
@@ -321,14 +347,17 @@ void Crane_State_ToDest2ndHalf(void)
             self->grabbedPlayer = NULL;
         }
     }
+
     Crane_CheckOffScreen();
 }
 
 void Crane_State_DropDelay(void)
 {
     RSDK_THIS(Crane);
-    if (--self->timer2 <= 0)
+
+    if (--self->delay <= 0)
         self->state = Crane_State_ToStart1stHalf;
+
     Crane_HandlePlayerInteractions();
     Crane_CheckOffScreen();
 }
@@ -348,6 +377,7 @@ void Crane_State_ToStart1stHalf(void)
         if (self->position.x <= self->startPos.x + (self->distance << 15))
             self->state = Crane_State_ToStart2ndHalf;
     }
+
     Crane_CheckOffScreen();
 }
 
@@ -360,6 +390,7 @@ void Crane_State_ToStart2ndHalf(void)
         self->position.x -= self->velocity.x;
     else
         self->position.x += self->velocity.x;
+
     if (self->velocity.x >= 0) {
         if (self->startType) {
             self->timer         = 32;
@@ -371,6 +402,7 @@ void Crane_State_ToStart2ndHalf(void)
             self->grabbedPlayer = NULL;
         }
     }
+
     Crane_CheckOffScreen();
 }
 
@@ -378,6 +410,7 @@ void Crane_State_ToStart2ndHalf(void)
 void Crane_EditorDraw(void)
 {
     RSDK_THIS(Crane);
+
     RSDK.SetSpriteAnimation(Crane->aniFrames, 2, &self->frontAnimator, true, 2);
     RSDK.SetSpriteAnimation(Crane->aniFrames, 3, &self->backAnimator, true, 2);
     RSDK.SetSpriteAnimation(Crane->aniFrames, 4, &self->chainAnimator, true, 0);
@@ -393,7 +426,7 @@ void Crane_EditorDraw(void)
     if (showGizmos()) {
         self->inkEffect = INK_BLEND;
 
-        uint8 mode = 0;
+        uint8 mode       = 0;
         self->velocity.x = 0;
         while (true) {
             switch (mode) {
@@ -411,6 +444,7 @@ void Crane_EditorDraw(void)
                             mode = 1;
                     }
                     break;
+
                 case 1:
                     self->velocity.x -= 0x1000;
                     if (self->direction == FLIP_NONE)
@@ -418,10 +452,11 @@ void Crane_EditorDraw(void)
                     else
                         drawPos.x -= self->velocity.x;
 
-                    if (self->velocity.x <= 0) 
+                    if (self->velocity.x <= 0)
                         mode = 2;
                     break;
             }
+
             if (mode > 1)
                 break;
         }
@@ -430,7 +465,7 @@ void Crane_EditorDraw(void)
         RSDK.DrawSprite(&self->backAnimator, &drawPos, false);
         RSDK.DrawSprite(&self->frontAnimator, &drawPos, false);
 
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, drawPos.x, drawPos.y, 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, drawPos.x, drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
         self->inkEffect = INK_NONE;
     }
@@ -441,8 +476,8 @@ void Crane_EditorLoad(void)
     Crane->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Crane.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Crane, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 
     RSDK_ACTIVE_VAR(Crane, startType);
     RSDK_ENUM_VAR("Up", CRANE_START_UP);

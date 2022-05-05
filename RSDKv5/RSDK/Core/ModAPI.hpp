@@ -162,6 +162,9 @@ bool32 ForeachConfigCategory(TextInfo *textInfo);
 
 void Super(int32 objectID, ModSuper callback, void *data);
 
+#ifdef GetObject
+#undef GetObject // winAPI so annoying
+#endif
 Object *GetObject(const char *name);
 
 void RegisterAchievement(const char *identifier, const char *name, const char *desc);

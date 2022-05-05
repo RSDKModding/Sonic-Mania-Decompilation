@@ -7,7 +7,7 @@ typedef enum {
     BREAKWALL_TYPE_SIDES,
     BREAKWALL_TYPE_TOP,
     BREAKWALL_TYPE_TOPCHUNK,
-    BREAKWALL_TYPE_TOPCHUNK_HIGH,
+    BREAKWALL_TYPE_TOPCHUNK_B,
     BREAKWALL_TYPE_BOTTOMCHUNK,
     BREAKWALL_TYPE_BOTTOMFULL
 } BreakableWallTypes;
@@ -87,8 +87,8 @@ void BreakableWall_State_Top(void);
 void BreakableWall_State_TopChunks(void);
 
 // Draw States
+void BreakableWall_Draw_Outline_Sides(void);
 void BreakableWall_Draw_Outline(void);
-void BreakableWall_Draw_Outline2(void);
 void BreakableWall_Draw_Tile(void);
 
 // Breaking
@@ -98,9 +98,9 @@ void BreakableWall_HandleSidesBreak(void);
 void BreakableWall_HandleBottomBreak_Chunks(void);
 void BreakableWall_HandleBottomBreak_All(void);
 void BreakableWall_HandleBlockBreak_V(void);
-void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *self, uint8 flip);
+void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction);
 
 // Misc
-void BreakableWall_GiveScoreBonus(void *plr);
+void BreakableWall_GiveScoreBonus(EntityPlayer *player);
 
 #endif //! OBJ_BREAKABLEWALL_H

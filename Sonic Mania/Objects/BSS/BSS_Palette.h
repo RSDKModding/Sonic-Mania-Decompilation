@@ -34,7 +34,7 @@ void BSS_Palette_Update(void);
 void BSS_Palette_LateUpdate(void);
 void BSS_Palette_StaticUpdate(void);
 void BSS_Palette_Draw(void);
-void BSS_Palette_Create(void* data);
+void BSS_Palette_Create(void *data);
 void BSS_Palette_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BSS_Palette_EditorDraw(void);
@@ -44,5 +44,4 @@ void BSS_Palette_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_BSS_PALETTE_H
+#endif //! OBJ_BSS_PALETTE_H

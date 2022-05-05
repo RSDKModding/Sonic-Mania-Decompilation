@@ -15,21 +15,22 @@ void Soundboard_LateUpdate(void) {}
 
 void Soundboard_StaticUpdate(void)
 {
-    for (int32 s = 0; s < maxVal(Soundboard->sfxCount, Soundboard_SFXLimit); ++s) {
+    for (int32 s = 0; s < maxVal(Soundboard->sfxCount, SOUNDBOARD_SFX_COUNT); ++s) {
         bool32 shouldStopSfx = true;
+
         if (Soundboard->sfxCheckCallback[s] && SceneInfo->state == ENGINESTATE_REGULAR) {
             if (Soundboard->sfxCheckCallback[s]()) {
                 shouldStopSfx                  = false;
                 Soundboard->sfxFadeOutTimer[s] = 0;
+
                 if (!Soundboard->sfxIsPlaying[s]) {
                     Soundboard->sfxChannel[s]      = RSDK.PlaySfx(Soundboard->sfxList[s], Soundboard->sfxLoopPoint[s], 255);
                     Soundboard->sfxIsPlaying[s]    = true;
                     Soundboard->sfxPlayingTimer[s] = 0;
                 }
 
-                if (Soundboard->sfxFadeOutDuration[s] > 0) {
+                if (Soundboard->sfxFadeOutDuration[s] > 0)
                     RSDK.SetChannelAttributes(Soundboard->sfxChannel[s], 1.0, 0.0, 1.0);
-                }
 
                 if (Soundboard->sfxUpdateCallback[s]) {
                     Soundboard->sfxUpdateCallback[s](s);
@@ -41,8 +42,10 @@ void Soundboard_StaticUpdate(void)
         if (shouldStopSfx) {
             if (Soundboard->sfxIsPlaying[s]) {
                 Soundboard->sfxFadeOutTimer[s] = 0;
+
                 if (!Soundboard->sfxFadeOutDuration[s])
                     RSDK.StopSfx(Soundboard->sfxList[s]);
+
                 Soundboard->sfxIsPlaying[s]    = false;
                 Soundboard->sfxPlayingTimer[s] = 0;
             }
@@ -68,7 +71,8 @@ void Soundboard_StageLoad(void)
 {
     Soundboard->active   = ACTIVE_ALWAYS;
     Soundboard->sfxCount = 0;
-    for (int32 i = 0; i < Soundboard_SFXLimit; ++i) {
+
+    for (int32 i = 0; i < SOUNDBOARD_SFX_COUNT; ++i) {
         Soundboard->sfxList[i]            = 0;
         Soundboard->sfxLoopPoint[i]       = 0;
         Soundboard->sfxCheckCallback[i]   = NULL;
@@ -83,8 +87,9 @@ uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCa
 {
     if (!Soundboard)
         return -1;
-    if (Soundboard->sfxCount >= Soundboard_SFXLimit)
+    if (Soundboard->sfxCount >= SOUNDBOARD_SFX_COUNT)
         return -1;
+
     int32 sfxID = Soundboard->sfxCount;
 
     Soundboard->sfxList[sfxID]            = RSDK.GetSfx(sfxName);
@@ -93,6 +98,7 @@ uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCa
     Soundboard->sfxUpdateCallback[sfxID]  = updateCallback;
     Soundboard->sfxFadeOutDuration[sfxID] = 0;
     RSDK.StopSfx(Soundboard->sfxList[sfxID]);
+
     ++Soundboard->sfxCount;
     return sfxID;
 }

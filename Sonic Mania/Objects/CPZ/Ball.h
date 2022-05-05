@@ -25,7 +25,7 @@ struct EntityBall {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    Entity *playerPtr;
+    EntityPlayer *targetPlayer;
     Vector2 startPos;
     Animator animator;
 };
@@ -38,7 +38,7 @@ void Ball_Update(void);
 void Ball_LateUpdate(void);
 void Ball_StaticUpdate(void);
 void Ball_Draw(void);
-void Ball_Create(void* data);
+void Ball_Create(void *data);
 void Ball_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Ball_EditorDraw(void);
@@ -55,11 +55,11 @@ void Ball_CheckOffScreen(void);
 void Ball_SpawnSplashes(void);
 
 void Ball_State_Setup(void);
-void Ball_State_LookForPlayer(void);
+void Ball_State_AwaitPlayer(void);
 void Ball_State_TargetingPlayer(void);
-void Ball_State_Chemical(void);
+void Ball_State_ChemicalDrop(void);
 void Ball_State_Splash(void);
 void Ball_State_StraightMovement(void);
 void Ball_State_Spawner(void);
 
-#endif //!OBJ_BALL_H
+#endif //! OBJ_BALL_H

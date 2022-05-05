@@ -12,7 +12,9 @@ ObjectTitleSonic *TitleSonic;
 void TitleSonic_Update(void)
 {
     RSDK_THIS(TitleSonic);
+
     RSDK.ProcessAnimation(&self->animatorSonic);
+
     if (self->animatorSonic.frameID == self->animatorSonic.frameCount - 1)
         RSDK.ProcessAnimation(&self->animatorFinger);
 }
@@ -24,9 +26,12 @@ void TitleSonic_StaticUpdate(void) {}
 void TitleSonic_Draw(void)
 {
     RSDK_THIS(TitleSonic);
+
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, 160);
     RSDK.DrawSprite(&self->animatorSonic, NULL, false);
+
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+
     if (self->animatorSonic.frameID == self->animatorSonic.frameCount - 1)
         RSDK.DrawSprite(&self->animatorFinger, NULL, false);
 }
@@ -34,8 +39,10 @@ void TitleSonic_Draw(void)
 void TitleSonic_Create(void *data)
 {
     RSDK_THIS(TitleSonic);
+
     RSDK.SetSpriteAnimation(TitleSonic->aniFrames, 0, &self->animatorSonic, true, 0);
     RSDK.SetSpriteAnimation(TitleSonic->aniFrames, 1, &self->animatorFinger, true, 0);
+
     if (!SceneInfo->inEditor) {
         self->visible   = false;
         self->active    = ACTIVE_NEVER;
@@ -49,6 +56,7 @@ void TitleSonic_StageLoad(void) { TitleSonic->aniFrames = RSDK.LoadSpriteAnimati
 void TitleSonic_EditorDraw(void)
 {
     RSDK_THIS(TitleSonic);
+
     self->animatorSonic.frameID = self->animatorSonic.frameCount - 1;
 
     RSDK.DrawSprite(&self->animatorSonic, NULL, false);

@@ -3,34 +3,34 @@
 
 #include "SonicMania.h"
 
-#define LEDPanel_TextCount (8)
-#define LEDPanel_RowCount  (2)
+#define LEDPANEL_TEXT_COUNT (8)
+#define LEDPANEL_ROW_COUNT  (2)
 
 // Object Class
 struct ObjectLEDPanel {
     RSDK_OBJECT
     uint16 aniFrames;
     TextInfo text;
-    color storedColor;
+    color panelColor;
 };
 
 // Entity Class
 struct EntityLEDPanel {
     RSDK_ENTITY
-    TextInfo text[LEDPanel_TextCount];
-    TextInfo seq[LEDPanel_RowCount];
-    TextInfo *seqPtrs[LEDPanel_RowCount];
-    int32 rowSeqPos[LEDPanel_RowCount];
-    StateMachine(stateRow[LEDPanel_RowCount]);
-    TextInfo *textPtrs[LEDPanel_TextCount];
-    TextInfo activeText[LEDPanel_RowCount];
-    Vector2 textMovePos[LEDPanel_RowCount];
-    Vector2 textPos[LEDPanel_RowCount];
-    Vector2 textTargetPos[LEDPanel_RowCount];
-    Vector2 textMoveVel[LEDPanel_RowCount];
-    int32 activeTextSize[LEDPanel_RowCount];
-    int32 activeTextLen[LEDPanel_RowCount];
-    bool32 rowSignaled[LEDPanel_RowCount];
+    TextInfo text[LEDPANEL_TEXT_COUNT];
+    TextInfo seq[LEDPANEL_ROW_COUNT];
+    TextInfo *seqPtrs[LEDPANEL_ROW_COUNT];
+    int32 rowSeqPos[LEDPANEL_ROW_COUNT];
+    StateMachine(stateRow[LEDPANEL_ROW_COUNT]);
+    TextInfo *textPtrs[LEDPANEL_TEXT_COUNT];
+    TextInfo activeText[LEDPANEL_ROW_COUNT];
+    Vector2 textMovePos[LEDPANEL_ROW_COUNT];
+    Vector2 textPos[LEDPANEL_ROW_COUNT];
+    Vector2 textTargetPos[LEDPANEL_ROW_COUNT];
+    Vector2 textMoveVel[LEDPANEL_ROW_COUNT];
+    int32 activeTextSize[LEDPANEL_ROW_COUNT];
+    int32 activeTextLen[LEDPANEL_ROW_COUNT];
+    bool32 rowSignaled[LEDPANEL_ROW_COUNT];
     Vector2 size;
     int32 left;
     int32 right;
@@ -45,7 +45,7 @@ struct EntityLEDPanel {
     int32 newXBoundaryR;
     int32 newYBoundaryB;
     Vector2 boundsMoveSpeed;
-    int32 rowDelay[LEDPanel_RowCount];
+    int32 rowDelay[LEDPANEL_ROW_COUNT];
     uint8 row;
     Animator animatorText;
 };
@@ -58,7 +58,7 @@ void LEDPanel_Update(void);
 void LEDPanel_LateUpdate(void);
 void LEDPanel_StaticUpdate(void);
 void LEDPanel_Draw(void);
-void LEDPanel_Create(void* data);
+void LEDPanel_Create(void *data);
 void LEDPanel_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LEDPanel_EditorDraw(void);
@@ -76,4 +76,4 @@ void LEDPanel_StateText_Delay(void);
 void LEDPanel_StateText_ChangeClipBounds(void);
 void LEDPanel_StateText_WaitForSignal(void);
 
-#endif //!OBJ_LEDPANEL_H
+#endif //! OBJ_LEDPANEL_H

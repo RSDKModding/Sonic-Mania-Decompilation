@@ -191,7 +191,7 @@ void Batbrain_State_FlyToCeiling(void)
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x1800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, 0, -0xC0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, 0, -0xC0000, true)) {
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->state      = Batbrain_State_CheckPlayerInRange;

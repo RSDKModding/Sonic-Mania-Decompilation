@@ -36,7 +36,7 @@ void FrostThrower_Update(void);
 void FrostThrower_LateUpdate(void);
 void FrostThrower_StaticUpdate(void);
 void FrostThrower_Draw(void);
-void FrostThrower_Create(void* data);
+void FrostThrower_Create(void *data);
 void FrostThrower_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FrostThrower_EditorDraw(void);
@@ -49,8 +49,8 @@ void FrostThrower_DrawGustFX(void);
 void FrostThrower_CheckPlayerCollisions(void);
 void FrostThrower_HandleGustCount(void);
 void FrostThrower_HandleGustPos(void);
-void FrostThrower_State_IntervalWait(void);
+void FrostThrower_State_AwaitInterval(void);
 void FrostThrower_State_Dispensing(void);
 void FrostThrower_State_StopDispensing(void);
 
-#endif //!OBJ_FROSTTHROWER_H
+#endif //! OBJ_FROSTTHROWER_H

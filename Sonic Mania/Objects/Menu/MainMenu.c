@@ -16,11 +16,13 @@ void MainMenu_LateUpdate(void) {}
 
 void MainMenu_StaticUpdate(void)
 {
-    EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
+    EntityUIControl *control = MainMenu->menuControl;
+
     if (control && control->active) {
-        EntityUIDiorama *diorama     = (EntityUIDiorama *)MainMenu->dioramaPtr;
-        MainMenu->promptPtr->visible = (((EntityUIShifter *)control->shifter)->shiftOffset.y & 0xFFFF0000) > -0x700000;
-        EntityUIButton *button       = control->buttons[control->lastButtonID];
+        EntityUIDiorama *diorama         = MainMenu->diorama;
+        MainMenu->confirmPrompt->visible = (control->shifter->shiftOffset.y & 0xFFFF0000) > -0x700000;
+        EntityUIButton *button           = control->buttons[control->lastButtonID];
+
         if (button) {
             switch (button->frameID) {
                 case 0: diorama->dioramaID = UIDIORAMA_MANIAMODE; break;
@@ -50,103 +52,112 @@ void MainMenu_Initialize(void)
 {
     TextInfo text;
     INIT_TEXTINFO(text);
+
     foreach_all(UIControl, control)
     {
         RSDK.PrependText(&text, "Main Menu");
         if (RSDK.StringCompare(&text, &control->tag, false)) {
-            MainMenu->menuControlPtr = control;
-            control->backPressCB     = MainMenu_ReturnToTitleOption;
+            MainMenu->menuControl = control;
+            control->backPressCB  = MainMenu_BackPressCB_ReturnToTitle;
         }
     }
 
-    EntityUIControl *menuControl = (EntityUIControl *)MainMenu->menuControlPtr;
+    EntityUIControl *menuControl = MainMenu->menuControl;
 
     foreach_all(UIButtonPrompt, prompt)
     {
         int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
         int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
+
         Hitbox hitbox;
         hitbox.right  = (menuControl->size.x >> 17);
         hitbox.left   = -(menuControl->size.x >> 17);
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
+
         if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && !prompt->buttonID)
-            MainMenu->promptPtr = prompt;
+            MainMenu->confirmPrompt = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
     {
         int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
         int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
+
         Hitbox hitbox;
         hitbox.right  = (menuControl->size.x >> 17);
         hitbox.left   = -(menuControl->size.x >> 17);
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
+
         if (MathHelpers_PointInHitbox(x, y, diorama->position.x, diorama->position.y, FLIP_NONE, &hitbox)) {
-            MainMenu->dioramaPtr = diorama;
-            diorama->parent      = MainMenu->menuControlPtr;
+            MainMenu->diorama = diorama;
+            diorama->parent   = MainMenu->menuControl;
         }
     }
 
 #if RETRO_USE_PLUS
-    int32 button1Frame       = 1;
-    int32 button2Frame       = 2;
-    int32 button3Frame       = 3;
-    bool32 button3StopMus    = false;
-    int32 button4Frame       = 4;
-    int32 button5Frame       = 6;
-    bool32 button5Transition = false;
+    int32 button1Frame = 1; // Time Attack
+    int32 button2Frame = 2; // Competition
+    int32 button3Frame = 3; // Options
+    int32 button4Frame = 4; // Extras
+    int32 button5Frame = 6; // Buy Plus
+
+    bool32 button3StopMus    = false; // Options button does NOT stop music
+    bool32 button5Transition = false; // Buy Plus Does NOT do a transition
+
     if (API.CheckDLC(DLC_PLUS)) {
-        button1Frame      = 5;
-        button2Frame      = 1;
-        button3Frame      = 2;
-        button4Frame      = 3;
-        button5Frame      = 4;
-        button3StopMus    = true;
-        button5Transition = true;
+        button1Frame = 5; // Encore Mode
+        button2Frame = 1; // Time Attack
+        button3Frame = 2; // Competition
+        button4Frame = 3; // Options
+        button5Frame = 4; // Extras
+
+        button3StopMus    = true; // Competition button stops music
+        button5Transition = true; // Extras Does a transition
     }
 
-    EntityUIButton *button = menuControl->buttons[0];
-    button->frameID        = 0;
-    button->transition     = true;
-    button->stopMusic      = true;
+    EntityUIButton *buttonManiaMode = menuControl->buttons[0];
+    buttonManiaMode->frameID        = 0;
+    buttonManiaMode->transition     = true;
+    buttonManiaMode->stopMusic      = true;
 
-    button             = menuControl->buttons[1];
-    button->frameID    = button1Frame;
-    button->transition = true;
-    button->stopMusic  = true;
+    EntityUIButton *buttonEncoreMode = menuControl->buttons[1];
+    buttonEncoreMode->frameID        = button1Frame;
+    buttonEncoreMode->transition     = true;
+    buttonEncoreMode->stopMusic      = true;
 
-    button             = menuControl->buttons[2];
-    button->frameID    = button2Frame;
-    button->transition = true;
-    button->stopMusic  = true;
+    EntityUIButton *buttonTimeAttack = menuControl->buttons[2];
+    buttonTimeAttack->frameID        = button2Frame;
+    buttonTimeAttack->transition     = true;
+    buttonTimeAttack->stopMusic      = true;
 
-    button             = menuControl->buttons[3];
-    button->frameID    = button3Frame;
-    button->transition = true;
-    button->stopMusic  = button3StopMus;
+    EntityUIButton *buttonCompetition = menuControl->buttons[3];
+    buttonCompetition->frameID        = button3Frame;
+    buttonCompetition->transition     = true;
+    buttonCompetition->stopMusic      = button3StopMus;
 
-    button             = menuControl->buttons[4];
-    button->frameID    = button4Frame;
-    button->transition = true;
-    button->stopMusic  = false;
+    EntityUIButton *buttonOptions = menuControl->buttons[4];
+    buttonOptions->frameID        = button4Frame;
+    buttonOptions->transition     = true;
+    buttonOptions->stopMusic      = false;
 
-    button             = menuControl->buttons[5];
-    button->frameID    = button5Frame;
-    button->transition = button5Transition;
-    button->stopMusic  = false;
+    EntityUIButton *buttonExtras = menuControl->buttons[5];
+    buttonExtras->frameID        = button5Frame;
+    buttonExtras->transition     = button5Transition;
+    buttonExtras->stopMusic      = false;
 
-    button             = menuControl->buttons[6];
-    button->frameID    = 7;
-    button->transition = false;
-    button->stopMusic  = false;
+    EntityUIButton *buttonExit = menuControl->buttons[6];
+    buttonExit->frameID        = 7;
+    buttonExit->transition     = false;
+    buttonExit->stopMusic      = false;
 #endif
 }
 
-bool32 MainMenu_ReturnToTitleOption(void)
+bool32 MainMenu_BackPressCB_ReturnToTitle(void)
 {
     ManiaModeMenu_StartReturnToTitle();
+
     return true;
 }
 
@@ -156,6 +167,7 @@ void MainMenu_ExitButton_ActionCB(void)
 {
     TextInfo msg;
     Localization_GetString(&msg, STR_QUITWARNING);
+
     UIDialog_CreateDialogYesNo(&msg, MainMenu_StartExitGame, StateMachine_None, true, true);
 }
 
@@ -163,6 +175,7 @@ void MainMenu_StartExitGame(void)
 {
     if (UIControl_GetUIControl())
         UIControl_GetUIControl()->state = StateMachine_None;
+
     Music_FadeOut(0.02);
 
     MenuSetup_StartTransition(MainMenu_ExitGame, 64);
@@ -170,10 +183,11 @@ void MainMenu_StartExitGame(void)
 
 void MainMenu_MenuButton_ActionCB(void)
 {
-    EntityUIButton *button = (EntityUIButton *)SceneInfo->entity;
-    switch (button->frameID) {
-        case 0:
-            if (checkNoSave) {
+    RSDK_THIS(UIButton);
+
+    switch (self->frameID) {
+        case 0: // Mania Mode
+            if (API_GetNoSave()) {
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
@@ -182,6 +196,7 @@ void MainMenu_MenuButton_ActionCB(void)
 #if RETRO_USE_PLUS
                 saveSelect->menuWasSetup           = false;
                 ManiaModeMenu->saveSelLastButtonID = -1;
+
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
                     Entity *store     = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)saveSelect->buttons[i];
@@ -192,7 +207,8 @@ void MainMenu_MenuButton_ActionCB(void)
                 UIControl_MatchMenuTag("Save Select");
             }
             break;
-        case 1:
+
+        case 1: // Time Attack
             if (API.CheckDLC(DLC_PLUS)) {
                 EntityUIControl *control = TimeAttackMenu->timeAttackControl;
                 control->buttonID        = 0;
@@ -206,16 +222,24 @@ void MainMenu_MenuButton_ActionCB(void)
                 UIControl_MatchMenuTag("Time Attack Legacy");
             }
             break;
-        case 2:
+
+        case 2: // Competition
             if (API.CheckDLC(DLC_PLUS))
                 UIControl_MatchMenuTag("Competition");
             else
                 UIControl_MatchMenuTag("Competition Legacy");
             break;
-        case 3: UIControl_MatchMenuTag("Options"); break;
-        case 4: UIControl_MatchMenuTag("Extras"); break;
-        case 5:
-            if (checkNoSave) {
+
+        case 3: // Options
+            UIControl_MatchMenuTag("Options");
+            break;
+
+        case 4: // Extras
+            UIControl_MatchMenuTag("Extras");
+            break;
+
+        case 5: // Encore
+            if (API_GetNoSave()) {
                 UIControl_MatchMenuTag("No Save Encore");
             }
             else {
@@ -231,50 +255,43 @@ void MainMenu_MenuButton_ActionCB(void)
                 UIControl_MatchMenuTag("Encore Mode");
             }
             break;
-        case 6: API.ShowExtensionOverlay(0);
+
+        case 6: // Buy Plus DLC
+            API.ShowExtensionOverlay(0);
+
 #if RETRO_USE_EGS
             if (!API.CheckDLC(DLC_PLUS)) {
                 if (API.ShowCheckoutPage(0)) {
                     API.ShowEncorePage(0);
                 }
                 else {
-                    TextInfo buffer;
-                    INIT_TEXTINFO(buffer);
-                    Localization_GetString(&buffer, STR_CONNECTINGTOEGS);
-                    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(buffer);
-                    if (dialog) {
-                        UIDialog_AddButton(DIALOG_OK, dialog, MainMenu_BuyPlusDialogCB, true);
-                        UIDialog_AddButton(DIALOG_CANCEL, dialog, NULL, true);
-                        UIDialog_Setup(dialog);
-                    }
+                    TextInfo message;
+                    INIT_TEXTINFO(message);
+                    Localization_GetString(&message, STR_CONNECTINGTOEGS);
+
+                    UIDialog_CreateDialogOkCancel(&message, MainMenu_BuyPlusDialogCB, StateMachine_None, true, true);
                 }
             }
 #endif
             break;
+
         default: break;
     }
 }
 
 #if RETRO_USE_EGS
-int32 MainMenu_BuyPlusDialogCB(void)
-{
-    API.CoreUnknown4(0);
-    return 1;
-}
+void MainMenu_BuyPlusDialogCB(void) { API.CoreUnknown4(0); }
 #endif
 
 void MainMenu_HandleUnlocks(void)
 {
-    EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
-    EntityUIButton *taButton = control->buttons[1];
-    if (API.CheckDLC(DLC_PLUS))
-        taButton = control->buttons[2];
-    taButton->disabled = !GameProgress_CheckUnlock(0);
+    EntityUIControl *control = MainMenu->menuControl;
 
-    EntityUIButton *compButton = control->buttons[2];
-    if (API.CheckDLC(DLC_PLUS))
-        compButton = control->buttons[3];
-    compButton->disabled = !GameProgress_CheckUnlock(1);
+    EntityUIButton *taButton = API.CheckDLC(DLC_PLUS) ? control->buttons[2] : control->buttons[1];
+    taButton->disabled       = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_TIMEATTACK);
+
+    EntityUIButton *compButton = API.CheckDLC(DLC_PLUS) ? control->buttons[3] : control->buttons[2];
+    compButton->disabled       = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_COMPETITION);
 }
 
 void MainMenu_SetupActions(void)
@@ -284,11 +301,13 @@ void MainMenu_SetupActions(void)
         if (button->listID == 1) {
             if (button->frameID == 7) {
                 if (sku_platform != PLATFORM_PC && sku_platform != PLATFORM_DEV) {
-                    EntityUIControl *mainMenu = (EntityUIControl *)MainMenu->menuControlPtr;
+                    EntityUIControl *control = MainMenu->menuControl;
+
+                    // Remove "Exit" Button if not on PC or DEV platform
                     destroyEntity(button);
-                    --mainMenu->buttonCount;
-                    --mainMenu->rowCount;
-                    mainMenu->buttons[6] = NULL;
+                    --control->buttonCount;
+                    --control->rowCount;
+                    control->buttons[6] = NULL;
                 }
                 else {
                     button->actionCB = MainMenu_ExitButton_ActionCB;
@@ -299,10 +318,11 @@ void MainMenu_SetupActions(void)
             }
         }
     }
-    ((EntityUIControl *)MainMenu->menuControlPtr)->menuSetupCB = MainMenu_MenuSetupCB;
+
+    MainMenu->menuControl->menuSetupCB = MainMenu_MenuSetupCB;
 }
 
-void MainMenu_MenuSetupCB(void) { ((EntityUIDiorama *)MainMenu->dioramaPtr)->lastDioramaID = -1; }
+void MainMenu_MenuSetupCB(void) { MainMenu->diorama->lastDioramaID = -1; }
 
 #if RETRO_INCLUDE_EDITOR
 void MainMenu_EditorDraw(void) {}

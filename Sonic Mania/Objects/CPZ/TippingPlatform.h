@@ -7,16 +7,17 @@ typedef enum {
     TIPPINGPLATFORM_NONE,
     TIPPINGPLATFORM_PLAYER,
     TIPPINGPLATFORM_EGGMAN,
-}TippingPlatformBossIDs;
+} TippingPlatformBossIDs;
 
 // Object Class
 struct ObjectTippingPlatform {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityTippingPlatform {
     MANIA_PLATFORM_BASE
+
     uint8 interval;
     uint8 intervalOffset;
     uint8 duration;
@@ -32,7 +33,7 @@ void TippingPlatform_Update(void);
 void TippingPlatform_LateUpdate(void);
 void TippingPlatform_StaticUpdate(void);
 void TippingPlatform_Draw(void);
-void TippingPlatform_Create(void* data);
+void TippingPlatform_Create(void *data);
 void TippingPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TippingPlatform_EditorDraw(void);
@@ -47,4 +48,4 @@ void TippingPlatform_State_Tipping(void);
 void TippingPlatform_State_Restore(void);
 void TippingPlatform_State_Tipping_Delay(void);
 
-#endif //!OBJ_TIPPINGPLATFORM_H
+#endif //! OBJ_TIPPINGPLATFORM_H

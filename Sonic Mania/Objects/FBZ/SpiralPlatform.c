@@ -32,12 +32,14 @@ void SpiralPlatform_StaticUpdate(void) {}
 void SpiralPlatform_Draw(void)
 {
     RSDK_THIS(SpiralPlatform);
+
     RSDK.DrawTile(self->tiles, self->tileSize.x >> 20, self->tileSize.y >> 20, &self->drawPos, NULL, false);
 }
 
 void SpiralPlatform_Create(void *data)
 {
     RSDK_THIS(SpiralPlatform);
+
     self->targetPos.x = 0x400000;
     self->targetPos.y = 0x280000;
     self->tileSize.x  = 0x600000;
@@ -45,12 +47,15 @@ void SpiralPlatform_Create(void *data)
     TilePlatform_Create(NULL);
 
     if (!SceneInfo->inEditor) {
-        self->offRange.y <<= 10;
         self->drawPos.y += self->offRange.x;
+
         self->hitbox.left += 17;
         self->hitbox.right -= 17;
-        self->speed <<= 16;
+
         self->offRange.x <<= 10;
+        self->offRange.y <<= 10;
+        self->speed <<= 16;
+
         self->fallY         = self->offRange.x;
         self->active        = ACTIVE_XBOUNDS;
         self->updateRange.y = 0x800000 + self->offRange.y;
@@ -73,6 +78,7 @@ void SpiralPlatform_State_Move(void)
     self->fallY += self->speed;
     self->drawPos.y += self->speed;
     self->velocity.y = self->speed;
+
     if ((self->speed <= 0 && self->fallY <= self->offRange.y) || (self->speed > 0 && self->fallY >= self->offRange.y)) {
         self->fallY     = 0;
         self->drawPos.y = self->centerPos.y;
@@ -89,7 +95,7 @@ void SpiralPlatform_EditorDraw(void)
 
     if (showGizmos()) {
         DrawHelpers_DrawRectOutline(0x400000, 0x280000, 0x600000, 0x300000, 0xFFFF00);
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, 0x400000, 0x280000, 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, 0x400000, 0x280000, 0x00FF00, INK_NONE, 0xFF);
         self->active = ACTIVE_NORMAL;
     }
 }

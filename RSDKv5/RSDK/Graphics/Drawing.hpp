@@ -13,6 +13,8 @@
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
 
+#define SHADER_MAX (0x20)
+
 enum InkEffects {
     INK_NONE,
     INK_BLEND,
@@ -32,6 +34,23 @@ enum Alignments {
     ALIGN_LEFT,
     ALIGN_RIGHT,
     ALIGN_CENTER,
+};
+
+enum WindowStates {
+    WINDOWSTATE_UNINITIALIZED,
+    WINDOWSTATE_ACTIVE,
+    WINDOWSTATE_INACTIVE,
+};
+
+enum ShaderIDs {
+    SHADER_NONE,
+    SHADER_CLEAN,
+    SHADER_CRT_YEETRON,
+    SHADER_CRT_YEE64,
+    SHADER_YUV_420,
+    SHADER_YUV_422,
+    SHADER_YUV_444,
+    SHADER_RGB_IMAGE,
 };
 
 struct GFXSurface {
@@ -73,6 +92,157 @@ struct DrawList {
     int32 layerCount;
 };
 
+struct WindowInfo {
+#if RETRO_USING_DIRECTX9
+    D3DDISPLAYMODE *displays;
+    D3DVIEWPORT9 viewport;
+#endif
+
+#if RETRO_USING_SDL2
+    SDL_DisplayMode *displays;
+    SDL_Rect viewport;
+#endif
+};
+
+struct float4 {
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+struct float2 {
+    float x;
+    float y;
+};
+
+struct RenderVertex {
+    float4 pos;
+    float2 tex;
+};
+
+struct ShaderEntry {
+#if RETRO_USING_DIRECTX9
+    IDirect3DVertexShader9 *vertexShaderObject;
+    IDirect3DPixelShader9 *pixelShaderObject;
+#endif
+
+    uint8 linear;
+    char name[0x20];
+};
+
+class RenderDevice
+{
+public:
+    static bool Init();
+    static void CopyFrameBuffer();
+    static void FlipScreen();
+    static void Release(bool isRefresh);
+
+    static void RefreshWindow();
+
+    static bool ProcessEvents();
+
+    static void InitFPSCap();
+    static bool CheckFPSCap();
+    static void UpdateFPSCap();
+
+    // ====================
+    // RSDK COMMON START
+    // ====================
+
+    static int isRunning;
+    static int windowRefreshDelay;
+
+    static int displayWidth[16];
+    static int displayHeight[16];
+    static int displayCount;
+    static WindowInfo displayInfo;
+
+    static int lastShaderID;
+
+#if RETRO_REV02
+    static uint8 startVertex_2P[];
+    static uint8 startVertex_3P[];
+#endif
+
+    static float2 pixelSize;
+    static float2 textureSize;
+    static float2 viewSize;
+
+    // ====================
+    // RSDK COMMON END
+    // ====================
+
+#if RETRO_USING_DIRECTX9
+
+    static HWND windowHandle;
+    static IDirect3DTexture9 *imageTexture;
+
+    static IDirect3D9 *dx9Context;
+    static IDirect3DDevice9 *dx9Device;
+
+    static UINT dxAdapter;
+    static int adapterCount;
+
+    // WinMain args
+    static HINSTANCE hInstance;
+    static HINSTANCE hPrevInstance;
+    static INT nShowCmd;
+#endif
+
+#if RETRO_USING_SDL2
+    static SDL_Window *window;
+    static SDL_Renderer *renderer;
+    static SDL_Texture *screenTexture[SCREEN_MAX];
+
+    static SDL_Texture *imageTexture;
+#endif
+
+private:
+    static bool InitShaders();
+    static bool SetupRendering();
+    static void InitVertexBuffer();
+    static bool InitGraphicsAPI();
+
+    static void GetDisplays();
+
+    static void LoadShader(const char *fileName, bool linear);
+
+#if RETRO_USING_DIRECTX9
+
+    static void ProcessEvent(MSG msg);
+    static LRESULT CALLBACK WindowEventCallback(HWND hRecipient, UINT Msg, WPARAM wParam, LPARAM lParam);
+
+    static bool useFrequency;
+
+    static LARGE_INTEGER performanceCount, frequency, initialFrequency, curFrequency;
+
+    static HDEVNOTIFY deviceNotif;
+    static PAINTSTRUCT Paint;
+
+    static IDirect3DVertexDeclaration9 *dx9VertexDeclare;
+    static IDirect3DVertexBuffer9 *dx9VertexBuffer;
+    static IDirect3DTexture9 *screenTextures[SCREEN_MAX];
+    static D3DVIEWPORT9 dx9ViewPort;
+
+    static RECT monitorDisplayRect;
+    static GUID deviceIdentifier;
+#endif
+
+#if RETRO_USING_SDL2
+
+    static void ProcessEvent(SDL_Event event);
+
+    static uint32 displayModeIndex;
+    static int32 displayModeCount;
+
+    static unsigned long long targetFreq;
+    static unsigned long long curTicks;
+    static unsigned long long prevTicks;
+#endif
+};
+
 extern DrawList drawLayers[DRAWLAYER_COUNT];
 extern char drawGroupNames[0x10][0x10];
 
@@ -81,36 +251,35 @@ extern uint16 subtractLookupTable[0x20 * 0x100];
 
 extern GFXSurface gfxSurface[SURFACE_MAX];
 
-extern int32 pixWidth;
 extern float dpi;
 extern int32 cameraCount;
 extern ScreenInfo screens[SCREEN_MAX];
 extern CameraInfo cameras[CAMERA_MAX];
 extern ScreenInfo *currentScreen;
 
-extern uint8 startVertex_2P[2];
-extern uint8 startVertex_3P[3];
+extern RenderVertex vertexBuffer[60];
 
-bool32 InitRenderDevice();
-void FlipScreen();
-void ReleaseRenderDevice();
-void UpdateWindow();
+extern int32 shaderCount;
+extern ShaderEntry shaderList[SHADER_MAX];
+
+void UpdateGameWindow();
 void SetImageTexture(int width, int height, byte *imagePixels);
 
 void GenerateBlendLookupTable();
 
 void InitSystemSurfaces();
 
-void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);
+void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, char *text);
 void GetWindowSize(int *width, int *height);
 
-inline void SetScreenSplitVerticies(sbyte p2_1, sbyte p2_2, sbyte p3_1, sbyte p3_2, sbyte p3_3)
+inline void SetScreenRenderVertices(sbyte startVert2P_S1, sbyte startVert2P_S2, sbyte startVert3P_S1, sbyte startVert3P_S2, sbyte startVert3P_S3)
 {
-    startVertex_2P[0] = p2_1;
-    startVertex_2P[1] = p2_2;
-    startVertex_3P[0] = p3_1;
-    startVertex_3P[1] = p3_2;
-    startVertex_3P[2] = p3_3;
+    RenderDevice::startVertex_2P[0] = startVert2P_S1;
+    RenderDevice::startVertex_2P[1] = startVert2P_S2;
+
+    RenderDevice::startVertex_3P[0] = startVert3P_S1;
+    RenderDevice::startVertex_3P[1] = startVert3P_S2;
+    RenderDevice::startVertex_3P[2] = startVert3P_S3;
 }
 
 inline void SetScreenSize(byte screenID, uint16 width, uint16 height)
@@ -118,7 +287,7 @@ inline void SetScreenSize(byte screenID, uint16 width, uint16 height)
     if (screenID < SCREEN_MAX) {
         int screenHeight     = height & 0xFFF0;
         ScreenInfo *screen   = &screens[screenID];
-        screen->pitch        = width; //(width + 15) & 0xFFFFFFF0;
+        screen->pitch        = (width + 15) & 0xFFFFFFF0;
         screen->center.x     = width >> 1;
         screen->size.x       = width;
         screen->size.y       = screenHeight;
@@ -144,32 +313,17 @@ inline void AddCamera(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelati
 
 inline void ClearCameras() { cameraCount = 0; }
 
-inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
+inline void SetClipBounds(byte screenID, int32 x1, int32 y1, int32 x2, int32 y2)
 {
     ScreenInfo *screen; 
 
     if (screenID < SCREEN_MAX) {
         screen = &screens[screenID];
 
-        if (x1 <= screen->size.x)
-            screen->clipBound_X1 = x1 >= 0 ? x1 : 0;
-        else
-            screen->clipBound_X1 = screen->size.x;
-
-        if (y1 <= screen->size.y)
-            screen->clipBound_Y1 = y1 >= 0 ? y1 : 0;
-        else
-            screen->clipBound_Y1 = screen->size.y;
-
-        if (x2 >= 0)
-            screen->clipBound_X2 = x2 < screen->size.x ? x2 : screen->size.x;
-        else
-            screen->clipBound_X2 = 0;
-
-        if (y2 >= 0)
-            screen->clipBound_Y2 = y2 < screen->size.y ? y2 : screen->size.y;
-        else
-            screen->clipBound_Y2 = 0;
+        screen->clipBound_X1 = clampVal(x1, 0, screen->size.x);
+        screen->clipBound_Y1 = clampVal(y1, 0, screen->size.y);
+        screen->clipBound_X2 = clampVal(x2, 0, screen->size.x);
+        screen->clipBound_Y2 = clampVal(y2, 0, screen->size.y);
     }
 }
 
@@ -225,11 +379,11 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
 
 void DrawDeformedSprite(uint16 spriteIndex, InkEffects inkEffect, int alpha);
 
-void DrawTile(uint16 *tileInfo, int countX, int countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
+void DrawTile(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
 void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
 
-void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
+void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 endFrame, int32 textLength, int32 align, int32 spacing, void *unused,
               Vector2 *charPositions, bool32 screenRelative);
-void DrawDevText(const char *text, int x, int y, int align, uint color);
+void DrawDevText(const char *text, int32 x, int32 y, int32 align, uint color);
 
 #endif // !DRAWING_H

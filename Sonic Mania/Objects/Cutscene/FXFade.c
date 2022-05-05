@@ -12,6 +12,7 @@ ObjectFXFade *FXFade;
 void FXFade_Update(void)
 {
     RSDK_THIS(FXFade);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,12 +23,14 @@ void FXFade_StaticUpdate(void) {}
 void FXFade_Draw(void)
 {
     RSDK_THIS(FXFade);
+
     RSDK.FillScreen(self->color, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void FXFade_Create(void *data)
 {
     RSDK_THIS(FXFade);
+
     if (!SceneInfo->inEditor) {
         self->visible = true;
         self->active  = ACTIVE_NORMAL;
@@ -76,6 +79,7 @@ void FXFade_StopAll(void)
 void FXFade_State_FadeIn(void)
 {
     RSDK_THIS(FXFade);
+
     if (self->timer >= 512) {
         if (self->oneWay) {
             self->state = StateMachine_None;
@@ -101,6 +105,7 @@ void FXFade_State_FadeIn(void)
 void FXFade_State_Wait(void)
 {
     RSDK_THIS(FXFade);
+
     if (--self->wait <= 0) {
         if (self->fadeOutBlack)
             self->state = FXFade_State_FadeOutBlack;
@@ -111,6 +116,7 @@ void FXFade_State_Wait(void)
 void FXFade_State_FadeOut(void)
 {
     RSDK_THIS(FXFade);
+
     if (self->timer <= 0) {
         if (self->oneWay)
             self->state = StateMachine_None;
@@ -147,6 +153,7 @@ void FXFade_State_FadeOutBlack(void)
     else {
         self->state = StateMachine_None;
     }
+
     self->color = (r << 16) | (g << 8) | (b << 0);
 }
 

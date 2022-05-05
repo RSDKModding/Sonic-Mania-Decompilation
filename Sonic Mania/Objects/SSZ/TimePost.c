@@ -12,6 +12,7 @@ ObjectTimePost *TimePost;
 void TimePost_Update(void)
 {
     RSDK_THIS(TimePost);
+
     StateMachine_Run(self->state);
 }
 
@@ -43,6 +44,7 @@ void TimePost_Draw(void)
                 sidePos.x      = ((abs(RSDK.Sin512(self->rotation)) - 32) << 9) + faceplatePos.x + 0x500 * abs(RSDK.Cos512(self->rotation));
                 sidePos.y      = self->position.y;
                 break;
+
             default: break;
         }
 
@@ -65,23 +67,25 @@ void TimePost_Create(void *data)
         RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->faceplateAnimator, true, 0);
         RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->sideAnimator, true, 1);
         RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->standAnimator, true, 2);
+
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
-        self->spinSpeed     = 0x3000;
-        self->spinCount     = 8;
-        self->maxAngle      = 0x10000;
-        self->scale.y       = 0x200;
-        self->active        = ACTIVE_BOUNDS;
-        self->state         = TimePost_State_Setup;
+
+        self->spinSpeed = 0x3000;
+        self->spinCount = 8;
+        self->maxAngle  = 0x10000;
+        self->scale.y   = 0x200;
+        self->active    = ACTIVE_BOUNDS;
+        self->state     = TimePost_State_Setup;
     }
 }
 
 void TimePost_StageLoad(void)
 {
-    TimePost->aniFrames      = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE);
-    TimePost->sparkleFrames  = RSDK.LoadSpriteAnimation("SSZ1/TTSparkle.bin", SCOPE_STAGE);
+    TimePost->aniFrames     = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE);
+    TimePost->sparkleFrames = RSDK.LoadSpriteAnimation("SSZ1/TTSparkle.bin", SCOPE_STAGE);
 
     TimePost->hitbox.left   = -16;
     TimePost->hitbox.top    = -40;
@@ -93,7 +97,7 @@ void TimePost_StageLoad(void)
     TimePost->hitboxItemBox.right  = 8;
     TimePost->hitboxItemBox.bottom = 24;
 
-    TimePost->sfxFuture      = RSDK.GetSfx("SSZ1/Future.wav");
+    TimePost->sfxFuture = RSDK.GetSfx("SSZ1/Future.wav");
 }
 
 void TimePost_Spin(void)
@@ -101,14 +105,17 @@ void TimePost_Spin(void)
     RSDK_THIS(TimePost);
 
     self->angle += self->spinSpeed;
+
     if (self->angle >= self->maxAngle) {
         self->maxAngle += 0x20000;
         self->spinSpeed = minVal(0x600 * self->spinCount, 0x3000);
+
         if (!--self->spinCount) {
             self->spinSpeed = 0;
             self->angle     = 0x10000;
         }
     }
+
     self->rotation = (self->angle >> 8) & 0x1FF;
 }
 
@@ -122,20 +129,20 @@ void TimePost_CheckPlayerCollisions(void)
         if ((!RSDK.GetEntityID(player) || globals->gameMode == MODE_COMPETITION) && !((1 << playerID) & self->activePlayers)
             && player->position.x > self->position.x) {
             RSDK.PlaySfx(TimePost->sfxFuture, false, 255);
+
             self->active = ACTIVE_NORMAL;
             if (player->superState == SUPERSTATE_SUPER)
                 player->superState = SUPERSTATE_FADEOUT;
 
-            int32 vel = 0;
-            if (player->onGround)
-                vel = player->groundVel;
-            else
-                vel = player->velocity.x;
-            self->velocity.y          = -(vel >> 1);
-            self->gravityStrength            = vel / 96;
+            // Lol this was prolly copied from Global/SignPost, there's no reason for this obj to use YVelocity and the methods are the same as they
+            // are there
+            int32 vel              = player->onGround ? player->groundVel : player->velocity.x;
+            self->velocity.y       = -(vel >> 1);
+            self->gravityStrength  = vel / 96;
             SceneInfo->timeEnabled = false;
-            self->state               = TimePost_State_Spin;
+            self->state            = TimePost_State_Spinning;
         }
+
         ++playerID;
     }
 }
@@ -143,6 +150,7 @@ void TimePost_CheckPlayerCollisions(void)
 void TimePost_ParticleCB_TimeSparkles(EntityDebris *debris)
 {
     RSDK.SetSpriteAnimation(TimePost->sparkleFrames, 0, &debris->animator, true, 0);
+
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
     debris->drawOrder     = Zone->objectDrawHigh;
@@ -152,17 +160,19 @@ void TimePost_ParticleCB_TimeSparkles(EntityDebris *debris)
 void TimePost_HandleTimeSparkles(void)
 {
     bool32 spawnedDebris = true;
+
+    Vector2 onScreenRange;
+    onScreenRange.x = 0;
+    onScreenRange.y = 0;
+
     if (!(Zone->timer % 5)) {
         foreach_active(Player, player)
         {
             if (abs(player->groundVel) >= 0x80000) {
-                Vector2 range;
-                range.x = 0;
-                range.y = 0;
-                if (RSDK.CheckOnScreen(player, &range)) {
+                if (RSDK.CheckOnScreen(player, &onScreenRange)) {
                     spawnedDebris = false;
-                    ParticleHelpers_SetupParticleFX(Debris_State_Move, TimePost_ParticleCB_TimeSparkles, 0, player->position.x,
-                                             player->position.y, 0x200000, 0x200000);
+                    ParticleHelpers_SetupParticleFX(Debris_State_Move, TimePost_ParticleCB_TimeSparkles, 0, player->position.x, player->position.y,
+                                                    0x200000, 0x200000);
                 }
             }
         }
@@ -172,17 +182,19 @@ void TimePost_HandleTimeSparkles(void)
 void TimePost_State_Setup(void)
 {
     RSDK_THIS(TimePost);
+
     self->state = TimePost_State_CheckPlayerCollisions;
 }
 
 void TimePost_State_CheckPlayerCollisions(void) { TimePost_CheckPlayerCollisions(); }
 
-void TimePost_State_Spin(void)
+void TimePost_State_Spinning(void)
 {
     RSDK_THIS(TimePost);
 
     TimePost_HandleTimeSparkles();
     TimePost_Spin();
+
     if (!self->spinCount)
         self->state = TimePost_State_FinishedSpin;
 }
@@ -193,6 +205,7 @@ void TimePost_State_FinishedSpin(void) { TimePost_HandleTimeSparkles(); }
 void TimePost_EditorDraw(void)
 {
     RSDK_THIS(TimePost);
+
     RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->faceplateAnimator, false, 0);
     RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->sideAnimator, false, 1);
     RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->standAnimator, false, 2);
@@ -216,6 +229,7 @@ void TimePost_EditorDraw(void)
             sidePos.x      = ((abs(RSDK.Sin512(self->rotation)) - 32) << 9) + faceplatePos.x + 0x500 * abs(RSDK.Cos512(self->rotation));
             sidePos.y      = self->position.y;
             break;
+
         default: break;
     }
 
@@ -234,7 +248,7 @@ void TimePost_EditorLoad(void)
     TimePost->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(TimePost, type); // might have been "Past"/"Future" at one point?
-    RSDK_ENUM_VAR("Unused", 0);
+    RSDK_ENUM_VAR("(Unused)", 0);
 }
 #endif
 

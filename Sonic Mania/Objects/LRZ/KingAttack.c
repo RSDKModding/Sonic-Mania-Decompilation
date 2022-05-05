@@ -523,7 +523,7 @@ void KingAttack_State_SmallBullet(void)
     }
 
     if (self->state == KingAttack_State_SmallBullet) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
             RSDK.SetSpriteAnimation(KingAttack->aniFrames, 22, &self->animator, false, 0);
             self->state = KingAttack_State_SmallBullet_Impact;
             self->position.y += 0x40000;

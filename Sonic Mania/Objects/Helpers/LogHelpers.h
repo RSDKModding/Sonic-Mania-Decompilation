@@ -31,6 +31,5 @@ void LogHelpers_Serialize(void);
 
 // Extra Entity Functions
 void LogHelpers_Print(const char *message, ...);
-void LogHelpers_PrintString(TextInfo *text);
 
 #endif //! OBJ_LOGHELPERS_H

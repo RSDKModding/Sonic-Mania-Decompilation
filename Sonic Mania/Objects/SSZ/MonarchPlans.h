@@ -41,7 +41,7 @@ void MonarchPlans_Update(void);
 void MonarchPlans_LateUpdate(void);
 void MonarchPlans_StaticUpdate(void);
 void MonarchPlans_Draw(void);
-void MonarchPlans_Create(void* data);
+void MonarchPlans_Create(void *data);
 void MonarchPlans_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MonarchPlans_EditorDraw(void);
@@ -52,4 +52,4 @@ void MonarchPlans_Serialize(void);
 // Extra Entity Functions
 #endif
 
-#endif //!OBJ_MONARCHPLANS_H
+#endif //! OBJ_MONARCHPLANS_H

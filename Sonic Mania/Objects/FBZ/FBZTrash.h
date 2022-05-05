@@ -8,7 +8,7 @@ typedef enum {
     FBZTRASH_UNUSED,
     FBZTRASH_ORB,
     FBZTRASH_ORBINAUT,
-}FBZTrashTypes;
+} FBZTrashTypes;
 
 // Object Class
 struct ObjectFBZTrash {
@@ -27,7 +27,7 @@ struct EntityFBZTrash {
     int32 radius;
     Vector2 targetPos;
     Vector2 startPos;
-    Entity *parent;
+    EntityFBZTrash *parent;
     Hitbox hitbox;
     Animator animator;
 };
@@ -40,7 +40,7 @@ void FBZTrash_Update(void);
 void FBZTrash_LateUpdate(void);
 void FBZTrash_StaticUpdate(void);
 void FBZTrash_Draw(void);
-void FBZTrash_Create(void* data);
+void FBZTrash_Create(void *data);
 void FBZTrash_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FBZTrash_EditorDraw(void);
@@ -57,4 +57,4 @@ void FBZTrash_State_MoveToTarget(void);
 void FBZTrash_State_OrbinautOrb(void);
 void FBZTrash_State_OrbinautMove(void);
 
-#endif //!OBJ_FBZTRASH_H
+#endif //! OBJ_FBZTRASH_H

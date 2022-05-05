@@ -12,6 +12,7 @@ ObjectNewspaper *Newspaper;
 void Newspaper_Update(void)
 {
     RSDK_THIS(Newspaper);
+
 #if RETRO_USE_PLUS
     StateMachine_Run(self->state);
 #else
@@ -26,6 +27,7 @@ void Newspaper_StaticUpdate(void) {}
 void Newspaper_Draw(void)
 {
     RSDK_THIS(Newspaper);
+
 #if RETRO_USE_PLUS
     RSDK.DrawSprite(&self->animator, NULL, false);
 #else
@@ -36,6 +38,7 @@ void Newspaper_Draw(void)
 void Newspaper_Create(void *data)
 {
     RSDK_THIS(Newspaper);
+
 #if RETRO_USE_PLUS
     if (!SceneInfo->inEditor) {
         self->visible       = true;
@@ -49,8 +52,10 @@ void Newspaper_Create(void *data)
                 self->state     = Newspaper_HandleInteractions;
                 self->drawOrder = Zone->playerDrawLow;
                 break;
+
             case NEWSPAPER_WHITE_BG:
             case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->objectDrawLow; break;
+
             default: break;
         }
 
@@ -59,6 +64,7 @@ void Newspaper_Create(void *data)
         self->hitbox.right  = 16;
         self->hitbox.bottom = 16;
     }
+
 #else
     self->collision = PLATFORM_C_SOLID_ALL;
     self->type      = PLATFORM_CONTROLLED;
@@ -70,7 +76,8 @@ void Newspaper_Create(void *data)
 void Newspaper_StageLoad(void)
 {
 #if RETRO_USE_PLUS
-    Newspaper->aniFrames     = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
+    Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
+
     Newspaper->sfxPaperStack = RSDK.GetSfx("PSZ/PaperStack.wav");
 #else
     if (RSDK.CheckStageFolder("PSZ1"))
@@ -87,13 +94,15 @@ void Newspaper_HandleInteractions(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                EntityDebris *debris =
-                    CREATE_ENTITY(Debris, NULL, self->position.x + RSDK.Rand(-0x80000, 0x80000), self->position.y + RSDK.Rand(-0x80000, 0x80000));
-                debris->state      = Debris_State_Fall;
-                debris->gravityStrength    = 0x400;
-                debris->velocity.x = RSDK.Rand(0, 0x20000);
-                debris->timer      = 240;
-                self->timer      = 2;
+                int32 x              = self->position.x + RSDK.Rand(-0x80000, 0x80000);
+                int32 y              = self->position.y + RSDK.Rand(-0x80000, 0x80000);
+                EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
+
+                debris->state           = Debris_State_Fall;
+                debris->gravityStrength = 0x400;
+                debris->velocity.x      = RSDK.Rand(0, 0x20000);
+                debris->timer           = 240;
+                self->timer             = 2;
                 if (debris->position.x < self->position.x)
                     debris->velocity.x = -debris->velocity.x;
                 debris->drawOrder = Zone->objectDrawLow;
@@ -116,34 +125,59 @@ void Newspaper_HandleInteractions(void)
 void Newspaper_EditorDraw(void)
 {
     RSDK_THIS(Newspaper);
+
 #if RETRO_USE_PLUS
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
+
     RSDK.SetSpriteAnimation(Newspaper->aniFrames, 1, &self->animator, true, self->type);
+
     switch (self->type) {
         case NEWSPAPER_WHITE_FG:
         case NEWSPAPER_BLUE_FG:
             self->state     = Newspaper_HandleInteractions;
             self->drawOrder = Zone->playerDrawLow;
             break;
+
         case NEWSPAPER_WHITE_BG:
         case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->objectDrawLow; break;
         default: break;
     }
+
 #else
     RSDK.SetSpriteAnimation(Newspaper->aniFrames, 0, &self->animator, true, 0);
-    self->drawPos = self->position;
-#endif 
+    self->centerPos = self->position;
+    self->drawPos   = self->position;
+#endif
 
     Newspaper_Draw();
+
+#if !RETRO_USE_PLUS
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
+            Entity *child = RSDK_GET_ENTITY(s + i, );
+            if (!child)
+                continue;
+
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xE0E0E0, INK_NONE, 0xFF);
+        }
+
+        Entity *targetNode = RSDK_GET_ENTITY(self->node, );
+        if (targetNode)
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, targetNode->position.x, targetNode->position.y, 0xFFFF00, INK_NONE, 0xFF);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
+#endif
 }
 
 void Newspaper_EditorLoad(void)
 {
 #if RETRO_USE_PLUS
-    Newspaper->aniFrames     = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
-    Newspaper->sfxPaperStack = RSDK.GetSfx("PSZ/PaperStack.wav");
+    Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Newspaper, type);
     RSDK_ENUM_VAR("White (FG)", NEWSPAPER_WHITE_FG);
@@ -154,7 +188,7 @@ void Newspaper_EditorLoad(void)
 #else
     if (RSDK.CheckStageFolder("PSZ1"))
         Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
-#endif 
+#endif
 }
 #endif
 
@@ -163,7 +197,7 @@ void Newspaper_Serialize(void)
 #if RETRO_USE_PLUS
     RSDK_EDITABLE_VAR(Newspaper, VAR_UINT8, type);
 #else
-    RSDK_EDITABLE_VAR(Newspaper, VAR_ENUM, node);
+    RSDK_EDITABLE_VAR(Newspaper, VAR_ENUM, node); // slotID of the target PlatformNode
     RSDK_EDITABLE_VAR(Newspaper, VAR_ENUM, childCount);
 #endif
 }

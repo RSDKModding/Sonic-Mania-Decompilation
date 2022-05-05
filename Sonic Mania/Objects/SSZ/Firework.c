@@ -19,6 +19,7 @@ void Firework_Update(void)
     else if (self->timer == 10) {
         if (self->mainAnimator.frameID < self->mainAnimator.frameCount - 1)
             RSDK.ProcessAnimation(&self->mainAnimator);
+
         if (self->sparkAnimator.frameID < self->sparkAnimator.frameCount - 1)
             RSDK.ProcessAnimation(&self->sparkAnimator);
     }
@@ -41,6 +42,7 @@ void Firework_StaticUpdate(void)
                     RSDK.PlaySfx(Firework->sfxFlame, true, 255);
                     Firework->playingFlameSfx = true;
                 }
+
                 fireworkActive = true;
                 foreach_break;
             }
@@ -88,8 +90,10 @@ void Firework_Create(void *data)
 
     if (!self->innerRadius)
         self->innerRadius = 64;
+
     if (!self->outerRadius)
         self->outerRadius = 128;
+
     if (!self->distance)
         self->distance = 512;
 
@@ -133,9 +137,11 @@ void Firework_CheckPlayerCollisions(void)
                 && Player_CheckCollisionTouch(player, self, &Firework->hitboxFireworkGrab)) {
                 player->tileCollisions = false;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->animator, false, 0);
+
                 player->state = Player_State_None;
                 self->activePlayers |= 1 << playerID;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
+
                 player->direction = player->position.x > self->position.x;
                 if (player->sidekick == false)
                     self->activated = true;
@@ -157,9 +163,7 @@ void Firework_CheckPlayerCollisions(void)
                 player->position.x = self->position.x;
                 player->position.y = self->position.y;
 
-                int power = -16;
-                if (player->direction == FLIP_NONE)
-                    power = 16;
+                int32 power = player->direction == FLIP_NONE ? 16 : -16;
 
                 player->position.x += power * (RSDK.Sin1024(self->angle) << 6);
                 player->position.y -= power * (RSDK.Cos1024(self->angle) << 6);
@@ -179,7 +183,8 @@ void Firework_HandlePlayerTimers(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
+
         if (self->playerTimers[playerID])
             self->playerTimers[playerID]--;
     }
@@ -198,12 +203,14 @@ void Firework_HandlePlayerRemoval(EntityPlayer *player, bool32 crashed)
 {
     RSDK_THIS(Firework);
 
-    int playerID = RSDK.GetEntityID(player);
+    int32 playerID = RSDK.GetEntityID(player);
+
     if ((1 << playerID) & self->activePlayers) {
-        player->state                = Player_State_Air;
-        player->onGround             = false;
-        player->tileCollisions       = true;
-        player->velocity             = self->velocity;
+        player->state          = Player_State_Air;
+        player->onGround       = false;
+        player->tileCollisions = true;
+        player->velocity       = self->velocity;
+
         self->playerTimers[playerID] = 30;
         if (crashed) {
             bool32 isSidekick = player->sidekick;
@@ -214,6 +221,7 @@ void Firework_HandlePlayerRemoval(EntityPlayer *player, bool32 crashed)
         else {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         }
+
         self->activePlayers &= ~(1 << playerID);
     }
 }
@@ -225,7 +233,7 @@ void Firework_HandlePlayerJump(void)
     foreach_active(Player, player)
     {
         if ((1 << RSDK.GetEntityID(player)) & self->activePlayers && player->jumpPress) {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
 
             if ((1 << playerID) & self->activePlayers) {
                 player->state                = Player_State_Air;
@@ -235,6 +243,7 @@ void Firework_HandlePlayerJump(void)
                 player->velocity.y           = self->velocity.y;
                 self->playerTimers[playerID] = 30;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+
                 self->activePlayers &= ~(1 << playerID);
             }
         }
@@ -262,6 +271,7 @@ void Firework_HandleMoveDir(void)
 
     if (self->moveVelocity < 0x80000)
         self->moveVelocity += 0x2000;
+
     if (self->moveVelocity > 0x80000)
         self->moveVelocity = 0x80000;
 
@@ -273,6 +283,7 @@ void Firework_HandleMoveDir(void)
     int32 rx = abs(self->lastPosition.x - self->position.x) >> 16;
     int32 ry = abs(self->lastPosition.y - self->position.y) >> 16;
     self->ridePos += MathHelpers_SquareRoot(rx * rx + ry * ry);
+
     self->lastPosition.x = self->position.x;
     self->lastPosition.y = self->position.y;
 }
@@ -283,6 +294,7 @@ void Firework_HandleDebrisSpawn(void)
 
     if (!(self->timer % 5)) {
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
+
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->position.x -= 0x600 * RSDK.Cos1024(self->angle);
         debris->position.y -= 0x600 * RSDK.Sin1024(self->angle);
@@ -295,9 +307,9 @@ void Firework_HandleTileCollisions(void)
 {
     RSDK_THIS(Firework);
 
-    bool32 collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, Firework->hitboxTileCheck.right << 13, 0, 4);
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_ROOF, 0, 0, Firework->hitboxTileCheck.top << 13, 4);
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, Firework->hitboxTileCheck.left << 13, 0, 4);
+    bool32 collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, Firework->hitboxTileCheck.right << 13, 0, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, Firework->hitboxTileCheck.top << 13, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, Firework->hitboxTileCheck.left << 13, 0, 4);
 
     if (collided) {
         Camera_ShakeScreen(0, 0, 4);
@@ -310,9 +322,12 @@ void Firework_HandleRideEnd(bool32 crashed)
     RSDK_THIS(Firework);
 
     self->rideActive = false;
+
     if (crashed) {
+        // Watch out! you're gonna crash! ah!
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(Firework->sfxExplosion2, false, 255);
+
         Firework_RemovePlayers(true);
         self->state = Firework_State_Explode;
     }
@@ -345,6 +360,7 @@ void Firework_HandleRideEnd(bool32 crashed)
         self->timer     = 512;
         self->drawOrder = Zone->hudDrawOrder;
         RSDK.PlaySfx(Firework->sfxExplosion, false, 255);
+
         Firework_RemovePlayers(false);
         self->state = Firework_State_Explode;
     }
@@ -357,22 +373,20 @@ void Firework_CheckOffScreen(void)
     if (self->state == Firework_State_Explode) {
         if (self->timer <= 0) {
             if (!RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-                self->position.x = self->startPos.x;
-                self->position.y = self->startPos.y;
-                self->state      = Firework_State_ResetOffScreen;
-                self->visible    = false;
-                self->direction  = FLIP_NONE;
+                self->position  = self->startPos;
+                self->state     = Firework_State_ResetOffScreen;
+                self->visible   = false;
+                self->direction = FLIP_NONE;
             }
         }
     }
     else {
         if (!RSDK.CheckOnScreen(self, NULL)) {
             if (!RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-                self->position.x = self->startPos.x;
-                self->position.y = self->startPos.y;
-                self->state      = Firework_State_ResetOffScreen;
-                self->visible    = false;
-                self->direction  = FLIP_NONE;
+                self->position  = self->startPos;
+                self->state     = Firework_State_ResetOffScreen;
+                self->visible   = false;
+                self->direction = FLIP_NONE;
             }
         }
     }
@@ -381,11 +395,12 @@ void Firework_CheckOffScreen(void)
 void Firework_HandleSparkAnimations(int sparkID, int16 angle, Animator *fireworkAnimator, Animator *sparkAnimator, uint8 *direction)
 {
     uint16 ang = angle & 0x3FF;
-    int anim   = 4 * (sparkID != 0) + 3;
+    int32 anim = 4 * (sparkID != 0) + 3;
 
     if (ang <= 0x40 || ang > 0x3C0) {
         if (direction)
             *direction = FLIP_NONE;
+
         if (fireworkAnimator)
             RSDK.SetSpriteAnimation(Firework->aniFrames, anim, fireworkAnimator, true, 0);
     }
@@ -399,12 +414,14 @@ void Firework_HandleSparkAnimations(int sparkID, int16 angle, Animator *firework
     else if (ang <= 0x140) {
         if (direction)
             *direction = FLIP_Y;
+
         if (fireworkAnimator)
             RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 1, fireworkAnimator, true, 0);
     }
     else if (ang <= 0x1C0) {
         if (direction)
             *direction = FLIP_XY;
+
         if (fireworkAnimator)
             RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 2, fireworkAnimator, true, 0);
     }
@@ -418,19 +435,23 @@ void Firework_HandleSparkAnimations(int sparkID, int16 angle, Animator *firework
     else if (ang <= 0x2C0) {
         if (direction)
             *direction = FLIP_X;
+
         if (fireworkAnimator)
             RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 2, fireworkAnimator, true, 0);
     }
     else if (ang > 0x340) {
         if (direction)
             *direction = FLIP_NONE;
+
         if (fireworkAnimator)
             RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 2, fireworkAnimator, true, 0);
     }
-    else if (direction)
-        *direction = FLIP_NONE;
-    else if (fireworkAnimator)
-        RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 1, fireworkAnimator, true, 0);
+    else {
+        if (direction)
+            *direction = FLIP_NONE;
+        else if (fireworkAnimator)
+            RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 1, fireworkAnimator, true, 0);
+    }
 
     if (sparkAnimator)
         RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 3, sparkAnimator, true, 0);
@@ -440,19 +461,18 @@ void Firework_State_Setup(void)
 {
     RSDK_THIS(Firework);
 
-    self->position.x     = self->startPos.x;
-    self->position.y     = self->startPos.y;
-    self->lastPosition.x = self->startPos.x;
-    self->lastPosition.y = self->startPos.y;
-    self->visible        = true;
-    self->activePlayers  = 0;
-    self->rotation       = 0;
-    self->angle          = 768;
-    self->timer          = 0;
-    self->activated      = false;
-    self->moveVelocity   = 0;
-    self->ridePos        = 0;
-    self->drawOrder      = Zone->objectDrawLow;
+    self->position      = self->startPos;
+    self->lastPosition  = self->startPos;
+    self->visible       = true;
+    self->activePlayers = 0;
+    self->rotation      = 0;
+    self->angle         = 0x300;
+    self->timer         = 0;
+    self->activated     = false;
+    self->moveVelocity  = 0;
+    self->ridePos       = 0;
+    self->drawOrder     = Zone->objectDrawLow;
+
     RSDK.SetSpriteAnimation(Firework->aniFrames, 0, &self->mainAnimator, true, 0);
     self->state = Firework_State_AwaitPlayerRide;
 }
@@ -462,6 +482,7 @@ void Firework_State_AwaitPlayerRide(void)
     RSDK_THIS(Firework);
 
     Firework_CheckPlayerCollisions();
+
     if (self->activated) {
         RSDK.PlaySfx(Firework->sfxRocketJet, false, 255);
         RSDK.SetSpriteAnimation(Firework->aniFrames, 1, &self->mainAnimator, true, 0);
@@ -477,14 +498,15 @@ void Firework_State_PlayerGrabDelay(void)
     if (self->timer <= 0) {
         self->rideActive = true;
         RSDK.SetSpriteAnimation(Firework->aniFrames, 2, &self->mainAnimator, true, 0);
-        self->lastPosition.x = self->position.x;
-        self->lastPosition.y = self->position.y;
-        self->timer          = 0;
-        self->state          = Firework_State_Riding;
+
+        self->lastPosition = self->position;
+        self->timer        = 0;
+        self->state        = Firework_State_Riding;
     }
     else {
         self->timer--;
     }
+
     Firework_CheckPlayerCollisions();
     Firework_HandlePlayerJump();
 }
@@ -504,6 +526,7 @@ void Firework_State_Riding(void)
 
     Firework_HandleTileCollisions();
     Firework_CheckOffScreen();
+
     ++self->timer;
 }
 
@@ -549,6 +572,7 @@ void Firework_State_Spark(void)
         if (self->timer == 10) {
             self->position.x += self->velocity.x;
             self->position.y += self->velocity.y;
+
             if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1)
                 destroyEntity(self);
         }
@@ -563,6 +587,7 @@ void Firework_State_Spark(void)
 void Firework_EditorDraw(void)
 {
     RSDK_THIS(Firework);
+
     RSDK.SetSpriteAnimation(Firework->aniFrames, 0, &self->mainAnimator, false, 0);
 
     Firework_Draw();
@@ -570,7 +595,8 @@ void Firework_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - (self->distance << 16), 0xFFFF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - (self->distance << 16), 0xFFFF00, INK_NONE,
+                              0xFF);
 
         RSDK_DRAWING_OVERLAY(false);
     }

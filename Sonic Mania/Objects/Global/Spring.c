@@ -13,9 +13,11 @@ void Spring_Update(void)
 {
     RSDK_THIS(Spring);
 
-    if (self->timer > 0)
-        self->timer--;
+    if (self->sfxTimer > 0)
+        self->sfxTimer--;
+
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == 8)
         self->animator.speed = 0;
@@ -28,12 +30,14 @@ void Spring_StaticUpdate(void) {}
 void Spring_Draw(void)
 {
     RSDK_THIS(Spring);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Spring_Create(void *data)
 {
     RSDK_THIS(Spring);
+
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->type %= 6;
@@ -42,12 +46,14 @@ void Spring_Create(void *data)
             self->type        = (propertyVal >> 0) & 0xFF;
             self->flipFlag    = (propertyVal >> 8) & 0xFF;
         }
+
         RSDK.SetSpriteAnimation(Spring->aniFrames, self->type, &self->animator, true, 0);
         self->active         = ACTIVE_BOUNDS;
         self->animator.speed = 0;
         self->updateRange.x  = 0x600000;
         self->updateRange.y  = 0x600000;
         self->visible        = true;
+
         if (self->planeFilter && ((uint8)self->planeFilter - 1) & 2)
             self->drawOrder = Zone->objectDrawHigh;
         else
@@ -119,18 +125,22 @@ void Spring_Create(void *data)
 void Spring_StageLoad(void)
 {
     Spring->aniFrames = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
+
     Spring->sfxSpring = RSDK.GetSfx("Global/Spring.wav");
 }
 
 void Spring_State_Vertical(void)
 {
     RSDK_THIS(Spring);
+
     if (self->direction == FLIP_NONE) {
         foreach_active(Player, player)
         {
             if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
-                int32 col = (self->type == 0xFF && player->velocity.y < -0x50000) ? Player_CheckCollisionPlatform(player, self, &self->hitbox)
-                                                                                  : Player_CheckCollisionBox(player, self, &self->hitbox);
+                int32 col = (self->type == SPRING_TUBESPRING && player->velocity.y < -0x50000)
+                                ? Player_CheckCollisionPlatform(player, self, &self->hitbox)
+                                : Player_CheckCollisionBox(player, self, &self->hitbox);
+
                 if (col == C_TOP) {
                     int32 anim = player->animator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
@@ -147,15 +157,18 @@ void Spring_State_Vertical(void)
                             player->state = Player_State_Air;
                         }
                     }
+
                     player->onGround       = false;
                     player->velocity.y     = self->velocity.y;
                     player->tileCollisions = true;
+
                     self->animator.speed   = 0x80;
                     self->animator.timer   = 0;
                     self->animator.frameID = 1;
-                    if (self->timer == 0) {
+
+                    if (self->sfxTimer == 0) {
                         RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                        self->timer = 8;
+                        self->sfxTimer = 8;
                     }
                 }
             }
@@ -172,15 +185,18 @@ void Spring_State_Vertical(void)
                     else
                         player->state = Player_State_Air;
                 }
+
                 player->onGround       = false;
                 player->velocity.y     = self->velocity.y;
                 player->tileCollisions = true;
+
                 self->animator.speed   = 0x80;
                 self->animator.timer   = 0;
                 self->animator.frameID = 1;
-                if (!self->timer) {
+
+                if (!self->sfxTimer) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                    self->timer = 8;
+                    self->sfxTimer = 8;
                 }
             }
         }
@@ -189,6 +205,7 @@ void Spring_State_Vertical(void)
 void Spring_State_Horizontal(void)
 {
     RSDK_THIS(Spring);
+
     if (self->direction == FLIP_NONE) {
         foreach_active(Player, player)
         {
@@ -211,21 +228,25 @@ void Spring_State_Horizontal(void)
                         else
                             player->state = Player_State_Air;
                     }
+
                     int32 anim = player->animator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->animator.animationID = ANI_WALK;
                 }
+
                 player->controlLock    = 16;
                 player->skidding       = false;
                 player->pushing        = false;
                 player->direction      = FLIP_NONE;
                 player->tileCollisions = true;
+
                 self->animator.speed   = 0x80;
                 self->animator.timer   = 0;
                 self->animator.frameID = 1;
-                if (self->timer == 0) {
+
+                if (self->sfxTimer == 0) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                    self->timer = 8;
+                    self->sfxTimer = 8;
                 }
             }
         }
@@ -252,21 +273,25 @@ void Spring_State_Horizontal(void)
                         else
                             player->state = Player_State_Air;
                     }
+
                     int32 anim = player->animator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->animator.animationID = ANI_WALK;
                 }
+
                 player->controlLock    = 16;
                 player->skidding       = 0;
                 player->pushing        = false;
                 player->direction      = FLIP_X;
                 player->tileCollisions = true;
+
                 self->animator.speed   = 0x80;
                 self->animator.timer   = 0;
                 self->animator.frameID = 1;
-                if (self->timer == 0) {
+
+                if (self->sfxTimer == 0) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                    self->timer = 8;
+                    self->sfxTimer = 8;
                 }
             }
         }
@@ -280,18 +305,11 @@ void Spring_State_Diagonal(void)
         if ((!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 bool32 collided = false;
-                if (player->onGround) {
+                if (player->onGround || player->velocity.y >= 0)
                     collided = true;
-                }
-                else {
-                    int32 y = player->velocity.y;
-                    if (y >= 0) {
-                        collided = true;
-                    }
-                    else {
-                        collided = abs(player->velocity.x) > -y;
-                    }
-                }
+                else
+                    collided = abs(player->velocity.x) > -player->velocity.y;
+
                 if (collided) {
                     if (player->state != Ice_State_FrozenPlayer) {
                         if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
@@ -299,11 +317,13 @@ void Spring_State_Diagonal(void)
                         }
                         else {
                             player->state = Player_State_Air;
-                            int32 anim    = player->animator.animationID;
+
+                            int32 anim = player->animator.animationID;
                             if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                                 player->animator.animationID = ANI_WALK;
                         }
                     }
+
                     if (self->direction < FLIP_Y) {
                         if (player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
                             int32 anim = player->animator.animationID;
@@ -314,17 +334,20 @@ void Spring_State_Diagonal(void)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                         }
                     }
+
                     player->direction      = self->direction & 1;
                     player->onGround       = false;
                     player->velocity.x     = self->velocity.x;
                     player->velocity.y     = self->velocity.y;
                     player->tileCollisions = true;
+
                     self->animator.speed   = 0x80;
                     self->animator.timer   = 0;
                     self->animator.frameID = 1;
-                    if (self->timer == 0) {
+
+                    if (self->sfxTimer == 0) {
                         RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                        self->timer = 8;
+                        self->sfxTimer = 8;
                     }
                 }
             }

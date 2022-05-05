@@ -63,7 +63,7 @@ void WeatherTV_Update(void);
 void WeatherTV_LateUpdate(void);
 void WeatherTV_StaticUpdate(void);
 void WeatherTV_Draw(void);
-void WeatherTV_Create(void* data);
+void WeatherTV_Create(void *data);
 void WeatherTV_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void WeatherTV_EditorDraw(void);
@@ -116,4 +116,4 @@ void WeatherTV_State_StartRaining(void);
 void WeatherTV_State_StopRaining(void);
 void WeatherTV_State_Outro(void);
 
-#endif //!OBJ_WEATHERTV_H
+#endif //! OBJ_WEATHERTV_H

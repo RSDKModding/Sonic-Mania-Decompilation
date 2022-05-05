@@ -51,6 +51,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SPZ1Intro);
     RSDK_GET_PLAYER(player1, player2, camera);
+
     Entity *curEnt = host->activeEntity;
     if (!host->timer) {
         player1->position.x = self->position.x;
@@ -63,6 +64,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         player1->stateInput     = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
+
         if (player2->objectID == Player->objectID) {
             player2->position.x     = player1->position.x;
             player2->position.y     = player1->position.y;
@@ -95,13 +97,14 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         if (host->timer == 45)
             RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
 
-        if (host->timer == 90) 
+        if (host->timer == 90)
             return true;
     }
 
     SceneInfo->timeEnabled  = false;
     SceneInfo->milliseconds = 0;
     camera->state           = StateMachine_None;
+
     return false;
 }
 
@@ -120,14 +123,14 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
         RSDK.PlaySfx(SPZ1Intro->sfxPon, false, 0xFF);
         RSDK.StopSfx(Player->sfxRoll);
         Camera_ShakeScreen(0, 0, 2);
-        EntityDebris *lid = SPZ1Intro->sewerLid;
-        lid->state        = Debris_State_Fall;
-        lid->velocity.y   = -0x60000;
-        lid->velocity.x   = -0x18000;
-        lid->gravityStrength      = 0x3800;
-        lid->scaleInc.x   = 8;
-        lid->scaleInc.y   = 8;
-        lid->rotSpeed     = -1;
+        EntityDebris *lid    = SPZ1Intro->sewerLid;
+        lid->state           = Debris_State_Fall;
+        lid->velocity.y      = -0x60000;
+        lid->velocity.x      = -0x18000;
+        lid->gravityStrength = 0x3800;
+        lid->scaleSpeed.x    = 8;
+        lid->scaleSpeed.y    = 8;
+        lid->rotSpeed        = -1;
         RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 1, &lid->animator, true, 0);
     }
 
@@ -161,13 +164,15 @@ bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
-        camera->target   = (Entity *)player1;
+        camera->target      = (Entity *)player1;
         camera->state       = Camera_State_Follow;
         player1->stateInput = Player_ProcessP1Input;
         player1->state      = Player_State_Ground;
         player1->camera     = camera;
+
         if (player2->objectID == Player->objectID)
             player2->stateInput = Player_ProcessP2Input_AI;
+
         SceneInfo->timeEnabled = true;
         return true;
     }
@@ -179,6 +184,7 @@ bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 void SPZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(SPZ1Intro);
+
     if (showGizmos())
         CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }

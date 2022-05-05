@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectGrabber {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxGrab;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxGrab;
@@ -40,7 +40,7 @@ void Grabber_Update(void);
 void Grabber_LateUpdate(void);
 void Grabber_StaticUpdate(void);
 void Grabber_Draw(void);
-void Grabber_Create(void* data);
+void Grabber_Create(void *data);
 void Grabber_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Grabber_EditorDraw(void);
@@ -66,4 +66,4 @@ void Grabber_State_GrabbedPlayer(void);
 void Grabber_State_Struggle(void);
 void Grabber_State_PlayerEscaped(void);
 
-#endif //!OBJ_GRABBER_H
+#endif //! OBJ_GRABBER_H

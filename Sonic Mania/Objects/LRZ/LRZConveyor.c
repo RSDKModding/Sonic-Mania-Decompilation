@@ -240,13 +240,9 @@ void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 
         currentX += (endX - startY) / count;
         currentY += (endY - startX) / count;
 
-        uint32 *lineColor = NULL;
-        if (color) 
-            lineColor = color;
-        else 
-            lineColor = &LRZConveyor->lineColors[(colorID % count) & 0x3F];
+        uint32 lineColor = color ? *color : LRZConveyor->lineColors[(colorID % count) & 0x3F];
+        RSDK.DrawLine(currentX + offsetX, currentY + offsetY, currentX + offsetX, currentY + offsetY, lineColor, 0x7F, INK_NONE, false);
 
-        RSDK.DrawLine(currentX + offsetX, currentY + offsetY, currentX + offsetX, currentY + offsetY, *lineColor, 0x7F, INK_NONE, false);
         ++len;
     }
 }
@@ -294,8 +290,10 @@ void LRZConveyor_EditorDraw(void)
         self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
 
         RSDK_DRAWING_OVERLAY(true);
-        if (self->taggedButton)
-            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00);
+        if (self->taggedButton) {
+            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00,
+                                  INK_NONE, 0xFF);
+        }
         RSDK_DRAWING_OVERLAY(false);
     }
 }

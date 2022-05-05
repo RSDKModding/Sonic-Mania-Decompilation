@@ -215,14 +215,14 @@ void DERobot_HandleLegMovement(int32 offset)
     foot->onGround   = false;
     int32 storeX     = foot->position.x;
     int32 storeY     = foot->position.y;
-    if (RSDK.ObjectTileGrip(foot, Zone->fgLayers, CMODE_FLOOR, 0, -0x100000, 0x100000, 32)) {
+    if (RSDK.ObjectTileGrip(foot, Zone->collisionLayers, CMODE_FLOOR, 0, -0x100000, 0x100000, 32)) {
         foot->position.y = storeY;
-        if (RSDK.ObjectTileGrip(foot, Zone->fgLayers, CMODE_FLOOR, 0, 0x100000, 0x100000, 32))
+        if (RSDK.ObjectTileGrip(foot, Zone->collisionLayers, CMODE_FLOOR, 0, 0x100000, 0x100000, 32))
             foot->rotation = 2 * RSDK.ATan2(32, (foot->position.y >> 16) - (foot->position.y >> 16));
     }
     foot->position.x = storeX;
     foot->position.y = storeY;
-    if (RSDK.ObjectTileCollision(foot, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x110000, true))
+    if (RSDK.ObjectTileCollision(foot, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x110000, true))
         foot->onGround = true;
 }
 
@@ -783,7 +783,7 @@ void DERobot_State_BombLaunched(void)
         self->velocity.y = self->position.y - self->velocity.y;
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xE0000, true))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xE0000, true))
         self->state = DERobot_State_BombLanded;
 
     DERobot_CheckPlayerCollisions_Bomb();
@@ -1254,7 +1254,7 @@ void DERobot_State_ExplodeTerrain(void)
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
         DERobot_DestroyTerrainFinal();
         RSDK.PlaySfx(DERobot->sfxLedgeBreak, false, 255);
         self->state      = DERobot_State_Finish;
@@ -1380,6 +1380,18 @@ void DERobot_EditorDraw(void)
             if (showGizmos()) {
                 RSDK_DRAWING_OVERLAY(true);
                 DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER + 128, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 128, 0, 1 | 0 | 4 | 8, 0x00C0F0);
+
+                int32 slot = RSDK.GetEntityID(self);
+                for (int32 i = -7; i < 7; ++i) {
+                    if (i == 0) // thats this object lol
+                        continue;
+
+                    EntityDERobot *child = RSDK_GET_ENTITY(slot + i, DERobot);
+
+                    if (child)
+                        DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
+                }
+
                 RSDK_DRAWING_OVERLAY(false);
             }
             break;

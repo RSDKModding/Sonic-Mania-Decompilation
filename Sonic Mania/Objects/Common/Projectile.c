@@ -12,9 +12,12 @@ ObjectProjectile *Projectile;
 void Projectile_Update(void)
 {
     RSDK_THIS(Projectile);
+
     StateMachine_Run(self->state);
+
     if (self->drawFX & FX_ROTATE)
         self->rotation = (self->rotation + self->rotationSpeed) & 0x1FF;
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -25,12 +28,14 @@ void Projectile_StaticUpdate(void) {}
 void Projectile_Draw(void)
 {
     RSDK_THIS(Projectile);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Projectile_Create(void *data)
 {
     RSDK_THIS(Projectile);
+
     self->active  = ACTIVE_NORMAL;
     self->visible = true;
     self->state   = (Type_StateMachine)data;
@@ -87,6 +92,7 @@ void Projectile_CheckPlayerCollisions(void)
                     }
                     break;
                 }
+
                 default: break;
             }
         }
@@ -96,8 +102,10 @@ void Projectile_CheckPlayerCollisions(void)
 void Projectile_State_Move(void)
 {
     RSDK_THIS(Projectile);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (self->hurtDelay <= 0)
         Projectile_CheckPlayerCollisions();
     else
@@ -116,9 +124,11 @@ void Projectile_State_Move(void)
 void Projectile_State_MoveGravity(void)
 {
     RSDK_THIS(Projectile);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += self->gravityStrength;
+
     if (self->hurtDelay <= 0)
         Projectile_CheckPlayerCollisions();
     else

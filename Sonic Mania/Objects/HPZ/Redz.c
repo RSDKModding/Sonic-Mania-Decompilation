@@ -124,7 +124,7 @@ void Redz_State_Walk(void)
     RSDK_THIS(Redz);
 
     self->position.x += self->velocity.x;
-    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, (2 * (self->direction != FLIP_NONE) - 1) << 19, 0x100000, 8)) {
+    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, (2 * (self->direction != FLIP_NONE) - 1) << 19, 0x100000, 8)) {
         self->state = Redz_State_Turn;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID        = 0;

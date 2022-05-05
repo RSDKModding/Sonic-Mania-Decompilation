@@ -12,6 +12,7 @@ ObjectTwistedTubes *TwistedTubes;
 void TwistedTubes_Update(void)
 {
     RSDK_THIS(TwistedTubes);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,8 +23,8 @@ void TwistedTubes_StaticUpdate(void) {}
 void TwistedTubes_Draw(void)
 {
     RSDK_THIS(TwistedTubes);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     RSDK.DrawSprite(&self->entranceAnimator, &drawPos, false);
@@ -67,9 +68,9 @@ void TwistedTubes_Create(void *data)
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         if (data) {
-            self->active    = ACTIVE_NORMAL;
-            self->playerPtr = (EntityPlayer *)data;
-            if (self->playerPtr->position.x > self->position.x)
+            self->active = ACTIVE_NORMAL;
+            self->player = (EntityPlayer *)data;
+            if (self->player->position.x > self->position.x)
                 self->state = TwistedTubes_State_PlayerEntryR;
             else
                 self->state = TwistedTubes_State_PlayerEntryL;
@@ -78,8 +79,9 @@ void TwistedTubes_Create(void *data)
             self->visible       = true;
             self->drawOrder     = Zone->objectDrawHigh;
             self->active        = ACTIVE_BOUNDS;
-            self->updateRange.y = (self->height + 4) << 21;
             self->updateRange.x = 0x800000;
+            self->updateRange.y = (self->height + 4) << 21;
+
             RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->entranceAnimator, true, 0);
             RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->tubeAnimator, true, 1);
             RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->topGlassAnimator, true, 2);
@@ -158,7 +160,8 @@ void TwistedTubes_State_HandleInteractions(void)
 void TwistedTubes_State_PlayerEntryL(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = self->playerPtr;
+
+    EntityPlayer *player = self->player;
     player->position.x += (self->position.x - player->position.x - 0x380000) >> 3;
     player->position.y += (self->position.y - player->position.y - 0x80000) >> 3;
     if (++self->timer == 8) {
@@ -171,9 +174,11 @@ void TwistedTubes_State_PlayerEntryL(void)
 void TwistedTubes_State_PlayerEntryR(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = self->playerPtr;
+
+    EntityPlayer *player = self->player;
     player->position.x += (self->position.x - player->position.x + 0x380000) >> 3;
     player->position.y += (self->position.y - player->position.y - 0x80000) >> 3;
+
     if (++self->timer == 8) {
         self->timer     = 0;
         self->direction = FLIP_X;
@@ -184,7 +189,8 @@ void TwistedTubes_State_PlayerEntryR(void)
 void TwistedTubes_State_FirstLoopR(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = self->playerPtr;
+
+    EntityPlayer *player = self->player;
     int32 playerID       = RSDK.GetEntityID(player);
 
     self->angle += 8;
@@ -192,7 +198,8 @@ void TwistedTubes_State_FirstLoopR(void)
     player->position.y = self->position.y - (RSDK.Cos256(self->angle) << 12);
     player->velocity.x = -0x400000;
     player->velocity.y = 0x10000;
-    if (self->angle >= 128) {
+
+    if (self->angle >= 0x80) {
         self->position.y += 0x100000;
         self->angle = 0;
         self->state = TwistedTubes_State_TubeLoops;
@@ -207,7 +214,8 @@ void TwistedTubes_State_FirstLoopR(void)
 void TwistedTubes_State_TubeLoops(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = self->playerPtr;
+
+    EntityPlayer *player = self->player;
     int32 playerID       = RSDK.GetEntityID(player);
 
     self->angle += 8;
@@ -216,8 +224,8 @@ void TwistedTubes_State_TubeLoops(void)
     player->velocity.x = 0x40000;
     player->velocity.y = 0x10000;
 
-    if (self->angle < 128) {
-        if (self->angle >= 64 && self->direction == FLIP_X && self->height == 1) {
+    if (self->angle < 0x80) {
+        if (self->angle >= 0x40 && self->direction == FLIP_X && self->height == 1) {
             player->position.y                   = self->position.y;
             player->velocity.x                   = 0xC0000;
             player->velocity.y                   = 0;
@@ -251,14 +259,16 @@ void TwistedTubes_State_TubeLoops(void)
 void TwistedTubes_State_FirstLoopL(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = self->playerPtr;
+
+    EntityPlayer *player = self->player;
+
     self->angle += 8;
-    player->position.x = self->position.x - 0x3800 * RSDK.Cos256(self->angle);
+    player->position.x = self->position.x - (RSDK.Cos256(self->angle) * 0x3800);
     player->position.y = self->position.y - (RSDK.Cos256(self->angle) << 12);
     player->velocity.x = 0x40000;
     player->velocity.y = 0x10000;
 
-    if (self->angle >= 128) {
+    if (self->angle >= 0x80) {
         self->position.y += 0x200000;
         self->angle = 0;
         self->state = TwistedTubes_State_FirstLoopR;
@@ -273,8 +283,10 @@ void TwistedTubes_State_FirstLoopL(void)
 void TwistedTubes_State_ExitL(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = self->playerPtr;
+
+    EntityPlayer *player = self->player;
     player->position.y   = self->position.y;
+
     if (player->velocity.x <= -0x80000)
         destroyEntity(self);
     else
@@ -287,7 +299,8 @@ void TwistedTubes_State_ExitL(void)
 void TwistedTubes_State_ExitR(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = self->playerPtr;
+
+    EntityPlayer *player = self->player;
     player->position.y   = self->position.y;
 
     if (player->velocity.x >= 0x80000)
@@ -305,6 +318,7 @@ void TwistedTubes_EditorDraw(void)
 
     self->updateRange.y = (self->height + 4) << 21;
     self->updateRange.x = 0x800000;
+
     RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->entranceAnimator, true, 0);
     RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->tubeAnimator, true, 1);
     RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->topGlassAnimator, true, 2);

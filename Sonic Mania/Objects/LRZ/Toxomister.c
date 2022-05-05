@@ -221,7 +221,7 @@ void Toxomister_StateCloud_FallToFloor(void)
     if (self->velocity.y < 0x20000)
         self->velocity.y += 0x80;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, false))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x180000, false))
         self->state = Toxomister_StateCloud_ReachedFloor;
 
     Toxomister_CheckCloudOnScreen();

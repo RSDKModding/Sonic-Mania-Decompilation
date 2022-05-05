@@ -12,12 +12,15 @@ ObjectUISaveSlot *UISaveSlot;
 void UISaveSlot_Update(void)
 {
     RSDK_THIS(UISaveSlot);
+
     UISaveSlot_SetupButtonElements();
+
     if (self->textFrames != UIWidgets->textFrames) {
         UISaveSlot_SetupAnimators();
         UISaveSlot_HandleSaveIcons();
         self->textFrames = UIWidgets->textFrames;
     }
+
     StateMachine_Run(self->state);
 
     if (++self->zoneIconSprX >= 192)
@@ -34,6 +37,7 @@ void UISaveSlot_Update(void)
     if (self->isSelected) {
         self->textBouncePos -= 0x600;
         self->textBounceOffset += self->textBouncePos;
+
         if (self->textBounceOffset >= 0x13600)
             self->textBounceOffset = 0x13600;
 
@@ -44,6 +48,7 @@ void UISaveSlot_Update(void)
 
         self->buttonBouncePos -= 0x1800;
         self->buttonBounceOffset += self->buttonBouncePos;
+
         if (self->buttonBounceOffset >= 0x11800)
             self->buttonBounceOffset = 0x11800;
 
@@ -55,12 +60,14 @@ void UISaveSlot_Update(void)
     else if (self->state != UISaveSlot_State_Selected) {
         if (self->textBounceOffset > 0) {
             self->textBounceOffset -= 0x2000;
+
             if (self->textBounceOffset < 0)
                 self->textBounceOffset = 0;
         }
 
         if (self->buttonBounceOffset > 0) {
             self->buttonBounceOffset -= 0x2000;
+
             if (self->buttonBounceOffset < 0)
                 self->buttonBounceOffset = 0;
         }
@@ -83,6 +90,7 @@ void UISaveSlot_Update(void)
             self->stateInput = StateMachine_None;
 #endif
         }
+
         self->active = ACTIVE_BOUNDS;
     }
 }
@@ -94,8 +102,8 @@ void UISaveSlot_StaticUpdate(void) {}
 void UISaveSlot_Draw(void)
 {
     RSDK_THIS(UISaveSlot);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     if (self->type == UISAVESLOT_REGULAR) {
         drawPos.y = self->position.y + 0x30000;
         drawPos.x = self->position.x + 0x30000;
@@ -107,13 +115,14 @@ void UISaveSlot_Draw(void)
 
         drawPos.x = self->position.x + 0x2D0000;
         drawPos.y = 0x4F0000 + self->position.y;
-        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, (-64 * self->textBounceOffset) >> 16, 96, 160, 176);
-        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, (-44 * self->textBounceOffset) >> 16, 88, 112, 224);
+        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, (-64 * self->textBounceOffset) >> 16, 0x60, 0xA0, 0xB0);
+        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, (-44 * self->textBounceOffset) >> 16, 0x58, 0x70, 0xE0);
 
         drawPos.x = self->position.x + 0x30000;
         drawPos.y = self->position.y + 0x30000;
         UIWidgets_DrawRectOutline_Blended(drawPos.x, drawPos.y, 96, 164);
-        RSDK.DrawRect(drawPos.x - 0x2D0000, drawPos.y - 0x130000, 0x5A0000, 0x30000, 0, 255, INK_BLEND, false);
+
+        RSDK.DrawRect(drawPos.x - 0x2D0000, drawPos.y - 0x130000, 0x5A0000, 0x30000, 0x000000, 0xFF, INK_BLEND, false);
 
         if (self->isSelected)
             UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 96, 164);
@@ -125,23 +134,26 @@ void UISaveSlot_Draw(void)
         drawPos.y                = self->position.y - 0x300000;
         RSDK.DrawSprite(&self->uiAnimator, &drawPos, false);
 
-        if (self->isNewSave || self->saveZoneID == 255) {
+        if (self->isNewSave || self->saveZoneID == 0xFF) {
             RSDK.DrawSprite(&self->iconBGAnimator, &drawPos, false);
             RSDK.DrawSprite(&self->saveStatusAnimator, &drawPos, false);
         }
-        else if ((self->isSelected || self->state == UISaveSlot_State_Selected) && self->saveZoneID <= 13) {
+        else if ((self->isSelected || self->state == UISaveSlot_State_Selected) && self->saveZoneID <= ZONE_COUNT_SAVEFILE) {
             SpriteFrame *frame = RSDK.GetFrame(UISaveSlot->aniFrames, 5, self->saveZoneID);
             frame->pivotX      = -43;
             frame->width       = 86;
             frame->sprX        = self->zoneIconSprX;
+
             if (frame->sprX > 106) {
                 int32 width  = frame->sprX - 106;
                 frame->width = 86 - width;
                 RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
+
                 frame->pivotX += frame->width;
                 frame->sprX  = 0;
                 frame->width = width;
             }
+
             RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
             RSDK.DrawSprite(&self->zoneNameAnimator, &drawPos, false);
         }
@@ -159,13 +171,14 @@ void UISaveSlot_Draw(void)
             UISaveSlot_DrawPlayerIcons(drawPos.x, drawPos.y);
         }
         else {
-            RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y + 0x3D0000, 0x5A0000, 0x100000, 0, 255, INK_NONE, false);
+            RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y + 0x3D0000, 0x5A0000, 0x100000, 0x000000, 0xFF, INK_NONE, false);
 
             drawPos.x = self->position.x - 0x240000;
             drawPos.y = 0x450000 + self->position.y;
             for (int32 i = 0; i < 7; ++i) {
                 self->emeraldsAnimator.frameID = ((1 << i) & self->saveEmeralds) ? i : 7;
                 RSDK.DrawSprite(&self->emeraldsAnimator, &drawPos, false);
+
                 drawPos.x += 0xC0000;
             }
 
@@ -196,7 +209,7 @@ void UISaveSlot_Draw(void)
     else {
         drawPos.y = self->position.y + 0x30000;
         drawPos.x = self->position.x + 0x30000;
-        RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y - 0x1F0000, 0x600000, 0x440000, 0xFFFFFF, 127, INK_BLEND, false);
+        RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y - 0x1F0000, 0x600000, 0x440000, 0xFFFFFF, 0x7F, INK_BLEND, false);
 
         drawPos.x = self->position.x + 0x30000;
         drawPos.y = self->position.y + 0x30000;
@@ -241,12 +254,14 @@ void UISaveSlot_Draw(void)
 #endif
         }
     }
-    RSDK.DrawCircle(ScreenInfo->centerX, ScreenInfo->centerY, self->fxRadius, 0, self->alpha, INK_ALPHA, true);
+
+    RSDK.DrawCircle(ScreenInfo->centerX, ScreenInfo->centerY, self->fxRadius, 0x000000, self->alpha, INK_ALPHA, true);
 }
 
 void UISaveSlot_Create(void *data)
 {
     RSDK_THIS(UISaveSlot);
+
     if (!SceneInfo->inEditor) {
         self->visible         = true;
         self->drawOrder       = 2;
@@ -255,6 +270,7 @@ void UISaveSlot_Create(void *data)
         self->updateRange.y   = 0x300000;
         self->processButtonCB = UISaveSlot_ProcessButtonCB;
         self->state           = UISaveSlot_State_NotSelected;
+
         if (self->type == UISAVESLOT_REGULAR) {
             UISaveSlot_LoadSaveInfo();
         }
@@ -262,6 +278,7 @@ void UISaveSlot_Create(void *data)
             self->slotID = NO_SAVE_SLOT;
             UISaveSlot_SetupAnimators();
         }
+
         self->textFrames = UIWidgets->textFrames;
         UISaveSlot_HandleSaveIcons();
     }
@@ -280,6 +297,7 @@ uint8 UISaveSlot_GetPlayerIDFromID(uint8 id)
         case 5: return ID_RAY;
         default: break;
     }
+
     return ID_NONE;
 }
 uint8 UISaveSlot_GetIDFromPlayerID(uint8 playerID)
@@ -292,6 +310,7 @@ uint8 UISaveSlot_GetIDFromPlayerID(uint8 playerID)
         case ID_RAY: return 5;
         default: break;
     }
+
     return ID_NONE;
 }
 
@@ -299,13 +318,9 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
                                       int32 drawY)
 {
     RSDK_THIS(UISaveSlot);
-    Vector2 drawPos;
 
-    Animator *animator = NULL;
-    if (!isSilhouette)
-        animator = &self->playersAnimator;
-    else
-        animator = &self->shadowsAnimator;
+    Vector2 drawPos;
+    Animator *animator = !isSilhouette ? &self->playersAnimator : &self->shadowsAnimator;
 
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, (isSilhouette != 0) + 19, animator, true, 0);
     self->drawFX |= FX_FLIP;
@@ -338,6 +353,7 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
     y = drawY;
     if (friendCount)
         y = drawY - 0x80000;
+
     drawPos.x       = drawX - 0xF0000;
     drawPos.y       = y + 0x30000;
     self->direction = animator->frameID && animator->frameID != 3;
@@ -353,6 +369,7 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
             offset = 0xA0000;
             x      = drawX - 0x160000;
         }
+
         drawPos.x = x + ((offset * (friendCount - 1)) >> 1);
         drawPos.y = drawY + 0x1A0000;
 
@@ -365,6 +382,7 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
                 default: animator->frameID = 0; break;
             }
             RSDK.DrawSprite(animator, &drawPos, false);
+
             drawPos.x -= offset;
         }
     }
@@ -401,6 +419,7 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
                 friendIDs[i] = 0;
                 if (!self->saveEncoreFriends[i])
                     continue;
+
                 ++friendCount;
                 friendIDs[i] = self->saveEncoreFriends[i];
             }
@@ -413,12 +432,14 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
                     case ID_RAY: playerID = 5; break;
                     default: playerID = 0; break;
                 }
+
                 self->shadowsAnimator.frameID = playerID;
                 self->playersAnimator.frameID = playerID;
             }
             else if (playerID) {
                 drawX += 4 * self->buttonBounceOffset;
                 drawY += 4 * self->buttonBounceOffset;
+
                 UISaveSlot_DrawPlayerIcon_Encore(playerID, true, buddyID, friendIDs, friendCount, drawX, drawY);
                 UISaveSlot_DrawPlayerIcon_Encore(playerID, false, buddyID, friendIDs, friendCount, drawX - 8 * self->buttonBounceOffset,
                                                  drawY - 8 * self->buttonBounceOffset);
@@ -436,14 +457,13 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
         friendIDs[0] = UISaveSlot_GetPlayerIDFromID(self->dCharStock1);
         friendIDs[1] = UISaveSlot_GetPlayerIDFromID(self->dCharStock2);
         friendIDs[2] = UISaveSlot_GetPlayerIDFromID(self->dCharStock3);
-        if (friendIDs[0]) {
+
+        if (friendIDs[0])
             friendCount = 1;
-            if (friendIDs[1]) {
-                friendCount = 2;
-                if (friendIDs[2])
-                    friendCount = 3;
-            }
-        }
+        if (friendIDs[0] && friendIDs[1])
+            friendCount = 2;
+        if (friendIDs[0] && friendIDs[1] && friendIDs[2])
+            friendCount = 3;
 
         if (!buddyID) {
             switch (playerID) {
@@ -453,12 +473,14 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
                 case ID_RAY: playerID = 5; break;
                 default: playerID = 0; break;
             }
+
             self->shadowsAnimator.frameID = playerID;
             self->playersAnimator.frameID = playerID;
         }
         else if (playerID) {
             drawX += 4 * self->buttonBounceOffset;
             drawY += 4 * self->buttonBounceOffset;
+
             UISaveSlot_DrawPlayerIcon_Encore(playerID, true, buddyID, friendIDs, friendCount, drawX, drawY);
             UISaveSlot_DrawPlayerIcon_Encore(playerID, false, buddyID, friendIDs, friendCount, drawX - 8 * self->buttonBounceOffset,
                                              drawY - 8 * self->buttonBounceOffset);
@@ -487,6 +509,7 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
 void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 {
     RSDK_THIS(UISaveSlot);
+
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 3, &self->livesAnimator, true, 0);
 #if RETRO_USE_PLUS
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 21, &self->continuesAnimator, true, 0);
@@ -524,6 +547,7 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 #if RETRO_USE_PLUS
     }
 #endif
+
     self->livesAnimator.frameID = playerID;
 #if RETRO_USE_PLUS
     self->continuesAnimator.frameID = playerID;
@@ -591,6 +615,7 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 void UISaveSlot_SetupButtonElements(void)
 {
     RSDK_THIS(UISaveSlot);
+
     self->touchCB            = UIButton_ProcessTouchCB_Multi;
     self->selectedCB         = UISaveSlot_SelectedCB;
     self->failCB             = StateMachine_None;
@@ -604,6 +629,7 @@ void UISaveSlot_SetupButtonElements(void)
 #else
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
 #endif
+
     if (self->type == UISAVESLOT_NOSAVE) {
         self->touchPosSizeM[0].x   = 0x600000;
         self->touchPosSizeM[0].y   = 0x440000;
@@ -649,7 +675,9 @@ void UISaveSlot_SetupButtonElements(void)
 
                 self->touchPosCount = 3;
                 break;
+
             case SAVEGAME_INPROGRESS: self->touchPosCount = 1; break;
+
             case SAVEGAME_COMPLETE:
                 self->touchPosSizeM[1].x   = 0x200000;
                 self->touchPosSizeM[1].y   = 0x200000;
@@ -672,6 +700,7 @@ void UISaveSlot_SetupButtonElements(void)
 void UISaveSlot_SetupAnimators(void)
 {
     RSDK_THIS(UISaveSlot);
+
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 0, &self->uiAnimator, true, 0);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 1, &self->playersAnimator, true, 3);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 2, &self->shadowsAnimator, true, 3);
@@ -686,17 +715,20 @@ void UISaveSlot_SetupAnimators(void)
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 2, &self->zoneNameAnimator, true, 2);
     else
         RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 6, &self->zoneNameAnimator, true, 0);
+
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 8, &self->numbersAnimator, true, 0);
 }
 
 void UISaveSlot_LoadSaveInfo(void)
 {
     RSDK_THIS(UISaveSlot);
+
 #if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
 #endif
+
     int32 saveState = saveRAM->saveState;
     if (saveState == SAVEGAME_INPROGRESS || saveState == SAVEGAME_COMPLETE) {
 #if RETRO_USE_PLUS
@@ -709,6 +741,7 @@ void UISaveSlot_LoadSaveInfo(void)
                 self->saveEncoreFriends[i] = ID_NONE;
                 if (!friends)
                     continue;
+
                 self->saveEncoreFriends[i] = friends & 0xFF;
                 friends >>= 8;
             }
@@ -725,6 +758,7 @@ void UISaveSlot_LoadSaveInfo(void)
 
     switch (saveState) {
         default: break;
+
         case SAVEGAME_BLANK:
             self->saveZoneID   = ZONE_GHZ;
             self->saveEmeralds = 0;
@@ -738,6 +772,7 @@ void UISaveSlot_LoadSaveInfo(void)
             self->isNewSave = true;
             self->listID    = 0;
             break;
+
         case SAVEGAME_INPROGRESS:
             self->saveZoneID   = saveRAM->zoneID;
             self->saveEmeralds = saveRAM->chaosEmeralds;
@@ -748,6 +783,7 @@ void UISaveSlot_LoadSaveInfo(void)
             self->isNewSave = false;
             self->listID    = 0;
             break;
+
         case SAVEGAME_COMPLETE:
             self->saveZoneID   = NO_SAVE_SLOT;
             self->saveEmeralds = saveRAM->chaosEmeralds;
@@ -759,6 +795,7 @@ void UISaveSlot_LoadSaveInfo(void)
             self->isNewSave = false;
             break;
     }
+
     UISaveSlot_SetupAnimators();
     UISaveSlot_HandleSaveIcons();
 }
@@ -768,8 +805,10 @@ void UISaveSlot_HandleSaveIcons(void)
 
     self->saveStatusAnimator.frameID = self->listID;
     self->zoneIconAnimator.frameID   = self->saveZoneID;
+
     if (self->type == UISAVESLOT_REGULAR) {
         self->zoneNameAnimator.frameID = self->saveZoneID;
+
         if (self->currentlySelected) {
 #if RETRO_USE_PLUS
             if (self->encoreMode)
@@ -785,14 +824,22 @@ void UISaveSlot_DeleteDLG_CB(void)
 {
     EntityUIDialog *dialog     = (EntityUIDialog *)UIDialog->activeDialog;
     EntityUISaveSlot *saveSlot = (EntityUISaveSlot *)dialog->entityPtr;
-    dialog->parent->state      = StateMachine_None;
+
+    dialog->parent->state = StateMachine_None;
+
     UIWaitSpinner_StartWait();
+
 #if RETRO_USE_PLUS
     int32 *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8, saveSlot->encoreMode);
 #else
     int32 *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8);
 #endif
+    // Bug Details(?):
+    // sizeof(globals->noSaveSlot) and sizeof(saveData) is 4096 (sizeof(int32) * 0x400)
+    // but the memset size is only 1024 (sizeof(uint8) * 0x400)
+    // so only about 1/4th of the save slot is cleared, though nothin uses the extra space so it's not a big deal
     memset(saveRAM, 0, 0x400);
+
     SaveGame_SaveFile(UISaveSlot_DeleteSaveCB);
 }
 
@@ -822,6 +869,7 @@ void UISaveSlot_ProcessButtonCB(void)
 
     self->active = ACTIVE_NORMAL;
     UIControl_SetTargetPos(control, self->position.x, 0);
+
     if (control->position.x == control->targetPos.x) {
         if (control->columnCount > 1) {
             if (UIControl->keyLeft) {
@@ -876,6 +924,7 @@ void UISaveSlot_ProcessButtonCB(void)
 void UISaveSlot_SelectedCB(void)
 {
     RSDK_THIS(UISaveSlot);
+
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     if (control->position.x == control->targetPos.x) {
@@ -884,6 +933,7 @@ void UISaveSlot_SelectedCB(void)
         self->isSelected        = false;
         self->currentlySelected = false;
         self->processButtonCB   = NULL;
+
         foreach_all(UISaveSlot, saveSlot)
         {
             if (saveSlot != self) {
@@ -907,6 +957,7 @@ void UISaveSlot_SelectedCB(void)
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
+
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         RSDK.StopChannel(Music->channelID);
     }
@@ -915,42 +966,46 @@ void UISaveSlot_SelectedCB(void)
 void UISaveSlot_NextCharacter(void)
 {
     RSDK_THIS(UISaveSlot);
-    ++self->frameID;
 
+    ++self->frameID;
     int32 player = self->frameID;
+
 #if RETRO_USE_PLUS
     int32 max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
 #else
     int32 max = 4;
 #endif
-    while (player >= max) {
-        player -= max;
-    }
+    while (player >= max) player -= max;
+
     self->frameID            = player;
     self->buttonBouncePos    = 0x8000;
     self->buttonBounceOffset = 0;
+
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
+
     UISaveSlot_HandleSaveIcons();
 }
 
 void UISaveSlot_PrevCharacter(void)
 {
     RSDK_THIS(UISaveSlot);
-    --self->frameID;
 
+    --self->frameID;
     int32 player = self->frameID;
+
 #if RETRO_USE_PLUS
     int32 max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
 #else
     int32 max = 4;
 #endif
-    while (player < 0) {
-        player += max;
-    }
+    while (player < 0) player += max;
+
     self->frameID            = player;
     self->buttonBouncePos    = 0x8000;
     self->buttonBounceOffset = 0;
+
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
+
     UISaveSlot_HandleSaveIcons();
 }
 
@@ -966,7 +1021,9 @@ void UISaveSlot_NextZone(void)
         if (self->saveZoneID > ZONE_TMZ)
             self->saveZoneID = ZONE_GHZ;
     }
+
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
+
     UISaveSlot_HandleSaveIcons();
 }
 
@@ -982,33 +1039,41 @@ void UISaveSlot_PrevZone(void)
         if (self->saveZoneID < ZONE_GHZ)
             self->saveZoneID = ZONE_TMZ;
     }
+
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
+
     UISaveSlot_HandleSaveIcons();
 }
 
 bool32 UISaveSlot_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UISaveSlot);
+
     return self->isSelected;
 }
 bool32 UISaveSlot_CheckSelectedCB(void)
 {
     RSDK_THIS(UISaveSlot);
+
     return self->state == UISaveSlot_State_Selected;
 }
 
 void UISaveSlot_ButtonEnterCB(void)
 {
     RSDK_THIS(UISaveSlot);
+
     if (!self->currentlySelected) {
         self->isSelected        = true;
         self->currentlySelected = true;
+
         UISaveSlot_HandleSaveIcons();
+
         self->textBouncePos   = 0x4000;
         self->buttonBouncePos = 0x8000;
 #if RETRO_USE_PLUS
         self->stateInput = StateMachine_None;
 #endif
+
         if (!self->isNewSave && self->type != UISAVESLOT_NOSAVE) {
             if (self->listID)
                 self->state = UISaveSlot_State_CompletedSave;
@@ -1032,6 +1097,7 @@ void UISaveSlot_ButtonEnterCB(void)
 void UISaveSlot_ButtonLeaveCB(void)
 {
     RSDK_THIS(UISaveSlot);
+
     self->isSelected        = false;
     self->currentlySelected = false;
     self->state             = UISaveSlot_State_NotSelected;
@@ -1043,6 +1109,7 @@ void UISaveSlot_ButtonLeaveCB(void)
 void UISaveSlot_HandleSaveIconChange(void)
 {
     RSDK_THIS(UISaveSlot);
+
 #if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
@@ -1060,6 +1127,7 @@ void UISaveSlot_HandleSaveIconChange(void)
             UISaveSlot_HandleSaveIcons();
         }
     }
+
     if (self->type == UISAVESLOT_NOSAVE && saveRAM->saveState == SAVEGAME_COMPLETE) {
         self->saveZoneID = NO_SAVE_SLOT;
         UISaveSlot_HandleSaveIcons();
@@ -1069,13 +1137,16 @@ void UISaveSlot_HandleSaveIconChange(void)
 void UISaveSlot_State_NotSelected(void)
 {
     RSDK_THIS(UISaveSlot);
+
     RSDK.ProcessAnimation(&self->fuzzAnimator);
+
     self->direction = self->fuzzAnimator.frameID & 3;
 }
 
 void UISaveSlot_State_OtherWasSelected(void)
 {
     RSDK_THIS(UISaveSlot);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 }
@@ -1083,7 +1154,7 @@ void UISaveSlot_State_OtherWasSelected(void)
 void UISaveSlot_State_NewSave(void)
 {
 #if RETRO_USE_PLUS
-    // so true!
+    // lol
 #else
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)self->parent;
@@ -1100,6 +1171,7 @@ void UISaveSlot_State_NewSave(void)
 void UISaveSlot_State_ActiveSave(void)
 {
     RSDK_THIS(UISaveSlot);
+
     if (!self->currentlySelected)
         self->state = UISaveSlot_State_NotSelected;
 }
@@ -1108,6 +1180,7 @@ void UISaveSlot_State_ActiveSave(void)
 void UISaveSlot_StateInput_NewSave(void)
 {
     RSDK_THIS(UISaveSlot);
+
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     if (control->active == ACTIVE_ALWAYS) {
@@ -1122,6 +1195,7 @@ void UISaveSlot_StateInput_NewSave(void)
 void UISaveSlot_State_CompletedSave(void)
 {
     RSDK_THIS(UISaveSlot);
+
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     if (control->active == ACTIVE_ALWAYS) {
@@ -1137,6 +1211,7 @@ void UISaveSlot_State_Selected(void)
     RSDK_THIS(UISaveSlot);
 
     ++self->timer;
+
 #if RETRO_USE_PLUS
     if (self->encoreMode && (self->isNewSave || self->type == UISAVESLOT_NOSAVE)) {
         EntityFXRuby *fxRuby = self->fxRuby;
@@ -1199,9 +1274,11 @@ void UISaveSlot_State_Selected(void)
 void UISaveSlot_EditorDraw(void)
 {
     RSDK_THIS(UISaveSlot);
+
     self->drawOrder     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
+
     if (self->type == UISAVESLOT_REGULAR) {
         UISaveSlot_LoadSaveInfo();
     }
@@ -1209,6 +1286,7 @@ void UISaveSlot_EditorDraw(void)
         self->slotID = NO_SAVE_SLOT;
         UISaveSlot_SetupAnimators();
     }
+
     self->textFrames = UIWidgets->textFrames;
     UISaveSlot_HandleSaveIcons();
 

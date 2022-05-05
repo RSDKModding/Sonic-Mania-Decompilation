@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UITEXT_ALIGN_LEFT,
+    UITEXT_ALIGN_CENTER,
+    UITEXT_ALIGN_RIGHT,
+}UITextAlignments;
+
 // Object Class
 struct ObjectUIText {
     RSDK_OBJECT
@@ -35,7 +41,7 @@ void UIText_Update(void);
 void UIText_LateUpdate(void);
 void UIText_StaticUpdate(void);
 void UIText_Draw(void);
-void UIText_Create(void* data);
+void UIText_Create(void *data);
 void UIText_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIText_EditorDraw(void);
@@ -45,5 +51,4 @@ void UIText_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_UITEXT_H
+#endif //! OBJ_UITEXT_H

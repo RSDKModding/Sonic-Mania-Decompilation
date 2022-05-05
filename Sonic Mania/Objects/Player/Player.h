@@ -63,6 +63,7 @@ typedef enum {
     ANI_SWIMLIFT,
 } PlayerAnimationIDs;
 
+// for "characterID" in editor
 typedef enum {
     CHAR_NONE,
     CHAR_SONIC,
@@ -437,7 +438,7 @@ void Player_SaveValues(void);
 void Player_GiveScore(EntityPlayer *player, int32 score);
 void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx);
 void Player_GiveLife(EntityPlayer *entity);
-void Player_ApplyShieldEffect(EntityPlayer *player);
+void Player_ApplyShield(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int32 character);
 bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks);
 void Player_BlendSuperSonicColors(int32 bankID);
@@ -458,12 +459,14 @@ void Player_RemoveEncoreLeader(void);
 #endif
 void Player_ResetBoundaries(EntityPlayer *player);
 void Player_HandleDeath(EntityPlayer *player);
-void Player_ResetState(EntityPlayer *player);
+void Player_HandleQuickRespawn(EntityPlayer *player);
 
 // Collision
-//returns a pointer to the currently active player hitbox
+//returns a pointer to the currently active player hitbox (outer box)
 Hitbox *Player_GetHitbox(EntityPlayer *player);
-//performs a non-solid box collision with the player, this handles setting the appropriate collision-related player variabes automatically
+// returns a pointer to the alternate player hitbox (inner box)
+Hitbox *Player_GetAltHitbox(EntityPlayer *player);
+// performs a non-solid box collision with the player, this handles setting the appropriate collision-related player variabes automatically
 bool32 Player_CheckCollisionTouch(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 // performs an all-solid box collision with the player, this handles setting the appropriate collision-related player variabes automatically
 bool32 Player_CheckCollisionBox(EntityPlayer *player, void *entity, Hitbox *entityHitbox);

@@ -12,14 +12,14 @@ typedef enum {
     CRANE_PLAYER1_ONLY,
     CRANE_PLAYER2_ONLY,
     CRANE_PLAYER_ALL,
-}CranePlayerTypes;
+} CranePlayerTypes;
 
 // Object Class
 struct ObjectCrane {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxUnused;
+    Hitbox hitboxGrab;
+    Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxGrab;
 };
@@ -31,13 +31,13 @@ struct EntityCrane {
     Animator frontAnimator;
     Animator backAnimator;
     Animator chainAnimator;
-    Entity *grabbedPlayer;
+    EntityPlayer *grabbedPlayer;
     uint16 distance;
     uint8 startType;
     uint8 playerType;
     Vector2 startPos;
     uint8 startDir;
-    int32 timer2;
+    int32 delay;
     int32 timer;
 };
 
@@ -49,7 +49,7 @@ void Crane_Update(void);
 void Crane_LateUpdate(void);
 void Crane_StaticUpdate(void);
 void Crane_Draw(void);
-void Crane_Create(void* data);
+void Crane_Create(void *data);
 void Crane_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Crane_EditorDraw(void);
@@ -76,4 +76,4 @@ void Crane_State_DropDelay(void);
 void Crane_State_ToStart1stHalf(void);
 void Crane_State_ToStart2ndHalf(void);
 
-#endif //!OBJ_CRANE_H
+#endif //! OBJ_CRANE_H

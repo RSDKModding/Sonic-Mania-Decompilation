@@ -13,7 +13,7 @@ typedef enum {
     HHW_UNUSED2,
     HHW_MINILASER,
     HHW_ELECTRICORB,
-}HHWTypes;
+} HHWTypes;
 
 // Object Class
 struct ObjectHotaruHiWatt {
@@ -75,7 +75,7 @@ void HotaruHiWatt_Update(void);
 void HotaruHiWatt_LateUpdate(void);
 void HotaruHiWatt_StaticUpdate(void);
 void HotaruHiWatt_Draw(void);
-void HotaruHiWatt_Create(void* data);
+void HotaruHiWatt_Create(void *data);
 void HotaruHiWatt_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HotaruHiWatt_EditorDraw(void);
@@ -84,9 +84,12 @@ void HotaruHiWatt_EditorLoad(void);
 void HotaruHiWatt_Serialize(void);
 
 // Extra Entity Functions
-bool32 HotaruHiWatt_ZapCheckCB(void);
-bool32 HotaruHiWatt_LaserCheckCB(void);
-void HotaruHiWatt_LaserUpdateCB(int sfx);
+bool32 HotaruHiWatt_CheckCB_Zap(void);
+bool32 HotaruHiWatt_CheckCB_Laser(void);
+void HotaruHiWatt_UpdateCB_Laser(int sfx);
+
+void HotaruHiWatt_Hit(void);
+void HotaruHiWatt_Explode(void);
 
 void HotaruHiWatt_CheckPlayerCollisions_Hotaru(void);
 void HotaruHiWatt_CheckPlayerCollisions_Boss(void);
@@ -157,4 +160,4 @@ void HotaruHiWatt_StateBoss_FinishedLaserAttack(void);
 void HotaruHiWatt_StateBoss_Destroyed(void);
 void HotaruHiWatt_StateBoss_Finished(void);
 
-#endif //!OBJ_HOTARUHIWATT_H
+#endif //! OBJ_HOTARUHIWATT_H

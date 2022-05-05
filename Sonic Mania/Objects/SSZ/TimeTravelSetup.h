@@ -12,7 +12,7 @@ struct ObjectTimeTravelSetup {
 
 // Entity Class
 struct EntityTimeTravelSetup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -23,7 +23,7 @@ void TimeTravelSetup_Update(void);
 void TimeTravelSetup_LateUpdate(void);
 void TimeTravelSetup_StaticUpdate(void);
 void TimeTravelSetup_Draw(void);
-void TimeTravelSetup_Create(void* data);
+void TimeTravelSetup_Create(void *data);
 void TimeTravelSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TimeTravelSetup_EditorDraw(void);
@@ -34,4 +34,4 @@ void TimeTravelSetup_Serialize(void);
 // Extra Entity Functions
 void TimeTravelSetup_Particle_CB(EntityDebris *debris);
 
-#endif //!OBJ_TIMETRAVELSETUP_H
+#endif //! OBJ_TIMETRAVELSETUP_H

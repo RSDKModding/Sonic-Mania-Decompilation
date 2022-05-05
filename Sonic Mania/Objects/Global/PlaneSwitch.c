@@ -12,10 +12,12 @@ ObjectPlaneSwitch *PlaneSwitch;
 void PlaneSwitch_Update(void)
 {
     RSDK_THIS(PlaneSwitch);
+
     foreach_active(Player, player)
     {
         PlaneSwitch_CheckCollisions(self, player, self->flags, self->size, true, Zone->playerDrawLow, Zone->playerDrawHigh);
     }
+
     self->visible = DebugMode->debugActive;
 }
 
@@ -28,7 +30,9 @@ void PlaneSwitch_Draw(void) { PlaneSwitch_DrawSprites(); }
 void PlaneSwitch_Create(void *data)
 {
     RSDK_THIS(PlaneSwitch);
+
     RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator, true, 0);
+
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_BOUNDS;
 
@@ -45,6 +49,7 @@ void PlaneSwitch_StageLoad(void) { PlaneSwitch->aniFrames = RSDK.LoadSpriteAnima
 void PlaneSwitch_DrawSprites(void)
 {
     RSDK_THIS(PlaneSwitch);
+
     Vector2 drawPos;
 
     drawPos.x = self->position.x - 0x80000;
@@ -74,6 +79,9 @@ void PlaneSwitch_DrawSprites(void)
     }
 }
 
+// Custom function, but it allows me to majorly shrink any planeSwitch code 
+// it's based on all the repeated planeswitch code, just made more modular
+// (and also it means you can add planeswitches to basically anything with ease :P)
 void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
 {
     Entity *other = (Entity *)o;
@@ -85,6 +93,7 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
     int32 pos   = ((other->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (other->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
     RSDK.Cos256(self->negAngle);
     RSDK.Sin256(self->negAngle);
+
     if (!self->onPath || other->onGround) {
         int32 xDif = abs(scanX - self->position.x);
         int32 yDif = abs(scanY - self->position.y);

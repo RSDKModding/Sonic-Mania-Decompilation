@@ -141,7 +141,7 @@ inline void GetCString(char *dest, TextInfo *info)
 void AppendText(TextInfo *info, char *text);
 void PrependText(TextInfo *info, char *text);
 void AppendString(TextInfo *textA, TextInfo *textB);
-bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 flag);
+bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch);
 bool32 SplitStringList(TextInfo *list, TextInfo *strings, int32 start, int32 count);
 
 void LoadStrings(TextInfo *buffer, const char *filePath);

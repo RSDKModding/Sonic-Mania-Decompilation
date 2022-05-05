@@ -15,7 +15,9 @@ struct EntityUIVsResults {
     MANIA_UI_ITEM_BASE
     uint8 playerID;
     int32 numRows;
+#if RETRO_USE_PLUS
     int32 trophyCount;
+#endif
     uint8 row0Label;
     uint8 row1Label;
     uint8 row2Label;
@@ -56,7 +58,9 @@ struct EntityUIVsResults {
     Animator textAnimator;
     Animator numbersAnimator;
     Animator rowAnimators[13];
+#if RETRO_USE_PLUS
     Animator trophyAnimator;
+#endif
     uint16 textFrames;
 };
 
@@ -68,7 +72,7 @@ void UIVsResults_Update(void);
 void UIVsResults_LateUpdate(void);
 void UIVsResults_StaticUpdate(void);
 void UIVsResults_Draw(void);
-void UIVsResults_Create(void* data);
+void UIVsResults_Create(void *data);
 void UIVsResults_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIVsResults_EditorDraw(void);
@@ -80,9 +84,11 @@ void UIVsResults_Serialize(void);
 void UIVsResults_SetupSprites(void);
 void UIVsResults_DrawOutline(void);
 void UIVsResults_DrawBG(void);
-void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY);
+void UIVsResults_DrawRow(int32 row, int32 x, int32 y);
+#if RETRO_USE_PLUS
 void UIVsResults_DrawTrophies(void);
+#endif
 void UIVsResults_DrawResults(void);
 void UIVsResults_State_Blank(void);
 
-#endif //!OBJ_UIVSRESULTS_H
+#endif //! OBJ_UIVSRESULTS_H

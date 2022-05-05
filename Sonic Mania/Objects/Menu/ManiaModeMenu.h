@@ -22,7 +22,7 @@ struct ObjectManiaModeMenu {
 
 // Entity Class
 struct EntityManiaModeMenu {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -33,7 +33,7 @@ void ManiaModeMenu_Update(void);
 void ManiaModeMenu_LateUpdate(void);
 void ManiaModeMenu_StaticUpdate(void);
 void ManiaModeMenu_Draw(void);
-void ManiaModeMenu_Create(void* data);
+void ManiaModeMenu_Create(void *data);
 void ManiaModeMenu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ManiaModeMenu_EditorDraw(void);
@@ -47,13 +47,14 @@ bool32 ManiaModeMenu_InitAPI(void);
 void ManiaModeMenu_InitLocalization(bool32 success);
 int32 ManiaModeMenu_GetActiveMenu(void);
 void ManiaModeMenu_ChangeMenuTrack(void);
-int32 ManiaModeMenu_StartReturnToTitle(void);
+void ManiaModeMenu_StartReturnToTitle(void);
 void ManiaModeMenu_SetBGColors(void);
 void ManiaModeMenu_ReturnToTitle(void);
 void ManiaModeMenu_State_HandleTransition(void);
 void ManiaModeMenu_HandleUnlocks(void);
 void ManiaModeMenu_SetupActions(void);
 void ManiaModeMenu_HandleMenuReturn(void);
+
 #endif
 
-#endif //!OBJ_MANIAMODEMENU_H
+#endif //! OBJ_MANIAMODEMENU_H

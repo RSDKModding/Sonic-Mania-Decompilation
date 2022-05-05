@@ -9,7 +9,7 @@ struct ObjectTwistedTubes {
     Hitbox hitboxSolid;
     Hitbox hitboxEntryL;
     Hitbox hitboxEntryR;
-    int32 playerActive[4];
+    bool32 playerActive[PLAYER_MAX];
     uint16 aniFrames;
     uint16 sfxTravel;
 };
@@ -20,7 +20,7 @@ struct EntityTwistedTubes {
     StateMachine(state);
     uint8 height;
     int32 timer;
-    EntityPlayer *playerPtr;
+    EntityPlayer *player;
     Animator entranceAnimator;
     Animator tubeAnimator;
     Animator topGlassAnimator;
@@ -36,7 +36,7 @@ void TwistedTubes_Update(void);
 void TwistedTubes_LateUpdate(void);
 void TwistedTubes_StaticUpdate(void);
 void TwistedTubes_Draw(void);
-void TwistedTubes_Create(void* data);
+void TwistedTubes_Create(void *data);
 void TwistedTubes_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TwistedTubes_EditorDraw(void);
@@ -55,4 +55,4 @@ void TwistedTubes_State_FirstLoopL(void);
 void TwistedTubes_State_ExitL(void);
 void TwistedTubes_State_ExitR(void);
 
-#endif //!OBJ_TWISTEDTUBES_H
+#endif //! OBJ_TWISTEDTUBES_H

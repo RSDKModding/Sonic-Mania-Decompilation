@@ -3,20 +3,20 @@
 
 #include "SonicMania.h"
 
-#define UISlider_MinVal (0)
-#define UISlider_MaxVal (0x400)
+#define UISlider_MinVal    (0)
+#define UISlider_MaxVal    (0x400)
 #define UISlider_Increment (UISlider_MaxVal / 0x10)
 
 // Object Class
 struct ObjectUISlider {
     RSDK_OBJECT
-    uint16 aniFrames; //prolly used in-editor
+    uint16 aniFrames; // prolly used in-editor
     Entity *activeEntity;
 };
 
 // Entity Class
 struct EntityUISlider {
-	MANIA_UI_ITEM_BASE
+    MANIA_UI_ITEM_BASE
     int32 listID;
     int32 frameID;
     Vector2 size;
@@ -42,7 +42,7 @@ void UISlider_Update(void);
 void UISlider_LateUpdate(void);
 void UISlider_StaticUpdate(void);
 void UISlider_Draw(void);
-void UISlider_Create(void* data);
+void UISlider_Create(void *data);
 void UISlider_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UISlider_EditorDraw(void);
@@ -64,4 +64,4 @@ bool32 UISlider_CheckSelectedCB(void);
 void UISlider_State_HandleButtonLeave(void);
 void UISlider_State_HandleButtonEnter(void);
 
-#endif //!OBJ_UISLIDER_H
+#endif //! OBJ_UISLIDER_H

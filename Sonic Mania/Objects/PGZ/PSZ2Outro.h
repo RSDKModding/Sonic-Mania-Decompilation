@@ -12,7 +12,7 @@ struct ObjectPSZ2Outro {
 // Entity Class
 struct EntityPSZ2Outro {
     MANIA_CUTSCENE_BASE
-    Entity *eggman;
+    EntityPSZEggman *eggman;
     EntityPhantomRuby *ruby;
     EntityFXRuby *fxRuby;
 };

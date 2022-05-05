@@ -12,6 +12,7 @@ ObjectUIVideo *UIVideo;
 void UIVideo_Update(void)
 {
     RSDK_THIS(UIVideo);
+
     StateMachine_Run(self->state);
 }
 
@@ -24,12 +25,14 @@ void UIVideo_Draw(void) {}
 void UIVideo_Create(void *data)
 {
     RSDK_THIS(UIVideo);
+
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
         self->drawOrder = 0;
-        UIVideo->playing  = false;
-        self->state     = UIVideo_State_PlayVideo1;
+
+        UIVideo->playing = false;
+        self->state      = UIVideo_State_PlayVideo1;
     }
 }
 
@@ -39,22 +42,26 @@ bool32 UIVideo_SkipCB(void)
 {
     if (ControllerInfo->keyStart.press || ControllerInfo->keyA.press || ControllerInfo->keyB.press) {
         Music_FadeOut(0.0125);
+
         UIVideo->playing = true;
         return true;
     }
 #if RETRO_USE_TOUCH_CONTROLS
     else if (TouchInfo->count) {
         Music_FadeOut(0.0125);
+
         UIVideo->playing = true;
         return true;
     }
 #endif
+
     return false;
 }
 
 void UIVideo_State_PlayVideo1(void)
 {
     RSDK_THIS(UIVideo);
+
     if (!self->timer)
         RSDK.StopChannel(Music->channelID);
 
@@ -63,6 +70,7 @@ void UIVideo_State_PlayVideo1(void)
         char audioFile[64];
         RSDK.GetCString(audioFile, &self->audioFile);
         RSDK.GetCString(videoFile1, &self->videoFile1);
+
         int32 len = self->videoFile1.length;
 #if RETRO_USE_PLUS
         if (videoFile1[len - 3] == 'p' && videoFile1[len - 2] == 'n' && videoFile1[len - 1] == 'g')
@@ -72,37 +80,44 @@ void UIVideo_State_PlayVideo1(void)
             RSDK.LoadImage(videoFile1, 32.0, 1.0, UIVideo_SkipCB);
         else
             RSDK.LoadVideo(videoFile1, 0.0, UIVideo_SkipCB);
+
         self->state = UIVideo_State_PlayVideo2;
         RSDK.PlayStream(audioFile, Music->channelID, 0, false, false);
+
         self->timer = 0;
     }
 }
 void UIVideo_State_PlayVideo2(void)
 {
     RSDK_THIS(UIVideo);
-    if (self->videoFile2.length) {
-        if (!UIVideo->playing) {
-            char videoFile2[64];
-            RSDK.GetCString(videoFile2, &self->videoFile2);
-            RSDK.LoadVideo(videoFile2, 14.0, NULL);
-        }
+
+    if (self->videoFile2.length && !UIVideo->playing) {
+        char videoFile2[64];
+        RSDK.GetCString(videoFile2, &self->videoFile2);
+        RSDK.LoadVideo(videoFile2, 14.0, NULL);
     }
+
     self->state = UIVideo_State_FinishPlayback;
 }
 void UIVideo_State_FinishPlayback(void)
 {
     RSDK_THIS(UIVideo);
+
     if (++self->timer == 120) {
         if (self->gotoStage) {
-            char catName[64];
+            char categoryName[64];
             char sceneName[64];
-            RSDK.GetCString(catName, &self->stageListCategory);
+            RSDK.GetCString(categoryName, &self->stageListCategory);
             RSDK.GetCString(sceneName, &self->stageListName);
-            RSDK.SetScene(catName, sceneName);
+
+            RSDK.SetScene(categoryName, sceneName);
+
             if (!RSDK.CheckValidScene())
                 RSDK.SetScene("Presentation", "Title Screen");
+
             RSDK.LoadScene();
         }
+
         destroyEntity(self);
     }
 }

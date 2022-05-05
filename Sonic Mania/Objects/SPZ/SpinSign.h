@@ -8,7 +8,7 @@ typedef enum {
     SPINSIGN_SONIC_V,
     SPINSIGN_MANIA_H,
     SPINSIGN_MANIA_V,
-}SpinSignTypes;
+} SpinSignTypes;
 
 // Object Class
 struct ObjectSpinSign {
@@ -38,7 +38,7 @@ void SpinSign_Update(void);
 void SpinSign_LateUpdate(void);
 void SpinSign_StaticUpdate(void);
 void SpinSign_Draw(void);
-void SpinSign_Create(void* data);
+void SpinSign_Create(void *data);
 void SpinSign_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpinSign_EditorDraw(void);
@@ -58,4 +58,4 @@ void SpinSign_Draw_SonicV(void);
 void SpinSign_Draw_ManiaH(void);
 void SpinSign_Draw_ManiaV(void);
 
-#endif //!OBJ_SPINSIGN_H
+#endif //! OBJ_SPINSIGN_H

@@ -109,7 +109,7 @@ void LRZFireball_CheckTileCollisions(void)
 {
     RSDK_THIS(LRZFireball);
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(0x200 - self->rotation) << 11,
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, RSDK.Sin512(0x200 - self->rotation) << 11,
                                  RSDK.Cos512(0x200 - self->rotation) << 11, false)
         && !self->alpha) {
         self->inkEffect = INK_ALPHA;

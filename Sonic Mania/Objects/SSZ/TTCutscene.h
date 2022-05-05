@@ -23,7 +23,7 @@ void TTCutscene_Update(void);
 void TTCutscene_LateUpdate(void);
 void TTCutscene_StaticUpdate(void);
 void TTCutscene_Draw(void);
-void TTCutscene_Create(void* data);
+void TTCutscene_Create(void *data);
 void TTCutscene_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TTCutscene_EditorDraw(void);
@@ -43,4 +43,4 @@ bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host);
 bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host);
 bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host);
 
-#endif //!OBJ_TTCUTSCENE_H
+#endif //! OBJ_TTCUTSCENE_H

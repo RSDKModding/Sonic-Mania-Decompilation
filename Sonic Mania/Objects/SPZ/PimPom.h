@@ -18,6 +18,8 @@ typedef enum {
     PIMPOM_MOVE_PATH,
 } PimPomMoveTypes;
 
+typedef enum { PIMPOM_CLR_CYAN, PIMPOM_CLR_PURPLE, PIMPOM_CLR_GREEN } PimPomColors;
+
 // Object Class
 struct ObjectPimPom {
     RSDK_OBJECT

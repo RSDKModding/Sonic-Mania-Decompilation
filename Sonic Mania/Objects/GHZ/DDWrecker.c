@@ -81,6 +81,7 @@ void DDWrecker_Create(void *data)
 
                 default: break;
             }
+
             self->visible   = true;
             self->drawOrder = Zone->objectDrawLow;
         }
@@ -621,7 +622,7 @@ void DDWrecker_State_HandleBounceAttack(void)
     self->animator.speed = 0x100 - 32 * self->timer;
 
     if (self->velocity.y > 0) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, 0, 0, 0, 0x180000, true)) {
             ++self->timer;
             Camera_ShakeScreen(0, 0, 3);
             RSDK.PlaySfx(DDWrecker->sfxImpact, false, 255);
@@ -936,6 +937,15 @@ void DDWrecker_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
         DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0, 1 | 0 | 4 | 8, 0x00C0F0);
+
+        int32 slot = RSDK.GetEntityID(self);
+        for (int32 i = 0; i < 6; ++i) {
+            EntityDDWrecker *child = RSDK_GET_ENTITY(slot + 1 + i, DDWrecker);
+
+            if (child)
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
+        }
+
         RSDK_DRAWING_OVERLAY(false);
     }
 }

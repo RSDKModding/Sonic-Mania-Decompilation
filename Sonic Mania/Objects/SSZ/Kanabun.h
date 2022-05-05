@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectKanabun {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
 };
 
@@ -32,7 +32,7 @@ void Kanabun_Update(void);
 void Kanabun_LateUpdate(void);
 void Kanabun_StaticUpdate(void);
 void Kanabun_Draw(void);
-void Kanabun_Create(void* data);
+void Kanabun_Create(void *data);
 void Kanabun_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Kanabun_EditorDraw(void);
@@ -52,4 +52,4 @@ void Kanabun_State_Setup(void);
 void Kanabun_State_Moving(void);
 void Kanabun_State_Turning(void);
 
-#endif //!OBJ_KANABUN_H
+#endif //! OBJ_KANABUN_H

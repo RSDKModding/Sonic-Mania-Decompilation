@@ -215,15 +215,15 @@ void MatryoshkaBom_State_Walk(void)
     else {
         bool32 collided = false;
         if (self->velocity.x <= 0)
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
         else
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
 
         if (!collided) {
             if (self->direction & FLIP_Y)
-                collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -self->offsetY, 8);
+                collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -self->offsetY, 8);
             else
-                collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->offsetY, 8);
+                collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->offsetY, 8);
         }
 
         if (!collided) {
@@ -389,9 +389,9 @@ void MatryoshkaBom_State_Hatched(void)
     if (self->velocity.x) {
         bool32 collided = false;
         if (self->velocity.x <= 0)
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
         else
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
 
         if (collided)
             self->velocity.x = 0;
@@ -399,9 +399,9 @@ void MatryoshkaBom_State_Hatched(void)
 
     bool32 collided = false;
     if (self->direction & FLIP_Y)
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -self->offsetY, true);
+        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -self->offsetY, true);
     else
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->offsetY, true);
+        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->offsetY, true);
 
     if (collided) {
         self->timer = 0x600;

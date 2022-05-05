@@ -124,8 +124,8 @@ typedef enum {
     SLOT_UFO_SPEEDLINES = 34,
     SLOT_UFO_PLASMA     = 36,
 #if RETRO_USE_PLUS
-    SLOT_REPLAYRECORDER_R = 36,
-    SLOT_REPLAYRECORDER_W = 37,
+    SLOT_REPLAYRECORDER_PLAYBACK = 36,
+    SLOT_REPLAYRECORDER_RECORD = 37,
 #endif
     SLOT_MUSICSTACK_START = 40,
     //[41-47] are part of the music stack
@@ -218,8 +218,6 @@ typedef struct {
     int32 hasPlusInitial;
 #endif
 } GlobalVariables;
-
-extern Hitbox defaultHitbox;
 
 extern GlobalVariables *globals;
 

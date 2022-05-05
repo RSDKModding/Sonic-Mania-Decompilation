@@ -6,12 +6,12 @@
 // Object Class
 struct ObjectFlingRamp {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxRamp;
 };
 
 // Entity Class
 struct EntityFlingRamp {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -22,7 +22,7 @@ void FlingRamp_Update(void);
 void FlingRamp_LateUpdate(void);
 void FlingRamp_StaticUpdate(void);
 void FlingRamp_Draw(void);
-void FlingRamp_Create(void* data);
+void FlingRamp_Create(void *data);
 void FlingRamp_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FlingRamp_EditorDraw(void);
@@ -32,5 +32,4 @@ void FlingRamp_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_FLINGRAMP_H
+#endif //! OBJ_FLINGRAMP_H

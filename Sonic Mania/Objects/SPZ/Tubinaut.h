@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Tubinaut_OrbCount (3)
+#define TUBINAUT_ORB_COUNT (3)
 
 // Object Class
 struct ObjectTubinaut {
@@ -24,11 +24,11 @@ struct EntityTubinaut {
     Animator bodyAnimator;
     Animator fieldAnimator;
     Vector2 startPos;
-    Vector2 orbPositions[Tubinaut_OrbCount];
-    int32 orbAngles[Tubinaut_OrbCount];
-    int16 reAdjustTimers[Tubinaut_OrbCount];
-    bool32 ballsVisible[Tubinaut_OrbCount]; // hehe
-    Animator ballAnimators[Tubinaut_OrbCount];
+    Vector2 orbPositions[TUBINAUT_ORB_COUNT];
+    int32 orbAngles[TUBINAUT_ORB_COUNT];
+    int16 reAdjustTimers[TUBINAUT_ORB_COUNT];
+    bool32 ballsVisible[TUBINAUT_ORB_COUNT]; // hehe
+    Animator ballAnimators[TUBINAUT_ORB_COUNT];
     uint16 playerTimers[PLAYER_MAX];
     int32 attackTimer;
     uint16 activeOrbs;

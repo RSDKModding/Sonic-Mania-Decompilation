@@ -12,6 +12,7 @@ ObjectSSZSpikeBall *SSZSpikeBall;
 void SSZSpikeBall_Update(void)
 {
     RSDK_THIS(SSZSpikeBall);
+
     StateMachine_Run(self->state);
 
     foreach_active(Player, player)
@@ -35,6 +36,7 @@ void SSZSpikeBall_StaticUpdate(void) {}
 void SSZSpikeBall_Draw(void)
 {
     RSDK_THIS(SSZSpikeBall);
+
     RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
     RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 }
@@ -42,10 +44,12 @@ void SSZSpikeBall_Draw(void)
 void SSZSpikeBall_Create(void *data)
 {
     RSDK_THIS(SSZSpikeBall);
+
     if (!self->speed) {
         self->speed = 12;
         self->dist  = 64;
     }
+
     if (!self->interval)
         self->interval = 120;
 
@@ -53,11 +57,11 @@ void SSZSpikeBall_Create(void *data)
         RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 0, &self->baseAnimator, true, 0);
         RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 1, &self->spikeBallAnimator, true, 0);
 
-        self->active         = ACTIVE_BOUNDS;
-        self->updateRange.x  = 0x600000;
-        self->updateRange.y  = 0x600000;
-        self->visible        = true;
-        self->drawOrder      = Zone->objectDrawLow;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x600000;
+        self->updateRange.y = 0x600000;
+        self->visible       = true;
+        self->drawOrder     = Zone->objectDrawLow;
         self->speed <<= 15;
         self->dist           = (self->dist << 16) / self->speed;
         self->spikeBallPos.x = self->position.x;
@@ -85,7 +89,7 @@ void SSZSpikeBall_Create(void *data)
             default: break;
         }
 
-        self->state             = SSZSpikeBall_State_Setup;
+        self->state                = SSZSpikeBall_State_AwaitInterval;
         self->baseAnimator.frameID = minVal(self->type, 4);
     }
 }
@@ -97,14 +101,14 @@ void SSZSpikeBall_StageLoad(void)
     else
         SSZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/SpikeBall.bin", SCOPE_STAGE);
 
-    SSZSpikeBall->hitboxSpikeBall.left  = -12;
-    SSZSpikeBall->hitboxSpikeBall.top  = -12;
-    SSZSpikeBall->hitboxSpikeBall.right = 12;
+    SSZSpikeBall->hitboxSpikeBall.left   = -12;
+    SSZSpikeBall->hitboxSpikeBall.top    = -12;
+    SSZSpikeBall->hitboxSpikeBall.right  = 12;
     SSZSpikeBall->hitboxSpikeBall.bottom = 12;
 
-    SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_UP].left  = -16;
-    SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_UP].top  = -12;
-    SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_UP].right = 16;
+    SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_UP].left   = -16;
+    SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_UP].top    = -12;
+    SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_UP].right  = 16;
     SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_UP].bottom = 0;
 
     SSZSpikeBall->hitboxBase[SSZSPIKEBALL_LAUNCHER_DOWN].left   = -16;
@@ -125,14 +129,16 @@ void SSZSpikeBall_StageLoad(void)
     SSZSpikeBall->sfxPon = RSDK.GetSfx("Stage/Pon.wav");
 }
 
-void SSZSpikeBall_State_Setup(void)
+void SSZSpikeBall_State_AwaitInterval(void)
 {
     RSDK_THIS(SSZSpikeBall);
+
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
         self->spikeBallPos.x = self->position.x;
         self->spikeBallPos.y = self->position.y;
         self->active         = ACTIVE_NORMAL;
         self->timer          = 0;
+
         switch (self->type) {
             case SSZSPIKEBALL_LAUNCHER_UP:
                 self->state = SSZSpikeBall_State_V;
@@ -165,6 +171,7 @@ void SSZSpikeBall_State_Setup(void)
                 self->timer = self->dist;
                 self->state = SSZSpikeBall_State_Ball_MoveOut;
                 break;
+
             default: break;
         }
     }
@@ -207,10 +214,11 @@ void SSZSpikeBall_State_H_Launch(void)
     RSDK_THIS(SSZSpikeBall);
 
     self->spikeBallPos.x += self->velocity.x;
+
     if (self->direction) {
         self->velocity.x -= 0x3800;
         if (self->spikeBallPos.x < self->position.x) {
-            self->state          = SSZSpikeBall_State_Setup;
+            self->state          = SSZSpikeBall_State_AwaitInterval;
             self->active         = ACTIVE_BOUNDS;
             self->spikeBallPos.x = -0x200000;
         }
@@ -218,7 +226,7 @@ void SSZSpikeBall_State_H_Launch(void)
     else {
         self->velocity.x += 0x3800;
         if (self->spikeBallPos.x > self->position.x) {
-            self->state          = SSZSpikeBall_State_Setup;
+            self->state          = SSZSpikeBall_State_AwaitInterval;
             self->active         = ACTIVE_BOUNDS;
             self->spikeBallPos.x = -0x200000;
         }
@@ -230,10 +238,11 @@ void SSZSpikeBall_State_V_Launch(void)
     RSDK_THIS(SSZSpikeBall);
 
     self->spikeBallPos.y += self->velocity.y;
+
     if (self->direction) {
         self->velocity.y -= 0x3800;
         if (self->spikeBallPos.y < self->position.y) {
-            self->state          = SSZSpikeBall_State_Setup;
+            self->state          = SSZSpikeBall_State_AwaitInterval;
             self->active         = ACTIVE_BOUNDS;
             self->spikeBallPos.y = -0x200000;
         }
@@ -241,7 +250,7 @@ void SSZSpikeBall_State_V_Launch(void)
     else {
         self->velocity.y += 0x3800;
         if (self->spikeBallPos.y > self->position.y) {
-            self->state          = SSZSpikeBall_State_Setup;
+            self->state          = SSZSpikeBall_State_AwaitInterval;
             self->active         = ACTIVE_BOUNDS;
             self->spikeBallPos.y = -0x200000;
         }
@@ -254,6 +263,7 @@ void SSZSpikeBall_State_Ball_MoveOut(void)
 
     self->spikeBallPos.x += self->velocity.x;
     self->spikeBallPos.y += self->velocity.y;
+
     if (!--self->timer) {
         self->timer = (self->interval >> 1) - self->dist;
         self->state = SSZSpikeBall_State_Ball_Stopped;
@@ -279,7 +289,7 @@ void SSZSpikeBall_State_Ball_MoveBack(void)
 
     if (!--self->timer) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = SSZSpikeBall_State_Setup;
+        self->state  = SSZSpikeBall_State_AwaitInterval;
     }
 }
 
@@ -287,6 +297,7 @@ void SSZSpikeBall_State_Ball_MoveBack(void)
 void SSZSpikeBall_EditorDraw(void)
 {
     RSDK_THIS(SSZSpikeBall);
+
     RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 0, &self->baseAnimator, true, 0);
     RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 1, &self->spikeBallAnimator, true, 0);
 
@@ -295,14 +306,10 @@ void SSZSpikeBall_EditorDraw(void)
 
     switch (self->type) {
         case SSZSPIKEBALL_LAUNCHER_UP:
-        case SSZSPIKEBALL_LAUNCHER_LEFT:
-            self->direction      = FLIP_NONE;
-            break;
+        case SSZSPIKEBALL_LAUNCHER_LEFT: self->direction = FLIP_NONE; break;
 
         case SSZSPIKEBALL_LAUNCHER_DOWN:
-        case SSZSPIKEBALL_LAUNCHER_RIGHT:
-            self->direction      = FLIP_X;
-            break;
+        case SSZSPIKEBALL_LAUNCHER_RIGHT: self->direction = FLIP_X; break;
         default: break;
     }
 
@@ -311,51 +318,130 @@ void SSZSpikeBall_EditorDraw(void)
     SSZSpikeBall_Draw();
 
     if (showGizmos()) {
-        int speed = self->speed;
-        int dist  = self->dist;
+        RSDK_DRAWING_OVERLAY(true);
 
-        
+        int32 speed = self->speed;
+        int32 dist  = self->dist;
+
         self->speed <<= 15;
         self->dist = (self->dist << 16) / self->speed;
 
-        int distance = self->dist * self->speed;
+        int32 distance = self->dist * self->speed;
 
         switch (self->type) {
             case SSZSPIKEBALL_LAUNCHER_UP:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00);
+                self->spikeBallPos.y += 0x40000;
+                self->spikeBallPos.y += 0x8000 * 48;
+
+                self->velocity.y = -self->speed;
+                while (self->velocity.y < 0) {
+                    self->spikeBallPos.y += self->velocity.y;
+
+                    self->velocity.y += 0x3800;
+                }
+
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->spikeBallPos.x, self->spikeBallPos.y, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
 
             case SSZSPIKEBALL_LAUNCHER_DOWN:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00);
+                self->spikeBallPos.y -= 0x40000;
+                self->spikeBallPos.y -= 0x8000 * 48;
+
+                self->velocity.y = self->speed;
+                while (self->velocity.y > 0) {
+                    self->spikeBallPos.y += self->velocity.y;
+
+                    self->velocity.y -= 0x3800;
+                }
+
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->spikeBallPos.x, self->spikeBallPos.y, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
 
             case SSZSPIKEBALL_LAUNCHER_LEFT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00);
+                self->spikeBallPos.x += 0x40000;
+                self->spikeBallPos.x += 0x8000 * 48;
+
+                self->velocity.x = -self->speed;
+                while (self->velocity.x < 0) {
+                    self->spikeBallPos.x += self->velocity.x;
+
+                    self->velocity.x += 0x3800;
+                }
+
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->spikeBallPos.x, self->spikeBallPos.y, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
 
             case SSZSPIKEBALL_LAUNCHER_RIGHT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00);
+                self->spikeBallPos.x -= 0x40000;
+                self->spikeBallPos.x -= 0x8000 * 48;
+
+                self->velocity.x = self->speed;
+                while (self->velocity.x > 0) {
+                    self->spikeBallPos.x += self->velocity.x;
+
+                    self->velocity.x -= 0x3800;
+                }
+
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->spikeBallPos.x, self->spikeBallPos.y, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_UP:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - distance, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - distance, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->spikeBallPos.y -= distance;
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_DOWN:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + distance, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + distance, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->spikeBallPos.y += distance;
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_LEFT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - distance, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - distance, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->spikeBallPos.x -= distance;
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_RIGHT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + distance, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + distance, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
+
+                self->spikeBallPos.x += distance;
+                self->inkEffect = INK_BLEND;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &self->spikeBallPos, false);
+                self->inkEffect = INK_NONE;
                 break;
         }
 
         self->speed = speed;
         self->dist  = dist;
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

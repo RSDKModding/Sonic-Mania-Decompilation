@@ -27,7 +27,7 @@ struct EntityCableWarp {
     StateMachine(state);
     int32 type;
     int32 timer;
-    Entity *playerPtr;
+    EntityPlayer *player;
     uint16 slotID;
     uint16 nextSlot;
     Animator animator;

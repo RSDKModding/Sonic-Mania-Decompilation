@@ -285,7 +285,7 @@ void WalkerLegs_CheckTileCollisions(void)
 
     self->legPos[self->activeLeg != 0].x = self->position.x;
     self->legPos[self->activeLeg != 0].y = self->position.y;
-    if (angle > 128 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
+    if (angle > 128 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
         self->legPos[self->activeLeg != 0].x    = self->position.x;
         self->legPos[self->activeLeg != 0].y    = self->position.y;
         self->smokeSpawnY[self->activeLeg != 0] = self->position.y + 0x280000;

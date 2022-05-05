@@ -29,10 +29,7 @@ void ForceSpin_Update(void)
             if (scanX + pos >= self->position.x) {
                 if (self->direction) {
                     if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
-                        if (player->onGround)
-                            player->state = Player_State_Roll;
-                        else
-                            player->state = Player_State_Air;
+                        player->state = player->onGround ? Player_State_Roll : Player_State_Air;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                     }
@@ -44,10 +41,7 @@ void ForceSpin_Update(void)
             else {
                 if (!self->direction) {
                     if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
-                        if (player->onGround)
-                            player->state = Player_State_Roll;
-                        else
-                            player->state = Player_State_Air;
+                        player->state           = player->onGround ? Player_State_Roll : Player_State_Air;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                     }
@@ -70,9 +64,11 @@ void ForceSpin_Draw(void) { ForceSpin_DrawSprites(); }
 void ForceSpin_Create(void *data)
 {
     RSDK_THIS(ForceSpin);
+
     RSDK.SetSpriteAnimation(ForceSpin->aniFrames, 0, &self->animator, true, 0);
-    self->drawFX |= FX_FLIP;
     self->animator.frameID = 4;
+    self->drawFX |= FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_BOUNDS;
         self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
@@ -87,9 +83,9 @@ void ForceSpin_StageLoad(void) { ForceSpin->aniFrames = RSDK.LoadSpriteAnimation
 
 void ForceSpin_DrawSprites(void)
 {
-    Vector2 drawPos;
-
     RSDK_THIS(ForceSpin);
+
+    Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - (self->size << 19);
     Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
@@ -114,10 +110,7 @@ void ForceSpin_SetPlayerState(EntityPlayer *player)
         }
 
         player->nextAirState = StateMachine_None;
-        if (player->onGround)
-            player->state = Player_State_ForceRoll_Ground;
-        else
-            player->state = Player_State_ForceRoll_Air;
+        player->state        = player->onGround ? Player_State_ForceRoll_Ground : Player_State_ForceRoll_Air;
 
         player->nextGroundState = StateMachine_None;
         if (abs(player->groundVel) < 0x10000) {
@@ -132,7 +125,14 @@ void ForceSpin_SetPlayerState(EntityPlayer *player)
 #if RETRO_INCLUDE_EDITOR
 void ForceSpin_EditorDraw(void) { ForceSpin_DrawSprites(); }
 
-void ForceSpin_EditorLoad(void) { ForceSpin->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void ForceSpin_EditorLoad(void)
+{
+    ForceSpin->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(ForceSpin, direction);
+    RSDK_ENUM_VAR("Enter From Right, Exit From Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Enter From Left, Exit From Right", FLIP_X);
+}
 #endif
 
 void ForceSpin_Serialize(void)

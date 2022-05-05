@@ -3,24 +3,26 @@
 
 #include "SonicMania.h"
 
+#define AMOEBADROID_BLOB_COUNT (8)
+
 typedef enum {
     AMOEBADROID_BOSS,
     AMOEBADROID_BLOB_BIG,
     AMOEBADROID_BLOB_SMALL,
     AMOEBADROID_POOLSPLASH,
     AMOEBADROID_POOLSPLASH_DELAY,
-}AmoebaDroidTypes;
+} AmoebaDroidTypes;
 
 // Object Class
 struct ObjectAmoebaDroid {
     RSDK_OBJECT
     TABLE(int32 debrisInfo1[17], { 4, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x28000, 2, 0, -0x28000, -0x20000, 3, 0, 0x28000, -0x20000 });
     TABLE(int32 debrisInfo2[13], { 3, 4, 0, 0, -0x20000, 5, 0, -0x28000, -0x20000, 5, 1, 0x28000, -0x20000 });
-    int32 arenaLeft;
-    int32 arenaRight;
-    int32 startX;
-    int32 arenaTop;
-    int32 arenaBottom;
+    int32 boundsL;
+    int32 boundsR;
+    int32 boundsM;
+    int32 boundsT;
+    int32 boundsB;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxGather;
@@ -44,8 +46,8 @@ struct EntityAmoebaDroid {
     int32 blobAmplitude;
     int32 blobRadius;
     Vector2 offsetPos;
-    Entity *blobs[8];
-    Entity *parent;
+    EntityAmoebaDroid *blobs[AMOEBADROID_BLOB_COUNT];
+    EntityAmoebaDroid *parent;
     Animator animator;
     Animator attractorTopAnimator;
     Animator attractorSideAnimator;
@@ -60,7 +62,7 @@ void AmoebaDroid_Update(void);
 void AmoebaDroid_LateUpdate(void);
 void AmoebaDroid_StaticUpdate(void);
 void AmoebaDroid_Draw(void);
-void AmoebaDroid_Create(void* data);
+void AmoebaDroid_Create(void *data);
 void AmoebaDroid_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void AmoebaDroid_EditorDraw(void);
@@ -107,6 +109,6 @@ void AmoebaDroid_State_PoolSplash(void);
 
 // Boss States (Continued)
 void AmoebaDroid_State_Destroyed(void);
-void AmoebaDroid_State_SpawnSignPost(void);
+void AmoebaDroid_State_DropSignPost(void);
 
-#endif //!OBJ_AMOEBADROID_H
+#endif //! OBJ_AMOEBADROID_H

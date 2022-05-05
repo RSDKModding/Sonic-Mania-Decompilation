@@ -12,6 +12,7 @@ ObjectSPZ2Setup *SPZ2Setup;
 void SPZ2Setup_Update(void)
 {
     RSDK_THIS(SPZ2Setup);
+
     self->palBlendPercent += 4;
     self->fadeTimer -= 16;
 
@@ -48,20 +49,20 @@ void SPZ2Setup_StaticUpdate(void)
                           SPZ2Setup->bgLightsFramePosY[SPZ2Setup->musicSndDisplayFrameH], 16, 32);
     }
 
-    SPZ2Setup->palFadePercent += 3;
-    SPZ2Setup->palFadePercent &= 0x1FF;
-    RSDK.SetLimitedFade(0, 1, 3, abs(RSDK.Sin512(SPZ2Setup->palFadePercent) >> 1), 144, 151);
+    SPZ2Setup->pulsePercent += 3;
+    SPZ2Setup->pulsePercent &= 0x1FF;
+    RSDK.SetLimitedFade(0, 1, 3, abs(RSDK.Sin512(SPZ2Setup->pulsePercent) >> 1), 144, 151);
 
     RSDK.SetLimitedFade(0, 1, 2, RSDK.Sin512(4 * Zone->timer), 192, 197);
 
     // Rotating thingy on the left of the AniTiles1 sheet
-    RSDK.DrawAniTiles(SPZ2Setup->aniTiles, 360, 16 * (Zone->timer & 7), 0, 16, 128);
+    RSDK.DrawAniTiles(SPZ2Setup->aniTiles1, 360, 16 * (Zone->timer & 7), 0, 16, 128);
 
     if (--SPZ2Setup->speakerTimer < 1) {
         ++SPZ2Setup->speakerFrame;
         SPZ2Setup->speakerFrame &= 7;
         SPZ2Setup->speakerTimer = SPZ2Setup->speakerDelays[SPZ2Setup->speakerFrame];
-        RSDK.DrawAniTiles(SPZ2Setup->aniTiles, 113, 16 * (SPZ2Setup->speakerFrame + 8), 0, 16, 128);
+        RSDK.DrawAniTiles(SPZ2Setup->aniTiles1, 113, 16 * (SPZ2Setup->speakerFrame + 8), 0, 16, 128);
     }
 
     if (--SPZ2Setup->stageLightsTimer < 1) {
@@ -78,12 +79,14 @@ void SPZ2Setup_StaticUpdate(void)
 void SPZ2Setup_Draw(void)
 {
     RSDK_THIS(SPZ2Setup);
+
     RSDK.FillScreen(0xF0F0F0, self->fadeTimer, self->fadeTimer - 0x80, self->fadeTimer - 0x100);
 }
 
 void SPZ2Setup_Create(void *data)
 {
     RSDK_THIS(SPZ2Setup);
+
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->fadeTimer = 384;
@@ -92,11 +95,11 @@ void SPZ2Setup_Create(void *data)
 
 void SPZ2Setup_StageLoad(void)
 {
-    SPZ2Setup->aniTiles  = RSDK.LoadSpriteSheet("SPZ2/AniTiles1.gif", SCOPE_STAGE);
+    SPZ2Setup->aniTiles1 = RSDK.LoadSpriteSheet("SPZ2/AniTiles1.gif", SCOPE_STAGE);
     SPZ2Setup->aniTiles2 = RSDK.LoadSpriteSheet("SPZ2/AniTiles2.gif", SCOPE_STAGE);
 
-    SPZ2Setup->fgLow     = RSDK.GetSceneLayer(Zone->fgLow);
-    SPZ2Setup->fgHigh    = RSDK.GetSceneLayer(Zone->fgHigh);
+    SPZ2Setup->fgLow  = RSDK.GetSceneLayer(Zone->fgLow);
+    SPZ2Setup->fgHigh = RSDK.GetSceneLayer(Zone->fgHigh);
 
     // Sun Attack Deform
     for (int32 i = 0; i < 0x400; ++i) {
@@ -111,13 +114,15 @@ void SPZ2Setup_StageLoad(void)
         if (!PlayerHelpers_CheckStageReload()) {
             Zone->cameraBoundsL[0] = 0x100 - ScreenInfo->centerX;
             Zone_ReloadStoredEntities(256 << 16, 1376 << 16, true);
+
             CREATE_ENTITY(SPZ2Setup, NULL, 0, 0);
         }
     }
 
     if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
         foreach_all(SPZ2Outro, entity) { foreach_break; }
-        SPZ2Setup->outroPtr       = entity;
+        SPZ2Setup->outro = entity;
+
         Zone->stageFinishCallback = SPZ2Setup_SetupOutro;
     }
 
@@ -133,7 +138,7 @@ void SPZ2Setup_StageLoad(void)
     SPZ2Setup->fgHigh->scrollInfo[0].deform = false;
 }
 
-void SPZ2Setup_SetupOutro(void) { SPZ2Setup->outroPtr->active = ACTIVE_NORMAL; }
+void SPZ2Setup_SetupOutro(void) { SPZ2Setup->outro->active = ACTIVE_NORMAL; }
 
 #if RETRO_INCLUDE_EDITOR
 void SPZ2Setup_EditorDraw(void) {}

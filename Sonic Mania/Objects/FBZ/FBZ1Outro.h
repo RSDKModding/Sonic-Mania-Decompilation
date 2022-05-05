@@ -30,10 +30,12 @@ void FBZ1Outro_Update(void);
 void FBZ1Outro_LateUpdate(void);
 void FBZ1Outro_StaticUpdate(void);
 void FBZ1Outro_Draw(void);
-void FBZ1Outro_Create(void* data);
+void FBZ1Outro_Create(void *data);
 void FBZ1Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FBZ1Outro_EditorDraw(void);
 void FBZ1Outro_EditorLoad(void);
+#endif
 void FBZ1Outro_Serialize(void);
 
 // Extra Entity Functions
@@ -46,4 +48,4 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host);
 bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host);
 bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host);
 
-#endif //!OBJ_FBZ1OUTRO_H
+#endif //! OBJ_FBZ1OUTRO_H

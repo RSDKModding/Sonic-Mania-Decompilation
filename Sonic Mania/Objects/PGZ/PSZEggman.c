@@ -27,6 +27,7 @@ void PSZEggman_StaticUpdate(void) {}
 void PSZEggman_Draw(void)
 {
     RSDK_THIS(PSZEggman);
+
     RSDK.DrawSprite(&self->terminalAnimator, NULL, false);
     RSDK.DrawSprite(&self->displayAnimator, NULL, false);
 
@@ -40,15 +41,18 @@ void PSZEggman_Draw(void)
 void PSZEggman_Create(void *data)
 {
     RSDK_THIS(PSZEggman);
+
     if (!SceneInfo->inEditor) {
-        self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
-        self->eggmanPos.x     = self->position.x - 0x180000;
-        self->eggmanPos.y     = self->position.y + 0x10000;
+        self->visible     = true;
+        self->drawOrder   = Zone->objectDrawLow;
+        self->eggmanPos.x = self->position.x - 0x180000;
+        self->eggmanPos.y = self->position.y + 0x10000;
+
         self->alpha         = 64;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 0, &self->terminalAnimator, true, 0);
         RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 1, &self->displayAnimator, true, 0);
         RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 2, &self->scanlinesAnimator, true, 0);
@@ -65,6 +69,7 @@ void PSZEggman_StageLoad(void)
 void PSZEggman_State_TurnRound(void)
 {
     RSDK_THIS(PSZEggman);
+
     if (self->eggmanAnimator.timer == 1) {
         if (self->ruby) {
             self->ruby->position.x += 0x10000;
@@ -87,14 +92,16 @@ void PSZEggman_State_TurnRound(void)
 void PSZEggman_EditorDraw(void)
 {
     RSDK_THIS(PSZEggman);
+
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow;
-    self->eggmanPos.x     = self->position.x - 0x180000;
-    self->eggmanPos.y     = self->position.y + 0x10000;
+    self->eggmanPos.x   = self->position.x - 0x180000;
+    self->eggmanPos.y   = self->position.y + 0x10000;
     self->alpha         = 0x40;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 0, &self->terminalAnimator, true, 0);
     RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 1, &self->displayAnimator, true, 0);
     RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 2, &self->scanlinesAnimator, true, 0);

@@ -29,6 +29,8 @@
 #define RETRO_USE_MOD_LOADER (1)
 #endif
 
+#define RETRO_MOD_LOADER_VER (1)
+
 // used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
 #ifndef RETRO_STANDALONE
 #define RETRO_STANDALONE (1)
@@ -75,6 +77,18 @@ typedef enum { DLC_PLUS } GameDLC;
     Hitbox hitbox;                                                                                                                                   \
     Animator animator;                                                                                                                               \
     int32 childCount;
+
+#define MANIA_BUTTON_BASE                                                                                                                            \
+    RSDK_ENTITY                                                                                                                                      \
+    int32 type;                                                                                                                                      \
+    bool32 walkOnto;                                                                                                                                 \
+    uint8 tag;                                                                                                                                       \
+    bool32 down;                                                                                                                                     \
+    bool32 toggled;                                                                                                                                  \
+    bool32 currentlyActive;                                                                                                                          \
+    bool32 activated;                                                                                                                                \
+    bool32 wasActivated;                                                                                                                             \
+    int32 pressPos;
 
 #define MANIA_UI_ITEM_BASE                                                                                                                           \
     RSDK_ENTITY                                                                                                                                      \

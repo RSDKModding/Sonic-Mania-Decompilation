@@ -76,7 +76,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &ItemBox->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &ItemBox->hitboxItemBox)) {
             if (Player_CheckAttacking(player, self) || player->state == Ice_State_FrozenPlayer) {
                 TurretSwitch_Break(self, player);
                 foreach_break;
@@ -152,10 +152,10 @@ void TurretSwitch_State_Projectile(void)
         destroyEntity(self);
     }
     else {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, TurretSwitch->hitboxProjectile.bottom << 13, 4)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, TurretSwitch->hitboxProjectile.right << 13, 0, 4)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, TurretSwitch->hitboxProjectile.top << 13, 4)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, TurretSwitch->hitboxProjectile.left << 13, 0, 4)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TurretSwitch->hitboxProjectile.bottom << 13, 4)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, TurretSwitch->hitboxProjectile.right << 13, 0, 4)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, TurretSwitch->hitboxProjectile.top << 13, 4)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, TurretSwitch->hitboxProjectile.left << 13, 0, 4)) {
             destroyEntity(self);
         }
         else {

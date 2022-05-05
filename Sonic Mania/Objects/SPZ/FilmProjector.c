@@ -12,10 +12,8 @@ ObjectFilmProjector *FilmProjector;
 void FilmProjector_Update(void)
 {
     RSDK_THIS(FilmProjector);
-    if (self->pathMovement)
-        self->rotation -= 4;
-    else
-        self->rotation += 4;
+
+    self->rotation += self->pathMovement != FLIP_NONE ? -4 : 4;
     self->rotation &= 0x1FF;
 
     RSDK.ProcessAnimation(&self->celluoidAnimator);
@@ -65,7 +63,11 @@ void FilmProjector_Draw(void)
         self->drawFX &= ~FX_ROTATE;
         RSDK.DrawSprite(&self->reelEdgeAnimator, &drawPos, false);
 
+        // ???
+        // This is the ONLY reference to this in the entire game
+        // (Not counting the editor funcs since they're for RE2 and custom-made)
         SceneInfo->effectGizmo = true;
+
         self->drawFX |= FX_FLIP;
         RSDK.DrawSprite(&self->projectorAnimator, NULL, false);
 
@@ -98,8 +100,8 @@ void FilmProjector_Create(void *data)
         self->updateRange.y = 0x1000000;
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
-        self->filmPos.x  = self->position.x;
-        self->filmPos.y  = self->position.y;
+
+        self->filmPos = self->position;
         if (self->direction == FLIP_NONE)
             self->filmPos.x += 0xB80000;
         else
@@ -161,7 +163,6 @@ void FilmProjector_EditorDraw(void)
     self->drawFX &= ~FX_ROTATE;
     RSDK.DrawSprite(&self->reelEdgeAnimator, &drawPos, false);
 
-    SceneInfo->effectGizmo = true;
     self->drawFX |= FX_FLIP;
     RSDK.DrawSprite(&self->projectorAnimator, NULL, false);
 
@@ -171,7 +172,19 @@ void FilmProjector_EditorDraw(void)
     self->inkEffect = INK_NONE;
 }
 
-void FilmProjector_EditorLoad(void) { FilmProjector->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
+void FilmProjector_EditorLoad(void)
+{
+    FilmProjector->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(FilmProjector, direction);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
+
+    // Confusing name, but controls what dir the projector wheels spin
+    RSDK_ACTIVE_VAR(FilmProjector, pathMovement);
+    RSDK_ENUM_VAR("Clockwise", FLIP_NONE);
+    RSDK_ENUM_VAR("Counter-Clockwise", FLIP_X);
+}
 #endif
 
 void FilmProjector_Serialize(void)

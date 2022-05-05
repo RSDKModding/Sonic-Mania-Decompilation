@@ -14,12 +14,12 @@ struct ObjectSSZ1Setup {
     RSDK_OBJECT
     int32 unused;
     TileLayer *background2;
-    EntitySSZ1Outro *outroPtr;
+    EntitySSZ1Outro *outro;
 };
 
 // Entity Class
 struct EntitySSZ1Setup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -30,7 +30,7 @@ void SSZ1Setup_Update(void);
 void SSZ1Setup_LateUpdate(void);
 void SSZ1Setup_StaticUpdate(void);
 void SSZ1Setup_Draw(void);
-void SSZ1Setup_Create(void* data);
+void SSZ1Setup_Create(void *data);
 void SSZ1Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SSZ1Setup_EditorDraw(void);
@@ -41,5 +41,4 @@ void SSZ1Setup_Serialize(void);
 // Extra Entity Functions
 void SSZ1Setup_StageFinishCB(void);
 
-
-#endif //!OBJ_SSZ1SETUP_H
+#endif //! OBJ_SSZ1SETUP_H

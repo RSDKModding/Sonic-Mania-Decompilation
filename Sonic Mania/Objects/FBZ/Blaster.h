@@ -7,7 +7,7 @@ typedef enum {
     BLASTER_BADNIK,
     BLASTER_SHOT,
     BLASTER_SHELL,
-}BlasterTypes;
+} BlasterTypes;
 
 // Object Class
 struct ObjectBlaster {
@@ -24,7 +24,7 @@ struct EntityBlaster {
     StateMachine(state);
     uint16 unused1;
     uint16 timer;
-    uint16 timer2;
+    uint16 attackTimer;
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
@@ -38,7 +38,7 @@ void Blaster_Update(void);
 void Blaster_LateUpdate(void);
 void Blaster_StaticUpdate(void);
 void Blaster_Draw(void);
-void Blaster_Create(void* data);
+void Blaster_Create(void *data);
 void Blaster_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Blaster_EditorDraw(void);
@@ -64,4 +64,4 @@ void Blaster_State_Shot(void);
 void Blaster_State_Fall(void);
 void Blaster_State_Shell(void);
 
-#endif //!OBJ_BLASTER_H
+#endif //! OBJ_BLASTER_H

@@ -12,6 +12,7 @@ ObjectFrostThrower *FrostThrower;
 void FrostThrower_Update(void)
 {
     RSDK_THIS(FrostThrower);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,7 +23,9 @@ void FrostThrower_StaticUpdate(void) {}
 void FrostThrower_Draw(void)
 {
     RSDK_THIS(FrostThrower);
+
     RSDK.DrawSprite(&self->dispenseAnimator, NULL, false);
+
     if (self->isActive)
         FrostThrower_DrawGustFX();
 }
@@ -30,23 +33,28 @@ void FrostThrower_Draw(void)
 void FrostThrower_Create(void *data)
 {
     RSDK_THIS(FrostThrower);
-    self->active          = ACTIVE_BOUNDS;
-    self->visible         = true;
-    self->drawFX          = FX_FLIP;
-    self->drawOrder       = Zone->playerDrawLow + 1;
-    self->updateRange.x   = 0x100000;
-    self->updateRange.y   = 0x100000;
+
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->drawOrder     = Zone->playerDrawLow + 1;
+    self->updateRange.x = 0x100000;
+    self->updateRange.y = 0x100000;
+
     self->hitbox.left     = -14;
     self->hitbox.right    = 15;
     self->maxGustCount[0] = 2;
     self->maxGustCount[1] = 2;
     self->maxGustCount[2] = 3;
     self->maxGustCount[3] = 3;
+
     FrostThrower_HandleGustCount();
     FrostThrower_HandleGustPos();
+
     RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 0, &self->dispenseAnimator, true, 0);
     RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->gustAnimator, true, 0);
-    self->state = FrostThrower_State_IntervalWait;
+
+    self->state = FrostThrower_State_AwaitInterval;
 }
 
 void FrostThrower_StageLoad(void)
@@ -75,6 +83,7 @@ void FrostThrower_DrawGustFX(void)
             drawPos.y = self->position.y + self->gustPos[pos + p].y;
             RSDK.DrawSprite(&self->gustAnimator, &drawPos, false);
         }
+
         pos += 3;
     }
 }
@@ -85,9 +94,10 @@ void FrostThrower_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !Ice->playerTimers[RSDK.GetEntityID(player)]) {
+        int32 playerID = RSDK.GetEntityID(player);
+
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !Ice->playerTimers[playerID])
             Ice_FreezePlayer(player);
-        }
     }
 }
 
@@ -122,9 +132,10 @@ void FrostThrower_HandleGustPos(void)
     }
 }
 
-void FrostThrower_State_IntervalWait(void)
+void FrostThrower_State_AwaitInterval(void)
 {
     RSDK_THIS(FrostThrower);
+
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
         self->active   = ACTIVE_NORMAL;
         self->timer    = 0;
@@ -137,6 +148,7 @@ void FrostThrower_State_IntervalWait(void)
 void FrostThrower_State_Dispensing(void)
 {
     RSDK_THIS(FrostThrower);
+
     self->hitbox.top = 0;
     if (self->timer >= 20)
         self->hitbox.bottom = 80;
@@ -187,8 +199,10 @@ void FrostThrower_State_Dispensing(void)
 void FrostThrower_State_StopDispensing(void)
 {
     RSDK_THIS(FrostThrower);
+
     self->hitbox.top    = 4 * self->timer;
     self->hitbox.bottom = 80;
+
     FrostThrower_CheckPlayerCollisions();
 
     if (self->timer > 8)
@@ -229,13 +243,21 @@ void FrostThrower_State_StopDispensing(void)
     if (self->timer++ >= 20) {
         self->active   = ACTIVE_BOUNDS;
         self->isActive = false;
-        self->state    = FrostThrower_State_IntervalWait;
+        self->state    = FrostThrower_State_AwaitInterval;
         self->timer    = 0;
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FrostThrower_EditorDraw(void) { FrostThrower_Draw(); }
+void FrostThrower_EditorDraw(void)
+{
+    RSDK_THIS(FrostThrower);
+
+    RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 0, &self->dispenseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->gustAnimator, true, 0);
+
+    FrostThrower_Draw();
+}
 
 void FrostThrower_EditorLoad(void)
 {

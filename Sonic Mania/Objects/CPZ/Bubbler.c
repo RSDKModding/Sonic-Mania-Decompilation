@@ -9,9 +9,13 @@
 
 ObjectBubbler *Bubbler = NULL;
 
+// NOTE: this object is basically a port of the Bubbler & Bubbler's mother debug objects in S2 '13, though it's unused
+// It's not in any stage lists, and the sprites for it aren't aligned correctly, though they are at different positions from S2 '13s
+
 void Bubbler_Update(void)
 {
     RSDK_THIS(Bubbler);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +26,7 @@ void Bubbler_StaticUpdate(void) {}
 void Bubbler_Draw(void)
 {
     RSDK_THIS(Bubbler);
+
     RSDK.DrawSprite(&self->bodyHitbox, NULL, false);
     if (self->startPos.x)
         RSDK.DrawSprite(&self->flameAnimator, NULL, false);
@@ -30,6 +35,7 @@ void Bubbler_Draw(void)
 void Bubbler_Create(void *data)
 {
     RSDK_THIS(Bubbler);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
@@ -39,16 +45,13 @@ void Bubbler_Create(void *data)
 
     if (data) {
         RSDK.SetSpriteAnimation(Bubbler->aniFrames, 3, &self->bodyHitbox, true, 0);
-        self->state = Bubbler_State_Projectile_Seed;
+        self->state = Bubbler_StateProjectile_Seed;
     }
     else {
         self->startPos   = self->position;
         self->startDir   = self->direction;
+        self->velocity.x = !self->direction ? -0x4000 : 0x4000;
         self->velocity.y = 0;
-        if (!self->direction)
-            self->velocity.x = -0x4000;
-        else
-            self->velocity.x = 0x4000;
         self->timer      = 0;
         self->spawnTimer = 32;
         RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &self->bodyHitbox, true, 0);
@@ -83,6 +86,7 @@ void Bubbler_StageLoad(void)
 void Bubbler_DebugSpawn(void)
 {
     RSDK_THIS(Bubbler);
+
     CREATE_ENTITY(Bubbler, NULL, self->position.x, self->position.y);
 }
 
@@ -95,6 +99,7 @@ void Bubbler_DebugDraw(void)
 void Bubbler_HandleInteractions(void)
 {
     RSDK_THIS(Bubbler);
+
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Bubbler->hitboxBadnik))
@@ -105,6 +110,7 @@ void Bubbler_HandleInteractions(void)
 void Bubbler_HandleProjectileInteractions(void)
 {
     RSDK_THIS(Bubbler);
+
     int32 distance = 0x7FFFFFFF;
     foreach_active(Player, player)
     {
@@ -113,15 +119,15 @@ void Bubbler_HandleProjectileInteractions(void)
             self->direction = player->position.x >= self->position.x;
         }
 
-        if (Player_CheckCollisionTouch(player, self, &Bubbler->hitboxProjectile)) {
+        if (Player_CheckCollisionTouch(player, self, &Bubbler->hitboxProjectile))
             Player_CheckHit(player, self);
-        }
     }
 }
 
 void Bubbler_CheckOffScreen(void)
 {
     RSDK_THIS(Bubbler);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position  = self->startPos;
         self->direction = self->startDir;
@@ -132,6 +138,7 @@ void Bubbler_CheckOffScreen(void)
 void Bubbler_State_Setup(void)
 {
     RSDK_THIS(Bubbler);
+
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = -0x10000;
     self->state      = Bubbler_State_MotherPatrol;
@@ -141,6 +148,7 @@ void Bubbler_State_Setup(void)
 void Bubbler_State_MotherPatrol(void)
 {
     RSDK_THIS(Bubbler);
+
     self->position.x += self->velocity.x;
     RSDK.ProcessAnimation(&self->flameAnimator);
 
@@ -171,10 +179,12 @@ void Bubbler_State_FoundPlayer(void)
     RSDK_THIS(Bubbler);
 
     RSDK.ProcessAnimation(&self->flameAnimator);
+
     if (--self->timer < 0) {
         RSDK.SetSpriteAnimation(Bubbler->aniFrames, 2, &self->flameAnimator, true, 0);
         self->state = Bubbler_State_AttackPlayer;
     }
+
     Bubbler_HandleInteractions();
     Bubbler_CheckOffScreen();
 }
@@ -200,25 +210,30 @@ void Bubbler_State_AttackPlayer(void)
     Bubbler_CheckOffScreen();
 }
 
-void Bubbler_State_Projectile_Seed(void)
+void Bubbler_StateProjectile_Seed(void)
 {
     RSDK_THIS(Bubbler);
+
     RSDK.ProcessAnimation(&self->bodyHitbox);
     self->position.y += 0x10000;
+
     Bubbler_HandleProjectileInteractions();
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, false)) {
+
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, false)) {
         RSDK.SetSpriteAnimation(Bubbler->aniFrames, 4, &self->bodyHitbox, true, 0);
-        self->state = Bubbler_State_Projectile_Bubbler;
+        self->state = Bubbler_StateProjectile_Bubbler;
     }
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
 
-void Bubbler_State_Projectile_Bubbler(void)
+void Bubbler_StateProjectile_Bubbler(void)
 {
     RSDK_THIS(Bubbler);
+
     RSDK.ProcessAnimation(&self->bodyHitbox);
+
     if (self->bodyHitbox.frameID >= 7)
         destroyEntity(self);
     else if (self->bodyHitbox.frameID < 6)
@@ -229,6 +244,7 @@ void Bubbler_State_Projectile_Bubbler(void)
 void Bubbler_EditorDraw(void)
 {
     RSDK_THIS(Bubbler);
+
     self->startPos = self->position;
     RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &self->bodyHitbox, true, 0);
     RSDK.SetSpriteAnimation(Bubbler->aniFrames, 1, &self->flameAnimator, true, 0);
@@ -241,8 +257,8 @@ void Bubbler_EditorLoad(void)
     Bubbler->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Bubbler.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Bubbler, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 }
 #endif
 

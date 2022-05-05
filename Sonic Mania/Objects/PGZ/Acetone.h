@@ -36,7 +36,7 @@ void Acetone_Update(void);
 void Acetone_LateUpdate(void);
 void Acetone_StaticUpdate(void);
 void Acetone_Draw(void);
-void Acetone_Create(void* data);
+void Acetone_Create(void *data);
 void Acetone_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Acetone_EditorDraw(void);
@@ -49,9 +49,8 @@ void Acetone_DrawGustFX(void);
 void Acetone_CheckPlayerCollisions(void);
 void Acetone_HandleGustCount(void);
 void Acetone_HandleGustPos(void);
-void Acetone_State_IntervalWait(void);
+void Acetone_State_AwaitInterval(void);
 void Acetone_State_Dispensing(void);
 void Acetone_State_StopDispensing(void);
 
-
-#endif //!OBJ_ACETONE_H
+#endif //! OBJ_ACETONE_H

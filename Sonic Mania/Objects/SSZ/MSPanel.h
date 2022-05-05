@@ -25,7 +25,7 @@ void MSPanel_Update(void);
 void MSPanel_LateUpdate(void);
 void MSPanel_StaticUpdate(void);
 void MSPanel_Draw(void);
-void MSPanel_Create(void* data);
+void MSPanel_Create(void *data);
 void MSPanel_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSPanel_EditorDraw(void);
@@ -39,4 +39,4 @@ void MSPanel_State_Active(void);
 void MSPanel_State_Explode(void);
 void MSPanel_State_Rumbling(void);
 
-#endif //!OBJ_MSPANEL_H
+#endif //! OBJ_MSPANEL_H

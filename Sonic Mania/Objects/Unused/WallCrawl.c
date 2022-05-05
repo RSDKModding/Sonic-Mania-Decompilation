@@ -135,7 +135,7 @@ void WallCrawl_State_Setup(void)
     if (!(self->direction & FLIP_X))
         offsetX = 0xC0000;
 
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, (2 * ((self->direction & FLIP_X) != 0) + 1), 0, offsetX, offsetY, 8);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & FLIP_X) != 0) + 1), 0, offsetX, offsetY, 8);
     self->state = WallCrawl_State_Moving;
     WallCrawl_State_Moving();
 }
@@ -193,7 +193,7 @@ void WallCrawl_State_Moving(void)
     int32 offsetX = -0xD0000;
     if (!(self->direction & FLIP_X))
         offsetX = 0xC0000;
-    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, (2 * ((self->direction & 1) != 0) + 1), 0, offsetX, offsetY, 0)) {
+    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & 1) != 0) + 1), 0, offsetX, offsetY, 0)) {
         self->state    = WallCrawl_State_Idle;
         self->idleTimer = 30;
         if (self->playerPtr) {

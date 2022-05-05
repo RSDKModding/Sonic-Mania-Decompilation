@@ -13,12 +13,13 @@ void UIVsZoneButton_Update(void)
 {
     RSDK_THIS(UIVsZoneButton);
 
-    self->touchPosSizeS.x = 0x500000;
-    self->touchPosSizeS.y = 0x380000;
-    self->touchPosOffsetS.x   = 0;
-    self->touchPosOffsetS.y   = 0;
+    self->touchPosSizeS.x   = 0x500000;
+    self->touchPosSizeS.y   = 0x380000;
+    self->touchPosOffsetS.x = 0;
+    self->touchPosOffsetS.y = 0;
 
     self->disabled = self->obfuscate || self->xOut;
+
     if (self->obfuscate != self->prevObfuscate) {
         UIVsZoneButton_SetNameText();
         self->prevObfuscate = self->obfuscate;
@@ -29,15 +30,17 @@ void UIVsZoneButton_Update(void)
     if (self->isSelected) {
         self->triBounceVelocity -= 0x600;
         self->triBounceOffset += self->triBounceVelocity;
+
         if (self->triBounceOffset <= 0x10000 && self->triBounceVelocity < 0) {
-            self->triBounceOffset = 0x10000;
+            self->triBounceOffset   = 0x10000;
             self->triBounceVelocity = 0;
         }
 
         self->unusedBounceVelocity -= 0x1800;
         self->unusedBounceOffset += self->unusedBounceVelocity;
+
         if (self->unusedBounceOffset <= 0x8000 && self->unusedBounceVelocity < 0) {
-            self->unusedBounceOffset = 0x8000;
+            self->unusedBounceOffset   = 0x8000;
             self->unusedBounceVelocity = 0;
         }
     }
@@ -45,16 +48,18 @@ void UIVsZoneButton_Update(void)
         if (self->triBounceOffset > 0)
             self->triBounceOffset = self->triBounceOffset >> 1;
         if (self->unusedBounceOffset > 0)
+
             self->unusedBounceOffset = self->unusedBounceOffset >> 1;
     }
+
     if (self->zoneID == UIVSZONEBUTTON_FUZZ || self->xOut)
         RSDK.ProcessAnimation(&self->zoneAnimator);
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if (self->state == UIVsZoneButton_State_HandleButtonEnter) {
         if (parent->state != UIControl_ProcessInputs) {
-            self->isSelected  = false;
-            self->state = UIVsZoneButton_State_HandleButtonLeave;
+            self->isSelected = false;
+            self->state      = UIVsZoneButton_State_HandleButtonLeave;
         }
         else {
             int32 id = -1;
@@ -67,7 +72,7 @@ void UIVsZoneButton_Update(void)
 
             if (parent->buttonID != id) {
                 self->isSelected = false;
-                self->state = UIVsZoneButton_State_HandleButtonLeave;
+                self->state      = UIVsZoneButton_State_HandleButtonLeave;
             }
         }
     }
@@ -80,11 +85,15 @@ void UIVsZoneButton_StaticUpdate(void) {}
 void UIVsZoneButton_Draw(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     UIVsZoneButton_SetupAnimators();
-    RSDK.DrawRect(self->position.x - 0x250000, self->position.y - 0x190000, 0x500000, 0x380000, 0xFFFFFF, 127, INK_BLEND, false);
+
+    RSDK.DrawRect(self->position.x - 0x250000, self->position.y - 0x190000, 0x500000, 0x380000, 0xFFFFFF, 0x7F, INK_BLEND, false);
+
     UIVsZoneButton_DrawBG();
     UIVsZoneButton_DrawOutline();
     UIVsZoneButton_DrawButton();
+
     if (self->state != UIVsZoneButton_State_Selected || !(self->timer & 2))
         UIVsZoneButton_DrawZoneIcon();
 }
@@ -92,12 +101,14 @@ void UIVsZoneButton_Draw(void)
 void UIVsZoneButton_Create(void *data)
 {
     RSDK_THIS(UIVsZoneButton);
-    self->active             = ACTIVE_BOUNDS;
-    self->drawOrder          = 2;
-    self->visible            = true;
-    self->drawFX             = FX_FLIP;
-    self->updateRange.x      = 0x800000;
-    self->updateRange.y      = 0x300000;
+
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = 2;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x300000;
+
     self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
     self->touchCB            = UIButton_ProcessTouchCB_Single;
     self->selectedCB         = UIVsZoneButton_SelectedCB;
@@ -107,6 +118,7 @@ void UIVsZoneButton_Create(void *data)
     self->checkButtonEnterCB = UIVsZoneButton_CheckButtonEnterCB;
     self->checkSelectedCB    = UIVsZoneButton_CheckSelectedCB;
     self->state              = UIVsZoneButton_State_HandleButtonLeave;
+
     UIVsZoneButton_SetupAnimators();
     UIVsZoneButton_SetNameText();
 }
@@ -115,41 +127,48 @@ void UIVsZoneButton_StageLoad(void)
 {
     UIVsZoneButton->aniFrames  = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
     UIVsZoneButton->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
-    UIVsZoneButton->sfxFail    = RSDK.GetSfx("Stage/Fail.wav");
+
+    UIVsZoneButton->sfxFail = RSDK.GetSfx("Stage/Fail.wav");
 }
 
 void UIVsZoneButton_SetupAnimators(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     if (SceneInfo->inEditor || self->zoneID == UIVSZONEBUTTON_FUZZ || self->xOut)
         RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 16, &self->zoneAnimator, false, 0);
     else
         RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 17, &self->zoneAnimator, false, self->zoneID);
+
     RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 14, &self->redCrossAnimator, false, 5);
     RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 14, &self->blackCrossAnimator, false, 6);
 
-    self->size.x = 0x300000;
-    self->size.y = 0xD0000;
+    self->size.x     = 0x300000;
+    self->size.y     = 0xD0000;
     self->bgEdgeSize = 13;
 }
 
 void UIVsZoneButton_SetNameText(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
+
         if (self->obfuscate) {
             RSDK.PrependText(&self->nameText, "???");
             self->nameText.length = 3;
         }
         else {
-            Localization_SetZoneNameShort(&self->nameText, self->zoneID);
+            Localization_GetZoneInitials(&self->nameText, self->zoneID);
+
             if (self->zoneID < UIVSZONEBUTTON_FUZZ) {
                 char buffer[0x10];
                 sprintf(buffer, " %d", self->act + 1);
                 RSDK.AppendText(&self->nameText, buffer);
             }
         }
+
         RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->nameText);
     }
 }
@@ -157,8 +176,10 @@ void UIVsZoneButton_SetNameText(void)
 void UIVsZoneButton_DrawOutline(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, self->position.y + 0x30000, 80, 56);
+
     if (self->isSelected)
         UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 80, 56);
     else
@@ -168,6 +189,7 @@ void UIVsZoneButton_DrawOutline(void)
 void UIVsZoneButton_DrawBG(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     UIWidgets_DrawRightTriangle(self->position.x - 0x250000, self->position.y - 0x190000, (23 * self->triBounceOffset) >> 16, 232, 40, 88);
     UIWidgets_DrawRightTriangle(self->position.x + 0x250000, self->position.y + 0x180000, (-29 * self->triBounceOffset) >> 16, 96, 160, 176);
     UIWidgets_DrawRightTriangle(self->position.x + 0x250000, self->position.y + 0x180000, (-17 * self->triBounceOffset) >> 16, 88, 112, 224);
@@ -176,9 +198,10 @@ void UIVsZoneButton_DrawBG(void)
 void UIVsZoneButton_DrawZoneIcon(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    EntityUIControl *parent = (EntityUIControl *)self->parent;
-    Vector2 drawPos;
 
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
+
+    Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
 
@@ -186,13 +209,15 @@ void UIVsZoneButton_DrawZoneIcon(void)
         && !SceneInfo->inEditor && self->zoneID != UIVSZONEBUTTON_FUZZ && !self->xOut) {
         RSDK.CopyPalette(((self->zoneID >> 3) + 1), (32 * self->zoneID), 0, 224, 32);
     }
-    RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0, 255, INK_BLEND, false);
+
+    RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0x000000, 0xFF, INK_BLEND, false);
 
     drawPos.x += self->buttonBounceOffset;
     drawPos.y += self->buttonBounceOffset;
-    RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0xFFFFFF, 255, INK_NONE, false);
+    RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0xFFFFFF, 0xFF, INK_NONE, false);
+
     if (self->xOut) {
-        int32 dir           = self->direction;
+        int32 dir       = self->direction;
         self->direction = self->zoneDirection;
         RSDK.DrawSprite(&self->zoneAnimator, &drawPos, false);
 
@@ -208,7 +233,7 @@ void UIVsZoneButton_DrawZoneIcon(void)
         RSDK.DrawSprite(&self->redCrossAnimator, &drawPos, false);
     }
     else if (self->zoneID == UIVSZONEBUTTON_FUZZ) {
-        int32 dir           = self->direction;
+        int32 dir       = self->direction;
         self->direction = self->zoneDirection;
         RSDK.DrawSprite(&self->zoneAnimator, &drawPos, false);
 
@@ -222,10 +247,10 @@ void UIVsZoneButton_DrawZoneIcon(void)
 void UIVsZoneButton_DrawButton(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    Vector2 drawPos;
 
-    int32 width  = (self->size.y + self->size.x) >> 16;
-    
+    Vector2 drawPos;
+    int32 width = (self->size.y + self->size.x) >> 16;
+
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x280000;
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, 0xF0, 0xF0, 0xF0);
@@ -236,37 +261,43 @@ void UIVsZoneButton_DrawButton(void)
 
     if (!SceneInfo->inEditor) {
         int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->nameText, 0, self->nameText.length, 0);
-        drawPos.y -= 0x10000;
+
         drawPos.x -= width << 15;
-        RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText, 0, self->nameText.length, ALIGN_LEFT, 0, 0, 0, false);
+        drawPos.y -= 0x10000;
+        RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText, 0, self->nameText.length, ALIGN_LEFT, 0, NULL, NULL, false);
     }
 }
 
 bool32 UIVsZoneButton_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     return self->state == UIVsZoneButton_State_HandleButtonEnter;
 }
 
 bool32 UIVsZoneButton_CheckSelectedCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     return self->state == UIVsZoneButton_State_Selected;
 }
 
 void UIVsZoneButton_SelectedCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
 
     parent->state = StateMachine_None;
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
     RSDK.StopChannel(Music->channelID);
+
     TimeAttackData_Clear();
     param->vsZoneID = self->zoneID;
     param->vsActID  = self->act;
-    self->state   = UIVsZoneButton_State_Selected;
+
+    self->state = UIVsZoneButton_State_Selected;
 }
 
 void UIVsZoneButton_FailCB(void) { RSDK.PlaySfx(UIVsZoneButton->sfxFail, false, 255); }
@@ -276,35 +307,38 @@ void UIVsZoneButton_ButtonEnterCB(void)
     RSDK_THIS(UIVsZoneButton);
 
     self->state = UIVsZoneButton_State_HandleButtonEnter;
+
     if (!self->isSelected) {
-        self->buttonBounceOffset = 0;
+        self->buttonBounceOffset   = 0;
         self->buttonBounceVelocity = -0x20000;
-        self->triBounceVelocity = 0x4000;
+        self->triBounceVelocity    = 0x4000;
         self->unusedBounceVelocity = 0x8000;
-        self->isSelected = true;
+        self->isSelected           = true;
     }
 }
 
 void UIVsZoneButton_ButtonLeaveCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     self->isSelected = false;
-    self->state = UIVsZoneButton_State_HandleButtonLeave;
+    self->state      = UIVsZoneButton_State_HandleButtonLeave;
 }
 
 void UIVsZoneButton_State_HandleButtonLeave(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     if (self->zoneID == UIVSZONEBUTTON_FUZZ || self->xOut)
         self->zoneDirection = self->zoneAnimator.frameID & 3;
 
     if (self->buttonBounceOffset) {
         int32 dist = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
         self->buttonBounceOffset += dist << 16;
+
         if (dist < 0) {
-            if (self->buttonBounceOffset < 0) {
+            if (self->buttonBounceOffset < 0)
                 self->buttonBounceOffset = 0;
-            }
             else if (dist > 0 && self->buttonBounceOffset > 0)
                 self->buttonBounceOffset = 0;
         }
@@ -316,13 +350,15 @@ void UIVsZoneButton_State_HandleButtonLeave(void)
 void UIVsZoneButton_State_HandleButtonEnter(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     if (self->zoneID == UIVSZONEBUTTON_FUZZ || self->xOut)
         self->zoneDirection = self->zoneAnimator.frameID & 3;
 
     self->buttonBounceVelocity += 0x4800;
     self->buttonBounceOffset += self->buttonBounceVelocity;
+
     if (self->buttonBounceOffset >= -0x20000 && self->buttonBounceVelocity > 0) {
-        self->buttonBounceOffset = -0x20000;
+        self->buttonBounceOffset   = -0x20000;
         self->buttonBounceVelocity = 0;
     }
 }
@@ -330,6 +366,7 @@ void UIVsZoneButton_State_HandleButtonEnter(void)
 void UIVsZoneButton_State_Selected(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     if (self->zoneID == UIVSZONEBUTTON_FUZZ || self->xOut)
         self->zoneDirection = self->zoneAnimator.frameID & 3;
 
@@ -349,6 +386,7 @@ void UIVsZoneButton_State_Selected(void)
 void UIVsZoneButton_EditorDraw(void)
 {
     RSDK_THIS(UIVsZoneButton);
+
     self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
 
     UIVsZoneButton_Draw();

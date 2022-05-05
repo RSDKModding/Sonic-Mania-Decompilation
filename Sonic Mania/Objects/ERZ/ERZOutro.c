@@ -93,8 +93,10 @@ void ERZOutro_HandleRubyHover(void)
 
     ruby->angle += 2;
     int amp          = abs(RSDK.Sin256(Zone->timer)) >> 6;
-    ruby->position.x = (RSDK.Rand(-amp, amp) << 16) + ruby->startPos.x;
-    ruby->position.y = (RSDK.Sin256(ruby->angle) << 8) + (RSDK.Rand(-amp, amp) << 16) + ruby->startPos.y;
+    int32 offset     = amp == 0 ? 0 : RSDK.Rand(-amp, amp);
+
+    ruby->position.x = (offset << 16) + ruby->startPos.x;
+    ruby->position.y = (offset << 16) + ruby->startPos.y + (RSDK.Sin256(ruby->angle) << 8);
 
     fxRuby->position.x = ruby->position.x;
     fxRuby->position.y = ruby->position.y;

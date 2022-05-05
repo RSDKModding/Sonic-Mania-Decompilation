@@ -9,7 +9,7 @@ typedef enum {
     CONSTELLATION_BERRIES,
     CONSTELLATION_LYRE,
     CONSTELLATION_HELMET,
-}ConstellationShapes;
+} ConstellationShapes;
 
 // Object Class
 struct ObjectConstellation {
@@ -22,7 +22,7 @@ struct ObjectConstellation {
 struct EntityConstellation {
     RSDK_ENTITY
     uint8 shape;
-    Vector2 startPos;
+    Vector2 originPos;
     int32 unused;
     ScrollInfo *scrollInfo;
     Animator animator;
@@ -36,7 +36,7 @@ void Constellation_Update(void);
 void Constellation_LateUpdate(void);
 void Constellation_StaticUpdate(void);
 void Constellation_Draw(void);
-void Constellation_Create(void* data);
+void Constellation_Create(void *data);
 void Constellation_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Constellation_EditorDraw(void);
@@ -47,4 +47,4 @@ void Constellation_Serialize(void);
 // Extra Entity Functions
 void Constellation_SetupInfo(void);
 
-#endif //!OBJ_CONSTELLATION_H
+#endif //! OBJ_CONSTELLATION_H

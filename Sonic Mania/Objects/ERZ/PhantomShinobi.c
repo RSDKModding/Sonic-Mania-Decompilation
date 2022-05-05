@@ -69,7 +69,7 @@ void PhantomShinobi_Create(void *data)
         self->active          = ACTIVE_NEVER;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;
-        self->collisionLayers = Zone->fgLayers;
+        self->collisionLayers = Zone->collisionLayers;
         self->startPos.x      = self->position.x;
         self->startPos.y      = self->position.y;
         self->tileCollisions  = true;

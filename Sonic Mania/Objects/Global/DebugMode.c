@@ -21,7 +21,8 @@ void DebugMode_Update(void)
         APICallback->achievementsDisabled = true;
 #endif
 
-    //if (Zone)
+    // TODO: uncomment this in the final
+    // if (Zone)
     //    Zone->stageFinishCallback = NULL;
 
     bool32 moved = false;
@@ -53,7 +54,7 @@ void DebugMode_Update(void)
     }
 
 #if RETRO_GAMEVER != VER_100
-    bool32 keyBack = ControllerInfo[CONT_P1].keyY.press;
+    bool32 keyBack  = ControllerInfo[CONT_P1].keyY.press;
     bool32 keySpawn = ControllerInfo[CONT_P1].keyX.press;
 #else
     bool32 keyBack  = ControllerInfo[CONT_P1].keyX.press;
@@ -66,33 +67,37 @@ void DebugMode_Update(void)
         DebugMode->itemSubType = 0;
     }
     else if (keySpawn) {
-        EntityPlayer *player        = (EntityPlayer *)SceneInfo->entity;
-        player->objectID            = Player->objectID;
-        player->groundVel           = 0;
-        player->velocity.x          = 0;
-        player->velocity.y          = 0;
-        player->state               = Player_State_Air;
-        player->collisionPlane      = 0;
-        player->tileCollisions      = true;
-        player->interaction         = true;
-        player->visible             = true;
-        player->drawOrder           = Zone->playerDrawLow;
-        SceneInfo->timeEnabled      = true;
+        // Do this so we can access the player variables again
+        RSDK_THIS(Player);
+        self->objectID       = Player->objectID;
+        self->groundVel      = 0;
+        self->velocity.x     = 0;
+        self->velocity.y     = 0;
+        self->state          = Player_State_Air;
+        self->collisionPlane = 0;
+        self->tileCollisions = true;
+        self->interaction    = true;
+        self->visible        = true;
+        self->drawOrder      = Zone->playerDrawLow;
+
+        SceneInfo->timeEnabled = true;
         if (SceneInfo->minutes == 9 && SceneInfo->seconds == 59 && SceneInfo->milliseconds == 99) {
             SceneInfo->minutes      = 0;
             SceneInfo->seconds      = 0;
             SceneInfo->milliseconds = 0;
         }
+
         DebugMode->debugActive = false;
     }
     else if (ControllerInfo[CONT_P1].keyA.down) {
         if (ControllerInfo[CONT_P1].keyC.press || keyBack) {
             --DebugMode->objID;
-            if (DebugMode->objID < 0) {
+            if (DebugMode->objID < 0)
                 DebugMode->objID = DebugMode->itemCount - 1;
-            }
+
             DebugMode->itemSubType = 0;
         }
+
         if (ControllerInfo[CONT_P1].keyB.press) {
             DebugMode->itemSubType--;
             if (DebugMode->itemSubType >= DebugMode->subtypeCount)
@@ -114,14 +119,12 @@ void DebugMode_LateUpdate(void) {}
 
 void DebugMode_StaticUpdate(void) {}
 
-void DebugMode_Draw(void)
-{
-    StateMachine_Run(DebugMode->draw[DebugMode->objID]);
-}
+void DebugMode_Draw(void) { StateMachine_Run(DebugMode->draw[DebugMode->objID]); }
 
 void DebugMode_Create(void *data)
 {
     RSDK_THIS(DebugMode);
+
     self->active  = ACTIVE_NORMAL;
     self->visible = true;
 }
@@ -132,7 +135,7 @@ void DebugMode_StageLoad(void)
     DebugMode->itemCount   = 0;
     DebugMode->debugActive = false;
 
-    for (int32 i = 0; i < DebugMode_ObjectLimit; ++i) {
+    for (int32 i = 0; i < DEBUGMODE_OBJECT_COUNT; ++i) {
         DebugMode->objectIDs[i] = TYPE_BLANK;
         DebugMode->draw[i]      = StateMachine_None;
         DebugMode->spawn[i]     = DebugMode_NullState;
@@ -143,7 +146,7 @@ void DebugMode_NullState(void) {}
 
 void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void))
 {
-    if (DebugMode->itemCount < DebugMode_ObjectLimit) {
+    if (DebugMode->itemCount < DEBUGMODE_OBJECT_COUNT) {
         DebugMode->objectIDs[DebugMode->itemCount] = id;
         DebugMode->draw[DebugMode->itemCount]      = draw;
         DebugMode->spawn[DebugMode->itemCount]     = spawn;

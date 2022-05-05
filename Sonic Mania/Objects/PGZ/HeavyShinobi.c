@@ -12,6 +12,7 @@ ObjectHeavyShinobi *HeavyShinobi;
 void HeavyShinobi_Update(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void HeavyShinobi_StaticUpdate(void) {}
 void HeavyShinobi_Draw(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -30,26 +32,32 @@ void HeavyShinobi_Create(void *data)
     RSDK_THIS(HeavyShinobi);
 
     self->drawFX = FX_ROTATE | FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->type = voidToInt(data);
+
             switch (self->type) {
                 case SHINOBI_MAIN:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = false;
                     self->drawOrder = Zone->objectDrawLow;
+
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, true, 0);
+
                     self->state         = HeavyShinobi_State_Setup;
                     self->stateDraw     = HeavyShinobi_Draw_Shinobi;
                     self->updateRange.y = 0x800000;
                     self->updateRange.x = 0x800000;
                     break;
                 case SHINOBI_SLASH:
+
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->objectDrawLow;
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 8, &self->mainAnimator, true, 0);
+
                     self->inkEffect     = INK_ALPHA;
                     self->alpha         = 0x100;
                     self->state         = HeavyShinobi_StateSlash_Active;
@@ -61,6 +69,7 @@ void HeavyShinobi_Create(void *data)
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->objectDrawLow - 1;
+
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 9, &self->mainAnimator, true, 0);
                     self->updateRange.x = 0x1000000;
                     self->updateRange.y = 0x1000000;
@@ -69,9 +78,10 @@ void HeavyShinobi_Create(void *data)
                     self->stateDraw     = HeavyShinobi_Draw_Asteron;
                     break;
                 case SHINOBI_ASTERONSPIKE:
-                    self->active        = ACTIVE_NORMAL;
-                    self->visible       = true;
-                    self->drawOrder     = Zone->objectDrawLow;
+                    self->active    = ACTIVE_NORMAL;
+                    self->visible   = true;
+                    self->drawOrder = Zone->objectDrawLow;
+
                     self->drawFX        = FX_ROTATE | FX_FLIP;
                     self->state         = HeavyShinobi_State_AsteronSpike;
                     self->stateDraw     = HeavyShinobi_Draw_AsteronSpike;
@@ -79,21 +89,25 @@ void HeavyShinobi_Create(void *data)
                     self->updateRange.x = 0x800000;
                     break;
                 case SHINOBI_BOUNDS:
-                    self->active      = ACTIVE_NORMAL;
+                    self->active = ACTIVE_NORMAL;
+
                     // Bug Details: Remember the PGZ2 boss skip?
                     // you guessed it, this is the fix, isPermanent just says "DO NOT OVERWRITE THIS ENTITY"
                     // since all entities spawned via RSDK.CreateEntity use the last 0x100 slots, and it loops around
 #if RETRO_GAMEVER != VER_100
                     self->isPermanent = true;
 #endif
-                    self->visible     = true;
-                    self->drawOrder   = Zone->fgLayerHigh - 1;
+
+                    self->visible   = true;
+                    self->drawOrder = Zone->fgLayerHigh - 1;
                     RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->mainAnimator, true, 0);
+
                     self->state         = HeavyShinobi_StateBounds_WaitForPlayer;
                     self->stateDraw     = HeavyShinobi_Draw_Bounds;
                     self->updateRange.y = 0x800000;
                     self->updateRange.x = 0x800000;
                     break;
+
                 default: break;
             }
         }
@@ -151,17 +165,17 @@ void HeavyShinobi_StageLoad(void)
     HeavyShinobi->health             = 8;
     HeavyShinobi->invincibilityTimer = 0;
 
-    HeavyShinobi->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
-    HeavyShinobi->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
-    HeavyShinobi->sfxDefeat          = RSDK.GetSfx("PSZ/ShinobiDefeat.wav");
-    HeavyShinobi->sfxDropIn          = RSDK.GetSfx("PSZ/ShinobiDropIn.wav");
-    HeavyShinobi->sfxExplode         = RSDK.GetSfx("PSZ/ShinobiExplode.wav");
-    HeavyShinobi->sfxGlitch          = RSDK.GetSfx("PSZ/ShinobiGlitch.wav");
-    HeavyShinobi->sfxJump            = RSDK.GetSfx("PSZ/ShinobiJump.wav");
-    HeavyShinobi->sfxParry           = RSDK.GetSfx("PSZ/ShinobiParry.wav");
-    HeavyShinobi->sfxSlash           = RSDK.GetSfx("PSZ/ShinobiSlash.wav");
-    HeavyShinobi->sfxStick           = RSDK.GetSfx("PSZ/ShinobiStick.wav");
-    HeavyShinobi->sfxThrow           = RSDK.GetSfx("PSZ/ShinobiThrow.wav");
+    HeavyShinobi->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyShinobi->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyShinobi->sfxDefeat    = RSDK.GetSfx("PSZ/ShinobiDefeat.wav");
+    HeavyShinobi->sfxDropIn    = RSDK.GetSfx("PSZ/ShinobiDropIn.wav");
+    HeavyShinobi->sfxExplode   = RSDK.GetSfx("PSZ/ShinobiExplode.wav");
+    HeavyShinobi->sfxGlitch    = RSDK.GetSfx("PSZ/ShinobiGlitch.wav");
+    HeavyShinobi->sfxJump      = RSDK.GetSfx("PSZ/ShinobiJump.wav");
+    HeavyShinobi->sfxParry     = RSDK.GetSfx("PSZ/ShinobiParry.wav");
+    HeavyShinobi->sfxSlash     = RSDK.GetSfx("PSZ/ShinobiSlash.wav");
+    HeavyShinobi->sfxStick     = RSDK.GetSfx("PSZ/ShinobiStick.wav");
+    HeavyShinobi->sfxThrow     = RSDK.GetSfx("PSZ/ShinobiThrow.wav");
 }
 
 void HeavyShinobi_HandleAfterFX(void)
@@ -171,6 +185,7 @@ void HeavyShinobi_HandleAfterFX(void)
     for (int32 i = 15; i > 0; --i) {
         HeavyShinobi->storePos[i] = HeavyShinobi->storePos[i - 1];
     }
+
     HeavyShinobi->storePos[0].x = self->position.x;
     HeavyShinobi->storePos[0].y = self->position.y;
 
@@ -184,6 +199,7 @@ void HeavyShinobi_HandleAfterFX(void)
         }
 
         if (HeavyShinobi->storedIDs[i]) {
+
             --HeavyShinobi->storedIDs[i];
             if (!HeavyShinobi->storedIDs[i]) {
                 int32 id = HeavyShinobi->storedAnimIDs[i];
@@ -202,24 +218,25 @@ void HeavyShinobi_HandleAfterFX(void)
         HeavyShinobi->invincibilityTimer--;
 }
 
-void HeavyShinobi_HandleSlash(void *p)
+void HeavyShinobi_HandleSlash(EntityPlayer *player)
 {
     RSDK_THIS(HeavyShinobi);
-    EntityPlayer *player = (EntityPlayer *)p;
 
     RSDK.PlaySfx(HeavyShinobi->sfxSlash, false, 255);
+
     self->direction = player->position.x >= self->position.x;
     RSDK.SetSpriteAnimation(-1, 0, &self->fxAnimator, true, 0);
     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 4, &self->mainAnimator, true, 1);
+
     CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SLASH), self->position.x, self->position.y)->direction = self->direction;
 
     int32 delay = 4;
     int32 alpha = 0xC0;
     for (int32 i = 3; i >= 0; --i) {
-        EntityHeavyShinobi *child = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SLASH), self->position.x, self->position.y);
-        child->mainAnimator.frameDuration += delay;
-        child->alpha     = alpha;
-        child->direction = self->direction;
+        EntityHeavyShinobi *slash = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SLASH), self->position.x, self->position.y);
+        slash->mainAnimator.frameDuration += delay;
+        slash->alpha     = alpha;
+        slash->direction = self->direction;
 
         delay += 4;
         alpha -= 32;
@@ -251,6 +268,7 @@ void HeavyShinobi_StartJump(void)
     else
         self->velocity.x -= 0x1000;
     self->velocity.y = -0x70000;
+
     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 3, &self->mainAnimator, true, 0);
     self->state = HeavyShinobi_State_Jump;
 }
@@ -284,10 +302,10 @@ void HeavyShinobi_Explode(void)
         RSDK.PlaySfx(HeavyShinobi->sfxExplosion, false, 255);
 
         if (!(Zone->timer & 0xF)) {
-            int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
-            int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
+            int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder = Zone->objectDrawHigh + 2;
+            explosion->drawOrder       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -297,12 +315,14 @@ void HeavyShinobi_State_Setup(void)
     RSDK_THIS(HeavyShinobi);
 
     if (++self->timer >= 2) {
-        self->timer               = 0;
+        self->timer = 0;
+
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsR[0]     = ScreenInfo->centerX + 80 + (self->position.x >> 16);
+        Zone->cameraBoundsR[0]      = ScreenInfo->centerX + 80 + (self->position.x >> 16);
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 68;
-        self->position.y          = (ScreenInfo->position.y - 192) << 16;
+        Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 68;
+
+        self->position.y = (ScreenInfo->position.y - 192) << 16;
         for (int32 i = 0; i < 16; ++i) HeavyShinobi->storePos[i] = self->position;
 
         self->active = ACTIVE_NORMAL;
@@ -315,17 +335,22 @@ void HeavyShinobi_State_SetupArena(void)
     RSDK_THIS(HeavyShinobi);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
+
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
-        CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->cameraBoundsL[0] + 40) << 16, (Zone->cameraBoundsB[0] - 376) << 16);
-        EntityHeavyShinobi *child =
-            CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->cameraBoundsR[0] - 40) << 16, (Zone->cameraBoundsB[0] - 376) << 16);
-        child->timer      = 1;
-        child->position.y = (Zone->cameraBoundsB[0] - 99) << 16;
-        child->state      = HeavyShinobi_StateBounds_Active;
-        self->state     = HeavyShinobi_State_StartFight;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+
+        int32 y = (Zone->cameraBoundsB[0] - 376) << 16;
+
+        CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->cameraBoundsL[0] + 40) << 16, y);
+
+        EntityHeavyShinobi *rBounds = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->cameraBoundsR[0] - 40) << 16, y);
+        rBounds->timer              = 1;
+        rBounds->position.y         = (Zone->cameraBoundsB[0] - 99) << 16;
+        rBounds->state              = HeavyShinobi_StateBounds_Active;
+
+        self->state = HeavyShinobi_State_StartFight;
     }
 }
 
@@ -334,10 +359,12 @@ void HeavyShinobi_State_StartFight(void)
     RSDK_THIS(HeavyShinobi);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
+
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+
         Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
         self->visible = true;
         HeavyShinobi_StartJump();
@@ -351,12 +378,15 @@ void HeavyShinobi_State_Idle(void)
     RSDK_THIS(HeavyShinobi);
 
     HeavyShinobi_HandleAfterFX();
+
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->fxAnimator);
     for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->fxTrailAnimator[i]);
+
     self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
 
     EntityPlayer *player = Player_GetNearestPlayerX();
+
     if (abs(player->position.x - self->position.x) < 0x500000 && player->state != Ice_State_FrozenPlayer) {
         HeavyShinobi_HandleSlash(player);
     }
@@ -371,15 +401,18 @@ void HeavyShinobi_State_Slash(void)
     RSDK_THIS(HeavyShinobi);
 
     HeavyShinobi_HandleAfterFX();
+
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->fxAnimator);
     for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->fxTrailAnimator[i]);
+
     if (self->mainAnimator.frameID == 12)
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, false, 0);
 
     self->position.y += self->velocity.y;
     self->velocity.y += 0x2800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true))
+
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true))
         self->velocity.y = 0;
 
     if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
@@ -396,11 +429,8 @@ void HeavyShinobi_State_Slash(void)
             Ice_FreezePlayer(player);
             player->timer      = 3;
             player->onGround   = false;
+            player->velocity.x = player->position.x < self->position.x ? -0x30000 : 0x30000;
             player->velocity.y = -0x38000;
-            if (player->position.x < self->position.x)
-                player->velocity.x = -0x30000;
-            else
-                player->velocity.x = 0x30000;
         }
     }
 }
@@ -410,8 +440,10 @@ void HeavyShinobi_State_Jump(void)
     RSDK_THIS(HeavyShinobi);
 
     HeavyShinobi_HandleAfterFX();
+
     for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->fxTrailAnimator[i]);
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x2800;
@@ -435,52 +467,59 @@ void HeavyShinobi_State_Jump(void)
             switch (HeavyShinobi->health) {
                 case 1:
                 case 2: count = 3; break;
+
                 case 3:
                 case 4:
                 case 5: count = 2; break;
+
                 case 6:
                 case 7: count = 1; break;
+
                 case 8:
                 default: count = 0; break;
             }
+
             if (count)
                 RSDK.PlaySfx(HeavyShinobi->sfxThrow, false, 0xFF);
 
             for (int32 i = 0; i < count; ++i) {
-                EntityHeavyShinobi *child = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_ASTERON), self->position.x, self->position.y);
-                child->direction          = FLIP_NONE;
-                child->mainAnimator.frameID  = RSDK.Rand(0, 8);
-                child->timer              = 180;
+                EntityHeavyShinobi *asteron   = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_ASTERON), self->position.x, self->position.y);
+                asteron->direction            = FLIP_NONE;
+                asteron->mainAnimator.frameID = RSDK.Rand(0, 8);
+                asteron->timer                = 180;
 
                 switch (count) {
-                    case 1: child->angle = 64; break;
+                    case 1: asteron->angle = 64; break;
+
                     case 2:
                         if (!i)
-                            child->angle = 96;
+                            asteron->angle = 96;
                         else
-                            child->angle = 32;
+                            asteron->angle = 32;
                         break;
+
                     case 3:
                         switch (i) {
-                            case 0: child->angle = 96; break;
-                            case 1: child->angle = 64; break;
-                            case 2: child->angle = 32; break;
+                            case 0: asteron->angle = 96; break;
+                            case 1: asteron->angle = 64; break;
+                            case 2: asteron->angle = 32; break;
                         }
                         break;
                 }
 
-                child->angle += RSDK.Rand(-16, 17);
-                child->velocity.x = 0x300 * RSDK.Cos256(child->angle);
-                child->velocity.y = 0x300 * RSDK.Sin256(child->angle);
+                asteron->angle += RSDK.Rand(-16, 17);
+                asteron->velocity.x = 0x300 * RSDK.Cos256(asteron->angle);
+                asteron->velocity.y = 0x300 * RSDK.Sin256(asteron->angle);
                 ++HeavyShinobi->activeShurikens;
             }
         }
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->direction  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
+
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, false, 0);
         self->timer = RSDK.Rand(30, 91);
@@ -499,12 +538,14 @@ void HeavyShinobi_State_Jump(void)
                     self->direction  = FLIP_NONE;
                     self->velocity.x = 0x20000;
                 }
-                self->velocity.y  = -0x40000;
-                int32 angle           = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-                player->velocity.x  = 0x380 * RSDK.Cos256(angle);
-                player->velocity.y  = 0x380 * RSDK.Sin256(angle);
-                self->timer       = 180;
-                self->glitchTimer = 0;
+                self->velocity.y = -0x40000;
+
+                int32 angle        = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
+                player->velocity.x = 0x380 * RSDK.Cos256(angle);
+                player->velocity.y = 0x380 * RSDK.Sin256(angle);
+                self->timer        = 180;
+                self->glitchTimer  = 0;
+
                 RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 15, &self->mainAnimator, true, 0);
                 RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, false, 0);
                 RSDK.PlaySfx(HeavyShinobi->sfxParry, false, 255);
@@ -517,11 +558,15 @@ void HeavyShinobi_State_Jump(void)
 void HeavyShinobi_State_Glitched(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     if (!(self->glitchTimer % 40))
         RSDK.PlaySfx(HeavyShinobi->sfxGlitch, false, 255);
     ++self->glitchTimer;
+
     HeavyShinobi_HandleAfterFX();
+
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -539,15 +584,18 @@ void HeavyShinobi_State_Glitched(void)
         }
     }
 
-    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
-        RSDK.GetEntityByID(SLOT_PLAYER1);
+    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
+        RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         self->velocity.x = 0;
         self->velocity.y = 0;
+
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 16, &self->mainAnimator, false, 0);
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, false, 0);
+
         if (--self->timer <= 0) {
             RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 0, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, false, 0);
+
             self->timer = RSDK.Rand(30, 91);
             self->state = HeavyShinobi_State_Idle;
             RSDK.StopSfx(HeavyShinobi->sfxGlitch);
@@ -569,9 +617,12 @@ void HeavyShinobi_State_Glitched(void)
 void HeavyShinobi_State_Destroyed(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     HeavyShinobi_HandleAfterFX();
+
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->fxAnimator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -589,19 +640,23 @@ void HeavyShinobi_State_Destroyed(void)
         }
     }
 
-    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
+    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->direction  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
+
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 16, &self->mainAnimator, false, 0);
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, false, 0);
     }
 
     HeavyShinobi_Explode();
+
     if (--self->timer <= 0) {
         self->velocity.y = -0x70000;
+
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 3, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->fxAnimator, true, 0);
+
         RSDK.PlaySfx(HeavyShinobi->sfxDefeat, false, 255);
         self->state = HeavyShinobi_State_Finished;
     }
@@ -610,7 +665,9 @@ void HeavyShinobi_State_Destroyed(void)
 void HeavyShinobi_State_Finished(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     HeavyShinobi_HandleAfterFX();
+
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->fxAnimator);
     for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->fxTrailAnimator[i]);
@@ -632,6 +689,7 @@ void HeavyShinobi_State_Finished(void)
 void HeavyShinobi_Draw_Shinobi(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     RSDK.DrawSprite(&self->fxAnimator, NULL, false);
 
     self->inkEffect = INK_ALPHA;
@@ -645,6 +703,7 @@ void HeavyShinobi_Draw_Shinobi(void)
     self->inkEffect = INK_NONE;
     if (HeavyShinobi->invincibilityTimer & 1)
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     RSDK.SetPaletteEntry(0, 128, 0x000000);
@@ -653,7 +712,9 @@ void HeavyShinobi_Draw_Shinobi(void)
 void HeavyShinobi_StateSlash_Active(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     if (self->mainAnimator.frameID != self->mainAnimator.frameCount - 1) {
         foreach_active(Player, player)
         {
@@ -677,6 +738,7 @@ void HeavyShinobi_StateSlash_Active(void)
 void HeavyShinobi_Draw_Slash(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
@@ -686,6 +748,7 @@ void HeavyShinobi_StateAsteron_Thrown(void)
 
     if (HeavyShinobi->health) {
         RSDK.ProcessAnimation(&self->mainAnimator);
+
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
 
@@ -717,7 +780,7 @@ void HeavyShinobi_StateAsteron_Thrown(void)
             }
         }
 
-        if (!isStuck && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true))
+        if (!isStuck && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true))
             isStuck = true;
 
         if (!isStuck) {
@@ -744,6 +807,7 @@ void HeavyShinobi_StateAsteron_Thrown(void)
     else {
         RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
+
         destroyEntity(self);
     }
 }
@@ -755,6 +819,7 @@ void HeavyShinobi_StateAsteron_Debris(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     self->visible ^= true;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
@@ -764,9 +829,11 @@ void HeavyShinobi_StateAsteron_Debris(void)
 void HeavyShinobi_StateAsteron_Explode(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     if (!HeavyShinobi->health) {
         RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
+
         destroyEntity(self);
     }
     else {
@@ -780,15 +847,17 @@ void HeavyShinobi_StateAsteron_Explode(void)
                     RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
                     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
                     --HeavyShinobi->activeShurikens;
+
                     destroyEntity(self);
                     foreach_break;
                 }
             }
-            else if ((player->state != Ice_State_FrozenPlayer || !self->playerPtr) && Player_CheckBadnikTouch(player, self, &HeavyShinobi->hitboxAsteron)
-                     && Player_CheckItemBreak(player, self, true)) {
+            else if ((player->state != Ice_State_FrozenPlayer || !self->playerPtr)
+                     && Player_CheckBadnikTouch(player, self, &HeavyShinobi->hitboxAsteron) && Player_CheckItemBreak(player, self, true)) {
                 RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
                 --HeavyShinobi->activeShurikens;
+
                 destroyEntity(self);
                 foreach_break;
             }
@@ -809,6 +878,7 @@ void HeavyShinobi_StateAsteron_Explode(void)
                 EntityHeavyShinobi *child = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_ASTERONSPIKE), self->position.x, self->position.y);
                 child->rotation           = (self->mainAnimator.frameID & 0xFFFFFFFE) << 6;
                 child->direction          = self->direction;
+
                 switch (i) {
                     case 0:
                         child->angle = (32 * ((self->mainAnimator.frameID & 0xFE) - 2));
@@ -816,12 +886,14 @@ void HeavyShinobi_StateAsteron_Explode(void)
                         child->position.y -= RSDK.Sin512(child->rotation) << 10;
                         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 17, &child->mainAnimator, true, 0);
                         break;
+
                     case 1:
                         child->angle = (32 * (self->mainAnimator.frameID & 0xFE) - 120);
                         child->position.x -= 0x380 * RSDK.Cos512(child->rotation);
                         child->position.y -= 0x180 * RSDK.Sin512(child->rotation);
                         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 18, &child->mainAnimator, true, 0);
                         break;
+
                     case 2:
                         child->angle = (32 * (self->mainAnimator.frameID & 0xFE) - 8);
                         child->position.x += 0x380 * RSDK.Cos512(child->rotation);
@@ -829,12 +901,14 @@ void HeavyShinobi_StateAsteron_Explode(void)
                         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 18, &child->mainAnimator, true, 0);
                         child->direction ^= FLIP_X;
                         break;
+
                     case 3:
                         child->angle = (32 * ((self->mainAnimator.frameID & 0xFE) + 3));
                         child->position.x -= 0x380 * RSDK.Cos512(child->rotation);
                         child->position.y += 0x380 * RSDK.Sin512(child->rotation);
                         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 19, &child->mainAnimator, true, 0);
                         break;
+
                     case 4:
                         child->angle = (32 * ((self->mainAnimator.frameID & 0xFE) + 1));
                         child->position.x += 0x380 * RSDK.Cos512(child->rotation);
@@ -842,6 +916,7 @@ void HeavyShinobi_StateAsteron_Explode(void)
                         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 19, &child->mainAnimator, true, 0);
                         child->direction ^= FLIP_X;
                         break;
+
                     default: break;
                 }
 
@@ -854,8 +929,10 @@ void HeavyShinobi_StateAsteron_Explode(void)
                 playerPtr->state = Player_State_Air;
                 Player_CheckHit(playerPtr, self);
             }
+
             destroyEntity(self);
         }
+
         if (!RSDK.CheckOnScreen(self, &self->updateRange))
             destroyEntity(self);
     }
@@ -875,10 +952,13 @@ void HeavyShinobi_Draw_Asteron(void)
 void HeavyShinobi_State_AsteronSpike(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     if (HeavyShinobi->health) {
         RSDK.ProcessAnimation(&self->mainAnimator);
+
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
+
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &HeavyShinobi->hitboxAsteronSpike) && player->state != Ice_State_FrozenPlayer) {
@@ -902,6 +982,7 @@ void HeavyShinobi_State_AsteronSpike(void)
     else {
         RSDK.PlaySfx(HeavyShinobi->sfxExplosion, false, 255);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawLow;
+
         destroyEntity(self);
     }
 }
@@ -909,6 +990,7 @@ void HeavyShinobi_State_AsteronSpike(void)
 void HeavyShinobi_Draw_AsteronSpike(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
@@ -946,24 +1028,27 @@ void HeavyShinobi_StateBounds_Active(void)
                 left  = HeavyShinobi->hitboxBounds.right;
                 right = playerHitbox->left;
             }
+
             player->position.x = self->position.x + ((left - right) << 16);
         }
     }
 
     if (HeavyShinobi->health == -1) {
         RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
-        for (int32 i = 0; i < 0x80; ++i) {
-            int32 x = RSDK.Rand(-64, 65) << 16;
-            int32 y = RSDK.Rand(-80, 81) << 16;
 
-            EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), x + self->position.x, y + self->position.y);
+        for (int32 i = 0; i < 0x80; ++i) {
+            int32 x        = self->position.x + (RSDK.Rand(-64, 65) << 16);
+            int32 y        = self->position.y + (RSDK.Rand(-80, 81) << 16);
+            EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), x, y);
+
             RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &ice->blockAnimator, true, 0);
-            ice->velocity.x               = RSDK.Rand(-6, 8) << 15;
-            ice->velocity.y               = RSDK.Rand(-10, 2) << 15;
-            ice->direction                = RSDK.Rand(0, 4);
-            ice->blockAnimator.speed      = RSDK.Rand(1, 4);
-            ice->active                   = ACTIVE_NORMAL;
+            ice->velocity.x          = RSDK.Rand(-6, 8) << 15;
+            ice->velocity.y          = RSDK.Rand(-10, 2) << 15;
+            ice->direction           = RSDK.Rand(0, 4);
+            ice->blockAnimator.speed = RSDK.Rand(1, 4);
+            ice->active              = ACTIVE_NORMAL;
         }
+
         destroyEntity(self);
     }
 }
@@ -973,8 +1058,8 @@ void HeavyShinobi_Draw_Bounds(void)
     RSDK_THIS(HeavyShinobi);
     Vector2 drawPos;
 
-    drawPos.x                 = self->position.x;
-    drawPos.y                 = self->position.y - 0x880000;
+    drawPos.x                  = self->position.x;
+    drawPos.y                  = self->position.y - 0x880000;
     self->mainAnimator.frameID = 3;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
@@ -987,9 +1072,10 @@ void HeavyShinobi_Draw_Bounds(void)
     drawPos.y += 0x500000;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->direction         = FLIP_Y;
+    self->direction            = FLIP_Y;
     self->mainAnimator.frameID = 3;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
+
     self->direction = FLIP_NONE;
 }
 
@@ -997,6 +1083,7 @@ void HeavyShinobi_Draw_Bounds(void)
 void HeavyShinobi_EditorDraw(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     self->active    = ACTIVE_BOUNDS;
     self->visible   = false;
     self->drawOrder = Zone->objectDrawLow;
@@ -1013,8 +1100,6 @@ void HeavyShinobi_EditorDraw(void)
         int32 boundsR = (self->position.x >> 16) + WIDE_SCR_XCENTER + 80;
         int32 boundsB = (self->position.y >> 16) + 68;
 
-        DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER - 80, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 80, 68, 1 | 0 | 4 | 8, 0x00C0F0);
-
         Vector2 startPos = self->position;
 
         self->active    = ACTIVE_NORMAL;
@@ -1030,6 +1115,8 @@ void HeavyShinobi_EditorDraw(void)
         self->position.y = (boundsB - 99) << 16;
         HeavyShinobi_Draw_Bounds();
 
+        DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER - 80, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 80, 68, 1 | 0 | 4 | 8, 0x00C0F0);
+
         self->position = startPos;
         RSDK_DRAWING_OVERLAY(false);
     }
@@ -1038,6 +1125,7 @@ void HeavyShinobi_EditorDraw(void)
 void HeavyShinobi_EditorLoad(void)
 {
     HeavyShinobi->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shinobi.bin", SCOPE_STAGE);
+
     RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->fxTrailAnimator[0], true, 0);
     RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->fxTrailAnimator[1], true, 0);
     RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->fxTrailAnimator[2], true, 0);

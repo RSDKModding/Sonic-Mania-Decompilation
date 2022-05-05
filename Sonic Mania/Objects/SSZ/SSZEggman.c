@@ -13,7 +13,9 @@ ObjectSSZEggman *SSZEggman;
 void SSZEggman_Update(void)
 {
     RSDK_THIS(SSZEggman);
+
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->eggmanAnimator);
 }
 
@@ -26,10 +28,8 @@ void SSZEggman_Draw(void)
     RSDK_THIS(SSZEggman);
 
     Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x += self->offset.x;
-    drawPos.y += self->offset.y;
+    drawPos.x = self->position.x + self->offset.x;
+    drawPos.y = self->position.y + self->offset.y;
 
     RSDK.DrawSprite(&self->seatAnimator, NULL, false);
     RSDK.DrawSprite(&self->eggmanAnimator, &drawPos, false);
@@ -40,11 +40,13 @@ void SSZEggman_Draw(void)
 void SSZEggman_Create(void *data)
 {
     RSDK_THIS(SSZEggman);
+
     if (!SceneInfo->inEditor) {
+
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
         self->drawFX        = FX_FLIP;
-        self->alpha         = 64;
+        self->alpha         = 0x40;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -69,9 +71,10 @@ void SSZEggman_State_Setup(void)
     RSDK_THIS(SSZEggman);
 
     foreach_all(PhantomRuby, ruby) { self->ruby = ruby; }
+
     self->originPos.x = self->position.x;
     self->originPos.y = self->position.y;
-    self->state     = SSZEggman_State_HoldingRuby;
+    self->state       = SSZEggman_State_HoldingRuby;
 }
 
 void SSZEggman_State_HoldingRuby(void)
@@ -91,6 +94,7 @@ void SSZEggman_State_HoldingRuby(void)
             self->speed = -0x28000;
             RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 3, &self->eggmanAnimator, true, 0);
             self->state = SSZEggman_State_ThrownRuby;
+
             if (self->ruby) {
                 self->ruby->state      = PhantomRuby_State_MoveGravity;
                 self->ruby->velocity.x = -0x40000;
@@ -154,8 +158,10 @@ void SSZEggman_State_FlyAway(void)
 void SSZEggman_EditorDraw(void)
 {
     RSDK_THIS(SSZEggman);
-    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 2, &self->eggmanAnimator, true, 0);
+
     self->offset.y = -0x100000;
+
+    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 2, &self->eggmanAnimator, true, 0);
     RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 4, &self->seatAnimator, true, 0);
     RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 5, &self->mobileAnimator, true, 0);
 

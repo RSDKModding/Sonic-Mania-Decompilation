@@ -39,12 +39,13 @@ void SpikeFlail_StaticUpdate(void)
 void SpikeFlail_Draw(void)
 {
     RSDK_THIS(SpikeFlail);
+
     Vector2 ringPos, spikeBallPos;
 
     spikeBallPos.x = (((16 * self->chainLength + 34) * RSDK.Cos512(self->angle)) << 7) + self->position.x;
     spikeBallPos.y = self->position.y - 0x80000;
 
-    ringPos.y    = self->position.y;
+    ringPos.y = self->position.y;
 
     int32 ballPos = (((16 * self->chainLength + 34) * RSDK.Cos512(0)) << 7) + self->position.x;
 
@@ -60,7 +61,7 @@ void SpikeFlail_Draw(void)
                 ballPos = ((((16 * (i + 1)) * RSDK.Cos512(0)) << 7) + self->position.x) - self->position.x;
 
                 int32 extend = (((16 * self->chainLength + 34) * RSDK.Cos512(0)) << 7) + self->position.x;
-                extend     = abs(extend - self->position.x) >> 16;
+                extend       = abs(extend - self->position.x) >> 16;
 
                 self->scale.x = ((((extend * (RSDK.Sin512(self->angle) << 7)) >> 16) * (ballPos / extend)) >> 16) + 0x200;
                 self->scale.y = self->scale.x;
@@ -114,6 +115,7 @@ void SpikeFlail_Draw(void)
 void SpikeFlail_Create(void *data)
 {
     RSDK_THIS(SpikeFlail);
+
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_SCALE;
@@ -123,6 +125,7 @@ void SpikeFlail_Create(void *data)
     self->updateRange.y = 0x800000;
     self->scale.x       = 0x200;
     self->scale.y       = 0x200;
+
     RSDK.SetSpriteAnimation(SpikeFlail->aniFrames, 0, &self->poleAnimator, true, 0);
     RSDK.SetSpriteAnimation(SpikeFlail->aniFrames, 1, &self->spikeBallAnimator, true, 0);
 }
@@ -131,9 +134,9 @@ void SpikeFlail_StageLoad(void)
 {
     SpikeFlail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpikeFlail.bin", SCOPE_STAGE);
 
-    SpikeFlail->active    = ACTIVE_ALWAYS;
+    SpikeFlail->active = ACTIVE_ALWAYS;
 
-    SpikeFlail->sfxFlail  = RSDK.GetSfx("SSZ1/Flail.wav");
+    SpikeFlail->sfxFlail = RSDK.GetSfx("SSZ1/Flail.wav");
 }
 
 void SpikeFlail_SetupHitbox(void)
@@ -165,10 +168,12 @@ void SpikeFlail_CheckPlayerCollisions(void)
 
                 self->position.x = self->position.x + (((16 * self->chainLength + 34) * RSDK.Cos512(self->angle)) << 7);
                 self->position.y = self->position.y - 0x80000;
+
 #if RETRO_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x500, 2, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
+
                 self->position.x = storeX;
                 self->position.y = storeY;
             }
@@ -193,8 +198,20 @@ Vector2 SpikeFlail_GetScale(int ballPos, int angle)
 void SpikeFlail_EditorDraw(void)
 {
     RSDK_THIS(SpikeFlail);
+
     self->angle = (self->phase512 + 3 * 0) & 0x1FF;
+
+    int32 group = SceneInfo->currentDrawGroup;
+
+    SceneInfo->currentDrawGroup = -1;
     SpikeFlail_Draw();
+
+    if (self->angle < 0x100) {
+        SceneInfo->currentDrawGroup = Zone->objectDrawHigh;
+        SpikeFlail_Draw();
+    }
+
+    self->drawOrder = group;
 }
 
 void SpikeFlail_EditorLoad(void) { SpikeFlail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpikeFlail.bin", SCOPE_STAGE); }

@@ -41,16 +41,12 @@ SDL_AudioSpec audioDeviceFormat;
 
 #define ADJUST_VOLUME(s, v) (s = (s * v) / MAX_VOLUME)
 
-#else
-#define LockAudioDevice()   ;
-#define UnlockAudioDevice() ;
 #endif
 
 #define MIX_BUFFER_SAMPLES (256)
 
 bool32 InitAudioDevice()
 {
-    // StopAllSfx(); //"init"
 #if !RETRO_USE_ORIGINAL_CODE
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
     SDL_AudioSpec want;
@@ -165,7 +161,7 @@ long tellVorbis(void *ptr)
 }
 int closeVorbis(void *ptr) { return 1; }
 
-void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
+void ProcessAudioPlayback(void *data, uint8 *stream, int len)
 {
     (void)data; // Unused
 
@@ -401,6 +397,7 @@ bool32 LoadGlobalSfx()
     return false;
 }
 
+#if RETRO_USING_SDL2
 void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *channel)
 {
     if (!channel)
@@ -443,6 +440,7 @@ void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *chan
         i++;
     }
 }
+#endif
 
 void LoadStream(ChannelInfo *channel)
 {
@@ -564,7 +562,11 @@ int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint
     streamInfo.loopPoint = loopPoint;
 
     if (loadASync) {
+#if RETRO_USING_SDL2
         SDL_CreateThread((SDL_ThreadFunction)LoadStream, "LoadStream", (void *)channel);
+#else
+        LoadStream(channel);
+#endif
     }
     else {
         LoadStream(channel);
@@ -575,6 +577,82 @@ int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint
 
 #define WAV_SIG_HEADER 0x46464952 // RIFF
 #define WAV_SIG_DATA   0x61746164 // data
+
+void LoadSfx_RSDK(char *filename, byte id, byte plays, byte scope, uint *size, uint *format, ushort *channels, uint *freq)
+{
+    FileInfo info;
+    InitFileInfo(&info);
+
+    if (LoadFile(&info, filename, FMODE_RB)) {
+        uint signature = ReadInt32(&info, false);
+
+        if (signature == WAV_SIG_HEADER) {
+            ReadInt32(&info, false); // chunk size
+            ReadInt32(&info, false); // WAVE
+            ReadInt32(&info, false); // FMT
+            ReadInt32(&info, false); // chunk size
+            ReadInt16(&info);        // audio format
+            *channels = ReadInt16(&info);
+            *freq       = ReadInt32(&info, false);
+            ReadInt32(&info, false); // bytes per sec
+            ReadInt16(&info);        // block align
+            *format = ReadInt16(&info);
+            Seek_Set(&info, 34);
+
+            ushort sampleBits = ReadInt16(&info);
+            int loop          = 0;
+            while (true) {
+                signature = ReadInt32(&info, false);
+                if (signature == WAV_SIG_DATA)
+                    break;
+
+                loop += 4;
+                if (loop >= 0x40) {
+                    if (loop != 0x100) {
+                        CloseFile(&info);
+                        PrintLog(PRINT_ERROR, "Unable to read sfx: %s", filename);
+                        return;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+
+            uint length = ReadInt32(&info, false);
+            *size   = length;
+            if (sampleBits == 16)
+                length >>= 1;
+
+            RSDK::AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
+            sfxList[id].length = length;
+
+            if (sampleBits == 8) {
+                sbyte *buffer = (sbyte *)sfxList[id].buffer;
+                for (int remaining = length; remaining; --remaining) {
+                    int sample = ReadInt8(&info);
+                    *buffer    = (sample - 128);
+                    buffer++;
+                }
+            }
+            else {
+                short *buffer = (short *)sfxList[id].buffer;
+                for (int remaining = length; remaining; --remaining) {
+                    int sample = ReadInt16(&info);
+                    if (sample > 0x7FFF)
+                        sample = (sample & 0x7FFF) - 0x8000;
+                    *buffer = sample;
+                    buffer++;
+                }
+            }
+        }
+
+        CloseFile(&info);
+    }
+    else {
+        PrintLog(PRINT_ERROR, "Unable to open sfx: %s", filename);
+    }
+}
 
 void LoadSfx(char *filename, byte plays, byte scope)
 {
@@ -601,11 +679,11 @@ void LoadSfx(char *filename, byte plays, byte scope)
     if (LoadFile(&info, fullPath, FMODE_RB)) {
         byte type = fullPath[strlen(fullPath) - 3];
         if (type == 'w' || type == 'W') {
-#if !RETRO_USE_ORIGINAL_CODE
             byte *sfx = new byte[info.fileSize];
             ReadBytes(&info, sfx, info.fileSize);
             CloseFile(&info);
 
+#if RETRO_USING_SDL2
             SDL_RWops *src = SDL_RWFromMem(sfx, info.fileSize);
             if (src == NULL) {
                 SDL_RWclose(src);
@@ -614,8 +692,8 @@ void LoadSfx(char *filename, byte plays, byte scope)
             }
             else {
                 SDL_AudioSpec wav_spec;
-                uint wav_length = 0;
-                byte *wav_buffer = NULL;
+                uint wav_length    = 0;
+                byte *wav_buffer   = NULL;
                 SDL_AudioSpec *wav = SDL_LoadWAV_RW(src, 0, &wav_spec, &wav_buffer, &wav_length);
 
                 SDL_RWclose(src);
@@ -624,107 +702,45 @@ void LoadSfx(char *filename, byte plays, byte scope)
                     PrintLog(PRINT_POPUP, "Unable to open sfx: '%s'\nError: %s\nTrying native method", fullPath, SDL_GetError());
 
                     // Try Again, this time with RSDK's loader
-                    InitFileInfo(&info);
-                    if (LoadFile(&info, fullPath, FMODE_RB)) {
-                        uint signature = ReadInt32(&info, false);
 
-                        if (signature == WAV_SIG_HEADER) {
-                            ReadInt32(&info, false); // chunk size
-                            ReadInt32(&info, false); // WAVE
-                            ReadInt32(&info, false); // FMT
-                            ReadInt32(&info, false); // chunk size
-                            ReadInt16(&info);        // audio format
-                            ushort channels = ReadInt16(&info);
-                            uint freq       = ReadInt32(&info, false);
-                            ReadInt32(&info, false); // bytes per sec
-                            ReadInt16(&info);        // block align
-                            uint format = 0x8000 | (ReadInt16(&info) & 0xFF);
-                            Seek_Set(&info, 34);
+                    ushort channels = 0;
+                    uint freq       = 0;
+                    uint format     = 0;
+                    uint size       = 0;
+                    LoadSfx_RSDK(fullPath, id, plays, scope, &size, &format, &channels, &freq);
+                    format = 0x8000 | (format & 0xFF);
 
-                            ushort sampleBits = ReadInt16(&info);
-                            int loop          = 0;
-                            while (true) {
-                                signature = ReadInt32(&info, false);
-                                if (signature == WAV_SIG_DATA)
-                                    break;
+                    SDL_AudioCVT convert;
+                    if (SDL_BuildAudioCVT(&convert, format, channels, freq, audioDeviceFormat.format, audioDeviceFormat.channels,
+                                          audioDeviceFormat.freq)
+                        > 0) {
+                        convert.buf = (byte *)malloc(size * convert.len_mult);
+                        convert.len = size;
+                        memcpy(convert.buf, sfxList[id].buffer, size);
+                        SDL_ConvertAudio(&convert);
 
-                                loop += 4;
-                                if (loop >= 0x40) {
-                                    if (loop != 0x100) {
-                                        CloseFile(&info);
-                                        PrintLog(PRINT_ERROR, "Unable to read sfx: %s", fullPath);
-                                        return;
-                                    }
-                                    else {
-                                        break;
-                                    }
-                                }
-                            }
-
-                            uint length = ReadInt32(&info, false);
-                            uint size   = length;
-                            if (sampleBits == 16) {
-                                length >>= 1;
-                            }
-                            RSDK::AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
-                            sfxList[id].length = length;
-
-                            if (sampleBits == 8) {
-                                sbyte *buffer = (sbyte *)sfxList[id].buffer;
-                                for (int remaining = length; remaining; --remaining) {
-                                    int sample = ReadInt8(&info);
-                                    *buffer    = (sample - 128);
-                                    buffer++;
-                                }
-                            }
-                            else {
-                                short *buffer = (short *)sfxList[id].buffer;
-                                for (int remaining = length; remaining; --remaining) {
-                                    int sample = ReadInt16(&info);
-                                    if (sample > 0x7FFF)
-                                        sample = (sample & 0x7FFF) - 0x8000;
-                                    *buffer = sample;
-                                    buffer++;
-                                }
-                            }
-
-                            SDL_AudioCVT convert;
-                            if (SDL_BuildAudioCVT(&convert, format, channels, freq, audioDeviceFormat.format, audioDeviceFormat.channels,
-                                                  audioDeviceFormat.freq)
-                                > 0) {
-                                convert.buf = (byte *)malloc(size * convert.len_mult);
-                                convert.len = size;
-                                memcpy(convert.buf, sfxList[id].buffer, size);
-                                SDL_ConvertAudio(&convert);
-
-                                LockAudioDevice();
-                                GEN_HASH(filename, sfxList[id].hash);
-                                sfxList[id].buffer = NULL;
-                                AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
-                                memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
-                                sfxList[id].length             = convert.len_cvt / sizeof(float);
-                                sfxList[id].scope              = scope;
-                                sfxList[id].maxConcurrentPlays = plays;
-                                sfxList[id].channelCount       = channels;
-                                UnlockAudioDevice();
-                                free(convert.buf);
-                            }
-                            else {
-                                LockAudioDevice();
-                                GEN_HASH(filename, sfxList[id].hash);
-                                // AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
-                                // memcpy(sfxList[id].buffer, wav_buffer, wav_length);
-                                // sfxList[id].length             = wav_length / sizeof(float);
-                                sfxList[id].scope              = scope;
-                                sfxList[id].maxConcurrentPlays = plays;
-                                sfxList[id].channelCount       = channels;
-                                UnlockAudioDevice();
-                            }
-                        }
-                        CloseFile(&info);
+                        LockAudioDevice();
+                        GEN_HASH(filename, sfxList[id].hash);
+                        sfxList[id].buffer = NULL;
+                        AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
+                        memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
+                        sfxList[id].length             = convert.len_cvt / sizeof(float);
+                        sfxList[id].scope              = scope;
+                        sfxList[id].maxConcurrentPlays = plays;
+                        sfxList[id].channelCount       = channels;
+                        UnlockAudioDevice();
+                        free(convert.buf);
                     }
                     else {
-                        PrintLog(PRINT_ERROR, "Unable to open sfx: %s", fullPath);
+                        LockAudioDevice();
+                        GEN_HASH(filename, sfxList[id].hash);
+                        // AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                        // memcpy(sfxList[id].buffer, wav_buffer, wav_length);
+                        // sfxList[id].length             = wav_length / sizeof(float);
+                        sfxList[id].scope              = scope;
+                        sfxList[id].maxConcurrentPlays = plays;
+                        sfxList[id].channelCount       = channels;
+                        UnlockAudioDevice();
                     }
                 }
                 else {
@@ -762,100 +778,19 @@ void LoadSfx(char *filename, byte plays, byte scope)
                     }
                 }
             }
+#else
+            ushort channels = 0;
+            uint freq       = 0;
+            uint format     = 0;
+            uint size       = 0;
+            LoadSfx_RSDK(fullPath, id, plays, scope, &size, &format, &channels, &freq);
+#endif
         }
         else {
             // wtf lol
             CloseFile(&info);
             PrintLog(PRINT_ERROR, "Sfx format not supported!");
         }
-#else
-            uint signature = ReadInt32(&info, false);
-
-            if (signature == 'FFIR') {
-                ReadInt32(&info, false); // chunk size
-                ReadInt32(&info, false); // WAVE
-                ReadInt32(&info, false); // FMT
-                ReadInt32(&info, false); // chunk size
-                ReadInt16(&info);        // audio format
-                ushort channels = ReadInt16(&info);
-                uint freq       = ReadInt32(&info, false);
-                ReadInt32(&info, false); // bytes per sec
-                ReadInt16(&info);        // block align
-                uint format = 0x8000 | (ReadInt16(&info) & 0xFF);
-                Seek_Set(&info, 34);
-
-                ushort sampleBits = ReadInt16(&info);
-                int loop          = 0;
-                while (true) {
-                    signature = ReadInt32(&info, false);
-                    if (signature == 'atad')
-                        break;
-
-                    loop += 4;
-                    if (loop >= 0x40) {
-                        if (loop != 0x100) {
-                            CloseFile(&info);
-                            PrintLog(PRINT_ERROR, "Unable to read sfx: %s", fullPath);
-                            return;
-                        }
-                        else {
-                            break;
-                        }
-                    }
-                }
-
-                uint length = ReadInt32(&info, false);
-                uint size   = length;
-                if (sampleBits == 16) {
-                    length >>= 1;
-                }
-                RSDK::AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
-                sfxList[id].length = length;
-
-                if (sampleBits == 8) {
-                    sbyte *buffer = (sbyte *)sfxList[id].buffer;
-                    for (int remaining = length; remaining; --remaining) {
-                        int sample = ReadInt8(&info);
-                        *buffer    = (sample - 128);
-                        buffer++;
-                    }
-                }
-                else {
-                    short *buffer = (short *)sfxList[id].buffer;
-                    for (int remaining = length; remaining; --remaining) {
-                        int sample = ReadInt16(&info);
-                        if (sample > 0x7FFF)
-                            sample = (sample & 0x7FFF) - 0x8000;
-                        *buffer = sample;
-                        buffer++;
-                    }
-                }
-
-#if !RETRO_USE_ORIGINAL_CODE
-                SDL_AudioCVT convert;
-                if (SDL_BuildAudioCVT(&convert, format, channels, freq, audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq)
-                    > 0) {
-                    convert.buf = (byte *)malloc(size * convert.len_mult);
-                    convert.len = size;
-                    memcpy(convert.buf, sfxList[id].buffer, size);
-                    SDL_ConvertAudio(&convert);
-
-                    LockAudioDevice();
-                    GEN_HASH(filename, sfxList[id].hash);
-                    sfxList[id].buffer = NULL;
-                    RSDK::AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
-                    memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
-                    sfxList[id].length             = convert.len_cvt / sizeof(float);
-                    sfxList[id].scope              = scope;
-                    sfxList[id].maxConcurrentPlays = plays;
-                    sfxList[id].channelCount       = channels;
-                    UnlockAudioDevice();
-                    free(convert.buf);
-                }
-#endif
-            }
-            CloseFile(&info);
-#endif
     }
 }
 int PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)

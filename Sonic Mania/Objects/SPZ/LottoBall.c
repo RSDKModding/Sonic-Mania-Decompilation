@@ -12,7 +12,9 @@ ObjectLottoBall *LottoBall;
 void LottoBall_Update(void)
 {
     RSDK_THIS(LottoBall);
+
     StateMachine_Run(self->state);
+
     self->angle += self->angleVel;
     self->rotation = (self->angle >> 15) & 0x1FF;
 }
@@ -24,10 +26,11 @@ void LottoBall_StaticUpdate(void) {}
 void LottoBall_Draw(void)
 {
     RSDK_THIS(LottoBall);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     if (self->isVisible[SceneInfo->currentScreenID] || (!self->isUIBall && self->state != LottoBall_State_Collected)) {
         RSDK.DrawSprite(&self->ballAnimator, NULL, self->isUIBall);
+
         switch (self->type) {
             case LOTTOBALL_BLUE:
             case LOTTOBALL_YELLOW:
@@ -93,6 +96,7 @@ void LottoBall_Create(void *data)
 
             default: break;
         }
+
         self->active          = ACTIVE_BOUNDS;
         self->updateRange.x   = 0x400000;
         self->updateRange.y   = 0xE00000;
@@ -120,8 +124,7 @@ void LottoBall_CheckOffScreen(void)
         self->angle      = 0;
         self->velocity.x = 0;
         self->velocity.y = 0;
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
+        self->position   = self->startPos;
         self->active     = ACTIVE_BOUNDS;
         self->state      = StateMachine_None;
     }
@@ -145,6 +148,7 @@ void LottoBall_State_FallIntoMachine(void)
                 else
                     self->velocity.x += self->gravityStrength;
             }
+
             self->velocity.y += self->gravityStrength;
             self->position.x += self->velocity.x;
             self->position.y += self->velocity.y;
@@ -157,7 +161,7 @@ void LottoBall_State_InMachine(void)
 {
     RSDK_THIS(LottoBall);
 
-    EntityLottoMachine *parent = (EntityLottoMachine *)self->parent;
+    EntityLottoMachine *parent = self->parent;
     if (parent) {
         self->velocity.y += self->gravityStrength;
         self->position.x += self->velocity.x;
@@ -168,11 +172,10 @@ void LottoBall_State_InMachine(void)
         }
         else {
             int32 vel = (abs(self->velocity.x) + abs(parent->spinSpeed) + abs(self->velocity.y)) >> 1;
-            if (vel >= 0x30000) {
-                if (vel > 0x60000)
-                    vel = 0x60000;
+            if (vel > 0x60000) {
+                vel = 0x60000;
             }
-            else {
+            else if (vel < 0x30000) {
                 vel         = 0x30000;
                 self->timer = RSDK.Rand(16, 32);
             }
@@ -185,6 +188,7 @@ void LottoBall_State_InMachine(void)
                 if (ball != self) {
                     int32 rx = (self->position.x - ball->position.x) >> 16;
                     int32 ry = (self->position.y - ball->position.y) >> 16;
+
                     if (rx * rx + ry * ry < 0x100) {
                         int32 angle      = RSDK.ATan2(rx, ry);
                         self->velocity.x = (vel * RSDK.Cos256(angle)) >> 8;
@@ -257,14 +261,16 @@ void LottoBall_State_Collected(void)
             self->drawOrder = Zone->hudDrawOrder;
             self->active    = ACTIVE_NORMAL;
             self->state     = LottoBall_State_CollectFall;
+
             RSDK.SetSpriteAnimation(LottoBall->aniFrames, self->ballAnimator.animationID + 3, &self->ballAnimator, true, self->ballAnimator.frameID);
             RSDK.SetSpriteAnimation(LottoBall->aniFrames, (self->leftNumAnimator.animationID + 3), &self->leftNumAnimator, true,
                                     self->leftNumAnimator.frameID);
             RSDK.SetSpriteAnimation(LottoBall->aniFrames, (self->rightNumAnimator.animationID + 3), &self->rightNumAnimator, true,
                                     self->rightNumAnimator.frameID);
+
             self->position.x = self->bounds.x - 0x1880000;
-            self->velocity.x = 0x80000;
             self->position.y = ((ScreenInfo->height - 160) << 16);
+            self->velocity.x = 0x80000;
             self->velocity.y = 0x40000;
         }
     }
@@ -278,12 +284,14 @@ void LottoBall_State_CollectFall(void)
         self->velocity.y += 0x4800;
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
+
         if (self->position.x > self->bounds.x)
             self->position.x = self->bounds.x;
 
         if (self->position.y > self->bounds.y) {
             self->position.y = self->bounds.y;
             self->velocity.y = -(self->velocity.y >> 1);
+
             if (self->position.x >= self->bounds.x) {
                 self->position.x = self->bounds.x;
                 self->state      = StateMachine_None;
@@ -298,12 +306,13 @@ void LottoBall_State_SetupUIBall(void)
 
     ++self->timer;
     self->position.x += ((ScreenInfo->centerX << 16) - self->position.x) >> 3;
+
     if (self->timer > 24) {
         self->scale.x -= (self->scale.x >> 3);
         self->scale.y -= (self->scale.y >> 3);
+
         if (self->scale.x < 8) {
-            self->position.x   = self->startPos.x;
-            self->position.y   = self->startPos.y;
+            self->position     = self->startPos;
             self->scale.y      = 8;
             self->scale.x      = 8;
             self->angle        = 0;
@@ -317,6 +326,7 @@ void LottoBall_State_SetupUIBall(void)
             self->isVisible[2] = false;
             self->isVisible[3] = false;
             self->state        = LottoBall_State_EnterUIBall;
+
             RSDK.SetSpriteAnimation(LottoBall->aniFrames, self->ballAnimator.animationID - 3, &self->ballAnimator, true, self->ballAnimator.frameID);
             RSDK.SetSpriteAnimation(LottoBall->aniFrames, self->leftNumAnimator.animationID - 3, &self->leftNumAnimator, true,
                                     self->leftNumAnimator.frameID);
@@ -332,6 +342,7 @@ void LottoBall_State_EnterUIBall(void)
 
     self->scale.x += self->scale.x >> 3;
     self->scale.y += self->scale.y >> 3;
+
     if (self->scale.x >= 0x200) {
         self->drawFX &= ~FX_SCALE;
         self->scale.y = 0x200;
@@ -343,11 +354,13 @@ void LottoBall_State_EnterUIBall(void)
 void LottoBall_State_ShowUIBall(void)
 {
     RSDK_THIS(LottoBall);
+
     self->timer += 8;
 
     int32 scale   = minVal(self->scale.x + ((0x214 - self->scale.x) >> 3), 0x200);
     self->scale.x = scale;
     self->scale.y = scale;
+
     if (self->timer > 512) {
         self->timer    = 0;
         self->type     = LOTTOBALL_TOTAL;
@@ -361,7 +374,9 @@ void LottoBall_State_ShowUIBall(void)
 void LottoBall_EditorDraw(void)
 {
     RSDK_THIS(LottoBall);
+
     RSDK.SetSpriteAnimation(LottoBall->aniFrames, 0, &self->ballAnimator, true, self->type);
+
     switch (self->type) {
         case LOTTOBALL_BLUE:
         case LOTTOBALL_YELLOW:
@@ -379,6 +394,7 @@ void LottoBall_EditorDraw(void)
 
         default: break;
     }
+
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0xE00000;
     self->visible       = true;

@@ -12,6 +12,7 @@ ObjectMusic *Music;
 void Music_Update(void)
 {
     RSDK_THIS(Music);
+
     StateMachine_Run(self->state);
 }
 
@@ -24,9 +25,11 @@ void Music_Draw(void) {}
 void Music_Create(void *data)
 {
     RSDK_THIS(Music);
+
     if (!SceneInfo->inEditor) {
-        //if frozen, ACTIVE_ALWAYS, else ACTIVE_NORMAL
+        // if frozen, ACTIVE_ALWAYS, else ACTIVE_NORMAL
         self->active = ACTIVE_ALWAYS + ((SceneInfo->state & 3) != ENGINESTATE_FROZEN);
+
         if (self->trackFile.length) {
             if (self->trackID != TRACK_NOLOAD) {
                 RSDK.GetCString(Music->trackNames[self->trackID], &self->trackFile);
@@ -54,7 +57,7 @@ void Music_StageLoad(void)
     Music_SetMusicTrack("GameOver.ogg", TRACK_GAMEOVER, false);
     Music_SetMusicTrack("Super.ogg", TRACK_SUPER, 165375);
     Music_SetMusicTrack("HBHMischief.ogg", TRACK_HBHMISCHIEF, 381405);
-    // Slot 12: "no load"
+    // Slot 12 (slot 11 in pre-plus): "no load"
     Music_SetMusicTrack("1up.ogg", TRACK_1UP, false);
 
     if (globals->suppressAutoMusic) {
@@ -67,6 +70,7 @@ void Music_StageLoad(void)
 
     globals->restartMusicID = TRACK_STAGE;
     Music->nextTrack        = TRACK_NONE;
+
 #if RETRO_USE_PLUS
     if (sku_platform == PLATFORM_DEV)
         RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, DTYPE_BOOL, false, true);
@@ -79,12 +83,10 @@ void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint)
 
     int32 charID = 0;
     for (; charID < 0x20; ++charID) {
-        if (!path[charID]) {
+        if (!path[charID])
             break;
-        }
-        else {
+        else
             Music->trackNames[track][charID] = path[charID];
-        }
     }
     Music->trackNames[track][charID] = 0;
     Music->trackLoops[track]         = loopPoint;
@@ -93,6 +95,7 @@ void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint)
 void Music_State_PlayAutoMusic(void)
 {
     RSDK_THIS(Music);
+
     if (globals->suppressAutoMusic) {
         globals->suppressAutoMusic = false;
         switch (Music->activeTrack) {
@@ -106,6 +109,7 @@ void Music_State_PlayAutoMusic(void)
     else {
         Music_PlayTrack(self->trackID);
     }
+
     destroyEntity(self);
 }
 
@@ -135,23 +139,24 @@ void Music_PlayQueuedTrack(uint8 trackID)
     entity->state         = Music_State_HandleQueuedTrack;
     entity->trackPriority = TRACK_PRIORITY_NONE;
     entity->fadeSpeed     = 0.08;
+
     switch (trackID) {
         case TRACK_INVINCIBLE:
         case TRACK_SNEAKERS:
             Music_HandleMusicStack_Powerups(entity);
-            entity->trackPriority    = TRACK_PRIORITY_SUPER;
-            entity->restartTrack = true;
+            entity->trackPriority = TRACK_PRIORITY_SUPER;
+            entity->restartTrack  = true;
             break;
 
         case TRACK_DROWNING:
-            entity->timer            = 960;
-            entity->trackPriority    = TRACK_PRIORITY_DROWN;
-            entity->restartTrack = true;
+            entity->timer         = 960;
+            entity->trackPriority = TRACK_PRIORITY_DROWN;
+            entity->restartTrack  = true;
             break;
 
         case TRACK_SUPER:
-            entity->trackPriority    = TRACK_PRIORITY_SUPER;
-            entity->restartTrack = true;
+            entity->trackPriority = TRACK_PRIORITY_SUPER;
+            entity->restartTrack  = true;
             break;
 
         case TRACK_1UP:
@@ -177,10 +182,12 @@ void Music_PlayQueuedTrack(uint8 trackID)
     RSDK.StopChannel(Music->channelID);
     Music->activeTrack = trackID;
     Music->channelID   = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+
 #if RETRO_USE_PLUS
     if (globals->vapeMode)
         RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
+
     entity->volume = 1.0;
 }
 
@@ -197,9 +204,11 @@ void Music_PlayTrack(uint8 trackID)
 
         destroyEntitySlot(SLOT_MUSIC);
         RSDK.StopChannel(Music->channelID);
+
         Music->activeTrack   = trackID;
         Music->trackStartPos = 0;
         Music->channelID     = RSDK.PlayStream(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
+
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
             RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
@@ -211,8 +220,10 @@ void Music_PlayTrackPtr(EntityMusic *entity)
 {
     RSDK.GetCString(Music->trackNames[0], &entity->trackFile);
     Music->trackLoops[0] = entity->trackLoop;
+
     destroyEntitySlot(SLOT_MUSIC);
     RSDK.StopChannel(Music->channelID);
+
     Music->activeTrack   = 0;
     Music->trackStartPos = 0;
     Music->channelID     = RSDK.PlayStream(Music->trackNames[0], 0, 0, Music->trackLoops[0], true);
@@ -251,23 +262,24 @@ void Music_PlayAutoMusicQueuedTrack(uint8 trackID)
     entity->trackPriority = TRACK_PRIORITY_NONE;
     entity->volume        = 1.0;
     entity->fadeSpeed     = 0.08;
+
     switch (trackID) {
         case TRACK_INVINCIBLE:
         case TRACK_SNEAKERS:
             Music_HandleMusicStack_Powerups(entity);
-            entity->trackPriority    = TRACK_PRIORITY_POWERUP;
-            entity->restartTrack = true;
+            entity->trackPriority = TRACK_PRIORITY_POWERUP;
+            entity->restartTrack  = true;
             break;
 
         case TRACK_DROWNING:
-            entity->timer            = 960;
-            entity->trackPriority    = TRACK_PRIORITY_DROWN;
-            entity->restartTrack = true;
+            entity->timer         = 960;
+            entity->trackPriority = TRACK_PRIORITY_DROWN;
+            entity->restartTrack  = true;
             break;
 
         case TRACK_SUPER:
-            entity->trackPriority    = TRACK_PRIORITY_SUPER;
-            entity->restartTrack = true;
+            entity->trackPriority = TRACK_PRIORITY_SUPER;
+            entity->restartTrack  = true;
             break;
 
         case TRACK_1UP:
@@ -291,16 +303,19 @@ void Music_HandleMusicStack_Powerups(EntityMusic *entity)
 bool32 Music_CheckMusicStack_Active(void)
 {
     bool32 active = false;
+
     for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackPriority > TRACK_PRIORITY_NONE)
             active = true;
     }
+
     return active;
 }
 void Music_GetNextTrackStartPos(EntityMusic *entity)
 {
     int32 stackCount = 0;
+
     for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && entity != music) {
@@ -324,6 +339,7 @@ void Music_GetNextTrackStartPos(EntityMusic *entity)
 void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade)
 {
     trackID &= 0xF;
+
     for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
@@ -368,7 +384,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
             }
 
             RSDK.StopChannel(Music->channelID);
-            if (trackPtr) { //another track is on the music stack still
+            if (trackPtr) { // another track is on the music stack still
                 if (trackPtr->trackID == Music->activeTrack) {
                     trackPtr->trackStartPos = 0;
                 }
@@ -395,10 +411,13 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
             else if (Music->nextTrack > TRACK_NONE) { // next track is queued
                 Music->activeTrack = Music->nextTrack;
                 Music->nextTrack   = TRACK_NONE;
+
                 if (restartTrack)
                     Music->trackStartPos = 0;
+
                 Music->channelID =
                     RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, Music->trackStartPos, Music->trackLoops[Music->activeTrack], true);
+
                 if (Music->trackStartPos) {
 #if RETRO_USE_PLUS
                     RSDK.SetChannelAttributes(Music->channelID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
@@ -433,13 +452,16 @@ void Music_ClearMusicStack(void)
 void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
 {
     trackID &= 0xF;
+
     switch (trackID) {
         case TRACK_MINIBOSS:
         case TRACK_HBHBOSS:
         case TRACK_EGGMAN1:
         case TRACK_EGGMAN2:
         case TRACK_HBHMISCHIEF: break;
+
         case TRACK_ACTCLEAR: Music_ClearMusicStack(); break;
+
         default:
             if (Music_CheckMusicStack_Active()) {
                 Music->nextTrack = trackID;
@@ -450,6 +472,7 @@ void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
 
     EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
     Music->nextTrack   = trackID;
+
     if (music->objectID != Music->objectID || music->state != Music_State_TransitionTrack) {
         RSDK.ResetEntityPtr(music, Music->objectID, NULL);
         music->state     = Music_State_TransitionTrack;
@@ -470,6 +493,7 @@ void Music_FadeOut(float fadeSpeed)
 void Music_State_HandleQueuedTrack(void)
 {
     RSDK_THIS(Music);
+
     if (Music->activeTrack == self->trackID && RSDK.GetChannelPos(Music->channelID) > self->trackStartPos) {
         self->trackStartPos = 0;
         if (self->volume < 1.0) {
@@ -488,10 +512,13 @@ void Music_State_HandleQueuedTrack(void)
 void Music_State_FadeTrackOut(void)
 {
     RSDK_THIS(Music);
+
     if (self->volume > -0.5) {
         self->volume -= self->fadeSpeed;
+
         if (Music->activeTrack == self->trackID)
             RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+
         if (self->volume <= -0.5)
             Music_HandleMusicStackTrackRemoval(self);
     }
@@ -499,9 +526,11 @@ void Music_State_FadeTrackOut(void)
 void Music_State_FadeTrackIn(void)
 {
     RSDK_THIS(Music);
+
     if (RSDK.GetChannelPos(Music->channelID) > Music->trackStartPos) {
         Music->trackStartPos = 0;
         self->volume += self->fadeSpeed;
+
         RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
         if (self->volume >= 1.0) {
             self->volume = 1.0;
@@ -512,8 +541,10 @@ void Music_State_FadeTrackIn(void)
 void Music_State_FadeOut(void)
 {
     RSDK_THIS(Music);
+
     self->volume -= self->fadeSpeed;
     RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+
     if (self->volume < -0.5) {
         RSDK.StopChannel(Music->channelID);
         destroyEntity(self);
@@ -523,17 +554,22 @@ void Music_State_FadeOut(void)
 void Music_State_TransitionTrack(void)
 {
     RSDK_THIS(Music);
+
     self->volume -= self->fadeSpeed;
     RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+
     if (self->volume < -0.5) {
         RSDK.StopChannel(Music->channelID);
+
         Music->activeTrack   = Music->nextTrack;
         Music->trackStartPos = 0;
         Music->channelID     = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
             RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
+
         Music->nextTrack = TRACK_NONE;
         destroyEntity(self);
     }
@@ -543,6 +579,7 @@ void Music_State_TransitionTrack(void)
 void Music_EditorDraw(void)
 {
     RSDK_THIS(Music);
+
     RSDK.SetSpriteAnimation(Music->aniFrames, 0, &self->animator, true, 1);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }

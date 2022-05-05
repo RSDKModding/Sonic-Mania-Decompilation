@@ -14,6 +14,7 @@ void MSHologram_Update(void)
     RSDK_THIS(MSHologram);
 
     self->angle = (self->angle + 4) & 0xFF;
+
     RSDK.ProcessAnimation(&self->lightsAnimator);
     RSDK.ProcessAnimation(&self->metalSonicAnimator);
     RSDK.ProcessAnimation(&self->rabbitAnimator);
@@ -70,11 +71,13 @@ void MSHologram_Create(void *data)
             self->drawOrder     = Zone->objectDrawLow;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
+
             RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &self->projectorAnimator, true, 0);
             RSDK.SetSpriteAnimation(MSHologram->aniFrames, 1, &self->lightsAnimator, true, 0);
             RSDK.SetSpriteAnimation(MSHologram->aniFrames, 2, &self->metalSonicAnimator, true, 0);
             RSDK.SetSpriteAnimation(MSHologram->aniFrames, 3, &self->rabbitAnimator, true, 0);
             RSDK.SetSpriteAnimation(MSHologram->aniFrames, 4, &self->canaryAnimator, true, 0);
+
             self->state = MSHologram_State_CheckPlayerCollisions;
         }
     }
@@ -92,7 +95,7 @@ void MSHologram_StageLoad(void)
     MSHologram->hitbox.right  = 12;
     MSHologram->hitbox.bottom = 10;
 
-    MSHologram->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
+    MSHologram->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 void MSHologram_State_CheckPlayerCollisions(void)
@@ -117,9 +120,10 @@ void MSHologram_State_Explode(void)
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(MSHologram->sfxExplosion, false, 255);
+
         if (Zone->timer & 4) {
-            int32 x                      = RSDK.Rand(-8, 8) << 16;
-            int32 y                      = RSDK.Rand(-8, 8) << 16;
+            int32 x                    = RSDK.Rand(-8, 8) << 16;
+            int32 y                    = RSDK.Rand(-8, 8) << 16;
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y);
             explosion->drawOrder       = Zone->objectDrawHigh;
         }
@@ -130,6 +134,7 @@ void MSHologram_State_Explode(void)
         self->destroyed = true;
         self->visible   = false;
         self->state     = MSHologram_State_Destroyed;
+
         for (int32 i = 0; i < 16; ++i) {
             int32 x               = self->position.x + RSDK.Rand(0x800000, 0xE00000);
             int32 y               = self->position.y - RSDK.Rand(0x200000, 0x800000);
@@ -151,6 +156,7 @@ void MSHologram_State_Destroyed(void)
             if (animal->behaviour == ANIMAL_BEHAVE_FOLLOW)
                 animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
         }
+
         destroyEntity(self);
     }
 }
@@ -159,6 +165,7 @@ void MSHologram_State_Destroyed(void)
 void MSHologram_EditorDraw(void)
 {
     RSDK_THIS(MSHologram);
+
     RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &self->projectorAnimator, false, 0);
     RSDK.SetSpriteAnimation(MSHologram->aniFrames, 1, &self->lightsAnimator, false, 0);
     RSDK.SetSpriteAnimation(MSHologram->aniFrames, 2, &self->metalSonicAnimator, false, 0);

@@ -14,6 +14,7 @@ ObjectInkWipe *InkWipe;
 void InkWipe_Update(void)
 {
     RSDK_THIS(InkWipe);
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -31,6 +32,7 @@ void InkWipe_Draw(void)
 void InkWipe_Create(void *data)
 {
     RSDK_THIS(InkWipe);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
@@ -51,6 +53,7 @@ void InkWipe_StageLoad(void)
 void InkWipe_EditorDraw(void)
 {
     RSDK_THIS(InkWipe);
+
     self->drawOrder     = Zone->objectDrawHigh;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

@@ -21,7 +21,7 @@ uint16 tintLookupTable[0x10000];
 #endif
 
 #if RETRO_REV02
-void LoadPalette(uint8 paletteID, const char *filename, ushort rowFlags)
+void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
 {
     char buffer[0x80];    
     sprintf(buffer, "Data/Palettes/%s", filename);
@@ -35,7 +35,7 @@ void LoadPalette(uint8 paletteID, const char *filename, ushort rowFlags)
                     uint8 red                             = ReadInt8(&info);
                     uint8 green                           = ReadInt8(&info);
                     uint8 blue                            = ReadInt8(&info);
-                    fullPalette[paletteID][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
+                    fullPalette[bankID][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                 }
             }
             else {
@@ -48,25 +48,22 @@ void LoadPalette(uint8 paletteID, const char *filename, ushort rowFlags)
 }
 #endif
 
-void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, short blendAmount, int startIndex, int endIndex)
+void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex)
 {
-    if (destPaletteID >= PALETTE_COUNT || srcPaletteA >= PALETTE_COUNT || srcPaletteB >= PALETTE_COUNT)
+    if (destBankID >= PALETTE_COUNT || srcBankA >= PALETTE_COUNT || srcBankB >= PALETTE_COUNT)
         return;
 
-    if (blendAmount > 0xFF) 
-        blendAmount = 0xFF;
-    else if (blendAmount < 0)
-        blendAmount = 0;
-
+    blendAmount = clampVal(blendAmount, 0x00, 0xFF);
+    endIndex    = minVal(endIndex, 0x100);
 
     if (startIndex >= endIndex)
         return;
 
     uint32 blendA         = 0xFF - blendAmount;
-    uint16 *dst         = &fullPalette[destPaletteID][startIndex];
+    uint16 *dst         = &fullPalette[destBankID][startIndex];
     for (int32 l = startIndex; l <= endIndex; ++l) {
-        uint32 clrA = GetPaletteEntry(srcPaletteA, l);
-        uint32 clrB = GetPaletteEntry(srcPaletteB, l);
+        uint32 clrA = GetPaletteEntry(srcBankA, l);
+        uint32 clrB = GetPaletteEntry(srcBankB, l);
         int32 rA    = (clrA >> 16) & 0xFF;
         int32 rB    = (clrB >> 16) & 0xFF;
         int32 gA    = (clrA >> 8) & 0xFF;
@@ -74,27 +71,24 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, shor
         int32 bA    = (clrA >> 0) & 0xFF;
         int32 bB    = (clrB >> 0) & 0xFF;
         
-        *dst = PACK_RGB888((byte)((ushort)(rB * blendAmount + blendA * rA) >> 8),
-                                (byte)((ushort)(gB * blendAmount + blendA * gA) >> 8),
-                                (byte)((ushort)(bB * blendAmount + blendA * bA) >> 8));
+        *dst = PACK_RGB888((uint8)((uint16)(rB * blendAmount + blendA * rA) >> 8),
+                                (uint8)((uint16)(gB * blendAmount + blendA * gA) >> 8),
+                                (uint8)((uint16)(bB * blendAmount + blendA * bA) >> 8));
 
         ++dst;
     }
 }
 
 #if RETRO_REV02
-void BlendColors(byte paletteID, byte* colorsA, byte* colorsB, int32 alpha, int32 index, int32 count) {
+void BlendColors(uint8 bankID, uint8* colorsA, uint8* colorsB, int32 alpha, int32 index, int32 count) {
 
-    if (paletteID >= PALETTE_COUNT || !colorsA || !colorsB)
+    if (bankID >= PALETTE_COUNT || !colorsA || !colorsB)
         return;
 
-    if (alpha > 0xFF) 
-        alpha = 0xFF;
-    else if (alpha < 0) 
-        alpha = 0;
+    alpha = clampVal(alpha, 0x00, 0xFF);
 
-    byte alpha2        = 0xFF - alpha;
-    ushort *palettePtr = &fullPalette[paletteID][index];
+    uint8 alpha2        = 0xFF - alpha;
+    uint16 *palettePtr = &fullPalette[bankID][index];
     for (int32 i = index; i < index + count; ++i) {
         // bgrx formatted array
         int32 r = alpha * colorsB[2] + alpha2 * colorsA[2];
@@ -102,7 +96,7 @@ void BlendColors(byte paletteID, byte* colorsA, byte* colorsB, int32 alpha, int3
         int32 b = alpha * colorsB[0] + alpha2 * colorsA[0];
         colorsA += 4;
         colorsB += 4;
-        *palettePtr = PACK_RGB888((byte)(r >> 8), (byte)(g >> 8), (byte)(b >> 8));
+        *palettePtr = PACK_RGB888((uint8)(r >> 8), (uint8)(g >> 8), (uint8)(b >> 8));
         ++palettePtr;
     }
 }

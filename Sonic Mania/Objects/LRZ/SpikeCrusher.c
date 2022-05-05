@@ -35,7 +35,7 @@ void SpikeCrusher_Create(void *data)
         RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 4);
         RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->spikeAnimator, true, 5);
 
-        while (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x7FFF0000, true)) self->position.y += 0x10000;
+        while (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x7FFF0000, true)) self->position.y += 0x10000;
 
         self->updateRange.x = 0x800000;
         self->updateRange.y = self->position.y - self->centerPos.y + 0x200000;
@@ -94,7 +94,7 @@ void SpikeCrusher_State_MovingDown(void)
     self->timer++;
 
     self->position = self->drawPos;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
         if (self->activeScreens)
             RSDK.PlaySfx(SpikeCrusher->sfxImpact, false, 0xFF);
 
@@ -199,7 +199,7 @@ void SpikeCrusher_EditorDraw(void)
             if (!child)
                 continue;
 
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
         }
 
         RSDK_DRAWING_OVERLAY(false);

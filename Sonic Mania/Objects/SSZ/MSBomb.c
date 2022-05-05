@@ -13,7 +13,9 @@ ObjectMSBomb *MSBomb;
 void MSBomb_Update(void)
 {
     RSDK_THIS(MSBomb);
+
     RSDK.ProcessAnimation(&self->animator);
+
     StateMachine_Run(self->state);
 }
 
@@ -24,6 +26,7 @@ void MSBomb_StaticUpdate(void) {}
 void MSBomb_Draw(void)
 {
     RSDK_THIS(MSBomb);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -37,28 +40,32 @@ void MSBomb_Create(void *data)
 
     if (data) {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 1, &self->animator, true, 0);
+
         self->hitbox.left   = -4;
         self->hitbox.top    = -4;
         self->hitbox.right  = 4;
         self->hitbox.bottom = 4;
-        self->state         = MSBomb_State_Projectile;
+
+        self->state = MSBomb_State_Projectile;
     }
     else {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 0, &self->animator, true, 0);
+
         self->hitbox.left   = -8;
         self->hitbox.top    = -8;
         self->hitbox.right  = 8;
         self->hitbox.bottom = 8;
-        self->drawFX        = FX_SCALE;
-        self->scale.x       = 0xC0;
-        self->scale.y       = 0xC0;
-        self->state         = MSBomb_State_EnterBomb;
+
+        self->drawFX  = FX_SCALE;
+        self->scale.x = 0xC0;
+        self->scale.y = 0xC0;
+        self->state   = MSBomb_State_EnterBomb;
     }
 }
 
 void MSBomb_StageLoad(void)
 {
-    MSBomb->aniFrames    = RSDK.LoadSpriteAnimation("SSZ2/MSBomb.bin", SCOPE_STAGE);
+    MSBomb->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MSBomb.bin", SCOPE_STAGE);
 
     MSBomb->sfxExplosion = RSDK.GetSfx("Stage/Explosion4.wav");
 }
@@ -105,18 +112,18 @@ void MSBomb_State_SilverSonicExplode(void)
         bomb->velocity.x   = -xVel;
         bomb->velocity.y   = yVel;
 
-        bomb = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
-        bomb->velocity.x   = xVel;
-        bomb->velocity.y   = yVel;
+        bomb             = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
+        bomb->velocity.x = xVel;
+        bomb->velocity.y = yVel;
 
-        bomb = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
-        yVel               = -(yVel >> 1);
-        bomb->velocity.x   = -xVel;
-        bomb->velocity.y   = yVel;
+        bomb             = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
+        yVel             = -(yVel >> 1);
+        bomb->velocity.x = -xVel;
+        bomb->velocity.y = yVel;
 
-        bomb = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
-        bomb->velocity.x   = xVel;
-        bomb->velocity.y   = yVel;
+        bomb             = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
+        bomb->velocity.x = xVel;
+        bomb->velocity.y = yVel;
 
         RSDK.PlaySfx(MSBomb->sfxExplosion, false, 0xFF);
         RSDK.ResetEntityPtr(self, Explosion->objectID, intToVoid(EXPLOSION_BOSS));
@@ -137,9 +144,10 @@ void MSBomb_State_Bouncing(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xA0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xA0000, true)) {
         // Bounce
         self->velocity.y = -0x40000;
+
         if (self->timer > 0) {
             if (!--self->timer) {
                 int32 storeX = self->position.x;
@@ -188,10 +196,12 @@ void MSBomb_State_Projectile(void)
     {
         if (RSDK.CheckObjectCollisionTouchBox(metal, metal->outerBox, self, &self->hitbox)) {
             MetalSonic->invincibilityTimerPanel = 16;
+
             if (--metal->health <= 0) {
                 metal->timer = 0;
                 metal->state = MetalSonic_State_PanelExplosion;
             }
+
             RSDK.PlaySfx(MetalSonic->sfxHit, false, 255);
             destroyEntity(self);
             foreach_break;
@@ -203,9 +213,15 @@ void MSBomb_State_Projectile(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MSBomb_EditorDraw(void) {}
+void MSBomb_EditorDraw(void)
+{
+    RSDK_THIS(MSBomb);
+    RSDK.SetSpriteAnimation(MSBomb->aniFrames, 0, &self->animator, true, 0);
 
-void MSBomb_EditorLoad(void) {}
+    MSBomb_Draw();
+}
+
+void MSBomb_EditorLoad(void) { MSBomb->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MSBomb.bin", SCOPE_STAGE); }
 #endif
 
 void MSBomb_Serialize(void) {}

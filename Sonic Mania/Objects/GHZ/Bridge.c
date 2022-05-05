@@ -141,7 +141,7 @@ void Bridge_Burn(int32 offset)
     destroyEntity(self);
 }
 
-bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox, bool32 noVarUpdates, bool32 isPlayer)
+bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox, bool32 updateVars, bool32 isPlayer)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -153,7 +153,7 @@ bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox
 
     if (entity->position.x > self->startPos && entity->position.x < self->endPos) {
         if (entity != self->stoodEntity) {
-            if (noVarUpdates && !self->stoodEntityCount)
+            if (updateVars && !self->stoodEntityCount)
                 self->stoodPos = entity->position.x - self->startPos;
 
             if (entity->velocity.y >= 0) {
@@ -191,7 +191,7 @@ bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox
                 if (collided) {
                     entity->position.y = hitY + self->position.y - (entityHitbox->bottom << 16);
 
-                    if (noVarUpdates) {
+                    if (updateVars) {
                         ++self->stoodEntityCount;
                         if (!entity->onGround) {
                             entity->onGround  = true;
@@ -241,7 +241,7 @@ bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox
                 }
             }
         }
-        else if (noVarUpdates) {
+        else if (updateVars) {
             self->stoodPos   = entity->position.x - self->startPos;
             int32 distance   = (self->endPos - self->startPos);
             self->depression = RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16)) * (distance >> 13);

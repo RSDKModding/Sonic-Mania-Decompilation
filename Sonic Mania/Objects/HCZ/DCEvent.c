@@ -122,7 +122,7 @@ void DCEvent_State_Collapse(void)
 
     foreach_active(Player, player)
     {
-        player->collisionLayers |= Zone->moveID;
+        player->collisionLayers |= Zone->moveMask;
         player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
         player->moveLayerPosition.y = move->scrollPos;
     }
@@ -228,8 +228,8 @@ void DCEvent_StateEggmanBomber_Swimming(void)
         self->velocity.y -= 0x400;
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)
-        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x200000, 0, true)
+        || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
         self->direction ^= FLIP_X;
         self->velocity.x = -self->velocity.x;
     }
@@ -428,7 +428,7 @@ void DCEvent_EditorDraw(void)
             if (!child)
                 continue;
 
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
         }
 
         RSDK_DRAWING_OVERLAY(false);

@@ -48,7 +48,7 @@ void UIWidgets_Update(void);
 void UIWidgets_LateUpdate(void);
 void UIWidgets_StaticUpdate(void);
 void UIWidgets_Draw(void);
-void UIWidgets_Create(void* data);
+void UIWidgets_Create(void *data);
 void UIWidgets_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIWidgets_EditorDraw(void);
@@ -72,4 +72,4 @@ Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color right
 void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
 #endif
 
-#endif //!OBJ_UIWIDGETS_H
+#endif //! OBJ_UIWIDGETS_H

@@ -13,9 +13,9 @@ struct ObjectPropeller {
 // Entity Class
 struct EntityPropeller {
     RSDK_ENTITY
-    Hitbox playerHitbox;
+    Hitbox hitboxPlayer;
     Hitbox hitboxFan;
-    Hitbox hitbox;
+    Hitbox hitboxTrigger;
     bool32 fanEnabled;
     uint8 activePlayers;
     Animator animator;
@@ -29,7 +29,7 @@ void Propeller_Update(void);
 void Propeller_LateUpdate(void);
 void Propeller_StaticUpdate(void);
 void Propeller_Draw(void);
-void Propeller_Create(void* data);
+void Propeller_Create(void *data);
 void Propeller_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Propeller_EditorDraw(void);
@@ -39,5 +39,4 @@ void Propeller_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_PROPELLER_H
+#endif //! OBJ_PROPELLER_H

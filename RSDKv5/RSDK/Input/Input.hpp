@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#define PLAYER_COUNT (4)
+#define PLAYER_COUNT      (4)
 #define INPUTDEVICE_COUNT (0x10)
 
 enum ControllerIDs {
@@ -34,12 +34,12 @@ enum InputDeviceIDs {
     DEVICE_SWITCH_PRO      = 8,
 };
 
-enum InputDeviceFlags {
-    DEVICE_FLAG_NONE         = 0,
-    DEVICE_FLAG_UNKNOWN1     = 1,
-    DEVICE_FLAG_UNKNOWN2     = 2,
-    DEVICE_FLAG_UNKNOWN3     = 3,
-    DEVICE_FLAG_STEAMOVERLAY = 4,
+enum InputDeviceAPIs {
+    DEVICE_API_NONE     = 0,
+    DEVICE_API_KEYBOARD = 1,
+    DEVICE_API_XINPUT   = 2,
+    DEVICE_API_RAWINPUT = 3,
+    DEVICE_API_STEAM    = 4,
 };
 
 enum ControllerKeys {
@@ -58,86 +58,104 @@ enum ControllerKeys {
     KEY_MAX,
 };
 
+enum KeyMasks {
+    KEYMASK_UP     = 1 << 0,
+    KEYMASK_DOWN   = 1 << 1,
+    KEYMASK_LEFT   = 1 << 2,
+    KEYMASK_RIGHT  = 1 << 3,
+    KEYMASK_A      = 1 << 12,
+    KEYMASK_B      = 1 << 13,
+    KEYMASK_C      = 1 << 10,
+    KEYMASK_X      = 1 << 14,
+    KEYMASK_Y      = 1 << 15,
+    KEYMASK_Z      = 1 << 11,
+    KEYMASK_START  = 1 << 4,
+    KEYMASK_SELECT = 1 << 5,
+};
+
 enum WinMappings {
-    VK_LBUTTON                         = 0x01,
-    VK_RBUTTON                         = 0x02,
-    VK_CANCEL                          = 0x03,
-    VK_MBUTTON                         = 0x04,
-    VK_XBUTTON1                        = 0x05,
-    VK_XBUTTON2                        = 0x06,
-    VK_BACK                            = 0x08,
-    VK_TAB                             = 0x09,
-    VK_CLEAR                           = 0x0C,
-    VK_RETURN                          = 0x0D,
-    VK_SHIFT                           = 0x10,
-    VK_CONTROL                         = 0x11,
-    VK_MENU                            = 0x12,
-    VK_PAUSE                           = 0x13,
-    VK_CAPITAL                         = 0x14,
-    VK_KANA                            = 0x15,
-    VK_HANGEUL                         = 0x15,
-    VK_HANGUL                          = 0x15,
-    VK_JUNJA                           = 0x17,
-    VK_FINAL                           = 0x18,
-    VK_HANJA                           = 0x19,
-    VK_KANJI                           = 0x19,
-    VK_ESCAPE                          = 0x1B,
-    VK_CONVERT                         = 0x1C,
-    VK_NONCONVERT                      = 0x1D,
-    VK_ACCEPT                          = 0x1E,
-    VK_MODECHANGE                      = 0x1F,
-    VK_SPACE                           = 0x20,
-    VK_PRIOR                           = 0x21,
-    VK_NEXT                            = 0x22,
-    VK_END                             = 0x23,
-    VK_HOME                            = 0x24,
-    VK_LEFT                            = 0x25,
-    VK_UP                              = 0x26,
-    VK_RIGHT                           = 0x27,
-    VK_DOWN                            = 0x28,
-    VK_SELECT                          = 0x29,
-    VK_PRINT                           = 0x2A,
-    VK_EXECUTE                         = 0x2B,
-    VK_SNAPSHOT                        = 0x2C,
-    VK_INSERT                          = 0x2D,
-    VK_DELETE                          = 0x2E,
-    VK_HELP                            = 0x2F,
-    VK_0                               = 0x30,
-    VK_1                               = 0x31,
-    VK_2                               = 0x32,
-    VK_3                               = 0x33,
-    VK_4                               = 0x34,
-    VK_5                               = 0x35,
-    VK_6                               = 0x36,
-    VK_7                               = 0x37,
-    VK_8                               = 0x38,
-    VK_9                               = 0x39,
-    VK_A                               = 0x41,
-    VK_B                               = 0x42,
-    VK_C                               = 0x43,
-    VK_D                               = 0x44,
-    VK_E                               = 0x45,
-    VK_F                               = 0x46,
-    VK_G                               = 0x47,
-    VK_H                               = 0x48,
-    VK_I                               = 0x49,
-    VK_J                               = 0x4A,
-    VK_K                               = 0x4B,
-    VK_L                               = 0x4C,
-    VK_M                               = 0x4D,
-    VK_N                               = 0x4E,
-    VK_O                               = 0x4F,
-    VK_P                               = 0x50,
-    VK_Q                               = 0x51,
-    VK_R                               = 0x52,
-    VK_S                               = 0x53,
-    VK_T                               = 0x54,
-    VK_U                               = 0x55,
-    VK_V                               = 0x56,
-    VK_W                               = 0x57,
-    VK_X                               = 0x58,
-    VK_Y                               = 0x59,
-    VK_Z                               = 0x5A,
+#if !RETRO_USING_DIRECTX9 && !RETRO_USING_DIRECTX11
+    VK_LBUTTON    = 0x01,
+    VK_RBUTTON    = 0x02,
+    VK_CANCEL     = 0x03,
+    VK_MBUTTON    = 0x04,
+    VK_XBUTTON1   = 0x05,
+    VK_XBUTTON2   = 0x06,
+    VK_BACK       = 0x08,
+    VK_TAB        = 0x09,
+    VK_CLEAR      = 0x0C,
+    VK_RETURN     = 0x0D,
+    VK_SHIFT      = 0x10,
+    VK_CONTROL    = 0x11,
+    VK_MENU       = 0x12,
+    VK_PAUSE      = 0x13,
+    VK_CAPITAL    = 0x14,
+    VK_KANA       = 0x15,
+    VK_HANGEUL    = 0x15,
+    VK_HANGUL     = 0x15,
+    VK_JUNJA      = 0x17,
+    VK_FINAL      = 0x18,
+    VK_HANJA      = 0x19,
+    VK_KANJI      = 0x19,
+    VK_ESCAPE     = 0x1B,
+    VK_CONVERT    = 0x1C,
+    VK_NONCONVERT = 0x1D,
+    VK_ACCEPT     = 0x1E,
+    VK_MODECHANGE = 0x1F,
+    VK_SPACE      = 0x20,
+    VK_PRIOR      = 0x21,
+    VK_NEXT       = 0x22,
+    VK_END        = 0x23,
+    VK_HOME       = 0x24,
+    VK_LEFT       = 0x25,
+    VK_UP         = 0x26,
+    VK_RIGHT      = 0x27,
+    VK_DOWN       = 0x28,
+    VK_SELECT     = 0x29,
+    VK_PRINT      = 0x2A,
+    VK_EXECUTE    = 0x2B,
+    VK_SNAPSHOT   = 0x2C,
+    VK_INSERT     = 0x2D,
+    VK_DELETE     = 0x2E,
+    VK_HELP       = 0x2F,
+#endif
+    VK_0 = 0x30,
+    VK_1 = 0x31,
+    VK_2 = 0x32,
+    VK_3 = 0x33,
+    VK_4 = 0x34,
+    VK_5 = 0x35,
+    VK_6 = 0x36,
+    VK_7 = 0x37,
+    VK_8 = 0x38,
+    VK_9 = 0x39,
+    VK_A = 0x41,
+    VK_B = 0x42,
+    VK_C = 0x43,
+    VK_D = 0x44,
+    VK_E = 0x45,
+    VK_F = 0x46,
+    VK_G = 0x47,
+    VK_H = 0x48,
+    VK_I = 0x49,
+    VK_J = 0x4A,
+    VK_K = 0x4B,
+    VK_L = 0x4C,
+    VK_M = 0x4D,
+    VK_N = 0x4E,
+    VK_O = 0x4F,
+    VK_P = 0x50,
+    VK_Q = 0x51,
+    VK_R = 0x52,
+    VK_S = 0x53,
+    VK_T = 0x54,
+    VK_U = 0x55,
+    VK_V = 0x56,
+    VK_W = 0x57,
+    VK_X = 0x58,
+    VK_Y = 0x59,
+    VK_Z = 0x5A,
+#if !RETRO_USING_DIRECTX9 && !RETRO_USING_DIRECTX11
     VK_LWIN                            = 0x5B,
     VK_RWIN                            = 0x5C,
     VK_APPS                            = 0x5D,
@@ -287,30 +305,140 @@ enum WinMappings {
     VK_NONAME                          = 0xFC,
     VK_PA1                             = 0xFD,
     VK_OEM_CLEAR                       = 0xFE,
-    VK_UNKNOWN                         = 0xFF,
+#endif
+    VK_UNKNOWN = 0xFF,
+};
+
+struct GamePadButtonMap {
+    int maskVal;
+    short mappingType;
+    short offset;
+};
+
+struct GamePadMappings {
+    char name[0x40];
+    GamePadButtonMap buttons[24];
+    int vendorID;
+    int productID;
+    int type;
 };
 
 struct InputDevice {
-    void (*updateInput)(InputDevice *device);
-    void (*processInput)(InputDevice *device, int inputID);
+    virtual void UpdateInput(void) {}
+    virtual void ProcessInput(int32 controllerID) {}
+    virtual void CloseDevice() {}
+    virtual void Unknown2() {}
+    virtual void Unknown3() {}
+
     int32 gamePadType;
     int32 inputID;
     uint8 active;
     uint8 assignedControllerID;
-    uint8 field_E;
-    uint8 field_F;
+    uint8 unknown;
+    uint8 disabled;
     uint8 anyPress;
     int32 inactiveTimer[2];
-    int32 field_1C;
-    uint8 controllerID;
 };
 
-struct InputDeviceBase : InputDevice {
-    uint8 data[0x3DC];
+struct InputDeviceKeyboard : InputDevice {
+    void UpdateInput(void);
+    void ProcessInput(int32 controllerID);
+
+    uint16 inputFlags;
+    uint16 prevInputFlags;
+    uint8 controllerID;
+    int32 mouseHideTimer;
+    uint8 stateUp;
+    uint8 stateDown;
+    uint8 stateLeft;
+    uint8 stateRight;
+    uint8 stateA;
+    uint8 stateB;
+    uint8 stateC;
+    uint8 stateX;
+    uint8 stateY;
+    uint8 stateZ;
+    uint8 stateStart;
+    uint8 stateSelect;
 };
+
+#if RETRO_USING_DIRECTX9
+struct InputDeviceXInput : InputDevice {
+    void UpdateInput(void);
+    void ProcessInput(int32 controllerID);
+
+    XINPUT_STATE inputState[2];
+    uint8 activeState;
+    uint8 controllerID;
+    uint8 stateUp;
+    uint8 stateDown;
+    uint8 stateLeft;
+    uint8 stateRight;
+    uint8 stateA;
+    uint8 stateB;
+    uint8 stateX;
+    uint8 stateY;
+    uint8 stateStart;
+    uint8 stateSelect;
+    uint8 stateBumper_L;
+    uint8 stateBumper_R;
+    uint8 stateStick_L;
+    uint8 stateStick_R;
+    int32 field_4C;
+    float hDelta_L;
+    float vDelta_L;
+    float hDelta_R;
+    float vDelta_R;
+    float deadzoneLTrigger;
+    float deltaLTrigger;
+    float deadzoneRTrigger;
+    float deltaRTrigger;
+};
+
+struct InputDeviceRaw : InputDevice {
+    void UpdateInput(void);
+    void ProcessInput(int32 controllerID);
+
+    HANDLE deviceHandle;
+
+    int32 activeButtons;
+    int32 inputFlags;
+    int32 prevInputFlags;
+    uint8 stateUp;
+    uint8 stateDown;
+    uint8 stateLeft;
+    uint8 stateRight;
+    uint8 stateA;
+    uint8 stateB;
+    uint8 stateC;
+    uint8 stateX;
+    uint8 stateY;
+    uint8 stateZ;
+    uint8 stateStart;
+    uint8 stateSelect;
+    uint8 stateBumper_L;
+    uint8 stateBumper_R;
+    uint8 stickStateL;
+    uint8 stickStateR;
+    uint8 stateTrigger_L;
+    uint8 stateTrigger_R;
+    float triggerDeltaL;
+    float triggerDeltaR;
+    float hDelta_L;
+    float vDelta_L;
+    float vDelta_R;
+    float hDelta_R;
+    int32 unknown1;
+    int32 unknown2;
+    GamePadButtonMap buttons[24];
+};
+#endif
 
 #if RETRO_USING_SDL2
 struct InputDeviceSDL : InputDevice {
+    void UpdateInput(void);
+    void ProcessInput(int32 controllerID);
+
     SDL_GameController *controllerPtr;
 };
 #endif
@@ -368,15 +496,6 @@ struct TouchMouseData {
 #endif
 };
 
-#if RETRO_USING_SDL2
-struct InputManagerInfo {
-    int32 mouseHideTimer = 0;
-    bool32 anyPress;
-};
-
-extern InputManagerInfo InputManager;
-#endif
-
 #if !RETRO_REV02
 struct ActiveControllerInfo {
     int32 unknown1;
@@ -386,7 +505,7 @@ struct ActiveControllerInfo {
 };
 #endif
 
-extern InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
+extern InputDevice *InputDevices[INPUTDEVICE_COUNT];
 extern int32 InputDeviceCount;
 
 extern int32 activeControllers[PLAYER_COUNT];
@@ -399,12 +518,42 @@ extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
+#if RETRO_USING_DIRECTX9
+extern bool32 disabledXInputDevices[PLAYER_COUNT];
+
+extern bool32 HIDEnabled;
+
+extern InputDevice *rawInputDevices[INPUTDEVICE_COUNT];
+extern int32 rawInputDeviceCount;
+
+extern tagRAWINPUT rawInputData;
+#endif
+
+extern int32 keyState[PLAYER_COUNT];
+
+extern GamePadMappings *gamePadMappings;
+extern int gamePadCount;
+
 #if !RETRO_REV02
 extern int mostRecentControllerID;
 #endif
 
-void InitInputDevice();
+void InitInputDevices();
 void ProcessInput();
+
+void InitKeyboardInputAPI();
+#if RETRO_USING_DIRECTX9
+void InitXInputAPI();
+void InitHIDAPI();
+void InitRawInputAPI();
+#endif
+
+InputDeviceKeyboard *InitKeyboardDevice(uint32 id);
+#if RETRO_USING_DIRECTX9
+InputDeviceRaw *InitRawInputDevice(uint32 id);
+#endif
+
+void RemoveInputDevice(InputDevice *targetDevice);
 
 #if !RETRO_REV02
 extern int32 specialKeyStates[4];
@@ -414,12 +563,6 @@ extern int32 prevButtonDownCount;
 
 void HandleSpecialKeys();
 #endif
-
-void UpdateKeyboardInput(InputDevice *device);
-void UpdateDeviceInput(InputDevice *device);
-
-void ProcessKeyboardInput(InputDevice* device, int32 controllerID);
-void ProcessDeviceInput(InputDevice* device, int32 controllerID);
 
 inline int32 controllerUnknown2(int32 a2, int32 a3) { return 0; }
 inline int32 controllerUnknown3(int32 a2, int32 a3) { return 0; }
@@ -436,9 +579,9 @@ inline InputDevice *controllerInit(uint8 controllerID)
 
     InputDeviceSDL *device = NULL;
     for (int i = 0; i < InputDeviceCount; ++i) {
-        //same input id, so smth prolly went wrong here
-        //lets just close it and take it
-        if (InputDevices[i].inputID == id && InputDevices[i].active) {
+        // same input id, so smth prolly went wrong here
+        // lets just close it and take it
+        if (InputDevices[i] && InputDevices[i]->inputID == id && InputDevices[i]->active) {
             if (device->controllerPtr)
                 SDL_GameControllerClose(device->controllerPtr);
             device = (InputDeviceSDL *)&InputDevices[i];
@@ -446,16 +589,16 @@ inline InputDevice *controllerInit(uint8 controllerID)
     }
 
     for (int i = 0; i < InputDeviceCount; ++i) {
-        //this device was closed, we can use it's slot
-        if (!InputDevices[i].active) {
+        // this device was closed, we can use it's slot
+        if (InputDevices[i] && !InputDevices[i]->active) {
             device = (InputDeviceSDL *)&InputDevices[i];
             break;
         }
     }
-    
+
     if (!device)
         device = (InputDeviceSDL *)&InputDevices[InputDeviceCount++];
-    device->controllerPtr  = SDL_GameControllerOpen(controllerID);
+    device->controllerPtr = SDL_GameControllerOpen(controllerID);
 
     const char *name = SDL_GameControllerName(device->controllerPtr);
 
@@ -471,16 +614,14 @@ inline InputDevice *controllerInit(uint8 controllerID)
         controllerType = DEVICE_SATURN;
 
     device->active       = true;
-    device->field_F      = false;
-    device->gamePadType  = (DEVICE_FLAG_UNKNOWN2 << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (controllerType << 0);
+    device->disabled      = false;
+    device->gamePadType  = (DEVICE_API_XINPUT << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (controllerType << 0);
     device->inputID      = id;
-    device->updateInput  = UpdateDeviceInput;
-    device->processInput = ProcessDeviceInput;
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
         if (activeControllers[i] == id) {
             activeInputDevices[i]        = (InputDevice *)device;
-            device->assignedControllerID = i + 1;
+            device->assignedControllerID = true;
         }
     }
 
@@ -497,12 +638,12 @@ inline void controllerClose(uint8 controllerID)
     sprintf(buffer, "%s%d", "SDLDevice", controllerID);
     GenerateCRC(&id, buffer);
 
-    //clean up the device list
+    // clean up the device list
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].inputID == id && InputDevices[i].active) {
+        if (InputDevices[i] && InputDevices[i]->inputID == id && InputDevices[i]->active) {
             InputDeviceSDL *device       = (InputDeviceSDL *)&InputDevices[i];
             device->active               = false;
-            device->assignedControllerID = 0;
+            device->assignedControllerID = false;
             SDL_GameControllerClose(device->controllerPtr);
             device->controllerPtr = NULL;
             InputDeviceCount--;
@@ -514,19 +655,21 @@ inline void controllerClose(uint8 controllerID)
 inline InputDevice *InputDeviceFromID(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].inputID == inputID) {
-            return &InputDevices[i];
-        }
+        if (InputDevices[i] && InputDevices[i]->inputID == inputID)
+            return InputDevices[i];
     }
+
     return NULL;
 }
 inline int32 GetControllerInputID()
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && !InputDevices[i].assignedControllerID && InputDevices[i].anyPress) {
-            return InputDevices[i].inputID;
+        if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled && !InputDevices[i]->assignedControllerID
+            && InputDevices[i]->anyPress) {
+            return InputDevices[i]->inputID;
         }
     }
+
     return -1;
 }
 
@@ -535,6 +678,7 @@ inline int ControllerIDForInputID(uint8 inputID)
     byte i = inputID - 1;
     if (i < PLAYER_COUNT)
         return activeControllers[i];
+
     return 0;
 }
 
@@ -548,12 +692,12 @@ inline int32 MostRecentActiveControllerID(int32 type, bool32 unassignedOnly, uin
 
     if (InputDeviceCount) {
         for (int i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !unassignedOnly)) {
-                if (InputDevices[i].inactiveTimer[type] < mostRecentTime) {
-                    mostRecentTime = InputDevices[i].inactiveTimer[type];
-                    if (InputDevices[i].inactiveTimer[type] <= maxTime)
-                        mostRecentValidID = InputDevices[i].inputID;
-                    mostRecentID = InputDevices[i].inputID;
+            if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled && (!InputDevices[i]->assignedControllerID || !unassignedOnly)) {
+                if (InputDevices[i]->inactiveTimer[type] < mostRecentTime) {
+                    mostRecentTime = InputDevices[i]->inactiveTimer[type];
+                    if (InputDevices[i]->inactiveTimer[type] <= maxTime)
+                        mostRecentValidID = InputDevices[i]->inputID;
+                    mostRecentID = InputDevices[i]->inputID;
                 }
             }
         }
@@ -561,12 +705,13 @@ inline int32 MostRecentActiveControllerID(int32 type, bool32 unassignedOnly, uin
         if (mostRecentValidID)
             return mostRecentValidID;
     }
+
     if (mostRecentID)
         return mostRecentID;
 
-    for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !unassignedOnly)) {
-            return InputDevices[i].inputID;
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
+        if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled && (!InputDevices[i]->assignedControllerID || !unassignedOnly)) {
+            return InputDevices[i]->inputID;
         }
     }
 
@@ -575,8 +720,8 @@ inline int32 MostRecentActiveControllerID(int32 type, bool32 unassignedOnly, uin
 #else
 inline int32 MostRecentActiveControllerID()
 {
-    //TODO: fix pre-plus input API
-    return InputDevices[0].inputID; 
+    // TODO: fix pre-plus input API
+    return InputDevices[0].inputID;
     /*mostRecentControllerID;*/
 }
 #endif
@@ -586,8 +731,8 @@ int32 GetControllerType(int32 inputID);
 inline int32 GetAssignedControllerID(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].inputID == inputID) {
-            return InputDevices[i].assignedControllerID;
+        if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
+            return InputDevices[i]->assignedControllerID;
         }
     }
 
@@ -597,8 +742,8 @@ inline int32 GetAssignedControllerID(int32 inputID)
 inline int32 GetAssignedUnknown(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].inputID == inputID) {
-            break; // what
+        if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
+            break; // ???
         }
     }
 
@@ -608,7 +753,7 @@ inline int32 GetAssignedUnknown(int32 inputID)
 inline int32 DoInputUnknown2(int32 inputID, int32 a2, int32 a3)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].inputID == inputID) {
+        if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
             return controllerUnknown2(a2, a3);
         }
     }
@@ -619,7 +764,7 @@ inline int32 DoInputUnknown2(int32 inputID, int32 a2, int32 a3)
 inline int32 DoInputUnknown3(int32 inputID, int32 a2, int32 a3)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].inputID == inputID) {
+        if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
             return controllerUnknown3(a2, a3);
         }
     }
@@ -633,7 +778,7 @@ inline int32 DoInputUnknown2_Active(int32 inputID, int32 a2, int32 a3)
 {
     if (inputID < PLAYER_COUNT) {
         if (activeControllers[inputID]) {
-            //return activeInputDevices[inputID]->controllerUnknown2(a2, a3);
+            // return activeInputDevices[inputID]->controllerUnknown2(a2, a3);
         }
     }
 
@@ -644,7 +789,7 @@ inline int32 DoInputUnknown3_Active(int32 inputID, int32 a2, int32 a3)
 {
     if (inputID < PLAYER_COUNT) {
         if (activeControllers[inputID]) {
-            //return activeInputDevices[inputID]->controllerUnknown3(a2, a3);
+            // return activeInputDevices[inputID]->controllerUnknown3(a2, a3);
         }
     }
 
@@ -662,10 +807,10 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
             }
             else {
                 for (int i = 0; i < InputDeviceCount; ++i) {
-                    if (InputDevices[i].inputID == inputID) {
-                        InputDevices[i].assignedControllerID = controllerID;
+                    if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
+                        InputDevices[i]->assignedControllerID = controllerID;
                         activeControllers[contID]            = inputID;
-                        activeInputDevices[contID]           = &InputDevices[i];
+                        activeInputDevices[contID]           = InputDevices[i];
                         break;
                     }
                 }
@@ -674,7 +819,7 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
         else {
             InputDevice *device = InputDeviceFromID(activeControllers[contID]);
             if (device)
-                device->assignedControllerID = 0;
+                device->assignedControllerID = true;
             activeControllers[contID] = inputID;
         }
     }
@@ -698,12 +843,14 @@ inline void ResetControllerAssignments()
     }
 
     for (int i = 0; i < InputDeviceCount; ++i) {
-        InputDevices[i].assignedControllerID = 0;
+        if (InputDevices[i])
+            InputDevices[i]->assignedControllerID = true;
     }
 }
 
-inline void SetInputLEDColor() {
-    //empty
+inline void SetInputLEDColor()
+{
+    // empty
 }
 
 #if !RETRO_REV02
@@ -713,13 +860,42 @@ inline void InputUnknown(int32 controllerID, int32 type, int32 *valuePtr)
         uint32 id = controllerID - 1;
         if (id < PLAYER_COUNT) {
             switch (type) {
-                default: break;
-                // case 0: *valuePtr = InputDevices[id].field_0; break;
-                // case 1: *valuePtr = InputDevices[id].field_4; break;
+                default:
+                    break;
+                    // case 0: *valuePtr = InputDevices[id].field_0; break;
+                    // case 1: *valuePtr = InputDevices[id].field_4; break;
             }
         }
     }
 }
+#endif
+
+void UpdateKeyState(int32 keyCode);
+void ClearKeyState(int32 keyCode);
+
+#if RETRO_USING_DIRECTX9
+inline InputDeviceRaw *GetRawInputDevice(uint8 *deviceID)
+{
+    if (*deviceID >= InputDeviceCount)
+        return NULL;
+
+    for (int32 d = *deviceID; d < InputDeviceCount; ++d) {
+        if (!InputDevices[d])
+            continue;
+
+        InputDeviceRaw *device = (InputDeviceRaw *)InputDevices[d];
+
+        if (((device->gamePadType >> 16) & 0xFF) == DEVICE_API_RAWINPUT) {
+            *deviceID = d;
+            return device;
+        }
+    }
+
+    return NULL;
+}
+
+void UpdateXInputDevices();
+void UpdateRawInputButtonState(HRAWINPUT hRawInput);
 #endif
 
 #endif

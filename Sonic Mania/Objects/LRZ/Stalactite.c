@@ -91,7 +91,7 @@ void Stalactite_State_Falling(void)
         }
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
         self->state = Stalactite_State_Landed;
         RSDK.PlaySfx(Stalactite->sfxShoot, false, 255);
     }

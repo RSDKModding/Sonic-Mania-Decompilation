@@ -8,7 +8,7 @@ typedef enum {
     SPIDERMOBILE_ORB,
     SPIDERMOBILE_BUMPERDEBRIS,
     SPIDERMOBILE_EGGMAN,
-}SpiderMobileTypes;
+} SpiderMobileTypes;
 
 // Object Class
 struct ObjectSpiderMobile {
@@ -18,11 +18,11 @@ struct ObjectSpiderMobile {
     Hitbox hitboxUnused;
     Hitbox hitboxOrb;
     Hitbox hitboxPlatform;
-    int32 boundL;
-    int32 boundR;
-    int32 startX;
-    int32 boundT;
-    int32 boundB;
+    int32 boundsL;
+    int32 boundsR;
+    int32 boundsM;
+    int32 boundsT;
+    int32 boundsB;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxBumper;
@@ -89,7 +89,7 @@ void SpiderMobile_Update(void);
 void SpiderMobile_LateUpdate(void);
 void SpiderMobile_StaticUpdate(void);
 void SpiderMobile_Draw(void);
-void SpiderMobile_Create(void* data);
+void SpiderMobile_Create(void *data);
 void SpiderMobile_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpiderMobile_EditorDraw(void);
@@ -114,7 +114,7 @@ void SpiderMobile_Draw_Body(void);
 void SpiderMobile_Draw_Bumper(void);
 void SpiderMobile_Draw_Cockpit(void);
 
-void SpiderMobile_StateBody_SetupBounds(void);
+void SpiderMobile_StateBody_AwaitPlayer(void);
 void SpiderMobile_StateBody_SetupArena(void);
 void SpiderMobile_StateBody_InitialDrop(void);
 void SpiderMobile_StateBody_Rise(void);
@@ -135,4 +135,4 @@ void SpiderMobile_StateOrb_Fired(void);
 
 bool32 SpiderMobile_ElevatorCheckCB(void);
 
-#endif //!OBJ_SPIDERMOBILE_H
+#endif //! OBJ_SPIDERMOBILE_H

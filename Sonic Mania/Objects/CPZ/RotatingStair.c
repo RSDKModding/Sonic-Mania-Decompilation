@@ -18,17 +18,21 @@ void RotatingStair_StaticUpdate(void) {}
 void RotatingStair_Draw(void)
 {
     RSDK_THIS(RotatingStair);
+
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void RotatingStair_Create(void *data)
 {
     RSDK_THIS(RotatingStair);
+
     self->frameID   = 2;
     self->collision = PLATFORM_C_SOLID_ALL;
     self->speed     = 3;
+
     if (self->direction)
         self->amplitude.x = -self->amplitude.x;
+
     if (self->mode & 1)
         self->amplitude.x = -self->amplitude.x;
 
@@ -52,6 +56,7 @@ void RotatingStair_StageLoad(void) { RotatingStair->unused = 0; }
 void RotatingStair_State_Move(void)
 {
     RSDK_THIS(RotatingStair);
+
     int32 timer = Zone->timer + self->oscOff;
     int32 drawX = -self->drawPos.x;
     int32 drawY = -self->drawPos.y;
@@ -61,24 +66,29 @@ void RotatingStair_State_Move(void)
         dir = self->mode - (((3 * timer) >> 9) & 3) - 2;
     else
         dir = ((3 * timer) >> 9) + self->mode;
+
     switch (dir & 3) {
         case FLIP_NONE: // right
             self->drawPos.x = self->centerPos.x + self->amplitude.x * RSDK.Cos1024(timer * self->speed);
             self->drawPos.y = self->centerPos.y + (self->amplitude.y << 10);
             break;
+
         case FLIP_X: // up
             self->drawPos.x = self->centerPos.x - (self->amplitude.x << 10);
             self->drawPos.y = self->centerPos.y - self->amplitude.y * RSDK.Cos1024(timer * self->speed);
             break;
+
         case FLIP_Y: // left
             self->drawPos.x = self->centerPos.x - self->amplitude.x * RSDK.Cos1024(timer * self->speed);
             self->drawPos.y = self->centerPos.y - (self->amplitude.y << 10);
             break;
+
         case FLIP_XY: // down
             self->drawPos.x = self->centerPos.x + (self->amplitude.x << 10);
             self->drawPos.y = self->centerPos.y + self->amplitude.y * RSDK.Cos1024(timer * self->speed);
             break;
     }
+
     self->velocity.x = drawX + self->drawPos.x;
     self->velocity.y = drawY + self->drawPos.y;
 }
@@ -86,6 +96,7 @@ void RotatingStair_State_Move(void)
 void RotatingStair_State_Move_Intervals(void)
 {
     RSDK_THIS(RotatingStair);
+
     int32 drawX = -self->drawPos.x;
     int32 drawY = -self->drawPos.y;
 
@@ -98,24 +109,29 @@ void RotatingStair_State_Move_Intervals(void)
         dir = self->mode - ((self->speed * (Zone->timer + self->oscOff) / self->interval) & 3) - 2;
     else
         dir = self->speed * (Zone->timer + self->oscOff) / self->interval + self->mode;
+
     switch (dir & 3) {
         case FLIP_NONE: // right
             self->drawPos.x = self->centerPos.x + self->amplitude.x * RSDK.Cos1024(angle);
             self->drawPos.y = self->centerPos.y + (self->amplitude.y << 10);
             break;
+
         case FLIP_X: // up
             self->drawPos.x = self->centerPos.x - (self->amplitude.x << 10);
             self->drawPos.y = self->centerPos.y - self->amplitude.y * RSDK.Cos1024(angle + 0x200);
             break;
+
         case FLIP_Y: // left
             self->drawPos.x = self->centerPos.x - self->amplitude.x * RSDK.Cos1024(angle);
             self->drawPos.y = self->centerPos.y - (self->amplitude.y << 10);
             break;
+
         case FLIP_XY: // down
             self->drawPos.x = self->centerPos.x + (self->amplitude.x << 10);
             self->drawPos.y = self->centerPos.y + self->amplitude.y * RSDK.Cos1024(angle + 0x200);
             break;
     }
+
     self->velocity.x = drawX + self->drawPos.x;
     self->velocity.y = drawY + self->drawPos.y;
 }
@@ -125,7 +141,20 @@ void RotatingStair_EditorDraw(void)
 {
     RSDK_THIS(RotatingStair);
 
-    self->drawPos = self->position;
+    self->frameID   = 2;
+    self->collision = PLATFORM_C_SOLID_ALL;
+    self->speed     = 3;
+    if (self->direction)
+        self->amplitude.x = -self->amplitude.x;
+    if (self->mode & 1)
+        self->amplitude.x = -self->amplitude.x;
+
+    int32 typeStore = self->mode;
+    self->mode      = (RotatingStairModes)PLATFORM_MOVING;
+    Platform_Create(NULL);
+    self->mode = typeStore;
+
+    // self->drawPos = self->position;
 
     Vector2 amplitude = self->amplitude;
 
@@ -145,6 +174,20 @@ void RotatingStair_EditorDraw(void)
 
     RotatingStair_Draw();
 
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
+            Entity *child = RSDK_GET_ENTITY(s + i, );
+            if (!child)
+                continue;
+
+            DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
+
     self->amplitude = amplitude;
 }
 
@@ -163,7 +206,7 @@ void RotatingStair_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(RotatingStair, direction);
     RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flipped", FLIP_X);
 }
 #endif
 

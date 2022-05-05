@@ -122,11 +122,7 @@ void Current_Create(void *data)
                 self->drawFX  = FX_SCALE | FX_FLIP;
                 self->scale.x = 0x400;
                 self->scale.y = 0x100;
-#if RETRO_USE_PLUS
-                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, RSDK.RandSeeded(0, 4, &Zone->randSeed));
-#else
-                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 4));
-#endif
+                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, ZONE_RAND(0, 4));
             }
             else {
                 RSDK.SetSpriteAnimation(Water->aniFrames, 5, &self->animator, true, 0);
@@ -247,19 +243,15 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
     if (screenY < minY)
         minY = screenY;
 
-    int32 max = (minY - maxY) >> 20;
-    if (!max)
-        max = 1;
+    int32 randMax = (minY - maxY) >> 20;
+    if (!randMax)
+        randMax = 1;
 
     bubblePos.x = x;
-    if (max <= 0)
+    if (randMax <= 0)
         bubblePos.y = maxY;
     else
-#if RETRO_USE_PLUS
-        bubblePos.y = maxY + (RSDK.RandSeeded(0, max, &Zone->randSeed) << 20);
-#else
-        bubblePos.y = maxY + (RSDK.Rand(0, max) << 20);
-#endif
+        bubblePos.y = maxY + (ZONE_RAND(0, randMax) << 20);
     return bubblePos;
 }
 
@@ -353,7 +345,7 @@ void Current_State_WaterLeft(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentLeft;
+                                player->state           = Current_PlayerState_CurrentLeft;
                             }
                         }
 
@@ -424,7 +416,7 @@ void Current_State_WaterRight(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentRight;
+                                player->state           = Current_PlayerState_CurrentRight;
                             }
                         }
 
@@ -495,7 +487,7 @@ void Current_State_WaterUp(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentUp;
+                                player->state           = Current_PlayerState_CurrentUp;
                             }
                         }
 
@@ -572,7 +564,7 @@ void Current_State_WaterDown(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentDown;
+                                player->state           = Current_PlayerState_CurrentDown;
                             }
                         }
 
@@ -742,7 +734,7 @@ void Current_State_Child(void)
         destroyEntity(self);
 }
 
-void Current_Player_State_CurrentLeft(void)
+void Current_PlayerState_CurrentLeft(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -750,7 +742,7 @@ void Current_Player_State_CurrentLeft(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->left << 16, hitbox->bottom << 16, true);
 }
 
-void Current_Player_State_CurrentRight(void)
+void Current_PlayerState_CurrentRight(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -758,7 +750,7 @@ void Current_Player_State_CurrentRight(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->right << 16, hitbox->bottom << 16, true);
 }
 
-void Current_Player_State_CurrentUp(void)
+void Current_PlayerState_CurrentUp(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -766,7 +758,7 @@ void Current_Player_State_CurrentUp(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, hitbox->top << 16, true);
 }
 
-void Current_Player_State_CurrentDown(void)
+void Current_PlayerState_CurrentDown(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -816,8 +808,10 @@ void Current_EditorDraw(void)
         Current_SetupTagLink();
 
         RSDK_DRAWING_OVERLAY(true);
-        if (self->taggedButton)
-            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00);
+        if (self->taggedButton) {
+            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00,
+                                  INK_NONE, 0xFF);
+        }
         RSDK_DRAWING_OVERLAY(false);
     }
 }

@@ -16,10 +16,12 @@ void PSZ2Outro_Update(void)
     CutsceneSeq_StartSequence(self, PSZ2Outro_Cutscene_SetupCameraMove, PSZ2Outro_Cutscene_HandleCameraMovement, PSZ2Outro_Cutscene_WalkIntoPlace,
                               PSZ2Outro_Cutscene_EnterRuby, PSZ2Outro_Cutscene_RubyActivated, PSZ2Outro_Cutscene_RubyWarp,
                               PSZ2Outro_Cutscene_LoadSSZ1, StateMachine_None);
+
 #if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
+
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
     self->active = ACTIVE_NEVER;
 }
@@ -33,8 +35,9 @@ void PSZ2Outro_Draw(void) {}
 void PSZ2Outro_Create(void *data)
 {
     RSDK_THIS(PSZ2Outro);
+
     if (!SceneInfo->inEditor) {
-        foreach_all(PSZEggman, eggman) { self->eggman = (Entity *)eggman; }
+        foreach_all(PSZEggman, eggman) { self->eggman = eggman; }
 
         self->active  = ACTIVE_NORMAL;
         self->visible = false;
@@ -46,7 +49,8 @@ void PSZ2Outro_StageLoad(void) {}
 bool32 PSZ2Outro_Cutscene_SetupCameraMove(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
+
+    EntityPSZEggman *eggman = self->eggman;
 
     foreach_active(Player, player)
     {
@@ -66,16 +70,19 @@ bool32 PSZ2Outro_Cutscene_SetupCameraMove(EntityCutsceneSeq *host)
     camera->boundsR += 512;
     Zone->playerBoundActiveR[0] = false;
     Zone->playerBoundActiveR[1] = false;
+
     FXRuby_SetupLayerDeformation();
     Camera_SetupLerp(3, 0, eggman->position.x - 0x600000, camera->position.y, 2);
     Music_PlayTrack(TRACK_STAGE);
+
     return true;
 }
 
 bool32 PSZ2Outro_Cutscene_HandleCameraMovement(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
+
+    EntityPSZEggman *eggman = self->eggman;
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     if (host->timer == 180) {
@@ -84,25 +91,31 @@ bool32 PSZ2Outro_Cutscene_HandleCameraMovement(EntityCutsceneSeq *host)
             player->position.x = camera->position.x - (ScreenInfo->centerX << 16) - 0x400000;
             player->position.y = eggman->position.y;
             player->state      = Player_State_Ground;
+
             if (!player->sidekick)
                 player->right = true;
         }
+
         return true;
     }
+
     return false;
 }
 
 bool32 PSZ2Outro_Cutscene_WalkIntoPlace(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
+
+    EntityPSZEggman *eggman = self->eggman;
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     foreach_active(Player, player)
     {
         player->direction = FLIP_NONE;
+
         if (player->groundVel > 0x30000)
             player->groundVel = 0x30000;
+
         if (!player->sidekick) {
             if (camera->position.x - player->position.x >= 0x600000) {
                 player->left  = false;
@@ -114,6 +127,7 @@ bool32 PSZ2Outro_Cutscene_WalkIntoPlace(EntityCutsceneSeq *host)
                     eggman->state    = PSZEggman_State_TurnRound;
                     player->skidding = 24;
                 }
+
                 player->right = false;
             }
         }
@@ -126,8 +140,10 @@ bool32 PSZ2Outro_Cutscene_WalkIntoPlace(EntityCutsceneSeq *host)
             playerPtr->groundVel = 0;
             playerPtr->skidding  = false;
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -140,47 +156,51 @@ bool32 PSZ2Outro_Cutscene_EnterRuby(EntityCutsceneSeq *host)
         foreach_active(PhantomRuby, ruby) { self->ruby = ruby; }
     }
 
-    if (self->ruby) {
-        if (self->ruby->state == PhantomRuby_State_Oscillate) {
-            if (player2->objectID == Player->objectID) {
-                player2->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, false, 0);
-            }
-            return true;
+    if (self->ruby && self->ruby->state == PhantomRuby_State_Oscillate) {
+        if (player2->objectID == Player->objectID) {
+            player2->state = Player_State_None;
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, false, 0);
         }
+
+        return true;
     }
+
     return false;
 }
 
 bool32 PSZ2Outro_Cutscene_RubyActivated(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
+
+    EntityPSZEggman *eggman = self->eggman;
 
     if (!host->timer)
         PhantomRuby_SetupFlash(self->ruby);
+
     if (eggman->ruby) {
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         return true;
     }
+
     return false;
 }
 
 bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
+
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    EntityFXRuby *fxRuby = NULL;
+    EntityPSZEggman *eggman = self->eggman;
+    EntityFXRuby *fxRuby    = NULL;
     if (host->timer) {
         fxRuby = self->fxRuby;
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, eggman->position.x, eggman->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
-        self->fxRuby    = fxRuby;
+        self->fxRuby      = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)
@@ -192,34 +212,37 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
             if (host->storedTimer) {
                 if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
-                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
+                    fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
-                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
+                    fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedTimer    = host->timer;
-                    host->values[0] = 1;
+                    host->storedTimer = host->timer;
+                    host->values[0]   = 1;
                 }
             }
             else {
                 host->storedTimer = host->timer;
             }
+
             if (host->timer >= host->storedTimer + 52) {
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x40) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
+
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
                     int32 valX = (player->position.x - player->position.x) >> 3;
                     int32 valY =
-                        (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y) >> 3;
+                        (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y)
+                        >> 3;
 
                     player->position.x += valX;
                     player->position.y += valY;
@@ -244,6 +267,7 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
             fxRuby->fadeWhite += 16;
         }
     }
+
     return false;
 }
 
@@ -253,11 +277,16 @@ bool32 PSZ2Outro_Cutscene_LoadSSZ1(EntityCutsceneSeq *host)
         RSDK.LoadScene();
         return true;
     }
+
     return false;
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PSZ2Outro_EditorDraw(void) {}
+void PSZ2Outro_EditorDraw(void)
+{
+    RSDK_THIS(PSZ2Outro);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
+}
 
 void PSZ2Outro_EditorLoad(void) {}
 #endif

@@ -17,16 +17,8 @@ struct ObjectPullChain {
 
 // Entity Class
 struct EntityPullChain {
-    RSDK_ENTITY
-    int32 type;
-    bool32 walkOnto;
-    uint8 tag;
-    bool32 down;            // 64
-    bool32 toggled;         // 68
-    bool32 currentlyActive; // 6B
-    bool32 activated;       // 70
-    bool32 wasActivated;    // 74
-    int32 pressPos;         // 78
+    MANIA_BUTTON_BASE
+
     Animator hookAnimator;
     int32 length;
     int32 decorMode;

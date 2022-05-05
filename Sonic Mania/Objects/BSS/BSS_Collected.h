@@ -10,11 +10,11 @@ typedef enum {
     BSS_COLLECTED_GREEN,
     BSS_COLLECTED_GREEN_STOOD,
     BSS_COLLECTED_PINK,
-}BSS_CollectedTypes;
+} BSS_CollectedTypes;
 
 // Object Class
 struct ObjectBSS_Collected {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -32,7 +32,7 @@ void BSS_Collected_Update(void);
 void BSS_Collected_LateUpdate(void);
 void BSS_Collected_StaticUpdate(void);
 void BSS_Collected_Draw(void);
-void BSS_Collected_Create(void* data);
+void BSS_Collected_Create(void *data);
 void BSS_Collected_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BSS_Collected_EditorDraw(void);
@@ -42,5 +42,4 @@ void BSS_Collected_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_BSS_COLLECTED_H
+#endif //! OBJ_BSS_COLLECTED_H

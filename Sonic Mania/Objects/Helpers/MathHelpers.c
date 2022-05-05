@@ -65,8 +65,8 @@ void MathHelpers_LerpSin1024(Vector2 *pos, int32 percent, int32 startX, int32 st
     }
     else {
         int32 lerpPercent = (RSDK.Sin1024(percent + 0x300) >> 2) + 0x200;
-        pos->x    = startX + lerpPercent * ((endX - startX) >> 8);
-        pos->y    = startY + lerpPercent * ((endY - startY) >> 8);
+        pos->x            = startX + lerpPercent * ((endX - startX) >> 8);
+        pos->y            = startY + lerpPercent * ((endY - startY) >> 8);
     }
 }
 
@@ -82,8 +82,8 @@ void MathHelpers_Lerp2Sin1024(Vector2 *pos, int32 percent, int32 startX, int32 s
     }
     else {
         int32 lerpPercent = RSDK.Sin1024(percent) >> 2;
-        pos->x = startX + lerpPercent * ((endX - startX) >> 8);
-        pos->y = startY + lerpPercent * ((endY - startY) >> 8);
+        pos->x            = startX + lerpPercent * ((endX - startX) >> 8);
+        pos->y            = startY + lerpPercent * ((endY - startY) >> 8);
     }
 }
 
@@ -99,8 +99,8 @@ void MathHelpers_LerpSin512(Vector2 *pos, int32 percent, int32 startX, int32 sta
     }
     else {
         int32 lerpPercent = (RSDK.Sin512(percent + 0x180) >> 2) + 0x80;
-        pos->x    = startX + lerpPercent * ((endX - startX) >> 8);
-        pos->y    = startY + lerpPercent * ((endY - startY) >> 8);
+        pos->x            = startX + lerpPercent * ((endX - startX) >> 8);
+        pos->y            = startY + lerpPercent * ((endY - startY) >> 8);
     }
 }
 
@@ -199,10 +199,12 @@ bool32 MathHelpers_PointInHitbox(int32 thisX1, int32 thisY1, int32 otherX1, int3
         hitboxY2 = top;
     if (bottom > top)
         hitboxY1 = bottom;
-    return otherX1 >= thisX1 + (hitboxX2 << 16) && otherX1 <= thisX1 + (hitboxX1 << 16) && otherY1 >= thisY1 + (hitboxY2 << 16) && otherY1 <= thisY1 + (hitboxY1 << 16);
+    return otherX1 >= thisX1 + (hitboxX2 << 16) && otherX1 <= thisX1 + (hitboxX1 << 16) && otherY1 >= thisY1 + (hitboxY2 << 16)
+           && otherY1 <= thisY1 + (hitboxY1 << 16);
 }
 
-bool32 MathHelpers_PositionBoxesIntersect(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2, int32 thisY2)
+bool32 MathHelpers_PositionBoxesIntersect(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2,
+                                          int32 thisY2)
 {
     int32 left_other   = minVal(otherX1, otherX2);
     int32 top_other    = minVal(otherY1, otherY2);
@@ -251,7 +253,8 @@ bool32 MathHelpers_CheckValidIntersect(int32 otherX1, int32 otherY1, int32 other
         return false;
     return true;
 }
-int32 MathHelpers_CheckPositionOverlap(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2, int32 thisY2)
+int32 MathHelpers_CheckPositionOverlap(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2,
+                                       int32 thisY2)
 {
     // Creates "hitboxes" from the positions and does a quick check to see if they overlap
     if (!MathHelpers_PositionBoxesIntersect(otherX1, otherY1, otherX2, otherY2, thisX1, thisY1, thisX2, thisY2))
@@ -366,7 +369,7 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos
     if (!radius)
         return false;
 
-    int32 posY         = 0;
+    int32 posY = 0;
     if (x <= boxPos.x) {
         posY = y + MathHelpers_GetEdgeDistance(boxPosLeft - x, radius);
         if (boxPosTop <= posY && posY <= boxPosBottom) {

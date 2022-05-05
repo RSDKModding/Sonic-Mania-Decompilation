@@ -78,6 +78,7 @@ void Clucker_Create(void *data)
         else {
             self->direction *= FLIP_Y;
         }
+
         self->visible = true;
         self->active  = ACTIVE_BOUNDS;
 
@@ -104,22 +105,27 @@ void Clucker_Create(void *data)
 void Clucker_StageLoad(void)
 {
     Clucker->aniFrames           = RSDK.LoadSpriteAnimation("FBZ/Clucker.bin", SCOPE_STAGE);
+
     Clucker->hitboxBadnik.left   = -16;
     Clucker->hitboxBadnik.top    = -8;
     Clucker->hitboxBadnik.right  = 16;
     Clucker->hitboxBadnik.bottom = 8;
+
     Clucker->hitboxRange.left    = -128;
     Clucker->hitboxRange.top     = -256;
     Clucker->hitboxRange.right   = 128;
     Clucker->hitboxRange.bottom  = 32;
+
     Clucker->hitboxSolid.left    = -16;
     Clucker->hitboxSolid.top     = -8;
     Clucker->hitboxSolid.right   = 16;
     Clucker->hitboxSolid.bottom  = 8;
+
     Clucker->hitboxEgg.left      = -4;
     Clucker->hitboxEgg.top       = -4;
     Clucker->hitboxEgg.right     = 4;
     Clucker->hitboxEgg.bottom    = 4;
+
     Clucker->sfxShot             = RSDK.GetSfx("Stage/Shot.wav");
 
     DEBUGMODE_ADD_OBJ(Clucker);
@@ -151,6 +157,7 @@ void Clucker_HandlePlayerInteractions(void)
             self->position.y -= self->yOffset;
         else
             self->position.y += self->yOffset;
+
         if (Player_CheckBadnikTouch(player, self, &Clucker->hitboxBadnik)) {
             if (self->hasParent) {
                 Player_CheckBadnikBreak(player, self, true);
@@ -160,6 +167,7 @@ void Clucker_HandlePlayerInteractions(void)
                 self->state   = Clucker_State_Destroyed;
             }
         }
+
         self->position.y = posY;
     }
 }
@@ -167,6 +175,7 @@ void Clucker_HandlePlayerInteractions(void)
 void Clucker_CheckOffScreen(void)
 {
     RSDK_THIS(Clucker);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->direction = self->direction >> 1;
         Clucker_Create(NULL);
@@ -203,6 +212,7 @@ void Clucker_State_CheckForPlayer(void)
                 self->direction |= FLIP_X;
             else
                 self->direction &= ~FLIP_X;
+
             self->state = Clucker_State_Appear;
         }
     }
@@ -212,9 +222,11 @@ void Clucker_State_CheckForPlayer(void)
 void Clucker_State_Appear(void)
 {
     RSDK_THIS(Clucker);
+
     self->yOffset -= 0x20000;
     if (self->yOffset == -0x180000)
         self->state = Clucker_State_ShootDelay;
+
     Clucker_HandlePlayerInteractions();
     Clucker_CheckOffScreen();
 }
@@ -228,6 +240,7 @@ void Clucker_State_ShootDelay(void)
         self->timer = 14;
         self->state = Clucker_State_Shoot;
     }
+
     Clucker_HandlePlayerInteractions();
     Clucker_CheckOffScreen();
 }
@@ -258,6 +271,7 @@ void Clucker_State_Shoot(void)
             projectile->velocity.x = -0x20000;
         }
         projectile->direction = self->direction;
+
         self->timer           = self->delay;
         RSDK.PlaySfx(Clucker->sfxShot, false, 255);
     }
@@ -277,6 +291,7 @@ void Clucker_State_Shoot(void)
             self->timer = 68;
         }
     }
+
     Clucker_HandlePlayerInteractions();
     Clucker_CheckOffScreen();
 }
@@ -286,11 +301,13 @@ void Clucker_State_Turn(void)
     RSDK_THIS(Clucker);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
         self->direction ^= FLIP_X;
         RSDK.SetSpriteAnimation(Clucker->aniFrames, 0, &self->animator, true, 1);
         self->state = Clucker_State_Shoot;
     }
+
     Clucker_HandlePlayerInteractions();
     Clucker_CheckOffScreen();
 }
@@ -319,17 +336,20 @@ void Clucker_State_Destroyed(void)
 void Clucker_State_Egg(void)
 {
     RSDK_THIS(Clucker);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (RSDK.CheckOnScreen(self, NULL)) {
         RSDK.ProcessAnimation(&self->animator);
+
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Clucker->hitboxEgg))
                 Player_CheckProjectileHit(player, self);
         }
 
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, false))
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, false))
             destroyEntity(self);
     }
     else {
@@ -344,7 +364,7 @@ void Clucker_EditorDraw(void)
     RSDK.SetSpriteAnimation(Clucker->aniFrames, 0, &self->animator, true, 0);
 
     self->yOffset = -0x180000;
-    int dir = self->direction;
+    int32 dir = self->direction;
     self->direction *= FLIP_Y;
     Clucker_Draw();
     self->direction = dir;
@@ -354,9 +374,9 @@ void Clucker_EditorLoad(void)
 {
     Clucker->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Clucker.bin", SCOPE_STAGE);
 
-    RSDK_ACTIVE_VAR(Blaster, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip Y", FLIP_X);
+    RSDK_ACTIVE_VAR(Clucker, direction);
+    RSDK_ENUM_VAR("Rightside Up", FLIP_NONE);
+    RSDK_ENUM_VAR("Upside Down", FLIP_X);
 }
 #endif
 

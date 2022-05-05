@@ -32,7 +32,7 @@ void UIVideo_Update(void);
 void UIVideo_LateUpdate(void);
 void UIVideo_StaticUpdate(void);
 void UIVideo_Draw(void);
-void UIVideo_Create(void* data);
+void UIVideo_Create(void *data);
 void UIVideo_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIVideo_EditorDraw(void);
@@ -47,4 +47,4 @@ void UIVideo_State_PlayVideo1(void);
 void UIVideo_State_PlayVideo2(void);
 void UIVideo_State_FinishPlayback(void);
 
-#endif //!OBJ_UIVIDEO_H
+#endif //! OBJ_UIVIDEO_H

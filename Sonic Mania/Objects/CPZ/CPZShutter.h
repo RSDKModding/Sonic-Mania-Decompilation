@@ -27,7 +27,7 @@ void CPZShutter_Update(void);
 void CPZShutter_LateUpdate(void);
 void CPZShutter_StaticUpdate(void);
 void CPZShutter_Draw(void);
-void CPZShutter_Create(void* data);
+void CPZShutter_Create(void *data);
 void CPZShutter_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CPZShutter_EditorDraw(void);
@@ -39,4 +39,4 @@ void CPZShutter_Serialize(void);
 void CPZShutter_State_Open(void);
 void CPZShutter_State_Close(void);
 
-#endif //!OBJ_CPZSHUTTER_H
+#endif //! OBJ_CPZSHUTTER_H

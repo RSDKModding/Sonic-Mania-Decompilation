@@ -12,31 +12,39 @@ ObjectInk *Ink;
 void Ink_Update(void)
 {
     RSDK_THIS(Ink);
+
     RSDK.ProcessAnimation(&self->splashAnimator);
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        Player_CheckCollisionBox(player, self, &Ink->hitbox);
-        Player_CheckCollisionBox(player, self, &Ink->hitbox2);
-        if (Player_CheckCollisionBox(player, self, &Ink->hitbox3) == C_TOP) {
+
+        Player_CheckCollisionBox(player, self, &Ink->hitboxBottleL);
+        Player_CheckCollisionBox(player, self, &Ink->hitboxBottleR);
+
+        if (Player_CheckCollisionBox(player, self, &Ink->hitboxBottleBottom) == C_TOP) {
             if (!((1 << playerID) & self->inkedPlayers)) {
-                self->inkedPlayers = self->inkedPlayers | (1 << playerID);
+                self->inkedPlayers |= 1 << playerID;
+
                 switch (player->characterID) {
                     default: break;
+
                     // Bug Details:
                     // This actually wont work on sonic specifically, it uses the "old" sonic palette
                     // This palette starts at index 2, instead of index 64 like usual
                     // Fix:
                     // to fix this up to work as "intended", simply replace the "2"s with "64"
                     case ID_SONIC: RSDK.CopyPalette(self->type + 3, 2, 0, 2, 6); break;
+
                     case ID_TAILS: RSDK.CopyPalette(self->type + 3, 70, 0, 70, 6); break;
                     case ID_KNUCKLES: RSDK.CopyPalette(self->type + 3, 80, 0, 80, 6); break;
-                        // This is an unused object that was scrapped before plus was created, so there's no mighty/ray code
-                        // I've created a mock-up of what mighty/ray code could've looked like, had it been implimented:
-                        // case ID_MIGHTY: RSDK.CopyPalette(self->type + 3, 96, 0, 96, 6); break;
-                        // case ID_RAY: RSDK.CopyPalette(self->type + 3, 113, 0, 113, 6); break;
+
+                    // This is an unused object that was scrapped before plus was created, so there's no mighty/ray code
+                    // I've created a mock-up of what mighty/ray code could've looked like, had it been implimented:
+                    // case ID_MIGHTY: RSDK.CopyPalette(self->type + 3, 96, 0, 96, 6); break;
+                    // case ID_RAY: RSDK.CopyPalette(self->type + 3, 113, 0, 113, 6); break;
                 }
+
                 Ink->playerColors[playerID] = self->type + 1;
                 RSDK.SetSpriteAnimation(Ink->aniFrames, self->type + 6, &self->splashAnimator, true, 0);
             }
@@ -66,6 +74,7 @@ void Ink_Draw(void)
 void Ink_Create(void *data)
 {
     RSDK_THIS(Ink);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
@@ -82,25 +91,30 @@ void Ink_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
         Ink->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ink.bin", SCOPE_STAGE);
-    Ink->hitbox.left    = -24;
-    Ink->hitbox.top     = -30;
-    Ink->hitbox.right   = -16;
-    Ink->hitbox.bottom  = 30;
-    Ink->hitbox2.left   = 16;
-    Ink->hitbox2.top    = -30;
-    Ink->hitbox2.right  = 24;
-    Ink->hitbox2.bottom = 30;
-    Ink->hitbox3.left   = -24;
-    Ink->hitbox3.top    = 26;
-    Ink->hitbox3.right  = 24;
-    Ink->hitbox3.bottom = 30;
-    for (int32 p = 0; p < 4; ++p) Ink->playerColors[p] = 0;
+
+    Ink->hitboxBottleL.left   = -24;
+    Ink->hitboxBottleL.top    = -30;
+    Ink->hitboxBottleL.right  = -16;
+    Ink->hitboxBottleL.bottom = 30;
+
+    Ink->hitboxBottleR.left   = 16;
+    Ink->hitboxBottleR.top    = -30;
+    Ink->hitboxBottleR.right  = 24;
+    Ink->hitboxBottleR.bottom = 30;
+
+    Ink->hitboxBottleBottom.left   = -24;
+    Ink->hitboxBottleBottom.top    = 26;
+    Ink->hitboxBottleBottom.right  = 24;
+    Ink->hitboxBottleBottom.bottom = 30;
+
+    for (int32 p = 0; p < PLAYER_MAX; ++p) Ink->playerColors[p] = 0;
 }
 
 #if RETRO_INCLUDE_EDITOR
 void Ink_EditorDraw(void)
 {
     RSDK_THIS(Ink);
+
     self->alpha         = 0x180;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

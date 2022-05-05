@@ -12,6 +12,7 @@ ObjectRTeleporter *RTeleporter;
 void RTeleporter_Update(void)
 {
     RSDK_THIS(RTeleporter);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void RTeleporter_StaticUpdate(void) {}
 void RTeleporter_Draw(void)
 {
     RSDK_THIS(RTeleporter);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -30,15 +32,18 @@ void RTeleporter_Create(void *data)
     RSDK_THIS(RTeleporter);
 
     self->drawFX = FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawHigh;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         RSDK.SetSpriteAnimation(RTeleporter->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(RTeleporter->aniFrames, 1, &self->electricAnimator, true, 0);
-        self->originY    = self->position.y;
+
+        self->originY   = self->position.y;
         self->state     = RTeleporter_State_CheckPlayerCollisions;
         self->stateDraw = RTeleporter_Draw_Active;
     }
@@ -51,10 +56,10 @@ void RTeleporter_StageLoad(void)
     else if (RSDK.CheckStageFolder("MMZ1") || RSDK.CheckStageFolder("MMZ2"))
         RTeleporter->aniFrames = RSDK.LoadSpriteAnimation("MMZ/RTeleporter.bin", SCOPE_STAGE);
 
-    RTeleporter->hitbox.top    = -32;
-    RTeleporter->hitbox.left   = -34;
-    RTeleporter->hitbox.right  = 34;
-    RTeleporter->hitbox.bottom = 32;
+    RTeleporter->hitboxTeleporter.top    = -32;
+    RTeleporter->hitboxTeleporter.left   = -34;
+    RTeleporter->hitboxTeleporter.right  = 34;
+    RTeleporter->hitboxTeleporter.bottom = 32;
 
     RTeleporter->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
     RTeleporter->sfxGoodFuture = RSDK.GetSfx("Stage/GoodFuture.wav");
@@ -72,7 +77,7 @@ void RTeleporter_State_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (!player->onGround) {
-            if (Player_CheckCollisionTouch(player, self, &RTeleporter->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &RTeleporter->hitboxTeleporter)) {
                 Player_CheckItemBreak(player, self, false);
                 self->state     = RTeleporter_State_Destroyed;
                 self->stateDraw = RTeleporter_Draw_Exploding;
@@ -87,19 +92,22 @@ void RTeleporter_State_Destroyed(void)
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(RTeleporter->sfxExplosion, false, 255);
+
         if (Zone->timer & 4) {
-            int32 x = self->position.x + (RSDK.Rand(-32, 32) << 16);
-            int32 y = self->position.y + (RSDK.Rand(-32, 32) << 16);
+            int32 x                    = self->position.x + (RSDK.Rand(-32, 32) << 16);
+            int32 y                    = self->position.y + (RSDK.Rand(-32, 32) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS)), x, y);
-            explosion->drawOrder = Zone->objectDrawHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 
     if (++self->timer == 80) {
         RSDK.PlaySfx(RTeleporter->sfxGoodFuture, false, 255);
         RSDK.SetSpriteAnimation(RTeleporter->aniFrames, 2, &self->mainAnimator, true, 0);
+
         self->position.y += 0x180000;
-        RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
+        RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
+
         self->state     = StateMachine_None;
         self->stateDraw = RTeleporter_Draw_Destroyed;
     }
@@ -112,7 +120,6 @@ void RTeleporter_Draw_Active(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     self->direction = FLIP_Y;
@@ -133,15 +140,17 @@ void RTeleporter_Draw_Exploding(void)
     RSDK_THIS(RTeleporter);
 
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
-    self->direction = FLIP_Y;
 
+    self->direction = FLIP_Y;
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
+
     self->direction = FLIP_NONE;
 }
 
 void RTeleporter_Draw_Destroyed(void)
 {
     RSDK_THIS(RTeleporter);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 

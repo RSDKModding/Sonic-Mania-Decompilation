@@ -33,8 +33,9 @@ void APICallback_Create(void *data)
 
 void APICallback_StageLoad(void)
 {
-    APICallback->achievementsDisabled         = false;
-    APICallback->active                       = ACTIVE_ALWAYS;
+    APICallback->achievementsDisabled = false;
+    APICallback->active               = ACTIVE_ALWAYS;
+
     APICallback->LaunchManual                 = RSDK.GetAPIFunction("LaunchManual");
     APICallback->ExitGame                     = RSDK.GetAPIFunction("ExitGame");
     APICallback->ClearAchievements            = RSDK.GetAPIFunction("ClearAchievements");
@@ -67,25 +68,29 @@ void APICallback_StageLoad(void)
     APICallback->GetInputType                 = RSDK.GetAPIFunction("GetInputType");
     APICallback->GetControllerType            = RSDK.GetAPIFunction("GetControllerType");
     APICallback->ShowSteamControllerOverlay   = RSDK.GetAPIFunction("ShowSteamControllerOverlay");
-    APICallback->controllerIDs[0]             = CONT_P1;
-    APICallback->controllerIDs[1]             = CONT_P2;
-    APICallback->controllerIDs[2]             = CONT_P3;
-    APICallback->controllerIDs[3]             = CONT_P4;
-    APICallback->controllerCount              = 4;
+
+    APICallback->controllerIDs[0] = CONT_P1;
+    APICallback->controllerIDs[1] = CONT_P2;
+    APICallback->controllerIDs[2] = CONT_P3;
+    APICallback->controllerIDs[3] = CONT_P4;
+    APICallback->controllerCount  = 4;
 }
 
 void APICallback_SetRichPresence(int32 id, TextInfo *msg)
 {
     if (globals->presenceID != id) {
-        // RSDK.PrependText(&message, id + '.');
+        char buffer[0x40];
+        RSDK.GetCString(buffer, msg);
+
         if (APICallback->SetRichPresence) {
             LogHelpers_Print("API SetRichPresence(%d)", id);
-            LogHelpers_PrintString(msg);
+            LogHelpers_Print("%s", buffer);
+
             APICallback->SetRichPresence(id, msg);
         }
         else {
             LogHelpers_Print("EMPTY SetRichPresence(%d)", id);
-            LogHelpers_PrintString(msg);
+            LogHelpers_Print("%s", buffer);
         }
     }
 }
@@ -124,7 +129,7 @@ void APICallback_SetNoSaveDisabled(void)
 
 void APICallback_SaveUserFile(const char *name, void *buffer, int32 size, void (*callback)(int32))
 {
-    if (globals->noSave) {
+    if (API_GetNoSave()) {
         LogHelpers_Print("SaveUserFile(%s, %X, %d, %X) failing due to noSave", name, buffer, size, callback);
         callback(false);
     }
@@ -147,6 +152,7 @@ void APICallback_SaveUserFile(const char *name, void *buffer, int32 size, void (
 void APICallback_SaveCB(void)
 {
     RSDK_THIS(APICallback);
+
     int32 saveResult = RSDK.SaveUserFile(self->fileName, self->fileBuffer, self->fileSize);
     LogHelpers_Print("DUMMY DummySaveCB(%s, %x, %d) -> %d", self->fileName, self->fileBuffer, self->fileSize, saveResult);
 
@@ -154,7 +160,8 @@ void APICallback_SaveCB(void)
         self->fileCallback(true);
 }
 
-void APICallback_SaveSettingsINI(void) {
+void APICallback_SaveSettingsINI(void)
+{
     if (APICallback->SetRichPresence) {
         LogHelpers_Print("API SaveSettingsINI(%d)");
         APICallback->SaveSettingsINI();
@@ -168,11 +175,14 @@ LeaderboardEntry *APICallback_ReadLeaderboardEntry(int32 rankID)
 {
     if (APICallback->LeaderboardReadEntry)
         return APICallback->LeaderboardReadEntry(rankID);
+
     if (!GameInfo->platform) {
         LogHelpers_Print("EMPTY LeaderboardReadEntry()");
         return NULL;
     }
+
     LogHelpers_Print("DUMMY LeaderboardReadEntry()");
+
     if (APICallback->leaderboardsStatus != STATUS_OK || rankID < 0 || rankID >= APICallback->leaderboardEntryCount) {
         LogHelpers_Print("ERROR index out of bounds for RankEntry");
         return NULL;
@@ -219,19 +229,20 @@ LeaderboardEntry *APICallback_ReadLeaderboardEntry(int32 rankID)
 void APICallback_NotifyAutoSave_OK(void)
 {
     APICallback->isAutoSaving = false;
-    globals->notifiedAutosave       = true;
+    globals->notifiedAutosave = true;
     UIWaitSpinner_FinishWait();
 }
 
 void APICallback_NotifyAutoSave_CB(void)
 {
     RSDK_THIS(APICallback);
+
     if (APICallback->isAutoSaving) {
         if (!UIDialog->activeDialog) {
             TextInfo info;
             Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_NotifyAutoSave_OK, true);
-            dialog->useAltColor   = true;
+            dialog->useAltColor    = true;
         }
     }
     else {
@@ -243,6 +254,7 @@ void APICallback_NotifyAutoSave_CB(void)
 void APICallback_PromptSavePreference_CB(void)
 {
     RSDK_THIS(APICallback);
+
     if (APICallback->saveStatus == STATUS_CONTINUE) {
         if (!UIDialog->activeDialog) {
             TextInfo info;
@@ -260,7 +272,7 @@ void APICallback_PromptSavePreference_CB(void)
             Localization_GetString(&info, stringID);
 
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_SetNoSaveEnabled, APICallback_SetNoSaveDisabled, true, true);
-            dialog->useAltColor   = true;
+            dialog->useAltColor    = true;
         }
     }
     else {
@@ -271,15 +283,16 @@ void APICallback_PromptSavePreference_CB(void)
 
 void APICallback_PromptSavePreference(int32 status)
 {
-    if (globals->noSave) {
+    if (API_GetNoSave()) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");
         return;
     }
+
     LogHelpers_Print("PromptSavePreference()");
 
-    if (APICallback->saveStatus == STATUS_CONTINUE) {
+    if (APICallback->saveStatus == STATUS_CONTINUE)
         LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
-    }
+
     APICallback->saveStatus = STATUS_CONTINUE;
 
     EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_PromptSavePreference_CB, 0, 0);
@@ -289,7 +302,7 @@ void APICallback_PromptSavePreference(int32 status)
 
 void APICallback_LoadUserFile(const char *name, void *buffer, int32 size, void (*callback)(int32))
 {
-    if (globals->noSave) {
+    if (API_GetNoSave()) {
         LogHelpers_Print("LoadUserFile(%s, %X, %d, %X) loading 0's due to noSave", name, buffer, size, callback);
         memset(buffer, 0, size);
         callback(false);
@@ -313,11 +326,13 @@ void APICallback_LoadUserFile(const char *name, void *buffer, int32 size, void (
 int32 APICallback_LoadCB(void)
 {
     RSDK_THIS(APICallback);
+
     int32 loadResult = RSDK.LoadUserFile(self->fileName, self->fileBuffer, self->fileSize);
     LogHelpers_Print("DUMMY DummyLoadCB(%s, %x, %d) -> %d", self->fileName, self->fileBuffer, self->fileSize, loadResult);
 
     if (self->fileCallback)
         self->fileCallback(1);
+
     return 1;
 }
 
@@ -333,6 +348,7 @@ int32 APICallback_LeaderboardStatus(void)
     }
     else {
         LogHelpers_Print("DUMMY LeaderboardStatus()");
+
         if (APICallback->leaderboardsStatus == STATUS_CONTINUE) {
             if (APICallback->statusTimer < 60) {
                 APICallback->statusTimer++;
@@ -346,6 +362,7 @@ int32 APICallback_LeaderboardStatus(void)
         }
         status = APICallback->leaderboardsStatus;
     }
+
     return status;
 }
 
@@ -353,6 +370,7 @@ int32 APICallback_LeaderboardEntryCount(void)
 {
     if (APICallback->LeaderboardEntryCount)
         return APICallback->LeaderboardEntryCount();
+
     if (GameInfo->platform < PLATFORM_PS4) {
         LogHelpers_Print("EMPTY LeaderboardEntryCount()");
     }
@@ -361,20 +379,18 @@ int32 APICallback_LeaderboardEntryCount(void)
         if (APICallback->leaderboardsStatus == STATUS_OK)
             return APICallback->leaderboardEntryCount;
     }
+
     return -1;
 }
 
 void APICallback_LaunchManual()
 {
-    if (APICallback->LaunchManual) {
+    if (APICallback->LaunchManual)
         APICallback->LaunchManual();
-    }
-    else if (GameInfo->platform == PLATFORM_DEV) {
+    else if (GameInfo->platform == PLATFORM_DEV)
         LogHelpers_Print("DUMMY LaunchManual()");
-    }
-    else {
+    else
         LogHelpers_Print("EMPTY LaunchManual()");
-    }
 }
 
 void APICallback_HandleCallback(void)
@@ -393,24 +409,23 @@ void APICallback_HandleCallback(void)
 
 int32 APICallback_GetUserAuthStatus(void)
 {
-    if (APICallback->GetUserAuthStatus) {
+    if (APICallback->GetUserAuthStatus)
         APICallback->authStatus = APICallback->GetUserAuthStatus();
-    }
-    else {
+    else
         APICallback->authStatus = STATUS_OK;
-    }
 
     if (APICallback->saveStatus || APICallback->authStatus != STATUS_ERROR) {
         if (APICallback->authStatus == STATUS_FORBIDDEN && !APICallback->authForbidden) {
-            EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_CheckUserAuth_CB, 0, 0);
-            entity->active                     = ACTIVE_ALWAYS;
-            APICallback->activeEntity = (Entity *)entity;
-            APICallback->authForbidden     = true;
+            EntityAPICallback *entity  = CREATE_ENTITY(APICallback, APICallback_CheckUserAuth_CB, 0, 0);
+            entity->active             = ACTIVE_ALWAYS;
+            APICallback->activeEntity  = (Entity *)entity;
+            APICallback->authForbidden = true;
         }
     }
     else {
         APICallback->saveStatus = STATUS_ERROR;
     }
+
     return APICallback->authStatus;
 }
 
@@ -451,12 +466,13 @@ int32 APICallback_GetStorageStatus(void)
         if (status == STATUS_OK)
             APICallback->saveStatus = STATUS_OK;
     }
+
     return status;
 }
 
 int32 APICallback_GetSaveStatus(void)
 {
-    if (globals->noSave)
+    if (API_GetNoSave())
         return STATUS_OK;
 
     if (APICallback->activeEntity)
@@ -477,6 +493,7 @@ int32 APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int32 playerID
 {
     if (APICallback->FetchLeaderboard)
         return APICallback->FetchLeaderboard(zoneID, actID, playerID, start, end, isUser);
+
     if (GameInfo->platform < PLATFORM_PS4) {
         LogHelpers_Print("EMPTY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, start, end, isUser);
         return 0;
@@ -496,7 +513,7 @@ int32 APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int32 playerID
         APICallback->prevRank  = RSDK.Rand(0, APICallback->leaderboardEntryCount - 1);
     }
     APICallback->leaderboardsStatus = STATUS_CONTINUE;
-    APICallback->statusTimer            = 0;
+    APICallback->statusTimer        = 0;
     return 0;
 }
 
@@ -508,6 +525,7 @@ void APICallback_ExitGame(void)
     else {
         if (GameInfo->platform == PLATFORM_DEV)
             exit(0);
+
         LogHelpers_Print("EMPTY ExitGame()");
     }
 }
@@ -520,6 +538,7 @@ void APICallback_ClearPrerollErrors(void)
     }
     else {
         LogHelpers_Print("DUMMY ClearPrerollErrors()");
+
         if (APICallback->authStatus != STATUS_OK) {
             APICallback->authStatus = STATUS_NONE;
         }
@@ -531,12 +550,14 @@ void APICallback_ClearPrerollErrors(void)
 bool32 APICallback_CheckInputDisconnected(void)
 {
     RSDK_THIS(APICallback);
+
     return APICallback_InputIDIsDisconnected(self->inputID) || PauseMenu->forcedDisconnect;
 }
 
 bool32 APICallback_InputIDIsDisconnected(int32 id)
 {
     RSDK_THIS(APICallback);
+
     if (APICallback->InputIDIsDisconnected) {
         return APICallback->InputIDIsDisconnected(id);
     }
@@ -631,6 +652,7 @@ void APICallback_TryAuth_Yes(void) { APICallback->authStatus = STATUS_OK; }
 void APICallback_TryAuth_CB(void)
 {
     RSDK_THIS(APICallback);
+
     if (APICallback->authStatus == 100) {
         if (!UIDialog->activeDialog) {
             TextInfo info;
@@ -643,7 +665,7 @@ void APICallback_TryAuth_CB(void)
                 case PLATFORM_SWITCH: Localization_GetString(&info, STR_LOADNINTENDO); break;
             }
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_TryAuth_Yes, APICallback_TryAuth_No, true, true);
-            dialog->useAltColor   = true;
+            dialog->useAltColor    = true;
         }
     }
     else {
@@ -664,8 +686,9 @@ int32 APICallback_TryAuth(void)
             LogHelpers_Print("WARNING TryAuth() when auth already in progress.");
         }
         APICallback->statusTimer = 0;
-        APICallback->authStatus = STATUS_CONTINUE;
+        APICallback->authStatus  = STATUS_CONTINUE;
         CREATE_ENTITY(APICallback, APICallback_TryAuth_CB, 0, 0);
+
         return STATUS_CONTINUE;
     }
 }
@@ -703,46 +726,41 @@ bool32 APICallback_GetUsername(TextInfo *info)
             LogHelpers_Print("EMPTY GetUsername()");
         }
     }
+
     return false;
 }
 
 void APICallback_ClearAchievements(void)
 {
-    if (APICallback->ClearAchievements) {
+    if (APICallback->ClearAchievements)
         APICallback->ClearAchievements();
-    }
-    else if (GameInfo->platform == PLATFORM_DEV) {
+    else if (GameInfo->platform == PLATFORM_DEV)
         LogHelpers_Print("DUMMY ClearAchievements()");
-    }
-    else {
+    else
         LogHelpers_Print("EMPTY ClearAchievements()");
-    }
 }
 
 void APICallback_UnlockAchievement(const char *name)
 {
-    if (APICallback->achievementsDisabled) {
+    if (APICallback->achievementsDisabled)
         LogHelpers_Print("SKIP UnlockAchievement(%s)", name);
-    }
-    else if (APICallback->UnlockAchievement) {
+    else if (APICallback->UnlockAchievement)
         APICallback->UnlockAchievement(name);
-    }
-    else if (GameInfo->platform == PLATFORM_DEV) {
+    else if (GameInfo->platform == PLATFORM_DEV)
         LogHelpers_Print("DUMMY UnlockAchievement(%s)", name);
-    }
-    else {
+    else
         LogHelpers_Print("EMPTY UnlockAchievement(%s)", name);
-    }
 }
 
-void APICallback_CheckUserAuth_OK(void) { APICallback->signedout = true; }
+void APICallback_CheckUserAuth_OK(void) { APICallback->signedOut = true; }
 
 void APICallback_CheckUserAuth_CB(void)
 {
     RSDK_THIS(APICallback);
+
     EntityUIDialog *dialog = UIDialog->activeDialog;
     if (self->timer) {
-        if (APICallback->signedout) {
+        if (APICallback->signedOut) {
             if (!dialog) {
                 if (Zone) {
                     RSDK.SetScene("Presentation", "Title Screen");
@@ -751,6 +769,7 @@ void APICallback_CheckUserAuth_CB(void)
                 else if (MenuSetup) {
                     MenuSetup_StartReturnToTitle();
                 }
+
                 APICallback->activeEntity = NULL;
                 destroyEntity(self);
             }
@@ -758,7 +777,7 @@ void APICallback_CheckUserAuth_CB(void)
         else if (!dialog) {
             TextInfo info;
             Localization_GetString(&info, STR_SIGNOUTDETECTED);
-            dialog = UIDialog_CreateDialogOk(&info, APICallback_CheckUserAuth_OK, true);
+            dialog              = UIDialog_CreateDialogOk(&info, APICallback_CheckUserAuth_OK, true);
             dialog->useAltColor = true;
         }
     }
@@ -771,6 +790,7 @@ void APICallback_CheckUserAuth_CB(void)
                 if (UIControl_GetUIControl())
                     UIControl_SetInactiveMenu(UIControl_GetUIControl());
             }
+
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
             self->timer = 1;
@@ -782,11 +802,11 @@ void APICallback_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(
 
 void APICallback_GetNextNotif(void)
 {
-    if (SceneInfo->inEditor || globals->noSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         return;
     }
     else {
-        EntityGameProgress *progress = GameProgress_GetGameProgress();
+        EntityGameProgress *progress                        = GameProgress_GetGameProgress();
         progress->unreadNotifs[GameProgress_GetNextNotif()] = true;
     }
 }
@@ -794,6 +814,7 @@ void APICallback_GetNextNotif(void)
 void APICallback_ManageNotifs(void)
 {
     RSDK_THIS(APICallback);
+
     if (GameProgress_CountUnreadNotifs()) {
         TextInfo info;
         INIT_TEXTINFO(info);
@@ -802,7 +823,7 @@ void APICallback_ManageNotifs(void)
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_GetNextNotif, true);
             dialog->playEventSfx   = true;
-            dialog->useAltColor   = true;
+            dialog->useAltColor    = true;
         }
     }
     else {
@@ -817,17 +838,18 @@ bool32 APICallback_CheckUnreadNotifs(void)
 {
     if (!GameProgress_CountUnreadNotifs())
         return false;
+
     if (!APICallback->activeEntity)
         APICallback->activeEntity = (Entity *)CREATE_ENTITY(APICallback, APICallback_ManageNotifs, 0, 0);
+
     return true;
 }
 
 bool32 APICallback_NotifyAutosave(void)
 {
     if (globals->notifiedAutosave) {
-        if (!APICallback->isAutoSaving && !APICallback->activeEntity) {
+        if (!APICallback->isAutoSaving && !APICallback->activeEntity)
             return false;
-        }
     }
     else if (!APICallback->isAutoSaving || !APICallback->activeEntity) {
         UIWaitSpinner_StartWait();
@@ -838,6 +860,7 @@ bool32 APICallback_NotifyAutosave(void)
         dialogRunner->active            = ACTIVE_ALWAYS;
         APICallback->activeEntity       = (Entity *)dialogRunner;
     }
+
     return true;
 }
 

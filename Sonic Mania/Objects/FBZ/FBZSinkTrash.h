@@ -4,10 +4,10 @@
 #include "SonicMania.h"
 
 typedef enum {
-    FBZSINKTRASH_LOOSE,
+    FBZSINKTRASH_SINK,
     FBZSINKTRASH_SOLID,
     FBZSINKTRASH_DECOR,
-}FBZSinkTrashTypes;
+} FBZSinkTrashTypes;
 
 // Object Class
 struct ObjectFBZSinkTrash {
@@ -20,9 +20,9 @@ struct EntityFBZSinkTrash {
     RSDK_ENTITY
     int32 type;
     Vector2 size;
-    Vector2 positions[64];
-    uint8 frameIDs[64];
-    uint8 directions[64];
+    Vector2 trashPos[64];
+    uint8 trashFrame[64];
+    uint8 trashDir[64];
     Hitbox hitboxTrash;
     Hitbox hitboxDebris;
     Animator trashAnimator;
@@ -38,7 +38,7 @@ void FBZSinkTrash_Update(void);
 void FBZSinkTrash_LateUpdate(void);
 void FBZSinkTrash_StaticUpdate(void);
 void FBZSinkTrash_Draw(void);
-void FBZSinkTrash_Create(void* data);
+void FBZSinkTrash_Create(void *data);
 void FBZSinkTrash_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FBZSinkTrash_EditorDraw(void);
@@ -48,5 +48,4 @@ void FBZSinkTrash_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_FBZSINKTRASH_H
+#endif //! OBJ_FBZSINKTRASH_H

@@ -38,6 +38,9 @@ void RSDK::SKU::FillDummyLeaderboardEntries()
         entry->globalRank = leaderboards->entryInfo.globalRankOffset + e;
         entry->score      = (4 * entry->globalRank + 2400) % 59999;
         entry->isUser     = leaderboards->isUser && entry->globalRank == leaderboards->userRank;
+
+        memset(&entry->username, 0, sizeof(entry->username));
+        memset(&entry->userID, 0, sizeof(entry->userID));
         if (entry->isUser) {
             GetUsername(&entry->username);
         }

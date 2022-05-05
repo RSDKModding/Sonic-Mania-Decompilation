@@ -29,12 +29,12 @@ TYPEMAP = {
 
 ALIASES = {
     "color": "int32",
-    "colour": "int32",
     "char": "uint8"
 }
 
 DEFINES = {
-    "PLAYER_MAX": 4
+    "PLAYER_MAX": 4,
+    "SCREEN_MAX": 4
 }
 
 objects: Dict[str, List[Tuple[str, int, int, List[int]]]] = {}
@@ -128,7 +128,8 @@ def deduce(delim):
         errflag = 1
         return
     name = readuntil(delim)
-    relseek(-2)
+    currentfile.seek(curpos - 2, 0) # relseek didn't wanna work so
+
     asize = 1
     if currentfile.read(1) == "]":
         backward()
@@ -193,10 +194,12 @@ for path in Path(sys.argv[1]).rglob("*.h"):
 
             mode = 1
             continue
+
         if mode == 1 and l.strip() == "RSDK_OBJECT":
             mode = 2
             t = []
             continue
+
         if mode == 2:
             if l.strip().startswith("TABLE"):
                 mode = 3
@@ -228,6 +231,7 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                 continue #I changed this specifically because of "SPZSetup" & "SPZ2Setup" sharing a file :LOL:
             backward()
             deduce(";")
+
         if mode == 3:
             backward()
             readuntil("(")
@@ -254,6 +258,7 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             readuntil(";")
             mode = 2
             continue
+
         if mode == 4:
             backward()
             readuntil("(")
@@ -293,6 +298,7 @@ for key in objects:
             bs = tuple(TYPEMAP.values())[type & (~0x80)]
             for val in arr:
                 b.extend(val.to_bytes(bs, byteorder='little', signed=(type & (~0x80)) in range(4, 7))) #val
+        
         if debugMode:
             print("  ", tuple(TYPEMAP.keys())[type & (~0x80)], name + (f"[{size}]" if arr else ""))
 

@@ -79,9 +79,9 @@ void Current_State_PushUp(void);
 void Current_State_PushDown(void);
 void Current_State_Child(void);
 
-void Current_Player_State_CurrentLeft(void);
-void Current_Player_State_CurrentRight(void);
-void Current_Player_State_CurrentUp(void);
-void Current_Player_State_CurrentDown(void);
+void Current_PlayerState_CurrentLeft(void);
+void Current_PlayerState_CurrentRight(void);
+void Current_PlayerState_CurrentUp(void);
+void Current_PlayerState_CurrentDown(void);
 
 #endif //!OBJ_CURRENT_H

@@ -21,349 +21,102 @@ void *link_handle = NULL;
 int32 *globalVarsPtr = NULL;
 RetroEngine engine   = RetroEngine();
 
-bool32 processEvents()
+int RunRetroEngine(int argc, char *argv[])
 {
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
-    while (SDL_PollEvent(&engine.sdlEvents)) {
-        // Main Events
-        switch (engine.sdlEvents.type) {
-#if RETRO_USING_SDL2
-            case SDL_WINDOWEVENT:
-                switch (engine.sdlEvents.window.event) {
-                    case SDL_WINDOWEVENT_MAXIMIZED: {
-                        SDL_RestoreWindow(engine.window);
-                        SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                        SDL_ShowCursor(SDL_FALSE);
-                        engine.isWindowed = false;
-                        break;
-                    }
-                    case SDL_WINDOWEVENT_CLOSE: return false;
-                    case SDL_WINDOWEVENT_FOCUS_GAINED:
-#if RETRO_REV02
-                        RSDK::SKU::userCore->focusState = 0;
-#endif
-                        break;
-                    case SDL_WINDOWEVENT_FOCUS_LOST:
-#if RETRO_REV02
-                        RSDK::SKU::userCore->focusState = 1;
-#endif
-                        break;
-                }
-                break;
-            case SDL_CONTROLLERDEVICEADDED: controllerInit(engine.sdlEvents.cdevice.which); break;
-            case SDL_CONTROLLERDEVICEREMOVED: controllerClose(engine.sdlEvents.cdevice.which); break;
-            case SDL_APP_WILLENTERFOREGROUND:
-#if RETRO_REV02
-                RSDK::SKU::userCore->focusState = 0;
-#endif
-                break;
-            case SDL_APP_WILLENTERBACKGROUND:
-#if RETRO_REV02
-                RSDK::SKU::userCore->focusState = 1;
-#endif
-                break;
-            case SDL_APP_TERMINATING: return false;
-#endif
+    ParseArguments(argc, argv);
 
-#ifdef RETRO_USING_MOUSE
-            case SDL_MOUSEBUTTONDOWN:
-#if RETRO_USING_SDL2
-                switch (engine.sdlEvents.button.button) {
-                    case SDL_BUTTON_LEFT: touchMouseData.down[0] = true; touchMouseData.count = 1;
-#if !RETRO_REV02
-                        if (buttonDownCount > 0)
-                            buttonDownCount--;
-#endif
-                        break;
-#if !RETRO_REV02
-                    case SDL_BUTTON_RIGHT:
-                        specialKeyStates[3] = true;
-                        buttonDownCount++;
-                        break;
-#endif
-                }
-#endif //! RETRO_USING_SDL2
-                break;
-            case SDL_MOUSEBUTTONUP:
-#if RETRO_USING_SDL2
-                switch (engine.sdlEvents.button.button) {
-                    case SDL_BUTTON_LEFT: touchMouseData.down[0] = false; touchMouseData.count = 0;
-#if !RETRO_REV02
-                        if (buttonDownCount > 0)
-                            buttonDownCount--;
-#endif
-                        break;
-#if !RETRO_REV02
-                    case SDL_BUTTON_RIGHT:
-                        specialKeyStates[3] = false;
-                        buttonDownCount--;
-                        break;
-#endif
-                }
-#endif //! RETRO_USING_SDL2
-                break;
-#endif
+    if (engine.printConsole) {
+#if RETRO_PLATFORM == RETRO_WIN
+        AllocConsole();
+        AttachConsole(GetCurrentProcessId());
 
-#if defined(RETRO_USING_TOUCH) && RETRO_USING_SDL2
-            case SDL_FINGERMOTION:
-            case SDL_FINGERDOWN:
-            case SDL_FINGERUP: {
-                int count            = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
-                touchMouseData.count = 0;
-                for (int i = 0; i < count; i++) {
-                    SDL_Finger *finger = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
-                    if (finger) {
-                        touchMouseData.down[touchMouseData.count] = true;
-                        touchMouseData.x[touchMouseData.count]    = finger->x;
-                        touchMouseData.y[touchMouseData.count]    = finger->y;
-                        touchMouseData.count++;
-                    }
-                }
-                break;
-            }
-#endif //! RETRO_USING_SDL2
-
-            case SDL_KEYDOWN:
-#if !RETRO_REV02
-                ++buttonDownCount;
+        freopen("CON", "w", stdout);
 #endif
-                switch (engine.sdlEvents.key.keysym.sym) {
-                    default: break;
-                    case SDLK_ESCAPE:
-                        if (engine.devMenu) {
-                            if (sceneInfo.state == ENGINESTATE_DEVMENU) {
-                                sceneInfo.state = devMenu.stateStore;
-                                if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
-                                    engine.screenCount = 0;
-                                ResumeSound();
-                            }
-                            else {
-                                devMenu.stateStore = sceneInfo.state;
-                                if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                                    engine.screenCount = 1;
-                                devMenu.state   = DevMenu_MainMenu;
-                                devMenu.option  = 0;
-                                devMenu.scroll  = 0;
-                                devMenu.timer   = 0;
-                                sceneInfo.state = ENGINESTATE_DEVMENU;
-                                PauseSound();
-                            }
-                        }
-#if !RETRO_REV02
-                        specialKeyStates[0] = true;
-#endif
-                        break;
-
-#if !RETRO_REV02
-                    case SDLK_RETURN: specialKeyStates[1] = true; break;
-#endif
-
-#if !RETRO_USE_ORIGINAL_CODE
-                    case SDLK_F1:
-                        sceneInfo.listPos--;
-                        if (sceneInfo.listPos < sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart) {
-                            sceneInfo.activeCategory--;
-                            if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
-                                sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
-                            }
-                            sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd;
-                        }
-                        InitSceneLoad();
-                        break;
-
-                    case SDLK_F2:
-                        sceneInfo.listPos++;
-                        if (sceneInfo.listPos > sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
-                            sceneInfo.activeCategory++;
-                            if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
-                                sceneInfo.activeCategory = 0;
-                            }
-                            sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart;
-                        }
-                        InitSceneLoad();
-                        break;
-#endif
-
-                    case SDLK_F3: engine.shaderID = (engine.shaderID + 1) % (shaderCount - 4); break;
-
-                    case SDLK_F4:
-                        engine.isWindowed ^= 1;
-                        if (!engine.isWindowed) {
-#if RETRO_USING_SDL2
-                            SDL_RestoreWindow(engine.window);
-                            SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                            SDL_ShowCursor(SDL_FALSE);
-#endif
-                        }
-                        else {
-#if RETRO_USING_SDL2
-                            SDL_SetWindowFullscreen(engine.window, false);
-                            SDL_ShowCursor(SDL_TRUE);
-                            SDL_SetWindowSize(engine.window, engine.windowWidth, engine.windowHeight);
-                            SDL_SetWindowPosition(engine.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-                            SDL_RestoreWindow(engine.window);
-#endif
-                        }
-                        break;
-
-#if !RETRO_USE_ORIGINAL_CODE
-                    case SDLK_F5:
-                        // Quick-Reload
-                        InitSceneLoad();
-                        break;
-
-                    case SDLK_F6:
-                        if (engine.devMenu && engine.screenCount > 1)
-                            engine.screenCount--;
-                        break;
-
-                    case SDLK_F7:
-                        if (engine.devMenu && engine.screenCount < SCREEN_MAX)
-                            engine.screenCount++;
-                        break;
-
-                    case SDLK_F9:
-                        if (engine.devMenu)
-                            showHitboxes ^= 1;
-                        break;
-
-                    case SDLK_F10:
-                        if (engine.devMenu)
-                            engine.showPaletteOverlay ^= 1;
-                        break;
-#endif
-                    case SDLK_BACKSPACE:
-                        if (engine.devMenu)
-                            engine.gameSpeed = engine.fastForwardSpeed;
-                        break;
-
-                    case SDLK_F11:
-                    case SDLK_INSERT:
-                        if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
-                            engine.frameStep = true;
-                        break;
-
-                    case SDLK_F12:
-                    case SDLK_PAUSE:
-                        if (engine.devMenu) {
-                            sceneInfo.state ^= ENGINESTATE_STEPOVER;
-                        }
-                        break;
-                }
-                break;
-            case SDL_KEYUP:
-#if !RETRO_REV02
-                --buttonDownCount;
-#endif
-                switch (engine.sdlEvents.key.keysym.sym) {
-                    default: break;
-#if !RETRO_REV02
-                    case SDLK_ESCAPE: specialKeyStates[0] = false; break;
-                    case SDLK_RETURN: specialKeyStates[1] = false; break;
-#endif
-                    case SDLK_BACKSPACE: engine.gameSpeed = 1; break;
-                }
-                break;
-            case SDL_QUIT: return false;
-        }
     }
+
+#if RETRO_USING_DIRECTX9
+    MSG Msg;
+    PeekMessage(&Msg, NULL, 0, 0, true);
+    InitCommonControls();
 #endif
-    return true;
-}
 
-bool32 initRetroEngine()
-{
-    RSDK::InitStorage();
 
+    RenderDevice::isRunning = false;
+    if (RSDK::InitStorage()) {
 #if RETRO_PLATFORM == RETRO_OSX
-    char buffer[0x100];
-    sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
-    RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
+        char buffer[0x100];
+        sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
+        RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
 #elif RETRO_PLATFORM == RETRO_ANDROID
-    char buffer[0x200];
+        char buffer[0x200];
 
-    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
-    jobject activity = (jobject)SDL_AndroidGetActivity();
-    jclass cls(env->GetObjectClass(activity));
-    jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
-    auto ret         = env->CallObjectMethod(activity, method);
+        JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
+        jobject activity = (jobject)SDL_AndroidGetActivity();
+        jclass cls(env->GetObjectClass(activity));
+        jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
+        auto ret         = env->CallObjectMethod(activity, method);
 
-    strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
+        strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
 
-    RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
+        RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
 
-    env->DeleteLocalRef(activity);
-    env->DeleteLocalRef(cls);
+        env->DeleteLocalRef(activity);
+        env->DeleteLocalRef(cls);
 #elif RETRO_PLATFORM == RETRO_LINUX
-    RSDK::SKU::SetUserFileCallbacks("./", NULL, NULL);
+        RSDK::SKU::SetUserFileCallbacks("./", NULL, NULL);
 #else
-    RSDK::SKU::SetUserFileCallbacks("", NULL, NULL);
+        RSDK::SKU::SetUserFileCallbacks("", NULL, NULL);
 #endif
 
-    RSDK::SKU::InitUserData();
-
-    // By Default we use the dummy system so this'll never be false
-    // its used in cases like steam where it gives the "Steam must be running to play this game" message and closes
+        RSDK::readSettings();
+        RSDK::SKU::InitUserData();
+    
+        // By Default we use the dummy system so this'll never be false
+        // its used in cases like steam where it gives the "Steam must be running to play this game" message and closes
 #if RETRO_REV02
-    if (RSDK::SKU::userCore->CheckAPIInitialized()) {
+        if (!RSDK::SKU::userCore->CheckAPIInitialized()) {
 #endif
-        RSDK::SKU::readSettings();
-        startGameObjects();
-
-        engine.running = true;
-        if (!InitRenderDevice()) {
-            engine.running = false;
-            return false;
+            // custom message box, the original RSDK PC ver has a steam message instead
+            // MessageBox(RenderDevice::windowHandle, L"API Validation failed", L"RSDK Error", 0);
+            return 0;
         }
 
-        if (!InitAudioDevice()) {
-            engine.running = false;
-            return false;
-        }
+        StartGameObjects();
+        engine.initialized = true;
+        engine.hardPause   = false;
 
-        InitInputDevice();
+        if (RenderDevice::Init()) {
+            RenderDevice::isRunning = true;
 
 #if RETRO_USE_MOD_LOADER
-        // we confirmed the game actually is valid, lets start some callbacks
-        RSDK::RunModCallbacks(RSDK::MODCB_GAME_STARTUP, NULL);
+            // we confirmed the game actually is valid & running, lets start some callbacks
+            RSDK::RunModCallbacks(RSDK::MODCB_GAME_STARTUP, NULL);
 #endif
-
-#if RETRO_REV02
-    }
-    else {
-        engine.running = false;
-    }
-#endif
-    return true;
-}
-void runRetroEngine()
-{
-    unsigned long long targetFreq = SDL_GetPerformanceFrequency() / engine.refreshRate;
-    unsigned long long curTicks   = 0;
-    unsigned long long prevTicks  = 0;
-
-    while (engine.running) {
-#if !RETRO_USE_ORIGINAL_CODE
-        if (!engine.vsync) {
-            curTicks = SDL_GetPerformanceCounter();
-            if (curTicks < prevTicks + targetFreq)
-                continue;
-            prevTicks = curTicks;
         }
+        else {
+#if RETRO_USING_DIRECTX9
+            PostQuitMessage(0);
 #endif
+        }
+    }
 
-        engine.running  = processEvents();
-        foreachStackPtr = foreachStackList;
-#if !RETRO_USE_ORIGINAL_CODE
-        debugHitboxCount = 0;
-#endif
+    RenderDevice::InitFPSCap();
+
+    while (RenderDevice::isRunning) {
+        RenderDevice::isRunning = RenderDevice::ProcessEvents();
+
+        if (!RenderDevice::isRunning)
+            break;
+
+        if (RenderDevice::CheckFPSCap()) {
+            RenderDevice::UpdateFPSCap();
 
 #if RETRO_REV02
-        RSDK::SKU::userCore->FrameInit();
-#endif
+            RSDK::SKU::userCore->FrameInit();
 
-#if RETRO_REV02
-        if (!RSDK::SKU::userCore->CheckEnginePause()) {
+            if (RSDK::SKU::userCore->CheckEnginePause())
+                continue;
+
             // Focus Checks
             if (RSDK::SKU::userCore->CheckFocusLost()) {
                 if (!(engine.focusState & 1)) {
@@ -377,222 +130,16 @@ void runRetroEngine()
             }
 #endif
 
-            if (!(engine.focusState & 1)) {
-#if RETRO_USE_MOD_LOADER
-                if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
-                    devMenu.modsChanged = false;
-                    RSDK::saveMods();
-                    for (int c = 0; c < CHANNEL_COUNT; ++c) StopChannel(c);
-#if RETRO_REV02
-                    hardResetFlag = true;
-#endif
-                    SceneInfo pre = sceneInfo;
-                    startGameObjects();
-                    sceneInfo.classCount = pre.classCount;
-                    if (pre.state == ENGINESTATE_LOAD) {
-                        sceneInfo.activeCategory = pre.activeCategory;
-                        sceneInfo.listPos        = pre.listPos;
-                    }
-#if RETRO_USING_SDL2
-                    SDL_SetWindowTitle(engine.window, RSDK::gameVerInfo.gameName);
-#endif
-                    LoadGlobalSfx();
+            if (!engine.initialized || (engine.focusState & 1)) {
+                if (RSDK::gameSettings.windowState != WINDOWSTATE_ACTIVE)
+                    continue;
+            }
+            else {
+                if (!engine.hardPause)
+                    ProcessEngine();
 
-                    sceneInfo.state = ENGINESTATE_LOAD;
-                }
-#endif
-
-                if (engine.devMenu)
-                    ProcessDebugCommands();
-
-                switch (sceneInfo.state) {
-                    default: break;
-                    case ENGINESTATE_LOAD:
-                        if (!sceneInfo.listData) {
-                            sceneInfo.state = ENGINESTATE_NULL;
-                        }
-                        else {
-                            LoadScene();
-                            LoadSceneFile();
-                            InitObjects();
-#if RETRO_REV02
-                            RSDK::SKU::userCore->StageLoad();
-                            for (int v = 0; v < DRAWLAYER_COUNT; ++v) {
-                                SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
-                            }
-#endif
-                            // dim after 5 mins
-                            engine.dimLimit = (5 * 60) * engine.refreshRate;
-                            ProcessInput();
-                            ProcessObjects();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                            RSDK::SKU::LoadAchievementAssets();
-#endif
-                        }
-                        break;
-                    case ENGINESTATE_REGULAR:
-                        ProcessInput();
-                        ProcessSceneTimer();
-                        ProcessObjects();
-                        ProcessParallaxAutoScroll();
-                        for (int i = 1; i < engine.gameSpeed; ++i) {
-                            if (sceneInfo.state != ENGINESTATE_REGULAR)
-                                break;
-                            ProcessSceneTimer();
-                            ProcessObjects();
-                            ProcessParallaxAutoScroll();
-                        }
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                        RSDK::SKU::ProcessAchievements();
-#endif
-                        ProcessObjectDrawLists();
-                        break;
-                    case ENGINESTATE_PAUSED:
-                        ProcessInput();
-                        ProcessPausedObjects();
-                        for (int i = 1; i < engine.gameSpeed; ++i) {
-                            if (sceneInfo.state != ENGINESTATE_PAUSED)
-                                break;
-                            ProcessPausedObjects();
-                        }
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                        RSDK::SKU::ProcessAchievements();
-#endif
-                        ProcessObjectDrawLists();
-                        break;
-                    case ENGINESTATE_FROZEN:
-                        ProcessInput();
-                        ProcessFrozenObjects();
-                        for (int i = 1; i < engine.gameSpeed; ++i) {
-                            if (sceneInfo.state != ENGINESTATE_FROZEN)
-                                break;
-                            ProcessFrozenObjects();
-                        }
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                        RSDK::SKU::ProcessAchievements();
-#endif
-                        ProcessObjectDrawLists();
-                        break;
-                    case ENGINESTATE_LOAD | ENGINESTATE_STEPOVER:
-                        LoadScene();
-                        LoadSceneFile();
-                        InitObjects();
-#if RETRO_REV02
-                        RSDK::SKU::userCore->StageLoad();
-                        for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
-                            DebugValueInfo *val = &debugValues[debugValCnt++];
-                            strncpy(val->name, drawGroupNames[v], 0x10);
-                            val->type       = 0;
-                            val->value      = &engine.drawLayerVisible[v];
-                            val->valByteCnt = 4;
-                            val->min        = 0;
-                            val->max        = 1;
-                        }
-#endif
-                        ProcessInput();
-                        ProcessObjects();
-                        sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                        RSDK::SKU::LoadAchievementAssets();
-#endif
-                        break;
-                    case ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER:
-                        ProcessInput();
-                        if (engine.frameStep) {
-                            ProcessSceneTimer();
-                            ProcessObjects();
-                            ProcessParallaxAutoScroll();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                            RSDK::SKU::ProcessAchievements();
-#endif
-                            ProcessObjectDrawLists();
-                            engine.frameStep = false;
-                        }
-                        break;
-                    case ENGINESTATE_PAUSED | ENGINESTATE_STEPOVER:
-                        ProcessInput();
-                        if (engine.frameStep) {
-                            ProcessPausedObjects();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                            RSDK::SKU::ProcessAchievements();
-#endif
-                            ProcessObjectDrawLists();
-                            engine.frameStep = false;
-                        }
-                        break;
-                    case ENGINESTATE_FROZEN | ENGINESTATE_STEPOVER:
-                        ProcessInput();
-                        if (engine.frameStep) {
-                            ProcessFrozenObjects();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                            RSDK::SKU::ProcessAchievements();
-#endif
-                            ProcessObjectDrawLists();
-                            engine.frameStep = false;
-                        }
-                        break;
-                    case ENGINESTATE_DEVMENU:
-                        ProcessInput();
-                        currentScreen = &screens[0];
-                        if (devMenu.state)
-                            devMenu.state();
-                        break;
-                    case ENGINESTATE_VIDEOPLAYBACK:
-                        ProcessInput();
-                        if (ProcessVideo() == 1)
-                            sceneInfo.state = engine.prevEngineMode;
-                        break;
-                    case ENGINESTATE_SHOWPNG:
-                        ProcessInput();
-                        if (engine.imageDelta <= 0.0 || engine.dimMax >= 1.0) {
-                            if (engine.displayTime <= 0.0) {
-                                engine.dimMax += engine.imageDelta;
-                                if (engine.dimMax <= 0.0) {
-                                    engine.shaderID    = engine.prevShaderID;
-                                    engine.screenCount = 1;
-                                    sceneInfo.state    = engine.prevEngineMode;
-                                    engine.dimMax      = 1.0;
-                                }
-                            }
-                            else {
-                                engine.displayTime -= 0.01666666666666667;
-                                if (engine.skipCallback) {
-                                    if (engine.skipCallback())
-                                        engine.displayTime = 0.0;
-                                }
-                            }
-                        }
-                        else {
-                            engine.dimMax += engine.imageDelta;
-                            if (engine.dimMax >= 1.0) {
-                                engine.imageDelta = -engine.imageDelta;
-                                engine.dimMax     = 1.0;
-                            }
-                        }
-                        break;
-#if RETRO_REV02
-                    case ENGINESTATE_ERRORMSG: {
-                        ProcessInput();
-                        if (controller[0].keyStart.down)
-                            sceneInfo.state = engine.prevEngineMode;
-                        currentScreen = &screens[0];
-                        int yOff      = RSDK::DevOutput_GetStringYOffset(outputString);
-                        DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
-                        DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
-                        break;
-                    }
-                    case ENGINESTATE_ERRORMSG_FATAL: {
-                        ProcessInput();
-                        currentScreen = &screens[0];
-                        if (controller[0].keyStart.down)
-                            engine.running = false;
-                        int yOff = RSDK::DevOutput_GetStringYOffset(outputString);
-                        DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
-                        DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
-                        break;
-                    }
-#endif
-                }
+                if (RSDK::gameSettings.windowState != WINDOWSTATE_ACTIVE)
+                    continue;
 
 #if !RETRO_USE_ORIGINAL_CODE
                 for (int t = 0; t < touchMouseData.count; ++t) {
@@ -605,7 +152,7 @@ void runRetroEngine()
                                 if (sceneInfo.state != ENGINESTATE_DEVMENU) {
                                     devMenu.stateStore = sceneInfo.state;
                                     if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                                        engine.screenCount = 1;
+                                        RSDK::gameSettings.screenCount = 1;
                                     devMenu.state   = DevMenu_MainMenu;
                                     devMenu.option  = 0;
                                     devMenu.scroll  = 0;
@@ -618,6 +165,12 @@ void runRetroEngine()
                     }
                 }
 #endif
+
+#if RETRO_REV02
+                if (!(engine.focusState & 1))
+                    RSDK::SKU::HandleUserStatuses();
+#endif
+
                 // Uncomment this code to add the build number to dev menu
                 // overrides the game subtitle, used in switch dev menu
                 if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
@@ -627,29 +180,33 @@ void runRetroEngine()
                     // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
                     // DrawDevText(buffer, currentScreen->center.x, currentScreen->center.y - 48, 1, 0xF0F0F0);
                 }
+
+                RenderDevice::CopyFrameBuffer();
             }
 
-            FlipScreen();
-
-#if RETRO_REV02
-            if (!(engine.focusState & 1))
-                RSDK::SKU::HandleUserStatuses();
+            RenderDevice::FlipScreen();
         }
-#endif
+    }
+
+    if (hLibModule) {
+        FreeLibrary(hLibModule);
+        hLibModule = NULL;
     }
 
     // Shutdown
+#if RETRO_USING_DIRECTX9
+    CoUninitialize();
+    // DeleteCriticalSection(&CriticalSection);
+#endif
+
+    // AudioDevice::Release();
     ReleaseAudioDevice();
-    ReleaseRenderDevice();
-    RSDK::SKU::writeSettings(false);
+    RenderDevice::Release(false);
+    RSDK::writeSettings(false);
     RSDK::SKU::releaseUserData();
     RSDK::ReleaseStorage();
 #if RETRO_USE_MOD_LOADER
     RSDK::unloadMods();
-#endif
-
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
-    SDL_Quit();
 #endif
 
 #if RETRO_PLATFORM == RETRO_WIN
@@ -663,9 +220,275 @@ void runRetroEngine()
     if (link_handle)
         dlclose(link_handle);
 #endif
+
+    if (engine.printConsole) {
+#if RETRO_PLATFORM == RETRO_WIN
+        FreeConsole();
+#endif
+    }
+
+    return 0;
 }
 
-void parseArguments(int32 argc, char *argv[])
+void ProcessEngine()
+{
+    foreachStackPtr = foreachStackList;
+#if !RETRO_USE_ORIGINAL_CODE
+    debugHitboxCount = 0;
+#endif
+
+#if RETRO_USE_MOD_LOADER
+    if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
+        devMenu.modsChanged = false;
+        RSDK::saveMods();
+        for (int32 c = 0; c < CHANNEL_COUNT; ++c) StopChannel(c);
+#if RETRO_REV02
+        hardResetFlag = true;
+#endif
+        SceneInfo pre = sceneInfo;
+        StartGameObjects();
+        sceneInfo.classCount = pre.classCount;
+        if (pre.state == ENGINESTATE_LOAD) {
+            sceneInfo.activeCategory = pre.activeCategory;
+            sceneInfo.listPos        = pre.listPos;
+        }
+#if RETRO_USING_SDL2
+        SDL_SetWindowTitle(RenderDevice::window, RSDK::gameVerInfo.gameName);
+#endif
+        LoadGlobalSfx();
+
+        sceneInfo.state = ENGINESTATE_LOAD;
+    }
+#endif
+
+    if (engine.devMenu)
+        ProcessDebugCommands();
+
+    switch (sceneInfo.state) {
+        default: break;
+
+        case ENGINESTATE_LOAD:
+            if (!sceneInfo.listData) {
+                sceneInfo.state = ENGINESTATE_NULL;
+            }
+            else {
+                LoadScene();
+                LoadSceneFile();
+                InitObjects();
+
+#if RETRO_REV02
+                RSDK::SKU::userCore->StageLoad();
+                for (int v = 0; v < DRAWLAYER_COUNT; ++v) {
+                    SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+                }
+#endif
+                // dim after 5 mins
+                RSDK::gameSettings.dimLimit = (5 * 60) * RSDK::gameSettings.refreshRate;
+                ProcessInput();
+                ProcessObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                RSDK::SKU::LoadAchievementAssets();
+#endif
+            }
+            break;
+
+        case ENGINESTATE_REGULAR:
+            ProcessInput();
+            ProcessSceneTimer();
+            ProcessObjects();
+            ProcessParallaxAutoScroll();
+
+            for (int32 i = 1; i < engine.gameSpeed; ++i) {
+                if (sceneInfo.state != ENGINESTATE_REGULAR)
+                    break;
+
+                ProcessSceneTimer();
+                ProcessObjects();
+                ProcessParallaxAutoScroll();
+            }
+
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+            RSDK::SKU::ProcessAchievements();
+#endif
+            ProcessObjectDrawLists();
+            break;
+
+        case ENGINESTATE_PAUSED:
+            ProcessInput();
+            ProcessPausedObjects();
+
+            for (int32 i = 1; i < engine.gameSpeed; ++i) {
+                if (sceneInfo.state != ENGINESTATE_PAUSED)
+                    break;
+
+                ProcessPausedObjects();
+            }
+
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+            RSDK::SKU::ProcessAchievements();
+#endif
+            ProcessObjectDrawLists();
+            break;
+
+        case ENGINESTATE_FROZEN:
+            ProcessInput();
+            ProcessFrozenObjects();
+
+            for (int32 i = 1; i < engine.gameSpeed; ++i) {
+                if (sceneInfo.state != ENGINESTATE_FROZEN)
+                    break;
+
+                ProcessFrozenObjects();
+            }
+
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+            RSDK::SKU::ProcessAchievements();
+#endif
+            ProcessObjectDrawLists();
+            break;
+
+        case ENGINESTATE_LOAD | ENGINESTATE_STEPOVER:
+            LoadScene();
+            LoadSceneFile();
+            InitObjects();
+
+#if RETRO_REV02
+            RSDK::SKU::userCore->StageLoad();
+            for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
+                DebugValueInfo *val = &debugValues[debugValCnt++];
+                strncpy(val->name, drawGroupNames[v], 0x10);
+                val->type       = 0;
+                val->value      = &engine.drawLayerVisible[v];
+                val->valByteCnt = 4;
+                val->min        = 0;
+                val->max        = 1;
+            }
+#endif
+
+            ProcessInput();
+            ProcessObjects();
+            sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+            RSDK::SKU::LoadAchievementAssets();
+#endif
+            break;
+
+        case ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER:
+            ProcessInput();
+
+            if (engine.frameStep) {
+                ProcessSceneTimer();
+                ProcessObjects();
+                ProcessParallaxAutoScroll();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                RSDK::SKU::ProcessAchievements();
+#endif
+                ProcessObjectDrawLists();
+                engine.frameStep = false;
+            }
+            break;
+
+        case ENGINESTATE_PAUSED | ENGINESTATE_STEPOVER:
+            ProcessInput();
+
+            if (engine.frameStep) {
+                ProcessPausedObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                RSDK::SKU::ProcessAchievements();
+#endif
+                ProcessObjectDrawLists();
+                engine.frameStep = false;
+            }
+            break;
+
+        case ENGINESTATE_FROZEN | ENGINESTATE_STEPOVER:
+            ProcessInput();
+
+            if (engine.frameStep) {
+                ProcessFrozenObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                RSDK::SKU::ProcessAchievements();
+#endif
+                ProcessObjectDrawLists();
+                engine.frameStep = false;
+            }
+            break;
+
+        case ENGINESTATE_DEVMENU:
+            ProcessInput();
+            currentScreen = &screens[0];
+
+            if (devMenu.state)
+                devMenu.state();
+            break;
+
+        case ENGINESTATE_VIDEOPLAYBACK:
+            ProcessInput();
+
+            if (ProcessVideo() == 1)
+                sceneInfo.state = engine.prevEngineMode;
+            break;
+
+        case ENGINESTATE_SHOWPNG:
+            ProcessInput();
+
+            if (engine.imageDelta <= 0.0 || RSDK::gameSettings.dimMax >= 1.0) {
+                if (engine.displayTime <= 0.0) {
+                    RSDK::gameSettings.dimMax += engine.imageDelta;
+                    if (RSDK::gameSettings.dimMax <= 0.0) {
+                        RSDK::gameSettings.shaderID    = RenderDevice::lastShaderID;
+                        RSDK::gameSettings.screenCount = 1;
+                        sceneInfo.state                = engine.prevEngineMode;
+                        RSDK::gameSettings.dimMax      = 1.0;
+                    }
+                }
+                else {
+                    engine.displayTime -= 0.01666666666666667;
+                    if (engine.skipCallback) {
+                        if (engine.skipCallback())
+                            engine.displayTime = 0.0;
+                    }
+                }
+            }
+            else {
+                RSDK::gameSettings.dimMax += engine.imageDelta;
+                if (RSDK::gameSettings.dimMax >= 1.0) {
+                    engine.imageDelta         = -engine.imageDelta;
+                    RSDK::gameSettings.dimMax = 1.0;
+                }
+            }
+            break;
+
+#if RETRO_REV02
+        case ENGINESTATE_ERRORMSG: {
+            ProcessInput();
+
+            if (controller[0].keyStart.down)
+                sceneInfo.state = engine.prevEngineMode;
+
+            currentScreen = &screens[0];
+            int yOff      = RSDK::DevOutput_GetStringYOffset(outputString);
+            DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
+            DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            break;
+        }
+        case ENGINESTATE_ERRORMSG_FATAL: {
+            ProcessInput();
+
+            if (controller[0].keyStart.down)
+                RenderDevice::isRunning = false;
+
+            currentScreen = &screens[0];
+            int yOff = RSDK::DevOutput_GetStringYOffset(outputString);
+            DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
+            DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            break;
+        }
+#endif
+    }
+}
+
+void ParseArguments(int argc, char *argv[])
 {
     memset(currentSceneFolder, 0, sizeof(currentSceneFolder));
     memset(currentSceneID, 0, sizeof(currentSceneID));
@@ -709,17 +532,11 @@ void parseArguments(int32 argc, char *argv[])
         if (find) {
             engine.printConsole = true;
             engine.devMenu      = true;
-#if RETRO_PLATFORM == RETRO_WIN
-            AllocConsole();
-            freopen_s((FILE **)stdin, "CONIN$", "w", stdin);
-            freopen_s((FILE **)stdout, "CONOUT$", "w", stdout);
-            freopen_s((FILE **)stderr, "CONOUT$", "w", stderr);
-#endif
         }
     }
 }
 
-void startGameObjects()
+void StartGameObjects()
 {
     memset(&objectList, 0, OBJECT_COUNT * sizeof(ObjectInfo));
     sceneInfo.classCount     = 0;
@@ -1177,7 +994,7 @@ void InitScriptSystem()
     info.APIPtrs    = RSDK::APIFunctionTable;
     info.currentSKU = &RSDK::SKU::curSKU;
 #endif
-    info.engineInfo = &RSDK::gameVerInfo;
+    info.gameInfo   = &RSDK::gameVerInfo;
     info.sceneInfo  = &sceneInfo;
     info.controller = controller;
     info.stickL     = stickL;
@@ -1275,13 +1092,13 @@ void ProcessDebugCommands()
         if (sceneInfo.state == ENGINESTATE_DEVMENU) {
             sceneInfo.state = devMenu.stateStore;
             if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
-                engine.screenCount = 0;
+                RSDK::gameSettings.screenCount = 0;
             ResumeSound();
         }
         else {
             devMenu.stateStore = sceneInfo.state;
             if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                engine.screenCount = 1;
+                RSDK::gameSettings.screenCount = 1;
             devMenu.state   = DevMenu_MainMenu;
             devMenu.option  = 0;
             devMenu.scroll  = 0;

@@ -14,6 +14,7 @@ void SentryBug_Update(void)
     RSDK_THIS(SentryBug);
 
     RSDK.ProcessAnimation(&self->bugAnimator);
+
     StateMachine_Run(self->state);
     StateMachine_Run(self->stateOrbs);
 }
@@ -77,7 +78,7 @@ void SentryBug_Create(void *data)
         self->amplitude.y >>= 10;
         self->originPos = self->position;
         self->startPos  = self->position;
-        self->netColor = 0xF02000;
+        self->netColor  = 0xF02000;
         self->alpha     = 0x100;
         if (!self->speed)
             self->speed = 4;
@@ -388,7 +389,7 @@ void SentryBug_State_NetFlash(void)
         self->timer = 0;
         Player_CheckHit(player, self);
         self->orbAnimator.frameID = 0;
-        self->netColor           = 0xF02000;
+        self->netColor            = 0xF02000;
         self->orbsDetatched       = false;
         self->stateOrbs           = SentryBug_StateOrbs_ReturnToSlots;
         self->state               = SentryBug_State_ReturnToSlots;
@@ -436,7 +437,7 @@ void SentryBug_EditorDraw(void)
         RSDK.SetSpriteAnimation(SentryBug->aniFrames, 0, &self->bugAnimator, true, 6);
     RSDK.SetSpriteAnimation(SentryBug->aniFrames, 2, &self->orbAnimator, true, 0);
 
-    SentryBug_Draw();
+    RSDK.DrawSprite(&self->bugAnimator, NULL, false);
 }
 
 void SentryBug_EditorLoad(void) { SentryBug->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/SentryBug.bin", SCOPE_STAGE); }

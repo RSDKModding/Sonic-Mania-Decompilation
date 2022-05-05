@@ -25,6 +25,7 @@ void PlatformNode_StageLoad(void) {}
 void PlatformNode_EditorDraw(void)
 {
     RSDK_THIS(PlatformNode);
+
     RSDK.SetSpriteAnimation(PlatformNode->aniFrames, 0, &self->animator, false, 7);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }

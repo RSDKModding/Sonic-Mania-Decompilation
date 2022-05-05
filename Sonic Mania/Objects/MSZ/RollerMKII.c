@@ -38,7 +38,7 @@ void RollerMKII_Create(void *data)
     self->updateRange.y   = 0x1000000;
     self->onGround        = false;
     self->tileCollisions  = true;
-    self->collisionLayers = Zone->fgLayers;
+    self->collisionLayers = Zone->collisionLayers;
     self->collisionPlane  = 0;
     RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 5);
     self->state = RollerMKII_State_Setup;
@@ -233,7 +233,7 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
             if (platform->collision != PLATFORM_C_SOLID_ALL) {
                 if (platform->collision == PLATFORM_C_USE_TILES
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &RollerMKII->hitboxObject)) {
-                    if (self->collisionLayers & Zone->moveID) {
+                    if (self->collisionLayers & Zone->moveMask) {
                         TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
                         move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                         move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
@@ -272,8 +272,8 @@ void RollerMKII_HandleCollisions(void)
 
     if (!self->collisionMode && self->state != RollerMKII_State_Bumped) {
         bool32 collided = self->direction == FLIP_X
-                              ? RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, self->collisionPlane, -0xA0000, 0, false)
-                              : RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, self->collisionPlane, 0xA0000, 0, false);
+                              ? RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, self->collisionPlane, -0xA0000, 0, false)
+                              : RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, self->collisionPlane, 0xA0000, 0, false);
         if (collided) {
             RSDK.PlaySfx(RollerMKII->sfxBumper, false, 255);
             RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 0);
@@ -318,9 +318,9 @@ void RollerMKII_State_Idle(void)
     else if (RSDK.CheckOnScreen(self, &range)) {
         bool32 wallCollided = false;
         if (self->direction == FLIP_X)
-            wallCollided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, self->collisionPlane, -0x180000, 0, false);
+            wallCollided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, self->collisionPlane, -0x180000, 0, false);
         else
-            wallCollided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, self->collisionPlane, 0x180000, 0, false);
+            wallCollided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, self->collisionPlane, 0x180000, 0, false);
 
         if (wallCollided)
             self->direction ^= FLIP_X;

@@ -9,7 +9,7 @@ struct ObjectPSZ2Intro {
     int32 unused;
     uint16 sfxExplosion3;
     EntityFXFade *fxFade;
-    Entity *signPost;
+    EntitySignPost *signPost;
 };
 
 // Entity Class
@@ -25,10 +25,12 @@ void PSZ2Intro_Update(void);
 void PSZ2Intro_LateUpdate(void);
 void PSZ2Intro_StaticUpdate(void);
 void PSZ2Intro_Draw(void);
-void PSZ2Intro_Create(void* data);
+void PSZ2Intro_Create(void *data);
 void PSZ2Intro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PSZ2Intro_EditorDraw(void);
 void PSZ2Intro_EditorLoad(void);
+#endif
 void PSZ2Intro_Serialize(void);
 
 // Extra Entity Functions
@@ -37,4 +39,4 @@ bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host);
 bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host);
 bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host);
 
-#endif //!OBJ_PSZ2INTRO_H
+#endif //! OBJ_PSZ2INTRO_H

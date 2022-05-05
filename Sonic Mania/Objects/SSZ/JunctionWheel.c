@@ -12,6 +12,7 @@ ObjectJunctionWheel *JunctionWheel;
 void JunctionWheel_Update(void)
 {
     RSDK_THIS(JunctionWheel);
+
     if (RSDK_GET_ENTITY((SceneInfo->entitySlot - 1), Button)->currentlyActive)
         self->spinDir ^= 1;
 
@@ -19,6 +20,7 @@ void JunctionWheel_Update(void)
         self->rotation += 4;
     else
         self->rotation -= 4;
+
     self->rotation &= 0x1FF;
 
     int32 direction = ((self->rotation + 48) >> 6) & 7;
@@ -26,9 +28,9 @@ void JunctionWheel_Update(void)
     foreach_active(Player, player)
     {
         if (player->state == Player_State_None) {
-            if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxEnteredWheel)) {
-                player->position.x += player->groundVel * RSDK.Cos512(self->rotation) + self->position.x;
-                player->position.y += player->groundVel * RSDK.Sin512(self->rotation) + self->position.y;
+            if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxWheelRange)) {
+                player->position.x = player->groundVel * RSDK.Cos512(self->rotation) + self->position.x;
+                player->position.y = player->groundVel * RSDK.Sin512(self->rotation) + self->position.y;
 
                 if (player->groundVel < -0x1000)
                     player->groundVel += 0x200;
@@ -59,9 +61,9 @@ void JunctionWheel_Update(void)
         else {
             switch (direction) {
                 case 1:
-                    Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolid);
+                    Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolidR);
 
-                    if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxEntry1)) {
+                    if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxEntryR)) {
                         player->state = Player_State_None;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->onGround  = false;
@@ -83,33 +85,35 @@ void JunctionWheel_Update(void)
                 case 6:
                 case 7:
                     if (player->position.y < self->position.y)
-                        Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolid2);
+                        Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolidL);
 
-                    Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolid);
+                    Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolidR);
                     break;
 
                 case 5:
                     if (player->velocity.x <= 0) {
-                        Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolid2);
+                        Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolidL);
 
-                        if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxEntry5)) {
+                        if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxEntryL)) {
                             player->state = Player_State_None;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+
                             player->onGround  = false;
                             player->groundVel = -0x1800;
+
+                            player->tileCollisions  = false;
+                            player->nextAirState    = StateMachine_None;
+                            player->nextGroundState = StateMachine_None;
+                            player->velocity.x      = 0;
+                            player->velocity.y      = 0;
+                            RSDK.PlaySfx(Player->sfxRoll, false, 255);
                         }
-                        player->tileCollisions  = false;
-                        player->nextAirState    = StateMachine_None;
-                        player->nextGroundState = StateMachine_None;
-                        player->velocity.x      = 0;
-                        player->velocity.y      = 0;
-                        RSDK.PlaySfx(Player->sfxRoll, false, 255);
                     }
                     break;
             }
 
             if (player->velocity.y < 0 || (player->onGround && player->collisionMode))
-                Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolid3);
+                Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolidB);
         }
     }
 }
@@ -121,6 +125,7 @@ void JunctionWheel_StaticUpdate(void) {}
 void JunctionWheel_Draw(void)
 {
     RSDK_THIS(JunctionWheel);
+
     RSDK.DrawSprite(&self->slotAnimator, NULL, false);
     RSDK.DrawSprite(&self->maskAnimator, NULL, false);
 }
@@ -144,39 +149,57 @@ void JunctionWheel_StageLoad(void)
     if (RSDK.CheckStageFolder("SSZ1"))
         JunctionWheel->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/JunctionWheel.bin", SCOPE_STAGE);
 
-    JunctionWheel->hitboxEnteredWheel.left   = -192;
-    JunctionWheel->hitboxEnteredWheel.top    = -192;
-    JunctionWheel->hitboxEnteredWheel.right  = 192;
-    JunctionWheel->hitboxEnteredWheel.bottom = 192;
+    JunctionWheel->hitboxWheelRange.left   = -192;
+    JunctionWheel->hitboxWheelRange.top    = -192;
+    JunctionWheel->hitboxWheelRange.right  = 192;
+    JunctionWheel->hitboxWheelRange.bottom = 192;
 
-    JunctionWheel->hitboxSolid2.left   = -40;
-    JunctionWheel->hitboxSolid2.top    = -56;
-    JunctionWheel->hitboxSolid2.right  = -16;
-    JunctionWheel->hitboxSolid2.bottom = 32;
+    JunctionWheel->hitboxSolidL.left   = -40;
+    JunctionWheel->hitboxSolidL.top    = -56;
+    JunctionWheel->hitboxSolidL.right  = -16;
+    JunctionWheel->hitboxSolidL.bottom = 32;
 
-    JunctionWheel->hitboxSolid.left   = 16;
-    JunctionWheel->hitboxSolid.top    = -56;
-    JunctionWheel->hitboxSolid.right  = 40;
-    JunctionWheel->hitboxSolid.bottom = 32;
+    JunctionWheel->hitboxSolidR.left   = 16;
+    JunctionWheel->hitboxSolidR.top    = -56;
+    JunctionWheel->hitboxSolidR.right  = 40;
+    JunctionWheel->hitboxSolidR.bottom = 32;
 
-    JunctionWheel->hitboxSolid3.left   = -40;
-    JunctionWheel->hitboxSolid3.top    = 32;
-    JunctionWheel->hitboxSolid3.right  = 40;
-    JunctionWheel->hitboxSolid3.bottom = 56;
+    JunctionWheel->hitboxSolidB.left   = -40;
+    JunctionWheel->hitboxSolidB.top    = 32;
+    JunctionWheel->hitboxSolidB.right  = 40;
+    JunctionWheel->hitboxSolidB.bottom = 56;
 
-    JunctionWheel->hitboxEntry1.left   = -40;
-    JunctionWheel->hitboxEntry1.top    = -40;
-    JunctionWheel->hitboxEntry1.right  = -16;
-    JunctionWheel->hitboxEntry1.bottom = -8;
+    JunctionWheel->hitboxEntryR.left   = -40;
+    JunctionWheel->hitboxEntryR.top    = -40;
+    JunctionWheel->hitboxEntryR.right  = -16;
+    JunctionWheel->hitboxEntryR.bottom = -8;
 
-    JunctionWheel->hitboxEntry5.left   = 16;
-    JunctionWheel->hitboxEntry5.top    = 8;
-    JunctionWheel->hitboxEntry5.right  = 38;
-    JunctionWheel->hitboxEntry5.bottom = 40;
+    JunctionWheel->hitboxEntryL.left   = 16;
+    JunctionWheel->hitboxEntryL.top    = 8;
+    JunctionWheel->hitboxEntryL.right  = 38;
+    JunctionWheel->hitboxEntryL.bottom = 40;
 }
 
 #if RETRO_INCLUDE_EDITOR
-void JunctionWheel_EditorDraw(void) { JunctionWheel_Draw(); }
+void JunctionWheel_EditorDraw(void)
+{
+    RSDK_THIS(JunctionWheel);
+
+    JunctionWheel_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        // May also be something like a SSZ/SDashWheel since Common/Button doesn't exist in SSZ1 object list
+        EntityButton *button = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Button);
+
+        if (button) {
+            DrawHelpers_DrawArrow(button->position.x, button->position.y, self->position.x, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
+}
 
 void JunctionWheel_EditorLoad(void) { JunctionWheel->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/JunctionWheel.bin", SCOPE_STAGE); }
 #endif
