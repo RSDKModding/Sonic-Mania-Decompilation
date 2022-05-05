@@ -144,14 +144,14 @@ void RSDK::SKU::DrawAchievements()
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
             drawPos.y = vertices[1].y + 0xA0000;
             SetSpriteString(achievementAniFrames[0], 0, &achievementText[0]);
-            DrawText(&achievementAnimator[0], &drawPos, &achievementText[0], 0, achievementText[0].length, ALIGN_CENTER, 0, 0, NULL, true);
+            DrawString(&achievementAnimator[0], &drawPos, &achievementText[0], 0, achievementText[0].length, ALIGN_CENTER, 0, 0, NULL, true);
 
             vertices[1].y += 0x1C0000;
 
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
             drawPos.y = vertices[1].y;
             SetSpriteString(achievementAniFrames[1], 0, &achievementText[1]);
-            DrawText(&achievementAnimator[1], &drawPos, &achievementText[1], 0, achievementText[1].length, ALIGN_CENTER, 0, 0, NULL, true);
+            DrawString(&achievementAnimator[1], &drawPos, &achievementText[1], 0, achievementText[1].length, ALIGN_CENTER, 0, 0, NULL, true);
 
             achievementsDrawn = true;
         }

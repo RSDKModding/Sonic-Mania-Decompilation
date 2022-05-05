@@ -5,11 +5,9 @@
 RSDK::SKU::UserCore *RSDK::SKU::userCore = NULL;
 #endif
 
-RSDK::SKU::GamePadMappings *RSDK::SKU::gamePadMappings = NULL;
-int RSDK::SKU::gamePadCount                       = 0;
-
-bool32 RSDK::SKU::settingsChanged = false;
-RSDK::SKU::SettingsStorage RSDK::SKU::settingsStorage;
+bool32 RSDK::settingsChanged = false;
+RSDK::SettingsStorage RSDK::gameSettings;
+RSDK::SettingsStorage RSDK::settingsStorage;
 
 void RSDK::SKU::InitUserData()
 {
@@ -40,18 +38,18 @@ void RSDK::SKU::InitUserData()
 #endif
 
     int32 value = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_STATUS", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_STATUS", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME", 0));
-    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_STATUS", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_STATUS", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME", 0));
+    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME", 0));
 
 #if RETRO_REV02
     if (dummyCore)
@@ -144,7 +142,7 @@ void RSDK::SKU::InitUserData()
 #endif
     if (loaded) {
         uint32 statCount = *((uint32 *)statsRAM);
-        int32 pos = sizeof(uint32);
+        int32 pos        = sizeof(uint32);
 
         for (int i = 0; i < statCount; ++i) {
             StatInfo stat;
@@ -212,9 +210,9 @@ void RSDK::SKU::saveUserData()
     int32 leaderboardsRAM[0x100];
     memset(leaderboardsRAM, 0, 0x100 * sizeof(int32));
     leaderboardsRAM[0] = (int)leaderboardList.size();
-    int32 pos            = 1;
+    int32 pos          = 1;
     for (int32 i = 0; i < (int)leaderboardList.size(); ++i) {
-        int32 len                = (int32)strlen(leaderboardList[i].name);
+        int32 len              = (int32)strlen(leaderboardList[i].name);
         leaderboardsRAM[pos++] = len;
         memcpy(&leaderboardsRAM[pos], leaderboardList[i].name, len);
         int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
@@ -296,10 +294,10 @@ int RSDK::SKU::GetDefaultGamepadType()
 #endif
 
     switch (platform) {
-        case PLATFORM_SWITCH: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+        case PLATFORM_SWITCH: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
         case PLATFORM_PC:
         case PLATFORM_DEV:
-        default: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+        default: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
     }
 }
 
@@ -313,31 +311,31 @@ int RSDK::SKU::ShowExtensionOverlay(byte overlay)
 }
 #endif
 
-int RSDK::SKU::GetSettingsValue(int id)
+int RSDK::GetSettingsValue(int id)
 {
     switch (id) {
-        case SETTINGS_WINDOWED: return engine.isWindowed; 
-        case SETTINGS_BORDERED: return engine.hasBorder; 
-        case SETTINGS_EXCLUSIVEFS: return engine.exclusiveFS;
-        case SETTINGS_VSYNC: return engine.vsync;
-        case SETTINGS_TRIPLEBUFFERED: return engine.tripleBuffer;
-        case SETTINGS_WINDOW_WIDTH: return engine.windowWidth;
-        case SETTINGS_WINDOW_HEIGHT: return engine.windowHeight;
-        case SETTINGS_FSWIDTH: return engine.fsWidth;
-        case SETTINGS_FSHEIGHT: return engine.fsHeight;
-        case SETTINGS_REFRESHRATE: return engine.refreshRate;
-        case SETTINGS_SHADERSUPPORT: return engine.shaderSupport;
-        case SETTINGS_SHADERID: return engine.shaderID;
-        case SETTINGS_SCREENCOUNT: return engine.screenCount;
+        case SETTINGS_WINDOWED: return gameSettings.windowed;
+        case SETTINGS_BORDERED: return gameSettings.bordered;
+        case SETTINGS_EXCLUSIVEFS: return gameSettings.exclusiveFS;
+        case SETTINGS_VSYNC: return gameSettings.vsync;
+        case SETTINGS_TRIPLEBUFFERED: return gameSettings.tripleBuffered;
+        case SETTINGS_WINDOW_WIDTH: return gameSettings.windowWidth;
+        case SETTINGS_WINDOW_HEIGHT: return gameSettings.windowHeight;
+        case SETTINGS_FSWIDTH: return gameSettings.fsWidth;
+        case SETTINGS_FSHEIGHT: return gameSettings.fsHeight;
+        case SETTINGS_REFRESHRATE: return gameSettings.refreshRate;
+        case SETTINGS_SHADERSUPPORT: return gameSettings.shaderSupport;
+        case SETTINGS_SHADERID: return gameSettings.shaderID;
+        case SETTINGS_SCREENCOUNT: return gameSettings.screenCount;
 #if RETRO_REV02
-        case SETTINGS_DIMTIMER: return engine.dimTimer;
+        case SETTINGS_DIMTIMER: return gameSettings.dimTimer;
 #endif
         case SETTINGS_STREAMSENABLED: return engine.streamsEnabled;
         case SETTINGS_STREAM_VOL: return (int)(engine.streamVolume * 1024.0);
         case SETTINGS_SFX_VOL: return (int)(engine.soundFXVolume * 1024.0);
         case SETTINGS_LANGUAGE:
 #if RETRO_REV02
-            return curSKU.language;
+            return SKU::curSKU.language;
 #else
             return gameVerInfo.language;
 #endif
@@ -347,69 +345,70 @@ int RSDK::SKU::GetSettingsValue(int id)
     return 0;
 }
 
-void RSDK::SKU::SetSettingsValue(int id, int val)
+void RSDK::SetSettingsValue(int id, int val)
 {
     bool32 bVal = val;
     switch (id) {
         case SETTINGS_WINDOWED:
-            if (engine.isWindowed != bVal) {
-                settingsChanged     = true;
-                engine.isWindowed = bVal;
+            if (gameSettings.windowed != bVal) {
+                gameSettings.windowed = bVal;
+                settingsChanged       = true;
             }
             break;
         case SETTINGS_BORDERED:
-            if (engine.hasBorder != bVal) {
-                settingsChanged   = true;
-                engine.hasBorder = bVal;
+            if (gameSettings.bordered != bVal) {
+                gameSettings.bordered = bVal;
+                settingsChanged       = true;
             }
             break;
         case SETTINGS_EXCLUSIVEFS:
-            if (engine.exclusiveFS != bVal) {
-                settingsChanged    = 1;
-                engine.exclusiveFS = bVal;
+            if (gameSettings.exclusiveFS != bVal) {
+                gameSettings.exclusiveFS = bVal;
+                settingsChanged          = true;
             }
             break;
         case SETTINGS_VSYNC:
-            if (engine.vsync != bVal) {
-                settingsChanged = true;
-                engine.vsync    = bVal;
-            }
-            break;
-        case SETTINGS_TRIPLEBUFFERED:
-            if (engine.tripleBuffer != bVal) {
-                settingsChanged     = true;
-                engine.tripleBuffer = bVal;
-            }
-            break;
-        case SETTINGS_WINDOW_WIDTH:
-            if (engine.windowWidth != val) {
-                engine.windowWidth = val;
+            if (gameSettings.vsync != bVal) {
+                gameSettings.vsync = bVal;
                 settingsChanged    = true;
             }
             break;
+        case SETTINGS_TRIPLEBUFFERED:
+            if (gameSettings.tripleBuffered != bVal) {
+                gameSettings.tripleBuffered = bVal;
+                settingsChanged             = true;
+            }
+            break;
+        case SETTINGS_WINDOW_WIDTH:
+            if (gameSettings.windowWidth != val) {
+                gameSettings.windowWidth = val;
+                settingsChanged          = true;
+            }
+            break;
         case SETTINGS_WINDOW_HEIGHT:
-            if (engine.windowHeight != val) {
-                engine.windowHeight = val;
-                settingsChanged     = true;
+            if (gameSettings.windowHeight != val) {
+                gameSettings.windowHeight = val;
+                settingsChanged           = true;
             }
             break;
-        case SETTINGS_FSWIDTH: engine.fsWidth = val; break;
-        case SETTINGS_FSHEIGHT: engine.fsHeight = val; break;
-        case SETTINGS_REFRESHRATE: engine.refreshRate = val; break;
-        case SETTINGS_SHADERSUPPORT: engine.shaderSupport = val; break;
+        case SETTINGS_FSWIDTH: gameSettings.fsWidth = val; break;
+        case SETTINGS_FSHEIGHT: gameSettings.fsHeight = val; break;
+        case SETTINGS_REFRESHRATE: gameSettings.refreshRate = val; break;
+        case SETTINGS_SHADERSUPPORT: gameSettings.shaderSupport = val; break;
         case SETTINGS_SHADERID:
-            if (engine.shaderID != val) {
-                engine.shaderID = val;
-                settingsChanged = true;
+            if (gameSettings.shaderID != val) {
+                gameSettings.shaderID = val;
+                settingsChanged       = true;
             }
             break;
-        case SETTINGS_SCREENCOUNT: engine.screenCount = val; break;
+        case SETTINGS_SCREENCOUNT: gameSettings.screenCount = val; break;
 #if RETRO_REV02
-        case SETTINGS_DIMTIMER: engine.dimLimit = val; break;
+        case SETTINGS_DIMTIMER: gameSettings.dimLimit = val; break;
 #endif
         case SETTINGS_STREAMSENABLED:
             if (engine.streamsEnabled != bVal)
                 settingsChanged = true;
+
             engine.streamsEnabled = bVal;
             break;
         case SETTINGS_STREAM_VOL:
@@ -426,66 +425,19 @@ void RSDK::SKU::SetSettingsValue(int id, int val)
             break;
         case SETTINGS_LANGUAGE:
 #if RETRO_REV02
-            curSKU.language = val;
+            SKU::curSKU.language = val;
 #else
             gameVerInfo.language = val;
 #endif
             break;
-        case SETTINGS_STORE:
-            settingsStorage.windowed      = engine.isWindowed;
-            settingsStorage.bordered      = engine.hasBorder;
-            settingsStorage.exclusiveFS   = engine.exclusiveFS;
-            settingsStorage.vsync         = engine.vsync;
-            settingsStorage.shaderSupport = engine.shaderSupport;
-            settingsStorage.fsWidth       = engine.fsWidth;
-            settingsStorage.fsHeight      = engine.fsHeight;
-            settingsStorage.gameHeight    = engine.gameHeight;
-            settingsStorage.windowActive  = engine.windowActive;
-            settingsStorage.shaderID      = engine.shaderID;
-            settingsStorage.screenCount   = engine.screenCount;
-            settingsStorage.dimTimer      = engine.dimTimer;
-            settingsStorage.dimLimit      = engine.dimLimit;
-            settingsStorage.dimMax        = engine.dimMax;
-            settingsStorage.dimPercent    = engine.dimPercent;
-            settingsStorage.refreshRate   = engine.refreshRate;
-            settingsStorage.windowWidth   = engine.windowWidth;
-            settingsStorage.windowHeight  = engine.windowHeight;
-            settingsStorage.pixWidth      = pixWidth;
-            // settingsStorage.mouseX        = 0;
-            // settingsStorage.mouseY        = 0;
-            // settingsStorage.field_8       = 0;
-            // settingsStorage.field_C       = 0;
-            break;
+        case SETTINGS_STORE: memcpy(&settingsStorage, &gameSettings, sizeof(gameSettings)); break;
         case SETTINGS_RELOAD:
             settingsChanged = true;
-
-            engine.isWindowed    = settingsStorage.windowed;
-            engine.hasBorder     = settingsStorage.bordered;
-            engine.exclusiveFS   = settingsStorage.exclusiveFS;
-            engine.vsync         = settingsStorage.vsync;
-            engine.shaderSupport = settingsStorage.shaderSupport;
-            engine.fsWidth       = settingsStorage.fsWidth;
-            engine.fsHeight      = settingsStorage.fsHeight;
-            engine.gameHeight    = settingsStorage.gameHeight;
-            engine.windowActive  = settingsStorage.windowActive;
-            engine.shaderID      = settingsStorage.shaderID;
-            engine.screenCount   = settingsStorage.screenCount;
-            engine.dimTimer      = settingsStorage.dimTimer;
-            engine.dimLimit      = settingsStorage.dimLimit;
-            engine.dimMax        = settingsStorage.dimMax;
-            engine.dimPercent    = settingsStorage.dimPercent;
-            engine.refreshRate   = settingsStorage.refreshRate;
-            engine.windowWidth   = settingsStorage.windowWidth;
-            engine.windowHeight  = settingsStorage.windowHeight;
-            pixWidth             = settingsStorage.pixWidth;
-            // 0                    = settingsStorage.mouseX;
-            // 0                    = settingsStorage.mouseY;
-            // 0                    = settingsStorage.field_8;
-            // 0                    = settingsStorage.field_C;
+            memcpy(&gameSettings, &settingsStorage, sizeof(settingsStorage));
             break;
         case SETTINGS_CHANGED: settingsChanged = val; break;
         case SETTINGS_WRITE: writeSettings(val); break;
-        default: return;
+        default: break;
     }
 }
 #if RETRO_PLATFORM == RETRO_ANDROID
@@ -494,14 +446,15 @@ void RSDK::SKU::SetSettingsValue(int id, int val)
 
 char buttonNames[18][8] = { "U", "D", "L", "R", "START", "SELECT", "LSTICK", "RSTICK", "L1", "R1", "C", "Z", "A", "B", "X", "Y", "L2", "R2" };
 
-void RSDK::SKU::readSettings()
+void RSDK::readSettings()
 {
-    engine.screenCount = 1;
-    engine.gameHeight  = SCREEN_YSIZE;
+    gameSettings.screenCount = 1;
+    gameSettings.pixHeight   = SCREEN_YSIZE;
+    gameSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
     int platform = PLATFORM_DEV;
 #if RETRO_REV02
-    platform = curSKU.platform;
+    platform = SKU::curSKU.platform;
 #else
     platform = gameVerInfo.platform;
 #endif
@@ -509,7 +462,7 @@ void RSDK::SKU::readSettings()
     // Consoles load the entire file and buffer it, while pc just io's the file when needed
     bool32 useBuffer = !(platform == PLATFORM_PC || platform == PLATFORM_DEV);
     char pathBuffer[0x100];
-    sprintf(pathBuffer, "%sSettings.ini", userFileDir);
+    sprintf(pathBuffer, "%sSettings.ini", SKU::userFileDir);
 
     dictionary *ini = iniparser_load(pathBuffer);
 
@@ -525,7 +478,7 @@ void RSDK::SKU::readSettings()
 
     if (ini) {
 #if RETRO_REV02
-        curSKU.language = iniparser_getint(ini, "Game:language", LANGUAGE_EN);
+        SKU::curSKU.language = iniparser_getint(ini, "Game:language", LANGUAGE_EN);
 #else
         gameVerInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #endif
@@ -546,23 +499,21 @@ void RSDK::SKU::readSettings()
         engine.XYFlip = false;
 #endif
 
-        engine.isWindowed      = iniparser_getboolean(ini, "Video:windowed", true);
-        engine.startFullScreen = !engine.isWindowed;
+        gameSettings.windowed       = iniparser_getboolean(ini, "Video:windowed", true);
+        gameSettings.bordered       = iniparser_getboolean(ini, "Video:border", true);
+        gameSettings.exclusiveFS    = iniparser_getboolean(ini, "Video:exclusiveFS", false);
+        gameSettings.vsync          = iniparser_getboolean(ini, "Video:vsync", false);
+        gameSettings.tripleBuffered = iniparser_getboolean(ini, "Video:tripleBuffering", false);
 
-        engine.hasBorder      =  iniparser_getboolean(ini, "Video:border", true);
-        engine.exclusiveFS     = iniparser_getboolean(ini, "Video:exclusiveFS", false);
-        engine.vsync           = iniparser_getboolean(ini, "Video:vsync", false);
-        engine.tripleBuffer    = iniparser_getboolean(ini, "Video:tripleBuffering", false);
+        gameSettings.pixWidth = iniparser_getint(ini, "Video:pixWidth", DEFAULT_SCREEN_XSIZE);
 
-        pixWidth = iniparser_getint(ini, "Video:pixWidth", DEFAULT_SCREEN_XSIZE);
-
-        engine.windowWidth   = iniparser_getint(ini, "Video:winWidth", DEFAULT_SCREEN_XSIZE);
-        engine.windowHeight  = iniparser_getint(ini, "Video:winHeight", SCREEN_YSIZE);
-        engine.fsWidth       = iniparser_getint(ini, "Video:fsWidth", 0);
-        engine.fsHeight      = iniparser_getint(ini, "Video:fsHeight", 0);
-        engine.refreshRate   = iniparser_getint(ini, "Video:refreshRate", 60);
-        engine.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
-        engine.shaderID      = iniparser_getint(ini, "Video:screenShader", 0);
+        gameSettings.windowWidth   = iniparser_getint(ini, "Video:winWidth", DEFAULT_SCREEN_XSIZE);
+        gameSettings.windowHeight  = iniparser_getint(ini, "Video:winHeight", SCREEN_YSIZE);
+        gameSettings.fsWidth       = iniparser_getint(ini, "Video:fsWidth", 0);
+        gameSettings.fsHeight      = iniparser_getint(ini, "Video:fsHeight", 0);
+        gameSettings.refreshRate   = iniparser_getint(ini, "Video:refreshRate", 60);
+        gameSettings.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
+        gameSettings.shaderID      = iniparser_getint(ini, "Video:screenShader", 0);
 
         engine.streamsEnabled = iniparser_getboolean(ini, "Audio:streamsEnabled", true);
         engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 0.8);
@@ -665,24 +616,23 @@ void RSDK::SKU::readSettings()
         iniparser_freedict(ini);
     }
     else {
-        engine.isWindowed                               = true;
-        engine.startFullScreen                          = false;
-        engine.hasBorder                                = false;
-        engine.exclusiveFS                              = true;
-        engine.vsync                                    = true;
-        engine.tripleBuffer                             = false;
-        engine.shaderSupport                            = true;
-        pixWidth                                        = 424;
-        engine.fsWidth                                  = 0;
-        engine.windowWidth                              = pixWidth * 1;
-        engine.windowHeight                             = SCREEN_YSIZE * 1;
-        engine.fsHeight                                 = 0;
-        engine.refreshRate                              = 60;
-        engine.shaderID                                 = SHADER_NONE;
-        engine.streamsEnabled                           = true;
-        engine.streamVolume                             = 1.0f;
-        engine.soundFXVolume                            = 1.0f;
-        engine.devMenu                                  = false;
+        gameSettings.windowed       = true;
+        gameSettings.bordered       = false;
+        gameSettings.exclusiveFS    = true;
+        gameSettings.vsync          = true;
+        gameSettings.tripleBuffered = false;
+        gameSettings.shaderSupport  = true;
+        gameSettings.pixWidth       = 424;
+        gameSettings.fsWidth        = 0;
+        gameSettings.windowWidth    = gameSettings.pixWidth * 1;
+        gameSettings.windowHeight   = SCREEN_YSIZE * 1;
+        gameSettings.fsHeight       = 0;
+        gameSettings.refreshRate    = 60;
+        gameSettings.shaderID       = SHADER_NONE;
+        engine.streamsEnabled       = true;
+        engine.streamVolume         = 1.0f;
+        engine.soundFXVolume        = 1.0f;
+        engine.devMenu              = false;
 
         for (int i = 1; i <= PLAYER_COUNT; ++i) {
             controller[i].keyUp.keyMap     = defKeyMaps[i][0];
@@ -704,11 +654,11 @@ void RSDK::SKU::readSettings()
     }
 }
 
-void RSDK::SKU::writeSettings(bool32 writeToFile)
+void RSDK::writeSettings(bool32 writeToFile)
 {
     // only done on windows and "dev", consoles use "options.bin"
 #if RETRO_REV02
-    if (curSKU.platform != PLATFORM_PC && curSKU.platform != PLATFORM_DEV)
+    if (SKU::curSKU.platform != PLATFORM_PC && SKU::curSKU.platform != PLATFORM_DEV)
         return;
 #else
     if (gameVerInfo.platform != PLATFORM_PC && gameVerInfo.platform != PLATFORM_DEV)
@@ -717,7 +667,7 @@ void RSDK::SKU::writeSettings(bool32 writeToFile)
 
     if (settingsChanged || writeToFile) {
         char pathBuffer[0x100];
-        sprintf(pathBuffer, "%sSettings.ini", userFileDir);
+        sprintf(pathBuffer, "%sSettings.ini", SKU::userFileDir);
 
         dictionary *ini = iniparser_load(pathBuffer);
         FileIO *file    = fOpen(pathBuffer, "wb");
@@ -743,33 +693,33 @@ void RSDK::SKU::writeSettings(bool32 writeToFile)
         }
 
 #if RETRO_REV02
-        writeText(file, "language=%d\n", curSKU.language);
+        writeText(file, "language=%d\n", SKU::curSKU.language);
 #else
         writeText(file, "language=%d\n", gameVerInfo.language);
 #endif
         writeText(file, "\n[Video]\n");
         writeText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");
         writeText(file, "; If not listed, fullscreen will just use the desktop resolution\n");
-        writeText(file, "windowed=%s\n", (!engine.startFullScreen ? "y" : "n"));
-        writeText(file, "border=%s\n", (engine.hasBorder ? "y" : "n"));
-        writeText(file, "exclusiveFS=%s\n", (engine.exclusiveFS ? "y" : "n"));
-        writeText(file, "vsync=%s\n", (engine.vsync ? "y" : "n"));
-        writeText(file, "tripleBuffering=%s\n", (engine.tripleBuffer ? "y" : "n"));
+        writeText(file, "windowed=%s\n", (gameSettings.windowed ? "y" : "n"));
+        writeText(file, "border=%s\n", (gameSettings.bordered ? "y" : "n"));
+        writeText(file, "exclusiveFS=%s\n", (gameSettings.exclusiveFS ? "y" : "n"));
+        writeText(file, "vsync=%s\n", (gameSettings.vsync ? "y" : "n"));
+        writeText(file, "tripleBuffering=%s\n", (gameSettings.tripleBuffered ? "y" : "n"));
         if (ini) {
             if (strcmp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound") == 0)
-                writeText(file, "pixWidth=%d\n", pixWidth);
+                writeText(file, "pixWidth=%d\n", gameSettings.pixWidth);
         }
-        writeText(file, "winWidth=%d\n", engine.windowWidth);
-        writeText(file, "winHeight=%d\n", engine.windowHeight);
-        if (engine.fsWidth > 0)
-            writeText(file, "fsWidth=%d\n", engine.fsWidth);
-        if (engine.fsHeight > 0)
-            writeText(file, "fsHeight=%d\n", engine.fsHeight);
-        if (engine.refreshRate > 0)
-            writeText(file, "refreshRate=%d\n", engine.refreshRate);
+        writeText(file, "winWidth=%d\n", gameSettings.windowWidth);
+        writeText(file, "winHeight=%d\n", gameSettings.windowHeight);
+        if (gameSettings.fsWidth > 0)
+            writeText(file, "fsWidth=%d\n", gameSettings.fsWidth);
+        if (gameSettings.fsHeight > 0)
+            writeText(file, "fsHeight=%d\n", gameSettings.fsHeight);
+        if (gameSettings.refreshRate > 0)
+            writeText(file, "refreshRate=%d\n", gameSettings.refreshRate);
 
-        writeText(file, "shaderSupport=%s\n", (engine.shaderSupport ? "y" : "n"));
-        writeText(file, "screenShader=%d\n", engine.shaderID);
+        writeText(file, "shaderSupport=%s\n", (gameSettings.shaderSupport ? "y" : "n"));
+        writeText(file, "screenShader=%d\n", gameSettings.shaderID);
         writeText(file, "\n[Audio]\n");
         writeText(file, "streamsEnabled=%s\n", (engine.streamsEnabled ? "y" : "n"));
         writeText(file, "streamVolume=%f\n", engine.streamVolume);
@@ -818,9 +768,9 @@ void RSDK::SKU::writeSettings(bool32 writeToFile)
                             break;
                         }
                     }
-                    if (m == 18) {
+
+                    if (m == 18)
                         writeText(file, "?,");
-                    }
                 }
                 else {
                     writeText(file, "?,");

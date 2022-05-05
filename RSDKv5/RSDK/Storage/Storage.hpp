@@ -110,7 +110,7 @@ public:
 
 extern DataStorage dataStorage[DATASET_MAX];
 
-void InitStorage();
+bool32 InitStorage();
 void ReleaseStorage();
 
 void AllocateStorage(uint32 size, void **dataPtr, StorageDataSets dataSet, bool32 clear);

@@ -554,7 +554,7 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     continue; // don't save no-categories
                 byte len = kv.first.length();
                 fWrite(&len, 1, 1, cfg);
-                SKU::writeText(cfg, kv.first.c_str());
+                writeText(cfg, kv.first.c_str());
                 byte kt = kv.second.size();
                 fWrite(&kt, 1, 1, cfg);
                 for (auto kkv : kv.second) {
@@ -568,13 +568,13 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     } catch (...) {
                     }
                     fWrite(&len, 1, 1, cfg);
-                    SKU::writeText(cfg, kkv.first.c_str());
+                    writeText(cfg, kkv.first.c_str());
                     if (isint)
                         fWrite(&r, sizeof(int32), 1, cfg);
                     else {
                         byte len = kkv.second.length();
                         fWrite(&len, 1, 1, cfg);
-                        SKU::writeText(cfg, kkv.second.c_str());
+                        writeText(cfg, kkv.second.c_str());
                     }
                 }
             }
@@ -605,12 +605,12 @@ void RSDK::saveMods()
         std::string mod_config = modPath.string() + "/modconfig.ini";
         FileIO *file           = fOpen(mod_config.c_str(), "w");
 
-        SKU::writeText(file, "[Mods]\n");
+        writeText(file, "[Mods]\n");
 
         for (int32 m = 0; m < modList.size(); ++m) {
             currentMod = &modList[m];
             SaveSettings();
-            SKU::writeText(file, "%s=%c\n", currentMod->id.c_str(), currentMod->active ? 'y' : 'n');
+            writeText(file, "%s=%c\n", currentMod->id.c_str(), currentMod->active ? 'y' : 'n');
         }
         fClose(file);
     }
@@ -1014,13 +1014,13 @@ void RSDK::SaveSettings()
     FileIO *file = fOpen((GetModPath_i(currentMod->id.c_str()) + "/modSettings.ini").c_str(), "w");
 
     if (currentMod->settings[""].size()) {
-        for (pair<string, string> pair : currentMod->settings[""]) SKU::writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
+        for (pair<string, string> pair : currentMod->settings[""]) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
     }
     for (pair<string, map<string, string>> kv : currentMod->settings) {
         if (!kv.first.length())
             continue;
-        SKU::writeText(file, "\n[%s]\n", kv.first.c_str());
-        for (pair<string, string> pair : kv.second) SKU::writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
+        writeText(file, "\n[%s]\n", kv.first.c_str());
+        for (pair<string, string> pair : kv.second) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
     }
     fClose(file);
     PrintLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", currentMod->id.c_str());

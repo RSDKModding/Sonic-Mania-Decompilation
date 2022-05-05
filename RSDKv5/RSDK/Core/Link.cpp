@@ -121,7 +121,7 @@ enum FunctionTableIDs {
     FunctionTable_ClearCameras,
     FunctionTable_AddCamera,
 #if !RETRO_REV02
-    FunctionTable_GetFuncPtr,
+    FunctionTable_GetAPIFunction,
 #endif
     FunctionTable_GetSettingsValue,
     FunctionTable_SetSettingsValue,
@@ -507,11 +507,11 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ClearCameras, ClearCameras);
     addToRSDKFunctionTable(FunctionTable_AddCamera, AddCamera);
 #if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_GetFuncPtr, GetAPIFunction);
+    addToRSDKFunctionTable(FunctionTable_GetAPIFunction, GetAPIFunction);
 #endif
     addToRSDKFunctionTable(FunctionTable_GetSettingsValue, GetSettingsValue);
     addToRSDKFunctionTable(FunctionTable_SetSettingsValue, SetSettingsValue);
-    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateWindow);
+    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateGameWindow);
     addToRSDKFunctionTable(FunctionTable_Sin1024, sin1024);
     addToRSDKFunctionTable(FunctionTable_Cos1024, cos1024);
     addToRSDKFunctionTable(FunctionTable_ATan1024, tan1024);
@@ -585,7 +585,7 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_DrawBlendedFace, DrawBlendedFace);
     addToRSDKFunctionTable(FunctionTable_DrawSprite, DrawSprite);
     addToRSDKFunctionTable(FunctionTable_DrawDeformed, DrawDeformedSprite);
-    addToRSDKFunctionTable(FunctionTable_DrawText, DrawText);
+    addToRSDKFunctionTable(FunctionTable_DrawText, DrawString);
     addToRSDKFunctionTable(FunctionTable_DrawTile, DrawTile);
     addToRSDKFunctionTable(FunctionTable_CopyTile, CopyTile);
     addToRSDKFunctionTable(FunctionTable_DrawAniTile, DrawAniTile);

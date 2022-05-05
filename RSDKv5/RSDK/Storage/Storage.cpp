@@ -2,7 +2,7 @@
 
 RSDK::DataStorage RSDK::dataStorage[RSDK::DATASET_MAX];
 
-void RSDK::InitStorage()
+bool32 RSDK::InitStorage()
 {
     // storage limit (in ints)
     dataStorage[DATASET_STG].storageLimit = 24 * 0x100000; // 24MB
@@ -18,6 +18,8 @@ void RSDK::InitStorage()
         dataStorage[s].entryCount  = 0;
         dataStorage[s].clearCount  = 0;
     }
+
+    return true;
 }
 
 void RSDK::ReleaseStorage()

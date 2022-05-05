@@ -26,13 +26,12 @@ struct DummyCore : UserCore {
     bool32 IsOverlayEnabled(uint32 overlay)
     {
         for (int i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i].inputID == overlay) {
-                uint8 flag = InputDevices[i].gamePadType >> 16;
-                if (flag != DEVICE_FLAG_STEAMOVERLAY) {
+            if (InputDevices[i] && InputDevices[i]->inputID == overlay) {
+                uint8 flag = (InputDevices[i]->gamePadType >> 16) & 0xFF;
+                if (flag != DEVICE_API_STEAM)
                     return false;
-                }
 
-                return false; // sorry!
+                return false; // not implemented, sorry!
             }
         }
 

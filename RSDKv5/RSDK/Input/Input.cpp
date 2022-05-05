@@ -1,10 +1,6 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-#if RETRO_USING_SDL2
-InputManagerInfo InputManager;
-#endif
-
-InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
+InputDevice *InputDevices[INPUTDEVICE_COUNT];
 int32 InputDeviceCount = 0;
 
 int32 activeControllers[PLAYER_COUNT];
@@ -16,6 +12,23 @@ AnalogState stickR[PLAYER_COUNT + 1];
 TriggerState triggerL[PLAYER_COUNT + 1];
 TriggerState triggerR[PLAYER_COUNT + 1];
 TouchMouseData touchMouseData;
+
+int32 keyState[PLAYER_COUNT];
+
+#if RETRO_USING_DIRECTX9
+
+bool32 disabledXInputDevices[PLAYER_COUNT];
+
+bool32 HIDEnabled = false;
+
+InputDevice *rawInputDevices[INPUTDEVICE_COUNT];
+int32 rawInputDeviceCount = 0;
+
+tagRAWINPUT rawInputData;
+#endif
+
+GamePadMappings *gamePadMappings = NULL;
+int gamePadCount                 = 0;
 
 #if !RETRO_REV02
 int mostRecentControllerID = -1;
@@ -363,50 +376,333 @@ bool32 getControllerButton(InputDevice *device, uint8 buttonID)
 }
 #endif
 
-void UpdateKeyboardInput(InputDevice *device)
+void InputDeviceKeyboard::UpdateInput()
 {
-    device->anyPress = false;
+    if (!this->controllerID) {
+#if RETRO_USING_DIRECTX9
+        tagPOINT cursorPos;
+        GetCursorPos(&cursorPos);
+        ScreenToClient(RenderDevice::windowHandle, &cursorPos);
+#endif
 #if RETRO_USING_SDL2
-    int keyCount         = 0;
-    const byte *keyState = SDL_GetKeyboardState(&keyCount);
+        Vector2 cursorPos;
+        SDL_GetMouseState(&cursorPos.x, &cursorPos.y);
+#endif
 
-    uint8 keyboardID      = (device->gamePadType & 0xFF);
-    InputState *buttons[] = {
-        &controller[keyboardID].keyUp, &controller[keyboardID].keyDown, &controller[keyboardID].keyLeft,  &controller[keyboardID].keyRight,
-        &controller[keyboardID].keyA,  &controller[keyboardID].keyB,    &controller[keyboardID].keyC,     &controller[keyboardID].keyX,
-        &controller[keyboardID].keyY,  &controller[keyboardID].keyZ,    &controller[keyboardID].keyStart, &controller[keyboardID].keySelect,
-    };
+        float prevX = touchMouseData.x[0];
+        float prevY = touchMouseData.y[0];
 
-    bool32 confirmPress = false;
-    for (int i = 0; i < KEY_MAX; i++) {
-        if (keyState[winAPIToSDLMappings(buttons[i]->keyMap)]) {
-            device->anyPress |= true;
-            confirmPress |= (i == 4 || i == 10);
+        touchMouseData.x[0] = (cursorPos.x - RSDK::gameSettings.viewportX) * RSDK::gameSettings.viewportW;
+        touchMouseData.y[0] = (cursorPos.y - RSDK::gameSettings.viewportY) * RSDK::gameSettings.viewportH;
+
+        if (touchMouseData.x[0] == prevX && touchMouseData.y[0] == prevY) {
+            if (this->mouseHideTimer < 120 + 1) {
+                if (++this->mouseHideTimer == 120) {
+#if RETRO_USING_DIRECTX9
+                    while (ShowCursor(false) >= 0) {
+                    }
+#endif
+
+#if RETRO_USING_SDL2
+                    SDL_ShowCursor(false);
+#endif
+                }
+            }
+        }
+        else if (this->mouseHideTimer >= 120) {
+            this->mouseHideTimer = 0;
+
+#if RETRO_USING_DIRECTX9
+            while (ShowCursor(true) < 0) {
+            }
+#endif
+
+#if RETRO_USING_SDL2
+            SDL_ShowCursor(true);
+#endif
         }
     }
 
-    if (device->anyPress)
-        device->inactiveTimer[0] = 0;
+    this->prevInputFlags = this->inputFlags;
+    this->inputFlags     = keyState[this->controllerID];
+
+    int32 changedKeys = ~this->prevInputFlags & (this->inputFlags ^ this->prevInputFlags);
+    if (changedKeys) {
+        this->inactiveTimer[0] = 0;
+        this->anyPress         = true;
+    }
+    else {
+        ++this->inactiveTimer[0];
+        this->anyPress = 0;
+    }
+
+    if ((changedKeys & KEYMASK_A) || (changedKeys & KEYMASK_START))
+        this->inactiveTimer[1] = 0;
     else
-        device->inactiveTimer[0]++;
+        ++this->inactiveTimer[1];
 
-    if (confirmPress)
-        device->inactiveTimer[1] = 0;
-    else
-        device->inactiveTimer[1]++;
+    this->stateUp     = (this->inputFlags & 1) != 0;
+    this->stateDown   = (this->inputFlags & 2) != 0;
+    this->stateLeft   = (this->inputFlags & 4) != 0;
+    this->stateRight  = (this->inputFlags & 8) != 0;
+    this->stateA      = (this->inputFlags & 0x1000) != 0;
+    this->stateB      = (this->inputFlags & 0x2000) != 0;
+    this->stateC      = (this->inputFlags & 0x400) != 0;
+    this->stateX      = (this->inputFlags & 0x4000) != 0;
+    this->stateY      = (this->inputFlags & 0x8000u) != 0;
+    this->stateZ      = (this->inputFlags & 0x800) != 0;
+    this->stateStart  = (this->inputFlags & 0x10) != 0;
+    this->stateSelect = (this->inputFlags & 0x20) != 0;
 
-#if !RETRO_REV02
-    if (device->anyPress)
-        mostRecentControllerID = device->controllerID;
-#endif
-
-#endif
-
-    device->processInput(device, CONT_ANY);
+    this->ProcessInput(CONT_ANY);
 }
-void UpdateDeviceInput(InputDevice *device)
+
+void InputDeviceKeyboard::ProcessInput(int32 controllerID)
 {
-    device->anyPress = false;
+    ControllerState *cont = &controller[controllerID];
+
+    cont->keyUp.press |= this->stateUp;
+    cont->keyDown.press |= this->stateDown;
+    cont->keyLeft.press |= this->stateLeft;
+    cont->keyRight.press |= this->stateRight;
+    cont->keyA.press |= this->stateA;
+    cont->keyB.press |= this->stateB;
+    cont->keyC.press |= this->stateC;
+    cont->keyX.press |= this->stateX;
+    cont->keyY.press |= this->stateY;
+    cont->keyZ.press |= this->stateZ;
+    cont->keyStart.press |= this->stateStart;
+    cont->keySelect.press |= this->stateSelect;
+}
+
+#if RETRO_USING_DIRECTX9
+void InputDeviceXInput::UpdateInput() {
+    XINPUT_STATE *inputState = &this->inputState[this->activeState];
+    if (disabledXInputDevices[this->controllerID]) {
+        this->disabled = true;
+    }
+    else {
+        this->disabled = false;
+        if (!XInputGetState(this->controllerID, inputState)) {
+            this->activeState ^= 1;
+
+            int32 changedButtons = ~this->inputState[this->activeState].Gamepad.wButtons
+                                   & (this->inputState[this->activeState].Gamepad.wButtons ^ inputState->Gamepad.wButtons);
+
+            if (changedButtons)
+                this->inactiveTimer[0] = 0;
+            else
+                ++this->inactiveTimer[0];
+
+            if ((changedButtons & KEYMASK_A) || (changedButtons & KEYMASK_START))
+                this->inactiveTimer[1] = 0;
+            else
+                ++this->inactiveTimer[1];
+
+            this->anyPress = changedButtons || ((inputState->Gamepad.sThumbLX ^ this->inputState[this->activeState].Gamepad.sThumbLX) & 0xC000) != 0
+                             || ((inputState->Gamepad.sThumbLY ^ this->inputState[this->activeState].Gamepad.sThumbLY) & 0xC000) != 0
+                             || ((inputState->Gamepad.sThumbRX ^ this->inputState[this->activeState].Gamepad.sThumbRX) & 0xC000) != 0
+                             || ((inputState->Gamepad.sThumbRY ^ this->inputState[this->activeState].Gamepad.sThumbRY) & 0xC000) != 0;
+            
+            XINPUT_GAMEPAD *gamePad             = &this->inputState[this->activeState].Gamepad;
+
+            this->stateUp       = (gamePad->wButtons & 1) != 0;
+            this->stateDown     = (gamePad->wButtons & 2) != 0;
+            this->stateLeft     = (gamePad->wButtons & 4) != 0;
+            this->stateRight    = (gamePad->wButtons & 8) != 0;
+            this->stateA        = (gamePad->wButtons & 0x1000) != 0;
+            this->stateB        = (gamePad->wButtons & 0x2000) != 0;
+            this->stateX        = (gamePad->wButtons & 0x4000) != 0;
+            this->stateY        = (gamePad->wButtons & 0x8000) != 0;
+            this->stateStart    = (gamePad->wButtons & 0x10) != 0;
+            this->stateSelect   = (gamePad->wButtons & 0x20) != 0;
+            this->stateBumper_L = (gamePad->wButtons & 0x100) != 0;
+            this->stateBumper_R = (gamePad->wButtons & 0x200) != 0;
+            this->stateStick_L  = (gamePad->wButtons & 0x40) != 0;
+            this->stateStick_R  = (gamePad->wButtons & 0x80) != 0;
+
+            this->hDelta_L      = gamePad->sThumbLX;
+            this->vDelta_L      = gamePad->sThumbLY;
+
+            float div      = sqrtf((this->hDelta_L * this->hDelta_L) + (this->vDelta_L * this->vDelta_L));
+            this->hDelta_L = this->hDelta_L / div;
+            this->vDelta_L = this->vDelta_L / div;
+            if (div <= 7864.0) {
+                this->hDelta_L = 0.0;
+                this->vDelta_L = 0.0;
+            }
+            else {
+                this->hDelta_L = this->hDelta_L * ((fminf(32767.0, div) - 7864.0) / 24903.0);
+                this->vDelta_L = this->vDelta_L * ((fminf(32767.0, div) - 7864.0) / 24903.0);
+            }
+
+            this->hDelta_R = gamePad->sThumbRX;
+            this->vDelta_R = gamePad->sThumbRY;
+
+            div            = sqrtf((this->hDelta_R * this->hDelta_R) + (this->vDelta_R * this->vDelta_R));
+            this->hDelta_R = this->hDelta_R / div;
+            this->vDelta_R = this->vDelta_R / div;
+            if (div <= 7864.0) {
+                this->hDelta_R = 0.0;
+                this->vDelta_R = 0.0;
+            }
+            else {
+                this->hDelta_R = this->hDelta_R * ((fminf(32767.0, div) - 7864.0) / 24903.0);
+                this->vDelta_R = this->vDelta_R * ((fminf(32767.0, div) - 7864.0) / 24903.0);
+            }
+
+            if (this->stateBumper_L)
+                this->deadzoneLTrigger = 1.0;
+            else
+                this->deadzoneLTrigger = 0.0;
+
+            this->deltaLTrigger = gamePad->bLeftTrigger;
+            if (this->deltaLTrigger <= 30.0)
+                this->deltaLTrigger = 0.0;
+            else
+                this->deltaLTrigger = (this->deltaLTrigger - 30.0) / 225.0;
+
+            if (this->stateBumper_R)
+                this->deadzoneRTrigger = 1.0;
+            else
+                this->deadzoneRTrigger = 0.0;
+
+            this->deltaRTrigger = gamePad->bRightTrigger;
+            if (this->deltaRTrigger <= 30.0)
+                this->deltaRTrigger = 0.0;
+            else
+                this->deltaRTrigger = (this->deltaRTrigger - 30.0) / 225.0;
+        }
+        return this->ProcessInput(CONT_ANY);
+    }
+}
+
+void InputDeviceXInput::ProcessInput(int32 controllerID)
+{
+    controller[controllerID].keyUp.press |= this->stateUp;
+    controller[controllerID].keyDown.press |= this->stateDown;
+    controller[controllerID].keyLeft.press |= this->stateLeft;
+    controller[controllerID].keyRight.press |= this->stateRight;
+    controller[controllerID].keyA.press |= this->stateA;
+    controller[controllerID].keyB.press |= this->stateB;
+    controller[controllerID].keyX.press |= this->stateX;
+    controller[controllerID].keyY.press |= this->stateY;
+    controller[controllerID].keyStart.press |= this->stateStart;
+    controller[controllerID].keySelect.press |= this->stateSelect;
+
+    stickL[controllerID].keyStick.press |= this->stateStick_L;
+    stickR[controllerID].keyStick.press |= this->stateStick_R;
+    stickL[controllerID].hDelta = this->hDelta_L;
+    stickL[controllerID].vDelta = this->vDelta_L;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+
+    stickR[controllerID].hDelta = this->hDelta_R;
+    stickR[controllerID].vDelta = this->vDelta_R;
+    stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
+    stickR[controllerID].keyDown.press |= this->vDelta_R < -0.3;
+    stickR[controllerID].keyLeft.press |= this->hDelta_R < -0.3;
+    stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
+
+    triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
+    triggerL[controllerID].deadzone = this->deadzoneLTrigger;
+    triggerL[controllerID].delta    = this->deltaLTrigger;
+
+    triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
+    triggerR[controllerID].deadzone = this->deadzoneRTrigger;
+    triggerR[controllerID].delta    = this->deltaRTrigger;
+}
+
+void InputDeviceRaw::UpdateInput()
+{
+    this->prevInputFlags = this->inputFlags;
+    this->inputFlags     = this->activeButtons;
+
+    int32 changedButtons = ~this->prevInputFlags & (this->prevInputFlags ^ this->inputFlags);
+    if (changedButtons) {
+        this->inactiveTimer[0] = 0;
+        this->anyPress         = true;
+    }
+    else {
+        ++this->inactiveTimer[0];
+        this->anyPress = false;
+    }
+
+    if ((changedButtons & KEYMASK_A) || (changedButtons & KEYMASK_START))
+        this->inactiveTimer[1] = 0;
+    else
+        ++this->inactiveTimer[1];
+
+    this->stateUp        = (this->inputFlags & 1) != 0;
+    this->stateDown      = (this->inputFlags & 2) != 0;
+    this->stateLeft      = (this->inputFlags & 4) != 0;
+    this->stateRight     = (this->inputFlags & 8) != 0;
+    this->stateA         = (this->inputFlags & 0x1000) != 0;
+    this->stateB         = (this->inputFlags & 0x2000) != 0;
+    this->stateC         = (this->inputFlags & 0x400) != 0;
+    this->stateX         = (this->inputFlags & 0x4000) != 0;
+    this->stateY         = (this->inputFlags & 0x8000) != 0;
+    this->stateZ         = (this->inputFlags & 0x800) != 0;
+    this->stateStart     = (this->inputFlags & 0x10) != 0;
+    this->stateSelect    = (this->inputFlags & 0x20) != 0;
+    this->stateBumper_L  = (this->inputFlags & 0x100) != 0;
+    this->stateBumper_R  = (this->inputFlags & 0x200) != 0;
+    this->stickStateL    = (this->inputFlags & 0x40) != 0;
+    this->stickStateR    = (this->inputFlags & 0x80) != 0;
+    this->stateTrigger_L = (this->inputFlags & 0x10000) != 0;
+    this->stateTrigger_R = (this->inputFlags & 0x20000) != 0;
+    
+    this->ProcessInput(CONT_ANY);
+}
+
+void InputDeviceRaw::ProcessInput(int32 controllerID)
+{
+    controller[controllerID].keyUp.press |= this->stateUp;
+    controller[controllerID].keyDown.press |= this->stateDown;
+    controller[controllerID].keyLeft.press |= this->stateLeft;
+    controller[controllerID].keyRight.press |= this->stateRight;
+    controller[controllerID].keyA.press |= this->stateA;
+    controller[controllerID].keyB.press |= this->stateB;
+    controller[controllerID].keyC.press |= this->stateC;
+    controller[controllerID].keyX.press |= this->stateX;
+    controller[controllerID].keyY.press |= this->stateY;
+    controller[controllerID].keyZ.press |= this->stateZ;
+    controller[controllerID].keyStart.press |= this->stateStart;
+    controller[controllerID].keySelect.press |= this->stateSelect;
+
+    stickL[controllerID].keyStick.press |= this->stickStateL;
+    stickR[controllerID].keyStick.press |= this->stickStateR;
+    stickL[controllerID].hDelta = this->hDelta_L;
+    stickL[controllerID].vDelta = this->vDelta_L;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+
+    stickR[controllerID].hDelta = this->vDelta_R;
+    stickR[controllerID].vDelta = this->hDelta_R;
+    stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
+    stickR[controllerID].keyDown.press |= this->vDelta_R < -0.3;
+    stickR[controllerID].keyLeft.press |= this->hDelta_R < -0.3;
+    stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
+
+    triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
+    triggerL[controllerID].keyTrigger.press |= this->stateTrigger_L;
+    triggerL[controllerID].deadzone = this->triggerDeltaL;
+    triggerL[controllerID].delta    = this->triggerDeltaL;
+
+    triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
+    triggerR[controllerID].keyTrigger.press |= this->stateTrigger_R;
+    triggerR[controllerID].deadzone = this->triggerDeltaR;
+    triggerR[controllerID].delta    = this->triggerDeltaR;
+}
+#endif
+
+#if RETRO_USING_SDL2
+void InputDeviceSDL::UpdateInput()
+{
 #if RETRO_USING_SDL2
     int buttonMap[] = {
         SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
@@ -523,51 +819,7 @@ void UpdateDeviceInput(InputDevice *device)
     device->processInput(device, CONT_ANY);
 }
 
-void ProcessKeyboardInput(InputDevice *device, int32 controllerID)
-{
-#if RETRO_USING_SDL2
-    int keyCount = 0;
-    const byte *keyState = SDL_GetKeyboardState(&keyCount);
-
-    InputState *buttons[] = {
-        &controller[controllerID].keyUp, &controller[controllerID].keyDown, &controller[controllerID].keyLeft,  &controller[controllerID].keyRight,
-        &controller[controllerID].keyA,  &controller[controllerID].keyB,    &controller[controllerID].keyC,     &controller[controllerID].keyX,
-        &controller[controllerID].keyY,  &controller[controllerID].keyZ,    &controller[controllerID].keyStart, &controller[controllerID].keySelect,
-    };
-
-    int lastKey = -1;
-    for (int i = 0; i < keyCount; i++) {
-        if (keyState[i]) {
-            lastKey = i;
-        }
-    }
-
-    uint8 keyboardID = (device->gamePadType & 0xFF);
-
-    int32 *mappings[] = {
-        &controller[keyboardID].keyUp.keyMap,    &controller[keyboardID].keyDown.keyMap,  &controller[keyboardID].keyLeft.keyMap,
-        &controller[keyboardID].keyRight.keyMap, &controller[keyboardID].keyA.keyMap,     &controller[keyboardID].keyB.keyMap,
-        &controller[keyboardID].keyC.keyMap,     &controller[keyboardID].keyX.keyMap,     &controller[keyboardID].keyY.keyMap,
-        &controller[keyboardID].keyZ.keyMap,     &controller[keyboardID].keyStart.keyMap, &controller[keyboardID].keySelect.keyMap,
-    };
-
-    for (int i = 0; i < KEY_MAX; i++) {
-        if (*mappings[i] == -1 && lastKey != -1)
-            *mappings[i] = SDLToWinAPIMappings(lastKey);
-
-        if (keyState[winAPIToSDLMappings(*mappings[i])]) {
-            buttons[i]->press = true;
-        }
-    }
-
-    for (int i = 0; i < keyCount && !InputManager.anyPress; i++) {
-        if (keyState[i]) {
-            InputManager.anyPress = true;
-        }
-    }
-#endif
-}
-void ProcessDeviceInput(InputDevice *device, int32 controllerID)
+void InputDeviceSDL2::ProcessInput(int32 controllerID)
 {
 #if RETRO_USING_SDL2
     InputState *buttons[] = {
@@ -671,31 +923,136 @@ void ProcessDeviceInput(InputDevice *device, int32 controllerID)
         triggerR[controllerID].keyTrigger.press = true;
 #endif
 }
+#endif
 
-InputDevice *InitKeyboardDevice(uint32 id)
+InputDeviceKeyboard *InitKeyboardDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
-    InputDevice *device = &InputDevices[InputDeviceCount];
-    if (device->active)
+
+    if (InputDevices[InputDeviceCount] && InputDevices[InputDeviceCount]->active)
         return NULL;
 
-    InputDeviceCount++;
-    device->gamePadType = (DEVICE_FLAG_UNKNOWN1 << 16) | (DEVICE_TYPE_KEYBOARD << 8) | (DEVICE_KEYBOARD << 0);
-    device->field_F     = false;
+    if (InputDevices[InputDeviceCount])
+        delete InputDevices[InputDeviceCount];
+
+    InputDevices[InputDeviceCount] = new InputDeviceKeyboard();
+
+    InputDeviceKeyboard *device = (InputDeviceKeyboard *)InputDevices[InputDeviceCount];
+    device->gamePadType = (DEVICE_API_KEYBOARD << 16) | (DEVICE_TYPE_KEYBOARD << 8) | (DEVICE_KEYBOARD << 0);
+    device->disabled    = false;
     device->inputID     = id;
     device->active      = true;
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         if (activeControllers[i] == id) {
             activeInputDevices[i]        = device;
-            device->assignedControllerID = 0;
+            device->assignedControllerID = true;
         }
     }
+
+    InputDeviceCount++;
     return device;
 }
 
-void StartupKeyboardInput()
+InputDeviceXInput *InitXInputInputDevice(uint32 id)
+{
+    if (InputDeviceCount == INPUTDEVICE_COUNT)
+        return NULL;
+
+    if (InputDevices[InputDeviceCount] && InputDevices[InputDeviceCount]->active)
+        return NULL;
+
+    if (InputDevices[InputDeviceCount])
+        delete InputDevices[InputDeviceCount];
+
+    InputDevices[InputDeviceCount] = new InputDeviceXInput();
+
+    InputDeviceXInput *device = (InputDeviceXInput *)InputDevices[InputDeviceCount];
+
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) disabledXInputDevices[i] = false;
+
+    device->gamePadType = (DEVICE_API_XINPUT << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_XBOX << 0);
+    device->disabled     = false;
+    device->inputID     = id;
+    device->active      = true;
+
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
+        if (activeControllers[i] == id) {
+            activeInputDevices[i]        = device;
+            device->assignedControllerID = true;
+        }
+    }
+
+    InputDeviceCount++;
+    return device;
+}
+
+InputDeviceRaw* InitRawInputDevice(uint32 id)
+{
+    if (InputDeviceCount == INPUTDEVICE_COUNT)
+        return NULL;
+
+    if (InputDevices[InputDeviceCount] && InputDevices[InputDeviceCount]->active)
+        return NULL;
+
+    if (InputDevices[InputDeviceCount])
+        delete InputDevices[InputDeviceCount];
+
+    InputDevices[InputDeviceCount] = new InputDeviceRaw();
+
+    InputDeviceRaw *device = (InputDeviceRaw *)InputDevices[InputDeviceCount];
+
+    InputDeviceCount++;
+    device->gamePadType = (DEVICE_API_RAWINPUT << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0);
+    device->disabled     = false;
+    device->inputID     = id;
+    device->active      = true;
+
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
+        if (activeControllers[i] == id) {
+            activeInputDevices[i]        = device;
+            device->assignedControllerID = true;
+        }
+    }
+
+    InputDeviceCount++;
+    return device;
+}
+
+void RemoveInputDevice(InputDevice *targetDevice)
+{
+    if (targetDevice) {
+        for (int32 d = 0; d < InputDeviceCount; ++d) {
+            if (InputDevices[d] && InputDevices[d] == targetDevice) {
+                uint32 inputID = targetDevice->inputID;
+                targetDevice->CloseDevice();
+                InputDeviceCount--;
+
+                delete InputDevices[d];
+                InputDevices[d] = NULL;
+
+                for (int32 id = d + 1; id < InputDeviceCount; ++id) InputDevices[id - 1] = InputDevices[id];
+
+                for (int32 id = 0; id < PLAYER_COUNT; ++id) {
+                    if (activeControllers[id] == inputID)
+                        activeInputDevices[id] = NULL;
+                }
+
+                for (int32 id = 0; id < PLAYER_COUNT; ++id) {
+                    for (int32 c = 0; c < InputDeviceCount; ++c) {
+                        if (InputDevices[c] && InputDevices[c]->inputID == activeControllers[id]) {
+                            if (activeInputDevices[id] != InputDevices[c])
+                                activeInputDevices[id] = InputDevices[c];
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void InitKeyboardInputAPI()
 {
     char buffer[0x10];
     for (int i = 0; i < PLAYER_COUNT; ++i) {
@@ -703,21 +1060,162 @@ void StartupKeyboardInput()
         uint id = 0;
         GenerateCRC(&id, buffer);
 
-        InputDevice *device = InitKeyboardDevice(id);
+        InputDeviceKeyboard *device = InitKeyboardDevice(id);
         if (device) {
             device->controllerID = i;
-            //add the keyboard "device" id to the type as its lowest byte
+            // add the keyboard "device" id to the type as its lowest byte
             device->gamePadType |= i + 1;
-            device->updateInput  = UpdateKeyboardInput;
-            device->processInput = ProcessKeyboardInput;
         }
     }
 }
 
-void InitInputDevice()
+#if RETRO_USING_DIRECTX9
+void InitXInputAPI()
+{
+    char idString[16];  
+    
+    sprintf(idString, "%s", "XInputDevice0");
+
+    for (int i = 0; i < PLAYER_COUNT; ++i) {
+        idString[12] = '0' + i;
+
+        uint32 id;
+        GenerateCRC(&id, idString);
+
+        InputDeviceXInput *device = NULL;
+        for (int32 d = 0; d < InputDeviceCount; ++d) {
+            if (InputDevices[d] && InputDevices[d]->inputID == id) {
+                device = (InputDeviceXInput *)InputDevices[d];
+                break;
+            }
+        }
+
+        XINPUT_STATE pState;
+        if (XInputGetState(i, &pState)) {
+            if (device)
+                RemoveInputDevice(device);
+        }
+        else if (!device) {
+            device = InitXInputInputDevice(id);
+            if (device)
+                device->controllerID = i;
+        }
+    }
+}
+
+void InitHIDAPI()
+{
+    RAWINPUTDEVICE pRawInputDevices;
+    pRawInputDevices.hwndTarget  = RenderDevice::windowHandle;
+    pRawInputDevices.usUsagePage = 1;
+    pRawInputDevices.usUsage     = 5;
+    pRawInputDevices.dwFlags     = 0;
+
+    if (!RegisterRawInputDevices(&pRawInputDevices, 1, sizeof(pRawInputDevices)))
+        PrintLog(PRINT_NORMAL, "Unable to Register HID Device.\n");
+
+    HIDEnabled = true;
+    InitRawInputAPI();
+}
+
+void InitRawInputAPI()
+{
+    if (HIDEnabled) {
+        rawInputDeviceCount = 0;
+
+        UINT puiNumDevices;
+        if (GetRawInputDeviceList(0, &puiNumDevices, sizeof(tagRAWINPUTDEVICELIST))) {
+            PrintLog(PRINT_NORMAL, "Could not get Input Device Count.\n");
+            return;
+        }
+
+        tagRAWINPUTDEVICELIST *pRawInputDeviceList;
+        RSDK::AllocateStorage(sizeof(tagRAWINPUTDEVICELIST) * puiNumDevices, (void **)&pRawInputDeviceList, RSDK::DATASET_TMP, false);
+        if (!pRawInputDeviceList) {
+            PrintLog(PRINT_NORMAL, "Could not allocate memory for Input Device List.\n");
+            return;
+        }
+
+        int32 rawInputListSize = GetRawInputDeviceList(pRawInputDeviceList, (PUINT)&puiNumDevices, sizeof(tagRAWINPUTDEVICELIST));
+        if (rawInputListSize == -1) {
+            PrintLog(PRINT_NORMAL, "Wrong Device Count.\n");
+        }
+        else {
+
+            RID_DEVICE_INFO deviceInfo;
+            deviceInfo.cbSize         = sizeof(RID_DEVICE_INFO);
+            uint8 deviceID            = 0;
+            InputDeviceRaw *devicePtr = GetRawInputDevice(&deviceID);
+            if (devicePtr) {
+                for (int32 i = 0; i < InputDeviceCount; ++i) {
+                    if (!InputDevices[i])
+                        return;
+
+                    InputDeviceRaw *device = (InputDeviceRaw *)InputDevices[i];
+
+                    if ((device->gamePadType >> 16) & 0xFF == DEVICE_API_RAWINPUT) {
+                        int32 id = 0;
+                        for (; id < rawInputListSize; ++id) {
+                            if (device->deviceHandle == pRawInputDeviceList[id].hDevice)
+                                break;
+                        }
+
+                        if (id == rawInputListSize)
+                            RemoveInputDevice(device);
+                    }
+                }
+            }
+
+            for (int32 d = 0; d < rawInputListSize; ++d) {
+                uint32 deviceInfoSize = deviceInfo.cbSize;
+                GetRawInputDeviceInfoA(pRawInputDeviceList[d].hDevice, RIDI_DEVICEINFO, &deviceInfo, &deviceInfoSize);
+
+                char deviceName[0x100];
+                memset(deviceName, 0, sizeof(deviceName));
+                uint32 deviceNameSize = sizeof(deviceName);
+                GetRawInputDeviceInfoA(pRawInputDeviceList[d].hDevice, RIDI_DEVICENAME, deviceName, &deviceNameSize);
+
+                if (deviceInfo.dwType == RIM_TYPEHID && deviceInfo.hid.usUsage == 5) {
+                    uint32 id;
+                    GenerateCRC(&id, deviceName);
+
+                    InputDeviceRaw *device = (InputDeviceRaw *)InputDeviceFromID(id);
+                    if (!device) {
+                        for (int32 g = 0; g < gamePadCount; ++g) {
+                            if (gamePadMappings[g].productID == deviceInfo.hid.dwProductId) {
+                                device = InitRawInputDevice(id);
+
+                                if (device) {
+                                    device->gamePadType |= gamePadMappings[g].type;
+                                    device->deviceHandle = pRawInputDeviceList[d].hDevice;
+                                    memcpy(device->buttons, gamePadMappings[g].buttons, sizeof(device->buttons));
+                                    PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name,
+                                             deviceInfo.mouse.dwId, deviceInfo.mouse.dwNumberOfButtons);
+                                    rawInputDevices[rawInputDeviceCount++] = device;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        rawInputDevices[rawInputDeviceCount++] = device;
+                    }
+                }
+
+            }
+
+            PrintLog(PRINT_NORMAL, "Total HID GamePad Count: %d\n", rawInputDeviceCount);
+        }
+
+        RSDK::RemoveStorageEntry((void **)&pRawInputDeviceList);
+    }
+}
+#endif
+
+void InitInputDevices()
 {
     if (activeInputDevices[0])
         return;
+
     char buffer[0x100];
 #if RETRO_USING_SDL2
 #if RETRO_PLATFORM == RETRO_SWITCH
@@ -750,12 +1248,10 @@ void InitInputDevice()
         activeInputDevices[i] = NULL;
     }
 
-    StartupKeyboardInput();
-
-    for (int c = 0; c < RSDK::SKU::gamePadCount; ++c) {
-        //PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[c].name, gamePadMappings[c].vendorID,
-        //         gamePadMappings[c].productID);
-    }
+    InitKeyboardInputAPI();
+    InitHIDAPI();
+    InitXInputAPI();
+    // InitSteamInputAPI();
 }
 
 void ClearInput()
@@ -797,18 +1293,10 @@ void ProcessInput()
 {
     ClearInput();
 
-    InputManager.anyPress = false;
-
     for (int i = 0; i < InputDeviceCount; ++i) {
-        InputDevice *device = &InputDevices[i];
-        if (device && device->updateInput)
-            device->updateInput(device);
+        if (InputDevices[i])
+            InputDevices[i]->UpdateInput();
     }
-
-    if (InputManager.anyPress)
-        engine.dimTimer = 0;
-    else if (engine.dimTimer < engine.dimLimit)
-        ++engine.dimTimer;
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
         int assign = activeControllers[i];
@@ -821,8 +1309,8 @@ void ProcessInput()
             }
             else {
                 InputDevice *device = activeInputDevices[i];
-                if (device && device->inputID == assign && device->active && device->processInput)
-                    device->processInput(device, i + 1);
+                if (device && device->inputID == assign && device->active)
+                    device->ProcessInput(i + 1);
             }
         }
     }
@@ -896,37 +1384,6 @@ void ProcessInput()
             }
         }
     }
-
-#if RETRO_USING_SDL2
-#ifdef RETRO_USING_MOUSE
-#if RETRO_USING_SDL2
-    if (touchMouseData.count <= 1) { // Touch always takes priority over mouse
-#endif
-                                     //! RETRO_USING_SDL2
-        int mx = 0, my = 0;
-        SDL_GetMouseState(&mx, &my);
-
-        if ((mx == touchMouseData.x[0] * engine.windowWidth && my == touchMouseData.y[0] * engine.windowHeight)) {
-            ++InputManager.mouseHideTimer;
-            if (InputManager.mouseHideTimer == 120) {
-                SDL_ShowCursor(false);
-            }
-        }
-        else {
-            if (InputManager.mouseHideTimer >= 120)
-                SDL_ShowCursor(true);
-            InputManager.mouseHideTimer = 0;
-        }
-        touchMouseData.x[0] = mx / (float)engine.windowWidth;
-        touchMouseData.y[0] = my / (float)engine.windowHeight;
-#if RETRO_USING_SDL2
-    }
-#endif //! RETRO_USING_SDL2
-#endif //! RETRO_USING_MOUSE
-
-    if (touchMouseData.count)
-        engine.dimTimer = 0;
-#endif
 }
 
 #if !RETRO_REV02
@@ -962,9 +1419,8 @@ void HandleSpecialKeys()
 int32 GetControllerType(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].inputID == inputID) {
-            return InputDevices[i].gamePadType;
-        }
+        if (InputDevices[i] && InputDevices[i]->inputID == inputID)
+            return InputDevices[i]->gamePadType;
     }
 
 #if RETRO_REV02
@@ -973,10 +1429,146 @@ int32 GetControllerType(int32 inputID)
     int32 platform = RSDK::gameVerInfo.platform;
 
     switch (platform) {
-        case PLATFORM_SWITCH: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+        case PLATFORM_SWITCH: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
         case PLATFORM_PC:
         case PLATFORM_DEV:
-        default: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+        default: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
     }
 #endif
 }
+
+void UpdateKeyState(int32 keyCode)
+{
+#if RETRO_USING_SDL2
+    keyCode = SDLToWinAPIMappings(keyCode);
+#endif
+
+    for (int i = 1; i <= PLAYER_COUNT; ++i) {
+        InputState *buttons[] = {
+            &controller[i].keyUp, &controller[i].keyDown, &controller[i].keyLeft,  &controller[i].keyRight,
+            &controller[i].keyA,  &controller[i].keyB,    &controller[i].keyC,     &controller[i].keyX,
+            &controller[i].keyY,  &controller[i].keyZ,    &controller[i].keyStart, &controller[i].keySelect,
+        };
+
+        int32 keyMasks[] = {
+            KEYMASK_UP, KEYMASK_DOWN, KEYMASK_LEFT, KEYMASK_RIGHT, KEYMASK_A,     KEYMASK_B,
+            KEYMASK_C,  KEYMASK_X,    KEYMASK_Y,    KEYMASK_Z,     KEYMASK_START, KEYMASK_SELECT,
+        };
+
+        for (int k = 0; k < KEY_MAX; k++) {
+            if (keyCode == buttons[k]->keyMap)
+                keyState[i - 1] |= keyMasks[k];
+            else if (buttons[k]->keyMap == -1)
+                buttons[k]->keyMap = keyCode;
+        }
+    }
+}
+
+void ClearKeyState(int32 keyCode)
+{
+#if RETRO_USING_SDL2
+    keyCode = SDLToWinAPIMappings(keyCode);
+#endif
+
+    for (int i = 1; i <= PLAYER_COUNT; ++i) {
+        InputState *buttons[] = {
+            &controller[i].keyUp, &controller[i].keyDown, &controller[i].keyLeft,  &controller[i].keyRight,
+            &controller[i].keyA,  &controller[i].keyB,    &controller[i].keyC,     &controller[i].keyX,
+            &controller[i].keyY,  &controller[i].keyZ,    &controller[i].keyStart, &controller[i].keySelect,
+        };
+
+        int32 keyMasks[] = {
+            KEYMASK_UP, KEYMASK_DOWN, KEYMASK_LEFT, KEYMASK_RIGHT, KEYMASK_A,     KEYMASK_B,
+            KEYMASK_C,  KEYMASK_X,    KEYMASK_Y,    KEYMASK_Z,     KEYMASK_START, KEYMASK_SELECT,
+        };
+
+        for (int32 k = 0; k < KEY_MAX; k++) {
+            if (keyCode == buttons[k]->keyMap)
+                keyState[i - 1] &= ~keyMasks[k];
+        }
+    }
+}
+
+#if RETRO_USING_DIRECTX9
+void UpdateXInputDevices()
+{
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
+        disabledXInputDevices[i] = false;
+    }
+}
+
+void UpdateRawInputButtonState(HRAWINPUT hRawInput)
+{
+    uint32 pcbSize;
+    GetRawInputData(hRawInput, RID_INPUT, NULL, &pcbSize, sizeof(rawInputData.header)); // get size
+    GetRawInputData(hRawInput, RID_INPUT, &rawInputData, &pcbSize, sizeof(rawInputData.header)); // get data
+
+    for (int32 d = 0; d < rawInputDeviceCount; ++d) {
+        InputDeviceRaw *device = (InputDeviceRaw *)rawInputDevices[d];
+
+        if (device && device->deviceHandle == rawInputData.header.hDevice) {
+            device->activeButtons = 0;
+            for (int32 b = 0; b < 18; ++b) {
+                int32 offset = device->buttons[b].offset;
+
+                switch (device->buttons[b].mappingType) {
+                    default:
+                    case 0:
+                    case 4:
+                    case 5: break;
+
+                    case 1:
+                        if (((1 << (offset & 7)) & rawInputData.data.hid.bRawData[offset >> 3]) != 0)
+                            device->activeButtons |= device->buttons[b].maskVal;
+                        break;
+
+                    case 2:
+                        if (((1 << (offset & 7)) & rawInputData.data.hid.bRawData[offset >> 3]) == 0)
+                            device->activeButtons |= device->buttons[b].maskVal;
+                        break;
+
+                    case 3:
+                        switch (rawInputData.data.hid.bRawData[offset >> 3] & 0xF) {
+                            case 0: device->activeButtons |= 1; break;
+                            case 1: device->activeButtons |= 9; break;
+                            case 2: device->activeButtons |= 8; break;
+                            case 3: device->activeButtons |= 10; break;
+                            case 4: device->activeButtons |= 2; break;
+                            case 5: device->activeButtons |= 6; break;
+                            case 6: device->activeButtons |= 4; break;
+                            case 7: device->activeButtons |= 5; break;
+                            default: break;
+                        }
+                        break;
+                }
+            }
+
+            for (int32 b = 18; b < 24; ++b) {
+                float delta  = 0;
+                int32 offset = device->buttons[b].offset;
+
+                switch (device->buttons[b].mappingType) {
+                    default:
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3: break;
+
+                    case 4: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * -0.0078125; break;
+                    case 5: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * 0.0078125; break;
+                }
+
+                switch (b) {
+                    case 18: device->triggerDeltaL = delta; break;
+                    case 19: device->triggerDeltaR = delta; break;
+                    case 20: device->hDelta_L = delta; break;
+                    case 21: device->vDelta_L = delta; break;
+                    case 22: device->hDelta_R = delta; break;
+                    case 23: device->vDelta_R = delta; break;
+                }
+            }
+        }
+    }
+}
+
+#endif

@@ -499,12 +499,12 @@ typedef enum {
 } InputDeviceIDs;
 
 typedef enum {
-    DEVICE_FLAG_NONE         = 0,
-    DEVICE_FLAG_UNKNOWN1     = 1,
-    DEVICE_FLAG_UNKNOWN2     = 2,
-    DEVICE_FLAG_UNKNOWN3     = 3,
-    DEVICE_FLAG_STEAMOVERLAY = 4,
-} InputDeviceFlags;
+    DEVICE_API_NONE         = 0,
+    DEVICE_API_KEYBOARD     = 1,
+    DEVICE_API_XINPUT     = 2,
+    DEVICE_API_RAWINPUT     = 3,
+    DEVICE_API_STEAM = 4,
+} InputDeviceAPIs;
 
 typedef enum {
     ALIGN_LEFT,
@@ -539,21 +539,21 @@ typedef enum {
 #if RETRO_USE_PLUS
 typedef enum {
     DBVAR_NONE,
-    DBVAR_BOOL8, // may not actually be "bool8" since I've never seen that type, but I don't have any better ideas so...
+    DBVAR_BOOL, // may not actually be "bool8" since I've never seen that type, but I don't have any better ideas so...
     DBVAR_UINT8,
     DBVAR_UINT16,
     DBVAR_UINT32,
-    DBVAR_UNUSED1,
+    DBVAR_UINT64,
     DBVAR_INT8,
     DBVAR_INT16,
     DBVAR_INT32,
-    DBVAR_UNUSED2,
+    DBVAR_INT64,
     DBVAR_FLOAT,
-    DBVAR_UNUSED3,
-    DBVAR_UNUSED4,
-    DBVAR_UNUSED5,
-    DBVAR_UNUSED6,
-    DBVAR_BOOL32, // not 100% sure that this is bool32, but that's what fit the best so that's what it'll be labeled as
+    DBVAR_DOUBLE,
+    DBVAR_VECTOR2,
+    DBVAR_VECTOR3,
+    DBVAR_VECTOR4,
+    DBVAR_COLOR, // not 100% sure that this is bool32, but that's what fit the best so that's what it'll be labeled as
     DBVAR_STRING,
 } DBVarTypes;
 

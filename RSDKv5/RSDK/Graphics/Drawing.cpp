@@ -1,5 +1,9 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+#if RETRO_USING_DIRECTX9
+#include <D3Dcompiler.h>
+#endif
+
 DrawList drawLayers[DRAWLAYER_COUNT];
 
 uint16 blendLookupTable[0x20 * 0x100];
@@ -7,19 +11,83 @@ uint16 subtractLookupTable[0x20 * 0x100];
 
 GFXSurface gfxSurface[SURFACE_MAX];
 
-int32 pixWidth    = 424;
 float dpi         = 1;
 int32 cameraCount = 0;
 ScreenInfo screens[SCREEN_MAX];
 CameraInfo cameras[CAMERA_MAX];
 ScreenInfo *currentScreen = NULL;
 
-uint8 startVertex_2P[2] = { 18, 24 };
-uint8 startVertex_3P[3] = { 30, 36, 12 };
+RenderVertex vertexBuffer[!RETRO_REV02 ? 24 : 60];
 
-RenderVertex vertexBuffer[60];
+int32 shaderCount = 0;
+ShaderEntry shaderList[SHADER_MAX];
+
+int RenderDevice::isRunning          = true;
+int RenderDevice::windowRefreshDelay = 0;
+
+#if RETRO_REV02
+uint8 RenderDevice::startVertex_2P[] = { 18, 24 };
+uint8 RenderDevice::startVertex_3P[] = { 30, 36, 12 };
+#endif
+
+float2 RenderDevice::pixelSize   = { 424, 240 };
+float2 RenderDevice::textureSize = { 512.0, 256.0 };
+float2 RenderDevice::viewSize    = { 0, 0 };
+
+int RenderDevice::displayWidth[16];
+int RenderDevice::displayHeight[16];
+int RenderDevice::displayCount = 0;
+WindowInfo RenderDevice::displayInfo;
+
+int RenderDevice::lastShaderID = -1;
+
+#if RETRO_USING_DIRECTX9
+
+HWND RenderDevice::windowHandle;
+
+HDEVNOTIFY RenderDevice::deviceNotif = 0;
+PAINTSTRUCT RenderDevice::Paint;
+
+IDirect3D9 *RenderDevice::dx9Context;
+IDirect3DDevice9 *RenderDevice::dx9Device;
+UINT RenderDevice::dxAdapter;
+IDirect3DVertexDeclaration9 *RenderDevice::dx9VertexDeclare;
+IDirect3DVertexBuffer9 *RenderDevice::dx9VertexBuffer;
+IDirect3DTexture9 *RenderDevice::screenTextures[4];
+IDirect3DTexture9 *RenderDevice::imageTexture;
+D3DVIEWPORT9 RenderDevice::dx9ViewPort;
+
+int RenderDevice::adapterCount = 0;
+RECT RenderDevice::monitorDisplayRect;
+GUID RenderDevice::deviceIdentifier;
+
+bool RenderDevice::useFrequency = false;
+
+LARGE_INTEGER RenderDevice::performanceCount;
+LARGE_INTEGER RenderDevice::frequency;
+LARGE_INTEGER RenderDevice::initialFrequency;
+LARGE_INTEGER RenderDevice::curFrequency;
+
+// WinMain args
+HINSTANCE RenderDevice::hInstance;
+HINSTANCE RenderDevice::hPrevInstance;
+INT RenderDevice::nShowCmd;
+#endif
 
 #if RETRO_USING_SDL2
+SDL_Window *RenderDevice::window     = nullptr;
+SDL_Renderer *RenderDevice::renderer = nullptr;
+SDL_Texture *RenderDevice::screenTexture[SCREEN_MAX];
+
+SDL_Texture *RenderDevice::imageTexture = nullptr;
+
+uint32 RenderDevice::displayModeIndex = 0;
+int32 RenderDevice::displayModeCount  = 0;
+
+unsigned long long RenderDevice::targetFreq = 0;
+unsigned long long RenderDevice::curTicks   = 0;
+unsigned long long RenderDevice::prevTicks  = 0;
+
 // clang-format off
 SDL_Color vertexColorBuffer[60] = {
     { 0xFF, 0xFF, 0xFF, 0xFF },
@@ -130,20 +198,83 @@ char drawGroupNames[0x10][0x10] = {
     if (frameBufferClr != maskColor)                                                                                                                 \
         frameBufferClr = pixel;
 
-bool32 InitRenderDevice()
+#define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
+
+bool RenderDevice::Init()
 {
-    if (engine.windowActive)
-        return true;
+#if RETRO_USING_DIRECTX9
+    // shit workaround since windows is BEGGING me to use wide strs
+    std::string str    = RSDK::gameVerInfo.gameName;
+    std::wstring stemp = std::wstring(str.begin(), str.end());
+    LPCWSTR gameTitle  = stemp.c_str();
+
+    HMODULE handle = GetModuleHandle(NULL);
+
+    WNDCLASS wndClass;
+    wndClass.style         = CS_VREDRAW | CS_HREDRAW;
+    wndClass.lpfnWndProc   = WindowEventCallback;
+    wndClass.cbClsExtra    = 0;
+    wndClass.cbWndExtra    = 4;
+    wndClass.hInstance     = hInstance;
+    wndClass.hIcon         = LoadIcon(handle, MAKEINTRESOURCE(101));
+    wndClass.hCursor       = LoadCursor(0, IDI_APPLICATION);
+    wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+    wndClass.lpszMenuName  = 0;
+    wndClass.lpszClassName = gameTitle;
+    if (!RegisterClass(&wndClass))
+        return false;
+
+    ShowCursor(false);
+
+    tagRECT winRect;
+    if (RSDK::gameSettings.windowed) {
+        winRect.left   = (GetSystemMetrics(0) - RSDK::gameSettings.windowWidth) / 2;
+        winRect.right  = RSDK::gameSettings.windowWidth + winRect.left;
+        winRect.top    = (GetSystemMetrics(1) - RSDK::gameSettings.windowHeight) / 2;
+        winRect.bottom = RSDK::gameSettings.windowHeight + winRect.top;
+    }
+    else if (RSDK::gameSettings.fsWidth <= 0 || RSDK::gameSettings.fsHeight <= 0) {
+        winRect.left   = 0;
+        winRect.right  = GetSystemMetrics(0);
+        winRect.top    = 0;
+        winRect.bottom = GetSystemMetrics(1);
+    }
+    else {
+        winRect.left   = (GetSystemMetrics(0) - RSDK::gameSettings.fsWidth) / 2;
+        winRect.right  = RSDK::gameSettings.fsWidth + winRect.left;
+        winRect.top    = (GetSystemMetrics(1) - RSDK::gameSettings.fsHeight) / 2;
+        winRect.bottom = RSDK::gameSettings.fsHeight + winRect.top;
+    }
+
+    if (RSDK::gameSettings.bordered && RSDK::gameSettings.windowed) {
+        AdjustWindowRect(&winRect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, 0);
+        windowHandle = CreateWindowEx(0, gameTitle, gameTitle, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, winRect.left, winRect.top,
+                                      winRect.right - winRect.left, winRect.bottom - winRect.top, 0, 0, hInstance, 0);
+    }
+    else {
+        AdjustWindowRect(&winRect, WS_POPUP, 0);
+        windowHandle = CreateWindowEx(0, gameTitle, gameTitle, WS_POPUP, winRect.left, winRect.top, winRect.right - winRect.left,
+                                      winRect.bottom - winRect.top, 0, 0, hInstance, 0);
+    }
+
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, RSDK::gameSettings.windowed);
+
+    if (!windowHandle)
+        return false;
+
+    ShowWindow(windowHandle, nShowCmd);
+    UpdateWindow(windowHandle);
+#endif
 
 #if RETRO_USING_SDL2
-    SDL_Init(SDL_INIT_EVERYTHING);
+    const char *gameTitle = RSDK::gameVerInfo.gameName;
 
-    SDL_DisableScreenSaver();
+    SDL_Init(SDL_INIT_EVERYTHING);
 
     byte flags = 0;
 
 #if RETRO_PLATFORM == RETRO_ANDROID || RETRO_PLATFORM == RETRO_SWITCH
-    engine.startFullScreen = true;
+    RSDK::gameSettings.windowed = false;
     SDL_DisplayMode dm;
     SDL_GetDesktopDisplayMode(0, &dm);
     float hdp = 0, vdp = 0;
@@ -152,245 +283,551 @@ bool32 InitRenderDevice()
     int h          = landscape ? dm.w : dm.h;
     int w          = landscape ? dm.h : dm.w;
 
-    engine.windowWidth = pixWidth = ((float)SCREEN_YSIZE * h / w);
+    RSDK::gameSettings.windowWidth = pixWidth = ((float)SCREEN_YSIZE * h / w);
 #endif
 
 #if RETRO_PLATFORM == RETRO_SWITCH
-    engine.windowWidth  = 1920;
-    engine.windowHeight = 1080;
+    RSDK::gameSettings.windowWidth  = 1920;
+    RSDK::gameSettings.windowHeight = 1080;
     flags |= SDL_WINDOW_FULLSCREEN;
 #endif
 
-    for (int s = 0; s < SCREEN_MAX; ++s) {
-        SetScreenSize(s, pixWidth, SCREEN_YSIZE);
-
-        // screens[s].frameBuffer = new ushort[screens[s].size.x * screens[s].size.y];
-        memset(screens[s].frameBuffer, 0, (screens[s].pitch * screens[s].size.y) * sizeof(uint16));
-    }
-
-    int size  = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
-    scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
-    memset(scanlines, 0, size * sizeof(ScanlineInfo));
-    memset(drawLayers, 0, DRAWLAYER_COUNT * sizeof(DrawList));
-
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, RSDK::gameSettings.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
-                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN | flags);
+    window = SDL_CreateWindow(gameTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RSDK::gameSettings.windowWidth,
+                              RSDK::gameSettings.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | flags);
 
-    engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
-
-    if (!engine.window) {
+    if (!window) {
         PrintLog(PRINT_NORMAL, "ERROR: failed to create window!");
-        return 0;
+        return false;
     }
 
-    if (!engine.renderer) {
-        PrintLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
-        return 0;
-    }
-
-    SDL_RenderSetLogicalSize(engine.renderer, pixWidth, SCREEN_YSIZE);
-    SDL_SetRenderDrawBlendMode(engine.renderer, SDL_BLENDMODE_BLEND);
-
-    InitScreenVertices();
-
-    for (int s = 0; s < SCREEN_MAX; ++s) {
-        engine.screenBuffer[s] =
-            SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].size.x, screens[s].size.y);
-
-        if (!engine.screenBuffer[s]) {
-            PrintLog(PRINT_NORMAL, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
-            return 0;
-        }
-    }
-
-    if (engine.startFullScreen) {
-        SDL_RestoreWindow(engine.window);
-        SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    if (!RSDK::gameSettings.windowed) {
+        SDL_RestoreWindow(window);
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
         SDL_ShowCursor(SDL_FALSE);
-        engine.isWindowed = false;
     }
 
-    if (!engine.hasBorder) {
-        SDL_RestoreWindow(engine.window);
-        SDL_SetWindowBordered(engine.window, SDL_FALSE);
+    if (!RSDK::gameSettings.bordered) {
+        SDL_RestoreWindow(window);
+        SDL_SetWindowBordered(window, SDL_FALSE);
     }
 
-    InitShaders();
-
-    if (engine.displays)
-        free(engine.displays);
-
-    engine.displayCount = SDL_GetNumVideoDisplays();
-    engine.displays     = (SDL_DisplayMode *)malloc(engine.displayCount * sizeof(SDL_DisplayMode));
-    for (int d = 0; d < engine.displayCount; ++d) {
-        if (SDL_GetDisplayMode(d, 0, &engine.displays[d]) == 0) {
-        }
-        else {
-            // what the
-        }
-    }
-    return true;
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", RSDK::gameSettings.windowWidth, RSDK::gameSettings.windowHeight,
+             RSDK::gameSettings.windowed);
 #endif
-    return false;
+
+    if (!SetupRendering() || !InitAudioDevice())
+        return false;
+
+    InitInputDevices();
+    return true;
 }
 
-void FlipScreen()
+void RenderDevice::CopyFrameBuffer()
 {
-    if (engine.dimTimer < engine.dimLimit) {
-        if (engine.dimPercent < 1.0) {
-            engine.dimPercent += 0.05;
-            if (engine.dimPercent > 1.0)
-                engine.dimPercent = 1.0;
+#if RETRO_USING_DIRECTX9
+    dx9Device->SetTexture(0, NULL);
+
+    for (int s = 0; s < RSDK::gameSettings.screenCount; ++s) {
+        D3DLOCKED_RECT rect;
+
+        if (screenTextures[s]->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
+            WORD *pixels           = (WORD *)rect.pBits;
+            uint16 *frameBufferPtr = screens[s].frameBuffer;
+
+            int screenPitch = screens[s].pitch;
+            int pitch       = (rect.Pitch >> 1) - screenPitch;
+
+            for (int32 y = 0; y < 240; ++y) {
+                int32 pixelCount = screenPitch >> 4;
+                for (int32 x = 0; x < pixelCount; ++x) {
+                    pixels[0]  = frameBufferPtr[0];
+                    pixels[1]  = frameBufferPtr[1];
+                    pixels[2]  = frameBufferPtr[2];
+                    pixels[3]  = frameBufferPtr[3];
+                    pixels[4]  = frameBufferPtr[4];
+                    pixels[5]  = frameBufferPtr[5];
+                    pixels[6]  = frameBufferPtr[6];
+                    pixels[7]  = frameBufferPtr[7];
+                    pixels[8]  = frameBufferPtr[8];
+                    pixels[9]  = frameBufferPtr[9];
+                    pixels[10] = frameBufferPtr[10];
+                    pixels[11] = frameBufferPtr[11];
+                    pixels[12] = frameBufferPtr[12];
+                    pixels[13] = frameBufferPtr[13];
+                    pixels[14] = frameBufferPtr[14];
+                    pixels[15] = frameBufferPtr[15];
+
+                    frameBufferPtr += 16;
+                    pixels += 16;
+                }
+
+                pixels += pitch;
+            }
+
+            screenTextures[s]->UnlockRect(0);
         }
     }
-    else if (engine.dimPercent > 0.25) {
-        engine.dimPercent *= 0.9;
-    }
+#endif
 
-    float dimAmount = engine.dimMax * engine.dimPercent;
-
-    
 #if RETRO_USING_SDL2
-
-    int pitch      = 0;
+    int32 pitch    = 0;
     uint16 *pixels = NULL;
-    for (int s = 0; s < engine.screenCount; ++s) {
-        SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
+
+    for (int32 s = 0; s < RSDK::gameSettings.screenCount; ++s) {
+        SDL_LockTexture(screenTexture[s], NULL, (void **)&pixels, &pitch);
 
         uint16 *frameBufferPtr = screens[s].frameBuffer;
-        for (int y = 0; y < SCREEN_YSIZE; ++y) {
+        for (int32 y = 0; y < SCREEN_YSIZE; ++y) {
             memcpy(pixels, frameBufferPtr, screens[s].size.x * sizeof(uint16));
             frameBufferPtr += screens[s].pitch;
             pixels += pitch / sizeof(uint16);
         }
-        SDL_UnlockTexture(engine.screenBuffer[s]);
+
+        SDL_UnlockTexture(screenTexture[s]);
     }
+#endif
+}
+
+void RenderDevice::FlipScreen()
+{
+    if (RSDK::gameSettings.dimTimer < RSDK::gameSettings.dimLimit) {
+        if (RSDK::gameSettings.dimPercent < 1.0) {
+            RSDK::gameSettings.dimPercent += 0.05;
+            if (RSDK::gameSettings.dimPercent > 1.0)
+                RSDK::gameSettings.dimPercent = 1.0;
+        }
+    }
+    else if (RSDK::gameSettings.dimPercent > 0.25) {
+        RSDK::gameSettings.dimPercent *= 0.9;
+    }
+
+    if (windowRefreshDelay > 0) {
+        windowRefreshDelay--;
+        if (!windowRefreshDelay)
+            UpdateGameWindow();
+        return;
+    }
+
+#if RETRO_USING_DIRECTX9
+    dx9Device->SetViewport(&displayInfo.viewport);
+    dx9Device->Clear(0, 0, 1, 0xFF000000, 0x3F800000, 0);
+    dx9Device->SetViewport(&dx9ViewPort);
+
+    if (dx9Device->BeginScene() >= 0) {
+        // reload shader if needed
+        if (lastShaderID != RSDK::gameSettings.shaderID) {
+            lastShaderID = RSDK::gameSettings.shaderID;
+
+            if (shaderList[RSDK::gameSettings.shaderID].linear)
+                dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+            else
+                dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+            dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
+
+            if (RSDK::gameSettings.shaderSupport) {
+                dx9Device->SetVertexShader(shaderList[RSDK::gameSettings.shaderID].vertexShaderObject);
+                dx9Device->SetPixelShader(shaderList[RSDK::gameSettings.shaderID].pixelShaderObject);
+                dx9Device->SetVertexDeclaration(dx9VertexDeclare);
+                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, 24);
+            }
+            else {
+                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, 24);
+                dx9Device->SetFVF(D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZ);
+            }
+        }
+
+        if (RSDK::gameSettings.shaderSupport) {
+            float2 dimAmount = { 0, 0 };
+            dimAmount.x      = RSDK::gameSettings.dimMax * RSDK::gameSettings.dimPercent;
+
+            dx9Device->SetPixelShaderConstantF(0, &pixelSize.x, 1);   // pixelSize
+            dx9Device->SetPixelShaderConstantF(1, &textureSize.x, 1); // textureSize
+            dx9Device->SetPixelShaderConstantF(2, &viewSize.x, 1);    // viewSize
+            dx9Device->SetPixelShaderConstantF(3, &dimAmount.x, 1);   // screenDim
+        }
+
+        int32 startVert = 0;
+        switch (RSDK::gameSettings.screenCount) {
+            default:
+            case 0:
+#if RETRO_REV02
+                startVert = 54;
+#else
+                startVert = 18;
+#endif
+                dx9Device->SetTexture(0, imageTexture);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVert, 2);
+                dx9Device->EndScene();
+                break;
+
+            case 1:
+                dx9Device->SetTexture(0, screenTextures[0]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);
+                break;
+
+            case 2:
+#if RETRO_REV02
+                startVert = startVertex_2P[0];
+#else
+                startVert = 6;
+#endif
+                dx9Device->SetTexture(0, screenTextures[0]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVert, 2);
+
+#if RETRO_REV02
+                startVert = startVertex_2P[1];
+#else
+                startVert = 12;
+#endif
+                dx9Device->SetTexture(0, screenTextures[1]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVert, 2);
+                break;
+
+#if RETRO_REV02
+            case 3:
+                dx9Device->SetTexture(0, screenTextures[0]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVertex_3P[0], 2);
+
+                dx9Device->SetTexture(0, screenTextures[1]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVertex_3P[1], 2);
+
+                dx9Device->SetTexture(0, screenTextures[2]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVertex_3P[2], 2);
+                break;
+
+            case 4:
+                dx9Device->SetTexture(0, screenTextures[0]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 30, 2);
+
+                dx9Device->SetTexture(0, screenTextures[1]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 36, 2);
+
+                dx9Device->SetTexture(0, screenTextures[2]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 42, 2);
+
+                dx9Device->SetTexture(0, screenTextures[3]);
+                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 48, 2);
+                break;
+#endif
+        }
+
+        dx9Device->EndScene();
+    }
+
+    if (dx9Device->Present(NULL, NULL, NULL, NULL) < 0)
+        windowRefreshDelay = 8;
+#endif
+
+#if RETRO_USING_SDL2
+    float dimAmount = RSDK::gameSettings.dimMax * RSDK::gameSettings.dimPercent;
 
     // Clear the screen. This is needed to keep the
     // pillarboxes in fullscreen from displaying garbage data.
-    SDL_RenderClear(engine.renderer);
+    SDL_RenderClear(renderer);
 
     int32 startVert = 0;
-    switch (engine.screenCount) {
+    switch (RSDK::gameSettings.screenCount) {
         default:
         case 0:
+#if RETRO_REV02
             startVert = 54;
-            SDL_RenderGeometryRaw(engine.renderer, engine.imageTexture, &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+#else
+            startVert = 18;
+#endif
+            SDL_RenderGeometryRaw(renderer, imageTexture, &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
         case 1:
             startVert = 0;
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
         case 2:
+#if RETRO_REV02
             startVert = startVertex_2P[0];
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+#else
+            startVert = 6;
+#endif
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
 
+#if RETRO_REV02
             startVert = startVertex_2P[1];
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+#else
+            startVert = 12;
+#endif
+            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
 #if RETRO_REV02
         case 3:
             startVert = startVertex_3P[0];
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = startVertex_3P[1];
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = startVertex_3P[2];
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
         case 4:
             startVert = 30;
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = 36;
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = 42;
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = 48;
-            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[3], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
-                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
-                                  0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[3], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
+                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 #endif
     }
 
-    SDL_SetRenderTarget(engine.renderer, NULL);
-    SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
     if (dimAmount < 1.0)
-        SDL_RenderFillRect(engine.renderer, NULL);
+        SDL_RenderFillRect(renderer, NULL);
     // no change here
-    SDL_RenderPresent(engine.renderer);
-#endif
-
-#if RETRO_USING_SDL2
-    SDL_ShowWindow(engine.window);
+    SDL_RenderPresent(renderer);
 #endif
 }
-void ReleaseRenderDevice()
+
+void RenderDevice::Release(bool isRefresh)
 {
-    for (int s = 0; s < SCREEN_MAX; ++s) {
-#if RETRO_USING_SDL2
-        if (engine.screenBuffer[s])
-            SDL_DestroyTexture(engine.screenBuffer[s]);
-        engine.screenBuffer[s] = NULL;
-#endif
+#if RETRO_USING_DIRECTX9
+    if (RSDK::gameSettings.shaderSupport) {
+        for (int32 i = 0; i < shaderCount; ++i) {
+            if (shaderList[i].vertexShaderObject)
+                shaderList[i].vertexShaderObject->Release();
+            shaderList[i].vertexShaderObject = NULL;
+
+            if (shaderList[i].pixelShaderObject)
+                shaderList[i].pixelShaderObject->Release();
+            shaderList[i].pixelShaderObject = NULL;
+        }
+
+        shaderCount = 0;
     }
 
-    if (scanlines)
-        free(scanlines);
-    scanlines = NULL;
+    if (imageTexture) {
+        imageTexture->Release();
+        imageTexture = NULL;
+    }
+
+    for (int32 i = 0; i < SCREEN_MAX; ++i) {
+        if (screenTextures[i])
+            screenTextures[i]->Release();
+
+        screenTextures[i] = NULL;
+    }
+
+    if (displayInfo.displays)
+        free(displayInfo.displays);
+    displayInfo.displays = NULL;
+
+    if (dx9VertexBuffer) {
+        dx9VertexBuffer->Release();
+        dx9VertexBuffer = NULL;
+    }
+
+    if (isRefresh && dx9VertexDeclare) {
+        dx9VertexDeclare->Release();
+        dx9VertexDeclare = NULL;
+    }
+
+    if (dx9Device) {
+        dx9Device->Release();
+        dx9Device = NULL;
+    }
+
+    if (!isRefresh && dx9Context) {
+        dx9Context->Release();
+        dx9Context = NULL;
+    }
+#endif
 
 #if RETRO_USING_SDL2
-    if (engine.imageTexture)
-        SDL_DestroyTexture(engine.imageTexture);
-    engine.imageTexture = NULL;
+    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+        if (screenTexture[s])
+            SDL_DestroyTexture(screenTexture[s]);
+        screenTexture[s] = NULL;
+    }
 
-    if (engine.displays)
-        free(engine.displays);
-    engine.displays = NULL;
+    if (imageTexture)
+        SDL_DestroyTexture(imageTexture);
+    imageTexture = NULL;
 
-    if (engine.renderer)
-        SDL_DestroyRenderer(engine.renderer);
-    if (engine.window)
-        SDL_DestroyWindow(engine.window);
+    if (renderer)
+        SDL_DestroyRenderer(renderer);
+
+    if (!isRefresh && window)
+        SDL_DestroyWindow(window);
+
+    if (!isRefresh)
+        SDL_Quit();
+#endif
+
+    if (!isRefresh) {
+        if (scanlines)
+            free(scanlines);
+        scanlines = NULL;
+    }
+}
+
+void RenderDevice::RefreshWindow()
+{
+    RSDK::gameSettings.windowState = WINDOWSTATE_UNINITIALIZED;
+
+    RenderDevice::Release(true);
+
+#if RETRO_USING_DIRECTX9
+    ShowWindow(RenderDevice::windowHandle, false);
+
+    if (RSDK::gameSettings.windowed && RSDK::gameSettings.bordered)
+        SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP);
+    else
+        SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, WS_POPUP);
+
+    Sleep(250); // zzzz.. mimimimi..
+
+    GetDisplays();
+
+    tagRECT rect;
+    if (RSDK::gameSettings.windowed || !RSDK::gameSettings.exclusiveFS) {
+        tagRECT winRect;
+        GetClientRect(RenderDevice::windowHandle, &winRect);
+
+        tagPOINT topLeft, bottomRight;
+        topLeft.x     = winRect.left;
+        topLeft.y     = winRect.top;
+        bottomRight.x = winRect.right;
+        bottomRight.y = winRect.bottom;
+
+        ClientToScreen(RenderDevice::windowHandle, &topLeft);
+        ClientToScreen(RenderDevice::windowHandle, &bottomRight);
+
+        if (RSDK::gameSettings.windowed) {
+            D3DDISPLAYMODE displayMode;
+            dx9Context->GetAdapterDisplayMode(dxAdapter, &displayMode);
+
+            if (RSDK::gameSettings.windowWidth >= displayMode.Width || RSDK::gameSettings.windowHeight >= displayMode.Height) {
+                RSDK::gameSettings.windowWidth  = (displayMode.Height / 480 * RSDK::gameSettings.pixWidth);
+                RSDK::gameSettings.windowHeight = displayMode.Height / 480 * RSDK::gameSettings.pixHeight;
+            }
+
+            rect.left   = (bottomRight.x + topLeft.x) / 2 - RSDK::gameSettings.windowWidth / 2;
+            rect.top    = (bottomRight.y + topLeft.y) / 2 - RSDK::gameSettings.windowHeight / 2;
+            rect.right  = (bottomRight.x + topLeft.x) / 2 + RSDK ::gameSettings.windowWidth / 2;
+            rect.bottom = (bottomRight.y + topLeft.y) / 2 + RSDK::gameSettings.windowHeight / 2;
+
+            if (RSDK::gameSettings.bordered)
+                AdjustWindowRect(&rect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, false);
+            else
+                AdjustWindowRect(&rect, WS_POPUP, false);
+
+            if (rect.left < monitorDisplayRect.left || rect.right > monitorDisplayRect.right || rect.top < monitorDisplayRect.top
+                || rect.bottom > monitorDisplayRect.bottom) {
+                rect.left   = (monitorDisplayRect.right + monitorDisplayRect.left) / 2 - RSDK::gameSettings.windowWidth / 2;
+                rect.top    = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 - RSDK::gameSettings.windowHeight / 2;
+                rect.right  = (monitorDisplayRect.right + monitorDisplayRect.left) / 2 + RSDK::gameSettings.windowWidth / 2;
+                rect.bottom = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 + RSDK::gameSettings.windowHeight / 2;
+
+                if (RSDK::gameSettings.bordered)
+                    AdjustWindowRect(&rect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, false);
+                else
+                    AdjustWindowRect(&rect, WS_POPUP, false);
+            }
+        }
+        else {
+            rect = monitorDisplayRect;
+            AdjustWindowRect(&monitorDisplayRect, 0x80000000, 0);
+        }
+
+        SetWindowPos(RenderDevice::windowHandle, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0x40);
+    }
+
+    ShowWindow(RenderDevice::windowHandle, 5);
+    RedrawWindow(RenderDevice::windowHandle, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+
+    if (!InitGraphicsAPI() || !InitShaders())
+        return;
+
+    RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
 #endif
 }
 
+void RenderDevice::InitFPSCap()
+{
+#if RETRO_USING_DIRECTX9
+    if (QueryPerformanceFrequency(&frequency)) {
+        useFrequency              = true;
+        initialFrequency.QuadPart = frequency.QuadPart / RSDK::gameSettings.refreshRate;
+        QueryPerformanceCounter(&performanceCount);
+    }
+    else {
+        useFrequency              = false;
+        performanceCount.QuadPart = timeGetTime();
+    }
+#endif
 
-#define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
-void InitScreenVertices()
+#if RETRO_USING_SDL2
+    targetFreq = SDL_GetPerformanceFrequency() / RSDK::gameSettings.refreshRate;
+    curTicks   = 0;
+    prevTicks  = 0;
+#endif
+}
+bool RenderDevice::CheckFPSCap()
+{
+#if RETRO_USING_DIRECTX9
+    if (useFrequency)
+        QueryPerformanceCounter(&curFrequency);
+    else
+        curFrequency.QuadPart = timeGetTime();
+
+    if (curFrequency.QuadPart > performanceCount.QuadPart)
+        return true;
+#endif
+
+#if RETRO_USING_SDL2
+    curTicks = SDL_GetPerformanceCounter();
+    if (curTicks >= prevTicks + targetFreq)
+        return true;
+#endif
+
+    return false;
+}
+void RenderDevice::UpdateFPSCap()
+{
+#if RETRO_USING_DIRECTX9
+    performanceCount.QuadPart = curFrequency.QuadPart + initialFrequency.LowPart;
+#endif
+
+#if RETRO_USING_SDL2
+    prevTicks = curTicks;
+#endif
+}
+
+void RenderDevice::InitVertexBuffer()
 {
 // clang-format off
+#if RETRO_REV02
 RenderVertex vertBuffer[60] = {
     // 1 Screen (0)
     { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
@@ -399,16 +836,16 @@ RenderVertex vertBuffer[60] = {
     { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
     { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
     { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-
-    // ??? (6)
+    
+    // 2 Screens - Bordered (Top Screen) (6)
     { { -0.5,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
     { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
     { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
     { { -0.5,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
     { {  0.5,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
     { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-
-    // ??? (12)
+    
+    // 2 Screens - Bordered (Bottom Screen) (12)
     { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
     { { -0.5, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
     { {  0.5, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
@@ -417,7 +854,7 @@ RenderVertex vertBuffer[60] = {
     { {  0.5, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
     { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
 
-    // ??? (18)
+    // 2 Screens - Stretched (Top Screen)  (18)
     { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
     { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
     { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
@@ -425,7 +862,7 @@ RenderVertex vertBuffer[60] = {
     { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
     { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
 
-    // ??? (24)
+    // 2 Screens - Stretched (Bottom Screen) (24)
     { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
     { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
     { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
@@ -472,54 +909,1396 @@ RenderVertex vertBuffer[60] = {
     { {  1.0,  1.0,  1.0,  1.0 }, {  1.0,  0.0 } },
     { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } }
 };
-// clang-format on
+#else
+RenderVertex vertexList[24] =
+{
+  // 1 Screen (0)
+  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+
+  // 2 Screens - Stretched (Top Screen) (6)
+  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+  { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+  { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+  
+  // 2 Screens - Stretched (Bottom Screen) (12)
+  { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+  { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+  
+    // Image/Video (18)
+  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  1.0 } },
+  { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } },
+  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+  { {  1.0,  1.0,  1.0,  1.0 }, {  1.0,  0.0 } },
+  { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } }
+};
+#endif
+    // clang-format on
 
 #if RETRO_USING_SDL2
-    for (int v = 0; v < 60; ++v) {
+    for (int v = 0; v < (!RETRO_REV02 ? 24 : 60); ++v) {
         RenderVertex *vertex = &vertBuffer[v];
-        vertex->pos.x        = NORMALIZE(vertex->pos.x, -1.0, 1.0) * pixWidth;
+        vertex->pos.x        = NORMALIZE(vertex->pos.x, -1.0, 1.0) * RSDK::gameSettings.pixWidth;
         vertex->pos.y        = (1.0 - NORMALIZE(vertex->pos.y, -1.0, 1.0)) * SCREEN_YSIZE;
 
-        if (vertex->tex.u)
-            vertex->tex.u = screens[0].size.x * (1.0 / pixWidth);
+        if (vertex->tex.x)
+            vertex->tex.x = screens[0].size.x * (1.0 / textureSize.x);
 
-        if (vertex->tex.v)
-            vertex->tex.v = screens[0].size.y * (1.0 / SCREEN_YSIZE);
+        if (vertex->tex.y)
+            vertex->tex.y = screens[0].size.y * (1.0 / textureSize.y);
     }
-#else
-    float x                    = 0.5 / (float)engine.windowWidth;
-    float y                    = 0.5 / (float)engine.windowHeight;
-    for (int v = 0; v < 60; ++v) {
+
+    memcpy(vertexBuffer, vertBuffer, sizeof(vertBuffer));
+#endif
+
+#if RETRO_USING_DIRECTX9
+    float x = 0.5 / (float)viewSize.x;
+    float y = 0.5 / (float)viewSize.y;
+
+    for (int v = 0; v < (!RETRO_REV02 ? 24 : 60); ++v) {
         RenderVertex *vertex = &vertBuffer[v];
         vertex->pos.x        = vertex->pos.x - x;
         vertex->pos.y        = vertex->pos.y + y;
 
-        vertex->tex.u = screens[0].size.x * (1.0 / pixWidth);
-        vertex->tex.v = screens[0].size.y * (1.0 / SCREEN_YSIZE);
+        if (vertex->tex.x)
+            vertex->tex.x = screens[0].size.x * (1.0 / textureSize.x);
+
+        if (vertex->tex.y)
+            vertex->tex.y = screens[0].size.y * (1.0 / textureSize.y);
+    }
+
+    RenderVertex *vertBufferPtr;
+    if (dx9VertexBuffer->Lock(0, 0, (void **)&vertBufferPtr, 0) >= 0) {
+        memcpy(vertBufferPtr, vertBuffer, sizeof(vertBuffer));
+        dx9VertexBuffer->Unlock();
+    }
+#endif
+}
+
+bool RenderDevice::InitGraphicsAPI()
+{
+    RSDK::gameSettings.shaderSupport = false;
+
+#if RETRO_USING_DIRECTX9
+    D3DCAPS9 pCaps;
+    if (dx9Context->GetDeviceCaps(0, D3DDEVTYPE_HAL, &pCaps) >= 0 && (pCaps.PixelShaderVersion & 0xFF00) >= 0x300)
+        RSDK::gameSettings.shaderSupport = true;
+
+    viewSize.x = 0;
+    viewSize.y = 0;
+
+    D3DPRESENT_PARAMETERS presentParams;
+    memset(&presentParams, 0, sizeof(presentParams));
+    if (RSDK::gameSettings.windowed || !RSDK::gameSettings.exclusiveFS) {
+        presentParams.BackBufferFormat     = D3DFMT_UNKNOWN;
+        presentParams.BackBufferCount      = 1;
+        presentParams.SwapEffect           = D3DSWAPEFFECT_DISCARD;
+        presentParams.PresentationInterval = 0;
+        presentParams.hDeviceWindow        = windowHandle;
+        presentParams.Windowed             = true;
+        if (RSDK::gameSettings.windowed) {
+            viewSize.x = RSDK::gameSettings.windowWidth;
+            viewSize.y = RSDK::gameSettings.windowHeight;
+        }
+        else {
+            viewSize.x = displayWidth[dxAdapter];
+            viewSize.y = displayHeight[dxAdapter];
+        }
+    }
+    else {
+        int32 bufferWidth  = RSDK::gameSettings.fsWidth;
+        int32 bufferHeight = RSDK::gameSettings.fsWidth;
+        if (RSDK::gameSettings.fsWidth <= 0 || RSDK::gameSettings.fsHeight <= 0) {
+            bufferWidth  = displayWidth[dxAdapter];
+            bufferHeight = displayHeight[dxAdapter];
+        }
+
+        presentParams.BackBufferWidth            = bufferWidth;
+        presentParams.BackBufferHeight           = bufferHeight;
+        presentParams.BackBufferCount            = (RSDK::gameSettings.tripleBuffered == 1) + 1;
+        presentParams.BackBufferFormat           = D3DFMT_X8R8G8B8;
+        presentParams.PresentationInterval       = RSDK::gameSettings.vsync ? 1 : 0x80000000;
+        presentParams.SwapEffect                 = D3DSWAPEFFECT_DISCARD;
+        presentParams.FullScreen_RefreshRateInHz = RSDK::gameSettings.refreshRate;
+        presentParams.hDeviceWindow              = windowHandle;
+        presentParams.Windowed                   = 0;
+        viewSize.x                               = bufferWidth;
+        viewSize.y                               = bufferHeight;
+    }
+
+    int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);
+    if (RSDK::gameSettings.shaderSupport) {
+        if (adapterStatus < 0)
+            return false;
+
+        D3DVERTEXELEMENT9 elements[4];
+
+        elements[0].Type       = D3DDECLTYPE_FLOAT3;
+        elements[0].Method     = 0;
+        elements[0].Stream     = 0;
+        elements[0].Offset     = 0;
+        elements[0].Usage      = D3DDECLUSAGE_POSITION;
+        elements[0].UsageIndex = 0;
+
+        elements[1].Type       = D3DDECLTYPE_D3DCOLOR;
+        elements[1].Method     = 0;
+        elements[1].Stream     = 0;
+        elements[1].Offset     = 12;
+        elements[1].Usage      = D3DDECLUSAGE_COLOR;
+        elements[1].UsageIndex = 0;
+
+        elements[2].Type       = D3DDECLTYPE_FLOAT2;
+        elements[2].Method     = 0;
+        elements[2].Stream     = 0;
+        elements[2].Offset     = 16;
+        elements[2].Usage      = D3DDECLUSAGE_TEXCOORD;
+        elements[2].UsageIndex = 0;
+
+        elements[3].Type       = D3DDECLTYPE_UNUSED;
+        elements[3].Method     = 0;
+        elements[3].Stream     = 0xFF;
+        elements[3].Offset     = 0;
+        elements[3].Usage      = D3DDECLUSAGE_POSITION;
+        elements[3].UsageIndex = 0;
+
+        if (dx9Device->CreateVertexDeclaration(elements, &dx9VertexDeclare) < 0)
+            return false;
+
+        if (dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, 0, D3DPOOL_DEFAULT, &dx9VertexBuffer, NULL) < 0)
+            return false;
+    }
+    else {
+        if (adapterStatus < 0
+            || dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZ, D3DPOOL_DEFAULT, &dx9VertexBuffer,
+                                             NULL)
+                   < 0)
+            return false;
+    }
+
+    int32 maxPixHeight = 0;
+    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+        if (RSDK::gameSettings.pixHeight > maxPixHeight)
+            maxPixHeight = RSDK::gameSettings.pixHeight;
+
+        screens[s].size.y = RSDK::gameSettings.pixHeight;
+
+        float viewAspect  = viewSize.x / viewSize.y;
+        int32 screenWidth = (int)((viewAspect * RSDK::gameSettings.pixHeight) + 3) & 0xFFFFFFFC;
+        if (screenWidth < RSDK::gameSettings.pixWidth)
+            screenWidth = RSDK::gameSettings.pixWidth;
+
+        // if (screenWidth > 424)
+        //     screenWidth = 424;
+
+        memset(&screens[s].frameBuffer, 0, sizeof(screens[s].frameBuffer));
+        SetScreenSize(s, screenWidth, screens[s].size.y);
+    }
+
+    pixelSize.x     = screens[0].size.x;
+    pixelSize.y     = screens[0].size.y;
+    float pixAspect = pixelSize.x / pixelSize.y;
+
+    dx9Device->GetViewport(&displayInfo.viewport);
+    dx9ViewPort = displayInfo.viewport;
+
+    if ((viewSize.x / viewSize.y) <= ((pixelSize.x / pixelSize.y) + 0.1)) {
+        if ((pixAspect - 0.1) > (viewSize.x / viewSize.y)) {
+            viewSize.y         = (pixelSize.y / pixelSize.x) * viewSize.x;
+            dx9ViewPort.Y      = (displayInfo.viewport.Height >> 1) - (viewSize.y * 0.5);
+            dx9ViewPort.Height = viewSize.y;
+
+            dx9Device->SetViewport(&dx9ViewPort);
+        }
+    }
+    else {
+        viewSize.x        = pixAspect * viewSize.y;
+        dx9ViewPort.X     = (displayInfo.viewport.Width >> 1) - ((pixAspect * viewSize.y) * 0.5);
+        dx9ViewPort.Width = (pixAspect * viewSize.y);
+
+        dx9Device->SetViewport(&dx9ViewPort);
+    }
+
+    if (maxPixHeight <= 256) {
+        textureSize.x = 512.0;
+        textureSize.y = 256.0;
+    }
+    else {
+        textureSize.x = 1024.0;
+        textureSize.y = 512.0;
+    }
+
+    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+        if (dx9Device->CreateTexture(textureSize.x, textureSize.y, 1, D3DUSAGE_DYNAMIC, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &screenTextures[s], NULL)
+            != 0)
+            return false;
+    }
+
+    if (dx9Device->CreateTexture(1024, 512, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &imageTexture, 0) != 0)
+        return false;
+
+    lastShaderID = -1;
+    InitVertexBuffer();
+    RSDK::gameSettings.viewportX = dx9ViewPort.X;
+    RSDK::gameSettings.viewportY = dx9ViewPort.Y;
+    RSDK::gameSettings.viewportW = 1.0 / viewSize.x;
+    RSDK::gameSettings.viewportH = 1.0 / viewSize.y;
+#endif
+
+#if RETRO_USING_SDL2
+    viewSize.x = 0;
+    viewSize.y = 0;
+
+    if (RSDK::gameSettings.windowed || !RSDK::gameSettings.exclusiveFS) {
+        if (RSDK::gameSettings.windowed) {
+            viewSize.x = RSDK::gameSettings.windowWidth;
+            viewSize.y = RSDK::gameSettings.windowHeight;
+        }
+        else {
+            viewSize.x = displayWidth[displayModeIndex];
+            viewSize.y = displayHeight[displayModeIndex];
+        }
+    }
+    else {
+        int32 bufferWidth  = RSDK::gameSettings.fsWidth;
+        int32 bufferHeight = RSDK::gameSettings.fsWidth;
+        if (RSDK::gameSettings.fsWidth <= 0 || RSDK::gameSettings.fsHeight <= 0) {
+            bufferWidth  = displayWidth[displayModeIndex];
+            bufferHeight = displayHeight[displayModeIndex];
+        }
+
+        viewSize.x = bufferWidth;
+        viewSize.y = bufferHeight;
+    }
+
+    int32 maxPixHeight = 0;
+    for (int32 s = 0; s < 4; ++s) {
+        if (RSDK::gameSettings.pixHeight > maxPixHeight)
+            maxPixHeight = RSDK::gameSettings.pixHeight;
+
+        screens[s].size.y = RSDK::gameSettings.pixHeight;
+
+        float viewAspect  = viewSize.x / viewSize.y;
+        int32 screenWidth = (int)((viewAspect * RSDK::gameSettings.pixHeight) + 3) & 0xFFFFFFFC;
+        if (screenWidth < RSDK::gameSettings.pixWidth)
+            screenWidth = RSDK::gameSettings.pixWidth;
+
+        // if (screenWidth > 424)
+        //     screenWidth = 424;
+
+        memset(&screens[s].frameBuffer, 0, sizeof(screens[s].frameBuffer));
+        SetScreenSize(s, screenWidth, screens[s].size.y);
+    }
+
+    pixelSize.x     = screens[0].size.x;
+    pixelSize.y     = screens[0].size.y;
+    float pixAspect = pixelSize.x / pixelSize.y;
+
+    SDL_RenderSetLogicalSize(renderer, RSDK::gameSettings.pixWidth, SCREEN_YSIZE);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    if (maxPixHeight <= 256) {
+        textureSize.x = 512.0;
+        textureSize.y = 256.0;
+    }
+    else {
+        textureSize.x = 1024.0;
+        textureSize.y = 512.0;
+    }
+
+    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+        screenTexture[s] = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, textureSize.x, textureSize.y);
+
+        if (!screenTexture[s]) {
+            PrintLog(PRINT_NORMAL, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
+            return 0;
+        }
+    }
+
+    imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 1024, 512);
+    if (!imageTexture)
+        return false;
+
+    lastShaderID = -1;
+    InitVertexBuffer();
+    RSDK::gameSettings.viewportX = dx9ViewPort.X;
+    RSDK::gameSettings.viewportY = dx9ViewPort.Y;
+    RSDK::gameSettings.viewportW = 1.0 / viewSize.x;
+    RSDK::gameSettings.viewportH = 1.0 / viewSize.y;
+#endif
+
+    return true;
+}
+
+void RenderDevice::LoadShader(const char *fileName, bool linear)
+{
+    char buffer[0x100];
+    FileInfo info;
+
+    for (int i = 0; i < shaderCount; ++i) {
+        if (strcmp(shaderList[i].name, fileName) == 0)
+            return;
+    }
+
+    if (shaderCount == SHADER_MAX)
+        return;
+
+    ShaderEntry *shader = &shaderList[shaderCount];
+    shader->linear      = linear;
+    sprintf(shader->name, "%s", fileName);
+
+    const char *shaderFolder    = "Dummy"; // nothing should ever be in "Data/Shaders/Dummy" so it works out to never load anything
+    const char *vertexShaderExt = "txt";
+    const char *pixelShaderExt  = "txt";
+
+    const char *bytecodeFolder    = "CSO-Dummy"; // nothing should ever be in "Data/Shaders/CSO-Dummy" so it works out to never load anything
+    const char *vertexBytecodeExt = "bin";
+    const char *pixelBytecodeExt  = "bin";
+
+#if RETRO_USING_DIRECTX9
+    shaderFolder    = "DX9"; // windows
+    vertexShaderExt = "vs";
+    pixelShaderExt  = "fs";
+
+    bytecodeFolder    = "CSO-DX9"; // windows
+    vertexBytecodeExt = "vso";
+    pixelBytecodeExt  = "fso";
+#endif
+
+#if RETRO_USING_DIRECTX11
+    shaderFolder    = "DX11"; // xbox one
+    vertexShaderExt = "vs";
+    pixelShaderExt  = "fs";
+
+    bytecodeFolder    = "CSO-DX11"; // xbox one
+    vertexBytecodeExt = "vso";
+    pixelBytecodeExt  = "fso";
+#endif
+
+#if !RETRO_USE_ORIGINAL_CODE
+    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
+    InitFileInfo(&info);
+    if (LoadFile(&info, buffer, FMODE_RB)) {
+        byte *fileData = NULL;
+        RSDK::AllocateStorage(info.fileSize, (void **)&fileData, RSDK::DATASET_TMP, false);
+        ReadBytes(&info, fileData, info.fileSize);
+        CloseFile(&info);
+
+#if RETRO_USING_DIRECTX9
+        UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+        if (engine.devMenu)
+            flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+
+        ID3DBlob *shaderBlob = nullptr;
+        ID3DBlob *errorBlob  = nullptr;
+        HRESULT result       = D3DCompile(fileData, info.fileSize, fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VSMain", "vs_3_0", flags, 0,
+                                    &shaderBlob, &errorBlob);
+
+        if (FAILED(result)) {
+            if (errorBlob) {
+                PrintLog(PRINT_NORMAL, "ERROR COMPILING VERTEX SHADER: %s", (char *)errorBlob->GetBufferPointer());
+                errorBlob->Release();
+            }
+
+            if (shaderBlob)
+                shaderBlob->Release();
+
+            fileData = NULL;
+            return;
+        }
+        else {
+            if (dx9Device->CreateVertexShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->vertexShaderObject) < 0) {
+                if (shader->vertexShaderObject) {
+                    shader->vertexShaderObject->Release();
+                    shader->vertexShaderObject = NULL;
+                }
+
+                fileData = NULL;
+                return;
+            }
+        }
+#endif
+
+        fileData = NULL;
+    }
+    else {
+#endif
+
+        sprintf(buffer, "Data/Shaders/%s/%s.%s", bytecodeFolder, fileName, vertexBytecodeExt);
+        InitFileInfo(&info);
+        if (LoadFile(&info, buffer, FMODE_RB)) {
+            byte *fileData = NULL;
+            RSDK::AllocateStorage(info.fileSize, (void **)&fileData, RSDK::DATASET_TMP, false);
+            ReadBytes(&info, fileData, info.fileSize);
+            CloseFile(&info);
+
+#if RETRO_USING_DIRECTX9
+            if (dx9Device->CreateVertexShader((DWORD *)fileData, &shader->vertexShaderObject) < 0) {
+                if (shader->vertexShaderObject) {
+                    shader->vertexShaderObject->Release();
+                    shader->vertexShaderObject = NULL;
+                }
+
+                fileData = NULL;
+                return;
+            }
+#endif
+
+            fileData = NULL;
+        }
+
+#if !RETRO_USE_ORIGINAL_CODE
     }
 #endif
 
-    memcpy(vertexBuffer, vertBuffer, sizeof(vertBuffer));
+#if !RETRO_USE_ORIGINAL_CODE
+    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, pixelShaderExt);
+    InitFileInfo(&info);
+    if (LoadFile(&info, buffer, FMODE_RB)) {
+        byte *fileData = NULL;
+        RSDK::AllocateStorage(info.fileSize, (void **)&fileData, RSDK::DATASET_TMP, false);
+        ReadBytes(&info, fileData, info.fileSize);
+        CloseFile(&info);
+
+#if RETRO_USING_DIRECTX9
+        UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+        if (engine.devMenu)
+            flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+
+        ID3DBlob *shaderBlob = nullptr;
+        ID3DBlob *errorBlob  = nullptr;
+        HRESULT result       = D3DCompile(fileData, info.fileSize, fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PSMain", "ps_3_0", flags, 0,
+                                    &shaderBlob, &errorBlob);
+
+        if (FAILED(result)) {
+            if (errorBlob) {
+                PrintLog(PRINT_NORMAL, "ERROR COMPILING PIXEL SHADER: %s", (char *)errorBlob->GetBufferPointer());
+                errorBlob->Release();
+            }
+
+            if (shaderBlob)
+                shaderBlob->Release();
+        }
+        else {
+            if (dx9Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->pixelShaderObject) < 0) {
+                if (shader->vertexShaderObject) {
+                    shader->vertexShaderObject->Release();
+                    shader->vertexShaderObject = NULL;
+                }
+
+                fileData = NULL;
+                return;
+            }
+        }
+#endif
+
+        fileData = NULL;
+    }
+    else {
+#endif
+        sprintf(buffer, "Data/Shaders/%s/%s.%s", bytecodeFolder, fileName, pixelBytecodeExt);
+        InitFileInfo(&info);
+        if (LoadFile(&info, buffer, FMODE_RB)) {
+            byte *fileData = NULL;
+            RSDK::AllocateStorage(info.fileSize, (void **)&fileData, RSDK::DATASET_TMP, false);
+            ReadBytes(&info, fileData, info.fileSize);
+            CloseFile(&info);
+
+#if RETRO_USING_DIRECTX9
+            if (dx9Device->CreatePixelShader((DWORD *)fileData, &shader->pixelShaderObject) < 0) {
+                if (shader->pixelShaderObject) {
+                    shader->pixelShaderObject->Release();
+                    shader->pixelShaderObject = NULL;
+                }
+
+                fileData = NULL;
+                return;
+            }
+#endif
+
+            fileData = NULL;
+        }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    }
+#endif
+
+    shaderCount++;
 }
 
-void UpdateWindow()
+bool RenderDevice::InitShaders()
 {
+#if RETRO_USING_DIRECTX9
+    dx9Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    dx9Device->SetRenderState(D3DRS_LIGHTING, false);
+    dx9Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+    dx9Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+    dx9Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+    dx9Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+    dx9Device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    dx9Device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+#endif
+
+    int32 maxShaders = 0;
+    if (RSDK::gameSettings.shaderSupport) {
+        LoadShader("None", false);
+        LoadShader("Clean", true);
+        LoadShader("CRT-Yeetron", true);
+        LoadShader("CRT-Yee64", true);
+        LoadShader("YUV-420", true);
+        LoadShader("YUV-422", true);
+        LoadShader("YUV-444", true);
+        LoadShader("RGB-Image", true);
+        maxShaders = shaderCount;
+    }
+    else {
+        for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+
+        shaderList[0].linear = RSDK::gameSettings.windowed ? false : shaderList[0].linear;
+        maxShaders           = 1;
+        shaderCount          = 1;
+    }
+
+    RSDK::gameSettings.shaderID = RSDK::gameSettings.shaderID >= maxShaders ? 0 : RSDK::gameSettings.shaderID;
+
+#if RETRO_USING_DIRECTX9
+    if (shaderList[RSDK::gameSettings.shaderID].linear || RSDK::gameSettings.screenCount > 1) {
+        dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+        dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+    }
+    else {
+        dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+        dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+    }
+
+    dx9Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+#endif
+
+    return true;
+}
+
+bool RenderDevice::SetupRendering()
+{
+#if RETRO_USING_DIRECTX9
+    dx9Context = Direct3DCreate9(D3D_SDK_VERSION);
+    if (!dx9Context)
+        return false;
+
+    memset(&deviceIdentifier, 0, sizeof(deviceIdentifier));
+#endif
+
 #if RETRO_USING_SDL2
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    if (!renderer) {
+        PrintLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
+        return false;
+    }
+#endif
+
+    RenderDevice::GetDisplays();
+
+    if (!InitGraphicsAPI() || !InitShaders())
+        return false;
+
+    int size  = RSDK::gameSettings.pixWidth >= SCREEN_YSIZE ? RSDK::gameSettings.pixWidth : SCREEN_YSIZE;
+    scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
+    memset(scanlines, 0, size * sizeof(ScanlineInfo));
+
+    RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
+    RSDK::gameSettings.dimMax      = 1.0;
+    RSDK::gameSettings.dimPercent  = 1.0;
+
+    return true;
+}
+
+void RenderDevice::GetDisplays()
+{
+#if RETRO_USING_DIRECTX9
+    adapterCount = dx9Context->GetAdapterCount();
+
+    UINT prevAdapter = dxAdapter;
+
+    HMONITOR windowMonitor = MonitorFromWindow(windowHandle, 1);
+    dxAdapter              = 0;
+    for (int a = 0; a < adapterCount; ++a) {
+        D3DDISPLAYMODE displayMode;
+
+        HMONITOR monitor = dx9Context->GetAdapterMonitor(a);
+        dx9Context->GetAdapterDisplayMode(a, &displayMode);
+        displayWidth[a]  = displayMode.Width;
+        displayHeight[a] = displayMode.Height;
+
+        if (windowMonitor == monitor) {
+            tagMONITORINFO lpmi;
+            memset(&lpmi, 0, sizeof(lpmi));
+            lpmi.cbSize = 40;
+
+            GetMonitorInfo(windowMonitor, &lpmi);
+            dxAdapter          = a;
+            monitorDisplayRect = lpmi.rcMonitor;
+        }
+    }
+
+    D3DADAPTER_IDENTIFIER9 adapterIdentifier;
+    memset(&adapterIdentifier, 0, sizeof(adapterIdentifier));
+    dx9Context->GetAdapterIdentifier(dxAdapter, 0, &adapterIdentifier);
+
+    unsigned long *curIdentifier = &deviceIdentifier.Data1;
+    unsigned long *newIdentifier = &adapterIdentifier.DeviceIdentifier.Data1;
+
+    int remain = 3;
+    while (*curIdentifier == *newIdentifier) {
+        curIdentifier++;
+        newIdentifier++;
+
+        remain--;
+        if (remain <= 0) {
+            if (prevAdapter == dxAdapter) // no change
+                return;
+            else // change, reload info
+                break;
+        }
+    }
+
+    deviceIdentifier = adapterIdentifier.DeviceIdentifier;
+
+    displayCount = dx9Context->GetAdapterModeCount(dxAdapter, D3DFMT_X8R8G8B8);
+    if (displayInfo.displays)
+        free(displayInfo.displays);
+
+    displayInfo.displays        = (D3DDISPLAYMODE *)malloc(sizeof(D3DDISPLAYMODE) * displayCount);
+    int newDisplayCount         = 0;
+    bool foundFullScreenDisplay = false;
+
+    for (int d = 0; d < displayCount; ++d) {
+        dx9Context->EnumAdapterModes(dxAdapter, D3DFMT_X8R8G8B8, d, &displayInfo.displays[newDisplayCount]);
+
+        int refreshRate = displayInfo.displays[newDisplayCount].RefreshRate;
+        if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].Height >= (SCREEN_YSIZE * 2)) {
+            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].RefreshRate == 59)
+                --newDisplayCount;
+
+            if (RSDK::gameSettings.fsWidth == displayInfo.displays[newDisplayCount].Width
+                && RSDK::gameSettings.fsHeight == displayInfo.displays[newDisplayCount].Height)
+                foundFullScreenDisplay = true;
+
+            ++newDisplayCount;
+        }
+    }
+
+    displayCount = newDisplayCount;
+    if (!foundFullScreenDisplay) {
+        RSDK::gameSettings.fsWidth     = 0;
+        RSDK::gameSettings.fsHeight    = 0;
+        RSDK::gameSettings.refreshRate = 60; // 0;
+    }
+#endif
+
+#if RETRO_USING_SDL2
+    int currentWindowDisplay = SDL_GetWindowDisplayIndex(window);
+
+    int dispCount = SDL_GetNumVideoDisplays();
+
+    uint32 prevDisplayMode = displayModeIndex;
+
+    SDL_DisplayMode currentDisplay;
+    SDL_GetCurrentDisplayMode(currentWindowDisplay, &currentDisplay);
+
+    displayModeIndex = 0;
+    for (int a = 0; a < dispCount; ++a) {
+        SDL_DisplayMode displayMode;
+
+        SDL_GetCurrentDisplayMode(currentWindowDisplay, &displayMode);
+        displayWidth[a]  = displayMode.w;
+        displayHeight[a] = displayMode.h;
+
+        if (memcmp(&currentDisplay, &displayMode, sizeof(displayMode)) == 0) {
+            displayModeIndex = a;
+        }
+    }
+
+    displayCount = SDL_GetNumDisplayModes(currentWindowDisplay);
+    if (displayInfo.displays)
+        free(displayInfo.displays);
+
+    displayInfo.displays        = (SDL_DisplayMode *)malloc(sizeof(SDL_DisplayMode) * displayCount);
+    int newDisplayCount         = 0;
+    bool foundFullScreenDisplay = false;
+
+    for (int d = 0; d < displayCount; ++d) {
+        SDL_GetDisplayMode(currentWindowDisplay, d, &displayInfo.displays[newDisplayCount]);
+
+        int refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
+        if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].h >= (SCREEN_YSIZE * 2)) {
+            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59)
+                --newDisplayCount;
+
+            if (RSDK::gameSettings.fsWidth == displayInfo.displays[newDisplayCount].w
+                && RSDK::gameSettings.fsHeight == displayInfo.displays[newDisplayCount].h)
+                foundFullScreenDisplay = true;
+
+            ++newDisplayCount;
+        }
+    }
+
+    displayCount = newDisplayCount;
+    if (!foundFullScreenDisplay) {
+        RSDK::gameSettings.fsWidth     = 0;
+        RSDK::gameSettings.fsHeight    = 0;
+        RSDK::gameSettings.refreshRate = 60; // 0;
+    }
+#endif
+}
+
+#if RETRO_USING_DIRECTX9
+void RenderDevice::ProcessEvent(MSG Msg)
+{
+    bool handledMsg = false;
+
+    switch (Msg.message) {
+        case WM_QUIT: isRunning = false; break;
+
+        // called when holding "ALT" down
+        case WM_SYSKEYDOWN: {
+            WPARAM activeButtons = Msg.wParam;
+            switch (Msg.wParam) {
+                case VK_SHIFT: activeButtons = MapVirtualKey(((Msg.lParam >> 8) & 0xFF), MAPVK_VSC_TO_VK_EX); break;
+
+                case VK_CONTROL: activeButtons = VK_LCONTROL + ((Msg.lParam >> 8) & 1); break;
+
+                case VK_MENU: // ALT key
+                    activeButtons = VK_LMENU + ((Msg.lParam >> 8) & 1);
+                    break;
+            }
+
+            switch (Msg.wParam) {
+                default: UpdateKeyState(activeButtons); break;
+
+                case VK_RETURN:
+                    if (GetAsyncKeyState(VK_MENU)) {
+                        RSDK::gameSettings.windowed ^= 1;
+                        UpdateGameWindow();
+                        RSDK::settingsChanged = false;
+                    }
+                    break;
+
+                case VK_F4:
+                    if (GetAsyncKeyState(VK_MENU))
+                        isRunning = false;
+                    break;
+            }
+
+            handledMsg = true;
+            break;
+        }
+
+        // regular keydown
+        case WM_KEYDOWN: {
+            WPARAM activeButtons = Msg.wParam;
+            switch (Msg.wParam) {
+                case VK_SHIFT: activeButtons = MapVirtualKey(((Msg.lParam >> 8) & 0xFF), MAPVK_VSC_TO_VK_EX); break;
+
+                case VK_CONTROL: activeButtons = VK_LCONTROL + ((Msg.lParam >> 8) & 1); break;
+
+                case VK_MENU: // ALT key
+                    activeButtons = VK_LMENU + ((Msg.lParam >> 8) & 1);
+                    break;
+            }
+
+            // handledMsg = true;
+            switch (Msg.wParam) {
+                default:
+                    UpdateKeyState(activeButtons);
+                    handledMsg = false;
+                    break;
+
+                case VK_BACK:
+                    if (engine.devMenu) {
+                        engine.gameSpeed = engine.fastForwardSpeed;
+                        handledMsg       = true;
+                    }
+                    break;
+
+                case VK_ESCAPE:
+                    if (engine.devMenu) {
+                        if (sceneInfo.state == ENGINESTATE_DEVMENU) {
+                            sceneInfo.state                = devMenu.stateStore;
+                            RSDK::gameSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 0 : RSDK::gameSettings.screenCount;
+                            ResumeSound();
+                        }
+                        else {
+                            devMenu.stateStore             = sceneInfo.state;
+                            devMenu.state                  = DevMenu_MainMenu;
+                            devMenu.option                 = 0;
+                            devMenu.scroll                 = 0;
+                            devMenu.timer                  = 0;
+                            RSDK::gameSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 1 : RSDK::gameSettings.screenCount;
+                            sceneInfo.state                = ENGINESTATE_DEVMENU;
+                            PauseSound();
+                        }
+                    }
+                    else {
+                        UpdateKeyState(activeButtons);
+                        handledMsg = false;
+                    }
+                    break;
+
+#if !RETRO_USE_ORIGINAL_CODE
+                case VK_F1:
+                    sceneInfo.listPos--;
+                    if (sceneInfo.listPos < sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart) {
+                        sceneInfo.activeCategory--;
+                        if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
+                            sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
+                        }
+                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd;
+                    }
+
+                    InitSceneLoad();
+                    break;
+
+                case VK_F2:
+                    sceneInfo.listPos++;
+                    if (sceneInfo.listPos > sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
+                        sceneInfo.activeCategory++;
+                        if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
+                            sceneInfo.activeCategory = 0;
+                        }
+                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart;
+                    }
+
+                    InitSceneLoad();
+                    break;
+#endif
+
+                case VK_F3:
+                    RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % (shaderCount - 4);
+                    handledMsg                  = true;
+                    break;
+
+#if !RETRO_USE_ORIGINAL_CODE
+                case VK_F5:
+                    // Quick-Reload
+                    InitSceneLoad();
+                    break;
+
+                case VK_F6:
+                    if (engine.devMenu && RSDK::gameSettings.screenCount > 1)
+                        RSDK::gameSettings.screenCount--;
+                    break;
+
+                case VK_F7:
+                    if (engine.devMenu && RSDK::gameSettings.screenCount < SCREEN_MAX)
+                        RSDK::gameSettings.screenCount++;
+                    break;
+
+                case VK_F9:
+                    if (engine.devMenu)
+                        showHitboxes ^= 1;
+                    break;
+
+                case VK_F10:
+                    if (engine.devMenu)
+                        engine.showPaletteOverlay ^= 1;
+                    break;
+#endif
+
+                case VK_INSERT:
+                case VK_F11:
+                    if (engine.devMenu) {
+                        engine.frameStep = true;
+                        handledMsg       = true;
+                    }
+                    break;
+
+                case VK_PAUSE:
+                case VK_F12:
+                    if (engine.devMenu) {
+                        if (sceneInfo.state != ENGINESTATE_NULL)
+                            sceneInfo.state ^= ENGINESTATE_STEPOVER;
+                    }
+                    break;
+            }
+            break;
+        }
+
+        case WM_KEYUP:
+        case WM_SYSKEYUP: {
+            WPARAM activeButtons = Msg.wParam;
+            switch (Msg.wParam) {
+                case VK_SHIFT: activeButtons = MapVirtualKey(((Msg.lParam >> 8) & 0xFF), MAPVK_VSC_TO_VK_EX); break;
+
+                case VK_CONTROL: activeButtons = VK_LCONTROL + ((Msg.lParam >> 8) & 1); break;
+
+                case VK_MENU: // ALT key
+                    activeButtons = VK_LMENU + ((Msg.lParam >> 8) & 1);
+                    break;
+            }
+
+            switch (Msg.wParam) {
+                default: ClearKeyState(activeButtons); break;
+
+                case VK_BACK:
+                    engine.gameSpeed = 1;
+                    handledMsg       = true;
+                    break;
+            }
+
+            break;
+        }
+
+        case WM_LBUTTONDOWN:
+            touchMouseData.down[0] = 1;
+            touchMouseData.count   = 1;
+            handledMsg             = true;
+            break;
+
+        case WM_LBUTTONUP:
+            touchMouseData.down[0] = 0;
+            touchMouseData.count   = 0;
+            handledMsg             = true;
+            break;
+
+        case WM_MBUTTONDOWN:
+        case WM_RBUTTONDOWN: handledMsg = true; break;
+    }
+
+    if (!handledMsg)
+        DispatchMessage(&Msg);
+}
+#endif
+
+#if RETRO_USING_SDL2
+void RenderDevice::ProcessEvent(SDL_Event event)
+{
+    switch (event.type) {
+        case SDL_WINDOWEVENT:
+            switch (event.window.event) {
+                case SDL_WINDOWEVENT_MAXIMIZED: {
+                    SDL_RestoreWindow(window);
+                    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                    SDL_ShowCursor(SDL_FALSE);
+                    RSDK::gameSettings.windowed = false;
+                    break;
+                }
+
+                case SDL_WINDOWEVENT_CLOSE: isRunning = false; break;
+
+                case SDL_WINDOWEVENT_FOCUS_GAINED:
+#if RETRO_REV02
+                    RSDK::SKU::userCore->focusState = 0;
+#endif
+                    break;
+
+                case SDL_WINDOWEVENT_FOCUS_LOST:
+#if RETRO_REV02
+                    RSDK::SKU::userCore->focusState = 1;
+#endif
+                    break;
+            }
+            break;
+
+        case SDL_CONTROLLERDEVICEADDED: controllerInit(event.cdevice.which); break;
+
+        case SDL_CONTROLLERDEVICEREMOVED: controllerClose(event.cdevice.which); break;
+
+        case SDL_APP_WILLENTERFOREGROUND:
+#if RETRO_REV02
+            RSDK::SKU::userCore->focusState = 0;
+#endif
+            break;
+
+        case SDL_APP_WILLENTERBACKGROUND:
+#if RETRO_REV02
+            RSDK::SKU::userCore->focusState = 1;
+#endif
+            break;
+
+        case SDL_APP_TERMINATING: isRunning = false; break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            switch (event.button.button) {
+                case SDL_BUTTON_LEFT: touchMouseData.down[0] = true; touchMouseData.count = 1;
+#if !RETRO_REV02
+                    if (buttonDownCount > 0)
+                        buttonDownCount--;
+#endif
+                    break;
+
+                case SDL_BUTTON_RIGHT:
+#if !RETRO_REV02
+                    specialKeyStates[3] = true;
+                    buttonDownCount++;
+#endif
+                    break;
+            }
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            switch (event.button.button) {
+                case SDL_BUTTON_LEFT: touchMouseData.down[0] = false; touchMouseData.count = 0;
+#if !RETRO_REV02
+                    if (buttonDownCount > 0)
+                        buttonDownCount--;
+#endif
+                    break;
+
+                case SDL_BUTTON_RIGHT:
+#if !RETRO_REV02
+                    specialKeyStates[3] = false;
+                    buttonDownCount--;
+#endif
+                    break;
+            }
+            break;
+
+        case SDL_FINGERMOTION:
+        case SDL_FINGERDOWN:
+        case SDL_FINGERUP: {
+            int32 count          = SDL_GetNumTouchFingers(event.tfinger.touchId);
+            touchMouseData.count = 0;
+            for (int32 i = 0; i < count; i++) {
+                SDL_Finger *finger = SDL_GetTouchFinger(event.tfinger.touchId, i);
+                if (finger) {
+                    touchMouseData.down[touchMouseData.count] = true;
+                    touchMouseData.x[touchMouseData.count]    = finger->x;
+                    touchMouseData.y[touchMouseData.count]    = finger->y;
+                    touchMouseData.count++;
+                }
+            }
+            break;
+        }
+
+        case SDL_KEYDOWN:
+#if !RETRO_REV02
+            ++buttonDownCount;
+#endif
+            switch (event.key.keysym.scancode) {
+                default: UpdateKeyState(event.key.keysym.scancode); break;
+
+                case SDL_SCANCODE_ESCAPE:
+                    if (engine.devMenu) {
+                        if (sceneInfo.state == ENGINESTATE_DEVMENU) {
+                            sceneInfo.state = devMenu.stateStore;
+                            if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
+                                RSDK::gameSettings.screenCount = 0;
+
+                            ResumeSound();
+                        }
+                        else {
+                            devMenu.stateStore = sceneInfo.state;
+                            if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
+                                RSDK::gameSettings.screenCount = 1;
+
+                            devMenu.state   = DevMenu_MainMenu;
+                            devMenu.option  = 0;
+                            devMenu.scroll  = 0;
+                            devMenu.timer   = 0;
+                            sceneInfo.state = ENGINESTATE_DEVMENU;
+                            PauseSound();
+                        }
+                    }
+                    else {
+                        UpdateKeyState(event.key.keysym.scancode);
+                    }
+#if !RETRO_REV02
+                    specialKeyStates[0] = true;
+#endif
+                    break;
+
+#if !RETRO_REV02
+                case SDL_SCANCODE_RETURN: specialKeyStates[1] = true; break;
+#endif
+
+#if !RETRO_USE_ORIGINAL_CODE
+                case SDL_SCANCODE_F1:
+                    sceneInfo.listPos--;
+                    if (sceneInfo.listPos < sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart) {
+                        sceneInfo.activeCategory--;
+                        if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
+                            sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
+                        }
+                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd;
+                    }
+
+                    InitSceneLoad();
+                    break;
+
+                case SDL_SCANCODE_F2:
+                    sceneInfo.listPos++;
+                    if (sceneInfo.listPos > sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
+                        sceneInfo.activeCategory++;
+                        if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
+                            sceneInfo.activeCategory = 0;
+                        }
+                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart;
+                    }
+
+                    InitSceneLoad();
+                    break;
+#endif
+
+                case SDL_SCANCODE_F3: RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % (shaderCount - 4); break;
+
+                case SDL_SCANCODE_F4:
+                    RSDK::gameSettings.windowed ^= 1;
+                    if (!RSDK::gameSettings.windowed) {
+                        SDL_RestoreWindow(window);
+                        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                        SDL_ShowCursor(SDL_FALSE);
+                    }
+                    else {
+                        SDL_SetWindowFullscreen(window, false);
+                        SDL_ShowCursor(SDL_TRUE);
+                        SDL_SetWindowSize(window, RSDK::gameSettings.windowWidth, RSDK::gameSettings.windowHeight);
+                        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+                        SDL_RestoreWindow(window);
+                    }
+                    break;
+
+#if !RETRO_USE_ORIGINAL_CODE
+                case SDL_SCANCODE_F5:
+                    // Quick-Reload
+                    InitSceneLoad();
+                    break;
+
+                case SDL_SCANCODE_F6:
+                    if (engine.devMenu && RSDK::gameSettings.screenCount > 1)
+                        RSDK::gameSettings.screenCount--;
+                    break;
+
+                case SDL_SCANCODE_F7:
+                    if (engine.devMenu && RSDK::gameSettings.screenCount < SCREEN_MAX)
+                        RSDK::gameSettings.screenCount++;
+                    break;
+
+                case SDL_SCANCODE_F9:
+                    if (engine.devMenu)
+                        showHitboxes ^= 1;
+                    break;
+
+                case SDL_SCANCODE_F10:
+                    if (engine.devMenu)
+                        engine.showPaletteOverlay ^= 1;
+                    break;
+#endif
+                case SDL_SCANCODE_BACKSPACE:
+                    if (engine.devMenu)
+                        engine.gameSpeed = engine.fastForwardSpeed;
+                    break;
+
+                case SDL_SCANCODE_F11:
+                case SDL_SCANCODE_INSERT:
+                    if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
+                        engine.frameStep = true;
+                    break;
+
+                case SDL_SCANCODE_F12:
+                case SDL_SCANCODE_PAUSE:
+                    if (engine.devMenu) {
+                        sceneInfo.state ^= ENGINESTATE_STEPOVER;
+                    }
+                    break;
+            }
+            break;
+
+        case SDL_KEYUP:
+#if !RETRO_REV02
+            --buttonDownCount;
+#endif
+            switch (event.key.keysym.scancode) {
+                default: ClearKeyState(event.key.keysym.scancode); break;
+#if !RETRO_REV02
+                case SDL_SCANCODE_ESCAPE: specialKeyStates[0] = false; break;
+                case SDL_SCANCODE_RETURN: specialKeyStates[1] = false; break;
+#endif
+                case SDL_SCANCODE_BACKSPACE: engine.gameSpeed = 1; break;
+            }
+            break;
+
+        case SDL_QUIT: isRunning = false; break;
+    }
+}
+#endif
+
+bool RenderDevice::ProcessEvents()
+{
+#if RETRO_USING_DIRECTX9
+    MSG Msg;
+    while (PeekMessage(&Msg, NULL, 0, 0, true)) {
+        RenderDevice::ProcessEvent(Msg);
+
+        if (!isRunning)
+            return false;
+    }
+#endif
+
+#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+    SDL_Event sdlEvent;
+
+    while (SDL_PollEvent(&sdlEvent)) {
+        RenderDevice::ProcessEvent(sdlEvent);
+
+        if (!isRunning)
+            return false;
+    }
+#endif
+
+    return true;
+}
+
+#if RETRO_USING_DIRECTX9
+LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+    switch (Msg) {
+        case WM_CREATE: {
+            if (deviceNotif)
+                return 0;
+
+            int filter  = 32;
+            deviceNotif = RegisterDeviceNotification(hRecipient, &filter, 0);
+            break;
+        }
+
+        case WM_DESTROY:
+            if (deviceNotif) {
+                UnregisterDeviceNotification(deviceNotif);
+                deviceNotif = 0;
+            }
+
+            isRunning = false;
+            break;
+
+        case WM_MOVE:
+        case WM_SIZE: break;
+
+        case WM_ACTIVATE:
+            if (wParam) {
+                if (!RSDK::gameSettings.windowState)
+                    return 0;
+
+                // if (byte_66BB18 == 1)
+                // {
+                //      byte_97BB18 = 0;
+                //      audioContext_sourceVoice->Start(audioContext_sourceVoice, 0, 0);
+                // }
+
+                GetDisplays();
+                RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
+            }
+            else {
+                touchMouseData.down[0] = 0;
+                touchMouseData.count   = 0;
+                if (!RSDK::gameSettings.windowState)
+                    return 0;
+
+                // if (!byte_66BB18)
+                // {
+                //      byte_97BB18 = 1;
+                //      audioContext_sourceVoice->Stop(audioContext_sourceVoice, 0, 0);
+                // }
+
+                RSDK::gameSettings.windowState = WINDOWSTATE_INACTIVE;
+            }
+            break;
+
+        case WM_PAINT:
+            BeginPaint(hRecipient, &Paint);
+            EndPaint(hRecipient, &Paint);
+            break;
+
+        case WM_DEVICECHANGE: {
+            unsigned int dbch_sizes[] = { 1771351300u, 298882031u, 2684406947u, 2519802569u };
+            DEV_BROADCAST_HDR *param  = (DEV_BROADCAST_HDR *)lParam;
+
+            if ((wParam == DBT_DEVICEARRIVAL || wParam == DBT_DEVICEREMOVECOMPLETE) && param && param->dbch_devicetype == 5) {
+                DEV_BROADCAST_HDR *device = param + 1;
+                int remain                = 3;
+                unsigned int *size        = dbch_sizes;
+                while (device->dbch_size == *size) {
+                    ++device;
+                    ++size;
+                    remain--;
+                    if (remain <= 0) {
+                        // audioEnabled = 30;
+                        break;
+                    }
+                }
+            }
+
+            UpdateXInputDevices();
+            InitHIDAPI();
+            InitXInputAPI();
+            break;
+        }
+
+        case WM_INPUT: UpdateRawInputButtonState((HRAWINPUT)lParam); break;
+
+        case WM_SYSCOMMAND: {
+            int32 param = wParam & 0xFFF0;
+            if (param == SC_MINIMIZE) {
+                touchMouseData.down[0] = 0;
+                touchMouseData.count   = 0;
+                if (RSDK::gameSettings.windowState) {
+                    PauseSound();
+                    RSDK::gameSettings.windowState = WINDOWSTATE_INACTIVE;
+                }
+            }
+            else if (param == SC_MAXIMIZE && RSDK::gameSettings.windowState != WINDOWSTATE_UNINITIALIZED) {
+                ResumeSound();
+                RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
+            }
+
+            return DefWindowProc(hRecipient, WM_SYSCOMMAND, wParam, lParam);
+        }
+
+        case WM_MENUSELECT:
+        case WM_ENTERSIZEMOVE:
+            touchMouseData.down[0] = 0;
+            touchMouseData.count   = 0;
+            break;
+
+        case WM_EXITSIZEMOVE: GetDisplays(); break;
+
+        default: return DefWindowProc(hRecipient, Msg, wParam, lParam);
+    }
+
+    return 0;
+}
+#endif
+
+void UpdateGameWindow()
+{
+    RenderDevice::RefreshWindow();
+#if RETRO_USING_SDL2
+    /*
     for (int s = 0; s < SCREEN_MAX; ++s) {
         SDL_DestroyTexture(engine.screenBuffer[s]);
     }
     SDL_DestroyRenderer(engine.renderer);
-    SDL_DestroyWindow(engine.window);
+    SDL_DestroyWindow(window);
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
+    window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
                                      engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
 
-    engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
+    engine.renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    if (!engine.window) {
+    if (!window) {
         PrintLog(PRINT_NORMAL, "ERROR: failed to create window!");
         engine.running = false;
         return;
@@ -546,14 +2325,14 @@ void UpdateWindow()
     }
 
     if (!engine.isWindowed) {
-        SDL_RestoreWindow(engine.window);
-        SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_RestoreWindow(window);
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
         SDL_ShowCursor(SDL_FALSE);
     }
 
     if (!engine.hasBorder) {
-        SDL_RestoreWindow(engine.window);
-        SDL_SetWindowBordered(engine.window, SDL_FALSE);
+        SDL_RestoreWindow(window);
+        SDL_SetWindowBordered(window, SDL_FALSE);
     }
 
     InitShaders();
@@ -561,32 +2340,32 @@ void UpdateWindow()
     if (engine.displays)
         free(engine.displays);
 
-    engine.displayCount = SDL_GetNumVideoDisplays();
-    engine.displays     = (SDL_DisplayMode *)malloc(engine.displayCount * sizeof(SDL_DisplayMode));
-    for (int d = 0; d < engine.displayCount; ++d) {
+    RenderDevice::displayCount = SDL_GetNumVideoDisplays();
+    engine.displays     = (SDL_DisplayMode *)malloc(RenderDevice::displayCount * sizeof(SDL_DisplayMode));
+    for (int d = 0; d < RenderDevice::displayCount; ++d) {
         if (SDL_GetDisplayMode(d, 0, &engine.displays[d])) {
             // what the
         }
-    }
+    }*/
 #endif
 }
 
 void SetImageTexture(int width, int height, byte *imagePixels)
 {
 #if RETRO_USING_SDL2
-    if (engine.imageTexture)
-        SDL_DestroyTexture(engine.imageTexture);
-
-    int32 format        = imagePixels ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_YV12;
-    engine.imageTexture = SDL_CreateTexture(engine.renderer, format, SDL_TEXTUREACCESS_STREAMING, width, height);
-
-    if (imagePixels) {
-        int pitch = 0;
-        byte *pixels;
-        SDL_LockTexture(engine.imageTexture, NULL, (void **)&pixels, &pitch);
-        memcpy(pixels, imagePixels, pitch * height);
-        SDL_UnlockTexture(engine.imageTexture);
-    }
+    // if (RenderDevice::imageTexture)
+    //     SDL_DestroyTexture(RenderDevice::imageTexture);
+    //
+    // int32 format        = imagePixels ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_YV12;
+    // RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, format, SDL_TEXTUREACCESS_STREAMING, width, height);
+    //
+    // if (imagePixels) {
+    //     int pitch = 0;
+    //     byte *pixels;
+    //     SDL_LockTexture(RenderDevice::imageTexture, NULL, (void **)&pixels, &pitch);
+    //     memcpy(pixels, imagePixels, pitch * height);
+    //     SDL_UnlockTexture(RenderDevice::imageTexture);
+    // }
 #endif
 }
 
@@ -641,14 +2420,27 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, c
     int dispID = 0;
 
     if (*displayID == -2) {
-        if (engine.fsWidth && engine.fsHeight) {
+        if (RSDK::gameSettings.fsWidth && RSDK::gameSettings.fsHeight) {
             int d = 0;
-            for (; d < engine.displayCount; ++d) {
-                if (engine.displays[d].w == engine.fsWidth && engine.displays[d].h == engine.fsHeight
-                    && engine.displays[d].refresh_rate == engine.refreshRate) {
+#if RETRO_USING_DIRECTX9
+            for (; d < RenderDevice::displayCount; ++d) {
+                if (RenderDevice::displayInfo.displays[d].Width == RSDK::gameSettings.fsWidth
+                    && RenderDevice::displayInfo.displays[d].Height == RSDK::gameSettings.fsHeight
+                    && RenderDevice::displayInfo.displays[d].RefreshRate == RSDK::gameSettings.refreshRate) {
                     break;
                 }
             }
+#endif
+
+#if RETRO_USING_SDL2
+            for (; d < RenderDevice::displayCount; ++d) {
+                if (RenderDevice::displayInfo.displays[d].w == RSDK::gameSettings.fsWidth
+                    && RenderDevice::displayInfo.displays[d].h == RSDK::gameSettings.fsHeight
+                    && RenderDevice::displayInfo.displays[d].refresh_rate == RSDK::gameSettings.refreshRate) {
+                    break;
+                }
+            }
+#endif
             dispID = d + 1;
         }
         else {
@@ -656,9 +2448,9 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, c
         }
     }
     else {
-        dispID = engine.displayCount - 1;
-        if (id < engine.displayCount) {
-            if (id == engine.displayCount)
+        dispID = RenderDevice::displayCount - 1;
+        if (id < RenderDevice::displayCount) {
+            if (id == RenderDevice::displayCount)
                 dispID = 0;
             else
                 dispID = *displayID;
@@ -668,19 +2460,38 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, c
     *displayID = dispID;
     if (dispID) {
         int d = dispID - 1;
+
+#if RETRO_USING_DIRECTX9
         if (width)
-            *width = engine.displays[d].w;
+            *width = RenderDevice::displayInfo.displays[d].Width;
 
         if (height)
-            *height = engine.displays[d].h;
+            *height = RenderDevice::displayInfo.displays[d].Height;
 
         if (refreshRate)
-            *refreshRate = engine.displays[d].refresh_rate;
+            *refreshRate = RenderDevice::displayInfo.displays[d].RefreshRate;
 
         if (text) {
-            char buffer[0x20];
-            sprintf(buffer, "%ix%i @%iHz", engine.displays[d].w, engine.displays[d].h, engine.displays[d].refresh_rate);
+            sprintf(text, "%ix%i @%iHz", RenderDevice::displayInfo.displays[d].Width, RenderDevice::displayInfo.displays[d].Height,
+                    RenderDevice::displayInfo.displays[d].RefreshRate);
         }
+#endif
+
+#if RETRO_USING_SDL2
+        if (width)
+            *width = RenderDevice::displayInfo.displays[d].w;
+
+        if (height)
+            *height = RenderDevice::displayInfo.displays[d].h;
+
+        if (refreshRate)
+            *refreshRate = RenderDevice::displayInfo.displays[d].refresh_rate;
+
+        if (text) {
+            sprintf(text, "%ix%i @%iHz", RenderDevice::displayInfo.displays[d].w, RenderDevice::displayInfo.displays[d].h,
+                    RenderDevice::displayInfo.displays[d].refresh_rate);
+        }
+#endif
     }
     else {
         if (width)
@@ -699,13 +2510,26 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, c
 
 void GetWindowSize(int *width, int *height)
 {
+#if RETRO_USING_DIRECTX9
+    D3DDISPLAYMODE display;
+    RenderDevice::dx9Context->GetAdapterDisplayMode(RenderDevice::dxAdapter, &display);
+
+    if (width)
+        *width = display.Width;
+
+    if (height)
+        *height = display.Height;
+#endif
+
 #if RETRO_USING_SDL2
-    if (!engine.isWindowed) {
-        SDL_GetRendererOutputSize(engine.renderer, width, height);
+    if (!RSDK::gameSettings.windowed) {
+        SDL_GetRendererOutputSize(RenderDevice::renderer, width, height);
     }
     else {
+        int currentWindowDisplay = SDL_GetWindowDisplayIndex(RenderDevice::window);
+
         SDL_DisplayMode display;
-        SDL_GetCurrentDisplayMode(0, &display);
+        SDL_GetCurrentDisplayMode(currentWindowDisplay, &display);
 
         if (width)
             *width = display.w;
@@ -724,8 +2548,8 @@ void SwapDrawListEntries(uint8 layer, uint16 entitySlotA, uint16 entitySlotB, in
             count = list->entityCount;
 
         if (count) {
-            int slotA = -1;
-            int slotB = -1;
+            int32 slotA = -1;
+            int32 slotB = -1;
             if (count > 0) {
                 for (int i = 0; i < count; ++i) {
                     if (list->entries[i] == entitySlotA)
@@ -4430,8 +6254,8 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
     }
 }
 
-void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
-              Vector2 *charOffsets, bool32 screenRelative)
+void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
+                void *unused, Vector2 *charOffsets, bool32 screenRelative)
 {
     if (animator && info && animator->frames) {
         if (!position)
@@ -4512,7 +6336,7 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32
 }
 void DrawDevText(const char *text, int32 x, int32 y, int32 align, uint color)
 {
-    int32 length     = 0;
+    int32 length   = 0;
     ushort color16 = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 
     bool32 finished = false;
@@ -4533,7 +6357,7 @@ void DrawDevText(const char *text, int32 x, int32 y, int32 align, uint color)
         }
 
         if (y >= 0 && y < currentScreen->size.y - 7) {
-            int32 drawX  = x;
+            int32 drawX = x;
 
             int32 alignX = 0;
             if (align == ALIGN_CENTER)

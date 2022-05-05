@@ -1073,7 +1073,7 @@ void ProcessSceneTimer()
                     sceneInfo.minutes = 0;
             }
         }
-        sceneInfo.milliseconds = sceneInfo.timeCounter / engine.refreshRate;
+        sceneInfo.milliseconds = sceneInfo.timeCounter / RSDK::gameSettings.refreshRate;
     }
 }
 

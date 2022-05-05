@@ -11,8 +11,13 @@
 
 #define MAX_VOLUME (1.0f)
 
+#if RETRO_USING_SDL1 || RETRO_USING_SDL2
 #define LockAudioDevice()   SDL_LockAudio()
 #define UnlockAudioDevice() SDL_UnlockAudio()
+#else
+#define LockAudioDevice()   ;
+#define UnlockAudioDevice() ;
+#endif
 
 struct SFXInfo {
     uint32 hash[4];

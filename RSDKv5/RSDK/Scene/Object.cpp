@@ -684,7 +684,7 @@ void ProcessFrozenObjects()
 void ProcessObjectDrawLists()
 {
     if (sceneInfo.state && sceneInfo.state != (ENGINESTATE_LOAD | ENGINESTATE_STEPOVER)) {
-        for (int32 s = 0; s < engine.screenCount; ++s) {
+        for (int32 s = 0; s < RSDK::gameSettings.screenCount; ++s) {
             currentScreen             = &screens[s];
             sceneInfo.currentScreenID = s;
             for (int32 l = 0; l < DRAWLAYER_COUNT; ++l) drawLayers[l].layerCount = 0;
@@ -847,7 +847,7 @@ void ProcessObjectDrawLists()
 
             if (engine.showPaletteOverlay) {
                 for (int32 p = 0; p < PALETTE_COUNT; ++p) {
-                    int32 x = (pixWidth - (0x10 << 3));
+                    int32 x = (RSDK::gameSettings.pixWidth - (0x10 << 3));
                     int32 y = (SCREEN_YSIZE - (0x10 << 2));
                     for (int32 c = 0; c < PALETTE_SIZE; ++c) {
                         uint32 clr = GetPaletteEntry(p, c);
