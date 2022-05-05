@@ -154,7 +154,7 @@ enum GameRegions {
 #endif // ! RETRO_USING_SDL2
 #include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
-#include <theoraPlay/theoraplay.h>
+#include <theoraplay/theoraplay.h>
 #endif // ! RETRO_WIN
 
 #if RETRO_PLATFORM == RETRO_XB1

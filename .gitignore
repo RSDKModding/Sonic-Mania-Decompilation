@@ -48,6 +48,8 @@ cmake/
 [Dd]ependencies/ios/libSDLMain.a
 ![Dd]ependencies/ios/[Ii]nfo.plist
 [Dd]ependencies/all/*
+![Dd]ependencies/all/tinyxml2
+![Dd]ependencies/all/theoraplay
 ![Dd]ependencies/all/dependencies.txt
 ![Dd]ependencies/windows/dependencies.txt
 ![Dd]ependencies/ios/dependencies.txt

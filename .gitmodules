@@ -7,3 +7,9 @@
 [submodule "mods/ManiaModMenu"]
 	path = mods/ManiaModMenu
 	url = https://github.com/MGRich/ManiaModMenu
+[submodule "dependencies/all/tinyxml2"]
+	path = dependencies/all/tinyxml2
+	url = https://github.com/leethomason/tinyxml2
+[submodule "dependencies/all/theoraplay"]
+	path = dependencies/all/theoraplay
+	url = https://github.com/icculus/theoraplay
