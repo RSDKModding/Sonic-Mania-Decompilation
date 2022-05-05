@@ -674,7 +674,7 @@ void RenderDevice::Release(bool isRefresh)
         SDL_DestroyTexture(imageTexture);
     imageTexture = NULL;
 
-    if (renderer)
+    if (!isRefresh && renderer)
         SDL_DestroyRenderer(renderer);
 
     if (!isRefresh && window)
@@ -763,14 +763,57 @@ void RenderDevice::RefreshWindow()
         SetWindowPos(RenderDevice::windowHandle, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0x40);
     }
 
-    ShowWindow(RenderDevice::windowHandle, 5);
+    ShowWindow(RenderDevice::windowHandle, SW_SHOW);
     RedrawWindow(RenderDevice::windowHandle, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+#endif
+
+#if RETRO_USING_SDL2
+    SDL_HideWindow(RenderDevice::window);
+
+    if (RSDK::gameSettings.windowed && RSDK::gameSettings.bordered)
+        SDL_SetWindowBordered(window, SDL_TRUE);
+    else
+        SDL_SetWindowBordered(window, SDL_FALSE);
+
+    GetDisplays();
+
+    SDL_Rect winRect;
+    winRect.x = SDL_WINDOWPOS_CENTERED;
+    winRect.y = SDL_WINDOWPOS_CENTERED;
+    if (RSDK::gameSettings.windowed || !RSDK::gameSettings.exclusiveFS) {
+        int32 currentWindowDisplay = SDL_GetWindowDisplayIndex(window);
+        SDL_DisplayMode displayMode;
+        SDL_GetCurrentDisplayMode(currentWindowDisplay, &displayMode);
+
+        if (RSDK::gameSettings.windowed) {
+            if (RSDK::gameSettings.windowWidth >= displayMode.w || RSDK::gameSettings.windowHeight >= displayMode.h) {
+                RSDK::gameSettings.windowWidth  = (displayMode.h / 480 * RSDK::gameSettings.pixWidth);
+                RSDK::gameSettings.windowHeight = displayMode.h / 480 * RSDK::gameSettings.pixHeight;
+            }
+
+            winRect.w = RSDK::gameSettings.windowWidth;
+            winRect.h = RSDK::gameSettings.windowHeight;
+            SDL_SetWindowFullscreen(window, SDL_FALSE);
+            SDL_ShowCursor(SDL_FALSE);
+        }
+        else {
+            winRect.w = displayMode.w;
+            winRect.h = displayMode.h;
+            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+            SDL_ShowCursor(SDL_TRUE);
+        }
+
+        SDL_SetWindowSize(RenderDevice::window, winRect.w, winRect.h);
+        SDL_SetWindowPosition(RenderDevice::window, winRect.x, winRect.y);
+    }
+
+    SDL_ShowWindow(RenderDevice::window);
+#endif
 
     if (!InitGraphicsAPI() || !InitShaders())
         return;
 
     RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
-#endif
 }
 
 void RenderDevice::InitFPSCap()
@@ -1182,6 +1225,9 @@ bool RenderDevice::InitGraphicsAPI()
         viewSize.y = bufferHeight;
     }
 
+    SDL_SetWindowSize(RenderDevice::window, viewSize.x, viewSize.y);
+    SDL_SetWindowPosition(RenderDevice::window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
     int32 maxPixHeight = 0;
     for (int32 s = 0; s < 4; ++s) {
         if (RSDK::gameSettings.pixHeight > maxPixHeight)
@@ -1232,8 +1278,8 @@ bool RenderDevice::InitGraphicsAPI()
 
     lastShaderID = -1;
     InitVertexBuffer();
-    RSDK::gameSettings.viewportX = dx9ViewPort.X;
-    RSDK::gameSettings.viewportY = dx9ViewPort.Y;
+    RSDK::gameSettings.viewportX = 0;
+    RSDK::gameSettings.viewportY = 0;
     RSDK::gameSettings.viewportW = 1.0 / viewSize.x;
     RSDK::gameSettings.viewportH = 1.0 / viewSize.y;
 #endif
@@ -1686,7 +1732,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
             switch (Msg.wParam) {
                 default: UpdateKeyState(activeButtons); break;
 
-                case VK_RETURN:
+                case VK_RETURN: // alt + enter
                     if (GetAsyncKeyState(VK_MENU)) {
                         RSDK::gameSettings.windowed ^= 1;
                         UpdateGameWindow();
@@ -1694,7 +1740,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
                     }
                     break;
 
-                case VK_F4:
+                case VK_F4: // alt + f4
                     if (GetAsyncKeyState(VK_MENU))
                         isRunning = false;
                     break;
@@ -1910,9 +1956,25 @@ void RenderDevice::ProcessEvent(SDL_Event event)
             }
             break;
 
-        case SDL_CONTROLLERDEVICEADDED: controllerInit(event.cdevice.which); break;
+        case SDL_CONTROLLERDEVICEADDED: {
+            uint32 id;
+            char buffer[0x20];
+            sprintf(buffer, "%s%d", "SDLDevice", event.cdevice.which);
+            GenerateCRC(&id, buffer);
 
-        case SDL_CONTROLLERDEVICEREMOVED: controllerClose(event.cdevice.which); break;
+            InitSDL2InputDevice(id, event.cdevice.which);
+            break;
+        }
+
+        case SDL_CONTROLLERDEVICEREMOVED: {
+            uint32 id;
+            char buffer[0x20];
+            sprintf(buffer, "%s%d", "SDLDevice", event.cdevice.which);
+            GenerateCRC(&id, buffer);
+
+            RemoveInputDevice(InputDeviceFromID(id));
+            break;
+        }
 
         case SDL_APP_WILLENTERFOREGROUND:
 #if RETRO_REV02
@@ -1986,6 +2048,15 @@ void RenderDevice::ProcessEvent(SDL_Event event)
             ++buttonDownCount;
 #endif
             switch (event.key.keysym.scancode) {
+                case SDL_SCANCODE_RETURN:
+                    if (event.key.keysym.mod == KMOD_LALT) {
+                        RSDK::gameSettings.windowed ^= 1;
+                        UpdateGameWindow();
+                        RSDK::settingsChanged = false;
+                        break;
+                    }
+                // [fallthrough]
+
                 default: UpdateKeyState(event.key.keysym.scancode); break;
 
                 case SDL_SCANCODE_ESCAPE:
@@ -2051,22 +2122,6 @@ void RenderDevice::ProcessEvent(SDL_Event event)
 #endif
 
                 case SDL_SCANCODE_F3: RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % (shaderCount - 4); break;
-
-                case SDL_SCANCODE_F4:
-                    RSDK::gameSettings.windowed ^= 1;
-                    if (!RSDK::gameSettings.windowed) {
-                        SDL_RestoreWindow(window);
-                        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                        SDL_ShowCursor(SDL_FALSE);
-                    }
-                    else {
-                        SDL_SetWindowFullscreen(window, false);
-                        SDL_ShowCursor(SDL_TRUE);
-                        SDL_SetWindowSize(window, RSDK::gameSettings.windowWidth, RSDK::gameSettings.windowHeight);
-                        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-                        SDL_RestoreWindow(window);
-                    }
-                    break;
 
 #if !RETRO_USE_ORIGINAL_CODE
                 case SDL_SCANCODE_F5:
@@ -2282,72 +2337,6 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
 void UpdateGameWindow()
 {
     RenderDevice::RefreshWindow();
-#if RETRO_USING_SDL2
-    /*
-    for (int s = 0; s < SCREEN_MAX; ++s) {
-        SDL_DestroyTexture(engine.screenBuffer[s]);
-    }
-    SDL_DestroyRenderer(engine.renderer);
-    SDL_DestroyWindow(window);
-
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
-
-    window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
-                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
-
-    engine.renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-    if (!window) {
-        PrintLog(PRINT_NORMAL, "ERROR: failed to create window!");
-        engine.running = false;
-        return;
-    }
-
-    if (!engine.renderer) {
-        PrintLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
-        engine.running = false;
-        return;
-    }
-
-    SDL_RenderSetLogicalSize(engine.renderer, pixWidth, SCREEN_YSIZE);
-    SDL_SetRenderDrawBlendMode(engine.renderer, SDL_BLENDMODE_BLEND);
-
-    for (int s = 0; s < SCREEN_MAX; ++s) {
-        engine.screenBuffer[s] =
-            SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].size.x, screens[s].size.y);
-
-        if (!engine.screenBuffer[s]) {
-            PrintLog(PRINT_NORMAL, "ERROR: failed to create screen buffer %d!\nerror msg: %s", s, SDL_GetError());
-            engine.running = false;
-            return;
-        }
-    }
-
-    if (!engine.isWindowed) {
-        SDL_RestoreWindow(window);
-        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-        SDL_ShowCursor(SDL_FALSE);
-    }
-
-    if (!engine.hasBorder) {
-        SDL_RestoreWindow(window);
-        SDL_SetWindowBordered(window, SDL_FALSE);
-    }
-
-    InitShaders();
-
-    if (engine.displays)
-        free(engine.displays);
-
-    RenderDevice::displayCount = SDL_GetNumVideoDisplays();
-    engine.displays     = (SDL_DisplayMode *)malloc(RenderDevice::displayCount * sizeof(SDL_DisplayMode));
-    for (int d = 0; d < RenderDevice::displayCount; ++d) {
-        if (SDL_GetDisplayMode(d, 0, &engine.displays[d])) {
-            // what the
-        }
-    }*/
-#endif
 }
 
 void SetImageTexture(int width, int height, byte *imagePixels)

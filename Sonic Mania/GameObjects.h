@@ -345,18 +345,18 @@ typedef struct {
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
-    int32 (*ControllerIDForInputID)(uint8 inputID);
-    int32 (*MostRecentActiveControllerID)(int32 type, bool32 unassignedOnly, uint32 maxInactiveTimer);
-    int32 (*GetControllerType)(int32 inputID);
-    int32 (*GetAssignedControllerID)(int32 inputID);
-    int32 (*GetAssignedUnknown)(int32 inputID);
-    int32 (*DoInputUnknown2)(int32 inputID, int32 a2, int32 a3);
-    int32 (*DoInputUnknown3)(int32 inputID, int32 a2, int32 a3);
-    int32 (*Missing24)(void);
-    int32 (*DoInputUnknown2_Active)(uint8 inputID, int32 a2, int32 a3);
-    int32 (*DoInputUnknown3_Active)(uint8 inputID, int32 a2, int32 a3);
-    void (*AssignControllerID)(uint8 inputID, int32 deviceID);
-    bool32 (*InputIDIsDisconnected)(uint8 inputID);
+    int32 (*ControllerIDForInputID)(uint8 controllerID);
+    int32 (*MostRecentActiveControllerID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
+    int32 (*GetControllerType)(uint32 inputID);
+    int32 (*GetAssignedControllerID)(uint32 inputID);
+    int32 (*GetInputUnknown)(uint32 inputID);
+    int32 (*InputUnknown1)(uint32 inputID, int32 unknown1, int32 unknown2);
+    int32 (*InputUnknown2)(uint32 inputID, int32 unknown1, int32 unknown2);
+    int32 (*GetControllerUnknown)(void);
+    int32 (*ControllerUnknown1)(uint8 controllerID, int32 unknown1, int32 unknown2);
+    int32 (*ControllerUnknown2)(uint8 controllerID, int32 unknown1, int32 unknown2);
+    void (*AssignControllerID)(uint8 controllerID, uint32 inputID);
+    bool32 (*InputIDIsDisconnected)(uint8 controllerID);
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS

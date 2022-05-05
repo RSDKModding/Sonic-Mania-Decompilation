@@ -34,7 +34,7 @@ int gamePadCount                 = 0;
 int mostRecentControllerID = -1;
 #endif
 
-#define normalize(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
+#define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
 #if RETRO_USING_SDL2
 
@@ -360,17 +360,18 @@ int32 SDLToWinAPIMappings(int32 mapping)
         case SDL_SCANCODE_RSHIFT: return VK_RSHIFT;
         case SDL_SCANCODE_LCTRL: return VK_LCONTROL;
         case SDL_SCANCODE_RCTRL: return VK_RCONTROL;
+        case SDL_SCANCODE_LALT: return VK_LMENU;
+        case SDL_SCANCODE_RALT: return VK_RMENU;
     }
 }
 
-bool32 getControllerButton(InputDevice *device, uint8 buttonID)
+bool32 getControllerButton(InputDeviceSDL *device, uint8 buttonID)
 {
     if (buttonID == (uint8)SDL_CONTROLLER_BUTTON_INVALID || !device)
         return false;
 
-    if (SDL_GameControllerGetButton(((InputDeviceSDL *)device)->controllerPtr, (SDL_GameControllerButton)buttonID)) {
+    if (SDL_GameControllerGetButton(device->controllerPtr, (SDL_GameControllerButton)buttonID))
         return true;
-    }
 
     return false;
 }
@@ -441,18 +442,18 @@ void InputDeviceKeyboard::UpdateInput()
     else
         ++this->inactiveTimer[1];
 
-    this->stateUp     = (this->inputFlags & 1) != 0;
-    this->stateDown   = (this->inputFlags & 2) != 0;
-    this->stateLeft   = (this->inputFlags & 4) != 0;
-    this->stateRight  = (this->inputFlags & 8) != 0;
-    this->stateA      = (this->inputFlags & 0x1000) != 0;
-    this->stateB      = (this->inputFlags & 0x2000) != 0;
-    this->stateC      = (this->inputFlags & 0x400) != 0;
-    this->stateX      = (this->inputFlags & 0x4000) != 0;
-    this->stateY      = (this->inputFlags & 0x8000u) != 0;
-    this->stateZ      = (this->inputFlags & 0x800) != 0;
-    this->stateStart  = (this->inputFlags & 0x10) != 0;
-    this->stateSelect = (this->inputFlags & 0x20) != 0;
+    this->stateUp     = (this->inputFlags & KEYMASK_UP) != 0;
+    this->stateDown   = (this->inputFlags & KEYMASK_DOWN) != 0;
+    this->stateLeft   = (this->inputFlags & KEYMASK_LEFT) != 0;
+    this->stateRight  = (this->inputFlags & KEYMASK_RIGHT) != 0;
+    this->stateA      = (this->inputFlags & KEYMASK_A) != 0;
+    this->stateB      = (this->inputFlags & KEYMASK_B) != 0;
+    this->stateC      = (this->inputFlags & KEYMASK_C) != 0;
+    this->stateX      = (this->inputFlags & KEYMASK_X) != 0;
+    this->stateY      = (this->inputFlags & KEYMASK_Y) != 0;
+    this->stateZ      = (this->inputFlags & KEYMASK_Z) != 0;
+    this->stateStart  = (this->inputFlags & KEYMASK_START) != 0;
+    this->stateSelect = (this->inputFlags & KEYMASK_SELECT) != 0;
 
     this->ProcessInput(CONT_ANY);
 }
@@ -506,20 +507,20 @@ void InputDeviceXInput::UpdateInput() {
             
             XINPUT_GAMEPAD *gamePad             = &this->inputState[this->activeState].Gamepad;
 
-            this->stateUp       = (gamePad->wButtons & 1) != 0;
-            this->stateDown     = (gamePad->wButtons & 2) != 0;
-            this->stateLeft     = (gamePad->wButtons & 4) != 0;
-            this->stateRight    = (gamePad->wButtons & 8) != 0;
-            this->stateA        = (gamePad->wButtons & 0x1000) != 0;
-            this->stateB        = (gamePad->wButtons & 0x2000) != 0;
-            this->stateX        = (gamePad->wButtons & 0x4000) != 0;
-            this->stateY        = (gamePad->wButtons & 0x8000) != 0;
-            this->stateStart    = (gamePad->wButtons & 0x10) != 0;
-            this->stateSelect   = (gamePad->wButtons & 0x20) != 0;
-            this->stateBumper_L = (gamePad->wButtons & 0x100) != 0;
-            this->stateBumper_R = (gamePad->wButtons & 0x200) != 0;
-            this->stateStick_L  = (gamePad->wButtons & 0x40) != 0;
-            this->stateStick_R  = (gamePad->wButtons & 0x80) != 0;
+            this->stateUp       = (gamePad->wButtons & KEYMASK_UP) != 0;
+            this->stateDown     = (gamePad->wButtons & KEYMASK_DOWN) != 0;
+            this->stateLeft     = (gamePad->wButtons & KEYMASK_LEFT) != 0;
+            this->stateRight    = (gamePad->wButtons & KEYMASK_RIGHT) != 0;
+            this->stateA        = (gamePad->wButtons & KEYMASK_A) != 0;
+            this->stateB        = (gamePad->wButtons & KEYMASK_B) != 0;
+            this->stateX        = (gamePad->wButtons & KEYMASK_X) != 0;
+            this->stateY        = (gamePad->wButtons & KEYMASK_Y) != 0;
+            this->stateStart    = (gamePad->wButtons & KEYMASK_START) != 0;
+            this->stateSelect   = (gamePad->wButtons & KEYMASK_SELECT) != 0;
+            this->stateBumper_L = (gamePad->wButtons & KEYMASK_BUMPERL) != 0;
+            this->stateBumper_R = (gamePad->wButtons & KEYMASK_BUMPERR) != 0;
+            this->stateStick_L  = (gamePad->wButtons & KEYMASK_STICKL) != 0;
+            this->stateStick_R  = (gamePad->wButtons & KEYMASK_STICKR) != 0;
 
             this->hDelta_L      = gamePad->sThumbLX;
             this->vDelta_L      = gamePad->sThumbLY;
@@ -591,7 +592,6 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     controller[controllerID].keySelect.press |= this->stateSelect;
 
     stickL[controllerID].keyStick.press |= this->stateStick_L;
-    stickR[controllerID].keyStick.press |= this->stateStick_R;
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
     stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
@@ -599,6 +599,7 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
     stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
 
+    stickR[controllerID].keyStick.press |= this->stateStick_R;
     stickR[controllerID].hDelta = this->hDelta_R;
     stickR[controllerID].vDelta = this->vDelta_R;
     stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
@@ -635,24 +636,24 @@ void InputDeviceRaw::UpdateInput()
     else
         ++this->inactiveTimer[1];
 
-    this->stateUp        = (this->inputFlags & 1) != 0;
-    this->stateDown      = (this->inputFlags & 2) != 0;
-    this->stateLeft      = (this->inputFlags & 4) != 0;
-    this->stateRight     = (this->inputFlags & 8) != 0;
-    this->stateA         = (this->inputFlags & 0x1000) != 0;
-    this->stateB         = (this->inputFlags & 0x2000) != 0;
-    this->stateC         = (this->inputFlags & 0x400) != 0;
-    this->stateX         = (this->inputFlags & 0x4000) != 0;
-    this->stateY         = (this->inputFlags & 0x8000) != 0;
-    this->stateZ         = (this->inputFlags & 0x800) != 0;
-    this->stateStart     = (this->inputFlags & 0x10) != 0;
-    this->stateSelect    = (this->inputFlags & 0x20) != 0;
-    this->stateBumper_L  = (this->inputFlags & 0x100) != 0;
-    this->stateBumper_R  = (this->inputFlags & 0x200) != 0;
-    this->stickStateL    = (this->inputFlags & 0x40) != 0;
-    this->stickStateR    = (this->inputFlags & 0x80) != 0;
-    this->stateTrigger_L = (this->inputFlags & 0x10000) != 0;
-    this->stateTrigger_R = (this->inputFlags & 0x20000) != 0;
+    this->stateUp        = (this->inputFlags & KEYMASK_UP) != 0;
+    this->stateDown      = (this->inputFlags & KEYMASK_DOWN) != 0;
+    this->stateLeft      = (this->inputFlags & KEYMASK_LEFT) != 0;
+    this->stateRight     = (this->inputFlags & KEYMASK_RIGHT) != 0;
+    this->stateA         = (this->inputFlags & KEYMASK_A) != 0;
+    this->stateB         = (this->inputFlags & KEYMASK_B) != 0;
+    this->stateC         = (this->inputFlags & KEYMASK_C) != 0;
+    this->stateX         = (this->inputFlags & KEYMASK_X) != 0;
+    this->stateY         = (this->inputFlags & KEYMASK_Y) != 0;
+    this->stateZ         = (this->inputFlags & KEYMASK_Z) != 0;
+    this->stateStart     = (this->inputFlags & KEYMASK_START) != 0;
+    this->stateSelect    = (this->inputFlags & KEYMASK_SELECT) != 0;
+    this->stateBumper_L  = (this->inputFlags & KEYMASK_BUMPERL) != 0;
+    this->stateBumper_R  = (this->inputFlags & KEYMASK_BUMPERR) != 0;
+    this->stateStick_L    = (this->inputFlags & KEYMASK_STICKL) != 0;
+    this->stateStick_R    = (this->inputFlags & KEYMASK_STICKR) != 0;
+    this->stateTrigger_L = (this->inputFlags & KEYMASK_TRIGGERL) != 0;
+    this->stateTrigger_R = (this->inputFlags & KEYMASK_TRIGGERR) != 0;
     
     this->ProcessInput(CONT_ANY);
 }
@@ -672,8 +673,7 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
     controller[controllerID].keyStart.press |= this->stateStart;
     controller[controllerID].keySelect.press |= this->stateSelect;
 
-    stickL[controllerID].keyStick.press |= this->stickStateL;
-    stickR[controllerID].keyStick.press |= this->stickStateR;
+    stickL[controllerID].keyStick.press |= this->stateStick_L;
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
     stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
@@ -681,6 +681,7 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
     stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
     stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
 
+    stickR[controllerID].keyStick.press |= this->stateStick_R;
     stickR[controllerID].hDelta = this->vDelta_R;
     stickR[controllerID].vDelta = this->hDelta_R;
     stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
@@ -703,225 +704,150 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
 #if RETRO_USING_SDL2
 void InputDeviceSDL::UpdateInput()
 {
-#if RETRO_USING_SDL2
-    int buttonMap[] = {
-        SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
-        SDL_CONTROLLER_BUTTON_A,       SDL_CONTROLLER_BUTTON_B,         SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_X,
-        SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_BACK,
+    int32 buttonMap[] = {
+        SDL_CONTROLLER_BUTTON_DPAD_UP,   SDL_CONTROLLER_BUTTON_DPAD_DOWN,  SDL_CONTROLLER_BUTTON_DPAD_LEFT,    SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+        SDL_CONTROLLER_BUTTON_A,         SDL_CONTROLLER_BUTTON_B,          SDL_CONTROLLER_BUTTON_INVALID,      SDL_CONTROLLER_BUTTON_X,
+        SDL_CONTROLLER_BUTTON_Y,         SDL_CONTROLLER_BUTTON_INVALID,    SDL_CONTROLLER_BUTTON_START,        SDL_CONTROLLER_BUTTON_BACK,
+        SDL_CONTROLLER_BUTTON_LEFTSTICK, SDL_CONTROLLER_BUTTON_RIGHTSTICK, SDL_CONTROLLER_BUTTON_LEFTSHOULDER, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER,
     };
 
-    bool32 confirmPress = false;
-    for (int i = 0; i < KEY_MAX; ++i) {
-        if (getControllerButton(device, buttonMap[i])) {
-            device->anyPress |= true;
-            confirmPress |= (i == 4 || i == 10);
-        }
+    int32 keyMasks[] = { KEYMASK_UP, KEYMASK_DOWN, KEYMASK_LEFT,  KEYMASK_RIGHT,  KEYMASK_A,      KEYMASK_B,      KEYMASK_C,       KEYMASK_X,
+                         KEYMASK_Y,  KEYMASK_Z,    KEYMASK_START, KEYMASK_SELECT, KEYMASK_STICKL, KEYMASK_STICKR, KEYMASK_BUMPERL, KEYMASK_BUMPERR };
+
+    this->prevInputFlags = this->inputFlags;
+
+    float prevHDeltaL       = hDelta_L;
+    float prevVDeltaL       = vDelta_L;
+    float prevHDeltaR       = hDelta_R;
+    float prevVDeltaR       = vDelta_R;
+    float prevTriggerDeltaL = triggerDeltaL;
+    float prevTriggerDeltaR = triggerDeltaR;
+
+    this->inputFlags = 0;
+    for (int32 i = 0; i < KEY_MAX + 4; ++i) {
+        if (getControllerButton(this, buttonMap[i]))
+            this->inputFlags |= keyMasks[i];
     }
 
-    InputDeviceSDL *sdlDevice = (InputDeviceSDL *)device;
-    int delta                 = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_LEFTX);
-    float hDeltaL             = 0;
+    int32 delta                 = SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_LEFTX);
     if (delta < 0)
-        hDeltaL = -normalize(-delta, 1, 32768);
+        hDelta_L = -NORMALIZE(-delta, 1, 32768);
     else
-        hDeltaL = normalize(delta, 0, 32767);
+        hDelta_L = NORMALIZE(delta, 0, 32767);
 
-    delta         = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_LEFTY);
-    float vDeltaL = 0;
+    delta         = SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_LEFTY);
     if (delta < 0)
-        vDeltaL = -normalize(-delta, 1, 32768);
+        vDelta_L = -NORMALIZE(-delta, 1, 32768);
     else
-        vDeltaL = normalize(delta, 0, 32767);
-    vDeltaL = -vDeltaL;
+        vDelta_L = NORMALIZE(delta, 0, 32767);
+    vDelta_L = -vDelta_L;
 
-    delta         = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_RIGHTX);
-    float hDeltaR = 0;
+    delta         = SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_RIGHTX);
     if (delta < 0)
-        hDeltaR = -normalize(-delta, 1, 32768);
+        hDelta_R = -NORMALIZE(-delta, 1, 32768);
     else
-        hDeltaR = normalize(delta, 0, 32767);
+        hDelta_R = NORMALIZE(delta, 0, 32767);
 
-    delta = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_RIGHTY);
-    float vDeltaR = 0;
+    delta = SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_RIGHTY);
     if (delta < 0)
-        vDeltaR = -normalize(-delta, 1, 32768);
+        vDelta_R = -NORMALIZE(-delta, 1, 32768);
     else
-        vDeltaR = normalize(delta, 0, 32767);
-    vDeltaR = -vDeltaR;
+        vDelta_R = NORMALIZE(delta, 0, 32767);
+    vDelta_R = -vDelta_R;
 
-    float deltaTriggerL = normalize(SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERLEFT), 0, 32767);
-    float deltaTriggerR = normalize(SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT), 0, 32767);
+    triggerDeltaL = NORMALIZE(SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERLEFT), 0, 32767);
+    triggerDeltaR = NORMALIZE(SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT), 0, 32767);
 
-    stickL[CONT_ANY].deadzone   = 0.3;
-    stickR[CONT_ANY].deadzone   = 0.3;
-    triggerL[CONT_ANY].deadzone = 0.3;
-    triggerR[CONT_ANY].deadzone = 0.3;
+    int32 changedButtons = ~this->prevInputFlags & (this->prevInputFlags ^ this->inputFlags);
 
-    if (vDeltaL > stickL[CONT_ANY].deadzone) 
-        device->anyPress |= true;
+    if (changedButtons || hDelta_L != prevHDeltaL || vDelta_L != prevVDeltaL || hDelta_R != prevHDeltaR || vDelta_R != prevVDeltaR
+        || triggerDeltaL != prevTriggerDeltaL || triggerDeltaR != prevTriggerDeltaR) {
+        this->inactiveTimer[0] = 0;
+        this->anyPress         = true;
+    }
+    else {
+        ++this->inactiveTimer[0];
+        this->anyPress = false;
+    }
 
-    if (vDeltaL < -stickL[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (hDeltaL < -stickL[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (hDeltaL > stickL[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSTICK)) 
-        device->anyPress |= true;
-
-    if (vDeltaR > stickR[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (vDeltaR < -stickR[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (hDeltaR < -stickR[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (hDeltaR > stickR[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) 
-        device->anyPress |= true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) 
-        device->anyPress |= true;
-
-    if (deltaTriggerL > triggerL[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) 
-        device->anyPress |= true;
-
-    if (deltaTriggerR > triggerR[CONT_ANY].deadzone) 
-        device->anyPress |= true;
-
-
-    if (device->anyPress)
-        device->inactiveTimer[0] = 0;
+    if ((changedButtons & KEYMASK_A) || (changedButtons & KEYMASK_START))
+        this->inactiveTimer[1] = 0;
     else
-        device->inactiveTimer[0]++;
+        ++this->inactiveTimer[1];
 
-    if (confirmPress)
-        device->inactiveTimer[1] = 0;
-    else
-        device->inactiveTimer[1]++;
+    this->stateUp        = (this->inputFlags & KEYMASK_UP) != 0;
+    this->stateDown      = (this->inputFlags & KEYMASK_DOWN) != 0;
+    this->stateLeft      = (this->inputFlags & KEYMASK_LEFT) != 0;
+    this->stateRight     = (this->inputFlags & KEYMASK_RIGHT) != 0;
+    this->stateA         = (this->inputFlags & KEYMASK_A) != 0;
+    this->stateB         = (this->inputFlags & KEYMASK_B) != 0;
+    this->stateC         = (this->inputFlags & KEYMASK_C) != 0;
+    this->stateX         = (this->inputFlags & KEYMASK_X) != 0;
+    this->stateY         = (this->inputFlags & KEYMASK_Y) != 0;
+    this->stateZ         = (this->inputFlags & KEYMASK_Z) != 0;
+    this->stateStart     = (this->inputFlags & KEYMASK_START) != 0;
+    this->stateSelect    = (this->inputFlags & KEYMASK_SELECT) != 0;
+    this->stateBumper_L  = (this->inputFlags & KEYMASK_BUMPERL) != 0;
+    this->stateBumper_R  = (this->inputFlags & KEYMASK_BUMPERR) != 0;
+    this->stateStick_L   = (this->inputFlags & KEYMASK_STICKL) != 0;
+    this->stateStick_R   = (this->inputFlags & KEYMASK_STICKR) != 0;
 
 #if !RETRO_REV02
-    if (device->anyPress || confirmPress)
+    if ((changedButtons & KEYMASK_A) || (changedButtons & KEYMASK_START))
         mostRecentControllerID = device->controllerID;
 #endif
-#endif
 
-    device->processInput(device, CONT_ANY);
+    ProcessInput(CONT_ANY);
 }
 
-void InputDeviceSDL2::ProcessInput(int32 controllerID)
+void InputDeviceSDL::ProcessInput(int32 controllerID)
 {
-#if RETRO_USING_SDL2
-    InputState *buttons[] = {
-        &controller[controllerID].keyUp, &controller[controllerID].keyDown, &controller[controllerID].keyLeft,  &controller[controllerID].keyRight,
-        &controller[controllerID].keyA,  &controller[controllerID].keyB,    &controller[controllerID].keyC,     &controller[controllerID].keyX,
-        &controller[controllerID].keyY,  &controller[controllerID].keyZ,    &controller[controllerID].keyStart, &controller[controllerID].keySelect,
-    };
-    int buttonMap[] = {
-        SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
-        SDL_CONTROLLER_BUTTON_A,       SDL_CONTROLLER_BUTTON_B,         SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_X,
-        SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_BACK,
-    };
+    controller[controllerID].keyUp.press |= this->stateUp;
+    controller[controllerID].keyDown.press |= this->stateDown;
+    controller[controllerID].keyLeft.press |= this->stateLeft;
+    controller[controllerID].keyRight.press |= this->stateRight;
+    controller[controllerID].keyA.press |= this->stateA;
+    controller[controllerID].keyB.press |= this->stateB;
+    controller[controllerID].keyC.press |= this->stateC;
+    controller[controllerID].keyX.press |= this->stateX;
+    controller[controllerID].keyY.press |= this->stateY;
+    controller[controllerID].keyZ.press |= this->stateZ;
+    controller[controllerID].keyStart.press |= this->stateStart;
+    controller[controllerID].keySelect.press |= this->stateSelect;
 
-    for (int i = 0; i < KEY_MAX; ++i) {
-        if (getControllerButton(device, buttonMap[i])) 
-            buttons[i]->press = true;
-    }
+    stickL[controllerID].keyStick.press |= this->stateStick_L;
+    stickL[controllerID].hDelta = this->hDelta_L;
+    stickL[controllerID].vDelta = this->vDelta_L;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
 
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSTICK)) 
-        stickL[controllerID].keyStick.press = true;
+    stickR[controllerID].keyStick.press |= this->stateStick_R;
+    stickR[controllerID].hDelta = this->vDelta_R;
+    stickR[controllerID].vDelta = this->hDelta_R;
+    stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
+    stickR[controllerID].keyDown.press |= this->vDelta_R < -0.3;
+    stickR[controllerID].keyLeft.press |= this->hDelta_R < -0.3;
+    stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
 
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSTICK))
-        stickR[controllerID].keyStick.press = true;
+    triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
+    triggerL[controllerID].keyTrigger.press |= this->triggerDeltaL > 0.3;
+    triggerL[controllerID].deadzone = this->triggerDeltaL;
+    triggerL[controllerID].delta    = this->triggerDeltaL;
 
-    for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX && !InputManager.anyPress; ++i) {
-        if (getControllerButton(device, i)) {
-            InputManager.anyPress = true;
-        }
-    }
+    triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
+    triggerR[controllerID].keyTrigger.press |= this->triggerDeltaR > 0.3;
+    triggerR[controllerID].deadzone = this->triggerDeltaR;
+    triggerR[controllerID].delta    = this->triggerDeltaR;
+}
 
-    InputDeviceSDL *sdlDevice = (InputDeviceSDL *)device;
-    int delta                 = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_LEFTX);
-    if (delta < 0)
-        stickL[controllerID].hDelta = -normalize(-delta, 1, 32768);
-    else
-        stickL[controllerID].hDelta = normalize(delta, 0, 32767);
-
-    delta = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_LEFTY);
-    if (delta < 0)
-        stickL[controllerID].vDelta = -normalize(-delta, 1, 32768);
-    else
-        stickL[controllerID].vDelta = normalize(delta, 0, 32767);
-    stickL[controllerID].vDelta = -stickL[controllerID].vDelta;
-
-    delta = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_RIGHTX);
-    if (delta < 0)
-        stickR[controllerID].hDelta = -normalize(-delta, 1, 32768);
-    else
-        stickR[controllerID].hDelta = normalize(delta, 0, 32767);
-
-    delta = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_RIGHTY);
-    if (delta < 0)
-        stickR[controllerID].vDelta = -normalize(-delta, 1, 32768);
-    else
-        stickR[controllerID].vDelta = normalize(delta, 0, 32767);
-    stickR[controllerID].vDelta = -stickR[controllerID].vDelta;
-
-    triggerL[controllerID].delta = normalize(SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERLEFT), 0, 32767);
-    triggerR[controllerID].delta = normalize(SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT), 0, 32767);
-
-    if (stickL[controllerID].vDelta > stickL[controllerID].deadzone)
-        stickL[controllerID].keyUp.press = true;
-
-    if (stickL[controllerID].vDelta < -stickL[controllerID].deadzone)
-        stickL[controllerID].keyDown.press = true;
-
-    if (stickL[controllerID].hDelta < -stickL[controllerID].deadzone)
-        stickL[controllerID].keyLeft.press = true;
-
-    if (stickL[controllerID].hDelta > stickL[controllerID].deadzone)
-        stickL[controllerID].keyRight.press = true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSTICK))
-        stickL[controllerID].keyStick.press = true;
-
-    if (stickR[controllerID].vDelta > stickR[controllerID].deadzone)
-        stickR[controllerID].keyUp.press = true;
-
-    if (stickR[controllerID].vDelta < -stickR[controllerID].deadzone)
-        stickR[controllerID].keyDown.press = true;
-
-    if (stickR[controllerID].hDelta < -stickR[controllerID].deadzone)
-        stickR[controllerID].keyLeft.press = true;
-
-    if (stickR[controllerID].hDelta > stickR[controllerID].deadzone)
-        stickR[controllerID].keyRight.press = true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSTICK))
-        stickR[controllerID].keyStick.press = true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
-        triggerL[controllerID].keyBumper.press = true;
-
-    if (triggerL[controllerID].delta > triggerL[controllerID].deadzone)
-        triggerL[controllerID].keyTrigger.press = true;
-
-    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
-        triggerR[controllerID].keyBumper.press = true;
-
-    if (triggerR[controllerID].delta > triggerR[controllerID].deadzone)
-        triggerR[controllerID].keyTrigger.press = true;
-#endif
+void InputDeviceSDL::CloseDevice()
+{
+    this->active               = false;
+    this->assignedControllerID = false;
+    SDL_GameControllerClose(this->controllerPtr);
+    this->controllerPtr = NULL;
 }
 #endif
 
@@ -955,7 +881,8 @@ InputDeviceKeyboard *InitKeyboardDevice(uint32 id)
     return device;
 }
 
-InputDeviceXInput *InitXInputInputDevice(uint32 id)
+#if RETRO_USING_DIRECTX9
+InputDeviceXInput *InitXInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -1019,6 +946,54 @@ InputDeviceRaw* InitRawInputDevice(uint32 id)
     InputDeviceCount++;
     return device;
 }
+#endif
+
+#if RETRO_USING_SDL2
+InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID)
+{
+    if (InputDeviceCount >= INPUTDEVICE_COUNT)
+        return NULL;
+
+    if (InputDevices[InputDeviceCount] && InputDevices[InputDeviceCount]->active)
+        return NULL;
+
+    if (InputDevices[InputDeviceCount])
+        delete InputDevices[InputDeviceCount];
+
+    InputDevices[InputDeviceCount] = new InputDeviceSDL();
+
+    InputDeviceSDL *device = (InputDeviceSDL *)InputDevices[InputDeviceCount];
+
+    device->controllerPtr = SDL_GameControllerOpen(controllerID);
+
+    const char *name = SDL_GameControllerName(device->controllerPtr);
+
+    byte controllerType = DEVICE_XBOX;
+    if (strstr(name, "Xbox"))
+        controllerType = DEVICE_XBOX;
+    else if (strstr(name, "PS4") || strstr(name, "PS5"))
+        controllerType = DEVICE_PS4;
+    else if (strstr(name, "Nintendo") || strstr(name, "Switch"))
+        controllerType = DEVICE_SWITCH_PRO;
+    else if (strstr(name, "Saturn"))
+        controllerType = DEVICE_SATURN;
+
+    device->active      = true;
+    device->disabled    = false;
+    device->gamePadType = (DEVICE_API_SDL2 << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (controllerType << 0);
+    device->inputID     = id;
+
+    for (int i = 0; i < PLAYER_COUNT; ++i) {
+        if (activeControllers[i] == id) {
+            activeInputDevices[i]        = device;
+            device->assignedControllerID = true;
+        }
+    }
+
+    InputDeviceCount++;
+    return device;
+}
+#endif
 
 void RemoveInputDevice(InputDevice *targetDevice)
 {
@@ -1096,7 +1071,7 @@ void InitXInputAPI()
                 RemoveInputDevice(device);
         }
         else if (!device) {
-            device = InitXInputInputDevice(id);
+            device = InitXInputDevice(id);
             if (device)
                 device->controllerID = i;
         }
@@ -1211,13 +1186,11 @@ void InitRawInputAPI()
 }
 #endif
 
-void InitInputDevices()
-{
-    if (activeInputDevices[0])
-        return;
 
-    char buffer[0x100];
 #if RETRO_USING_SDL2
+void InitSDL2InputAPI()
+{
+    char buffer[0x100];
 #if RETRO_PLATFORM == RETRO_SWITCH
     SDL_GameControllerAddMapping("53776974636820436f6e74726f6c6c65,Switch "
                                  "Controller,a:b0,b:b1,back:b11,dpdown:b15,dpleft:b12,dpright:b14,dpup:b13,leftshoulder:b6,leftstick:b4,lefttrigger:"
@@ -1232,26 +1205,37 @@ void InitInputDevices()
 #else
     sprintf(buffer, BASE_PATH "controllerdb.txt");
 #endif // ! RETRO_PLATFORM == RETRO_SWITCH
+
     FileIO *file = fOpen(buffer, "rb");
     if (file) {
         fClose(file);
 
-        // SDL_GameControllerAddMapping()
-        int nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
+        int32 nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
         if (nummaps >= 0)
             PrintLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
     }
+}
 #endif // ! RETRO_USING_SDL2
 
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
+void InitInputDevices()
+{
+    if (activeInputDevices[0])
+        return;
+
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         activeControllers[i]  = CONT_AUTOASSIGN;
         activeInputDevices[i] = NULL;
     }
 
     InitKeyboardInputAPI();
+#if RETRO_USING_DIRECTX9
     InitHIDAPI();
     InitXInputAPI();
+#endif
     // InitSteamInputAPI();
+#if RETRO_USING_SDL2
+    InitSDL2InputAPI();
+#endif
 }
 
 void ClearInput()
@@ -1442,6 +1426,10 @@ void UpdateKeyState(int32 keyCode)
 #if RETRO_USING_SDL2
     keyCode = SDLToWinAPIMappings(keyCode);
 #endif
+
+    // invalid key
+    if (keyCode == VK_UNKNOWN)
+        return;
 
     for (int i = 1; i <= PLAYER_COUNT; ++i) {
         InputState *buttons[] = {

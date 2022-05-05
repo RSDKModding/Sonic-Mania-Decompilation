@@ -481,10 +481,10 @@ int32 APICallback_GetSaveStatus(void)
         return APICallback->saveStatus;
 }
 
-int32 APICallback_GetControllerType(int32 id)
+int32 APICallback_GetControllerType(int32 inputID)
 {
     if (APICallback->GetControllerType)
-        return APICallback->GetControllerType(id, 0);
+        return APICallback->GetControllerType(inputID);
     else
         return GameInfo->platform == PLATFORM_DEV;
 }
@@ -554,47 +554,47 @@ bool32 APICallback_CheckInputDisconnected(void)
     return APICallback_InputIDIsDisconnected(self->inputID) || PauseMenu->forcedDisconnect;
 }
 
-bool32 APICallback_InputIDIsDisconnected(int32 id)
+bool32 APICallback_InputIDIsDisconnected(int32 controllerID)
 {
     RSDK_THIS(APICallback);
 
     if (APICallback->InputIDIsDisconnected) {
-        return APICallback->InputIDIsDisconnected(id);
+        return APICallback->InputIDIsDisconnected(controllerID);
     }
     else {
         LogHelpers_Print("DUMMY InputIDIsDisconnected()");
-        return APICallback->controllerIDs[id];
+        return APICallback->controllerIDs[controllerID];
     }
 }
 
-int32 APICallback_ControllerIDForInputID(int32 id)
+int32 APICallback_ControllerIDForInputID(int32 controllerID)
 {
     if (APICallback->ControllerIDForInputID) {
-        return APICallback->ControllerIDForInputID(id);
+        return APICallback->ControllerIDForInputID(controllerID);
     }
     else {
         LogHelpers_Print("DUMMY ControllerIDForInputID()");
         return 1;
     }
 }
-int32 APICallback_MostRecentActiveControllerID(int32 id)
+int32 APICallback_MostRecentActiveControllerID(int32 controllerID)
 {
     if (APICallback->MostRecentActiveControllerID) {
-        return APICallback->MostRecentActiveControllerID(id);
+        return APICallback->MostRecentActiveControllerID(controllerID);
     }
     else {
         LogHelpers_Print("DUMMY MostRecentActiveControllerID()");
         return 1;
     }
 }
-void APICallback_AssignControllerID(int32 controllerID, int32 id)
+void APICallback_AssignControllerID(int32 controllerID, int32 inputID)
 {
     if (APICallback->AssignControllerID) {
-        APICallback->AssignControllerID(controllerID, id);
+        APICallback->AssignControllerID(controllerID, inputID);
     }
     else {
         LogHelpers_Print("DUMMY AssignControllerID()");
-        APICallback->controllerIDs[controllerID] = id;
+        APICallback->controllerIDs[controllerID] = inputID;
     }
 }
 void APICallback_ResetControllerAssignments(void)

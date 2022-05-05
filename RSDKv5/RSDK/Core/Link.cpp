@@ -257,12 +257,12 @@ enum FunctionTableIDs {
     FunctionTable_MostRecentActiveControllerID,
     FunctionTable_GetControllerType,
     FunctionTable_GetAssignedControllerID,
-    FunctionTable_GetAssignedUnknown,
-    FunctionTable_Missing22,
-    FunctionTable_Missing23,
-    FunctionTable_Missing24,
-    FunctionTable_Missing25,
-    FunctionTable_Missing26,
+    FunctionTable_GetInputUnknown,
+    FunctionTable_InputUnknown1,
+    FunctionTable_InputUnknown2,
+    FunctionTable_GetControllerUnknown,
+    FunctionTable_ControllerUnknown1,
+    FunctionTable_ControllerUnknown2,
     FunctionTable_AssignControllerID,
     FunctionTable_InputIDIsDisconnected,
     FunctionTable_ResetControllerAssignments,
@@ -648,12 +648,12 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
     addToRSDKFunctionTable(FunctionTable_GetControllerType, GetControllerType);
     addToRSDKFunctionTable(FunctionTable_GetAssignedControllerID, GetAssignedControllerID);
-    addToRSDKFunctionTable(FunctionTable_GetAssignedUnknown, GetAssignedUnknown);
-    addToRSDKFunctionTable(FunctionTable_Missing22, DoInputUnknown2);
-    addToRSDKFunctionTable(FunctionTable_Missing23, DoInputUnknown3);
-    addToRSDKFunctionTable(FunctionTable_Missing24, Missing24);
-    addToRSDKFunctionTable(FunctionTable_Missing25, DoInputUnknown2_Active);
-    addToRSDKFunctionTable(FunctionTable_Missing26, DoInputUnknown3_Active);
+    addToRSDKFunctionTable(FunctionTable_GetInputUnknown, GetInputUnknown);
+    addToRSDKFunctionTable(FunctionTable_InputUnknown1, InputUnknown1);
+    addToRSDKFunctionTable(FunctionTable_InputUnknown2, InputUnknown2);
+    addToRSDKFunctionTable(FunctionTable_GetControllerUnknown, GetControllerUnknown);
+    addToRSDKFunctionTable(FunctionTable_ControllerUnknown1, ControllerUnknown1);
+    addToRSDKFunctionTable(FunctionTable_ControllerUnknown2, ControllerUnknown2);
     addToRSDKFunctionTable(FunctionTable_AssignControllerID, AssignControllerID);
     addToRSDKFunctionTable(FunctionTable_InputIDIsDisconnected, InputIDIsDisconnected);
     addToRSDKFunctionTable(FunctionTable_ResetControllerAssignments, ResetControllerAssignments);
