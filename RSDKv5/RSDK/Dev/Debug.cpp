@@ -898,10 +898,10 @@ void DevMenu_VideoOptions()
                 RSDK::settingsChanged = true;
             }
 
-            if (RSDK::gameSettings.shaderID > SHADER_CRT_YEE64)
+            if (RSDK::gameSettings.shaderID >= userShaderCount)
                 RSDK::gameSettings.shaderID = SHADER_NONE;
             else if (RSDK::gameSettings.shaderID < SHADER_NONE)
-                RSDK::gameSettings.shaderID = SHADER_CRT_YEE64;
+                RSDK::gameSettings.shaderID = userShaderCount - 1;
             break;
 
         case 4: // confirm

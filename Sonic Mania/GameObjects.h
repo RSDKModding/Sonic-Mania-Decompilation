@@ -25,6 +25,7 @@ typedef enum {
     MODCB_ONSTATICUPDATE,
     MODCB_ONDRAW,
     MODCB_STAGEUNLOAD,
+    MODCB_ONSHADERLOAD,
 } ModCallbackEvents;
 
 typedef enum {
@@ -42,7 +43,10 @@ typedef enum {
 // Mod Table
 typedef struct {
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size);
-    void *RegisterObject_FuncP;
+    void (*RegisterObject)(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void),
+                              void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *),
+                              void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void),
+                              const char *inherited);
     void *RegisterObject_STD;
     void *(*GetGlobals)(void);
     void (*Super)(int32 objectID, ModSuper callback, void *data);
@@ -53,7 +57,7 @@ typedef struct {
     const char *(*GetModIDByIndex)(uint32 index);
     bool32 (*ForeachModID)(TextInfo *id);
 
-    void *AddModCallback_FuncP;
+    void (*AddModCallback)(int32 callbackID, void (*callback)(void *));
     void *AddModCallback_STD;
     void (*AddPublicFunction)(const char *functionName, void *functionPtr);
     void *(*GetPublicFunction)(const char *id, const char *functionName);
@@ -80,6 +84,7 @@ typedef struct {
     void (*GetAchievementInfo)(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
     int32 (*GetAchievementIndexByID)(const char *identifier);
     int32 (*GetAchievementCount)(void);
+    void (*LoadShader)(const char *shaderName, bool32 linear);
 } ModFunctionTable;
 #endif
 
@@ -427,6 +432,13 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize)
+#endif
+
+#if RETRO_USE_MOD_LOADER
+#define MOD_ADD_OBJECT(object, inherit)                                                                                                              \
+    Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
+                       object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
+                       object##_Serialize, inherit)
 #endif
 
 #if RETRO_USE_PLUS

@@ -22,6 +22,10 @@ RenderVertex vertexBuffer[!RETRO_REV02 ? 24 : 60];
 int32 shaderCount = 0;
 ShaderEntry shaderList[SHADER_MAX];
 
+#if RETRO_USE_MOD_LOADER
+int32 userShaderCount = 0;
+#endif
+
 int RenderDevice::isRunning          = true;
 int RenderDevice::windowRefreshDelay = 0;
 
@@ -87,71 +91,6 @@ int32 RenderDevice::displayModeCount  = 0;
 unsigned long long RenderDevice::targetFreq = 0;
 unsigned long long RenderDevice::curTicks   = 0;
 unsigned long long RenderDevice::prevTicks  = 0;
-
-// clang-format off
-SDL_Color vertexColorBuffer[60] = {
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-    { 0xFF, 0xFF, 0xFF, 0xFF },
-};
-// clang-format on
 #endif
 
 char drawGroupNames[0x10][0x10] = {
@@ -431,10 +370,10 @@ void RenderDevice::FlipScreen()
                 dx9Device->SetVertexShader(shaderList[RSDK::gameSettings.shaderID].vertexShaderObject);
                 dx9Device->SetPixelShader(shaderList[RSDK::gameSettings.shaderID].pixelShaderObject);
                 dx9Device->SetVertexDeclaration(dx9VertexDeclare);
-                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, 24);
+                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, sizeof(RenderVertex));
             }
             else {
-                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, 24);
+                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, sizeof(RenderVertex));
                 dx9Device->SetFVF(D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZ);
             }
         }
@@ -537,14 +476,16 @@ void RenderDevice::FlipScreen()
 #else
             startVert = 18;
 #endif
-            SDL_RenderGeometryRaw(renderer, imageTexture, &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, imageTexture, &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
         case 1:
             startVert = 0;
-            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
         case 2:
@@ -553,49 +494,58 @@ void RenderDevice::FlipScreen()
 #else
             startVert = 6;
 #endif
-            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
 
 #if RETRO_REV02
             startVert = startVertex_2P[1];
 #else
             startVert = 12;
 #endif
-            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
 #if RETRO_REV02
         case 3:
             startVert = startVertex_3P[0];
-            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = startVertex_3P[1];
-            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = startVertex_3P[2];
-            SDL_RenderGeometryRaw(renderer, screenTexture[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 
         case 4:
             startVert = 30;
-            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = 36;
-            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = 42;
-            SDL_RenderGeometryRaw(renderer, screenTexture[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
 
             startVert = 48;
-            SDL_RenderGeometryRaw(renderer, screenTexture[3], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex), &vertexColorBuffer[startVert],
-                                  sizeof(SDL_Color), &vertexBuffer[startVert].tex.x, sizeof(RenderVertex), 6, NULL, 0, 0);
+            SDL_RenderGeometryRaw(renderer, screenTexture[3], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  (SDL_Color *)&vertexBuffer[startVert].color, sizeof(RenderVertex), &vertexBuffer[startVert].tex.x,
+                                  sizeof(RenderVertex), 6, NULL, 0, 0);
             break;
 #endif
     }
@@ -609,7 +559,7 @@ void RenderDevice::FlipScreen()
 #endif
 }
 
-void RenderDevice::Release(bool isRefresh)
+void RenderDevice::Release(bool32 isRefresh)
 {
 #if RETRO_USING_DIRECTX9
     if (RSDK::gameSettings.shaderSupport) {
@@ -624,6 +574,9 @@ void RenderDevice::Release(bool isRefresh)
         }
 
         shaderCount = 0;
+#if RETRO_USE_MOD_LOADER
+        userShaderCount = 0;
+#endif
     }
 
     if (imageTexture) {
@@ -873,119 +826,119 @@ void RenderDevice::InitVertexBuffer()
 #if RETRO_REV02
 RenderVertex vertBuffer[60] = {
     // 1 Screen (0)
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
     
     // 2 Screens - Bordered (Top Screen) (6)
-    { { -0.5,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -0.5,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  0.5,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -0.5,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -0.5,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  0.5,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
     
     // 2 Screens - Bordered (Bottom Screen) (12)
-    { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { { -0.5, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  0.5, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  0.5, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-
+    { { -0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -0.5, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  0.5, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  0.5, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    
     // 2 Screens - Stretched (Top Screen)  (18)
-    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    
     // 2 Screens - Stretched (Bottom Screen) (24)
-    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    
     // 4 Screens (Top-Left) (30)
-    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  0.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  0.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  0.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { {  0.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  0.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    
     // 4 Screens (Top-Right) (36)
-    { {  0.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { {  0.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-
-    // 4 Screens (Bottom-Left) (42)
-    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  0.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  0.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  0.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { {  0.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-
+    { {  0.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { {  0.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    
     // 4 Screens (Bottom-Right) (48)
-    { {  0.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { {  0.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  0.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  0.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    
+    // 4 Screens (Bottom-Left) (42)
+    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  0.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    
     // Image/Video (54)
-    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  1.0 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } },
-    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0,  1.0 }, {  1.0,  0.0 } },
-    { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } }
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  1.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  0.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } }
 };
 #else
 RenderVertex vertexList[24] =
 {
-  // 1 Screen (0)
-  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    // 1 Screen (0)
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
 
   // 2 Screens - Stretched (Top Screen) (6)
-  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-  { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-  { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
   
   // 2 Screens - Stretched (Bottom Screen) (12)
-  { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
-  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
-  { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
-  { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
   
     // Image/Video (18)
-  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  1.0 } },
-  { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } },
-  { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
-  { {  1.0,  1.0,  1.0,  1.0 }, {  1.0,  0.0 } },
-  { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } }
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  1.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } },
+    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  0.0 } },
+    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } }
 };
 #endif
     // clang-format on
@@ -1098,14 +1051,14 @@ bool RenderDevice::InitGraphicsAPI()
         elements[1].Type       = D3DDECLTYPE_D3DCOLOR;
         elements[1].Method     = 0;
         elements[1].Stream     = 0;
-        elements[1].Offset     = 12;
+        elements[1].Offset     = offsetof(RenderVertex, color);
         elements[1].Usage      = D3DDECLUSAGE_COLOR;
         elements[1].UsageIndex = 0;
 
         elements[2].Type       = D3DDECLTYPE_FLOAT2;
         elements[2].Method     = 0;
         elements[2].Stream     = 0;
-        elements[2].Offset     = 16;
+        elements[2].Offset     = offsetof(RenderVertex, tex);
         elements[2].Usage      = D3DDECLUSAGE_TEXCOORD;
         elements[2].UsageIndex = 0;
 
@@ -1113,7 +1066,7 @@ bool RenderDevice::InitGraphicsAPI()
         elements[3].Method     = 0;
         elements[3].Stream     = 0xFF;
         elements[3].Offset     = 0;
-        elements[3].Usage      = D3DDECLUSAGE_POSITION;
+        elements[3].Usage      = 0;
         elements[3].UsageIndex = 0;
 
         if (dx9Device->CreateVertexDeclaration(elements, &dx9VertexDeclare) < 0)
@@ -1124,7 +1077,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
     else {
         if (adapterStatus < 0
-            || dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZ, D3DPOOL_DEFAULT, &dx9VertexBuffer,
+            || dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT, &dx9VertexBuffer,
                                              NULL)
                    < 0)
             return false;
@@ -1188,7 +1141,7 @@ bool RenderDevice::InitGraphicsAPI()
             return false;
     }
 
-    if (dx9Device->CreateTexture(1024, 512, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &imageTexture, 0) != 0)
+    if (dx9Device->CreateTexture(1024, 512, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &imageTexture, NULL) != 0)
         return false;
 
     lastShaderID = -1;
@@ -1287,7 +1240,7 @@ bool RenderDevice::InitGraphicsAPI()
     return true;
 }
 
-void RenderDevice::LoadShader(const char *fileName, bool linear)
+void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 {
     char buffer[0x100];
     FileInfo info;
@@ -1314,12 +1267,21 @@ void RenderDevice::LoadShader(const char *fileName, bool linear)
 
 #if RETRO_USING_DIRECTX9
     shaderFolder    = "DX9"; // windows
-    vertexShaderExt = "vs";
-    pixelShaderExt  = "fs";
+    vertexShaderExt = "hlsl";
+    pixelShaderExt  = "hlsl";
 
     bytecodeFolder    = "CSO-DX9"; // windows
     vertexBytecodeExt = "vso";
     pixelBytecodeExt  = "fso";
+
+    const D3D_SHADER_MACRO defines[] = {
+#if RETRO_REV02
+        "RETRO_REV02",
+        "1",
+#endif
+        NULL,
+        NULL
+    };
 #endif
 
 #if RETRO_USING_DIRECTX11
@@ -1344,11 +1306,11 @@ void RenderDevice::LoadShader(const char *fileName, bool linear)
 #if RETRO_USING_DIRECTX9
         UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
         if (engine.devMenu)
-            flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+            flags |= D3DCOMPILE_DEBUG;
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VSMain", "vs_3_0", flags, 0,
+        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "VSMain", "vs_3_0", flags, 0,
                                     &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
@@ -1364,6 +1326,10 @@ void RenderDevice::LoadShader(const char *fileName, bool linear)
             return;
         }
         else {
+            PrintLog(PRINT_NORMAL, "Successfully compiled vertex shader!");
+            if (errorBlob)
+                PrintLog(PRINT_NORMAL, "Vertex shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
+
             if (dx9Device->CreateVertexShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->vertexShaderObject) < 0) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
@@ -1420,16 +1386,16 @@ void RenderDevice::LoadShader(const char *fileName, bool linear)
 #if RETRO_USING_DIRECTX9
         UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
         if (engine.devMenu)
-            flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+            flags |= D3DCOMPILE_DEBUG;
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PSMain", "ps_3_0", flags, 0,
+        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "PSMain", "ps_3_0", flags, 0,
                                     &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
-                PrintLog(PRINT_NORMAL, "ERROR COMPILING PIXEL SHADER: %s", (char *)errorBlob->GetBufferPointer());
+                PrintLog(PRINT_NORMAL, "ERROR COMPILING PIXEL SHADER:\n%s", (char *)errorBlob->GetBufferPointer());
                 errorBlob->Release();
             }
 
@@ -1437,6 +1403,11 @@ void RenderDevice::LoadShader(const char *fileName, bool linear)
                 shaderBlob->Release();
         }
         else {
+            PrintLog(PRINT_NORMAL, "Successfully compiled pixel shader!");
+            if (errorBlob)
+                PrintLog(PRINT_NORMAL, "Pixel shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
+
+
             if (dx9Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->pixelShaderObject) < 0) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
@@ -1502,6 +1473,13 @@ bool RenderDevice::InitShaders()
         LoadShader("Clean", true);
         LoadShader("CRT-Yeetron", true);
         LoadShader("CRT-Yee64", true);
+
+#if RETRO_USE_MOD_LOADER
+        // a place for mods to load custom shaders
+        RSDK::RunModCallbacks(RSDK::MODCB_ONSHADERLOAD, NULL);
+        userShaderCount = shaderCount;
+#endif
+
         LoadShader("YUV-420", true);
         LoadShader("YUV-422", true);
         LoadShader("YUV-444", true);
@@ -1830,7 +1808,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
 #endif
 
                 case VK_F3:
-                    RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % (shaderCount - 4);
+                    RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % userShaderCount;
                     handledMsg                  = true;
                     break;
 
@@ -2121,7 +2099,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                     break;
 #endif
 
-                case SDL_SCANCODE_F3: RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % (shaderCount - 4); break;
+                case SDL_SCANCODE_F3: RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % userShaderCount; break;
 
 #if !RETRO_USE_ORIGINAL_CODE
                 case SDL_SCANCODE_F5:

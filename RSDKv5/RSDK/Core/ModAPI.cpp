@@ -97,6 +97,7 @@ void RSDK::initModAPI()
     addToModFunctionTable(ModTable_GetAchievementInfo, GetAchievementInfo);
     addToModFunctionTable(ModTable_GetAchievementIndexByID, GetAchievementIndexByID);
     addToModFunctionTable(ModTable_GetAchievementCount, GetAchievementCount);
+    addToModFunctionTable(ModTable_LoadShader, RenderDevice::LoadShader);
 
     loadMods();
 }

@@ -22,6 +22,7 @@ typedef enum {
     MODCB_ONSTATICUPDATE,
     MODCB_ONDRAW,
     MODCB_STAGEUNLOAD,
+    MODCB_ONSHADERLOAD,
     MODCB_MAX,
 } ModCallbackEvents;
 
@@ -69,6 +70,7 @@ typedef enum {
     ModTable_GetAchievementInfo,
     ModTable_GetAchievementIndexByID,
     ModTable_GetAchievementCount,
+    ModTable_LoadShader,
     ModTable_Max
 } ModFunctionTable;
 

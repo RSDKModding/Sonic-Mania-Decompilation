@@ -111,13 +111,20 @@ struct float4 {
     float w;
 };
 
+struct float3 {
+    float x;
+    float y;
+    float z;
+};
+
 struct float2 {
     float x;
     float y;
 };
 
 struct RenderVertex {
-    float4 pos;
+    float3 pos;
+    uint32 color;
     float2 tex;
 };
 
@@ -137,7 +144,7 @@ public:
     static bool Init();
     static void CopyFrameBuffer();
     static void FlipScreen();
-    static void Release(bool isRefresh);
+    static void Release(bool32 isRefresh);
 
     static void RefreshWindow();
     static void SetupImageTexture(int32 width, int32 height, uint8 *imagePixels);
@@ -147,6 +154,9 @@ public:
     static void InitFPSCap();
     static bool CheckFPSCap();
     static void UpdateFPSCap();
+
+    // Public since it's needed for the ModAPI
+    static void LoadShader(const char *fileName, bool32 linear);
 
     // ====================
     // RSDK COMMON START
@@ -208,8 +218,6 @@ private:
 
     static void GetDisplays();
 
-    static void LoadShader(const char *fileName, bool linear);
-
 #if RETRO_USING_DIRECTX9
 
     static void ProcessEvent(MSG msg);
@@ -262,6 +270,12 @@ extern RenderVertex vertexBuffer[60];
 
 extern int32 shaderCount;
 extern ShaderEntry shaderList[SHADER_MAX];
+
+#if RETRO_USE_MOD_LOADER
+extern int32 userShaderCount;
+#else
+#define userShaderCount (4)
+#endif
 
 void UpdateGameWindow();
 
