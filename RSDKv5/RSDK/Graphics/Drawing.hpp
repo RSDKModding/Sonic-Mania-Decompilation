@@ -94,15 +94,32 @@ struct DrawList {
 
 struct WindowInfo {
 #if RETRO_USING_DIRECTX9
-    D3DDISPLAYMODE *displays;
+    // rdc gonna hate me frfr 😈
+    union {
+        struct {
+            UINT width;
+            UINT height;
+            UINT refresh_rate;
+        };
+        D3DDISPLAYMODE internal;
+    } *displays;
     D3DVIEWPORT9 viewport;
-#endif
 
-#if RETRO_USING_SDL2
-    SDL_DisplayMode *displays;
+#elif RETRO_USING_SDL2
+    union {
+        struct {
+            // i wanna do uint32 : 32 but idk if other compilers like that
+            uint32 _pad;
+            int width;
+            int height;
+            int refresh_rate;
+        };
+        SDL_DisplayMode internal;
+    } *displays;
     SDL_Rect viewport;
 #endif
 };
+
 
 struct float4 {
     float x;
@@ -128,17 +145,12 @@ struct RenderVertex {
     float2 tex;
 };
 
-struct ShaderEntry {
-#if RETRO_USING_DIRECTX9
-    IDirect3DVertexShader9 *vertexShaderObject;
-    IDirect3DPixelShader9 *pixelShaderObject;
-#endif
-
+struct ShaderEntryBase {
     uint8 linear;
     char name[0x20];
 };
 
-class RenderDevice
+class RenderDeviceBase
 {
 public:
     static bool Init();
@@ -181,35 +193,6 @@ public:
     static float2 textureSize;
     static float2 viewSize;
 
-    // ====================
-    // RSDK COMMON END
-    // ====================
-
-#if RETRO_USING_DIRECTX9
-
-    static HWND windowHandle;
-    static IDirect3DTexture9 *imageTexture;
-
-    static IDirect3D9 *dx9Context;
-    static IDirect3DDevice9 *dx9Device;
-
-    static UINT dxAdapter;
-    static int adapterCount;
-
-    // WinMain args
-    static HINSTANCE hInstance;
-    static HINSTANCE hPrevInstance;
-    static INT nShowCmd;
-#endif
-
-#if RETRO_USING_SDL2
-    static SDL_Window *window;
-    static SDL_Renderer *renderer;
-    static SDL_Texture *screenTexture[SCREEN_MAX];
-
-    static SDL_Texture *imageTexture;
-#endif
-
 private:
     static bool InitShaders();
     static bool SetupRendering();
@@ -217,40 +200,13 @@ private:
     static bool InitGraphicsAPI();
 
     static void GetDisplays();
+};
 
 #if RETRO_USING_DIRECTX9
-
-    static void ProcessEvent(MSG msg);
-    static LRESULT CALLBACK WindowEventCallback(HWND hRecipient, UINT Msg, WPARAM wParam, LPARAM lParam);
-
-    static bool useFrequency;
-
-    static LARGE_INTEGER performanceCount, frequency, initialFrequency, curFrequency;
-
-    static HDEVNOTIFY deviceNotif;
-    static PAINTSTRUCT Paint;
-
-    static IDirect3DVertexDeclaration9 *dx9VertexDeclare;
-    static IDirect3DVertexBuffer9 *dx9VertexBuffer;
-    static IDirect3DTexture9 *screenTextures[SCREEN_MAX];
-    static D3DVIEWPORT9 dx9ViewPort;
-
-    static RECT monitorDisplayRect;
-    static GUID deviceIdentifier;
+#include "DX9/DX9RenderDevice.hpp"
+#elif RETRO_USING_SDL2
+#include "SDL2/SDL2RenderDevice.hpp"
 #endif
-
-#if RETRO_USING_SDL2
-
-    static void ProcessEvent(SDL_Event event);
-
-    static uint32 displayModeIndex;
-    static int32 displayModeCount;
-
-    static unsigned long long targetFreq;
-    static unsigned long long curTicks;
-    static unsigned long long prevTicks;
-#endif
-};
 
 extern DrawList drawLayers[DRAWLAYER_COUNT];
 extern char drawGroupNames[0x10][0x10];

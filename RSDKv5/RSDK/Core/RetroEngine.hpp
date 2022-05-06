@@ -159,6 +159,7 @@ enum GameRegions {
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_UWP
 
 #if RETRO_USING_DIRECTX9
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 #include <timeapi.h>
