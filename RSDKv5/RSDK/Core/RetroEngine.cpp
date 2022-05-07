@@ -267,9 +267,7 @@ void ProcessEngine()
 
 #if RETRO_REV02
                 RSDK::SKU::userCore->StageLoad();
-                for (int v = 0; v < DRAWLAYER_COUNT; ++v) {
-                    SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
-                }
+                for (int v = 0; v < DRAWLAYER_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
 #endif
                 // dim after 5 mins
                 RSDK::videoSettings.dimLimit = (5 * 60) * RSDK::videoSettings.refreshRate;
@@ -343,15 +341,7 @@ void ProcessEngine()
 
 #if RETRO_REV02
             RSDK::SKU::userCore->StageLoad();
-            for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
-                DebugValueInfo *val = &debugValues[debugValueCount++];
-                strncpy(val->name, drawGroupNames[v], 0x10);
-                val->type       = 0;
-                val->value      = &engine.drawLayerVisible[v];
-                val->size = 4;
-                val->min        = 0;
-                val->max        = 1;
-            }
+            for (int v = 0; v < DRAWLAYER_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
 #endif
 
             ProcessInput();

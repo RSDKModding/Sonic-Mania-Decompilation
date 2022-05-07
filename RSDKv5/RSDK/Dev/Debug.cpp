@@ -15,7 +15,7 @@ char outputString[0x400];
 
 #if RETRO_REV02
 int32 debugValueCount = 0;
-DebugValueInfo debugValues[DEBUGVAL_MAX];
+DebugValueInfo debugValues[DEBUGVALUE_LIST_COUNT];
 #endif
 
 DevMenu devMenu = DevMenu();
@@ -95,7 +95,7 @@ void PrintLog(int32 severity, const char *message, ...)
 #if RETRO_REV02
 void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 max)
 {
-    if (debugValueCount < DEBUGVAL_MAX) {
+    if (debugValueCount < DEBUGVALUE_COUNT) {
         DebugValueInfo *value = &debugValues[debugValueCount++];
         strncpy(value->name, name, 0x10);
         value->value = valPtr;

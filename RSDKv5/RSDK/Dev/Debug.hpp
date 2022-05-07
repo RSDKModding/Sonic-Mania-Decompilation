@@ -1,7 +1,10 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#define DEBUGVAL_MAX (0x900)
+// These being different sizes will surely cause issues if more then DEBUGVALUE_LIST_COUNT values are set
+// But that's how the code is in the original so what can ya do
+#define DEBUGVALUE_COUNT      (0x900)
+#define DEBUGVALUE_LIST_COUNT (0x40)
 
 #include <stdarg.h>
 
@@ -65,7 +68,7 @@ typedef enum {
 } DebugVarDisplayTypes;
 
 extern int32 debugValueCount;
-extern DebugValueInfo debugValues[DEBUGVAL_MAX];
+extern DebugValueInfo debugValues[DEBUGVALUE_LIST_COUNT];
 
 inline void ClearDebugValues() { debugValueCount = 0; }
 void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 max);
