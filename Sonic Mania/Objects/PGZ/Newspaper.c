@@ -158,14 +158,14 @@ void Newspaper_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(true);
 
         for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
-            Entity *child = RSDK_GET_ENTITY(s + i, );
+            Entity *child = RSDK_GET_ENTITY_GEN(s + i);
             if (!child)
                 continue;
 
             DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xE0E0E0, INK_NONE, 0xFF);
         }
 
-        Entity *targetNode = RSDK_GET_ENTITY(self->node, );
+        Entity *targetNode = RSDK_GET_ENTITY_GEN(self->node);
         if (targetNode)
             DrawHelpers_DrawArrow(self->position.x, self->position.y, targetNode->position.x, targetNode->position.y, 0xFFFF00, INK_NONE, 0xFF);
 

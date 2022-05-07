@@ -758,7 +758,7 @@ void BSS_Setup_HandleCollectableMovement(void)
         uint16 tile =
             BSS_Setup->playField[((self->offset.y + self->playerPos.y) & 0x1F) + (BSS_PLAYFIELD_H * ((self->offset.x + self->playerPos.x) & 0x1F))];
         if (tile) {
-            EntityBSS_Collectable *collectable = (EntityBSS_Collectable *)RSDK.GetEntity(slot);
+            EntityBSS_Collectable *collectable = RSDK_GET_ENTITY(slot, BSS_Collectable);
             int32 x                            = (self->offset.x * RSDK.Cos256(self->angle) + self->offset.y * RSDK.Sin256(self->angle)) >> 4;
             int32 y                            = (self->offset.y * RSDK.Cos256(self->angle) - self->offset.x * RSDK.Sin256(self->angle)) >> 4;
             y                                  = -(y + self->paletteLine - 16);
@@ -795,8 +795,7 @@ void BSS_Setup_HandleCollectableMovement(void)
     }
 
     while (slot < RESERVE_ENTITY_COUNT + 0x80) {
-        Entity *entity   = RSDK.GetEntity(slot++);
-        entity->classID = TYPE_BLANK;
+        RSDK_GET_ENTITY(slot++, BSS_Collectable)->classID = TYPE_BLANK;
     }
 }
 

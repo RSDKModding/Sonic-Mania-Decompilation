@@ -295,10 +295,12 @@ void CableWarp_StateTransport_EndNode(void)
         RSDK.ProcessAnimation(&self->animator);
         self->position.x = player->position.x;
         self->position.y = player->position.y;
-        RSDK.GetEntity(self->slotID);
+
+        RSDK_GET_ENTITY(self->slotID, CableWarp);
         EntityCableWarp *nextNode = RSDK_GET_ENTITY(self->nextSlot, CableWarp);
-        int rx                    = (nextNode->position.x - player->position.x) >> 16;
-        int ry                    = (nextNode->position.y - player->position.y) >> 16;
+
+        int32 rx                    = (nextNode->position.x - player->position.x) >> 16;
+        int32 ry                    = (nextNode->position.y - player->position.y) >> 16;
         if (rx * rx + ry * ry < 0x100) {
             player->position.x = nextNode->position.x;
             player->position.y = nextNode->position.y;

@@ -282,7 +282,7 @@ void HeavyShinobi_Hit(void)
 
     if (!HeavyShinobi->health) {
         SceneInfo->timeEnabled = false;
-        Player_GiveScore(RSDK.GetEntity(SLOT_PLAYER1), 1000);
+        Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         RSDK.PlaySfx(HeavyShinobi->sfxExplosion, false, 255);
         self->timer = 120;
         self->state = HeavyShinobi_State_Destroyed;

@@ -425,7 +425,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
                     RSDK.SetChannelAttributes(Music->channelID, 0.0, 0.0, 1.0);
 #endif
                     music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-                    RSDK.ResetEntityPtr(music, Music->classID, 0);
+                    RSDK.ResetEntityPtr(music, Music->classID, NULL);
                     music->state     = Music_State_FadeTrackIn;
                     music->volume    = 0.0;
                     music->fadeSpeed = 0.08;
@@ -444,9 +444,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
 }
 void Music_ClearMusicStack(void)
 {
-    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
-        destroyEntity(RSDK.GetEntity(slot));
-    }
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) destroyEntity(RSDK_GET_ENTITY(slot, Music));
 }
 
 void Music_TransitionTrack(uint8 trackID, float fadeSpeed)

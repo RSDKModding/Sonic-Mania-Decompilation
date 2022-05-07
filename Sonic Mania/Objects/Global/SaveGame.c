@@ -115,12 +115,12 @@ void SaveGame_LoadSaveData(void)
 
             for (int32 e = 0x40; e < 0x840; ++e) {
                 if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
-                    Entity *entity   = RSDK.GetEntity(e);
-                    entity->classID = TYPE_BLANK;
+                    Entity *entity   = RSDK_GET_ENTITY_GEN(e);
+                    entity->classID  = TYPE_BLANK;
                     entity->active   = -1;
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
-                    EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntity(e);
+                    EntityItemBox *itemBox = RSDK_GET_ENTITY(e, ItemBox);
                     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
                     RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
                     RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);

@@ -60,7 +60,7 @@ void DERobot_Create(void *data)
                     break;
 
                 case DEROBOT_HEAD:
-                    self->parent    = RSDK.GetEntity(slotID + 1);
+                    self->parent    = (Entity *)RSDK_GET_ENTITY(slotID + 1, DERobot);
                     self->stateDraw = DERobot_Draw_RelativeToParent;
                     self->drawFX    = FX_ROTATE;
                     self->offset.x  = -0x160000;
@@ -80,7 +80,7 @@ void DERobot_Create(void *data)
                         self->stateDraw = DERobot_Draw_Simple;
                     }
                     else {
-                        self->parent    = RSDK.GetEntity(slotID - 4);
+                        self->parent    = (Entity *)RSDK_GET_ENTITY(slotID - 4, DERobot);
                         self->stateDraw = DERobot_Draw_RelativeToParent;
                         self->offset.x  = -0xC0000;
                         self->offset.y  = -0x100000;

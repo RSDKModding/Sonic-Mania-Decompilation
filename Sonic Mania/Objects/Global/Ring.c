@@ -541,7 +541,7 @@ void Ring_State_Path(void)
     self->drawPos.x += self->velocity.x;
     self->drawPos.y += self->velocity.y;
 
-    Entity *node = RSDK.GetEntity(self->speed);
+    Entity *node = RSDK_GET_ENTITY_GEN(self->speed);
 
     if (self->velocity.x <= 0) {
         if (self->drawPos.x < node->position.x) {
@@ -864,7 +864,7 @@ void Ring_EditorDraw(void)
                 break;
 
             case RING_MOVE_PATH: {
-                Entity *target = RSDK_GET_ENTITY(self->speed, );
+                Entity *target = RSDK_GET_ENTITY_GEN(self->speed);
 
                 if (target)
                     DrawHelpers_DrawArrow(self->position.x, self->position.y, target->position.x, target->position.y, 0x00FF00, INK_NONE, 0xFF);

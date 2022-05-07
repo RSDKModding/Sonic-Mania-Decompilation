@@ -127,7 +127,7 @@ void ButtonDoor_SetupTagLink(void)
         self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
     }
     else {
-        EntityButton *taggedButton = RSDK.GetEntity(RSDK.GetEntityID(self) - 1);
+        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
         bool32 tagged              = false;
 
         if (self->buttonTag > 0) {

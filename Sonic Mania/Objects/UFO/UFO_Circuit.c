@@ -57,34 +57,35 @@ void UFO_Circuit_Draw(void)
 void UFO_Circuit_Create(void *data)
 {
     RSDK_THIS(UFO_Circuit);
+
     if (!SceneInfo->inEditor) {
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
         int32 id         = RSDK.GetEntityID(self);
 
-        Entity *next = (Entity *)RSDK.GetEntity(id + 1);
+        EntityUFO_Circuit *next = RSDK_GET_ENTITY(id + 1, UFO_Circuit);
         if (next->classID == UFO_Circuit->classID) {
             self->nextNode = next;
         }
         else {
             for (int32 e = id - 1; e > 0; --e) {
-                Entity *node = RSDK.GetEntity(e);
+                EntityUFO_Circuit *node = RSDK_GET_ENTITY(e, UFO_Circuit);
                 if (node->classID != UFO_Circuit->classID) {
-                    self->nextNode = RSDK.GetEntity(e + 1);
+                    self->nextNode = RSDK_GET_ENTITY(e + 1, UFO_Circuit);
                     break;
                 }
             }
         }
 
-        Entity *prev = (Entity *)RSDK.GetEntity(id - 1);
+        EntityUFO_Circuit *prev = RSDK_GET_ENTITY(id - 1, UFO_Circuit);
         if (prev->classID == UFO_Circuit->classID) {
             self->prevNode = prev;
         }
         else {
             for (int32 e = id + 1; e < TEMPENTITY_START; ++e) {
-                Entity *node = RSDK.GetEntity(e);
+                EntityUFO_Circuit *node = RSDK_GET_ENTITY(e, UFO_Circuit);
                 if (node->classID != UFO_Circuit->classID) {
-                    self->prevNode = RSDK.GetEntity(e - 1);
+                    self->prevNode = RSDK_GET_ENTITY(e - 1, UFO_Circuit);
                     break;
                 }
             }
@@ -94,10 +95,7 @@ void UFO_Circuit_Create(void *data)
             self->active    = ACTIVE_NORMAL;
             self->visible   = true;
             self->drawOrder = 4;
-            if (self->reverse)
-                self->curNode = self->prevNode;
-            else
-                self->curNode = self->nextNode;
+            self->curNode   = self->reverse ? self->prevNode : self->nextNode;
             self->groundVel = 0x70000;
             self->topSpeed  = 0x70000;
             RSDK.SetModelAnimation(UFO_Circuit->ufoModel, &self->ufoAnimator, 128, 0, true, 0);

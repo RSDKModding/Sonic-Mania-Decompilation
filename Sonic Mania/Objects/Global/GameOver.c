@@ -162,9 +162,9 @@ void GameOver_State_EnterLetters(void)
                 int32 gameOverCount        = 0;
                 int32 deathCount           = 0;
                 for (int32 i = 0; i < session->playerCount; ++i) {
-                    Entity *ent = RSDK.GetEntity(i + Player->playerCount);
+                    EntityGameOver *gameOver = RSDK_GET_ENTITY(i + Player->playerCount, GameOver);
 
-                    if (ent->classID == GameOver->classID) {
+                    if (gameOver->classID == GameOver->classID) {
                         ++gameOverCount;
                         ++deathCount;
                     }
@@ -206,12 +206,13 @@ void GameOver_State_HandleMultiplayer(void)
 
     EntityCompetition *manager        = Competition->sessionManager;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+
     int32 gameOverCount               = 0;
     int32 deathCount                  = 0;
     for (int32 i = 0; i < session->playerCount; ++i) {
-        Entity *ent = RSDK.GetEntity(i + Player->playerCount);
+        EntityGameOver *gameOver = RSDK_GET_ENTITY(i + Player->playerCount, GameOver);
 
-        if (ent->classID == GameOver->classID) {
+        if (gameOver->classID == GameOver->classID) {
             ++gameOverCount;
             ++deathCount;
         }

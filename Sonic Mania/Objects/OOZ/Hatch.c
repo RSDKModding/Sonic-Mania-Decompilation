@@ -102,7 +102,7 @@ void Hatch_Create(void *data)
                 else {
                     self->vScrollPos += self->depth << 16;
                     self->position.y += self->depth << 16;
-                    destroyEntity(RSDK.GetEntity(SceneInfo->entitySlot - 1));
+                    destroyEntity(RSDK_GET_ENTITY_GEN(SceneInfo->entitySlot - 1));
                     self->useMoveLayer = true;
                 }
                 break;

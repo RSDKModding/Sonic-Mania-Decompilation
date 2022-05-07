@@ -369,6 +369,7 @@ void UFO_Setup_State_ShowStartMessage(void)
 void UFO_Setup_State_FinishFadeout(void)
 {
     RSDK_THIS(UFO_Setup);
+
     if (self->timer >= 1024) {
         if (UFO_Setup->resetToTitle) {
             RSDK.SetScene("Presentation", "Title Screen");
@@ -382,9 +383,9 @@ void UFO_Setup_State_FinishFadeout(void)
             }
 
             for (int32 i = 0; i < 0x800; ++i) {
-                Entity *ent = RSDK.GetEntity(i);
-                if (ent->classID != self->classID)
-                    destroyEntity(ent);
+                EntityUFO_Setup *entity = RSDK_GET_ENTITY(i, UFO_Setup);
+                if (entity->classID != self->classID)
+                    destroyEntity(entity);
             }
 
             RSDK.ResetEntitySlot(0, UIBackground->classID, NULL);

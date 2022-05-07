@@ -195,7 +195,7 @@ void SpikeCrusher_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(true);
 
         for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
-            Entity *child = RSDK_GET_ENTITY(s + i, );
+            Entity *child = RSDK_GET_ENTITY_GEN(s + i);
             if (!child)
                 continue;
 

@@ -78,8 +78,8 @@ void UFO_Shadow_StageLoad(void)
     int32 slot = TEMPENTITY_START;
     foreach_all(UFO_Player, player)
     {
-        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntity(slot--);
-        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, 0);
+        EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
+        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
         shadow->position.x  = player->position.x;
         shadow->position.y  = player->position.y;
         shadow->parent      = (Entity *)player;
@@ -89,8 +89,8 @@ void UFO_Shadow_StageLoad(void)
     foreach_all(UFO_Circuit, ufo)
     {
         if (ufo->startNode) {
-            EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntity(slot--);
-            RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, 0);
+            EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
+            RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
             shadow->position.x  = ufo->position.x;
             shadow->position.y  = ufo->position.y;
             shadow->parent      = (Entity *)ufo;
@@ -100,8 +100,8 @@ void UFO_Shadow_StageLoad(void)
 
     foreach_all(UFO_Ring, ring)
     {
-        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntity(slot--);
-        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, 0);
+        EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
+        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
         shadow->position.x  = ring->position.x;
         shadow->position.y  = ring->position.y;
         shadow->parent      = (Entity *)ring;
@@ -110,11 +110,11 @@ void UFO_Shadow_StageLoad(void)
 
     foreach_all(UFO_Sphere, sphere)
     {
-        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntity(slot--);
-        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, 0);
+        EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
+        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
         shadow->position.x  = sphere->position.x;
         shadow->position.y  = sphere->position.y;
-        shadow->parent      = (Entity*)sphere;
+        shadow->parent      = (Entity *)sphere;
         shadow->shadowScale = 0x100;
     }
 

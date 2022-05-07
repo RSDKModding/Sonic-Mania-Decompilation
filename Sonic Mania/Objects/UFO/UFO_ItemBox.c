@@ -50,7 +50,7 @@ void UFO_ItemBox_Draw(void)
 
     if (self->state == UFO_ItemBox_State_HasContents) {
         RSDK.Prepare3DScene(UFO_ItemBox->sceneIndex);
-        RSDK.GetEntity(SLOT_UFO_CAMERA);
+        RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
         RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height, self->position.y, true);
         RSDK.MatrixRotateY(&self->matNormal, 8 * UFO_Setup->timer);
         RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);

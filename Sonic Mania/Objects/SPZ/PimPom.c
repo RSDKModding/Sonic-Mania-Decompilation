@@ -392,7 +392,7 @@ void PimPom_Move_Normal(void)
 
     int32 slot = SceneInfo->entitySlot + 1;
     for (int32 i = 0; i < self->numChildren; ++i) {
-        Entity *child = RSDK_GET_ENTITY(slot + i, );
+        Entity *child = RSDK_GET_ENTITY_GEN(slot + i);
         child->position.x += moveX;
         child->position.y += moveY;
     }
@@ -411,7 +411,7 @@ void PimPom_Move_Circle(void)
 
     int32 slot = SceneInfo->entitySlot + 1;
     for (int32 i = 0; i < self->numChildren; ++i) {
-        Entity *child = RSDK_GET_ENTITY(slot + i, );
+        Entity *child = RSDK_GET_ENTITY_GEN(slot + i);
         child->position.x += moveX;
         child->position.y += moveY;
     }
@@ -426,7 +426,7 @@ void PimPom_Move_Path(void)
     self->drawPos.x += self->velocity.x;
     self->drawPos.y += self->velocity.y;
 
-    Entity *target = RSDK_GET_ENTITY(self->speed, );
+    Entity *target = RSDK_GET_ENTITY_GEN(self->speed);
 
     if (self->velocity.x <= 0) {
         if (self->drawPos.x < target->position.x)
@@ -447,7 +447,7 @@ void PimPom_Move_Path(void)
 
     int32 slot = SceneInfo->entitySlot + 1;
     for (int32 i = 0; i < self->numChildren; ++i) {
-        Entity *child = RSDK_GET_ENTITY(slot + i, );
+        Entity *child = RSDK_GET_ENTITY_GEN(slot + i);
         child->position.x += moveX;
         child->position.y += moveY;
     }
@@ -474,7 +474,7 @@ void PimPom_Move_Track(void)
 
     int32 slot = SceneInfo->entitySlot + 1;
     for (int32 i = 0; i < self->numChildren; ++i) {
-        Entity *child = RSDK_GET_ENTITY(slot + i, );
+        Entity *child = RSDK_GET_ENTITY_GEN(slot + i);
         child->position.x += moveX;
         child->position.y += moveY;
     }
@@ -636,7 +636,7 @@ void PimPom_EditorDraw(void)
                 break;
 
             case PIMPOM_MOVE_PATH: {
-                Entity *target = RSDK_GET_ENTITY(self->speed, );
+                Entity *target = RSDK_GET_ENTITY_GEN(self->speed);
 
                 if (target)
                     DrawHelpers_DrawArrow(self->position.x, self->position.y, target->position.x, target->position.y, 0x00FF00, INK_NONE, 0xFF);
@@ -653,7 +653,7 @@ void PimPom_EditorDraw(void)
 
         int32 slot = SceneInfo->entitySlot + 1;
         for (int32 i = 0; i < self->numChildren; ++i) {
-            Entity *child = RSDK_GET_ENTITY(slot + i, );
+            Entity *child = RSDK_GET_ENTITY_GEN(slot + i);
 
             if (child) {
                 DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xE0E0E0, INK_NONE, 0xFF);

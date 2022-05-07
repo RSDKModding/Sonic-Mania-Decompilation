@@ -199,7 +199,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
             globals->stock          = ID_NONE;
             globals->characterFlags = ID_SONIC;
             Player_ChangeCharacter(player1, ID_SONIC);
-            destroyEntity(RSDK.GetEntity(SLOT_PLAYER2));
+            destroyEntity(RSDK_GET_ENTITY(SLOT_PLAYER2, Player));
             player1->alpha      = 0;
             player1->inkEffect  = INK_ALPHA;
             ruby->alpha         = 0;

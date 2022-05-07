@@ -129,7 +129,7 @@ void DCEvent_State_Collapse(void)
 
     int32 slot = SceneInfo->entitySlot + 1;
     for (int32 i = 0; i < self->numChildren; ++i) {
-        Entity *child = RSDK_GET_ENTITY(slot + i, );
+        Entity *child = RSDK_GET_ENTITY_GEN(slot + i);
         child->position.y += 0x8000;
     }
 
@@ -424,7 +424,7 @@ void DCEvent_EditorDraw(void)
 
         int32 slot = SceneInfo->entitySlot + 1;
         for (int32 i = 0; i < self->numChildren; ++i) {
-            Entity *child = RSDK_GET_ENTITY(slot + i, );
+            Entity *child = RSDK_GET_ENTITY_GEN(slot + i);
             if (!child)
                 continue;
 

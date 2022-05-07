@@ -591,7 +591,7 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
         if (globals->atlEntitySlot[e] >= SLOT_ZONE)
             entity = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
         else
-            entity = RSDK_GET_ENTITY(globals->atlEntitySlot[e], );
+            entity = RSDK_GET_ENTITY_GEN(globals->atlEntitySlot[e]);
 
         if (storedEntity->classID == Player->classID) {
             EntityPlayer *storedPlayer = (EntityPlayer *)storedEntity;
@@ -1059,8 +1059,8 @@ void Zone_HandlePlayerSwap(void)
         Zone->screenPosX[p] = ScreenInfo[camera->screenID].position.x;
         Zone->screenPosY[p] = ScreenInfo[camera->screenID].position.y;
 
-        RSDK.CopyEntity(&Zone->entityStorage[4 + p], RSDK_GET_ENTITY(Player->playerCount + Zone->preSwapPlayerIDs[p], ), false);
-        RSDK.CopyEntity(&Zone->entityStorage[12 + p], RSDK_GET_ENTITY((2 * Player->playerCount) + Zone->preSwapPlayerIDs[p], ), false);
+        RSDK.CopyEntity(&Zone->entityStorage[4 + p], RSDK_GET_ENTITY(Player->playerCount + Zone->preSwapPlayerIDs[p], Shield), false);
+        RSDK.CopyEntity(&Zone->entityStorage[12 + p], RSDK_GET_ENTITY((2 * Player->playerCount) + Zone->preSwapPlayerIDs[p], ImageTrail), false);
     }
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
@@ -1206,8 +1206,8 @@ void Zone_HandlePlayerSwap(void)
 
         storedShields[p] = (EntityShield *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
         storedPowerups[p] = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
-        RSDK.CopyEntity(storedShields[p], RSDK_GET_ENTITY(Player->playerCount + preSwapPlayerIDs[p], ), false);
-        RSDK.CopyEntity(storedPowerups[p], RSDK_GET_ENTITY((2 * Player->playerCount) + preSwapPlayerIDs[p], ), false);
+        RSDK.CopyEntity(storedShields[p], RSDK_GET_ENTITY(Player->playerCount + preSwapPlayerIDs[p], Shield), false);
+        RSDK.CopyEntity(storedPowerups[p], RSDK_GET_ENTITY((2 * Player->playerCount) + preSwapPlayerIDs[p], ImageTrail), false);
     }
 
     // Reload & Swap Player info

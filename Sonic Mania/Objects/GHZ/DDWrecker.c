@@ -192,8 +192,8 @@ void DDWrecker_State_InitChildren(void)
             ball1->siblingSlots[3] = SceneInfo->entitySlot + 4; // Chain 3
             ball1->siblingSlots[4] = SceneInfo->entitySlot + 5; // Chain 4
             ball1->siblingSlots[5] = SceneInfo->entitySlot + 7; // Ball 2
-            ball1->bodyA           = RSDK.GetEntity(SceneInfo->entitySlot + 6);
-            ball1->bodyB           = RSDK.GetEntity(SceneInfo->entitySlot + 7);
+            ball1->bodyA           = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker);
+            ball1->bodyB           = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);
             ball1->radius          = 64;
 
             EntityDDWrecker *ball2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);

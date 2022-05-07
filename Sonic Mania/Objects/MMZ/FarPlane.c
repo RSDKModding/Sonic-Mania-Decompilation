@@ -109,18 +109,18 @@ void FarPlane_StageLoad(void)
 void FarPlane_SetupEntities(void)
 {
     RSDK_THIS(FarPlane);
+
     self->entityCount = 0;
 
     for (int32 i = 0; i < SCENEENTITY_COUNT && self->entityCount < 0x100; ++i) {
-        Entity *entPtr = RSDK.GetEntity(i);
-        if (abs(self->origin.x - entPtr->position.x) < self->size.x) {
-            if (abs(self->origin.y - entPtr->position.y) < self->size.y) {
-                self->entityIDs[self->entityCount++] = i;
-                entPtr->active                       = ACTIVE_NEVER;
-                entPtr->drawOrder                    = 1;
-            }
+        Entity *child = RSDK_GET_ENTITY_GEN(i);
+        if (abs(self->origin.x - child->position.x) < self->size.x && abs(self->origin.y - child->position.y) < self->size.y) {
+            self->entityIDs[self->entityCount++] = i;
+            child->active                        = ACTIVE_NEVER;
+            child->drawOrder                     = 1;
         }
     }
+
     self->active = ACTIVE_BOUNDS;
 }
 
@@ -128,7 +128,7 @@ void FarPlane_SetEntityActivities(uint8 active)
 {
     RSDK_THIS(FarPlane);
     for (int32 i = 0; i < self->entityCount; ++i) {
-        RSDK_GET_ENTITY(self->entityIDs[i], )->active = active;
+        RSDK_GET_ENTITY_GEN(self->entityIDs[i])->active = active;
     }
 }
 

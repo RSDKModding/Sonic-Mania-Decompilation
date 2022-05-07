@@ -57,9 +57,9 @@ void PlatformControl_Update(void)
                                 break;
 
                             case PLATFORMCONTROL_TOSTART: {
-                                Entity *ent         = RSDK.GetEntity(startNodeSlot);
-                                platform->drawPos.x = ent->position.x;
-                                platform->drawPos.y = ent->position.y;
+                                Entity *startNode   = RSDK_GET_ENTITY_GEN(startNodeSlot);
+                                platform->drawPos.x = startNode->position.x;
+                                platform->drawPos.y = startNode->position.y;
                                 platform->speed     = startNodeSlot + 1;
                                 break;
                             }
@@ -83,9 +83,9 @@ void PlatformControl_Update(void)
                                 break;
 
                             case PLATFORMCONTROL_TOSTART: {
-                                Entity *ent         = RSDK.GetEntity(startNodeSlot + self->nodeCount - 1);
-                                platform->drawPos.x = ent->position.x;
-                                platform->drawPos.y = ent->position.y;
+                                Entity *startNode   = RSDK_GET_ENTITY_GEN(startNodeSlot + self->nodeCount - 1);
+                                platform->drawPos.x = startNode->position.x;
+                                platform->drawPos.y = startNode->position.y;
                                 platform->speed     = startNodeSlot + (self->nodeCount - 2);
                                 break;
                             }
@@ -159,7 +159,8 @@ void PlatformControl_Create(void *data)
 
         int32 id = RSDK.GetEntityID(self) + 1;
         for (int32 i = 0; i < self->nodeCount; ++i) {
-            Entity *node = RSDK.GetEntity(id++);
+            Entity *node = RSDK_GET_ENTITY_GEN(id++);
+
             if (abs(node->position.x - self->position.x) > self->updateRange.x)
                 self->updateRange.x = abs(node->position.x - self->position.x);
 

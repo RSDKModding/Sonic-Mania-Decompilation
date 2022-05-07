@@ -512,10 +512,11 @@ extern ModFunctionTable Mod;
 #define RSDK_REGISTER_STATIC_VARIABLES(variables) RSDK.RegisterStaticVariables((void **)&variables, #variables, sizeof(Object##variables))
 #endif
 
-#define RSDK_THIS(class)               Entity##class *self = (Entity##class *)SceneInfo->entity
-#define RSDK_THIS_GEN()                Entity *self = SceneInfo->entity
-#define RSDK_GET_ENTITY(slot, class)   ((Entity##class *)RSDK.GetEntity(slot))
-#define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->classID, data, x, y))
+#define RSDK_THIS(class)                  Entity##class *self = (Entity##class *)SceneInfo->entity
+#define RSDK_THIS_GEN()                   Entity *self = SceneInfo->entity
+#define RSDK_GET_ENTITY(slot, class)      ((Entity##class *)RSDK.GetEntity(slot))
+#define RSDK_GET_ENTITY_GEN(slot)         ((Entity *)RSDK.GetEntity(slot))
+#define CREATE_ENTITY(object, data, x, y) ((Entity##object *)RSDK.CreateEntity(object->classID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
     info.text   = NULL;                                                                                                                              \

@@ -524,13 +524,15 @@ void Water_State_Palette(void)
                 else {
                     if (player->invincibleTimer <= 0) {
                         if (player->shield == SHIELD_FIRE) {
+                            // No cool smoke fx in mania, just a loss of shield :(
                             player->shield = SHIELD_NONE;
-                            destroyEntity(RSDK.GetEntity(Player->playerCount + RSDK.GetEntityID(player)));
+                            destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield));
                         }
 
                         if (player->shield == SHIELD_LIGHTNING) {
+                            // No cool electric flash fx in mania, just a loss of shield :(
                             player->shield = SHIELD_NONE;
-                            destroyEntity(RSDK.GetEntity(Player->playerCount + RSDK.GetEntityID(player)));
+                            destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield));
                         }
                     }
 
@@ -932,13 +934,13 @@ void Water_State_HCZBubble(void)
                     if (RSDK.GetEntityID(self) >= RESERVE_ENTITY_COUNT) {
                         int32 id = SLOT_HCZBUBBLE_P1;
                         for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX; ++id) {
-                            if (!RSDK_GET_ENTITY(id, )->classID)
+                            if (RSDK_GET_ENTITY_GEN(id)->classID == TYPE_BLANK)
                                 break;
                         }
 
                         if (id >= 0 && id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX) {
                             RSDK.AddDrawListRef(self->drawOrder, id);
-                            RSDK.CopyEntity(RSDK.GetEntity(id), self, true);
+                            RSDK.CopyEntity(RSDK_GET_ENTITY(id, Water), self, true);
                             foreach_return;
                         }
                     }

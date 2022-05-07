@@ -3415,14 +3415,14 @@ void Player_ForceSuperTransform(void)
 
     self->superState = SUPERSTATE_SUPER;
 
-    destroyEntity(RSDK.GetEntity(self->playerID + Player->playerCount));
+    destroyEntity(RSDK_GET_ENTITY(self->playerID + Player->playerCount, Shield));
     self->invincibleTimer = 60;
     self->superState      = SUPERSTATE_SUPER;
     Player_UpdatePhysicsState(self);
 
-    RSDK.ResetEntityPtr(RSDK.GetEntity(self->playerID + 2 * Player->playerCount), ImageTrail->classID, self);
+    RSDK.ResetEntityPtr(RSDK_GET_ENTITY(self->playerID + 2 * Player->playerCount, ImageTrail), ImageTrail->classID, self);
 #if RETRO_USE_PLUS
-    RSDK.ResetEntityPtr(RSDK.GetEntity(self->playerID + Player->playerCount), SuperSparkle->classID, self);
+    RSDK.ResetEntityPtr(RSDK_GET_ENTITY(self->playerID + Player->playerCount, SuperSparkle), SuperSparkle->classID, self);
 #endif
 
     self->state = Player_State_Ground;

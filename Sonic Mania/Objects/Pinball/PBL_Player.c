@@ -174,7 +174,7 @@ void PBL_Player_ProcessPlayerControl(void)
             if (TouchInfo->down[t]) {
                 if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
                     if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                        EntityPauseMenu *pauseMenu = RSDK.GetEntity(SLOT_PAUSEMENU);
+                        EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                         if (!pauseMenu->classID) {
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                             pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);

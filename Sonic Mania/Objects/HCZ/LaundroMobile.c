@@ -426,8 +426,8 @@ void LaundroMobile_HandleStageWrap(void)
                     player2->position.y -= offsetY;
                 }
 
-                for (int i = 0; i < 0x1000; ++i) {
-                    Entity *entPtr = RSDK.GetEntity(i);
+                for (int32 i = 0; i < 0x1000; ++i) {
+                    Entity *entPtr = RSDK_GET_ENTITY_GEN(i);
 
                     if (entPtr->classID == LaundroMobile->classID) {
                         EntityLaundroMobile *laundroMobile = (EntityLaundroMobile *)entPtr;

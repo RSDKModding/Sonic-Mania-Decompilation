@@ -261,7 +261,7 @@ void Fan_SetupTagLink(void)
     RSDK_THIS(Fan);
 
     self->taggedButton         = NULL;
-    EntityButton *taggedButton = RSDK.GetEntity(RSDK.GetEntityID(self) - 1);
+    EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
 
     if (self->buttonTag > 0) {
         bool32 matchedTag = false;

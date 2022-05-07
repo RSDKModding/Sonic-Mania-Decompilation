@@ -949,13 +949,13 @@ void PuyoBean_State_Falling(void)
                     int32 playfieldSlot = 128 * self->playerID + 8 * self->stillPos.y + self->stillPos.x;
                     int32 entitySlot    = 0x600 + playfieldSlot;
                     if (self->isJunk) {
-                        PuyoBean->playfield[playfieldSlot] = RSDK.GetEntity(entitySlot);
+                        PuyoBean->playfield[playfieldSlot] = RSDK_GET_ENTITY(entitySlot, PuyoBean);
                         self->state                        = PuyoBean_State_JunkLand;
                         if (self->velocity.y > 0x8000)
                             RSDK.PlaySfx(PuyoBean->sfxJunk, false, 255);
                     }
                     else {
-                        PuyoBean->playfield[playfieldSlot] = RSDK.GetEntity(entitySlot);
+                        PuyoBean->playfield[playfieldSlot] = RSDK_GET_ENTITY(entitySlot, PuyoBean);
                         self->state                        = PuyoBean_State_BeanLand;
                         if (self->velocity.y > 0x8000)
                             RSDK.PlaySfx(PuyoBean->sfxLand, false, 255);

@@ -787,7 +787,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->delay         = 60;
 
                     SceneInfo->timeEnabled = false;
-                    Player_GiveScore(RSDK.GetEntity(SLOT_PLAYER1), 1000);
+                    Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                     self->visible = false;
                     self->state   = CrimsonEye_StateCore_Explode;
                 }
