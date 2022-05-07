@@ -1012,11 +1012,6 @@ bool RenderDevice::ProcessEvents()
     return true;
 }
 
-void UpdateGameWindow()
-{
-    RenderDevice::RefreshWindow();
-}
-
 void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixels)
 {
     if (RenderDevice::imageTexture)

@@ -47,8 +47,20 @@
     <ClCompile Include="RSDK\Dev\Debug.cpp" />
     <ClCompile Include="RSDK\Graphics\Animation.cpp" />
     <ClCompile Include="RSDK\Graphics\Drawing.cpp" />
+    <ClCompile Include="RSDK\Graphics\DX9\DX9RenderDevice.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="RSDK\Graphics\Palette.cpp" />
     <ClCompile Include="RSDK\Graphics\Scene3D.cpp" />
+    <ClCompile Include="RSDK\Graphics\SDL2\SDL2RenderDevice.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="RSDK\Graphics\Sprite.cpp" />
     <ClCompile Include="RSDK\Graphics\Video.cpp" />
     <ClCompile Include="RSDK\Input\Input.cpp" />
@@ -120,8 +132,20 @@
     <ClInclude Include="RSDK\Dev\DevFont.hpp" />
     <ClInclude Include="RSDK\Graphics\Animation.hpp" />
     <ClInclude Include="RSDK\Graphics\Drawing.hpp" />
+    <ClInclude Include="RSDK\Graphics\DX9\DX9RenderDevice.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="RSDK\Graphics\Palette.hpp" />
     <ClInclude Include="RSDK\Graphics\Scene3D.hpp" />
+    <ClInclude Include="RSDK\Graphics\SDL2\SDL2RenderDevice.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="RSDK\Graphics\Sprite.hpp" />
     <ClInclude Include="RSDK\Graphics\Video.hpp" />
     <ClInclude Include="RSDK\Input\Input.hpp" />

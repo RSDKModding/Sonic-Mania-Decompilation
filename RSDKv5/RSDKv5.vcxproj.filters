@@ -69,6 +69,12 @@
     <Filter Include="Source Files\RSDK\Scene\Objects">
       <UniqueIdentifier>{b9894090-5a9a-4ac6-9ad3-1848676f8cfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Graphics\SDL2">
+      <UniqueIdentifier>{12712656-5ec7-4db8-93e8-4efb59fa2fb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Graphics\DX9">
+      <UniqueIdentifier>{e7e02a25-3ad5-4bb8-9f2a-7b588716e834}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\zlib\adler32.c">
@@ -284,6 +290,12 @@
     <ClCompile Include="RSDK\Storage\Text.cpp">
       <Filter>Source Files\RSDK\Storage</Filter>
     </ClCompile>
+    <ClCompile Include="RSDK\Graphics\SDL2\SDL2RenderDevice.cpp">
+      <Filter>Source Files\RSDK\Graphics\SDL2</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Graphics\DX9\DX9RenderDevice.cpp">
+      <Filter>Source Files\RSDK\Graphics\DX9</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\zlib\crc32.h">
@@ -498,6 +510,12 @@
     </ClInclude>
     <ClInclude Include="main.hpp">
       <Filter>Source Files\RSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Graphics\SDL2\SDL2RenderDevice.hpp">
+      <Filter>Source Files\RSDK\Graphics\SDL2</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Graphics\DX9\DX9RenderDevice.hpp">
+      <Filter>Source Files\RSDK\Graphics\DX9</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
