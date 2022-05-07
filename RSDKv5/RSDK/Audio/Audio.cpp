@@ -18,7 +18,7 @@ struct StreamInfo {
     bool32 loaded;
     OggVorbis_File vorbisFile;
     int vorbBitstream;
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
     SDL_AudioStream *musicStream;
 #endif
 };
@@ -27,9 +27,9 @@ StreamInfo streamInfo;
 
 float speedMixAmounts[0x400];
 
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
 SDL_AudioDeviceID audioDevice;
 #endif
 SDL_AudioSpec audioDeviceFormat;
@@ -48,7 +48,7 @@ SDL_AudioSpec audioDeviceFormat;
 bool32 InitAudioDevice()
 {
 #if !RETRO_USE_ORIGINAL_CODE
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
     SDL_AudioSpec want;
     want.freq     = AUDIO_FREQUENCY;
     want.format   = AUDIO_FORMAT;
@@ -56,7 +56,7 @@ bool32 InitAudioDevice()
     want.channels = AUDIO_CHANNELS;
     want.callback = ProcessAudioPlayback;
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
     if ((audioDevice = SDL_OpenAudioDevice(nullptr, 0, &want, &audioDeviceFormat, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE)) > 0) {
         audioEnabled = true;
         SDL_PauseAudioDevice(audioDevice, 0);
@@ -116,7 +116,7 @@ void ReleaseAudioDevice()
     }
 
     if (streamInfo.loaded) {
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
         if (streamInfo.musicStream)
             SDL_FreeAudioStream(streamInfo.musicStream);
         SDL_CloseAudioDevice(audioDevice);
@@ -233,7 +233,7 @@ void ProcessAudioPlayback(void *data, uint8 *stream, int len)
                             }
                         }
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
                         ProcessAudioMixing(mix_buffer, buffer, (int)samples_done, channel);
 #endif
                     }
@@ -253,7 +253,7 @@ void ProcessAudioPlayback(void *data, uint8 *stream, int len)
 
                     size_t bytes_wanted = samples_gotten * sizeof(float);
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
                     while (streamInfo.musicStream && SDL_AudioStreamAvailable(streamInfo.musicStream) < bytes_wanted) {
                         // We need more samples: get some
                         long bytes_read =
@@ -313,7 +313,7 @@ void ProcessAudioPlayback(void *data, uint8 *stream, int len)
                         spdVal &= 0xFFFF;
                     }
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
                     ProcessAudioMixing(mix_buffer, buffer, (int)samples_done, channel);
 #endif
                     break;
@@ -397,7 +397,7 @@ bool32 LoadGlobalSfx()
     return false;
 }
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
 void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *channel)
 {
     if (!channel)
@@ -450,7 +450,7 @@ void LoadStream(ChannelInfo *channel)
     LockAudioDevice();
 
     if (streamInfo.loaded) {
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
         if (streamInfo.musicStream)
             SDL_FreeAudioStream(streamInfo.musicStream);
         streamInfo.musicStream = NULL;
@@ -489,7 +489,7 @@ void LoadStream(ChannelInfo *channel)
             streamInfo.vorbBitstream = -1;
             streamInfo.vorbisFile.vi = ov_info(&streamInfo.vorbisFile, -1);
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
             streamInfo.musicStream = SDL_NewAudioStream(AUDIO_S16, streamInfo.vorbisFile.vi->channels, (int)streamInfo.vorbisFile.vi->rate,
                                                         audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq);
             if (!streamInfo.musicStream) {
@@ -562,7 +562,7 @@ int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint
     streamInfo.loopPoint = loopPoint;
 
     if (loadASync) {
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
         SDL_CreateThread((SDL_ThreadFunction)LoadStream, "LoadStream", (void *)channel);
 #else
         LoadStream(channel);
@@ -683,7 +683,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
             ReadBytes(&info, sfx, info.fileSize);
             CloseFile(&info);
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
             SDL_RWops *src = SDL_RWFromMem(sfx, info.fileSize);
             if (src == NULL) {
                 SDL_RWclose(src);

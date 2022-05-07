@@ -13,12 +13,15 @@ TriggerState triggerL[PLAYER_COUNT + 1];
 TriggerState triggerR[PLAYER_COUNT + 1];
 TouchMouseData touchMouseData;
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 int32 keyState[PLAYER_COUNT];
+#endif
 
-#if RETRO_USING_DIRECTX9
-
+#if RETRO_INPUTDEVICE_XINPUT
 bool32 disabledXInputDevices[PLAYER_COUNT];
+#endif
 
+#if RETRO_INPUTDEVICE_RAWINPUT
 bool32 HIDEnabled = false;
 
 InputDevice *rawInputDevices[INPUTDEVICE_COUNT];
@@ -36,7 +39,7 @@ int mostRecentControllerID = -1;
 
 #define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
 
 int32 winAPIToSDLMappings(int32 mapping)
 {
@@ -377,15 +380,16 @@ bool32 getControllerButton(InputDeviceSDL *device, uint8 buttonID)
 }
 #endif
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 void InputDeviceKeyboard::UpdateInput()
 {
     if (!this->controllerID) {
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
         tagPOINT cursorPos;
         GetCursorPos(&cursorPos);
         ScreenToClient(RenderDevice::windowHandle, &cursorPos);
 #endif
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
         Vector2 cursorPos;
         SDL_GetMouseState(&cursorPos.x, &cursorPos.y);
 #endif
@@ -399,12 +403,12 @@ void InputDeviceKeyboard::UpdateInput()
         if (touchMouseData.x[0] == prevX && touchMouseData.y[0] == prevY) {
             if (this->mouseHideTimer < 120 + 1) {
                 if (++this->mouseHideTimer == 120) {
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
                     while (ShowCursor(false) >= 0) {
                     }
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
                     SDL_ShowCursor(false);
 #endif
                 }
@@ -413,12 +417,12 @@ void InputDeviceKeyboard::UpdateInput()
         else if (this->mouseHideTimer >= 120) {
             this->mouseHideTimer = 0;
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
             while (ShowCursor(true) < 0) {
             }
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
             SDL_ShowCursor(true);
 #endif
         }
@@ -475,8 +479,9 @@ void InputDeviceKeyboard::ProcessInput(int32 controllerID)
     cont->keyStart.press |= this->stateStart;
     cont->keySelect.press |= this->stateSelect;
 }
+#endif
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_INPUTDEVICE_XINPUT
 void InputDeviceXInput::UpdateInput() {
     XINPUT_STATE *inputState = &this->inputState[this->activeState];
     if (disabledXInputDevices[this->controllerID]) {
@@ -615,7 +620,9 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     triggerR[controllerID].deadzone = this->deadzoneRTrigger;
     triggerR[controllerID].delta    = this->deltaRTrigger;
 }
+#endif
 
+#if RETRO_INPUTDEVICE_RAWINPUT
 void InputDeviceRaw::UpdateInput()
 {
     this->prevInputFlags = this->inputFlags;
@@ -701,7 +708,7 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
 }
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_INPUTDEVICE_SDL2
 void InputDeviceSDL::UpdateInput()
 {
     int32 buttonMap[] = {
@@ -851,6 +858,7 @@ void InputDeviceSDL::CloseDevice()
 }
 #endif
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 InputDeviceKeyboard *InitKeyboardDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
@@ -880,8 +888,9 @@ InputDeviceKeyboard *InitKeyboardDevice(uint32 id)
     InputDeviceCount++;
     return device;
 }
+#endif
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_INPUTDEVICE_XINPUT
 InputDeviceXInput *InitXInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
@@ -914,7 +923,9 @@ InputDeviceXInput *InitXInputDevice(uint32 id)
     InputDeviceCount++;
     return device;
 }
+#endif
 
+#if RETRO_INPUTDEVICE_RAWINPUT
 InputDeviceRaw* InitRawInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
@@ -948,7 +959,7 @@ InputDeviceRaw* InitRawInputDevice(uint32 id)
 }
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_INPUTDEVICE_SDL2
 InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID)
 {
     if (InputDeviceCount >= INPUTDEVICE_COUNT)
@@ -1027,6 +1038,7 @@ void RemoveInputDevice(InputDevice *targetDevice)
     }
 }
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 void InitKeyboardInputAPI()
 {
     char buffer[0x10];
@@ -1043,8 +1055,9 @@ void InitKeyboardInputAPI()
         }
     }
 }
+#endif
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_INPUTDEVICE_XINPUT
 void InitXInputAPI()
 {
     char idString[16];  
@@ -1077,7 +1090,9 @@ void InitXInputAPI()
         }
     }
 }
+#endif
 
+#if RETRO_INPUTDEVICE_RAWINPUT
 void InitHIDAPI()
 {
     RAWINPUTDEVICE pRawInputDevices;
@@ -1187,7 +1202,7 @@ void InitRawInputAPI()
 #endif
 
 
-#if RETRO_USING_SDL2
+#if RETRO_INPUTDEVICE_SDL2
 void InitSDL2InputAPI()
 {
     char buffer[0x100];
@@ -1215,7 +1230,7 @@ void InitSDL2InputAPI()
             PrintLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
     }
 }
-#endif // ! RETRO_USING_SDL2
+#endif // ! RETRO_INPUTDEVICE_SDL2
 
 void InitInputDevices()
 {
@@ -1227,13 +1242,23 @@ void InitInputDevices()
         activeInputDevices[i] = NULL;
     }
 
+#if RETRO_INPUTDEVICE_KEYBOARD
     InitKeyboardInputAPI();
-#if RETRO_USING_DIRECTX9
+#endif
+
+#if RETRO_INPUTDEVICE_DIRECTX9
     InitHIDAPI();
+#endif
+
+#if RETRO_INPUTDEVICE_XINPUT
     InitXInputAPI();
 #endif
+
+#if RETRO_INPUTDEVICE_STEAM
     // InitSteamInputAPI();
-#if RETRO_USING_SDL2
+#endif
+
+#if RETRO_INPUTDEVICE_SDL2
     InitSDL2InputAPI();
 #endif
 }
@@ -1421,9 +1446,10 @@ int32 GetControllerType(int32 inputID)
 #endif
 }
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 void UpdateKeyState(int32 keyCode)
 {
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
     keyCode = SDLToWinAPIMappings(keyCode);
 #endif
 
@@ -1454,7 +1480,7 @@ void UpdateKeyState(int32 keyCode)
 
 void ClearKeyState(int32 keyCode)
 {
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
     keyCode = SDLToWinAPIMappings(keyCode);
 #endif
 
@@ -1476,15 +1502,18 @@ void ClearKeyState(int32 keyCode)
         }
     }
 }
+#endif
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_INPUTDEVICE_XINPUT
 void UpdateXInputDevices()
 {
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         disabledXInputDevices[i] = false;
     }
 }
+#endif
 
+#if RETRO_INPUTDEVICE_RAWINPUT
 void UpdateRawInputButtonState(HRAWINPUT hRawInput)
 {
     uint32 pcbSize;
@@ -1558,5 +1587,4 @@ void UpdateRawInputButtonState(HRAWINPUT hRawInput)
         }
     }
 }
-
 #endif

@@ -113,9 +113,27 @@ enum GameRegions {
 
 #define BASE_PATH ""
 
-#define RETRO_USING_SDL2      (0) // general
-#define RETRO_USING_DIRECTX9  (0) // windows
-#define RETRO_USING_DIRECTX11 (0) // xbox one
+// ============================
+// RENDER DEVICE BACKENDS
+// ============================
+#define RETRO_RENDERDEVICE_SDL2      (0)
+#define RETRO_RENDERDEVICE_DIRECTX9  (0)
+#define RETRO_RENDERDEVICE_DIRECTX11 (0)
+
+// ============================
+// AUDIO DEVICE BACKENDS
+// ============================
+#define RETRO_AUDIODEVICE_SDL2   (0)
+#define RETRO_AUDIODEVICE_XAUDIO (0)
+
+// ============================
+// INPUT DEVICE BACKENDS
+// ============================
+#define RETRO_INPUTDEVICE_KEYBOARD (1)
+#define RETRO_INPUTDEVICE_XINPUT   (0)
+#define RETRO_INPUTDEVICE_RAWINPUT (0)
+#define RETRO_INPUTDEVICE_STEAM    (0)
+#define RETRO_INPUTDEVICE_SDL2     (0)
 
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false
@@ -136,29 +154,50 @@ enum GameRegions {
 #if RETRO_PLATFORM == RETRO_WIN
 
 #ifdef RSDK_USE_DX9
-#undef RETRO_USING_DIRECTX9
-#define RETRO_USING_DIRECTX9 (1)
+#undef RETRO_RENDERDEVICE_DIRECTX9
+#define RETRO_RENDERDEVICE_DIRECTX9 (1)
+
+#undef RETRO_AUDIODEVICE_XAUDIO
+#define RETRO_AUDIODEVICE_XAUDIO (1)
+
+#undef RETRO_INPUTDEVICE_XINPUT
+#define RETRO_INPUTDEVICE_XINPUT (1)
+
+#undef RETRO_INPUTDEVICE_RAWINPUT
+#define RETRO_INPUTDEVICE_RAWINPUT (1)
 #else
-#undef RETRO_USING_SDL2
-#define RETRO_USING_SDL2 (1)
+#undef RETRO_RENDERDEVICE_SDL2
+#define RETRO_RENDERDEVICE_SDL2 (1)
+
+#undef RETRO_AUDIODEVICE_SDL2
+#define RETRO_AUDIODEVICE_SDL2 (1)
+
+#undef RETRO_INPUTDEVICE_SDL2
+#define RETRO_INPUTDEVICE_SDL2 (1)
 #endif
 
 #elif RETRO_PLATFORM == RETRO_XB1
 
-#undef RETRO_USING_DIRECTX11
-#define RETRO_USING_DIRECTX11 (1)
+#undef RETRO_RENDERDEVICE_DIRECTX11
+#define RETRO_RENDERDEVICE_DIRECTX11 (1)
 
 #elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID                 \
     || RETRO_PLATFORM == RETRO_SWITCH
 
-#undef RETRO_USING_SDL2
-#define RETRO_USING_SDL2 (1)
+#undef RETRO_RENDERDEVICE_SDL2
+#define RETRO_RENDERDEVICE_SDL2 (1)
+
+#undef RETRO_AUDIODEVICE_SDL2
+#define RETRO_AUDIODEVICE_SDL2 (1)
+
+#undef RETRO_INPUTDEVICE_SDL2
+#define RETRO_INPUTDEVICE_SDL2 (1)
 
 #endif
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_UWP
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -168,22 +207,24 @@ enum GameRegions {
 
 #include <d3d9.h>
 
-#include <XAudio2.h>
-
-#include <Xinput.h>
-
-
 #undef LoadImage
-
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_AUDIODEVICE_XAUDIO
+#include <XAudio2.h>
+#endif
+
+#if RETRO_INPUTDEVICE_XINPUT
+#include <Xinput.h>
+#endif
+
+#if RETRO_RENDERDEVICE_SDL2
 #ifdef USING_VCPKG
 #include <SDL2/SDL.h>
 #else
 #include <SDL.h>
 #endif // ! USING_VCPKG
-#endif // ! RETRO_USING_SDL2
+#endif // ! RETRO_RENDERDEVICE_SDL2
 
 #include <vorbis/vorbisfile.h>
 #include <theora/theora.h>

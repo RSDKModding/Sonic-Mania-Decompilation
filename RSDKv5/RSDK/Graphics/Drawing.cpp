@@ -1,6 +1,6 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
 #include <D3Dcompiler.h>
 #endif
 
@@ -91,16 +91,11 @@ char drawGroupNames[0x10][0x10] = {
 
 #define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
 #include "DX9/DX9RenderDevice.cpp"
-#elif RETRO_USING_SDL2
+#elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.cpp"
 #endif
-
-void UpdateGameWindow()
-{
-    RenderDevice::RefreshWindow();
-}
 
 void GenerateBlendLookupTable()
 {
@@ -142,6 +137,11 @@ void InitSystemSurfaces()
     gfxSurface[1].lineSize = 3; // 8
     gfxSurface[1].dataPtr  = engineTextBuffer;
 #endif
+}
+
+void UpdateGameWindow()
+{
+    RenderDevice::RefreshWindow();
 }
 
 void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, char *text)
@@ -213,7 +213,7 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, c
 
 void GetWindowSize(int *width, int *height)
 {
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
     D3DDISPLAYMODE display;
     RenderDevice::dx9Context->GetAdapterDisplayMode(RenderDevice::dxAdapter, &display);
 
@@ -222,7 +222,7 @@ void GetWindowSize(int *width, int *height)
 
     if (height)
         *height = display.Height;
-#elif RETRO_USING_SDL2
+#elif RETRO_RENDERDEVICE_SDL2
     if (!RSDK::gameSettings.windowed) {
         SDL_GetRendererOutputSize(RenderDevice::renderer, width, height);
     }

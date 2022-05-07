@@ -276,7 +276,7 @@ bool32 RSDK::SKU::GetConfirmButtonFlip() { return engine.confirmFlip; }
 void RSDK::SKU::LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
     // SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
     PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
 #else

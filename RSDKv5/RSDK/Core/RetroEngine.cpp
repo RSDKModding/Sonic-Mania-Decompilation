@@ -34,7 +34,7 @@ int RunRetroEngine(int argc, char *argv[])
 #endif
     }
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
     MSG Msg;
     PeekMessage(&Msg, NULL, 0, 0, true);
     InitCommonControls();
@@ -94,7 +94,7 @@ int RunRetroEngine(int argc, char *argv[])
 #endif
         }
         else {
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
             PostQuitMessage(0);
 #endif
         }
@@ -194,7 +194,7 @@ int RunRetroEngine(int argc, char *argv[])
     }
 
     // Shutdown
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
     CoUninitialize();
     // DeleteCriticalSection(&CriticalSection);
 #endif
@@ -252,7 +252,7 @@ void ProcessEngine()
             sceneInfo.activeCategory = pre.activeCategory;
             sceneInfo.listPos        = pre.listPos;
         }
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
         SDL_SetWindowTitle(RenderDevice::window, RSDK::gameVerInfo.gameName);
 #endif
         LoadGlobalSfx();

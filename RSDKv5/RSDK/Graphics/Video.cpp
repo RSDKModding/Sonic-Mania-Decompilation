@@ -42,7 +42,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         callbacks.read     = videoRead;
         callbacks.close    = videoClose;
         callbacks.userdata = (void *)&videoFile;
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
         videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 60, THEORAPLAY_VIDFMT_IYUV);
 #endif
 
@@ -71,7 +71,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         videoAR = float(videoWidth) / float(videoHeight);
 
         SetupVideoBuffer(videoWidth, videoHeight);
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
         vidBaseticks = SDL_GetTicks();
 #else
         vidBaseticks = 0;
@@ -114,7 +114,7 @@ int32 ProcessVideo() {
 
         // Don't pause or it'll go wild
         if (videoPlaying) {
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
             const uint32 now = (SDL_GetTicks() - vidBaseticks);
 #else
             const uint32 now = 0;
@@ -132,7 +132,7 @@ int32 ProcessVideo() {
                 const uint8 *u = y + (videoFrameData->width * videoFrameData->height);
                 const uint8 *v = u + (half_w * (videoFrameData->height / 2));
 
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
                 SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, y, videoFrameData->width, u, half_w, v, half_w);
 #endif
 #if RETRO_USING_SDL1
@@ -186,7 +186,7 @@ void CloseVideoBuffer()
 #if RETRO_USING_SDL1
         SDL_FreeSurface(RenderDevice::imageTexture);
 #endif
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
         SDL_DestroyTexture(RenderDevice::imageTexture);
 #endif
         RenderDevice::imageTexture = nullptr;

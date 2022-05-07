@@ -805,7 +805,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     };
 
 //TODO: leaving this here for RDC
-#if RETRO_USING_DIRECTX11
+#if RETRO_RENDERDEVICE_DIRECTX11
     shaderFolder    = "DX11"; // xbox one
     vertexShaderExt = "vs";
     pixelShaderExt  = "fs";

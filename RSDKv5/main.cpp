@@ -28,7 +28,7 @@ static void initNxLink()
 
 #if RETRO_STANDALONE
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nShowCmd)
 {
     RenderDevice::hInstance     = hInstance;

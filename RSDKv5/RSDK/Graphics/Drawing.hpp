@@ -93,7 +93,7 @@ struct DrawList {
 };
 
 struct WindowInfo {
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
     // rdc gonna hate me frfr 😈
     union {
         struct {
@@ -105,7 +105,7 @@ struct WindowInfo {
     } *displays;
     D3DVIEWPORT9 viewport;
 
-#elif RETRO_USING_SDL2
+#elif RETRO_RENDERDEVICE_SDL2
     union {
         struct {
             // i wanna do uint32 : 32 but idk if other compilers like that
@@ -202,9 +202,9 @@ private:
     static void GetDisplays();
 };
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9
 #include "DX9/DX9RenderDevice.hpp"
-#elif RETRO_USING_SDL2
+#elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.hpp"
 #endif
 

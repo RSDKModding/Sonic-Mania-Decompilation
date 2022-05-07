@@ -40,7 +40,7 @@ enum InputDeviceAPIs {
     DEVICE_API_XINPUT,
     DEVICE_API_RAWINPUT,
     DEVICE_API_STEAM,
-#if RETRO_USING_SDL2
+#if RETRO_RENDERDEVICE_SDL2
     DEVICE_API_SDL2, // custom-made for SDL2 API, afaik it's not in original v5
 #endif
 };
@@ -83,7 +83,7 @@ enum KeyMasks {
 };
 
 enum WinMappings {
-#if !RETRO_USING_DIRECTX9 && !RETRO_USING_DIRECTX11
+#if !RETRO_RENDERDEVICE_DIRECTX9 && !RETRO_RENDERDEVICE_DIRECTX11
     VK_LBUTTON    = 0x01,
     VK_RBUTTON    = 0x02,
     VK_CANCEL     = 0x03,
@@ -164,7 +164,7 @@ enum WinMappings {
     VK_X = 0x58,
     VK_Y = 0x59,
     VK_Z = 0x5A,
-#if !RETRO_USING_DIRECTX9 && !RETRO_USING_DIRECTX11
+#if !RETRO_RENDERDEVICE_DIRECTX9 && !RETRO_RENDERDEVICE_DIRECTX11
     VK_LWIN                            = 0x5B,
     VK_RWIN                            = 0x5C,
     VK_APPS                            = 0x5D,
@@ -349,6 +349,7 @@ struct InputDevice {
     int32 inactiveTimer[2];
 };
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 struct InputDeviceKeyboard : InputDevice {
     void UpdateInput(void);
     void ProcessInput(int32 controllerID);
@@ -370,8 +371,9 @@ struct InputDeviceKeyboard : InputDevice {
     uint8 stateStart;
     uint8 stateSelect;
 };
+#endif
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_INPUTDEVICE_XINPUT
 struct InputDeviceXInput : InputDevice {
     void UpdateInput(void);
     void ProcessInput(int32 controllerID);
@@ -403,7 +405,9 @@ struct InputDeviceXInput : InputDevice {
     float deadzoneRTrigger;
     float deltaRTrigger;
 };
+#endif
 
+#if RETRO_INPUTDEVICE_RAWINPUT
 struct InputDeviceRaw : InputDevice {
     void UpdateInput(void);
     void ProcessInput(int32 controllerID);
@@ -443,7 +447,7 @@ struct InputDeviceRaw : InputDevice {
 };
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_INPUTDEVICE_SDL2
 struct InputDeviceSDL : InputDevice {
     void UpdateInput(void);
     void ProcessInput(int32 controllerID);
@@ -553,9 +557,15 @@ extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
-#if RETRO_USING_DIRECTX9
-extern bool32 disabledXInputDevices[PLAYER_COUNT];
+#if RETRO_INPUTDEVICE_KEYBOARD
+extern int32 keyState[PLAYER_COUNT];
+#endif
 
+#if RETRO_INPUTDEVICE_XINPUT
+extern bool32 disabledXInputDevices[PLAYER_COUNT];
+#endif
+
+#if RETRO_INPUTDEVICE_RAWINPUT
 extern bool32 HIDEnabled;
 
 extern InputDevice *rawInputDevices[INPUTDEVICE_COUNT];
@@ -563,8 +573,6 @@ extern int32 rawInputDeviceCount;
 
 extern tagRAWINPUT rawInputData;
 #endif
-
-extern int32 keyState[PLAYER_COUNT];
 
 extern GamePadMappings *gamePadMappings;
 extern int gamePadCount;
@@ -576,24 +584,36 @@ extern int mostRecentControllerID;
 void InitInputDevices();
 void ProcessInput();
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 void InitKeyboardInputAPI();
-#if RETRO_USING_DIRECTX9
+#endif
+
+#if RETRO_INPUTDEVICE_XINPUT
 void InitXInputAPI();
+#endif
+
+#if RETRO_INPUTDEVICE_RAWINPUT
 void InitHIDAPI();
 void InitRawInputAPI();
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_INPUTDEVICE_SDL2
 void InitSDL2InputAPI();
 #endif
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 InputDeviceKeyboard *InitKeyboardDevice(uint32 id);
-#if RETRO_USING_DIRECTX9
+#endif
+
+#if RETRO_INPUTDEVICE_XINPUT
 InputDeviceXInput *InitXInputDevice(uint32 id);
+#endif
+
+#if RETRO_INPUTDEVICE_RAWINPUT
 InputDeviceRaw *InitRawInputDevice(uint32 id);
 #endif
 
-#if RETRO_USING_SDL2
+#if RETRO_INPUTDEVICE_SDL2
 InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID);
 #endif
 
@@ -826,10 +846,12 @@ inline void InputUnknown(int32 controllerID, int32 type, int32 *valuePtr)
 }
 #endif
 
+#if RETRO_INPUTDEVICE_KEYBOARD
 void UpdateKeyState(int32 keyCode);
 void ClearKeyState(int32 keyCode);
+#endif
 
-#if RETRO_USING_DIRECTX9
+#if RETRO_INPUTDEVICE_RAWINPUT
 inline InputDeviceRaw *GetRawInputDevice(uint8 *deviceID)
 {
     if (*deviceID >= InputDeviceCount)
@@ -850,8 +872,11 @@ inline InputDeviceRaw *GetRawInputDevice(uint8 *deviceID)
     return NULL;
 }
 
-void UpdateXInputDevices();
 void UpdateRawInputButtonState(HRAWINPUT hRawInput);
+#endif
+
+#if RETRO_INPUTDEVICE_XINPUT
+void UpdateXInputDevices();
 #endif
 
 #endif

@@ -11,7 +11,7 @@
 
 #define MAX_VOLUME (1.0f)
 
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
 #define LockAudioDevice()   SDL_LockAudio()
 #define UnlockAudioDevice() SDL_UnlockAudio()
 #else
@@ -56,7 +56,7 @@ extern bool32 audioEnabled;
 bool32 InitAudioDevice();
 void ReleaseAudioDevice();
 
-#if RETRO_USING_SDL1 || RETRO_USING_SDL2
+#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
 #if !RETRO_USE_ORIGINAL_CODE
 // These functions did exist, but with different signatures
 void ProcessAudioPlayback(void *data, Uint8 *stream, int len);
