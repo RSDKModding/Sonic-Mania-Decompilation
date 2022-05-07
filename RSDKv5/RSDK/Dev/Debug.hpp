@@ -9,36 +9,32 @@ extern bool32 engineDebugMode;
 extern bool32 useEndLine;
 extern char outputString[0x400];
 
-void PrintLog(SeverityModes severity, const char *message, ...);
-inline void printConsole(const char *message) { printf("%s", message); }
+void PrintLog(int32 severity, const char *message, ...);
+inline void PrintConsole(const char *message) { printf("%s", message); }
+
+#if !RETRO_REV02
+void PrintMessage(void *msg, int32 type);
+#endif
 
 #if RETRO_REV02
-inline void PrintString(SeverityModes severity, const char *message) { PrintLog(severity, "%s", message); }
-inline void PrintText(SeverityModes severity, TextInfo *text)
+inline void PrintString(int32 severity, const char *message) { PrintLog(severity, "%s", message); }
+inline void PrintText(int32 severity, TextInfo *text)
 {
     useEndLine = false;
-    for (int c = 0; c < text->length; ++c) {
-        PrintLog(severity, "%c", text->text[c]);
-    }
+
+    for (int32 c = 0; c < text->length; ++c) PrintLog(severity, "%c", text->text[c]);
     PrintLog(severity, "\n");
+
     useEndLine = true;
 }
-inline void PrintIntegerUnsigned(SeverityModes severity, const char *message, uint integer) { PrintLog(severity, "%s: %d", message, integer); }
-inline void PrintInteger(SeverityModes severity, const char *message, int32 integer) { PrintLog(severity, "%s: %d", message, integer); }
-inline void PrintFloat(SeverityModes severity, const char *message, float f) { PrintLog(severity, "%s: %f", message, f); }
-inline void PrintVector2(SeverityModes severity, const char *message, int32 x, int32 y)
+inline void PrintIntegerUnsigned(int32 severity, const char *message, uint integer) { PrintLog(severity, "%s: %d", message, integer); }
+inline void PrintInteger(int32 severity, const char *message, int32 integer) { PrintLog(severity, "%s: %d", message, integer); }
+inline void PrintFloat(int32 severity, const char *message, float f) { PrintLog(severity, "%s: %f", message, f); }
+inline void PrintVector2(int32 severity, const char *message, int32 x, int32 y)
 {
-    int32 absX = abs(x);
-    int32 absY = abs(y);
-    int32 xCnt = 32;
-    if (x < 0)
-        xCnt = 45;
-    int32 yCnt = 32;
-    if (y < 0)
-        yCnt = 45;
-    PrintLog(severity, "%s: <%c%08X, %c%08X>", message, xCnt, absX, yCnt, absY);
+    PrintLog(severity, "%s: <%c%08X, %c%08X>", message, x < 0 ? 45 : 32, abs(x), y < 0 ? 45 : 32, abs(y));
 }
-inline void PrintHitbox(SeverityModes severity, const char *message, RSDK::Hitbox *hitbox)
+inline void PrintHitbox(int32 severity, const char *message, RSDK::Hitbox *hitbox)
 {
     PrintLog(severity, "%s: <l: %d, r: %d, t: %d, b: %d>", message, hitbox->left, hitbox->right, hitbox->top, hitbox->bottom);
 }
@@ -47,7 +43,7 @@ struct DebugValueInfo {
     char name[0x10];
     void *value;
     int32 type;
-    int32 valByteCnt;
+    int32 size;
     int32 min;
     int32 max;
 };
@@ -62,27 +58,29 @@ typedef enum {
     DTYPE_INT32,
 } DebugVarTypes;
 
-extern int32 debugValCnt;
+typedef enum {
+    DEBUGDISPLAY_BOOL,
+    DEBUGDISPLAY_UNSIGNED,
+    DEBUGDISPLAY_SIGNED,
+} DebugVarDisplayTypes;
+
+extern int32 debugValueCount;
 extern DebugValueInfo debugValues[DEBUGVAL_MAX];
 
-inline void ClearDebugValues() { debugValCnt = 0; }
+inline void ClearDebugValues() { debugValueCount = 0; }
 void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 max);
-#endif
-
-#if !RETRO_REV02
-void PrintMessage(void *msg, int32 type);
 #endif
 
 struct DevMenu {
     void (*state)(void);
-    int32 option;
-    int32 scroll;
+    int32 selection;
+    int32 scrollPos;
     int32 timer;
-    int32 listPos;
-    int32 stateStore;
-    int32 winScale;
-    int32 winAspect;
     bool32 windowed;
+    int8 sceneState;
+    int8 listPos;
+    int8 windowScale;
+    int8 windowAspect;
 #if RETRO_USE_MOD_LOADER
     bool32 modsChanged;
 #endif
@@ -91,18 +89,39 @@ struct DevMenu {
 extern DevMenu devMenu;
 
 void DevMenu_MainMenu();
-void DevMenu_ListSel();
-void DevMenu_SceneSel();
-void DevMenu_Options();
-void DevMenu_VideoOptions();
-void DevMenu_AudioOptions();
-void DevMenu_InputOptions();
-void DevMenu_MappingsOptions();
+void DevMenu_CategorySelectMenu();
+void DevMenu_SceneSelectMenu();
+void DevMenu_OptionsMenu();
+void DevMenu_VideoOptionsMenu();
+void DevMenu_AudioOptionsMenu();
+void DevMenu_InputOptionsMenu();
+void DevMenu_KeyMappingsMenu();
 #if RETRO_REV02
-void DevMenu_DebugOptions();
-#endif 
-#if RETRO_USE_MOD_LOADER
-void DevMenu_Mods();
+void DevMenu_DebugOptionsMenu();
 #endif
+#if RETRO_USE_MOD_LOADER
+void DevMenu_ModsMenu();
+#endif
+
+inline void OpenDevMenu()
+{
+    devMenu.sceneState = sceneInfo.state;
+    devMenu.state      = DevMenu_MainMenu;
+    devMenu.selection  = 0;
+    devMenu.scrollPos  = 0;
+    devMenu.timer      = 0;
+
+    RSDK::videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 1 : RSDK::videoSettings.screenCount;
+    sceneInfo.state                 = ENGINESTATE_DEVMENU;
+    PauseSound();
+}
+
+inline void CloseDevMenu()
+{
+    sceneInfo.state = devMenu.sceneState;
+
+    RSDK::videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 0 : RSDK::videoSettings.screenCount;
+    ResumeSound();
+}
 
 #endif

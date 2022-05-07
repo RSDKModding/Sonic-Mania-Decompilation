@@ -14,13 +14,13 @@ bool32 useEndLine      = true;
 char outputString[0x400];
 
 #if RETRO_REV02
-int32 debugValCnt = 0;
+int32 debugValueCount = 0;
 DebugValueInfo debugValues[DEBUGVAL_MAX];
 #endif
 
 DevMenu devMenu = DevMenu();
 
-void PrintLog(SeverityModes severity, const char *message, ...)
+void PrintLog(int32 severity, const char *message, ...)
 {
 #ifndef RETRO_DISABLE_LOG
     if (engineDebugMode) {
@@ -60,14 +60,14 @@ void PrintLog(SeverityModes severity, const char *message, ...)
                 break;
         }
 #endif
-        if (engine.printConsole) {
-            printConsole(outputString);
+        if (engine.consoleEnabled) {
+            PrintConsole(outputString);
         }
         else {
 #if RETRO_PLATFORM == RETRO_WIN
             OutputDebugStringA(outputString);
 #elif RETRO_PLATFORM == RETRO_ANDROID
-            int as = ANDROID_LOG_INFO;
+            int32 as = ANDROID_LOG_INFO;
             switch (severity) {
                 case PRINT_ERROR: as = ANDROID_LOG_ERROR; break;
                 case PRINT_FATAL: as = ANDROID_LOG_FATAL; break;
@@ -95,48 +95,49 @@ void PrintLog(SeverityModes severity, const char *message, ...)
 #if RETRO_REV02
 void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 max)
 {
-    if (debugValCnt < DEBUGVAL_MAX) {
-        DebugValueInfo *value = &debugValues[debugValCnt++];
+    if (debugValueCount < DEBUGVAL_MAX) {
+        DebugValueInfo *value = &debugValues[debugValueCount++];
         strncpy(value->name, name, 0x10);
         value->value = valPtr;
         switch (type) {
-            case DTYPE_BOOL: // bool
-                value->type       = 0;
-                value->valByteCnt = 4;
+            case DTYPE_BOOL:
+                value->type = DEBUGDISPLAY_BOOL;
+                value->size = sizeof(bool32);
                 break;
 
-            case DTYPE_UINT8: // byte
-                value->type       = 1;
-                value->valByteCnt = 1;
+            case DTYPE_UINT8:
+                value->type = DEBUGDISPLAY_UNSIGNED;
+                value->size = sizeof(uint8);
                 break;
 
-            case DTYPE_UINT16: // ushort
-                value->type       = 1;
-                value->valByteCnt = 2;
+            case DTYPE_UINT16:
+                value->type = DEBUGDISPLAY_UNSIGNED;
+                value->size = sizeof(uint16);
                 break;
 
-            case DTYPE_UINT32: // uint
-                value->type       = 1;
-                value->valByteCnt = 4;
+            case DTYPE_UINT32:
+                value->type = DEBUGDISPLAY_UNSIGNED;
+                value->size = sizeof(uint32);
                 break;
 
-            case DTYPE_INT8: // sbyte
-                value->type       = 2;
-                value->valByteCnt = 1;
+            case DTYPE_INT8:
+                value->type = DEBUGDISPLAY_SIGNED;
+                value->size = sizeof(int8);
                 break;
 
-            case DTYPE_INT16: // short
-                value->type       = 2;
-                value->valByteCnt = 2;
+            case DTYPE_INT16:
+                value->type = DEBUGDISPLAY_SIGNED;
+                value->size = sizeof(int16);
                 break;
 
-            case DTYPE_INT32: // int
-                value->type       = 2;
-                value->valByteCnt = 4;
+            case DTYPE_INT32:
+                value->type = DEBUGDISPLAY_SIGNED;
+                value->size = sizeof(int32);
                 break;
 
             default: break;
         }
+
         value->min = min;
         value->max = max;
     }
@@ -144,9 +145,9 @@ void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 
 #endif
 
 #if !RETRO_REV02
-void PrintMessage(void *msg, int type)
+void PrintMessage(void *msg, int32 type)
 {
-    if (msg && engine.printConsole) {
+    if (msg && engine.consoleEnabled) {
         switch (type) {
             case 0: PrintLog(PRINT_NORMAL, "%s", (const char *)msg); break;
             case 1: PrintLog(PRINT_NORMAL, "%i", *(int32 *)msg); break;
@@ -159,41 +160,45 @@ void PrintMessage(void *msg, int type)
 #endif
 
 #if !RETRO_USE_ORIGINAL_CODE
-byte touchTimer = 0;
+uint8 touchTimer = 0;
 
 void DevMenu_HandleTouchControls()
 {
-    if (!controller[CONT_P1].keyStart.down && !controller[CONT_P1].keyUp.down && !controller[CONT_P1].keyDown.down) {
-        for (int t = 0; t < touchMouseData.count; ++t) {
+    if (!controller[CONT_ANY].keyStart.down && !controller[CONT_ANY].keyUp.down && !controller[CONT_ANY].keyDown.down) {
+        for (int32 t = 0; t < touchMouseData.count; ++t) {
             if (touchMouseData.down[t] && !(touchTimer % 8)) {
-                int tx = touchMouseData.x[t] * screens->size.x;
-                int ty = touchMouseData.y[t] * screens->size.y;
+                int32 tx = touchMouseData.x[t] * screens->size.x;
+                int32 ty = touchMouseData.y[t] * screens->size.y;
 
                 if (tx < screens->center.x) {
                     if (ty >= screens->center.y) {
-                        if (!controller[CONT_P1].keyDown.down)
-                            controller[CONT_P1].keyDown.press = true;
-                        controller[CONT_P1].keyDown.down = true;
+                        if (!controller[CONT_ANY].keyDown.down)
+                            controller[CONT_ANY].keyDown.press = true;
+
+                        controller[CONT_ANY].keyDown.down = true;
                         break;
                     }
                     else {
-                        if (!controller[CONT_P1].keyUp.down)
-                            controller[CONT_P1].keyUp.press = true;
-                        controller[CONT_P1].keyUp.down = true;
+                        if (!controller[CONT_ANY].keyUp.down)
+                            controller[CONT_ANY].keyUp.press = true;
+
+                        controller[CONT_ANY].keyUp.down = true;
                         break;
                     }
                 }
                 else if (tx > screens->center.x) {
                     if (ty > screens->center.y) {
-                        if (!controller[CONT_P1].keyStart.down)
-                            controller[CONT_P1].keyStart.press = true;
-                        controller[CONT_P1].keyStart.down = true;
+                        if (!controller[CONT_ANY].keyStart.down)
+                            controller[CONT_ANY].keyStart.press = true;
+
+                        controller[CONT_ANY].keyStart.down = true;
                         break;
                     }
                     else {
-                        if (!controller[CONT_P1].keyB.down)
-                            controller[CONT_P1].keyB.press = true;
-                        controller[CONT_P1].keyB.down = true;
+                        if (!controller[CONT_ANY].keyB.down)
+                            controller[CONT_ANY].keyB.press = true;
+
+                        controller[CONT_ANY].keyB.down = true;
                         break;
                     }
                 }
@@ -208,36 +213,39 @@ void DevMenu_HandleTouchControls()
 void DevMenu_MainMenu()
 {
 #if !RETRO_USE_MOD_LOADER
-    int optionCount           = 5;
-    uint optionColors[]       = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    const char *optionNames[] = { "Resume", "Restart", "Stage Select", "Options", "Exit" };
+    int32 selectionCount         = 5;
+    uint32 selectionColors[]     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    const char *selectionNames[] = { "Resume", "Restart", "Stage Select", "Options", "Exit" };
 #else
-    int optionCount           = 6;
-    uint optionColors[]       = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    const char *optionNames[] = { "Resume", "Restart", "Stage Select", "Options", "Mods", "Exit" };
+    int32 selectionCount         = 6;
+    uint32 selectionColors[]     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    const char *selectionNames[] = { "Resume", "Restart", "Stage Select", "Options", "Mods", "Exit" };
 #endif
-    optionColors[devMenu.option] = 0xF0F0F0;
+    selectionColors[devMenu.selection] = 0xF0F0F0;
 
     // Info Box
-    int y = currentScreen->center.y - 80;
-    DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 84, 256, 48, 128, 255, INK_NONE, true);
+    int32 y = currentScreen->center.y - 80;
+    DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
     DrawDevText("RETRO ENGINE v5", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
+
     y += 8;
     DrawDevText("Dev Menu", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
+
     y += 16;
     DrawDevText(RSDK::gameVerInfo.gameName, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
+
     y += 8;
     DrawDevText(RSDK::gameVerInfo.gameVersion, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
-    y += 24;
 
-    // Options Box
-    DrawRectangle(currentScreen->center.x - 128, y - 8, 256, 72, 128, 255, INK_NONE, true);
+    // Selections Box
+    y += 24;
+    DrawRectangle(currentScreen->center.x - 128, y - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
 #if RETRO_USE_MOD_LOADER
     y -= 6;
 #endif
-    for (int i = 0; i < optionCount; ++i) {
-        DrawDevText(optionNames[i], currentScreen->center.x, y, ALIGN_CENTER, optionColors[i]);
+    for (int32 i = 0; i < selectionCount; ++i) {
+        DrawDevText(selectionNames[i], currentScreen->center.x, y, ALIGN_CENTER, selectionColors[i]);
         y += 12;
     }
     y += 20;
@@ -245,114 +253,122 @@ void DevMenu_MainMenu()
     // Storage box
 
     // Stage Storage
-    int stgUsed = (sizeof(int) * RSDK::dataStorage[RSDK::DATASET_STG].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_STG].storageLimit * 126.0;
-    DrawRectangle(currentScreen->center.x - 40, y, 128, 8, 128, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x - 39, y + 1, stgUsed, 6, 0xF0F0F0, 255, INK_NONE, true);
+    int32 stgUsed =
+        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_STG].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_STG].storageLimit * 126.0;
+    DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 39, y + 1, stgUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevText("STG", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Music Storage
-    int musUsed = (sizeof(int) * RSDK::dataStorage[RSDK::DATASET_MUS].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_MUS].storageLimit * 126.0;
+    int32 musUsed =
+        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_MUS].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_MUS].storageLimit * 126.0;
     y += 10;
-    DrawRectangle(currentScreen->center.x - 40, y, 128, 8, 128, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x - 39, y + 1, musUsed, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF5, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 39, y + 1, musUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevText("MUS", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // SoundFX Storage
-    int sfxUsed = (sizeof(int) * RSDK::dataStorage[RSDK::DATASET_SFX].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_SFX].storageLimit * 126.0;
+    int32 sfxUsed =
+        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_SFX].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_SFX].storageLimit * 126.0;
     y += 10;
-    DrawRectangle(currentScreen->center.x - 40, y, 128, 8, 128, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x - 39, y + 1, sfxUsed, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 39, y + 1, sfxUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevText("SFX", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // String Storage
-    int strUsed = (sizeof(int) * RSDK::dataStorage[RSDK::DATASET_STR].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_STR].storageLimit * 126.0;
+    int32 strUsed =
+        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_STR].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_STR].storageLimit * 126.0;
     y += 10;
-    DrawRectangle(currentScreen->center.x - 40, y, 128, 8, 128, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x - 39, y + 1, strUsed, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 39, y + 1, strUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevText("STR", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Temp Storage
-    int tmpUsed = (sizeof(int) * RSDK::dataStorage[RSDK::DATASET_TMP].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_TMP].storageLimit * 126.0;
+    int32 tmpUsed =
+        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_TMP].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_TMP].storageLimit * 126.0;
     y += 10;
-    DrawRectangle(currentScreen->center.x - 40, y, 128, 8, 128, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x - 39, y + 1, tmpUsed, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 39, y + 1, tmpUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevText("TMP", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
 
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
+    if (controller[CONT_ANY].keyUp.press) {
+        devMenu.selection--;
         devMenu.timer = 1;
-        if (devMenu.option < 0)
-            devMenu.option += optionCount;
+
+        if (devMenu.selection < 0)
+            devMenu.selection += selectionCount;
     }
-    else if (controller[CONT_P1].keyUp.down) {
+    else if (controller[CONT_ANY].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = ++devMenu.timer & 7;
         }
         else {
-            devMenu.option--;
+            devMenu.selection--;
             devMenu.timer = ++devMenu.timer & 7;
-            if (devMenu.option < 0)
-                devMenu.option += optionCount;
+
+            if (devMenu.selection < 0)
+                devMenu.selection += selectionCount;
         }
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
+    if (controller[CONT_ANY].keyDown.press) {
+        devMenu.selection++;
         devMenu.timer = 1;
-        if (devMenu.option >= optionCount)
-            devMenu.option -= optionCount;
+
+        if (devMenu.selection >= selectionCount)
+            devMenu.selection -= selectionCount;
     }
-    else if (controller[CONT_P1].keyDown.down) {
+    else if (controller[CONT_ANY].keyDown.down) {
         if (devMenu.timer) {
             devMenu.timer = ++devMenu.timer & 7;
         }
         else {
-            devMenu.option++;
+            devMenu.selection++;
             devMenu.timer = ++devMenu.timer & 7;
-            if (devMenu.option >= optionCount)
-                devMenu.option -= optionCount;
+
+            if (devMenu.selection >= selectionCount)
+                devMenu.selection -= selectionCount;
         }
     }
 
-    bool32 confirm = controller[CONT_P1].keyA.press;
+    bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
     if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-        confirm = controller[CONT_P1].keyB.press;
+        confirm = controller[CONT_ANY].keyB.press;
 
-    if (controller[CONT_P1].keyStart.press || confirm) {
-        switch (devMenu.option) {
-            case 0: sceneInfo.state = devMenu.stateStore; break;
+    if (controller[CONT_ANY].keyStart.press || confirm) {
+        switch (devMenu.selection) {
+            case 0: sceneInfo.state = devMenu.sceneState; break;
 
             case 1: sceneInfo.state = ENGINESTATE_LOAD; break;
 
             case 2:
-                devMenu.state  = DevMenu_ListSel;
-                devMenu.option = 0;
-                devMenu.timer  = 1;
+                devMenu.state     = DevMenu_CategorySelectMenu;
+                devMenu.selection = 0;
+                devMenu.timer     = 1;
                 break;
 
             case 3:
-                devMenu.state  = DevMenu_Options;
-                devMenu.option = 0;
-                devMenu.timer  = 1;
+                devMenu.state     = DevMenu_OptionsMenu;
+                devMenu.selection = 0;
+                devMenu.timer     = 1;
                 break;
 
 #if !RETRO_USE_MOD_LOADER
             case 4: engine.running = false; break;
 #else
-
             case 4:
-                RSDK::loadMods(); // reload our mod list real quick
-                devMenu.state  = DevMenu_Mods;
-                devMenu.option = 0;
-                devMenu.timer  = 1;
+                RSDK::LoadMods(); // reload our mod list real quick
+                devMenu.state     = DevMenu_ModsMenu;
+                devMenu.selection = 0;
+                devMenu.timer     = 1;
                 break;
 
             case 5: RenderDevice::isRunning = false; break;
@@ -362,29 +378,24 @@ void DevMenu_MainMenu()
         }
     }
 }
-void DevMenu_ListSel()
+void DevMenu_CategorySelectMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    uint32 selectionColors[] = {
+        0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090,
+    };
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("SELECT STAGE CATEGORY", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
-    DrawRectangle(currentScreen->center.x - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 128, dy + 36, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    uint optionColors[8];
-    optionColors[0]                               = 0x808090;
-    optionColors[1]                               = 0x808090;
-    optionColors[2]                               = 0x808090;
-    optionColors[3]                               = 0x808090;
-    optionColors[4]                               = 0x808090;
-    optionColors[5]                               = 0x808090;
-    optionColors[6]                               = 0x808090;
-    optionColors[7]                               = 0x808090;
-    optionColors[devMenu.option - devMenu.scroll] = 0xF0F0F0;
-
-    int y = dy + 40;
-    for (int i = 0; i < 8; ++i) {
-        if (devMenu.scroll + i < sceneInfo.categoryCount) {
-            DrawDevText(sceneInfo.listCategory[devMenu.scroll + i].name, currentScreen->center.x - 64, y, 0, optionColors[i]);
+    int32 y = dy + 40;
+    for (int32 i = 0; i < 8; ++i) {
+        if (devMenu.scrollPos + i < sceneInfo.categoryCount) {
+            DrawDevText(sceneInfo.listCategory[devMenu.scrollPos + i].name, currentScreen->center.x - 64, y, 0, selectionColors[i]);
             y += 8;
         }
     }
@@ -393,142 +404,137 @@ void DevMenu_ListSel()
     DevMenu_HandleTouchControls();
 #endif
 
-    if (controller[CONT_P1].keyUp.press) {
-        if (--devMenu.option < 0)
-            devMenu.option += sceneInfo.categoryCount;
+    if (controller[CONT_ANY].keyUp.press) {
+        if (--devMenu.selection < 0)
+            devMenu.selection += sceneInfo.categoryCount;
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
+
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
+    else if (controller[CONT_ANY].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = (devMenu.timer + 1) & 7;
 
-            if (devMenu.option >= devMenu.scroll) {
-                if (devMenu.option > devMenu.scroll + 7) {
-                    devMenu.scroll = devMenu.option - 7;
-                }
+            if (devMenu.selection >= devMenu.scrollPos) {
+                if (devMenu.selection > devMenu.scrollPos + 7)
+                    devMenu.scrollPos = devMenu.selection - 7;
             }
             else {
-                devMenu.scroll = devMenu.option;
+                devMenu.scrollPos = devMenu.selection;
             }
         }
         else {
-            if (--devMenu.option < 0)
-                devMenu.option += sceneInfo.categoryCount;
+            if (--devMenu.selection < 0)
+                devMenu.selection += sceneInfo.categoryCount;
 
             devMenu.timer = (devMenu.timer + 1) & 7;
-            if (devMenu.option >= devMenu.scroll) {
-                if (devMenu.option > devMenu.scroll + 7) {
-                    devMenu.scroll = devMenu.option - 7;
-                }
+
+            if (devMenu.selection >= devMenu.scrollPos) {
+                if (devMenu.selection > devMenu.scrollPos + 7)
+                    devMenu.scrollPos = devMenu.selection - 7;
             }
             else {
-                devMenu.scroll = devMenu.option;
+                devMenu.scrollPos = devMenu.selection;
             }
         }
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        if (++devMenu.option == sceneInfo.categoryCount)
-            devMenu.option = 0;
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection == sceneInfo.categoryCount)
+            devMenu.selection = 0;
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
+
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyDown.down) {
+    else if (controller[CONT_ANY].keyDown.down) {
         if (devMenu.timer) {
             devMenu.timer = (devMenu.timer + 1) & 7;
-            if (devMenu.option >= devMenu.scroll) {
-                if (devMenu.option > devMenu.scroll + 7) {
-                    devMenu.scroll = devMenu.option - 7;
-                }
+
+            if (devMenu.selection >= devMenu.scrollPos) {
+                if (devMenu.selection > devMenu.scrollPos + 7)
+                    devMenu.scrollPos = devMenu.selection - 7;
             }
             else {
-                devMenu.scroll = devMenu.option;
+                devMenu.scrollPos = devMenu.selection;
             }
         }
         else {
-            if (++devMenu.option == sceneInfo.categoryCount)
-                devMenu.option = 0;
+            if (++devMenu.selection == sceneInfo.categoryCount)
+                devMenu.selection = 0;
+
             devMenu.timer = (devMenu.timer + 1) & 7;
-            if (devMenu.option >= devMenu.scroll) {
-                if (devMenu.option > devMenu.scroll + 7) {
-                    devMenu.scroll = devMenu.option - 7;
-                }
+
+            if (devMenu.selection >= devMenu.scrollPos) {
+                if (devMenu.selection > devMenu.scrollPos + 7)
+                    devMenu.scrollPos = devMenu.selection - 7;
             }
             else {
-                devMenu.scroll = devMenu.option;
+                devMenu.scrollPos = devMenu.selection;
             }
         }
     }
 
-    bool32 confirm = controller[CONT_P1].keyA.press;
+    bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
     if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-        confirm = controller[CONT_P1].keyB.press;
+        confirm = controller[CONT_ANY].keyB.press;
 
-    if (controller[CONT_P1].keyStart.press || confirm) {
-        if (sceneInfo.listCategory[devMenu.option].sceneCount) {
-            devMenu.state   = DevMenu_SceneSel;
-            devMenu.listPos = devMenu.option;
-            devMenu.scroll  = 0;
-            devMenu.option  = 0;
+    if (controller[CONT_ANY].keyStart.press || confirm) {
+        if (sceneInfo.listCategory[devMenu.selection].sceneCount) {
+            devMenu.state     = DevMenu_SceneSelectMenu;
+            devMenu.listPos   = devMenu.selection;
+            devMenu.scrollPos = 0;
+            devMenu.selection = 0;
         }
     }
 #if !RETRO_USE_ORIGINAL_CODE
-    else if (controller[CONT_P1].keyB.press) {
-        devMenu.state   = DevMenu_MainMenu;
-        devMenu.listPos = 0;
-        devMenu.scroll  = 0;
-        devMenu.option  = 2;
+    else if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_MainMenu;
+        devMenu.listPos   = 0;
+        devMenu.scrollPos = 0;
+        devMenu.selection = 2;
     }
 #endif
 }
-void DevMenu_SceneSel()
+void DevMenu_SceneSelectMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    uint32 selectionColors[] = {
+        0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090,
+    };
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("SELECT STAGE SCENE", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
-    DrawRectangle(currentScreen->center.x - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 128, dy + 36, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    uint optionColors[8];
-    optionColors[0]                               = 0x808090;
-    optionColors[1]                               = 0x808090;
-    optionColors[2]                               = 0x808090;
-    optionColors[3]                               = 0x808090;
-    optionColors[4]                               = 0x808090;
-    optionColors[5]                               = 0x808090;
-    optionColors[6]                               = 0x808090;
-    optionColors[7]                               = 0x808090;
-    optionColors[devMenu.option - devMenu.scroll] = 0xF0F0F0;
-
-    int y               = dy + 40;
+    int32 y             = dy + 40;
     SceneListInfo *list = &sceneInfo.listCategory[devMenu.listPos];
-    int off             = list->sceneOffsetStart;
-    for (int i = 0; i < 8; ++i) {
-        if (devMenu.scroll + i < list->sceneCount) {
-            DrawDevText(sceneInfo.listData[off + (devMenu.scroll + i)].name, currentScreen->center.x + 96, y, ALIGN_RIGHT, optionColors[i]);
+    int32 start         = list->sceneOffsetStart;
+    for (int32 i = 0; i < 8; ++i) {
+        if (devMenu.scrollPos + i < list->sceneCount) {
+            DrawDevText(sceneInfo.listData[start + (devMenu.scrollPos + i)].name, currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
             y += 8;
-            devMenu.scroll = devMenu.scroll;
+            devMenu.scrollPos = devMenu.scrollPos;
         }
     }
 
@@ -536,364 +542,347 @@ void DevMenu_SceneSel()
     DevMenu_HandleTouchControls();
 #endif
 
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
-        if (off + devMenu.option < list->sceneOffsetStart)
-            devMenu.option = list->sceneCount - 1;
+    if (controller[CONT_ANY].keyUp.press) {
+        if (start + --devMenu.selection < list->sceneOffsetStart)
+            devMenu.selection = list->sceneCount - 1;
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7) {
+                devMenu.scrollPos = devMenu.selection - 7;
             }
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
+
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (off + devMenu.option < list->sceneOffsetStart)
-                devMenu.option = list->sceneCount - 1;
-        }
-
-        devMenu.timer = (devMenu.timer + 1) & 7;
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7)
-                devMenu.scroll = devMenu.option - 7;
-        }
-        else {
-            devMenu.scroll = devMenu.option;
-        }
-    }
-
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
-        if (devMenu.option >= list->sceneCount)
-            devMenu.option = 0;
-
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7)
-                devMenu.scroll = devMenu.option - 7;
-        }
-        else {
-            devMenu.scroll = devMenu.option;
-        }
-        devMenu.timer = 1;
-    }
-    else if (controller[CONT_P1].keyDown.down) {
-        if (!devMenu.timer) {
-            devMenu.option++;
-
-            if (devMenu.option >= list->sceneCount)
-                devMenu.option = 0;
-        }
+    else if (controller[CONT_ANY].keyUp.down) {
+        if (!devMenu.timer && start + --devMenu.selection < list->sceneOffsetStart)
+            devMenu.selection = list->sceneCount - 1;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7)
-                devMenu.scroll = devMenu.option - 7;
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
     }
 
-    bool32 confirm = controller[CONT_P1].keyA.press;
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection >= list->sceneCount)
+            devMenu.selection = 0;
+
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
+        }
+        else {
+            devMenu.scrollPos = devMenu.selection;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[CONT_ANY].keyDown.down) {
+        if (!devMenu.timer && ++devMenu.selection >= list->sceneCount)
+            devMenu.selection = 0;
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
+        }
+        else {
+            devMenu.scrollPos = devMenu.selection;
+        }
+    }
+
+    bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
     if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-        confirm = controller[CONT_P1].keyB.press;
+        confirm = controller[CONT_ANY].keyB.press;
 
-    if (controller[CONT_P1].keyStart.press || confirm) {
+    if (controller[CONT_ANY].keyStart.press || confirm) {
         sceneInfo.activeCategory = devMenu.listPos;
-        sceneInfo.listPos        = devMenu.option + list->sceneOffsetStart;
+        sceneInfo.listPos        = devMenu.selection + list->sceneOffsetStart;
         sceneInfo.state          = ENGINESTATE_LOAD;
+
+        // Bug Details(?):
+        // rev01 had this here, rev02 does not.
+        // This can cause an annoying popup when starting a stage, so it's re-added for anyone who doesn't like that popup
+#if !RETRO_REV02 || !RETRO_USE_ORIGINAL_CODE
+        AssignControllerID(CONT_P1, CONT_AUTOASSIGN);
+#endif
     }
 #if !RETRO_USE_ORIGINAL_CODE
-    else if (controller[CONT_P1].keyB.press) {
-        devMenu.state   = DevMenu_ListSel;
-        devMenu.scroll  = 0;
-        devMenu.option  = 0;
-        devMenu.listPos = 0;
+    else if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_CategorySelectMenu;
+        devMenu.scrollPos = 0;
+        devMenu.selection = 0;
+        devMenu.listPos   = 0;
     }
 #endif
 }
-void DevMenu_Options()
+void DevMenu_OptionsMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    const uint8 selectionCount = RETRO_REV02 ? 5 : 4;
+#if RETRO_REV02
+    uint32 selectionColors[] = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+#else
+    uint32 selectionColors[] = { 0x808090, 0x808090, 0x808090, 0x808090 };
+#endif
+    selectionColors[devMenu.selection] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("OPTIONS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+
     dy += 44;
-    DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    const byte optionCount = RETRO_REV02 ? 5 : 4;
+    DrawDevText("Video Settings", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[0]);
 
-    uint optionColors[optionCount];
-    optionColors[0] = 0x808090;
-    optionColors[1] = 0x808090;
-    optionColors[2] = 0x808090;
-    optionColors[3] = 0x808090;
-#if RETRO_REV02
-    optionColors[4] = 0x808090;
-#endif
-    optionColors[devMenu.option] = 0xF0F0F0;
-
-    DrawDevText("Video Settings", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[0]);
     dy += 12;
-    DrawDevText("Audio Settings", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[1]);
+    DrawDevText("Audio Settings", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[1]);
+
     dy += 12;
-    DrawDevText("Configure Input", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[2]);
+    DrawDevText("Configure Input", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[2]);
+
 #if RETRO_REV02
     dy += 12;
-    DrawDevText("Debug Flags", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[3]);
+    DrawDevText("Debug Flags", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[3]);
+
 #endif
-    DrawDevText("Back", currentScreen->center.x, dy + 12, ALIGN_CENTER, optionColors[optionCount - 1]);
+    DrawDevText("Back", currentScreen->center.x, dy + 12, ALIGN_CENTER, selectionColors[selectionCount - 1]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
 
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
-        if (devMenu.option < 0) {
-            devMenu.option = optionCount - 1;
-        }
+    if (controller[CONT_ANY].keyUp.press) {
+        if (--devMenu.selection < 0)
+            devMenu.selection = selectionCount - 1;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (devMenu.option < 0) {
-                devMenu.option = optionCount - 1;
-            }
-        }
+    else if (controller[CONT_ANY].keyUp.down) {
+        if (!devMenu.timer && --devMenu.selection < 0)
+            devMenu.selection = selectionCount - 1;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
-        if (devMenu.option >= optionCount) {
-            devMenu.option = 0;
-        }
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection >= selectionCount)
+            devMenu.selection = 0;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyDown.down) {
-        if (!devMenu.timer) {
-            devMenu.option++;
-            if (devMenu.option >= optionCount) {
-                devMenu.option = 0;
-            }
-        }
+    else if (controller[CONT_ANY].keyDown.down) {
+        if (!devMenu.timer && ++devMenu.selection >= selectionCount)
+            devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    bool32 confirm = controller[CONT_P1].keyA.press;
+    bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
     if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-        confirm = controller[CONT_P1].keyB.press;
+        confirm = controller[CONT_ANY].keyB.press;
 
-    if (controller[CONT_P1].keyStart.press || confirm) {
-        switch (devMenu.option) {
+    if (controller[CONT_ANY].keyStart.press || confirm) {
+        switch (devMenu.selection) {
             case 0: {
-                devMenu.windowed = !RSDK::videoSettings.windowed;
-                devMenu.winScale = (RSDK::videoSettings.windowWidth / RSDK::videoSettings.pixWidth) - 1;
-                int aspect       = (int)((RSDK::videoSettings.windowWidth / (float)RSDK::videoSettings.windowHeight) * (float)SCREEN_YSIZE) >> 3;
+                devMenu.windowed    = RSDK::videoSettings.windowed;
+                devMenu.windowScale = (RSDK::videoSettings.windowWidth / RSDK::videoSettings.pixWidth) - 1;
+
+                int32 aspect = (int32)((RSDK::videoSettings.windowWidth / (float)RSDK::videoSettings.windowHeight) * (float)SCREEN_YSIZE) >> 3;
                 switch (aspect) {
-                    case 40: devMenu.winAspect = 0; break;
-                    case 45: devMenu.winAspect = 1; break;
-                    case 48: devMenu.winAspect = 2; break;
-                    case 50: devMenu.winAspect = 3; break;
-                    default: devMenu.winAspect = aspect != 53 ? 0 : 4; break;
+                    default:
+                    case 40: devMenu.windowAspect = 0; break; // 4:3
+                    case 45: devMenu.windowAspect = 1; break; // 3:2
+                    case 48: devMenu.windowAspect = 2; break; // 16:10
+                    case 50: devMenu.windowAspect = 3; break; // 5:3
+                    case 53: devMenu.windowAspect = 4; break; // 16:9
                 }
-                devMenu.state  = DevMenu_VideoOptions;
-                devMenu.option = 0;
-            } break;
+
+                devMenu.state     = DevMenu_VideoOptionsMenu;
+                devMenu.selection = 0;
+                break;
+            }
 
             case 1:
-                devMenu.state  = DevMenu_AudioOptions;
-                devMenu.option = 0;
+                devMenu.state     = DevMenu_AudioOptionsMenu;
+                devMenu.selection = 0;
                 break;
 
             case 2:
-                devMenu.state  = DevMenu_InputOptions;
-                devMenu.option = 0;
+                devMenu.state     = DevMenu_InputOptionsMenu;
+                devMenu.selection = 0;
                 break;
 
 #if RETRO_REV02
-            case 3:
-                devMenu.state  = DevMenu_DebugOptions;
-                devMenu.option = 0;
+            case 3: devMenu.state = DevMenu_DebugOptionsMenu; devMenu.selection = 0;
+
+#if !RETRO_USE_ORIGINAL_CODE
+                // reset this just to be sure there's no crashing since we can go back from prev menus unlike original RSDKv5
+                devMenu.scrollPos = 0;
+#endif
                 break;
 
             case 4:
 #else
             case 3:
 #endif
-                devMenu.state  = DevMenu_MainMenu;
-                devMenu.option = 0;
+                devMenu.state     = DevMenu_MainMenu;
+                devMenu.selection = 0;
                 break;
         }
     }
 #if !RETRO_USE_ORIGINAL_CODE
-    else if (controller[CONT_P1].keyB.press) {
-        devMenu.state   = DevMenu_MainMenu;
-        devMenu.listPos = 0;
-        devMenu.scroll  = 0;
-        devMenu.option  = 3;
+    else if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_MainMenu;
+        devMenu.listPos   = 0;
+        devMenu.scrollPos = 0;
+        devMenu.selection = 3;
     }
 #endif
 }
-void DevMenu_VideoOptions()
+void DevMenu_VideoOptionsMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("VIDEO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+
     dy += 44;
-    DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    uint optionColors[6];
-    optionColors[0]              = 0x808090;
-    optionColors[1]              = 0x808090;
-    optionColors[2]              = 0x808090;
-    optionColors[3]              = 0x808090;
-    optionColors[4]              = 0x808090;
-    optionColors[5]              = 0x808090;
-    optionColors[devMenu.option] = 0xF0F0F0;
+    DrawDevText("Window Size:", currentScreen->center.x - 96, dy, 0, selectionColors[0]);
 
-    DrawDevText("Window Size:", currentScreen->center.x - 96, dy, 0, optionColors[0]);
-
-    const char *winScale = "unknown";
-    switch (devMenu.winScale) {
-        case 0: winScale = "1x"; break;
-        case 1: winScale = "2x"; break;
-        case 2: winScale = "3x"; break;
-        case 3: winScale = "4x"; break;
+    const char *scale = "unknown";
+    switch (devMenu.windowScale) {
+        case 0: scale = "1x"; break;
+        case 1: scale = "2x"; break;
+        case 2: scale = "3x"; break;
+        case 3: scale = "4x"; break;
         default: break;
     }
-    DrawDevText(winScale, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
-    dy += 8;
-    DrawDevText("Window Aspect:", currentScreen->center.x - 96, dy, 0, optionColors[1]);
+    DrawDevText(scale, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
-    const char *winAspect = "unknown";
-    switch (devMenu.winAspect) {
-        case 0: winAspect = "4:3"; break;
-        case 1: winAspect = "3:2"; break;
-        case 2: winAspect = "16:10"; break;
-        case 3: winAspect = "5:3"; break;
-        case 4: winAspect = "16:9"; break;
+    dy += 8;
+    DrawDevText("Window Aspect:", currentScreen->center.x - 96, dy, 0, selectionColors[1]);
+
+    const char *aspect = "unknown";
+    switch (devMenu.windowAspect) {
+        case 0: aspect = "4:3"; break;
+        case 1: aspect = "3:2"; break;
+        case 2: aspect = "16:10"; break;
+        case 3: aspect = "5:3"; break;
+        case 4: aspect = "16:9"; break;
         default: break;
     }
-    DrawDevText(winAspect, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText(aspect, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+
     dy += 8;
-    DrawDevText("Fullscreen:", currentScreen->center.x - 96, dy, 0, optionColors[2]);
-    const char *fsOpt = "NO";
-    if (devMenu.windowed != 1)
-        fsOpt = "YES";
-    DrawDevText(fsOpt, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText("Fullscreen:", currentScreen->center.x - 96, dy, 0, selectionColors[2]);
+    DrawDevText(devMenu.windowed ? "NO" : "YES", currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+
     dy += 8;
-    DrawDevText("Screen Shader:", currentScreen->center.x - 96, dy, ALIGN_LEFT, optionColors[3]);
+    DrawDevText("Screen Shader:", currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[3]);
     DrawDevText(shaderList[RSDK::videoSettings.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+
     dy += 16;
-    DrawDevText("Confirm", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[4]);
-    DrawDevText("Cancel", currentScreen->center.x, dy + 8, ALIGN_CENTER, optionColors[5]);
+    DrawDevText("Confirm", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[4]);
+    DrawDevText("Cancel", currentScreen->center.x, dy + 8, ALIGN_CENTER, selectionColors[5]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
 
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
-        if (devMenu.option < 0) {
-            devMenu.option = 5;
-        }
+    if (controller[CONT_ANY].keyUp.press) {
+        if (--devMenu.selection < 0)
+            devMenu.selection = 5;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (devMenu.option < 0) {
-                devMenu.option = 5;
-            }
-        }
+    else if (controller[CONT_ANY].keyUp.down) {
+        if (!devMenu.timer && --devMenu.selection < 0)
+            devMenu.selection = 5;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
-        if (devMenu.option > 5) {
-            devMenu.option = 0;
-        }
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection > 5)
+            devMenu.selection = 0;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyDown.down) {
-        if (!devMenu.timer) {
-            devMenu.option++;
-            if (devMenu.option > 5) {
-                devMenu.option = 0;
-            }
-        }
+    else if (controller[CONT_ANY].keyDown.down) {
+        if (!devMenu.timer && ++devMenu.selection > 5)
+            devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    switch (devMenu.option) {
+    switch (devMenu.selection) {
         case 0: // scale
-            if (controller[CONT_P1].keyLeft.press) {
-                devMenu.winScale           = (devMenu.winScale - 1) & 3;
+            if (controller[CONT_ANY].keyLeft.press) {
+                devMenu.windowScale        = (devMenu.windowScale - 1) & 3;
                 RSDK::changedVideoSettings = true;
             }
-            else if (controller[CONT_P1].keyRight.press) {
-                devMenu.winScale           = (devMenu.winScale + 1) & 3;
+            else if (controller[CONT_ANY].keyRight.press) {
+                devMenu.windowScale        = (devMenu.windowScale + 1) & 3;
                 RSDK::changedVideoSettings = true;
             }
             break;
 
         case 1: // aspect
-            if (controller[CONT_P1].keyLeft.press) {
-                devMenu.winAspect--;
+            if (controller[CONT_ANY].keyLeft.press) {
+                devMenu.windowAspect--;
                 RSDK::changedVideoSettings = true;
             }
-            else if (controller[CONT_P1].keyRight.press) {
-                devMenu.winAspect++;
+            else if (controller[CONT_ANY].keyRight.press) {
+                devMenu.windowAspect++;
                 RSDK::changedVideoSettings = true;
             }
 
-            if (devMenu.winAspect > 4)
-                devMenu.winAspect = 0;
-            else if (devMenu.winAspect < 0)
-                devMenu.winAspect = 4;
+            if (devMenu.windowAspect > 4)
+                devMenu.windowAspect = 0;
+            else if (devMenu.windowAspect < 0)
+                devMenu.windowAspect = 4;
             break;
 
         case 2: // fullscreen
-            if (controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
+            if (controller[CONT_ANY].keyLeft.press || controller[CONT_ANY].keyRight.press) {
                 devMenu.windowed ^= 1;
                 RSDK::changedVideoSettings = true;
             }
             break;
 
         case 3: // screenShader
-            if (controller[CONT_P1].keyLeft.press) {
+            if (controller[CONT_ANY].keyLeft.press) {
                 RSDK::videoSettings.shaderID--;
                 RSDK::changedVideoSettings = true;
             }
-            else if (controller[CONT_P1].keyRight.press) {
+            else if (controller[CONT_ANY].keyRight.press) {
                 RSDK::videoSettings.shaderID++;
                 RSDK::changedVideoSettings = true;
             }
@@ -906,712 +895,659 @@ void DevMenu_VideoOptions()
 
         case 4: // confirm
         {
-            bool32 confirm = controller[CONT_P1].keyA.press;
+            bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
             if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
             if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-                confirm = controller[CONT_P1].keyB.press;
+                confirm = controller[CONT_ANY].keyB.press;
 
-            if (controller[CONT_P1].keyStart.press || confirm) {
+            if (controller[CONT_ANY].keyStart.press || confirm) {
                 // do confirm
-                RSDK::videoSettings.windowed = !devMenu.windowed;
-                shaderList[0].linear = !devMenu.windowed;
-                if (!devMenu.winScale)
+                RSDK::videoSettings.windowed = devMenu.windowed;
+                shaderList[0].linear         = !devMenu.windowed;
+                if (!devMenu.windowScale)
                     RSDK::videoSettings.shaderID = SHADER_NONE;
 
-                int width = 0;
-                switch (devMenu.winAspect) {
-                    case 0: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.3333334); break;
-                    case 1: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.5); break;
-                    case 2: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.6); break;
-                    case 3: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.6666666); break;
-                    case 4: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.7777778); break;
+                int32 width = 0;
+                switch (devMenu.windowAspect) {
                     default: width = RSDK::videoSettings.windowWidth; break;
+                    case 0: width = 3 - (RSDK::videoSettings.pixHeight * -1.3333334f); break; // 16:9
+                    case 1: width = 3 - (RSDK::videoSettings.pixHeight * -1.5f); break;       // 4:3
+                    case 2: width = 3 - (RSDK::videoSettings.pixHeight * -1.6f); break;       // 3:2
+                    case 3: width = 3 - (RSDK::videoSettings.pixHeight * -1.6666666f); break; // 16:10
+                    case 4: width = 3 - (RSDK::videoSettings.pixHeight * -1.7777778f); break; // 5:3
                 }
                 width &= 0x7FF8;
                 if (width > 424)
                     width = 424;
-                RSDK::videoSettings.windowWidth  = width * (devMenu.winScale + 1);
-                RSDK::videoSettings.windowHeight = RSDK::videoSettings.pixHeight * (devMenu.winScale + 1);
+                RSDK::videoSettings.windowWidth  = width * (devMenu.windowScale + 1);
+                RSDK::videoSettings.windowHeight = RSDK::videoSettings.pixHeight * (devMenu.windowScale + 1);
                 UpdateGameWindow();
 
-                devMenu.state  = DevMenu_Options;
-                devMenu.option = 0;
+                devMenu.state     = DevMenu_OptionsMenu;
+                devMenu.selection = 0;
             }
             break;
         }
 
         case 5: // cancel
         {
-            bool32 confirm = controller[CONT_P1].keyA.press;
+            bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
             if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
             if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-                confirm = controller[CONT_P1].keyB.press;
+                confirm = controller[CONT_ANY].keyB.press;
 
-            if (controller[CONT_P1].keyStart.press || confirm) {
-                devMenu.state  = DevMenu_Options;
-                devMenu.option = 0;
+            if (controller[CONT_ANY].keyStart.press || confirm) {
+                devMenu.state     = DevMenu_OptionsMenu;
+                devMenu.selection = 0;
             }
             break;
         }
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
-    if (controller[CONT_P1].keyB.press) {
-        devMenu.state  = DevMenu_Options;
-        devMenu.option = 0;
+    if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_OptionsMenu;
+        devMenu.selection = 0;
     }
 #endif
 }
-void DevMenu_AudioOptions()
+void DevMenu_AudioOptionsMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("AUDIO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+
     dy += 44;
-    DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    uint optionColors[4];
-    optionColors[0]              = 0x808090;
-    optionColors[1]              = 0x808090;
-    optionColors[2]              = 0x808090;
-    optionColors[3]              = 0x808090;
-    optionColors[devMenu.option] = 0xF0F0F0;
+    DrawDevText("Streams Enabled:", currentScreen->center.x - 96, dy, 0, selectionColors[0]);
+    DrawDevText(engine.streamsEnabled ? "YES" : "NO", currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
-    DrawDevText("Streams Enabled:", currentScreen->center.x - 96, dy, 0, optionColors[0]);
-
-    const char *strmEnabled = "YES";
-    if (!engine.streamsEnabled)
-        strmEnabled = "NO";
-    DrawDevText(strmEnabled, currentScreen->center.x + 80, dy, ALIGN_CENTER, 15790208);
     dy += 16;
+    DrawDevText("Streams Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[1]);
+    DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0x000000, 0xFF, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x + 9, dy + 1, engine.streamVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
 
-    DrawDevText("Streams Vol:", currentScreen->center.x - 96, dy, 0, optionColors[1]);
-    DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x + 9, dy + 1, (int)(engine.streamVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
     dy += 16;
-
-    DrawDevText("SoundFX Vol:", currentScreen->center.x - 96, dy, 0, optionColors[2]);
-    DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x + 9, dy + 1, (int)(engine.soundFXVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
-    DrawDevText("Back", currentScreen->center.x, dy + 16, ALIGN_CENTER, optionColors[3]);
+    DrawDevText("SoundFX Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[2]);
+    DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0x000000, 0xFF, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x + 9, dy + 1, engine.soundFXVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawDevText("Back", currentScreen->center.x, dy + 16, ALIGN_CENTER, selectionColors[3]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
 
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
-        if (devMenu.option < 0) {
-            devMenu.option = 3;
-        }
+    if (controller[CONT_ANY].keyUp.press) {
+        if (--devMenu.selection < 0)
+            devMenu.selection = 3;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (devMenu.option < 0) {
-                devMenu.option = 3;
-            }
-        }
+    else if (controller[CONT_ANY].keyUp.down) {
+        if (!devMenu.timer && --devMenu.selection < 0)
+            devMenu.selection = 3;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
-        if (devMenu.option > 3) {
-            devMenu.option = 0;
-        }
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection > 3)
+            devMenu.selection = 0;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyDown.down) {
-        if (!devMenu.timer) {
-            devMenu.option++;
-            if (devMenu.option > 3) {
-                devMenu.option = 0;
-            }
-        }
+    else if (controller[CONT_ANY].keyDown.down) {
+        if (!devMenu.timer && ++devMenu.selection > 3)
+            devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    switch (devMenu.option) {
+    switch (devMenu.selection) {
         case 0:
-            if (controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
+            if (controller[CONT_ANY].keyLeft.press || controller[CONT_ANY].keyRight.press) {
                 engine.streamsEnabled ^= 1;
                 RSDK::changedVideoSettings = true;
             }
             break;
 
         case 1:
-            if (controller[CONT_P1].keyLeft.down) {
-                engine.streamVolume -= 0.015625;
+            if (controller[CONT_ANY].keyLeft.down) {
+                engine.streamVolume -= 1.0 / 64.0;
                 if (engine.streamVolume < 0.0)
                     engine.streamVolume = 0.0;
+
                 RSDK::changedVideoSettings = true;
             }
             else {
-                if (controller[CONT_P1].keyRight.down) {
-                    engine.streamVolume += 0.015625;
+                if (controller[CONT_ANY].keyRight.down) {
+                    engine.streamVolume += 1.0 / 64.0;
                     if (engine.streamVolume > 1.0)
                         engine.streamVolume = 1.0;
+
                     RSDK::changedVideoSettings = true;
                 }
             }
             break;
 
         case 2:
-            if (controller[CONT_P1].keyLeft.down) {
-                engine.soundFXVolume -= 0.015625;
+            if (controller[CONT_ANY].keyLeft.down) {
+                engine.soundFXVolume -= 1.0 / 64.0;
                 if (engine.soundFXVolume < 0.0)
                     engine.soundFXVolume = 0.0;
+
                 RSDK::changedVideoSettings = true;
             }
             else {
-                if (controller[CONT_P1].keyRight.down) {
-                    engine.soundFXVolume += 0.015625;
+                if (controller[CONT_ANY].keyRight.down) {
+                    engine.soundFXVolume += 1.0 / 64.0;
                     if (engine.soundFXVolume > 1.0)
                         engine.soundFXVolume = 1.0;
+
                     RSDK::changedVideoSettings = true;
                 }
             }
             break;
 
         case 3: {
-            bool32 confirm = controller[CONT_P1].keyA.press;
+            bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
             if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
             if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-                confirm = controller[CONT_P1].keyB.press;
+                confirm = controller[CONT_ANY].keyB.press;
 
-            if (controller[CONT_P1].keyStart.press || confirm) {
-                devMenu.state  = DevMenu_Options;
-                devMenu.option = 1;
+            if (controller[CONT_ANY].keyStart.press || confirm) {
+                devMenu.state     = DevMenu_OptionsMenu;
+                devMenu.selection = 1;
             }
             break;
         }
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
-    if (controller[CONT_P1].keyB.press) {
-        devMenu.state  = DevMenu_Options;
-        devMenu.option = 1;
+    if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_OptionsMenu;
+        devMenu.selection = 1;
     }
 #endif
 }
-void DevMenu_InputOptions()
+void DevMenu_InputOptionsMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("CONFIGURE INPUT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+
     dy += 44;
-    DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    uint optionColors[6];
-    optionColors[0]              = 0x808090;
-    optionColors[1]              = 0x808090;
-    optionColors[2]              = 0x808090;
-    optionColors[3]              = 0x808090;
-    optionColors[4]              = 0x808090;
-    optionColors[devMenu.option] = 0xF0F0F0;
+    DrawDevText("Set Keys For Input 1", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[0]);
 
-    DrawDevText("Set Keys For Input 1", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[0]);
     dy += 10;
-    DrawDevText("Set Keys For Input 2", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[1]);
+    DrawDevText("Set Keys For Input 2", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[1]);
+
     dy += 10;
-    DrawDevText("Set Keys For Input 3", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[2]);
+    DrawDevText("Set Keys For Input 3", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[2]);
+
     dy += 10;
-    DrawDevText("Set Keys For Input 4", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[3]);
-    DrawDevText("Back", currentScreen->center.x, dy + 18, ALIGN_CENTER, optionColors[4]);
+    DrawDevText("Set Keys For Input 4", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[3]);
+
+    DrawDevText("Back", currentScreen->center.x, dy + 18, ALIGN_CENTER, selectionColors[4]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
 
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
-        if (devMenu.option < 0) {
-            devMenu.option = 4;
-        }
+    if (controller[CONT_ANY].keyUp.press) {
+        if (--devMenu.selection < 0)
+            devMenu.selection = 4;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (devMenu.option < 0) {
-                devMenu.option = 4;
-            }
-        }
+    else if (controller[CONT_ANY].keyUp.down) {
+        if (!devMenu.timer && --devMenu.selection < 0)
+            devMenu.selection = 4;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
-        if (devMenu.option > 4) {
-            devMenu.option = 0;
-        }
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection > 4)
+            devMenu.selection = 0;
 
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyDown.down) {
-        if (!devMenu.timer) {
-            devMenu.option++;
-            if (devMenu.option > 4) {
-                devMenu.option = 0;
-            }
-        }
+    else if (controller[CONT_ANY].keyDown.down) {
+        if (!devMenu.timer && ++devMenu.selection > 4)
+            devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    bool32 confirm = controller[CONT_P1].keyA.press;
+    bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
     if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-        confirm = controller[CONT_P1].keyB.press;
+        confirm = controller[CONT_ANY].keyB.press;
 
-    if (controller[CONT_P1].keyStart.press || confirm) {
-        if (devMenu.option == 4) {
-            devMenu.state  = DevMenu_Options;
-            devMenu.option = 3;
+    if (controller[CONT_ANY].keyStart.press || confirm) {
+        if (devMenu.selection == 4) {
+            devMenu.state     = DevMenu_OptionsMenu;
+            devMenu.selection = 3;
         }
         else {
-            devMenu.state              = DevMenu_MappingsOptions;
-            devMenu.scroll             = 0;
+            devMenu.state              = DevMenu_KeyMappingsMenu;
+            devMenu.scrollPos          = 0;
             RSDK::changedVideoSettings = true;
         }
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
-    if (controller[CONT_P1].keyB.press) {
-        devMenu.state  = DevMenu_Options;
-        devMenu.option = 2;
+    if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_OptionsMenu;
+        devMenu.selection = 2;
     }
 #endif
 }
-void DevMenu_MappingsOptions()
+void DevMenu_KeyMappingsMenu()
 {
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
 
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("SET KEY BINDING", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
-    dy += 44;
-    DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
-    int controllerID = devMenu.option + 1;
-    switch (devMenu.scroll) {
+    dy += 44;
+    DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
+
+    int32 controllerID = devMenu.selection + 1;
+    switch (devMenu.scrollPos) {
         case 0:
             DrawDevText("Press Key For UP", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyUp.keyMap != -1) {
-                controller[controllerID].keyDown.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyUp.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyDown.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 1:
             DrawDevText("Press Key For DOWN", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyDown.keyMap != -1) {
-                controller[controllerID].keyLeft.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyDown.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyLeft.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 2:
             DrawDevText("Press Key For LEFT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyLeft.keyMap != -1) {
-                controller[controllerID].keyRight.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyLeft.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyRight.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 3:
             DrawDevText("Press Key For RIGHT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyRight.keyMap != -1) {
-                controller[controllerID].keyA.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyRight.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyA.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 4:
             DrawDevText("Press Key For BUTTON A", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyA.keyMap != -1) {
-                controller[controllerID].keyB.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyA.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyB.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 5:
             DrawDevText("Press Key For BUTTON B", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyB.keyMap != -1) {
-                controller[controllerID].keyC.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyB.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyC.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 6:
             DrawDevText("Press Key For BUTTON C", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyC.keyMap != -1) {
-                controller[controllerID].keyX.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyC.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyX.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 7:
             DrawDevText("Press Key For BUTTON X", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyX.keyMap != -1) {
-                controller[controllerID].keyY.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyX.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyY.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 8:
             DrawDevText("Press Key For BUTTON Y", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyY.keyMap != -1) {
-                controller[controllerID].keyZ.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyY.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyZ.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 9:
             DrawDevText("Press Key For BUTTON Z", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyZ.keyMap != -1) {
-                controller[controllerID].keyStart.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyZ.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keyStart.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 10:
             DrawDevText("Press Key For START", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keyStart.keyMap != -1) {
-                controller[controllerID].keySelect.keyMap = -1;
-                ++devMenu.scroll;
+            if (controller[controllerID].keyStart.keyMap != KEYMAP_AUTO_MAPPING) {
+                controller[controllerID].keySelect.keyMap = KEYMAP_AUTO_MAPPING;
+                ++devMenu.scrollPos;
             }
             break;
 
         case 11:
             DrawDevText("Press Key For SELECT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
-            if (controller[controllerID].keySelect.keyMap != -1)
-                devMenu.state = DevMenu_InputOptions;
+            if (controller[controllerID].keySelect.keyMap != KEYMAP_AUTO_MAPPING)
+                devMenu.state = DevMenu_InputOptionsMenu;
             break;
 
         default: break;
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
-    if (controller[CONT_P1].keyB.press) {
-        devMenu.state  = DevMenu_Options;
-        devMenu.option = 3;
+    if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_OptionsMenu;
+        devMenu.selection = 3;
     }
 #endif
 }
 #if RETRO_REV02
-void DevMenu_DebugOptions()
+void DevMenu_DebugOptionsMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    uint32 selectionColors[]                               = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("CONFIGURE DEBUG FLAGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+
     dy += 40;
-    DrawRectangle(currentScreen->center.x - 128, dy - 4, 256, 72, 128, 255, INK_NONE, true);
-    uint optionColors[8];
-    optionColors[0]                               = 0x808090;
-    optionColors[1]                               = 0x808090;
-    optionColors[2]                               = 0x808090;
-    optionColors[3]                               = 0x808090;
-    optionColors[4]                               = 0x808090;
-    optionColors[5]                               = 0x808090;
-    optionColors[6]                               = 0x808090;
-    optionColors[7]                               = 0x808090;
-    optionColors[devMenu.option - devMenu.scroll] = 0xF0F0F0;
+    DrawRectangle(currentScreen->center.x - 128, dy - 4, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
 
-    bool32 confirm = controller[CONT_P1].keyA.press;
+    bool32 confirm = controller[CONT_ANY].keyA.press;
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
-        confirm = controller[CONT_P1].keyB.press;
+        confirm = controller[CONT_ANY].keyB.press;
 
-    confirm |= controller[CONT_P1].keyStart.press;
+    confirm |= controller[CONT_ANY].keyStart.press;
 
-    for (int i = 0; i < 8; ++i) {
-        if (devMenu.scroll + i < debugValCnt) {
-            DebugValueInfo *val = &debugValues[devMenu.scroll + i];
-            DrawDevText(val->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, optionColors[i]);
-            if (!val->value) {
+    for (int32 i = 0; i < 8; ++i) {
+        if (devMenu.scrollPos + i < debugValueCount) {
+            DebugValueInfo *value = &debugValues[devMenu.scrollPos + i];
+            DrawDevText(value->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[i]);
+
+            if (!value->value) {
                 DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080);
             }
             else {
-                char valBuf[0x10];
-                strcpy(valBuf, "--------");
-                switch (val->valByteCnt) {
+                char valueStr[0x10];
+                strcpy(valueStr, "--------");
+
+                switch (value->size) {
                     default: DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
 
-                    case sizeof(sbyte): {
-                        sbyte *v = (sbyte *)val->value;
-                        if (val->type == 2) {
-                            valBuf[0] = ' ';
-                            if (*v > 0x7F)
-                                valBuf[0] = '-';
-                            *v &= 0x7FFF;
-                        }
-                        else if (!val->type) {
-                            valBuf[0] = 'Y';
-                            if (!*v)
-                                valBuf[0] = 'N';
-                            valBuf[1] = 0;
-                        }
-                        else {
-                            valBuf[0] = ' ';
+                    case sizeof(uint8): {
+                        uint8 *v = (uint8 *)value->value;
+
+                        switch (value->type) {
+                            case DEBUGDISPLAY_BOOL:
+                                valueStr[0] = *v ? 'Y' : 'N';
+                                valueStr[1] = 0;
+                                break;
+
+                            default:
+                            case DEBUGDISPLAY_UNSIGNED: valueStr[0] = ' '; break;
+
+                            case DEBUGDISPLAY_SIGNED:
+                                valueStr[0] = *v > 0x7F ? '-' : ' ';
+                                *v &= 0x7F;
+                                break;
                         }
                         break;
                     }
 
-                    case sizeof(short): {
-                        short *v = (short *)val->value;
-                        if (val->type == 2) {
-                            valBuf[0] = ' ';
-                            if (*v > 0x7FFF)
-                                valBuf[0] = '-';
-                            *v &= 0x7FFF;
-                        }
-                        else if (!val->type) {
-                            short *v  = (short *)val->value;
-                            valBuf[0] = 'Y';
-                            if (!*v)
-                                valBuf[0] = 'N';
-                            valBuf[1] = 0;
-                        }
-                        else {
-                            valBuf[0] = ' ';
+                    case sizeof(uint16): {
+                        uint16 *v = (uint16 *)value->value;
+
+                        switch (value->type) {
+                            case DEBUGDISPLAY_BOOL:
+                                valueStr[0] = *v ? 'Y' : 'N';
+                                valueStr[1] = 0;
+                                break;
+
+                            default:
+                            case DEBUGDISPLAY_UNSIGNED: valueStr[0] = ' '; break;
+
+                            case DEBUGDISPLAY_SIGNED:
+                                valueStr[0] = *v > 0x7FFF ? '-' : ' ';
+                                *v &= 0x7FFF;
+                                break;
                         }
                         break;
                     }
 
-                    case sizeof(int): {
-                        int *v = (int *)val->value;
-                        if (val->type == 2) {
-                            valBuf[0] = ' ';
-                            if (*v > 0x7FFFFFFF)
-                                valBuf[0] = '-';
-                            *v &= 0x7FFFFFFF;
-                        }
-                        else if (!val->type) {
-                            valBuf[0] = 'Y';
-                            if (!*v)
-                                valBuf[0] = 'N';
-                            valBuf[1] = 0;
-                        }
-                        else {
-                            valBuf[0] = ' ';
+                    case sizeof(uint32): {
+                        uint32 *v = (uint32 *)value->value;
+
+                        switch (value->type) {
+                            case DEBUGDISPLAY_BOOL:
+                                valueStr[0] = *v ? 'Y' : 'N';
+                                valueStr[1] = 0;
+                                break;
+
+                            default:
+                            case DEBUGDISPLAY_UNSIGNED: valueStr[0] = ' '; break;
+
+                            case DEBUGDISPLAY_SIGNED:
+                                valueStr[0] = *v > 0x7FFFFFFF ? '-' : ' ';
+                                *v &= 0x7FFFFFFF;
+                                break;
                         }
                         break;
                     }
                 }
 
-                if (val->type) {
-                    if (2 * val->valByteCnt) {
-                        char *bufPtr                      = &valBuf[2 * val->valByteCnt];
-                        valBuf[(2 * val->valByteCnt) + 1] = 0;
+                if (value->type != DEBUGDISPLAY_BOOL) {
+                    if (2 * value->size) {
+                        char *curChar                   = &valueStr[2 * value->size];
+                        valueStr[(2 * value->size) + 1] = 0;
 
-                        switch (val->valByteCnt) {
+                        switch (value->size) {
                             default: break;
 
-                            case sizeof(sbyte): {
-                                sbyte *value = (sbyte *)val->value;
-                                for (int v = 0; v < 2 * val->valByteCnt; ++v) {
-                                    *bufPtr-- = ((v & 0xF) > 9 ? '7' : '0') + ((*value >> 4 * v) & 0xF);
-                                }
+                            case sizeof(uint8): {
+                                uint8 *valuePtr = (uint8 *)value->value;
+
+                                for (int32 v = 0; v < 2 * value->size; ++v) *curChar-- = ((v & 0xF) > 9 ? '7' : '0') + ((*valuePtr >> 4 * v) & 0xF);
                                 break;
                             }
 
-                            case sizeof(short): {
-                                short *value = (short *)val->value;
-                                for (int v = 0; v < 2 * val->valByteCnt; ++v) {
-                                    *bufPtr-- = ((v & 0xF) > 9 ? '7' : '0') + ((*value >> 4 * v) & 0xF);
-                                }
+                            case sizeof(uint16): {
+                                uint16 *valuePtr = (uint16 *)value->value;
+
+                                for (int32 v = 0; v < 2 * value->size; ++v) *curChar-- = ((v & 0xF) > 9 ? '7' : '0') + ((*valuePtr >> 4 * v) & 0xF);
                                 break;
                             }
 
-                            case sizeof(int): {
-                                int *value = (int *)val->value;
-                                for (int v = 0; v < 2 * val->valByteCnt; ++v) {
-                                    *bufPtr-- = ((v & 0xF) > 9 ? '7' : '0') + ((*value >> 4 * v) & 0xF);
-                                }
+                            case sizeof(uint32): {
+                                uint32 *valuePtr = (uint32 *)value->value;
+
+                                for (int32 v = 0; v < 2 * value->size; ++v) *curChar-- = ((v & 0xF) > 9 ? '7' : '0') + ((*valuePtr >> 4 * v) & 0xF);
                                 break;
                             }
                         }
                     }
                 }
-                DrawDevText(valBuf, currentScreen->center.x + 96, dy, ALIGN_CENTER, optionColors[i]);
+
+                DrawDevText(valueStr, currentScreen->center.x + 96, dy, ALIGN_CENTER, selectionColors[i]);
             }
             dy += 8;
         }
         else {
-            DrawDevText("Back", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[i]);
+            DrawDevText("Back", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[i]);
         }
     }
 
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
-        if (devMenu.option < 0) {
-            devMenu.option = debugValCnt;
-        }
+    if (controller[CONT_ANY].keyUp.press) {
+        if (--devMenu.selection < 0)
+            devMenu.selection = debugValueCount;
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
+
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (devMenu.option < 0) {
-                devMenu.option = debugValCnt;
-            }
-        }
+    else if (controller[CONT_ANY].keyUp.down) {
+        if (!devMenu.timer && --devMenu.selection < 0)
+            devMenu.selection = debugValueCount;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
-        if (devMenu.option > debugValCnt) {
-            devMenu.option = 0;
-        }
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection > debugValueCount)
+            devMenu.selection = 0;
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
+
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyDown.down) {
-        if (!devMenu.timer) {
-            devMenu.option++;
-            if (devMenu.option >= debugValCnt) {
-                devMenu.option = 0;
-            }
-        }
+    else if (controller[CONT_ANY].keyDown.down) {
+        if (!devMenu.timer && ++devMenu.selection >= debugValueCount)
+            devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
     }
 
-    if (devMenu.option < debugValCnt) {
-        DebugValueInfo *val = &debugValues[devMenu.option];
-        switch (val->valByteCnt) {
+    if (devMenu.selection < debugValueCount) {
+        DebugValueInfo *value = &debugValues[devMenu.selection];
+
+        switch (value->size) {
             default: DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
-            case sizeof(sbyte): {
-                sbyte *v = (sbyte *)val->value;
-                if (controller[CONT_P1].keyLeft.press) {
-                    if (!val->type) {
-                        *v ^= 1;
-                    }
-                    else {
-                        if (*v - 1 >= val->min)
-                            *v -= 1;
-                    }
+
+            case sizeof(int8): {
+                int8 *valuePtr = (int8 *)value->value;
+
+                if (controller[CONT_ANY].keyLeft.press) {
+                    if (value->type == DEBUGDISPLAY_BOOL)
+                        *valuePtr ^= 1;
+                    else if (*valuePtr - 1 >= value->min)
+                        *valuePtr--;
                 }
 
-                if (controller[CONT_P1].keyRight.press) {
-                    if (!val->type) {
-                        *v ^= 1;
-                    }
-                    else {
-                        if (*v + 1 <= val->max)
-                            *v += 1;
-                    }
+                if (controller[CONT_ANY].keyRight.press) {
+                    if (value->type == DEBUGDISPLAY_BOOL)
+                        *valuePtr ^= 1;
+                    else if (*valuePtr + 1 <= value->max)
+                        *valuePtr++;
                 }
                 break;
             }
-            case sizeof(short): {
-                short *v = (short *)val->value;
-                if (controller[CONT_P1].keyLeft.press) {
-                    if (!val->type) {
-                        *v ^= 1;
-                    }
-                    else {
-                        if (*v - 1 >= val->min)
-                            *v -= 1;
-                    }
+
+            case sizeof(int16): {
+                int16 *valuePtr = (int16 *)value->value;
+
+                if (controller[CONT_ANY].keyLeft.press) {
+                    if (value->type == DEBUGDISPLAY_BOOL)
+                        *valuePtr ^= 1;
+                    else if (*valuePtr - 1 >= value->min)
+                        *valuePtr--;
                 }
 
-                if (controller[CONT_P1].keyRight.press) {
-                    if (!val->type) {
-                        *v ^= 1;
-                    }
-                    else {
-                        if (*v + 1 <= val->max)
-                            *v += 1;
-                    }
+                if (controller[CONT_ANY].keyRight.press) {
+                    if (value->type == DEBUGDISPLAY_BOOL)
+                        *valuePtr ^= 1;
+                    else if (*valuePtr + 1 <= value->max)
+                        *valuePtr++;
                 }
                 break;
             }
-            case sizeof(int): {
-                int *v = (int *)val->value;
-                if (controller[CONT_P1].keyLeft.press) {
-                    if (!val->type) {
-                        *v ^= 1;
-                    }
-                    else {
-                        if (*v - 1 >= val->min)
-                            *v -= 1;
-                    }
+
+            case sizeof(int32): {
+                int32 *valuePtr = (int32 *)value->value;
+
+                if (controller[CONT_ANY].keyLeft.press) {
+                    if (value->type == DEBUGDISPLAY_BOOL)
+                        *valuePtr ^= 1;
+                    else if (*valuePtr - 1 >= value->min)
+                        *valuePtr--;
                 }
 
-                if (controller[CONT_P1].keyRight.press) {
-                    if (!val->type) {
-                        *v ^= 1;
-                    }
-                    else {
-                        if (*v + 1 <= val->max)
-                            *v += 1;
-                    }
+                if (controller[CONT_ANY].keyRight.press) {
+                    if (!value->type)
+                        *valuePtr ^= 1;
+                    else if (*valuePtr + 1 <= value->max)
+                        *valuePtr++;
                 }
                 break;
             }
@@ -1619,47 +1555,41 @@ void DevMenu_DebugOptions()
     }
     else {
         if (confirm) {
-            devMenu.state  = DevMenu_Options;
-            devMenu.option = 4;
+            devMenu.state     = DevMenu_OptionsMenu;
+            devMenu.selection = 4;
         }
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
-    if (controller[CONT_P1].keyB.press) {
-        devMenu.state  = DevMenu_Options;
-        devMenu.option = 4;
+    if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_OptionsMenu;
+        devMenu.selection = 4;
     }
 #endif
 }
 #endif
 
 #if RETRO_USE_MOD_LOADER
-void DevMenu_Mods()
+void DevMenu_ModsMenu()
 {
-    int dy = currentScreen->center.y;
-    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    uint32 selectionColors[]                               = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+
+    int32 dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
+
     dy -= 68;
     DrawDevText("MANAGE MODS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
-    DrawRectangle(currentScreen->center.x - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x - 128, dy + 36, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    uint optionColors[8];
-    optionColors[0]                               = 0x808090;
-    optionColors[1]                               = 0x808090;
-    optionColors[2]                               = 0x808090;
-    optionColors[3]                               = 0x808090;
-    optionColors[4]                               = 0x808090;
-    optionColors[5]                               = 0x808090;
-    optionColors[6]                               = 0x808090;
-    optionColors[7]                               = 0x808090;
-    optionColors[devMenu.option - devMenu.scroll] = 0xF0F0F0;
+    int32 y = dy + 40;
+    for (int32 i = 0; i < 8; ++i) {
+        if (devMenu.scrollPos + i < RSDK::modList.size()) {
+            DrawDevText(RSDK::modList[(devMenu.scrollPos + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, selectionColors[i]);
+            DrawDevText(RSDK::modList[(devMenu.scrollPos + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
 
-    int y = dy + 40;
-    for (int i = 0; i < 8; ++i) {
-        if (devMenu.scroll + i < RSDK::modList.size()) {
-            DrawDevText(RSDK::modList[(devMenu.scroll + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, optionColors[i]);
-            DrawDevText(RSDK::modList[(devMenu.scroll + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT, optionColors[i]);
             y += 8;
-            devMenu.scroll = devMenu.scroll;
+            devMenu.scrollPos = devMenu.scrollPos;
         }
     }
 
@@ -1667,100 +1597,88 @@ void DevMenu_Mods()
     DevMenu_HandleTouchControls();
 #endif
 
-    int preOption = devMenu.option;
-    if (controller[CONT_P1].keyUp.press) {
-        devMenu.option--;
-        if (devMenu.option < 0) {
-            devMenu.option = (int)(RSDK::modList.size() - 1);
-        }
+    int32 preselection = devMenu.selection;
+    if (controller[CONT_ANY].keyUp.press) {
+        if (--devMenu.selection < 0)
+            devMenu.selection = (int32)(RSDK::modList.size() - 1);
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
+
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyUp.down) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (devMenu.option < 0) {
-                devMenu.option = (int)(RSDK::modList.size() - 1);
-            }
-        }
+    else if (controller[CONT_ANY].keyUp.down) {
+        if (!devMenu.timer && --devMenu.selection < 0)
+            devMenu.selection = (int32)(RSDK::modList.size() - 1);
 
         devMenu.timer = (devMenu.timer + 1) & 7;
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
     }
 
-    if (controller[CONT_P1].keyDown.press) {
-        devMenu.option++;
-        if (devMenu.option >= RSDK::modList.size()) {
-            devMenu.option = 0;
-        }
+    if (controller[CONT_ANY].keyDown.press) {
+        if (++devMenu.selection >= RSDK::modList.size())
+            devMenu.selection = 0;
 
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
+
         devMenu.timer = 1;
     }
-    else if (controller[CONT_P1].keyDown.down) {
-        if (!devMenu.timer) {
-            devMenu.option++;
-            if (devMenu.option >= RSDK::modList.size()) {
-                devMenu.option = 0;
-            }
-        }
+    else if (controller[CONT_ANY].keyDown.down) {
+        if (!devMenu.timer && ++devMenu.selection >= RSDK::modList.size())
+            devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
-        if (devMenu.option >= devMenu.scroll) {
-            if (devMenu.option > devMenu.scroll + 7) {
-                devMenu.scroll = devMenu.option - 7;
-            }
+
+        if (devMenu.selection >= devMenu.scrollPos) {
+            if (devMenu.selection > devMenu.scrollPos + 7)
+                devMenu.scrollPos = devMenu.selection - 7;
         }
         else {
-            devMenu.scroll = devMenu.option;
+            devMenu.scrollPos = devMenu.selection;
         }
     }
 
-    bool32 confirm = controller[CONT_P1].keyA.press;
+    bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
     if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
-        confirm = controller[CONT_P1].keyB.press;
+        confirm = controller[CONT_ANY].keyB.press;
 
-    if (controller[CONT_P1].keyStart.press || confirm || controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
-        RSDK::modList[devMenu.option].active ^= true;
+    if (controller[CONT_ANY].keyStart.press || confirm || controller[CONT_ANY].keyLeft.press || controller[CONT_ANY].keyRight.press) {
+        RSDK::modList[devMenu.selection].active ^= true;
         devMenu.modsChanged = true;
     }
-    else if (controller[CONT_P1].keyC.down) {
-        RSDK::ModInfo swap            = RSDK::modList[preOption];
-        RSDK::modList[preOption]      = RSDK::modList[devMenu.option];
-        RSDK::modList[devMenu.option] = swap;
-        devMenu.modsChanged           = true;
+    else if (controller[CONT_ANY].keyC.down) {
+        RSDK::ModInfo swap               = RSDK::modList[preselection];
+        RSDK::modList[preselection]      = RSDK::modList[devMenu.selection];
+        RSDK::modList[devMenu.selection] = swap;
+        devMenu.modsChanged              = true;
     }
-    else if (controller[CONT_P1].keyB.press) {
-        devMenu.state  = DevMenu_MainMenu;
-        devMenu.scroll = 0;
-        devMenu.option = 4;
-        RSDK::saveMods();
+    else if (controller[CONT_ANY].keyB.press) {
+        devMenu.state     = DevMenu_MainMenu;
+        devMenu.scrollPos = 0;
+        devMenu.selection = 4;
+        RSDK::SaveMods();
         LoadGameConfig();
     }
 }

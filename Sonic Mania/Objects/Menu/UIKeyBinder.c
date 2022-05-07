@@ -38,7 +38,7 @@ void UIKeyBinder_Update(void)
     }
     else if (keyMap == KEYMAP_AUTO_MAPPING) {
         RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, 0);
-        self->lasyKeyMap = -1;
+        self->lasyKeyMap = KEYMAP_AUTO_MAPPING;
         keyMapChanged    = false;
     }
     else {
@@ -51,27 +51,26 @@ void UIKeyBinder_Update(void)
                 if (UIKeyBinder_GetMappings(inputID, buttonID) != keyMap)
                     continue;
 
-                if (self->state != UIKeyBinder_State_Selected)
-                    break;
+                if (self->state == UIKeyBinder_State_Selected) {
+                    UIKeyBinder->activeInputID  = inputID;
+                    UIKeyBinder->activeButtonID = buttonID;
 
-                UIKeyBinder->activeInputID  = inputID;
-                UIKeyBinder->activeButtonID = buttonID;
+                    int32 str = -1;
+                    if (inputID == input)
+                        str = STR_KEYALREADYBOUND;
+                    else if (inputID == CONT_P1)
+                        str = STR_KEYALREADYBOUNDP1;
+                    else if (inputID == CONT_P2)
+                        str = STR_KEYALREADYBOUNDP2;
 
-                int32 str = -1;
-                if (inputID == input)
-                    str = STR_KEYALREADYBOUND;
-                else if (inputID == 1)
-                    str = STR_KEYALREADYBOUNDP1;
-                else if (inputID == 2)
-                    str = STR_KEYALREADYBOUNDP2;
+                    if (str != -1)
+                        Localization_GetString(&info, str);
 
-                if (str != -1)
-                    Localization_GetString(&info, str);
-
-                UIKeyBinder_SetMappings(self->type, input, KEYMAP_NO_MAPPING);
-                self->lasyKeyMap = 0;
-                UIDialog_CreateDialogYesNo(&info, UIKeyBinder_MoveKeyToActionCB_Yes, UIKeyBinder_MoveKeyToActionCB_No, true, true);
-                keyMapChanged = false;
+                    UIKeyBinder_SetMappings(self->type, input, KEYMAP_NO_MAPPING);
+                    self->lasyKeyMap = KEYMAP_NO_MAPPING;
+                    UIDialog_CreateDialogYesNo(&info, UIKeyBinder_MoveKeyToActionCB_Yes, UIKeyBinder_MoveKeyToActionCB_No, true, true);
+                    keyMapChanged = false;
+                }
             }
         }
     }
@@ -201,7 +200,7 @@ int32 UIKeyBinder_GetMappings(int32 input, int32 button)
         default: break;
     }
 
-    return 0;
+    return KEYMAP_NO_MAPPING;
 }
 
 void UIKeyBinder_SetMappings(int32 input, int32 button, int32 keyMap)
@@ -396,8 +395,8 @@ void UIKeyBinder_MoveKeyToActionCB_No(void)
 
     if (binder->state == UIKeyBinder_State_Selected) {
         UIKeyBinder_SetMappings(binder->inputID + 1, binder->type, KEYMAP_AUTO_MAPPING);
-        UIKeyBinder->activeInputID  = -1;
-        UIKeyBinder->activeButtonID = -1;
+        UIKeyBinder->activeInputID  = KEYMAP_AUTO_MAPPING;
+        UIKeyBinder->activeButtonID = KEYMAP_AUTO_MAPPING;
     }
 }
 
@@ -406,10 +405,13 @@ void UIKeyBinder_MoveKeyToActionCB_Yes(void)
     EntityUIKeyBinder *binder = UIKeyBinder->activeBinder;
 
     if (binder->state == UIKeyBinder_State_Selected) {
+        // Store the keyMap from the other button
         int32 keyMap = UIKeyBinder_GetMappings(UIKeyBinder->activeInputID, UIKeyBinder->activeButtonID);
 
-        // TODO: what is v3??
-        // UIKeyBinder_SetMappings(UIKeyBinder->activeInputID, v3, 0);
+        // Remove other button's keyMap
+        UIKeyBinder_SetMappings(UIKeyBinder->activeInputID, UIKeyBinder->activeButtonID, KEYMAP_NO_MAPPING);
+
+        // Give the keyMap to the new button
         UIKeyBinder_SetMappings(binder->inputID + 1, binder->type, keyMap);
 
         EntityUIControl *parent   = (EntityUIControl *)binder->parent;
@@ -422,8 +424,8 @@ void UIKeyBinder_MoveKeyToActionCB_Yes(void)
         UIKeyBinder->activeBinder = NULL;
 
         RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, false);
-        UIKeyBinder->activeInputID  = -1;
-        UIKeyBinder->activeButtonID = -1;
+        UIKeyBinder->activeInputID  = KEYMAP_AUTO_MAPPING;
+        UIKeyBinder->activeButtonID = KEYMAP_AUTO_MAPPING;
     }
 }
 

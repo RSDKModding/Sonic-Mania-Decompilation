@@ -112,15 +112,15 @@ extern int32 currentObjectID;
 
 extern ModInfo *currentMod;
 
-inline void setActiveMod(int32 id) { activeMod = id; }
+inline void SetActiveMod(int32 id) { activeMod = id; }
 
-void initModAPI();
-void unloadMods();
-void loadMods();
-bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active);
-void saveMods();
+void InitModAPI();
+void UnloadMods();
+void LoadMods();
+bool32 LoadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active);
+void SaveMods();
 
-void sortMods();
+void SortMods();
 
 void RunModCallbacks(int32 callbackID, void *data);
 

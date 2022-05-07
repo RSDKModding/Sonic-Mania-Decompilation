@@ -1,3 +1,4 @@
+
 #define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
 bool32 getControllerButton(InputDeviceSDL *device, uint8 buttonID)
@@ -178,7 +179,7 @@ InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID)
 
     const char *name = SDL_GameControllerName(device->controllerPtr);
 
-    byte controllerType = DEVICE_XBOX;
+    uint8 controllerType = DEVICE_XBOX;
     if (strstr(name, "Xbox"))
         controllerType = DEVICE_XBOX;
     else if (strstr(name, "PS4") || strstr(name, "PS5"))
@@ -193,7 +194,7 @@ InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID)
     device->gamePadType = (DEVICE_API_SDL2 << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (controllerType << 0);
     device->inputID     = id;
 
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         if (activeControllers[i] == id) {
             activeInputDevices[i]        = device;
             device->assignedControllerID = true;

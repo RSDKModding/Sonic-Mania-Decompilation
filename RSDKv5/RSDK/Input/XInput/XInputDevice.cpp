@@ -141,7 +141,6 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     triggerR[controllerID].delta    = this->deltaRTrigger;
 }
 
-
 InputDeviceXInput *InitXInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
@@ -175,14 +174,13 @@ InputDeviceXInput *InitXInputDevice(uint32 id)
     return device;
 }
 
-
 void InitXInputAPI()
 {
     char idString[16];
 
     sprintf(idString, "%s", "XInputDevice0");
 
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         idString[12] = '0' + i;
 
         uint32 id;
@@ -209,10 +207,7 @@ void InitXInputAPI()
     }
 }
 
-
 void UpdateXInputDevices()
 {
-    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
-        disabledXInputDevices[i] = false;
-    }
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) disabledXInputDevices[i] = false;
 }

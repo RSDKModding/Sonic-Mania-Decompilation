@@ -320,17 +320,17 @@ enum WinMappings {
 };
 
 struct GamePadButtonMap {
-    int maskVal;
-    short mappingType;
-    short offset;
+    int32 maskVal;
+    int16 mappingType;
+    int16 offset;
 };
 
 struct GamePadMappings {
     char name[0x40];
     GamePadButtonMap buttons[24];
-    int vendorID;
-    int productID;
-    int type;
+    int32 vendorID;
+    int32 productID;
+    int32 type;
 };
 
 struct InputDevice {
@@ -426,10 +426,10 @@ extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
 extern GamePadMappings *gamePadMappings;
-extern int gamePadCount;
+extern int32 gamePadCount;
 
 #if !RETRO_REV02
-extern int mostRecentControllerID;
+extern int32 mostRecentControllerID;
 #endif
 
 #if RETRO_INPUTDEVICE_KEYBOARD
@@ -459,7 +459,7 @@ void RemoveInputDevice(InputDevice *targetDevice);
 
 inline InputDevice *InputDeviceFromID(int32 inputID)
 {
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->inputID == inputID)
             return InputDevices[i];
     }
@@ -468,7 +468,7 @@ inline InputDevice *InputDeviceFromID(int32 inputID)
 }
 inline int32 GetControllerInputID()
 {
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled && !InputDevices[i]->assignedControllerID
             && InputDevices[i]->anyPress) {
             return InputDevices[i]->inputID;
@@ -480,7 +480,7 @@ inline int32 GetControllerInputID()
 
 inline int32 ControllerIDForInputID(uint8 controllerID)
 {
-    byte i = controllerID - 1;
+    uint8 i = controllerID - 1;
     if (i < PLAYER_COUNT)
         return activeControllers[i];
 
@@ -490,14 +490,15 @@ inline int32 ControllerIDForInputID(uint8 controllerID)
 #if RETRO_REV02
 inline int32 MostRecentActiveControllerID(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer)
 {
-    uint mostRecentTime   = -1;
-    int mostRecentValidID = 0;
-    int mostRecentID      = 0;
-    uint maxTime          = maxInactiveTimer ? maxInactiveTimer : -1;
+    uint mostRecentTime     = -1;
+    int32 mostRecentValidID = 0;
+    int32 mostRecentID      = 0;
+    uint maxTime            = maxInactiveTimer ? maxInactiveTimer : -1;
 
     if (InputDeviceCount) {
-        for (int i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled && (!InputDevices[i]->assignedControllerID || !unassignedOnly)) {
+        for (int32 i = 0; i < InputDeviceCount; ++i) {
+            if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled
+                && (!InputDevices[i]->assignedControllerID || !unassignedOnly)) {
                 if (InputDevices[i]->inactiveTimer[confirmOnly] < mostRecentTime) {
                     mostRecentTime = InputDevices[i]->inactiveTimer[confirmOnly];
                     if (InputDevices[i]->inactiveTimer[confirmOnly] <= maxTime)
@@ -535,7 +536,7 @@ int32 GetControllerType(int32 inputID);
 
 inline int32 GetAssignedControllerID(int32 inputID)
 {
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
             return InputDevices[i]->assignedControllerID;
         }
@@ -546,7 +547,7 @@ inline int32 GetAssignedControllerID(int32 inputID)
 
 inline int32 GetInputUnknown(int32 inputID)
 {
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
             return 0xFFFF; // ???
         }
@@ -557,7 +558,7 @@ inline int32 GetInputUnknown(int32 inputID)
 
 inline int32 InputUnknown1(int32 inputID, int32 unknown1, int32 unknown2)
 {
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
             return InputDevices[i]->Unknown1(unknown1, unknown2);
         }
@@ -568,7 +569,7 @@ inline int32 InputUnknown1(int32 inputID, int32 unknown1, int32 unknown2)
 
 inline int32 InputUnknown2(int32 inputID, int32 unknown1, int32 unknown2)
 {
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
             return InputDevices[i]->Unknown2(unknown1, unknown2);
         }
@@ -612,11 +613,11 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
                 activeControllers[contID] = CONT_UNASSIGNED;
             }
             else {
-                for (int i = 0; i < InputDeviceCount; ++i) {
+                for (int32 i = 0; i < InputDeviceCount; ++i) {
                     if (InputDevices[i] && InputDevices[i]->inputID == inputID) {
                         InputDevices[i]->assignedControllerID = controllerID;
-                        activeControllers[contID]            = inputID;
-                        activeInputDevices[contID]           = InputDevices[i];
+                        activeControllers[contID]             = inputID;
+                        activeInputDevices[contID]            = InputDevices[i];
                         break;
                     }
                 }
@@ -625,7 +626,7 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
         else {
             InputDevice *device = InputDeviceFromID(activeControllers[contID]);
             if (device)
-                device->assignedControllerID = true;
+                device->assignedControllerID = false;
             activeControllers[contID] = inputID;
         }
     }
@@ -638,19 +639,20 @@ inline bool32 InputIDIsDisconnected(uint8 inputID)
 {
     if (inputID < PLAYER_COUNT)
         return activeControllers[inputID] != CONT_ANY;
+
     return false;
 }
 
 inline void ResetControllerAssignments()
 {
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         activeControllers[i]  = CONT_ANY;
         activeInputDevices[i] = NULL;
     }
 
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i])
-            InputDevices[i]->assignedControllerID = true;
+            InputDevices[i]->assignedControllerID = false;
     }
 }
 
@@ -664,12 +666,12 @@ inline void InputUnknown(int32 controllerID, int32 type, int32 *valuePtr)
 {
     if (valuePtr) {
         uint32 id = controllerID - 1;
-        if (id < PLAYER_COUNT) {
+        if (id < PLAYER_COUNT && activeInputDevices[id]) {
             switch (type) {
                 default:
                     break;
-                    // case 0: *valuePtr = InputDevices[id].field_0; break;
-                    // case 1: *valuePtr = InputDevices[id].field_4; break;
+                    // case 0: *valuePtr = activeInputDevices[id].deviceType; break;
+                    // case 1: *valuePtr = activeInputDevices[id].field_4; break;
             }
         }
     }

@@ -159,7 +159,7 @@ void RSDK::SKU::DummyCore::StageLoad()
 {
     UserCore::StageLoad();
 
-    for (int i = 0; i < userCore->valueCount && debugValCnt < DEBUGVAL_MAX; ++i) {
+    for (int i = 0; i < userCore->valueCount && debugValueCount < DEBUGVAL_MAX; ++i) {
         SetDebugValue(userValueNames[i], userCore->values[i], DTYPE_BOOL, false, true);
     }
 }

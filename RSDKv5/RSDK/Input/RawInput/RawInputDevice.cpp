@@ -6,7 +6,6 @@ int32 rawInputDeviceCount = 0;
 
 tagRAWINPUT rawInputData;
 
-
 void InputDeviceRaw::UpdateInput()
 {
     this->prevInputFlags = this->inputFlags;
@@ -91,7 +90,6 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
     triggerR[controllerID].delta    = this->triggerDeltaR;
 }
 
-
 InputDeviceRaw *InitRawInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
@@ -123,7 +121,6 @@ InputDeviceRaw *InitRawInputDevice(uint32 id)
     InputDeviceCount++;
     return device;
 }
-
 
 void InitHIDAPI()
 {
@@ -230,7 +227,6 @@ void InitRawInputAPI()
         RSDK::RemoveStorageEntry((void **)&pRawInputDeviceList);
     }
 }
-
 
 void UpdateRawInputButtonState(HRAWINPUT hRawInput)
 {

@@ -179,11 +179,11 @@ void PauseMenu_SetupMenu(void)
     control->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     control->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
-    // TODO: look into this
     // Bug Details:
     // control->rowCount is slightly bugged, if `pauseMenu->disableRestart` is enabled then wrapping by pressing down is broken and wont work
+    // this is due to rowCount being 3, while control->buttonCount is only 2
     // Fix:
-    // set it properly like buttonCount is done below
+    // set control->rowCount to control->buttonCount once it's been initialized, instead of using a constant value
     control->rowCount    = PAUSEMENU_BUTTON_COUNT;
     control->columnCount = 1;
     control->buttonID    = 0;

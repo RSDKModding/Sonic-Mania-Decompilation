@@ -65,7 +65,7 @@ struct GameInfo {
 #endif
 };
 
-void setupFunctions();
+void SetupFunctionTables();
 
 void LinkGameLogic(void *info);
 

@@ -37,4 +37,3 @@ extern int32 prevButtonDownCount;
 
 void HandleSpecialKeys();
 #endif
-

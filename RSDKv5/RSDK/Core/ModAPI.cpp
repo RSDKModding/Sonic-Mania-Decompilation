@@ -61,7 +61,7 @@ std::string trim(const std::string &s)
     return std::string(start, end + 1);
 }
 
-void RSDK::initModAPI()
+void RSDK::InitModAPI()
 {
 
     memset(modFunctionTable, 0, sizeof(modFunctionTable));
@@ -99,10 +99,10 @@ void RSDK::initModAPI()
     addToModFunctionTable(ModTable_GetAchievementCount, GetAchievementCount);
     addToModFunctionTable(ModTable_LoadShader, RenderDevice::LoadShader);
 
-    loadMods();
+    LoadMods();
 }
 
-void RSDK::sortMods()
+void RSDK::SortMods()
 {
     std::sort(modList.begin(), modList.end(), [](ModInfo a, ModInfo b) {
         if (!(a.active && b.active))
@@ -112,7 +112,7 @@ void RSDK::sortMods()
     });
 }
 
-void RSDK::unloadMods()
+void RSDK::UnloadMods()
 {
     for (ModInfo &mod : modList)
         if (mod.unloadMod)
@@ -123,10 +123,10 @@ void RSDK::unloadMods()
     for (int32 c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
 }
 
-void RSDK::loadMods()
+void RSDK::LoadMods()
 {
     using namespace std;
-    unloadMods();
+    UnloadMods();
     char modBuf[0x100];
     sprintf(modBuf, "%smods/", SKU::userFileDir);
     fs::path modPath(modBuf);
@@ -145,7 +145,7 @@ void RSDK::loadMods()
             for (int32 m = 0; m < c; ++m) {
                 ModInfo info;
                 bool32 active = iniparser_getboolean(ini, keys[m], false);
-                bool32 loaded = loadMod(&info, modPath.string(), string(keys[m] + 5), active);
+                bool32 loaded = LoadMod(&info, modPath.string(), string(keys[m] + 5), active);
                 if (info.language && active) {
                     if (info.language == (const char *)1 && !loaded)
                         waitList.push_back((int)modList.size());
@@ -160,7 +160,7 @@ void RSDK::loadMods()
 
         // try the waitlist
         for (int32 &m : waitList) {
-            loadMod(&modList[m], modPath.string(), modList[m].id, true);
+            LoadMod(&modList[m], modPath.string(), modList[m].id, true);
             modList[m].language = 0;
         }
 
@@ -183,7 +183,7 @@ void RSDK::loadMods()
                         FileIO *f = fOpen((modDir + "/mod.ini").c_str(), "r");
                         if (f) {
                             fClose(f);
-                            loadMod(&info, modPath.string(), modDirPath.filename().string(), false);
+                            LoadMod(&info, modPath.string(), modDirPath.filename().string(), false);
                             modList.push_back(info);
                         }
                     }
@@ -193,7 +193,7 @@ void RSDK::loadMods()
             PrintLog(PRINT_ERROR, "Mods Folder Scanning Error: %s", fe.what());
         }
     }
-    sortMods();
+    SortMods();
 }
 
 void loadCfg(RSDK::ModInfo *info, std::string path)
@@ -227,7 +227,7 @@ void loadCfg(RSDK::ModInfo *info, std::string path)
     CloseFile(cfg);
 }
 
-bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active)
+bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active)
 {
     if (!info)
         return false;
@@ -329,7 +329,7 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
 #if RETRO_PLATFORM == RETRO_WIN
                     autodec = ".dll";
 #elif RETRO_PLATFORM == RETRO_OSX
-                    autodec = ".dylib";
+                    autodec        = ".dylib";
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                     autodec = ".so";
 #elif RETRO_PLATFORM == RETRO_SWITCH
@@ -378,13 +378,13 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     std::string fl = file.string().c_str();
 #if RETRO_PLATFORM == RETRO_ANDROID
                     // only load ones that are compiled. this is to still allow lang mods to work
-                    fl = "lib" + buf;
+                    fl                = "lib" + buf;
 #endif
                     void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
 #define getAddress dlsym
 #elif RETRO_PLATFORM == RETRO_SWITCH
                     // TODO
-                    void* link_handle = NULL;
+                    void *link_handle = NULL;
 #define getAddress(x, y) NULL
 #endif
 
@@ -591,14 +591,14 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
     return false;
 }
 
-void RSDK::saveMods()
+void RSDK::SaveMods()
 {
     ModInfo *cur = currentMod;
     char modBuf[0x100];
     sprintf(modBuf, "%smods/", SKU::userFileDir);
     fs::path modPath(modBuf);
 
-    sortMods();
+    SortMods();
 
     PrintLog(PRINT_NORMAL, "[MOD] Saving mods...");
 
@@ -1126,18 +1126,18 @@ void RSDK::ModRegisterGlobalVariables(const char *globalsPath, void **globals, u
 }
 
 void RSDK::ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void),
-                             void (*lateUpdate)(void),
-                       void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                       void (*editorLoad)(void), void (*serialize)(void), const char *inherited)
+                             void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *),
+                             void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void),
+                             const char *inherited)
 {
     return ModRegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,
                                  editorLoad, serialize, inherited);
 }
 
 void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
-                           std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
-                           std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
-                           std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
+                                 std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
+                                 std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+                                 std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
 {
     // TODO: i think i introduced a memleak somewhere here??
 
@@ -1203,6 +1203,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
         if (!create)       info->create       = [curMod, copy](void* data) { currentMod = curMod; SuperInternal(copy, SUPER_CREATE, data);       currentMod = NULL; };
         // clang-format on
     }
+
     // clang-format off
     if (update)       info->update       = [curMod, update]()           { currentMod = curMod; update();       currentMod = NULL; };
     if (lateUpdate)   info->lateUpdate   = [curMod, lateUpdate]()       { currentMod = curMod; lateUpdate();   currentMod = NULL; };
@@ -1214,6 +1215,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     if (editorLoad)   info->editorLoad   = [curMod, editorLoad]()       { currentMod = curMod; editorLoad();   currentMod = NULL; };
     if (create)       info->create       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
     // clang-format on
+
     objectCount = preCount;
 }
 
@@ -1221,6 +1223,7 @@ Object *RSDK::GetObject(const char *name)
 {
     if (int32 o = GetObjectByName(name))
         return *objectList[stageObjectIDs[o]].type;
+
     return NULL;
 }
 
@@ -1231,10 +1234,13 @@ void RSDK::GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, 
 
     if (name)
         SetText(name, (char *)SKU::achievementList[id].name.c_str(), 0);
+
     if (description)
         SetText(description, (char *)SKU::achievementList[id].description.c_str(), 0);
+
     if (identifer)
         SetText(identifer, (char *)SKU::achievementList[id].identifier.c_str(), 0);
+
     if (achieved)
         *achieved = SKU::achievementList[id].achieved;
 }
@@ -1242,10 +1248,10 @@ void RSDK::GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, 
 int RSDK::GetAchievementIndexByID(const char *id)
 {
     for (int i = 0; i < SKU::achievementList.size(); ++i) {
-        if (SKU::achievementList[i].identifier == std::string(id)) {
+        if (SKU::achievementList[i].identifier == std::string(id))
             return i;
-        }
     }
+
     return -1;
 }
 int RSDK::GetAchievementCount() { return (int)SKU::achievementList.size(); }

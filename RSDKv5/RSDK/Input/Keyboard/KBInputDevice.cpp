@@ -352,10 +352,10 @@ InputDeviceKeyboard *InitKeyboardDevice(uint32 id)
     InputDevices[InputDeviceCount] = new InputDeviceKeyboard();
 
     InputDeviceKeyboard *device = (InputDeviceKeyboard *)InputDevices[InputDeviceCount];
-    device->gamePadType = (DEVICE_API_KEYBOARD << 16) | (DEVICE_TYPE_KEYBOARD << 8) | (DEVICE_KEYBOARD << 0);
-    device->disabled    = false;
-    device->inputID     = id;
-    device->active      = true;
+    device->gamePadType         = (DEVICE_API_KEYBOARD << 16) | (DEVICE_TYPE_KEYBOARD << 8) | (DEVICE_KEYBOARD << 0);
+    device->disabled            = false;
+    device->inputID             = id;
+    device->active              = true;
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         if (activeControllers[i] == id) {
@@ -455,9 +455,9 @@ void InputDeviceKeyboard::ProcessInput(int32 controllerID)
 void InitKeyboardInputAPI()
 {
     char buffer[0x10];
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         sprintf(buffer, "KBDevice%d", i);
-        uint id = 0;
+        uint32 id = 0;
         GenerateCRC(&id, buffer);
 
         InputDeviceKeyboard *device = InitKeyboardDevice(id);
@@ -479,7 +479,7 @@ void UpdateKeyState(int32 keyCode)
     if (keyCode == KEYMAP_NO_MAPPING)
         return;
 
-    for (int i = 1; i <= PLAYER_COUNT; ++i) {
+    for (int32 i = 1; i <= PLAYER_COUNT; ++i) {
         InputState *buttons[] = {
             &controller[i].keyUp, &controller[i].keyDown, &controller[i].keyLeft,  &controller[i].keyRight,
             &controller[i].keyA,  &controller[i].keyB,    &controller[i].keyC,     &controller[i].keyX,
@@ -491,7 +491,7 @@ void UpdateKeyState(int32 keyCode)
             KEYMASK_C,  KEYMASK_X,    KEYMASK_Y,    KEYMASK_Z,     KEYMASK_START, KEYMASK_SELECT,
         };
 
-        for (int k = 0; k < KEY_MAX; k++) {
+        for (int32 k = 0; k < KEY_MAX; k++) {
             if (keyCode == buttons[k]->keyMap)
                 keyState[i - 1] |= keyMasks[k];
             else if (buttons[k]->keyMap == -1)
@@ -506,7 +506,7 @@ void ClearKeyState(int32 keyCode)
     keyCode = SDLToWinAPIMappings(keyCode);
 #endif
 
-    for (int i = 1; i <= PLAYER_COUNT; ++i) {
+    for (int32 i = 1; i <= PLAYER_COUNT; ++i) {
         InputState *buttons[] = {
             &controller[i].keyUp, &controller[i].keyDown, &controller[i].keyLeft,  &controller[i].keyRight,
             &controller[i].keyA,  &controller[i].keyB,    &controller[i].keyC,     &controller[i].keyX,

@@ -335,20 +335,20 @@ void *GetAPIFunction(const char *name)
             return RSDK::APIFunctionTable[f].ptr;
     }
 
-    if (engine.printConsole)
+    if (engine.PrintConsole)
         PrintLog(PRINT_POPUP, "API Function not found: %s", name);
     return NULL;
 }
 #endif
 
-void RSDK::setupFunctions()
+void RSDK::SetupFunctionTables()
 {
     using namespace RSDK;
     using namespace RSDK::SKU;
 
 #if RETRO_USE_MOD_LOADER
     if (RSDKFunctionTable[0]) {
-        initModAPI();
+        InitModAPI();
         return;
     }
 #endif
@@ -684,7 +684,7 @@ void RSDK::setupFunctions()
 #endif
 
 #if RETRO_USE_MOD_LOADER
-    initModAPI(); //setup mods & the mod API table
+    InitModAPI(); //setup mods & the mod API table
 #endif
 }
 

@@ -877,25 +877,10 @@ void RenderDevice::ProcessEvent(SDL_Event event)
 
                 case SDL_SCANCODE_ESCAPE:
                     if (engine.devMenu) {
-                        if (sceneInfo.state == ENGINESTATE_DEVMENU) {
-                            sceneInfo.state = devMenu.stateStore;
-                            if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
-                                RSDK::videoSettings.screenCount = 0;
-
-                            ResumeSound();
-                        }
-                        else {
-                            devMenu.stateStore = sceneInfo.state;
-                            if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                                RSDK::videoSettings.screenCount = 1;
-
-                            devMenu.state   = DevMenu_MainMenu;
-                            devMenu.option  = 0;
-                            devMenu.scroll  = 0;
-                            devMenu.timer   = 0;
-                            sceneInfo.state = ENGINESTATE_DEVMENU;
-                            PauseSound();
-                        }
+                        if (sceneInfo.state == ENGINESTATE_DEVMENU)
+                            CloseDevMenu();
+                        else
+                            OpenDevMenu();
                     }
                     else {
 #if RETRO_INPUTDEVICE_KEYBOARD
@@ -920,7 +905,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                         if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
                             sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
                         }
-                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd;
+                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd - 1;
                     }
 
                     InitSceneLoad();
@@ -928,7 +913,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
 
                 case SDL_SCANCODE_F2:
                     sceneInfo.listPos++;
-                    if (sceneInfo.listPos > sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
+                    if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
                         sceneInfo.activeCategory++;
                         if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
                             sceneInfo.activeCategory = 0;

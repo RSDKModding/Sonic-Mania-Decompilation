@@ -14,10 +14,10 @@ TriggerState triggerR[PLAYER_COUNT + 1];
 TouchMouseData touchMouseData;
 
 GamePadMappings *gamePadMappings = NULL;
-int gamePadCount                 = 0;
+int32 gamePadCount               = 0;
 
 #if !RETRO_REV02
-int mostRecentControllerID = -1;
+int32 mostRecentControllerID = -1;
 #endif
 
 #if RETRO_INPUTDEVICE_KEYBOARD
@@ -78,7 +78,7 @@ void InitInputDevices()
         return;
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
-        activeControllers[i]  = CONT_AUTOASSIGN;
+        activeControllers[i]  = CONT_ANY;
         activeInputDevices[i] = NULL;
     }
 
@@ -122,23 +122,23 @@ void ClearInput()
         controller[i].keyStart.press  = false;
         controller[i].keySelect.press = false;
 
-        stickL[i].keyUp.press         = false;
-        stickL[i].keyDown.press       = false;
-        stickL[i].keyLeft.press       = false;
-        stickL[i].keyRight.press      = false;
-        stickL[i].keyStick.press      = false;
+        stickL[i].keyUp.press    = false;
+        stickL[i].keyDown.press  = false;
+        stickL[i].keyLeft.press  = false;
+        stickL[i].keyRight.press = false;
+        stickL[i].keyStick.press = false;
 
-        stickR[i].keyUp.press         = false;
-        stickR[i].keyDown.press       = false;
-        stickR[i].keyLeft.press       = false;
-        stickR[i].keyRight.press      = false;
-        stickR[i].keyStick.press      = false;
+        stickR[i].keyUp.press    = false;
+        stickR[i].keyDown.press  = false;
+        stickR[i].keyLeft.press  = false;
+        stickR[i].keyRight.press = false;
+        stickR[i].keyStick.press = false;
 
-        triggerL[i].keyBumper.press   = false;
-        triggerL[i].keyTrigger.press  = false;
+        triggerL[i].keyBumper.press  = false;
+        triggerL[i].keyTrigger.press = false;
 
-        triggerR[i].keyBumper.press   = false;
-        triggerR[i].keyTrigger.press  = false;
+        triggerR[i].keyBumper.press  = false;
+        triggerR[i].keyTrigger.press = false;
     }
 }
 
@@ -146,16 +146,16 @@ void ProcessInput()
 {
     ClearInput();
 
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i])
             InputDevices[i]->UpdateInput();
     }
 
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
-        int assign = activeControllers[i];
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
+        int32 assign = activeControllers[i];
         if (assign && assign != CONT_UNASSIGNED) {
             if (assign == CONT_AUTOASSIGN) {
-                int id               = GetControllerInputID();
+                int32 id             = GetControllerInputID();
                 activeControllers[i] = id;
                 if (id != -1)
                     AssignControllerID(i + 1, id);
@@ -172,7 +172,7 @@ void ProcessInput()
     HandleSpecialKeys();
 #endif
 
-    for (int c = 0; c <= PLAYER_COUNT; ++c) {
+    for (int32 c = 0; c <= PLAYER_COUNT; ++c) {
         if (c <= 0 || activeControllers[c - 1] != CONT_UNASSIGNED) {
             InputState *cont[] = {
                 &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
@@ -185,7 +185,7 @@ void ProcessInput()
             InputState *lTrigger[] = { &triggerL[c].keyBumper, &triggerL[c].keyTrigger };
             InputState *rTrigger[] = { &triggerR[c].keyBumper, &triggerR[c].keyTrigger };
 
-            for (int i = 0; i < 12; ++i) {
+            for (int32 i = 0; i < 12; ++i) {
                 if (cont[i]->press) {
                     if (cont[i]->down)
                         cont[i]->press = false;
@@ -196,7 +196,7 @@ void ProcessInput()
                     cont[i]->down = false;
             }
 
-            for (int i = 0; i < 5; ++i) {
+            for (int32 i = 0; i < 5; ++i) {
                 if (lStick[i]->press) {
                     if (lStick[i]->down)
                         lStick[i]->press = false;
@@ -216,7 +216,7 @@ void ProcessInput()
                     rStick[i]->down = false;
             }
 
-            for (int i = 0; i < 2; ++i) {
+            for (int32 i = 0; i < 2; ++i) {
                 if (lTrigger[i]->press) {
                     if (lTrigger[i]->down)
                         lTrigger[i]->press = false;
@@ -241,7 +241,7 @@ void ProcessInput()
 
 int32 GetControllerType(int32 inputID)
 {
-    for (int i = 0; i < InputDeviceCount; ++i) {
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->inputID == inputID)
             return InputDevices[i]->gamePadType;
     }

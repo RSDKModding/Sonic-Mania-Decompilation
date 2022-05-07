@@ -350,8 +350,8 @@ struct RetroEngine {
     bool32 useExternalCode = false;
 #endif
 
-    bool32 devMenu      = false;
-    bool32 printConsole = false;
+    bool32 devMenu        = false;
+    bool32 consoleEnabled = false;
 
     bool32 hasPlus     = true;  // are sonic mania plus features enabled?
     bool32 confirmFlip = false; // swaps A/B, used for nintendo and etc controllers
@@ -398,7 +398,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount);
 #endif
 
 void LoadGameConfig();
-void InitScriptSystem();
+void InitGameLink();
 
 void ProcessDebugCommands();
 
