@@ -1910,23 +1910,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus</OutDir>
     <TargetName>Game</TargetName>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus\Intermediate</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus</OutDir>
     <TargetName>Game</TargetName>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus\Intermediate</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus</OutDir>
     <TargetName>Game</TargetName>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus\Intermediate</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus</OutDir>
     <TargetName>Game</TargetName>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\Game\Pre-Plus\Intermediate</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -1944,7 +1948,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstaticv1.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -1970,7 +1975,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstaticv1.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -1992,7 +1998,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstaticv1.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -2018,7 +2025,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstaticv1.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
+      <Command>copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\Game.dll"
+"$(ProjectDir)buildstaticv1.bat"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
