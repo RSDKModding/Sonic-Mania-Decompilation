@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_PrePlus", "Soni
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5-dx9", "RSDKv5\RSDKv5_dx9.vcxproj", "{A082FD51-53AF-4EF7-B03E-BCE50E144BD4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5-gl3", "RSDKv5\RSDKv5_gl3.vcxproj", "{A842E0D8-1D55-4B5D-92B2-5B6770021626}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{A082FD51-53AF-4EF7-B03E-BCE50E144BD4}.Release|x64.Build.0 = Release|x64
 		{A082FD51-53AF-4EF7-B03E-BCE50E144BD4}.Release|x86.ActiveCfg = Release|Win32
 		{A082FD51-53AF-4EF7-B03E-BCE50E144BD4}.Release|x86.Build.0 = Release|Win32
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Debug|x64.ActiveCfg = Debug|x64
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Debug|x64.Build.0 = Debug|x64
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Debug|x86.ActiveCfg = Debug|Win32
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Debug|x86.Build.0 = Debug|Win32
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Release|x64.ActiveCfg = Release|x64
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Release|x64.Build.0 = Release|x64
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Release|x86.ActiveCfg = Release|Win32
+		{A842E0D8-1D55-4B5D-92B2-5B6770021626}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

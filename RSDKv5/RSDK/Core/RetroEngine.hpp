@@ -167,8 +167,11 @@ enum GameRegions {
 #ifdef RSDK_USE_DX9
 #undef RETRO_RENDERDEVICE_DIRECTX9
 #define RETRO_RENDERDEVICE_DIRECTX9 (1)
+#elif defined(RSDK_USE_GL3)
+#undef RETRO_RENDERDEVICE_OPENGL3
+#define RETRO_RENDERDEVICE_OPENGL3 (1)
 #else
-#error One of RSDK_USE_SDL2 or RSDK_USE_DX9 must be defined.
+#error One of RSDK_USE_SDL2, RSDK_USE_DX9, or RSDK_USE_GL3 must be defined.
 #endif //! RSDK_USE_DX9
 
 #undef RETRO_AUDIODEVICE_XAUDIO
