@@ -1150,23 +1150,29 @@ void RenderDevice::ProcessEvent(MSG Msg)
             }
 
             switch (Msg.wParam) {
-                default: UpdateKeyState(activeButtons); break;
+                default:
+#if RETRO_INPUTDEVICE_KEYBOARD
+                    UpdateKeyState(activeButtons);
+                    handledMsg = true;
+#endif
+                    break;
 
                 case VK_RETURN: // alt + enter
                     if (GetAsyncKeyState(VK_MENU)) {
                         RSDK::videoSettings.windowed ^= 1;
                         UpdateGameWindow();
                         RSDK::changedVideoSettings = false;
+                        handledMsg                 = true;
                     }
                     break;
 
                 case VK_F4: // alt + f4
                     if (GetAsyncKeyState(VK_MENU))
                         isRunning = false;
+                    handledMsg = true;
                     break;
             }
 
-            handledMsg = true;
             break;
         }
 
@@ -1186,8 +1192,10 @@ void RenderDevice::ProcessEvent(MSG Msg)
             // handledMsg = true;
             switch (Msg.wParam) {
                 default:
+#if RETRO_INPUTDEVICE_KEYBOARD
                     UpdateKeyState(activeButtons);
                     handledMsg = false;
+#endif
                     break;
 
                 case VK_BACK:
@@ -1216,8 +1224,10 @@ void RenderDevice::ProcessEvent(MSG Msg)
                         }
                     }
                     else {
+#if RETRO_INPUTDEVICE_KEYBOARD
                         UpdateKeyState(activeButtons);
                         handledMsg = false;
+#endif
                     }
                     break;
 
@@ -1316,7 +1326,11 @@ void RenderDevice::ProcessEvent(MSG Msg)
             }
 
             switch (Msg.wParam) {
-                default: ClearKeyState(activeButtons); break;
+                default:
+#if RETRO_INPUTDEVICE_KEYBOARD
+                    ClearKeyState(activeButtons); 
+#endif
+                    break;
 
                 case VK_BACK:
                     engine.gameSpeed = 1;
@@ -1438,13 +1452,25 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
                 }
             }
 
+#if RETRO_INPUTDEVICE_XINPUT
             UpdateXInputDevices();
+#endif
+
+#if RETRO_INPUTDEVICE_RAWINPUT
             InitHIDAPI();
+#endif
+
+#if RETRO_INPUTDEVICE_XINPUT
             InitXInputAPI();
+#endif
             break;
         }
 
-        case WM_INPUT: UpdateRawInputButtonState((HRAWINPUT)lParam); break;
+#if RETRO_INPUTDEVICE_RAWINPUT
+        case WM_INPUT: 
+            UpdateRawInputButtonState((HRAWINPUT)lParam); 
+            break;
+#endif
 
         case WM_SYSCOMMAND: {
             int32 param = wParam & 0xFFF0;

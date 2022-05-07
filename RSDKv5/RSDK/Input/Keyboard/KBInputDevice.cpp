@@ -1,6 +1,12 @@
+
 int32 keyState[PLAYER_COUNT];
 
-
+#if !RETRO_REV02
+int32 specialKeyStates[4];
+int32 prevSpecialKeyStates[4];
+int32 buttonDownCount     = 0;
+int32 prevButtonDownCount = 0;
+#endif
 
 #if RETRO_RENDERDEVICE_SDL2
 
@@ -518,3 +524,29 @@ void ClearKeyState(int32 keyCode)
         }
     }
 }
+
+#if !RETRO_REV02
+void HandleSpecialKeys()
+{
+    if (specialKeyStates[0] || specialKeyStates[3]) {
+        touchMouseData.pausePress       = !touchMouseData.pausePressActive;
+        touchMouseData.pausePressActive = true;
+    }
+    else {
+        touchMouseData.pausePress       = false;
+        touchMouseData.pausePressActive = false;
+    }
+
+    if (buttonDownCount) {
+        touchMouseData.anyPressActive = true;
+        touchMouseData.anyPress       = prevButtonDownCount < buttonDownCount;
+    }
+    else {
+        touchMouseData.anyPress       = false;
+        touchMouseData.anyPressActive = false;
+    }
+
+    prevButtonDownCount = buttonDownCount;
+    for (int32 k = 0; k < 4; ++k) prevSpecialKeyStates[k] = specialKeyStates[k];
+}
+#endif

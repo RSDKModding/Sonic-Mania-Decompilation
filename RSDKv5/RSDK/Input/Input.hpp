@@ -40,8 +40,8 @@ enum InputDeviceAPIs {
     DEVICE_API_XINPUT,
     DEVICE_API_RAWINPUT,
     DEVICE_API_STEAM,
-#if RETRO_RENDERDEVICE_SDL2
-    DEVICE_API_SDL2, // custom-made for SDL2 API, afaik it's not in original v5
+#if RETRO_INPUTDEVICE_SDL2
+    DEVICE_API_SDL2, // custom-made for SDL2 API, afaik it's not in original RSDKv5 (since it could be in a mac-version, but I do not have that so...)
 #endif
 };
 
@@ -350,115 +350,6 @@ struct InputDevice {
     int32 inactiveTimer[2];
 };
 
-#if RETRO_INPUTDEVICE_XINPUT
-struct InputDeviceXInput : InputDevice {
-    void UpdateInput(void);
-    void ProcessInput(int32 controllerID);
-
-    XINPUT_STATE inputState[2];
-    uint8 activeState;
-    uint8 controllerID;
-    uint8 stateUp;
-    uint8 stateDown;
-    uint8 stateLeft;
-    uint8 stateRight;
-    uint8 stateA;
-    uint8 stateB;
-    uint8 stateX;
-    uint8 stateY;
-    uint8 stateStart;
-    uint8 stateSelect;
-    uint8 stateBumper_L;
-    uint8 stateBumper_R;
-    uint8 stateStick_L;
-    uint8 stateStick_R;
-    int32 unknown;
-    float hDelta_L;
-    float vDelta_L;
-    float hDelta_R;
-    float vDelta_R;
-    float deadzoneLTrigger;
-    float deltaLTrigger;
-    float deadzoneRTrigger;
-    float deltaRTrigger;
-};
-#endif
-
-#if RETRO_INPUTDEVICE_RAWINPUT
-struct InputDeviceRaw : InputDevice {
-    void UpdateInput(void);
-    void ProcessInput(int32 controllerID);
-
-    HANDLE deviceHandle;
-
-    int32 activeButtons;
-    int32 inputFlags;
-    int32 prevInputFlags;
-    uint8 stateUp;
-    uint8 stateDown;
-    uint8 stateLeft;
-    uint8 stateRight;
-    uint8 stateA;
-    uint8 stateB;
-    uint8 stateC;
-    uint8 stateX;
-    uint8 stateY;
-    uint8 stateZ;
-    uint8 stateStart;
-    uint8 stateSelect;
-    uint8 stateBumper_L;
-    uint8 stateBumper_R;
-    uint8 stateStick_L;
-    uint8 stateStick_R;
-    uint8 stateTrigger_L;
-    uint8 stateTrigger_R;
-    float triggerDeltaL;
-    float triggerDeltaR;
-    float hDelta_L;
-    float vDelta_L;
-    float vDelta_R;
-    float hDelta_R;
-    int32 unknown1;
-    int32 unknown2;
-    GamePadButtonMap buttons[24];
-};
-#endif
-
-#if RETRO_INPUTDEVICE_SDL2
-struct InputDeviceSDL : InputDevice {
-    void UpdateInput(void);
-    void ProcessInput(int32 controllerID);
-    void CloseDevice();
-
-    int32 inputFlags;
-    int32 prevInputFlags;
-    uint8 stateUp;
-    uint8 stateDown;
-    uint8 stateLeft;
-    uint8 stateRight;
-    uint8 stateA;
-    uint8 stateB;
-    uint8 stateC;
-    uint8 stateX;
-    uint8 stateY;
-    uint8 stateZ;
-    uint8 stateStart;
-    uint8 stateSelect;
-    uint8 stateBumper_L;
-    uint8 stateBumper_R;
-    uint8 stateStick_L;
-    uint8 stateStick_R;
-    float triggerDeltaL;
-    float triggerDeltaR;
-    float hDelta_L;
-    float vDelta_L;
-    float vDelta_R;
-    float hDelta_R;
-
-    SDL_GameController *controllerPtr;
-};
-#endif
-
 struct InputState {
     bool32 down;
     bool32 press;
@@ -534,19 +425,6 @@ extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
-#if RETRO_INPUTDEVICE_XINPUT
-extern bool32 disabledXInputDevices[PLAYER_COUNT];
-#endif
-
-#if RETRO_INPUTDEVICE_RAWINPUT
-extern bool32 HIDEnabled;
-
-extern InputDevice *rawInputDevices[INPUTDEVICE_COUNT];
-extern int32 rawInputDeviceCount;
-
-extern tagRAWINPUT rawInputData;
-#endif
-
 extern GamePadMappings *gamePadMappings;
 extern int gamePadCount;
 
@@ -558,44 +436,26 @@ extern int mostRecentControllerID;
 #include "Keyboard/KBInputDevice.hpp"
 #endif
 
+#if RETRO_INPUTDEVICE_XINPUT
+#include "XInput/XInputDevice.hpp"
+#endif
+
+#if RETRO_INPUTDEVICE_RAWINPUT
+#include "RawInput/RawInputDevice.hpp"
+#endif
+
+#if RETRO_INPUTDEVICE_STEAM
+#include "RawInput/SteamInputDevice.hpp"
+#endif
+
+#if RETRO_INPUTDEVICE_SDL2
+#include "SDL2/SDL2InputDevice.hpp"
+#endif
+
 void InitInputDevices();
 void ProcessInput();
 
-#if RETRO_INPUTDEVICE_XINPUT
-void InitXInputAPI();
-#endif
-
-#if RETRO_INPUTDEVICE_RAWINPUT
-void InitHIDAPI();
-void InitRawInputAPI();
-#endif
-
-#if RETRO_INPUTDEVICE_SDL2
-void InitSDL2InputAPI();
-#endif
-
-#if RETRO_INPUTDEVICE_XINPUT
-InputDeviceXInput *InitXInputDevice(uint32 id);
-#endif
-
-#if RETRO_INPUTDEVICE_RAWINPUT
-InputDeviceRaw *InitRawInputDevice(uint32 id);
-#endif
-
-#if RETRO_INPUTDEVICE_SDL2
-InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID);
-#endif
-
 void RemoveInputDevice(InputDevice *targetDevice);
-
-#if !RETRO_REV02
-extern int32 specialKeyStates[4];
-extern int32 prevSpecialKeyStates[4];
-extern int32 buttonDownCount;
-extern int32 prevButtonDownCount;
-
-void HandleSpecialKeys();
-#endif
 
 inline InputDevice *InputDeviceFromID(int32 inputID)
 {
@@ -743,7 +603,8 @@ inline int32 ControllerUnknown2(int32 controllerID, int32 unknown1, int32 unknow
 
 inline void AssignControllerID(int8 controllerID, int32 inputID)
 {
-    int contID = controllerID - 1;
+    int32 contID = controllerID - 1;
+
 #if RETRO_REV02 || true
     if (contID < PLAYER_COUNT) {
         if (inputID && inputID != CONT_AUTOASSIGN) {
@@ -815,32 +676,4 @@ inline void InputUnknown(int32 controllerID, int32 type, int32 *valuePtr)
 }
 #endif
 
-#if RETRO_INPUTDEVICE_RAWINPUT
-inline InputDeviceRaw *GetRawInputDevice(uint8 *deviceID)
-{
-    if (*deviceID >= InputDeviceCount)
-        return NULL;
-
-    for (int32 d = *deviceID; d < InputDeviceCount; ++d) {
-        if (!InputDevices[d])
-            continue;
-
-        InputDeviceRaw *device = (InputDeviceRaw *)InputDevices[d];
-
-        if (((device->gamePadType >> 16) & 0xFF) == DEVICE_API_RAWINPUT) {
-            *deviceID = d;
-            return device;
-        }
-    }
-
-    return NULL;
-}
-
-void UpdateRawInputButtonState(HRAWINPUT hRawInput);
-#endif
-
-#if RETRO_INPUTDEVICE_XINPUT
-void UpdateXInputDevices();
-#endif
-
-#endif
+#endif // !INPUT_H

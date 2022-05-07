@@ -812,7 +812,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                     break;
 
                 case SDL_BUTTON_RIGHT:
-#if !RETRO_REV02
+#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
                     specialKeyStates[3] = true;
                     buttonDownCount++;
 #endif
@@ -830,7 +830,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                     break;
 
                 case SDL_BUTTON_RIGHT:
-#if !RETRO_REV02
+#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
                     specialKeyStates[3] = false;
                     buttonDownCount--;
 #endif
@@ -869,7 +869,11 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                     }
                 // [fallthrough]
 
-                default: UpdateKeyState(event.key.keysym.scancode); break;
+                default:
+#if RETRO_INPUTDEVICE_KEYBOARD
+                    UpdateKeyState(event.key.keysym.scancode); 
+#endif
+                    break;
 
                 case SDL_SCANCODE_ESCAPE:
                     if (engine.devMenu) {
@@ -894,14 +898,17 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                         }
                     }
                     else {
+#if RETRO_INPUTDEVICE_KEYBOARD
                         UpdateKeyState(event.key.keysym.scancode);
+#endif
                     }
-#if !RETRO_REV02
+
+#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
                     specialKeyStates[0] = true;
 #endif
                     break;
 
-#if !RETRO_REV02
+#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
                 case SDL_SCANCODE_RETURN: specialKeyStates[1] = true; break;
 #endif
 
@@ -989,8 +996,12 @@ void RenderDevice::ProcessEvent(SDL_Event event)
             --buttonDownCount;
 #endif
             switch (event.key.keysym.scancode) {
-                default: ClearKeyState(event.key.keysym.scancode); break;
-#if !RETRO_REV02
+                default:
+#if RETRO_INPUTDEVICE_KEYBOARD
+                    ClearKeyState(event.key.keysym.scancode); 
+#endif
+                    break;
+#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
                 case SDL_SCANCODE_ESCAPE: specialKeyStates[0] = false; break;
                 case SDL_SCANCODE_RETURN: specialKeyStates[1] = false; break;
 #endif
