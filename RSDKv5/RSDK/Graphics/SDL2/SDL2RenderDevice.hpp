@@ -19,6 +19,8 @@ public:
 
     static void LoadShader(const char *fileName, bool32 linear);
 
+    inline void ShowCursor(bool32 shown) { SDL_ShowCursor(shown); }
+
     static SDL_Window *window;
     static SDL_Renderer *renderer;
     static SDL_Texture *screenTexture[SCREEN_MAX];

@@ -1,3 +1,5 @@
+#include "resource.h"
+
 HWND RenderDevice::windowHandle;
 
 HDEVNOTIFY RenderDevice::deviceNotif = 0;
@@ -44,7 +46,7 @@ bool RenderDevice::Init()
     wndClass.cbClsExtra    = 0;
     wndClass.cbWndExtra    = 4;
     wndClass.hInstance     = hInstance;
-    wndClass.hIcon         = LoadIcon(handle, MAKEINTRESOURCE(101));
+    wndClass.hIcon         = LoadIcon(handle, MAKEINTRESOURCE(IDI_ICON1));
     wndClass.hCursor       = LoadCursor(0, IDI_APPLICATION);
     wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
     wndClass.lpszMenuName  = 0;

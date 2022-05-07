@@ -349,30 +349,6 @@ struct InputDevice {
     int32 inactiveTimer[2];
 };
 
-#if RETRO_INPUTDEVICE_KEYBOARD
-struct InputDeviceKeyboard : InputDevice {
-    void UpdateInput(void);
-    void ProcessInput(int32 controllerID);
-
-    uint16 inputFlags;
-    uint16 prevInputFlags;
-    uint8 controllerID;
-    int32 mouseHideTimer;
-    uint8 stateUp;
-    uint8 stateDown;
-    uint8 stateLeft;
-    uint8 stateRight;
-    uint8 stateA;
-    uint8 stateB;
-    uint8 stateC;
-    uint8 stateX;
-    uint8 stateY;
-    uint8 stateZ;
-    uint8 stateStart;
-    uint8 stateSelect;
-};
-#endif
-
 #if RETRO_INPUTDEVICE_XINPUT
 struct InputDeviceXInput : InputDevice {
     void UpdateInput(void);
@@ -557,10 +533,6 @@ extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
-#if RETRO_INPUTDEVICE_KEYBOARD
-extern int32 keyState[PLAYER_COUNT];
-#endif
-
 #if RETRO_INPUTDEVICE_XINPUT
 extern bool32 disabledXInputDevices[PLAYER_COUNT];
 #endif
@@ -581,12 +553,12 @@ extern int gamePadCount;
 extern int mostRecentControllerID;
 #endif
 
+#if RETRO_INPUTDEVICE_KEYBOARD
+#include "Keyboard/KBInputDevice.hpp"
+#endif
+
 void InitInputDevices();
 void ProcessInput();
-
-#if RETRO_INPUTDEVICE_KEYBOARD
-void InitKeyboardInputAPI();
-#endif
 
 #if RETRO_INPUTDEVICE_XINPUT
 void InitXInputAPI();
@@ -599,10 +571,6 @@ void InitRawInputAPI();
 
 #if RETRO_INPUTDEVICE_SDL2
 void InitSDL2InputAPI();
-#endif
-
-#if RETRO_INPUTDEVICE_KEYBOARD
-InputDeviceKeyboard *InitKeyboardDevice(uint32 id);
 #endif
 
 #if RETRO_INPUTDEVICE_XINPUT
@@ -844,11 +812,6 @@ inline void InputUnknown(int32 controllerID, int32 type, int32 *valuePtr)
         }
     }
 }
-#endif
-
-#if RETRO_INPUTDEVICE_KEYBOARD
-void UpdateKeyState(int32 keyCode);
-void ClearKeyState(int32 keyCode);
 #endif
 
 #if RETRO_INPUTDEVICE_RAWINPUT

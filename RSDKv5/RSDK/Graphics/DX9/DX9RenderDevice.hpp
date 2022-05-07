@@ -1,3 +1,5 @@
+const auto _wapiShowCursor = ShowCursor;
+
 class RenderDevice : public RenderDeviceBase
 {
 public:
@@ -16,6 +18,18 @@ public:
     static void UpdateFPSCap();
 
     static void LoadShader(const char *fileName, bool32 linear);
+
+    inline static void ShowCursor(bool32 shown)
+    {
+        if (shown) {
+            while (_wapiShowCursor(true) < 0)
+                ;
+        }
+        else {
+            while (_wapiShowCursor(false) >= 0)
+                ;
+        }
+    }
 
     static HWND windowHandle;
     static IDirect3DTexture9 *imageTexture;
