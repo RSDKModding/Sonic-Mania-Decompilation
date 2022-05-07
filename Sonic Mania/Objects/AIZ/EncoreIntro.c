@@ -1029,7 +1029,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
         player->state          = Player_State_Ground;
         player->camera         = camera;
 
-        Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, camera->position.x, camera->position.y, 0);
         camera->target = (Entity *)player;
         camera->state  = Camera_State_Follow;
 

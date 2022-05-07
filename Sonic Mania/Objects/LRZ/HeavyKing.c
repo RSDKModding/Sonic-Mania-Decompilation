@@ -496,7 +496,7 @@ void HeavyKing_StateCutscene_PlayerLookUp(void)
             emerald->active = ACTIVE_NORMAL;
             if (emerald->type == HPZEMERALD_MASTER) {
                 self->masterEmerald = emerald;
-                Camera_SetupLerp(2, 0, emerald->position.x - 0x500000, emerald->position.y - 0x800000, 3);
+                Camera_SetupLerp(CAMERA_LERP_SIN1024_2, 0, emerald->position.x - 0x500000, emerald->position.y - 0x800000, 3);
             }
         }
         self->state = HeavyKing_StateCutscene_EnterKing;
@@ -511,7 +511,7 @@ void HeavyKing_StateCutscene_EnterKing(void)
     if (++self->timer == 180) {
         self->timer          = 0;
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        Camera_SetupLerp(3, 0, camera->position.x, camera->startLerpPos.y, 4);
+        Camera_SetupLerp(CAMERA_LERP_SIN512, 0, camera->position.x, camera->startLerpPos.y, 4);
         self->state = HeavyKing_StateCutscene_ReturnCamToPlayer;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -624,7 +624,7 @@ void HeavyKing_StateCutscene_GetHigherGround(void)
             player1->applyJumpCap = false;
             player1->onGround     = false;
             player1->state        = Player_State_Air;
-            Camera_SetupLerp(3, 0, camera->startLerpPos.x, camera->startLerpPos.y + 0x200000, 4);
+            Camera_SetupLerp(CAMERA_LERP_SIN512, 0, camera->startLerpPos.x, camera->startLerpPos.y + 0x200000, 4);
             break;
 
         default:
@@ -691,7 +691,7 @@ void HeavyKing_StateCutscene_AttackClaw(void)
         player1->jumpHold    = true;
         player1->scrollDelay = 160;
         if (self->masterEmerald)
-            Camera_SetupLerp(2, 0, self->masterEmerald->position.x, self->masterEmerald->position.y + 0x300000, 4);
+            Camera_SetupLerp(CAMERA_LERP_SIN1024_2, 0, self->masterEmerald->position.x, self->masterEmerald->position.y + 0x300000, 4);
     }
     else {
         player1->jumpPress = false;

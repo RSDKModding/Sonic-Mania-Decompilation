@@ -54,8 +54,8 @@ void UIDialog_Draw(void)
         default: break;
     }
 
-    drawPos.x += self->drawPos.x;
-    drawPos.y += self->drawPos.y;
+    drawPos.x += self->dialogPos.x;
+    drawPos.y += self->dialogPos.y;
 
     int32 w     = 0;
     int32 count = self->lineCount + 1;
@@ -258,12 +258,12 @@ void UIDialog_DrawBGShapes(void)
 {
     RSDK_THIS(UIDialog);
 
-    RSDK.DrawRect(((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - (self->size.x >> 1),
-                  ((ScreenInfo->position.y + ScreenInfo->centerY) << 16) - (self->size.y >> 1), self->size.x, self->size.y,
+    RSDK.DrawRect(((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - (self->bgRectSize.x >> 1),
+                  ((ScreenInfo->position.y + ScreenInfo->centerY) << 16) - (self->bgRectSize.y >> 1), self->bgRectSize.x, self->bgRectSize.y,
                   self->useAltColor ? 0x282028 : 0x000000, 0xFF, INK_NONE, false);
 
-    UIWidgets_DrawParallelogram(self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
-                                self->drawPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16), 0xC8, 0x8F, 0x8F, 0x30, 0xA0, 0xF0);
+    UIWidgets_DrawParallelogram(self->dialogPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
+                                self->dialogPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16), 0xC8, 0x8F, 0x8F, 0x30, 0xA0, 0xF0);
 }
 
 void UIDialog_HandleButtonPositions(void)
@@ -273,8 +273,8 @@ void UIDialog_HandleButtonPositions(void)
     int32 offsets[] = { 0, 0, 0x80, 0x70 };
 
     int32 offset = offsets[self->buttonCount] << 16;
-    int32 x      = self->position.x - 0x240000 + self->drawPos.x - ((offset * maxVal(self->buttonCount - 1, 0)) >> 1);
-    int32 y      = self->position.y + 0x2C0000 + self->drawPos.y;
+    int32 x      = self->position.x - 0x240000 + self->dialogPos.x - ((offset * maxVal(self->buttonCount - 1, 0)) >> 1);
+    int32 y      = self->position.y + 0x2C0000 + self->dialogPos.y;
 
     for (int32 i = 0; i < UIDIALOG_OPTION_COUNT; ++i) {
         if (!self->buttons[i])
@@ -382,10 +382,10 @@ void UIDialog_State_Appear(void)
                 self->state                     = UIDialog_State_Idle;
             }
             else {
-                self->size.x = ScreenInfo->width << 16;
-                self->size.y = 0x900000;
+                self->bgRectSize.x = ScreenInfo->width << 16;
+                self->bgRectSize.y = 0x900000;
                 MathHelpers_Lerp2Sin1024(&pos, maxVal(((self->timer - 16) << 8) / 10, 0), -0x400000 - (ScreenInfo->width << 16), 0, 0, 0);
-                self->drawPos = pos;
+                self->dialogPos = pos;
 
                 if (self->timer - 16 == 1 && self->playEventSfx)
                     RSDK.PlaySfx(UIWidgets->sfxEvent, false, 255);
@@ -394,19 +394,19 @@ void UIDialog_State_Appear(void)
             }
         }
         else {
-            self->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
-            self->drawPos.y = 0;
+            self->dialogPos.x = -0x400000 - (ScreenInfo->width << 16);
+            self->dialogPos.y = 0;
             MathHelpers_Lerp(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x10000, ScreenInfo->width << 16, 0x900000);
-            self->size = pos;
+            self->bgRectSize = pos;
 
             self->timer++;
         }
     }
     else {
-        self->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
-        self->drawPos.y = 0;
+        self->dialogPos.x = -0x400000 - (ScreenInfo->width << 16);
+        self->dialogPos.y = 0;
         MathHelpers_Lerp2Sin1024(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0x10000, ScreenInfo->width << 16, 0x10000);
-        self->size = pos;
+        self->bgRectSize = pos;
 
         ++self->timer;
     }
@@ -416,35 +416,33 @@ void UIDialog_State_Idle(void)
 {
     RSDK_THIS(UIDialog);
 
-    self->size.x    = ScreenInfo->width << 16;
-    self->size.y    = 0x900000;
-    self->drawPos.x = 0;
-    self->drawPos.y = 0;
+    self->bgRectSize.x = ScreenInfo->width << 16;
+    self->bgRectSize.y = 0x900000;
+    self->dialogPos.x  = 0;
+    self->dialogPos.y  = 0;
 }
 
 void UIDialog_State_Close(void)
 {
     RSDK_THIS(UIDialog);
 
-    Vector2 pos;
     if (self->timer >= 8) {
         if (self->timer >= 16) {
             UIDialog_Close();
         }
         else {
-            self->drawPos.x = (ScreenInfo->width + 64) << 16;
-            self->drawPos.y = 0;
-            MathHelpers_Lerp2Sin1024(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x900000, ScreenInfo->width << 16, 0);
-            self->size = pos;
+            self->dialogPos.x = (ScreenInfo->width + 64) << 16;
+            self->dialogPos.y = 0;
+            MathHelpers_Lerp2Sin1024(&self->bgRectSize, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x900000,
+                                     ScreenInfo->width << 16, 0);
 
             ++self->timer;
         }
     }
     else {
-        self->size.x = ScreenInfo->width << 16;
-        self->size.y = 0x900000;
-        MathHelpers_LerpSin1024(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0, (ScreenInfo->width + 64) << 16, 0);
-        self->drawPos = pos;
+        self->bgRectSize.x = ScreenInfo->width << 16;
+        self->bgRectSize.y = 0x900000;
+        MathHelpers_LerpSin1024(&self->dialogPos, maxVal((self->timer << 8) / 8, 0), 0, 0, (ScreenInfo->width + 64) << 16, 0);
 
         ++self->timer;
     }

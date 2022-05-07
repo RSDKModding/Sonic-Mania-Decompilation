@@ -211,7 +211,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         }
 
         host->values[0] = true;
-        Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, camera->position.x, camera->position.y, 0);
         return true;
     }
     else {

@@ -430,21 +430,21 @@ void Camera_State_HandleLerp(void)
 
     switch (self->lerpType) {
         default: break;
-        case 0:
+        case CAMERA_LERP_NORMAL:
             MathHelpers_Lerp(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x, self->endLerpPos.y);
             break;
 
-        case 1:
+        case CAMERA_LERP_SIN1024:
             MathHelpers_LerpSin1024(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
                                     self->endLerpPos.y);
             break;
 
-        case 2:
+        case CAMERA_LERP_SIN1024_2:
             MathHelpers_Lerp2Sin1024(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
                                      self->endLerpPos.y);
             break;
 
-        case 3:
+        case CAMERA_LERP_SIN512:
             MathHelpers_LerpSin512(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
                                    self->endLerpPos.y);
             break;

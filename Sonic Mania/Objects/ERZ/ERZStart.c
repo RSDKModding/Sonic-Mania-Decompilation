@@ -304,7 +304,7 @@ bool32 ERZStart_Cutscene_SetupEggmanReveal(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (host->timer == 30)
-        Camera_SetupLerp(0, 0, camera->position.x - (ScreenInfo->width << 16), camera->position.y, 3);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, camera->position.x - (ScreenInfo->width << 16), camera->position.y, 3);
 
     if (host->timer == 45)
         RSDK.PlaySfx(ERZStart->sfxFlyIn, false, 255);
@@ -525,7 +525,7 @@ bool32 ERZStart_Cutscene_ReturnCamToSonic(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (host->timer == 30)
-        Camera_SetupLerp(0, 0, ScreenInfo->centerX << 16, camera->position.y, 2);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, ScreenInfo->centerX << 16, camera->position.y, 2);
 
     if (!host->values[0]) {
         if (camera->position.x == ScreenInfo->centerX << 16) {

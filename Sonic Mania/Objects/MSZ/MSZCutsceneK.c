@@ -190,7 +190,7 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
         host->storedTimer      = host->timer;
         MSZCutsceneK->pos3     = camera->position;
         MSZCutsceneK->pos3.y += 0x1E00000;
-        Camera_SetupLerp(0, 0, MSZCutsceneK->pos3.x, MSZCutsceneK->pos3.y, 3);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, MSZCutsceneK->pos3.x, MSZCutsceneK->pos3.y, 3);
     }
 
     player2->position.x = tornado->position.x + MSZCutsceneK->tornadoDistanceP2.x;

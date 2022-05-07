@@ -230,7 +230,7 @@ bool32 GHZ2Outro_Cutscene_SpyOnEggman(EntityCutsceneSeq *host)
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.0125);
 
     if (host->timer == 120)
-        Camera_SetupLerp(3, 0, self->position.x, self->position.y, 4);
+        Camera_SetupLerp(CAMERA_LERP_SIN512, 0, self->position.x, self->position.y, 4);
 
     if (host->timer >= 208) {
         foreach_active(Player, player)
@@ -285,7 +285,7 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
             if (mystic)
                 mystic->state = CutsceneHBH_State_MysticExit;
 
-            Camera_SetupLerp(0, 0, self->position.x, self->position.y - 0x400000, 1);
+            Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, self->position.x, self->position.y - 0x400000, 1);
             RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, false, 0xFF);
             break;
         }

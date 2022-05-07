@@ -137,7 +137,7 @@ bool32 MMZ2Outro_Cutscene_CameraMoveToWindow(EntityCutsceneSeq *host)
     self->position.x                                = (Zone->cameraBoundsR[0] - ScreenInfo->centerX) << 16;
     self->position.y                                = (Zone->cameraBoundsB[0] - ScreenInfo->centerY) << 16;
     RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    Camera_SetupLerp(3, 0, self->position.x, self->position.y, 2);
+    Camera_SetupLerp(CAMERA_LERP_SIN512, 0, self->position.x, self->position.y, 2);
     return true;
 }
 
@@ -220,7 +220,7 @@ bool32 MMZ2Outro_Cutscene_ViewMonarch(EntityCutsceneSeq *host)
 
     if (++self->timer == 120) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        Camera_SetupLerp(3, 0, camera->position.x, camera->position.y - 0x1000000, 1);
+        Camera_SetupLerp(CAMERA_LERP_SIN512, 0, camera->position.x, camera->position.y - 0x1000000, 1);
     }
 
     if (self->timer == 600) {

@@ -573,7 +573,7 @@ bool32 MSZCutsceneST_Cutscene_PanCameraToPlayer(EntityCutsceneSeq *host)
     if (!host->timer) {
         TornadoPath->camera = NULL;
         camera->boundsB        = 0x5A00000;
-        Camera_SetupLerp(0, 0, player1->position.x + 0x340000, player1->position.y - 0x140000, 2);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, player1->position.x + 0x340000, player1->position.y - 0x140000, 2);
         MSZSetup_ReloadBGParallax_Multiply(0x400);
     }
 

@@ -64,7 +64,7 @@ void MathHelpers_LerpSin1024(Vector2 *pos, int32 percent, int32 startX, int32 st
         pos->y = endY;
     }
     else {
-        int32 lerpPercent = (RSDK.Sin1024(percent + 0x300) >> 2) + 0x200;
+        int32 lerpPercent = (RSDK.Sin1024(percent + 0x300) >> 2) + 0x100;
         pos->x            = startX + lerpPercent * ((endX - startX) >> 8);
         pos->y            = startY + lerpPercent * ((endY - startY) >> 8);
     }

@@ -139,8 +139,9 @@ void CPZBoss_State_SetupArena(void)
         SceneInfo->timeEnabled = false;
         Music_SetMusicTrack("BossPuyo.ogg", TRACK_EGGMAN2, 846720);
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
+
         Entity *entPtr = RSDK.GetEntityByID(SceneInfo->entitySlot + 1);
-        Camera_SetupLerp(2, 0, entPtr->position.x, entPtr->position.y, 8);
+        Camera_SetupLerp(CAMERA_LERP_SIN1024_2, 0, entPtr->position.x, entPtr->position.y, 8);
 
         foreach_active(HUD, hud)
         {

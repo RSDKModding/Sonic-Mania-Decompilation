@@ -463,7 +463,7 @@ bool32 AIZSetup_CutsceneSonic_EnterClaw(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         player1->camera = NULL;
-        Camera_SetupLerp(0, 0, AIZSetup->platform->position.x - 0x400000, camera->position.y, 3);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, AIZSetup->platform->position.x - 0x400000, camera->position.y, 3);
         player1->stateInput = StateMachine_None;
         player1->state      = Player_State_Ground;
         player1->up         = true;
@@ -767,7 +767,7 @@ bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         player1->camera = NULL;
-        Camera_SetupLerp(0, 0, player1->position.x - 0x600000, camera->position.y, 3);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, player1->position.x - 0x600000, camera->position.y, 3);
     }
     else if (camera->position.x <= camera->endLerpPos.x) {
         if (host->storedTimer) {

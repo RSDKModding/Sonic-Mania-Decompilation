@@ -29,8 +29,8 @@ struct EntityUIDialog {
     int32 closeDelay;
     TextInfo textInfo;
     int32 buttonCount;
-    Vector2 size;
-    Vector2 drawPos;
+    Vector2 bgRectSize;
+    Vector2 dialogPos;
     EntityUIControl *parent;
     Entity *entityPtr;
     uint8 buttonFrames[UIDIALOG_OPTION_COUNT];

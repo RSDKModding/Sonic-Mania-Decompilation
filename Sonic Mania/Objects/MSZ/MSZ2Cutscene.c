@@ -201,7 +201,7 @@ bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
     if (host->timer == 30) {
         host->storedValue = camera->position.x + 0x1000000;
         host->storedTimer = camera->position.y - 0x4000000;
-        Camera_SetupLerp(0, 0, host->storedValue, host->storedTimer, 2);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, host->storedValue, host->storedTimer, 2);
     }
 
     if (host->timer > 30 && camera->position.x == host->storedValue && camera->position.y == host->storedTimer) {
