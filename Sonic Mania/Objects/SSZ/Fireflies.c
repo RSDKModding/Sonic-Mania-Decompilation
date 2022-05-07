@@ -45,7 +45,7 @@ void Fireflies_Create(void *data)
         }
         else {
             self->state       = Fireflies_State_Spawner;
-            self->screenCount = RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT);
+            self->screenCount = RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT);
         }
     }
 }

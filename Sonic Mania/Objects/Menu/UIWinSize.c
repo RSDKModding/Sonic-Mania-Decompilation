@@ -104,7 +104,7 @@ void UIWinSize_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x400000;
 
-        self->selection  = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT) / SCREEN_YSIZE;
+        self->selection  = RSDK.GetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT) / SCREEN_YSIZE;
         self->bgEdgeSize = self->size.y >> 16;
         self->size.y     = abs(self->size.y);
 
@@ -166,11 +166,11 @@ void UIWinSize_ApplySettings(void)
 
     UIWinSize_SetupText(self);
 
-    RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, self->selection * ScreenInfo->width);
-    RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, self->selection * ScreenInfo->height);
+    RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, self->selection * ScreenInfo->width);
+    RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, self->selection * ScreenInfo->height);
 
 #if RETRO_USE_PLUS
-    RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
+    RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
 #else
     RSDK.UpdateWindow();
 #endif

@@ -835,15 +835,15 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
         if (image.width == 1024 && image.height == 512)
             RenderDevice::SetupImageTexture(image.width, image.height, image.pixels);
 
-        engine.displayTime             = displayLength;
-        RenderDevice::lastShaderID     = RSDK::gameSettings.shaderID;
-        engine.prevEngineMode          = sceneInfo.state;
-        RSDK::gameSettings.dimMax      = 0.0;
-        RSDK::gameSettings.shaderID    = SHADER_RGB_IMAGE;
-        RSDK::gameSettings.screenCount = 0;
-        engine.skipCallback            = skipCallback;
-        sceneInfo.state                = ENGINESTATE_SHOWPNG;
-        engine.imageDelta              = speed / 60.0;
+        engine.displayTime              = displayLength;
+        RenderDevice::lastShaderID      = RSDK::videoSettings.shaderID;
+        engine.prevEngineMode           = sceneInfo.state;
+        RSDK::videoSettings.dimMax      = 0.0;
+        RSDK::videoSettings.shaderID    = SHADER_RGB_IMAGE;
+        RSDK::videoSettings.screenCount = 0;
+        engine.skipCallback             = skipCallback;
+        sceneInfo.state                 = ENGINESTATE_SHOWPNG;
+        engine.imageDelta               = speed / 60.0;
 
         image.palette = NULL;
         image.pixels  = NULL;

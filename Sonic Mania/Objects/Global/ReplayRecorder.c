@@ -807,7 +807,7 @@ void ReplayRecorder_Play(EntityPlayer *player)
         recorder->state     = ReplayRecorder_State_SetupPlayback;
         recorder->stateLate = StateMachine_None;
         // Set the dim timer to dim after 15 mins instead of the usual 5
-        RSDK.SetSettingsValue(SETTINGS_DIMTIMER, 15 * 60 * 60);
+        RSDK.SetVideoSetting(VIDEOSETTING_DIMTIMER, 15 * 60 * 60);
     }
     else {
         LogHelpers_Print("No replay to play");

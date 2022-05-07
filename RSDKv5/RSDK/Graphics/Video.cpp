@@ -83,17 +83,17 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         /*engine.videoUnknown = 0.0;
         if (dword_66B80C == 1)
             engine.videoUnknown = a2;*/
-        RenderDevice::lastShaderID     = RSDK::gameSettings.shaderID;
-        RSDK::gameSettings.screenCount  = 0;
+        RenderDevice::lastShaderID     = RSDK::videoSettings.shaderID;
+        RSDK::videoSettings.screenCount = 0;
         engine.prevEngineMode = sceneInfo.state;
         // if (yuv_mode)
-        //    gameSettings.shaderID = (yuv_mode != 2) + SHADER_YUV_422;
+        //    videoSettings.shaderID = (yuv_mode != 2) + SHADER_YUV_422;
         // else
-        //    gameSettings.shaderID = SHADER_YUV_420; // YUV-420
+        //    videoSettings.shaderID = SHADER_YUV_420; // YUV-420
         engine.skipCallback = NULL;
         ProcessVideo();
         engine.skipCallback = skipCallback;
-        RSDK::settingsChanged = false;
+        RSDK::changedVideoSettings = false;
         sceneInfo.state     = ENGINESTATE_VIDEOPLAYBACK;
     }
 }
@@ -166,9 +166,9 @@ void StopVideoPlayback()
         CloseVideoBuffer();
         videoPlaying = false;
 
-        RSDK::gameSettings.shaderID = RenderDevice::lastShaderID;
+        RSDK::videoSettings.shaderID    = RenderDevice::lastShaderID;
         sceneInfo.state    = engine.prevEngineMode;
-        RSDK::gameSettings.screenCount = 1;
+        RSDK::videoSettings.screenCount = 1;
     }
 }
 

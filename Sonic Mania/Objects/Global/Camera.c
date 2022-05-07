@@ -92,7 +92,7 @@ void Camera_StageLoad(void)
     // I don't think this object is in the final credits right...?
     // Likely a holdover from the earlier credits revision
     if (!RSDK.CheckStageFolder("Credits")) {
-        for (int32 i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i)
+        for (int32 i = 0; i < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++i)
             RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->objectID, intToVoid(i));
 
         Camera->centerBounds.x = 0x100000;

@@ -708,9 +708,9 @@ void DevMenu_Options()
     if (controller[CONT_P1].keyStart.press || confirm) {
         switch (devMenu.option) {
             case 0: {
-                devMenu.windowed = !RSDK::gameSettings.windowed;
-                devMenu.winScale = (RSDK::gameSettings.windowWidth / RSDK::gameSettings.pixWidth) - 1;
-                int aspect       = (int)((RSDK::gameSettings.windowWidth / (float)RSDK::gameSettings.windowHeight) * (float)SCREEN_YSIZE) >> 3;
+                devMenu.windowed = !RSDK::videoSettings.windowed;
+                devMenu.winScale = (RSDK::videoSettings.windowWidth / RSDK::videoSettings.pixWidth) - 1;
+                int aspect       = (int)((RSDK::videoSettings.windowWidth / (float)RSDK::videoSettings.windowHeight) * (float)SCREEN_YSIZE) >> 3;
                 switch (aspect) {
                     case 40: devMenu.winAspect = 0; break;
                     case 45: devMenu.winAspect = 1; break;
@@ -806,7 +806,7 @@ void DevMenu_VideoOptions()
     DrawDevText(fsOpt, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
     dy += 8;
     DrawDevText("Screen Shader:", currentScreen->center.x - 96, dy, ALIGN_LEFT, optionColors[3]);
-    DrawDevText(shaderList[RSDK::gameSettings.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText(shaderList[RSDK::videoSettings.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
     dy += 16;
     DrawDevText("Confirm", currentScreen->center.x, dy, ALIGN_CENTER, optionColors[4]);
     DrawDevText("Cancel", currentScreen->center.x, dy + 8, ALIGN_CENTER, optionColors[5]);
@@ -857,22 +857,22 @@ void DevMenu_VideoOptions()
         case 0: // scale
             if (controller[CONT_P1].keyLeft.press) {
                 devMenu.winScale           = (devMenu.winScale - 1) & 3;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
             else if (controller[CONT_P1].keyRight.press) {
                 devMenu.winScale           = (devMenu.winScale + 1) & 3;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
             break;
 
         case 1: // aspect
             if (controller[CONT_P1].keyLeft.press) {
                 devMenu.winAspect--;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
             else if (controller[CONT_P1].keyRight.press) {
                 devMenu.winAspect++;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
 
             if (devMenu.winAspect > 4)
@@ -884,24 +884,24 @@ void DevMenu_VideoOptions()
         case 2: // fullscreen
             if (controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
                 devMenu.windowed ^= 1;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
             break;
 
         case 3: // screenShader
             if (controller[CONT_P1].keyLeft.press) {
-                RSDK::gameSettings.shaderID--;
-                RSDK::settingsChanged = true;
+                RSDK::videoSettings.shaderID--;
+                RSDK::changedVideoSettings = true;
             }
             else if (controller[CONT_P1].keyRight.press) {
-                RSDK::gameSettings.shaderID++;
-                RSDK::settingsChanged = true;
+                RSDK::videoSettings.shaderID++;
+                RSDK::changedVideoSettings = true;
             }
 
-            if (RSDK::gameSettings.shaderID >= userShaderCount)
-                RSDK::gameSettings.shaderID = SHADER_NONE;
-            else if (RSDK::gameSettings.shaderID < SHADER_NONE)
-                RSDK::gameSettings.shaderID = userShaderCount - 1;
+            if (RSDK::videoSettings.shaderID >= userShaderCount)
+                RSDK::videoSettings.shaderID = SHADER_NONE;
+            else if (RSDK::videoSettings.shaderID < SHADER_NONE)
+                RSDK::videoSettings.shaderID = userShaderCount - 1;
             break;
 
         case 4: // confirm
@@ -916,25 +916,25 @@ void DevMenu_VideoOptions()
 
             if (controller[CONT_P1].keyStart.press || confirm) {
                 // do confirm
-                RSDK::gameSettings.windowed = !devMenu.windowed;
+                RSDK::videoSettings.windowed = !devMenu.windowed;
                 shaderList[0].linear = !devMenu.windowed;
                 if (!devMenu.winScale)
-                    RSDK::gameSettings.shaderID = SHADER_NONE;
+                    RSDK::videoSettings.shaderID = SHADER_NONE;
 
                 int width = 0;
                 switch (devMenu.winAspect) {
-                    case 0: width = 3 - (float)((float)RSDK::gameSettings.pixHeight * -1.3333334); break;
-                    case 1: width = 3 - (float)((float)RSDK::gameSettings.pixHeight * -1.5); break;
-                    case 2: width = 3 - (float)((float)RSDK::gameSettings.pixHeight * -1.6); break;
-                    case 3: width = 3 - (float)((float)RSDK::gameSettings.pixHeight * -1.6666666); break;
-                    case 4: width = 3 - (float)((float)RSDK::gameSettings.pixHeight * -1.7777778); break;
-                    default: width = RSDK::gameSettings.windowWidth; break;
+                    case 0: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.3333334); break;
+                    case 1: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.5); break;
+                    case 2: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.6); break;
+                    case 3: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.6666666); break;
+                    case 4: width = 3 - (float)((float)RSDK::videoSettings.pixHeight * -1.7777778); break;
+                    default: width = RSDK::videoSettings.windowWidth; break;
                 }
                 width &= 0x7FF8;
                 if (width > 424)
                     width = 424;
-                RSDK::gameSettings.windowWidth  = width * (devMenu.winScale + 1);
-                RSDK::gameSettings.windowHeight = RSDK::gameSettings.pixHeight * (devMenu.winScale + 1);
+                RSDK::videoSettings.windowWidth  = width * (devMenu.winScale + 1);
+                RSDK::videoSettings.windowHeight = RSDK::videoSettings.pixHeight * (devMenu.winScale + 1);
                 UpdateGameWindow();
 
                 devMenu.state  = DevMenu_Options;
@@ -1048,7 +1048,7 @@ void DevMenu_AudioOptions()
         case 0:
             if (controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
                 engine.streamsEnabled ^= 1;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
             break;
 
@@ -1057,14 +1057,14 @@ void DevMenu_AudioOptions()
                 engine.streamVolume -= 0.015625;
                 if (engine.streamVolume < 0.0)
                     engine.streamVolume = 0.0;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
             else {
                 if (controller[CONT_P1].keyRight.down) {
                     engine.streamVolume += 0.015625;
                     if (engine.streamVolume > 1.0)
                         engine.streamVolume = 1.0;
-                    RSDK::settingsChanged = true;
+                    RSDK::changedVideoSettings = true;
                 }
             }
             break;
@@ -1074,14 +1074,14 @@ void DevMenu_AudioOptions()
                 engine.soundFXVolume -= 0.015625;
                 if (engine.soundFXVolume < 0.0)
                     engine.soundFXVolume = 0.0;
-                RSDK::settingsChanged = true;
+                RSDK::changedVideoSettings = true;
             }
             else {
                 if (controller[CONT_P1].keyRight.down) {
                     engine.soundFXVolume += 0.015625;
                     if (engine.soundFXVolume > 1.0)
                         engine.soundFXVolume = 1.0;
-                    RSDK::settingsChanged = true;
+                    RSDK::changedVideoSettings = true;
                 }
             }
             break;
@@ -1194,7 +1194,7 @@ void DevMenu_InputOptions()
         else {
             devMenu.state              = DevMenu_MappingsOptions;
             devMenu.scroll             = 0;
-            RSDK::settingsChanged = true;
+            RSDK::changedVideoSettings = true;
         }
     }
 

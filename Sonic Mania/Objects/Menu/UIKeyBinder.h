@@ -79,7 +79,7 @@ void UIKeyBinder_Serialize(void);
 // Extra Entity Functions
 int32 UIKeyBinder_GetButtonListID(void);
 int32 UIKeyBinder_GetMappings(int32 input, int32 button);
-void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings);
+void UIKeyBinder_SetMappings(int32 input, int32 button, int32 keyMap);
 int32 UIKeyBinder_GetKeyNameFrameID(int32 id);
 void UIKeyBinder_DrawSprites(void);
 

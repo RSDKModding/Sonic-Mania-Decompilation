@@ -150,15 +150,15 @@ void UIResPicker_ApplySettings(void)
 
     UIResPicker_GetDisplayInfo(self);
 
-    RSDK.SetSettingsValue(SETTINGS_FSWIDTH, self->displayWidth);
-    RSDK.SetSettingsValue(SETTINGS_FSHEIGHT, self->displayHeight);
+    RSDK.SetVideoSetting(VIDEOSETTING_FSWIDTH, self->displayWidth);
+    RSDK.SetVideoSetting(VIDEOSETTING_FSHEIGHT, self->displayHeight);
     if (!self->displayRefreshRate)
-        RSDK.SetSettingsValue(SETTINGS_REFRESHRATE, 60);
+        RSDK.SetVideoSetting(VIDEOSETTING_REFRESHRATE, 60);
     else
-        RSDK.SetSettingsValue(SETTINGS_REFRESHRATE, self->displayRefreshRate);
+        RSDK.SetVideoSetting(VIDEOSETTING_REFRESHRATE, self->displayRefreshRate);
 
 #if RETRO_USE_PLUS
-    RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
+    RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
 #else
     RSDK.UpdateWindow();
 #endif

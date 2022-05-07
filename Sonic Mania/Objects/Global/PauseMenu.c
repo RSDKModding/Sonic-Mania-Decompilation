@@ -112,7 +112,7 @@ void PauseMenu_Draw(void)
     if (self->paused)
         RSDK.FillScreen(0x000000, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
 
-    if (RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT) <= 1) {
+    if (RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT) <= 1) {
         StateMachine_Run(self->stateDraw);
     }
 }
@@ -650,7 +650,7 @@ void PauseMenu_State_StartPauseCompetition(void)
             int32 t      = self->timer - 8;
             self->paused = true;
             if (self->timer == 8) {
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+                RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
                 PauseMenu_FocusCamera();
             }
             ++self->timer;
@@ -781,7 +781,7 @@ void PauseMenu_State_ForcedPauseCompetition(void)
             self->paused = true;
 
             if (self->timer == 8) {
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+                RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
                 PauseMenu_FocusCamera();
             }
 
@@ -852,7 +852,7 @@ void PauseMenu_State_ResumeCompetition(void)
 
             if (self->timer == 8) {
                 EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
+                RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, session->playerCount);
                 PauseMenu_UpdateCameras();
             }
 
@@ -889,7 +889,7 @@ void PauseMenu_State_ForcedResumeCompetition(void)
 
             if (self->timer == 8) {
                 EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
+                RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, session->playerCount);
                 PauseMenu_UpdateCameras();
             }
 

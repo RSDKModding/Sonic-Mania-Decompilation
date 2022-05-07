@@ -16,13 +16,17 @@ void PBL_Flipper_Update(void)
 
     if (self->direction) {
         self->buttonPress =
-            TriggerInfoL[1].key1.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyC.press || ControllerInfo[1].keyX.press;
-        self->buttonDown = TriggerInfoL[1].key1.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyC.down || ControllerInfo[1].keyX.down;
+            TriggerInfoL[1].keyBumper.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyC.press || ControllerInfo[1].keyX.press;
+
+        self->buttonDown =
+            TriggerInfoL[1].keyBumper.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyC.down || ControllerInfo[1].keyX.down;
     }
     else {
         self->buttonPress =
-            TriggerInfoR[1].key1.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyB.press || ControllerInfo[1].keyC.press;
-        self->buttonDown = TriggerInfoR[1].key1.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyB.down || ControllerInfo[1].keyC.down;
+            TriggerInfoR[1].keyBumper.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyB.press || ControllerInfo[1].keyC.press;
+
+        self->buttonDown =
+            TriggerInfoR[1].keyBumper.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyB.down || ControllerInfo[1].keyC.down;
     }
 
     StateMachine_Run(self->state);

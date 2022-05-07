@@ -52,7 +52,7 @@ void E3MenuSetup_Create(void *data)
     self->drawOrder = 14;
 }
 
-void E3MenuSetup_StageLoad(void) { RSDK.SetSettingsValue(SETTINGS_SHADERID, 1); }
+void E3MenuSetup_StageLoad(void) { RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, 1); }
 
 void E3MenuSetup_SetupUI(void)
 {

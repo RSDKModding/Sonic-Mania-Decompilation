@@ -36,7 +36,7 @@ void UIKeyBinder_Update(void)
     if (self->lasyKeyMap == keyMap) {
         keyMapChanged = false;
     }
-    else if (keyMap == -1) {
+    else if (keyMap == KEYMAP_AUTO_MAPPING) {
         RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, 0);
         self->lasyKeyMap = -1;
         keyMapChanged    = false;
@@ -68,7 +68,7 @@ void UIKeyBinder_Update(void)
                 if (str != -1)
                     Localization_GetString(&info, str);
 
-                UIKeyBinder_SetMappings(self->type, input, 0);
+                UIKeyBinder_SetMappings(self->type, input, KEYMAP_NO_MAPPING);
                 self->lasyKeyMap = 0;
                 UIDialog_CreateDialogYesNo(&info, UIKeyBinder_MoveKeyToActionCB_Yes, UIKeyBinder_MoveKeyToActionCB_No, true, true);
                 keyMapChanged = false;
@@ -92,7 +92,7 @@ void UIKeyBinder_Update(void)
                 UIKeyBinder->activeBinder = NULL;
                 parent->childHasFocus     = false;
 
-                RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
+                RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
                 RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
             }
         }
@@ -101,7 +101,7 @@ void UIKeyBinder_Update(void)
 
             int32 frame = UIButtonPrompt_MappingsToFrame(self->lasyKeyMap);
             RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, frame);
-            UIKeyBinder_SetMappings(input, self->type, -1);
+            UIKeyBinder_SetMappings(input, self->type, KEYMAP_AUTO_MAPPING);
 
             RSDK.PlaySfx(UIKeyBinder->sfxFail, false, 255);
         }
@@ -204,18 +204,18 @@ int32 UIKeyBinder_GetMappings(int32 input, int32 button)
     return 0;
 }
 
-void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings)
+void UIKeyBinder_SetMappings(int32 input, int32 button, int32 keyMap)
 {
     switch (button) {
-        case UIKEYBINDER_UP: ControllerInfo[input].keyUp.keyMap = mappings; break;
-        case UIKEYBINDER_DOWN: ControllerInfo[input].keyDown.keyMap = mappings; break;
-        case UIKEYBINDER_LEFT: ControllerInfo[input].keyLeft.keyMap = mappings; break;
-        case UIKEYBINDER_RIGHT: ControllerInfo[input].keyRight.keyMap = mappings; break;
-        case UIKEYBINDER_A: ControllerInfo[input].keyA.keyMap = mappings; break;
-        case UIKEYBINDER_B: ControllerInfo[input].keyB.keyMap = mappings; break;
-        case UIKEYBINDER_X: ControllerInfo[input].keyX.keyMap = mappings; break;
-        case UIKEYBINDER_Y: ControllerInfo[input].keyY.keyMap = mappings; break;
-        case UIKEYBINDER_START: ControllerInfo[input].keyStart.keyMap = mappings; break;
+        case UIKEYBINDER_UP: ControllerInfo[input].keyUp.keyMap = keyMap; break;
+        case UIKEYBINDER_DOWN: ControllerInfo[input].keyDown.keyMap = keyMap; break;
+        case UIKEYBINDER_LEFT: ControllerInfo[input].keyLeft.keyMap = keyMap; break;
+        case UIKEYBINDER_RIGHT: ControllerInfo[input].keyRight.keyMap = keyMap; break;
+        case UIKEYBINDER_A: ControllerInfo[input].keyA.keyMap = keyMap; break;
+        case UIKEYBINDER_B: ControllerInfo[input].keyB.keyMap = keyMap; break;
+        case UIKEYBINDER_X: ControllerInfo[input].keyX.keyMap = keyMap; break;
+        case UIKEYBINDER_Y: ControllerInfo[input].keyY.keyMap = keyMap; break;
+        case UIKEYBINDER_START: ControllerInfo[input].keyStart.keyMap = keyMap; break;
         default: break;
     }
 }
@@ -318,7 +318,7 @@ void UIKeyBinder_SelectedCB(void)
 
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 
-        UIKeyBinder_SetMappings(self->inputID + 1, self->type, -1);
+        UIKeyBinder_SetMappings(self->inputID + 1, self->type, KEYMAP_AUTO_MAPPING);
     }
 }
 
@@ -395,7 +395,7 @@ void UIKeyBinder_MoveKeyToActionCB_No(void)
     EntityUIKeyBinder *binder = UIKeyBinder->activeBinder;
 
     if (binder->state == UIKeyBinder_State_Selected) {
-        UIKeyBinder_SetMappings(binder->inputID + 1, binder->type, -1);
+        UIKeyBinder_SetMappings(binder->inputID + 1, binder->type, KEYMAP_AUTO_MAPPING);
         UIKeyBinder->activeInputID  = -1;
         UIKeyBinder->activeButtonID = -1;
     }
@@ -406,11 +406,11 @@ void UIKeyBinder_MoveKeyToActionCB_Yes(void)
     EntityUIKeyBinder *binder = UIKeyBinder->activeBinder;
 
     if (binder->state == UIKeyBinder_State_Selected) {
-        int32 mappings = UIKeyBinder_GetMappings(UIKeyBinder->activeInputID, UIKeyBinder->activeButtonID);
+        int32 keyMap = UIKeyBinder_GetMappings(UIKeyBinder->activeInputID, UIKeyBinder->activeButtonID);
 
         // TODO: what is v3??
         // UIKeyBinder_SetMappings(UIKeyBinder->activeInputID, v3, 0);
-        UIKeyBinder_SetMappings(binder->inputID + 1, binder->type, mappings);
+        UIKeyBinder_SetMappings(binder->inputID + 1, binder->type, keyMap);
 
         EntityUIControl *parent   = (EntityUIControl *)binder->parent;
         parent->selectionDisabled = false;
@@ -421,7 +421,7 @@ void UIKeyBinder_MoveKeyToActionCB_Yes(void)
         binder->state             = UIKeyBinder_State_HandleButtonEnter;
         UIKeyBinder->activeBinder = NULL;
 
-        RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
+        RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, false);
         UIKeyBinder->activeInputID  = -1;
         UIKeyBinder->activeButtonID = -1;
     }

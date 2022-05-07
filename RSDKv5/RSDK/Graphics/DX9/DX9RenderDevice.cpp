@@ -57,26 +57,26 @@ bool RenderDevice::Init()
     ShowCursor(false);
 
     tagRECT winRect;
-    if (RSDK::gameSettings.windowed) {
-        winRect.left   = (GetSystemMetrics(0) - RSDK::gameSettings.windowWidth) / 2;
-        winRect.right  = RSDK::gameSettings.windowWidth + winRect.left;
-        winRect.top    = (GetSystemMetrics(1) - RSDK::gameSettings.windowHeight) / 2;
-        winRect.bottom = RSDK::gameSettings.windowHeight + winRect.top;
+    if (RSDK::videoSettings.windowed) {
+        winRect.left   = (GetSystemMetrics(0) - RSDK::videoSettings.windowWidth) / 2;
+        winRect.right  = RSDK::videoSettings.windowWidth + winRect.left;
+        winRect.top    = (GetSystemMetrics(1) - RSDK::videoSettings.windowHeight) / 2;
+        winRect.bottom = RSDK::videoSettings.windowHeight + winRect.top;
     }
-    else if (RSDK::gameSettings.fsWidth <= 0 || RSDK::gameSettings.fsHeight <= 0) {
+    else if (RSDK::videoSettings.fsWidth <= 0 || RSDK::videoSettings.fsHeight <= 0) {
         winRect.left   = 0;
         winRect.right  = GetSystemMetrics(0);
         winRect.top    = 0;
         winRect.bottom = GetSystemMetrics(1);
     }
     else {
-        winRect.left   = (GetSystemMetrics(0) - RSDK::gameSettings.fsWidth) / 2;
-        winRect.right  = RSDK::gameSettings.fsWidth + winRect.left;
-        winRect.top    = (GetSystemMetrics(1) - RSDK::gameSettings.fsHeight) / 2;
-        winRect.bottom = RSDK::gameSettings.fsHeight + winRect.top;
+        winRect.left   = (GetSystemMetrics(0) - RSDK::videoSettings.fsWidth) / 2;
+        winRect.right  = RSDK::videoSettings.fsWidth + winRect.left;
+        winRect.top    = (GetSystemMetrics(1) - RSDK::videoSettings.fsHeight) / 2;
+        winRect.bottom = RSDK::videoSettings.fsHeight + winRect.top;
     }
 
-    if (RSDK::gameSettings.bordered && RSDK::gameSettings.windowed) {
+    if (RSDK::videoSettings.bordered && RSDK::videoSettings.windowed) {
         AdjustWindowRect(&winRect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, 0);
         windowHandle = CreateWindowEx(0, gameTitle, gameTitle, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, winRect.left, winRect.top,
                                       winRect.right - winRect.left, winRect.bottom - winRect.top, 0, 0, hInstance, 0);
@@ -87,7 +87,7 @@ bool RenderDevice::Init()
                                       winRect.bottom - winRect.top, 0, 0, hInstance, 0);
     }
 
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, RSDK::gameSettings.windowed);
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, RSDK::videoSettings.windowed);
 
     if (!windowHandle)
         return false;
@@ -107,7 +107,7 @@ void RenderDevice::CopyFrameBuffer()
 {
     dx9Device->SetTexture(0, NULL);
 
-    for (int s = 0; s < RSDK::gameSettings.screenCount; ++s) {
+    for (int s = 0; s < RSDK::videoSettings.screenCount; ++s) {
         D3DLOCKED_RECT rect;
 
         if (screenTextures[s]->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
@@ -151,15 +151,15 @@ void RenderDevice::CopyFrameBuffer()
 
 void RenderDevice::FlipScreen()
 {
-    if (RSDK::gameSettings.dimTimer < RSDK::gameSettings.dimLimit) {
-        if (RSDK::gameSettings.dimPercent < 1.0) {
-            RSDK::gameSettings.dimPercent += 0.05;
-            if (RSDK::gameSettings.dimPercent > 1.0)
-                RSDK::gameSettings.dimPercent = 1.0;
+    if (RSDK::videoSettings.dimTimer < RSDK::videoSettings.dimLimit) {
+        if (RSDK::videoSettings.dimPercent < 1.0) {
+            RSDK::videoSettings.dimPercent += 0.05;
+            if (RSDK::videoSettings.dimPercent > 1.0)
+                RSDK::videoSettings.dimPercent = 1.0;
         }
     }
-    else if (RSDK::gameSettings.dimPercent > 0.25) {
-        RSDK::gameSettings.dimPercent *= 0.9;
+    else if (RSDK::videoSettings.dimPercent > 0.25) {
+        RSDK::videoSettings.dimPercent *= 0.9;
     }
 
     if (windowRefreshDelay > 0) {
@@ -175,18 +175,18 @@ void RenderDevice::FlipScreen()
 
     if (dx9Device->BeginScene() >= 0) {
         // reload shader if needed
-        if (lastShaderID != RSDK::gameSettings.shaderID) {
-            lastShaderID = RSDK::gameSettings.shaderID;
+        if (lastShaderID != RSDK::videoSettings.shaderID) {
+            lastShaderID = RSDK::videoSettings.shaderID;
 
-            if (shaderList[RSDK::gameSettings.shaderID].linear)
+            if (shaderList[RSDK::videoSettings.shaderID].linear)
                 dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
             else
                 dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
             dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
 
-            if (RSDK::gameSettings.shaderSupport) {
-                dx9Device->SetVertexShader(shaderList[RSDK::gameSettings.shaderID].vertexShaderObject);
-                dx9Device->SetPixelShader(shaderList[RSDK::gameSettings.shaderID].pixelShaderObject);
+            if (RSDK::videoSettings.shaderSupport) {
+                dx9Device->SetVertexShader(shaderList[RSDK::videoSettings.shaderID].vertexShaderObject);
+                dx9Device->SetPixelShader(shaderList[RSDK::videoSettings.shaderID].pixelShaderObject);
                 dx9Device->SetVertexDeclaration(dx9VertexDeclare);
                 dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, sizeof(RenderVertex));
             }
@@ -196,9 +196,9 @@ void RenderDevice::FlipScreen()
             }
         }
 
-        if (RSDK::gameSettings.shaderSupport) {
+        if (RSDK::videoSettings.shaderSupport) {
             float2 dimAmount = { 0, 0 };
-            dimAmount.x      = RSDK::gameSettings.dimMax * RSDK::gameSettings.dimPercent;
+            dimAmount.x      = RSDK::videoSettings.dimMax * RSDK::videoSettings.dimPercent;
 
             dx9Device->SetPixelShaderConstantF(0, &pixelSize.x, 1);   // pixelSize
             dx9Device->SetPixelShaderConstantF(1, &textureSize.x, 1); // textureSize
@@ -207,7 +207,7 @@ void RenderDevice::FlipScreen()
         }
 
         int32 startVert = 0;
-        switch (RSDK::gameSettings.screenCount) {
+        switch (RSDK::videoSettings.screenCount) {
             default:
             case 0:
 #if RETRO_REV02
@@ -280,7 +280,7 @@ void RenderDevice::FlipScreen()
 
 void RenderDevice::Release(bool32 isRefresh)
 {
-    if (RSDK::gameSettings.shaderSupport) {
+    if (RSDK::videoSettings.shaderSupport) {
         for (int32 i = 0; i < shaderCount; ++i) {
             if (shaderList[i].vertexShaderObject)
                 shaderList[i].vertexShaderObject->Release();
@@ -342,13 +342,13 @@ void RenderDevice::Release(bool32 isRefresh)
 
 void RenderDevice::RefreshWindow()
 {
-    RSDK::gameSettings.windowState = WINDOWSTATE_UNINITIALIZED;
+    RSDK::videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
     RenderDevice::Release(true);
 
     ShowWindow(RenderDevice::windowHandle, false);
 
-    if (RSDK::gameSettings.windowed && RSDK::gameSettings.bordered)
+    if (RSDK::videoSettings.windowed && RSDK::videoSettings.bordered)
         SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP);
     else
         SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, WS_POPUP);
@@ -358,7 +358,7 @@ void RenderDevice::RefreshWindow()
     GetDisplays();
 
     tagRECT rect;
-    if (RSDK::gameSettings.windowed || !RSDK::gameSettings.exclusiveFS) {
+    if (RSDK::videoSettings.windowed || !RSDK::videoSettings.exclusiveFS) {
         tagRECT winRect;
         GetClientRect(RenderDevice::windowHandle, &winRect);
 
@@ -371,33 +371,33 @@ void RenderDevice::RefreshWindow()
         ClientToScreen(RenderDevice::windowHandle, &topLeft);
         ClientToScreen(RenderDevice::windowHandle, &bottomRight);
 
-        if (RSDK::gameSettings.windowed) {
+        if (RSDK::videoSettings.windowed) {
             D3DDISPLAYMODE displayMode;
             dx9Context->GetAdapterDisplayMode(dxAdapter, &displayMode);
 
-            if (RSDK::gameSettings.windowWidth >= displayMode.Width || RSDK::gameSettings.windowHeight >= displayMode.Height) {
-                RSDK::gameSettings.windowWidth  = (displayMode.Height / 480 * RSDK::gameSettings.pixWidth);
-                RSDK::gameSettings.windowHeight = displayMode.Height / 480 * RSDK::gameSettings.pixHeight;
+            if (RSDK::videoSettings.windowWidth >= displayMode.Width || RSDK::videoSettings.windowHeight >= displayMode.Height) {
+                RSDK::videoSettings.windowWidth  = (displayMode.Height / 480 * RSDK::videoSettings.pixWidth);
+                RSDK::videoSettings.windowHeight = displayMode.Height / 480 * RSDK::videoSettings.pixHeight;
             }
 
-            rect.left   = (bottomRight.x + topLeft.x) / 2 - RSDK::gameSettings.windowWidth / 2;
-            rect.top    = (bottomRight.y + topLeft.y) / 2 - RSDK::gameSettings.windowHeight / 2;
-            rect.right  = (bottomRight.x + topLeft.x) / 2 + RSDK ::gameSettings.windowWidth / 2;
-            rect.bottom = (bottomRight.y + topLeft.y) / 2 + RSDK::gameSettings.windowHeight / 2;
+            rect.left   = (bottomRight.x + topLeft.x) / 2 - RSDK::videoSettings.windowWidth / 2;
+            rect.top    = (bottomRight.y + topLeft.y) / 2 - RSDK::videoSettings.windowHeight / 2;
+            rect.right  = (bottomRight.x + topLeft.x) / 2 + RSDK ::videoSettings.windowWidth / 2;
+            rect.bottom = (bottomRight.y + topLeft.y) / 2 + RSDK::videoSettings.windowHeight / 2;
 
-            if (RSDK::gameSettings.bordered)
+            if (RSDK::videoSettings.bordered)
                 AdjustWindowRect(&rect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, false);
             else
                 AdjustWindowRect(&rect, WS_POPUP, false);
 
             if (rect.left < monitorDisplayRect.left || rect.right > monitorDisplayRect.right || rect.top < monitorDisplayRect.top
                 || rect.bottom > monitorDisplayRect.bottom) {
-                rect.left   = (monitorDisplayRect.right + monitorDisplayRect.left) / 2 - RSDK::gameSettings.windowWidth / 2;
-                rect.top    = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 - RSDK::gameSettings.windowHeight / 2;
-                rect.right  = (monitorDisplayRect.right + monitorDisplayRect.left) / 2 + RSDK::gameSettings.windowWidth / 2;
-                rect.bottom = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 + RSDK::gameSettings.windowHeight / 2;
+                rect.left   = (monitorDisplayRect.right + monitorDisplayRect.left) / 2 - RSDK::videoSettings.windowWidth / 2;
+                rect.top    = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 - RSDK::videoSettings.windowHeight / 2;
+                rect.right  = (monitorDisplayRect.right + monitorDisplayRect.left) / 2 + RSDK::videoSettings.windowWidth / 2;
+                rect.bottom = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 + RSDK::videoSettings.windowHeight / 2;
 
-                if (RSDK::gameSettings.bordered)
+                if (RSDK::videoSettings.bordered)
                     AdjustWindowRect(&rect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, false);
                 else
                     AdjustWindowRect(&rect, WS_POPUP, false);
@@ -417,14 +417,14 @@ void RenderDevice::RefreshWindow()
     if (!InitGraphicsAPI() || !InitShaders())
         return;
 
-    RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
+    RSDK::videoSettings.windowState = WINDOWSTATE_ACTIVE;
 }
 
 void RenderDevice::InitFPSCap()
 {
     if (QueryPerformanceFrequency(&frequency)) {
         useFrequency              = true;
-        initialFrequency.QuadPart = frequency.QuadPart / RSDK::gameSettings.refreshRate;
+        initialFrequency.QuadPart = frequency.QuadPart / RSDK::videoSettings.refreshRate;
         QueryPerformanceCounter(&performanceCount);
     }
     else {
@@ -596,27 +596,27 @@ RenderVertex vertexList[24] =
 
 bool RenderDevice::InitGraphicsAPI()
 {
-    RSDK::gameSettings.shaderSupport = false;
+    RSDK::videoSettings.shaderSupport = false;
 
     D3DCAPS9 pCaps;
     if (dx9Context->GetDeviceCaps(0, D3DDEVTYPE_HAL, &pCaps) >= 0 && (pCaps.PixelShaderVersion & 0xFF00) >= 0x300)
-        RSDK::gameSettings.shaderSupport = true;
+        RSDK::videoSettings.shaderSupport = true;
 
     viewSize.x = 0;
     viewSize.y = 0;
 
     D3DPRESENT_PARAMETERS presentParams;
     memset(&presentParams, 0, sizeof(presentParams));
-    if (RSDK::gameSettings.windowed || !RSDK::gameSettings.exclusiveFS) {
+    if (RSDK::videoSettings.windowed || !RSDK::videoSettings.exclusiveFS) {
         presentParams.BackBufferFormat     = D3DFMT_UNKNOWN;
         presentParams.BackBufferCount      = 1;
         presentParams.SwapEffect           = D3DSWAPEFFECT_DISCARD;
         presentParams.PresentationInterval = 0;
         presentParams.hDeviceWindow        = windowHandle;
         presentParams.Windowed             = true;
-        if (RSDK::gameSettings.windowed) {
-            viewSize.x = RSDK::gameSettings.windowWidth;
-            viewSize.y = RSDK::gameSettings.windowHeight;
+        if (RSDK::videoSettings.windowed) {
+            viewSize.x = RSDK::videoSettings.windowWidth;
+            viewSize.y = RSDK::videoSettings.windowHeight;
         }
         else {
             viewSize.x = displayWidth[dxAdapter];
@@ -624,20 +624,20 @@ bool RenderDevice::InitGraphicsAPI()
         }
     }
     else {
-        int32 bufferWidth  = RSDK::gameSettings.fsWidth;
-        int32 bufferHeight = RSDK::gameSettings.fsWidth;
-        if (RSDK::gameSettings.fsWidth <= 0 || RSDK::gameSettings.fsHeight <= 0) {
+        int32 bufferWidth  = RSDK::videoSettings.fsWidth;
+        int32 bufferHeight = RSDK::videoSettings.fsWidth;
+        if (RSDK::videoSettings.fsWidth <= 0 || RSDK::videoSettings.fsHeight <= 0) {
             bufferWidth  = displayWidth[dxAdapter];
             bufferHeight = displayHeight[dxAdapter];
         }
 
         presentParams.BackBufferWidth            = bufferWidth;
         presentParams.BackBufferHeight           = bufferHeight;
-        presentParams.BackBufferCount            = (RSDK::gameSettings.tripleBuffered == 1) + 1;
+        presentParams.BackBufferCount            = (RSDK::videoSettings.tripleBuffered == 1) + 1;
         presentParams.BackBufferFormat           = D3DFMT_X8R8G8B8;
-        presentParams.PresentationInterval       = RSDK::gameSettings.vsync ? 1 : 0x80000000;
+        presentParams.PresentationInterval       = RSDK::videoSettings.vsync ? 1 : 0x80000000;
         presentParams.SwapEffect                 = D3DSWAPEFFECT_DISCARD;
-        presentParams.FullScreen_RefreshRateInHz = RSDK::gameSettings.refreshRate;
+        presentParams.FullScreen_RefreshRateInHz = RSDK::videoSettings.refreshRate;
         presentParams.hDeviceWindow              = windowHandle;
         presentParams.Windowed                   = 0;
         viewSize.x                               = bufferWidth;
@@ -645,7 +645,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);
-    if (RSDK::gameSettings.shaderSupport) {
+    if (RSDK::videoSettings.shaderSupport) {
         if (adapterStatus < 0)
             return false;
 
@@ -695,15 +695,15 @@ bool RenderDevice::InitGraphicsAPI()
 
     int32 maxPixHeight = 0;
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
-        if (RSDK::gameSettings.pixHeight > maxPixHeight)
-            maxPixHeight = RSDK::gameSettings.pixHeight;
+        if (RSDK::videoSettings.pixHeight > maxPixHeight)
+            maxPixHeight = RSDK::videoSettings.pixHeight;
 
-        screens[s].size.y = RSDK::gameSettings.pixHeight;
+        screens[s].size.y = RSDK::videoSettings.pixHeight;
 
         float viewAspect  = viewSize.x / viewSize.y;
-        int32 screenWidth = (int)((viewAspect * RSDK::gameSettings.pixHeight) + 3) & 0xFFFFFFFC;
-        if (screenWidth < RSDK::gameSettings.pixWidth)
-            screenWidth = RSDK::gameSettings.pixWidth;
+        int32 screenWidth = (int)((viewAspect * RSDK::videoSettings.pixHeight) + 3) & 0xFFFFFFFC;
+        if (screenWidth < RSDK::videoSettings.pixWidth)
+            screenWidth = RSDK::videoSettings.pixWidth;
 
         // if (screenWidth > 424)
         //     screenWidth = 424;
@@ -756,10 +756,10 @@ bool RenderDevice::InitGraphicsAPI()
 
     lastShaderID = -1;
     InitVertexBuffer();
-    RSDK::gameSettings.viewportX = dx9ViewPort.X;
-    RSDK::gameSettings.viewportY = dx9ViewPort.Y;
-    RSDK::gameSettings.viewportW = 1.0 / viewSize.x;
-    RSDK::gameSettings.viewportH = 1.0 / viewSize.y;
+    RSDK::videoSettings.viewportX = dx9ViewPort.X;
+    RSDK::videoSettings.viewportY = dx9ViewPort.Y;
+    RSDK::videoSettings.viewportW = 1.0 / viewSize.x;
+    RSDK::videoSettings.viewportH = 1.0 / viewSize.y;
 
     return true;
 }
@@ -981,7 +981,7 @@ bool RenderDevice::InitShaders()
     dx9Device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
     int32 maxShaders = 0;
-    if (RSDK::gameSettings.shaderSupport) {
+    if (RSDK::videoSettings.shaderSupport) {
         LoadShader("None", false);
         LoadShader("Clean", true);
         LoadShader("CRT-Yeetron", true);
@@ -1002,14 +1002,14 @@ bool RenderDevice::InitShaders()
     else {
         for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
 
-        shaderList[0].linear = RSDK::gameSettings.windowed ? false : shaderList[0].linear;
+        shaderList[0].linear = RSDK::videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
         shaderCount          = 1;
     }
 
-    RSDK::gameSettings.shaderID = RSDK::gameSettings.shaderID >= maxShaders ? 0 : RSDK::gameSettings.shaderID;
+    RSDK::videoSettings.shaderID = RSDK::videoSettings.shaderID >= maxShaders ? 0 : RSDK::videoSettings.shaderID;
 
-    if (shaderList[RSDK::gameSettings.shaderID].linear || RSDK::gameSettings.screenCount > 1) {
+    if (shaderList[RSDK::videoSettings.shaderID].linear || RSDK::videoSettings.screenCount > 1) {
         dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
         dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
     }
@@ -1036,13 +1036,13 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int size  = RSDK::gameSettings.pixWidth >= SCREEN_YSIZE ? RSDK::gameSettings.pixWidth : SCREEN_YSIZE;
+    int size  = RSDK::videoSettings.pixWidth >= SCREEN_YSIZE ? RSDK::videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
-    RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
-    RSDK::gameSettings.dimMax      = 1.0;
-    RSDK::gameSettings.dimPercent  = 1.0;
+    RSDK::videoSettings.windowState = WINDOWSTATE_ACTIVE;
+    RSDK::videoSettings.dimMax      = 1.0;
+    RSDK::videoSettings.dimPercent  = 1.0;
 
     return true;
 }
@@ -1113,8 +1113,8 @@ void RenderDevice::GetDisplays()
             if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59)
                 --newDisplayCount;
 
-            if (RSDK::gameSettings.fsWidth == displayInfo.displays[newDisplayCount].width
-                && RSDK::gameSettings.fsHeight == displayInfo.displays[newDisplayCount].height)
+            if (RSDK::videoSettings.fsWidth == displayInfo.displays[newDisplayCount].width
+                && RSDK::videoSettings.fsHeight == displayInfo.displays[newDisplayCount].height)
                 foundFullScreenDisplay = true;
 
             ++newDisplayCount;
@@ -1123,9 +1123,9 @@ void RenderDevice::GetDisplays()
 
     displayCount = newDisplayCount;
     if (!foundFullScreenDisplay) {
-        RSDK::gameSettings.fsWidth     = 0;
-        RSDK::gameSettings.fsHeight    = 0;
-        RSDK::gameSettings.refreshRate = 60; // 0;
+        RSDK::videoSettings.fsWidth     = 0;
+        RSDK::videoSettings.fsHeight    = 0;
+        RSDK::videoSettings.refreshRate = 60; // 0;
     }
 }
 
@@ -1154,9 +1154,9 @@ void RenderDevice::ProcessEvent(MSG Msg)
 
                 case VK_RETURN: // alt + enter
                     if (GetAsyncKeyState(VK_MENU)) {
-                        RSDK::gameSettings.windowed ^= 1;
+                        RSDK::videoSettings.windowed ^= 1;
                         UpdateGameWindow();
-                        RSDK::settingsChanged = false;
+                        RSDK::changedVideoSettings = false;
                     }
                     break;
 
@@ -1201,7 +1201,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
                     if (engine.devMenu) {
                         if (sceneInfo.state == ENGINESTATE_DEVMENU) {
                             sceneInfo.state                = devMenu.stateStore;
-                            RSDK::gameSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 0 : RSDK::gameSettings.screenCount;
+                            RSDK::videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 0 : RSDK::videoSettings.screenCount;
                             ResumeSound();
                         }
                         else {
@@ -1210,7 +1210,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
                             devMenu.option                 = 0;
                             devMenu.scroll                 = 0;
                             devMenu.timer                  = 0;
-                            RSDK::gameSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 1 : RSDK::gameSettings.screenCount;
+                            RSDK::videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 1 : RSDK::videoSettings.screenCount;
                             sceneInfo.state                = ENGINESTATE_DEVMENU;
                             PauseSound();
                         }
@@ -1250,8 +1250,10 @@ void RenderDevice::ProcessEvent(MSG Msg)
 #endif
 
                 case VK_F3:
-                    RSDK::gameSettings.shaderID = (RSDK::gameSettings.shaderID + 1) % userShaderCount;
-                    handledMsg                  = true;
+                    if (userShaderCount) {
+                        RSDK::videoSettings.shaderID = (RSDK::videoSettings.shaderID + 1) % userShaderCount;
+                        handledMsg                   = true;
+                    }
                     break;
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -1261,13 +1263,13 @@ void RenderDevice::ProcessEvent(MSG Msg)
                     break;
 
                 case VK_F6:
-                    if (engine.devMenu && RSDK::gameSettings.screenCount > 1)
-                        RSDK::gameSettings.screenCount--;
+                    if (engine.devMenu && RSDK::videoSettings.screenCount > 1)
+                        RSDK::videoSettings.screenCount--;
                     break;
 
                 case VK_F7:
-                    if (engine.devMenu && RSDK::gameSettings.screenCount < SCREEN_MAX)
-                        RSDK::gameSettings.screenCount++;
+                    if (engine.devMenu && RSDK::videoSettings.screenCount < SCREEN_MAX)
+                        RSDK::videoSettings.screenCount++;
                     break;
 
                 case VK_F9:
@@ -1384,7 +1386,7 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
 
         case WM_ACTIVATE:
             if (wParam) {
-                if (!RSDK::gameSettings.windowState)
+                if (!RSDK::videoSettings.windowState)
                     return 0;
 
                 // if (byte_66BB18 == 1)
@@ -1394,12 +1396,12 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
                 // }
 
                 GetDisplays();
-                RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
+                RSDK::videoSettings.windowState = WINDOWSTATE_ACTIVE;
             }
             else {
                 touchMouseData.down[0] = 0;
                 touchMouseData.count   = 0;
-                if (!RSDK::gameSettings.windowState)
+                if (!RSDK::videoSettings.windowState)
                     return 0;
 
                 // if (!byte_66BB18)
@@ -1408,7 +1410,7 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
                 //      audioContext_sourceVoice->Stop(audioContext_sourceVoice, 0, 0);
                 // }
 
-                RSDK::gameSettings.windowState = WINDOWSTATE_INACTIVE;
+                RSDK::videoSettings.windowState = WINDOWSTATE_INACTIVE;
             }
             break;
 
@@ -1449,14 +1451,14 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
             if (param == SC_MINIMIZE) {
                 touchMouseData.down[0] = 0;
                 touchMouseData.count   = 0;
-                if (RSDK::gameSettings.windowState) {
+                if (RSDK::videoSettings.windowState) {
                     PauseSound();
-                    RSDK::gameSettings.windowState = WINDOWSTATE_INACTIVE;
+                    RSDK::videoSettings.windowState = WINDOWSTATE_INACTIVE;
                 }
             }
-            else if (param == SC_MAXIMIZE && RSDK::gameSettings.windowState != WINDOWSTATE_UNINITIALIZED) {
+            else if (param == SC_MAXIMIZE && RSDK::videoSettings.windowState != WINDOWSTATE_UNINITIALIZED) {
                 ResumeSound();
-                RSDK::gameSettings.windowState = WINDOWSTATE_ACTIVE;
+                RSDK::videoSettings.windowState = WINDOWSTATE_ACTIVE;
             }
 
             return DefWindowProc(hRecipient, WM_SYSCOMMAND, wParam, lParam);

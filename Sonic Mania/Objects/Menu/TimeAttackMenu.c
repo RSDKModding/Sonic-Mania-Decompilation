@@ -647,7 +647,7 @@ void TimeAttackMenu_SortReplayChoiceCB(void)
     if (control->buttons[0]->selection == 1)
         API.SortDBRows(globals->replayTableID, DBVAR_UINT32, "zoneSortVal", false);
     else
-        API.SortDBRows(globals->replayTableID, DBVAR_NONE, NULL, true);
+        API.SortDBRows(globals->replayTableID, 0, NULL, true);
 
     carousel->stateDraw = UIReplayCarousel_Draw_Loading;
 }

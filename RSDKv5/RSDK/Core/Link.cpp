@@ -123,8 +123,8 @@ enum FunctionTableIDs {
 #if !RETRO_REV02
     FunctionTable_GetAPIFunction,
 #endif
-    FunctionTable_GetSettingsValue,
-    FunctionTable_SetSettingsValue,
+    FunctionTable_GetVideoSetting,
+    FunctionTable_SetVideoSetting,
     FunctionTable_UpdateWindow,
     FunctionTable_Sin1024,
     FunctionTable_Cos1024,
@@ -509,8 +509,8 @@ void RSDK::setupFunctions()
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_GetAPIFunction, GetAPIFunction);
 #endif
-    addToRSDKFunctionTable(FunctionTable_GetSettingsValue, GetSettingsValue);
-    addToRSDKFunctionTable(FunctionTable_SetSettingsValue, SetSettingsValue);
+    addToRSDKFunctionTable(FunctionTable_GetVideoSetting, GetVideoSetting);
+    addToRSDKFunctionTable(FunctionTable_SetVideoSetting, SetVideoSetting);
     addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateGameWindow);
     addToRSDKFunctionTable(FunctionTable_Sin1024, sin1024);
     addToRSDKFunctionTable(FunctionTable_Cos1024, cos1024);

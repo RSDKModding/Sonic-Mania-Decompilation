@@ -28,7 +28,7 @@ void HUD_LateUpdate(void)
 
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_COMPETITION) {
-        for (self->screenID = 0; self->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++self->screenID) {
+        for (self->screenID = 0; self->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++self->screenID) {
             StateMachine_Run(self->vsStates[self->screenID]);
         }
     }

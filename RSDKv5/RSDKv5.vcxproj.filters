@@ -75,6 +75,21 @@
     <Filter Include="Source Files\RSDK\Graphics\DX9">
       <UniqueIdentifier>{e7e02a25-3ad5-4bb8-9f2a-7b588716e834}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Input\Keyboard">
+      <UniqueIdentifier>{58a99494-ed12-440c-b723-7ce55ef4a7ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Input\XInput">
+      <UniqueIdentifier>{7fdbae2e-3df7-45bb-847b-20ad4d0282da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Input\Steam">
+      <UniqueIdentifier>{1bc59318-3a61-4874-94fe-2951a519893a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Input\SDL2">
+      <UniqueIdentifier>{49063a91-6575-45f9-b215-c7ada69f501b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Input\RawInput">
+      <UniqueIdentifier>{0b8543ee-c9c4-4205-9ca4-3b53372cf959}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\zlib\adler32.c">
@@ -296,6 +311,21 @@
     <ClCompile Include="RSDK\Graphics\DX9\DX9RenderDevice.cpp">
       <Filter>Source Files\RSDK\Graphics\DX9</Filter>
     </ClCompile>
+    <ClCompile Include="RSDK\Input\Keyboard\KBInputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Input\RawInput\RawInputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\RawInput</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Input\SDL2\SDL2InputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\SDL2</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Input\Steam\SteamInputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\Steam</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Input\XInput\XInputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\XInput</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\zlib\crc32.h">
@@ -516,6 +546,21 @@
     </ClInclude>
     <ClInclude Include="RSDK\Graphics\DX9\DX9RenderDevice.hpp">
       <Filter>Source Files\RSDK\Graphics\DX9</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\Keyboard\KBInputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\RawInput\RawInputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\RawInput</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\SDL2\SDL2InputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\SDL2</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\Steam\SteamInputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\Steam</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\XInput\XInputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\XInput</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

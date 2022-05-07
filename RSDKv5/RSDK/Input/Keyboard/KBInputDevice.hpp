@@ -1,3 +1,4 @@
+
 extern int32 keyState[PLAYER_COUNT];
 
 struct InputDeviceKeyboard : InputDevice {
@@ -24,6 +25,7 @@ struct InputDeviceKeyboard : InputDevice {
 
 void InitKeyboardInputAPI();
 InputDeviceKeyboard *InitKeyboardDevice(uint32 id);
+
 void UpdateKeyState(int32 keyCode);
 void ClearKeyState(int32 keyCode);
 

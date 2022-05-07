@@ -211,8 +211,8 @@ typedef struct {
 #if !RETRO_USE_PLUS
     void *(*GetAPIFunction)(const char *funcName);
 #endif
-    int32 (*GetSettingsValue)(int32 id);
-    void (*SetSettingsValue)(int32 id, int32 val);
+    int32 (*GetVideoSetting)(int32 id);
+    void (*SetVideoSetting)(int32 id, int32 val);
     void (*UpdateWindow)(void);
     int32 (*Sin1024)(int32 angle);
     int32 (*Cos1024)(int32 angle);

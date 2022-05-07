@@ -5,9 +5,9 @@
 RSDK::SKU::UserCore *RSDK::SKU::userCore = NULL;
 #endif
 
-bool32 RSDK::settingsChanged = false;
-RSDK::SettingsStorage RSDK::gameSettings;
-RSDK::SettingsStorage RSDK::settingsStorage;
+bool32 RSDK::changedVideoSettings = false;
+RSDK::SettingsStorage RSDK::videoSettings;
+RSDK::SettingsStorage RSDK::videoSettingsBackup;
 
 void RSDK::SKU::InitUserData()
 {
@@ -311,132 +311,150 @@ int RSDK::SKU::ShowExtensionOverlay(byte overlay)
 }
 #endif
 
-int RSDK::GetSettingsValue(int id)
+int32 RSDK::GetVideoSetting(int32 id)
 {
     switch (id) {
-        case SETTINGS_WINDOWED: return gameSettings.windowed;
-        case SETTINGS_BORDERED: return gameSettings.bordered;
-        case SETTINGS_EXCLUSIVEFS: return gameSettings.exclusiveFS;
-        case SETTINGS_VSYNC: return gameSettings.vsync;
-        case SETTINGS_TRIPLEBUFFERED: return gameSettings.tripleBuffered;
-        case SETTINGS_WINDOW_WIDTH: return gameSettings.windowWidth;
-        case SETTINGS_WINDOW_HEIGHT: return gameSettings.windowHeight;
-        case SETTINGS_FSWIDTH: return gameSettings.fsWidth;
-        case SETTINGS_FSHEIGHT: return gameSettings.fsHeight;
-        case SETTINGS_REFRESHRATE: return gameSettings.refreshRate;
-        case SETTINGS_SHADERSUPPORT: return gameSettings.shaderSupport;
-        case SETTINGS_SHADERID: return gameSettings.shaderID;
-        case SETTINGS_SCREENCOUNT: return gameSettings.screenCount;
+        case VIDEOSETTING_WINDOWED: return videoSettings.windowed;
+        case VIDEOSETTING_BORDERED: return videoSettings.bordered;
+        case VIDEOSETTING_EXCLUSIVEFS: return videoSettings.exclusiveFS;
+        case VIDEOSETTING_VSYNC: return videoSettings.vsync;
+        case VIDEOSETTING_TRIPLEBUFFERED: return videoSettings.tripleBuffered;
+        case VIDEOSETTING_WINDOW_WIDTH: return videoSettings.windowWidth;
+        case VIDEOSETTING_WINDOW_HEIGHT: return videoSettings.windowHeight;
+        case VIDEOSETTING_FSWIDTH: return videoSettings.fsWidth;
+        case VIDEOSETTING_FSHEIGHT: return videoSettings.fsHeight;
+        case VIDEOSETTING_REFRESHRATE: return videoSettings.refreshRate;
+        case VIDEOSETTING_SHADERSUPPORT: return videoSettings.shaderSupport;
+        case VIDEOSETTING_SHADERID: return videoSettings.shaderID;
+        case VIDEOSETTING_SCREENCOUNT: return videoSettings.screenCount;
 #if RETRO_REV02
-        case SETTINGS_DIMTIMER: return gameSettings.dimTimer;
+        case VIDEOSETTING_DIMTIMER: return videoSettings.dimTimer;
 #endif
-        case SETTINGS_STREAMSENABLED: return engine.streamsEnabled;
-        case SETTINGS_STREAM_VOL: return (int)(engine.streamVolume * 1024.0);
-        case SETTINGS_SFX_VOL: return (int)(engine.soundFXVolume * 1024.0);
-        case SETTINGS_LANGUAGE:
+        case VIDEOSETTING_STREAMSENABLED: return engine.streamsEnabled;
+        case VIDEOSETTING_STREAM_VOL: return (int)(engine.streamVolume * 1024.0);
+        case VIDEOSETTING_SFX_VOL: return (int)(engine.soundFXVolume * 1024.0);
+        case VIDEOSETTING_LANGUAGE:
 #if RETRO_REV02
             return SKU::curSKU.language;
 #else
             return gameVerInfo.language;
 #endif
-        case SETTINGS_CHANGED: return settingsChanged;
+        case VIDEOSETTING_CHANGED: return changedVideoSettings;
+
         default: break;
     }
+
     return 0;
 }
 
-void RSDK::SetSettingsValue(int id, int val)
+void RSDK::SetVideoSetting(int32 id, int32 val)
 {
-    bool32 bVal = val;
+    bool32 boolVal = val;
     switch (id) {
-        case SETTINGS_WINDOWED:
-            if (gameSettings.windowed != bVal) {
-                gameSettings.windowed = bVal;
-                settingsChanged       = true;
+        case VIDEOSETTING_WINDOWED:
+            if (videoSettings.windowed != boolVal) {
+                videoSettings.windowed = boolVal;
+                changedVideoSettings   = true;
             }
             break;
-        case SETTINGS_BORDERED:
-            if (gameSettings.bordered != bVal) {
-                gameSettings.bordered = bVal;
-                settingsChanged       = true;
-            }
-            break;
-        case SETTINGS_EXCLUSIVEFS:
-            if (gameSettings.exclusiveFS != bVal) {
-                gameSettings.exclusiveFS = bVal;
-                settingsChanged          = true;
-            }
-            break;
-        case SETTINGS_VSYNC:
-            if (gameSettings.vsync != bVal) {
-                gameSettings.vsync = bVal;
-                settingsChanged    = true;
-            }
-            break;
-        case SETTINGS_TRIPLEBUFFERED:
-            if (gameSettings.tripleBuffered != bVal) {
-                gameSettings.tripleBuffered = bVal;
-                settingsChanged             = true;
-            }
-            break;
-        case SETTINGS_WINDOW_WIDTH:
-            if (gameSettings.windowWidth != val) {
-                gameSettings.windowWidth = val;
-                settingsChanged          = true;
-            }
-            break;
-        case SETTINGS_WINDOW_HEIGHT:
-            if (gameSettings.windowHeight != val) {
-                gameSettings.windowHeight = val;
-                settingsChanged           = true;
-            }
-            break;
-        case SETTINGS_FSWIDTH: gameSettings.fsWidth = val; break;
-        case SETTINGS_FSHEIGHT: gameSettings.fsHeight = val; break;
-        case SETTINGS_REFRESHRATE: gameSettings.refreshRate = val; break;
-        case SETTINGS_SHADERSUPPORT: gameSettings.shaderSupport = val; break;
-        case SETTINGS_SHADERID:
-            if (gameSettings.shaderID != val) {
-                gameSettings.shaderID = val;
-                settingsChanged       = true;
-            }
-            break;
-        case SETTINGS_SCREENCOUNT: gameSettings.screenCount = val; break;
-#if RETRO_REV02
-        case SETTINGS_DIMTIMER: gameSettings.dimLimit = val; break;
-#endif
-        case SETTINGS_STREAMSENABLED:
-            if (engine.streamsEnabled != bVal)
-                settingsChanged = true;
 
-            engine.streamsEnabled = bVal;
-            break;
-        case SETTINGS_STREAM_VOL:
-            if (engine.streamVolume != (val / 1024.0f)) {
-                engine.streamVolume = (float)val / 1024.0f;
-                settingsChanged     = true;
+        case VIDEOSETTING_BORDERED:
+            if (videoSettings.bordered != boolVal) {
+                videoSettings.bordered = boolVal;
+                changedVideoSettings   = true;
             }
             break;
-        case SETTINGS_SFX_VOL:
+
+        case VIDEOSETTING_EXCLUSIVEFS:
+            if (videoSettings.exclusiveFS != boolVal) {
+                videoSettings.exclusiveFS = boolVal;
+                changedVideoSettings      = true;
+            }
+            break;
+
+        case VIDEOSETTING_VSYNC:
+            if (videoSettings.vsync != boolVal) {
+                videoSettings.vsync  = boolVal;
+                changedVideoSettings = true;
+            }
+            break;
+
+        case VIDEOSETTING_TRIPLEBUFFERED:
+            if (videoSettings.tripleBuffered != boolVal) {
+                videoSettings.tripleBuffered = boolVal;
+                changedVideoSettings         = true;
+            }
+            break;
+
+        case VIDEOSETTING_WINDOW_WIDTH:
+            if (videoSettings.windowWidth != val) {
+                videoSettings.windowWidth = val;
+                changedVideoSettings      = true;
+            }
+            break;
+
+        case VIDEOSETTING_WINDOW_HEIGHT:
+            if (videoSettings.windowHeight != val) {
+                videoSettings.windowHeight = val;
+                changedVideoSettings       = true;
+            }
+            break;
+
+        case VIDEOSETTING_FSWIDTH: videoSettings.fsWidth = val; break;
+        case VIDEOSETTING_FSHEIGHT: videoSettings.fsHeight = val; break;
+        case VIDEOSETTING_REFRESHRATE: videoSettings.refreshRate = val; break;
+        case VIDEOSETTING_SHADERSUPPORT: videoSettings.shaderSupport = val; break;
+        case VIDEOSETTING_SHADERID:
+            if (videoSettings.shaderID != val) {
+                videoSettings.shaderID = val;
+                changedVideoSettings   = true;
+            }
+            break;
+
+        case VIDEOSETTING_SCREENCOUNT: videoSettings.screenCount = val; break;
+#if RETRO_REV02
+        case VIDEOSETTING_DIMTIMER: videoSettings.dimLimit = val; break;
+#endif
+        case VIDEOSETTING_STREAMSENABLED:
+            if (engine.streamsEnabled != boolVal)
+                changedVideoSettings = true;
+
+            engine.streamsEnabled = boolVal;
+            break;
+
+        case VIDEOSETTING_STREAM_VOL:
+            if (engine.streamVolume != (val / 1024.0f)) {
+                engine.streamVolume  = (float)val / 1024.0f;
+                changedVideoSettings = true;
+            }
+            break;
+
+        case VIDEOSETTING_SFX_VOL:
             if (engine.soundFXVolume != ((float)val / 1024.0f)) {
                 engine.soundFXVolume = (float)val / 1024.0f;
-                settingsChanged      = true;
+                changedVideoSettings = true;
             }
             break;
-        case SETTINGS_LANGUAGE:
+
+        case VIDEOSETTING_LANGUAGE:
 #if RETRO_REV02
             SKU::curSKU.language = val;
 #else
             gameVerInfo.language = val;
 #endif
             break;
-        case SETTINGS_STORE: memcpy(&settingsStorage, &gameSettings, sizeof(gameSettings)); break;
-        case SETTINGS_RELOAD:
-            settingsChanged = true;
-            memcpy(&gameSettings, &settingsStorage, sizeof(settingsStorage));
+
+        case VIDEOSETTING_STORE: memcpy(&videoSettingsBackup, &videoSettings, sizeof(videoSettings)); break;
+
+        case VIDEOSETTING_RELOAD:
+            changedVideoSettings = true;
+            memcpy(&videoSettings, &videoSettingsBackup, sizeof(videoSettingsBackup));
             break;
-        case SETTINGS_CHANGED: settingsChanged = val; break;
-        case SETTINGS_WRITE: writeSettings(val); break;
+
+        case VIDEOSETTING_CHANGED: changedVideoSettings = boolVal; break;
+
+        case VIDEOSETTING_WRITE: writeSettings(val); break;
+
         default: break;
     }
 }
@@ -448,9 +466,9 @@ char buttonNames[18][8] = { "U", "D", "L", "R", "START", "SELECT", "LSTICK", "RS
 
 void RSDK::readSettings()
 {
-    gameSettings.screenCount = 1;
-    gameSettings.pixHeight   = SCREEN_YSIZE;
-    gameSettings.windowState = WINDOWSTATE_UNINITIALIZED;
+    videoSettings.screenCount = 1;
+    videoSettings.pixHeight   = SCREEN_YSIZE;
+    videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
     int platform = PLATFORM_DEV;
 #if RETRO_REV02
@@ -466,15 +484,19 @@ void RSDK::readSettings()
 
     dictionary *ini = iniparser_load(pathBuffer);
 
-    int defKeyMaps[PLAYER_COUNT + 1][12] = { { VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN,
-                                               VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN },
-                                             { VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_A, VK_S, VK_D, VK_Q, VK_W, VK_E, VK_RETURN, VK_TAB },
-                                             { VK_NUMPAD8, VK_NUMPAD5, VK_NUMPAD4, VK_NUMPAD6, VK_J, VK_J, VK_UNKNOWN, VK_U, VK_I, VK_UNKNOWN,
-                                               VK_OEM_4, VK_OEM_6 },
-                                             { VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN,
-                                               VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN },
-                                             { VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN,
-                                               VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN } };
+    int defKeyMaps[PLAYER_COUNT + 1][12] = {
+        { KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING,
+          KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING },
+
+        { VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_A, VK_S, VK_D, VK_Q, VK_W, VK_E, VK_RETURN, VK_TAB },
+        { VK_NUMPAD8, VK_NUMPAD5, VK_NUMPAD4, VK_NUMPAD6, VK_J, VK_J, KEYMAP_NO_MAPPING, VK_U, VK_I, KEYMAP_NO_MAPPING, VK_OEM_4, VK_OEM_6 },
+
+        { KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING,
+          KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING },
+
+        { KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING,
+          KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING }
+    };
 
     if (ini) {
 #if RETRO_REV02
@@ -499,21 +521,21 @@ void RSDK::readSettings()
         engine.XYFlip = false;
 #endif
 
-        gameSettings.windowed       = iniparser_getboolean(ini, "Video:windowed", true);
-        gameSettings.bordered       = iniparser_getboolean(ini, "Video:border", true);
-        gameSettings.exclusiveFS    = iniparser_getboolean(ini, "Video:exclusiveFS", false);
-        gameSettings.vsync          = iniparser_getboolean(ini, "Video:vsync", false);
-        gameSettings.tripleBuffered = iniparser_getboolean(ini, "Video:tripleBuffering", false);
+        videoSettings.windowed       = iniparser_getboolean(ini, "Video:windowed", true);
+        videoSettings.bordered       = iniparser_getboolean(ini, "Video:border", true);
+        videoSettings.exclusiveFS    = iniparser_getboolean(ini, "Video:exclusiveFS", false);
+        videoSettings.vsync          = iniparser_getboolean(ini, "Video:vsync", false);
+        videoSettings.tripleBuffered = iniparser_getboolean(ini, "Video:tripleBuffering", false);
 
-        gameSettings.pixWidth = iniparser_getint(ini, "Video:pixWidth", DEFAULT_SCREEN_XSIZE);
+        videoSettings.pixWidth = iniparser_getint(ini, "Video:pixWidth", DEFAULT_SCREEN_XSIZE);
 
-        gameSettings.windowWidth   = iniparser_getint(ini, "Video:winWidth", DEFAULT_SCREEN_XSIZE);
-        gameSettings.windowHeight  = iniparser_getint(ini, "Video:winHeight", SCREEN_YSIZE);
-        gameSettings.fsWidth       = iniparser_getint(ini, "Video:fsWidth", 0);
-        gameSettings.fsHeight      = iniparser_getint(ini, "Video:fsHeight", 0);
-        gameSettings.refreshRate   = iniparser_getint(ini, "Video:refreshRate", 60);
-        gameSettings.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
-        gameSettings.shaderID      = iniparser_getint(ini, "Video:screenShader", 0);
+        videoSettings.windowWidth   = iniparser_getint(ini, "Video:winWidth", DEFAULT_SCREEN_XSIZE);
+        videoSettings.windowHeight  = iniparser_getint(ini, "Video:winHeight", SCREEN_YSIZE);
+        videoSettings.fsWidth       = iniparser_getint(ini, "Video:fsWidth", 0);
+        videoSettings.fsHeight      = iniparser_getint(ini, "Video:fsHeight", 0);
+        videoSettings.refreshRate   = iniparser_getint(ini, "Video:refreshRate", 60);
+        videoSettings.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
+        videoSettings.shaderID      = iniparser_getint(ini, "Video:screenShader", 0);
 
         engine.streamsEnabled = iniparser_getboolean(ini, "Audio:streamsEnabled", true);
         engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 0.8);
@@ -616,19 +638,19 @@ void RSDK::readSettings()
         iniparser_freedict(ini);
     }
     else {
-        gameSettings.windowed       = true;
-        gameSettings.bordered       = false;
-        gameSettings.exclusiveFS    = true;
-        gameSettings.vsync          = true;
-        gameSettings.tripleBuffered = false;
-        gameSettings.shaderSupport  = true;
-        gameSettings.pixWidth       = 424;
-        gameSettings.fsWidth        = 0;
-        gameSettings.windowWidth    = gameSettings.pixWidth * 1;
-        gameSettings.windowHeight   = SCREEN_YSIZE * 1;
-        gameSettings.fsHeight       = 0;
-        gameSettings.refreshRate    = 60;
-        gameSettings.shaderID       = SHADER_NONE;
+        videoSettings.windowed       = true;
+        videoSettings.bordered       = false;
+        videoSettings.exclusiveFS    = true;
+        videoSettings.vsync          = true;
+        videoSettings.tripleBuffered = false;
+        videoSettings.shaderSupport  = true;
+        videoSettings.pixWidth       = 424;
+        videoSettings.fsWidth        = 0;
+        videoSettings.windowWidth    = videoSettings.pixWidth * 1;
+        videoSettings.windowHeight   = SCREEN_YSIZE * 1;
+        videoSettings.fsHeight       = 0;
+        videoSettings.refreshRate    = 60;
+        videoSettings.shaderID       = SHADER_NONE;
         engine.streamsEnabled       = true;
         engine.streamVolume         = 1.0f;
         engine.soundFXVolume        = 1.0f;
@@ -665,7 +687,7 @@ void RSDK::writeSettings(bool32 writeToFile)
         return;
 #endif
 
-    if (settingsChanged || writeToFile) {
+    if (changedVideoSettings || writeToFile) {
         char pathBuffer[0x100];
         sprintf(pathBuffer, "%sSettings.ini", SKU::userFileDir);
 
@@ -700,26 +722,26 @@ void RSDK::writeSettings(bool32 writeToFile)
         writeText(file, "\n[Video]\n");
         writeText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");
         writeText(file, "; If not listed, fullscreen will just use the desktop resolution\n");
-        writeText(file, "windowed=%s\n", (gameSettings.windowed ? "y" : "n"));
-        writeText(file, "border=%s\n", (gameSettings.bordered ? "y" : "n"));
-        writeText(file, "exclusiveFS=%s\n", (gameSettings.exclusiveFS ? "y" : "n"));
-        writeText(file, "vsync=%s\n", (gameSettings.vsync ? "y" : "n"));
-        writeText(file, "tripleBuffering=%s\n", (gameSettings.tripleBuffered ? "y" : "n"));
+        writeText(file, "windowed=%s\n", (videoSettings.windowed ? "y" : "n"));
+        writeText(file, "border=%s\n", (videoSettings.bordered ? "y" : "n"));
+        writeText(file, "exclusiveFS=%s\n", (videoSettings.exclusiveFS ? "y" : "n"));
+        writeText(file, "vsync=%s\n", (videoSettings.vsync ? "y" : "n"));
+        writeText(file, "tripleBuffering=%s\n", (videoSettings.tripleBuffered ? "y" : "n"));
         if (ini) {
             if (strcmp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound") == 0)
-                writeText(file, "pixWidth=%d\n", gameSettings.pixWidth);
+                writeText(file, "pixWidth=%d\n", videoSettings.pixWidth);
         }
-        writeText(file, "winWidth=%d\n", gameSettings.windowWidth);
-        writeText(file, "winHeight=%d\n", gameSettings.windowHeight);
-        if (gameSettings.fsWidth > 0)
-            writeText(file, "fsWidth=%d\n", gameSettings.fsWidth);
-        if (gameSettings.fsHeight > 0)
-            writeText(file, "fsHeight=%d\n", gameSettings.fsHeight);
-        if (gameSettings.refreshRate > 0)
-            writeText(file, "refreshRate=%d\n", gameSettings.refreshRate);
+        writeText(file, "winWidth=%d\n", videoSettings.windowWidth);
+        writeText(file, "winHeight=%d\n", videoSettings.windowHeight);
+        if (videoSettings.fsWidth > 0)
+            writeText(file, "fsWidth=%d\n", videoSettings.fsWidth);
+        if (videoSettings.fsHeight > 0)
+            writeText(file, "fsHeight=%d\n", videoSettings.fsHeight);
+        if (videoSettings.refreshRate > 0)
+            writeText(file, "refreshRate=%d\n", videoSettings.refreshRate);
 
-        writeText(file, "shaderSupport=%s\n", (gameSettings.shaderSupport ? "y" : "n"));
-        writeText(file, "screenShader=%d\n", gameSettings.shaderID);
+        writeText(file, "shaderSupport=%s\n", (videoSettings.shaderSupport ? "y" : "n"));
+        writeText(file, "screenShader=%d\n", videoSettings.shaderID);
         writeText(file, "\n[Audio]\n");
         writeText(file, "streamsEnabled=%s\n", (engine.streamsEnabled ? "y" : "n"));
         writeText(file, "streamVolume=%f\n", engine.streamVolume);

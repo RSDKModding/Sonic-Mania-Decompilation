@@ -197,7 +197,7 @@ void MenuSetup_StageLoad(void)
     MenuSetup->vsTotalTimer = 120;
 #endif
 
-    RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+    RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
 
     foreach_all(FXFade, fade) { MenuSetup->fxFade = fade; }
 }
@@ -902,17 +902,17 @@ void MenuSetup_HandleMenuReturn(void)
         if (control == MenuSetup->video) {
             EntityUIControl *control = MenuSetup->video;
             EntityUIButton *button   = control->buttons[0];
-            UIButton_SetChoiceSelection(button, RSDK.GetSettingsValue(SETTINGS_SHADERID));
+            UIButton_SetChoiceSelection(button, RSDK.GetVideoSetting(VIDEOSETTING_SHADERID));
         }
 
         if (control == MenuSetup->sound) {
             EntityUIControl *control = MenuSetup->sound;
 
             EntityUISlider *slider = (EntityUISlider *)control->buttons[0];
-            slider->sliderPos      = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
+            slider->sliderPos      = RSDK.GetVideoSetting(VIDEOSETTING_STREAM_VOL);
 
             slider            = (EntityUISlider *)control->buttons[1];
-            slider->sliderPos = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
+            slider->sliderPos = RSDK.GetVideoSetting(VIDEOSETTING_SFX_VOL);
         }
 
         if (control == MenuSetup->language) {
@@ -1966,34 +1966,34 @@ void MenuSetup_Options_ControlsMenuButton_ActionCB(void)
 
 void MenuSetup_Options_SetDefaultMappings_P1(void)
 {
-    ControllerInfo[CONT_P1].keyUp.keyMap     = 38;
-    ControllerInfo[CONT_P1].keyDown.keyMap   = 40;
-    ControllerInfo[CONT_P1].keyLeft.keyMap   = 37;
-    ControllerInfo[CONT_P1].keyRight.keyMap  = 39;
-    ControllerInfo[CONT_P1].keyA.keyMap      = 65;
-    ControllerInfo[CONT_P1].keyB.keyMap      = 83;
-    ControllerInfo[CONT_P1].keyC.keyMap      = 0;
-    ControllerInfo[CONT_P1].keyX.keyMap      = 81;
-    ControllerInfo[CONT_P1].keyY.keyMap      = 87;
-    ControllerInfo[CONT_P1].keyZ.keyMap      = 0;
-    ControllerInfo[CONT_P1].keyStart.keyMap  = 13;
-    ControllerInfo[CONT_P1].keySelect.keyMap = 9;
+    ControllerInfo[CONT_P1].keyUp.keyMap     = KEYMAP_UP;
+    ControllerInfo[CONT_P1].keyDown.keyMap   = KEYMAP_DOWN;
+    ControllerInfo[CONT_P1].keyLeft.keyMap   = KEYMAP_LEFT;
+    ControllerInfo[CONT_P1].keyRight.keyMap  = KEYMAP_RIGHT;
+    ControllerInfo[CONT_P1].keyA.keyMap      = KEYMAP_A;
+    ControllerInfo[CONT_P1].keyB.keyMap      = KEYMAP_S;
+    ControllerInfo[CONT_P1].keyC.keyMap      = KEYMAP_NO_MAPPING;
+    ControllerInfo[CONT_P1].keyX.keyMap      = KEYMAP_Q;
+    ControllerInfo[CONT_P1].keyY.keyMap      = KEYMAP_W;
+    ControllerInfo[CONT_P1].keyZ.keyMap      = KEYMAP_NO_MAPPING;
+    ControllerInfo[CONT_P1].keyStart.keyMap  = KEYMAP_RETURN;
+    ControllerInfo[CONT_P1].keySelect.keyMap = KEYMAP_TAB;
 }
 
 void MenuSetup_Options_SetDefaultMappings_P2(void)
 {
-    ControllerInfo[CONT_P2].keyUp.keyMap     = 104;
-    ControllerInfo[CONT_P2].keyDown.keyMap   = 101;
-    ControllerInfo[CONT_P2].keyLeft.keyMap   = 100;
-    ControllerInfo[CONT_P2].keyRight.keyMap  = 102;
-    ControllerInfo[CONT_P2].keyA.keyMap      = 74;
-    ControllerInfo[CONT_P2].keyB.keyMap      = 75;
-    ControllerInfo[CONT_P2].keyC.keyMap      = 0;
-    ControllerInfo[CONT_P2].keyX.keyMap      = 85;
-    ControllerInfo[CONT_P2].keyY.keyMap      = 73;
-    ControllerInfo[CONT_P2].keyZ.keyMap      = 0;
-    ControllerInfo[CONT_P2].keyStart.keyMap  = 219;
-    ControllerInfo[CONT_P2].keySelect.keyMap = 221;
+    ControllerInfo[CONT_P2].keyUp.keyMap     = KEYMAP_NUMPAD8;
+    ControllerInfo[CONT_P2].keyDown.keyMap   = KEYMAP_NUMPAD5;
+    ControllerInfo[CONT_P2].keyLeft.keyMap   = KEYMAP_NUMPAD4;
+    ControllerInfo[CONT_P2].keyRight.keyMap  = KEYMAP_NUMPAD6;
+    ControllerInfo[CONT_P2].keyA.keyMap      = KEYMAP_J;
+    ControllerInfo[CONT_P2].keyB.keyMap      = KEYMAP_K;
+    ControllerInfo[CONT_P2].keyC.keyMap      = KEYMAP_NO_MAPPING;
+    ControllerInfo[CONT_P2].keyX.keyMap      = KEYMAP_U;
+    ControllerInfo[CONT_P2].keyY.keyMap      = KEYMAP_I;
+    ControllerInfo[CONT_P2].keyZ.keyMap      = KEYMAP_NO_MAPPING;
+    ControllerInfo[CONT_P2].keyStart.keyMap  = KEYMAP_OEM_4;
+    ControllerInfo[CONT_P2].keySelect.keyMap = KEYMAP_OEM_6;
 }
 
 void MenuSetup_Options_SetupKBControlsMenu(int32 playerID)
@@ -2042,17 +2042,17 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
 
         int32 options[7];
 
-        options[0] = RSDK.GetSettingsValue(SETTINGS_SHADERID); // filter
+        options[0] = RSDK.GetVideoSetting(VIDEOSETTING_SHADERID); // filter
         options[1] = optionsRAM->windowSize;                   // window size
-        options[2] = RSDK.GetSettingsValue(SETTINGS_BORDERED); // bordered
+        options[2] = RSDK.GetVideoSetting(VIDEOSETTING_BORDERED); // bordered
 
         options[3] = 0;
-        if (!RSDK.GetSettingsValue(SETTINGS_WINDOWED) || optionsRAM->windowSize == 4)
+        if (!RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED) || optionsRAM->windowSize == 4)
             options[3] = 1;
 
         options[4] = 0;                                              // fullscreen res
-        options[5] = RSDK.GetSettingsValue(SETTINGS_VSYNC);          // vsync
-        options[6] = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED); // triple buffered
+        options[5] = RSDK.GetVideoSetting(VIDEOSETTING_VSYNC);          // vsync
+        options[6] = RSDK.GetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED); // triple buffered
 
         for (int32 i = 0; i < videoControl_Win->buttonCount; ++i) {
             EntityUIButton *button = videoControl_Win->buttons[i];
@@ -2063,7 +2063,7 @@ void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
             }
             else if (i == 1) {
                 EntityUIWinSize *winSize = (EntityUIWinSize *)UIButton_GetChoicePtr(button, button->selection);
-                winSize->selection       = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT) / SCREEN_YSIZE;
+                winSize->selection       = RSDK.GetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT) / SCREEN_YSIZE;
             }
             else if (button->selection != options[i]) {
                 UIButton_SetChoiceSelection(button, options[i]);
@@ -2117,7 +2117,7 @@ void MenuSetup_OptionsLanguage_LanguageButton_ActionCB(void)
     options->overrideLanguage = control->buttonID >= 0;
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
-        RSDK.SetSettingsValue(SETTINGS_LANGUAGE, control->buttonID);
+        RSDK.SetVideoSetting(VIDEOSETTING_LANGUAGE, control->buttonID);
 
     Options->changed = true;
 
@@ -2140,7 +2140,7 @@ void MenuSetup_OptionsVideo_ShaderButton_ActionCB(void)
 
     options->screenShader   = self->selection;
     options->overrideShader = true;
-    RSDK.SetSettingsValue(SETTINGS_SHADERID, self->selection);
+    RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, self->selection);
 
     Options->changed = true;
 }
@@ -2152,8 +2152,8 @@ void MenuSetup_OptionsVideo_WindowScaleButton_ActionCB(void)
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     if (self->selection != 4) {
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, WIDE_SCR_XSIZE * (self->selection + 1));
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
+        RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, WIDE_SCR_XSIZE * (self->selection + 1));
+        RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
 
         options->windowSize = self->selection;
         Options->changed    = true;
@@ -2167,7 +2167,7 @@ void MenuSetup_OptionsVideo_BorderlessButton_ActionCB(void)
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     options->windowBorder = self->selection;
-    RSDK.SetSettingsValue(SETTINGS_BORDERED, self->selection);
+    RSDK.SetVideoSetting(VIDEOSETTING_BORDERED, self->selection);
 
     RSDK.UpdateWindow();
     Options->changed = true;
@@ -2180,7 +2180,7 @@ void MenuSetup_OptionsVideo_FullscreenButton_ActionCB(void)
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     options->windowed = self->selection ^ 1;
-    RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
+    RSDK.SetVideoSetting(VIDEOSETTING_WINDOWED, options->windowed);
 
     RSDK.UpdateWindow();
     Options->changed = true;
@@ -2193,7 +2193,7 @@ void MenuSetup_OptionsVideo_VSyncButton_ActionCB(void)
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     options->vSync = self->selection;
-    RSDK.SetSettingsValue(SETTINGS_VSYNC, self->selection);
+    RSDK.SetVideoSetting(VIDEOSETTING_VSYNC, self->selection);
 
     Options->changed = true;
 }
@@ -2205,7 +2205,7 @@ void MenuSetup_OptionsVideo_TripleBufferButton_ActionCB(void)
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     options->tripleBuffering = self->selection;
-    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, self->selection);
+    RSDK.SetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED, self->selection);
 
     Options->changed = true;
 }
@@ -2225,28 +2225,28 @@ void MenuSetup_OptionsVideo_UISlider_ChangedCB(void)
     switch (value) {
         case 0xF1:
             options->windowed = self->sliderPos;
-            RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
+            RSDK.SetVideoSetting(VIDEOSETTING_WINDOWED, options->windowed);
             break;
 
         case 0xF2:
             options->windowBorder = self->sliderPos;
-            RSDK.SetSettingsValue(SETTINGS_BORDERED, options->windowBorder);
+            RSDK.SetVideoSetting(VIDEOSETTING_BORDERED, options->windowBorder);
             break;
 
         case 0xF4:
             options->vSync = self->sliderPos;
-            RSDK.SetSettingsValue(SETTINGS_VSYNC, options->vSync);
+            RSDK.SetVideoSetting(VIDEOSETTING_VSYNC, options->vSync);
             break;
 
         case 0xF5:
             options->tripleBuffering = self->sliderPos;
-            RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, options->tripleBuffering);
+            RSDK.SetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED, options->tripleBuffering);
             break;
 
         case 0xFC:
             options->screenShader   = self->sliderPos;
             options->overrideShader = true;
-            RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
+            RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, options->screenShader);
 
             RSDK.UpdateWindow();
             break;
@@ -2254,13 +2254,13 @@ void MenuSetup_OptionsVideo_UISlider_ChangedCB(void)
         case 0:
             options->volMusic         = self->sliderPos;
             options->overrideMusicVol = true;
-            RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
+            RSDK.SetVideoSetting(VIDEOSETTING_STREAM_VOL, options->volMusic);
             break;
 
         case 1:
             options->volSfx         = self->sliderPos;
             options->overrideSfxVol = true;
-            RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
+            RSDK.SetVideoSetting(VIDEOSETTING_SFX_VOL, options->volSfx);
             break;
 
         default: break;

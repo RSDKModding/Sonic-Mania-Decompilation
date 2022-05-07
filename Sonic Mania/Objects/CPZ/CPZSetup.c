@@ -117,7 +117,7 @@ void CPZSetup_StageLoad(void)
 
         BGSwitch->screenID = 0;
         if (setCPZ1BG) {
-            for (; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitchCB_Act1BG();
+            for (; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitchCB_Act1BG();
 
             BGSwitch->layerIDs[0] = CPZ_BG_CPZ1;
             BGSwitch->layerIDs[1] = CPZ_BG_CPZ1;
@@ -131,7 +131,7 @@ void CPZSetup_StageLoad(void)
                 backgroundAct1->scrollInfo[i].scrollPos += 0x470000 * backgroundAct1->scrollInfo[i].parallaxFactor;
         }
         else {
-            for (; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitchCB_Act2BG();
+            for (; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitchCB_Act2BG();
 
             BGSwitch->layerIDs[0] = CPZ_BG_CPZ2;
             BGSwitch->layerIDs[1] = CPZ_BG_CPZ2;

@@ -120,7 +120,7 @@ void GHZSetup_SetupStartingBG(void)
         BGSwitch->layerIDs[2] = GHZ_BG_CAVES;
         BGSwitch->layerIDs[3] = GHZ_BG_CAVES;
 
-        for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->screenID) {
+        for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++BGSwitch->screenID) {
             GHZSetup_BGSwitchCB_Caves_Act2();
         }
         Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 1724 << 16, true);
@@ -161,7 +161,7 @@ void GHZSetup_HandleActTransition(void)
         bgCave2->scrollInfo[s].scrollPos += 0x3CB000 * bgCave2->scrollInfo[s].parallaxFactor;
     }
 
-    for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->screenID) {
+    for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++BGSwitch->screenID) {
         GHZSetup_BGSwitchCB_Caves_Act2();
     }
 }

@@ -131,14 +131,14 @@ int RunRetroEngine(int argc, char *argv[])
 #endif
 
             if (!engine.initialized || (engine.focusState & 1)) {
-                if (RSDK::gameSettings.windowState != WINDOWSTATE_ACTIVE)
+                if (RSDK::videoSettings.windowState != WINDOWSTATE_ACTIVE)
                     continue;
             }
             else {
                 if (!engine.hardPause)
                     ProcessEngine();
 
-                if (RSDK::gameSettings.windowState != WINDOWSTATE_ACTIVE)
+                if (RSDK::videoSettings.windowState != WINDOWSTATE_ACTIVE)
                     continue;
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -152,7 +152,7 @@ int RunRetroEngine(int argc, char *argv[])
                                 if (sceneInfo.state != ENGINESTATE_DEVMENU) {
                                     devMenu.stateStore = sceneInfo.state;
                                     if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                                        RSDK::gameSettings.screenCount = 1;
+                                        RSDK::videoSettings.screenCount = 1;
                                     devMenu.state   = DevMenu_MainMenu;
                                     devMenu.option  = 0;
                                     devMenu.scroll  = 0;
@@ -283,7 +283,7 @@ void ProcessEngine()
                 }
 #endif
                 // dim after 5 mins
-                RSDK::gameSettings.dimLimit = (5 * 60) * RSDK::gameSettings.refreshRate;
+                RSDK::videoSettings.dimLimit = (5 * 60) * RSDK::videoSettings.refreshRate;
                 ProcessInput();
                 ProcessObjects();
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
@@ -432,14 +432,14 @@ void ProcessEngine()
         case ENGINESTATE_SHOWPNG:
             ProcessInput();
 
-            if (engine.imageDelta <= 0.0 || RSDK::gameSettings.dimMax >= 1.0) {
+            if (engine.imageDelta <= 0.0 || RSDK::videoSettings.dimMax >= 1.0) {
                 if (engine.displayTime <= 0.0) {
-                    RSDK::gameSettings.dimMax += engine.imageDelta;
-                    if (RSDK::gameSettings.dimMax <= 0.0) {
-                        RSDK::gameSettings.shaderID    = RenderDevice::lastShaderID;
-                        RSDK::gameSettings.screenCount = 1;
+                    RSDK::videoSettings.dimMax += engine.imageDelta;
+                    if (RSDK::videoSettings.dimMax <= 0.0) {
+                        RSDK::videoSettings.shaderID    = RenderDevice::lastShaderID;
+                        RSDK::videoSettings.screenCount = 1;
                         sceneInfo.state                = engine.prevEngineMode;
-                        RSDK::gameSettings.dimMax      = 1.0;
+                        RSDK::videoSettings.dimMax      = 1.0;
                     }
                 }
                 else {
@@ -451,10 +451,10 @@ void ProcessEngine()
                 }
             }
             else {
-                RSDK::gameSettings.dimMax += engine.imageDelta;
-                if (RSDK::gameSettings.dimMax >= 1.0) {
+                RSDK::videoSettings.dimMax += engine.imageDelta;
+                if (RSDK::videoSettings.dimMax >= 1.0) {
                     engine.imageDelta         = -engine.imageDelta;
-                    RSDK::gameSettings.dimMax = 1.0;
+                    RSDK::videoSettings.dimMax = 1.0;
                 }
             }
             break;
@@ -1092,13 +1092,13 @@ void ProcessDebugCommands()
         if (sceneInfo.state == ENGINESTATE_DEVMENU) {
             sceneInfo.state = devMenu.stateStore;
             if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
-                RSDK::gameSettings.screenCount = 0;
+                RSDK::videoSettings.screenCount = 0;
             ResumeSound();
         }
         else {
             devMenu.stateStore = sceneInfo.state;
             if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                RSDK::gameSettings.screenCount = 1;
+                RSDK::videoSettings.screenCount = 1;
             devMenu.state   = DevMenu_MainMenu;
             devMenu.option  = 0;
             devMenu.scroll  = 0;

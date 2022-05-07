@@ -290,7 +290,7 @@ void GameOver_State_ExitLetters(void)
 #else
             session->matchID++;
 #endif
-            RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+            RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
             RSDK.SetScene("Presentation", "Menu");
         }
         else if (self->animator.animationID != 6) {

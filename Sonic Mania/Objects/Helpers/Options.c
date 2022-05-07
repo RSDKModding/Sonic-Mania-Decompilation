@@ -43,14 +43,14 @@ void Options_Reload(void)
 
     options->overrideLanguage = true;
 
-    options->screenShader    = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
-    options->volMusic        = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
-    options->volSfx          = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
-    options->language        = RSDK.GetSettingsValue(SETTINGS_LANGUAGE);
-    options->vSync           = RSDK.GetSettingsValue(SETTINGS_VSYNC);
-    options->windowBorder    = RSDK.GetSettingsValue(SETTINGS_BORDERED);
-    options->windowed        = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
-    options->tripleBuffering = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
+    options->screenShader    = RSDK.GetVideoSetting(VIDEOSETTING_SHADERID) % 4;
+    options->volMusic        = RSDK.GetVideoSetting(VIDEOSETTING_STREAM_VOL);
+    options->volSfx          = RSDK.GetVideoSetting(VIDEOSETTING_SFX_VOL);
+    options->language        = RSDK.GetVideoSetting(VIDEOSETTING_LANGUAGE);
+    options->vSync           = RSDK.GetVideoSetting(VIDEOSETTING_VSYNC);
+    options->windowBorder    = RSDK.GetVideoSetting(VIDEOSETTING_BORDERED);
+    options->windowed        = RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED);
+    options->tripleBuffering = RSDK.GetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED);
 
     Options_GetWinSize();
 
@@ -69,13 +69,13 @@ void Options_Reload(void)
 void Options_GetWinSize(void)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    int32 windowed         = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
+    int32 windowed         = RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED);
 
     if (!windowed) {
         options->windowSize = 4;
     }
     else {
-        int32 width = RSDK.GetSettingsValue(SETTINGS_WINDOW_WIDTH);
+        int32 width = RSDK.GetVideoSetting(VIDEOSETTING_WINDOW_WIDTH);
 
         if (width <= WIDE_SCR_XSIZE) {
             options->windowSize = 0;
@@ -144,7 +144,7 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success))
         }
         else {
 #if RETRO_USE_PLUS
-            RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
+            RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
 #else
             APICallback_SaveSettingsINI();
 #endif
@@ -170,7 +170,7 @@ void Options_SetLanguage(int32 language)
     }
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
-        RSDK.SetSettingsValue(SETTINGS_LANGUAGE, language);
+        RSDK.SetVideoSetting(VIDEOSETTING_LANGUAGE, language);
 
     Options->changed = true;
 }
@@ -180,13 +180,13 @@ void Options_LoadValuesFromSettings(EntityOptions *options)
     Localization->language = options->overrideLanguage ? options->language : sku_language;
 
     if (!options->overrideShader)
-        options->screenShader = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
+        options->screenShader = RSDK.GetVideoSetting(VIDEOSETTING_SHADERID) % 4;
 
     if (!options->overrideMusicVol)
-        options->volMusic = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
+        options->volMusic = RSDK.GetVideoSetting(VIDEOSETTING_STREAM_VOL);
 
     if (!options->overrideSfxVol)
-        options->volSfx = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
+        options->volSfx = RSDK.GetVideoSetting(VIDEOSETTING_SFX_VOL);
 }
 
 void Options_LoadOptionsCallback(int32 statusCode)
@@ -201,9 +201,9 @@ void Options_LoadOptionsCallback(int32 statusCode)
         LogHelpers_Print("dataPtr.overrideLanguage = %d", options->overrideLanguage);
         Options_LoadValuesFromSettings((EntityOptions *)globals->optionsRAM);
 
-        RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
-        RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
-        RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
+        RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, options->screenShader);
+        RSDK.SetVideoSetting(VIDEOSETTING_STREAM_VOL, options->volMusic);
+        RSDK.SetVideoSetting(VIDEOSETTING_SFX_VOL, options->volSfx);
     }
     else {
         success                = false;

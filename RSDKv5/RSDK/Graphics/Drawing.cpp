@@ -153,12 +153,12 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, c
     int dispID = 0;
 
     if (*displayID == -2) {
-        if (RSDK::gameSettings.fsWidth && RSDK::gameSettings.fsHeight) {
+        if (RSDK::videoSettings.fsWidth && RSDK::videoSettings.fsHeight) {
             int d = 0;
             for (; d < RenderDevice::displayCount; ++d) {
-                if (RenderDevice::displayInfo.displays[d].width == RSDK::gameSettings.fsWidth
-                    && RenderDevice::displayInfo.displays[d].height == RSDK::gameSettings.fsHeight
-                    && RenderDevice::displayInfo.displays[d].refresh_rate == RSDK::gameSettings.refreshRate) {
+                if (RenderDevice::displayInfo.displays[d].width == RSDK::videoSettings.fsWidth
+                    && RenderDevice::displayInfo.displays[d].height == RSDK::videoSettings.fsHeight
+                    && RenderDevice::displayInfo.displays[d].refresh_rate == RSDK::videoSettings.refreshRate) {
                     break;
                 }
             }
@@ -223,7 +223,7 @@ void GetWindowSize(int *width, int *height)
     if (height)
         *height = display.Height;
 #elif RETRO_RENDERDEVICE_SDL2
-    if (!RSDK::gameSettings.windowed) {
+    if (!RSDK::videoSettings.windowed) {
         SDL_GetRendererOutputSize(RenderDevice::renderer, width, height);
     }
     else {

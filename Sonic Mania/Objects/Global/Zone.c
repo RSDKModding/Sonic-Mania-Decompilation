@@ -440,7 +440,7 @@ void Zone_StageLoad(void)
     if (globals->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
             if (globals->gameMode == MODE_COMPETITION) {
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+                RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
             }
             else {
 #if RETRO_USE_PLUS
@@ -448,12 +448,12 @@ void Zone_StageLoad(void)
 #else
                 CompetitionSession_ResetOptions();
 #endif
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+                RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
             }
         }
         else {
             session->playerCount = clampVal(session->playerCount, 2, PLAYER_MAX);
-            RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
+            RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, session->playerCount);
         }
     }
     else {
@@ -462,7 +462,7 @@ void Zone_StageLoad(void)
 #else
         CompetitionSession_ResetOptions();
 #endif
-        RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+        RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
     }
 
     // Setup Rich Presence for this game mode
@@ -952,7 +952,7 @@ void Zone_State_Fadeout_Competition(void)
 #endif
 
         RSDK.SetScene("Presentation", "Menu");
-        RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
+        RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
         RSDK.LoadScene();
     }
 }

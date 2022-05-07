@@ -15,23 +15,23 @@ enum ControllerIDs {
 };
 
 enum InputDeviceTypes {
-    DEVICE_TYPE_NONE       = 0,
-    DEVICE_TYPE_KEYBOARD   = 1,
-    DEVICE_TYPE_CONTROLLER = 2,
-    DEVICE_TYPE_UNKNOWN3   = 3,
-    DEVICE_TYPE_UNKNOWN4   = 4,
+    DEVICE_TYPE_NONE,
+    DEVICE_TYPE_KEYBOARD,
+    DEVICE_TYPE_CONTROLLER,
+    DEVICE_TYPE_UNKNOWN,
+    DEVICE_TYPE_STEAMOVERLAY,
 };
 
 enum InputDeviceIDs {
-    DEVICE_KEYBOARD        = 0,
-    DEVICE_XBOX            = 1,
-    DEVICE_PS4             = 2,
-    DEVICE_SATURN          = 3,
-    DEVICE_SWITCH_HANDHELD = 4,
-    DEVICE_SWITCH_JOY_GRIP = 5,
-    DEVICE_SWITCH_JOY_L    = 6,
-    DEVICE_SWITCH_JOY_R    = 7,
-    DEVICE_SWITCH_PRO      = 8,
+    DEVICE_KEYBOARD,
+    DEVICE_XBOX,
+    DEVICE_PS4,
+    DEVICE_SATURN,
+    DEVICE_SWITCH_HANDHELD,
+    DEVICE_SWITCH_JOY_GRIP,
+    DEVICE_SWITCH_JOY_L,
+    DEVICE_SWITCH_JOY_R,
+    DEVICE_SWITCH_PRO,
 };
 
 enum InputDeviceAPIs {
@@ -83,6 +83,8 @@ enum KeyMasks {
 };
 
 enum WinMappings {
+    KEYMAP_AUTO_MAPPING = -1,
+    KEYMAP_NO_MAPPING   = 0,
 #if !RETRO_RENDERDEVICE_DIRECTX9 && !RETRO_RENDERDEVICE_DIRECTX11
     VK_LBUTTON    = 0x01,
     VK_RBUTTON    = 0x02,
@@ -315,7 +317,6 @@ enum WinMappings {
     VK_PA1                             = 0xFD,
     VK_OEM_CLEAR                       = 0xFE,
 #endif
-    VK_UNKNOWN = 0xFF,
 };
 
 struct GamePadButtonMap {
