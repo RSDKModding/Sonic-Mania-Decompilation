@@ -33,7 +33,7 @@ int32 mostRecentControllerID = -1;
 #endif
 
 #if RETRO_INPUTDEVICE_STEAM
-#include "RawInput/SteamInputDevice.cpp"
+#include "Steam/SteamInputDevice.cpp"
 #endif
 
 #if RETRO_INPUTDEVICE_SDL2
