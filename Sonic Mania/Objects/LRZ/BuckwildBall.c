@@ -293,7 +293,7 @@ void BuckwildBall_State_Falling(void)
     self->position.y += self->velocity.y;
 
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x1C0000, true)) {
-        if (!RSDK.GetEntityCount(Drillerdroid->objectID, true) || (Drillerdroid->platformActive[self->bossBallSlot] == true)) {
+        if (!RSDK.GetEntityCount(Drillerdroid->classID, true) || (Drillerdroid->platformActive[self->bossBallSlot] == true)) {
             self->velocity.y = 0;
             self->state      = BuckwildBall_State_Rolling;
             self->velocity.x = abs(self->speed << 15) * (2 * (self->direction != FLIP_NONE) - 1);

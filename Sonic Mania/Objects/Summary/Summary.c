@@ -28,7 +28,7 @@ void Summary_StaticUpdate(void)
         Summary->bgAniFrame &= 3;
         Summary->bgAniDuration = Summary->bgAniDurationTable[Summary->bgAniFrame];
 
-        TileLayer *background = RSDK.GetSceneLayer(0);
+        TileLayer *background = RSDK.GetTileLayer(0);
         background->scrollPos = (background->scrollPos + 0x1000000) & 0x7FF0000;
     }
 }
@@ -56,7 +56,7 @@ void Summary_Create(void *data)
 
 void Summary_StageLoad(void)
 {
-    RSDK.ResetEntitySlot(0, Summary->objectID, 0);
+    RSDK.ResetEntitySlot(0, Summary->classID, 0);
 
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
     UIText->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);

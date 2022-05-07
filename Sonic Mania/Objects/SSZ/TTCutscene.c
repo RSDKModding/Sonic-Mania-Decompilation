@@ -54,7 +54,7 @@ void TTCutscene_StartCutscene(void)
 
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (cutsceneSeq->objectID != TYPE_BLANK) {
+    if (cutsceneSeq->classID != TYPE_BLANK) {
         cutsceneSeq->skipType     = SKIPTYPE_CALLBACK;
         cutsceneSeq->skipCallback = TTCutscene_SkipCB;
     }
@@ -98,7 +98,7 @@ bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
         player1->position.y = (ScreenInfo->position.y + 32 + ScreenInfo->height) << 16;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SPRINGTWIRL, &player1->animator, false, 0);
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player1->position.x += 0x100000;
             player1->stateInput = StateMachine_None;
 
@@ -139,7 +139,7 @@ bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host)
     player1->velocity.x = 0;
     player1->velocity.y = 0;
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         int32 timerP2 = host->timer - 15;
         if (timerP2 > 0) {
             if (timerP2 >= 60) {
@@ -169,7 +169,7 @@ bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host)
     unused(camera);
 
     player1->position.y = (ScreenInfo->centerY + ScreenInfo->position.y) << 16;
-    if (player2->objectID == Player->objectID)
+    if (player2->classID == Player->classID)
         player2->position.y = (ScreenInfo->centerY + ScreenInfo->position.y) << 16;
 
     return host->timer == 100;
@@ -201,7 +201,7 @@ bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
     player1->velocity.x = 0;
     player1->velocity.y = 0;
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         int32 timerP2 = host->timer - 15;
         if (timerP2 > 0) {
             if (timerP2 >= 60) {

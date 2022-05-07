@@ -126,7 +126,7 @@ void Fan_StaticUpdate(void)
 
     if (RSDK.CheckStageFolder("HCZ")) {
         int32 count = 0;
-        if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
+        if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
             Vector2 range;
             range.x = 0x400000;
             range.y = 0x400000;
@@ -261,7 +261,7 @@ void Fan_SetupTagLink(void)
     RSDK_THIS(Fan);
 
     self->taggedButton         = NULL;
-    EntityButton *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+    EntityButton *taggedButton = RSDK.GetEntity(RSDK.GetEntityID(self) - 1);
 
     if (self->buttonTag > 0) {
         bool32 matchedTag = false;
@@ -287,7 +287,7 @@ void Fan_SetupTagLink(void)
     }
 
     if (taggedButton) {
-        if ((Button && taggedButton->objectID == Button->objectID) || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+        if ((Button && taggedButton->classID == Button->classID) || (PullChain && taggedButton->classID == PullChain->classID)) {
             int32 distX = abs(self->position.x - taggedButton->position.x);
             int32 distY = abs(self->position.y - taggedButton->position.y);
 
@@ -474,12 +474,12 @@ void Fan_Activate_Platform(void)
 
     int32 slot               = SceneInfo->entitySlot - 1;
     EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
-    while (platform->objectID == Fan->objectID) {
+    while (platform->classID == Fan->classID) {
         --slot;
         platform = RSDK_GET_ENTITY(slot, Platform);
     }
 
-    if (platform->objectID == Platform->objectID) {
+    if (platform->classID == Platform->classID) {
         if (platform->amplitude.y == platform->amplitude.x)
             self->state = Fan_State_Stopped;
         else if (self->state == Fan_State_Stopped)

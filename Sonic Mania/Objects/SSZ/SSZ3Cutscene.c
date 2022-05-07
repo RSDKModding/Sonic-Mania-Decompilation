@@ -19,7 +19,7 @@ void SSZ3Cutscene_Update(void)
                                   SSZ3Cutscene_CutsceneOutro_EnterRuby, SSZ3Cutscene_CutsceneOutro_RubyActivate, SSZ3Cutscene_CutsceneOutro_RubyWarp,
                                   SSZ3Cutscene_CutsceneOutro_LoadHCZ1, StateMachine_None);
 
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
@@ -191,7 +191,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_EnterRuby(EntityCutsceneSeq *host)
 
     SSZ3Cutscene_HandleRubyFX();
 
-    if (RSDK.GetEntityCount(PhantomRuby->objectID, true) > 0) {
+    if (RSDK.GetEntityCount(PhantomRuby->classID, true) > 0) {
         foreach_active(PhantomRuby, ruby) { self->ruby = ruby; }
     }
 
@@ -288,7 +288,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
         Camera_ShakeScreen(0, 4, 4);
 
         player1->drawOrder = Zone->playerDrawHigh + 1;
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->drawOrder = Zone->playerDrawHigh + 1;
     }
 

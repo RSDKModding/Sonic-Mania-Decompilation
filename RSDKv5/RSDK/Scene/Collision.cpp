@@ -738,8 +738,8 @@ void ProcessTileCollisions(Entity *entity, RSDK::Hitbox *outerBox, RSDK::Hitbox 
                 ProcessAirCollision();
 
             if (entity->onGround) {
-                entity->velocity.x = entity->groundVel * cosVal256[entity->angle & 0xFF] >> 8;
-                entity->velocity.y = entity->groundVel * sinVal256[entity->angle & 0xFF] >> 8;
+                entity->velocity.x = entity->groundVel * cos256LookupTable[entity->angle & 0xFF] >> 8;
+                entity->velocity.y = entity->groundVel * sin256LookupTable[entity->angle & 0xFF] >> 8;
             }
             else {
                 entity->groundVel = entity->velocity.x;
@@ -1044,13 +1044,13 @@ void ProcessPathGrip()
     absSpeed &= 0x3FFFF;
     while (checkDist > -1) {
         if (checkDist >= 1) {
-            xVel = cosVal256[collisionEntity->angle] << 10;
-            yVel = sinVal256[collisionEntity->angle] << 10;
+            xVel = cos256LookupTable[collisionEntity->angle] << 10;
+            yVel = sin256LookupTable[collisionEntity->angle] << 10;
             checkDist--;
         }
         else {
-            xVel      = absSpeed * cosVal256[collisionEntity->angle] >> 8;
-            yVel      = absSpeed * sinVal256[collisionEntity->angle] >> 8;
+            xVel      = absSpeed * cos256LookupTable[collisionEntity->angle] >> 8;
+            yVel      = absSpeed * sin256LookupTable[collisionEntity->angle] >> 8;
             checkDist = -1;
         }
 
@@ -1340,8 +1340,8 @@ void ProcessPathGrip()
             else {
                 collisionEntity->onGround      = false;
                 collisionEntity->collisionMode = CMODE_FLOOR;
-                collisionEntity->velocity.x    = cosVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
-                collisionEntity->velocity.y    = sinVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.x    = cos256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.y    = sin256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
                 if (collisionEntity->velocity.y < -0x100000)
                     collisionEntity->velocity.y = -0x100000;
 
@@ -1375,8 +1375,8 @@ void ProcessPathGrip()
             else {
                 collisionEntity->onGround      = false;
                 collisionEntity->collisionMode = CMODE_FLOOR;
-                collisionEntity->velocity.x    = cosVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
-                collisionEntity->velocity.y    = sinVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.x    = cos256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.y    = sin256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
                 if (collisionEntity->velocity.y < -0x100000) {
                     collisionEntity->velocity.y = -0x100000;
                 }
@@ -1424,8 +1424,8 @@ void ProcessPathGrip()
             else {
                 collisionEntity->onGround      = false;
                 collisionEntity->collisionMode = CMODE_FLOOR;
-                collisionEntity->velocity.x    = cosVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
-                collisionEntity->velocity.y    = sinVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.x    = cos256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.y    = sin256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
 
                 if (collisionEntity->velocity.y < -0x100000)
                     collisionEntity->velocity.y = -0x100000;
@@ -1460,8 +1460,8 @@ void ProcessPathGrip()
             else {
                 collisionEntity->onGround      = false;
                 collisionEntity->collisionMode = CMODE_FLOOR;
-                collisionEntity->velocity.x    = cosVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
-                collisionEntity->velocity.y    = sinVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.x    = cos256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
+                collisionEntity->velocity.y    = sin256LookupTable[collisionEntity->angle] * collisionEntity->groundVel >> 8;
 
                 if (collisionEntity->velocity.y < -0x100000)
                     collisionEntity->velocity.y = -0x100000;

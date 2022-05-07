@@ -285,7 +285,7 @@ void ScrewMobile_State_PlayerRiding(void)
         if (!player1->jumpHold || self->whirlPoolTimer) {
             EntityWhirlpool *whirlpool = self->whirlpool;
             if (whirlpool) {
-                if (whirlpool->objectID == Whirlpool->objectID)
+                if (whirlpool->classID == Whirlpool->classID)
                     whirlpool->activePlayers = -3;
                 self->whirlpool = NULL;
             }
@@ -300,7 +300,7 @@ void ScrewMobile_State_PlayerRiding(void)
             if (self->whirlpoolHeight > 0) {
                 EntityWhirlpool *whirlpool = self->whirlpool;
                 if (whirlpool) {
-                    if (whirlpool->objectID == Whirlpool->objectID)
+                    if (whirlpool->classID == Whirlpool->classID)
                         whirlpool->position.x = self->position.x;
                     else
                         self->whirlpool = NULL;

@@ -282,7 +282,7 @@ void Buggernaut_State_Child(void)
     self->position.y += self->velocity.y;
 
     EntityBuggernaut *parent = self->parent;
-    if (!parent || parent->objectID != Buggernaut->objectID) {
+    if (!parent || parent->classID != Buggernaut->classID) {
         self->parent = NULL;
         foreach_active(Buggernaut, buggernaut)
         {

@@ -19,7 +19,7 @@ void GHZ2Outro_Update(void)
                                   GHZ2Outro_Cutscene_LoadCPZ1, StateMachine_None);
 
 #if RETRO_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             seq->skipType          = SKIPTYPE_CALLBACK;
             seq->skipCallback      = GHZ2Outro_Cutscene_SkipCB;
@@ -32,7 +32,7 @@ void GHZ2Outro_Update(void)
         CutsceneSeq_StartSequence(self, GHZ2Outro_Cutscene_FinishActClear, GHZ2Outro_Cutscene_JumpIntoHole, StateMachine_None);
 
 #if RETRO_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -344,7 +344,7 @@ bool32 GHZ2Outro_Cutscene_RubyHover(EntityCutsceneSeq *host)
 
     if (ruby) {
         if (ruby->state == PhantomRuby_State_Oscillate) {
-            if (player2->objectID == Player->objectID && player2->characterID == ID_TAILS) {
+            if (player2->classID == Player->classID && player2->characterID == ID_TAILS) {
                 player2->state = Player_State_None;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, false, 0);
             }
@@ -387,7 +387,7 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
         self->fxRuby      = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->drawOrder = Zone->playerDrawHigh + 1;
     }
 
@@ -418,7 +418,7 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x10) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-                    if (!player || player->objectID == TYPE_BLANK)
+                    if (!player || player->classID == TYPE_BLANK)
                         break;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 

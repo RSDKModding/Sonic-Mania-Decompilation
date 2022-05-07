@@ -54,7 +54,7 @@ void HCZSetup_StaticUpdate(void)
         RSDK.DrawAniTiles(HCZSetup->pendulumAniTiles, 874, 0, 16 * pendulumAniTileFrame, 32, 16);
 
     if (!(Zone->timer & 1)) {
-        for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) ++RSDK.GetSceneLayer(layerID)->deformationOffsetW;
+        for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) ++RSDK.GetTileLayer(layerID)->deformationOffsetW;
     }
 
 #if RETRO_USE_PLUS
@@ -117,7 +117,7 @@ void HCZSetup_StageLoad(void)
     HCZSetup->waterlineAniTiles = RSDK.LoadSpriteSheet("HCZ/AniTiles2.gif", SCOPE_STAGE);
     HCZSetup->pendulumAniTiles  = RSDK.LoadSpriteSheet("HCZ/AniTiles3.gif", SCOPE_STAGE);
 
-    HCZSetup->background2Layer = RSDK.GetSceneLayer(1);
+    HCZSetup->background2Layer = RSDK.GetTileLayer(1);
     // Add some deformations to background 2
     for (int32 i = 0; i < 0x200; i += 0x10) {
         int32 deformation = RSDK.Rand(0, 4);
@@ -139,7 +139,7 @@ void HCZSetup_StageLoad(void)
 
     // All Layers between FG Low & FG High get foreground water deformation applied
     for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) {
-        TileLayer *layer   = RSDK.GetSceneLayer(layerID);
+        TileLayer *layer   = RSDK.GetTileLayer(layerID);
         int32 *deformDataW = layer->deformationDataW;
 
         // HCZ FG underwater deformation values

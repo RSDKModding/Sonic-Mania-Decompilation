@@ -116,8 +116,8 @@ void ReplayRecorder_StaticUpdate(void)
                     if (ActClear && ActClear->actClearActive)
                         allowPause = false;
 
-                    if (!RSDK.GetEntityCount(TitleCard->objectID, false) && !pauseMenu->objectID && allowPause) {
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                    if (!RSDK.GetEntityCount(TitleCard->classID, false) && !pauseMenu->classID && allowPause) {
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         pauseMenu->triggerPlayer = RSDK.GetEntityID(SceneInfo->entity);
                         if (globals->gameMode == MODE_COMPETITION)
                             pauseMenu->disableRestart = true;
@@ -182,12 +182,12 @@ void ReplayRecorder_StageLoad(void)
 
             RSDK.SetRandSeed(1624633040);
 
-            RSDK.ResetEntitySlot(SLOT_REPLAYRECORDER_RECORD, ReplayRecorder->objectID, NULL);
+            RSDK.ResetEntitySlot(SLOT_REPLAYRECORDER_RECORD, ReplayRecorder->classID, NULL);
             EntityReplayRecorder *recordingManager = RSDK_GET_ENTITY(SLOT_REPLAYRECORDER_RECORD, ReplayRecorder);
             recordingManager->maxFrameCount        = REPLAY_MAX_FRAMECOUNT;
             ReplayRecorder->recordingManager       = recordingManager;
 
-            RSDK.ResetEntitySlot(SLOT_REPLAYRECORDER_PLAYBACK, ReplayRecorder->objectID, NULL);
+            RSDK.ResetEntitySlot(SLOT_REPLAYRECORDER_PLAYBACK, ReplayRecorder->classID, NULL);
             EntityReplayRecorder *playbackManager = RSDK_GET_ENTITY(SLOT_REPLAYRECORDER_PLAYBACK, ReplayRecorder);
             playbackManager->maxFrameCount        = REPLAY_MAX_FRAMECOUNT;
             ReplayRecorder->playbackManager       = playbackManager;
@@ -1283,7 +1283,7 @@ void ReplayRecorder_Late_RecordFrames(void)
         EntityIce *ice = player->abilityPtrs[1];
 
         Animator *animator = &player->animator;
-        if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && ice->objectID == Ice->objectID)
+        if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && ice->classID == Ice->classID)
             animator = &ice->contentsAnimator;
 
         self->animID  = animator->animationID;

@@ -41,7 +41,7 @@ struct ObjectTVVan {
 struct EntityTVVan {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateDraw[DRAWLAYER_COUNT]);
+    StateMachine(stateDraw[DRAWGROUP_COUNT]);
     uint8 type;
     Vector2 vanPos;
     Vector2 movePos;

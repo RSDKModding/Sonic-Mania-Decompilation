@@ -41,7 +41,7 @@ void PrintLog(int32 severity, const char *message, ...)
 
             case PRINT_POPUP:
                 if (sceneInfo.state & 3) {
-                    CreateEntity(RSDK::DevOutput->objectID, outputString, 0, 0);
+                    CreateEntity(RSDK::DevOutput->classID, outputString, 0, 0);
                 }
                 break;
 
@@ -145,10 +145,10 @@ void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 
 #endif
 
 #if !RETRO_REV02
-void PrintMessage(void *msg, int32 type)
+void PrintMessage(void *msg, int32 staticVars)
 {
     if (msg && engine.consoleEnabled) {
-        switch (type) {
+        switch (staticVars) {
             case 0: PrintLog(PRINT_NORMAL, "%s", (const char *)msg); break;
             case 1: PrintLog(PRINT_NORMAL, "%i", *(int32 *)msg); break;
             case 2: PrintLog(PRINT_NORMAL, "%i", *(uint32 *)msg, 0); break;
@@ -226,16 +226,16 @@ void DevMenu_MainMenu()
     // Info Box
     int32 y = currentScreen->center.y - 80;
     DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
-    DrawDevText("RETRO ENGINE v5", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("RETRO ENGINE v5", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
 
     y += 8;
-    DrawDevText("Dev Menu", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("Dev Menu", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
 
     y += 16;
-    DrawDevText(RSDK::gameVerInfo.gameName, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
+    DrawDevString(RSDK::gameVerInfo.gameName, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
 
     y += 8;
-    DrawDevText(RSDK::gameVerInfo.gameVersion, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
+    DrawDevString(RSDK::gameVerInfo.gameVersion, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
 
     // Selections Box
     y += 24;
@@ -245,7 +245,7 @@ void DevMenu_MainMenu()
     y -= 6;
 #endif
     for (int32 i = 0; i < selectionCount; ++i) {
-        DrawDevText(selectionNames[i], currentScreen->center.x, y, ALIGN_CENTER, selectionColors[i]);
+        DrawDevString(selectionNames[i], currentScreen->center.x, y, ALIGN_CENTER, selectionColors[i]);
         y += 12;
     }
     y += 20;
@@ -257,7 +257,7 @@ void DevMenu_MainMenu()
         (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_STG].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_STG].storageLimit * 126.0;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, stgUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
-    DrawDevText("STG", currentScreen->center.x - 64, y, 0, 0xF0F080);
+    DrawDevString("STG", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Music Storage
     int32 musUsed =
@@ -265,7 +265,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF5, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, musUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
-    DrawDevText("MUS", currentScreen->center.x - 64, y, 0, 0xF0F080);
+    DrawDevString("MUS", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // SoundFX Storage
     int32 sfxUsed =
@@ -273,7 +273,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, sfxUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
-    DrawDevText("SFX", currentScreen->center.x - 64, y, 0, 0xF0F080);
+    DrawDevString("SFX", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // String Storage
     int32 strUsed =
@@ -281,7 +281,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, strUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
-    DrawDevText("STR", currentScreen->center.x - 64, y, 0, 0xF0F080);
+    DrawDevString("STR", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Temp Storage
     int32 tmpUsed =
@@ -289,7 +289,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, tmpUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
-    DrawDevText("TMP", currentScreen->center.x - 64, y, 0, 0xF0F080);
+    DrawDevString("TMP", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -389,13 +389,13 @@ void DevMenu_CategorySelectMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("SELECT STAGE CATEGORY", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("SELECT STAGE CATEGORY", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     DrawRectangle(currentScreen->center.x - 128, dy + 36, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
     int32 y = dy + 40;
     for (int32 i = 0; i < 8; ++i) {
         if (devMenu.scrollPos + i < sceneInfo.categoryCount) {
-            DrawDevText(sceneInfo.listCategory[devMenu.scrollPos + i].name, currentScreen->center.x - 64, y, 0, selectionColors[i]);
+            DrawDevString(sceneInfo.listCategory[devMenu.scrollPos + i].name, currentScreen->center.x - 64, y, ALIGN_LEFT, selectionColors[i]);
             y += 8;
         }
     }
@@ -524,7 +524,7 @@ void DevMenu_SceneSelectMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("SELECT STAGE SCENE", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("SELECT STAGE SCENE", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     DrawRectangle(currentScreen->center.x - 128, dy + 36, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
     int32 y             = dy + 40;
@@ -532,7 +532,7 @@ void DevMenu_SceneSelectMenu()
     int32 start         = list->sceneOffsetStart;
     for (int32 i = 0; i < 8; ++i) {
         if (devMenu.scrollPos + i < list->sceneCount) {
-            DrawDevText(sceneInfo.listData[start + (devMenu.scrollPos + i)].name, currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
+            DrawDevString(sceneInfo.listData[start + (devMenu.scrollPos + i)].name, currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
             y += 8;
             devMenu.scrollPos = devMenu.scrollPos;
         }
@@ -644,25 +644,25 @@ void DevMenu_OptionsMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("OPTIONS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("OPTIONS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
 
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    DrawDevText("Video Settings", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[0]);
+    DrawDevString("Video Settings", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[0]);
 
     dy += 12;
-    DrawDevText("Audio Settings", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[1]);
+    DrawDevString("Audio Settings", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[1]);
 
     dy += 12;
-    DrawDevText("Configure Input", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[2]);
+    DrawDevString("Configure Input", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[2]);
 
 #if RETRO_REV02
     dy += 12;
-    DrawDevText("Debug Flags", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[3]);
+    DrawDevString("Debug Flags", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[3]);
 
 #endif
-    DrawDevText("Back", currentScreen->center.x, dy + 12, ALIGN_CENTER, selectionColors[selectionCount - 1]);
+    DrawDevString("Back", currentScreen->center.x, dy + 12, ALIGN_CENTER, selectionColors[selectionCount - 1]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -769,12 +769,12 @@ void DevMenu_VideoOptionsMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("VIDEO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("VIDEO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
 
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    DrawDevText("Window Size:", currentScreen->center.x - 96, dy, 0, selectionColors[0]);
+    DrawDevString("Window Size:", currentScreen->center.x - 96, dy, 0, selectionColors[0]);
 
     const char *scale = "unknown";
     switch (devMenu.windowScale) {
@@ -784,10 +784,10 @@ void DevMenu_VideoOptionsMenu()
         case 3: scale = "4x"; break;
         default: break;
     }
-    DrawDevText(scale, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevString(scale, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
     dy += 8;
-    DrawDevText("Window Aspect:", currentScreen->center.x - 96, dy, 0, selectionColors[1]);
+    DrawDevString("Window Aspect:", currentScreen->center.x - 96, dy, 0, selectionColors[1]);
 
     const char *aspect = "unknown";
     switch (devMenu.windowAspect) {
@@ -798,19 +798,19 @@ void DevMenu_VideoOptionsMenu()
         case 4: aspect = "16:9"; break;
         default: break;
     }
-    DrawDevText(aspect, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevString(aspect, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
     dy += 8;
-    DrawDevText("Fullscreen:", currentScreen->center.x - 96, dy, 0, selectionColors[2]);
-    DrawDevText(devMenu.windowed ? "NO" : "YES", currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevString("Fullscreen:", currentScreen->center.x - 96, dy, 0, selectionColors[2]);
+    DrawDevString(devMenu.windowed ? "NO" : "YES", currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
     dy += 8;
-    DrawDevText("Screen Shader:", currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[3]);
-    DrawDevText(shaderList[RSDK::videoSettings.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevString("Screen Shader:", currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[3]);
+    DrawDevString(shaderList[RSDK::videoSettings.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
     dy += 16;
-    DrawDevText("Confirm", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[4]);
-    DrawDevText("Cancel", currentScreen->center.x, dy + 8, ALIGN_CENTER, selectionColors[5]);
+    DrawDevString("Confirm", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[4]);
+    DrawDevString("Cancel", currentScreen->center.x, dy + 8, ALIGN_CENTER, selectionColors[5]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -966,24 +966,24 @@ void DevMenu_AudioOptionsMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("AUDIO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("AUDIO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
 
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    DrawDevText("Streams Enabled:", currentScreen->center.x - 96, dy, 0, selectionColors[0]);
-    DrawDevText(engine.streamsEnabled ? "YES" : "NO", currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevString("Streams Enabled:", currentScreen->center.x - 96, dy, 0, selectionColors[0]);
+    DrawDevString(engine.streamsEnabled ? "YES" : "NO", currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
     dy += 16;
-    DrawDevText("Streams Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[1]);
+    DrawDevString("Streams Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[1]);
     DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0x000000, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x + 9, dy + 1, engine.streamVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
 
     dy += 16;
-    DrawDevText("SoundFX Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[2]);
+    DrawDevString("SoundFX Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[2]);
     DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0x000000, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x + 9, dy + 1, engine.soundFXVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
-    DrawDevText("Back", currentScreen->center.x, dy + 16, ALIGN_CENTER, selectionColors[3]);
+    DrawDevString("Back", currentScreen->center.x, dy + 16, ALIGN_CENTER, selectionColors[3]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -1094,23 +1094,23 @@ void DevMenu_InputOptionsMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("CONFIGURE INPUT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("CONFIGURE INPUT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
 
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    DrawDevText("Set Keys For Input 1", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[0]);
+    DrawDevString("Set Keys For Input 1", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[0]);
 
     dy += 10;
-    DrawDevText("Set Keys For Input 2", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[1]);
+    DrawDevString("Set Keys For Input 2", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[1]);
 
     dy += 10;
-    DrawDevText("Set Keys For Input 3", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[2]);
+    DrawDevString("Set Keys For Input 3", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[2]);
 
     dy += 10;
-    DrawDevText("Set Keys For Input 4", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[3]);
+    DrawDevString("Set Keys For Input 4", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[3]);
 
-    DrawDevText("Back", currentScreen->center.x, dy + 18, ALIGN_CENTER, selectionColors[4]);
+    DrawDevString("Back", currentScreen->center.x, dy + 18, ALIGN_CENTER, selectionColors[4]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -1179,7 +1179,7 @@ void DevMenu_KeyMappingsMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("SET KEY BINDING", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("SET KEY BINDING", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
 
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
@@ -1187,7 +1187,7 @@ void DevMenu_KeyMappingsMenu()
     int32 controllerID = devMenu.selection + 1;
     switch (devMenu.scrollPos) {
         case 0:
-            DrawDevText("Press Key For UP", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For UP", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyUp.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyDown.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1195,7 +1195,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 1:
-            DrawDevText("Press Key For DOWN", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For DOWN", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyDown.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyLeft.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1203,7 +1203,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 2:
-            DrawDevText("Press Key For LEFT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For LEFT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyLeft.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyRight.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1211,7 +1211,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 3:
-            DrawDevText("Press Key For RIGHT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For RIGHT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyRight.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyA.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1219,7 +1219,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 4:
-            DrawDevText("Press Key For BUTTON A", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For BUTTON A", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyA.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyB.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1227,7 +1227,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 5:
-            DrawDevText("Press Key For BUTTON B", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For BUTTON B", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyB.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyC.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1235,7 +1235,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 6:
-            DrawDevText("Press Key For BUTTON C", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For BUTTON C", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyC.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyX.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1243,7 +1243,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 7:
-            DrawDevText("Press Key For BUTTON X", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For BUTTON X", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyX.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyY.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1251,7 +1251,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 8:
-            DrawDevText("Press Key For BUTTON Y", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For BUTTON Y", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyY.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyZ.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1259,7 +1259,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 9:
-            DrawDevText("Press Key For BUTTON Z", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For BUTTON Z", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyZ.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keyStart.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1267,7 +1267,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 10:
-            DrawDevText("Press Key For START", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For START", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyStart.keyMap != KEYMAP_AUTO_MAPPING) {
                 controller[controllerID].keySelect.keyMap = KEYMAP_AUTO_MAPPING;
                 ++devMenu.scrollPos;
@@ -1275,7 +1275,7 @@ void DevMenu_KeyMappingsMenu()
             break;
 
         case 11:
-            DrawDevText("Press Key For SELECT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevString("Press Key For SELECT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keySelect.keyMap != KEYMAP_AUTO_MAPPING)
                 devMenu.state = DevMenu_InputOptionsMenu;
             break;
@@ -1300,7 +1300,7 @@ void DevMenu_DebugOptionsMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("CONFIGURE DEBUG FLAGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("CONFIGURE DEBUG FLAGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
 
     dy += 40;
     DrawRectangle(currentScreen->center.x - 128, dy - 4, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
@@ -1318,17 +1318,17 @@ void DevMenu_DebugOptionsMenu()
     for (int32 i = 0; i < 8; ++i) {
         if (devMenu.scrollPos + i < debugValueCount) {
             DebugValueInfo *value = &debugValues[devMenu.scrollPos + i];
-            DrawDevText(value->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[i]);
+            DrawDevString(value->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[i]);
 
             if (!value->value) {
-                DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080);
+                DrawDevString("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080);
             }
             else {
                 char valueStr[0x10];
                 strcpy(valueStr, "--------");
 
                 switch (value->size) {
-                    default: DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
+                    default: DrawDevString("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
 
                     case sizeof(uint8): {
                         uint8 *v = (uint8 *)value->value;
@@ -1423,12 +1423,12 @@ void DevMenu_DebugOptionsMenu()
                     }
                 }
 
-                DrawDevText(valueStr, currentScreen->center.x + 96, dy, ALIGN_CENTER, selectionColors[i]);
+                DrawDevString(valueStr, currentScreen->center.x + 96, dy, ALIGN_CENTER, selectionColors[i]);
             }
             dy += 8;
         }
         else {
-            DrawDevText("Back", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[i]);
+            DrawDevString("Back", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[i]);
         }
     }
 
@@ -1493,7 +1493,7 @@ void DevMenu_DebugOptionsMenu()
         DebugValueInfo *value = &debugValues[devMenu.selection];
 
         switch (value->size) {
-            default: DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
+            default: DrawDevString("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
 
             case sizeof(int8): {
                 int8 *valuePtr = (int8 *)value->value;
@@ -1579,14 +1579,14 @@ void DevMenu_ModsMenu()
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
 
     dy -= 68;
-    DrawDevText("MANAGE MODS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevString("MANAGE MODS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     DrawRectangle(currentScreen->center.x - 128, dy + 36, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
     int32 y = dy + 40;
     for (int32 i = 0; i < 8; ++i) {
         if (devMenu.scrollPos + i < RSDK::modList.size()) {
-            DrawDevText(RSDK::modList[(devMenu.scrollPos + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, selectionColors[i]);
-            DrawDevText(RSDK::modList[(devMenu.scrollPos + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
+            DrawDevString(RSDK::modList[(devMenu.scrollPos + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, selectionColors[i]);
+            DrawDevString(RSDK::modList[(devMenu.scrollPos + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
 
             y += 8;
             devMenu.scrollPos = devMenu.scrollPos;

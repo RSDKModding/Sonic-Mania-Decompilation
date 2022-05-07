@@ -47,12 +47,12 @@ void MMZ2Outro_StartCutscene(void)
     RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
     for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0x000000);
     for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
-    RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[0] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
-    RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
-    RSDK.GetSceneLayer(4)->drawLayer[0] = 0;
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+    RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawLayer[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(3)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(4)->drawLayer[0] = 0;
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }

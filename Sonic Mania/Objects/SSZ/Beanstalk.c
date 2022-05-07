@@ -106,7 +106,7 @@ int32 Beanstalk_GetNextNodeDistance(void)
 
     EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
 
-    if (self->forceEnd || next->objectID != Beanstalk->objectID)
+    if (self->forceEnd || next->classID != Beanstalk->classID)
         return 0;
 
     int32 thisX = ((self->bezCtrlLength * RSDK.Cos256(self->bezCtrlAngle)) << 9) + self->position.x;
@@ -126,7 +126,7 @@ int32 Beanstalk_GetRemainingDistance(void)
     int32 len = 0;
     while (self->type) {
         EntityBeanstalk *prev = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Beanstalk);
-        if (prev->objectID != Beanstalk->objectID)
+        if (prev->classID != Beanstalk->classID)
             break;
 
         int32 prevX = ((prev->bezCtrlLength * RSDK.Cos256(prev->bezCtrlAngle)) << 9) + prev->position.x;
@@ -149,7 +149,7 @@ int32 Beanstalk_GetBezierInc(void)
 
     EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
 
-    if (self->forceEnd || next->objectID != Beanstalk->objectID)
+    if (self->forceEnd || next->classID != Beanstalk->classID)
         return 0;
 
     int32 thisX = ((self->bezCtrlLength * RSDK.Cos256(self->bezCtrlAngle)) << 9) + self->position.x;
@@ -170,7 +170,7 @@ void Beanstalk_DrawNodes(void)
     if (!self->forceEnd) {
         EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
 
-        if (next->objectID == Beanstalk->objectID) {
+        if (next->classID == Beanstalk->classID) {
             if (SceneInfo->inEditor) {
                 self->curBezierPos = Beanstalk_GetNextNodeDistance();
                 self->bezierPos    = 0x10000;
@@ -236,7 +236,7 @@ void Beanstalk_DrawCreationNode(void)
     if (!self->forceEnd) {
         EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
 
-        if (next->objectID == Beanstalk->objectID) {
+        if (next->classID == Beanstalk->classID) {
             if (self->curBezierPos) {
                 int32 thisX = self->position.x + ((self->bezCtrlLength * RSDK.Cos256(self->bezCtrlAngle + 0x00)) << 9);
                 int32 thisY = self->position.y + ((self->bezCtrlLength * RSDK.Sin256(self->bezCtrlAngle + 0x00)) << 9);
@@ -261,7 +261,7 @@ void Beanstalk_HandleNodeMovement(void)
 
         if (!self->forceEnd) {
             node = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
-            if (node->objectID != Beanstalk->objectID)
+            if (node->classID != Beanstalk->classID)
                 node = NULL;
         }
 

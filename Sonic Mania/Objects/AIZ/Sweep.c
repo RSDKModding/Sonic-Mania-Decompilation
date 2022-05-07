@@ -147,7 +147,7 @@ void Sweep_CheckPlayerCollisions(void)
         RSDK.GetHitbox(&player->animator, 0);
 
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-        if (shield->objectID == Shield->objectID && shield->state == Shield_State_Insta) {
+        if (shield->classID == Shield->classID && shield->state == Shield_State_Insta) {
             hitbox.left   = 2 * playerHitbox->left - (playerHitbox->left >> 1);
             hitbox.top    = 2 * playerHitbox->top - (playerHitbox->top >> 1);
             hitbox.right  = 2 * playerHitbox->right - (playerHitbox->right >> 1);

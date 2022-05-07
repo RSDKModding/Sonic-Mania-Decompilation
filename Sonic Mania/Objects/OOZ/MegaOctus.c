@@ -243,7 +243,7 @@ void MegaOctus_CheckPlayerCollisions_Body(void)
     {
         int32 playerRadius   = 0x100000;
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-        if (shield->objectID == Shield->objectID && shield->state == Shield_State_Insta)
+        if (shield->classID == Shield->classID && shield->state == Shield_State_Insta)
             playerRadius = 0x160000;
 
         if (RSDK.CheckObjectCollisionTouchCircle(self, 0x300000, player, playerRadius)) {
@@ -408,7 +408,7 @@ void MegaOctus_State_SetupArena(void)
     Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->origin.x) {
-        RSDK.GetSceneLayer(Zone->fgLow)->drawLayer[0] = 2;
+        RSDK.GetTileLayer(Zone->fgLow)->drawLayer[0] = 2;
         Zone->playerBoundActiveL[0]                   = true;
         Zone->cameraBoundsL[0]                        = (self->position.x >> 16) - 192;
         Music_TransitionTrack(TRACK_EGGMAN1, 0.0075);

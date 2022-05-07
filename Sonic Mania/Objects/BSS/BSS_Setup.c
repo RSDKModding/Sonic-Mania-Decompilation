@@ -42,9 +42,9 @@ void BSS_Setup_Draw(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
+    TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     self->inkEffect  = INK_NONE;
-    if (globe->drawLayer[0] == DRAWLAYER_COUNT)
+    if (globe->drawLayer[0] == DRAWGROUP_COUNT)
         RSDK.DrawSprite(&self->globeSpinAnimator, NULL, false);
 
     Vector2 drawPos;
@@ -82,17 +82,17 @@ void BSS_Setup_StageLoad(void)
 {
     BSS_Setup->globeMappings = RSDK.LoadSpriteAnimation("SpecialBS/Globe.bin", SCOPE_STAGE);
 
-    BSS_Setup->bgLayer        = RSDK.GetSceneLayerID("Background");
-    BSS_Setup->globeLayer     = RSDK.GetSceneLayerID("Globe");
-    BSS_Setup->frustum1Layer  = RSDK.GetSceneLayerID("Frustum 1");
-    BSS_Setup->frustum2Layer  = RSDK.GetSceneLayerID("Frustum 2");
-    BSS_Setup->playFieldLayer = RSDK.GetSceneLayerID("Playfield");
-    BSS_Setup->ringCountLayer = RSDK.GetSceneLayerID("Ring Count");
+    BSS_Setup->bgLayer        = RSDK.GetTileLayerID("Background");
+    BSS_Setup->globeLayer     = RSDK.GetTileLayerID("Globe");
+    BSS_Setup->frustum1Layer  = RSDK.GetTileLayerID("Frustum 1");
+    BSS_Setup->frustum2Layer  = RSDK.GetTileLayerID("Frustum 2");
+    BSS_Setup->playFieldLayer = RSDK.GetTileLayerID("Playfield");
+    BSS_Setup->ringCountLayer = RSDK.GetTileLayerID("Ring Count");
 
     BSS_Setup_SetupFrustum();
     BSS_Setup->ringCount = 0;
 
-    TileLayer *playField = RSDK.GetSceneLayer(BSS_Setup->playFieldLayer);
+    TileLayer *playField = RSDK.GetTileLayer(BSS_Setup->playFieldLayer);
 
     memset(BSS_Setup->playField, 0, sizeof(BSS_Setup->playField));
     memset(BSS_Setup->sphereChainTable, 0, sizeof(BSS_Setup->sphereChainTable));
@@ -200,7 +200,7 @@ void BSS_Setup_StageLoad(void)
         BSS_Setup->playField[(16 * BSS_PLAYFIELD_H) + 3] = BSS_SPAWN_RIGHT;
     }
 
-    RSDK.ResetEntitySlot(SLOT_BSS_SETUP, BSS_Setup->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_BSS_SETUP, BSS_Setup->classID, NULL);
 
     BSS_Setup_SetupPalette();
 
@@ -268,7 +268,7 @@ void BSS_Setup_SetupFrustum(void)
 
     for (int32 f = 0; f < 2; ++f) {
         int32 frustumID    = f ? BSS_Setup->frustum2Layer : BSS_Setup->frustum1Layer;
-        TileLayer *frustum = RSDK.GetSceneLayer(frustumID);
+        TileLayer *frustum = RSDK.GetTileLayer(frustumID);
 
         count       = offset;
         int32 lastX = 0;
@@ -323,7 +323,7 @@ void BSS_Setup_SetupFrustum(void)
     }
 
     for (int32 i = RESERVE_ENTITY_COUNT; i < RESERVE_ENTITY_COUNT + 0x60; ++i) {
-        RSDK.ResetEntitySlot(i, BSS_Collectable->objectID, NULL);
+        RSDK.ResetEntitySlot(i, BSS_Collectable->classID, NULL);
     }
 }
 
@@ -403,14 +403,14 @@ void BSS_Setup_GetStartupInfo(void)
         }
     }
 
-    RSDK.GetSceneLayer(BSS_Setup->bgLayer)->scrollInfo[0].scrollPos = self->angle << 18;
+    RSDK.GetTileLayer(BSS_Setup->bgLayer)->scrollInfo[0].scrollPos = self->angle << 18;
 }
 
 void BSS_Setup_Finished(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
+    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
 
     self->globeTimer += self->globeSpeed;
     if (self->globeSpeed <= 0 && self->globeTimer < 0) {
@@ -431,7 +431,7 @@ void BSS_Setup_Finished(void)
 
     self->paletteLine = (self->globeTimer >> 4) & 0xF;
 
-    TileLayer *background = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+    TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
     background->scrollPos += self->globeSpeed << 14;
 
     self->stopMovement = true;
@@ -758,16 +758,16 @@ void BSS_Setup_HandleCollectableMovement(void)
         uint16 tile =
             BSS_Setup->playField[((self->offset.y + self->playerPos.y) & 0x1F) + (BSS_PLAYFIELD_H * ((self->offset.x + self->playerPos.x) & 0x1F))];
         if (tile) {
-            EntityBSS_Collectable *collectable = (EntityBSS_Collectable *)RSDK.GetEntityByID(slot);
+            EntityBSS_Collectable *collectable = (EntityBSS_Collectable *)RSDK.GetEntity(slot);
             int32 x                            = (self->offset.x * RSDK.Cos256(self->angle) + self->offset.y * RSDK.Sin256(self->angle)) >> 4;
             int32 y                            = (self->offset.y * RSDK.Cos256(self->angle) - self->offset.x * RSDK.Sin256(self->angle)) >> 4;
             y                                  = -(y + self->paletteLine - 16);
 
             if (y < 0) {
-                collectable->objectID = TYPE_BLANK;
+                collectable->classID = TYPE_BLANK;
             }
             else {
-                collectable->objectID = BSS_Collectable->objectID;
+                collectable->classID = BSS_Collectable->classID;
                 collectable->type     = tile & 0x3FF;
                 if (y < 112) {
                     self->xMultiplier             = BSS_Setup->xMultiplierTable[y];
@@ -795,8 +795,8 @@ void BSS_Setup_HandleCollectableMovement(void)
     }
 
     while (slot < RESERVE_ENTITY_COUNT + 0x80) {
-        Entity *entity   = RSDK.GetEntityByID(slot++);
-        entity->objectID = TYPE_BLANK;
+        Entity *entity   = RSDK.GetEntity(slot++);
+        entity->classID = TYPE_BLANK;
     }
 }
 
@@ -804,7 +804,7 @@ void BSS_Setup_State_FinishWalk(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
+    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
 
     self->globeTimer += self->globeSpeed;
     if (++self->spinTimer == 120)
@@ -829,7 +829,7 @@ void BSS_Setup_State_FinishWalk(void)
     self->playerPos.y &= 0x1F;
     self->paletteLine = (self->globeTimer >> 4) & 0xF;
 
-    TileLayer *background = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+    TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
     background->scrollPos += self->globeSpeed << 14;
 
     BSS_Setup_HandleCollectableMovement();
@@ -934,16 +934,16 @@ void BSS_Setup_State_Exit(void)
         foreach_active(BSS_Player, player) { player->stateInput = StateMachine_None; }
     }
     else {
-        TileLayer *background = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+        TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
         background->scrollInfo[0].scrollPos -= 0x200000;
 
         self->angle -= 8;
         self->angle &= 0xFF;
     }
 
-    TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
+    TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     if (self->spinTimer & 0xF) {
-        globe->drawLayer[0] = DRAWLAYER_COUNT;
+        globe->drawLayer[0] = DRAWGROUP_COUNT;
 
         int32 timer                     = self->spinTimer & 0xF;
         self->globeSpinAnimator.frameID = BSS_Setup->globeFrameTable[timer - 1];
@@ -971,7 +971,7 @@ void BSS_Setup_State_HandleStage(void)
         self->maxSpeed += 4;
     }
 
-    RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
+    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
 
     if (self->playerWasBumped) {
         if (!self->disableBumpers && player1->up)
@@ -1052,7 +1052,7 @@ void BSS_Setup_State_HandleStage(void)
             self->spinState = 0;
         }
 
-        TileLayer *background = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+        TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
         background->scrollPos += self->globeSpeed << 14;
     }
 
@@ -1069,13 +1069,13 @@ void BSS_Setup_State_SpinLeft(void)
         self->maxSpeed += 4;
     }
 
-    TileLayer *background = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+    TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
     background->scrollInfo[0].scrollPos -= 0x100000;
 
     self->angle -= 4;
     self->angle &= 0xFF;
 
-    TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
+    TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     if (self->spinTimer == 15) {
         globe->drawLayer[0] = 1;
 
@@ -1089,7 +1089,7 @@ void BSS_Setup_State_SpinLeft(void)
         BSS_Setup_HandleCollectableMovement();
     }
     else {
-        globe->drawLayer[0] = DRAWLAYER_COUNT;
+        globe->drawLayer[0] = DRAWGROUP_COUNT;
 
         self->globeSpinAnimator.frameID = BSS_Setup->globeFrameTable[self->spinTimer];
         self->direction                 = BSS_Setup->globeDirTableL[self->spinTimer];
@@ -1110,13 +1110,13 @@ void BSS_Setup_State_SpinRight(void)
         self->speedupTimer = 0;
         self->maxSpeed += 4;
     }
-    TileLayer *background = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+    TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
     background->scrollInfo[0].scrollPos += 0x100000;
 
     self->angle += 4;
     self->angle &= 0xFF;
 
-    TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
+    TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     if (self->spinTimer == 15) {
         globe->drawLayer[0] = 1;
 
@@ -1129,7 +1129,7 @@ void BSS_Setup_State_SpinRight(void)
         BSS_Setup_HandleCollectableMovement();
     }
     else {
-        globe->drawLayer[0] = DRAWLAYER_COUNT;
+        globe->drawLayer[0] = DRAWGROUP_COUNT;
 
         if (!self->spinTimer)
             self->palettePage ^= 1;
@@ -1214,7 +1214,7 @@ void BSS_Setup_LaunchSpheres(void)
     EntityBSS_Collectable *collectable = NULL;
 
     collectable = RSDK_GET_ENTITY(slot++, BSS_Collectable);
-    while (collectable->objectID != TYPE_BLANK) {
+    while (collectable->classID != TYPE_BLANK) {
         int32 ix                = (collectable->position.x >> 16);
         collectable->position.x = ((x * (ix - screen->centerX) >> 8) + screen->centerX) << 16;
         collectable->position.y -= y;

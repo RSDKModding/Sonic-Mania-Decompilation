@@ -223,7 +223,7 @@ void CircleBumper_Move_Path(void)
 
     self->drawPos.x += self->velocity.x;
     self->drawPos.y += self->velocity.y;
-    Entity *node = RSDK.GetEntityByID(self->speed);
+    Entity *node = RSDK.GetEntity(self->speed);
 
     if (self->velocity.x <= 0) {
         if (self->drawPos.x < node->position.x)

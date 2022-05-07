@@ -798,7 +798,7 @@ void MenuSetup_HandleUnlocks(void)
     if (matchLength->choiceCount >= 1) {
         EntityUIVsRoundPicker *vsRoundPicker = (EntityUIVsRoundPicker *)UIButton_GetChoicePtr(matchLength, matchLength->selection);
 
-        if (vsRoundPicker->objectID == UIVsRoundPicker->objectID) {
+        if (vsRoundPicker->classID == UIVsRoundPicker->classID) {
             vsRoundPicker->maxVal = maxRounds;
             vsRoundPicker->val    = minVal(vsRoundPicker->val, maxRounds);
         }
@@ -1875,7 +1875,7 @@ bool32 MenuSetup_VS_BackoutFromVsCharSelect(void)
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttonCount;
-        if (button->objectID == UIVsCharSelector->objectID && button->prevSelected && UIControl->backPress[button->playerID]) {
+        if (button->classID == UIVsCharSelector->classID && button->prevSelected && UIControl->backPress[button->playerID]) {
             UITransition_StartTransition(MenuSetup_VS_BackoutFromVsCharSelect_CB, 0);
             return true;
         }
@@ -2020,7 +2020,7 @@ void MenuSetup_Options_SetupKBControlsMenu(int32 playerID)
     for (int32 b = 0; b < control->buttonCount; ++b) {
         EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[b];
 
-        if (binder->objectID == UIKeyBinder->objectID) {
+        if (binder->classID == UIKeyBinder->classID) {
             binder->inputID = playerID;
 
             if (playerID == 1)

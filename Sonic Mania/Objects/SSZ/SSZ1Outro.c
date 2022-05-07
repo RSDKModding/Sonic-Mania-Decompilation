@@ -17,7 +17,7 @@ void SSZ1Outro_Update(void)
         self->activated = true;
 
 #if RETRO_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -78,7 +78,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
 
         player1->state      = Player_State_Ground;
         player1->stateInput = StateMachine_None;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->state      = Player_State_Ground;
             player2->stateInput = StateMachine_None;
         }
@@ -101,7 +101,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
         player1->velocity.x = player1->velocity.x;
     }
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         if (player1->position.x > player2->position.x)
             player2->right = true;
 

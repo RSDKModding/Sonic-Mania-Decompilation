@@ -86,7 +86,7 @@ void TitleSetup_StageLoad(void)
     TitleSetup->sfxMenuAccept = RSDK.GetSfx("Global/MenuAccept.wav");
     TitleSetup->sfxRing       = RSDK.GetSfx("Global/Ring.wav");
 
-    RSDK.ResetEntitySlot(0, TitleSetup->objectID, NULL);
+    RSDK.ResetEntitySlot(0, TitleSetup->classID, NULL);
 }
 
 #if RETRO_USE_PLUS

@@ -61,14 +61,14 @@ void LRZ3Setup_StageLoad(void)
                 Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;
             }
             else {
-                LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
+                LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->classID);
                 if (LRZ3Setup->cutsceneOutroK)
                     Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
             }
         }
 #else
         if (checkPlayerID(ID_KNUCKLES, 1)) 
-            LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
+            LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->classID);
 
         if (LRZ3Setup->cutsceneOutroK)
             Zone->stageFinishCallback = LRZ3Setup_StartCutscene;

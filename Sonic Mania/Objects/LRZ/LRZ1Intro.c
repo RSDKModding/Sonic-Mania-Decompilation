@@ -131,7 +131,7 @@ void LRZ1Intro_State_SetupActors(void)
     for (int32 p = 1; p < Player->playerCount; ++p) {
         EntityPlayer *playerPtr = RSDK_GET_ENTITY(p, Player);
 
-        if (playerPtr->objectID == Player->objectID) {
+        if (playerPtr->classID == Player->classID) {
             Hitbox *hitbox          = Player_GetHitbox(playerPtr);
             self->playerOffset[p].x = 0x400000;
             self->playerOffset[p].y = -0x10000 * hitbox->bottom;

@@ -22,7 +22,7 @@ void Water_StaticUpdate(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
-    if (pauseMenu->objectID != PauseMenu->objectID) {
+    if (pauseMenu->classID != PauseMenu->classID) {
         if (Water->newWaterLevel == Water->targetWaterLevel) {
             Water->moveWaterLevel = 0;
 
@@ -79,7 +79,7 @@ void Water_StaticUpdate(void)
     for (int32 i = 0; i < PLAYER_MAX; ++i) wakeActive |= Water->wakePosX[i] > 0;
 
     if (wakeActive) {
-        if (pauseMenu->objectID != PauseMenu->objectID)
+        if (pauseMenu->classID != PauseMenu->classID)
             RSDK.ProcessAnimation(&Water->wakeAnimator);
 
         if (!Water->playingSkimSFX) {
@@ -525,12 +525,12 @@ void Water_State_Palette(void)
                     if (player->invincibleTimer <= 0) {
                         if (player->shield == SHIELD_FIRE) {
                             player->shield = SHIELD_NONE;
-                            destroyEntity(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)));
+                            destroyEntity(RSDK.GetEntity(Player->playerCount + RSDK.GetEntityID(player)));
                         }
 
                         if (player->shield == SHIELD_LIGHTNING) {
                             player->shield = SHIELD_NONE;
-                            destroyEntity(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)));
+                            destroyEntity(RSDK.GetEntity(Player->playerCount + RSDK.GetEntityID(player)));
                         }
                     }
 
@@ -932,13 +932,13 @@ void Water_State_HCZBubble(void)
                     if (RSDK.GetEntityID(self) >= RESERVE_ENTITY_COUNT) {
                         int32 id = SLOT_HCZBUBBLE_P1;
                         for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX; ++id) {
-                            if (!RSDK_GET_ENTITY(id, )->objectID)
+                            if (!RSDK_GET_ENTITY(id, )->classID)
                                 break;
                         }
 
                         if (id >= 0 && id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX) {
                             RSDK.AddDrawListRef(self->drawOrder, id);
-                            RSDK.CopyEntity(RSDK.GetEntityByID(id), self, true);
+                            RSDK.CopyEntity(RSDK.GetEntity(id), self, true);
                             foreach_return;
                         }
                     }

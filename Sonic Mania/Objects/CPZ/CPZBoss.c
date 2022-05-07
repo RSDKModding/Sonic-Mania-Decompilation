@@ -121,7 +121,7 @@ bool32 CPZBoss_CheckMatchReset(void)
 
         foreach_all(PuyoBean, bean) { destroyEntity(bean); }
 
-        int32 layerID = RSDK.GetSceneLayerID("FG High");
+        int32 layerID = RSDK.GetTileLayerID("FG High");
         RSDK.CopyTileLayer(layerID, 438, 150, layerID, 452, 150, 6, 2);
         SceneInfo->timeEnabled = true;
         CPZBoss_Create(NULL);
@@ -140,7 +140,7 @@ void CPZBoss_State_SetupArena(void)
         Music_SetMusicTrack("BossPuyo.ogg", TRACK_EGGMAN2, 846720);
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
 
-        Entity *entPtr = RSDK.GetEntityByID(SceneInfo->entitySlot + 1);
+        Entity *entPtr = RSDK.GetEntity(SceneInfo->entitySlot + 1);
         Camera_SetupLerp(CAMERA_LERP_SIN1024_2, 0, entPtr->position.x, entPtr->position.y, 8);
 
         foreach_active(HUD, hud)
@@ -321,8 +321,8 @@ void CPZBoss_State_HandleMatch_Player(void)
         }
 
         if (ControllerInfo[CONT_P1].keyStart.press) {
-            if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == TYPE_BLANK) {
-                RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+            if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == TYPE_BLANK) {
+                RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                 RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
             }
@@ -337,8 +337,8 @@ void CPZBoss_State_HandleMatch_Player(void)
                 if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
                     if (SceneInfo->state == ENGINESTATE_REGULAR) {
                         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                        if (!pauseMenu->objectID) {
-                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        if (!pauseMenu->classID) {
+                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                             pauseMenu->triggerPlayer = 1;
                             RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
                             RSDK.SetGameMode(ENGINESTATE_FROZEN);
@@ -512,7 +512,7 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
             }
 
             EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
-            RSDK.ResetEntityPtr(hud, HUD->objectID, NULL);
+            RSDK.ResetEntityPtr(hud, HUD->classID, NULL);
             hud->maxOffset = hud->scoreOffset.x;
             hud->scoreOffset.x -= 0x1000000;
             hud->timeOffset.x -= 0x1100000;
@@ -563,7 +563,7 @@ void CPZBoss_State_PlayerExit(void)
         TransportTube_SetupDirections(tube);
 
         EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
-        RSDK.ResetEntityPtr(hud, HUD->objectID, NULL);
+        RSDK.ResetEntityPtr(hud, HUD->classID, NULL);
         hud->maxOffset = hud->scoreOffset.x;
         hud->scoreOffset.x -= 0x1000000;
         hud->timeOffset.x -= 0x1100000;

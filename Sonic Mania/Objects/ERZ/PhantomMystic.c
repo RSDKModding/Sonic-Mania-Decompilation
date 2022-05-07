@@ -440,7 +440,7 @@ void PhantomMystic_State_MoveCupsToMystic(void)
     if (self->timer == 120) {
         int32 x = self->position.x;
         int32 y = self->position.y;
-        RSDK.ResetEntityPtr(self, PhantomMystic->objectID, NULL);
+        RSDK.ResetEntityPtr(self, PhantomMystic->classID, NULL);
         self->position.x = x;
         self->position.y = y;
     }

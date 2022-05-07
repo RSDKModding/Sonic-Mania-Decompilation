@@ -126,7 +126,7 @@ void MSBomb_State_SilverSonicExplode(void)
         bomb->velocity.y = yVel;
 
         RSDK.PlaySfx(MSBomb->sfxExplosion, false, 0xFF);
-        RSDK.ResetEntityPtr(self, Explosion->objectID, intToVoid(EXPLOSION_BOSS));
+        RSDK.ResetEntityPtr(self, Explosion->classID, intToVoid(EXPLOSION_BOSS));
         self->position.x = bomb->position.x;
         self->position.y = bomb->position.y;
     }
@@ -152,7 +152,7 @@ void MSBomb_State_Bouncing(void)
             if (!--self->timer) {
                 int32 storeX = self->position.x;
                 int32 storeY = self->position.y;
-                RSDK.ResetEntityPtr(self, Explosion->objectID, intToVoid(EXPLOSION_BOSS));
+                RSDK.ResetEntityPtr(self, Explosion->classID, intToVoid(EXPLOSION_BOSS));
                 self->position.x = storeX;
                 self->position.y = storeY;
                 RSDK.PlaySfx(MSBomb->sfxExplosion, false, 255);
@@ -163,7 +163,7 @@ void MSBomb_State_Bouncing(void)
         destroyEntity(self);
     }
 
-    if (self->objectID == MSBomb->objectID) {
+    if (self->classID == MSBomb->classID) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {

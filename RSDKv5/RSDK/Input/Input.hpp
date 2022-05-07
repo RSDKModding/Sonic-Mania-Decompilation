@@ -662,12 +662,12 @@ inline void SetInputLEDColor()
 }
 
 #if !RETRO_REV02
-inline void InputUnknown(int32 controllerID, int32 type, int32 *valuePtr)
+inline void InputUnknown(int32 controllerID, int32 staticVariables, int32 *valuePtr)
 {
     if (valuePtr) {
         uint32 id = controllerID - 1;
         if (id < PLAYER_COUNT && activeInputDevices[id]) {
-            switch (type) {
+            switch (staticVariables) {
                 default:
                     break;
                     // case 0: *valuePtr = activeInputDevices[id].deviceType; break;

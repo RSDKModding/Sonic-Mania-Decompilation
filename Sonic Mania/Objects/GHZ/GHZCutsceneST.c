@@ -26,7 +26,7 @@ void GHZCutsceneST_Update(void)
                                           GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
 
 #if RETRO_USE_PLUS
-                if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
+                if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                     cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
@@ -162,7 +162,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
         player1->state      = Player_State_None;
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.y = ruby->position.y;
             player2->state      = Player_State_None;
             player2->stateInput = StateMachine_None;
@@ -172,7 +172,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
     int32 id = 0;
     for (int32 angle = 0; angle < 0x80; angle += 0x40) {
         EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-        if (!player || player->objectID == TYPE_BLANK)
+        if (!player || player->classID == TYPE_BLANK)
             break;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
@@ -197,7 +197,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         int32 id = 0;
         for (int32 angle = 0; angle < 0x80; angle += 0x10) {
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-            if (!player || player->objectID == TYPE_BLANK)
+            if (!player || player->classID == TYPE_BLANK)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x            = (player->position.x - player->position.x) >> 3;
@@ -218,7 +218,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         int32 id = 0;
         for (int32 angle = 0; angle < 0x80; angle += 0x10) {
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-            if (!player || player->objectID == TYPE_BLANK)
+            if (!player || player->classID == TYPE_BLANK)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
@@ -244,7 +244,7 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
             int32 id = 0;
             for (int32 i = 0; i < 2; ++i) {
                 EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-                if (!player || player->objectID == TYPE_BLANK)
+                if (!player || player->classID == TYPE_BLANK)
                     break;
                 player->up = false;
             }

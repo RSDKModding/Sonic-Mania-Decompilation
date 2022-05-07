@@ -117,7 +117,7 @@ void ContinueSetup_State_FadeIn(void)
 {
     RSDK_THIS(ContinueSetup);
 
-    if (++self->timer >= 8 && !RSDK.GetEntityCount(FXFade->objectID, true)) {
+    if (++self->timer >= 8 && !RSDK.GetEntityCount(FXFade->classID, true)) {
         self->timer = 0;
         self->state = ContinueSetup_State_HandleCountdown;
     }

@@ -243,9 +243,9 @@ void UFO_Player_ProcessPlayerControl(void)
             if (TouchInfo->down[t]) {
                 if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
                     if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                        EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
-                        if (!pauseMenu->objectID) {
-                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        EntityPauseMenu *pauseMenu = RSDK.GetEntity(SLOT_PAUSEMENU);
+                        if (!pauseMenu->classID) {
+                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                             pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                             pauseMenu->disableRestart = true;
                         }
@@ -280,9 +280,9 @@ void UFO_Player_ProcessPlayerControl(void)
 
         if (controller->keyStart.press || Unknown_pausePress) {
             if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
-                if (!pauseMenu->objectID) {
-                    RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                EntityPauseMenu *pauseMenu = RSDK.GetEntity(SLOT_PAUSEMENU);
+                if (!pauseMenu->classID) {
+                    RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                     pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                     pauseMenu->disableRestart = true;
                 }

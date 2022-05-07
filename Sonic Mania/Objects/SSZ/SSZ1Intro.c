@@ -78,7 +78,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         player1->velocity.x = 0;
         player1->velocity.y = 0;
         player1->onGround   = false;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.x -= 0x80000;
             player2->velocity.x = 0;
             player2->velocity.y = 0;
@@ -108,7 +108,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         }
         else {
             player1->state = Player_State_Air;
-            if (player2->objectID == Player->objectID)
+            if (player2->classID == Player->classID)
                 player2->state = Player_State_Air;
             fxRuby->active = ACTIVE_NEVER;
             return true;
@@ -121,7 +121,7 @@ bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         if (player1 && player2->onGround)
             return true;
     }
@@ -136,7 +136,7 @@ bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             player2->up = false;
         }
@@ -150,7 +150,7 @@ bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
         player1->camera         = camera;
         camera->target       = (Entity *)player1;
         camera->state           = Camera_State_Follow;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->stateInput     = Player_ProcessP2Input_AI;
             player2->tileCollisions = true;
             player2->onGround       = true;

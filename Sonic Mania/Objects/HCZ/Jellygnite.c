@@ -18,7 +18,7 @@ void Jellygnite_Update(void)
 
     StateMachine_Run(self->state);
 
-    if (self->state != Jellygnite_State_Setup && self->objectID == Jellygnite->objectID) {
+    if (self->state != Jellygnite_State_Setup && self->classID == Jellygnite->classID) {
         if (self->grabDelay > 0)
             self->grabDelay--;
         Jellygnite_CheckPlayerCollisions();

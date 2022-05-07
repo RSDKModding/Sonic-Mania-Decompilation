@@ -132,7 +132,7 @@ void SP500_StageLoad(void)
     SP500->hitboxBottom.right  = 32;
     SP500->hitboxBottom.bottom = 24;
 
-    SP500->printLayerID   = RSDK.GetSceneLayerID("Print Source");
+    SP500->printLayerID   = RSDK.GetTileLayerID("Print Source");
     SP500->sfxBeep4       = RSDK.GetSfx("Stage/Beep4.wav");
     SP500->sfxFail        = RSDK.GetSfx("Stage/Fail.wav");
     SP500->sfxButton2     = RSDK.GetSfx("Stage/Button2.wav");

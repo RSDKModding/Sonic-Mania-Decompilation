@@ -66,7 +66,7 @@ void BSS_HUD_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
-        self->drawOrder     = DRAWLAYER_COUNT - 1;
+        self->drawOrder     = DRAWGROUP_COUNT - 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
@@ -80,7 +80,7 @@ void BSS_HUD_StageLoad(void)
 {
     BSS_HUD->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
 
-    RSDK.ResetEntitySlot(SLOT_BSS_HUD, BSS_HUD->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_BSS_HUD, BSS_HUD->classID, NULL);
 }
 
 void BSS_HUD_DrawNumbers(int32 value, Vector2 *drawPos)

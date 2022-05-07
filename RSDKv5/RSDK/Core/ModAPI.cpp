@@ -1039,21 +1039,21 @@ void SuperInternal(ObjectInfo *super, RSDK::ModSuper callback, void *data)
     ModInfo *curMod = currentMod;
     if (HASH_MATCH(super->hash, super->inherited->hash)) {
         for (int i = 0; i < superLevels; i++) {
-            before = *super->type;
+            before = *super->staticVars;
             if (!super->inherited) {
                 superLevels = i;
                 break;
             }
             // if overriding, force it all to be that object and don't set it back
-            *super->inherited->type = *super->type;
+            *super->inherited->staticVars = *super->staticVars;
             super                   = super->inherited;
         }
         ++superLevels;
     }
     else if (super->inherited) {
         // if we're just inheriting, set it back properly afterward
-        before                  = *super->inherited->type;
-        *super->inherited->type = *super->type;
+        before                  = *super->inherited->staticVars;
+        *super->inherited->staticVars = *super->staticVars;
         super                   = super->inherited;
         superLevels             = 1;
     }
@@ -1095,7 +1095,7 @@ void SuperInternal(ObjectInfo *super, RSDK::ModSuper callback, void *data)
                 super->editorDraw();
             break;
     }
-    *super->type = before;
+    *super->staticVars = before;
     superLevels  = 1;
     currentMod   = curMod;
 }
@@ -1183,9 +1183,9 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
 
         if (HASH_MATCH(info->hash, inherit->hash)) {
             // we override an obj and lets check for structPtr
-            if (!info->type) {
-                info->type       = inherit->type;
-                info->objectSize = inherit->objectSize;
+            if (!info->staticVars) {
+                info->staticVars       = inherit->staticVars;
+                info->staticClassSize = inherit->staticClassSize;
             }
         }
 
@@ -1222,7 +1222,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
 Object *RSDK::GetObject(const char *name)
 {
     if (int32 o = GetObjectByName(name))
-        return *objectList[stageObjectIDs[o]].type;
+        return *objectList[stageObjectIDs[o]].staticVars;
 
     return NULL;
 }

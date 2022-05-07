@@ -86,7 +86,7 @@ void Shield_Create(void *data)
 
     if (data) {
         EntityPlayer *player = (EntityPlayer *)data;
-        if (player->objectID == Player->objectID)
+        if (player->classID == Player->classID)
             self->type = player->shield;
         self->player = player;
     }

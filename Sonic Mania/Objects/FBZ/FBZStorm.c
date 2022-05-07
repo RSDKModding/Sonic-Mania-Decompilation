@@ -54,7 +54,7 @@ void FBZStorm_Update(void)
     }
 
     // BGStorm layer
-    if (RSDK.GetSceneLayer(3)->drawLayer[0] < DRAWLAYER_COUNT) {
+    if (RSDK.GetTileLayer(3)->drawLayer[0] < DRAWGROUP_COUNT) {
         self->enabled = true;
         if (self->blendAmount < 0x100) {
             self->blendAmount += 8;
@@ -82,7 +82,7 @@ void FBZStorm_StaticUpdate(void)
             enabled = true;
     }
 
-    if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
+    if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID) {
         if (FBZStorm->playingRainSFX) {
             RSDK.StopSfx(FBZStorm->sfxRain);
             FBZStorm->playingRainSFX = false;
@@ -148,7 +148,7 @@ void FBZStorm_State_WaitForActive(void)
     RSDK_THIS(FBZStorm);
 
     if (self->enabled) {
-        if (RSDK.GetEntityCount(Current->objectID, true) > 0)
+        if (RSDK.GetEntityCount(Current->classID, true) > 0)
             self->state = FBZStorm_State_StormStart;
     }
 }
@@ -175,7 +175,7 @@ void FBZStorm_State_StormStart(void)
     }
 
     if (FBZStorm->playingRainSFX) {
-        if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
+        if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID) {
             RSDK.StopSfx(FBZStorm->sfxRain);
             FBZStorm->playingRainSFX = false;
         }

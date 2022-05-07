@@ -56,7 +56,7 @@ void Woodrow_Create(void *data)
 
             int32 slot               = SceneInfo->entitySlot + 1;
             EntityWoodrow *bombSpawn = RSDK_GET_ENTITY(slot, Woodrow);
-            while (bombSpawn->objectID == Woodrow->objectID) {
+            while (bombSpawn->classID == Woodrow->classID) {
                 if (bombSpawn->type != WOODROW_BOMB)
                     break;
                 bombSpawn->parent = self;
@@ -377,7 +377,7 @@ void Woodrow_State_BombSpawner(void)
                 self->position.x = self->startPos.x;
                 self->position.y = self->startPos.y;
 
-                if (parent->objectID != Woodrow->objectID) {
+                if (parent->classID != Woodrow->classID) {
                     self->active = ACTIVE_BOUNDS;
                 }
                 else {
@@ -448,7 +448,7 @@ void Woodrow_EditorDraw(void)
 
         int32 slot               = SceneInfo->entitySlot + 1;
         EntityWoodrow *bombSpawn = RSDK_GET_ENTITY(slot, Woodrow);
-        while (bombSpawn && bombSpawn->objectID == Woodrow->objectID) {
+        while (bombSpawn && bombSpawn->classID == Woodrow->classID) {
             if (bombSpawn->type != WOODROW_BOMB)
                 break;
 

@@ -25,7 +25,7 @@ void WeatherMobile_StaticUpdate(void)
     int32 rainCount          = 0;
     int32 windFinishingCount = 0;
 
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
         foreach_all(WeatherMobile, weatherMobile)
         {
             if (weatherMobile->type == WEATHERMOBILE_RAIN)
@@ -1001,7 +1001,7 @@ void WeatherMobile_State_Flee(void)
     self->origin.y -= 0x4000;
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.ResetEntityPtr(self, EggPrison->objectID, intToVoid(EGGPRISON_FLYING));
+        RSDK.ResetEntityPtr(self, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
         self->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         self->position.y = (ScreenInfo->position.y - 48) << 16;
     }

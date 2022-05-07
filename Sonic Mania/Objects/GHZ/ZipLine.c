@@ -281,7 +281,7 @@ Vector2 ZipLine_GetJoinPos(void)
     result.x = 0;
     result.y = 0;
 
-    if (endMarker->objectID == ZipLine->objectID) {
+    if (endMarker->classID == ZipLine->classID) {
         Hitbox thisHitbox, otherHitbox;
 
         if (self->startPos.y >= self->endPos.y) {

@@ -25,13 +25,13 @@ void GameOver_Draw(void)
     RSDK_THIS(GameOver);
 
     if (self->state != GameOver_State_ExitLetters && globals->gameMode == MODE_COMPETITION) {
-        if (SceneInfo->currentScreenID != self->playerID || RSDK.GetEntityCount(PauseMenu->objectID, true) > 0) {
+        if (SceneInfo->currentScreenID != self->playerID || RSDK.GetEntityCount(PauseMenu->classID, true) > 0) {
             return;
         }
     }
 
     EntityPlayer *player = RSDK_GET_ENTITY(SceneInfo->currentScreenID + Player->playerCount, Player);
-    if (SceneInfo->currentScreenID == self->playerID || player->objectID != GameOver->objectID)
+    if (SceneInfo->currentScreenID == self->playerID || player->classID != GameOver->classID)
         RSDK.DrawQuad(self->verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
     if (globals->gameMode != MODE_COMPETITION || SceneInfo->currentScreenID == self->playerID) {
@@ -162,9 +162,9 @@ void GameOver_State_EnterLetters(void)
                 int32 gameOverCount        = 0;
                 int32 deathCount           = 0;
                 for (int32 i = 0; i < session->playerCount; ++i) {
-                    Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
+                    Entity *ent = RSDK.GetEntity(i + Player->playerCount);
 
-                    if (ent->objectID == GameOver->objectID) {
+                    if (ent->classID == GameOver->classID) {
                         ++gameOverCount;
                         ++deathCount;
                     }
@@ -209,9 +209,9 @@ void GameOver_State_HandleMultiplayer(void)
     int32 gameOverCount               = 0;
     int32 deathCount                  = 0;
     for (int32 i = 0; i < session->playerCount; ++i) {
-        Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
+        Entity *ent = RSDK.GetEntity(i + Player->playerCount);
 
-        if (ent->objectID == GameOver->objectID) {
+        if (ent->classID == GameOver->classID) {
             ++gameOverCount;
             ++deathCount;
         }

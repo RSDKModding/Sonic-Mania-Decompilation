@@ -127,7 +127,7 @@ void ButtonDoor_SetupTagLink(void)
         self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
     }
     else {
-        EntityButton *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+        EntityButton *taggedButton = RSDK.GetEntity(RSDK.GetEntityID(self) - 1);
         bool32 tagged              = false;
 
         if (self->buttonTag > 0) {
@@ -166,8 +166,8 @@ void ButtonDoor_SetupTagLink(void)
         }
 
         if (taggedButton) {
-            if ((Button && taggedButton->objectID == Button->objectID) || (TurretSwitch && taggedButton->objectID == TurretSwitch->objectID)
-                || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+            if ((Button && taggedButton->classID == Button->classID) || (TurretSwitch && taggedButton->classID == TurretSwitch->classID)
+                || (PullChain && taggedButton->classID == PullChain->classID)) {
                 if (self) {
                     int32 distX = abs(self->position.x - taggedButton->position.x);
                     int32 distY = abs(self->position.y - taggedButton->position.y);

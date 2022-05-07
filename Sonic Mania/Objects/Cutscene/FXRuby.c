@@ -64,7 +64,7 @@ void FXRuby_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible   = true;
         self->active    = ACTIVE_NORMAL;
-        self->drawOrder = Zone ? Zone->objectDrawHigh : (DRAWLAYER_COUNT - 1);
+        self->drawOrder = Zone ? Zone->objectDrawHigh : (DRAWGROUP_COUNT - 1);
 
         self->radiusSpeed = 4;
 
@@ -82,8 +82,8 @@ void FXRuby_Create(void *data)
 
 void FXRuby_StageLoad(void)
 {
-    FXRuby->fgLow  = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG Low"));
-    FXRuby->fgHigh = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG High"));
+    FXRuby->fgLow  = RSDK.GetTileLayer(RSDK.GetTileLayerID("FG Low"));
+    FXRuby->fgHigh = RSDK.GetTileLayer(RSDK.GetTileLayerID("FG High"));
 
     for (int32 i = 0; i < 0x200; ++i) FXRuby->deformData[i] = RSDK.Rand(-64, 64);
 
@@ -95,8 +95,8 @@ void FXRuby_StageLoad(void)
 void FXRuby_SetupLayerDeformation(void)
 {
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
-        TileLayer *layer = RSDK.GetSceneLayer(l);
-        if (layer->width && layer->drawLayer[0] != DRAWLAYER_COUNT) {
+        TileLayer *layer = RSDK.GetTileLayer(l);
+        if (layer->width && layer->drawLayer[0] != DRAWGROUP_COUNT) {
             for (int32 s = 0; s < layer->scrollInfoCount; ++s) {
                 layer->scrollInfo[s].deform = true;
             }
@@ -112,8 +112,8 @@ void FXRuby_HandleLayerDeform(void)
 
     int32 *deformationData = NULL;
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
-        TileLayer *layer = RSDK.GetSceneLayer(l);
-        if (layer->width && layer->drawLayer[0] != DRAWLAYER_COUNT) {
+        TileLayer *layer = RSDK.GetTileLayer(l);
+        if (layer->width && layer->drawLayer[0] != DRAWGROUP_COUNT) {
             layer->deformationOffset += 3;
 
             if (deformationData) {

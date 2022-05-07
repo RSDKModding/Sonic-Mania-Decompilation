@@ -229,7 +229,7 @@ void OOZSetup_StageLoad(void)
 {
     OOZSetup->aniTiles = RSDK.LoadSpriteSheet("OOZ/AniTiles.gif", SCOPE_STAGE);
 
-    OOZSetup->bgPtr = RSDK.GetSceneLayer(0);
+    OOZSetup->bgPtr = RSDK.GetTileLayer(0);
     for (int32 i = 0; i < 0x400; ++i) {
         OOZSetup->bgPtr->deformationData[i] = OOZSetup->deformData[i & 0x3F];
     }

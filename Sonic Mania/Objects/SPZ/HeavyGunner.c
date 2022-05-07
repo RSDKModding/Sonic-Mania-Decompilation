@@ -213,17 +213,17 @@ bool32 HeavyGunner_BurnCheckCB(void)
 
 void HeavyGunner_HandleBGWrap(int multiplier)
 {
-    TileLayer *background1 = RSDK.GetSceneLayer(0);
+    TileLayer *background1 = RSDK.GetTileLayer(0);
     for (int32 s = 0; s < background1->scrollInfoCount; ++s) {
         background1->scrollInfo[s].scrollPos += multiplier * background1->scrollInfo[s].parallaxFactor;
     }
 
-    TileLayer *background2 = RSDK.GetSceneLayer(1);
+    TileLayer *background2 = RSDK.GetTileLayer(1);
     for (int32 s = 0; s < background2->scrollInfoCount; ++s) {
         background2->scrollInfo[s].scrollPos += multiplier * background2->scrollInfo[s].parallaxFactor;
     }
 
-    TileLayer *background3 = RSDK.GetSceneLayer(2);
+    TileLayer *background3 = RSDK.GetTileLayer(2);
     for (int32 s = 0; s < background3->scrollInfoCount; ++s) {
         background3->scrollInfo[s].scrollPos += multiplier * background3->scrollInfo[s].parallaxFactor;
     }
@@ -324,15 +324,15 @@ void HeavyGunner_StateManager_SetupArena(void)
 
             int32 mult = -0x1E00 * ScreenInfo->position.y;
 
-            TileLayer *background1 = RSDK.GetSceneLayer(0);
+            TileLayer *background1 = RSDK.GetTileLayer(0);
             background1->scrollPos += mult;
             background1->parallaxFactor = 88;
 
-            TileLayer *background2 = RSDK.GetSceneLayer(1);
+            TileLayer *background2 = RSDK.GetTileLayer(1);
             background2->scrollPos += mult;
             background2->parallaxFactor = 88;
 
-            TileLayer *background3 = RSDK.GetSceneLayer(2);
+            TileLayer *background3 = RSDK.GetTileLayer(2);
             background3->scrollPos += mult;
             background3->parallaxFactor = 88;
 
@@ -347,7 +347,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *robo1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, HeavyGunner);
             int32 x                  = robo1->position.x;
             int32 y                  = robo1->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 1, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 1, HeavyGunner->classID, intToVoid(HEAVYGUNNER_EGGROBO));
             robo1->position.x = x;
             robo1->position.y = y;
             robo1->parent     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
@@ -357,7 +357,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *robo2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, HeavyGunner);
             x                        = robo2->position.x;
             y                        = robo2->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 2, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 2, HeavyGunner->classID, intToVoid(HEAVYGUNNER_EGGROBO));
             robo2->position.x = x;
             robo2->position.y = y;
             robo2->parent     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
@@ -367,7 +367,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *robo3 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 3, HeavyGunner);
             x                        = robo3->position.x;
             y                        = robo3->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 3, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 3, HeavyGunner->classID, intToVoid(HEAVYGUNNER_EGGROBO));
             robo3->position.x = x;
             robo3->position.y = y;
             robo3->parent     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
@@ -379,7 +379,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *heli = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
             x                       = heli->position.x;
             y                       = heli->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 4, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_HELI));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 4, HeavyGunner->classID, intToVoid(HEAVYGUNNER_HELI));
             heli->position.x = x;
             heli->position.y = y;
 

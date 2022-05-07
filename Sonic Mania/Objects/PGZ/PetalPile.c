@@ -51,9 +51,9 @@ void PetalPile_Create(void *data)
     }
     else {
         if (self->tileLayer)
-            self->layerID = RSDK.GetSceneLayerID("FG Low");
+            self->layerID = RSDK.GetTileLayerID("FG Low");
         else
-            self->layerID = RSDK.GetSceneLayerID("FG High");
+            self->layerID = RSDK.GetTileLayerID("FG High");
     }
 
     RSDK.SetSpriteAnimation(PetalPile->aniFrames, 0, &self->animator, true, 0);

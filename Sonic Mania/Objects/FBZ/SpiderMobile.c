@@ -333,7 +333,7 @@ void SpiderMobile_HandlePlatformMovement(void)
     Zone->cameraBoundsB[0] += offsetY >> 16;
     Zone->deathBoundary[0] += offsetY;
     Zone->playerBoundsB[0] += offsetY;
-    RSDK.GetSceneLayer(Zone->fgHigh)->scrollPos -= offsetY;
+    RSDK.GetTileLayer(Zone->fgHigh)->scrollPos -= offsetY;
 
     self->position.y += offsetY;
     self->origin.y += offsetY;
@@ -345,7 +345,7 @@ void SpiderMobile_HandlePlatformMovement(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-        if (player->objectID == Player->objectID && player->state == Player_State_Transform)
+        if (player->classID == Player->classID && player->state == Player_State_Transform)
             Player_CheckCollisionPlatform(player, self, &SpiderMobile->hitboxPlatform);
     }
 
@@ -778,7 +778,7 @@ void SpiderMobile_StateBody_SetupArena(void)
             FBZSetup_BGSwitchCB_ShowInside2();
             FBZSetup_BGSwitchCB_ShowInside1();
 
-            TileLayer *overlay    = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Exterior Overlay"));
+            TileLayer *overlay    = RSDK.GetTileLayer(RSDK.GetTileLayerID("Exterior Overlay"));
             overlay->drawLayer[0] = 0;
         }
     }
@@ -1117,7 +1117,7 @@ void SpiderMobile_StateBody_MovePlatformToEnd(void)
         self->visible = false;
         RSDK.PlaySfx(SpiderMobile->sfxHullClose, false, 255);
         self->state       = SpiderMobile_StateBody_FinishedMovingPlatform;
-        TileLayer *fgHigh = RSDK.GetSceneLayer(Zone->fgHigh);
+        TileLayer *fgHigh = RSDK.GetTileLayer(Zone->fgHigh);
         fgHigh->scrollPos = 0x9200000;
         self->origin.y    = 0x13600000;
     }

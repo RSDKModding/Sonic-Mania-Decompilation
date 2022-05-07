@@ -188,7 +188,7 @@ void HUD_Draw(void)
             HUD_DrawNumbersBase10(&lifePos, player->rings, 0);
     }
 
-    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->objectID == DebugMode->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->classID == DebugMode->classID) {
         if (player->camera) {
             // Draw Camera YPos
             lifePos.x = (ScreenInfo[player->camera->screenID].width - 16) << 16;
@@ -304,7 +304,7 @@ void HUD_Draw(void)
 
         lifePos.x += 0x140000;
         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-        if (sidekick->objectID) {
+        if (sidekick->classID) {
             // Draw Buddy Icon
             int32 charID       = sidekick->characterID;
             int32 stockFrameID = -1;
@@ -725,11 +725,11 @@ void HUD_State_GoOffScreen(void)
             EntityCompetition *manager = Competition->sessionManager;
 
             if (!manager || manager->timer) {
-                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(false));
+                RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(false));
                 gameOver->playerID = self->screenID;
             }
             else {
-                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(true));
+                RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(true));
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
                 SceneInfo->timeEnabled = false;
                 gameOver->playerID     = self->screenID;

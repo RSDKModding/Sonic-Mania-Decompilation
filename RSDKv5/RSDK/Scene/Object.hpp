@@ -78,6 +78,7 @@ enum DefaultObjects {
     TYPE_DEFAULTCOUNT, // max
 };
 
+// lmao
 struct UnknownStruct {
     int16 unknown1;
     int16 unknown2;
@@ -91,7 +92,7 @@ struct UnknownStruct {
 };
 
 struct Object {
-    int16 objectID;
+    int16 classID;
     uint8 active;
 };
 
@@ -106,7 +107,7 @@ struct Entity {
     int32 groundVel;
     int32 depth;
     uint16 group;
-    uint16 objectID;
+    uint16 classID;
     bool32 inBounds;
     bool32 isPermanent;
     bool32 tileCollisions;
@@ -154,9 +155,9 @@ struct ObjectInfo {
     void (*editorLoad)(void);
     void (*serialize)(void);
 #endif
-    Object **type;
-    int32 entitySize;
-    int32 objectSize;
+    Object **staticVars;
+    int32 entityClassSize;
+    int32 staticClassSize;
 #if RETRO_USE_MOD_LOADER
     ObjectInfo *inherited;
 #endif
@@ -196,39 +197,50 @@ extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 extern bool32 validDraw;
 
-void RegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
-                    void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                    void (*editorLoad)(void), void (*serialize)(void));
+void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                    void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                    void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
 
 #if RETRO_USE_MOD_LOADER
-void RegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
+void RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void(void)> update,
                         std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
                         std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
                         std::function<void(void)> editorLoad, std::function<void(void)> serialize);
 #endif
 
 #if RETRO_REV02
-void RegisterObjectContainer(Object **structPtr, const char *name, uint32 objectSize);
+void RegisterStaticVariables(void **varClass, const char *name, uint32 classSize);
 #endif
 
-void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos);
+void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset);
 
-#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
+#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->classID, offsetof(Entity##object, var))
 
-inline void SetEditableVar(uint8 type, const char *name, uint8 object, int32 offset)
+// classID isn't used AND is a uint8, how strange
+// assuming classID would be used in-editor (it is in RetroED2, but not sure about official RSDK SDK)
+// not sure why it's a uint8, given the original value is a uint16, so there's some small warnings about that
+inline void SetEditableVar(uint8 type, const char *name, uint8 classID, int32 offset)
 {
-    if (editableVarCount < 255) {
+    if (editableVarCount < EDITABLEVAR_COUNT - 1) {
         EditableVarInfo *var = &editableVarList[editableVarCount];
+
         GEN_HASH(name, var->hash);
         var->type   = type;
         var->offset = offset;
         var->active = true;
+
         editableVarCount++;
     }
 }
 
-void SetActiveVariable(int32 objectID, const char *name);
-void AddEnumVariable(const char *name);
+inline void SetActiveVariable(int32 classID, const char *name)
+{
+    // Editor-Only function
+}
+inline void AddEnumVariable(const char *name)
+{
+    // Editor-Only function
+}
 
 void InitObjects();
 void ProcessObjects();
@@ -237,27 +249,27 @@ void ProcessFrozenObjects();
 void ProcessObjectDrawLists();
 
 uint16 GetObjectByName(const char *name);
-inline Entity *GetObjectByID(uint16 objectID) { return &objectEntityList[objectID < ENTITY_COUNT ? objectID : (ENTITY_COUNT - 1)]; }
 
-inline int32 GetEntityID(EntityBase *entityPtr) { return (int32)(entityPtr - objectEntityList < ENTITY_COUNT ? entityPtr - objectEntityList : 0); }
+inline Entity *GetEntity(uint16 slot) { return &objectEntityList[slot < ENTITY_COUNT ? slot : (ENTITY_COUNT - 1)]; }
+inline int32 GetEntityID(EntityBase *entity) { return (int32)(entity - objectEntityList < ENTITY_COUNT ? entity - objectEntityList : 0); }
+int32 GetEntityCount(uint16 classID, bool32 isActive);
 
-int32 GetEntityCount(uint16 type, bool32 isActive);
-
-void ResetEntityPtr(Entity *entity, uint16 type, void *data);
-void ResetEntitySlot(uint16 slotID, uint16 type, void *data);
-Entity *CreateEntity(uint16 type, void *data, int32 x, int32 y);
+void ResetEntityPtr(Entity *entity, uint16 classID, void *data);
+void ResetEntitySlot(uint16 slot, uint16 classID, void *data);
+Entity *CreateEntity(uint16 classID, void *data, int32 x, int32 y);
 
 inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
 {
     if (destEntity && srcEntity) {
         memcpy(destEntity, srcEntity, sizeof(EntityBase));
+
         if (clearSrcEntity)
             memset(srcEntity, 0, sizeof(EntityBase));
     }
 }
 
 bool32 GetActiveEntities(uint16 group, Entity **entity);
-bool32 GetEntities(uint16 type, Entity **entity);
+bool32 GetEntities(uint16 classID, Entity **entity);
 
 inline void BreakForeachLoop() { --foreachStackPtr; }
 

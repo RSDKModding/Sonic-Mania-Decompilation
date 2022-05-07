@@ -55,15 +55,15 @@ void UFO_Setup_Create(void *data)
 
 void UFO_Setup_StageLoad(void)
 {
-    RSDK.ResetEntitySlot(SLOT_BSS_SETUP, UFO_Setup->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_BSS_SETUP, UFO_Setup->classID, NULL);
 
-    UFO_Setup->playFieldLayer                                       = RSDK.GetSceneLayerID("Playfield");
+    UFO_Setup->playFieldLayer                                       = RSDK.GetTileLayerID("Playfield");
     UFO_Setup->machPoints                                           = 0;
     UFO_Setup->machLevel                                            = 0;
     UFO_Setup->rings                                                = 30;
     UFO_Setup->timedOut                                             = 0;
     UFO_Setup->resetToTitle                                         = false;
-    RSDK.GetSceneLayer(UFO_Setup->playFieldLayer)->scanlineCallback = UFO_Setup_ScanlineCallback_Playfield;
+    RSDK.GetTileLayer(UFO_Setup->playFieldLayer)->scanlineCallback = UFO_Setup_ScanlineCallback_Playfield;
     RSDK.SetDrawLayerProperties(1, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(3, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(4, true, NULL);
@@ -80,18 +80,18 @@ void UFO_Setup_StageLoad(void)
     RSDK.SetLimitedFade(5, 0, 7, 180, 160, 255);
     RSDK.SetLimitedFade(6, 0, 7, 216, 160, 255);
 
-    uint16 floorID = RSDK.GetSceneLayerID("3D Floor");
+    uint16 floorID = RSDK.GetTileLayerID("3D Floor");
     if (floorID != (uint16)-1) {
-        TileLayer *floor3D = RSDK.GetSceneLayer(floorID);
+        TileLayer *floor3D = RSDK.GetTileLayer(floorID);
         if (floor3D) {
             floor3D->drawLayer[0]     = 0;
             floor3D->scanlineCallback = UFO_Setup_ScanlineCallback_3DFloor;
         }
     }
 
-    uint16 roofID = RSDK.GetSceneLayerID("3D Roof");
+    uint16 roofID = RSDK.GetTileLayerID("3D Roof");
     if (roofID != (uint16)-1) {
-        TileLayer *roof3D = RSDK.GetSceneLayer(roofID);
+        TileLayer *roof3D = RSDK.GetTileLayer(roofID);
         if (roof3D) {
             roof3D->drawLayer[0]     = 0;
             roof3D->scanlineCallback = UFO_Setup_ScanlineCallback_3DRoof;
@@ -101,7 +101,7 @@ void UFO_Setup_StageLoad(void)
     if (RSDK.CheckStageFolder("UFO3")) {
         UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO3;
 
-        int32 *deformData = RSDK.GetSceneLayer(0)->deformationData;
+        int32 *deformData = RSDK.GetTileLayer(0)->deformationData;
         for (int32 i = 0; i < 0x200; i += 0x10) {
             int32 deform = RSDK.Rand(0, 4);
 
@@ -117,7 +117,7 @@ void UFO_Setup_StageLoad(void)
         }
         memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int32)));
 
-        deformData = RSDK.GetSceneLayer(1)->deformationData;
+        deformData = RSDK.GetTileLayer(1)->deformationData;
         for (int32 i = 0; i < 0x200; i += 0x10) {
             int32 deform = RSDK.Rand(0, 4);
 
@@ -137,7 +137,7 @@ void UFO_Setup_StageLoad(void)
         int32 *deformData = NULL;
         if (RSDK.CheckStageFolder("UFO4")) {
             UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO4;
-            TileLayer *bg       = RSDK.GetSceneLayer(0);
+            TileLayer *bg       = RSDK.GetTileLayer(0);
             deformData          = bg->deformationData;
             int32 angle         = 0;
             for (int32 i = 0; i < 0x200; ++i) {
@@ -148,7 +148,7 @@ void UFO_Setup_StageLoad(void)
         else {
             if (RSDK.CheckStageFolder("UFO5")) {
                 UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO5;
-                TileLayer *bg       = RSDK.GetSceneLayer(0);
+                TileLayer *bg       = RSDK.GetTileLayer(0);
                 deformData          = bg->deformationData;
                 int32 angle         = 0;
                 for (int32 i = 0; i < 0x200; ++i) {
@@ -332,22 +332,22 @@ void UFO_Setup_Finish_Fail(void)
 void UFO_Setup_DeformCB_UFO3(void)
 {
     if (!(UFO_Setup->timer & 1)) {
-        ++RSDK.GetSceneLayer(0)->deformationOffset;
-        ++RSDK.GetSceneLayer(1)->deformationOffset;
+        ++RSDK.GetTileLayer(0)->deformationOffset;
+        ++RSDK.GetTileLayer(1)->deformationOffset;
     }
 }
 
 void UFO_Setup_DeformCB_UFO4(void)
 {
     if (!(UFO_Setup->timer & 1)) {
-        ++RSDK.GetSceneLayer(0)->deformationOffset;
+        ++RSDK.GetTileLayer(0)->deformationOffset;
     }
 }
 
 void UFO_Setup_DeformCB_UFO5(void)
 {
     if (!(UFO_Setup->timer & 1)) {
-        ++RSDK.GetSceneLayer(0)->deformationOffset;
+        ++RSDK.GetTileLayer(0)->deformationOffset;
     }
 }
 
@@ -376,19 +376,19 @@ void UFO_Setup_State_FinishFadeout(void)
         }
         else {
             for (int32 i = 0; i < LAYER_COUNT; ++i) {
-                TileLayer *layer = RSDK.GetSceneLayer(i);
+                TileLayer *layer = RSDK.GetTileLayer(i);
                 if (layer)
-                    layer->drawLayer[0] = DRAWLAYER_COUNT;
+                    layer->drawLayer[0] = DRAWGROUP_COUNT;
             }
 
             for (int32 i = 0; i < 0x800; ++i) {
-                Entity *ent = RSDK.GetEntityByID(i);
-                if (ent->objectID != self->objectID)
+                Entity *ent = RSDK.GetEntity(i);
+                if (ent->classID != self->classID)
                     destroyEntity(ent);
             }
 
-            RSDK.ResetEntitySlot(0, UIBackground->objectID, NULL);
-            RSDK.ResetEntitySlot(1, SpecialClear->objectID, NULL);
+            RSDK.ResetEntitySlot(0, UIBackground->classID, NULL);
+            RSDK.ResetEntitySlot(1, SpecialClear->classID, NULL);
             RSDK.AddDrawListRef(14, 1);
 #if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)

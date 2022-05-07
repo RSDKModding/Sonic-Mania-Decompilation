@@ -27,7 +27,7 @@ void TVFlyingBattery_LateUpdate(void) {}
 void TVFlyingBattery_StaticUpdate(void)
 {
     int32 count = 0;
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
         foreach_all(TVFlyingBattery, tvFlyingBattery)
         {
             if (tvFlyingBattery->active == ACTIVE_NORMAL)

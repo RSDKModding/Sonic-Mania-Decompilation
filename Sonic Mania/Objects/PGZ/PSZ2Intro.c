@@ -65,7 +65,7 @@ bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host)
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveR[1] = true;
         player1->pushing            = false;
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->pushing = false;
     }
 
@@ -97,7 +97,7 @@ bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host)
 {
     if (ActClear->finished) {
 #if RETRO_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -129,7 +129,7 @@ bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
         player1->left      = false;
         player1->down      = false;
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player1->animator, true, 0);
             player2->state      = Player_State_Ground;
             player2->up         = false;
@@ -171,7 +171,7 @@ bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host)
         if (player1->groundVel < 0x20000)
             player1->groundVel = 0x20000;
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             if (player2->groundVel < 0x20000)
                 player2->groundVel = 0x20000;
         }

@@ -24,7 +24,7 @@ void MSZCutsceneST_LateUpdate(void) {}
 
 void MSZCutsceneST_StaticUpdate(void)
 {
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID || !MSZCutsceneST->isMayday) {
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID || !MSZCutsceneST->isMayday) {
         if (MSZCutsceneST->playingMaydaySfx) {
             RSDK.StopSfx(MSZCutsceneST->sfxMayday);
             MSZCutsceneST->playingMaydaySfx = false;
@@ -146,14 +146,14 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
     if (MSZCutsceneST->finishedAct) {
         mystic->oscillate = false;
 
-        TileLayer *fgLow = RSDK.GetSceneLayer(Zone->fgLow);
+        TileLayer *fgLow = RSDK.GetTileLayer(Zone->fgLow);
         for (int32 i = 0; i < fgLow->scrollInfoCount; ++i) {
             fgLow->scrollInfo[i].parallaxFactor = 0x100;
             fgLow->scrollInfo[i].scrollSpeed    = 0;
         }
 
 #if RETRO_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_NEXTSCENE;
 #endif
         return true;
@@ -481,10 +481,10 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
         destroyEntity(MSZCutsceneST->rouges[MSZCutsceneST->rougeID]);
         destroyEntity(MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID]);
 
-        TileLayer *background1 = RSDK.GetSceneLayer(0);
+        TileLayer *background1 = RSDK.GetTileLayer(0);
         for (int32 i = 0; i < background1->scrollInfoCount; ++i) background1->scrollInfo[i].scrollPos = 0;
 
-        TileLayer *background2 = RSDK.GetSceneLayer(1);
+        TileLayer *background2 = RSDK.GetTileLayer(1);
         for (int32 i = 0; i < background2->scrollInfoCount; ++i) background2->scrollInfo[i].scrollPos = 0;
 
         foreach_active(ParallaxSprite, sprite) { sprite->scrollPos.x = 0; }
@@ -517,7 +517,7 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
         player1->direction  = FLIP_NONE;
         player1->velocity.x = 0xE0000;
         host->values[2]     = true;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->state  = MSZSetup_PlayerState_PostCrashJumpIn;
             player2->active = ACTIVE_NORMAL;
         }
@@ -580,17 +580,17 @@ bool32 MSZCutsceneST_Cutscene_PanCameraToPlayer(EntityCutsceneSeq *host)
     if (camera->position.x == player1->position.x + 0x340000 && camera->position.y == player1->position.y - 0x140000) {
         MSZSetup_ReloadBGParallax_Multiply(0x000);
 
-        TileLayer *background1 = RSDK.GetSceneLayer(0);
+        TileLayer *background1 = RSDK.GetTileLayer(0);
         for (int32 i = 0; i < background1->scrollInfoCount; ++i) background1->scrollInfo[i].scrollPos &= 0xFFFF0000;
 
-        TileLayer *background2 = RSDK.GetSceneLayer(1);
+        TileLayer *background2 = RSDK.GetTileLayer(1);
         for (int32 i = 0; i < background2->scrollInfoCount; ++i) background2->scrollInfo[i].scrollPos &= 0xFFFF0000;
 
         foreach_active(ParallaxSprite, sprite) { sprite->scrollPos.x &= 0xFFFF0000; }
 
         Zone->cameraBoundsL[0] = (player1->position.x >> 16) - 160;
         Zone->cameraBoundsB[0] = (player1->position.y >> 16) - 112;
-        if (player2->objectID != Player->objectID || player2->onGround)
+        if (player2->classID != Player->classID || player2->onGround)
             return true;
     }
     return false;

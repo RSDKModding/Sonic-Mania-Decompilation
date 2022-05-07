@@ -69,7 +69,7 @@ void DCEvent_Create(void *data)
                 EntityWater *water = (EntityWater *)self;
                 int32 x            = self->position.x;
                 int32 y            = self->position.y;
-                RSDK.ResetEntityPtr(water, Water->objectID, intToVoid(WATER_BUBBLE));
+                RSDK.ResetEntityPtr(water, Water->classID, intToVoid(WATER_BUBBLE));
 
                 water->position.x = x;
                 water->bubbleX    = x;
@@ -117,7 +117,7 @@ void DCEvent_State_Collapse(void)
 {
     RSDK_THIS(DCEvent);
 
-    TileLayer *move = RSDK.GetSceneLayer(Zone->moveLayer);
+    TileLayer *move = RSDK.GetTileLayer(Zone->moveLayer);
     move->scrollPos -= 0x8000;
 
     foreach_active(Player, player)
@@ -165,7 +165,7 @@ void DCEvent_StateEggmanBomber_AwaitPlayer(void)
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &self->animator, true, 0);
 
-        TileLayer *moveLayer    = RSDK.GetSceneLayer(Zone->moveLayer);
+        TileLayer *moveLayer    = RSDK.GetTileLayer(Zone->moveLayer);
         moveLayer->drawLayer[0] = 6;
 
         self->position.x -= 0x1000000;

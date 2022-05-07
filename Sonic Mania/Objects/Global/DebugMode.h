@@ -3,21 +3,22 @@
 
 #include "SonicMania.h"
 
-#define DEBUGMODE_ADD_OBJ(object) DebugMode_AddObject(object->objectID, object##_DebugDraw, object##_DebugSpawn)
+#define DEBUGMODE_ADD_OBJ(object) DebugMode_AddObject(object->classID, object##_DebugDraw, object##_DebugSpawn)
 #define DEBUGMODE_OBJECT_COUNT     (0x100)
 
 // Object Class
 struct ObjectDebugMode {
     RSDK_OBJECT
-    int16 objectIDs[DEBUGMODE_OBJECT_COUNT];
+    // Never used, only set, prolly leftover from S1/S2
+    int16 classIDs[DEBUGMODE_OBJECT_COUNT];
     StateMachine(draw[DEBUGMODE_OBJECT_COUNT]);
     StateMachine(spawn[DEBUGMODE_OBJECT_COUNT]);
     Animator animator;
-    int32 objID;
+    int32 itemID;
     int32 itemCount;
     bool32 debugActive;
-    uint8 itemSubType;
-    uint8 subtypeCount;
+    uint8 itemType;
+    uint8 itemTypeCount;
     int32 unused1; // no clue, though it could be "exitTimer" assuming this was based on v4's debugMode object?
 };
 

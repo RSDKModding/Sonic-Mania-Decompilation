@@ -425,7 +425,7 @@ void EggPrison_State_SetupActClear(void)
         self->state               = StateMachine_None;
         Zone->forcePlayerOnScreen = false;
         Music_PlayTrack(TRACK_ACTCLEAR);
-        RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, NULL);
+        RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->classID, NULL);
     }
 }
 

@@ -22,7 +22,7 @@ void Hatch_Update(void)
         foreach_all(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                TileLayer *moveLayer = RSDK.GetSceneLayer(Zone->moveLayer);
+                TileLayer *moveLayer = RSDK.GetTileLayer(Zone->moveLayer);
                 if (!player->sidekick) {
                     moveLayer->scrollPos               = -self->vScrollPos;
                     moveLayer->scrollInfo[0].scrollPos = -self->hScrollPos;
@@ -83,7 +83,7 @@ void Hatch_Create(void *data)
         self->startPos      = self->position;
 
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
-        if (warpDoor->objectID == WarpDoor->objectID) {
+        if (warpDoor->classID == WarpDoor->classID) {
             self->hitboxWarpDoor    = warpDoor->hitbox;
             warpDoor->hitbox.left   = 0;
             warpDoor->hitbox.top    = 0x7FFF;
@@ -102,7 +102,7 @@ void Hatch_Create(void *data)
                 else {
                     self->vScrollPos += self->depth << 16;
                     self->position.y += self->depth << 16;
-                    destroyEntity(RSDK.GetEntityByID(SceneInfo->entitySlot - 1));
+                    destroyEntity(RSDK.GetEntity(SceneInfo->entitySlot - 1));
                     self->useMoveLayer = true;
                 }
                 break;
@@ -289,7 +289,7 @@ void Hatch_State_Descend(void)
         else { // Uses the WarpDoor obj for transport
             player->state            = Player_State_Air;
             EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
-            if (warpDoor->objectID == WarpDoor->objectID) {
+            if (warpDoor->classID == WarpDoor->classID) {
                 Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
                 warpDoor->hitbox                              = self->hitboxWarpDoor;
                 warpDoor->position.y                          = self->position.y;
@@ -297,7 +297,7 @@ void Hatch_State_Descend(void)
                 player->interaction                           = true;
                 player->visible                               = true;
             }
-            RSDK.GetSceneLayer(Zone->moveLayer)->scrollPos = 0;
+            RSDK.GetTileLayer(Zone->moveLayer)->scrollPos = 0;
             self->position.x                               = self->startPos.x;
             self->position.y                               = self->startPos.y;
             if (self->go != HATCH_GO_SUBENTRYHATCH_SMOGONLY)
@@ -432,7 +432,7 @@ void Hatch_State_FadeOut(void)
     if (zone->timer >= 512) {
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
 
-        if (warpDoor->objectID == WarpDoor->objectID) {
+        if (warpDoor->classID == WarpDoor->classID) {
             Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
             warpDoor->hitbox                              = self->hitboxWarpDoor;
             warpDoor->position.y                          = player->position.y;

@@ -65,7 +65,7 @@ void LRZ3OutroK_StartCutscene(void)
 
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (sequence->objectID)
+    if (sequence->classID)
         sequence->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -95,7 +95,7 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
         player1->state      = Player_State_Ground;
         player1->groundVel  = 0;
         player1->right      = true;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->state      = Player_State_Ground;
             player2->stateInput = Player_ProcessP2Input_AI;
             player2->groundVel  = 0;
@@ -124,7 +124,7 @@ bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host)
 
     if (player1->onGround) {
         CutsceneSeq_LockPlayerControl(player1);
-        if (player2->objectID == Player->objectID && player2->onGround)
+        if (player2->classID == Player->classID && player2->onGround)
             CutsceneSeq_LockPlayerControl(player2);
         return true;
     }

@@ -375,7 +375,7 @@ void PhantomKing_State_SetupArms(void)
     self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x < self->position.x;
     if (++self->timer == 30) {
         EntityPhantomKing *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, PhantomKing);
-        RSDK.ResetEntityPtr(arm1, PhantomKing->objectID, intToVoid(PHANTOMKING_ARM_L));
+        RSDK.ResetEntityPtr(arm1, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_L));
         arm1->position.x     = self->position.x;
         arm1->position.y     = self->position.y;
         arm1->parent         = (Entity *)self;
@@ -384,7 +384,7 @@ void PhantomKing_State_SetupArms(void)
         arm1->armAngleOffset = 32;
 
         EntityPhantomKing *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PhantomKing);
-        RSDK.ResetEntityPtr(arm2, PhantomKing->objectID, intToVoid(PHANTOMKING_ARM_R));
+        RSDK.ResetEntityPtr(arm2, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_R));
         arm2->position.x     = self->position.x;
         arm2->position.y     = self->position.y;
         arm2->parent         = (Entity *)self;

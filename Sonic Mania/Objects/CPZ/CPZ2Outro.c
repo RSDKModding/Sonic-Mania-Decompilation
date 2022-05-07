@@ -52,7 +52,7 @@ void CPZ2Outro_SetupCutscene(void)
     CutsceneSeq_StartSequence(self, CPZ2Outro_Cutscene_Outro, StateMachine_None);
 
 #if RETRO_USE_PLUS
-    if (seq->objectID)
+    if (seq->classID)
         seq->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -81,7 +81,7 @@ bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)
         player1->groundVel  = 0;
         player1->right      = true;
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->state      = Player_State_Ground;
             player2->stateInput = Player_ProcessP2Input_AI;
             player2->groundVel  = 0;

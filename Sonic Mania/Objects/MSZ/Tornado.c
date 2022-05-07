@@ -84,7 +84,7 @@ void Tornado_Create(void *data)
             RSDK.SetSpriteAnimation(Tornado->knuxFrames, 6, &self->animatorKnux, false, 0);
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->state = MSZSetup_PlayerState_Pilot;
     }
 }
@@ -207,7 +207,7 @@ void Tornado_HandlePlayerCollisions(void)
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 
-        if (player1->objectID == Player->objectID) {
+        if (player1->classID == Player->classID) {
             int32 deathBounds = (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16));
             if (player1->position.y > deathBounds)
                 player1->deathType = PLAYER_DEATH_DIE_USESFX;
@@ -367,7 +367,7 @@ void Tornado_State_PlayerControlled(void)
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 
-        if (player1->objectID == Player->objectID) {
+        if (player1->classID == Player->classID) {
             if (player1->position.y > (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16)))
                 player1->deathType = PLAYER_DEATH_DIE_USESFX;
         }

@@ -110,7 +110,7 @@ void Whirlpool_StaticUpdate(void)
             Whirlpool->timer = 30;
     }
 
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID)
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID)
         Whirlpool->timer = 0;
 
     if (Whirlpool->playingSFX)

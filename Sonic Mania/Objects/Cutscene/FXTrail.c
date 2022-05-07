@@ -15,7 +15,7 @@ void FXTrail_LateUpdate(void)
 {
     RSDK_THIS(FXTrail);
     Entity *parent = (Entity *)self->parent;
-    if (parent && self->animatorPtr && parent->objectID) {
+    if (parent && self->animatorPtr && parent->classID) {
         // Update recordings
         for (int32 i = FXTrail_trackCount - 1; i > 0; --i) {
             self->statePos[i].x     = self->statePos[i - 1].x;

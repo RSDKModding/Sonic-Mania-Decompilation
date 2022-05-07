@@ -34,7 +34,7 @@ void Firework_StaticUpdate(void)
 {
     bool32 fireworkActive = false;
 
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
         foreach_active(Firework, firework)
         {
             if (firework->rideActive) {

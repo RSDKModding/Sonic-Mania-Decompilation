@@ -23,7 +23,7 @@ void Turbine_LateUpdate(void) {}
 void Turbine_StaticUpdate(void)
 {
     bool32 playingSfx = false;
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
 
         foreach_active(Turbine, turbine)
         {

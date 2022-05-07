@@ -175,9 +175,9 @@ void CutsceneSeq_LockAllPlayerControl(void)
 }
 void CutsceneSeq_StartSequence(void *manager, ...)
 {
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         return;
-    RSDK.ResetEntitySlot(SLOT_CUTSCENESEQ, CutsceneSeq->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_CUTSCENESEQ, CutsceneSeq->classID, NULL);
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     cutsceneSeq->position.x        = 0;
     cutsceneSeq->position.y        = 0;

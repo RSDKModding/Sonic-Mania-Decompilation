@@ -26,7 +26,7 @@ void CPZ1Intro_Update(void)
 
 #if RETRO_USE_PLUS
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            if (seq->objectID)
+            if (seq->classID)
                 seq->skipType = SKIPTYPE_RELOADSCN;
 #endif
         }
@@ -167,7 +167,7 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
         player1->velocity.x = 0;
         player1->velocity.y = 0;
         player1->onGround   = false;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.x -= 0x80000;
             player2->velocity.x = 0;
             player2->velocity.y = 0;
@@ -193,7 +193,7 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
             if (!fxRuby->outerRadius) {
                 player1->state = Player_State_Air;
-                if (player2->objectID == Player->objectID)
+                if (player2->classID == Player->classID)
                     player2->state = Player_State_Air;
                 fxRuby->active = ACTIVE_NEVER;
                 return true;
@@ -212,7 +212,7 @@ bool32 CPZ1Intro_Cutscene_PostWarpDrop(EntityCutsceneSeq *host)
     unused(host);
     unused(camera);
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         if (player1->onGround && player2->onGround)
             return true;
     }
@@ -231,7 +231,7 @@ bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         player1->state = Player_State_None;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->state = Player_State_None;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
         }
@@ -338,7 +338,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
         }
     }
 
-    if (host->timer == 60 && player2->objectID == Player->objectID) {
+    if (host->timer == 60 && player2->classID == Player->classID) {
         RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOKUP, &player2->animator, true, 0);
         player2->up    = true;
         player2->state = Player_State_LookUp;
@@ -365,7 +365,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host)
     if (!host->timer) {
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             player2->up = false;
         }
@@ -379,7 +379,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host)
         player1->camera         = camera;
         camera->target          = (Entity *)player1;
         camera->state           = Camera_State_Follow;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->stateInput     = Player_ProcessP2Input_AI;
             player2->tileCollisions = true;
             player2->onGround       = true;

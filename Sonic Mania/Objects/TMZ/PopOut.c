@@ -17,7 +17,7 @@ void PopOut_Update(void)
     int32 storeX        = self->position.x;
     int32 storeY        = self->position.y;
     EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
-    if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
+    if (child->classID != Spring->classID && child->classID != Spikes->classID)
         child = NULL;
 
     self->direction = FLIP_NONE;
@@ -141,10 +141,10 @@ void PopOut_Create(void *data)
         RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &self->mountAnimator, true, 0);
 
         EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
-        if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
+        if (child->classID != Spring->classID && child->classID != Spikes->classID)
             child = NULL;
 
-        if (child->objectID == Spring->objectID) {
+        if (child->classID == Spring->classID) {
             if (child->type & 1)
                 self->childType = POPOUT_CHILD_SPRING_RED;
             else
@@ -292,9 +292,9 @@ void PopOut_EditorDraw(void)
     RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &self->mountAnimator, true, 0);
 
     EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
-    if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
+    if (child->classID != Spring->classID && child->classID != Spikes->classID)
         child = NULL;
-    if (child && child->objectID == Spring->objectID) {
+    if (child && child->classID == Spring->classID) {
         if (child->type & 1)
             self->childType = POPOUT_CHILD_SPRING_RED;
         else

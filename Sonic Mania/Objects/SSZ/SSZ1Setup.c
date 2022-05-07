@@ -26,7 +26,7 @@ void SSZ1Setup_Create(void *data) {}
 void SSZ1Setup_StageLoad(void)
 {
     // The low lake style bg
-    SSZ1Setup->background2 = RSDK.GetSceneLayer(1);
+    SSZ1Setup->background2 = RSDK.GetTileLayer(1);
 
     int32 id = 0;
     for (int32 i = 0; i < 0x200; ++i) {

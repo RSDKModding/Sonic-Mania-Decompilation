@@ -127,7 +127,7 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void)
             if (Player_CheckBadnikBreak(player, self, false)) {
                 int32 x = self->position.x;
                 int32 y = self->position.y;
-                RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
+                RSDK.ResetEntityPtr(self, MSBomb->classID, NULL);
 
                 EntityMSBomb *bomb = (EntityMSBomb *)self;
                 bomb->position.x   = x;
@@ -229,7 +229,7 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                 else if (Player_CheckBadnikBreak(player, self, false)) {
                     int32 x = self->position.x;
                     int32 y = self->position.y;
-                    RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
+                    RSDK.ResetEntityPtr(self, MSBomb->classID, NULL);
 
                     EntityMSBomb *bomb = (EntityMSBomb *)self;
                     bomb->position.x   = x;
@@ -247,7 +247,7 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                 else if (Player_CheckBadnikBreak(player, self, false)) {
                     int32 x = self->position.x;
                     int32 y = self->position.y;
-                    RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
+                    RSDK.ResetEntityPtr(self, MSBomb->classID, NULL);
 
                     EntityMSBomb *bomb = (EntityMSBomb *)self;
                     bomb->position.x   = x;

@@ -62,14 +62,14 @@ void DebugMode_Update(void)
 #endif
 
     if (ControllerInfo[CONT_P1].keyA.press) {
-        ++DebugMode->objID;
-        DebugMode->objID %= DebugMode->itemCount;
-        DebugMode->itemSubType = 0;
+        ++DebugMode->itemID;
+        DebugMode->itemID %= DebugMode->itemCount;
+        DebugMode->itemType = 0;
     }
     else if (keySpawn) {
         // Do this so we can access the player variables again
         RSDK_THIS(Player);
-        self->objectID       = Player->objectID;
+        self->classID       = Player->classID;
         self->groundVel      = 0;
         self->velocity.x     = 0;
         self->velocity.y     = 0;
@@ -91,27 +91,27 @@ void DebugMode_Update(void)
     }
     else if (ControllerInfo[CONT_P1].keyA.down) {
         if (ControllerInfo[CONT_P1].keyC.press || keyBack) {
-            --DebugMode->objID;
-            if (DebugMode->objID < 0)
-                DebugMode->objID = DebugMode->itemCount - 1;
+            if (--DebugMode->itemID < 0)
+                DebugMode->itemID = DebugMode->itemCount - 1;
 
-            DebugMode->itemSubType = 0;
+            DebugMode->itemType = 0;
         }
 
         if (ControllerInfo[CONT_P1].keyB.press) {
-            DebugMode->itemSubType--;
-            if (DebugMode->itemSubType >= DebugMode->subtypeCount)
-                DebugMode->itemSubType = DebugMode->subtypeCount - 1;
+            DebugMode->itemType--;
+            
+            if (DebugMode->itemType >= DebugMode->itemTypeCount)
+                DebugMode->itemType = DebugMode->itemTypeCount - 1;
         }
     }
     else if (ControllerInfo[CONT_P1].keyC.press || keyBack) {
-        StateMachine_Run(DebugMode->spawn[DebugMode->objID]);
+        StateMachine_Run(DebugMode->spawn[DebugMode->itemID]);
     }
     else if (ControllerInfo[CONT_P1].keyB.press) {
-        if (DebugMode->itemSubType >= DebugMode->subtypeCount - 1)
-            DebugMode->itemSubType = 0;
+        if (DebugMode->itemType >= DebugMode->itemTypeCount - 1)
+            DebugMode->itemType = 0;
         else
-            DebugMode->itemSubType++;
+            DebugMode->itemType++;
     }
 }
 
@@ -119,7 +119,7 @@ void DebugMode_LateUpdate(void) {}
 
 void DebugMode_StaticUpdate(void) {}
 
-void DebugMode_Draw(void) { StateMachine_Run(DebugMode->draw[DebugMode->objID]); }
+void DebugMode_Draw(void) { StateMachine_Run(DebugMode->draw[DebugMode->itemID]); }
 
 void DebugMode_Create(void *data)
 {
@@ -131,12 +131,12 @@ void DebugMode_Create(void *data)
 
 void DebugMode_StageLoad(void)
 {
-    DebugMode->objID       = 0;
+    DebugMode->itemID      = 0;
     DebugMode->itemCount   = 0;
     DebugMode->debugActive = false;
 
     for (int32 i = 0; i < DEBUGMODE_OBJECT_COUNT; ++i) {
-        DebugMode->objectIDs[i] = TYPE_BLANK;
+        DebugMode->classIDs[i]  = TYPE_BLANK;
         DebugMode->draw[i]      = StateMachine_None;
         DebugMode->spawn[i]     = DebugMode_NullState;
     }
@@ -147,7 +147,7 @@ void DebugMode_NullState(void) {}
 void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void))
 {
     if (DebugMode->itemCount < DEBUGMODE_OBJECT_COUNT) {
-        DebugMode->objectIDs[DebugMode->itemCount] = id;
+        DebugMode->classIDs[DebugMode->itemCount]  = id;
         DebugMode->draw[DebugMode->itemCount]      = draw;
         DebugMode->spawn[DebugMode->itemCount]     = spawn;
         DebugMode->itemCount++;

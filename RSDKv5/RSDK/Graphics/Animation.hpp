@@ -10,6 +10,8 @@ namespace RSDK
 
 #define FRAMEHITBOX_COUNT (0x8)
 
+#define RSDK_SIGNATURE_SPR (0x525053)
+
 enum RotationFlags { ROTFLAG_NONE, ROTFLAG_FULL, ROTFLAG_45DEG, ROTFLAG_90DEG, ROTFLAG_180DEG, ROTFLAG_STATICFRAMES };
 
 struct SpriteAnimationEntry {
@@ -36,7 +38,7 @@ struct SpriteFrame {
     int16 pivotX;
     int16 pivotY;
     uint16 duration;
-    uint16 id;
+    uint16 unicodeChar;
     uint8 sheetID;
     uint8 hitboxCnt;
     Hitbox hitboxes[FRAMEHITBOX_COUNT];
@@ -65,13 +67,14 @@ struct Animator {
 
 extern SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 
-uint16 LoadSpriteAnimation(const char *filename, Scopes scope);
-uint16 CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope);
+uint16 LoadSpriteAnimation(const char *filename, int32 scope);
+uint16 CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, int32 scope);
 
 inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
 {
     if (aniFrames >= SPRFILE_COUNT)
         return 0;
+
     SpriteAnimation *spr = &spriteAnimationList[aniFrames];
 
     RETRO_HASH(hash);
@@ -82,6 +85,7 @@ inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
             return a;
         }
     }
+
     return -1;
 }
 
@@ -89,9 +93,11 @@ inline SpriteFrame *GetFrame(uint16 aniFrames, uint16 anim, int32 frame)
 {
     if (aniFrames >= SPRFILE_COUNT)
         return NULL;
+
     SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (anim >= spr->animCount)
         return NULL;
+
     return &spr->frames[frame + spr->animations[anim].frameListOffset];
 }
 
@@ -106,22 +112,21 @@ inline Hitbox *GetHitbox(Animator *animator, uint8 hitboxID)
 inline int16 GetFrameID(Animator *animator)
 {
     if (animator && animator->frames)
-        return animator->frames[animator->frameID].id;
-    else
-        return 0;
+        return animator->frames[animator->frameID].unicodeChar;
+
+    return 0;
 }
 
 void ProcessAnimation(Animator *animator);
 
 inline void SetSpriteAnimation(uint16 aniFrames, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID)
 {
-    if (aniFrames >= SPRFILE_COUNT) {
+    if (aniFrames >= SPRFILE_COUNT || !animator) {
         if (animator)
             animator->frames = NULL;
         return;
     }
-    if (!animator)
-        return;
+
     SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (animationID >= spr->animCount)
         return;

@@ -186,8 +186,8 @@ void UIChoice_TouchedCB_Left(void)
 
         if (parent->choiceCount > 0) {
             choice = RSDK_GET_ENTITY(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent), UIButton);
-            if (choice->objectID == UIChoice->objectID || choice->objectID == UIVsRoundPicker->objectID || choice->objectID == UIResPicker->objectID
-                || choice->objectID == UIWinSize->objectID)
+            if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
+                || choice->classID == UIWinSize->classID)
                 continue;
         }
 
@@ -214,8 +214,8 @@ void UIChoice_TouchedCB_Right(void)
         if (parent->choiceCount > 0) {
             choice = RSDK_GET_ENTITY(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent), UIButton);
 
-            if (choice->objectID == UIChoice->objectID || choice->objectID == UIVsRoundPicker->objectID || choice->objectID == UIResPicker->objectID
-                || choice->objectID == UIWinSize->objectID)
+            if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
+                || choice->classID == UIWinSize->classID)
                 continue;
         }
 

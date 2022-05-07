@@ -31,7 +31,7 @@ void TMZ1Setup_StaticUpdate(void)
     if (!(Zone->timer & 1))
         RSDK.RotatePalette(0, 204, 207, false);
 
-    if (!RSDK.GetEntityCount(TMZ1Setup->objectID, true)) {
+    if (!RSDK.GetEntityCount(TMZ1Setup->classID, true)) {
         RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(2 * Zone->timer) >> 1) + 128, 192, 197);
         RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(2 * Zone->timer + 128) >> 1) + 128, 198, 203);
         RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(4 * Zone->timer + 128) >> 1) + 64, 220, 223);
@@ -53,15 +53,15 @@ void TMZ1Setup_StaticUpdate(void)
 
     if (TMZ1Setup->stageState < TMZ1_STAGESTATE_LIFT) {
         int32 posY = ScreenInfo->centerY + ScreenInfo->position.y;
-        if (posY > 4528 && TMZ1Setup->stageState != TMZ1_STAGESTATE_CITY && !RSDK.GetEntityCount(TMZ1Setup->objectID, true)) {
+        if (posY > 4528 && TMZ1Setup->stageState != TMZ1_STAGESTATE_CITY && !RSDK.GetEntityCount(TMZ1Setup->classID, true)) {
             CREATE_ENTITY(TMZ1Setup, intToVoid(1), 0, 0);
         }
-        else if (posY < 4192 && TMZ1Setup->stageState != TMZ1_STAGESTATE_SKY && !RSDK.GetEntityCount(TMZ1Setup->objectID, true)) {
+        else if (posY < 4192 && TMZ1Setup->stageState != TMZ1_STAGESTATE_SKY && !RSDK.GetEntityCount(TMZ1Setup->classID, true)) {
             CREATE_ENTITY(TMZ1Setup, intToVoid(0), 0, 0);
         }
     }
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
-    if (!TMZ1Setup->hasAchievement && actClear->objectID == ActClear->objectID && actClear->state == ActClear_State_EnterText && !Player->gotHit[0]) {
+    if (!TMZ1Setup->hasAchievement && actClear->classID == ActClear->classID && actClear->state == ActClear_State_EnterText && !Player->gotHit[0]) {
         API_UnlockAchievement("ACH_TMZ");
         TMZ1Setup->hasAchievement = true;
     }
@@ -87,7 +87,7 @@ void TMZ1Setup_StageLoad(void)
     TMZ1Setup->aniTileDelay = RSDK.Rand(2, 60);
     TMZ1Setup->angle        = 0xC0;
     TMZ1Setup->stageState   = TMZ1_STAGESTATE_NONE;
-    TMZ1Setup->bgPtr        = RSDK.GetSceneLayer(0);
+    TMZ1Setup->bgPtr        = RSDK.GetTileLayer(0);
 
     int32 ang = 0;
     for (int32 i = 0; i < 0x200; ++i) {
@@ -96,8 +96,8 @@ void TMZ1Setup_StageLoad(void)
     }
     memcpy(TMZ1Setup->bgPtr->deformationData + 0x200, TMZ1Setup->bgPtr->deformationData, 0x200 * sizeof(int32));
 
-    RSDK.GetSceneLayer(2)->scrollPos = -0x1000000;
-    RSDK.GetSceneLayer(3)->scrollPos = -0x1000000;
+    RSDK.GetTileLayer(2)->scrollPos = -0x1000000;
+    RSDK.GetTileLayer(3)->scrollPos = -0x1000000;
 
     if (!TMZ1Setup->paletteInit) {
 #if RETRO_USE_PLUS
@@ -133,22 +133,22 @@ void TMZ1Setup_StageLoad(void)
 
 void TMZ1Setup_BGCallback_ShowSky(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(4)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(4)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
     foreach_active(MonarchBG, monarch) { monarch->visible = true; }
     TMZ1Setup->stageState = TMZ1_STAGESTATE_SKY;
 }
 
 void TMZ1Setup_BGCallback_ShowLift(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(4)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(4)->drawLayer[BGSwitch->screenID] = 0;
     foreach_active(MonarchBG, monarch) { monarch->visible = false; }
     TMZ1Setup->stageState = TMZ1_STAGESTATE_LIFT;
 }
@@ -193,17 +193,17 @@ void TMZ1Setup_State_FadeOutCurrentBG(void)
     if (self->timer >= 256) {
         if (TMZ1Setup->stageState) {
             TMZ1Setup->stageState               = TMZ1_STAGESTATE_SKY;
-            RSDK.GetSceneLayer(0)->drawLayer[0] = 0;
-            RSDK.GetSceneLayer(1)->drawLayer[0] = 0;
-            RSDK.GetSceneLayer(2)->drawLayer[0] = DRAWLAYER_COUNT;
-            RSDK.GetSceneLayer(3)->drawLayer[0] = DRAWLAYER_COUNT;
+            RSDK.GetTileLayer(0)->drawLayer[0] = 0;
+            RSDK.GetTileLayer(1)->drawLayer[0] = 0;
+            RSDK.GetTileLayer(2)->drawLayer[0] = DRAWGROUP_COUNT;
+            RSDK.GetTileLayer(3)->drawLayer[0] = DRAWGROUP_COUNT;
         }
         else {
             TMZ1Setup->stageState               = TMZ1_STAGESTATE_CITY;
-            RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
-            RSDK.GetSceneLayer(1)->drawLayer[0] = DRAWLAYER_COUNT;
-            RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
-            RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
+            RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
+            RSDK.GetTileLayer(1)->drawLayer[0] = DRAWGROUP_COUNT;
+            RSDK.GetTileLayer(2)->drawLayer[0] = 0;
+            RSDK.GetTileLayer(3)->drawLayer[0] = 0;
         }
         self->state = TMZ1Setup_State_FadeIntoOutsideBGs;
     }
@@ -221,10 +221,10 @@ void TMZ1Setup_State_ShowCityBG(void)
 {
     RSDK_THIS(TMZ1Setup);
     TMZ1Setup->stageState               = TMZ1_STAGESTATE_CITY;
-    RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[0] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
-    RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawLayer[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(3)->drawLayer[0] = 0;
     RSDK.CopyPalette(3, 128, 0, 128, 80);
     destroyEntity(self);
 }
@@ -233,10 +233,10 @@ void TMZ1Setup_State_ShowSkyBG(void)
 {
     RSDK_THIS(TMZ1Setup);
     TMZ1Setup->stageState               = TMZ1_STAGESTATE_SKY;
-    RSDK.GetSceneLayer(0)->drawLayer[0] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[0] = 0;
-    RSDK.GetSceneLayer(2)->drawLayer[0] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(3)->drawLayer[0] = DRAWLAYER_COUNT;
+    RSDK.GetTileLayer(0)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(1)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(2)->drawLayer[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(3)->drawLayer[0] = DRAWGROUP_COUNT;
     RSDK.CopyPalette(4, 128, 0, 128, 80);
     destroyEntity(self);
 }

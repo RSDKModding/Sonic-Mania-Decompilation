@@ -167,7 +167,7 @@ int RunRetroEngine(int argc, char *argv[])
                     // char buffer[0x40];
                     // sprintf(buffer, "Build #%d", 18403);
                     // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
-                    // DrawDevText(buffer, currentScreen->center.x, currentScreen->center.y - 48, 1, 0xF0F0F0);
+                    // DrawDevString(buffer, currentScreen->center.x, currentScreen->center.y - 48, 1, 0xF0F0F0);
                 }
 
                 RenderDevice::CopyFrameBuffer();
@@ -232,7 +232,7 @@ void ProcessEngine()
         RSDK::SaveMods();
         for (int32 c = 0; c < CHANNEL_COUNT; ++c) StopChannel(c);
 #if RETRO_REV02
-        hardResetFlag = true;
+        forceHardReset = true;
 #endif
         SceneInfo pre = sceneInfo;
         StartGameObjects();
@@ -267,7 +267,7 @@ void ProcessEngine()
 
 #if RETRO_REV02
                 RSDK::SKU::userCore->StageLoad();
-                for (int v = 0; v < DRAWLAYER_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+                for (int v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
 #endif
                 // dim after 5 mins
                 RSDK::videoSettings.dimLimit = (5 * 60) * RSDK::videoSettings.refreshRate;
@@ -341,7 +341,7 @@ void ProcessEngine()
 
 #if RETRO_REV02
             RSDK::SKU::userCore->StageLoad();
-            for (int v = 0; v < DRAWLAYER_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+            for (int v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
 #endif
 
             ProcessInput();
@@ -448,7 +448,7 @@ void ProcessEngine()
             currentScreen = &screens[0];
             int yOff      = RSDK::DevOutput_GetStringYOffset(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
-            DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
         }
         case ENGINESTATE_ERRORMSG_FATAL: {
@@ -460,7 +460,7 @@ void ProcessEngine()
             currentScreen = &screens[0];
             int yOff = RSDK::DevOutput_GetStringYOffset(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
-            DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
         }
 #endif
@@ -528,7 +528,7 @@ void StartGameObjects()
 
     devMenu.state            = DevMenu_MainMenu;
 
-    for (int l = 0; l < DRAWLAYER_COUNT; ++l) engine.drawLayerVisible[l] = true;
+    for (int l = 0; l < DRAWGROUP_COUNT; ++l) engine.drawLayerVisible[l] = true;
 
     RSDK::SetupFunctionTables();
     InitGameLink();

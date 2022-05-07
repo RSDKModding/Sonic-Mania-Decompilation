@@ -263,7 +263,7 @@ void MonkeyDude_HandleStates(void)
             Player_CheckBadnikBreak(player, self, true);
     }
 
-    if (self->objectID) {
+    if (self->classID) {
         if (self->throwCount) {
             if (self->throwCount == 3 && self->armAngles[MonkeyDude_ArmJointCount - 1] <= 164) {
                 int32 spawnX = self->position.x + 0xD0000;

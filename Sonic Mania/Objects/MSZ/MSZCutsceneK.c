@@ -72,7 +72,7 @@ void MSZCutsceneK_StartCutscene(void)
 
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (sequence->objectID) {
+    if (sequence->classID) {
         sequence->skipType     = SKIPTYPE_CALLBACK;
         sequence->skipCallback = MSZCutsceneK_SkipCB;
     }
@@ -83,7 +83,7 @@ void MSZCutsceneK_SetupP2(int32 x, int32 y)
 {
     Player->sonicFrames = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE);
     Player->superFrames = RSDK.LoadSpriteAnimation("Players/SuperSonic.bin", SCOPE_STAGE);
-    RSDK.ResetEntitySlot(SLOT_PLAYER2, Player->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_PLAYER2, Player->classID, NULL);
 
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     ++Player->playerCount;

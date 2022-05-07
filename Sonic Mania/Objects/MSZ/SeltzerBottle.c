@@ -110,7 +110,7 @@ void SeltzerBottle_StageLoad(void)
     SeltzerBottle->hitboxButton.right  = 16;
     SeltzerBottle->hitboxButton.bottom = SeltzerBottle->hitboxButton.top + 16;
 
-    SeltzerBottle->layerID = RSDK.GetSceneLayerID("Seltzer Path");
+    SeltzerBottle->layerID = RSDK.GetTileLayerID("Seltzer Path");
     if (SeltzerBottle->layerID)
         SeltzerBottle->seltzerPathLayer = 1 << SeltzerBottle->layerID;
 

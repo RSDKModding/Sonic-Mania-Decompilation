@@ -119,7 +119,7 @@ bool32 OOZ1Outro_Cutscene_PostActClearSetup(EntityCutsceneSeq *host)
         Zone->cameraBoundsT[0] = self->boundsT;
         Zone->cameraBoundsB[0] = self->boundsB;
 #if RETRO_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
         return true;
@@ -133,14 +133,14 @@ bool32 OOZ1Outro_Cutscene_FallIntoAct2(EntityCutsceneSeq *host)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (host->timer == 48) {
         player1->interaction = true;
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->interaction = true;
     }
     if (Smog->forceEnabled && player1->animator.animationID)
         return false;
     player1->direction  = FLIP_NONE;
     player1->stateInput = Player_ProcessP1Input;
-    if (player2->objectID == Player->objectID)
+    if (player2->classID == Player->classID)
         player2->stateInput = Player_ProcessP2Input_AI;
     return true;
 }

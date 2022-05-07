@@ -112,13 +112,13 @@ EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg)
         LogHelpers_Print("EXCEPTION: Called CreateDialog when an activeDialog already existed.");
     }
     else {
-        int32 id = RSDK_GET_ENTITY(SLOT_DIALOG, UIDialog)->objectID;
+        int32 id = RSDK_GET_ENTITY(SLOT_DIALOG, UIDialog)->classID;
 
         if (id) {
-            LogHelpers_Print("Can't create UIDialog (%d), entity already exists in slot (class ID: %d)", UIDialog->objectID, id);
+            LogHelpers_Print("Can't create UIDialog (%d), entity already exists in slot (class ID: %d)", UIDialog->classID, id);
         }
         else {
-            RSDK.ResetEntitySlot(SLOT_DIALOG, UIDialog->objectID, msg);
+            RSDK.ResetEntitySlot(SLOT_DIALOG, UIDialog->classID, msg);
 
             EntityUIDialog *dialog = RSDK_GET_ENTITY(SLOT_DIALOG, UIDialog);
             dialog->position.x     = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
@@ -162,7 +162,7 @@ void UIDialog_AddButton(uint8 frame, EntityUIDialog *dialog, void (*callback)(vo
         dialog->callbacks[dialog->buttonCount]     = callback;
         dialog->closeOnSelect[dialog->buttonCount] = closeOnSelect;
 
-        RSDK.ResetEntitySlot(SLOT_DIALOG_BUTTONS + dialog->buttonCount, UIButton->objectID, NULL);
+        RSDK.ResetEntitySlot(SLOT_DIALOG_BUTTONS + dialog->buttonCount, UIButton->classID, NULL);
 
         EntityUIButton *button = RSDK_GET_ENTITY(SLOT_DIALOG_BUTTONS + dialog->buttonCount, UIButton);
         button->position.x     = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
@@ -211,7 +211,7 @@ void UIDialog_Setup(EntityUIDialog *dialog)
         }
 
         control = NULL;
-        RSDK.ResetEntitySlot(SLOT_DIALOG_UICONTROL, UIControl->objectID, &size);
+        RSDK.ResetEntitySlot(SLOT_DIALOG_UICONTROL, UIControl->classID, &size);
 
         control                    = RSDK_GET_ENTITY(SLOT_DIALOG_UICONTROL, UIControl);
         control->menuWasSetup      = true;

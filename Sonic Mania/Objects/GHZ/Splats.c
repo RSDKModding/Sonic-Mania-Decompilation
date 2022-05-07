@@ -143,7 +143,7 @@ void Splats_CheckPlayerCollisions(void)
                 if (Player_CheckBadnikBreak(player, self, false)) {
                     EntitySplats *parent = self->parent;
                     if (parent) {
-                        if (parent->objectID == Splats->objectID)
+                        if (parent->classID == Splats->classID)
                             --parent->activeCount;
                     }
                     destroyEntity(self);
@@ -322,7 +322,7 @@ void Splats_State_HandleBouncing(void)
     }
     else {
         EntitySplats *parent = self->parent;
-        if (parent && parent->objectID == Splats->objectID)
+        if (parent && parent->classID == Splats->classID)
             --parent->activeCount;
 
         destroyEntity(self);
@@ -347,7 +347,7 @@ void Splats_State_HandleLanding(void)
     }
     else {
         EntitySplats *parent = self->parent;
-        if (parent && parent->objectID == Splats->objectID)
+        if (parent && parent->classID == Splats->classID)
             --parent->activeCount;
 
         destroyEntity(self);
@@ -376,7 +376,7 @@ void Splats_State_NoMoreJumps(void)
     }
     else {
         EntitySplats *parent = self->parent;
-        if (parent && parent->objectID == Splats->objectID)
+        if (parent && parent->classID == Splats->classID)
             --parent->activeCount;
 
         destroyEntity(self);

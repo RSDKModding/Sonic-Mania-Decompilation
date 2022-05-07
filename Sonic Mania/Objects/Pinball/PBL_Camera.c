@@ -43,7 +43,7 @@ void PBL_Camera_Create(void *data)
 
 void PBL_Camera_StageLoad(void)
 {
-    RSDK.ResetEntitySlot(SLOT_PBL_CAMERA, PBL_Camera->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_PBL_CAMERA, PBL_Camera->classID, NULL);
     RSDK.ClearCameras();
     EntityPBL_Camera *entity = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     RSDK.AddCamera(&entity->targetPos, 0x100 << 16, 0x100 << 16, true);

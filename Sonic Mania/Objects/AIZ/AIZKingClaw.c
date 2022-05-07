@@ -20,7 +20,7 @@ void AIZKingClaw_Update(void)
             grabbed->position.x = self->clawPos.x;
             grabbed->position.y = self->clawPos.y + 0x2C0000;
 
-            if (grabbed->objectID == Platform->objectID) {
+            if (grabbed->classID == Platform->classID) {
                 EntityPlatform *plat = (EntityPlatform *)grabbed;
                 plat->drawPos.x      = plat->position.x;
                 plat->drawPos.y      = plat->position.y;

@@ -165,7 +165,7 @@ void CrimsonEye_StageLoad(void)
     CrimsonEye->destroyedBallCount  = 0;
     CrimsonEye->shotsRemaining      = 0;
 
-    CrimsonEye->elevatorBG = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Lift Background"));
+    CrimsonEye->elevatorBG = RSDK.GetTileLayer(RSDK.GetTileLayerID("Lift Background"));
 
     CrimsonEye->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
     CrimsonEye->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
@@ -210,7 +210,7 @@ void CrimsonEye_SetupBG2Layer(void)
         for (int32 x = 1; x < 31; ++x) RSDK.SetTileInfo(1, x, y, -1);
     }
 
-    TileLayer *bg2Layer = RSDK.GetSceneLayer(1);
+    TileLayer *bg2Layer = RSDK.GetTileLayer(1);
     for (int32 i = 0; i < bg2Layer->scrollInfoCount; ++i) {
         bg2Layer->scrollInfo[i].parallaxFactor = 0x200;
         bg2Layer->scrollInfo[i].scrollPos      = -0x1C0000;
@@ -410,7 +410,7 @@ void CrimsonEye_StateContainer_HandleElevator(void)
 
     for (int32 i = 0; i < PLAYER_MAX; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-        if (player->objectID)
+        if (player->classID)
             player->gravityStrength = 0x3800 - CrimsonEye->elevatorSpeed / 0x30;
     }
 
@@ -467,7 +467,7 @@ void CrimsonEye_StateContainer_MoveElevatorToTMZ2Entry(void)
 
     CrimsonEye->bg2Layer->scrollSpeed = 6 * CrimsonEye->elevatorSpeed;
 
-    TileLayer *moveLayer   = RSDK.GetSceneLayer(Zone->moveLayer);
+    TileLayer *moveLayer   = RSDK.GetTileLayer(Zone->moveLayer);
     moveLayer->scrollSpeed = (CrimsonEye->elevatorSpeed / 24) << 6;
 }
 
@@ -787,7 +787,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->delay         = 60;
 
                     SceneInfo->timeEnabled = false;
-                    Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
+                    Player_GiveScore(RSDK.GetEntity(SLOT_PLAYER1), 1000);
                     self->visible = false;
                     self->state   = CrimsonEye_StateCore_Explode;
                 }

@@ -174,7 +174,7 @@ void Current_SetupTagLink(void)
     RSDK_THIS(Current);
 
     self->taggedButton         = NULL;
-    EntityButton *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+    EntityButton *taggedButton = RSDK.GetEntity(RSDK.GetEntityID(self) - 1);
 
     if (self->buttonTag > 0) {
         bool32 matchedTag = false;
@@ -202,7 +202,7 @@ void Current_SetupTagLink(void)
     }
 
     if (taggedButton) {
-        if ((Button && taggedButton->objectID == Button->objectID) || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+        if ((Button && taggedButton->classID == Button->classID) || (PullChain && taggedButton->classID == PullChain->classID)) {
             int32 distX = abs(self->position.x - taggedButton->position.x);
             int32 distY = abs(self->position.y - taggedButton->position.y);
 

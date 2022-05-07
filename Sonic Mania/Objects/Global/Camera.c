@@ -93,7 +93,7 @@ void Camera_StageLoad(void)
     // Likely a holdover from the earlier credits revision
     if (!RSDK.CheckStageFolder("Credits")) {
         for (int32 i = 0; i < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++i)
-            RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->objectID, intToVoid(i));
+            RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->classID, intToVoid(i));
 
         Camera->centerBounds.x = 0x100000;
         Camera->centerBounds.y = 0x180000;

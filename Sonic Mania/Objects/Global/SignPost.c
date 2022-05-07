@@ -255,7 +255,7 @@ void SignPost_HandleCamBounds(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-        if (player->objectID == Player->objectID && !player->sidekick) {
+        if (player->classID == Player->classID && !player->sidekick) {
             if (globals->gameMode == MODE_COMPETITION) {
                 int32 storeX     = self->position.x;
                 int32 storeY     = self->position.y;
@@ -288,7 +288,7 @@ void SignPost_CheckTouch(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-        if (self->activePlayers && RSDK_GET_ENTITY(p + Player->playerCount, Player)->objectID == GameOver->objectID) {
+        if (self->activePlayers && RSDK_GET_ENTITY(p + Player->playerCount, Player)->classID == GameOver->classID) {
             self->activePlayers |= 1 << p;
         }
         else if (!p || globals->gameMode == MODE_COMPETITION) {
@@ -427,7 +427,7 @@ void SignPost_State_Land(void)
         self->type  = SIGNPOST_DECOR;
         self->state = SignPost_State_Finish;
         Music_PlayTrack(TRACK_ACTCLEAR);
-        RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, NULL);
+        RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->classID, NULL);
     }
 }
 void SignPost_State_SpunVS(void)

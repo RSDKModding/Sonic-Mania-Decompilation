@@ -25,7 +25,7 @@ typedef enum {
     ID_RAY    = 0x10,
 #endif
     ID_TAILS_ASSIST    = ID_TAILS << 8,
-    ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, //custom-added, can be used to check if "& knux" is active
+    ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, // custom-added, can be used to check if "& knux" is active
     ID_DEFAULT_PLAYER  = ID_SONIC | ID_TAILS_ASSIST,
 } PlayerIDs;
 
@@ -81,16 +81,16 @@ typedef enum {
     SLOT_POWERUP1_2 = 4,
     SLOT_POWERUP2_2 = 5,
 #endif
-    SLOT_BSS_SETUP           = 8,
-    SLOT_PBL_SETUP           = 8,
-    SLOT_UFO_SETUP           = 8,
-    SLOT_MUSIC               = 9,
-    SLOT_BSS_HUD             = 10,
-    SLOT_UFO_CAMERA          = 10,
-    SLOT_PBL_CAMERA          = 10,
-    SLOT_BSS_MESSAGE         = 11,
-    SLOT_UFO_HUD             = 11,
-    SLOT_ZONE                = RETRO_USE_PLUS ? 12 : 8,
+    SLOT_BSS_SETUP   = 8,
+    SLOT_PBL_SETUP   = 8,
+    SLOT_UFO_SETUP   = 8,
+    SLOT_MUSIC       = 9,
+    SLOT_BSS_HUD     = 10,
+    SLOT_UFO_CAMERA  = 10,
+    SLOT_PBL_CAMERA  = 10,
+    SLOT_BSS_MESSAGE = 11,
+    SLOT_UFO_HUD     = 11,
+    SLOT_ZONE        = RETRO_USE_PLUS ? 12 : 8,
     // 13 = ???
     // 14 = ???
     SLOT_CUTSCENESEQ         = 15,
@@ -125,15 +125,15 @@ typedef enum {
     SLOT_UFO_PLASMA     = 36,
 #if RETRO_USE_PLUS
     SLOT_REPLAYRECORDER_PLAYBACK = 36,
-    SLOT_REPLAYRECORDER_RECORD = 37,
+    SLOT_REPLAYRECORDER_RECORD   = 37,
 #endif
     SLOT_MUSICSTACK_START = 40,
     //[41-47] are part of the music stack
-    SLOT_MUSICSTACK_END   = 48,
-    SLOT_CAMERA1          = 60,
-    SLOT_CAMERA2          = 61,
-    SLOT_CAMERA3          = 62,
-    SLOT_CAMERA4          = 63,
+    SLOT_MUSICSTACK_END = 48,
+    SLOT_CAMERA1        = 60,
+    SLOT_CAMERA2        = 61,
+    SLOT_CAMERA3        = 62,
+    SLOT_CAMERA4        = 63,
 } ReservedEntities;
 
 typedef enum {

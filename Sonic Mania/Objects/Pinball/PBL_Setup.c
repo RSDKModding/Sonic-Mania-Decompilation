@@ -42,8 +42,8 @@ void PBL_Setup_StaticUpdate(void)
     PBL_Setup->scanlineTimer += 0x8000;
     PBL_Setup->scanlineTimer &= 0x7FFFFFFF;
     if ((ControllerInfo->keyStart.press || Unknown_pausePress) && SceneInfo->state == ENGINESTATE_REGULAR
-        && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
-        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+        && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID) {
+        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
         pauseMenu->disableRestart  = true;
         pauseMenu->triggerPlayer   = RSDK.GetEntityID(self);
@@ -61,7 +61,7 @@ void PBL_Setup_Create(void *data)
     RSDK_THIS(PBL_Setup);
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawOrder = DRAWLAYER_COUNT - 1;
+    self->drawOrder = DRAWGROUP_COUNT - 1;
     self->color    = 0xF0F0F0;
     self->timer     = 512;
     self->state     = PBL_Setup_State_FadeIn;
@@ -69,16 +69,16 @@ void PBL_Setup_Create(void *data)
 
 void PBL_Setup_StageLoad(void)
 {
-    PBL_Setup->tableLow                                        = RSDK.GetSceneLayerID("Table Low");
-    PBL_Setup->tableHigh                                       = RSDK.GetSceneLayerID("Table High");
+    PBL_Setup->tableLow                                        = RSDK.GetTileLayerID("Table Low");
+    PBL_Setup->tableHigh                                       = RSDK.GetTileLayerID("Table High");
     PBL_Setup->rings                                           = 0;
     PBL_Setup->sectorID                                        = 0;
     PBL_Setup->sectorCount                                     = 0;
     PBL_Setup->score                                           = 0;
     PBL_Setup->score1UP                                        = 10000;
-    RSDK.GetSceneLayer(PBL_Setup->tableLow)->scanlineCallback  = PBL_Setup_TableLow_ScanlineCB;
-    RSDK.GetSceneLayer(PBL_Setup->tableHigh)->scanlineCallback = PBL_Setup_TableHigh_ScanlineCB;
-    RSDK.GetSceneLayer(1)->scanlineCallback                    = PBL_Setup_BG_ScanlineCallback;
+    RSDK.GetTileLayer(PBL_Setup->tableLow)->scanlineCallback  = PBL_Setup_TableLow_ScanlineCB;
+    RSDK.GetTileLayer(PBL_Setup->tableHigh)->scanlineCallback = PBL_Setup_TableHigh_ScanlineCB;
+    RSDK.GetTileLayer(1)->scanlineCallback                    = PBL_Setup_BG_ScanlineCallback;
     RSDK.SetDrawLayerProperties(1, false, PBL_Setup_DrawLayer_Callback);
     RSDK.SetDrawLayerProperties(3, false, PBL_Setup_DrawLayer_Callback);
     RSDK.SetDrawLayerProperties(4, true, NULL);
@@ -88,7 +88,7 @@ void PBL_Setup_StageLoad(void)
     RSDK.SetLimitedFade(4, 0, 7, 144, 0, 255);
     RSDK.SetLimitedFade(5, 0, 7, 180, 0, 255);
     RSDK.SetLimitedFade(6, 0, 7, 216, 0, 255);
-    RSDK.ResetEntitySlot(SLOT_PBL_SETUP, PBL_Setup->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_PBL_SETUP, PBL_Setup->classID, NULL);
     PBL_Setup->sfxContinue = RSDK.GetSfx("Special/Continue.wav");
 }
 

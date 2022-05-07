@@ -198,7 +198,7 @@ void RockDrill_State_Setup(void)
 
     int32 slot                         = SceneInfo->entitySlot - 1;
     EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
-    while (platform->objectID == CollapsingPlatform->objectID) {
+    while (platform->classID == CollapsingPlatform->classID) {
         platform->active = ACTIVE_NEVER;
         platform         = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
     }
@@ -455,7 +455,7 @@ void RockDrill_EditorDraw(void)
         if (CollapsingPlatform) {
             int32 slot                         = SceneInfo->entitySlot - 1;
             EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
-            while (platform && platform->objectID == CollapsingPlatform->objectID) {
+            while (platform && platform->classID == CollapsingPlatform->classID) {
                 DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00, INK_NONE, 0xFF);
 
                 platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);

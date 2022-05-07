@@ -35,22 +35,22 @@ void AIZSetup_StaticUpdate(void)
 
         if (ScreenInfo->position.x <= 8704) {
             AIZSetup->background2->drawLayer[0] = 0;
-            AIZSetup->background3->drawLayer[0] = DRAWLAYER_COUNT;
+            AIZSetup->background3->drawLayer[0] = DRAWGROUP_COUNT;
         }
         else {
-            AIZSetup->background2->drawLayer[0] = DRAWLAYER_COUNT;
+            AIZSetup->background2->drawLayer[0] = DRAWGROUP_COUNT;
             AIZSetup->background3->drawLayer[0] = 0;
         }
 #if RETRO_USE_PLUS
     }
     else {
         if (!(Zone->timer & 3)) {
-            ++RSDK.GetSceneLayer(0)->deformationOffsetW;
+            ++RSDK.GetTileLayer(0)->deformationOffsetW;
         }
 
         if (!(Zone->timer & 1)) {
             for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
-                RSDK.GetSceneLayer(i)->deformationOffsetW++;
+                RSDK.GetTileLayer(i)->deformationOffsetW++;
             }
         }
     }
@@ -67,7 +67,7 @@ void AIZSetup_StaticUpdate(void)
 #endif
     }
 
-    if (!AIZSetup->playDrillSfx || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
+    if (!AIZSetup->playDrillSfx || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID) {
         if (AIZSetup->playingDrillSFX) {
             RSDK.StopSfx(AIZSetup->sfxDrill);
             AIZSetup->playingDrillSFX = false;
@@ -128,7 +128,7 @@ void AIZSetup_StageLoad(void)
     AIZSetup->knuxFrames   = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
 
 #if RETRO_USE_PLUS
-    if (RSDK.GetSceneLayerID("Background 4") >= DRAWLAYER_COUNT) {
+    if (RSDK.GetTileLayerID("Background 4") >= DRAWGROUP_COUNT) {
         // Bug Details:
         // AIZ->background4 doesn't get cleared here, so coming from AIZ Intro to AIZ Encore (same folder so object structs aren't reset)
         // leaves background4's tileLayer pointer intact, though pointing to the wrong layers
@@ -138,7 +138,7 @@ void AIZSetup_StageLoad(void)
         // (though you should prolly clear the other 3 as well)
 
         for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
-            int32 *deformData = RSDK.GetSceneLayer(i)->deformationDataW;
+            int32 *deformData = RSDK.GetTileLayer(i)->deformationDataW;
 
             int32 id = 0;
             for (int32 d = 0; d < 0x200; ++d) {
@@ -148,7 +148,7 @@ void AIZSetup_StageLoad(void)
             }
         }
 
-        int32 *deformData = RSDK.GetSceneLayer(0)->deformationDataW;
+        int32 *deformData = RSDK.GetTileLayer(0)->deformationDataW;
 
         int32 id = 0;
         for (int32 d = 0; d < 0x200; d += 16) {
@@ -170,10 +170,10 @@ void AIZSetup_StageLoad(void)
     }
     else {
 #endif
-        AIZSetup->background1 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
-        AIZSetup->background2 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 2"));
-        AIZSetup->background3 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 3"));
-        AIZSetup->background4 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 4"));
+        AIZSetup->background1 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 1"));
+        AIZSetup->background2 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 2"));
+        AIZSetup->background3 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 3"));
+        AIZSetup->background4 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 4"));
 
         for (int32 i = 0; i < AIZSetup->background2->scrollInfoCount; ++i) {
             int32 parallaxFactor                           = AIZSetup->background2->scrollInfo[i].parallaxFactor;
@@ -220,14 +220,14 @@ void AIZSetup_StageLoad(void)
 #if RETRO_USE_PLUS
 void AIZSetup_BGSwitchCB_Jungle(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 
 void AIZSetup_BGSwitchCB_Sky(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
 }
 #endif
 
@@ -345,7 +345,7 @@ void AIZSetup_CutsceneST_Setup(void)
 
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (seq->objectID) {
+    if (seq->classID) {
         seq->skipType     = SKIPTYPE_CALLBACK;
         seq->skipCallback = AIZSetup_SkipCB;
     }
@@ -363,7 +363,7 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host)
     }
     Zone->playerBoundActiveL[0] = false;
 
-    if (player2->objectID == Player->objectID)
+    if (player2->classID == Player->classID)
         player2->state = AIZSetup_PlayerState_Static;
 
     if (tornado->position.x < ScreenInfo->width << 16)
@@ -403,7 +403,7 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
             }
         }
         else {
-            if (player2->objectID == Player->objectID) {
+            if (player2->classID == Player->classID) {
                 player2->stateInput = StateMachine_None;
             }
             Player->targetLeaderPosition.x = player1->position.x - 0x200000;
@@ -436,7 +436,7 @@ bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         if (player2->onGround) {
             player2->stateInput = StateMachine_None;
             player2->direction  = FLIP_NONE;
@@ -480,7 +480,7 @@ bool32 AIZSetup_CutsceneSonic_EnterClaw(EntityCutsceneSeq *host)
         }
         else {
             player1->up = true;
-            if (player2->objectID == Player->objectID) {
+            if (player2->classID == Player->classID) {
                 player2->state = Player_State_None;
             }
         }
@@ -606,7 +606,7 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
         AIZSetup->fxRuby  = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->drawOrder = Zone->playerDrawHigh + 1;
     }
 
@@ -637,7 +637,7 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x40) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-                    if (!player || player->objectID == TYPE_BLANK)
+                    if (!player || player->classID == TYPE_BLANK)
                         break;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
@@ -679,7 +679,7 @@ void AIZSetup_CutsceneK_Setup(void)
 
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (seq->objectID) {
+    if (seq->classID) {
         seq->skipType     = SKIPTYPE_CALLBACK;
         seq->skipCallback = AIZSetup_SkipCB;
     }
@@ -832,7 +832,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         player1->onGround        = false;
         player1->drawOrder       = Zone->playerDrawHigh + 1;
 
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->drawOrder = Zone->playerDrawHigh + 1;
 
         Camera_ShakeScreen(0, 4, 4);

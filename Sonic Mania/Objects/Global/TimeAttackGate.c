@@ -13,7 +13,7 @@ void TimeAttackGate_Update(void)
 {
     RSDK_THIS(TimeAttackGate);
 
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
         StateMachine_Run(self->state);
     }
 }
@@ -382,7 +382,7 @@ void TimeAttackGate_State_Gate(void)
             if (self->timer >= 180) {
                 if (self->timer == 180) {
                     Music_PlayTrack(TRACK_ACTCLEAR);
-                    RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, NULL);
+                    RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->classID, NULL);
                     ++self->timer;
                 }
             }

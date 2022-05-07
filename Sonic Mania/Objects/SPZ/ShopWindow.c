@@ -19,7 +19,7 @@ void ShopWindow_Update(void)
         foreach_active(Player, player)
         {
             EntityShield *shield = RSDK_GET_ENTITY((Player->playerCount + RSDK.GetEntityID(player)), Shield);
-            if (shield->objectID == Shield->objectID && shield->type == SHIELD_BLUE) {
+            if (shield->classID == Shield->classID && shield->type == SHIELD_BLUE) {
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxItem))
                     shield->forceVisible = Zone->timer & 1;
             }

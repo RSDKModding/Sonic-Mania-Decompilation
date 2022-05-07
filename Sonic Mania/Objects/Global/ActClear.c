@@ -975,7 +975,7 @@ void ActClear_State_ForcePlayerOnScreen(void)
             finishedP1 = true;
     }
 
-    if (player2->objectID != Player->objectID) {
+    if (player2->classID != Player->classID) {
         finishedP2 = true;
     }
     else {

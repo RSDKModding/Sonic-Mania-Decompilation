@@ -21,55 +21,58 @@ ForeachStackInfo foreachStackList[FOREACH_STACK_COUNT];
 ForeachStackInfo *foreachStackPtr = NULL;
 
 #if RETRO_USE_MOD_LOADER
-void RegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
-                    void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                    void (*editorLoad)(void), void (*serialize)(void))
+void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                    void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                    void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 {
-    return RegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,
-                              editorLoad, serialize);
+    return RegisterObject_STD(staticVars, name, entityClassSize, staticClassSize, update, lateUpdate, staticUpdate, draw, create, stageLoad,
+                              editorDraw, editorLoad, serialize);
 }
-void RegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
+
+void RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void(void)> update,
                         std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
                         std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
                         std::function<void(void)> editorLoad, std::function<void(void)> serialize)
 #else
-void RegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
-                    void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                    void (*editorLoad)(void), void (*serialize)(void))
+void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                    void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                    void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 #endif
 {
     if (objectCount < OBJECT_COUNT) {
-        ObjectInfo *info = &objectList[objectCount];
-        if (entitySize > sizeof(EntityBase))
+        if (entityClassSize > sizeof(EntityBase))
             printf("Class exceeds max entity memory: %s \n", name);
+
+        ObjectInfo *info = &objectList[objectCount];
         GEN_HASH(name, info->hash);
-        info->type         = structPtr;
-        info->entitySize   = entitySize;
-        info->objectSize   = objectSize;
-        info->update       = update;
-        info->lateUpdate   = lateUpdate;
-        info->staticUpdate = staticUpdate;
-        info->draw         = draw;
-        info->create       = create;
-        info->stageLoad    = stageLoad;
-        info->editorDraw   = editorDraw;
-        info->editorLoad   = editorLoad;
-        info->serialize    = serialize;
+        info->staticVars      = staticVars;
+        info->entityClassSize = entityClassSize;
+        info->staticClassSize = staticClassSize;
+        info->update          = update;
+        info->lateUpdate      = lateUpdate;
+        info->staticUpdate    = staticUpdate;
+        info->draw            = draw;
+        info->create          = create;
+        info->stageLoad       = stageLoad;
+        info->editorDraw      = editorDraw;
+        info->editorLoad      = editorLoad;
+        info->serialize       = serialize;
+
         ++objectCount;
     }
 }
 
 #if RETRO_REV02
-void RegisterObjectContainer(Object **structPtr, const char *name, uint32 objectSize)
+void RegisterStaticVariables(void **staticVars, const char *name, uint32 classSize)
 {
     uint32 hash[4];
     GEN_HASH(name, hash);
-    RSDK::AllocateStorage(objectSize, (void **)structPtr, RSDK::DATASET_STG, true);
-    LoadStaticObject((uint8 *)*structPtr, hash, 0);
+    RSDK::AllocateStorage(classSize, (void **)staticVars, RSDK::DATASET_STG, true);
+    LoadStaticVariables((uint8 *)*staticVars, hash, 0);
 }
 #endif
 
-void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
+void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 {
     FileInfo info;
 
@@ -84,14 +87,17 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
         int32 charVal     = hash[0] >> i;
         hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
+
     for (int32 i = 0; i < 32; i += 4) {
         int32 charVal     = hash[1] >> i;
         hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
+
     for (int32 i = 0; i < 32; i += 4) {
         int32 charVal     = hash[2] >> i;
         hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
+
     for (int32 i = 0; i < 32; i += 4) {
         int32 charVal     = hash[3] >> i;
         hashBuf[strPos++] = hexChars[charVal & 0xF];
@@ -125,6 +131,7 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
             return;
         }
 
+        int32 dataPos = readOffset;
         while (info.readPos < info.fileSize) {
             int32 dataType  = ReadInt8(&info);
             int32 arraySize = ReadInt32(&info, false);
@@ -137,28 +144,33 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                 switch (dataType) {
                     case SVAR_UINT8:
                     case SVAR_INT8:
-                        if (info.readPos + dataSize <= info.fileSize && &obj[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(uint8); i += sizeof(uint8)) ReadBytes(&info, &obj[dataPos + i], sizeof(uint8));
+                        if (info.readPos + dataSize <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < dataSize * sizeof(uint8); i += sizeof(uint8))
+                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(uint8));
                         }
                         else {
                             for (int32 i = 0; i < dataSize * sizeof(uint8); ++i) ReadInt8(&info);
                         }
+
                         dataPos += dataSize * sizeof(uint8);
                         break;
 
                     case SVAR_UINT16:
                     case SVAR_INT16: {
-                        int32 tmp = (dataPos & -(int32)sizeof(short)) + sizeof(short);
-                        if ((dataPos & -(int32)sizeof(short)) >= dataPos)
+                        int32 tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
+                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
-                        if (info.readPos + (dataSize * sizeof(short)) <= info.fileSize && &obj[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(short); i += sizeof(short)) ReadBytes(&info, &obj[dataPos + i], sizeof(short));
+
+                        if (info.readPos + (dataSize * sizeof(int16)) <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < dataSize * sizeof(int16); i += sizeof(int16))
+                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(int16));
                         }
                         else {
-                            info.readPos += (dataSize * sizeof(short));
+                            info.readPos += (dataSize * sizeof(int16));
                         }
-                        dataPos = tmp + sizeof(short) * dataSize;
+
+                        dataPos = tmp + sizeof(int16) * dataSize;
                         break;
                     }
 
@@ -168,12 +180,15 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                         if ((dataPos & -(int32)sizeof(int32)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
-                        if (info.readPos + (dataSize * sizeof(int32)) <= info.fileSize && &obj[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(int32); i += sizeof(int32)) ReadBytes(&info, &obj[dataPos + i], sizeof(int32));
+
+                        if (info.readPos + (dataSize * sizeof(int32)) <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < dataSize * sizeof(int32); i += sizeof(int32))
+                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(int32));
                         }
                         else {
                             info.readPos += (dataSize * sizeof(int32));
                         }
+
                         dataPos = tmp + sizeof(int32) * dataSize;
                         break;
                     }
@@ -183,12 +198,15 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                         if ((dataPos & -(int32)sizeof(bool32)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
-                        if (info.readPos + (dataSize * sizeof(bool32)) <= info.fileSize && &obj[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(bool32); i += sizeof(bool32)) ReadBytes(&info, &obj[dataPos + i], sizeof(int32));
+
+                        if (info.readPos + (dataSize * sizeof(bool32)) <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < dataSize * sizeof(bool32); i += sizeof(bool32))
+                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(int32));
                         }
                         else {
                             info.readPos += (dataSize * sizeof(bool32));
                         }
+
                         dataPos = tmp + sizeof(bool32) * dataSize;
                         break;
                     }
@@ -202,10 +220,11 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
 
                     case SVAR_UINT16:
                     case SVAR_INT16:
-                        tmp = (dataPos & -(int32)sizeof(short)) + sizeof(short);
-                        if ((dataPos & -(int32)sizeof(short)) >= dataPos)
+                        tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
+                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(short) * arraySize;
+
+                        dataPos = tmp + sizeof(int16) * arraySize;
                         break;
 
                     case SVAR_UINT32:
@@ -213,6 +232,7 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                         tmp = (dataPos & -(int32)sizeof(int32)) + sizeof(int32);
                         if ((dataPos & -(int32)sizeof(int32)) >= dataPos)
                             tmp = dataPos;
+
                         dataPos = tmp + sizeof(int32) * arraySize;
                         break;
 
@@ -220,6 +240,7 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                         tmp = (dataPos & -(int32)sizeof(bool32)) + sizeof(bool32);
                         if ((dataPos & -(int32)sizeof(bool32)) >= dataPos)
                             tmp = dataPos;
+
                         dataPos = tmp + sizeof(bool32) * arraySize;
                         break;
 
@@ -227,6 +248,7 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                         tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
                         if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
+
                         dataPos = tmp + sizeof(void *) * arraySize; // 4/8
                         break;
 
@@ -234,6 +256,7 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                         tmp = (dataPos & -(int32)sizeof(int32)) + sizeof(int32);
                         if ((dataPos & -(int32)sizeof(int32)) >= dataPos)
                             tmp = dataPos;
+
                         dataPos = tmp + sizeof(Vector2) * arraySize; // 8
                         break;
 
@@ -241,27 +264,29 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                         tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
                         if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
+
                         dataPos = tmp + sizeof(TextInfo) * arraySize; // 8/16
                         break;
 
-                    case SVAR_ANIMATOR: // Animator
+                    case SVAR_ANIMATOR:
                         tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
                         if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(Animator) * arraySize; // 24/32
                         break;
 
-                    case SVAR_HITBOX: // Hitbox
-                        tmp = (dataPos & -(int32)sizeof(short)) + sizeof(short);
-                        if ((dataPos & -(int32)sizeof(short)) >= dataPos)
+                    case SVAR_HITBOX:
+                        tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
+                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(Hitbox) * arraySize; // 8
                         break;
 
-                    case SVAR_UNKNOWN: //???
-                        tmp = (dataPos & -(int32)sizeof(short)) + sizeof(short);
-                        if ((dataPos & -(int32)sizeof(short)) >= dataPos)
+                    case SVAR_UNKNOWN: // ???
+                        tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
+                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
                             tmp = dataPos;
+
                         dataPos = tmp + sizeof(UnknownStruct) * arraySize; // 18 (0x12) (2 * 9)
                         break;
 
@@ -269,12 +294,10 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                 }
             }
         }
+
         CloseFile(&info);
     }
 }
-
-void SetActiveVariable(int32 objectID, const char *name) { /* Editor-Only function*/ }
-void AddEnumVariable(const char *name) { /* Editor-Only function*/ }
 
 void InitObjects()
 {
@@ -286,9 +309,11 @@ void InitObjects()
 #if RETRO_USE_MOD_LOADER
         currentObjectID = o;
 #endif
+
         if (objectList[stageObjectIDs[o]].stageLoad)
             objectList[stageObjectIDs[o]].stageLoad();
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_STAGELOAD, NULL);
 #endif
@@ -296,21 +321,23 @@ void InitObjects()
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entitySlot = e;
         sceneInfo.entity     = &objectEntityList[e];
-        if (sceneInfo.entity->objectID) {
-            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].create) {
+
+        if (sceneInfo.entity->classID) {
+            if (objectList[stageObjectIDs[sceneInfo.entity->classID]].create) {
                 sceneInfo.entity->interaction = true;
-                objectList[stageObjectIDs[sceneInfo.entity->objectID]].create(NULL);
+                objectList[stageObjectIDs[sceneInfo.entity->classID]].create(NULL);
             }
         }
     }
 
     sceneInfo.state = ENGINESTATE_REGULAR;
+
     if (!cameraCount)
         AddCamera(&screens[0].position, screens[0].center.x << 0x10, screens[0].center.x << 0x10, false);
 }
 void ProcessObjects()
 {
-    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) drawLayers[i].entityCount = 0;
+    for (int32 i = 0; i < DRAWGROUP_COUNT; ++i) drawGroups[i].entityCount = 0;
 
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
 #if RETRO_USE_MOD_LOADER
@@ -318,7 +345,7 @@ void ProcessObjects()
 #endif
 
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_NORMAL) {
+        if ((*objInfo->staticVars)->active == ACTIVE_ALWAYS || (*objInfo->staticVars)->active == ACTIVE_NORMAL) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
@@ -330,6 +357,7 @@ void ProcessObjects()
 
     for (int32 s = 0; s < cameraCount; ++s) {
         CameraInfo *camera = &cameras[s];
+
         if (camera->targetPos) {
             if (camera->worldRelative) {
                 camera->position.x = camera->targetPos->x;
@@ -345,7 +373,7 @@ void ProcessObjects()
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
-        if (sceneInfo.entity->objectID) {
+        if (sceneInfo.entity->classID) {
             switch (sceneInfo.entity->active) {
                 default: break;
 
@@ -357,9 +385,11 @@ void ProcessObjects()
 
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
                         int32 sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+
                         if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x
                             && sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
@@ -370,8 +400,10 @@ void ProcessObjects()
 
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+
                         if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
@@ -381,8 +413,10 @@ void ProcessObjects()
 
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+
                         if (sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
@@ -392,6 +426,7 @@ void ProcessObjects()
 
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sx = abs(sceneInfo.entity->position.x - cameras[s].position.x) >> 0x10;
                         int32 sy = abs(sceneInfo.entity->position.y - cameras[s].position.y) >> 0x10;
@@ -405,17 +440,17 @@ void ProcessObjects()
             }
 
             if (sceneInfo.entity->inBounds) {
-                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].update) {
-                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].update();
-                }
+                if (objectList[stageObjectIDs[sceneInfo.entity->classID]].update)
+                    objectList[stageObjectIDs[sceneInfo.entity->classID]].update();
 
-                if (sceneInfo.entity->drawOrder < DRAWLAYER_COUNT)
-                    drawLayers[sceneInfo.entity->drawOrder].entries[drawLayers[sceneInfo.entity->drawOrder].entityCount++] = sceneInfo.entitySlot;
+                if (sceneInfo.entity->drawOrder < DRAWGROUP_COUNT)
+                    drawGroups[sceneInfo.entity->drawOrder].entries[drawGroups[sceneInfo.entity->drawOrder].entityCount++] = sceneInfo.entitySlot;
             }
         }
         else {
             sceneInfo.entity->inBounds = false;
         }
+
         sceneInfo.entitySlot++;
     }
 
@@ -428,24 +463,28 @@ void ProcessObjects()
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
+
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
-            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
-            if (sceneInfo.entity->group >= TYPE_COUNT) {
-                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
-            }
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++] = e; // All active objects
+
+            typeGroups[sceneInfo.entity->classID].entries[typeGroups[sceneInfo.entity->classID].entryCount++] = e; // class-based groups
+
+            if (sceneInfo.entity->group >= TYPE_COUNT)
+                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra groups
         }
+
         sceneInfo.entitySlot++;
     }
 
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
+
         if (sceneInfo.entity->inBounds) {
-            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate) {
-                objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
-            }
+            if (objectList[stageObjectIDs[sceneInfo.entity->classID]].lateUpdate)
+                objectList[stageObjectIDs[sceneInfo.entity->classID]].lateUpdate();
         }
+
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
@@ -456,17 +495,17 @@ void ProcessObjects()
 }
 void ProcessPausedObjects()
 {
-    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) drawLayers[i].entityCount = 0;
+    for (int32 i = 0; i < DRAWGROUP_COUNT; ++i) drawGroups[i].entityCount = 0;
 
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
 #if RETRO_USE_MOD_LOADER
         currentObjectID = o;
 #endif
 
-        ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
-            if (objInfo->staticUpdate)
-                objInfo->staticUpdate();
+        ObjectInfo *object = &objectList[stageObjectIDs[o]];
+        if ((*object->staticVars)->active == ACTIVE_ALWAYS || (*object->staticVars)->active == ACTIVE_PAUSED) {
+            if (object->staticUpdate)
+                object->staticUpdate();
         }
     }
 
@@ -477,19 +516,20 @@ void ProcessPausedObjects()
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
-        if (sceneInfo.entity->objectID) {
-            if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
-                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].update) {
-                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].update();
-                }
 
-                if (sceneInfo.entity->drawOrder < DRAWLAYER_COUNT)
-                    drawLayers[sceneInfo.entity->drawOrder].entries[drawLayers[sceneInfo.entity->drawOrder].entityCount++] = sceneInfo.entitySlot;
+        if (sceneInfo.entity->classID) {
+            if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
+                if (objectList[stageObjectIDs[sceneInfo.entity->classID]].update)
+                    objectList[stageObjectIDs[sceneInfo.entity->classID]].update();
+
+                if (sceneInfo.entity->drawOrder < DRAWGROUP_COUNT)
+                    drawGroups[sceneInfo.entity->drawOrder].entries[drawGroups[sceneInfo.entity->drawOrder].entityCount++] = sceneInfo.entitySlot;
             }
         }
         else {
             sceneInfo.entity->inBounds = false;
         }
+
         sceneInfo.entitySlot++;
     }
 
@@ -502,13 +542,16 @@ void ProcessPausedObjects()
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
+
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
-            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
-            if (sceneInfo.entity->group >= TYPE_COUNT) {
-                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
-            }
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++] = e; // All active entities
+
+            typeGroups[sceneInfo.entity->classID].entries[typeGroups[sceneInfo.entity->classID].entryCount++] = e; // type-based groups
+
+            if (sceneInfo.entity->group >= TYPE_COUNT)
+                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra groups
         }
+
         sceneInfo.entitySlot++;
     }
 
@@ -519,31 +562,33 @@ void ProcessPausedObjects()
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
+
         if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
-            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate) {
-                objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
-            }
+            if (objectList[stageObjectIDs[sceneInfo.entity->classID]].lateUpdate)
+                objectList[stageObjectIDs[sceneInfo.entity->classID]].lateUpdate();
         }
+
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_PAUSED));
 #endif
 }
 void ProcessFrozenObjects()
 {
-    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) drawLayers[i].entityCount = 0;
+    for (int32 i = 0; i < DRAWGROUP_COUNT; ++i) drawGroups[i].entityCount = 0;
 
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
 #if RETRO_USE_MOD_LOADER
         currentObjectID = o;
 #endif
 
-        ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
-            if (objInfo->staticUpdate)
-                objInfo->staticUpdate();
+        ObjectInfo *object = &objectList[stageObjectIDs[o]];
+        if ((*object->staticVars)->active == ACTIVE_ALWAYS || (*object->staticVars)->active == ACTIVE_PAUSED) {
+            if (object->staticUpdate)
+                object->staticUpdate();
         }
     }
 
@@ -553,6 +598,7 @@ void ProcessFrozenObjects()
 
     for (int32 s = 0; s < cameraCount; ++s) {
         CameraInfo *camera = &cameras[s];
+
         if (camera->targetPos) {
             if (camera->worldRelative) {
                 camera->position.x = camera->targetPos->x;
@@ -568,7 +614,8 @@ void ProcessFrozenObjects()
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
-        if (sceneInfo.entity->objectID) {
+
+        if (sceneInfo.entity->classID) {
             switch (sceneInfo.entity->active) {
                 default: break;
 
@@ -580,9 +627,11 @@ void ProcessFrozenObjects()
 
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
                         int32 sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+
                         if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x
                             && sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
@@ -593,8 +642,10 @@ void ProcessFrozenObjects()
 
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+
                         if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
@@ -604,8 +655,10 @@ void ProcessFrozenObjects()
 
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+
                         if (sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
@@ -615,6 +668,7 @@ void ProcessFrozenObjects()
 
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
+
                     for (int32 s = 0; s < cameraCount; ++s) {
                         int32 sx = abs(sceneInfo.entity->position.x - cameras[s].position.x) >> 0x10;
                         int32 sy = abs(sceneInfo.entity->position.y - cameras[s].position.y) >> 0x10;
@@ -629,18 +683,18 @@ void ProcessFrozenObjects()
 
             if (sceneInfo.entity->inBounds) {
                 if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
-                    if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].update) {
-                        objectList[stageObjectIDs[sceneInfo.entity->objectID]].update();
-                    }
+                    if (objectList[stageObjectIDs[sceneInfo.entity->classID]].update)
+                        objectList[stageObjectIDs[sceneInfo.entity->classID]].update();
                 }
 
-                if (sceneInfo.entity->drawOrder < DRAWLAYER_COUNT)
-                    drawLayers[sceneInfo.entity->drawOrder].entries[drawLayers[sceneInfo.entity->drawOrder].entityCount++] = sceneInfo.entitySlot;
+                if (sceneInfo.entity->drawOrder < DRAWGROUP_COUNT)
+                    drawGroups[sceneInfo.entity->drawOrder].entries[drawGroups[sceneInfo.entity->drawOrder].entityCount++] = sceneInfo.entitySlot;
             }
         }
         else {
             sceneInfo.entity->inBounds = false;
         }
+
         sceneInfo.entitySlot++;
     }
 
@@ -654,11 +708,12 @@ void ProcessFrozenObjects()
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
-            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
-            if (sceneInfo.entity->group >= TYPE_COUNT) {
-                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
-            }
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++] = e; // All active entities
+
+            typeGroups[sceneInfo.entity->classID].entries[typeGroups[sceneInfo.entity->classID].entryCount++] = e; // type-based groups
+
+            if (sceneInfo.entity->group >= TYPE_COUNT)
+                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra groups
         }
         sceneInfo.entitySlot++;
     }
@@ -666,13 +721,14 @@ void ProcessFrozenObjects()
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
+
         if (sceneInfo.entity->inBounds) {
             if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
-                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate) {
-                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
-                }
+                if (objectList[stageObjectIDs[sceneInfo.entity->classID]].lateUpdate)
+                    objectList[stageObjectIDs[sceneInfo.entity->classID]].lateUpdate();
             }
         }
+
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
@@ -687,31 +743,33 @@ void ProcessObjectDrawLists()
         for (int32 s = 0; s < RSDK::videoSettings.screenCount; ++s) {
             currentScreen             = &screens[s];
             sceneInfo.currentScreenID = s;
-            for (int32 l = 0; l < DRAWLAYER_COUNT; ++l) drawLayers[l].layerCount = 0;
+
+            for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) drawGroups[l].layerCount = 0;
 
             for (int32 t = 0; t < LAYER_COUNT; ++t) {
                 uint8 drawOrder = tileLayers[t].drawLayer[s];
-                if (drawOrder < DRAWLAYER_COUNT)
-                    drawLayers[drawOrder].layerDrawList[drawLayers[drawOrder].layerCount++] = t;
+
+                if (drawOrder < DRAWGROUP_COUNT)
+                    drawGroups[drawOrder].layerDrawList[drawGroups[drawOrder].layerCount++] = t;
             }
 
             sceneInfo.currentDrawGroup = 0;
-            for (int32 l = 0; l < DRAWLAYER_COUNT; ++l) {
+            for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) {
                 if (engine.drawLayerVisible[l]) {
 
-                    DrawList *list = &drawLayers[l];
+                    DrawList *list = &drawGroups[l];
 
                     if (list->callback)
                         list->callback();
 
                     if (list->sorted) {
                         for (int32 e = 0; e < list->entityCount; ++e) {
-                            for (int32 e2 = list->entityCount - 1; e2 > e; --e2) {
-                                int32 slotA = list->entries[e2 - 1];
-                                int32 slotB = list->entries[e2];
-                                if (objectEntityList[slotB].depth > objectEntityList[slotA].depth) {
-                                    list->entries[e2 - 1] = slotB;
-                                    list->entries[e2]     = slotA;
+                            for (int32 i = list->entityCount - 1; i > e; --i) {
+                                int32 slot1 = list->entries[i - 1];
+                                int32 slot2 = list->entries[i];
+                                if (objectEntityList[slot2].depth > objectEntityList[slot1].depth) {
+                                    list->entries[i - 1] = slot2;
+                                    list->entries[i]     = slot1;
                                 }
                             }
                         }
@@ -721,10 +779,10 @@ void ProcessObjectDrawLists()
                         sceneInfo.entitySlot = list->entries[i];
                         validDraw            = false;
                         sceneInfo.entity     = &objectEntityList[list->entries[i]];
+
                         if (sceneInfo.entity->visible) {
-                            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw) {
-                                objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw();
-                            }
+                            if (objectList[stageObjectIDs[sceneInfo.entity->classID]].draw)
+                                objectList[stageObjectIDs[sceneInfo.entity->classID]].draw();
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
                             if (i == list->entityCount - 1)
@@ -810,24 +868,30 @@ void ProcessObjectDrawLists()
                             if (info->collision & 2) { // left
                                 int32 sy = y;
                                 int32 sh = h;
+
                                 if (info->collision & 1) {
                                     sy += 1 << 16;
                                     sh -= 1 << 16;
                                 }
+
                                 if (info->collision & 8)
                                     sh -= 1 << 16;
+
                                 DrawRectangle(x, sy, 1 << 16, sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
                             }
 
                             if (info->collision & 4) { // right
                                 int32 sy = y;
                                 int32 sh = h;
+
                                 if (info->collision & 1) {
                                     sy += 1 << 16;
                                     sh -= 1 << 16;
                                 }
+
                                 if (info->collision & 8)
                                     sh -= 1 << 16;
+
                                 DrawRectangle(x + w, sy, 1 << 16, sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
                             }
                             break;
@@ -849,6 +913,7 @@ void ProcessObjectDrawLists()
                 for (int32 p = 0; p < PALETTE_COUNT; ++p) {
                     int32 x = (RSDK::videoSettings.pixWidth - (0x10 << 3));
                     int32 y = (SCREEN_YSIZE - (0x10 << 2));
+
                     for (int32 c = 0; c < PALETTE_SIZE; ++c) {
                         uint32 clr = GetPaletteEntry(p, c);
 
@@ -875,112 +940,127 @@ uint16 GetObjectByName(const char *name)
         if (HASH_MATCH(hash, objectList[stageObjectIDs[o]].hash))
             return o;
     }
+
     return 0;
 }
 
-int32 GetEntityCount(uint16 type, bool32 isActive)
+int32 GetEntityCount(uint16 classID, bool32 isActive)
 {
-    if (type >= TYPE_COUNT)
+    if (classID >= TYPE_COUNT)
         return 0;
     if (isActive)
-        return typeGroups[type].entryCount;
+        return typeGroups[classID].entryCount;
 
-    int32 cnt = 0;
+    int32 entityCount = 0;
     for (int32 i = 0; i < ENTITY_COUNT; ++i) {
-        if (objectEntityList[i].objectID == type)
-            cnt++;
+        if (objectEntityList[i].classID == classID)
+            entityCount++;
     }
-    return cnt;
+
+    return entityCount;
 }
 
-void ResetEntityPtr(Entity *entity, uint16 type, void *data)
+void ResetEntityPtr(Entity *entity, uint16 classID, void *data)
 {
     if (entity) {
-        ObjectInfo *info = &objectList[stageObjectIDs[type]];
-        memset(entity, 0, info->entitySize);
+        ObjectInfo *info = &objectList[stageObjectIDs[classID]];
+        memset(entity, 0, info->entityClassSize);
+
         if (info->create) {
-            Entity *curEnt                = sceneInfo.entity;
+            Entity *curEnt = sceneInfo.entity;
+
             sceneInfo.entity              = entity;
             sceneInfo.entity->interaction = true;
             info->create(data);
-            sceneInfo.entity->objectID = type;
-            sceneInfo.entity           = curEnt;
+            sceneInfo.entity->classID = classID;
+
+            sceneInfo.entity = curEnt;
         }
-        entity->objectID = type;
+
+        entity->classID = classID;
     }
 }
 
-void ResetEntitySlot(uint16 slotID, uint16 type, void *data)
+void ResetEntitySlot(uint16 slot, uint16 classID, void *data)
 {
-    short slot          = ENTITY_COUNT - 1;
-    ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
-    if (slotID < ENTITY_COUNT)
-        slot = slotID;
+    ObjectInfo *object = &objectList[stageObjectIDs[classID]];
+    slot               = slot < ENTITY_COUNT ? slot : (ENTITY_COUNT - 1);
 
-    Entity *entityPtr = &objectEntityList[slot];
-    memset(&objectEntityList[slot], 0, objInfo->entitySize);
-    if (objInfo->create) {
-        Entity *curEnt         = sceneInfo.entity;
-        sceneInfo.entity       = entityPtr;
-        entityPtr->interaction = true;
-        objInfo->create(data);
-        sceneInfo.entity    = curEnt;
-        entityPtr->objectID = type;
+    Entity *entity = &objectEntityList[slot];
+    memset(&objectEntityList[slot], 0, object->entityClassSize);
+
+    if (object->create) {
+        Entity *curEnt = sceneInfo.entity;
+
+        sceneInfo.entity    = entity;
+        entity->interaction = true;
+        object->create(data);
+        entity->classID = classID;
+
+        sceneInfo.entity = curEnt;
     }
     else {
-        entityPtr->objectID = type;
+        entity->classID = classID;
     }
 }
 
-Entity *CreateEntity(uint16 type, void *data, int32 x, int32 y)
+Entity *CreateEntity(uint16 classID, void *data, int32 x, int32 y)
 {
-    ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
-    Entity *entityPtr   = &objectEntityList[sceneInfo.createSlot];
+    ObjectInfo *object = &objectList[stageObjectIDs[classID]];
+    Entity *entity     = &objectEntityList[sceneInfo.createSlot];
 
     int32 permCnt = 0, loopCnt = 0;
-    while (entityPtr->objectID) {
+    while (entity->classID) {
         // after 16 loops, the game says fuck it and will start overwriting non-temp objects
-        if (!entityPtr->isPermanent && loopCnt >= 16)
+        if (!entity->isPermanent && loopCnt >= 16)
             break;
-        if (entityPtr->isPermanent)
+
+        if (entity->isPermanent)
             ++permCnt;
+
         sceneInfo.createSlot++;
         if (sceneInfo.createSlot == ENTITY_COUNT) {
             sceneInfo.createSlot = TEMPENTITY_START;
-            entityPtr            = &objectEntityList[sceneInfo.createSlot];
+            entity               = &objectEntityList[sceneInfo.createSlot];
         }
         else {
-            entityPtr = &objectEntityList[sceneInfo.createSlot];
+            entity = &objectEntityList[sceneInfo.createSlot];
         }
+
         if (permCnt >= TEMPENTITY_COUNT)
             break;
+
         ++loopCnt;
     }
 
-    memset(entityPtr, 0, objInfo->entitySize);
-    entityPtr->position.x  = x;
-    entityPtr->position.y  = y;
-    entityPtr->interaction = true;
+    memset(entity, 0, object->entityClassSize);
+    entity->position.x  = x;
+    entity->position.y  = y;
+    entity->interaction = true;
 
-    if (objInfo->create) {
-        Entity *curEnt   = sceneInfo.entity;
-        sceneInfo.entity = entityPtr;
-        objInfo->create(data);
-        sceneInfo.entity    = curEnt;
-        entityPtr->objectID = type;
+    if (object->create) {
+        Entity *curEnt = sceneInfo.entity;
+
+        sceneInfo.entity = entity;
+        object->create(data);
+        entity->classID = classID;
+
+        sceneInfo.entity = curEnt;
     }
     else {
-        entityPtr->objectID = type;
-        entityPtr->active   = ACTIVE_NORMAL;
-        entityPtr->visible  = true;
+        entity->classID = classID;
+        entity->active  = ACTIVE_NORMAL;
+        entity->visible = true;
     }
-    return entityPtr;
+
+    return entity;
 }
 
 bool32 GetActiveEntities(uint16 group, Entity **entity)
 {
     if (group >= TYPEGROUP_COUNT)
         return false;
+
     if (!entity)
         return false;
 
@@ -992,21 +1072,23 @@ bool32 GetActiveEntities(uint16 group, Entity **entity)
         foreachStackPtr->id = 0;
     }
 
-    for (Entity *nextEnt = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]; foreachStackPtr->id < typeGroups[group].entryCount;
-         ++foreachStackPtr->id, nextEnt = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]) {
-        if (nextEnt->objectID == group) {
-            *entity = nextEnt;
+    for (Entity *nextEntity = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]; foreachStackPtr->id < typeGroups[group].entryCount;
+         ++foreachStackPtr->id, nextEntity = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]) {
+        if (nextEntity->classID == group) {
+            *entity = nextEntity;
             return true;
         }
     }
+
     foreachStackPtr--;
 
     return false;
 }
-bool32 GetEntities(uint16 type, Entity **entity)
+bool32 GetEntities(uint16 classID, Entity **entity)
 {
-    if (type >= OBJECT_COUNT)
+    if (classID >= OBJECT_COUNT)
         return false;
+
     if (!entity)
         return false;
 
@@ -1018,13 +1100,14 @@ bool32 GetEntities(uint16 type, Entity **entity)
         foreachStackPtr->id = 0;
     }
 
-    for (Entity *nextEnt = &objectEntityList[foreachStackPtr->id]; foreachStackPtr->id < ENTITY_COUNT;
-         ++foreachStackPtr->id, nextEnt = &objectEntityList[foreachStackPtr->id]) {
-        if (nextEnt->objectID == type) {
-            *entity = nextEnt;
+    for (Entity *nextEntity = &objectEntityList[foreachStackPtr->id]; foreachStackPtr->id < ENTITY_COUNT;
+         ++foreachStackPtr->id, nextEntity = &objectEntityList[foreachStackPtr->id]) {
+        if (nextEntity->classID == classID) {
+            *entity = nextEntity;
             return true;
         }
     }
+
     foreachStackPtr--;
 
     return false;
@@ -1048,9 +1131,9 @@ bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range)
     for (int32 s = 0; s < cameraCount; ++s) {
         int32 sx = abs(position->x - cameras[s].position.x);
         int32 sy = abs(position->y - cameras[s].position.y);
-        if (sx <= range->x + cameras[s].offset.x && sy <= range->y + cameras[s].offset.y) {
+
+        if (sx <= range->x + cameras[s].offset.x && sy <= range->y + cameras[s].offset.y)
             return true;
-        }
     }
 
     return false;

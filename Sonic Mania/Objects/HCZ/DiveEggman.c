@@ -458,7 +458,7 @@ void DiveEggman_StateBomb_WhirlpoolRise(void)
                 if (!player1->blinkTimer && !player1->invincibleTimer) {
                     if (player1->shield) {
                         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player1), Shield);
-                        if (shield->objectID == Shield->objectID)
+                        if (shield->classID == Shield->classID)
                             destroyEntity(shield);
                         player1->shield     = SHIELD_NONE;
                         player1->blinkTimer = 120;
@@ -526,7 +526,7 @@ void DiveEggman_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(true);
 
         EntityCollapsingPlatform *screwMobile = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
-        if (ScrewMobile && screwMobile->objectID == ScrewMobile->objectID)
+        if (ScrewMobile && screwMobile->classID == ScrewMobile->classID)
             DrawHelpers_DrawArrow(self->position.x, self->position.y, screwMobile->position.x, screwMobile->position.y, 0xFFFF00, INK_NONE, 0xFF);
 
         RSDK_DRAWING_OVERLAY(false);

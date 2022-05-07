@@ -169,7 +169,7 @@ void Scarab_HandleChildMove(void)
         EntityItemBox *child = RSDK_GET_ENTITY(slot + c, ItemBox);
         child->position.x += self->moveOffset.x;
         child->position.y += self->moveOffset.y;
-        if (child->objectID == ItemBox->objectID)
+        if (child->classID == ItemBox->classID)
             child->moveOffset = self->moveOffset;
     }
 }

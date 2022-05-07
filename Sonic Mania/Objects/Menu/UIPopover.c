@@ -55,13 +55,13 @@ EntityUIPopover *UIPopover_CreatePopover(void)
         return NULL;
     }
     else {
-        if (RSDK_GET_ENTITY(SLOT_POPOVER, UIPopover)->objectID) {
-            LogHelpers_Print("Can't create UIPopover (%d), entity already exists in slot (class ID: %d)", UIPopover->objectID,
-                             RSDK_GET_ENTITY(SLOT_POPOVER, UIPopover)->objectID);
+        if (RSDK_GET_ENTITY(SLOT_POPOVER, UIPopover)->classID) {
+            LogHelpers_Print("Can't create UIPopover (%d), entity already exists in slot (class ID: %d)", UIPopover->classID,
+                             RSDK_GET_ENTITY(SLOT_POPOVER, UIPopover)->classID);
             return NULL;
         }
         else {
-            RSDK.ResetEntitySlot(SLOT_POPOVER, UIPopover->objectID, NULL);
+            RSDK.ResetEntitySlot(SLOT_POPOVER, UIPopover->classID, NULL);
 
             EntityUIPopover *popover = RSDK_GET_ENTITY(SLOT_POPOVER, UIPopover);
             popover->position.x      = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
@@ -83,7 +83,7 @@ void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callbac
         popover->closeOnSelect[id] = closeOnSelect;
 
         int32 slot = popover->buttonCount + SLOT_POPOVER_BUTTONS;
-        RSDK.ResetEntitySlot(slot, UIButton->objectID, 0);
+        RSDK.ResetEntitySlot(slot, UIButton->classID, 0);
         EntityUIButton *button = RSDK_GET_ENTITY(slot, UIButton);
 
         button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
@@ -130,7 +130,7 @@ void UIPopover_Setup(EntityUIPopover *popover, int32 x, int32 y)
             }
         }
 
-        RSDK.ResetEntitySlot(SLOT_POPOVER_UICONTROL, UIControl->objectID, &size);
+        RSDK.ResetEntitySlot(SLOT_POPOVER_UICONTROL, UIControl->classID, &size);
 
         EntityUIControl *control   = RSDK_GET_ENTITY(SLOT_POPOVER_UICONTROL, UIControl);
         control->menuWasSetup      = true;

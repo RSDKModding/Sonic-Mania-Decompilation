@@ -24,7 +24,7 @@ void Press_StaticUpdate(void)
     Press->canSuper      = true;
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (player->objectID == Player->objectID) {
+    if (player->classID == Player->classID) {
         foreach_active(Press, press)
         {
             Hitbox hitboxRange;

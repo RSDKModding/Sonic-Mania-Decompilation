@@ -15,7 +15,7 @@ void OOZ2Outro_Update(void)
     RSDK_THIS(OOZ2Outro);
 
     EntityMegaOctus *boss = MegaOctus->bossPtr;
-    if (globals->gameMode < MODE_TIMEATTACK && boss && !boss->objectID) {
+    if (globals->gameMode < MODE_TIMEATTACK && boss && !boss->classID) {
         self->scrollOffset.x = self->moveOffset.x & 0xFFFF0000;
         self->scrollOffset.y = self->moveOffset.y & 0xFFFF0000;
 
@@ -57,7 +57,7 @@ void OOZ2Outro_Create(void *data)
                 self->size.x = WIDE_SCR_XSIZE << 16;
             if (!self->size.y)
                 self->size.y = SCREEN_YSIZE << 16;
-            self->moveLayer   = RSDK.GetSceneLayer(Zone->moveLayer);
+            self->moveLayer   = RSDK.GetTileLayer(Zone->moveLayer);
             self->updateRange = self->size;
             foreach_all(EggPrison, prison)
             {

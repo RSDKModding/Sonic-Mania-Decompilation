@@ -35,7 +35,7 @@ void Platform_Update(void)
 
     StateMachine_Run(self->state);
 
-    if (self->objectID) {
+    if (self->classID) {
         self->stood = false;
         self->collisionOffset.x += self->drawPos.x & 0xFFFF0000;
         self->collisionOffset.y += self->drawPos.y & 0xFFFF0000;
@@ -46,8 +46,8 @@ void Platform_Update(void)
         self->position.x = self->centerPos.x;
         self->position.y = self->centerPos.y;
         for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
-            Entity *child = RSDK.GetEntityByID(s++);
-            if (child->objectID == ItemBox->objectID) {
+            Entity *child = RSDK.GetEntity(s++);
+            if (child->classID == ItemBox->classID) {
                 if (!child->scale.y) {
                     EntityItemBox *itemBox = (EntityItemBox *)child;
 #if RETRO_USE_PLUS
@@ -67,21 +67,21 @@ void Platform_Update(void)
                 child->position.x += self->collisionOffset.x;
                 child->position.y += self->collisionOffset.y;
 
-                if (child->objectID == Spikes->objectID) {
+                if (child->classID == Spikes->classID) {
                     EntitySpikes *spikes      = (EntitySpikes *)child;
                     spikes->collisionOffset.x = self->collisionOffset.x;
                     spikes->collisionOffset.y = self->collisionOffset.y;
                 }
-                else if (child->objectID == Platform->objectID) {
+                else if (child->classID == Platform->classID) {
                     EntityPlatform *platform = (EntityPlatform *)child;
                     platform->centerPos.x += self->collisionOffset.x;
                     platform->centerPos.y += self->collisionOffset.y;
                 }
-                else if (Ice && child->objectID == Ice->objectID) {
+                else if (Ice && child->classID == Ice->classID) {
                     EntityIce *ice        = (EntityIce *)child;
                     ice->playerMoveOffset = self->collisionOffset;
                 }
-                else if (TurboTurtle && child->objectID == TurboTurtle->objectID) {
+                else if (TurboTurtle && child->classID == TurboTurtle->classID) {
                     EntityTurboTurtle *turboTurtle = (EntityTurboTurtle *)child;
                     turboTurtle->startPos.x += self->collisionOffset.x;
                     turboTurtle->startPos.y += self->collisionOffset.y;
@@ -382,7 +382,7 @@ void Platform_Create(void *data)
         for (int32 i = 0; i < self->childCount; ++i) {
             EntityPlatform *child = RSDK_GET_ENTITY((i + RSDK.GetEntityID(self) + 1), Platform);
             child->tileCollisions = false;
-            if (HangPoint && child->objectID == HangPoint->objectID) {
+            if (HangPoint && child->classID == HangPoint->classID) {
                 EntityHangPoint *hang = (EntityHangPoint *)child;
                 if (self->updateRange.y < 0x800000 + abs(self->position.y - (hang->length << 16) - hang->position.y))
                     self->updateRange.y = 0x800000 + abs(self->position.y - (hang->length << 16) - hang->position.y);
@@ -1181,16 +1181,16 @@ void Platform_State_ActivateControlOnStood(void)
     else {
         int32 slot                        = SceneInfo->entitySlot - 1;
         EntityPlatformControl *controller = RSDK_GET_ENTITY(slot, PlatformControl);
-        if (controller->objectID == PlatformControl->objectID) {
+        if (controller->classID == PlatformControl->classID) {
             controller->setActive = true;
             self->state           = Platform_State_Controlled;
             self->velocity.x      = 0;
             self->velocity.y      = 0;
         }
         else {
-            while (controller->objectID == Platform->objectID || controller->objectID == PlatformNode->objectID) {
+            while (controller->classID == Platform->classID || controller->classID == PlatformNode->classID) {
                 controller = RSDK_GET_ENTITY(slot--, PlatformControl);
-                if (controller->objectID == PlatformControl->objectID) {
+                if (controller->classID == PlatformControl->classID) {
                     controller->setActive = true;
                     self->state           = Platform_State_Controlled;
                     self->velocity.x      = 0;
@@ -1999,7 +1999,7 @@ void Platform_Collision_TurnTable(void)
                         player->velocity.x      = 0;
                         player->velocity.y      = 0;
                         player->groundVel       = 0;
-                        if (self->objectID == Platform->objectID)
+                        if (self->classID == Platform->classID)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
                         player->animator.speed = 64;
                         player->direction      = FLIP_NONE;
@@ -2121,7 +2121,7 @@ void Platform_Collision_Twister(void)
                         player->velocity.y      = 0;
                         player->groundVel       = 0;
 
-                        if (self->objectID == Platform->objectID)
+                        if (self->classID == Platform->classID)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, false, 0);
 
                         player->animator.speed = 64;

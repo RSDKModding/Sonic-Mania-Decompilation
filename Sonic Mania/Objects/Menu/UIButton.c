@@ -125,8 +125,8 @@ void UIButton_Create(void *data)
         for (int32 i = 0; i < self->choiceCount; ++i) {
             EntityUIButton *item = RSDK_GET_ENTITY(slot + i, UIButton);
 
-            if ((UIChoice && item->objectID == UIChoice->objectID) || (UIVsRoundPicker && item->objectID == UIVsRoundPicker->objectID)
-                || (UIResPicker && item->objectID == UIResPicker->objectID) || (UIWinSize && item->objectID == UIWinSize->objectID)) {
+            if ((UIChoice && item->classID == UIChoice->classID) || (UIVsRoundPicker && item->classID == UIVsRoundPicker->classID)
+                || (UIResPicker && item->classID == UIResPicker->classID) || (UIWinSize && item->classID == UIWinSize->classID)) {
                 item->parent = (Entity *)self;
             }
 
@@ -150,8 +150,8 @@ void UIButton_ManageChoices(EntityUIButton *button)
     for (int32 i = 0; i < button->choiceCount; ++i) {
         EntityUIButton *choice = RSDK_GET_ENTITY(i % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button), UIButton);
         if (button->choiceCount > 0
-            && (choice->objectID == UIChoice->objectID || choice->objectID == UIVsRoundPicker->objectID || choice->objectID == UIResPicker->objectID
-                || choice->objectID == UIWinSize->objectID)) {
+            && (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
+                || choice->classID == UIWinSize->classID)) {
 
             choice->visible = i == button->selection;
             choice->active  = i == button->selection ? ACTIVE_NORMAL : ACTIVE_NEVER;
@@ -165,8 +165,8 @@ EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 selection)
         return NULL;
 
     EntityUIButton *choice = RSDK_GET_ENTITY(selection % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button), UIButton);
-    if (choice->objectID == UIChoice->objectID || choice->objectID == UIVsRoundPicker->objectID || choice->objectID == UIResPicker->objectID
-        || choice->objectID == UIWinSize->objectID) {
+    if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
+        || choice->classID == UIWinSize->classID) {
         return choice;
     }
 
@@ -179,20 +179,20 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection)
 
         EntityUIButton *curChoice = UIButton_GetChoicePtr(button, button->selection);
         if (curChoice) {
-            if (curChoice->objectID == UIChoice->objectID) {
+            if (curChoice->classID == UIChoice->classID) {
                 EntityUIChoice *choice     = (EntityUIChoice *)curChoice;
                 choice->textBounceOffset   = 0;
                 choice->buttonBounceOffset = 0;
                 choice->isSelected         = false;
                 choice->state              = UIChoice_State_HandleButtonLeave;
             }
-            else if (curChoice->objectID == UIVsRoundPicker->objectID) {
+            else if (curChoice->classID == UIVsRoundPicker->classID) {
                 UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)curChoice);
             }
-            else if (curChoice->objectID == UIResPicker->objectID) {
+            else if (curChoice->classID == UIResPicker->classID) {
                 UIResPicker_SetChoiceInactive((EntityUIResPicker *)curChoice);
             }
-            else if (curChoice->objectID == UIWinSize->objectID) {
+            else if (curChoice->classID == UIWinSize->classID) {
                 UIWinSize_SetChoiceInactive((EntityUIWinSize *)curChoice);
             }
 
@@ -228,20 +228,20 @@ void UIButton_SetChoiceSelection(EntityUIButton *button, int32 selection)
 
         EntityUIButton *choicePtr = UIButton_GetChoicePtr(button, button->selection);
         if (choicePtr) {
-            if (choicePtr->objectID == UIChoice->objectID) {
+            if (choicePtr->classID == UIChoice->classID) {
                 EntityUIChoice *choice     = (EntityUIChoice *)choicePtr;
                 choice->textBounceOffset   = 0;
                 choice->buttonBounceOffset = 0;
                 choice->isSelected         = false;
                 choice->state              = UIChoice_State_HandleButtonLeave;
             }
-            else if (choicePtr->objectID == UIVsRoundPicker->objectID) {
+            else if (choicePtr->classID == UIVsRoundPicker->classID) {
                 UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)choicePtr);
             }
-            else if (choicePtr->objectID == UIResPicker->objectID) {
+            else if (choicePtr->classID == UIResPicker->classID) {
                 UIResPicker_SetChoiceInactive((EntityUIResPicker *)choicePtr);
             }
-            else if (choicePtr->objectID == UIWinSize->objectID) {
+            else if (choicePtr->classID == UIWinSize->classID) {
                 UIWinSize_SetChoiceInactive((EntityUIWinSize *)choicePtr);
             }
 
@@ -452,7 +452,7 @@ bool32 UIButton_ProcessTouchCB_Single(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     bool32 touched = false;
-    if (self->objectID != UIButton->objectID || !self->invisible) {
+    if (self->classID != UIButton->classID || !self->invisible) {
         if (TouchInfo->count) {
             int32 screenX = (ScreenInfo->position.x << 16);
             int32 screenY = (ScreenInfo->position.y << 16);
@@ -478,7 +478,7 @@ bool32 UIButton_ProcessTouchCB_Single(void)
                     self->isSelected       = false;
                     StateMachine(actionCB) = NULL;
 
-                    if (self->objectID == UIButton->objectID)
+                    if (self->classID == UIButton->classID)
                         actionCB = UIButton_GetActionCB();
                     else
                         actionCB = self->actionCB;
@@ -506,7 +506,7 @@ bool32 UIButton_ProcessTouchCB_Single(void)
 
     bool32 childTouchFlag = false;
     self->touchPressed    = touched;
-    if (self->objectID == UIButton->objectID && self->choiceCount > 0) {
+    if (self->classID == UIButton->classID && self->choiceCount > 0) {
         EntityUIButton *entPtr = UIButton_GetChoicePtr(self, self->selection);
         if (entPtr) {
             Entity *entStore  = SceneInfo->entity;
@@ -705,19 +705,19 @@ void UIButton_ButtonEnterCB(void)
             EntityUIButton *choicePtr = UIButton_GetChoicePtr(self, self->selection);
 
             if (choicePtr) {
-                if (choicePtr->objectID == UIChoice->objectID) {
+                if (choicePtr->classID == UIChoice->classID) {
                     UIChoice_SetChoiceActive((EntityUIChoice *)choicePtr);
                 }
 
-                if (choicePtr->objectID == UIVsRoundPicker->objectID) {
+                if (choicePtr->classID == UIVsRoundPicker->classID) {
                     UIVsRoundPicker_SetChoiceActive((EntityUIVsRoundPicker *)choicePtr);
                 }
 
-                if (choicePtr->objectID == UIResPicker->objectID) {
+                if (choicePtr->classID == UIResPicker->classID) {
                     UIResPicker_SetChoiceActive((EntityUIResPicker *)choicePtr);
                 }
 
-                if (choicePtr->objectID == UIWinSize->objectID) {
+                if (choicePtr->classID == UIWinSize->classID) {
                     UIWinSize_SetChoiceActive((EntityUIWinSize *)choicePtr);
                 }
             }
@@ -734,19 +734,19 @@ void UIButton_ButtonLeaveCB(void)
     if (UIChoice) {
         EntityUIButton *widget = UIButton_GetChoicePtr(self, self->selection);
         if (widget) {
-            if (widget->objectID == UIChoice->objectID) {
+            if (widget->classID == UIChoice->classID) {
                 ((EntityUIChoice *)widget)->textBounceOffset   = 0;
                 ((EntityUIChoice *)widget)->buttonBounceOffset = 0;
                 widget->isSelected                             = false;
                 widget->state                                  = UIChoice_State_HandleButtonLeave;
             }
-            else if (widget->objectID == UIVsRoundPicker->objectID) {
+            else if (widget->classID == UIVsRoundPicker->classID) {
                 UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)widget);
             }
-            else if (widget->objectID == UIResPicker->objectID) {
+            else if (widget->classID == UIResPicker->classID) {
                 UIResPicker_SetChoiceInactive((EntityUIResPicker *)widget);
             }
-            else if (widget->objectID == UIWinSize->objectID) {
+            else if (widget->classID == UIWinSize->classID) {
                 UIWinSize_SetChoiceInactive((EntityUIWinSize *)widget);
             }
         }
@@ -760,7 +760,7 @@ void UIButton_SelectedCB(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     EntityUIButton *choice  = UIButton_GetChoicePtr(self, self->selection);
 
-    if (self->clearParentState || (choice && choice->objectID == UIChoice->objectID && choice->buttonBounceVelocity))
+    if (self->clearParentState || (choice && choice->classID == UIChoice->classID && choice->buttonBounceVelocity))
         parent->state = StateMachine_None;
 
     if (self->assignsP1) {

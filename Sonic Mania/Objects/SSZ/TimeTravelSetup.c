@@ -37,7 +37,7 @@ void TimeTravelSetup_StaticUpdate(void)
     TimeTravelSetup->timer += 4;
     TimeTravelSetup->timer %= 768;
 
-    TileLayer *background1 = RSDK.GetSceneLayer(0);
+    TileLayer *background1 = RSDK.GetTileLayer(0);
     background1->deformationOffset += 2;
 
     for (int32 i = 0; i < 0x200; ++i) {
@@ -46,7 +46,7 @@ void TimeTravelSetup_StaticUpdate(void)
         background1->deformationData[i + 0x200] = deform;
     }
 
-    TileLayer *background2 = RSDK.GetSceneLayer(1);
+    TileLayer *background2 = RSDK.GetTileLayer(1);
     background2->deformationOffset += 2;
 
     for (int32 i = 0; i < 0x200; ++i) {
@@ -63,11 +63,11 @@ void TimeTravelSetup_Create(void *data) {}
 
 void TimeTravelSetup_StageLoad(void)
 {
-    TileLayer *background1    = RSDK.GetSceneLayer(0);
+    TileLayer *background1    = RSDK.GetTileLayer(0);
     background1->drawLayer[0] = 0;
     background1->scrollSpeed  = -0x60000;
 
-    TileLayer *background2    = RSDK.GetSceneLayer(1);
+    TileLayer *background2    = RSDK.GetTileLayer(1);
     background2->drawLayer[0] = 0;
     background2->scrollSpeed  = -0xA0000;
 

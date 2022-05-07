@@ -133,7 +133,7 @@ void BreakableWall_StageLoad(void)
     else
         BreakableWall->sfxBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");
 
-    BreakableWall->farPlaneLayer = RSDK.GetSceneLayerID("Far Plane");
+    BreakableWall->farPlaneLayer = RSDK.GetTileLayerID("Far Plane");
 }
 
 // States

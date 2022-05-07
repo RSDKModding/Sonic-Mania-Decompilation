@@ -330,19 +330,19 @@ void KleptoMobile_State_SetupArena(void)
     self->active = ACTIVE_NORMAL;
 
     EntityKleptoMobile *hand = RSDK_GET_ENTITY(SceneInfo->entitySlot - 2, KleptoMobile);
-    RSDK.ResetEntityPtr(hand, KleptoMobile->objectID, intToVoid(KLEPTOMOBILE_HAND));
+    RSDK.ResetEntityPtr(hand, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_HAND));
     hand->position.x = self->position.x;
     hand->position.y = self->position.y;
     hand->parent     = self;
 
     EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
-    RSDK.ResetEntityPtr(arm2, KleptoMobile->objectID, intToVoid(KLEPTOMOBILE_ARM_R));
+    RSDK.ResetEntityPtr(arm2, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_R));
     arm2->position.x = self->position.x;
     arm2->position.y = self->position.y;
     arm2->parent     = self;
 
     EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
-    RSDK.ResetEntityPtr(arm1, KleptoMobile->objectID, intToVoid(KLEPTOMOBILE_ARM_L));
+    RSDK.ResetEntityPtr(arm1, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_L));
     arm1->position.x = self->position.x;
     arm1->position.y = self->position.y;
     arm1->parent     = self;

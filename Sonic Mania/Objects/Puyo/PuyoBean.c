@@ -176,8 +176,8 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
                 if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
                     if (SceneInfo->state == ENGINESTATE_REGULAR) {
                         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                        if (!pauseMenu->objectID) {
-                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        if (!pauseMenu->classID) {
+                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                             pauseMenu->triggerPlayer = self->playerID;
                             if (globals->gameMode == MODE_COMPETITION)
                                 pauseMenu->disableRestart = true;
@@ -949,13 +949,13 @@ void PuyoBean_State_Falling(void)
                     int32 playfieldSlot = 128 * self->playerID + 8 * self->stillPos.y + self->stillPos.x;
                     int32 entitySlot    = 0x600 + playfieldSlot;
                     if (self->isJunk) {
-                        PuyoBean->playfield[playfieldSlot] = RSDK.GetEntityByID(entitySlot);
+                        PuyoBean->playfield[playfieldSlot] = RSDK.GetEntity(entitySlot);
                         self->state                        = PuyoBean_State_JunkLand;
                         if (self->velocity.y > 0x8000)
                             RSDK.PlaySfx(PuyoBean->sfxJunk, false, 255);
                     }
                     else {
-                        PuyoBean->playfield[playfieldSlot] = RSDK.GetEntityByID(entitySlot);
+                        PuyoBean->playfield[playfieldSlot] = RSDK.GetEntity(entitySlot);
                         self->state                        = PuyoBean_State_BeanLand;
                         if (self->velocity.y > 0x8000)
                             RSDK.PlaySfx(PuyoBean->sfxLand, false, 255);

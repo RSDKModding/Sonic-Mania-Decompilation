@@ -318,7 +318,7 @@ void EggPistonsMKII_State_SetupArena(void)
 
     for (int i = 0; i < 6; ++i) {
         EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot + 8 + i, CollapsingPlatform);
-        if (platform->objectID == CollapsingPlatform->objectID)
+        if (platform->classID == CollapsingPlatform->classID)
             platform->active = ACTIVE_NEVER;
     }
 
@@ -398,7 +398,7 @@ void EggPistonsMKII_State_PistonReveal(void)
 
         for (int i = 0; i < 6; ++i) {
             EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot + 8 + i, CollapsingPlatform);
-            if (platform->objectID == CollapsingPlatform->objectID) {
+            if (platform->classID == CollapsingPlatform->classID) {
                 platform->active        = ACTIVE_NORMAL;
                 platform->collapseDelay = 8;
                 platform->stoodPos.x    = self->position.x;

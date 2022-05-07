@@ -182,7 +182,7 @@ void MetalSonic_HandleStageWrap(void)
             MetalSonic_ProcessBGParallax(-0xE0000);
 
 #if RETRO_USE_PLUS
-            if (self->objectID == GigaMetal->objectID) {
+            if (self->classID == GigaMetal->classID) {
                 camera->boundsL += 0xE00;
                 camera->boundsR += 0xE00;
                 Zone->cameraBoundsL[0] += 0xE00;
@@ -237,7 +237,7 @@ void MetalSonic_HandleStageWrap(void)
         MetalSonic_ProcessBGParallax(0xE0000);
 
 #if RETRO_USE_PLUS
-        if (self->objectID == GigaMetal->objectID) {
+        if (self->classID == GigaMetal->classID) {
             camera->boundsL -= 0xE00;
             camera->boundsR -= 0xE00;
             Zone->cameraBoundsL[0] -= 0xE00;
@@ -288,13 +288,13 @@ void MetalSonic_HandleStageWrap(void)
 void MetalSonic_ProcessBGParallax(int32 mult)
 {
     for (int32 i = 0; i < 2; ++i) {
-        TileLayer *background = RSDK.GetSceneLayer(i);
+        TileLayer *background = RSDK.GetTileLayer(i);
         for (int32 s = 0; s < background->scrollInfoCount; ++s) {
             background->scrollInfo[s].scrollPos += mult * background->scrollInfo[s].parallaxFactor;
         }
     }
 
-    TileLayer *tower = RSDK.GetSceneLayer(2);
+    TileLayer *tower = RSDK.GetTileLayer(2);
     tower->scrollPos += mult * tower->parallaxFactor;
 
     foreach_active(EggTower, eggTower) { eggTower->rotationX += (mult >> 8); }
@@ -1176,7 +1176,7 @@ void MetalSonic_HandlePanelAttack(void)
     RSDK_THIS(MetalSonic);
 
 #if RETRO_USE_PLUS
-    if (!RSDK.GetEntityCount(MSBomb->objectID, true))
+    if (!RSDK.GetEntityCount(MSBomb->classID, true))
 #endif
         --self->attackTimer;
 
@@ -1236,9 +1236,9 @@ void MetalSonic_State_HandleSilverSonics(void)
     MetalSonic_HandlePanelAttack();
 
 #if RETRO_USE_PLUS
-    if (!RSDK.GetEntityCount(SilverSonic->objectID, true) && !RSDK.GetEntityCount(MSBomb->objectID, true) && self->timer > 60) {
+    if (!RSDK.GetEntityCount(SilverSonic->classID, true) && !RSDK.GetEntityCount(MSBomb->classID, true) && self->timer > 60) {
 #else
-    if (!RSDK.GetEntityCount(SilverSonic->objectID, true) && self->timer > 60) {
+    if (!RSDK.GetEntityCount(SilverSonic->classID, true) && self->timer > 60) {
 #endif
         self->timer = 0;
         self->state = MetalSonic_State_OpenFactoryDoor;

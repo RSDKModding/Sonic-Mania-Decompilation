@@ -22,7 +22,7 @@ void EncoreGoodEnd_Update(void)
                                           EncoreGoodEnd_Cutscene_ThanksForPlaying, EncoreGoodEnd_Cutscene_FinishCutscene, StateMachine_None);
 
                 EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-                if (seq->objectID) {
+                if (seq->classID) {
                     seq->skipType     = SKIPTYPE_CALLBACK;
                     seq->skipCallback = EncoreGoodEnd_SkipCB;
                 }
@@ -346,7 +346,7 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
         player1->groundVel  = 0x30000;
         player1->drawOrder  = Zone->playerDrawHigh;
         player1->state      = Player_State_Ground;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.x = -0x800000;
             player2->velocity.x = 0x30000;
             player2->groundVel  = 0x30000;
@@ -357,7 +357,7 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
     }
     else if (host->timer > 120 && player1->groundVel <= 0x18000) {
         player1->state = EncoreGoodEnd_StatePlayer_MoveToPos;
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->state = EncoreGoodEnd_StatePlayer_MoveToPos;
         return true;
     }
@@ -368,7 +368,7 @@ bool32 EncoreGoodEnd_Cutscene_WaitForMovementFinish(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    return player1->state == Player_State_None && (player2->state == Player_State_None || player2->objectID != Player->objectID);
+    return player1->state == Player_State_None && (player2->state == Player_State_None || player2->classID != Player->classID);
 }
 
 bool32 EncoreGoodEnd_Cutscene_ClinkGlasses(EntityCutsceneSeq *host)

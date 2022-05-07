@@ -58,7 +58,7 @@ void SeltzerWater_State_Sprayed(void)
     RSDK.ProcessAnimation(&self->animator);
 
     EntityPlatformNode *node = RSDK_GET_ENTITY(self->nodeSlot, PlatformNode);
-    if (node->objectID == PlatformNode->objectID) {
+    if (node->classID == PlatformNode->classID) {
         int32 x = (self->position.x - node->position.x) >> 16;
         int32 y = (self->position.y - node->position.y) >> 16;
 

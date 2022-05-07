@@ -387,22 +387,22 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
                     int32 slot = RSDK.GetEntityID(entity);
 
                     SceneInfo->entity = (Entity *)entity;
-                    if (UIButton && entity->objectID == UIButton->objectID) {
+                    if (UIButton && entity->classID == UIButton->classID) {
                         UIButton_ManageChoices(entity);
                         UIButton_Update();
                     }
-                    else if (UIChoice && entity->objectID == UIChoice->objectID) {
+                    else if (UIChoice && entity->classID == UIChoice->classID) {
                         UIChoice_Update();
                     }
-                    else if (UITAZoneModule && entity->objectID == UITAZoneModule->objectID) {
+                    else if (UITAZoneModule && entity->classID == UITAZoneModule->classID) {
                         UITAZoneModule_Update();
                     }
 #if RETRO_USE_PLUS
-                    else if (UIReplayCarousel && entity->objectID == UIReplayCarousel->objectID) {
+                    else if (UIReplayCarousel && entity->classID == UIReplayCarousel->classID) {
                         UIReplayCarousel_Update();
                     }
 #endif
-                    else if (UIModeButton && entity->objectID == UIModeButton->objectID) {
+                    else if (UIModeButton && entity->classID == UIModeButton->classID) {
 #if RETRO_USE_PLUS
                         UIModeButton_Update();
 #else
@@ -418,10 +418,10 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
                         }
 #endif
                     }
-                    else if (UIVsZoneButton && entity->objectID == UIVsZoneButton->objectID) {
+                    else if (UIVsZoneButton && entity->classID == UIVsZoneButton->classID) {
                         UIVsZoneButton_Update();
                     }
-                    else if (UIHeading && entity->objectID == UIHeading->objectID) {
+                    else if (UIHeading && entity->classID == UIHeading->classID) {
                         UIHeading_Update();
                     }
 
@@ -607,16 +607,16 @@ void UIControl_SetupButtons(void)
         EntityUIButton *button = RSDK_GET_ENTITY(i, UIButton);
 
         if (button) {
-            int32 classID = button->objectID;
-            if (classID != UIButton->objectID && (!UIModeButton || classID != UIModeButton->objectID)
-                && (!UISaveSlot || classID != UISaveSlot->objectID) && (!UICharButton || classID != UICharButton->objectID)
-                && (!UITAZoneModule || classID != UITAZoneModule->objectID)
+            int32 classID = button->classID;
+            if (classID != UIButton->classID && (!UIModeButton || classID != UIModeButton->classID)
+                && (!UISaveSlot || classID != UISaveSlot->classID) && (!UICharButton || classID != UICharButton->classID)
+                && (!UITAZoneModule || classID != UITAZoneModule->classID)
 #if RETRO_USE_PLUS
-                && (!UIRankButton || classID != UIRankButton->objectID) && (!UIReplayCarousel || classID != UIReplayCarousel->objectID)
+                && (!UIRankButton || classID != UIRankButton->classID) && (!UIReplayCarousel || classID != UIReplayCarousel->classID)
 #endif
-                && (!UILeaderboard || classID != UILeaderboard->objectID) && (!UIVsCharSelector || classID != UIVsCharSelector->objectID)
-                && (!UIVsZoneButton || classID != UIVsZoneButton->objectID) && (!UIVsResults || classID != UIVsResults->objectID)
-                && (!UISlider || classID != UISlider->objectID) && (!UIKeyBinder || classID != UIKeyBinder->objectID)) {
+                && (!UILeaderboard || classID != UILeaderboard->classID) && (!UIVsCharSelector || classID != UIVsCharSelector->classID)
+                && (!UIVsZoneButton || classID != UIVsZoneButton->classID) && (!UIVsResults || classID != UIVsResults->classID)
+                && (!UISlider || classID != UISlider->classID) && (!UIKeyBinder || classID != UIKeyBinder->classID)) {
             }
             else {
                 int32 x            = self->startPos.x - self->cameraOffset.x;

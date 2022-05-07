@@ -60,7 +60,7 @@ void DERobot_Create(void *data)
                     break;
 
                 case DEROBOT_HEAD:
-                    self->parent    = RSDK.GetEntityByID(slotID + 1);
+                    self->parent    = RSDK.GetEntity(slotID + 1);
                     self->stateDraw = DERobot_Draw_RelativeToParent;
                     self->drawFX    = FX_ROTATE;
                     self->offset.x  = -0x160000;
@@ -80,7 +80,7 @@ void DERobot_Create(void *data)
                         self->stateDraw = DERobot_Draw_Simple;
                     }
                     else {
-                        self->parent    = RSDK.GetEntityByID(slotID - 4);
+                        self->parent    = RSDK.GetEntity(slotID - 4);
                         self->stateDraw = DERobot_Draw_RelativeToParent;
                         self->offset.x  = -0xC0000;
                         self->offset.y  = -0x100000;
@@ -924,7 +924,7 @@ void DERobot_State_SetupBoss(void)
             handFront->visible       = true;
 
             EntityEggman *eggman = self->eggman;
-            RSDK.ResetEntityPtr(eggman, Eggman->objectID, self);
+            RSDK.ResetEntityPtr(eggman, Eggman->classID, self);
             eggman->state    = Eggman_State_ProcessAnimation;
             eggman->animID   = 0;
             eggman->offset.x = -0x40000;
@@ -1289,7 +1289,7 @@ void DERobot_State_Finish(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
         EntityEggPrison *prison = (EntityEggPrison *)self->eggman;
-        RSDK.ResetEntityPtr(prison, EggPrison->objectID, intToVoid(EGGPRISON_FLYING));
+        RSDK.ResetEntityPtr(prison, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
         prison->position.x          = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         prison->checkTileCollisions = true;
         prison->position.y          = (ScreenInfo->position.y - 48) << 16;

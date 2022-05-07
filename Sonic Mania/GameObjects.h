@@ -7,7 +7,7 @@
 #define fabs(a)                           ((a) > 0 ? (a) : -(a))
 
 #define setBit(value, set, pos) ((value) ^= (-(int32)(set) ^ (value)) & (1 << (pos)))
-#define getBit(b, pos)          ((b) >> (pos) & 1)
+#define getBit(b, pos)          ((b) >> (pos)&1)
 
 #define intToVoid(x)   (void *)(size_t)(x)
 #define floatToVoid(x) intToVoid(*(int32 *)&(x))
@@ -42,48 +42,55 @@ typedef enum {
 
 // Mod Table
 typedef struct {
+    // Registration & Core
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size);
-    void (*RegisterObject)(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void),
-                              void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *),
-                              void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void),
-                              const char *inherited);
+    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                           void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                           void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
     void *RegisterObject_STD;
     void *(*GetGlobals)(void);
-    void (*Super)(int32 objectID, ModSuper callback, void *data);
+    void (*Super)(int32 classID, ModSuper callback, void *data);
 
+    // Mod Info
     bool32 (*LoadModInfo)(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
     void (*GetModPath)(const char *id, TextInfo *result);
     int32 (*GetModCount)(bool32 active);
     const char *(*GetModIDByIndex)(uint32 index);
     bool32 (*ForeachModID)(TextInfo *id);
 
+    // Mod Callbacks & Public Functions
     void (*AddModCallback)(int32 callbackID, void (*callback)(void *));
     void *AddModCallback_STD;
     void (*AddPublicFunction)(const char *functionName, void *functionPtr);
     void *(*GetPublicFunction)(const char *id, const char *functionName);
 
+    // Mod Settings
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int32 (*GetSettingsInteger)(const char *id, const char *key, int32 fallback);
     void (*GetSettingsString)(const char *id, const char *key, TextInfo *result, const char *fallback);
-
     void (*SetSettingsBool)(const char *key, bool32 val);
     void (*SetSettingsInteger)(const char *key, int32 val);
     void (*SetSettingsString)(const char *key, TextInfo *val);
-
     void (*SaveSettings)(void);
 
+    // Config
     bool32 (*GetConfigBool)(const char *key, bool32 fallback);
     int32 (*GetConfigInteger)(const char *key, int32 fallback);
     void (*GetConfigString)(const char *key, TextInfo *result, const char *fallback);
+
+    // New foreach loops
     bool32 (*ForeachConfig)(TextInfo *textInfo);
     bool32 (*ForeachConfigCategory)(TextInfo *textInfo);
 
     Object *(*GetObject)(const char *name);
 
+    // Achievements
     void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
     void (*GetAchievementInfo)(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
     int32 (*GetAchievementIndexByID)(const char *identifier);
     int32 (*GetAchievementCount)(void);
+
+    // Shaders
     void (*LoadShader)(const char *shaderName, bool32 linear);
 } ModFunctionTable;
 #endif
@@ -91,12 +98,13 @@ typedef struct {
 #if RETRO_USE_PLUS
 // Userdata Table
 typedef struct {
+    // API Core
     int32 (*GetUserLanguage)(void);
     bool32 (*GetConfirmButtonFlip)(void);
     void (*ExitGame)(void);
     void (*LaunchManual)(void);
     bool32 (*IsOverlayEnabled)(uint32 inputID);
-    bool32 (*CheckDLC)(GameDLC dlc);
+    bool32 (*CheckDLC)(int32 dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
 #if RETRO_USE_EGS
     void (*ShowCheckoutPage)(int32 value);
@@ -104,6 +112,8 @@ typedef struct {
     void (*CoreUnknown4)(int32 value);
     void (*RegisterHIDDevice)(void);
 #endif
+
+    // Achievements
     void (*UnlockAchievement)(const char *identifier);
     bool32 (*GetAchievementsEnabled)(void);
     void (*SetAchievementsEnabled)(bool32 enabled);
@@ -111,6 +121,8 @@ typedef struct {
     bool32 (*CheckAchievementsEnabled)(void);
     void (*GetAchievementNames)(TextInfo *names, int32 count);
 #endif
+
+    // Leaderboards
     void (*LeaderboardsUnknown4)(void);
 #if RETRO_USE_EGS
     void (*LeaderboardUnknown1)(void);
@@ -123,16 +135,24 @@ typedef struct {
     void (*LoadNewLeaderboardEntries)(int32 start, uint32 end, int32 type);
     void (*ClearLeaderboardInfo)(void);
     LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 entryID);
+
+    // Rich Presence
     void (*SetRichPresence)(int32, TextInfo *text);
+
+    // Stats
     void (*TryTrackStat)(StatInfo *stat);
     bool32 (*GetStatsEnabled)(void);
     void (*SetStatsEnabled)(bool32 enabled);
+
+    // Authorization & Storage
     void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
     bool32 (*GetUsername)(TextInfo *name);
     void (*TryInitStorage)(void);
     int32 (*GetStorageStatus)(void);
+
+    // Saving
     int32 (*GetSaveStatus)(void);
     void (*ClearSaveStatus)(void);
     void (*SetSaveStatusContinue)(void);
@@ -141,13 +161,13 @@ typedef struct {
     void (*SetSaveStatusError)(void);
     void (*SetNoSave)(bool32 noSave);
     bool32 (*GetNoSave)(void);
-    // load user file from game dir
-    void (*LoadUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status));
-    // save user file to game dir
-    void (*SaveUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status), bool32 compress);
-    // delete user file from game dir
-    void (*DeleteUserFile)(const char *name, void (*callback)(int32 status));
-    // format: name, [colType, colName] for how ever many columns you want (max of 8), DBVAR_NONE (or NULL)
+
+    // User File Management
+    void (*LoadUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status));                  // load user file from game dir
+    void (*SaveUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status), bool32 compress); // save user file to game dir
+    void (*DeleteUserFile)(const char *name, void (*callback)(int32 status)); // delete user file from game dir
+
+    // User DBs
     uint16 (*InitUserDB)(const char *name, ...);
     uint16 (*LoadUserDB)(const char *filename, void (*callback)(int32 status));
     void (*SaveUserDB)(uint16 tableID, void (*callback)(int32 status));
@@ -172,48 +192,61 @@ typedef struct {
 
 // Function Table
 typedef struct {
-    void (*InitGlobalVariables)(void **globals, int32 size);
-    void (*RegisterObject)(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
-                           void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                           void (*editorLoad)(void), void (*serialize)(void));
+    // Registration
+    void (*RegisterGlobalVariables)(void **globals, int32 size);
+    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                           void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                           void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
 #if RETRO_USE_PLUS
-    void (*RegisterObjectContainer)(void **structPtr, const char *name, uint32 objectSize);
+    void (*RegisterStaticVariables)(void **varClass, const char *name, uint32 classSize);
 #endif
+
+    // Entities & Objects
     bool32 (*GetActiveEntities)(uint16 group, Entity **entity);
-    bool32 (*GetEntities)(uint16 type, Entity **entity);
+    bool32 (*GetEntities)(uint16 classID, Entity **entity);
     void (*BreakForeachLoop)(void);
-    void (*SetEditableVar)(uint8 type, const char *name, uint8 object, int32 storeOffset);
-    void *(*GetEntityByID)(uint16 slotID);
-    int32 (*GetEntityID)(void *entityPtr);
-    int32 (*GetEntityCount)(uint16 type, bool32 isActive);
-    int32 (*GetDrawListRef)(uint8 layerID, uint16 entityID);
-    void *(*GetDrawListRefPtr)(uint8 layerID, uint16 entityID);
-    void (*ResetEntityPtr)(void *entity, uint16 type, void *data);
-    void (*ResetEntitySlot)(uint16 slotID, uint16 type, void *data);
-    Entity *(*CreateEntity)(uint16 type, void *data, int32 x, int32 y);
+    void (*SetEditableVar)(uint8 type, const char *name, uint8 classID, int32 storeOffset);
+    void *(*GetEntity)(uint16 slot);
+    int32 (*GetEntityID)(void *entity);
+    int32 (*GetEntityCount)(uint16 classID, bool32 isActive);
+    int32 (*GetDrawListRef)(uint8 drawGroup, uint16 entitySlot);
+    void *(*GetDrawListRefPtr)(uint8 drawGroup, uint16 entitySlot);
+    void (*ResetEntityPtr)(void *entity, uint16 classID, void *data);
+    void (*ResetEntitySlot)(uint16 slot, uint16 classID, void *data);
+    Entity *(*CreateEntity)(uint16 classID, void *data, int32 x, int32 y);
     void (*CopyEntity)(void *destEntity, void *srcEntity, bool32 clearSrcEntity);
     bool32 (*CheckOnScreen)(void *entity, Vector2 *range);
-    bool32 (*CheckPosOnScreen)(Vector2 *pos, Vector2 *range);
-    void (*AddDrawListRef)(uint8 layer, uint16 entityID);
-    void (*SwapDrawListEntries)(uint8 layer, uint16 entryStart, uint16 entryEnd, uint16 count);
-    void (*SetDrawLayerProperties)(uint8 layer, bool32 sorted, void (*callback)(void));
+    bool32 (*CheckPosOnScreen)(Vector2 *position, Vector2 *range);
+    void (*AddDrawListRef)(uint8 drawGroup, uint16 entityID);
+    void (*SwapDrawListEntries)(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, uint16 count);
+    void (*SetDrawLayerProperties)(uint8 drawGroup, bool32 sorted, void (*callback)(void));
+
+    // Scene List stuff
     void (*SetScene)(const char *categoryName, const char *sceneName);
     void (*SetGameMode)(uint8 mode);
 #if RETRO_USE_PLUS
-    void (*SetHardResetFlag)(bool32 set);
+    void (*ForceHardReset)(bool32 shouldHardReset);
 #endif
     bool32 (*CheckValidScene)(void);
     int32 (*CheckStageFolder)(const char *folderName);
     int32 (*LoadScene)(void);
     int32 (*GetObjectIDByName)(const char *name);
+
+    // Cameras
     void (*ClearCameras)(void);
-    void (*AddCamera)(Vector2 *pos, int32 offsetX, int32 offsetY, bool32 worldRelative);
+    void (*AddCamera)(Vector2 *targetPos, int32 offsetX, int32 offsetY, bool32 worldRelative);
+
+    // API (Rev01 only)
 #if !RETRO_USE_PLUS
     void *(*GetAPIFunction)(const char *funcName);
 #endif
+
+    // Window/Video Settings
     int32 (*GetVideoSetting)(int32 id);
-    void (*SetVideoSetting)(int32 id, int32 val);
+    void (*SetVideoSetting)(int32 id, int32 value);
     void (*UpdateWindow)(void);
+
+    // Math
     int32 (*Sin1024)(int32 angle);
     int32 (*Cos1024)(int32 angle);
     int32 (*Tan1024)(int32 angle);
@@ -233,6 +266,8 @@ typedef struct {
     int32 (*RandSeeded)(int32 min, int32 max, int32 *randSeed);
     void (*SetRandSeed)(int32 key);
     uint8 (*ATan2)(int32 x, int32 y);
+
+    // Matrices
     void (*SetIdentityMatrix)(Matrix *matrix);
     void (*MatrixMultiply)(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
     void (*MatrixTranslateXYZ)(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity);
@@ -243,6 +278,8 @@ typedef struct {
     void (*MatrixRotateXYZ)(Matrix *matrix, int32 angleX, int32 angleY, int32 angleZ);
     void (*MatrixInverse)(Matrix *dest, Matrix *matrix);
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
+
+    // Strings
     void (*SetText)(TextInfo *textInfo, const char *text, uint32 size);
     void (*CopyString)(TextInfo *dst, TextInfo *src);
     void (*PrependText)(TextInfo *info, const char *text);
@@ -252,6 +289,8 @@ typedef struct {
     bool32 (*SplitStringList)(TextInfo *list, TextInfo *strings, int32 start, int32 end);
     void (*GetCString)(char *dest, TextInfo *info);
     bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 exactMatch);
+
+    // Screens & Displays
     void (*GetDisplayInfo)(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text);
     void (*GetWindowSize)(int32 *width, int32 *height);
     int32 (*SetScreenSize)(uint8 screenID, uint16 width, uint16 height);
@@ -259,7 +298,11 @@ typedef struct {
 #if RETRO_USE_PLUS
     void (*SetScreenRenderVertices)(int8 startVert2P_S1, int8 startVert2P_S2, int8 startVert3P_S1, int8 startVert3P_S2, int8 startVert3P_S3);
 #endif
+
+    // Spritesheets
     int16 (*LoadSpriteSheet)(const char *path, Scopes scope);
+
+    // Palettes & Colors
 #if RETRO_USE_PLUS
     void (*SetTintLookupTable)(uint16 *lookupTable);
 #else
@@ -278,10 +321,13 @@ typedef struct {
 #if RETRO_USE_PLUS
     void (*BlendColors)(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 alpha, int32 index, int32 count);
 #endif
+
+    // Drawing
     void (*DrawRect)(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawLine)(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawCircle)(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
+    void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, InkEffects inkEffect,
+                              bool32 screenRelative);
     void (*DrawQuad)(Vector2 *verticies, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, InkEffects inkEffect);
     void (*DrawBlendedQuad)(Vector2 *verticies, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
@@ -292,6 +338,8 @@ typedef struct {
     void (*CopyTile)(void);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
     void (*FillScreen)(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB);
+
+    // Meshes & 3D Scenes
     uint16 (*LoadMesh)(const char *filename, uint8 scope);
     uint16 (*Create3DScene)(const char *identifier, uint16 faceCount, uint8 scope);
     void (*Prepare3DScene)(uint16 index);
@@ -303,6 +351,8 @@ typedef struct {
     void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
                                   color color);
     void (*Draw3DScene)(uint16 index);
+
+    // Sprite Animations & Frames
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
     uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 listCount, Scopes scope);
     void (*SetSpriteAnimation)(uint16 aniFrames, uint16 listID, Animator *animator, bool32 forceApply, int16 frameID);
@@ -315,14 +365,18 @@ typedef struct {
     int16 (*GetFrameID)(Animator *animator);
     int32 (*GetStringWidth)(uint16 aniFrames, uint16 listID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
     void (*ProcessAnimation)(Animator *animator);
-    int32 (*GetSceneLayerID)(const char *name);
-    TileLayer *(*GetSceneLayer)(int32 layerID);
+
+    // Tile Layers
+    int32 (*GetTileLayerID)(const char *name);
+    TileLayer *(*GetTileLayer)(int32 layerID);
     void (*GetLayerSize)(uint16 layer, Vector2 *size, bool32 pixelSize);
     uint16 (*GetTileInfo)(uint16 layer, int32 x, int32 y);
     void (*SetTileInfo)(uint16 layer, int32 x, int32 y, uint16 tile);
     int32 (*CopyTileLayer)(uint16 dstLayer, int32 startX1, int32 startY1, uint16 srcLayer, int32 startX2, int32 startY2, int32 sizeX, int32 sizeY);
     void (*ProcessParallax)(TileLayer *TileLayer);
     ScanlineInfo *(*GetScanlines)(void);
+
+    // Object & Tile Collisions
     bool32 (*CheckObjectCollisionTouchBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox);
     bool32 (*CheckObjectCollisionTouchCircle)(void *thisEntity, int32 thisOffset, void *otherEntity, int32 otherOffset);
     uint8 (*CheckObjectCollisionBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
@@ -336,6 +390,8 @@ typedef struct {
     void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 angle);
     uint8 (*GetTileFlags)(uint16 tileID, uint8 cPlane);
     void (*SetTileFlags)(uint16 tileID, uint8 cPlane, uint8 flags);
+
+    // Audio
     int32 (*GetSfx)(const char *path);
     int32 (*PlaySfx)(uint16 sfx, int32 loopPoint, int32 priority);
     void (*StopSfx)(uint16 sfx);
@@ -347,8 +403,12 @@ typedef struct {
     bool32 (*IsSfxPlaying)(uint16 sfxID);
     bool32 (*ChannelActive)(uint8 channel);
     uint32 (*GetChannelPos)(uint8 channel);
+
+    // Videos & "HD Images"
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
+
+    // Input
 #if RETRO_USE_PLUS
     int32 (*ControllerIDForInputID)(uint8 controllerID);
     int32 (*MostRecentActiveControllerID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
@@ -365,12 +425,14 @@ typedef struct {
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS
-    void (*InputUnknown)(int32 controllerID, int32 type, int32 *valuePtr);
+    void (*InputUnknown)(int32 controllerID, int32 staticVars, int32 *valuePtr);
 #endif
-    // load user file from exe dir
-    int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size);
-    // save use file to exe dir
-    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size);
+
+    // User File Management
+    int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size); // load user file from exe dir
+    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir
+
+    // Printing
 #if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
@@ -381,81 +443,86 @@ typedef struct {
     void (*PrintVector2)(SeverityModes severity, const char *message, int32 x, int32 y);
     void (*PrintHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);
 #endif
-    void (*SetActiveVariable)(int32 objectID, const char *name);
+
+    // Editor
+    void (*SetActiveVariable)(int32 classID, const char *name);
     void (*AddVarEnumValue)(const char *name);
+
+    // Debugging
 #if RETRO_USE_PLUS
     void (*ClearDebugValues)(void);
     void (*SetDebugValue)(const char *name, void *valPtr, DebugVarTypes type, int32 min, int32 max);
 #endif
+
+    // Printing (Rev01)
 #if !RETRO_USE_PLUS
-    void (*PrintMessage)(void *message, uint8 type);
+    void (*PrintMessage)(void *message, uint8 staticVars);
 #endif
 } RSDKFunctionTable;
 
-
-#if RETRO_USE_MOD_LOADER
-extern ModFunctionTable Mod;
-#endif
+extern RSDKFunctionTable RSDK;
 #if RETRO_USE_PLUS
 extern APIFunctionTable API;
 #endif
-extern RSDKFunctionTable RSDK;
+#if RETRO_USE_MOD_LOADER
+extern ModFunctionTable Mod;
+#endif
 
 #include "All.h"
 
-#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->objectID, offsetof(Entity##object, var))
+#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->classID, offsetof(Entity##object, var))
 #define RSDK_EDITABLE_ARRAY(object, type, var, count, arrType)                                                                                       \
     for (int i = 0; i < (count); ++i) {                                                                                                              \
         char buffer[0x40];                                                                                                                           \
         sprintf(buffer, "%s%d", #var, i);                                                                                                            \
-        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var) + sizeof(arrType) * i);                             \
+        RSDK.SetEditableVar(type, buffer, (uint8)object->classID, offsetof(Entity##object, var) + sizeof(arrType) * i);                              \
     }
 
 #if RETRO_INCLUDE_EDITOR
 // Some extra precaution to prevent crashes in editor
 #define RSDK_ACTIVE_VAR(object, var)                                                                                                                 \
     if (object) {                                                                                                                                    \
-        RSDK.SetActiveVariable(object->objectID, #var);                                                                                               \
+        RSDK.SetActiveVariable(object->classID, #var);                                                                                               \
     }                                                                                                                                                \
     else {                                                                                                                                           \
-        RSDK.SetActiveVariable(-1, #var);                                                                                                             \
+        RSDK.SetActiveVariable(-1, #var);                                                                                                            \
     }
 #define RSDK_ENUM_VAR(name, var) RSDK.AddVarEnumValue(name)
 
 #define RSDK_DRAWING_OVERLAY(isDrawingOverlay) SceneInfo->debugMode = isDrawingOverlay
 
-#define RSDK_ADD_OBJECT(object)                                                                                                                      \
+#define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
                         object##_Serialize)
 #else
-#define RSDK_ADD_OBJECT(object)                                                                                                                      \
+#define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize)
 #endif
 
 #if RETRO_USE_MOD_LOADER
-#define MOD_ADD_OBJECT(object, inherit)                                                                                                              \
+#define MOD_REGISTER_OBJECT(object, inherit)                                                                                                         \
     Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
                        object##_Serialize, inherit)
 #endif
 
 #if RETRO_USE_PLUS
-#define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
+#define RSDK_REGISTER_STATIC_VARIABLES(variables) RSDK.RegisterStaticVariables((void **)&variables, #variables, sizeof(Object##variables))
 #endif
 
-#define RSDK_THIS(type)                Entity##type *self = (Entity##type *)SceneInfo->entity
+#define RSDK_THIS(class)               Entity##class *self = (Entity##class *)SceneInfo->entity
 #define RSDK_THIS_GEN()                Entity *self = SceneInfo->entity
-#define RSDK_GET_ENTITY(slot, type)    ((Entity##type *)RSDK.GetEntityByID(slot))
-#define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
+#define RSDK_GET_ENTITY(slot, class)   ((Entity##class *)RSDK.GetEntity(slot))
+#define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->classID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
     info.text   = NULL;                                                                                                                              \
     info.length = 0;                                                                                                                                 \
     info.size   = 0
 
-//Initializes entity values to the defaults
+// Initializes entity values to the defaults
 #define INIT_ENTITY(entity)                                                                                                                          \
     (entity)->active        = ACTIVE_BOUNDS;                                                                                                         \
     (entity)->visible       = false;                                                                                                                 \
@@ -464,10 +531,10 @@ extern RSDKFunctionTable RSDK;
 
 #define foreach_active(type, entityOut)                                                                                                              \
     Entity##type *entityOut = NULL;                                                                                                                  \
-    while (RSDK.GetActiveEntities(type->objectID, (Entity **)&entityOut))
+    while (RSDK.GetActiveEntities(type->classID, (Entity **)&entityOut))
 #define foreach_all(type, entityOut)                                                                                                                 \
     Entity##type *entityOut = NULL;                                                                                                                  \
-    while (RSDK.GetEntities(type->objectID, (Entity **)&entityOut))
+    while (RSDK.GetEntities(type->classID, (Entity **)&entityOut))
 
 #define foreach_active_group(group, entityOut)                                                                                                       \
     Entity *entityOut = NULL;                                                                                                                        \
@@ -480,7 +547,7 @@ extern RSDKFunctionTable RSDK;
 #define foreach_config(text)                                                                                                                         \
     TextInfo *text = NULL;                                                                                                                           \
     while (Mod.ForeachConfig(&text))
-#define foreach_configCategory(text)                                                                                                      \
+#define foreach_configCategory(text)                                                                                                                 \
     TextInfo *text = NULL;                                                                                                                           \
     while (Mod.ForeachConfigCategory(&text))
 #endif
@@ -498,7 +565,7 @@ extern RSDKFunctionTable RSDK;
     EntityPlayer *p2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);                                                                                       \
     EntityCamera *cam = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
-#define destroyEntity(entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL)
+#define destroyEntity(entity)   RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL)
 #define destroyEntitySlot(slot) RSDK.ResetEntitySlot(slot, TYPE_BLANK, NULL)
 
 #if RETRO_USE_PLUS

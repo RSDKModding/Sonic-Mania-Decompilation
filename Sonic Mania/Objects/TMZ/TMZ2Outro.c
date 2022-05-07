@@ -578,7 +578,7 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
 
         Player_CheckGoSuper(player1, 0xFF);
         EntitySuperSparkle *sparkle = RSDK_GET_ENTITY(Player->playerCount, SuperSparkle);
-        RSDK.ResetEntityPtr(sparkle, SuperSparkle->objectID, player1);
+        RSDK.ResetEntityPtr(sparkle, SuperSparkle->classID, player1);
 
         Player->playerCount = 6;
         int offsetX         = 0;

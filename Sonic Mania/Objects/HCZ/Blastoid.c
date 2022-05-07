@@ -90,7 +90,7 @@ void Blastoid_CheckPlayerCollisions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Blastoid->hitboxBody) && Player_CheckBadnikBreak(player, self, false)) {
             EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
-            if (platform->objectID == CollapsingPlatform->objectID) {
+            if (platform->classID == CollapsingPlatform->classID) {
                 platform->active        = ACTIVE_NORMAL;
                 platform->collapseDelay = 30;
                 platform->stoodPos.x    = self->position.x;
@@ -107,7 +107,7 @@ void Blastoid_State_Setup(void)
     self->active = ACTIVE_NORMAL;
 
     EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
-    if (platform->objectID == CollapsingPlatform->objectID)
+    if (platform->classID == CollapsingPlatform->classID)
         platform->active = ACTIVE_NEVER;
 
     self->state = Blastoid_State_Body;
@@ -211,7 +211,7 @@ void Blastoid_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(true);
 
         EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
-        if (CollapsingPlatform && platform->objectID == CollapsingPlatform->objectID)
+        if (CollapsingPlatform && platform->classID == CollapsingPlatform->classID)
             DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00, INK_NONE, 0xFF);
 
         RSDK_DRAWING_OVERLAY(false);

@@ -157,7 +157,7 @@ void BSS_Player_StageLoad(void)
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;
 
-    RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->classID, NULL);
 
     BSS_Player->sfxJump = RSDK.GetSfx("Global/Jump.wav");
 }
@@ -231,9 +231,9 @@ void BSS_Player_ProcessP1Input(void)
             if (TouchInfo->down[t]) {
                 if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
                     if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                        EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
-                        if (!pauseMenu->objectID) {
-                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        EntityPauseMenu *pauseMenu = RSDK.GetEntity(SLOT_PAUSEMENU);
+                        if (!pauseMenu->classID) {
+                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                             pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                             pauseMenu->disableRestart = true;
                         }
@@ -268,8 +268,8 @@ void BSS_Player_ProcessP1Input(void)
         if (controller->keyStart.press || Unknown_pausePress) {
             if (SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                if (!pauseMenu->objectID) {
-                    RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                if (!pauseMenu->classID) {
+                    RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                     pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                     pauseMenu->disableRestart = true;
                 }

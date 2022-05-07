@@ -57,7 +57,7 @@ void PlatformControl_Update(void)
                                 break;
 
                             case PLATFORMCONTROL_TOSTART: {
-                                Entity *ent         = RSDK.GetEntityByID(startNodeSlot);
+                                Entity *ent         = RSDK.GetEntity(startNodeSlot);
                                 platform->drawPos.x = ent->position.x;
                                 platform->drawPos.y = ent->position.y;
                                 platform->speed     = startNodeSlot + 1;
@@ -83,7 +83,7 @@ void PlatformControl_Update(void)
                                 break;
 
                             case PLATFORMCONTROL_TOSTART: {
-                                Entity *ent         = RSDK.GetEntityByID(startNodeSlot + self->nodeCount - 1);
+                                Entity *ent         = RSDK.GetEntity(startNodeSlot + self->nodeCount - 1);
                                 platform->drawPos.x = ent->position.x;
                                 platform->drawPos.y = ent->position.y;
                                 platform->speed     = startNodeSlot + (self->nodeCount - 2);
@@ -159,7 +159,7 @@ void PlatformControl_Create(void *data)
 
         int32 id = RSDK.GetEntityID(self) + 1;
         for (int32 i = 0; i < self->nodeCount; ++i) {
-            Entity *node = RSDK.GetEntityByID(id++);
+            Entity *node = RSDK.GetEntity(id++);
             if (abs(node->position.x - self->position.x) > self->updateRange.x)
                 self->updateRange.x = abs(node->position.x - self->position.x);
 
@@ -212,8 +212,8 @@ void PlatformControl_Create(void *data)
         }
 
         if (taggedButton) {
-            if ((Button && taggedButton->objectID == Button->objectID) || (SDashWheel && taggedButton->objectID == SDashWheel->objectID)
-                || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+            if ((Button && taggedButton->classID == Button->classID) || (SDashWheel && taggedButton->classID == SDashWheel->classID)
+                || (PullChain && taggedButton->classID == PullChain->classID)) {
                 self->taggedButton = taggedButton;
                 if (self->updateRange.y < 0x800000 + abs(self->position.x - taggedButton->position.x)) {
                     self->updateRange.y = 0x800000 + abs(self->position.x - taggedButton->position.x);
@@ -313,8 +313,8 @@ void PlatformControl_EditorDraw(void)
         }
 
         if (taggedButton) {
-            if ((Button && taggedButton->objectID == Button->objectID) || (SDashWheel && taggedButton->objectID == SDashWheel->objectID)
-                || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+            if ((Button && taggedButton->classID == Button->classID) || (SDashWheel && taggedButton->classID == SDashWheel->classID)
+                || (PullChain && taggedButton->classID == PullChain->classID)) {
                 self->taggedButton = taggedButton;
                 if (self->updateRange.y < 0x800000 + abs(self->position.x - taggedButton->position.x)) {
                     self->updateRange.y = 0x800000 + abs(self->position.x - taggedButton->position.x);

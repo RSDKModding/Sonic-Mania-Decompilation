@@ -15,7 +15,7 @@ void BGSwitch_Update(void)
 
     for (BGSwitch->screenID = 0; BGSwitch->screenID < SCREEN_MAX; BGSwitch->screenID++) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1 + BGSwitch->screenID, Camera);
-        if (!camera->objectID)
+        if (!camera->classID)
             break;
 
         if (abs(camera->position.x - self->position.x) < self->size.x && abs(camera->position.y - self->position.y) < self->size.y) {

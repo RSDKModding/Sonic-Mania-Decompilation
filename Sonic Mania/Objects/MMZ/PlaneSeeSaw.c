@@ -166,7 +166,7 @@ void PlaneSeeSaw_State_Launch(void)
                 player->applyJumpCap = false;
                 player->onGround     = false;
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                if (shield && shield->objectID) {
+                if (shield && shield->classID) {
                     shield->drawFX |= FX_SCALE;
                 }
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -238,7 +238,7 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
         self->state = Player_State_Air;
 
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
-        if (shield && shield->objectID) {
+        if (shield && shield->classID) {
             shield->drawFX &= ~FX_SCALE;
         }
         self->scale.y = self->scale.x;

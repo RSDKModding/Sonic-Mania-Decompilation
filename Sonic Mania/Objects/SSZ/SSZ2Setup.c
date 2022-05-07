@@ -58,9 +58,9 @@ void SSZ2Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
 
-    SSZ2Setup->towerID = RSDK.GetSceneLayerID("Tower");
+    SSZ2Setup->towerID = RSDK.GetTileLayerID("Tower");
     if (SSZ2Setup->towerID < LAYER_COUNT) {
-        SSZ2Setup->towerLayer                   = RSDK.GetSceneLayer(SSZ2Setup->towerID);
+        SSZ2Setup->towerLayer                   = RSDK.GetTileLayer(SSZ2Setup->towerID);
         SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCB;
 
         RSDK.SetDrawLayerProperties(1, false, SSZ2Setup_TowerDrawLayerCB);

@@ -173,7 +173,7 @@ void HangPoint_Update(void)
                 if (player->state != Player_State_None || self->playerTimer[playerID]) {
                     self->activePlayers &= ~(1 << playerID);
 
-                    if (player->objectID == Player->objectID && Player_CheckValidState(player))
+                    if (player->classID == Player->classID && Player_CheckValidState(player))
                         player->tileCollisions = true;
                 }
                 else {

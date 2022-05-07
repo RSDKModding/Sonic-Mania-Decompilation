@@ -63,7 +63,7 @@ void BSS_Horizon_StageLoad(void)
 {
     BSS_Horizon->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/Horizon.bin", SCOPE_STAGE);
 
-    RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->classID, NULL);
 }
 
 #if RETRO_INCLUDE_EDITOR

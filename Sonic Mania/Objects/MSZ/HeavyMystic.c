@@ -420,7 +420,7 @@ void HeavyMystic_StateBoss_AwaitPlayer(void)
             self->inkEffect                                    = INK_ALPHA;
             self->visible                                      = true;
             self->state                                        = HeavyMystic_StateBoss_BeginShow;
-            RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = HeavyMystic_ScanlineCB;
+            RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = HeavyMystic_ScanlineCB;
 
             foreach_active(MSZSpotlight, spotlight) { spotlight->state = MSZSpotlight_State_Appear; }
         }
@@ -680,7 +680,7 @@ void HeavyMystic_StateBoss_CloseCurtains(void)
 
     if (HeavyMystic->curtainLinePos >= 0xD00000) {
         HeavyMystic->curtainLinePos                        = 0xD00000;
-        RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = 0;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = 0;
         Zone->cameraBoundsR[0] += 0x350;
         destroyEntity(self);
     }

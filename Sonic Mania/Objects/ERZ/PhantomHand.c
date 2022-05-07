@@ -194,7 +194,7 @@ void PhantomHand_State_TryGrabPlayers(void)
     bool32 playersActive = true;
     for (int i = SLOT_PLAYER1; i < SLOT_PLAYER1 + 2; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-        if (player->objectID == Player->objectID)
+        if (player->classID == Player->classID)
             playersActive = playersActive && player->interaction && player->state == Player_State_None;
     }
 

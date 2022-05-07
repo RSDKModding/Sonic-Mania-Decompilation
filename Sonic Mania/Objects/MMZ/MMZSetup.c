@@ -74,12 +74,12 @@ void MMZSetup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_POCKY;
 
     if (Zone->actID) {
-        RSDK.GetSceneLayer(0)->scrollPos = 0x1800000;
-        RSDK.GetSceneLayer(1)->scrollPos = 0x1800000;
+        RSDK.GetTileLayer(0)->scrollPos = 0x1800000;
+        RSDK.GetTileLayer(1)->scrollPos = 0x1800000;
 
 #if RETRO_USE_PLUS
         for (int32 i = 3; i < 5; ++i) {
-            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
+            RSDK.GetTileLayer(i)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
         }
 #endif
 

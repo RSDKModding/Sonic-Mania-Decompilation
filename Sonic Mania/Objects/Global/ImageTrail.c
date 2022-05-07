@@ -123,7 +123,7 @@ void ImageTrail_Create(void *data)
         self->active         = ACTIVE_ALWAYS;
         self->visible        = true;
         self->player         = player;
-        self->playerClassID  = player->objectID; // dunno what this is for, maybe a v4 leftover where frames were per-object?
+        self->playerClassID  = player->classID; // dunno what this is for, maybe a v4 leftover where frames were per-object?
         self->baseAlpha      = 0x100;
         self->drawFX         = FX_FLIP | FX_SCALE | FX_ROTATE;
         self->inkEffect      = INK_ALPHA;

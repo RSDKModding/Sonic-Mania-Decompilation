@@ -234,7 +234,7 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
                 if (platform->collision == PLATFORM_C_USE_TILES
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &RollerMKII->hitboxObject)) {
                     if (self->collisionLayers & Zone->moveMask) {
-                        TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
+                        TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                         move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                         move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
                     }

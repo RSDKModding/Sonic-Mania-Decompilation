@@ -1,7 +1,7 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-#define SURFACE_MAX      (0x40)
+#define SURFACE_MAX (0x40)
 
 #if RETRO_REV02
 #define SCREEN_MAX (0x4)
@@ -11,7 +11,7 @@
 #define CAMERA_MAX (0x4)
 
 #define LAYER_COUNT     (8)
-#define DRAWLAYER_COUNT (16)
+#define DRAWGROUP_COUNT (16)
 
 #define SHADER_MAX (0x20)
 
@@ -63,7 +63,7 @@ struct GFXSurface {
 };
 
 struct ScreenInfo {
-    //uint16 *frameBuffer;
+    // uint16 *frameBuffer;
     uint16 frameBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     Vector2 position;
     Vector2 size;
@@ -102,7 +102,7 @@ struct WindowInfo {
             UINT refresh_rate;
         };
         D3DDISPLAYMODE internal;
-    } *displays;
+    } * displays;
     D3DVIEWPORT9 viewport;
 
 #elif RETRO_RENDERDEVICE_SDL2
@@ -110,16 +110,15 @@ struct WindowInfo {
         struct {
             // i wanna do uint32 : 32 but idk if other compilers like that
             uint32 _pad;
-            int width;
-            int height;
-            int refresh_rate;
+            int32 width;
+            int32 height;
+            int32 refresh_rate;
         };
         SDL_DisplayMode internal;
-    } *displays;
+    } * displays;
     SDL_Rect viewport;
 #endif
 };
-
 
 struct float4 {
     float x;
@@ -174,15 +173,15 @@ public:
     // RSDK COMMON START
     // ====================
 
-    static int isRunning;
-    static int windowRefreshDelay;
+    static bool32 isRunning;
+    static int32 windowRefreshDelay;
 
-    static int displayWidth[16];
-    static int displayHeight[16];
-    static int displayCount;
+    static int32 displayWidth[16];
+    static int32 displayHeight[16];
+    static int32 displayCount;
     static WindowInfo displayInfo;
 
-    static int lastShaderID;
+    static int32 lastShaderID;
 
 #if RETRO_REV02
     static uint8 startVertex_2P[];
@@ -208,7 +207,7 @@ private:
 #include "SDL2/SDL2RenderDevice.hpp"
 #endif
 
-extern DrawList drawLayers[DRAWLAYER_COUNT];
+extern DrawList drawGroups[DRAWGROUP_COUNT];
 extern char drawGroupNames[0x10][0x10];
 
 extern uint16 blendLookupTable[0x20 * 0x100];
@@ -239,8 +238,8 @@ void GenerateBlendLookupTable();
 
 void InitSystemSurfaces();
 
-void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, char *text);
-void GetWindowSize(int *width, int *height);
+void GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text);
+void GetWindowSize(int32 *width, int32 *height);
 
 inline void SetScreenRenderVertices(sbyte startVert2P_S1, sbyte startVert2P_S2, sbyte startVert3P_S1, sbyte startVert3P_S2, sbyte startVert3P_S3)
 {
@@ -252,40 +251,43 @@ inline void SetScreenRenderVertices(sbyte startVert2P_S1, sbyte startVert2P_S2, 
     RenderDevice::startVertex_3P[2] = startVert3P_S3;
 }
 
-inline void SetScreenSize(byte screenID, uint16 width, uint16 height)
+inline void SetScreenSize(uint8 screenID, uint16 width, uint16 height)
 {
     if (screenID < SCREEN_MAX) {
-        int screenHeight     = height & 0xFFF0;
-        ScreenInfo *screen   = &screens[screenID];
-        screen->pitch        = (width + 15) & 0xFFFFFFF0;
-        screen->center.x     = width >> 1;
-        screen->size.x       = width;
-        screen->size.y       = screenHeight;
-        screen->center.y     = screenHeight >> 1;
+        ScreenInfo *screen = &screens[screenID];
+
+        screen->size.x   = width;
+        screen->size.y   = height & 0xFFF0;
+        screen->pitch    = (screen->size.x + 15) & 0xFFFFFFF0;
+        screen->center.x = screen->size.x >> 1;
+        screen->center.y = screen->size.y >> 1;
+
         screen->clipBound_X1 = 0;
-        screen->clipBound_X2 = width;
+        screen->clipBound_X2 = screen->size.x;
         screen->clipBound_Y1 = 0;
-        screen->clipBound_Y2 = screenHeight;
-        screen->waterDrawPos = screenHeight;
+        screen->clipBound_Y2 = screen->size.y;
+
+        screen->waterDrawPos = screen->size.y;
     }
 }
 
-inline void AddCamera(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative)
+inline void AddCamera(Vector2 *targetPos, int32 offsetX, int32 offsetY, bool32 worldRelative)
 {
     if (cameraCount < CAMERA_MAX) {
-        cameras[cameraCount].targetPos     = pos;
+        cameras[cameraCount].targetPos     = targetPos;
         cameras[cameraCount].offset.x      = offsetX;
         cameras[cameraCount].offset.y      = offsetY;
         cameras[cameraCount].worldRelative = worldRelative;
+
         ++cameraCount;
     }
 }
 
 inline void ClearCameras() { cameraCount = 0; }
 
-inline void SetClipBounds(byte screenID, int32 x1, int32 y1, int32 x2, int32 y2)
+inline void SetClipBounds(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2)
 {
-    ScreenInfo *screen; 
+    ScreenInfo *screen;
 
     if (screenID < SCREEN_MAX) {
         screen = &screens[screenID];
@@ -297,63 +299,64 @@ inline void SetClipBounds(byte screenID, int32 x1, int32 y1, int32 x2, int32 y2)
     }
 }
 
-inline void AddDrawListRef(byte layer, uint16 entityID)
+inline void AddDrawListRef(uint8 drawGroup, uint16 entityID)
 {
-    if (layer < DRAWLAYER_COUNT)
-        drawLayers[layer].entries[drawLayers[layer].entityCount++] = entityID;
+    if (drawGroup < DRAWGROUP_COUNT)
+        drawGroups[drawGroup].entries[drawGroups[drawGroup].entityCount++] = entityID;
 }
 
-inline uint16 GetDrawListRef(byte layerID, uint16 entityID)
+inline uint16 GetDrawListRef(uint8 drawGroup, uint16 entityID)
 {
-    DrawList *listPtr = &drawLayers[layerID];
-    if (layerID >= DRAWLAYER_COUNT || entityID >= listPtr->entityCount)
+    DrawList *list = &drawGroups[drawGroup];
+    if (drawGroup >= DRAWGROUP_COUNT || entityID >= list->entityCount)
         return 0;
     else
-        return listPtr->entries[entityID];
+        return list->entries[entityID];
 }
 
-inline Entity *GetDrawListRefPtr(byte layerID, uint16 entityID)
+inline Entity *GetDrawListRefPtr(uint8 drawGroup, uint16 entityID)
 {
-    DrawList *listPtr = &drawLayers[layerID];
-    if (layerID >= DRAWLAYER_COUNT || entityID >= listPtr->entityCount)
+    DrawList *listPtr = &drawGroups[drawGroup];
+    if (drawGroup >= DRAWGROUP_COUNT || entityID >= listPtr->entityCount)
         return NULL;
     else
         return &objectEntityList[listPtr->entries[entityID]];
 }
 
-inline void SetDrawLayerProperties(byte layer, bool32 sorted, void (*callback)(void))
+inline void SetDrawLayerProperties(uint8 drawGroup, bool32 sorted, void (*callback)(void))
 {
-    if (layer < DRAWLAYER_COUNT) {
-        DrawList *list = &drawLayers[layer];
+    if (drawGroup < DRAWGROUP_COUNT) {
+        DrawList *list = &drawGroups[drawGroup];
         list->sorted   = sorted;
         list->callback = callback;
     }
 }
 
-void SwapDrawListEntries(uint8 layer, uint16 indexA, uint16 indexB, int32 count);
+void SwapDrawListEntries(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, int32 count);
 
-void FillScreen(uint color, int alphaR, int alphaG, int alphaB);
+void FillScreen(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB);
 
-void DrawLine(int x1, int y1, int x2, int y2, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
-void DrawRectangle(int x, int y, int width, int height, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
-void DrawCircle(int x, int y, int radius, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
-void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
+void DrawLine(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative);
+void DrawRectangle(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative);
+void DrawCircle(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative);
+void DrawCircleOutline(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative);
 
-void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
-void DrawBlendedFace(Vector2 *vertices, uint *colors, int vertCount, int alpha, InkEffects inkEffect);
+void DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, int32 inkEffect);
+void DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, int32 alpha, int32 inkEffect);
 
 void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelative);
-void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects inkEffect, int alpha, int sheetID);
-void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int height, int sprX, int sprY, int scaleX, int scaleY, FlipFlags direction,
-                        short Rotation, InkEffects inkEffect, signed int alpha, int sheetID);
+void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, int32 sprY, int32 direction, int32 inkEffect, int32 alpha,
+                       int32 sheetID);
+void DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int32 width, int32 height, int32 sprX, int32 sprY, int32 scaleX, int32 scaleY,
+                        int32 direction, int16 Rotation, int32 inkEffect, int32 alpha, int32 sheetID);
 
-void DrawDeformedSprite(uint16 spriteIndex, InkEffects inkEffect, int alpha);
+void DrawDeformedSprite(uint16 spriteIndex, int32 inkEffect, int32 alpha);
 
 void DrawTile(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
 void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
 
-void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 endFrame, int32 textLength, int32 align, int32 spacing, void *unused,
-              Vector2 *charPositions, bool32 screenRelative);
-void DrawDevText(const char *text, int32 x, int32 y, int32 align, uint color);
+void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 endFrame, int32 textLength, int32 align, int32 spacing,
+                void *unused, Vector2 *charPositions, bool32 screenRelative);
+void DrawDevString(const char *text, int32 x, int32 y, int32 align, uint32 color);
 
 #endif // !DRAWING_H

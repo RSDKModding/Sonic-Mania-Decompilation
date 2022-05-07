@@ -66,7 +66,7 @@ void UFO_Plasma_StageLoad(void)
     for (int32 i = 0; i < 8; ++i) RSDK.SetPaletteEntry(i, 0xDB, 0xF000);
 
     RSDK.SetPaletteMask(0xF000);
-    RSDK.ResetEntitySlot(SLOT_UFO_PLASMA, UFO_Plasma->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_UFO_PLASMA, UFO_Plasma->classID, NULL);
     RSDK.SetDrawLayerProperties(3, false, NULL);
 }
 

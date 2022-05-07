@@ -23,7 +23,7 @@ void WoodChipper_StaticUpdate(void)
     int32 cuttingCount = 0;
     int32 debrisCount  = 0;
 
-    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
         foreach_active(WoodChipper, chipper)
         {
             if (!chipper->timer)

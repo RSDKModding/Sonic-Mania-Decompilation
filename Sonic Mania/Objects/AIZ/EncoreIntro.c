@@ -19,7 +19,7 @@ void EncoreIntro_Update(void)
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 EncoreIntro_SetupCutscene();
                 EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-                if (seq->objectID)
+                if (seq->classID)
                     seq->skipType = SKIPTYPE_RELOADSCN;
                 self->activated = true;
             }
@@ -199,7 +199,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
             globals->stock          = ID_NONE;
             globals->characterFlags = ID_SONIC;
             Player_ChangeCharacter(player1, ID_SONIC);
-            destroyEntity(RSDK.GetEntityByID(SLOT_PLAYER2));
+            destroyEntity(RSDK.GetEntity(SLOT_PLAYER2));
             player1->alpha      = 0;
             player1->inkEffect  = INK_ALPHA;
             ruby->alpha         = 0;
@@ -366,13 +366,13 @@ bool32 EncoreIntro_Cutscene_CapsuleFound(EntityCutsceneSeq *host)
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
 
     if (!self->seenActClear) {
-        if (actClear->objectID == ActClear->objectID)
+        if (actClear->classID == ActClear->classID)
             self->seenActClear = true;
     }
     else {
         player->velocity.x = 0;
         player->groundVel  = 0;
-        if (actClear->objectID != ActClear->objectID) {
+        if (actClear->classID != ActClear->classID) {
             self->seenActClear = false;
             Music_TransitionTrack(TRACK_EGGMAN2, 0.05);
 
@@ -493,7 +493,7 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
     }
     else if (host->timer == 300) {
         EntityPlayer *otherBuddy = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
-        if (!otherBuddy->objectID)
+        if (!otherBuddy->classID)
             otherBuddy = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
         self->position.x = otherBuddy->position.x;
         self->position.y = otherBuddy->position.y;
@@ -521,7 +521,7 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
         else {
             EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
             EntityPlayer *otherBuddy  = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
-            if (!otherBuddy->objectID)
+            if (!otherBuddy->classID)
                 otherBuddy = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
             mystic->position.x = otherBuddy->position.x;
             mystic->position.y = otherBuddy->position.y;
@@ -641,8 +641,8 @@ bool32 EncoreIntro_Cutscene_MysticStealRuby(EntityCutsceneSeq *host)
         }
         else if (host->timer == 75) {
             RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->mainAnimator, true, 0);
-            Zone->cameraBoundsR[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
-            Zone->playerBoundsR[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
+            Zone->cameraBoundsR[0] = 16 * RSDK.GetTileLayer(Zone->fgLow)->width;
+            Zone->playerBoundsR[0] = 16 * RSDK.GetTileLayer(Zone->fgLow)->width;
             Zone->cameraBoundsT[0] = 784;
             Zone->playerBoundsT[0] = 784;
             mystic->direction      = FLIP_NONE;
@@ -717,7 +717,7 @@ bool32 EncoreIntro_Cutscene_AIZEncoreTutorial(EntityCutsceneSeq *host)
             player->velocity.x = 0x20000;
         self->velocity.x = player->velocity.x;
         camera->target   = (Entity *)self;
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
             EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
             cutsceneSeq->skipCallback      = AIZEncoreTutorial_State_ReturnToCutscene;
@@ -902,7 +902,7 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         Camera_ShakeScreen(0, 4, 4);
         player->drawOrder = Zone->playerDrawHigh + 1;
-        if (buddy->objectID == Player->objectID)
+        if (buddy->classID == Player->classID)
             buddy->drawOrder = Zone->playerDrawHigh + 1;
     }
     else {
@@ -1040,7 +1040,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
         }
 
         if (!SceneInfo->minutes && !SceneInfo->seconds) {
-            EntityTitleCard *titleCard = (EntityTitleCard *)CutsceneSeq_GetEntity(TitleCard->objectID);
+            EntityTitleCard *titleCard = (EntityTitleCard *)CutsceneSeq_GetEntity(TitleCard->classID);
             titleCard->active          = ACTIVE_NORMAL;
             titleCard->state           = TitleCard_State_SetupBGElements;
             titleCard->stateDraw       = TitleCard_Draw_SlideIn;

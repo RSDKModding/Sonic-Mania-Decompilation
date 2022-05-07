@@ -68,7 +68,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
 #else
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
 #endif
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.x = player1->position.x;
             player2->position.y = player1->position.y;
             player2->state      = Player_State_Air;
@@ -96,14 +96,14 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
         player1->position.y = 0;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.y = 0;
             player2->velocity.x = 0;
             player2->velocity.y = 0;
         }
     }
 
-    if (RSDK.GetEntityCount(TitleCard->objectID, false) || RSDK_GET_ENTITY(SLOT_ACTCLEAR, TitleCard)->objectID) {
+    if (RSDK.GetEntityCount(TitleCard->classID, false) || RSDK_GET_ENTITY(SLOT_ACTCLEAR, TitleCard)->classID) {
         if (!host->values[0])
             return false;
     }
@@ -113,7 +113,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
     }
 
     if (host->timer >= 8) {
-        if (player2->objectID != Player->objectID)
+        if (player2->classID != Player->classID)
             return true;
 
         if (player2->underwater) {

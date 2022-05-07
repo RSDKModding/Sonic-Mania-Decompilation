@@ -299,8 +299,8 @@ void Ball_State_Spawner(void)
     RSDK_THIS(Ball);
 
     EntityBall *child = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Ball);
-    if (child->objectID != Ball->objectID) {
-        RSDK.ResetEntityPtr(child, Ball->objectID, NULL);
+    if (child->classID != Ball->classID) {
+        RSDK.ResetEntityPtr(child, Ball->classID, NULL);
         child->active     = ACTIVE_NORMAL;
         child->position.x = self->position.x;
         child->position.y = self->position.y;

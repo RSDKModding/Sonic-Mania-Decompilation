@@ -755,7 +755,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
 }
 #endif
 
-uint16 RSDK::LoadSpriteSheet(const char *filename, Scopes scope)
+uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);

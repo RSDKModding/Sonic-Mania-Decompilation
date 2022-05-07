@@ -42,7 +42,7 @@ void RSDK::DevOutput_Draw()
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
     DrawRectangle(0, 0, currentScreen->size.x, entity->position.y + entity->yOffset, 128, 255, INK_NONE, true);
-    DrawDevText(entity->message, 8, entity->position.y + 8, 0, 0xF0F0F0);
+    DrawDevString(entity->message, 8, entity->position.y + 8, 0, 0xF0F0F0);
 }
 
 void RSDK::DevOutput_Create(void *source)
@@ -53,7 +53,7 @@ void RSDK::DevOutput_Create(void *source)
     entity->isPermanent     = true;
     entity->drawOrder       = 15;
     strncpy(entity->message, (char *)source, 0x3F4);
-    entity->id         = 180 * GetEntityCount(RSDK::DevOutput->objectID, 0);
+    entity->id         = 180 * GetEntityCount(RSDK::DevOutput->classID, 0);
     entity->yOffset    = DevOutput_GetStringYOffset(entity->message);
     entity->position.y = -entity->yOffset;
 }

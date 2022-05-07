@@ -32,7 +32,7 @@ typedef uint32 color;
 #define SCREEN_YCENTER (SCREEN_YSIZE / 2)
 
 #define LAYER_COUNT     (8)
-#define DRAWLAYER_COUNT (16)
+#define DRAWGROUP_COUNT (16)
 
 #if RETRO_USE_PLUS
 #define SCREEN_MAX (4)
@@ -73,7 +73,7 @@ typedef struct {
     int32 groundVel;
     int32 depth;
     uint16 group;
-    uint16 objectID;
+    uint16 classID;
     bool32 inBounds;
     bool32 isPermanent;
     bool32 tileCollisions;
@@ -95,12 +95,12 @@ typedef struct {
 } Entity;
 
 typedef struct {
-    uint16 objectID;
+    uint16 classID;
     uint8 active;
 } Object;
 
 #define RSDK_OBJECT                                                                                                                                  \
-    uint16 objectID;                                                                                                                                 \
+    uint16 classID;                                                                                                                                 \
     uint8 active;
 
 #if RETRO_USE_PLUS
@@ -115,7 +115,7 @@ typedef struct {
     int32 groundVel;                                                                                                                                 \
     int32 depth3D;                                                                                                                                   \
     uint16 group;                                                                                                                                    \
-    uint16 objectID;                                                                                                                                 \
+    uint16 classID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
@@ -144,7 +144,7 @@ typedef struct {
     int32 groundVel;                                                                                                                                 \
     int32 depth3D;                                                                                                                                   \
     uint16 group;                                                                                                                                    \
-    uint16 objectID;                                                                                                                                 \
+    uint16 classID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \

@@ -71,7 +71,7 @@ void Clucker_Create(void *data)
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         EntityPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Platform);
-        if (platform->objectID == Platform->objectID) {
+        if (platform->classID == Platform->classID) {
             if (platform->childCount > 0)
                 self->hasParent = true;
         }
@@ -319,7 +319,7 @@ void Clucker_State_Destroyed(void)
     EntityPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Platform);
     int32 offsetX            = 0;
     int32 offsetY            = 0;
-    if (platform->objectID == Platform->objectID) {
+    if (platform->classID == Platform->classID) {
         offsetX = platform->collisionOffset.x;
         offsetY = platform->collisionOffset.y;
     }

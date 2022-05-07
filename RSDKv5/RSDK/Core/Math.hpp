@@ -14,90 +14,89 @@ struct Vector2 {
     int32 y;
 };
 
-#define MEM_ZERO(x)  memset(&(x), 0, sizeof((x)))
-#define MEM_ZEROP(x) memset((x), 0, sizeof(*(x)))
+#define MEM_ZERO(x) memset(&(x), 0, sizeof((x)))
 
-extern int32 sinVal1024[0x400];
-extern int32 cosVal1024[0x400];
-extern int32 tanVal1024[0x400];
-extern int32 aSinVal1024[0x400];
-extern int32 aCosVal1024[0x400];
+extern int32 sin1024LookupTable[0x400];
+extern int32 cos1024LookupTable[0x400];
+extern int32 tan1024LookupTable[0x400];
+extern int32 asin1024LookupTable[0x400];
+extern int32 acos1024LookupTable[0x400];
 
-extern int32 sinVal512[0x200];
-extern int32 cosVal512[0x200];
-extern int32 tanVal512[0x200];
-extern int32 aSinVal512[0x200];
-extern int32 aCosVal512[0x200];
+extern int32 sin512LookupTable[0x200];
+extern int32 cos512LookupTable[0x200];
+extern int32 tan512LookupTable[0x200];
+extern int32 asin512LookupTable[0x200];
+extern int32 acos512LookupTable[0x200];
 
-extern int32 sinVal256[0x100];
-extern int32 cosVal256[0x100];
-extern int32 tanVal256[0x100];
-extern int32 aSinVal256[0x100];
-extern int32 aCosVal256[0x100];
+extern int32 sin256LookupTable[0x100];
+extern int32 cos256LookupTable[0x100];
+extern int32 tan256LookupTable[0x100];
+extern int32 asin256LookupTable[0x100];
+extern int32 acos256LookupTable[0x100];
 
-extern uint8 atanVal256[0x100 * 0x100];
+extern uint8 arcTan256LookupTable[0x100 * 0x100];
 
 // Setup angles
 void CalculateTrigAngles();
 
-inline int32 sin1024(int32 angle) { return sinVal1024[angle & 0x3FF]; }
-inline int32 cos1024(int32 angle) { return cosVal1024[angle & 0x3FF]; }
-inline int32 tan1024(int32 angle) { return tanVal1024[angle & 0x3FF]; }
-inline int32 aSin1024(int32 angle)
+inline int32 Sin1024(int32 angle) { return sin1024LookupTable[angle & 0x3FF]; }
+inline int32 Cos1024(int32 angle) { return cos1024LookupTable[angle & 0x3FF]; }
+inline int32 Tan1024(int32 angle) { return tan1024LookupTable[angle & 0x3FF]; }
+inline int32 ASin1024(int32 angle)
 {
     if (angle > 0x3FF)
         return 0;
     if (angle < 0)
-        return -aSinVal1024[-angle];
-    return aSinVal1024[angle];
+        return -asin1024LookupTable[-angle];
+    return asin1024LookupTable[angle];
 }
-inline int32 aCos1024(int32 angle)
+inline int32 ACos1024(int32 angle)
 {
     if (angle > 0x3FF)
         return 0;
     if (angle < 0)
-        return -aCosVal1024[-angle];
-    return aCosVal1024[angle];
+        return -acos1024LookupTable[-angle];
+    return acos1024LookupTable[angle];
 }
 
-inline int32 sin512(int32 angle) { return sinVal512[angle & 0x1FF]; }
-inline int32 cos512(int32 angle) { return cosVal512[angle & 0x1FF]; }
-inline int32 tan512(int32 angle) { return tanVal512[angle & 0x1FF]; }
-inline int32 aSin512(int32 angle)
+inline int32 Sin512(int32 angle) { return sin512LookupTable[angle & 0x1FF]; }
+inline int32 Cos512(int32 angle) { return cos512LookupTable[angle & 0x1FF]; }
+inline int32 Tan512(int32 angle) { return tan512LookupTable[angle & 0x1FF]; }
+inline int32 ASin512(int32 angle)
 {
     if (angle > 0x1FF)
         return 0;
     if (angle < 0)
-        return -aSinVal512[-angle];
-    return aSinVal512[angle];
+        return -asin512LookupTable[-angle];
+    return asin512LookupTable[angle];
 }
-inline int32 aCos512(int32 angle)
+inline int32 ACos512(int32 angle)
 {
     if (angle > 0x1FF)
         return 0;
     if (angle < 0)
-        return -aCosVal512[-angle];
-    return aCosVal512[angle];
+        return -acos512LookupTable[-angle];
+    return acos512LookupTable[angle];
 }
 
-inline int32 sin256(int32 angle) { return sinVal256[angle & 0xFF]; }
-inline int32 cos256(int32 angle) { return cosVal256[angle & 0xFF]; }
-inline int32 tan256(int32 angle) { return tanVal256[angle & 0xFF]; }
-inline int32 aSin256(int32 angle)
+inline int32 Sin256(int32 angle) { return sin256LookupTable[angle & 0xFF]; }
+inline int32 Cos256(int32 angle) { return cos256LookupTable[angle & 0xFF]; }
+inline int32 Tan256(int32 angle) { return tan256LookupTable[angle & 0xFF]; }
+inline int32 ASin256(int32 angle)
 {
     if (angle > 0xFF)
         return 0;
     if (angle < 0)
-        return -aSinVal256[-angle];
-    return aSinVal256[angle];
+        return -asin256LookupTable[-angle];
+    return asin256LookupTable[angle];
 }
-inline int32 aCos256(int32 angle)
+inline int32 ACos256(int32 angle)
 {
     if (angle > 0xFF)
         return 0;
     if (angle < 0)
-        return -aCosVal256[-angle];
-    return aCosVal256[angle];
+        return -acos256LookupTable[-angle];
+    return acos256LookupTable[angle];
 }
 
 // Get Arc Tan value
@@ -111,7 +110,7 @@ inline int32 GetRandomValue(int32 min, int32 max)
     int32 seed1 = 1103515245 * randSeed + 12345;
     int32 seed2 = 1103515245 * seed1 + 12345;
     randSeed    = 1103515245 * seed2 + 12345;
-    
+
     int32 result = ((randSeed >> 16) & 0x7FF) ^ ((((seed1 >> 6) & 0x1FFC00) ^ ((seed2 >> 16) & 0x7FF)) << 10);
     int32 size   = abs(max - min);
 
@@ -119,7 +118,7 @@ inline int32 GetRandomValue(int32 min, int32 max)
         return (result - result / size * size + max);
     else if (min < max)
         return (result - result / size * size + min);
-    else 
+    else
         return max;
 }
 inline int32 GetSeededRandomValue(int32 min, int32 max, int32 *randSeed)
@@ -130,7 +129,7 @@ inline int32 GetSeededRandomValue(int32 min, int32 max, int32 *randSeed)
     int32 seed1 = 1103515245 * *randSeed + 12345;
     int32 seed2 = 1103515245 * seed1 + 12345;
     *randSeed   = 1103515245 * seed2 + 12345;
-    
+
     int32 result = ((*randSeed >> 16) & 0x7FF) ^ ((((seed1 >> 6) & 0x1FFC00) ^ ((seed2 >> 16) & 0x7FF)) << 10);
     int32 size   = abs(max - min);
 

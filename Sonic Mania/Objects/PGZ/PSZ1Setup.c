@@ -110,8 +110,8 @@ void PSZ1Setup_StaticUpdate(void)
                 ScreenInfo[camera->screenID].position.y += 0xA00;
                 player->position.y += 0xA000000;
 
-                TileLayer *background1 = RSDK.GetSceneLayer(0);
-                TileLayer *background2 = RSDK.GetSceneLayer(1);
+                TileLayer *background1 = RSDK.GetTileLayer(0);
+                TileLayer *background2 = RSDK.GetTileLayer(1);
                 background1->scrollPos -= 0xA00000;
                 background2->scrollPos -= 0x2800000;
 
@@ -133,8 +133,8 @@ void PSZ1Setup_StaticUpdate(void)
             ScreenInfo[camera->screenID].position.y -= 0xA00;
             player->position.y -= 0xA000000;
 
-            TileLayer *background1 = RSDK.GetSceneLayer(0);
-            TileLayer *background2 = RSDK.GetSceneLayer(1);
+            TileLayer *background1 = RSDK.GetTileLayer(0);
+            TileLayer *background2 = RSDK.GetTileLayer(1);
             background1->scrollPos += 0xA00000;
             background2->scrollPos += 0x2800000;
 
@@ -261,16 +261,16 @@ void PSZ1Setup_StageLoad(void)
 #if RETRO_USE_PLUS
 void PSZ1Setup_BGSwitch_CB_Inside(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0; // Background 1
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0; // Background 2
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0; // Background 3
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0; // Background 1
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0; // Background 2
+    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0; // Background 3
 }
 
 void PSZ1Setup_BGSwitch_CB_Outside(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;               // Background 1
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT; // Background 2
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT; // Background 3
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;               // Background 1
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 2
+    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 3
 }
 #endif
 
@@ -318,11 +318,11 @@ void PSZ1Setup_LevelWrap_Top(void)
 {
     for (int32 i = 1; i < ENTITY_COUNT; ++i) {
         EntityPlatform *entity = RSDK_GET_ENTITY(i, Platform);
-        if (entity->objectID != BoundsMarker->objectID) {
+        if (entity->classID != BoundsMarker->classID) {
             if (entity->position.y >= 0x6800000) {
                 entity->position.y -= 0xA000000;
 
-                if (entity->objectID == PrintBlock->objectID || entity->objectID == Platform->objectID || entity->objectID == Crate->objectID) {
+                if (entity->classID == PrintBlock->classID || entity->classID == Platform->classID || entity->classID == Crate->classID) {
                     EntityPlatform *platform = entity;
                     platform->drawPos.y -= 0xA000000;
                     platform->centerPos.y -= 0xA000000;
@@ -336,11 +336,11 @@ void PSZ1Setup_LevelWrap_Bottom(void)
 {
     for (int32 i = 1; i < ENTITY_COUNT; ++i) {
         EntityPlatform *entity = RSDK_GET_ENTITY(i, Platform);
-        if (entity->objectID != BoundsMarker->objectID) {
+        if (entity->classID != BoundsMarker->classID) {
             if (entity->position.y <= 0x1800000) {
                 entity->position.y += 0xA000000;
 
-                if (entity->objectID == PrintBlock->objectID || entity->objectID == Platform->objectID || entity->objectID == Crate->objectID) {
+                if (entity->classID == PrintBlock->classID || entity->classID == Platform->classID || entity->classID == Crate->classID) {
                     EntityPlatform *platform = entity;
                     platform->drawPos.y += 0xA000000;
                     platform->centerPos.y += 0xA000000;

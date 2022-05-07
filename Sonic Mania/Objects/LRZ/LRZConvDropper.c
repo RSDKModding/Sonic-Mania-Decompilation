@@ -129,13 +129,13 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
         int32 seqPos              = entity->seqPos - entity->seqCount;
         EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(slot + seqPos, LRZConvItem);
 
-        if (seqEnt->objectID == LRZConvItem->objectID) {
+        if (seqEnt->classID == LRZConvItem->classID) {
             EntityLRZConvItem *item = CREATE_ENTITY(LRZConvItem, intToVoid(seqEnt->type), entity->position.x, entity->position.y);
             item->active            = ACTIVE_NORMAL;
             item->velocity.x        = 0;
             item->velocity.y        = 0;
         }
-        else if (seqEnt->objectID == Iwamodoki->objectID) {
+        else if (seqEnt->classID == Iwamodoki->classID) {
             EntityIwamodoki *iwamadoki = CREATE_ENTITY(Iwamodoki, NULL, entity->position.x, entity->position.y);
             iwamadoki->active          = ACTIVE_NORMAL;
             iwamadoki->state           = Iwamodoki_State_AwaitPlayer;
@@ -143,7 +143,7 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
             iwamadoki->velocity.y      = 0;
             iwamadoki->lrzConvPhys     = true;
         }
-        else if (seqEnt->objectID == ItemBox->objectID) {
+        else if (seqEnt->classID == ItemBox->classID) {
             EntityItemBox *seqBox = (EntityItemBox *)seqEnt;
 
             EntityItemBox *itembox = CREATE_ENTITY(ItemBox, intToVoid(seqBox->type), entity->position.x, entity->position.y);

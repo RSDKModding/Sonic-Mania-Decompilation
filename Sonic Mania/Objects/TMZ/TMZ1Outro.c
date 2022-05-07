@@ -22,7 +22,7 @@ void TMZ1Outro_Update(void)
                                   TMZ1Outro_CutsceneAct1_HeadForEntrance, TMZ1Outro_CutsceneAct1_EnterMonarch, StateMachine_None);
     }
 #if RETRO_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
     self->active = ACTIVE_NEVER;
@@ -68,7 +68,7 @@ bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
     if (host->timer == 160) {
         Camera_ShakeScreen(0, 0, 6);
         CrimsonEye->targetElevatorSpeed            = -0x10000;
-        TileLayer *moveLayer               = RSDK.GetSceneLayer(Zone->moveLayer);
+        TileLayer *moveLayer               = RSDK.GetTileLayer(Zone->moveLayer);
         moveLayer->drawLayer[0]            = 0;
         moveLayer->scrollPos               = 0x5000000;
         moveLayer->scrollInfo[0].scrollPos = -0x4D00000;
@@ -80,7 +80,7 @@ bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
 
     if (host->timer > 200) {
         if (CrimsonEye->targetElevatorSpeed) {
-            if (RSDK.GetSceneLayer(Zone->moveLayer)->scrollPos < 0x2300000)
+            if (RSDK.GetTileLayer(Zone->moveLayer)->scrollPos < 0x2300000)
                 CrimsonEye->targetElevatorSpeed = 0;
         }
         else if (!CrimsonEye->elevatorSpeed) {

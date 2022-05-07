@@ -165,13 +165,13 @@ void CableWarp_State_CheckPlayerEntry(void)
             if (self->type) {
                 warp->nextSlot            = warp->slotID - 1;
                 EntityCableWarp *nextNode = RSDK_GET_ENTITY(warp->nextSlot, CableWarp);
-                if (nextNode->objectID != CableWarp->objectID || nextNode->type != CABLEWARP_NODE)
+                if (nextNode->classID != CableWarp->classID || nextNode->type != CABLEWARP_NODE)
                     warp->nextSlot += 2;
             }
             else {
                 warp->nextSlot            = warp->slotID + 1;
                 EntityCableWarp *nextNode = RSDK_GET_ENTITY(warp->nextSlot, CableWarp);
-                if (nextNode->objectID == CableWarp->objectID) {
+                if (nextNode->classID == CableWarp->classID) {
                     if (nextNode->type != CABLEWARP_NODE)
                         warp->nextSlot -= 2;
                 }
@@ -295,7 +295,7 @@ void CableWarp_StateTransport_EndNode(void)
         RSDK.ProcessAnimation(&self->animator);
         self->position.x = player->position.x;
         self->position.y = player->position.y;
-        RSDK.GetEntityByID(self->slotID);
+        RSDK.GetEntity(self->slotID);
         EntityCableWarp *nextNode = RSDK_GET_ENTITY(self->nextSlot, CableWarp);
         int rx                    = (nextNode->position.x - player->position.x) >> 16;
         int ry                    = (nextNode->position.y - player->position.y) >> 16;
@@ -381,7 +381,7 @@ void CableWarp_EditorDraw(void)
             case CABLEWARP_ENTRY: {
                 nextSlot                  = slotID + 1;
                 EntityCableWarp *nextNode = RSDK_GET_ENTITY(nextSlot, CableWarp);
-                if (nextNode && nextNode->objectID == CableWarp->objectID) {
+                if (nextNode && nextNode->classID == CableWarp->classID) {
                     if (nextNode->type != CABLEWARP_NODE)
                         nextSlot -= 2;
                 }
@@ -394,7 +394,7 @@ void CableWarp_EditorDraw(void)
             case CABLEWARP_EXIT: {
                 nextSlot                  = slotID - 1;
                 EntityCableWarp *nextNode = RSDK_GET_ENTITY(nextSlot, CableWarp);
-                if (nextNode && nextNode->objectID != CableWarp->objectID || nextNode->type != CABLEWARP_NODE)
+                if (nextNode && nextNode->classID != CableWarp->classID || nextNode->type != CABLEWARP_NODE)
                     nextSlot += 2;
                 break;
             }

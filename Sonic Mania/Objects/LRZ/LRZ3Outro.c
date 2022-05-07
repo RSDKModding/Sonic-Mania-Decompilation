@@ -29,8 +29,8 @@ void LRZ3Outro_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active      = ACTIVE_NORMAL;
         self->isPermanent = true;
-        self->background1         = RSDK.GetSceneLayer(1);
-        self->background2         = RSDK.GetSceneLayer(2);
+        self->background1         = RSDK.GetTileLayer(1);
+        self->background2         = RSDK.GetTileLayer(2);
         foreach_active(ParallaxSprite, sprite) { self->littlePlanet = sprite; }
         self->state = LRZ3Outro_State_BlastOff;
     }
@@ -75,8 +75,8 @@ void LRZ3Outro_State_BlastOff(void)
     if (self->timer == 60) {
         self->timer                       = 0;
         self->state                         = LRZ3Outro_State_RocketLaunch;
-        RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
-        RSDK.GetSceneLayer(1)->drawLayer[0] = 0;
+        RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
+        RSDK.GetTileLayer(1)->drawLayer[0] = 0;
     }
 }
 
@@ -167,7 +167,7 @@ void LRZ3Outro_StageFinishCB(void)
 
     if (cutscene) {
         CutsceneSeq_StartSequence(cutscene, LRZ3Outro_Cutscene_StopPlayers, LRZ3Outro_Cutscene_LightUpLittlePlanet, StateMachine_None);
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }

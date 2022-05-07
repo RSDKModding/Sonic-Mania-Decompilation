@@ -38,7 +38,7 @@ void MMZWheel_Update(void)
     self->offset.y += self->position.y;
     int32 id = SceneInfo->entitySlot;
     for (int32 i = 0; i < self->childCount; ++i) {
-        Entity *child = RSDK.GetEntityByID(++id);
+        Entity *child = RSDK.GetEntity(++id);
         child->position.x += self->offset.x;
         child->position.y += self->offset.y;
     }

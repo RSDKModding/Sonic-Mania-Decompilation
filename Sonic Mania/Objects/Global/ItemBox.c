@@ -213,12 +213,12 @@ void ItemBox_DebugDraw(void)
 {
     RSDK_THIS(ItemBox);
 
-    DebugMode->subtypeCount = ITEMBOX_COUNT;
+    DebugMode->itemTypeCount = ITEMBOX_COUNT;
 
     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 
-    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &DebugMode->animator, true, DebugMode->itemSubType);
+    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &DebugMode->animator, true, DebugMode->itemType);
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - 0x30000;
@@ -229,8 +229,8 @@ void ItemBox_DebugSpawn(void)
     RSDK_THIS(DebugMode);
 
     EntityItemBox *itemBox            = CREATE_ENTITY(ItemBox, NULL, self->position.x, self->position.y);
-    itemBox->type                     = DebugMode->itemSubType;
-    itemBox->contentsAnimator.frameID = DebugMode->itemSubType;
+    itemBox->type                     = DebugMode->itemType;
+    itemBox->contentsAnimator.frameID = DebugMode->itemType;
 }
 
 void ItemBox_State_Broken(void)
@@ -529,7 +529,7 @@ void ItemBox_GivePowerup(void)
         case ITEMBOX_INVINCIBLE:
             if (player->superState == SUPERSTATE_NONE) {
                 EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars);
-                RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->objectID, player);
+                RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->classID, player);
                 player->invincibleTimer = 1260;
                 Music_PlayQueuedTrack(TRACK_INVINCIBLE);
             }
@@ -541,7 +541,7 @@ void ItemBox_GivePowerup(void)
             if (player->superState == SUPERSTATE_NONE) {
                 Music_PlayQueuedTrack(TRACK_SNEAKERS);
                 EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail);
-                RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);
+                RSDK.ResetEntityPtr(powerup, ImageTrail->classID, player);
             }
             break;
 
@@ -714,14 +714,14 @@ void ItemBox_GivePowerup(void)
                         && !(globals->stock & 0xFF0000)) {
                         globals->characterFlags |= (1 << self->contentsAnimator.frameID);
                         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-                        if (player2->objectID) {
+                        if (player2->classID) {
                             int32 id = 0;
                             while ((globals->stock >> id) & 0xFF) id += 8;
                             globals->stock |= (1 << self->contentsAnimator.frameID << id);
                             HUD->stockFlashTimers[(id >> 3) + 1] = 120;
                         }
                         else {
-                            player2->objectID   = Player->objectID;
+                            player2->classID   = Player->classID;
                             Player->jumpInTimer = 0;
                             EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
 
@@ -986,7 +986,7 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
 
             case PLATFORM_C_USE_TILES:
                 if (self->collisionLayers & Zone->moveMask) {
-                    TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
+                    TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                     move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                     move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
                 }
@@ -1054,7 +1054,7 @@ void ItemBox_HandleObjectCollisions(void)
             EntityPlatform *platform = RSDK_GET_ENTITY(self->groundVel, Platform);
 #endif
 
-            if (platform->objectID == Platform->objectID) {
+            if (platform->classID == Platform->classID) {
                 platform->stood    = true;
                 self->position.x   = self->scale.x + platform->drawPos.x;
                 self->position.y   = (self->scale.y + platform->drawPos.y) & 0xFFFF0000;
@@ -1078,7 +1078,7 @@ void ItemBox_HandleObjectCollisions(void)
 #if RETRO_USE_PLUS
     if (TilePlatform && self->parent) {
         EntityTilePlatform *tilePlatform = (EntityTilePlatform *)self->parent;
-        if (tilePlatform->objectID == TilePlatform->objectID) {
+        if (tilePlatform->classID == TilePlatform->classID) {
             platformCollided    = true;
             tilePlatform->stood = true;
             self->position.x    = self->scale.x + tilePlatform->drawPos.x;
@@ -1100,7 +1100,7 @@ void ItemBox_HandleObjectCollisions(void)
         if (self->groundVel) {
             EntityCrate *crate = RSDK_GET_ENTITY(self->groundVel, Crate);
 #endif
-            if (crate->objectID == Crate->objectID) {
+            if (crate->classID == Crate->classID) {
                 crate->stood       = true;
                 self->position.x   = self->scale.x + crate->drawPos.x;
                 self->position.y   = (self->scale.y + crate->drawPos.x) & 0xFFFF0000;

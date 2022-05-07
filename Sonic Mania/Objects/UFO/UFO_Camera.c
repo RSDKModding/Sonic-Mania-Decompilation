@@ -39,7 +39,7 @@ void UFO_Camera_Create(void *data)
 
 void UFO_Camera_StageLoad(void)
 {
-    RSDK.ResetEntitySlot(SLOT_UFO_CAMERA, UFO_Camera->objectID, 0);
+    RSDK.ResetEntitySlot(SLOT_UFO_CAMERA, UFO_Camera->classID, 0);
     UFO_Camera->isSS7 = RSDK.CheckStageFolder("UFO7");
 }
 

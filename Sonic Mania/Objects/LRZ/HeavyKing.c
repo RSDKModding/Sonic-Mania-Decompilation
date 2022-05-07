@@ -306,7 +306,7 @@ void HeavyKing_StartLeap(int32 startFrame)
     RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 3, &self->bodyAnimator, true, startFrame);
     RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 12, &self->scepterAnimator, true, startFrame);
 
-    if (RSDK.GetEntityCount(KingAttack->objectID, true)) {
+    if (RSDK.GetEntityCount(KingAttack->classID, true)) {
         HeavyKing_FindTargetEmerald();
         self->velocity.x     = (self->targetEmerald->position.x - self->position.x) / 40;
         EntityPlayer *player = Player_GetNearestPlayer();
@@ -462,7 +462,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, false, 0);
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->groundVel  = 0;
             player2->velocity.x = 0;
             player2->direction  = FLIP_NONE;
@@ -743,7 +743,7 @@ void HeavyKing_StateCutscene_AttackRebound(void)
         player1->stateInput = Player_ProcessP1Input;
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             CutsceneSeq_LockPlayerControl(player2);
             player2->stateInput = Player_ProcessP2Input_AI;
         }
@@ -1042,7 +1042,7 @@ void HeavyKing_State_TwinChargeAttack(void)
 
     BadnikHelpers_Oscillate(self->originPos.y, 2, 11);
 
-    if (!RSDK.GetEntityCount(KingAttack->objectID, true))
+    if (!RSDK.GetEntityCount(KingAttack->classID, true))
         HeavyKing_HandleAttackFinish();
 
     HeavyKing_CheckPlayerCollisions();

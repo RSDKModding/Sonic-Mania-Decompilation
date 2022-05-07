@@ -608,7 +608,7 @@ void OptionsMenu_SetupKBControlsMenu(int32 playerID)
     for (int32 b = 0; b < control->buttonCount; ++b) {
         EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[b];
 
-        if (binder->objectID == UIKeyBinder->objectID)
+        if (binder->classID == UIKeyBinder->classID)
             binder->inputID = playerID;
     }
 }
@@ -647,7 +647,7 @@ void OptionsMenu_TransitionCB_ReloadScene(void)
 {
     globals->suppressAutoMusic = true;
 
-    RSDK.SetHardResetFlag(true);
+    RSDK.ForceHardReset(true);
     RSDK.LoadScene();
 }
 

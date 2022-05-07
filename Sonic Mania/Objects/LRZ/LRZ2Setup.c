@@ -233,7 +233,7 @@ EntityButton *LRZ2Setup_SetupTagLink(int32 tag, Entity *entity)
     }
 
     if (taggedButton) {
-        if ((Button && taggedButton->objectID == Button->objectID) || (TurretSwitch && taggedButton->objectID == TurretSwitch->objectID)) {
+        if ((Button && taggedButton->classID == Button->classID) || (TurretSwitch && taggedButton->classID == TurretSwitch->classID)) {
             if (entity) {
                 int32 distX = abs(entity->position.x - taggedButton->position.x);
                 int32 distY = abs(entity->position.y - taggedButton->position.y);

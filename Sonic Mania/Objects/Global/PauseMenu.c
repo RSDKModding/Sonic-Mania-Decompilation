@@ -41,7 +41,7 @@ void PauseMenu_LateUpdate(void)
         }
         else {
             self->visible   = true;
-            self->drawOrder = DRAWLAYER_COUNT - 1;
+            self->drawOrder = DRAWGROUP_COUNT - 1;
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &self->animator, true, 3);
             PauseMenu_PauseSound();
@@ -58,9 +58,9 @@ void PauseMenu_StaticUpdate(void)
     if (SceneInfo->state == ENGINESTATE_REGULAR) {
         int32 cnt = 0;
         if (TitleCard)
-            cnt = RSDK.GetEntityCount(TitleCard->objectID, true);
+            cnt = RSDK.GetEntityCount(TitleCard->classID, true);
         if (ActClear)
-            cnt += RSDK.GetEntityCount(ActClear->objectID, true);
+            cnt += RSDK.GetEntityCount(ActClear->classID, true);
 
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
@@ -68,17 +68,17 @@ void PauseMenu_StaticUpdate(void)
         if (Zone)
             allowEvents = Zone->timer > 1;
 
-        if (!cnt && pauseMenu->objectID == TYPE_BLANK && allowEvents && !PauseMenu->disableEvents) {
+        if (!cnt && pauseMenu->classID == TYPE_BLANK && allowEvents && !PauseMenu->disableEvents) {
             if (API_GetUserAuthStatus() == STATUS_FORBIDDEN) {
                 PauseMenu->signOutDetected = true;
-                RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                 pauseMenu->triggerPlayer = 0;
             }
 #if RETRO_USE_PLUS
             else if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus) {
                 PauseMenu->plusChanged = true;
                 globals->lastHasPlus   = API.CheckDLC(DLC_PLUS);
-                RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                 pauseMenu->triggerPlayer = 0;
             }
 #endif
@@ -88,14 +88,14 @@ void PauseMenu_StaticUpdate(void)
                     int32 id = API_ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
                         PauseMenu->controllerDisconnect = true;
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         pauseMenu->triggerPlayer = i;
                     }
 #else
                     if (API_InputIDIsDisconnected(i + 1)) {
                         // API is broken rn, TODO: fix!
                         // PauseMenu->controllerDisconnect = true;
-                        // RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        // RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         // pauseMenu->triggerPlayer = i;
                     }
 #endif
@@ -126,7 +126,7 @@ void PauseMenu_Create(void *data)
 
         if (data == intToVoid(true)) {
             self->visible   = true;
-            self->drawOrder = DRAWLAYER_COUNT - 1;
+            self->drawOrder = DRAWGROUP_COUNT - 1;
             self->state     = PauseMenu_State_HandleFadeout;
         }
         else {
@@ -172,7 +172,7 @@ void PauseMenu_SetupMenu(void)
     Vector2 size;
     size.x = ScreenInfo->width << 16;
     size.y = ScreenInfo->height << 16;
-    RSDK.ResetEntitySlot(SLOT_PAUSEMENU_UICONTROL, UIControl->objectID, &size);
+    RSDK.ResetEntitySlot(SLOT_PAUSEMENU_UICONTROL, UIControl->classID, &size);
 
     EntityUIControl *control = RSDK_GET_ENTITY(SLOT_PAUSEMENU_UICONTROL, UIControl);
 
@@ -240,7 +240,7 @@ void PauseMenu_AddButton(uint8 id, void *action)
         self->buttonActions[buttonID] = action;
 
         int32 buttonSlot = self->buttonCount + 18;
-        RSDK.ResetEntitySlot(buttonSlot, UIButton->objectID, NULL);
+        RSDK.ResetEntitySlot(buttonSlot, UIButton->classID, NULL);
         EntityUIButton *button = RSDK_GET_ENTITY(buttonSlot, UIButton);
 
         button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;

@@ -19,7 +19,7 @@ void FarPlane_LateUpdate(void)
     }
     else if (self->active == ACTIVE_BOUNDS) {
         self->active                                        = ACTIVE_NORMAL;
-        RSDK.GetSceneLayer(FarPlane->layerID)->drawLayer[0] = 0;
+        RSDK.GetTileLayer(FarPlane->layerID)->drawLayer[0] = 0;
         FarPlane->originPos.x                                = self->origin.x;
         FarPlane->originPos.y                                = self->origin.y;
         FarPlane->position.x                                = self->position.x;
@@ -30,7 +30,7 @@ void FarPlane_LateUpdate(void)
     }
     else if (!RSDK.CheckOnScreen(self, NULL)) {
         self->active                                        = ACTIVE_BOUNDS;
-        RSDK.GetSceneLayer(FarPlane->layerID)->drawLayer[0] = DRAWLAYER_COUNT;
+        RSDK.GetTileLayer(FarPlane->layerID)->drawLayer[0] = DRAWGROUP_COUNT;
         RSDK.SetDrawLayerProperties(1, false, NULL);
         RSDK.SetDrawLayerProperties(3, false, NULL);
         FarPlane_SetEntityActivities(ACTIVE_NEVER);
@@ -72,14 +72,14 @@ void FarPlane_Create(void *data)
 
 void FarPlane_StageLoad(void)
 {
-    FarPlane->layerID = RSDK.GetSceneLayerID("Far Plane");
+    FarPlane->layerID = RSDK.GetTileLayerID("Far Plane");
 
     if (FarPlane->layerID != (uint16)-1) {
-        TileLayer *layer                               = RSDK.GetSceneLayer(FarPlane->layerID);
-        layer->drawLayer[0]                            = DRAWLAYER_COUNT;
+        TileLayer *layer                               = RSDK.GetTileLayer(FarPlane->layerID);
+        layer->drawLayer[0]                            = DRAWGROUP_COUNT;
         layer->scanlineCallback                        = FarPlane_ScanlineCB;
-        RSDK.GetSceneLayer(Zone->fgLow)->drawLayer[0]  = 2;
-        RSDK.GetSceneLayer(Zone->fgHigh)->drawLayer[0] = 7;
+        RSDK.GetTileLayer(Zone->fgLow)->drawLayer[0]  = 2;
+        RSDK.GetTileLayer(Zone->fgHigh)->drawLayer[0] = 7;
         RSDK.SetDrawLayerProperties(1, false, NULL);
         RSDK.SetDrawLayerProperties(2, false, NULL);
         RSDK.CopyPalette(0, 0, 3, 0, 128);
@@ -112,7 +112,7 @@ void FarPlane_SetupEntities(void)
     self->entityCount = 0;
 
     for (int32 i = 0; i < SCENEENTITY_COUNT && self->entityCount < 0x100; ++i) {
-        Entity *entPtr = RSDK.GetEntityByID(i);
+        Entity *entPtr = RSDK.GetEntity(i);
         if (abs(self->origin.x - entPtr->position.x) < self->size.x) {
             if (abs(self->origin.y - entPtr->position.y) < self->size.y) {
                 self->entityIDs[self->entityCount++] = i;

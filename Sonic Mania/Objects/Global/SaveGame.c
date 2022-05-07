@@ -115,12 +115,12 @@ void SaveGame_LoadSaveData(void)
 
             for (int32 e = 0x40; e < 0x840; ++e) {
                 if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
-                    Entity *entity   = RSDK.GetEntityByID(e);
-                    entity->objectID = TYPE_BLANK;
+                    Entity *entity   = RSDK.GetEntity(e);
+                    entity->classID = TYPE_BLANK;
                     entity->active   = -1;
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
-                    EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(e);
+                    EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntity(e);
                     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
                     RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
                     RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
@@ -253,8 +253,8 @@ void SaveGame_SaveGameState(void)
 
     for (int32 i = RESERVE_ENTITY_COUNT; i < RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT; ++i) {
         EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);
-        if (itemBox->objectID || (itemBox->active != ACTIVE_NEVER2)) {
-            if (itemBox->objectID == ItemBox->objectID) {
+        if (itemBox->classID || (itemBox->active != ACTIVE_NEVER2)) {
+            if (itemBox->classID == ItemBox->classID) {
                 if (itemBox->state == ItemBox_State_Broken) {
                     globals->atlEntityData[(0x200 * 1) + i] = 2;
                 }

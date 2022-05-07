@@ -51,7 +51,7 @@ void RubyPortal_Create(void *data)
         }
         else if (RSDK.CheckStageFolder("TMZ2")) {
             EntityWarpDoor *door = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
-            if (door->objectID == WarpDoor->objectID) {
+            if (door->classID == WarpDoor->classID) {
                 self->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
                 door->hitbox.top    = 0x7FFF;
@@ -71,7 +71,7 @@ void RubyPortal_Create(void *data)
         self->state = StateMachine_None;
         if (!RSDK.CheckStageFolder("ERZ")) {
             EntityWarpDoor *door = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
-            if (door->objectID == WarpDoor->objectID) {
+            if (door->classID == WarpDoor->classID) {
                 self->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
                 door->hitbox.top    = 0x7FFF;
@@ -281,7 +281,7 @@ void RubyPortal_State_Open_WarpDoor(void)
 
     if (self->alpha >= 0x100) {
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
-        if (warpDoor->objectID == WarpDoor->objectID)
+        if (warpDoor->classID == WarpDoor->classID)
             warpDoor->hitbox = self->hitbox;
         self->state = StateMachine_None;
     }

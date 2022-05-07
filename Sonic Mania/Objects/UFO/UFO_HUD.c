@@ -99,7 +99,7 @@ void UFO_HUD_Create(void *data)
 void UFO_HUD_StageLoad(void)
 {
     UFO_HUD->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE);
-    RSDK.ResetEntitySlot(SLOT_UFO_HUD, UFO_HUD->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_UFO_HUD, UFO_HUD->classID, NULL);
 }
 
 void UFO_HUD_CheckLevelUp(void)

@@ -327,7 +327,7 @@ void PhantomGunner_State_Idle(void)
     RSDK.ProcessAnimation(&self->fxAnimator);
 
     self->fireAnimTimer = 8;
-    if (++self->timer < 120 || RSDK.GetEntityCount(PhantomGunner->objectID, true) >= 2) {
+    if (++self->timer < 120 || RSDK.GetEntityCount(PhantomGunner->classID, true) >= 2) {
         PhantomGunner_CheckPlayerExplosionCollisions();
     }
     else {
@@ -469,7 +469,7 @@ void PhantomGunner_State_Mortar(void)
     self->position.y += self->velocity.y;
 
     PhantomGunner_CheckPlayerMissileCollisions();
-    if (self->objectID) {
+    if (self->classID) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == PHANTOMGUNNER_NAPALM) {
                 EntityPhantomGunner *child =
@@ -498,7 +498,7 @@ void PhantomGunner_State_Napalm(void)
     self->position.y += self->velocity.y;
 
     PhantomGunner_CheckPlayerMissileCollisions();
-    if (self->objectID) {
+    if (self->classID) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == PHANTOMGUNNER_NAPALM) {
                 EntityPhantomGunner *child =

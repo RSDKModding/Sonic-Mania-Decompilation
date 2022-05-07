@@ -65,7 +65,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.x     = player1->position.x;
             player2->position.y     = player1->position.y;
             player2->tileCollisions = false;
@@ -88,7 +88,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         SPZ1Intro->sewerLid = lid;
     }
 
-    if (!RSDK.GetEntityCount(TitleCard->objectID, false) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID && !host->values[0]) {
+    if (!RSDK.GetEntityCount(TitleCard->classID, false) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID && !host->values[0]) {
         host->values[0]   = true;
         host->storedTimer = host->timer;
     }
@@ -137,7 +137,7 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
     if (player1->velocity.y > 0)
         player1->tileCollisions = true;
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         if (host->timer == 10) {
             player2->velocity.x      = 0;
             player2->velocity.y      = -0x80000;
@@ -170,7 +170,7 @@ bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
         player1->state      = Player_State_Ground;
         player1->camera     = camera;
 
-        if (player2->objectID == Player->objectID)
+        if (player2->classID == Player->classID)
             player2->stateInput = Player_ProcessP2Input_AI;
 
         SceneInfo->timeEnabled = true;

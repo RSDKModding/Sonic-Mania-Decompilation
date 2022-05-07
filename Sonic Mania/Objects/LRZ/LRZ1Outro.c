@@ -44,7 +44,7 @@ void LRZ1Outro_StartCutscene(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -121,7 +121,7 @@ bool32 LRZ1Outro_CutsceneAct1_SetupDashLift(EntityCutsceneSeq *host)
     self->lift = NULL;
     foreach_active(DashLift, lift) { self->lift = lift; }
 
-    return RSDK.GetEntityCount(DashLift->objectID, true) > 0;
+    return RSDK.GetEntityCount(DashLift->classID, true) > 0;
 }
 
 bool32 LRZ1Outro_CutsceneAct1_GoToDashLift(EntityCutsceneSeq *host)

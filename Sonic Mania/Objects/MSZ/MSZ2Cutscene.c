@@ -57,7 +57,7 @@ void MSZ2Cutscene_SetupCutscene(void)
     CutsceneSeq_StartSequence(self, MSZ2Cutscene_Cutscene_GoToPistol, MSZ2Cutscene_Cutscene_EnterPistol, MSZ2Cutscene_Cutscene_PistolFired,
                               MSZ2Cutscene_Cutscene_AppearInBG, StateMachine_None);
 #if RETRO_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -104,7 +104,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         player1->state     = Player_State_Ground;
         player1->groundVel = 0;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
 #if RETRO_USE_PLUS
             Player->disableP2KeyCheck = true;
 #endif
@@ -141,7 +141,7 @@ bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     EntityGiantPistol *pistol = MSZ2Cutscene->pistol;
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         if (player2->state == Player_State_Air && player2->animator.animationID == ANI_JUMP)
             player2->position.x += (player1->position.x - player2->position.x) >> 4;
         player2->position.y += (player1->position.y - player2->position.y) >> 4;
@@ -152,7 +152,7 @@ bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host)
 
     if (pistol->state == GiantPistol_State_CloseChamber) {
         player1->jumpHold = false;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->position.x      = player1->position.x;
             player2->position.y      = player1->position.y;
             player2->stateInput      = StateMachine_None;
@@ -191,7 +191,7 @@ bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
         player1->position.y = 0;
     }
 
-    if (player2->objectID == Player->objectID && player2->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
+    if (player2->classID == Player->classID && player2->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
         player2->state      = Player_State_None;
         player2->velocity.x = 0;
         player2->velocity.y = 0;
@@ -206,7 +206,7 @@ bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
 
     if (host->timer > 30 && camera->position.x == host->storedValue && camera->position.y == host->storedTimer) {
         EntityShield *shield = RSDK_GET_ENTITY(player1->playerID + Player->playerCount, Shield);
-        if (shield->objectID == Shield->objectID) {
+        if (shield->classID == Shield->classID) {
             player1->shield = SHIELD_NONE;
             destroyEntity(shield);
         }
@@ -230,7 +230,7 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
         player1->position.x     = camera->position.x;
         player1->position.y     = camera->position.y - 0x700000;
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->drawFX |= FX_SCALE;
             player2->scale.x    = 0x40;
             player2->scale.y    = 0x40;
@@ -249,7 +249,7 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
     if (host->timer > 0) {
         player1->velocity.x = 0xB000;
         player1->velocity.y = host->storedTimer;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->state      = Player_State_None;
             player2->velocity.x = 0xB000;
             player2->velocity.y = player1->velocity.y;

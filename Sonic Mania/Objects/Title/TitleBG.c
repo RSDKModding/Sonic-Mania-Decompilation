@@ -93,14 +93,14 @@ void TitleBG_StageLoad(void)
 
 void TitleBG_SetupFX(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawLayer[0] = 0;
 
-    TileLayer *cloudLayer        = RSDK.GetSceneLayer(2);
+    TileLayer *cloudLayer        = RSDK.GetTileLayer(2);
     cloudLayer->drawLayer[0]     = 0;
     cloudLayer->scanlineCallback = TitleBG_ScanlineCB_Clouds;
 
-    TileLayer *islandLayer        = RSDK.GetSceneLayer(3);
+    TileLayer *islandLayer        = RSDK.GetTileLayer(3);
     islandLayer->drawLayer[0]     = 1;
     islandLayer->scanlineCallback = TitleBG_ScanlineCB_Island;
 

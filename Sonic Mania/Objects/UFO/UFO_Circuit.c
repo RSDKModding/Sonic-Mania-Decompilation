@@ -62,29 +62,29 @@ void UFO_Circuit_Create(void *data)
         self->startPos.y = self->position.y;
         int32 id         = RSDK.GetEntityID(self);
 
-        Entity *next = (Entity *)RSDK.GetEntityByID(id + 1);
-        if (next->objectID == UFO_Circuit->objectID) {
+        Entity *next = (Entity *)RSDK.GetEntity(id + 1);
+        if (next->classID == UFO_Circuit->classID) {
             self->nextNode = next;
         }
         else {
             for (int32 e = id - 1; e > 0; --e) {
-                Entity *node = RSDK.GetEntityByID(e);
-                if (node->objectID != UFO_Circuit->objectID) {
-                    self->nextNode = RSDK.GetEntityByID(e + 1);
+                Entity *node = RSDK.GetEntity(e);
+                if (node->classID != UFO_Circuit->classID) {
+                    self->nextNode = RSDK.GetEntity(e + 1);
                     break;
                 }
             }
         }
 
-        Entity *prev = (Entity *)RSDK.GetEntityByID(id - 1);
-        if (prev->objectID == UFO_Circuit->objectID) {
+        Entity *prev = (Entity *)RSDK.GetEntity(id - 1);
+        if (prev->classID == UFO_Circuit->classID) {
             self->prevNode = prev;
         }
         else {
             for (int32 e = id + 1; e < TEMPENTITY_START; ++e) {
-                Entity *node = RSDK.GetEntityByID(e);
-                if (node->objectID != UFO_Circuit->objectID) {
-                    self->prevNode = RSDK.GetEntityByID(e - 1);
+                Entity *node = RSDK.GetEntity(e);
+                if (node->classID != UFO_Circuit->classID) {
+                    self->prevNode = RSDK.GetEntity(e - 1);
                     break;
                 }
             }

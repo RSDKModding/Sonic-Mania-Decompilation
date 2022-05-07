@@ -373,11 +373,11 @@ void Zone_StageLoad(void)
     Zone->hudDrawOrder   = 14;
 
     // Layer IDs
-    Zone->fgLow     = RSDK.GetSceneLayerID("FG Low");
-    Zone->fgHigh    = RSDK.GetSceneLayerID("FG High");
-    Zone->moveLayer = RSDK.GetSceneLayerID("Move");
+    Zone->fgLow     = RSDK.GetTileLayerID("FG Low");
+    Zone->fgHigh    = RSDK.GetTileLayerID("FG High");
+    Zone->moveLayer = RSDK.GetTileLayerID("Move");
 #if RETRO_USE_PLUS
-    Zone->scratchLayer = RSDK.GetSceneLayerID("Scratch");
+    Zone->scratchLayer = RSDK.GetTileLayerID("Scratch");
 #endif
 
     // Layer Masks
@@ -433,7 +433,7 @@ void Zone_StageLoad(void)
     // Destroy any zone entities placed in the scene
     foreach_all(Zone, entity) { destroyEntity(entity); }
     // ... and ensure we have a zone entity in the correct reserved slot
-    RSDK.ResetEntitySlot(SLOT_ZONE, Zone->objectID, NULL);
+    RSDK.ResetEntitySlot(SLOT_ZONE, Zone->classID, NULL);
 
     // Setup Competition options (or ensure they're not active if not in competition mode)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -593,14 +593,14 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
         else
             entity = RSDK_GET_ENTITY(globals->atlEntitySlot[e], );
 
-        if (storedEntity->objectID == Player->objectID) {
+        if (storedEntity->classID == Player->classID) {
             EntityPlayer *storedPlayer = (EntityPlayer *)storedEntity;
             EntityPlayer *player       = (EntityPlayer *)entity;
             player->shield             = storedPlayer->shield;
 
             if (player->shield && player->superState != SUPERSTATE_SUPER && player->invincibleTimer <= 0) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                RSDK.ResetEntityPtr(shield, Shield->objectID, player);
+                RSDK.ResetEntityPtr(shield, Shield->classID, player);
             }
         }
         else {
@@ -649,7 +649,7 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColor)
     zone->state     = Zone_State_Fadeout;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
-    zone->drawOrder = DRAWLAYER_COUNT - 1;
+    zone->drawOrder = DRAWGROUP_COUNT - 1;
 }
 
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor)
@@ -663,7 +663,7 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor)
     zone->state     = Zone_State_FadeIn;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
-    zone->drawOrder = DRAWLAYER_COUNT - 1;
+    zone->drawOrder = DRAWGROUP_COUNT - 1;
 }
 
 void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor)
@@ -677,7 +677,7 @@ void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor)
     zone->state     = Zone_State_Fadeout;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
-    zone->drawOrder = DRAWLAYER_COUNT - 1;
+    zone->drawOrder = DRAWGROUP_COUNT - 1;
     Music_FadeOut(0.025);
 }
 
@@ -692,7 +692,7 @@ void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor)
     zone->state     = Zone_State_Fadeout_Competition;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
-    zone->drawOrder = DRAWLAYER_COUNT - 1;
+    zone->drawOrder = DRAWGROUP_COUNT - 1;
     Music_FadeOut(0.025);
 }
 
@@ -719,14 +719,14 @@ void Zone_ReloadScene(int32 screen)
         entity->state     = Zone_State_Fadeout_Destroy;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
-        entity->drawOrder = DRAWLAYER_COUNT - 1;
+        entity->drawOrder = DRAWGROUP_COUNT - 1;
 #if RETRO_USE_PLUS
     }
     else {
         entity->state     = Zone_State_ReloadScene;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
-        entity->drawOrder = DRAWLAYER_COUNT - 1;
+        entity->drawOrder = DRAWGROUP_COUNT - 1;
     }
 #endif
 }
@@ -742,7 +742,7 @@ void Zone_StartTeleportAction(void)
     entity->state     = Zone_State_SwapPlayers;
     entity->stateDraw = Zone_Draw_Fade;
     entity->visible   = true;
-    entity->drawOrder = DRAWLAYER_COUNT - 1;
+    entity->drawOrder = DRAWGROUP_COUNT - 1;
 #if RETRO_USE_PLUS
     Zone->teleportActionActive = true;
 #endif
@@ -799,7 +799,7 @@ bool32 Zone_IsZoneLastAct(void)
     }
 
     if (RSDK.CheckStageFolder("SSZ2")) {
-        if (RSDK.GetSceneLayerID("Tower") < LAYER_COUNT)
+        if (RSDK.GetTileLayerID("Tower") < LAYER_COUNT)
             return true;
     }
     else if ((RSDK.CheckStageFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("MSZ") && Zone->actID == 1) || RSDK.CheckStageFolder("OOZ2")
@@ -1047,11 +1047,11 @@ void Zone_HandlePlayerSwap(void)
 
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
-            TileLayer *layer = RSDK.GetSceneLayer(l);
+            TileLayer *layer = RSDK.GetTileLayer(l);
             if (layer)
                 layerPlanes[l] = layer->drawLayer[Zone->preSwapPlayerIDs[p]];
             else
-                layerPlanes[l] = DRAWLAYER_COUNT;
+                layerPlanes[l] = DRAWGROUP_COUNT;
         }
 
         EntityCamera *camera = player->camera;
@@ -1124,7 +1124,7 @@ void Zone_HandlePlayerSwap(void)
 
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
-            TileLayer *layer                            = RSDK.GetSceneLayer(l);
+            TileLayer *layer                            = RSDK.GetTileLayer(l);
             layer->drawLayer[Zone->swappedPlayerIDs[p]] = layerPlanes[l];
         }
 
@@ -1195,7 +1195,7 @@ void Zone_HandlePlayerSwap(void)
             if (layer)
                 layerPlanes[l] = layer->drawLayer[preSwapPlayerIDs[p]];
             else
-                layerPlanes[l] = DRAWLAYER_COUNT;
+                layerPlanes[l] = DRAWGROUP_COUNT;
         }
 
         EntityCamera *camera = player->camera;

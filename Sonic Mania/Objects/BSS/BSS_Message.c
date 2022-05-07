@@ -75,7 +75,7 @@ void BSS_Message_StageLoad(void)
 {
     BSS_Message->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
 
-    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->objectID, intToVoid(BSS_MESSAGE_GETSPHERES));
+    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->classID, intToVoid(BSS_MESSAGE_GETSPHERES));
 }
 
 void BSS_Message_State_GetBS(void)

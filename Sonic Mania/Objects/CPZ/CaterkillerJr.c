@@ -16,7 +16,7 @@ void CaterkillerJr_Update(void)
     self->active = ACTIVE_NORMAL;
     StateMachine_Run(self->state);
 
-    if (self->objectID == CaterkillerJr->objectID && !RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+    if (self->classID == CaterkillerJr->classID && !RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position = self->startPos;
         CaterkillerJr_SetupPositions();
     }
@@ -232,7 +232,7 @@ void CaterkillerJr_State_Move(void)
             foreach_break;
         }
 
-        if (self->objectID != TYPE_BLANK) {
+        if (self->classID != TYPE_BLANK) {
             for (int32 i = 1; i < CATERKILLERJR_SEGMENT_COUNT; ++i) {
                 self->position.x = self->bodyPosition[i].x;
                 self->position.y = self->bodyPosition[i].y;

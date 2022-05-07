@@ -127,7 +127,7 @@ void PhantomEgg_CheckPlayerCollisions(void)
 {
     RSDK_THIS(PhantomEgg);
 
-    if (RSDK.GetEntityCount(PhantomShield->objectID, true) <= 0) {
+    if (RSDK.GetEntityCount(PhantomShield->classID, true) <= 0) {
         foreach_active(Player, player)
         {
             if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
@@ -143,7 +143,7 @@ void PhantomEgg_Hit(void)
 
     --self->health;
     if (!(self->health & 3)) {
-        int32 id = (-2 - RSDK.GetEntityCount(TMZCable->objectID, true)) & 3;
+        int32 id = (-2 - RSDK.GetEntityCount(TMZCable->classID, true)) & 3;
 
         foreach_active(TMZCable, cable)
         {
@@ -243,8 +243,8 @@ void PhantomEgg_SetupScanlineCB(void)
     {
         PhantomEgg->startScanline                          = ScreenInfo->centerY;
         PhantomEgg->endScanline                            = ScreenInfo->height;
-        RSDK.GetSceneLayer(Zone->fgLow)->scanlineCallback  = PhantomEgg_ScanlineCB;
-        RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = PhantomEgg_ScanlineCB;
+        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = PhantomEgg_ScanlineCB;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = PhantomEgg_ScanlineCB;
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
         phantomEgg->timer = 0;
         phantomEgg->state = PhantomEgg_State_Attack_HandleWarp;
@@ -404,7 +404,7 @@ void PhantomEgg_HandleReturnWarp(void)
 
 void PhantomEgg_ScanlineCB(ScanlineInfo *scanlines)
 {
-    TileLayer *fgLow = RSDK.GetSceneLayer(Zone->fgLow);
+    TileLayer *fgLow = RSDK.GetTileLayer(Zone->fgLow);
     RSDK.ProcessParallax(fgLow);
 
     int32 line = 0;
@@ -922,8 +922,8 @@ void PhantomEgg_State_Attack_WarpAway(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->height) {
-        RSDK.GetSceneLayer(Zone->fgLow)->scanlineCallback  = NULL;
-        RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = NULL;
+        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = NULL;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = NULL;
 
         self->timer   = 0;
         self->visible = 0;
@@ -945,8 +945,8 @@ void PhantomEgg_State_Attack_WarpReturn(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->height) {
-        RSDK.GetSceneLayer(Zone->fgLow)->scanlineCallback  = NULL;
-        RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = NULL;
+        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = NULL;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = NULL;
 
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
         self->timer = 0;
@@ -970,7 +970,7 @@ void PhantomEgg_State_Destroyed(void)
     self->position.x = self->targetPos.x + RSDK.Rand(-0x20000, 0x20000);
     self->position.y = self->targetPos.y + RSDK.Rand(-0x20000, 0x20000);
 
-    if (!RSDK.GetEntityCount(TMZCable->objectID, true)) {
+    if (!RSDK.GetEntityCount(TMZCable->classID, true)) {
         int id = 0;
         foreach_active(PhantomMissile, missile)
         {

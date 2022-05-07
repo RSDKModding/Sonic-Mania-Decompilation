@@ -75,7 +75,7 @@ void FBZ1Outro_StartCutscene(void)
                               FBZ1Outro_Cutscene_PrepareFBZ2, StateMachine_None);
 
 #if RETRO_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_DISABLED;
 #endif
 }
@@ -142,7 +142,7 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
         player1->state = Player_State_None;
         CutsceneSeq_LockPlayerControl(player1);
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_BALANCE1, &player2->animator, false, 0);
 
             player2->state = Player_State_None;
@@ -152,7 +152,7 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
 
     player1->nextGroundState = StateMachine_None;
     player1->nextAirState    = StateMachine_None;
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         player2->nextGroundState = StateMachine_None;
         player2->nextAirState    = StateMachine_None;
     }
@@ -162,7 +162,7 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
         player1->state    = Player_State_Air;
         player1->onGround = false;
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_HURT, &player2->animator, false, 0);
             player2->state    = Player_State_Air;
             player2->onGround = false;
@@ -222,7 +222,7 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
         self->grabbedPlayers |= 1;
     }
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         EntityCrane *craneP2 = FBZ1Outro->craneP2;
         craneP2->position.x  = player2->position.x;
         if (craneP2->state == Crane_State_RiseUp) {
@@ -246,7 +246,7 @@ bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host)
 
     FBZ1Outro_DispenseTrash();
 
-    return player1->onGround && (player2->objectID != Player->objectID || player2->onGround);
+    return player1->onGround && (player2->classID != Player->classID || player2->onGround);
 }
 bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host)
 {
@@ -261,7 +261,7 @@ bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host)
     }
 
     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
-    if (player2->objectID == Player->objectID)
+    if (player2->classID == Player->classID)
         RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
 
     if (camera->offset.x || ScreenInfo->position.x < Zone->cameraBoundsL[0] || host->timer < 30) {
@@ -275,7 +275,7 @@ bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host)
         RSDK.LoadScene();
 
         int32 id         = 0;
-        TileLayer *layer = RSDK.GetSceneLayer(1);
+        TileLayer *layer = RSDK.GetTileLayer(1);
         for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
             globals->parallaxOffset[id++] = layer->scrollInfo[i].scrollPos + layer->scrollInfo[i].parallaxFactor * ScreenInfo->position.x;
         }

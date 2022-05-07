@@ -55,14 +55,14 @@ void Constellation_StageLoad(void)
 {
     Constellation->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Constellation.bin", SCOPE_STAGE);
 
-    Constellation->background1 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
+    Constellation->background1 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 1"));
 }
 
 void Constellation_SetupInfo(void)
 {
     RSDK_THIS(Constellation);
 
-    TileLayer *background1 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
+    TileLayer *background1 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 1"));
 
     int32 id         = minVal(self->originPos.y >> 3, 20);
     self->scrollInfo = &background1->scrollInfo[id];

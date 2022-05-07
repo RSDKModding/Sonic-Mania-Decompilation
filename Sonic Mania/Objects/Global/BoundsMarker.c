@@ -52,7 +52,7 @@ void BoundsMarker_CheckBounds(EntityPlayer *player, EntityBoundsMarker *marker, 
 {
     uint16 playerID = RSDK.GetEntityID(player);
 
-    if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
+    if (Player_CheckValidState(player) || player->classID == DebugMode->classID) {
         if (abs(marker->position.x - player->position.x) < marker->width) {
             switch (marker->type) {
                 case BOUNDSMARKER_BOTTOM: // bottom
@@ -98,7 +98,7 @@ void BoundsMarker_CheckBounds(EntityPlayer *player, EntityBoundsMarker *marker, 
 }
 void BoundsMarker_CheckAllBounds(EntityPlayer *player, bool32 setPos)
 {
-    if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
+    if (Player_CheckValidState(player) || player->classID == DebugMode->classID) {
         foreach_all(BoundsMarker, entity) { BoundsMarker_CheckBounds(player, entity, setPos); }
     }
 }

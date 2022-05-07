@@ -783,7 +783,7 @@ void HotaruHiWatt_State_MiniLaser(void)
         }
     }
 
-    if (self->objectID == HotaruHiWatt->objectID)
+    if (self->classID == HotaruHiWatt->classID)
         HotaruHiWatt_CheckPlayerCollisions_MiniLaser();
 }
 
@@ -952,7 +952,7 @@ void HotaruHiWatt_State_SparkyOrb(void)
     EntityHotaruHiWatt *hotaruPair1 = self->parents[1];
     EntityHotaruHiWatt *hotaruPair2 = self->parents[2];
 
-    if (hotaruPair1->objectID == HotaruHiWatt->objectID && hotaruPair2->objectID == HotaruHiWatt->objectID) {
+    if (hotaruPair1->classID == HotaruHiWatt->classID && hotaruPair2->classID == HotaruHiWatt->classID) {
         int32 scale = (RSDK.Sin256(self->angle + 4 * Zone->timer) >> 7) + self->scale.x;
 
         self->position.x = hotaruPair1->position.x + scale * ((hotaruPair2->position.x - hotaruPair1->position.x) >> 8);

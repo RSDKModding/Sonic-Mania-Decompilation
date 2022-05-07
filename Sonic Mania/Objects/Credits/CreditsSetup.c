@@ -134,7 +134,7 @@ void CreditsSetup_LoadCreditsStrings(void)
             }
 
             EntityUICreditsText *text = RSDK_GET_ENTITY(i + 0x100, UICreditsText);
-            RSDK.ResetEntityPtr(text, UICreditsText->objectID, 0);
+            RSDK.ResetEntityPtr(text, UICreditsText->classID, 0);
             text->hasShape   = hasShape;
             text->position.x = 0x1000000;
             text->position.y = offset;

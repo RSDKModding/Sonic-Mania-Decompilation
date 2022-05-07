@@ -94,11 +94,11 @@ void LRZ1Setup_StageLoad(void)
 {
     LRZ1Setup->fadeTimer = 0;
 
-    LRZ1Setup->background1 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
-    LRZ1Setup->background2 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 2"));
+    LRZ1Setup->background1 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 1"));
+    LRZ1Setup->background2 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 2"));
 #if RETRO_USE_PLUS
-    LRZ1Setup->fgLow       = RSDK.GetSceneLayer(Zone->fgLow);
-    LRZ1Setup->fgHigh      = RSDK.GetSceneLayer(Zone->fgHigh);
+    LRZ1Setup->fgLow       = RSDK.GetTileLayer(Zone->fgLow);
+    LRZ1Setup->fgHigh      = RSDK.GetTileLayer(Zone->fgHigh);
 #endif
 
     RSDK.SetDrawLayerProperties(0, false, LRZ1Setup_DrawLayerCB);

@@ -34,7 +34,7 @@ void LevelSelect_StaticUpdate(void)
         LevelSelect->bgAniFrame &= 3;
         LevelSelect->bgAniDuration = LevelSelect->bgAniDurationTable[LevelSelect->bgAniFrame];
 
-        TileLayer *background = RSDK.GetSceneLayer(0);
+        TileLayer *background = RSDK.GetTileLayer(0);
         background->scrollPos = (background->scrollPos + 0x1000000) & 0x7FF0000;
     }
 }
@@ -70,7 +70,7 @@ void LevelSelect_StageLoad(void)
     LevelSelect->sfxMedalGot = RSDK.GetSfx("Special/MedalCaught.wav");
 #endif
 
-    RSDK.ResetEntitySlot(0, LevelSelect->objectID, NULL);
+    RSDK.ResetEntitySlot(0, LevelSelect->classID, NULL);
 
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
     UIText->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);

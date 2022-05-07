@@ -25,7 +25,7 @@ void Competition_Draw(void)
     RSDK_THIS(Competition);
 
 #if RETRO_USE_PLUS
-    if (RSDK_GET_ENTITY(SceneInfo->currentScreenID, Player)->objectID == Player->objectID) {
+    if (RSDK_GET_ENTITY(SceneInfo->currentScreenID, Player)->classID == Player->classID) {
 #endif
         if (!self->playerFinished[SceneInfo->currentScreenID]) {
             Vector2 drawPos;
@@ -89,7 +89,7 @@ void Competition_State_Manager(void)
         SceneInfo->timeEnabled = false;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->objectID == Player->objectID && player->state == Player_State_Die)
+            if (player->classID == Player->classID && player->state == Player_State_Die)
                 player->visible = true;
         }
         self->state = StateMachine_None;
@@ -108,7 +108,7 @@ void Competition_State_Manager(void)
                 for (int32 p = 0; p < Player->playerCount; ++p) {
                     if (!self->playerFinished[p]) {
                         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-                        if (player->objectID == Player->objectID)
+                        if (player->classID == Player->classID)
                             player->deathType = PLAYER_DEATH_DIE_USESFX;
                     }
                 }

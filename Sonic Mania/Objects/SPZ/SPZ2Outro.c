@@ -61,7 +61,7 @@ void SPZ2Outro_StartCutscene(void)
                               SPZ2Outro_Cutscene_FBZFlyAway, StateMachine_None);
 
 #if RETRO_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
 
@@ -107,7 +107,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         player1->left       = false;
         player1->right      = false;
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             player2->stateInput = StateMachine_None;
             player2->jumpPress  = false;
             player2->jumpHold   = false;
@@ -118,7 +118,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         }
     }
 
-    if (player2->objectID == Player->objectID) {
+    if (player2->classID == Player->classID) {
         player2->stateInput = StateMachine_None;
         player2->jumpPress  = false;
         player2->jumpHold   = false;
@@ -133,7 +133,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         player1->up        = true;
         player1->direction = player1->position.x > weatherTV->position.x;
 
-        if (player2->objectID == Player->objectID) {
+        if (player2->classID == Player->classID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOKUP, &player2->animator, true, 0);
             player2->state     = Player_State_LookUp;
             player2->up        = true;
@@ -169,7 +169,7 @@ bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
         player1->right = true;
 
         if (player2) {
-            if (player2->objectID == Player->objectID && !SPZ2Outro->ignoreP2) {
+            if (player2->classID == Player->classID && !SPZ2Outro->ignoreP2) {
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
                 player2->state      = Player_State_Ground;
                 player2->up         = false;
@@ -181,9 +181,9 @@ bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
     int32 posX = ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x100000;
     if (player1->position.x > posX) {
         player1->right = false;
-        if (player2->objectID != Player->objectID || SPZ2Outro->ignoreP2 || player2->position.x > posX) {
+        if (player2->classID != Player->classID || SPZ2Outro->ignoreP2 || player2->position.x > posX) {
             EntityShield *shield = RSDK_GET_ENTITY(player1->playerID + Player->playerCount, Shield);
-            if (shield->objectID == Shield->objectID) {
+            if (shield->classID == Shield->classID) {
                 player1->shield = SHIELD_NONE;
                 destroyEntity(shield);
             }
@@ -229,7 +229,7 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
         player1->scale.y         = 0x100;
         player1->drawFX          = FX_SCALE | FX_FLIP;
 
-        if (player2 && player2->objectID == Player->objectID && !SPZ2Outro->ignoreP2) {
+        if (player2 && player2->classID == Player->classID && !SPZ2Outro->ignoreP2) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->animator, true, 0);
             player2->drawOrder       = Zone->playerDrawLow;
             player2->state           = Player_State_None;
@@ -252,7 +252,7 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
 
     bool32 finished = true;
     for (int32 p = 0; p < 2; ++p) {
-        if (p != 1 || (players[p]->objectID == Player->objectID && !SPZ2Outro->ignoreP2)) {
+        if (p != 1 || (players[p]->classID == Player->classID && !SPZ2Outro->ignoreP2)) {
             EntityPlayer *player = players[p];
 
             if (player->position.x >= weatherTV->position.x && !player->velocity.y && player->animator.animationID == ANI_RUN) {
@@ -297,7 +297,7 @@ bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host)
     if (player1->animator.animationID == ANI_CLING)
         player1->position.y = tvFlyingBattery->position.y - 0x80000;
 
-    if (player2->objectID == Player->objectID && !SPZ2Outro->ignoreP2 && player2->animator.animationID == ANI_CLING)
+    if (player2->classID == Player->classID && !SPZ2Outro->ignoreP2 && player2->animator.animationID == ANI_CLING)
         player2->position.y = tvFlyingBattery->position.y - 0x80000;
 
     return false;

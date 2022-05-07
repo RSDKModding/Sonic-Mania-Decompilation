@@ -224,7 +224,7 @@ void ProcessAudioPlayback(void *data, uint8 *stream, int len)
                                         soundBuf           = &channel->samplePtr[channel->bufferPos * sfxList[channel->soundID].channelCount];
                                     }
                                     else {
-                                        MEM_ZEROP(channel);
+                                        MEM_ZERO(*channel);
                                         channel->soundID = -1;
                                         channel->state   = CHANNEL_NONE;
                                         flag             = true;
@@ -270,7 +270,7 @@ void ProcessAudioPlayback(void *data, uint8 *stream, int len)
                                 continue;
                             }
                             else {
-                                MEM_ZEROP(channel);
+                                MEM_ZERO(*channel);
                                 channel->soundID = -1;
                                 channel->state   = CHANNEL_NONE;
                                 break;

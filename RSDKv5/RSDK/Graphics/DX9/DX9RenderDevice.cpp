@@ -117,7 +117,7 @@ void RenderDevice::CopyFrameBuffer()
             int screenPitch = screens[s].pitch;
             int pitch       = (rect.Pitch >> 1) - screenPitch;
 
-            for (int32 y = 0; y < 240; ++y) {
+            for (int32 y = 0; y < SCREEN_YSIZE; ++y) {
                 int32 pixelCount = screenPitch >> 4;
                 for (int32 x = 0; x < pixelCount; ++x) {
                     pixels[0]  = frameBufferPtr[0];

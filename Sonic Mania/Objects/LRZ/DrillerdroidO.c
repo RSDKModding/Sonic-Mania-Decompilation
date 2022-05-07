@@ -1099,7 +1099,7 @@ void DrillerdroidO_EditorDraw(void)
                     for (int32 i = 0; i < 9; ++i) {
                         EntityLRZRockPile *pile = RSDK_GET_ENTITY(DrillerdroidO->childSlotStart++, LRZRockPile);
 
-                        if (pile && pile->objectID == LRZRockPile->objectID)
+                        if (pile && pile->classID == LRZRockPile->classID)
                             DrawHelpers_DrawArrow(self->position.x, self->position.y, pile->position.x, pile->position.y, 0xFFFF00, INK_NONE, 0xFF);
                     }
                 }

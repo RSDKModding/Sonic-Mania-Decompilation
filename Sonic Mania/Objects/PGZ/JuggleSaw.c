@@ -231,7 +231,7 @@ void JuggleSaw_StateCrab_Handle(void)
         if (++self->sawTimer >= self->sawDelay) {
             bool32 throwSaw = true;
 
-            if (!self->friends[0] || self->friends[0]->objectID != self->objectID) {
+            if (!self->friends[0] || self->friends[0]->classID != self->classID) {
                 self->friendCount = 0;
                 foreach_active(JuggleSaw, newFriend)
                 {
@@ -293,7 +293,7 @@ void JuggleSaw_StateCrab_ThrowSaw(void)
     if (self->animator.frameID == 3) {
         EntityJuggleSaw *reciever = self->friends[0];
 
-        if (reciever->objectID == JuggleSaw->objectID) {
+        if (reciever->classID == JuggleSaw->classID) {
             RSDK.PlaySfx(JuggleSaw->sfxThrow, false, 0xFF);
             reciever->hasSaw = JUGGLESAW_AWAITING_SAW;
             reciever->active = ACTIVE_NORMAL;
@@ -410,7 +410,7 @@ void JuggleSaw_StateSaw_Handle(void)
             }
         }
     }
-    else if (!self->friends[0] || self->friends[0]->objectID != JuggleSaw->objectID)
+    else if (!self->friends[0] || self->friends[0]->classID != JuggleSaw->classID)
         destroyEntity(self);
 }
 

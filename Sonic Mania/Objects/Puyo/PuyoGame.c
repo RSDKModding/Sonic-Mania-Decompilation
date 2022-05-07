@@ -21,8 +21,8 @@ void PuyoGame_Update(void)
     StateMachine_Run(self->state);
     RSDK.ProcessAnimation(&self->animator);
 
-    if ((ControllerInfo->keyStart.press || Unknown_pausePress) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
-        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+    if ((ControllerInfo->keyStart.press || Unknown_pausePress) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID) {
+        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
         RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->triggerPlayer = 1;
         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
         RSDK.SetGameMode(ENGINESTATE_FROZEN);
@@ -37,8 +37,8 @@ void PuyoGame_Update(void)
             if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
                 if (SceneInfo->state == ENGINESTATE_REGULAR) {
                     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                    if (!pauseMenu->objectID) {
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                    if (!pauseMenu->classID) {
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         pauseMenu->triggerPlayer = 1;
                         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
                         RSDK.SetGameMode(ENGINESTATE_FROZEN);
@@ -157,8 +157,8 @@ void PuyoGame_DestroyPuyoBeans(void)
 
 void PuyoGame_SetupGameState(void)
 {
-    int32 fgHighRebuild = RSDK.GetSceneLayerID("FG High Rebuild");
-    int32 fgHigh        = RSDK.GetSceneLayerID("FG High");
+    int32 fgHighRebuild = RSDK.GetTileLayerID("FG High Rebuild");
+    int32 fgHigh        = RSDK.GetTileLayerID("FG High");
     RSDK.CopyTileLayer(fgHigh, 0, 0, fgHighRebuild, 0, 0, 32, 16);
 
     EntityPuyoScore *scoreP1 = PuyoGame->score2[0];

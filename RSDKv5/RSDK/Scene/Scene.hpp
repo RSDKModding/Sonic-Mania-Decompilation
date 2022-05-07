@@ -117,7 +117,7 @@ extern TileLayer tileLayers[LAYER_COUNT];
 extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per direction
 
 #if RETRO_REV02
-extern bool32 hardResetFlag;
+extern bool32 forceHardReset;
 #endif
 extern char currentSceneFolder[0x10];
 extern char currentSceneID[0x10];
@@ -127,7 +127,7 @@ extern uint8 currentSceneFilter;
 
 extern SceneInfo sceneInfo;
 
-extern uint8 tilesetGFXData[TILESET_SIZE * 4];
+extern uint8 tilesetPixels[TILESET_SIZE * 4];
 
 void LoadScene();
 void LoadSceneFile();
@@ -140,19 +140,19 @@ void ProcessSceneTimer();
 
 void SetScene(const char *categoryName, const char *sceneName);
 inline void InitSceneLoad() {
-    bool32 stepOver = (sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER;
     sceneInfo.state = ENGINESTATE_LOAD;
-    if (stepOver)
+
+    if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
         sceneInfo.state |= ENGINESTATE_STEPOVER;
 }
 
 #if RETRO_REV02
-inline void SetHardResetFlag(bool32 set) { hardResetFlag = set; }
+inline void ForceHardReset(bool32 shouldHardReset) { forceHardReset = shouldHardReset; }
 #endif
 
 inline bool32 CheckValidStage()
 {
-    if (!(sceneInfo.activeCategory < sceneInfo.categoryCount))
+    if (sceneInfo.activeCategory >= sceneInfo.categoryCount)
         return false;
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
@@ -164,7 +164,7 @@ inline bool32 CheckSceneFolder(const char *folderName)
     return strcmp(folderName, sceneInfo.listData[sceneInfo.listPos].folder) == 0;
 }
 
-inline uint16 GetSceneLayerID(const char *name)
+inline uint16 GetTileLayerID(const char *name)
 {
     RETRO_HASH(hash);
     GEN_HASH(name, hash);
@@ -176,18 +176,13 @@ inline uint16 GetSceneLayerID(const char *name)
     return -1;
 }
 
-inline TileLayer *GetSceneLayer(uint16 layerID)
-{
-    if (layerID < LAYER_COUNT)
-        return &tileLayers[layerID];
-    else
-        return NULL;
-}
+inline TileLayer *GetTileLayer(uint16 layerID) { return layerID < LAYER_COUNT ? &tileLayers[layerID] : NULL; }
 
 inline void GetLayerSize(uint16 layerID, Vector2 *size, bool32 pixelSize)
 {
     if (layerID < LAYER_COUNT && size) {
         TileLayer *layer = &tileLayers[layerID];
+
         if (pixelSize == 1) {
             size->x = TILE_SIZE * layer->xsize;
             size->y = TILE_SIZE * layer->ysize;
@@ -203,20 +198,19 @@ inline uint16 GetTileInfo(uint16 layerID, int32 tileX, int32 tileY)
 {
     if (layerID < LAYER_COUNT) {
         TileLayer *layer = &tileLayers[layerID];
-        if (tileX >= 0 && tileX < layer->xsize && tileY >= 0 && tileY < layer->ysize) {
+        if (tileX >= 0 && tileX < layer->xsize && tileY >= 0 && tileY < layer->ysize)
             return layer->layout[tileX + (tileY << layer->widthShift)];
-        }
     }
-    return 0xFFFF;
+
+    return (uint16)-1;
 }
 
 inline void SetTileInfo(uint16 layerID, int32 tileX, int32 tileY, uint16 tile)
 {
     if (layerID < LAYER_COUNT) {
-        TileLayer* layer = &tileLayers[layerID];
-        if (tileX >= 0 && tileX < layer->xsize && tileY >= 0 && tileY < layer->ysize) {
+        TileLayer *layer = &tileLayers[layerID];
+        if (tileX >= 0 && tileX < layer->xsize && tileY >= 0 && tileY < layer->ysize)
             layer->layout[tileX + (tileY << layer->widthShift)] = tile;
-        }
     }
 }
 
@@ -250,22 +244,25 @@ inline void CopyTile(uint16 dest, uint16 src, uint16 count)
 {
     if (dest > TILE_COUNT)
         dest = TILE_COUNT - 1;
+
     if (src > TILE_COUNT)
         src = TILE_COUNT - 1;
+
     if (count > TILE_COUNT)
         count = TILE_COUNT - 1;
 
-    uint8 *destPtr = &tilesetGFXData[TILE_DATASIZE * dest];
-    uint8 *srcPtr  = &tilesetGFXData[TILE_DATASIZE * src];
+    uint8 *destPtr = &tilesetPixels[TILE_DATASIZE * dest];
+    uint8 *srcPtr  = &tilesetPixels[TILE_DATASIZE * src];
 
-    uint8 *destPtrX = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_X)];
-    uint8 *srcPtrX  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_X)];
+    uint8 *destPtrX = &tilesetPixels[(TILE_DATASIZE * dest) + (0x40000 * FLIP_X)];
+    uint8 *srcPtrX  = &tilesetPixels[(TILE_DATASIZE * src) + (0x40000 * FLIP_X)];
 
-    uint8 *destPtrY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_Y)];
-    uint8 *srcPtrY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_Y)];
+    uint8 *destPtrY = &tilesetPixels[(TILE_DATASIZE * dest) + (0x40000 * FLIP_Y)];
+    uint8 *srcPtrY  = &tilesetPixels[(TILE_DATASIZE * src) + (0x40000 * FLIP_Y)];
 
-    uint8 *destPtrXY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_XY)];
-    uint8 *srcPtrXY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_XY)];
+    uint8 *destPtrXY = &tilesetPixels[(TILE_DATASIZE * dest) + (0x40000 * FLIP_XY)];
+    uint8 *srcPtrXY  = &tilesetPixels[(TILE_DATASIZE * src) + (0x40000 * FLIP_XY)];
+
     while (count--) {
         int32 pxCnt = TILE_DATASIZE;
         while (pxCnt--) {

@@ -91,8 +91,8 @@ void Tuesday_Create(void *data)
 
             int32 slotID         = RSDK.GetEntityID(self->parent);
             EntityTuesday *child = RSDK_GET_ENTITY(slotID, Tuesday);
-            while (child->objectID == Tuesday->objectID || child->objectID == Platform->objectID) {
-                if (child != self && child->objectID == Tuesday->objectID) {
+            while (child->classID == Tuesday->classID || child->classID == Platform->classID) {
+                if (child != self && child->classID == Tuesday->classID) {
                     ++self->linkCount;
 
                     if (self->type == TUESDAY_GONDOLA) {
@@ -451,7 +451,7 @@ void Tuesday_State_Controller(void)
         EntityTuesday *tuesday = RSDK_GET_ENTITY(slotID, Tuesday);
         int32 count            = self->linkCount;
         for (int32 i = 0; i < count;) {
-            if (tuesday->objectID == Tuesday->objectID) {
+            if (tuesday->classID == Tuesday->classID) {
                 ++i;
                 tuesday->nextShockFlags = 0;
             }
@@ -492,7 +492,7 @@ void Tuesday_State_Node(void)
     RSDK_THIS(Tuesday);
 
     EntityPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Platform);
-    if (platform->objectID == Platform->objectID && platform->childCount > 0) {
+    if (platform->classID == Platform->classID && platform->childCount > 0) {
         self->position.x -= platform->collisionOffset.x;
         self->position.y -= platform->collisionOffset.y;
         self->drawPos.x += platform->collisionOffset.x;

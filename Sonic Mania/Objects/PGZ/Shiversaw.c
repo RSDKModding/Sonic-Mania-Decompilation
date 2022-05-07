@@ -484,7 +484,7 @@ void Shiversaw_State_Entry(void)
         }
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (player1->objectID == Player->objectID && player1->position.x < self->position.x - 0x380000) {
+        if (player1->classID == Player->classID && player1->position.x < self->position.x - 0x380000) {
             if (player1->position.y > self->position.y + 0x400000 && player1->onGround) {
                 self->timer                 = 0;
                 Zone->playerBoundActiveR[0] = true;
@@ -512,7 +512,7 @@ void Shiversaw_State_Entry(void)
                 player1->up              = true;
 
                 EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-                if (player2->objectID == Player->objectID) {
+                if (player2->classID == Player->classID) {
                     if (Player_CheckValidState(player2)) {
                         player2->direction       = FLIP_X;
                         player2->groundVel       = 0;
@@ -544,7 +544,7 @@ void Shiversaw_State_Entry(void)
                     player1->up         = true;
 
                     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-                    if (player2->objectID == Player->objectID) {
+                    if (player2->classID == Player->classID) {
                         if (Player_CheckValidState(player2)) {
                             player2->stateInput = StateMachine_None;
                             player2->jumpPress  = false;

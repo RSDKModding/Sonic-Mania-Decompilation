@@ -86,16 +86,16 @@ int32 RSDK::APIFunctionTableCount;
 #endif
 
 enum FunctionTableIDs {
-    FunctionTable_InitGameOptions,
+    FunctionTable_RegisterGlobalVariables,
     FunctionTable_RegisterObject,
 #if RETRO_REV02
-    FunctionTable_RegisterObjectContainer,
+    FunctionTable_RegisterStaticVariables,
 #endif
     FunctionTable_GetActiveEntities,
     FunctionTable_GetEntities,
     FunctionTable_BreakForeachLoop,
     FunctionTable_SetEditableVar,
-    FunctionTable_GetObjectByID,
+    FunctionTable_GetEntity,
     FunctionTable_GetEntityID,
     FunctionTable_GetEntityCount,
     FunctionTable_GetDrawListRef,
@@ -472,16 +472,17 @@ void RSDK::SetupFunctionTables()
 #endif
 
     // Function Table
-    addToRSDKFunctionTable(FunctionTable_InitGameOptions, RegisterGlobalVariables);
+    addToRSDKFunctionTable(FunctionTable_RegisterGlobalVariables, RegisterGlobalVariables);
     addToRSDKFunctionTable(FunctionTable_RegisterObject, RegisterObject);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_RegisterObjectContainer, RegisterObjectContainer);
+    addToRSDKFunctionTable(FunctionTable_RegisterStaticVariables, RegisterStaticVariables);
 #endif
+
     addToRSDKFunctionTable(FunctionTable_GetActiveEntities, GetActiveEntities);
     addToRSDKFunctionTable(FunctionTable_GetEntities, GetEntities);
     addToRSDKFunctionTable(FunctionTable_BreakForeachLoop, BreakForeachLoop);
     addToRSDKFunctionTable(FunctionTable_SetEditableVar, SetEditableVar);
-    addToRSDKFunctionTable(FunctionTable_GetObjectByID, GetObjectByID);
+    addToRSDKFunctionTable(FunctionTable_GetEntity, GetEntity);
     addToRSDKFunctionTable(FunctionTable_GetEntityID, GetEntityID);
     addToRSDKFunctionTable(FunctionTable_GetEntityCount, GetEntityCount);
     addToRSDKFunctionTable(FunctionTable_GetDrawListRef, GetDrawListRef);
@@ -495,38 +496,43 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_AddDrawListRef, AddDrawListRef);
     addToRSDKFunctionTable(FunctionTable_SwapDrawLayers, SwapDrawListEntries);
     addToRSDKFunctionTable(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
+
     addToRSDKFunctionTable(FunctionTable_SetScene, SetScene);
     addToRSDKFunctionTable(FunctionTable_SetGameMode, SetEngineState);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_SetHardResetFlag, SetHardResetFlag);
+    addToRSDKFunctionTable(FunctionTable_SetHardResetFlag, ForceHardReset);
 #endif
     addToRSDKFunctionTable(FunctionTable_CheckValidScene, CheckValidStage);
     addToRSDKFunctionTable(FunctionTable_CheckSceneFolder, CheckSceneFolder);
     addToRSDKFunctionTable(FunctionTable_InitSceneLoad, InitSceneLoad);
     addToRSDKFunctionTable(FunctionTable_GetObjectByName, GetObjectByName);
+
     addToRSDKFunctionTable(FunctionTable_ClearCameras, ClearCameras);
     addToRSDKFunctionTable(FunctionTable_AddCamera, AddCamera);
+
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_GetAPIFunction, GetAPIFunction);
 #endif
+
     addToRSDKFunctionTable(FunctionTable_GetVideoSetting, GetVideoSetting);
     addToRSDKFunctionTable(FunctionTable_SetVideoSetting, SetVideoSetting);
-    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateGameWindow);
-    addToRSDKFunctionTable(FunctionTable_Sin1024, sin1024);
-    addToRSDKFunctionTable(FunctionTable_Cos1024, cos1024);
-    addToRSDKFunctionTable(FunctionTable_ATan1024, tan1024);
-    addToRSDKFunctionTable(FunctionTable_ASin1024, aSin1024);
-    addToRSDKFunctionTable(FunctionTable_ACos1024, aCos1024);
-    addToRSDKFunctionTable(FunctionTable_Sin512, sin512);
-    addToRSDKFunctionTable(FunctionTable_Cos512, cos512);
-    addToRSDKFunctionTable(FunctionTable_ATan512, tan512);
-    addToRSDKFunctionTable(FunctionTable_ASin512, aSin512);
-    addToRSDKFunctionTable(FunctionTable_ACos512, aCos512);
-    addToRSDKFunctionTable(FunctionTable_Sin256, sin256);
-    addToRSDKFunctionTable(FunctionTable_Cos256, cos256);
-    addToRSDKFunctionTable(FunctionTable_ATan256, tan256);
-    addToRSDKFunctionTable(FunctionTable_ASin256, aSin256);
-    addToRSDKFunctionTable(FunctionTable_ACos256, aCos256);
+    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateGameWindow)
+
+    addToRSDKFunctionTable(FunctionTable_Sin1024, Sin1024);
+    addToRSDKFunctionTable(FunctionTable_Cos1024, Cos1024);
+    addToRSDKFunctionTable(FunctionTable_ATan1024, Tan1024);
+    addToRSDKFunctionTable(FunctionTable_ASin1024, ASin1024);
+    addToRSDKFunctionTable(FunctionTable_ACos1024, ACos1024);
+    addToRSDKFunctionTable(FunctionTable_Sin512, Sin512);
+    addToRSDKFunctionTable(FunctionTable_Cos512, Cos512);
+    addToRSDKFunctionTable(FunctionTable_ATan512, Tan512);
+    addToRSDKFunctionTable(FunctionTable_ASin512, ASin512);
+    addToRSDKFunctionTable(FunctionTable_ACos512, ACos512);
+    addToRSDKFunctionTable(FunctionTable_Sin256, Sin256);
+    addToRSDKFunctionTable(FunctionTable_Cos256, Cos256);
+    addToRSDKFunctionTable(FunctionTable_ATan256, Tan256);
+    addToRSDKFunctionTable(FunctionTable_ASin256, ASin256);
+    addToRSDKFunctionTable(FunctionTable_ACos256, ACos256);
     addToRSDKFunctionTable(FunctionTable_Rand, GetRandomValue);
     addToRSDKFunctionTable(FunctionTable_RandSeeded, GetSeededRandomValue);
     addToRSDKFunctionTable(FunctionTable_SetRandSeed, SetRandSeed);
@@ -611,8 +617,8 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_GetFrameID, GetFrameID);
     addToRSDKFunctionTable(FunctionTable_GetStringWidth, GetStringWidth);
     addToRSDKFunctionTable(FunctionTable_ProcessAnimation, ProcessAnimation);
-    addToRSDKFunctionTable(FunctionTable_GetSceneLayer, GetSceneLayer);
-    addToRSDKFunctionTable(FunctionTable_GetSceneLayerID, GetSceneLayerID);
+    addToRSDKFunctionTable(FunctionTable_GetSceneLayer, GetTileLayer);
+    addToRSDKFunctionTable(FunctionTable_GetSceneLayerID, GetTileLayerID);
     addToRSDKFunctionTable(FunctionTable_GetLayerSize, GetLayerSize);
     addToRSDKFunctionTable(FunctionTable_GetTileInfo, GetTileInfo);
     addToRSDKFunctionTable(FunctionTable_SetTileInfo, SetTileInfo);

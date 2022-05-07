@@ -69,8 +69,8 @@ void SPZ1Setup_StageLoad(void)
 {
     SPZ1Setup->aniTiles = RSDK.LoadSpriteSheet("SPZ1/AniTiles.gif", SCOPE_STAGE);
 
-    SPZ1Setup->cityBGLow  = RSDK.GetSceneLayer(0); // Background 1
-    SPZ1Setup->cityBGHigh = RSDK.GetSceneLayer(1); // Background 2
+    SPZ1Setup->cityBGLow  = RSDK.GetTileLayer(0); // Background 1
+    SPZ1Setup->cityBGHigh = RSDK.GetTileLayer(1); // Background 2
 
     int32 pos = 0;
     for (int32 i = 0; i < 0x200; ++i) {

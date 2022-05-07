@@ -63,7 +63,7 @@ void CPZSetup_StageLoad(void)
     CPZSetup->chemLiquidPalIndex2 = 1;
     CPZSetup->chemLiquidPalIndex3 = 2;
 
-    CPZSetup->background = RSDK.GetSceneLayer(0);
+    CPZSetup->background = RSDK.GetTileLayer(0);
     for (int32 i = 0; i < 0x400; ++i) {
         CPZSetup->background->deformationData[i] = CPZSetup->deformation[i & 0x3F];
     }
@@ -124,7 +124,7 @@ void CPZSetup_StageLoad(void)
             BGSwitch->layerIDs[2] = CPZ_BG_CPZ1;
             BGSwitch->layerIDs[3] = CPZ_BG_CPZ1;
 
-            TileLayer *backgroundAct1 = RSDK.GetSceneLayer(3);
+            TileLayer *backgroundAct1 = RSDK.GetTileLayer(3);
 
             backgroundAct1->scrollPos += -0x118000 * backgroundAct1->parallaxFactor;
             for (int32 i = 0; i < backgroundAct1->scrollInfoCount; ++i)
@@ -161,23 +161,23 @@ void CPZSetup_StageLoad(void)
 
 void CPZSetup_BGSwitchCB_Act2BG(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 
 void CPZSetup_BGSwitchCB_Act1BG(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = 0;
 }
 
 void CPZSetup_StageFinishCB_Act1(void)
 {
-    RSDK.GetSceneLayer(0);
+    RSDK.GetTileLayer(0);
     Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
 }

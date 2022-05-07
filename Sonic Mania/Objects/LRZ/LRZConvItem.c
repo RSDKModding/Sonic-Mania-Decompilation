@@ -87,11 +87,11 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
         hitbox.right  = 0;
         hitbox.bottom = 0;
 
-        if (entity->objectID == LRZConvItem->objectID)
+        if (entity->classID == LRZConvItem->classID)
             hitbox = LRZConvItem->hitboxRock;
-        else if (entity->objectID == ItemBox->objectID)
+        else if (entity->classID == ItemBox->classID)
             hitbox = ItemBox->hitboxItemBox;
-        else if (entity->objectID == Iwamodoki->objectID)
+        else if (entity->classID == Iwamodoki->classID)
             hitbox = Iwamodoki->hitboxBadnik;
 
         // Handle Object-Based Conveyor interactions
@@ -208,7 +208,7 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
                 entity->velocity.x >>= 1;
             }
 
-            if (entity->objectID != LRZConvItem->objectID || entity->type) {
+            if (entity->classID != LRZConvItem->classID || entity->type) {
                 entity->velocity.y = 0x4000;
             }
             else {

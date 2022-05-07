@@ -685,7 +685,7 @@ void AmoebaDroid_State_SmallBlob(void)
         }
     }
 
-    if (self->objectID == AmoebaDroid->objectID) {
+    if (self->classID == AmoebaDroid->classID) {
         if (self->interaction && self->drawOrder == Zone->objectDrawLow)
             AmoebaDroid_CheckPlayerHit();
 
