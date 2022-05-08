@@ -324,7 +324,7 @@ void CPZBoss_State_HandleMatch_Player(void)
             if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == TYPE_BLANK) {
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                 RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
-                RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                RSDK.SetEngineState(ENGINESTATE_FROZEN);
             }
         }
 
@@ -341,7 +341,7 @@ void CPZBoss_State_HandleMatch_Player(void)
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                             pauseMenu->triggerPlayer = 1;
                             RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
-                            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                            RSDK.SetEngineState(ENGINESTATE_FROZEN);
                         }
                     }
                     break;

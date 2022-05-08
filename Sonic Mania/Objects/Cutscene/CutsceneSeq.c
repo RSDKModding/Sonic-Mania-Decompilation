@@ -133,7 +133,7 @@ void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCa
             globals->suppressTitlecard = false;
             globals->suppressAutoMusic = false;
             globals->enableIntro       = false;
-            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+            RSDK.SetEngineState(ENGINESTATE_FROZEN);
             Zone_StartFadeOut(20, 0x000000);
             Music_FadeOut(0.03);
         }

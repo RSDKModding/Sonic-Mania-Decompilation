@@ -446,7 +446,7 @@ void ProcessEngine()
                 sceneInfo.state = engine.prevEngineMode;
 
             currentScreen = &screens[0];
-            int yOff      = RSDK::DevOutput_GetStringYOffset(outputString);
+            int yOff      = RSDK::DevOutput_GetStringYSize(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
             DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
@@ -458,7 +458,7 @@ void ProcessEngine()
                 RenderDevice::isRunning = false;
 
             currentScreen = &screens[0];
-            int yOff = RSDK::DevOutput_GetStringYOffset(outputString);
+            int yOff = RSDK::DevOutput_GetStringYSize(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
             DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;

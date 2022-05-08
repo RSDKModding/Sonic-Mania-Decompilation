@@ -376,7 +376,7 @@ void TitleCard_State_SetupBGElements(void)
     Zone_ApplyWorldBounds();
 
     if (!globals->atlEnabled && !globals->suppressTitlecard)
-        RSDK.SetGameMode(ENGINESTATE_PAUSED);
+        RSDK.SetEngineState(ENGINESTATE_PAUSED);
 
     self->timer += 24;
     if (self->timer >= 512) {
@@ -493,7 +493,7 @@ void TitleCard_State_ShowingTitle(void)
         self->actionTimer = 0;
         self->state       = TitleCard_State_SlideAway;
         self->stateDraw   = TitleCard_Draw_SlideAway;
-        RSDK.SetGameMode(ENGINESTATE_REGULAR);
+        RSDK.SetEngineState(ENGINESTATE_REGULAR);
         StateMachine_Run(TitleCard->finishedCB);
     }
     else {
@@ -632,7 +632,7 @@ void TitleCard_State_Supressed(void)
     RSDK_THIS(TitleCard);
 
     TitleCard_HandleCamera();
-    RSDK.SetGameMode(ENGINESTATE_REGULAR);
+    RSDK.SetEngineState(ENGINESTATE_REGULAR);
 
     globals->atlEnabled = false;
     if (globals->gameMode == MODE_TIMEATTACK || globals->enableIntro)

@@ -6,10 +6,12 @@ namespace RSDK
 
 // Object Class
 struct ObjectDefaultObject : Object {
+    // Nothin'
 };
 
 // Entity Class
 struct EntityDefaultObject : Entity {
+    // Nothin'
 };
 
 // Object Entity
@@ -30,4 +32,4 @@ void DefaultObject_Serialize();
 
 } // namespace RSDK
 
-#endif //!OBJ_DEFAULTOBJECT_H
+#endif //! OBJ_DEFAULTOBJECT_H

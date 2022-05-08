@@ -730,7 +730,7 @@ void HUD_State_GoOffScreen(void)
             }
             else {
                 RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(true));
-                RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                RSDK.SetEngineState(ENGINESTATE_FROZEN);
                 SceneInfo->timeEnabled = false;
                 gameOver->playerID     = self->screenID;
             }

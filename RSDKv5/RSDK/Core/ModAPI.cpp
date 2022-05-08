@@ -43,7 +43,7 @@ std::vector<int32> waitList;
 
 void *RSDK::modFunctionTable[RSDK::ModTable_Max];
 
-#define addToModFunctionTable(id, func) modFunctionTable[id] = (void *)func;
+#define ADD_MOD_FUNCTION(id, func) modFunctionTable[id] = (void *)func;
 
 // https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
 std::string trim(const std::string &s)
@@ -70,51 +70,51 @@ void RSDK::InitModAPI()
     // ============================
 
     // Registration & Core
-    addToModFunctionTable(ModTable_GetGlobals, GetGlobals);
-    addToModFunctionTable(ModTable_RegisterGlobals, ModRegisterGlobalVariables);
-    addToModFunctionTable(ModTable_RegisterObject, ModRegisterObject);
-    addToModFunctionTable(ModTable_RegisterObjectSTD, ModRegisterObject_STD);
-    addToModFunctionTable(ModTable_Super, Super);
+    ADD_MOD_FUNCTION(ModTable_GetGlobals, GetGlobals);
+    ADD_MOD_FUNCTION(ModTable_RegisterGlobals, ModRegisterGlobalVariables);
+    ADD_MOD_FUNCTION(ModTable_RegisterObject, ModRegisterObject);
+    ADD_MOD_FUNCTION(ModTable_RegisterObjectSTD, ModRegisterObject_STD);
+    ADD_MOD_FUNCTION(ModTable_Super, Super);
 
     // Mod Info
-    addToModFunctionTable(ModTable_LoadModInfo, LoadModInfo);
-    addToModFunctionTable(ModTable_GetModPath, GetModPath);
-    addToModFunctionTable(ModTable_GetModCount, GetModCount);
-    addToModFunctionTable(ModTable_GetModIDByIndex, GetModIDByIndex);
-    addToModFunctionTable(ModTable_ForeachModID, ForeachModID);
+    ADD_MOD_FUNCTION(ModTable_LoadModInfo, LoadModInfo);
+    ADD_MOD_FUNCTION(ModTable_GetModPath, GetModPath);
+    ADD_MOD_FUNCTION(ModTable_GetModCount, GetModCount);
+    ADD_MOD_FUNCTION(ModTable_GetModIDByIndex, GetModIDByIndex);
+    ADD_MOD_FUNCTION(ModTable_ForeachModID, ForeachModID);
 
     // Mod Callbacks & Public Functions
-    addToModFunctionTable(ModTable_AddModCallback, AddModCallback);
-    addToModFunctionTable(ModTable_AddModCallbackSTD, AddModCallback_STD);
-    addToModFunctionTable(ModTable_AddPublicFunction, AddPublicFunction);
-    addToModFunctionTable(ModTable_GetPublicFunction, GetPublicFunction);
+    ADD_MOD_FUNCTION(ModTable_AddModCallback, AddModCallback);
+    ADD_MOD_FUNCTION(ModTable_AddModCallbackSTD, AddModCallback_STD);
+    ADD_MOD_FUNCTION(ModTable_AddPublicFunction, AddPublicFunction);
+    ADD_MOD_FUNCTION(ModTable_GetPublicFunction, GetPublicFunction);
 
     // Mod Settings
-    addToModFunctionTable(ModTable_GetSettingsBool, GetSettingsBool);
-    addToModFunctionTable(ModTable_GetSettingsInt, GetSettingsInteger);
-    addToModFunctionTable(ModTable_GetSettingsString, GetSettingsString);
-    addToModFunctionTable(ModTable_SetSettingsBool, SetSettingsBool);
-    addToModFunctionTable(ModTable_SetSettingsInt, SetSettingsInteger);
-    addToModFunctionTable(ModTable_SetSettingsString, SetSettingsString);
-    addToModFunctionTable(ModTable_SaveSettings, SaveSettings);
+    ADD_MOD_FUNCTION(ModTable_GetSettingsBool, GetSettingsBool);
+    ADD_MOD_FUNCTION(ModTable_GetSettingsInt, GetSettingsInteger);
+    ADD_MOD_FUNCTION(ModTable_GetSettingsString, GetSettingsString);
+    ADD_MOD_FUNCTION(ModTable_SetSettingsBool, SetSettingsBool);
+    ADD_MOD_FUNCTION(ModTable_SetSettingsInt, SetSettingsInteger);
+    ADD_MOD_FUNCTION(ModTable_SetSettingsString, SetSettingsString);
+    ADD_MOD_FUNCTION(ModTable_SaveSettings, SaveSettings);
 
     // Config
-    addToModFunctionTable(ModTable_GetConfigBool, GetConfigBool);
-    addToModFunctionTable(ModTable_GetConfigInt, GetConfigInteger);
-    addToModFunctionTable(ModTable_GetConfigString, GetConfigString);
-    addToModFunctionTable(ModTable_ForeachConfig, ForeachConfig);
-    addToModFunctionTable(ModTable_ForeachConfigCategory, ForeachConfigCategory);
+    ADD_MOD_FUNCTION(ModTable_GetConfigBool, GetConfigBool);
+    ADD_MOD_FUNCTION(ModTable_GetConfigInt, GetConfigInteger);
+    ADD_MOD_FUNCTION(ModTable_GetConfigString, GetConfigString);
+    ADD_MOD_FUNCTION(ModTable_ForeachConfig, ForeachConfig);
+    ADD_MOD_FUNCTION(ModTable_ForeachConfigCategory, ForeachConfigCategory);
 
-    addToModFunctionTable(ModTable_GetObject, GetObject);
+    ADD_MOD_FUNCTION(ModTable_GetObject, GetObject);
 
     // Achievements
-    addToModFunctionTable(ModTable_RegisterAchievement, RegisterAchievement);
-    addToModFunctionTable(ModTable_GetAchievementInfo, GetAchievementInfo);
-    addToModFunctionTable(ModTable_GetAchievementIndexByID, GetAchievementIndexByID);
-    addToModFunctionTable(ModTable_GetAchievementCount, GetAchievementCount);
+    ADD_MOD_FUNCTION(ModTable_RegisterAchievement, RegisterAchievement);
+    ADD_MOD_FUNCTION(ModTable_GetAchievementInfo, GetAchievementInfo);
+    ADD_MOD_FUNCTION(ModTable_GetAchievementIndexByID, GetAchievementIndexByID);
+    ADD_MOD_FUNCTION(ModTable_GetAchievementCount, GetAchievementCount);
 
     // Shaders
-    addToModFunctionTable(ModTable_LoadShader, RenderDevice::LoadShader);
+    ADD_MOD_FUNCTION(ModTable_LoadShader, RenderDevice::LoadShader);
 
     LoadMods();
 }

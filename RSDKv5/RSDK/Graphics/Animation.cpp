@@ -2,13 +2,13 @@
 
 RSDK::SpriteAnimation RSDK::spriteAnimationList[SPRFILE_COUNT];
 
-uint16 RSDK::LoadSpriteAnimation(const char *filename, int32 scope)
+uint16 RSDK::LoadSpriteAnimation(const char *filePath, int32 scope)
 {
-    char buffer[0x100];
-    sprintf(buffer, "Data/Sprites/%s", filename);
+    char fullFilePath[0x100];
+    sprintf(fullFilePath, "Data/Sprites/%s", filePath);
 
     RETRO_HASH(hash);
-    GEN_HASH(filename, hash);
+    GEN_HASH(filePath, hash);
 
     for (int32 i = 0; i < SPRFILE_COUNT; ++i) {
         if (HASH_MATCH(spriteAnimationList[i].hash, hash))
@@ -30,7 +30,7 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, int32 scope)
 
     FileInfo info;
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
         if (sig != RSDK_SIGNATURE_SPR) {
@@ -47,8 +47,8 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, int32 scope)
 
         uint8 sheetCount = ReadInt8(&info);
         for (int32 s = 0; s < sheetCount; ++s) {
-            ReadString(&info, buffer);
-            sheetIDs[s] = LoadSpriteSheet(buffer, scope);
+            ReadString(&info, fullFilePath);
+            sheetIDs[s] = LoadSpriteSheet(fullFilePath, scope);
         }
 
         uint8 hitboxCount = ReadInt8(&info);

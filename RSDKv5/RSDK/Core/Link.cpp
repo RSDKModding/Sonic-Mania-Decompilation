@@ -59,7 +59,7 @@ enum UserdataTableIDs {
     APITable_LoadUserFile,
     APITable_SaveUserFile,
     APITable_DeleteUserFile,
-    APITable_AddUserDBEntry,
+    APITable_InitUserDB,
     APITable_OpenUserDB,
     APITable_SaveUserDB,
     APITable_ClearUserDB,
@@ -73,11 +73,11 @@ enum UserdataTableIDs {
     APITable_AddUserDBRow,
     APITable_SetUserDBValue,
     APITable_GetUserDBValue,
-    APITable_GetEntryUUID,
+    APITable_GetRowUUID,
     APITable_GetUserDBRowByID,
     APITable_GetUserDBRowCreationTime,
     APITable_RemoveDBRow,
-    APITable_RemoveAllDBEntries,
+    APITable_RemoveAllDBRows,
     APITable_Count,
 };
 #else
@@ -107,12 +107,12 @@ enum FunctionTableIDs {
     FunctionTable_CheckOnScreen,
     FunctionTable_CheckPosOnScreen,
     FunctionTable_AddDrawListRef,
-    FunctionTable_SwapDrawLayers,
+    FunctionTable_SwapDrawListEntries,
     FunctionTable_SetDrawLayerProperties,
     FunctionTable_SetScene,
-    FunctionTable_SetGameMode,
+    FunctionTable_SetEngineState,
 #if RETRO_REV02
-    FunctionTable_SetHardResetFlag,
+    FunctionTable_ForceHardReset,
 #endif
     FunctionTable_CheckValidScene,
     FunctionTable_CheckSceneFolder,
@@ -193,7 +193,7 @@ enum FunctionTableIDs {
     FunctionTable_DrawFace,
     FunctionTable_DrawBlendedFace,
     FunctionTable_DrawSprite,
-    FunctionTable_DrawDeformed,
+    FunctionTable_DrawDeformedSprite,
     FunctionTable_DrawString,
     FunctionTable_DrawTile,
     FunctionTable_CopyTile,
@@ -205,23 +205,23 @@ enum FunctionTableIDs {
     FunctionTable_SetDiffuseColor,
     FunctionTable_SetDiffuseIntensity,
     FunctionTable_SetSpecularIntensity,
-    FunctionTable_SetupMesh,
+    FunctionTable_AddModelToScene,
     FunctionTable_SetModelAnimation,
-    FunctionTable_SetupMeshAnimation,
+    FunctionTable_AddMeshFrameToScene,
     FunctionTable_Draw3DScene,
-    FunctionTable_LoadAnimation,
-    FunctionTable_CreateAnimation,
+    FunctionTable_LoadSpriteAnimation,
+    FunctionTable_CreateSpriteAnimation,
     FunctionTable_SetSpriteAnimation,
-    FunctionTable_EditAnimation,
+    FunctionTable_EditSpriteAnimation,
     FunctionTable_SetSpriteString,
-    FunctionTable_GetAnimation,
+    FunctionTable_GetSpriteAnimation,
     FunctionTable_GetFrame,
     FunctionTable_GetHitbox,
     FunctionTable_GetFrameID,
     FunctionTable_GetStringWidth,
     FunctionTable_ProcessAnimation,
-    FunctionTable_GetSceneLayerID,
-    FunctionTable_GetSceneLayer,
+    FunctionTable_GetTileLayerID,
+    FunctionTable_GetTileLayer,
     FunctionTable_GetLayerSize,
     FunctionTable_GetTileInfo,
     FunctionTable_SetTileInfo,
@@ -229,7 +229,7 @@ enum FunctionTableIDs {
     FunctionTable_ProcessParallax,
     FunctionTable_GetScanlines,
     FunctionTable_CheckObjectCollisionTouch,
-    FunctionTable_CheckObjectCollisionPoint,
+    FunctionTable_CheckObjectCollisionCircle,
     FunctionTable_CheckObjectCollisionBox,
     FunctionTable_CheckObjectCollisionPlatform,
     FunctionTable_ObjectTileCollision,
@@ -237,11 +237,11 @@ enum FunctionTableIDs {
     FunctionTable_ProcessTileCollisions,
     FunctionTable_GetTileAngle,
     FunctionTable_SetTileAngle,
-    FunctionTable_GetTileBehaviour,
-    FunctionTable_SetTileBehaviour,
-    FunctionTable_GetSFX,
-    FunctionTable_PlaySFX,
-    FunctionTable_StopSFX,
+    FunctionTable_GetTileFlags,
+    FunctionTable_SetTileFlags,
+    FunctionTable_GetSfx,
+    FunctionTable_PlaySfx,
+    FunctionTable_StopSfx,
     FunctionTable_PlayMusic,
     FunctionTable_SetChannelAttributes,
     FunctionTable_StopChannel,
@@ -276,8 +276,8 @@ enum FunctionTableIDs {
     FunctionTable_PrintLog,
     FunctionTable_PrintText,
     FunctionTable_PrintString,
-    FunctionTable_PrintIntegerUnsigned,
-    FunctionTable_PrintInteger,
+    FunctionTable_PrintUInt32,
+    FunctionTable_PrintInt32,
     FunctionTable_PrintFloat,
     FunctionTable_PrintVector2,
     FunctionTable_PrintHitbox,
@@ -303,11 +303,13 @@ RSDK::GameVersionInfo RSDK::gameVerInfo;
 
 void NullFunc() {}
 
-#define addToRSDKFunctionTable(id, func) RSDKFunctionTable[id] = (void *)func;
+#define ADD_RSDK_FUNCTION(id, func) RSDKFunctionTable[id] = (void *)func;
 #if RETRO_REV02
-#define addToAPIFunctionTable(id, func) APIFunctionTable[id] = (void *)func;
+#define ADD_API_FUNCTION(id, func) APIFunctionTable[id] = (void *)func;
 #else
-void addToAPIFunctionTable(const char *name, void *ptr)
+#define ADD_API_FUNCTION(name, func) SetAPIFunction(name, (void *)func);
+
+void SetAPIFunction(const char *name, void *ptr)
 {
     if (RSDK::APIFunctionTableCount < APITABLE_COUNT) {
         RETRO_HASH(hash);
@@ -368,416 +370,416 @@ void RSDK::SetupFunctionTables()
     // ============================
 
     // API Core
-    addToAPIFunctionTable(APITable_GetUserLanguage, GetUserLanguage);
-    addToAPIFunctionTable(APITable_GetConfirmButtonFlip, GetConfirmButtonFlip);
-    addToAPIFunctionTable(APITable_ExitGame, ExitGame);
-    addToAPIFunctionTable(APITable_LaunchManual, LaunchManual);
-    addToAPIFunctionTable(APITable_IsOverlayEnabled, IsOverlayEnabled);
-    addToAPIFunctionTable(APITable_CheckDLC, CheckDLC);
-    addToAPIFunctionTable(APITable_ShowExtensionOverlay, ShowExtensionOverlay);
+    ADD_API_FUNCTION(APITable_GetUserLanguage, GetUserLanguage);
+    ADD_API_FUNCTION(APITable_GetConfirmButtonFlip, GetConfirmButtonFlip);
+    ADD_API_FUNCTION(APITable_ExitGame, ExitGame);
+    ADD_API_FUNCTION(APITable_LaunchManual, LaunchManual);
+    ADD_API_FUNCTION(APITable_IsOverlayEnabled, IsOverlayEnabled);
+    ADD_API_FUNCTION(APITable_CheckDLC, CheckDLC);
+    ADD_API_FUNCTION(APITable_ShowExtensionOverlay, ShowExtensionOverlay);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_ShowCheckoutPage, ShowCheckoutPage);
-    addToAPIFunctionTable(APITable_ShowEncorePage, ShowEncorePage);
-    addToAPIFunctionTable(APITable_EGS_Unknown4, EpicUnknown4);
-    addToAPIFunctionTable(APITable_RegisterHIDDevice, RegisterHIDDevice);
+    ADD_API_FUNCTION(APITable_ShowCheckoutPage, ShowCheckoutPage);
+    ADD_API_FUNCTION(APITable_ShowEncorePage, ShowEncorePage);
+    ADD_API_FUNCTION(APITable_EGS_Unknown4, EpicUnknown4);
+    ADD_API_FUNCTION(APITable_RegisterHIDDevice, RegisterHIDDevice);
 #endif
 
     // Achievements
-    addToAPIFunctionTable(APITable_UnlockAchievement, TryUnlockAchievement);
-    addToAPIFunctionTable(APITable_GetAchievementsEnabled, GetAchievementsEnabled);
-    addToAPIFunctionTable(APITable_SetAchievementsEnabled, SetAchievementsEnabled);
+    ADD_API_FUNCTION(APITable_UnlockAchievement, TryUnlockAchievement);
+    ADD_API_FUNCTION(APITable_GetAchievementsEnabled, GetAchievementsEnabled);
+    ADD_API_FUNCTION(APITable_SetAchievementsEnabled, SetAchievementsEnabled);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_CheckAchievementsEnabled, CheckAchievementsEnabled);
-    addToAPIFunctionTable(APITable_GetAchievementNames, GetAchievementNames);
+    ADD_API_FUNCTION(APITable_CheckAchievementsEnabled, CheckAchievementsEnabled);
+    ADD_API_FUNCTION(APITable_GetAchievementNames, GetAchievementNames);
 #endif
 
     // Leaderboards
-    addToAPIFunctionTable(APITable_LeaderboardsUnknown4, leaderboardsUnknown4); // LeaderboardsUnknown4);
+    ADD_API_FUNCTION(APITable_LeaderboardsUnknown4, leaderboardsUnknown4); // LeaderboardsUnknown4);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_EGS_LeaderboardsUnknown4, leaderboardsUnknown6); // EGS_LeaderboardsUnknown4);
+    ADD_API_FUNCTION(APITable_EGS_LeaderboardsUnknown4, leaderboardsUnknown6); // EGS_LeaderboardsUnknown4);
 #endif
-    addToAPIFunctionTable(APITable_FetchLeaderboard, FetchLeaderboard);
-    addToAPIFunctionTable(APITable_TrackScore, TrackScore);
-    addToAPIFunctionTable(APITable_GetLeaderboardsStatus, GetLeaderboardsStatus);
-    addToAPIFunctionTable(APITable_LeaderboardEntryCount, LeaderboardEntryCount);
-    addToAPIFunctionTable(APITable_LeaderboardEntryLength, LeaderboardEntryLength);
-    addToAPIFunctionTable(APITable_LoadNewLeaderboardEntries, LoadNewLeaderboardEntries);
-    addToAPIFunctionTable(APITable_ClearLeaderboardInfo, ClearLeaderboardInfo);
-    addToAPIFunctionTable(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
+    ADD_API_FUNCTION(APITable_FetchLeaderboard, FetchLeaderboard);
+    ADD_API_FUNCTION(APITable_TrackScore, TrackScore);
+    ADD_API_FUNCTION(APITable_GetLeaderboardsStatus, GetLeaderboardsStatus);
+    ADD_API_FUNCTION(APITable_LeaderboardEntryCount, LeaderboardEntryCount);
+    ADD_API_FUNCTION(APITable_LeaderboardEntryLength, LeaderboardEntryLength);
+    ADD_API_FUNCTION(APITable_LoadNewLeaderboardEntries, LoadNewLeaderboardEntries);
+    ADD_API_FUNCTION(APITable_ClearLeaderboardInfo, ClearLeaderboardInfo);
+    ADD_API_FUNCTION(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
 
     // Rich Presence
-    addToAPIFunctionTable(APITable_SetPresence, SetPresence);
+    ADD_API_FUNCTION(APITable_SetPresence, SetPresence);
 
     // Stats
-    addToAPIFunctionTable(APITable_TryTrackStat, TryTrackStat);
-    addToAPIFunctionTable(APITable_GetStatsEnabled, GetStatsEnabled);
-    addToAPIFunctionTable(APITable_SetStatsEnabled, SetStatsEnabled);
+    ADD_API_FUNCTION(APITable_TryTrackStat, TryTrackStat);
+    ADD_API_FUNCTION(APITable_GetStatsEnabled, GetStatsEnabled);
+    ADD_API_FUNCTION(APITable_SetStatsEnabled, SetStatsEnabled);
 
     // Authorization & Storage
-    addToAPIFunctionTable(APITable_ClearPrerollErrors, ClearPrerollErrors);
-    addToAPIFunctionTable(APITable_TryAuth, TryAuth);
-    addToAPIFunctionTable(APITable_GetUserAuthStatus, GetUserAuthStatus);
-    addToAPIFunctionTable(APITable_GetUsername, GetUsername);
-    addToAPIFunctionTable(APITable_TryInitStorage, TryInitStorage);
-    addToAPIFunctionTable(APITable_GetUserStorageStatus, GetUserStorageStatus);
+    ADD_API_FUNCTION(APITable_ClearPrerollErrors, ClearPrerollErrors);
+    ADD_API_FUNCTION(APITable_TryAuth, TryAuth);
+    ADD_API_FUNCTION(APITable_GetUserAuthStatus, GetUserAuthStatus);
+    ADD_API_FUNCTION(APITable_GetUsername, GetUsername);
+    ADD_API_FUNCTION(APITable_TryInitStorage, TryInitStorage);
+    ADD_API_FUNCTION(APITable_GetUserStorageStatus, GetUserStorageStatus);
 
     // Saving
-    addToAPIFunctionTable(APITable_GetSaveStatus, GetSaveStatus);
-    addToAPIFunctionTable(APITable_ClearSaveStatus, ClearSaveStatus);
-    addToAPIFunctionTable(APITable_SetSaveStatusContinue, SetSaveStatusContinue);
-    addToAPIFunctionTable(APITable_SetSaveStatusOK, SetSaveStatusOK);
-    addToAPIFunctionTable(APITable_SetSaveStatusForbidden, SetSaveStatusForbidden);
-    addToAPIFunctionTable(APITable_SetSaveStatusError, SetSaveStatusError);
-    addToAPIFunctionTable(APITable_SetUserStorageNoSave, SetUserStorageNoSave);
-    addToAPIFunctionTable(APITable_GetUserStorageNoSave, GetUserStorageNoSave);
+    ADD_API_FUNCTION(APITable_GetSaveStatus, GetSaveStatus);
+    ADD_API_FUNCTION(APITable_ClearSaveStatus, ClearSaveStatus);
+    ADD_API_FUNCTION(APITable_SetSaveStatusContinue, SetSaveStatusContinue);
+    ADD_API_FUNCTION(APITable_SetSaveStatusOK, SetSaveStatusOK);
+    ADD_API_FUNCTION(APITable_SetSaveStatusForbidden, SetSaveStatusForbidden);
+    ADD_API_FUNCTION(APITable_SetSaveStatusError, SetSaveStatusError);
+    ADD_API_FUNCTION(APITable_SetUserStorageNoSave, SetUserStorageNoSave);
+    ADD_API_FUNCTION(APITable_GetUserStorageNoSave, GetUserStorageNoSave);
 
     // User File Management
-    addToAPIFunctionTable(APITable_LoadUserFile, TryLoadUserFile);     // load user file from game dir
-    addToAPIFunctionTable(APITable_SaveUserFile, TrySaveUserFile);     // save user file to game dir
-    addToAPIFunctionTable(APITable_DeleteUserFile, TryDeleteUserFile); // delete user file from game dir
+    ADD_API_FUNCTION(APITable_LoadUserFile, TryLoadUserFile);     // load user file from game dir
+    ADD_API_FUNCTION(APITable_SaveUserFile, TrySaveUserFile);     // save user file to game dir
+    ADD_API_FUNCTION(APITable_DeleteUserFile, TryDeleteUserFile); // delete user file from game dir
 
     // User DBs
-    addToAPIFunctionTable(APITable_AddUserDBEntry, InitUserDB);
-    addToAPIFunctionTable(APITable_OpenUserDB, LoadUserDB);
-    addToAPIFunctionTable(APITable_SaveUserDB, SaveUserDB);
-    addToAPIFunctionTable(APITable_ClearUserDB, ClearUserDB);
-    addToAPIFunctionTable(APITable_ClearAllUserDBs, ClearAllUserDBs);
-    addToAPIFunctionTable(APITable_SetupUserDBRowSorting, SetupUserDBRowSorting);
-    addToAPIFunctionTable(APITable_GetUserDBRowsChanged, GetUserDBRowsChanged);
-    addToAPIFunctionTable(APITable_AddUserDBRowSortFilter, AddUserDBRowSortFilter);
-    addToAPIFunctionTable(APITable_SortUserDBRows, SortUserDBRows);
-    addToAPIFunctionTable(APITable_GetSortedUserDBRowCount, GetSortedUserDBRowCount);
-    addToAPIFunctionTable(APITable_GetSortedUserDBRowID, GetSortedUserDBRowID);
-    addToAPIFunctionTable(APITable_AddUserDBRow, AddUserDBRow);
-    addToAPIFunctionTable(APITable_SetUserDBValue, SetUserDBValue);
-    addToAPIFunctionTable(APITable_GetUserDBValue, GetUserDBValue);
-    addToAPIFunctionTable(APITable_GetEntryUUID, GetDBRowUUID);
-    addToAPIFunctionTable(APITable_GetUserDBRowByID, GetUserDBRowByID);
-    addToAPIFunctionTable(APITable_GetUserDBRowCreationTime, GetUserDBRowCreationTime);
-    addToAPIFunctionTable(APITable_RemoveDBRow, RemoveDBRow);
-    addToAPIFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBRows);
+    ADD_API_FUNCTION(APITable_InitUserDB, InitUserDB);
+    ADD_API_FUNCTION(APITable_OpenUserDB, LoadUserDB);
+    ADD_API_FUNCTION(APITable_SaveUserDB, SaveUserDB);
+    ADD_API_FUNCTION(APITable_ClearUserDB, ClearUserDB);
+    ADD_API_FUNCTION(APITable_ClearAllUserDBs, ClearAllUserDBs);
+    ADD_API_FUNCTION(APITable_SetupUserDBRowSorting, SetupUserDBRowSorting);
+    ADD_API_FUNCTION(APITable_GetUserDBRowsChanged, GetUserDBRowsChanged);
+    ADD_API_FUNCTION(APITable_AddUserDBRowSortFilter, AddUserDBRowSortFilter);
+    ADD_API_FUNCTION(APITable_SortUserDBRows, SortUserDBRows);
+    ADD_API_FUNCTION(APITable_GetSortedUserDBRowCount, GetSortedUserDBRowCount);
+    ADD_API_FUNCTION(APITable_GetSortedUserDBRowID, GetSortedUserDBRowID);
+    ADD_API_FUNCTION(APITable_AddUserDBRow, AddUserDBRow);
+    ADD_API_FUNCTION(APITable_SetUserDBValue, SetUserDBValue);
+    ADD_API_FUNCTION(APITable_GetUserDBValue, GetUserDBValue);
+    ADD_API_FUNCTION(APITable_GetRowUUID, GetDBRowUUID);
+    ADD_API_FUNCTION(APITable_GetUserDBRowByID, GetUserDBRowByID);
+    ADD_API_FUNCTION(APITable_GetUserDBRowCreationTime, GetUserDBRowCreationTime);
+    ADD_API_FUNCTION(APITable_RemoveDBRow, RemoveDBRow);
+    ADD_API_FUNCTION(APITable_RemoveAllDBRows, RemoveAllDBRows);
 #else
     // ============================
     // API Functions (Rev01)
     // ============================
 
     // API Core
-    addToAPIFunctionTable("GetConfirmButtonFlip", GetConfirmButtonFlip);
+    ADD_API_FUNCTION("GetConfirmButtonFlip", GetConfirmButtonFlip);
     // APICallback uses the sku one anyways if this isn't set, this is only needed if it needs to interact with the backend APIs
-    // addToAPIFunctionTable("GetUserLanguage", GetUserLanguage);
-    addToAPIFunctionTable("GetXYButtonFlip", GetXYButtonFlip);
-    addToAPIFunctionTable("LaunchManual", LaunchManual);
-    addToAPIFunctionTable("ExitGame", ExitGame);
+    // ADD_API_FUNCTION("GetUserLanguage", GetUserLanguage);
+    ADD_API_FUNCTION("GetXYButtonFlip", GetXYButtonFlip);
+    ADD_API_FUNCTION("LaunchManual", LaunchManual);
+    ADD_API_FUNCTION("ExitGame", ExitGame);
 
     // Achievements
-    addToAPIFunctionTable("ClearAchievements", ClearAchievements);
-    addToAPIFunctionTable("UnlockAchievement", TryUnlockAchievement);
+    ADD_API_FUNCTION("ClearAchievements", ClearAchievements);
+    ADD_API_FUNCTION("UnlockAchievement", TryUnlockAchievement);
 
     // Leaderboards
-    // addToAPIFunctionTable("FetchLeaderboard", FetchLeaderboard);
-    // addToAPIFunctionTable("LeaderboardStatus", GetLeaderboardStatus);
-    // addToAPIFunctionTable("LeaderboardEntryCount", LeaderboardEntryCount);
-    // addToAPIFunctionTable("LeaderboardReadEntry", LeaderboardReadEntry);
+    // ADD_API_FUNCTION("FetchLeaderboard", FetchLeaderboard);
+    // ADD_API_FUNCTION("LeaderboardStatus", GetLeaderboardStatus);
+    // ADD_API_FUNCTION("LeaderboardEntryCount", LeaderboardEntryCount);
+    // ADD_API_FUNCTION("LeaderboardReadEntry", LeaderboardReadEntry);
 
     // Rich Presence
-    // addToAPIFunctionTable("SetRichPresence", SetPresence);
+    // ADD_API_FUNCTION("SetRichPresence", SetPresence);
 
     // Stats
-    addToAPIFunctionTable("TrackActClear", TrackActClear);
-    addToAPIFunctionTable("TrackTAClear", TrackTAClear);
-    addToAPIFunctionTable("TrackEnemyDefeat", TrackEnemyDefeat);
-    addToAPIFunctionTable("TrackGameProgress", TrackGameProgress);
+    ADD_API_FUNCTION("TrackActClear", TrackActClear);
+    ADD_API_FUNCTION("TrackTAClear", TrackTAClear);
+    ADD_API_FUNCTION("TrackEnemyDefeat", TrackEnemyDefeat);
+    ADD_API_FUNCTION("TrackGameProgress", TrackGameProgress);
 
     // Authorization & Storage
-    // addToAPIFunctionTable("ClearPrerollErrors", ClearPrerollErrors); // Dummy behaviour is managed by APICallback
-    // addToAPIFunctionTable("TryAuth", TryAuth); // Dummy behaviour is managed by APICallback
-    // addToAPIFunctionTable("GetUserAuthStatus", GetUserAuthStatus); // Dummy behaviour is managed by APICallback
-    // addToAPIFunctionTable("TryInitStorage", TryInitStorage); // Dummy behaviour is managed by APICallback
-    // addToAPIFunctionTable("GetStorageStatus", GetUserStorageStatus); // Dummy behaviour is managed by APICallback
-    // addToAPIFunctionTable("GetUsername", GetUsername); // APICallback sets the dummy one anyways if this isn't set
+    // ADD_API_FUNCTION("ClearPrerollErrors", ClearPrerollErrors); // Dummy behaviour is managed by APICallback
+    // ADD_API_FUNCTION("TryAuth", TryAuth); // Dummy behaviour is managed by APICallback
+    // ADD_API_FUNCTION("GetUserAuthStatus", GetUserAuthStatus); // Dummy behaviour is managed by APICallback
+    // ADD_API_FUNCTION("TryInitStorage", TryInitStorage); // Dummy behaviour is managed by APICallback
+    // ADD_API_FUNCTION("GetStorageStatus", GetUserStorageStatus); // Dummy behaviour is managed by APICallback
+    // ADD_API_FUNCTION("GetUsername", GetUsername); // APICallback sets the dummy one anyways if this isn't set
 
     // User File Management
-    addToAPIFunctionTable("LoadUserFile", TryLoadUserFile);
-    addToAPIFunctionTable("SaveUserFile", TrySaveUserFile);
-    addToAPIFunctionTable("SaveSettingsINI", writeSettings);
+    ADD_API_FUNCTION("LoadUserFile", TryLoadUserFile);
+    ADD_API_FUNCTION("SaveUserFile", TrySaveUserFile);
+    ADD_API_FUNCTION("SaveSettingsINI", writeSettings);
 
-    // Input 
-    addToAPIFunctionTable("ControllerIDForInputID", ControllerIDForInputID);
-    addToAPIFunctionTable("MostRecentActiveControllerID", MostRecentActiveControllerID);
-    addToAPIFunctionTable("AssignControllerID", AssignControllerID);
-    addToAPIFunctionTable("ResetControllerAssignments", ResetControllerAssignments);
-    addToAPIFunctionTable("InputIDIsDisconnected", InputIDIsDisconnected);
-    addToAPIFunctionTable("GetControllerType", GetControllerType);
-    addToAPIFunctionTable("ShowSteamControllerOverlay", ShowExtensionOverlay);
-    addToAPIFunctionTable("SetInputLEDColor", SetInputLEDColor);
+    // Input
+    ADD_API_FUNCTION("ControllerIDForInputID", ControllerIDForInputID);
+    ADD_API_FUNCTION("MostRecentActiveControllerID", MostRecentActiveControllerID);
+    ADD_API_FUNCTION("AssignControllerID", AssignControllerID);
+    ADD_API_FUNCTION("ResetControllerAssignments", ResetControllerAssignments);
+    ADD_API_FUNCTION("InputIDIsDisconnected", InputIDIsDisconnected);
+    ADD_API_FUNCTION("GetControllerType", GetControllerType);
+    ADD_API_FUNCTION("ShowSteamControllerOverlay", ShowExtensionOverlay);
+    ADD_API_FUNCTION("SetInputLEDColor", SetInputLEDColor);
 #endif
 
     // ============================
     // RSDK Function Table
     // ============================
-    
+
     // Registration
-    addToRSDKFunctionTable(FunctionTable_RegisterGlobalVariables, RegisterGlobalVariables);
-    addToRSDKFunctionTable(FunctionTable_RegisterObject, RegisterObject);
+    ADD_RSDK_FUNCTION(FunctionTable_RegisterGlobalVariables, RegisterGlobalVariables);
+    ADD_RSDK_FUNCTION(FunctionTable_RegisterObject, RegisterObject);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_RegisterStaticVariables, RegisterStaticVariables);
+    ADD_RSDK_FUNCTION(FunctionTable_RegisterStaticVariables, RegisterStaticVariables);
 #endif
 
     // Entities & Objects
-    addToRSDKFunctionTable(FunctionTable_GetActiveEntities, GetActiveEntities);
-    addToRSDKFunctionTable(FunctionTable_GetEntities, GetEntities);
-    addToRSDKFunctionTable(FunctionTable_BreakForeachLoop, BreakForeachLoop);
-    addToRSDKFunctionTable(FunctionTable_SetEditableVar, SetEditableVar);
-    addToRSDKFunctionTable(FunctionTable_GetEntity, GetEntity);
-    addToRSDKFunctionTable(FunctionTable_GetEntityID, GetEntityID);
-    addToRSDKFunctionTable(FunctionTable_GetEntityCount, GetEntityCount);
-    addToRSDKFunctionTable(FunctionTable_GetDrawListRef, GetDrawListRef);
-    addToRSDKFunctionTable(FunctionTable_GetDrawListRefPtr, GetDrawListRefPtr);
-    addToRSDKFunctionTable(FunctionTable_ResetEntityPtr, ResetEntityPtr);
-    addToRSDKFunctionTable(FunctionTable_ResetEntitySlot, ResetEntitySlot);
-    addToRSDKFunctionTable(FunctionTable_CreateEntity, CreateEntity);
-    addToRSDKFunctionTable(FunctionTable_CopyEntity, CopyEntity);
-    addToRSDKFunctionTable(FunctionTable_CheckOnScreen, CheckOnScreen);
-    addToRSDKFunctionTable(FunctionTable_CheckPosOnScreen, CheckPosOnScreen);
-    addToRSDKFunctionTable(FunctionTable_AddDrawListRef, AddDrawListRef);
-    addToRSDKFunctionTable(FunctionTable_SwapDrawLayers, SwapDrawListEntries);
-    addToRSDKFunctionTable(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
+    ADD_RSDK_FUNCTION(FunctionTable_GetActiveEntities, GetActiveEntities);
+    ADD_RSDK_FUNCTION(FunctionTable_GetEntities, GetEntities);
+    ADD_RSDK_FUNCTION(FunctionTable_BreakForeachLoop, BreakForeachLoop);
+    ADD_RSDK_FUNCTION(FunctionTable_SetEditableVar, SetEditableVar);
+    ADD_RSDK_FUNCTION(FunctionTable_GetEntity, GetEntity);
+    ADD_RSDK_FUNCTION(FunctionTable_GetEntityID, GetEntityID);
+    ADD_RSDK_FUNCTION(FunctionTable_GetEntityCount, GetEntityCount);
+    ADD_RSDK_FUNCTION(FunctionTable_GetDrawListRef, GetDrawListRef);
+    ADD_RSDK_FUNCTION(FunctionTable_GetDrawListRefPtr, GetDrawListRefPtr);
+    ADD_RSDK_FUNCTION(FunctionTable_ResetEntityPtr, ResetEntityPtr);
+    ADD_RSDK_FUNCTION(FunctionTable_ResetEntitySlot, ResetEntitySlot);
+    ADD_RSDK_FUNCTION(FunctionTable_CreateEntity, CreateEntity);
+    ADD_RSDK_FUNCTION(FunctionTable_CopyEntity, CopyEntity);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckOnScreen, CheckOnScreen);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckPosOnScreen, CheckPosOnScreen);
+    ADD_RSDK_FUNCTION(FunctionTable_AddDrawListRef, AddDrawListRef);
+    ADD_RSDK_FUNCTION(FunctionTable_SwapDrawListEntries, SwapDrawListEntries);
+    ADD_RSDK_FUNCTION(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
 
     // Scene Management
-    addToRSDKFunctionTable(FunctionTable_SetScene, SetScene);
-    addToRSDKFunctionTable(FunctionTable_SetGameMode, SetEngineState);
+    ADD_RSDK_FUNCTION(FunctionTable_SetScene, SetScene);
+    ADD_RSDK_FUNCTION(FunctionTable_SetEngineState, SetEngineState);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_SetHardResetFlag, ForceHardReset);
+    ADD_RSDK_FUNCTION(FunctionTable_ForceHardReset, ForceHardReset);
 #endif
-    addToRSDKFunctionTable(FunctionTable_CheckValidScene, CheckValidStage);
-    addToRSDKFunctionTable(FunctionTable_CheckSceneFolder, CheckSceneFolder);
-    addToRSDKFunctionTable(FunctionTable_InitSceneLoad, InitSceneLoad);
-    addToRSDKFunctionTable(FunctionTable_GetObjectByName, GetObjectByName);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckValidScene, CheckValidStage);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckSceneFolder, CheckSceneFolder);
+    ADD_RSDK_FUNCTION(FunctionTable_InitSceneLoad, InitSceneLoad);
+    ADD_RSDK_FUNCTION(FunctionTable_GetObjectByName, GetObjectByName);
 
     // Cameras
-    addToRSDKFunctionTable(FunctionTable_ClearCameras, ClearCameras);
-    addToRSDKFunctionTable(FunctionTable_AddCamera, AddCamera);
+    ADD_RSDK_FUNCTION(FunctionTable_ClearCameras, ClearCameras);
+    ADD_RSDK_FUNCTION(FunctionTable_AddCamera, AddCamera);
 
     // API (Rev01 only)
 #if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_GetAPIFunction, GetAPIFunction);
+    ADD_RSDK_FUNCTION(FunctionTable_GetAPIFunction, GetAPIFunction);
 #endif
 
     // Window/Video Settings
-    addToRSDKFunctionTable(FunctionTable_GetVideoSetting, GetVideoSetting);
-    addToRSDKFunctionTable(FunctionTable_SetVideoSetting, SetVideoSetting);
-    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateGameWindow)
+    ADD_RSDK_FUNCTION(FunctionTable_GetVideoSetting, GetVideoSetting);
+    ADD_RSDK_FUNCTION(FunctionTable_SetVideoSetting, SetVideoSetting);
+    ADD_RSDK_FUNCTION(FunctionTable_UpdateWindow, UpdateGameWindow)
 
     // Math
-    addToRSDKFunctionTable(FunctionTable_Sin1024, Sin1024);
-    addToRSDKFunctionTable(FunctionTable_Cos1024, Cos1024);
-    addToRSDKFunctionTable(FunctionTable_ATan1024, Tan1024);
-    addToRSDKFunctionTable(FunctionTable_ASin1024, ASin1024);
-    addToRSDKFunctionTable(FunctionTable_ACos1024, ACos1024);
-    addToRSDKFunctionTable(FunctionTable_Sin512, Sin512);
-    addToRSDKFunctionTable(FunctionTable_Cos512, Cos512);
-    addToRSDKFunctionTable(FunctionTable_ATan512, Tan512);
-    addToRSDKFunctionTable(FunctionTable_ASin512, ASin512);
-    addToRSDKFunctionTable(FunctionTable_ACos512, ACos512);
-    addToRSDKFunctionTable(FunctionTable_Sin256, Sin256);
-    addToRSDKFunctionTable(FunctionTable_Cos256, Cos256);
-    addToRSDKFunctionTable(FunctionTable_ATan256, Tan256);
-    addToRSDKFunctionTable(FunctionTable_ASin256, ASin256);
-    addToRSDKFunctionTable(FunctionTable_ACos256, ACos256);
-    addToRSDKFunctionTable(FunctionTable_Rand, GetRandomValue);
-    addToRSDKFunctionTable(FunctionTable_RandSeeded, GetSeededRandomValue);
-    addToRSDKFunctionTable(FunctionTable_SetRandSeed, SetRandSeed);
-    addToRSDKFunctionTable(FunctionTable_ATan2, ArcTanLookup);
+    ADD_RSDK_FUNCTION(FunctionTable_Sin1024, Sin1024);
+    ADD_RSDK_FUNCTION(FunctionTable_Cos1024, Cos1024);
+    ADD_RSDK_FUNCTION(FunctionTable_ATan1024, Tan1024);
+    ADD_RSDK_FUNCTION(FunctionTable_ASin1024, ASin1024);
+    ADD_RSDK_FUNCTION(FunctionTable_ACos1024, ACos1024);
+    ADD_RSDK_FUNCTION(FunctionTable_Sin512, Sin512);
+    ADD_RSDK_FUNCTION(FunctionTable_Cos512, Cos512);
+    ADD_RSDK_FUNCTION(FunctionTable_ATan512, Tan512);
+    ADD_RSDK_FUNCTION(FunctionTable_ASin512, ASin512);
+    ADD_RSDK_FUNCTION(FunctionTable_ACos512, ACos512);
+    ADD_RSDK_FUNCTION(FunctionTable_Sin256, Sin256);
+    ADD_RSDK_FUNCTION(FunctionTable_Cos256, Cos256);
+    ADD_RSDK_FUNCTION(FunctionTable_ATan256, Tan256);
+    ADD_RSDK_FUNCTION(FunctionTable_ASin256, ASin256);
+    ADD_RSDK_FUNCTION(FunctionTable_ACos256, ACos256);
+    ADD_RSDK_FUNCTION(FunctionTable_Rand, GetRandomValue);
+    ADD_RSDK_FUNCTION(FunctionTable_RandSeeded, GetSeededRandomValue);
+    ADD_RSDK_FUNCTION(FunctionTable_SetRandSeed, SetRandSeed);
+    ADD_RSDK_FUNCTION(FunctionTable_ATan2, ArcTanLookup);
 
     // Matrices
-    addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, SetIdentityMatrix);
-    addToRSDKFunctionTable(FunctionTable_MatrixMultiply, MatrixMultiply);
-    addToRSDKFunctionTable(FunctionTable_MatrixTranslateXYZ, MatrixTranslateXYZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixScaleXYZ, MatrixScaleXYZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateX, MatrixRotateX);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateY, MatrixRotateY);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateZ, MatrixRotateZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixRotateXYZ, MatrixRotateXYZ);
-    addToRSDKFunctionTable(FunctionTable_MatrixInverse, MatrixInverse);
-    addToRSDKFunctionTable(FunctionTable_MatrixCopy, MatrixCopy);
+    ADD_RSDK_FUNCTION(FunctionTable_SetIdentityMatrix, SetIdentityMatrix);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixMultiply, MatrixMultiply);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixTranslateXYZ, MatrixTranslateXYZ);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixScaleXYZ, MatrixScaleXYZ);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixRotateX, MatrixRotateX);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixRotateY, MatrixRotateY);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixRotateZ, MatrixRotateZ);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixRotateXYZ, MatrixRotateXYZ);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixInverse, MatrixInverse);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixCopy, MatrixCopy);
 
     // Strings
-    addToRSDKFunctionTable(FunctionTable_InitString, InitString);
-    addToRSDKFunctionTable(FunctionTable_CopyString, CopyString);
-    addToRSDKFunctionTable(FunctionTable_SetString, SetString);
-    addToRSDKFunctionTable(FunctionTable_AppendString, AppendString);
-    addToRSDKFunctionTable(FunctionTable_AppendText, AppendText);
-    addToRSDKFunctionTable(FunctionTable_LoadStringList, LoadStringList);
-    addToRSDKFunctionTable(FunctionTable_SplitStringList, SplitStringList);
-    addToRSDKFunctionTable(FunctionTable_GetCString, GetCString);
-    addToRSDKFunctionTable(FunctionTable_CompareStrings, CompareStrings);
+    ADD_RSDK_FUNCTION(FunctionTable_InitString, InitString);
+    ADD_RSDK_FUNCTION(FunctionTable_CopyString, CopyString);
+    ADD_RSDK_FUNCTION(FunctionTable_SetString, SetString);
+    ADD_RSDK_FUNCTION(FunctionTable_AppendString, AppendString);
+    ADD_RSDK_FUNCTION(FunctionTable_AppendText, AppendText);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadStringList, LoadStringList);
+    ADD_RSDK_FUNCTION(FunctionTable_SplitStringList, SplitStringList);
+    ADD_RSDK_FUNCTION(FunctionTable_GetCString, GetCString);
+    ADD_RSDK_FUNCTION(FunctionTable_CompareStrings, CompareStrings);
 
     // Screens & Displays
-    addToRSDKFunctionTable(FunctionTable_GetDisplayInfo, GetDisplayInfo);
-    addToRSDKFunctionTable(FunctionTable_GetWindowSize, GetWindowSize);
-    addToRSDKFunctionTable(FunctionTable_SetScreenSize, SetScreenSize);
-    addToRSDKFunctionTable(FunctionTable_SetClipBounds, SetClipBounds);
+    ADD_RSDK_FUNCTION(FunctionTable_GetDisplayInfo, GetDisplayInfo);
+    ADD_RSDK_FUNCTION(FunctionTable_GetWindowSize, GetWindowSize);
+    ADD_RSDK_FUNCTION(FunctionTable_SetScreenSize, SetScreenSize);
+    ADD_RSDK_FUNCTION(FunctionTable_SetClipBounds, SetClipBounds);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_SetScreenRenderVertices, SetScreenRenderVertices);
+    ADD_RSDK_FUNCTION(FunctionTable_SetScreenRenderVertices, SetScreenRenderVertices);
 #endif
 
     // Spritesheets
-    addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, RSDK::LoadSpriteSheet);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadSpriteSheet, RSDK::LoadSpriteSheet);
 
     // Palettes & Colors
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_SetTintLookupTable, SetTintLookupTable);
+    ADD_RSDK_FUNCTION(FunctionTable_SetTintLookupTable, SetTintLookupTable);
 #else
-    //cant be bothered to change the enum name, but in rev01, this returns a ptr to the lookup table
-    addToRSDKFunctionTable(FunctionTable_SetTintLookupTable, GetTintLookupTable);
+    // cant be bothered to change the enum name, but in rev01, this returns a ptr to the tint lookup table
+    ADD_RSDK_FUNCTION(FunctionTable_SetTintLookupTable, GetTintLookupTable);
 #endif
-    addToRSDKFunctionTable(FunctionTable_SetPaletteMask, SetPaletteMask);
-    addToRSDKFunctionTable(FunctionTable_SetPaletteEntry, SetPaletteEntry);
-    addToRSDKFunctionTable(FunctionTable_GetPaletteEntry, GetPaletteEntry);
-    addToRSDKFunctionTable(FunctionTable_SetActivePalette, SetActivePalette);
-    addToRSDKFunctionTable(FunctionTable_CopyPalette, CopyPalette);
+    ADD_RSDK_FUNCTION(FunctionTable_SetPaletteMask, SetPaletteMask);
+    ADD_RSDK_FUNCTION(FunctionTable_SetPaletteEntry, SetPaletteEntry);
+    ADD_RSDK_FUNCTION(FunctionTable_GetPaletteEntry, GetPaletteEntry);
+    ADD_RSDK_FUNCTION(FunctionTable_SetActivePalette, SetActivePalette);
+    ADD_RSDK_FUNCTION(FunctionTable_CopyPalette, CopyPalette);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_LoadPalette, LoadPalette);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadPalette, LoadPalette);
 #endif
-    addToRSDKFunctionTable(FunctionTable_RotatePalette, RotatePalette);
-    addToRSDKFunctionTable(FunctionTable_SetLimitedFade, SetPaletteFade);
+    ADD_RSDK_FUNCTION(FunctionTable_RotatePalette, RotatePalette);
+    ADD_RSDK_FUNCTION(FunctionTable_SetLimitedFade, SetPaletteFade);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_BlendColors, BlendColors);
+    ADD_RSDK_FUNCTION(FunctionTable_BlendColors, BlendColors);
 #endif
 
     // Drawing
-    addToRSDKFunctionTable(FunctionTable_DrawRect, DrawRectangle);
-    addToRSDKFunctionTable(FunctionTable_DrawLine, DrawLine);
-    addToRSDKFunctionTable(FunctionTable_DrawCircle, DrawCircle);
-    addToRSDKFunctionTable(FunctionTable_DrawCircleOutline, DrawCircleOutline);
-    addToRSDKFunctionTable(FunctionTable_DrawFace, DrawFace);
-    addToRSDKFunctionTable(FunctionTable_DrawBlendedFace, DrawBlendedFace);
-    addToRSDKFunctionTable(FunctionTable_DrawSprite, DrawSprite);
-    addToRSDKFunctionTable(FunctionTable_DrawDeformed, DrawDeformedSprite);
-    addToRSDKFunctionTable(FunctionTable_DrawString, DrawString);
-    addToRSDKFunctionTable(FunctionTable_DrawTile, DrawTile);
-    addToRSDKFunctionTable(FunctionTable_CopyTile, CopyTile);
-    addToRSDKFunctionTable(FunctionTable_DrawAniTile, DrawAniTile);
-    addToRSDKFunctionTable(FunctionTable_FillScreen, FillScreen);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawRect, DrawRectangle);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawLine, DrawLine);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawCircle, DrawCircle);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawCircleOutline, DrawCircleOutline);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawFace, DrawFace);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawBlendedFace, DrawBlendedFace);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawSprite, DrawSprite);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawDeformedSprite, DrawDeformedSprite);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawString, DrawString);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawTile, DrawTile);
+    ADD_RSDK_FUNCTION(FunctionTable_CopyTile, CopyTile);
+    ADD_RSDK_FUNCTION(FunctionTable_DrawAniTile, DrawAniTile);
+    ADD_RSDK_FUNCTION(FunctionTable_FillScreen, FillScreen);
 
     // Meshes & 3D Scenes
-    addToRSDKFunctionTable(FunctionTable_LoadMesh, LoadMesh);
-    addToRSDKFunctionTable(FunctionTable_Create3DScene, Create3DScene);
-    addToRSDKFunctionTable(FunctionTable_Prepare3DScene, Prepare3DScene);
-    addToRSDKFunctionTable(FunctionTable_SetDiffuseColor, SetDiffuseColor);
-    addToRSDKFunctionTable(FunctionTable_SetDiffuseIntensity, SetDiffuseIntensity);
-    addToRSDKFunctionTable(FunctionTable_SetSpecularIntensity, SetSpecularIntensity);
-    addToRSDKFunctionTable(FunctionTable_SetupMesh, AddModelToScene);
-    addToRSDKFunctionTable(FunctionTable_SetModelAnimation, SetMeshAnimation);
-    addToRSDKFunctionTable(FunctionTable_SetupMeshAnimation, AddMeshFrameToScene);
-    addToRSDKFunctionTable(FunctionTable_Draw3DScene, Draw3DScene);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadMesh, LoadMesh);
+    ADD_RSDK_FUNCTION(FunctionTable_Create3DScene, Create3DScene);
+    ADD_RSDK_FUNCTION(FunctionTable_Prepare3DScene, Prepare3DScene);
+    ADD_RSDK_FUNCTION(FunctionTable_SetDiffuseColor, SetDiffuseColor);
+    ADD_RSDK_FUNCTION(FunctionTable_SetDiffuseIntensity, SetDiffuseIntensity);
+    ADD_RSDK_FUNCTION(FunctionTable_SetSpecularIntensity, SetSpecularIntensity);
+    ADD_RSDK_FUNCTION(FunctionTable_AddModelToScene, AddModelToScene);
+    ADD_RSDK_FUNCTION(FunctionTable_SetModelAnimation, SetMeshAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_AddMeshFrameToScene, AddMeshFrameToScene);
+    ADD_RSDK_FUNCTION(FunctionTable_Draw3DScene, Draw3DScene);
 
     // Sprite Animations & Frames
-    addToRSDKFunctionTable(FunctionTable_LoadAnimation, LoadSpriteAnimation);
-    addToRSDKFunctionTable(FunctionTable_CreateAnimation, CreateSpriteAnimation);
-    addToRSDKFunctionTable(FunctionTable_SetSpriteAnimation, SetSpriteAnimation);
-    addToRSDKFunctionTable(FunctionTable_EditAnimation, EditSpriteAnimation);
-    addToRSDKFunctionTable(FunctionTable_SetSpriteString, SetSpriteString);
-    addToRSDKFunctionTable(FunctionTable_GetAnimation, GetSpriteAnimation);
-    addToRSDKFunctionTable(FunctionTable_GetFrame, GetFrame);
-    addToRSDKFunctionTable(FunctionTable_GetHitbox, GetHitbox);
-    addToRSDKFunctionTable(FunctionTable_GetFrameID, GetFrameID);
-    addToRSDKFunctionTable(FunctionTable_GetStringWidth, GetStringWidth);
-    addToRSDKFunctionTable(FunctionTable_ProcessAnimation, ProcessAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadSpriteAnimation, LoadSpriteAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_CreateSpriteAnimation, CreateSpriteAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_SetSpriteAnimation, SetSpriteAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_EditSpriteAnimation, EditSpriteAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_SetSpriteString, SetSpriteString);
+    ADD_RSDK_FUNCTION(FunctionTable_GetSpriteAnimation, GetSpriteAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_GetFrame, GetFrame);
+    ADD_RSDK_FUNCTION(FunctionTable_GetHitbox, GetHitbox);
+    ADD_RSDK_FUNCTION(FunctionTable_GetFrameID, GetFrameID);
+    ADD_RSDK_FUNCTION(FunctionTable_GetStringWidth, GetStringWidth);
+    ADD_RSDK_FUNCTION(FunctionTable_ProcessAnimation, ProcessAnimation);
 
     // Tile Layers
-    addToRSDKFunctionTable(FunctionTable_GetSceneLayer, GetTileLayer);
-    addToRSDKFunctionTable(FunctionTable_GetSceneLayerID, GetTileLayerID);
-    addToRSDKFunctionTable(FunctionTable_GetLayerSize, GetLayerSize);
-    addToRSDKFunctionTable(FunctionTable_GetTileInfo, GetTileInfo);
-    addToRSDKFunctionTable(FunctionTable_SetTileInfo, SetTileInfo);
-    addToRSDKFunctionTable(FunctionTable_CopyTileLayer, CopyTileLayout);
-    addToRSDKFunctionTable(FunctionTable_ProcessParallax, ProcessParallax);
-    addToRSDKFunctionTable(FunctionTable_GetScanlines, GetScanlines);
+    ADD_RSDK_FUNCTION(FunctionTable_GetTileLayer, GetTileLayer);
+    ADD_RSDK_FUNCTION(FunctionTable_GetTileLayerID, GetTileLayerID);
+    ADD_RSDK_FUNCTION(FunctionTable_GetLayerSize, GetLayerSize);
+    ADD_RSDK_FUNCTION(FunctionTable_GetTileInfo, GetTileInfo);
+    ADD_RSDK_FUNCTION(FunctionTable_SetTileInfo, SetTileInfo);
+    ADD_RSDK_FUNCTION(FunctionTable_CopyTileLayer, CopyTileLayout);
+    ADD_RSDK_FUNCTION(FunctionTable_ProcessParallax, ProcessParallax);
+    ADD_RSDK_FUNCTION(FunctionTable_GetScanlines, GetScanlines);
 
     // Object & Tile Collisions
-    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionTouch, CheckObjectCollisionTouch);
-    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionPoint, CheckObjectCollisionCircle);
-    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionBox, CheckObjectCollisionBox);
-    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionPlatform, CheckObjectCollisionPlatform);
-    addToRSDKFunctionTable(FunctionTable_ObjectTileCollision, ObjectTileCollision);
-    addToRSDKFunctionTable(FunctionTable_ObjectTileGrip, ObjectTileGrip);
-    addToRSDKFunctionTable(FunctionTable_ProcessTileCollisions, ProcessTileCollisions);
-    addToRSDKFunctionTable(FunctionTable_GetTileAngle, GetTileAngle);
-    addToRSDKFunctionTable(FunctionTable_SetTileAngle, SetTileAngle);
-    addToRSDKFunctionTable(FunctionTable_GetTileBehaviour, GetTileBehaviour);
-    addToRSDKFunctionTable(FunctionTable_SetTileBehaviour, SetTileBehaviour);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckObjectCollisionTouch, CheckObjectCollisionTouch);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckObjectCollisionCircle, CheckObjectCollisionCircle);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckObjectCollisionBox, CheckObjectCollisionBox);
+    ADD_RSDK_FUNCTION(FunctionTable_CheckObjectCollisionPlatform, CheckObjectCollisionPlatform);
+    ADD_RSDK_FUNCTION(FunctionTable_ObjectTileCollision, ObjectTileCollision);
+    ADD_RSDK_FUNCTION(FunctionTable_ObjectTileGrip, ObjectTileGrip);
+    ADD_RSDK_FUNCTION(FunctionTable_ProcessTileCollisions, ProcessTileCollisions);
+    ADD_RSDK_FUNCTION(FunctionTable_GetTileAngle, GetTileAngle);
+    ADD_RSDK_FUNCTION(FunctionTable_SetTileAngle, SetTileAngle);
+    ADD_RSDK_FUNCTION(FunctionTable_GetTileFlags, GetTileFlags);
+    ADD_RSDK_FUNCTION(FunctionTable_SetTileFlags, SetTileFlags);
 
     // Audio
-    addToRSDKFunctionTable(FunctionTable_GetSFX, GetSfx);
-    addToRSDKFunctionTable(FunctionTable_PlaySFX, PlaySfx);
-    addToRSDKFunctionTable(FunctionTable_StopSFX, StopSfx);
-    addToRSDKFunctionTable(FunctionTable_PlayMusic, PlayStream);
-    addToRSDKFunctionTable(FunctionTable_SetChannelAttributes, SetChannelAttributes);
-    addToRSDKFunctionTable(FunctionTable_StopChannel, StopChannel);
-    addToRSDKFunctionTable(FunctionTable_PauseChannel, PauseChannel);
-    addToRSDKFunctionTable(FunctionTable_ResumeChannel, ResumeChannel);
-    addToRSDKFunctionTable(FunctionTable_SfxPlaying, SfxPlaying);
-    addToRSDKFunctionTable(FunctionTable_ChannelActive, ChannelActive);
-    addToRSDKFunctionTable(FunctionTable_GetChannelPos, GetChannelPos);
+    ADD_RSDK_FUNCTION(FunctionTable_GetSfx, GetSfx);
+    ADD_RSDK_FUNCTION(FunctionTable_PlaySfx, PlaySfx);
+    ADD_RSDK_FUNCTION(FunctionTable_StopSfx, StopSfx);
+    ADD_RSDK_FUNCTION(FunctionTable_PlayMusic, PlayStream);
+    ADD_RSDK_FUNCTION(FunctionTable_SetChannelAttributes, SetChannelAttributes);
+    ADD_RSDK_FUNCTION(FunctionTable_StopChannel, StopChannel);
+    ADD_RSDK_FUNCTION(FunctionTable_PauseChannel, PauseChannel);
+    ADD_RSDK_FUNCTION(FunctionTable_ResumeChannel, ResumeChannel);
+    ADD_RSDK_FUNCTION(FunctionTable_SfxPlaying, SfxPlaying);
+    ADD_RSDK_FUNCTION(FunctionTable_ChannelActive, ChannelActive);
+    ADD_RSDK_FUNCTION(FunctionTable_GetChannelPos, GetChannelPos);
 
     // Videos & "HD Images"
-    addToRSDKFunctionTable(FunctionTable_LoadVideo, LoadVideo);
-    addToRSDKFunctionTable(FunctionTable_LoadImage, RSDK::LoadImage);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadVideo, LoadVideo);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadImage, RSDK::LoadImage);
 
     // Input
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, ControllerIDForInputID);
-    addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
-    addToRSDKFunctionTable(FunctionTable_GetControllerType, GetControllerType);
-    addToRSDKFunctionTable(FunctionTable_GetAssignedControllerID, GetAssignedControllerID);
-    addToRSDKFunctionTable(FunctionTable_GetInputUnknown, GetInputUnknown);
-    addToRSDKFunctionTable(FunctionTable_InputUnknown1, InputUnknown1);
-    addToRSDKFunctionTable(FunctionTable_InputUnknown2, InputUnknown2);
-    addToRSDKFunctionTable(FunctionTable_GetControllerUnknown, GetControllerUnknown);
-    addToRSDKFunctionTable(FunctionTable_ControllerUnknown1, ControllerUnknown1);
-    addToRSDKFunctionTable(FunctionTable_ControllerUnknown2, ControllerUnknown2);
-    addToRSDKFunctionTable(FunctionTable_AssignControllerID, AssignControllerID);
-    addToRSDKFunctionTable(FunctionTable_InputIDIsDisconnected, InputIDIsDisconnected);
-    addToRSDKFunctionTable(FunctionTable_ResetControllerAssignments, ResetControllerAssignments);
+    ADD_RSDK_FUNCTION(FunctionTable_ControllerIDForInputID, ControllerIDForInputID);
+    ADD_RSDK_FUNCTION(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
+    ADD_RSDK_FUNCTION(FunctionTable_GetControllerType, GetControllerType);
+    ADD_RSDK_FUNCTION(FunctionTable_GetAssignedControllerID, GetAssignedControllerID);
+    ADD_RSDK_FUNCTION(FunctionTable_GetInputUnknown, GetInputUnknown);
+    ADD_RSDK_FUNCTION(FunctionTable_InputUnknown1, InputUnknown1);
+    ADD_RSDK_FUNCTION(FunctionTable_InputUnknown2, InputUnknown2);
+    ADD_RSDK_FUNCTION(FunctionTable_GetControllerUnknown, GetControllerUnknown);
+    ADD_RSDK_FUNCTION(FunctionTable_ControllerUnknown1, ControllerUnknown1);
+    ADD_RSDK_FUNCTION(FunctionTable_ControllerUnknown2, ControllerUnknown2);
+    ADD_RSDK_FUNCTION(FunctionTable_AssignControllerID, AssignControllerID);
+    ADD_RSDK_FUNCTION(FunctionTable_InputIDIsDisconnected, InputIDIsDisconnected);
+    ADD_RSDK_FUNCTION(FunctionTable_ResetControllerAssignments, ResetControllerAssignments);
 #endif
 #if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_InputUnknown, InputUnknown);
+    ADD_RSDK_FUNCTION(FunctionTable_InputUnknown, InputUnknown);
 #endif
 
     // User File Management
-    addToRSDKFunctionTable(FunctionTable_LoadUserFile, LoadUserFile); // load user file from exe dir
-    addToRSDKFunctionTable(FunctionTable_SaveUserFile, SaveUserFile); // save use file to exe dir
+    ADD_RSDK_FUNCTION(FunctionTable_LoadUserFile, LoadUserFile); // load user file from exe dir
+    ADD_RSDK_FUNCTION(FunctionTable_SaveUserFile, SaveUserFile); // save use file to exe dir
 
     // Printing (Rev02)
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_PrintLog, PrintLog);
-    addToRSDKFunctionTable(FunctionTable_PrintText, PrintText);
-    addToRSDKFunctionTable(FunctionTable_PrintString, PrintString);
-    addToRSDKFunctionTable(FunctionTable_PrintIntegerUnsigned, PrintUInt32);
-    addToRSDKFunctionTable(FunctionTable_PrintInteger, PrintInt32);
-    addToRSDKFunctionTable(FunctionTable_PrintFloat, PrintFloat);
-    addToRSDKFunctionTable(FunctionTable_PrintVector2, PrintVector2);
-    addToRSDKFunctionTable(FunctionTable_PrintHitbox, PrintHitbox);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintLog, PrintLog);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintText, PrintText);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintString, PrintString);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintUInt32, PrintUInt32);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintInt32, PrintInt32);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintFloat, PrintFloat);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintVector2, PrintVector2);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintHitbox, PrintHitbox);
 #endif
 
     // Editor
-    addToRSDKFunctionTable(FunctionTable_SetActiveVariable, SetActiveVariable);
-    addToRSDKFunctionTable(FunctionTable_AddEnumVariable, AddEnumVariable);
+    ADD_RSDK_FUNCTION(FunctionTable_SetActiveVariable, SetActiveVariable);
+    ADD_RSDK_FUNCTION(FunctionTable_AddEnumVariable, AddEnumVariable);
 
     // Debugging
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_ClearDebugValues, ClearDebugValues);
-    addToRSDKFunctionTable(FunctionTable_SetDebugValue, SetDebugValue);
+    ADD_RSDK_FUNCTION(FunctionTable_ClearDebugValues, ClearDebugValues);
+    ADD_RSDK_FUNCTION(FunctionTable_SetDebugValue, SetDebugValue);
 #endif
 
     // Printing (Rev01)
 #if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_PrintMessage, PrintMessage);
+    ADD_RSDK_FUNCTION(FunctionTable_PrintMessage, PrintMessage);
 #endif
 
 #if RETRO_USE_MOD_LOADER
-    InitModAPI(); //setup mods & the mod API table
+    InitModAPI(); // setup mods & the mod API table
 #endif
 }
 

@@ -25,7 +25,7 @@ void PuyoGame_Update(void)
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
         RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->triggerPlayer = 1;
         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
-        RSDK.SetGameMode(ENGINESTATE_FROZEN);
+        RSDK.SetEngineState(ENGINESTATE_FROZEN);
     }
 
 #if RETRO_USE_TOUCH_CONTROLS
@@ -41,7 +41,7 @@ void PuyoGame_Update(void)
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         pauseMenu->triggerPlayer = 1;
                         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
-                        RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                        RSDK.SetEngineState(ENGINESTATE_FROZEN);
                     }
                 }
                 break;

@@ -20,6 +20,9 @@
 
 #define FOREACH_STACK_COUNT (0x400)
 
+// Used for DefaultObject & DevOutput
+#define RSDK_THIS(class) Entity##class *self = (Entity##class *)sceneInfo.entity
+
 enum StaticObjectTypes {
     SVAR_UINT8,
     SVAR_UINT16,

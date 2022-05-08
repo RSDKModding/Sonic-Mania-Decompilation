@@ -791,7 +791,7 @@ void APICallback_CheckUserAuth_CB(void)
                     UIControl_SetInactiveMenu(UIControl_GetUIControl());
             }
 
-            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+            RSDK.SetEngineState(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
             self->timer = 1;
         }

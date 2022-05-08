@@ -221,7 +221,7 @@ typedef struct {
 
     // Scene Management
     void (*SetScene)(const char *categoryName, const char *sceneName);
-    void (*SetGameMode)(uint8 mode);
+    void (*SetEngineState)(uint8 state);
 #if RETRO_USE_PLUS
     void (*ForceHardReset)(bool32 shouldHardReset);
 #endif

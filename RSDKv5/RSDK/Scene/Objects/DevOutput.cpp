@@ -5,85 +5,90 @@ RSDK::ObjectDevOutput *RSDK::DevOutput;
 
 void RSDK::DevOutput_Update()
 {
-    EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
+    RSDK_THIS(DevOutput);
 
-    switch (entity->type) {
-        case 0:
-            if (entity->id <= 0)
-                entity->type = 1;
-            else
-                entity->id--;
-            break;
-        case 1:
-            if (entity->position.y >= 0)
-                entity->type = 2;
-            else
-                entity->position.y += 2;
-            break;
-        case 2:
-            if (entity->id >= 120)
-                entity->type = 3;
-            else
-                entity->id++;
-            break;
-        case 3:
-            entity->position.y -= 2;
-            if (-entity->position.y > entity->yOffset)
-                ResetEntityPtr(entity, 0, NULL);
-            break;
+    switch (self->state) {
         default: break;
+
+        case DEVOUTPUT_DELAY:
+            if (self->timer <= 0)
+                self->state = DEVOUTPUT_ENTERPOPUP;
+            else
+                self->timer--;
+            break;
+
+        case DEVOUTPUT_ENTERPOPUP:
+            if (self->position.y >= 0)
+                self->state = DEVOUTPUT_SHOWPOPUP;
+            else
+                self->position.y += 2;
+            break;
+
+        case DEVOUTPUT_SHOWPOPUP:
+            if (self->timer >= 120)
+                self->state = 3;
+            else
+                self->timer++;
+            break;
+
+        case DEVOUTPUT_EXITPOPUP:
+            self->position.y -= 2;
+            if (-self->position.y > self->ySize)
+                ResetEntityPtr(self, TYPE_DEFAULTOBJECT, NULL);
+            break;
     }
 }
 
 void RSDK::DevOutput_LateUpdate() {}
+
 void RSDK::DevOutput_StaticUpdate() {}
 
 void RSDK::DevOutput_Draw()
 {
-    EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
-    DrawRectangle(0, 0, currentScreen->size.x, entity->position.y + entity->yOffset, 128, 255, INK_NONE, true);
-    DrawDevString(entity->message, 8, entity->position.y + 8, 0, 0xF0F0F0);
+    RSDK_THIS(DevOutput);
+
+    DrawRectangle(0, 0, currentScreen->size.x, self->position.y + self->ySize, 0x000080, 0xFF, INK_NONE, true);
+    DrawDevString(self->message, 8, self->position.y + 8, 0, 0xF0F0F0);
 }
 
-void RSDK::DevOutput_Create(void *source)
+void RSDK::DevOutput_Create(void *data)
 {
-    EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
-    entity->active          = ACTIVE_ALWAYS;
-    entity->visible         = true;
-    entity->isPermanent     = true;
-    entity->drawOrder       = 15;
-    strncpy(entity->message, (char *)source, 0x3F4);
-    entity->id         = 180 * GetEntityCount(RSDK::DevOutput->classID, 0);
-    entity->yOffset    = DevOutput_GetStringYOffset(entity->message);
-    entity->position.y = -entity->yOffset;
+    RSDK_THIS(DevOutput);
+    strncpy(self->message, (char *)data, 0x3F4);
+
+    self->active      = ACTIVE_ALWAYS;
+    self->visible     = true;
+    self->isPermanent = true;
+    self->drawOrder   = 15;
+    self->timer       = 180 * GetEntityCount(RSDK::DevOutput->classID, false);
+    self->ySize       = DevOutput_GetStringYSize(self->message);
+    self->position.y  = -self->ySize;
 }
 
 void RSDK::DevOutput_StageLoad() {}
 
-int RSDK::DevOutput_GetStringYOffset(char *string)
-{
-    char cur = *string;
-    int v2   = 0;
-    int v4   = 0;
+void RSDK::DevOutput_EditorDraw() {}
 
+void RSDK::DevOutput_EditorLoad() {}
+
+void RSDK::DevOutput_Serialize() {}
+
+int RSDK::DevOutput_GetStringYSize(char *string)
+{
     if (!*string)
         return 24;
 
-    do {
-        bool32 isNewLine = cur == '\n';
-        cur              = *++string;
-        v4               = v2 + 1;
-        if (!isNewLine)
-            v4 = v2;
-        v2 = v4;
-    } while (cur);
-    if (v4 >= 1)
-        return 8 * v4 + 16;
+    int32 lineCount = 0;
+    while (*string) {
+        if (*string == '\n')
+            lineCount++;
+
+        ++string;
+    }
+
+    if (lineCount >= 1)
+        return 8 * lineCount + 16;
     else
         return 24;
 }
-
-void RSDK::DevOutput_EditorDraw() {}
-void RSDK::DevOutput_EditorLoad() {}
-void RSDK::DevOutput_Serialize() {}
 #endif

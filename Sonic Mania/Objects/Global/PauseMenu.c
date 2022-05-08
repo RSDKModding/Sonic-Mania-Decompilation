@@ -42,7 +42,7 @@ void PauseMenu_LateUpdate(void)
         else {
             self->visible   = true;
             self->drawOrder = DRAWGROUP_COUNT - 1;
-            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+            RSDK.SetEngineState(ENGINESTATE_FROZEN);
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &self->animator, true, 3);
             PauseMenu_PauseSound();
 #if !RETRO_USE_PLUS
@@ -737,7 +737,7 @@ void PauseMenu_State_ForcedPause(void)
     if (!UIDialog->activeDialog) {
         if (self->forcePaused) {
             if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo")) {
-                RSDK.SetGameMode(ENGINESTATE_REGULAR);
+                RSDK.SetEngineState(ENGINESTATE_REGULAR);
                 PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
                 PauseMenu_ResumeSound();
             }
@@ -809,7 +809,7 @@ void PauseMenu_State_Resume(void)
         self->yellowTrianglePos.y = 0;
         self->yellowTrianglePos.x = 0xE80000;
         self->timer               = 0;
-        RSDK.SetGameMode(ENGINESTATE_REGULAR);
+        RSDK.SetEngineState(ENGINESTATE_REGULAR);
         PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
         PauseMenu_ResumeSound();
     }
@@ -843,7 +843,7 @@ void PauseMenu_State_ResumeCompetition(void)
         if (self->timer >= 16) {
             self->paused = false;
             self->timer  = 0;
-            RSDK.SetGameMode(ENGINESTATE_REGULAR);
+            RSDK.SetEngineState(ENGINESTATE_REGULAR);
             PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
             PauseMenu_ResumeSound();
         }
@@ -879,7 +879,7 @@ void PauseMenu_State_ForcedResumeCompetition(void)
         if (self->timer >= 16) {
             self->paused = false;
             self->timer  = 0;
-            RSDK.SetGameMode(ENGINESTATE_REGULAR);
+            RSDK.SetEngineState(ENGINESTATE_REGULAR);
             PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
             PauseMenu_ResumeSound();
         }

@@ -111,7 +111,7 @@ void OOZ2Outro_CheckSkip(void)
         globals->suppressTitlecard = false;
         globals->suppressAutoMusic = false;
         globals->enableIntro       = false;
-        RSDK.SetGameMode(ENGINESTATE_FROZEN);
+        RSDK.SetEngineState(ENGINESTATE_FROZEN);
         Zone_StartFadeOut(20, 0);
         Music_FadeOut(0.03);
     }

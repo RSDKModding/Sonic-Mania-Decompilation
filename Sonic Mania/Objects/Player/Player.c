@@ -233,7 +233,7 @@ void Player_LateUpdate(void)
                 else if (globals->gameMode == MODE_ENCORE) {
                     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                     if (!globals->stock && !sidekick->classID) {
-                        RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                        RSDK.SetEngineState(ENGINESTATE_FROZEN);
                         SceneInfo->timeEnabled = false;
                     }
 
@@ -244,7 +244,7 @@ void Player_LateUpdate(void)
                 }
 #endif
                 else {
-                    RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                    RSDK.SetEngineState(ENGINESTATE_FROZEN);
                     SceneInfo->timeEnabled = false;
                     if (self->camera) {
                         self->scrollDelay   = 2;
@@ -1996,7 +1996,7 @@ void Player_HandleDeath(EntityPlayer *player)
 
                             EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                             gameOver->activeScreens |= 1 << player->playerID;
-                            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                            RSDK.SetEngineState(ENGINESTATE_FROZEN);
                             SceneInfo->timeEnabled = false;
                         }
                     }
@@ -2064,7 +2064,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(false));
                         gameOver->playerID = RSDK.GetEntityID(player);
                         GameOver->activeScreens |= 1 << screenID;
-                        RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                        RSDK.SetEngineState(ENGINESTATE_FROZEN);
                         SceneInfo->timeEnabled = false;
                     }
                 }
@@ -2097,7 +2097,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(false));
                     gameOver->playerID = RSDK.GetEntityID(player);
                     GameOver->activeScreens |= 1 << screenID;
-                    RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                    RSDK.SetEngineState(ENGINESTATE_FROZEN);
                     SceneInfo->timeEnabled = false;
 
                     if (player->classID == Player->classID) {
@@ -6485,7 +6485,7 @@ void Player_ProcessP1Input(void)
                     self->groundVel  = 0;
                     self->drawOrder  = Zone->playerDrawHigh;
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->animator, true, 0);
-                    RSDK.SetGameMode(ENGINESTATE_REGULAR);
+                    RSDK.SetEngineState(ENGINESTATE_REGULAR);
                     self->jumpHold         = false;
                     self->jumpPress        = false;
                     self->visible          = true;

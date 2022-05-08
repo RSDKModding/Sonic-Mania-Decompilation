@@ -24,15 +24,15 @@ void LogHelpers_StageLoad(void) {}
 void LogHelpers_Print(const char *message, ...)
 {
     if (!SceneInfo->inEditor) {
-        char buffer[0x100];
+        char messageText[0x100];
 
         va_list list;
         va_start(list, message);
-        vsprintf(buffer, message, list);
+        vsprintf(messageText, message, list);
 #if RETRO_USE_PLUS
-        RSDK.PrintText(PRINT_NORMAL, buffer);
+        RSDK.PrintText(PRINT_NORMAL, messageText);
 #else
-        RSDK.PrintMessage((void *)buffer, 0);
+        RSDK.PrintMessage((void *)messageText, 0);
 #endif
         va_end(list);
     }

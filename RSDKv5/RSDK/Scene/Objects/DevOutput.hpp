@@ -1,19 +1,27 @@
 #ifndef OBJ_DEVOUTPUT_H
 #define OBJ_DEVOUTPUT_H
 
+#if RETRO_REV02
 namespace RSDK
 {
 
-#if RETRO_REV02
+enum DevOutputStates {
+    DEVOUTPUT_DELAY,
+    DEVOUTPUT_ENTERPOPUP,
+    DEVOUTPUT_SHOWPOPUP,
+    DEVOUTPUT_EXITPOPUP,
+};
+
 // Object Class
 struct ObjectDevOutput : Object {
+    // Nothin'
 };
 
 // Entity Class
 struct EntityDevOutput : Entity {
-    int type;
-    int id;
-    int yOffset;
+    int32 state;
+    int32 timer;
+    int32 ySize;
     char message[1012];
 };
 
@@ -32,9 +40,9 @@ void DevOutput_EditorLoad();
 void DevOutput_Serialize();
 
 // Extra Entity Functions
-int DevOutput_GetStringYOffset(char *string);
-#endif
+int DevOutput_GetStringYSize(char *string);
 
 } // namespace RSDK
+#endif
 
-#endif //!OBJ_DEVOUTPUT_H
+#endif //! OBJ_DEVOUTPUT_H
