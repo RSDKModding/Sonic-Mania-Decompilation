@@ -12,16 +12,7 @@ namespace RSDK
 
 #define RSDK_SIGNATURE_SPR (0x525053)
 
-enum RotationFlags { ROTFLAG_NONE, ROTFLAG_FULL, ROTFLAG_45DEG, ROTFLAG_90DEG, ROTFLAG_180DEG, ROTFLAG_STATICFRAMES };
-
-struct SpriteAnimationEntry {
-    RETRO_HASH(hash);
-    int32 frameListOffset;
-    uint16 frameCount;
-    int16 animationSpeed;
-    uint8 loopIndex;
-    uint8 rotationFlag;
-};
+enum RotationSyles { ROTSTYLE_NONE, ROTSTYLE_FULL, ROTFLAG_45DEG, ROTSTYLE_90DEG, ROTSTYLE_180DEG, ROTSTYLE_STATICFRAMES };
 
 struct Hitbox {
     int16 left;
@@ -44,6 +35,15 @@ struct SpriteFrame {
     Hitbox hitboxes[FRAMEHITBOX_COUNT];
 };
 
+struct SpriteAnimationEntry {
+    RETRO_HASH(hash);
+    int32 frameListOffset;
+    uint16 frameCount;
+    int16 animationSpeed;
+    uint8 loopIndex;
+    uint8 rotationStyle;
+};
+
 struct SpriteAnimation {
     RETRO_HASH(hash);
     SpriteFrame *frames;
@@ -62,7 +62,7 @@ struct Animator {
     int16 frameDuration;
     int16 frameCount;
     uint8 loopIndex;
-    uint8 rotationFlag;
+    uint8 rotationStyle;
 };
 
 extern SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
@@ -142,14 +142,14 @@ inline void SetSpriteAnimation(uint16 aniFrames, uint16 animationID, Animator *a
     animator->frameCount      = anim->frameCount;
     animator->frameDuration   = animator->frames[frameID].duration;
     animator->speed           = anim->animationSpeed;
-    animator->rotationFlag    = anim->rotationFlag;
+    animator->rotationStyle   = anim->rotationStyle;
     animator->loopIndex       = anim->loopIndex;
     animator->prevAnimationID = animator->animationID;
     animator->animationID     = animationID;
 }
 
 inline void EditSpriteAnimation(uint16 aniFrames, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
-                                uint8 loopIndex, uint8 rotationFlag)
+                                uint8 loopIndex, uint8 rotationStyle)
 {
     if (aniFrames < SPRFILE_COUNT) {
         SpriteAnimation *spr = &spriteAnimationList[aniFrames];
@@ -160,7 +160,7 @@ inline void EditSpriteAnimation(uint16 aniFrames, uint16 animID, const char *nam
             anim->frameCount      = frameCount;
             anim->animationSpeed  = animSpeed;
             anim->loopIndex       = loopIndex;
-            anim->rotationFlag    = rotationFlag;
+            anim->rotationStyle   = rotationStyle;
         }
     }
 }

@@ -2320,14 +2320,14 @@ void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelati
         int32 rotation = sceneInfo.entity->rotation;
         int32 drawFX   = sceneInfo.entity->drawFX;
         if (sceneInfo.entity->drawFX & FX_ROTATE) {
-            switch (animator->rotationFlag) {
-                case RSDK::ROTFLAG_NONE:
+            switch (animator->rotationStyle) {
+                case RSDK::ROTSTYLE_NONE:
                     rotation = 0;
                     if ((sceneInfo.entity->drawFX & FX_ROTATE) != FX_NONE)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTFLAG_FULL:
+                case RSDK::ROTSTYLE_FULL:
                     rotation = sceneInfo.entity->rotation & 0x1FF;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
@@ -2339,19 +2339,19 @@ void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelati
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTFLAG_90DEG: // 0x00, 0x80, 0x100, 0x180
+                case RSDK::ROTSTYLE_90DEG: // 0x00, 0x80, 0x100, 0x180
                     rotation = (sceneInfo.entity->rotation + 0x40) & 0x180;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTFLAG_180DEG: // 0x00, 0x100
+                case RSDK::ROTSTYLE_180DEG: // 0x00, 0x100
                     rotation = (sceneInfo.entity->rotation + 0x80) & 0x100;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTFLAG_STATICFRAMES:
+                case RSDK::ROTSTYLE_STATICFRAMES:
                     if (sceneInfo.entity->rotation >= 0x100) {
                         rotation = 0x08 - ((0x214 - sceneInfo.entity->rotation) >> 6);
                     }
