@@ -370,8 +370,8 @@ void MenuSetup_Initialize(void)
             MenuSetup->delSavePrompt = prompt;
 
         EntityUIControl *leaderboardsControl = MenuSetup->leaderboards;
-        int32 x                              = leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x;
-        int32 y                              = leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y;
+        x                              = leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x;
+        y                              = leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y;
 
         hitbox.right  = leaderboardsControl->size.x >> 17;
         hitbox.left   = -(leaderboardsControl->size.x >> 17);
@@ -382,8 +382,8 @@ void MenuSetup_Initialize(void)
             MenuSetup->leaderboardPrompt = prompt;
 
         EntityUIControl *optionsControl = MenuSetup->options;
-        int32 x                         = optionsControl->startPos.x - optionsControl->cameraOffset.x;
-        int32 y                         = optionsControl->startPos.y - optionsControl->cameraOffset.y;
+        x                         = optionsControl->startPos.x - optionsControl->cameraOffset.x;
+        y                         = optionsControl->startPos.y - optionsControl->cameraOffset.y;
 
         hitbox.right  = optionsControl->size.x >> 17;
         hitbox.left   = -(optionsControl->size.x >> 17);
@@ -1135,12 +1135,19 @@ void MenuSetup_OpenSaveSelectMenu(void)
     control->childHasFocus = false;
 }
 
+#if RETRO_USE_PLUS
 void MenuSetup_SaveFileCB(bool32 success)
 {
     UIWaitSpinner_FinishWait();
-
     RSDK.LoadScene();
 }
+#else
+void MenuSetup_SaveFileCB(void)
+{
+    UIWaitSpinner_FinishWait();
+    RSDK.LoadScene();
+}
+#endif
 
 void MenuSetup_SaveSlot_ActionCB(void)
 {
@@ -1387,7 +1394,7 @@ void MenuSetup_TA_Leaderboards_YPressCB(void)
 {
     EntityUILeaderboard *leaderboards = MenuSetup->leaderboardWidget;
 
-    UITAZoneModule_ShowLeaderboards(leaderboards->characterID, leaderboards->zoneID, leaderboards->actID, leaderboards->entryIsUser, NULL);
+    UITAZoneModule_ShowLeaderboards(leaderboards->characterID, leaderboards->zoneID, leaderboards->actID, leaderboards->viewingUserRank, NULL);
 }
 
 void MenuSetup_State_SetupLeaderboards(void)
@@ -1427,9 +1434,9 @@ void MenuSetup_State_SetupLeaderboards(void)
         parent->buttonID        = 0;
 
         if (leaderboard->taRecord)
-            leaderboard->entryIsUser = !leaderboard->entryIsUser;
+            leaderboard->viewingUserRank = !leaderboard->viewingUserRank;
 
-        prompt->promptID   = leaderboard->entryIsUser ? 14 : 15;
+        prompt->promptID   = leaderboard->viewingUserRank ? 14 : 15;
         prompt->prevPrompt = -1;
         prompt->visible    = leaderboard->taRecord != 0;
 
@@ -1438,7 +1445,7 @@ void MenuSetup_State_SetupLeaderboards(void)
         destroyEntity(self);
     }
     else if (status == STATUS_OK) {
-        prompt->promptID   = leaderboard->entryIsUser ? 14 : 15;
+        prompt->promptID   = leaderboard->viewingUserRank ? 14 : 15;
         prompt->prevPrompt = -1;
         prompt->visible    = leaderboard->taRecord != 0;
 
@@ -2096,7 +2103,7 @@ void MenuSetup_Options_MenuSetupCB(void)
     }
 }
 
-void MenuSetup_Options_SaveOptionsCB_Load(bool32 success) { UIWaitSpinner_FinishWait(); }
+void MenuSetup_Options_SaveOptionsCB_Load(void) { UIWaitSpinner_FinishWait(); }
 
 void MenuSetup_Options_LaunchManual(void)
 {

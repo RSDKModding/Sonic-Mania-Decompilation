@@ -40,11 +40,16 @@ struct EntitySaveGame {
 struct ObjectSaveGame {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
-#endif
+    Entity *loadEntityPtr;
+    void (*loadCallback)(void);
+    Entity *saveEntityPtr;
+    void (*saveCallback)(void);
+#else
     Entity *loadEntityPtr;
     void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
     void (*saveCallback)(bool32 success);
+#endif
     EntitySaveGame *saveRAM;
     int32 unused1;
 };
@@ -72,7 +77,11 @@ int32 *SaveGame_GetDataPtr(int32 slot);
 #endif
 void SaveGame_LoadSaveData(void);
 void SaveGame_LoadFile(void);
+#if RETRO_USE_PLUS
 void SaveGame_SaveFile(void (*callback)(bool32 success));
+#else
+void SaveGame_SaveFile(void (*callback)(void));
+#endif
 void SaveGame_SaveLoadedCB(bool32 success);
 void SaveGame_SaveGameState(void);
 void SaveGame_SaveProgress(void);

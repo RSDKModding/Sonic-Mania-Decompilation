@@ -7,11 +7,16 @@
 struct ObjectOptions {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
-#endif
+    Entity *loadEntityPtr;
+    void (*loadCallback)(bool32 success);
+    Entity *saveEntityPtr;
+    void (*saveCallback)(void);
+#else
     Entity *loadEntityPtr;
     void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
     void (*saveCallback)(bool32 success);
+#endif
     bool32 changed;
 };
 
@@ -54,10 +59,14 @@ void Options_Reload(void);
 void Options_GetWinSize(void);
 void Options_LoadCallback(bool32 success);
 void Options_LoadOptionsBin(void);
+#if RETRO_USE_PLUS
 void Options_SaveOptionsBin(void (*callback)(bool32 success));
+#else
+void Options_SaveOptionsBin(void (*callback)(void));
+#endif
 void Options_SetLanguage(int32 language);
 void Options_LoadValuesFromSettings(EntityOptions *options);
-void Options_LoadOptionsCallback(int32 statusCode);
-void Options_SaveOptionsCallback(int32 statusCode);
+void Options_LoadOptionsCallback(int32 status);
+void Options_SaveOptionsCallback(int32 status);
 
 #endif //! OBJ_OPTIONS_H

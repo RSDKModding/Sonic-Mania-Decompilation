@@ -120,7 +120,11 @@ void Options_LoadOptionsBin(void)
     }
 }
 
+#if RETRO_USE_PLUS
 void Options_SaveOptionsBin(void (*callback)(bool32 success))
+#else
+void Options_SaveOptionsBin(void (*callback)(void))
+#endif
 {
     if (Options->changed) {
         if (sku_platform && sku_platform != PLATFORM_DEV) {
@@ -136,8 +140,10 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success))
             }
             else {
                 Options->changed = false;
+#if RETRO_USE_PLUS
                 if (callback)
                     callback(false);
+#endif
             }
 
             return;
@@ -152,8 +158,10 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success))
         }
     }
 
+#if RETRO_USE_PLUS
     if (callback)
         callback(true);
+#endif
 }
 
 void Options_SetLanguage(int32 language)
@@ -189,11 +197,16 @@ void Options_LoadValuesFromSettings(EntityOptions *options)
         options->volSfx = RSDK.GetVideoSetting(VIDEOSETTING_SFX_VOL);
 }
 
-void Options_LoadOptionsCallback(int32 statusCode)
+void Options_LoadOptionsCallback(int32 status)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     bool32 success         = false;
-    if (statusCode == STATUS_OK || statusCode == STATUS_NOTFOUND) {
+
+#if RETRO_USE_PLUS
+    if (status == STATUS_OK || status == STATUS_NOTFOUND) {
+#else
+    if (status) {
+#endif
         success                = true;
         globals->optionsLoaded = STATUS_OK;
 
@@ -222,14 +235,19 @@ void Options_LoadOptionsCallback(int32 statusCode)
     }
 }
 
-void Options_SaveOptionsCallback(int32 statusCode)
+void Options_SaveOptionsCallback(int32 status)
 {
     Options->changed = false;
     if (Options->saveCallback) {
         Entity *entStore = SceneInfo->entity;
         if (Options->saveEntityPtr)
             SceneInfo->entity = Options->saveEntityPtr;
-        Options->saveCallback(statusCode == STATUS_OK);
+
+#if RETRO_USE_PLUS
+        Options->saveCallback(status == STATUS_OK);
+#else
+        Options->saveCallback();
+#endif
         SceneInfo->entity = entStore;
 
         Options->saveCallback  = NULL;

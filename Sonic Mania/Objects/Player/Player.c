@@ -1992,7 +1992,7 @@ void Player_HandleDeath(EntityPlayer *player)
                             }
 #endif
 
-                            SaveGame_SaveFile(NULL);
+                            SaveGame_SaveFile(StateMachine_None);
 
                             EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                             gameOver->activeScreens |= 1 << player->playerID;
@@ -2021,7 +2021,7 @@ void Player_HandleDeath(EntityPlayer *player)
                                 saveRAM->stock          = globals->stock;
                             }
 #endif
-                            SaveGame_SaveFile(NULL);
+                            SaveGame_SaveFile(StateMachine_None);
                         }
 
                         Music_FadeOut(0.025);
@@ -6434,10 +6434,14 @@ void Player_ProcessP1Input(void)
             self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
             self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
             self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
+
+#if RETRO_USE_PLUS
             self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
             self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
             self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
             self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+#endif
+
             if (self->left && self->right) {
                 self->left  = false;
                 self->right = false;
@@ -6732,10 +6736,12 @@ void Player_ProcessP2Input_Player(void)
             self->left  = ControllerInfo[self->controllerID].keyLeft.down;
             self->right = ControllerInfo[self->controllerID].keyRight.down;
 
+#if RETRO_USE_PLUS
             self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
             self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
             self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
             self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+#endif
 
             if (self->left && self->right) {
                 self->left  = false;

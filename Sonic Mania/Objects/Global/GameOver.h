@@ -46,7 +46,11 @@ void GameOver_EditorLoad(void);
 void GameOver_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void GameOver_SaveGameCallback(bool32 success);
+#else
+void GameOver_SaveGameCallback(void);
+#endif
 
 void GameOver_State_EnterLetters(void);
 void GameOver_State_HandleMultiplayer(void);

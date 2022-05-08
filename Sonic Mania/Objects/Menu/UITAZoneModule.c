@@ -869,7 +869,7 @@ void UITAZoneModule_ProcessButtonCB_Expanded(void)
     }
     else {
         if (MenuSetup && UIControl->keyY) {
-            UITAZoneModule_ShowLeaderboards(self->characterID, self->zoneID, self->actID, 0, UITAZoneModule_ShowLeaderboards_CB);
+            UITAZoneModule_ShowLeaderboards(self->characterID, self->zoneID, self->actID, false, UITAZoneModule_ShowLeaderboards_CB);
 
             RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         }
@@ -882,7 +882,7 @@ void UITAZoneModule_ProcessButtonCB_Expanded(void)
     }
 }
 
-void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32 isUser, void (*callback)(void))
+void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32 wasUser, void (*callback)(void))
 {
     String string;
     INIT_STRING(string);
@@ -897,12 +897,10 @@ void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32
         uint16 *records                  = TimeAttackData_GetRecordedTime(zone, act, player, 1);
         EntityUILeaderboard *leaderboard = (EntityUILeaderboard *)MenuSetup->leaderboardWidget;
 
-        bool32 isUser = false;
-        if (!isUser)
-            isUser = *records;
+        int32 isUser = wasUser ? 0 : (*records != 0);
 
         leaderboard->taRecord    = *records;
-        leaderboard->entryIsUser = isUser;
+        leaderboard->viewingUserRank = isUser;
 
         APICallback_FetchLeaderboardData(zone, act, player, 0, 100, isUser);
         UILeaderboard_SetupLeaderboard(leaderboard, player, zone, act);

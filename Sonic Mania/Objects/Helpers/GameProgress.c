@@ -123,7 +123,11 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
     return zonePercent + medalPercent + specialPercent + endingPercent;
 }
 
+#if RETRO_USE_PLUS
 void GameProgress_TrackGameProgress(void (*callback)(bool32 success))
+#else
+void GameProgress_TrackGameProgress(void (*callback)(void))
+#endif
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to track progress before loading SaveGame file");
@@ -147,8 +151,10 @@ void GameProgress_TrackGameProgress(void (*callback)(bool32 success))
         }
     }
 
+#if RETRO_USE_PLUS
     if (callback)
         callback(false);
+#endif
 }
 void GameProgress_ClearBSSSave(void)
 {

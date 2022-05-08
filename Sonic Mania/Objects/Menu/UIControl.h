@@ -87,11 +87,9 @@ struct EntityUIControl {
     EntityUIShifter *shifter;
 #if RETRO_USE_PLUS
     EntityUICarousel *carousel;
-#endif
     EntityUIButtonPrompt *prompts[UICONTROL_PROMPT_COUNT];
-#if RETRO_USE_PLUS
-    EntityUIButton *buttons[UICONTROL_BUTTON_COUNT];
 #endif
+    EntityUIButton *buttons[UICONTROL_BUTTON_COUNT];
     bool32 (*backPressCB)(void);
     void (*processButtonInputCB)(void);
     void (*menuSetupCB)(void);

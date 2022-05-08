@@ -95,7 +95,7 @@ inline void StopSfx(int sfx)
 }
 void SetChannelAttributes(uint8 channel, float volume, float panning, float speed);
 
-inline void StopChannel(uint8 channel)
+inline void StopChannel(uint32 channel)
 {
     if (channel < CHANNEL_COUNT) {
         if (channels[channel].state != CHANNEL_STREAM_LOAD)
@@ -103,7 +103,7 @@ inline void StopChannel(uint8 channel)
     }
 }
 
-inline void PauseChannel(uint8 channel)
+inline void PauseChannel(uint32 channel)
 {
     if (channel < CHANNEL_COUNT) {
         if (channels[channel].state != CHANNEL_STREAM_LOAD)
@@ -111,7 +111,7 @@ inline void PauseChannel(uint8 channel)
     }
 }
 
-inline void ResumeChannel(uint8 channel)
+inline void ResumeChannel(uint32 channel)
 {
     if (channel < CHANNEL_COUNT) {
         if (channels[channel].state != CHANNEL_STREAM_LOAD)
@@ -140,7 +140,7 @@ inline bool32 SfxPlaying(uint16 sfxID)
     return false;
 }
 
-inline bool32 ChannelActive(uint8 channel)
+inline bool32 ChannelActive(uint32 channel)
 {
     if (channel >= CHANNEL_COUNT)
         return false;
@@ -148,6 +148,6 @@ inline bool32 ChannelActive(uint8 channel)
         return (channels[channel].state & 0x3F) != CHANNEL_NONE;
 }
 
-uint GetChannelPos(uint8 channel);
+uint GetChannelPos(uint32 channel);
 
 #endif

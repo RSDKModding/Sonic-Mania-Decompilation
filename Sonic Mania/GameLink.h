@@ -252,6 +252,16 @@ typedef struct {
     InputState keyZ;
     InputState keyStart;
     InputState keySelect;
+
+    // Rev01 hasn't split these into different structs yet
+#if !RETRO_USE_PLUS
+    InputState bumperL;
+    InputState bumperR;
+    InputState keyTriggerL;
+    InputState keyTriggerR;
+    InputState stickL;
+    InputState stickR;
+#endif
 } RSDKControllerState;
 
 typedef struct {
@@ -259,10 +269,20 @@ typedef struct {
     InputState keyDown;
     InputState keyLeft;
     InputState keyRight;
+#if RETRO_USE_PLUS
     InputState keyStick;
     float deadzone;
     float hDelta;
     float vDelta;
+#else
+    float deadzone;
+    float triggerDeltaL;
+    float triggerDeltaR;
+    float hDeltaL;
+    float vDeltaL;
+    float hDeltaR;
+    float vDeltaR;
+#endif
 } RSDKAnalogState;
 
 #if RETRO_USE_PLUS
@@ -304,32 +324,23 @@ typedef struct {
     int32 waterDrawPos;
 } RSDKScreenInfo;
 
-typedef struct {
-    void *functionPtrs;
 #if RETRO_USE_PLUS
-    void *APIPtrs;
-#endif
+typedef struct {
+    void *functionTable;
+    void *APITable;
 
     RSDKGameInfo *gameInfo;
-#if RETRO_USE_PLUS
     RSDKSKUInfo *currentSKU;
-#endif
-
     RSDKSceneInfo *sceneInfo;
 
     RSDKControllerState *controllerInfo;
     RSDKAnalogState *stickInfoL;
-#if RETRO_USE_PLUS
     RSDKAnalogState *stickInfoR;
     RSDKTriggerState *triggerInfoL;
     RSDKTriggerState *triggerInfoR;
-#endif
-
     RSDKTouchInfo *touchInfo;
 
-#if RETRO_USE_PLUS
     RSDKUnknownInfo *unknownInfo;
-#endif
 
     RSDKScreenInfo *screenInfo;
 
@@ -337,6 +348,23 @@ typedef struct {
     void *modPtrs;
 #endif
 } EngineInfo;
+#elif RETRO_USE_MOD_LOADER
+typedef struct {
+    void *functionTable;
+
+    RSDKGameInfo *gameInfo;
+    RSDKSceneInfo *sceneInfo;
+
+    RSDKControllerState *controllerInfo;
+    RSDKAnalogState *stickInfoL;
+
+    RSDKTouchInfo *touchInfo;
+
+    RSDKScreenInfo *screenInfo;
+
+    void *modPtrs;
+} EngineInfo;
+#endif
 
 typedef struct {
     int32 values[4][4];

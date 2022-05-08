@@ -32,41 +32,75 @@ ModFunctionTable Mod;
 #define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void *)(func))
 #endif
 
+void InitGameLogic(void);
+
+#if RETRO_USE_PLUS
 void LinkGameLogicDLL(EngineInfo *info)
 {
-#if RETRO_USE_PLUS
     memset(&API, 0, sizeof(APIFunctionTable));
-#endif
     memset(&RSDK, 0, sizeof(RSDKFunctionTable));
 
-    if (info->functionPtrs)
-        memcpy(&RSDK, info->functionPtrs, sizeof(RSDKFunctionTable));
-#if RETRO_USE_PLUS
-    if (info->APIPtrs)
-        memcpy(&API, info->APIPtrs, sizeof(APIFunctionTable));
-#endif
+    if (info->functionTable)
+        memcpy(&RSDK, info->functionTable, sizeof(RSDKFunctionTable));
+
+    if (info->APITable)
+        memcpy(&API, info->APITable, sizeof(APIFunctionTable));
+
 #if RETRO_USE_MOD_LOADER
-    if (info->modPtrs)
-        memcpy(&Mod, info->modPtrs, sizeof(ModFunctionTable));
+    if (info->modTable)
+        memcpy(&Mod, info->modTable, sizeof(ModFunctionTable));
 #endif
 
-    GameInfo = info->gameInfo;
-#if RETRO_USE_PLUS
-    SKU = info->currentSKU;
-#endif
-    SceneInfo        = info->sceneInfo;
-    ControllerInfo   = info->controllerInfo;
+    GameInfo       = info->gameInfo;
+    SKU            = info->currentSKU;
+    SceneInfo      = info->sceneInfo;
+    ControllerInfo = info->controllerInfo;
+
     AnalogStickInfoL = info->stickInfoL;
-#if RETRO_USE_PLUS
     AnalogStickInfoR = info->stickInfoR;
     TriggerInfoL     = info->triggerInfoL;
     TriggerInfoR     = info->triggerInfoR;
-#endif
-    TouchInfo = info->touchInfo;
-#if RETRO_USE_PLUS
+    TouchInfo        = info->touchInfo;
+
     UnknownInfo = info->unknownInfo;
+    ScreenInfo  = info->screenInfo;
+
+    InitGameLogic();
+}
+#else
+
+#if RETRO_USE_MOD_LOADER
+void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
+                      RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo, void *modTable)
+#else
+void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
+                      RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo)
 #endif
-    ScreenInfo = info->screenInfo;
+{
+    memset(&RSDK, 0, sizeof(RSDKFunctionTable));
+
+    if (functionTable)
+        memcpy(&RSDK, functionTable, sizeof(RSDKFunctionTable));
+
+#if RETRO_USE_MOD_LOADER
+    if (modTable)
+        memcpy(&Mod, modTable, sizeof(ModFunctionTable));
+#endif
+
+    GameInfo         = gameInfo;
+    SceneInfo        = sceneInfo;
+    ControllerInfo   = controllerInfo;
+    AnalogStickInfoL = stickInfoL;
+    TouchInfo        = touchInfo;
+    ScreenInfo       = screenInfo;
+
+    InitGameLogic();
+}
+#endif
+
+// This is actually part of "LinkGameLogicDLL" but since we have 2 versions of it, its easier to use shared code this way
+void InitGameLogic(void) {
+
     RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables));
 
     RSDK_REGISTER_OBJECT(Acetone);
@@ -1109,7 +1143,8 @@ bool32 LinkModLogic(EngineInfo *info, const char *id)
 #endif
 
 #if !RETRO_STANDALONE
-int32 RSDK_main(int32 argc, char **argv, void (*linkLogicPtr)(void *info)); // make sure other side has a void* too
+int32 RSDK_main(int32 argc, char **argv, void *linkLogicPtr); // make sure other side has a void* too
 
+// SDL Entry point
 int32 SDL_main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
 #endif

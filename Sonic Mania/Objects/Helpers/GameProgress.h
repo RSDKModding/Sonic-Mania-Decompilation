@@ -60,7 +60,11 @@ void GameProgress_ShuffleBSSID(void);
 EntityGameProgress *GameProgress_GetGameProgress(void);
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID);
 float GameProgress_GetCompletionPercent(EntityGameProgress *progress);
+#if RETRO_USE_PLUS
 void GameProgress_TrackGameProgress(void (*callback)(bool32 success));
+#else
+void GameProgress_TrackGameProgress(void (*callback)(void));
+#endif
 void GameProgress_ClearBSSSave(void);
 void GameProgress_UnlockAllMedals(void);
 void GameProgress_UnlockAll(void);

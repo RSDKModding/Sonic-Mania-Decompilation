@@ -192,9 +192,17 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
         self->down  = ControllerInfo[self->controllerID].keyDown.down;
         self->left  = ControllerInfo[self->controllerID].keyLeft.down;
         self->right = ControllerInfo[self->controllerID].keyRight.down;
+
+#if RETRO_USE_PLUS
         self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
         self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
         self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+#else
+        self->down |= AnalogStickInfoL[self->controllerID].vDeltaL < -0.3;
+        self->left |= AnalogStickInfoL[self->controllerID].hDeltaL < -0.3;
+        self->right |= AnalogStickInfoL[self->controllerID].hDeltaL > 0.3;
+#endif
+
         if (self->left && self->right) {
             self->left  = false;
             self->right = false;

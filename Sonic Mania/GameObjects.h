@@ -395,12 +395,12 @@ typedef struct {
     void (*StopSfx)(uint16 sfx);
     int32 (*PlayStream)(const char *filename, uint32 channel, uint32 startPos, uint32 loopPoint, bool32 loadASync);
     void (*SetChannelAttributes)(uint8 channel, float volume, float pan, float speed);
-    void (*StopChannel)(uint8 channel);
-    void (*PauseChannel)(uint8 channel);
-    void (*ResumeChannel)(uint8 channel);
+    void (*StopChannel)(uint32 channel);
+    void (*PauseChannel)(uint32 channel);
+    void (*ResumeChannel)(uint32 channel);
     bool32 (*IsSfxPlaying)(uint16 sfxID);
-    bool32 (*ChannelActive)(uint8 channel);
-    uint32 (*GetChannelPos)(uint8 channel);
+    bool32 (*ChannelActive)(uint32 channel);
+    uint32 (*GetChannelPos)(uint32 channel);
 
     // Videos & "HD Images"
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
@@ -577,7 +577,20 @@ extern ModFunctionTable Mod;
 #define showGizmos() (SceneInfo->listPos == SceneInfo->entitySlot || SceneInfo->effectGizmo)
 #endif
 
+#if RETRO_USE_PLUS
 DLLExport void LinkGameLogicDLL(EngineInfo *info);
+#else
+
+#if RETRO_USE_MOD_LOADER
+DLLExport void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
+                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo, void *modTable);
+#else
+DLLExport void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
+                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo);
+#endif
+
+#endif
+
 #if RETRO_USE_MOD_LOADER
 DLLExport bool32 LinkModLogic(EngineInfo *info, const char *id);
 #endif

@@ -106,7 +106,7 @@ void UITAZoneModule_State_StartTimeAttackAttempt(void);
 void UITAZoneModule_TouchCB_Left(void);
 void UITAZoneModule_TouchCB_Right(void);
 void UITAZoneModule_ProcessButtonCB_Expanded(void);
-void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32 isUser, void (*callback)(void));
+void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32 wasUser, void (*callback)(void));
 void UITAZoneModule_SetStartupModule(EntityUIControl *control, uint8 characterID, uint32 zoneID, uint8 actID, int32 score);
 void UITAZoneModule_State_ExpandModule(void);
 void UITAZoneModule_State_ContractModule(void);

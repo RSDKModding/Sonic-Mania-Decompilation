@@ -691,7 +691,11 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_USE_PLUS
 void TMZ2Outro_SaveFileCB(bool32 success) { TMZ2Outro->finishedSaving = true; }
+#else
+void TMZ2Outro_SaveFileCB(void) { TMZ2Outro->finishedSaving = true; }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void TMZ2Outro_EditorDraw(void) {}

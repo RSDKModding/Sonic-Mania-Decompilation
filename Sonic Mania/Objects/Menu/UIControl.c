@@ -121,7 +121,10 @@ void UIControl_Create(void *data)
             self->visible = true;
         }
         else {
+#if RETRO_USE_PLUS
             self->menuWasSetup = false;
+#endif
+
             if (self->activeOnLoad)
                 UIControl_SetActiveMenu(self);
             else
@@ -465,7 +468,11 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
 
     UIControl_MenuChangeButtonInit(entity);
 
+#if RETRO_USE_PLUS
     if (!entity->childHasFocus && (entity->resetSelection || !entity->menuWasSetup)) {
+#else
+    if (!entity->childHasFocus && entity->resetSelection) {
+#endif
         entity->position.x  = entity->startPos.x;
         entity->position.y  = entity->startPos.y;
         entity->targetPos.x = entity->startPos.x;
@@ -474,9 +481,10 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
 
     entity->state         = UIControl_ProcessInputs;
     entity->childHasFocus = false;
-    entity->menuWasSetup  = true;
 
 #if RETRO_USE_PLUS
+    entity->menuWasSetup  = true;
+
     for (int32 p = 0; p < entity->promptCount; ++p) entity->prompts[p]->active = ACTIVE_NORMAL;
 #endif
 

@@ -103,7 +103,11 @@ void UISaveSlot_LoadSaveInfo(void);
 void UISaveSlot_HandleSaveIcons(void);
 
 void UISaveSlot_DeleteDLG_CB(void);
+#if RETRO_USE_PLUS
 void UISaveSlot_DeleteSaveCB(bool32 success);
+#else
+void UISaveSlot_DeleteSaveCB(void);
+#endif
 void UISaveSlot_ProcessButtonCB(void);
 void UISaveSlot_SelectedCB(void);
 

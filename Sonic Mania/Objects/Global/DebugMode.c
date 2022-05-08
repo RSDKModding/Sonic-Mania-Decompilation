@@ -26,6 +26,8 @@ void DebugMode_Update(void)
     //    Zone->stageFinishCallback = NULL;
 
     bool32 moved = false;
+
+#if RETRO_USE_PLUS 
     if (ControllerInfo[CONT_P1].keyUp.down || (AnalogStickInfoL[CONT_P1].vDelta > 0.3)) {
         self->position.y -= self->velocity.y;
         moved = true;
@@ -43,6 +45,25 @@ void DebugMode_Update(void)
         self->position.x += self->velocity.y;
         moved = true;
     }
+#else
+    if (ControllerInfo[CONT_P1].keyUp.down || (AnalogStickInfoL[CONT_P1].vDeltaL > 0.3)) {
+        self->position.y -= self->velocity.y;
+        moved = true;
+    }
+    else if (ControllerInfo[CONT_P1].keyDown.down || (AnalogStickInfoL[CONT_P1].vDeltaL < -0.3)) {
+        self->position.y += self->velocity.y;
+        moved = true;
+    }
+
+    if (ControllerInfo[CONT_P1].keyLeft.down || (AnalogStickInfoL[CONT_P1].hDeltaL < -0.3)) {
+        self->position.x -= self->velocity.y;
+        moved = true;
+    }
+    else if (ControllerInfo[CONT_P1].keyRight.down || (AnalogStickInfoL[CONT_P1].hDeltaL > 0.3)) {
+        self->position.x += self->velocity.y;
+        moved = true;
+    }
+#endif
 
     if (!moved) {
         self->velocity.y = 0;

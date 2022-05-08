@@ -874,7 +874,7 @@ void SetChannelAttributes(uint8 channel, float volume, float panning, float spee
     }
 }
 
-uint GetChannelPos(uint8 channel)
+uint GetChannelPos(uint32 channel)
 {
     if (channel >= CHANNEL_COUNT)
         return 0;

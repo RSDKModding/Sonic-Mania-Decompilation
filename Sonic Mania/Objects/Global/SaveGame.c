@@ -173,11 +173,18 @@ void SaveGame_LoadFile(void)
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
     API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 }
+
+#if RETRO_USE_PLUS
 void SaveGame_SaveFile(void (*callback)(bool32 success))
+#else
+void SaveGame_SaveFile(void (*callback)(void))
+#endif
 {
     if (API_GetNoSave() || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
+#if RETRO_USE_PLUS
         if (callback)
             callback(false);
+#endif
     }
     else {
         SaveGame->saveEntityPtr = SceneInfo->entity;
@@ -372,6 +379,7 @@ void SaveGame_ResetPlayerState(void)
 void SaveGame_LoadFile_CB(int32 status)
 {
     bool32 success = false;
+#if RETRO_USE_PLUS
     if (status == STATUS_OK || status == STATUS_NOTFOUND) {
         success             = true;
         globals->saveLoaded = STATUS_OK;
@@ -380,12 +388,27 @@ void SaveGame_LoadFile_CB(int32 status)
         success             = false;
         globals->saveLoaded = STATUS_ERROR;
     }
+#else
+    if (status) {
+        success             = true;
+        globals->saveLoaded = STATUS_OK;
+    }
+    else {
+        success             = false;
+        globals->saveLoaded = STATUS_ERROR;
+    }
+#endif
 
     if (SaveGame->loadCallback) {
         Entity *store = SceneInfo->entity;
         if (SaveGame->loadEntityPtr)
             SceneInfo->entity = SaveGame->loadEntityPtr;
+
+#if RETRO_USE_PLUS
         SaveGame->loadCallback(success);
+#else
+        SaveGame->loadCallback();
+#endif
         SceneInfo->entity = store;
 
         SaveGame->loadCallback  = NULL;
@@ -398,7 +421,13 @@ void SaveGame_SaveFile_CB(int32 status)
         Entity *store = SceneInfo->entity;
         if (SaveGame->saveEntityPtr)
             SceneInfo->entity = SaveGame->saveEntityPtr;
+
+#if RETRO_USE_PLUS
         SaveGame->saveCallback(status == STATUS_OK);
+#else
+        SaveGame->saveCallback();
+#endif
+
         SceneInfo->entity = store;
 
         SaveGame->saveCallback  = NULL;

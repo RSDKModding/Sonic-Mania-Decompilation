@@ -43,13 +43,13 @@ int main(int argc, char *argv[]) { return RSDK_main(argc, argv, RSDK::LinkGameLo
 
 #endif
 
-int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void *))
+int RSDK_main(int argc, char **argv, void *linkLogicPtr)
 {
 #ifdef __SWITCH__
     initNxLink();
 #endif
 
-    linkGameLogic = (linkPtr)linkLogicPtr;
+    linkGameLogic = (LogicLinkHandle)linkLogicPtr;
 
     int exitCode = RunRetroEngine(argc, argv);
 

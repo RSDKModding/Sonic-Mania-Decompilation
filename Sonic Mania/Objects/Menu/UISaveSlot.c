@@ -843,7 +843,11 @@ void UISaveSlot_DeleteDLG_CB(void)
     SaveGame_SaveFile(UISaveSlot_DeleteSaveCB);
 }
 
+#if RETRO_USE_PLUS
 void UISaveSlot_DeleteSaveCB(bool32 success)
+#else
+void UISaveSlot_DeleteSaveCB(void)
+#endif
 {
     EntityUIDialog *dialog     = (EntityUIDialog *)UIDialog->activeDialog;
     EntityUISaveSlot *saveSlot = (EntityUISaveSlot *)dialog->entityPtr;

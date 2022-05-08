@@ -43,11 +43,13 @@ struct GameInfo {
 #if RETRO_REV02
     void *APIPtrs;
 #endif
+
     GameVersionInfo *gameInfo;
 #if RETRO_REV02
     SKU::SKUInfo *currentSKU;
 #endif
     SceneInfo *sceneInfo;
+
     ControllerState *controller;
     AnalogState *stickL;
 #if RETRO_REV02
@@ -56,10 +58,13 @@ struct GameInfo {
     TriggerState *triggerR;
 #endif
     TouchMouseData *touchMouse;
+
 #if RETRO_REV02
     SKU::UnknownInfo *unknown;
 #endif
+
     ScreenInfo *screenInfo;
+
 #if RETRO_USE_MOD_LOADER
     void *modPtrs;
 #endif
@@ -67,7 +72,18 @@ struct GameInfo {
 
 void SetupFunctionTables();
 
+#if RETRO_REV02
 void LinkGameLogic(void *info);
+#else
+
+#if RETRO_USE_MOD_LOADER
+void LinkGameLogic(void *functionTable, void *gameInfo, void *sceneInfo, void *controllerInfo, void *stickInfoL, void *touchInfo, void *screenInfo,
+                   void *modTable);
+#else
+void LinkGameLogic(void *functionTable, void *gameInfo, void *sceneInfo, void *controllerInfo, void *stickInfoL, void *touchInfo, void *screenInfo);
+#endif
+
+#endif
 
 } // namespace RSDK
 

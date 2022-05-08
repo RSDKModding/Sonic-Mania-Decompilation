@@ -344,7 +344,7 @@ struct InputDevice {
     int32 inputID;
     uint8 active;
     uint8 assignedControllerID;
-    uint8 unknown;
+    uint8 unused;
     uint8 disabled;
     uint8 anyPress;
     int32 inactiveTimer[2];
@@ -369,6 +369,16 @@ struct ControllerState {
     InputState keyZ;
     InputState keyStart;
     InputState keySelect;
+
+    // Rev01 hasn't split these into different structs yet
+#if !RETRO_REV02
+    InputState bumperL;
+    InputState bumperR;
+    InputState keyTriggerL;
+    InputState keyTriggerR;
+    InputState stickL;
+    InputState stickR;
+#endif
 };
 
 struct AnalogState {
@@ -376,18 +386,30 @@ struct AnalogState {
     InputState keyDown;
     InputState keyLeft;
     InputState keyRight;
+#if RETRO_REV02
     InputState keyStick;
     float deadzone;
     float hDelta;
     float vDelta;
+#else
+    float deadzone;
+    float triggerDeltaL;
+    float triggerDeltaR;
+    float hDeltaL;
+    float vDeltaL;
+    float hDeltaR;
+    float vDeltaR;
+#endif
 };
 
+#if RETRO_REV02
 struct TriggerState {
     InputState keyBumper;
     InputState keyTrigger;
     float deadzone;
     float delta;
 };
+#endif
 
 struct TouchMouseData {
     float x[0x10];
@@ -405,7 +427,7 @@ struct TouchMouseData {
 
 #if !RETRO_REV02
 struct ActiveControllerInfo {
-    int32 unknown1;
+    int32 deviceType;
     int32 unknown2;
     int32 inputID;
     int32 unknown3;
@@ -420,9 +442,11 @@ extern InputDevice *activeInputDevices[PLAYER_COUNT];
 
 extern ControllerState controller[PLAYER_COUNT + 1];
 extern AnalogState stickL[PLAYER_COUNT + 1];
+#if RETRO_REV02
 extern AnalogState stickR[PLAYER_COUNT + 1];
 extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
+#endif
 extern TouchMouseData touchMouseData;
 
 extern GamePadMappings *gamePadMappings;

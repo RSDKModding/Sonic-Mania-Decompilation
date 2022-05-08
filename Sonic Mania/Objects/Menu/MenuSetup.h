@@ -123,7 +123,11 @@ void MenuSetup_State_HandleTransition(void);
 //Save Select
 int32 MenuSetup_GetMedalMods(void);
 void MenuSetup_OpenSaveSelectMenu(void);
+#if RETRO_USE_PLUS
 void MenuSetup_SaveFileCB(bool32 success);
+#else
+void MenuSetup_SaveFileCB(void);
+#endif
 void MenuSetup_SaveSlot_ActionCB(void);
 void MenuSetup_SaveSel_MenuUpdateCB(void);
 void MenuSetup_OpenSecretsMenu(void);
@@ -174,7 +178,7 @@ void MenuSetup_OptionsVideo_Win_MenuUpdateCB(void);
 void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void);
 void MenuSetup_Options_OpenKBControlsMenu(void);
 void MenuSetup_Options_MenuSetupCB(void);
-void MenuSetup_Options_SaveOptionsCB_Load(bool32 success);
+void MenuSetup_Options_SaveOptionsCB_Load(void);
 void MenuSetup_Options_LaunchManual(void);
 void MenuSetup_OptionsLanguage_LanguageButton_ActionCB(void);
 void MenuSetup_OptionsVideo_ShaderButton_ActionCB(void);

@@ -783,4 +783,23 @@ void RSDK::SetupFunctionTables()
 #endif
 }
 
+#if RETRO_REV02
 void RSDK::LinkGameLogic(void *info) { PrintLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked"); }
+#else
+
+#if RETRO_USE_MOD_LOADER
+void RSDK::LinkGameLogic(void *functionTable, void *gameInfo, void *sceneInfo, void *controllerInfo, void *stickInfoL, void *touchInfo,
+                         void *screenInfo, void *modTable)
+{
+    PrintLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked");
+}
+#else
+void RSDK::LinkGameLogic(void *functionTable, void *gameInfo, void *sceneInfo, void *controllerInfo, void *stickInfoL, void *touchInfo,
+                         void *screenInfo)
+{
+    PrintLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked");
+}
+#endif
+
+#endif
+

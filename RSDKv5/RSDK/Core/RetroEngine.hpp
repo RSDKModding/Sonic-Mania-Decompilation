@@ -387,8 +387,19 @@ struct RetroEngine {
 
 extern RetroEngine engine;
 
-typedef void (*linkPtr)(RSDK::GameInfo *);
-extern linkPtr linkGameLogic;
+#if RETRO_REV02
+typedef void (*LogicLinkHandle)(RSDK::GameInfo *info);
+#else
+#if RETRO_USE_MOD_LOADER
+typedef void (*LogicLinkHandle)(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
+                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo, void *modTable);
+#else
+typedef void (*LogicLinkHandle)(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
+                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo);
+#endif
+#endif
+
+extern LogicLinkHandle linkGameLogic;
 
 int RunRetroEngine(int argc, char *argv[]);
 void ProcessEngine();

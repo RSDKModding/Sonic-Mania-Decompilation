@@ -99,11 +99,19 @@ void GameOver_StageLoad(void)
     GameOver->activeScreens = 0;
 }
 
+#if RETRO_USE_PLUS
 void GameOver_SaveGameCallback(bool32 success)
 {
     UIWaitSpinner_FinishWait();
     RSDK.LoadScene();
 }
+#else
+void GameOver_SaveGameCallback(void)
+{
+    UIWaitSpinner_FinishWait();
+    RSDK.LoadScene();
+}
+#endif
 
 void GameOver_State_EnterLetters(void)
 {

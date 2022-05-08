@@ -97,7 +97,7 @@ void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
     int32 count              = APICallback_LeaderboardEntryCount();
     leaderboard->entryLength = count;
 
-    if (leaderboard->entryIsUser && count >= 1) {
+    if (leaderboard->viewingUserRank && count >= 1) {
 
         int32 i = 0;
         for (; i < leaderboard->entryLength; ++i) {

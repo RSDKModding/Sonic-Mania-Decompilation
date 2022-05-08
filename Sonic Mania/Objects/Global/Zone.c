@@ -1191,7 +1191,7 @@ void Zone_HandlePlayerSwap(void)
 
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
-            TileLayer *layer = RSDK.GetSceneLayer(l);
+            TileLayer *layer = RSDK.GetTileLayer(l);
             if (layer)
                 layerPlanes[l] = layer->drawLayer[preSwapPlayerIDs[p]];
             else
@@ -1271,7 +1271,7 @@ void Zone_HandlePlayerSwap(void)
 
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
-            TileLayer *layer = RSDK.GetSceneLayer(l);
+            TileLayer *layer = RSDK.GetTileLayer(l);
             layer->drawLayer[swappedPlayerIDs[p]] = layerPlanes[l];
         }
 

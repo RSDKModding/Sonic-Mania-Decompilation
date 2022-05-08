@@ -29,7 +29,7 @@ struct EntityUILeaderboard {
     int32 entryOffset;
     int32 entryLength;
 #if !RETRO_USE_PLUS
-    int32 entryIsUser;
+    bool32 viewingUserRank;
     int32 taRecord;
 #endif
     bool32 yPressCBEnabled;

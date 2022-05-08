@@ -539,11 +539,20 @@ void ActClear_CheckPlayerVictory(void)
         }
     }
 }
+
+#if RETRO_USE_PLUS
 void ActClear_SaveGameCallback(bool32 success)
 {
     UIWaitSpinner_FinishWait();
     ActClear->isSavingGame = false;
 }
+#else
+void ActClear_SaveGameCallback(void)
+{
+    UIWaitSpinner_FinishWait();
+    ActClear->isSavingGame = false;
+}
+#endif
 
 void ActClear_SetupForceOnScreenP2(void)
 {

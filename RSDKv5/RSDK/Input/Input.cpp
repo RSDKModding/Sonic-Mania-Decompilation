@@ -8,9 +8,11 @@ InputDevice *activeInputDevices[PLAYER_COUNT];
 
 ControllerState controller[PLAYER_COUNT + 1];
 AnalogState stickL[PLAYER_COUNT + 1];
+#if RETRO_REV02
 AnalogState stickR[PLAYER_COUNT + 1];
 TriggerState triggerL[PLAYER_COUNT + 1];
 TriggerState triggerR[PLAYER_COUNT + 1];
+#endif
 TouchMouseData touchMouseData;
 
 GamePadMappings *gamePadMappings = NULL;
@@ -126,6 +128,8 @@ void ClearInput()
         stickL[i].keyDown.press  = false;
         stickL[i].keyLeft.press  = false;
         stickL[i].keyRight.press = false;
+
+#if RETRO_REV02
         stickL[i].keyStick.press = false;
 
         stickR[i].keyUp.press    = false;
@@ -139,6 +143,16 @@ void ClearInput()
 
         triggerR[i].keyBumper.press  = false;
         triggerR[i].keyTrigger.press = false;
+#else
+        controller[i].keyStickL.press = false;
+        controller[i].keyStickR.press = false;
+
+        controller[i].keyBumperL.press  = false;
+        controller[i].keyTriggerL.press = false;
+
+        controller[i].keyBumperR.press  = false;
+        controller[i].keyTriggerR.press = false;
+#endif
     }
 }
 
@@ -179,11 +193,20 @@ void ProcessInput()
                 &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
                 &controller[c].keyY,  &controller[c].keyZ,    &controller[c].keyStart, &controller[c].keySelect,
             };
+
+#if RETRO_REV02
             InputState *lStick[] = { &stickL[c].keyUp, &stickL[c].keyDown, &stickL[c].keyLeft, &stickL[c].keyRight, &stickL[c].keyStick };
             InputState *rStick[] = { &stickR[c].keyUp, &stickR[c].keyDown, &stickR[c].keyLeft, &stickR[c].keyRight, &stickR[c].keyStick };
 
             InputState *lTrigger[] = { &triggerL[c].keyBumper, &triggerL[c].keyTrigger };
             InputState *rTrigger[] = { &triggerR[c].keyBumper, &triggerR[c].keyTrigger };
+#else
+            InputState *lStick[]   = { &stickL[c].keyUp, &stickL[c].keyDown, &stickL[c].keyLeft, &stickL[c].keyRight, &controller[c].keyStickL };
+            InputState *rStick[] = { NULL, NULL, NULL, NULL, &controller[c].keyStickR };
+
+            InputState *lTrigger[] = { &controller[c].keyBumperL, &controller[c].keyTriggerL };
+            InputState *rTrigger[] = { &controller[c].keyBumperR, &controller[c].keyTriggerR };
+#endif
 
             for (int32 i = 0; i < 12; ++i) {
                 if (cont[i]->press) {
@@ -206,14 +229,16 @@ void ProcessInput()
                 else
                     lStick[i]->down = false;
 
-                if (rStick[i]->press) {
-                    if (rStick[i]->down)
-                        rStick[i]->press = false;
+                if (rStick[i]) {
+                    if (rStick[i]->press) {
+                        if (rStick[i]->down)
+                            rStick[i]->press = false;
+                        else
+                            rStick[i]->down = true;
+                    }
                     else
-                        rStick[i]->down = true;
+                        rStick[i]->down = false;
                 }
-                else
-                    rStick[i]->down = false;
             }
 
             for (int32 i = 0; i < 2; ++i) {

@@ -133,8 +133,13 @@ void DemoMenu_State_Selection(void)
         RSDK.PlaySfx(TitleSetup->sfxMenuBleep, false, 255);
     }
     else {
+#if RETRO_USE_PLUS
         float vDelta    = AnalogStickInfoL->vDelta;
         float deltaDist = AnalogStickInfoL->vDelta - self->vDelta;
+#else
+        float vDelta    = AnalogStickInfoL->vDeltaL;
+        float deltaDist = AnalogStickInfoL->vDeltaL - self->vDelta;
+#endif
         if (deltaDist < 0.0)
             deltaDist = -deltaDist;
 
@@ -147,7 +152,7 @@ void DemoMenu_State_Selection(void)
                 RSDK.PlaySfx(TitleSetup->sfxMenuBleep, false, 255);
             }
 
-            self->vDelta = AnalogStickInfoL->vDelta;
+            self->vDelta = vDelta;
         }
     }
 

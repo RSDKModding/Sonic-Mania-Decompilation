@@ -1,6 +1,6 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-linkPtr linkGameLogic = NULL;
+LogicLinkHandle linkGameLogic = NULL;
 
 #if RETRO_PLATFORM == RETRO_WIN
 #include "Windows.h"
@@ -970,30 +970,32 @@ void InitGameLink()
 
     globalObjectCount = TYPE_DEFAULTCOUNT;
 
+#if RETRO_REV02
     RSDK::GameInfo info;
 
     info.functionPtrs = RSDK::RSDKFunctionTable;
-#if RETRO_REV02
-    info.APIPtrs    = RSDK::APIFunctionTable;
-    info.currentSKU = &RSDK::SKU::curSKU;
-#endif
-    info.gameInfo   = &RSDK::gameVerInfo;
-    info.sceneInfo  = &sceneInfo;
-    info.controller = controller;
-    info.stickL     = stickL;
-#if RETRO_REV02
-    info.stickR   = stickR;
-    info.triggerL = triggerL;
-    info.triggerR = triggerR;
-#endif
-    info.touchMouse = &touchMouseData;
-#if RETRO_REV02
-    info.unknown = &RSDK::SKU::unknownInfo;
-#endif
-    info.screenInfo = screens;
+    info.APIPtrs      = RSDK::APIFunctionTable;
+
+    info.currentSKU   = &RSDK::SKU::curSKU;
+    info.gameInfo     = &RSDK::gameVerInfo;
+    info.sceneInfo    = &sceneInfo;
+
+    info.controller   = controller;
+    info.stickL       = stickL;
+    info.stickR       = stickR;
+    info.triggerL     = triggerL;
+    info.triggerR     = triggerR;
+    info.touchMouse   = &touchMouseData;
+
+    info.unknown      = &RSDK::SKU::unknownInfo;
+
+    info.screenInfo   = screens;
+
 #if RETRO_USE_MOD_LOADER
     info.modPtrs = RSDK::modFunctionTable;
 #endif
+#endif
+
     bool32 linked = false;
 
     if (engine.useExternalCode) {
@@ -1002,9 +1004,18 @@ void InitGameLink()
             hLibModule = LoadLibraryA(gameLogicName);
 
         if (hLibModule) {
-            linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
+            LogicLinkHandle linkGameLogic = (LogicLinkHandle)GetProcAddress(hLibModule, "LinkGameLogicDLL");
             if (linkGameLogic) {
+#if RETRO_REV02
                 linkGameLogic(&info);
+#else
+#if RETRO_USE_MOD_LOADER
+                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens,
+                              RSDK::modFunctionTable);
+#else
+                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
+#endif
+#endif
                 linked = true;
             }
         }
@@ -1017,9 +1028,18 @@ void InitGameLink()
             link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
 
         if (link_handle) {
-            linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
+            LogicLinkHandle linkGameLogic = (LogicLinkHandle)dlsym(link_handle, "LinkGameLogicDLL");
             if (linkGameLogic) {
+#if RETRO_REV02
                 linkGameLogic(&info);
+#else
+#if RETRO_USE_MOD_LOADER
+                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens,
+                              RSDK::modFunctionTable);
+#else
+                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
+#endif
+#endif
                 linked = true;
             }
         }
@@ -1032,9 +1052,18 @@ void InitGameLink()
             link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
         
         if (link_handle) {
-            linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
+            LogicLinkHandle linkGameLogic = (LogicLinkHandle)dlsym(link_handle, "LinkGameLogicDLL");
             if (linkGameLogic) {
+#if RETRO_REV02
                 linkGameLogic(&info);
+#else
+#if RETRO_USE_MOD_LOADER
+                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens,
+                              RSDK::modFunctionTable);
+#else
+                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
+#endif
+#endif
                 linked = true;
             }
         }
@@ -1044,7 +1073,15 @@ void InitGameLink()
             PrintLog(PRINT_POPUP, "Failed to link game logic!");
     }
     else {
+#if RETRO_REV02
         linkGameLogic(&info);
+#else
+#if RETRO_USE_MOD_LOADER
+        linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens, RSDK::modFunctionTable);
+#else
+        linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
+#endif
+#endif
     }
 
 #if RETRO_USE_MOD_LOADER
