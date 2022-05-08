@@ -15,9 +15,9 @@ struct Image {
     }
 
     virtual bool32 Load(const char *fileName, bool32 loadHeader) { return false; }
-    virtual bool32 Load(TextInfo *fileName, bool32 loadHeader)
+    virtual bool32 Load(String *fileName, bool32 loadHeader)
     {
-        if (!fileName->text)
+        if (!fileName->chars)
             return Load("", loadHeader);
 
         GetCString(textBuffer, fileName);

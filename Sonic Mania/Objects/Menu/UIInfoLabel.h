@@ -16,7 +16,7 @@ struct EntityUIInfoLabel {
     int32 unused1;
     int32 unused2;
     Vector2 size;
-    TextInfo text;
+    String text;
     int32 width;
     Animator textAnimator;
 };
@@ -39,7 +39,7 @@ void UIInfoLabel_Serialize(void);
 
 // Extra Entity Functions
 void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text);
-void UIInfoLabel_SetString(EntityUIInfoLabel *self, TextInfo *text);
+void UIInfoLabel_SetString(EntityUIInfoLabel *self, String *text);
 void UIInfoLabel_DrawSprites(void);
 
 #endif //! OBJ_UIINFOLABEL_H

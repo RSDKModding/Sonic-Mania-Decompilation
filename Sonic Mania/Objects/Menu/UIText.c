@@ -62,8 +62,8 @@ void UIText_Create(void *data)
         self->visible   = true;
         self->drawOrder = 2;
 
-        if (!self->text.text)
-            RSDK.SetText(&self->text, "UNTITLED", false);
+        if (!self->text.chars)
+            RSDK.InitString(&self->text, "UNTITLED", false);
 
         if (!UIWidgets || UIText->aniFrames)
             RSDK.SetSpriteString(UIText->aniFrames, self->listID, &self->text);

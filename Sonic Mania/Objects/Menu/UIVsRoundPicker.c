@@ -149,7 +149,7 @@ void UIVsRoundPicker_SetText(void)
 
     char buffer[0x10];
     sprintf(buffer, "%2d", self->val);
-    RSDK.PrependText(&self->text, buffer);
+    RSDK.SetString(&self->text, buffer);
 
     RSDK.SetSpriteString(UIVsRoundPicker->aniFrames, 15, &self->text);
 }

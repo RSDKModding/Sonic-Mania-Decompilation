@@ -26,69 +26,69 @@ void OptionsMenu_Initialize(void)
 {
     LogHelpers_Print("ManiaModeMenu_Initialize()");
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&info, "Options");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Options");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->optionsControl = control;
 
-        RSDK.PrependText(&info, "Language");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Language");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->languageControl = control;
 
-        RSDK.PrependText(&info, "Language Old");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Language Old");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->languageControl_Legacy = control;
 
-        RSDK.PrependText(&info, "Video");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Video");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->videoControl = control;
 
-        RSDK.PrependText(&info, "Video WIN");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Video WIN");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->videoControl_Windows = control;
 
-        RSDK.PrependText(&info, "Sound");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Sound");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->soundControl = control;
 
-        RSDK.PrependText(&info, "Controls WIN");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls WIN");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_Windows = control;
 
-        RSDK.PrependText(&info, "Controls KB");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls KB");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_KB = control;
 
-        RSDK.PrependText(&info, "Controls PS4");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls PS4");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_PS4 = control;
 
-        RSDK.PrependText(&info, "Controls XB1");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls XB1");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_XB1 = control;
 
-        RSDK.PrependText(&info, "Controls NX");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_NX = control;
 
-        RSDK.PrependText(&info, "Controls NX Grip");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX Grip");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_NXGrip = control;
 
-        RSDK.PrependText(&info, "Controls NX Joycon");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX Joycon");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_NXJoycon = control;
 
-        RSDK.PrependText(&info, "Controls NX Pro");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX Pro");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->controlsControl_NXPro = control;
 
-        RSDK.PrependText(&info, "Data Options");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Data Options");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             OptionsMenu->dataOptionsControl = control;
     }
 
@@ -170,8 +170,8 @@ void OptionsMenu_SetupActions(void)
     EntityUIControl *dataControl         = OptionsMenu->dataOptionsControl;
 
     Hitbox hitbox;
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     foreach_all(UIButton, button)
     {
@@ -329,8 +329,8 @@ void OptionsMenu_SetupActions(void)
     optionsControl->menuSetupCB = OptionsMenu_MenuSetupCB;
 
     EntityUIInfoLabel *label = OptionsMenu->selectDataToEraseLabel;
-    Localization_GetString(&info, STR_SELECTDATATOERASE);
-    UIInfoLabel_SetString(label, &info);
+    Localization_GetString(&string, STR_SELECTDATATOERASE);
+    UIInfoLabel_SetString(label, &string);
 
     videoControl_Win->menuUpdateCB = OptionsMenu_VideoControl_Win_MenuUpdateCB;
     videoControl_Win->yPressCB     = OptionsMenu_VideoControl_Win_YPressCB;
@@ -415,31 +415,36 @@ void OptionsMenu_VideoControl_Win_MenuUpdateCB(void) { OptionsMenu_InitVideoOpti
 
 void OptionsMenu_VideoControl_Win_YPressCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     if (RSDK.GetVideoSetting(VIDEOSETTING_CHANGED)) {
         RSDK.UpdateWindow();
 
         Localization_GetString(&message, STR_VIDEOCHANGESAPPLIED);
-        UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_Win_YesCB, OptionsMenu_ApplyChangesDlg_Win_NoCB, true, true);
+        EntityUIDialog *dialog =
+            UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_Win_YesCB, OptionsMenu_ApplyChangesDlg_Win_NoCB, true, true);
+        if (dialog)
+            dialog->closeDelay = 15 * 60; // 15 seconds at 60 FPS
     }
 }
 void OptionsMenu_DlgRunnerCB_RevertVideoChanges(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     RSDK.UpdateWindow();
 
     Localization_GetString(&message, STR_VIDEOCHANGESAPPLIED);
-    UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_YesCB, OptionsMenu_ApplyChangesDlg_NoCB, true, true);
+    EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&message, OptionsMenu_ApplyChangesDlg_YesCB, OptionsMenu_ApplyChangesDlg_NoCB, true, true);
+    if (dialog)
+        dialog->closeDelay = 15 * 60; // 15 seconds at 60 FPS
 }
 
 bool32 OptionsMenu_VideoControl_Win_BackPressCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     if (RSDK.GetVideoSetting(VIDEOSETTING_CHANGED)) {
         Localization_GetString(&message, STR_APPLYCHANGEDSETTINGS);
@@ -505,7 +510,7 @@ void OptionsMenu_ApplyChangesDlg_YesCB(void)
 void OptionsMenu_VideoMenuButton_ActionCB(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
-        RSDK.SetVideoSetting(VIDEOSETTING_STORE, 0);
+        RSDK.SetVideoSetting(VIDEOSETTING_STORE, false);
         UIControl_MatchMenuTag("Video WIN");
     }
     else {
@@ -523,8 +528,8 @@ void OptionsMenu_ControlsMenuButton_ActionCB(void)
     int32 id          = API_MostRecentActiveControllerID(1, 0, 5);
     int32 gamepadType = API_GetControllerType(id);
 
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     switch ((gamepadType >> 8) & 0xFF) {
         default:
@@ -823,7 +828,7 @@ void OptionsMenu_ShowManual(void)
 
 void OptionsMenu_EraseSaveDataCB(bool32 success)
 {
-    TextInfo message;
+    String message;
     EntityUIControl *control = OptionsMenu->dataOptionsControl;
 
     UIWaitSpinner_FinishWait();
@@ -832,7 +837,7 @@ void OptionsMenu_EraseSaveDataCB(bool32 success)
     }
     else {
         control->selectionDisabled = false;
-        RSDK.SetText(&message, "ERROR ERASING DATA.", 0);
+        RSDK.InitString(&message, "ERROR ERASING DATA.", 0);
         UIDialog_CreateDialogOk(&message, StateMachine_None, true);
     }
 }
@@ -888,8 +893,8 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseAllData(void)
 
 void OptionsMenu_EraseSaveGameButton_ActionCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_AREYOUSURESAVE);
     UIDialog_CreateDialogYesNo(&message, OptionsMenu_AreYouSureDlg_YesCB_EraseSaveGame, StateMachine_None, true, true);
@@ -906,8 +911,8 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseMedallions(void)
 
 void OptionsMenu_EraseMedallionsButton_ActionCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_AREYOUSURESAVE);
     UIDialog_CreateDialogYesNo(&message, OptionsMenu_AreYouSureDlg_YesCB_EraseMedallions, StateMachine_None, true, true);
@@ -927,8 +932,8 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseTimeAttack(void)
 
 void OptionsMenu_EraseTimeAttackButton_ActionCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_AREYOUSURESAVE);
     UIDialog_CreateDialogYesNo(&message, OptionsMenu_AreYouSureDlg_YesCB_EraseTimeAttack, StateMachine_None, true, true);
@@ -959,8 +964,8 @@ void OptionsMenu_EraseReplaysCB(bool32 success) { TimeAttackData_SaveTimeAttackD
 
 void OptionsMenu_EraseReplaysButton_ActionCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     if (API.CheckDLC(DLC_PLUS)) {
         Localization_GetString(&message, STR_AREYOUSURESAVE);
@@ -974,8 +979,8 @@ void OptionsMenu_EraseReplaysButton_ActionCB(void)
 
 void OptionsMenu_EraseAllButton_ActionCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_AREYOUSURESAVE);
     UIDialog_CreateDialogYesNo(&message, OptionsMenu_AreYouSureDlg_YesCB_EraseAllData, StateMachine_None, true, true);

@@ -14,10 +14,10 @@ struct ObjectUIReplayCarousel {
 // Entity Class
 struct EntityUIReplayCarousel {
     MANIA_UI_ITEM_BASE
-    TextInfo zoneNameText[4];
-    TextInfo createdAtText[4];
-    TextInfo loadingText;
-    TextInfo noReplaysText;
+    String zoneNameText[4];
+    String createdAtText[4];
+    String loadingText;
+    String noReplaysText;
     int32 sprX;
     uint8 fuzzDirection;
     int32 unused1;

@@ -20,8 +20,8 @@ struct EntityUIText {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    TextInfo text;
-    TextInfo tag;
+    String text;
+    String tag;
     bool32 selectable;
     uint16 listID;
     int32 align;

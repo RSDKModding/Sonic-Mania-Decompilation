@@ -500,12 +500,12 @@ void LoadSceneFile()
 
                         case VAR_STRING:
                             if (varList[v].active) {
-                                TextInfo *textInfo = (TextInfo *)&entityBuffer[varList[v].offset];
+                                String *string = (String *)&entityBuffer[varList[v].offset];
                                 uint16 len         = ReadInt16(&info);
 
-                                SetText(textInfo, (char *)"", len);
-                                for (textInfo->length = 0; textInfo->length < len; ++textInfo->length)
-                                    textInfo->text[textInfo->length] = ReadInt16(&info);
+                                InitString(string, (char *)"", len);
+                                for (string->length = 0; string->length < len; ++string->length)
+                                    string->chars[string->length] = ReadInt16(&info);
                             }
                             else {
                                 Seek_Cur(&info, ReadInt16(&info) * sizeof(uint16));

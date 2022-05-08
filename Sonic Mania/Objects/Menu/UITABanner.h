@@ -16,7 +16,7 @@ struct EntityUITABanner {
     StateMachine(state);
     Vector2 startPos;
     EntityUIControl *parent;
-    TextInfo zoneName;
+    String zoneName;
     int32 timer;
     uint8 characterID;
     uint8 zoneID;

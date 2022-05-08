@@ -155,15 +155,15 @@ enum FunctionTableIDs {
     FunctionTable_MatrixRotateXYZ,
     FunctionTable_MatrixInverse,
     FunctionTable_MatrixCopy,
-    FunctionTable_SetText,
+    FunctionTable_InitString,
     FunctionTable_CopyString,
-    FunctionTable_PrependText,
+    FunctionTable_SetString,
     FunctionTable_AppendString,
     FunctionTable_AppendText,
-    FunctionTable_LoadStrings,
+    FunctionTable_LoadStringList,
     FunctionTable_SplitStringList,
     FunctionTable_GetCString,
-    FunctionTable_StringCompare,
+    FunctionTable_CompareStrings,
     FunctionTable_GetDisplayInfo,
     FunctionTable_GetWindowSize,
     FunctionTable_SetScreenSize,
@@ -194,7 +194,7 @@ enum FunctionTableIDs {
     FunctionTable_DrawBlendedFace,
     FunctionTable_DrawSprite,
     FunctionTable_DrawDeformed,
-    FunctionTable_DrawText,
+    FunctionTable_DrawString,
     FunctionTable_DrawTile,
     FunctionTable_CopyTile,
     FunctionTable_DrawAniTile,
@@ -274,8 +274,8 @@ enum FunctionTableIDs {
     FunctionTable_SaveUserFile,
 #if RETRO_REV02
     FunctionTable_PrintLog,
-    FunctionTable_PrintString,
     FunctionTable_PrintText,
+    FunctionTable_PrintString,
     FunctionTable_PrintIntegerUnsigned,
     FunctionTable_PrintInteger,
     FunctionTable_PrintFloat,
@@ -362,7 +362,12 @@ void RSDK::SetupFunctionTables()
 #endif
 
 #if RETRO_REV02
-    // API functions
+
+    // ============================
+    // API Function Table (Rev02)
+    // ============================
+
+    // API Core
     addToAPIFunctionTable(APITable_GetUserLanguage, GetUserLanguage);
     addToAPIFunctionTable(APITable_GetConfirmButtonFlip, GetConfirmButtonFlip);
     addToAPIFunctionTable(APITable_ExitGame, ExitGame);
@@ -376,6 +381,8 @@ void RSDK::SetupFunctionTables()
     addToAPIFunctionTable(APITable_EGS_Unknown4, EpicUnknown4);
     addToAPIFunctionTable(APITable_RegisterHIDDevice, RegisterHIDDevice);
 #endif
+
+    // Achievements
     addToAPIFunctionTable(APITable_UnlockAchievement, TryUnlockAchievement);
     addToAPIFunctionTable(APITable_GetAchievementsEnabled, GetAchievementsEnabled);
     addToAPIFunctionTable(APITable_SetAchievementsEnabled, SetAchievementsEnabled);
@@ -383,6 +390,8 @@ void RSDK::SetupFunctionTables()
     addToAPIFunctionTable(APITable_CheckAchievementsEnabled, CheckAchievementsEnabled);
     addToAPIFunctionTable(APITable_GetAchievementNames, GetAchievementNames);
 #endif
+
+    // Leaderboards
     addToAPIFunctionTable(APITable_LeaderboardsUnknown4, leaderboardsUnknown4); // LeaderboardsUnknown4);
 #if RETRO_VER_EGS
     addToAPIFunctionTable(APITable_EGS_LeaderboardsUnknown4, leaderboardsUnknown6); // EGS_LeaderboardsUnknown4);
@@ -395,16 +404,24 @@ void RSDK::SetupFunctionTables()
     addToAPIFunctionTable(APITable_LoadNewLeaderboardEntries, LoadNewLeaderboardEntries);
     addToAPIFunctionTable(APITable_ClearLeaderboardInfo, ClearLeaderboardInfo);
     addToAPIFunctionTable(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
+
+    // Rich Presence
     addToAPIFunctionTable(APITable_SetPresence, SetPresence);
+
+    // Stats
     addToAPIFunctionTable(APITable_TryTrackStat, TryTrackStat);
     addToAPIFunctionTable(APITable_GetStatsEnabled, GetStatsEnabled);
     addToAPIFunctionTable(APITable_SetStatsEnabled, SetStatsEnabled);
+
+    // Authorization & Storage
     addToAPIFunctionTable(APITable_ClearPrerollErrors, ClearPrerollErrors);
     addToAPIFunctionTable(APITable_TryAuth, TryAuth);
     addToAPIFunctionTable(APITable_GetUserAuthStatus, GetUserAuthStatus);
     addToAPIFunctionTable(APITable_GetUsername, GetUsername);
     addToAPIFunctionTable(APITable_TryInitStorage, TryInitStorage);
     addToAPIFunctionTable(APITable_GetUserStorageStatus, GetUserStorageStatus);
+
+    // Saving
     addToAPIFunctionTable(APITable_GetSaveStatus, GetSaveStatus);
     addToAPIFunctionTable(APITable_ClearSaveStatus, ClearSaveStatus);
     addToAPIFunctionTable(APITable_SetSaveStatusContinue, SetSaveStatusContinue);
@@ -413,9 +430,13 @@ void RSDK::SetupFunctionTables()
     addToAPIFunctionTable(APITable_SetSaveStatusError, SetSaveStatusError);
     addToAPIFunctionTable(APITable_SetUserStorageNoSave, SetUserStorageNoSave);
     addToAPIFunctionTable(APITable_GetUserStorageNoSave, GetUserStorageNoSave);
-    addToAPIFunctionTable(APITable_LoadUserFile, TryLoadUserFile);
-    addToAPIFunctionTable(APITable_SaveUserFile, TrySaveUserFile);
-    addToAPIFunctionTable(APITable_DeleteUserFile, TryDeleteUserFile);
+
+    // User File Management
+    addToAPIFunctionTable(APITable_LoadUserFile, TryLoadUserFile);     // load user file from game dir
+    addToAPIFunctionTable(APITable_SaveUserFile, TrySaveUserFile);     // save user file to game dir
+    addToAPIFunctionTable(APITable_DeleteUserFile, TryDeleteUserFile); // delete user file from game dir
+
+    // User DBs
     addToAPIFunctionTable(APITable_AddUserDBEntry, InitUserDB);
     addToAPIFunctionTable(APITable_OpenUserDB, LoadUserDB);
     addToAPIFunctionTable(APITable_SaveUserDB, SaveUserDB);
@@ -436,30 +457,51 @@ void RSDK::SetupFunctionTables()
     addToAPIFunctionTable(APITable_RemoveDBRow, RemoveDBRow);
     addToAPIFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBRows);
 #else
+    // ============================
+    // API Functions (Rev01)
+    // ============================
+
+    // API Core
     addToAPIFunctionTable("GetConfirmButtonFlip", GetConfirmButtonFlip);
+    // APICallback uses the sku one anyways if this isn't set, this is only needed if it needs to interact with the backend APIs
+    // addToAPIFunctionTable("GetUserLanguage", GetUserLanguage);
     addToAPIFunctionTable("GetXYButtonFlip", GetXYButtonFlip);
     addToAPIFunctionTable("LaunchManual", LaunchManual);
     addToAPIFunctionTable("ExitGame", ExitGame);
+
+    // Achievements
     addToAPIFunctionTable("ClearAchievements", ClearAchievements);
     addToAPIFunctionTable("UnlockAchievement", TryUnlockAchievement);
+
+    // Leaderboards
     // addToAPIFunctionTable("FetchLeaderboard", FetchLeaderboard);
     // addToAPIFunctionTable("LeaderboardStatus", GetLeaderboardStatus);
     // addToAPIFunctionTable("LeaderboardEntryCount", LeaderboardEntryCount);
     // addToAPIFunctionTable("LeaderboardReadEntry", LeaderboardReadEntry);
+
+    // Rich Presence
+    // addToAPIFunctionTable("SetRichPresence", SetPresence);
+
+    // Stats
     addToAPIFunctionTable("TrackActClear", TrackActClear);
     addToAPIFunctionTable("TrackTAClear", TrackTAClear);
     addToAPIFunctionTable("TrackEnemyDefeat", TrackEnemyDefeat);
     addToAPIFunctionTable("TrackGameProgress", TrackGameProgress);
+
+    // Authorization & Storage
     // addToAPIFunctionTable("ClearPrerollErrors", ClearPrerollErrors); // Dummy behaviour is managed by APICallback
     // addToAPIFunctionTable("TryAuth", TryAuth); // Dummy behaviour is managed by APICallback
     // addToAPIFunctionTable("GetUserAuthStatus", GetUserAuthStatus); // Dummy behaviour is managed by APICallback
     // addToAPIFunctionTable("TryInitStorage", TryInitStorage); // Dummy behaviour is managed by APICallback
     // addToAPIFunctionTable("GetStorageStatus", GetUserStorageStatus); // Dummy behaviour is managed by APICallback
     // addToAPIFunctionTable("GetUsername", GetUsername); // APICallback sets the dummy one anyways if this isn't set
+
+    // User File Management
     addToAPIFunctionTable("LoadUserFile", TryLoadUserFile);
     addToAPIFunctionTable("SaveUserFile", TrySaveUserFile);
     addToAPIFunctionTable("SaveSettingsINI", writeSettings);
-    // addToAPIFunctionTable("GetUserLanguage", GetUserLanguage); // APICallback uses the sku one anyways if this isn't set, this is only needed if it needs to interact with the API
+
+    // Input 
     addToAPIFunctionTable("ControllerIDForInputID", ControllerIDForInputID);
     addToAPIFunctionTable("MostRecentActiveControllerID", MostRecentActiveControllerID);
     addToAPIFunctionTable("AssignControllerID", AssignControllerID);
@@ -468,16 +510,20 @@ void RSDK::SetupFunctionTables()
     addToAPIFunctionTable("GetControllerType", GetControllerType);
     addToAPIFunctionTable("ShowSteamControllerOverlay", ShowExtensionOverlay);
     addToAPIFunctionTable("SetInputLEDColor", SetInputLEDColor);
-    // addToAPIFunctionTable("SetRichPresence", SetPresence);
 #endif
 
-    // Function Table
+    // ============================
+    // RSDK Function Table
+    // ============================
+    
+    // Registration
     addToRSDKFunctionTable(FunctionTable_RegisterGlobalVariables, RegisterGlobalVariables);
     addToRSDKFunctionTable(FunctionTable_RegisterObject, RegisterObject);
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_RegisterStaticVariables, RegisterStaticVariables);
 #endif
 
+    // Entities & Objects
     addToRSDKFunctionTable(FunctionTable_GetActiveEntities, GetActiveEntities);
     addToRSDKFunctionTable(FunctionTable_GetEntities, GetEntities);
     addToRSDKFunctionTable(FunctionTable_BreakForeachLoop, BreakForeachLoop);
@@ -497,6 +543,7 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_SwapDrawLayers, SwapDrawListEntries);
     addToRSDKFunctionTable(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
 
+    // Scene Management
     addToRSDKFunctionTable(FunctionTable_SetScene, SetScene);
     addToRSDKFunctionTable(FunctionTable_SetGameMode, SetEngineState);
 #if RETRO_REV02
@@ -507,17 +554,21 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_InitSceneLoad, InitSceneLoad);
     addToRSDKFunctionTable(FunctionTable_GetObjectByName, GetObjectByName);
 
+    // Cameras
     addToRSDKFunctionTable(FunctionTable_ClearCameras, ClearCameras);
     addToRSDKFunctionTable(FunctionTable_AddCamera, AddCamera);
 
+    // API (Rev01 only)
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_GetAPIFunction, GetAPIFunction);
 #endif
 
+    // Window/Video Settings
     addToRSDKFunctionTable(FunctionTable_GetVideoSetting, GetVideoSetting);
     addToRSDKFunctionTable(FunctionTable_SetVideoSetting, SetVideoSetting);
     addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateGameWindow)
 
+    // Math
     addToRSDKFunctionTable(FunctionTable_Sin1024, Sin1024);
     addToRSDKFunctionTable(FunctionTable_Cos1024, Cos1024);
     addToRSDKFunctionTable(FunctionTable_ATan1024, Tan1024);
@@ -537,6 +588,8 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_RandSeeded, GetSeededRandomValue);
     addToRSDKFunctionTable(FunctionTable_SetRandSeed, SetRandSeed);
     addToRSDKFunctionTable(FunctionTable_ATan2, ArcTanLookup);
+
+    // Matrices
     addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, SetIdentityMatrix);
     addToRSDKFunctionTable(FunctionTable_MatrixMultiply, MatrixMultiply);
     addToRSDKFunctionTable(FunctionTable_MatrixTranslateXYZ, MatrixTranslateXYZ);
@@ -547,15 +600,19 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_MatrixRotateXYZ, MatrixRotateXYZ);
     addToRSDKFunctionTable(FunctionTable_MatrixInverse, MatrixInverse);
     addToRSDKFunctionTable(FunctionTable_MatrixCopy, MatrixCopy);
-    addToRSDKFunctionTable(FunctionTable_SetText, SetText);
+
+    // Strings
+    addToRSDKFunctionTable(FunctionTable_InitString, InitString);
     addToRSDKFunctionTable(FunctionTable_CopyString, CopyString);
-    addToRSDKFunctionTable(FunctionTable_PrependText, PrependText);
+    addToRSDKFunctionTable(FunctionTable_SetString, SetString);
     addToRSDKFunctionTable(FunctionTable_AppendString, AppendString);
     addToRSDKFunctionTable(FunctionTable_AppendText, AppendText);
-    addToRSDKFunctionTable(FunctionTable_LoadStrings, LoadStrings);
+    addToRSDKFunctionTable(FunctionTable_LoadStringList, LoadStringList);
     addToRSDKFunctionTable(FunctionTable_SplitStringList, SplitStringList);
     addToRSDKFunctionTable(FunctionTable_GetCString, GetCString);
-    addToRSDKFunctionTable(FunctionTable_StringCompare, StringCompare);
+    addToRSDKFunctionTable(FunctionTable_CompareStrings, CompareStrings);
+
+    // Screens & Displays
     addToRSDKFunctionTable(FunctionTable_GetDisplayInfo, GetDisplayInfo);
     addToRSDKFunctionTable(FunctionTable_GetWindowSize, GetWindowSize);
     addToRSDKFunctionTable(FunctionTable_SetScreenSize, SetScreenSize);
@@ -563,7 +620,11 @@ void RSDK::SetupFunctionTables()
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetScreenRenderVertices, SetScreenRenderVertices);
 #endif
+
+    // Spritesheets
     addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, RSDK::LoadSpriteSheet);
+
+    // Palettes & Colors
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetTintLookupTable, SetTintLookupTable);
 #else
@@ -583,6 +644,8 @@ void RSDK::SetupFunctionTables()
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_BlendColors, BlendColors);
 #endif
+
+    // Drawing
     addToRSDKFunctionTable(FunctionTable_DrawRect, DrawRectangle);
     addToRSDKFunctionTable(FunctionTable_DrawLine, DrawLine);
     addToRSDKFunctionTable(FunctionTable_DrawCircle, DrawCircle);
@@ -591,11 +654,13 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_DrawBlendedFace, DrawBlendedFace);
     addToRSDKFunctionTable(FunctionTable_DrawSprite, DrawSprite);
     addToRSDKFunctionTable(FunctionTable_DrawDeformed, DrawDeformedSprite);
-    addToRSDKFunctionTable(FunctionTable_DrawText, DrawString);
+    addToRSDKFunctionTable(FunctionTable_DrawString, DrawString);
     addToRSDKFunctionTable(FunctionTable_DrawTile, DrawTile);
     addToRSDKFunctionTable(FunctionTable_CopyTile, CopyTile);
     addToRSDKFunctionTable(FunctionTable_DrawAniTile, DrawAniTile);
     addToRSDKFunctionTable(FunctionTable_FillScreen, FillScreen);
+
+    // Meshes & 3D Scenes
     addToRSDKFunctionTable(FunctionTable_LoadMesh, LoadMesh);
     addToRSDKFunctionTable(FunctionTable_Create3DScene, Create3DScene);
     addToRSDKFunctionTable(FunctionTable_Prepare3DScene, Prepare3DScene);
@@ -606,6 +671,8 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_SetModelAnimation, SetMeshAnimation);
     addToRSDKFunctionTable(FunctionTable_SetupMeshAnimation, AddMeshFrameToScene);
     addToRSDKFunctionTable(FunctionTable_Draw3DScene, Draw3DScene);
+
+    // Sprite Animations & Frames
     addToRSDKFunctionTable(FunctionTable_LoadAnimation, LoadSpriteAnimation);
     addToRSDKFunctionTable(FunctionTable_CreateAnimation, CreateSpriteAnimation);
     addToRSDKFunctionTable(FunctionTable_SetSpriteAnimation, SetSpriteAnimation);
@@ -617,6 +684,8 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_GetFrameID, GetFrameID);
     addToRSDKFunctionTable(FunctionTable_GetStringWidth, GetStringWidth);
     addToRSDKFunctionTable(FunctionTable_ProcessAnimation, ProcessAnimation);
+
+    // Tile Layers
     addToRSDKFunctionTable(FunctionTable_GetSceneLayer, GetTileLayer);
     addToRSDKFunctionTable(FunctionTable_GetSceneLayerID, GetTileLayerID);
     addToRSDKFunctionTable(FunctionTable_GetLayerSize, GetLayerSize);
@@ -625,6 +694,8 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_CopyTileLayer, CopyTileLayout);
     addToRSDKFunctionTable(FunctionTable_ProcessParallax, ProcessParallax);
     addToRSDKFunctionTable(FunctionTable_GetScanlines, GetScanlines);
+
+    // Object & Tile Collisions
     addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionTouch, CheckObjectCollisionTouch);
     addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionPoint, CheckObjectCollisionCircle);
     addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionBox, CheckObjectCollisionBox);
@@ -636,6 +707,8 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_SetTileAngle, SetTileAngle);
     addToRSDKFunctionTable(FunctionTable_GetTileBehaviour, GetTileBehaviour);
     addToRSDKFunctionTable(FunctionTable_SetTileBehaviour, SetTileBehaviour);
+
+    // Audio
     addToRSDKFunctionTable(FunctionTable_GetSFX, GetSfx);
     addToRSDKFunctionTable(FunctionTable_PlaySFX, PlaySfx);
     addToRSDKFunctionTable(FunctionTable_StopSFX, StopSfx);
@@ -647,8 +720,12 @@ void RSDK::SetupFunctionTables()
     addToRSDKFunctionTable(FunctionTable_SfxPlaying, SfxPlaying);
     addToRSDKFunctionTable(FunctionTable_ChannelActive, ChannelActive);
     addToRSDKFunctionTable(FunctionTable_GetChannelPos, GetChannelPos);
+
+    // Videos & "HD Images"
     addToRSDKFunctionTable(FunctionTable_LoadVideo, LoadVideo);
     addToRSDKFunctionTable(FunctionTable_LoadImage, RSDK::LoadImage);
+
+    // Input
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, ControllerIDForInputID);
     addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
@@ -667,26 +744,36 @@ void RSDK::SetupFunctionTables()
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_InputUnknown, InputUnknown);
 #endif
-    addToRSDKFunctionTable(FunctionTable_LoadUserFile, LoadUserFile);
-    addToRSDKFunctionTable(FunctionTable_SaveUserFile, SaveUserFile);
+
+    // User File Management
+    addToRSDKFunctionTable(FunctionTable_LoadUserFile, LoadUserFile); // load user file from exe dir
+    addToRSDKFunctionTable(FunctionTable_SaveUserFile, SaveUserFile); // save use file to exe dir
+
+    // Printing (Rev02)
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_PrintLog, PrintLog);
-    addToRSDKFunctionTable(FunctionTable_PrintString, PrintString);
     addToRSDKFunctionTable(FunctionTable_PrintText, PrintText);
-    addToRSDKFunctionTable(FunctionTable_PrintIntegerUnsigned, PrintIntegerUnsigned);
-    addToRSDKFunctionTable(FunctionTable_PrintInteger, PrintInteger);
+    addToRSDKFunctionTable(FunctionTable_PrintString, PrintString);
+    addToRSDKFunctionTable(FunctionTable_PrintIntegerUnsigned, PrintUInt32);
+    addToRSDKFunctionTable(FunctionTable_PrintInteger, PrintInt32);
     addToRSDKFunctionTable(FunctionTable_PrintFloat, PrintFloat);
     addToRSDKFunctionTable(FunctionTable_PrintVector2, PrintVector2);
     addToRSDKFunctionTable(FunctionTable_PrintHitbox, PrintHitbox);
 #endif
+
+    // Editor
     addToRSDKFunctionTable(FunctionTable_SetActiveVariable, SetActiveVariable);
     addToRSDKFunctionTable(FunctionTable_AddEnumVariable, AddEnumVariable);
-#if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_PrintMessage, PrintMessage);
-#endif
+
+    // Debugging
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ClearDebugValues, ClearDebugValues);
     addToRSDKFunctionTable(FunctionTable_SetDebugValue, SetDebugValue);
+#endif
+
+    // Printing (Rev01)
+#if !RETRO_REV02
+    addToRSDKFunctionTable(FunctionTable_PrintMessage, PrintMessage);
 #endif
 
 #if RETRO_USE_MOD_LOADER

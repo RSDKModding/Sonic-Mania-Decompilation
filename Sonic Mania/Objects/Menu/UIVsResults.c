@@ -63,7 +63,7 @@ void UIVsResults_Create(void *data)
     if (!SceneInfo->inEditor) {
         for (int32 i = 0; i < self->numRows; ++i) {
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&self->rowText[i], "00", 0);
+                RSDK.InitString(&self->rowText[i], "00", 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &self->rowText[i]);
             }
         }

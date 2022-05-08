@@ -76,7 +76,7 @@ void APICallback_StageLoad(void)
     APICallback->controllerCount  = 4;
 }
 
-void APICallback_SetRichPresence(int32 id, TextInfo *msg)
+void APICallback_SetRichPresence(int32 id, String *msg)
 {
     if (globals->presenceID != id) {
         char buffer[0x40];
@@ -213,13 +213,13 @@ LeaderboardEntry *APICallback_ReadLeaderboardEntry(int32 rankID)
     APICallback->leaderboardEntry.score      = (4 * APICallback->leaderboardEntry.globalRank + 2400) % 59999;
     APICallback->leaderboardEntry.isUser     = APICallback->prevIsUser && rankID == APICallback->prevRank;
     if (APICallback->leaderboardEntry.isUser) {
-        RSDK.SetText(&APICallback->leaderboardEntry.username, "YOU", 0);
+        RSDK.InitString(&APICallback->leaderboardEntry.username, "YOU", 0);
         LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->leaderboardEntry.globalRank,
                          APICallback->leaderboardEntry.score, "YOU", APICallback->leaderboardEntry.isUser);
     }
     else {
-        RSDK.SetText(&APICallback->leaderboardEntry.username, "", 0);
-        RSDK.PrependText(&APICallback->leaderboardEntry.username, dummyNames[rankID]);
+        RSDK.InitString(&APICallback->leaderboardEntry.username, "", 0);
+        RSDK.SetString(&APICallback->leaderboardEntry.username, dummyNames[rankID]);
         LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->leaderboardEntry.globalRank,
                          APICallback->leaderboardEntry.score, dummyNames[rankID], APICallback->leaderboardEntry.isUser);
     }
@@ -239,9 +239,9 @@ void APICallback_NotifyAutoSave_CB(void)
 
     if (APICallback->isAutoSaving) {
         if (!UIDialog->activeDialog) {
-            TextInfo info;
-            Localization_GetString(&info, STR_AUTOSAVENOTIF);
-            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_NotifyAutoSave_OK, true);
+            String string;
+            Localization_GetString(&string, STR_AUTOSAVENOTIF);
+            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&string, APICallback_NotifyAutoSave_OK, true);
             dialog->useAltColor    = true;
         }
     }
@@ -257,7 +257,7 @@ void APICallback_PromptSavePreference_CB(void)
 
     if (APICallback->saveStatus == STATUS_CONTINUE) {
         if (!UIDialog->activeDialog) {
-            TextInfo info;
+            String string;
 
             int32 stringID = STR_SAVELOADFAIL;
             switch (self->status) {
@@ -269,9 +269,9 @@ void APICallback_PromptSavePreference_CB(void)
                 case STATUS_CORRUPT: stringID = STR_CORRUPTSAVE; break;
                 case STATUS_NOSPACE: stringID = (GameInfo->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
             }
-            Localization_GetString(&info, stringID);
+            Localization_GetString(&string, stringID);
 
-            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_SetNoSaveEnabled, APICallback_SetNoSaveDisabled, true, true);
+            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&string, APICallback_SetNoSaveEnabled, APICallback_SetNoSaveDisabled, true, true);
             dialog->useAltColor    = true;
         }
     }
@@ -655,16 +655,16 @@ void APICallback_TryAuth_CB(void)
 
     if (APICallback->authStatus == 100) {
         if (!UIDialog->activeDialog) {
-            TextInfo info;
+            String string;
             switch (sku_platform) {
                 case PLATFORM_PC:
-                    Localization_GetString(&info, STR_LOADSTEAM); // could also be STR_LOADINGFROMEGS
+                    Localization_GetString(&string, STR_LOADSTEAM); // could also be STR_LOADINGFROMEGS
                     break;
-                case PLATFORM_PS4: Localization_GetString(&info, STR_LOADPSN); break;
-                case PLATFORM_XB1: Localization_GetString(&info, STR_LOADXBOX); break;
-                case PLATFORM_SWITCH: Localization_GetString(&info, STR_LOADNINTENDO); break;
+                case PLATFORM_PS4: Localization_GetString(&string, STR_LOADPSN); break;
+                case PLATFORM_XB1: Localization_GetString(&string, STR_LOADXBOX); break;
+                case PLATFORM_SWITCH: Localization_GetString(&string, STR_LOADNINTENDO); break;
             }
-            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_TryAuth_Yes, APICallback_TryAuth_No, true, true);
+            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&string, APICallback_TryAuth_Yes, APICallback_TryAuth_No, true, true);
             dialog->useAltColor    = true;
         }
     }
@@ -709,17 +709,17 @@ void APICallback_TryInitStorage(void)
     }
 }
 
-bool32 APICallback_GetUsername(TextInfo *info)
+bool32 APICallback_GetUsername(String *userName)
 {
     if (APICallback->GetUsername) {
         LogHelpers_Print("API GetUsername()");
-        APICallback->GetUsername(info);
+        APICallback->GetUsername(userName);
         return true;
     }
     else {
         if (GameInfo->platform == PLATFORM_DEV) {
             LogHelpers_Print("DUMMY GetUsername()");
-            RSDK.SetText(info, "IntegerGeorge802", false);
+            RSDK.InitString(userName, "IntegerGeorge802", false);
             return true;
         }
         else {
@@ -775,9 +775,9 @@ void APICallback_CheckUserAuth_CB(void)
             }
         }
         else if (!dialog) {
-            TextInfo info;
-            Localization_GetString(&info, STR_SIGNOUTDETECTED);
-            dialog              = UIDialog_CreateDialogOk(&info, APICallback_CheckUserAuth_OK, true);
+            String string;
+            Localization_GetString(&string, STR_SIGNOUTDETECTED);
+            dialog              = UIDialog_CreateDialogOk(&string, APICallback_CheckUserAuth_OK, true);
             dialog->useAltColor = true;
         }
     }
@@ -816,12 +816,12 @@ void APICallback_ManageNotifs(void)
     RSDK_THIS(APICallback);
 
     if (GameProgress_CountUnreadNotifs()) {
-        TextInfo info;
-        INIT_TEXTINFO(info);
+        String string;
+        INIT_STRING(string);
         if (!UIDialog->activeDialog) {
             int32 str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
-            Localization_GetString(&info, str);
-            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_GetNextNotif, true);
+            Localization_GetString(&string, str);
+            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&string, APICallback_GetNextNotif, true);
             dialog->playEventSfx   = true;
             dialog->useAltColor    = true;
         }

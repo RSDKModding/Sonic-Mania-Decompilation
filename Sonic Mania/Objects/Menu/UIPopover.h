@@ -27,7 +27,7 @@ struct EntityUIPopover {
     StateMachine(state);
     int32 timer;
     int32 closeDelay;
-    TextInfo unusedTextInfo;
+    String unusedTextInfo;
     int32 buttonCount;
     Vector2 size;
     Vector2 drawPos; // unused, it's here cuz its based off UIDialog

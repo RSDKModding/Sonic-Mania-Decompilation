@@ -21,14 +21,14 @@ struct EntityUITAZoneModule {
     bool32 isExpanding;
 #endif
     uint8 zoneID;
-    TextInfo text1;
-    TextInfo text2;
+    String text1;
+    String text2;
 #if !RETRO_USE_PLUS
     bool32 debugExpand;
 #endif
     bool32 wasDisabled;
-    TextInfo text1Store;
-    TextInfo text2Store;
+    String text1Store;
+    String text2Store;
     int32 zoneIconSprX;
     Vector2 drawPos;
 #if !RETRO_USE_PLUS

@@ -22,7 +22,7 @@ struct EntityUIVsScoreboard {
     bool32 showWinner;
     uint8 winnerID;
     int32 bgEdgeSize;
-    TextInfo scoreText;
+    String scoreText;
     Animator totalAnimator;
     Animator textAnimator;
     Animator winnerAnimator;

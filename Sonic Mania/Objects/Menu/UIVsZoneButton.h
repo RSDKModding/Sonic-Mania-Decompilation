@@ -44,7 +44,7 @@ struct EntityUIVsZoneButton {
     int32 unusedBounceOffset;
     int32 buttonBounceVelocity;
     int32 buttonBounceOffset;
-    TextInfo nameText;
+    String nameText;
     Animator textAnimator;
     Animator zoneAnimator;
     Animator redCrossAnimator;

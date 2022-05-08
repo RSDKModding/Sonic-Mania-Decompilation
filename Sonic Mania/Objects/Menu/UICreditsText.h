@@ -13,8 +13,8 @@ struct ObjectUICreditsText {
 struct EntityUICreditsText {
     RSDK_ENTITY
     StateMachine(state);
-    TextInfo text;
-    TextInfo tag;
+    String text;
+    String tag;
     int32 listID;
     bool32 isHeading;
     bool32 hasShape;
@@ -45,7 +45,7 @@ void UICreditsText_EditorLoad(void);
 void UICreditsText_Serialize(void);
 
 // Extra Entity Functions
-void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, TextInfo *text);
+void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, String *text);
 
 void UICreditsText_State_Setup(void);
 void UICreditsText_State_SetupCharPos(void);

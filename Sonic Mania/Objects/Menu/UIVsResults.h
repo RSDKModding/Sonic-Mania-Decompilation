@@ -44,7 +44,7 @@ struct EntityUIVsResults {
     bool32 row10Highlight;
     bool32 row11Highlight;
     bool32 row12Highlight;
-    TextInfo rowText[13];
+    String rowText[13];
     int32 characterID;
     int32 triBounceOffset;
     int32 playerBounceOffset;

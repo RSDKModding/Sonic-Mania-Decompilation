@@ -59,7 +59,7 @@ void UITABanner_Create(void *data)
     self->updateRange.y = 0x300000;
 
     if (!SceneInfo->inEditor) {
-        RSDK.SetText(&self->zoneName, "", 0);
+        RSDK.InitString(&self->zoneName, "", 0);
         RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->labelAnimator, true, 0);
     }
 
@@ -70,7 +70,7 @@ void UITABanner_StageLoad(void) { UITABanner->aniFrames = RSDK.LoadSpriteAnimati
 
 void UITABanner_SetupDetails(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore)
 {
-    RSDK.SetText(&banner->zoneName, "", 0);
+    RSDK.InitString(&banner->zoneName, "", 0);
     Localization_GetZoneName(&banner->zoneName, zoneID);
 
     if (zoneID == 5 || zoneID == 10)

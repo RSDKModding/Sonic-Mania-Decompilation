@@ -84,7 +84,7 @@ void DAControl_Create(void *data)
         RSDK.SetSpriteAnimation(DAControl->aniFrames, 4, &self->textAnimator, true, 0);
         for (int32 i = 0; i < 5; ++i) RSDK.SetSpriteAnimation(DAControl->aniFrames, 2, &self->optionsAnimator[i], true, i);
 
-        RSDK.SetText(&self->text, "SELECT A TRACK...", 0);
+        RSDK.InitString(&self->text, "SELECT A TRACK...", 0);
         RSDK.SetSpriteAnimation(DAControl->aniFrames, 4, &self->textAnimator, true, 0);
         RSDK.SetSpriteString(DAControl->aniFrames, 4, &self->text);
     }

@@ -60,8 +60,8 @@ struct ObjectMusic {
 struct EntityMusic {
     RSDK_ENTITY
     StateMachine(state);
-    TextInfo trackFile;
-    TextInfo soundTestTitle;
+    String trackFile;
+    String soundTestTitle;
     int32 trackID;
     uint32 trackLoop;
     bool32 playOnLoad;

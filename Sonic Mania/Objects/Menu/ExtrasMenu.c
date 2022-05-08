@@ -24,15 +24,15 @@ void ExtrasMenu_StageLoad(void) {}
 
 void ExtrasMenu_Initialize(void)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     LogHelpers_Print("ManiaModeMenu_Initialize()");
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&info, "Extras");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Extras");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             ExtrasMenu->extrasControl = control;
     }
 }

@@ -1,18 +1,18 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-struct TextInfo {
-    uint16 *text; // text
-    int16 length; // string length
-    int16 size;   // total alloc length
+struct String {
+    uint16 *chars; // text
+    int16 length;  // string length
+    int16 size;    // total alloc length
 };
 
 inline void StringLowerCase(char *dest, const char *src)
 {
-    int destPos = 0;
-    int curChar = *src;
+    int32 destPos = 0;
+    int32 curChar = *src;
     if (*src) {
-        int srcPos = 0;
+        int32 srcPos = 0;
         do {
             while (curChar - 'A' <= 0x19u) {
                 destPos       = srcPos;
@@ -33,10 +33,10 @@ inline void StringLowerCase(char *dest, const char *src)
 
 inline void StringUpperCase(char *dest, const char *src)
 {
-    int destPos = 0;
-    int curChar = *src;
+    int32 destPos = 0;
+    int32 curChar = *src;
     if (*src) {
-        int srcPos = 0;
+        int32 srcPos = 0;
         do {
             while ((uint32)curChar - 'a' < 26) {
                 destPos       = srcPos;
@@ -59,91 +59,81 @@ extern char textBuffer[0x400];
 void GenerateHash(uint32 *buffer, int32 len);
 void GenerateCRC(uint32 *id, char *fileName);
 
-#define RETRO_HASH(name)     uint32 name[4]
-#define HASH_SIZE            (4 * sizeof(uint32))
-#define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
+#define RETRO_HASH(name) uint32 name[4]
+#define HASH_SIZE        (4 * sizeof(uint32))
+#define HASH_MATCH(a, b) (memcmp(a, b, HASH_SIZE) == 0)
 #define GEN_HASH(text, hash)                                                                                                                         \
     strcpy(textBuffer, text);                                                                                                                        \
     GenerateHash(hash, (int32)strlen(textBuffer))
 #define HASH_COPY(dst, src) memcpy(dst, src, HASH_SIZE)
 
-inline void SetText(TextInfo *textInfo, char *text, uint size)
+inline void InitString(String *string, char *text, uint32 textLength)
 {
     if (text) {
-        textInfo->text = NULL;
-        if (*text) {
-            int cnt = 0;
-            do
-                textInfo->length = ++cnt;
-            while (text[cnt]);
-        }
-        if (size && size >= textInfo->length)
-            textInfo->size = size;
-        else
-            textInfo->size = textInfo->length;
-        if (!textInfo->size)
-            textInfo->size = 1;
-        RSDK::AllocateStorage(sizeof(ushort) * textInfo->size, (void **)&textInfo->text, RSDK::DATASET_STR, false);
+        string->chars = NULL;
 
-        char *txt = text;
-        if (*text) {
-            int cnt = 0;
-            do {
-                textInfo->text[cnt++] = *txt;
-                ++txt;
-            } while (*txt);
+        int32 pos = 0;
+        while (text[pos]) string->length = ++pos;
+
+        if (textLength && textLength >= string->length)
+            string->size = textLength;
+        else
+            string->size = string->length;
+
+        if (!string->size)
+            string->size = 1;
+
+        RSDK::AllocateStorage(sizeof(uint16) * string->size, (void **)&string->chars, RSDK::DATASET_STR, false);
+
+        pos       = 0;
+        while (text[pos]) {
+            string->chars[pos] = text[pos];
+            ++pos;
         }
     }
 }
+void SetString(String *string, char *text);
 
-inline void CopyString(TextInfo *dst, TextInfo *src)
+inline void CopyString(String *dst, String *src)
 {
     if (dst == src)
         return;
 
-    int textLen = src->length;
-    dst->text   = NULL;
-    if (dst->size >= textLen) {
-        if (!dst->text) {
-            RSDK::AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, RSDK::DATASET_STR, false);
+    int32 srcLength = src->length;
+    dst->chars    = NULL;
+    if (dst->size >= srcLength) {
+        if (!dst->chars) {
+            RSDK::AllocateStorage(sizeof(uint16) * dst->size, (void **)&dst->chars, RSDK::DATASET_STR, false);
         }
     }
     else {
-        dst->size = textLen;
-        RSDK::AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, RSDK::DATASET_STR, false);
+        dst->size = srcLength;
+        RSDK::AllocateStorage(sizeof(uint16) * dst->size, (void **)&dst->chars, RSDK::DATASET_STR, false);
     }
-    
+
     dst->length = src->length;
-    for (int c = 0; c < dst->length; ++c) {
-        dst->text[c] = src->text[c];
-    }
+    for (int32 c = 0; c < dst->length; ++c) dst->chars[c] = src->chars[c];
 }
 
-inline void GetCString(char *dest, TextInfo *info)
+inline void GetCString(char *destChars, String *string)
 {
-    if (!info->text)
+    if (!string->chars)
         return;
 
-    char* text = (char*)"";
-    if (dest)
-        text = dest;
-    int textLen = 0x400;
-    if (dest)
-        textLen = info->length;
-    
-    int c = 0;
-    for (; c < textLen; ++c) {
-        text[c] = info->text[c];
-    }
-    text[c] = 0;
+    char *cString = destChars ? destChars : (char *) "";
+    int32 textLen = destChars ? string->length : 0x400;
+
+    int32 c = 0;
+    for (; c < textLen; ++c) cString[c] = string->chars[c];
+    cString[c] = 0;
 }
 
-void AppendText(TextInfo *info, char *text);
-void PrependText(TextInfo *info, char *text);
-void AppendString(TextInfo *textA, TextInfo *textB);
-bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch);
-bool32 SplitStringList(TextInfo *list, TextInfo *strings, int32 start, int32 count);
+void AppendText(String *string, char *appendText);
+void AppendString(String *string, String *appendString);
+bool32 CompareStrings(String *string1, String *string2, bool32 exactMatch);
 
-void LoadStrings(TextInfo *buffer, const char *filePath);
+void InitStringList(String *stringList, int32 size);
+void LoadStringList(String *stringList, const char *filePath, uint32 charSize);
+bool32 SplitStringList(String *splitStrings, String *stringList, int32 startStringID, int32 stringCount);
 
 #endif

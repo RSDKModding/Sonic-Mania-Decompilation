@@ -24,37 +24,37 @@ void CompetitionMenu_StageLoad(void) { CompetitionMenu->timer = 120; }
 
 void CompetitionMenu_Initialize(void)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&info, "Competition");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Competition");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             CompetitionMenu->competitionControl = control;
 
-        RSDK.PrependText(&info, "Competition Legacy");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Competition Legacy");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             CompetitionMenu->competitionControl_Legacy = control;
 
-        RSDK.PrependText(&info, "Competition Rules");
-        if (RSDK.StringCompare(&info, &control->tag, false)) {
+        RSDK.SetString(&string, "Competition Rules");
+        if (RSDK.CompareStrings(&string, &control->tag, false)) {
             CompetitionMenu->compRulesControl = control;
             control->backPressCB              = CompetitionMenu_CompRules_BackPressCB;
         }
 
-        RSDK.PrependText(&info, "Competition Zones");
-        if (RSDK.StringCompare(&info, &control->tag, false)) {
+        RSDK.SetString(&string, "Competition Zones");
+        if (RSDK.CompareStrings(&string, &control->tag, false)) {
             CompetitionMenu->compZoneControl = control;
             control->backPressCB             = CompetitionMenu_CompZones_BackPressCB;
         }
 
-        RSDK.PrependText(&info, "Competition Round");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Competition Round");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             CompetitionMenu->compRoundControl = control;
 
-        RSDK.PrependText(&info, "Competition Total");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Competition Total");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             CompetitionMenu->compTotalControl = control;
     }
 
@@ -666,8 +666,8 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     EntityUIControl *roundControl     = CompetitionMenu->compRoundControl;
     CompetitionMenu_SetupResultsUI(roundControl);
 
-    TextInfo roundLabelStr;
-    INIT_TEXTINFO(roundLabelStr);
+    String roundLabelStr;
+    INIT_STRING(roundLabelStr);
 
     char roundLabel[0x100];
     memset(roundLabel, 0, sizeof(roundLabel));
@@ -725,31 +725,31 @@ void CompetitionMenu_Round_MenuSetupCB(void)
 
         sprintf(buffer, "%d", session->rings[p]);
         if (!SceneInfo->inEditor) {
-            RSDK.SetText(&results->rowText[0], buffer, 0);
+            RSDK.InitString(&results->rowText[0], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
         }
 
         printf(buffer, "%d", session->totalRings[p]);
         if (!SceneInfo->inEditor) {
-            RSDK.SetText(&results->rowText[1], buffer, 0);
+            RSDK.InitString(&results->rowText[1], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
         }
 
         sprintf(buffer, "%d", session->score[p]);
         if (!SceneInfo->inEditor) {
-            RSDK.SetText(&results->rowText[2], buffer, 0);
+            RSDK.InitString(&results->rowText[2], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[2]);
         }
 
         sprintf(buffer, "%d", session->items[p]);
         if (!SceneInfo->inEditor) {
-            RSDK.SetText(&results->rowText[3], buffer, 0);
+            RSDK.InitString(&results->rowText[3], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[3]);
         }
 
         sprintf(buffer, "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
         if (!SceneInfo->inEditor) {
-            RSDK.SetText(&results->rowText[4], buffer, 0);
+            RSDK.InitString(&results->rowText[4], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
 
@@ -829,8 +829,8 @@ void CompetitionMenu_Results_MenuSetupCB(void)
     totalControl->targetPos.y = totalControl->startPos.y;
     totalControl->position.y  = totalControl->startPos.y;
 
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     EntityUIInfoLabel *label = CompetitionMenu->resultsLabel_Total;
     Localization_GetString(&message, STR_COMPTOTAL);
@@ -880,7 +880,7 @@ void CompetitionMenu_Results_MenuSetupCB(void)
             sprintf(buffer, "%d", session->matchWinner[r]);
 
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&results->rowText[r], buffer, 0);
+                RSDK.InitString(&results->rowText[r], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
             }
 
@@ -945,8 +945,8 @@ bool32 CompetitionMenu_CompRules_BackPressCB(void)
 
 bool32 CompetitionMenu_CompZones_BackPressCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_EXITCOMP);
     UIDialog_CreateDialogYesNo(&message, CompetitionMenu_ExitComp_YesCB, StateMachine_None, true, true);

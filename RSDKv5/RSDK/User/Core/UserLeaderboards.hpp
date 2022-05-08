@@ -16,9 +16,9 @@ struct LeaderboardID {
 };
 
 struct LeaderboardEntry {
-    TextInfo username;
+    String username;
 #if RETRO_REV02
-    TextInfo userID;
+    String userID;
 #endif
     int globalRank;
     int score;

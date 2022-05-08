@@ -50,13 +50,13 @@ void MainMenu_StageLoad(void) {}
 
 void MainMenu_Initialize(void)
 {
-    TextInfo text;
-    INIT_TEXTINFO(text);
+    String text;
+    INIT_STRING(text);
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&text, "Main Menu");
-        if (RSDK.StringCompare(&text, &control->tag, false)) {
+        RSDK.SetString(&text, "Main Menu");
+        if (RSDK.CompareStrings(&text, &control->tag, false)) {
             MainMenu->menuControl = control;
             control->backPressCB  = MainMenu_BackPressCB_ReturnToTitle;
         }
@@ -165,7 +165,7 @@ void MainMenu_ExitGame(void) { API.ExitGame(); }
 
 void MainMenu_ExitButton_ActionCB(void)
 {
-    TextInfo msg;
+    String msg;
     Localization_GetString(&msg, STR_QUITWARNING);
 
     UIDialog_CreateDialogYesNo(&msg, MainMenu_StartExitGame, StateMachine_None, true, true);
@@ -265,8 +265,8 @@ void MainMenu_MenuButton_ActionCB(void)
                     API.ShowEncorePage(0);
                 }
                 else {
-                    TextInfo message;
-                    INIT_TEXTINFO(message);
+                    String message;
+                    INIT_STRING(message);
                     Localization_GetString(&message, STR_CONNECTINGTOEGS);
 
                     UIDialog_CreateDialogOkCancel(&message, MainMenu_BuyPlusDialogCB, StateMachine_None, true, true);

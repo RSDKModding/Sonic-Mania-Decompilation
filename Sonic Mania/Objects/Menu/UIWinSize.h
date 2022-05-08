@@ -23,7 +23,7 @@ struct EntityUIWinSize {
     int32 textBounceVelocity;
     int32 buttonBounceVelocity;
     bool32 textVisible;
-    TextInfo text;
+    String text;
     int32 touchID;
     int32 maxScale;
     Animator unusedAnimator;

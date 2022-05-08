@@ -73,7 +73,7 @@ void UIVsScoreboard_SetScores(EntityUIVsScoreboard *scoreboard, uint32 p1Score, 
         scoreboard->p2Score = p2Score;
 
         if (!SceneInfo->inEditor) {
-            RSDK.SetText(&self->scoreText, text, 0);
+            RSDK.InitString(&self->scoreText, text, 0);
 
             if (!SceneInfo->inEditor) {
                 RSDK.SetSpriteAnimation(UIVsScoreboard->aniFrames, 18, &self->textAnimator, true, 0);

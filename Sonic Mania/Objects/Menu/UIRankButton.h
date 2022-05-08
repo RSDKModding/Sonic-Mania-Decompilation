@@ -15,8 +15,8 @@ struct EntityUIRankButton {
     MANIA_UI_ITEM_BASE
     bool32 showsName;
     LeaderboardEntry *leaderboardEntry;
-    TextInfo rankText;
-    TextInfo nameTimeText;
+    String rankText;
+    String nameTimeText;
     LeaderboardEntry *prevLeaderboardEntry;
     int32 prevLeaderboardEntryStatus;
     Vector2 popoverPos;

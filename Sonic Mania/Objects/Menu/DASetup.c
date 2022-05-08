@@ -75,8 +75,8 @@ void DASetup_StageLoad(void)
 void DASetup_DisplayTrack(int32 trackID)
 {
     char buffer[0x10];
-    TextInfo text;
-    INIT_TEXTINFO(text);
+    String text;
+    INIT_STRING(text);
 
     EntityUIInfoLabel *trackTitleLabel = DASetup->trackTitleLabel;
     EntityMusic *trackCountTrack       = DASetup->trackList[trackID];
@@ -85,7 +85,7 @@ void DASetup_DisplayTrack(int32 trackID)
     strcpy(&buffer[2], " - ");
     buffer[0] = (trackID / 10) + '0';
     buffer[1] = trackID - 10 * (trackID / 10) + '0';
-    RSDK.PrependText(&text, buffer);
+    RSDK.SetString(&text, buffer);
     RSDK.AppendString(&text, &trackCountTrack->soundTestTitle);
     UIInfoLabel_SetString(trackTitleLabel, &text);
 }
@@ -145,15 +145,15 @@ bool32 DASetup_HandleMedallionDebug(void)
 
 void DASetup_SetupUI(void)
 {
-    TextInfo buffer;
-    INIT_TEXTINFO(buffer);
+    String buffer;
+    INIT_STRING(buffer);
 
     TitleBG_SetupFX();
     DASetup_DisplayTrack(0);
     EntityUIInfoLabel *trackSelLabel = DASetup->trackSelLabel;
     Localization_GetString(&buffer, STR_SELECTATRACK);
 #if RETRO_USE_PLUS
-    RSDK.PrintText(PRINT_NORMAL, &buffer);
+    RSDK.PrintString(PRINT_NORMAL, &buffer);
 #endif
     UIInfoLabel_SetString(trackSelLabel, &buffer);
 }

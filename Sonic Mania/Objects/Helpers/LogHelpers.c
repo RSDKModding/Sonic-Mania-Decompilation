@@ -26,12 +26,11 @@ void LogHelpers_Print(const char *message, ...)
     if (!SceneInfo->inEditor) {
         char buffer[0x100];
 
-        // make the full string
         va_list list;
         va_start(list, message);
         vsprintf(buffer, message, list);
 #if RETRO_USE_PLUS
-        RSDK.PrintString(PRINT_NORMAL, buffer);
+        RSDK.PrintText(PRINT_NORMAL, buffer);
 #else
         RSDK.PrintMessage((void *)buffer, 0);
 #endif

@@ -24,7 +24,7 @@ struct EntityUIVsRoundPicker {
     int32 textBounceVelocity;
     int32 buttonBounceVelocity;
     bool32 textVisible;
-    TextInfo text;
+    String text;
     bool32 touchID;
     Animator textAnimator;
     Animator numbersAnimator;

@@ -96,8 +96,8 @@ void UIReplayCarousel_Create(void *data)
     UIReplayCarousel_HandlePositions();
     if (!SceneInfo->inEditor) {
         for (int32 i = 0; i < 4; ++i) {
-            RSDK.SetText(&self->zoneNameText[i], "", 0);
-            RSDK.SetText(&self->createdAtText[i], "", 0);
+            RSDK.InitString(&self->zoneNameText[i], "", 0);
+            RSDK.InitString(&self->createdAtText[i], "", 0);
         }
 
         UIReplayCarousel_SetupVisibleReplayButtons();
@@ -109,8 +109,8 @@ void UIReplayCarousel_Create(void *data)
             Localization_GetString(&self->loadingText, STR_LOADING);
         }
         else {
-            RSDK.SetText(&self->noReplaysText, "", 0);
-            RSDK.SetText(&self->loadingText, "", 0);
+            RSDK.InitString(&self->noReplaysText, "", 0);
+            RSDK.InitString(&self->loadingText, "", 0);
         }
         RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->noReplaysText);
         RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->loadingText);
@@ -304,14 +304,14 @@ void UIReplayCarousel_SetupVisibleReplayButtons(void)
             API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
             API.GetUserDBRowCreationTime(globals->replayTableID, row, buffer, 31, "%D");
             if (zoneID != 0xFF) {
-                RSDK.SetText(&self->zoneNameText[i], "", 0);
+                RSDK.InitString(&self->zoneNameText[i], "", 0);
                 Localization_GetZoneName(&self->zoneNameText[i], zoneID);
                 if (zoneID == 5 || zoneID == 10)
                     RSDK.SetSpriteString(UIWidgets->uiFrames, 5, &self->zoneNameText[i]);
                 else
                     RSDK.SetSpriteString(UIWidgets->uiFrames, 3, &self->zoneNameText[i]);
 
-                RSDK.SetText(&self->createdAtText[i], buffer, 0);
+                RSDK.InitString(&self->createdAtText[i], buffer, 0);
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->createdAtText[i]);
             }
         }

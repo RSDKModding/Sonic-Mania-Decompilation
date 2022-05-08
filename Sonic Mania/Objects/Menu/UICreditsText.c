@@ -60,8 +60,8 @@ void UICreditsText_Create(void *data)
         self->drawOrder     = 2;
         self->state         = UICreditsText_State_Setup;
 
-        if (!self->text.text)
-            RSDK.SetText(&self->text, "UNTITLED", 0);
+        if (!self->text.chars)
+            RSDK.InitString(&self->text, "UNTITLED", 0);
 
         bool32 isHeading = self->isHeading;
         UICreditsText_SetText(self->animator.animationID, self, &self->text);
@@ -71,7 +71,7 @@ void UICreditsText_Create(void *data)
 
 void UICreditsText_StageLoad(void) { UICreditsText->aniFrames = RSDK.LoadSpriteAnimation("UI/CreditsText.bin", SCOPE_STAGE); }
 
-void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, TextInfo *text)
+void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, String *text)
 {
     RSDK.SetSpriteAnimation(UICreditsText->aniFrames, animID, &label->animator, true, 0);
 
@@ -95,7 +95,7 @@ void UICreditsText_State_Setup(void)
         self->visible = true;
 
         if (self->animator.animationID == 7) {
-            self->animator.frameID = self->text.text[1];
+            self->animator.frameID = self->text.chars[1];
             self->scaleSpeed       = 64;
             self->drawFX           = FX_SCALE;
             self->state            = UICreditsText_State_ScaleIn;

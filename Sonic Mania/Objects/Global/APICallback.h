@@ -60,7 +60,7 @@ struct ObjectAPICallback {
     int32 (*ExitGame)(void);
     void (*ClearAchievements)(void);
     int32 (*UnlockAchievement)(const char *);
-    int32 (*SetRichPresence)(int32, TextInfo *);
+    int32 (*SetRichPresence)(int32, String *);
     int32 (*LoadUserFile)(const char *, void *, size_t, void (*)(int32));
     int32 (*SaveUserFile)(const char *, void *, size_t, void (*)(int32));
     void (*SaveSettingsINI)(void);
@@ -77,7 +77,7 @@ struct ObjectAPICallback {
     int32 (*ClearPrerollErrors)(void);
     int32 (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
-    int32 (*GetUsername)(TextInfo *info);
+    int32 (*GetUsername)(String *userName);
     int32 (*TryInitStorage)(void);
     int32 (*GetStorageStatus)(int32);
     int32 (*ControllerIDForInputID)(int32 controllerID);
@@ -143,7 +143,7 @@ void APICallback_EditorLoad(void);
 void APICallback_Serialize(void);
 
 // Extra Entity Functions
-void APICallback_SetRichPresence(int32 id, TextInfo *msg);
+void APICallback_SetRichPresence(int32 id, String *msg);
 int32 APICallback_GetUserLanguage(void);
 bool32 APICallback_GetConfirmButtonFlip(void);
 void APICallback_SetNoSaveEnabled(void);
@@ -184,7 +184,7 @@ void APICallback_TryAuth_Yes(void);
 void APICallback_TryAuth_CB(void);
 int32 APICallback_TryAuth(void);
 void APICallback_TryInitStorage(void);
-bool32 APICallback_GetUsername(TextInfo *info);
+bool32 APICallback_GetUsername(String *userName);
 void APICallback_ClearAchievements(void);
 void APICallback_UnlockAchievement(const char *name);
 void APICallback_CheckUserAuth_OK(void);

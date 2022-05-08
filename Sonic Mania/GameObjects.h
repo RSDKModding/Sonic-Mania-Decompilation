@@ -52,11 +52,11 @@ typedef struct {
     void (*Super)(int32 classID, ModSuper callback, void *data);
 
     // Mod Info
-    bool32 (*LoadModInfo)(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
-    void (*GetModPath)(const char *id, TextInfo *result);
+    bool32 (*LoadModInfo)(const char *id, String *name, String *description, String *version, bool32 *active);
+    void (*GetModPath)(const char *id, String *result);
     int32 (*GetModCount)(bool32 active);
     const char *(*GetModIDByIndex)(uint32 index);
-    bool32 (*ForeachModID)(TextInfo *id);
+    bool32 (*ForeachModID)(String *id);
 
     // Mod Callbacks & Public Functions
     void (*AddModCallback)(int32 callbackID, void (*callback)(void *));
@@ -67,26 +67,24 @@ typedef struct {
     // Mod Settings
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int32 (*GetSettingsInteger)(const char *id, const char *key, int32 fallback);
-    void (*GetSettingsString)(const char *id, const char *key, TextInfo *result, const char *fallback);
+    void (*GetSettingsString)(const char *id, const char *key, String *result, const char *fallback);
     void (*SetSettingsBool)(const char *key, bool32 val);
     void (*SetSettingsInteger)(const char *key, int32 val);
-    void (*SetSettingsString)(const char *key, TextInfo *val);
+    void (*SetSettingsString)(const char *key, String *val);
     void (*SaveSettings)(void);
 
     // Config
     bool32 (*GetConfigBool)(const char *key, bool32 fallback);
     int32 (*GetConfigInteger)(const char *key, int32 fallback);
-    void (*GetConfigString)(const char *key, TextInfo *result, const char *fallback);
-
-    // New foreach loops
-    bool32 (*ForeachConfig)(TextInfo *textInfo);
-    bool32 (*ForeachConfigCategory)(TextInfo *textInfo);
+    void (*GetConfigString)(const char *key, String *result, const char *fallback);
+    bool32 (*ForeachConfig)(String *textInfo);
+    bool32 (*ForeachConfigCategory)(String *textInfo);
 
     Object *(*GetObject)(const char *name);
 
     // Achievements
     void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
-    void (*GetAchievementInfo)(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
+    void (*GetAchievementInfo)(uint32 id, String *name, String *description, String *identifer, bool32 *achieved);
     int32 (*GetAchievementIndexByID)(const char *identifier);
     int32 (*GetAchievementCount)(void);
 
@@ -119,7 +117,7 @@ typedef struct {
     void (*SetAchievementsEnabled)(bool32 enabled);
 #if RETRO_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
-    void (*GetAchievementNames)(TextInfo *names, int32 count);
+    void (*GetAchievementNames)(String *names, int32 count);
 #endif
 
     // Leaderboards
@@ -137,7 +135,7 @@ typedef struct {
     LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 entryID);
 
     // Rich Presence
-    void (*SetRichPresence)(int32, TextInfo *text);
+    void (*SetRichPresence)(int32, String *text);
 
     // Stats
     void (*TryTrackStat)(StatInfo *stat);
@@ -148,7 +146,7 @@ typedef struct {
     void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
-    bool32 (*GetUsername)(TextInfo *name);
+    bool32 (*GetUsername)(String *userName);
     void (*TryInitStorage)(void);
     int32 (*GetStorageStatus)(void);
 
@@ -221,7 +219,7 @@ typedef struct {
     void (*SwapDrawListEntries)(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, uint16 count);
     void (*SetDrawLayerProperties)(uint8 drawGroup, bool32 sorted, void (*callback)(void));
 
-    // Scene List stuff
+    // Scene Management
     void (*SetScene)(const char *categoryName, const char *sceneName);
     void (*SetGameMode)(uint8 mode);
 #if RETRO_USE_PLUS
@@ -280,15 +278,15 @@ typedef struct {
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
 
     // Strings
-    void (*SetText)(TextInfo *textInfo, const char *text, uint32 size);
-    void (*CopyString)(TextInfo *dst, TextInfo *src);
-    void (*PrependText)(TextInfo *info, const char *text);
-    void (*AppendString)(TextInfo *info, TextInfo *str);
-    void (*AppendText)(TextInfo *info, const char *text);
-    void (*LoadStrings)(TextInfo *dst, const char *path, int32);
-    bool32 (*SplitStringList)(TextInfo *list, TextInfo *strings, int32 start, int32 end);
-    void (*GetCString)(char *dest, TextInfo *info);
-    bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 exactMatch);
+    void (*InitString)(String *string, const char *text, uint32 textLength);
+    void (*CopyString)(String *dst, String *src);
+    void (*SetString)(String *string, const char *text);
+    void (*AppendString)(String *string, String *appendString);
+    void (*AppendText)(String *string, const char *appendText);
+    void (*LoadStringList)(String *stringList, const char *filePath, uint32 charSize);
+    bool32 (*SplitStringList)(String *splitStrings, String *stringList, int32 startStringID, int32 stringCount);
+    void (*GetCString)(char *destChars, String *string);
+    bool32 (*CompareStrings)(String *string1, String *string2, bool32 exactMatch);
 
     // Screens & Displays
     void (*GetDisplayInfo)(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text);
@@ -332,7 +330,7 @@ typedef struct {
     void (*DrawBlendedQuad)(Vector2 *verticies, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheet, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
+    void (*DrawText)(Animator *animator, Vector2 *position, String *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
                      void *unused, Vector2 *charOffsets, bool32 screenRelative);
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(void);
@@ -358,12 +356,12 @@ typedef struct {
     void (*SetSpriteAnimation)(uint16 aniFrames, uint16 listID, Animator *animator, bool32 forceApply, int16 frameID);
     void (*EditSpriteAnimation)(uint16 aniFrames, uint16 listID, const char *name, int32 frameOffset, uint16 frameCount, int16 speed, uint8 loopIndex,
                                 uint8 rotationFlag);
-    void (*SetSpriteString)(uint16 aniFrames, uint16 listID, TextInfo *info);
+    void (*SetSpriteString)(uint16 aniFrames, uint16 listID, String *info);
     void *(*GetSpriteAnimation)(uint16 aniFrames, const char *name);
     SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 listID, int32 frameID);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);
     int16 (*GetFrameID)(Animator *animator);
-    int32 (*GetStringWidth)(uint16 aniFrames, uint16 listID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
+    int32 (*GetStringWidth)(uint16 aniFrames, uint16 listID, String *info, int32 startIndex, int32 length, int32 spacing);
     void (*ProcessAnimation)(Animator *animator);
 
     // Tile Layers
@@ -432,13 +430,13 @@ typedef struct {
     int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size); // load user file from exe dir
     int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir
 
-    // Printing
+    // Printing (Rev02)
 #if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
-    void (*PrintString)(SeverityModes severity, const char *message);
-    void (*PrintText)(SeverityModes severity, TextInfo *text);
-    void (*PrintIntegerUnsigned)(SeverityModes severity, const char *message, uint32 integer);
-    void (*PrintInteger)(SeverityModes severity, const char *message, int32 integer);
+    void (*PrintText)(SeverityModes severity, const char *message);
+    void (*PrintString)(SeverityModes severity, String *message);
+    void (*PrintUInt32)(SeverityModes severity, const char *message, uint32 integer);
+    void (*PrintInt32)(SeverityModes severity, const char *message, int32 integer);
     void (*PrintFloat)(SeverityModes severity, const char *message, float f);
     void (*PrintVector2)(SeverityModes severity, const char *message, int32 x, int32 y);
     void (*PrintHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);
@@ -518,10 +516,10 @@ extern ModFunctionTable Mod;
 #define RSDK_GET_ENTITY_GEN(slot)         ((Entity *)RSDK.GetEntity(slot))
 #define CREATE_ENTITY(object, data, x, y) ((Entity##object *)RSDK.CreateEntity(object->classID, data, x, y))
 
-#define INIT_TEXTINFO(info)                                                                                                                          \
-    info.text   = NULL;                                                                                                                              \
-    info.length = 0;                                                                                                                                 \
-    info.size   = 0
+#define INIT_STRING(string)                                                                                                                          \
+    string.chars  = NULL;                                                                                                                            \
+    string.length = 0;                                                                                                                               \
+    string.size   = 0
 
 // Initializes entity values to the defaults
 #define INIT_ENTITY(entity)                                                                                                                          \
@@ -546,10 +544,10 @@ extern ModFunctionTable Mod;
 
 #if RETRO_USE_MOD_LOADER
 #define foreach_config(text)                                                                                                                         \
-    TextInfo *text = NULL;                                                                                                                           \
+    String *text = NULL;                                                                                                                           \
     while (Mod.ForeachConfig(&text))
 #define foreach_configCategory(text)                                                                                                                 \
-    TextInfo *text = NULL;                                                                                                                           \
+    String *text = NULL;                                                                                                                           \
     while (Mod.ForeachConfigCategory(&text))
 #endif
 

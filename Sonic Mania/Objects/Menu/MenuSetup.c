@@ -40,13 +40,13 @@ void MenuSetup_StaticUpdate(void)
     if (!MenuSetup->initializedAPI) {
         MenuSetup->fxFade->speedOut = 0;
 
-        TextInfo tag;
-        INIT_TEXTINFO(tag);
+        String tag;
+        INIT_STRING(tag);
 
         foreach_all(UIControl, control)
         {
-            if (!RSDK.StringCompare(&tag, &control->tag, false)) {
-                RSDK.PrependText(&tag, "Main Menu");
+            if (!RSDK.CompareStrings(&tag, &control->tag, false)) {
+                RSDK.SetString(&tag, "Main Menu");
             }
         }
 
@@ -58,7 +58,7 @@ void MenuSetup_StaticUpdate(void)
             control->selectionDisabled = false;
             MenuSetup->initializedAPI  = true;
 
-            TextInfo message;
+            String message;
             Localization_GetString(&message, STR_RPC_MENU);
             API_SetRichPresence(PRESENCE_MENU, &message);
         }
@@ -84,13 +84,13 @@ void MenuSetup_StaticUpdate(void)
     DialogRunner_GetUserAuthStatus();
 #else
     if (!MenuSetup->initializedAPI) {
-        TextInfo tag;
-        INIT_TEXTINFO(tag);
+        String tag;
+        INIT_STRING(tag);
 
         foreach_all(UIControl, control)
         {
-            if (!RSDK.StringCompare(&tag, &control->tag, false)) {
-                RSDK.PrependText(&tag, "Main Menu");
+            if (!RSDK.CompareStrings(&tag, &control->tag, false)) {
+                RSDK.SetString(&tag, "Main Menu");
             }
         }
 
@@ -102,7 +102,7 @@ void MenuSetup_StaticUpdate(void)
             control->selectionDisabled = false;
             MenuSetup->initializedAPI  = true;
 
-            TextInfo message;
+            String message;
             Localization_GetString(&message, STR_RPC_MENU);
             API_SetRichPresence(PRESENCE_MENU, &message);
         }
@@ -236,121 +236,121 @@ void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay)
 #if !RETRO_USE_PLUS
 void MenuSetup_Initialize(void)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&info, "Main Menu");
-        if (RSDK.StringCompare(&info, &control->tag, false)) {
+        RSDK.SetString(&string, "Main Menu");
+        if (RSDK.CompareStrings(&string, &control->tag, false)) {
             MenuSetup->mainMenu  = control;
             control->backPressCB = MenuSetup_BackPressCB_ReturnToTitle;
         }
 
-        RSDK.PrependText(&info, "Time Attack");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Time Attack");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->timeAttack = control;
 
-        RSDK.PrependText(&info, "Time Attack Zones");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Time Attack Zones");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->timeAttackZones = control;
 
-        RSDK.PrependText(&info, "Leaderboards");
-        if (RSDK.StringCompare(&info, &control->tag, false)) {
+        RSDK.SetString(&string, "Leaderboards");
+        if (RSDK.CompareStrings(&string, &control->tag, false)) {
             MenuSetup->leaderboards = control;
             control->backPressCB    = MenuSetup_TA_Leaderboards_BackPressCB;
         }
 
-        RSDK.PrependText(&info, "Competition");
-        if (RSDK.StringCompare(&info, &control->tag, false)) {
+        RSDK.SetString(&string, "Competition");
+        if (RSDK.CompareStrings(&string, &control->tag, false)) {
             MenuSetup->competition = control;
             control->backPressCB   = MenuSetup_VS_BackoutFromVsCharSelect;
         }
 
-        RSDK.PrependText(&info, "Competition Rules");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Competition Rules");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->competitionRules = control;
 
-        RSDK.PrependText(&info, "Competition Zones");
-        if (RSDK.StringCompare(&info, &control->tag, false)) {
+        RSDK.SetString(&string, "Competition Zones");
+        if (RSDK.CompareStrings(&string, &control->tag, false)) {
             MenuSetup->competitionZones = control;
             control->backPressCB        = MenuSetup_VS_CompZones_BackPressCB;
         }
 
-        RSDK.PrependText(&info, "Competition Round");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Competition Round");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->competitionRound = control;
 
-        RSDK.PrependText(&info, "Competition Total");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Competition Total");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->competitionTotal = control;
 
-        RSDK.PrependText(&info, "Save Select");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Save Select");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->saveSelect = control;
 
-        RSDK.PrependText(&info, "No Save Mode");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "No Save Mode");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->noSaveMode = control;
 
-        RSDK.PrependText(&info, "Secrets");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Secrets");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->secrets = control;
 
-        RSDK.PrependText(&info, "Extras");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Extras");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->extras = control;
 
-        RSDK.PrependText(&info, "Options");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Options");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->options = control;
 
-        RSDK.PrependText(&info, "Language");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Language");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->language = control;
 
-        RSDK.PrependText(&info, "Video");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Video");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->video = control;
 
-        RSDK.PrependText(&info, "Video WIN");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Video WIN");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->video_win = control;
 
-        RSDK.PrependText(&info, "Sound");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Sound");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->sound = control;
 
-        RSDK.PrependText(&info, "Controls WIN");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls WIN");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_win = control;
 
-        RSDK.PrependText(&info, "Controls KB");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls KB");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_KB = control;
 
-        RSDK.PrependText(&info, "Controls PS4");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls PS4");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_PS4 = control;
 
-        RSDK.PrependText(&info, "Controls XB1");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls XB1");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_XB1 = control;
 
-        RSDK.PrependText(&info, "Controls NX");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_NX = control;
 
-        RSDK.PrependText(&info, "Controls NX Grip");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX Grip");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_NX_Grip = control;
 
-        RSDK.PrependText(&info, "Controls NX Joycon");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX Joycon");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_NX_JoyCon = control;
 
-        RSDK.PrependText(&info, "Controls NX Pro");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Controls NX Pro");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             MenuSetup->controls_NX_Pro = control;
     }
 
@@ -1080,11 +1080,11 @@ void MenuSetup_ExitGame(void) { APICallback_ExitGame(); }
 
 void MenuSetup_ExitGame_ActionCB(void)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
-    Localization_GetString(&info, STR_QUITWARNING);
-    UIDialog_CreateDialogYesNo(&info, MenuSetup_ExitGame_CB, NULL, true, true);
+    Localization_GetString(&string, STR_QUITWARNING);
+    UIDialog_CreateDialogYesNo(&string, MenuSetup_ExitGame_CB, NULL, true, true);
 }
 
 void MenuSetup_ExitGame_CB(void)
@@ -1401,9 +1401,9 @@ void MenuSetup_State_SetupLeaderboards(void)
     int32 status = APICallback_LeaderboardStatus();
 
     if (status == STATUS_CONTINUE) {
-        TextInfo message;
-        INIT_TEXTINFO(message);
-        RSDK.SetText(&message, "", false);
+        String message;
+        INIT_STRING(message);
+        RSDK.InitString(&message, "", false);
 
         Localization_GetString(&message, STR_CONNECTING);
         UIDialog_SetupText(dialog, &message);
@@ -1413,9 +1413,9 @@ void MenuSetup_State_SetupLeaderboards(void)
 
         int32 strID = status == STATUS_TIMEOUT ? STR_COMMERROR : STR_NOWIFI;
 
-        TextInfo message;
-        INIT_TEXTINFO(message);
-        RSDK.SetText(&message, "", false);
+        String message;
+        INIT_STRING(message);
+        RSDK.InitString(&message, "", false);
         Localization_GetString(&message, strID);
 
         UIDialog_SetupText(dialog, &message);
@@ -1611,8 +1611,8 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     if (matchWinner > 1)
         winner = matchWinner - 1;
 
-    TextInfo roundLabelStr;
-    INIT_TEXTINFO(roundLabelStr);
+    String roundLabelStr;
+    INIT_STRING(roundLabelStr);
 
     char roundLabel[0x100];
     memset(roundLabel, 0, sizeof(roundLabel));
@@ -1667,31 +1667,31 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
 
             sprintf(buffer, "%d", session->rings[p]);
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&results->rowText[0], buffer, 0);
+                RSDK.InitString(&results->rowText[0], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
             }
 
             printf(buffer, "%d", session->totalRings[p]);
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&results->rowText[1], buffer, 0);
+                RSDK.InitString(&results->rowText[1], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
             }
 
             sprintf(buffer, "%d", session->score[p]);
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&results->rowText[2], buffer, 0);
+                RSDK.InitString(&results->rowText[2], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[2]);
             }
 
             sprintf(buffer, "%d", session->items[p]);
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&results->rowText[3], buffer, 0);
+                RSDK.InitString(&results->rowText[3], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[3]);
             }
 
             sprintf(buffer, "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&results->rowText[4], buffer, 0);
+                RSDK.InitString(&results->rowText[4], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
             }
 
@@ -1757,12 +1757,12 @@ void MenuSetup_VS_Total_MenuSetupCB(void)
     totalControl->targetPos.y = totalControl->startPos.y;
     totalControl->position.y  = totalControl->startPos.y;
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     EntityUIInfoLabel *label = MenuSetup->totalLabel;
-    Localization_GetString(&info, STR_COMPTOTAL);
-    UIInfoLabel_SetString(label, &info);
+    Localization_GetString(&string, STR_COMPTOTAL);
+    UIInfoLabel_SetString(label, &string);
 
     int32 highestScore = 0;
     for (int32 p = 0; p < session->playerCount; ++p) {
@@ -1804,7 +1804,7 @@ void MenuSetup_VS_Total_MenuSetupCB(void)
                 sprintf(buffer, "%d", session->matchWinner[r]);
 
                 if (!SceneInfo->inEditor) {
-                    RSDK.SetText(&results->rowText[r], buffer, 0);
+                    RSDK.InitString(&results->rowText[r], buffer, 0);
                     RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
                 }
 
@@ -1897,8 +1897,8 @@ void MenuSetup_VS_ExitComp_YesCB(void) { UITransition_StartTransition(MenuSetup_
 
 bool32 MenuSetup_VS_CompZones_BackPressCB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_EXITCOMP);
     UIDialog_CreateDialogYesNo(&message, MenuSetup_VS_ExitComp_YesCB, NULL, true, true);

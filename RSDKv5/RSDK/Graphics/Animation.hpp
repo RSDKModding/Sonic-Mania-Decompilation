@@ -165,8 +165,8 @@ inline void EditSpriteAnimation(uint16 aniFrames, uint16 animID, const char *nam
     }
 }
 
-int32 GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
-void SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info);
+int32 GetStringWidth(uint16 aniFrames, uint16 animID, String *string, int32 startIndex, int32 length, int32 spacing);
+void SetSpriteString(uint16 aniFrames, uint16 animID, String *string);
 
 } // namespace RSDK
 

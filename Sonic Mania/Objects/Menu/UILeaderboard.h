@@ -14,9 +14,9 @@ struct EntityUILeaderboard {
     MANIA_UI_ITEM_BASE
     int32 unused;
     LeaderboardEntry *leaderboardEntry;
-    TextInfo unusedText[5];
-    TextInfo rankText[5];
-    TextInfo nameText[5];
+    String unusedText[5];
+    String rankText[5];
+    String nameText[5];
     int32 times[5];
     int32 ranks[5];
     bool32 isUser[5];
@@ -34,7 +34,7 @@ struct EntityUILeaderboard {
 #endif
     bool32 yPressCBEnabled;
     StateMachine(yPressCB);
-    TextInfo zoneName;
+    String zoneName;
     Animator unusedAnimator1;
     Animator unusedAnimator2;
     Animator zoneIconAnimator;

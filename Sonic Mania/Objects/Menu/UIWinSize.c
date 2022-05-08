@@ -109,7 +109,7 @@ void UIWinSize_Create(void *data)
         self->size.y     = abs(self->size.y);
 
         self->textVisible = true;
-        RSDK.SetText(&self->text, "", 0x100);
+        RSDK.InitString(&self->text, "", 0x100);
         self->processButtonCB = UIWinSize_ProcessButtonCB;
         self->touchCB         = UIWinSize_ProcessTouchCB;
 
@@ -139,12 +139,12 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
         char buffer[0x10];
         sprintf(buffer, "%ix", self->selection);
 
-        RSDK.PrependText(&entityPtr->text, buffer);
+        RSDK.SetString(&entityPtr->text, buffer);
 #if RETRO_GAMEVER != VER_100
         if (Localization->language == LANGUAGE_TC) {
             for (int32 c = 0; c < entityPtr->text.length; ++c) {
-                if (entityPtr->text.text[c] == 'x')
-                    entityPtr->text.text[c] = 20493; // unicode character ID
+                if (entityPtr->text.chars[c] == 'x')
+                    entityPtr->text.chars[c] = 20493; // unicode character ID
             }
         }
 #endif

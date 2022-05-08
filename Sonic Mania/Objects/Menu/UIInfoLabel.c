@@ -40,14 +40,14 @@ void UIInfoLabel_StageLoad(void) {}
 void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
 {
     if (!SceneInfo->inEditor) {
-        RSDK.SetText(&label->text, text, 0);
+        RSDK.InitString(&label->text, text, 0);
         if (!SceneInfo->inEditor) {
             RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &label->textAnimator, true, 0);
             RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &label->text);
         }
     }
 }
-void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
+void UIInfoLabel_SetString(EntityUIInfoLabel *entity, String *text)
 {
     if (!SceneInfo->inEditor) {
         RSDK.CopyString(&entity->text, text);

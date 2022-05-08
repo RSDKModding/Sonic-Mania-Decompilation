@@ -445,7 +445,7 @@ void UIControl_SetActiveMenuButtonPrompts(EntityUIControl *entity)
 void UIControl_SetActiveMenu(EntityUIControl *entity)
 {
 #if RETRO_USE_PLUS
-    RSDK.PrintText(PRINT_NORMAL, &entity->tag);
+    RSDK.PrintString(PRINT_NORMAL, &entity->tag);
 #endif
 
     entity->active  = ACTIVE_ALWAYS;
@@ -658,25 +658,25 @@ bool32 UIControl_isMoving(EntityUIControl *entity)
 
 void UIControl_MatchMenuTag(const char *text)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
-    RSDK.PrependText(&info, text);
+    RSDK.SetString(&string, text);
     foreach_all(UIControl, entity)
     {
-        if (entity->active == ACTIVE_ALWAYS || !RSDK.StringCompare(&info, &entity->tag, false))
+        if (entity->active == ACTIVE_ALWAYS || !RSDK.CompareStrings(&string, &entity->tag, false))
             UIControl_SetInactiveMenu(entity);
         else
             UIControl_SetActiveMenu(entity);
     }
 }
 
-void UIControl_HandleMenuChange(TextInfo *info)
+void UIControl_HandleMenuChange(String *newMenuTag)
 {
-    if (info->length) {
+    if (newMenuTag->length) {
         foreach_all(UIControl, entity)
         {
-            if (entity->active == ACTIVE_ALWAYS || !RSDK.StringCompare(info, &entity->tag, false))
+            if (entity->active == ACTIVE_ALWAYS || !RSDK.CompareStrings(newMenuTag, &entity->tag, false))
                 UIControl_SetInactiveMenu(entity);
             else
                 UIControl_SetActiveMenu(entity);

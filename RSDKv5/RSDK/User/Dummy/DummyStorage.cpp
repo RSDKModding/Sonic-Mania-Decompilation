@@ -28,9 +28,9 @@ int RSDK::SKU::DummyUserStorage::TryInitStorage()
     }
     return userStorage->storageStatus;
 }
-bool32 RSDK::SKU::DummyUserStorage::GetUsername(TextInfo *name)
+bool32 RSDK::SKU::DummyUserStorage::GetUsername(String *name)
 {
-    SetText(name, (char *)"IntegerGeorge802", false);
+    InitString(name, (char *)"IntegerGeorge802", false);
     return true;
 }
 void RSDK::SKU::DummyUserStorage::ClearPrerollErrors()

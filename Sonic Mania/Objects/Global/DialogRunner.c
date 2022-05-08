@@ -92,12 +92,12 @@ void DialogRunner_NotifyAutoSave(void)
 {
     RSDK_THIS(DialogRunner);
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
     if (DialogRunner->isAutoSaving) {
         if (!UIDialog->activeDialog) {
-            Localization_GetString(&info, STR_AUTOSAVENOTIF);
-            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_NotifyAutoSave_CB, true);
+            Localization_GetString(&string, STR_AUTOSAVENOTIF);
+            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&string, DialogRunner_NotifyAutoSave_CB, true);
             dialog->useAltColor    = true;
         }
     }
@@ -123,8 +123,8 @@ void DialogRunner_PromptSavePreference_CB(void)
 {
     RSDK_THIS(DialogRunner);
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
     if (API.GetSaveStatus() == STATUS_CONTINUE) {
         if (!UIDialog->activeDialog) {
             int32 stringID = STR_SAVELOADFAIL;
@@ -137,8 +137,8 @@ void DialogRunner_PromptSavePreference_CB(void)
                 case STATUS_CORRUPT: stringID = STR_CORRUPTSAVE; break;
                 case STATUS_NOSPACE: stringID = (sku_platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
             }
-            Localization_GetString(&info, stringID);
-            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, DialogRunner_SetNoSaveEnabled, DialogRunner_SetNoSaveDisabled, true, true);
+            Localization_GetString(&string, stringID);
+            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&string, DialogRunner_SetNoSaveEnabled, DialogRunner_SetNoSaveDisabled, true, true);
             dialog->useAltColor    = true;
         }
     }
@@ -190,12 +190,12 @@ void DialogRunner_CheckUserAuth_CB()
             }
         }
         else if (!UIDialog->activeDialog) {
-            TextInfo info;
+            String string;
             int32 id = STR_SIGNOUTDETECTED;
             if (self->useGenericText)
                 id = STR_RETRURNINGTOTITLE;
-            Localization_GetString(&info, id);
-            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_CheckUserAuth_OK, true);
+            Localization_GetString(&string, id);
+            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&string, DialogRunner_CheckUserAuth_OK, true);
             dialog->useAltColor    = true;
         }
     }
@@ -221,12 +221,12 @@ void DialogRunner_ManageNotifs(void)
     RSDK_THIS(DialogRunner);
 
     if (GameProgress_CountUnreadNotifs()) {
-        TextInfo info;
-        INIT_TEXTINFO(info);
+        String string;
+        INIT_STRING(string);
         if (!UIDialog->activeDialog) {
             int32 str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
-            Localization_GetString(&info, str);
-            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_GetNextNotif, true);
+            Localization_GetString(&string, str);
+            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&string, DialogRunner_GetNextNotif, true);
             dialog->playEventSfx   = true;
             dialog->useAltColor    = true;
         }

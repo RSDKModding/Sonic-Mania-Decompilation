@@ -16,7 +16,7 @@ struct EntityDAControl {
     int32 unused1;
     int32 unused2;
     int32 unused3;
-    TextInfo text;
+    String text;
     Animator backPlateAnimator;
     Animator buttonAnimator;
     Animator optionsAnimator[5];

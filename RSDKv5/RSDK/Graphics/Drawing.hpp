@@ -355,8 +355,8 @@ void DrawDeformedSprite(uint16 spriteIndex, int32 inkEffect, int32 alpha);
 void DrawTile(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
 void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
 
-void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 endFrame, int32 textLength, int32 align, int32 spacing,
+void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int32 endFrame, int32 textLength, int32 align, int32 spacing,
                 void *unused, Vector2 *charPositions, bool32 screenRelative);
-void DrawDevString(const char *text, int32 x, int32 y, int32 align, uint32 color);
+void DrawDevString(const char *string, int32 x, int32 y, int32 align, uint32 color);
 
 #endif // !DRAWING_H

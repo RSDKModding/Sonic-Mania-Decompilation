@@ -27,7 +27,7 @@ struct EntityUIDialog {
     StateMachine(state);
     int32 timer;
     int32 closeDelay;
-    TextInfo textInfo;
+    String textInfo;
     int32 buttonCount;
     Vector2 bgRectSize;
     Vector2 dialogPos;
@@ -62,8 +62,8 @@ void UIDialog_EditorLoad(void);
 void UIDialog_Serialize(void);
 
 // Extra Entity Functions
-EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg);
-void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text);
+EntityUIDialog *UIDialog_CreateActiveDialog(String *msg);
+void UIDialog_SetupText(EntityUIDialog *dialog, String *text);
 
 void UIDialog_AddButton(uint8 frame, EntityUIDialog *dialog, void (*callback)(void), bool32 closeOnSelect);
 void UIDialog_Setup(EntityUIDialog *dialog);
@@ -78,10 +78,10 @@ void UIDialog_State_Idle(void);
 void UIDialog_State_Close(void);
 
 // Some Helpers
-EntityUIDialog *UIDialog_CreateDialogOk(TextInfo *text, void (*callback)(void), bool32 closeOnSelect);
-EntityUIDialog *UIDialog_CreateDialogYesNo(TextInfo *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 closeOnSelect_Yes,
+EntityUIDialog *UIDialog_CreateDialogOk(String *text, void (*callback)(void), bool32 closeOnSelect);
+EntityUIDialog *UIDialog_CreateDialogYesNo(String *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 closeOnSelect_Yes,
                                            bool32 closeOnSelect_No);
-EntityUIDialog *UIDialog_CreateDialogOkCancel(TextInfo *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 closeOnSelect_Ok,
+EntityUIDialog *UIDialog_CreateDialogOkCancel(String *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 closeOnSelect_Ok,
                                               bool32 closeOnSelect_Cancel);
 
 #endif //! OBJ_UIDIALOG_H

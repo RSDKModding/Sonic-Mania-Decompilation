@@ -466,7 +466,7 @@ void Zone_StageLoad(void)
     }
 
     // Setup Rich Presence for this game mode
-    TextInfo message;
+    String message;
     switch (globals->gameMode) {
 #if !RETRO_USE_PLUS
         case MODE_NOSAVE:

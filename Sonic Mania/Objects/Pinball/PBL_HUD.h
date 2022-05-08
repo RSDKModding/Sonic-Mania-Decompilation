@@ -30,7 +30,7 @@ struct EntityPBL_HUD {
     StateMachine(stateDraw);
     int32 timer;
     Vector2 offset;
-    TextInfo text;
+    String text;
     Animator displayAnimator;
     Animator baseAnimator;
     Animator textAnimator;

@@ -156,7 +156,7 @@ void UIVsZoneButton_SetNameText(void)
         RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
 
         if (self->obfuscate) {
-            RSDK.PrependText(&self->nameText, "???");
+            RSDK.SetString(&self->nameText, "???");
             self->nameText.length = 3;
         }
         else {

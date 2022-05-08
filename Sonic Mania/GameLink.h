@@ -343,10 +343,10 @@ typedef struct {
 } Matrix;
 
 typedef struct {
-    uint16 *text;
+    uint16 *chars;
     uint16 length;
     uint16 size;
-} TextInfo;
+} String;
 
 typedef struct {
     int16 left;
@@ -428,9 +428,9 @@ typedef struct {
 } LeaderboardID;
 
 typedef struct {
-    TextInfo username;
+    String username;
 #if RETRO_USE_PLUS
-    TextInfo userID;
+    String userID;
 #endif
     int32 globalRank;
     int32 score;

@@ -1,12 +1,12 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
 #if RETRO_REV02
-void RSDK::SKU::DummyRichPresence::SetPresence(byte id, TextInfo *info)
+void RSDK::SKU::DummyRichPresence::SetPresence(byte id, String *message)
 {
     char buffer[0xFF];
-    GetCString(buffer, info);
-    if (info->text[info->length - 1] == '\r')
-        buffer[info->length - 1] = 0;
+    GetCString(buffer, message);
+    if (message->chars[message->length - 1] == '\r')
+        buffer[message->length - 1] = 0;
 
     richPresence->curID = id;
 

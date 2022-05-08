@@ -510,7 +510,7 @@ void PBL_Crane_StatePrize_PrizeGet(void)
             if (sector->craneID == PBL_Setup->sectorID)
                 sector->active = ACTIVE_NORMAL;
         }
-        RSDK.PrintInteger(PRINT_NORMAL, "Sector", PBL_Setup->sectorID);
+        RSDK.PrintInt32(PRINT_NORMAL, "Sector", PBL_Setup->sectorID);
         camera->target = self->cameraTarget;
         camera->rotationY = -96;
         foreach_active(PBL_HUD, hud)

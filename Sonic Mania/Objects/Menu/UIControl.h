@@ -49,8 +49,8 @@ struct EntityUIControl {
     StateMachine(state);
     int32 unused1;
     int32 buttonID;
-    TextInfo tag;
-    TextInfo parentTag;
+    String tag;
+    String parentTag;
     bool32 activeOnLoad;
     bool32 noWidgets;
     bool32 resetSelection;
@@ -137,7 +137,7 @@ void UIControl_SetupButtons(void);
 EntityUIControl *UIControl_GetUIControl(void);
 bool32 UIControl_isMoving(EntityUIControl *entity);
 void UIControl_MatchMenuTag(const char *text);
-void UIControl_HandleMenuChange(TextInfo *info);
+void UIControl_HandleMenuChange(String *newMenuTag);
 void UIControl_HandleMenuLoseFocus(EntityUIControl *parent);
 void UIControl_ReturnToParentMenu(void);
 

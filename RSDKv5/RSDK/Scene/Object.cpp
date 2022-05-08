@@ -265,7 +265,7 @@ void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                         if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
 
-                        dataPos = tmp + sizeof(TextInfo) * arraySize; // 8/16
+                        dataPos = tmp + sizeof(String) * arraySize; // 8/16
                         break;
 
                     case SVAR_ANIMATOR:

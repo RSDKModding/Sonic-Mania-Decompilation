@@ -46,7 +46,7 @@ void PBL_HUD_Create(void *data)
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->displayAnimator, true, 0);
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->baseAnimator, true, 1);
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 1, &self->textAnimator, true, 0);
-        RSDK.SetText(&self->text, "", 64);
+        RSDK.InitString(&self->text, "", 64);
 
         if (globals->gameMode == MODE_ENCORE)
             PBL_HUD_DisplayMessage(self, "BONUS STAGE! RESCUE YOUR BUDDIES!", PBL_HUD_MSG_SCROLL_LEFT);
@@ -60,7 +60,7 @@ void PBL_HUD_StageLoad(void) { PBL_HUD->aniFrames = RSDK.LoadSpriteAnimation("Pi
 void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char *message, int32 type)
 {
     if (entity->state != PBL_HUD_StateMessage_FlashThenCrane && entity->state != PBL_HUD_State_RevealCrane && entity->state != PBL_HUD_State_HideCrane) {
-        RSDK.PrependText(&entity->text, message);
+        RSDK.SetString(&entity->text, message);
         RSDK.SetSpriteString(PBL_HUD->aniFrames, 1, &entity->text);
         entity->stateDraw = PBL_HUD_Draw_Message;
         switch (type) {

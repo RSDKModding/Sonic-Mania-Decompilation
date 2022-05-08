@@ -124,8 +124,8 @@ void UITAZoneModule_Create(void *data)
     self->state           = UITAZoneModule_State_Setup;
 
     if (!SceneInfo->inEditor) {
-        RSDK.SetText(&self->text1Store, "", false);
-        RSDK.SetText(&self->text2Store, "", false);
+        RSDK.InitString(&self->text1Store, "", false);
+        RSDK.InitString(&self->text2Store, "", false);
         RSDK.CopyString(&self->text1Store, &self->text1);
         RSDK.CopyString(&self->text2Store, &self->text2);
     }
@@ -200,18 +200,18 @@ void UITAZoneModule_SetupText(void)
     RSDK_THIS(UITAZoneModule);
 
     if (!SceneInfo->inEditor) {
-        if (!self->text1.text)
-            RSDK.SetText(&self->text1, "", 0);
+        if (!self->text1.chars)
+            RSDK.InitString(&self->text1, "", 0);
 
-        if (!self->text2.text)
-            RSDK.SetText(&self->text2, "", 0);
+        if (!self->text2.chars)
+            RSDK.InitString(&self->text2, "", 0);
 
         RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->medLetterAnimator1, false, 0);
         RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->medLetterAnimator2, false, 0);
 
         if (self->disabled) {
-            RSDK.PrependText(&self->text1, "???");
-            RSDK.PrependText(&self->text2, "");
+            RSDK.SetString(&self->text1, "???");
+            RSDK.SetString(&self->text2, "");
             self->text2.length = 0;
         }
         else {
@@ -884,11 +884,11 @@ void UITAZoneModule_ProcessButtonCB_Expanded(void)
 
 void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, bool32 isUser, void (*callback)(void))
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
-    Localization_GetString(&info, STR_CONNECTING);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+    Localization_GetString(&string, STR_CONNECTING);
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&string);
     if (dialog) {
         UIDialog_Setup(dialog);
         MenuSetup->connectingDlg = dialog;

@@ -106,7 +106,7 @@ void UIDialog_StageLoad(void)
     UIDialog->activeDialog = NULL;
 }
 
-EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg)
+EntityUIDialog *UIDialog_CreateActiveDialog(String *msg)
 {
     if (UIDialog->activeDialog) {
         LogHelpers_Print("EXCEPTION: Called CreateDialog when an activeDialog already existed.");
@@ -132,14 +132,14 @@ EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg)
     return NULL;
 }
 
-void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text)
+void UIDialog_SetupText(EntityUIDialog *dialog, String *text)
 {
     if (text) {
         dialog->lineCount = 0;
         int32 charPos     = 0;
 
         for (int32 i = 0; i < text->length; ++i) {
-            if (text->text[charPos] == '\n' && dialog->lineCount < 3) {
+            if (text->chars[charPos] == '\n' && dialog->lineCount < 3) {
                 dialog->lineLength[dialog->lineCount] = charPos;
                 ++dialog->lineCount;
             }
@@ -448,7 +448,7 @@ void UIDialog_State_Close(void)
     }
 }
 
-EntityUIDialog *UIDialog_CreateDialogOk(TextInfo *text, void (*callback)(void), bool32 closeOnSelect)
+EntityUIDialog *UIDialog_CreateDialogOk(String *text, void (*callback)(void), bool32 closeOnSelect)
 {
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(text);
 
@@ -459,7 +459,7 @@ EntityUIDialog *UIDialog_CreateDialogOk(TextInfo *text, void (*callback)(void), 
 
     return dialog;
 }
-EntityUIDialog *UIDialog_CreateDialogYesNo(TextInfo *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 closeOnSelect_Yes,
+EntityUIDialog *UIDialog_CreateDialogYesNo(String *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 closeOnSelect_Yes,
                                            bool32 closeOnSelect_No)
 {
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(text);
@@ -472,7 +472,7 @@ EntityUIDialog *UIDialog_CreateDialogYesNo(TextInfo *text, void (*callbackYes)(v
 
     return dialog;
 }
-EntityUIDialog *UIDialog_CreateDialogOkCancel(TextInfo *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 closeOnSelect_Ok,
+EntityUIDialog *UIDialog_CreateDialogOkCancel(String *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 closeOnSelect_Ok,
                                               bool32 closeOnSelect_Cancel)
 {
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(text);

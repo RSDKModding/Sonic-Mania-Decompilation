@@ -113,8 +113,8 @@ typedef enum {
 // Object Class
 struct ObjectLocalization {
     RSDK_OBJECT
-    TextInfo text;
-    TextInfo strings[STR_STRING_COUNT];
+    String text;
+    String strings[STR_STRING_COUNT];
     bool32 loaded;
     uint8 language;
 };
@@ -142,8 +142,8 @@ void Localization_Serialize(void);
 
 // Extra Entity Functions
 void Localization_LoadStrings(void);
-void Localization_GetString(TextInfo *textInfo, uint8 id);
-void Localization_GetZoneName(TextInfo *info, uint8 zone);
-void Localization_GetZoneInitials(TextInfo *info, uint8 zone);
+void Localization_GetString(String *string, uint8 id);
+void Localization_GetZoneName(String *string, uint8 zone);
+void Localization_GetZoneInitials(String *string, uint8 zone);
 
 #endif //!OBJ_LOCALIZATION_H

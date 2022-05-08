@@ -894,8 +894,8 @@ void UISaveSlot_ProcessButtonCB(void)
         StateMachine_Run(self->stateInput);
 #endif
 
-        TextInfo msg;
-        INIT_TEXTINFO(msg);
+        String msg;
+        INIT_STRING(msg);
 
         if (UIControl->keyConfirm) {
 #if RETRO_USE_PLUS

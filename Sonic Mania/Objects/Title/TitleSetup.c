@@ -50,7 +50,7 @@ void TitleSetup_Create(void *data)
 
 void TitleSetup_StageLoad(void)
 {
-    TextInfo presence;
+    String presence;
     Localization_GetString(&presence, STR_RPC_TITLE);
     API_SetRichPresence(PRESENCE_TITLE, &presence);
 

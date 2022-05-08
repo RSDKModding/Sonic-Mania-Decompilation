@@ -164,23 +164,23 @@ void RSDK::ProcessAnimation(Animator *animator)
     }
 }
 
-int32 RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
+int32 RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, String *string, int32 startIndex, int32 length, int32 spacing)
 {
-    if (aniFrames >= SPRFILE_COUNT || !info || !info->text)
+    if (aniFrames >= SPRFILE_COUNT || !string || !string->chars)
         return 0;
 
     SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
-        startIndex = clampVal(startIndex, 0, info->length - 1);
+        startIndex = clampVal(startIndex, 0, string->length - 1);
 
-        if (length <= 0 || length > info->length)
-            length = info->length;
+        if (length <= 0 || length > string->length)
+            length = string->length;
 
         int32 w = 0;
         for (int32 c = startIndex; c < length; ++c) {
-            int32 charFrame = info->text[c];
+            int32 charFrame = string->chars[c];
             if (charFrame < anim->frameCount) {
                 w += spr->frames[charFrame + anim->frameListOffset].width;
                 if (c + 1 >= length)
@@ -196,21 +196,21 @@ int32 RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int3
     return 0;
 }
 
-void RSDK::SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info)
+void RSDK::SetSpriteString(uint16 aniFrames, uint16 animID, String *string)
 {
-    if (aniFrames >= SPRFILE_COUNT || !info)
+    if (aniFrames >= SPRFILE_COUNT || !string)
         return;
 
     SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
-        for (int32 c = 0; c < info->length; ++c) {
-            int32 unicodeChar = info->text[c];
-            info->text[c]     = -1;
+        for (int32 c = 0; c < string->length; ++c) {
+            int32 unicodeChar = string->chars[c];
+            string->chars[c]  = -1;
             for (int32 f = 0; f < anim->frameCount; ++f) {
                 if (spr->frames[f + anim->frameListOffset].unicodeChar == unicodeChar) {
-                    info->text[c] = f;
+                    string->chars[c] = f;
                     break;
                 }
             }

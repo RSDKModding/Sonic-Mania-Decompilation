@@ -18,7 +18,7 @@ struct EntityUIUsernamePopup {
     bool32 isVisible;
     Vector2 size;
     Vector2 drawPos;
-    TextInfo username;
+    String username;
     Animator animator;
 };
 

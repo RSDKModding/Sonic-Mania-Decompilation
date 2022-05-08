@@ -80,7 +80,7 @@ void PuyoGame_StageLoad(void)
 
     foreach_all(FXFade, fxFade) { PuyoGame->fxFade = fxFade; }
 
-    TextInfo text;
+    String text;
     Localization_GetString(&text, STR_RPC_PLAYING);
     API_SetRichPresence(0, &text);
     RSDK.ResetEntitySlot(SLOT_ZONE, TYPE_BLANK, NULL);

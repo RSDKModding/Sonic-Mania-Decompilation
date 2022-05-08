@@ -103,8 +103,8 @@ void UIRankButton_Create(void *data)
     self->replayID      = 0;
 
     if (!SceneInfo->inEditor) {
-        RSDK.SetText(&self->rankText, "", 0);
-        RSDK.SetText(&self->nameTimeText, "-----", 0);
+        RSDK.InitString(&self->rankText, "", 0);
+        RSDK.InitString(&self->nameTimeText, "-----", 0);
         RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->nameTimeText);
     }
 
@@ -136,7 +136,7 @@ void UIRankButton_SetRankText(EntityUIRankButton *button, int32 rank)
     else
         sprintf(buffer, "-");
 
-    RSDK.PrependText(&button->rankText, buffer);
+    RSDK.SetString(&button->rankText, buffer);
     RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &button->rankText);
 }
 
@@ -176,7 +176,7 @@ void UIRankButton_SetupLeaderboardRank(EntityUIRankButton *button, LeaderboardEn
             button->score      = 0;
             button->hasChanged = false;
 
-            RSDK.PrependText(&button->nameTimeText, "-----");
+            RSDK.SetString(&button->nameTimeText, "-----");
             RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &button->nameTimeText);
 
             UIRankButton_SetRankText(button, button->rank);
@@ -187,7 +187,7 @@ void UIRankButton_SetupLeaderboardRank(EntityUIRankButton *button, LeaderboardEn
         button->score      = 0;
         button->hasChanged = false;
 
-        RSDK.PrependText(&button->nameTimeText, "-----");
+        RSDK.SetString(&button->nameTimeText, "-----");
         RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &button->nameTimeText);
 
         UIRankButton_SetRankText(button, button->rank);

@@ -20,18 +20,18 @@ void PrintMessage(void *msg, int32 staticVariables);
 #endif
 
 #if RETRO_REV02
-inline void PrintString(int32 severity, const char *message) { PrintLog(severity, "%s", message); }
-inline void PrintText(int32 severity, TextInfo *text)
+inline void PrintText(int32 severity, const char *message) { PrintLog(severity, "%s", message); }
+inline void PrintString(int32 severity, String *message)
 {
     useEndLine = false;
 
-    for (int32 c = 0; c < text->length; ++c) PrintLog(severity, "%c", text->text[c]);
+    for (int32 c = 0; c < message->length; ++c) PrintLog(severity, "%c", message->chars[c]);
     PrintLog(severity, "\n");
 
     useEndLine = true;
 }
-inline void PrintIntegerUnsigned(int32 severity, const char *message, uint integer) { PrintLog(severity, "%s: %d", message, integer); }
-inline void PrintInteger(int32 severity, const char *message, int32 integer) { PrintLog(severity, "%s: %d", message, integer); }
+inline void PrintUInt32(int32 severity, const char *message, uint integer) { PrintLog(severity, "%s: %d", message, integer); }
+inline void PrintInt32(int32 severity, const char *message, int32 integer) { PrintLog(severity, "%s: %d", message, integer); }
 inline void PrintFloat(int32 severity, const char *message, float f) { PrintLog(severity, "%s: %f", message, f); }
 inline void PrintVector2(int32 severity, const char *message, int32 x, int32 y)
 {

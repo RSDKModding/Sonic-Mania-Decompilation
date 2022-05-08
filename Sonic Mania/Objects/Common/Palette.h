@@ -27,7 +27,7 @@ struct ObjectPalette {
 struct EntityPalette {
     RSDK_ENTITY
     int32 state;
-    TextInfo paletteFile;
+    String paletteFile;
     uint16 rowFlags;
     uint8 bankID;
     bool32 loadOnce;

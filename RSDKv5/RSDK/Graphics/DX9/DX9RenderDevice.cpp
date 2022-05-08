@@ -309,9 +309,11 @@ void RenderDevice::Release(bool32 isRefresh)
         screenTextures[i] = NULL;
     }
 
-    if (displayInfo.displays)
-        free(displayInfo.displays);
-    displayInfo.displays = NULL;
+    if (!isRefresh) {
+        if (displayInfo.displays)
+            free(displayInfo.displays);
+        displayInfo.displays = NULL;
+    }
 
     if (dx9VertexBuffer) {
         dx9VertexBuffer->Release();
@@ -1102,16 +1104,21 @@ void RenderDevice::GetDisplays()
         free(displayInfo.displays);
 
     displayInfo.displays        = (decltype(displayInfo.displays))malloc(sizeof(D3DDISPLAYMODE) * displayCount);
-    int newDisplayCount         = 0;
-    bool foundFullScreenDisplay = false;
+    int32 newDisplayCount         = 0;
+    bool32 foundFullScreenDisplay = false;
 
-    for (int d = 0; d < displayCount; ++d) {
+    for (int32 d = 0; d < displayCount; ++d) {
         dx9Context->EnumAdapterModes(dxAdapter, D3DFMT_X8R8G8B8, d, &displayInfo.displays[newDisplayCount].internal);
+        int32 w = displayInfo.displays[newDisplayCount].width;
+        int32 h = displayInfo.displays[newDisplayCount].height;
+        int32 r = displayInfo.displays[newDisplayCount].refresh_rate;
 
-        int refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
+        int32 refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
         if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].height >= (SCREEN_YSIZE * 2)) {
-            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59)
+            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59) {
+                memcpy(&displayInfo.displays[newDisplayCount - 1], &displayInfo.displays[newDisplayCount], sizeof(displayInfo.displays[0]));
                 --newDisplayCount;
+            }
 
             if (RSDK::videoSettings.fsWidth == displayInfo.displays[newDisplayCount].width
                 && RSDK::videoSettings.fsHeight == displayInfo.displays[newDisplayCount].height)

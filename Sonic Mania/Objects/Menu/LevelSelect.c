@@ -380,8 +380,8 @@ void LevelSelect_State_HandleMenu(void)
             }
 
             EntityUIText *soundTest = self->soundTestLabel;
-            soundTest->text.text[0] = self->soundTestID >> 4;
-            soundTest->text.text[1] = self->soundTestID & 0xF;
+            soundTest->text.chars[0] = self->soundTestID >> 4;
+            soundTest->text.chars[1] = self->soundTestID & 0xF;
         }
         else {
             LevelSelect_HandleColumnChange();

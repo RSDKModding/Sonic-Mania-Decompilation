@@ -249,8 +249,8 @@ void TitleCard_SetupTitleWords(void)
 {
     RSDK_THIS(TitleCard);
 
-    if (!self->zoneName.text)
-        RSDK.SetText(&self->zoneName, "UNTITLED", 0);
+    if (!self->zoneName.chars)
+        RSDK.InitString(&self->zoneName, "UNTITLED", 0);
 
     RSDK.SetSpriteString(TitleCard->aniFrames, 1, &self->zoneName);
 
@@ -267,7 +267,7 @@ void TitleCard_SetupTitleWords(void)
     }
 
     for (int32 c = 0; c < self->zoneName.length; ++c) {
-        if (self->zoneName.text[c] == (uint16)-1)
+        if (self->zoneName.chars[c] == (uint16)-1)
             self->titleCardWord2 = c;
     }
 

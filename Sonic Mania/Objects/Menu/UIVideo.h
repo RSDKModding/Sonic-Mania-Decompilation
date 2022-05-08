@@ -14,12 +14,12 @@ struct ObjectUIVideo {
 struct EntityUIVideo {
     RSDK_ENTITY
     StateMachine(state);
-    TextInfo videoFile1;
-    TextInfo videoFile2;
-    TextInfo audioFile;
+    String videoFile1;
+    String videoFile2;
+    String audioFile;
     bool32 gotoStage;
-    TextInfo stageListCategory;
-    TextInfo stageListName;
+    String stageListCategory;
+    String stageListName;
     int32 timer;
     Animator unusedAnimator;
 };

@@ -45,10 +45,10 @@ void RSDK::SKU::FillDummyLeaderboardEntries()
             GetUsername(&entry->username);
         }
         else {
-            SetText(&entry->username, (char *)"", 0);
-            PrependText(&entry->username, (char *)dummyNames[e % 100]);
+            InitString(&entry->username, (char *)"", 0);
+            SetString(&entry->username, (char *)dummyNames[e % 100]);
         }
-        SetText(&entry->userID, (char *)"DUMMY_USER_ID", 0);
+        InitString(&entry->userID, (char *)"DUMMY_USER_ID", 0);
     }
 }
 void RSDK::SKU::DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser)

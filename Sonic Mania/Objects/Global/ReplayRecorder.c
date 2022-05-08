@@ -325,8 +325,8 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
 
 void ReplayRecorder_SaveReplayDLG_CB(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_SAVEREPLAY);
     UIDialog_CreateDialogYesNo(&message, ReplayRecorder_SaveReplayDLG_YesCB, ReplayRecorder_SaveReplayDLG_NoCB, true, true);
@@ -364,8 +364,8 @@ void ReplayRecorder_ReplaySaveFinish_CB(bool32 success)
         if (ReplayRecorder->replayRowID != -1)
             API.RemoveDBRow(globals->replayTableID, ReplayRecorder->replayRowID);
 
-        TextInfo message;
-        INIT_TEXTINFO(message);
+        String message;
+        INIT_STRING(message);
         Localization_GetString(&message, STR_NOREPLAYSPACE);
         UIDialog_CreateDialogOk(&message, NULL, true);
 
@@ -397,8 +397,8 @@ void ReplayRecorder_ReplaySave_CB(bool32 success)
         }
     }
     else {
-        TextInfo message;
-        INIT_TEXTINFO(message);
+        String message;
+        INIT_STRING(message);
 
         char fileName[0x20];
         sprintf(fileName, "Replay_%08X.bin", ReplayRecorder->replayID);

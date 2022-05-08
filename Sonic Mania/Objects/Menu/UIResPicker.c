@@ -110,7 +110,7 @@ void UIResPicker_Create(void *data)
         self->size.y        = abs(self->size.y);
 
         self->textVisible = true;
-        RSDK.SetText(&self->text, "", 0x100);
+        RSDK.InitString(&self->text, "", 0x100);
         self->processButtonCB = UIResPicker_ProcessButtonCB;
         self->touchCB         = UIResPicker_ProcessTouchCB;
 
@@ -129,7 +129,7 @@ void UIResPicker_GetDisplayInfo(EntityUIResPicker *entity)
         RSDK.GetDisplayInfo(&entity->selection, &entity->displayWidth, &entity->displayHeight, &entity->displayRefreshRate, buffer);
 
         if (strcmp(buffer, "DEFAULT") != 0)
-            RSDK.PrependText(&entity->text, buffer);
+            RSDK.SetString(&entity->text, buffer);
         else
             Localization_GetString(&entity->text, STR_DEFAULT);
 

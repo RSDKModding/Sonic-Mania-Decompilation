@@ -33,8 +33,8 @@ void RSDK::SKU::TryUnlockAchievement(const char *name)
 bool32 RSDK::SKU::achievementsEnabled = true;
 ushort RSDK::SKU::achievementAniFrames[2];
 RSDK::Animator RSDK::SKU::achievementAnimator[2];
-TextInfo RSDK::SKU::achievementText[2];
-int RSDK::SKU::achievementTextWidth[2];
+String RSDK::SKU::achievementStrings[2];
+int RSDK::SKU::achievementStringWidth[2];
 int RSDK::SKU::achievementID             = 0;
 int RSDK::SKU::achievementsDelay         = 0;
 int RSDK::SKU::achievementsDrawn         = 0;
@@ -91,22 +91,22 @@ void RSDK::SKU::ProcessAchievements()
                     achievementsDrawn   = false;
                     achievements->RemoveLastAchievementID();
 
-                    TextInfo buffer;
-                    CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
-                    CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
+                    String buffer;
+                    CopyString(&achievementStrings[0], achievements->GetAchievementString(&buffer));
+                    CopyString(&achievementStrings[1], achievements->GetAchievementName(&buffer, achievementID));
                     if (curSKU.language == LANGUAGE_JP) {
-                        achievementTextWidth[0] = 13 * achievementText[0].length;
-                        achievementTextWidth[1] = 13 * achievementText[1].length;
+                        achievementStringWidth[0] = 13 * achievementStrings[0].length;
+                        achievementStringWidth[1] = 13 * achievementStrings[1].length;
                     }
                     else {
-                        achievementTextWidth[0] =
-                            GetStringWidth(achievementAniFrames[0], 0, &achievementText[0], 0, achievementText[0].length, 0);
-                        achievementTextWidth[1] =
-                            GetStringWidth(achievementAniFrames[1], 0, &achievementText[1], 0, achievementText[1].length, 0);
+                        achievementStringWidth[0] =
+                            GetStringWidth(achievementAniFrames[0], 0, &achievementStrings[0], 0, achievementStrings[0].length, 0);
+                        achievementStringWidth[1] =
+                            GetStringWidth(achievementAniFrames[1], 0, &achievementStrings[1], 0, achievementStrings[1].length, 0);
                     }
 
-                    achievementStrW = maxVal(achievementTextWidth[0], achievementTextWidth[1]) + 16;
-                    achievementStrX = achievementTextWidth[1] > achievementTextWidth[0] ? 20 : 0;
+                    achievementStrW = maxVal(achievementStringWidth[0], achievementStringWidth[1]) + 16;
+                    achievementStrX = achievementStringWidth[1] > achievementStringWidth[0] ? 20 : 0;
                 }
             }
 
@@ -125,9 +125,9 @@ void RSDK::SKU::DrawAchievements()
         if (achievementsLoaded && achievementDrawFlag && achievementID) {
             Vector2 drawPos;
 
-            TextInfo buffer;
-            CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
-            CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
+            String buffer;
+            CopyString(&achievementStrings[0], achievements->GetAchievementString(&buffer));
+            CopyString(&achievementStrings[1], achievements->GetAchievementName(&buffer, achievementID));
 
             int drawX = achievementStrX + currentScreen->size.x - achievementStrW;
             DrawRectangle(drawX, currentScreen->size.y - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 255, INK_NONE, true);
@@ -143,15 +143,15 @@ void RSDK::SKU::DrawAchievements()
 
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
             drawPos.y = vertices[1].y + 0xA0000;
-            SetSpriteString(achievementAniFrames[0], 0, &achievementText[0]);
-            DrawString(&achievementAnimator[0], &drawPos, &achievementText[0], 0, achievementText[0].length, ALIGN_CENTER, 0, 0, NULL, true);
+            SetSpriteString(achievementAniFrames[0], 0, &achievementStrings[0]);
+            DrawString(&achievementAnimator[0], &drawPos, &achievementStrings[0], 0, achievementStrings[0].length, ALIGN_CENTER, 0, 0, NULL, true);
 
             vertices[1].y += 0x1C0000;
 
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
             drawPos.y = vertices[1].y;
-            SetSpriteString(achievementAniFrames[1], 0, &achievementText[1]);
-            DrawString(&achievementAnimator[1], &drawPos, &achievementText[1], 0, achievementText[1].length, ALIGN_CENTER, 0, 0, NULL, true);
+            SetSpriteString(achievementAniFrames[1], 0, &achievementStrings[1]);
+            DrawString(&achievementAnimator[1], &drawPos, &achievementStrings[1], 0, achievementStrings[1].length, ALIGN_CENTER, 0, 0, NULL, true);
 
             achievementsDrawn = true;
         }

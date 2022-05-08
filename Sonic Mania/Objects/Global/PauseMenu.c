@@ -430,7 +430,7 @@ void PauseMenu_RestartButtonCB(void)
 {
     RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
-    TextInfo msg;
+    String msg;
 #if RETRO_USE_PLUS
     int32 strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->isReplaying)
@@ -447,7 +447,7 @@ void PauseMenu_ExitButtonCB(void)
 {
     RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
-    TextInfo msg;
+    String msg;
 #if RETRO_USE_PLUS
     int32 strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->isReplaying)
@@ -691,7 +691,7 @@ void PauseMenu_State_Paused(void)
 void PauseMenu_State_ForcedPause(void)
 {
     RSDK_THIS(PauseMenu);
-    TextInfo textBuffer;
+    String textBuffer;
 
     if (self->timer == 1) {
         UIControl->inputLocked = false;

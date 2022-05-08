@@ -216,7 +216,7 @@ struct EntityUIDiorama {
     int32 values[16];
     Vector2 vectors[16];
     Animator animators[16];
-    TextInfo texts[16];
+    String texts[16];
 };
 
 // Object Struct
@@ -237,7 +237,7 @@ void UIDiorama_Serialize(void);
 
 // Extra Entity Functions
 void UIDiorama_ChangeDiorama(uint8 dioramaID);
-void UIDiorama_SetText(TextInfo *info);
+void UIDiorama_SetText(String *string);
 
 void UIDiorama_State_ManiaMode_Alt_Run(void);
 void UIDiorama_State_ManiaMode_Alt_Jog(void);

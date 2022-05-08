@@ -31,7 +31,7 @@ struct EntityTitleCard {
     Vector2 stripVertsGreen[4];  // Using Mania Mode colour names since its better than anything else we did
     Vector2 bgLCurtainVerts[4];
     Vector2 bgRCurtainVerts[4];
-    TextInfo zoneName;
+    String zoneName;
     int32 zoneCharPos[4];
     int32 zoneCharVel[4];
     int32 zoneXPos;

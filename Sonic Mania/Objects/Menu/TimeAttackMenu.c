@@ -49,35 +49,35 @@ void TimeAttackMenu_StageLoad(void)
 
 void TimeAttackMenu_Initialize(void)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&info, "Time Attack");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Time Attack");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             TimeAttackMenu->timeAttackControl = control;
 
-        RSDK.PrependText(&info, "Time Attack Legacy");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Time Attack Legacy");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             TimeAttackMenu->timeAttackControl_Legacy = control;
 
-        RSDK.PrependText(&info, "Time Attack Zones");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Time Attack Zones");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             TimeAttackMenu->taZoneSelControl = control;
 
-        RSDK.PrependText(&info, "Time Attack Detail");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Time Attack Detail");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             TimeAttackMenu->taDetailsControl = control;
 
-        RSDK.PrependText(&info, "Leaderboards");
-        if (RSDK.StringCompare(&info, &control->tag, false)) {
+        RSDK.SetString(&string, "Leaderboards");
+        if (RSDK.CompareStrings(&string, &control->tag, false)) {
             TimeAttackMenu->leaderboardsControl = control;
             control->backPressCB                = TimeAttackMenu_LeaderboardsBackPressCB;
         }
 
-        RSDK.PrependText(&info, "Replays");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Replays");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             TimeAttackMenu->replaysControl = control;
     }
 
@@ -297,11 +297,11 @@ void TimeAttackMenu_DeleteReplayActionCB(void)
 
     if (replayControl->buttonID == 1 && carousel->stateDraw == UIReplayCarousel_Draw_Carousel
         && API.GetSortedUserDBRowCount(globals->replayTableID)) {
-        TextInfo info;
-        INIT_TEXTINFO(info);
+        String string;
+        INIT_STRING(string);
 
-        Localization_GetString(&info, STR_DELETEREPLAY);
-        UIDialog_CreateDialogYesNo(&info, TimeAttackMenu_ConfirmDeleteReplay_Yes_CB, StateMachine_None, true, true);
+        Localization_GetString(&string, STR_DELETEREPLAY);
+        UIDialog_CreateDialogYesNo(&string, TimeAttackMenu_ConfirmDeleteReplay_Yes_CB, StateMachine_None, true, true);
     }
 }
 
@@ -365,11 +365,11 @@ void TimeAttackMenu_MenuUpdateCB_LB(void)
 
 void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act, bool32 isEncore, bool32 isUser, void (*callback)(void))
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
-    Localization_GetString(&info, STR_CONNECTING);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+    Localization_GetString(&string, STR_CONNECTING);
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&string);
 
     if (dialog) {
         UIDialog_Setup(dialog);
@@ -498,8 +498,8 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 success)
         strID = STR_ERRORLOADINGREPLAY;
     }
 
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
     Localization_GetString(&message, strID);
 
     EntityUIDialog *dialog = UIDialog_CreateDialogOk(&message, StateMachine_None, true);
@@ -794,8 +794,8 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
 
 void TimeAttackMenu_XPressCB_Details(void)
 {
-    TextInfo message;
-    INIT_TEXTINFO(message);
+    String message;
+    INIT_STRING(message);
 
     Localization_GetString(&message, STR_RESETTIMESWARNING);
     UIDialog_CreateDialogYesNo(&message, TimeAttackMenu_ResetTimes_YesCB, StateMachine_None, true, true);
@@ -909,25 +909,25 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
 {
     RSDK_THIS(TimeAttackMenu);
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     EntityUIDialog *dialog = TimeAttackMenu->connectingDlg;
     int32 status           = API.GetLeaderboardsStatus();
 
     switch (status) {
         case STATUS_CONTINUE:
-            Localization_GetString(&info, STR_CONNECTING);
-            UIDialog_SetupText(dialog, &info);
+            Localization_GetString(&string, STR_CONNECTING);
+            UIDialog_SetupText(dialog, &string);
             break;
 
         default:
         case STATUS_ERROR: {
             if (status < STATUS_ERROR) {
                 int32 strID = status == STATUS_TIMEOUT ? STR_COMMERROR : STR_NOWIFI;
-                Localization_GetString(&info, strID);
+                Localization_GetString(&string, strID);
 
-                UIDialog_SetupText(dialog, &info);
+                UIDialog_SetupText(dialog, &string);
                 UIDialog_AddButton(DIALOG_OK, dialog, StateMachine_None, true);
 
                 EntityUIControl *control   = dialog->parent;

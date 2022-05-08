@@ -34,53 +34,53 @@ void Localization_StageLoad(void)
 
 void Localization_LoadStrings(void)
 {
-    RSDK.SetText(&Localization->text, "", 0);
+    RSDK.InitString(&Localization->text, "", 0);
 
     switch (Localization->language) {
         case LANGUAGE_EN:
             LogHelpers_Print("Loading EN strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsEN.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsEN.txt", 16);
             break;
 
         case LANGUAGE_FR:
             LogHelpers_Print("Loading FR strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsFR.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsFR.txt", 16);
             break;
 
         case LANGUAGE_IT:
             LogHelpers_Print("Loading IT strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsIT.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsIT.txt", 16);
             break;
 
         case LANGUAGE_GE:
             LogHelpers_Print("Loading GE strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsGE.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsGE.txt", 16);
             break;
 
         case LANGUAGE_SP:
             LogHelpers_Print("Loading SP strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsSP.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsSP.txt", 16);
             break;
 
         case LANGUAGE_JP:
             LogHelpers_Print("Loading JP strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsJP.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsJP.txt", 16);
             break;
 
 #if RETRO_GAMEVER != VER_100
         case LANGUAGE_KO:
             LogHelpers_Print("Loading KO strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsKO.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsKO.txt", 16);
             break;
 
         case LANGUAGE_SC:
             LogHelpers_Print("Loading Simp Chinese strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsSC.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsSC.txt", 16);
             break;
 
         case LANGUAGE_TC:
             LogHelpers_Print("Loading Trad Chinese strings...");
-            RSDK.LoadStrings(&Localization->text, "StringsTC.txt", 16);
+            RSDK.LoadStringList(&Localization->text, "StringsTC.txt", 16);
             break;
 #endif
 
@@ -92,7 +92,7 @@ void Localization_LoadStrings(void)
 
 #if RETRO_USE_EGS
     if (API.CheckAchievementsEnabled()) {
-        TextInfo names[STR_STRING_COUNT - STR_ACHIEVEMENT];
+        String names[STR_STRING_COUNT - STR_ACHIEVEMENT];
         for (int32 i = STR_ACHIEVEMENT; i < STR_STRING_COUNT; ++i) {
             names[i] = Localization->strings[i];
         }
@@ -102,52 +102,52 @@ void Localization_LoadStrings(void)
 #endif
 }
 
-void Localization_GetString(TextInfo *textInfo, uint8 id)
+void Localization_GetString(String *string, uint8 id)
 {
-    memset(textInfo, 0, sizeof(TextInfo));
-    RSDK.SetText(textInfo, "", 0);
-    RSDK.CopyString(textInfo, &Localization->strings[id]);
-    for (int32 c = 0; c < textInfo->length; ++c) {
-        if (textInfo->text[c] == '\\')
-            textInfo->text[c] = '\n';
+    memset(string, 0, sizeof(String));
+    RSDK.InitString(string, "", 0);
+    RSDK.CopyString(string, &Localization->strings[id]);
+    for (int32 c = 0; c < string->length; ++c) {
+        if (string->chars[c] == '\\')
+            string->chars[c] = '\n';
     }
 }
 
-void Localization_GetZoneName(TextInfo *info, uint8 zone)
+void Localization_GetZoneName(String *string, uint8 zone)
 {
     switch (zone) {
-        case ZONE_GHZ: RSDK.SetText(info, "GREEN HILL", 0); break;
-        case ZONE_CPZ: RSDK.SetText(info, "CHEMICAL PLANT", 0); break;
-        case ZONE_SPZ: RSDK.SetText(info, "STUDIOPOLIS", 0); break;
-        case ZONE_FBZ: RSDK.SetText(info, "FLYING BATTERY", 0); break;
-        case ZONE_PGZ: RSDK.SetText(info, "PRESS GARDEN", 0); break;
-        case ZONE_SSZ: RSDK.SetText(info, "STARDUST SPEEDWAY", 0); break;
-        case ZONE_HCZ: RSDK.SetText(info, "HYDROCITY", 0); break;
-        case ZONE_MSZ: RSDK.SetText(info, "MIRAGE SALOON", 0); break;
-        case ZONE_OOZ: RSDK.SetText(info, "OIL OCEAN", 0); break;
-        case ZONE_LRZ: RSDK.SetText(info, "LAVA REEF", 0); break;
-        case ZONE_MMZ: RSDK.SetText(info, "METALLIC MADNESS", 0); break;
-        case ZONE_TMZ: RSDK.SetText(info, "TITANIC MONARCH", 0); break;
-        case ZONE_ERZ: RSDK.SetText(info, "???", 0); break;
+        case ZONE_GHZ: RSDK.InitString(string, "GREEN HILL", 0); break;
+        case ZONE_CPZ: RSDK.InitString(string, "CHEMICAL PLANT", 0); break;
+        case ZONE_SPZ: RSDK.InitString(string, "STUDIOPOLIS", 0); break;
+        case ZONE_FBZ: RSDK.InitString(string, "FLYING BATTERY", 0); break;
+        case ZONE_PGZ: RSDK.InitString(string, "PRESS GARDEN", 0); break;
+        case ZONE_SSZ: RSDK.InitString(string, "STARDUST SPEEDWAY", 0); break;
+        case ZONE_HCZ: RSDK.InitString(string, "HYDROCITY", 0); break;
+        case ZONE_MSZ: RSDK.InitString(string, "MIRAGE SALOON", 0); break;
+        case ZONE_OOZ: RSDK.InitString(string, "OIL OCEAN", 0); break;
+        case ZONE_LRZ: RSDK.InitString(string, "LAVA REEF", 0); break;
+        case ZONE_MMZ: RSDK.InitString(string, "METALLIC MADNESS", 0); break;
+        case ZONE_TMZ: RSDK.InitString(string, "TITANIC MONARCH", 0); break;
+        case ZONE_ERZ: RSDK.InitString(string, "???", 0); break;
         default: break;
     }
 }
-void Localization_GetZoneInitials(TextInfo *info, uint8 zone)
+void Localization_GetZoneInitials(String *string, uint8 zone)
 {
     switch (zone) {
-        case ZONE_GHZ: RSDK.SetText(info, "GHZ", 0); break;
-        case ZONE_CPZ: RSDK.SetText(info, "CPZ", 0); break;
-        case ZONE_SPZ: RSDK.SetText(info, "SPZ", 0); break;
-        case ZONE_FBZ: RSDK.SetText(info, "FBZ", 0); break;
-        case ZONE_PGZ: RSDK.SetText(info, "PGZ", 0); break;
-        case ZONE_SSZ: RSDK.SetText(info, "SSZ", 0); break;
-        case ZONE_HCZ: RSDK.SetText(info, "HCZ", 0); break;
-        case ZONE_MSZ: RSDK.SetText(info, "MSZ", 0); break;
-        case ZONE_OOZ: RSDK.SetText(info, "OOZ", 0); break;
-        case ZONE_LRZ: RSDK.SetText(info, "LRZ", 0); break;
-        case ZONE_MMZ: RSDK.SetText(info, "MMZ", 0); break;
-        case ZONE_TMZ: RSDK.SetText(info, "TMZ", 0); break;
-        case ZONE_ERZ: RSDK.SetText(info, "???", 0); break;
+        case ZONE_GHZ: RSDK.InitString(string, "GHZ", 0); break;
+        case ZONE_CPZ: RSDK.InitString(string, "CPZ", 0); break;
+        case ZONE_SPZ: RSDK.InitString(string, "SPZ", 0); break;
+        case ZONE_FBZ: RSDK.InitString(string, "FBZ", 0); break;
+        case ZONE_PGZ: RSDK.InitString(string, "PGZ", 0); break;
+        case ZONE_SSZ: RSDK.InitString(string, "SSZ", 0); break;
+        case ZONE_HCZ: RSDK.InitString(string, "HCZ", 0); break;
+        case ZONE_MSZ: RSDK.InitString(string, "MSZ", 0); break;
+        case ZONE_OOZ: RSDK.InitString(string, "OOZ", 0); break;
+        case ZONE_LRZ: RSDK.InitString(string, "LRZ", 0); break;
+        case ZONE_MMZ: RSDK.InitString(string, "MMZ", 0); break;
+        case ZONE_TMZ: RSDK.InitString(string, "TMZ", 0); break;
+        case ZONE_ERZ: RSDK.InitString(string, "???", 0); break;
         default: break;
     }
 }

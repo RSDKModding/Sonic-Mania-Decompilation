@@ -221,6 +221,12 @@ void RenderDevice::Release(bool32 isRefresh)
         SDL_DestroyTexture(imageTexture);
     imageTexture = NULL;
 
+    if (!isRefresh) {
+        if (displayInfo.displays)
+            free(displayInfo.displays);
+        displayInfo.displays = NULL;
+    }
+
     if (!isRefresh && renderer)
         SDL_DestroyRenderer(renderer);
 
@@ -715,13 +721,15 @@ void RenderDevice::GetDisplays()
     int newDisplayCount         = 0;
     bool foundFullScreenDisplay = false;
 
-    for (int d = 0; d < displayCount; ++d) {
+    for (int d = displayCount - 1; d >= 0; --d) {
         SDL_GetDisplayMode(currentWindowDisplay, d, &displayInfo.displays[newDisplayCount].internal);
 
         int refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
         if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].height >= (SCREEN_YSIZE * 2)) {
-            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59)
+            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59) {
+                memcpy(&displayInfo.displays[newDisplayCount - 1], &displayInfo.displays[newDisplayCount], sizeof(displayInfo.displays[0]));
                 --newDisplayCount;
+            }
 
             if (RSDK::videoSettings.fsWidth == displayInfo.displays[newDisplayCount].width
                 && RSDK::videoSettings.fsHeight == displayInfo.displays[newDisplayCount].height)

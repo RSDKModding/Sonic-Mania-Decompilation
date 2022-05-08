@@ -221,9 +221,9 @@ void BSS_Setup_StageLoad(void)
 
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     if (param->bssSelection == BSS_SELECTION_EXTRAS) {
-        TextInfo info;
-        Localization_GetString(&info, STR_RPC_PLAYING);
-        API_SetRichPresence(PRESENCE_GENERIC, &info);
+        String string;
+        Localization_GetString(&string, STR_RPC_PLAYING);
+        API_SetRichPresence(PRESENCE_GENERIC, &string);
     }
 }
 

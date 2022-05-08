@@ -10,20 +10,20 @@
 struct ObjectLEDPanel {
     RSDK_OBJECT
     uint16 aniFrames;
-    TextInfo text;
+    String text;
     color panelColor;
 };
 
 // Entity Class
 struct EntityLEDPanel {
     RSDK_ENTITY
-    TextInfo text[LEDPANEL_TEXT_COUNT];
-    TextInfo seq[LEDPANEL_ROW_COUNT];
-    TextInfo *seqPtrs[LEDPANEL_ROW_COUNT];
+    String text[LEDPANEL_TEXT_COUNT];
+    String seq[LEDPANEL_ROW_COUNT];
+    String *seqPtrs[LEDPANEL_ROW_COUNT];
     int32 rowSeqPos[LEDPANEL_ROW_COUNT];
     StateMachine(stateRow[LEDPANEL_ROW_COUNT]);
-    TextInfo *textPtrs[LEDPANEL_TEXT_COUNT];
-    TextInfo activeText[LEDPANEL_ROW_COUNT];
+    String *textPtrs[LEDPANEL_TEXT_COUNT];
+    String activeText[LEDPANEL_ROW_COUNT];
     Vector2 textMovePos[LEDPANEL_ROW_COUNT];
     Vector2 textPos[LEDPANEL_ROW_COUNT];
     Vector2 textTargetPos[LEDPANEL_ROW_COUNT];
@@ -67,7 +67,7 @@ void LEDPanel_EditorLoad(void);
 void LEDPanel_Serialize(void);
 
 // Extra Entity Functions
-void LEDPanel_SetupActiveText(int index, TextInfo *src);
+void LEDPanel_SetupActiveText(int index, String *src);
 void LEDPanel_SetupTextPos(int index, int x, int y);
 void LEDPanel_HandleCharacters(void);
 

@@ -28,8 +28,8 @@ void UIKeyBinder_Update(void)
     int32 input             = self->inputID + 1;
     int32 keyMap            = UIKeyBinder_GetMappings(input, self->type);
 
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
     bool32 keyMapChanged = true;
 
     int32 frameID = -1;
@@ -64,11 +64,11 @@ void UIKeyBinder_Update(void)
                         str = STR_KEYALREADYBOUNDP2;
 
                     if (str != -1)
-                        Localization_GetString(&info, str);
+                        Localization_GetString(&string, str);
 
                     UIKeyBinder_SetMappings(self->type, input, KEYMAP_NO_MAPPING);
                     self->lasyKeyMap = KEYMAP_NO_MAPPING;
-                    UIDialog_CreateDialogYesNo(&info, UIKeyBinder_MoveKeyToActionCB_Yes, UIKeyBinder_MoveKeyToActionCB_No, true, true);
+                    UIDialog_CreateDialogYesNo(&string, UIKeyBinder_MoveKeyToActionCB_Yes, UIKeyBinder_MoveKeyToActionCB_No, true, true);
                     keyMapChanged = false;
                 }
             }

@@ -34,28 +34,28 @@ void RSDK::SKU::DummyAchievements::TryUnlockAchievement(const char *name)
     }
 }
 
-void RSDK::SKU::DummyAchievements::GetAchievementNames(TextInfo *names, int32 count)
+void RSDK::SKU::DummyAchievements::GetAchievementNames(String *names, int32 count)
 {
     int i = 0;
     for (; i < count && i < (int)RSDK::SKU::achievementStack.size(); ++i) {
-        SetText(&names[i], (char *)RSDK::SKU::achievementList[i].name.c_str(), 0);
+        InitString(&names[i], (char *)RSDK::SKU::achievementList[i].name.c_str(), 0);
     }
     for (; i < count; ++i) {
-        SetText(&names[i], (char *)"Dummy Achievement", 0);
+        InitString(&names[i], (char *)"Dummy Achievement", 0);
     }
 }
 
-TextInfo *RSDK::SKU::DummyAchievements::GetAchievementText(TextInfo *info)
+String *RSDK::SKU::DummyAchievements::GetAchievementString(String *string)
 {
-    SetText(info, (char *)"Achievement!", 0);
-    return info;
+    InitString(string, (char *)"Achievement!", 0);
+    return string;
 }
-TextInfo *RSDK::SKU::DummyAchievements::GetAchievementName(TextInfo *info, uint id)
+String *RSDK::SKU::DummyAchievements::GetAchievementName(String *name, uint id)
 {
     id--;
     if (id <= achievementList.size())
-        SetText(info, (char *)achievementList[id].name.c_str(), 0);
-    return info;
+        InitString(name, (char *)achievementList[id].name.c_str(), 0);
+    return name;
 }
 
 int RSDK::SKU::DummyAchievements::GetNextAchievementID(void)

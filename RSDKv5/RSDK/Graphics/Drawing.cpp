@@ -146,52 +146,51 @@ void GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refres
     if (!displayID)
         return;
 
-    uint32 id    = *displayID;
-    int32 dispID = 0;
+    int32 prevDisplay = *displayID;
+    int32 display      = 0;
 
-    if (*displayID == -2) {
+    if (*displayID == -2) { // -2 == "get FS size display"
         if (RSDK::videoSettings.fsWidth && RSDK::videoSettings.fsHeight) {
-            int32 d = 0;
-            for (; d < RenderDevice::displayCount; ++d) {
-                if (RenderDevice::displayInfo.displays[d].width == RSDK::videoSettings.fsWidth
-                    && RenderDevice::displayInfo.displays[d].height == RSDK::videoSettings.fsHeight
-                    && RenderDevice::displayInfo.displays[d].refresh_rate == RSDK::videoSettings.refreshRate) {
+            for (display = 0; display < RenderDevice::displayCount; ++display) {
+                if (RenderDevice::displayInfo.displays[display].width == RSDK::videoSettings.fsWidth
+                    && RenderDevice::displayInfo.displays[display].height == RSDK::videoSettings.fsHeight
+                    && RenderDevice::displayInfo.displays[display].refresh_rate == RSDK::videoSettings.refreshRate) {
                     break;
                 }
             }
 
-            dispID = d + 1;
+            display++;
         }
     }
     else {
-        dispID = RenderDevice::displayCount - 1;
-        if (id < RenderDevice::displayCount) {
-            if (id == RenderDevice::displayCount)
-                dispID = 0;
-            else
-                dispID = *displayID;
-        }
+        display = *displayID;
+        if (prevDisplay < 0)
+            display = RenderDevice::displayCount;
+        else if (prevDisplay > RenderDevice::displayCount)
+            display = 0;
     }
 
-    *displayID = dispID;
-    if (dispID) {
-        int32 d = dispID - 1;
+    *displayID = display;
+    if (display) {
+        int32 d = display - 1;
+
+        int32 displayWidth   = RenderDevice::displayInfo.displays[d].width;
+        int32 displayHeight  = RenderDevice::displayInfo.displays[d].height;
+        int32 displayRefresh = RenderDevice::displayInfo.displays[d].refresh_rate;
 
         if (width)
-            *width = RenderDevice::displayInfo.displays[d].width;
+            *width = displayWidth;
 
         if (height)
-            *height = RenderDevice::displayInfo.displays[d].height;
+            *height = displayHeight;
 
         if (refreshRate)
-            *refreshRate = RenderDevice::displayInfo.displays[d].refresh_rate;
+            *refreshRate = displayRefresh;
 
-        if (text) {
-            sprintf(text, "%ix%i @%iHz", RenderDevice::displayInfo.displays[d].width, RenderDevice::displayInfo.displays[d].height,
-                    RenderDevice::displayInfo.displays[d].refresh_rate);
-        }
+        if (text)
+            sprintf(text, "%ix%i @%iHz", displayWidth, displayHeight, displayRefresh);
     }
-    else {
+    else { // displayID 0 == "default fullscreen size"
         if (width)
             *width = 0;
 
@@ -3942,10 +3941,10 @@ void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uin
     }
 }
 
-void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
+void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
                 void *unused, Vector2 *charOffsets, bool32 screenRelative)
 {
-    if (animator && info && animator->frames) {
+    if (animator && string && animator->frames) {
         if (!position)
             position = &sceneInfo.entity->position;
 
@@ -3958,16 +3957,16 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int
             y -= currentScreen->position.y;
         }
 
-        startFrame = clampVal(startFrame, 0, info->length - 1);
+        startFrame = clampVal(startFrame, 0, string->length - 1);
 
-        if (endFrame <= 0 || endFrame > info->length)
-            endFrame = info->length;
+        if (endFrame <= 0 || endFrame > string->length)
+            endFrame = string->length;
 
         switch (align) {
             case ALIGN_LEFT:
                 if (charOffsets) {
                     for (; startFrame < endFrame; ++startFrame) {
-                        uint16 curChar = info->text[startFrame];
+                        uint16 curChar = string->chars[startFrame];
                         if (curChar < animator->frameCount) {
                             RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height,
@@ -3979,7 +3978,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int
                 }
                 else {
                     for (; startFrame < endFrame; ++startFrame) {
-                        uint16 curChar = info->text[startFrame];
+                        uint16 curChar = string->chars[startFrame];
                         if (curChar < animator->frameCount) {
                             RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
@@ -3996,7 +3995,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int
                 --endFrame;
                 if (charOffsets) {
                     for (Vector2 *charOffset = &charOffsets[endFrame]; endFrame >= startFrame; --endFrame) {
-                        uint16 curChar = info->text[endFrame];
+                        uint16 curChar = string->chars[endFrame];
                         if (curChar < animator->frameCount) {
                             RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x - frame->width + (charOffset->x >> 0x10), y + frame->pivotY + (charOffset->y >> 0x10), frame->width,
@@ -4008,7 +4007,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int
                 }
                 else {
                     for (; endFrame >= startFrame; --endFrame) {
-                        uint16 curChar = info->text[endFrame];
+                        uint16 curChar = string->chars[endFrame];
                         if (curChar < animator->frameCount) {
                             RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x - frame->width, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
@@ -4021,7 +4020,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int
         }
     }
 }
-void DrawDevString(const char *text, int32 x, int32 y, int32 align, uint32 color)
+void DrawDevString(const char *string, int32 x, int32 y, int32 align, uint32 color)
 {
     uint16 color16 = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 
@@ -4031,10 +4030,10 @@ void DrawDevString(const char *text, int32 x, int32 y, int32 align, uint32 color
         linesRemain = false;
 
         int32 lineSize = 0;
-        char cur       = text[charOffset];
+        char cur       = string[charOffset];
         if (cur != '\n') {
             while (cur) {
-                cur = text[++charOffset];
+                cur = string[++charOffset];
                 lineSize++;
                 if (cur == '\n') {
                     linesRemain = true;
@@ -4055,7 +4054,7 @@ void DrawDevString(const char *text, int32 x, int32 y, int32 align, uint32 color
             }
             int32 drawX = x - offset;
 
-            const char *curChar = &text[charOffset++ - lineSize];
+            const char *curChar = &string[charOffset++ - lineSize];
 
             for (int32 c = 0; c < lineSize; ++c) {
                 if (drawX >= 0 && drawX < currentScreen->size.x - 7) {

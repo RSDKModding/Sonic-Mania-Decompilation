@@ -14,7 +14,7 @@ namespace SKU
 struct DummyUserStorage : UserStorage {
     int32 TryAuth(void);
     int32 TryInitStorage(void);
-    bool32 GetUsername(TextInfo *name);
+    bool32 GetUsername(String *name);
     bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
     bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress);
     bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32));

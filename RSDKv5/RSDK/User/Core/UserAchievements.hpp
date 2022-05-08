@@ -21,9 +21,9 @@ struct UserAchievements {
     virtual void OnUnknownEvent(void) {}
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
     virtual bool32 CheckAchievementsEnabled(void) { return false; }
-    virtual void GetAchievementNames(TextInfo *names, int32 count) {}
-    virtual TextInfo *GetAchievementText(TextInfo *info) { return NULL; }
-    virtual TextInfo *GetAchievementName(TextInfo *info, uint id) { return NULL; }
+    virtual void GetAchievementNames(String *names, int32 count) {}
+    virtual String *GetAchievementString(String *string) { return NULL; }
+    virtual String *GetAchievementName(String *name, uint id) { return NULL; }
     virtual bool32 Unknown8(void) { return false; }
     virtual int32 GetNextAchievementID(void) { return 0; }
     virtual void RemoveLastAchievementID(void) {}
@@ -44,7 +44,7 @@ inline void SetAchievementsEnabled(bool32 enabled) { achievements->enabled = ena
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
 inline bool32 CheckAchievementsEnabled(void) { return achievements->CheckAchievementsEnabled(); }
-inline void GetAchievementNames(TextInfo *names, int32 count) { achievements->GetAchievementNames(names, count); }
+inline void GetAchievementNames(String *names, int32 count) { achievements->GetAchievementNames(names, count); }
 #endif
 
 #if RETRO_REV02
@@ -58,8 +58,8 @@ void ClearAchievements();
 extern bool32 achievementsEnabled;
 extern ushort achievementAniFrames[2];
 extern Animator achievementAnimator[2];
-extern TextInfo achievementText[2];
-extern int achievementTextWidth[2];
+extern String achievementStrings[2];
+extern int achievementStringWidth[2];
 extern int achievementID;
 extern int achievementsDelay;
 extern int achievementsDrawn;

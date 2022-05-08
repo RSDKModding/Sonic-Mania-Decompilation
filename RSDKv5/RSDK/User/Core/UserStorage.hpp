@@ -21,7 +21,7 @@ struct UserStorage {
     virtual void OnUnknownEvent(void) {}
     virtual int32 TryAuth(void) { return 0; }
     virtual int32 TryInitStorage(void) { return 0; }
-    virtual bool32 GetUsername(TextInfo *name) { return false; }
+    virtual bool32 GetUsername(String *userName) { return false; }
     virtual bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32)) { return false; }
     virtual bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress) { return false; }
     virtual bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32)) { return false; }
@@ -130,7 +130,7 @@ extern UserDBStorage *userDBStorage;
 
 inline int TryAuth(void) { return userStorage->TryAuth(); }
 inline int TryInitStorage(void) { return userStorage->TryInitStorage(); }
-inline bool32 GetUsername(TextInfo *name) { return userStorage->GetUsername(name); }
+inline bool32 GetUsername(String *userName) { return userStorage->GetUsername(userName); }
 inline bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32))
 {
     return userStorage->TryLoadUserFile(filename, buffer, size, callback);

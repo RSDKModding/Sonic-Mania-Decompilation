@@ -111,26 +111,26 @@ void CreditsSetup_StageLoad(void)
 
 void CreditsSetup_LoadCreditsStrings(void)
 {
-    TextInfo info;
-    TextInfo buffer;
+    String string;
+    String stringList;
 
-    INIT_TEXTINFO(buffer);
-    INIT_TEXTINFO(info);
-    RSDK.LoadStrings(&buffer, "Credits.txt", 8);
-    RSDK.SetText(&info, "", 0x80);
+    INIT_STRING(stringList);
+    INIT_STRING(string);
+    RSDK.LoadStringList(&stringList, "Credits.txt", 8);
+    RSDK.InitString(&string, "", 0x80);
 
     int32 offset = (ScreenInfo->height + 128) << 16;
-    for (int32 i = 0; RSDK.SplitStringList(&info, &buffer, i, 1); ++i) {
-        if (info.length <= 4) {
+    for (int32 i = 0; RSDK.SplitStringList(&string, &stringList, i, 1); ++i) {
+        if (string.length <= 4) {
             offset += 0x200000;
         }
         else {
-            int32 type      = info.text[1] - '0';
-            bool32 hasShape = info.text[2] == 'U';
+            int32 type      = string.chars[1] - '0';
+            bool32 hasShape = string.chars[2] == 'U';
 
-            info.length -= 3;
-            for (int32 c = 0; c < info.length; ++c) {
-                info.text[c] = info.text[c + 3];
+            string.length -= 3;
+            for (int32 c = 0; c < string.length; ++c) {
+                string.chars[c] = string.chars[c + 3];
             }
 
             EntityUICreditsText *text = RSDK_GET_ENTITY(i + 0x100, UICreditsText);
@@ -138,7 +138,7 @@ void CreditsSetup_LoadCreditsStrings(void)
             text->hasShape   = hasShape;
             text->position.x = 0x1000000;
             text->position.y = offset;
-            UICreditsText_SetText(type, text, &info);
+            UICreditsText_SetText(type, text, &string);
             SpriteFrame *frame = RSDK.GetFrame(UICreditsText->aniFrames, type, 0);
             if (frame)
                 offset += (frame->height + 8) << 16;

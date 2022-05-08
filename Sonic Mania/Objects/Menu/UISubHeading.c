@@ -82,29 +82,29 @@ void UISubHeading_StageLoad(void) {}
 #if RETRO_USE_PLUS
 void UISubHeading_Initialize(void)
 {
-    TextInfo tag;
-    INIT_TEXTINFO(tag);
+    String tag;
+    INIT_STRING(tag);
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&tag, "Save Select");
-        if (RSDK.StringCompare(&tag, &control->tag, false))
+        RSDK.SetString(&tag, "Save Select");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             ManiaModeMenu->saveSelectMenu = control;
 
-        RSDK.PrependText(&tag, "Encore Mode");
-        if (RSDK.StringCompare(&tag, &control->tag, false))
+        RSDK.SetString(&tag, "Encore Mode");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             ManiaModeMenu->encoreSaveSelect = control;
 
-        RSDK.PrependText(&tag, "No Save Mode");
-        if (RSDK.StringCompare(&tag, &control->tag, false))
+        RSDK.SetString(&tag, "No Save Mode");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             ManiaModeMenu->noSaveMenu = control;
 
-        RSDK.PrependText(&tag, "No Save Encore");
-        if (RSDK.StringCompare(&tag, &control->tag, false))
+        RSDK.SetString(&tag, "No Save Encore");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             ManiaModeMenu->noSaveMenuEncore = control;
 
-        RSDK.PrependText(&tag, "Secrets");
-        if (RSDK.StringCompare(&tag, &control->tag, false))
+        RSDK.SetString(&tag, "Secrets");
+        if (RSDK.CompareStrings(&tag, &control->tag, false))
             ManiaModeMenu->secretsMenu = control;
     }
 }

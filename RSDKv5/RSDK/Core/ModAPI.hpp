@@ -135,11 +135,11 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySi
                            std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited);
 void *GetGlobals();
 
-bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
-void GetModPath(const char *id, TextInfo *result);
+bool32 LoadModInfo(const char *folder, String *name, String *description, String *version, bool32 *active);
+void GetModPath(const char *id, String *result);
 int32 GetModCount(bool32 active);
 const char *GetModIDByIndex(uint32 index);
-bool32 ForeachModID(TextInfo *id);
+bool32 ForeachModID(String *id);
 
 void AddModCallback(int32 callbackID, ModCallback callback);
 void AddModCallback_STD(int32 callbackID, ModCallbackSTD callback);
@@ -148,19 +148,19 @@ void *GetPublicFunction(const char *folder, const char *functionName);
 
 bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback);
 int32 GetSettingsInteger(const char *id, const char *key, int32 fallback);
-void GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback);
+void GetSettingsString(const char *id, const char *key, String *result, const char *fallback);
 
 void SetSettingsBool(const char *key, bool32 val);
 void SetSettingsInteger(const char *key, int32 val);
-void SetSettingsString(const char *key, TextInfo *val);
+void SetSettingsString(const char *key, String *val);
 
 void SaveSettings();
 
 bool32 GetConfigBool(const char *key, bool32 fallback);
 int32 GetConfigInteger(const char *key, int32 fallback);
-void GetConfigString(const char *key, TextInfo *result, const char *fallback);
-bool32 ForeachConfig(TextInfo *textInfo);
-bool32 ForeachConfigCategory(TextInfo *textInfo);
+void GetConfigString(const char *key, String *result, const char *fallback);
+bool32 ForeachConfig(String *config);
+bool32 ForeachConfigCategory(String *category);
 
 void Super(int32 objectID, ModSuper callback, void *data);
 
@@ -170,7 +170,7 @@ void Super(int32 objectID, ModSuper callback, void *data);
 Object *GetObject(const char *name);
 
 void RegisterAchievement(const char *identifier, const char *name, const char *desc);
-void GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
+void GetAchievementInfo(uint32 id, String *name, String *description, String *identifer, bool32 *achieved);
 int GetAchievementIndexByID(const char *id);
 int GetAchievementCount();
 #endif

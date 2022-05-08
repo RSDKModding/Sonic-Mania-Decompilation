@@ -56,17 +56,17 @@ void E3MenuSetup_StageLoad(void) { RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, 1
 
 void E3MenuSetup_SetupUI(void)
 {
-    TextInfo info;
-    INIT_TEXTINFO(info);
+    String string;
+    INIT_STRING(string);
 
     foreach_all(UIControl, control)
     {
-        RSDK.PrependText(&info, "Char Select");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Char Select");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             E3MenuSetup->charSelControl = control;
 
-        RSDK.PrependText(&info, "Zone");
-        if (RSDK.StringCompare(&info, &control->tag, false))
+        RSDK.SetString(&string, "Zone");
+        if (RSDK.CompareStrings(&string, &control->tag, false))
             E3MenuSetup->zoneControl = control;
     }
 

@@ -182,7 +182,7 @@ void UIDiorama_ChangeDiorama(uint8 dioramaID)
     }
 }
 
-void UIDiorama_SetText(TextInfo *text)
+void UIDiorama_SetText(String *text)
 {
     RSDK_THIS(UIDiorama);
 
@@ -195,7 +195,7 @@ void UIDiorama_SetText(TextInfo *text)
 
         int32 *linePosPtr = info->linePos;
         for (int32 i = 0; i < text->length; ++i) {
-            if (text->text[linePos] == '\n' && lineCount < 3) {
+            if (text->chars[linePos] == '\n' && lineCount < 3) {
                 linePosPtr[lineCount] = linePos;
                 ++lineCount;
             }
@@ -319,10 +319,10 @@ void UIDiorama_State_PlusUpsell(void)
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 3, &info->arrowAnimator, true, 4);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 11, &info->lightningAnimator, true, 0);
 
-        TextInfo text;
-        INIT_TEXTINFO(text);
-        RSDK.SetText(&text, "", 0);
-        RSDK.SetText(&self->texts[0], "", 0);
+        String text;
+        INIT_STRING(text);
+        RSDK.InitString(&text, "", 0);
+        RSDK.InitString(&self->texts[0], "", 0);
         Localization_GetString(&text, STR_MIGHTYRAYPLUS);
         UIDiorama_SetText(&text);
         info->showFlash  = false;

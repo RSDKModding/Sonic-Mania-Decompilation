@@ -59,16 +59,16 @@ void UILeaderboard_Create(void *data)
     self->textFrames = UIWidgets->textFrames;
 
     if (!SceneInfo->inEditor) {
-        RSDK.SetText(&self->unusedText[0], "", 0);
-        RSDK.SetText(&self->unusedText[1], "", 0);
-        RSDK.SetText(&self->unusedText[2], "", 0);
-        RSDK.SetText(&self->unusedText[3], "", 0);
-        RSDK.SetText(&self->unusedText[4], "", 0);
-        RSDK.SetText(&self->nameText[0], "", 0);
-        RSDK.SetText(&self->nameText[1], "", 0);
-        RSDK.SetText(&self->nameText[2], "", 0);
-        RSDK.SetText(&self->nameText[3], "", 0);
-        RSDK.SetText(&self->nameText[4], "", 0);
+        RSDK.InitString(&self->unusedText[0], "", 0);
+        RSDK.InitString(&self->unusedText[1], "", 0);
+        RSDK.InitString(&self->unusedText[2], "", 0);
+        RSDK.InitString(&self->unusedText[3], "", 0);
+        RSDK.InitString(&self->unusedText[4], "", 0);
+        RSDK.InitString(&self->nameText[0], "", 0);
+        RSDK.InitString(&self->nameText[1], "", 0);
+        RSDK.InitString(&self->nameText[2], "", 0);
+        RSDK.InitString(&self->nameText[3], "", 0);
+        RSDK.InitString(&self->nameText[4], "", 0);
     }
 }
 
@@ -160,7 +160,7 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
                     strcpy(buffer, "--");
                 else
                     sprintf(buffer, "%d", entry->globalRank);
-                RSDK.PrependText(&entity->rankText[i], buffer);
+                RSDK.SetString(&entity->rankText[i], buffer);
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
                 RSDK.CopyString(&entity->nameText[i], &entry->username);
@@ -175,10 +175,10 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
                 entity->isUser[i] = entry->isUser;
             }
             else {
-                RSDK.PrependText(&entity->rankText[i], "--");
+                RSDK.SetString(&entity->rankText[i], "--");
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
-                RSDK.PrependText(&entity->nameText[i], "--------");
+                RSDK.SetString(&entity->nameText[i], "--------");
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->nameText[i]);
 
                 entity->times[i]  = 0;
