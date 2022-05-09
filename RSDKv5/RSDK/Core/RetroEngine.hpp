@@ -119,6 +119,8 @@ enum GameRegions {
 #define RETRO_RENDERDEVICE_SDL2      (0)
 #define RETRO_RENDERDEVICE_DIRECTX9  (0)
 #define RETRO_RENDERDEVICE_DIRECTX11 (0)
+// CUSTOM
+#define RETRO_RENDERDEVICE_OPENGL3   (0)
 
 // ============================
 // AUDIO DEVICE BACKENDS
@@ -167,9 +169,19 @@ enum GameRegions {
 #ifdef RSDK_USE_DX9
 #undef RETRO_RENDERDEVICE_DIRECTX9
 #define RETRO_RENDERDEVICE_DIRECTX9 (1)
+
+#undef RETRO_INPUTDEVICE_XINPUT
+#define RETRO_INPUTDEVICE_XINPUT (1)
+
+#undef RETRO_INPUTDEVICE_RAWINPUT
+#define RETRO_INPUTDEVICE_RAWINPUT (1)
+
 #elif defined(RSDK_USE_GL3)
 #undef RETRO_RENDERDEVICE_OPENGL3
 #define RETRO_RENDERDEVICE_OPENGL3 (1)
+
+#undef RETRO_INPUTDEVICE_GLFW
+#define RETRO_INPUTDEVICE_GLFW (1)
 #else
 #error One of RSDK_USE_SDL2, RSDK_USE_DX9, or RSDK_USE_GL3 must be defined.
 #endif //! RSDK_USE_DX9
@@ -177,11 +189,6 @@ enum GameRegions {
 #undef RETRO_AUDIODEVICE_XAUDIO
 #define RETRO_AUDIODEVICE_XAUDIO (1)
 
-#undef RETRO_INPUTDEVICE_XINPUT
-#define RETRO_INPUTDEVICE_XINPUT (1)
-
-#undef RETRO_INPUTDEVICE_RAWINPUT
-#define RETRO_INPUTDEVICE_RAWINPUT (1)
 #endif //! RSDK_USE_SDL2
 
 
@@ -206,6 +213,15 @@ enum GameRegions {
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_UWP
 
+
+#if RETRO_AUDIODEVICE_XAUDIO
+#include <XAudio2.h>
+#endif
+
+#if RETRO_INPUTDEVICE_XINPUT
+#include <Xinput.h>
+#endif
+
 #if RETRO_RENDERDEVICE_DIRECTX9
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -217,14 +233,9 @@ enum GameRegions {
 #include <d3d9.h>
 
 #undef LoadImage
-#endif
-
-#if RETRO_AUDIODEVICE_XAUDIO
-#include <XAudio2.h>
-#endif
-
-#if RETRO_INPUTDEVICE_XINPUT
-#include <Xinput.h>
+#elif RETRO_RENDERDEVICE_OPENGL3
+#include <glad/glad.h> 
+#include <GLFW/glfw3.h>
 #endif
 
 #if RETRO_RENDERDEVICE_SDL2

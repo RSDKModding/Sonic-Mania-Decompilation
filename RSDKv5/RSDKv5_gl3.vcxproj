@@ -38,6 +38,7 @@
     <ClCompile Include="..\dependencies\all\zlib\trees.c" />
     <ClCompile Include="..\dependencies\all\zlib\uncompr.c" />
     <ClCompile Include="..\dependencies\all\zlib\zutil.c" />
+    <ClCompile Include="..\dependencies\gl3\glad\src\glad.c" />
     <ClCompile Include="RSDK\Audio\Audio.cpp" />
     <ClCompile Include="RSDK\Core\Link.cpp" />
     <ClCompile Include="RSDK\Core\Math.cpp" />
@@ -47,22 +48,11 @@
     <ClCompile Include="RSDK\Dev\Debug.cpp" />
     <ClCompile Include="RSDK\Graphics\Animation.cpp" />
     <ClCompile Include="RSDK\Graphics\Drawing.cpp" />
-    <ClCompile Include="RSDK\Graphics\DX9\DX9RenderDevice.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="RSDK\Graphics\Palette.cpp" />
     <ClCompile Include="RSDK\Graphics\Scene3D.cpp" />
-    <ClCompile Include="RSDK\Graphics\SDL2\SDL2RenderDevice.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="RSDK\Graphics\Sprite.cpp" />
     <ClCompile Include="RSDK\Graphics\Video.cpp" />
+    <ClCompile Include="RSDK\Input\GLFW\GLFWInputDevice.cpp" />
     <ClCompile Include="RSDK\Input\Input.cpp" />
     <ClCompile Include="RSDK\Input\Keyboard\KBInputDevice.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -70,25 +60,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="RSDK\Input\RawInput\RawInputDevice.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="RSDK\Input\SDL2\SDL2InputDevice.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="RSDK\Input\Steam\SteamInputDevice.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="RSDK\Input\XInput\XInputDevice.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -162,22 +134,11 @@
     <ClInclude Include="RSDK\Dev\DevFont.hpp" />
     <ClInclude Include="RSDK\Graphics\Animation.hpp" />
     <ClInclude Include="RSDK\Graphics\Drawing.hpp" />
-    <ClInclude Include="RSDK\Graphics\DX9\DX9RenderDevice.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="RSDK\Graphics\Palette.hpp" />
     <ClInclude Include="RSDK\Graphics\Scene3D.hpp" />
-    <ClInclude Include="RSDK\Graphics\SDL2\SDL2RenderDevice.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="RSDK\Graphics\Sprite.hpp" />
     <ClInclude Include="RSDK\Graphics\Video.hpp" />
+    <ClInclude Include="RSDK\Input\GLFW\GLFWInputDevice.hpp" />
     <ClInclude Include="RSDK\Input\Input.hpp" />
     <ClInclude Include="RSDK\Input\Keyboard\KBInputDevice.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -185,25 +146,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="RSDK\Input\RawInput\RawInputDevice.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="RSDK\Input\SDL2\SDL2InputDevice.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="RSDK\Input\Steam\SteamInputDevice.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="RSDK\Input\XInput\XInputDevice.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -309,24 +252,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\</OutDir>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\</OutDir>
     <TargetName>$(ProjectName)_64</TargetName>
-    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\DX9\Intermediate\</IntDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\GL3\Intermediate\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -336,25 +279,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RSDK_USE_GL3;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;$(ExecutablePath);$(DXSDK_DIR)Utilities\bin\x86;$(IncludePath);$(DXSDK_DIR)Include;$(LibraryPath);$(DXSDK_DIR)Lib\$(PlatformTargetAsMSBuildArchitecture);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;$(SolutionDir)dependencies/gl3/glfw/include/;$(SolutionDir)dependencies/gl3/glad/include/;$(ExecutablePath);$(DXSDK_DIR)Utilities\bin\x86;$(IncludePath);$(DXSDK_DIR)Include;$(LibraryPath);$(DXSDK_DIR)Lib\$(PlatformTargetAsMSBuildArchitecture);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;d3d9.lib;d3dcompiler.lib;XInput.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/gl3/glfw/lib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;XInput.lib;winmm.lib;comctl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <When Condition=" '$(VCPKG)'!='Y' ">
-      <PostBuildEvent>
-        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-      </PostBuildEvent>
-      <PostBuildEvent>
-        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-      </PostBuildEvent>
-    </When>
     <PostBuildEvent>
       <Command>
       </Command>
@@ -368,24 +303,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RSDK_USE_GL3;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;$(ExecutablePath);$(DXSDK_DIR)Utilities\bin\x86;$(IncludePath);$(DXSDK_DIR)Include;$(LibraryPath);$(DXSDK_DIR)Lib\$(PlatformTargetAsMSBuildArchitecture);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;$(SolutionDir)dependencies/gl3/glfw/include/;$(SolutionDir)dependencies/gl3/glad/include/;$(ExecutablePath);$(DXSDK_DIR)Utilities\bin\x86;$(IncludePath);$(DXSDK_DIR)Include;$(LibraryPath);$(DXSDK_DIR)Lib\$(PlatformTargetAsMSBuildArchitecture);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;d3d9.lib;d3dcompiler.lib;XInput.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/gl3/glfw/lib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;XInput.lib;winmm.lib;comctl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <When Condition=" '$(VCPKG)'!='Y' ">
-      <PostBuildEvent>
-        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-      </PostBuildEvent>
-      <PostBuildEvent>
-        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-      </PostBuildEvent>
-    </When>
     <PostBuildEvent>
       <Command>
       </Command>
@@ -401,7 +328,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RSDK_USE_GL3;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;$(SolutionDir)dependencies/gl3/glfw/include/;$(SolutionDir)dependencies/gl3/glad/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -410,17 +337,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;d3d9.lib;d3dcompiler.lib;XInput.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/gl3/glfw/lib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;XInput.lib;winmm.lib;comctl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <When Condition=" '$(VCPKG)'!='Y' ">
-      <PostBuildEvent>
-        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-      </PostBuildEvent>
-      <PostBuildEvent>
-        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-      </PostBuildEvent>
-    </When>
     <PostBuildEvent>
       <Command>
       </Command>
@@ -436,7 +355,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RSDK_USE_GL3;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;$(SolutionDir)dependencies/gl3/glfw/include/;$(SolutionDir)dependencies/gl3/glad/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -445,17 +364,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;d3d9.lib;d3dcompiler.lib;XInput.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/gl3/glfw/lib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;XInput.lib;winmm.lib;comctl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <When Condition=" '$(VCPKG)'!='Y' ">
-      <PostBuildEvent>
-        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-      </PostBuildEvent>
-      <PostBuildEvent>
-        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-      </PostBuildEvent>
-    </When>
     <PostBuildEvent>
       <Command>
       </Command>

@@ -1,4 +1,5 @@
 #include "resource.h"
+#include <D3Dcompiler.h>
 
 HWND RenderDevice::windowHandle;
 

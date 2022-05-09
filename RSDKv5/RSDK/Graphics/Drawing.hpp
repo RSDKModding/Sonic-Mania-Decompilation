@@ -117,6 +117,23 @@ struct WindowInfo {
         SDL_DisplayMode internal;
     } * displays;
     SDL_Rect viewport;
+#elif RETRO_RENDERDEVICE_OPENGL3
+    union {
+        struct {
+            int width;
+            int height;
+            int _pad[3];
+            int refresh_rate;
+        };
+        GLFWvidmode internal;
+    }* displays;
+#else
+    struct { 
+        int32 width;
+        int32 height;
+        int32 refresh_rate;
+    }* displays;
+    // something for viewport
 #endif
 };
 
@@ -205,6 +222,8 @@ private:
 #include "DX9/DX9RenderDevice.hpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.hpp"
+#elif RETRO_RENDERDEVICE_OPENGL3
+#include "GL3/GL3RenderDevice.hpp"
 #endif
 
 extern DrawList drawGroups[DRAWGROUP_COUNT];

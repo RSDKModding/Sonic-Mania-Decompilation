@@ -42,6 +42,8 @@ enum InputDeviceAPIs {
     DEVICE_API_STEAM,
 #if RETRO_INPUTDEVICE_SDL2
     DEVICE_API_SDL2, // custom-made for SDL2 API, afaik it's not in original RSDKv5 (since it could be in a mac-version, but I do not have that so...)
+#elif RETRO_INPUTDEVICE_GLFW
+    DEVICE_API_GLFW, // custom-made for GL3, won't be in ANY real RSDKv5 version ever, it's just cool
 #endif
 };
 
@@ -85,7 +87,7 @@ enum KeyMasks {
 enum WinMappings {
     KEYMAP_AUTO_MAPPING = -1,
     KEYMAP_NO_MAPPING   = 0,
-#if !RETRO_RENDERDEVICE_DIRECTX9 && !RETRO_RENDERDEVICE_DIRECTX11
+#if !VK_LBUTTON
     VK_LBUTTON    = 0x01,
     VK_RBUTTON    = 0x02,
     VK_CANCEL     = 0x03,
@@ -166,7 +168,7 @@ enum WinMappings {
     VK_X = 0x58,
     VK_Y = 0x59,
     VK_Z = 0x5A,
-#if !RETRO_RENDERDEVICE_DIRECTX9 && !RETRO_RENDERDEVICE_DIRECTX11
+#if !VK_LBUTTON
     VK_LWIN                            = 0x5B,
     VK_RWIN                            = 0x5C,
     VK_APPS                            = 0x5D,
