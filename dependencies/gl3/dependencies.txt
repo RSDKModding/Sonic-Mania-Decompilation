@@ -1,0 +1,6 @@
+GLAD:
+Go to https://glad.dav1d.de/ and generate GL version 3.3 for C/C++. Download glad.zip and extract it's contents to ./glad/
+
+GLFW:
+Go to https://www.glfw.org/download.html and download the 64-bit or 32-bit binaries. Make sure what you're building matches the binaries use download!
+You're also free to build it yourself.

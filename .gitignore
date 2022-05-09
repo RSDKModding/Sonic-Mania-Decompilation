@@ -57,6 +57,8 @@ cmake/
 ![Dd]ependencies/windows-uwp/dependencies.txt
 ![Dd]ependencies/android/dependencies.txt
 ![Dd]ependencies/android/libogg/include/ogg/config_types.h
+[Dd]dependencies/gl3/*
+![Dd]dependencies/gl3/dependencies.txt
 
 # UWP
 **/Generated Files
