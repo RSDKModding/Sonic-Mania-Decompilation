@@ -1,9 +1,5 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-#if RETRO_RENDERDEVICE_DIRECTX9
-#include <D3Dcompiler.h>
-#endif
-
 DrawList drawGroups[DRAWGROUP_COUNT];
 
 uint16 blendLookupTable[0x20 * 0x100];
@@ -95,6 +91,8 @@ char drawGroupNames[0x10][0x10] = {
 #include "DX9/DX9RenderDevice.cpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.cpp"
+#elif RETRO_RENDERDEVICE_OPENGL3
+#include "GL3/GL3RenderDevice.cpp"
 #endif
 
 void GenerateBlendLookupTable()

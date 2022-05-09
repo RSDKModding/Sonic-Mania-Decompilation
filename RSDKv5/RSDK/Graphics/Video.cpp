@@ -189,6 +189,6 @@ void CloseVideoBuffer()
 #if RETRO_RENDERDEVICE_SDL2
         SDL_DestroyTexture(RenderDevice::imageTexture);
 #endif
-        RenderDevice::imageTexture = nullptr;
+        //RenderDevice::imageTexture = nullptr;
     }
 }

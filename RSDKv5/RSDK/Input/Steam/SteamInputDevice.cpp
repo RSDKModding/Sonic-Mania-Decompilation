@@ -50,10 +50,8 @@ InputDeviceSteam *InitSteamInputDevice(uint32 id)
 
     InputDevices[InputDeviceCount] = new InputDeviceSteam();
 
-    InputDeviceSteam *device = (InputDeviceXInput *)InputDevices[InputDeviceCount];
-
-    for (int32 i = 0; i < PLAYER_COUNT; ++i) disabledXInputDevices[i] = false;
-
+    InputDeviceSteam *device = (InputDeviceSteam *)InputDevices[InputDeviceCount];
+    
     device->gamePadType = (DEVICE_API_STEAM << 16) | (DEVICE_TYPE_STEAMOVERLAY << 8) | (DEVICE_KEYBOARD << 0);
     device->disabled    = false;
     device->inputID     = id;
