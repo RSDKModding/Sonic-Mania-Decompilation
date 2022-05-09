@@ -377,12 +377,23 @@ void SpecialClear_GiveScoreBonus(int32 score)
     }
 }
 
+#if RETRO_USE_PLUS
 void SpecialClear_SaveCB(bool32 success)
 {
     RSDK_THIS(SpecialClear);
+
     UIWaitSpinner_FinishWait();
     self->saveInProgress = false;
 }
+#else
+void SpecialClear_SaveCB(void)
+{
+    RSDK_THIS(SpecialClear);
+
+    UIWaitSpinner_FinishWait();
+    self->saveInProgress = false;
+}
+#endif
 
 void SpecialClear_State_SetupDelay(void)
 {

@@ -321,7 +321,7 @@ void TitleSetup_State_WaitForEnter(void)
                        || ControllerInfo->keyY.press || ControllerInfo->keyZ.press || ControllerInfo->keyStart.press
                        || ControllerInfo->keySelect.press;
 
-    bool32 anyClick = (!TouchInfo->count && self->touched) || Unknown_anyPress;
+    bool32 anyClick = (!TouchInfo->count && self->touched) || Unknown_anyKeyPress;
     self->touched   = TouchInfo->count > 0;
 
     if (anyClick || anyButton) {

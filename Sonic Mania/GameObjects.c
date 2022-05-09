@@ -8,7 +8,7 @@ RSDKSKUInfo *SKU = NULL;
 #endif
 
 RSDKControllerState *ControllerInfo = NULL;
-RSDKAnalogState *AnalogStickInfoL   = NULL;
+RSDKAnalogState *AnalogStickInfoL   = NULL; // should be called "AnalogStickInfo" for Pre-Plus but its easier to be consistent this way
 #if RETRO_USE_PLUS
 RSDKAnalogState *AnalogStickInfoR = NULL;
 RSDKTriggerState *TriggerInfoL    = NULL;
@@ -26,6 +26,7 @@ RSDKFunctionTable RSDK;
 #if RETRO_USE_PLUS
 APIFunctionTable API;
 #endif
+
 #if RETRO_USE_MOD_LOADER
 ModFunctionTable Mod;
 
@@ -68,31 +69,30 @@ void LinkGameLogicDLL(EngineInfo *info)
     InitGameLogic();
 }
 #else
-
-#if RETRO_USE_MOD_LOADER
-void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
-                      RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo, void *modTable)
-#else
-void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
-                      RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo)
-#endif
+void LinkGameLogicDLL(EngineInfo info)
 {
+    // Actual params are:
+    // void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
+    //                       RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo)
+    // But by passing EngineInfo by value we can create a sorta "container" for it, to keep things consistent & easy to manage
+
+
     memset(&RSDK, 0, sizeof(RSDKFunctionTable));
 
-    if (functionTable)
-        memcpy(&RSDK, functionTable, sizeof(RSDKFunctionTable));
+    if (info.functionTable)
+        memcpy(&RSDK, info.functionTable, sizeof(RSDKFunctionTable));
 
 #if RETRO_USE_MOD_LOADER
     if (modTable)
-        memcpy(&Mod, modTable, sizeof(ModFunctionTable));
+        memcpy(&Mod, info.modTable, sizeof(ModFunctionTable));
 #endif
 
-    GameInfo         = gameInfo;
-    SceneInfo        = sceneInfo;
-    ControllerInfo   = controllerInfo;
-    AnalogStickInfoL = stickInfoL;
-    TouchInfo        = touchInfo;
-    ScreenInfo       = screenInfo;
+    GameInfo         = info.gameInfo;
+    SceneInfo        = info.sceneInfo;
+    ControllerInfo   = info.controllerInfo;
+    AnalogStickInfoL = info.stickInfoL;
+    TouchInfo        = info.touchInfo;
+    ScreenInfo       = info.screenInfo;
 
     InitGameLogic();
 }

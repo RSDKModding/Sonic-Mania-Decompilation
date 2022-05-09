@@ -177,7 +177,7 @@ void APICallback_AssignControllerID(int32 controllerID, int32 inputID);
 void APICallback_ResetControllerAssignments(void);
 void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time, int32 rings, int32 score);
 void APICallback_TrackTAClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time);
-void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int32 entityX, int32 entityY);
+void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int32 x, int32 y);
 void APICallback_TrackGameProgress(float percent);
 void APICallback_TryAuth_No(void);
 void APICallback_TryAuth_Yes(void);
@@ -189,7 +189,11 @@ void APICallback_ClearAchievements(void);
 void APICallback_UnlockAchievement(const char *name);
 void APICallback_CheckUserAuth_OK(void);
 void APICallback_CheckUserAuth_CB(void);
+#if RETRO_USE_PLUS
 void APICallback_TrackGameProgressCB(bool32 success);
+#else
+void APICallback_TrackGameProgressCB(void);
+#endif
 void APICallback_GetNextNotif(void);
 void APICallback_ManageNotifs(void);
 bool32 APICallback_CheckUnreadNotifs(void);

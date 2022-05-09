@@ -30,23 +30,23 @@ void CompetitionSession_ResetOptions(void)
     session->matchCount               = 0;
     session->stageIndex               = 0;
 
-    for (int32 i = 0; i < 12; ++i) {
-        session->completedStages[i] = 0;
-        session->matchWinner[i]     = 0;
+    for (int32 r = 0; r < 12; ++r) {
+        session->completedStages[r] = 0;
+        session->matchWinner[r]     = 0;
     }
 
-    for (int32 i = 0; i < 4; ++i) {
-        session->finishState[i]       = FINISHFLAG_NOTFINISHED;
-        session->playerID[i]          = 0;
-        session->time[i].minutes      = 0;
-        session->time[i].seconds      = 0;
-        session->time[i].milliseconds = 0;
-        session->rings[i]             = 0;
-        session->score[i]             = 0;
-        session->items[i]             = 0;
-        session->totalRings[i]        = 0;
-        session->wins[i]              = 0;
-        session->lives[i]             = 0;
+    for (int32 p = 0; p < 4; ++p) {
+        session->finishState[p]       = FINISHFLAG_NOTFINISHED;
+        session->playerID[p]          = 0;
+        session->time[p].minutes      = 0;
+        session->time[p].seconds      = 0;
+        session->time[p].milliseconds = 0;
+        session->rings[p]             = 0;
+        session->score[p]             = 0;
+        session->items[p]             = 0;
+        session->totalRings[p]        = 0;
+        session->wins[p]              = 0;
+        session->lives[p]             = 3;
     }
 }
 
@@ -55,15 +55,15 @@ void CompetitionSession_ClearMatchData(void)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
     session->matchWinner[session->matchID] = 0;
-    for (int32 i = 0; i < 4; ++i) {
-        session->finishState[i]       = FINISHFLAG_NOTFINISHED;
-        session->time[i].minutes      = 0;
-        session->time[i].seconds      = 0;
-        session->time[i].milliseconds = 0;
-        session->rings[i]             = 0;
-        session->score[i]             = 0;
-        session->items[i]             = 0;
-        session->totalRings[i]        = 0;
+    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+        session->finishState[p]       = FINISHFLAG_NOTFINISHED;
+        session->time[p].minutes      = 0;
+        session->time[p].seconds      = 0;
+        session->time[p].milliseconds = 0;
+        session->rings[p]             = 0;
+        session->score[p]             = 0;
+        session->items[p]             = 0;
+        session->totalRings[p]        = 0;
     }
 }
 

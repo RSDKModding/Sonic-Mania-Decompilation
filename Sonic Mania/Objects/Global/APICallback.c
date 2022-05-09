@@ -625,12 +625,12 @@ void APICallback_TrackTAClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 t
     else
         LogHelpers_Print("EMPTY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
 }
-void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int32 entityX, int32 entityY)
+void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int32 x, int32 y)
 {
     if (APICallback->TrackEnemyDefeat)
-        APICallback->TrackEnemyDefeat(zoneID, actID, playerID, entityX, entityY);
+        APICallback->TrackEnemyDefeat(zoneID, actID, playerID, x, y);
     else
-        LogHelpers_Print("EMPTY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
+        LogHelpers_Print("EMPTY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, x, y);
 }
 
 void APICallback_TrackGameProgress(float percent)
@@ -658,12 +658,17 @@ void APICallback_TryAuth_CB(void)
             String string;
             switch (sku_platform) {
                 case PLATFORM_PC:
-                    Localization_GetString(&string, STR_LOADSTEAM); // could also be STR_LOADINGFROMEGS
+#if RETRO_USE_EGS
+                    Localization_GetString(&string, STR_LOADEGS);
+#else
+                    Localization_GetString(&string, STR_LOADSTEAM);
+#endif
                     break;
                 case PLATFORM_PS4: Localization_GetString(&string, STR_LOADPSN); break;
                 case PLATFORM_XB1: Localization_GetString(&string, STR_LOADXBOX); break;
                 case PLATFORM_SWITCH: Localization_GetString(&string, STR_LOADNINTENDO); break;
             }
+
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&string, APICallback_TryAuth_Yes, APICallback_TryAuth_No, true, true);
             dialog->useAltColor    = true;
         }
@@ -798,7 +803,11 @@ void APICallback_CheckUserAuth_CB(void)
     }
 }
 
+#if RETRO_USE_PLUS
 void APICallback_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(); }
+#else
+void APICallback_TrackGameProgressCB(void) { UIWaitSpinner_FinishWait(); }
+#endif
 
 void APICallback_GetNextNotif(void)
 {

@@ -404,13 +404,7 @@ extern RetroEngine engine;
 #if RETRO_REV02
 typedef void (*LogicLinkHandle)(RSDK::GameInfo *info);
 #else
-#if RETRO_USE_MOD_LOADER
-typedef void (*LogicLinkHandle)(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
-                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo, void *modTable);
-#else
-typedef void (*LogicLinkHandle)(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
-                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo);
-#endif
+typedef void (*LogicLinkHandle)(RSDK::GameInfo info);
 #endif
 
 extern LogicLinkHandle linkGameLogic;

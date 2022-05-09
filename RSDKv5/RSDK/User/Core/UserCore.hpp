@@ -31,7 +31,7 @@ struct UnknownInfo {
     int32 unknown7;
     int32 unknown8;
     int32 unknown9;
-    bool32 anyPress;
+    bool32 anyKeyPress;
     int32 unknown10;
 };
 
@@ -39,10 +39,10 @@ extern SKUInfo curSKU;
 extern UnknownInfo unknownInfo;
 
 #define Unknown_pausePress UnknownInfo->pausePress
-#define Unknown_anyPress   UnknownInfo->anyPress
+#define Unknown_anyKeyPress   UnknownInfo->anyPress
 #else
 #define Unknown_pausePress TouchInfo->pausePress
-#define Unknown_anyPress   TouchInfo->anyPress
+#define Unknown_anyKeyPress   TouchInfo->anyPress
 #endif
 
 #if RETRO_REV02

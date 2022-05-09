@@ -158,6 +158,7 @@ void SaveGame_LoadSaveData(void)
 
 void SaveGame_LoadFile(void)
 {
+#if RETRO_USE_PLUS
     if (!SaveGame->saveRAM || globals->saveLoaded == STATUS_CONTINUE) {
         SaveGame_SaveLoadedCB(false);
         return;
@@ -167,6 +168,15 @@ void SaveGame_LoadFile(void)
         SaveGame_SaveLoadedCB(true);
         return;
     }
+#else
+    if (!SaveGame->saveRAM || globals->saveLoaded == STATUS_CONTINUE)
+        return;
+
+    if (globals->saveLoaded == STATUS_OK) {
+        SaveGame_SaveLoadedCB(true);
+        return;
+    }
+#endif
 
     globals->saveLoaded     = STATUS_CONTINUE;
     SaveGame->loadEntityPtr = SceneInfo->entity;
@@ -199,15 +209,20 @@ void SaveGame_SaveFile(void (*callback)(void))
 
 void SaveGame_SaveLoadedCB(bool32 success)
 {
+#if RETRO_USE_PLUS
     LogHelpers_Print("SaveLoadedCB(%d)", success);
+#endif
+
     if (success) {
         foreach_all(UISaveSlot, entity)
         {
             if (!entity->type) {
                 Entity *store     = SceneInfo->entity;
+
                 SceneInfo->entity = (Entity *)entity;
                 UISaveSlot_LoadSaveInfo();
                 UISaveSlot_HandleSaveIcons();
+
                 SceneInfo->entity = store;
             }
         }
@@ -404,11 +419,7 @@ void SaveGame_LoadFile_CB(int32 status)
         if (SaveGame->loadEntityPtr)
             SceneInfo->entity = SaveGame->loadEntityPtr;
 
-#if RETRO_USE_PLUS
         SaveGame->loadCallback(success);
-#else
-        SaveGame->loadCallback();
-#endif
         SceneInfo->entity = store;
 
         SaveGame->loadCallback  = NULL;

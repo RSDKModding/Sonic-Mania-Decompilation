@@ -177,6 +177,7 @@ void BSS_Message_State_MsgFinished(void)
         destroyEntity(self);
 }
 
+#if RETRO_USE_PLUS
 void BSS_Message_TrackProgressCB(bool32 success)
 {
     RSDK_THIS(BSS_Message);
@@ -184,6 +185,15 @@ void BSS_Message_TrackProgressCB(bool32 success)
     self->saveInProgress = false;
     UIWaitSpinner_FinishWait();
 }
+#else
+void BSS_Message_TrackProgressCB(void)
+{
+    RSDK_THIS(BSS_Message);
+
+    self->saveInProgress = false;
+    UIWaitSpinner_FinishWait();
+}
+#endif
 
 void BSS_Message_State_SaveGameProgress(void)
 {

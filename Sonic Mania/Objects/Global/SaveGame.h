@@ -41,7 +41,7 @@ struct ObjectSaveGame {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
     Entity *loadEntityPtr;
-    void (*loadCallback)(void);
+    void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
     void (*saveCallback)(void);
 #else

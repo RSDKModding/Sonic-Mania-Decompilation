@@ -419,11 +419,12 @@ struct TouchMouseData {
     bool32 down[0x10];
     uint8 count;
 #if !RETRO_REV02
-    bool32 pausePressActive;
+    bool32 pauseHold;
     bool32 pausePress;
-    bool32 anyPressActive;
-    bool32 anyPress;
-    int32 unknown1;
+    bool32 unknown1;
+    bool32 anyKeyHold;
+    bool32 anyKeyPress;
+    bool32 unknown2;
 #endif
 };
 

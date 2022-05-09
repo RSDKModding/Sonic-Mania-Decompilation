@@ -2045,7 +2045,10 @@ void Player_HandleDeath(EntityPlayer *player)
                         screenID                  = player->camera->screenID;
                         player->camera->target = (Entity *)player->camera;
                     }
+
+                    bool32 showGameOver = true;
                     if (globals->gameMode == MODE_COMPETITION) {
+                        showGameOver                      = false;
                         int32 playerID                    = RSDK.GetEntityID(player);
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         if (!session->finishState[playerID]) {
@@ -2053,13 +2056,15 @@ void Player_HandleDeath(EntityPlayer *player)
                             Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
 #else
                             CompetitionSession_DeriveWinner(playerID, FINISHFLAG_TIMEOVER);
+                            showGameOver = true;
 #endif
                         }
 #if RETRO_USE_PLUS
                         foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
 #endif
                     }
-                    else {
+
+                    if (showGameOver) {
                         EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                         RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(false));
                         gameOver->playerID = RSDK.GetEntityID(player);

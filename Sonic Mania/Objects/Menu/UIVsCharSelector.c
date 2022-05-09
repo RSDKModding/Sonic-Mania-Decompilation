@@ -148,13 +148,23 @@ void UIVsCharSelector_DrawPlayer(void)
     drawPos.x = self->position.x - 0x2D0000;
     drawPos.y = self->position.y + 0x180000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x5A0000, 0x100000, 0, 255, INK_NONE, false);
+#if RETRO_USE_PLUS
     RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 14, &self->edgeAnimator, true, 1);
 
     drawPos.x = self->position.x + 0x2D0000;
+#else
+    RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 14, &self->edgeAnimator, true, self->playerID);
+
+    drawPos.x = self->position.x + (self->playerID ? 0x2D0000 : -0x2D0000);
+#endif
     drawPos.y = self->position.y - 0x2D0000;
     RSDK.DrawSprite(&self->edgeAnimator, &drawPos, false);
 
+#if RETRO_USE_PLUS
     drawPos.x -= 0xA0000;
+#else
+    drawPos.x += self->playerID ? -0xA0000 : 0xA0000;
+#endif
     drawPos.y += 0x80000;
     RSDK.DrawSprite(&self->playerIDAnimator, &drawPos, false);
 

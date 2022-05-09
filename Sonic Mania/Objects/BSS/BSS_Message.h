@@ -52,7 +52,11 @@ void BSS_Message_State_Perfect(void);
 void BSS_Message_State_PerfectWait(void);
 void BSS_Message_State_MsgFinished(void);
 
+#if RETRO_USE_PLUS
 void BSS_Message_TrackProgressCB(bool32 success);
+#else
+void BSS_Message_TrackProgressCB(void);
+#endif
 
 void BSS_Message_State_SaveGameProgress(void);
 void BSS_Message_State_LoadPrevScene(void);

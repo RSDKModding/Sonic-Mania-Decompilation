@@ -269,7 +269,7 @@ void UIVsResults_DrawResults(void)
     drawPos.y = self->position.y - 0x1D8000;
     RSDK.DrawSprite(&self->edgeAnimator, &drawPos, false);
 
-    drawPos.x -= 0xA0000;
+    drawPos.x += self->playerID ? -0xA0000 : 0xA0000;
     drawPos.y += 0x80000;
     RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 

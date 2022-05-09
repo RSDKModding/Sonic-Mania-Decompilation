@@ -102,7 +102,12 @@ void SpecialClear_Serialize(void);
 // Extra Entity Functions
 void SpecialClear_DrawNumbers(Vector2 *pos, int32 value);
 void SpecialClear_GiveScoreBonus(int32 score);
+
+#if RETRO_USE_PLUS
 void SpecialClear_SaveCB(bool32 success);
+#else
+void SpecialClear_SaveCB(void);
+#endif
 
 void SpecialClear_State_SetupDelay(void);
 void SpecialClear_State_EnterText(void);

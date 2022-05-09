@@ -580,15 +580,7 @@ extern ModFunctionTable Mod;
 #if RETRO_USE_PLUS
 DLLExport void LinkGameLogicDLL(EngineInfo *info);
 #else
-
-#if RETRO_USE_MOD_LOADER
-DLLExport void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
-                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo, void *modTable);
-#else
-DLLExport void LinkGameLogicDLL(void *functionTable, RSDKGameInfo *gameInfo, RSDKSceneInfo *sceneInfo, RSDKControllerState *controllerInfo,
-                                RSDKAnalogState *stickInfoL, RSDKTouchInfo *touchInfo, RSDKScreenInfo *screenInfo);
-#endif
-
+DLLExport void LinkGameLogicDLL(EngineInfo info);
 #endif
 
 #if RETRO_USE_MOD_LOADER

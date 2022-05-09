@@ -90,6 +90,12 @@
     <Filter Include="Source Files\RSDK\Input\RawInput">
       <UniqueIdentifier>{0b8543ee-c9c4-4205-9ca4-3b53372cf959}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Graphics\GL3">
+      <UniqueIdentifier>{4095d349-fe42-4021-b5a3-4a333a7763f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Input\GLFW">
+      <UniqueIdentifier>{ba402bc1-9763-4454-9d46-3aaa17bb1e49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\zlib\adler32.c">
@@ -326,6 +332,12 @@
     <ClCompile Include="RSDK\Input\XInput\XInputDevice.cpp">
       <Filter>Source Files\RSDK\Input\XInput</Filter>
     </ClCompile>
+    <ClCompile Include="RSDK\Graphics\GL3\GL3RenderDevice.cpp">
+      <Filter>Source Files\RSDK\Graphics\GL3</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Input\GLFW\GLFWInputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\GLFW</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\zlib\crc32.h">
@@ -561,6 +573,12 @@
     </ClInclude>
     <ClInclude Include="RSDK\Input\XInput\XInputDevice.hpp">
       <Filter>Source Files\RSDK\Input\XInput</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Graphics\GL3\GL3RenderDevice.hpp">
+      <Filter>Source Files\RSDK\Graphics\GL3</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\GLFW\GLFWInputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\GLFW</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -165,8 +165,8 @@ typedef struct {
 #define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
 
 #if RETRO_USE_PLUS
-#define Unknown_pausePress UnknownInfo->pausePress
-#define Unknown_anyPress   UnknownInfo->anyPress
+#define Unknown_pausePress  UnknownInfo->pausePress
+#define Unknown_anyKeyPress UnknownInfo->anyKeyPress
 
 typedef struct {
     int32 platform;
@@ -187,12 +187,12 @@ typedef struct {
     int32 unknown7;
     int32 unknown8;
     int32 unknown9;
-    bool32 anyPress;
+    bool32 anyKeyPress;
     int32 unknown10;
 } RSDKUnknownInfo;
 #else
-#define Unknown_pausePress TouchInfo->pausePress
-#define Unknown_anyPress   TouchInfo->anyPress
+#define Unknown_pausePress  TouchInfo->pausePress
+#define Unknown_anyKeyPress TouchInfo->anyKeyPress
 #endif
 
 typedef struct {
@@ -300,11 +300,12 @@ typedef struct {
     bool32 down[0x10];
     uint8 count;
 #if !RETRO_USE_PLUS
-    bool32 pausePressActive;
+    bool32 pauseHold;
     bool32 pausePress;
-    bool32 anyPressActive;
-    bool32 anyPress;
-    int32 unknown;
+    bool32 unknown1;
+    bool32 anyKeyHold;
+    bool32 anyKeyPress;
+    bool32 unknown2;
 #endif
 } RSDKTouchInfo;
 
@@ -348,7 +349,7 @@ typedef struct {
     void *modPtrs;
 #endif
 } EngineInfo;
-#elif RETRO_USE_MOD_LOADER
+#else
 typedef struct {
     void *functionTable;
 
@@ -362,7 +363,9 @@ typedef struct {
 
     RSDKScreenInfo *screenInfo;
 
+#if RETRO_USE_MOD_LOADER
     void *modPtrs;
+#endif
 } EngineInfo;
 #endif
 

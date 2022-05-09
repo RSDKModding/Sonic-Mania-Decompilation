@@ -1469,9 +1469,8 @@ void MenuSetup_VS_ProcessButtonCB(void)
     if (control) {
         bool32 allPlayersReady = true;
 
-        for (int32 i = 0; i < control->buttonCount; ++i) {
-            EntityUIVsCharSelector *charSel = (EntityUIVsCharSelector *)control->buttons[i];
-
+        foreach_all(UIVsCharSelector, charSel)
+        {
             Entity *entStore  = SceneInfo->entity;
             SceneInfo->entity = (Entity *)charSel;
             StateMachine_Run(charSel->processButtonCB);
@@ -1493,9 +1492,9 @@ void MenuSetup_VS_MenuSetupCB(void)
     RSDK_THIS(UIControl);
 
     self->childHasFocus = false;
-    for (int32 i = 0; i < self->buttonCount; ++i) {
-        EntityUIVsCharSelector *charSel = (EntityUIVsCharSelector *)self->buttons[i];
 
+    foreach_all(UIVsCharSelector, charSel)
+    {
         charSel->isSelected      = true;
         charSel->ready           = false;
         charSel->processButtonCB = UIVsCharSelector_ProcessButtonCB;
@@ -1881,7 +1880,7 @@ bool32 MenuSetup_VS_BackoutFromVsCharSelect(void)
     EntityUIControl *control = MenuSetup->competition;
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
-        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttonCount;
+        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
         if (button->classID == UIVsCharSelector->classID && button->prevSelected && UIControl->backPress[button->playerID]) {
             UITransition_StartTransition(MenuSetup_VS_BackoutFromVsCharSelect_CB, 0);
             return true;
