@@ -4,6 +4,3 @@ NOTE: you will need to create a project to build libSDL2Main.a manually, otherwi
 
 libogg: https://xiph.org/downloads/ (libogg)
 Download the source and create an Xcode project to build the library as a framework, once the framework is built (Ogg.framework), place it in ./
-
-libvorbis: https://xiph.org/downloads/ (libvorbis)
-Download the source and create an Xcode project to build the library as a framework, once the framework is built (vorbis.framework), place it in ./

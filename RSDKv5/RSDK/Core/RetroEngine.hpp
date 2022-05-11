@@ -246,31 +246,24 @@ enum GameRegions {
 #endif // ! USING_VCPKG
 #endif // ! RETRO_RENDERDEVICE_SDL2
 
-#include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
-#include <theoraplay/theoraplay.h>
 #endif // ! RETRO_WIN
 
 #if RETRO_PLATFORM == RETRO_OSX
 #include <SDL2/SDL.h>
-#include <Vorbis/vorbisfile.h>
 #include <Theora/Theora.h>
-#include <theoraplay/theoraplay.h>
 
 #include "cocoaHelpers.hpp"
 #elif RETRO_PLATFORM == RETRO_iOS
 #include <SDL2/SDL.h>
-#include <vorbis/vorbisfile.h>
 
 #include "cocoaHelpers.hpp"
 #elif RETRO_PLATFORM == RETRO_LINUX
 #include <SDL2/SDL.h>
-#include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
 #include <theoraplay/theoraplay.h>
 #elif RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>
-#include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
 #include <theoraplay/theoraplay.h>
 
@@ -280,9 +273,7 @@ enum GameRegions {
 #undef RETRO_USING_MOUSE
 #elif RETRO_PLATFORM == RETRO_SWITCH
 #include <SDL2/SDL.h>
-#include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
-#include <theoraplay/theoraplay.h>
 
 #undef RETRO_USING_MOUSE
 #endif
@@ -409,10 +400,10 @@ typedef void (*LogicLinkHandle)(RSDK::GameInfo info);
 
 extern LogicLinkHandle linkGameLogic;
 
-int RunRetroEngine(int argc, char *argv[]);
+int32 RunRetroEngine(int32 argc, char *argv[]);
 void ProcessEngine();
 
-void ParseArguments(int argc, char *argv[]);
+void ParseArguments(int32 argc, char *argv[]);
 
 void StartGameObjects();
 
@@ -427,7 +418,7 @@ void InitGameLink();
 
 void ProcessDebugCommands();
 
-inline void SetEngineState(byte state)
+inline void SetEngineState(uint8 state)
 {
     bool32 stepOver = (sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER;
     sceneInfo.state = state;
@@ -440,7 +431,7 @@ extern int32 *globalVarsPtr;
 inline void RegisterGlobalVariables(void **globals, int32 size)
 {
     RSDK::AllocateStorage(size, globals, RSDK::DATASET_STG, true);
-    globalVarsPtr = (int *)*globals;
+    globalVarsPtr = (int32 *)*globals;
 }
 
 #include "Link.hpp"

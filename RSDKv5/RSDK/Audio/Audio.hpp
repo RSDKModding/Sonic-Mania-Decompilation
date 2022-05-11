@@ -1,23 +1,12 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#define TRACK_COUNT (0x10)
-#define SFX_COUNT   (0x100)
-#if !RETRO_USE_ORIGINAL_CODE
-#define CHANNEL_COUNT (0x10) // 4 in the original, 16 for convenience
-#else
-#define CHANNEL_COUNT (0x4)
-#endif
+#define TRACK_COUNT   (0x10)
+#define SFX_COUNT     (0x100)
+#define CHANNEL_COUNT (0x10)
 
-#define MAX_VOLUME (1.0f)
-
-#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
-#define LockAudioDevice()   SDL_LockAudio()
-#define UnlockAudioDevice() SDL_UnlockAudio()
-#else
-#define LockAudioDevice()   ;
-#define UnlockAudioDevice() ;
-#endif
+#define MIX_BUFFER_SIZE (0x800)
+#define SAMPLE_FORMAT   float
 
 struct SFXInfo {
     uint32 hash[4];
@@ -26,10 +15,6 @@ struct SFXInfo {
     int32 playCount;
     uint8 maxConcurrentPlays;
     uint8 scope;
-    //I need this to fix sfx loopPoints
-#if !RETRO_USE_ORIGINAL_CODE
-    uint8 channelCount;
-#endif
 };
 
 struct ChannelInfo {
@@ -51,41 +36,52 @@ enum ChannelStates { CHANNEL_NONE, CHANNEL_SFX, CHANNEL_STREAMING, CHANNEL_STREA
 extern SFXInfo sfxList[SFX_COUNT];
 extern ChannelInfo channels[CHANNEL_COUNT];
 
-extern bool32 audioEnabled;
+struct AudioDeviceBase {
+    static bool32 Init();
+    static void Release();
 
-bool32 InitAudioDevice();
-void ReleaseAudioDevice();
+    static void ClearStageSfx();
 
-#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
-#if !RETRO_USE_ORIGINAL_CODE
-// These functions did exist, but with different signatures
-void ProcessAudioPlayback(void *data, Uint8 *stream, int len);
-void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *channel);
-#endif
+    static void ProcessAudioMixing(void *stream, int32 length);
 
-#endif
+    static void FrameInit();
 
+    static void HandleStreamLoad(ChannelInfo *channel, bool32 async);
+
+    static uint8 initializedAudioChannels;
+    static uint8 audioState;
+
+    static int32 mixBufferID;
+    static float mixBuffer[3][MIX_BUFFER_SIZE];
+
+private:
+    static void InitAudioChannels();
+    static void InitMixBuffer();
+};
+
+void UpdateStreamBuffer(ChannelInfo *channel);
 void LoadStream(ChannelInfo *channel);
-int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint, bool32 loadASync);
+int32 PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopPoint, bool32 loadASync);
 
-void LoadSfx(char *filePath, byte plays, byte scope);
-bool32 LoadGlobalSfx();
+void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, uint32 *format, uint16 *channels, uint32 *freq);
+void LoadSfx(char *filePath, uint8 plays, uint8 scope);
+
 inline uint16 GetSfx(const char *sfxName)
 {
-    uint hash[4];
+    uint32 hash[4];
     GEN_HASH(sfxName, hash);
 
-    for (int s = 0; s < SFX_COUNT; ++s) {
+    for (int32 s = 0; s < SFX_COUNT; ++s) {
         if (HASH_MATCH(sfxList[s].hash, hash))
             return s;
     }
 
     return -1;
 }
-int PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority);
-inline void StopSfx(int sfx)
+int32 PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority);
+inline void StopSfx(int32 sfx)
 {
-    for (int i = 0; i < CHANNEL_COUNT; ++i) {
+    for (int32 i = 0; i < CHANNEL_COUNT; ++i) {
         if (channels[i].soundID == sfx) {
             MEM_ZERO(channels[i]);
             channels[i].soundID = -1;
@@ -93,6 +89,7 @@ inline void StopSfx(int sfx)
         }
     }
 }
+
 void SetChannelAttributes(uint8 channel, float volume, float panning, float speed);
 
 inline void StopChannel(uint32 channel)
@@ -121,19 +118,17 @@ inline void ResumeChannel(uint32 channel)
 
 inline void PauseSound()
 {
-    for (int c = 0; c < CHANNEL_COUNT; ++c) 
-        PauseChannel(c);
+    for (int32 c = 0; c < CHANNEL_COUNT; ++c) PauseChannel(c);
 }
 
 inline void ResumeSound()
 {
-    for (int c = 0; c < CHANNEL_COUNT; ++c) 
-        ResumeChannel(c);
+    for (int32 c = 0; c < CHANNEL_COUNT; ++c) ResumeChannel(c);
 }
 
 inline bool32 SfxPlaying(uint16 sfxID)
 {
-    for (int c = 0; c < CHANNEL_COUNT; ++c) {
+    for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
         if (channels[c].state == CHANNEL_SFX && channels[c].soundID == sfxID)
             return true;
     }
@@ -148,6 +143,12 @@ inline bool32 ChannelActive(uint32 channel)
         return (channels[channel].state & 0x3F) != CHANNEL_NONE;
 }
 
-uint GetChannelPos(uint32 channel);
+uint32 GetChannelPos(uint32 channel);
+
+#if RETRO_AUDIODEVICE_XAUDIO
+#include "XAudio/XAudioDevice.hpp"
+#elif RETRO_AUDIODEVICE_SDL2
+#include "SDL2/SDL2RenderDevice.hpp"
+#endif
 
 #endif

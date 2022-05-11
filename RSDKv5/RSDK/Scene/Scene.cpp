@@ -97,21 +97,8 @@ void LoadScene()
         }
     }
 
-    // Unload sfx channels
-    for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
-        if (channels[c].state == CHANNEL_SFX || channels[c].state == (CHANNEL_SFX | CHANNEL_PAUSED)) {
-            channels[c].soundID = -1;
-            channels[c].state   = CHANNEL_NONE;
-        }
-    }
-
-    // Unload stage SFX
-    for (int32 s = 0; s < SFX_COUNT; ++s) {
-        if (sfxList[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(sfxList[s]);
-            sfxList[s].scope = SCOPE_NONE;
-        }
-    }
+    // Unload stage sfx & audio channels
+    AudioDevice::ClearStageSfx();
 
     // Unload object data
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {

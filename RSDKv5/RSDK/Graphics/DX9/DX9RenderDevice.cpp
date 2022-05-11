@@ -97,7 +97,7 @@ bool RenderDevice::Init()
     UpdateWindow(windowHandle);
 
 
-    if (!SetupRendering() || !InitAudioDevice())
+    if (!SetupRendering() || !AudioDevice::Init())
         return false;
 
     InitInputDevices();

@@ -21,7 +21,7 @@ void *link_handle = NULL;
 int32 *globalVarsPtr = NULL;
 RetroEngine engine   = RetroEngine();
 
-int RunRetroEngine(int argc, char *argv[])
+int32 RunRetroEngine(int32 argc, char *argv[])
 {
     ParseArguments(argc, argv);
 
@@ -111,6 +111,8 @@ int RunRetroEngine(int argc, char *argv[])
         if (RenderDevice::CheckFPSCap()) {
             RenderDevice::UpdateFPSCap();
 
+            AudioDevice::FrameInit();
+
 #if RETRO_REV02
             RSDK::SKU::userCore->FrameInit();
 
@@ -188,8 +190,8 @@ int RunRetroEngine(int argc, char *argv[])
     // DeleteCriticalSection(&CriticalSection);
 #endif
 
-    // AudioDevice::Release();
-    ReleaseAudioDevice();
+    AudioDevice::Release();
+    // ReleaseAudioDevice();
     RenderDevice::Release(false);
     RSDK::writeSettings(false);
     RSDK::SKU::releaseUserData();
@@ -244,7 +246,6 @@ void ProcessEngine()
 #if RETRO_RENDERDEVICE_SDL2
         SDL_SetWindowTitle(RenderDevice::window, RSDK::gameVerInfo.gameName);
 #endif
-        LoadGlobalSfx();
 
         sceneInfo.state = ENGINESTATE_LOAD;
     }
@@ -267,7 +268,7 @@ void ProcessEngine()
 
 #if RETRO_REV02
                 RSDK::SKU::userCore->StageLoad();
-                for (int v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+                for (int32 v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
 #endif
                 // dim after 5 mins
                 RSDK::videoSettings.dimLimit = (5 * 60) * RSDK::videoSettings.refreshRate;
@@ -341,7 +342,7 @@ void ProcessEngine()
 
 #if RETRO_REV02
             RSDK::SKU::userCore->StageLoad();
-            for (int v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+            for (int32 v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
 #endif
 
             ProcessInput();
@@ -446,7 +447,7 @@ void ProcessEngine()
                 sceneInfo.state = engine.prevEngineMode;
 
             currentScreen = &screens[0];
-            int yOff      = RSDK::DevOutput_GetStringYSize(outputString);
+            int32 yOff      = RSDK::DevOutput_GetStringYSize(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
             DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
@@ -458,7 +459,7 @@ void ProcessEngine()
                 RenderDevice::isRunning = false;
 
             currentScreen = &screens[0];
-            int yOff = RSDK::DevOutput_GetStringYSize(outputString);
+            int32 yOff = RSDK::DevOutput_GetStringYSize(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
             DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
@@ -467,7 +468,7 @@ void ProcessEngine()
     }
 }
 
-void ParseArguments(int argc, char *argv[])
+void ParseArguments(int32 argc, char *argv[])
 {
     memset(currentSceneFolder, 0, sizeof(currentSceneFolder));
     memset(currentSceneID, 0, sizeof(currentSceneID));
@@ -475,21 +476,21 @@ void ParseArguments(int argc, char *argv[])
     sceneInfo.filter = 0;
 #endif
 
-    for (int a = 0; a < argc; ++a) {
+    for (int32 a = 0; a < argc; ++a) {
         const char *find = "";
 
         find = strstr(argv[a], "stage=");
         if (find) {
-            int b = 0;
-            int c = 6;
+            int32 b = 0;
+            int32 c = 6;
             while (find[c] && find[c] != ';') currentSceneFolder[b++] = find[c++];
             currentSceneFolder[b] = 0;
         }
 
         find = strstr(argv[a], "scene=");
         if (find) {
-            int b = 0;
-            int c = 6;
+            int32 b = 0;
+            int32 c = 6;
             while (find[c] && find[c] != ';') currentSceneID[b++] = find[c++];
             currentSceneID[b] = 0;
         }
@@ -499,8 +500,8 @@ void ParseArguments(int argc, char *argv[])
         if (find) {
             char buf[0x10];
 
-            int b = 0;
-            int c = 7;
+            int32 b = 0;
+            int32 c = 7;
             while (argv[a][c] && find[c] != ';') buf[b++] = find[c++];
             buf[b]           = 0;
             sceneInfo.filter = atoi(buf);
@@ -522,13 +523,13 @@ void StartGameObjects()
     sceneInfo.classCount     = 0;
     sceneInfo.activeCategory = 0;
     sceneInfo.listPos        = 0;
-    sceneInfo.state          = 0;
-    sceneInfo.inEditor       = 0;
+    sceneInfo.state          = ENGINESTATE_LOAD;
+    sceneInfo.inEditor       = false;
     sceneInfo.debugMode      = engine.devMenu;
 
     devMenu.state            = DevMenu_MainMenu;
 
-    for (int l = 0; l < DRAWGROUP_COUNT; ++l) engine.drawLayerVisible[l] = true;
+    for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) engine.drawLayerVisible[l] = true;
 
     RSDK::SetupFunctionTables();
     InitGameLink();
@@ -568,7 +569,7 @@ void LoadXMLObjects()
 {
     FileInfo info;
 
-    for (int m = 0; m < (int)RSDK::modList.size(); ++m) {
+    for (int32 m = 0; m < (int32)RSDK::modList.size(); ++m) {
         if (!RSDK::modList[m].active)
             continue;
 
@@ -599,7 +600,7 @@ void LoadXMLObjects()
                             RETRO_HASH(hash);
                             GEN_HASH(objName, hash);
                             globalObjectIDs[globalObjectCount] = 0;
-                            for (int objID = 0; objID < objectCount; ++objID) {
+                            for (int32 objID = 0; objID < objectCount; ++objID) {
                                 if (HASH_MATCH(hash, objectList[objID].hash)) {
                                     globalObjectIDs[globalObjectCount] = objID;
                                     globalObjectCount++;
@@ -623,7 +624,7 @@ void LoadXMLObjects()
 void LoadXMLSoundFX()
 {
     FileInfo info;
-    for (int m = 0; m < (int)RSDK::modList.size(); ++m) {
+    for (int32 m = 0; m < (int32)RSDK::modList.size(); ++m) {
         if (!RSDK::modList[m].active)
             continue;
 
@@ -652,7 +653,7 @@ void LoadXMLSoundFX()
                                 sfxPath = getXMLAttributeValueString(valAttr);
 
                             const tinyxml2::XMLAttribute *playsAttr = findXMLAttribute(sfxElement, "maxConcurrentPlays");
-                            int maxConcurrentPlays                  = 0;
+                            int32 maxConcurrentPlays                  = 0;
                             if (playsAttr)
                                 maxConcurrentPlays = getXMLAttributeValueInt(playsAttr);
 
@@ -675,10 +676,10 @@ void LoadXMLSoundFX()
 int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 {
     FileInfo info;
-    int listCount  = 0;
-    int stageCount = 0;
+    int32 listCount  = 0;
+    int32 stageCount = 0;
 
-    for (int m = 0; m < (int)RSDK::modList.size(); ++m) {
+    for (int32 m = 0; m < (int32)RSDK::modList.size(); ++m) {
         if (!RSDK::modList[m].active)
             continue;
 
@@ -699,7 +700,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                 const tinyxml2::XMLElement *listElement = firstXMLChildElement(doc, gameElement, "category");
                 if (listElement) {
                     do {
-                        int listID                             = gcListCount++;
+                        int32 listID                             = gcListCount++;
                         const tinyxml2::XMLElement *stgElement = firstXMLChildElement(doc, listElement, "stage");
 
                         SceneListInfo *list = &sceneInfo.listCategory[listID];
@@ -737,7 +738,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 
 #if RETRO_REV02
                                     const tinyxml2::XMLAttribute *filterAttr = findXMLAttribute(stgElement, "highlight");
-                                    int stgFilter                            = 0;
+                                    int32 stgFilter                            = 0;
                                     if (stgFilter)
                                         stgFilter = getXMLAttributeValueInt(filterAttr);
 #endif
@@ -792,8 +793,8 @@ void LoadGameConfig()
 {
     FileInfo info;
     InitFileInfo(&info);
-    int gcListCount  = 0;
-    int gcSceneCount = 0;
+    int32 gcListCount  = 0;
+    int32 gcSceneCount = 0;
 
     if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
         char buffer[0x100];
@@ -811,11 +812,11 @@ void LoadGameConfig()
         ReadString(&info, RSDK::gameVerInfo.gameVersion);
 
         sceneInfo.activeCategory = ReadInt8(&info);
-        int startScene           = ReadInt16(&info);
+        int32 startScene           = ReadInt16(&info);
 
         byte objCnt       = ReadInt8(&info);
         globalObjectCount = TYPE_DEFAULTCOUNT;
-        for (int i = 0; i < objCnt; ++i) {
+        for (int32 i = 0; i < objCnt; ++i) {
             ReadString(&info, textBuffer);
 
             RETRO_HASH(hash);
@@ -823,7 +824,7 @@ void LoadGameConfig()
 
             if (objectCount > 0) {
                 globalObjectIDs[globalObjectCount] = 0;
-                for (int objID = 0; objID < objectCount; ++objID) {
+                for (int32 objID = 0; objID < objectCount; ++objID) {
                     if (HASH_MATCH(hash, objectList[objID].hash)) {
                         globalObjectIDs[globalObjectCount] = objID;
                         globalObjectCount++;
@@ -832,11 +833,11 @@ void LoadGameConfig()
             }
         }
 
-        for (int i = 0; i < PALETTE_COUNT; ++i) {
+        for (int32 i = 0; i < PALETTE_COUNT; ++i) {
             activeGlobalRows[i] = ReadInt16(&info);
-            for (int r = 0; r < 0x10; ++r) {
+            for (int32 r = 0; r < 0x10; ++r) {
                 if ((activeGlobalRows[i] >> r & 1)) {
-                    for (int c = 0; c < 0x10; ++c) {
+                    for (int32 c = 0; c < 0x10; ++c) {
                         byte red                       = ReadInt8(&info);
                         byte green                     = ReadInt8(&info);
                         byte blue                      = ReadInt8(&info);
@@ -844,15 +845,16 @@ void LoadGameConfig()
                     }
                 }
                 else {
-                    for (int c = 0; c < 0x10; ++c) globalPalette[i][(r << 4) + c] = 0;
+                    for (int32 c = 0; c < 0x10; ++c) globalPalette[i][(r << 4) + c] = 0;
                 }
             }
         }
 
         byte sfxCnt = ReadInt8(&info);
-        for (int i = 0; i < sfxCnt; ++i) {
+        for (int32 i = 0; i < sfxCnt; ++i) {
             ReadString(&info, buffer);
-            ReadInt8(&info);
+            byte maxConcurrentPlays = ReadInt8(&info);
+            LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
         }
 
         ushort totalSceneCount = ReadInt16(&info);
@@ -888,7 +890,7 @@ void LoadGameConfig()
         sceneInfo.categoryCount = ReadInt8(&info);
         sceneInfo.listPos       = 0;
 
-        int categoryCount = sceneInfo.categoryCount;
+        int32 categoryCount = sceneInfo.categoryCount;
 #if RETRO_USE_MOD_LOADER
         gcListCount = categoryCount;
         categoryCount += LoadXMLStages(1, 0, 0);
@@ -899,15 +901,15 @@ void LoadGameConfig()
         RSDK::AllocateStorage(sizeof(SceneListInfo) * categoryCount, (void **)&sceneInfo.listCategory, RSDK::DATASET_STG, false);
         sceneInfo.listPos = 0;
 
-        int sceneID = 0;
-        for (int i = 0; i < sceneInfo.categoryCount; ++i) {
+        int32 sceneID = 0;
+        for (int32 i = 0; i < sceneInfo.categoryCount; ++i) {
             SceneListInfo *category = &sceneInfo.listCategory[i];
             ReadString(&info, category->name);
             GEN_HASH(category->name, category->hash);
 
             category->sceneOffsetStart = sceneID;
             category->sceneCount       = ReadInt8(&info);
-            for (int s = 0; s < category->sceneCount; ++s) {
+            for (int32 s = 0; s < category->sceneCount; ++s) {
                 SceneListEntry *scene = &sceneInfo.listData[sceneID + s];
                 ReadString(&info, scene->name);
                 GEN_HASH(scene->name, scene->hash);
@@ -926,10 +928,10 @@ void LoadGameConfig()
         }
 
         byte varCount = ReadInt8(&info);
-        for (int i = 0; i < varCount && globalVarsPtr; ++i) {
-            int offset = ReadInt32(&info, false);
-            int count  = ReadInt32(&info, false);
-            for (int v = 0; v < count; ++v) {
+        for (int32 i = 0; i < varCount && globalVarsPtr; ++i) {
+            int32 offset = ReadInt32(&info, false);
+            int32 count  = ReadInt32(&info, false);
+            for (int32 v = 0; v < count; ++v) {
                 globalVarsPtr[offset + v] = ReadInt32(&info, false);
             }
         }
@@ -1107,7 +1109,7 @@ void ProcessDebugCommands()
 {
 #if !RETRO_USE_ORIGINAL_CODE
     // This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
-    int id            = ControllerIDForInputID(1);
+    int32 id            = ControllerIDForInputID(1);
     uint8 gamepadType = GetControllerType(id) >> 8;
     if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN)
         return;

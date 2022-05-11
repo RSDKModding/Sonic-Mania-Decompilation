@@ -1,7 +1,5 @@
 iniparser:
 
-theoraplay:
-
 zlib:
 
 tinyxml2: download https://github.com/leethomason/tinyxml2/releases

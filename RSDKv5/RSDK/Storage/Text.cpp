@@ -324,8 +324,9 @@ void AppendString(String *string, String *appendString)
         string->size = newSize;
     }
 
+    int32 startOffset = string->length;
     string->length += appendString->length;
-    for (int32 c = 0, pos = string->length; pos < string->length; ++pos, ++c) string->chars[pos] = appendString->chars[c];
+    for (int32 c = 0, pos = startOffset; pos < string->length; ++pos, ++c) string->chars[pos] = appendString->chars[c];
 }
 
 bool32 CompareStrings(String *string1, String *string2, bool32 exactMatch)
