@@ -1054,7 +1054,7 @@ void SuperInternal(ObjectInfo *super, RSDK::ModSuper callback, void *data)
 
     Object *before  = NULL;
     ModInfo *curMod = currentMod;
-    if (HASH_MATCH(super->hash, super->inherited->hash)) {
+    if (HASH_MATCH_MD5(super->hash, super->inherited->hash)) {
         for (int i = 0; i < superLevels; i++) {
             before = *super->staticVars;
             if (!super->inherited) {
@@ -1160,13 +1160,13 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
 
     ModInfo *curMod = currentMod;
     int32 preCount  = objectCount + 1;
-    RETRO_HASH(hash);
-    GEN_HASH(name, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(name, hash);
 
     int32 superSlot     = preCount;
     ObjectInfo *inherit = NULL;
     for (int32 i = 0; i < objectCount; ++i) {
-        if (HASH_MATCH(objectList[i].hash, hash)) {
+        if (HASH_MATCH_MD5(objectList[i].hash, hash)) {
             objectCount = i;
             superSlot   = i;
             inherit     = new ObjectInfo(objectList[i]);
@@ -1178,11 +1178,11 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     }
 
     if (inherited) {
-        uint32 hash[4];
-        GEN_HASH(inherited, hash);
+        RETRO_HASH_MD5(hash);
+        GEN_HASH_MD5(inherited, hash);
         if (!inherit)
             for (int32 i = 0; i < preCount; ++i) {
-                if (HASH_MATCH(objectList[i].hash, hash)) {
+                if (HASH_MATCH_MD5(objectList[i].hash, hash)) {
                     inherit = new ObjectInfo(objectList[i]);
                     break;
                 }
@@ -1198,7 +1198,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     if (inherited) {
         info->inherited = inherit;
 
-        if (HASH_MATCH(info->hash, inherit->hash)) {
+        if (HASH_MATCH_MD5(info->hash, inherit->hash)) {
             // we override an obj and lets check for structPtr
             if (!info->staticVars) {
                 info->staticVars       = inherit->staticVars;

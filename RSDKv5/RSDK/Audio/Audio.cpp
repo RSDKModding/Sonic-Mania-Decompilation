@@ -27,7 +27,7 @@ float AudioDevice::mixBuffer[3][MIX_BUFFER_SIZE];
 #if RETRO_AUDIODEVICE_XAUDIO
 #include "XAudio/XAudioDevice.cpp"
 #elif RETRO_AUDIODEVICE_SDL2
-#include "SDL2/SDL2RenderDevice.cpp"
+#include "SDL2/SDL2AudioDevice.cpp"
 #endif
 
 void UpdateStreamBuffer(ChannelInfo *channel)
@@ -42,7 +42,7 @@ void UpdateStreamBuffer(ChannelInfo *channel)
                 // we're looping & the seek was successful, get more samples
             }
             else {
-                channel->state   = CHANNEL_NONE;
+                channel->state   = CHANNEL_IDLE;
                 channel->soundID = -1;
                 memset(buffer, 0, sizeof(float) * bufferRemaining);
 
@@ -67,7 +67,7 @@ void UpdateStreamBuffer(ChannelInfo *channel)
 
 void LoadStream(ChannelInfo *channel)
 {
-    if (channel->state != CHANNEL_STREAM_LOAD)
+    if (channel->state != CHANNEL_LOADING_STREAM)
         return;
 
     if (vorbisInfo) {
@@ -96,13 +96,13 @@ void LoadStream(ChannelInfo *channel)
                     stb_vorbis_seek(vorbisInfo, streamStartPos);
                 UpdateStreamBuffer(channel);
 
-                channel->state = CHANNEL_STREAMING;
+                channel->state = CHANNEL_STREAM;
             }
         }
     }
 
-    if (channel->state == CHANNEL_STREAM_LOAD)
-        channel->state = CHANNEL_NONE;
+    if (channel->state == CHANNEL_LOADING_STREAM)
+        channel->state = CHANNEL_IDLE;
 }
 
 int32 PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopPoint, bool32 loadASync)
@@ -112,7 +112,7 @@ int32 PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopP
 
     if (slot >= CHANNEL_COUNT) {
         for (int32 c = 0; c < CHANNEL_COUNT && slot >= CHANNEL_COUNT; ++c) {
-            if (channels[c].soundID == -1 && channels[c].state != CHANNEL_STREAM_LOAD) {
+            if (channels[c].soundID == -1 && channels[c].state != CHANNEL_LOADING_STREAM) {
                 slot = c;
             }
         }
@@ -122,7 +122,7 @@ int32 PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopP
         if (slot >= CHANNEL_COUNT) {
             uint32 len = 0xFFFFFFFF;
             for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
-                if (channels[c].sampleLength < len && channels[c].state != CHANNEL_STREAM_LOAD) {
+                if (channels[c].sampleLength < len && channels[c].state != CHANNEL_LOADING_STREAM) {
                     slot = c;
                     len  = (uint32)channels[c].sampleLength;
                 }
@@ -140,7 +140,7 @@ int32 PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopP
     channel->soundID      = 0xFF;
     channel->loop         = loopPoint != 0;
     channel->priority     = 0xFF;
-    channel->state        = CHANNEL_STREAM_LOAD;
+    channel->state        = CHANNEL_LOADING_STREAM;
     channel->pan          = 0.0;
     channel->volume       = 1.0;
     channel->sampleLength = sfxList[SFX_COUNT - 1].length;
@@ -213,19 +213,17 @@ void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, u
 
             float *buffer = (float *)sfxList[id].buffer;
             if (sampleBits == 8) {
-                for (int32 remaining = length; remaining; --remaining) {
+                for (int32 s = 0; s < length; ++s) {
                     int32 sample = ReadInt8(&info);
-                    *buffer      = (sample - 128) * 0.0078125;
-                    buffer++;
+                    *buffer++      = (sample - 128) * 0.0078125;
                 }
             }
             else {
-                for (int32 remaining = length; remaining; --remaining) {
+                for (int32 s = 0; s < length; ++s) {
                     int32 sample = ReadInt16(&info);
                     if (sample > 0x7FFF)
                         sample = (sample & 0x7FFF) - 0x8000;
-                    *buffer = (sample * 0.000030518) * 0.75;
-                    buffer++;
+                    *buffer++ = (sample * 0.000030518) * 0.75;
                 }
             }
         }
@@ -239,11 +237,11 @@ void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, u
 
 void LoadSfx(char *filename, uint8 plays, uint8 scope)
 {
-    char fullPath[0x80];
-    sprintf(fullPath, "Data/SoundFX/%s", filename);
+    char fullFilePath[0x80];
+    sprintf(fullFilePath, "Data/SoundFX/%s", filename);
 
-    uint32 hash[4];
-    GEN_HASH(filename, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(filename, hash);
 
     uint16 id = -1;
     for (id = 0; id < SFX_COUNT; ++id) {
@@ -254,9 +252,9 @@ void LoadSfx(char *filename, uint8 plays, uint8 scope)
     if (id >= SFX_COUNT)
         return;
 
-    uint8 type = fullPath[strlen(fullPath) - 3];
+    uint8 type = fullFilePath[strlen(fullFilePath) - 3];
     if (type == 'w' || type == 'W') {
-        GEN_HASH(filename, sfxList[id].hash);
+        GEN_HASH_MD5(filename, sfxList[id].hash);
         sfxList[id].scope              = scope;
         sfxList[id].maxConcurrentPlays = plays;
 
@@ -264,7 +262,7 @@ void LoadSfx(char *filename, uint8 plays, uint8 scope)
         uint32 freq     = 0;
         uint32 format   = 0;
         uint32 size     = 0;
-        ReadSfx(fullPath, id, plays, scope, &size, &format, &channels, &freq);
+        ReadSfx(fullFilePath, id, plays, scope, &size, &format, &channels, &freq);
     }
     else {
         // what the
@@ -297,7 +295,7 @@ int32 PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
 
     // if we don't have a slot yet, try to pick any channel that's not currently playing
     for (int32 c = 0; c < CHANNEL_COUNT && slot < 0; ++c) {
-        if (channels[c].soundID == -1 && channels[c].state != CHANNEL_STREAM_LOAD) {
+        if (channels[c].soundID == -1 && channels[c].state != CHANNEL_LOADING_STREAM) {
             slot = c;
         }
     }
@@ -307,7 +305,7 @@ int32 PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
     if (slot < 0) {
         uint32 len = 0xFFFFFFFF;
         for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
-            if (channels[c].sampleLength < len && priority > channels[c].priority && channels[c].state != CHANNEL_STREAM_LOAD) {
+            if (channels[c].sampleLength < len && priority > channels[c].priority && channels[c].state != CHANNEL_LOADING_STREAM) {
                 slot = c;
                 len  = (uint32)channels[c].sampleLength;
             }
@@ -365,7 +363,7 @@ uint32 GetChannelPos(uint32 channel)
     if (channels[channel].state == CHANNEL_SFX)
         return channels[channel].bufferPos;
 
-    if (channels[channel].state == CHANNEL_STREAMING) {
+    if (channels[channel].state == CHANNEL_STREAM) {
         if (!vorbisInfo->current_loc_valid || vorbisInfo->current_loc < 0)
             return 0;
 
@@ -373,4 +371,35 @@ uint32 GetChannelPos(uint32 channel)
     }
 
     return 0;
+}
+
+double GetVideoStreamPos()
+{
+    if (channels[0].state == CHANNEL_STREAM && AudioDevice::audioState && AudioDevice::initializedAudioChannels && vorbisInfo->current_loc_valid) {
+        return vorbisInfo->current_loc / (float)AUDIO_FREQUENCY;
+    }
+
+    return -1.0;
+}
+
+void ClearStageSfx()
+{
+    LockAudioDevice();
+
+    for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
+        if (channels[c].state == CHANNEL_SFX || channels[c].state == (CHANNEL_SFX | CHANNEL_PAUSED)) {
+            channels[c].soundID = -1;
+            channels[c].state   = CHANNEL_IDLE;
+        }
+    }
+
+    // Unload stage SFX
+    for (int32 s = 0; s < SFX_COUNT; ++s) {
+        if (sfxList[s].scope >= SCOPE_STAGE) {
+            MEM_ZERO(sfxList[s]);
+            sfxList[s].scope = SCOPE_NONE;
+        }
+    }
+
+    UnlockAudioDevice();
 }

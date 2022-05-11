@@ -44,7 +44,7 @@ void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSiz
             printf("Class exceeds max entity memory: %s \n", name);
 
         ObjectInfo *info = &objectList[objectCount];
-        GEN_HASH(name, info->hash);
+        GEN_HASH_MD5(name, info->hash);
         info->staticVars      = staticVars;
         info->entityClassSize = entityClassSize;
         info->staticClassSize = staticClassSize;
@@ -65,8 +65,8 @@ void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSiz
 #if RETRO_REV02
 void RegisterStaticVariables(void **staticVars, const char *name, uint32 classSize)
 {
-    uint32 hash[4];
-    GEN_HASH(name, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(name, hash);
     RSDK::AllocateStorage(classSize, (void **)staticVars, RSDK::DATASET_STG, true);
     LoadStaticVariables((uint8 *)*staticVars, hash, 0);
 }
@@ -933,11 +933,11 @@ void ProcessObjectDrawLists()
 
 uint16 GetObjectByName(const char *name)
 {
-    uint32 hash[4];
-    GEN_HASH(name, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(name, hash);
 
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
-        if (HASH_MATCH(hash, objectList[stageObjectIDs[o]].hash))
+        if (HASH_MATCH_MD5(hash, objectList[stageObjectIDs[o]].hash))
             return o;
     }
 

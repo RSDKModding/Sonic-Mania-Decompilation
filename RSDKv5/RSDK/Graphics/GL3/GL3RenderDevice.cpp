@@ -251,7 +251,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
     glGenTextures(1, &imageTexture);
     glBindTexture(GL_TEXTURE_2D, imageTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 512, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -393,10 +393,10 @@ RenderVertex vertBuffer[24] =
 
     float x = 0.5 / (float)viewSize.x;
     float y = 0.5 / (float)viewSize.y;
-    // float x = 0;
-    // float y = 0;
 
-    for (int v = 0; v < (!RETRO_REV02 ? 24 : 60); ++v) {
+    // ignore the last 6 verts, they're scaled to the 1024x512 textures already!
+    int32 vertCount = (RETRO_REV02 ? 60 : 24) - 6;
+    for (int32 v = 0; v < vertCount; ++v) {
         RenderVertex *vertex = &vertBuffer[v];
         vertex->pos.x        = vertex->pos.x - x;
         vertex->pos.y        = vertex->pos.y + y;

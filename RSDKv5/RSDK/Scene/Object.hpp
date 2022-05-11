@@ -40,11 +40,12 @@ enum StaticObjectTypes {
 };
 
 enum TypeGroups {
-    GROUP_ALL     = 0,
-    GROUP_CUSTOM1 = TYPE_COUNT,
+    GROUP_ALL = 0,
+
+    GROUP_CUSTOM0 = TYPE_COUNT,
+    GROUP_CUSTOM1,
     GROUP_CUSTOM2,
     GROUP_CUSTOM3,
-    GROUP_CUSTOM4,
 };
 
 enum VariableTypes {
@@ -78,7 +79,7 @@ enum DefaultObjects {
 #if RETRO_REV02
     TYPE_DEVOUTPUT,
 #endif
-    TYPE_DEFAULTCOUNT, // max
+    TYPE_DEFAULT_COUNT, // max
 };
 
 // lmao
@@ -136,7 +137,9 @@ struct EntityBase : Entity {
 };
 
 struct ObjectInfo {
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
+
+    // Events
 #if RETRO_USE_MOD_LOADER // using std::function makes it easier to use stuff like lambdas
     std::function<void(void)> update;
     std::function<void(void)> lateUpdate;
@@ -158,16 +161,19 @@ struct ObjectInfo {
     void (*editorLoad)(void);
     void (*serialize)(void);
 #endif
+
+    // Classes 
     Object **staticVars;
     int32 entityClassSize;
     int32 staticClassSize;
+
 #if RETRO_USE_MOD_LOADER
     ObjectInfo *inherited;
 #endif
 };
 
 struct EditableVarInfo {
-    uint32 hash[4];
+    RETRO_HASH_MD5(hash);
     int32 offset;
     int32 active;
     uint8 type;
@@ -227,7 +233,7 @@ inline void SetEditableVar(uint8 type, const char *name, uint8 classID, int32 of
     if (editableVarCount < EDITABLEVAR_COUNT - 1) {
         EditableVarInfo *var = &editableVarList[editableVarCount];
 
-        GEN_HASH(name, var->hash);
+        GEN_HASH_MD5(name, var->hash);
         var->type   = type;
         var->offset = offset;
         var->active = true;

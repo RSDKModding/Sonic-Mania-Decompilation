@@ -48,7 +48,7 @@ void TitleSetup_Serialize(void);
 void TitleSetup_HandleCheatInputs(void);
 void TitleSetup_CheckCheatCode(void);
 #endif
-bool32 TitleSetup_IntroCallback(void);
+bool32 TitleSetup_VideoSkipCB(void);
 
 void TitleSetup_State_Wait(void);
 void TitleSetup_State_AnimateUntilFlash(void);

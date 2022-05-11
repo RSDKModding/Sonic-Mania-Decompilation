@@ -15,6 +15,10 @@
 
 #define SHADER_MAX (0x20)
 
+// Also for "Images" but it's a cleaner name as is
+#define RETRO_VIDEO_TEXTURE_W (1024)
+#define RETRO_VIDEO_TEXTURE_H (512)
+
 enum InkEffects {
     INK_NONE,
     INK_BLEND,
@@ -54,8 +58,8 @@ enum ShaderIDs {
 };
 
 struct GFXSurface {
-    uint32 hash[4];
-    uint8 *dataPtr;
+    RETRO_HASH_MD5(hash);
+    uint8 *pixels;
     int32 height;
     int32 width;
     int32 lineSize;
@@ -175,7 +179,11 @@ public:
     static void Release(bool32 isRefresh);
 
     static void RefreshWindow();
+
     static void SetupImageTexture(int32 width, int32 height, uint8 *imagePixels);
+    static void SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *imagePixels);
+    static void SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *imagePixels);
+    static void SetupVideoTexture_YUV424(int32 width, int32 height, uint8 *imagePixels);
 
     static bool ProcessEvents();
 

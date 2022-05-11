@@ -246,7 +246,7 @@ enum GameRegions {
 #endif // ! USING_VCPKG
 #endif // ! RETRO_RENDERDEVICE_SDL2
 
-#include <theora/theora.h>
+#include <theora/theoradec.h>
 #endif // ! RETRO_WIN
 
 #if RETRO_PLATFORM == RETRO_OSX
@@ -261,11 +261,9 @@ enum GameRegions {
 #elif RETRO_PLATFORM == RETRO_LINUX
 #include <SDL2/SDL.h>
 #include <theora/theora.h>
-#include <theoraplay/theoraplay.h>
 #elif RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>
 #include <theora/theora.h>
-#include <theoraplay/theoraplay.h>
 
 //#include "androidHelpers.hpp"
 #undef RETRO_STANDALONE
@@ -283,15 +281,15 @@ enum EngineStates {
     ENGINESTATE_REGULAR,
     ENGINESTATE_PAUSED,
     ENGINESTATE_FROZEN,
-    ENGINESTATE_STEPOVER      = 4,
-    ENGINESTATE_DEVMENU       = 8,
-    ENGINESTATE_VIDEOPLAYBACK = 9,
-    ENGINESTATE_SHOWPNG,
+    ENGINESTATE_STEPOVER = 4,
+    ENGINESTATE_DEVMENU  = 8,
+    ENGINESTATE_VIDEOPLAYBACK,
+    ENGINESTATE_SHOWIMAGE,
 #if RETRO_REV02
     ENGINESTATE_ERRORMSG,
     ENGINESTATE_ERRORMSG_FATAL,
 #endif
-    ENGINESTATE_NULL,
+    ENGINESTATE_NONE,
 };
 
 // Utils
@@ -373,7 +371,8 @@ struct RetroEngine {
     bool32 initialized = false;
     bool32 hardPause   = false;
 
-    int32 prevEngineMode      = ENGINESTATE_LOAD;
+    int32 storedShaderID      = SHADER_NONE;
+    int32 storedState         = ENGINESTATE_LOAD;
     int32 gameSpeed           = 1;
     int32 fastForwardSpeed    = 8;
     bool32 frameStep          = false;
@@ -381,8 +380,9 @@ struct RetroEngine {
     bool32 drawLayerVisible[DRAWGROUP_COUNT];
 
     // Image/Video support
-    float displayTime            = 0;
-    float imageDelta             = 0;
+    double displayTime           = 0.0;
+    double videoStartDelay       = 0.0;
+    double imageDelta            = 0.0;
     bool32 (*skipCallback)(void) = NULL;
 
     bool32 streamsEnabled = true;

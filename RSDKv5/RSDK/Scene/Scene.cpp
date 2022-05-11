@@ -98,7 +98,7 @@ void LoadScene()
     }
 
     // Unload stage sfx & audio channels
-    AudioDevice::ClearStageSfx();
+    ClearStageSfx();
 
     // Unload object data
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
@@ -158,21 +158,21 @@ void LoadScene()
             sceneInfo.classCount = globalObjectCount;
         }
         else {
-            for (int32 o = 0; o < TYPE_DEFAULTCOUNT; ++o) stageObjectIDs[o] = globalObjectIDs[o];
+            for (int32 o = 0; o < TYPE_DEFAULT_COUNT; ++o) stageObjectIDs[o] = globalObjectIDs[o];
 
-            sceneInfo.classCount = TYPE_DEFAULTCOUNT;
+            sceneInfo.classCount = TYPE_DEFAULT_COUNT;
         }
 
         uint8 objCnt = ReadInt8(&info);
         for (int32 o = 0; o < objCnt; ++o) {
             ReadString(&info, textBuffer);
 
-            RETRO_HASH(hash);
-            GEN_HASH(textBuffer, hash);
+            RETRO_HASH_MD5(hash);
+            GEN_HASH_MD5(textBuffer, hash);
 
             stageObjectIDs[sceneInfo.classCount] = 0;
             for (int32 objID = 0; objID < objectCount; ++objID) {
-                if (HASH_MATCH(hash, objectList[objID].hash)) {
+                if (HASH_MATCH_MD5(hash, objectList[objID].hash)) {
                     stageObjectIDs[sceneInfo.classCount] = objID;
                     sceneInfo.classCount++;
                 }
@@ -185,7 +185,7 @@ void LoadScene()
                 RSDK::AllocateStorage(obj->staticClassSize, (void **)obj->staticVars, RSDK::DATASET_STG, true);
                 LoadStaticVariables((uint8 *)*obj->staticVars, obj->hash, sizeof(Object));
                 (*obj->staticVars)->classID = o;
-                if (o >= TYPE_DEFAULTCOUNT)
+                if (o >= TYPE_DEFAULT_COUNT)
                     (*obj->staticVars)->active = ACTIVE_NORMAL;
             }
         }
@@ -273,7 +273,7 @@ void LoadSceneFile()
             // Tests in RetroED & comparing images of the RSDKv5 editor we have puts this as the most likely use for this (otherwise unused) variable
             bool32 visibleInEditor = ReadInt8(&info) != 0;
             ReadString(&info, textBuffer);
-            GEN_HASH(textBuffer, layer->name);
+            GEN_HASH_MD5(textBuffer, layer->name);
 
             layer->type         = ReadInt8(&info);
             layer->drawLayer[0] = ReadInt8(&info);
@@ -353,7 +353,7 @@ void LoadSceneFile()
         RSDK::AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&tempEntityList, RSDK::DATASET_TMP, true);
 #endif
         for (int32 i = 0; i < objectCount; ++i) {
-            RETRO_HASH(hashBuf);
+            RETRO_HASH_MD5(hashBuf);
             hashBuf[0] = ReadInt32(&info, false);
             hashBuf[1] = ReadInt32(&info, false);
             hashBuf[2] = ReadInt32(&info, false);
@@ -361,14 +361,14 @@ void LoadSceneFile()
 
             int32 classID = 0;
             for (int32 o = 0; o < sceneInfo.classCount; ++o) {
-                if (HASH_MATCH(hashBuf, objectList[stageObjectIDs[o]].hash)) {
+                if (HASH_MATCH_MD5(hashBuf, objectList[stageObjectIDs[o]].hash)) {
                     classID = o;
                     break;
                 }
             }
 
 #if !RETRO_USE_ORIGINAL_CODE
-            if (!classID && i >= TYPE_DEFAULTCOUNT)
+            if (!classID && i >= TYPE_DEFAULT_COUNT)
                 PrintLog(PRINT_NORMAL, "Object Class %d is unimplimented!", i);
 #endif
 
@@ -400,9 +400,9 @@ void LoadSceneFile()
                 int32 varID = 0;
                 MEM_ZERO(varList[e]);
                 for (int32 v = 0; v < editableVarCount; ++v) {
-                    if (HASH_MATCH(hashBuf, editableVarList[v].hash)) {
+                    if (HASH_MATCH_MD5(hashBuf, editableVarList[v].hash)) {
                         varID = v;
-                        HASH_COPY(varList[e].hash, editableVarList[v].hash);
+                        HASH_COPY_MD5(varList[e].hash, editableVarList[v].hash);
                         varList[e].offset = editableVarList[v].offset;
                         varList[e].active = true;
                         break;
@@ -1081,17 +1081,17 @@ void ProcessSceneTimer()
 
 void SetScene(const char *categoryName, const char *sceneName)
 {
-    RETRO_HASH(hash);
-    GEN_HASH(categoryName, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(categoryName, hash);
 
     for (int32 i = 0; i < sceneInfo.categoryCount; ++i) {
-        if (HASH_MATCH(sceneInfo.listCategory[i].hash, hash)) {
+        if (HASH_MATCH_MD5(sceneInfo.listCategory[i].hash, hash)) {
             sceneInfo.activeCategory = i;
             sceneInfo.listPos        = sceneInfo.listCategory[i].sceneOffsetStart;
-            GEN_HASH(sceneName, hash);
+            GEN_HASH_MD5(sceneName, hash);
 
             for (int32 s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
-                if (HASH_MATCH(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, hash)) {
+                if (HASH_MATCH_MD5(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, hash)) {
                     sceneInfo.listPos = sceneInfo.listCategory[i].sceneOffsetStart + s;
                     break;
                 }

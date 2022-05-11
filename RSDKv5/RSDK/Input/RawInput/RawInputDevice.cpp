@@ -196,7 +196,7 @@ void InitRawInputAPI()
 
                 if (deviceInfo.dwType == RIM_TYPEHID && deviceInfo.hid.usUsage == 5) {
                     uint32 id;
-                    GenerateCRC(&id, deviceName);
+                    GenerateHashCRC(&id, deviceName);
 
                     InputDeviceRaw *device = (InputDeviceRaw *)InputDeviceFromID(id);
                     if (!device) {

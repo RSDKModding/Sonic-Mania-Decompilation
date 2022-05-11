@@ -27,10 +27,10 @@ bool32 AudioDevice::Init()
                 WAVEFORMATEX format;
                 format.cbSize          = 0;
                 format.wBitsPerSample  = sizeof(SAMPLE_FORMAT) * 8;
-                format.nChannels       = 2;
+                format.nChannels       = AUDIO_CHANNELS;
                 format.nBlockAlign     = (format.nChannels * format.wBitsPerSample) / 8;
                 format.wFormatTag      = WAVE_FORMAT_IEEE_FLOAT;
-                format.nSamplesPerSec  = 44100;
+                format.nSamplesPerSec  = AUDIO_FREQUENCY;
                 format.nAvgBytesPerSec = 352800;
 
                 if (audioContext->CreateSourceVoice(&sourceVoice, &format, 0, 2.0, &voiceCallback, NULL, NULL) >= 0) {
@@ -86,30 +86,18 @@ void AudioDevice::Release()
     if (audioContext)
         audioContext->Release();
 
+        // as far as I know, this isn't in the original which means it'd memleak right?
+#if !RETRO_USE_ORIGINAL_CODE
+    if (vorbisInfo) {
+        vorbis_deinit(vorbisInfo);
+        if (!vorbisInfo->alloc.alloc_buffer)
+            free(vorbisInfo);
+    }
+    vorbisInfo = NULL;
+#endif
+
     CoUninitialize();
     DeleteCriticalSection(&AudioDevice::criticalSection);
-}
-
-void AudioDevice::ClearStageSfx()
-{
-    LockAudioDevice();
-
-    for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
-        if (channels[c].state == CHANNEL_SFX || channels[c].state == (CHANNEL_SFX | CHANNEL_PAUSED)) {
-            channels[c].soundID = -1;
-            channels[c].state   = CHANNEL_NONE;
-        }
-    }
-
-    // Unload stage SFX
-    for (int32 s = 0; s < SFX_COUNT; ++s) {
-        if (sfxList[s].scope >= SCOPE_STAGE) {
-            MEM_ZERO(sfxList[s]);
-            sfxList[s].scope = SCOPE_NONE;
-        }
-    }
-
-    UnlockAudioDevice();
 }
 
 void AudioDevice::ProcessAudioMixing(void *stream, int32 length)
@@ -126,7 +114,7 @@ void AudioDevice::ProcessAudioMixing(void *stream, int32 length)
 
         switch (channel->state) {
             default:
-            case CHANNEL_NONE: break;
+            case CHANNEL_IDLE: break;
 
             case CHANNEL_SFX: {
                 SAMPLE_FORMAT *sfxBuffer = &channel->samplePtr[channel->bufferPos];
@@ -142,59 +130,29 @@ void AudioDevice::ProcessAudioMixing(void *stream, int32 length)
 
                 uint32 speedPercent       = 0;
                 SAMPLE_FORMAT *curStreamF = streamF;
-                if (c) {
-                    while (curStreamF < streamEndF && streamF < streamEndF) {
-                        SAMPLE_FORMAT sample = (sfxBuffer[1] - *sfxBuffer) * speedMixAmounts[speedPercent >> 6] + *sfxBuffer;
+                while (curStreamF < streamEndF && streamF < streamEndF) {
+                    SAMPLE_FORMAT sample = (sfxBuffer[1] - *sfxBuffer) * speedMixAmounts[speedPercent >> 6] + *sfxBuffer;
 
-                        speedPercent += channel->speed;
-                        sfxBuffer += speedPercent >> 16;
-                        channel->bufferPos += speedPercent >> 16;
-                        speedPercent &= 0xFFFF;
+                    speedPercent += channel->speed;
+                    sfxBuffer += speedPercent >> 16;
+                    channel->bufferPos += speedPercent >> 16;
+                    speedPercent &= 0xFFFF;
 
-                        curStreamF[0] += sample * panR;
-                        curStreamF[1] += sample * panL;
-                        curStreamF += 2;
+                    curStreamF[0] += sample * panR;
+                    curStreamF[1] += sample * panL;
+                    curStreamF += 2;
 
-                        if (channel->bufferPos >= channel->sampleLength) {
-                            if (channel->loop == 0xFFFFFFFF) {
-                                channel->state   = CHANNEL_NONE;
-                                channel->soundID = -1;
-                                break;
-                            }
-                            else {
-                                channel->bufferPos -= channel->sampleLength;
-                                channel->bufferPos += channel->loop;
-
-                                sfxBuffer = &channel->samplePtr[channel->bufferPos];
-                            }
+                    if (channel->bufferPos >= channel->sampleLength) {
+                        if (channel->loop == 0xFFFFFFFF) {
+                            channel->state   = CHANNEL_IDLE;
+                            channel->soundID = -1;
+                            break;
                         }
-                    }
-                }
-                else {
-                    while (curStreamF < streamEndF && streamF < streamEndF) {
-                        SAMPLE_FORMAT sample = (sfxBuffer[1] - *sfxBuffer) * speedMixAmounts[speedPercent >> 6] + *sfxBuffer;
+                        else {
+                            channel->bufferPos -= channel->sampleLength;
+                            channel->bufferPos += channel->loop;
 
-                        speedPercent += channel->speed;
-                        sfxBuffer += speedPercent >> 16;
-                        channel->bufferPos += speedPercent >> 16;
-                        speedPercent &= 0xFFFF;
-
-                        curStreamF[0] = sample * panR;
-                        curStreamF[1] = sample * panL;
-                        curStreamF += 2;
-
-                        if (channel->bufferPos >= channel->sampleLength) {
-                            if (channel->loop == 0xFFFFFFFF) {
-                                channel->state   = CHANNEL_NONE;
-                                channel->soundID = -1;
-                                break;
-                            }
-                            else {
-                                channel->bufferPos -= channel->sampleLength;
-                                channel->bufferPos += channel->loop;
-
-                                sfxBuffer = &channel->samplePtr[channel->bufferPos];
-                            }
+                            sfxBuffer = &channel->samplePtr[channel->bufferPos];
                         }
                     }
                 }
@@ -202,7 +160,7 @@ void AudioDevice::ProcessAudioMixing(void *stream, int32 length)
                 break;
             }
 
-            case CHANNEL_STREAMING: {
+            case CHANNEL_STREAM: {
                 SAMPLE_FORMAT *streamBuffer = &channel->samplePtr[channel->bufferPos];
 
                 float volL = channel->volume, volR = channel->volume;
@@ -216,61 +174,30 @@ void AudioDevice::ProcessAudioMixing(void *stream, int32 length)
 
                 uint32 speedPercent       = 0;
                 SAMPLE_FORMAT *curStreamF = streamF;
-                if (c) {
-                    while (curStreamF < streamEndF && streamF < streamEndF) {
-                        speedPercent += channel->speed;
-                        int32 next = speedPercent >> 16;
-                        speedPercent &= 0xFFFF;
+                while (curStreamF < streamEndF && streamF < streamEndF) {
+                    speedPercent += channel->speed;
+                    int32 next = speedPercent >> 16;
+                    speedPercent &= 0xFFFF;
 
-                        curStreamF[0] += *streamBuffer;
-                        curStreamF[1] += streamBuffer[next];
-                        curStreamF += 2;
+                    curStreamF[0] += panR * *streamBuffer;
+                    curStreamF[1] += panL * streamBuffer[next];
+                    curStreamF += 2;
 
-                        streamBuffer += next * 2;
-                        channel->bufferPos += next * 2;
+                    streamBuffer += next * 2;
+                    channel->bufferPos += next * 2;
 
-                        if (channel->bufferPos >= channel->sampleLength) {
-                            channel->bufferPos -= channel->sampleLength;
+                    if (channel->bufferPos >= channel->sampleLength) {
+                        channel->bufferPos -= channel->sampleLength;
 
-                            streamBuffer = &channel->samplePtr[channel->bufferPos];
+                        streamBuffer = &channel->samplePtr[channel->bufferPos];
 
-                            UpdateStreamBuffer(channel);
-                        }
-                    }
-                }
-                else {
-                    while (curStreamF < streamEndF && streamF < streamEndF) {
-                        speedPercent += channel->speed;
-                        int32 next = speedPercent >> 16;
-                        speedPercent &= 0xFFFF;
-
-                        curStreamF[0] = *streamBuffer;
-                        curStreamF[1] = streamBuffer[next];
-                        curStreamF += 2;
-
-                        streamBuffer += next * 2;
-                        channel->bufferPos += next * 2;
-
-                        if (channel->bufferPos >= channel->sampleLength) {
-                            if (channel->loop == 0xFFFFFFFF) {
-                                channel->state   = CHANNEL_NONE;
-                                channel->soundID = -1;
-                                break;
-                            }
-                            else {
-                                channel->bufferPos -= channel->sampleLength;
-
-                                streamBuffer = &channel->samplePtr[channel->bufferPos];
-
-                                UpdateStreamBuffer(channel);
-                            }
-                        }
+                        UpdateStreamBuffer(channel);
                     }
                 }
                 break;
             }
 
-            case CHANNEL_STREAM_LOAD: break;
+            case CHANNEL_LOADING_STREAM: break;
         }
     }
 
@@ -334,15 +261,15 @@ void AudioDevice::InitAudioChannels()
 {
     for (int32 i = 0; i < CHANNEL_COUNT; ++i) {
         channels[i].soundID = -1;
-        channels[i].state   = CHANNEL_NONE;
+        channels[i].state   = CHANNEL_IDLE;
     }
 
     for (int32 i = 0; i < 0x400; i += 2) {
-        speedMixAmounts[i]     = (SAMPLE_FORMAT)i * (1.0f / 1024.0f);
-        speedMixAmounts[i + 1] = (SAMPLE_FORMAT)(i + 1) * (1.0f / 1024.0f); // 0.00097656;
+        speedMixAmounts[i]     = (i + 0) * (1.0f / 1024.0f);
+        speedMixAmounts[i + 1] = (i + 1) * (1.0f / 1024.0f);
     }
 
-    GEN_HASH("Stream Channel 0", sfxList[SFX_COUNT - 1].hash);
+    GEN_HASH_MD5("Stream Channel 0", sfxList[SFX_COUNT - 1].hash);
     sfxList[SFX_COUNT - 1].scope              = SCOPE_GLOBAL;
     sfxList[SFX_COUNT - 1].maxConcurrentPlays = 1;
     sfxList[SFX_COUNT - 1].length             = MIX_BUFFER_SIZE;

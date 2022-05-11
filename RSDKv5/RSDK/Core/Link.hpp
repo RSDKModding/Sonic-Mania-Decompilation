@@ -299,7 +299,7 @@ extern void *APIFunctionTable[APITable_Count];
 #else
 struct APITableEntry {
     void *ptr;
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
 };
 
 extern APITableEntry APIFunctionTable[APITABLE_COUNT];

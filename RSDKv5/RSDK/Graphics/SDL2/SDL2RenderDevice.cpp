@@ -65,7 +65,7 @@ bool RenderDevice::Init()
     PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", RSDK::videoSettings.windowWidth, RSDK::videoSettings.windowHeight,
              RSDK::videoSettings.windowed);
 
-    if (!SetupRendering() || !InitAudioDevice())
+    if (!SetupRendering() || !AudioDevice::Init())
         return false;
 
     InitInputDevices();
@@ -439,7 +439,9 @@ RenderVertex vertexList[24] =
 #endif
     // clang-format on
 
-    for (int v = 0; v < (!RETRO_REV02 ? 24 : 60); ++v) {
+    // ignore the last 6 verts, they're scaled to the 1024x512 textures already!
+    int32 vertCount = (RETRO_REV02 ? 60 : 24) - 6;
+    for (int32 v = 0; v < vertCount; ++v) {
         RenderVertex *vertex = &vertBuffer[v];
         vertex->pos.x        = NORMALIZE(vertex->pos.x, -1.0, 1.0) * RSDK::videoSettings.pixWidth;
         vertex->pos.y        = (1.0 - NORMALIZE(vertex->pos.y, -1.0, 1.0)) * SCREEN_YSIZE;
@@ -530,7 +532,7 @@ bool RenderDevice::InitGraphicsAPI()
         }
     }
 
-    imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 1024, 512);
+    imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H);
     if (!imageTexture)
         return false;
 
@@ -780,7 +782,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
             uint32 id;
             char buffer[0x20];
             sprintf(buffer, "%s%d", "SDLDevice", event.cdevice.which);
-            GenerateCRC(&id, buffer);
+            GenerateHashCRC(&id, buffer);
 
             InitSDL2InputDevice(id, event.cdevice.which);
             break;
@@ -790,7 +792,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
             uint32 id;
             char buffer[0x20];
             sprintf(buffer, "%s%d", "SDLDevice", event.cdevice.which);
-            GenerateCRC(&id, buffer);
+            GenerateHashCRC(&id, buffer);
 
             RemoveInputDevice(InputDeviceFromID(id));
             break;

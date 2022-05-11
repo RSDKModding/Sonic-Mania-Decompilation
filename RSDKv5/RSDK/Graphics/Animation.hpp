@@ -36,7 +36,7 @@ struct SpriteFrame {
 };
 
 struct SpriteAnimationEntry {
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
     int32 frameListOffset;
     uint16 frameCount;
     int16 animationSpeed;
@@ -45,7 +45,7 @@ struct SpriteAnimationEntry {
 };
 
 struct SpriteAnimation {
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
     SpriteFrame *frames;
     SpriteAnimationEntry *animations;
     uint16 animCount;
@@ -77,11 +77,11 @@ inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
 
     SpriteAnimation *spr = &spriteAnimationList[aniFrames];
 
-    RETRO_HASH(hash);
-    GEN_HASH(name, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(name, hash);
 
     for (int32 a = 0; a < spr->animCount; ++a) {
-        if (HASH_MATCH(hash, spr->animations[a].hash)) {
+        if (HASH_MATCH_MD5(hash, spr->animations[a].hash)) {
             return a;
         }
     }
@@ -155,7 +155,7 @@ inline void EditSpriteAnimation(uint16 aniFrames, uint16 animID, const char *nam
         SpriteAnimation *spr = &spriteAnimationList[aniFrames];
         if (animID < spr->animCount) {
             SpriteAnimationEntry *anim = &spr->animations[animID];
-            GEN_HASH(name, anim->hash);
+            GEN_HASH_MD5(name, anim->hash);
             anim->frameListOffset = frameOffset;
             anim->frameCount      = frameCount;
             anim->animationSpeed  = animSpeed;

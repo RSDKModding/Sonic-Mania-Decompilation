@@ -76,7 +76,7 @@ ushort RSDK::SKU::InitUserDB(const char *name, ...)
 {
     int tableID = -1;
     uint uuid   = 0;
-    GenerateCRC(&uuid, (char *)name);
+    GenerateHashCRC(&uuid, (char *)name);
 
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
         if (!userDBStorage->userDB[i].loaded) {
@@ -93,7 +93,7 @@ ushort RSDK::SKU::InitUserDB(const char *name, ...)
 
     userDBStorage->userDB[tableID].loaded = true;
     userDBStorage->userDB[tableID].name   = name;
-    GenerateCRC(&userDBStorage->userDB[tableID].uuid, (char *)name);
+    GenerateHashCRC(&userDBStorage->userDB[tableID].uuid, (char *)name);
     InitUserDBValues(&userDBStorage->userDB[tableID], list);
     UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
     va_end(list);
@@ -103,7 +103,7 @@ ushort RSDK::SKU::LoadUserDB(const char *filename, void (*callback)(int))
 {
     int tableID = -1;
     uint uuid   = 0;
-    GenerateCRC(&uuid, (char *)filename);
+    GenerateHashCRC(&uuid, (char *)filename);
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
         if (uuid == userDBStorage->userDB[i].uuid && userDBStorage->userDB[i].loaded)
             return i;
@@ -203,7 +203,7 @@ bool32 RSDK::SKU::AddUserDBColumn(UserDBRow *userDB, int type, char *name, void 
 {
     UserDB *db = userDB->parent;
     uint uuid  = 0;
-    GenerateCRC(&uuid, name);
+    GenerateHashCRC(&uuid, name);
 
     for (int c = 0; c < db->columnCount; ++c) {
         if (db->columnUUIDs[c] == uuid) {
@@ -223,7 +223,7 @@ bool32 RSDK::SKU::AddUserDBColumn(UserDBRow *userDB, int type, char *name, void 
 int RSDK::SKU::GetDBColumnID(UserDB *userDB, const char *name)
 {
     uint uuid = 0;
-    GenerateCRC(&uuid, (char *)name);
+    GenerateHashCRC(&uuid, (char *)name);
 
     int id = -1;
     for (int i = 0; i < userDB->columnCount; ++i) {
@@ -238,7 +238,7 @@ bool32 RSDK::SKU::GetUserDBColumn(UserDBRow *row, int type, char *name, void *va
 {
     UserDB *db = row->parent;
     uint uuid  = 0;
-    GenerateCRC(&uuid, name);
+    GenerateHashCRC(&uuid, name);
 
     for (int c = 0; c < db->columnCount; ++c) {
         if (db->columnUUIDs[c] == uuid) {
@@ -417,7 +417,7 @@ void RSDK::SKU::InitUserDBValues(UserDB *userDB, va_list list)
         userDB->columnTypes[cnt] = type;
         memset(userDB->columnNames[cnt], 0, 0x10);
         sprintf(userDB->columnNames[cnt], "%s", va_arg(list, const char *));
-        GenerateCRC(&userDB->columnUUIDs[cnt], userDB->columnNames[cnt]);
+        GenerateHashCRC(&userDB->columnUUIDs[cnt], userDB->columnNames[cnt]);
         ++cnt;
     }
 
@@ -605,7 +605,7 @@ bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, byte *buffer)
         sprintf(userDB->columnNames[c], "%s", (char *)buffer);
         buffer += 0x10;
 
-        GenerateCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
+        GenerateHashCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
     }
 
     for (int r = 0; r < userDB->rowCount; ++r) {

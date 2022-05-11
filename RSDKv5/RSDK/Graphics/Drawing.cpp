@@ -120,20 +120,20 @@ void GenerateBlendLookupTable()
 
 void InitSystemSurfaces()
 {
-    GEN_HASH("TileBuffer", gfxSurface[0].hash);
+    GEN_HASH_MD5("TileBuffer", gfxSurface[0].hash);
     gfxSurface[0].scope    = SCOPE_GLOBAL;
     gfxSurface[0].width    = TILE_SIZE;
     gfxSurface[0].height   = 0x40000;
     gfxSurface[0].lineSize = 4; // 16px
-    gfxSurface[0].dataPtr  = tilesetPixels;
+    gfxSurface[0].pixels  = tilesetPixels;
 
 #if RETRO_REV02
-    GEN_HASH("EngineText", gfxSurface[1].hash);
+    GEN_HASH_MD5("EngineText", gfxSurface[1].hash);
     gfxSurface[1].scope    = SCOPE_GLOBAL;
     gfxSurface[1].width    = 8;
     gfxSurface[1].height   = 128 * 8;
     gfxSurface[1].lineSize = 3; // 8px
-    gfxSurface[1].dataPtr  = devTextStencil;
+    gfxSurface[1].pixels  = devTextStencil;
 #endif
 }
 
@@ -2550,7 +2550,7 @@ void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, 
         case FLIP_NONE:
             gfxPitch       = surface->width - width;
             lineBuffer     = &gfxLineBuffer[y];
-            gfxData        = &surface->dataPtr[sprX + surface->width * sprY];
+            gfxData        = &surface->pixels[sprX + surface->width * sprY];
             frameBufferPtr = &currentScreen->frameBuffer[x + currentScreen->pitch * y];
             switch (inkEffect) {
                 case INK_NONE:
@@ -2699,7 +2699,7 @@ void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, 
         case FLIP_X:
             gfxPitch       = width + surface->width;
             lineBuffer     = &gfxLineBuffer[y];
-            gfxData        = &surface->dataPtr[widthFlip - 1 + sprX + surface->width * sprY];
+            gfxData        = &surface->pixels[widthFlip - 1 + sprX + surface->width * sprY];
             frameBufferPtr = &currentScreen->frameBuffer[x + currentScreen->pitch * y];
             switch (inkEffect) {
                 case INK_NONE:
@@ -2848,7 +2848,7 @@ void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, 
         case FLIP_Y:
             gfxPitch       = width + surface->width;
             lineBuffer     = &gfxLineBuffer[y];
-            gfxData        = &surface->dataPtr[sprX + surface->width * (sprY + heightFlip - 1)];
+            gfxData        = &surface->pixels[sprX + surface->width * (sprY + heightFlip - 1)];
             frameBufferPtr = &currentScreen->frameBuffer[x + currentScreen->pitch * y];
             switch (inkEffect) {
                 case INK_NONE:
@@ -2997,7 +2997,7 @@ void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, 
         case FLIP_XY:
             gfxPitch       = surface->width - width;
             lineBuffer     = &gfxLineBuffer[y];
-            gfxData        = &surface->dataPtr[widthFlip - 1 + sprX + surface->width * (sprY + heightFlip - 1)];
+            gfxData        = &surface->pixels[widthFlip - 1 + sprX + surface->width * (sprY + heightFlip - 1)];
             frameBufferPtr = &currentScreen->frameBuffer[x + currentScreen->pitch * y];
             switch (inkEffect) {
                 case INK_NONE:
@@ -3283,7 +3283,7 @@ void DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int32 widt
         uint8 *lineBuffer      = &gfxLineBuffer[top];
         int32 xLen             = left - x;
         int32 yLen             = top - y;
-        uint8 *gfxData         = surface->dataPtr;
+        uint8 *gfxData         = surface->pixels;
         uint16 *frameBufferPtr = &currentScreen->frameBuffer[left + (top * currentScreen->pitch)];
         int32 fullSprY         = (sprY << 16) - 1;
         int32 fullSprX         = (sprX << 16) - 1;
@@ -3514,7 +3514,7 @@ void DrawDeformedSprite(uint16 sheetID, int32 inkEffect, int32 alpha)
 
     validDraw                 = true;
     GFXSurface *surface       = &gfxSurface[sheetID];
-    uint8 *gfxDataPtr         = surface->dataPtr;
+    uint8 *gfxDataPtr         = surface->pixels;
     int32 clipY1              = currentScreen->clipBound_Y1;
     ScanlineInfo *scanlinePtr = &scanlines[clipY1];
     uint16 *frameBufferPtr    = &currentScreen->frameBuffer[clipY1 * currentScreen->pitch];
@@ -3886,7 +3886,7 @@ void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uin
         uint8 *tilePixels = &tilesetPixels[tileIndex << 8];
         int32 cnt         = 0;
         for (int32 fy = 0; fy < height; fy += TILE_SIZE) {
-            uint8 *gfxData = &surface->dataPtr[((fy + srcY) << surface->lineSize) + srcX];
+            uint8 *gfxData = &surface->pixels[((fy + srcY) << surface->lineSize) + srcX];
             cnt += ((width - 1) / TILE_SIZE) + 1;
             for (int32 fx = 0; fx < width; fx += TILE_SIZE) {
                 uint8 *gfxDataPtr = &gfxData[fx];

@@ -364,14 +364,14 @@ void MatrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(
 
 uint16 LoadMesh(const char *filename, Scopes scope)
 {
-    char buffer[0x100];
-    sprintf(buffer, "Data/Meshes/%s", filename);
+    char fullFilePath[0x100];
+    sprintf(fullFilePath, "Data/Meshes/%s", filename);
 
-    uint32 hash[4];
-    GEN_HASH(buffer, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(fullFilePath, hash);
 
     for (int32 i = 0; i < MODEL_MAX; ++i) {
-        if (HASH_MATCH(hash, modelList[i].hash)) {
+        if (HASH_MATCH_MD5(hash, modelList[i].hash)) {
             return i;
         }
     }
@@ -388,7 +388,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
     Model *model = &modelList[id];
     FileInfo info;
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
         if (sig != 0x4C444D) {
@@ -397,7 +397,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         }
 
         model->scope = scope;
-        HASH_COPY(model->hash, hash);
+        HASH_COPY_MD5(model->hash, hash);
 
         model->flags         = ReadInt8(&info);
         model->faceVertCount = ReadInt8(&info);
@@ -452,11 +452,11 @@ uint16 LoadMesh(const char *filename, Scopes scope)
 }
 uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 {
-    uint32 hash[4];
-    GEN_HASH(name, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(name, hash);
 
     for (int32 i = 0; i < SCENE3D_MAX; ++i) {
-        if (HASH_MATCH(hash, scene3DList[i].hash)) {
+        if (HASH_MATCH_MD5(hash, scene3DList[i].hash)) {
             return i;
         }
     }
@@ -476,7 +476,7 @@ uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
         vertexLimit = SCENE3D_VERT_MAX;
 
     scene->scope = scope;
-    HASH_COPY(scene->hash, hash);
+    HASH_COPY_MD5(scene->hash, hash);
     scene->vertLimit   = vertexLimit;
     scene->faceCount   = 6;
     scene->projectionX = 8;

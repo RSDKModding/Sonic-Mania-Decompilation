@@ -15,9 +15,6 @@
     <Filter Include="Source Files\Dependencies\zlib">
       <UniqueIdentifier>{8bdc9495-2674-40a5-9d14-44702f102d70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Dependencies\theoraPlay">
-      <UniqueIdentifier>{9154ae5d-c054-49e0-acc5-0fc37b61472c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Dependencies\tinyxml2">
       <UniqueIdentifier>{a654cc12-6586-4ca9-a1f5-4283b5adb333}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,15 @@
     <Filter Include="Source Files\RSDK\Input\GLFW">
       <UniqueIdentifier>{ba402bc1-9763-4454-9d46-3aaa17bb1e49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Audio\SDL2">
+      <UniqueIdentifier>{9c30e4d9-8382-48af-8d33-432bd1c3398a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Audio\XAudio">
+      <UniqueIdentifier>{d4cac3fe-2063-44e8-8fe0-eabafd4611bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dependencies\stb_vorbis">
+      <UniqueIdentifier>{5bef1c25-dbec-45b2-85fc-1fb313159239}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\zlib\adler32.c">
@@ -148,9 +154,6 @@
     </ClCompile>
     <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp">
       <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\theoraplay\theoraplay.c">
-      <Filter>Source Files\Dependencies\theoraPlay</Filter>
     </ClCompile>
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
       <Filter>Source Files\Dependencies\tinyxml2</Filter>
@@ -338,6 +341,15 @@
     <ClCompile Include="RSDK\Input\GLFW\GLFWInputDevice.cpp">
       <Filter>Source Files\RSDK\Input\GLFW</Filter>
     </ClCompile>
+    <ClCompile Include="RSDK\Audio\XAudio\XAudioDevice.cpp">
+      <Filter>Source Files\RSDK\Audio\XAudio</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Audio\SDL2\SDL2AudioDevice.cpp">
+      <Filter>Source Files\RSDK\Audio\SDL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\all\stb_vorbis\stb_vorbis.c">
+      <Filter>Source Files\Dependencies\stb_vorbis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\zlib\crc32.h">
@@ -381,12 +393,6 @@
     </ClInclude>
     <ClInclude Include="unistd.h">
       <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\theoraplay\theoraplay.h">
-      <Filter>Source Files\Dependencies\theoraPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\theoraplay\theoraplay_cvtrgb.h">
-      <Filter>Source Files\Dependencies\theoraPlay</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\all\tinyxml2\tinyxml2.h">
       <Filter>Source Files\Dependencies\tinyxml2</Filter>
@@ -579,6 +585,12 @@
     </ClInclude>
     <ClInclude Include="RSDK\Input\GLFW\GLFWInputDevice.hpp">
       <Filter>Source Files\RSDK\Input\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Audio\XAudio\XAudioDevice.hpp">
+      <Filter>Source Files\RSDK\Audio\XAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Audio\SDL2\SDL2AudioDevice.hpp">
+      <Filter>Source Files\RSDK\Audio\SDL2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

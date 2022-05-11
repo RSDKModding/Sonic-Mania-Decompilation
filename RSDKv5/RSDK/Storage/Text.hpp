@@ -56,16 +56,16 @@ inline void StringUpperCase(char *dest, const char *src)
 }
 
 extern char textBuffer[0x400];
-void GenerateHash(uint32 *buffer, int32 len);
-void GenerateCRC(uint32 *id, char *fileName);
+void GenerateHashMD5(uint32 *buffer, int32 len);
+void GenerateHashCRC(uint32 *id, char *inputString);
 
-#define RETRO_HASH(name) uint32 name[4]
-#define HASH_SIZE        (4 * sizeof(uint32))
-#define HASH_MATCH(a, b) (memcmp(a, b, HASH_SIZE) == 0)
-#define GEN_HASH(text, hash)                                                                                                                         \
+#define RETRO_HASH_MD5(name) uint32 name[4]
+#define HASH_SIZE_MD5        (4 * sizeof(uint32))
+#define HASH_MATCH_MD5(a, b) (memcmp(a, b, HASH_SIZE_MD5) == 0)
+#define GEN_HASH_MD5(text, hash)                                                                                                                         \
     strcpy(textBuffer, text);                                                                                                                        \
-    GenerateHash(hash, (int32)strlen(textBuffer))
-#define HASH_COPY(dst, src) memcpy(dst, src, HASH_SIZE)
+    GenerateHashMD5(hash, (int32)strlen(textBuffer))
+#define HASH_COPY_MD5(dst, src) memcpy(dst, src, HASH_SIZE_MD5)
 
 inline void InitString(String *string, char *text, uint32 textLength)
 {

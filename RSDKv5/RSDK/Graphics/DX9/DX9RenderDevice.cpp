@@ -171,7 +171,7 @@ void RenderDevice::FlipScreen()
     }
 
     dx9Device->SetViewport(&displayInfo.viewport);
-    dx9Device->Clear(0, 0, 1, 0xFF000000, 0x3F800000, 0);
+    dx9Device->Clear(0, NULL, D3DCLEAR_TARGET, 0xFF000000, 1.0, 0);
     dx9Device->SetViewport(&dx9ViewPort);
 
     if (dx9Device->BeginScene() >= 0) {
@@ -578,7 +578,9 @@ RenderVertex vertexList[24] =
     float x = 0.5 / (float)viewSize.x;
     float y = 0.5 / (float)viewSize.y;
 
-    for (int v = 0; v < (!RETRO_REV02 ? 24 : 60); ++v) {
+    // ignore the last 6 verts, they're scaled to the 1024x512 textures already!
+    int32 vertCount = (RETRO_REV02 ? 60 : 24) - 6;
+    for (int32 v = 0; v < vertCount; ++v) {
         RenderVertex *vertex = &vertBuffer[v];
         vertex->pos.x        = vertex->pos.x - x;
         vertex->pos.y        = vertex->pos.y + y;
@@ -754,7 +756,9 @@ bool RenderDevice::InitGraphicsAPI()
             return false;
     }
 
-    if (dx9Device->CreateTexture(1024, 512, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &imageTexture, NULL) != 0)
+    if (dx9Device->CreateTexture(RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &imageTexture,
+                                 NULL)
+        != 0)
         return false;
 
     lastShaderID = -1;
@@ -1301,7 +1305,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
                 case VK_PAUSE:
                 case VK_F12:
                     if (engine.devMenu) {
-                        if (sceneInfo.state != ENGINESTATE_NULL)
+                        if (sceneInfo.state != ENGINESTATE_NONE)
                             sceneInfo.state ^= ENGINESTATE_STEPOVER;
                     }
                     break;
@@ -1520,6 +1524,148 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
             }
 
             pixels += pitch;
+        }
+
+        imageTexture->UnlockRect(0);
+    }
+}
+
+void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    RenderDevice::dx9Device->SetTexture(0, NULL);
+
+    D3DLOCKED_RECT rect;
+    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
+        DWORD *pixels = (DWORD *)rect.pBits;
+        int32 pitch   = (rect.Pitch >> 2) - width;
+
+        if (RSDK::videoSettings.shaderSupport) {
+            // Shaders are supported! lets watch this video in full color!
+            for (int32 y = 0; y < height; ++y) {
+                for (int32 x = 0; x < width; ++x) {
+                    *pixels++ = (pixelsY[x] << 16) | 0xFF000000;
+                }
+
+                pixels += pitch;
+                pixelsY += strideY;
+            }
+
+            pixels      = (DWORD *)rect.pBits;
+            pitch = (rect.Pitch >> 2) - (width >> 1);
+            for (int32 y = 0; y < (height >> 1); ++y) {
+                for (int32 x = 0; x < (width >> 1); ++x) {
+                    *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+                }
+
+                pixels += pitch;
+                pixelsU += strideU;
+                pixelsV += strideV;
+            }
+        }
+        else {
+            // No shader support means no YUV support! at least use the brightness to show it in grayscale!
+            for (int32 y = 0; y < height; ++y) {
+                for (int32 x = 0; x < width; ++x) {
+                    int32 brightness = pixelsY[x];
+                    *pixels++        = (brightness << 0) | (brightness << 8) | (brightness << 16) | 0xFF000000;
+                }
+
+                pixels += pitch;
+                pixelsY += strideY;
+            }
+        }
+
+        imageTexture->UnlockRect(0);
+    }
+}
+void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    RenderDevice::dx9Device->SetTexture(0, NULL);
+
+    D3DLOCKED_RECT rect;
+    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
+        DWORD *pixels = (DWORD *)rect.pBits;
+        int32 pitch   = (rect.Pitch >> 2) - width;
+
+        if (RSDK::videoSettings.shaderSupport) {
+            // Shaders are supported! lets watch this video in full color!
+            for (int32 y = 0; y < height; ++y) {
+                for (int32 x = 0; x < width; ++x) {
+                    *pixels++        = (pixelsY[x] << 16) | 0xFF000000;
+                }
+
+                pixels += pitch;
+                pixelsY += strideY;
+            }
+
+            pixels = (DWORD *)rect.pBits;
+            pitch  = (rect.Pitch >> 2) - (width >> 1);
+            for (int32 y = 0; y < height; ++y) {
+                for (int32 x = 0; x < (width >> 1); ++x) {
+                    *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+                }
+
+                pixels += pitch;
+                pixelsU += strideU;
+                pixelsV += strideV;
+            }
+        }
+        else {
+            // No shader support means no YUV support! at least use the brightness to show it in grayscale!
+            for (int32 y = 0; y < height; ++y) {
+                for (int32 x = 0; x < width; ++x) {
+                    int32 brightness = pixelsY[x];
+                    *pixels++        = (brightness << 0) | (brightness << 8) | (brightness << 16) | 0xFF000000;
+                }
+
+                pixels += pitch;
+                pixelsY += strideY;
+            }
+        }
+
+        imageTexture->UnlockRect(0);
+    }
+}
+void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    RenderDevice::dx9Device->SetTexture(0, NULL);
+
+    D3DLOCKED_RECT rect;
+    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
+        DWORD *pixels = (DWORD *)rect.pBits;
+        int32 pitch   = (rect.Pitch >> 2) - width;
+
+        if (RSDK::videoSettings.shaderSupport) {
+            // Shaders are supported! lets watch this video in full color!
+            for (int32 y = 0; y < height; ++y) {
+                int32 pos1  = pixelsY - pixelsV;
+                int32 pos2  = pixelsU - pixelsV;
+                uint8 *pixV = pixelsV;
+                for (int32 x = 0; x < width; ++x) {
+                    *pixels++ = pixV[0] | (pixV[pos2] << 8) | (pixV[pos1] << 16) | 0xFF000000;
+                    pixV++;
+                }
+
+                pixels += pitch;
+                pixelsY += strideY;
+                pixelsU += strideU;
+                pixelsV += strideV;
+            }
+        }
+        else {
+            // No shader support means no YUV support! at least use the brightness to show it in grayscale!
+            for (int32 y = 0; y < height; ++y) {
+                for (int32 x = 0; x < width; ++x) {
+                    int32 brightness = pixelsY[x];
+                    *pixels++        = (brightness << 0) | (brightness << 8) | (brightness << 16) | 0xFF000000;
+                }
+
+                pixels += pitch;
+                pixelsY += strideY;
+            }
         }
 
         imageTexture->UnlockRect(0);

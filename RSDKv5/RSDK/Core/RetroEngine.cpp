@@ -259,7 +259,7 @@ void ProcessEngine()
 
         case ENGINESTATE_LOAD:
             if (!sceneInfo.listData) {
-                sceneInfo.state = ENGINESTATE_NULL;
+                sceneInfo.state = ENGINESTATE_NONE;
             }
             else {
                 LoadScene();
@@ -404,29 +404,26 @@ void ProcessEngine()
 
         case ENGINESTATE_VIDEOPLAYBACK:
             ProcessInput();
-
-            if (ProcessVideo() == 1)
-                sceneInfo.state = engine.prevEngineMode;
+            ProcessVideo();
             break;
 
-        case ENGINESTATE_SHOWPNG:
+        case ENGINESTATE_SHOWIMAGE:
             ProcessInput();
 
             if (engine.imageDelta <= 0.0 || RSDK::videoSettings.dimMax >= 1.0) {
                 if (engine.displayTime <= 0.0) {
                     RSDK::videoSettings.dimMax += engine.imageDelta;
                     if (RSDK::videoSettings.dimMax <= 0.0) {
-                        RSDK::videoSettings.shaderID    = RenderDevice::lastShaderID;
+                        RSDK::videoSettings.shaderID    = engine.storedShaderID;
                         RSDK::videoSettings.screenCount = 1;
-                        sceneInfo.state                = engine.prevEngineMode;
+                        sceneInfo.state                 = engine.storedState;
                         RSDK::videoSettings.dimMax      = 1.0;
                     }
                 }
                 else {
-                    engine.displayTime -= 0.01666666666666667;
-                    if (engine.skipCallback) {
-                        if (engine.skipCallback())
-                            engine.displayTime = 0.0;
+                    engine.displayTime -= (1.0 / 60.0); // deltaTime frame-step;
+                    if (engine.skipCallback && engine.skipCallback()) {
+                        engine.displayTime = 0.0;
                     }
                 }
             }
@@ -444,7 +441,7 @@ void ProcessEngine()
             ProcessInput();
 
             if (controller[0].keyStart.down)
-                sceneInfo.state = engine.prevEngineMode;
+                sceneInfo.state = engine.storedState;
 
             currentScreen = &screens[0];
             int32 yOff      = RSDK::DevOutput_GetStringYSize(outputString);
@@ -597,11 +594,11 @@ void LoadXMLObjects()
                             if (nameAttr)
                                 objName = getXMLAttributeValueString(nameAttr);
 
-                            RETRO_HASH(hash);
-                            GEN_HASH(objName, hash);
+                            RETRO_HASH_MD5(hash);
+                            GEN_HASH_MD5(objName, hash);
                             globalObjectIDs[globalObjectCount] = 0;
                             for (int32 objID = 0; objID < objectCount; ++objID) {
-                                if (HASH_MATCH(hash, objectList[objID].hash)) {
+                                if (HASH_MATCH_MD5(hash, objectList[objID].hash)) {
                                     globalObjectIDs[globalObjectCount] = objID;
                                     globalObjectCount++;
                                 }
@@ -711,7 +708,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                                 lstName = getXMLAttributeValueString(nameAttr);
 
                             sprintf(list->name, "%s", lstName);
-                            GEN_HASH(list->name, list->hash);
+                            GEN_HASH_MD5(list->name, list->hash);
 
                             list->sceneOffsetStart = gcStageCount;
                             list->sceneOffsetEnd   = gcStageCount;
@@ -746,7 +743,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                                     SceneListEntry *scene = &sceneInfo.listData[gcStageCount];
 
                                     sprintf(scene->name, "%s", stgName);
-                                    GEN_HASH(scene->name, scene->hash);
+                                    GEN_HASH_MD5(scene->name, scene->hash);
                                     sprintf(scene->folder, "%s", stgFolder);
                                     sprintf(scene->id, "%s", stgID);
 
@@ -815,17 +812,17 @@ void LoadGameConfig()
         int32 startScene           = ReadInt16(&info);
 
         byte objCnt       = ReadInt8(&info);
-        globalObjectCount = TYPE_DEFAULTCOUNT;
+        globalObjectCount = TYPE_DEFAULT_COUNT;
         for (int32 i = 0; i < objCnt; ++i) {
             ReadString(&info, textBuffer);
 
-            RETRO_HASH(hash);
-            GEN_HASH(textBuffer, hash);
+            RETRO_HASH_MD5(hash);
+            GEN_HASH_MD5(textBuffer, hash);
 
             if (objectCount > 0) {
                 globalObjectIDs[globalObjectCount] = 0;
                 for (int32 objID = 0; objID < objectCount; ++objID) {
-                    if (HASH_MATCH(hash, objectList[objID].hash)) {
+                    if (HASH_MATCH_MD5(hash, objectList[objID].hash)) {
                         globalObjectIDs[globalObjectCount] = objID;
                         globalObjectCount++;
                     }
@@ -875,7 +872,7 @@ void LoadGameConfig()
 #if RETRO_REV02
             scene->filter = sceneInfo.filter;
 #endif
-            GEN_HASH(scene->name, scene->hash);
+            GEN_HASH_MD5(scene->name, scene->hash);
 
             // Override existing values
             sceneInfo.activeCategory = 0;
@@ -905,14 +902,14 @@ void LoadGameConfig()
         for (int32 i = 0; i < sceneInfo.categoryCount; ++i) {
             SceneListInfo *category = &sceneInfo.listCategory[i];
             ReadString(&info, category->name);
-            GEN_HASH(category->name, category->hash);
+            GEN_HASH_MD5(category->name, category->hash);
 
             category->sceneOffsetStart = sceneID;
             category->sceneCount       = ReadInt8(&info);
             for (int32 s = 0; s < category->sceneCount; ++s) {
                 SceneListEntry *scene = &sceneInfo.listData[sceneID + s];
                 ReadString(&info, scene->name);
-                GEN_HASH(scene->name, scene->hash);
+                GEN_HASH_MD5(scene->name, scene->hash);
 
                 ReadString(&info, scene->folder);
                 ReadString(&info, scene->id);
@@ -970,7 +967,7 @@ void InitGameLink()
     globalObjectIDs[1] = TYPE_DEVOUTPUT;
 #endif
 
-    globalObjectCount = TYPE_DEFAULTCOUNT;
+    globalObjectCount = TYPE_DEFAULT_COUNT;
 
 #if RETRO_REV02
     RSDK::GameInfo info;
@@ -1111,7 +1108,7 @@ void ProcessDebugCommands()
     // This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
     int32 id            = ControllerIDForInputID(1);
     uint8 gamepadType = GetControllerType(id) >> 8;
-    if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN)
+    if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN || id == CONT_ANY)
         return;
 #endif
 

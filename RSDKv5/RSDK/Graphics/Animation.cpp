@@ -7,11 +7,11 @@ uint16 RSDK::LoadSpriteAnimation(const char *filePath, int32 scope)
     char fullFilePath[0x100];
     sprintf(fullFilePath, "Data/Sprites/%s", filePath);
 
-    RETRO_HASH(hash);
-    GEN_HASH(filePath, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(filePath, hash);
 
     for (int32 i = 0; i < SPRFILE_COUNT; ++i) {
-        if (HASH_MATCH(spriteAnimationList[i].hash, hash))
+        if (HASH_MATCH_MD5(spriteAnimationList[i].hash, hash))
             return i;
     }
 
@@ -63,7 +63,7 @@ uint16 RSDK::LoadSpriteAnimation(const char *filePath, int32 scope)
         for (int32 a = 0; a < spr->animCount; ++a) {
             SpriteAnimationEntry *animation = &spr->animations[a];
             ReadString(&info, textBuffer);
-            GEN_HASH(textBuffer, animation->hash);
+            GEN_HASH_MD5(textBuffer, animation->hash);
 
             animation->frameCount      = ReadInt16(&info);
             animation->frameListOffset = frameID;
@@ -107,11 +107,11 @@ uint16 RSDK::CreateSpriteAnimation(const char *filename, uint32 frameCount, uint
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);
 
-    RETRO_HASH(hash);
-    GEN_HASH(filename, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(filename, hash);
 
     for (int32 i = 0; i < SPRFILE_COUNT; ++i) {
-        if (HASH_MATCH(spriteAnimationList[i].hash, hash)) {
+        if (HASH_MATCH_MD5(spriteAnimationList[i].hash, hash)) {
             return i;
         }
     }

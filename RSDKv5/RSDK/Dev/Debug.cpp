@@ -47,14 +47,14 @@ void PrintLog(int32 severity, const char *message, ...)
 
             case PRINT_ERROR:
                 if (sceneInfo.state & 3) {
-                    engine.prevEngineMode = sceneInfo.state;
+                    engine.storedState = sceneInfo.state;
                     sceneInfo.state       = ENGINESTATE_ERRORMSG;
                 }
                 break;
 
             case PRINT_FATAL:
                 if (sceneInfo.state & 3) {
-                    engine.prevEngineMode = sceneInfo.state;
+                    engine.storedState = sceneInfo.state;
                     sceneInfo.state       = ENGINESTATE_ERRORMSG_FATAL;
                 }
                 break;

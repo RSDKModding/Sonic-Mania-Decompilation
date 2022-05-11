@@ -1,15 +1,17 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#define TRACK_COUNT   (0x10)
 #define SFX_COUNT     (0x100)
 #define CHANNEL_COUNT (0x10)
 
 #define MIX_BUFFER_SIZE (0x800)
 #define SAMPLE_FORMAT   float
 
+#define AUDIO_FREQUENCY (44100)
+#define AUDIO_CHANNELS  (2)
+
 struct SFXInfo {
-    uint32 hash[4];
+    RETRO_HASH_MD5(hash);
     float *buffer;
     size_t length;
     int32 playCount;
@@ -31,7 +33,7 @@ struct ChannelInfo {
     uint8 state;
 };
 
-enum ChannelStates { CHANNEL_NONE, CHANNEL_SFX, CHANNEL_STREAMING, CHANNEL_STREAM_LOAD, CHANNEL_PAUSED = 0x40 };
+enum ChannelStates { CHANNEL_IDLE, CHANNEL_SFX, CHANNEL_STREAM, CHANNEL_LOADING_STREAM, CHANNEL_PAUSED = 0x40 };
 
 extern SFXInfo sfxList[SFX_COUNT];
 extern ChannelInfo channels[CHANNEL_COUNT];
@@ -39,8 +41,6 @@ extern ChannelInfo channels[CHANNEL_COUNT];
 struct AudioDeviceBase {
     static bool32 Init();
     static void Release();
-
-    static void ClearStageSfx();
 
     static void ProcessAudioMixing(void *stream, int32 length);
 
@@ -68,11 +68,11 @@ void LoadSfx(char *filePath, uint8 plays, uint8 scope);
 
 inline uint16 GetSfx(const char *sfxName)
 {
-    uint32 hash[4];
-    GEN_HASH(sfxName, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(sfxName, hash);
 
     for (int32 s = 0; s < SFX_COUNT; ++s) {
-        if (HASH_MATCH(sfxList[s].hash, hash))
+        if (HASH_MATCH_MD5(sfxList[s].hash, hash))
             return s;
     }
 
@@ -85,7 +85,7 @@ inline void StopSfx(int32 sfx)
         if (channels[i].soundID == sfx) {
             MEM_ZERO(channels[i]);
             channels[i].soundID = -1;
-            channels[i].state   = CHANNEL_NONE;
+            channels[i].state   = CHANNEL_IDLE;
         }
     }
 }
@@ -95,15 +95,15 @@ void SetChannelAttributes(uint8 channel, float volume, float panning, float spee
 inline void StopChannel(uint32 channel)
 {
     if (channel < CHANNEL_COUNT) {
-        if (channels[channel].state != CHANNEL_STREAM_LOAD)
-            channels[channel].state = CHANNEL_NONE;
+        if (channels[channel].state != CHANNEL_LOADING_STREAM)
+            channels[channel].state = CHANNEL_IDLE;
     }
 }
 
 inline void PauseChannel(uint32 channel)
 {
     if (channel < CHANNEL_COUNT) {
-        if (channels[channel].state != CHANNEL_STREAM_LOAD)
+        if (channels[channel].state != CHANNEL_LOADING_STREAM)
             channels[channel].state |= CHANNEL_PAUSED;
     }
 }
@@ -111,7 +111,7 @@ inline void PauseChannel(uint32 channel)
 inline void ResumeChannel(uint32 channel)
 {
     if (channel < CHANNEL_COUNT) {
-        if (channels[channel].state != CHANNEL_STREAM_LOAD)
+        if (channels[channel].state != CHANNEL_LOADING_STREAM)
             channels[channel].state &= ~CHANNEL_PAUSED;
     }
 }
@@ -140,15 +140,18 @@ inline bool32 ChannelActive(uint32 channel)
     if (channel >= CHANNEL_COUNT)
         return false;
     else
-        return (channels[channel].state & 0x3F) != CHANNEL_NONE;
+        return (channels[channel].state & 0x3F) != CHANNEL_IDLE;
 }
 
 uint32 GetChannelPos(uint32 channel);
+double GetVideoStreamPos();
+
+void ClearStageSfx();
 
 #if RETRO_AUDIODEVICE_XAUDIO
 #include "XAudio/XAudioDevice.hpp"
 #elif RETRO_AUDIODEVICE_SDL2
-#include "SDL2/SDL2RenderDevice.hpp"
+#include "SDL2/SDL2AudioDevice.hpp"
 #endif
 
 #endif

@@ -50,7 +50,7 @@ struct TexCoord {
 };
 
 struct Model {
-    uint32 hash[4];
+    RETRO_HASH_MD5(hash);
     ModelVertex *vertices;
     TexCoord *texCoords;
     Color *colors;
@@ -81,7 +81,7 @@ struct FaceBufferEntry {
 };
 
 struct Scene3D {
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
     Scene3DVertex *vertices;
     Scene3DVertex *normals;
     FaceBufferEntry *faceBuffer;

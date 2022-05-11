@@ -129,7 +129,7 @@ unsigned *md5(const char *msg, int32 mlen)
 
 char textBuffer[0x400];
 // Buffer is expected to be at least 16 bytes long
-void GenerateHash(uint32 *buffer, int32 len)
+void GenerateHashMD5(uint32 *buffer, int32 len)
 {
     uint8 *buf  = (uint8 *)buffer;
     unsigned *d = md5(textBuffer, len);
@@ -166,19 +166,19 @@ uint32 crc32_t[256] = {
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-void GenerateCRC(uint32 *id, char *str)
+void GenerateHashCRC(uint32 *id, char *inputString)
 {
     *id = -1;
-    if (!str)
+    if (!inputString)
         return;
 
     int32 len = 0;
     do ++len;
-    while (str[len]);
+    while (inputString[len]);
 
     for (uint32 i = 0; i < len; i++) {
-        *id = crc32_t[(uint8)(*id ^ *str)] ^ (*id >> 8);
-        str++;
+        *id = crc32_t[(uint8)(*id ^ *inputString)] ^ (*id >> 8);
+        inputString++;
     }
     *id = ~*id;
 }

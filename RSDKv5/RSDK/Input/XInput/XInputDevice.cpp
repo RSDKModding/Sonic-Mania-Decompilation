@@ -184,7 +184,7 @@ void InitXInputAPI()
         idString[12] = '0' + i;
 
         uint32 id;
-        GenerateCRC(&id, idString);
+        GenerateHashCRC(&id, idString);
 
         InputDeviceXInput *device = NULL;
         for (int32 d = 0; d < InputDeviceCount; ++d) {

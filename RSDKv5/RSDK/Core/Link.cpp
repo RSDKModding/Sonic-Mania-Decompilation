@@ -25,14 +25,14 @@ void NullFunc() {}
 void SetAPIFunction(const char *name, void *ptr)
 {
     if (RSDK::APIFunctionTableCount < APITABLE_COUNT) {
-        RETRO_HASH(hash);
-        GEN_HASH(name, hash);
+        RETRO_HASH_MD5(hash);
+        GEN_HASH_MD5(name, hash);
         for (int f = 0; f < RSDK::APIFunctionTableCount; ++f) {
-            if (HASH_MATCH(hash, RSDK::APIFunctionTable[f].hash))
+            if (HASH_MATCH_MD5(hash, RSDK::APIFunctionTable[f].hash))
                 return; // already exists, ignore this call
         }
 
-        HASH_COPY(RSDK::APIFunctionTable[RSDK::APIFunctionTableCount].hash, hash);
+        HASH_COPY_MD5(RSDK::APIFunctionTable[RSDK::APIFunctionTableCount].hash, hash);
         RSDK::APIFunctionTable[RSDK::APIFunctionTableCount].ptr = ptr;
         RSDK::APIFunctionTableCount++;
     }
@@ -44,9 +44,9 @@ void *GetAPIFunction(const char *name)
         return NULL;
 
     uint hash[4];
-    GEN_HASH(name, hash);
+    GEN_HASH_MD5(name, hash);
     for (int f = 0; f < RSDK::APIFunctionTableCount; ++f) {
-        if (HASH_MATCH(hash, RSDK::APIFunctionTable[f].hash))
+        if (HASH_MATCH_MD5(hash, RSDK::APIFunctionTable[f].hash))
             return RSDK::APIFunctionTable[f].ptr;
     }
 

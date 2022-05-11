@@ -403,7 +403,7 @@ typedef struct {
     uint32 (*GetChannelPos)(uint32 channel);
 
     // Videos & "HD Images"
-    void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
+    void (*LoadVideo)(const char *filename, double startDelay, bool32 (*skipCallback)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 
     // Input

@@ -56,7 +56,7 @@ struct FileInfo {
 };
 
 struct RSDKFileInfo {
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
     int32 size;
     int32 offset;
     uint8 encrypted;

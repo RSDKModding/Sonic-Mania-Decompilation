@@ -18,7 +18,7 @@ enum LayerTypes {
 };
 
 struct SceneListInfo {
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
     char name[0x20];
     uint16 sceneOffsetStart;
     uint16 sceneOffsetEnd;
@@ -26,7 +26,7 @@ struct SceneListInfo {
 };
 
 struct SceneListEntry {
-    RETRO_HASH(hash);
+    RETRO_HASH_MD5(hash);
     char name[0x20];
     char folder[0x10];
     char id[0x08];
@@ -166,11 +166,11 @@ inline bool32 CheckSceneFolder(const char *folderName)
 
 inline uint16 GetTileLayerID(const char *name)
 {
-    RETRO_HASH(hash);
-    GEN_HASH(name, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(name, hash);
 
     for (int32 i = 0; i < LAYER_COUNT; ++i) {
-        if (HASH_MATCH(tileLayers[i].name, hash))
+        if (HASH_MATCH_MD5(tileLayers[i].name, hash))
             return i;
     }
     return -1;

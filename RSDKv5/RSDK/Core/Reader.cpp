@@ -87,12 +87,12 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
 {
     StringLowerCase(textBuffer, filename);
     uint hash[0x4];
-    GEN_HASH(textBuffer, hash);
+    GEN_HASH_MD5(textBuffer, hash);
 
     for (int f = 0; f < dataFileCount; ++f) {
         RSDKFileInfo *file = &dataFiles[f];
 
-        if (!HASH_MATCH(hash, file->hash))
+        if (!HASH_MATCH_MD5(hash, file->hash))
             continue;
 
         info->usingFileBuffer = file->useFileBuffer;
@@ -201,7 +201,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
 
     // StringA
     StringUpperCase(textBuffer, key1);
-    GEN_HASH(textBuffer, (uint *)hash);
+    GEN_HASH_MD5(textBuffer, (uint *)hash);
 
     for (int y = 0; y < 0x10; y += 4) {
         info->encryptionKeyA[y + 3] = hash[y + 0];
@@ -212,7 +212,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
 
     // StringB
     sprintf(textBuffer, "%d", key2); // Vary lazy ik
-    GEN_HASH(textBuffer, (uint *)hash);
+    GEN_HASH_MD5(textBuffer, (uint *)hash);
 
     for (int y = 0; y < 0x10; y += 4) {
         info->encryptionKeyB[y + 3] = hash[y + 0];

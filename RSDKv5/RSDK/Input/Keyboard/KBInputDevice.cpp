@@ -802,7 +802,7 @@ void InitKeyboardInputAPI()
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         sprintf(buffer, "KBDevice%d", i);
         uint32 id = 0;
-        GenerateCRC(&id, buffer);
+        GenerateHashCRC(&id, buffer);
 
         InputDeviceKeyboard *device = InitKeyboardDevice(id);
         if (device) {

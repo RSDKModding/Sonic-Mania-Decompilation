@@ -757,14 +757,14 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
 
 uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
 {
-    char buffer[0x100];
-    sprintf(buffer, "Data/Sprites/%s", filename);
+    char fullFilePath[0x100];
+    sprintf(fullFilePath, "Data/Sprites/%s", filename);
 
-    uint32 hash[4];
-    GEN_HASH(filename, hash);
+    RETRO_HASH_MD5(hash);
+    GEN_HASH_MD5(filename, hash);
 
     for (int32 i = 0; i < SURFACE_MAX; ++i) {
-        if (HASH_MATCH(gfxSurface[i].hash, hash)) {
+        if (HASH_MATCH_MD5(gfxSurface[i].hash, hash)) {
             return i;
         }
     }
@@ -781,7 +781,7 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
     GFXSurface *surface = &gfxSurface[id];
     ImageGIF image;
 
-    if (image.Load(buffer, true)) {
+    if (image.Load(fullFilePath, true)) {
         surface->scope    = scope;
         surface->width    = image.width;
         surface->height   = image.height;
@@ -798,9 +798,9 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
             surface->lineSize = ls;
         }
 
-        surface->dataPtr = NULL;
-        AllocateStorage(surface->width * surface->height, (void **)&surface->dataPtr, DATASET_STG, false);
-        image.pixels = surface->dataPtr;
+        surface->pixels = NULL;
+        AllocateStorage(surface->width * surface->height, (void **)&surface->pixels, DATASET_STG, false);
+        image.pixels = surface->pixels;
         image.Load(NULL, false);
 
         image.palette = NULL;
@@ -820,8 +820,8 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
 
 bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void))
 {
-    char buffer[0x100];
-    sprintf(buffer, "Data/Images/%s", filename);
+    char fullFilePath[0x100];
+    sprintf(fullFilePath, "Data/Images/%s", filename);
 
 #if RETRO_REV02
     ImagePNG image;
@@ -831,18 +831,24 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
     InitFileInfo(&image.info);
 
 #if RETRO_REV02
-    if (image.Load(buffer, false)) {
-        if (image.width == 1024 && image.height == 512)
+    if (image.Load(fullFilePath, false)) {
+        if (image.width == RETRO_VIDEO_TEXTURE_W && image.height == RETRO_VIDEO_TEXTURE_H) {
             RenderDevice::SetupImageTexture(image.width, image.height, image.pixels);
+        }
+#if !RETRO_USING_ORIGINAL_CODE
+        else {
+            PrintLog(PRINT_NORMAL, "ERROR: Images must be 1024x512!");
+        }
+#endif
 
         engine.displayTime              = displayLength;
-        RenderDevice::lastShaderID      = RSDK::videoSettings.shaderID;
-        engine.prevEngineMode           = sceneInfo.state;
+        engine.storedShaderID           = RSDK::videoSettings.shaderID;
+        engine.storedState              = sceneInfo.state;
         RSDK::videoSettings.dimMax      = 0.0;
         RSDK::videoSettings.shaderID    = SHADER_RGB_IMAGE;
-        RSDK::videoSettings.screenCount = 0;
+        RSDK::videoSettings.screenCount = 0; // "Image Display Mode"
         engine.skipCallback             = skipCallback;
-        sceneInfo.state                 = ENGINESTATE_SHOWPNG;
+        sceneInfo.state                 = ENGINESTATE_SHOWIMAGE;
         engine.imageDelta               = speed / 60.0;
 
         image.palette = NULL;
@@ -851,22 +857,28 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
         return true;
     }
 #elif !RETRO_REV02
-    if (image.Load(buffer, true)) {
-        if (image.width == 1024 && image.height == 512)
-            SetupImageTexture(image.width, image.height, image.dataPtr);
+    if (image.Load(fullFilePath, true)) {
+        if (image.width == RETRO_VIDEO_TEXTURE_W && image.height == RETRO_VIDEO_TEXTURE_H) {
+            RenderDevice::SetupImageTexture(image.width, image.height, image.pixels);
+        }
+#if !RETRO_USING_ORIGINAL_CODE
+        else {
+            PrintLog(PRINT_NORMAL, "ERROR: Images must be 1024x512!");
+        }
+#endif
 
         engine.displayTime    = displayLength;
-        engine.prevShaderID   = engine.shaderID;
-        engine.prevEngineMode = sceneInfo.state;
+        engine.storedShaderID = engine.shaderID;
+        engine.storedState    = sceneInfo.state;
         engine.dimMax         = 0.0;
         engine.shaderID       = SHADER_RGB_IMAGE;
-        engine.screenCount    = 0;
+        engine.screenCount    = 0; // "Image Display Mode"
         engine.skipCallback   = skipCallback;
-        sceneInfo.state       = ENGINESTATE_SHOWPNG;
+        sceneInfo.state       = ENGINESTATE_SHOWIMAGE;
         engine.imageDelta     = speed / 60.0;
 
         image.palette = NULL;
-        image.dataPtr = NULL;
+        image.pixels  = NULL;
         CloseFile(&image.info);
         return true;
     }

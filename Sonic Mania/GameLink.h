@@ -686,10 +686,11 @@ typedef enum {
 
 typedef enum {
     GROUP_ALL     = 0,
-    GROUP_CUSTOM1 = TYPE_COUNT,
+
+    GROUP_CUSTOM0 = TYPE_COUNT,
+    GROUP_CUSTOM1,
     GROUP_CUSTOM2,
     GROUP_CUSTOM3,
-    GROUP_CUSTOM4,
 } TypeGroups;
 
 typedef enum {
@@ -726,22 +727,19 @@ typedef enum {
 } GameLanguages;
 
 typedef enum {
-    ENGINESTATE_LOAD             = 0,
-    ENGINESTATE_REGULAR          = 1,
-    ENGINESTATE_PAUSED           = 2,
-    ENGINESTATE_FROZEN           = 3,
-    ENGINESTATE_LOAD_STEPOVER    = 4,
-    ENGINESTATE_REGULAR_STEPOVER = 5,
-    ENGINESTATE_PAUSED_STEPOVER  = 6,
-    ENGINESTATE_FROZEN_STEPOVER  = 7,
-    ENGINESTATE_DEVMENU          = 8,
-    ENGINESTATE_VIDEOPLAYBACK    = 9,
-    ENGINESTATE_SHOWPNG          = 0x0A,
+    ENGINESTATE_LOAD,
+    ENGINESTATE_REGULAR,
+    ENGINESTATE_PAUSED,
+    ENGINESTATE_FROZEN,
+    ENGINESTATE_STEPOVER = 4,
+    ENGINESTATE_DEVMENU  = 8,
+    ENGINESTATE_VIDEOPLAYBACK,
+    ENGINESTATE_SHOWIMAGE,
 #if RETRO_USE_PLUS
-    ENGINESTATE_ERRORMSG       = 0x0B,
-    ENGINESTATE_ERRORMSG_FATAL = 0x0C,
+    ENGINESTATE_ERRORMSG,
+    ENGINESTATE_ERRORMSG_FATAL,
 #endif
-    ENGINESTATE_NULL = 0x0D,
+    ENGINESTATE_NONE,
 } EngineStates;
 
 // see: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

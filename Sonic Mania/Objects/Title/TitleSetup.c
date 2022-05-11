@@ -124,7 +124,7 @@ void TitleSetup_CheckCheatCode(void)
 }
 #endif
 
-bool32 TitleSetup_IntroCallback(void)
+bool32 TitleSetup_VideoSkipCB(void)
 {
     if (ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyStart.press) {
         RSDK.StopChannel(Music->channelID);
@@ -375,12 +375,12 @@ void TitleSetup_State_FadeToVideo(void)
 
         if (TitleSetup->useAltIntroMusic) {
             RSDK.PlayStream("IntroTee.ogg", Music->channelID, 0, 0, false);
-            RSDK.LoadVideo("Mania.ogv", 1.8, TitleSetup_IntroCallback);
+            RSDK.LoadVideo("Mania.ogv", 1.8, TitleSetup_VideoSkipCB);
             TitleSetup->useAltIntroMusic = false;
         }
         else {
             RSDK.PlayStream("IntroHP.ogg", Music->channelID, 0, 0, false);
-            RSDK.LoadVideo("Mania.ogv", 0, TitleSetup_IntroCallback);
+            RSDK.LoadVideo("Mania.ogv", 0, TitleSetup_VideoSkipCB);
             TitleSetup->useAltIntroMusic = true;
         }
     }
