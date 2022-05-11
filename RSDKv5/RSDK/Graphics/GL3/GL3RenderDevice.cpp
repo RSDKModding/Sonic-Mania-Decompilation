@@ -16,6 +16,8 @@ double RenderDevice::targetFreq;
 
 int RenderDevice::monitorIndex;
 
+uint32 *RenderDevice::videoBuffer;
+
 bool RenderDevice::Init()
 {
     glfwInit();
@@ -822,7 +824,7 @@ void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *pi
         pixelsU += strideU;
         pixelsV += strideV;
     }
-    
+
     glBindTexture(GL_TEXTURE_2D, imageTexture);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
 }
