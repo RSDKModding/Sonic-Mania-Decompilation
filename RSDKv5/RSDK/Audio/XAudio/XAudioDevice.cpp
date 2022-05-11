@@ -39,17 +39,21 @@ bool32 AudioDevice::Init()
                     audioState = true;
                 }
                 else {
+#if RETRO_RENDERDEVICE_DIRECTX9
                     if (RSDK::videoSettings.windowed) {
                         MessageBox(RenderDevice::windowHandle, L"Unable to create source voice. Sound will not be available during this session.",
                                    L"AudioDevice::Init", MB_OK);
                     }
+#endif
                 }
             }
             else {
+#if RETRO_RENDERDEVICE_DIRECTX9
                 if (RSDK::videoSettings.windowed) {
                     MessageBox(RenderDevice::windowHandle, L"Unable to create mastering voice. Sound will not be available during this session.",
                                L"AudioDevice::Init", MB_OK);
                 }
+#endif
 
                 if (audioContext) {
                     audioContext->Release();
@@ -58,6 +62,7 @@ bool32 AudioDevice::Init()
             }
         }
         else {
+#if RETRO_RENDERDEVICE_DIRECTX9
             if (RSDK::videoSettings.windowed) {
                 MessageBox(RenderDevice::windowHandle,
                            L"Error Initializing XAudio2.\n"
@@ -65,6 +70,7 @@ bool32 AudioDevice::Init()
                            "Sound will not be available during this session.",
                            L"AudioDevice::Init", MB_OK);
             }
+#endif
         }
     }
 

@@ -684,13 +684,6 @@ typedef enum {
     VIDEOSETTING_WRITE,
 } VideoSettings;
 
-#if RETRO_USE_PLUS
-typedef enum {
-    SECRET_RICKYMODE = 0,
-    SECRET_SUPERDASH = 1,
-} GameCheats;
-#endif
-
 typedef enum {
     GROUP_ALL     = 0,
     GROUP_CUSTOM1 = TYPE_COUNT,

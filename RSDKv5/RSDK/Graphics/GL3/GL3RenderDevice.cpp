@@ -59,7 +59,7 @@ bool RenderDevice::Init()
     glfwSetWindowMaximizeCallback(window, ProcessMaximizeEvent);
 
     // TODO: icon, best way i can see we do it is stb_image
-    if (!SetupRendering() || !InitAudioDevice())
+    if (!SetupRendering() || !AudioDevice::Init())
         return false;
 
     InitInputDevices();

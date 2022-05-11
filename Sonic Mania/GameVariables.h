@@ -148,6 +148,13 @@ typedef enum {
     PRESENCE_TITLE,
 } PresenceTypes;
 
+#if RETRO_USE_PLUS
+typedef enum {
+    SECRET_RICKYMODE = 0,
+    SECRET_SUPERDASH = 1,
+} GameCheats;
+#endif
+
 typedef struct {
     int32 gameMode;
     int32 playerID;

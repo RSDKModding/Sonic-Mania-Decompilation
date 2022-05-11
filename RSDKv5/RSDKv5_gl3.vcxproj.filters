@@ -15,9 +15,6 @@
     <Filter Include="Source Files\Dependencies\zlib">
       <UniqueIdentifier>{8bdc9495-2674-40a5-9d14-44702f102d70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Dependencies\theoraPlay">
-      <UniqueIdentifier>{9154ae5d-c054-49e0-acc5-0fc37b61472c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Dependencies\tinyxml2">
       <UniqueIdentifier>{a654cc12-6586-4ca9-a1f5-4283b5adb333}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,12 @@
     <Filter Include="Source Files\RSDK\Input\GLFW">
       <UniqueIdentifier>{b308ee7b-f651-4f07-8c15-8bc9b8c58742}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Audio\XAudio">
+      <UniqueIdentifier>{3eeafa77-646c-44ce-b45d-565c9917f903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Graphics\GL3">
+      <UniqueIdentifier>{84040347-202b-4c6b-be79-e0fe666aec56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\zlib\adler32.c">
@@ -133,9 +136,6 @@
     </ClCompile>
     <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp">
       <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\theoraplay\theoraplay.c">
-      <Filter>Source Files\Dependencies\theoraPlay</Filter>
     </ClCompile>
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
       <Filter>Source Files\Dependencies\tinyxml2</Filter>
@@ -308,6 +308,12 @@
     <ClCompile Include="RSDK\Input\GLFW\GLFWInputDevice.cpp">
       <Filter>Source Files\RSDK\Input\GLFW</Filter>
     </ClCompile>
+    <ClCompile Include="RSDK\Audio\XAudio\XAudioDevice.cpp">
+      <Filter>Source Files\RSDK\Audio\XAudio</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Graphics\GL3\GL3RenderDevice.cpp">
+      <Filter>Source Files\RSDK\Graphics\GL3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\zlib\crc32.h">
@@ -351,12 +357,6 @@
     </ClInclude>
     <ClInclude Include="unistd.h">
       <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\theoraplay\theoraplay.h">
-      <Filter>Source Files\Dependencies\theoraPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\theoraplay\theoraplay_cvtrgb.h">
-      <Filter>Source Files\Dependencies\theoraPlay</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\all\tinyxml2\tinyxml2.h">
       <Filter>Source Files\Dependencies\tinyxml2</Filter>
@@ -531,6 +531,12 @@
     </ClInclude>
     <ClInclude Include="RSDK\Input\GLFW\GLFWInputDevice.hpp">
       <Filter>Source Files\RSDK\Input\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Audio\XAudio\XAudioDevice.hpp">
+      <Filter>Source Files\RSDK\Audio\XAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Graphics\GL3\GL3RenderDevice.hpp">
+      <Filter>Source Files\RSDK\Graphics\GL3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
