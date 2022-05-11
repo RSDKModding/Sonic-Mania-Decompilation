@@ -5,20 +5,20 @@
 // DX9
 class AudioDeviceCallback : public IXAudio2VoiceCallback
 {
-    void __stdcall OnVoiceProcessingPassStart(UINT32 BytesRequired) {}
-    void __stdcall OnVoiceProcessingPassEnd() {}
-    void __stdcall OnStreamEnd() {}
-    void __stdcall OnBufferStart(void *pBufferContext) {}
-    void __stdcall OnBufferEnd(void *pBufferContext);
-    void __stdcall OnLoopEnd(void *pBufferContext) {}
-    void __stdcall OnVoiceError(void *pBufferContext, HRESULT Error) {}
+    void WINAPI OnVoiceProcessingPassStart(UINT32 BytesRequired) {}
+    void WINAPI OnVoiceProcessingPassEnd() {}
+    void WINAPI OnStreamEnd() {}
+    void WINAPI OnBufferStart(void *pBufferContext) {}
+    void WINAPI OnBufferEnd(void *pBufferContext);
+    void WINAPI OnLoopEnd(void *pBufferContext) {}
+    void WINAPI OnVoiceError(void *pBufferContext, HRESULT Error) {}
 };
 
 class AudioEngineCallback : public IXAudio2EngineCallback
 {
-    void __stdcall OnProcessingPassStart() {}
-    void __stdcall OnProcessingPassEnd() {}
-    void __stdcall OnCriticalError(HRESULT Error);
+    void WINAPI OnProcessingPassStart() {}
+    void WINAPI OnProcessingPassEnd() {}
+    void WINAPI OnCriticalError(HRESULT Error);
 };
 
 struct AudioDevice : public AudioDeviceBase {
