@@ -47,6 +47,8 @@ private:
 
     static double lastFrame;
     static double targetFreq;
+
+    static uint32* videoBuffer;
 };
 
 struct ShaderEntry : public ShaderEntryBase {

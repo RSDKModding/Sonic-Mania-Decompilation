@@ -258,6 +258,9 @@ bool RenderDevice::InitGraphicsAPI()
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+    // TODO: does RDC want me to use RSDK storage here or something stupid 
+    videoBuffer = new uint32[1024 * 512];
+
     lastShaderID = -1;
     InitVertexBuffer();
     RSDK::videoSettings.viewportX = viewportPos.x;
@@ -730,12 +733,98 @@ void RenderDevice::RefreshWindow()
     if (!InitGraphicsAPI() || !InitShaders())
         return;
 }
+
 void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixels)
 {
     if (imagePixels) {
         glBindTexture(GL_TEXTURE_2D, imageTexture);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, imagePixels);
     }
+}
+
+void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    uint32 *pixels = videoBuffer;
+    uint32 *preY = pixels;
+    int32 pitch = (1024 >> 2) - width;
+
+    for (int32 y = 0; y < height; ++y) {
+        for (int32 x = 0; x < width; ++x) {
+            *pixels++ = (pixelsY[x] << 16) | 0xFF000000;
+        }
+
+        pixels += pitch;
+        pixelsY += strideY;
+    }
+
+    pixels      = preY;
+    pitch = (1024 >> 2) - (width >> 1);
+    for (int32 y = 0; y < (height >> 1); ++y) {
+        for (int32 x = 0; x < (width >> 1); ++x) {
+            *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+        }
+
+        pixels += pitch;
+        pixelsU += strideU;
+        pixelsV += strideV;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, imageTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
+}
+
+void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    uint32 *pixels = videoBuffer;
+    uint32 *preY = pixels;
+    int32 pitch = (1024 >> 2) - width;
+
+    for (int32 y = 0; y < height; ++y) {
+        for (int32 x = 0; x < width; ++x) {
+            *pixels++        = (pixelsY[x] << 16) | 0xFF000000;
+        }
+
+        pixels += pitch;
+        pixelsY += strideY;
+    }
+
+    pixels = preY;
+    pitch  = (1024 >> 2) - (width >> 1);
+    for (int32 y = 0; y < height; ++y) {
+        for (int32 x = 0; x < (width >> 1); ++x) {
+            *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+        }
+
+        pixels += pitch;
+        pixelsU += strideU;
+        pixelsV += strideV;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, imageTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
+}
+void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    uint32 *pixels = videoBuffer;
+
+    for (int32 y = 0; y < height; ++y) {
+        int32 pos1  = pixelsY - pixelsV;
+        int32 pos2  = pixelsU - pixelsV;
+        uint8 *pixV = pixelsV;
+        for (int32 x = 0; x < width; ++x) {
+            *pixels++ = pixV[0] | (pixV[pos2] << 8) | (pixV[pos1] << 16) | 0xFF000000;
+            pixV++;
+        }
+        pixelsY += strideY;
+        pixelsU += strideU;
+        pixelsV += strideV;
+    }
+    
+    glBindTexture(GL_TEXTURE_2D, imageTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
 }
 
 void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int action, int mods)
