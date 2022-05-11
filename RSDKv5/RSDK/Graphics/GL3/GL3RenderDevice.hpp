@@ -8,7 +8,13 @@ public:
 
     static void RefreshWindow();
     static void SetupImageTexture(int32 width, int32 height, uint8 *imagePixels);
-
+    static void SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                         int32 strideV);
+    static void SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                         int32 strideV);
+    static void SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+                                         int32 strideV);
+                                         
     static bool ProcessEvents();
 
     static void InitFPSCap();
