@@ -185,13 +185,8 @@ int32 RunRetroEngine(int32 argc, char *argv[])
     }
 
     // Shutdown
-#if RETRO_RENDERDEVICE_DIRECTX9
-    CoUninitialize();
-    // DeleteCriticalSection(&CriticalSection);
-#endif
 
     AudioDevice::Release();
-    // ReleaseAudioDevice();
     RenderDevice::Release(false);
     RSDK::writeSettings(false);
     RSDK::SKU::releaseUserData();
