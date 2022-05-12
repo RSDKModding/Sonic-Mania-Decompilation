@@ -4,11 +4,11 @@
 #define SURFACE_MAX (0x40)
 
 #if RETRO_REV02
-#define SCREEN_MAX (0x4)
+#define SCREEN_MAX (4)
 #else
-#define SCREEN_MAX (0x2)
+#define SCREEN_MAX (2)
 #endif
-#define CAMERA_MAX (0x4)
+#define CAMERA_MAX (4)
 
 #define LAYER_COUNT     (8)
 #define DRAWGROUP_COUNT (16)

@@ -11,6 +11,8 @@ unsigned long long RenderDevice::targetFreq = 0;
 unsigned long long RenderDevice::curTicks   = 0;
 unsigned long long RenderDevice::prevTicks  = 0;
 
+uint8 RenderDevice::lastTextureFormat = -1;
+
 
 bool RenderDevice::Init()
 {
@@ -441,6 +443,8 @@ RenderVertex vertexList[24] =
 
     // ignore the last 6 verts, they're scaled to the 1024x512 textures already!
     int32 vertCount = (RETRO_REV02 ? 60 : 24) - 6;
+
+    // Regular in-game screen de-normalization stuff
     for (int32 v = 0; v < vertCount; ++v) {
         RenderVertex *vertex = &vertBuffer[v];
         vertex->pos.x        = NORMALIZE(vertex->pos.x, -1.0, 1.0) * RSDK::videoSettings.pixWidth;
@@ -451,6 +455,20 @@ RenderVertex vertexList[24] =
 
         if (vertex->tex.y)
             vertex->tex.y = screens[0].size.y * (1.0 / textureSize.y);
+    }
+
+    // Fullscreen Image/Video de-normalization stuff
+    for (int32 v = 0; v < 6; ++v) {
+        RenderVertex *vertex = &vertBuffer[vertCount + v];
+        vertex->pos.x        = NORMALIZE(vertex->pos.x, -1.0, 1.0) * RSDK::videoSettings.pixWidth;
+        vertex->pos.y        = (1.0 - NORMALIZE(vertex->pos.y, -1.0, 1.0)) * SCREEN_YSIZE;
+
+        // Set the texture to fill the entire screen with all 1024x512 pixels
+        if (vertex->tex.x)
+            vertex->tex.x = 1.0f;
+
+        if (vertex->tex.y)
+            vertex->tex.y = 1.0f;
     }
 
     memcpy(vertexBuffer, vertBuffer, sizeof(vertBuffer));
@@ -1023,28 +1041,71 @@ bool RenderDevice::ProcessEvents()
 
 void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixels)
 {
-    if (RenderDevice::imageTexture)
-        SDL_DestroyTexture(RenderDevice::imageTexture);
+    if (lastTextureFormat != SHADER_RGB_IMAGE) {
+        if (RenderDevice::imageTexture)
+            SDL_DestroyTexture(RenderDevice::imageTexture);
 
-    int32 format               = imagePixels ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_YV12;
-    RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, format, SDL_TEXTUREACCESS_STREAMING, width, height);
+        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
 
-    if (imagePixels) {
-        int texPitch   = 0;
-        uint32 *pixels = NULL;
-        SDL_LockTexture(RenderDevice::imageTexture, NULL, (void **)&pixels, &texPitch);
+        lastTextureFormat = SHADER_RGB_IMAGE;
+    }
 
-        int32 pitch    = (texPitch >> 2) - width;
-        uint32 *imagePixels32 = (uint32 *)imagePixels;
-        for (int32 y = 0; y < height; ++y) {
-            for (int32 x = 0; x < width; ++x) {
-                *pixels++ = *imagePixels32++;
-            }
+    int32 texPitch = 0;
+    uint32 *pixels = NULL;
+    SDL_LockTexture(RenderDevice::imageTexture, NULL, (void **)&pixels, &texPitch);
 
-            pixels += pitch;
+    int32 pitch           = (texPitch >> 2) - width;
+    uint32 *imagePixels32 = (uint32 *)imagePixels;
+    for (int32 y = 0; y < height; ++y) {
+        for (int32 x = 0; x < width; ++x) {
+            *pixels++ = *imagePixels32++;
         }
 
-        SDL_UnlockTexture(RenderDevice::imageTexture);
+        pixels += pitch;
     }
+
+    SDL_UnlockTexture(RenderDevice::imageTexture);
 }
 
+void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    if (lastTextureFormat != SHADER_YUV_420) {
+        if (RenderDevice::imageTexture)
+            SDL_DestroyTexture(RenderDevice::imageTexture);
+
+        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
+
+        lastTextureFormat = SHADER_YUV_420;
+    }
+
+    SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
+}
+void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    if (lastTextureFormat != SHADER_YUV_422) {
+        if (RenderDevice::imageTexture)
+            SDL_DestroyTexture(RenderDevice::imageTexture);
+
+        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
+
+        lastTextureFormat = SHADER_YUV_422;
+    }
+
+    SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
+}
+void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
+                                            int32 strideV)
+{
+    if (lastTextureFormat != SHADER_YUV_444) {
+        if (RenderDevice::imageTexture)
+            SDL_DestroyTexture(RenderDevice::imageTexture);
+
+        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
+
+        lastTextureFormat = SHADER_YUV_444;
+    }
+
+    SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
+}

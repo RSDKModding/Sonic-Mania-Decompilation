@@ -515,7 +515,7 @@ void ParseArguments(int32 argc, char *argv[])
 
 void StartGameObjects()
 {
-    memset(&objectList, 0, OBJECT_COUNT * sizeof(ObjectInfo));
+    memset(&objectClassList, 0, OBJECT_COUNT * sizeof(ObjectClass));
 
     sceneInfo.classCount     = 0;
     sceneInfo.activeCategory = 0;
@@ -597,8 +597,8 @@ void LoadXMLObjects()
                             RETRO_HASH_MD5(hash);
                             GEN_HASH_MD5(objName, hash);
                             globalObjectIDs[globalObjectCount] = 0;
-                            for (int32 objID = 0; objID < objectCount; ++objID) {
-                                if (HASH_MATCH_MD5(hash, objectList[objID].hash)) {
+                            for (int32 objID = 0; objID < stageObjectCount; ++objID) {
+                                if (HASH_MATCH_MD5(hash, objectClassList[objID].hash)) {
                                     globalObjectIDs[globalObjectCount] = objID;
                                     globalObjectCount++;
                                 }
@@ -819,10 +819,10 @@ void LoadGameConfig()
             RETRO_HASH_MD5(hash);
             GEN_HASH_MD5(textBuffer, hash);
 
-            if (objectCount > 0) {
+            if (stageObjectCount > 0) {
                 globalObjectIDs[globalObjectCount] = 0;
-                for (int32 objID = 0; objID < objectCount; ++objID) {
-                    if (HASH_MATCH_MD5(hash, objectList[objID].hash)) {
+                for (int32 objID = 0; objID < stageObjectCount; ++objID) {
+                    if (HASH_MATCH_MD5(hash, objectClassList[objID].hash)) {
                         globalObjectIDs[globalObjectCount] = objID;
                         globalObjectCount++;
                     }
@@ -946,7 +946,7 @@ void LoadGameConfig()
 void InitGameLink()
 {
 #if RETRO_USE_MOD_LOADER
-    objectCount = 0;
+    stageObjectCount = 0;
     memset(globalObjectIDs, 0, sizeof(int32) * OBJECT_COUNT);
     memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
     editableVarCount = 0;

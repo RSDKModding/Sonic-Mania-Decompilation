@@ -76,6 +76,7 @@ inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int32 thisRadius, E
             debugHitboxList[otherHitboxID].collision |= 1 << (collided - 1);
     }
 #endif
+
     return x * x + y * y < r * r;
 }
 uint8 CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues);

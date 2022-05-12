@@ -1048,7 +1048,7 @@ void RSDK::SaveSettings()
 // i'm going to hell for this
 // nvm im actually so proud of this func yall have no idea i'm insane
 int32 superLevels = 1;
-void SuperInternal(ObjectInfo *super, RSDK::ModSuper callback, void *data)
+void SuperInternal(ObjectClass *super, RSDK::ModSuper callback, void *data)
 {
     using namespace RSDK;
 
@@ -1117,7 +1117,7 @@ void SuperInternal(ObjectInfo *super, RSDK::ModSuper callback, void *data)
     currentMod   = curMod;
 }
 
-void RSDK::Super(int32 objectID, ModSuper callback, void *data) { return SuperInternal(&objectList[stageObjectIDs[objectID]], callback, data); }
+void RSDK::Super(int32 objectID, ModSuper callback, void *data) { return SuperInternal(&objectClassList[stageObjectIDs[objectID]], callback, data); }
 
 void *RSDK::GetGlobals() { return (void *)globalVarsPtr; }
 
@@ -1159,17 +1159,17 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     // TODO: i think i introduced a memleak somewhere here??
 
     ModInfo *curMod = currentMod;
-    int32 preCount  = objectCount + 1;
+    int32 preCount  = stageObjectCount + 1;
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
 
     int32 superSlot     = preCount;
-    ObjectInfo *inherit = NULL;
-    for (int32 i = 0; i < objectCount; ++i) {
-        if (HASH_MATCH_MD5(objectList[i].hash, hash)) {
-            objectCount = i;
+    ObjectClass *inherit = NULL;
+    for (int32 i = 0; i < stageObjectCount; ++i) {
+        if (HASH_MATCH_MD5(objectClassList[i].hash, hash)) {
+            stageObjectCount = i;
             superSlot   = i;
-            inherit     = new ObjectInfo(objectList[i]);
+            inherit     = new ObjectClass(objectClassList[i]);
             --preCount;
             if (!inherited)
                 inherited = name;
@@ -1182,8 +1182,8 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
         GEN_HASH_MD5(inherited, hash);
         if (!inherit)
             for (int32 i = 0; i < preCount; ++i) {
-                if (HASH_MATCH_MD5(objectList[i].hash, hash)) {
-                    inherit = new ObjectInfo(objectList[i]);
+                if (HASH_MATCH_MD5(objectClassList[i].hash, hash)) {
+                    inherit = new ObjectClass(objectClassList[i]);
                     break;
                 }
             }
@@ -1194,7 +1194,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
 
     RegisterObject_STD(structPtr, name, entitySize, objectSize, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
-    ObjectInfo *info = &objectList[objectCount - 1];
+    ObjectClass *info = &objectClassList[stageObjectCount - 1];
     if (inherited) {
         info->inherited = inherit;
 
@@ -1206,7 +1206,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
             }
         }
 
-        ObjectInfo *copy = new ObjectInfo(*info);
+        ObjectClass *copy = new ObjectClass(*info);
 
         // clang-format off
         if (!update)       info->update       = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_UPDATE, NULL);       currentMod = NULL; };
@@ -1233,13 +1233,13 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     if (create)       info->create       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
     // clang-format on
 
-    objectCount = preCount;
+    stageObjectCount = preCount;
 }
 
 Object *RSDK::GetObject(const char *name)
 {
     if (int32 o = GetObjectByName(name))
-        return *objectList[stageObjectIDs[o]].staticVars;
+        return *objectClassList[stageObjectIDs[o]].staticVars;
 
     return NULL;
 }

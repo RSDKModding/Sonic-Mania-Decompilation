@@ -188,8 +188,7 @@ float4 PSMain(PixelInput input) : SV_TARGET
     r2.x = 0.899999976;
     r1.xyz = cmp(r1.x, r2, c8.wzzw).xyz;
     r1.xyz = (r0 * r1).xyz;
-    r2.z = 720;
-    r0.w = r2.z + -viewSize.y;
+    r0.w = 720 + -viewSize.y;
 
 	float4 outColor;
     outColor.rgb = cmp(r0.w, r0, r1).rgb;

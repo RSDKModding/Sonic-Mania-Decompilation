@@ -31,7 +31,6 @@ HINSTANCE RenderDevice::hInstance;
 HINSTANCE RenderDevice::hPrevInstance;
 INT RenderDevice::nShowCmd;
 
-
 bool RenderDevice::Init()
 {
     // shit workaround since windows is BEGGING me to use wide strs
@@ -95,7 +94,6 @@ bool RenderDevice::Init()
 
     ShowWindow(windowHandle, nShowCmd);
     UpdateWindow(windowHandle);
-
 
     if (!SetupRendering() || !AudioDevice::Init())
         return false;
@@ -447,10 +445,7 @@ bool RenderDevice::CheckFPSCap()
 
     return false;
 }
-void RenderDevice::UpdateFPSCap()
-{
-    performanceCount.QuadPart = curFrequency.QuadPart + initialFrequency.LowPart;
-}
+void RenderDevice::UpdateFPSCap() { performanceCount.QuadPart = curFrequency.QuadPart + initialFrequency.LowPart; }
 
 void RenderDevice::InitVertexBuffer()
 {
@@ -813,7 +808,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
         NULL
     };
 
-//TODO: leaving this here for RDC
+// TODO: leaving this here for RDC
 #if RETRO_RENDERDEVICE_DIRECTX11
     shaderFolder    = "DX11"; // xbox one
     vertexShaderExt = "vs";
@@ -839,8 +834,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "VSMain", "vs_3_0", flags, 0,
-                                    &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "VSMain", "vs_3_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -915,8 +909,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "PSMain", "ps_3_0", flags, 0,
-                                    &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "PSMain", "ps_3_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -931,7 +924,6 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             PrintLog(PRINT_NORMAL, "Successfully compiled pixel shader!");
             if (errorBlob)
                 PrintLog(PRINT_NORMAL, "Pixel shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
-
 
             if (dx9Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->pixelShaderObject) < 0) {
                 if (shader->vertexShaderObject) {
@@ -1108,7 +1100,7 @@ void RenderDevice::GetDisplays()
     if (displayInfo.displays)
         free(displayInfo.displays);
 
-    displayInfo.displays        = (decltype(displayInfo.displays))malloc(sizeof(D3DDISPLAYMODE) * displayCount);
+    displayInfo.displays          = (decltype(displayInfo.displays))malloc(sizeof(D3DDISPLAYMODE) * displayCount);
     int32 newDisplayCount         = 0;
     bool32 foundFullScreenDisplay = false;
 
@@ -1221,7 +1213,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
                     if (engine.devMenu) {
                         if (sceneInfo.state == ENGINESTATE_DEVMENU)
                             CloseDevMenu();
-                        else 
+                        else
                             OpenDevMenu();
                     }
                     else {
@@ -1329,7 +1321,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
             switch (Msg.wParam) {
                 default:
 #if RETRO_INPUTDEVICE_KEYBOARD
-                    ClearKeyState(activeButtons); 
+                    ClearKeyState(activeButtons);
 #endif
                     break;
 
@@ -1468,9 +1460,7 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
         }
 
 #if RETRO_INPUTDEVICE_RAWINPUT
-        case WM_INPUT: 
-            UpdateRawInputButtonState((HRAWINPUT)lParam); 
-            break;
+        case WM_INPUT: UpdateRawInputButtonState((HRAWINPUT)lParam); break;
 #endif
 
         case WM_SYSCOMMAND: {
@@ -1530,7 +1520,7 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
     }
 }
 
-void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     RenderDevice::dx9Device->SetTexture(0, NULL);
@@ -1544,42 +1534,42 @@ void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *pi
             // Shaders are supported! lets watch this video in full color!
             for (int32 y = 0; y < height; ++y) {
                 for (int32 x = 0; x < width; ++x) {
-                    *pixels++ = (pixelsY[x] << 16) | 0xFF000000;
+                    *pixels++ = (yPlane[x] << 16) | 0xFF000000;
                 }
 
                 pixels += pitch;
-                pixelsY += strideY;
+                yPlane += strideY;
             }
 
-            pixels      = (DWORD *)rect.pBits;
-            pitch = (rect.Pitch >> 2) - (width >> 1);
+            pixels = (DWORD *)rect.pBits;
+            pitch  = (rect.Pitch >> 2) - (width >> 1);
             for (int32 y = 0; y < (height >> 1); ++y) {
                 for (int32 x = 0; x < (width >> 1); ++x) {
-                    *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+                    *pixels++ |= (vPlane[x] << 0) | (uPlane[x] << 8) | 0xFF000000;
                 }
 
                 pixels += pitch;
-                pixelsU += strideU;
-                pixelsV += strideV;
+                uPlane += strideU;
+                vPlane += strideV;
             }
         }
         else {
             // No shader support means no YUV support! at least use the brightness to show it in grayscale!
             for (int32 y = 0; y < height; ++y) {
                 for (int32 x = 0; x < width; ++x) {
-                    int32 brightness = pixelsY[x];
+                    int32 brightness = yPlane[x];
                     *pixels++        = (brightness << 0) | (brightness << 8) | (brightness << 16) | 0xFF000000;
                 }
 
                 pixels += pitch;
-                pixelsY += strideY;
+                yPlane += strideY;
             }
         }
 
         imageTexture->UnlockRect(0);
     }
 }
-void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     RenderDevice::dx9Device->SetTexture(0, NULL);
@@ -1593,42 +1583,42 @@ void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *pi
             // Shaders are supported! lets watch this video in full color!
             for (int32 y = 0; y < height; ++y) {
                 for (int32 x = 0; x < width; ++x) {
-                    *pixels++        = (pixelsY[x] << 16) | 0xFF000000;
+                    *pixels++ = (yPlane[x] << 16) | 0xFF000000;
                 }
 
                 pixels += pitch;
-                pixelsY += strideY;
+                yPlane += strideY;
             }
 
             pixels = (DWORD *)rect.pBits;
             pitch  = (rect.Pitch >> 2) - (width >> 1);
             for (int32 y = 0; y < height; ++y) {
                 for (int32 x = 0; x < (width >> 1); ++x) {
-                    *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+                    *pixels++ |= (vPlane[x] << 0) | (uPlane[x] << 8) | 0xFF000000;
                 }
 
                 pixels += pitch;
-                pixelsU += strideU;
-                pixelsV += strideV;
+                uPlane += strideU;
+                vPlane += strideV;
             }
         }
         else {
             // No shader support means no YUV support! at least use the brightness to show it in grayscale!
             for (int32 y = 0; y < height; ++y) {
                 for (int32 x = 0; x < width; ++x) {
-                    int32 brightness = pixelsY[x];
+                    int32 brightness = yPlane[x];
                     *pixels++        = (brightness << 0) | (brightness << 8) | (brightness << 16) | 0xFF000000;
                 }
 
                 pixels += pitch;
-                pixelsY += strideY;
+                yPlane += strideY;
             }
         }
 
         imageTexture->UnlockRect(0);
     }
 }
-void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     RenderDevice::dx9Device->SetTexture(0, NULL);
@@ -1641,30 +1631,30 @@ void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *pi
         if (RSDK::videoSettings.shaderSupport) {
             // Shaders are supported! lets watch this video in full color!
             for (int32 y = 0; y < height; ++y) {
-                int32 pos1  = pixelsY - pixelsV;
-                int32 pos2  = pixelsU - pixelsV;
-                uint8 *pixV = pixelsV;
+                int32 pos1  = yPlane - vPlane;
+                int32 pos2  = uPlane - vPlane;
+                uint8 *pixV = vPlane;
                 for (int32 x = 0; x < width; ++x) {
                     *pixels++ = pixV[0] | (pixV[pos2] << 8) | (pixV[pos1] << 16) | 0xFF000000;
                     pixV++;
                 }
 
                 pixels += pitch;
-                pixelsY += strideY;
-                pixelsU += strideU;
-                pixelsV += strideV;
+                yPlane += strideY;
+                uPlane += strideU;
+                vPlane += strideV;
             }
         }
         else {
             // No shader support means no YUV support! at least use the brightness to show it in grayscale!
             for (int32 y = 0; y < height; ++y) {
                 for (int32 x = 0; x < width; ++x) {
-                    int32 brightness = pixelsY[x];
+                    int32 brightness = yPlane[x];
                     *pixels++        = (brightness << 0) | (brightness << 8) | (brightness << 16) | 0xFF000000;
                 }
 
                 pixels += pitch;
-                pixelsY += strideY;
+                yPlane += strideY;
             }
         }
 

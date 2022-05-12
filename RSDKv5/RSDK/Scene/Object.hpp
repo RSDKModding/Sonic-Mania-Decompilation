@@ -79,6 +79,7 @@ enum DefaultObjects {
 #if RETRO_REV02
     TYPE_DEVOUTPUT,
 #endif
+
     TYPE_DEFAULT_COUNT, // max
 };
 
@@ -136,7 +137,7 @@ struct EntityBase : Entity {
     void *data[0x100];
 };
 
-struct ObjectInfo {
+struct ObjectClass {
     RETRO_HASH_MD5(hash);
 
     // Events
@@ -168,7 +169,7 @@ struct ObjectInfo {
     int32 staticClassSize;
 
 #if RETRO_USE_MOD_LOADER
-    ObjectInfo *inherited;
+    ObjectClass *inherited;
 #endif
 };
 
@@ -188,10 +189,14 @@ struct TypeGroupList {
     uint16 entries[ENTITY_COUNT];
 };
 
-extern int32 objectCount;
-extern ObjectInfo objectList[OBJECT_COUNT];
+extern ObjectClass objectClassList[OBJECT_COUNT];
+
+// Loaded Global Objects
 extern int32 globalObjectCount;
 extern int32 globalObjectIDs[OBJECT_COUNT];
+
+// Loaded Stage Objects (includes Globals if "loadGlobals" is enabled)
+extern int32 stageObjectCount;
 extern int32 stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];

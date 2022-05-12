@@ -6,9 +6,11 @@
 #define TILE_DATASIZE (TILE_SIZE * TILE_SIZE)
 #define TILESET_SIZE  (TILE_COUNT * TILE_DATASIZE)
 
-#define CHUNKTILE_COUNT (0x200 * (8 * 8))
-
 #define CPATH_COUNT (2)
+
+#define RSDK_SIGNATURE_CFG (0x474643)
+#define RSDK_SIGNATURE_SCN (0x4E4353)
+#define RSDK_SIGNATURE_TIL (0x4C4954)
 
 enum LayerTypes {
     LAYER_HSCROLL,
@@ -78,7 +80,7 @@ struct ScanlineInfo {
 
 struct TileLayer {
     uint8 type;
-    uint8 drawLayer[4];
+    uint8 drawLayer[CAMERA_MAX];
     uint8 widthShift;
     uint8 heightShift;
     uint16 xsize;
@@ -91,10 +93,10 @@ struct TileLayer {
     int32 deformationOffsetW;
     int32 deformationData[0x400];
     int32 deformationDataW[0x400];
-    void (*scanlineCallback)(ScanlineInfo *);
+    void (*scanlineCallback)(ScanlineInfo *scanlines);
     uint16 scrollInfoCount;
     ScrollInfo scrollInfo[0x100];
-    uint32 name[4];
+    RETRO_HASH_MD5(name);
     uint16 *layout;
     uint8 *lineScroll;
 };
@@ -173,17 +175,18 @@ inline uint16 GetTileLayerID(const char *name)
         if (HASH_MATCH_MD5(tileLayers[i].name, hash))
             return i;
     }
-    return -1;
+
+    return (uint16)-1;
 }
 
 inline TileLayer *GetTileLayer(uint16 layerID) { return layerID < LAYER_COUNT ? &tileLayers[layerID] : NULL; }
 
-inline void GetLayerSize(uint16 layerID, Vector2 *size, bool32 pixelSize)
+inline void GetLayerSize(uint16 layerID, Vector2 *size, bool32 usePixelUnits)
 {
     if (layerID < LAYER_COUNT && size) {
         TileLayer *layer = &tileLayers[layerID];
 
-        if (pixelSize == 1) {
+        if (usePixelUnits) {
             size->x = TILE_SIZE * layer->xsize;
             size->y = TILE_SIZE * layer->ysize;
         }

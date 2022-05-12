@@ -26,19 +26,26 @@ void LoadScene()
     sceneInfo.seconds      = 0;
     sceneInfo.milliseconds = 0;
 
+    // clear draw groups
     for (int32 i = 0; i < DRAWGROUP_COUNT; ++i) {
         drawGroups[i].entityCount = 0;
         drawGroups[i].layerCount  = 0;
     }
 
+    // Clear Type groups
     for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) {
         typeGroups[i].entryCount = 0;
     }
+
 #if RETRO_REV02
+    // Unload debug values
     ClearDebugValues();
+
+    // unload tint table
     tintLookupTable = NULL;
 #endif
 
+    // Unload TileLayers
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         MEM_ZERO(tileLayers[l]);
         tileLayers[l].drawLayer[0] = -1;
@@ -65,7 +72,7 @@ void LoadScene()
     }
 #endif
 
-    // Unload Model data
+    // Unload Models
     for (int32 m = 0; m < MODEL_MAX; ++m) {
         if (modelList[m].scope != SCOPE_GLOBAL) {
             MEM_ZERO(modelList[m]);
@@ -89,7 +96,7 @@ void LoadScene()
         }
     }
 
-    // Unload surfaces
+    // Unload sprite sheets
     for (int32 s = 0; s < SURFACE_MAX; ++s) {
         if (gfxSurface[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(gfxSurface[s]);
@@ -100,10 +107,10 @@ void LoadScene()
     // Unload stage sfx & audio channels
     ClearStageSfx();
 
-    // Unload object data
+    // Unload static object classes
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
-        if (objectList[stageObjectIDs[o]].staticVars) {
-            *objectList[stageObjectIDs[o]].staticVars = NULL;
+        if (objectClassList[stageObjectIDs[o]].staticVars) {
+            *objectClassList[stageObjectIDs[o]].staticVars = NULL;
         }
     }
 
@@ -133,19 +140,18 @@ void LoadScene()
     PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
 #endif
 
-    char buffer[0x40];
-    sprintf(buffer, "Data/Stages/%s/TileConfig.bin", currentSceneFolder);
-    LoadTileConfig(buffer);
+    char fullFilePath[0x40];
+    sprintf(fullFilePath, "Data/Stages/%s/TileConfig.bin", currentSceneFolder);
+    LoadTileConfig(fullFilePath);
 
-    sprintf(buffer, "Data/Stages/%s/StageConfig.bin", currentSceneFolder);
+    sprintf(fullFilePath, "Data/Stages/%s/StageConfig.bin", currentSceneFolder);
 
     FileInfo info;
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        char buffer[0x100];
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
-        if (sig != 0x474643) {
+        if (sig != RSDK_SIGNATURE_CFG) {
             CloseFile(&info);
             return;
         }
@@ -163,62 +169,65 @@ void LoadScene()
             sceneInfo.classCount = TYPE_DEFAULT_COUNT;
         }
 
-        uint8 objCnt = ReadInt8(&info);
-        for (int32 o = 0; o < objCnt; ++o) {
+        uint8 objectCount = ReadInt8(&info);
+        for (int32 o = 0; o < objectCount; ++o) {
             ReadString(&info, textBuffer);
 
             RETRO_HASH_MD5(hash);
             GEN_HASH_MD5(textBuffer, hash);
 
             stageObjectIDs[sceneInfo.classCount] = 0;
-            for (int32 objID = 0; objID < objectCount; ++objID) {
-                if (HASH_MATCH_MD5(hash, objectList[objID].hash)) {
-                    stageObjectIDs[sceneInfo.classCount] = objID;
+            for (int32 id = 0; id < stageObjectCount; ++id) {
+                if (HASH_MATCH_MD5(hash, objectClassList[id].hash)) {
+                    stageObjectIDs[sceneInfo.classCount] = id;
                     sceneInfo.classCount++;
                 }
             }
         }
 
         for (int32 o = 0; o < sceneInfo.classCount; ++o) {
-            ObjectInfo *obj = &objectList[stageObjectIDs[o]];
-            if (obj->staticVars && !*obj->staticVars) {
-                RSDK::AllocateStorage(obj->staticClassSize, (void **)obj->staticVars, RSDK::DATASET_STG, true);
-                LoadStaticVariables((uint8 *)*obj->staticVars, obj->hash, sizeof(Object));
-                (*obj->staticVars)->classID = o;
+            ObjectClass *objClass = &objectClassList[stageObjectIDs[o]];
+            if (objClass->staticVars && !*objClass->staticVars) {
+                RSDK::AllocateStorage(objClass->staticClassSize, (void **)objClass->staticVars, RSDK::DATASET_STG, true);
+                LoadStaticVariables((uint8 *)*objClass->staticVars, objClass->hash, sizeof(Object));
+
+                (*objClass->staticVars)->classID = o;
                 if (o >= TYPE_DEFAULT_COUNT)
-                    (*obj->staticVars)->active = ACTIVE_NORMAL;
+                    (*objClass->staticVars)->active = ACTIVE_NORMAL;
             }
         }
 
-        for (int32 i = 0; i < PALETTE_COUNT; ++i) {
-            activeStageRows[i] = ReadInt16(&info);
+        for (int32 p = 0; p < PALETTE_COUNT; ++p) {
+            activeStageRows[p] = ReadInt16(&info);
+
             for (int32 r = 0; r < 0x10; ++r) {
-                if ((activeStageRows[i] >> r & 1)) {
+                if ((activeStageRows[p] >> r & 1)) {
                     for (int32 c = 0; c < 0x10; ++c) {
                         uint8 red                     = ReadInt8(&info);
                         uint8 green                   = ReadInt8(&info);
                         uint8 blue                    = ReadInt8(&info);
-                        stagePalette[i][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
+                        stagePalette[p][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                     }
                 }
                 else {
-                    for (int32 c = 0; c < 0x10; ++c) stagePalette[i][(r << 4) + c] = 0;
+                    for (int32 c = 0; c < 0x10; ++c) stagePalette[p][(r << 4) + c] = 0;
                 }
             }
         }
 
-        uint8 sfxCnt = ReadInt8(&info);
-        for (int32 i = 0; i < sfxCnt; ++i) {
-            ReadString(&info, buffer);
+        uint8 sfxCount = ReadInt8(&info);
+        char sfxPath[0x100];
+        for (int32 i = 0; i < sfxCount; ++i) {
+            ReadString(&info, sfxPath);
             uint8 maxConcurrentPlays = ReadInt8(&info);
-            LoadSfx(buffer, maxConcurrentPlays, SCOPE_STAGE);
+            LoadSfx(sfxPath, maxConcurrentPlays, SCOPE_STAGE);
         }
 
         CloseFile(&info);
     }
 
-    sprintf(buffer, "Data/Stages/%s/16x16Tiles.gif", currentSceneFolder);
-    LoadStageGIF(buffer);
+    sprintf(fullFilePath, "Data/Stages/%s/16x16Tiles.gif", currentSceneFolder);
+    LoadStageGIF(fullFilePath);
 }
 void LoadSceneFile()
 {
@@ -255,7 +264,7 @@ void LoadSceneFile()
     if (LoadFile(&info, buffer, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
-        if (sig != 0x4E4353) {
+        if (sig != RSDK_SIGNATURE_SCN) {
             CloseFile(&info);
             return;
         }
@@ -272,12 +281,14 @@ void LoadSceneFile()
 
             // Tests in RetroED & comparing images of the RSDKv5 editor we have puts this as the most likely use for this (otherwise unused) variable
             bool32 visibleInEditor = ReadInt8(&info) != 0;
+            (void)visibleInEditor; // unused
+
             ReadString(&info, textBuffer);
             GEN_HASH_MD5(textBuffer, layer->name);
 
             layer->type         = ReadInt8(&info);
             layer->drawLayer[0] = ReadInt8(&info);
-            for (int32 s = 1; s < SCREEN_MAX; ++s) layer->drawLayer[s] = layer->drawLayer[0];
+            for (int32 s = 1; s < CAMERA_MAX; ++s) layer->drawLayer[s] = layer->drawLayer[0];
 
             layer->xsize = ReadInt16(&info);
             int32 shift  = 1;
@@ -322,7 +333,9 @@ void LoadSceneFile()
                 layer->scrollInfo[s].scrollPos      = 0;
                 layer->scrollInfo[s].tilePos        = 0;
                 layer->scrollInfo[s].deform         = ReadInt8(&info);
-                layer->scrollInfo[s].unknown        = ReadInt8(&info);
+
+                // this isn't used anywhere in-engine, and is never set in the files. so as you might expect no one knows what it is for!
+                layer->scrollInfo[s].unknown = ReadInt8(&info);
             }
 
             uint8 *scrollIndexes = NULL;
@@ -340,6 +353,7 @@ void LoadSceneFile()
                     id += 2;
                 }
             }
+
             tileLayout = NULL;
         }
 
@@ -352,16 +366,17 @@ void LoadSceneFile()
         EntityBase *tempEntityList = NULL;
         RSDK::AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&tempEntityList, RSDK::DATASET_TMP, true);
 #endif
+
         for (int32 i = 0; i < objectCount; ++i) {
-            RETRO_HASH_MD5(hashBuf);
-            hashBuf[0] = ReadInt32(&info, false);
-            hashBuf[1] = ReadInt32(&info, false);
-            hashBuf[2] = ReadInt32(&info, false);
-            hashBuf[3] = ReadInt32(&info, false);
+            RETRO_HASH_MD5(objHash);
+            objHash[0] = ReadInt32(&info, false);
+            objHash[1] = ReadInt32(&info, false);
+            objHash[2] = ReadInt32(&info, false);
+            objHash[3] = ReadInt32(&info, false);
 
             int32 classID = 0;
             for (int32 o = 0; o < sceneInfo.classCount; ++o) {
-                if (HASH_MATCH_MD5(hashBuf, objectList[stageObjectIDs[o]].hash)) {
+                if (HASH_MATCH_MD5(objHash, objectClassList[stageObjectIDs[o]].hash)) {
                     classID = o;
                     break;
                 }
@@ -372,11 +387,11 @@ void LoadSceneFile()
                 PrintLog(PRINT_NORMAL, "Object Class %d is unimplimented!", i);
 #endif
 
-            ObjectInfo *object = &objectList[stageObjectIDs[classID]];
+            ObjectClass *objectClass = &objectClassList[stageObjectIDs[classID]];
 
-            uint8 varCnt             = ReadInt8(&info);
+            uint8 varCount           = ReadInt8(&info);
             EditableVarInfo *varList = NULL;
-            RSDK::AllocateStorage(sizeof(EditableVarInfo) * varCnt, (void **)&varList, RSDK::DATASET_TMP, false);
+            RSDK::AllocateStorage(sizeof(EditableVarInfo) * varCount, (void **)&varList, RSDK::DATASET_TMP, false);
             editableVarCount = 0;
             if (classID) {
 #if RETRO_REV02
@@ -387,20 +402,21 @@ void LoadSceneFile()
                 RSDK::currentObjectID = classID;
 #endif
 
-                if (object->serialize)
-                    object->serialize();
+                if (objectClass->serialize)
+                    objectClass->serialize();
             }
 
-            for (int32 e = 1; e < varCnt; ++e) {
-                hashBuf[0] = ReadInt32(&info, false);
-                hashBuf[1] = ReadInt32(&info, false);
-                hashBuf[2] = ReadInt32(&info, false);
-                hashBuf[3] = ReadInt32(&info, false);
+            for (int32 e = 1; e < varCount; ++e) {
+                RETRO_HASH_MD5(varHash);
+                varHash[0] = ReadInt32(&info, false);
+                varHash[1] = ReadInt32(&info, false);
+                varHash[2] = ReadInt32(&info, false);
+                varHash[3] = ReadInt32(&info, false);
 
                 int32 varID = 0;
                 MEM_ZERO(varList[e]);
                 for (int32 v = 0; v < editableVarCount; ++v) {
-                    if (HASH_MATCH_MD5(hashBuf, editableVarList[v].hash)) {
+                    if (HASH_MATCH_MD5(varHash, editableVarList[v].hash)) {
                         varID = v;
                         HASH_COPY_MD5(varList[e].hash, editableVarList[v].hash);
                         varList[e].offset = editableVarList[v].offset;
@@ -436,15 +452,15 @@ void LoadSceneFile()
 
                 uint8 *entityBuffer = (uint8 *)entity;
 
-                uint8 buffer[0x10];
-                for (int32 v = 1; v < varCnt; ++v) {
+                uint8 tempBuffer[0x10];
+                for (int32 v = 1; v < varCount; ++v) {
                     switch (varList[v].type) {
                         case VAR_UINT8:
                         case VAR_INT8:
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int8));
                             else
-                                ReadBytes(&info, buffer, sizeof(int8));
+                                ReadBytes(&info, tempBuffer, sizeof(int8));
                             break;
 
                         case VAR_UINT16:
@@ -452,7 +468,7 @@ void LoadSceneFile()
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int16));
                             else
-                                ReadBytes(&info, buffer, sizeof(int16));
+                                ReadBytes(&info, tempBuffer, sizeof(int16));
                             break;
 
                         case VAR_UINT32:
@@ -460,7 +476,7 @@ void LoadSceneFile()
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int32));
                             else
-                                ReadBytes(&info, buffer, sizeof(int32));
+                                ReadBytes(&info, tempBuffer, sizeof(int32));
                             break;
 
                         // not entirely sure on specifics here, should prolly be int32 always but the specific type implies it may not always be
@@ -468,31 +484,30 @@ void LoadSceneFile()
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int32));
                             else
-                                ReadBytes(&info, buffer, sizeof(int32));
+                                ReadBytes(&info, tempBuffer, sizeof(int32));
                             break;
 
                         case VAR_BOOL:
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(bool32));
                             else
-                                ReadBytes(&info, buffer, sizeof(bool32));
+                                ReadBytes(&info, tempBuffer, sizeof(bool32));
                             break;
 
                         case VAR_COLOR:
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(color));
                             else
-                                ReadBytes(&info, buffer, sizeof(color));
+                                ReadBytes(&info, tempBuffer, sizeof(color));
                             break;
 
                         case VAR_STRING:
                             if (varList[v].active) {
                                 String *string = (String *)&entityBuffer[varList[v].offset];
-                                uint16 len         = ReadInt16(&info);
+                                uint16 len     = ReadInt16(&info);
 
                                 InitString(string, (char *)"", len);
-                                for (string->length = 0; string->length < len; ++string->length)
-                                    string->chars[string->length] = ReadInt16(&info);
+                                for (string->length = 0; string->length < len; ++string->length) string->chars[string->length] = ReadInt16(&info);
                             }
                             else {
                                 Seek_Cur(&info, ReadInt16(&info) * sizeof(uint16));
@@ -505,17 +520,18 @@ void LoadSceneFile()
                                 ReadBytes(&info, &entityBuffer[varList[v].offset + sizeof(int32)], sizeof(int32));
                             }
                             else {
-                                ReadBytes(&info, buffer, sizeof(int32)); // x
-                                ReadBytes(&info, buffer, sizeof(int32)); // y
+                                ReadBytes(&info, tempBuffer, sizeof(int32)); // x
+                                ReadBytes(&info, tempBuffer, sizeof(int32)); // y
                             }
                             break;
 
+                        // Never used in mania so we don't know for sure, but it's our best guess!
                         case VAR_FLOAT:
                             if (varList[v].active) {
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(float));
                             }
                             else {
-                                ReadBytes(&info, buffer, sizeof(float));
+                                ReadBytes(&info, tempBuffer, sizeof(float));
                             }
                             break;
                     }
@@ -566,7 +582,7 @@ void LoadTileConfig(char *filepath)
 
     if (LoadFile(&info, filepath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
-        if (sig != 0x4C4954) {
+        if (sig != RSDK_SIGNATURE_TIL) {
             CloseFile(&info);
             return;
         }
@@ -578,13 +594,13 @@ void LoadTileConfig(char *filepath)
         for (int32 p = 0; p < CPATH_COUNT; ++p) {
             // No Flip/Stored in file
             for (int32 t = 0; t < TILE_COUNT; ++t) {
-                uint8 collision[0x10];
-                uint8 hasCollision[0x10];
+                uint8 maskHeights[0x10];
+                uint8 maskActive[0x10];
 
-                memcpy(collision, buffer + bufPos, 0x10 * sizeof(uint8));
-                bufPos += 0x10;
-                memcpy(hasCollision, buffer + bufPos, 0x10 * sizeof(uint8));
-                bufPos += 0x10;
+                memcpy(maskHeights, buffer + bufPos, TILE_SIZE * sizeof(uint8));
+                bufPos += TILE_SIZE;
+                memcpy(maskActive, buffer + bufPos, TILE_SIZE * sizeof(uint8));
+                bufPos += TILE_SIZE;
 
                 bool32 yFlip                    = buffer[bufPos++];
                 collisionMasks[p][t].floorAngle = buffer[bufPos++];
@@ -595,9 +611,9 @@ void LoadTileConfig(char *filepath)
 
                 if (yFlip) {
                     for (int32 c = 0; c < TILE_SIZE; c++) {
-                        if (hasCollision[c]) {
+                        if (maskActive[c]) {
                             collisionMasks[p][t].floorMasks[c] = 0x00;
-                            collisionMasks[p][t].roofMasks[c]  = collision[c];
+                            collisionMasks[p][t].roofMasks[c]  = maskHeights[c];
                         }
                         else {
                             collisionMasks[p][t].floorMasks[c] = 0xFF;
@@ -653,8 +669,8 @@ void LoadTileConfig(char *filepath)
                 {
                     // Collision heights
                     for (int32 c = 0; c < TILE_SIZE; ++c) {
-                        if (hasCollision[c]) {
-                            collisionMasks[p][t].floorMasks[c] = collision[c];
+                        if (maskActive[c]) {
+                            collisionMasks[p][t].floorMasks[c] = maskHeights[c];
                             collisionMasks[p][t].roofMasks[c]  = 0x0F;
                         }
                         else {
@@ -882,33 +898,34 @@ void ProcessParallax(TileLayer *layer)
             for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
                 scrollInfo->tilePos = scrollInfo->scrollPos + (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
 
-                int16 pos = (scrollInfo->tilePos >> 16) % pixelWidth;
-                if (pos < 0)
-                    pos += pixelWidth;
-                scrollInfo->tilePos = pos << 0x10;
+                int16 tilePos = (scrollInfo->tilePos >> 16) % pixelWidth;
+                if (tilePos < 0)
+                    tilePos += pixelWidth;
+                scrollInfo->tilePos = tilePos << 0x10;
 
                 ++scrollInfo;
             }
 
-            int16 posY = ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
-            if (posY < 0)
-                posY += pixelHeight;
+            int16 scrollPos =
+                ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
+            if (scrollPos < 0)
+                scrollPos += pixelHeight;
 
-            uint8 *lineScrollPtr = &layer->lineScroll[posY];
+            uint8 *lineScrollPtr = &layer->lineScroll[scrollPos];
 
             // Above water
-            int32 *deformationData = &layer->deformationData[(posY + (uint16)layer->deformationOffset) & 0x1FF];
+            int32 *deformationData = &layer->deformationData[(scrollPos + (uint16)layer->deformationOffset) & 0x1FF];
             for (int32 i = 0; i < currentScreen->waterDrawPos; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform)
                     scanlinePtr->position.x += *deformationData << 0x10;
 
-                scanlinePtr->position.y = posY++ << 0x10;
+                scanlinePtr->position.y = scrollPos++ << 0x10;
 
                 deformationData++;
-                if (posY == pixelHeight) {
+                if (scrollPos == pixelHeight) {
                     lineScrollPtr = layer->lineScroll;
-                    posY          = 0;
+                    scrollPos     = 0;
                 }
                 else {
                     ++lineScrollPtr;
@@ -917,21 +934,21 @@ void ProcessParallax(TileLayer *layer)
             }
 
             // Under water
-            deformationData = &layer->deformationDataW[(posY + (uint16)layer->deformationOffsetW) & 0x1FF];
+            deformationData = &layer->deformationDataW[(scrollPos + (uint16)layer->deformationOffsetW) & 0x1FF];
             for (int32 i = currentScreen->waterDrawPos; i < currentScreen->size.y; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform)
                     scanlinePtr->position.x += *deformationData << 0x10;
 
-                scanlinePtr->position.y = posY++ << 0x10;
+                scanlinePtr->position.y = scrollPos++ << 0x10;
 
-                scanlinePtr->deform.x = 0x10000;
-                scanlinePtr->deform.y = 0x00000;
+                scanlinePtr->deform.x = 1 << 16;
+                scanlinePtr->deform.y = 0 << 16;
 
                 deformationData++;
-                if (posY == pixelHeight) {
+                if (scrollPos == pixelHeight) {
                     lineScrollPtr = layer->lineScroll;
-                    posY          = 0;
+                    scrollPos     = 0;
                 }
                 else {
                     ++lineScrollPtr;
@@ -949,22 +966,23 @@ void ProcessParallax(TileLayer *layer)
                 ++scrollInfo;
             }
 
-            int16 posX = ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 16) % pixelWidth;
-            if (posX < 0)
-                posX += pixelWidth;
+            int16 scrollPos =
+                ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 16) % pixelWidth;
+            if (scrollPos < 0)
+                scrollPos += pixelWidth;
 
-            uint8 *lineScrollPtr = &layer->lineScroll[posX];
+            uint8 *lineScrollPtr = &layer->lineScroll[scrollPos];
 
             // Above water
             for (int32 i = 0; i < currentScreen->size.x; ++i) {
-                scanlinePtr->position.x = posX++ << 0x10;
+                scanlinePtr->position.x = scrollPos++ << 0x10;
                 scanlinePtr->position.y = layer->scrollInfo[*lineScrollPtr].tilePos;
-                scanlinePtr->deform.x   = 0x10000;
-                scanlinePtr->deform.y   = 0x00000;
+                scanlinePtr->deform.x   = 1 << 16;
+                scanlinePtr->deform.y   = 0 << 16;
 
-                if (posX == pixelWidth) {
+                if (scrollPos == pixelWidth) {
                     lineScrollPtr = layer->lineScroll;
-                    posX          = 0;
+                    scrollPos     = 0;
                 }
                 else {
                     ++lineScrollPtr;
@@ -976,19 +994,21 @@ void ProcessParallax(TileLayer *layer)
         }
 
         case LAYER_ROTOZOOM: {
-            int16 posX = ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 0x10) % pixelWidth;
-            if (posX < 0)
-                posX += pixelWidth;
+            int16 scrollPosX =
+                ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 0x10) % pixelWidth;
+            if (scrollPosX < 0)
+                scrollPosX += pixelWidth;
 
-            int16 posY = ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 0x10) % pixelHeight;
-            if (posY < 0)
-                posY += pixelHeight;
+            int16 scrollPosY =
+                ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 0x10) % pixelHeight;
+            if (scrollPosY < 0)
+                scrollPosY += pixelHeight;
 
             for (int32 i = 0; i < currentScreen->size.y; ++i) {
-                scanlinePtr->position.x = posX << 0x10;
-                scanlinePtr->position.y = posY++ << 0x10;
-                scanlinePtr->deform.x   = 0x10000;
-                scanlinePtr->deform.y   = 0x00000;
+                scanlinePtr->position.x = scrollPosX << 0x10;
+                scanlinePtr->position.y = scrollPosY++ << 0x10;
+                scanlinePtr->deform.x   = 1 << 16;
+                scanlinePtr->deform.y   = 0 << 16;
 
                 scanlinePtr++;
             }
@@ -999,34 +1019,36 @@ void ProcessParallax(TileLayer *layer)
             for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
                 scrollInfo->tilePos = scrollInfo->scrollPos + (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
 
-                int16 pos = (scrollInfo->tilePos >> 16) % pixelWidth;
-                if (pos < 0)
-                    pos += pixelWidth;
-                scrollInfo->tilePos = pos << 0x10;
+                int16 tilePos = (scrollInfo->tilePos >> 16) % pixelWidth;
+                if (tilePos < 0)
+                    tilePos += pixelWidth;
+                scrollInfo->tilePos = tilePos << 0x10;
 
                 ++scrollInfo;
             }
 
-            int16 posY = ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
-            if (posY < 0)
-                posY += pixelHeight;
+            int16 scrollPos =
+                ((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
+            if (scrollPos < 0)
+                scrollPos += pixelHeight;
 
-            uint8 *lineScrollPtr = &layer->lineScroll[posY];
+            uint8 *lineScrollPtr = &layer->lineScroll[scrollPos];
 
             // Above water
-            int32 *deformationData = &layer->deformationData[((posY >> 16) + (uint16)layer->deformationOffset) & 0x1FF];
+            int32 *deformationData = &layer->deformationData[((scrollPos >> 16) + (uint16)layer->deformationOffset) & 0x1FF];
             for (int32 i = 0; i < currentScreen->waterDrawPos; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform)
                     scanlinePtr->position.x += *deformationData;
-                scanlinePtr->position.y = posY++ << 0x10;
-                scanlinePtr->deform.x   = 0x10000;
-                scanlinePtr->deform.y   = 0x00000;
+                scanlinePtr->position.y = scrollPos++ << 0x10;
+
+                scanlinePtr->deform.x = 1 << 16;
+                scanlinePtr->deform.y = 0 << 16;
 
                 deformationData++;
-                if (posY == pixelHeight) {
+                if (scrollPos == pixelHeight) {
                     lineScrollPtr = layer->lineScroll;
-                    posY          = 0;
+                    scrollPos     = 0;
                 }
                 else {
                     ++lineScrollPtr;
@@ -1035,17 +1057,17 @@ void ProcessParallax(TileLayer *layer)
             }
 
             // Under water
-            deformationData = &layer->deformationDataW[((posY >> 16) + (uint16)layer->deformationOffsetW) & 0x1FF];
+            deformationData = &layer->deformationDataW[((scrollPos >> 16) + (uint16)layer->deformationOffsetW) & 0x1FF];
             for (int32 i = currentScreen->waterDrawPos; i < currentScreen->size.y; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform)
                     scanlinePtr->position.x += *deformationData;
-                scanlinePtr->position.y = posY++ << 0x10;
+                scanlinePtr->position.y = scrollPos++ << 0x10;
 
                 deformationData++;
-                if (posY == pixelHeight) {
+                if (scrollPos == pixelHeight) {
                     lineScrollPtr = layer->lineScroll;
-                    posY          = 0;
+                    scrollPos     = 0;
                 }
                 else {
                     ++lineScrollPtr;
