@@ -186,8 +186,8 @@ enum GameRegions {
 #error One of RSDK_USE_SDL2, RSDK_USE_DX9, or RSDK_USE_GL3 must be defined.
 #endif //! RSDK_USE_DX9
 
-#undef RETRO_AUDIODEVICE_SDL2
-#define RETRO_AUDIODEVICE_SDL2 (1)
+#undef RETRO_AUDIODEVICE_XAUDIO
+#define RETRO_AUDIODEVICE_XAUDIO (1)
 
 #endif //! RSDK_USE_SDL2
 
