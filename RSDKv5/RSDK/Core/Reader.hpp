@@ -1,7 +1,7 @@
 #ifndef READER_H
 #define READER_H
 
-#if RETRO_USING_SDL1 || RETRO_RENDERDEVICE_SDL2
+#if RETRO_RENDERDEVICE_SDL2 || RETRO_AUDIODEVICE_SDL2 || RETRO_INPUTDEVICE_SDL2
 #define FileIO                                          SDL_RWops
 #if RETRO_PLATFORM != RETRO_ANDROID
 #define fOpen(path, mode)                               SDL_RWFromFile(path, mode)
