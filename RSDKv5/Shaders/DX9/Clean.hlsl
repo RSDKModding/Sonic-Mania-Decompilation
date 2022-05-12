@@ -34,20 +34,6 @@ struct PixelInput
     float2 tex : TEXCOORD0;
 };
 
-
-// =======================
-// FUNCTIONS
-// =======================
-
-float4 cmp(float4 src0, float4 src1, float4 src2) {
-	return float4(
-		src0.x >= 0 ? src1.x : src2.x,
-		src0.y >= 0 ? src1.y : src2.y,
-		src0.z >= 0 ? src1.z : src2.z,
-		src0.w >= 0 ? src1.w : src2.w
-	);
-}
-
 // =======================
 // ENTRY POINTS
 // =======================
@@ -70,18 +56,18 @@ float4 PSMain(PixelInput input) : SV_TARGET
     float2 texel = input.tex.xy * float4(textureSize, 1.0 / textureSize).xy;
     float2 scale = float2(2, 2);
 
-    float2 texel_floored = floor(texel);
-    float2 s             = frac(texel);
-    float2 region_range  = 0.5 - 0.5 / scale;
+    float2 texelFloored = floor(texel);
+    float2 s            = frac(texel);
+    float2 regionRange  = 0.5 - 0.5 / scale;
 
-    float2 center_dist = s - 0.5;
-    float2 f           = (center_dist - clamp(center_dist, -region_range, region_range)) * scale + 0.5;
+    float2 centerDist   = s - 0.5;
+    float2 f            = (centerDist - clamp(centerDist, -regionRange, regionRange)) * scale + 0.5;
 
-    float2 mod_texel = texel_floored + f;
+    float2 modTexel = texelFloored + f;
 	
 #if defined(RETRO_REV02) 
-	return tex2D(texDiffuse, (mod_texel / textureSize.xy)) * screenDim.x;
+	return tex2D(texDiffuse, (modTexel / textureSize.xy)) * screenDim.x;
 #else
-	return tex2D(texDiffuse, (mod_texel / textureSize.xy));
+	return tex2D(texDiffuse, (modTexel / textureSize.xy));
 #endif
 }
