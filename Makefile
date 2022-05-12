@@ -27,6 +27,7 @@ GAME_LIBS    =
 
 DEFINES      =
 
+
 # =============================================================================
 # Detect default platform if not explicitly specified
 # =============================================================================
@@ -50,11 +51,18 @@ PLATFORM ?= Unknown
 
 # =============================================================================
 
-OUTDIR = bin/$(PLATFORM)
-RSDK_OBJDIR = RSDKv5/obj/$(PLATFORM)
-GAME_OBJDIR = Game/obj/$(PLATFORM)
+RSDK_SOURCES =
 
 include makefiles/$(PLATFORM).cfg
+
+DEFINES += -DRSDK_USE_$(SUBSYSTEM)
+VIDEODEVICE_F ?= VIDEODEVICE
+AUDIODEVICE_F ?= AUDIODEVICE
+
+OUTDIR = bin/$(PLATFORM)/$(SUBSYSTEM)
+RSDK_OBJDIR = bin/obj/RSDKv5/$(PLATFORM)/$(SUBSYSTEM)
+GAME_OBJDIR = bin/obj/Game/$(PLATFORM)
+
 
 # =============================================================================
 
@@ -91,8 +99,8 @@ else
 	DEFINES += -DRETRO_STANDALONE=0
 endif
 
-RSDK_CFLAGS += `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
-RSDK_LIBS += `$(PKGCONFIG) --libs --static sdl2 vorbisfile vorbis theora theoradec zlib`
+RSDK_CFLAGS += `$(PKGCONFIG) --cflags --static theora theoradec zlib`
+RSDK_LIBS += `$(PKGCONFIG) --libs --static theora theoradec zlib`
 
 CFLAGS_ALL += $(CFLAGS) \
                -fsigned-char 
@@ -112,7 +120,7 @@ RSDK_INCLUDES  += \
 	-I./dependencies/all/theoraplay/ 
 
 # Main Sources
-RSDK_SOURCES = \
+RSDK_SOURCES += \
     RSDKv5/main 							\
     RSDKv5/RSDK/Core/RetroEngine  			\
     RSDKv5/RSDK/Core/Math         			\
@@ -123,7 +131,6 @@ RSDK_SOURCES = \
     RSDKv5/RSDK/Storage/Storage       		\
     RSDKv5/RSDK/Storage/Text         		\
     RSDKv5/RSDK/Graphics/Drawing      		\
-    RSDKv5/RSDK/Graphics/Shader       		\
     RSDKv5/RSDK/Graphics/Scene3D      		\
     RSDKv5/RSDK/Graphics/Animation    		\
     RSDKv5/RSDK/Graphics/Sprite       		\
@@ -143,7 +150,6 @@ RSDK_SOURCES = \
     RSDKv5/RSDK/User/Core/UserStats     	\
     RSDKv5/RSDK/User/Core/UserStorage     	\
     dependencies/all/tinyxml2/tinyxml2 		\
-	dependencies/all/theoraplay/theoraplay 	\
 	dependencies/all/iniparser/iniparser 	\
 	dependencies/all/iniparser/dictionary
 
@@ -154,7 +160,9 @@ RSDK_SOURCES += \
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Leaderboards   	\
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Presence    	\
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Stats     		\
-    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Storage     		
+    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Storage         
+
+
 
 GAME_INCLUDES = \
 	-I./Game/   		\

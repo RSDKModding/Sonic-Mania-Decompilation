@@ -6,6 +6,7 @@ SDL_AudioSpec AudioDevice::deviceSpec;
 
 bool32 AudioDevice::Init()
 {
+    SDL_InitSubSystem(SDL_INIT_AUDIO);
     if (!contextInitialized) {
         contextInitialized = true;
         InitAudioChannels();
@@ -45,6 +46,7 @@ void AudioDevice::Release()
     UnlockAudioDevice();
 
     SDL_CloseAudioDevice(AudioDevice::device);
+    SDL_Quit();
 }
 
 void AudioDevice::ProcessAudioMixing(void *stream, int32 length)

@@ -19,7 +19,7 @@ bool RenderDevice::Init()
 
     const char *gameTitle = RSDK::gameVerInfo.gameName;
 
-    SDL_Init(SDL_INIT_EVERYTHING);
+    SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
     byte flags = 0;
 

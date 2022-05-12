@@ -208,6 +208,7 @@ InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID)
 void InitSDL2InputAPI()
 {
     char buffer[0x100];
+    SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
 #if RETRO_PLATFORM == RETRO_SWITCH
     SDL_GameControllerAddMapping("53776974636820436f6e74726f6c6c65,Switch "
                                  "Controller,a:b0,b:b1,back:b11,dpdown:b15,dpleft:b12,dpright:b14,dpup:b13,leftshoulder:b6,leftstick:b4,lefttrigger:"

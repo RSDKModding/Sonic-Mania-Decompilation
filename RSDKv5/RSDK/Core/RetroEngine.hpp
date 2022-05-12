@@ -186,8 +186,8 @@ enum GameRegions {
 #error One of RSDK_USE_SDL2, RSDK_USE_DX9, or RSDK_USE_GL3 must be defined.
 #endif //! RSDK_USE_DX9
 
-#undef RETRO_AUDIODEVICE_XAUDIO
-#define RETRO_AUDIODEVICE_XAUDIO (1)
+#undef RETRO_AUDIODEVICE_SDL2
+#define RETRO_AUDIODEVICE_SDL2 (1)
 
 #endif //! RSDK_USE_SDL2
 
@@ -197,7 +197,29 @@ enum GameRegions {
 #undef RETRO_RENDERDEVICE_DIRECTX11
 #define RETRO_RENDERDEVICE_DIRECTX11 (1)
 
-#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID                 \
+#elif RETRO_PLATFORM == RETRO_LINUX
+
+#ifdef RSDK_USE_SDL2
+#undef RETRO_RENDERDEVICE_SDL2
+#define RETRO_RENDERDEVICE_SDL2 (1)
+#undef RETRO_AUDIODEVICE_SDL2
+#define RETRO_AUDIODEVICE_SDL2 (1)
+#undef RETRO_INPUTDEVICE_SDL2
+#define RETRO_INPUTDEVICE_SDL2 (1)
+
+#elif defined(RSDK_USE_GL3)
+#undef RETRO_RENDERDEVICE_OPENGL3
+#define RETRO_RENDERDEVICE_OPENGL3 (1)
+#undef RETRO_INPUTDEVICE_GLFW
+#define RETRO_INPUTDEVICE_GLFW (1)
+#undef RETRO_AUDIODEVICE_SDL2
+#define RETRO_AUDIODEVICE_SDL2 (1)
+
+#else
+#error RSDK_USE_SDL2 or RSDK_USE_GL3 must be defined.
+#endif //! RSDK_USE_SDL2
+
+#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID                 \
     || RETRO_PLATFORM == RETRO_SWITCH
 
 #undef RETRO_RENDERDEVICE_SDL2
@@ -259,8 +281,18 @@ enum GameRegions {
 
 #include "cocoaHelpers.hpp"
 #elif RETRO_PLATFORM == RETRO_LINUX
+
+#if RETRO_RENDERDEVICE_OPENGL3
+#include <glad/glad.h> 
+#include <GLFW/glfw3.h>
+#endif
+
+#if RETRO_AUDIODEVICE_SDL2
 #include <SDL2/SDL.h>
-#include <theora/theora.h>
+#endif // ! RETRO_RENDERDEVICE_SDL2
+
+#include <theora/theoradec.h>
+
 #elif RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>
 #include <theora/theora.h>
