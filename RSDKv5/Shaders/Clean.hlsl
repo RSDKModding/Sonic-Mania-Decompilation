@@ -65,26 +65,23 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(PixelInput input) : SV_TARGET
 {
-	float4 r0;
-    r0.xy = textureSize * input.tex;
-    float4 r1 = frac(r0.xyxy);
-    
-	r0.xy = (r0 + -r1.zwzw).xy;
-    r1 += float2(-0.5, -0.25).xxyy;
+	// Adapted from https://github.com/rsn8887/Sharp-Bilinear-Shaders/releases, used in RetroArch 
 	
-	r0.zw = cmp(r1, r1.xyxy, -0.25).zw;
-	
-    r1.zw = max(-0.25, -r0).zw;
-    r0.zw = (r1 + r1.xyxy).zw;
-    r0.xy = ((r0.zwzw * 2.0) + r0).xy;
-    r0.xy = (r0 + 0.5).xy;
-	
-	r1.x = 1.0 / textureSize.x;
-	r1.y = 1.0 / textureSize.y;
+    float2 texel = input.tex.xy * float4(textureSize, 1.0 / textureSize).xy;
+    float2 scale = float2(2, 2);
+
+    float2 texel_floored = floor(texel);
+    float2 s             = frac(texel);
+    float2 region_range  = 0.5 - 0.5 / scale;
+
+    float2 center_dist = s - 0.5;
+    float2 f           = (center_dist - clamp(center_dist, -region_range, region_range)) * scale + 0.5;
+
+    float2 mod_texel = texel_floored + f;
 	
 #if defined(RETRO_REV02) 
-	return tex2D(texDiffuse, (r0 * r1).xy) * screenDim.x;
+	return tex2D(texDiffuse, (mod_texel / textureSize.xy)) * screenDim.x;
 #else
-	return tex2D(texDiffuse, (r0 * r1).xy);
+	return tex2D(texDiffuse, (mod_texel / textureSize.xy));
 #endif
 }
