@@ -232,6 +232,7 @@ void Drillerdroid_Explode(void)
 
     if (!(Zone->timer & 3)) {
         RSDK.PlaySfx(Drillerdroid->sfxExplosion, false, 255);
+
         if (!(Zone->timer & 3)) {
             int32 x = self->position.y + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.x + (RSDK.Rand(-24, 25) << 16);

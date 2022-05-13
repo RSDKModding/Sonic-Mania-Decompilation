@@ -374,12 +374,12 @@ struct ControllerState {
 
     // Rev01 hasn't split these into different structs yet
 #if !RETRO_REV02
-    InputState bumperL;
-    InputState bumperR;
+    InputState keyBumperL;
+    InputState keyBumperR;
     InputState keyTriggerL;
     InputState keyTriggerR;
-    InputState stickL;
-    InputState stickR;
+    InputState keyStickL;
+    InputState keyStickR;
 #endif
 };
 
@@ -554,7 +554,7 @@ inline int32 MostRecentActiveControllerID(bool32 confirmOnly, bool32 unassignedO
 inline int32 MostRecentActiveControllerID()
 {
     // TODO: fix pre-plus input API
-    return InputDevices[0].inputID;
+    return InputDevices[0] ? InputDevices[0]->inputID : CONT_UNASSIGNED;
     /*mostRecentControllerID;*/
 }
 #endif
@@ -689,17 +689,15 @@ inline void SetInputLEDColor()
 }
 
 #if !RETRO_REV02
-inline void InputUnknown(int32 controllerID, int32 staticVariables, int32 *valuePtr)
+inline void GetUnknownInputValue(int32 controllerID, int32 type, int32 *value)
 {
-    if (valuePtr) {
-        uint32 id = controllerID - 1;
-        if (id < PLAYER_COUNT && activeInputDevices[id]) {
-            switch (staticVariables) {
-                default:
-                    break;
-                    // case 0: *valuePtr = activeInputDevices[id].deviceType; break;
-                    // case 1: *valuePtr = activeInputDevices[id].field_4; break;
-            }
+    uint32 id = controllerID - 1;
+    if (value && id < PLAYER_COUNT && activeInputDevices[id]) {
+        switch (type) {
+            default:
+                break;
+                // case 0: *value = activeInputDevices[id].deviceType; break;
+                // case 1: *value = activeInputDevices[id].field_4; break;
         }
     }
 }

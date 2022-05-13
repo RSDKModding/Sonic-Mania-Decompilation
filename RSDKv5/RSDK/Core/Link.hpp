@@ -267,7 +267,7 @@ enum FunctionTableIDs {
     FunctionTable_ResetControllerAssignments,
 #endif
 #if !RETRO_REV02
-    FunctionTable_InputUnknown,
+    FunctionTable_GetUnknownInputValue,
 #endif
     FunctionTable_LoadUserFile,
     FunctionTable_SaveUserFile,
@@ -321,8 +321,8 @@ extern GameVersionInfo gameVerInfo;
 
 #if RETRO_REV02
 struct GameInfo {
-    void *functionPtrs;
-    void *APIPtrs;
+    void *functionTable;
+    void *APITable;
 
     GameVersionInfo *gameInfo;
     SKU::SKUInfo *currentSKU;
@@ -340,7 +340,7 @@ struct GameInfo {
     ScreenInfo *screenInfo;
 
 #if RETRO_USE_MOD_LOADER
-    void *modPtrs;
+    void *modTable;
 #endif
 };
 #else
@@ -351,14 +351,14 @@ struct GameInfo {
     SceneInfo *sceneInfo;
 
     ControllerState *controllerInfo;
-    AnalogState *stickInfoL;
+    AnalogState *stickInfo;
 
     TouchMouseData *touchInfo;
 
     ScreenInfo *screenInfo;
 
 #if RETRO_USE_MOD_LOADER
-    void *modPtrs;
+    void *modTable;
 #endif
 };
 #endif

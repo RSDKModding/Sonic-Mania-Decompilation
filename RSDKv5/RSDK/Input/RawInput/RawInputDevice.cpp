@@ -63,6 +63,7 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
     controller[controllerID].keyStart.press |= this->stateStart;
     controller[controllerID].keySelect.press |= this->stateSelect;
 
+#if RETRO_REV02
     stickL[controllerID].keyStick.press |= this->stateStick_L;
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
@@ -88,6 +89,28 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
     triggerR[controllerID].keyTrigger.press |= this->stateTrigger_R;
     triggerR[controllerID].deadzone = this->triggerDeltaR;
     triggerR[controllerID].delta    = this->triggerDeltaR;
+#else
+    controller[controllerID].keyStickL.press |= this->stateStick_L;
+    stickL[controllerID].hDeltaL = this->hDelta_L;
+    stickL[controllerID].vDeltaL = this->vDelta_L;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+
+    controller[controllerID].keyStickR.press |= this->stateStick_R;
+    stickL[controllerID].hDeltaR = this->vDelta_R;
+    stickL[controllerID].vDeltaR = this->hDelta_R;
+
+    controller[controllerID].keyBumperL.press |= this->stateBumper_L;
+    controller[controllerID].keyTriggerL.press |= this->stateTrigger_L;
+    stickL[controllerID].deadzone = this->triggerDeltaL;
+    stickL[controllerID].triggerDeltaL      = this->triggerDeltaL;
+
+    controller[controllerID].keyBumperR.press |= this->stateBumper_R;
+    controller[controllerID].keyTriggerR.press |= this->stateTrigger_R;
+    stickL[controllerID].triggerDeltaR    = this->triggerDeltaR;
+#endif
 }
 
 InputDeviceRaw *InitRawInputDevice(uint32 id)

@@ -69,7 +69,9 @@ void SaveGame_LoadSaveData(void)
     while (saveRAM->score1UP <= saveRAM->score) saveRAM->score1UP += 50000;
 
     if (Player) {
+#if RETRO_USE_PLUS
         if (!TitleCard || TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
+#endif
             Player->savedLives    = saveRAM->lives;
             Player->savedScore    = saveRAM->score;
             Player->savedScore1UP = saveRAM->score1UP;
@@ -77,8 +79,8 @@ void SaveGame_LoadSaveData(void)
             globals->continues      = saveRAM->continues;
             globals->stock          = saveRAM->stock;
             globals->characterFlags = saveRAM->characterFlags;
-#endif
         }
+#endif
     }
 
     if (Zone && SceneInfo->activeCategory < 3) {
@@ -346,7 +348,11 @@ void SaveGame_SavePlayerState(void)
     globals->restartSeconds      = SceneInfo->seconds;
     globals->restartMinutes      = SceneInfo->minutes;
 
+#if RETRO_USE_PLUS
     if (saveRAM && TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
+#else
+    if (saveRAM) {
+#endif
         saveRAM->lives    = player->lives;
         saveRAM->score    = player->score;
         saveRAM->score1UP = player->score1UP;

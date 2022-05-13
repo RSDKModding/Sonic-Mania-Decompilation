@@ -145,17 +145,21 @@ void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 
 #endif
 
 #if !RETRO_REV02
-void PrintMessage(void *msg, int32 staticVars)
+void PrintMessage(void *msg, int32 type)
 {
+    useEndLine = false;
+
     if (msg && engine.consoleEnabled) {
-        switch (staticVars) {
-            case 0: PrintLog(PRINT_NORMAL, "%s", (const char *)msg); break;
-            case 1: PrintLog(PRINT_NORMAL, "%i", *(int32 *)msg); break;
-            case 2: PrintLog(PRINT_NORMAL, "%i", *(uint32 *)msg, 0); break;
-            case 3: PrintLog(PRINT_NORMAL, "%f", *(float *)msg); break;
+        switch (type) {
+            case MESSAGE_STRING: PrintLog(PRINT_NORMAL, "%s", (const char *)msg); break;
+            case MESSAGE_INT32: PrintLog(PRINT_NORMAL, "%i", *(int32 *)msg); break;
+            case MESSAGE_UINT32: PrintLog(PRINT_NORMAL, "%i", *(uint32 *)msg, 0); break;
+            case MESSAGE_FLOAT: PrintLog(PRINT_NORMAL, "%f", *(float *)msg); break;
             default: break;
         }
     }
+
+    useEndLine = true;
 }
 #endif
 
@@ -920,8 +924,9 @@ void DevMenu_VideoOptionsMenu()
                     case 4: width = 3 - (RSDK::videoSettings.pixHeight * -1.7777778f); break; // 5:3
                 }
                 width &= 0x7FF8;
-                if (width > 424)
-                    width = 424;
+                // if (width > DEFAULT_SCREEN_XSIZE)
+                //     width = DEFAULT_SCREEN_XSIZE;
+
                 RSDK::videoSettings.windowWidth  = width * (devMenu.windowScale + 1);
                 RSDK::videoSettings.windowHeight = RSDK::videoSettings.pixHeight * (devMenu.windowScale + 1);
                 UpdateGameWindow();

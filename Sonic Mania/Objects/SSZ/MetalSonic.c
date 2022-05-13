@@ -451,7 +451,9 @@ void MetalSonic_State_WaitForHologram(void)
     foreach_active(MSHologram, hologram)
     {
         if (hologram->state == MSHologram_State_Destroyed && hologram->timer == 320) {
+#if RETRO_USE_PLUS
             Music_ClearMusicStack();
+#endif
             Music_PlayTrack(TRACK_EGGMAN1);
             RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 255);
 

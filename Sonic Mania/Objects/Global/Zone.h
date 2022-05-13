@@ -160,8 +160,10 @@ void Zone_Draw_Fade(void);
 void Zone_State_Fadeout(void);
 void Zone_State_FadeIn(void);
 void Zone_State_Fadeout_Competition(void);
+#if RETRO_USE_PLUS
 void Zone_TitleCard_SupressCB(void);
 void Zone_State_ReloadScene(void);
+#endif
 void Zone_State_Fadeout_Destroy(void);
 void Zone_HandlePlayerSwap(void);
 void Zone_State_SwapPlayers(void);

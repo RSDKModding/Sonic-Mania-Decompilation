@@ -198,8 +198,8 @@ bool RenderDevice::InitGraphicsAPI()
         if (screenWidth < RSDK::videoSettings.pixWidth)
             screenWidth = RSDK::videoSettings.pixWidth;
 
-        // if (screenWidth > 424)
-        //     screenWidth = 424;
+        // if (screenWidth > DEFAULT_SCREEN_XSIZE)
+        //     screenWidth = DEFAULT_SCREEN_XSIZE;
 
         memset(&screens[s].frameBuffer, 0, sizeof(screens[s].frameBuffer));
         SetScreenSize(s, screenWidth, screens[s].size.y);

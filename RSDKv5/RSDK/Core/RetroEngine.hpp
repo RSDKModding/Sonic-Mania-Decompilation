@@ -148,7 +148,7 @@ enum GameRegions {
 #define RETRO_VER_EGS (RETRO_REV02 && 0)
 
 // enables only EGS's ingame achievements popup without enabling anything else
-#define RETRO_USE_DUMMY_ACHIEVEMENTS (1 && RETRO_REV02)
+#define RETRO_USE_DUMMY_ACHIEVEMENTS (RETRO_REV02 && 1)
 
 // enables the use of the mod loader
 #define RETRO_USE_MOD_LOADER (!RETRO_USE_ORIGINAL_CODE && 1)

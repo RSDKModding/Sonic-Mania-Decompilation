@@ -111,7 +111,7 @@ bool32 APICallback_GetConfirmButtonFlip(void)
     if (APICallback->GetConfirmButtonFlip)
         return APICallback->GetConfirmButtonFlip();
 
-    LogHelpers_Print("DUMMY GetConfirmButtonFlip()");
+    // LogHelpers_Print("DUMMY GetConfirmButtonFlip()");
     return false;
 }
 

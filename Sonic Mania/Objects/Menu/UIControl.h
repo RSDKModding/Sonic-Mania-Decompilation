@@ -139,8 +139,10 @@ void UIControl_HandleMenuChange(String *newMenuTag);
 void UIControl_HandleMenuLoseFocus(EntityUIControl *parent);
 void UIControl_ReturnToParentMenu(void);
 
-void UIControl_ClearInputs(uint8 id);
+void UIControl_ClearInputs(uint8 buttonID);
+#if RETRO_USE_PLUS
 void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y);
+#endif
 void UIControl_HandlePosition(void);
 void UIControl_ProcessInputs(void);
 void UIControl_ProcessButtonInput(void);

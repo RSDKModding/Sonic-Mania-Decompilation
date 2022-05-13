@@ -428,26 +428,31 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     if (info->language) {
                         GameInfo linkInfo;
 
-                        linkInfo.functionPtrs = RSDKFunctionTable;
 #if RETRO_REV02
-                        linkInfo.APIPtrs    = APIFunctionTable;
-                        linkInfo.currentSKU = &SKU::curSKU;
+                        linkInfo.functionTable = RSDKFunctionTable;
+                        linkInfo.APITable      = APIFunctionTable;
+                        linkInfo.currentSKU   = &SKU::curSKU;
+                        linkInfo.gameInfo     = &gameVerInfo;
+                        linkInfo.sceneInfo    = &sceneInfo;
+                        linkInfo.controller   = controller;
+                        linkInfo.stickL       = stickL;
+                        linkInfo.stickR       = stickR;
+                        linkInfo.triggerL     = triggerL;
+                        linkInfo.triggerR     = triggerR;
+                        linkInfo.touchMouse   = &touchMouseData;
+                        linkInfo.unknown      = &SKU::unknownInfo;
+                        linkInfo.screenInfo   = screens;
+                        linkInfo.modTable      = modFunctionTable;
+#else
+                        linkInfo.functionTable  = RSDKFunctionTable;
+                        linkInfo.gameInfo       = &gameVerInfo;
+                        linkInfo.sceneInfo      = &sceneInfo;
+                        linkInfo.controllerInfo = controller;
+                        linkInfo.stickInfo      = stickL;
+                        linkInfo.touchInfo      = &touchMouseData;
+                        linkInfo.screenInfo     = screens;
+                        linkInfo.modTable        = modFunctionTable;
 #endif
-                        linkInfo.gameInfo   = &gameVerInfo;
-                        linkInfo.sceneInfo  = &sceneInfo;
-                        linkInfo.controller = controller;
-                        linkInfo.stickL     = stickL;
-#if RETRO_REV02
-                        linkInfo.stickR   = stickR;
-                        linkInfo.triggerL = triggerL;
-                        linkInfo.triggerR = triggerR;
-#endif
-                        linkInfo.touchMouse = &touchMouseData;
-#if RETRO_REV02
-                        linkInfo.unknown = &SKU::unknownInfo;
-#endif
-                        linkInfo.screenInfo = screens;
-                        linkInfo.modPtrs    = modFunctionTable;
 
                         const char *fid = info->id.c_str();
                         currentMod      = info;

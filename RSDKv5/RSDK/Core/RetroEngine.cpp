@@ -70,11 +70,13 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
         RSDK::readSettings();
         RSDK::SKU::InitUserData();
-    
+
         // By Default we use the dummy system so this'll never be false
         // its used in cases like steam where it gives the "Steam must be running to play this game" message and closes
 #if RETRO_REV02
         if (!RSDK::SKU::userCore->CheckAPIInitialized()) {
+#else
+        if (false) { // it's more hardcoded in rev01, so lets pretend it's here
 #endif
             // custom message box, the original RSDK PC ver has a steam message instead
             // MessageBox(RenderDevice::windowHandle, L"API Validation failed", L"RSDK Error", 0);
@@ -190,7 +192,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
     AudioDevice::Release();
     RenderDevice::Release(false);
-    RSDK::writeSettings(false);
+    RSDK::WriteSettings(false);
     RSDK::SKU::releaseUserData();
     RSDK::ReleaseStorage();
 #if RETRO_USE_MOD_LOADER
@@ -969,8 +971,8 @@ void InitGameLink()
 #if RETRO_REV02
     RSDK::GameInfo info;
 
-    info.functionPtrs = RSDK::RSDKFunctionTable;
-    info.APIPtrs      = RSDK::APIFunctionTable;
+    info.functionTable = RSDK::RSDKFunctionTable;
+    info.APITable      = RSDK::APIFunctionTable;
 
     info.currentSKU   = &RSDK::SKU::curSKU;
     info.gameInfo     = &RSDK::gameVerInfo;
@@ -988,7 +990,24 @@ void InitGameLink()
     info.screenInfo   = screens;
 
 #if RETRO_USE_MOD_LOADER
-    info.modPtrs = RSDK::modFunctionTable;
+    info.modTable = RSDK::modFunctionTable;
+#endif
+#else
+    RSDK::GameInfo info;
+
+    info.functionTable = RSDK::RSDKFunctionTable;
+
+    info.gameInfo = &RSDK::gameVerInfo;
+    info.sceneInfo = &sceneInfo;
+
+    info.controllerInfo = controller;
+    info.stickInfo = stickL;
+    info.touchInfo = &touchMouseData;
+
+    info.screenInfo = screens;
+
+#if RETRO_USE_MOD_LOADER
+    info.modTable = RSDK::modFunctionTable;
 #endif
 #endif
 
@@ -1005,12 +1024,7 @@ void InitGameLink()
 #if RETRO_REV02
                 linkGameLogic(&info);
 #else
-#if RETRO_USE_MOD_LOADER
-                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens,
-                              RSDK::modFunctionTable);
-#else
-                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
-#endif
+                linkGameLogic(info);
 #endif
                 linked = true;
             }
@@ -1029,12 +1043,7 @@ void InitGameLink()
 #if RETRO_REV02
                 linkGameLogic(&info);
 #else
-#if RETRO_USE_MOD_LOADER
-                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens,
-                              RSDK::modFunctionTable);
-#else
-                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
-#endif
+                linkGameLogic(info);
 #endif
                 linked = true;
             }
@@ -1053,12 +1062,7 @@ void InitGameLink()
 #if RETRO_REV02
                 linkGameLogic(&info);
 #else
-#if RETRO_USE_MOD_LOADER
-                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens,
-                              RSDK::modFunctionTable);
-#else
-                linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
-#endif
+                linkGameLogic(info);
 #endif
                 linked = true;
             }
@@ -1072,11 +1076,7 @@ void InitGameLink()
 #if RETRO_REV02
         linkGameLogic(&info);
 #else
-#if RETRO_USE_MOD_LOADER
-        linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens, RSDK::modFunctionTable);
-#else
-        linkGameLogic(RSDK::RSDKFunctionTable, &RSDK::gameVerInfo, &sceneInfo, controller, stickL, &touchMouseData, screens);
-#endif
+        linkGameLogic(info);
 #endif
     }
 
@@ -1118,6 +1118,7 @@ void ProcessDebugCommands()
 
     bool32 framePaused = (sceneInfo.state >> 2) & 1;
 
+#if RETRO_REV02
     if (triggerL[CONT_P1].keyBumper.down) {
         if (triggerL[CONT_P1].keyTrigger.down) {
             if (!framePaused)
@@ -1147,4 +1148,32 @@ void ProcessDebugCommands()
         if (framePaused)
             sceneInfo.state ^= ENGINESTATE_STEPOVER;
     }
+#else
+    if (controller[CONT_P1].keyBumperL.down) {
+        if (controller[CONT_P1].keyTriggerL.down) {
+            if (!framePaused)
+                sceneInfo.state ^= ENGINESTATE_STEPOVER;
+        }
+        else {
+            if (framePaused)
+                sceneInfo.state ^= ENGINESTATE_STEPOVER;
+        }
+
+        framePaused = (sceneInfo.state >> 2) & 1;
+        if (framePaused) {
+            if (controller[CONT_P1].keyBumperR.press)
+                engine.frameStep = true;
+        }
+        else {
+            engine.gameSpeed = controller[CONT_P1].keyTriggerR.down ? 8 : 1;
+        }
+    }
+    else {
+        if (engine.gameSpeed == 8)
+            engine.gameSpeed = 1;
+
+        if (framePaused)
+            sceneInfo.state ^= ENGINESTATE_STEPOVER;
+    }
+#endif
 }

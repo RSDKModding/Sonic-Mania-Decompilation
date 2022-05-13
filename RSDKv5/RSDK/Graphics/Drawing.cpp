@@ -30,7 +30,7 @@ uint8 RenderDevice::startVertex_2P[] = { 18, 24 };
 uint8 RenderDevice::startVertex_3P[] = { 30, 36, 12 };
 #endif
 
-float2 RenderDevice::pixelSize   = { 424, SCREEN_YSIZE };
+float2 RenderDevice::pixelSize   = { DEFAULT_SCREEN_XSIZE, SCREEN_YSIZE };
 float2 RenderDevice::textureSize = { 512.0, 256.0 };
 float2 RenderDevice::viewSize    = { 0, 0 };
 

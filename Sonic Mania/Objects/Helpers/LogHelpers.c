@@ -26,15 +26,21 @@ void LogHelpers_Print(const char *message, ...)
     if (!SceneInfo->inEditor) {
         char messageText[0x100];
 
-        va_list list;
-        va_start(list, message);
-        vsprintf(messageText, message, list);
+        va_list args;
+        va_start(args, message);
+        vsprintf(messageText, message, args);
+
 #if RETRO_USE_PLUS
         RSDK.PrintText(PRINT_NORMAL, messageText);
 #else
-        RSDK.PrintMessage((void *)messageText, 0);
+        int32 len            = strlen(messageText);
+        messageText[len]     = '\n';
+        messageText[len + 1] = 0;
+
+        RSDK.PrintMessage((void *)messageText, MESSAGE_STRING);
 #endif
-        va_end(list);
+
+        va_end(args);
     }
 }
 

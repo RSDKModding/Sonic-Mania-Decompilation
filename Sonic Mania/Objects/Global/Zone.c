@@ -957,6 +957,7 @@ void Zone_State_Fadeout_Competition(void)
     }
 }
 
+#if RETRO_USE_PLUS
 void Zone_TitleCard_SupressCB(void)
 {
     RSDK_THIS(Zone);
@@ -998,6 +999,7 @@ void Zone_State_ReloadScene(void)
 
     RSDK.LoadScene();
 }
+#endif
 
 void Zone_State_Fadeout_Destroy(void)
 {

@@ -346,7 +346,7 @@ typedef struct {
     RSDKScreenInfo *screenInfo;
 
 #if RETRO_USE_MOD_LOADER
-    void *modPtrs;
+    void *modTable;
 #endif
 } EngineInfo;
 #else
@@ -364,7 +364,7 @@ typedef struct {
     RSDKScreenInfo *screenInfo;
 
 #if RETRO_USE_MOD_LOADER
-    void *modPtrs;
+    void *modTable;
 #endif
 } EngineInfo;
 #endif
@@ -557,7 +557,14 @@ typedef enum {
     PRINT_POPUP,
     PRINT_ERROR,
     PRINT_FATAL,
-} SeverityModes;
+} PrintModes;
+#else
+typedef enum {
+    MESSAGE_STRING,
+    MESSAGE_INT32,
+    MESSAGE_UINT32,
+    MESSAGE_FLOAT,
+} PrintMessageTypes;
 #endif
 
 typedef enum {

@@ -867,15 +867,15 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
         }
 #endif
 
-        engine.displayTime    = displayLength;
-        engine.storedShaderID = engine.shaderID;
-        engine.storedState    = sceneInfo.state;
-        engine.dimMax         = 0.0;
-        engine.shaderID       = SHADER_RGB_IMAGE;
-        engine.screenCount    = 0; // "Image Display Mode"
-        engine.skipCallback   = skipCallback;
-        sceneInfo.state       = ENGINESTATE_SHOWIMAGE;
-        engine.imageDelta     = speed / 60.0;
+        engine.displayTime              = displayLength;
+        engine.storedShaderID           = RSDK::videoSettings.shaderID;
+        engine.storedState              = sceneInfo.state;
+        RSDK::videoSettings.dimMax      = 0.0;
+        RSDK::videoSettings.shaderID    = SHADER_RGB_IMAGE;
+        RSDK::videoSettings.screenCount = 0; // "Image Display Mode"
+        engine.skipCallback             = skipCallback;
+        sceneInfo.state                 = ENGINESTATE_SHOWIMAGE;
+        engine.imageDelta               = speed / 60.0;
 
         image.palette = NULL;
         image.pixels  = NULL;

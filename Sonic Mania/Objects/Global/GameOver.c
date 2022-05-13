@@ -247,7 +247,9 @@ void GameOver_State_ShowMessage(void)
         self->timer = 420;
 
     if (self->timer == 420) {
+#if RETRO_USE_PLUS
         Music_ClearMusicStack();
+#endif
         Music_FadeOut(0.05);
 
         foreach_all(GameOver, gameOver)

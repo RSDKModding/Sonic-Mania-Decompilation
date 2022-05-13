@@ -218,5 +218,5 @@ int RSDK::SKU::DummyCore::ShowEncorePage(int a1)
     PrintLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
     return 1;
 }
-void DummyCore::EpicUnknown4(int a1) { PrintLog(PRINT_POPUP, "EpicUnknown4(%d)", a1); }
+void RSDK::SKU::DummyCore::EpicUnknown4(int a1) { PrintLog(PRINT_POPUP, "EpicUnknown4(%d)", a1); }
 #endif

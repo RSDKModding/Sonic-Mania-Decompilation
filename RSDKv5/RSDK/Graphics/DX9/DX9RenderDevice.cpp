@@ -11,7 +11,7 @@ IDirect3DDevice9 *RenderDevice::dx9Device;
 UINT RenderDevice::dxAdapter;
 IDirect3DVertexDeclaration9 *RenderDevice::dx9VertexDeclare;
 IDirect3DVertexBuffer9 *RenderDevice::dx9VertexBuffer;
-IDirect3DTexture9 *RenderDevice::screenTextures[4];
+IDirect3DTexture9 *RenderDevice::screenTextures[SCREEN_MAX];
 IDirect3DTexture9 *RenderDevice::imageTexture;
 D3DVIEWPORT9 RenderDevice::dx9ViewPort;
 
@@ -533,7 +533,7 @@ RenderVertex vertBuffer[60] = {
     { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } }
 };
 #else
-RenderVertex vertexList[24] =
+RenderVertex vertBuffer[24] =
 {
     // 1 Screen (0)
     { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
@@ -705,8 +705,8 @@ bool RenderDevice::InitGraphicsAPI()
         if (screenWidth < RSDK::videoSettings.pixWidth)
             screenWidth = RSDK::videoSettings.pixWidth;
 
-        // if (screenWidth > 424)
-        //     screenWidth = 424;
+        // if (screenWidth > DEFAULT_SCREEN_XSIZE)
+        //     screenWidth = DEFAULT_SCREEN_XSIZE;
 
         memset(&screens[s].frameBuffer, 0, sizeof(screens[s].frameBuffer));
         SetScreenSize(s, screenWidth, screens[s].size.y);

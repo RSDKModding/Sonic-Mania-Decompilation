@@ -116,6 +116,7 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     controller[controllerID].keyStart.press |= this->stateStart;
     controller[controllerID].keySelect.press |= this->stateSelect;
 
+#if RETRO_REV02
     stickL[controllerID].keyStick.press |= this->stateStick_L;
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
@@ -139,6 +140,27 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
     triggerR[controllerID].deadzone = this->deadzoneRTrigger;
     triggerR[controllerID].delta    = this->deltaRTrigger;
+#else
+    controller[controllerID].keyStickL.press |= this->stateStick_L;
+    stickL[controllerID].hDeltaL = this->hDelta_L;
+    stickL[controllerID].vDeltaL = this->vDelta_L;
+
+    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+
+    controller[controllerID].keyStickR.press |= this->stateStick_R;
+    stickL[controllerID].hDeltaL = this->hDelta_R;
+    stickL[controllerID].vDeltaL = this->vDelta_R;
+
+    controller[controllerID].keyBumperL.press |= this->stateBumper_L;
+    stickL[controllerID].deadzone      = this->deadzoneLTrigger;
+    stickL[controllerID].triggerDeltaL = this->deltaLTrigger;
+
+    controller[controllerID].keyBumperR.press |= this->stateBumper_R;
+    stickL[controllerID].triggerDeltaR = this->deltaRTrigger;
+#endif
 }
 
 InputDeviceXInput *InitXInputDevice(uint32 id)

@@ -191,7 +191,7 @@ int32 GetVideoSetting(int32 id);
 void SetVideoSetting(int32 id, int32 val);
 
 void readSettings();
-void writeSettings(bool32 writeToFile);
+void WriteSettings(bool32 writeToFile);
 
 inline void writeText(FileIO *file, const char *string, ...)
 {

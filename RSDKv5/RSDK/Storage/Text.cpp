@@ -440,14 +440,14 @@ void LoadStringList(String *stringList, const char *filePath, uint32 charSize)
                 stringList->length = info.fileSize;
                 InitStringList(stringList, info.fileSize);
 
-                for (int32 c = 0; c < stringList->length; ++c) stringList->text[c] = ReadInt8(&info);
+                for (int32 c = 0; c < stringList->length; ++c) stringList->chars[c] = ReadInt8(&info);
                 break;
 
             case 16: // UTF-16
                 stringList->length = info.fileSize >> 1;
                 InitStringList(stringList, info.fileSize >> 1);
 
-                for (int32 c = 0; c < stringList->length; ++c) stringList->text[c] = ReadInt16(&info);
+                for (int32 c = 0; c < stringList->length; ++c) stringList->chars[c] = ReadInt16(&info);
                 break;
         }
 #endif

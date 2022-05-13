@@ -283,7 +283,7 @@ void RSDK::SKU::LaunchManual()
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
 #endif
 }
-void RSDK::SKU::ExitGame() { engine.running = false; }
+void RSDK::SKU::ExitGame() { RenderDevice::isRunning = false; }
 
 int RSDK::SKU::GetDefaultGamepadType()
 {
@@ -453,7 +453,7 @@ void RSDK::SetVideoSetting(int32 id, int32 val)
 
         case VIDEOSETTING_CHANGED: changedVideoSettings = boolVal; break;
 
-        case VIDEOSETTING_WRITE: writeSettings(val); break;
+        case VIDEOSETTING_WRITE: WriteSettings(val); break;
 
         default: break;
     }
@@ -644,7 +644,7 @@ void RSDK::readSettings()
         videoSettings.vsync          = true;
         videoSettings.tripleBuffered = false;
         videoSettings.shaderSupport  = true;
-        videoSettings.pixWidth       = 424;
+        videoSettings.pixWidth       = DEFAULT_SCREEN_XSIZE;
         videoSettings.fsWidth        = 0;
         videoSettings.windowWidth    = videoSettings.pixWidth * 1;
         videoSettings.windowHeight   = SCREEN_YSIZE * 1;
@@ -671,12 +671,12 @@ void RSDK::readSettings()
             controller[i].keySelect.keyMap = defKeyMaps[i][11];
         }
 
-        writeSettings(true);
+        WriteSettings(true);
         engine.devMenu = CheckDataFile("Data.rsdk", 0, useBuffer);
     }
 }
 
-void RSDK::writeSettings(bool32 writeToFile)
+void RSDK::WriteSettings(bool32 writeToFile)
 {
     // only done on windows and "dev", consoles use "options.bin"
 #if RETRO_REV02

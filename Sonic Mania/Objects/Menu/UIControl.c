@@ -153,9 +153,9 @@ EntityUIControl *UIControl_GetUIControl(void)
     return NULL;
 }
 
-void UIControl_ClearInputs(uint8 id)
+void UIControl_ClearInputs(uint8 buttonID)
 {
-    for (int32 i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < PLAYER_MAX; ++i) {
         UIControl->upPress[i]      = false;
         UIControl->downPress[i]    = false;
         UIControl->leftPress[i]    = false;
@@ -173,21 +173,21 @@ void UIControl_ClearInputs(uint8 id)
     UIControl->keyDown  = false;
     UIControl->keyLeft  = false;
     UIControl->keyRight = false;
-    UIControl->keyY     = id == UIBUTTONPROMPT_BUTTON_Y;
-    UIControl->keyX     = id == UIBUTTONPROMPT_BUTTON_X;
+    UIControl->keyY     = buttonID == UIBUTTONPROMPT_BUTTON_Y;
+    UIControl->keyX     = buttonID == UIBUTTONPROMPT_BUTTON_X;
 #if RETRO_USE_PLUS
-    UIControl->keyStart = id == UIBUTTONPROMPT_BUTTON_SELECT;
+    UIControl->keyStart = buttonID == UIBUTTONPROMPT_BUTTON_SELECT;
 #endif
 
     if (API_GetConfirmButtonFlip()) {
-        UIControl->keyConfirm     = id == UIBUTTONPROMPT_BUTTON_B;
-        UIControl->keyBack        = id == UIBUTTONPROMPT_BUTTON_A;
-        UIControl->forceBackPress = id == UIBUTTONPROMPT_BUTTON_A;
+        UIControl->keyConfirm     = buttonID == UIBUTTONPROMPT_BUTTON_B;
+        UIControl->keyBack        = buttonID == UIBUTTONPROMPT_BUTTON_A;
+        UIControl->forceBackPress = buttonID == UIBUTTONPROMPT_BUTTON_A;
     }
     else {
-        UIControl->keyConfirm     = id == UIBUTTONPROMPT_BUTTON_A;
-        UIControl->keyBack        = id == UIBUTTONPROMPT_BUTTON_B;
-        UIControl->forceBackPress = id == UIBUTTONPROMPT_BUTTON_B;
+        UIControl->keyConfirm     = buttonID == UIBUTTONPROMPT_BUTTON_A;
+        UIControl->keyBack        = buttonID == UIBUTTONPROMPT_BUTTON_B;
+        UIControl->forceBackPress = buttonID == UIBUTTONPROMPT_BUTTON_B;
     }
 
     UIControl->lockInput   = true;
@@ -471,7 +471,7 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
 #if RETRO_USE_PLUS
     if (!entity->childHasFocus && (entity->resetSelection || !entity->menuWasSetup)) {
 #else
-    if (!entity->childHasFocus && entity->resetSelection) {
+    if (!entity->childHasFocus) {
 #endif
         entity->position.x  = entity->startPos.x;
         entity->position.y  = entity->startPos.y;
@@ -483,7 +483,7 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
     entity->childHasFocus = false;
 
 #if RETRO_USE_PLUS
-    entity->menuWasSetup  = true;
+    entity->menuWasSetup = true;
 
     for (int32 p = 0; p < entity->promptCount; ++p) entity->prompts[p]->active = ACTIVE_NORMAL;
 #endif
@@ -616,9 +616,8 @@ void UIControl_SetupButtons(void)
 
         if (button) {
             int32 classID = button->classID;
-            if (classID != UIButton->classID && (!UIModeButton || classID != UIModeButton->classID)
-                && (!UISaveSlot || classID != UISaveSlot->classID) && (!UICharButton || classID != UICharButton->classID)
-                && (!UITAZoneModule || classID != UITAZoneModule->classID)
+            if (classID != UIButton->classID && (!UIModeButton || classID != UIModeButton->classID) && (!UISaveSlot || classID != UISaveSlot->classID)
+                && (!UICharButton || classID != UICharButton->classID) && (!UITAZoneModule || classID != UITAZoneModule->classID)
 #if RETRO_USE_PLUS
                 && (!UIRankButton || classID != UIRankButton->classID) && (!UIReplayCarousel || classID != UIReplayCarousel->classID)
 #endif
@@ -711,6 +710,7 @@ void UIControl_ReturnToParentMenu(void)
     UIControl_HandleMenuChange(&entity->parentTag);
 }
 
+#if RETRO_USE_PLUS
 void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y)
 {
     int32 targetX = x;
@@ -725,9 +725,7 @@ void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y)
         y       = entity->position.y;
     }
 
-#if RETRO_USE_PLUS
     if (!entity->noClamp) {
-#endif
         int32 startX = entity->startPos.x - entity->cameraOffset.x;
         int32 startY = entity->startPos.y - entity->cameraOffset.y;
         int32 x1     = startX + (ScreenInfo->width << 15) - (entity->size.x >> 1);
@@ -748,13 +746,12 @@ void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y)
 
         if (y1 > y2)
             targetY = y1;
-#if RETRO_USE_PLUS
     }
-#endif
 
     entity->targetPos.x = targetX;
     entity->targetPos.y = targetY;
 }
+#endif
 
 void UIControl_HandlePosition(void)
 {

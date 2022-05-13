@@ -248,7 +248,7 @@ extern ScreenInfo screens[SCREEN_MAX];
 extern CameraInfo cameras[CAMERA_MAX];
 extern ScreenInfo *currentScreen;
 
-extern RenderVertex vertexBuffer[60];
+extern RenderVertex vertexBuffer[!RETRO_REV02 ? 24 : 60];
 
 extern int32 shaderCount;
 extern ShaderEntry shaderList[SHADER_MAX];
@@ -268,6 +268,7 @@ void InitSystemSurfaces();
 void GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text);
 void GetWindowSize(int32 *width, int32 *height);
 
+#if RETRO_REV02
 inline void SetScreenRenderVertices(sbyte startVert2P_S1, sbyte startVert2P_S2, sbyte startVert3P_S1, sbyte startVert3P_S2, sbyte startVert3P_S3)
 {
     RenderDevice::startVertex_2P[0] = startVert2P_S1;
@@ -277,6 +278,7 @@ inline void SetScreenRenderVertices(sbyte startVert2P_S1, sbyte startVert2P_S2, 
     RenderDevice::startVertex_3P[1] = startVert3P_S2;
     RenderDevice::startVertex_3P[2] = startVert3P_S3;
 }
+#endif
 
 inline void SetScreenSize(uint8 screenID, uint16 width, uint16 height)
 {

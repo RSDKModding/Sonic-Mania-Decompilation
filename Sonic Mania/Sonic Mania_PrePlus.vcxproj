@@ -96,6 +96,7 @@
     <ClInclude Include="Objects\Credits\AnimalHBH.h" />
     <ClInclude Include="Objects\Credits\CreditsSetup.h" />
     <ClInclude Include="Objects\Credits\EncoreGoodEnd.h" />
+    <ClInclude Include="Objects\Credits\TAEmerald.h" />
     <ClInclude Include="Objects\Credits\TryAgain.h" />
     <ClInclude Include="Objects\Credits\TryAgainE.h" />
     <ClInclude Include="Objects\Cutscene\ChaosEmerald.h" />
@@ -209,6 +210,16 @@
     <ClInclude Include="Objects\Global\NoSwap.h" />
     <ClInclude Include="Objects\Global\PauseMenu.h" />
     <ClInclude Include="Objects\Global\PlaneSwitch.h" />
+    <ClInclude Include="Objects\Global\Player.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Objects\Global\ReplayRecorder.h" />
     <ClInclude Include="Objects\Global\Ring.h" />
     <ClInclude Include="Objects\Global\SaveGame.h" />
@@ -261,6 +272,8 @@
     <ClInclude Include="Objects\Helpers\MathHelpers.h" />
     <ClInclude Include="Objects\Helpers\Options.h" />
     <ClInclude Include="Objects\Helpers\ParticleHelpers.h" />
+    <ClInclude Include="Objects\Helpers\PlayerHelpers.h" />
+    <ClInclude Include="Objects\Helpers\PlayerProbe.h" />
     <ClInclude Include="Objects\Helpers\ReplayDB.h" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.h" />
     <ClInclude Include="Objects\HPZ\Batbot.h" />
@@ -324,7 +337,6 @@
     <ClInclude Include="Objects\Menu\MenuParam.h" />
     <ClInclude Include="Objects\Menu\MenuSetup.h" />
     <ClInclude Include="Objects\Menu\OptionsMenu.h" />
-    <ClInclude Include="Objects\Menu\TAEmerald.h" />
     <ClInclude Include="Objects\Menu\ThanksSetup.h" />
     <ClInclude Include="Objects\Menu\TimeAttackMenu.h" />
     <ClInclude Include="Objects\Menu\UIBackground.h" />
@@ -482,9 +494,6 @@
     <ClInclude Include="Objects\Pinball\PBL_Sector.h" />
     <ClInclude Include="Objects\Pinball\PBL_Setup.h" />
     <ClInclude Include="Objects\Pinball\PBL_TargetBumper.h" />
-    <ClInclude Include="Objects\Player\Player.h" />
-    <ClInclude Include="Objects\Player\PlayerHelpers.h" />
-    <ClInclude Include="Objects\Player\PlayerProbe.h" />
     <ClInclude Include="Objects\Puyo\PuyoAI.h" />
     <ClInclude Include="Objects\Puyo\PuyoAttack.h" />
     <ClInclude Include="Objects\Puyo\PuyoBean.h" />
@@ -784,6 +793,7 @@
     </ClCompile>
     <ClCompile Include="Objects\Credits\EncoreGoodEnd.c">
     </ClCompile>
+    <ClCompile Include="Objects\Credits\TAEmerald.c" />
     <ClCompile Include="Objects\Credits\TryAgain.c">
     </ClCompile>
     <ClCompile Include="Objects\Credits\TryAgainE.c">
@@ -1010,6 +1020,16 @@
     </ClCompile>
     <ClCompile Include="Objects\Global\PlaneSwitch.c">
     </ClCompile>
+    <ClCompile Include="Objects\Global\Player.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Objects\Global\ReplayRecorder.c">
     </ClCompile>
     <ClCompile Include="Objects\Global\Ring.c">
@@ -1110,6 +1130,8 @@
     </ClCompile>
     <ClCompile Include="Objects\Helpers\ParticleHelpers.c">
     </ClCompile>
+    <ClCompile Include="Objects\Helpers\PlayerHelpers.c" />
+    <ClCompile Include="Objects\Helpers\PlayerProbe.c" />
     <ClCompile Include="Objects\Helpers\ReplayDB.c">
     </ClCompile>
     <ClCompile Include="Objects\Helpers\TimeAttackData.c">
@@ -1235,8 +1257,6 @@
     <ClCompile Include="Objects\Menu\MenuSetup.c">
     </ClCompile>
     <ClCompile Include="Objects\Menu\OptionsMenu.c">
-    </ClCompile>
-    <ClCompile Include="Objects\Menu\TAEmerald.c">
     </ClCompile>
     <ClCompile Include="Objects\Menu\ThanksSetup.c">
     </ClCompile>
@@ -1551,12 +1571,6 @@
     <ClCompile Include="Objects\Pinball\PBL_Setup.c">
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_TargetBumper.c">
-    </ClCompile>
-    <ClCompile Include="Objects\Player\Player.c">
-    </ClCompile>
-    <ClCompile Include="Objects\Player\PlayerHelpers.c">
-    </ClCompile>
-    <ClCompile Include="Objects\Player\PlayerProbe.c">
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoAI.c">
     </ClCompile>

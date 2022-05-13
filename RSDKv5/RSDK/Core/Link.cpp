@@ -27,7 +27,8 @@ void SetAPIFunction(const char *name, void *ptr)
     if (RSDK::APIFunctionTableCount < APITABLE_COUNT) {
         RETRO_HASH_MD5(hash);
         GEN_HASH_MD5(name, hash);
-        for (int f = 0; f < RSDK::APIFunctionTableCount; ++f) {
+
+        for (int32 f = 0; f < RSDK::APIFunctionTableCount; ++f) {
             if (HASH_MATCH_MD5(hash, RSDK::APIFunctionTable[f].hash))
                 return; // already exists, ignore this call
         }
@@ -43,15 +44,17 @@ void *GetAPIFunction(const char *name)
     if (!name)
         return NULL;
 
-    uint hash[4];
+    RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
+
     for (int f = 0; f < RSDK::APIFunctionTableCount; ++f) {
         if (HASH_MATCH_MD5(hash, RSDK::APIFunctionTable[f].hash))
             return RSDK::APIFunctionTable[f].ptr;
     }
 
-    if (engine.PrintConsole)
+    if (engine.consoleEnabled)
         PrintLog(PRINT_POPUP, "API Function not found: %s", name);
+
     return NULL;
 }
 #endif
@@ -215,7 +218,7 @@ void RSDK::SetupFunctionTables()
     // User File Management
     ADD_API_FUNCTION("LoadUserFile", TryLoadUserFile);
     ADD_API_FUNCTION("SaveUserFile", TrySaveUserFile);
-    ADD_API_FUNCTION("SaveSettingsINI", writeSettings);
+    ADD_API_FUNCTION("SaveSettingsINI", WriteSettings);
 
     // Input
     ADD_API_FUNCTION("ControllerIDForInputID", ControllerIDForInputID);
@@ -458,7 +461,7 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_ResetControllerAssignments, ResetControllerAssignments);
 #endif
 #if !RETRO_REV02
-    ADD_RSDK_FUNCTION(FunctionTable_InputUnknown, InputUnknown);
+    ADD_RSDK_FUNCTION(FunctionTable_GetUnknownInputValue, GetUnknownInputValue);
 #endif
 
     // User File Management
@@ -502,4 +505,3 @@ void RSDK::LinkGameLogic(void *info) { PrintLog(PRINT_POPUP, "Internal LinkGameL
 #else
 void RSDK::LinkGameLogic(GameInfo info) { PrintLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked"); }
 #endif
-

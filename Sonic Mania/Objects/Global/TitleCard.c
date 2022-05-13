@@ -35,17 +35,21 @@ void TitleCard_Create(void *data)
         self->active      = ACTIVE_ALWAYS;
         self->visible     = true;
         self->drawOrder   = Zone->hudDrawOrder;
+#if RETRO_USE_PLUS
         self->enableIntro = globals->enableIntro;
+
+        TitleCard_SetupColors();
+#endif
 
         if (!globals->suppressTitlecard || globals->enableIntro || globals->gameMode == MODE_TIMEATTACK)
             SceneInfo->timeEnabled = false;
 
-        TitleCard_SetupColors();
-
         if (globals->suppressTitlecard) {
+#if RETRO_USE_PLUS
             StateMachine_Run(TitleCard->suppressCB);
             TitleCard->suppressCB = NULL;
-            self->state           = TitleCard_State_Supressed;
+#endif
+            self->state = TitleCard_State_Supressed;
         }
         else {
             if (!globals->atlEnabled)
@@ -104,7 +108,8 @@ void TitleCard_Create(void *data)
             Player_ApplyShield(player);
 
             if (player->invincibleTimer > 0 && player->superState != SUPERSTATE_SUPER)
-                RSDK.ResetEntityPtr(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars), InvincibleStars->classID, player);
+                RSDK.ResetEntityPtr(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars), InvincibleStars->classID,
+                                    player);
 
             if (player->speedShoesTimer > 0 || player->superState == SUPERSTATE_SUPER)
                 RSDK.ResetEntityPtr(RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail), ImageTrail->classID, player);
@@ -123,11 +128,11 @@ void TitleCard_StageLoad(void)
     foreach_all(TitleCard, titleCard) { Zone->actID = titleCard->actID; }
 }
 
+#if RETRO_USE_PLUS
 void TitleCard_SetupColors(void)
 {
     RSDK_THIS(TitleCard);
 
-#if RETRO_USE_PLUS
     if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
         self->colors[0] = 0x3751A2; // dark blue
         self->colors[1] = 0xC7525B; // light red
@@ -136,16 +141,14 @@ void TitleCard_SetupColors(void)
         self->colors[4] = 0x6BAE99; // teal
     }
     else {
-#endif
         self->colors[0] = 0xF08C18; // orange
         self->colors[1] = 0x60C0A0; // green
         self->colors[2] = 0xF05030; // red
         self->colors[3] = 0x4060B0; // blue
         self->colors[4] = 0xF0C800; // yellow
-#if RETRO_USE_PLUS
     }
-#endif
 }
+#endif
 
 void TitleCard_SetupVertices(void)
 {
@@ -494,7 +497,9 @@ void TitleCard_State_ShowingTitle(void)
         self->state       = TitleCard_State_SlideAway;
         self->stateDraw   = TitleCard_Draw_SlideAway;
         RSDK.SetEngineState(ENGINESTATE_REGULAR);
+#if RETRO_USE_PLUS
         StateMachine_Run(TitleCard->finishedCB);
+#endif
     }
     else {
         self->actionTimer++;
@@ -639,17 +644,41 @@ void TitleCard_State_Supressed(void)
         SceneInfo->timeEnabled = false;
 
     self->active = ACTIVE_NEVER;
+#if RETRO_USE_PLUS
     if ((globals->suppressTitlecard && !self->enableIntro) || globals->gameMode == MODE_TIMEATTACK) {
         destroyEntity(self);
         globals->suppressTitlecard = false;
     }
+#else 
+    if (globals->suppressTitlecard > true || globals->gameMode == MODE_TIMEATTACK) {
+        destroyEntity(self);
+        globals->suppressTitlecard = false;
+    }
+#endif
 
+#if RETRO_USE_PLUS
     StateMachine_Run(TitleCard->finishedCB);
+#endif
 }
 
 void TitleCard_Draw_SlideIn(void)
 {
     RSDK_THIS(TitleCard);
+
+    color colors[5];
+#if RETRO_USE_PLUS
+    colors[0] = self->colors[0];
+    colors[1] = self->colors[1];
+    colors[2] = self->colors[2];
+    colors[3] = self->colors[3];
+    colors[4] = self->colors[4];
+#else
+    colors[0] = 0xF08C18; // orange
+    colors[1] = 0x60C0A0; // green
+    colors[2] = 0xF05030; // red
+    colors[3] = 0x4060B0; // blue
+    colors[4] = 0xF0C800; // yellow
+#endif
 
     // The big ol' BG
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
@@ -659,27 +688,27 @@ void TitleCard_Draw_SlideIn(void)
         // Blue
         int32 height = self->timer;
         if (self->timer < 512)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colors[3], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[3], 0xFF, INK_NONE, true);
 
         // Red
         height = self->timer - 128;
         if (self->timer > 128 && self->timer < 640)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colors[2], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[2], 0xFF, INK_NONE, true);
 
         // Orange
         height = self->timer - 256;
         if (self->timer > 256 && self->timer < 768)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colors[0], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[0], 0xFF, INK_NONE, true);
 
         // Green
         height = self->timer - 384;
         if (self->timer > 384 && self->timer < 896)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colors[1], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[1], 0xFF, INK_NONE, true);
 
         // Yellow
         height = self->timer - 512;
         if (self->timer > 512)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colors[4], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[4], 0xFF, INK_NONE, true);
     }
 
     // Draw the BG thingos
@@ -702,29 +731,40 @@ void TitleCard_Draw_ShowTitleCard(void)
 {
     RSDK_THIS(TitleCard);
 
+    color colors[5];
+#if RETRO_USE_PLUS
+    colors[0] = self->colors[0];
+    colors[1] = self->colors[1];
+    colors[2] = self->colors[2];
+    colors[3] = self->colors[3];
+    colors[4] = self->colors[4];
+#else
+    colors[0] = 0xF08C18; // orange
+    colors[1] = 0x60C0A0; // green
+    colors[2] = 0xF05030; // red
+    colors[3] = 0x4060B0; // blue
+    colors[4] = 0xF0C800; // yellow
+#endif
+
     // Draw Yellow BG
     if (!globals->atlEnabled && !globals->suppressTitlecard)
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, self->colors[4], 0xFF, INK_NONE, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, colors[4], 0xFF, INK_NONE, true);
 
     // Draw Orange Strip
     if (self->vertMovePos[1].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsOrange, 4, (self->colors[0] >> 16) & 0xFF, (self->colors[0] >> 8) & 0xFF, (self->colors[0] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Green Strip
     if (self->vertMovePos[1].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsGreen, 4, (self->colors[1] >> 16) & 0xFF, (self->colors[1] >> 8) & 0xFF, (self->colors[1] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Red Strip
     if (self->vertMovePos[0].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsRed, 4, (self->colors[2] >> 16) & 0xFF, (self->colors[2] >> 8) & 0xFF, (self->colors[2] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Blue Strip
     if (self->vertMovePos[0].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsBlue, 4, (self->colors[3] >> 16) & 0xFF, (self->colors[3] >> 8) & 0xFF, (self->colors[3] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw "Sonic Mania"
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
@@ -795,33 +835,42 @@ void TitleCard_Draw_SlideAway(void)
 {
     RSDK_THIS(TitleCard);
 
+    color colors[5];
+#if RETRO_USE_PLUS
+    colors[0] = self->colors[0];
+    colors[1] = self->colors[1];
+    colors[2] = self->colors[2];
+    colors[3] = self->colors[3];
+    colors[4] = self->colors[4];
+#else
+    colors[0] = 0xF08C18; // orange
+    colors[1] = 0x60C0A0; // green
+    colors[2] = 0xF05030; // red
+    colors[3] = 0x4060B0; // blue
+    colors[4] = 0xF0C800; // yellow
+#endif
+
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
         // Draw Yellow BG curtain "opening"
-        RSDK.DrawQuad(self->bgLCurtainVerts, 4, (self->colors[4] >> 16) & 0xFF, (self->colors[4] >> 8) & 0xFF, (self->colors[4] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
-        RSDK.DrawQuad(self->bgRCurtainVerts, 4, (self->colors[4] >> 16) & 0xFF, (self->colors[4] >> 8) & 0xFF, (self->colors[4] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->bgLCurtainVerts, 4, (colors[4] >> 16) & 0xFF, (colors[4] >> 8) & 0xFF, (colors[4] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawQuad(self->bgRCurtainVerts, 4, (colors[4] >> 16) & 0xFF, (colors[4] >> 8) & 0xFF, (colors[4] >> 0) & 0xFF, 0xFF, INK_NONE);
     }
 
     // Orange Strip
     if (self->vertMovePos[1].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsOrange, 4, (self->colors[0] >> 16) & 0xFF, (self->colors[0] >> 8) & 0xFF, (self->colors[0] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Green Strip
     if (self->vertMovePos[1].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsGreen, 4, (self->colors[1] >> 16) & 0xFF, (self->colors[1] >> 8) & 0xFF, (self->colors[1] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Red Strip
     if (self->vertMovePos[0].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsRed, 4, (self->colors[2] >> 16) & 0xFF, (self->colors[2] >> 8) & 0xFF, (self->colors[2] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Blue Strip
     if (self->vertMovePos[0].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsBlue, 4, (self->colors[3] >> 16) & 0xFF, (self->colors[3] >> 8) & 0xFF, (self->colors[3] >> 0) & 0xFF, 0xFF,
-                      INK_NONE);
+        RSDK.DrawQuad(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw "Sonic Mania"
     if (!globals->atlEnabled && !globals->suppressTitlecard) {

@@ -877,21 +877,21 @@ void ClearKeyState(int32 keyCode)
 void HandleSpecialKeys()
 {
     if (specialKeyStates[0] || specialKeyStates[3]) {
-        touchMouseData.pausePress       = !touchMouseData.pausePressActive;
-        touchMouseData.pausePressActive = true;
+        touchMouseData.pausePress = !touchMouseData.pauseHold;
+        touchMouseData.pauseHold  = true;
     }
     else {
-        touchMouseData.pausePress       = false;
-        touchMouseData.pausePressActive = false;
+        touchMouseData.pausePress = false;
+        touchMouseData.pauseHold  = false;
     }
 
     if (buttonDownCount) {
-        touchMouseData.anyPressActive = true;
-        touchMouseData.anyPress       = prevButtonDownCount < buttonDownCount;
+        touchMouseData.anyKeyHold  = true;
+        touchMouseData.anyKeyPress = prevButtonDownCount < buttonDownCount;
     }
     else {
-        touchMouseData.anyPress       = false;
-        touchMouseData.anyPressActive = false;
+        touchMouseData.anyKeyPress = false;
+        touchMouseData.anyKeyHold  = false;
     }
 
     prevButtonDownCount = buttonDownCount;

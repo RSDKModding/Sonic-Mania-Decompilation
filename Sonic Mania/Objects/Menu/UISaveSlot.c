@@ -872,7 +872,12 @@ void UISaveSlot_ProcessButtonCB(void)
 #endif
 
     self->active = ACTIVE_NORMAL;
+
+#if RETRO_USE_PLUS
     UIControl_SetTargetPos(control, self->position.x, 0);
+#else
+    control->targetPos.x = self->position.x;
+#endif
 
     if (control->position.x == control->targetPos.x) {
         if (control->columnCount > 1) {

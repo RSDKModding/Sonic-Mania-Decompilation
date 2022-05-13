@@ -1181,9 +1181,6 @@
     <ClInclude Include="Objects\Menu\OptionsMenu.h">
       <Filter>Sources\Objects\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Menu\TAEmerald.h">
-      <Filter>Sources\Objects\Menu</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Menu\ThanksSetup.h">
       <Filter>Sources\Objects\Menu</Filter>
     </ClInclude>
@@ -1940,14 +1937,17 @@
     <ClInclude Include="All.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Player\Player.h">
+    <ClInclude Include="Objects\Global\Player.h">
       <Filter>Sources\Objects\Global</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Player\PlayerHelpers.h">
+    <ClInclude Include="Objects\Helpers\PlayerHelpers.h">
       <Filter>Sources\Objects\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Player\PlayerProbe.h">
+    <ClInclude Include="Objects\Helpers\PlayerProbe.h">
       <Filter>Sources\Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Credits\TAEmerald.h">
+      <Filter>Sources\Objects\Credits</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3022,9 +3022,6 @@
     <ClCompile Include="Objects\Menu\OptionsMenu.c">
       <Filter>Sources\Objects\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Menu\TAEmerald.c">
-      <Filter>Sources\Objects\Menu</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Menu\ThanksSetup.c">
       <Filter>Sources\Objects\Menu</Filter>
     </ClCompile>
@@ -3775,14 +3772,17 @@
     <ClCompile Include="GameVariables.c">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Player\Player.c">
+    <ClCompile Include="Objects\Global\Player.c">
       <Filter>Sources\Objects\Global</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Player\PlayerHelpers.c">
+    <ClCompile Include="Objects\Helpers\PlayerHelpers.c">
       <Filter>Sources\Objects\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Player\PlayerProbe.c">
+    <ClCompile Include="Objects\Helpers\PlayerProbe.c">
       <Filter>Sources\Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Credits\TAEmerald.c">
+      <Filter>Sources\Objects\Credits</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

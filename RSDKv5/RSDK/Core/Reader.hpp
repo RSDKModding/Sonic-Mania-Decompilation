@@ -2,9 +2,9 @@
 #define READER_H
 
 #if RETRO_RENDERDEVICE_SDL2 || RETRO_AUDIODEVICE_SDL2 || RETRO_INPUTDEVICE_SDL2
-#define FileIO                                          SDL_RWops
+#define FileIO SDL_RWops
 #if RETRO_PLATFORM != RETRO_ANDROID
-#define fOpen(path, mode)                               SDL_RWFromFile(path, mode)
+#define fOpen(path, mode) SDL_RWFromFile(path, mode)
 #else
 SDL_RWops *fOpen(const char *path, const char *mode);
 #endif
@@ -42,7 +42,7 @@ struct FileInfo {
     int32 fileSize;
     int32 externalFile;
     FileIO *file;
-    uint8* fileData;
+    uint8 *fileData;
     int32 readPos;
     int32 fileOffset;
     uint8 usingFileBuffer;
@@ -83,19 +83,13 @@ extern bool32 useDataFile;
 bool32 CheckDataFile(const char *filename, size_t fileOffset, bool32 useBuffer);
 bool32 OpenDataFile(FileInfo *info, const char *filename);
 
-enum FileModes {
-    FMODE_NONE,
-    FMODE_RB,
-    FMODE_WB,
-    FMODE_RB_PLUS,
-    FMODE_4
-};
+enum FileModes { FMODE_NONE, FMODE_RB, FMODE_WB, FMODE_RB_PLUS, FMODE_4 };
 
 static const char *openModes[3] = { "rb", "wb", "rb+" };
 
 inline void InitFileInfo(FileInfo *info)
 {
-    info->file            = 0;
+    info->file            = NULL;
     info->fileSize        = 0;
     info->externalFile    = false;
     info->usingFileBuffer = false;
@@ -108,10 +102,9 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode);
 
 inline void CloseFile(FileInfo *info)
 {
-    if (!info->usingFileBuffer) {
-        if (info->file)
-            fClose(info->file);
-    }
+    if (!info->usingFileBuffer && info->file)
+        fClose(info->file);
+
     info->file = NULL;
 }
 
@@ -119,9 +112,11 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2);
 void DecryptBytes(FileInfo *info, void *buffer, size_t size);
 void SkipBytes(FileInfo *info, int32 size);
 
-inline void Seek_Set(FileInfo* info, int32 count) {
+inline void Seek_Set(FileInfo *info, int32 count)
+{
     if (info->readPos != count) {
         info->readPos = count;
+
         if (info->encrypted) {
             info->eKeyNo      = (info->fileSize / 4) & 0x7F;
             info->eKeyPosA    = 0;
@@ -142,9 +137,9 @@ inline void Seek_Set(FileInfo* info, int32 count) {
 inline void Seek_Cur(FileInfo *info, int32 count)
 {
     info->readPos += count;
-    if (info->encrypted) {
+
+    if (info->encrypted)
         SkipBytes(info, count);
-    }
 
     if (info->usingFileBuffer) {
         info->fileData += count;
@@ -154,9 +149,10 @@ inline void Seek_Cur(FileInfo *info, int32 count)
     }
 }
 
-inline size_t ReadBytes(FileInfo *info, void* data, int32 count)
+inline size_t ReadBytes(FileInfo *info, void *data, int32 count)
 {
     size_t bytesRead = 0;
+
     if (info->usingFileBuffer) {
         bytesRead = count;
         memcpy(data, info->fileData, count);
@@ -165,74 +161,84 @@ inline size_t ReadBytes(FileInfo *info, void* data, int32 count)
     else {
         bytesRead = fRead(data, 1, count, info->file);
     }
+
     if (info->encrypted)
         DecryptBytes(info, data, bytesRead);
+
     info->readPos += bytesRead;
     return bytesRead;
 }
 
 inline uint8 ReadInt8(FileInfo *info)
 {
-    byte result = 0;
+    int8 result      = 0;
     size_t bytesRead = 0;
+
     if (info->usingFileBuffer) {
-        bytesRead = sizeof(byte);
-        result             = *info->fileData;
+        bytesRead = sizeof(int8);
+        result    = *info->fileData;
         info->fileData++;
     }
     else {
-        bytesRead = fRead(&result, 1, sizeof(byte), info->file);
+        bytesRead = fRead(&result, 1, sizeof(int8), info->file);
     }
+
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
+
     info->readPos += bytesRead;
     return result;
 }
 
 inline int16 ReadInt16(FileInfo *info)
 {
-    short result  = 0;
+    int16 result     = 0;
     size_t bytesRead = 0;
+
     if (info->usingFileBuffer) {
-        bytesRead = sizeof(short);
-        result    = *(short *)info->fileData;
-        info->fileData += sizeof(short);
+        bytesRead = sizeof(int16);
+        result    = *(int16 *)info->fileData;
+        info->fileData += sizeof(int16);
     }
     else {
-        bytesRead = fRead(&result, 1, sizeof(short), info->file);
+        bytesRead = fRead(&result, 1, sizeof(int16), info->file);
     }
+
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
+
     info->readPos += bytesRead;
     return result;
 }
 
 inline int32 ReadInt32(FileInfo *info, bool32 swapEndian)
 {
-    int result   = 0;
+    int32 result     = 0;
     size_t bytesRead = 0;
+
     if (info->usingFileBuffer) {
-        bytesRead = sizeof(int);
-        result    = *(int *)info->fileData;
-        info->fileData += sizeof(int);
+        bytesRead = sizeof(int32);
+        result    = *(int32 *)info->fileData;
+        info->fileData += sizeof(int32);
     }
     else {
-        bytesRead = fRead(&result, 1, sizeof(int), info->file);
+        bytesRead = fRead(&result, 1, sizeof(int32), info->file);
     }
+
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
 
     if (swapEndian) {
-        byte bytes[sizeof(int)];
-        memcpy(bytes, &result, sizeof(int));
+        byte bytes[sizeof(int32)];
+        memcpy(bytes, &result, sizeof(int32));
 
-        int max = sizeof(int) - 1;
-        for (int i = 0; i < sizeof(int) / 2; ++i) {
+        int max = sizeof(int32) - 1;
+        for (int i = 0; i < sizeof(int32) / 2; ++i) {
             byte store     = bytes[i];
             bytes[i]       = bytes[max - i];
             bytes[max - i] = store;
         }
-        memcpy(&result, bytes, sizeof(int));
+        memcpy(&result, bytes, sizeof(int32));
     }
 
     info->readPos += bytesRead;
@@ -240,8 +246,9 @@ inline int32 ReadInt32(FileInfo *info, bool32 swapEndian)
 }
 inline int64 ReadInt64(FileInfo *info)
 {
-    int64 result  = 0;
+    int64 result     = 0;
     size_t bytesRead = 0;
+
     if (info->usingFileBuffer) {
         bytesRead = sizeof(int64);
         result    = *(int64 *)info->fileData;
@@ -250,16 +257,19 @@ inline int64 ReadInt64(FileInfo *info)
     else {
         bytesRead = fRead(&result, 1, sizeof(int64), info->file);
     }
+
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
+
     info->readPos += bytesRead;
     return result;
 }
 
 inline float ReadSingle(FileInfo *info)
 {
-    float result    = 0;
+    float result     = 0;
     size_t bytesRead = 0;
+
     if (info->usingFileBuffer) {
         bytesRead = sizeof(float);
         result    = *(float *)info->fileData;
@@ -268,13 +278,16 @@ inline float ReadSingle(FileInfo *info)
     else {
         bytesRead = fRead(&result, 1, sizeof(float), info->file);
     }
+
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
+
     info->readPos += bytesRead;
     return result;
 }
 
-inline void ReadString(FileInfo *info, char* buffer) { 
+inline void ReadString(FileInfo *info, char *buffer)
+{
     byte size = ReadInt8(info);
     ReadBytes(info, buffer, size);
     buffer[size] = 0;
@@ -284,9 +297,10 @@ inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
 {
     if (!buffer)
         return 0;
-    uLongf complen      = ReadInt32(info, false) - 4;
-    uint decompLE = ReadInt32(info, false);
-    uLongf destLen      = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+
+    uLongf complen = ReadInt32(info, false) - 4;
+    uint decompLE  = ReadInt32(info, false);
+    uLongf destLen = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
     RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);
@@ -304,9 +318,10 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
 {
     if (!buffer)
         return 0;
-    uLongf complen  = cSize;
-    uint decompLE = size;
-    uLongf destLen  = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+
+    uLongf complen = cSize;
+    uint decompLE  = size;
+    uLongf destLen = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
     RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);

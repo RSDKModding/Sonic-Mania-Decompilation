@@ -36,10 +36,9 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
     info.externalFile = true;
     if (LoadFile(&info, pathBuffer, FMODE_RB)) {
         byte signature[6] = { 'R', 'S', 'D', 'K', 'v', '5' };
-        byte buf          = 0;
         for (int i = 0; i < 6; ++i) {
-            buf = ReadInt8(&info);
-            if (buf != signature[i])
+            byte sig = ReadInt8(&info);
+            if (sig != signature[i])
                 return false;
         }
         useDataFile = true;
@@ -86,10 +85,10 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
 bool32 OpenDataFile(FileInfo *info, const char *filename)
 {
     StringLowerCase(textBuffer, filename);
-    uint hash[0x4];
+    RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(textBuffer, hash);
 
-    for (int f = 0; f < dataFileCount; ++f) {
+    for (int32 f = 0; f < dataFileCount; ++f) {
         RSDKFileInfo *file = &dataFiles[f];
 
         if (!HASH_MATCH_MD5(hash, file->hash))
@@ -101,6 +100,7 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
             if (!info->file) {
                 return false;
             }
+
             fSeek(info->file, file->offset, SEEK_SET);
         }
         else {
@@ -179,10 +179,12 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {
         info->file = fOpen(filePathBuf, openModes[fileMode - 1]);
     }
+
     if (!info->file) {
         PrintLog(PRINT_NORMAL, "Couldn't load file '%s'", filePathBuf);
         return false;
     }
+
     info->readPos  = 0;
     info->fileSize = 0;
 
@@ -191,6 +193,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
         info->fileSize = (int)fTell(info->file);
         fSeek(info->file, 0, SEEK_SET);
     }
+
     PrintLog(PRINT_NORMAL, "Loaded file '%s'", filePathBuf);
     return true;
 }
@@ -203,7 +206,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
     StringUpperCase(textBuffer, key1);
     GEN_HASH_MD5(textBuffer, (uint *)hash);
 
-    for (int y = 0; y < 0x10; y += 4) {
+    for (int32 y = 0; y < 0x10; y += 4) {
         info->encryptionKeyA[y + 3] = hash[y + 0];
         info->encryptionKeyA[y + 2] = hash[y + 1];
         info->encryptionKeyA[y + 1] = hash[y + 2];
@@ -211,10 +214,10 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
     }
 
     // StringB
-    sprintf(textBuffer, "%d", key2); // Vary lazy ik
+    sprintf(textBuffer, "%d", key2);
     GEN_HASH_MD5(textBuffer, (uint *)hash);
 
-    for (int y = 0; y < 0x10; y += 4) {
+    for (int32 y = 0; y < 0x10; y += 4) {
         info->encryptionKeyB[y + 3] = hash[y + 0];
         info->encryptionKeyB[y + 2] = hash[y + 1];
         info->encryptionKeyB[y + 1] = hash[y + 2];
@@ -235,13 +238,13 @@ void DecryptBytes(FileInfo *info, void *buffer, size_t size)
             info->eKeyPosA++;
             info->eKeyPosB++;
 
-            if (info->eKeyPosA <= 0x0F) {
-                if (info->eKeyPosB > 0x0C) {
+            if (info->eKeyPosA <= 15) {
+                if (info->eKeyPosB > 12) {
                     info->eKeyPosB = 0;
                     info->eNybbleSwap ^= 1;
                 }
             }
-            else if (info->eKeyPosB <= 0x08) {
+            else if (info->eKeyPosB <= 8) {
                 info->eKeyPosA = 0;
                 info->eNybbleSwap ^= 1;
             }
@@ -253,12 +256,12 @@ void DecryptBytes(FileInfo *info, void *buffer, size_t size)
                     info->eNybbleSwap = false;
 
                     info->eKeyPosA = info->eKeyNo % 7;
-                    info->eKeyPosB = (info->eKeyNo % 0xC) + 2;
+                    info->eKeyPosB = (info->eKeyNo % 12) + 2;
                 }
                 else {
                     info->eNybbleSwap = true;
 
-                    info->eKeyPosA = (info->eKeyNo % 0xC) + 3;
+                    info->eKeyPosA = (info->eKeyNo % 12) + 3;
                     info->eKeyPosB = info->eKeyNo % 7;
                 }
             }
@@ -275,13 +278,13 @@ void SkipBytes(FileInfo *info, int32 size)
             info->eKeyPosA++;
             info->eKeyPosB++;
 
-            if (info->eKeyPosA <= 0x0F) {
-                if (info->eKeyPosB > 0x0C) {
+            if (info->eKeyPosA <= 15) {
+                if (info->eKeyPosB > 12) {
                     info->eKeyPosB = 0;
                     info->eNybbleSwap ^= 1;
                 }
             }
-            else if (info->eKeyPosB <= 0x08) {
+            else if (info->eKeyPosB <= 8) {
                 info->eKeyPosA = 0;
                 info->eNybbleSwap ^= 1;
             }
@@ -293,15 +296,16 @@ void SkipBytes(FileInfo *info, int32 size)
                     info->eNybbleSwap = false;
 
                     info->eKeyPosA = info->eKeyNo % 7;
-                    info->eKeyPosB = (info->eKeyNo % 0xC) + 2;
+                    info->eKeyPosB = (info->eKeyNo % 12) + 2;
                 }
                 else {
                     info->eNybbleSwap = true;
 
-                    info->eKeyPosA = (info->eKeyNo % 0xC) + 3;
+                    info->eKeyPosA = (info->eKeyNo % 12) + 3;
                     info->eKeyPosB = info->eKeyNo % 7;
                 }
             }
+
             --size;
         }
     }

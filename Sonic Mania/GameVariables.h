@@ -126,10 +126,10 @@ typedef enum {
 #if RETRO_USE_PLUS
     SLOT_REPLAYRECORDER_PLAYBACK = 36,
     SLOT_REPLAYRECORDER_RECORD   = 37,
-#endif
     SLOT_MUSICSTACK_START = 40,
     //[41-47] are part of the music stack
     SLOT_MUSICSTACK_END = 48,
+#endif
     SLOT_CAMERA1        = 60,
     SLOT_CAMERA2        = 61,
     SLOT_CAMERA3        = 62,

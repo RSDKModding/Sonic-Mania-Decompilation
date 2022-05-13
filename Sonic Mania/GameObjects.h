@@ -423,7 +423,7 @@ typedef struct {
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS
-    void (*InputUnknown)(int32 controllerID, int32 staticVars, int32 *valuePtr);
+    void (*GetUnknownInputValue)(int32 controllerID, int32 type, int32 *value);
 #endif
 
     // User File Management
@@ -432,14 +432,14 @@ typedef struct {
 
     // Printing (Rev02)
 #if RETRO_USE_PLUS
-    void (*PrintLog)(SeverityModes severity, const char *message, ...);
-    void (*PrintText)(SeverityModes severity, const char *message);
-    void (*PrintString)(SeverityModes severity, String *message);
-    void (*PrintUInt32)(SeverityModes severity, const char *message, uint32 integer);
-    void (*PrintInt32)(SeverityModes severity, const char *message, int32 integer);
-    void (*PrintFloat)(SeverityModes severity, const char *message, float f);
-    void (*PrintVector2)(SeverityModes severity, const char *message, int32 x, int32 y);
-    void (*PrintHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);
+    void (*PrintLog)(PrintModes printType, const char *message, ...);
+    void (*PrintText)(PrintModes printType, const char *message);
+    void (*PrintString)(PrintModes printType, String *message);
+    void (*PrintUInt32)(PrintModes printType, const char *message, uint32 integer);
+    void (*PrintInt32)(PrintModes printType, const char *message, int32 integer);
+    void (*PrintFloat)(PrintModes printType, const char *message, float f);
+    void (*PrintVector2)(PrintModes printType, const char *message, int32 x, int32 y);
+    void (*PrintHitbox)(PrintModes printType, const char *message, Hitbox *hitbox);
 #endif
 
     // Editor
@@ -449,12 +449,12 @@ typedef struct {
     // Debugging
 #if RETRO_USE_PLUS
     void (*ClearDebugValues)(void);
-    void (*SetDebugValue)(const char *name, void *valPtr, DebugVarTypes type, int32 min, int32 max);
+    void (*SetDebugValue)(const char *name, void *value, DebugVarTypes type, int32 min, int32 max);
 #endif
 
     // Printing (Rev01)
 #if !RETRO_USE_PLUS
-    void (*PrintMessage)(void *message, uint8 staticVars);
+    void (*PrintMessage)(void *message, uint8 type);
 #endif
 } RSDKFunctionTable;
 

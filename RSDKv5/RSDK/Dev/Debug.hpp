@@ -16,7 +16,14 @@ void PrintLog(int32 severity, const char *message, ...);
 inline void PrintConsole(const char *message) { printf("%s", message); }
 
 #if !RETRO_REV02
-void PrintMessage(void *msg, int32 staticVariables);
+enum PrintMessageTypes {
+    MESSAGE_STRING,
+    MESSAGE_INT32,
+    MESSAGE_UINT32,
+    MESSAGE_FLOAT,
+};
+
+void PrintMessage(void *msg, int32 type);
 #endif
 
 #if RETRO_REV02

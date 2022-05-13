@@ -1030,7 +1030,7 @@ void MenuSetup_MenuButton_ActionCB(void)
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
-                (MenuSetup->saveSelect)->buttonID = 7;
+                MenuSetup->saveSelect->buttonID = 7;
                 UIControl_MatchMenuTag("Save Select");
             }
             break;
@@ -1157,12 +1157,6 @@ void MenuSetup_SaveSlot_ActionCB(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
-    TimeAttackData_Clear();
-
-    RSDK.GetCString(param->menuTag, &control->tag);
-    param->menuSelection = control->lastButtonID;
-    param->replayID      = 0;
-    globals->gameMode    = MODE_MANIA;
 
     bool32 loadingSave = false;
     if (self->type) {
@@ -1180,6 +1174,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
     else {
         globals->saveSlotID = self->slotID;
         globals->medalMods  = 0;
+        globals->gameMode   = MODE_MANIA;
 
         if (self->isNewSave) {
             int32 *saveData = SaveGame_GetDataPtr(self->slotID % 8);
@@ -1236,7 +1231,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, self->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, 0, self->frameID);
     }
 
     if (!loadingSave) {
@@ -1357,7 +1352,7 @@ void MenuSetup_TA_StartAttempt(void)
     globals->medalMods  = 0;
 
     RSDK.SetScene("Mania Mode", "");
-    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->actID, param->characterID);
 
     switch (param->characterID) {
         case 1: globals->playerID = ID_SONIC; break;
@@ -1512,7 +1507,7 @@ void MenuSetup_VS_StartMatch(void)
     session->actID      = param->vsActID;
 
     RSDK.SetScene("Mania Mode", "");
-    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, param->vsActID, 0);
 
     SaveGame_ResetPlayerState();
 
