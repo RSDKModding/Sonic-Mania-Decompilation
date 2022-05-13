@@ -38,11 +38,11 @@ struct UnknownInfo {
 extern SKUInfo curSKU;
 extern UnknownInfo unknownInfo;
 
-#define Unknown_pausePress UnknownInfo->pausePress
-#define Unknown_anyKeyPress   UnknownInfo->anyPress
+#define Unknown_pausePress  UnknownInfo->pausePress
+#define Unknown_anyKeyPress UnknownInfo->anyPress
 #else
-#define Unknown_pausePress TouchInfo->pausePress
-#define Unknown_anyKeyPress   TouchInfo->anyPress
+#define Unknown_pausePress  TouchInfo->pausePress
+#define Unknown_anyKeyPress TouchInfo->anyPress
 #endif
 
 #if RETRO_REV02
@@ -53,7 +53,6 @@ struct UserCore {
     virtual void Shutdown(void) {}
     virtual bool32 CheckAPIInitialized(void) { return true; }
     virtual bool32 CheckFocusLost(void) { return false; }
-    // I do not know what this is, both PC & Switch vers have it as return false always so
     virtual bool32 CheckEnginePause(void) { return false; }
     virtual void StageLoad(void);
     virtual void FrameInit(void);
@@ -84,7 +83,7 @@ struct UserCore {
     virtual void EpicUnknown6(void) {}
 #endif
 
-    int *values[8];
+    bool32 *values[8];
     byte valueCount = 0;
 
     // Not Original, but I gotta store it somewhere /shrug
@@ -95,8 +94,8 @@ extern UserCore *userCore;
 #endif
 
 void InitUserData();
-void releaseUserData();
-void saveUserData();
+void ReleaseUserData();
+void SaveUserData();
 
 #if RETRO_REV02
 void HandleUserStatuses();

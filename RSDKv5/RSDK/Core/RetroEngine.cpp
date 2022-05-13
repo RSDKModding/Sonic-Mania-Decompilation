@@ -193,7 +193,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
     AudioDevice::Release();
     RenderDevice::Release(false);
     RSDK::WriteSettings(false);
-    RSDK::SKU::releaseUserData();
+    RSDK::SKU::ReleaseUserData();
     RSDK::ReleaseStorage();
 #if RETRO_USE_MOD_LOADER
     RSDK::UnloadMods();

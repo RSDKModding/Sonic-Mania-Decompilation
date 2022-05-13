@@ -76,7 +76,7 @@ RSDK::SKU::DummyCore *RSDK::SKU::InitDummyCore()
 
     //Setup default values
 
-    core->values[0]   = (int *)&engine.hasPlus;
+    core->values[0]   = &engine.hasPlus;
     core->valueCount = 1;
 
     leaderboards->userRank = 0;

@@ -53,6 +53,8 @@ typedef enum { NO_SAVE_SLOT = 255 } SaveSlots;
 
 #if RETRO_USE_PLUS
 typedef enum { FILTER_NONE = 0, FILTER_BOTH = 1, FILTER_MANIA = 2, FILTER_ENCORE = 4, FILTER_ANY = 0xFF } ModeFilters;
+
+typedef enum { DLC_PLUS } GameDLC;
 #endif
 
 typedef enum {

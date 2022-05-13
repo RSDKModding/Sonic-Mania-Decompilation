@@ -18,7 +18,7 @@ void RSDK::SKU::TryUnlockAchievement(const char *name)
                 achievementStack.push_back(i);
                 PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
                 achievementList[i].achieved = true;
-                saveUserData();
+                SaveUserData();
             }
             break;
         }

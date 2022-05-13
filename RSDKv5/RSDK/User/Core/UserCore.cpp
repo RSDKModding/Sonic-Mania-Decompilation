@@ -152,9 +152,9 @@ void RSDK::SKU::InitUserData()
     }
     delete[] statsRAM;
 }
-void RSDK::SKU::releaseUserData()
+void RSDK::SKU::ReleaseUserData()
 {
-    saveUserData();
+    SaveUserData();
 
 #if RETRO_REV02
 
@@ -194,7 +194,7 @@ void RSDK::SKU::releaseUserData()
 #endif
 }
 
-void RSDK::SKU::saveUserData()
+void RSDK::SKU::SaveUserData()
 {
     int achievementsRAM[0x100];
     memset(achievementsRAM, 0, 0x100 * sizeof(int));

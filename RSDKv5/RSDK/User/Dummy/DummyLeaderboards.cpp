@@ -95,7 +95,7 @@ void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 
     }
 
     leaderboardList[id].score = score;
-    saveUserData();
+    SaveUserData();
 
     std::string str = __FILE__;
     str += ": TrackScore() # TrackScore ";

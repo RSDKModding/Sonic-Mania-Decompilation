@@ -30,7 +30,7 @@ RSDK::SKU::NXCore *RSDK::SKU::InitNXCore()
     //Setup default values
 
     engine.hasPlus   = false; // TODO: DLC check
-    core->values[0]   = (int *)&engine.hasPlus;
+    core->values[0]  = (bool32 *)&engine.hasPlus;
     core->valueCount = 1;
 
     //TODO: remove

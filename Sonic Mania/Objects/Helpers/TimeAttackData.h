@@ -74,7 +74,8 @@ int32 TimeAttackData_GetReplayID(uint8 zoneID, uint8 act, uint8 characterID, boo
 void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore);
 
 void TimeAttackData_GetLeaderboardRank_CB(bool32 success, int32 rank);
-void TimeAttackData_AddLeaderboardEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score);
+void TimeAttackData_AddLeaderboardEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore, int32 score);
+LeaderboardID *TimeAttackData_GetLeaderboardInfo(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore);
 #else
 void TimeAttackData_SaveTATime(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank, uint16 score);
 #endif

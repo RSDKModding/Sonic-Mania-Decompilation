@@ -384,14 +384,7 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
         TimeAttackMenu->isUser        = API.GetSortedUserDBRowCount(globals->taTableID) != 0;
         TimeAttackMenu->prevIsUser    = isUser ? false : TimeAttackMenu->isUser;
 
-        LeaderboardID *leaderboardInfo = NULL;
-        if (zoneID > 11 || act > 1 || (characterID - 1) <= 4) {
-            int32 pos = act + 2 * zoneID - 1 + characterID + 4 * (act + 2 * zoneID);
-            if (isEncore)
-                pos += 120;
-            leaderboardInfo = &maniaLeaderboardInfo[pos];
-        }
-
+        LeaderboardID *leaderboardInfo = TimeAttackData_GetLeaderboardInfo(zoneID, act, characterID, isEncore);
         API.FetchLeaderboard(leaderboardInfo, TimeAttackMenu->prevIsUser);
 
         UITABanner_SetupDetails(characterID, TimeAttackMenu->leaderboardsBanner, zoneID, act, isEncore);
