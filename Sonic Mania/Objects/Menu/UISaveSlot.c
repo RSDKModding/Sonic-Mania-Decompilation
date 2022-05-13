@@ -921,7 +921,10 @@ void UISaveSlot_ProcessButtonCB(void)
         }
         else if (UIControl->keyX && saveRAM->saveState != SAVEGAME_BLANK && self->type == UISAVESLOT_REGULAR) {
             Localization_GetString(&msg, STR_DELETEPOPUP);
-            UIDialog_CreateDialogYesNo(&msg, UISaveSlot_DeleteDLG_CB, NULL, false, true);
+            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&msg, UISaveSlot_DeleteDLG_CB, NULL, false, true);
+            if (dialog) {
+                dialog->entityPtr = (Entity *)self;
+            }
         }
         else if (!self->currentlySelected && control->buttons[control->lastButtonID] == (EntityUIButton *)self
                  && control->state == UIControl_ProcessInputs) {
