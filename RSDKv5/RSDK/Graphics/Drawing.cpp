@@ -1,5 +1,13 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+#if RETRO_RENDERDEVICE_DIRECTX9
+#include "DX9/DX9RenderDevice.cpp"
+#elif RETRO_RENDERDEVICE_SDL2
+#include "SDL2/SDL2RenderDevice.cpp"
+#elif RETRO_RENDERDEVICE_OPENGL3
+#include "GL3/GL3RenderDevice.cpp"
+#endif
+
 DrawList drawGroups[DRAWGROUP_COUNT];
 
 uint16 blendLookupTable[0x20 * 0x100];
@@ -22,24 +30,24 @@ ShaderEntry shaderList[SHADER_MAX];
 int32 userShaderCount = 0;
 #endif
 
-bool32 RenderDevice::isRunning         = true;
-int32 RenderDevice::windowRefreshDelay = 0;
+bool32 RenderDeviceBase::isRunning         = true;
+int32 RenderDeviceBase::windowRefreshDelay = 0;
 
 #if RETRO_REV02
-uint8 RenderDevice::startVertex_2P[] = { 18, 24 };
-uint8 RenderDevice::startVertex_3P[] = { 30, 36, 12 };
+uint8 RenderDeviceBase::startVertex_2P[] = { 18, 24 };
+uint8 RenderDeviceBase::startVertex_3P[] = { 30, 36, 12 };
 #endif
 
-float2 RenderDevice::pixelSize   = { DEFAULT_SCREEN_XSIZE, SCREEN_YSIZE };
-float2 RenderDevice::textureSize = { 512.0, 256.0 };
-float2 RenderDevice::viewSize    = { 0, 0 };
+float2 RenderDeviceBase::pixelSize   = { DEFAULT_SCREEN_XSIZE, SCREEN_YSIZE };
+float2 RenderDeviceBase::textureSize = { 512.0, 256.0 };
+float2 RenderDeviceBase::viewSize    = { 0, 0 };
 
-int32 RenderDevice::displayWidth[16];
-int32 RenderDevice::displayHeight[16];
-int32 RenderDevice::displayCount = 0;
-WindowInfo RenderDevice::displayInfo;
+int32 RenderDeviceBase::displayWidth[16];
+int32 RenderDeviceBase::displayHeight[16];
+int32 RenderDeviceBase::displayCount = 0;
+WindowInfo RenderDeviceBase::displayInfo;
 
-int32 RenderDevice::lastShaderID = -1;
+int32 RenderDeviceBase::lastShaderID = -1;
 
 char drawGroupNames[0x10][0x10] = {
     "Draw Group 0", "Draw Group 1", "Draw Group 2",  "Draw Group 3",  "Draw Group 4",  "Draw Group 5",  "Draw Group 6",  "Draw Group 7",
@@ -85,15 +93,7 @@ char drawGroupNames[0x10][0x10] = {
     if (frameBufferClr != maskColor)                                                                                                                 \
         frameBufferClr = pixel;
 
-#define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
-#if RETRO_RENDERDEVICE_DIRECTX9
-#include "DX9/DX9RenderDevice.cpp"
-#elif RETRO_RENDERDEVICE_SDL2
-#include "SDL2/SDL2RenderDevice.cpp"
-#elif RETRO_RENDERDEVICE_OPENGL3
-#include "GL3/GL3RenderDevice.cpp"
-#endif
 
 void GenerateBlendLookupTable()
 {

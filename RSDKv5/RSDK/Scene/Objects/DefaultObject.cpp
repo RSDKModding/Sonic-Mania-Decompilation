@@ -4,8 +4,6 @@ RSDK::ObjectDefaultObject *RSDK::DefaultObject;
 
 void RSDK::DefaultObject_Update()
 {
-    RSDK_THIS(DefaultObject);
-
     if (controller[CONT_ANY].keyUp.down) {
         if (screens[CONT_ANY].position.y > 0)
             screens[CONT_ANY].position.y -= 4;

@@ -505,8 +505,6 @@ void PopcornMachine_EditorDraw(void)
     // Draw Top
     drawPos = self->position;
     drawPos.y += -0xD00000 - 0xA00000 * self->height;
-    int32 storeY1          = drawPos.y;
-    int32 storeY2          = self->position.y - 0x300000;
     self->animator.frameID = 4;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 

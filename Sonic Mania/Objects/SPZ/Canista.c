@@ -236,8 +236,6 @@ void Canista_State_Moving(void)
                 }
             }
             else {
-                bool32 collided = Player_CheckCollisionTouch(player, self, &Canista->hitboxDetect);
-
                 if (Player_CheckCollisionTouch(player, self, &Canista->hitboxDetect)) {
                     self->state          = Canista_State_Idle;
                     self->stopTimer      = 60;

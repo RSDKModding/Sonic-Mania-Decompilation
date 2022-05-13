@@ -396,7 +396,7 @@ void CableWarp_EditorDraw(void)
             case CABLEWARP_EXIT: {
                 nextSlot                  = slotID - 1;
                 EntityCableWarp *nextNode = RSDK_GET_ENTITY(nextSlot, CableWarp);
-                if (nextNode && nextNode->classID != CableWarp->classID || nextNode->type != CABLEWARP_NODE)
+                if (nextNode && (nextNode->classID != CableWarp->classID || nextNode->type != CABLEWARP_NODE))
                     nextSlot += 2;
                 break;
             }

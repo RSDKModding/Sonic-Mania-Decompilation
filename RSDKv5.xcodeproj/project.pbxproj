@@ -9,13 +9,10 @@
 /* Begin PBXBuildFile section */
 		C92834EA2631150A00D51CCE /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92834E92631150A00D51CCE /* Ogg.framework */; };
 		C92834EB2631150A00D51CCE /* Ogg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C92834E92631150A00D51CCE /* Ogg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C92834ED2631151B00D51CCE /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92834EC2631151B00D51CCE /* Vorbis.framework */; };
-		C92834EE2631151B00D51CCE /* Vorbis.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C92834EC2631151B00D51CCE /* Vorbis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C928353D26A3F28200D51CCE /* cocoaHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = C928353C26A3F28200D51CCE /* cocoaHelpers.mm */; };
 		C9555DAE2744FE06006E1353 /* tinyxml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9555DAD2744FE06006E1353 /* tinyxml2.cpp */; };
 		C965667626BCF1E80076832A /* Theora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C965667526BCF1E80076832A /* Theora.framework */; };
 		C965667726BCF1E80076832A /* Theora.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C965667526BCF1E80076832A /* Theora.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C965667C26BCF27B0076832A /* theoraplay.c in Sources */ = {isa = PBXBuildFile; fileRef = C965667926BCF27B0076832A /* theoraplay.c */; };
 		C96881FA25DF3C8B00BEE4B8 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C96881F925DF3C8A00BEE4B8 /* Info.plist */; };
 		C968886525DF3EF300BEE4B8 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C968886425DF3EF300BEE4B8 /* SDL2.framework */; };
 		C968886625DF3EF300BEE4B8 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C968886425DF3EF300BEE4B8 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -46,7 +43,6 @@
 		C9CDC74F27F9199300E4C97E /* Debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC74E27F9199300E4C97E /* Debug.cpp */; };
 		C9CDC75E27F9199D00E4C97E /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC75027F9199C00E4C97E /* Sprite.cpp */; };
 		C9CDC75F27F9199D00E4C97E /* Drawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC75227F9199C00E4C97E /* Drawing.cpp */; };
-		C9CDC76027F9199D00E4C97E /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC75327F9199C00E4C97E /* Shader.cpp */; };
 		C9CDC76127F9199D00E4C97E /* Scene3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC75527F9199C00E4C97E /* Scene3D.cpp */; };
 		C9CDC76227F9199D00E4C97E /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC75627F9199C00E4C97E /* Video.cpp */; };
 		C9CDC76327F9199D00E4C97E /* Palette.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC75C27F9199D00E4C97E /* Palette.cpp */; };
@@ -100,7 +96,6 @@
 			files = (
 				C92834EB2631150A00D51CCE /* Ogg.framework in Embed Frameworks */,
 				C968886625DF3EF300BEE4B8 /* SDL2.framework in Embed Frameworks */,
-				C92834EE2631151B00D51CCE /* Vorbis.framework in Embed Frameworks */,
 				C965667726BCF1E80076832A /* Theora.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -116,11 +111,8 @@
 		C9555DAC2744FE06006E1353 /* tinyxml2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml2.h; path = dependencies/all/tinyxml2/tinyxml2.h; sourceTree = SOURCE_ROOT; };
 		C9555DAD2744FE06006E1353 /* tinyxml2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml2.cpp; path = dependencies/all/tinyxml2/tinyxml2.cpp; sourceTree = SOURCE_ROOT; };
 		C965667526BCF1E80076832A /* Theora.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Theora.framework; path = dependencies/mac/libtheora/macosx/Theora.framework; sourceTree = "<group>"; };
-		C965667926BCF27B0076832A /* theoraplay.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = theoraplay.c; path = dependencies/all/theoraplay/theoraplay.c; sourceTree = SOURCE_ROOT; };
-		C965667A26BCF27B0076832A /* theoraplay_cvtrgb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = theoraplay_cvtrgb.h; path = dependencies/all/theoraplay/theoraplay_cvtrgb.h; sourceTree = SOURCE_ROOT; };
-		C965667B26BCF27B0076832A /* theoraplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = theoraplay.h; path = dependencies/all/theoraplay/theoraplay.h; sourceTree = SOURCE_ROOT; };
 		C96881F125DF3C8700BEE4B8 /* RSDKv5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RSDKv5.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C96881F925DF3C8A00BEE4B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../dependencies/mac/RSDKv5/Info.plist; sourceTree = "<group>"; };
+		C96881F925DF3C8A00BEE4B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C96881FE25DF3C8B00BEE4B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../dependencies/mac/RSDKv5/Assets.xcassets; sourceTree = "<group>"; };
 		C968886425DF3EF300BEE4B8 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = dependencies/mac/SDL2.framework; sourceTree = "<group>"; };
 		C968886A25DF3F4B00BEE4B8 /* dictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dictionary.cpp; path = dependencies/all/iniparser/dictionary.cpp; sourceTree = SOURCE_ROOT; };
@@ -173,7 +165,6 @@
 		C9CDC75027F9199C00E4C97E /* Sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sprite.cpp; path = RSDK/Graphics/Sprite.cpp; sourceTree = "<group>"; };
 		C9CDC75127F9199C00E4C97E /* Palette.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Palette.hpp; path = RSDK/Graphics/Palette.hpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C9CDC75227F9199C00E4C97E /* Drawing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Drawing.cpp; path = RSDK/Graphics/Drawing.cpp; sourceTree = "<group>"; wrapsLines = 0; };
-		C9CDC75327F9199C00E4C97E /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shader.cpp; path = RSDK/Graphics/Shader.cpp; sourceTree = "<group>"; };
 		C9CDC75427F9199C00E4C97E /* Video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Video.hpp; path = RSDK/Graphics/Video.hpp; sourceTree = "<group>"; };
 		C9CDC75527F9199C00E4C97E /* Scene3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene3D.cpp; path = RSDK/Graphics/Scene3D.cpp; sourceTree = "<group>"; };
 		C9CDC75627F9199C00E4C97E /* Video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Video.cpp; path = RSDK/Graphics/Video.cpp; sourceTree = "<group>"; };
@@ -181,7 +172,6 @@
 		C9CDC75827F9199C00E4C97E /* Drawing.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Drawing.hpp; path = RSDK/Graphics/Drawing.hpp; sourceTree = "<group>"; };
 		C9CDC75927F9199C00E4C97E /* Sprite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Sprite.hpp; path = RSDK/Graphics/Sprite.hpp; sourceTree = "<group>"; };
 		C9CDC75A27F9199C00E4C97E /* Scene3D.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Scene3D.hpp; path = RSDK/Graphics/Scene3D.hpp; sourceTree = "<group>"; };
-		C9CDC75B27F9199C00E4C97E /* Shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Shader.hpp; path = RSDK/Graphics/Shader.hpp; sourceTree = "<group>"; };
 		C9CDC75C27F9199D00E4C97E /* Palette.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Palette.cpp; path = RSDK/Graphics/Palette.cpp; sourceTree = "<group>"; };
 		C9CDC75D27F9199D00E4C97E /* Animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Animation.cpp; path = RSDK/Graphics/Animation.cpp; sourceTree = "<group>"; };
 		C9CDC76527F919A900E4C97E /* Input.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Input.hpp; path = RSDK/Input/Input.hpp; sourceTree = "<group>"; };
@@ -260,6 +250,11 @@
 		C9CDC7D827F91A4100E4C97E /* DevOutput.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DevOutput.hpp; path = RSDK/Scene/Objects/DevOutput.hpp; sourceTree = "<group>"; };
 		C9CDC7D927F91A4100E4C97E /* DefaultObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DefaultObject.cpp; path = RSDK/Scene/Objects/DefaultObject.cpp; sourceTree = "<group>"; };
 		C9CDC7DA27F91A4100E4C97E /* DevOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DevOutput.cpp; path = RSDK/Scene/Objects/DevOutput.cpp; sourceTree = "<group>"; };
+		C9CDC7DF282E45AF00E4C97E /* stb_vorbis.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = stb_vorbis.c; path = dependencies/all/stb_vorbis/stb_vorbis.c; sourceTree = SOURCE_ROOT; };
+		C9CDC7E5282E4A1100E4C97E /* SDL2RenderDevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SDL2RenderDevice.hpp; path = RSDK/Graphics/SDL2/SDL2RenderDevice.hpp; sourceTree = "<group>"; };
+		C9CDC7E6282E4A1100E4C97E /* SDL2RenderDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDL2RenderDevice.cpp; path = RSDK/Graphics/SDL2/SDL2RenderDevice.cpp; sourceTree = "<group>"; };
+		C9CDC7E9282E4AAC00E4C97E /* SDL2AudioDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDL2AudioDevice.cpp; path = RSDK/Audio/SDL2/SDL2AudioDevice.cpp; sourceTree = "<group>"; };
+		C9CDC7EA282E4AAC00E4C97E /* SDL2AudioDevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SDL2AudioDevice.hpp; path = RSDK/Audio/SDL2/SDL2AudioDevice.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,7 +264,6 @@
 			files = (
 				C92834EA2631150A00D51CCE /* Ogg.framework in Frameworks */,
 				C968886525DF3EF300BEE4B8 /* SDL2.framework in Frameworks */,
-				C92834ED2631151B00D51CCE /* Vorbis.framework in Frameworks */,
 				C965667626BCF1E80076832A /* Theora.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,16 +289,6 @@
 			name = tinyXML2;
 			sourceTree = "<group>";
 		};
-		C965667826BCF24C0076832A /* theoraPlay */ = {
-			isa = PBXGroup;
-			children = (
-				C965667A26BCF27B0076832A /* theoraplay_cvtrgb.h */,
-				C965667926BCF27B0076832A /* theoraplay.c */,
-				C965667B26BCF27B0076832A /* theoraplay.h */,
-			);
-			name = theoraPlay;
-			sourceTree = "<group>";
-		};
 		C968819E25DF3BC700BEE4B8 = {
 			isa = PBXGroup;
 			children = (
@@ -327,12 +311,12 @@
 			children = (
 				C9CDC72D27F9165300E4C97E /* sources */,
 				C9555DAB2744FDBB006E1353 /* tinyXML2 */,
-				C965667826BCF24C0076832A /* theoraPlay */,
 				C928353A26A3F25D00D51CCE /* helpers */,
 				C968887625DF488300BEE4B8 /* zlib */,
 				C968886925DF3F3C00BEE4B8 /* iniParser */,
-				C96881F925DF3C8A00BEE4B8 /* Info.plist */,
+				C9CDC7DE282E44CB00E4C97E /* stb_vorbis */,
 				C96881FE25DF3C8B00BEE4B8 /* Assets.xcassets */,
+				C96881F925DF3C8A00BEE4B8 /* Info.plist */,
 			);
 			path = RSDKv5;
 			sourceTree = "<group>";
@@ -466,6 +450,7 @@
 		C9CDC73627F9195700E4C97E /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				C9CDC7E1282E475100E4C97E /* SDL2 */,
 				C9CDC75D27F9199D00E4C97E /* Animation.cpp */,
 				C9CDC75727F9199C00E4C97E /* Animation.hpp */,
 				C9CDC75227F9199C00E4C97E /* Drawing.cpp */,
@@ -474,8 +459,6 @@
 				C9CDC75127F9199C00E4C97E /* Palette.hpp */,
 				C9CDC75527F9199C00E4C97E /* Scene3D.cpp */,
 				C9CDC75A27F9199C00E4C97E /* Scene3D.hpp */,
-				C9CDC75327F9199C00E4C97E /* Shader.cpp */,
-				C9CDC75B27F9199C00E4C97E /* Shader.hpp */,
 				C9CDC75027F9199C00E4C97E /* Sprite.cpp */,
 				C9CDC75927F9199C00E4C97E /* Sprite.hpp */,
 				C9CDC75627F9199C00E4C97E /* Video.cpp */,
@@ -514,6 +497,7 @@
 		C9CDC73927F9197100E4C97E /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				C9CDC7E8282E4A9E00E4C97E /* SDL2 */,
 				C9CDC73A27F9197B00E4C97E /* Audio.cpp */,
 				C9CDC73B27F9197C00E4C97E /* Audio.hpp */,
 			);
@@ -626,6 +610,32 @@
 			name = Objects;
 			sourceTree = "<group>";
 		};
+		C9CDC7DE282E44CB00E4C97E /* stb_vorbis */ = {
+			isa = PBXGroup;
+			children = (
+				C9CDC7DF282E45AF00E4C97E /* stb_vorbis.c */,
+			);
+			name = stb_vorbis;
+			sourceTree = "<group>";
+		};
+		C9CDC7E1282E475100E4C97E /* SDL2 */ = {
+			isa = PBXGroup;
+			children = (
+				C9CDC7E6282E4A1100E4C97E /* SDL2RenderDevice.cpp */,
+				C9CDC7E5282E4A1100E4C97E /* SDL2RenderDevice.hpp */,
+			);
+			name = SDL2;
+			sourceTree = "<group>";
+		};
+		C9CDC7E8282E4A9E00E4C97E /* SDL2 */ = {
+			isa = PBXGroup;
+			children = (
+				C9CDC7E9282E4AAC00E4C97E /* SDL2AudioDevice.cpp */,
+				C9CDC7EA282E4AAC00E4C97E /* SDL2AudioDevice.hpp */,
+			);
+			name = SDL2;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -703,7 +713,6 @@
 				C9CDC78A27F919FB00E4C97E /* UserStats.cpp in Sources */,
 				C9CDC79D27F91A0A00E4C97E /* DummyPresence.cpp in Sources */,
 				C9CDC73C27F9197C00E4C97E /* Audio.cpp in Sources */,
-				C9CDC76027F9199D00E4C97E /* Shader.cpp in Sources */,
 				C9CDC78D27F919FB00E4C97E /* UserPresence.cpp in Sources */,
 				C9CDC76327F9199D00E4C97E /* Palette.cpp in Sources */,
 				C9CDC7AE27F91A1700E4C97E /* EOSStorage.cpp in Sources */,
@@ -740,7 +749,6 @@
 				C9CDC7C127F91A2300E4C97E /* NXLeaderboards.cpp in Sources */,
 				C9CDC76227F9199D00E4C97E /* Video.cpp in Sources */,
 				C9CDC76E27F919B800E4C97E /* Object.cpp in Sources */,
-				C965667C26BCF27B0076832A /* theoraplay.c in Sources */,
 				C96888A125DF48CE00BEE4B8 /* inflate.c in Sources */,
 				C968889E25DF48CE00BEE4B8 /* trees.c in Sources */,
 				C968889F25DF48CE00BEE4B8 /* gzread.c in Sources */,
@@ -903,6 +911,10 @@
 					"$(PROJECT_DIR)/dependencies/mac/libvorbis/macosx",
 					"$(PROJECT_DIR)/dependencies/mac/libtheora/macosx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"RSDK_USE_SDL2=1",
+					"DEBUG=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/dependencies/all",
 					"$(PROJECT_DIR)/dependencies/mac",
@@ -935,6 +947,7 @@
 					"$(PROJECT_DIR)/dependencies/mac/libvorbis/macosx",
 					"$(PROJECT_DIR)/dependencies/mac/libtheora/macosx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = "RSDK_USE_SDL2=1";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/dependencies/all",
 					"$(PROJECT_DIR)/dependencies/mac",

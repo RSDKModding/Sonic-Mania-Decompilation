@@ -40,7 +40,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
         bool32 finishedHeader = false;
         while (!finishedHeader) {
             buffer    = ogg_sync_buffer(&VideoManager::oy, 0x1000);
-            int32 ret = ReadBytes(&VideoManager::file, buffer, 0x1000);
+            int32 ret = (int32)ReadBytes(&VideoManager::file, buffer, 0x1000);
             ogg_sync_wrote(&VideoManager::oy, 0x1000);
 
             if (ret == 0)
@@ -113,7 +113,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
                 }
                 else {
                     buffer    = ogg_sync_buffer(&VideoManager::oy, 0x1000);
-                    int32 ret = ReadBytes(&VideoManager::file, buffer, 0x1000);
+                    int32 ret = (int32)ReadBytes(&VideoManager::file, buffer, 0x1000);
                     ogg_sync_wrote(&VideoManager::oy, 0x1000);
                     if (ret == 0) {
 #if !RETRO_USE_ORIGINAL_CODE
@@ -215,6 +215,8 @@ void ProcessVideo()
 
             int32 dataPos = (VideoManager::ti.pic_x & 0xFFFFFFFE) + (VideoManager::ti.pic_y & 0xFFFFFFFE) * yuv[0].stride;
             switch (VideoManager::pixelFormat) {
+                default: break;
+                    
                 case TH_PF_444:
                     RenderDevice::SetupVideoTexture_YUV444(yuv[0].width, yuv[0].height, &yuv[0].data[dataPos], &yuv[1].data[dataPos],
                                                            &yuv[2].data[dataPos], yuv[0].stride, yuv[1].stride, yuv[2].stride);

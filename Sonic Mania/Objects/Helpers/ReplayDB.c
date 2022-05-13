@@ -81,7 +81,7 @@ int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed)
         ++compressedBuffer;
     }
 
-    return compressedBuffer - compressed;
+    return (int32)(compressedBuffer - compressed);
 }
 
 int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
@@ -147,7 +147,7 @@ int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
         framePtr->frame = *compressedBuffer++;
     }
 
-    return compressedBuffer - compressed;
+    return (int32)(compressedBuffer - compressed);
 }
 
 #if RETRO_INCLUDE_EDITOR

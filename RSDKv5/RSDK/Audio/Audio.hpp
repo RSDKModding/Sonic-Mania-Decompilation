@@ -38,7 +38,8 @@ enum ChannelStates { CHANNEL_IDLE, CHANNEL_SFX, CHANNEL_STREAM, CHANNEL_LOADING_
 extern SFXInfo sfxList[SFX_COUNT];
 extern ChannelInfo channels[CHANNEL_COUNT];
 
-struct AudioDeviceBase {
+class AudioDeviceBase {
+public:
     static bool32 Init();
     static void Release();
 

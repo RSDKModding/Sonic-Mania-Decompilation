@@ -86,7 +86,6 @@ void SuperSparkle_StageLoad(void) { SuperSparkle->aniFrames = RSDK.LoadSpriteAni
 #if RETRO_INCLUDE_EDITOR
 void SuperSparkle_EditorDraw(void)
 {
-    RSDK_THIS(SuperSparkle);
     Animator animator;
     RSDK.SetSpriteAnimation(SuperSparkle->aniFrames, 0, &animator, true, 3);
 

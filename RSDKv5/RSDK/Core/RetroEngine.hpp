@@ -272,8 +272,12 @@ enum GameRegions {
 #endif // ! RETRO_WIN
 
 #if RETRO_PLATFORM == RETRO_OSX
+
+#if RETRO_AUDIODEVICE_SDL2 || RETRO_AUDIODEVICE_SDL2 || RETRO_INPUTDEVICE_SDL2
 #include <SDL2/SDL.h>
-#include <Theora/Theora.h>
+#endif
+
+#include <theora/theoradec.h>
 
 #include "cocoaHelpers.hpp"
 #elif RETRO_PLATFORM == RETRO_iOS

@@ -713,12 +713,6 @@
 		C99BDD2626AFA6F100A5D907 /* PBL_Player.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BDD1226AFA6F100A5D907 /* PBL_Player.c */; };
 		C99BDD2726AFA6F100A5D907 /* PBL_Ring.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BDD1326AFA6F100A5D907 /* PBL_Ring.c */; };
 		C99BDD2826AFA6F100A5D907 /* PBL_Camera.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BDD1426AFA6F100A5D907 /* PBL_Camera.c */; };
-		C99BDD3026AFA70500A5D907 /* Player.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BDD2A26AFA70400A5D907 /* Player.h */; };
-		C99BDD3126AFA70500A5D907 /* Player.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BDD2B26AFA70500A5D907 /* Player.c */; };
-		C99BDD3226AFA70500A5D907 /* PlayerProbe.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BDD2C26AFA70500A5D907 /* PlayerProbe.c */; };
-		C99BDD3326AFA70500A5D907 /* PlayerHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BDD2D26AFA70500A5D907 /* PlayerHelpers.c */; };
-		C99BDD3426AFA70500A5D907 /* PlayerHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BDD2E26AFA70500A5D907 /* PlayerHelpers.h */; };
-		C99BDD3526AFA70500A5D907 /* PlayerProbe.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BDD2F26AFA70500A5D907 /* PlayerProbe.h */; };
 		C99BDD4926AFA71400A5D907 /* PuyoAI.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BDD3726AFA71200A5D907 /* PuyoAI.c */; };
 		C99BDD4A26AFA71500A5D907 /* PuyoAttack.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BDD3826AFA71200A5D907 /* PuyoAttack.h */; };
 		C99BDD4B26AFA71500A5D907 /* PuyoBean.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BDD3926AFA71200A5D907 /* PuyoBean.h */; };
@@ -1202,7 +1196,6 @@
 		C99BE17D26AFAD9E00A5D907 /* UIVsZoneButton.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BE10B26AFAD9A00A5D907 /* UIVsZoneButton.h */; };
 		C99BE17E26AFAD9E00A5D907 /* UIButton.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BE10C26AFAD9A00A5D907 /* UIButton.c */; };
 		C99BE17F26AFAD9E00A5D907 /* UIVsResults.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BE10D26AFAD9B00A5D907 /* UIVsResults.h */; };
-		C99BE18026AFAD9E00A5D907 /* TAEmerald.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BE10E26AFAD9B00A5D907 /* TAEmerald.c */; };
 		C99BE18126AFAD9E00A5D907 /* UIWidgets.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BE10F26AFAD9B00A5D907 /* UIWidgets.c */; };
 		C99BE18226AFAD9E00A5D907 /* UICharButton.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BE11026AFAD9B00A5D907 /* UICharButton.h */; };
 		C99BE18326AFAD9E00A5D907 /* UICreditsText.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BE11126AFAD9B00A5D907 /* UICreditsText.c */; };
@@ -1219,7 +1212,6 @@
 		C99BE18E26AFAD9E00A5D907 /* UIButtonLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BE11C26AFAD9D00A5D907 /* UIButtonLabel.h */; };
 		C99BE18F26AFAD9E00A5D907 /* UIWidgets.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BE11D26AFAD9D00A5D907 /* UIWidgets.h */; };
 		C99BE19026AFAD9E00A5D907 /* UIControl.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BE11E26AFAD9D00A5D907 /* UIControl.c */; };
-		C99BE19126AFAD9E00A5D907 /* TAEmerald.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BE11F26AFAD9D00A5D907 /* TAEmerald.h */; };
 		C99BE19226AFAD9E00A5D907 /* DAControl.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BE12026AFAD9D00A5D907 /* DAControl.c */; };
 		C99BE19326AFAD9E00A5D907 /* UIResPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = C99BE12126AFAD9D00A5D907 /* UIResPicker.h */; };
 		C99BE19426AFAD9E00A5D907 /* CompetitionMenu.c in Sources */ = {isa = PBXBuildFile; fileRef = C99BE12226AFAD9E00A5D907 /* CompetitionMenu.c */; };
@@ -1231,6 +1223,14 @@
 		C9AE6E282715390D0099790C /* GameVariables.c in Sources */ = {isa = PBXBuildFile; fileRef = C9AE6E262715390D0099790C /* GameVariables.c */; };
 		C9AE6E2C271539970099790C /* Current.c in Sources */ = {isa = PBXBuildFile; fileRef = C9AE6E2A271539960099790C /* Current.c */; };
 		C9AE6E2D271539970099790C /* Current.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE6E2B271539960099790C /* Current.h */; };
+		C9CDC7EF282E4D1B00E4C97E /* Player.c in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC7ED282E4D1B00E4C97E /* Player.c */; };
+		C9CDC7F0282E4D1B00E4C97E /* Player.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CDC7EE282E4D1B00E4C97E /* Player.h */; };
+		C9CDC7F6282E4D2F00E4C97E /* PlayerProbe.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CDC7F2282E4D2E00E4C97E /* PlayerProbe.h */; };
+		C9CDC7F7282E4D2F00E4C97E /* PlayerHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC7F3282E4D2E00E4C97E /* PlayerHelpers.c */; };
+		C9CDC7F8282E4D2F00E4C97E /* PlayerProbe.c in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC7F4282E4D2E00E4C97E /* PlayerProbe.c */; };
+		C9CDC7F9282E4D2F00E4C97E /* PlayerHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CDC7F5282E4D2E00E4C97E /* PlayerHelpers.h */; };
+		C9CDC7FD282E4D4100E4C97E /* TAEmerald.c in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC7FB282E4D4100E4C97E /* TAEmerald.c */; };
+		C9CDC7FE282E4D4100E4C97E /* TAEmerald.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CDC7FC282E4D4100E4C97E /* TAEmerald.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1942,12 +1942,6 @@
 		C99BDD1226AFA6F100A5D907 /* PBL_Player.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PBL_Player.c; path = "Sonic Mania/Objects/Pinball/PBL_Player.c"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BDD1326AFA6F100A5D907 /* PBL_Ring.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PBL_Ring.c; path = "Sonic Mania/Objects/Pinball/PBL_Ring.c"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BDD1426AFA6F100A5D907 /* PBL_Camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PBL_Camera.c; path = "Sonic Mania/Objects/Pinball/PBL_Camera.c"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BDD2A26AFA70400A5D907 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = "Sonic Mania/Objects/Player/Player.h"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BDD2B26AFA70500A5D907 /* Player.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Player.c; path = "Sonic Mania/Objects/Player/Player.c"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BDD2C26AFA70500A5D907 /* PlayerProbe.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PlayerProbe.c; path = "Sonic Mania/Objects/Player/PlayerProbe.c"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BDD2D26AFA70500A5D907 /* PlayerHelpers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PlayerHelpers.c; path = "Sonic Mania/Objects/Player/PlayerHelpers.c"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BDD2E26AFA70500A5D907 /* PlayerHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerHelpers.h; path = "Sonic Mania/Objects/Player/PlayerHelpers.h"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BDD2F26AFA70500A5D907 /* PlayerProbe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerProbe.h; path = "Sonic Mania/Objects/Player/PlayerProbe.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BDD3726AFA71200A5D907 /* PuyoAI.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PuyoAI.c; path = "Sonic Mania/Objects/Puyo/PuyoAI.c"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BDD3826AFA71200A5D907 /* PuyoAttack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PuyoAttack.h; path = "Sonic Mania/Objects/Puyo/PuyoAttack.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BDD3926AFA71200A5D907 /* PuyoBean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PuyoBean.h; path = "Sonic Mania/Objects/Puyo/PuyoBean.h"; sourceTree = "<group>"; wrapsLines = 0; };
@@ -2431,7 +2425,6 @@
 		C99BE10B26AFAD9A00A5D907 /* UIVsZoneButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIVsZoneButton.h; path = "Sonic Mania/Objects/Menu/UIVsZoneButton.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE10C26AFAD9A00A5D907 /* UIButton.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = UIButton.c; path = "Sonic Mania/Objects/Menu/UIButton.c"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE10D26AFAD9B00A5D907 /* UIVsResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIVsResults.h; path = "Sonic Mania/Objects/Menu/UIVsResults.h"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BE10E26AFAD9B00A5D907 /* TAEmerald.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TAEmerald.c; path = "Sonic Mania/Objects/Menu/TAEmerald.c"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE10F26AFAD9B00A5D907 /* UIWidgets.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = UIWidgets.c; path = "Sonic Mania/Objects/Menu/UIWidgets.c"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE11026AFAD9B00A5D907 /* UICharButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UICharButton.h; path = "Sonic Mania/Objects/Menu/UICharButton.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE11126AFAD9B00A5D907 /* UICreditsText.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = UICreditsText.c; path = "Sonic Mania/Objects/Menu/UICreditsText.c"; sourceTree = "<group>"; wrapsLines = 0; };
@@ -2448,7 +2441,6 @@
 		C99BE11C26AFAD9D00A5D907 /* UIButtonLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIButtonLabel.h; path = "Sonic Mania/Objects/Menu/UIButtonLabel.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE11D26AFAD9D00A5D907 /* UIWidgets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIWidgets.h; path = "Sonic Mania/Objects/Menu/UIWidgets.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE11E26AFAD9D00A5D907 /* UIControl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = UIControl.c; path = "Sonic Mania/Objects/Menu/UIControl.c"; sourceTree = "<group>"; wrapsLines = 0; };
-		C99BE11F26AFAD9D00A5D907 /* TAEmerald.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TAEmerald.h; path = "Sonic Mania/Objects/Menu/TAEmerald.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE12026AFAD9D00A5D907 /* DAControl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DAControl.c; path = "Sonic Mania/Objects/Menu/DAControl.c"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE12126AFAD9D00A5D907 /* UIResPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIResPicker.h; path = "Sonic Mania/Objects/Menu/UIResPicker.h"; sourceTree = "<group>"; wrapsLines = 0; };
 		C99BE12226AFAD9E00A5D907 /* CompetitionMenu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CompetitionMenu.c; path = "Sonic Mania/Objects/Menu/CompetitionMenu.c"; sourceTree = "<group>"; wrapsLines = 0; };
@@ -2460,6 +2452,14 @@
 		C9AE6E262715390D0099790C /* GameVariables.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = GameVariables.c; path = "Sonic Mania/GameVariables.c"; sourceTree = "<group>"; };
 		C9AE6E2A271539960099790C /* Current.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Current.c; path = "Sonic Mania/Objects/HCZ/Current.c"; sourceTree = "<group>"; };
 		C9AE6E2B271539960099790C /* Current.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Current.h; path = "Sonic Mania/Objects/HCZ/Current.h"; sourceTree = "<group>"; };
+		C9CDC7ED282E4D1B00E4C97E /* Player.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Player.c; path = "Sonic Mania/Objects/Global/Player.c"; sourceTree = "<group>"; };
+		C9CDC7EE282E4D1B00E4C97E /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = "Sonic Mania/Objects/Global/Player.h"; sourceTree = "<group>"; };
+		C9CDC7F2282E4D2E00E4C97E /* PlayerProbe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerProbe.h; path = "Sonic Mania/Objects/Helpers/PlayerProbe.h"; sourceTree = "<group>"; };
+		C9CDC7F3282E4D2E00E4C97E /* PlayerHelpers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PlayerHelpers.c; path = "Sonic Mania/Objects/Helpers/PlayerHelpers.c"; sourceTree = "<group>"; };
+		C9CDC7F4282E4D2E00E4C97E /* PlayerProbe.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PlayerProbe.c; path = "Sonic Mania/Objects/Helpers/PlayerProbe.c"; sourceTree = "<group>"; };
+		C9CDC7F5282E4D2E00E4C97E /* PlayerHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerHelpers.h; path = "Sonic Mania/Objects/Helpers/PlayerHelpers.h"; sourceTree = "<group>"; };
+		C9CDC7FB282E4D4100E4C97E /* TAEmerald.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TAEmerald.c; path = "Sonic Mania/Objects/Credits/TAEmerald.c"; sourceTree = "<group>"; };
+		C9CDC7FC282E4D4100E4C97E /* TAEmerald.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TAEmerald.h; path = "Sonic Mania/Objects/Credits/TAEmerald.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2830,19 +2830,6 @@
 			name = Puyo;
 			sourceTree = "<group>";
 		};
-		C928354726AF9C1A00D51CCE /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				C99BDD2B26AFA70500A5D907 /* Player.c */,
-				C99BDD2A26AFA70400A5D907 /* Player.h */,
-				C99BDD2D26AFA70500A5D907 /* PlayerHelpers.c */,
-				C99BDD2E26AFA70500A5D907 /* PlayerHelpers.h */,
-				C99BDD2C26AFA70500A5D907 /* PlayerProbe.c */,
-				C99BDD2F26AFA70500A5D907 /* PlayerProbe.h */,
-			);
-			name = Player;
-			sourceTree = "<group>";
-		};
 		C928354826AF9C1F00D51CCE /* Pinball */ = {
 			isa = PBXGroup;
 			children = (
@@ -3135,8 +3122,6 @@
 				C99BE0C826AFAD9100A5D907 /* MenuSetup.h */,
 				C99BE0E926AFAD9600A5D907 /* OptionsMenu.c */,
 				C99BE0EE26AFAD9600A5D907 /* OptionsMenu.h */,
-				C99BE10E26AFAD9B00A5D907 /* TAEmerald.c */,
-				C99BE11F26AFAD9D00A5D907 /* TAEmerald.h */,
 				C99BE11826AFAD9C00A5D907 /* ThanksSetup.c */,
 				C99BE0BE26AFAD8F00A5D907 /* ThanksSetup.h */,
 				C99BE10326AFAD9900A5D907 /* TimeAttackMenu.c */,
@@ -3340,6 +3325,10 @@
 		C928355026AF9D7400D51CCE /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				C9CDC7F3282E4D2E00E4C97E /* PlayerHelpers.c */,
+				C9CDC7F5282E4D2E00E4C97E /* PlayerHelpers.h */,
+				C9CDC7F4282E4D2E00E4C97E /* PlayerProbe.c */,
+				C9CDC7F2282E4D2E00E4C97E /* PlayerProbe.h */,
 				C9555DA727153A9B006E1353 /* CompetitionSession.c */,
 				C9555DA627153A9B006E1353 /* CompetitionSession.h */,
 				C99BDB0A26AFA65A00A5D907 /* BadnikHelpers.c */,
@@ -3430,6 +3419,8 @@
 		C928355226AF9D9000D51CCE /* Globals */ = {
 			isa = PBXGroup;
 			children = (
+				C9CDC7ED282E4D1B00E4C97E /* Player.c */,
+				C9CDC7EE282E4D1B00E4C97E /* Player.h */,
 				C99BD99C26AFA5EA00A5D907 /* ActClear.c */,
 				C99BD9CF26AFA5EE00A5D907 /* ActClear.h */,
 				C99BD9A526AFA5EB00A5D907 /* Animals.c */,
@@ -3581,7 +3572,6 @@
 				C928354A26AF9C3200D51CCE /* OOZ */,
 				C928354926AF9C2E00D51CCE /* PGZ */,
 				C928354826AF9C1F00D51CCE /* Pinball */,
-				C928354726AF9C1A00D51CCE /* Player */,
 				C928354626AF9C1300D51CCE /* Puyo */,
 				C928354526AF9C0C00D51CCE /* SBZ */,
 				C928354426AF9C0600D51CCE /* SPZ */,
@@ -3796,6 +3786,8 @@
 		C99BD6FD26AFA46B00A5D907 /* Credits */ = {
 			isa = PBXGroup;
 			children = (
+				C9CDC7FB282E4D4100E4C97E /* TAEmerald.c */,
+				C9CDC7FC282E4D4100E4C97E /* TAEmerald.h */,
 				C99BD82D26AFA59100A5D907 /* AnimalHBH.c */,
 				C99BD82926AFA59100A5D907 /* AnimalHBH.h */,
 				C99BD82C26AFA59100A5D907 /* CreditsSetup.c */,
@@ -4003,7 +3995,6 @@
 				C99BD98B26AFA5DA00A5D907 /* Motobug.h in Headers */,
 				C99BDFF926AFA8BD00A5D907 /* TimePost.h in Headers */,
 				C99BD73726AFA4EA00A5D907 /* AIZRockPile.h in Headers */,
-				C99BDD3426AFA70500A5D907 /* PlayerHelpers.h in Headers */,
 				C99BE12726AFAD9E00A5D907 /* UIVideo.h in Headers */,
 				C99BDBBF26AFA67F00A5D907 /* HPZEmerald.h in Headers */,
 				C99BDF8126AFA8A400A5D907 /* TVVan.h in Headers */,
@@ -4098,7 +4089,6 @@
 				C99BDB9326AFA67E00A5D907 /* LavaFall.h in Headers */,
 				C99BDDBC26AFA72900A5D907 /* DoorTrigger.h in Headers */,
 				C99BDBAC26AFA67F00A5D907 /* DashLift.h in Headers */,
-				C99BE19126AFAD9E00A5D907 /* TAEmerald.h in Headers */,
 				C99BD93C26AFA5CB00A5D907 /* Cylinder.h in Headers */,
 				C99BD8B326AFA5B500A5D907 /* ERZGunner.h in Headers */,
 				C99BD7A326AFA51500A5D907 /* GenericTrigger.h in Headers */,
@@ -4245,6 +4235,7 @@
 				C99BDA3026AFA5F100A5D907 /* Spikes.h in Headers */,
 				C99BE14626AFAD9E00A5D907 /* UIReplayCarousel.h in Headers */,
 				C99BD89F26AFA5B500A5D907 /* PhantomHand.h in Headers */,
+				C9CDC7F6282E4D2F00E4C97E /* PlayerProbe.h in Headers */,
 				C99BD7FC26AFA57D00A5D907 /* Springboard.h in Headers */,
 				C99BDEF726AFA87A00A5D907 /* OOZSetup.h in Headers */,
 				C99BDE2626AFA85400A5D907 /* Gachapandora.h in Headers */,
@@ -4349,6 +4340,7 @@
 				C99BD98926AFA5DA00A5D907 /* GHZ2Outro.h in Headers */,
 				C99BE16626AFAD9E00A5D907 /* UIDialog.h in Headers */,
 				C99BDADB26AFA64D00A5D907 /* Spear.h in Headers */,
+				C9CDC7F0282E4D1B00E4C97E /* Player.h in Headers */,
 				C99BDBD126AFA67F00A5D907 /* LRZRockPile.h in Headers */,
 				C99BDBDB26AFA67F00A5D907 /* Drillerdroid.h in Headers */,
 				C99BE03326AFA8BD00A5D907 /* SilverSonic.h in Headers */,
@@ -4386,6 +4378,7 @@
 				C99BDEEE26AFA87A00A5D907 /* PullSwitch.h in Headers */,
 				C99BE03526AFA8BD00A5D907 /* Beanstalk.h in Headers */,
 				C99BE03926AFA8BD00A5D907 /* SSZ1Setup.h in Headers */,
+				C9CDC7F9282E4D2F00E4C97E /* PlayerHelpers.h in Headers */,
 				C99BD72F26AFA4EA00A5D907 /* EncoreIntro.h in Headers */,
 				C99BD83826AFA59100A5D907 /* EncoreGoodEnd.h in Headers */,
 				C99BDDB626AFA72900A5D907 /* Crate.h in Headers */,
@@ -4399,7 +4392,6 @@
 				C99BD86626AFA5A500A5D907 /* FXTrail.h in Headers */,
 				C99BD9FB26AFA5F000A5D907 /* Soundboard.h in Headers */,
 				C99BDB2C26AFA66800A5D907 /* Stegway.h in Headers */,
-				C99BDD3026AFA70500A5D907 /* Player.h in Headers */,
 				C99BD98526AFA5DA00A5D907 /* BuzzBomber.h in Headers */,
 				C99BD78D26AFA51500A5D907 /* Palette.h in Headers */,
 				C99BD81A26AFA57D00A5D907 /* StickyPlatform.h in Headers */,
@@ -4479,7 +4471,6 @@
 				C99BDAD126AFA64D00A5D907 /* HCZSpikeBall.h in Headers */,
 				C99BE13026AFAD9E00A5D907 /* ThanksSetup.h in Headers */,
 				C99BDD1F26AFA6F100A5D907 /* PBL_HUD.h in Headers */,
-				C99BDD3526AFA70500A5D907 /* PlayerProbe.h in Headers */,
 				C99BDEFF26AFA87A00A5D907 /* Sol.h in Headers */,
 				C99BDA2626AFA5F100A5D907 /* DebugMode.h in Headers */,
 				C99BDF9B26AFA8A400A5D907 /* TVPole.h in Headers */,
@@ -4514,6 +4505,7 @@
 				C99BDDA126AFA72900A5D907 /* Shuriken.h in Headers */,
 				C99BDBEB26AFA67F00A5D907 /* LRZ2Setup.h in Headers */,
 				C99BDBDC26AFA67F00A5D907 /* RisingLava.h in Headers */,
+				C9CDC7FE282E4D4100E4C97E /* TAEmerald.h in Headers */,
 				C99BDD5A26AFA71500A5D907 /* PuyoAI.h in Headers */,
 				C99BD8B926AFA5B500A5D907 /* PhantomEgg.h in Headers */,
 				C99BDE8D26AFA86A00A5D907 /* EggLoco.h in Headers */,
@@ -4734,7 +4726,6 @@
 				C99BDD1526AFA6F100A5D907 /* PBL_Bumper.c in Sources */,
 				C99BDD2626AFA6F100A5D907 /* PBL_Player.c in Sources */,
 				C99BE15526AFAD9E00A5D907 /* UIKeyBinder.c in Sources */,
-				C99BDD3326AFA70500A5D907 /* PlayerHelpers.c in Sources */,
 				C99BD91D26AFA5CB00A5D907 /* FBZSetup.c in Sources */,
 				C9AE6E2C271539970099790C /* Current.c in Sources */,
 				C99BDE0B26AFA85400A5D907 /* BuzzSaw.c in Sources */,
@@ -4885,6 +4876,7 @@
 				C99BE15B26AFAD9E00A5D907 /* OptionsMenu.c in Sources */,
 				C99BDBA026AFA67E00A5D907 /* LRZ1Intro.c in Sources */,
 				C99BD80D26AFA57D00A5D907 /* Syringe.c in Sources */,
+				C9CDC7F7282E4D2F00E4C97E /* PlayerHelpers.c in Sources */,
 				C99BD89826AFA5B500A5D907 /* PhantomEgg.c in Sources */,
 				C99BD9F926AFA5F000A5D907 /* Animals.c in Sources */,
 				C99BDBD526AFA67F00A5D907 /* LRZSpikeBall.c in Sources */,
@@ -4916,6 +4908,7 @@
 				C99BDAD626AFA64D00A5D907 /* HandLauncher.c in Sources */,
 				C99BD9F126AFA5F000A5D907 /* Spikes.c in Sources */,
 				C99BDA8226AFA63F00A5D907 /* UFO_Player.c in Sources */,
+				C9CDC7F8282E4D2F00E4C97E /* PlayerProbe.c in Sources */,
 				C99BDA3826AFA5F100A5D907 /* SaveGame.c in Sources */,
 				C99BDE9826AFA86A00A5D907 /* GiantPistol.c in Sources */,
 				C99BDA7D26AFA63F00A5D907 /* UFO_Message.c in Sources */,
@@ -4926,8 +4919,8 @@
 				C99BE14826AFAD9E00A5D907 /* UIVsZoneButton.c in Sources */,
 				C99BD93F26AFA5CB00A5D907 /* HangGlider.c in Sources */,
 				C99BDE1226AFA85400A5D907 /* MechaBu.c in Sources */,
+				C9CDC7FD282E4D4100E4C97E /* TAEmerald.c in Sources */,
 				C99BDE0E26AFA85400A5D907 /* MMZLightning.c in Sources */,
-				C99BDD3226AFA70500A5D907 /* PlayerProbe.c in Sources */,
 				C99BE13F26AFAD9E00A5D907 /* UIVsRoundPicker.c in Sources */,
 				C99BDF8326AFA8A400A5D907 /* Clapperboard.c in Sources */,
 				C99BD9F026AFA5F000A5D907 /* ActClear.c in Sources */,
@@ -4950,6 +4943,7 @@
 				C99BDEA626AFA86A00A5D907 /* Honkytonk.c in Sources */,
 				C99BD97726AFA5DA00A5D907 /* SpikeLog.c in Sources */,
 				C99BD8B626AFA5B500A5D907 /* PhantomMissile.c in Sources */,
+				C9CDC7EF282E4D1B00E4C97E /* Player.c in Sources */,
 				C99BDE9026AFA86A00A5D907 /* Cactula.c in Sources */,
 				C99BE12D26AFAD9E00A5D907 /* UITransition.c in Sources */,
 				C99BDD2726AFA6F100A5D907 /* PBL_Ring.c in Sources */,
@@ -5011,7 +5005,6 @@
 				C99BDAD326AFA64D00A5D907 /* ScrewMobile.c in Sources */,
 				C99BDBAF26AFA67F00A5D907 /* LRZConveyor.c in Sources */,
 				C99BDBB026AFA67F00A5D907 /* DrillerdroidO.c in Sources */,
-				C99BE18026AFAD9E00A5D907 /* TAEmerald.c in Sources */,
 				C99BDF6426AFA8A300A5D907 /* PopcornKernel.c in Sources */,
 				C99BD73626AFA4EA00A5D907 /* AIZKingClaw.c in Sources */,
 				C99BDBC526AFA67F00A5D907 /* HPZEmerald.c in Sources */,
@@ -5048,7 +5041,6 @@
 				C99BDE2126AFA85400A5D907 /* PlaneSeeSaw.c in Sources */,
 				C99BE12926AFAD9E00A5D907 /* LevelSelect.c in Sources */,
 				C99BDEB126AFA86A00A5D907 /* Hatterkiller.c in Sources */,
-				C99BDD3126AFA70500A5D907 /* Player.c in Sources */,
 				C99BDA0526AFA5F000A5D907 /* InvincibleStars.c in Sources */,
 				C99BDA7726AFA63F00A5D907 /* UFO_Springboard.c in Sources */,
 				C99BDF6026AFA8A300A5D907 /* SPZ1Setup.c in Sources */,

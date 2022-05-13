@@ -60,7 +60,7 @@ void Fireflies_State_Spawner(void)
         self->timer = 1;
 
         if (Fireflies->activeFireflyCount < 48) {
-            Vector2 startPos, points[1];
+            Vector2 startPos;
 
             RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
             int32 x                = ((screen->width & 0xFFFFFFFE) + 2 * screen->position.x) << 15;

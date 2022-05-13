@@ -59,12 +59,12 @@ void RSDK::SKU::InitUserData()
     // Initalize platform-specific subsystems here
 
     // Examples
-    if (false)
-        userCore = InitSteamCore();
-    if (false)
-        userCore = InitEOSCore();
-    if (false)
-        userCore = InitNXCore();
+    // if (usingSteamAPI)
+    //     userCore = InitSteamCore();
+    // if (usingEGSAPI)
+    //     userCore = InitEOSCore();
+    // if (usingSwitchAPI)
+    //     userCore = InitNXCore();
 
     if (!userCore) // no platform core, so default to dummy funcs
         userCore = dummyCore;

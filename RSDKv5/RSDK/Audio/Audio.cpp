@@ -1,7 +1,6 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
 #define STB_VORBIS_NO_STDIO
-
 #include "stb_vorbis/stb_vorbis.c"
 
 stb_vorbis *vorbisInfo = NULL;
@@ -18,17 +17,17 @@ ChannelInfo channels[CHANNEL_COUNT];
 
 float speedMixAmounts[0x400];
 
-uint8 AudioDevice::initializedAudioChannels = false;
-uint8 AudioDevice::audioState               = false;
-
-int32 AudioDevice::mixBufferID = 0;
-float AudioDevice::mixBuffer[3][MIX_BUFFER_SIZE];
-
 #if RETRO_AUDIODEVICE_XAUDIO
 #include "XAudio/XAudioDevice.cpp"
 #elif RETRO_AUDIODEVICE_SDL2
 #include "SDL2/SDL2AudioDevice.cpp"
 #endif
+
+uint8 AudioDeviceBase::initializedAudioChannels = false;
+uint8 AudioDeviceBase::audioState               = false;
+
+int32 AudioDeviceBase::mixBufferID = 0;
+float AudioDeviceBase::mixBuffer[3][MIX_BUFFER_SIZE];
 
 void UpdateStreamBuffer(ChannelInfo *channel)
 {

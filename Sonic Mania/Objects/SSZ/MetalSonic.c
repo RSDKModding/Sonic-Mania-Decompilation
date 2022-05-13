@@ -2158,7 +2158,6 @@ void MetalSonic_StateWall_Move(void)
 void MetalSonic_EditorDraw(void)
 {
     RSDK_THIS(MetalSonic);
-    Vector2 drawPos;
 
     self->drawFX         = FX_FLIP | FX_ROTATE;
     self->updateRange.x  = 0x800000;

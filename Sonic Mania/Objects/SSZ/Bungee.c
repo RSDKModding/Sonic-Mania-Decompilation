@@ -177,8 +177,6 @@ void Bungee_StageLoad(void)
 #if RETRO_INCLUDE_EDITOR
 void Bungee_EditorDraw(void)
 {
-    RSDK_THIS(Bungee);
-
     RSDK.DrawSprite(&Bungee->animator, NULL, false);
 }
 

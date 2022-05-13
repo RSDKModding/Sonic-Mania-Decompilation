@@ -156,7 +156,6 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
 
-    Entity *entity       = host->activeEntity;
     EntityFXRuby *fxRuby = CPZ1Intro->fxRuby;
     if (!host->timer) {
         player1->camera = NULL;

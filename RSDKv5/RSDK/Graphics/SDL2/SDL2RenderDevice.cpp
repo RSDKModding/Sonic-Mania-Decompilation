@@ -1,3 +1,4 @@
+
 SDL_Window *RenderDevice::window     = nullptr;
 SDL_Renderer *RenderDevice::renderer = nullptr;
 SDL_Texture *RenderDevice::screenTexture[SCREEN_MAX];
@@ -12,6 +13,8 @@ unsigned long long RenderDevice::curTicks   = 0;
 unsigned long long RenderDevice::prevTicks  = 0;
 
 uint8 RenderDevice::lastTextureFormat = -1;
+
+#define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
 
 bool RenderDevice::Init()
@@ -527,7 +530,6 @@ bool RenderDevice::InitGraphicsAPI()
 
     pixelSize.x     = screens[0].size.x;
     pixelSize.y     = screens[0].size.y;
-    float pixAspect = pixelSize.x / pixelSize.y;
 
     SDL_RenderSetLogicalSize(renderer, RSDK::videoSettings.pixWidth, SCREEN_YSIZE);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -714,8 +716,6 @@ void RenderDevice::GetDisplays()
     int currentWindowDisplay = SDL_GetWindowDisplayIndex(window);
 
     int dispCount = SDL_GetNumVideoDisplays();
-
-    uint32 prevDisplayMode = displayModeIndex;
 
     SDL_DisplayMode currentDisplay;
     SDL_GetCurrentDisplayMode(currentWindowDisplay, &currentDisplay);

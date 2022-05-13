@@ -974,7 +974,6 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel)
     EntityUIControl *parent    = (EntityUIControl *)carousel->parent;
 
     Vector2 entryCount         = API.LeaderboardEntryCount();
-    int32 start                = entryCount.x;
     carousel->minOffset        = maxVal(entryCount.x, 1);
     carousel->maxOffset        = maxVal(entryCount.x + entryCount.y, carousel->minOffset + 5);
 

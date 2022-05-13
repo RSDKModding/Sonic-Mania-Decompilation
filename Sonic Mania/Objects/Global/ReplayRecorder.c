@@ -1445,7 +1445,7 @@ uint32 ReplayRecorder_AddReplayID(uint8 zoneID, uint8 act, uint8 characterID, in
 {
     if (globals->replayTableLoaded == STATUS_OK) {
         uint32 rowID       = API.AddUserDBRow(globals->replayTableID);
-        int32 zoneStortVal = score & 0x3FFFFFF | (((zoneID << 2) | (act & 1) | ((encore & 1) << 1)) << 26);
+        int32 zoneStortVal = (score & 0x3FFFFFF) | (((zoneID << 2) | (act & 1) | ((encore & 1) << 1)) << 26);
 
         API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT32, "score", &score);
         API.SetUserDBValue(globals->replayTableID, rowID, DBVAR_UINT8, "zoneID", &zoneID);

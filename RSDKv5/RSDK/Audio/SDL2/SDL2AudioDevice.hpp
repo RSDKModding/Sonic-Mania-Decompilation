@@ -2,7 +2,8 @@
 #define LockAudioDevice()   SDL_LockAudio()
 #define UnlockAudioDevice() SDL_UnlockAudio()
 
-struct AudioDevice : public AudioDeviceBase {
+class AudioDevice : public AudioDeviceBase {
+public:
     static bool32 Init();
     static void Release();
 
