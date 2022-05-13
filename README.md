@@ -49,8 +49,11 @@ A: Try turning on VSync in settings.ini.
 ### Q: I found a bug/I have a feature request!
 A: Submit an issue in the issues tab and we _might_ fix it in the main branch. Don't expect any future releases, however.
 
-### Q: Will you do a decompilation for Sonic CD (2011) and Sonic 1/2 (2013)?
-A: I already have! You can find CD [here](https://github.com/Rubberduckycooly/Sonic-CD-11-Decompilation) and Sonic 1/2 [here](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation).
+### Q: Will you do a decompilation for Sonic CD (2011) and/or Sonic 1/2 (2013)?
+A: I already have! You can find Sonic CD [here](https://github.com/Rubberduckycooly/Sonic-CD-11-Decompilation) and Sonic 1/2 [here](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation).
+
+### Q: Will you do a decompilation for Sonic Origins/Sonic 3?
+A: No. This is the last decompilation from us. This project took about 1.5 years to do, and doing Sonic 3 would take equally as long, if not longer due to the rest of origins content. We would also like to expand our horizons beyond sonic going forward, and we don't wish to spend forever just playing catchup with sega's official releases.
 
 ### Q: Do you have anymore decompilation projects in the works?
 A: Absolutely not. Between the last two and this one, I'm done with decompiling, at least for the time being. Please do not expect any more decompilations from us, Sonic or otherwise!
