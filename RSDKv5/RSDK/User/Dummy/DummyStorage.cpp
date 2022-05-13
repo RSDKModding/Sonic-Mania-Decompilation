@@ -3,30 +3,30 @@
 #if RETRO_REV02
 int RSDK::SKU::DummyUserStorage::TryAuth()
 {
-    if (userStorage->authStatus == STATUS_CONTINUE) {
+    if (authStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
         str += ": TryAuth() # WARNING TryAuth() when auth currently in progress. \r\n";
         PrintLog(PRINT_NORMAL, str.c_str());
     }
 
-    if (!userStorage->authStatus) {
-        userStorage->authStatus                             = STATUS_CONTINUE;
+    if (!authStatus) {
+        authStatus                                          = STATUS_CONTINUE;
         API_TypeOf(userStorage, DummyUserStorage)->authTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
     }
-    return userStorage->authStatus;
+    return authStatus;
 }
 int RSDK::SKU::DummyUserStorage::TryInitStorage()
 {
-    if (userStorage->storageStatus == STATUS_CONTINUE) {
+    if (storageStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
         str += ": TryInitStorage() # WARNING TryInitStorage() when auth currently in progress. \r\n";
         PrintLog(PRINT_NORMAL, str.c_str());
     }
     else {
-        userStorage->storageStatus                                 = STATUS_CONTINUE;
+        storageStatus                                              = STATUS_CONTINUE;
         API_TypeOf(userStorage, DummyUserStorage)->storageInitTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
     }
-    return userStorage->storageStatus;
+    return storageStatus;
 }
 bool32 RSDK::SKU::DummyUserStorage::GetUsername(String *name)
 {
@@ -35,19 +35,19 @@ bool32 RSDK::SKU::DummyUserStorage::GetUsername(String *name)
 }
 void RSDK::SKU::DummyUserStorage::ClearPrerollErrors()
 {
-    if (userStorage->authStatus != STATUS_OK)
-        userStorage->authStatus = STATUS_NONE;
+    if (authStatus != STATUS_OK)
+        authStatus = STATUS_NONE;
 
-    API_TypeOf(userStorage, DummyUserStorage)->authTime = 0;
-    if (userStorage->storageStatus != STATUS_OK)
-        userStorage->storageStatus = STATUS_NONE;
+    authTime = 0;
+    if (storageStatus != STATUS_OK)
+        storageStatus = STATUS_NONE;
 }
 
 bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 bufSize, int32 (*callback)(int32))
 {
     bool32 success = false;
     memset(buffer, 0, bufSize);
-    if (!userStorage->noSaveActive) {
+    if (!noSaveActive) {
         success = LoadUserFile(filename, buffer, bufSize);
 
         if (bufSize >= 4) {
@@ -85,7 +85,7 @@ bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *
 bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compressData)
 {
     bool32 success = false;
-    if (!userStorage->noSaveActive) {
+    if (!noSaveActive) {
         if (compressData) {
             int *cbuf = NULL;
             RSDK::AllocateStorage(size, (void **)&cbuf, RSDK::DATASET_TMP, false);
@@ -119,7 +119,7 @@ bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *
 }
 bool32 RSDK::SKU::DummyUserStorage::TryDeleteUserFile(const char *filename, int32 (*callback)(int32))
 {
-    if (!userStorage->noSaveActive) {
+    if (!noSaveActive) {
         DeleteUserFile(filename);
 
         if (callback)

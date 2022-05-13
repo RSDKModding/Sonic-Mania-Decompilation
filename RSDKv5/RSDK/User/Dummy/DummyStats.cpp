@@ -12,7 +12,7 @@ std::vector<RSDK::SKU::StatInfo> RSDK::SKU::statList;
 
 void RSDK::SKU::DummyStats::TryTrackStat(StatInfo *stat)
 {
-    if (stats->enabled) {
+    if (enabled) {
         std::string str = __FILE__;
         str += ": TrackStat() # TrackStat ";
         str += stat->name;

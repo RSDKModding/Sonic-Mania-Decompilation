@@ -8,11 +8,16 @@ namespace SKU
 {
 
 struct LeaderboardID {
-    int id1;
-    int id2;
-    int id_switch;
-    const char *name_legacy;
-    const char *name;
+    int unknownID1;       // leaderboard id (unknown platform)
+    int unknownID2;       // leaderboard id (unknown platform)
+    int switchID;         // leaderboard id (switch)
+    const char *xboxName; // XBox One Leaderboard name (making an assumption based on the MS docs)
+    const char *pcName;   // Plus Leaderboard name
+};
+
+struct LeaderboardAvail {
+    int32 start;
+    int32 length;
 };
 
 struct LeaderboardEntry {
@@ -40,10 +45,8 @@ struct LeaderboardsUnknown {
     void *parent;
     int loadStatus;
     int globalRankOffset;
-    int entryCount;
-    int field_10;
-    int entryStart;
-    int entryLength;
+    LeaderboardAvail entryCount;
+    LeaderboardAvail entryStart;
     LeaderboardEntry entries[25];
 };
 
@@ -62,7 +65,7 @@ struct UserLeaderboards {
     virtual void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank)) {}
     virtual int32 GetStatus(void) { return 0; }
 
-    const char *currentLeaderboard;
+    LeaderboardID *currentLeaderboard;
     LeaderboardsUnknown2 unknown2;
     LeaderboardsUnknown entryInfo;
     int32 status   = 0;
@@ -98,8 +101,8 @@ inline void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)
 }
 inline int32 GetLeaderboardsStatus(void) { return leaderboards->GetStatus(); }
 
-Vector2 LeaderboardEntryLength();
-Vector2 LeaderboardEntryCount();
+LeaderboardAvail LeaderboardEntryLength();
+LeaderboardAvail LeaderboardEntryCount();
 void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type);
 void ClearLeaderboardInfo();
 LeaderboardEntry *ReadLeaderboardEntry(int entryID);

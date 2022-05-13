@@ -120,16 +120,16 @@ void RSDK::SKU::HandleUserStatuses()
                 leaderboards->status = STATUS_OK;
 
                 if (!leaderboards->isUser) {
-                    leaderboards->entryInfo.entryStart       = 1;
-                    leaderboards->entryInfo.entryLength      = 20;
-                    leaderboards->entryInfo.globalRankOffset = 1;
-                    leaderboards->entryInfo.entryCount       = 20;
+                    leaderboards->entryInfo.entryStart.start  = 1;
+                    leaderboards->entryInfo.entryStart.length = 20;
+                    leaderboards->entryInfo.globalRankOffset  = 1;
+                    leaderboards->entryInfo.entryCount.start  = 20;
                 }
                 else {
-                    leaderboards->entryInfo.entryStart       = leaderboards->userRank - 10;
-                    leaderboards->entryInfo.entryLength      = 20;
-                    leaderboards->entryInfo.globalRankOffset = leaderboards->userRank - 10;
-                    leaderboards->entryInfo.entryCount       = 20;
+                    leaderboards->entryInfo.entryStart.start  = leaderboards->userRank - 10;
+                    leaderboards->entryInfo.entryStart.length = 20;
+                    leaderboards->entryInfo.globalRankOffset  = leaderboards->userRank - 10;
+                    leaderboards->entryInfo.entryCount.start  = 20;
                 }
 
                 FillDummyLeaderboardEntries();
@@ -159,7 +159,7 @@ void RSDK::SKU::DummyCore::StageLoad()
 {
     UserCore::StageLoad();
 
-    for (int v = 0; v < userCore->valueCount; ++v) SetDebugValue(userValueNames[v], userCore->values[v], DTYPE_BOOL, false, true);
+    for (int v = 0; v < valueCount; ++v) SetDebugValue(userValueNames[v], values[v], DTYPE_BOOL, false, true);
 }
 
 bool32 RSDK::SKU::DummyCore::CheckFocusLost() { return focusState != 0; }

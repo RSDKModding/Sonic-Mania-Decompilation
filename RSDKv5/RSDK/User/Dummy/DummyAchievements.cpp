@@ -3,12 +3,12 @@
 // Start Dummy Achievements
 std::vector<RSDK::SKU::AchievementInfo> RSDK::SKU::achievementList;
 std::vector<int> RSDK::SKU::achievementStack;
-//End Dummy Achievements
+// End Dummy Achievements
 
 #if RETRO_REV02
 void RSDK::SKU::DummyAchievements::TryUnlockAchievement(const char *name)
 {
-    if (achievements->enabled) {
+    if (enabled) {
         PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
         int i = 0;

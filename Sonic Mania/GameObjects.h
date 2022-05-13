@@ -128,8 +128,8 @@ typedef struct {
     void (*FetchLeaderboard)(LeaderboardID *leaderboard, bool32 isUser);
     void (*TrackScore)(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank));
     int32 (*GetLeaderboardsStatus)(void);
-    Vector2 (*LeaderboardEntryCount)(void);
-    Vector2 (*LeaderboardEntryLength)(void);
+    LeaderboardAvail (*LeaderboardEntryCount)(void);
+    LeaderboardAvail (*LeaderboardEntryLength)(void);
     void (*LoadNewLeaderboardEntries)(int32 start, uint32 end, int32 type);
     void (*ClearLeaderboardInfo)(void);
     LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 entryID);

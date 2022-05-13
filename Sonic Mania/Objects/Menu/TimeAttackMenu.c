@@ -282,7 +282,7 @@ void TimeAttackMenu_HandleMenuReturn(void)
 void TimeAttackMenu_SetEncoreLayouts(bool32 enabled)
 {
     LogHelpers_Print("SetEncoreLayouts(%d)", enabled);
-    TimeAttackMenu->encoreMode   = enabled;
+    TimeAttackMenu->encoreMode = enabled;
 
     EntityUIButtonPrompt *prompt = TimeAttackMenu->switchModePrompt;
     prompt->promptID             = 21 - (enabled != false);
@@ -309,7 +309,7 @@ void TimeAttackMenu_ConfirmDeleteReplay_Yes_CB(void)
 {
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
 
-    int32 row                        = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
+    int32 row = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
     ReplayRecorder_DeleteReplay(row, TimeAttackMenu_DeleteReplayCB, false);
 }
 
@@ -330,23 +330,23 @@ void TimeAttackMenu_MenuUpdateCB_LB(void)
 
     if (control->active == ACTIVE_ALWAYS) {
         EntityUICarousel *carousel = control->carousel;
-        Vector2 entryCount         = API.LeaderboardEntryCount();
+        LeaderboardAvail avail     = API.LeaderboardEntryCount();
 
-        if (entryCount.x <= 1 || carousel->scrollOffset >= entryCount.x + 2) {
-            if (carousel->scrollOffset > entryCount.y - control->buttonCount + entryCount.x - 2) {
+        if (avail.start <= 1 || carousel->scrollOffset >= avail.start + 2) {
+            if (carousel->scrollOffset > avail.length - control->buttonCount + avail.start - 2) {
                 // Load Down
-                API.LoadNewLeaderboardEntries(entryCount.x, entryCount.y + 20, 2);
+                API.LoadNewLeaderboardEntries(avail.start, avail.length + 20, 2);
             }
         }
         else {
             // Load Up
-            API.LoadNewLeaderboardEntries(entryCount.x - 20, entryCount.y + 20, 1);
+            API.LoadNewLeaderboardEntries(avail.start - 20, avail.length + 20, 1);
         }
 
         // Load the new entry count after (possibly) reloading new entries
-        entryCount          = API.LeaderboardEntryCount();
-        carousel->minOffset = maxVal(entryCount.x, 1);
-        carousel->maxOffset = maxVal(entryCount.x + entryCount.y, carousel->minOffset + 5);
+        avail               = API.LeaderboardEntryCount();
+        carousel->minOffset = maxVal(avail.start, 1);
+        carousel->maxOffset = maxVal(avail.start + avail.length, carousel->minOffset + 5);
 
         for (int32 i = 0; i < control->buttonCount; ++i) {
             EntityUIRankButton *button = (EntityUIRankButton *)control->buttons[i];
@@ -375,14 +375,14 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
         UIDialog_Setup(dialog);
         TimeAttackMenu->connectingDlg = dialog;
 
-        EntityTimeAttackMenu *entity  = CREATE_ENTITY(TimeAttackMenu, NULL, -0x100000, -0x100000);
-        entity->active                = ACTIVE_NORMAL;
-        entity->visible               = true;
-        entity->delay                 = 120;
-        entity->state                 = TimeAttackMenu_State_SetupLeaderboards;
-        entity->callback              = callback;
-        TimeAttackMenu->isUser        = API.GetSortedUserDBRowCount(globals->taTableID) != 0;
-        TimeAttackMenu->prevIsUser    = isUser ? false : TimeAttackMenu->isUser;
+        EntityTimeAttackMenu *entity = CREATE_ENTITY(TimeAttackMenu, NULL, -0x100000, -0x100000);
+        entity->active               = ACTIVE_NORMAL;
+        entity->visible              = true;
+        entity->delay                = 120;
+        entity->state                = TimeAttackMenu_State_SetupLeaderboards;
+        entity->callback             = callback;
+        TimeAttackMenu->isUser       = API.GetSortedUserDBRowCount(globals->taTableID) != 0;
+        TimeAttackMenu->prevIsUser   = isUser ? false : TimeAttackMenu->isUser;
 
         LeaderboardID *leaderboardInfo = TimeAttackData_GetLeaderboardInfo(zoneID, act, characterID, isEncore);
         API.FetchLeaderboard(leaderboardInfo, TimeAttackMenu->prevIsUser);
@@ -412,7 +412,7 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    int32 id               = API_MostRecentActiveControllerID(0, 0, 0);
+    int32 id = API_MostRecentActiveControllerID(0, 0, 0);
     API_ResetControllerAssignments();
     API_AssignControllerID(CONT_P1, id);
 
@@ -454,7 +454,7 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
             ++replayID;
         }
     }
-    param->selectedReplay    = replayID;
+    param->selectedReplay = replayID;
 
     EntityUIPopover *popover = UIPopover->activePopover;
     if (popover)
@@ -515,7 +515,7 @@ void TimeAttackMenu_WatchReplayActionCB_ReplaysMenu(void)
     param->replayRankID = button->selection;
     param->replayID     = carousel->curReplayID;
 
-    int32 id            = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
+    int32 id = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
     TimeAttackMenu_WatchReplay(id, false);
 }
 
@@ -531,7 +531,7 @@ void TimeAttackMenu_ChallengeReplayActionCB_ReplaysMenu(void)
     param->replayRankID = button->selection;
     param->replayID     = carousel->curReplayID;
 
-    int32 id            = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
+    int32 id = API.GetSortedUserDBRowID(globals->replayTableID, carousel->curReplayID);
     TimeAttackMenu_WatchReplay(id, true);
 }
 
@@ -618,7 +618,7 @@ void TimeAttackMenu_YPressCB_Replay(void)
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
 
     if (carousel->stateDraw == UIReplayCarousel_Draw_Carousel) {
-        control->buttonID          = 0;
+        control->buttonID = 0;
 
         carousel->curReplayID      = -1;
         carousel->curViewOffset    = 0;
@@ -761,7 +761,7 @@ void TimeAttackMenu_YPressCB_Details(void)
 {
     EntityUITABanner *banner = TimeAttackMenu->detailsBanner;
 
-    int32 rowCount           = API.GetSortedUserDBRowCount(globals->taTableID);
+    int32 rowCount = API.GetSortedUserDBRowCount(globals->taTableID);
     TimeAttackMenu_SetupLeaderboards(banner->zoneID, banner->characterID, banner->actID, TimeAttackMenu->encoreMode, !rowCount,
                                      UITAZoneModule_ShowLeaderboards_CB);
 }
@@ -964,17 +964,17 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
 
 void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel)
 {
-    EntityUIControl *parent    = (EntityUIControl *)carousel->parent;
+    EntityUIControl *parent = (EntityUIControl *)carousel->parent;
 
-    Vector2 entryCount         = API.LeaderboardEntryCount();
-    carousel->minOffset        = maxVal(entryCount.x, 1);
-    carousel->maxOffset        = maxVal(entryCount.x + entryCount.y, carousel->minOffset + 5);
+    LeaderboardAvail avail = API.LeaderboardEntryCount();
+    carousel->minOffset    = maxVal(avail.start, 1);
+    carousel->maxOffset    = maxVal(avail.start + avail.length, carousel->minOffset + 5);
 
-    if (TimeAttackMenu->prevIsUser && entryCount.y) {
+    if (TimeAttackMenu->prevIsUser && avail.length) {
         int32 userID = 0;
 
-        int32 end = entryCount.x + entryCount.y;
-        for (int32 entryID = entryCount.x; entryID < end; ++entryID) {
+        int32 end = avail.start + avail.length;
+        for (int32 entryID = avail.start; entryID < end; ++entryID) {
             LeaderboardEntry *entry = API.ReadLeaderboardEntry(entryID);
             if (entry->isUser) {
                 userID = entryID;
@@ -983,7 +983,7 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel)
         }
 
         carousel->scrollOffset = userID != parent->buttonCount >> 1 ? userID - (parent->buttonCount >> 1) : 0;
-        carousel->virtualIndex = !userID ? entryCount.x : userID;
+        carousel->virtualIndex = !userID ? avail.start : userID;
     }
     else {
         carousel->virtualIndex = 1;
@@ -1004,7 +1004,7 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel)
         }
     }
 
-    LogHelpers_Print("avail.start = %d, length = %d", entryCount.x, entryCount.y);
+    LogHelpers_Print("avail.start = %d, length = %d", avail.start, avail.length);
     LogHelpers_Print("scrollOffset = %d", carousel->scrollOffset);
     LogHelpers_Print("virtualIndex = %d", carousel->virtualIndex);
     LogHelpers_Print("minOffset = %d", carousel->minOffset);

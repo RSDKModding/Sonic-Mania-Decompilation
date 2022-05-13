@@ -459,6 +459,11 @@ typedef struct {
 } LeaderboardID;
 
 typedef struct {
+    int32 start;
+    int32 length;
+} LeaderboardAvail;
+
+typedef struct {
     String username;
 #if RETRO_USE_PLUS
     String userID;

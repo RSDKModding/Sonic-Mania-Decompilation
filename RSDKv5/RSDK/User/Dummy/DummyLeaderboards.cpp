@@ -31,7 +31,7 @@ void RSDK::SKU::FillDummyLeaderboardEntries()
                                  "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
 
     leaderboards->entryInfo.loadStatus = STATUS_OK;
-    for (int e = 0; e < leaderboards->entryInfo.entryCount; ++e) {
+    for (int e = 0; e < leaderboards->entryInfo.entryCount.start; ++e) {
         LeaderboardEntry *entry = &leaderboards->entryInfo.entries[e];
 
         entry->status     = STATUS_OK;
@@ -56,19 +56,19 @@ void RSDK::SKU::DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, 
     if (!leaderboard)
         return;
 
-    if (leaderboards->status == STATUS_CONTINUE) {
+    if (status == STATUS_CONTINUE) {
         std::string str = __FILE__;
         str += ": FetchLeaderboard() # ERROR Attemped to fetch leaderboard when fetch currently in progress. \r\n";
         PrintLog(PRINT_NORMAL, str.c_str());
     }
     else {
-        PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", leaderboard->name, isUser ? "true" : "false");
-        leaderboards->isUser   = isUser;
-        leaderboards->userRank = 0;
+        PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", leaderboard->pcName, isUser ? "true" : "false");
+        isUser   = isUser;
+        userRank = 0;
         if (isUser)
-            leaderboards->userRank = rand() % 9999 + 1;
+            userRank = rand() % 9999 + 1;
 
-        leaderboards->status   = STATUS_CONTINUE;
+        status = STATUS_CONTINUE;
 
         API_TypeOf(leaderboards, DummyLeaderboards)->loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
     }
@@ -80,7 +80,7 @@ void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 
 
     int id = -1;
     for (int i = 0; i < leaderboardList.size(); ++i) {
-        if (std::string(leaderboardList[i].name) == leaderboard->name) {
+        if (std::string(leaderboardList[i].name) == leaderboard->pcName) {
             id = i;
             break;
         }
@@ -88,7 +88,7 @@ void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 
 
     if (id == -1) {
         LeaderboardInfo info;
-        sprintf(info.name, "%s", leaderboard->name);
+        sprintf(info.name, "%s", leaderboard->pcName);
         info.score = 0x7FFFFFFF;
         id         = (int32)leaderboardList.size();
         leaderboardList.push_back(info);

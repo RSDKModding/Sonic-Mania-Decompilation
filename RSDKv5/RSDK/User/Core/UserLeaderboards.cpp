@@ -4,21 +4,9 @@
 #if RETRO_REV02
 RSDK::SKU::UserLeaderboards *RSDK::SKU::leaderboards = NULL;
 
-Vector2 RSDK::SKU::LeaderboardEntryLength()
-{
-    Vector2 value;
-    value.x = leaderboards->entryInfo.entryCount;
-    value.y = leaderboards->entryInfo.field_10;
-    return value;
-}
+RSDK::SKU::LeaderboardAvail RSDK::SKU::LeaderboardEntryLength() { return leaderboards->entryInfo.entryCount; }
 
-Vector2 RSDK::SKU::LeaderboardEntryCount()
-{
-    Vector2 value;
-    value.x = leaderboards->entryInfo.entryStart;
-    value.y = leaderboards->entryInfo.entryLength;
-    return value;
-}
+RSDK::SKU::LeaderboardAvail RSDK::SKU::LeaderboardEntryCount() { return leaderboards->entryInfo.entryStart; }
 
 void RSDK::SKU::LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type)
 {
@@ -38,8 +26,8 @@ void RSDK::SKU::LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type)
             leaderboards->unknown2.loadEndIndex = end;
             break;
         case 2: {
-            int32 startPos = start;
-            int32 endPos   = start + end - 1;
+            int32 startPos                  = start;
+            int32 endPos                    = start + end - 1;
             leaderboards->unknown2.loadType = 2;
             if (start < (endPos - 199))
                 startPos = endPos - 199;
@@ -60,9 +48,10 @@ void RSDK::SKU::ClearLeaderboardInfo()
 
 RSDK::SKU::LeaderboardEntry *RSDK::SKU::ReadLeaderboardEntry(int entryID)
 {
-    if (entryID < leaderboards->entryInfo.entryStart || entryID >= leaderboards->entryInfo.entryStart + leaderboards->entryInfo.entryLength)
+    if (entryID < leaderboards->entryInfo.entryStart.start
+        || entryID >= leaderboards->entryInfo.entryStart.start + leaderboards->entryInfo.entryStart.length)
         return NULL;
     else
-        return &leaderboards->entryInfo.entries[entryID - leaderboards->entryInfo.entryStart];
+        return &leaderboards->entryInfo.entries[entryID - leaderboards->entryInfo.entryStart.start];
 }
 #endif

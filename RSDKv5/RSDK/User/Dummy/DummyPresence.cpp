@@ -8,7 +8,7 @@ void RSDK::SKU::DummyRichPresence::SetPresence(byte id, String *message)
     if (message->chars[message->length - 1] == '\r')
         buffer[message->length - 1] = 0;
 
-    richPresence->curID = id;
+    curID = id;
 
     std::string str = __FILE__;
     str += ": SetPresence() # Set Steam rich presence string to ";
