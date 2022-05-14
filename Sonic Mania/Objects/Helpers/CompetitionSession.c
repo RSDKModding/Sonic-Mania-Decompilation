@@ -25,10 +25,11 @@ void CompetitionSession_StageLoad(void) {}
 void CompetitionSession_ResetOptions(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    session->inMatch                  = false;
-    session->matchID                  = 0;
-    session->matchCount               = 0;
-    session->stageIndex               = 0;
+
+    session->inMatch    = false;
+    session->matchID    = 0;
+    session->matchCount = 0;
+    session->stageIndex = 0;
 
     for (int32 r = 0; r < 12; ++r) {
         session->completedStages[r] = 0;
@@ -172,6 +173,7 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 finishFlag)
         LogHelpers_Print("DeriveWinner() -> %d", -1);
     }
 }
+
 void CompetitionSession_WinMatchFor(int32 player)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

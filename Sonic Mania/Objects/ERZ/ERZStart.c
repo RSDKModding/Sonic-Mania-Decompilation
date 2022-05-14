@@ -198,7 +198,7 @@ bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (!host->timer)
-        fxRuby->state = FXRuby_State_ShrinkRing;
+        fxRuby->state = FXRuby_State_Shrinking;
 
     EntityPhantomKing *king = ERZStart->king;
     if (fxRuby->outerRadius <= 0) {

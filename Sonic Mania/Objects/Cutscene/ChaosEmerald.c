@@ -12,6 +12,7 @@ ObjectChaosEmerald *ChaosEmerald;
 void ChaosEmerald_Update(void)
 {
     RSDK_THIS(ChaosEmerald);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,21 +24,22 @@ void ChaosEmerald_Draw(void)
 {
     RSDK_THIS(ChaosEmerald);
 
-    for (int32 i = 0; i < 36; ++i) {
-        ChaosEmerald->colorStorage[i] = RSDK.GetPaletteEntry(0, i + 128);
-        RSDK.SetPaletteEntry(0, i + 128, ChaosEmerald->emeraldColors[i]);
+    for (int32 c = 0; c < 36; ++c) {
+        ChaosEmerald->colorStorage[c] = RSDK.GetPaletteEntry(0, c + 128);
+        RSDK.SetPaletteEntry(0, c + 128, ChaosEmerald->emeraldColors[c]);
     }
 
     RSDK.DrawSprite(&self->animator, NULL, false);
 
-    for (int32 i = 0; i < 36; ++i) {
-        RSDK.SetPaletteEntry(0, i + 0x80, ChaosEmerald->colorStorage[i]);
+    for (int32 c = 0; c < 36; ++c) {
+        RSDK.SetPaletteEntry(0, c + 0x80, ChaosEmerald->colorStorage[c]);
     }
 }
 
 void ChaosEmerald_Create(void *data)
 {
     RSDK_THIS(ChaosEmerald);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawHigh;
     self->originPos     = self->position;
@@ -58,6 +60,7 @@ void ChaosEmerald_State_None(void)
 void ChaosEmerald_State_Rotate(void)
 {
     RSDK_THIS(ChaosEmerald);
+
     self->angle += self->groundVel;
     self->position.x = self->radius * RSDK.Cos256(self->angle >> 8) + self->originPos.x;
     self->position.y = self->radius * RSDK.Sin256(self->angle >> 8) + self->originPos.y;
@@ -67,6 +70,7 @@ void ChaosEmerald_State_Rotate(void)
 void ChaosEmerald_EditorDraw(void)
 {
     RSDK_THIS(ChaosEmerald);
+
     RSDK.SetSpriteAnimation(ChaosEmerald->aniFrames, 0, &self->animator, true, self->type);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }

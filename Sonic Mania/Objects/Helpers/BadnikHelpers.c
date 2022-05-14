@@ -9,6 +9,11 @@
 
 ObjectBadnikHelpers *BadnikHelpers = NULL;
 
+// NOTE:
+// I'm not actually sure *what* this object was for
+// BadnikHelpers_Oscillate was always inlined so I can't say for sure that it was a real func, though I assume it was?
+// I've never seen definitive proof of any funcs this object may have once had so be it what you will
+
 void BadnikHelpers_Update(void) {}
 
 void BadnikHelpers_LateUpdate(void) {}
@@ -27,24 +32,6 @@ int BadnikHelpers_Oscillate(int origin, int speed, int amplitude)
 
     self->angle = (self->angle + speed) & 0xFF;
     return ((RSDK.Sin256(self->angle) << amplitude) + origin) & 0xFFFF0000;
-}
-
-void BadnikHelpers_HandleExplode(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder)
-{
-    RSDK_THIS_GEN(); // generic type
-
-    int32 x = self->position.x + (RSDK.Rand(xMin, xMax) << 16);
-    int32 y = self->position.y + (RSDK.Rand(yMin, yMax) << 16);
-    CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = drawOrder;
-}
-
-void BadnikHelpers_HandleExplode16(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder)
-{
-    RSDK_THIS_GEN(); // generic type
-
-    int x                                                                                            = self->position.x + RSDK.Rand(xMin, xMax);
-    int y                                                                                            = self->position.y + RSDK.Rand(yMin, yMax);
-    CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = drawOrder;
 }
 
 #if RETRO_INCLUDE_EDITOR

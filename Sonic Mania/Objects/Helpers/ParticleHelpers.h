@@ -30,7 +30,7 @@ void ParticleHelpers_EditorLoad(void);
 void ParticleHelpers_Serialize(void);
 
 // Extra Entity Functions
-void ParticleHelpers_SetupFallingParticles(int32 x, int32 y);
+void ParticleHelpers_SetupFallingParticles(int32 x, int32 y, void (*callback)(EntityDebris *));
 void ParticleHelpers_SetupParticleFX(void *debrisState, void (*callback)(EntityDebris *), int32 speed, int32 xOffset, int32 yOffset, int32 maxX,
                                      int32 maxY);
 

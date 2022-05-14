@@ -207,7 +207,8 @@ void PauseMenu_SetupTintTable(void)
         int32 brightness =
             ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
         brightness                    = minVal(0xFF, brightness);
-        PauseMenu->tintLookupTable[i] = (brightness >> 3) | ((brightness >> 3) << 11) | 8 * brightness & 0xFFE0;
+
+        PauseMenu->tintLookupTable[i] = ColorHelpers_PackRGB(brightness, brightness, brightness);
     }
 #else
     uint16 *tintLookupTable = RSDK.GetTintLookupTable();

@@ -926,8 +926,8 @@ void PhantomEgg_State_Attack_WarpAway(void)
         RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = NULL;
 
         self->timer   = 0;
-        self->visible = 0;
-        self->state   = 0;
+        self->visible = false;
+        self->state   = StateMachine_None;
     }
     else {
         if (self->timer > 8)

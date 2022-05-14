@@ -35,18 +35,12 @@ void FXFade_Create(void *data)
         self->visible = true;
         self->active  = ACTIVE_NORMAL;
 
-        if (RSDK.CheckStageFolder("Menu")) {
+        if (RSDK.CheckStageFolder("Menu"))
             self->drawOrder = 14;
-        }
-        else if (Zone) {
-            if (!self->overHUD)
-                self->drawOrder = Zone->hudDrawOrder - 1;
-            else
-                self->drawOrder = Zone->hudDrawOrder;
-        }
-        else {
+        else if (Zone)
+            self->drawOrder = self->overHUD ? Zone->hudDrawOrder : Zone->hudDrawOrder - 1;
+        else
             self->drawOrder = 15;
-        }
 
         if (!self->speedIn)
             self->speedIn = 32;
@@ -61,10 +55,7 @@ void FXFade_Create(void *data)
 #if RETRO_USE_PLUS
             self->transitionScene = false;
 #endif
-            if (self->timer <= 0)
-                self->state = FXFade_State_FadeIn;
-            else
-                self->state = FXFade_State_FadeOut;
+            self->state = self->timer <= 0 ? FXFade_State_FadeIn : FXFade_State_FadeOut;
         }
     }
 }
@@ -83,16 +74,14 @@ void FXFade_State_FadeIn(void)
     if (self->timer >= 512) {
         if (self->oneWay) {
             self->state = StateMachine_None;
+
 #if RETRO_USE_PLUS
             if (self->transitionScene)
                 RSDK.LoadScene();
 #endif
         }
         else if (self->wait <= 0) {
-            if (self->fadeOutBlack)
-                self->state = FXFade_State_FadeOutBlack;
-            else
-                self->state = FXFade_State_FadeOut;
+            self->state = self->fadeOutBlack ? FXFade_State_FadeOutBlack : FXFade_State_FadeOut;
         }
         else {
             self->state = FXFade_State_Wait;
@@ -107,10 +96,7 @@ void FXFade_State_Wait(void)
     RSDK_THIS(FXFade);
 
     if (--self->wait <= 0) {
-        if (self->fadeOutBlack)
-            self->state = FXFade_State_FadeOutBlack;
-        else
-            self->state = FXFade_State_FadeOut;
+        self->state = self->fadeOutBlack ? FXFade_State_FadeOutBlack : FXFade_State_FadeOut;
     }
 }
 void FXFade_State_FadeOut(void)
@@ -135,26 +121,16 @@ void FXFade_State_FadeOutBlack(void)
     int32 g = (self->color >> 8) & 0xFF;
     int32 b = (self->color >> 0) & 0xFF;
 
-    if (r) {
+    if (r)
         r -= self->speedOut;
-        if (r - self->speedOut < 0)
-            r = 0;
-    }
-    else if (g) {
+    else if (g)
         g -= self->speedOut;
-        if (g - self->speedOut < 0)
-            g = 0;
-    }
-    else if (b) {
+    else if (b)
         b -= self->speedOut;
-        if (b - self->speedOut < 0)
-            b = 0;
-    }
-    else {
+    else
         self->state = StateMachine_None;
-    }
 
-    self->color = (r << 16) | (g << 8) | (b << 0);
+    self->color = (maxVal(r, 0) << 16) | (maxVal(g, 0) << 8) | (maxVal(b, 0) << 0);
 }
 
 #if RETRO_INCLUDE_EDITOR

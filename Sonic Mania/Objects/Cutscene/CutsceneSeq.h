@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define CUTSCENESEQ_POINT_COUNT (8)
+
 #if RETRO_USE_PLUS
 typedef enum {
     SKIPTYPE_DISABLED,
@@ -14,13 +16,13 @@ typedef enum {
 
 // Object Class
 struct ObjectCutsceneSeq {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityCutsceneSeq {
     RSDK_ENTITY
-    bool32 (*currentState)(Entity *host);
+    bool32 (*currentState)(EntityCutsceneSeq *host);
     uint8 stateID;
     int32 timer;
     int32 storedValue; // never reset, unlike timer & the 8 values
@@ -28,8 +30,8 @@ struct EntityCutsceneSeq {
     int32 values[8];
     Entity *activeEntity;  // the entity that called StartSequence
     Entity *managerEntity; // the host entity of the sequence
-    void *cutsceneStates[0x40];
-    Vector2 points[8];
+    bool32 (*cutsceneStates[0x40])(EntityCutsceneSeq *host);
+    Vector2 points[CUTSCENESEQ_POINT_COUNT];
     int32 fadeWhite;
     int32 fadeBlack;
 #if RETRO_USE_PLUS
@@ -46,7 +48,7 @@ void CutsceneSeq_Update(void);
 void CutsceneSeq_LateUpdate(void);
 void CutsceneSeq_StaticUpdate(void);
 void CutsceneSeq_Draw(void);
-void CutsceneSeq_Create(void* data);
+void CutsceneSeq_Create(void *data);
 void CutsceneSeq_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CutsceneSeq_EditorDraw(void);
@@ -64,11 +66,11 @@ void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCa
 // Does a foreach loop for the entity of type `type`
 Entity *CutsceneSeq_GetEntity(int32 type);
 // Locks control of the selected player
-void CutsceneSeq_LockPlayerControl(void *plr);
+void CutsceneSeq_LockPlayerControl(EntityPlayer *player);
 // Locks Control of all players
 void CutsceneSeq_LockAllPlayerControl(void);
 // Sets up a cutscene sequence, the cutscene object should be passed as 'manager', then the cutscene states should be passed in order, make sure to
 // end the states with StateMachine_None to tell it when to stop reading states
 void CutsceneSeq_StartSequence(void *manager, ...);
 
-#endif //!OBJ_CUTSCENESEQ_H
+#endif //! OBJ_CUTSCENESEQ_H

@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectAnimalHBH {
     RSDK_OBJECT
-    int32 palID;
-    int32 palCnt;
+    int32 currentColor;
+    int32 colorCount;
     uint16 aniFrames;
     uint16 silhouetteFrames;
 };
@@ -29,7 +29,7 @@ void AnimalHBH_Update(void);
 void AnimalHBH_LateUpdate(void);
 void AnimalHBH_StaticUpdate(void);
 void AnimalHBH_Draw(void);
-void AnimalHBH_Create(void* data);
+void AnimalHBH_Create(void *data);
 void AnimalHBH_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void AnimalHBH_EditorDraw(void);
@@ -39,5 +39,4 @@ void AnimalHBH_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_ANIMALHBH_H
+#endif //! OBJ_ANIMALHBH_H

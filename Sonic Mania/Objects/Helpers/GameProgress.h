@@ -3,6 +3,10 @@
 
 #include "SonicMania.h"
 
+#define GAMEPROGRESS_MEDAL_COUNT   (32)
+#define GAMEPROGRESS_ZONE_COUNT    (12)
+#define GAMEPROGRESS_EMERALD_COUNT (7)
+
 typedef enum {
     GAMEPROGRESS_UNLOCK_TIMEATTACK,
     GAMEPROGRESS_UNLOCK_COMPETITION,
@@ -13,7 +17,20 @@ typedef enum {
     GAMEPROGRESS_UNLOCK_MEANBEAN,
     GAMEPROGRESS_UNLOCK_DAGARDEN,
     GAMEPROGRESS_UNLOCK_BLUESPHERES,
+    GAMEPROGRESS_UNLOCK_COUNT,
 } GameProgressUnlockIDs;
+
+typedef enum {
+    GAMEPROGRESS_ENDING_NONE,
+    GAMEPROGRESS_ENDING_BAD,
+    GAMEPROGRESS_ENDING_GOOD,
+} GameProgressEndingIDs;
+
+typedef enum {
+    GAMEPROGRESS_MEDAL_NONE,
+    GAMEPROGRESS_MEDAL_SILVER,
+    GAMEPROGRESS_MEDAL_GOLD,
+} GameProgressMedalIDs;
 
 // Object Class
 struct ObjectGameProgress {
@@ -23,15 +40,15 @@ struct ObjectGameProgress {
 // Entity Class
 struct EntityGameProgress {
     uint8 padding[0x56]; // aka sizeof(Entity) for pre-plus
-    uint8 medals[32];
+    uint8 medals[GAMEPROGRESS_MEDAL_COUNT];
     bool32 allGoldMedals;
     bool32 allSilverMedals;
-    bool32 zoneCleared[12];
+    bool32 zoneCleared[GAMEPROGRESS_ZONE_COUNT];
     bool32 allZonesCleared;
-    bool32 emeraldObtained[7];
+    bool32 emeraldObtained[GAMEPROGRESS_EMERALD_COUNT];
     bool32 allEmeraldsObtained;
-    bool32 unreadNotifs[9];
-    bool32 specialCleared[7];
+    bool32 unreadNotifs[GAMEPROGRESS_UNLOCK_COUNT];
+    bool32 specialCleared[GAMEPROGRESS_EMERALD_COUNT];
     bool32 allSpecialCleared;
     bool32 unlockedEndingID;
     int32 goldMedalCount;

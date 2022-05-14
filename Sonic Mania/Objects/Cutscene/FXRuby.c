@@ -71,11 +71,11 @@ void FXRuby_Create(void *data)
         if (data)
             self->state = (Type_StateMachine)data;
         else if (!self->waitForTrigger)
-            self->state = FXRuby_State_ExpandRing;
+            self->state = FXRuby_State_Expanding;
 
 #if !RETRO_USE_PLUS
         uint16 *tintLookupTable = RSDK.GetTintLookupTable();
-        for (int32 i = 0; i < 0x10000; ++i) tintLookupTable[0xFFFF - i] = i;
+        for (int32 c = 0; c < 0x10000; ++c) tintLookupTable[0xFFFF - c] = c;
 #endif
     }
 }
@@ -85,10 +85,10 @@ void FXRuby_StageLoad(void)
     FXRuby->fgLow  = RSDK.GetTileLayer(RSDK.GetTileLayerID("FG Low"));
     FXRuby->fgHigh = RSDK.GetTileLayer(RSDK.GetTileLayerID("FG High"));
 
-    for (int32 i = 0; i < 0x200; ++i) FXRuby->deformData[i] = RSDK.Rand(-64, 64);
+    for (int32 d = 0; d < 0x200; ++d) FXRuby->deformation[d] = RSDK.Rand(-64, 64);
 
 #if RETRO_USE_PLUS
-    for (int32 i = 0; i < 0x10000; ++i) FXRuby->tintLookupTable[0xFFFF - i] = i;
+    for (int32 c = 0; c < 0x10000; ++c) FXRuby->tintLookupTable[0xFFFF - c] = c;
 #endif
 }
 
@@ -96,10 +96,9 @@ void FXRuby_SetupLayerDeformation(void)
 {
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = RSDK.GetTileLayer(l);
+
         if (layer->width && layer->drawLayer[0] != DRAWGROUP_COUNT) {
-            for (int32 s = 0; s < layer->scrollInfoCount; ++s) {
-                layer->scrollInfo[s].deform = true;
-            }
+            for (int32 s = 0; s < layer->scrollInfoCount; ++s) layer->scrollInfo[s].deform = true;
         }
     }
 }
@@ -126,7 +125,7 @@ void FXRuby_HandleLayerDeform(void)
                 int32 cnt = 8 * timer;
                 for (int32 s = 0; s < 0x200; ++s) {
                     int32 angle                       = RSDK.Sin256(4 * s);
-                    layer->deformationData[s]         = ((self->timer * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((self->timer * angle) >> 7);
+                    layer->deformationData[s]         = ((self->timer * FXRuby->deformation[cnt-- & 0x1FF]) >> 7) + ((self->timer * angle) >> 7);
                     layer->deformationData[s + 0x200] = layer->deformationData[s];
                 }
                 deformationData = layer->deformationData;
@@ -135,21 +134,23 @@ void FXRuby_HandleLayerDeform(void)
     }
 }
 
-void FXRuby_State_ExpandRing(void)
+void FXRuby_State_Expanding(void)
 {
     RSDK_THIS(FXRuby);
 
     self->outerRadius += self->radiusSpeed;
+
     if (self->outerRadius > ScreenInfo->width) {
         self->fullyExpanded = true;
         self->state         = FXRuby_State_None;
     }
 }
-void FXRuby_State_ShrinkRing(void)
+void FXRuby_State_Shrinking(void)
 {
     RSDK_THIS(FXRuby);
 
     self->outerRadius -= self->radiusSpeed;
+
     if (self->outerRadius <= 0) {
         self->fullyExpanded = false;
         self->state         = FXRuby_State_None;
@@ -158,7 +159,7 @@ void FXRuby_State_ShrinkRing(void)
 
 void FXRuby_State_None(void)
 {
-    // what
+    // do nothin, just chill
 }
 
 void FXRuby_State_IncreaseStageDeform(void)
@@ -166,6 +167,7 @@ void FXRuby_State_IncreaseStageDeform(void)
     RSDK_THIS(FXRuby);
 
     FXRuby_HandleLayerDeform();
+
     if (++self->timer >= self->delay)
         self->state = FXRuby_State_DecreaseStageDeform;
 }
@@ -174,6 +176,7 @@ void FXRuby_State_DecreaseStageDeform(void)
     RSDK_THIS(FXRuby);
 
     FXRuby_HandleLayerDeform();
+
     if (self->timer > 0)
         self->timer--;
 }

@@ -187,7 +187,7 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
             if (!host->values[0]) {
                 PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                 host->values[0] = 1;
-                fxRuby->state   = FXRuby_State_ShrinkRing;
+                fxRuby->state   = FXRuby_State_Shrinking;
             }
 
             if (!fxRuby->outerRadius) {
@@ -270,7 +270,7 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host)
     int32 playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
     if (debris->position.y >= playerY) {
         RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, false, 255);
-        ParticleHelpers_SetupFallingParticles(debris->position.x, playerY);
+        ParticleHelpers_SetupFallingParticles(debris->position.x, playerY, CPZ1Intro_Particle_CB);
         destroyEntity(debris);
 
         if (checkPlayerID(ID_TAILS, 2))

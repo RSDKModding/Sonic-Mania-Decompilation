@@ -222,7 +222,7 @@ void CableWarp_StateTransport_Enter(void)
         RSDK.ProcessAnimation(&self->animator);
 
         if (self->animator.frameID == 20) {
-            player->visible    = 0;
+            player->visible    = false;
             player->velocity.y = 0x60000;
             RSDK.PlaySfx(CableWarp->sfxPulse, false, 0xFF);
         }

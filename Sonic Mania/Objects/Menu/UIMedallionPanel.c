@@ -41,7 +41,7 @@ void UIMedallionPanel_DrawPanel(void)
     Vector2 drawPos;
 
     EntityGameProgress *progress = GameProgress_GetGameProgress();
-    for (int32 m = 0; m < 0x20; ++m) {
+    for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
         drawPos.x = (self->position.x - 0x310000) + 0xE0000 * (m % 8);
         drawPos.y = (self->position.y - 0x150000) + 0xE0000 * (m / 8);
 

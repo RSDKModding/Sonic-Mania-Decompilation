@@ -380,7 +380,7 @@ void Tubinaut_CheckOffScreen(void)
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position = self->startPos;
-        self->visible  = 0;
+        self->visible  = false;
         self->state    = Tubinaut_State_Setup;
         self->active   = ACTIVE_BOUNDS;
 

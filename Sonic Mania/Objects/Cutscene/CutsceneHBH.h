@@ -54,7 +54,7 @@ void CutsceneHBH_Update(void);
 void CutsceneHBH_LateUpdate(void);
 void CutsceneHBH_StaticUpdate(void);
 void CutsceneHBH_Draw(void);
-void CutsceneHBH_Create(void* data);
+void CutsceneHBH_Create(void *data);
 void CutsceneHBH_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CutsceneHBH_EditorDraw(void);
@@ -87,4 +87,4 @@ void CutsceneHBH_State_KingFall(void);
 void CutsceneHBH_State_KingTMZ2_Fall(void);
 void CutsceneHBH_State_KingTMZ2_Land(void);
 
-#endif //!OBJ_CUTSCENEHBH_H
+#endif //! OBJ_CUTSCENEHBH_H

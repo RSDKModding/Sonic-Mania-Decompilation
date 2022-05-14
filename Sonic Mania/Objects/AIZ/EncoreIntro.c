@@ -117,7 +117,7 @@ void EncoreIntro_SetupEntities(void)
     foreach_all(FXRuby, fxRuby)
     {
         EncoreIntro->fxRuby = fxRuby;
-        fxRuby->state       = FXRuby_State_ShrinkRing;
+        fxRuby->state       = FXRuby_State_Shrinking;
         fxRuby->outerRadius = 0;
         foreach_break;
     }

@@ -54,7 +54,7 @@ typedef enum {
     E_END_ICECREAM_GREEN,
     E_END_ICECREAM_PINK2,
     E_END_COUNT,
-}EncoreGoodEndDecorIDs;
+} EncoreGoodEndDecorIDs;
 
 // Object Class
 struct ObjectEncoreGoodEnd {
@@ -80,7 +80,7 @@ void EncoreGoodEnd_Update(void);
 void EncoreGoodEnd_LateUpdate(void);
 void EncoreGoodEnd_StaticUpdate(void);
 void EncoreGoodEnd_Draw(void);
-void EncoreGoodEnd_Create(void* data);
+void EncoreGoodEnd_Create(void *data);
 void EncoreGoodEnd_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EncoreGoodEnd_EditorDraw(void);
@@ -107,4 +107,4 @@ void EncoreGoodEnd_SkipCB(void);
 
 #endif
 
-#endif //!OBJ_ENCOREGOODEND_H
+#endif //! OBJ_ENCOREGOODEND_H

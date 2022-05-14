@@ -40,7 +40,7 @@ void SeltzerWater_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
-        self->visible       = 1;
+        self->visible       = true;
         self->drawFX        = FX_SCALE;
         self->scale.x       = 0x80;
         self->scale.y       = 0x80;

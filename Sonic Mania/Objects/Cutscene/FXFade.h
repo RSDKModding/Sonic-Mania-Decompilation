@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectFXFade {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -34,7 +34,7 @@ void FXFade_Update(void);
 void FXFade_LateUpdate(void);
 void FXFade_StaticUpdate(void);
 void FXFade_Draw(void);
-void FXFade_Create(void* data);
+void FXFade_Create(void *data);
 void FXFade_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FXFade_EditorDraw(void);
@@ -49,4 +49,4 @@ void FXFade_State_Wait(void);
 void FXFade_State_FadeOut(void);
 void FXFade_State_FadeOutBlack(void);
 
-#endif //!OBJ_FXFADE_H
+#endif //! OBJ_FXFADE_H

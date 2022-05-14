@@ -119,7 +119,7 @@ void SaveGame_LoadSaveData(void)
                 if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
                     Entity *entity   = RSDK_GET_ENTITY_GEN(e);
                     entity->classID  = TYPE_BLANK;
-                    entity->active   = -1;
+                    entity->active   = ACTIVE_NEVER2;
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
                     EntityItemBox *itemBox = RSDK_GET_ENTITY(e, ItemBox);

@@ -39,7 +39,7 @@ void BreakableWall_Create(void *data)
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
         self->active        = ACTIVE_NORMAL;
-        self->drawFX        = 2 * (self->velocity.x != 0) + 1;
+        self->drawFX        = FX_FLIP | (self->velocity.x != 0 ? FX_ROTATE : FX_NONE);
         self->tileRotation  = RSDK.Rand(-8, 8);
 
         switch (type) {

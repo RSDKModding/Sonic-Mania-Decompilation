@@ -725,7 +725,7 @@ void ItemBox_GivePowerup(void)
                             Player->jumpInTimer = 0;
                             EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
 
-                            dust->visible         = 0;
+                            dust->visible         = false;
                             dust->active          = ACTIVE_NEVER;
                             dust->isPermanent     = true;
                             dust->position.y      = (ScreenInfo->position.y - 128) << 16;
@@ -870,7 +870,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
         if (debris->position.x < itemBox->position.x)
             debris->velocity.x = -debris->velocity.x;
         debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
-        debris->drawFX     = 1;
+        debris->drawFX     = FX_FLIP;
         debris->direction  = d & 3;
         debris->drawOrder  = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));

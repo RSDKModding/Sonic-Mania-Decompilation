@@ -44,29 +44,17 @@ bool32 PlayerHelpers_CheckAct2(void)
 
     return false;
 }
-bool32 PlayerHelpers_CheckIntro(void)
-{
-#if RETRO_USE_PLUS
-    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->enableIntro && !PlayerHelpers_CheckStageReload();
-#else
-    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->enableIntro && !PlayerHelpers_CheckStageReload();
-#endif
-}
-bool32 PlayerHelpers_CheckAct1Regular(void)
-{
-#if RETRO_USE_PLUS
-    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct1();
-#else
-    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && PlayerHelpers_CheckAct1();
-#endif
-}
+
+bool32 PlayerHelpers_CheckIntro(void) { return isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload(); }
+
+bool32 PlayerHelpers_CheckAct1Regular(void) { return isMainGameMode() && PlayerHelpers_CheckAct1(); }
+
 bool32 PlayerHelpers_CheckStageReload(void)
 {
     if (StarPost && Player->playerCount > 0) {
         for (int32 p = 0; p < Player->playerCount; ++p) {
-            if (StarPost->postIDs[p]) {
+            if (StarPost->postIDs[p])
                 return true;
-            }
         }
     }
 
@@ -77,24 +65,25 @@ bool32 PlayerHelpers_CheckStageReload(void)
                 return true;
         }
     }
+
     return false;
 }
 bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2)
 {
-    int32 px = 0;
-    int32 py = 0;
+    int32 playerX = 0;
+    int32 playerY = 0;
 
     if (Player) {
         foreach_all(Player, player)
         {
             if ((globals->playerID & player->characterID) > 0) {
-                px = player->position.x;
-                py = player->position.y;
+                playerX = player->position.x;
+                playerY = player->position.y;
             }
         }
     }
 
-    return px >= x1 && px <= x2 && py >= y1 && py <= y2;
+    return playerX >= x1 && playerY >= y1 && playerX <= x2 && playerY <= y2;
 }
 
 #if RETRO_INCLUDE_EDITOR

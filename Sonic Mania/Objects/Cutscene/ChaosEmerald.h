@@ -42,7 +42,7 @@ void ChaosEmerald_Update(void);
 void ChaosEmerald_LateUpdate(void);
 void ChaosEmerald_StaticUpdate(void);
 void ChaosEmerald_Draw(void);
-void ChaosEmerald_Create(void* data);
+void ChaosEmerald_Create(void *data);
 void ChaosEmerald_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ChaosEmerald_EditorDraw(void);
@@ -54,5 +54,4 @@ void ChaosEmerald_Serialize(void);
 void ChaosEmerald_State_None(void);
 void ChaosEmerald_State_Rotate(void);
 
-
-#endif //!OBJ_CHAOSEMERALD_H
+#endif //! OBJ_CHAOSEMERALD_H

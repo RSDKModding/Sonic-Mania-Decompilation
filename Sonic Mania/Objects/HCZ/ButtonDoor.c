@@ -60,7 +60,7 @@ void ButtonDoor_Create(void *data)
     self->drawOrder     = Zone->objectDrawLow;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
-    self->visible       = 1;
+    self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = self->size.x + 0x800000;
     self->updateRange.y = self->size.y + 0x800000;

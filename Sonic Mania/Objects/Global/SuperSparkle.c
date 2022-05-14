@@ -47,7 +47,7 @@ void SuperSparkle_Update(void)
             sparkle->state      = Ring_State_Sparkle;
             sparkle->stateDraw  = Ring_Draw_Sparkle;
             sparkle->active     = ACTIVE_NORMAL;
-            sparkle->visible    = 0;
+            sparkle->visible    = false;
             sparkle->velocity.y = -0x10000;
             sparkle->drawOrder  = player->drawOrder;
             RSDK.SetSpriteAnimation(Ring->aniFrames, Zone->timer % 3 + 2, &sparkle->animator, true, 0);

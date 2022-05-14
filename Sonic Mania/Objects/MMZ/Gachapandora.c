@@ -279,7 +279,9 @@ void Gachapandora_Explode(int xMin, int xMax, int yMin, int yMax)
     if (!(Zone->timer % interval)) {
         RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
-            BadnikHelpers_HandleExplode(xMin, xMax, yMin, yMax, Zone->objectDrawHigh + 2);
+            int32 x = self->position.x + (RSDK.Rand(xMin, xMax) << 16);
+            int32 y = self->position.y + (RSDK.Rand(yMin, yMax) << 16);
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh + 2;
         }
     }
 }

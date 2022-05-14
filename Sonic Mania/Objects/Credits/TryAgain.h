@@ -34,7 +34,7 @@ void TryAgain_Update(void);
 void TryAgain_LateUpdate(void);
 void TryAgain_StaticUpdate(void);
 void TryAgain_Draw(void);
-void TryAgain_Create(void* data);
+void TryAgain_Create(void *data);
 void TryAgain_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TryAgain_EditorDraw(void);
@@ -48,4 +48,4 @@ void TryAgain_State_EnterEggman(void);
 void TryAgain_State_EggmanLaugh(void);
 void TryAgain_State_Stinger(void);
 
-#endif //!OBJ_TRYAGAIN_H
+#endif //! OBJ_TRYAGAIN_H

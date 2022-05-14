@@ -100,7 +100,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         if (!host->values[0]) {
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
             host->values[0] = true;
-            fxRuby->state   = FXRuby_State_ShrinkRing;
+            fxRuby->state   = FXRuby_State_Shrinking;
         }
 
         if (fxRuby->outerRadius) {

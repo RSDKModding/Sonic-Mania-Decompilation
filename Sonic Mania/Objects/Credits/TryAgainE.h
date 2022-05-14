@@ -33,7 +33,7 @@ void TryAgainE_Update(void);
 void TryAgainE_LateUpdate(void);
 void TryAgainE_StaticUpdate(void);
 void TryAgainE_Draw(void);
-void TryAgainE_Create(void* data);
+void TryAgainE_Create(void *data);
 void TryAgainE_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TryAgainE_EditorDraw(void);
@@ -46,4 +46,4 @@ void TryAgainE_SetupEmeralds(void);
 void TryAgainE_State_Stinger(void);
 #endif
 
-#endif //!OBJ_TRYAGAINE_H
+#endif //! OBJ_TRYAGAINE_H

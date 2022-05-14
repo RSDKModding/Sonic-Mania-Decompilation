@@ -69,23 +69,22 @@ void Options_Reload(void)
 void Options_GetWinSize(void)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    int32 windowed         = RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED);
 
+    bool32 windowed = RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED);
     if (!windowed) {
         options->windowSize = 4;
     }
     else {
         int32 width = RSDK.GetVideoSetting(VIDEOSETTING_WINDOW_WIDTH);
 
-        if (width <= WIDE_SCR_XSIZE) {
+        if (width <= WIDE_SCR_XSIZE)
             options->windowSize = 0;
-        }
-        else if (width <= WIDE_SCR_XSIZE * 2) {
+        else if (width <= WIDE_SCR_XSIZE * 2)
             options->windowSize = 1;
-        }
-        else {
-            options->windowSize = (width > (WIDE_SCR_XSIZE * 3)) + 2;
-        }
+        else if (width <= WIDE_SCR_XSIZE * 3)
+            options->windowSize = 2;
+        else
+            options->windowSize = 3;
     }
 }
 
@@ -93,6 +92,7 @@ void Options_LoadCallback(bool32 success)
 {
     if (success) {
         Localization->loaded = false;
+
         Localization_LoadStrings();
         UIWidgets_ApplyLanguage();
         UIHeading_LoadSprites();

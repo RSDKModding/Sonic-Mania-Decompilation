@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectFXSpinRay {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -33,7 +33,7 @@ void FXSpinRay_Update(void);
 void FXSpinRay_LateUpdate(void);
 void FXSpinRay_StaticUpdate(void);
 void FXSpinRay_Draw(void);
-void FXSpinRay_Create(void* data);
+void FXSpinRay_Create(void *data);
 void FXSpinRay_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FXSpinRay_EditorDraw(void);
@@ -46,4 +46,4 @@ void FXSpinRay_State_FadeIn(void);
 void FXSpinRay_State_Spinning(void);
 void FXSpinRay_State_FadeOut(void);
 
-#endif //!OBJ_FXSPINRAY_H
+#endif //! OBJ_FXSPINRAY_H

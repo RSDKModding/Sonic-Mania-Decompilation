@@ -212,7 +212,7 @@ void PhantomMissile_State_Attacking(void)
         self->timer          = 0;
         self->reattachRadius = 0;
         self->drawOrder      = Zone->objectDrawLow;
-        self->visible        = 0;
+        self->visible        = false;
         self->state          = PhantomMissile_State_Explode;
         Camera_ShakeScreen(0, 0, 3);
         RSDK.PlaySfx(PhantomEgg->sfxMissile, false, 255);

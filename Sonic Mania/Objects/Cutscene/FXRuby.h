@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectFXRuby {
     RSDK_OBJECT
-    int32 deformData[0x200];
+    int32 deformation[0x200];
 #if RETRO_USE_PLUS
     uint16 tintLookupTable[0x10000];
 #endif
@@ -54,8 +54,8 @@ void FXRuby_Serialize(void);
 void FXRuby_SetupLayerDeformation(void);
 void FXRuby_HandleLayerDeform(void);
 
-void FXRuby_State_ExpandRing(void);
-void FXRuby_State_ShrinkRing(void);
+void FXRuby_State_Expanding(void);
+void FXRuby_State_Shrinking(void);
 void FXRuby_State_None(void);
 void FXRuby_State_IncreaseStageDeform(void);
 void FXRuby_State_DecreaseStageDeform(void);

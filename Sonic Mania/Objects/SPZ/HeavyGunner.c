@@ -1410,7 +1410,7 @@ void HeavyGunner_StateHeli_ShotsFired(void)
 
     if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
         self->velocity.x = 0;
-        self->drawFX     = 0;
+        self->drawFX     = FX_NONE;
         self->state      = HeavyGunner_StateHeli_HandleAttacks;
     }
 }

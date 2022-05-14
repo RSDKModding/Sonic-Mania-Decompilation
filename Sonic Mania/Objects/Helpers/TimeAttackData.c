@@ -312,7 +312,8 @@ void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, 
 void TimeAttackData_Clear(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    param->puyoSelection   = PUYO_SELECTION_NONE;
+
+    param->puyoSelection = PUYO_SELECTION_NONE;
     memset(param->menuTag, 0, sizeof(param->menuTag));
     param->menuSelection    = 0;
     param->startedTAAttempt = false;
@@ -535,6 +536,7 @@ int32 TimeAttackData_AddTimeAttackDBEntry(uint8 zoneID, uint8 act, uint8 charact
     char buf[0x20];
     memset(buf, 0, 0x20 * sizeof(char));
     API.GetUserDBRowCreationTime(globals->taTableID, rowID, buf, 23, "%Y/%m/%d %H:%M:%S");
+
     LogHelpers_Print("Time Attack DB Added Entry");
     LogHelpers_Print("Created at %s", buf);
     LogHelpers_Print("Row ID: %d", rowID);
@@ -557,15 +559,15 @@ int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bo
         TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
     }
 
-    int32 c     = 0;
+    int32 rank  = 0;
     int32 rowID = 0;
-    for (c = 0; c < 3; ++c) {
-        rowID = API.GetSortedUserDBRowID(globals->taTableID, c);
+    for (rank = 0; rank < 3; ++rank) {
+        rowID = API.GetSortedUserDBRowID(globals->taTableID, rank);
         if (API.GetUserDBRowUUID(globals->taTableID, rowID) == uuid)
             break;
     }
 
-    if (c == 3) {
+    if (rank == 3) {
         if (callback)
             callback(false);
 
@@ -574,7 +576,7 @@ int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bo
 
     TimeAttackData->uuid         = uuid;
     TimeAttackData->rowID        = rowID;
-    TimeAttackData->personalRank = c + 1;
+    TimeAttackData->personalRank = rank + 1;
 
     if (TimeAttackData->isMigratingData) {
         if (callback)
@@ -584,7 +586,7 @@ int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bo
         TimeAttackData_SaveTimeAttackDB(callback);
     }
 
-    return c + 1;
+    return rank + 1;
 }
 
 void TimeAttackData_SaveTimeAttackDB(void (*callback)(bool32 success))
@@ -628,12 +630,12 @@ int32 TimeAttackData_GetScore(uint8 zoneID, uint8 act, uint8 characterID, bool32
         TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
     }
 
-    int32 row = API.GetSortedUserDBRowID(globals->taTableID, rankID);
-    if (row == -1)
+    int32 rowID = API.GetSortedUserDBRowID(globals->taTableID, rankID);
+    if (rowID == -1)
         return 0;
 
     int32 score = 0;
-    API.GetUserDBValue(globals->taTableID, row, DBVAR_UINT32, "score", &score);
+    API.GetUserDBValue(globals->taTableID, rowID, DBVAR_UINT32, "score", &score);
 
     return score;
 }

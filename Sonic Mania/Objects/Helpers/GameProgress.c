@@ -26,18 +26,28 @@ EntityGameProgress *GameProgress_GetGameProgress(void) { return (EntityGameProgr
 int32 GameProgress_GetNotifStringID(int32 type)
 {
     switch (type) {
-        case GAMEPROGRESS_UNLOCK_TIMEATTACK: return STR_TAUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_COMPETITION: return STR_COMPUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_PEELOUT: return STR_PEELOUTUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_INSTASHIELD: return STR_INSTASHIELDUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_ANDKNUX: return STR_ANDKNUXUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_DEBUGMODE: return STR_DEBUGMODEUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_MEANBEAN: return STR_MBMUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_DAGARDEN: return STR_DAGARDENUNLOCKED; break;
-        case GAMEPROGRESS_UNLOCK_BLUESPHERES: return STR_BLUESPHERESUNLOCKED; break;
-        default: return STR_FEATUREUNIMPLIMENTED; break;
+        case GAMEPROGRESS_UNLOCK_TIMEATTACK: return STR_TAUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_COMPETITION: return STR_COMPUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_PEELOUT: return STR_PEELOUTUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_INSTASHIELD: return STR_INSTASHIELDUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_ANDKNUX: return STR_ANDKNUXUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_DEBUGMODE: return STR_DEBUGMODEUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_MEANBEAN: return STR_MBMUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_DAGARDEN: return STR_DAGARDENUNLOCKED;
+
+        case GAMEPROGRESS_UNLOCK_BLUESPHERES: return STR_BLUESPHERESUNLOCKED;
+
+        default: return STR_FEATUREUNIMPLIMENTED;
     }
 }
+
 void GameProgress_ShuffleBSSID(void)
 {
     EntityGameProgress *progress = GameProgress_GetGameProgress();
@@ -47,18 +57,18 @@ void GameProgress_ShuffleBSSID(void)
         while (true) {
             if (globals->blueSpheresInit) {
                 ++globals->blueSpheresID;
-                globals->blueSpheresID %= 32;
+                globals->blueSpheresID %= GAMEPROGRESS_MEDAL_COUNT;
             }
             else {
                 globals->blueSpheresID   = 0;
                 globals->blueSpheresInit = true;
             }
 
-            if (progress->goldMedalCount >= 32)
+            if (progress->goldMedalCount >= GAMEPROGRESS_MEDAL_COUNT)
                 break;
 
             bool32 rotatedBSS = false;
-            if (progress->silverMedalCount < 32)
+            if (progress->silverMedalCount < GAMEPROGRESS_MEDAL_COUNT)
                 rotatedBSS = progress->medals[globals->blueSpheresID] == 0;
             else
                 rotatedBSS = progress->medals[globals->blueSpheresID] < 2;
@@ -72,7 +82,7 @@ void GameProgress_ShuffleBSSID(void)
     else {
         if (globals->blueSpheresInit) {
             globals->blueSpheresID++;
-            globals->blueSpheresID %= 32;
+            globals->blueSpheresID %= GAMEPROGRESS_MEDAL_COUNT;
         }
         else {
             globals->blueSpheresID   = 0;
@@ -102,8 +112,8 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
     int32 medalsGotten   = 0;
     int32 emeraldsGotten = 0;
 
-    for (int32 i = 0; i < 32; ++i) {
-        if (i < 7)
+    for (int32 i = 0; i < GAMEPROGRESS_MEDAL_COUNT; ++i) {
+        if (i < GAMEPROGRESS_EMERALD_COUNT)
             emeraldsGotten += progress->emeraldObtained[i] == 1;
 
         if (i < ZONE_ERZ)
@@ -116,10 +126,10 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
     // then multiply by its completion weight (in this case zones are worth 55% of completion percent)
     // then finally divide by the maximum count to normalize it
 
-    float zonePercent    = ((minVal(completeZones, 12) * 0.55) / 12.0);
-    float medalPercent   = ((minVal(medalsGotten, 64) * 0.35) / 64.0);
-    float specialPercent = ((minVal(emeraldsGotten, 7) * 0.05) / 7.0);
-    float endingPercent  = ((minVal(progress->unlockedEndingID, 2) * 0.05) / 2.0);
+    float zonePercent    = ((minVal(completeZones, GAMEPROGRESS_ZONE_COUNT) * 0.55) / (float)GAMEPROGRESS_ZONE_COUNT);
+    float medalPercent   = ((minVal(medalsGotten, GAMEPROGRESS_MEDAL_COUNT * 2) * 0.35) / (float)(GAMEPROGRESS_MEDAL_COUNT * 2));
+    float specialPercent = ((minVal(emeraldsGotten, GAMEPROGRESS_EMERALD_COUNT) * 0.05) / (float)GAMEPROGRESS_EMERALD_COUNT);
+    float endingPercent  = ((minVal(progress->unlockedEndingID, GAMEPROGRESS_ENDING_GOOD) * 0.05) / (float)GAMEPROGRESS_ENDING_GOOD);
     return zonePercent + medalPercent + specialPercent + endingPercent;
 }
 
@@ -181,20 +191,20 @@ void GameProgress_UnlockAllMedals(void)
 
     progress->allSpecialCleared   = true;
     progress->allEmeraldsObtained = true;
-    progress->unlockedEndingID    = 2;
-    progress->silverMedalCount    = 32;
-    progress->goldMedalCount      = 32;
+    progress->unlockedEndingID    = GAMEPROGRESS_ENDING_GOOD;
+    progress->silverMedalCount    = GAMEPROGRESS_MEDAL_COUNT;
+    progress->goldMedalCount      = GAMEPROGRESS_MEDAL_COUNT;
     progress->allGoldMedals       = true;
     progress->allSilverMedals     = true;
 
-    for (int32 m = 0; m < 32; ++m) {
-        if (m < 7)
+    for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
+        if (m < GAMEPROGRESS_EMERALD_COUNT)
             progress->emeraldObtained[m] = true;
 
         if (m < ZONE_COUNT_SAVEFILE)
             progress->zoneCleared[m] = true;
 
-        progress->medals[m] = 2;
+        progress->medals[m] = GAMEPROGRESS_MEDAL_GOLD;
     }
 }
 
@@ -220,28 +230,29 @@ void GameProgress_ClearProgress(void)
 
     progress->allSpecialCleared   = false;
     progress->allEmeraldsObtained = false;
-    progress->unlockedEndingID    = 0;
+    progress->unlockedEndingID    = GAMEPROGRESS_ENDING_NONE;
     progress->silverMedalCount    = 0;
     progress->goldMedalCount      = 0;
     progress->allGoldMedals       = false;
     progress->allSilverMedals     = false;
 
-    for (int32 m = 0; m < 0x20; ++m) {
-        if (m < 7)
+    for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
+        if (m < GAMEPROGRESS_EMERALD_COUNT)
             progress->emeraldObtained[m] = false;
 
         if (m < ZONE_COUNT_SAVEFILE)
             progress->zoneCleared[m] = false;
 
-        if (m < 7)
+        if (m < GAMEPROGRESS_EMERALD_COUNT)
             progress->specialCleared[m] = false;
 
-        if (m < 9)
+        if (m < GAMEPROGRESS_UNLOCK_COUNT)
             progress->unreadNotifs[m] = false;
 
-        progress->medals[m] = 0;
+        progress->medals[m] = GAMEPROGRESS_MEDAL_NONE;
     }
 }
+
 void GameProgress_MarkZoneCompleted(int32 zoneID)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -259,6 +270,7 @@ void GameProgress_MarkZoneCompleted(int32 zoneID)
         }
     }
 }
+
 bool32 GameProgress_CheckZoneClear(void)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -277,6 +289,7 @@ bool32 GameProgress_CheckZoneClear(void)
 
     return false;
 }
+
 void GameProgress_GiveEmerald(int32 emeraldID)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -288,13 +301,14 @@ void GameProgress_GiveEmerald(int32 emeraldID)
 
     progress->emeraldObtained[emeraldID] = true;
     bool32 allEmeralds                   = true;
-    for (int32 i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < GAMEPROGRESS_EMERALD_COUNT; ++i) {
         allEmeralds = allEmeralds && progress->emeraldObtained[i];
     }
 
     if (allEmeralds)
         progress->allEmeraldsObtained = true;
 }
+
 void GameProgress_GiveMedal(uint8 medalID, uint8 type)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -305,14 +319,14 @@ void GameProgress_GiveMedal(uint8 medalID, uint8 type)
     EntityGameProgress *progress = GameProgress_GetGameProgress();
     int32 goldCount              = 0;
     int32 silverCount            = 0;
-    for (int32 m = 0; m < 32; ++m) {
+    for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
         if (m == medalID && type > progress->medals[m])
             progress->medals[m] = type;
 
-        if (progress->medals[m] >= 2)
+        if (progress->medals[m] >= GAMEPROGRESS_MEDAL_GOLD)
             ++goldCount;
 
-        if (progress->medals[m] >= 1)
+        if (progress->medals[m] >= GAMEPROGRESS_MEDAL_SILVER)
             ++silverCount;
     }
 
@@ -320,14 +334,16 @@ void GameProgress_GiveMedal(uint8 medalID, uint8 type)
     progress->silverMedalCount = silverCount;
 
     LogHelpers_Print("Get %d medallion #%d", type, medalID);
-    LogHelpers_Print("Gold: %d %d, Silver: %d %d", goldCount, goldCount >= 32, silverCount, silverCount >= 32);
+    LogHelpers_Print("Gold: %d %d, Silver: %d %d", goldCount, goldCount >= GAMEPROGRESS_MEDAL_COUNT, silverCount,
+                     silverCount >= GAMEPROGRESS_MEDAL_COUNT);
 
-    if (goldCount >= 32)
+    if (goldCount >= GAMEPROGRESS_MEDAL_COUNT)
         progress->allGoldMedals = true;
 
-    if (silverCount >= 32)
+    if (silverCount >= GAMEPROGRESS_MEDAL_COUNT)
         progress->allSilverMedals = true;
 }
+
 void GameProgress_GiveEnding(uint8 ending)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -338,6 +354,7 @@ void GameProgress_GiveEnding(uint8 ending)
     if (ending > progress->unlockedEndingID)
         progress->unlockedEndingID = ending;
 }
+
 void GameProgress_PrintSaveProgress(void)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -350,7 +367,7 @@ void GameProgress_PrintSaveProgress(void)
     LogHelpers_Print("=========================");
     LogHelpers_Print("Game Progress:\n");
 
-    for (int32 e = 0; e < 7; ++e) {
+    for (int32 e = 0; e < GAMEPROGRESS_EMERALD_COUNT; ++e) {
         if (progress->emeraldObtained[e])
             LogHelpers_Print("Emerald %d => TRUE", e);
         else
@@ -371,17 +388,21 @@ void GameProgress_PrintSaveProgress(void)
 
     switch (progress->unlockedEndingID) {
         default:
-        case 0: LogHelpers_Print("NO ENDING!\n"); break;
-        case 1: LogHelpers_Print("BAD ENDING!\n"); break;
-        case 2: LogHelpers_Print("GOOD ENDING!\n"); break;
+        case GAMEPROGRESS_ENDING_NONE: LogHelpers_Print("NO ENDING!\n"); break;
+
+        case GAMEPROGRESS_ENDING_BAD: LogHelpers_Print("BAD ENDING!\n"); break;
+
+        case GAMEPROGRESS_ENDING_GOOD: LogHelpers_Print("GOOD ENDING!\n"); break;
     }
 
-    for (int32 m = 0; m < 32; ++m) {
+    for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
         switch (progress->medals[m]) {
             default:
-            case 2: LogHelpers_Print("Medallion %d => GOLD", m); break;
-            case 1: LogHelpers_Print("Medallion %d => SILVER", m); break;
-            case 0: LogHelpers_Print("Medallion %d => NULL", m); break;
+            case GAMEPROGRESS_MEDAL_GOLD: LogHelpers_Print("Medallion %d => GOLD", m); break;
+
+            case GAMEPROGRESS_MEDAL_SILVER: LogHelpers_Print("Medallion %d => SILVER", m); break;
+
+            case GAMEPROGRESS_MEDAL_NONE: LogHelpers_Print("Medallion %d => NULL", m); break;
         }
     }
 
@@ -404,7 +425,7 @@ int32 GameProgress_CountUnreadNotifs(void)
     else {
         int32 unreadCount            = 0;
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        for (int32 i = 0; i < 9; ++i) {
+        for (int32 i = 0; i < GAMEPROGRESS_UNLOCK_COUNT; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
 
@@ -423,7 +444,7 @@ int32 GameProgress_GetNextNotif(void)
     }
     else {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        for (int32 i = 0; i < 9; ++i) {
+        for (int32 i = 0; i < GAMEPROGRESS_UNLOCK_COUNT; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
 
@@ -444,14 +465,22 @@ bool32 GameProgress_CheckUnlock(uint8 id)
         EntityGameProgress *progress = GameProgress_GetGameProgress();
         switch (id) {
             case GAMEPROGRESS_UNLOCK_TIMEATTACK:
-            case GAMEPROGRESS_UNLOCK_COMPETITION: return progress->zoneCleared[0] == 1;
+            case GAMEPROGRESS_UNLOCK_COMPETITION: return progress->zoneCleared[0];
+
             case GAMEPROGRESS_UNLOCK_PEELOUT: return progress->silverMedalCount >= 1;
+
             case GAMEPROGRESS_UNLOCK_INSTASHIELD: return progress->silverMedalCount >= 6;
+
             case GAMEPROGRESS_UNLOCK_ANDKNUX: return progress->silverMedalCount >= 11;
+
             case GAMEPROGRESS_UNLOCK_DEBUGMODE: return progress->silverMedalCount >= 16;
+
             case GAMEPROGRESS_UNLOCK_MEANBEAN: return progress->silverMedalCount >= 21;
+
             case GAMEPROGRESS_UNLOCK_DAGARDEN: return progress->silverMedalCount >= 26;
-            case GAMEPROGRESS_UNLOCK_BLUESPHERES: return progress->silverMedalCount >= 32;
+
+            case GAMEPROGRESS_UNLOCK_BLUESPHERES: return progress->silverMedalCount >= GAMEPROGRESS_MEDAL_COUNT;
+
             default: return false;
         }
     }

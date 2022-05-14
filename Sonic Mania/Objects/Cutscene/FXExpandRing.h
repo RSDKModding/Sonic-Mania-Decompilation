@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectFXExpandRing {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -30,7 +30,7 @@ void FXExpandRing_Update(void);
 void FXExpandRing_LateUpdate(void);
 void FXExpandRing_StaticUpdate(void);
 void FXExpandRing_Draw(void);
-void FXExpandRing_Create(void* data);
+void FXExpandRing_Create(void *data);
 void FXExpandRing_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FXExpandRing_EditorDraw(void);
@@ -43,5 +43,4 @@ void FXExpandRing_State_FadeIn(void);
 void FXExpandRing_State_Expand(void);
 void FXExpandRing_State_FadeOut(void);
 
-
-#endif //!OBJ_FXEXPANDRING_H
+#endif //! OBJ_FXEXPANDRING_H

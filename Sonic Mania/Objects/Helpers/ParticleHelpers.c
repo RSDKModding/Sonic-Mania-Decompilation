@@ -21,7 +21,7 @@ void ParticleHelpers_Create(void *data) {}
 
 void ParticleHelpers_StageLoad(void) {}
 
-void ParticleHelpers_SetupFallingParticles(int32 x, int32 y)
+void ParticleHelpers_SetupFallingParticles(int32 x, int32 y, void (*callback)(EntityDebris *))
 {
     int32 pos = x - 0x80000;
     for (int32 i = 0; i < 5; ++i) {
@@ -35,7 +35,8 @@ void ParticleHelpers_SetupFallingParticles(int32 x, int32 y)
         if (debris->position.x < x)
             debris->direction = FLIP_X;
 
-        CPZ1Intro_Particle_CB(debris);
+        if (callback)
+            callback(debris);
     }
 }
 

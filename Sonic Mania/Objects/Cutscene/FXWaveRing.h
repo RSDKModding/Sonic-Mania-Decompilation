@@ -6,7 +6,7 @@
 #if RETRO_USE_PLUS
 // Object Class
 struct ObjectFXWaveRing {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -37,7 +37,7 @@ void FXWaveRing_Update(void);
 void FXWaveRing_LateUpdate(void);
 void FXWaveRing_StaticUpdate(void);
 void FXWaveRing_Draw(void);
-void FXWaveRing_Create(void* data);
+void FXWaveRing_Create(void *data);
 void FXWaveRing_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FXWaveRing_EditorDraw(void);
@@ -51,4 +51,4 @@ void FXWaveRing_State_Wait(void);
 void FXWaveRing_State_FadeOut(void);
 #endif
 
-#endif //!OBJ_FXWAVERING_H
+#endif //! OBJ_FXWAVERING_H

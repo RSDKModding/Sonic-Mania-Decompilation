@@ -366,7 +366,7 @@ void BuckwildBall_State_Debris(void)
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    self->visible = Zone->timer % 4 < 2;
+    self->visible = (Zone->timer % 4) < 2;
 
     BuckwildBall_CheckOffScreen();
 }

@@ -12,6 +12,7 @@ ObjectTryAgain *TryAgain;
 void TryAgain_Update(void)
 {
     RSDK_THIS(TryAgain);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void TryAgain_StaticUpdate(void) {}
 void TryAgain_Draw(void)
 {
     RSDK_THIS(TryAgain);
+
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, (self->position.y >> 16));
 
@@ -37,19 +39,20 @@ void TryAgain_Draw(void)
 void TryAgain_Create(void *data)
 {
     RSDK_THIS(TryAgain);
+
     if (!SceneInfo->inEditor) {
         self->eggmanPos.x = self->position.x;
-        self->eggmanPos.y = self->position.y;
-        self->eggmanPos.y += 0x100000;
-        self->rubyPos.x = self->eggmanPos.x;
-        self->rubyPos.x -= 0x340000;
-        self->rubyPos.y     = self->eggmanPos.y;
+        self->eggmanPos.y = self->position.y + 0x100000;
+        self->rubyPos.x   = self->eggmanPos.x - 0x340000;
+        self->rubyPos.y   = self->eggmanPos.y;
+
         self->visible       = true;
         self->drawOrder     = 1;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->state         = TryAgain_State_Setup;
+
+        self->state = TryAgain_State_Setup;
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 0, &self->debrisAnimator, true, 0);
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 2, &self->eggmanAnimator, true, 0);
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 4, &self->rubyAnimator, true, 0);
@@ -59,15 +62,18 @@ void TryAgain_Create(void *data)
 void TryAgain_StageLoad(void)
 {
     TryAgain->aniFrames = RSDK.LoadSpriteAnimation("Credits/TryAgain.bin", SCOPE_STAGE);
+
     RSDK.CopyPalette(0, 0, 1, 0, 128);
 }
 
 void TryAgain_State_Setup(void)
 {
     RSDK_THIS(TryAgain);
+
     if (++self->timer == 60) {
         self->timer           = 0;
         self->eggmanVelocityY = -0x5C000;
+
 #if RETRO_USE_PLUS
         Music_PlayTrack(TRACK_STAGE);
 #endif
@@ -82,6 +88,7 @@ void TryAgain_State_EnterEggman(void)
     self->eggmanVelocityY += 0x3800;
     int32 targetPos = self->position.y - 0x340000;
     self->eggmanPos.y += self->eggmanVelocityY;
+
     if (self->eggmanPos.y <= targetPos || self->eggmanVelocityY <= 0) {
         self->rubyPos.y = self->eggmanPos.y;
     }
@@ -96,8 +103,10 @@ void TryAgain_State_EnterEggman(void)
 void TryAgain_State_EggmanLaugh(void)
 {
     RSDK_THIS(TryAgain);
+
     if (self->timer > (RETRO_USE_PLUS ? 15 : 30))
         RSDK.ProcessAnimation(&self->eggmanAnimator);
+
     if (++self->timer == 120) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 3, &self->eggmanAnimator, true, 2);
@@ -108,7 +117,9 @@ void TryAgain_State_EggmanLaugh(void)
 void TryAgain_State_Stinger(void)
 {
     RSDK_THIS(TryAgain);
+
     RSDK.ProcessAnimation(&self->eggmanAnimator);
+
     if (self->eggmanAnimator.frameID == 2) {
         if (self->eggmanAnimator.timer == 1) {
             self->rubyVelocity.x = 0x22000;
@@ -120,8 +131,8 @@ void TryAgain_State_Stinger(void)
         self->rubyVelocity.y = -0x58000;
     }
 
-    self->rubyPos.x += self->rubyVelocity.x;
     self->rubyVelocity.y += 0x3800;
+    self->rubyPos.x += self->rubyVelocity.x;
     self->rubyPos.y += self->rubyVelocity.y;
 
     if (self->rubyPos.y <= self->eggmanPos.y + 0x80000) {
@@ -156,6 +167,7 @@ void TryAgain_State_Stinger(void)
         fxFade->wait         = 240;
 #endif
     }
+
     if (self->timer >= (RETRO_USE_PLUS ? 740 : 680)) {
 #if RETRO_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
@@ -163,6 +175,7 @@ void TryAgain_State_Stinger(void)
         else
 #endif
             RSDK.SetScene("Presentation", "Menu");
+
         RSDK.LoadScene();
     }
 }

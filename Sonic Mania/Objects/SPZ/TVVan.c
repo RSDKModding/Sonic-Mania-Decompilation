@@ -166,7 +166,7 @@ void TVVan_Create(void *data)
             case TVVAN_RADIO:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->radioAnimator, true, 0);
                 self->active    = ACTIVE_NORMAL;
-                self->visible   = 0;
+                self->visible   = false;
                 self->drawOrder = Zone->objectDrawHigh;
 
                 self->state                           = TVVan_StateRadio_StartBroadcast;

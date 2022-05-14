@@ -13,6 +13,7 @@ ObjectEncoreGoodEnd *EncoreGoodEnd;
 void EncoreGoodEnd_Update(void)
 {
     RSDK_THIS(EncoreGoodEnd);
+
     if (!self->activated) {
         foreach_active(Player, player)
         {
@@ -41,6 +42,7 @@ void EncoreGoodEnd_Draw(void) {}
 void EncoreGoodEnd_Create(void *data)
 {
     RSDK_THIS(EncoreGoodEnd);
+
     if (!SceneInfo->inEditor) {
         INIT_ENTITY(self);
         self->active = ACTIVE_NORMAL;
@@ -49,6 +51,7 @@ void EncoreGoodEnd_Create(void *data)
         SceneInfo->timeEnabled = false;
         EncoreGoodEnd->unused1 = 0;
         Player->playerCount    = 4;
+
         EncoreGoodEnd_SetupDecorations();
     }
 }
@@ -62,12 +65,13 @@ void EncoreGoodEnd_SetupDecorations(void)
     {
         if (id >= E_END_COUNT)
             break;
+
         if (id == E_END_ICECREAM_CONE)
             decor->drawFX = FX_NONE;
         if (id >= E_END_ICECREAM_CONE)
             decor->visible = false;
-        EncoreGoodEnd->decorations[id] = decor;
-        ++id;
+
+        EncoreGoodEnd->decorations[id++] = decor;
     }
 }
 
@@ -104,15 +108,18 @@ void EncoreGoodEnd_StatePlayer_MoveToPos(void)
 {
     RSDK_THIS(Player);
 
-    int32 id         = self->characterID;
     self->velocity.x = 0x18000;
-    int32 playerID   = -1;
-    for (self->groundVel = 0x18000; id > 0; ++playerID) id >>= 1;
+    self->groundVel  = 0x18000;
+
+    int32 playerID = -1;
+    for (int32 id = self->characterID; id > 0; ++playerID) id >>= 1;
 
     if (self->position.x >= EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.x) {
         self->position.x = EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.x;
+
         self->velocity.x = 0;
         self->groundVel  = 0;
+
         switch (self->characterID) {
             case ID_SONIC:
                 self->visible                                               = false;
@@ -147,6 +154,7 @@ void EncoreGoodEnd_StatePlayer_MoveToPos(void)
 void EncoreGoodEnd_StatePlayer_EndingIdle(void)
 {
     RSDK_THIS(Player);
+
     Player_State_Air();
 
     if (self->velocity.y > 0) {
@@ -154,9 +162,10 @@ void EncoreGoodEnd_StatePlayer_EndingIdle(void)
         for (int32 id = self->characterID; id > 0; ++playerID) id >>= 1;
 
         if (self->position.y >= (EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.y - 0x80000)) {
-            self->position.y                                            = (EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.y - 0x80000);
-            self->velocity.y                                            = 0;
-            self->visible                                               = false;
+            self->position.y = (EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.y - 0x80000);
+            self->velocity.y = 0;
+            self->visible    = false;
+
             EncoreGoodEnd->decorations[playerID + E_END_SONIC]->visible = true;
             switch (self->characterID) {
                 default:
@@ -205,6 +214,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
     RSDK_THIS(Player);
 
     EntityDecoration *playerDecor = EncoreGoodEnd->decorations[E_END_SONIC];
+
     switch (self->abilityValues[0]) {
         case 0:
             if (EncoreGoodEnd->decorations[E_END_SONIC]->animator.frameID == 8) {
@@ -214,6 +224,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
                 self->abilityValues[1]                                      = 0;
             }
             break;
+
         case 1:
             if (++self->abilityValues[1] >= 15) {
                 self->abilityValues[1]                                      = 0;
@@ -222,6 +233,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
                 EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->velocity.y = -0x40000;
             }
             break;
+
         case 2:
             if (++self->abilityValues[1] >= 15) {
                 self->abilityValues[1]                                       = 0;
@@ -230,6 +242,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
                 EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->velocity.y = -0x40000;
             }
             break;
+
         case 3:
             if (++self->abilityValues[1] >= 15) {
                 self->abilityValues[1]                                       = 0;
@@ -238,10 +251,12 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
                 EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->velocity.y = -0x40000;
             }
             break;
+
         case 4:
             if (EncoreGoodEnd->decorations[E_END_SONIC]->animator.frameID >= 22)
                 self->state = Player_State_None;
             break;
+
         default: break;
     }
 
@@ -261,8 +276,10 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
 
         EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->position.y += EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->velocity.y;
         EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->velocity.y += 0x3800;
+
         if (EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->position.y >= playerDecor->position.y) {
-            EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->visible = 0;
+            EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->visible = false;
+
             ++playerDecor->animator.frameID;
             playerDecor->animator.speed = 1;
         }
@@ -279,8 +296,10 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
 
         EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->position.y += EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->velocity.y;
         EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->velocity.y += 0x3800;
+
         if (EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->position.y >= playerDecor->position.y) {
             EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->visible = false;
+
             ++playerDecor->animator.frameID;
             playerDecor->animator.speed = 1;
         }
@@ -297,8 +316,10 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
 
         EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->position.y += EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->velocity.y;
         EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->velocity.y += 0x3800;
+
         if (EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->position.y >= playerDecor->position.y - 0x40000) {
             EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->visible = false;
+
             ++playerDecor->animator.frameID;
             playerDecor->animator.speed = 1;
         }
@@ -315,8 +336,10 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
 
         EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->position.y += EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->velocity.y;
         EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->velocity.y += 0x3800;
+
         if (EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->position.y >= playerDecor->position.y - 0x80000) {
             EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->visible = false;
+
             ++playerDecor->animator.frameID;
             playerDecor->animator.speed = 1;
         }
@@ -331,13 +354,17 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
     if (!host->timer) {
         player1->state      = Player_State_None;
         player1->stateInput = StateMachine_None;
+
         CutsceneSeq_LockAllPlayerControl();
         EncoreGoodEnd_SetupPlayer(player1->characterID);
         EncoreGoodEnd_SetupPlayer(player2->characterID);
-        camera->target = (Entity *)EncoreGoodEnd->decorations[E_END_SONIC];
-        self->position.y  = EncoreGoodEnd->decorations[E_END_KING]->position.y;
+
+        camera->target   = (Entity *)EncoreGoodEnd->decorations[E_END_SONIC];
+        self->position.y = EncoreGoodEnd->decorations[E_END_KING]->position.y;
+
         EncoreGoodEnd->decorations[E_END_KING]->position.y += 0x500000;
         RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_SONICLAYDOWN, &EncoreGoodEnd->decorations[E_END_SONIC]->animator, true, 21);
+
         foreach_all(UICreditsText, label) { label->active = ACTIVE_NEVER; }
     }
     else if (host->timer == 120) {
@@ -346,6 +373,7 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
         player1->groundVel  = 0x30000;
         player1->drawOrder  = Zone->playerDrawHigh;
         player1->state      = Player_State_Ground;
+
         if (player2->classID == Player->classID) {
             player2->position.x = -0x800000;
             player2->velocity.x = 0x30000;
@@ -359,6 +387,7 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
         player1->state = EncoreGoodEnd_StatePlayer_MoveToPos;
         if (player2->classID == Player->classID)
             player2->state = EncoreGoodEnd_StatePlayer_MoveToPos;
+
         return true;
     }
     return false;
@@ -368,6 +397,7 @@ bool32 EncoreGoodEnd_Cutscene_WaitForMovementFinish(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+
     return player1->state == Player_State_None && (player2->state == Player_State_None || player2->classID != Player->classID);
 }
 
@@ -389,18 +419,22 @@ bool32 EncoreGoodEnd_Cutscene_ClinkGlasses(EntityCutsceneSeq *host)
         EncoreGoodEnd->decorations[E_END_KING]->velocity.y = -0x60000;
         return true;
     }
+
     return false;
 }
 
 bool32 EncoreGoodEnd_Cutscene_KingAppear(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreGoodEnd);
+
     EntityDecoration *decor = EncoreGoodEnd->decorations[E_END_KING];
     decor->position.y += decor->velocity.y;
     decor->velocity.y += 0x3800;
+
     if (decor->velocity.y > 0) {
         if (decor->position.y >= self->position.y) {
             decor->position.y = self->position.y;
+
             RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_SONICSHOCKED, &EncoreGoodEnd->decorations[E_END_SONIC]->animator, true, 0);
             RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_TAILSSHOCKED, &EncoreGoodEnd->decorations[E_END_TAILS]->animator, true, 0);
             RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_KNUXSHOCKED, &EncoreGoodEnd->decorations[E_END_KNUX]->animator, true, 0);
@@ -412,6 +446,7 @@ bool32 EncoreGoodEnd_Cutscene_KingAppear(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_STOOL_STILL, &EncoreGoodEnd->decorations[E_END_STOOLR]->animator, false, 0);
             RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_KNUXICECREAMSHOCK, &EncoreGoodEnd->decorations[E_END_GLASSK]->animator, true,
                                     0);
+
             EncoreGoodEnd->decorations[E_END_GLASSK]->drawFX |= FX_SCALE;
             EncoreGoodEnd->decorations[E_END_GLASSK]->position.x += 0x80000;
             EncoreGoodEnd->decorations[E_END_GLASSK]->rotation = -32;
@@ -437,26 +472,31 @@ bool32 EncoreGoodEnd_Cutscene_KingAppear(EntityCutsceneSeq *host)
             return true;
         }
     }
+
     return false;
 }
 
 bool32 EncoreGoodEnd_Cutscene_ThanksForPlaying(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreGoodEnd);
+
     if (host->timer < 22) {
         foreach_active(Decoration, decor)
         {
             if (decor->type >= 25) {
                 decor->drawOrder = Zone->objectDrawHigh + 1;
+
                 if (decor->position.y >= self->position.y)
                     decor->position.y -= 0x20000;
                 else
                     decor->position.y += 0x20000;
             }
         }
+
         RSDK.SetActivePalette(0, 0, ScreenInfo->height);
         RSDK.SetActivePalette(1, 2 * host->timer, ScreenInfo->height - 2 * host->timer);
     }
+
     return host->timer == 240;
 }
 
@@ -466,8 +506,10 @@ bool32 EncoreGoodEnd_Cutscene_FinishCutscene(EntityCutsceneSeq *host)
         RSDK.SetScene("Presentation", "Encore Summary");
     else
         RSDK.SetScene("Presentation", "Menu");
+
     Zone_StartFadeOut(10, 0x000000);
     Music_FadeOut(0.025);
+
     return true;
 }
 

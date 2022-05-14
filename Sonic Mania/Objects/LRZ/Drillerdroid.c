@@ -1158,7 +1158,7 @@ void Drillerdroid_Draw_Boss(void)
             RSDK.DrawSprite(&self->armorAnimator, NULL, false);
 
             self->direction             = FLIP_NONE;
-            self->drawFX                = 0;
+            self->drawFX                = FX_NONE;
             self->armorAnimator.frameID = 7;
 
             // Piston (L1) Armor

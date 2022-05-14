@@ -190,7 +190,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby = GHZCutsceneST->phantomRuby;
     EntityFXRuby *fxRuby    = GHZCutsceneST->fxRuby;
     if (!host->timer)
-        fxRuby->state = FXRuby_State_ShrinkRing;
+        fxRuby->state = FXRuby_State_Shrinking;
 
     EntityPlayer **curPlayer = &player1;
     if (fxRuby->outerRadius <= 0) {

@@ -30,7 +30,7 @@ void RubyPortal_Update(void);
 void RubyPortal_LateUpdate(void);
 void RubyPortal_StaticUpdate(void);
 void RubyPortal_Draw(void);
-void RubyPortal_Create(void* data);
+void RubyPortal_Create(void *data);
 void RubyPortal_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RubyPortal_EditorDraw(void);
@@ -55,4 +55,4 @@ void RubyPortal_State_EncoreEnd(void);
 void RubyPortal_State_EncoreRampage(void);
 #endif
 
-#endif //!OBJ_RUBYPORTAL_H
+#endif //! OBJ_RUBYPORTAL_H

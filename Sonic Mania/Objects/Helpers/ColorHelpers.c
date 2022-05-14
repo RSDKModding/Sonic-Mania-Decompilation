@@ -9,6 +9,12 @@
 
 ObjectColorHelpers *ColorHelpers = NULL;
 
+// NOTE:
+// I'm not actually sure *what* this object was for
+// ColorHelpers_Unknown1 && ColorHelpers_Unknown2 were only in PC 1.03, and not in 1.06 so idk what happened
+// ColorHelpers_PackRGB is a helper func that allows me to easily pack RGB888 into RGB565 format
+// I've never seen definitive proof of any funcs this object may have once had so be it what you will
+
 void ColorHelpers_Update(void) {}
 
 void ColorHelpers_LateUpdate(void) {}
@@ -21,7 +27,7 @@ void ColorHelpers_Create(void *data) {}
 
 void ColorHelpers_StageLoad(void) {}
 
-uint16 ColorHelpers_PackRGB(uint8 r, uint8 g, uint8 b) { return (b >> 3) | (8 * ((g | (32 * (r & 0xFFF8))) & 0xFFFC)); }
+uint16 ColorHelpers_PackRGB(uint8 r, uint8 g, uint8 b) { return (b >> 3) | ((g >> 2) << 5) | ((r >> 3) << 11); }
 
 void ColorHelpers_Unknown1(int32 r, int32 g, int32 b, uint32 *rPtr, uint32 *gPtr, uint32 *bPtr)
 {
@@ -44,29 +50,31 @@ void ColorHelpers_Unknown1(int32 r, int32 g, int32 b, uint32 *rPtr, uint32 *gPtr
         if (val2 == val1) {
             if (rPtr)
                 *rPtr = 0;
+
             if (gPtr)
                 *gPtr = 0;
+
             if (bPtr)
                 *bPtr = val1;
         }
         else {
-            if (g == val2) {
+            if (g == val2)
                 newR = 60 * (r - b) / div;
-            }
-            else if (r == val2) {
+            else if (r == val2)
                 newR = 60 * (b - g) / div + 120;
-            }
-            else {
+            else
                 newR = 60 * (g - r) / div + 240;
-            }
+
             if (rPtr) {
                 if (newR >= 0)
                     *rPtr = newR;
                 else
                     *rPtr = newR + 360;
             }
+
             if (gPtr)
                 *gPtr = 255 * div / val2;
+
             if (bPtr)
                 *bPtr = val2;
         }
@@ -130,10 +138,10 @@ void ColorHelpers_Unknown2(int32 a1, int32 a2, int32 brightness, uint32 *r, uint
         newB = brightness;
     }
 
-    if (g)
-        *g = newR;
     if (r)
         *r = newG;
+    if (g)
+        *g = newR;
     if (b)
         *b = newB;
 }
