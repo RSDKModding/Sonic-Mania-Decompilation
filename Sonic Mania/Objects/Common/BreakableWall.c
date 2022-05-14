@@ -387,7 +387,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
         bool32 onGround = player->onGround;
 
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP && !player->sidekick
-            && ((player->collisionPlane == 1 && self->type != BREAKWALL_TYPE_TOPCHUNK_B) || self->type == BREAKWALL_TYPE_TOPCHUNK)) {
+            && ((player->collisionPlane == 1 && self->type == BREAKWALL_TYPE_TOPCHUNK_B) || self->type == BREAKWALL_TYPE_TOPCHUNK)) {
 #if RETRO_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
