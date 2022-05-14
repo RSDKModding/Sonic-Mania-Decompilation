@@ -36,7 +36,7 @@ bool RenderDevice::Init()
     int h          = landscape ? dm.w : dm.h;
     int w          = landscape ? dm.h : dm.w;
 
-    RSDK::videoSettings.windowWidth = pixWidth = ((float)SCREEN_YSIZE * h / w);
+    RSDK::videoSettings.windowWidth = RSDK::videoSettings.pixWidth = ((float)SCREEN_YSIZE * h / w);
 #endif
 
 #if RETRO_PLATFORM == RETRO_SWITCH

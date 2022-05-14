@@ -299,7 +299,7 @@ enum GameRegions {
 
 #elif RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>
-#include <theora/theora.h>
+#include <theora/theoradec.h>
 
 //#include "androidHelpers.hpp"
 #undef RETRO_STANDALONE
@@ -307,7 +307,7 @@ enum GameRegions {
 #undef RETRO_USING_MOUSE
 #elif RETRO_PLATFORM == RETRO_SWITCH
 #include <SDL2/SDL.h>
-#include <theora/theora.h>
+#include <theora/theoradec.h>
 
 #undef RETRO_USING_MOUSE
 #endif

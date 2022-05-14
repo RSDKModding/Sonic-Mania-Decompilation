@@ -12,6 +12,7 @@ namespace fs = std::__fs::filesystem;
 #else
 namespace fs = std::filesystem;
 #endif
+
 #if RETRO_PLATFORM == RETRO_WIN
 #include "Windows.h"
 #undef GetObject // fuck you

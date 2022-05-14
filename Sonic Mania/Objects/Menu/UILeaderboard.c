@@ -442,9 +442,7 @@ void UILeaderboard_ProcessButtonCB(void)
     RSDK_THIS(UILeaderboard);
 
 #if RETRO_USE_PLUS
-    // x = entryOffset
-    // y = entryLength
-    Vector2 entryCount = API.LeaderboardEntryCount();
+    LeaderboardAvail entryCount = API.LeaderboardEntryCount();
 
     int32 newID = self->entryOffset;
     if (UIControl->keyUp)
@@ -456,28 +454,28 @@ void UILeaderboard_ProcessButtonCB(void)
     else if (UIControl->keyRight)
         newID += 5;
 
-    int32 end = entryCount.x + entryCount.y;
+    int32 end = entryCount.start + entryCount.length;
     if (newID >= end)
         newID = end - 5;
-    if (newID < entryCount.x)
-        newID = entryCount.x;
+    if (newID < entryCount.start)
+        newID = entryCount.start;
 
-    if (entryCount.y && self->entryOffset != newID) {
+    if (entryCount.length && self->entryOffset != newID) {
         LogHelpers_Print("old: %d, new: %d", self->entryOffset, newID);
         self->entryOffset = newID;
 
         UILeaderboard_LoadEntries(self);
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
 
-        if (entryCount.x <= 1 || newID >= entryCount.x + 2) {
-            if (newID > (entryCount.x + entryCount.y - 7)) {
+        if (entryCount.start <= 1 || newID >= entryCount.start + 2) {
+            if (newID > (entryCount.start + entryCount.length - 7)) {
                 LogHelpers_Print("Load down");
-                API.LoadNewLeaderboardEntries(entryCount.x, entryCount.y + 20, 2);
+                API.LoadNewLeaderboardEntries(entryCount.start, entryCount.length + 20, 2);
             }
         }
         else {
             LogHelpers_Print("Load up");
-            API.LoadNewLeaderboardEntries(entryCount.x - 20, entryCount.y + 20, 1);
+            API.LoadNewLeaderboardEntries(entryCount.start - 20, entryCount.length + 20, 1);
         }
     }
 
