@@ -1451,7 +1451,7 @@ void HeavyMystic_StateBox_Transforming(void)
     if (!(Zone->timer & 7)) {
         RSDK.PlaySfx(HeavyMystic->sfxMagicBox, false, 255);
         int32 x                                                               = self->position.x + (RSDK.Rand(-24, 25) << 16);
-        int32 y                                                               = self->position.x + (RSDK.Rand(-24, 25) << 16);
+        int32 y                                                               = self->position.y + (RSDK.Rand(-24, 25) << 16);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawOrder = Zone->objectDrawHigh + 2;
     }
 

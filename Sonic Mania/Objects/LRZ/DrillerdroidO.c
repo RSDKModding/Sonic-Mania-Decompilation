@@ -253,9 +253,10 @@ void DrillerdroidO_Explode(void)
 
     if (!(Zone->timer & 3)) {
         RSDK.PlaySfx(Drillerdroid->sfxExplosion, false, 255);
+
         if (!(Zone->timer & 3)) {
-            int x = self->position.y + (RSDK.Rand(-19, 20) << 16);
-            int y = self->position.x + (RSDK.Rand(-24, 25) << 16);
+            int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh + 2;
         }
     }

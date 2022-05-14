@@ -77,7 +77,7 @@ void Soundboard_StageLoad(void)
         Soundboard->sfxLoopPoint[i]       = 0;
         Soundboard->sfxCheckCallback[i]   = NULL;
         Soundboard->sfxUpdateCallback[i]  = NULL;
-        Soundboard->sfxIsPlaying[i]       = 0;
+        Soundboard->sfxIsPlaying[i]       = false;
         Soundboard->sfxPlayingTimer[i]    = 0;
         Soundboard->sfxFadeOutDuration[i] = 0;
     }

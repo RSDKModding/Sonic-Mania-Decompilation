@@ -24,42 +24,40 @@ void MMZSetup_StaticUpdate(void)
     }
 
     if (Zone->actID == 1) {
-        if (!MMZSetup->aniTileDelay) {
-            ++MMZSetup->aniTileFrameA;
-            if (MMZSetup->aniTileFrameA > 11) {
-                MMZSetup->aniTileFrameA = 0;
-            }
-            RSDK.DrawAniTiles(MMZSetup->aniTiles, 282, 0, 16 * MMZSetup->aniTileFrameA, 16, 16);
+        if (!MMZSetup->panelAniTimer) {
+            if (++MMZSetup->panelAniFrame > 11)
+                MMZSetup->panelAniFrame = 0;
+
+            RSDK.DrawAniTiles(MMZSetup->aniTiles, 282, 0, 16 * MMZSetup->panelAniFrame, 16, 16);
         }
 
-        ++MMZSetup->aniTileDelay;
-        if (MMZSetup->aniTileDelay == MMZSetup->aniTileDelay2 >> 1) {
-            MMZSetup->aniTileDelay = 0;
-            --MMZSetup->aniTileDelay2;
-            if (MMZSetup->aniTileDelay2 < 4) {
-                MMZSetup->aniTileDelay2 = 4;
-            }
+        if (++MMZSetup->panelAniTimer == (MMZSetup->panelAniDuration >> 1)) {
+            MMZSetup->panelAniTimer = 0;
+
+            if (--MMZSetup->panelAniDuration < 4)
+                MMZSetup->panelAniDuration = 4;
         }
     }
 
-    --MMZSetup->aniTileDelay3;
-    if (MMZSetup->aniTileDelay3 < 1) {
-        MMZSetup->aniTileFrameB += 32;
-        MMZSetup->aniTileFrameB %= 384;
-        MMZSetup->aniTileDelay3 = MMZSetup->aniTileDelays[MMZSetup->aniTileFrameB >> 5];
-        RSDK.DrawAniTiles(MMZSetup->aniTiles, 336, ((MMZSetup->aniTileFrameB >> 4) & 0xFFF0) + 96, MMZSetup->aniTileFrameB & 0xFF, 16, 32);
+    if (--MMZSetup->pistonAniDuration < 1) {
+        MMZSetup->pistonAniFrame += 32;
+        MMZSetup->pistonAniFrame %= 384;
+
+        MMZSetup->pistonAniDuration = MMZSetup->pistonAniDurationTable[MMZSetup->pistonAniFrame >> 5];
+        RSDK.DrawAniTiles(MMZSetup->aniTiles, 336, 96 + ((MMZSetup->pistonAniFrame >> 4) & 0xFFF0), MMZSetup->pistonAniFrame & 0xFF, 16, 32);
     }
 
-    ++MMZSetup->aniTileDelay4;
-    if (MMZSetup->aniTileDelay4 == 2) {
-        MMZSetup->aniTileDelay4 = 0;
-        MMZSetup->aniTileFrameC += 16;
-        MMZSetup->aniTileFrameC %= 384;
-        RSDK.DrawAniTiles(MMZSetup->aniTiles, 338, ((MMZSetup->aniTileFrameC >> 4) & 0xFFF0) + 16, MMZSetup->aniTileFrameC & 0xFF, 16, 16);
-        MMZSetup->aniTileFrameD += 32;
-        MMZSetup->aniTileFrameD &= 0xFF;
-        RSDK.DrawAniTiles(MMZSetup->aniTiles, 330, 48, MMZSetup->aniTileFrameD, 16, 32);
-        RSDK.DrawAniTiles(MMZSetup->aniTiles, 332, 64, MMZSetup->aniTileFrameD, 32, 32);
+    if (++MMZSetup->lightsAniDuration == 2) {
+        MMZSetup->lightsAniDuration = 0;
+
+        MMZSetup->spinLightsAniFrame += 16;
+        MMZSetup->spinLightsAniFrame %= 384;
+        RSDK.DrawAniTiles(MMZSetup->aniTiles, 338, 16 + ((MMZSetup->spinLightsAniFrame >> 4) & 0xFFF0), MMZSetup->spinLightsAniFrame & 0xFF, 16, 16);
+
+        MMZSetup->generatorAniFrame += 32;
+        MMZSetup->generatorAniFrame &= 0xFF;
+        RSDK.DrawAniTiles(MMZSetup->aniTiles, 330, 48, MMZSetup->generatorAniFrame, 16, 32);
+        RSDK.DrawAniTiles(MMZSetup->aniTiles, 332, 64, MMZSetup->generatorAniFrame, 32, 32);
     }
 }
 
@@ -69,21 +67,20 @@ void MMZSetup_Create(void *data) {}
 
 void MMZSetup_StageLoad(void)
 {
-    MMZSetup->aniTiles      = RSDK.LoadSpriteSheet("MMZ/AniTiles.gif", SCOPE_STAGE);
+    MMZSetup->aniTiles = RSDK.LoadSpriteSheet("MMZ/AniTiles.gif", SCOPE_STAGE);
+
     Animals->animalTypes[0] = ANIMAL_CUCKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;
 
     if (Zone->actID) {
-        RSDK.GetTileLayer(0)->scrollPos = 0x1800000;
-        RSDK.GetTileLayer(1)->scrollPos = 0x1800000;
+        RSDK.GetTileLayer(0)->scrollPos = 384 << 16;
+        RSDK.GetTileLayer(1)->scrollPos = 384 << 16;
 
 #if RETRO_USE_PLUS
-        for (int32 i = 3; i < 5; ++i) {
-            RSDK.GetTileLayer(i)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
-        }
+        for (int32 l = 3; l < 5; ++l) RSDK.GetTileLayer(l)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
 #endif
 
-        MMZSetup->aniTileDelay2 = 16;
+        MMZSetup->panelAniDuration = 16;
         if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x73C0000, 0x2C0000, 0x1040000, 0x82C0000)) {
             Zone->cameraBoundsB[0] = 2092;
             Zone->cameraBoundsB[1] = 2092;
@@ -104,8 +101,9 @@ void MMZSetup_StageLoad(void)
     else {
         if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
             Zone->forcePlayerOnScreen = true;
-            Zone->stageFinishCallback     = MMZSetup_StageFinishCB_Act1;
+            Zone->stageFinishCallback = MMZSetup_StageFinishCB_Act1;
         }
+
         Zone->cameraBoundsB[0] = 5120;
         Zone->cameraBoundsB[1] = 5120;
         Zone->cameraBoundsB[2] = 5120;
@@ -126,6 +124,7 @@ void MMZSetup_StageFinishCB_Act1(void)
     Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
+
 #if RETRO_USE_PLUS
 void MMZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(MMZ2Outro, NULL, 0, 0); }
 #endif

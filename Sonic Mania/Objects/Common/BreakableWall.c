@@ -57,6 +57,7 @@ void BreakableWall_Create(void *data)
     }
     else {
         self->drawFX |= FX_FLIP;
+
         if (!SceneInfo->inEditor) {
             self->visible       = false;
             self->drawOrder     = Zone->objectDrawHigh;
@@ -64,17 +65,19 @@ void BreakableWall_Create(void *data)
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             self->priority      = self->priority == BREAKWALL_PRIO_HIGH ? Zone->fgHigh : Zone->fgLow;
-            self->size.y >>= 0x10;
+
             self->size.x >>= 0x10;
+            self->size.y >>= 0x10;
 
             switch (self->type) {
                 case BREAKWALL_TYPE_SIDES:
-                    self->state     = BreakableWall_State_BreakableSides;
-                    self->stateDraw = BreakableWall_Draw_Outline_Sides;
                     if (!self->size.x) {
                         self->size.x = 2;
                         self->size.y = 4;
                     }
+
+                    self->state     = BreakableWall_State_BreakableSides;
+                    self->stateDraw = BreakableWall_Draw_Outline_Sides;
                     break;
 
                 case BREAKWALL_TYPE_TOP:
@@ -82,6 +85,7 @@ void BreakableWall_Create(void *data)
                         self->size.x = 2;
                         self->size.y = 2;
                     }
+
                     self->state     = BreakableWall_State_Top;
                     self->stateDraw = BreakableWall_Draw_Outline;
                     break;
@@ -90,6 +94,7 @@ void BreakableWall_Create(void *data)
                 case BREAKWALL_TYPE_TOPCHUNK_B:
                     if (!self->size.x)
                         self->size.x = 2;
+
                     self->state     = BreakableWall_State_TopChunks;
                     self->stateDraw = BreakableWall_Draw_Outline;
                     break;
@@ -97,6 +102,7 @@ void BreakableWall_Create(void *data)
                 case BREAKWALL_TYPE_BOTTOMCHUNK:
                     if (!self->size.x)
                         self->size.x = 2;
+
                     self->state     = BreakableWall_State_BottomChunks;
                     self->stateDraw = BreakableWall_Draw_Outline;
                     break;
@@ -106,6 +112,7 @@ void BreakableWall_Create(void *data)
                         self->size.x = 2;
                         self->size.y = 2;
                     }
+
                     self->state     = BreakableWall_State_BottomFull;
                     self->stateDraw = BreakableWall_Draw_Outline;
                     break;
@@ -113,12 +120,10 @@ void BreakableWall_Create(void *data)
                 default: break;
             }
 
-            int32 x             = 8 * self->size.x;
-            int32 y             = 8 * self->size.y;
-            self->hitbox.right  = x;
-            self->hitbox.left   = -x;
-            self->hitbox.bottom = y;
-            self->hitbox.top    = -y;
+            self->hitbox.left   = -(8 * self->size.x);
+            self->hitbox.top    = -(8 * self->size.y);
+            self->hitbox.right  = 8 * self->size.x;
+            self->hitbox.bottom = 8 * self->size.y;
         }
     }
 }
@@ -160,9 +165,8 @@ void BreakableWall_State_FallingTile(void)
     if (--self->timer <= 0) {
         RSDK.SetTileInfo(self->layerID, self->tilePos.x, self->tilePos.y, -1);
 
-        if (self->drawOrder < Zone->objectDrawLow) {
-            if (BreakableWall->farPlaneLayer != (uint16)-1)
-                RSDK.SetTileInfo(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, -1);
+        if (self->drawOrder < Zone->objectDrawLow && BreakableWall->farPlaneLayer != (uint16)-1) {
+            RSDK.SetTileInfo(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, -1);
         }
 
         self->state     = BreakableWall_State_Tile;
@@ -311,7 +315,9 @@ void BreakableWall_HandleTopBreak_All(void)
                             if (!canBreak)
                                 canBreak = player->animator.animationID == ANI_DROPDASH;
                             break;
+
                         case ID_KNUCKLES: canBreak = true; break;
+
 #if RETRO_USE_PLUS
                         case ID_MIGHTY:
                             if (!canBreak)
@@ -344,9 +350,8 @@ void BreakableWall_HandleTopBreak_All(void)
                                 tile->velocity.y += 40 * spd * RSDK.Sin256(angle);
                                 RSDK.SetTileInfo(self->priority, posX, posY, -1);
 
-                                if (self->drawOrder < Zone->objectDrawLow) {
-                                    if (BreakableWall->farPlaneLayer != (uint16)-1)
-                                        RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
+                                if (self->drawOrder < Zone->objectDrawLow && BreakableWall->farPlaneLayer != (uint16)-1) {
+                                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
                                 }
 
                                 blockSpeedX += 0x200000;
@@ -396,14 +401,15 @@ void BreakableWall_HandleTopBreak_Chunks(void)
 
                     switch (player->characterID) {
                         default: break;
+
                         case ID_SONIC:
                             if (!canBreak)
                                 canBreak = player->animator.animationID == ANI_DROPDASH;
                             break;
 
                         case ID_KNUCKLES: canBreak = true; break;
-#if RETRO_USE_PLUS
 
+#if RETRO_USE_PLUS
                         case ID_MIGHTY:
                             if (!canBreak)
                                 canBreak = player->state == Player_State_MightyHammerDrop;
@@ -460,6 +466,7 @@ void BreakableWall_HandleSidesBreak(void)
 
                 switch (player->characterID) {
                     default: break;
+
                     case ID_SONIC:
                         canBreak |= player->animator.animationID == ANI_DROPDASH;
                         canBreak |= player->superState == SUPERSTATE_SUPER;
@@ -474,6 +481,7 @@ void BreakableWall_HandleSidesBreak(void)
                 if (canBreak && !player->sidekick) {
                     if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                         BreakableWall_HandleBlockBreak_H(self, player->position.x > self->position.x);
+
                         if (player->characterID == ID_KNUCKLES) {
                             if (player->animator.animationID == ANI_FLY) {
                                 player->abilitySpeed -= player->abilitySpeed >> 2;
@@ -556,16 +564,19 @@ void BreakableWall_HandleBottomBreak_All(void)
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
                     player->onGround = false;
-                    int32 tx         = self->position.x - (self->size.x << 19) + 0x80000;
-                    int32 tw         = self->position.x - (self->size.x << 19) + 0x80000;
-                    int32 ty         = self->position.y - (self->size.y << 19) + 0x80000;
-                    int32 th         = (self->size.y << 19) + self->position.y;
-                    int32 offsetY    = ty - th;
+
+                    int32 tx      = self->position.x - (self->size.x << 19) + 0x80000;
+                    int32 tw      = self->position.x - (self->size.x << 19) + 0x80000;
+                    int32 ty      = self->position.y - (self->size.y << 19) + 0x80000;
+                    int32 th      = (self->size.y << 19) + self->position.y;
+                    int32 offsetY = ty - th;
+
                     for (int32 y = 0; y < self->size.y; ++y) {
                         int32 posY        = ty >> 20;
                         int32 speed       = 3 * abs(offsetY);
                         int32 offsetX     = tx - self->position.x;
                         int32 blockSpeedX = 2 * (tx - self->position.x);
+
                         for (int32 x = 0; x < self->size.x; ++x) {
                             int32 posX                = tx >> 20;
                             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, ty);
@@ -611,6 +622,7 @@ void BreakableWall_HandleBlockBreak_V(void)
     int32 sizeY = self->size.y;
     int32 posX  = self->position.x;
     int32 posY  = self->position.y;
+
     if (self->state == BreakableWall_State_BottomChunks) {
         if (sizeY > 2)
             self->size.y = 2;
@@ -633,6 +645,7 @@ void BreakableWall_HandleBlockBreak_V(void)
         int32 tileY  = curY >> 20;
         int32 angleX = 2 * distX;
         int32 speed  = 3 * abs(distY);
+
         for (int32 x = 0; x < self->size.x; ++x) {
             int32 tileX               = tx >> 20;
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, curY);
@@ -653,6 +666,7 @@ void BreakableWall_HandleBlockBreak_V(void)
             distX += 0x100000;
             angleX += 0x200000;
         }
+
         curY += 0x100000;
         distY += 0x100000;
     }
@@ -669,6 +683,7 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction
     int32 startY = wall->position.y;
     int32 endX   = wall->position.x - (wall->size.x << 19) + 0x80000;
     int32 endY   = wall->position.y - (wall->size.y << 19) + 0x80000;
+
     switch (direction) {
         case FLIP_NONE: startX += wall->size.x << 19; break;
         case FLIP_X: startX -= wall->size.x << 19; break;
@@ -682,6 +697,7 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction
         int32 curX   = endX - startX;
         int32 tileY  = (curY + startY) >> 20;
         int32 angleX = 2 * (endX - startX);
+
         for (int32 x = 0; x < wall->size.x; ++x) {
             int32 tileX               = (curX + startX) >> 20;
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), curX + startX, curY + startY);
@@ -702,6 +718,7 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction
                     else {
                         angle2 = RSDK.ATan2(curX, curY);
                     }
+
                     tile->velocity.x = direction == FLIP_NONE ? -0x10000 : 0x10000;
                     tile->velocity.y = 0x10000;
                     tile->velocity.x += 40 * (((wall->size.y << 19) + 3 * abs(curX) - abs(curY)) >> 18) * RSDK.Cos256(angle);
@@ -713,6 +730,7 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction
                     int32 angle = RSDK.ATan2(angleX, curY);
                     tile->velocity.x += 40 * ((abs(curX) + 3 * abs(curY)) >> 18) * RSDK.Cos256(angle);
                     tile->velocity.y += 40 * ((abs(curX) + 3 * abs(curY)) >> 18) * RSDK.Sin256(angle);
+                    break;
                 }
             }
 
@@ -721,9 +739,11 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction
                 if (BreakableWall->farPlaneLayer != (uint16)-1)
                     RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
+
             curX += 0x10 << 16;
             angleX += 0x200000;
         }
+
         curY += 0x10 << 16;
     }
 }
@@ -807,6 +827,7 @@ void BreakableWall_EditorDraw(void)
 
         default: break;
     }
+
     sizeX <<= 4;
     sizeY <<= 4;
 

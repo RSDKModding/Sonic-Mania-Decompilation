@@ -213,20 +213,20 @@ void MatryoshkaBom_State_Walk(void)
         self->state = MatryoshkaBom_State_Stopped;
     }
     else {
-        bool32 collided = false;
+        bool32 shouldTurn = false;
         if (self->velocity.x <= 0)
-            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
+            shouldTurn = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
         else
-            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
+            shouldTurn = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
 
-        if (!collided) {
+        if (!shouldTurn) {
             if (self->direction & FLIP_Y)
-                collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -self->offsetY, 8);
+                shouldTurn = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -self->offsetY, 8) == false;
             else
-                collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->offsetY, 8);
+                shouldTurn = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->offsetY, 8) == false;
         }
 
-        if (!collided) {
+        if (shouldTurn) {
             self->timer = 60;
             self->state = MatryoshkaBom_State_Stopped;
             switch (self->size) {
