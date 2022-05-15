@@ -12,6 +12,7 @@ ObjectPuyoMatch *PuyoMatch;
 void PuyoMatch_Update(void)
 {
     RSDK_THIS(PuyoMatch);
+
     StateMachine_Run(self->state);
 }
 
@@ -25,8 +26,8 @@ void PuyoMatch_StaticUpdate(void)
 void PuyoMatch_Draw(void)
 {
     RSDK_THIS(PuyoMatch);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     if (SceneInfo->currentDrawGroup != Zone->hudDrawOrder) {
         drawPos.x = self->position.x;
         drawPos.y = self->position.y - 0x80000;
@@ -45,15 +46,17 @@ void PuyoMatch_Create(void *data)
     RSDK_THIS(PuyoMatch);
 
     if (!SceneInfo->inEditor) {
-        self->active          = ACTIVE_BOUNDS;
-        self->visible         = true;
-        self->drawOrder       = Zone->objectDrawLow;
-        self->updateRange.x   = 0x800000;
-        self->updateRange.y   = 0x800000;
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawOrder     = Zone->objectDrawLow;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+
         self->stateInput      = PuyoBean_StateInput_HandlePlayerInputs;
         self->comboBonusTable = PuyoMatch->comboBonus;
         self->beanDropPos     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode)->position;
         self->timer           = 60;
+
         RSDK.SetSpriteAnimation(PuyoMatch->aniFrames, 1, &self->lightAnimator, true, 0);
     }
 }
@@ -80,6 +83,7 @@ void PuyoMatch_SetupNextBeans(EntityPuyoMatch *match)
 {
     int32 left  = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
     int32 right = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
+
     RSDK.SetSpriteAnimation(PuyoBean->aniFrames, left, &match->beanLAnimator, true, 0);
     RSDK.SetSpriteAnimation(PuyoBean->aniFrames, right, &match->beanRAnimator, true, 0);
 }
@@ -91,24 +95,26 @@ void PuyoMatch_DropNextBeans(void)
     if (!self->beanLAnimator.frameDuration)
         PuyoMatch_SetupNextBeans(self);
 
-    EntityPuyoBean *bean1 = CREATE_ENTITY(PuyoBean, intToVoid(self->beanLAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
-    EntityPuyoBean *bean2 = CREATE_ENTITY(PuyoBean, intToVoid(self->beanRAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
+    EntityPuyoBean *partnerBean = CREATE_ENTITY(PuyoBean, intToVoid(self->beanLAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
+    EntityPuyoBean *bean        = CREATE_ENTITY(PuyoBean, intToVoid(self->beanRAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
+
     PuyoMatch_SetupNextBeans(self);
-    bean1->playerID           = self->playerID;
-    bean1->partner            = bean2;
-    bean1->beanAnimator.speed = 0;
-    bean1->controllerID       = self->playerID + 1;
-    bean1->state              = PuyoBean_State_PartnerControlled;
 
-    bean2->playerID      = self->playerID;
-    bean2->partner       = bean1;
-    bean2->controllerID  = self->playerID + 1;
-    bean2->state         = PuyoBean_State_Controlled;
-    bean2->selectedLevel = self->selectedLevel;
-    bean2->stateInput    = self->stateInput;
-    bean2->position.y += 0x100000;
+    partnerBean->playerID           = self->playerID;
+    partnerBean->partner            = bean;
+    partnerBean->beanAnimator.speed = 0;
+    partnerBean->controllerID       = self->playerID + 1;
+    partnerBean->state              = PuyoBean_State_PartnerControlled;
 
-    self->beanPtr                             = bean2;
+    bean->playerID      = self->playerID;
+    bean->partner       = partnerBean;
+    bean->controllerID  = self->playerID + 1;
+    bean->state         = PuyoBean_State_Controlled;
+    bean->selectedLevel = self->selectedLevel;
+    bean->stateInput    = self->stateInput;
+    bean->position.y += 0x100000;
+
+    self->beanPtr                             = bean;
     PuyoBean->comboChainCount[self->playerID] = 0;
 }
 
@@ -131,9 +137,7 @@ void PuyoMatch_DropJunkBeans(void)
         }
     }
 
-    count = minVal(count, 30);
-    if (count > self->junkBeanCount)
-        count = self->junkBeanCount;
+    count = clampVal(count, 30, self->junkBeanCount);
     self->junkBeanCount -= count;
     self->junkDropCount -= count << 8;
 
@@ -162,8 +166,8 @@ void PuyoMatch_DropJunkBeans(void)
 void PuyoMatch_DrawJunkBeanPreviews(void)
 {
     RSDK_THIS(PuyoMatch);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->beanDropPos.x - 0x280000;
     drawPos.y = self->beanDropPos.y + 0x140000;
 
@@ -265,7 +269,7 @@ void PuyoMatch_State_HandleCombos(void)
     if (++self->comboCount == 3 && self->stateInput == PuyoBean_StateInput_HandlePlayerInputs)
         API_UnlockAchievement("ACH_CPZ");
 
-    uint8 comboColors         = 0;
+    uint8 comboColors          = 0;
     EntityPuyoBean *targetBean = NULL;
     foreach_active(PuyoBean, bean)
     {
@@ -353,18 +357,22 @@ void PuyoMatch_State_Lose(void)
 
         RSDK.SetSpriteAnimation(-1, 0, &self->beanLAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->beanRAnimator, true, 0);
-        StateMachine_Run(self->matchFinishCB);
+
+        StateMachine_Run(self->matchWinCB);
 
         foreach_active(PuyoMatch, match)
         {
             if (match->playerID != self->playerID) {
                 RSDK.SetSpriteAnimation(-1, 0, &match->beanLAnimator, true, 0);
                 RSDK.SetSpriteAnimation(-1, 0, &match->beanRAnimator, true, 0);
+
                 StateMachine_Run(match->matchLoseCB);
+
                 if (RSDK.CheckStageFolder("CPZ"))
                     match->state = StateMachine_None;
             }
         }
+
         self->state = StateMachine_None;
     }
 }
@@ -373,6 +381,7 @@ void PuyoMatch_State_Lose(void)
 void PuyoMatch_EditorDraw(void)
 {
     RSDK_THIS(PuyoMatch);
+
     RSDK.SetSpriteAnimation(PuyoMatch->aniFrames, self->playerID ? 18 : 6, &self->unusedAnimator, false, 0);
     RSDK.DrawSprite(&self->unusedAnimator, NULL, false);
 }
@@ -382,8 +391,8 @@ void PuyoMatch_EditorLoad(void)
     PuyoMatch->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoBeans.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(PuyoMatch, playerID);
-    RSDK_ENUM_VAR("Player 1", SLOT_PLAYER1);
-    RSDK_ENUM_VAR("Player 2", SLOT_PLAYER2);
+    RSDK_ENUM_VAR("Player 1", PUYOGAME_PLAYER1);
+    RSDK_ENUM_VAR("Player 2", PUYOGAME_PLAYER2);
 }
 #endif
 

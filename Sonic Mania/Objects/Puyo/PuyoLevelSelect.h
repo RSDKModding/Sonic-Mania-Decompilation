@@ -38,7 +38,7 @@ void PuyoLevelSelect_Update(void);
 void PuyoLevelSelect_LateUpdate(void);
 void PuyoLevelSelect_StaticUpdate(void);
 void PuyoLevelSelect_Draw(void);
-void PuyoLevelSelect_Create(void* data);
+void PuyoLevelSelect_Create(void *data);
 void PuyoLevelSelect_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PuyoLevelSelect_EditorDraw(void);
@@ -50,4 +50,4 @@ void PuyoLevelSelect_Serialize(void);
 void PuyoLevelSelect_DrawSprites(void);
 void PuyoLevelSelect_HandleMenuMovement(void);
 
-#endif //!OBJ_PUYOLEVELSELECT_H
+#endif //! OBJ_PUYOLEVELSELECT_H

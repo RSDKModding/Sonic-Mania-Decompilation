@@ -135,7 +135,7 @@ typedef struct {
     LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 entryID);
 
     // Rich Presence
-    void (*SetRichPresence)(int32, String *text);
+    void (*SetRichPresence)(int32 id, String *text);
 
     // Stats
     void (*TryTrackStat)(StatInfo *stat);

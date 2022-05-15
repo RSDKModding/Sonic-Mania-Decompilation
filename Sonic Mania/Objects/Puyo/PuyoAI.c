@@ -21,11 +21,10 @@ void PuyoAI_Create(void *data) {}
 
 void PuyoAI_StageLoad(void) {}
 
-Vector2 PuyoAI_GetBeanPos(int playerID)
+Vector2 PuyoAI_GetBeanPos(int32 playerID)
 {
-    Vector2 pos;
-    pos.x = -1;
-    pos.y = -1;
+    Vector2 pos = { -1, -1 };
+
     foreach_all(PuyoBean, bean)
     {
         if (bean->stateInput && bean->state == PuyoBean_State_Controlled && bean->playerID == playerID) {
@@ -33,10 +32,11 @@ Vector2 PuyoAI_GetBeanPos(int playerID)
             pos.y = bean->stillPos.y;
         }
     }
+
     return pos;
 }
 
-void PuyoAI_PrepareAction(int playerID)
+void PuyoAI_PrepareAction(int32 playerID)
 {
     EntityPuyoBean *bean    = NULL;
     EntityPuyoBean *partner = NULL;
@@ -162,6 +162,7 @@ int PuyoAI_GetChainComboSize(int32 playerID, EntityPuyoBean *bean, EntityPuyoBea
 void PuyoAI_SetupInputs(EntityPuyoBean *bean, bool32 rotationDisabled)
 {
     bean->down = RSDK.Rand(0, 6) > 3;
+
     if (((bean->position.x - bean->origin.x) & 0xFFF00000) == 0x200000) {
         if (RSDK.Rand(0, 2)) {
             bean->left  = false;
@@ -191,6 +192,7 @@ void PuyoAI_SetupInputs(EntityPuyoBean *bean, bool32 rotationDisabled)
 void PuyoAI_Input_AI(void)
 {
     RSDK_THIS(PuyoBean);
+
     EntityPuyoBean *partner = self->partner;
 
     self->left        = false;
@@ -221,13 +223,9 @@ void PuyoAI_Input_AI(void)
                     PuyoAI_PrepareAction(self->playerID);
 
                     uint8 currentRotation = 0;
-                    if (self->stillPos.y == partner->stillPos.y) {
-                        if (self->stillPos.x >= partner->stillPos.x) {
-                            if (self->stillPos.y == partner->stillPos.y) {
-                                if (self->stillPos.x > partner->stillPos.x) {
-                                    currentRotation = 2;
-                                }
-                            }
+                    if (self->stillPos.y == partner->stillPos.y && self->stillPos.x >= partner->stillPos.x) {
+                        if (self->stillPos.y == partner->stillPos.y && self->stillPos.x > partner->stillPos.x) {
+                            currentRotation = 2;
                         }
                     }
 
@@ -259,9 +257,10 @@ void PuyoAI_Input_AI(void)
                     if (canMove) {
                         self->left  = beanPos.x > PuyoAI->desiredColumn[self->playerID];
                         self->right = beanPos.x < PuyoAI->desiredColumn[self->playerID];
+
                         if (!targetRotation && !self->left && !self->right && beanPos.x == PuyoAI->desiredColumn[self->playerID])
                             self->down = true;
-                        else 
+                        else
                             self->down = false;
                     }
                 }

@@ -15,14 +15,14 @@ struct UserRichPresence {
     virtual void StageLoad(void) {}
     virtual void FrameInit(void) {}
     virtual void OnUnknownEvent(void) {}
-    virtual void SetPresence(byte id, String *message) {}
+    virtual void SetPresence(int32 id, String *message) {}
 
     int curID = 0;
 };
 
 extern UserRichPresence *richPresence;
 
-inline void SetPresence(byte id, String *message) { richPresence->SetPresence(id, message); }
+inline void SetPresence(int32 id, String *message) { richPresence->SetPresence(id, message); }
 #endif
 
 } // namespace SKU

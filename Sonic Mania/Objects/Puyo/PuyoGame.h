@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PUYOGAME_PLAYER1,
+    PUYOGAME_PLAYER2,
+} PuyoGamePlayerIDs;
+
 // Object Class
 struct ObjectPuyoGame {
     RSDK_OBJECT
@@ -42,7 +47,7 @@ void PuyoGame_Update(void);
 void PuyoGame_LateUpdate(void);
 void PuyoGame_StaticUpdate(void);
 void PuyoGame_Draw(void);
-void PuyoGame_Create(void* data);
+void PuyoGame_Create(void *data);
 void PuyoGame_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PuyoGame_EditorDraw(void);
@@ -66,4 +71,4 @@ void PuyoGame_State_ShowRoundResults(void);
 void PuyoGame_State_ShowMatchResults(void);
 void PuyoGame_State_FadeToMenu(void);
 
-#endif //!OBJ_PUYOGAME_H
+#endif //! OBJ_PUYOGAME_H

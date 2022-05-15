@@ -246,7 +246,7 @@ void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                         dataPos = tmp + sizeof(bool32) * arraySize;
                         break;
 
-                    case SVAR_PTR:
+                    case SVAR_POINTER:
                         tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
                         if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
@@ -254,7 +254,7 @@ void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                         dataPos = tmp + sizeof(void *) * arraySize; // 4/8
                         break;
 
-                    case SVAR_VEC2:
+                    case SVAR_VECTOR2:
                         tmp = (dataPos & -(int32)sizeof(int32)) + sizeof(int32);
                         if ((dataPos & -(int32)sizeof(int32)) >= dataPos)
                             tmp = dataPos;
@@ -262,7 +262,7 @@ void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                         dataPos = tmp + sizeof(Vector2) * arraySize; // 8
                         break;
 
-                    case SVAR_TEXT:
+                    case SVAR_STRING:
                         tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
                         if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
                             tmp = dataPos;

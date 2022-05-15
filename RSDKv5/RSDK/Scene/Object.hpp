@@ -23,7 +23,7 @@
 // Used for DefaultObject & DevOutput
 #define RSDK_THIS(class) Entity##class *self = (Entity##class *)sceneInfo.entity
 
-enum StaticObjectTypes {
+enum StaticVariableTypes {
     SVAR_UINT8,
     SVAR_UINT16,
     SVAR_UINT32,
@@ -31,9 +31,9 @@ enum StaticObjectTypes {
     SVAR_INT16,
     SVAR_INT32,
     SVAR_BOOL,
-    SVAR_PTR,
-    SVAR_VEC2,
-    SVAR_TEXT,
+    SVAR_POINTER,
+    SVAR_VECTOR2,
+    SVAR_STRING,
     SVAR_ANIMATOR,
     SVAR_HITBOX,
     SVAR_UNKNOWN,

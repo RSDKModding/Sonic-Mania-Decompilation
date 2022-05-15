@@ -1,7 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
 #if RETRO_REV02
-void RSDK::SKU::DummyRichPresence::SetPresence(byte id, String *message)
+void RSDK::SKU::DummyRichPresence::SetPresence(int32 id, String *message)
 {
     char buffer[0xFF];
     GetCString(buffer, message);

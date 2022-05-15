@@ -20,7 +20,7 @@ struct EntityPuyoMatch {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateInput);
-    StateMachine(matchFinishCB);
+    StateMachine(matchWinCB);
     StateMachine(matchLoseCB);
     int32 playerID;
     int32 score;
@@ -52,7 +52,7 @@ void PuyoMatch_Update(void);
 void PuyoMatch_LateUpdate(void);
 void PuyoMatch_StaticUpdate(void);
 void PuyoMatch_Draw(void);
-void PuyoMatch_Create(void* data);
+void PuyoMatch_Create(void *data);
 void PuyoMatch_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PuyoMatch_EditorDraw(void);
@@ -72,4 +72,4 @@ void PuyoMatch_State_HandleCombos(void);
 void PuyoMatch_State_HandleComboEnd(void);
 void PuyoMatch_State_Lose(void);
 
-#endif //!OBJ_PUYOMATCH_H
+#endif //! OBJ_PUYOMATCH_H

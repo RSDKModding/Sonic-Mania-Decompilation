@@ -18,17 +18,20 @@ void PuyoLabel_StaticUpdate(void) {}
 void PuyoLabel_Draw(void)
 {
     RSDK_THIS(PuyoLabel);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PuyoLabel_Create(void *data)
 {
     RSDK_THIS(PuyoLabel);
+
     self->active        = ACTIVE_NORMAL;
     self->drawOrder     = 10;
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     RSDK.SetSpriteAnimation(PuyoLabel->aniFrames, self->listID, &self->animator, true, self->frame);
 }
 
@@ -38,6 +41,7 @@ void PuyoLabel_StageLoad(void) { PuyoLabel->aniFrames = RSDK.LoadSpriteAnimation
 void PuyoLabel_EditorDraw(void)
 {
     RSDK_THIS(PuyoLabel);
+
     RSDK.SetSpriteAnimation(PuyoLabel->aniFrames, self->listID, &self->animator, true, self->frame);
 
     PuyoLabel_Draw();

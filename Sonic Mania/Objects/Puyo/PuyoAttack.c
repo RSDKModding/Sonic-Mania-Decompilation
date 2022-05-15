@@ -21,9 +21,10 @@ void PuyoAttack_Update(void)
     }
 
     RSDK.ProcessAnimation(&self->animator);
-    int32 angle = RSDK.ATan2((self->targetPos.x - self->position.x) >> 16, (self->targetPos.y - self->position.y) >> 16);
-    int32 rot   = 2 * angle;
-    int32 targetRotation   = rot - self->rotation;
+
+    int32 angle          = RSDK.ATan2((self->targetPos.x - self->position.x) >> 16, (self->targetPos.y - self->position.y) >> 16);
+    int32 rot            = 2 * angle;
+    int32 targetRotation = rot - self->rotation;
 
     if (abs(rot - self->rotation) >= abs(targetRotation - 0x200)) {
         if (abs(targetRotation - 0x200) < abs(targetRotation + 0x200))
@@ -31,10 +32,12 @@ void PuyoAttack_Update(void)
         else
             self->rotation += ((targetRotation + 0x200) >> 3);
     }
-    else if (abs(rot - self->rotation) >= abs(targetRotation + 0x200))
-        self->rotation += ((targetRotation + 0x200) >> 3);
-    else
-        self->rotation += (targetRotation >> 3);
+    else {
+        if (abs(rot - self->rotation) >= abs(targetRotation + 0x200))
+            self->rotation += ((targetRotation + 0x200) >> 3);
+        else
+            self->rotation += (targetRotation >> 3);
+    }
 
     self->rotation &= 0x1FF;
     self->position.x += self->radius * RSDK.Cos512(self->rotation);
@@ -56,22 +59,22 @@ void PuyoAttack_StaticUpdate(void) {}
 void PuyoAttack_Draw(void)
 {
     RSDK_THIS(PuyoAttack);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PuyoAttack_Create(void *data)
 {
     RSDK_THIS(PuyoAttack);
+
     if (!SceneInfo->inEditor) {
         self->delay     = 16;
         self->radius    = 512;
         self->drawOrder = Zone->hudDrawOrder;
-        self->playerID  = voidToInt(data);
-        if (!self->playerID)
-            self->rotation = 0x40;
-        else
-            self->rotation = 0x140;
-        self->active = ACTIVE_NORMAL;
+
+        self->playerID = voidToInt(data);
+        self->rotation = self->playerID ? 0x140 : 0x40;
+        self->active   = ACTIVE_NORMAL;
         RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, self->playerID ^ 1, &self->animator, true, 0);
     }
 }
@@ -79,6 +82,7 @@ void PuyoAttack_Create(void *data)
 void PuyoAttack_StageLoad(void)
 {
     PuyoAttack->aniFrames = RSDK.LoadSpriteAnimation("Puyo/Combos.bin", SCOPE_STAGE);
+
     PuyoAttack->sfxAttack = RSDK.GetSfx("Puyo/Attack.wav");
 }
 

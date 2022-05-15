@@ -18,7 +18,7 @@ struct ObjectPuyoAI {
 
 // Entity Class
 struct EntityPuyoAI {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -29,7 +29,7 @@ void PuyoAI_Update(void);
 void PuyoAI_LateUpdate(void);
 void PuyoAI_StaticUpdate(void);
 void PuyoAI_Draw(void);
-void PuyoAI_Create(void* data);
+void PuyoAI_Create(void *data);
 void PuyoAI_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PuyoAI_EditorDraw(void);
@@ -44,4 +44,4 @@ int PuyoAI_GetChainComboSize(int32 playerID, EntityPuyoBean *bean, EntityPuyoBea
 void PuyoAI_SetupInputs(EntityPuyoBean *bean, bool32 rotationDisabled);
 void PuyoAI_Input_AI(void);
 
-#endif //!OBJ_PUYOAI_H
+#endif //! OBJ_PUYOAI_H

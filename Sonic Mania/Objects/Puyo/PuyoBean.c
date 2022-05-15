@@ -12,6 +12,7 @@ ObjectPuyoBean *PuyoBean;
 void PuyoBean_Update(void)
 {
     RSDK_THIS(PuyoBean);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,6 +24,7 @@ void PuyoBean_StaticUpdate(void)
 
     if (--PuyoBean->shinkDelay <= 0) {
         PuyoBean->shinkDelay = 15 * RSDK.Rand(1, 24);
+
         RSDK.SetSpriteAnimation(PuyoBean->aniFrames, PUYOBEAN_JUNK + PUYOBEAN_ANI_BOUNCE, &PuyoBean->junkBeanAnimator, true, 0);
     }
 }
@@ -43,23 +45,21 @@ void PuyoBean_Create(void *data)
 {
     RSDK_THIS(PuyoBean);
     if (!SceneInfo->inEditor) {
-        self->visible = true;
-        if (PuyoGame)
-            self->drawOrder = Zone->objectDrawLow;
-        else
-            self->drawOrder = Zone->objectDrawHigh;
-
+        self->visible       = true;
+        self->drawOrder     = PuyoGame ? Zone->objectDrawLow : Zone->objectDrawHigh;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->angle         = 0xC0;
-        self->position.x    = (self->position.x & 0xFFF00000) + 0x80000;
-        self->position.y    = (self->position.y & 0xFFF00000) + 0x80000;
-        self->origin.x      = self->position.x - 0x280000;
-        self->origin.y      = self->position.y - 0x80000;
-        self->controllerID  = 1;
-        self->type          = voidToInt(data);
-        if (self->type == 30)
+
+        self->angle        = 0xC0;
+        self->position.x   = (self->position.x & 0xFFF00000) + 0x80000;
+        self->position.y   = (self->position.y & 0xFFF00000) + 0x80000;
+        self->origin.x     = self->position.x - 0x280000;
+        self->origin.y     = self->position.y - 0x80000;
+        self->controllerID = CONT_P1;
+
+        self->type = voidToInt(data);
+        if (self->type == PUYOBEAN_JUNK)
             self->isJunk = true;
 
         RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type, &self->beanAnimator, true, 0);
@@ -120,14 +120,17 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
                             ControllerInfo->keyRight.down |= true;
                             ControllerInfo[self->controllerID].keyRight.down = true;
                             break;
+
                         case 1:
                             ControllerInfo->keyDown.down |= true;
                             ControllerInfo[self->controllerID].keyDown.down = true;
                             break;
+
                         case 2:
                             ControllerInfo->keyLeft.down |= true;
                             ControllerInfo[self->controllerID].keyLeft.down = true;
                             break;
+
                         case 3:
                             ControllerInfo->keyUp.down |= true;
                             ControllerInfo[self->controllerID].keyUp.down = true;
@@ -222,6 +225,7 @@ void PuyoBean_DestroyPuyoBeans(void)
         if (bean->stateInput && bean->state == PuyoBean_State_Controlled) {
             if (bean->partner)
                 destroyEntity(bean->partner);
+
             destroyEntity(bean);
         }
     }
@@ -239,11 +243,9 @@ void PuyoBean_HandleBeanLinks(void)
         self->linkBeans[0] = NULL;
         if (ny > -1) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, ny);
-            if (bean) {
-                if (bean->type == self->type) {
-                    self->linkSides |= 1;
-                    self->linkBeans[0] = bean;
-                }
+            if (bean && bean->type == self->type) {
+                self->linkSides |= 1;
+                self->linkBeans[0] = bean;
             }
         }
 
@@ -251,11 +253,9 @@ void PuyoBean_HandleBeanLinks(void)
         self->linkBeans[1] = NULL;
         if (ny < PUYO_PLAYFIELD_H) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, ny);
-            if (bean) {
-                if (bean->type == self->type) {
-                    self->linkSides |= 2;
-                    self->linkBeans[1] = bean;
-                }
+            if (bean && bean->type == self->type) {
+                self->linkSides |= 2;
+                self->linkBeans[1] = bean;
             }
         }
 
@@ -263,11 +263,9 @@ void PuyoBean_HandleBeanLinks(void)
         self->linkBeans[2] = NULL;
         if (nx > -1) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, nx, self->stillPos.y);
-            if (bean) {
-                if (bean->type == self->type) {
-                    self->linkSides |= 4;
-                    self->linkBeans[2] = bean;
-                }
+            if (bean && bean->type == self->type) {
+                self->linkSides |= 4;
+                self->linkBeans[2] = bean;
             }
         }
 
@@ -275,11 +273,9 @@ void PuyoBean_HandleBeanLinks(void)
         self->linkBeans[3] = NULL;
         if (nx < PUYO_PLAYFIELD_W) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, nx, self->stillPos.y);
-            if (bean) {
-                if (bean->type == self->type) {
-                    self->linkSides |= 8;
-                    self->linkBeans[3] = bean;
-                }
+            if (bean && bean->type == self->type) {
+                self->linkSides |= 8;
+                self->linkBeans[3] = bean;
             }
         }
     }
@@ -292,12 +288,14 @@ void PuyoBean_CheckBeanLinks(EntityPuyoBean *bean, EntityPuyoBean *curLink)
     EntityPuyoBean **linkBeans = bean->linkBeans;
     for (int32 i = 0; i < 4; ++i) {
         EntityPuyoBean *link = bean->linkBeans[i];
+
         if (link && link != curLink) {
             if (++self->linkCount > 2) // Beans can only be connected on 2 axis at a time
                 return;
 
             PuyoBean_CheckBeanLinks(link, bean);
         }
+
         ++linkBeans;
     }
 }
@@ -350,6 +348,7 @@ void PuyoBean_HandleMoveBounds(void)
     self->stillPos.y    = entityY;
     partner->stillPos.x = partnerX;
     partner->stillPos.y = partnerY;
+
     self->position.x += self->stillPos.x << 20;
     self->position.y += self->stillPos.y << 20;
 }
@@ -392,6 +391,7 @@ void PuyoBean_CheckCollisions(void)
 
     if (self->position.x - self->origin.x != self->stillPos.x << 20) {
         int32 nx = self->stillPos.x - 1;
+
         if (self->stillPos.x <= 0 || PuyoBean_GetPuyoBean(self->playerID, nx, self->stillPos.y)) {
             self->left     = false;
             wallCollisions = 1;
@@ -410,6 +410,7 @@ void PuyoBean_CheckCollisions(void)
                 else if (self->rotateLeft)
                     self->forceRotateRight = true;
             }
+
             self->rotateRight = false;
             self->rotateLeft  = false;
         }
@@ -418,6 +419,7 @@ void PuyoBean_CheckCollisions(void)
     if (partner->position.x - partner->origin.x != partner->stillPos.x << 20) {
         if (partner->stillPos.x >= 1) {
             int32 nx = partner->stillPos.x - 1;
+
             if (PuyoBean_GetPuyoBean(self->playerID, nx, partner->stillPos.y)) {
                 self->left = false;
             }
@@ -437,6 +439,7 @@ void PuyoBean_CheckCollisions(void)
 
     if (self->position.y & 0xF0000) {
         int32 ny = self->stillPos.y + 1;
+
         if (self->stillPos.y == 13 || PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, ny)) {
             self->onGround = true;
         }
@@ -444,6 +447,7 @@ void PuyoBean_CheckCollisions(void)
 
     if (partner->position.y & 0xF0000) {
         int32 ny = partner->stillPos.y + 1;
+
         if (partner->stillPos.y == 13 || PuyoBean_GetPuyoBean(self->playerID, partner->stillPos.x, ny)) {
             partner->onGround = true;
         }
@@ -480,18 +484,22 @@ int PuyoBean_GetBeanChainRemovalCount(int32 playerID, EntityPuyoBean *bean, int3
 
         for (int32 b = 0; b < PuyoBean->beanLinkCount; ++b) {
             Vector2 positions[4];
+
             positions[0].x = PuyoBean->beanLinkPositions[b].x - 1;
             positions[0].y = PuyoBean->beanLinkPositions[b].y;
+
             positions[1].x = PuyoBean->beanLinkPositions[b].x + 1;
             positions[1].y = PuyoBean->beanLinkPositions[b].y;
+
             positions[2].x = PuyoBean->beanLinkPositions[b].x;
             positions[2].y = PuyoBean->beanLinkPositions[b].y - 1;
+
             positions[3].x = PuyoBean->beanLinkPositions[b].x;
             positions[3].y = PuyoBean->beanLinkPositions[b].y + 1;
 
-            for (int32 x = 0; x < 4; ++x) {
-                int32 bx = positions[i].x;
-                int32 by = positions[i].y;
+            for (int32 p = 0; p < 4; ++p) {
+                int32 bx = positions[p].x;
+                int32 by = positions[p].y;
 
                 beanState = PuyoBean_GetPuyoBean(playerID, bx, by);
                 if (beanState && !PuyoBean->beanLinkTable[bx + PUYO_PLAYFIELD_W * by]) {
@@ -524,9 +532,9 @@ int PuyoBean_GetAvaliableLinks(int32 playerID, EntityPuyoBean *bean, int32 x, in
         EntityPuyoBean *beanState = PuyoBean_GetPuyoBean(playerID, bx, by);
         if (beanState && beanState->type != bean->type) {
             PuyoBean_SetupBeanLinkTable(playerID, bx, by, true);
-            if (PuyoBean->beanLinkCount >= 3) {
-                if (!PuyoBean_CheckLinkPosAvaliable(playerID, x, y))
-                    avaliableLinks++;
+
+            if (PuyoBean->beanLinkCount >= 3 && !PuyoBean_CheckLinkPosAvaliable(playerID, x, y)) {
+                avaliableLinks++;
             }
         }
     }
@@ -541,12 +549,16 @@ bool32 PuyoBean_CheckLinkPosAvaliable(int32 playerID, int32 x, int32 y)
 
     for (int32 b = 0; b < PuyoBean->beanLinkCount; ++b) {
         Vector2 possibleLinks[4];
+
         possibleLinks[0].x = PuyoBean->beanLinkPositions[b].x - 1;
         possibleLinks[0].y = PuyoBean->beanLinkPositions[b].y;
+
         possibleLinks[1].x = PuyoBean->beanLinkPositions[b].x + 1;
         possibleLinks[1].y = PuyoBean->beanLinkPositions[b].y;
+
         possibleLinks[2].x = PuyoBean->beanLinkPositions[b].x;
         possibleLinks[2].y = PuyoBean->beanLinkPositions[b].y - 1;
+
         possibleLinks[3].x = PuyoBean->beanLinkPositions[b].x;
         possibleLinks[3].y = PuyoBean->beanLinkPositions[b].y + 1;
 
@@ -556,6 +568,7 @@ bool32 PuyoBean_CheckLinkPosAvaliable(int32 playerID, int32 x, int32 y)
 
             if (!beanLinkTable[bx + PUYO_PLAYFIELD_W * by]) {
                 beanLinkTable[bx + PUYO_PLAYFIELD_W * by] = true;
+
                 if (bx != x || by != y) {
                     EntityPuyoBean *beanState = PuyoBean_GetPuyoBean(playerID, bx, by);
                     if (bx >= 0 && by >= 0 && bx <= (PUYO_PLAYFIELD_W - 1) && by <= (PUYO_PLAYFIELD_H - 1) && !beanState)
@@ -573,9 +586,7 @@ void PuyoBean_SetupBeanLinkTable(int32 playerID, int32 x, int32 y, bool32 useTem
     bool32 tempBeanLinkTable[0x101];
     memset(tempBeanLinkTable, 0, sizeof(tempBeanLinkTable));
 
-    bool32 *beanLinkTable = PuyoBean->beanLinkTable;
-    if (useTempTable)
-        beanLinkTable = tempBeanLinkTable;
+    bool32 *beanLinkTable = useTempTable ? tempBeanLinkTable : PuyoBean->beanLinkTable;
 
     if (!beanLinkTable[x + PUYO_PLAYFIELD_W * y]) {
         for (int32 i = 0; i < (PUYO_PLAYFIELD_W * PUYO_PLAYFIELD_H); ++i) {
@@ -609,6 +620,7 @@ void PuyoBean_SetupBeanLinkTable(int32 playerID, int32 x, int32 y, bool32 useTem
                             if (!beanLinkTable[nx + PUYO_PLAYFIELD_W * by] && by >= 0 && nx <= (PUYO_PLAYFIELD_W - 1)
                                 && by <= (PUYO_PLAYFIELD_H - 1)) {
                                 curBean = PuyoBean_GetPuyoBean(playerID, nx, by);
+
                                 if (curBean && beanState->type == curBean->type) {
                                     PuyoBean->beanLinkPositions[linkCount].x   = nx;
                                     PuyoBean->beanLinkPositions[linkCount++].y = by;
@@ -620,6 +632,7 @@ void PuyoBean_SetupBeanLinkTable(int32 playerID, int32 x, int32 y, bool32 useTem
                         if (nx <= (PUYO_PLAYFIELD_W - 1)) {
                             if (!beanLinkTable[nx + PUYO_PLAYFIELD_W * by] && nx >= 0 && by >= 0 && by <= (PUYO_PLAYFIELD_H - 1)) {
                                 curBean = PuyoBean_GetPuyoBean(playerID, nx, by);
+
                                 if (curBean && beanState->type == curBean->type) {
                                     PuyoBean->beanLinkPositions[linkCount].x   = nx;
                                     PuyoBean->beanLinkPositions[linkCount++].y = by;
@@ -632,6 +645,7 @@ void PuyoBean_SetupBeanLinkTable(int32 playerID, int32 x, int32 y, bool32 useTem
                             if (!beanLinkTable[bx + PUYO_PLAYFIELD_W * ny] && bx >= 0 && bx <= (PUYO_PLAYFIELD_W - 1)
                                 && ny <= (PUYO_PLAYFIELD_H - 1)) {
                                 curBean = PuyoBean_GetPuyoBean(playerID, bx, ny);
+
                                 if (curBean && beanState->type == curBean->type) {
                                     PuyoBean->beanLinkPositions[linkCount].x   = bx;
                                     PuyoBean->beanLinkPositions[linkCount++].y = ny;
@@ -643,6 +657,7 @@ void PuyoBean_SetupBeanLinkTable(int32 playerID, int32 x, int32 y, bool32 useTem
                         if (ny <= (PUYO_PLAYFIELD_H - 1)) {
                             if (!beanLinkTable[bx + PUYO_PLAYFIELD_W * ny] && bx >= 0 && ny >= 0 && bx <= 5) {
                                 curBean = PuyoBean_GetPuyoBean(playerID, bx, ny);
+
                                 if (curBean && beanState->type == curBean->type) {
                                     PuyoBean->beanLinkPositions[linkCount].x   = bx;
                                     PuyoBean->beanLinkPositions[linkCount++].y = ny;
@@ -684,6 +699,7 @@ void PuyoBean_CalculateStillPos(EntityPuyoBean *bean)
 {
     if (bean->state == PuyoBean_State_PartnerControlled) {
         EntityPuyoBean *partner = bean->partner;
+
         switch (partner->targetAngle >> 6) {
             case 0:
                 bean->stillPos.y = partner->stillPos.y;
@@ -720,15 +736,18 @@ void PuyoBean_CalculateStillPos(EntityPuyoBean *bean)
 void PuyoBean_State_PartnerControlled(void)
 {
     RSDK_THIS(PuyoBean);
+
     RSDK.ProcessAnimation(&self->beanAnimator);
 }
 
 void PuyoBean_State_Controlled(void)
 {
     RSDK_THIS(PuyoBean);
+
     EntityPuyoBean *partner = self->partner;
 
     RSDK.ProcessAnimation(&self->beanAnimator);
+
     if (self->beanAnimator.animationID == self->type + PUYOBEAN_ANI_BOUNCE && self->beanAnimator.frameID == self->beanAnimator.frameCount - 1)
         RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type, &self->beanAnimator, true, 0);
 
@@ -736,38 +755,42 @@ void PuyoBean_State_Controlled(void)
 
     bool32 prevOnGround = self->onGround;
     PuyoBean_CheckCollisions();
-    if (self->down)
-        self->fallDelay = 1;
-    else
-        self->fallDelay = PuyoBean->fallDelays[self->selectedLevel];
+    self->fallDelay = self->down ? 1 : PuyoBean->fallDelays[self->selectedLevel];
 
     if (!self->rotateSpeed) {
         self->targetAngle         = self->angle;
         self->forceRotationActive = false;
+
         if (self->rotateRight) {
             self->rotateSpeed = -8;
 
             self->targetAngle = self->angle - 0x40;
             if (self->targetAngle < 0)
                 self->targetAngle += 0x100;
+
             RSDK.PlaySfx(PuyoBean->sfxRotate, false, 255);
         }
         else if (self->rotateLeft) {
             self->targetAngle = (self->angle + 0x40) & 0xFF;
             self->rotateSpeed = 8;
+
             RSDK.PlaySfx(PuyoBean->sfxRotate, false, 255);
         }
         else {
             if (self->forceRotateLeft) {
                 self->forceRotationActive = true;
-                self->rotateSpeed         = -8;
-                self->targetAngle         = (self->angle + 0x80) & 0xFF;
+
+                self->rotateSpeed = -8;
+                self->targetAngle = (self->angle + 0x80) & 0xFF;
+
                 RSDK.PlaySfx(PuyoBean->sfxRotate, false, 255);
             }
             else if (self->forceRotateRight) {
                 self->forceRotationActive = true;
-                self->rotateSpeed         = 8;
-                self->targetAngle         = (self->angle + 0x80) & 0xFF;
+
+                self->rotateSpeed = 8;
+                self->targetAngle = (self->angle + 0x80) & 0xFF;
+
                 RSDK.PlaySfx(PuyoBean->sfxRotate, false, 255);
             }
         }
@@ -820,8 +843,10 @@ void PuyoBean_State_Controlled(void)
             if ((self->moveTimer & 3) == 1 || (self->moveTimer & 3) == 2)
                 self->position.x += self->velocity.x;
         }
-        else if (self->moveTimer < 3)
-            self->position.x += self->velocity.x;
+        else {
+            if (self->moveTimer < 3)
+                self->position.x += self->velocity.x;
+        }
     }
 
     PuyoBean_CalculateStillPos(self);
@@ -830,10 +855,12 @@ void PuyoBean_State_Controlled(void)
 
     partner->position.x = self->position.x + (RSDK.Cos256(self->angle) << 12);
     partner->position.y = self->position.y + (RSDK.Sin256(self->angle) << 12);
+
     if (self->onGround) {
         if (!prevOnGround) {
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, partner->type + PUYOBEAN_ANI_BOUNCE, &partner->beanAnimator, false, 0);
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_BOUNCE, &self->beanAnimator, false, 0);
+
             RSDK.PlaySfx(PuyoBean->sfxLand, false, 255);
         }
         if (++self->idleTimer > 60 || self->down) {
@@ -841,8 +868,10 @@ void PuyoBean_State_Controlled(void)
             self->position.y    = ((self->origin.y + (self->stillPos.y << 20)) & 0xFFF00000) + 0x80000;
             partner->position.x = ((partner->origin.x + (partner->stillPos.x << 20)) & 0xFFF00000) + 0x80000;
             partner->position.y = ((partner->origin.y + (partner->stillPos.y << 20)) & 0xFFF00000) + 0x80000;
+
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, partner->type + PUYOBEAN_ANI_BOUNCE, &partner->beanAnimator, false, 0);
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_BOUNCE, &self->beanAnimator, false, 0);
+
             self->left        = false;
             self->right       = false;
             self->down        = false;
@@ -850,8 +879,9 @@ void PuyoBean_State_Controlled(void)
             self->rotateLeft  = false;
             self->popTimer    = 0;
             partner->popTimer = 0;
-            partner->state    = PuyoBean_State_Falling;
-            self->state       = PuyoBean_State_Falling;
+
+            partner->state = PuyoBean_State_Falling;
+            self->state    = PuyoBean_State_Falling;
         }
     }
     else {
@@ -867,10 +897,13 @@ void PuyoBean_State_BeanIdle(void)
     // Check if bean should be falling
     if (self->stillPos.y < (PUYO_PLAYFIELD_H - 1)) {
         int32 ny = self->stillPos.y + 1;
+
         if (self->stillPos.x < 0 || ny < 0 || self->stillPos.x > (PUYO_PLAYFIELD_W - 1) || ny > (PUYO_PLAYFIELD_H - 1)
             || !PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, ny)) {
             PuyoBean->playfield[128 * self->playerID + 8 * self->stillPos.y + self->stillPos.x] = NULL;
+
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_BOUNCE, &self->beanAnimator, true, 0);
+
             self->timer        = 0;
             self->velocity.y   = 0;
             self->linkBeans[0] = NULL;
@@ -893,6 +926,7 @@ void PuyoBean_State_BeanIdle(void)
         }
         else if (++self->connectTimer > 2) {
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_CONNECT, &self->beanAnimator, true, self->linkSides);
+
             self->timer        = 0;
             self->connectTimer = 0;
             self->state        = PuyoBean_State_BeginBeanPop;
@@ -911,6 +945,7 @@ void PuyoBean_State_BeanIdle(void)
                 }
                 else {
                     RSDK.ProcessAnimation(&self->beanAnimator);
+
                     if (self->beanAnimator.frameID == self->beanAnimator.frameCount - 1)
                         self->timer = RSDK.Rand(120, 240);
                 }
@@ -947,6 +982,7 @@ void PuyoBean_State_Falling(void)
         if (self->stillPos.y >= 0) {
             if (self->stillPos.y > (PUYO_PLAYFIELD_H - 1))
                 self->stillPos.y = (PUYO_PLAYFIELD_H - 1);
+
             int32 y  = self->stillPos.y;
             int32 ny = y + 1;
 
@@ -956,6 +992,7 @@ void PuyoBean_State_Falling(void)
                     self->timer         = 0;
                     int32 playfieldSlot = 128 * self->playerID + 8 * self->stillPos.y + self->stillPos.x;
                     int32 entitySlot    = 0x600 + playfieldSlot;
+
                     if (self->isJunk) {
                         PuyoBean->playfield[playfieldSlot] = RSDK_GET_ENTITY(entitySlot, PuyoBean);
                         self->state                        = PuyoBean_State_JunkLand;
@@ -983,12 +1020,12 @@ void PuyoBean_State_BeanLand(void)
     RSDK_THIS(PuyoBean);
 
     RSDK.ProcessAnimation(&self->beanAnimator);
+
     if (self->beanAnimator.frameID == self->beanAnimator.frameCount - 1) {
         EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, self->stillPos.y);
-        if (bean) {
-            if (bean != self)
-                destroyEntity(bean);
-        }
+        if (bean && bean != self)
+            destroyEntity(bean);
+
         self->timer = RSDK.Rand(120, 240);
         self->state = PuyoBean_State_BeanIdle;
     }
@@ -1001,6 +1038,7 @@ void PuyoBean_State_JunkLand(void)
     if (++self->timer == 2) {
         self->timer = 0;
         self->state = PuyoBean_State_JunkIdle;
+
         PuyoBean_CalculateStillPos(self);
     }
 }
@@ -1016,10 +1054,9 @@ void PuyoBean_State_JunkIdle(void)
         int32 y = self->stillPos.y - 1;
         if (self->stillPos.x >= 0 && y >= 0 && self->stillPos.x <= (PUYO_PLAYFIELD_W - 1) && y <= (PUYO_PLAYFIELD_H - 1)) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, y);
-            if (bean) {
-                if (bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
-                    popJunk = true;
-            }
+
+            if (bean && bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
+                popJunk = true;
         }
     }
 
@@ -1028,10 +1065,8 @@ void PuyoBean_State_JunkIdle(void)
         int32 y = self->stillPos.y + 1;
         if (self->stillPos.x >= 0 && y >= 0 && self->stillPos.x <= (PUYO_PLAYFIELD_W - 1) && y <= (PUYO_PLAYFIELD_H - 1)) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, y);
-            if (bean) {
-                if (bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
-                    popJunk = true;
-            }
+            if (bean && bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
+                popJunk = true;
         }
     }
 
@@ -1040,10 +1075,8 @@ void PuyoBean_State_JunkIdle(void)
         int32 x = self->stillPos.x - 1;
         if (x >= 0 && self->stillPos.y >= 0 && x <= (PUYO_PLAYFIELD_W - 1) && self->stillPos.y <= (PUYO_PLAYFIELD_H - 1)) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, x, self->stillPos.y);
-            if (bean) {
-                if (bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
-                    popJunk = true;
-            }
+            if (bean && bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
+                popJunk = true;
         }
     }
 
@@ -1052,15 +1085,14 @@ void PuyoBean_State_JunkIdle(void)
         int32 x = self->stillPos.x + 1;
         if (x >= 0 && self->stillPos.y >= 0 && x <= (PUYO_PLAYFIELD_W - 1) && self->stillPos.y <= (PUYO_PLAYFIELD_H - 1)) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, x, self->stillPos.y);
-            if (bean) {
-                if (bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
-                    popJunk = true;
-            }
+            if (bean && bean->state == PuyoBean_State_BeanPop && bean->popTimer < 2)
+                popJunk = true;
         }
     }
 
     if (popJunk) {
         RSDK.SetSpriteAnimation(PuyoBean->aniFrames, PUYOBEAN_JUNK + PUYOBEAN_ANI_IDLE, &self->beanAnimator, true, 0);
+
         self->state = PuyoBean_State_JunkPopped;
         self->timer = 0;
     }
@@ -1070,10 +1102,11 @@ void PuyoBean_State_JunkIdle(void)
             if (self->stillPos.x < 0 || y < 0 || self->stillPos.x > (PUYO_PLAYFIELD_W - 1) || y > (PUYO_PLAYFIELD_H - 1)
                 || !PuyoBean_GetPuyoBean(self->playerID, self->stillPos.x, y)) {
                 PuyoBean->playfield[128 * self->playerID + 8 * self->stillPos.y + self->stillPos.x] = NULL;
-                self->velocity.y                                                                    = 0;
-                self->popTimer                                                                      = 0;
-                self->state                                                                         = PuyoBean_State_Falling;
-                self->timer                                                                         = 0;
+
+                self->velocity.y = 0;
+                self->popTimer   = 0;
+                self->state      = PuyoBean_State_Falling;
+                self->timer      = 0;
             }
         }
     }
@@ -1098,10 +1131,8 @@ void PuyoBean_State_JunkPopped(void)
     if (self->timer == 26)
         PuyoBean->playfield[128 * self->playerID + 8 * self->stillPos.y + self->stillPos.x] = NULL;
 
-    if (self->timer >= 26) {
-        if (animationFinished)
-            destroyEntity(self);
-    }
+    if (self->timer >= 26 && animationFinished)
+        destroyEntity(self);
 }
 
 void PuyoBean_State_BeginBeanPop(void)
@@ -1109,6 +1140,7 @@ void PuyoBean_State_BeginBeanPop(void)
     RSDK_THIS(PuyoBean);
 
     PuyoBean_HandleBeanLinks();
+
     ++self->timer;
     self->visible = !(self->timer & 1);
 
@@ -1116,6 +1148,7 @@ void PuyoBean_State_BeginBeanPop(void)
         self->timer    = RSDK.Rand(8, 16);
         self->popTimer = 0;
         RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_POP, &self->beanAnimator, true, 0);
+
         self->state = PuyoBean_State_BeanPop;
         RSDK.PlaySfx(PuyoBean->chainFrames[minVal(PuyoBean->comboChainCount[self->playerID], 5)], false, 255);
     }
@@ -1135,14 +1168,16 @@ void PuyoBean_State_BeanPop(void)
             int32 x              = RSDK.Cos256(angle) << 10;
             int32 y              = RSDK.Sin256(angle) << 10;
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x + self->position.x, y + self->position.y);
-            debris->state        = Debris_State_Fall;
-            debris->gravityStrength      = 0x4000;
-            debris->timer        = 14;
-            debris->velocity.x   = RSDK.Cos256(angle) << 9;
-            debris->velocity.y   = RSDK.Sin256(angle) << 9;
-            debris->drawOrder    = Zone->objectDrawHigh + 1;
+
+            debris->state           = Debris_State_Fall;
+            debris->gravityStrength = 0x4000;
+            debris->timer           = 14;
+            debris->velocity.x      = RSDK.Cos256(angle) << 9;
+            debris->velocity.y      = RSDK.Sin256(angle) << 9;
+            debris->drawOrder       = Zone->objectDrawHigh + 1;
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_DEBRIS, &debris->animator, true, 0);
         }
+
         destroyEntity(self);
     }
     else {
@@ -1158,9 +1193,7 @@ void PuyoBean_State_MatchLoseFall(void)
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;
 
-        Vector2 range;
-        range.x = 0x800000;
-        range.y = 0x800000;
+        Vector2 range = { 0x800000, 0x800000 };
         if (!RSDK.CheckOnScreen(self, &range))
             destroyEntity(self);
     }
@@ -1176,6 +1209,7 @@ void PuyoBean_EditorDraw(void) { RSDK.DrawSprite(&PuyoBean->junkBeanAnimator, NU
 void PuyoBean_EditorLoad(void)
 {
     PuyoBean->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoBeans.bin", SCOPE_STAGE);
+
     RSDK.SetSpriteAnimation(PuyoBean->aniFrames, PUYOBEAN_BLUE + PUYOBEAN_ANI_FLASH, &PuyoBean->junkBeanAnimator, true, 0);
 }
 #endif

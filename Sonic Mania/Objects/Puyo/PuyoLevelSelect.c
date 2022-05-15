@@ -104,6 +104,7 @@ void PuyoLevelSelect_Update(void)
             self->confirmPress = ControllerInfo[controllerID].keyA.press;
             self->backPress    = ControllerInfo[controllerID].keyB.press;
         }
+
         PuyoLevelSelect_HandleMenuMovement();
     }
     else {
@@ -120,6 +121,7 @@ void PuyoLevelSelect_Draw(void) { PuyoLevelSelect_DrawSprites(); }
 void PuyoLevelSelect_Create(void *data)
 {
     RSDK_THIS(PuyoLevelSelect);
+
     self->active        = ACTIVE_NORMAL;
     self->drawOrder     = 10;
     self->visible       = true;
@@ -138,8 +140,8 @@ void PuyoLevelSelect_StageLoad(void)
 void PuyoLevelSelect_DrawSprites(void)
 {
     RSDK_THIS(PuyoLevelSelect);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x       = self->position.x + 0x30000;
     drawPos.y       = self->position.y + 0x30000;
     self->inkEffect = INK_BLEND;
@@ -179,31 +181,38 @@ void PuyoLevelSelect_HandleMenuMovement(void)
         if (self->backPress)
             self->ready = false;
     }
-    else {
-        if (self->up || self->down) {
-            if (self->up)
-                --self->optionID;
-            if (self->down)
-                ++self->optionID;
+    else if (self->up || self->down) {
+        if (self->up)
+            --self->optionID;
 
-            if (self->optionID >= 5)
-                self->optionID -= 5;
-            if (self->optionID < 0)
-                self->optionID += 5;
+        if (self->down)
+            ++self->optionID;
 
-            RSDK.PlaySfx(PuyoLevelSelect->sfxMenuBleep, false, 255);
-        }
-        else if (self->confirmPress) {
-            self->ready = true;
-            RSDK.PlaySfx(PuyoLevelSelect->sfxMenuAccept, false, 255);
-        }
+        if (self->optionID >= 5)
+            self->optionID -= 5;
+
+        if (self->optionID < 0)
+            self->optionID += 5;
+
+        RSDK.PlaySfx(PuyoLevelSelect->sfxMenuBleep, false, 255);
+    }
+    else if (self->confirmPress) {
+        self->ready = true;
+        RSDK.PlaySfx(PuyoLevelSelect->sfxMenuAccept, false, 255);
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
 void PuyoLevelSelect_EditorDraw(void) { PuyoLevelSelect_DrawSprites(); }
 
-void PuyoLevelSelect_EditorLoad(void) { PuyoLevelSelect->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE); }
+void PuyoLevelSelect_EditorLoad(void)
+{
+    PuyoLevelSelect->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PuyoLevelSelect, playerID);
+    RSDK_ENUM_VAR("Player 1", PUYOGAME_PLAYER1);
+    RSDK_ENUM_VAR("Player 2", PUYOGAME_PLAYER2);
+}
 #endif
 
 void PuyoLevelSelect_Serialize(void) { RSDK_EDITABLE_VAR(PuyoLevelSelect, VAR_ENUM, playerID); }

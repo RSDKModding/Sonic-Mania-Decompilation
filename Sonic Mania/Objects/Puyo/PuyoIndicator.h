@@ -29,7 +29,7 @@ void PuyoIndicator_Update(void);
 void PuyoIndicator_LateUpdate(void);
 void PuyoIndicator_StaticUpdate(void);
 void PuyoIndicator_Draw(void);
-void PuyoIndicator_Create(void* data);
+void PuyoIndicator_Create(void *data);
 void PuyoIndicator_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PuyoIndicator_EditorDraw(void);
@@ -42,4 +42,4 @@ void PuyoIndicator_ShowWinner(void);
 void PuyoIndicator_ShowLoser(void);
 void PuyoIndicator_ShowReady(void);
 
-#endif //!OBJ_PUYOINDICATOR_H
+#endif //! OBJ_PUYOINDICATOR_H
