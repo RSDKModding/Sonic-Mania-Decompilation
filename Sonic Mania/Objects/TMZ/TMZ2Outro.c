@@ -58,7 +58,7 @@ void TMZ2Outro_SetupCutscene(void)
 #if RETRO_USE_PLUS
     }
     else {
-        if (SaveGame->saveRAM->chaosEmeralds == 0x7F) {
+        if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
             CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman,
                                       TMZ2Outro_Cutscene_EggmanFall, TMZ2Outro_Cutscene_StartRubyRampage, TMZ2Outro_Cutscene_OuttaHere,
                                       TMZ2Outro_Cutscene_TeamEscape, TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
@@ -287,7 +287,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
         foreach_active(PhantomRuby, ruby)
         {
             int pos = ScreenInfo->position.x;
-            if (SaveGame->saveRAM->chaosEmeralds == 0x7F)
+            if (SaveGame->saveRAM->chaosEmeralds == 0b01111111)
                 pos += 64;
             else
                 pos += 96;
@@ -327,9 +327,12 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
         }
 
         for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colors[i]);
-        if (SaveGame->saveRAM->chaosEmeralds == 0x7F)
+        
+        if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
             CREATE_ENTITY(RubyPortal, RubyPortal_State_EncoreEnd, (ScreenInfo->position.x + 64) << 16,
                           (ScreenInfo->position.y + ScreenInfo->centerY) << 16);
+        }
+
         return true;
     }
     return false;

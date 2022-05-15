@@ -55,7 +55,7 @@ void UFO_Sphere_Update(void);
 void UFO_Sphere_LateUpdate(void);
 void UFO_Sphere_StaticUpdate(void);
 void UFO_Sphere_Draw(void);
-void UFO_Sphere_Create(void* data);
+void UFO_Sphere_Create(void *data);
 void UFO_Sphere_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Sphere_EditorDraw(void);
@@ -71,4 +71,4 @@ void UFO_Sphere_State_Collected(void);
 void UFO_Sphere_State_HandleRespawn(void);
 void UFO_Sphere_State_AnimateAndDestroy(void);
 
-#endif //!OBJ_UFO_SPHERE_H
+#endif //! OBJ_UFO_SPHERE_H

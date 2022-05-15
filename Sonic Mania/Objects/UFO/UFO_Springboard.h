@@ -7,7 +7,7 @@
 struct ObjectUFO_Springboard {
     RSDK_OBJECT
     Animator unusedAnimator1;
-    uint16 aniFrames; //unused
+    uint16 aniFrames; // unused
     uint16 modelIndex;
     uint16 sceneIndex;
 };
@@ -19,9 +19,9 @@ struct EntityUFO_Springboard {
     int32 height;
     uint8 rampCount;
     Matrix unusedMatrix1;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
+    Matrix matTemp;
+    Matrix matWorld;
+    Matrix matNormal;
     Animator animator;
 };
 
@@ -33,7 +33,7 @@ void UFO_Springboard_Update(void);
 void UFO_Springboard_LateUpdate(void);
 void UFO_Springboard_StaticUpdate(void);
 void UFO_Springboard_Draw(void);
-void UFO_Springboard_Create(void* data);
+void UFO_Springboard_Create(void *data);
 void UFO_Springboard_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Springboard_EditorDraw(void);
@@ -43,5 +43,4 @@ void UFO_Springboard_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_UFO_SPRINGBOARD_H
+#endif //! OBJ_UFO_SPRINGBOARD_H

@@ -15,24 +15,28 @@ void UFO_Shadow_LateUpdate(void)
 {
     RSDK_THIS(UFO_Shadow);
     Entity *parent = self->parent;
+
     if (parent->classID) {
         self->position.x = parent->position.x;
         self->position.y = parent->position.y;
+
         if (RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) == (uint16)-1 || parent->drawOrder != 4) {
             self->visible = false;
         }
         else {
             self->visible = true;
-            int32 x           = self->position.x >> 8;
-            int32 z           = self->position.y >> 8;
-            Matrix *mat     = &UFO_Camera->matWorld;
+            int32 x       = self->position.x >> 8;
+            int32 z       = self->position.y >> 8;
+            Matrix *mat   = &UFO_Camera->matWorld;
 
             self->depth3D = mat->values[2][3] + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
-            if (self->depth3D >= 0x4000)
+
+            if (self->depth3D >= 0x4000) {
                 self->visible =
                     abs((int32)((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00))
                         / self->depth3D)
                     < 0x100;
+            }
         }
     }
     else {
@@ -45,6 +49,7 @@ void UFO_Shadow_StaticUpdate(void) {}
 void UFO_Shadow_Draw(void)
 {
     RSDK_THIS(UFO_Shadow);
+
     if (self->depth3D >= 0x4000) {
         RSDK.MatrixScaleXYZ(&self->matrix, self->shadowScale, 0x100, self->shadowScale);
         RSDK.MatrixTranslateXYZ(&self->matrix, self->position.x, 0, self->position.y, 0);
@@ -59,6 +64,7 @@ void UFO_Shadow_Draw(void)
 void UFO_Shadow_Create(void *data)
 {
     RSDK_THIS(UFO_Shadow);
+
     if (!SceneInfo->inEditor) {
         self->inkEffect     = INK_BLEND;
         self->visible       = true;

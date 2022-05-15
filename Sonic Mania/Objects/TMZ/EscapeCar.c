@@ -203,7 +203,7 @@ void EscapeCar_StateEncore_Setup(void)
     if (self->position.x - 0x800000 < (ScreenInfo->position.x + ScreenInfo->centerX) << 16) {
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 1, &self->thrustAnimator, true, 0);
         self->velocity.x = 0x6000;
-        if (SaveGame->saveRAM->chaosEmeralds == 0x7F)
+        if (SaveGame->saveRAM->chaosEmeralds == 0b01111111)
             self->state = EscapeCar_StateEncore_GoodEnd;
         else
             self->state = EscapeCar_StateEncore_BadEnd;

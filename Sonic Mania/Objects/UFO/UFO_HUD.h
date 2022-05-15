@@ -29,7 +29,7 @@ void UFO_HUD_Update(void);
 void UFO_HUD_LateUpdate(void);
 void UFO_HUD_StaticUpdate(void);
 void UFO_HUD_Draw(void);
-void UFO_HUD_Create(void* data);
+void UFO_HUD_Create(void *data);
 void UFO_HUD_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_HUD_EditorDraw(void);
@@ -42,4 +42,4 @@ void UFO_HUD_CheckLevelUp(void);
 void UFO_HUD_LevelUpMach(void);
 void UFO_HUD_DrawNumbers(Vector2 *drawPos, int32 value);
 
-#endif //!OBJ_UFO_HUD_H
+#endif //! OBJ_UFO_HUD_H

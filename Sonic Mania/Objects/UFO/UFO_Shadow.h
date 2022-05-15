@@ -27,7 +27,7 @@ void UFO_Shadow_Update(void);
 void UFO_Shadow_LateUpdate(void);
 void UFO_Shadow_StaticUpdate(void);
 void UFO_Shadow_Draw(void);
-void UFO_Shadow_Create(void* data);
+void UFO_Shadow_Create(void *data);
 void UFO_Shadow_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Shadow_EditorDraw(void);
@@ -37,5 +37,4 @@ void UFO_Shadow_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_UFO_SHADOW_H
+#endif //! OBJ_UFO_SHADOW_H

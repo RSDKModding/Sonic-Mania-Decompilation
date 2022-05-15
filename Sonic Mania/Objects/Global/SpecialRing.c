@@ -73,7 +73,7 @@ void SpecialRing_StageLoad(void)
     SpecialRing->hitbox.bottom = 18;
 
     // sets diffuse colour (overrides)
-    RSDK.SetDiffuseColor(SpecialRing->sceneIndex, 160, 160, 160);
+    RSDK.SetDiffuseColor(SpecialRing->sceneIndex, 0xA0, 0xA0, 0xA0);
     // sets diffuse intensity (0-8 means more diffuse, any more and it'll start darkening to black (9-12), any greater than 11 is full black)
     RSDK.SetDiffuseIntensity(SpecialRing->sceneIndex, 8, 8, 8);
     // sets specular (highlight) intensity (16-0, 16 = none, 0 = all)
@@ -191,7 +191,7 @@ void SpecialRing_State_Warp(void)
         self->sparkleRadius -= 0x80000;
     }
 
-    if (SaveGame->saveRAM->chaosEmeralds == 0x7F || !self->id) {
+    if (SaveGame->saveRAM->chaosEmeralds == 0b01111111 || !self->id) {
         destroyEntity(self);
     }
     else if (self->warpAnimator.frameID == self->warpAnimator.frameCount - 1) {
@@ -237,10 +237,10 @@ void SpecialRing_State_Normal(void)
                     EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_GAMEVER != VER_100
                     // rings spawned via debug mode give you 50 rings, always
-                    if (saveRAM->chaosEmeralds != 0x7F && self->id) {
+                    if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {
 #else
                     // rings spawned via debug mode take you to special stage, always
-                    if (saveRAM->chaosEmeralds != 0x7F) {
+                    if (saveRAM->chaosEmeralds != 0b01111111) {
 #endif
                         player->visible        = false;
                         player->active         = ACTIVE_NEVER;
@@ -251,7 +251,7 @@ void SpecialRing_State_Normal(void)
                     }
 
                     if (self->id > 0) {
-                        if (saveRAM->chaosEmeralds != 0x7F)
+                        if (saveRAM->chaosEmeralds != 0b01111111)
                             globals->specialRingID = self->id;
 
                         saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + self->id);

@@ -16,8 +16,9 @@ void UFO_Dust_LateUpdate(void)
     RSDK_THIS(UFO_Dust);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
-        RSDK.ResetEntityPtr(self, TYPE_BLANK, 0);
+        destroyEntity(self);
     }
     else {
         int32 x = self->position.x >> 8;
@@ -26,8 +27,8 @@ void UFO_Dust_LateUpdate(void)
 
         Matrix *mat = &UFO_Camera->matWorld;
 
-        self->worldX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
-        self->worldY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
+        self->worldX  = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
+        self->worldY  = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
         self->depth3D = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
     }
 }
@@ -52,6 +53,7 @@ void UFO_Dust_Draw(void)
 void UFO_Dust_Create(void *data)
 {
     RSDK_THIS(UFO_Dust);
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_SCALE | FX_FLIP;
@@ -59,9 +61,11 @@ void UFO_Dust_Create(void *data)
         self->active        = ACTIVE_RBOUNDS;
         self->updateRange.x = 0x400;
         self->updateRange.y = 0x400;
+
         self->position.x += RSDK.Rand(-0x80000, 0x80000);
         self->position.y += RSDK.Rand(-0x80000, 0x80000);
         self->height = RSDK.Rand(0x40000, 0x100000);
+
         RSDK.SetSpriteAnimation(UFO_Dust->aniFrames, 0, &self->animator, true, 0);
     }
 }

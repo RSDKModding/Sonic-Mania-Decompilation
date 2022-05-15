@@ -12,15 +12,17 @@ ObjectUFO_HUD *UFO_HUD;
 void UFO_HUD_Update(void)
 {
     RSDK_THIS(UFO_HUD);
+
 #if RETRO_USE_PLUS && RETRO_GAMEVER != VER_107
     if (ControllerInfo->keyY.press)
         UFO_HUD_LevelUpMach();
 #endif
 
-    if (self->scale.x > 512) {
+    if (self->scale.x > 0x200) {
         self->scale.x -= 0x10;
         self->scale.y -= 0x10;
-        if (self->scale.x <= 512) {
+
+        if (self->scale.x <= 0x200) {
             int32 cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
             RSDK.CopyPalette(self->machPaletteBank, 96, 0, 96, cnt);
             RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (uint8)(32 - cnt));
@@ -52,6 +54,7 @@ void UFO_HUD_Draw(void)
     drawPos.x = ScreenInfo->centerX << 16;
     if (self->scale.x > 0x200)
         self->drawFX = FX_SCALE;
+
     RSDK.DrawSprite(&self->hudAnimator, &drawPos, true);
 
     for (int32 i = 0; i <= UFO_Setup->machLevel; ++i) {
@@ -80,15 +83,17 @@ void UFO_HUD_Draw(void)
 void UFO_HUD_Create(void *data)
 {
     RSDK_THIS(UFO_HUD);
+
     if (!SceneInfo->inEditor) {
-        self->active        = ACTIVE_NORMAL;
-        self->visible       = true;
-        self->drawOrder     = 12;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
-        self->scale.x       = 0x200;
-        self->scale.y       = 0x200;
-        self->machPaletteBank         = 2;
+        self->active          = ACTIVE_NORMAL;
+        self->visible         = true;
+        self->drawOrder       = 12;
+        self->updateRange.x   = 0x800000;
+        self->updateRange.y   = 0x800000;
+        self->scale.x         = 0x200;
+        self->scale.y         = 0x200;
+        self->machPaletteBank = 2;
+
         RSDK.SetSpriteAnimation(UFO_HUD->aniFrames, 0, &self->hudAnimator, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->aniFrames, 1, &self->numbersAnimator, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->aniFrames, 2, &self->machAnimator, true, 0);
@@ -99,30 +104,34 @@ void UFO_HUD_Create(void *data)
 void UFO_HUD_StageLoad(void)
 {
     UFO_HUD->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE);
+
     RSDK.ResetEntitySlot(SLOT_UFO_HUD, UFO_HUD->classID, NULL);
 }
 
 void UFO_HUD_CheckLevelUp(void)
 {
     EntityUFO_HUD *hud = RSDK_GET_ENTITY(SLOT_UFO_HUD, UFO_HUD);
+
     if (UFO_Setup->machPoints >= UFO_Setup->machQuotas[UFO_Setup->machLevel]) {
         UFO_Setup->machPoints -= UFO_Setup->machQuotas[UFO_Setup->machLevel];
+
         if (UFO_Setup->machLevel >= 2) {
             ++UFO_Setup->scoreBonus;
             hud->timer = 60;
         }
         else {
-            UFO_Setup->machLevel++;
-            if (UFO_Setup->machLevel == 2)
+            if (++UFO_Setup->machLevel == 2)
                 hud->machPaletteBank = 3;
         }
+
         UFO_Player_ChangeMachState();
-        hud->scale.x = 768;
-        hud->scale.y = 768;
+
+        hud->scale.x = 0x300;
+        hud->scale.y = 0x300;
         RSDK.PlaySfx(UFO_Sphere->sfxMachSpeed, false, 0xFF);
     }
 
-    if (hud->scale.x == 512) {
+    if (hud->scale.x == 0x200) {
         int32 cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
         RSDK.CopyPalette(hud->machPaletteBank, 96, 0, 96, cnt);
         RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (uint8)(32 - cnt));
@@ -139,11 +148,12 @@ void UFO_HUD_LevelUpMach(void)
         hud->timer = 60;
     }
     else {
-        UFO_Setup->machLevel++;
-        if (UFO_Setup->machLevel == 2)
+        if (++UFO_Setup->machLevel == 2)
             hud->machPaletteBank = 3;
     }
+
     UFO_Player_ChangeMachState();
+
     hud->scale.x = 0x300;
     hud->scale.y = 0x300;
     RSDK.PlaySfx(UFO_Sphere->sfxMachSpeed, false, 255);

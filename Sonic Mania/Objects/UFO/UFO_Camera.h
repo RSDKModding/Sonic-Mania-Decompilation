@@ -35,7 +35,7 @@ void UFO_Camera_Update(void);
 void UFO_Camera_LateUpdate(void);
 void UFO_Camera_StaticUpdate(void);
 void UFO_Camera_Draw(void);
-void UFO_Camera_Create(void* data);
+void UFO_Camera_Create(void *data);
 void UFO_Camera_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Camera_EditorDraw(void);
@@ -49,4 +49,4 @@ void UFO_Camera_State_Normal(void);
 void UFO_Camera_State_CourseOut(void);
 void UFO_Camera_State_UFOCaught(void);
 
-#endif //!OBJ_UFO_CAMERA_H
+#endif //! OBJ_UFO_CAMERA_H

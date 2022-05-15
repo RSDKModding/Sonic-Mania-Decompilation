@@ -7,7 +7,7 @@
 struct ObjectUFO_Player {
     RSDK_OBJECT
     int32 maxSpeed;
-    uint16 aniFrames; //unused
+    uint16 aniFrames; // unused
     uint16 sfxJump;
     uint16 sfxCharge;
     uint16 sfxRelease;
@@ -71,7 +71,7 @@ void UFO_Player_Update(void);
 void UFO_Player_LateUpdate(void);
 void UFO_Player_StaticUpdate(void);
 void UFO_Player_Draw(void);
-void UFO_Player_Create(void* data);
+void UFO_Player_Create(void *data);
 void UFO_Player_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Player_EditorDraw(void);
@@ -92,4 +92,4 @@ void UFO_Player_State_CourseOut(void);
 void UFO_Player_State_UFOCaught_Charge(void);
 void UFO_Player_State_UFOCaught_Released(void);
 
-#endif //!OBJ_UFO_PLAYER_H
+#endif //! OBJ_UFO_PLAYER_H

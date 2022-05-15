@@ -24,7 +24,7 @@ typedef enum {
 #if RETRO_USE_PLUS
     SC_ANI_CONTINUE,
 #endif
-}SpecialClearAniIDs;
+} SpecialClearAniIDs;
 
 // Object Class
 struct ObjectSpecialClear {
@@ -49,8 +49,8 @@ struct EntitySpecialClear {
     int32 messageType;
     int32 timer;
     bool32 showFade;
-    bool32 continuesVisible;
-    bool32 continuesFlag;
+    bool32 continueIconVisible;
+    bool32 hasContinues;
     int32 fillColor;
     int32 score;
     int32 score1UP;
@@ -91,7 +91,7 @@ void SpecialClear_Update(void);
 void SpecialClear_LateUpdate(void);
 void SpecialClear_StaticUpdate(void);
 void SpecialClear_Draw(void);
-void SpecialClear_Create(void* data);
+void SpecialClear_Create(void *data);
 void SpecialClear_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpecialClear_EditorDraw(void);
@@ -124,4 +124,4 @@ void SpecialClear_State_ShowSuperMessage(void);
 void SpecialClear_State_ExitFadeOut(void);
 void SpecialClear_State_ExitResults(void);
 
-#endif //!OBJ_SPECIALCLEAR_H
+#endif //! OBJ_SPECIALCLEAR_H

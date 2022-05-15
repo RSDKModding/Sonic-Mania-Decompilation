@@ -123,7 +123,7 @@ void LevelSelect_Cheat_AllEmeralds(void)
 {
     Music_FadeOut(0.125);
     RSDK.PlaySfx(LevelSelect->sfxEmerald, false, 255);
-    SaveGame->saveRAM->chaosEmeralds = 0x7F;
+    SaveGame->saveRAM->chaosEmeralds = 0b01111111;
 }
 
 void LevelSelect_Cheat_ChangeSuperMusicFlag(void)

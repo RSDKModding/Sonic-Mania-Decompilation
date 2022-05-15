@@ -16,8 +16,8 @@ void UFO_Water_LateUpdate(void) {}
 void UFO_Water_StaticUpdate(void)
 {
     if (!(UFO_Setup->timer & 3)) {
-        UFO_Water->timer += 128;
-        UFO_Water->timer &= 0x7FF;
+        UFO_Water->timer = (UFO_Water->timer + 128) & 0x7FF;
+
         RSDK.DrawAniTiles(UFO_Water->aniFrames, 712, UFO_Water->timer & 0x1FF, (UFO_Water->timer >> 2) & 0xFF80, 128, 128);
     }
 }

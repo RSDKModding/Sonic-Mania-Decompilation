@@ -131,7 +131,7 @@ void PBL_Player_StageLoad(void)
     PBL_Player->innerBox.right = 10;
 
     PBL_Player->sceneIndex = RSDK.Create3DScene("View:Pinball", 4096, SCOPE_STAGE);
-    RSDK.SetDiffuseColor(PBL_Player->sceneIndex, 160, 160, 160);
+    RSDK.SetDiffuseColor(PBL_Player->sceneIndex, 0xA0, 0xA0, 0xA0);
     RSDK.SetDiffuseIntensity(PBL_Player->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(PBL_Player->sceneIndex, 15, 15, 15);
 

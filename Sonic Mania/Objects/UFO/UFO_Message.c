@@ -12,6 +12,7 @@ ObjectUFO_Message *UFO_Message;
 void UFO_Message_Update(void)
 {
     RSDK_THIS(UFO_Message);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,8 +23,8 @@ void UFO_Message_StaticUpdate(void) {}
 void UFO_Message_Draw(void)
 {
     RSDK_THIS(UFO_Message);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = (ScreenInfo->centerX - self->timer) << 16;
     drawPos.y = 0x580000;
     RSDK.DrawSprite(&self->leftAnimator, &drawPos, true);
@@ -35,6 +36,7 @@ void UFO_Message_Draw(void)
 void UFO_Message_Create(void *data)
 {
     RSDK_THIS(UFO_Message);
+
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
@@ -59,21 +61,26 @@ void UFO_Message_StageLoad(void) { UFO_Message->aniFrames = RSDK.LoadSpriteAnima
 void UFO_Message_State_Appear(void)
 {
     RSDK_THIS(UFO_Message);
+
     self->timer -= 16;
+
     if (self->timer <= 0)
-        self->state = UFO_Message_State_Wait;
+        self->state = UFO_Message_State_ShowMsg;
 }
-void UFO_Message_State_Wait(void)
+void UFO_Message_State_ShowMsg(void)
 {
     RSDK_THIS(UFO_Message);
-    if (++self->delay >= 180) {
-        self->delay = 0;
-        self->state  = UFO_Message_State_Exit;
+
+    if (++self->displayTime >= 180) {
+        self->displayTime = 0;
+
+        self->state = UFO_Message_State_Exit;
     }
 }
 void UFO_Message_State_Exit(void)
 {
     RSDK_THIS(UFO_Message);
+
     self->timer += 16;
     if (self->timer > 320)
         destroyEntity(self);

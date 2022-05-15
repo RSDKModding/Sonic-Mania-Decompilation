@@ -1036,7 +1036,7 @@ void PhantomEgg_State_Exploding(void)
         self->position.y = PhantomEgg->boundsB - 0x400000;
 
         bool32 goodEnd = (checkPlayerID(ID_SONIC, 1) || (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2)))
-                         && SaveGame->saveRAM->chaosEmeralds == 0x7F;
+                         && SaveGame->saveRAM->chaosEmeralds == 0b01111111;
 
 #if RETRO_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE)

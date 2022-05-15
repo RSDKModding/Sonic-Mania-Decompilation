@@ -10,7 +10,7 @@ typedef enum {
 #if RETRO_USE_PLUS
     UFO_ITEMBOX_BUMPER,
 #endif
-}UFO_ItemBoxTypes;
+} UFO_ItemBoxTypes;
 
 // Object Class
 struct ObjectUFO_ItemBox {
@@ -33,7 +33,7 @@ struct EntityUFO_ItemBox {
     int32 type;
     int32 timer;
     int32 height;
-    int32 timer2;
+    int32 contentsTimer;
     int32 worldX;
     int32 worldY;
     Vector2 drawPos;
@@ -42,7 +42,7 @@ struct EntityUFO_ItemBox {
     Matrix matWorld;
     Matrix matNormal;
     int32 sfxTimer;
-    Animator itemAnimator;
+    Animator contentsAnimator;
     Animator unusedAnimator1;
 };
 
@@ -54,7 +54,7 @@ void UFO_ItemBox_Update(void);
 void UFO_ItemBox_LateUpdate(void);
 void UFO_ItemBox_StaticUpdate(void);
 void UFO_ItemBox_Draw(void);
-void UFO_ItemBox_Create(void* data);
+void UFO_ItemBox_Create(void *data);
 void UFO_ItemBox_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_ItemBox_EditorDraw(void);
@@ -66,4 +66,4 @@ void UFO_ItemBox_Serialize(void);
 void UFO_ItemBox_State_HasContents(void);
 void UFO_ItemBox_State_ShowContents(void);
 
-#endif //!OBJ_UFO_ITEMBOX_H
+#endif //! OBJ_UFO_ITEMBOX_H

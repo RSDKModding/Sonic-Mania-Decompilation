@@ -12,7 +12,7 @@ typedef enum {
     UFO_DECOR_PILLAR2,
     UFO_DECOR_BIRD,
     UFO_DECOR_FISH,
-}UFO_DecorationTypes;
+} UFO_DecorationTypes;
 
 // Object Class
 struct ObjectUFO_Decoration {
@@ -46,7 +46,7 @@ void UFO_Decoration_Update(void);
 void UFO_Decoration_LateUpdate(void);
 void UFO_Decoration_StaticUpdate(void);
 void UFO_Decoration_Draw(void);
-void UFO_Decoration_Create(void* data);
+void UFO_Decoration_Create(void *data);
 void UFO_Decoration_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Decoration_EditorDraw(void);
@@ -56,5 +56,4 @@ void UFO_Decoration_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_UFO_DECORATION_H
+#endif //! OBJ_UFO_DECORATION_H

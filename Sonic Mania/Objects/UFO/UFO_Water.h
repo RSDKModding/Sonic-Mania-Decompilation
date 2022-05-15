@@ -12,7 +12,7 @@ struct ObjectUFO_Water {
 
 // Entity Class
 struct EntityUFO_Water {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -23,7 +23,7 @@ void UFO_Water_Update(void);
 void UFO_Water_LateUpdate(void);
 void UFO_Water_StaticUpdate(void);
 void UFO_Water_Draw(void);
-void UFO_Water_Create(void* data);
+void UFO_Water_Create(void *data);
 void UFO_Water_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Water_EditorDraw(void);
@@ -33,5 +33,4 @@ void UFO_Water_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_UFO_WATER_H
+#endif //! OBJ_UFO_WATER_H

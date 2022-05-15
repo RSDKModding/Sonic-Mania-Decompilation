@@ -14,7 +14,9 @@ struct ObjectUFO_Setup {
     RSDK_OBJECT
     StateMachine(deformCB);
     int32 timedOut;
+#if RETRO_USE_PLUS
     bool32 encoreStage;
+#endif
     int32 machLevel;
     int32 scoreBonus;
     int32 machPoints;
@@ -63,7 +65,7 @@ void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines);
 void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines);
 void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines);
 
-void UFO_Setup_PlaySphereSFX(void);
+void UFO_Setup_PlaySphereSfx(void);
 void UFO_Setup_Finish_Win(void);
 void UFO_Setup_Finish_Fail(void);
 void UFO_Setup_DeformCB_UFO3(void);

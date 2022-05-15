@@ -20,7 +20,7 @@ struct ObjectUFO_Message {
 struct EntityUFO_Message {
     RSDK_ENTITY
     StateMachine(state);
-    int32 delay;
+    int32 displayTime;
     int32 timer;
     Animator leftAnimator;
     Animator rightAnimator;
@@ -36,7 +36,7 @@ void UFO_Message_Update(void);
 void UFO_Message_LateUpdate(void);
 void UFO_Message_StaticUpdate(void);
 void UFO_Message_Draw(void);
-void UFO_Message_Create(void* data);
+void UFO_Message_Create(void *data);
 void UFO_Message_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UFO_Message_EditorDraw(void);
@@ -46,7 +46,7 @@ void UFO_Message_Serialize(void);
 
 // Extra Entity Functions
 void UFO_Message_State_Appear(void);
-void UFO_Message_State_Wait(void);
+void UFO_Message_State_ShowMsg(void);
 void UFO_Message_State_Exit(void);
 
-#endif //!OBJ_UFO_MESSAGE_H
+#endif //! OBJ_UFO_MESSAGE_H

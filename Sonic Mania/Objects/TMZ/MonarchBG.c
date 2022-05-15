@@ -63,7 +63,7 @@ void MonarchBG_StageLoad(void)
     MonarchBG->meshIndex  = RSDK.LoadMesh("TMZ/MonarchBG.bin", SCOPE_STAGE);
     MonarchBG->sceneIndex = RSDK.Create3DScene("View:Monarch", 0x2000, SCOPE_STAGE);
 
-    RSDK.SetDiffuseColor(MonarchBG->sceneIndex, 64, 0, 64);
+    RSDK.SetDiffuseColor(MonarchBG->sceneIndex, 0x40, 0x00, 0x40);
     RSDK.SetDiffuseIntensity(MonarchBG->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(MonarchBG->sceneIndex, 16, 16, 16);
 }
