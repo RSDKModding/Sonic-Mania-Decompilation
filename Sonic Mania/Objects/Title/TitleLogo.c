@@ -13,7 +13,7 @@ void TitleLogo_Update(void)
 {
     RSDK_THIS(TitleLogo);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine_Run(self->state);
 #else
     switch (self->type) {
@@ -63,7 +63,7 @@ void TitleLogo_Draw(void)
                 RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case TITLELOGO_PLUS:
             RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             RSDK.DrawSprite(&self->plusAnimator, NULL, false);
@@ -87,20 +87,20 @@ void TitleLogo_Create(void *data)
             case TITLELOGO_RIBBON:
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 1, &self->mainAnimator, true, 0);
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->ribbonCenterAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 self->state = TitleLogo_State_Ribbon;
 #endif
                 break;
 
             case TITLELOGO_PRESSSTART:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 self->state = TitleLogo_State_PressButton;
 #else
                 TitleLogo_SetupPressStart();
 #endif
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case TITLELOGO_PLUS:
                 if (API.CheckDLC(DLC_PLUS)) {
                     RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 0, &self->mainAnimator, true, 0);
@@ -123,7 +123,7 @@ void TitleLogo_Create(void *data)
             case TITLELOGO_COPYRIGHT:
             case TITLELOGO_RINGBOTTOM:
             case TITLELOGO_PRESSSTART:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case TITLELOGO_PLUS:
 #endif
                 self->visible   = false;
@@ -144,7 +144,7 @@ void TitleLogo_StageLoad(void)
 {
     TitleLogo->aniFrames = RSDK.LoadSpriteAnimation("Title/Logo.bin", SCOPE_STAGE);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (API.CheckDLC(DLC_PLUS))
         TitleLogo->plusFrames = RSDK.LoadSpriteAnimation("Title/PlusLogo.bin", SCOPE_STAGE);
 
@@ -183,7 +183,7 @@ void TitleLogo_SetupPressStart(void)
 
         case LANGUAGE_SP: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 7); break;
 
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         case LANGUAGE_KO: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 8); break;
         case LANGUAGE_SC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 9); break;
         case LANGUAGE_TC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->mainAnimator, true, 10); break;
@@ -193,7 +193,7 @@ void TitleLogo_SetupPressStart(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleLogo_State_Ribbon(void)
 {
     RSDK_THIS(TitleLogo);
@@ -304,7 +304,7 @@ void TitleLogo_EditorDraw(void)
             RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case TITLELOGO_PLUS:
             RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 0, &self->mainAnimator, true, 0);
 
@@ -322,7 +322,7 @@ void TitleLogo_EditorDraw(void)
 void TitleLogo_EditorLoad(void)
 {
     TitleLogo->aniFrames = RSDK.LoadSpriteAnimation("Title/Logo.bin", SCOPE_STAGE);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     TitleLogo->plusFrames = RSDK.LoadSpriteAnimation("Title/PlusLogo.bin", SCOPE_STAGE);
 #endif
 
@@ -334,7 +334,7 @@ void TitleLogo_EditorLoad(void)
     RSDK_ENUM_VAR("Copyright", TITLELOGO_COPYRIGHT);
     RSDK_ENUM_VAR("Ring Bottom", TITLELOGO_RINGBOTTOM);
     RSDK_ENUM_VAR("Press Start", TITLELOGO_PRESSSTART);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_ENUM_VAR("Plus Logo", TITLELOGO_PLUS);
 #endif
 }

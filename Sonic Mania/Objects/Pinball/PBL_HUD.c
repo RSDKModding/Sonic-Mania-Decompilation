@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectPBL_HUD *PBL_HUD;
 
 void PBL_HUD_Update(void)

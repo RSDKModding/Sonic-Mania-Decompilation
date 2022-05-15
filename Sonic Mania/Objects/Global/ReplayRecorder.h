@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 
 #define REPLAY_SIGNATURE   (0xF6057BED)
 #define REPLAY_BUFFER_SIZE (0x100000)

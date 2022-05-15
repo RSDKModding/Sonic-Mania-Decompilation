@@ -18,25 +18,25 @@ struct ObjectUISaveSlot {
 struct EntityUISaveSlot {
     MANIA_UI_ITEM_BASE
     bool32 isNewSave;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine(stateInput);
 #endif
     int32 listID;
     int32 frameID;
     int32 saveZoneID;
     int32 saveLives;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 saveContinues;
 #endif
     int32 saveEmeralds;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint8 saveEncorePlayer;
     uint8 saveEncoreBuddy;
     uint8 saveEncoreFriends[3];
 #endif
     UISaveSlotTypes type;
     int32 slotID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 encoreMode;
 #endif
     bool32 currentlySelected;
@@ -46,7 +46,7 @@ struct EntityUISaveSlot {
     int32 textBouncePos;
     int32 buttonBouncePos;
     int32 fxRadius;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityFXRuby *fxRuby;
     bool32 debugEncoreDraw;
     uint8 dCharPoint;
@@ -59,7 +59,7 @@ struct EntityUISaveSlot {
     Animator playersAnimator;
     Animator shadowsAnimator;
     Animator livesAnimator;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Animator continuesAnimator;
 #endif
     Animator emeraldsAnimator;
@@ -89,7 +89,7 @@ void UISaveSlot_EditorLoad(void);
 void UISaveSlot_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 uint8 UISaveSlot_GetPlayerIDFromID(uint8 id);
 uint8 UISaveSlot_GetIDFromPlayerID(uint8 playerID);
 void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uint8 *friendIDs, uint8 friendCount, int32 drawX,
@@ -103,7 +103,7 @@ void UISaveSlot_LoadSaveInfo(void);
 void UISaveSlot_HandleSaveIcons(void);
 
 void UISaveSlot_DeleteDLG_CB(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UISaveSlot_DeleteSaveCB(bool32 success);
 #else
 void UISaveSlot_DeleteSaveCB(void);
@@ -126,7 +126,7 @@ void UISaveSlot_State_NotSelected(void);
 void UISaveSlot_State_OtherWasSelected(void);
 void UISaveSlot_State_NewSave(void);
 void UISaveSlot_State_ActiveSave(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UISaveSlot_StateInput_NewSave(void);
 #endif
 void UISaveSlot_State_CompletedSave(void);

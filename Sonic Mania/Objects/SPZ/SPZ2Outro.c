@@ -60,7 +60,7 @@ void SPZ2Outro_StartCutscene(void)
     CutsceneSeq_StartSequence(self, SPZ2Outro_Cutscene_SetupFBZTV, SPZ2Outro_Cutscene_ExitStageRight, SPZ2Outro_Cutscene_AsSeenOnTV,
                               SPZ2Outro_Cutscene_FBZFlyAway, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -70,7 +70,7 @@ void SPZ2Outro_StartCutscene(void)
 
 bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     EntityTVFlyingBattery *tvFlyingBattery = SPZ2Outro->tvFlyingBattery;
     EntityWeatherTV *weatherTV             = SPZ2Outro->weatherTV;
@@ -94,7 +94,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         WeatherTV->useHighLayer = true;
         camera->target          = NULL;
         player1->camera         = NULL;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Player->disableP2KeyCheck = true;
 #endif
 
@@ -159,7 +159,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 
 bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (!host->timer) {
@@ -206,7 +206,7 @@ void SPZ2Outro_DrawLayerCB_WeatherTV(void)
 // State where they are on da TV and jump onto FBZ
 bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
     EntityTVFlyingBattery *tvFlyingBattery = SPZ2Outro->tvFlyingBattery;
     EntityWeatherTV *weatherTV             = SPZ2Outro->weatherTV;
@@ -280,7 +280,7 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
 
 bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityTVFlyingBattery *tvFlyingBattery = SPZ2Outro->tvFlyingBattery;

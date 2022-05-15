@@ -50,7 +50,7 @@ typedef enum {
     ANI_CLING,
     ANI_BUNGEE,
     ANI_TWISTRUN,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     ANI_FLUME,
 #endif
     ANI_TRANSFORM,
@@ -106,7 +106,7 @@ typedef enum {
 } SuperStates;
 
 // Object Class
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 struct ObjectPlayer {
     RSDK_OBJECT
     TABLE(int32 sonicPhysicsTable[64],
@@ -402,15 +402,15 @@ struct EntityPlayer {
     Vector2 flyCarryLeaderPos;
     uint8 deathType;
     bool32 forceJumpIn;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 isGhost;
 #endif
     int32 abilityValues[8];
     void* abilityPtrs[8];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 uncurlTimer;
 #endif
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     int32 touchJump;
 #endif
 };
@@ -444,7 +444,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks);
 void Player_BlendSuperSonicColors(int32 bankID);
 void Player_BlendSuperTailsColors(int32 bankID);
 void Player_BlendSuperKnuxColors(int32 bankID);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_BlendSuperMightyColors(int32 bankID);
 void Player_BlendSuperRayColors(int32 bankID);
 #endif
@@ -454,7 +454,7 @@ bool32 Player_CheckP2KeyPress(void);
 EntityPlayer *Player_GetNearestPlayerX(void);
 // returns the pointer to the nearest player to the current entity on both the x & y axis
 EntityPlayer *Player_GetNearestPlayer(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_RemoveEncoreLeader(void);
 #endif
 void Player_ResetBoundaries(EntityPlayer *player);
@@ -489,7 +489,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *entity, bool32 destro
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
 //similar to checkHit, but for projectiles, handles the rebound effect when using shields or crouching as mighty, returns true if deflected, otherwise the player is hit and returns false
 bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 // similar to checkHit, but for objects that should bounce off mighty's shell, returns true if deflected, otherwise the player is hit and returns
 // false
 bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int32 velX, int32 velY);
@@ -540,7 +540,7 @@ void Player_State_KnuxGlideDrop(void);
 void Player_State_GlideSlide(void);
 void Player_State_KnuxWallClimb(void);
 void Player_State_KnuxLedgePullUp(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_State_MightyHammerDrop(void);
 void Player_State_MightyUnspin(void);
 void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox);
@@ -560,7 +560,7 @@ void Player_State_TransportTube(void);
 void Player_JumpAbility_Sonic(void);
 void Player_JumpAbility_Tails(void);
 void Player_JumpAbility_Knux(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_JumpAbility_Mighty(void);
 void Player_JumpAbility_Ray(void);
 

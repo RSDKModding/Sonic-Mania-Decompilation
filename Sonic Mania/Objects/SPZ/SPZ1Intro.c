@@ -50,7 +50,7 @@ void SPZ1Intro_StageLoad(void)
 bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SPZ1Intro);
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     Entity *curEnt = host->activeEntity;
     if (!host->timer) {
@@ -110,7 +110,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
 
 bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (!host->timer) {
@@ -161,7 +161,7 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
 
 bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         camera->target      = (Entity *)player1;

@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectCompetitionMenu *CompetitionMenu;
 
 void CompetitionMenu_Update(void) {}
@@ -600,7 +600,7 @@ void CompetitionMenu_RulesButton_ActionCB(void)
                 case 0: session->playerID[i] = ID_SONIC; break;
                 case 1: session->playerID[i] = ID_TAILS; break;
                 case 2: session->playerID[i] = ID_KNUCKLES; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case 3: session->playerID[i] = ID_MIGHTY; break;
                 case 4: session->playerID[i] = ID_RAY; break;
 #endif

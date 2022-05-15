@@ -43,7 +43,7 @@ void OneWayDoor_Create(void *data)
     RSDK.SetSpriteAnimation(OneWayDoor->aniFrames, 0, &self->animator, true, 0);
 
     if (RSDK.CheckStageFolder("MMZ")) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(OneWayDoor->aniFrames, self->direction ? 4 : 2, &self->animator, true, 0);
 #endif
         self->stateDraw = OneWayDoor_Draw_MMZ;
@@ -119,7 +119,7 @@ void OneWayDoor_HandlePlayerInteractions(void)
             OneWayDoor->hitboxRange.left = -88;
 
         if (Player_CheckCollisionTouch(currentPlayer, self, &OneWayDoor->hitboxRange)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (isMMZ1 && currentPlayer->sidekick && !isBehind) {
                 Player->cantSwap = true;
                 NoSwap->counter++;

@@ -12,7 +12,7 @@ struct ObjectSSZ3Cutscene {
 struct EntitySSZ3Cutscene {
     RSDK_ENTITY
     int32 unused;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 playTransformCutscene;
     EntityPhantomRuby *ruby;
     EntityFXRuby *fxRuby;
@@ -36,13 +36,13 @@ void SSZ3Cutscene_EditorLoad(void);
 void SSZ3Cutscene_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SSZ3Cutscene_HandleRubyFX(void);
 #endif
 
 bool32 SSZ3Cutscene_CutsceneIntro_EnterStageLeft(EntityCutsceneSeq *host);
 bool32 SSZ3Cutscene_CutsceneIntro_PlayerRunLeft(EntityCutsceneSeq *host);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host);
 bool32 SSZ3Cutscene_CutsceneOutro_FollowRuby(EntityCutsceneSeq *host);
 bool32 SSZ3Cutscene_CutsceneOutro_EnterRuby(EntityCutsceneSeq *host);

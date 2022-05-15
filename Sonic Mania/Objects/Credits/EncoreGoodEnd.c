@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectEncoreGoodEnd *EncoreGoodEnd;
 
 void EncoreGoodEnd_Update(void)
@@ -349,7 +349,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
 bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreGoodEnd);
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         player1->state      = Player_State_None;

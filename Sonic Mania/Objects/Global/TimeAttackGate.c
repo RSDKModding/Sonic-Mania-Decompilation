@@ -140,7 +140,7 @@ void TimeAttackGate_HandleSpin(void)
 
     foreach_active(Player, player)
     {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!player->sidekick && !player->isGhost) {
 #else
         if (!player->sidekick) {
@@ -222,7 +222,7 @@ void TimeAttackGate_HandleStart(void)
                 TimeAttackGate->restartManager  = restarter;
                 restarter->isPermanent          = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 StateMachine_Run(TimeAttackGate->startCB);
 #endif
             }
@@ -236,14 +236,14 @@ void TimeAttackGate_HandleStart(void)
             TimeAttackGate->started       = false;
             SceneInfo->timeEnabled        = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             StateMachine_Run(TimeAttackGate->endCB);
 #endif
 
             if (!TimeAttackGate->disableRecords)
                 ActClear->bufferMoveEnabled = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             TimeAttackGate_AddRecord();
 #endif
         }
@@ -253,7 +253,7 @@ void TimeAttackGate_HandleStart(void)
     self->playerPos.y = player1->position.y;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TimeAttackGate_AddRecord(void)
 {
     if (!TimeAttackGate->disableRecords) {

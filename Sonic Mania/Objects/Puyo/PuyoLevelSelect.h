@@ -25,7 +25,7 @@ struct EntityPuyoLevelSelect {
     bool32 down;
     bool32 confirmPress;
     bool32 backPress;
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     int32 touchFlags;
 #endif
 };

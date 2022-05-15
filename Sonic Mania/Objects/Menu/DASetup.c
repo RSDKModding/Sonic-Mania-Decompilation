@@ -152,7 +152,7 @@ void DASetup_SetupUI(void)
     DASetup_DisplayTrack(0);
     EntityUIInfoLabel *trackSelLabel = DASetup->trackSelLabel;
     Localization_GetString(&buffer, STR_SELECTATRACK);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.PrintString(PRINT_NORMAL, &buffer);
 #endif
     UIInfoLabel_SetString(trackSelLabel, &buffer);
@@ -160,7 +160,7 @@ void DASetup_SetupUI(void)
 
 void DASetup_State_ManageControl(void)
 {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     bool32 up = false, down = false, left = false, right = false, confirm = false, back = false;
     uint8 dir = -1;
 
@@ -274,7 +274,7 @@ void DASetup_State_ManageControl(void)
         DASetup_DisplayTrack(DASetup->trackID);
     }
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     if (UIControl->keyConfirm || confirm) {
 #else
     if (UIControl->keyConfirm) {
@@ -299,7 +299,7 @@ void DASetup_State_ManageControl(void)
     }
 
     if (!DASetup->returnToMenu) {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         if (UIControl->keyBack || back) {
 #else
         if (UIControl->keyBack) {

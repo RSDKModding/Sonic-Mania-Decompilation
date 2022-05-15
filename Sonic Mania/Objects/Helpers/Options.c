@@ -21,7 +21,7 @@ void Options_Create(void *data) {}
 
 void Options_StageLoad(void)
 {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     Options->changed = false;
     if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_PC) {
         Options_Reload();
@@ -120,7 +120,7 @@ void Options_LoadOptionsBin(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Options_SaveOptionsBin(void (*callback)(bool32 success))
 #else
 void Options_SaveOptionsBin(void (*callback)(void))
@@ -132,7 +132,7 @@ void Options_SaveOptionsBin(void (*callback)(void))
                 Options->saveEntityPtr = SceneInfo->entity;
                 Options->saveCallback  = callback;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, false);
 #else
                 API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback);
@@ -140,7 +140,7 @@ void Options_SaveOptionsBin(void (*callback)(void))
             }
             else {
                 Options->changed = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (callback)
                     callback(false);
 #endif
@@ -149,7 +149,7 @@ void Options_SaveOptionsBin(void (*callback)(void))
             return;
         }
         else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
 #else
             APICallback_SaveSettingsINI();
@@ -158,7 +158,7 @@ void Options_SaveOptionsBin(void (*callback)(void))
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (callback)
         callback(true);
 #endif
@@ -202,7 +202,7 @@ void Options_LoadOptionsCallback(int32 status)
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     bool32 success         = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (status == STATUS_OK || status == STATUS_NOTFOUND) {
 #else
     if (status) {
@@ -243,7 +243,7 @@ void Options_SaveOptionsCallback(int32 status)
         if (Options->saveEntityPtr)
             SceneInfo->entity = Options->saveEntityPtr;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Options->saveCallback(status == STATUS_OK);
 #else
         Options->saveCallback();

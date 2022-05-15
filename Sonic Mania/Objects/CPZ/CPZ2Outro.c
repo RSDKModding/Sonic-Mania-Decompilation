@@ -51,7 +51,7 @@ void CPZ2Outro_SetupCutscene(void)
 
     CutsceneSeq_StartSequence(self, CPZ2Outro_Cutscene_Outro, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (seq->classID)
         seq->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -61,7 +61,7 @@ void CPZ2Outro_SetupCutscene(void)
 
 bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     Vector2 size;

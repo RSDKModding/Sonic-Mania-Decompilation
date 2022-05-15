@@ -7,7 +7,7 @@ typedef enum {
     UFO_ITEMBOX_RING,
     UFO_ITEMBOX_SPHERE,
     UFO_ITEMBOX_LVLUP,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UFO_ITEMBOX_BUMPER,
 #endif
 } UFO_ItemBoxTypes;

@@ -25,7 +25,7 @@ void GHZCutsceneST_Update(void)
                 CutsceneSeq_StartSequence(self, GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp, GHZCutsceneST_Cutscene_ExitHBH,
                                           GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                     cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
@@ -123,10 +123,10 @@ void GHZCutsceneST_SetupKnuxCutscene(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GHZCutsceneST_SkipCB(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
     else
@@ -137,7 +137,7 @@ void GHZCutsceneST_SkipCB(void)
 
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityFXRuby *fxRuby    = GHZCutsceneST->fxRuby;
@@ -184,7 +184,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
 }
 bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
 
     EntityPhantomRuby *ruby = GHZCutsceneST->phantomRuby;
@@ -232,7 +232,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 }
 bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
 
     EntityPhantomRuby *ruby  = GHZCutsceneST->phantomRuby;
@@ -315,7 +315,7 @@ bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZCutsceneST);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         RSDK.SetScene("Encore Mode", "");
     else

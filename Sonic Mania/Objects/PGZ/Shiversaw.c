@@ -164,7 +164,7 @@ void Shiversaw_StageLoad(void)
     Shiversaw->hitboxT.right  = -48;
     Shiversaw->hitboxT.bottom = 54;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Shiversaw->hitboxEntryTrigger.left   = -192;
     Shiversaw->hitboxEntryTrigger.top    = -176;
     Shiversaw->hitboxEntryTrigger.right  = -144;
@@ -190,7 +190,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
 {
     RSDK_THIS(Shiversaw);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY) {
         int32 anim = player->animator.animationID;
         if (anim != ANI_JUMP && anim != ANI_SPINDASH && anim != ANI_DROPDASH)
@@ -471,7 +471,7 @@ void Shiversaw_State_Entry(void)
     RSDK_THIS(Shiversaw);
 
     if (++self->timer >= 2) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         foreach_active(Player, player)
         {
             if (player->velocity.x <= 0) {
@@ -578,7 +578,7 @@ void Shiversaw_State_SetupBounds(void)
 {
     RSDK_THIS(Shiversaw);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (++self->timer >= 60) {
         self->timer = 0;
 #endif
@@ -591,12 +591,12 @@ void Shiversaw_State_SetupBounds(void)
                 Zone->playerBoundActiveL[0] = true;
                 Zone->cameraBoundsL[0]      = (self->position.x >> 16) - 416;
                 self->state                 = Shiversaw_State_EnterShiversaw;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
                 Music_TransitionTrack(TRACK_MINIBOSS, 0.014);
 #endif
             }
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }

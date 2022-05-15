@@ -46,7 +46,7 @@ void Animals_Create(void *data)
     self->drawOrder     = Zone->objectDrawLow;
 
     int32 type = ANIMAL_POCKY;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!(globals->secrets & getMod(SECRET_RICKYMODE)))
 #endif
         type = voidToInt(data);

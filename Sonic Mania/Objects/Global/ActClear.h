@@ -9,17 +9,17 @@ struct ObjectActClear {
     uint16 aniFrames;
     uint16 sfxScoreAdd;
     uint16 sfxScoreTotal;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxEvent;
 #endif
     bool32 bufferMoveEnabled;
     bool32 isSavingGame;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 disableResultsInput;
 #endif
     int32 displayedActID;
     bool32 finished;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 forceNoSave;
     StateMachine(bufferMove_CB);
     StateMachine(saveReplay_CB);
@@ -56,7 +56,7 @@ struct EntityActClear {
     Animator playerNameAnimator;
     Animator gotThroughAnimator;
     Animator actNumAnimator;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Animator timeElementsAnimator;
 #endif
 };
@@ -78,13 +78,13 @@ void ActClear_EditorLoad(void);
 void ActClear_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 #endif
 void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount);
 void ActClear_CheckPlayerVictory(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ActClear_SaveGameCallback(bool32 success);
 #else
 void ActClear_SaveGameCallback(void);
@@ -97,7 +97,7 @@ void ActClear_State_EnterResults(void);
 void ActClear_State_ScoreShownDelay(void);
 void ActClear_State_TallyScore(void);
 void ActClear_State_SaveGameProgress(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ActClear_State_ShowResultsTA(void);
 #endif
 void ActClear_State_WaitForSaveFinish(void);

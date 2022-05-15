@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectExtrasMenu *ExtrasMenu;
 
 void ExtrasMenu_Update(void) {}
@@ -136,7 +136,7 @@ void ExtrasMenu_ProcessInputs(void)
 {
     RSDK_THIS(UIControl);
 
-#if RETRO_GAMEVER == VER_106
+#if MANIA_GAMEVER == VER_106
     // this "cheat" is technically PC only, but I can't be bothered to ifdef it and it's cooler to have on all platforms
 
     // buttonID == 2: DAGarden
@@ -214,7 +214,7 @@ void ExtrasMenu_Start_DAGarden(void)
     strcpy(param->menuTag, "Extras");
     param->menuSelection = EXTRAS_SELECTION_DAGARDEN;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (API.CheckDLC(DLC_PLUS))
         RSDK.SetScene("Extras", "D.A. Garden Plus");
     else

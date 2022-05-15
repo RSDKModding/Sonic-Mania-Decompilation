@@ -67,7 +67,7 @@ void SpikeLog_State_Main(void)
                 continue;
 
             if (Player_CheckCollisionTouch(player, self, &SpikeLog->hitboxSpikeLog)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->characterID == ID_MIGHTY) {
                     int32 anim = player->animator.animationID;
                     if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
@@ -93,7 +93,7 @@ void SpikeLog_State_Main(void)
                 else {
 #endif
                     Player_CheckHit(player, self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
             }

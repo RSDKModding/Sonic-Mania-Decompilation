@@ -133,7 +133,7 @@ void DemoMenu_State_Selection(void)
         RSDK.PlaySfx(TitleSetup->sfxMenuBleep, false, 255);
     }
     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         float vDelta    = AnalogStickInfoL->vDelta;
         float deltaDist = AnalogStickInfoL->vDelta - self->vDelta;
 #else

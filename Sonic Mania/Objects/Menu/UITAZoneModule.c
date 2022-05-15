@@ -24,7 +24,7 @@ void UITAZoneModule_Update(void)
 
     self->drawPos = self->position;
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     if (self->expandAmount != self->prevExpandAmount)
         self->prevExpandAmount = self->expandAmount;
     if (self->isExpanding) {
@@ -69,7 +69,7 @@ void UITAZoneModule_LateUpdate(void) {}
 
 void UITAZoneModule_StaticUpdate(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (UITAZoneModule->showLBPrompt)
         UITAZoneModule->showLBPrompt = false;
 
@@ -91,7 +91,7 @@ void UITAZoneModule_Draw(void)
     UITAZoneModule_DrawBGShapes();
     UITAZoneModule_DrawModuleInfo();
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     RSDK_THIS(UITAZoneModule);
 
     if (self->prevExpandAmount > 0) {
@@ -135,7 +135,7 @@ void UITAZoneModule_Create(void *data)
 
 void UITAZoneModule_StageLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UITAZoneModule->isEncoreMode = false;
     UITAZoneModule->showLBPrompt = false;
 #endif
@@ -163,7 +163,7 @@ void UITAZoneModule_Setup(void)
         self->buttonEnterCB = UITAZoneModule_ButtonEnterCB;
         self->buttonLeaveCB = UITAZoneModule_ButtonLeaveCB;
     }
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     else if (self->processButtonCB == UITAZoneModule_ProcessButtonCB_Expanded) {
         self->touchPosSizeM[0].x   = 0x9C0000;
         self->touchPosSizeM[0].y   = 0x2C0000;
@@ -232,7 +232,7 @@ void UITAZoneModule_DrawBGShapes(void)
     RSDK_THIS(UITAZoneModule);
 
     uint32 color = 0x5FA0B0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->isEncore)
         color = 0xF26C4F;
 #endif
@@ -245,7 +245,7 @@ void UITAZoneModule_DrawBGShapes(void)
 
     UIWidgets_DrawRightTriangle(self->drawPos.x + 0x990000, self->drawPos.y + 0x230000, -71, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, self->position.y + 0x30000, 312, 78);
 
@@ -270,7 +270,7 @@ void UITAZoneModule_DrawFGShapes(void)
 
     Vector2 drawPos = self->drawPos;
     uint32 color    = 0xF0F0F0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->isEncore)
         color = 0xF26C4F;
 #endif
@@ -279,14 +279,14 @@ void UITAZoneModule_DrawFGShapes(void)
     drawPos.y += 0x170000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x840000, 0xD0000, color, 255, INK_NONE, false);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->timeAttackAnimator, true, (self->isEncore != 0) + 10);
 #else
     RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->timeAttackAnimator, true, 10);
 #endif
     RSDK.DrawSprite(&self->timeAttackAnimator, &drawPos, false);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     drawPos = UIWidgets_DrawTriJoinRect(drawPos.x + 0x840000, drawPos.y, color, 0xF0D808);
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x400000, 0xD0000, 0xF0D808, 255, INK_NONE, false);
 #else
@@ -405,7 +405,7 @@ void UITAZoneModule_SelectedCB(void)
     self->timer = 0;
     self->state = UITAZoneModule_State_HasBeenSelected;
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     parent->childHasFocus   = true;
     self->processButtonCB   = StateMachine_None;
@@ -419,7 +419,7 @@ void UITAZoneModule_SelectedCB(void)
 
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (TimeAttackMenu->encoreMode)
         RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 4, (32 * (self->zoneID % 12)), 0, 224, 32);
     else
@@ -448,11 +448,11 @@ void UITAZoneModule_ButtonEnterCB(void)
     self->isSelected = true;
     self->state      = UITAZoneModule_State_Selected;
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     self->rank = 0;
 #endif
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (TimeAttackMenu->encoreMode)
         RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 4, (32 * (self->zoneID % 12)), 0, 224, 32);
     else
@@ -476,7 +476,7 @@ void UITAZoneModule_State_Setup(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     Hitbox hitboxBounds;
@@ -517,7 +517,7 @@ void UITAZoneModule_State_Selected(void)
     RSDK.ProcessAnimation(&self->fuzzAnimator);
     self->fuzzDir = self->fuzzAnimator.frameID & 3;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (UITAZoneModule->showLBPrompt) {
         if (TimeAttackMenu->encoreMode)
             RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 4, (32 * (self->zoneID % 12)), 0, 224, 32);
@@ -532,12 +532,12 @@ void UITAZoneModule_State_HasBeenSelected(void)
     RSDK_THIS(UITAZoneModule);
 
     self->isSelected = true;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     self->touchCB = StateMachine_None;
 #endif
 
     if (self->timer >= 30) {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
         self->isExpanding            = true;
         self->expandTimer            = 0;
         self->timer                  = 0;
@@ -556,7 +556,7 @@ void UITAZoneModule_State_HasBeenSelected(void)
     }
 }
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 Vector2 UITAZoneModule_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds)
 {
     RSDK_THIS(UITAZoneModule);
@@ -1229,7 +1229,7 @@ void UITAZoneModule_EditorDraw(void)
 
     UITAZoneModule_Draw();
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     self->expandAmount     = self->debugExpand ? 0x4D0000 : 0;
     self->prevExpandAmount = self->expandAmount;
 
@@ -1247,7 +1247,7 @@ void UITAZoneModule_Serialize(void)
     RSDK_EDITABLE_VAR(UITAZoneModule, VAR_UINT8, zoneID);
     RSDK_EDITABLE_VAR(UITAZoneModule, VAR_STRING, text1);
     RSDK_EDITABLE_VAR(UITAZoneModule, VAR_STRING, text2);
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     RSDK_EDITABLE_VAR(UITAZoneModule, VAR_BOOL, debugExpand);
 #endif
 }

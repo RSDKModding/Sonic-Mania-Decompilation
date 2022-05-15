@@ -77,7 +77,7 @@ void SignPost_Create(void *data)
             switch (globals->playerID & 0xFF) {
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &self->facePlateAnimator, true, 0); break;
                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &self->facePlateAnimator, true, 0); break;
 #endif
@@ -336,7 +336,7 @@ void SignPost_CheckTouch(void)
                                 case ID_KNUCKLES:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0);
                                     break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                 case ID_MIGHTY:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &self->facePlateAnimator, true, 0);
                                     break;
@@ -359,7 +359,7 @@ void SignPost_CheckTouch(void)
                         session->time[player->playerID].milliseconds = SceneInfo->milliseconds;
                         session->score[player->playerID]             = player->score;
                         session->lives[player->playerID]             = player->lives;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         Competition_CalculateScore(player->playerID, FINISHFLAG_FINISHED);
 #else
                         CompetitionSession_DeriveWinner(player->playerID, FINISHFLAG_FINISHED);
@@ -371,7 +371,7 @@ void SignPost_CheckTouch(void)
                         self->state = SignPost_State_SpunVS;
                     }
                     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (globals->gameMode == MODE_ENCORE) {
                             switch (globals->playerID & 0xFF) {
                                 case ID_TAILS:
@@ -476,7 +476,7 @@ void SignPost_State_Fall(void)
             switch (globals->playerID & 0xFF) {
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &self->facePlateAnimator, true, 0); break;
                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &self->facePlateAnimator, true, 0); break;
 #endif

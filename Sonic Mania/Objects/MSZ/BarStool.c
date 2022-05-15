@@ -42,7 +42,7 @@ void BarStool_Update(void)
                 if (abs(self->spinSpeed) <= 0x10000)
                     canTurntable = false;
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             canTurntable = canTurntable && player->state != Player_State_MightyHammerDrop;
 #endif
 

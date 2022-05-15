@@ -206,7 +206,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
 
 bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
 
     EntityKleptoMobile *eggman = (EntityKleptoMobile *)ERZOutro->eggman;
@@ -447,7 +447,7 @@ bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host)
     return true;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ERZOutro_SaveFileCB(bool32 success) { ERZOutro->savedGame = true; }
 #else
 void ERZOutro_SaveFileCB(void) { ERZOutro->savedGame = true; }

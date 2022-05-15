@@ -11,7 +11,7 @@ struct ObjectTitleSetup {
     uint16 sfxMenuBleep;
     uint16 sfxMenuAccept;
     uint16 sfxRing;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint8 cheatCode[8];
 #endif
 };
@@ -44,7 +44,7 @@ void TitleSetup_EditorLoad(void);
 void TitleSetup_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleSetup_HandleCheatInputs(void);
 void TitleSetup_CheckCheatCode(void);
 #endif
@@ -55,7 +55,7 @@ void TitleSetup_State_AnimateUntilFlash(void);
 void TitleSetup_State_FlashIn(void);
 void TitleSetup_State_WaitForSonic(void);
 void TitleSetup_State_SetupLogo(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleSetup_State_SetupPlusLogo(void);
 #endif
 void TitleSetup_State_WaitForEnter(void);

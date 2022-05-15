@@ -66,7 +66,7 @@ void UIControl_Create(void *data)
 
         self->updateRange.x = self->size.x >> 1;
         self->updateRange.y = self->size.y >> 1;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->promptCount = 0;
 #endif
 
@@ -86,7 +86,7 @@ void UIControl_Create(void *data)
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 slotID = RSDK.GetEntityID(self);
         if (UIButtonPrompt && slotID != SLOT_DIALOG_UICONTROL) {
             foreach_all(UIButtonPrompt, prompt)
@@ -121,7 +121,7 @@ void UIControl_Create(void *data)
             self->visible = true;
         }
         else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->menuWasSetup = false;
 #endif
 
@@ -164,7 +164,7 @@ void UIControl_ClearInputs(uint8 buttonID)
         UIControl->xPress[i]       = false;
         UIControl->backPress[i]    = false;
         UIControl->confirmPress[i] = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         UIControl->startPress[i] = false;
 #endif
     }
@@ -175,7 +175,7 @@ void UIControl_ClearInputs(uint8 buttonID)
     UIControl->keyRight = false;
     UIControl->keyY     = buttonID == UIBUTTONPROMPT_BUTTON_Y;
     UIControl->keyX     = buttonID == UIBUTTONPROMPT_BUTTON_X;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIControl->keyStart = buttonID == UIBUTTONPROMPT_BUTTON_SELECT;
 #endif
 
@@ -219,7 +219,7 @@ void UIControl_ProcessInputs(void)
 
             UIControl->yPress[i] = ControllerInfo[i + 1].keyY.press;
             UIControl->xPress[i] = ControllerInfo[i + 1].keyX.press;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             UIControl->startPress[i] = ControllerInfo[i + 1].keyStart.press;
 #endif
 
@@ -239,7 +239,7 @@ void UIControl_ProcessInputs(void)
         UIControl->keyRight = ControllerInfo->keyRight.press || AnalogStickInfoL->keyRight.press;
         UIControl->keyY     = ControllerInfo->keyY.press;
         UIControl->keyX     = ControllerInfo->keyX.press;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         UIControl->keyStart = ControllerInfo->keyStart.press;
 #endif
 
@@ -272,7 +272,7 @@ void UIControl_ProcessInputs(void)
 
         if (UIControl->keyBack) {
             if (!self->childHasFocus && !self->dialogHasFocus
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 && !self->popoverHasFocus
 #endif
                 && self->backoutTimer <= 0) {
@@ -304,7 +304,7 @@ void UIControl_ProcessInputs(void)
                 if (backPressed)
                     return;
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             else {
                 LogHelpers_Print("Backout prevented");
                 LogHelpers_Print("childHasFocus = %d", self->childHasFocus);
@@ -323,7 +323,7 @@ void UIControl_ProcessInputs(void)
         if (!self->selectionDisabled) {
             if (UIControl->keyY) {
                 if (!self->childHasFocus && !self->dialogHasFocus
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     && !self->popoverHasFocus
 #endif
                     && self->backoutTimer <= 0) {
@@ -335,7 +335,7 @@ void UIControl_ProcessInputs(void)
 
             if (UIControl->keyX) {
                 if (!self->childHasFocus && !self->dialogHasFocus
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     && !self->popoverHasFocus
 #endif
                     && self->backoutTimer <= 0) {
@@ -400,13 +400,13 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
                     else if (UITAZoneModule && entity->classID == UITAZoneModule->classID) {
                         UITAZoneModule_Update();
                     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     else if (UIReplayCarousel && entity->classID == UIReplayCarousel->classID) {
                         UIReplayCarousel_Update();
                     }
 #endif
                     else if (UIModeButton && entity->classID == UIModeButton->classID) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         UIModeButton_Update();
 #else
                         EntityUIModeButton *modeButton = (EntityUIModeButton *)SceneInfo->entity;
@@ -438,7 +438,7 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIControl_SetActiveMenuButtonPrompts(EntityUIControl *entity)
 {
     for (int32 i = 0; i < entity->promptCount; ++i) entity->prompts[i]->active = ACTIVE_NORMAL;
@@ -447,7 +447,7 @@ void UIControl_SetActiveMenuButtonPrompts(EntityUIControl *entity)
 
 void UIControl_SetActiveMenu(EntityUIControl *entity)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.PrintString(PRINT_NORMAL, &entity->tag);
 #endif
 
@@ -468,7 +468,7 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
 
     UIControl_MenuChangeButtonInit(entity);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!entity->childHasFocus && (entity->resetSelection || !entity->menuWasSetup)) {
 #else
     if (!entity->childHasFocus) {
@@ -482,7 +482,7 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
     entity->state         = UIControl_ProcessInputs;
     entity->childHasFocus = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     entity->menuWasSetup = true;
 
     for (int32 p = 0; p < entity->promptCount; ++p) entity->prompts[p]->active = ACTIVE_NORMAL;
@@ -502,7 +502,7 @@ void UIControl_SetMenuLostFocus(EntityUIControl *entity)
     entity->visible = true;
 
     if (!entity->dialogHasFocus && !entity->childHasFocus
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         && !entity->popoverHasFocus
 #endif
     ) {
@@ -513,7 +513,7 @@ void UIControl_SetMenuLostFocus(EntityUIControl *entity)
         }
         else if (entity->resetSelection) {
             entity->buttonID = entity->startingID;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
             entity->position.x  = entity->startPos.x;
             entity->position.y  = entity->startPos.y;
             entity->targetPos.x = entity->startPos.x;
@@ -522,7 +522,7 @@ void UIControl_SetMenuLostFocus(EntityUIControl *entity)
 #endif
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (entity->resetSelection || !entity->menuWasSetup) {
             entity->position.x  = entity->startPos.x;
             entity->position.y  = entity->startPos.y;
@@ -546,7 +546,7 @@ void UIControl_SetInactiveMenu(EntityUIControl *control)
     control->visible         = false;
     control->state           = StateMachine_None;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->promptCount) {
         for (int32 p = 0; p < control->promptCount; ++p) control->prompts[p]->active = ACTIVE_BOUNDS;
     }
@@ -575,7 +575,7 @@ void UIControl_SetupButtons(void)
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (UIShifter && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIShifter, shifter)
         {
@@ -618,7 +618,7 @@ void UIControl_SetupButtons(void)
             int32 classID = button->classID;
             if (classID != UIButton->classID && (!UIModeButton || classID != UIModeButton->classID) && (!UISaveSlot || classID != UISaveSlot->classID)
                 && (!UICharButton || classID != UICharButton->classID) && (!UITAZoneModule || classID != UITAZoneModule->classID)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 && (!UIRankButton || classID != UIRankButton->classID) && (!UIReplayCarousel || classID != UIReplayCarousel->classID)
 #endif
                 && (!UILeaderboard || classID != UILeaderboard->classID) && (!UIVsCharSelector || classID != UIVsCharSelector->classID)
@@ -710,7 +710,7 @@ void UIControl_ReturnToParentMenu(void)
     UIControl_HandleMenuChange(&entity->parentTag);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y)
 {
     int32 targetX = x;
@@ -800,7 +800,7 @@ void UIControl_ProcessButtonInput(void)
                 Entity *storeEntity = SceneInfo->entity;
                 SceneInfo->entity   = (Entity *)button;
                 if (button->touchCB && !self->dialogHasFocus
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     && !self->popoverHasFocus
 #endif
                 ) {
@@ -896,7 +896,7 @@ void UIControl_Serialize(void)
     RSDK_EDITABLE_VAR(UIControl, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(UIControl, VAR_VECTOR2, cameraOffset);
     RSDK_EDITABLE_VAR(UIControl, VAR_VECTOR2, scrollSpeed);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_EDITABLE_VAR(UIControl, VAR_BOOL, noClamp);
     RSDK_EDITABLE_VAR(UIControl, VAR_BOOL, noWrap);
 #endif

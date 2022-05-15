@@ -105,11 +105,11 @@ void Sol_HandlePlayerInteractions(void)
             self->position.y = self->positions[i].y;
             foreach_active(Player, player)
             {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->state != Player_State_MightyHammerDrop) {
 #endif
                     Sol_HandlePlayerHurt();
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
             }
@@ -130,7 +130,7 @@ void Sol_HandlePlayerInteractions(void)
                     EntitySol *sol   = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
 
                     sol->state = Sol_State_ActiveFireball;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop)
                         sol->interaction = false;
 #endif

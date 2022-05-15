@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 // preplus was always 2P
 #define COMPETITION_PLAYER_COUNT (2)
 #endif
@@ -49,7 +49,7 @@ struct EntityCompetitionSession {
     int32 matchID;
     int32 matchCount;
     int32 itemMode;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 swapType;
 #endif
     bool32 completedStages[COMPETITION_STAGE_COUNT];
@@ -63,7 +63,7 @@ struct EntityCompetitionSession {
     int32 totalRings[PLAYER_MAX];
     int32 wins[PLAYER_MAX];
     int32 lives[PLAYER_MAX];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 screenBorderType[SCREEN_MAX];
     int32 displayMode;
     int32 controllerIDs[PLAYER_MAX];
@@ -88,7 +88,7 @@ void CompetitionSession_EditorLoad(void);
 void CompetitionSession_Serialize(void);
 
 // Extra Entity Functions
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void CompetitionSession_ResetOptions(void);
 void CompetitionSession_ClearMatchData(void);
 void CompetitionSession_DeriveWinner(int32 playerID, int32 flags);

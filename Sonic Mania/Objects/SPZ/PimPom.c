@@ -225,7 +225,7 @@ void PimPom_State_Single(void)
                 player->onGround     = false;
                 player->applyJumpCap = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->state = Player_State_Air;
@@ -314,7 +314,7 @@ void PimPom_State_Horizontal(void)
             }
 
             if (side != C_NONE) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->state = Player_State_Air;

@@ -91,7 +91,7 @@ void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *leaderboard)
     UILeaderboard_LoadEntries(leaderboard);
 }
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
 {
     int32 count              = APICallback_LeaderboardEntryCount();
@@ -149,7 +149,7 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
     if (!SceneInfo->inEditor) {
         for (int32 i = 0; i < 5; ++i) {
             LeaderboardEntry *entry = API_ReadLeaderboardEntry(i + entity->entryOffset);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (entry && entry->status == STATUS_OK) {
 #else
             if (entry) {
@@ -441,7 +441,7 @@ void UILeaderboard_ProcessButtonCB(void)
 {
     RSDK_THIS(UILeaderboard);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LeaderboardAvail entryCount = API.LeaderboardEntryCount();
 
     int32 newID = self->entryOffset;

@@ -68,7 +68,7 @@ void CPZSetup_StageLoad(void)
         CPZSetup->background->deformationData[i] = CPZSetup->deformation[i & 0x3F];
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreCPZ.act", 0b0000000011111111);
         RSDK.LoadPalette(2, "EncoreCPZw.act", 0b0000000011111111);

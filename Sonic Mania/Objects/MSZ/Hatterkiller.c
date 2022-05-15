@@ -71,7 +71,7 @@ void Hatterkiller_Update(void)
                 self->position.y = self->bodyPositions[s].y;
 
                 if (Player_CheckCollisionTouch(player, self, &Hatterkiller->hitboxSegment)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);

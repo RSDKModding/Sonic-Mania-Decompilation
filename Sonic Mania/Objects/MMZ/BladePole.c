@@ -122,7 +122,7 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox)
             int32 storeX         = self->position.x;
             int32 storeY         = self->position.y;
             self->position.y = ((BladePole->hitboxBottom.bottom - BladePole->hitboxBottom.top) << 15) + storeY;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);

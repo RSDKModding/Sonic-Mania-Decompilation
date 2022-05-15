@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 // Object Class
 struct ObjectBloominator {
     RSDK_OBJECT

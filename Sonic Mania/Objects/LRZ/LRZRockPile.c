@@ -417,7 +417,7 @@ void LRZRockPile_State_Wall(void)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
             if ((!self->onlyKnux || player->characterID == ID_KNUCKLES)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 && (!self->onlyMighty || player->characterID == ID_MIGHTY)
 #endif
             ) {
@@ -458,7 +458,7 @@ void LRZRockPile_State_Floor_TopSolid(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionPlatform(player, self, &self->hitbox)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     && (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
                     && !player->sidekick && !self->unbreakable && player->onGround) {
@@ -467,7 +467,7 @@ void LRZRockPile_State_Floor_TopSolid(void)
                             self->canCollapse = true;
                             self->timer       = self->delay;
                         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop)
                             self->timer = 1;
 #endif
@@ -490,7 +490,7 @@ void LRZRockPile_State_Floor_AllSolid(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     && (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
                     && !player->sidekick && !self->unbreakable && player->onGround) {
@@ -499,7 +499,7 @@ void LRZRockPile_State_Floor_AllSolid(void)
                             self->canCollapse = true;
                             self->timer       = self->delay;
                         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop)
                             self->timer = 1;
 #endif
@@ -574,7 +574,7 @@ void LRZRockPile_Serialize(void)
     RSDK_EDITABLE_VAR(LRZRockPile, VAR_BOOL, unbreakable);
     RSDK_EDITABLE_VAR(LRZRockPile, VAR_ENUM, planeFilter);
     RSDK_EDITABLE_VAR(LRZRockPile, VAR_BOOL, onlyKnux);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_EDITABLE_VAR(LRZRockPile, VAR_BOOL, onlyMighty);
 #endif
 }

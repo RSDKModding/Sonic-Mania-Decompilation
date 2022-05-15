@@ -15,7 +15,7 @@ void MenuSetup_Update(void)
 
     StateMachine_Run(self->state);
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     if (self->state != MenuSetup_State_SetupLeaderboards) {
 #endif
 
@@ -27,7 +27,7 @@ void MenuSetup_Update(void)
             self->timer++;
         }
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     }
 #endif
 }
@@ -36,7 +36,7 @@ void MenuSetup_LateUpdate(void) {}
 
 void MenuSetup_StaticUpdate(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!MenuSetup->initializedAPI) {
         MenuSetup->fxFade->speedOut = 0;
 
@@ -148,7 +148,7 @@ void MenuSetup_StageLoad(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LogHelpers_Print("Menu recall ctrl: %s", param->menuTag);
 
     MenuSetup->initializedMenuReturn = false;
@@ -191,7 +191,7 @@ void MenuSetup_StageLoad(void)
     memset(globals->noSaveSlot, 0, 0x400);
 
     globals->continues = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     globals->recallEntities = false;
 #else
     MenuSetup->vsTotalTimer = 120;
@@ -210,7 +210,7 @@ void MenuSetup_StartTransition(void (*callback)(void), int32 delay)
     menuSetup->fadeColor = 0x000000;
     menuSetup->fadeShift = 5;
     menuSetup->delay     = delay;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     menuSetup->state = ManiaModeMenu_State_HandleTransition;
 #else
     menuSetup->state        = MenuSetup_State_HandleTransition;
@@ -218,7 +218,7 @@ void MenuSetup_StartTransition(void (*callback)(void), int32 delay)
     menuSetup->callback = callback;
 }
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay)
 {
     EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
@@ -233,7 +233,7 @@ void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay)
 #endif
 
 // START PRE-PLUS AREA
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void MenuSetup_Initialize(void)
 {
     String string;
@@ -1135,7 +1135,7 @@ void MenuSetup_OpenSaveSelectMenu(void)
     control->childHasFocus = false;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MenuSetup_SaveFileCB(bool32 success)
 {
     UIWaitSpinner_FinishWait();

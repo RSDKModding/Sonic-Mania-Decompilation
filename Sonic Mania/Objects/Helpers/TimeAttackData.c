@@ -267,7 +267,7 @@ void TimeAttackData_Create(void *data) {}
 
 void TimeAttackData_StageLoad(void) {}
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 characterID, int32 time, int32 rings, int32 score)
 {
     stat->statID = 0;
@@ -321,7 +321,7 @@ void TimeAttackData_Clear(void)
     param->zoneID           = 0;
     param->actID            = 0;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     param->timeAttackRank = 0;
     globals->gameMode     = MODE_MANIA;
 #else
@@ -426,7 +426,7 @@ uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterI
     return &saveRAM[pos];
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success))
 {
     LogHelpers_Print("Loading Time Attack DB");

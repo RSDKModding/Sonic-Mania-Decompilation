@@ -108,7 +108,7 @@ void Dango_CheckPlayerCollisions(void)
 
             bool32 bumpPlayer = anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH;
             bumpPlayer &= self->state == Dango_State_Rolling;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->characterID == ID_MIGHTY)
                 bumpPlayer |= anim == ANI_CROUCH || player->jumpAbilityState > 1;
             bumpPlayer &= player->state != Player_State_MightyHammerDrop;
@@ -133,14 +133,14 @@ void Dango_CheckPlayerCollisions(void)
 
                 self->velocity.x = self->groundVel;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!(player->characterID == ID_MIGHTY && player->jumpAbilityState > 1)) {
 #endif
                     player->groundVel  = (player->position.x - self->position.x) >> 2;
                     player->velocity.x = player->groundVel;
                     player->velocity.y = (player->position.y - self->position.y) >> 2;
                     player->onGround   = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
 
@@ -366,7 +366,7 @@ void Dango_State_Uncurling(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Dango_StateTaunt_Setup(void)
 {
     RSDK_THIS(Dango);

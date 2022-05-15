@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 
 typedef enum {
     AIZROCKPILE_SMALL,

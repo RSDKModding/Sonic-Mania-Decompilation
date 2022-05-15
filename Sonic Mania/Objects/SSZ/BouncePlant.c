@@ -66,7 +66,7 @@ void BouncePlant_Update(void)
 
                         if (player->state == Player_State_GlideSlide || player->state == Player_State_KnuxGlideDrop
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             || player->state == Player_State_MightyHammerDrop
 #endif
                         ) {
@@ -94,7 +94,7 @@ void BouncePlant_Update(void)
                         player->groundVel     = player->velocity.x;
 
                         if (player->state == Player_State_GlideSlide || player->state == Player_State_KnuxGlideDrop
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             || player->state == Player_State_MightyHammerDrop
 #endif
                         ) {

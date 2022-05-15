@@ -13,7 +13,7 @@ void UFO_HUD_Update(void)
 {
     RSDK_THIS(UFO_HUD);
 
-#if RETRO_USE_PLUS && RETRO_GAMEVER != VER_107
+#if MANIA_USE_PLUS && MANIA_GAMEVER != VER_107
     if (ControllerInfo->keyY.press)
         UFO_HUD_LevelUpMach();
 #endif

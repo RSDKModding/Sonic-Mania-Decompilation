@@ -85,7 +85,7 @@ void FarPlane_StageLoad(void)
         RSDK.CopyPalette(0, 0, 3, 0, 128);
         RSDK.CopyPalette(0, 144, 3, 144, 112);
         RSDK.CopyPalette(3, 0, 4, 0, 255);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter & FILTER_MANIA)
 #endif
             RSDK.SetLimitedFade(4, 0, 3, 96, 128, 143);

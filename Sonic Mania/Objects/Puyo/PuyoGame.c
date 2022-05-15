@@ -30,7 +30,7 @@ void PuyoGame_Update(void)
         RSDK.SetEngineState(ENGINESTATE_FROZEN);
     }
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     for (int32 t = 0; t < TouchInfo->count; ++t) {
         int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
         int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -348,7 +348,7 @@ void PuyoGame_State_ShowRoundResults(void)
                              || controller[i].keyY.down || controller[i].keyZ.down;
         }
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         buttonPressed |= TouchInfo->count != 0;
 #endif
 
@@ -379,7 +379,7 @@ void PuyoGame_State_ShowMatchResults(void)
                              || controller[i].keyY.down || controller[i].keyZ.down;
         }
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         buttonPressed |= TouchInfo->count != 0;
 #endif
 

@@ -104,7 +104,7 @@ void Spikes_Update(void)
                             }
                             shouldShatter = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             if (side == C_TOP && player->state == Player_State_MightyHammerDrop) {
                                 if (Ice) {
                                     if (!Press) {
@@ -119,7 +119,7 @@ void Spikes_Update(void)
 #endif
                         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         switch (side) {
                             case C_TOP:
                                 player->collisionFlagV |= 1;
@@ -497,7 +497,7 @@ void Spikes_Shatter(int32 velX, int32 velY)
     destroyEntity(self);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 {
     RSDK_THIS(Spikes);

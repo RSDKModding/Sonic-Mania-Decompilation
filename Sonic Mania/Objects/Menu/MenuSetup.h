@@ -8,7 +8,7 @@ typedef enum {
     MAINMENU_TIMEATTACK,
     MAINMENU_COMPETITION,
     MAINMENU_SAVESELECT,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MAINMENU_SAVESELECT_ENCORE,
 #endif
 } MainMenuIDs;
@@ -24,7 +24,7 @@ struct ObjectMenuSetup {
     int32 unused2;
     int32 unused3;
     EntityFXFade *fxFade;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     EntityUIButtonPrompt *delSavePrompt;
     EntityUIControl *mainMenu;
     EntityUIControl *timeAttack;
@@ -98,7 +98,7 @@ void MenuSetup_Serialize(void);
 // Extra Entity Functions
 void MenuSetup_StartTransition(void (*callback)(void), int32 delay);
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 //Setup
 void MenuSetup_Initialize(void);
 bool32 MenuSetup_InitAPI(void);
@@ -123,7 +123,7 @@ void MenuSetup_State_HandleTransition(void);
 //Save Select
 int32 MenuSetup_GetMedalMods(void);
 void MenuSetup_OpenSaveSelectMenu(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MenuSetup_SaveFileCB(bool32 success);
 #else
 void MenuSetup_SaveFileCB(void);

@@ -13,7 +13,7 @@ void Platform_Update(void)
 {
     RSDK_THIS(Platform);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (Zone->teleportActionActive) {
         self->pushPlayersL = false;
         self->pushPlayersR = false;
@@ -50,7 +50,7 @@ void Platform_Update(void)
             if (child->classID == ItemBox->classID) {
                 if (!child->scale.y) {
                     EntityItemBox *itemBox = (EntityItemBox *)child;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     itemBox->parent = (Entity *)self;
 #else
                     itemBox->groundVel = RSDK.GetEntityID(self);
@@ -1371,7 +1371,7 @@ void Platform_Collision_AllSolid(void)
             case C_TOP:
                 self->stood = true;
                 if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
                     else
@@ -1445,7 +1445,7 @@ void Platform_Collision_AllHazard(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionBox(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, self->type == PLATFORM_CIRCULAR, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
@@ -1473,7 +1473,7 @@ void Platform_Collision_BottomHazard(void)
                 self->stood = true;
                 self->stoodPlayers |= 1 << playerID;
                 if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
                     else
@@ -1530,7 +1530,7 @@ void Platform_Collision_BottomHazard(void)
                 if (self->velocity.y >= 0)
                     player->collisionFlagV |= 2;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x400, 0, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
@@ -1559,7 +1559,7 @@ void Platform_Collision_LRHazard(void)
                 self->stoodPlayers |= 1 << playerID;
 
                 if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
                     else
@@ -1586,7 +1586,7 @@ void Platform_Collision_LRHazard(void)
 
             case C_LEFT:
                 if (
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     Player_CheckMightyUnspin(player, 1024, 0, &player->uncurlTimer) ||
 #endif
                     Player_CheckHit(player, self)) {
@@ -1610,7 +1610,7 @@ void Platform_Collision_LRHazard(void)
 
             case C_RIGHT:
                 if (
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     Player_CheckMightyUnspin(player, 0x400, 0, &player->uncurlTimer) ||
 #endif
                     Player_CheckHit(player, self)) {
@@ -1724,7 +1724,7 @@ void Platform_Collision_Tiles(void)
                 if (!player->sidekick) {
                     self->stood = true;
                     if (self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                             self->timer = 1;
                         else
@@ -1788,7 +1788,7 @@ void Platform_Collision_Sticky(void)
             if (!player->sidekick) {
                 self->stood = true;
                 if (self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
                     else
@@ -1857,7 +1857,7 @@ void Platform_Collision_TopHazard(void)
                 self->stood = true;
                 self->stoodPlayers |= 1 << playerID;
                 if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
                     else
@@ -1878,7 +1878,7 @@ void Platform_Collision_TopHazard(void)
                 player->position.y += self->collisionOffset.y;
                 player->position.y &= 0xFFFF0000;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x400, 0, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
@@ -1943,7 +1943,7 @@ void Platform_Collision_TopSolid(void)
         if (Player_CheckCollisionPlatform(player, self, platformHitbox)) {
             self->stood = true;
             if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                     self->timer = 1;
                 else
@@ -1989,7 +1989,7 @@ void Platform_Collision_TurnTable(void)
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP: self->stood = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
 #endif
                     if (!((1 << playerID) & stoodPlayers)) {
@@ -2004,7 +2004,7 @@ void Platform_Collision_TurnTable(void)
                         player->animator.speed = 64;
                         player->direction      = FLIP_NONE;
                         if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                                 self->timer = 1;
                             else
@@ -2039,7 +2039,7 @@ void Platform_Collision_TurnTable(void)
                         Player_StartJump(player);
                     else if (self->velocity.y <= 0)
                         player->collisionFlagV |= 1;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
                 break;
@@ -2110,7 +2110,7 @@ void Platform_Collision_Twister(void)
                 break;
 
             case C_TOP:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
 #endif
                     if (!((1 << playerID) & stoodPlayers)) {
@@ -2129,7 +2129,7 @@ void Platform_Collision_Twister(void)
                         if (!player->sidekick) {
                             self->stood = true;
                             if (self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                                     self->timer = 1;
                                 else
@@ -2165,7 +2165,7 @@ void Platform_Collision_Twister(void)
                         Player_StartJump(player);
                     else if (self->velocity.y <= 0)
                         player->collisionFlagV |= 1;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
                 break;
@@ -2235,7 +2235,7 @@ void Platform_Collision_AllSolid_NoCrush(void)
             case C_TOP:
                 self->stood = true;
                 if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
                     else

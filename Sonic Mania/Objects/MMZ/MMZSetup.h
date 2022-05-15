@@ -42,7 +42,7 @@ void MMZSetup_Serialize(void);
 
 // Extra Entity Functions
 void MMZSetup_StageFinishCB_Act1(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MMZSetup_StageFinishCB_Act2(void);
 #endif
 

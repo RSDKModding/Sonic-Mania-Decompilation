@@ -129,7 +129,7 @@ void PhantomEgg_State_CrackOpen(void);
 void PhantomEgg_State_CrackedExploding(void);
 void PhantomEgg_State_StartGoodEnd(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void PhantomEgg_SaveGameCB(bool32 success);
 #else
 void PhantomEgg_SaveGameCB(void);

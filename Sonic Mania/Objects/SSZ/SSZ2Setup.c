@@ -73,12 +73,12 @@ void SSZ2Setup_StageLoad(void)
 
         CREATE_ENTITY(SSZ3Cutscene, intToVoid(false), 0, 0);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->stageFinishCallback = SSZ2Setup_StageFinishCB;
 #endif
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if ((SceneInfo->filter & FILTER_ENCORE))
         RSDK.LoadPalette(0, "EncoreSSZ2.act", 0b0000000011111111);
 #endif
@@ -88,7 +88,7 @@ void SSZ2Setup_StageLoad(void)
     GenericTrigger->callbacks[2] = SSZ2Setup_GenericTriggerCB_SSZ2BTransition;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
 #endif
 
@@ -202,7 +202,7 @@ void SSZ2Setup_GenericTriggerCB_SSZ2BTransition(void)
 
             Zone->cameraBoundsR[0] = ScreenInfo->centerX + (self->position.x >> 16);
             Zone->cameraBoundsR[1] = ScreenInfo->centerX + (self->position.x >> 16);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             Zone->cameraBoundsR[2] = ScreenInfo->centerX + (self->position.x >> 16);
             Zone->cameraBoundsR[3] = ScreenInfo->centerX + (self->position.x >> 16);
 #endif

@@ -82,7 +82,7 @@ void Stalactite_State_Falling(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Stalactite->hitboxStalactite)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
                 self->state = Stalactite_State_Debris;
             else
@@ -118,7 +118,7 @@ void Stalactite_State_Falling_Boss(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Stalactite->hitboxStalactite)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
                 self->state = Stalactite_State_Debris;
             else

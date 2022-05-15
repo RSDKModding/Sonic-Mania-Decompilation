@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectPBL_Setup *PBL_Setup;
 
 void PBL_Setup_Update(void)

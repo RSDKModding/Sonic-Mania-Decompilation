@@ -35,7 +35,7 @@ void TitleCard_Create(void *data)
         self->active      = ACTIVE_ALWAYS;
         self->visible     = true;
         self->drawOrder   = Zone->hudDrawOrder;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->enableIntro = globals->enableIntro;
 
         TitleCard_SetupColors();
@@ -45,7 +45,7 @@ void TitleCard_Create(void *data)
             SceneInfo->timeEnabled = false;
 
         if (globals->suppressTitlecard) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             StateMachine_Run(TitleCard->suppressCB);
             TitleCard->suppressCB = NULL;
 #endif
@@ -89,7 +89,7 @@ void TitleCard_Create(void *data)
             self->word2XPos = self->word2XPos - dist;
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (Zone->swapGameMode) {
             Zone->swapGameMode         = false;
             globals->enableIntro       = false;
@@ -128,7 +128,7 @@ void TitleCard_StageLoad(void)
     foreach_all(TitleCard, titleCard) { Zone->actID = titleCard->actID; }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleCard_SetupColors(void)
 {
     RSDK_THIS(TitleCard);
@@ -371,7 +371,7 @@ void TitleCard_State_SetupBGElements(void)
 {
     RSDK_THIS(TitleCard);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (ActClear && ActClear->actClearActive)
         ActClear->actClearActive = false;
 #endif
@@ -497,7 +497,7 @@ void TitleCard_State_ShowingTitle(void)
         self->state       = TitleCard_State_SlideAway;
         self->stateDraw   = TitleCard_Draw_SlideAway;
         RSDK.SetEngineState(ENGINESTATE_REGULAR);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         StateMachine_Run(TitleCard->finishedCB);
 #endif
     }
@@ -616,7 +616,7 @@ void TitleCard_State_SlideAway(void)
         globals->enableIntro = false;
         if (globals->gameMode >= MODE_TIMEATTACK) {
             if (globals->gameMode == MODE_COMPETITION) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 Competition_ClearMatchData();
 #else
                 CompetitionSession_ClearMatchData();
@@ -644,7 +644,7 @@ void TitleCard_State_Supressed(void)
         SceneInfo->timeEnabled = false;
 
     self->active = ACTIVE_NEVER;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if ((globals->suppressTitlecard && !self->enableIntro) || globals->gameMode == MODE_TIMEATTACK) {
         destroyEntity(self);
         globals->suppressTitlecard = false;
@@ -656,7 +656,7 @@ void TitleCard_State_Supressed(void)
     }
 #endif
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine_Run(TitleCard->finishedCB);
 #endif
 }
@@ -666,7 +666,7 @@ void TitleCard_Draw_SlideIn(void)
     RSDK_THIS(TitleCard);
 
     color colors[5];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     colors[0] = self->colors[0];
     colors[1] = self->colors[1];
     colors[2] = self->colors[2];
@@ -719,7 +719,7 @@ void TitleCard_Draw_SlideIn(void)
     RSDK.DrawQuad(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 
     // Draw Act Number
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     self->decorationAnimator.frameID = 2 * (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) + 1;
 #else
     self->decorationAnimator.frameID = 2 * 0 + 1;
@@ -732,7 +732,7 @@ void TitleCard_Draw_ShowTitleCard(void)
     RSDK_THIS(TitleCard);
 
     color colors[5];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     colors[0] = self->colors[0];
     colors[1] = self->colors[1];
     colors[2] = self->colors[2];
@@ -768,7 +768,7 @@ void TitleCard_Draw_ShowTitleCard(void)
 
     // Draw "Sonic Mania"
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->decorationAnimator.frameID = 2 * (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) + 1;
 #else
         self->decorationAnimator.frameID = 2 * 0 + 1;
@@ -817,7 +817,7 @@ void TitleCard_Draw_ShowTitleCard(void)
             self->scale.x = minVal(self->actNumScale, 0x200);
             self->scale.y = 0x200;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->decorationAnimator.frameID = (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) ? 2 : 0;
 #else
             self->decorationAnimator.frameID = 0;
@@ -836,7 +836,7 @@ void TitleCard_Draw_SlideAway(void)
     RSDK_THIS(TitleCard);
 
     color colors[5];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     colors[0] = self->colors[0];
     colors[1] = self->colors[1];
     colors[2] = self->colors[2];
@@ -874,7 +874,7 @@ void TitleCard_Draw_SlideAway(void)
 
     // Draw "Sonic Mania"
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->decorationAnimator.frameID = 2 * (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) + 1;
 #else
         self->decorationAnimator.frameID = 2 * 0 + 1;
@@ -884,7 +884,7 @@ void TitleCard_Draw_SlideAway(void)
 
     // Draw Act Number
     if (self->actID != 3 && self->actNumScale > 0) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->decorationAnimator.frameID = (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) ? 2 : 0;
 #else
         self->decorationAnimator.frameID = 0;

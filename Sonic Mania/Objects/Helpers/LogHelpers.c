@@ -30,7 +30,7 @@ void LogHelpers_Print(const char *message, ...)
         va_start(args, message);
         vsprintf(messageText, message, args);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.PrintText(PRINT_NORMAL, messageText);
 #else
         int32 len            = strlen(messageText);

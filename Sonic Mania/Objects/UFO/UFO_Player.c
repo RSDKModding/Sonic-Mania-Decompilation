@@ -147,7 +147,7 @@ void UFO_Player_StageLoad(void)
             UFO_Player->tumbleModel = RSDK.LoadMesh("Special/KnuxTumble.bin", SCOPE_STAGE);
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY:
             UFO_Player->jogModel    = RSDK.LoadMesh("Special/MightyJog.bin", SCOPE_STAGE);
             UFO_Player->dashModel   = RSDK.LoadMesh("Special/MightyDash.bin", SCOPE_STAGE);
@@ -198,7 +198,7 @@ void UFO_Player_ProcessPlayerControl(void)
     RSDK_THIS(UFO_Player);
 
     if (self->controllerID < PLAYER_MAX) {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -287,7 +287,7 @@ void UFO_Player_ProcessPlayerControl(void)
         self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
         self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
         self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
         self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;

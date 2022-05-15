@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectGiantPistol {
     RSDK_OBJECT
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 inCutscene;
 #endif
     Hitbox hitboxFront;
@@ -60,7 +60,7 @@ void GiantPistol_State_SpinGun(void);
 void GiantPistol_State_Aiming(void);
 void GiantPistol_State_FiredPlayers(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GiantPistol_PlayerState_PistolAir(void);
 void GiantPistol_PlayerState_PistolGround(void);
 #endif

@@ -193,7 +193,7 @@ void UIModeButton_SelectedCB(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     if (self->buttonID == UIMODEBUTTON_COMPETITION) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 id = API_MostRecentActiveControllerID(1, 0, 5);
 #else
         int32 id = API_MostRecentActiveControllerID(0);

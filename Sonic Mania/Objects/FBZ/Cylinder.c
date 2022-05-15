@@ -532,7 +532,7 @@ void Cylinder_State_InkRoller(void)
         else {
             if (Player_CheckCollisionTouch(player, self, &self->hitboxRange) && !player->onGround) {
                 if (
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     player->state == Player_State_MightyHammerDrop ||
 #endif
                     player->state == Player_State_BubbleBounce) {

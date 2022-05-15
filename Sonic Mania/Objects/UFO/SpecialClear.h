@@ -14,14 +14,14 @@ typedef enum {
     SC_ANI_SONIC,
     SC_ANI_TAILS,
     SC_ANI_KNUX,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     SC_ANI_MIGHTY,
     SC_ANI_RAY,
 #endif
     SC_ANI_BONUS,
     SC_ANI_NUMBERS,
     SC_ANI_EMERALDS,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     SC_ANI_CONTINUE,
 #endif
 } SpecialClearAniIDs;
@@ -30,7 +30,7 @@ typedef enum {
 struct ObjectSpecialClear {
     RSDK_OBJECT
     uint16 aniFrames;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     uint16 continueFrames;
 #endif
     uint16 sfxScoreAdd;
@@ -103,7 +103,7 @@ void SpecialClear_Serialize(void);
 void SpecialClear_DrawNumbers(Vector2 *pos, int32 value);
 void SpecialClear_GiveScoreBonus(int32 score);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SpecialClear_SaveCB(bool32 success);
 #else
 void SpecialClear_SaveCB(void);

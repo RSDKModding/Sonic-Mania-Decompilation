@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectMainMenu *MainMenu;
 
 void MainMenu_Update(void) {}
@@ -96,7 +96,7 @@ void MainMenu_Initialize(void)
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 button1Frame = 1; // Time Attack
     int32 button2Frame = 2; // Competition
     int32 button3Frame = 3; // Options
@@ -193,7 +193,7 @@ void MainMenu_MenuButton_ActionCB(void)
             else {
                 EntityUIControl *saveSelect = ManiaModeMenu->saveSelectMenu;
                 saveSelect->buttonID        = 7;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 saveSelect->menuWasSetup           = false;
                 ManiaModeMenu->saveSelLastButtonID = -1;
 
@@ -259,7 +259,7 @@ void MainMenu_MenuButton_ActionCB(void)
         case 6: // Buy Plus DLC
             API.ShowExtensionOverlay(0);
 
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
             if (!API.CheckDLC(DLC_PLUS)) {
                 if (API.ShowCheckoutPage(0)) {
                     API.ShowEncorePage(0);
@@ -279,7 +279,7 @@ void MainMenu_MenuButton_ActionCB(void)
     }
 }
 
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
 void MainMenu_BuyPlusDialogCB(void) { API.CoreUnknown4(0); }
 #endif
 

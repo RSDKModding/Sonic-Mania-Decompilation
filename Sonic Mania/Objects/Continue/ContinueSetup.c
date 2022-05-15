@@ -86,7 +86,7 @@ void ContinueSetup_Create(void *data)
             case ID_SONIC: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 0); break;
             case ID_TAILS: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 1); break;
             case ID_KNUCKLES: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 2); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 3); break;
             case ID_RAY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 4); break;
 #endif
@@ -178,7 +178,7 @@ void ContinueSetup_State_ContinueGame(void)
     }
 
     if (self->timer == 260) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "");
         else

@@ -61,7 +61,7 @@ void UIVsCharSelector_Update(void)
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if ((
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->state == UIVsCharSelector_State_HandlePlayerJoin ||
 #endif
             self->state == UIVsCharSelector_State_Selected)
@@ -148,7 +148,7 @@ void UIVsCharSelector_DrawPlayer(void)
     drawPos.x = self->position.x - 0x2D0000;
     drawPos.y = self->position.y + 0x180000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x5A0000, 0x100000, 0, 255, INK_NONE, false);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 14, &self->edgeAnimator, true, 1);
 
     drawPos.x = self->position.x + 0x2D0000;
@@ -160,7 +160,7 @@ void UIVsCharSelector_DrawPlayer(void)
     drawPos.y = self->position.y - 0x2D0000;
     RSDK.DrawSprite(&self->edgeAnimator, &drawPos, false);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     drawPos.x -= 0xA0000;
 #else
     drawPos.x += self->playerID ? -0xA0000 : 0xA0000;
@@ -177,7 +177,7 @@ void UIVsCharSelector_DrawPlayer(void)
     }
     else if (self->state != UIVsCharSelector_State_Selected || !(self->timer & 2)) {
         int32 frameID = self->frameID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->frameID >= UICHARBUTTON_MIGHTY)
             frameID++;
 #endif
@@ -238,7 +238,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
             RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 max = UICHARBUTTON_KNUX + (API.CheckDLC(DLC_PLUS) ? 2 : 0);
 #else
         int32 max = UICHARBUTTON_KNUX;
@@ -248,7 +248,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
         while (self->frameID < 0) self->frameID += max;
         while (self->frameID >= max) self->frameID -= max;
 
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         int32 activePlayers = 0;
 
         for (int32 i = 0; i < parent->buttonCount; ++i) {
@@ -329,7 +329,7 @@ void UIVsCharSelector_State_ResetState(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     self->state = UIVsCharSelector_State_HandlePlayerJoin;
 #else
     self->state = UIVsCharSelector_State_CharSelect;
@@ -348,7 +348,7 @@ void UIVsCharSelector_State_CharSelect(void)
     RSDK_THIS(UIVsCharSelector);
 
     int32 id = API_ControllerIDForInputID(self->playerID + 1);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!id || id == CONT_AUTOASSIGN) {
 #else
     if (id + 1 <= 1) {
@@ -368,7 +368,7 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
     self->isSelected      = false;
 
     int32 id = API_ControllerIDForInputID(self->playerID + 1);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     self->ready    = false;
     int32 assigned = RSDK.GetAssignedControllerID(id);
 
@@ -391,7 +391,7 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIVsCharSelector_State_HandlePlayerJoin(void)
 {
     RSDK_THIS(UIVsCharSelector);
@@ -438,7 +438,7 @@ void UIVsCharSelector_State_Selected(void)
                 case UICHARBUTTON_SONIC: RSDK.PlaySfx(Announcer->sfxSonic, false, 255); break;
                 case UICHARBUTTON_TAILS: RSDK.PlaySfx(Announcer->sfxTails, false, 255); break;
                 case UICHARBUTTON_KNUX: RSDK.PlaySfx(Announcer->sfxKnuckles, false, 255); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case UICHARBUTTON_MIGHTY: RSDK.PlaySfx(Announcer->sfxMighty, false, 255); break;
                 case UICHARBUTTON_RAY: RSDK.PlaySfx(Announcer->sfxRay, false, 255); break;
 #endif
@@ -467,7 +467,7 @@ void UIVsCharSelector_EditorLoad(void)
     RSDK_ACTIVE_VAR(UIVsCharSelector, playerID);
     RSDK_ENUM_VAR("Player 1", UIVSCHARSELECTOR_1P);
     RSDK_ENUM_VAR("Player 2", UIVSCHARSELECTOR_2P);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_ENUM_VAR("Player 3", UIVSCHARSELECTOR_3P);
     RSDK_ENUM_VAR("Player 4", UIVSCHARSELECTOR_4P);
 #endif

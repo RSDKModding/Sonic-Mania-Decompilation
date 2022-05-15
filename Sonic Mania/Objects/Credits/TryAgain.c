@@ -74,7 +74,7 @@ void TryAgain_State_Setup(void)
         self->timer           = 0;
         self->eggmanVelocityY = -0x5C000;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Music_PlayTrack(TRACK_STAGE);
 #endif
         self->state = TryAgain_State_EnterEggman;
@@ -104,7 +104,7 @@ void TryAgain_State_EggmanLaugh(void)
 {
     RSDK_THIS(TryAgain);
 
-    if (self->timer > (RETRO_USE_PLUS ? 15 : 30))
+    if (self->timer > (MANIA_USE_PLUS ? 15 : 30))
         RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     if (++self->timer == 120) {
@@ -149,13 +149,13 @@ void TryAgain_State_Stinger(void)
     ++self->timer;
     if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press)
         self->timer = 600;
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     else if (TouchInfo->count)
         self->timer = 600;
 #endif
 
     if (self->timer == 600) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), self->position.x, self->position.y);
         fxFade->speedIn      = 24;
@@ -168,8 +168,8 @@ void TryAgain_State_Stinger(void)
 #endif
     }
 
-    if (self->timer >= (RETRO_USE_PLUS ? 740 : 680)) {
-#if RETRO_USE_PLUS
+    if (self->timer >= (MANIA_USE_PLUS ? 740 : 680)) {
+#if MANIA_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
             RSDK.SetScene("Presentation", "Game Summary");
         else

@@ -177,7 +177,7 @@ void BSS_Message_State_MsgFinished(void)
         destroyEntity(self);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void BSS_Message_TrackProgressCB(bool32 success)
 {
     RSDK_THIS(BSS_Message);
@@ -233,7 +233,7 @@ void BSS_Message_State_LoadPrevScene(void)
         GameProgress_ShuffleBSSID();
 
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "");
         else

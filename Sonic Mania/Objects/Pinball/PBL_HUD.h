@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 
 typedef enum {
     PBL_HUD_MSG_SCROLL_LEFT_SLOW,

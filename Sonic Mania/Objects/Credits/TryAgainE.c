@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectTryAgainE *TryAgainE;
 
 void TryAgainE_Update(void)
@@ -179,7 +179,7 @@ void TryAgainE_State_Stinger(void)
 
     if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press)
         self->timer = 600;
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     else if (TouchInfo->count)
         self->timer = 600;
 #endif

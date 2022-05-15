@@ -76,7 +76,7 @@ void PullChain_Update(void)
                 player->position.x = self->position.x;
                 player->position.y = self->position.y + 0x1C0000;
 
-#if RETRO_GAMEVER == VER_100
+#if MANIA_GAMEVER == VER_100
                 if (!player->sidekick && PullChain_HandleDunkeyCode(player)) {
                     HandLauncher->dunkeyMode = true;
                     RSDK.PlaySfx(Ring->sfxRing, false, 0xFF);
@@ -176,7 +176,7 @@ void PullChain_StageLoad(void)
     PullChain->sfxPullChain = RSDK.GetSfx("HCZ/PullChain.wav");
 }
 
-#if RETRO_GAMEVER == VER_100
+#if MANIA_GAMEVER == VER_100
 bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
 {
     RSDK_THIS(PullChain);

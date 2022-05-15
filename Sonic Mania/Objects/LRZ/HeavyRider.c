@@ -256,7 +256,7 @@ void HeavyRider_CheckObjectCollisions(void)
                 self->position.y = HeavyRider->spikeBallPos.y;
 
                 if (Player_CheckCollisionTouch(player, self, &HeavyRider->hitboxSpikeBall)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x800, false, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);
@@ -522,7 +522,7 @@ void HeavyRider_State_AwaitPlayer(void)
     if (player1->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
         Zone->cameraBoundsL[0]      = (self->position.x >> 16) - WIDE_SCR_XSIZE;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         HeavyRider->outro = CREATE_ENTITY(LRZ3Outro, NULL, self->position.x, self->position.y);
 #endif
         self->state = HeavyRider_State_SetupRider;
@@ -535,7 +535,7 @@ void HeavyRider_State_SetupRider(void)
 
     Zone->playerBoundActiveL[0] = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityLRZ3Outro *outro = HeavyRider->outro;
     if (outro->state == LRZ3Outro_State_EnterLittlePlanet) {
 #else

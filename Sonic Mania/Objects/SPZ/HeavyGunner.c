@@ -883,13 +883,13 @@ void HeavyGunner_StateMissile_AttackPlayer(void)
                 if (player->onGround) {
                     player->groundVel = Zone->autoScrollSpeed - 0x20000;
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 else if (player->state != Player_State_MightyHammerDrop) {
 #endif
                     player->velocity.y = -player->velocity.y;
                     if (player->velocity.y > -0x40000)
                         player->velocity.y = -0x40000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
                 self->velocity.x = -0x10000;

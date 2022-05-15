@@ -70,7 +70,7 @@ void PhantomEgg_StageLoad(void)
 
     PhantomEgg->savedGameProgress = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreTMZ3.act", 0b0000000011111111);
         RSDK.LoadPalette(1, "EncoreTMZ3.act", 0b0000000011111111);
@@ -1038,7 +1038,7 @@ void PhantomEgg_State_Exploding(void)
         bool32 goodEnd = (checkPlayerID(ID_SONIC, 1) || (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2)))
                          && SaveGame->saveRAM->chaosEmeralds == 0b01111111;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE)
             goodEnd = false; // no ERZ for encore modes
 #endif
@@ -1176,7 +1176,7 @@ void PhantomEgg_State_StartGoodEnd(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void PhantomEgg_SaveGameCB(bool32 success) { PhantomEgg->savedGameProgress = true; }
 #else
 void PhantomEgg_SaveGameCB(void) { PhantomEgg->savedGameProgress = true; }

@@ -14,11 +14,11 @@ struct ObjectPauseMenu {
     bool32 controllerDisconnect;
     bool32 forcedDisconnect;
     bool32 signOutDetected;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 plusChanged;
 #endif
     bool32 activeChannels[0x10];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 tintLookupTable[0x10000];
 #endif
 };

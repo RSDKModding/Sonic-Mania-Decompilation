@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 #define sku_platform SKU->platform
 #define sku_language SKU->language
 #define sku_region   SKU->region
@@ -52,7 +52,7 @@
 #endif
 
 // 90% sure this is "DialogRunner" in plus/1.05
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 // Object Class
 struct ObjectAPICallback {
     RSDK_OBJECT
@@ -189,7 +189,7 @@ void APICallback_ClearAchievements(void);
 void APICallback_UnlockAchievement(const char *name);
 void APICallback_CheckUserAuth_OK(void);
 void APICallback_CheckUserAuth_CB(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void APICallback_TrackGameProgressCB(bool32 success);
 #else
 void APICallback_TrackGameProgressCB(void);

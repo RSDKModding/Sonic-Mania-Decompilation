@@ -36,7 +36,7 @@ void CreditsSetup_StaticUpdate(void)
                 fade->oneWay   = false;
                 Music_FadeOut(0.0125);
             }
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
             else if (TouchInfo->count) {
                 CreditsSetup->skipped = true;
 
@@ -54,7 +54,7 @@ void CreditsSetup_StaticUpdate(void)
             if (fade->state == FXFade_State_Wait && fade->wait == 1) {
                 EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (param->creditsReturnToMenu) {
                     RSDK.SetScene("Presentation", "Menu");
                 }

@@ -16,7 +16,7 @@ void SSZ1Outro_Update(void)
     if (!self->activated) {
         self->activated = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -49,7 +49,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ1Outro);
 
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (!host->timer) {

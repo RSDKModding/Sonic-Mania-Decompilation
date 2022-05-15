@@ -50,7 +50,7 @@ void RubyPortal_Create(void *data)
 
         RSDK.SetSpriteAnimation(RubyPortal->aniFrames, 0, &self->animator, true, 0);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (data) {
             self->state = (Type_StateMachine)data;
         }
@@ -107,7 +107,7 @@ void RubyPortal_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("ERZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (RSDK.CheckStageFolder("AIZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
     else
@@ -121,13 +121,13 @@ void RubyPortal_StageLoad(void)
     RubyPortal->hitbox.right  = 24;
     RubyPortal->hitbox.bottom = 24;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RubyPortal->openPortal = false;
     RSDK.SetDebugValue("Open Portal", &RubyPortal->openPortal, DTYPE_BOOL, false, true);
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void RubyPortal_HandleTileDestruction(void)
 {
     RSDK_THIS(RubyPortal);
@@ -196,7 +196,7 @@ void RubyPortal_State_AwaitOpenTMZ2(void)
 {
     RSDK_THIS(RubyPortal);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (TMZBarrier->clearedBarriers == (1 | 2 | 4 | 8) || RubyPortal->openPortal)
 #else
     if (TMZBarrier->clearedBarriers == (1 | 2 | 4 | 8))
@@ -211,7 +211,7 @@ void RubyPortal_State_Opening(void)
     if (++self->timer >= 120) {
         self->visible = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_MANIA)
             self->state = RubyPortal_State_Opened;
         else if (!isMainGameMode())
@@ -244,7 +244,7 @@ void RubyPortal_State_Opened(void)
 
                 SaveGame_SavePlayerState();
 
-#if !RETRO_USE_PLUS && RETRO_GAMEVER != VER_100
+#if !MANIA_USE_PLUS && MANIA_GAMEVER != VER_100
                 if (player1->superState == SUPERSTATE_SUPER)
                     globals->restartPowerups |= 0x80;
 #endif
@@ -266,7 +266,7 @@ void RubyPortal_State_Opened(void)
 
                 Zone_StartFadeOut(16, 0xF0F0F0);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 self->state = RubyPortal_State_SaveGameState;
 #endif
 
@@ -286,7 +286,7 @@ void RubyPortal_State_Opened(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void RubyPortal_State_SaveGameState(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -331,7 +331,7 @@ void RubyPortal_State_Open_Cutscene(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void RubyPortal_State_EncoreEnd(void)
 {
     RSDK_THIS(RubyPortal);
@@ -439,7 +439,7 @@ void RubyPortal_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("ERZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (RSDK.CheckStageFolder("AIZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
     else

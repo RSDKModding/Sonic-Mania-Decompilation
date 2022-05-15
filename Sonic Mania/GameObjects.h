@@ -1,6 +1,12 @@
 #ifndef GAMEOBJECTS_H
 #define GAMEOBJECTS_H
 
+#ifdef _MSC_VER
+#define DLLExport __declspec(dllexport)
+#else
+#define DLLExport
+#endif
+
 #define minVal(a, b)                      ((a) < (b) ? (a) : (b))
 #define maxVal(a, b)                      ((a) > (b) ? (a) : (b))
 #define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
@@ -93,8 +99,8 @@ typedef struct {
 } ModFunctionTable;
 #endif
 
-#if RETRO_USE_PLUS
-// Userdata Table
+#if RETRO_REV02
+// API Table
 typedef struct {
     // API Core
     int32 (*GetUserLanguage)(void);
@@ -104,7 +110,7 @@ typedef struct {
     bool32 (*IsOverlayEnabled)(uint32 inputID);
     bool32 (*CheckDLC)(int32 dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
     void (*ShowCheckoutPage)(int32 value);
     void (*ShowEncorePage)(int32 value);
     void (*CoreUnknown4)(int32 value);
@@ -115,14 +121,14 @@ typedef struct {
     void (*UnlockAchievement)(const char *identifier);
     bool32 (*GetAchievementsEnabled)(void);
     void (*SetAchievementsEnabled)(bool32 enabled);
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
     void (*GetAchievementNames)(String *names, int32 count);
 #endif
 
     // Leaderboards
     void (*LeaderboardsUnknown4)(void);
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
     void (*LeaderboardUnknown1)(void);
 #endif
     void (*FetchLeaderboard)(LeaderboardID *leaderboard, bool32 isUser);
@@ -195,7 +201,7 @@ typedef struct {
     void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*RegisterStaticVariables)(void **varClass, const char *name, uint32 classSize);
 #endif
 
@@ -222,7 +228,7 @@ typedef struct {
     // Scene Management
     void (*SetScene)(const char *categoryName, const char *sceneName);
     void (*SetEngineState)(uint8 state);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*ForceHardReset)(bool32 shouldHardReset);
 #endif
     bool32 (*CheckValidScene)(void);
@@ -235,7 +241,7 @@ typedef struct {
     void (*AddCamera)(Vector2 *targetPos, int32 offsetX, int32 offsetY, bool32 worldRelative);
 
     // API (Rev01 only)
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     void *(*GetAPIFunction)(const char *funcName);
 #endif
 
@@ -293,7 +299,7 @@ typedef struct {
     void (*GetWindowSize)(int32 *width, int32 *height);
     int32 (*SetScreenSize)(uint8 screenID, uint16 width, uint16 height);
     void (*SetClipBounds)(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*SetScreenRenderVertices)(int8 startVert2P_S1, int8 startVert2P_S2, int8 startVert3P_S1, int8 startVert3P_S2, int8 startVert3P_S3);
 #endif
 
@@ -301,7 +307,7 @@ typedef struct {
     int16 (*LoadSpriteSheet)(const char *path, Scopes scope);
 
     // Palettes & Colors
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*SetTintLookupTable)(uint16 *lookupTable);
 #else
     uint16 *(*GetTintLookupTable)(void);
@@ -311,12 +317,12 @@ typedef struct {
     uint32 (*GetPaletteEntry)(uint8 bankID, uint8 index);
     void (*SetActivePalette)(uint8 newActiveBank, int32 startLine, int32 endLine);
     void (*CopyPalette)(uint8 sourceBank, uint8 srcBankStart, uint8 destinationBank, uint8 destBankStart, uint16 count);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*LoadPalette)(uint8 bankID, const char *path, uint16 rowFlags);
 #endif
     void (*RotatePalette)(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32 right);
     void (*SetLimitedFade)(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*BlendColors)(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 alpha, int32 index, int32 count);
 #endif
 
@@ -407,7 +413,7 @@ typedef struct {
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 
     // Input
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     int32 (*ControllerIDForInputID)(uint8 controllerID);
     int32 (*MostRecentActiveControllerID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
     int32 (*GetControllerType)(uint32 inputID);
@@ -422,7 +428,7 @@ typedef struct {
     bool32 (*InputIDIsDisconnected)(uint8 controllerID);
     void (*ResetControllerAssignments)(void);
 #endif
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     void (*GetUnknownInputValue)(int32 controllerID, int32 type, int32 *value);
 #endif
 
@@ -431,7 +437,7 @@ typedef struct {
     int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir
 
     // Printing (Rev02)
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*PrintLog)(PrintModes printType, const char *message, ...);
     void (*PrintText)(PrintModes printType, const char *message);
     void (*PrintString)(PrintModes printType, String *message);
@@ -447,19 +453,19 @@ typedef struct {
     void (*AddVarEnumValue)(const char *name);
 
     // Debugging
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void (*ClearDebugValues)(void);
     void (*SetDebugValue)(const char *name, void *value, DebugVarTypes type, int32 min, int32 max);
 #endif
 
     // Printing (Rev01)
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     void (*PrintMessage)(void *message, uint8 type);
 #endif
 } RSDKFunctionTable;
 
 extern RSDKFunctionTable RSDK;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 extern APIFunctionTable API;
 #endif
 #if RETRO_USE_MOD_LOADER
@@ -506,7 +512,7 @@ extern ModFunctionTable Mod;
                        object##_Serialize, inherit)
 #endif
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 #define RSDK_REGISTER_STATIC_VARIABLES(variables) RSDK.RegisterStaticVariables((void **)&variables, #variables, sizeof(Object##variables))
 #endif
 
@@ -558,26 +564,14 @@ extern ModFunctionTable Mod;
     RSDK.BreakForeachLoop();                                                                                                                         \
     return
 
-// used mainly for cutscenes
-#define RSDK_GET_PLAYER(p1, p2, cam)                                                                                                                 \
-    EntityPlayer *p1  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);                                                                                       \
-    EntityPlayer *p2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);                                                                                       \
-    EntityCamera *cam = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-
 #define destroyEntity(entity)   RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL)
 #define destroyEntitySlot(slot) RSDK.ResetEntitySlot(slot, TYPE_BLANK, NULL)
-
-#if RETRO_USE_PLUS
-#define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
-#else
-#define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
-#endif
 
 #if RETRO_INCLUDE_EDITOR
 #define showGizmos() (SceneInfo->listPos == SceneInfo->entitySlot || SceneInfo->effectGizmo)
 #endif
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 DLLExport void LinkGameLogicDLL(EngineInfo *info);
 #else
 DLLExport void LinkGameLogicDLL(EngineInfo info);

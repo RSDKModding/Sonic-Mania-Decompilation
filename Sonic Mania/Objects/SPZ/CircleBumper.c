@@ -137,7 +137,7 @@ void CircleBumper_CheckPlayerCollisions(void)
             if (player->state == Player_State_FlyCarried)
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             }
@@ -150,7 +150,7 @@ void CircleBumper_CheckPlayerCollisions(void)
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->animator.animationID = ANI_WALK;
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
             if (player->animator.animationID != ANI_FLY) {

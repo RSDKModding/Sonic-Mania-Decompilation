@@ -5,7 +5,7 @@
 
 #define CUTSCENESEQ_POINT_COUNT (8)
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 typedef enum {
     SKIPTYPE_DISABLED,
     SKIPTYPE_RELOADSCN,
@@ -34,7 +34,7 @@ struct EntityCutsceneSeq {
     Vector2 points[CUTSCENESEQ_POINT_COUNT];
     int32 fadeWhite;
     int32 fadeBlack;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 skipType;
     void (*skipCallback)(void);
 #endif
@@ -59,7 +59,7 @@ void CutsceneSeq_Serialize(void);
 // Extra Entity Functions
 // Initializes a new state with ID of `nextState`
 void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 // Checks if the cutscene was skipped
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void));
 #endif

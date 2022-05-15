@@ -253,7 +253,7 @@ void Ice_Create(void *data)
                             case ID_SONIC: break;
                             case ID_TAILS: ++self->altContentsAnimator.frameID; break;
                             case ID_KNUCKLES: self->altContentsAnimator.frameID += 2; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             case ID_MIGHTY: self->altContentsAnimator.frameID += 8; break;
                             case ID_RAY: self->altContentsAnimator.frameID += 9; break;
 #endif
@@ -340,14 +340,14 @@ void Ice_StageLoad(void)
 
 void Ice_VSSwapCB(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityPlayer *player = RSDK_GET_ENTITY(Zone->swapPlayerID, Player);
 #else
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #endif
 
     if (player->state == Ice_State_FrozenPlayer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
         Ice_BreakPlayerBlock(player);
@@ -363,7 +363,7 @@ void Ice_FreezePlayer(EntityPlayer *player)
         EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PLAYER), player->position.x, player->position.y);
         ice->playerPtr = player;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         switch (player->characterID) {
             case ID_SONIC: ice->animationID = 4 * (player->superState == SUPERSTATE_SUPER) + ICEANI_SONICIDLE; break;
             case ID_TAILS: ice->animationID = ICEANI_TAILSIDLE; break;
@@ -943,7 +943,7 @@ void Ice_State_IceBlock(void)
 
                             foreach_return;
                         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         else if (player->state == Player_State_MightyHammerDrop && !player->sidekick) {
                             Ice_FullShatter(player, 0, player->velocity.y);
                             player->velocity.y = prevVel - 0x10000;
@@ -1111,7 +1111,7 @@ void Ice_State_PlayerBlock(void)
     if (playerPtr->state == Ice_State_FrozenPlayer) {
         RSDK.ProcessAnimation(&self->altContentsAnimator);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->contentsAnimator.animationID == self->animationID + 3) {
             if (self->contentsAnimator.frameID == self->contentsAnimator.frameCount - 1)
                 RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID, &self->contentsAnimator, false, 0);
@@ -1282,7 +1282,7 @@ void Ice_Draw_IceBlock(void)
     drawPos.y -= 0x30000;
     RSDK.DrawSprite(&self->altContentsAnimator, &drawPos, false);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!SceneInfo->inEditor) {
         self->inkEffect = INK_ADD;
         self->blockAnimator.frameID += !self->glintTimer ? 4 : 2;
@@ -1309,7 +1309,7 @@ void Ice_Draw_PlayerBlock(void)
     drawPos.x = self->position.x + self->contentsOffset.x;
     drawPos.y = self->position.y + self->contentsOffset.y;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 frame                 = self->blockAnimator.frameID;
     self->inkEffect             = INK_SUB;
     self->blockAnimator.frameID = 5;
@@ -1522,7 +1522,7 @@ void Ice_EditorDraw(void)
                     case ID_SONIC: break;
                     case ID_TAILS: ++self->altContentsAnimator.frameID; break;
                     case ID_KNUCKLES: self->altContentsAnimator.frameID += 2; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     case ID_MIGHTY: self->altContentsAnimator.frameID += 8; break;
                     case ID_RAY: self->altContentsAnimator.frameID += 9; break;
 #endif

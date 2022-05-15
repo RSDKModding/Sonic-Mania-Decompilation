@@ -294,7 +294,7 @@ void UITransition_State_TransitionOut(void)
         }
 
         if (MenuSetup) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             ManiaModeMenu_ChangeMenuTrack();
             ManiaModeMenu_SetBGColors();
 #else

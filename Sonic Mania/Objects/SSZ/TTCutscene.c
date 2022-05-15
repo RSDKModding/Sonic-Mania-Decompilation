@@ -52,7 +52,7 @@ void TTCutscene_StartCutscene(void)
     CutsceneSeq_StartSequence(self, TTCutscene_Cutscene_Setup, TTCutscene_Cutscene_FlyIn, TTCutscene_Cutscene_Wait, TTCutscene_Cutscene_FlyOut,
                               TTCutscene_Cutscene_NextScene, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (cutsceneSeq->classID != TYPE_BLANK) {
         cutsceneSeq->skipType     = SKIPTYPE_CALLBACK;
@@ -61,7 +61,7 @@ void TTCutscene_StartCutscene(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TTCutscene_SkipCB(void)
 {
     if (globals->gameMode == MODE_ENCORE)
@@ -75,7 +75,7 @@ void TTCutscene_SkipCB(void)
 
 bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         Zone->playerBoundActiveB[0] = false;
@@ -115,7 +115,7 @@ bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
 
 bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     int32 targetY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
@@ -165,7 +165,7 @@ bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host)
 
 bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     player1->position.y = (ScreenInfo->centerY + ScreenInfo->position.y) << 16;
@@ -177,7 +177,7 @@ bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host)
 
 bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     int32 startY  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
@@ -230,14 +230,14 @@ bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
 
 bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player1);
     unused(player2);
     unused(camera);
 
     if (host->timer >= 64) {
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "Stardust Speedway Zone+ 1");
         else

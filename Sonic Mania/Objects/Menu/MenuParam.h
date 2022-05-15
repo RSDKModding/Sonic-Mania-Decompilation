@@ -46,7 +46,7 @@ struct EntityMenuParam {
     int32 zoneID;
     int32 actID;
     int32 timeAttackRank;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 isEncoreMode;
     int32 replayUUID;
     bool32 viewReplay;

@@ -104,7 +104,7 @@ void PSZ2Setup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct2())
         Zone->stageFinishCallback = PSZ2Setup_StageFinishCB;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE)
         RSDK.LoadPalette(0, "EncorePSZ2.act", 0b0000000011111111);
 

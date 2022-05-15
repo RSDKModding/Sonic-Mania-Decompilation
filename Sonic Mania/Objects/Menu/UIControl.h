@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 #define UICONTROL_BUTTON_COUNT (64)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 #define UICONTROL_PROMPT_COUNT (4)
 #endif
 
@@ -22,7 +22,7 @@ struct ObjectUIControl {
     bool32 confirmPress[4];
     bool32 yPress[4];
     bool32 xPress[4];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 startPress[4];
 #endif
     bool32 keyUp;
@@ -33,7 +33,7 @@ struct ObjectUIControl {
     bool32 keyBack;
     bool32 keyY;
     bool32 keyX;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 keyStart;
 #endif
     bool32 forceBackPress;
@@ -55,7 +55,7 @@ struct EntityUIControl {
     bool32 noWidgets;
     bool32 resetSelection;
     uint8 buttonCount;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint8 promptCount;
 #endif
     uint8 rowCount;
@@ -64,7 +64,7 @@ struct EntityUIControl {
     Vector2 size;
     Vector2 cameraOffset;
     Vector2 scrollSpeed;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 noClamp;
     bool32 noWrap;
 #endif
@@ -72,12 +72,12 @@ struct EntityUIControl {
     Vector2 targetPos;
     bool32 childHasFocus;
     bool32 dialogHasFocus;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 popoverHasFocus;
 #endif
     bool32 hasStoredButton;
     bool32 selectionDisabled;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 menuWasSetup;
 #endif
     int32 backoutTimer;
@@ -85,7 +85,7 @@ struct EntityUIControl {
     int32 lastButtonID;
     EntityUIHeading *heading;
     EntityUIShifter *shifter;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityUICarousel *carousel;
     EntityUIButtonPrompt *prompts[UICONTROL_PROMPT_COUNT];
 #endif
@@ -124,7 +124,7 @@ void UIControl_Serialize(void);
 int32 UIControl_GetButtonID(EntityUIControl *control, EntityUIButton *entity);
 void UIControl_MenuChangeButtonInit(EntityUIControl *control);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIControl_SetActiveMenuButtonPrompts(EntityUIControl *entity);
 #endif
 void UIControl_SetActiveMenu(EntityUIControl *entity);
@@ -140,7 +140,7 @@ void UIControl_HandleMenuLoseFocus(EntityUIControl *parent);
 void UIControl_ReturnToParentMenu(void);
 
 void UIControl_ClearInputs(uint8 buttonID);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y);
 #endif
 void UIControl_HandlePosition(void);

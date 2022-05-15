@@ -62,7 +62,7 @@ void UIHeading_LoadSprites(void)
         case LANGUAGE_GE: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsGE.bin", SCOPE_STAGE); break;
         case LANGUAGE_SP: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsSP.bin", SCOPE_STAGE); break;
         case LANGUAGE_JP: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsJP.bin", SCOPE_STAGE); break;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         case LANGUAGE_KO: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsKO.bin", SCOPE_STAGE); break;
         case LANGUAGE_SC: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsSC.bin", SCOPE_STAGE); break;
         case LANGUAGE_TC: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsTC.bin", SCOPE_STAGE); break;

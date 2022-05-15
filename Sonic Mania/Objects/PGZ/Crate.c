@@ -163,7 +163,7 @@ bool32 Crate_Collide(void)
                     Player_CheckCollisionBox(player, self, &self->hitbox);
                     break;
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 else if (player->state == Player_State_MightyHammerDrop) {
                     player->velocity.y -= 0x10000;
                     Crate_Break(self);

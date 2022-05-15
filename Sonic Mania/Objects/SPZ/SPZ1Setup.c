@@ -100,7 +100,7 @@ void SPZ1Setup_StageLoad(void)
         Zone->stageFinishCallback = SPZ1Setup_StageFinishCB;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreSPZ1.act", 0b0000000011111111);
         RSDK.LoadPalette(1, "EncoreSPZ1b1.act", 0b0000000011111111);

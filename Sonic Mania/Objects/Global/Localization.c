@@ -67,7 +67,7 @@ void Localization_LoadStrings(void)
             RSDK.LoadStringList(&Localization->text, "StringsJP.txt", 16);
             break;
 
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         case LANGUAGE_KO:
             LogHelpers_Print("Loading KO strings...");
             RSDK.LoadStringList(&Localization->text, "StringsKO.txt", 16);
@@ -90,7 +90,7 @@ void Localization_LoadStrings(void)
     RSDK.SplitStringList(Localization->strings, &Localization->text, 0, STR_STRING_COUNT);
     Localization->loaded = true;
 
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
     if (API.CheckAchievementsEnabled()) {
         String names[STR_STRING_COUNT - STR_ACHIEVEMENT];
         for (int32 i = STR_ACHIEVEMENT; i < STR_STRING_COUNT; ++i) {

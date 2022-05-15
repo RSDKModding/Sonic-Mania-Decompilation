@@ -45,7 +45,7 @@ void PauseMenu_LateUpdate(void)
             RSDK.SetEngineState(ENGINESTATE_FROZEN);
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &self->animator, true, 3);
             PauseMenu_PauseSound();
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
             PauseMenu_SetupTintTable();
 #endif
             self->state = PauseMenu_State_SetupButtons;
@@ -74,7 +74,7 @@ void PauseMenu_StaticUpdate(void)
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                 pauseMenu->triggerPlayer = 0;
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             else if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus) {
                 PauseMenu->plusChanged = true;
                 globals->lastHasPlus   = API.CheckDLC(DLC_PLUS);
@@ -84,7 +84,7 @@ void PauseMenu_StaticUpdate(void)
 #endif
             else {
                 for (int32 i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     int32 id = API_ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
                         PauseMenu->controllerDisconnect = true;
@@ -147,7 +147,7 @@ void PauseMenu_StageLoad(void)
     PauseMenu->controllerDisconnect = false;
     PauseMenu->forcedDisconnect     = false;
     PauseMenu->signOutDetected      = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     PauseMenu->plusChanged = false;
 
     if (!globals->hasPlusInitial) {
@@ -160,7 +160,7 @@ void PauseMenu_StageLoad(void)
         PauseMenu->activeChannels[i] = false;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     PauseMenu_SetupTintTable();
 #endif
 }
@@ -202,7 +202,7 @@ void PauseMenu_SetupMenu(void)
 
 void PauseMenu_SetupTintTable(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     for (int32 i = 0; i < 0x10000; ++i) {
         int32 brightness =
             ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
@@ -367,7 +367,7 @@ void PauseMenu_CheckAndReassignControllers(void)
 {
     EntityPauseMenu *entity = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // prolly a leftover from pre-plus
     RSDK.ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
 
@@ -395,7 +395,7 @@ bool32 PauseMenu_IsDisconnected(void)
 
     int32 id = API_ControllerIDForInputID(self->triggerPlayer + 1);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     return RSDK.GetAssignedControllerID(id) || PauseMenu->forcedDisconnect;
 #else
     return id || PauseMenu->forcedDisconnect;
@@ -432,7 +432,7 @@ void PauseMenu_RestartButtonCB(void)
     RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
     String msg;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->isReplaying)
         strID = STR_RESTARTWARNING;
@@ -449,7 +449,7 @@ void PauseMenu_ExitButtonCB(void)
     RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
     String msg;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->isReplaying)
         strID = STR_QUITWARNINGLOSEPROGRESS;
@@ -551,7 +551,7 @@ void PauseMenu_State_SetupButtons(void)
     self->timer                 = 0;
     PauseMenu->forcedDisconnect = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (PauseMenu->controllerDisconnect || PauseMenu->signOutDetected || PauseMenu->plusChanged) {
 #else
     if (PauseMenu->controllerDisconnect || PauseMenu->signOutDetected) {
@@ -585,7 +585,7 @@ void PauseMenu_State_SetupButtons(void)
             self->state = PauseMenu_State_StartPauseCompetition;
         self->stateDraw = PauseMenu_Draw_RegularPause;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode < MODE_TIMEATTACK && API_ControllerIDForInputID(CONT_P2) == CONT_AUTOASSIGN)
             API_AssignControllerID(CONT_P2, CONT_ANY);
 #endif
@@ -709,7 +709,7 @@ void PauseMenu_State_ForcedPause(void)
             if (globals->gameMode < MODE_TIMEATTACK && API_ControllerIDForInputID(2) == CONT_AUTOASSIGN)
                 API_AssignControllerID(CONT_P2, CONT_ANY);
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         else if (PauseMenu->signOutDetected || PauseMenu->plusChanged) {
             int32 strID = STR_TESTSTR;
             if (PauseMenu->signOutDetected)
@@ -974,7 +974,7 @@ void PauseMenu_Draw_RegularPause(void)
     RSDK_THIS(PauseMenu);
 
     if (self->state != PauseMenu_State_HandleFadeout) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
         RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->tintAlpha, INK_TINT, true);
@@ -988,7 +988,7 @@ void PauseMenu_Draw_ForcePause(void)
     RSDK_THIS(PauseMenu);
 
     if (self->state != PauseMenu_State_HandleFadeout) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
         RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->tintAlpha, INK_TINT, true);

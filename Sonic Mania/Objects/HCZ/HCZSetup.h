@@ -15,7 +15,7 @@ struct ObjectHCZSetup {
     uint16 waterlineAniTiles;
     uint16 pendulumAniTiles;
     TileLayer *background2Layer;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 waterslidingPlayerCount;
     bool32 playingWaterfallLoop;
     int32 waterfallLoopTimer;

@@ -241,7 +241,7 @@ void PSZ1Setup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
         Zone->stageFinishCallback = PSZ1Setup_StageFinishCB;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE)
         RSDK.LoadPalette(0, "EncorePSZ1.act", 0b0000000011111111);
 
@@ -258,7 +258,7 @@ void PSZ1Setup_StageLoad(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void PSZ1Setup_BGSwitch_CB_Inside(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0; // Background 1

@@ -21,7 +21,7 @@ void TMZ1Outro_Update(void)
         CutsceneSeq_StartSequence(self, TMZ1Outro_CutsceneAct1_SetupPlayers, TMZ1Outro_CutsceneAct1_ElevatorRide,
                                   TMZ1Outro_CutsceneAct1_HeadForEntrance, TMZ1Outro_CutsceneAct1_EnterMonarch, StateMachine_None);
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif

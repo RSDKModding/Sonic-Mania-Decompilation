@@ -49,7 +49,7 @@ bool32 GHZ2Outro_Cutscene_StartRubyWarp(EntityCutsceneSeq *host);
 bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host);
 bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GHZ2Outro_Cutscene_SkipCB(void);
 #endif
 

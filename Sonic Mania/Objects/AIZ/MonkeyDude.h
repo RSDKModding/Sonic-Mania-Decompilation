@@ -14,7 +14,7 @@ struct ObjectMonkeyDude {
     Animator tailAnimator;
     Animator coconutAnimator;
     uint16 aniFrames;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxDrop;
 #endif
 };
@@ -71,7 +71,7 @@ void MonkeyDude_State_MoveArm(void);
 void MonkeyDude_State_MoveBody(void);
 void MonkeyDude_StateBody_ArmRaise(void);
 void MonkeyDude_StateBody_Throw(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MonkeyDude_State_Coconut(void);
 #endif
 

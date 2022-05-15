@@ -63,7 +63,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
         player1->state      = Player_State_Air;
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLUME, &player1->animator, false, 0);
 #else
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
@@ -75,7 +75,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
             player2->onGround   = false;
             player2->stateInput = StateMachine_None;
             player2->position.x = player1->position.x - 0x200000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_FLUME, &player2->animator, false, 0);
 #else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);

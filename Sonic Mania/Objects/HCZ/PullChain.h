@@ -51,7 +51,7 @@ void PullChain_EditorLoad(void);
 void PullChain_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_GAMEVER == VER_100
+#if MANIA_GAMEVER == VER_100
 bool32 PullChain_HandleDunkeyCode(EntityPlayer *player);
 #endif
 

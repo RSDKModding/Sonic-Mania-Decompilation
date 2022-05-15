@@ -33,7 +33,7 @@ void TTCutscene_Serialize(void);
 
 // Extra Entity Functions
 void TTCutscene_StartCutscene(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TTCutscene_SkipCB(void);
 #endif
 

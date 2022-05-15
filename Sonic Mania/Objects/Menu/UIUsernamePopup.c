@@ -51,7 +51,7 @@ void UIUsernamePopup_ShowPopup(void)
     EntityUIUsernamePopup *entity = (EntityUIUsernamePopup *)UIUsernamePopup->popup;
     if (entity->state == UIUsernamePopup_State_Setup) {
         if (API_GetUsername(&entity->username)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             RSDK.PrintString(PRINT_NORMAL, &entity->username);
 #endif
             RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &entity->animator, true, 0);

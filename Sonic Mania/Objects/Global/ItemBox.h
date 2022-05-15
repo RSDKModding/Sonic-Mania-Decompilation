@@ -19,7 +19,7 @@ typedef enum {
     ITEMBOX_SWAP,
     ITEMBOX_RANDOM,
     ITEMBOX_SUPER,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     ITEMBOX_1UP_MIGHTY,
     ITEMBOX_1UP_RAY,
     ITEMBOX_STOCK,
@@ -37,7 +37,7 @@ struct ObjectItemBox {
     uint16 sfxDestroy;
     uint16 sfxTeleport;
     uint16 sfxHyperRing;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxPowerDown;
     uint16 sfxRevovery;
 #endif
@@ -62,7 +62,7 @@ struct EntityItemBox {
     Animator contentsAnimator;
     Animator overlayAnimator;
     Animator debrisAnimator;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Entity *parent;
 #endif
 };

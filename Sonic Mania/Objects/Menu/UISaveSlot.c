@@ -77,7 +77,7 @@ void UISaveSlot_Update(void)
         self->isSelected        = false;
         self->currentlySelected = false;
         self->state             = UISaveSlot_State_NotSelected;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->stateInput = StateMachine_None;
 #endif
     }
@@ -86,7 +86,7 @@ void UISaveSlot_Update(void)
             self->isSelected        = false;
             self->currentlySelected = false;
             self->state             = UISaveSlot_State_NotSelected;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->stateInput = StateMachine_None;
 #endif
         }
@@ -184,7 +184,7 @@ void UISaveSlot_Draw(void)
 
             drawPos.x = self->position.x;
             drawPos.y = self->position.y + 0x100000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!self->encoreMode || self->type == UISAVESLOT_NOSAVE) {
                 if (!self->saveContinues) {
                     drawPos.y += 0x20000;
@@ -230,7 +230,7 @@ void UISaveSlot_Draw(void)
         if (self->isSelected && !(self->zoneIconSprX & 8)) {
             drawPos.x = self->position.x;
             drawPos.y = self->position.y;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!self->encoreMode) {
 #endif
                 if (self->type == UISAVESLOT_NOSAVE) {
@@ -245,7 +245,7 @@ void UISaveSlot_Draw(void)
                     drawPos.y -= 0x300000;
                     UIWidgets_DrawUpDownArrows(drawPos.x, drawPos.y, 40);
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
             else if (self->listID == 1) {
                 drawPos.y -= 0x300000;
@@ -286,7 +286,7 @@ void UISaveSlot_Create(void *data)
 
 void UISaveSlot_StageLoad(void) { UISaveSlot->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 uint8 UISaveSlot_GetPlayerIDFromID(uint8 id)
 {
     switch (id) {
@@ -402,13 +402,13 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
     int32 buddyID     = 0;
     int32 friendCount = 0;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!self->encoreMode) {
 #endif
         int32 frames[]                = { 3, 0, 1, 2, 4, 5 };
         self->shadowsAnimator.frameID = frames[self->frameID];
         self->playersAnimator.frameID = frames[self->frameID];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
     else if (!SceneInfo->inEditor) {
         if (!self->isNewSave && self->type != UISAVESLOT_NOSAVE) {
@@ -511,12 +511,12 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
     RSDK_THIS(UISaveSlot);
 
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 3, &self->livesAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 21, &self->continuesAnimator, true, 0);
 #endif
 
     int32 playerID = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->encoreMode) {
         if (self->isNewSave || self->type == UISAVESLOT_NOSAVE)
             return;
@@ -544,24 +544,24 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 #endif
         int32 frames[] = { 0, 0, 1, 2, 3, 4 };
         playerID       = frames[self->frameID];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 
     self->livesAnimator.frameID = playerID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     self->continuesAnimator.frameID = playerID;
 #endif
 
     Animator *animators[2];
     animators[0] = &self->livesAnimator;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     animators[1] = &self->continuesAnimator;
 #endif
 
     int32 retries[2];
     retries[0] = minVal(self->saveLives, 99);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     retries[1] = minVal(self->saveContinues, 99);
 #else
     retries[1] = 0;
@@ -589,7 +589,7 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
         drawPos.x = positions[i].x;
         drawPos.y = positions[i].y;
         if (
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             i || !self->encoreMode
 #else
             true
@@ -624,7 +624,7 @@ void UISaveSlot_SetupButtonElements(void)
     self->checkButtonEnterCB = UISaveSlot_CheckButtonEnterCB;
     self->checkSelectedCB    = UISaveSlot_CheckSelectedCB;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
@@ -723,7 +723,7 @@ void UISaveSlot_LoadSaveInfo(void)
 {
     RSDK_THIS(UISaveSlot);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
@@ -731,7 +731,7 @@ void UISaveSlot_LoadSaveInfo(void)
 
     int32 saveState = saveRAM->saveState;
     if (saveState == SAVEGAME_INPROGRESS || saveState == SAVEGAME_COMPLETE) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->encoreMode) {
             self->saveEncorePlayer = saveRAM->playerID & 0xFF;
             self->saveEncoreBuddy  = (saveRAM->playerID >> 8) & 0xFF;
@@ -751,7 +751,7 @@ void UISaveSlot_LoadSaveInfo(void)
         else {
 #endif
             self->frameID = saveRAM->characterID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -763,7 +763,7 @@ void UISaveSlot_LoadSaveInfo(void)
             self->saveZoneID   = ZONE_GHZ;
             self->saveEmeralds = 0;
             self->saveLives    = 3;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->saveContinues = 0;
             self->frameID       = self->encoreMode ? 6 : 0;
 #else
@@ -777,7 +777,7 @@ void UISaveSlot_LoadSaveInfo(void)
             self->saveZoneID   = saveRAM->zoneID;
             self->saveEmeralds = saveRAM->chaosEmeralds;
             self->saveLives    = saveRAM->lives;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->saveContinues = saveRAM->continues;
 #endif
             self->isNewSave = false;
@@ -788,7 +788,7 @@ void UISaveSlot_LoadSaveInfo(void)
             self->saveZoneID   = NO_SAVE_SLOT;
             self->saveEmeralds = saveRAM->chaosEmeralds;
             self->saveLives    = saveRAM->lives;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->saveContinues = saveRAM->continues;
 #endif
             self->listID    = 1;
@@ -810,7 +810,7 @@ void UISaveSlot_HandleSaveIcons(void)
         self->zoneNameAnimator.frameID = self->saveZoneID;
 
         if (self->currentlySelected) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (self->encoreMode)
                 RSDK.CopyPalette(((self->saveZoneID >> 3) + 4), 32 * self->saveZoneID, 0, 224, 32);
             else
@@ -829,7 +829,7 @@ void UISaveSlot_DeleteDLG_CB(void)
 
     UIWaitSpinner_StartWait();
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8, saveSlot->encoreMode);
 #else
     int32 *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8);
@@ -843,7 +843,7 @@ void UISaveSlot_DeleteDLG_CB(void)
     SaveGame_SaveFile(UISaveSlot_DeleteSaveCB);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UISaveSlot_DeleteSaveCB(bool32 success)
 #else
 void UISaveSlot_DeleteSaveCB(void)
@@ -865,7 +865,7 @@ void UISaveSlot_ProcessButtonCB(void)
 {
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)self->parent;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
@@ -873,7 +873,7 @@ void UISaveSlot_ProcessButtonCB(void)
 
     self->active = ACTIVE_NORMAL;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIControl_SetTargetPos(control, self->position.x, 0);
 #else
     control->targetPos.x = self->position.x;
@@ -899,7 +899,7 @@ void UISaveSlot_ProcessButtonCB(void)
             }
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         StateMachine_Run(self->stateInput);
 #endif
 
@@ -907,7 +907,7 @@ void UISaveSlot_ProcessButtonCB(void)
         INIT_STRING(msg);
 
         if (UIControl->keyConfirm) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (API.CheckDLC(DLC_PLUS) || self->frameID < 4) {
                 UISaveSlot_SelectedCB();
             }
@@ -962,7 +962,7 @@ void UISaveSlot_SelectedCB(void)
 
         foreach_all(UIButtonPrompt, prompt) { prompt->visible = false; }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 id = API_MostRecentActiveControllerID(1, 0, 5);
 #else
         int32 id = API_MostRecentActiveControllerID(0);
@@ -982,7 +982,7 @@ void UISaveSlot_NextCharacter(void)
     ++self->frameID;
     int32 player = self->frameID;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
 #else
     int32 max = 4;
@@ -1005,7 +1005,7 @@ void UISaveSlot_PrevCharacter(void)
     --self->frameID;
     int32 player = self->frameID;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
 #else
     int32 max = 4;
@@ -1082,7 +1082,7 @@ void UISaveSlot_ButtonEnterCB(void)
 
         self->textBouncePos   = 0x4000;
         self->buttonBouncePos = 0x8000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->stateInput = StateMachine_None;
 #endif
 
@@ -1092,14 +1092,14 @@ void UISaveSlot_ButtonEnterCB(void)
             else
                 self->state = UISaveSlot_State_ActiveSave;
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         else if (self->encoreMode) {
             self->state = UISaveSlot_State_ActiveSave;
         }
 #endif
         else {
             self->state = UISaveSlot_State_NewSave;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->stateInput = UISaveSlot_StateInput_NewSave;
 #endif
         }
@@ -1113,7 +1113,7 @@ void UISaveSlot_ButtonLeaveCB(void)
     self->isSelected        = false;
     self->currentlySelected = false;
     self->state             = UISaveSlot_State_NotSelected;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     self->stateInput = StateMachine_None;
 #endif
 }
@@ -1122,14 +1122,14 @@ void UISaveSlot_HandleSaveIconChange(void)
 {
     RSDK_THIS(UISaveSlot);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
 #endif
 
     if (saveRAM->saveState == SAVEGAME_BLANK) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 frame = self->encoreMode ? 6 : 0;
 #else
         int32 frame = 0;
@@ -1165,7 +1165,7 @@ void UISaveSlot_State_OtherWasSelected(void)
 
 void UISaveSlot_State_NewSave(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // lol
 #else
     RSDK_THIS(UISaveSlot);
@@ -1188,7 +1188,7 @@ void UISaveSlot_State_ActiveSave(void)
         self->state = UISaveSlot_State_NotSelected;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UISaveSlot_StateInput_NewSave(void)
 {
     RSDK_THIS(UISaveSlot);
@@ -1224,7 +1224,7 @@ void UISaveSlot_State_Selected(void)
 
     ++self->timer;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->encoreMode && (self->isNewSave || self->type == UISAVESLOT_NOSAVE)) {
         EntityFXRuby *fxRuby = self->fxRuby;
         int32 rubyY          = self->position.y;
@@ -1277,7 +1277,7 @@ void UISaveSlot_State_Selected(void)
             StateMachine_Run(self->actionCB);
             self->state = StateMachine_None;
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }
@@ -1313,7 +1313,7 @@ void UISaveSlot_EditorLoad(void)
     RSDK_ENUM_VAR("Regular Save Slot", UISAVESLOT_REGULAR);
     RSDK_ENUM_VAR("No Save Slot", UISAVESLOT_NOSAVE);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_ACTIVE_VAR(UISaveSlot, dCharPoint);
     RSDK_ENUM_VAR("None", ID_NONE);
     RSDK_ENUM_VAR("Sonic", sonic);
@@ -1362,7 +1362,7 @@ void UISaveSlot_Serialize(void)
     RSDK_EDITABLE_VAR(UISaveSlot, VAR_BOOL, disabled);
     RSDK_EDITABLE_VAR(UISaveSlot, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(UISaveSlot, VAR_ENUM, slotID);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_EDITABLE_VAR(UISaveSlot, VAR_BOOL, encoreMode);
     RSDK_EDITABLE_VAR(UISaveSlot, VAR_BOOL, debugEncoreDraw);
     RSDK_EDITABLE_VAR(UISaveSlot, VAR_UINT8, dCharPoint);

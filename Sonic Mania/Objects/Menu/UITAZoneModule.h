@@ -8,7 +8,7 @@ struct ObjectUITAZoneModule {
     RSDK_OBJECT
     uint16 aniFrames;
     EntityUIButtonPrompt *leaderboardsPrompt;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 isEncoreMode;
 #endif
     bool32 showLBPrompt;
@@ -17,13 +17,13 @@ struct ObjectUITAZoneModule {
 // Entity Class
 struct EntityUITAZoneModule {
     MANIA_UI_ITEM_BASE
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     bool32 isExpanding;
 #endif
     uint8 zoneID;
     String text1;
     String text2;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     bool32 debugExpand;
 #endif
     bool32 wasDisabled;
@@ -31,7 +31,7 @@ struct EntityUITAZoneModule {
     String text2Store;
     int32 zoneIconSprX;
     Vector2 drawPos;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     int32 prevExpandAmount;
     int32 expandAmount;
     uint8 expandTimer;
@@ -40,18 +40,18 @@ struct EntityUITAZoneModule {
     uint8 fuzzDir;
     uint8 characterID;
     uint8 actID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 isEncore;
 #else
     uint8 rank;
 #endif
     int32 unused1;
     int32 unused2;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 unused3;
     int32 unused4;
 #endif
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     Animator textAnimator;
 #endif
     Animator zoneIconsAnimator;
@@ -97,7 +97,7 @@ void UITAZoneModule_State_NotSelected(void);
 void UITAZoneModule_State_Selected(void);
 void UITAZoneModule_State_HasBeenSelected(void);
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 Vector2 UITAZoneModule_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
 void UITAZoneModule_DrawActInfo_Expanded(void);
 void UITAZoneModule_DrawExpandedView(void);

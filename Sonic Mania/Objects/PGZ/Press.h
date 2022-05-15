@@ -10,7 +10,7 @@ struct ObjectPress {
     Hitbox hitbox;
     uint16 sfxImpact;
     uint16 sfxPress;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 canSuper;
 #endif
 };

@@ -11,7 +11,7 @@ ObjectCutsceneSeq *CutsceneSeq;
 
 void CutsceneSeq_Update(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_THIS(CutsceneSeq);
 
     CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);
@@ -72,7 +72,7 @@ void CutsceneSeq_Draw(void)
     for (int32 p = 0; p < CUTSCENESEQ_POINT_COUNT; ++p) {
         Vector2 *point = &self->points[p];
         if (point->x || point->y) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             RSDK.PrintVector2(0, "Draw poi ", point->x, point->y);
 #endif
             DrawHelpers_DrawCross(point->x, point->y, 0x200000, 0x200000, colors[p]);
@@ -96,7 +96,7 @@ void CutsceneSeq_Create(void *data)
     self->fadeBlack = 0;
     self->drawOrder = Zone->hudDrawOrder + 1;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);
 #endif
 }
@@ -115,11 +115,11 @@ void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq)
         seq->points[p].y = 0;
     }
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void))
 {
     bool32 skipPress = ControllerInfo->keyStart.press;
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     skipPress |= TouchInfo->count;
 #endif
 

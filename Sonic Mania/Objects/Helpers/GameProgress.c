@@ -133,7 +133,7 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
     return zonePercent + medalPercent + specialPercent + endingPercent;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GameProgress_TrackGameProgress(void (*callback)(bool32 success))
 #else
 void GameProgress_TrackGameProgress(void (*callback)(void))
@@ -146,7 +146,7 @@ void GameProgress_TrackGameProgress(void (*callback)(void))
         EntityGameProgress *progress = GameProgress_GetGameProgress();
         if (!progress->allSpecialCleared) {
             float percent = GameProgress_GetCompletionPercent(progress);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             StatInfo stat;
             memset(&stat, 0, sizeof(StatInfo));
             stat.statID  = 3;
@@ -161,7 +161,7 @@ void GameProgress_TrackGameProgress(void (*callback)(void))
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (callback)
         callback(false);
 #endif

@@ -125,7 +125,7 @@ bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host)
 
 bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntitySignPost *signPost  = MSZCutsceneST->signPost;
@@ -152,7 +152,7 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
             fgLow->scrollInfo[i].scrollSpeed    = 0;
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_NEXTSCENE;
 #endif
@@ -163,7 +163,7 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
 
 bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityTornado *tornado    = MSZCutsceneST->tornado;
@@ -209,7 +209,7 @@ bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host)
 
 bool32 MSZCutsceneST_Cutscene_PrepareAmbush(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityTornado *tornado      = MSZCutsceneST->tornado;
@@ -458,7 +458,7 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
 
 bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
     EntityTornado *tornado      = MSZCutsceneST->tornado;
     EntityTornadoPath *pathNode = MSZCutsceneST->tornadoPath;
@@ -568,7 +568,7 @@ bool32 MSZCutsceneST_Cutscene_SetPlayerMSZ2SpawnPos(EntityCutsceneSeq *host)
 
 bool32 MSZCutsceneST_Cutscene_PanCameraToPlayer(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         TornadoPath->camera = NULL;

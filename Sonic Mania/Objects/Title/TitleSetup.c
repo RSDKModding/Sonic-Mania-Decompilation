@@ -60,7 +60,7 @@ void TitleSetup_StageLoad(void)
     TimeAttackData_Clear();
 
     API_ClearPrerollErrors();
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     API.ClearSaveStatus();
 #endif
 
@@ -70,7 +70,7 @@ void TitleSetup_StageLoad(void)
     globals->optionsLoaded = false;
     memset(globals->optionsRAM, 0, sizeof(globals->optionsRAM));
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     API.ClearUserDB(globals->replayTableID);
     API.ClearUserDB(globals->taTableID);
 
@@ -89,7 +89,7 @@ void TitleSetup_StageLoad(void)
     RSDK.ResetEntitySlot(0, TitleSetup->classID, NULL);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleSetup_HandleCheatInputs(void)
 {
     uint8 keyState = 0;
@@ -130,7 +130,7 @@ bool32 TitleSetup_VideoSkipCB(void)
         RSDK.StopChannel(Music->channelID);
         return true;
     }
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     else if (TouchInfo->count) {
         RSDK.StopChannel(Music->channelID);
         return true;
@@ -187,7 +187,7 @@ void TitleSetup_State_FlashIn(void)
     if (self->animator.frameID == self->animator.frameCount - 1) {
         foreach_all(TitleLogo, titleLogo)
         {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (titleLogo->type == TITLELOGO_PLUS) {
                 titleLogo->position.y -= 0x200000;
             }
@@ -222,14 +222,14 @@ void TitleSetup_State_WaitForSonic(void)
 {
     RSDK_THIS(TitleSetup);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     TitleSetup_CheckCheatCode();
 #endif
 
     if (self->timer <= 0) {
         self->stateDraw = StateMachine_None;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
             self->state = TitleSetup_State_SetupPlusLogo;
         else
@@ -245,7 +245,7 @@ void TitleSetup_State_SetupLogo(void)
 {
     RSDK_THIS(TitleSetup);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->timer < 120)
         TitleSetup_CheckCheatCode();
 #endif
@@ -257,7 +257,7 @@ void TitleSetup_State_SetupLogo(void)
                 titleLogo->active  = ACTIVE_NORMAL;
                 titleLogo->visible = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 Entity *store     = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)titleLogo;
                 TitleLogo_SetupPressStart();
@@ -270,7 +270,7 @@ void TitleSetup_State_SetupLogo(void)
         self->state = TitleSetup_State_WaitForEnter;
     }
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleSetup_State_SetupPlusLogo(void)
 {
     RSDK_THIS(TitleSetup);
@@ -330,13 +330,13 @@ void TitleSetup_State_WaitForEnter(void)
 
         const char *nextScene = "Menu";
         // Switch 1.0 dev level select cheat (Skips all the funky API setup stuff the menu does, so it was known for causin a bunch of issues)
-#if RETRO_GAMEVER == VER_100
+#if MANIA_GAMEVER == VER_100
         if (ControllerInfo->keyA.down && (ControllerInfo->keyX.down || ControllerInfo->keyC.down))
             nextScene = "Level Select";
 #endif
         RSDK.SetScene("Presentation", nextScene);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 id = API_MostRecentActiveControllerID(0, 0, 5);
 #else
         int32 id = API_MostRecentActiveControllerID(0);

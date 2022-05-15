@@ -21,7 +21,7 @@ void SSZSpikeBall_Update(void)
             Player_CheckCollisionBox(player, self, &SSZSpikeBall->hitboxBase[self->type]);
 
         if (Player_CheckCollisionTouch(player, &self->spikeBallPos, &SSZSpikeBall->hitboxSpikeBall)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);

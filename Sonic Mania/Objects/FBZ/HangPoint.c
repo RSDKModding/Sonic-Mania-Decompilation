@@ -231,7 +231,7 @@ void HangPoint_Update(void)
                                                 point->activePlayers |= 1 << playerID;
                                                 point->moveDistance[playerID] = 0x200000;
                                                 point->playerTimer[playerID]  = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                                 if (player->characterID == ID_RAY) {
                                                     if (player->abilityValues[0])
                                                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->animator, false, 6);
@@ -241,7 +241,7 @@ void HangPoint_Update(void)
                                                 else {
 #endif
                                                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->animator, false, 3);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                                 }
 #endif
 
@@ -271,7 +271,7 @@ void HangPoint_Update(void)
                                                 point->moveDistance[playerID] = -0x200000;
                                                 point->playerTimer[playerID]  = 0;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                                 if (player->characterID == ID_RAY) {
                                                     if (!player->abilityValues[0]) {
                                                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->animator, false, 0);
@@ -283,7 +283,7 @@ void HangPoint_Update(void)
                                                 else {
 #endif
                                                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->animator, false, 3);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                                 }
 #endif
 
@@ -302,7 +302,7 @@ void HangPoint_Update(void)
                             }
 
                             if (!changedHangPoint) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                 if (player->characterID == ID_RAY && player->abilityValues[0] == 1)
                                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_DROPDASH, &player->animator, false, 0);
                                 else
@@ -313,7 +313,7 @@ void HangPoint_Update(void)
                             }
                         }
                         else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             if (player->characterID == ID_RAY && player->abilityValues[0] == 1)
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_DROPDASH, &player->animator, false, 0);
                             else

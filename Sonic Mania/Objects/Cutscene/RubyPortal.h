@@ -8,7 +8,7 @@ struct ObjectRubyPortal {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 openPortal;
 #endif
 };
@@ -39,18 +39,18 @@ void RubyPortal_EditorLoad(void);
 void RubyPortal_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void RubyPortal_HandleTileDestruction(void);
 #endif
 void RubyPortal_State_AwaitOpenTMZ2(void);
 void RubyPortal_State_Opening(void);
 void RubyPortal_State_Opened(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void RubyPortal_State_SaveGameState(void);
 #endif
 void RubyPortal_State_Open_WarpDoor(void);
 void RubyPortal_State_Open_Cutscene(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void RubyPortal_State_EncoreEnd(void);
 void RubyPortal_State_EncoreRampage(void);
 #endif

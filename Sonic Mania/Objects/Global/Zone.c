@@ -107,7 +107,7 @@ void Zone_LateUpdate(void)
 
         // Handle Time Overs
         if (SceneInfo->minutes == 10
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             && !(globals->medalMods & MEDAL_NOTIMEOVER)
 #endif
         ) {
@@ -121,7 +121,7 @@ void Zone_LateUpdate(void)
             foreach_active(Player, playerLoop)
             {
                 bool32 canDie = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (globals->gameMode == MODE_COMPETITION && (session->finishState[playerLoop->playerID]) == FINISHFLAG_FINISHED)
                     canDie = false;
 #endif
@@ -133,7 +133,7 @@ void Zone_LateUpdate(void)
             StateMachine_Run(Zone->timeOverCallback);
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         // You took an hour to beat the stage... no time bonus for you!
         if (SceneInfo->minutes == 59 && SceneInfo->seconds == 59)
             ActClear->disableTimeBonus = true;
@@ -171,7 +171,7 @@ void Zone_StaticUpdate(void)
         Zone->ringFrame &= 0xF;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // Handle times for the summary screen
     int32 zone = Zone_GetZoneID();
 
@@ -212,7 +212,7 @@ void Zone_Create(void *data)
 
 void Zone_StageLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // Set the random seed to a "random" value
     Zone->randSeed = (uint32)time(NULL);
 
@@ -288,7 +288,7 @@ void Zone_StageLoad(void)
     Zone->fgLow     = RSDK.GetTileLayerID("FG Low");
     Zone->fgHigh    = RSDK.GetTileLayerID("FG High");
     Zone->moveLayer = RSDK.GetTileLayerID("Move");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Zone->scratchLayer = RSDK.GetTileLayerID("Scratch");
 #endif
 
@@ -311,7 +311,7 @@ void Zone_StageLoad(void)
     Vector2 layerSize;
     RSDK.GetLayerSize(Zone->fgLow, &layerSize, true);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!Zone->swapGameMode) {
 #endif
         for (int32 s = 0; s < PLAYER_MAX; ++s) {
@@ -329,7 +329,7 @@ void Zone_StageLoad(void)
             Zone->playerBoundActiveL[s] = true;
             Zone->playerBoundActiveB[s] = false;
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 
@@ -355,7 +355,7 @@ void Zone_StageLoad(void)
                 RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
             }
             else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 Competition_ResetOptions();
 #else
                 CompetitionSession_ResetOptions();
@@ -369,7 +369,7 @@ void Zone_StageLoad(void)
         }
     }
     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Competition_ResetOptions();
 #else
         CompetitionSession_ResetOptions();
@@ -380,7 +380,7 @@ void Zone_StageLoad(void)
     // Setup Rich Presence for this game mode
     String message;
     switch (globals->gameMode) {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
         case MODE_NOSAVE:
 #endif
         case MODE_MANIA:
@@ -388,7 +388,7 @@ void Zone_StageLoad(void)
             API_SetRichPresence(PRESENCE_MANIA, &message);
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case MODE_ENCORE:
             Localization_GetString(&message, STR_RPC_ENCORE);
             API_SetRichPresence(PRESENCE_ENCORE, &message);
@@ -439,7 +439,7 @@ int32 Zone_GetZoneID(void)
         return ZONE_TMZ;
     if (RSDK.CheckStageFolder("ERZ"))
         return ZONE_ERZ;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK.CheckStageFolder("AIZ") && globals->gameMode == MODE_ENCORE)
         return ZONE_AIZ;
 #endif
@@ -625,14 +625,14 @@ void Zone_ReloadScene(int32 screen)
     entity->fadeSpeed = 16;
     entity->fadeColor = 0xF0F0F0;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode != MODE_ENCORE || EncoreIntro) {
 #endif
         entity->state     = Zone_State_Fadeout_Destroy;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
         entity->drawOrder = DRAWGROUP_COUNT - 1;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
     else {
         entity->state     = Zone_State_ReloadScene;
@@ -655,7 +655,7 @@ void Zone_StartTeleportAction(void)
     entity->stateDraw = Zone_Draw_Fade;
     entity->visible   = true;
     entity->drawOrder = DRAWGROUP_COUNT - 1;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Zone->teleportActionActive = true;
 #endif
 }
@@ -723,7 +723,7 @@ bool32 Zone_IsZoneLastAct(void)
     return false;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 int32 Zone_GetEncoreStageID(void)
 {
     int32 maniaListPos = SceneInfo->listPos;
@@ -799,7 +799,7 @@ void Zone_State_Fadeout(void)
 
     self->timer += self->fadeSpeed;
     if (self->timer > 1024) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (Zone->swapGameMode) {
             if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA)) {
                 if (RSDK.CheckValidScene())
@@ -857,7 +857,7 @@ void Zone_State_Fadeout_Competition(void)
     self->timer += self->fadeSpeed;
     if (self->timer > 1024) {
         session->completedStages[session->stageIndex] = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         session->matchID = session->prevMatchID + 1;
 #else
         session->matchID++;
@@ -869,7 +869,7 @@ void Zone_State_Fadeout_Competition(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Zone_TitleCard_SupressCB(void)
 {
     RSDK_THIS(Zone);
@@ -940,7 +940,7 @@ void Zone_HandlePlayerSwap(void)
     int32 cameraBoundsL[PLAYER_MAX];
     int32 layerIDs[LAYER_COUNT];
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(Zone->preSwapPlayerIDs[p], Player);
         RSDK.CopyEntity(&Zone->entityStorage[p], player, false);
@@ -1228,12 +1228,12 @@ void Zone_State_SwapPlayers(void)
 
     if (self->timer > 512) {
         self->timer = self->timer - self->fadeSpeed;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->teleportActionActive = true;
 #endif
     }
     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->swapPlayerCount = 0;
         Zone->swapPlayerID    = 0;
 
@@ -1328,7 +1328,7 @@ void Zone_State_SwapPlayers(void)
             Zone_HandlePlayerSwap();
         }
         self->state = Zone_State_HandleSwapFadeIn;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->teleportActionActive = true;
 #endif
     }
@@ -1339,14 +1339,14 @@ void Zone_State_HandleSwapFadeIn(void)
     RSDK_THIS(Zone);
 
     if (self->timer <= 0) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->teleportActionActive = false;
 #endif
         destroyEntity(self);
     }
     else {
         self->timer -= self->fadeSpeed;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->teleportActionActive = true;
 #endif
     }

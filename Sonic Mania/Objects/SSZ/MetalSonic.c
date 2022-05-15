@@ -24,7 +24,7 @@ void MetalSonic_Update(void)
     if (MetalSonic->invincibilityTimerPanel > 0)
         MetalSonic->invincibilityTimerPanel--;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     foreach_active(StarPost, post) { post->starTimer = 0; }
 #endif
 }
@@ -116,7 +116,7 @@ void MetalSonic_StageLoad(void)
     MetalSonic->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
     MetalSonic->sfxMSShoot      = RSDK.GetSfx("SSZ2/MSShoot.wav");
     MetalSonic->sfxMSChargeFire = RSDK.GetSfx("SSZ2/MSChargeFire.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MetalSonic->sfxMSTransform = RSDK.GetSfx("SSZ2/MSTransform.wav");
     MetalSonic->sfxTransform2  = RSDK.GetSfx("Stage/Transform2.wav");
 #endif
@@ -129,7 +129,7 @@ void MetalSonic_HandleStageWrap(void)
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     EntityMetalSonic *marker = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, MetalSonic);
     EntityPlatform *wall     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
     if (player->position.y < marker->position.y && !player->collisionPlane) {
@@ -181,7 +181,7 @@ void MetalSonic_HandleStageWrap(void)
             camera->center.x += 0xE00;
             MetalSonic_ProcessBGParallax(-0xE0000);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (self->classID == GigaMetal->classID) {
                 camera->boundsL += 0xE00;
                 camera->boundsR += 0xE00;
@@ -194,7 +194,7 @@ void MetalSonic_HandleStageWrap(void)
 
             foreach_active(MSOrb, orb) { orb->position.x += 0xE000000; }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             foreach_active(MSBomb, bomb) { bomb->position.x += 0xE000000; }
 #endif
 
@@ -236,7 +236,7 @@ void MetalSonic_HandleStageWrap(void)
         camera->center.x -= 0xE00;
         MetalSonic_ProcessBGParallax(0xE0000);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->classID == GigaMetal->classID) {
             camera->boundsL -= 0xE00;
             camera->boundsR -= 0xE00;
@@ -249,7 +249,7 @@ void MetalSonic_HandleStageWrap(void)
 
         foreach_active(MSOrb, orb) { orb->position.x -= 0xE000000; }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         foreach_active(MSBomb, bomb) { bomb->position.x -= 0xE000000; }
 
 #endif
@@ -348,7 +348,7 @@ void MetalSonic_HandleAnimDir(void)
     }
 }
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void MetalSonic_CheckPlayerCollisions(void)
 {
     RSDK_THIS(MetalSonic);
@@ -451,7 +451,7 @@ void MetalSonic_State_WaitForHologram(void)
     foreach_active(MSHologram, hologram)
     {
         if (hologram->state == MSHologram_State_Destroyed && hologram->timer == 320) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             Music_ClearMusicStack();
 #endif
             Music_PlayTrack(TRACK_EGGMAN1);
@@ -1131,7 +1131,7 @@ void MetalSonic_State_StartPanelSequence(void)
 
     if (self->timer == 64) {
         int32 id = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         for (int32 i = 48; i < 82; i += 2) {
             if (id > 0)
                 RSDK.CopyTileLayer(Zone->fgLow, 167, i, Zone->fgHigh, 222, 218, 2, 2);
@@ -1167,8 +1167,8 @@ void MetalSonic_State_StartPanelSequence(void)
 
         self->position    = self->targetPos;
         self->timer       = 16;
-        self->attackTimer = RETRO_USE_PLUS ? 240 : 180;
-        self->health      = RETRO_USE_PLUS ? 6 : 4;
+        self->attackTimer = MANIA_USE_PLUS ? 240 : 180;
+        self->health      = MANIA_USE_PLUS ? 6 : 4;
         self->state       = MetalSonic_State_OpenFactoryDoor;
     }
 }
@@ -1177,7 +1177,7 @@ void MetalSonic_HandlePanelAttack(void)
 {
     RSDK_THIS(MetalSonic);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!RSDK.GetEntityCount(MSBomb->classID, true))
 #endif
         --self->attackTimer;
@@ -1186,7 +1186,7 @@ void MetalSonic_HandlePanelAttack(void)
         RSDK.PlaySfx(MetalSonic->sfxMSElecPulse, false, 255);
         self->invincibilityTimer = 60;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
         ring->radiusOffset     = 24;
         ring->timer            = 24;
@@ -1200,7 +1200,7 @@ void MetalSonic_HandlePanelAttack(void)
     if (self->attackTimer <= 0) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-        self->attackTimer = 45 * self->health + (RETRO_USE_PLUS ? 195 : 135);
+        self->attackTimer = 45 * self->health + (MANIA_USE_PLUS ? 195 : 135);
         int32 angle       = RSDK.ATan2(player1->position.x - self->position.x, player1->position.y - self->position.y);
 
         EntityMSOrb *orb = CREATE_ENTITY(MSOrb, NULL, self->position.x, self->position.y);
@@ -1237,7 +1237,7 @@ void MetalSonic_State_HandleSilverSonics(void)
     ++self->timer;
     MetalSonic_HandlePanelAttack();
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!RSDK.GetEntityCount(SilverSonic->classID, true) && !RSDK.GetEntityCount(MSBomb->classID, true) && self->timer > 60) {
 #else
     if (!RSDK.GetEntityCount(SilverSonic->classID, true) && self->timer > 60) {
@@ -1332,7 +1332,7 @@ void MetalSonic_State_PrepareFinalChase(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MetalSonic_State_WaitForRuby(void)
 {
     RSDK_THIS(MetalSonic);

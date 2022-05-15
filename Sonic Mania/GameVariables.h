@@ -2,11 +2,11 @@
 #define GAME_OPTIONS_H
 
 typedef enum {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     MODE_NOSAVE,
 #endif
     MODE_MANIA,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MODE_ENCORE,
 #endif
     MODE_TIMEATTACK,
@@ -20,7 +20,7 @@ typedef enum {
     ID_SONIC    = 0x01,
     ID_TAILS    = 0x02,
     ID_KNUCKLES = 0x04,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     ID_MIGHTY = 0x08,
     ID_RAY    = 0x10,
 #endif
@@ -39,7 +39,7 @@ typedef enum {
     MEDAL_PEELOUT,
     MEDAL_INSTASHIELD,
     MEDAL_NODROPDASH,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MEDAL_NOTIMEOVER,
 #endif
 } MedalMods;
@@ -51,7 +51,7 @@ typedef enum { WIDE_SCR_XSIZE = 424, WIDE_SCR_XCENTER = 212 } ScreenSizes;
 
 typedef enum { NO_SAVE_SLOT = 255 } SaveSlots;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 typedef enum { FILTER_NONE = 0, FILTER_BOTH = 1, FILTER_MANIA = 2, FILTER_ENCORE = 4, FILTER_ANY = 0xFF } ModeFilters;
 
 typedef enum { DLC_PLUS } GameDLC;
@@ -66,7 +66,7 @@ typedef enum {
 typedef enum {
     SLOT_PLAYER1 = 0,
     SLOT_PLAYER2 = 1,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     SLOT_PLAYER3    = 2,
     SLOT_PLAYER4    = 3,
     SLOT_POWERUP1   = 4,
@@ -92,7 +92,7 @@ typedef enum {
     SLOT_PBL_CAMERA  = 10,
     SLOT_BSS_MESSAGE = 11,
     SLOT_UFO_HUD     = 11,
-    SLOT_ZONE        = RETRO_USE_PLUS ? 12 : 8,
+    SLOT_ZONE        = MANIA_USE_PLUS ? 12 : 8,
     // 13 = ???
     // 14 = ???
     SLOT_CUTSCENESEQ         = 15,
@@ -108,7 +108,7 @@ typedef enum {
     SLOT_DIALOG_BUTTONS      = 23,
     SLOT_DIALOG_BUTTON2      = 24,
     SLOT_DIALOG_BUTTON3      = 25,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     SLOT_POPOVER           = 26,
     SLOT_POPOVER_UICONTROL = 27,
     SLOT_POPOVER_BUTTONS   = 28,
@@ -118,14 +118,14 @@ typedef enum {
 #endif
     SLOT_HCZBUBBLE_P1 = 32,
     SLOT_HCZBUBBLE_P2 = 33,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     SLOT_HCZBUBBLE_P3 = 34,
     SLOT_HCZBUBBLE_P4 = 36,
 #endif
     SLOT_BSS_HORIZON    = 32,
     SLOT_UFO_SPEEDLINES = 34,
     SLOT_UFO_PLASMA     = 36,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     SLOT_REPLAYRECORDER_PLAYBACK = 36,
     SLOT_REPLAYRECORDER_RECORD   = 37,
     SLOT_MUSICSTACK_START        = 40,
@@ -142,7 +142,7 @@ typedef enum {
     PRESENCE_GENERIC,
     PRESENCE_MENU,
     PRESENCE_MANIA,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     PRESENCE_ENCORE,
 #endif
     PRESENCE_TA,
@@ -150,7 +150,7 @@ typedef enum {
     PRESENCE_TITLE,
 } PresenceTypes;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 typedef enum {
     SECRET_RICKYMODE = 0,
     SECRET_SUPERDASH = 1,
@@ -208,7 +208,7 @@ typedef struct {
     int32 continues;
     int32 initCoolBonus;
     int32 coolBonus[4];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 replayWriteBuffer[0x40000];
     int32 replayReadBuffer[0x40000];
     int32 replayTempWBuffer[0x40000];
@@ -229,5 +229,89 @@ typedef struct {
 } GlobalVariables;
 
 extern GlobalVariables *globals;
+
+#if MANIA_USE_PLUS
+#define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
+#else
+#define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
+#endif
+
+// used mainly for cutscenes
+#define MANIA_GET_PLAYER(p1, p2, cam)                                                                                                                 \
+    EntityPlayer *p1  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);                                                                                       \
+    EntityPlayer *p2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);                                                                                       \
+    EntityCamera *cam = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+
+
+
+// "Base" Classes
+#define MANIA_PLATFORM_BASE                                                                                                                          \
+    RSDK_ENTITY                                                                                                                                      \
+    StateMachine(state);                                                                                                                             \
+    StateMachine(stateCollide);                                                                                                                      \
+    int32 type;                                                                                                                                      \
+    Vector2 amplitude;                                                                                                                               \
+    int32 speed;                                                                                                                                     \
+    bool32 hasTension;                                                                                                                               \
+    int8 frameID;                                                                                                                                    \
+    uint8 collision;                                                                                                                                 \
+    Vector2 tileOrigin;                                                                                                                              \
+    Vector2 centerPos;                                                                                                                               \
+    Vector2 drawPos;                                                                                                                                 \
+    Vector2 collisionOffset;                                                                                                                         \
+    int32 stood;                                                                                                                                     \
+    int32 timer;                                                                                                                                     \
+    int32 stoodAngle;                                                                                                                                \
+    uint8 stoodPlayers;                                                                                                                              \
+    uint8 pushPlayersL;                                                                                                                              \
+    uint8 pushPlayersR;                                                                                                                              \
+    Hitbox hitbox;                                                                                                                                   \
+    Animator animator;                                                                                                                               \
+    int32 childCount;
+
+#define MANIA_BUTTON_BASE                                                                                                                            \
+    RSDK_ENTITY                                                                                                                                      \
+    int32 type;                                                                                                                                      \
+    bool32 walkOnto;                                                                                                                                 \
+    uint8 tag;                                                                                                                                       \
+    bool32 down;                                                                                                                                     \
+    bool32 toggled;                                                                                                                                  \
+    bool32 currentlyActive;                                                                                                                          \
+    bool32 activated;                                                                                                                                \
+    bool32 wasActivated;                                                                                                                             \
+    int32 pressPos;
+
+#define MANIA_UI_ITEM_BASE                                                                                                                           \
+    RSDK_ENTITY                                                                                                                                      \
+    StateMachine(state);                                                                                                                             \
+    void (*processButtonCB)(void);                                                                                                                   \
+    bool32 (*touchCB)(void);                                                                                                                         \
+    void (*actionCB)(void);                                                                                                                          \
+    void (*selectedCB)(void);                                                                                                                        \
+    void (*failCB)(void);                                                                                                                            \
+    void (*buttonEnterCB)(void);                                                                                                                     \
+    void (*buttonLeaveCB)(void);                                                                                                                     \
+    bool32 (*checkButtonEnterCB)(void);                                                                                                              \
+    bool32 (*checkSelectedCB)(void);                                                                                                                 \
+    int32 timer;                                                                                                                                     \
+    Vector2 startPos;                                                                                                                                \
+    Entity *parent;                                                                                                                                  \
+    Vector2 touchPosSizeS;                                                                                                                           \
+    Vector2 touchPosOffsetS;                                                                                                                         \
+    bool32 touchPressed;                                                                                                                             \
+    Vector2 touchPosSizeM[4];   /*size of the touchPos: in 16-bit shifted format*/                                                                   \
+    Vector2 touchPosOffsetM[4]; /*offset of the touchPos: 0,0 is entity pos, negative is left/up, positive is right/down*/                           \
+    void (*touchPosCallbacks[4])(void);                                                                                                              \
+    int32 touchPosCount;                                                                                                                             \
+    int32 touchPosID;                                                                                                                                \
+    bool32 isSelected;                                                                                                                               \
+    bool32 disabled;
+
+#define MANIA_CUTSCENE_BASE                                                                                                                          \
+    RSDK_ENTITY                                                                                                                                      \
+    Vector2 size;                                                                                                                                    \
+    bool32 activated;                                                                                                                                \
+    Animator animator; /* unused, afaik */                                                                                                           \
+    Hitbox hitbox;
 
 #endif //! GAME_OPTIONS_H

@@ -21,12 +21,12 @@ void SaveGame_Create(void *data) {}
 
 void SaveGame_StageLoad(void)
 {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     SaveGame_LoadSaveData();
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore)
 {
     if (slot == NO_SAVE_SLOT)
@@ -54,7 +54,7 @@ void SaveGame_LoadSaveData(void)
     if (slot == NO_SAVE_SLOT)
         SaveGame->saveRAM = (EntitySaveGame *)globals->noSaveSlot;
     else
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
 #else
         SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot);
@@ -69,13 +69,13 @@ void SaveGame_LoadSaveData(void)
     while (saveRAM->score1UP <= saveRAM->score) saveRAM->score1UP += 50000;
 
     if (Player) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!TitleCard || TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
 #endif
             Player->savedLives    = saveRAM->lives;
             Player->savedScore    = saveRAM->score;
             Player->savedScore1UP = saveRAM->score1UP;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             globals->continues      = saveRAM->continues;
             globals->stock          = saveRAM->stock;
             globals->characterFlags = saveRAM->characterFlags;
@@ -160,7 +160,7 @@ void SaveGame_LoadSaveData(void)
 
 void SaveGame_LoadFile(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!SaveGame->saveRAM || globals->saveLoaded == STATUS_CONTINUE) {
         SaveGame_SaveLoadedCB(false);
         return;
@@ -186,14 +186,14 @@ void SaveGame_LoadFile(void)
     API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SaveGame_SaveFile(void (*callback)(bool32 success))
 #else
 void SaveGame_SaveFile(void (*callback)(void))
 #endif
 {
     if (API_GetNoSave() || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (callback)
             callback(false);
 #endif
@@ -201,7 +201,7 @@ void SaveGame_SaveFile(void (*callback)(void))
     else {
         SaveGame->saveEntityPtr = SceneInfo->entity;
         SaveGame->saveCallback  = callback;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
 #else
         API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB);
@@ -211,7 +211,7 @@ void SaveGame_SaveFile(void (*callback)(void))
 
 void SaveGame_SaveLoadedCB(bool32 success)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LogHelpers_Print("SaveLoadedCB(%d)", success);
 #endif
 
@@ -233,7 +233,7 @@ void SaveGame_SaveLoadedCB(bool32 success)
         GameProgress_PrintSaveProgress();
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE)
         TimeAttackData_LoadTimeAttackDB(NULL);
 #endif
@@ -262,7 +262,7 @@ void SaveGame_SaveGameState(void)
     saveRAM->lives           = player1->lives;
     globals->restartLives[0] = player1->lives;
     saveRAM->continues       = globals->continues;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     saveRAM->playerID       = globals->playerID;
     saveRAM->characterFlags = globals->characterFlags;
     saveRAM->stock          = globals->stock;
@@ -299,7 +299,7 @@ void SaveGame_SaveProgress(void)
     saveRAM->lives    = Player->savedLives;
     saveRAM->score    = Player->savedScore;
     saveRAM->score1UP = Player->savedScore1UP;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     saveRAM->continues      = globals->continues;
     saveRAM->characterFlags = globals->characterFlags;
     saveRAM->stock          = globals->stock;
@@ -320,7 +320,7 @@ void SaveGame_SaveProgress(void)
                     saveRAM->zoneID    = ZONE_ERZ;
                 }
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -348,7 +348,7 @@ void SaveGame_SavePlayerState(void)
     globals->restartSeconds      = SceneInfo->seconds;
     globals->restartMinutes      = SceneInfo->minutes;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (saveRAM && TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
 #else
     if (saveRAM) {
@@ -356,7 +356,7 @@ void SaveGame_SavePlayerState(void)
         saveRAM->lives    = player->lives;
         saveRAM->score    = player->score;
         saveRAM->score1UP = player->score1UP;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         saveRAM->continues      = globals->continues;
         saveRAM->characterFlags = globals->characterFlags;
         saveRAM->stock          = globals->stock;
@@ -400,7 +400,7 @@ void SaveGame_ResetPlayerState(void)
 void SaveGame_LoadFile_CB(int32 status)
 {
     bool32 success = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (status == STATUS_OK || status == STATUS_NOTFOUND) {
         success             = true;
         globals->saveLoaded = STATUS_OK;
@@ -439,7 +439,7 @@ void SaveGame_SaveFile_CB(int32 status)
         if (SaveGame->saveEntityPtr)
             SceneInfo->entity = SaveGame->saveEntityPtr;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         SaveGame->saveCallback(status == STATUS_OK);
 #else
         SaveGame->saveCallback();

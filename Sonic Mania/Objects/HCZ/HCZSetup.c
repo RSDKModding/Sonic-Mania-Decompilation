@@ -57,7 +57,7 @@ void HCZSetup_StaticUpdate(void)
         for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) ++RSDK.GetTileLayer(layerID)->deformationOffsetW;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (HCZSetup->waterslidingPlayerCount) {
         if (HCZSetup->playingWaterfallLoop) {
             if (!(HCZSetup->waterfallLoopTimer & 0x1F)) {
@@ -214,7 +214,7 @@ void HCZSetup_StageLoad(void)
         Zone->stageFinishCallback     = HCZSetup_HandleActTransition;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreHCZ.act", 0b0000000011111111);
         RSDK.LoadPalette(1, "EncoreHCZw.act", 0b0000000011111111);

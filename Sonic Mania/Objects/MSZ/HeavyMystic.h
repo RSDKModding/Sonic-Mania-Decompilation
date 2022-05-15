@@ -132,7 +132,7 @@ void HeavyMystic_StateBoss_BeanBomb2Throw(void);
 void HeavyMystic_StateBoss_BeanJump(void);
 
 void HeavyMystic_StateCork_Fired(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void HeavyMystic_StateCork_MightyRebound(void);
 #endif
 

@@ -20,7 +20,7 @@ void Press_LateUpdate(void) {}
 
 void Press_StaticUpdate(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Press->canSuper      = true;
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -133,7 +133,7 @@ void Press_StageLoad(void)
     Press->hitbox.right  = 112;
     Press->hitbox.bottom = 16;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Player->canSuperCB = Press_SuperCheckCB;
 #endif
 
@@ -141,7 +141,7 @@ void Press_StageLoad(void)
     Press->sfxPress  = RSDK.GetSfx("PSZ/Press.wav");
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 Press_SuperCheckCB(bool32 isHUD) { return Press->canSuper; }
 #endif
 

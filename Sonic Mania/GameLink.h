@@ -34,7 +34,7 @@ typedef uint32 color;
 #define LAYER_COUNT     (8)
 #define DRAWGROUP_COUNT (16)
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 #define SCREEN_MAX (4)
 #else
 #define SCREEN_MAX (2)
@@ -80,7 +80,7 @@ typedef struct {
     bool32 interaction;
     bool32 onGround;
     uint8 active;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     uint8 filter;
 #endif
     uint8 direction;
@@ -100,10 +100,10 @@ typedef struct {
 } Object;
 
 #define RSDK_OBJECT                                                                                                                                  \
-    uint16 classID;                                                                                                                                 \
+    uint16 classID;                                                                                                                                  \
     uint8 active;
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 #define RSDK_ENTITY                                                                                                                                  \
     Vector2 position;                                                                                                                                \
     Vector2 scale;                                                                                                                                   \
@@ -115,7 +115,7 @@ typedef struct {
     int32 groundVel;                                                                                                                                 \
     int32 depth3D;                                                                                                                                   \
     uint16 group;                                                                                                                                    \
-    uint16 classID;                                                                                                                                 \
+    uint16 classID;                                                                                                                                  \
     bool32 inBounds;                                                                                                                                 \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
@@ -144,7 +144,7 @@ typedef struct {
     int32 groundVel;                                                                                                                                 \
     int32 depth3D;                                                                                                                                   \
     uint16 group;                                                                                                                                    \
-    uint16 classID;                                                                                                                                 \
+    uint16 classID;                                                                                                                                  \
     bool32 inBounds;                                                                                                                                 \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
@@ -164,7 +164,7 @@ typedef struct {
 
 #define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 #define Unknown_pausePress  UnknownInfo->pausePress
 #define Unknown_anyKeyPress UnknownInfo->anyKeyPress
 
@@ -199,7 +199,7 @@ typedef struct {
     char engineInfo[0x40];
     char gameSubname[0x100];
     char version[0x10];
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     uint8 platform;
     uint8 language;
     uint8 region;
@@ -225,7 +225,7 @@ typedef struct {
     uint8 activeCategory;
     uint8 categoryCount;
     uint8 state;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     uint8 filter;
 #endif
     uint8 milliseconds;
@@ -254,7 +254,7 @@ typedef struct {
     InputState keySelect;
 
     // Rev01 hasn't split these into different structs yet
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     InputState bumperL;
     InputState bumperR;
     InputState keyTriggerL;
@@ -269,7 +269,7 @@ typedef struct {
     InputState keyDown;
     InputState keyLeft;
     InputState keyRight;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     InputState keyStick;
     float deadzone;
     float hDelta;
@@ -285,7 +285,7 @@ typedef struct {
 #endif
 } RSDKAnalogState;
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 typedef struct {
     InputState keyBumper;
     InputState keyTrigger;
@@ -299,7 +299,7 @@ typedef struct {
     float y[0x10];
     bool32 down[0x10];
     uint8 count;
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     bool32 pauseHold;
     bool32 pausePress;
     bool32 unknown1;
@@ -325,7 +325,7 @@ typedef struct {
     int32 waterDrawPos;
 } RSDKScreenInfo;
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 typedef struct {
     void *functionTable;
     void *APITable;
@@ -465,7 +465,7 @@ typedef struct {
 
 typedef struct {
     String username;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     String userID;
 #endif
     int32 globalRank;
@@ -556,7 +556,7 @@ typedef enum {
     ALIGN_CENTER,
 } Alignments;
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 typedef enum {
     PRINT_NORMAL,
     PRINT_POPUP,
@@ -587,7 +587,7 @@ typedef enum {
     VAR_COLOR,
 } VarTypes;
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 typedef enum {
     DBVAR_UNKNOWN, // unused (in Sonic Mania)
     DBVAR_BOOL,    // unused (in Sonic Mania)
@@ -683,7 +683,7 @@ typedef enum {
     VIDEOSETTING_SHADERSUPPORT,
     VIDEOSETTING_SHADERID,
     VIDEOSETTING_SCREENCOUNT,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     VIDEOSETTING_DIMTIMER,
 #endif
     VIDEOSETTING_STREAMSENABLED,
@@ -697,7 +697,7 @@ typedef enum {
 } VideoSettings;
 
 typedef enum {
-    GROUP_ALL     = 0,
+    GROUP_ALL = 0,
 
     GROUP_CUSTOM0 = TYPE_COUNT,
     GROUP_CUSTOM1,
@@ -731,7 +731,7 @@ typedef enum {
     LANGUAGE_GE,
     LANGUAGE_SP,
     LANGUAGE_JP,
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     LANGUAGE_KO,
     LANGUAGE_SC,
     LANGUAGE_TC,
@@ -747,7 +747,7 @@ typedef enum {
     ENGINESTATE_DEVMENU  = 8,
     ENGINESTATE_VIDEOPLAYBACK,
     ENGINESTATE_SHOWIMAGE,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     ENGINESTATE_ERRORMSG,
     ENGINESTATE_ERRORMSG_FATAL,
 #endif

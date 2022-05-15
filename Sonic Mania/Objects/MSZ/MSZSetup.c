@@ -82,13 +82,13 @@ void MSZSetup_Create(void *data)
     if (SceneInfo->minutes || SceneInfo->seconds || SceneInfo->milliseconds) {
         if (SceneInfo->minutes == globals->tempMinutes && SceneInfo->seconds == globals->tempSeconds
             && SceneInfo->milliseconds == globals->tempMilliseconds)
-            MSZSetup->usingRegularPalette = (RETRO_GAMEVER != VER_100 ? globals->tempFlags : globals->restartMusicID);
+            MSZSetup->usingRegularPalette = (MANIA_GAMEVER != VER_100 ? globals->tempFlags : globals->restartMusicID);
         else
             MSZSetup->usingRegularPalette = globals->restartFlags;
     }
     else {
         globals->restartFlags = 0;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         globals->tempFlags = 0;
 #else
         globals->restartMusicID = 0;
@@ -97,7 +97,7 @@ void MSZSetup_Create(void *data)
     }
 
     if (MSZSetup->usingRegularPalette) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreMSZ2.act", 0b0000000011111111);
             self->state = MSZSetup_State_CheckTrainStart;
@@ -107,14 +107,14 @@ void MSZSetup_Create(void *data)
             for (int32 i = 0; i < 0x400; ++i) MSZSetup->background1->deformationData[i] = MSZSetup->deformData[i & 0x1F];
             RSDK.CopyPalette(4, 128, 0, 128, 128);
             destroyEntity(self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
         RSDK.CopyPalette(0, 128, 1, 128, 128);
         RSDK.CopyPalette(0, 128, 2, 128, 128);
         RSDK.RotatePalette(2, 204, 207, false);
 #endif
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreMSZ1.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 3, 128, 80);
@@ -122,7 +122,7 @@ void MSZSetup_Create(void *data)
     }
 #endif
     else {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
         RSDK.CopyPalette(0, 204, 4, 204, 4);
 #endif
         RSDK.CopyPalette(3, 128, 0, 128, 128);
@@ -141,7 +141,7 @@ void MSZSetup_StageLoad(void)
         MSZSetup_ReloadBGParallax_Multiply(0x400);
     }
     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         GiantPistol->inCutscene = false;
         MSZSetup->chuggaVolume  = 0;
 #endif
@@ -149,7 +149,7 @@ void MSZSetup_StageLoad(void)
         if (Zone->actID) {
             MSZSetup->usingRegularPalette = true;
             RSDK.CopyPalette(4, 128, 0, 128, 128);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
                 RSDK.CopyPalette(0, 128, 5, 128, 128);
                 RSDK.LoadPalette(0, "EncoreMSZ2.act", 0b0000000011111111);
@@ -164,7 +164,7 @@ void MSZSetup_StageLoad(void)
             for (int32 i = 0; i < 0x400; ++i) MSZSetup->background1->deformationData[i] = MSZSetup->deformData[i & 0x1F];
 #endif
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!(SceneInfo->filter & FILTER_ENCORE) && (globals->playerID & ID_KNUCKLES)) {
 #else
             if (globals->playerID & ID_KNUCKLES) {
@@ -209,7 +209,7 @@ void MSZSetup_StageLoad(void)
             GenericTrigger->callbacks[MSZ_GENERICTRIGGER_ACHIEVEMENT] = MSZSetup_GenericTriggerCB_GetAchievement;
         }
         else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if ((SceneInfo->filter & FILTER_ENCORE)) {
                 RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_E);
                 if (isMainGameMode()) {
@@ -260,7 +260,7 @@ void MSZSetup_StageLoad(void)
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MSZSetup->sfxLocoChugga = RSDK.GetSfx("MSZ/LocoChugga.wav");
 #endif
 
@@ -298,7 +298,7 @@ void MSZSetup_StoreBGParallax(void)
     TileLayer *background1 = RSDK.GetTileLayer(0);
     for (int32 i = 0; i < background1->scrollInfoCount; ++i) {
         MSZSetup->storedParallax[id++] = background1->scrollInfo[i].parallaxFactor;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             background1->scrollInfo[i].parallaxFactor = 0;
@@ -307,7 +307,7 @@ void MSZSetup_StoreBGParallax(void)
     TileLayer *background2 = RSDK.GetTileLayer(1);
     for (int32 i = 0; i < background2->scrollInfoCount; ++i) {
         MSZSetup->storedParallax[id++] = background2->scrollInfo[i].parallaxFactor;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             background2->scrollInfo[i].parallaxFactor = 0;
@@ -316,7 +316,7 @@ void MSZSetup_StoreBGParallax(void)
     foreach_all(ParallaxSprite, parallaxSprite)
     {
         MSZSetup->storedParallax[id++] = (parallaxSprite->parallaxFactor.x >> 8);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             parallaxSprite->parallaxFactor.x = 0;
@@ -349,7 +349,7 @@ void MSZSetup_ReloadBGParallax_Multiply(int32 parallaxMultiplier)
     foreach_all(ParallaxSprite, parallaxSprite)
     {
         parallaxSprite->scrollSpeed.x = parallaxMultiplier * MSZSetup->storedParallax[id++];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!(SceneInfo->filter & FILTER_ENCORE))
 #endif
             parallaxSprite->scrollSpeed.x >>= 8;
@@ -374,7 +374,7 @@ void MSZSetup_State_ManageFade_K(void)
         self->state = MSZSetup_State_SwitchPalettes;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MSZSetup_State_ManageFade_E(void)
 {
     RSDK_THIS(MSZSetup);
@@ -396,7 +396,7 @@ void MSZSetup_StageFinishCB_K(void)
     RSDK.LoadScene();
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MSZSetup_StageFinishCB_E(void) {}
 #endif
 
@@ -417,16 +417,16 @@ void MSZSetup_State_SwitchPalettes(void)
     RSDK.SetLimitedFade(0, 3, 4, self->timer, 128, 255);
 
     if (self->timer >= 256) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!(SceneInfo->filter & FILTER_ENCORE)) {
 #endif
             for (int32 i = 0; i < 0x400; ++i) MSZSetup->background1->deformationData[i] = MSZSetup->deformData[i & 0x1F];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
         MSZSetup->usingRegularPalette = true;
         RSDK.CopyPalette(4, 128, 0, 128, 128);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.CopyPalette(4, 128, 1, 128, 128);
         RSDK.CopyPalette(4, 128, 2, 128, 128);
         RSDK.RotatePalette(2, 204, 207, false);
@@ -452,7 +452,7 @@ void MSZSetup_HandleRestart(void)
     foreach_all(ParallaxSprite, parallaxSprite) { parallaxSprite->scrollPos.x = globals->parallaxOffset[id++]; }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MSZSetup_State_CheckFadeTrigger_E(void)
 {
     RSDK_THIS(MSZSetup);

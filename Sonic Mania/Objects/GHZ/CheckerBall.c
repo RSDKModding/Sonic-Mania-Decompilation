@@ -585,7 +585,7 @@ void CheckerBall_HandleObjectCollisions(void)
                         case ID_SONIC: itemBox->type = ITEMBOX_1UP_SONIC; break;
                         case ID_TAILS: itemBox->type = ITEMBOX_1UP_TAILS; break;
                         case ID_KNUCKLES: itemBox->type = ITEMBOX_1UP_KNUX; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         case ID_MIGHTY: itemBox->type = ITEMBOX_1UP_MIGHTY; break;
                         case ID_RAY: itemBox->type = ITEMBOX_1UP_RAY; break;
 #endif

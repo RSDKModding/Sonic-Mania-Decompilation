@@ -22,7 +22,7 @@ void ImageTrail_LateUpdate(void)
         self->baseAlpha = 0x100;
     }
     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (player->state == Player_State_MightyHammerDrop) {
             self->fadeoutTimer = 0x10;
         }
@@ -43,7 +43,7 @@ void ImageTrail_LateUpdate(void)
                 if (self->baseAlpha == 0)
                     destroyEntity(self);
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }

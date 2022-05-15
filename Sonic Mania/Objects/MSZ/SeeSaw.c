@@ -122,7 +122,7 @@ void SeeSaw_Update(void)
                 SeeSaw->launchVelocity = self->launchVelocity;
 
             if (Player_CheckCollisionPlatform(player, self, &SeeSaw->hitboxPlank)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop) {
                     if (player->position.x >= self->position.x ? self->tilt != SEESAW_TILT_R : self->tilt != SEESAW_TILT_L)
                         player->state = Player_State_Air;
@@ -198,7 +198,7 @@ void SeeSaw_Update(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &SeeSaw->hitboxCactinaut)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);

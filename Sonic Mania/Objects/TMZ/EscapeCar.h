@@ -51,7 +51,7 @@ void EscapeCar_StateMania_AwaitPlayer(void);
 void EscapeCar_StateMania_EnteredCar(void);
 void EscapeCar_StateMania_Ride(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void EscapeCar_StateEncore_Setup(void);
 void EscapeCar_StateEncore_BadEnd(void);
 void EscapeCar_StateEncore_GoodEnd(void);

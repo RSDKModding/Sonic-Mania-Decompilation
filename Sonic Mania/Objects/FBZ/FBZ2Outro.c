@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectFBZ2Outro *FBZ2Outro;
 
 void FBZ2Outro_Update(void)

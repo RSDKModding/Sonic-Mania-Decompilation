@@ -56,7 +56,7 @@ void MSZ2Cutscene_SetupCutscene(void)
 
     CutsceneSeq_StartSequence(self, MSZ2Cutscene_Cutscene_GoToPistol, MSZ2Cutscene_Cutscene_EnterPistol, MSZ2Cutscene_Cutscene_PistolFired,
                               MSZ2Cutscene_Cutscene_AppearInBG, StateMachine_None);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -79,7 +79,7 @@ void MSZ2Cutscene_GetPistolPtr(void)
 
 bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityParallaxSprite *parallaxSprite = MSZ2Cutscene->oozPeek;
@@ -105,7 +105,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
         player1->state     = Player_State_Ground;
         player1->groundVel = 0;
         if (player2->classID == Player->classID) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             Player->disableP2KeyCheck = true;
 #endif
             player2->state      = Player_State_Ground;
@@ -138,7 +138,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
 
 bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     EntityGiantPistol *pistol = MSZ2Cutscene->pistol;
 
     if (player2->classID == Player->classID) {
@@ -176,7 +176,7 @@ bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host)
 
 bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     Entity *curEntity = host->activeEntity;
     if (!host->timer) {
@@ -217,7 +217,7 @@ bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
 
 bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         host->storedTimer = 0x4000;

@@ -12,7 +12,7 @@ struct ObjectLRZ1Setup {
     int32 fadeTimer;
     TileLayer* background1;
     TileLayer *background2;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     TileLayer *fgLow;
     TileLayer *fgHigh;
     TABLE(int32 deformFG[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });

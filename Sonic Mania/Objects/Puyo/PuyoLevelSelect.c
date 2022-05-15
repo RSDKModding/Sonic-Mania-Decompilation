@@ -18,7 +18,7 @@ void PuyoLevelSelect_Update(void)
 
         int32 controllerID = self->playerID + 1;
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);

@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectAIZRockPile *AIZRockPile;
 
 void AIZRockPile_Update(void)

@@ -20,7 +20,7 @@ void MSZ1KIntro_Update(void)
             self->activated = true;
             CutsceneSeq_StartSequence(self, MSZ1KIntro_Cutscene_SetupPlane, MSZ1KIntro_Cutscene_MagicianMischief, MSZ1KIntro_Cutscene_StartAct,
                                       StateMachine_None);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
                 RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -53,7 +53,7 @@ void MSZ1KIntro_StageLoad(void)
 
 bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -79,7 +79,7 @@ bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
 
 bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -106,7 +106,7 @@ bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
 
 bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     if (host->timer == 30) {

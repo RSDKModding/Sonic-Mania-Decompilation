@@ -342,10 +342,48 @@ void UFO_Circuit_State_Caught(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UFO_Circuit_EditorDraw(void) {}
+void UFO_Circuit_EditorDraw(void)
+{
+    RSDK_THIS(UFO_Circuit);
+
+    RSDK.SetSpriteAnimation(UFO_Circuit->aniFrames, 0, &self->ufoAnimator, true, self->startNode ? 4 : 5);
+
+    RSDK.DrawSprite(&self->ufoAnimator, NULL, false);
+
+    self->active = showGizmos() ? ACTIVE_NORMAL : ACTIVE_BOUNDS;
+
+    if (self->startNode && showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        int32 id = RSDK.GetEntityID(self) + 1;
+
+        EntityUFO_Circuit *lastNode = self;
+        EntityUFO_Circuit *nextNode = RSDK_GET_ENTITY(id++, UFO_Circuit);
+        while (nextNode != self) {
+
+            if (nextNode && nextNode->classID == UFO_Circuit->classID) {
+                DrawHelpers_DrawArrow(lastNode->position.x, lastNode->position.y, nextNode->position.x, nextNode->position.y, 0x00FF00, INK_NONE,
+                                      0xFF);
+
+                lastNode = nextNode;
+            }
+
+            nextNode = RSDK_GET_ENTITY(id++, UFO_Circuit);
+            if (id >= TEMPENTITY_START)
+                id = RESERVE_ENTITY_COUNT;
+        }
+
+        if (lastNode && lastNode->classID == UFO_Circuit->classID) {
+            DrawHelpers_DrawArrow(lastNode->position.x, lastNode->position.y, self->position.x, self->position.y, 0x00FF00, INK_NONE, 0xFF);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
+}
 
 void UFO_Circuit_EditorLoad(void)
 {
+    UFO_Circuit->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(UFO_Circuit, mode);
     RSDK_ENUM_VAR("(Unused)", UFO_CIRCUIT_MODE_UNUSED);

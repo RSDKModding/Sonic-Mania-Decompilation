@@ -43,28 +43,28 @@ void Announcer_StageLoad(void)
     Announcer->finishedCountdown = false;
 
     if (RSDK.CheckStageFolder("Menu")) {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
         Announcer->sfxNewRecordTop = RSDK.GetSfx("VO/NewRecordTop.wav");
         Announcer->sfxNewRecordMid = RSDK.GetSfx("VO/NewRecordMid.wav");
 #endif
         Announcer->sfxSonic    = RSDK.GetSfx("VO/Sonic.wav");
         Announcer->sfxTails    = RSDK.GetSfx("VO/Tails.wav");
         Announcer->sfxKnuckles = RSDK.GetSfx("VO/Knuckles.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Announcer->sfxMighty = RSDK.GetSfx("VO/Mighty.wav");
         Announcer->sfxRay    = RSDK.GetSfx("VO/Ray.wav");
 #endif
         Announcer->sfxTheWinnerIs = RSDK.GetSfx("VO/TheWinnerIs.wav");
         Announcer->sfxPlayer1     = RSDK.GetSfx("VO/Player1.wav");
         Announcer->sfxPlayer2     = RSDK.GetSfx("VO/Player2.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Announcer->sfxPlayer3 = RSDK.GetSfx("VO/Player3.wav");
         Announcer->sfxPlayer4 = RSDK.GetSfx("VO/Player4.wav");
 #endif
         Announcer->sfxSonicWins = RSDK.GetSfx("VO/SonicWins.wav");
         Announcer->sfxTailsWins = RSDK.GetSfx("VO/TailsWins.wav");
         Announcer->sfxKnuxWins  = RSDK.GetSfx("VO/KnuxWins.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Announcer->sfxMightyWins = RSDK.GetSfx("VO/MightyWins.wav");
         Announcer->sfxRayWins    = RSDK.GetSfx("VO/RayWins.wav");
         Announcer->sfxDrawRound  = RSDK.GetSfx("VO/ItsADraw.wav");
@@ -85,7 +85,7 @@ void Announcer_StageLoad(void)
     else if (globals->gameMode == MODE_TIMEATTACK) {
         Announcer->aniFrames = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Announcer->sfxNewRecordTop = RSDK.GetSfx("VO/NewRecordTop.wav");
         Announcer->sfxNewRecordMid = RSDK.GetSfx("VO/NewRecordMid.wav");
 #endif
@@ -133,7 +133,7 @@ void Announcer_Draw_Countdown(void)
             case ID_SONIC: frame = 0; break;
             case ID_TAILS: frame = 1; break;
             case ID_KNUCKLES: frame = 2; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: frame = 3; break;
             case ID_RAY: frame = 4; break;
 #endif
@@ -269,7 +269,7 @@ void Announcer_State_AnnounceWinner(void)
         switch (self->playerID) {
             case 0: RSDK.PlaySfx(Announcer->sfxPlayer1, false, 255); break;
             case 1: RSDK.PlaySfx(Announcer->sfxPlayer2, false, 255); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case 2: RSDK.PlaySfx(Announcer->sfxPlayer3, false, 255); break;
             case 3: RSDK.PlaySfx(Announcer->sfxPlayer4, false, 255); break;
 #endif
@@ -309,7 +309,7 @@ void Announcer_State_AnnounceWinPlayer(void)
             case ID_SONIC: RSDK.PlaySfx(Announcer->sfxSonicWins, false, 255); break;
             case ID_TAILS: RSDK.PlaySfx(Announcer->sfxTailsWins, false, 255); break;
             case ID_KNUCKLES: RSDK.PlaySfx(Announcer->sfxKnuxWins, false, 255); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: RSDK.PlaySfx(Announcer->sfxMightyWins, false, 255); break;
             case ID_RAY: RSDK.PlaySfx(Announcer->sfxRayWins, false, 255); break;
 #endif

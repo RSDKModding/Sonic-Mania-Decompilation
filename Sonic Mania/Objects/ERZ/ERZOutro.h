@@ -52,7 +52,7 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host);
 bool32 ERZOutro_Cutscene_FadeOut(EntityCutsceneSeq *host);
 bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ERZOutro_SaveFileCB(bool32 success);
 #else
 void ERZOutro_SaveFileCB(void);

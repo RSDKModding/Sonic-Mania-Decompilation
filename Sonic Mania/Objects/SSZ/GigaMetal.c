@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectGigaMetal *GigaMetal;
 
 void GigaMetal_Update(void)

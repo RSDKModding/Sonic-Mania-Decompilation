@@ -128,7 +128,7 @@ void LRZ2Setup_StageLoad(void)
         LRZ2Setup_HandleStageReload();
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreLRZ2.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 128, 128);
@@ -171,7 +171,7 @@ void LRZ2Setup_GenericTrigger_CB(void)
     if (isMainGameMode()) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             globals->tempFlags = player1->position.y > 0x4000000;
         }

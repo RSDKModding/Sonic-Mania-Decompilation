@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectPBL_Bumper *PBL_Bumper;
 
 void PBL_Bumper_Update(void)

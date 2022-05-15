@@ -46,7 +46,7 @@ void UISubHeading_EditorLoad(void);
 void UISubHeading_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UISubHeading_Initialize(void);
 void UISubHeading_HandleUnlocks(void);
 void UISubHeading_SetupActions(void);

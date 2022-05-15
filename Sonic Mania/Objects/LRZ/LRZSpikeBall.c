@@ -122,7 +122,7 @@ void LRZSpikeBall_CheckPlayerBallCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitboxBall)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);

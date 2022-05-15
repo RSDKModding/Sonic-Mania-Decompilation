@@ -112,7 +112,7 @@ void FBZSetup_StageLoad(void)
         FBZSetup_ActTransitionLoad();
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (isMainGameMode() && PlayerHelpers_CheckAct2())
         Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act2;
 
@@ -269,7 +269,7 @@ void FBZSetup_GenericTriggerCB_ShowInterior(void)
 }
 
 void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outro->active = ACTIVE_NORMAL; }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void FBZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(FBZ2Outro, NULL, 0, 0); }
 #endif
 

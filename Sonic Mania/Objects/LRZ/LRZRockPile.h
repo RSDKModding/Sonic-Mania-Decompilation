@@ -30,7 +30,7 @@ struct EntityLRZRockPile {
     bool32 unbreakable;
     PlaneFilterTypes planeFilter;
     bool32 onlyKnux;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 onlyMighty;
 #endif
     int32 rockDebrisInfo[32 * 6];

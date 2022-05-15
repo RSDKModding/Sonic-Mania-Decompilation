@@ -191,7 +191,7 @@ void WoodChipper_HandlePlayerCollisions(void)
     {
         if (Player_CheckCollisionTouch(player, self, &WoodChipper->hitboxRazor)
             && (!self->height || (prevPlayers && (prevPlayers != 0b10 || !player2->sidekick)))) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
@@ -204,7 +204,7 @@ void WoodChipper_HandlePlayerCollisions(void)
         else if (Player_CheckCollisionBox(player, self, &WoodChipper->hitboxWood) == C_TOP) {
             self->activePlayers |= 1 << player->playerID;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
                 self->timer   = 1;
                 player->state = Player_State_Air;

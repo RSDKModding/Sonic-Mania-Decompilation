@@ -61,7 +61,7 @@ void UIChoice_Draw(void)
     drawPos.y = self->position.y;
     drawPos.x -= self->buttonBounceOffset;
     drawPos.y -= self->buttonBounceOffset;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, size, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColor >> 16) & 0xFF,
                                 (UIWidgets->buttonColor >> 8) & 0xFF, (UIWidgets->buttonColor) & 0xFF);
 #else

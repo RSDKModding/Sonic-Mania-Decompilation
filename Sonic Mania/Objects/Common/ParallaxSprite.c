@@ -81,7 +81,7 @@ void ParallaxSprite_Create(void *data)
             break;
 
         case PARALLAXSPRITE_ATTR_COLORS:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
                 self->color1 = 0x189098;
                 self->color2 = 0x00D098;
@@ -90,7 +90,7 @@ void ParallaxSprite_Create(void *data)
 #endif
                 self->color1 = 0x885820;
                 self->color2 = 0xE89850;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
             self->parallaxFactor.x >>= 8;

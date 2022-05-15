@@ -26,7 +26,7 @@ void Turntable_Update(void)
         if (!((1 << playerID) & self->activePlayers)) {
             if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop || player->state == Player_State_BubbleBounce)
                     continue;
 #else

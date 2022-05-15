@@ -58,7 +58,7 @@ struct EntityUFO_Player {
     bool32 jumpPress;
     bool32 jumpHold;
     Animator animator;
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     int32 touchJump;
 #endif
 };

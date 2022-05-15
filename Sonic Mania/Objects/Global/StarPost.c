@@ -141,7 +141,7 @@ void StarPost_StageLoad(void)
             savedStarPost->interactedPlayers = StarPost->interactablePlayers;
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_COMPETITION || globals->gameMode == MODE_ENCORE) {
 #else
         if (globals->gameMode == MODE_COMPETITION) {
@@ -209,7 +209,7 @@ void StarPost_CheckBonusStageEntry(void)
                 RSDK.PlaySfx(StarPost->sfxWarp, false, 0xFE);
                 RSDK.SetEngineState(ENGINESTATE_FROZEN);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 EntityGameProgress *progress = GameProgress_GetGameProgress();
                 if ((API.CheckDLC(DLC_PLUS) && progress && progress->allGoldMedals) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM->storedStageID = SceneInfo->listPos;
@@ -224,7 +224,7 @@ void StarPost_CheckBonusStageEntry(void)
                     SceneInfo->listPos += globals->blueSpheresID;
                     Zone_StartFadeOut(10, 0xF0F0F0);
                     RSDK.StopChannel(Music->channelID);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
             }
@@ -297,7 +297,7 @@ void StarPost_CheckCollisions(void)
                 self->timer = 0;
                 if (globals->gameMode < MODE_TIMEATTACK) {
                     int32 quota = 25;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (globals->gameMode == MODE_ENCORE)
                         quota = 50;
 #endif

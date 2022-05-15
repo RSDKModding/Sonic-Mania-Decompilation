@@ -7,7 +7,7 @@
 struct ObjectTitleCard {
     RSDK_OBJECT
     uint16 aniFrames;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine(finishedCB);
     StateMachine(suppressCB);
 #endif
@@ -47,14 +47,14 @@ struct EntityTitleCard {
     uint8 actID;
     int32 actNumScale;
     Vector2 actNumPos;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 enableIntro;
 #endif
     Animator decorationAnimator;
     Animator nameLetterAnimator;
     Animator zoneLetterAnimator;
     Animator actNumbersAnimator;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     color colors[5];
 #endif
 };
@@ -76,7 +76,7 @@ void TitleCard_EditorLoad(void);
 void TitleCard_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleCard_SetupColors(void);
 #endif
 void TitleCard_SetupVertices(void);

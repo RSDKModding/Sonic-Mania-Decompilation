@@ -44,7 +44,7 @@ void CPZ1Intro_HandleRubyHover(EntityCutsceneSeq *cutsceneSequence, EntityPlayer
 bool32 CPZ1Intro_CheckSonicAnimFinish(void);
 bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer);
 bool32 CPZ1Intro_CheckKnuxAnimFinish(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 CPZ1Intro_CheckMightyAnimFinish(void);
 bool32 CPZ1Intro_CheckRayAnimFinish(void);
 #endif

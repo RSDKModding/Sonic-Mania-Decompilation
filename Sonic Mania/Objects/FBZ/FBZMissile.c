@@ -227,7 +227,7 @@ void FBZMissile_StateVertical_Fall(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &FBZMissile->hitboxMissileV)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
@@ -281,7 +281,7 @@ void FBZMissile_StateHorizontal_Move(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &FBZMissile->hitboxMissileH)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
@@ -300,7 +300,7 @@ void FBZMissile_State_Hull(void)
     self->position.x += self->velocity.x;
     RSDK.ProcessAnimation(&self->animator);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     foreach_active(Player, player)
     {
         int32 velY = player->velocity.y;

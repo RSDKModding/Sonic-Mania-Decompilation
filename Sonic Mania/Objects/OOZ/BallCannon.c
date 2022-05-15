@@ -243,7 +243,7 @@ void BallCannon_State_CorkBlocked(void)
 
         if (Player_CheckCollisionBox(player, self, &BallCannon->hitboxCorkBlock) == C_TOP) {
             if (player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 || player->state == Player_State_MightyHammerDrop
 #endif
             ) {

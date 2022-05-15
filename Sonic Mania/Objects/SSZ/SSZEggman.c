@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectSSZEggman *SSZEggman;
 
 void SSZEggman_Update(void)

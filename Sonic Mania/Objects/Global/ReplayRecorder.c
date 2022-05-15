@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectReplayRecorder *ReplayRecorder;
 
 void ReplayRecorder_Update(void)
@@ -650,7 +650,7 @@ void ReplayRecorder_SetupWriteBuffer(void)
     Replay *replayPtr      = ReplayRecorder->recordBuffer;
 
     replayPtr->header.signature     = REPLAY_SIGNATURE;
-    replayPtr->header.version       = RETRO_GAMEVER;
+    replayPtr->header.version       = MANIA_GAMEVER;
     replayPtr->header.isPacked      = false;
     replayPtr->header.isNotEmpty    = true;
     replayPtr->header.startingFrame = ReplayRecorder->frameCounter;

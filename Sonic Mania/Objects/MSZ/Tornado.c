@@ -70,7 +70,7 @@ void Tornado_Create(void *data)
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &self->animatorPropeller, true, 0);
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &self->animatorFlame, true, 0);
         if (checkPlayerID(ID_TAILS, 1)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             || checkPlayerID(ID_MIGHTY, 1) || checkPlayerID(ID_RAY, 1)
 #endif
         ) {

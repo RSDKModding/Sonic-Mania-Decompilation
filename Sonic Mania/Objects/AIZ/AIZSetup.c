@@ -15,7 +15,7 @@ void AIZSetup_LateUpdate(void) {}
 
 void AIZSetup_StaticUpdate(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (Zone->actID != 3 && !AIZSetup->hasSetupCutscene) {
 #else
     if (!AIZSetup->hasSetupCutscene) {
@@ -25,7 +25,7 @@ void AIZSetup_StaticUpdate(void)
         AIZSetup->hasSetupCutscene = true;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (AIZSetup->background4) {
 #endif
         if (ScreenInfo->position.x <= 4096)
@@ -41,7 +41,7 @@ void AIZSetup_StaticUpdate(void)
             AIZSetup->background2->drawLayer[0] = DRAWGROUP_COUNT;
             AIZSetup->background3->drawLayer[0] = 0;
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
     else {
         if (!(Zone->timer & 3)) {
@@ -58,7 +58,7 @@ void AIZSetup_StaticUpdate(void)
 
     if (!(Zone->timer % 5)) {
         RSDK.RotatePalette(0, 171, 174, true);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.RotatePalette(1, 171, 174, true);
         CutsceneHBH->paletteColors[43] = RSDK.GetPaletteEntry(0, 171);
         CutsceneHBH->paletteColors[44] = RSDK.GetPaletteEntry(0, 172);
@@ -78,7 +78,7 @@ void AIZSetup_StaticUpdate(void)
         AIZSetup->playingDrillSFX = true;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     --AIZSetup->bellPlantAniTimer;
     if (AIZSetup->bellPlantAniTimer < 0) {
         ++AIZSetup->bellPlantAniFrame;
@@ -117,7 +117,7 @@ void AIZSetup_Create(void *data) {}
 
 void AIZSetup_StageLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (Zone->actID != 3)
 #endif
         Zone->cameraBoundsB[0] = SCREEN_YSIZE;
@@ -127,7 +127,7 @@ void AIZSetup_StageLoad(void)
     AIZSetup->aniTiles     = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
     AIZSetup->knuxFrames   = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK.GetTileLayerID("Background 4") >= DRAWGROUP_COUNT) {
         // Bug Details:
         // AIZ->background4 doesn't get cleared here, so coming from AIZ Intro to AIZ Encore (same folder so object structs aren't reset)
@@ -184,7 +184,7 @@ void AIZSetup_StageLoad(void)
             int32 parallaxFactor                           = AIZSetup->background3->scrollInfo[i].parallaxFactor;
             AIZSetup->background3->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 
@@ -203,7 +203,7 @@ void AIZSetup_StageLoad(void)
         foreach_all(AIZTornadoPath, node) { destroyEntity(node); }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     BGSwitch->switchCallback[AIZ_BG_JUNGLE] = AIZSetup_BGSwitchCB_Jungle;
     BGSwitch->switchCallback[AIZ_BG_SKY]    = AIZSetup_BGSwitchCB_Sky;
     BGSwitch->layerIDs[0]                   = AIZ_BG_JUNGLE;
@@ -217,7 +217,7 @@ void AIZSetup_StageLoad(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void AIZSetup_BGSwitchCB_Jungle(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
@@ -312,7 +312,7 @@ void AIZSetup_GetCutsceneSetupPtr(void)
         default:
         case ID_SONIC:
         case ID_TAILS:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY:
         case ID_RAY:
 #endif
@@ -323,10 +323,10 @@ void AIZSetup_GetCutsceneSetupPtr(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void AIZSetup_SkipCB(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
     else
@@ -343,7 +343,7 @@ void AIZSetup_CutsceneST_Setup(void)
                               AIZSetup_CutsceneSonic_RubyGrabbed, AIZSetup_CutsceneSonic_RubyAppear, AIZSetup_CutsceneSonic_RubyFX,
                               AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->classID) {
         seq->skipType     = SKIPTYPE_CALLBACK;
@@ -354,7 +354,7 @@ void AIZSetup_CutsceneST_Setup(void)
 
 bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     EntityAIZTornado *tornado = AIZSetup->tornado;
 
     if (!host->timer) {
@@ -373,7 +373,7 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -391,7 +391,7 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (player1->position.x >= 0x2A300000) {
@@ -433,7 +433,7 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (player2->classID == Player->classID) {
@@ -459,7 +459,7 @@ bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneSonic_EnterClaw(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         player1->camera = NULL;
@@ -509,7 +509,7 @@ bool32 AIZSetup_CutsceneSonic_WatchClaw(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player1);
     unused(camera);
 
@@ -591,7 +591,7 @@ bool32 AIZSetup_CutsceneSonic_RubyAppear(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
@@ -677,7 +677,7 @@ void AIZSetup_CutsceneK_Setup(void)
                               AIZSetup_CutsceneKnux_PrepareForTrouble, AIZSetup_CutsceneKnux_EnterThreat, AIZSetup_CutsceneKnux_HeaviesAppear,
                               AIZSetup_CutsceneKnux_RubyImpact, AIZSetup_CutsceneKnux_RubyFX, AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->classID) {
         seq->skipType     = SKIPTYPE_CALLBACK;
@@ -688,7 +688,7 @@ void AIZSetup_CutsceneK_Setup(void)
 
 bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -704,7 +704,7 @@ bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -741,7 +741,7 @@ bool32 AIZSetup_CutsceneKnux_Drillin(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -762,7 +762,7 @@ bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
 
     if (!host->timer) {
@@ -785,7 +785,7 @@ bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -811,7 +811,7 @@ bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
@@ -864,7 +864,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
 }
 bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 

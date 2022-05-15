@@ -52,7 +52,7 @@ void FXFade_Create(void *data)
             self->color = voidToInt(data);
 
         if (!self->eventOnly) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->transitionScene = false;
 #endif
             self->state = self->timer <= 0 ? FXFade_State_FadeIn : FXFade_State_FadeOut;
@@ -75,7 +75,7 @@ void FXFade_State_FadeIn(void)
         if (self->oneWay) {
             self->state = StateMachine_None;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (self->transitionScene)
                 RSDK.LoadScene();
 #endif

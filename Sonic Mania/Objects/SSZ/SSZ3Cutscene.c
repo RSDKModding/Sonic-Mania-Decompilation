@@ -13,7 +13,7 @@ void SSZ3Cutscene_Update(void)
 {
     RSDK_THIS(SSZ3Cutscene);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->playTransformCutscene) {
         CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneOutro_SetupOutro, SSZ3Cutscene_CutsceneOutro_FollowRuby,
                                   SSZ3Cutscene_CutsceneOutro_EnterRuby, SSZ3Cutscene_CutsceneOutro_RubyActivate, SSZ3Cutscene_CutsceneOutro_RubyWarp,
@@ -30,7 +30,7 @@ void SSZ3Cutscene_Update(void)
 #endif
         CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
         self->active = ACTIVE_NEVER;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }
@@ -46,14 +46,14 @@ void SSZ3Cutscene_Create(void *data)
     RSDK_THIS(SSZ3Cutscene);
 
     self->active = ACTIVE_NORMAL;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     self->playTransformCutscene = voidToInt(data);
 #endif
 }
 
 void SSZ3Cutscene_StageLoad(void) {}
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SSZ3Cutscene_HandleRubyFX(void)
 {
     foreach_active(Player, player)
@@ -71,7 +71,7 @@ void SSZ3Cutscene_HandleRubyFX(void)
 
 bool32 SSZ3Cutscene_CutsceneIntro_EnterStageLeft(EntityCutsceneSeq *host)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!host->timer) {
 #else
     if (host->timer >= 8) {
@@ -114,7 +114,7 @@ bool32 SSZ3Cutscene_CutsceneIntro_PlayerRunLeft(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
@@ -149,7 +149,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
     Zone->playerBoundActiveR[0] = false;
     RSDK.CopyTileLayer(Zone->fgLow, screenBoundsR, 16, Zone->fgLow, 187, 160, 36, 14);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     CREATE_ENTITY(MonarchPlans, NULL, (cutscenePos << 20) + 0xF00000, 0x1A80000);
     CREATE_ENTITY(SSZEggman, intToVoid(true), (cutscenePos << 20) + 0x2000000, 0x1C50000);
 #endif
@@ -267,7 +267,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
     RSDK_THIS(SSZ3Cutscene);
 
     // lmao
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player1);
     unused(player2);
     unused(camera);

@@ -98,7 +98,7 @@ void Shuriken_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Shuriken->hitboxArrow)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
                 self->interaction = false;
                 self->state       = Shuriken_State_ArrowDebris;
@@ -106,7 +106,7 @@ void Shuriken_CheckPlayerCollisions(void)
             else {
 #endif
                 Player_CheckHit(player, self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }
@@ -346,7 +346,7 @@ void Shuriken_State_ArrowFall(void)
         destroyEntity(self);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Shuriken_State_ArrowDebris(void)
 {
     RSDK_THIS(Shuriken);

@@ -71,7 +71,7 @@ void FBZSetup_GenericTriggerCB_ShowExterior(void);
 void FBZSetup_GenericTriggerCB_ShowInterior(void);
 
 void FBZSetup_StageFinishCB_Act1(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void FBZSetup_StageFinishCB_Act2(void);
 #endif
 

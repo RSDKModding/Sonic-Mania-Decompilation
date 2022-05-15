@@ -14,7 +14,7 @@ struct ObjectUFO_Setup {
     RSDK_OBJECT
     StateMachine(deformCB);
     int32 timedOut;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 encoreStage;
 #endif
     int32 machLevel;

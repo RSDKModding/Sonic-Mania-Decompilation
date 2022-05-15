@@ -76,7 +76,7 @@ void MMZSetup_StageLoad(void)
         RSDK.GetTileLayer(0)->scrollPos = 384 << 16;
         RSDK.GetTileLayer(1)->scrollPos = 384 << 16;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         for (int32 l = 3; l < 5; ++l) RSDK.GetTileLayer(l)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
 #endif
 
@@ -93,7 +93,7 @@ void MMZSetup_StageLoad(void)
                 Zone_ReloadStoredEntities(256 << 16, 2092 << 16, true);
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (isMainGameMode() && PlayerHelpers_CheckAct2())
             Zone->stageFinishCallback = MMZSetup_StageFinishCB_Act2;
 #endif
@@ -110,7 +110,7 @@ void MMZSetup_StageLoad(void)
         Zone->cameraBoundsB[3] = 5120;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreMMZ.act", 0b0000000011111111);
         RSDK.LoadPalette(3, "EncoreMMZfp.act", 0b0000000011111111);
@@ -125,7 +125,7 @@ void MMZSetup_StageFinishCB_Act1(void)
     RSDK.LoadScene();
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MMZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(MMZ2Outro, NULL, 0, 0); }
 #endif
 

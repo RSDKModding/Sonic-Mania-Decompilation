@@ -43,7 +43,7 @@ void LRZ1Outro_StartCutscene(void)
                                   LRZ1Outro_CutsceneAct1_UsingDashLift, StateMachine_None);
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif

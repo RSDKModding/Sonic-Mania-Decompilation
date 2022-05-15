@@ -214,7 +214,7 @@ void UIDialog_Setup(EntityUIDialog *dialog)
         RSDK.ResetEntitySlot(SLOT_DIALOG_UICONTROL, UIControl->classID, &size);
 
         control = RSDK_GET_ENTITY(SLOT_DIALOG_UICONTROL, UIControl);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         control->menuWasSetup      = true;
 #endif
         control->position.x        = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;

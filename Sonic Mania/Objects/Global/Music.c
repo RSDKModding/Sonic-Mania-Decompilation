@@ -73,7 +73,7 @@ void Music_StageLoad(void)
     globals->restartMusicID = TRACK_STAGE;
     Music->nextTrack        = TRACK_NONE;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (sku_platform == PLATFORM_DEV)
         RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, DTYPE_BOOL, false, true);
 #endif
@@ -101,7 +101,7 @@ void Music_State_PlayAutoMusic(void)
     if (globals->suppressAutoMusic) {
         globals->suppressAutoMusic = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         switch (Music->activeTrack) {
             case TRACK_INVINCIBLE:
             case TRACK_SNEAKERS:
@@ -122,7 +122,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
 {
     trackID &= 0xF;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // remove any existing vers of this on the stack
     for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
@@ -189,7 +189,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
     Music->activeTrack = trackID;
     Music->channelID   = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->vapeMode)
         RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
@@ -246,7 +246,7 @@ void Music_PlayTrack(uint8 trackID)
 {
     trackID &= 0xF;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (trackID != TRACK_ACTCLEAR && Music_CheckMusicStack_Active()) {
         Music->nextTrack = trackID;
     }
@@ -310,13 +310,13 @@ void Music_PlayTrackPtr(EntityMusic *entity)
     Music->trackStartPos = 0;
     Music->channelID     = RSDK.PlayStream(Music->trackNames[0], 0, 0, Music->trackLoops[0], true);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->vapeMode)
         RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Music_PlayAutoMusicQueuedTrack(uint8 trackID)
 {
     trackID &= 0xF;
@@ -427,7 +427,7 @@ void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade)
 {
     trackID &= 0xF;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->classID == Music->classID && music->trackID == trackID) {
@@ -484,7 +484,7 @@ void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
 {
     if (entity) {
@@ -574,7 +574,7 @@ void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
     trackID &= 0xF;
 
     EntityMusic *music = NULL;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     switch (trackID) {
         case TRACK_ACTCLEAR:
             Music_ClearMusicStack();
@@ -628,7 +628,7 @@ void Music_FadeOut(float fadeSpeed)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Music_State_HandleQueuedTrack(void)
 {
     RSDK_THIS(Music);
@@ -668,7 +668,7 @@ void Music_State_FadeTrackIn(void)
 {
     RSDK_THIS(Music);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK.GetChannelPos(Music->channelID) > Music->trackStartPos) {
         Music->trackStartPos = 0;
         self->volume += self->fadeSpeed;
@@ -709,7 +709,7 @@ void Music_State_TransitionTrack(void)
     RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
 
     if (self->volume < -0.5) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.StopChannel(Music->channelID);
 
         Music->activeTrack   = Music->nextTrack;
@@ -757,7 +757,7 @@ void Music_State_TransitionTrack(void)
     }
 }
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void Music_State_1UPJingle(void)
 {
     RSDK_THIS(Music);

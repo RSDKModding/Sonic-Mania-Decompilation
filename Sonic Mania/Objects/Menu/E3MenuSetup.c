@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 ObjectE3MenuSetup *E3MenuSetup = NULL;
 
 void E3MenuSetup_Update(void)

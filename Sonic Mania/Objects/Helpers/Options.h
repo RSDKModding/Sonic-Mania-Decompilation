@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectOptions {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     RSDK_OBJECT
     Entity *loadEntityPtr;
     void (*loadCallback)(bool32 success);
@@ -59,7 +59,7 @@ void Options_Reload(void);
 void Options_GetWinSize(void);
 void Options_LoadCallback(bool32 success);
 void Options_LoadOptionsBin(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Options_SaveOptionsBin(void (*callback)(bool32 success));
 #else
 void Options_SaveOptionsBin(void (*callback)(void));

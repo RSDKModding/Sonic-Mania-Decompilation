@@ -22,10 +22,10 @@ typedef enum {
 struct ObjectHUD {
     RSDK_OBJECT
     uint16 aniFrames;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     uint16 superButtonFrames;
 #endif
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxClick;
     uint16 sfxStarpost;
     bool32 showTAPrompt;
@@ -44,15 +44,15 @@ struct EntityHUD {
     Vector2 timeOffset;
     Vector2 ringsOffset;
     Vector2 lifeOffset;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 lifeFrameIDs[PLAYER_MAX];
     int32 lives[PLAYER_MAX];
 #endif
     int32 maxOffset;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     int32 superButtonPos;
 #endif
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine(vsStates[PLAYER_MAX]);
     Vector2 vsScoreOffsets[PLAYER_MAX];
     Vector2 vsTimeOffsets[PLAYER_MAX];
@@ -61,7 +61,7 @@ struct EntityHUD {
     int32 vsMaxOffsets[PLAYER_MAX];
     int32 screenID;
 #endif
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     int32 timeFlashFrame;
 #endif
     int32 ringFlashFrame;
@@ -72,11 +72,11 @@ struct EntityHUD {
     Animator hyperNumbersAnimator;
     Animator lifeIconAnimator;
     Animator playerIDAnimator;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     Animator superIconAnimator;
     Animator superButtonAnimator;
 #endif
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Animator thumbsUpIconAnimator;
     Animator thumbsUpButtonAnimator;
     Animator replayClapAnimator;

@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectPBL_Player *PBL_Player;
 
 void PBL_Player_Update(void)
@@ -142,7 +142,7 @@ void PBL_Player_ProcessPlayerControl(void)
 {
     RSDK_THIS(PBL_Player);
     if (self->controllerID < PLAYER_MAX) {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);

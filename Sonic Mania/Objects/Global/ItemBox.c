@@ -15,7 +15,7 @@ void ItemBox_Update(void)
 
     StateMachine_Run(self->state);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         if (self->contentsAnimator.animationID == 2 || self->contentsAnimator.animationID == 7 || self->contentsAnimator.animationID == 8) {
             if (globals->characterFlags == 0x1F && globals->gameMode == MODE_ENCORE) {
@@ -101,14 +101,14 @@ void ItemBox_Create(void *data)
             case ITEMBOX_1UP_SONIC:
             case ITEMBOX_1UP_TAILS:
             case ITEMBOX_1UP_KNUX:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ITEMBOX_1UP_MIGHTY:
             case ITEMBOX_1UP_RAY:
 #endif
                 if (globals->gameMode == MODE_TIMEATTACK) {
                     self->type = ITEMBOX_RING;
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 else if (globals->gameMode == MODE_ENCORE) {
                     self->type = ITEMBOX_STOCK;
                 }
@@ -118,7 +118,7 @@ void ItemBox_Create(void *data)
                         case ID_SONIC: self->type = ITEMBOX_1UP_SONIC; break;
                         case ID_TAILS: self->type = ITEMBOX_1UP_TAILS; break;
                         case ID_KNUCKLES: self->type = ITEMBOX_1UP_KNUX; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         case ID_MIGHTY: self->type = ITEMBOX_1UP_MIGHTY; break;
                         case ID_RAY: self->type = ITEMBOX_1UP_RAY; break;
 #endif
@@ -128,7 +128,7 @@ void ItemBox_Create(void *data)
                 self->contentsAnimator.frameID = self->type;
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ITEMBOX_SWAP:
             case ITEMBOX_RANDOM:
                 if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
@@ -203,7 +203,7 @@ void ItemBox_StageLoad(void)
     ItemBox->sfxDestroy   = RSDK.GetSfx("Global/Destroy.wav");
     ItemBox->sfxTeleport  = RSDK.GetSfx("Global/Teleport.wav");
     ItemBox->sfxHyperRing = RSDK.GetSfx("Global/HyperRing.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     ItemBox->sfxPowerDown = RSDK.GetSfx("Stage/PowerDown.wav");
     ItemBox->sfxRevovery  = RSDK.GetSfx("Global/Recovery.wav");
 #endif
@@ -297,7 +297,7 @@ void ItemBox_State_Normal(void)
 
     RSDK.ProcessAnimation(&self->overlayAnimator);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
         if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
@@ -333,7 +333,7 @@ void ItemBox_State_Falling(void)
     ItemBox_CheckHit();
     RSDK.ProcessAnimation(&self->overlayAnimator);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
         if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
@@ -367,7 +367,7 @@ void ItemBox_State_Conveyor(void)
 
     RSDK.ProcessAnimation(&self->overlayAnimator);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
         if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
@@ -394,7 +394,7 @@ void ItemBox_CheckHit(void)
     foreach_active(Player, player)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1 && !self->parent) {
                 if (RSDK.CheckObjectCollisionTouchCircle(player, 0x1000000, self, 0x100000)) {
                     if (self->position.y - 0x800000 < player->position.y && self->state != ItemBox_State_Falling) {
@@ -447,7 +447,7 @@ void ItemBox_CheckHit(void)
                 switch (player->characterID) {
                     case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
                     case ID_KNUCKLES: attacking |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     case ID_MIGHTY: attacking |= anim == ANI_DROPDASH || player->jumpAbilityState > 1; break;
 #endif
                 }
@@ -548,7 +548,7 @@ void ItemBox_GivePowerup(void)
         case ITEMBOX_1UP_SONIC:
         case ITEMBOX_1UP_TAILS:
         case ITEMBOX_1UP_KNUX:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ITEMBOX_1UP_MIGHTY:
         case ITEMBOX_1UP_RAY:
 #endif
@@ -563,7 +563,7 @@ void ItemBox_GivePowerup(void)
             break;
 
         case ITEMBOX_SWAP:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (globals->gameMode == MODE_ENCORE) {
                 if (!globals->stock || player->animator.animationID == ANI_TRANSFORM) {
                     RSDK.PlaySfx(Player->sfxSwapFail, false, 255);
@@ -591,12 +591,12 @@ void ItemBox_GivePowerup(void)
 #endif
                 Zone_StartTeleportAction();
                 RSDK.PlaySfx(ItemBox->sfxTeleport, false, 255);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ITEMBOX_RANDOM: {
             uint8 playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
             uint8 newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -706,7 +706,7 @@ void ItemBox_GivePowerup(void)
             Player_CheckGoSuper(player, 0x7F);
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ITEMBOX_STOCK: {
             if (self->contentsAnimator.animationID == 7) {
                 if (globals->gameMode == MODE_ENCORE) {
@@ -838,7 +838,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 
     RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)
         player->velocity.y -= 0x10000;
     else
@@ -880,7 +880,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 
     itemBox->active = ACTIVE_NORMAL;
     if (itemBox->type == ITEMBOX_RANDOM) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode != MODE_ENCORE) {
 #endif
             while (true) {
@@ -894,7 +894,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
                             case ID_SONIC: itemBox->type = ITEMBOX_1UP_SONIC; break;
                             case ID_TAILS: itemBox->type = ITEMBOX_1UP_TAILS; break;
                             case ID_KNUCKLES: itemBox->type = ITEMBOX_1UP_KNUX; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             case ID_MIGHTY: itemBox->type = ITEMBOX_1UP_MIGHTY; break;
                             case ID_RAY: itemBox->type = ITEMBOX_1UP_RAY;
 #endif
@@ -906,7 +906,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 
                     case ITEMBOX_1UP_TAILS:
                     case ITEMBOX_1UP_KNUX:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     case ITEMBOX_1UP_MIGHTY:
                     case ITEMBOX_1UP_RAY:
 #endif
@@ -922,7 +922,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
                 }
                 break;
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -937,7 +937,7 @@ bool32 ItemBox_HandleFallingCollision(void)
     self->moveOffset.x = -self->position.x;
     self->moveOffset.y = -self->position.y;
     if (self->velocity.y)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->parent = NULL;
 #else
         self->groundVel = 0;
@@ -1012,7 +1012,7 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
             return false;
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->parent = (Entity *)platform;
 #else
         self->groundVel = RSDK.GetEntityID(platform);
@@ -1046,7 +1046,7 @@ void ItemBox_HandleObjectCollisions(void)
     bool32 platformCollided = false;
 
     if (Platform) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->parent) {
             EntityPlatform *platform = (EntityPlatform *)self->parent;
 #else
@@ -1075,7 +1075,7 @@ void ItemBox_HandleObjectCollisions(void)
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (TilePlatform && self->parent) {
         EntityTilePlatform *tilePlatform = (EntityTilePlatform *)self->parent;
         if (tilePlatform->classID == TilePlatform->classID) {
@@ -1093,7 +1093,7 @@ void ItemBox_HandleObjectCollisions(void)
 #endif
 
     if (Crate) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->parent) {
             EntityCrate *crate = (EntityCrate *)self->parent;
 #else
@@ -1111,7 +1111,7 @@ void ItemBox_HandleObjectCollisions(void)
                 self->velocity.y = 0;
             }
             else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 self->parent = NULL;
 #else
                 self->groundVel = 0;
@@ -1128,7 +1128,7 @@ void ItemBox_HandleObjectCollisions(void)
     }
 
     if (!platformCollided)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->parent = NULL;
 #else
         self->groundVel = 0;
@@ -1263,7 +1263,7 @@ void ItemBox_EditorLoad(void)
     RSDK_ENUM_VAR("Swap", ITEMBOX_SWAP);
     RSDK_ENUM_VAR("Random", ITEMBOX_RANDOM);
     RSDK_ENUM_VAR("Super", ITEMBOX_SUPER);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_ENUM_VAR("1UP (Mighty)", ITEMBOX_1UP_MIGHTY);
     RSDK_ENUM_VAR("1UP (Ray)", ITEMBOX_1UP_RAY);
     RSDK_ENUM_VAR("Extra Stock", ITEMBOX_STOCK);

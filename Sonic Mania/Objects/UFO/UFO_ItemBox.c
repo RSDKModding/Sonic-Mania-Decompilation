@@ -142,7 +142,7 @@ void UFO_ItemBox_State_HasContents(void)
 
                     RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->animator, 128, 0, true, 0);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (self->type >= UFO_ITEMBOX_BUMPER) {
                         RSDK.PlaySfx(UFO_ItemBox->sfxBumper, false, 255);
                         self->timer = 16;
@@ -153,7 +153,7 @@ void UFO_ItemBox_State_HasContents(void)
                         self->drawOrder = 12;
                         self->active    = 2;
                         self->state     = UFO_ItemBox_State_ShowContents;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     }
 #endif
                     ++UFO_ItemBox->breakCount;
@@ -220,7 +220,7 @@ void UFO_ItemBox_EditorDraw(void)
 
     RSDK.SetSpriteAnimation(UFO_ItemBox->aniFrames, 0, &self->contentsAnimator, true, self->type);
 
-    RSDK.DrawSprite(&self->contentsAnimator, &self->drawPos, true);
+    RSDK.DrawSprite(&self->contentsAnimator, NULL, false);
 }
 
 void UFO_ItemBox_EditorLoad(void)
@@ -231,7 +231,7 @@ void UFO_ItemBox_EditorLoad(void)
     RSDK_ENUM_VAR("Rings", UFO_ITEMBOX_RING);
     RSDK_ENUM_VAR("Spheres", UFO_ITEMBOX_SPHERE);
     RSDK_ENUM_VAR("Level Up", UFO_ITEMBOX_LVLUP);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_ENUM_VAR("Bumper", UFO_ITEMBOX_BUMPER);
 #endif
 }

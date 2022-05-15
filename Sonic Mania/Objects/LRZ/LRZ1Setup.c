@@ -73,7 +73,7 @@ void LRZ1Setup_StaticUpdate(void)
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!(Zone->timer & 3)) {
         ++LRZ1Setup->background1->deformationOffset;
         ++LRZ1Setup->background2->deformationOffset;
@@ -96,7 +96,7 @@ void LRZ1Setup_StageLoad(void)
 
     LRZ1Setup->background1 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 1"));
     LRZ1Setup->background2 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 2"));
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LRZ1Setup->fgLow       = RSDK.GetTileLayer(Zone->fgLow);
     LRZ1Setup->fgHigh      = RSDK.GetTileLayer(Zone->fgHigh);
 #endif
@@ -104,7 +104,7 @@ void LRZ1Setup_StageLoad(void)
     RSDK.SetDrawLayerProperties(0, false, LRZ1Setup_DrawLayerCB);
 
     Animals->animalTypes[0] = ANIMAL_FLICKY;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Animals->animalTypes[1] = ANIMAL_CUCKY;
 #else
     Animals->animalTypes[1] = ANIMAL_RICKY;
@@ -113,7 +113,7 @@ void LRZ1Setup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
         Zone->stageFinishCallback = LRZ1Setup_StageFinishCB;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreLRZ1.act", 0b0000000011111111);
 

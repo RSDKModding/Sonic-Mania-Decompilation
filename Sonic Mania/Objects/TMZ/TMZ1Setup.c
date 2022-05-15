@@ -100,7 +100,7 @@ void TMZ1Setup_StageLoad(void)
     RSDK.GetTileLayer(3)->scrollPos = -0x1000000;
 
     if (!TMZ1Setup->paletteInit) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreTMZ1.act", 0b0000000011111111);
             RSDK.LoadPalette(1, "EncoreTMZ1d.act", 0b0000000011111111);

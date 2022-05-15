@@ -1311,7 +1311,7 @@ void Gachapandora_StatePrize_AmyJump(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxFireball)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop) {
                     if (Player_CheckBossHit(player, self)) {
                         if (self->health)
@@ -1377,7 +1377,7 @@ void Gachapandora_StatePrize_AmyJump(void)
                         self->state  = Gachapandora_StatePrize_AmyGrabbed;
                         foreach_break;
                     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
             }

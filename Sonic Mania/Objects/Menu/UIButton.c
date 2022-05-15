@@ -59,7 +59,7 @@ void UIButton_Draw(void)
 
     drawPos.x = self->position.x - self->buttonBounceOffset;
     drawPos.y = self->position.y - self->buttonBounceOffset;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColor >> 16) & 0xFF,
                                 (UIWidgets->buttonColor >> 8) & 0xFF, (UIWidgets->buttonColor) & 0xFF);
 #else
@@ -276,7 +276,7 @@ void UIButton_ProcessButtonCB_Scroll(void)
 
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIControl_SetTargetPos(control, self->position.x, self->position.y);
 #else
     control->targetPos.y = self->position.y;
@@ -316,7 +316,7 @@ void UIButton_ProcessButtonCB_Scroll(void)
         }
 
         if (changedSelection) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (control->noWrap) {
                 int32 rowCount = control->rowCount;
                 int32 colCount = control->columnCount;
@@ -356,7 +356,7 @@ void UIButton_ProcessButtonCB_Scroll(void)
 
                 if (colID >= control->columnCount)
                     colID -= control->columnCount;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
 
@@ -622,7 +622,7 @@ void UIButton_ProcessButtonCB(void)
     }
 
     if (movedV) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (control->noWrap) {
             int32 count = control->rowCount;
             if (rowID < control->rowCount)
@@ -655,7 +655,7 @@ void UIButton_ProcessButtonCB(void)
 
             if (columnID >= control->columnCount)
                 columnID -= control->columnCount;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
 
@@ -776,7 +776,7 @@ void UIButton_SelectedCB(void)
         parent->state = StateMachine_None;
 
     if (self->assignsP1) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 id = API_MostRecentActiveControllerID(0, 0, 0);
 #else
         int32 id = API_MostRecentActiveControllerID(0);

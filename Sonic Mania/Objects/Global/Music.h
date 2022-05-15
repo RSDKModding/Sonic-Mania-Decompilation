@@ -19,7 +19,7 @@ typedef enum {
     TRACK_GAMEOVER     = 9,
     TRACK_SUPER        = 10,
     TRACK_ERZBOSS      = 10,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     TRACK_HBHMISCHIEF = 11,
     TRACK_NOLOAD      = 12,
 #else
@@ -46,7 +46,7 @@ struct ObjectMusic {
     int32 trackStartPos;
     int32 channelID;
     int32 activeTrack;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 nextTrack;
     int32 restartTrackID;
 #else
@@ -104,28 +104,28 @@ void Music_PlayTrack(uint8 trackID);
 // Play a track using the info from a music entity
 void Music_PlayTrackPtr(EntityMusic *entity);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Music_PlayAutoMusicQueuedTrack(uint8 trackID);
 void Music_HandleMusicStack_Powerups(EntityMusic *entity);
 bool32 Music_CheckMusicStack_Active(void);
 void Music_GetNextTrackStartPos(EntityMusic *entity);
 #endif
 void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Music_HandleMusicStackTrackRemoval(EntityMusic *entity);
 void Music_ClearMusicStack(void);
 #endif
 void Music_TransitionTrack(uint8 trackID, float fadeSpeed);
 void Music_FadeOut(float fadeSpeed);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Music_State_HandleQueuedTrack(void);
 void Music_State_FadeTrackOut(void);
 #endif
 void Music_State_FadeTrackIn(void);
 void Music_State_FadeOut(void);
 void Music_State_TransitionTrack(void);
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void Music_State_1UPJingle(void);
 #endif
 

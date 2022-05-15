@@ -16,7 +16,7 @@ void HUD_Update(void)
     self->enableTimeFlash = false;
     self->enableRingFlash = false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->replayClapAnimator.animationID == 11)
         RSDK.ProcessAnimation(&self->replayClapAnimator);
 #endif
@@ -26,7 +26,7 @@ void HUD_LateUpdate(void)
 {
     RSDK_THIS(HUD);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_COMPETITION) {
         for (self->screenID = 0; self->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++self->screenID) {
             StateMachine_Run(self->vsStates[self->screenID]);
@@ -39,7 +39,7 @@ void HUD_LateUpdate(void)
     StateMachine_Run(self->state);
 #endif
 
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (SceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER && SaveGame->saveRAM->chaosEmeralds >= 0b01111111) {
@@ -53,7 +53,7 @@ void HUD_LateUpdate(void)
                 self->superButtonPos -= 0x80000;
         }
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (globals->gameMode == MODE_TIMEATTACK) {
         if (HUD->showTAPrompt) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV) {
@@ -93,7 +93,7 @@ void HUD_Draw(void)
     lifeOffset.x  = self->lifeOffset.x;
     lifeOffset.y  = self->lifeOffset.y;
     if (globals->gameMode == MODE_COMPETITION) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         scoreOffset.x = self->vsScoreOffsets[SceneInfo->currentScreenID].x;
         scoreOffset.y = self->vsScoreOffsets[SceneInfo->currentScreenID].y;
         timeOffset.x  = self->vsTimeOffsets[SceneInfo->currentScreenID].x;
@@ -112,7 +112,7 @@ void HUD_Draw(void)
             }
         }
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else {
         if (HUD->swapCooldown > 0) {
             RSDK.ProcessAnimation(&self->playerIDAnimator);
@@ -124,8 +124,8 @@ void HUD_Draw(void)
 
     self->ringFlashFrame = player->rings ? 0 : ((Zone->persistentTimer >> 3) & 1);
 
-#if RETRO_GAMEVER != VER_100
-#if RETRO_USE_PLUS
+#if MANIA_GAMEVER != VER_100
+#if MANIA_USE_PLUS
     self->timeFlashFrame = 0;
     if ((SceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER))) && ActClear->disableTimeBonus)
         self->timeFlashFrame = (Zone->persistentTimer >> 3) & 1;
@@ -166,7 +166,7 @@ void HUD_Draw(void)
 
         // Draw Minutes
         lifePos.x -= 0x90000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->minutes > 9 && globals->medalMods & getMod(MEDAL_NOTIMEOVER))
             HUD_DrawNumbersBase10(&lifePos, SceneInfo->minutes, 2);
         else
@@ -209,7 +209,7 @@ void HUD_Draw(void)
             HUD_DrawNumbersBase16(&lifePos, (player->position.x >> 0x10));
         }
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (self->superButtonPos > -0x400000 && globals->gameMode == MODE_TIMEATTACK) {
         lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].width << 16) - self->superButtonPos;
         lifePos.y = 0x140000;
@@ -241,7 +241,7 @@ void HUD_Draw(void)
         RSDK.DrawSprite(&self->thumbsUpButtonAnimator, &lifePos, true);
     }
 #endif
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     else if (self->superButtonPos > -0x200000) {
         // Draw Super Icon
         lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].width << 16) - self->superButtonPos;
@@ -250,7 +250,7 @@ void HUD_Draw(void)
 
         lifePos.x -= 0x140000;
         bool32 canSuper = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (Player->canSuperCB)
             canSuper = Player->canSuperCB(true);
 #endif
@@ -272,7 +272,7 @@ void HUD_Draw(void)
     lifePos.x           = lifeOffset.x;
     lifePos.y           = lifeOffset.y;
     int32 charID        = player->characterID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 lives = self->lives[player->playerID];
     for (; charID > 0; ++lifeIconFrame) charID >>= 1;
     self->lifeIconAnimator.frameID = lifeIconFrame;
@@ -295,7 +295,7 @@ void HUD_Draw(void)
 #endif
     RSDK.DrawSprite(&self->lifeIconAnimator, &lifePos, true);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
         for (int32 p = 0; p < PLAYER_MAX; ++p) {
             if (HUD->stockFlashTimers[p] > 0)
@@ -363,7 +363,7 @@ void HUD_Draw(void)
 
     if (globals->gameMode == MODE_COMPETITION) {
         // Draw Competition Borders
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         switch (HUD->screenBorderType[SceneInfo->currentScreenID]) {
             default:
             case VS_BORDER_NONE: break;
@@ -430,7 +430,7 @@ void HUD_Create(void *data)
     RSDK_THIS(HUD);
 
     if (!SceneInfo->inEditor) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         ActClear->disableTimeBonus = false;
 #endif
 
@@ -446,11 +446,11 @@ void HUD_Create(void *data)
         self->ringsOffset.y = 0x2C0000;
         self->lifeOffset.x  = 0x100000;
         self->lifeOffset.y  = (ScreenInfo->height - 12) << 16;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         self->superButtonPos = -0x200000;
 #endif
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         for (int32 i = 0; i < SCREEN_MAX; ++i) {
             self->vsScoreOffsets[i].x = self->scoreOffset.x;
             self->vsScoreOffsets[i].y = self->scoreOffset.y;
@@ -467,7 +467,7 @@ void HUD_Create(void *data)
         RSDK.SetSpriteAnimation(HUD->aniFrames, 1, &self->numbersAnimator, true, 0);
         RSDK.SetSpriteAnimation(HUD->aniFrames, 9, &self->hyperNumbersAnimator, true, 0);
         RSDK.SetSpriteAnimation(HUD->aniFrames, 2, &self->lifeIconAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(HUD->aniFrames, globals->gameMode == MODE_ENCORE ? 13 : 8, &self->playerIDAnimator, true, 0);
         RSDK.SetSpriteAnimation(HUD->aniFrames, 10, &self->thumbsUpIconAnimator, true, 2);
         RSDK.SetSpriteAnimation(HUD->aniFrames, 10, &self->replayClapAnimator, true, 1);
@@ -475,12 +475,12 @@ void HUD_Create(void *data)
         RSDK.SetSpriteAnimation(HUD->aniFrames, 8, &self->playerIDAnimator, true, 0);
 #endif
 
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         RSDK.SetSpriteAnimation(HUD->superButtonFrames, 0, &self->superIconAnimator, true, 0);
         HUD_GetActionButtonFrames();
 #endif
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetDebugValue("Show HUD", &self->visible, DTYPE_UINT8, false, true);
 #endif
     }
@@ -489,11 +489,11 @@ void HUD_Create(void *data)
 void HUD_StageLoad(void)
 {
     HUD->aniFrames = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     HUD->superButtonFrames = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
 #endif
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     HUD->sfxClick    = RSDK.GetSfx("Stage/Click.wav");
     HUD->sfxStarpost = RSDK.GetSfx("Global/StarPost.wav");
 
@@ -580,7 +580,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value)
     RSDK.DrawSprite(&self->hyperNumbersAnimator, drawPos, true);
 }
 
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
 void HUD_GetButtonFrame(Animator *animator, int32 buttonID)
 {
     int32 gamepadType = UIButtonPrompt_GetGamepadType();
@@ -594,7 +594,7 @@ void HUD_GetButtonFrame(Animator *animator, int32 buttonID)
     else {
         // Keyboard
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         int32 id = RSDK.ControllerIDForInputID(player->controllerID);
 #else
         int32 id             = CONT_ANY;
@@ -620,7 +620,7 @@ void HUD_GetActionButtonFrames(void)
     RSDK_THIS(HUD);
 
     HUD_GetButtonFrame(&self->superButtonAnimator, KEY_Y);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     HUD_GetButtonFrame(&self->saveReplayButtonAnimator, KEY_Y);
     HUD_GetButtonFrame(&self->thumbsUpButtonAnimator, KEY_START);
 #endif
@@ -630,7 +630,7 @@ void HUD_GetActionButtonFrames(void)
 void HUD_State_ComeOnScreen(void)
 {
     RSDK_THIS(HUD);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     void **state         = NULL;
     Vector2 *scoreOffset = NULL, *timeOffset = NULL, *ringsOffset = NULL, *lifeOffset = NULL;
     int32 *max = NULL;
@@ -686,7 +686,7 @@ void HUD_State_GoOffScreen(void)
 {
     RSDK_THIS(HUD);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Vector2 *scoreOffset = NULL, *timeOffset = NULL, *ringsOffset = NULL, *lifeOffset = NULL;
     void **statePtr = NULL;
 

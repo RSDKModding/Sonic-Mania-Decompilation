@@ -84,7 +84,7 @@ void Decoration_StageLoad(void)
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("MSZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Decoration.bin", SCOPE_STAGE);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (RSDK.CheckStageFolder("MSZEnding"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Ending.bin", SCOPE_STAGE);
 #endif

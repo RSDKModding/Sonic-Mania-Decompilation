@@ -299,7 +299,7 @@ void SpecialClear_Create(void *data)
         switch (globals->playerID & 0xFF) {
             default:
             case ID_SONIC: RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_SONIC, &self->playerNameAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &self->continueAnimator, true, SC_ANI_SONIC);
 #else
                 RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &self->continueAnimator, true, SC_ANI_TAILS);
@@ -307,7 +307,7 @@ void SpecialClear_Create(void *data)
                 break;
 
             case ID_TAILS: RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_TAILS, &self->playerNameAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &self->continueAnimator, true, SC_ANI_TAILS);
 #else
                 RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &self->continueAnimator, true, SC_ANI_TAILS);
@@ -315,14 +315,14 @@ void SpecialClear_Create(void *data)
                 break;
 
             case ID_KNUCKLES: RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_KNUX, &self->playerNameAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &self->continueAnimator, true, SC_ANI_KNUX);
 #else
                 RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &self->continueAnimator, true, SC_ANI_TAILS);
 #endif
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
                 RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_MIGHTY, &self->playerNameAnimator, true, 0);
                 RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &self->continueAnimator, true, 3);
@@ -340,7 +340,7 @@ void SpecialClear_Create(void *data)
 void SpecialClear_StageLoad(void)
 {
     SpecialClear->aniFrames = RSDK.LoadSpriteAnimation("Special/Results.bin", SCOPE_STAGE);
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     SpecialClear->continueFrames = RSDK.LoadSpriteAnimation("Players/Continue.bin", SCOPE_STAGE);
 #endif
 
@@ -382,7 +382,7 @@ void SpecialClear_GiveScoreBonus(int32 score)
     if (self->score > 9999999)
         self->score = 9999999;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         return;
 #endif
@@ -398,7 +398,7 @@ void SpecialClear_GiveScoreBonus(int32 score)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SpecialClear_SaveCB(bool32 success)
 {
     RSDK_THIS(SpecialClear);
@@ -587,7 +587,7 @@ void SpecialClear_State_ShowTotalScore_Continues(void)
         globals->restartScore   = self->score;
         saveRAM->score1UP       = self->score1UP;
         saveRAM->lives          = self->lives;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         saveRAM->continues      = globals->continues;
         saveRAM->characterFlags = globals->characterFlags;
         saveRAM->stock          = globals->stock;
@@ -687,7 +687,7 @@ void SpecialClear_State_ExitFadeOut(void)
         }
         else {
             EntitySaveGame *saveRAM = SaveGame->saveRAM;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
                 RSDK.SetScene("Encore Mode", "");
             else

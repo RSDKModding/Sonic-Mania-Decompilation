@@ -990,7 +990,7 @@ void CrimsonEye_CheckPlayerCollisions_Ball(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &CrimsonEye->hitboxBall)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x600, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
@@ -1057,7 +1057,7 @@ void CrimsonEye_StateSpike_Harmful(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &CrimsonEye->hitboxOrb)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x600, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);

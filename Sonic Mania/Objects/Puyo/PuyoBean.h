@@ -82,7 +82,7 @@ struct EntityPuyoBean {
     bool32 forceRotateLeft;
     bool32 forceRotateRight;
     Animator beanAnimator;
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     int32 touchRight;
     int32 touchLeft;
 #endif

@@ -355,7 +355,7 @@ void Canista_CheckPlayerProjectileCollisions(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Canista->hitboxProjectile)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (Player_CheckMightyShellHit(player, self, -0x400, -0x400)) {
                     self->stopTimer   = 0;
                     self->interaction = false;

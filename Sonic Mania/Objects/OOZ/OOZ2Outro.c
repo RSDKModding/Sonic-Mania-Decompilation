@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectOOZ2Outro *OOZ2Outro;
 
 void OOZ2Outro_Update(void)

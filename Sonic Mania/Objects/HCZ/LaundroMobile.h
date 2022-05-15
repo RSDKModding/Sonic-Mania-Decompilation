@@ -63,7 +63,7 @@ struct ObjectLaundroMobile {
     uint16 sfxButton;
     uint16 sfxLedgeBreak;
     uint16 sfxPimPom;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxRumble;
     uint16 sfxImpact;
 #endif
@@ -136,7 +136,7 @@ void LaundroMobile_StateBoss_PrepareRockets(void);
 void LaundroMobile_StateBoss_Destroyed_Phase2(void);
 void LaundroMobile_StateBoss_Explode_Phase2(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void LaundroMobile_StageFinishCB_Blank(void);
 
 // HCZ2 Outro

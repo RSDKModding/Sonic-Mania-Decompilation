@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 // Object Class
 struct ObjectMainMenu {
     RSDK_OBJECT
@@ -41,7 +41,7 @@ void MainMenu_ExitButton_ActionCB(void);
 void MainMenu_StartExitGame(void);
 void MainMenu_MenuButton_ActionCB(void);
 
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
 void MainMenu_BuyPlusDialogCB(void)
 #endif
 

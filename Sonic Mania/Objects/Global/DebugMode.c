@@ -14,7 +14,7 @@ void DebugMode_Update(void)
     RSDK_THIS(DebugMode);
 
     // Disables Achievements
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     API.SetAchievementsEnabled(false);
 #else
     if (!APICallback->achievementsDisabled)
@@ -27,7 +27,7 @@ void DebugMode_Update(void)
 
     bool32 moved = false;
 
-#if RETRO_USE_PLUS 
+#if MANIA_USE_PLUS 
     if (ControllerInfo[CONT_P1].keyUp.down || (AnalogStickInfoL[CONT_P1].vDelta > 0.3)) {
         self->position.y -= self->velocity.y;
         moved = true;
@@ -74,7 +74,7 @@ void DebugMode_Update(void)
             self->velocity.y = 0x100000;
     }
 
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     bool32 keyBack  = ControllerInfo[CONT_P1].keyY.press;
     bool32 keySpawn = ControllerInfo[CONT_P1].keyX.press;
 #else

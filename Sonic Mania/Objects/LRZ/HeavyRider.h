@@ -56,7 +56,7 @@ struct ObjectHeavyRider {
     int32 spawnFireballs;
     int32 startY;
     uint8 chargeTimer;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityLRZ3Outro *outro;
 #endif
     uint16 aniFrames;

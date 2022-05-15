@@ -34,7 +34,7 @@ void Spear_Update(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);

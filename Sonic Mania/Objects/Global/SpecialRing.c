@@ -152,7 +152,7 @@ void SpecialRing_State_StartWarp(void)
         saveRAM->storedStageID  = SceneInfo->listPos;
         RSDK.SetScene("Special Stage", "");
         SceneInfo->listPos += saveRAM->nextSpecialStage;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             SceneInfo->listPos += 7;
 #endif
@@ -235,7 +235,7 @@ void SpecialRing_State_Normal(void)
                     self->state         = SpecialRing_State_Warp;
 
                     EntitySaveGame *saveRAM = SaveGame->saveRAM;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
                     // rings spawned via debug mode give you 50 rings, always
                     if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {
 #else

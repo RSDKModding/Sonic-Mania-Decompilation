@@ -21,7 +21,7 @@ void LRZ3Setup_Create(void *data) {}
 
 void LRZ3Setup_StageLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreLRZ3.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 240, 1, 240, 16);
@@ -41,7 +41,7 @@ void LRZ3Setup_StageLoad(void)
         CREATE_ENTITY(LRZ3Cutscene, NULL, 0, 0);
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE && globals->tempFlags) {
         if (!PlayerHelpers_CheckStageReload()) {
             foreach_all(Player, player) { player->position.y += 0x8000000; }
@@ -50,7 +50,7 @@ void LRZ3Setup_StageLoad(void)
 #endif
 
     if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             if (!globals->tempFlags) {
                 Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;

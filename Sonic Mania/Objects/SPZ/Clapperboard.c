@@ -141,7 +141,7 @@ void Clapperboard_Collide_Left(void)
         self->hitbox.top    = top;
         self->hitbox.bottom = top + 24;
         if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif
@@ -204,7 +204,7 @@ void Clapperboard_Collide_Right(void)
         self->hitbox.bottom = top + 24;
 
         if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif

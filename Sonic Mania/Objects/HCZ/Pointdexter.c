@@ -86,13 +86,13 @@ void Pointdexter_CheckPlayerCollisions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Pointdexter->hitbox)) {
             if (self->animator.frameID != 2 || player->invincibleTimer || player->blinkTimer
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 || player->state == Player_State_MightyHammerDrop
 #endif
             ) {
                 Player_CheckBadnikBreak(player, self, true);
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             else if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #else
             else

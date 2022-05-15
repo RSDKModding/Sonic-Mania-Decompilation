@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectOptionsMenu *OptionsMenu;
 
 void OptionsMenu_Update(void) {}

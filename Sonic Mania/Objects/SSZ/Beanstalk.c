@@ -373,7 +373,7 @@ void Beanstalk_CheckPlayerCollisions_Chomper(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Beanstalk->hitboxPlant)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
                 RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
@@ -383,7 +383,7 @@ void Beanstalk_CheckPlayerCollisions_Chomper(void)
             else if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer)) {
 #endif
                 Player_CheckHit(player, self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }

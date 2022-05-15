@@ -154,12 +154,12 @@ void Tubinaut_CheckPlayerCollisions(void)
 
                     if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitboxOrb)) {
                         Tubinaut_OrbHit(player, i);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->state != Player_State_MightyHammerDrop) {
 #endif
                             repelled                     = true;
                             self->playerTimers[playerID] = 15;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         }
 #endif
 
@@ -210,7 +210,7 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
 
     bool32 isAttacking = Player_CheckAttacking(player, self);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!isAttacking && player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
         if (!player->uncurlTimer) {
             RSDK.PlaySfx(Player->sfxPimPom, false, 255);
@@ -236,13 +236,13 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
         dust->state      = Dust_State_Move;
         dust->drawOrder  = player->drawOrder;
         RSDK.PlaySfx(Tubinaut->sfxPowerdown, false, 255);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_DROPDASH) {
 #endif
             int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
             int32 velX = 0, velY = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
                 velX = player->velocity.x;
                 velY = player->velocity.y - 0x10000;
@@ -251,7 +251,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
 #endif
                 velX = 0x540 * RSDK.Cos256(angle);
                 velY = 0x540 * RSDK.Sin256(angle);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
 
@@ -264,7 +264,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
             player->velocity.y     = velY;
             player->onGround       = false;
             player->tileCollisions = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
 
@@ -297,7 +297,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int32 playerID)
 {
     RSDK_THIS(Tubinaut);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
         self->playerTimers[playerID] = 15;
         RSDK.PlaySfx(Tubinaut->sfxRepel, false, 0xFF);
@@ -323,7 +323,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int32 playerID)
             self->playerTimers[playerID] = 15;
             RSDK.PlaySfx(Tubinaut->sfxRepel, false, 0xFF);
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }

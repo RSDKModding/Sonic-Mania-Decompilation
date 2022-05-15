@@ -33,7 +33,7 @@ void FXRuby_Draw(void)
 {
     RSDK_THIS(FXRuby);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.SetTintLookupTable(FXRuby->tintLookupTable);
 #endif
 
@@ -73,7 +73,7 @@ void FXRuby_Create(void *data)
         else if (!self->waitForTrigger)
             self->state = FXRuby_State_Expanding;
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
         uint16 *tintLookupTable = RSDK.GetTintLookupTable();
         for (int32 c = 0; c < 0x10000; ++c) tintLookupTable[0xFFFF - c] = c;
 #endif
@@ -87,7 +87,7 @@ void FXRuby_StageLoad(void)
 
     for (int32 d = 0; d < 0x200; ++d) FXRuby->deformation[d] = RSDK.Rand(-64, 64);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     for (int32 c = 0; c < 0x10000; ++c) FXRuby->tintLookupTable[0xFFFF - c] = c;
 #endif
 }

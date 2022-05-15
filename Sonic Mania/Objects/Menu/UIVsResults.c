@@ -34,7 +34,7 @@ void UIVsResults_Draw(void)
 {
     RSDK_THIS(UIVsResults);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.DrawRect(self->position.x - 0x300000, self->position.y - 0x208000, 0x600000, self->size.y, 0xFFFFFF, 0x7F, INK_BLEND, false);
 #endif
 
@@ -88,7 +88,7 @@ void UIVsResults_SetupSprites(void)
             case ID_SONIC: self->characterID = UICHARBUTTON_SONIC; break;
             case ID_TAILS: self->characterID = UICHARBUTTON_TAILS; break;
             case ID_KNUCKLES: self->characterID = UICHARBUTTON_KNUX; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: self->characterID = UICHARBUTTON_MIGHTY; break;
             case ID_RAY: self->characterID = UICHARBUTTON_RAY; break;
 #endif
@@ -96,14 +96,14 @@ void UIVsResults_SetupSprites(void)
         }
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &self->edgeAnimator, true, 1);
 #else
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &self->edgeAnimator, true, self->playerID);
 #endif
 
     int32 frame = self->characterID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (frame >= UICHARBUTTON_MIGHTY)
         ++frame;
 #endif
@@ -130,7 +130,7 @@ void UIVsResults_DrawOutline(void)
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, y, 96, self->size.y >> 16);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!self->isWinner)
         UIWidgets_DrawRectOutline_Black(self->position.x, y - 0x30000, 96, self->size.y >> 16);
     else
@@ -183,7 +183,7 @@ void UIVsResults_DrawRow(int32 row, int32 x, int32 y)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIVsResults_DrawTrophies(void)
 {
     RSDK_THIS(UIVsResults);
@@ -225,7 +225,7 @@ void UIVsResults_DrawResults(void)
 
     Vector2 drawPos;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     drawPos.x = self->position.x + 0x2D0000;
     drawPos.y = self->position.y - 0x1D8000;
     RSDK.DrawSprite(&self->edgeAnimator, &drawPos, false);
@@ -303,7 +303,7 @@ void UIVsResults_EditorLoad(void)
     RSDK_ACTIVE_VAR(UIVsResults, playerID);
     RSDK_ENUM_VAR("Player 1", UIVSCHARSELECTOR_1P);
     RSDK_ENUM_VAR("Player 2", UIVSCHARSELECTOR_2P);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_ENUM_VAR("Player 3", UIVSCHARSELECTOR_3P);
     RSDK_ENUM_VAR("Player 4", UIVSCHARSELECTOR_4P);
 #endif
@@ -315,7 +315,7 @@ void UIVsResults_Serialize(void)
     RSDK_EDITABLE_VAR(UIVsResults, VAR_BOOL, disabled);
     RSDK_EDITABLE_VAR(UIVsResults, VAR_UINT8, playerID);
     RSDK_EDITABLE_VAR(UIVsResults, VAR_ENUM, numRows);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_EDITABLE_VAR(UIVsResults, VAR_ENUM, trophyCount);
 #endif
     RSDK_EDITABLE_VAR(UIVsResults, VAR_UINT8, row0Label);

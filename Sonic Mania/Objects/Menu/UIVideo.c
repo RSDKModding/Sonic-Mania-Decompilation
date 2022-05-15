@@ -46,7 +46,7 @@ bool32 UIVideo_SkipCB(void)
         UIVideo->playing = true;
         return true;
     }
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     else if (TouchInfo->count) {
         Music_FadeOut(0.0125);
 
@@ -72,7 +72,7 @@ void UIVideo_State_PlayVideo1(void)
         RSDK.GetCString(videoFile1, &self->videoFile1);
 
         int32 len = self->videoFile1.length;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (videoFile1[len - 3] == 'p' && videoFile1[len - 2] == 'n' && videoFile1[len - 1] == 'g')
 #else
         if (videoFile1[len - 3] == 't' && videoFile1[len - 2] == 'g' && videoFile1[len - 1] == 'a')

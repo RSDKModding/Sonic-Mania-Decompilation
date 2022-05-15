@@ -22,14 +22,14 @@ void Mine_Update(void)
             }
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Mine_CheckMightyHit();
 #endif
     }
     else {
         self->animator.frameID ^= 1;
         if (--self->timer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             Mine_CheckMightyHit();
 #endif
         }
@@ -55,7 +55,7 @@ void Mine_Update(void)
             foreach_active(Player, player)
             {
                 if (Player_CheckCollisionTouch(player, self, &Mine->hitboxMine)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
                         player->onGround = false;
                     else
@@ -66,7 +66,7 @@ void Mine_Update(void)
 
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y - 0x30000)->drawOrder = Zone->objectDrawHigh;
             RSDK.PlaySfx(Mine->sfxExplosion, false, 255);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             Mine_CheckMightyHit();
 #endif
             destroyEntity(self);
@@ -112,7 +112,7 @@ void Mine_StageLoad(void)
     Mine->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Mine_CheckMightyHit(void)
 {
     RSDK_THIS(Mine);

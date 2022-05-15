@@ -35,7 +35,7 @@ void Mine_EditorLoad(void);
 void Mine_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Mine_CheckMightyHit(void);
 #endif
 

@@ -49,13 +49,13 @@ void TMZ2Outro_SetupCutscene(void)
 {
     RSDK_THIS(TMZ2Outro);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode != MODE_ENCORE) {
 #endif
         CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman, TMZ2Outro_Cutscene_EggmanFall,
                                   TMZ2Outro_Cutscene_StartAlert, TMZ2Outro_Cutscene_TimeToEscape, TMZ2Outro_Cutscene_HurryToCar,
                                   TMZ2Outro_Cutscene_StartFadeOut, TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
     else {
         if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
@@ -280,7 +280,7 @@ bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
 {
     if (host->timer == 60) {
@@ -629,7 +629,7 @@ bool32 TMZ2Outro_Cutscene_FadeOut(EntityCutsceneSeq *host)
 bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
 {
     bool32 hasGoodEnding = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!(SceneInfo->filter & FILTER_ENCORE))
 #endif
         hasGoodEnding =
@@ -664,7 +664,7 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
     }
     else {
         globals->playerID = TMZ2Outro->playerID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             RSDK.SetScene("Presentation", "Credits");
         }
@@ -678,13 +678,13 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
                     else
                         RSDK.SetScene("Videos", "Bad End - Knux");
                     break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case ID_MIGHTY: RSDK.SetScene("Videos", "Bad End - Mighty"); break;
                 case ID_RAY: RSDK.SetScene("Videos", "Bad End - Ray"); break;
 #endif
                 default: RSDK.SetScene("Videos", "Bad End - Sonic"); break;
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
         API_UnlockAchievement("ACH_GAME_CLEARED");
@@ -694,7 +694,7 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TMZ2Outro_SaveFileCB(bool32 success) { TMZ2Outro->finishedSaving = true; }
 #else
 void TMZ2Outro_SaveFileCB(void) { TMZ2Outro->finishedSaving = true; }

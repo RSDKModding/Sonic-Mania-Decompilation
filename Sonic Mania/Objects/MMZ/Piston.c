@@ -78,7 +78,7 @@ void Piston_Collide_Solid(void)
 {
     RSDK_THIS(Piston);
     Platform_Collision_AllSolid();
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     for (int32 i = 0; i < Player->playerCount; ++i) {
         if (((1 << i) & self->stoodPlayers) != 0) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);

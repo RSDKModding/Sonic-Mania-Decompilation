@@ -15,7 +15,7 @@ struct ObjectAnnouncer {
     uint16 sfxSonicWins;
     uint16 sfxTailsWins;
     uint16 sfxKnuxWins;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxMightyWins;
     uint16 sfxRayWins;
 #endif
@@ -24,14 +24,14 @@ struct ObjectAnnouncer {
     uint16 sfxSonic;
     uint16 sfxTails;
     uint16 sfxKnuckles;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxMighty;
     uint16 sfxRay;
 #endif
     uint16 sfxTheWinnerIs;
     uint16 sfxPlayer1;
     uint16 sfxPlayer2;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxPlayer3;
     uint16 sfxPlayer4;
 #endif

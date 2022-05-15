@@ -15,7 +15,7 @@ void UFO_Setup_Update(void)
 
     StateMachine_Run(self->state);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->state != UFO_Setup_State_FinishFadeout && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[29];
 #endif
@@ -172,7 +172,7 @@ void UFO_Setup_StageLoad(void)
     RSDK.SetScene("Special Stage", "");
     UFO_Setup->specialStageID = listPos - SceneInfo->listPos;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (UFO_Setup->specialStageID >= 7) {
         UFO_Setup->specialStageID = UFO_Setup->specialStageID % 7;
         UFO_Setup->encoreStage    = true;
@@ -399,7 +399,7 @@ void UFO_Setup_State_FinishFadeout(void)
 
             RSDK.AddDrawListRef(DRAWGROUP_COUNT - 2, 1);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
                 UIBackground->activeColors = &UIBackground->bgColors[18];
 #endif

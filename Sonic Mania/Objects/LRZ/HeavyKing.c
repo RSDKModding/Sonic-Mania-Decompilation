@@ -445,7 +445,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->right      = true;
         player1->pushing    = false;
         player1->state      = Player_State_Ground;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Player->disableP2KeyCheck = true;
 #endif
         if (player1->velocity.x > 0x20000) {
@@ -515,7 +515,7 @@ void HeavyKing_StateCutscene_EnterKing(void)
         self->state = HeavyKing_StateCutscene_ReturnCamToPlayer;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (player1->characterID == ID_KNUCKLES)
 #endif
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
@@ -529,12 +529,12 @@ void HeavyKing_StateCutscene_ReturnCamToPlayer(void)
 
     if (!RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->state) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (player1->characterID == ID_KNUCKLES) {
 #endif
             RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 0, &player1->animator, false, 0);
             CREATE_ENTITY(ThoughtBubble, NULL, player1->position.x - 0x300000, player1->position.y - 0x500000);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
         self->state = HeavyKing_StateCutscene_GrabMasterEmerald;
@@ -557,7 +557,7 @@ void HeavyKing_StateCutscene_GrabMasterEmerald(void)
         Camera_ShakeScreen(0, 6, 6);
         RSDK.PlaySfx(HeavyKing->sfxImpact6, false, 255);
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (player1->characterID == ID_KNUCKLES)
 #endif
             RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 1, &player1->animator, false, 0);
@@ -572,14 +572,14 @@ void HeavyKing_StateCutscene_FinishThinking(void)
     HeavyKing_HandleClawMovement();
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player1->characterID == ID_KNUCKLES) {
 #endif
         if (player1->animator.frameID == player1->animator.frameCount - 1) {
             RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 2, &player1->animator, false, 0);
             self->state = HeavyKing_StateCutscene_GetHigherGround;
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
     else {
         self->state = HeavyKing_StateCutscene_GetHigherGround;
@@ -600,7 +600,7 @@ void HeavyKing_StateCutscene_GetHigherGround(void)
 
     switch (++self->timer) {
         case 30:
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player1->characterID == ID_KNUCKLES)
 #endif
                 RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 4, &player1->animator, false, 0);
@@ -629,11 +629,11 @@ void HeavyKing_StateCutscene_GetHigherGround(void)
 
         default:
             if (self->timer > 144 && player1->onGround) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player1->characterID == ID_KNUCKLES)
 #endif
                     RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 3, &player1->animator, false, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 else
                     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
 #endif
@@ -737,7 +737,7 @@ void HeavyKing_StateCutscene_AttackRebound(void)
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 4, &self->bodyAnimator, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 13, &self->scepterAnimator, false, 0);
         HeavyKing_StartLeap(0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Player->disableP2KeyCheck = false;
 #endif
         player1->stateInput = Player_ProcessP1Input;

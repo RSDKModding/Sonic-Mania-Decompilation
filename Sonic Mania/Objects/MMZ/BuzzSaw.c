@@ -112,7 +112,7 @@ void BuzzSaw_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &BuzzSaw->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);

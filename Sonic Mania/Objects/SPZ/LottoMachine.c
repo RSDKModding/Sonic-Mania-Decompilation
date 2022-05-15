@@ -176,7 +176,7 @@ void LottoMachine_StageLoad(void)
 
 void LottoMachine_VSSwapCB(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if ((1 << Zone->swapPlayerID) & LottoMachine->activePlayers)
         Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
@@ -242,7 +242,7 @@ void LottoMachine_CheckPlayerCollisions(void)
                 int32 velY = radius * RSDK.Sin256(angle);
 
                 if ((player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) || player->state == Player_State_FlyCarried
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     || player->state == Player_State_RayGlide
 #endif
                 ) {

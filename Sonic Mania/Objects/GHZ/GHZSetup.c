@@ -92,7 +92,7 @@ void GHZSetup_StageLoad(void)
             Zone->stageFinishCallback = GHZSetup_SetupActTransition;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && globals->gameMode == MODE_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreGHZ.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 128, 80);

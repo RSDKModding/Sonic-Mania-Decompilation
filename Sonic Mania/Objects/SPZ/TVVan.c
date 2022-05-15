@@ -697,7 +697,7 @@ void TVVan_StateRadio_HandleMovement(void)
                             case ID_SONIC: RSDK.SetSpriteAnimation(TVVan->aniFrames, 19, &van->playerAnimator, true, 0); break;
                             case ID_TAILS: RSDK.SetSpriteAnimation(TVVan->aniFrames, 20, &van->playerAnimator, true, 0); break;
                             case ID_KNUCKLES: RSDK.SetSpriteAnimation(TVVan->aniFrames, 21, &van->playerAnimator, true, 0); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             case ID_MIGHTY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 22, &van->playerAnimator, true, 0); break;
                             case ID_RAY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 23, &van->playerAnimator, true, 0); break;
 #endif

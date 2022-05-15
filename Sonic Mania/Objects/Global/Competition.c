@@ -24,7 +24,7 @@ void Competition_Draw(void)
 {
     RSDK_THIS(Competition);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SceneInfo->currentScreenID, Player)->classID == Player->classID) {
 #endif
         if (!self->playerFinished[SceneInfo->currentScreenID]) {
@@ -38,7 +38,7 @@ void Competition_Draw(void)
             self->animator.frameID = self->timer % 10;
             RSDK.DrawSprite(&self->animator, &drawPos, true);
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }
@@ -83,7 +83,7 @@ void Competition_State_Manager(void)
 {
     RSDK_THIS(Competition);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->timer <= 0) {
         Zone->gotTimeOver      = true;
         SceneInfo->timeEnabled = false;
@@ -133,7 +133,7 @@ void Competition_State_Manager(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Competition_ResetOptions(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

@@ -103,7 +103,7 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
     RSDK_THIS(PuyoBean);
 
     if (self->controllerID < PLAYER_MAX) {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -196,7 +196,7 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
         self->left  = ControllerInfo[self->controllerID].keyLeft.down;
         self->right = ControllerInfo[self->controllerID].keyRight.down;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
         self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
         self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;

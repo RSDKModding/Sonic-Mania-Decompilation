@@ -391,7 +391,7 @@ void MegaOctus_State_SetupBounds(void)
         Zone->playerBoundActiveB[0] = false;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 96;
         Zone->deathBoundary[0]      = Zone->cameraBoundsB[0] << 16;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - 384;
 #endif
         self->position.y += 0xC00000;
@@ -435,7 +435,7 @@ void MegaOctus_State_EnterMegaOctus(void)
     RSDK_THIS(MegaOctus);
 
     self->position.y += self->velocity.y;
-    self->velocity.y += RETRO_USE_PLUS ? 0x3800 : 0x6000;
+    self->velocity.y += MANIA_USE_PLUS ? 0x3800 : 0x6000;
     if (self->velocity.y >= 0x10000) {
         self->state      = MegaOctus_State_OpenHatchAndLaugh;
         self->velocity.y = 0;
@@ -483,7 +483,7 @@ void MegaOctus_State_DiveIntoOil(void)
     RSDK_THIS(MegaOctus);
 
     self->position.y += self->velocity.y;
-    self->velocity.y += RETRO_USE_PLUS ? 0x3800 : 0x6000;
+    self->velocity.y += MANIA_USE_PLUS ? 0x3800 : 0x6000;
 
     if (self->position.y >= self->origin.y + 0xC00000) {
         self->position.y = self->origin.y + 0xC00000;
@@ -707,7 +707,7 @@ void MegaOctus_CheckPlayerCollisions_Harpoon(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
@@ -792,7 +792,7 @@ void MegaOctus_CheckPlayerCollisions_Cannon(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, &pos, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
@@ -808,7 +808,7 @@ void MegaOctus_StateCannon_RiseUp(void)
     RSDK.ProcessAnimation(&self->altAnimator);
     self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
     if (self->position.y <= self->targetPos) {
-        self->shotCount        = RETRO_USE_PLUS ? 2 : 3;
+        self->shotCount        = MANIA_USE_PLUS ? 2 : 3;
         self->timer            = 128;
         self->lastAttackHeight = 0x100;
         self->state            = MegaOctus_StateCannon_Idle;
@@ -966,7 +966,7 @@ void MegaOctus_StateOrb_FireShot(void)
         self->invincibilityTimer = 60;
         self->state              = MegaOctus_StateOrb_Destroyed;
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->shotCount > 0)
         self->position.x += self->velocity.x * RSDK.Sin1024(++self->orbMoveAngle);
 #endif
@@ -977,7 +977,7 @@ void MegaOctus_StateOrb_FireShot(void)
         int32 y = (RSDK.Sin512(self->angle) << 9) + self->position.y;
 
         int32 angle = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (MegaOctus->bossPtr->position.x <= x)
             angle = -3 * self->shotCount;
         else
@@ -1160,7 +1160,7 @@ void MegaOctus_StateArm_GrabPlatform(void)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, platform, &platform->hitbox)) {
                 self->parent = (Entity *)platform;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 self->tilePlatY = platform->position.y;
 #endif
                 RSDK.CopyTileLayer(Zone->fgLow, (platform->position.x >> 20) - 4, (platform->position.y >> 20) - 2, Zone->moveLayer, 10, 1, 8, 5);
@@ -1186,7 +1186,7 @@ void MegaOctus_StateArm_GrabbedPlatform(void)
 {
     RSDK_THIS(MegaOctus);
     if (--self->timer <= 0) {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
         foreach_active(Player, player)
         {
             if (abs(player->position.x - player->position.x) < 0x400000 && player->groundedStore) {
@@ -1209,7 +1209,7 @@ void MegaOctus_StateArm_PullPlatformDown(void)
     self->origin.y += 0x60000;
     self->position.y += 0x60000;
     if (parent) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         parent->state      = MegaOctus_TilePlatformState_RiseOuttaOil;
         parent->velocity.y = 0x60000;
         if (parent->drawPos.y - self->tilePlatY > 0x480000)
@@ -1222,7 +1222,7 @@ void MegaOctus_StateArm_PullPlatformDown(void)
 
     if (++self->timer >= 32) {
         EntityMegaOctus *boss = MegaOctus->bossPtr;
-        boss->velocity.y      = RETRO_USE_PLUS ? -0x8F400 : -0xB8000;
+        boss->velocity.y      = MANIA_USE_PLUS ? -0x8F400 : -0xB8000;
         boss->state           = MegaOctus_State_EnterMegaOctus;
 
         MegaOctus->eggmanOffset   = 0;
@@ -1234,7 +1234,7 @@ void MegaOctus_StateArm_PullPlatformDown(void)
         if (parent) {
             self->timer = 384;
             self->state = MegaOctus_StateArm_RisePlatformUp;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             parent->state      = StateMachine_None;
             parent->position.y = self->tilePlatY + (self->timer << 15);
 #endif
@@ -1250,7 +1250,7 @@ void MegaOctus_StateArm_RisePlatformUp(void)
     RSDK_THIS(MegaOctus);
     EntityTilePlatform *parent = (EntityTilePlatform *)self->parent;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (parent) {
         parent->state      = MegaOctus_TilePlatformState_RiseOuttaOil;
         parent->timer      = 4;
@@ -1271,7 +1271,7 @@ void MegaOctus_StateArm_RisePlatformUp(void)
 #endif
 
     if (self->timer <= 0) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (parent) {
             parent->state      = StateMachine_None;
             parent->drawPos.y  = self->tilePlatY;
@@ -1413,7 +1413,7 @@ void MegaOctus_Draw_OrbShot(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MegaOctus_TilePlatformState_RiseOuttaOil(void)
 {
     EntityTilePlatform *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, TilePlatform);

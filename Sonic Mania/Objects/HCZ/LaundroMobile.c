@@ -218,7 +218,7 @@ void LaundroMobile_StageLoad(void)
     LaundroMobile->sfxButton     = RSDK.GetSfx("Stage/Button.wav");
     LaundroMobile->sfxLedgeBreak = RSDK.GetSfx("Stage/LedgeBreak3.wav");
     LaundroMobile->sfxPimPom     = RSDK.GetSfx("Stage/PimPom.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LaundroMobile->sfxRumble = RSDK.GetSfx("Stage/Rumble.wav");
     LaundroMobile->sfxImpact = RSDK.GetSfx("Stage/Impact6.wav");
 #endif
@@ -240,7 +240,7 @@ void LaundroMobile_CheckPlayerCollisions(void)
                 self->position.x = LaundroMobile->rocketPositions[i].x;
                 self->position.y = LaundroMobile->rocketPositions[i].y;
                 if (Player_CheckCollisionTouch(player, self, &LaundroMobile->hitboxMissile)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);
@@ -594,7 +594,7 @@ void LaundroMobile_StateBoss_AwaitPlayer_Phase1(void)
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (self->position.x >= 0x60800000) {
             // did this use to only have 12 health at some point during dev?
-            if (LaundroMobile->health == (RETRO_USE_PLUS ? (5 + 8) : (4 + 8))) {
+            if (LaundroMobile->health == (MANIA_USE_PLUS ? (5 + 8) : (4 + 8))) {
                 LaundroMobile->health = 8;
                 Music_TransitionTrack(TRACK_EGGMAN1, 0.0125);
                 self->visible = true;
@@ -1230,7 +1230,7 @@ void LaundroMobile_StateBoss_Explode_Phase2(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
         CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
                       (ScreenInfo->position.y - 48) << 16);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Zone->stageFinishCallback = LaundroMobile_StageFinishCB_Blank;
         self->state               = LaundroMobile_StateOutro_StartCutscene;
 #else
@@ -1239,7 +1239,7 @@ void LaundroMobile_StateBoss_Explode_Phase2(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void LaundroMobile_StageFinishCB_Blank(void) {}
 
 void LaundroMobile_StateOutro_StartCutscene(void)

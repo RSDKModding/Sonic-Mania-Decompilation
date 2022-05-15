@@ -62,7 +62,7 @@ void PhantomRuby_State_Oscillate(void);
 void PhantomRuby_State_MoveGravity(void);
 void PhantomRuby_State_MoveRotateGravity(void);
 void PhantomRuby_State_MoveRotateGravity_CheckGround(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void PhantomRuby_State_MoveToPos(void);
 #endif
 void PhantomRuby_State_RotateToOrigin(void);

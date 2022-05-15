@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectMMZ2Outro *MMZ2Outro;
 
 void MMZ2Outro_Update(void)

@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 typedef enum {
     NEWSPAPER_WHITE_FG,
     NEWSPAPER_BLUE_FG,
@@ -16,7 +16,7 @@ typedef enum {
 struct ObjectNewspaper {
     RSDK_OBJECT
     uint16 aniFrames;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxPaperStack;
 #endif
 };
@@ -24,7 +24,7 @@ struct ObjectNewspaper {
 // Entity Class
 struct EntityNewspaper {
     RSDK_ENTITY
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine(state);
     Hitbox hitbox;
     uint8 type;
@@ -72,7 +72,7 @@ void Newspaper_EditorLoad(void);
 void Newspaper_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Newspaper_HandleInteractions(void);
 #endif
 

@@ -63,7 +63,7 @@ void LRZ3OutroK_StartCutscene(void)
     CutsceneSeq_StartSequence(self, LRZ3OutroK_Cutscene_RunToTeleporter, LRZ3OutroK_Cutscene_LandOnTeleporter, LRZ3OutroK_Cutscene_UseTeleporter,
                               LRZ3OutroK_Cutscene_TeleporterActivated, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->classID)
         sequence->skipType = SKIPTYPE_RELOADSCN;
@@ -75,7 +75,7 @@ void LRZ3OutroK_StartCutscene(void)
 bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ3OutroK);
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntitySkyTeleporter *teleporter = LRZ3OutroK->teleporter;
@@ -116,7 +116,7 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
 
 bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (player1->jumpPress)

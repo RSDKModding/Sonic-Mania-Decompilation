@@ -46,7 +46,7 @@ struct ObjectMetalSonic {
     uint16 sfxRockemSockem;
     uint16 sfxMSShoot;
     uint16 sfxMSChargeFire;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 sfxMSTransform;
     uint16 sfxTransform2;
 #endif
@@ -102,7 +102,7 @@ void MetalSonic_HandleStageWrap(void);
 void MetalSonic_ProcessBGParallax(int32 mult);
 void MetalSonic_HandleVelocity(void);
 void MetalSonic_HandleAnimDir(void);
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void MetalSonic_CheckPlayerCollisions(void);
 void MetalSonic_Hit(void);
 void MetalSonic_Explode(void);
@@ -139,7 +139,7 @@ void MetalSonic_State_PanelExplosion(void);
 void MetalSonic_State_ExitFactory(void);
 void MetalSonic_State_PrepareFinalChase(void);
 
-#if RETRO_USE_PLUS // Phase 3 (VS GigaMetal)
+#if MANIA_USE_PLUS // Phase 3 (VS GigaMetal)
 void MetalSonic_State_WaitForRuby(void);
 void MetalSonic_State_ObtainRuby(void);
 void MetalSonic_State_Transform(void);

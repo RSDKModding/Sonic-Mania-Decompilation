@@ -15,7 +15,7 @@ void Player_Update(void)
 {
     RSDK_THIS(Player);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // Cheat prevention, you can't play as mighty or ray if you don't have plus installed & active
     if (!API.CheckDLC(DLC_PLUS) && self->characterID > ID_KNUCKLES)
         Player_ChangeCharacter(self, ID_SONIC);
@@ -48,7 +48,7 @@ void Player_Update(void)
                 if (!self->invincibleTimer) {
                     Player_ApplyShield(self);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (globals->gameMode != MODE_ENCORE || !self->sidekick) {
 #else
                     if (!self->sidekick) {
@@ -91,7 +91,7 @@ void Player_Update(void)
             }
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->characterID == ID_RAY && self->state != Player_State_RayGlide && !self->isGhost) {
             Player->raySwoopTimer = 0;
             Player->rayDiveTimer  = 0;
@@ -163,13 +163,13 @@ void Player_LateUpdate(void)
     if (self->deathType) {
         self->abilityValues[0] = 0;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!self->sidekick)
             RSDK.CopyEntity(Zone->entityStorage[1], self, false);
 #endif
 
         bool32 stopInvincibility = self->sidekick || globals->gameMode == MODE_COMPETITION;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         stopInvincibility |= globals->gameMode == MODE_ENCORE;
 #endif
 
@@ -229,7 +229,7 @@ void Player_LateUpdate(void)
                         self->camera->state = StateMachine_None;
                     }
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 else if (globals->gameMode == MODE_ENCORE) {
                     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                     if (!globals->stock && !sidekick->classID) {
@@ -268,7 +268,7 @@ void Player_LateUpdate(void)
                     if (globals->gameMode == MODE_COMPETITION) {
                         Music_EndQueuedTrack(TRACK_DROWNING, false);
                     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     else if (globals->gameMode == MODE_ENCORE) {
                         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (globals->stock == 0 && !sidekick->classID) {
@@ -373,7 +373,7 @@ void Player_LateUpdate(void)
 
 void Player_StaticUpdate(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // Moved here from ERZ start since flying can now be done in any stage, not just ERZ
     if (Player->superDashCooldown > 0) {
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -426,7 +426,7 @@ void Player_StaticUpdate(void)
         Player->playingTiredSFX = false;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Player->raySwoopTimer -= 8;
     if (Player->raySwoopTimer < 0)
         Player->raySwoopTimer = 0;
@@ -441,7 +441,7 @@ void Player_Draw(void)
 {
     RSDK_THIS(Player);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->isGhost) {
         self->inkEffect = INK_BLEND;
         self->alpha     = 0x7F; // redundant since the ink effect is INK_BLEND, which is basically 50% alpha anyways
@@ -504,7 +504,7 @@ void Player_Draw(void)
                 for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x50, colorStore[c]);
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
                 for (int32 c = 0; c < 6; ++c) {
                     colorStore[c] = RSDK.GetPaletteEntry(0, 0x60 + c);
@@ -588,7 +588,7 @@ void Player_Create(void *data)
                 self->sensorY      = 0x140000;
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
                 self->aniFrames    = Player->mightyFrames;
                 self->tailFrames   = -1;
@@ -627,7 +627,7 @@ void Player_Create(void *data)
         if (!SceneInfo->entitySlot || globals->gameMode == MODE_COMPETITION) {
             self->stateInput = Player_ProcessP1Input;
         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         else if (SceneInfo->entitySlot == 1 && globals->gameMode == MODE_TIMEATTACK) {
             StateMachine_Run(Player->configureGhostCB);
         }
@@ -698,7 +698,7 @@ void Player_StageLoad(void)
 
     SceneInfo->debugMode = globals->medalMods & getMod(MEDAL_DEBUGMODE);
     SceneInfo->debugMode = true; // TODO: TEMP
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.SetDebugValue("Debug Mode", &SceneInfo->debugMode, DTYPE_BOOL, false, true);
 #endif
 
@@ -716,7 +716,7 @@ void Player_StageLoad(void)
     else
         Player_LoadSprites();
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
         Player->playerCount    = 2;
         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -732,7 +732,7 @@ void Player_StageLoad(void)
     // Handle Sidekick stuff setup
     Player->nextLeaderPosID = 1;
     Player->lastLeaderPosID = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Player->disableP2KeyCheck = false;
 #endif
 
@@ -761,7 +761,7 @@ void Player_StageLoad(void)
     Player->sfxSlide       = RSDK.GetSfx("Global/Slide.wav");
     Player->sfxOuttahere   = RSDK.GetSfx("Global/OuttaHere.wav");
     Player->sfxTransform2  = RSDK.GetSfx("Stage/Transform2.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Player->sfxPimPom        = RSDK.GetSfx("Stage/PimPom.wav");
     Player->sfxSwap          = RSDK.GetSfx("Global/Swap.wav");
     Player->sfxSwapFail      = RSDK.GetSfx("Global/SwapFail.wav");
@@ -784,7 +784,7 @@ void Player_LoadSprites(void)
     foreach_all(Player, entity)
     {
         int32 pID = globals->playerID & 0xFF;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (pID == ID_MIGHTY || pID == ID_RAY)
             pID = ID_SONIC;
 #endif
@@ -804,7 +804,7 @@ void Player_LoadSprites(void)
                     break;
 
                 case ID_KNUCKLES: Player->knuxFrames = RSDK.LoadSpriteAnimation("Players/Knux.bin", SCOPE_STAGE); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case ID_MIGHTY: Player->mightyFrames = RSDK.LoadSpriteAnimation("Players/Mighty.bin", SCOPE_STAGE); break;
                 case ID_RAY: Player->rayFrames = RSDK.LoadSpriteAnimation("Players/Ray.bin", SCOPE_STAGE); break;
 #endif
@@ -850,7 +850,7 @@ void Player_LoadSprites(void)
                 break;
 
             case ID_KNUCKLES: Player->knuxFrames = RSDK.LoadSpriteAnimation("Players/Knux.bin", SCOPE_STAGE); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: Player->mightyFrames = RSDK.LoadSpriteAnimation("Players/Mighty.bin", SCOPE_STAGE); break;
             case ID_RAY: Player->rayFrames = RSDK.LoadSpriteAnimation("Players/Ray.bin", SCOPE_STAGE); break;
 #endif
@@ -883,7 +883,7 @@ void Player_LoadSpritesVS(void)
                         break;
 
                     case ID_KNUCKLES: Player->knuxFrames = RSDK.LoadSpriteAnimation("Players/Knux.bin", SCOPE_STAGE); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     case ID_MIGHTY: Player->mightyFrames = RSDK.LoadSpriteAnimation("Players/Mighty.bin", SCOPE_STAGE); break;
                     case ID_RAY: Player->rayFrames = RSDK.LoadSpriteAnimation("Players/Ray.bin", SCOPE_STAGE); break;
 #endif
@@ -951,7 +951,7 @@ void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx)
 }
 void Player_GiveLife(EntityPlayer *entity)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
 #else
     if (globals->gameMode != MODE_TIMEATTACK) {
@@ -1050,7 +1050,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
             entity->sensorY      = 0x140000;
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY:
             Player->mightyFrames = RSDK.LoadSpriteAnimation("Players/Mighty.bin", SCOPE_STAGE);
             if (SizeLaser)
@@ -1100,7 +1100,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
     if (entity->state == Player_State_KnuxWallClimb || entity->state == Player_State_DropDash || entity->state == Player_State_TailsFlight
         || entity->state == Player_State_KnuxGlideDrop || entity->state == Player_State_KnuxGlideLeft || entity->state == Player_State_KnuxGlideRight
         || entity->state == Player_State_GlideSlide || entity->state == Player_State_KnuxLedgePullUp
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         || entity->state == Player_State_MightyHammerDrop || entity->state == Player_State_RayGlide || entity->state == Player_State_MightyUnspin
 #endif
     ) {
@@ -1116,7 +1116,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
             RSDK.SetPaletteEntry(0, i + 64, Player->superPalette_Sonic[i]);
             RSDK.SetPaletteEntry(0, i + 70, Player->superPalette_Tails[i]);
             RSDK.SetPaletteEntry(0, i + 80, Player->superPalette_Knux[i]);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             RSDK.SetPaletteEntry(0, i + 96, Player->superPalette_Mighty[i]);
             RSDK.SetPaletteEntry(0, i + 113, Player->superPalette_Ray[i]);
 #endif
@@ -1125,7 +1125,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
                 RSDK.SetPaletteEntry(1, i + 64, Player->superPalette_Sonic_HCZ[i]);
                 RSDK.SetPaletteEntry(1, i + 70, Player->superPalette_Tails_HCZ[i]);
                 RSDK.SetPaletteEntry(1, i + 80, Player->superPalette_Knux_HCZ[i]);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 RSDK.SetPaletteEntry(1, i + 96, Player->superPalette_Mighty_HCZ[i]);
                 RSDK.SetPaletteEntry(1, i + 113, Player->superPalette_Ray_HCZ[i]);
 #endif
@@ -1134,7 +1134,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
                 RSDK.SetPaletteEntry(2, i + 64, Player->superPalette_Sonic_CPZ[i]);
                 RSDK.SetPaletteEntry(2, i + 70, Player->superPalette_Tails_CPZ[i]);
                 RSDK.SetPaletteEntry(2, i + 80, Player->superPalette_Knux_CPZ[i]);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 RSDK.SetPaletteEntry(2, i + 96, Player->superPalette_Mighty_CPZ[i]);
                 RSDK.SetPaletteEntry(2, i + 113, Player->superPalette_Ray_CPZ[i]);
 #endif
@@ -1176,7 +1176,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks)
     if (emeraldMasks == 0xFF) // 0xFF seems to be the "force transform" flag
         emeralds = 0x7F;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (Player->canSuperCB) {
         if (!Player->canSuperCB(false))
             return false;
@@ -1186,7 +1186,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks)
     if ((player->superState >= SUPERSTATE_SUPER || emeralds != 0x7F || player->rings < 50) && emeraldMasks != 0xFF)
         return false;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.StopSfx(Player->sfxSwapFail);
     if (globals->medalMods & getMod(SECRET_SUPERDASH))
         player->stateAbility = ERZStart_Player_StartSuperFly;
@@ -1214,7 +1214,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks)
             }
             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY:
             for (int32 c = 0; c < 6; ++c) {
                 RSDK.SetPaletteEntry(6, c + 96, Player->superPalette_Mighty[c]);
@@ -1257,7 +1257,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks)
         player->state           = Player_State_Transform;
         player->isTransforming  = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!ERZStart && globals->superMusicEnabled)
 #else
         if (!ERZStart)
@@ -1363,7 +1363,7 @@ void Player_BlendSuperKnuxColors(int32 bankID)
     // set this "86" to "85" to fix knuckles's super palette overwriting an extra colour
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 80, 86);
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_BlendSuperMightyColors(int32 bankID)
 {
     RSDK_THIS(Player);
@@ -1569,7 +1569,7 @@ void Player_HandleSuperForm(void)
                 }
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
                 Player_BlendSuperMightyColors(0);
 
@@ -1684,7 +1684,7 @@ void Player_HandleSuperForm(void)
 
             case ID_TAILS: self->stateAbility = Player_JumpAbility_Tails; break;
             case ID_KNUCKLES: self->stateAbility = Player_JumpAbility_Knux; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: self->stateAbility = Player_JumpAbility_Mighty; break;
             case ID_RAY: self->stateAbility = Player_JumpAbility_Ray; break;
 #endif
@@ -1733,12 +1733,12 @@ bool32 Player_CheckP2KeyPress(void)
 {
     RSDK_THIS(Player);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         return false;
 #endif
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->controllerID > PLAYER_MAX || Player->disableP2KeyCheck)
         return false;
 #else
@@ -1788,7 +1788,7 @@ EntityPlayer *Player_GetNearestPlayer(void)
 
     return targetPlayer;
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_RemoveEncoreLeader(void)
 {
     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -1844,7 +1844,7 @@ void Player_HandleDeath(EntityPlayer *player)
         dust->position.y    = (ScreenInfo->position.y - 128) << 16;
 
         // Sidekicks just respawn, no biggie
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (globals->gameMode != MODE_ENCORE || (leader->state != Player_State_Die && leader->state != Player_State_Drown)) {
             player->angle            = 0x80;
@@ -1893,7 +1893,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
     }
     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         // if we're in encore mode AND can swap to the next player, just do that
         if (globals->gameMode == MODE_ENCORE && Player_SwapMainPlayer(false)) {
             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -1930,7 +1930,7 @@ void Player_HandleDeath(EntityPlayer *player)
             Player->savedScore1UP                   = player->score1UP;
             globals->restartLives[player->playerID] = player->lives;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (globals->gameMode != MODE_ENCORE) {
                 player->rings         = 0;
                 player->ringExtraLife = 0;
@@ -1949,7 +1949,7 @@ void Player_HandleDeath(EntityPlayer *player)
             if (globals->gameMode == MODE_COMPETITION) 
                 session->lives[player->playerID] = player->lives;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (globals->gameMode != MODE_ENCORE) {
 #endif
                 if (player->lives) {
@@ -1962,13 +1962,13 @@ void Player_HandleDeath(EntityPlayer *player)
                             int32 playerID                    = RSDK.GetEntityID(player);
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                             if (!session->finishState[playerID]) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                 Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
 #else
                         CompetitionSession_DeriveWinner(playerID, FINISHFLAG_TIMEOVER);
 #endif
                             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
 #endif
                         }
@@ -1977,7 +1977,7 @@ void Player_HandleDeath(EntityPlayer *player)
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;
                             saveRAM->score1UP = player->score1UP;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             saveRAM->continues = globals->continues;
                             if (globals->gameMode == MODE_ENCORE) {
                                 globals->playerID &= 0xFF;
@@ -2007,7 +2007,7 @@ void Player_HandleDeath(EntityPlayer *player)
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;
                             saveRAM->score1UP = player->score1UP;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             saveRAM->continues = globals->continues;
                             if (globals->gameMode == MODE_ENCORE) {
                                 globals->playerID &= 0xFF;
@@ -2031,7 +2031,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     else {
                         // Competition (or encore) death, do a quick respawn
                         Player_HandleQuickRespawn(player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (!player->playerID && globals->gameMode == MODE_ENCORE)
                             Player_HandleQuickRespawn(RSDK_GET_ENTITY(SLOT_PLAYER2, Player));
 #endif
@@ -2052,14 +2052,14 @@ void Player_HandleDeath(EntityPlayer *player)
                         int32 playerID                    = RSDK.GetEntityID(player);
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         if (!session->finishState[playerID]) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
 #else
                             CompetitionSession_DeriveWinner(playerID, FINISHFLAG_TIMEOVER);
                             showGameOver = true;
 #endif
                         }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
 #endif
                     }
@@ -2081,7 +2081,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     if (BoundsMarker)
                         BoundsMarker_CheckAllBounds(player, true);
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
             else {
                 // Encore death, lets switch to the next character and be on our way if possible
@@ -2149,7 +2149,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 }
             }
 #endif
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -2203,7 +2203,7 @@ Hitbox *Player_GetAltHitbox(EntityPlayer *player)
 
 bool32 Player_CheckCollisionTouch(EntityPlayer *player, void *e, Hitbox *entityHitbox)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->isGhost)
         return false;
 #endif
@@ -2215,7 +2215,7 @@ bool32 Player_CheckCollisionTouch(EntityPlayer *player, void *e, Hitbox *entityH
 }
 bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHitbox)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->isGhost)
         return C_NONE;
 #endif
@@ -2290,7 +2290,7 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
 }
 bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *e, Hitbox *entityHitbox)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->isGhost)
         return false;
 #endif
@@ -2376,7 +2376,7 @@ bool32 Player_CheckAttacking(EntityPlayer *player, void *e)
     bool32 attacking = player->invincibleTimer != 0 || anim == ANI_JUMP || anim == ANI_SPINDASH;
     switch (player->characterID) {
         case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY: attacking |= anim == ANI_DROPDASH; break;
 #endif
         case ID_TAILS:
@@ -2395,13 +2395,13 @@ bool32 Player_CheckAttacking(EntityPlayer *player, void *e)
 bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *e, Hitbox *entityHitbox)
 {
     Entity *entity = (Entity *)e;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->isGhost)
         return false;
 #endif
 
     Hitbox *playerHitbox = Player_GetHitbox(player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1) {
         Hitbox tempHitbox;
 
@@ -2450,11 +2450,11 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
                 case ID_SONIC: characterID = 1; break;
                 case ID_TAILS: characterID = 2; break;
                 case ID_KNUCKLES: characterID = 3; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case ID_MIGHTY: characterID = 4; break;
 #endif
                 default: characterID = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_RAY)
                         characterID = 5;
 #endif
@@ -2462,7 +2462,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
             }
 
             StatInfo info;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             TimeAttackData_TrackEnemyDefeat(&info, Zone_GetZoneID(), Zone->actID, characterID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE),
                                             (entity->position.x >> 0x10), (entity->position.y >> 0x10));
             API.TryTrackStat(&info);
@@ -2476,7 +2476,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
             yVel = player->velocity.y + 0x10000;
         }
         else if (player->position.y >= entity->position.y
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                  || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)
 #endif
         ) {
@@ -2527,7 +2527,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
 
         return true;
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
         if (player->uncurlTimer)
             return false;
@@ -2539,11 +2539,11 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
     }
 #endif
     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!player->uncurlTimer) {
 #endif
             Player_CheckHit(player, entity);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -2564,7 +2564,7 @@ bool32 Player_CheckBossHit(EntityPlayer *player, void *e)
             player->state = Player_State_KnuxGlideDrop;
         }
         else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop || player->state == Player_State_RayGlide) {
                 player->state = Player_State_Air;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -2587,7 +2587,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *p)
     Entity *projectile = (Entity *)p;
 
     bool32 deflected   = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY) {
         int32 anim = player->animator.animationID;
         if (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)
@@ -2596,7 +2596,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *p)
 #endif
 
     if (player->shield > SHIELD_BLUE || deflected) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (deflected)
             RSDK.PlaySfx(Player->sfxMightyDeflect, false, 0xFE);
 #endif
@@ -2612,7 +2612,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *p)
 
     return false;
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int32 velX, int32 velY)
 {
     Entity *entity = (Entity *)e;
@@ -2646,7 +2646,7 @@ bool32 Player_CheckItemBreak(EntityPlayer *player, void *e, bool32 hitIfNotAttac
             return true;
         }
         else if (player->position.y >= entity->position.y
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                  || (checkPlayerID(ID_MIGHTY, 1) && anim == ANI_DROPDASH)
 #endif
         ) {
@@ -2660,11 +2660,11 @@ bool32 Player_CheckItemBreak(EntityPlayer *player, void *e, bool32 hitIfNotAttac
     }
     else {
         if (hitIfNotAttacking) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!(character == ID_MIGHTY && anim == ANI_CROUCH)) {
 #endif
                 Player_CheckHit(player, entity);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }
@@ -2681,7 +2681,7 @@ void Player_UpdatePhysicsState(EntityPlayer *entity)
         case ID_SONIC: tablePtr = Player->sonicPhysicsTable; break;
         case ID_TAILS: tablePtr = Player->tailsPhysicsTable; break;
         case ID_KNUCKLES: tablePtr = Player->knuxPhysicsTable; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY: tablePtr = Player->mightyPhysicsTable; break;
         case ID_RAY: tablePtr = Player->rayPhysicsTable; break;
 #endif
@@ -3011,7 +3011,7 @@ void Player_StartPeelout(void)
     self->spindashCharge = 0;
     RSDK.PlaySfx(Player->sfxPeelCharge, false, 255);
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 Player_SwapMainPlayer(bool32 forceSwap)
 {
     RSDK_THIS(Player);
@@ -3273,7 +3273,7 @@ bool32 Player_CheckValidState(EntityPlayer *player)
 {
     if (player->classID == Player->classID && !player->deathType) {
         if (player->state != Player_State_Die && player->state != Player_State_Drown &&
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             player->state != Player_State_EncoreRespawn && player->state != Player_State_JumpIn &&
 #endif
             player->state != Player_State_StartJumpIn && player->state != Player_State_FlyIn && player->state != Player_State_Transform) {
@@ -3426,12 +3426,12 @@ void Player_ForceSuperTransform(void)
     Player_UpdatePhysicsState(self);
 
     RSDK.ResetEntityPtr(RSDK_GET_ENTITY(self->playerID + 2 * Player->playerCount, ImageTrail), ImageTrail->classID, self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.ResetEntityPtr(RSDK_GET_ENTITY(self->playerID + Player->playerCount, SuperSparkle), SuperSparkle->classID, self);
 #endif
 
     self->state = Player_State_Ground;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     Player_State_Ground();
 #endif
 }
@@ -3577,7 +3577,7 @@ void Player_State_Ground(void)
                         default:
                             switch (self->characterID) {
                                 case ID_SONIC:
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
                                     // pre-1.05 super sonic didn't have a "bored" anim
                                     if (self->superState != SUPERSTATE_SUPER) {
 #endif
@@ -3604,7 +3604,7 @@ void Player_State_Ground(void)
                                             else
                                                 RSDK.SetSpriteAnimation(self->aniFrames, ANI_BORED2, &self->animator, false, 0);
                                         }
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
                                     }
                                     else {
                                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->animator, false, 0);
@@ -3640,7 +3640,7 @@ void Player_State_Ground(void)
                                     }
                                     break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                 case ID_MIGHTY:
                                     if (self->timer < 240) {
                                         self->timer++;
@@ -4231,7 +4231,7 @@ void Player_State_Transform(void)
                 self->state          = Player_State_Air;
                 RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!ERZStart && globals->superMusicEnabled)
 #else
                 if (!ERZStart)
@@ -4259,7 +4259,7 @@ void Player_State_Transform(void)
                 self->interaction    = true;
                 self->state          = Player_State_Air;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!ERZStart && globals->superMusicEnabled)
 #else
                 if (!ERZStart)
@@ -5180,7 +5180,7 @@ void Player_State_KnuxLedgePullUp(void)
         }
     }
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_State_MightyHammerDrop(void)
 {
     RSDK_THIS(Player);
@@ -5523,7 +5523,7 @@ void Player_State_FlyIn(void)
     EntityPlayer *leader = NULL;
     if (self->playerID)
         leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else
         leader = (EntityPlayer *)Zone->entityStorage[1];
 #endif
@@ -5531,7 +5531,7 @@ void Player_State_FlyIn(void)
     Player->jumpInTimer  = 0;
     self->tileCollisions = false;
     self->interaction    = false;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     if (SizeLaser) {
         if (leader->isChibi != self->isChibi)
             SizeLaser_SetP2State(self, leader->isChibi);
@@ -5573,13 +5573,13 @@ void Player_State_FlyIn(void)
     }
 
     if (self->camera && self->camera->target != parent) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode != MODE_ENCORE) {
 #endif
             self->camera->position.x = parent->position.x;
             self->camera->position.y = parent->position.y;
             Camera_SetTargetEntity(self->camera->screenID, parent);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -5628,7 +5628,7 @@ void Player_State_FlyIn(void)
         int32 yVel = 0;
         if (self->characterID == ID_TAILS || self->characterID == ID_KNUCKLES) {
             yVel = 0x10000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
                 yVel = 0x20000;
 #endif
@@ -5682,7 +5682,7 @@ void Player_State_JumpIn(void)
     EntityPlayer *leader = NULL;
     if (self->playerID)
         leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else
         leader = (EntityPlayer *)Zone->entityStorage[1];
 #endif
@@ -5733,7 +5733,7 @@ void Player_State_StartJumpIn(void)
             dust->active      = ACTIVE_NEVER;
             dust->isPermanent = true;
             dust->position.y  = (ScreenInfo->position.y - 128) << 16;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->tileCollisions = false;
             self->interaction    = false;
             self->forceJumpIn    = false;
@@ -5775,7 +5775,7 @@ void Player_EndFlyJumpIn(EntityPlayer *player, EntityPlayer *leader)
     if (!SizeLaser || player->state == Player_State_FlyIn) {
         player->state = Player_State_Air;
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (globals->gameMode != MODE_ENCORE) {
         player->state = Player_State_Air;
     }
@@ -5824,7 +5824,7 @@ void Player_EndFlyJumpIn(EntityPlayer *player, EntityPlayer *leader)
                 break;
 
             case ID_KNUCKLES: player->aniFrames = Player->knuxFrames; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: player->aniFrames = Player->mightyFrames; break;
             case ID_RAY: player->aniFrames = Player->rayFrames; break;
 #endif
@@ -5890,7 +5890,7 @@ void Player_State_EncoreRespawn(void)
 
     EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (leader->state != Player_State_Die && leader->state != Player_State_Drown) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->stock) {
             Player_ChangeCharacter(self, globals->stock & 0xFF);
             globals->stock >>= 8;
@@ -5921,7 +5921,7 @@ void Player_State_EncoreRespawn(void)
 #endif
             leader->state    = StateMachine_None;
             leader->classID = TYPE_BLANK;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -5966,7 +5966,7 @@ void Player_State_Victory(void)
                 }
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
             case ID_RAY:
                 self->nextAirState    = StateMachine_None;
@@ -6031,7 +6031,7 @@ void Player_State_WaterSlide(void)
         self->groundVel += vel;
         self->controlLock = 30;
         self->direction   = vel + self->groundVel < 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLUME, &self->animator, false, 0);
 #endif
     }
@@ -6055,13 +6055,13 @@ void Player_JumpAbility_Sonic(void)
     bool32 dropdashAllowed = false;
 
     if (self->jumpAbilityState == 1) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->stateInput != Player_ProcessP2Input_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
 #else
         if (self->stateInput != Player_ProcessP2Input_AI) {
 #endif
             if (self->jumpPress
-#if RETRO_GAMEVER == VER_100
+#if MANIA_GAMEVER == VER_100
                 && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
             ) {
@@ -6131,7 +6131,7 @@ void Player_JumpAbility_Sonic(void)
                     }
                 }
             }
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
             else {
                 if (ControllerInfo[self->controllerID].keyY.press)
                     Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
@@ -6160,11 +6160,11 @@ void Player_JumpAbility_Tails(void)
     if (self->jumpPress && self->jumpAbilityState == 1
         && (self->stateInput != Player_ProcessP2Input_AI
             || (self->up
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 && globals->gameMode != MODE_ENCORE
 #endif
                 ))
-#if RETRO_GAMEVER == VER_100
+#if MANIA_GAMEVER == VER_100
         && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
     ) {
@@ -6181,7 +6181,7 @@ void Player_JumpAbility_Tails(void)
             self->nextAirState    = StateMachine_None;
         }
     }
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
         Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
 #endif
@@ -6193,11 +6193,11 @@ void Player_JumpAbility_Knux(void)
     if (self->jumpPress && self->jumpAbilityState == 1
         && (self->stateInput != Player_ProcessP2Input_AI
             || (self->up
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 && globals->gameMode != MODE_ENCORE
 #endif
                 ))
-#if RETRO_GAMEVER == VER_100
+#if MANIA_GAMEVER == VER_100
         && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
     ) {
@@ -6224,12 +6224,12 @@ void Player_JumpAbility_Knux(void)
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->animator, false, 6);
         }
     }
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
         Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
 #endif
 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Player_JumpAbility_Mighty(void)
 {
     RSDK_THIS(Player);
@@ -6331,7 +6331,7 @@ void Player_ProcessP1Input(void)
 
     if (self->controllerID < PLAYER_MAX) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
             for (int32 t = 0; t < TouchInfo->count; ++t) {
                 int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
                 int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -6394,7 +6394,7 @@ void Player_ProcessP1Input(void)
                         if (SceneInfo->state == ENGINESTATE_REGULAR) {
                             EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                             bool32 allowPause                = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             if (ActClear && ActClear->actClearActive)
                                 allowPause = false;
 #endif
@@ -6410,7 +6410,7 @@ void Player_ProcessP1Input(void)
                 }
             }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             for (int32 t = 0; t < TouchInfo->count; ++t) {
                 int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
                 int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -6440,7 +6440,7 @@ void Player_ProcessP1Input(void)
             self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
             self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
             self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
             self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
@@ -6455,7 +6455,7 @@ void Player_ProcessP1Input(void)
             self->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 
             if (!LottoMachine || !((1 << self->playerID) & LottoMachine->activePlayers)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (sku_platform == PLATFORM_DEV && controller->keyZ.press) {
                     Zone->swapGameMode = true;
                     RSDK.PlaySfx(Player->sfxTransform2, false, 0xFE);
@@ -6507,7 +6507,7 @@ void Player_ProcessP1Input(void)
                 if (SceneInfo->state == ENGINESTATE_REGULAR) {
                     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                     bool32 allowPause                = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (ActClear && ActClear->actClearActive)
                         allowPause = false;
 #endif
@@ -6741,7 +6741,7 @@ void Player_ProcessP2Input_Player(void)
             self->left  = ControllerInfo[self->controllerID].keyLeft.down;
             self->right = ControllerInfo[self->controllerID].keyRight.down;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
             self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
             self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
@@ -6763,7 +6763,7 @@ void Player_ProcessP2Input_Player(void)
             }
             else if (++Player->aiInputSwapTimer >= 600) {
                 self->stateInput = Player_ProcessP2Input_AI;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 RSDK.AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
 #else
                 APICallback_AssignControllerID(self->controllerID, CONT_AUTOASSIGN);

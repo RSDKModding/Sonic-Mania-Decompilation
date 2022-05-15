@@ -203,7 +203,7 @@ void UberCaterkiller_CheckPlayerCollisions(void)
                             hitboxSegment.top    = -hitboxSegment.right;
                             if (Player_CheckBadnikTouch(player, self, &hitboxSegment)) {
                                 if (angle >= 0x80) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                     if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
 #endif
                                         Player_CheckHit(player, self);

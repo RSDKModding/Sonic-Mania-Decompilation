@@ -8,7 +8,7 @@ typedef enum {
     LSELECT_PLAYER_SONIC,
     LSELECT_PLAYER_TAILS,
     LSELECT_PLAYER_KNUCKLES,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LSELECT_PLAYER_MIGHTY,
     LSELECT_PLAYER_RAY,
 #endif
@@ -17,7 +17,7 @@ typedef enum {
 // Object Class
 struct ObjectLevelSelect {
     RSDK_OBJECT
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     STATIC(int32 bgAniDuration, 240);
     TABLE(int32 bgAniDurationTable[4], { 240, 3, 3, 3 });
     TABLE(int32 cheat_RickyMode[9], { 1, 9, 7, 9, 0, 8, 1, 1, 255 });
@@ -69,11 +69,11 @@ struct EntityLevelSelect {
     EntityUIPicture *zoneIcon;
     EntityUIPicture *player1Icon;
     EntityUIPicture *player2Icon;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityUIText *pinballLabel;
 #endif
     int32 labelCount;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 offsetUFO;
     int32 offsetBSS;
     int32 unused1;
@@ -100,7 +100,7 @@ void LevelSelect_EditorLoad(void);
 void LevelSelect_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void LevelSelect_Cheat_AllEmeralds(void);
 void LevelSelect_Cheat_ChangeSuperMusicFlag(void);
 void LevelSelect_Cheat_MaxContinues(void);

@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectTimeAttackMenu *TimeAttackMenu;
 
 void TimeAttackMenu_Update(void)
@@ -478,7 +478,7 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 success)
     if (success) {
         Replay *replayPtr = (Replay *)globals->replayTempRBuffer;
 
-        if (replayPtr->header.version == RETRO_GAMEVER) {
+        if (replayPtr->header.version == MANIA_GAMEVER) {
             LogHelpers_Print("WARNING: Replay Load OK");
             ReplayRecorder_Buffer_Unpack(globals->replayReadBuffer, globals->replayTempRBuffer);
             TimeAttackMenu_LoadScene_Fadeout();

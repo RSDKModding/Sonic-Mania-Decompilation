@@ -141,7 +141,7 @@ void UICharButton_DrawPlayers(void)
 
     if (self->state != UICharButton_State_Selected || !(self->timer & 2)) {
         int32 frame = self->characterID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->characterID >= UICHARBUTTON_MIGHTY)
             frame = self->characterID + 1;
 #endif
@@ -239,7 +239,7 @@ void UICharButton_State_Selected(void)
                 case UICHARBUTTON_SONIC: RSDK.PlaySfx(Announcer->sfxSonic, false, 255); break;
                 case UICHARBUTTON_TAILS: RSDK.PlaySfx(Announcer->sfxTails, false, 255); break;
                 case UICHARBUTTON_KNUX: RSDK.PlaySfx(Announcer->sfxKnuckles, false, 255); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case UICHARBUTTON_MIGHTY: RSDK.PlaySfx(Announcer->sfxMighty, false, 255); break;
                 case UICHARBUTTON_RAY: RSDK.PlaySfx(Announcer->sfxRay, false, 255); break;
 #endif
@@ -268,7 +268,7 @@ void UICharButton_EditorLoad(void)
     RSDK_ENUM_VAR("Sonic", UICHARBUTTON_SONIC);
     RSDK_ENUM_VAR("Tails", UICHARBUTTON_TAILS);
     RSDK_ENUM_VAR("Knuckles", UICHARBUTTON_KNUX);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_ENUM_VAR("Mighty", UICHARBUTTON_MIGHTY);
     RSDK_ENUM_VAR("Ray", UICHARBUTTON_RAY);
 #endif

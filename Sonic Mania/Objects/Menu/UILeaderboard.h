@@ -28,7 +28,7 @@ struct EntityUILeaderboard {
     bool32 lostFocus;
     int32 entryOffset;
     int32 entryLength;
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     bool32 viewingUserRank;
     int32 taRecord;
 #endif
@@ -68,7 +68,7 @@ void UILeaderboard_Serialize(void);
 
 // Extra Entity Functions
 void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *leaderboard);
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard);
 void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 character, uint8 zone, uint8 act);
 #endif

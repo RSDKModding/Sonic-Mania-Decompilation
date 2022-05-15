@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 ObjectAPICallback *APICallback;
 
 void APICallback_Update(void)
@@ -658,7 +658,7 @@ void APICallback_TryAuth_CB(void)
             String string;
             switch (sku_platform) {
                 case PLATFORM_PC:
-#if RETRO_USE_EGS
+#if MANIA_USE_EGS
                     Localization_GetString(&string, STR_LOADEGS);
 #else
                     Localization_GetString(&string, STR_LOADSTEAM);
@@ -803,7 +803,7 @@ void APICallback_CheckUserAuth_CB(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void APICallback_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(); }
 #else
 void APICallback_TrackGameProgressCB(void) { UIWaitSpinner_FinishWait(); }

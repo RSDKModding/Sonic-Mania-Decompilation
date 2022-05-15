@@ -287,7 +287,7 @@ void HeavyMystic_CheckPlayerCollisions_Bark(void)
         foreach_active(Player, player)
         {
             if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 
                 if (self->animator.animationID == ANI_SKIDTURN
                     && ((self->direction == FLIP_NONE && player->position.x > self->position.x)
@@ -489,7 +489,7 @@ void HeavyMystic_StateBoss_BeginShow(void)
     if (self->alpha > 0xC0)
         HeavyMystic_HandleParticleFX();
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         if (self->timer < 256) {
             self->timer += 3;
@@ -669,7 +669,7 @@ void HeavyMystic_StateBoss_CloseCurtains(void)
 {
     RSDK_THIS(HeavyMystic);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         if (self->timer < 256) {
             self->timer += 3;
@@ -1315,7 +1315,7 @@ void HeavyMystic_StateCork_Fired(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
                 self->state = HeavyMystic_StateCork_MightyRebound;
             else
@@ -1332,7 +1332,7 @@ void HeavyMystic_StateCork_Fired(void)
         destroyEntity(self);
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void HeavyMystic_StateCork_MightyRebound(void)
 {
     RSDK_THIS(HeavyMystic);
@@ -1361,7 +1361,7 @@ void HeavyMystic_State_Bomb(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
@@ -1388,7 +1388,7 @@ void HeavyMystic_State_BarkDebris(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);

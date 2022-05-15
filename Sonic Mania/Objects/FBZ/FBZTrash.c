@@ -263,7 +263,7 @@ void FBZTrash_State_OrbinautMove(void)
         if (Player_CheckCollisionTouch(player, self, &self->hitbox) && Player_CheckBadnikBreak(player, self, true)) {
             foreach_all(Animals, animals) { destroyEntity(animals); }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state != Player_State_MightyHammerDrop)
                 player->velocity.y = -0x40000;
 #endif

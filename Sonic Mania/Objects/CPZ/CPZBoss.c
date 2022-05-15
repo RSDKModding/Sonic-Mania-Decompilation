@@ -162,7 +162,7 @@ void CPZBoss_State_SetupArena(void)
             case ID_SONIC: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMSonic.bin", SCOPE_STAGE); break;
             case ID_TAILS: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMTails.bin", SCOPE_STAGE); break;
             case ID_KNUCKLES: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMKnux.bin", SCOPE_STAGE); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMMighty.bin", SCOPE_STAGE); break;
             case ID_RAY: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMRay.bin", SCOPE_STAGE); break;
 #endif
@@ -328,7 +328,7 @@ void CPZBoss_State_HandleMatch_Player(void)
             }
         }
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);

@@ -15,7 +15,7 @@ struct EntityUIVsResults {
     MANIA_UI_ITEM_BASE
     uint8 playerID;
     int32 numRows;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 trophyCount;
 #endif
     uint8 row0Label;
@@ -58,7 +58,7 @@ struct EntityUIVsResults {
     Animator textAnimator;
     Animator numbersAnimator;
     Animator rowAnimators[13];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Animator trophyAnimator;
 #endif
     uint16 textFrames;
@@ -85,7 +85,7 @@ void UIVsResults_SetupSprites(void);
 void UIVsResults_DrawOutline(void);
 void UIVsResults_DrawBG(void);
 void UIVsResults_DrawRow(int32 row, int32 x, int32 y);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIVsResults_DrawTrophies(void);
 #endif
 void UIVsResults_DrawResults(void);

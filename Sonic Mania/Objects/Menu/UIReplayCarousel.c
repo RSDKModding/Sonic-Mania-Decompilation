@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectUIReplayCarousel *UIReplayCarousel;
 
 void UIReplayCarousel_Update(void)

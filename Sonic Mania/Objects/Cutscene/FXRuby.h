@@ -7,7 +7,7 @@
 struct ObjectFXRuby {
     RSDK_OBJECT
     int32 deformation[0x200];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 tintLookupTable[0x10000];
 #endif
     TileLayer *fgLow;

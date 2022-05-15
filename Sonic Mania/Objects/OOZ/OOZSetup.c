@@ -110,7 +110,7 @@ void OOZSetup_StaticUpdate(void)
 
                     case OOZ_TFLAGS_OILSTRIP:
                         if (player->state != Player_State_BubbleBounce
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             && player->state != Player_State_MightyHammerDrop
 #endif
                         ) {
@@ -125,7 +125,7 @@ void OOZSetup_StaticUpdate(void)
 
                     case OOZ_TFLAGS_OILSLIDE:
                         if (player->state != Player_State_BubbleBounce
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             && player->state != Player_State_MightyHammerDrop
 #endif
                         ) {
@@ -169,7 +169,7 @@ void OOZSetup_StaticUpdate(void)
             OOZSetup->smogTimer -= 32;
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     foreach_active(Ring, ring)
     {
         if (ring->state == Ring_State_Bounce) {
@@ -189,7 +189,7 @@ void OOZSetup_StaticUpdate(void)
     }
 #endif
     OOZSetup_HandleActiveFlames();
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.ProcessAnimation(&OOZSetup->animator);
 #endif
 }
@@ -197,7 +197,7 @@ void OOZSetup_StaticUpdate(void)
 void OOZSetup_Draw(void)
 {
     RSDK_THIS(OOZSetup);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (SceneInfo->currentDrawGroup != self->drawOrder) {
         foreach_active(Player, player)
         {
@@ -243,7 +243,7 @@ void OOZSetup_StageLoad(void)
     OOZSetup->flameCount = 0;
     OOZSetup->solFrames  = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(OOZSetup->solFrames, 3, &OOZSetup->flameAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     OOZSetup->splashFrames = RSDK.LoadSpriteAnimation("OOZ/Splash.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(OOZSetup->splashFrames, 0, &OOZSetup->animator, true, 0);
 #endif
@@ -266,7 +266,7 @@ void OOZSetup_StageLoad(void)
             }
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (isMainGameMode() && PlayerHelpers_CheckAct2())
             Zone->stageFinishCallback = OOZ2Outro_StageFinishCB_Act2;
 
@@ -283,7 +283,7 @@ void OOZSetup_StageLoad(void)
         }
 #endif
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     else if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreOOZ1.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
@@ -472,7 +472,7 @@ void OOZSetup_PlayerState_OilStrip(void)
     self->onGround     = true;
     Player_State_Ground();
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if ((animator->animationID == ANI_HURT || animator->animationID == ANI_FLUME) && (self->groundedStore == true) & self->onGround) {
 #else
     if (animator->animationID == ANI_HURT && (self->groundedStore == true) & self->onGround) {
@@ -519,7 +519,7 @@ void OOZSetup_PlayerState_OilSlide(void)
         self->groundVel += RSDK.Sin256(self->angle) << 13 >> 8;
         self->controlLock = 30;
         self->direction   = (RSDK.Sin256(self->angle) << 13 >> 8) + self->groundVel < 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLUME, &self->animator, false, 0);
 #else
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->animator, false, 2);

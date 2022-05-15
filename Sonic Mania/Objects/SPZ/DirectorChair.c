@@ -122,7 +122,7 @@ void DirectorChair_Collide_Chair(void)
     {
         bool32 prevOnGround = player->onGround;
         if (Player_CheckCollisionPlatform(player, self, &DirectorChair->hitboxChair)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (self->state == DirectorChair_State_Idle && player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif

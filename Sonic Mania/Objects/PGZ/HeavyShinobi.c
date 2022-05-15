@@ -94,7 +94,7 @@ void HeavyShinobi_Create(void *data)
                     // Bug Details: Remember the PGZ2 boss skip?
                     // you guessed it, this is the fix, isPermanent just says "DO NOT OVERWRITE THIS ENTITY"
                     // since all entities spawned via RSDK.CreateEntity use the last 0x100 slots, and it loops around
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
                     self->isPermanent = true;
 #endif
 
@@ -765,7 +765,7 @@ void HeavyShinobi_StateAsteron_Thrown(void)
                     foreach_break;
                 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
                     self->interaction = false;
                     self->state       = HeavyShinobi_StateAsteron_Debris;
@@ -774,7 +774,7 @@ void HeavyShinobi_StateAsteron_Thrown(void)
                 else {
 #endif
                     Player_CheckHit(player, self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
             }
@@ -962,7 +962,7 @@ void HeavyShinobi_State_AsteronSpike(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &HeavyShinobi->hitboxAsteronSpike) && player->state != Ice_State_FrozenPlayer) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
                     self->interaction = false;
                     self->state       = HeavyShinobi_StateAsteron_Debris;
@@ -970,7 +970,7 @@ void HeavyShinobi_State_AsteronSpike(void)
                 else {
 #endif
                     Player_CheckHit(player, self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 }
 #endif
             }

@@ -99,7 +99,7 @@ void ActClear_Draw(void)
         drawPos.y = self->playerNamePos.y;
         RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, true);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if ((globals->playerID & 0xFF) == ID_MIGHTY)
             self->gotThroughAnimator.frameID = 2;
         else
@@ -124,12 +124,12 @@ void ActClear_Draw(void)
 
     // Draw "Bonus" Sprite
     drawPos.x += 0x320000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
         self->hudElementsAnimator.frameID = 8; // "Bonus"
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 
@@ -143,7 +143,7 @@ void ActClear_Draw(void)
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x = dx - 0x620000;
         drawPos.y = dy - 0xE0000;
@@ -153,14 +153,14 @@ void ActClear_Draw(void)
     else {
 #endif
         ActClear_DrawNumbers(&drawPos, self->timeBonus, 0); // Draw Time Bonus
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 
     // Draw Ring Bonus
     drawPos.x = offset + self->ringBonusPos.x - 0x5C0000;
     drawPos.y = self->ringBonusPos.y;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK)
         self->hudElementsAnimator.frameID = 17; // "Best"
     else
@@ -170,7 +170,7 @@ void ActClear_Draw(void)
 
     dx = drawPos.x + 0x320000;
     drawPos.x += 0x320000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x                         = dx - 0xA0000;
         self->hudElementsAnimator.frameID = 1; // "Time"
@@ -181,7 +181,7 @@ void ActClear_Draw(void)
 #endif
         self->hudElementsAnimator.frameID = 8; // "Bonus"
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 
@@ -192,7 +192,7 @@ void ActClear_Draw(void)
 
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) { // Draw Best Time
         TimeAttackData_GetUnpackedTime(self->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
@@ -203,14 +203,14 @@ void ActClear_Draw(void)
     else {
 #endif
         ActClear_DrawNumbers(&drawPos, self->ringBonus, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 
     if (self->showCoolBonus) { // Draw Cool Bonus
         drawPos.x = offset + self->coolBonusPos.x - 0x5C0000;
         drawPos.y = self->coolBonusPos.y;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK)
             self->hudElementsAnimator.frameID = 18; // "Rank"
         else
@@ -219,12 +219,12 @@ void ActClear_Draw(void)
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         drawPos.x += 0x320000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
             self->hudElementsAnimator.frameID = 8; // "Bonus"
             RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
 
@@ -235,11 +235,11 @@ void ActClear_Draw(void)
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
             ActClear_DrawNumbers(&drawPos, self->coolBonus, 0); // Draw Cool bonus
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
         else {
             // Draw Rank
@@ -258,7 +258,7 @@ void ActClear_Draw(void)
     drawPos.x = self->totalScorePos.x;
     drawPos.y = self->totalScorePos.y;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         // Draw World Rank
         drawPos.x                         = offset + self->totalScorePos.x - 0x5C0000;
@@ -301,7 +301,7 @@ void ActClear_Draw(void)
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
         ActClear_DrawNumbers(&drawPos, self->totalScore, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }
@@ -310,7 +310,7 @@ void ActClear_Create(void *data)
 {
     RSDK_THIS(ActClear);
     if (!SceneInfo->inEditor) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         ActClear->actClearActive = true;
 #endif
         self->active           = ACTIVE_NORMAL;
@@ -326,7 +326,7 @@ void ActClear_Create(void *data)
         if (Zone_GetZoneID() > ZONE_INVALID) {
             StatInfo stat;
             uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             switch (globals->playerID & 0xFF) {
                 case ID_SONIC: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score); break;
                 case ID_TAILS: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 2, time, player1->rings, player1->score); break;
@@ -351,7 +351,7 @@ void ActClear_Create(void *data)
 #endif
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!ActClear->disableTimeBonus) {
 #endif
             switch (SceneInfo->minutes) {
@@ -370,7 +370,7 @@ void ActClear_Create(void *data)
 
                 case 9:
                     if (!SceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && SceneInfo->seconds == 59) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER)))
 #endif
                             self->timeBonus = 100000;
@@ -379,14 +379,14 @@ void ActClear_Create(void *data)
 
                 default: break;
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
 
         self->ringBonus        = 100 * player1->rings;
         self->coolBonus        = globals->coolBonus[0];
         globals->initCoolBonus = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
             self->time =
@@ -411,7 +411,7 @@ void ActClear_Create(void *data)
 
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &self->hudElementsAnimator, true, 0);
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 1, &self->numbersAnimator, true, 0);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &self->timeElementsAnimator, true, 12);
 #endif
 
@@ -420,7 +420,7 @@ void ActClear_Create(void *data)
             case ID_SONIC: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 0); break;
             case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 1); break;
             case ID_KNUCKLES: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 2); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 3); break;
             case ID_RAY: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 4); break;
 #endif
@@ -441,7 +441,7 @@ void ActClear_StageLoad(void)
 
     ActClear->sfxScoreAdd   = RSDK.GetSfx("Global/ScoreAdd.wav");
     ActClear->sfxScoreTotal = RSDK.GetSfx("Global/ScoreTotal.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     ActClear->sfxEvent = RSDK.GetSfx("Special/Event.wav");
 
     ActClear->actClearActive = false;
@@ -449,7 +449,7 @@ void ActClear_StageLoad(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs)
 {
     RSDK_THIS(ActClear);
@@ -498,7 +498,7 @@ void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount)
             }
         }
         else {
-            if (!digitCount && value < 0)
+            if (!digitCount && !value)
                 digitCount = 1;
         }
 
@@ -539,7 +539,7 @@ void ActClear_CheckPlayerVictory(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ActClear_SaveGameCallback(bool32 success)
 {
     UIWaitSpinner_FinishWait();
@@ -631,7 +631,7 @@ void ActClear_State_EnterResults(void)
         self->coolBonusPos.x -= 0x100000;
 
     if (self->totalScorePos.x >= -0x80000) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             if (ActClear->bufferMoveEnabled) {
                 StateMachine_Run(ActClear->bufferMove_CB);
@@ -693,7 +693,7 @@ void ActClear_State_TallyScore(void)
         Player_GiveScore(player, 100);
     }
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
     if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press || TouchInfo->count) {
 #else
     if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press) {
@@ -730,7 +730,7 @@ void ActClear_State_SaveGameProgress(void)
             if (globals->gameMode == MODE_COMPETITION) {
                 RSDK.SetScene("Presentation", "Menu");
             }
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
             else if (globals->gameMode == MODE_TIMEATTACK) {
                 EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
                 ActClear->isSavingGame = true;
@@ -769,7 +769,7 @@ void ActClear_State_SaveGameProgress(void)
                 if (Zone->actID > 0)
                     SaveGame->saveRAM->collectedSpecialRings = 0;
                 SaveGame_SaveProgress();
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {
 #else
                 if (globals->gameMode == MODE_MANIA) {
@@ -792,7 +792,7 @@ void ActClear_State_SaveGameProgress(void)
             StarPost_ResetStarPosts();
             SaveGame_SaveProgress();
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {
 #else
             if (globals->gameMode == MODE_MANIA) {
@@ -810,7 +810,7 @@ void ActClear_State_SaveGameProgress(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void ActClear_State_ShowResultsTA(void)
 {
     RSDK_THIS(ActClear);
@@ -836,7 +836,7 @@ void ActClear_State_ShowResultsTA(void)
     }
 
     if (!ActClear->isSavingGame && !ActClear->disableResultsInput) {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);

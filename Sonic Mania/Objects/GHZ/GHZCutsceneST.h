@@ -51,7 +51,7 @@ void GHZCutsceneST_Serialize(void);
 // Extra Entity Functions
 void GHZCutsceneST_SetupObjects(void);
 void GHZCutsceneST_SetupKnuxCutscene(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GHZCutsceneST_SkipCB(void);
 #endif
 

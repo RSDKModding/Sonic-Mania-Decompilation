@@ -135,7 +135,7 @@ void Funnel_Update(void)
                         player->velocity.y -= abs(9 * (player->velocity.x >> 4));
                         player->velocity.y = clampVal(player->velocity.y, 0x1000, 0x10000);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop)
                             player->velocity.y = 0x80000;
                         else

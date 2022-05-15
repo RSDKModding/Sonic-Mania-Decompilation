@@ -52,7 +52,7 @@ void UIVsRoundPicker_Draw(void)
 
     drawPos.x = self->position.x - self->buttonBounceOffset;
     drawPos.y = self->position.y - self->buttonBounceOffset;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColor >> 16) & 0xFF,
                                 (UIWidgets->buttonColor >> 8) & 0xFF, (UIWidgets->buttonColor) & 0xFF);
 #else

@@ -339,7 +339,7 @@ void Woodrow_State_Bomb(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Woodrow->hitboxBomb)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);

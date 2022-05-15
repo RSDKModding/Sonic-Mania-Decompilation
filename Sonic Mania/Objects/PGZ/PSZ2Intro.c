@@ -53,7 +53,7 @@ void PSZ2Intro_StageLoad(void)
 
 bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityFXFade *fxFade = PSZ2Intro->fxFade;
@@ -96,7 +96,7 @@ bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host)
 bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host)
 {
     if (ActClear->finished) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -109,7 +109,7 @@ bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host)
 
 bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (!host->timer) {
@@ -160,7 +160,7 @@ bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
 
 bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (ScreenInfo->position.x < Zone->cameraBoundsL[0]) {

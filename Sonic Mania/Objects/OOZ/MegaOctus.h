@@ -62,7 +62,7 @@ struct EntityMegaOctus {
     Vector2 origin;
     int32 orbID;
     Entity *parent;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 tilePlatY;
 #endif
     Animator animator;
@@ -142,7 +142,7 @@ void MegaOctus_Draw_Laser(void);
 void MegaOctus_State_Shot(void);
 void MegaOctus_Draw_OrbShot(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MegaOctus_TilePlatformState_RiseOuttaOil(void);
 #endif
 

@@ -23,7 +23,7 @@ struct ObjectTMZ2Outro {
 struct EntityTMZ2Outro {
     RSDK_ENTITY
     EntityEscapeCar *escapeCar;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityCutsceneHBH *heavyKing;
 #endif
 };
@@ -57,7 +57,7 @@ bool32 TMZ2Outro_Cutscene_TimeToEscape(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_Cutscene_HurryToCar(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host);
@@ -68,7 +68,7 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_Cutscene_FadeOut(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TMZ2Outro_SaveFileCB(bool32 success);
 #else 
 void TMZ2Outro_SaveFileCB(void);

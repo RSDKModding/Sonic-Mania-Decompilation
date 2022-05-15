@@ -34,7 +34,7 @@ void ERZStart_Update(void)
         SceneInfo->minutes      = RSDK.Rand(0, 9);
     }
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     if (ERZStart->superDashCooldown > 0) {
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         foreach_all(HUD, hud)
@@ -127,7 +127,7 @@ void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, in
 
 bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityPhantomRuby *ruby = ERZStart->ruby;
@@ -189,7 +189,7 @@ bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityPhantomRuby *ruby = ERZStart->ruby;
@@ -212,7 +212,7 @@ bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_EnterKing(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityPhantomRuby *ruby = ERZStart->ruby;
@@ -229,7 +229,7 @@ bool32 ERZStart_Cutscene_EnterKing(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_KingMovingRuby(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
@@ -260,7 +260,7 @@ bool32 ERZStart_Cutscene_KingMovingRuby(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_KingAttatchHornRuby(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityPhantomRuby *ruby = ERZStart->ruby;
@@ -297,7 +297,7 @@ bool32 ERZStart_Cutscene_KingAttatchHornRuby(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_SetupEggmanReveal(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
@@ -314,7 +314,7 @@ bool32 ERZStart_Cutscene_SetupEggmanReveal(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
@@ -420,7 +420,7 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityPhantomRuby *ruby = ERZStart->ruby;
@@ -469,7 +469,7 @@ bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_PostWrestleFadeIn(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityPhantomRuby *ruby = ERZStart->ruby;
@@ -518,7 +518,7 @@ bool32 ERZStart_Cutscene_PostWrestleFadeIn(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_ReturnCamToSonic(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
@@ -542,7 +542,7 @@ bool32 ERZStart_Cutscene_ReturnCamToSonic(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_PreparePlayerTransform(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityPhantomRuby *ruby = ERZStart->ruby;
@@ -565,7 +565,7 @@ bool32 ERZStart_Cutscene_PreparePlayerTransform(EntityCutsceneSeq *host)
 
 bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -602,7 +602,7 @@ bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
 bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host)
 {
     RSDK_THIS(ERZStart);
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
 
     EntityPhantomKing *king = ERZStart->king;
@@ -739,7 +739,7 @@ void ERZStart_Player_HandleSuperDash(EntityPlayer *player)
         fxFade->speedIn      = 256;
         fxFade->speedOut     = 64;
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Player->superDashCooldown = 30;
 #else
     ERZStart->superDashCooldown = 30;

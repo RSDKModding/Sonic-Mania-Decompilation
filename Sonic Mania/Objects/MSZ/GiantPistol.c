@@ -245,13 +245,13 @@ void GiantPistol_State_Aiming(void)
     }
 
     uint8 jumpPressed = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (GiantPistol->inCutscene) {
 #else
     if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
 #endif
         if (self->angle == 118 && self->activePlayers > 0) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
                 MSZSetup_ReloadBGParallax();
                 MSZSetup_ReloadBGParallax_Multiply(0x000);
@@ -297,7 +297,7 @@ void GiantPistol_State_Aiming(void)
                     player->velocity.y = -0xC00 * RSDK.Sin512(self->rotation);
                 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE) && GiantPistol->inCutscene) {
                     player->velocity.x += 0x18000;
                     player->state           = GiantPistol_PlayerState_PistolAir;
@@ -364,7 +364,7 @@ void GiantPistol_State_FiredPlayers(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GiantPistol_PlayerState_PistolAir(void)
 {
     RSDK_THIS(Player);

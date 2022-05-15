@@ -65,7 +65,7 @@ void Shuriken_State_ArrowSetup(void);
 void Shuriken_State_ArrowInAir(void);
 void Shuriken_State_ArrowOnWall(void);
 void Shuriken_State_ArrowFall(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Shuriken_State_ArrowDebris(void);
 #endif
 

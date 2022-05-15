@@ -24,7 +24,7 @@ struct EntitySaveGame {
     int32 nextSpecialStage;
     int32 collectedSpecialRings;
     int32 medalMods;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     //(AIZ if encore) + GHZ-TMZ + (ERZ if not encore)
     // Bonus stage is [28]
     // Special stage is [29]
@@ -38,7 +38,7 @@ struct EntitySaveGame {
 
 // Object Class
 struct ObjectSaveGame {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     RSDK_OBJECT
     Entity *loadEntityPtr;
     void (*loadCallback)(bool32 success);
@@ -70,14 +70,14 @@ void SaveGame_EditorLoad(void);
 void SaveGame_Serialize(void);
 
 //Funcs
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore);
 #else
 int32 *SaveGame_GetDataPtr(int32 slot);
 #endif
 void SaveGame_LoadSaveData(void);
 void SaveGame_LoadFile(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SaveGame_SaveFile(void (*callback)(bool32 success));
 #else
 void SaveGame_SaveFile(void (*callback)(void));

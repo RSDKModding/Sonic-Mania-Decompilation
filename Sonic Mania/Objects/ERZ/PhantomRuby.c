@@ -163,7 +163,7 @@ void PhantomRuby_State_MoveRotateGravity_CheckGround(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void PhantomRuby_State_MoveToPos(void)
 {
     RSDK_THIS(PhantomRuby);

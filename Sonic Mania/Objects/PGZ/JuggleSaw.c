@@ -399,7 +399,7 @@ void JuggleSaw_StateSaw_Handle(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &JuggleSaw->hitboxSaw)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
                     self->interaction = false;
                     self->state       = JuggleSaw_StateSaw_Debris;

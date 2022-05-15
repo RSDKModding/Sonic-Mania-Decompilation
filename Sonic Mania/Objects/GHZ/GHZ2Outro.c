@@ -18,7 +18,7 @@ void GHZ2Outro_Update(void)
                                   GHZ2Outro_Cutscene_RubyHover, GHZ2Outro_Cutscene_StartRubyWarp, GHZ2Outro_Cutscene_HandleRubyWarp,
                                   GHZ2Outro_Cutscene_LoadCPZ1, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             seq->skipType          = SKIPTYPE_CALLBACK;
@@ -31,7 +31,7 @@ void GHZ2Outro_Update(void)
     else {
         CutsceneSeq_StartSequence(self, GHZ2Outro_Cutscene_FinishActClear, GHZ2Outro_Cutscene_JumpIntoHole, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -457,7 +457,7 @@ bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host)
     if (host->timer == 16) {
         globals->enableIntro = true;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "Chemical Plant Zone+ 1");
         else
@@ -470,10 +470,10 @@ bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host)
     return false;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GHZ2Outro_Cutscene_SkipCB(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         RSDK.SetScene("Encore Mode", "Chemical Plant Zone+ 1");
     else

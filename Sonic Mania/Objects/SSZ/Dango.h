@@ -57,7 +57,7 @@ void Dango_State_Rolling(void);
 void Dango_State_Falling_Curled(void);
 void Dango_State_Uncurling(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Dango_StateTaunt_Setup(void);
 void Dango_StateTaunt_RollIn(void);
 void Dango_StateTaunt_KnockedRuby(void);

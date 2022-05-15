@@ -302,7 +302,7 @@ void BreakableWall_HandleTopBreak_All(void)
     {
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
@@ -318,7 +318,7 @@ void BreakableWall_HandleTopBreak_All(void)
 
                         case ID_KNUCKLES: canBreak = true; break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         case ID_MIGHTY:
                             if (!canBreak)
                                 canBreak = player->state == Player_State_MightyHammerDrop;
@@ -366,7 +366,7 @@ void BreakableWall_HandleTopBreak_All(void)
                         RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
                         BreakableWall_GiveScoreBonus(player);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                             player->velocity.y = velY - 0x10000;
                         else
@@ -376,7 +376,7 @@ void BreakableWall_HandleTopBreak_All(void)
                         destroyEntity(self);
                     }
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }
@@ -393,7 +393,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
 
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP && !player->sidekick
             && ((player->collisionPlane == 1 && self->type == BREAKWALL_TYPE_TOPCHUNK_B) || self->type == BREAKWALL_TYPE_TOPCHUNK)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
@@ -409,7 +409,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
 
                         case ID_KNUCKLES: canBreak = true; break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         case ID_MIGHTY:
                             if (!canBreak)
                                 canBreak = player->state == Player_State_MightyHammerDrop;
@@ -425,7 +425,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
                         BreakableWall_HandleBlockBreak_V();
                         BreakableWall_GiveScoreBonus(player);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                             player->velocity.y = velY - 0x10000;
                         else
@@ -441,7 +441,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
                             destroyEntity(self);
                     }
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }
@@ -453,7 +453,7 @@ void BreakableWall_HandleSidesBreak(void)
 
     foreach_active(Player, player)
     {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
             if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
@@ -504,7 +504,7 @@ void BreakableWall_HandleSidesBreak(void)
                     continue; // skip to next loop, so we dont do the box collision
                 }
             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
         Player_CheckCollisionBox(player, self, &self->hitbox);
@@ -518,7 +518,7 @@ void BreakableWall_HandleBottomBreak_Chunks(void)
     {
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
@@ -545,7 +545,7 @@ void BreakableWall_HandleBottomBreak_Chunks(void)
                         player->velocity.y = velY;
                     }
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }
@@ -559,7 +559,7 @@ void BreakableWall_HandleBottomBreak_All(void)
     {
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
@@ -608,7 +608,7 @@ void BreakableWall_HandleBottomBreak_All(void)
                     player->velocity.y = velY;
                     destroyEntity(self);
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }

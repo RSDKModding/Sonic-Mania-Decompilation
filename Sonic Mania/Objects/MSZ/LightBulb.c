@@ -88,7 +88,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
         if (player->animator.animationID != ANI_HURT && Player_CheckCollisionTouch(player, self, &LightBulb->hitboxLightBulb)) {
             RSDK.PlaySfx(LightBulb->sfxBulbPop, false, 255);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state != Player_State_MightyHammerDrop) {
 #endif
                 if (player->state == Player_State_FlyCarried)
@@ -113,7 +113,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
 
                 player->onGround       = false;
                 player->tileCollisions = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
             CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y)->animator.frameID = 16;

@@ -159,7 +159,7 @@ void DBTower_CheckPlayerCollisions_Head(void)
                         uint8 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y) - self->bodyAngles[i];
                         if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment)) {
                             if (angle >= 0x80) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                 if (!Player_CheckMightyUnspin(player, 0x300, true, &player->uncurlTimer))
 #endif
                                     Player_CheckHit(player, self);
@@ -220,7 +220,7 @@ void DBTower_State_SetupArena(void)
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
             self->timer = 60;
             self->state = DBTower_State_Setup_Encore;
@@ -232,7 +232,7 @@ void DBTower_State_SetupArena(void)
             self->segmentOffsetY += 0x360000;
             self->timer = 0;
             self->state = DBTower_State_HandleBoss;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
@@ -373,7 +373,7 @@ void DBTower_State_Finish(void)
         DBTower->defeated = true;
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
             self->timer = 0;
             self->state = DBTower_State_SpawnSignPost;
@@ -384,13 +384,13 @@ void DBTower_State_Finish(void)
             Zone->playerBoundActiveR[0] = false;
             Zone->cameraBoundsB[0]      = 304;
             destroyEntity(self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void DBTower_State_SpawnSignPost(void)
 {
     RSDK_THIS(DBTower);
@@ -422,7 +422,7 @@ void DBTower_CheckPlayerCollisions_Body(void)
             uint8 angle = (RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y) - self->bodyAngles[0]);
             if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment)) {
                 if (angle >= 0x80) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
                         self->playerTimers[playerID] = 30;
                     else
@@ -430,7 +430,7 @@ void DBTower_CheckPlayerCollisions_Body(void)
                         Player_CheckHit(player, self);
                 }
                 else if (
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) ||
 #endif
                     Player_CheckBossHit(player, self)) {

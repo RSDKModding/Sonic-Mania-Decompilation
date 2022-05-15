@@ -340,9 +340,9 @@ void EggPistonsMKII_State_EnterBoss(void)
     Zone->playerBoundActiveL[0] = true;
     Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
 
-    int pos = RETRO_USE_PLUS ? (self->position.x - 0xC00000) : self->position.x;
+    int pos = MANIA_USE_PLUS ? (self->position.x - 0xC00000) : self->position.x;
     if (player1->position.x > pos) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (player1->onGround)
             player1->state = Player_State_Ground;
         player1->stateInput = 0;
@@ -373,7 +373,7 @@ void EggPistonsMKII_State_EnterBoss(void)
             player1->right = false;
             player1->left  = true;
             self->state  = EggPistonsMKII_State_PistonReveal;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         }
 #endif
     }

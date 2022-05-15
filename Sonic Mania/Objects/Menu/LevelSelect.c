@@ -13,7 +13,7 @@ void LevelSelect_Update(void)
 {
     RSDK_THIS(LevelSelect);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityUIText *text = self->pinballLabel;
     if (text)
         text->visible = API.CheckDLC(DLC_PLUS);
@@ -63,7 +63,7 @@ void LevelSelect_Create(void *data)
 void LevelSelect_StageLoad(void)
 {
     LevelSelect->sfxFail = RSDK.GetSfx("Stage/Fail.wav");
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LevelSelect->sfxRing     = RSDK.GetSfx("Global/Ring.wav");
     LevelSelect->sfxEmerald  = RSDK.GetSfx("Special/Emerald.wav");
     LevelSelect->sfxContinue = RSDK.GetSfx("Special/Continue.wav");
@@ -88,7 +88,7 @@ void LevelSelect_StageLoad(void)
     --LevelSelect->soundTestMax;
 
     globals->medalMods |= MEDAL_DEBUGMODE;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     LevelSelect->cheatCodePtrs[0] = LevelSelect->cheat_RickyMode;
     LevelSelect->cheatCodePtrs[1] = LevelSelect->cheat_AllEmeralds;
     LevelSelect->cheatCodePtrs[2] = LevelSelect->cheat_MaxContinues;
@@ -118,7 +118,7 @@ void LevelSelect_StageLoad(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void LevelSelect_Cheat_AllEmeralds(void)
 {
     Music_FadeOut(0.125);
@@ -250,7 +250,7 @@ void LevelSelect_State_SetupEntities(void)
                         case UITEXT_ALIGN_CENTER: break;
 
                         case UITEXT_ALIGN_RIGHT: self->stageIDLabels[i] = labelR;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                             if (!labelR->data0 && labelR->data1 == 15)
                                 self->pinballLabel = labelR;
 #endif
@@ -340,7 +340,7 @@ void LevelSelect_State_HandleMenu(void)
 
         if (self->timer == 1) {
             LevelSelect_SetLabelHighlighted(false);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (--self->labelID == 28 && !API.CheckDLC(DLC_PLUS))
 #endif
                 --self->labelID;
@@ -356,7 +356,7 @@ void LevelSelect_State_HandleMenu(void)
         if (self->timer == 1) {
             LevelSelect_SetLabelHighlighted(false);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (++self->labelID == 28 && !API.CheckDLC(DLC_PLUS))
 #endif
                 ++self->labelID;
@@ -389,7 +389,7 @@ void LevelSelect_State_HandleMenu(void)
     }
     else if (confirmPress || ControllerInfo->keyStart.press) {
         if (self->labelID < self->labelCount - 1 || ControllerInfo->keyStart.press) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (self->labelID != 28 || API.CheckDLC(DLC_PLUS))
                 LevelSelect_HandleNewStagePos();
             else
@@ -402,7 +402,7 @@ void LevelSelect_State_HandleMenu(void)
             EntityMusic *track = RSDK_GET_ENTITY(self->soundTestID + LevelSelect->startMusicID, Music);
             Music_PlayTrackPtr(track);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             self->offsetUFO = self->soundTestID % 14;
             self->offsetBSS = self->soundTestID & 0x1F;
             for (int32 i = 0; i < 8; ++i) {
@@ -420,7 +420,7 @@ void LevelSelect_State_HandleMenu(void)
 #endif
         }
     }
-#if RETRO_GAMEVER == VER_100 || RETRO_USE_TOUCH_CONTROLS
+#if MANIA_GAMEVER == VER_100 || MANIA_USE_TOUCH_CONTROLS
     else if (TouchInfo->count) {
 
         self->timer = (self->timer + 1) & 0xF;
@@ -432,7 +432,7 @@ void LevelSelect_State_HandleMenu(void)
                 EntityUIText *label = self->zoneNameLabels[labelID];
 
                 if (label && labelID != self->labelID) {
-#if RETRO_USE_TOUCH_CONTROLS && RETRO_USE_PLUS
+#if MANIA_USE_TOUCH_CONTROLS && MANIA_USE_PLUS
                     if (labelID == 28 && !API.CheckDLC(DLC_PLUS))
                         continue;
 #endif
@@ -457,7 +457,7 @@ void LevelSelect_State_HandleMenu(void)
                     EntityUIText *label = self->stageIDLabels[labelID];
 
                     if (label && labelID != self->labelID) {
-#if RETRO_USE_TOUCH_CONTROLS && RETRO_USE_PLUS
+#if MANIA_USE_TOUCH_CONTROLS && MANIA_USE_PLUS
                         if (labelID == 28 && !API.CheckDLC(DLC_PLUS))
                             continue;
 #endif
@@ -486,7 +486,7 @@ void LevelSelect_State_HandleMenu(void)
                     LevelSelect_HandleNewStagePos();
             }
 
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
             for (int f = 0; f < TouchInfo->count; ++f) {
                 float tx = TouchInfo->x[f] * ScreenInfo->width;
                 float ty = TouchInfo->y[f] * ScreenInfo->height;
@@ -558,7 +558,7 @@ void LevelSelect_ManagePlayerIcon(void)
 
         case LSELECT_PLAYER_KNUCKLES: player1->animator.frameID = self->leaderCharacterID; break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case LSELECT_PLAYER_MIGHTY:
         case LSELECT_PLAYER_RAY:
             if (!API.CheckDLC(DLC_PLUS))
@@ -682,7 +682,7 @@ void LevelSelect_HandleNewStagePos(void)
         RSDK.SetScene(buffer, "");
         SceneInfo->listPos += curLabel->data0;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (self->labelID == self->labelCount - 4)
             SceneInfo->listPos += self->offsetUFO;
         else if (self->labelID == self->labelCount - 3)

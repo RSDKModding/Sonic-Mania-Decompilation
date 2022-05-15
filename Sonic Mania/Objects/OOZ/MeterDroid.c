@@ -103,7 +103,7 @@ void MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip(void)
 
             if (!self->invincibilityTimer) {
                 if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxPropellor)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);
@@ -131,7 +131,7 @@ void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void)
 
             if (!self->invincibilityTimer) {
                 if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxPropellor)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);
@@ -141,7 +141,7 @@ void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void)
         self->position.x = self->wrenchPos.x;
         self->position.y = self->wrenchPos.y;
         if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxWrench)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
@@ -165,7 +165,7 @@ void MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip(void)
 
             if (!self->invincibilityTimer) {
                 if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxPropellor)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);

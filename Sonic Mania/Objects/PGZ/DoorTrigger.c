@@ -72,7 +72,7 @@ void DoorTrigger_Update(void)
                         }
 
                         int32 angle = RSDK.ATan2(x, y);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH) {
                             player->velocity.y -= 0x10000;
                         }
@@ -81,7 +81,7 @@ void DoorTrigger_Update(void)
                             player->velocity.x = 0x300 * RSDK.Cos256(angle);
                             player->groundVel  = 0x300 * RSDK.Cos256(angle);
                             player->velocity.y = 0x300 * RSDK.Sin256(angle);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         }
 #endif
 

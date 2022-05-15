@@ -56,7 +56,7 @@ void MSZCutsceneK_StageLoad(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MSZCutsceneK_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
@@ -70,7 +70,7 @@ void MSZCutsceneK_StartCutscene(void)
 
     CutsceneSeq_StartSequence(self, MSZCutsceneK_Cutscene_RidingTornado, MSZCutsceneK_Cutscene_KnockedOffTornado, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->classID) {
         sequence->skipType     = SKIPTYPE_CALLBACK;
@@ -102,7 +102,7 @@ void MSZCutsceneK_SetupP2(int32 x, int32 y)
 
 bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
 
@@ -133,7 +133,7 @@ bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host)
 
 bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
     EntityTornado *tornado = MSZCutsceneK->tornado;

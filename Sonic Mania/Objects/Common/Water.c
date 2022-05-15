@@ -433,7 +433,7 @@ void Water_State_Palette(void)
             }
 
             int32 waterID = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (!player->isGhost)
 #endif
                 waterID = underwater;
@@ -572,7 +572,7 @@ void Water_State_Palette(void)
 
                         if (playAlertSfx) {
                             if (
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                 globals->gameMode == MODE_ENCORE ||
 #endif
                                 globals->gameMode == MODE_COMPETITION)
@@ -811,7 +811,7 @@ void Water_State_Bubble(void)
                                         player->state                                        = Player_State_Air;
                                         RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
                                     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                                     else if (player->state == Player_State_MightyHammerDrop) {
                                         player->state = Player_State_Air;
                                     }

@@ -92,7 +92,7 @@ void BSS_Player_Draw(void)
     // if we're tails, draw his tail
     if (checkPlayerID(ID_TAILS, 1) && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     // if we're ray, draw his tail
     else if (checkPlayerID(ID_RAY, 1) && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
@@ -121,7 +121,7 @@ void BSS_Player_Create(void *data)
 
             case ID_KNUCKLES: self->aniFrames = BSS_Player->knuxFrames; break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY: self->aniFrames = BSS_Player->mightyFrames; break;
 
             case ID_RAY:
@@ -167,7 +167,7 @@ void BSS_Player_ProcessP1Input(void)
     RSDK_THIS(BSS_Player);
 
     if (self->controllerID < PLAYER_MAX) {
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -255,7 +255,7 @@ void BSS_Player_ProcessP1Input(void)
         self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
         self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
         self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
         self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;

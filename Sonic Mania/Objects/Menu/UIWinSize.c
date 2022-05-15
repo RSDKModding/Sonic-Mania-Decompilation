@@ -47,7 +47,7 @@ void UIWinSize_Draw(void)
 
     drawPos.x = self->position.x - self->buttonBounceOffset;
     drawPos.y = self->position.y - self->buttonBounceOffset;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColor >> 16) & 0xFF,
                                 (UIWidgets->buttonColor >> 8) & 0xFF, (UIWidgets->buttonColor) & 0xFF);
 #else
@@ -140,7 +140,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
         sprintf(buffer, "%ix", self->selection);
 
         RSDK.SetString(&entityPtr->text, buffer);
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         if (Localization->language == LANGUAGE_TC) {
             for (int32 c = 0; c < entityPtr->text.length; ++c) {
                 if (entityPtr->text.chars[c] == 'x')
@@ -169,7 +169,7 @@ void UIWinSize_ApplySettings(void)
     RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, self->selection * ScreenInfo->width);
     RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, self->selection * ScreenInfo->height);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
 #else
     RSDK.UpdateWindow();

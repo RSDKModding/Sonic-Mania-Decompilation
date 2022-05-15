@@ -77,7 +77,7 @@ void Projectile_CheckPlayerCollisions(void)
                 case PROJECTILE_BASIC2: {
                     int32 anim = player->animator.animationID;
                     if (self->isProjectile
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         || (player->characterID == ID_MIGHTY
                             && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH))
 #endif

@@ -18,7 +18,7 @@ typedef enum {
 // Object Class
 struct ObjectAIZSetup {
     RSDK_OBJECT
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     TABLE(int32 bellPlantAniFramePos[13], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, -1 });
     TABLE(int32 bellPlantAniDurations[12], { 6, 4, 3, 2, 3, 4, 6, 4, 3, 2, 3, 4 });
     TABLE(int32 curlPlant1AniFramePos[15], { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, -1 });
@@ -39,7 +39,7 @@ struct ObjectAIZSetup {
     EntityPhantomRuby *phantomRuby;
     EntityFXRuby *fxRuby;
     EntityDecoration *decorations[3];
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 bellPlantAniFrame;
     int32 bellPlantAniTimer;
     int32 curlPlant1AniFrame;
@@ -77,7 +77,7 @@ void AIZSetup_EditorLoad(void);
 void AIZSetup_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void AIZSetup_BGSwitchCB_Jungle(void);
 void AIZSetup_BGSwitchCB_Sky(void);
 #endif
@@ -90,7 +90,7 @@ void AIZSetup_HandleHeavyMovement(void);
 void AIZSetup_SetupObjects(void);
 
 void AIZSetup_GetCutsceneSetupPtr(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void AIZSetup_SkipCB(void);
 #endif
 

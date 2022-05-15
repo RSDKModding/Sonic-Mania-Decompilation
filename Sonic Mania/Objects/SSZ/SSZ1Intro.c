@@ -65,7 +65,7 @@ void SSZ1Intro_HandleRubyHover(EntityCutsceneSeq *host, EntityPlayer *player1, E
 
 bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     Entity *cutEntity    = host->activeEntity;
     EntityFXRuby *fxRuby = SSZ1Intro->fxRuby;
@@ -118,7 +118,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 }
 bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (player2->classID == Player->classID) {
@@ -132,7 +132,7 @@ bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host)
 }
 bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);

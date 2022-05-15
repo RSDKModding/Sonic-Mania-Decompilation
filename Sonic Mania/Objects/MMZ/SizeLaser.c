@@ -124,7 +124,7 @@ void SizeLaser_StageLoad(void)
             SizeLaser->tailFrames  = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
         case ID_KNUCKLES: SizeLaser->knuxFrames = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY: SizeLaser->mightyFrames = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
         case ID_RAY: SizeLaser->rayFrames = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
 #endif
@@ -138,7 +138,7 @@ void SizeLaser_StageLoad(void)
             SizeLaser->tailFrames  = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
         case ID_KNUCKLES: SizeLaser->knuxFrames = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY: SizeLaser->mightyFrames = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
         case ID_RAY: SizeLaser->rayFrames = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
 #endif
@@ -190,7 +190,7 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
                 player->isChibi    = isChibi;
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
                 player->aniFrames  = SizeLaser->mightyFrames;
                 player->tailFrames = -1;
@@ -226,7 +226,7 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
                 player->isChibi    = isChibi;
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
                 player->aniFrames  = Player->mightyFrames;
                 player->tailFrames = -1;
@@ -341,7 +341,7 @@ void SizeLaser_P2JumpInShrink(void)
                 self->tailFrames = -1;
                 break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case ID_MIGHTY:
                 self->aniFrames  = SizeLaser->mightyFrames;
                 self->tailFrames = -1;
@@ -508,7 +508,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                             player->tailFrames = -1;
                             break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         case ID_MIGHTY:
                             player->aniFrames  = Player->mightyFrames;
                             player->tailFrames = -1;

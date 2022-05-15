@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectUIWidgets {
     RSDK_OBJECT
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 buttonColors[16];
     int32 timer;
     Animator unusedAnimator1;
@@ -18,7 +18,7 @@ struct ObjectUIWidgets {
     Animator frameAnimator;
     Animator arrowsAnimator;
     uint16 uiFrames;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 saveSelFrames;
 #endif
     uint16 textFrames;
@@ -29,7 +29,7 @@ struct ObjectUIWidgets {
     uint16 sfxEvent;
     uint16 sfxWoosh;
     uint16 sfxFail;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     color buttonColor;
 #endif
 };
@@ -68,7 +68,7 @@ void UIWidgets_DrawParallelogram(int32 x, int32 y, int32 width, int32 height, in
 void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
 void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);
 Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color rightColor);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
 #endif
 

@@ -13,7 +13,7 @@ void MonkeyDude_Update(void)
 {
     RSDK_THIS(MonkeyDude);
     StateMachine_Run(self->state);
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     for (self->armNodeID = 0; self->armNodeID < MonkeyDude_ArmJointCount; ++self->armNodeID) {
         StateMachine_Run(self->armStates[self->armNodeID]);
     }
@@ -27,7 +27,7 @@ void MonkeyDude_StaticUpdate(void) {}
 void MonkeyDude_Draw(void)
 {
     RSDK_THIS(MonkeyDude);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (self->state == MonkeyDude_State_Coconut) {
         RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
     }
@@ -72,7 +72,7 @@ void MonkeyDude_Draw(void)
         drawPos.x = self->position.x;
         drawPos.y = self->armY;
         RSDK.DrawSprite(&MonkeyDude->tailAnimator, &drawPos, false);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }
@@ -89,7 +89,7 @@ void MonkeyDude_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!self->nummoves)
         self->nummoves = 3;
 
@@ -102,14 +102,14 @@ void MonkeyDude_Create(void *data)
         RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 3, &self->handAnimator, true, 0);
         self->state = MonkeyDude_State_Setup;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     }
 #endif
 }
 
 void MonkeyDude_StageLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MonkeyDude->aniFrames            = RSDK.LoadSpriteAnimation("AIZ/MonkeyDude.bin", SCOPE_STAGE);
 
     MonkeyDude->hitboxBadnik.left    = -10;
@@ -135,7 +135,7 @@ void MonkeyDude_StageLoad(void)
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 1, &MonkeyDude->tailAnimator, true, 0);
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 4, &MonkeyDude->coconutAnimator, true, 0);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MonkeyDude->sfxDrop = RSDK.GetSfx("Stage/Drop.wav");
 #endif
 
@@ -144,7 +144,7 @@ void MonkeyDude_StageLoad(void)
 
 void MonkeyDude_DebugDraw(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_THIS(MonkeyDude);
 
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &self->bodyAnimator, true, 0);
@@ -154,7 +154,7 @@ void MonkeyDude_DebugDraw(void)
 
 void MonkeyDude_DebugSpawn(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_THIS(MonkeyDude);
 
     EntityMonkeyDude *monkeyDude = CREATE_ENTITY(MonkeyDude, NULL, self->position.x, self->position.y);
@@ -175,7 +175,7 @@ void MonkeyDude_State_Setup(void)
     self->activeArmNodes = 0;
     self->throwCount     = 0;
     self->state          = MonkeyDude_State_Laugh;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.ProcessAnimation(&self->bodyAnimator);
 #else
     self->bodyAnimator.frameID = (self->coconutFrame++ >> 3) & 1;
@@ -185,7 +185,7 @@ void MonkeyDude_State_Setup(void)
         self->timer        = 8;
         self->state        = MonkeyDude_State_MoveArm;
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MonkeyDude_HandleStates();
 #endif
 
@@ -253,7 +253,7 @@ void MonkeyDude_HandleBodyPart(void)
         self->activeArmNodes = 0;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MonkeyDude_HandleStates(void)
 {
     RSDK_THIS(MonkeyDude);
@@ -321,7 +321,7 @@ void MonkeyDude_HandleStates(void)
 void MonkeyDude_State_Laugh(void)
 {
     RSDK_THIS(MonkeyDude);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.ProcessAnimation(&self->bodyAnimator);
 #else
     self->bodyAnimator.frameID = (self->coconutFrame++ >> 3) & 1;
@@ -331,7 +331,7 @@ void MonkeyDude_State_Laugh(void)
         self->timer        = 8;
         self->state        = MonkeyDude_State_MoveArm;
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MonkeyDude_HandleStates();
 #endif
 }
@@ -345,7 +345,7 @@ void MonkeyDude_State_MoveArm(void)
         self->timer = 8;
         self->state = MonkeyDude_State_MoveBody;
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MonkeyDude_HandleStates();
 #endif
 }
@@ -366,7 +366,7 @@ void MonkeyDude_State_MoveBody(void)
             self->state      = MonkeyDude_State_Laugh;
         }
     }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MonkeyDude_HandleStates();
 #endif
 }
@@ -419,7 +419,7 @@ void MonkeyDude_StateBody_Throw(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MonkeyDude_State_Coconut(void)
 {
     RSDK_THIS(MonkeyDude);
@@ -447,7 +447,7 @@ void MonkeyDude_EditorDraw(void) { MonkeyDude_Draw(); }
 
 void MonkeyDude_EditorLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     MonkeyDude->aniFrames = RSDK.LoadSpriteAnimation("AIZ/MonkeyDude.bin", SCOPE_STAGE);
 #else
     MonkeyDude->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);

@@ -85,7 +85,7 @@ void MagPlatform_Collide_SolidAllHazardBottom(void)
 
             case C_BOTTOM:
                 if (!player->onGround) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer)) 
 #endif
                         Player_CheckHit(player, self);
@@ -95,7 +95,7 @@ void MagPlatform_Collide_SolidAllHazardBottom(void)
                         Player_CheckHit(player, self);
                     }
                     else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (!Player_CheckMightyUnspin(player, 0x300, true, &player->uncurlTimer)) 
 #endif
                             Player_CheckHit(player, self);

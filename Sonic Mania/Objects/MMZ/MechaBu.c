@@ -93,7 +93,7 @@ void MechaBu_CheckPlayerCollisions(void)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
             if (Player_CheckCollisionTouch(player, &self->sawPos, &MechaBu->hitboxSaw)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);

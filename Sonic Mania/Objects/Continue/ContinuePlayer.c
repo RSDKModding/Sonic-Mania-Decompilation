@@ -55,7 +55,7 @@ void ContinuePlayer_Create(void *data)
 
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_KNUX, &self->animator, true, 0); break;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_MIGHTY, &self->animator, true, 0); break;
 
                 case ID_RAY:
@@ -92,7 +92,7 @@ void ContinuePlayer_StageLoad(void)
         case ID_SONIC: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE); break;
         case ID_TAILS: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE); break;
         case ID_KNUCKLES: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Knux.bin", SCOPE_STAGE); break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         case ID_MIGHTY: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Mighty.bin", SCOPE_STAGE); break;
         case ID_RAY: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Ray.bin", SCOPE_STAGE); break;
 #endif

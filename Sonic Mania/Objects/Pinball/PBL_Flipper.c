@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectPBL_Flipper *PBL_Flipper;
 
 void PBL_Flipper_Update(void)

@@ -71,7 +71,7 @@ void PlaneSeeSaw_State_WaitForPlayer(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionPlatform(player, self, hitbox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif

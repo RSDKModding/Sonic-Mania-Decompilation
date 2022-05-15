@@ -27,7 +27,7 @@ void BSS_Setup_Update(void)
         RSDK.CopyPalette(2, 16 * self->paletteLine, 0, 144, 16);
     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     if (param->bssSelection == BSS_SELECTION_NONE && !self->stopMovement && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[28];

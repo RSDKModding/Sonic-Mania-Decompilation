@@ -58,7 +58,7 @@ void LogoSetup_StageLoad(void)
             case 3: globals->playerID = ID_SONIC; break;
             case 4: globals->playerID = ID_TAILS; break;
             case 5: globals->playerID = ID_KNUCKLES; break;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             case 6: globals->playerID = ID_MIGHTY; break;
             case 7: globals->playerID = ID_RAY; break;
 #endif
@@ -83,7 +83,7 @@ void LogoSetup_State_CESAScreen(void)
     RSDK_THIS(LogoSetup);
 
     LogoSetup->timer = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.LoadImage("CESA.png", 60.0, 2.0, LogoSetup_ImageCallback);
 #else
     RSDK.LoadImage("CESA.tga", 60.0, 2.0, LogoSetup_ImageCallback);

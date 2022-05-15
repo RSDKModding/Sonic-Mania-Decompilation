@@ -77,7 +77,7 @@ void Pinata_State_CheckPlayerCollisions(void)
         if (player->animator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &Pinata->hitboxPinata)) {
             RSDK.PlaySfx(Pinata->sfxPinata, false, 0xFF);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state != Player_State_MightyHammerDrop) {
 #endif
                 if (player->state == Player_State_FlyCarried)
@@ -102,7 +102,7 @@ void Pinata_State_CheckPlayerCollisions(void)
 
                 player->onGround       = false;
                 player->tileCollisions = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
             CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y)->animator.frameID = 16;

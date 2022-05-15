@@ -74,7 +74,7 @@ void FBZ1Outro_StartCutscene(void)
     CutsceneSeq_StartSequence(self, FBZ1Outro_Cutscene_CrushTrash, FBZ1Outro_Cutscene_TrashDrop, FBZ1Outro_Cutscene_CraneRide,
                               FBZ1Outro_Cutscene_PrepareFBZ2, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_DISABLED;
 #endif
@@ -126,7 +126,7 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
 
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityBigSqueeze *bossBorderL = FBZ1Outro->bossBorderL;
@@ -204,7 +204,7 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
 
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityBigSqueeze *bossBorderL = FBZ1Outro->bossBorderL;
@@ -241,7 +241,7 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
 }
 bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     FBZ1Outro_DispenseTrash();
@@ -250,7 +250,7 @@ bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host)
 }
 bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
         Zone->cameraBoundsL[0]      = 13568;

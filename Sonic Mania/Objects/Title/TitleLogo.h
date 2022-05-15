@@ -11,7 +11,7 @@ typedef enum {
     TITLELOGO_COPYRIGHT,
     TITLELOGO_RINGBOTTOM,
     TITLELOGO_PRESSSTART,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     TITLELOGO_PLUS,
 #endif
 } TitleLogoTypes;
@@ -20,7 +20,7 @@ typedef enum {
 struct ObjectTitleLogo {
     RSDK_OBJECT
     uint16 aniFrames;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 plusFrames;
     uint16 sfxPlus;
 #endif
@@ -30,14 +30,14 @@ struct ObjectTitleLogo {
 struct EntityTitleLogo {
     RSDK_ENTITY
     int32 type;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine(state);
 #endif
     bool32 showRibbonCenter;
     int32 timer;
     int32 storeY;
     Animator mainAnimator;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Animator plusAnimator;
 #endif
     Animator ribbonCenterAnimator;
@@ -61,7 +61,7 @@ void TitleLogo_Serialize(void);
 
 // Extra Entity Functions
 void TitleLogo_SetupPressStart(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TitleLogo_State_Ribbon(void);
 void TitleLogo_State_PressButton(void);
 void TitleLogo_State_HandleSetup(void);

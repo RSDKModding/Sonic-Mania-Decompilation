@@ -118,7 +118,7 @@ void SSZSpotlight_Create(void *data)
             vertex += 2;
         }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE)
             self->colorTable = self->color != SSZSPOTLIGHT_CLR_CYAN ? SSZSpotlight->yellowSpotlightColors : SSZSpotlight->redSpotlightColors;
         else

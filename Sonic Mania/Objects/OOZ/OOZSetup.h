@@ -28,7 +28,7 @@ struct ObjectOOZSetup {
     Vector2 flamePositions[400];
     uint16 flameCount;
     uint8 activePlayers;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Animator flameAnimator;
     Animator animator;
     uint16 solFrames;

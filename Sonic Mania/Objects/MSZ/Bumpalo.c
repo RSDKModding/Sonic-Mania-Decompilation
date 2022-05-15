@@ -162,7 +162,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                     }
                 }
                 else if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBumper)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop) {
                         RSDK.PlaySfx(Bumpalo->sfxBumper, false, 255);
                         Player_CheckBadnikBreak(player, self, true);
@@ -172,7 +172,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                         Bumpalo_BumpPlayer(player);
                 }
                 else if (Player_CheckCollisionTouch(player, self, &Bumpalo->hitboxCharge)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer)) {
                         RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                         RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
@@ -189,7 +189,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                 }
             }
             else if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBumper)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop) {
                     RSDK.PlaySfx(Bumpalo->sfxBumper, false, 255);
                     Player_CheckBadnikBreak(player, self, true);
@@ -199,7 +199,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                     Bumpalo_BumpPlayer(player);
             }
             else if (Player_CheckCollisionTouch(player, self, &Bumpalo->hitboxCharge)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (Player_CheckMightyUnspin(player, 1024, 2, &player->uncurlTimer)) {
                     RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                     RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
@@ -226,7 +226,7 @@ void Bumpalo_CheckPlayerCollisions(void)
             }
             else {
                 if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBumper)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop) {
                         RSDK.PlaySfx(Bumpalo->sfxBumper, false, 255);
                         Player_CheckBadnikBreak(player, self, true);
@@ -237,7 +237,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                 }
                 else {
                     if (Player_CheckCollisionTouch(player, self, &Bumpalo->hitboxCharge)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (Player_CheckMightyUnspin(player, 1024, 2, &player->uncurlTimer)) {
                             RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                             RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);

@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectTitleEggman *TitleEggman;
 
 void TitleEggman_Update(void)

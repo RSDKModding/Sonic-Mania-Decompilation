@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectWaterfallSound *WaterfallSound;
 
 void WaterfallSound_Update(void) {}

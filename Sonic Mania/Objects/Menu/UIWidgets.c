@@ -18,7 +18,7 @@ void UIWidgets_StaticUpdate(void)
     ++UIWidgets->timer;
     UIWidgets->timer &= 0x7FFF;
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets->buttonColor = UIWidgets->buttonColors[(UIWidgets->timer >> 1) & 0xF];
 #endif
 }
@@ -32,7 +32,7 @@ void UIWidgets_StageLoad(void)
     UIWidgets->active = ACTIVE_ALWAYS;
 
     UIWidgets->uiFrames = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
     UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
@@ -48,7 +48,7 @@ void UIWidgets_StageLoad(void)
     UIWidgets->sfxWoosh  = RSDK.GetSfx("Global/MenuWoosh.wav");
     UIWidgets->sfxFail   = RSDK.GetSfx("Stage/Fail.wav");
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets->buttonColors[0]  = 0xB00000;
     UIWidgets->buttonColors[1]  = 0xB81820;
     UIWidgets->buttonColors[2]  = 0xBC3440;
@@ -79,7 +79,7 @@ void UIWidgets_ApplyLanguage(void)
         case LANGUAGE_GE: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
         case LANGUAGE_SP: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
         case LANGUAGE_JP: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
-#if RETRO_GAMEVER != VER_100
+#if MANIA_GAMEVER != VER_100
         case LANGUAGE_KO: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
         case LANGUAGE_SC: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
         case LANGUAGE_TC: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
@@ -285,7 +285,7 @@ Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color right
     return newPos;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds)
 {
     Vector2 drawPos;
@@ -335,7 +335,7 @@ void UIWidgets_EditorDraw(void) {}
 void UIWidgets_EditorLoad(void)
 {
     UIWidgets->uiFrames = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
     UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
@@ -344,7 +344,7 @@ void UIWidgets_EditorLoad(void)
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 1, &UIWidgets->frameAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &UIWidgets->arrowsAnimator, true, 0);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIWidgets->buttonColor = 0xF0F0F0;
 #endif
 }

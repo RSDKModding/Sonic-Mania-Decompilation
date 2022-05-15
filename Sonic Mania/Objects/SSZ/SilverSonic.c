@@ -123,7 +123,7 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, self->innerBox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (Player_CheckBadnikBreak(player, self, false)) {
                 int32 x = self->position.x;
                 int32 y = self->position.y;
@@ -221,7 +221,7 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, self->innerBox)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (self->direction) {
                 if (player->position.x <= self->position.x) {
                     Player_CheckHit(player, self);
@@ -447,7 +447,7 @@ void SilverSonic_State_RollRebound(void)
 
             MetalSonic->invincibilityTimerPanel = 32;
             Camera_ShakeScreen(0, -4, 1);
-            metal->health -= RETRO_USE_PLUS ? 2 : 1;
+            metal->health -= MANIA_USE_PLUS ? 2 : 1;
 
             if (metal->health <= 0) {
                 metal->timer = 0;

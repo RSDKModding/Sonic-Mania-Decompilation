@@ -21,7 +21,7 @@ struct EntityFXFade {
     bool32 eventOnly;
     bool32 overHUD;
     bool32 fadeOutBlack;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     bool32 transitionScene;
 #endif
 };

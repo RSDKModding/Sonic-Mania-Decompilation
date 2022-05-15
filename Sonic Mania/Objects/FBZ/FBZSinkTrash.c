@@ -19,7 +19,7 @@ void FBZSinkTrash_Update(void)
             {
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxTrash)) {
                     if (player->velocity.y >= 0) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop) {
                             player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
                             if (player->velocity.y >= 0x30000) {
@@ -82,13 +82,13 @@ void FBZSinkTrash_Update(void)
                                 debris->updateRange.x   = 0x200000;
                                 debris->drawOrder       = Zone->objectDrawLow;
                             }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         }
 #endif
                     }
                 }
                 else if (Player_CheckCollisionTouch(player, self, &self->hitboxDebris)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop) {
                         player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
                         if (player->velocity.y < 0x30000) {

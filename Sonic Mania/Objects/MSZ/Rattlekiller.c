@@ -214,7 +214,7 @@ void Rattlekiller_Update(void)
                     self->position.x = self->bodyPositions[i].x;
                     self->position.y = self->bodyPositions[i].y;
                     if (Player_CheckCollisionTouch(player, self, &Rattlekiller->hitboxSegment)) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                         if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
                             Player_CheckHit(player, self);

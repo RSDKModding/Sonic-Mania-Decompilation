@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectTimeAttackData {
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     RSDK_OBJECT
 #endif
     bool32 loaded;
@@ -24,7 +24,7 @@ struct ObjectTimeAttackData {
     void (*saveCallback)(bool32 success);
 };
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 // Entity Class
 struct EntityTimeAttackData {
     RSDK_ENTITY
@@ -48,7 +48,7 @@ void TimeAttackData_EditorLoad(void);
 void TimeAttackData_Serialize(void);
 
 // Extra Entity FUnctions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 charID, int32 time, int32 rings, int32 score);
 void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 charID, int32 gameMode, int32 time);
 void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, uint8 charID, bool32 encore, int32 x, int32 y);
@@ -60,7 +60,7 @@ int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID
 void TimeAttackData_GetUnpackedTime(int32 time, int32 *minsPtr, int32 *secsPtr, int32 *millisecsPtr);
 uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success));
 void TimeAttackData_LoadTimeAttackDB_CB(int32 statusCode);
 void TimeAttackData_ResetTimeAttackDB(void);

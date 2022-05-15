@@ -26,7 +26,7 @@ struct ObjectSizeLaser {
     uint16 tailsFrames;
     uint16 tailFrames;
     uint16 knuxFrames;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 mightyFrames;
     uint16 rayFrames;
 #endif

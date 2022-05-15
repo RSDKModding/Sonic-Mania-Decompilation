@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Macro to reduce ifdefs needed when calling RandSeeded with Zone->randSeed, ensures easy pre-plus compatibility
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 #define ZONE_RAND(min, max) RSDK.RandSeeded(min, max, &Zone->randSeed)
 #else
 #define ZONE_RAND(min, max) RSDK.Rand(min, max)
@@ -31,7 +31,7 @@ typedef enum {
     ZONE_MMZ,
     ZONE_TMZ,
     ZONE_ERZ,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     ZONE_AIZ,
 #endif
     // total zone count
@@ -48,7 +48,7 @@ struct ObjectZone {
     bool32 forcePlayerOnScreen; // a little misleading, forces the player on-screen before an act transition if enabled
     StateMachine(vsSwapCB[0x10]);
     int32 vsSwapCBCount;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 playerSwapEnabled[PLAYER_MAX];
     uint8 swapPlayerID;
     uint8 swapPlayerCount;
@@ -83,7 +83,7 @@ struct ObjectZone {
     uint16 fgLow;
     uint16 fgHigh;
     uint16 moveLayer;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint16 scratchLayer;
 #endif
     uint16 fgLowMask;
@@ -97,7 +97,7 @@ struct ObjectZone {
     uint8 playerDrawHigh;
     uint8 hudDrawOrder;
     uint16 sfxFail;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     uint8 entityStorage[16][ENTITY_SIZE];
     int32 screenPosX[PLAYER_MAX];
     int32 screenPosY[PLAYER_MAX];
@@ -148,7 +148,7 @@ void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);
 
 bool32 Zone_IsZoneLastAct(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 int32 Zone_GetEncoreStageID(void);
 int32 Zone_GetManiaStageID(void);
 #endif
@@ -160,7 +160,7 @@ void Zone_Draw_Fade(void);
 void Zone_State_Fadeout(void);
 void Zone_State_FadeIn(void);
 void Zone_State_Fadeout_Competition(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Zone_TitleCard_SupressCB(void);
 void Zone_State_ReloadScene(void);
 #endif

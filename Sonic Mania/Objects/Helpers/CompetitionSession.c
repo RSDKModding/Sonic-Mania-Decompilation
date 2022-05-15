@@ -21,7 +21,7 @@ void CompetitionSession_Create(void *data) {}
 
 void CompetitionSession_StageLoad(void) {}
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
 void CompetitionSession_ResetOptions(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

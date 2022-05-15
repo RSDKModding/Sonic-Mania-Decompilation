@@ -17,7 +17,7 @@ void PSZ2Outro_Update(void)
                               PSZ2Outro_Cutscene_EnterRuby, PSZ2Outro_Cutscene_RubyActivated, PSZ2Outro_Cutscene_RubyWarp,
                               PSZ2Outro_Cutscene_LoadSSZ1, StateMachine_None);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
@@ -189,7 +189,7 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
 
-    RSDK_GET_PLAYER(player1, player2, camera);
+    MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityPSZEggman *eggman = self->eggman;

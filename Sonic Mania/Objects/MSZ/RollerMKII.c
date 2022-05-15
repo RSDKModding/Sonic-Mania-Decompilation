@@ -137,7 +137,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
 
             int32 anim        = player->animator.animationID;
             bool32 shouldBump = false;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
                 Player_CheckBadnikBreak(player, self, true);
             }
@@ -159,7 +159,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                         }
                     }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID != ID_MIGHTY || player->jumpAbilityState <= 1) {
 #endif
                         player->velocity.x   = velX;
@@ -172,7 +172,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                         player->velocity.y     = velY;
                         player->onGround       = false;
                         player->tileCollisions = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     }
 #endif
                     RSDK.PlaySfx(RollerMKII->sfxBumper, false, 255);
@@ -188,7 +188,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                 else {
                     Player_CheckHit(player, self);
                 }
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             }
 #endif
         }

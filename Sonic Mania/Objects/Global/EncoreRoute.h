@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 
 typedef enum { EROUTE_LAYER_FGLOW, EROUTE_LAYER_FGHIGH, EROUTE_LAYER_MOVE, EROUTE_LAYER_SCRATCH } EncoreRouteLayerIDs;
 

@@ -13,7 +13,7 @@ void Newspaper_Update(void)
 {
     RSDK_THIS(Newspaper);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     StateMachine_Run(self->state);
 #else
     Platform_Update();
@@ -28,7 +28,7 @@ void Newspaper_Draw(void)
 {
     RSDK_THIS(Newspaper);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK.DrawSprite(&self->animator, NULL, false);
 #else
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
@@ -39,7 +39,7 @@ void Newspaper_Create(void *data)
 {
     RSDK_THIS(Newspaper);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->active        = ACTIVE_BOUNDS;
@@ -75,7 +75,7 @@ void Newspaper_Create(void *data)
 
 void Newspaper_StageLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
 
     Newspaper->sfxPaperStack = RSDK.GetSfx("PSZ/PaperStack.wav");
@@ -85,7 +85,7 @@ void Newspaper_StageLoad(void)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void Newspaper_HandleInteractions(void)
 {
     RSDK_THIS(Newspaper);
@@ -126,7 +126,7 @@ void Newspaper_EditorDraw(void)
 {
     RSDK_THIS(Newspaper);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
@@ -153,7 +153,7 @@ void Newspaper_EditorDraw(void)
 
     Newspaper_Draw();
 
-#if !RETRO_USE_PLUS
+#if !MANIA_USE_PLUS
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
@@ -176,7 +176,7 @@ void Newspaper_EditorDraw(void)
 
 void Newspaper_EditorLoad(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Newspaper, type);
@@ -194,7 +194,7 @@ void Newspaper_EditorLoad(void)
 
 void Newspaper_Serialize(void)
 {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     RSDK_EDITABLE_VAR(Newspaper, VAR_UINT8, type);
 #else
     RSDK_EDITABLE_VAR(Newspaper, VAR_ENUM, node); // slotID of the target PlatformNode

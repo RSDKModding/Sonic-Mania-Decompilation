@@ -67,7 +67,7 @@ void PSZ1Setup_EditorLoad(void);
 void PSZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void PSZ1Setup_BGSwitch_CB_Inside(void);
 void PSZ1Setup_BGSwitch_CB_Outside(void);
 #endif

@@ -39,7 +39,7 @@ void SSZ2Setup_EditorLoad(void);
 void SSZ2Setup_Serialize(void);
 
 // Extra Entity Functions
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void SSZ2Setup_StageFinishCB(void);
 #endif
 

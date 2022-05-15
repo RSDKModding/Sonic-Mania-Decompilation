@@ -18,7 +18,7 @@ struct ObjectShiversaw {
     Hitbox hitboxB;
     Hitbox hitboxT;
     Hitbox hitboxL;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     Hitbox hitboxEntryTrigger;
     Hitbox hitboxEntryBounds;
 #endif

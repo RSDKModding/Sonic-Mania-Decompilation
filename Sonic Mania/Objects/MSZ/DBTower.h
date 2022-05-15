@@ -70,7 +70,7 @@ void DBTower_State_Setup_Encore(void);
 void DBTower_State_HandleBoss(void);
 void DBTower_State_Destroyed(void);
 void DBTower_State_Finish(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void DBTower_State_SpawnSignPost(void);
 #endif
 

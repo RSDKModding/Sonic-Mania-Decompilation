@@ -47,7 +47,7 @@ struct ObjectMSZSetup {
     bool32 hasAchievement;
     EntityMSZ2Cutscene *msz2Cutscene;
     int32 starPostID;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     int32 chuggaVolume;
     int32 chuggaChannel;
     uint16 sfxLocoChugga;
@@ -85,13 +85,13 @@ void MSZSetup_ReloadBGParallax_Multiply(int32 parallaxMult);
 
 void MSZSetup_State_ManageFade_ST(void);
 void MSZSetup_State_ManageFade_K(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MSZSetup_State_ManageFade_E(void);
 #endif
 
 void MSZSetup_StageFinishCB_ST(void);
 void MSZSetup_StageFinishCB_K(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MSZSetup_StageFinishCB_E(void);
 #endif
 
@@ -100,7 +100,7 @@ void MSZSetup_GenericTriggerCB_GetAchievement(void);
 void MSZSetup_HandleRestart(void);
 void MSZSetup_State_SwitchPalettes(void);
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void MSZSetup_State_CheckFadeTrigger_E(void);
 void MSZSetup_State_CheckTrainStart(void);
 void MSZSetup_State_TrainStarting(void);

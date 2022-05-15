@@ -109,14 +109,14 @@ void PohBee_CheckPlayerCollisions(void)
 
             for (int32 i = 0; i < self->spikeCount + 1; ++i) {
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxes[i])) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     int32 storeX   = self->position.x;
                     int32 storeY   = self->position.y;
                     self->position = PohBee_GetSpikePos(i, (self->drawOrder != 1) + 6);
                     if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer)) {
 #endif
                         Player_CheckHit(player, self);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     }
                     self->position.x = storeX;
                     self->position.y = storeY;

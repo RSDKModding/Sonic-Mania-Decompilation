@@ -20,7 +20,7 @@ void CollapsingPlatform_Update(void)
     bool32 runState = false;
 
     if (self->collapseDelay) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (Player) {
             foreach_active(Player, player)
             {
@@ -42,12 +42,12 @@ void CollapsingPlatform_Update(void)
             foreach_active(Player, player)
             {
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxTrigger)
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     && (!self->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
                     && !player->sidekick && player->onGround && !player->collisionMode && !self->eventOnly && self->delay < 0xFFFF) {
                     self->stoodPos.x = player->position.x;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1) {
                         runState = true;
                         foreach_break;

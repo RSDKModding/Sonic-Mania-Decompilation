@@ -7,7 +7,7 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 ObjectSummary *Summary;
 
 void Summary_Update(void)
@@ -146,7 +146,7 @@ void Summary_State_Wait(void)
     RSDK_THIS(Summary);
 
     if (ControllerInfo->keyStart.press || (API_GetConfirmButtonFlip() ? ControllerInfo->keyB.press : ControllerInfo->keyA.press)
-#if RETRO_USE_TOUCH_CONTROLS
+#if MANIA_USE_TOUCH_CONTROLS
         || TouchInfo->count
 #endif
     ) {

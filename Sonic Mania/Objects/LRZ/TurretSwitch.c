@@ -82,7 +82,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
                 foreach_break;
             }
             else {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_CROUCH)
 #endif
                     Player_CheckHit(player, self);

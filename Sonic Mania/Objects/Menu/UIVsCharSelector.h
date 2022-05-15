@@ -6,7 +6,7 @@
 typedef enum {
     UIVSCHARSELECTOR_1P,
     UIVSCHARSELECTOR_2P,
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
     UIVSCHARSELECTOR_3P,
     UIVSCHARSELECTOR_4P,
 #endif
@@ -66,7 +66,7 @@ void UIVsCharSelector_ProcessButtonCB_CharSelected(void);
 void UIVsCharSelector_State_ResetState(void);
 void UIVsCharSelector_State_CharSelect(void);
 void UIVsCharSelector_State_WaitingForPlayer(void);
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void UIVsCharSelector_State_HandlePlayerJoin(void);
 #endif
 void UIVsCharSelector_State_Selected(void);

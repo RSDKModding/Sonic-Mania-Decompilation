@@ -99,7 +99,7 @@ void GameOver_StageLoad(void)
     GameOver->activeScreens = 0;
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GameOver_SaveGameCallback(bool32 success)
 {
     UIWaitSpinner_FinishWait();
@@ -151,7 +151,7 @@ void GameOver_State_EnterLetters(void)
     self->scale.y = self->scale.x;
 
     if (self->timer == 0) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode != MODE_COMPETITION) {
             Music_TransitionTrack(TRACK_GAMEOVER, 0.025);
@@ -198,7 +198,7 @@ void GameOver_State_EnterLetters(void)
 
     if (++self->timer == 120) {
         self->timer = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         if (globals->gameMode == MODE_COMPETITION || Zone->gotTimeOver)
             self->state = GameOver_State_HandleMultiplayer;
         else
@@ -207,7 +207,7 @@ void GameOver_State_EnterLetters(void)
     }
 }
 
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
 void GameOver_State_HandleMultiplayer(void)
 {
     RSDK_THIS(GameOver);
@@ -247,7 +247,7 @@ void GameOver_State_ShowMessage(void)
         self->timer = 420;
 
     if (self->timer == 420) {
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
         Music_ClearMusicStack();
 #endif
         Music_FadeOut(0.05);
@@ -296,7 +296,7 @@ void GameOver_State_ExitLetters(void)
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode == MODE_COMPETITION) {
             session->completedStages[session->stageIndex] = true;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
             session->matchID = session->prevMatchID + 1;
 #else
             session->matchID++;
@@ -320,7 +320,7 @@ void GameOver_State_ExitLetters(void)
                 saveRAM->lives         = 3;
                 saveRAM->score         = 0;
                 saveRAM->score1UP      = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
                     int32 id                = -1;
@@ -338,7 +338,7 @@ void GameOver_State_ExitLetters(void)
                 saveRAM->lives    = 3;
                 saveRAM->score    = 0;
                 saveRAM->score1UP = 0;
-#if RETRO_USE_PLUS
+#if MANIA_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
                     int32 id                = -1;
