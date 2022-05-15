@@ -76,9 +76,6 @@ void RemoveInputDevice(InputDevice *targetDevice)
 
 void InitInputDevices()
 {
-    if (activeInputDevices[0])
-        return;
-
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         activeControllers[i]  = CONT_ANY;
         activeInputDevices[i] = NULL;
@@ -201,7 +198,7 @@ void ProcessInput()
             InputState *lTrigger[] = { &triggerL[c].keyBumper, &triggerL[c].keyTrigger };
             InputState *rTrigger[] = { &triggerR[c].keyBumper, &triggerR[c].keyTrigger };
 #else
-            InputState *lStick[]   = { &stickL[c].keyUp, &stickL[c].keyDown, &stickL[c].keyLeft, &stickL[c].keyRight, &controller[c].keyStickL };
+            InputState *lStick[] = { &stickL[c].keyUp, &stickL[c].keyDown, &stickL[c].keyLeft, &stickL[c].keyRight, &controller[c].keyStickL };
             InputState *rStick[] = { NULL, NULL, NULL, NULL, &controller[c].keyStickR };
 
             InputState *lTrigger[] = { &controller[c].keyBumperL, &controller[c].keyTriggerL };

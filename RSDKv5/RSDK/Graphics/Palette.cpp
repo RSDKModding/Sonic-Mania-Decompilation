@@ -4,12 +4,12 @@ uint16 rgb32To16_R[0x100];
 uint16 rgb32To16_G[0x100];
 uint16 rgb32To16_B[0x100];
 
-uint16 globalPalette[PALETTE_COUNT][PALETTE_SIZE];
-uint16 activeGlobalRows[PALETTE_COUNT];
-uint16 activeStageRows[PALETTE_COUNT];
-uint16 stagePalette[PALETTE_COUNT][PALETTE_SIZE];
+uint16 globalPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
+uint16 activeGlobalRows[PALETTE_BANK_COUNT];
+uint16 activeStageRows[PALETTE_BANK_COUNT];
+uint16 stagePalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
 
-uint16 fullPalette[PALETTE_COUNT][PALETTE_SIZE];
+uint16 fullPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
 
 uint8 gfxLineBuffer[SCREEN_YSIZE];
 
@@ -23,12 +23,12 @@ uint16 tintLookupTable[0x10000];
 #if RETRO_REV02
 void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
 {
-    char buffer[0x80];    
-    sprintf(buffer, "Data/Palettes/%s", filename);
+    char fullFilePath[0x80];    
+    sprintf(fullFilePath, "Data/Palettes/%s", filename);
 
     FileInfo info;
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         for (int32 r = 0; r < 0x10; ++r) {
             if (!(rowFlags >> r & 1)) {
                 for (int32 c = 0; c < 0x10; ++c) {
@@ -50,7 +50,7 @@ void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
 
 void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex)
 {
-    if (destBankID >= PALETTE_COUNT || srcBankA >= PALETTE_COUNT || srcBankB >= PALETTE_COUNT)
+    if (destBankID >= PALETTE_BANK_COUNT || srcBankA >= PALETTE_BANK_COUNT || srcBankB >= PALETTE_BANK_COUNT)
         return;
 
     blendAmount = clampVal(blendAmount, 0x00, 0xFF);
@@ -80,23 +80,26 @@ void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blen
 }
 
 #if RETRO_REV02
-void BlendColors(uint8 bankID, uint8* colorsA, uint8* colorsB, int32 alpha, int32 index, int32 count) {
+void BlendColors(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 blendAmount, int32 startIndex, int32 count)
+{
 
-    if (bankID >= PALETTE_COUNT || !colorsA || !colorsB)
+    if (bankID >= PALETTE_BANK_COUNT || !colorsA || !colorsB)
         return;
 
-    alpha = clampVal(alpha, 0x00, 0xFF);
+    blendAmount = clampVal(blendAmount, 0x00, 0xFF);
 
-    uint8 alpha2        = 0xFF - alpha;
-    uint16 *palettePtr = &fullPalette[bankID][index];
-    for (int32 i = index; i < index + count; ++i) {
+    uint8 blendA       = 0xFF - blendAmount;
+    uint16 *palettePtr = &fullPalette[bankID][startIndex];
+    for (int32 i = startIndex; i < startIndex + count; ++i) {
         // bgrx formatted array
-        int32 r = alpha * colorsB[2] + alpha2 * colorsA[2];
-        int32 g = alpha * colorsB[1] + alpha2 * colorsA[1];
-        int32 b = alpha * colorsB[0] + alpha2 * colorsA[0];
+        int32 r = blendAmount * colorsB[2] + blendA * colorsA[2];
+        int32 g = blendAmount * colorsB[1] + blendA * colorsA[1];
+        int32 b = blendAmount * colorsB[0] + blendA * colorsA[0];
+
+        *palettePtr = PACK_RGB888((uint8)(r >> 8), (uint8)(g >> 8), (uint8)(b >> 8));
+
         colorsA += 4;
         colorsB += 4;
-        *palettePtr = PACK_RGB888((uint8)(r >> 8), (uint8)(g >> 8), (uint8)(b >> 8));
         ++palettePtr;
     }
 }

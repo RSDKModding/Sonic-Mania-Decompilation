@@ -912,15 +912,15 @@ void ProcessObjectDrawLists()
             }
 
             if (engine.showPaletteOverlay) {
-                for (int32 p = 0; p < PALETTE_COUNT; ++p) {
+                for (int32 p = 0; p < PALETTE_BANK_COUNT; ++p) {
                     int32 x = (RSDK::videoSettings.pixWidth - (0x10 << 3));
                     int32 y = (SCREEN_YSIZE - (0x10 << 2));
 
-                    for (int32 c = 0; c < PALETTE_SIZE; ++c) {
+                    for (int32 c = 0; c < PALETTE_BANK_SIZE; ++c) {
                         uint32 clr = GetPaletteEntry(p, c);
 
-                        DrawRectangle(x + ((c & 0xF) << 1) + ((p % (PALETTE_COUNT / 2)) * (2 * 16)),
-                                      y + ((c >> 4) << 1) + ((p / (PALETTE_COUNT / 2)) * (2 * 16)), 2, 2, clr, 0xFF, INK_NONE, true);
+                        DrawRectangle(x + ((c & 0xF) << 1) + ((p % (PALETTE_BANK_COUNT / 2)) * (2 * 16)),
+                                      y + ((c >> 4) << 1) + ((p / (PALETTE_BANK_COUNT / 2)) * (2 * 16)), 2, 2, clr, 0xFF, INK_NONE, true);
                     }
                 }
             }

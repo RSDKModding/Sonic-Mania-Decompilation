@@ -159,11 +159,11 @@ void MenuSetup_StageLoad(void)
 
     if (!globals->suppressAutoMusic) {
         RSDK.StopChannel(Music->channelID);
-        Music->activeTrack = -1;
+        Music->activeTrack = TRACK_NONE;
     }
 #else
     RSDK.StopChannel(Music->channelID);
-    Music->activeTrack      = -1;
+    Music->activeTrack      = TRACK_NONE;
 #endif
 
     if (!SceneInfo->inEditor) {

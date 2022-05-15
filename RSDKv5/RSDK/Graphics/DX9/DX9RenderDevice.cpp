@@ -33,10 +33,15 @@ INT RenderDevice::nShowCmd;
 
 bool RenderDevice::Init()
 {
+#if _UNICODE
     // shit workaround since windows is BEGGING me to use wide strs
-    std::string str    = RSDK::gameVerInfo.gameName;
-    std::wstring stemp = std::wstring(str.begin(), str.end());
-    LPCWSTR gameTitle  = stemp.c_str();
+    std::string str   = RSDK::gameVerInfo.gameName;
+    std::wstring temp = std::wstring(str.begin(), str.end());
+    LPCWSTR gameTitle = temp.c_str();
+#else
+    std::string str   = RSDK::gameVerInfo.gameName;
+    LPCSTR gameTitle = str.c_str();
+#endif
 
     HMODULE handle = GetModuleHandle(NULL);
 
@@ -162,9 +167,9 @@ void RenderDevice::FlipScreen()
     }
 
     if (windowRefreshDelay > 0) {
-        windowRefreshDelay--;
-        if (!windowRefreshDelay)
+        if (!--windowRefreshDelay)
             UpdateGameWindow();
+
         return;
     }
 
@@ -196,13 +201,13 @@ void RenderDevice::FlipScreen()
         }
 
         if (RSDK::videoSettings.shaderSupport) {
-            float2 dimAmount = { 0, 0 };
-            dimAmount.x      = RSDK::videoSettings.dimMax * RSDK::videoSettings.dimPercent;
+            float2 screenDim = { 0, 0 };
+            screenDim.x      = RSDK::videoSettings.dimMax * RSDK::videoSettings.dimPercent;
 
             dx9Device->SetPixelShaderConstantF(0, &pixelSize.x, 1);   // pixelSize
             dx9Device->SetPixelShaderConstantF(1, &textureSize.x, 1); // textureSize
             dx9Device->SetPixelShaderConstantF(2, &viewSize.x, 1);    // viewSize
-            dx9Device->SetPixelShaderConstantF(3, &dimAmount.x, 1);   // screenDim
+            dx9Device->SetPixelShaderConstantF(3, &screenDim.x, 1);   // screenDim
         }
 
         int32 startVert = 0;
@@ -1374,7 +1379,7 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
             if (deviceNotif)
                 return 0;
 
-            int filter  = 32;
+            int32 filter  = 32;
             deviceNotif = RegisterDeviceNotification(hRecipient, &filter, 0);
             break;
         }
@@ -1396,26 +1401,24 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
                 if (!RSDK::videoSettings.windowState)
                     return 0;
 
-                // if (byte_66BB18 == 1)
-                // {
-                //      byte_97BB18 = 0;
-                //      audioContext_sourceVoice->Start(audioContext_sourceVoice, 0, 0);
-                // }
+                if (AudioDevice::audioFocus == 1) {
+                    AudioDevice::audioFocus = 0;
+                    AudioDevice::sourceVoice->Start(0, 0);
+                }
 
                 GetDisplays();
                 RSDK::videoSettings.windowState = WINDOWSTATE_ACTIVE;
             }
             else {
-                touchMouseData.down[0] = 0;
+                touchMouseData.down[0] = false;
                 touchMouseData.count   = 0;
                 if (!RSDK::videoSettings.windowState)
                     return 0;
 
-                // if (!byte_66BB18)
-                // {
-                //      byte_97BB18 = 1;
-                //      audioContext_sourceVoice->Stop(audioContext_sourceVoice, 0, 0);
-                // }
+                if (!AudioDevice::audioFocus) {
+                    AudioDevice::audioFocus = 1;
+                    AudioDevice::sourceVoice->Stop(0, 0);
+                }
 
                 RSDK::videoSettings.windowState = WINDOWSTATE_INACTIVE;
             }
@@ -1427,19 +1430,18 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
             break;
 
         case WM_DEVICECHANGE: {
-            unsigned int dbch_sizes[] = { 1771351300u, 298882031u, 2684406947u, 2519802569u };
-            DEV_BROADCAST_HDR *param  = (DEV_BROADCAST_HDR *)lParam;
+            uint32 dbch_sizes[]      = { 1771351300, 298882031, 2684406947, 2519802569 };
+            DEV_BROADCAST_HDR *param = (DEV_BROADCAST_HDR *)lParam;
 
             if ((wParam == DBT_DEVICEARRIVAL || wParam == DBT_DEVICEREMOVECOMPLETE) && param && param->dbch_devicetype == 5) {
                 DEV_BROADCAST_HDR *device = param + 1;
-                int remain                = 3;
-                unsigned int *size        = dbch_sizes;
+                int32 remain              = 3;
+                uint32 *size              = dbch_sizes;
                 while (device->dbch_size == *size) {
                     ++device;
                     ++size;
-                    remain--;
-                    if (remain <= 0) {
-                        // audioEnabled = 30;
+                    if (--remain <= 0) {
+                        AudioDevice::audioState = 30;
                         break;
                     }
                 }

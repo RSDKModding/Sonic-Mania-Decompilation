@@ -78,8 +78,8 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 #else
         if (false) { // it's more hardcoded in rev01, so lets pretend it's here
 #endif
-            // custom message box, the original RSDK PC ver has a steam message instead
-            // MessageBox(RenderDevice::windowHandle, L"API Validation failed", L"RSDK Error", 0);
+            // popup a message box saying the API failed to validate or something
+            // on steam this is the "steam must be running to play this game" message
             return 0;
         }
 
@@ -96,6 +96,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 #endif
         }
         else {
+            // No render device, throw a "QUIT" msg onto the message loop and call it a day :)
 #if RETRO_RENDERDEVICE_DIRECTX9
             PostQuitMessage(0);
 #endif
@@ -829,7 +830,7 @@ void LoadGameConfig()
             }
         }
 
-        for (int32 i = 0; i < PALETTE_COUNT; ++i) {
+        for (int32 i = 0; i < PALETTE_BANK_COUNT; ++i) {
             activeGlobalRows[i] = ReadInt16(&info);
             for (int32 r = 0; r < 0x10; ++r) {
                 if ((activeGlobalRows[i] >> r & 1)) {

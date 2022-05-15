@@ -336,7 +336,7 @@ struct GamePadMappings {
 };
 
 struct InputDevice {
-    virtual void UpdateInput(void) {}
+    virtual void UpdateInput() {}
     virtual void ProcessInput(int32 controllerID) {}
     virtual void CloseDevice() {}
     virtual int32 Unknown1(int32 unknown1, int32 unknown2) { return 0; }
@@ -609,9 +609,11 @@ inline int32 GetControllerUnknown() { return 0xFFFF; }
 
 inline int32 ControllerUnknown1(int32 controllerID, int32 unknown1, int32 unknown2)
 {
-    if (controllerID < PLAYER_COUNT) {
-        if (activeControllers[controllerID]) {
-            return activeInputDevices[controllerID]->Unknown1(unknown1, unknown2);
+    uint8 contID = controllerID - 1;
+
+    if (contID < PLAYER_COUNT) {
+        if (activeControllers[contID]) {
+            return activeInputDevices[contID]->Unknown1(unknown1, unknown2);
         }
     }
 
@@ -620,9 +622,11 @@ inline int32 ControllerUnknown1(int32 controllerID, int32 unknown1, int32 unknow
 
 inline int32 ControllerUnknown2(int32 controllerID, int32 unknown1, int32 unknown2)
 {
-    if (controllerID < PLAYER_COUNT) {
-        if (activeControllers[controllerID]) {
-            return activeInputDevices[controllerID]->Unknown2(unknown1, unknown2);
+    uint8 contID = controllerID - 1;
+
+    if (contID < PLAYER_COUNT) {
+        if (activeControllers[contID]) {
+            return activeInputDevices[contID]->Unknown2(unknown1, unknown2);
         }
     }
 
@@ -631,7 +635,7 @@ inline int32 ControllerUnknown2(int32 controllerID, int32 unknown1, int32 unknow
 
 inline void AssignControllerID(int8 controllerID, int32 inputID)
 {
-    int32 contID = controllerID - 1;
+    uint8 contID = controllerID - 1;
 
 #if RETRO_REV02 || true
     if (contID < PLAYER_COUNT) {
@@ -662,10 +666,12 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
 #endif
 }
 
-inline bool32 InputIDIsDisconnected(uint8 inputID)
+inline bool32 InputIDIsDisconnected(uint8 controllerID)
 {
-    if (inputID < PLAYER_COUNT)
-        return activeControllers[inputID] != CONT_ANY;
+    uint8 contID = controllerID - 1;
+
+    if (contID < PLAYER_COUNT)
+        return activeControllers[contID] != CONT_ANY;
 
     return false;
 }
@@ -691,13 +697,14 @@ inline void SetInputLEDColor()
 #if !RETRO_REV02
 inline void GetUnknownInputValue(int32 controllerID, int32 type, int32 *value)
 {
-    uint32 id = controllerID - 1;
-    if (value && id < PLAYER_COUNT && activeInputDevices[id]) {
+    uint8 contID = controllerID - 1;
+
+    if (value && id < PLAYER_COUNT && activeInputDevices[contID]) {
         switch (type) {
             default:
                 break;
-                // case 0: *value = activeInputDevices[id].deviceType; break;
-                // case 1: *value = activeInputDevices[id].field_4; break;
+                // case 0: *value = activeInputDevices[contID].deviceType; break;
+                // case 1: *value = activeInputDevices[contID].field_4; break;
         }
     }
 }

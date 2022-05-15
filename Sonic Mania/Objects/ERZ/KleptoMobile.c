@@ -521,11 +521,9 @@ void KleptoMobile_State_HandleChargeFinish(void)
     else
         self->position.x = player1->position.x + 0x1800000;
 
-    do {
-        do {
-            self->originPos.y = (RSDK.Rand(-2, 3) << 21) + player1->position.y;
-        } while (self->originPos.y > (Zone->cameraBoundsB[0] - 64) << 16);
-    } while (self->originPos.y < (Zone->cameraBoundsT[0] + 64) << 16);
+    while (self->originPos.y > (Zone->cameraBoundsB[0] - 64) << 16 && self->originPos.y < (Zone->cameraBoundsT[0] + 64) << 16) {
+        self->originPos.y = (RSDK.Rand(-2, 3) << 21) + player1->position.y;
+    } 
 
     self->circleRadius = 128;
     if (++self->attackCount == 4) {

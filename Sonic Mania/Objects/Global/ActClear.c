@@ -715,7 +715,7 @@ void ActClear_State_TallyScore(void)
         RSDK.PlaySfx(ActClear->sfxScoreAdd, false, 255);
     }
 
-    Music->nextTrack = -1;
+    Music->nextTrack = TRACK_NONE;
     ActClear_CheckPlayerVictory();
 }
 

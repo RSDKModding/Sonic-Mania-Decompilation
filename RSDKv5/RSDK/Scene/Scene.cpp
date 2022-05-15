@@ -197,7 +197,7 @@ void LoadScene()
             }
         }
 
-        for (int32 p = 0; p < PALETTE_COUNT; ++p) {
+        for (int32 p = 0; p < PALETTE_BANK_COUNT; ++p) {
             activeStageRows[p] = ReadInt16(&info);
 
             for (int32 r = 0; r < 0x10; ++r) {

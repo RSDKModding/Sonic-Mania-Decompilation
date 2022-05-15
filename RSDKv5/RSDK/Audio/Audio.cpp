@@ -24,7 +24,8 @@ float speedMixAmounts[0x400];
 #endif
 
 uint8 AudioDeviceBase::initializedAudioChannels = false;
-uint8 AudioDeviceBase::audioState               = false;
+uint8 AudioDeviceBase::audioState               = 0;
+uint8 AudioDeviceBase::audioFocus               = 0;
 
 int32 AudioDeviceBase::mixBufferID = 0;
 float AudioDeviceBase::mixBuffer[3][MIX_BUFFER_SIZE];

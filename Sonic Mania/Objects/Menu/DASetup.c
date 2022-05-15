@@ -64,7 +64,7 @@ void DASetup_StageLoad(void)
     foreach_all(Music, track) { DASetup->trackList[trackCount++] = track; }
 
     DASetup->trackCount  = trackCount;
-    DASetup->activeTrack = -1;
+    DASetup->activeTrack = TRACK_NONE;
 
     DASetup->sfxEmerald    = RSDK.GetSfx("Special/Emerald.wav");
     DASetup->sfxMedal      = RSDK.GetSfx("Special/Medal.wav");
@@ -281,7 +281,7 @@ void DASetup_State_ManageControl(void)
 #endif
         if (DASetup->activeTrack == DASetup->trackID) {
             RSDK.StopChannel(Music->channelID);
-            DASetup->activeTrack = -1;
+            DASetup->activeTrack = TRACK_NONE;
         }
         else {
             EntityMusic *track = DASetup->trackList[DASetup->trackID];
@@ -291,7 +291,7 @@ void DASetup_State_ManageControl(void)
                     Music_PlayTrackPtr(track);
                 }
                 else {
-                    DASetup->activeTrack = -1;
+                    DASetup->activeTrack = TRACK_NONE;
                     RSDK.StopChannel(Music->channelID);
                 }
             }

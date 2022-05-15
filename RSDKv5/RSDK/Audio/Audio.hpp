@@ -51,6 +51,7 @@ public:
 
     static uint8 initializedAudioChannels;
     static uint8 audioState;
+    static uint8 audioFocus;
 
     static int32 mixBufferID;
     static float mixBuffer[3][MIX_BUFFER_SIZE];

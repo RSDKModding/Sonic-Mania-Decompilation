@@ -1,4 +1,8 @@
 
+
+// allows generic string literal stuff
+#include <tchar.h>
+
 uint8 AudioDevice::contextInitialized;
 
 IXAudio2 *AudioDevice::audioContext;
@@ -41,8 +45,8 @@ bool32 AudioDevice::Init()
                 else {
 #if RETRO_RENDERDEVICE_DIRECTX9
                     if (RSDK::videoSettings.windowed) {
-                        MessageBox(RenderDevice::windowHandle, L"Unable to create source voice. Sound will not be available during this session.",
-                                   L"AudioDevice::Init", MB_OK);
+                        MessageBox(RenderDevice::windowHandle, _T("Unable to create source voice. Sound will not be available during this session."),
+                                   _T("AudioDevice::Init"), MB_OK);
                     }
 #endif
                 }
@@ -50,8 +54,8 @@ bool32 AudioDevice::Init()
             else {
 #if RETRO_RENDERDEVICE_DIRECTX9
                 if (RSDK::videoSettings.windowed) {
-                    MessageBox(RenderDevice::windowHandle, L"Unable to create mastering voice. Sound will not be available during this session.",
-                               L"AudioDevice::Init", MB_OK);
+                    MessageBox(RenderDevice::windowHandle, _T("Unable to create mastering voice. Sound will not be available during this session."),
+                               _T("AudioDevice::Init"), MB_OK);
                 }
 #endif
 
@@ -65,10 +69,10 @@ bool32 AudioDevice::Init()
 #if RETRO_RENDERDEVICE_DIRECTX9
             if (RSDK::videoSettings.windowed) {
                 MessageBox(RenderDevice::windowHandle,
-                           L"Error Initializing XAudio2.\n"
+                           _T("Error Initializing XAudio2.\n"
                            "You may need to install the Jun 2010 DirectX update to have the XAudio Drivers.\n"
-                           "Sound will not be available during this session.",
-                           L"AudioDevice::Init", MB_OK);
+                           "Sound will not be available during this session."),
+                           _T("AudioDevice::Init"), MB_OK);
             }
 #endif
         }
