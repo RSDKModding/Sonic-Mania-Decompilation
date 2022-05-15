@@ -128,14 +128,14 @@ typedef enum {
 #if RETRO_USE_PLUS
     SLOT_REPLAYRECORDER_PLAYBACK = 36,
     SLOT_REPLAYRECORDER_RECORD   = 37,
-    SLOT_MUSICSTACK_START = 40,
+    SLOT_MUSICSTACK_START        = 40,
     //[41-47] are part of the music stack
     SLOT_MUSICSTACK_END = 48,
 #endif
-    SLOT_CAMERA1        = 60,
-    SLOT_CAMERA2        = 61,
-    SLOT_CAMERA3        = 62,
-    SLOT_CAMERA4        = 63,
+    SLOT_CAMERA1 = 60,
+    SLOT_CAMERA2 = 61,
+    SLOT_CAMERA3 = 62,
+    SLOT_CAMERA4 = 63,
 } ReservedEntities;
 
 typedef enum {
@@ -159,7 +159,7 @@ typedef enum {
 
 typedef struct {
     int32 gameMode;
-    int32 playerID;
+    int32 playerID; // active character IDs (usually leader & sidekick)
     int32 specialCleared;
     int32 specialRingID;
     int32 blueSpheresID;
@@ -217,8 +217,8 @@ typedef struct {
     int32 replayTableLoaded;
     int32 taTableID;
     int32 taTableLoaded;
-    int32 stock;
-    int32 characterFlags;
+    int32 stock;          // order of buddies (not including the leader/sidekick)
+    int32 characterFlags; // characters in the "party"
     int32 vapeMode;
     int32 secrets;
     int32 superSecret;

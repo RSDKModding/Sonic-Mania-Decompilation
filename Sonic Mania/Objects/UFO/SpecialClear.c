@@ -356,29 +356,22 @@ void SpecialClear_DrawNumbers(Vector2 *pos, int32 value)
 {
     RSDK_THIS(SpecialClear);
 
-    int32 id  = 0;
     int32 cnt = value;
-    if (value <= 0) {
-        id = 1;
-    }
-    else {
-        do {
-            ++id;
-            cnt /= 10;
-        } while (cnt > 0);
+
+    int32 digitCount = value ? 0 : 1;
+    while (cnt > 0) {
+        ++digitCount;
+        cnt /= 10;
     }
 
-    if (id <= 0)
-        return;
-
-    int32 mult = 1;
-    do {
-        self->numbersAnimator.frameID = value / mult % 10;
+    int32 digit = 1;
+    while (digitCount) {
+        self->numbersAnimator.frameID = value / digit % 10;
         RSDK.DrawSprite(&self->numbersAnimator, pos, true);
-        mult *= 10;
+        digit *= 10;
         pos->x -= 0x90000;
-        --id;
-    } while (id);
+        --digitCount;
+    }
 }
 
 void SpecialClear_GiveScoreBonus(int32 score)

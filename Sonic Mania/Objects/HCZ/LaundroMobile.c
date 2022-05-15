@@ -390,11 +390,14 @@ void LaundroMobile_HandleStageWrap(void)
 
                     int prevLoopPoint = LaundroMobile->nextLoopPoint;
                     while (LaundroMobile->nextLoopPoint == prevLoopPoint) {
-                        do {
-                            // LoopPoints 1-4 are valid to use as attacks, 5 is reserved for the final stage wrap
+                        // LoopPoints 1-4 are valid to use as attacks, 5 is reserved for the final stage wrap
+                        LaundroMobile->nextLoopPoint = RSDK.Rand(1, 5);
+
+                        while ((1 << LaundroMobile->nextLoopPoint) & LaundroMobile->travelledPaths) {
                             LaundroMobile->nextLoopPoint = RSDK.Rand(1, 5);
-                        } while ((1 << LaundroMobile->nextLoopPoint) & LaundroMobile->travelledPaths);
+                        }
                     }
+                    
                     LaundroMobile->travelledPaths |= 1 << LaundroMobile->nextLoopPoint;
                 }
                 loopPoint = LaundroMobile->loopPoints[LaundroMobile->nextLoopPoint];

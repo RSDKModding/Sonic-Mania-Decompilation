@@ -81,7 +81,7 @@ void ActClear_Serialize(void);
 #if RETRO_USE_PLUS
 void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 #endif
-void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 maxVals);
+void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount);
 void ActClear_CheckPlayerVictory(void);
 
 #if RETRO_USE_PLUS

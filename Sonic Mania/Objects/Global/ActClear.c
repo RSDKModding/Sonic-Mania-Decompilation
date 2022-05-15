@@ -485,42 +485,41 @@ void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs)
 }
 #endif
 
-void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 maxVals)
+void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount)
 {
     RSDK_THIS(ActClear);
 
-    int32 mult = 1;
     if (value >= 0) {
-        if (!maxVals) {
-            if (value <= 0) {
-                maxVals = 1;
+        if (!digitCount && value > 0) {
+            int32 v = value;
+            while (v > 0) {
+                ++digitCount;
+                v /= 10;
             }
-            else {
-                int32 i = value;
-                do {
-                    ++maxVals;
-                    i /= 10;
-                } while (i > 0);
-            }
+        }
+        else {
+            if (!digitCount && value < 0)
+                digitCount = 1;
         }
 
-        if (maxVals > 0) {
+        if (digitCount > 0) {
             int32 digit = 1;
-            do {
-                self->numbersAnimator.frameID = value / mult % 10;
+            while (digitCount--) {
+                self->numbersAnimator.frameID = value / digit % 10;
                 RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
+
                 drawPos->x -= 0x90000;
-                mult = 10 * digit;
                 digit *= 10;
-            } while (--maxVals);
+            } 
         }
     }
-    else if (maxVals > 0) {
-        do {
+    else {
+        while (digitCount--) {
             self->numbersAnimator.frameID = 16;
             RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
+
             drawPos->x -= 0x90000;
-        } while (--maxVals);
+        }
     }
 }
 void ActClear_CheckPlayerVictory(void)

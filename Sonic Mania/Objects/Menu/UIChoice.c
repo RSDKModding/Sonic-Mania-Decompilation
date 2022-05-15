@@ -176,26 +176,23 @@ void UIChoice_TouchedCB_Left(void)
     RSDK_THIS(UIChoice);
 
     EntityUIButton *parent = (EntityUIButton *)self->parent;
-    int32 id               = parent->selection;
-    EntityUIButton *choice = NULL;
 
-    do {
-        if (--id < 0) {
-            while (id < 0) id += parent->choiceCount;
+    int32 selection = parent->selection;
+    if (--selection < 0) {
+        while (selection < 0) selection += parent->choiceCount;
+    }
+    EntityUIButton *choice = UIButton_GetChoicePtr(parent, selection);
+
+    while ((choice && choice->disabled) && selection != parent->selection) {
+        if (--selection < 0) {
+            while (selection < 0) selection += parent->choiceCount;
         }
 
-        if (parent->choiceCount > 0) {
-            choice = RSDK_GET_ENTITY(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent), UIButton);
-            if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
-                || choice->classID == UIWinSize->classID)
-                continue;
-        }
+        choice = UIButton_GetChoicePtr(parent, selection);
+    }
 
-        choice = 0;
-    } while ((choice && choice->disabled) && id != parent->selection);
-
-    if (id != parent->selection) {
-        UIButton_SetChoiceSelectionWithCB(parent, id);
+    if (selection != parent->selection) {
+        UIButton_SetChoiceSelectionWithCB(parent, selection);
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
 }
@@ -205,25 +202,17 @@ void UIChoice_TouchedCB_Right(void)
     RSDK_THIS(UIChoice);
 
     EntityUIButton *parent = (EntityUIButton *)self->parent;
-    int32 id               = parent->selection;
-    EntityUIButton *choice = NULL;
 
-    do {
-        id = (id + 1) % parent->choiceCount;
+    int32 selection        = (parent->selection + 1) % parent->choiceCount;
+    EntityUIButton *choice = UIButton_GetChoicePtr(parent, selection);
 
-        if (parent->choiceCount > 0) {
-            choice = RSDK_GET_ENTITY(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent), UIButton);
+    while ((choice && choice->disabled) && selection != parent->selection) {
+        selection              = (selection + 1) % parent->choiceCount;
+        choice = UIButton_GetChoicePtr(parent, selection);
+    }
 
-            if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
-                || choice->classID == UIWinSize->classID)
-                continue;
-        }
-
-        choice = NULL;
-    } while ((choice && choice->disabled) && id != parent->selection);
-
-    if (id != parent->selection) {
-        UIButton_SetChoiceSelectionWithCB(parent, id);
+    if (selection != parent->selection) {
+        UIButton_SetChoiceSelectionWithCB(parent, selection);
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
 }

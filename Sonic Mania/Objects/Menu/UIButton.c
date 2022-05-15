@@ -164,7 +164,7 @@ EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 selection)
     if (button->choiceCount <= 0)
         return NULL;
 
-    EntityUIButton *choice = RSDK_GET_ENTITY(selection % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button), UIButton);
+    EntityUIButton *choice = RSDK_GET_ENTITY(RSDK.GetEntityID(button) - button->choiceCount + (selection % button->choiceCount), UIButton);
     if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
         || choice->classID == UIWinSize->classID) {
         return choice;
@@ -567,12 +567,18 @@ void UIButton_ProcessButtonCB(void)
                 movedH = false;
             }
             else {
-                do {
+                if (--selection < 0) {
+                    while (selection < 0) selection += self->choiceCount;
+                }
+                EntityUIButton *choice = UIButton_GetChoicePtr(self, selection);
+
+                while ((choice && choice->disabled) && selection != self->selection) {
                     if (--selection < 0) {
-                        do selection += self->choiceCount;
-                        while (selection < 0);
+                        while (selection < 0) selection += self->choiceCount;
                     }
-                } while (UIButton_GetChoicePtr(self, selection)->disabled && selection != self->selection);
+
+                    choice = UIButton_GetChoicePtr(self, selection);
+                }
 
                 movedH = true;
             }
@@ -588,8 +594,14 @@ void UIButton_ProcessButtonCB(void)
                 movedH = false;
             }
             else {
-                do selection = (selection + 1) % self->choiceCount;
-                while (UIButton_GetChoicePtr(self, selection)->disabled && selection != self->selection);
+                selection              = (selection + 1) % self->choiceCount;
+                EntityUIButton *choice = UIButton_GetChoicePtr(self, selection);
+
+                while ((choice && choice->disabled) && selection != self->selection) {
+                    selection = (selection + 1) % self->choiceCount;
+
+                    choice = UIButton_GetChoicePtr(self, selection);
+                }
 
                 movedH = true;
             }

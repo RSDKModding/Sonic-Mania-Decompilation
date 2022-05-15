@@ -254,15 +254,13 @@ EntityEggPistonsMKII *EggPistonsMKII_GetNextPiston(void)
 {
     RSDK_THIS(EggPistonsMKII);
 
-    EntityEggPistonsMKII *piston = NULL;
-    int pistonID                 = 0;
+    int32 pistonID                 = RSDK.Rand(0, 5);
+    EntityEggPistonsMKII *piston = EggPistonsMKII->pistons[pistonID];
 
-    do {
-        do {
-            pistonID = RSDK.Rand(0, 5);
-            piston   = EggPistonsMKII->pistons[pistonID];
-        } while (piston->state != EggPistonsMKII_StatePiston_Idle);
-    } while (pistonID == EggPistonsMKII->pistonID - 1 || pistonID == EggPistonsMKII->pistonID + 1);
+    while (piston->state != EggPistonsMKII_StatePiston_Idle && (pistonID == EggPistonsMKII->pistonID - 1 || pistonID == EggPistonsMKII->pistonID + 1)) {
+        pistonID = RSDK.Rand(0, 5);
+        piston   = EggPistonsMKII->pistons[pistonID];
+    }
 
     EggPistonsMKII->pistonID = pistonID;
 

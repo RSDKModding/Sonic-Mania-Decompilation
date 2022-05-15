@@ -246,10 +246,10 @@ void Woodrow_State_Idle(void)
             else {
                 int32 bombSlot = SceneInfo->entitySlot + 1;
 
-                EntityWoodrow *bombSpawn = NULL;
-                do {
+                EntityWoodrow *bombSpawn = RSDK_GET_ENTITY(bombSlot + RSDK.Rand(0, self->bombCount), Woodrow);
+                while (bombSpawn->activeBombCount) {
                     bombSpawn = RSDK_GET_ENTITY(bombSlot + RSDK.Rand(0, self->bombCount), Woodrow);
-                } while (bombSpawn->activeBombCount);
+                }
 
                 EntityWoodrow *bomb = CREATE_ENTITY(Woodrow, intToVoid(true), bombSpawn->position.x, bombSpawn->position.y);
                 bombSpawn->position.y -= 0x100000;

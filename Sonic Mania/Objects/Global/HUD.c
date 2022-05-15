@@ -323,11 +323,9 @@ void HUD_Draw(void)
             for (int32 i = 0; i < 3; ++i) {
                 stockFrameID = -1;
                 int32 stock  = (globals->stock >> (i * 8)) & 0xFF;
-                if (stock) {
-                    do {
-                        stock >>= 1;
-                        ++stockFrameID;
-                    } while (stock > 0);
+                while (stock > 0) {
+                    stock >>= 1;
+                    ++stockFrameID;
                 }
 
                 self->lifeIconAnimator.frameID = stockFrameID;
@@ -511,27 +509,27 @@ void HUD_StageLoad(void)
 #endif
 }
 
-void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 maxDigits)
+void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 digitCount)
 {
     RSDK_THIS(HUD);
-    int32 mult = 1;
-    if (!maxDigits) {
-        if (value <= 0) {
-            maxDigits = 1;
-        }
-        else {
-            int32 v = value;
-            do {
-                ++maxDigits;
-                v /= 10;
-            } while (v > 0);
+    
+    if (!digitCount && value > 0) {
+        int32 v = value;
+        while (v > 0) {
+            ++digitCount;
+            v /= 10;
         }
     }
+    else {
+        if (!digitCount && value <= 0)
+            digitCount = 1;
+    }
 
-    while (maxDigits--) {
-        self->numbersAnimator.frameID = value / mult % 10;
+    int32 digit = 1;
+    while (digitCount--) {
+        self->numbersAnimator.frameID = value / digit % 10;
         RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
-        mult *= 10;
+        digit *= 10;
         drawPos->x -= 0x80000;
     }
 }

@@ -118,8 +118,8 @@ void UISubHeading_HandleUnlocks(void)
         UIButton_ManageChoices(debugMode);
 
     EntityUIButton *sonicAbility      = control->buttons[2];
-    EntityUIButton *peeloutChoice     = UIButton_GetChoicePtr(debugMode, 1);
-    EntityUIButton *instaShieldChoice = UIButton_GetChoicePtr(debugMode, 2);
+    EntityUIButton *peeloutChoice     = UIButton_GetChoicePtr(sonicAbility, 1);
+    EntityUIButton *instaShieldChoice = UIButton_GetChoicePtr(sonicAbility, 2);
     sonicAbility->disabled            = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_PEELOUT);
     if (sonicAbility->disabled)
         UIButton_ManageChoices(sonicAbility);

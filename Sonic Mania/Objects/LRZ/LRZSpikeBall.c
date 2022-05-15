@@ -57,10 +57,12 @@ void LRZSpikeBall_Create(void *data)
     self->hitboxBase.top    = 8;
     self->hitboxBase.right  = 8;
     self->hitboxBase.bottom = 16;
+
     self->hitboxBall.left   = -10;
     self->hitboxBall.top    = -10;
     self->hitboxBall.right  = 10;
     self->hitboxBall.bottom = 10;
+
     self->state             = LRZSpikeBall_State_Setup;
 }
 
@@ -201,11 +203,12 @@ void LRZSpikeBall_EditorDraw(void)
 
         self->inkEffect  = INK_BLEND;
         self->velocity.y = -0x8000 * self->strength;
+        self->ballOffset.y += self->velocity.y;
 
-        do {
+        while (self->velocity.y < 0 && self->ballOffset.y < 0) {
             self->ballOffset.y += self->velocity.y;
             self->velocity.y += 0x3800;
-        } while (self->velocity.y < 0 && self->ballOffset.y < 0);
+        }
 
         self->position.x += self->ballOffset.x;
         self->position.y += self->ballOffset.y;

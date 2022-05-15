@@ -101,7 +101,7 @@ void HUD_EditorLoad(void);
 void HUD_Serialize(void);
 
 // Extra Entity Functions
-void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 maxDigits);
+void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 digitCount);
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int32 value);
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value);
 void HUD_GetButtonFrame(Animator *animator, int32 buttonID);

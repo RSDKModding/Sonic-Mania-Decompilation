@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Gachapandora_CapsuleCount (4)
+#define GACHAPANDORA_CAPSULE_COUNT (4)
 
 typedef enum {
     GACHAPANDORA_MAIN,

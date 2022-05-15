@@ -56,26 +56,30 @@ void Gachapandora_Create(void *data)
                     Gachapandora->eggman = self;
 
                     capsuleOffset = 55;
-                    for (int32 i = Gachapandora_CapsuleCount - 1; i >= 0; --i) {
+                    for (int32 i = GACHAPANDORA_CAPSULE_COUNT - 1; i >= 0; --i) {
                         int32 id = 0;
-                        do {
-                            do {
-                                Gachapandora->capsuleTypeL[i] = RSDK.Rand(0, 6);
-                                id                            = Gachapandora->capsuleTypeL[i] % 3;
-                            } while (id == Gachapandora->lastCapsuleType);
-                        } while (Gachapandora->capsuleCount[id] == 3);
+
+                        Gachapandora->capsuleTypeL[i] = RSDK.Rand(0, 6);
+                        id                            = Gachapandora->capsuleTypeL[i] % 3;
+
+                        while (id == Gachapandora->lastCapsuleType && Gachapandora->capsuleCount[id] == 3) {
+                            Gachapandora->capsuleTypeL[i] = RSDK.Rand(0, 6);
+                            id                            = Gachapandora->capsuleTypeL[i] % 3;
+                        }
 
                         Gachapandora->lastCapsuleType = Gachapandora->capsuleTypeL[i] % 3;
                         ++Gachapandora->capsuleCount[Gachapandora->lastCapsuleType];
                         Gachapandora->capsuleOffsetL[i] = 4 * capsuleOffset;
                         Gachapandora->capsuleMaxL[i]    = 4 * capsuleOffset;
 
-                        do {
-                            do {
-                                Gachapandora->capsuleTypeR[i] = RSDK.Rand(0, 6);
-                                id                            = Gachapandora->capsuleTypeR[i] % 3;
-                            } while (id == Gachapandora->lastCapsuleType && i);
-                        } while (Gachapandora->capsuleCount[id] == 3);
+
+                        Gachapandora->capsuleTypeR[i] = RSDK.Rand(0, 6);
+                        id                            = Gachapandora->capsuleTypeR[i] % 3;
+
+                        while (id == Gachapandora->lastCapsuleType && i && Gachapandora->capsuleCount[id] == 3) {
+                            Gachapandora->capsuleTypeR[i] = RSDK.Rand(0, 6);
+                            id                            = Gachapandora->capsuleTypeR[i] % 3;
+                        }
 
                         Gachapandora->lastCapsuleType = Gachapandora->capsuleTypeR[i] % 3;
                         ++Gachapandora->capsuleCount[Gachapandora->lastCapsuleType];
@@ -91,7 +95,7 @@ void Gachapandora_Create(void *data)
                     Gachapandora->nextCapsuleR    = 3;
                     Gachapandora->capsuleSide     = RSDK.Rand(0, 2);
                     if (Gachapandora->capsuleSide == 1) {
-                        for (int32 i = 0; i < Gachapandora_CapsuleCount; ++i) {
+                        for (int32 i = 0; i < GACHAPANDORA_CAPSULE_COUNT; ++i) {
                             int32 store                   = Gachapandora->capsuleTypeL[i];
                             Gachapandora->capsuleTypeL[i] = Gachapandora->capsuleTypeR[i];
                             Gachapandora->capsuleTypeR[i] = store;
@@ -522,7 +526,7 @@ void Gachapandora_StateBoss_FloatAround(void)
     if (RSDK.Rand(0, 64) == 21)
         Gachapandora->eggmanDir ^= FLIP_X;
 
-    for (int32 i = 0; i < Gachapandora_CapsuleCount; ++i) {
+    for (int32 i = 0; i < GACHAPANDORA_CAPSULE_COUNT; ++i) {
         if (Gachapandora->capsuleDelayL[i]) {
             Gachapandora->capsuleDelayL[i]--;
         }
@@ -614,7 +618,7 @@ void Gachapandora_StateBoss_HandleSpun(void)
     if (RSDK.Rand(0, 64) == 21)
         Gachapandora->eggmanDir ^= FLIP_X;
 
-    for (int32 i = 0; i < Gachapandora_CapsuleCount; ++i) {
+    for (int32 i = 0; i < GACHAPANDORA_CAPSULE_COUNT; ++i) {
         if (Gachapandora->capsuleDelayL[i]) {
             Gachapandora->capsuleDelayL[i]--;
         }
@@ -894,7 +898,7 @@ void Gachapandora_Draw_Boss(void)
         self->mainAnimator.frameID = 5;
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-        for (int i = 0; i < Gachapandora_CapsuleCount; ++i) {
+        for (int i = 0; i < GACHAPANDORA_CAPSULE_COUNT; ++i) {
             if (Gachapandora->capsuleOffsetL[i] != 0xFF) {
                 self->capsuleAnimator.frameID = ((Gachapandora->capsuleTypeL[i] % 3) >> 1) + 2 * (Gachapandora->capsuleTypeL[i] / 3);
                 drawPos.x                     = self->position.x - (Gachapandora->capsuleOffsets[56 - (Gachapandora->capsuleOffsetL[i] >> 2)] << 16);

@@ -136,6 +136,9 @@ void ExtrasMenu_ProcessInputs(void)
 {
     RSDK_THIS(UIControl);
 
+#if RETRO_GAMEVER == VER_106
+    // this "cheat" is technically PC only, but I can't be bothered to ifdef it and it's cooler to have on all platforms
+
     // buttonID == 2: DAGarden
     if (self->buttonID == 2) {
         ExtrasMenu_ProcessMedallionCheat();
@@ -148,6 +151,7 @@ void ExtrasMenu_ProcessInputs(void)
             }
         }
     }
+#endif
 
     UIControl_ProcessButtonInput();
 }

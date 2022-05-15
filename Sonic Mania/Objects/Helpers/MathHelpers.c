@@ -124,19 +124,17 @@ int32 MathHelpers_SquareRoot(uint32 num)
 {
     int32 val = 0x40000000;
     int32 id  = 0;
-    while (val > num) {
+    while (val > num)
         val >>= 2;
-    }
 
-    if (val) {
-        do {
-            if (num >= val + id) {
-                num -= val + id;
-                id += 2 * val;
-            }
-            val >>= 2;
-            id >>= 1;
-        } while (val);
+    while (val) {
+        if (num >= val + id) {
+            num -= val + id;
+            id += 2 * val;
+        }
+
+        val >>= 2;
+        id >>= 1;
     }
 
     if (num <= id)

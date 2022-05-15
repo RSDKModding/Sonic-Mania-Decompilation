@@ -219,134 +219,46 @@ void Zone_StageLoad(void)
     // Setup encore character flags & stock if needed
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     if (globals->gameMode == MODE_ENCORE) {
-        if (globals->characterFlags == 0) {
+        if (globals->characterFlags == ID_NONE) {
             globals->characterFlags = 0;
-            saveRAM->characterFlags = 0;
-            uint8 id                = globals->playerID & 0xFF;
-            if (globals->playerID & 0xFF) {
+
+            if ((globals->playerID >> 0) & 0xFF) {
                 int32 charID = -1;
-                if (id) {
-                    do {
-                        id >>= 1;
-                        ++charID;
-                    } while (id > 0);
-                }
-                globals->characterFlags |= (1 << charID);
-                saveRAM->characterFlags = globals->characterFlags;
+                for (int32 i = ((globals->playerID >> 0) & 0xFF); i > 0; ++charID) i >>= 1;
+
+                globals->characterFlags |= 1 << charID;
             }
 
-            if (globals->playerID & 0xFF00) {
-                uint8 id     = globals->playerID >> 8;
+            if ((globals->playerID >> 8) & 0xFF) {
                 int32 charID = -1;
-                if (globals->playerID & 0xFF) {
-                    do {
-                        id >>= 1;
-                        ++charID;
-                    } while (id > 0);
-                }
+                for (int32 i = ((globals->playerID >> 8) & 0xFF); i > 0; ++charID) i >>= 1;
 
-                globals->characterFlags |= (1 << charID);
+                globals->characterFlags |= 1 << charID;
             }
-            else {
-                if (!globals->stock) {
-                    if (globals->stock & 0xFF) {
-                        int32 id     = globals->stock & 0xFF;
-                        int32 charID = -1;
-                        if (globals->stock & 0xFF) {
-                            do {
-                                id >>= 1;
-                                ++charID;
-                            } while (id > 0);
-                        }
 
-                        globals->characterFlags |= (1 << charID);
-                        saveRAM->characterFlags = globals->characterFlags;
-                    }
+            if ((globals->stock >> 0) & 0xFF) {
+                int32 charID = -1;
+                for (int32 i = ((globals->stock >> 0) & 0xFF); i > 0; ++charID) i >>= 1;
 
-                    if (globals->stock & 0xFF00) {
-                        uint8 id     = globals->playerID >> 8;
-                        int32 charID = -1;
-                        if (charID) {
-                            do {
-                                id >>= 1;
-                                ++charID;
-                            } while (id > 0);
-                        }
-                        globals->characterFlags |= (1 << charID);
-                        saveRAM->characterFlags = globals->characterFlags;
-                    }
-
-                    if (globals->stock & 0xFF0000) {
-                        int32 charID = -1;
-                        uint8 id     = globals->playerID >> 16;
-                        if (id) {
-                            do {
-                                id >>= 1;
-                                ++charID;
-                            } while (id > 0);
-                        }
-                        globals->characterFlags |= (1 << charID);
-                        saveRAM->characterFlags = globals->characterFlags;
-                    }
-                    saveRAM->playerID = globals->playerID;
-                }
-                else {
-                    globals->playerID |= (globals->stock & 0xFF);
-                    globals->stock >>= 8;
-                    saveRAM->stock = globals->stock;
-                    uint8 id       = globals->playerID >> 8;
-                    int32 charID   = -1;
-                    if (id) {
-                        do {
-                            id >>= 1;
-                            ++charID;
-                        } while (id > 0);
-                    }
-                    globals->characterFlags |= (1 << charID);
-                    saveRAM->characterFlags = globals->characterFlags;
-
-                    if (globals->stock & 0xFF) {
-                        int32 charID = -1;
-                        id           = globals->stock & 0xFF;
-                        if (globals->stock & 0xFF) {
-                            do {
-                                id >>= 1;
-                                ++charID;
-                            } while (id > 0);
-                        }
-
-                        globals->characterFlags |= (1 << charID);
-                        saveRAM->characterFlags = globals->characterFlags;
-                    }
-
-                    if (globals->stock & 0xFF00) {
-                        uint8 id     = globals->playerID >> 8;
-                        int32 charID = -1;
-                        if (charID) {
-                            do {
-                                id >>= 1;
-                                ++charID;
-                            } while (id > 0);
-                        }
-                        globals->characterFlags |= (1 << charID);
-                        saveRAM->characterFlags = globals->characterFlags;
-                    }
-
-                    if (globals->stock & 0xFF0000) {
-                        int32 charID = -1;
-                        uint8 id     = globals->playerID >> 16;
-                        if (id) {
-                            do {
-                                id >>= 1;
-                                ++charID;
-                            } while (id > 0);
-                        }
-                        globals->characterFlags |= (1 << charID);
-                        saveRAM->characterFlags = globals->characterFlags;
-                    }
-                    saveRAM->playerID = globals->playerID;
-                }
+                globals->characterFlags |= 1 << charID;
             }
+
+            if ((globals->stock >> 8) & 0xFF) {
+                int32 charID = -1;
+                for (int32 i = ((globals->stock >> 8) & 0xFF); i > 0; ++charID) i >>= 1;
+
+                globals->characterFlags |= 1 << charID;
+            }
+
+            if ((globals->stock >> 16) & 0xFF) {
+                int32 charID = -1;
+                for (int32 i = ((globals->stock >> 16) & 0xFF); i > 0; ++charID) i >>= 1;
+
+                globals->characterFlags |= 1 << charID;
+            }
+
+            saveRAM->playerID       = globals->playerID;
+            saveRAM->characterFlags = globals->characterFlags;
         }
 
         if (!TitleCard || TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
@@ -1370,9 +1282,10 @@ void Zone_State_SwapPlayers(void)
 
                     Zone->swapPlayerID = 0;
                     for (Zone->swapPlayerID = 0; Zone->swapPlayerID < Zone->swapPlayerCount; ++Zone->swapPlayerID) {
-                        do {
+
+                        Zone->swappedPlayerIDs[Zone->swapPlayerID] = Zone->preSwapPlayerIDs[RSDK.Rand(0, Zone->swapPlayerCount)];
+                        while ((1 << Zone->swappedPlayerIDs[Zone->swapPlayerID]) & playerIDs)
                             Zone->swappedPlayerIDs[Zone->swapPlayerID] = Zone->preSwapPlayerIDs[RSDK.Rand(0, Zone->swapPlayerCount)];
-                        } while ((1 << Zone->swappedPlayerIDs[Zone->swapPlayerID]) & playerIDs);
 
                         if (Zone->swappedPlayerIDs[Zone->swapPlayerID] != Zone->preSwapPlayerIDs[Zone->swapPlayerID]) {
                             playerIDs |= 1 << Zone->swappedPlayerIDs[Zone->swapPlayerID++];
