@@ -300,7 +300,7 @@ typedef struct {
     int32 (*SetScreenSize)(uint8 screenID, uint16 width, uint16 height);
     void (*SetClipBounds)(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2);
 #if RETRO_REV02
-    void (*SetScreenRenderVertices)(int8 startVert2P_S1, int8 startVert2P_S2, int8 startVert3P_S1, int8 startVert3P_S2, int8 startVert3P_S3);
+    void (*SetScreenRenderVertices)(uint8 startVert2P_S1, uint8 startVert2P_S2, uint8 startVert3P_S1, uint8 startVert3P_S2, uint8 startVert3P_S3);
 #endif
 
     // Spritesheets
@@ -323,7 +323,7 @@ typedef struct {
     void (*RotatePalette)(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32 right);
     void (*SetLimitedFade)(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
-    void (*BlendColors)(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 alpha, int32 index, int32 count);
+    void (*BlendColors)(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 blendAmount, int32 startIndex, int32 count);
 #endif
 
     // Drawing
@@ -339,7 +339,7 @@ typedef struct {
     void (*DrawText)(Animator *animator, Vector2 *position, String *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
                      void *unused, Vector2 *charOffsets, bool32 screenRelative);
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
-    void (*CopyTile)(void);
+    void (*CopyTile)(uint16 dest, uint16 src, uint16 count);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
     void (*FillScreen)(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB);
 
@@ -373,7 +373,7 @@ typedef struct {
     // Tile Layers
     int32 (*GetTileLayerID)(const char *name);
     TileLayer *(*GetTileLayer)(int32 layerID);
-    void (*GetLayerSize)(uint16 layer, Vector2 *size, bool32 pixelSize);
+    void (*GetLayerSize)(uint16 layer, Vector2 *size, bool32 usePixelUnits);
     uint16 (*GetTileInfo)(uint16 layer, int32 x, int32 y);
     void (*SetTileInfo)(uint16 layer, int32 x, int32 y, uint16 tile);
     int32 (*CopyTileLayer)(uint16 dstLayer, int32 startX1, int32 startY1, uint16 srcLayer, int32 startX2, int32 startY2, int32 sizeX, int32 sizeY);
@@ -441,8 +441,8 @@ typedef struct {
     void (*PrintLog)(PrintModes printType, const char *message, ...);
     void (*PrintText)(PrintModes printType, const char *message);
     void (*PrintString)(PrintModes printType, String *message);
-    void (*PrintUInt32)(PrintModes printType, const char *message, uint32 integer);
-    void (*PrintInt32)(PrintModes printType, const char *message, int32 integer);
+    void (*PrintUInt32)(PrintModes printType, const char *message, uint32 i);
+    void (*PrintInt32)(PrintModes printType, const char *message, int32 i);
     void (*PrintFloat)(PrintModes printType, const char *message, float f);
     void (*PrintVector2)(PrintModes printType, const char *message, int32 x, int32 y);
     void (*PrintHitbox)(PrintModes printType, const char *message, Hitbox *hitbox);
@@ -454,8 +454,8 @@ typedef struct {
 
     // Debugging
 #if RETRO_REV02
-    void (*ClearDebugValues)(void);
-    void (*SetDebugValue)(const char *name, void *value, DebugVarTypes type, int32 min, int32 max);
+    void (*ClearViewableVariables)(void);
+    void (*AddViewableVariable)(const char *name, void *value, ViewableVarTypes type, int32 min, int32 max);
 #endif
 
     // Printing (Rev01)

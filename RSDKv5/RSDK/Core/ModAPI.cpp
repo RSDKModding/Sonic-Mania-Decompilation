@@ -1165,15 +1165,15 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     // TODO: i think i introduced a memleak somewhere here??
 
     ModInfo *curMod = currentMod;
-    int32 preCount  = stageObjectCount + 1;
+    int32 preCount  = objectClassCount + 1;
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
 
     int32 superSlot     = preCount;
     ObjectClass *inherit = NULL;
-    for (int32 i = 0; i < stageObjectCount; ++i) {
+    for (int32 i = 0; i < objectClassCount; ++i) {
         if (HASH_MATCH_MD5(objectClassList[i].hash, hash)) {
-            stageObjectCount = i;
+            objectClassCount = i;
             superSlot   = i;
             inherit     = new ObjectClass(objectClassList[i]);
             --preCount;
@@ -1200,7 +1200,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
 
     RegisterObject_STD(structPtr, name, entitySize, objectSize, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
-    ObjectClass *info = &objectClassList[stageObjectCount - 1];
+    ObjectClass *info = &objectClassList[objectClassCount - 1];
     if (inherited) {
         info->inherited = inherit;
 
@@ -1239,7 +1239,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     if (create)       info->create       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
     // clang-format on
 
-    stageObjectCount = preCount;
+    objectClassCount = preCount;
 }
 
 Object *RSDK::GetObject(const char *name)

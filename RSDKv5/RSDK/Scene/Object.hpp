@@ -190,13 +190,13 @@ struct TypeGroupList {
 };
 
 extern ObjectClass objectClassList[OBJECT_COUNT];
+extern int32 objectClassCount;
 
 // Loaded Global Objects
 extern int32 globalObjectCount;
 extern int32 globalObjectIDs[OBJECT_COUNT];
 
 // Loaded Stage Objects (includes Globals if "loadGlobals" is enabled)
-extern int32 stageObjectCount;
 extern int32 stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];

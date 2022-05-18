@@ -159,7 +159,7 @@ void RSDK::SKU::DummyCore::StageLoad()
 {
     UserCore::StageLoad();
 
-    for (int v = 0; v < valueCount; ++v) SetDebugValue(userValueNames[v], values[v], DTYPE_BOOL, false, true);
+    for (int v = 0; v < valueCount; ++v) AddViewableVariable(userValueNames[v], values[v], VIEWVAR_BOOL, false, true);
 }
 
 bool32 RSDK::SKU::DummyCore::CheckFocusLost() { return focusState != 0; }

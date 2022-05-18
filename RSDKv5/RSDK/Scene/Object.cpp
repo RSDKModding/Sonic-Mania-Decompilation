@@ -3,11 +3,10 @@
 using namespace RSDK;
 
 ObjectClass objectClassList[OBJECT_COUNT];
+int32 objectClassCount = 0;
 
 int32 globalObjectCount = 0;
 int32 globalObjectIDs[OBJECT_COUNT];
-
-int32 stageObjectCount = 0;
 int32 stageObjectIDs[OBJECT_COUNT];
 
 EntityBase objectEntityList[ENTITY_COUNT];
@@ -41,11 +40,11 @@ void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSiz
                     void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 #endif
 {
-    if (stageObjectCount < OBJECT_COUNT) {
+    if (objectClassCount < OBJECT_COUNT) {
         if (entityClassSize > sizeof(EntityBase))
             printf("Class exceeds max entity memory: %s \n", name);
 
-        ObjectClass *info = &objectClassList[stageObjectCount];
+        ObjectClass *info = &objectClassList[objectClassCount];
         GEN_HASH_MD5(name, info->hash);
         info->staticVars      = staticVars;
         info->entityClassSize = entityClassSize;
@@ -60,7 +59,7 @@ void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSiz
         info->editorLoad      = editorLoad;
         info->serialize       = serialize;
 
-        ++stageObjectCount;
+        ++objectClassCount;
     }
 }
 

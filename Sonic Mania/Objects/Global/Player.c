@@ -699,7 +699,7 @@ void Player_StageLoad(void)
     SceneInfo->debugMode = globals->medalMods & getMod(MEDAL_DEBUGMODE);
     SceneInfo->debugMode = true; // TODO: TEMP
 #if MANIA_USE_PLUS
-    RSDK.SetDebugValue("Debug Mode", &SceneInfo->debugMode, DTYPE_BOOL, false, true);
+    RSDK.AddViewableVariable("Debug Mode", &SceneInfo->debugMode, VIEWVAR_BOOL, false, true);
 #endif
 
     if (globals->medalMods & getMod(MEDAL_ANDKNUCKLES)) {

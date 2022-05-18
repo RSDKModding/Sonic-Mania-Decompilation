@@ -1,6 +1,9 @@
 #include "resource.h"
 #include <D3Dcompiler.h>
 
+#define DX9_WINDOWFLAGS_BORDERED   (WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP)
+#define DX9_WINDOWFLAGS_BORDERLESS (WS_POPUP)
+
 HWND RenderDevice::windowHandle;
 
 HDEVNOTIFY RenderDevice::deviceNotif = 0;
@@ -39,7 +42,7 @@ bool RenderDevice::Init()
     std::wstring temp = std::wstring(str.begin(), str.end());
     LPCWSTR gameTitle = temp.c_str();
 #else
-    std::string str   = RSDK::gameVerInfo.gameName;
+    std::string str  = RSDK::gameVerInfo.gameName;
     LPCSTR gameTitle = str.c_str();
 #endif
 
@@ -49,12 +52,12 @@ bool RenderDevice::Init()
     wndClass.style         = CS_VREDRAW | CS_HREDRAW;
     wndClass.lpfnWndProc   = WindowEventCallback;
     wndClass.cbClsExtra    = 0;
-    wndClass.cbWndExtra    = 4;
+    wndClass.cbWndExtra    = sizeof(LONG);
     wndClass.hInstance     = hInstance;
     wndClass.hIcon         = LoadIcon(handle, MAKEINTRESOURCE(IDI_ICON1));
-    wndClass.hCursor       = LoadCursor(0, IDI_APPLICATION);
+    wndClass.hCursor       = LoadCursor(NULL, IDI_APPLICATION);
     wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-    wndClass.lpszMenuName  = 0;
+    wndClass.lpszMenuName  = NULL;
     wndClass.lpszClassName = gameTitle;
     if (!RegisterClass(&wndClass))
         return false;
@@ -63,33 +66,33 @@ bool RenderDevice::Init()
 
     tagRECT winRect;
     if (RSDK::videoSettings.windowed) {
-        winRect.left   = (GetSystemMetrics(0) - RSDK::videoSettings.windowWidth) / 2;
-        winRect.right  = RSDK::videoSettings.windowWidth + winRect.left;
-        winRect.top    = (GetSystemMetrics(1) - RSDK::videoSettings.windowHeight) / 2;
-        winRect.bottom = RSDK::videoSettings.windowHeight + winRect.top;
+        winRect.left   = (GetSystemMetrics(SM_CXSCREEN) - RSDK::videoSettings.windowWidth) / 2;
+        winRect.top    = (GetSystemMetrics(SM_CYSCREEN) - RSDK::videoSettings.windowHeight) / 2;
+        winRect.right  = winRect.left + RSDK::videoSettings.windowWidth;
+        winRect.bottom = winRect.top + RSDK::videoSettings.windowHeight;
     }
     else if (RSDK::videoSettings.fsWidth <= 0 || RSDK::videoSettings.fsHeight <= 0) {
         winRect.left   = 0;
-        winRect.right  = GetSystemMetrics(0);
         winRect.top    = 0;
-        winRect.bottom = GetSystemMetrics(1);
+        winRect.right  = GetSystemMetrics(SM_CXSCREEN);
+        winRect.bottom = GetSystemMetrics(SM_CYSCREEN);
     }
     else {
-        winRect.left   = (GetSystemMetrics(0) - RSDK::videoSettings.fsWidth) / 2;
-        winRect.right  = RSDK::videoSettings.fsWidth + winRect.left;
-        winRect.top    = (GetSystemMetrics(1) - RSDK::videoSettings.fsHeight) / 2;
-        winRect.bottom = RSDK::videoSettings.fsHeight + winRect.top;
+        winRect.left   = (GetSystemMetrics(SM_CXSCREEN) - RSDK::videoSettings.fsWidth) / 2;
+        winRect.top    = (GetSystemMetrics(SM_CYSCREEN) - RSDK::videoSettings.fsHeight) / 2;
+        winRect.right  = winRect.left + RSDK::videoSettings.fsWidth;
+        winRect.bottom = winRect.top + RSDK::videoSettings.fsHeight;
     }
 
     if (RSDK::videoSettings.bordered && RSDK::videoSettings.windowed) {
-        AdjustWindowRect(&winRect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, 0);
-        windowHandle = CreateWindowEx(0, gameTitle, gameTitle, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, winRect.left, winRect.top,
-                                      winRect.right - winRect.left, winRect.bottom - winRect.top, 0, 0, hInstance, 0);
+        AdjustWindowRect(&winRect, DX9_WINDOWFLAGS_BORDERED, false);
+        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX9_WINDOWFLAGS_BORDERED, winRect.left, winRect.top,
+                                      winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
     }
     else {
-        AdjustWindowRect(&winRect, WS_POPUP, 0);
-        windowHandle = CreateWindowEx(0, gameTitle, gameTitle, WS_POPUP, winRect.left, winRect.top, winRect.right - winRect.left,
-                                      winRect.bottom - winRect.top, 0, 0, hInstance, 0);
+        AdjustWindowRect(&winRect, DX9_WINDOWFLAGS_BORDERLESS, false);
+        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX9_WINDOWFLAGS_BORDERLESS, winRect.left, winRect.top,
+                                      winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
     }
 
     PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, RSDK::videoSettings.windowed);
@@ -355,9 +358,9 @@ void RenderDevice::RefreshWindow()
     ShowWindow(RenderDevice::windowHandle, false);
 
     if (RSDK::videoSettings.windowed && RSDK::videoSettings.bordered)
-        SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP);
+        SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, DX9_WINDOWFLAGS_BORDERED);
     else
-        SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, WS_POPUP);
+        SetWindowLong(RenderDevice::windowHandle, GWL_STYLE, DX9_WINDOWFLAGS_BORDERLESS);
 
     Sleep(250); // zzzz.. mimimimi..
 
@@ -392,9 +395,9 @@ void RenderDevice::RefreshWindow()
             rect.bottom = (bottomRight.y + topLeft.y) / 2 + RSDK::videoSettings.windowHeight / 2;
 
             if (RSDK::videoSettings.bordered)
-                AdjustWindowRect(&rect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, false);
+                AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERED, false);
             else
-                AdjustWindowRect(&rect, WS_POPUP, false);
+                AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERLESS, false);
 
             if (rect.left < monitorDisplayRect.left || rect.right > monitorDisplayRect.right || rect.top < monitorDisplayRect.top
                 || rect.bottom > monitorDisplayRect.bottom) {
@@ -404,9 +407,9 @@ void RenderDevice::RefreshWindow()
                 rect.bottom = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 + RSDK::videoSettings.windowHeight / 2;
 
                 if (RSDK::videoSettings.bordered)
-                    AdjustWindowRect(&rect, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP, false);
+                    AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERED, false);
                 else
-                    AdjustWindowRect(&rect, WS_POPUP, false);
+                    AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERLESS, false);
             }
         }
         else {
@@ -604,7 +607,7 @@ bool RenderDevice::InitGraphicsAPI()
     RSDK::videoSettings.shaderSupport = false;
 
     D3DCAPS9 pCaps;
-    if (dx9Context->GetDeviceCaps(0, D3DDEVTYPE_HAL, &pCaps) >= 0 && (pCaps.PixelShaderVersion & 0xFF00) >= 0x300)
+    if (dx9Context->GetDeviceCaps(0, D3DDEVTYPE_HAL, &pCaps) >= S_OK && (pCaps.PixelShaderVersion & 0xFF00) >= 0x300)
         RSDK::videoSettings.shaderSupport = true;
 
     viewSize.x = 0;
@@ -651,7 +654,7 @@ bool RenderDevice::InitGraphicsAPI()
 
     int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);
     if (RSDK::videoSettings.shaderSupport) {
-        if (adapterStatus < 0)
+        if (adapterStatus < S_OK)
             return false;
 
         D3DVERTEXELEMENT9 elements[4];
@@ -684,17 +687,17 @@ bool RenderDevice::InitGraphicsAPI()
         elements[3].Usage      = 0;
         elements[3].UsageIndex = 0;
 
-        if (dx9Device->CreateVertexDeclaration(elements, &dx9VertexDeclare) < 0)
+        if (dx9Device->CreateVertexDeclaration(elements, &dx9VertexDeclare) < S_OK)
             return false;
 
-        if (dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, 0, D3DPOOL_DEFAULT, &dx9VertexBuffer, NULL) < 0)
+        if (dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, 0, D3DPOOL_DEFAULT, &dx9VertexBuffer, NULL) < S_OK)
             return false;
     }
     else {
         if (adapterStatus < 0
             || dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT, &dx9VertexBuffer,
                                              NULL)
-                   < 0)
+                   < S_OK)
             return false;
     }
 
@@ -735,8 +738,8 @@ bool RenderDevice::InitGraphicsAPI()
     }
     else {
         viewSize.x        = pixAspect * viewSize.y;
-        dx9ViewPort.X     = (displayInfo.viewport.Width >> 1) - ((pixAspect * viewSize.y) * 0.5);
-        dx9ViewPort.Width = (pixAspect * viewSize.y);
+        dx9ViewPort.X     = (displayInfo.viewport.Width >> 1) - (viewSize.x * 0.5);
+        dx9ViewPort.Width = viewSize.x;
 
         dx9Device->SetViewport(&dx9ViewPort);
     }
@@ -752,13 +755,13 @@ bool RenderDevice::InitGraphicsAPI()
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
         if (dx9Device->CreateTexture(textureSize.x, textureSize.y, 1, D3DUSAGE_DYNAMIC, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &screenTextures[s], NULL)
-            != 0)
+            != S_OK)
             return false;
     }
 
     if (dx9Device->CreateTexture(RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &imageTexture,
                                  NULL)
-        != 0)
+        != S_OK)
         return false;
 
     lastShaderID = -1;
@@ -1068,9 +1071,9 @@ void RenderDevice::GetDisplays()
         displayHeight[a] = displayMode.Height;
 
         if (windowMonitor == monitor) {
-            tagMONITORINFO lpmi;
+            MONITORINFO lpmi;
             memset(&lpmi, 0, sizeof(lpmi));
-            lpmi.cbSize = 40;
+            lpmi.cbSize = sizeof(MONITORINFO);
 
             GetMonitorInfo(windowMonitor, &lpmi);
             dxAdapter          = a;
@@ -1082,22 +1085,8 @@ void RenderDevice::GetDisplays()
     memset(&adapterIdentifier, 0, sizeof(adapterIdentifier));
     dx9Context->GetAdapterIdentifier(dxAdapter, 0, &adapterIdentifier);
 
-    unsigned long *curIdentifier = &deviceIdentifier.Data1;
-    unsigned long *newIdentifier = &adapterIdentifier.DeviceIdentifier.Data1;
-
-    int remain = 3;
-    while (*curIdentifier == *newIdentifier) {
-        curIdentifier++;
-        newIdentifier++;
-
-        remain--;
-        if (remain <= 0) {
-            if (prevAdapter == dxAdapter) // no change
-                return;
-            else // change, reload info
-                break;
-        }
-    }
+    if (memcmp(&prevAdapter, &dxAdapter, sizeof(dxAdapter)) == 0) // no change, don't reload anything
+        return;
 
     deviceIdentifier = adapterIdentifier.DeviceIdentifier;
 
@@ -1111,9 +1100,6 @@ void RenderDevice::GetDisplays()
 
     for (int32 d = 0; d < displayCount; ++d) {
         dx9Context->EnumAdapterModes(dxAdapter, D3DFMT_X8R8G8B8, d, &displayInfo.displays[newDisplayCount].internal);
-        int32 w = displayInfo.displays[newDisplayCount].width;
-        int32 h = displayInfo.displays[newDisplayCount].height;
-        int32 r = displayInfo.displays[newDisplayCount].refresh_rate;
 
         int32 refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
         if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].height >= (SCREEN_YSIZE * 2)) {
@@ -1372,15 +1358,23 @@ bool RenderDevice::ProcessEvents()
     return true;
 }
 
-LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (Msg) {
+    GUID deviceGUID = { 1771351300, 37871, 4560, { 163, 204, 0, 160, 201, 34, 49, 150 } };
+
+    switch (message) {
         case WM_CREATE: {
             if (deviceNotif)
                 return 0;
 
-            int32 filter  = 32;
-            deviceNotif = RegisterDeviceNotification(hRecipient, &filter, 0);
+            DEV_BROADCAST_DEVICEINTERFACE filter;
+            filter.dbcc_name[0]    = 0;
+            filter.dbcc_reserved   = 0;
+            filter.dbcc_size       = 32;
+            filter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+            filter.dbcc_classguid  = deviceGUID;
+
+            deviceNotif = RegisterDeviceNotification(hRecipient, &filter, DEVICE_NOTIFY_WINDOW_HANDLE);
             break;
         }
 
@@ -1430,20 +1424,13 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
             break;
 
         case WM_DEVICECHANGE: {
-            uint32 dbch_sizes[]      = { 1771351300, 298882031, 2684406947, 2519802569 };
-            DEV_BROADCAST_HDR *param = (DEV_BROADCAST_HDR *)lParam;
+            DEV_BROADCAST_DEVICEINTERFACE *deviceInterace = (DEV_BROADCAST_DEVICEINTERFACE *)lParam;
 
-            if ((wParam == DBT_DEVICEARRIVAL || wParam == DBT_DEVICEREMOVECOMPLETE) && param && param->dbch_devicetype == 5) {
-                DEV_BROADCAST_HDR *device = param + 1;
-                int32 remain              = 3;
-                uint32 *size              = dbch_sizes;
-                while (device->dbch_size == *size) {
-                    ++device;
-                    ++size;
-                    if (--remain <= 0) {
-                        AudioDevice::audioState = 30;
-                        break;
-                    }
+            if ((wParam == DBT_DEVICEARRIVAL || wParam == DBT_DEVICEREMOVECOMPLETE) && deviceInterace
+                && deviceInterace->dbcc_devicetype == DBT_DEVTYP_DEVICEINTERFACE) {
+
+                if (memcmp(&deviceInterace->dbcc_classguid, &deviceGUID, sizeof(deviceGUID)) == 0) {
+                    AudioDevice::audioState = 30;
                 }
             }
 
@@ -1491,7 +1478,7 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT Msg, WP
 
         case WM_EXITSIZEMOVE: GetDisplays(); break;
 
-        default: return DefWindowProc(hRecipient, Msg, wParam, lParam);
+        default: return DefWindowProc(hRecipient, message, wParam, lParam);
     }
 
     return 0;

@@ -6,8 +6,8 @@ RSDK::SKU::UserCore *RSDK::SKU::userCore = NULL;
 #endif
 
 bool32 RSDK::changedVideoSettings = false;
-RSDK::SettingsStorage RSDK::videoSettings;
-RSDK::SettingsStorage RSDK::videoSettingsBackup;
+RSDK::VideoSettings RSDK::videoSettings;
+RSDK::VideoSettings RSDK::videoSettingsBackup;
 
 void RSDK::SKU::InitUserData()
 {
@@ -347,9 +347,9 @@ int32 RSDK::GetVideoSetting(int32 id)
     return 0;
 }
 
-void RSDK::SetVideoSetting(int32 id, int32 val)
+void RSDK::SetVideoSetting(int32 id, int32 value)
 {
-    bool32 boolVal = val;
+    bool32 boolVal = value;
     switch (id) {
         case VIDEOSETTING_WINDOWED:
             if (videoSettings.windowed != boolVal) {
@@ -387,33 +387,33 @@ void RSDK::SetVideoSetting(int32 id, int32 val)
             break;
 
         case VIDEOSETTING_WINDOW_WIDTH:
-            if (videoSettings.windowWidth != val) {
-                videoSettings.windowWidth = val;
+            if (videoSettings.windowWidth != value) {
+                videoSettings.windowWidth = value;
                 changedVideoSettings      = true;
             }
             break;
 
         case VIDEOSETTING_WINDOW_HEIGHT:
-            if (videoSettings.windowHeight != val) {
-                videoSettings.windowHeight = val;
+            if (videoSettings.windowHeight != value) {
+                videoSettings.windowHeight = value;
                 changedVideoSettings       = true;
             }
             break;
 
-        case VIDEOSETTING_FSWIDTH: videoSettings.fsWidth = val; break;
-        case VIDEOSETTING_FSHEIGHT: videoSettings.fsHeight = val; break;
-        case VIDEOSETTING_REFRESHRATE: videoSettings.refreshRate = val; break;
-        case VIDEOSETTING_SHADERSUPPORT: videoSettings.shaderSupport = val; break;
+        case VIDEOSETTING_FSWIDTH: videoSettings.fsWidth = value; break;
+        case VIDEOSETTING_FSHEIGHT: videoSettings.fsHeight = value; break;
+        case VIDEOSETTING_REFRESHRATE: videoSettings.refreshRate = value; break;
+        case VIDEOSETTING_SHADERSUPPORT: videoSettings.shaderSupport = value; break;
         case VIDEOSETTING_SHADERID:
-            if (videoSettings.shaderID != val) {
-                videoSettings.shaderID = val;
+            if (videoSettings.shaderID != value) {
+                videoSettings.shaderID = value;
                 changedVideoSettings   = true;
             }
             break;
 
-        case VIDEOSETTING_SCREENCOUNT: videoSettings.screenCount = val; break;
+        case VIDEOSETTING_SCREENCOUNT: videoSettings.screenCount = value; break;
 #if RETRO_REV02
-        case VIDEOSETTING_DIMTIMER: videoSettings.dimLimit = val; break;
+        case VIDEOSETTING_DIMTIMER: videoSettings.dimLimit = value; break;
 #endif
         case VIDEOSETTING_STREAMSENABLED:
             if (engine.streamsEnabled != boolVal)
@@ -423,24 +423,24 @@ void RSDK::SetVideoSetting(int32 id, int32 val)
             break;
 
         case VIDEOSETTING_STREAM_VOL:
-            if (engine.streamVolume != (val / 1024.0f)) {
-                engine.streamVolume  = (float)val / 1024.0f;
+            if (engine.streamVolume != (value / 1024.0f)) {
+                engine.streamVolume  = (float)value / 1024.0f;
                 changedVideoSettings = true;
             }
             break;
 
         case VIDEOSETTING_SFX_VOL:
-            if (engine.soundFXVolume != ((float)val / 1024.0f)) {
-                engine.soundFXVolume = (float)val / 1024.0f;
+            if (engine.soundFXVolume != ((float)value / 1024.0f)) {
+                engine.soundFXVolume = (float)value / 1024.0f;
                 changedVideoSettings = true;
             }
             break;
 
         case VIDEOSETTING_LANGUAGE:
 #if RETRO_REV02
-            SKU::curSKU.language = val;
+            SKU::curSKU.language = value;
 #else
-            gameVerInfo.language = val;
+            gameVerInfo.language = value;
 #endif
             break;
 
@@ -453,7 +453,7 @@ void RSDK::SetVideoSetting(int32 id, int32 val)
 
         case VIDEOSETTING_CHANGED: changedVideoSettings = boolVal; break;
 
-        case VIDEOSETTING_WRITE: WriteSettings(val); break;
+        case VIDEOSETTING_WRITE: SaveSettingsINI(value); break;
 
         default: break;
     }
@@ -464,7 +464,7 @@ void RSDK::SetVideoSetting(int32 id, int32 val)
 
 char buttonNames[18][8] = { "U", "D", "L", "R", "START", "SELECT", "LSTICK", "RSTICK", "L1", "R1", "C", "Z", "A", "B", "X", "Y", "L2", "R2" };
 
-void RSDK::readSettings()
+void RSDK::LoadSettingsINI()
 {
     videoSettings.screenCount = 1;
     videoSettings.pixHeight   = SCREEN_YSIZE;
@@ -671,12 +671,12 @@ void RSDK::readSettings()
             controller[i].keySelect.keyMap = defKeyMaps[i][11];
         }
 
-        WriteSettings(true);
+        SaveSettingsINI(true);
         engine.devMenu = CheckDataFile("Data.rsdk", 0, useBuffer);
     }
 }
 
-void RSDK::WriteSettings(bool32 writeToFile)
+void RSDK::SaveSettingsINI(bool32 writeToFile)
 {
     // only done on windows and "dev", consoles use "options.bin"
 #if RETRO_REV02

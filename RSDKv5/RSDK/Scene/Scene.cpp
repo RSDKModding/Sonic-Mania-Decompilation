@@ -39,7 +39,7 @@ void LoadScene()
 
 #if RETRO_REV02
     // Unload debug values
-    ClearDebugValues();
+    ClearViewableVariables();
 
     // unload tint table
     tintLookupTable = NULL;
@@ -177,7 +177,7 @@ void LoadScene()
             GEN_HASH_MD5(textBuffer, hash);
 
             stageObjectIDs[sceneInfo.classCount] = 0;
-            for (int32 id = 0; id < stageObjectCount; ++id) {
+            for (int32 id = 0; id < objectClassCount; ++id) {
                 if (HASH_MATCH_MD5(hash, objectClassList[id].hash)) {
                     stageObjectIDs[sceneInfo.classCount] = id;
                     sceneInfo.classCount++;

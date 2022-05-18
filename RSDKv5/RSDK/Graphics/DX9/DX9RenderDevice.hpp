@@ -61,7 +61,7 @@ private:
     static void GetDisplays();
 
     static void ProcessEvent(MSG msg);
-    static LRESULT CALLBACK WindowEventCallback(HWND hRecipient, UINT Msg, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK WindowEventCallback(HWND hRecipient, UINT message, WPARAM wParam, LPARAM lParam);
 
     static bool useFrequency;
 

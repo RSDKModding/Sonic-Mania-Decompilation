@@ -128,7 +128,7 @@ inline void RegisterHIDDevice(void) { userCore->RegisterHIDDevice(); }
 
 } // namespace SKU
 
-struct SettingsStorage {
+struct VideoSettings {
     uint8 windowed;
     uint8 bordered;
     uint8 exclusiveFS;
@@ -155,7 +155,7 @@ struct SettingsStorage {
     float viewportY;
 };
 
-enum VideoSettings {
+enum VideoSettingsValues {
     VIDEOSETTING_WINDOWED,
     VIDEOSETTING_BORDERED,
     VIDEOSETTING_EXCLUSIVEFS,
@@ -182,15 +182,15 @@ enum VideoSettings {
     VIDEOSETTING_WRITE,
 };
 
-extern SettingsStorage videoSettings;
-extern SettingsStorage videoSettingsBackup;
+extern VideoSettings videoSettings;
+extern VideoSettings videoSettingsBackup;
 extern bool32 changedVideoSettings;
 
 int32 GetVideoSetting(int32 id);
-void SetVideoSetting(int32 id, int32 val);
+void SetVideoSetting(int32 id, int32 value);
 
-void readSettings();
-void WriteSettings(bool32 writeToFile);
+void LoadSettingsINI();
+void SaveSettingsINI(bool32 writeToFile);
 
 inline void writeText(FileIO *file, const char *string, ...)
 {

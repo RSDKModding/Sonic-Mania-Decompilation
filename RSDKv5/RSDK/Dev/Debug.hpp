@@ -1,10 +1,10 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-// These being different sizes will surely cause issues if more then DEBUGVALUE_LIST_COUNT values are set
+// These being different sizes will surely cause issues if more then VIEWVAR_LIST_COUNT values are set
 // But that's how the code is in the original so what can ya do
-#define DEBUGVALUE_COUNT      (0x900)
-#define DEBUGVALUE_LIST_COUNT (0x40)
+#define VIEWVAR_COUNT      (0x900)
+#define VIEWVAR_LIST_COUNT (0x40)
 
 #include <stdarg.h>
 
@@ -59,26 +59,27 @@ struct DebugValueInfo {
 };
 
 typedef enum {
-    DTYPE_BOOL = 1,
-    DTYPE_UINT8,
-    DTYPE_UINT16,
-    DTYPE_UINT32,
-    DTYPE_INT8,
-    DTYPE_INT16,
-    DTYPE_INT32,
-} DebugVarTypes;
+    VIEWVAR_INVALID,
+    VIEWVAR_BOOL,
+    VIEWVAR_UINT8,
+    VIEWVAR_UINT16,
+    VIEWVAR_UINT32,
+    VIEWVAR_INT8,
+    VIEWVAR_INT16,
+    VIEWVAR_INT32,
+} ViewableVarTypes;
 
 typedef enum {
-    DEBUGDISPLAY_BOOL,
-    DEBUGDISPLAY_UNSIGNED,
-    DEBUGDISPLAY_SIGNED,
+    VIEWVAR_DISPLAY_BOOL,
+    VIEWVAR_DISPLAY_UNSIGNED,
+    VIEWVAR_DISPLAY_SIGNED,
 } DebugVarDisplayTypes;
 
-extern int32 debugValueCount;
-extern DebugValueInfo debugValues[DEBUGVALUE_LIST_COUNT];
+extern int32 viewableVarCount;
+extern DebugValueInfo debugValues[VIEWVAR_LIST_COUNT];
 
-inline void ClearDebugValues() { debugValueCount = 0; }
-void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 max);
+inline void ClearViewableVariables() { viewableVarCount = 0; }
+void AddViewableVariable(const char *name, void *value, int32 type, int32 min, int32 max);
 #endif
 
 struct DevMenu {

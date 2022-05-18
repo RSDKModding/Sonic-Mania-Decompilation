@@ -14,8 +14,8 @@ bool32 useEndLine      = true;
 char outputString[0x400];
 
 #if RETRO_REV02
-int32 debugValueCount = 0;
-DebugValueInfo debugValues[DEBUGVALUE_LIST_COUNT];
+int32 viewableVarCount = 0;
+DebugValueInfo debugValues[VIEWVAR_LIST_COUNT];
 #endif
 
 DevMenu devMenu = DevMenu();
@@ -93,45 +93,46 @@ void PrintLog(int32 severity, const char *message, ...)
 }
 
 #if RETRO_REV02
-void SetDebugValue(const char *name, void *valPtr, int32 type, int32 min, int32 max)
+void AddViewableVariable(const char *name, void *value, int32 type, int32 min, int32 max)
 {
-    if (debugValueCount < DEBUGVALUE_COUNT) {
-        DebugValueInfo *value = &debugValues[debugValueCount++];
+    if (viewableVarCount < VIEWVAR_COUNT) {
+        DebugValueInfo *value = &debugValues[viewableVarCount++];
+
         strncpy(value->name, name, 0x10);
-        value->value = valPtr;
+        value->value = value;
         switch (type) {
-            case DTYPE_BOOL:
-                value->type = DEBUGDISPLAY_BOOL;
+            case VIEWVAR_BOOL:
+                value->type = VIEWVAR_DISPLAY_BOOL;
                 value->size = sizeof(bool32);
                 break;
 
-            case DTYPE_UINT8:
-                value->type = DEBUGDISPLAY_UNSIGNED;
+            case VIEWVAR_UINT8:
+                value->type = VIEWVAR_DISPLAY_UNSIGNED;
                 value->size = sizeof(uint8);
                 break;
 
-            case DTYPE_UINT16:
-                value->type = DEBUGDISPLAY_UNSIGNED;
+            case VIEWVAR_UINT16:
+                value->type = VIEWVAR_DISPLAY_UNSIGNED;
                 value->size = sizeof(uint16);
                 break;
 
-            case DTYPE_UINT32:
-                value->type = DEBUGDISPLAY_UNSIGNED;
+            case VIEWVAR_UINT32:
+                value->type = VIEWVAR_DISPLAY_UNSIGNED;
                 value->size = sizeof(uint32);
                 break;
 
-            case DTYPE_INT8:
-                value->type = DEBUGDISPLAY_SIGNED;
+            case VIEWVAR_INT8:
+                value->type = VIEWVAR_DISPLAY_SIGNED;
                 value->size = sizeof(int8);
                 break;
 
-            case DTYPE_INT16:
-                value->type = DEBUGDISPLAY_SIGNED;
+            case VIEWVAR_INT16:
+                value->type = VIEWVAR_DISPLAY_SIGNED;
                 value->size = sizeof(int16);
                 break;
 
-            case DTYPE_INT32:
-                value->type = DEBUGDISPLAY_SIGNED;
+            case VIEWVAR_INT32:
+                value->type = VIEWVAR_DISPLAY_SIGNED;
                 value->size = sizeof(int32);
                 break;
 
@@ -1321,7 +1322,7 @@ void DevMenu_DebugOptionsMenu()
     confirm |= controller[CONT_ANY].keyStart.press;
 
     for (int32 i = 0; i < 8; ++i) {
-        if (devMenu.scrollPos + i < debugValueCount) {
+        if (devMenu.scrollPos + i < viewableVarCount) {
             DebugValueInfo *value = &debugValues[devMenu.scrollPos + i];
             DrawDevString(value->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[i]);
 
@@ -1339,15 +1340,15 @@ void DevMenu_DebugOptionsMenu()
                         uint8 *v = (uint8 *)value->value;
 
                         switch (value->type) {
-                            case DEBUGDISPLAY_BOOL:
+                            case VIEWVAR_DISPLAY_BOOL:
                                 valueStr[0] = *v ? 'Y' : 'N';
                                 valueStr[1] = 0;
                                 break;
 
                             default:
-                            case DEBUGDISPLAY_UNSIGNED: valueStr[0] = ' '; break;
+                            case VIEWVAR_DISPLAY_UNSIGNED: valueStr[0] = ' '; break;
 
-                            case DEBUGDISPLAY_SIGNED:
+                            case VIEWVAR_DISPLAY_SIGNED:
                                 valueStr[0] = *v > 0x7F ? '-' : ' ';
                                 *v &= 0x7F;
                                 break;
@@ -1359,15 +1360,15 @@ void DevMenu_DebugOptionsMenu()
                         uint16 *v = (uint16 *)value->value;
 
                         switch (value->type) {
-                            case DEBUGDISPLAY_BOOL:
+                            case VIEWVAR_DISPLAY_BOOL:
                                 valueStr[0] = *v ? 'Y' : 'N';
                                 valueStr[1] = 0;
                                 break;
 
                             default:
-                            case DEBUGDISPLAY_UNSIGNED: valueStr[0] = ' '; break;
+                            case VIEWVAR_DISPLAY_UNSIGNED: valueStr[0] = ' '; break;
 
-                            case DEBUGDISPLAY_SIGNED:
+                            case VIEWVAR_DISPLAY_SIGNED:
                                 valueStr[0] = *v > 0x7FFF ? '-' : ' ';
                                 *v &= 0x7FFF;
                                 break;
@@ -1379,15 +1380,15 @@ void DevMenu_DebugOptionsMenu()
                         uint32 *v = (uint32 *)value->value;
 
                         switch (value->type) {
-                            case DEBUGDISPLAY_BOOL:
+                            case VIEWVAR_DISPLAY_BOOL:
                                 valueStr[0] = *v ? 'Y' : 'N';
                                 valueStr[1] = 0;
                                 break;
 
                             default:
-                            case DEBUGDISPLAY_UNSIGNED: valueStr[0] = ' '; break;
+                            case VIEWVAR_DISPLAY_UNSIGNED: valueStr[0] = ' '; break;
 
-                            case DEBUGDISPLAY_SIGNED:
+                            case VIEWVAR_DISPLAY_SIGNED:
                                 valueStr[0] = *v > 0x7FFFFFFF ? '-' : ' ';
                                 *v &= 0x7FFFFFFF;
                                 break;
@@ -1396,7 +1397,7 @@ void DevMenu_DebugOptionsMenu()
                     }
                 }
 
-                if (value->type != DEBUGDISPLAY_BOOL) {
+                if (value->type != VIEWVAR_DISPLAY_BOOL) {
                     if (2 * value->size) {
                         char *curChar                   = &valueStr[2 * value->size];
                         valueStr[(2 * value->size) + 1] = 0;
@@ -1439,7 +1440,7 @@ void DevMenu_DebugOptionsMenu()
 
     if (controller[CONT_ANY].keyUp.press) {
         if (--devMenu.selection < 0)
-            devMenu.selection = debugValueCount;
+            devMenu.selection = viewableVarCount;
 
         if (devMenu.selection >= devMenu.scrollPos) {
             if (devMenu.selection > devMenu.scrollPos + 7)
@@ -1453,7 +1454,7 @@ void DevMenu_DebugOptionsMenu()
     }
     else if (controller[CONT_ANY].keyUp.down) {
         if (!devMenu.timer && --devMenu.selection < 0)
-            devMenu.selection = debugValueCount;
+            devMenu.selection = viewableVarCount;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
 
@@ -1467,7 +1468,7 @@ void DevMenu_DebugOptionsMenu()
     }
 
     if (controller[CONT_ANY].keyDown.press) {
-        if (++devMenu.selection > debugValueCount)
+        if (++devMenu.selection > viewableVarCount)
             devMenu.selection = 0;
 
         if (devMenu.selection >= devMenu.scrollPos) {
@@ -1481,7 +1482,7 @@ void DevMenu_DebugOptionsMenu()
         devMenu.timer = 1;
     }
     else if (controller[CONT_ANY].keyDown.down) {
-        if (!devMenu.timer && ++devMenu.selection >= debugValueCount)
+        if (!devMenu.timer && ++devMenu.selection >= viewableVarCount)
             devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
@@ -1494,7 +1495,7 @@ void DevMenu_DebugOptionsMenu()
         }
     }
 
-    if (devMenu.selection < debugValueCount) {
+    if (devMenu.selection < viewableVarCount) {
         DebugValueInfo *value = &debugValues[devMenu.selection];
 
         switch (value->size) {
@@ -1504,14 +1505,14 @@ void DevMenu_DebugOptionsMenu()
                 int8 *valuePtr = (int8 *)value->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == DEBUGDISPLAY_BOOL)
+                    if (value->type == VIEWVAR_DISPLAY_BOOL)
                         *valuePtr ^= 1;
                     else if (*valuePtr - 1 >= value->min)
                         *valuePtr--;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (value->type == DEBUGDISPLAY_BOOL)
+                    if (value->type == VIEWVAR_DISPLAY_BOOL)
                         *valuePtr ^= 1;
                     else if (*valuePtr + 1 <= value->max)
                         *valuePtr++;
@@ -1523,14 +1524,14 @@ void DevMenu_DebugOptionsMenu()
                 int16 *valuePtr = (int16 *)value->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == DEBUGDISPLAY_BOOL)
+                    if (value->type == VIEWVAR_DISPLAY_BOOL)
                         *valuePtr ^= 1;
                     else if (*valuePtr - 1 >= value->min)
                         *valuePtr--;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (value->type == DEBUGDISPLAY_BOOL)
+                    if (value->type == VIEWVAR_DISPLAY_BOOL)
                         *valuePtr ^= 1;
                     else if (*valuePtr + 1 <= value->max)
                         *valuePtr++;
@@ -1542,7 +1543,7 @@ void DevMenu_DebugOptionsMenu()
                 int32 *valuePtr = (int32 *)value->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == DEBUGDISPLAY_BOOL)
+                    if (value->type == VIEWVAR_DISPLAY_BOOL)
                         *valuePtr ^= 1;
                     else if (*valuePtr - 1 >= value->min)
                         *valuePtr--;

@@ -75,7 +75,7 @@ void Music_StageLoad(void)
 
 #if MANIA_USE_PLUS
     if (sku_platform == PLATFORM_DEV)
-        RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, DTYPE_BOOL, false, true);
+        RSDK.AddViewableVariable("Vape Mode", &globals->vapeMode, VIEWVAR_BOOL, false, true);
 #endif
 }
 

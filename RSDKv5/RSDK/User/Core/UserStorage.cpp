@@ -1,11 +1,11 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
 #if RETRO_REV02
-RSDK::SKU::UserStorage *RSDK::SKU::userStorage = NULL;
-RSDK::SKU::UserDBStorage *RSDK::SKU::userDBStorage  = NULL;
+RSDK::SKU::UserStorage *RSDK::SKU::userStorage     = NULL;
+RSDK::SKU::UserDBStorage *RSDK::SKU::userDBStorage = NULL;
 
-int RSDK::SKU::GetUserAuthStatus() { return userStorage->authStatus; }
-int RSDK::SKU::GetUserStorageStatus()
+int32 RSDK::SKU::GetUserAuthStatus() { return userStorage->authStatus; }
+int32 RSDK::SKU::GetUserStorageStatus()
 {
     if (userStorage->saveStatus == STATUS_ERROR)
         return STATUS_ERROR;
@@ -13,7 +13,7 @@ int RSDK::SKU::GetUserStorageStatus()
         return userStorage->storageStatus;
 }
 
-int RSDK::SKU::GetSaveStatus()
+int32 RSDK::SKU::GetSaveStatus()
 {
     if (userStorage->noSaveActive)
         return STATUS_OK;
@@ -37,8 +37,8 @@ void RSDK::SKU::SetSaveStatusError()
 }
 void RSDK::SKU::ClearSaveStatus() { userStorage->saveStatus = STATUS_NONE; }
 void RSDK::SKU::SetSaveStatusContinue() { userStorage->saveStatus = STATUS_CONTINUE; }
-void RSDK::SKU::SetUserStorageNoSave(int state) { userStorage->noSaveActive = state; }
-int RSDK::SKU::GetUserStorageNoSave() { return userStorage->noSaveActive; }
+void RSDK::SKU::SetUserStorageNoSave(int32 state) { userStorage->noSaveActive = state; }
+int32 RSDK::SKU::GetUserStorageNoSave() { return userStorage->noSaveActive; }
 
 void RSDK::SKU::InitUserStorageDB(UserDBStorage *storage)
 {
@@ -59,26 +59,26 @@ void RSDK::SKU::InitUserStorageDB(UserDBStorage *storage)
     storage->saveCallback[6] = UserDBStorage_SaveCB7;
     storage->saveCallback[7] = UserDBStorage_SaveCB8;
 
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+    for (int32 i = 0; i < RETRO_USERDB_MAX; ++i) {
         memset(&storage->userDB[i], 0, sizeof(UserDB));
         storage->userDB[i].sortedRowList.Clear();
     }
 }
 void RSDK::SKU::ReleaseUserStorageDB(UserDBStorage *storage)
 {
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+    for (int32 i = 0; i < RETRO_USERDB_MAX; ++i) {
         storage->userDB[i].sortedRowList.Clear(true);
     }
 }
 
-//UserDB Management
-ushort RSDK::SKU::InitUserDB(const char *name, ...)
+// UserDB Management
+uint16 RSDK::SKU::InitUserDB(const char *name, ...)
 {
-    int tableID = -1;
-    uint uuid   = 0;
+    int32 tableID = -1;
+    uint32 uuid   = 0;
     GenerateHashCRC(&uuid, (char *)name);
 
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+    for (int32 i = 0; i < RETRO_USERDB_MAX; ++i) {
         if (!userDBStorage->userDB[i].loaded) {
             tableID = i;
             break;
@@ -99,17 +99,17 @@ ushort RSDK::SKU::InitUserDB(const char *name, ...)
     va_end(list);
     return tableID;
 }
-ushort RSDK::SKU::LoadUserDB(const char *filename, void (*callback)(int))
+uint16 RSDK::SKU::LoadUserDB(const char *filename, void (*callback)(int32))
 {
-    int tableID = -1;
-    uint uuid   = 0;
+    int32 tableID = -1;
+    uint32 uuid   = 0;
     GenerateHashCRC(&uuid, (char *)filename);
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+    for (int32 i = 0; i < RETRO_USERDB_MAX; ++i) {
         if (uuid == userDBStorage->userDB[i].uuid && userDBStorage->userDB[i].loaded)
             return i;
     }
 
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+    for (int32 i = 0; i < RETRO_USERDB_MAX; ++i) {
         if (!userDBStorage->userDB[i].loaded) {
             tableID = i;
             break;
@@ -132,15 +132,15 @@ ushort RSDK::SKU::LoadUserDB(const char *filename, void (*callback)(int))
     userDB->uuid   = uuid;
     return tableID;
 }
-bool32 RSDK::SKU::SaveUserDB(ushort tableID, void (*callback)(int))
+bool32 RSDK::SKU::SaveUserDB(uint16 tableID, void (*callback)(int32))
 {
     UserDB *userDB = &userDBStorage->userDB[tableID];
 
     bool32 success = false;
     if (userDB->active) {
-        int totalSize = (int)GetUserDBWriteSize(userDB);
+        int32 totalSize = (int32)GetUserDBWriteSize(userDB);
         RSDK::AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], RSDK::DATASET_TMP, true);
-        SaveDBToBuffer(userDB, totalSize, (byte *)userDBStorage->writeBuffer[tableID]);
+        SaveDBToBuffer(userDB, totalSize, (uint8 *)userDBStorage->writeBuffer[tableID]);
         userDBStorage->userSaveCB[tableID] = UserDBSaveCB;
         userDBStorage->callbacks[tableID]  = callback;
         success = TrySaveUserFile(userDB->name, userDBStorage->writeBuffer[tableID], totalSize, userDBStorage->saveCallback[tableID], true);
@@ -152,7 +152,7 @@ bool32 RSDK::SKU::SaveUserDB(ushort tableID, void (*callback)(int))
     return success;
 }
 
-void RSDK::SKU::ClearUserDB(ushort tableID)
+void RSDK::SKU::ClearUserDB(uint16 tableID)
 {
     if (tableID == (uint16)-1)
         return;
@@ -164,7 +164,7 @@ void RSDK::SKU::ClearUserDB(ushort tableID)
         userDB->active      = false;
         userDB->valid       = false;
         userDB->uuid        = 0;
-        userDB->rowCount  = 0;
+        userDB->rowCount    = 0;
         userDB->columnCount = 0;
         memset(userDB->columnTypes, 0, sizeof(userDB->columnTypes));
         memset(userDB->columnNames, 0, sizeof(userDB->columnNames));
@@ -175,10 +175,10 @@ void RSDK::SKU::ClearUserDB(ushort tableID)
 }
 void RSDK::SKU::ClearAllUserDBs()
 {
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) ClearUserDB(i);
+    for (int32 i = 0; i < RETRO_USERDB_MAX; ++i) ClearUserDB(i);
 }
 
-ushort RSDK::SKU::GetUserDBRowByID(ushort tableID, uint uuid)
+uint16 RSDK::SKU::GetUserDBRowByID(uint16 tableID, uint32 uuid)
 {
     if (tableID == (uint16)-1)
         return -1;
@@ -190,7 +190,7 @@ ushort RSDK::SKU::GetUserDBRowByID(ushort tableID, uint uuid)
     if (!userDB->rowCount)
         return -1;
 
-    for (int i = 0; i < userDB->rowCount; ++i) {
+    for (int32 i = 0; i < userDB->rowCount; ++i) {
         if (uuid == userDB->rows[i].uuid) {
             return i;
         }
@@ -198,14 +198,14 @@ ushort RSDK::SKU::GetUserDBRowByID(ushort tableID, uint uuid)
     return -1;
 }
 
-//UserDB Columns
-bool32 RSDK::SKU::AddUserDBColumn(UserDBRow *userDB, int type, char *name, void *value)
+// UserDB Columns
+bool32 RSDK::SKU::AddUserDBColumn(UserDBRow *userDB, int32 type, char *name, void *value)
 {
-    UserDB *db = userDB->parent;
-    uint uuid  = 0;
+    UserDB *db  = userDB->parent;
+    uint32 uuid = 0;
     GenerateHashCRC(&uuid, name);
 
-    for (int c = 0; c < db->columnCount; ++c) {
+    for (int32 c = 0; c < db->columnCount; ++c) {
         if (db->columnUUIDs[c] == uuid) {
             if (c < 0 || type != db->columnTypes[c])
                 return 0;
@@ -220,13 +220,13 @@ bool32 RSDK::SKU::AddUserDBColumn(UserDBRow *userDB, int type, char *name, void 
 
     return false;
 }
-int RSDK::SKU::GetDBColumnID(UserDB *userDB, const char *name)
+int32 RSDK::SKU::GetDBColumnID(UserDB *userDB, const char *name)
 {
-    uint uuid = 0;
+    uint32 uuid = 0;
     GenerateHashCRC(&uuid, (char *)name);
 
-    int id = -1;
-    for (int i = 0; i < userDB->columnCount; ++i) {
+    int32 id = -1;
+    for (int32 i = 0; i < userDB->columnCount; ++i) {
         if (uuid == userDB->columnUUIDs[i]) {
             id = i;
             break;
@@ -234,13 +234,13 @@ int RSDK::SKU::GetDBColumnID(UserDB *userDB, const char *name)
     }
     return id;
 }
-bool32 RSDK::SKU::GetUserDBColumn(UserDBRow *row, int type, char *name, void *value)
+bool32 RSDK::SKU::GetUserDBColumn(UserDBRow *row, int32 type, char *name, void *value)
 {
-    UserDB *db = row->parent;
-    uint uuid  = 0;
+    UserDB *db  = row->parent;
+    uint32 uuid = 0;
     GenerateHashCRC(&uuid, name);
 
-    for (int c = 0; c < db->columnCount; ++c) {
+    for (int32 c = 0; c < db->columnCount; ++c) {
         if (db->columnUUIDs[c] == uuid) {
             if (c < 0 || type != db->columnTypes[c])
                 return 0;
@@ -252,8 +252,8 @@ bool32 RSDK::SKU::GetUserDBColumn(UserDBRow *row, int type, char *name, void *va
     return false;
 }
 
-//UserDB Rows
-int RSDK::SKU::AddUserDBRow(ushort tableID)
+// UserDB Rows
+int32 RSDK::SKU::AddUserDBRow(uint16 tableID)
 {
     if (tableID == (uint16)-1)
         return -1;
@@ -265,7 +265,7 @@ int RSDK::SKU::AddUserDBRow(ushort tableID)
         return -1;
 
     UserDBRow *row = &userDB->rows[userDB->rowCount];
-    row->uuid = CreateRowUUID(userDB);
+    row->uuid      = CreateRowUUID(userDB);
 
     time_t timeInfo;
     time(&timeInfo);
@@ -282,7 +282,7 @@ int RSDK::SKU::AddUserDBRow(ushort tableID)
     userDB->rowsChanged = true;
     return userDB->rowCount - 1;
 }
-uint RSDK::SKU::RemoveDBRow(ushort tableID, uint rowID)
+uint32 RSDK::SKU::RemoveDBRow(uint16 tableID, uint32 rowID)
 {
     if (tableID == (uint16)-1 || rowID == (uint16)-1)
         return 0;
@@ -294,7 +294,7 @@ uint RSDK::SKU::RemoveDBRow(ushort tableID, uint rowID)
         UserDBRow *entry = &userDB->rows[rowID];
         memset(entry, 0, sizeof(UserDBRow));
 
-        int id = (ushort)(userDB->rowCount - rowID - 1);
+        int32 id = (uint16)(userDB->rowCount - rowID - 1);
         memcpy(entry, &entry[1], id * sizeof(UserDBRow));
         memset(&entry[id + 1], 0, sizeof(UserDBRow));
 
@@ -305,7 +305,7 @@ uint RSDK::SKU::RemoveDBRow(ushort tableID, uint rowID)
     }
     return true;
 }
-bool32 RSDK::SKU::RemoveAllDBRows(ushort tableID)
+bool32 RSDK::SKU::RemoveAllDBRows(uint16 tableID)
 {
     if (tableID == (uint16)-1)
         return 0;
@@ -317,7 +317,7 @@ bool32 RSDK::SKU::RemoveAllDBRows(ushort tableID)
     UpdateUserDBParents(userDB);
     return true;
 }
-uint RSDK::SKU::GetDBRowUUID(ushort tableID, int rowID)
+uint32 RSDK::SKU::GetDBRowUUID(uint16 tableID, int32 rowID)
 {
     if (tableID == (uint16)-1 || rowID == (uint16)-1)
         return 0;
@@ -328,8 +328,8 @@ uint RSDK::SKU::GetDBRowUUID(ushort tableID, int rowID)
     return userDB->rows[rowID].uuid;
 }
 
-//UserDB Row Unknowns
-ushort RSDK::SKU::SetupUserDBRowSorting(ushort tableID)
+// UserDB Row Unknowns
+uint16 RSDK::SKU::SetupUserDBRowSorting(uint16 tableID)
 {
     if (tableID == (uint16)-1)
         return 0;
@@ -342,7 +342,7 @@ void RSDK::SKU::SetupRowSortIDs(UserDB *userDB)
     userDB->sortedRowCount = 0;
     memset(userDB->sortedRowIDs, 0, sizeof(userDB->sortedRowIDs));
 
-    for (int i = 0; i < userDB->sortedRowList.Count(); ++i) {
+    for (int32 i = 0; i < userDB->sortedRowList.Count(); ++i) {
         userDB->sortedRowIDs[i] = *userDB->sortedRowList.At(i);
         ++userDB->sortedRowCount;
     }
@@ -351,8 +351,8 @@ void RSDK::SKU::UserDBRefreshRowUnknown(UserDB *userDB)
 {
     userDB->sortedRowList.Clear();
 
-    for (int i = 0; i < userDB->rowCount; ++i) {
-        int *row = userDB->sortedRowList.Append();
+    for (int32 i = 0; i < userDB->rowCount; ++i) {
+        int32 *row = userDB->sortedRowList.Append();
         if (row)
             *row = i;
     }
@@ -361,7 +361,7 @@ void RSDK::SKU::UserDBRefreshRowUnknown(UserDB *userDB)
 
     SetupRowSortIDs(userDB);
 }
-int RSDK::SKU::AddUserDBRowSortFilter(ushort tableID, int type, const char *name, void *value)
+int32 RSDK::SKU::AddUserDBRowSortFilter(uint16 tableID, int32 type, const char *name, void *value)
 {
     if (tableID == (uint16)-1)
         return 0;
@@ -372,7 +372,7 @@ int RSDK::SKU::AddUserDBRowSortFilter(ushort tableID, int type, const char *name
     FilterSortedUserDBRows(userDB->parent, name, value);
     return userDB->sortedRowCount;
 }
-int RSDK::SKU::SortUserDBRows(ushort tableID, int type, const char *name, bool32 flag)
+int32 RSDK::SKU::SortUserDBRows(uint16 tableID, int32 type, const char *name, bool32 flag)
 {
     if (tableID == (uint16)-1)
         return 0;
@@ -383,7 +383,7 @@ int RSDK::SKU::SortUserDBRows(ushort tableID, int type, const char *name, bool32
     HandleUserDBSorting(userDB->parent, type, (char *)name, flag);
     return userDB->sortedRowCount;
 }
-int RSDK::SKU::GetSortedUserDBRowCount(ushort tableID)
+int32 RSDK::SKU::GetSortedUserDBRowCount(uint16 tableID)
 {
     if (tableID == (uint16)-1)
         return 0;
@@ -394,7 +394,7 @@ int RSDK::SKU::GetSortedUserDBRowCount(ushort tableID)
 
     return userDB->sortedRowCount;
 }
-int RSDK::SKU::GetSortedUserDBRowID(ushort tableID, ushort sortedRowID)
+int32 RSDK::SKU::GetSortedUserDBRowID(uint16 tableID, uint16 sortedRowID)
 {
     if (tableID == (uint16)-1)
         return -1;
@@ -405,12 +405,12 @@ int RSDK::SKU::GetSortedUserDBRowID(ushort tableID, ushort sortedRowID)
     return userDB->sortedRowIDs[sortedRowID];
 }
 
-//UserDB Values
+// UserDB Values
 void RSDK::SKU::InitUserDBValues(UserDB *userDB, va_list list)
 {
-    int cnt = 0;
+    int32 cnt = 0;
     while (true) {
-        int type = va_arg(list, int);
+        int32 type = va_arg(list, int32);
         if (type == 0)
             break;
 
@@ -422,26 +422,26 @@ void RSDK::SKU::InitUserDBValues(UserDB *userDB, va_list list)
     }
 
     userDB->columnCount = cnt;
-    userDB->rowCount  = 0;
+    userDB->rowCount    = 0;
     memset(userDB->rows, 0, sizeof(UserDBRow) * RETRO_USERDB_ROW_MAX);
     UpdateUserDBParents(userDB);
     userDB->active = true;
     userDB->valid  = true;
 }
-bool32 RSDK::SKU::GetUserDBValue(ushort tableID, uint rowID, int type, char *name, void *value)
+bool32 RSDK::SKU::GetUserDBValue(uint16 tableID, uint32 rowID, int32 type, char *name, void *value)
 {
     if (tableID == (uint16)-1 || rowID == (uint16)-1 || !userDBStorage->userDB[tableID].active)
         return false;
     return GetUserDBColumn(&userDBStorage->userDB[tableID].rows[rowID], type, name, value);
 }
-bool32 RSDK::SKU::SetUserDBValue(ushort tableID, uint rowID, int type, char *name, void *value)
+bool32 RSDK::SKU::SetUserDBValue(uint16 tableID, uint32 rowID, int32 type, char *name, void *value)
 {
     if (tableID == (uint16)-1 || rowID == (uint16)-1 || !userDBStorage->userDB[tableID].active)
         return false;
 
     return AddUserDBColumn(&userDBStorage->userDB[tableID].rows[rowID], type, name, value);
 }
-bool32 RSDK::SKU::CheckDBValueMatch(UserDBValue *valueA, int row, int column)
+bool32 RSDK::SKU::CheckDBValueMatch(UserDBValue *valueA, int32 row, int32 column)
 {
     UserDB *userDB      = (UserDB *)valueA->parent;
     UserDBValue *valueB = &userDB->rows[row].values[column];
@@ -463,12 +463,12 @@ bool32 RSDK::SKU::CheckDBValueMatch(UserDBValue *valueA, int row, int column)
             case DBVAR_STRING: {
                 char *string1 = (char *)valueA->data;
                 char *string2 = (char *)valueA->data;
-                int len1      = (int)strlen(string1);
-                int len2      = (int)strlen(string2);
+                int32 len1    = (int32)strlen(string1);
+                int32 len2    = (int32)strlen(string2);
                 if (len1 != len2)
                     return false;
 
-                for (int i = 0; i < len1; ++i) {
+                for (int32 i = 0; i < len1; ++i) {
                     if (string1[i] != string2[i])
                         return false;
                 }
@@ -479,7 +479,7 @@ bool32 RSDK::SKU::CheckDBValueMatch(UserDBValue *valueA, int row, int column)
     }
     return false;
 }
-void RSDK::SKU::StoreUserDBValue(UserDBValue *value, int type, void *data)
+void RSDK::SKU::StoreUserDBValue(UserDBValue *value, int32 type, void *data)
 {
     value->size = 0;
     memset(value->data, 0, sizeof(value->data));
@@ -505,10 +505,10 @@ void RSDK::SKU::StoreUserDBValue(UserDBValue *value, int type, void *data)
                 break;
             case DBVAR_STRING: {
                 char *string = (char *)data;
-                int len      = (int)strlen(string);
+                int32 len    = (int32)strlen(string);
                 if (len < 15) {
                     value->size = len + 1;
-                    int id      = 0;
+                    int32 id    = 0;
                     while (string[id]) {
                         value->data[id] = string[id];
                         ++id;
@@ -520,7 +520,7 @@ void RSDK::SKU::StoreUserDBValue(UserDBValue *value, int type, void *data)
         }
     }
 }
-void RSDK::SKU::RetrieveUserDBValue(UserDBValue *value, int type, void *data)
+void RSDK::SKU::RetrieveUserDBValue(UserDBValue *value, int32 type, void *data)
 {
     int8 *valData = (int8 *)data;
     switch (type) {
@@ -536,7 +536,7 @@ void RSDK::SKU::RetrieveUserDBValue(UserDBValue *value, int type, void *data)
         case DBVAR_STRING: {
             memset(valData, 0, value->size + 1);
             char *string = (char *)value->data;
-            for (int c = 0; c < value->size; ++c) {
+            for (int32 c = 0; c < value->size; ++c) {
                 valData[c] = string[c];
             }
             break;
@@ -545,9 +545,9 @@ void RSDK::SKU::RetrieveUserDBValue(UserDBValue *value, int type, void *data)
     }
 }
 
-//UserDB Misc
-int RSDK::SKU::GetUserDBRowsChanged(ushort tableID) { return userDBStorage->userDB[tableID].rowsChanged; }
-void RSDK::SKU::GetUserDBRowCreationTime(ushort tableID, int rowID, char *buf, size_t size, char *format)
+// UserDB Misc
+int32 RSDK::SKU::GetUserDBRowsChanged(uint16 tableID) { return userDBStorage->userDB[tableID].rowsChanged; }
+void RSDK::SKU::GetUserDBRowCreationTime(uint16 tableID, int32 rowID, char *buf, size_t size, char *format)
 {
     if (tableID != (uint16)-1 && rowID != (uint16)-1) {
         UserDB *userDB = &userDBStorage->userDB[tableID];
@@ -559,24 +559,24 @@ void RSDK::SKU::GetUserDBRowCreationTime(ushort tableID, int rowID, char *buf, s
 void RSDK::SKU::UpdateUserDBParents(UserDB *userDB)
 {
     userDB->parent = userDB;
-    for (int r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
+    for (int32 r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
         userDB->rows[r].parent = userDB;
-        for (int c = 0; c < userDB->columnCount; ++c) {
+        for (int32 c = 0; c < userDB->columnCount; ++c) {
             userDB->rows[r].values[c].parent = &userDB->rows[r];
         }
     }
 }
 size_t RSDK::SKU::GetUserDBWriteSize(UserDB *userDB)
 {
-    int colSize = 1;
+    int32 colSize = 1;
     if (userDB->columnCount)
         colSize = (0x10 * userDB->columnCount) + userDB->columnCount + 1;
     size_t size = colSize + 10;
 
-    for (int r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
+    for (int32 r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
         userDB->rows[r].parent = userDB;
-        int rowSize            = (sizeof(tm) * 2) + sizeof(uint32);
-        for (int c = 0; c < userDB->columnCount; ++c) {
+        int32 rowSize          = (sizeof(tm) * 2) + sizeof(uint32);
+        for (int32 c = 0; c < userDB->columnCount; ++c) {
             rowSize += sizeof(uint8) + userDB->rows[r].values[c].size;
         }
         size += rowSize;
@@ -584,11 +584,12 @@ size_t RSDK::SKU::GetUserDBWriteSize(UserDB *userDB)
 
     return size;
 }
-bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, byte *buffer)
+bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, uint8 *buffer)
 {
-    uint signature = *(uint *)buffer;
-    if (signature != 0x80074B1E)
+    uint32 signature = *(uint32 *)buffer;
+    if (signature != RETRO_USERDB_SIGNATURE)
         return false;
+
     buffer += sizeof(int32);
     buffer += sizeof(int32); // used size
 
@@ -598,7 +599,7 @@ bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, byte *buffer)
     userDB->columnCount = *buffer;
     buffer++;
 
-    for (int c = 0; c < userDB->columnCount; ++c) {
+    for (int32 c = 0; c < userDB->columnCount; ++c) {
         userDB->columnTypes[c] = *buffer;
         buffer++;
 
@@ -608,7 +609,7 @@ bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, byte *buffer)
         GenerateHashCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
     }
 
-    for (int r = 0; r < userDB->rowCount; ++r) {
+    for (int32 r = 0; r < userDB->rowCount; ++r) {
         userDB->rows[r].uuid = *(uint32 *)buffer;
         buffer += sizeof(uint32);
 
@@ -617,7 +618,7 @@ bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, byte *buffer)
         memcpy(&userDB->rows[r].changeTime, buffer, sizeof(tm));
         buffer += sizeof(tm);
 
-        for (int c = 0; c < userDB->columnCount; ++c) {
+        for (int32 c = 0; c < userDB->columnCount; ++c) {
             userDB->rows[r].values[c].size = *buffer;
             buffer++;
 
@@ -630,17 +631,17 @@ bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, byte *buffer)
     UpdateUserDBParents(userDB);
     return true;
 }
-void RSDK::SKU::SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
+void RSDK::SKU::SaveDBToBuffer(UserDB *userDB, int32 totalSize, uint8 *buffer)
 {
-    int size = 0;
+    int32 size = 0;
     if (sizeof(uint32) < totalSize) {
-        size           = sizeof(uint32);
-        *(uint32 *)buffer = 0x80074B1E; // signature
+        size              = sizeof(uint32);
+        *(uint32 *)buffer = RETRO_USERDB_SIGNATURE;
         buffer += sizeof(uint32);
     }
     if (size + sizeof(uint32) < totalSize) {
         size += sizeof(uint32);
-        *(uint32 *)buffer = (int)GetUserDBWriteSize(userDB); // used size
+        *(uint32 *)buffer = (int32)GetUserDBWriteSize(userDB); // used size
         buffer += sizeof(uint32);
     }
     if (size + sizeof(uint16) < totalSize) {
@@ -653,7 +654,7 @@ void RSDK::SKU::SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
         *buffer++ = userDB->columnCount;
     }
 
-    for (int c = 0; c < userDB->columnCount; ++c) {
+    for (int32 c = 0; c < userDB->columnCount; ++c) {
         if (size + sizeof(uint8) < totalSize) {
             ++size;
             *buffer++ = (uint8)userDB->columnTypes[c];
@@ -666,7 +667,7 @@ void RSDK::SKU::SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
         }
     }
 
-    for (int r = 0; r < userDB->rowCount; ++r) {
+    for (int32 r = 0; r < userDB->rowCount; ++r) {
         if (size + sizeof(uint32) < totalSize) {
             size += sizeof(uint32);
             *(uint32 *)buffer = userDB->rows[r].uuid;
@@ -683,7 +684,7 @@ void RSDK::SKU::SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
             buffer += sizeof(tm);
         }
 
-        for (int c = 0; c < userDB->columnCount; ++c) {
+        for (int32 c = 0; c < userDB->columnCount; ++c) {
             if (size + sizeof(uint8) < totalSize) {
                 ++size;
                 *buffer++ = (uint8)userDB->rows[r].values[c].size;
@@ -699,9 +700,9 @@ void RSDK::SKU::SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
     if (size < totalSize)
         memset(buffer, 0, totalSize - size);
 }
-void RSDK::SKU::HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *value, int column)
+void RSDK::SKU::HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *value, int32 column)
 {
-    for (int i = userDB->sortedRowList.Count() - 1; i >= 0; --i) {
+    for (int32 i = userDB->sortedRowList.Count() - 1; i >= 0; --i) {
         if (!CheckDBValueMatch(value, userDB->sortedRowIDs[i], column)) {
             userDB->sortedRowList.Remove(i);
         }
@@ -709,7 +710,7 @@ void RSDK::SKU::HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *value, int
 }
 void RSDK::SKU::FilterSortedUserDBRows(UserDB *userDB, const char *name, void *value)
 {
-    int id = GetDBColumnID(userDB, name);
+    int32 id = GetDBColumnID(userDB, name);
 
     if (id >= 0) {
         if (userDB->sortedRowCount) {
@@ -723,7 +724,7 @@ void RSDK::SKU::FilterSortedUserDBRows(UserDB *userDB, const char *name, void *v
     }
 }
 
-bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type, char *name, bool32 flag)
+bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int32 type, char *name, bool32 flag)
 {
     uint8 data1[0x10];
     uint8 data2[0x10];
@@ -835,10 +836,10 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
     return false;
 }
 
-void RSDK::SKU::HandleUserDBSorting(UserDB *userDB, int type, char *name, bool32 flag)
+void RSDK::SKU::HandleUserDBSorting(UserDB *userDB, int32 type, char *name, bool32 flag)
 {
     if (!userDB->rowsChanged && userDB->sortedRowCount) {
-        //sort by value
+        // sort by value
         if (type || name) {
             int32 col = GetDBColumnID(userDB, name);
             if (col >= 0) {
@@ -849,16 +850,16 @@ void RSDK::SKU::HandleUserDBSorting(UserDB *userDB, int type, char *name, bool32
 
                         if (CompareUserDBValues(&userDB->rows[*id1], &userDB->rows[*id2], type, name, flag)) {
                             int32 temp = *id1;
-                            *id1     = *id2;
-                            *id2     = temp;
+                            *id1       = *id2;
+                            *id2       = temp;
                         }
                     }
-                }  
+                }
 
                 SetupRowSortIDs(userDB);
             }
         }
-        else { //sort by date
+        else { // sort by date
             for (int32 i = 0; i < userDB->sortedRowList.Count(); i++) {
                 for (int32 j = i + 1; j < userDB->sortedRowList.Count(); j++) {
                     int32 *id1 = userDB->sortedRowList.At(i);
@@ -874,20 +875,20 @@ void RSDK::SKU::HandleUserDBSorting(UserDB *userDB, int type, char *name, bool32
 
                     if (swap) {
                         int32 temp = *id1;
-                        *id1     = *id2;
-                        *id2     = temp;
+                        *id1       = *id2;
+                        *id2       = temp;
                     }
                 }
-            }  
+            }
 
             SetupRowSortIDs(userDB);
         }
     }
 }
-uint RSDK::SKU::CreateRowUUID(UserDB *userDB)
+uint32 RSDK::SKU::CreateRowUUID(UserDB *userDB)
 {
     bool32 flag = true;
-    uint32 uuid   = 0;
+    uint32 uuid = 0;
 
     while (flag) {
         uint8 bytes[4];
@@ -895,13 +896,13 @@ uint RSDK::SKU::CreateRowUUID(UserDB *userDB)
         bytes[1] = rand();
         bytes[2] = rand();
         bytes[3] = rand();
-        uuid = (bytes[0]) | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+        uuid     = (bytes[0]) | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
 
         if (uuid < 0x10000000)
             uuid |= 0x10000000;
 
         flag = false;
-        for (int e = 0; e < userDB->rowCount; ++e) {
+        for (int32 e = 0; e < userDB->rowCount; ++e) {
             if (uuid == userDB->rows[e].uuid) {
                 flag = true;
             }
@@ -910,12 +911,12 @@ uint RSDK::SKU::CreateRowUUID(UserDB *userDB)
     return uuid;
 }
 
-//User Storage CBs
-int RSDK::SKU::UserDBLoadCB(ushort tableID, int status)
+// User Storage CBs
+int32 RSDK::SKU::UserDBLoadCB(uint16 tableID, int32 status)
 {
     bool32 result = false;
     if (status == STATUS_OK) {
-        result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte *)userDBStorage->readBuffer[tableID]);
+        result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (uint8 *)userDBStorage->readBuffer[tableID]);
         if (result) {
             UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
         }
@@ -931,7 +932,7 @@ int RSDK::SKU::UserDBLoadCB(ushort tableID, int status)
     }
     return result;
 }
-int RSDK::SKU::UserDBSaveCB(ushort tableID, int status)
+int32 RSDK::SKU::UserDBSaveCB(uint16 tableID, int32 status)
 {
     RSDK::RemoveStorageEntry((void **)&userDBStorage->writeBuffer[tableID]);
     if (status != STATUS_OK)
@@ -945,98 +946,98 @@ int RSDK::SKU::UserDBSaveCB(ushort tableID, int status)
     return 0;
 }
 
-int RSDK::SKU::UserDBStorage_LoadCB1(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB1(int32 status)
 {
     if (userDBStorage->userLoadCB[0])
         return userDBStorage->userLoadCB[0](0, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_LoadCB2(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB2(int32 status)
 {
     if (userDBStorage->userLoadCB[1])
         return userDBStorage->userLoadCB[1](1, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_LoadCB3(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB3(int32 status)
 {
     if (userDBStorage->userLoadCB[2])
         return userDBStorage->userLoadCB[2](2, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_LoadCB4(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB4(int32 status)
 {
     if (userDBStorage->userLoadCB[3])
         return userDBStorage->userLoadCB[3](3, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_LoadCB5(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB5(int32 status)
 {
     if (userDBStorage->userLoadCB[4])
         return userDBStorage->userLoadCB[4](4, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_LoadCB6(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB6(int32 status)
 {
     if (userDBStorage->userLoadCB[5])
         return userDBStorage->userLoadCB[5](5, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_LoadCB7(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB7(int32 status)
 {
     if (userDBStorage->userLoadCB[6])
         return userDBStorage->userLoadCB[6](6, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_LoadCB8(int status)
+int32 RSDK::SKU::UserDBStorage_LoadCB8(int32 status)
 {
     if (userDBStorage->userLoadCB[7])
         return userDBStorage->userLoadCB[7](7, status);
     return 0;
 }
 
-int RSDK::SKU::UserDBStorage_SaveCB1(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB1(int32 status)
 {
     if (userDBStorage->userSaveCB[0])
         return userDBStorage->userSaveCB[0](0, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_SaveCB2(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB2(int32 status)
 {
     if (userDBStorage->userSaveCB[1])
         return userDBStorage->userSaveCB[1](1, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_SaveCB3(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB3(int32 status)
 {
     if (userDBStorage->userSaveCB[2])
         return userDBStorage->userSaveCB[2](2, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_SaveCB4(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB4(int32 status)
 {
     if (userDBStorage->userSaveCB[3])
         return userDBStorage->userSaveCB[3](3, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_SaveCB5(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB5(int32 status)
 {
     if (userDBStorage->userSaveCB[4])
         return userDBStorage->userSaveCB[4](4, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_SaveCB6(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB6(int32 status)
 {
     if (userDBStorage->userSaveCB[5])
         return userDBStorage->userSaveCB[5](5, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_SaveCB7(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB7(int32 status)
 {
     if (userDBStorage->userSaveCB[6])
         return userDBStorage->userSaveCB[6](6, status);
     return 0;
 }
-int RSDK::SKU::UserDBStorage_SaveCB8(int status)
+int32 RSDK::SKU::UserDBStorage_SaveCB8(int32 status)
 {
     if (userDBStorage->userSaveCB[7])
         return userDBStorage->userSaveCB[7](7, status);
@@ -1045,14 +1046,14 @@ int RSDK::SKU::UserDBStorage_SaveCB8(int status)
 
 #endif
 
-void (*RSDK::SKU::userFileCallback)();
-void (*RSDK::SKU::userFileCallback2)();
+void (*RSDK::SKU::preLoadSaveFileCB)();
+void (*RSDK::SKU::postLoadSaveFileCB)();
 char RSDK::SKU::userFileDir[0x100];
 
-bool32 RSDK::SKU::LoadUserFile(const char *filename, void *buffer, uint bufSize)
+bool32 RSDK::SKU::LoadUserFile(const char *filename, void *buffer, uint32 bufSize)
 {
-    if (userFileCallback)
-        userFileCallback();
+    if (preLoadSaveFileCB)
+        preLoadSaveFileCB();
 
     char pathBuffer[0x400];
     sprintf(pathBuffer, "%s%s", userFileDir, filename);
@@ -1061,28 +1062,32 @@ bool32 RSDK::SKU::LoadUserFile(const char *filename, void *buffer, uint bufSize)
     FileIO *file = fOpen(pathBuffer, "rb");
     if (file) {
         fSeek(file, 0, SEEK_END);
-        int fSize = (int)fTell(file);
+        int32 fSize = (int32)fTell(file);
         fSeek(file, 0, SEEK_SET);
-        int size = bufSize;
+        int32 size = bufSize;
         if (bufSize > fSize)
             size = fSize;
         fRead(buffer, 1, size, file);
         fClose(file);
-        if (userFileCallback2)
-            userFileCallback2();
+
+        if (postLoadSaveFileCB)
+            postLoadSaveFileCB();
+
         return true;
     }
     else {
-        if (userFileCallback2)
-            userFileCallback2();
+        if (postLoadSaveFileCB)
+            postLoadSaveFileCB();
+
         PrintLog(PRINT_NORMAL, "Nope!");
     }
+
     return false;
 }
-bool32 RSDK::SKU::SaveUserFile(const char *filename, void *buffer, uint bufSize)
+bool32 RSDK::SKU::SaveUserFile(const char *filename, void *buffer, uint32 bufSize)
 {
-    if (userFileCallback)
-        userFileCallback();
+    if (preLoadSaveFileCB)
+        preLoadSaveFileCB();
 
     char pathBuffer[0x400];
     sprintf(pathBuffer, "%s%s", userFileDir, filename);
@@ -1093,29 +1098,32 @@ bool32 RSDK::SKU::SaveUserFile(const char *filename, void *buffer, uint bufSize)
         fWrite(buffer, 1, bufSize, file);
         fClose(file);
 
-        if (userFileCallback2)
-            userFileCallback2();
+        if (postLoadSaveFileCB)
+            postLoadSaveFileCB();
+
         return true;
     }
     else {
-        if (userFileCallback2)
-            userFileCallback2();
+        if (postLoadSaveFileCB)
+            postLoadSaveFileCB();
+
         PrintLog(PRINT_NORMAL, "Nope!");
     }
     return false;
 }
 bool32 RSDK::SKU::DeleteUserFile(const char *filename)
 {
-    if (userFileCallback)
-        userFileCallback();
+    if (preLoadSaveFileCB)
+        preLoadSaveFileCB();
 
     char pathBuffer[0x400];
     sprintf(pathBuffer, "%s%s", userFileDir, filename);
     PrintLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
-    int status = remove(pathBuffer);
+    int32 status = remove(pathBuffer);
 
-    if (userFileCallback2)
-        userFileCallback2();
+    if (postLoadSaveFileCB)
+        postLoadSaveFileCB();
+
     return status == 0;
 }
 

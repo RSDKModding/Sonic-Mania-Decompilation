@@ -218,7 +218,7 @@ void RSDK::SetupFunctionTables()
     // User File Management
     ADD_API_FUNCTION("LoadUserFile", TryLoadUserFile);
     ADD_API_FUNCTION("SaveUserFile", TrySaveUserFile);
-    ADD_API_FUNCTION("SaveSettingsINI", WriteSettings);
+    ADD_API_FUNCTION("SaveSettingsINI", SaveSettingsINI);
 
     // Input
     ADD_API_FUNCTION("ControllerIDForInputID", ControllerIDForInputID);
@@ -486,8 +486,8 @@ void RSDK::SetupFunctionTables()
 
     // Debugging
 #if RETRO_REV02
-    ADD_RSDK_FUNCTION(FunctionTable_ClearDebugValues, ClearDebugValues);
-    ADD_RSDK_FUNCTION(FunctionTable_SetDebugValue, SetDebugValue);
+    ADD_RSDK_FUNCTION(FunctionTable_ClearDebugValues, ClearViewableVariables);
+    ADD_RSDK_FUNCTION(FunctionTable_SetDebugValue, AddViewableVariable);
 #endif
 
     // Printing (Rev01)

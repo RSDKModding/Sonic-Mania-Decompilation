@@ -68,7 +68,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
         RSDK::SKU::SetUserFileCallbacks("", NULL, NULL);
 #endif
 
-        RSDK::readSettings();
+        RSDK::LoadSettingsINI();
         RSDK::SKU::InitUserData();
 
         // By Default we use the dummy system so this'll never be false
@@ -193,7 +193,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
     AudioDevice::Release();
     RenderDevice::Release(false);
-    RSDK::WriteSettings(false);
+    RSDK::SaveSettingsINI(false);
     RSDK::SKU::ReleaseUserData();
     RSDK::ReleaseStorage();
 #if RETRO_USE_MOD_LOADER
@@ -268,7 +268,8 @@ void ProcessEngine()
 
 #if RETRO_REV02
                 RSDK::SKU::userCore->StageLoad();
-                for (int32 v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+                for (int32 v = 0; v < DRAWGROUP_COUNT; ++v)
+                    AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], VIEWVAR_BOOL, false, true);
 #endif
                 // dim after 5 mins
                 RSDK::videoSettings.dimLimit = (5 * 60) * RSDK::videoSettings.refreshRate;
@@ -342,7 +343,8 @@ void ProcessEngine()
 
 #if RETRO_REV02
             RSDK::SKU::userCore->StageLoad();
-            for (int32 v = 0; v < DRAWGROUP_COUNT; ++v) SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+            for (int32 v = 0; v < DRAWGROUP_COUNT; ++v)
+                AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], VIEWVAR_BOOL, false, true);
 #endif
 
             ProcessInput();
@@ -597,7 +599,7 @@ void LoadXMLObjects()
                             RETRO_HASH_MD5(hash);
                             GEN_HASH_MD5(objName, hash);
                             globalObjectIDs[globalObjectCount] = 0;
-                            for (int32 objID = 0; objID < stageObjectCount; ++objID) {
+                            for (int32 objID = 0; objID < objectClassCount; ++objID) {
                                 if (HASH_MATCH_MD5(hash, objectClassList[objID].hash)) {
                                     globalObjectIDs[globalObjectCount] = objID;
                                     globalObjectCount++;
@@ -819,9 +821,9 @@ void LoadGameConfig()
             RETRO_HASH_MD5(hash);
             GEN_HASH_MD5(textBuffer, hash);
 
-            if (stageObjectCount > 0) {
+            if (objectClassCount > 0) {
                 globalObjectIDs[globalObjectCount] = 0;
-                for (int32 objID = 0; objID < stageObjectCount; ++objID) {
+                for (int32 objID = 0; objID < objectClassCount; ++objID) {
                     if (HASH_MATCH_MD5(hash, objectClassList[objID].hash)) {
                         globalObjectIDs[globalObjectCount] = objID;
                         globalObjectCount++;
@@ -946,7 +948,7 @@ void LoadGameConfig()
 void InitGameLink()
 {
 #if RETRO_USE_MOD_LOADER
-    stageObjectCount = 0;
+    objectClassCount = 0;
     memset(globalObjectIDs, 0, sizeof(int32) * OBJECT_COUNT);
     memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
     editableVarCount = 0;
