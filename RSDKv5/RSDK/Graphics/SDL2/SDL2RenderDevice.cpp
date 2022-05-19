@@ -121,7 +121,7 @@ void RenderDevice::FlipScreen()
     // pillarboxes in fullscreen from displaying garbage data.
     SDL_RenderClear(renderer);
 
-#if (SDL_COMPILEDVERSION >= SDL_VERSIONNUM(2, 0, 18)) && 0
+#if (SDL_COMPILEDVERSION >= SDL_VERSIONNUM(2, 0, 18))
     int32 startVert = 0;
     switch (RSDK::videoSettings.screenCount) {
         default:

@@ -115,8 +115,6 @@ void SkipBytes(FileInfo *info, int32 size);
 inline void Seek_Set(FileInfo *info, int32 count)
 {
     if (info->readPos != count) {
-        info->readPos = count;
-
         if (info->encrypted) {
             info->eKeyNo      = (info->fileSize / 4) & 0x7F;
             info->eKeyPosA    = 0;
@@ -126,11 +124,14 @@ inline void Seek_Set(FileInfo *info, int32 count)
         }
 
         if (info->usingFileBuffer) {
-            info->fileData = &info->fileData[info->readPos];
+            //TODO: YELL AT RDC START SCREAMIN AAAAAAAAAAA!!!!!!!!!!
+            info->fileData -= info->readPos;
+            info->fileData += count;
         }
         else {
-            fSeek(info->file, info->readPos + info->fileOffset, SEEK_SET);
+            fSeek(info->file, count + info->fileOffset, SEEK_SET);
         }
+        info->readPos = count;
     }
 }
 

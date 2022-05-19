@@ -49,10 +49,10 @@ bool RenderDevice::Init()
 
     RenderDevice::window = glfwCreateWindow(w, h, RSDK::gameVerInfo.gameName, monitor, NULL);
     if (!RenderDevice::window) {
-        PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
+        RSDK::PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return false;
     }
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, RSDK::videoSettings.windowed);
+    RSDK::PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, RSDK::videoSettings.windowed);
 
     glfwSetKeyCallback(window, ProcessKeyEvent);
     glfwSetJoystickCallback(ProcessJoystickEvent);
@@ -72,7 +72,7 @@ bool RenderDevice::SetupRendering()
 {
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        PrintLog(PRINT_NORMAL, "ERROR: failed to initialize GLAD");
+        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to initialize GLAD");
         return false;
     }
 
@@ -683,7 +683,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     glGetProgramiv(shader->programID, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shader->programID, 0x1000, NULL, infoLog);
-        PrintLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
+        RSDK::PrintLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
         return;
     }
     glDeleteShader(vert);
@@ -722,10 +722,10 @@ void RenderDevice::RefreshWindow()
 
     RenderDevice::window = glfwCreateWindow(w, h, RSDK::gameVerInfo.gameName, monitor, NULL);
     if (!RenderDevice::window) {
-        PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
+        RSDK::PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return;
     }
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, RSDK::videoSettings.windowed);
+    RSDK::PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, RSDK::videoSettings.windowed);
 
     glfwSetKeyCallback(window, ProcessKeyEvent);
     glfwSetMouseButtonCallback(window, ProcessMouseEvent);
@@ -860,9 +860,9 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
                 case GLFW_KEY_ESCAPE:
                     if (engine.devMenu) {
                         if (sceneInfo.state == ENGINESTATE_DEVMENU)
-                            CloseDevMenu();
+                            RSDK::CloseDevMenu();
                         else
-                            OpenDevMenu();
+                            RSDK::OpenDevMenu();
                     }
                     else {
 #if RETRO_INPUTDEVICE_KEYBOARD
