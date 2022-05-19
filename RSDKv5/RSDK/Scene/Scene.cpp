@@ -39,7 +39,7 @@ void LoadScene()
 
 #if RETRO_REV02
     // Unload debug values
-    ClearViewableVariables();
+    RSDK::ClearViewableVariables();
 
     // unload tint table
     tintLookupTable = NULL;
@@ -57,7 +57,7 @@ void LoadScene()
         // Reload
         RSDK::ClearUnusedStorage(RSDK::DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
-        PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name, sceneInfo.listData[sceneInfo.listPos].name,
+        RSDK::PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name, sceneInfo.listData[sceneInfo.listPos].name,
                  sceneInfo.listData[sceneInfo.listPos].filter);
         return;
     }
@@ -133,11 +133,11 @@ void LoadScene()
 #if RETRO_REV02
     forceHardReset   = false;
     sceneInfo.filter = sceneEntry->filter;
-    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
+    RSDK::PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
 #endif
 
 #if !RETRO_REV02
-    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
+    RSDK::PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
 #endif
 
     char fullFilePath[0x40];
@@ -384,7 +384,7 @@ void LoadSceneFile()
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (!classID && i >= TYPE_DEFAULT_COUNT)
-                PrintLog(PRINT_NORMAL, "Object Class %d is unimplimented!", i);
+                RSDK::PrintLog(PRINT_NORMAL, "Object Class %d is unimplimented!", i);
 #endif
 
             ObjectClass *objectClass = &objectClassList[stageObjectIDs[classID]];

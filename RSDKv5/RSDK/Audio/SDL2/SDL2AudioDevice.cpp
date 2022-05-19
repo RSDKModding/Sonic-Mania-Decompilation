@@ -25,8 +25,8 @@ bool32 AudioDevice::Init()
         audioState = true;
     }
     else {
-        PrintLog(PRINT_NORMAL, "ERROR: Unable to open audio device!");
-        PrintLog(PRINT_NORMAL, "ERROR: %s", SDL_GetError());
+        RSDK::PrintLog(PRINT_NORMAL, "ERROR: Unable to open audio device!");
+        RSDK::PrintLog(PRINT_NORMAL, "ERROR: %s", SDL_GetError());
     }
 
     return true;

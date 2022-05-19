@@ -16,7 +16,6 @@ uint8 RenderDevice::lastTextureFormat = -1;
 
 #define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
-
 bool RenderDevice::Init()
 {
 
@@ -26,7 +25,7 @@ bool RenderDevice::Init()
 
     byte flags = 0;
 
-#if RETRO_PLATFORM == RETRO_ANDROID || RETRO_PLATFORM == RETRO_SWITCH
+#if RETRO_PLATFORM == RETRO_ANDROID
     RSDK::videoSettings.windowed = false;
     SDL_DisplayMode dm;
     SDL_GetDesktopDisplayMode(0, &dm);
@@ -36,10 +35,10 @@ bool RenderDevice::Init()
     int h          = landscape ? dm.w : dm.h;
     int w          = landscape ? dm.h : dm.w;
 
-    RSDK::videoSettings.windowWidth = RSDK::videoSettings.pixWidth = ((float)SCREEN_YSIZE * h / w);
-#endif
+    RSDK::videoSettings.windowWidth = ((float)SCREEN_YSIZE * h / w);
 
-#if RETRO_PLATFORM == RETRO_SWITCH
+#elif RETRO_PLATFORM == RETRO_SWITCH
+    RSDK::videoSettings.windowed     = false;
     RSDK::videoSettings.windowWidth  = 1920;
     RSDK::videoSettings.windowHeight = 1080;
     flags |= SDL_WINDOW_FULLSCREEN;
@@ -52,7 +51,7 @@ bool RenderDevice::Init()
                               RSDK::videoSettings.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | flags);
 
     if (!window) {
-        PrintLog(PRINT_NORMAL, "ERROR: failed to create window!");
+        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to create window!");
         return false;
     }
 
@@ -67,8 +66,8 @@ bool RenderDevice::Init()
         SDL_SetWindowBordered(window, SDL_FALSE);
     }
 
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", RSDK::videoSettings.windowWidth, RSDK::videoSettings.windowHeight,
-             RSDK::videoSettings.windowed);
+    RSDK::PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", RSDK::videoSettings.windowWidth, RSDK::videoSettings.windowHeight,
+                   RSDK::videoSettings.windowed);
 
     if (!SetupRendering() || !AudioDevice::Init())
         return false;
@@ -122,6 +121,7 @@ void RenderDevice::FlipScreen()
     // pillarboxes in fullscreen from displaying garbage data.
     SDL_RenderClear(renderer);
 
+#if (SDL_COMPILEDVERSION >= SDL_VERSIONNUM(2, 0, 18)) && 0
     int32 startVert = 0;
     switch (RSDK::videoSettings.screenCount) {
         default:
@@ -204,7 +204,106 @@ void RenderDevice::FlipScreen()
             break;
 #endif
     }
+#else
+    int32 startVert = 0;
+    SDL_Rect src, dst;
 
+    // some cheating for today
+#define _SET_RECTS                                                                                                                                   \
+    dst.x = vertexBuffer[startVert].pos.x;                                                                                                           \
+    dst.y = vertexBuffer[startVert].pos.y;                                                                                                           \
+    dst.w = vertexBuffer[startVert + 2].pos.x - dst.x;                                                                                               \
+    dst.h = vertexBuffer[startVert + 2].pos.y - dst.y;                                                                                               \
+    src.x = vertexBuffer[startVert].tex.x * textureSize.x;                                                                                           \
+    src.y = vertexBuffer[startVert].tex.y * textureSize.y;                                                                                           \
+    src.w = vertexBuffer[startVert + 2].tex.x * textureSize.x - src.x;                                                                               \
+    src.h = vertexBuffer[startVert + 2].tex.y * textureSize.y - src.y;
+
+    switch (RSDK::videoSettings.screenCount) {
+        default:
+        case 0:
+#if RETRO_REV02
+            startVert = 54;
+#else
+            startVert = 18;
+#endif
+            _SET_RECTS;
+            src.w = vertexBuffer[startVert + 2].tex.x * 1024 - src.x;
+            src.h = vertexBuffer[startVert + 2].tex.y * 512 - src.y;
+            SDL_RenderCopy(renderer, imageTexture, &src, &dst);
+            break;
+
+        case 1:
+            startVert = 0;
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[0], &src, &dst);
+            break;
+
+        case 2:
+#if RETRO_REV02
+            startVert = startVertex_2P[0];
+#else
+            startVert = 6;
+#endif
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[0], &src, &dst);
+
+#if RETRO_REV02
+            startVert = startVertex_2P[1];
+#else
+            startVert = 12;
+#endif
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[1], &src, &dst);
+            break;
+
+#if RETRO_REV02
+        case 3:
+            startVert = startVertex_3P[0];
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[0], &src, &dst);
+
+            startVert = startVertex_3P[1];
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[1], &src, &dst);
+
+            startVert = startVertex_3P[2];
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[2], &src, &dst);
+
+            break;
+
+        case 4:
+            startVert = 30;
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[0], &src, &dst);
+
+            startVert = 36;
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[1], &src, &dst);
+
+            startVert = 42;
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[2], &src, &dst);
+
+            startVert = 48;
+            _SET_RECTS;
+
+            SDL_RenderCopy(renderer, screenTexture[3], &src, &dst);
+
+            break;
+#endif
+    }
+#endif
     SDL_SetRenderTarget(renderer, NULL);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
     if (dimAmount < 1.0)
@@ -315,14 +414,11 @@ bool RenderDevice::CheckFPSCap()
 
     return false;
 }
-void RenderDevice::UpdateFPSCap()
-{
-    prevTicks = curTicks;
-}
+void RenderDevice::UpdateFPSCap() { prevTicks = curTicks; }
 
 void RenderDevice::InitVertexBuffer()
 {
-    //TODO: can we share this amongst the renderdevices
+    // TODO: can we share this amongst the renderdevices
 // clang-format off
 #if RETRO_REV02
 RenderVertex vertBuffer[60] = {
@@ -528,8 +624,8 @@ bool RenderDevice::InitGraphicsAPI()
         SetScreenSize(s, screenWidth, screens[s].size.y);
     }
 
-    pixelSize.x     = screens[0].size.x;
-    pixelSize.y     = screens[0].size.y;
+    pixelSize.x = screens[0].size.x;
+    pixelSize.y = screens[0].size.y;
 
     SDL_RenderSetLogicalSize(renderer, RSDK::videoSettings.pixWidth, SCREEN_YSIZE);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -542,19 +638,20 @@ bool RenderDevice::InitGraphicsAPI()
         textureSize.x = 1024.0;
         textureSize.y = 512.0;
     }
-
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
         screenTexture[s] = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, textureSize.x, textureSize.y);
 
         if (!screenTexture[s]) {
-            PrintLog(PRINT_NORMAL, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
+            RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
             return 0;
         }
     }
-
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
     imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H);
     if (!imageTexture)
         return false;
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 
     lastShaderID = -1;
     InitVertexBuffer();
@@ -590,7 +687,6 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     const char *bytecodeFolder    = "CSO-Dummy"; // nothing should ever be in "Data/Shaders/CSO-Dummy" so it works out to never load anything
     const char *vertexBytecodeExt = "bin";
     const char *pixelBytecodeExt  = "bin";
-
 
 #if !RETRO_USE_ORIGINAL_CODE
     sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
@@ -691,7 +787,7 @@ bool RenderDevice::SetupRendering()
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (!renderer) {
-        PrintLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
+        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
         return false;
     }
 
@@ -895,20 +991,20 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                         RSDK::changedVideoSettings = false;
                         break;
                     }
-                // [fallthrough]
+                    // [fallthrough]
 
                 default:
 #if RETRO_INPUTDEVICE_KEYBOARD
-                    UpdateKeyState(event.key.keysym.scancode); 
+                    UpdateKeyState(event.key.keysym.scancode);
 #endif
                     break;
 
                 case SDL_SCANCODE_ESCAPE:
                     if (engine.devMenu) {
                         if (sceneInfo.state == ENGINESTATE_DEVMENU)
-                            CloseDevMenu();
+                            RSDK::CloseDevMenu();
                         else
-                            OpenDevMenu();
+                            RSDK::OpenDevMenu();
                     }
                     else {
 #if RETRO_INPUTDEVICE_KEYBOARD
@@ -1011,7 +1107,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
             switch (event.key.keysym.scancode) {
                 default:
 #if RETRO_INPUTDEVICE_KEYBOARD
-                    ClearKeyState(event.key.keysym.scancode); 
+                    ClearKeyState(event.key.keysym.scancode);
 #endif
                     break;
 #if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
@@ -1044,8 +1140,10 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
     if (lastTextureFormat != SHADER_RGB_IMAGE) {
         if (RenderDevice::imageTexture)
             SDL_DestroyTexture(RenderDevice::imageTexture);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
         RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 
         lastTextureFormat = SHADER_RGB_IMAGE;
     }
@@ -1073,9 +1171,11 @@ void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yP
     if (lastTextureFormat != SHADER_YUV_420) {
         if (RenderDevice::imageTexture)
             SDL_DestroyTexture(RenderDevice::imageTexture);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
         RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
-
+        
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
         lastTextureFormat = SHADER_YUV_420;
     }
 
@@ -1087,9 +1187,11 @@ void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yP
     if (lastTextureFormat != SHADER_YUV_422) {
         if (RenderDevice::imageTexture)
             SDL_DestroyTexture(RenderDevice::imageTexture);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
         RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
 
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
         lastTextureFormat = SHADER_YUV_422;
     }
 
@@ -1101,9 +1203,11 @@ void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yP
     if (lastTextureFormat != SHADER_YUV_444) {
         if (RenderDevice::imageTexture)
             SDL_DestroyTexture(RenderDevice::imageTexture);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
         RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
-
+        
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
         lastTextureFormat = SHADER_YUV_444;
     }
 

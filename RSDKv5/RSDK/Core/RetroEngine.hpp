@@ -305,6 +305,7 @@ enum GameRegions {
 #undef RETRO_STANDALONE
 #define RETRO_STANDALONE (0)
 #undef RETRO_USING_MOUSE
+
 #elif RETRO_PLATFORM == RETRO_SWITCH
 #include <SDL2/SDL.h>
 #include <theora/theoradec.h>

@@ -56,12 +56,10 @@ RSDK_SOURCES =
 include makefiles/$(PLATFORM).cfg
 
 DEFINES += -DRSDK_USE_$(SUBSYSTEM)
-VIDEODEVICE_F ?= VIDEODEVICE
-AUDIODEVICE_F ?= AUDIODEVICE
 
 OUTDIR = bin/$(PLATFORM)/$(SUBSYSTEM)
 RSDK_OBJDIR = bin/obj/RSDKv5/$(PLATFORM)/$(SUBSYSTEM)
-GAME_OBJDIR = bin/obj/Game/$(PLATFORM)
+GAME_OBJDIR = bin/obj/$(GAME_NAME)/$(PLATFORM)
 
 
 # =============================================================================
@@ -116,8 +114,7 @@ RSDK_INCLUDES  += \
     -I./RSDKv5/ 					\
     -I./dependencies/all/ 			\
     -I./dependencies/all/tinyxml2/ 	\
-	-I./dependencies/all/iniparser/ \
-	-I./dependencies/all/theoraplay/ 
+	-I./dependencies/all/iniparser/
 
 # Main Sources
 RSDK_SOURCES += \
@@ -165,18 +162,18 @@ RSDK_SOURCES += \
 
 
 GAME_INCLUDES = \
-	-I./Game/   		\
-	-I./Game/Objects/
+	-I./$(GAME_NAME)/   		\
+	-I./$(GAME_NAME)/Objects/
 
 GAME_SOURCES = \
-	Game/GameObjects	\
-	Game/GameVariables 
+	$(GAME_NAME)/GameObjects	\
+	$(GAME_NAME)/GameVariables 
 
 ifeq ($(GAME_ALLC),1)
-GAME_SOURCES += Game/Objects/All
+GAME_SOURCES += $(GAME_NAME)/Objects/All
 else
 # execute Game/objectmake.py?
-include Game/Objects.cfg
+include $(GAME_NAME)/Objects.cfg
 endif
 
 RSDK_PATH = $(OUTDIR)/$(RSDK_NAME)$(RSDK_SUFFIX)
@@ -214,7 +211,7 @@ $(RSDK_OBJDIR)/%.o: %.cpp
 ifeq ($(STATICGAME),1)
 $(RSDK_PATH): $(RSDK_OBJECTS) $(GAME_OBJECTS)
 	@echo -n linking...
-	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(RSDK_LDFLAGS) $(RSDK_OBJECTS) $(GAME_OBJECTS) -o $@ 
+	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(RSDK_LDFLAGS) $(RSDK_OBJECTS) $(GAME_OBJECTS) $(RSDK_LIBS) $(GAME_LIBS) -o $@ 
 	@echo done
 	$(STRIP) $@
 else

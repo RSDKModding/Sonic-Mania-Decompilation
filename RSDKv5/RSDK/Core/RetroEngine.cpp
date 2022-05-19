@@ -154,7 +154,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
                         if (tx <= 32 && ty <= 32) {
                             if (engine.devMenu && sceneInfo.state != ENGINESTATE_DEVMENU)
-                                OpenDevMenu();
+                                RSDK::OpenDevMenu();
                         }
                     }
                 }
@@ -229,8 +229,8 @@ void ProcessEngine()
 #endif
 
 #if RETRO_USE_MOD_LOADER
-    if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
-        devMenu.modsChanged = false;
+    if (sceneInfo.state != ENGINESTATE_DEVMENU && RSDK::devMenu.modsChanged) {
+        RSDK::devMenu.modsChanged = false;
         RSDK::SaveMods();
         for (int32 c = 0; c < CHANNEL_COUNT; ++c) StopChannel(c);
 #if RETRO_REV02
@@ -269,7 +269,7 @@ void ProcessEngine()
 #if RETRO_REV02
                 RSDK::SKU::userCore->StageLoad();
                 for (int32 v = 0; v < DRAWGROUP_COUNT; ++v)
-                    AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], VIEWVAR_BOOL, false, true);
+                    RSDK::AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], RSDK::VIEWVAR_BOOL, false, true);
 #endif
                 // dim after 5 mins
                 RSDK::videoSettings.dimLimit = (5 * 60) * RSDK::videoSettings.refreshRate;
@@ -344,7 +344,7 @@ void ProcessEngine()
 #if RETRO_REV02
             RSDK::SKU::userCore->StageLoad();
             for (int32 v = 0; v < DRAWGROUP_COUNT; ++v)
-                AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], VIEWVAR_BOOL, false, true);
+                RSDK::AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], RSDK::VIEWVAR_BOOL, false, true);
 #endif
 
             ProcessInput();
@@ -400,8 +400,8 @@ void ProcessEngine()
             ProcessInput();
             currentScreen = &screens[0];
 
-            if (devMenu.state)
-                devMenu.state();
+            if (RSDK::devMenu.state)
+                RSDK::devMenu.state();
             break;
 
         case ENGINESTATE_VIDEOPLAYBACK:
@@ -446,9 +446,9 @@ void ProcessEngine()
                 sceneInfo.state = engine.storedState;
 
             currentScreen = &screens[0];
-            int32 yOff      = RSDK::DevOutput_GetStringYSize(outputString);
+            int32 yOff      = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
-            DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            DrawDevString(RSDK::outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
         }
         case ENGINESTATE_ERRORMSG_FATAL: {
@@ -458,9 +458,9 @@ void ProcessEngine()
                 RenderDevice::isRunning = false;
 
             currentScreen = &screens[0];
-            int32 yOff = RSDK::DevOutput_GetStringYSize(outputString);
+            int32 yOff = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
-            DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            DrawDevString(RSDK::outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
         }
 #endif
@@ -526,7 +526,7 @@ void StartGameObjects()
     sceneInfo.inEditor       = false;
     sceneInfo.debugMode      = engine.devMenu;
 
-    devMenu.state            = DevMenu_MainMenu;
+    RSDK::devMenu.state            = RSDK::DevMenu_MainMenu;
 
     for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) engine.drawLayerVisible[l] = true;
 
@@ -611,7 +611,7 @@ void LoadXMLObjects()
                 }
             }
             else {
-                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                RSDK::PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
@@ -663,7 +663,7 @@ void LoadXMLSoundFX()
                 }
             }
             else {
-                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                RSDK::PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
@@ -772,7 +772,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                 }
             }
             else {
-                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                RSDK::PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
@@ -1073,7 +1073,7 @@ void InitGameLink()
 #endif
 
         if (!linked)
-            PrintLog(PRINT_POPUP, "Failed to link game logic!");
+            RSDK::PrintLog(PRINT_POPUP, "Failed to link game logic!");
     }
     else {
 #if RETRO_REV02
@@ -1092,7 +1092,7 @@ void InitGameLink()
         for (RSDK::modLinkSTD ptr : RSDK::modList[m].linkModLogic) {
             if (!ptr(&info, RSDK::modList[m].id.c_str())) {
                 RSDK::modList[m].active = false;
-                PrintLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", RSDK::modList[m].id.c_str());
+                RSDK::PrintLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", RSDK::modList[m].id.c_str());
             }
         }
     }
@@ -1114,9 +1114,9 @@ void ProcessDebugCommands()
 
     if (controller[CONT_P1].keySelect.press) {
         if (sceneInfo.state == ENGINESTATE_DEVMENU)
-            CloseDevMenu();
+            RSDK::CloseDevMenu();
         else
-            OpenDevMenu();
+            RSDK::OpenDevMenu();
     }
 
     bool32 framePaused = (sceneInfo.state >> 2) & 1;

@@ -83,7 +83,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
                 while (theora_p && (theora_p < 3) && (ret = ogg_stream_packetout(&VideoManager::to, &VideoManager::op))) {
                     if (ret < 0) {
 #if !RETRO_USE_ORIGINAL_CODE
-                        PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
+                        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
 #endif
 
                         theora_p = 0;
@@ -92,7 +92,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
 
                     if (!th_decode_headerin(&VideoManager::ti, &VideoManager::tc, &VideoManager::ts, &VideoManager::op)) {
 #if !RETRO_USE_ORIGINAL_CODE
-                        PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
+                        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
 #endif
 
                         theora_p = 0;
@@ -117,7 +117,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
                     ogg_sync_wrote(&VideoManager::oy, 0x1000);
                     if (ret == 0) {
 #if !RETRO_USE_ORIGINAL_CODE
-                        PrintLog(PRINT_NORMAL, "ERROR: Reached end of file while searching for codec headers.");
+                        RSDK::PrintLog(PRINT_NORMAL, "ERROR: Reached end of file while searching for codec headers.");
 #endif
 
                         theora_p = 0;

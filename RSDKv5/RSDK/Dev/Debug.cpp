@@ -9,18 +9,18 @@
 #include <android/log.h>
 #endif
 
-bool32 engineDebugMode = true;
-bool32 useEndLine      = true;
-char outputString[0x400];
+bool32 RSDK::engineDebugMode = true;
+bool32 RSDK::useEndLine      = true;
+char RSDK::outputString[0x400];
 
 #if RETRO_REV02
-int32 viewableVarCount = 0;
-DebugValueInfo debugValues[VIEWVAR_LIST_COUNT];
+int32 RSDK::viewableVarCount = 0;
+RSDK::DebugValueInfo RSDK::debugValues[VIEWVAR_LIST_COUNT];
 #endif
 
-DevMenu devMenu = DevMenu();
+RSDK::DevMenu RSDK::devMenu = RSDK::DevMenu();
 
-void PrintLog(int32 severity, const char *message, ...)
+void RSDK::PrintLog(int32 severity, const char *message, ...)
 {
 #ifndef RETRO_DISABLE_LOG
     if (engineDebugMode) {
@@ -48,20 +48,20 @@ void PrintLog(int32 severity, const char *message, ...)
             case PRINT_ERROR:
                 if (sceneInfo.state & 3) {
                     engine.storedState = sceneInfo.state;
-                    sceneInfo.state       = ENGINESTATE_ERRORMSG;
+                    sceneInfo.state    = ENGINESTATE_ERRORMSG;
                 }
                 break;
 
             case PRINT_FATAL:
                 if (sceneInfo.state & 3) {
                     engine.storedState = sceneInfo.state;
-                    sceneInfo.state       = ENGINESTATE_ERRORMSG_FATAL;
+                    sceneInfo.state    = ENGINESTATE_ERRORMSG_FATAL;
                 }
                 break;
         }
 #endif
         if (engine.consoleEnabled) {
-            PrintConsole(outputString);
+            RSDK::PrintConsole(outputString);
         }
         else {
 #if RETRO_PLATFORM == RETRO_WIN
@@ -93,7 +93,7 @@ void PrintLog(int32 severity, const char *message, ...)
 }
 
 #if RETRO_REV02
-void AddViewableVariable(const char *name, void *value, int32 type, int32 min, int32 max)
+void RSDK::AddViewableVariable(const char *name, void *value, int32 type, int32 min, int32 max)
 {
     if (viewableVarCount < VIEWVAR_COUNT) {
         DebugValueInfo *value = &debugValues[viewableVarCount++];
@@ -146,7 +146,7 @@ void AddViewableVariable(const char *name, void *value, int32 type, int32 min, i
 #endif
 
 #if !RETRO_REV02
-void PrintMessage(void *msg, int32 type)
+void RSDK::PrintMessage(void *msg, int32 staticVars)
 {
     useEndLine = false;
 
@@ -167,6 +167,8 @@ void PrintMessage(void *msg, int32 type)
 #if !RETRO_USE_ORIGINAL_CODE
 uint8 touchTimer = 0;
 
+namespace RSDK
+{
 void DevMenu_HandleTouchControls()
 {
     if (!controller[CONT_ANY].keyStart.down && !controller[CONT_ANY].keyUp.down && !controller[CONT_ANY].keyDown.down) {
@@ -213,9 +215,10 @@ void DevMenu_HandleTouchControls()
 
     touchTimer++;
 }
+} // namespace RSDK
 #endif
 
-void DevMenu_MainMenu()
+void RSDK::DevMenu_MainMenu()
 {
 #if !RETRO_USE_MOD_LOADER
     int32 selectionCount         = 5;
@@ -226,7 +229,7 @@ void DevMenu_MainMenu()
     uint32 selectionColors[]     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
     const char *selectionNames[] = { "Resume", "Restart", "Stage Select", "Options", "Mods", "Exit" };
 #endif
-    selectionColors[devMenu.selection] = 0xF0F0F0;
+    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
 
     // Info Box
     int32 y = currentScreen->center.y - 80;
@@ -355,13 +358,13 @@ void DevMenu_MainMenu()
             case 1: sceneInfo.state = ENGINESTATE_LOAD; break;
 
             case 2:
-                devMenu.state     = DevMenu_CategorySelectMenu;
+                devMenu.state     = RSDK::DevMenu_CategorySelectMenu;
                 devMenu.selection = 0;
                 devMenu.timer     = 1;
                 break;
 
             case 3:
-                devMenu.state     = DevMenu_OptionsMenu;
+                devMenu.state     = RSDK::DevMenu_OptionsMenu;
                 devMenu.selection = 0;
                 devMenu.timer     = 1;
                 break;
@@ -371,7 +374,7 @@ void DevMenu_MainMenu()
 #else
             case 4:
                 RSDK::LoadMods(); // reload our mod list real quick
-                devMenu.state     = DevMenu_ModsMenu;
+                devMenu.state     = RSDK::DevMenu_ModsMenu;
                 devMenu.selection = 0;
                 devMenu.timer     = 1;
                 break;
@@ -383,12 +386,12 @@ void DevMenu_MainMenu()
         }
     }
 }
-void DevMenu_CategorySelectMenu()
+void RSDK::DevMenu_CategorySelectMenu()
 {
     uint32 selectionColors[] = {
         0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090,
     };
-    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -503,7 +506,7 @@ void DevMenu_CategorySelectMenu()
 
     if (controller[CONT_ANY].keyStart.press || confirm) {
         if (sceneInfo.listCategory[devMenu.selection].sceneCount) {
-            devMenu.state     = DevMenu_SceneSelectMenu;
+            devMenu.state     = RSDK::DevMenu_SceneSelectMenu;
             devMenu.listPos   = devMenu.selection;
             devMenu.scrollPos = 0;
             devMenu.selection = 0;
@@ -518,12 +521,12 @@ void DevMenu_CategorySelectMenu()
     }
 #endif
 }
-void DevMenu_SceneSelectMenu()
+void RSDK::DevMenu_SceneSelectMenu()
 {
     uint32 selectionColors[] = {
         0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090,
     };
-    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -635,7 +638,7 @@ void DevMenu_SceneSelectMenu()
     }
 #endif
 }
-void DevMenu_OptionsMenu()
+void RSDK::DevMenu_OptionsMenu()
 {
     const uint8 selectionCount = RETRO_REV02 ? 5 : 4;
 #if RETRO_REV02
@@ -643,7 +646,7 @@ void DevMenu_OptionsMenu()
 #else
     uint32 selectionColors[] = { 0x808090, 0x808090, 0x808090, 0x808090 };
 #endif
-    selectionColors[devMenu.selection] = 0xF0F0F0;
+    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -723,23 +726,23 @@ void DevMenu_OptionsMenu()
                     case 53: devMenu.windowAspect = 4; break; // 16:9
                 }
 
-                devMenu.state     = DevMenu_VideoOptionsMenu;
+                devMenu.state     = RSDK::DevMenu_VideoOptionsMenu;
                 devMenu.selection = 0;
                 break;
             }
 
             case 1:
-                devMenu.state     = DevMenu_AudioOptionsMenu;
+                devMenu.state     = RSDK::DevMenu_AudioOptionsMenu;
                 devMenu.selection = 0;
                 break;
 
             case 2:
-                devMenu.state     = DevMenu_InputOptionsMenu;
+                devMenu.state     = RSDK::DevMenu_InputOptionsMenu;
                 devMenu.selection = 0;
                 break;
 
 #if RETRO_REV02
-            case 3: devMenu.state = DevMenu_DebugOptionsMenu; devMenu.selection = 0;
+            case 3: devMenu.state = RSDK::DevMenu_DebugOptionsMenu; devMenu.selection = 0;
 
 #if !RETRO_USE_ORIGINAL_CODE
                 // reset this just to be sure there's no crashing since we can go back from prev menus unlike original RSDKv5
@@ -765,10 +768,10 @@ void DevMenu_OptionsMenu()
     }
 #endif
 }
-void DevMenu_VideoOptionsMenu()
+void RSDK::DevMenu_VideoOptionsMenu()
 {
-    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[devMenu.selection] = 0xF0F0F0;
+    uint32 selectionColors[]                 = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -963,10 +966,10 @@ void DevMenu_VideoOptionsMenu()
     }
 #endif
 }
-void DevMenu_AudioOptionsMenu()
+void RSDK::DevMenu_AudioOptionsMenu()
 {
-    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[devMenu.selection] = 0xF0F0F0;
+    uint32 selectionColors[]                 = { 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1091,10 +1094,10 @@ void DevMenu_AudioOptionsMenu()
     }
 #endif
 }
-void DevMenu_InputOptionsMenu()
+void RSDK::DevMenu_InputOptionsMenu()
 {
-    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[devMenu.selection] = 0xF0F0F0;
+    uint32 selectionColors[]                 = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1162,7 +1165,7 @@ void DevMenu_InputOptionsMenu()
             devMenu.selection = 3;
         }
         else {
-            devMenu.state              = DevMenu_KeyMappingsMenu;
+            devMenu.state              = RSDK::DevMenu_KeyMappingsMenu;
             devMenu.scrollPos          = 0;
             RSDK::changedVideoSettings = true;
         }
@@ -1175,7 +1178,7 @@ void DevMenu_InputOptionsMenu()
     }
 #endif
 }
-void DevMenu_KeyMappingsMenu()
+void RSDK::DevMenu_KeyMappingsMenu()
 {
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -1190,7 +1193,7 @@ void DevMenu_KeyMappingsMenu()
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    int32 controllerID = devMenu.selection + 1;
+    int32 controllerID = RSDK::devMenu.selection + 1;
     switch (devMenu.scrollPos) {
         case 0:
             DrawDevString("Press Key For UP", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
@@ -1297,10 +1300,10 @@ void DevMenu_KeyMappingsMenu()
 #endif
 }
 #if RETRO_REV02
-void DevMenu_DebugOptionsMenu()
+void RSDK::DevMenu_DebugOptionsMenu()
 {
-    uint32 selectionColors[]                               = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    uint32 selectionColors[]                                     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1323,7 +1326,7 @@ void DevMenu_DebugOptionsMenu()
 
     for (int32 i = 0; i < 8; ++i) {
         if (devMenu.scrollPos + i < viewableVarCount) {
-            DebugValueInfo *value = &debugValues[devMenu.scrollPos + i];
+            RSDK::DebugValueInfo *value = &RSDK::debugValues[devMenu.scrollPos + i];
             DrawDevString(value->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[i]);
 
             if (!value->value) {
@@ -1576,10 +1579,10 @@ void DevMenu_DebugOptionsMenu()
 #endif
 
 #if RETRO_USE_MOD_LOADER
-void DevMenu_ModsMenu()
+void RSDK::DevMenu_ModsMenu()
 {
-    uint32 selectionColors[]                               = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    uint32 selectionColors[]                                     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1592,7 +1595,8 @@ void DevMenu_ModsMenu()
     for (int32 i = 0; i < 8; ++i) {
         if (devMenu.scrollPos + i < RSDK::modList.size()) {
             DrawDevString(RSDK::modList[(devMenu.scrollPos + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, selectionColors[i]);
-            DrawDevString(RSDK::modList[(devMenu.scrollPos + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
+            DrawDevString(RSDK::modList[(devMenu.scrollPos + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT,
+                          selectionColors[i]);
 
             y += 8;
             devMenu.scrollPos = devMenu.scrollPos;

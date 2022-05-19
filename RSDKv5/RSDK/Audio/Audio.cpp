@@ -194,7 +194,7 @@ void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, u
                 if (loop >= 0x40) {
                     if (loop != 0x100) {
                         CloseFile(&info);
-                        PrintLog(PRINT_ERROR, "Unable to read sfx: %s", filename);
+                        RSDK::PrintLog(PRINT_ERROR, "Unable to read sfx: %s", filename);
                         return;
                     }
                     else {
@@ -231,7 +231,7 @@ void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, u
         CloseFile(&info);
     }
     else {
-        PrintLog(PRINT_ERROR, "Unable to open sfx: %s", filename);
+        RSDK::PrintLog(PRINT_ERROR, "Unable to open sfx: %s", filename);
     }
 }
 
@@ -266,7 +266,7 @@ void LoadSfx(char *filename, uint8 plays, uint8 scope)
     }
     else {
         // what the
-        PrintLog(PRINT_ERROR, "Sfx format not supported!");
+        RSDK::PrintLog(PRINT_ERROR, "Sfx format not supported!");
     }
 }
 int32 PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)

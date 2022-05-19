@@ -230,6 +230,6 @@ void InitSDL2InputAPI()
 
         int32 nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
         if (nummaps >= 0)
-            PrintLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
+            RSDK::PrintLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
     }
 }

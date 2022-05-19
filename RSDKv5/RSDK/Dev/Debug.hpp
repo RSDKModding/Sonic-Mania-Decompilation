@@ -8,6 +8,8 @@
 
 #include <stdarg.h>
 
+namespace RSDK
+{
 extern bool32 engineDebugMode;
 extern bool32 useEndLine;
 extern char outputString[0x400];
@@ -136,3 +138,4 @@ inline void CloseDevMenu()
 }
 
 #endif
+}
