@@ -68,8 +68,8 @@ int32 RunRetroEngine(int32 argc, char *argv[])
         RSDK::SKU::SetUserFileCallbacks("", NULL, NULL);
 #endif
 
-        RSDK::LoadSettingsINI();
         RSDK::SKU::InitUserData();
+        RSDK::LoadSettingsINI();
 
         // By Default we use the dummy system so this'll never be false
         // its used in cases like steam where it gives the "Steam must be running to play this game" message and closes
