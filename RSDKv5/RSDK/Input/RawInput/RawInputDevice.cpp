@@ -154,7 +154,7 @@ void InitHIDAPI()
     pRawInputDevices.dwFlags     = 0;
 
     if (!RegisterRawInputDevices(&pRawInputDevices, 1, sizeof(pRawInputDevices)))
-        PrintLog(PRINT_NORMAL, "Unable to Register HID Device.\n");
+        RSDK::PrintLog(PRINT_NORMAL, "Unable to Register HID Device.\n");
 
     HIDEnabled = true;
     InitRawInputAPI();
@@ -167,20 +167,20 @@ void InitRawInputAPI()
 
         UINT puiNumDevices;
         if (GetRawInputDeviceList(0, &puiNumDevices, sizeof(tagRAWINPUTDEVICELIST))) {
-            PrintLog(PRINT_NORMAL, "Could not get Input Device Count.\n");
+            RSDK::PrintLog(PRINT_NORMAL, "Could not get Input Device Count.\n");
             return;
         }
 
         tagRAWINPUTDEVICELIST *pRawInputDeviceList;
         RSDK::AllocateStorage(sizeof(tagRAWINPUTDEVICELIST) * puiNumDevices, (void **)&pRawInputDeviceList, RSDK::DATASET_TMP, false);
         if (!pRawInputDeviceList) {
-            PrintLog(PRINT_NORMAL, "Could not allocate memory for Input Device List.\n");
+            RSDK::PrintLog(PRINT_NORMAL, "Could not allocate memory for Input Device List.\n");
             return;
         }
 
         int32 rawInputListSize = GetRawInputDeviceList(pRawInputDeviceList, (PUINT)&puiNumDevices, sizeof(tagRAWINPUTDEVICELIST));
         if (rawInputListSize == -1) {
-            PrintLog(PRINT_NORMAL, "Wrong Device Count.\n");
+            RSDK::PrintLog(PRINT_NORMAL, "Wrong Device Count.\n");
         }
         else {
 
@@ -231,7 +231,7 @@ void InitRawInputAPI()
                                     device->gamePadType |= gamePadMappings[g].type;
                                     device->deviceHandle = pRawInputDeviceList[d].hDevice;
                                     memcpy(device->buttons, gamePadMappings[g].buttons, sizeof(device->buttons));
-                                    PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name,
+                                    RSDK::PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name,
                                              deviceInfo.mouse.dwId, deviceInfo.mouse.dwNumberOfButtons);
                                     rawInputDevices[rawInputDeviceCount++] = device;
                                 }
@@ -244,7 +244,7 @@ void InitRawInputAPI()
                 }
             }
 
-            PrintLog(PRINT_NORMAL, "Total HID GamePad Count: %d\n", rawInputDeviceCount);
+            RSDK::PrintLog(PRINT_NORMAL, "Total HID GamePad Count: %d\n", rawInputDeviceCount);
         }
 
         RSDK::RemoveStorageEntry((void **)&pRawInputDeviceList);

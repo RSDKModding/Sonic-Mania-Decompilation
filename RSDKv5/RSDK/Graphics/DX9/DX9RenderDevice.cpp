@@ -95,7 +95,7 @@ bool RenderDevice::Init()
                                       winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
     }
 
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, RSDK::videoSettings.windowed);
+    RSDK::PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, RSDK::videoSettings.windowed);
 
     if (!windowHandle)
         return false;
@@ -846,7 +846,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         if (FAILED(result)) {
             if (errorBlob) {
-                PrintLog(PRINT_NORMAL, "ERROR COMPILING VERTEX SHADER: %s", (char *)errorBlob->GetBufferPointer());
+                RSDK::PrintLog(PRINT_NORMAL, "ERROR COMPILING VERTEX SHADER: %s", (char *)errorBlob->GetBufferPointer());
                 errorBlob->Release();
             }
 
@@ -857,9 +857,9 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             return;
         }
         else {
-            PrintLog(PRINT_NORMAL, "Successfully compiled vertex shader!");
+            RSDK::PrintLog(PRINT_NORMAL, "Successfully compiled vertex shader!");
             if (errorBlob)
-                PrintLog(PRINT_NORMAL, "Vertex shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
+                RSDK::PrintLog(PRINT_NORMAL, "Vertex shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
 
             if (dx9Device->CreateVertexShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->vertexShaderObject) < 0) {
                 if (shader->vertexShaderObject) {
@@ -921,7 +921,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         if (FAILED(result)) {
             if (errorBlob) {
-                PrintLog(PRINT_NORMAL, "ERROR COMPILING PIXEL SHADER:\n%s", (char *)errorBlob->GetBufferPointer());
+                RSDK::PrintLog(PRINT_NORMAL, "ERROR COMPILING PIXEL SHADER:\n%s", (char *)errorBlob->GetBufferPointer());
                 errorBlob->Release();
             }
 
@@ -929,9 +929,9 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
                 shaderBlob->Release();
         }
         else {
-            PrintLog(PRINT_NORMAL, "Successfully compiled pixel shader!");
+            RSDK::PrintLog(PRINT_NORMAL, "Successfully compiled pixel shader!");
             if (errorBlob)
-                PrintLog(PRINT_NORMAL, "Pixel shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
+                RSDK::PrintLog(PRINT_NORMAL, "Pixel shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
 
             if (dx9Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->pixelShaderObject) < 0) {
                 if (shader->vertexShaderObject) {
@@ -1203,9 +1203,9 @@ void RenderDevice::ProcessEvent(MSG Msg)
                 case VK_ESCAPE:
                     if (engine.devMenu) {
                         if (sceneInfo.state == ENGINESTATE_DEVMENU)
-                            CloseDevMenu();
+                            RSDK::CloseDevMenu();
                         else
-                            OpenDevMenu();
+                            RSDK::OpenDevMenu();
                     }
                     else {
 #if RETRO_INPUTDEVICE_KEYBOARD
