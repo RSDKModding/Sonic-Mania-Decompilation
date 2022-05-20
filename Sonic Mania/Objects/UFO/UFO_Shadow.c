@@ -56,7 +56,7 @@ void UFO_Shadow_Draw(void)
         RSDK.MatrixMultiply(&self->matrix, &self->matrix, &UFO_Camera->matWorld);
 
         RSDK.Prepare3DScene(UFO_Shadow->sceneID);
-        RSDK.AddModelTo3DScene(UFO_Shadow->modelIndex, UFO_Shadow->sceneID, S3D_FLATCLR_SCREEN, &self->matrix, 0, 0);
+        RSDK.AddModelTo3DScene(UFO_Shadow->modelIndex, UFO_Shadow->sceneID, S3D_SOLIDCOLOR_SCREEN, &self->matrix, 0, 0);
         RSDK.Draw3DScene(UFO_Shadow->sceneID);
     }
 }

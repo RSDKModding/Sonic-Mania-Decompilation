@@ -64,7 +64,7 @@ void UFO_ItemBox_Draw(void)
 
         RSDK.MatrixRotateXYZ(&self->matNormal, 0, 8 * UFO_Setup->timer, 4 * UFO_Setup->timer);
 
-        RSDK.AddModelTo3DScene(UFO_ItemBox->meshFrames, UFO_ItemBox->sceneIndex, S3D_FLATCLR_SHADED_SCREEN_WIREFRAME, &self->matWorld,
+        RSDK.AddModelTo3DScene(UFO_ItemBox->meshFrames, UFO_ItemBox->sceneIndex, S3D_WIREFRAME_SHADED_SCREEN, &self->matWorld,
                                &self->matNormal, 0xFFFF00);
 
         RSDK.Draw3DScene(UFO_ItemBox->sceneIndex);

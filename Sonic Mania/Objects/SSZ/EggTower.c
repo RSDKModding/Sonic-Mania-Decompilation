@@ -30,7 +30,7 @@ void EggTower_Draw(void)
 
     RSDK.Prepare3DScene(EggTower->sceneIndex);
 
-    RSDK.AddModelTo3DScene(EggTower->modelIndex, EggTower->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &self->matWorld, NULL, 0x000000);
+    RSDK.AddModelTo3DScene(EggTower->modelIndex, EggTower->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED, &self->matWorld, NULL, 0x000000);
 
     RSDK.Draw3DScene(EggTower->sceneIndex);
 }

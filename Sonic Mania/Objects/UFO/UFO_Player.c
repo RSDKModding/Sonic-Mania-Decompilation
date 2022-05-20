@@ -54,7 +54,7 @@ void UFO_Player_Draw(void)
             RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &UFO_Camera->matWorld);
             RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &UFO_Camera->matView);
 
-            RSDK.AddModelTo3DScene(self->animator.animationID, UFO_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matWorld,
+            RSDK.AddModelTo3DScene(self->animator.animationID, UFO_Player->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN, &self->matWorld,
                                    &self->matNormal, 0xFFFFFF);
         }
         else {
@@ -69,7 +69,7 @@ void UFO_Player_Draw(void)
             RSDK.MatrixRotateXYZ(&self->matNormal, 0, self->angle, 0);
             RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &UFO_Camera->matView);
 
-            RSDK.AddMeshFrameTo3DScene(self->animator.animationID, UFO_Player->sceneIndex, &self->animator, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+            RSDK.AddMeshFrameTo3DScene(self->animator.animationID, UFO_Player->sceneIndex, &self->animator, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN,
                                        &self->matWorld, &self->matNormal, 0xFFFFFF);
         }
 

@@ -310,7 +310,7 @@ void RSDK::LoadSceneFile()
                 layer->scrollInfo[s].tilePos        = 0;
                 layer->scrollInfo[s].deform         = ReadInt8(&info);
 
-                // this isn't used anywhere in-engine, and is never set in the files. so as you might expect no one knows what it is for!
+                // this isn't used anywhere in-engine, and is never set in the files. so as you might expect, no one knows what it is for!
                 layer->scrollInfo[s].unknown = ReadInt8(&info);
             }
 
@@ -455,7 +455,7 @@ void RSDK::LoadSceneFile()
                                 ReadBytes(&info, tempBuffer, sizeof(int32));
                             break;
 
-                        // not entirely sure on specifics here, should prolly be int32 always but the specific type implies it may not always be
+                        // not entirely sure on specifics here, should always be sizeof(int32) but it having a unique type implies it may not always be
                         case VAR_ENUM:
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int32));
@@ -468,13 +468,6 @@ void RSDK::LoadSceneFile()
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(bool32));
                             else
                                 ReadBytes(&info, tempBuffer, sizeof(bool32));
-                            break;
-
-                        case VAR_COLOR:
-                            if (varList[v].active)
-                                ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(color));
-                            else
-                                ReadBytes(&info, tempBuffer, sizeof(color));
                             break;
 
                         case VAR_STRING:
@@ -509,6 +502,13 @@ void RSDK::LoadSceneFile()
                             else {
                                 ReadBytes(&info, tempBuffer, sizeof(float));
                             }
+                            break;
+
+                        case VAR_COLOR:
+                            if (varList[v].active)
+                                ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(color));
+                            else
+                                ReadBytes(&info, tempBuffer, sizeof(color));
                             break;
                     }
                 }
@@ -1067,11 +1067,10 @@ void RSDK::ProcessSceneTimer()
         if (sceneInfo.timeCounter >= 6000) {
             sceneInfo.timeCounter -= 6025;
 
-            if (++sceneInfo.seconds > 59) {
+            if (++sceneInfo.seconds >= 60) {
                 sceneInfo.seconds = 0;
 
-                sceneInfo.minutes++;
-                if (sceneInfo.minutes > 59)
+                if (++sceneInfo.minutes >= 60)
                     sceneInfo.minutes = 0;
             }
         }
@@ -1082,17 +1081,19 @@ void RSDK::ProcessSceneTimer()
 
 void RSDK::SetScene(const char *categoryName, const char *sceneName)
 {
-    RETRO_HASH_MD5(hash);
-    GEN_HASH_MD5(categoryName, hash);
+    RETRO_HASH_MD5(catHash);
+    GEN_HASH_MD5(categoryName, catHash);
+
+    RETRO_HASH_MD5(scnHash);
+    GEN_HASH_MD5(sceneName, scnHash);
 
     for (int32 i = 0; i < sceneInfo.categoryCount; ++i) {
-        if (HASH_MATCH_MD5(sceneInfo.listCategory[i].hash, hash)) {
+        if (HASH_MATCH_MD5(sceneInfo.listCategory[i].hash, catHash)) {
             sceneInfo.activeCategory = i;
             sceneInfo.listPos        = sceneInfo.listCategory[i].sceneOffsetStart;
-            GEN_HASH_MD5(sceneName, hash);
 
             for (int32 s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
-                if (HASH_MATCH_MD5(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, hash)) {
+                if (HASH_MATCH_MD5(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, scnHash)) {
                     sceneInfo.listPos = sceneInfo.listCategory[i].sceneOffsetStart + s;
                     break;
                 }
@@ -1103,31 +1104,31 @@ void RSDK::SetScene(const char *categoryName, const char *sceneName)
     }
 }
 
-void RSDK::CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcLayerID, int32 startX2, int32 startY2, int32 countX,
+void RSDK::CopyTileLayout(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
                           int32 countY)
 {
     if (dstLayerID < LAYER_COUNT && srcLayerID < LAYER_COUNT) {
         TileLayer *dstLayer = &tileLayers[dstLayerID];
         TileLayer *srcLayer = &tileLayers[srcLayerID];
 
-        if (startX1 >= 0 && startX1 < dstLayer->xsize && startY1 >= 0 && startY1 < dstLayer->ysize) {
-            if (startX2 >= 0 && startX2 < srcLayer->xsize && startY2 >= 0 && startY2 < srcLayer->ysize) {
-                if (startX1 + countX > dstLayer->xsize)
-                    countX = dstLayer->xsize - startX1;
+        if (dstStartX >= 0 && dstStartX < dstLayer->xsize && dstStartY >= 0 && dstStartY < dstLayer->ysize) {
+            if (srcStartX >= 0 && srcStartX < srcLayer->xsize && srcStartY >= 0 && srcStartY < srcLayer->ysize) {
+                if (dstStartX + countX > dstLayer->xsize)
+                    countX = dstLayer->xsize - dstStartX;
 
-                if (startY1 + countY > dstLayer->ysize)
-                    countY = dstLayer->ysize - startY1;
+                if (dstStartY + countY > dstLayer->ysize)
+                    countY = dstLayer->ysize - dstStartY;
 
-                if (startX2 + countX > srcLayer->xsize)
-                    countX = srcLayer->xsize - startX2;
+                if (srcStartX + countX > srcLayer->xsize)
+                    countX = srcLayer->xsize - srcStartX;
 
-                if (startY2 + countY > srcLayer->ysize)
-                    countY = srcLayer->ysize - startY2;
+                if (srcStartY + countY > srcLayer->ysize)
+                    countY = srcLayer->ysize - srcStartY;
 
                 for (int32 y = 0; y < countY; ++y) {
                     for (int32 x = 0; x < countX; ++x) {
-                        uint16 tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
-                        dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
+                        uint16 tile = srcLayer->layout[(x + srcStartX) + ((y + srcStartY) << srcLayer->widthShift)];
+                        dstLayer->layout[(x + dstStartX) + ((y + dstStartY) << dstLayer->widthShift)] = tile;
                     }
                 }
             }

@@ -2,8 +2,8 @@
 
 using namespace RSDK;
 
-Model RSDK::modelList[MODEL_MAX];
-Scene3D RSDK::scene3DList[SCENE3D_MAX];
+Model RSDK::modelList[MODEL_COUNT];
+Scene3D RSDK::scene3DList[SCENE3D_COUNT];
 
 ScanEdge RSDK::scanEdgeBuffer[SCREEN_YSIZE * 2];
 
@@ -379,19 +379,19 @@ uint16 RSDK::LoadMesh(const char *filename, Scopes scope)
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(fullFilePath, hash);
 
-    for (int32 i = 0; i < MODEL_MAX; ++i) {
+    for (int32 i = 0; i < MODEL_COUNT; ++i) {
         if (HASH_MATCH_MD5(hash, modelList[i].hash)) {
             return i;
         }
     }
 
     uint16 id = -1;
-    for (id = 0; id < MODEL_MAX; ++id) {
+    for (id = 0; id < MODEL_COUNT; ++id) {
         if (modelList[id].scope == SCOPE_NONE)
             break;
     }
 
-    if (id >= MODEL_MAX)
+    if (id >= MODEL_COUNT)
         return -1;
 
     Model *model = &modelList[id];
@@ -464,19 +464,19 @@ uint16 RSDK::Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
 
-    for (int32 i = 0; i < SCENE3D_MAX; ++i) {
+    for (int32 i = 0; i < SCENE3D_COUNT; ++i) {
         if (HASH_MATCH_MD5(hash, scene3DList[i].hash)) {
             return i;
         }
     }
 
     uint16 id = -1;
-    for (id = 0; id < SCENE3D_MAX; ++id) {
+    for (id = 0; id < SCENE3D_COUNT; ++id) {
         if (scene3DList[id].scope == SCOPE_NONE)
             break;
     }
 
-    if (id >= SCENE3D_MAX)
+    if (id >= SCENE3D_COUNT)
         return -1;
 
     Scene3D *scene = &scene3DList[id];
@@ -486,23 +486,24 @@ uint16 RSDK::Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 
     scene->scope = scope;
     HASH_COPY_MD5(scene->hash, hash);
-    scene->vertLimit   = vertexLimit;
-    scene->faceCount   = 6;
+    scene->vertLimit = vertexLimit;
+    scene->faceCount = 6;
+
     scene->projectionX = 8;
     scene->projectionY = 8;
     AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, DATASET_STG, true);
     AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, DATASET_STG, true);
     AllocateStorage(sizeof(uint8) * vertexLimit, (void **)&scene->faceVertCounts, DATASET_STG, true);
-    AllocateStorage(sizeof(FaceBufferEntry) * vertexLimit, (void **)&scene->faceBuffer, DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DFace) * vertexLimit, (void **)&scene->faceBuffer, DATASET_STG, true);
 
     return id;
 }
-void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
+void RSDK::AddModelToScene(uint16 modelFrames, uint16 sceneIndex, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
 {
-    if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
+    if (modelFrames < MODEL_COUNT && sceneIndex < SCENE3D_COUNT) {
         if (matWorld) {
-            Model *mdl            = &modelList[modelID];
-            Scene3D *scn          = &scene3DList[sceneID];
+            Model *mdl            = &modelList[modelFrames];
+            Scene3D *scn          = &scene3DList[sceneIndex];
             uint16 *indices       = mdl->indices;
             int32 vertID          = scn->vertexCount;
             uint8 *faceVertCounts = &scn->faceVertCounts[scn->faceCount];
@@ -520,6 +521,7 @@ void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matri
                     case MODEL_USECOLOURS:
                         for (; i < mdl->indexCount;) {
                             faceVertCounts[f++] = mdl->faceVertCount;
+
                             for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                 ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                 Scene3DVertex *vertex  = &scn->vertices[vertID++];
@@ -540,6 +542,7 @@ void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matri
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
@@ -566,6 +569,7 @@ void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matri
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
@@ -587,6 +591,7 @@ void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matri
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
                                     Color *modelColor      = &mdl->colors[indices[i++]];
@@ -614,6 +619,7 @@ void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matri
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
                                     Color *modelColor      = &mdl->colors[indices[i++]];
@@ -636,12 +642,13 @@ void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matri
         }
     }
 }
-void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
+void RSDK::AddMeshFrameToScene(uint16 modelFrames, uint16 sceneIndex, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals,
+                               color color)
 {
-    if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
+    if (modelFrames < MODEL_COUNT && sceneIndex < SCENE3D_COUNT) {
         if (matWorld && animator) {
-            Model *mdl            = &modelList[modelID];
-            Scene3D *scn          = &scene3DList[sceneID];
+            Model *mdl            = &modelList[modelFrames];
+            Scene3D *scn          = &scene3DList[sceneIndex];
             uint16 *indices       = mdl->indices;
             int32 vertID          = scn->vertexCount;
             uint8 *faceVertCounts = &scn->faceVertCounts[scn->faceCount];
@@ -666,6 +673,7 @@ void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animato
                     case MODEL_USECOLOURS:
                         for (; i < mdl->indexCount;) {
                             faceVertCounts[f++] = mdl->faceVertCount;
+
                             for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                 ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                 ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -689,6 +697,7 @@ void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animato
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -720,6 +729,7 @@ void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animato
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -744,6 +754,7 @@ void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animato
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -775,6 +786,7 @@ void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animato
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -801,7 +813,7 @@ void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animato
 }
 void RSDK::Draw3DScene(uint16 sceneID)
 {
-    if (sceneID < SCENE3D_MAX) {
+    if (sceneID < SCENE3D_COUNT) {
         Entity *entity = sceneInfo.entity;
         Scene3D *scn   = &scene3DList[sceneID];
 
@@ -865,9 +877,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
         switch (scn->drawMode) {
             default: break;
 
-            case S3D_FLATCLR_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_WIREFRAME:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     for (int32 v = 0; v < *vertCnt - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].color,
                                  entity->alpha, entity->inkEffect, false);
@@ -878,9 +890,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
                 }
                 break;
 
-            case S3D_FLATCLR:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     for (int32 v = 0; v < *vertCnt; ++v) {
                         vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);
                         vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
@@ -896,9 +908,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
             case S3D_UNUSED_1: break;
             case S3D_UNUSED_2: break;
 
-            case S3D_FLATCLR_SHADED_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_WIREFRAME_SHADED:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 ny1 = 0;
@@ -938,9 +950,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SHADED:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 ny = 0;
@@ -971,16 +983,16 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                     uint32 color = (r << 16) | (g << 8) | (b << 0);
 
-                    drawVert = &scn->vertices[scn->faceBuffer[i].index];
+                    drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
 
                     vertCnt++;
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED_BLENDED:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SHADED_BLENDED:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     for (int32 v = 0; v < vertCount; ++v) {
@@ -1015,9 +1027,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
                 }
                 break;
 
-            case S3D_FLATCLR_SCREEN_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_WIREFRAME_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
 
                     int32 v = 0;
                     for (; v < *vertCnt && v < 0xFF; ++v) {
@@ -1033,7 +1045,7 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                     if (v < 0xFF) {
                         for (int32 v = 0; v < *vertCnt - 1; ++v) {
-                            DrawLine(vertPos[v + 0].x, drawVert[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, drawVert[0].color, entity->alpha,
+                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, drawVert[0].color, entity->alpha,
                                      entity->inkEffect, true);
                         }
                         DrawLine(vertPos[0].x, vertPos[0].y, vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, drawVert[0].color, entity->alpha,
@@ -1044,9 +1056,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
                 }
                 break;
 
-            case S3D_FLATCLR_SCREEN:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v = 0;
@@ -1069,9 +1081,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED_SCREEN_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_WIREFRAME_SHADED_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v   = 0;
@@ -1110,7 +1122,6 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                         uint32 color = (r << 16) | (g << 8) | (b << 0);
 
-                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
                         for (int32 v = 0; v < *vertCnt - 1; ++v) {
                             DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, color, entity->alpha, entity->inkEffect,
                                      true);
@@ -1123,9 +1134,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED_SCREEN:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SHADED_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v  = 0;
@@ -1164,7 +1175,7 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                         uint32 color = (r << 16) | (g << 8) | (b << 0);
 
-                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
+                        drawVert = &scn->vertices[scn->faceBuffer[f].index];
                         DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
                     }
 
@@ -1172,9 +1183,9 @@ void RSDK::Draw3DScene(uint16 sceneID)
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED_BLENDED_SCREEN:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v = 0;
@@ -1214,7 +1225,7 @@ void RSDK::Draw3DScene(uint16 sceneID)
                     }
 
                     if (v < 0xFF) {
-                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
+                        drawVert = &scn->vertices[scn->faceBuffer[f].index];
                         DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, entity->inkEffect);
                     }
 

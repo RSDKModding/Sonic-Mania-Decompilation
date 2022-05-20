@@ -76,7 +76,7 @@ void PBL_TargetBumper_StageLoad(void)
     PBL_TargetBumper->sceneIndex  = RSDK.Create3DScene("View:TargetBumper", 256u, SCOPE_STAGE);
     RSDK.SetDiffuseIntensity(PBL_TargetBumper->sceneIndex, 9, 9, 9);
     RSDK.SetSpecularIntensity(PBL_TargetBumper->sceneIndex, 15, 15, 15);
-    PBL_TargetBumper->drawType        = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
+    PBL_TargetBumper->drawType        = S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN;
     PBL_TargetBumper->hitbox.left     = -16;
     PBL_TargetBumper->hitbox.top      = -6;
     PBL_TargetBumper->hitbox.right    = 12;

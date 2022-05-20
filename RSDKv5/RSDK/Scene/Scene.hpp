@@ -242,7 +242,8 @@ inline void SetTileAngle(uint16 tile, uint8 cLayer, uint8 cMode, int32 value)
 inline uint8 GetTileFlags(uint16 tile, uint8 cLayer) { return collisionMasks[cLayer & 1][tile & 0x3FF].flag; }
 inline void SetTileFlags(uint16 tile, uint8 cLayer, uint8 flags) { collisionMasks[cLayer & 1][tile & 0x3FF].flag = flags; }
 
-void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcLayerID, int32 startX2, int32 startY2, int32 countX, int32 countY);
+void CopyTileLayout(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
+                    int32 countY);
 
 inline void CopyTile(uint16 dest, uint16 src, uint16 count)
 {

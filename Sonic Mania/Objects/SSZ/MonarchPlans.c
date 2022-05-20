@@ -36,7 +36,7 @@ void MonarchPlans_Draw(void)
 
     RSDK.Prepare3DScene(MonarchPlans->sceneIndex);
 
-    RSDK.AddModelTo3DScene(MonarchPlans->meshIndex, MonarchPlans->sceneIndex, S3D_FLATCLR_WIREFRAME, &self->matWorld, &self->matNormal, 0x609090);
+    RSDK.AddModelTo3DScene(MonarchPlans->meshIndex, MonarchPlans->sceneIndex, S3D_WIREFRAME, &self->matWorld, &self->matNormal, 0x609090);
 
     RSDK.Draw3DScene(MonarchPlans->sceneIndex);
 }

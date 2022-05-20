@@ -35,7 +35,7 @@ void SentryBug_Draw(void)
             RSDK.MatrixRotateXYZ(&self->matWorld, self->netRotation, self->netRotation, 0);
             RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &self->matTransform);
             RSDK.Prepare3DScene(SentryBug->sceneIndex);
-            RSDK.AddModelTo3DScene(SentryBug->meshFrames, SentryBug->sceneIndex, S3D_FLATCLR_WIREFRAME, &self->matWorld, NULL, self->netColor);
+            RSDK.AddModelTo3DScene(SentryBug->meshFrames, SentryBug->sceneIndex, S3D_WIREFRAME, &self->matWorld, NULL, self->netColor);
 
             self->inkEffect = INK_ALPHA;
             RSDK.Draw3DScene(SentryBug->sceneIndex);

@@ -37,7 +37,7 @@ void ContinueSetup_Draw(void)
     RSDK.MatrixMultiply(&self->matFinal, &self->matRotateY, &self->matRotateX);
     RSDK.MatrixMultiply(&self->matFinal, &self->matTemp, &self->matFinal);
     RSDK.MatrixMultiply(&self->matFinal, &self->matFinal, &self->matTranslate);
-    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer / 10 % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer / 10 % 10], ContinueSetup->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN,
                            &self->matFinal, &self->matFinal, self->numberColor);
 
     // Number 2 (single digits)
@@ -45,7 +45,7 @@ void ContinueSetup_Draw(void)
     RSDK.MatrixMultiply(&self->matFinal, &self->matRotateY, &self->matRotateX);
     RSDK.MatrixMultiply(&self->matFinal, &self->matTemp, &self->matFinal);
     RSDK.MatrixMultiply(&self->matFinal, &self->matFinal, &self->matTranslate);
-    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer % 10], ContinueSetup->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN,
                            &self->matFinal, &self->matFinal, self->numberColor);
 
     RSDK.Draw3DScene(ContinueSetup->sceneIndex);

@@ -656,18 +656,24 @@ typedef enum {
 } CSides;
 
 typedef enum {
-    S3D_FLATCLR_WIREFRAME               = 0x0,
-    S3D_FLATCLR                         = 0x1,
-    S3D_UNUSED_1                        = 0x2,
-    S3D_UNUSED_2                        = 0x3,
-    S3D_FLATCLR_SHADED_WIREFRAME        = 0x4,
-    S3D_FLATCLR_SHADED                  = 0x5,
-    S3D_FLATCLR_SHADED_BLENDED          = 0x6,
-    S3D_FLATCLR_SCREEN_WIREFRAME        = 0x7,
-    S3D_FLATCLR_SCREEN                  = 0x8,
-    S3D_FLATCLR_SHADED_SCREEN_WIREFRAME = 0x9,
-    S3D_FLATCLR_SHADED_SCREEN           = 0xA,
-    S3D_FLATCLR_SHADED_BLENDED_SCREEN   = 0xB,
+    S3D_WIREFRAME,
+    S3D_SOLIDCOLOR,
+
+    S3D_UNUSED_1,
+    S3D_UNUSED_2,
+
+    S3D_WIREFRAME_SHADED,
+    S3D_SOLIDCOLOR_SHADED,
+
+    S3D_SOLIDCOLOR_SHADED_BLENDED,
+
+    S3D_WIREFRAME_SCREEN,
+    S3D_SOLIDCOLOR_SCREEN,
+
+    S3D_WIREFRAME_SHADED_SCREEN,
+    S3D_SOLIDCOLOR_SHADED_SCREEN,
+
+    S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN,
 } Scene3DDrawTypes;
 
 typedef enum {
