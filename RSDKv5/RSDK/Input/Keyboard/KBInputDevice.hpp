@@ -1,4 +1,7 @@
 
+namespace SKU
+{
+
 extern int32 keyState[PLAYER_COUNT];
 
 struct InputDeviceKeyboard : InputDevice {
@@ -37,3 +40,5 @@ extern int32 prevButtonDownCount;
 
 void HandleSpecialKeys();
 #endif
+
+} // namespace SKU

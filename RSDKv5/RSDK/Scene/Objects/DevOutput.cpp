@@ -1,7 +1,9 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
 #if RETRO_REV02
-RSDK::ObjectDevOutput *RSDK::DevOutput;
+using namespace RSDK;
+
+ObjectDevOutput *RSDK::DevOutput;
 
 void RSDK::DevOutput_Update()
 {

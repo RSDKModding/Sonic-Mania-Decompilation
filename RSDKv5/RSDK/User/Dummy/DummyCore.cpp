@@ -1,8 +1,10 @@
 #include "RSDK/Core/RetroEngine.hpp"
 #include "zlib/zlib.h"
 
+using namespace RSDK;
+
 #if RETRO_REV02
-RSDK::SKU::DummyCore *RSDK::SKU::dummyCore = NULL;
+SKU::DummyCore *RSDK::SKU::dummyCore = NULL;
 #endif
 
 // Start custom achievement code
@@ -19,7 +21,7 @@ void RSDK::RegisterAchievement(const char *identifier, const char *name, const c
 
 // End custom achievement code
 
-uint32 RSDK::SKU::GetAPIValueID(const char *identifier, int charIndex)
+uint32 RSDK::SKU::GetAPIValueID(const char *identifier, int32 charIndex)
 {
     if (identifier[charIndex])
         return (33 * GetAPIValueID(identifier, charIndex + 1)) ^ identifier[charIndex];
@@ -49,7 +51,7 @@ int32 RSDK::SKU::GetAPIValue(uint32 id)
 }
 
 #if RETRO_REV02
-RSDK::SKU::DummyCore *RSDK::SKU::InitDummyCore()
+SKU::DummyCore *RSDK::SKU::InitDummyCore()
 {
     //Initalize API subsystems
     DummyCore *core = new DummyCore;
@@ -159,7 +161,7 @@ void RSDK::SKU::DummyCore::StageLoad()
 {
     UserCore::StageLoad();
 
-    for (int v = 0; v < valueCount; ++v) AddViewableVariable(userValueNames[v], values[v], VIEWVAR_BOOL, false, true);
+    for (int32 v = 0; v < valueCount; ++v) AddViewableVariable(userValueNames[v], values[v], VIEWVAR_BOOL, false, true);
 }
 
 bool32 RSDK::SKU::DummyCore::CheckFocusLost() { return focusState != 0; }
@@ -181,7 +183,7 @@ void RSDK::SKU::DummyCore::LaunchManual()
 }
 void RSDK::SKU::DummyCore::ExitGame() { RenderDevice::isRunning = false; }
 
-int RSDK::SKU::DummyCore::GetDefaultGamepadType()
+int32 RSDK::SKU::DummyCore::GetDefaultGamepadType()
 {
 #if RETRO_REV02
     int32 platform = curSKU.platform;
@@ -197,7 +199,7 @@ int RSDK::SKU::DummyCore::GetDefaultGamepadType()
     }
 }
 
-int RSDK::SKU::DummyCore::ShowExtensionOverlay(byte overlay)
+int32 RSDK::SKU::DummyCore::ShowExtensionOverlay(byte overlay)
 {
     switch (overlay) {
         default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
@@ -208,15 +210,15 @@ int RSDK::SKU::DummyCore::ShowExtensionOverlay(byte overlay)
 #endif
 
 #if RETRO_VER_EGS
-bool32 RSDK::SKU::DummyCore::ShowCheckoutPage(int a1)
+bool32 RSDK::SKU::DummyCore::ShowCheckoutPage(int32 a1)
 {
     PrintLog(PRINT_POPUP, "ShowCheckoutPage(%d)");
     return true;
 }
-int RSDK::SKU::DummyCore::ShowEncorePage(int a1)
+int32 RSDK::SKU::DummyCore::ShowEncorePage(int32 a1)
 {
     PrintLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
     return 1;
 }
-void RSDK::SKU::DummyCore::EpicUnknown4(int a1) { PrintLog(PRINT_POPUP, "EpicUnknown4(%d)", a1); }
+void RSDK::SKU::DummyCore::EpicUnknown4(int32 a1) { PrintLog(PRINT_POPUP, "EpicUnknown4(%d)", a1); }
 #endif

@@ -2,42 +2,42 @@
 
 using namespace RSDK;
 
-ObjectClass objectClassList[OBJECT_COUNT];
-int32 objectClassCount = 0;
+ObjectClass RSDK::objectClassList[OBJECT_COUNT];
+int32 RSDK::objectClassCount = 0;
 
-int32 globalObjectCount = 0;
-int32 globalObjectIDs[OBJECT_COUNT];
-int32 stageObjectIDs[OBJECT_COUNT];
+int32 RSDK::globalObjectCount = 0;
+int32 RSDK::globalObjectIDs[OBJECT_COUNT];
+int32 RSDK::stageObjectIDs[OBJECT_COUNT];
 
-EntityBase objectEntityList[ENTITY_COUNT];
+EntityBase RSDK::objectEntityList[ENTITY_COUNT];
 
-EditableVarInfo *editableVarList;
-int32 editableVarCount = 0;
+EditableVarInfo *RSDK::editableVarList;
+int32 RSDK::editableVarCount = 0;
 
-TypeGroupList typeGroups[TYPEGROUP_COUNT];
+TypeGroupList RSDK::typeGroups[TYPEGROUP_COUNT];
 
-bool32 validDraw = false;
+bool32 RSDK::validDraw = false;
 
-ForeachStackInfo foreachStackList[FOREACH_STACK_COUNT];
-ForeachStackInfo *foreachStackPtr = NULL;
+ForeachStackInfo RSDK::foreachStackList[FOREACH_STACK_COUNT];
+ForeachStackInfo *RSDK::foreachStackPtr = NULL;
 
 #if RETRO_USE_MOD_LOADER
-void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
-                    void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
-                    void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
+void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                          void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                          void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 {
     return RegisterObject_STD(staticVars, name, entityClassSize, staticClassSize, update, lateUpdate, staticUpdate, draw, create, stageLoad,
                               editorDraw, editorLoad, serialize);
 }
 
-void RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void(void)> update,
-                        std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
-                        std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
-                        std::function<void(void)> editorLoad, std::function<void(void)> serialize)
+void RSDK::RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void(void)> update,
+                              std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
+                              std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+                              std::function<void(void)> editorLoad, std::function<void(void)> serialize)
 #else
-void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
-                    void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
-                    void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
+void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                          void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                          void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 #endif
 {
     if (objectClassCount < OBJECT_COUNT) {
@@ -64,16 +64,16 @@ void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSiz
 }
 
 #if RETRO_REV02
-void RegisterStaticVariables(void **staticVars, const char *name, uint32 classSize)
+void RSDK::RegisterStaticVariables(void **staticVars, const char *name, uint32 classSize)
 {
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
-    RSDK::AllocateStorage(classSize, (void **)staticVars, RSDK::DATASET_STG, true);
+    AllocateStorage(classSize, (void **)staticVars, DATASET_STG, true);
     LoadStaticVariables((uint8 *)*staticVars, hash, 0);
 }
 #endif
 
-void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
+void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 {
     FileInfo info;
 
@@ -300,7 +300,7 @@ void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
     }
 }
 
-void InitObjects()
+void RSDK::InitObjects()
 {
     sceneInfo.entitySlot = 0;
     sceneInfo.createSlot = ENTITY_COUNT - 0x100;
@@ -336,7 +336,7 @@ void InitObjects()
     if (!cameraCount)
         AddCamera(&screens[0].position, screens[0].center.x << 0x10, screens[0].center.x << 0x10, false);
 }
-void ProcessObjects()
+void RSDK::ProcessObjects()
 {
     for (int32 i = 0; i < DRAWGROUP_COUNT; ++i) drawGroups[i].entityCount = 0;
 
@@ -494,7 +494,7 @@ void ProcessObjects()
     RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_REGULAR));
 #endif
 }
-void ProcessPausedObjects()
+void RSDK::ProcessPausedObjects()
 {
     for (int32 i = 0; i < DRAWGROUP_COUNT; ++i) drawGroups[i].entityCount = 0;
 
@@ -577,7 +577,7 @@ void ProcessPausedObjects()
     RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_PAUSED));
 #endif
 }
-void ProcessFrozenObjects()
+void RSDK::ProcessFrozenObjects()
 {
     for (int32 i = 0; i < DRAWGROUP_COUNT; ++i) drawGroups[i].entityCount = 0;
 
@@ -738,10 +738,10 @@ void ProcessFrozenObjects()
     RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_FROZEN));
 #endif
 }
-void ProcessObjectDrawLists()
+void RSDK::ProcessObjectDrawLists()
 {
     if (sceneInfo.state && sceneInfo.state != (ENGINESTATE_LOAD | ENGINESTATE_STEPOVER)) {
-        for (int32 s = 0; s < RSDK::videoSettings.screenCount; ++s) {
+        for (int32 s = 0; s < videoSettings.screenCount; ++s) {
             currentScreen             = &screens[s];
             sceneInfo.currentScreenID = s;
 
@@ -912,7 +912,7 @@ void ProcessObjectDrawLists()
 
             if (engine.showPaletteOverlay) {
                 for (int32 p = 0; p < PALETTE_BANK_COUNT; ++p) {
-                    int32 x = (RSDK::videoSettings.pixWidth - (0x10 << 3));
+                    int32 x = (videoSettings.pixWidth - (0x10 << 3));
                     int32 y = (SCREEN_YSIZE - (0x10 << 2));
 
                     for (int32 c = 0; c < PALETTE_BANK_SIZE; ++c) {
@@ -932,7 +932,7 @@ void ProcessObjectDrawLists()
     }
 }
 
-uint16 GetObjectByName(const char *name)
+uint16 RSDK::GetObjectByName(const char *name)
 {
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
@@ -945,7 +945,7 @@ uint16 GetObjectByName(const char *name)
     return 0;
 }
 
-int32 GetEntityCount(uint16 classID, bool32 isActive)
+int32 RSDK::GetEntityCount(uint16 classID, bool32 isActive)
 {
     if (classID >= TYPE_COUNT)
         return 0;
@@ -961,7 +961,7 @@ int32 GetEntityCount(uint16 classID, bool32 isActive)
     return entityCount;
 }
 
-void ResetEntityPtr(Entity *entity, uint16 classID, void *data)
+void RSDK::ResetEntityPtr(Entity *entity, uint16 classID, void *data)
 {
     if (entity) {
         ObjectClass *info = &objectClassList[stageObjectIDs[classID]];
@@ -982,7 +982,7 @@ void ResetEntityPtr(Entity *entity, uint16 classID, void *data)
     }
 }
 
-void ResetEntitySlot(uint16 slot, uint16 classID, void *data)
+void RSDK::ResetEntitySlot(uint16 slot, uint16 classID, void *data)
 {
     ObjectClass *object = &objectClassList[stageObjectIDs[classID]];
     slot                = slot < ENTITY_COUNT ? slot : (ENTITY_COUNT - 1);
@@ -1005,7 +1005,7 @@ void ResetEntitySlot(uint16 slot, uint16 classID, void *data)
     }
 }
 
-Entity *CreateEntity(uint16 classID, void *data, int32 x, int32 y)
+Entity *RSDK::CreateEntity(uint16 classID, void *data, int32 x, int32 y)
 {
     ObjectClass *object = &objectClassList[stageObjectIDs[classID]];
     Entity *entity      = &objectEntityList[sceneInfo.createSlot];
@@ -1057,7 +1057,7 @@ Entity *CreateEntity(uint16 classID, void *data, int32 x, int32 y)
     return entity;
 }
 
-bool32 GetActiveEntities(uint16 group, Entity **entity)
+bool32 RSDK::GetActiveEntities(uint16 group, Entity **entity)
 {
     if (group >= TYPEGROUP_COUNT)
         return false;
@@ -1085,7 +1085,7 @@ bool32 GetActiveEntities(uint16 group, Entity **entity)
 
     return false;
 }
-bool32 GetEntities(uint16 classID, Entity **entity)
+bool32 RSDK::GetEntities(uint16 classID, Entity **entity)
 {
     if (classID >= OBJECT_COUNT)
         return false;
@@ -1114,7 +1114,7 @@ bool32 GetEntities(uint16 classID, Entity **entity)
     return false;
 }
 
-bool32 CheckOnScreen(Entity *entity, Vector2 *range)
+bool32 RSDK::CheckOnScreen(Entity *entity, Vector2 *range)
 {
     if (!entity)
         return false;
@@ -1124,7 +1124,7 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
 
     return CheckPosOnScreen(&entity->position, range);
 }
-bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range)
+bool32 RSDK::CheckPosOnScreen(Vector2 *position, Vector2 *range)
 {
     if (!position || !range)
         return false;

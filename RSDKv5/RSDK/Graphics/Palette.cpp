@@ -1,27 +1,29 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-uint16 rgb32To16_R[0x100];
-uint16 rgb32To16_G[0x100];
-uint16 rgb32To16_B[0x100];
+using namespace RSDK;
 
-uint16 globalPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
-uint16 activeGlobalRows[PALETTE_BANK_COUNT];
-uint16 activeStageRows[PALETTE_BANK_COUNT];
-uint16 stagePalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
+uint16 RSDK::rgb32To16_R[0x100];
+uint16 RSDK::rgb32To16_G[0x100];
+uint16 RSDK::rgb32To16_B[0x100];
 
-uint16 fullPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
+uint16 RSDK::globalPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
+uint16 RSDK::activeGlobalRows[PALETTE_BANK_COUNT];
+uint16 RSDK::activeStageRows[PALETTE_BANK_COUNT];
+uint16 RSDK::stagePalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
 
-uint8 gfxLineBuffer[SCREEN_YSIZE];
+uint16 RSDK::fullPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
 
-int32 maskColor = 0;
+uint8 RSDK::gfxLineBuffer[SCREEN_YSIZE];
+
+int32 RSDK::maskColor = 0;
 #if RETRO_REV02
-uint16 *tintLookupTable = NULL;
+uint16 *RSDK::tintLookupTable = NULL;
 #else
-uint16 tintLookupTable[0x10000];
+uint16 RSDK::tintLookupTable[0x10000];
 #endif
 
 #if RETRO_REV02
-void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
+void RSDK::LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
 {
     char fullFilePath[0x80];    
     sprintf(fullFilePath, "Data/Palettes/%s", filename);
@@ -48,7 +50,7 @@ void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
 }
 #endif
 
-void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex)
+void RSDK::SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex)
 {
     if (destBankID >= PALETTE_BANK_COUNT || srcBankA >= PALETTE_BANK_COUNT || srcBankB >= PALETTE_BANK_COUNT)
         return;
@@ -80,7 +82,7 @@ void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blen
 }
 
 #if RETRO_REV02
-void BlendColors(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 blendAmount, int32 startIndex, int32 count)
+void RSDK::BlendColors(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 blendAmount, int32 startIndex, int32 count)
 {
 
     if (bankID >= PALETTE_BANK_COUNT || !colorsA || !colorsB)

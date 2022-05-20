@@ -1,5 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 FileInfo VideoManager::file;
 
 ogg_sync_state VideoManager::oy;
@@ -16,7 +18,7 @@ th_pixel_fmt VideoManager::pixelFormat;
 ogg_int64_t VideoManager::granulePos   = 0;
 bool32 VideoManager::shouldInit        = false;
 
-bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)(void))
+bool32 RSDK::LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)(void))
 {
     if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
         return false;
@@ -83,7 +85,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
                 while (theora_p && (theora_p < 3) && (ret = ogg_stream_packetout(&VideoManager::to, &VideoManager::op))) {
                     if (ret < 0) {
 #if !RETRO_USE_ORIGINAL_CODE
-                        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
+                        PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
 #endif
 
                         theora_p = 0;
@@ -92,7 +94,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
 
                     if (!th_decode_headerin(&VideoManager::ti, &VideoManager::tc, &VideoManager::ts, &VideoManager::op)) {
 #if !RETRO_USE_ORIGINAL_CODE
-                        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
+                        PrintLog(PRINT_NORMAL, "ERROR: failed to parse theora stream headers. corrupted stream?");
 #endif
 
                         theora_p = 0;
@@ -117,7 +119,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
                     ogg_sync_wrote(&VideoManager::oy, 0x1000);
                     if (ret == 0) {
 #if !RETRO_USE_ORIGINAL_CODE
-                        RSDK::PrintLog(PRINT_NORMAL, "ERROR: Reached end of file while searching for codec headers.");
+                        PrintLog(PRINT_NORMAL, "ERROR: Reached end of file while searching for codec headers.");
 #endif
 
                         theora_p = 0;
@@ -141,8 +143,8 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
 
                 th_setup_free(VideoManager::ts);
 
-                engine.storedShaderID           = RSDK::videoSettings.shaderID;
-                RSDK::videoSettings.screenCount = 0;
+                engine.storedShaderID           = videoSettings.shaderID;
+                videoSettings.screenCount = 0;
                 engine.storedState              = sceneInfo.state;
                 engine.displayTime              = 0.0;
                 VideoManager::shouldInit        = true;
@@ -155,16 +157,16 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
 
                 switch (VideoManager::pixelFormat) {
                     default: break;
-                    case TH_PF_420: RSDK::videoSettings.shaderID = SHADER_YUV_420; break;
-                    case TH_PF_422: RSDK::videoSettings.shaderID = SHADER_YUV_422; break;
-                    case TH_PF_444: RSDK::videoSettings.shaderID = SHADER_YUV_444; break;
+                    case TH_PF_420: videoSettings.shaderID = SHADER_YUV_420; break;
+                    case TH_PF_422: videoSettings.shaderID = SHADER_YUV_422; break;
+                    case TH_PF_444: videoSettings.shaderID = SHADER_YUV_444; break;
                 }
 
                 engine.skipCallback = NULL;
                 ProcessVideo();
                 engine.skipCallback        = skipCallback;
 
-                RSDK::changedVideoSettings = false;
+                changedVideoSettings = false;
                 sceneInfo.state            = ENGINESTATE_VIDEOPLAYBACK;
 
                 return true;
@@ -177,7 +179,7 @@ bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)
     return false;
 }
 
-void ProcessVideo()
+void RSDK::ProcessVideo()
 {
     bool32 finished = false;
     double curTime  = 0;
@@ -257,8 +259,8 @@ void ProcessVideo()
         th_info_clear(&VideoManager::ti);
         ogg_sync_clear(&VideoManager::oy);
 
-        RSDK::videoSettings.shaderID    = engine.storedShaderID;
-        RSDK::videoSettings.screenCount = 1;
+        videoSettings.shaderID    = engine.storedShaderID;
+        videoSettings.screenCount = 1;
         sceneInfo.state                 = engine.storedState;
     }
 }

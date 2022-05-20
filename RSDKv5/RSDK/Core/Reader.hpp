@@ -29,6 +29,9 @@ SDL_RWops *fOpen(const char *path, const char *mode);
 #include <zlib/zlib.h>
 #endif
 
+namespace RSDK
+{
+
 #define FILE_COUNT (0x1000)
 #define PACK_COUNT (4)
 
@@ -123,14 +126,14 @@ inline void Seek_Set(FileInfo *info, int32 count)
             SkipBytes(info, count);
         }
 
+        info->readPos = count;
         if (info->usingFileBuffer) {
             uint8 *fileBuffer = (uint8 *)info->file;
-            info->fileBuffer = &fileBuffer[info->readPos];
+            info->fileBuffer  = &fileBuffer[info->readPos];
         }
         else {
             fSeek(info->file, info->fileOffset + info->readPos, SEEK_SET);
         }
-        info->readPos = count;
     }
 }
 
@@ -303,13 +306,13 @@ inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
     uLongf destLen = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);
-    RSDK::AllocateStorage((int32)destLen, (void **)buffer, RSDK::DATASET_TMP, false);
+    AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
+    AllocateStorage((int32)destLen, (void **)buffer, DATASET_TMP, false);
     ReadBytes(info, compData, (int32)complen);
 
     uncompress(*buffer, &destLen, compData, complen);
 
-    RSDK::RemoveStorageEntry((void **)&compData);
+    RemoveStorageEntry((void **)&compData);
 
     return (int32)destLen;
 }
@@ -324,7 +327,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
     uLongf destLen  = (uint32)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);
+    AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
     ReadBytes(info, compData, (int32)complen);
 
     uncompress(*buffer, &destLen, compData, complen);
@@ -344,5 +347,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
     *cBuffer = NULL;
     return (int32)destLen;
 }
+
+} // namespace RSDK
 
 #endif

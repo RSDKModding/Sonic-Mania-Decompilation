@@ -1,5 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 // Start Dummy Achievements
 std::vector<RSDK::SKU::AchievementInfo> RSDK::SKU::achievementList;
 std::vector<int> RSDK::SKU::achievementStack;
@@ -58,7 +60,7 @@ String *RSDK::SKU::DummyAchievements::GetAchievementName(String *name, uint id)
     return name;
 }
 
-int RSDK::SKU::DummyAchievements::GetNextAchievementID(void)
+int RSDK::SKU::DummyAchievements::GetNextAchievementID()
 {
     if (achievementStack.size() > 0)
         return achievementStack[0] + 1;
@@ -66,7 +68,7 @@ int RSDK::SKU::DummyAchievements::GetNextAchievementID(void)
         return 0;
 }
 
-void RSDK::SKU::DummyAchievements::RemoveLastAchievementID(void)
+void RSDK::SKU::DummyAchievements::RemoveLastAchievementID()
 {
     if (achievementStack.size() > 0)
         achievementStack.erase(achievementStack.begin());

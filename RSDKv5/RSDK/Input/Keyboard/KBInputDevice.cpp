@@ -1,11 +1,13 @@
 
-int32 keyState[PLAYER_COUNT];
+using namespace RSDK::SKU;
+
+int32 RSDK::SKU::keyState[PLAYER_COUNT];
 
 #if !RETRO_REV02
-int32 specialKeyStates[4];
-int32 prevSpecialKeyStates[4];
-int32 buttonDownCount     = 0;
-int32 prevButtonDownCount = 0;
+int32 RSDK::SKU::specialKeyStates[4];
+int32 RSDK::SKU::prevSpecialKeyStates[4];
+int32 RSDK::SKU::buttonDownCount     = 0;
+int32 RSDK::SKU::prevButtonDownCount = 0;
 #endif
 
 #if RETRO_RENDERDEVICE_SDL2
@@ -676,7 +678,7 @@ int32 GLFWToWinAPIMappings(int32 mapping)
 }
 #endif
 
-InputDeviceKeyboard *InitKeyboardDevice(uint32 id)
+InputDeviceKeyboard *RSDK::SKU::InitKeyboardDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -796,7 +798,7 @@ void InputDeviceKeyboard::ProcessInput(int32 controllerID)
     cont->keySelect.press |= this->stateSelect;
 }
 
-void InitKeyboardInputAPI()
+void RSDK::SKU::InitKeyboardInputAPI()
 {
     char buffer[0x10];
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
@@ -813,7 +815,7 @@ void InitKeyboardInputAPI()
     }
 }
 
-void UpdateKeyState(int32 keyCode)
+void RSDK::SKU::UpdateKeyState(int32 keyCode)
 {
 #if RETRO_RENDERDEVICE_SDL2
     keyCode = SDLToWinAPIMappings(keyCode);
@@ -846,7 +848,7 @@ void UpdateKeyState(int32 keyCode)
     }
 }
 
-void ClearKeyState(int32 keyCode)
+void RSDK::SKU::ClearKeyState(int32 keyCode)
 {
 #if RETRO_RENDERDEVICE_SDL2
     keyCode = SDLToWinAPIMappings(keyCode);
@@ -874,7 +876,7 @@ void ClearKeyState(int32 keyCode)
 }
 
 #if !RETRO_REV02
-void HandleSpecialKeys()
+void RSDK::SKU::HandleSpecialKeys()
 {
     if (specialKeyStates[0] || specialKeyStates[3]) {
         touchMouseData.pausePress = !touchMouseData.pauseHold;

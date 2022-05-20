@@ -10,6 +10,7 @@
 
 namespace RSDK
 {
+
 extern bool32 engineDebugMode;
 extern bool32 useEndLine;
 extern char outputString[0x400];
@@ -46,12 +47,12 @@ inline void PrintVector2(int32 severity, const char *message, int32 x, int32 y)
 {
     PrintLog(severity, "%s: <%c%08X, %c%08X>", message, x < 0 ? 45 : 32, abs(x), y < 0 ? 45 : 32, abs(y));
 }
-inline void PrintHitbox(int32 severity, const char *message, RSDK::Hitbox *hitbox)
+inline void PrintHitbox(int32 severity, const char *message, Hitbox *hitbox)
 {
     PrintLog(severity, "%s: <l: %d, r: %d, t: %d, b: %d>", message, hitbox->left, hitbox->right, hitbox->top, hitbox->bottom);
 }
 
-struct DebugValueInfo {
+struct ViewableVariable {
     char name[0x10];
     void *value;
     int32 type;
@@ -78,7 +79,7 @@ typedef enum {
 } DebugVarDisplayTypes;
 
 extern int32 viewableVarCount;
-extern DebugValueInfo debugValues[VIEWVAR_LIST_COUNT];
+extern ViewableVariable viewableVarList[VIEWVAR_LIST_COUNT];
 
 inline void ClearViewableVariables() { viewableVarCount = 0; }
 void AddViewableVariable(const char *name, void *value, int32 type, int32 min, int32 max);
@@ -124,7 +125,7 @@ inline void OpenDevMenu()
     devMenu.scrollPos  = 0;
     devMenu.timer      = 0;
 
-    RSDK::videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 1 : RSDK::videoSettings.screenCount;
+    videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 1 : videoSettings.screenCount;
     sceneInfo.state                 = ENGINESTATE_DEVMENU;
     PauseSound();
 }
@@ -133,9 +134,10 @@ inline void CloseDevMenu()
 {
     sceneInfo.state = devMenu.sceneState;
 
-    RSDK::videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 0 : RSDK::videoSettings.screenCount;
+    videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 0 : videoSettings.screenCount;
     ResumeSound();
 }
 
 #endif
-}
+
+} // namespace RSDK

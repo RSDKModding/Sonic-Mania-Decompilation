@@ -1,6 +1,8 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-RSDK::ObjectDefaultObject *RSDK::DefaultObject;
+using namespace RSDK;
+
+ObjectDefaultObject *RSDK::DefaultObject;
 
 void RSDK::DefaultObject_Update()
 {

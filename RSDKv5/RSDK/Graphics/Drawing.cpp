@@ -1,5 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 #if RETRO_RENDERDEVICE_DIRECTX9
 #include "DX9/DX9RenderDevice.cpp"
 #elif RETRO_RENDERDEVICE_SDL2
@@ -8,26 +10,26 @@
 #include "GL3/GL3RenderDevice.cpp"
 #endif
 
-DrawList drawGroups[DRAWGROUP_COUNT];
+DrawList RSDK::drawGroups[DRAWGROUP_COUNT];
 
-uint16 blendLookupTable[0x20 * 0x100];
-uint16 subtractLookupTable[0x20 * 0x100];
+uint16 RSDK::blendLookupTable[0x20 * 0x100];
+uint16 RSDK::subtractLookupTable[0x20 * 0x100];
 
-GFXSurface gfxSurface[SURFACE_MAX];
+GFXSurface RSDK::gfxSurface[SURFACE_MAX];
 
-float dpi         = 1;
-int32 cameraCount = 0;
-ScreenInfo screens[SCREEN_MAX];
-CameraInfo cameras[CAMERA_MAX];
-ScreenInfo *currentScreen = NULL;
+float RSDK::dpi   = 1;
+int32 RSDK::cameraCount = 0;
+ScreenInfo RSDK::screens[SCREEN_MAX];
+CameraInfo RSDK::cameras[CAMERA_MAX];
+ScreenInfo *RSDK::currentScreen = NULL;
 
-RenderVertex vertexBuffer[!RETRO_REV02 ? 24 : 60];
+RenderVertex RSDK::vertexBuffer[!RETRO_REV02 ? 24 : 60];
 
-int32 shaderCount = 0;
-ShaderEntry shaderList[SHADER_MAX];
+int32 RSDK::shaderCount = 0;
+ShaderEntry RSDK::shaderList[SHADER_MAX];
 
 #if RETRO_USE_MOD_LOADER
-int32 userShaderCount = 0;
+int32 RSDK::userShaderCount = 0;
 #endif
 
 bool32 RenderDeviceBase::isRunning         = true;
@@ -49,7 +51,7 @@ WindowInfo RenderDeviceBase::displayInfo;
 
 int32 RenderDeviceBase::lastShaderID = -1;
 
-char drawGroupNames[0x10][0x10] = {
+char RSDK::drawGroupNames[0x10][0x10] = {
     "Draw Group 0", "Draw Group 1", "Draw Group 2",  "Draw Group 3",  "Draw Group 4",  "Draw Group 5",  "Draw Group 6",  "Draw Group 7",
     "Draw Group 8", "Draw Group 9", "Draw Group 10", "Draw Group 11", "Draw Group 12", "Draw Group 13", "Draw Group 14", "Draw Group 15",
 };
@@ -95,7 +97,7 @@ char drawGroupNames[0x10][0x10] = {
 
 
 
-void GenerateBlendLookupTable()
+void RSDK::GenerateBlendLookupTable()
 {
     for (int32 y = 0; y < 0x100; y++) {
         for (int32 x = 0; x < 0x20; x++) {
@@ -118,7 +120,7 @@ void GenerateBlendLookupTable()
     }
 }
 
-void InitSystemSurfaces()
+void RSDK::InitSystemSurfaces()
 {
     GEN_HASH_MD5("TileBuffer", gfxSurface[0].hash);
     gfxSurface[0].scope    = SCOPE_GLOBAL;
@@ -137,9 +139,9 @@ void InitSystemSurfaces()
 #endif
 }
 
-void UpdateGameWindow() { RenderDevice::RefreshWindow(); }
+void RSDK::UpdateGameWindow() { RenderDevice::RefreshWindow(); }
 
-void GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text)
+void RSDK::GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text)
 {
     if (!displayID)
         return;
@@ -148,11 +150,11 @@ void GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refres
     int32 display      = 0;
 
     if (*displayID == -2) { // -2 == "get FS size display"
-        if (RSDK::videoSettings.fsWidth && RSDK::videoSettings.fsHeight) {
+        if (videoSettings.fsWidth && videoSettings.fsHeight) {
             for (display = 0; display < RenderDevice::displayCount; ++display) {
-                if (RenderDevice::displayInfo.displays[display].width == RSDK::videoSettings.fsWidth
-                    && RenderDevice::displayInfo.displays[display].height == RSDK::videoSettings.fsHeight
-                    && RenderDevice::displayInfo.displays[display].refresh_rate == RSDK::videoSettings.refreshRate) {
+                if (RenderDevice::displayInfo.displays[display].width == videoSettings.fsWidth
+                    && RenderDevice::displayInfo.displays[display].height == videoSettings.fsHeight
+                    && RenderDevice::displayInfo.displays[display].refresh_rate == videoSettings.refreshRate) {
                     break;
                 }
             }
@@ -203,7 +205,7 @@ void GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refres
     }
 }
 
-void GetWindowSize(int32 *width, int32 *height)
+void RSDK::GetWindowSize(int32 *width, int32 *height)
 {
 #if RETRO_RENDERDEVICE_DIRECTX9
     D3DDISPLAYMODE display;
@@ -215,7 +217,7 @@ void GetWindowSize(int32 *width, int32 *height)
     if (height)
         *height = display.Height;
 #elif RETRO_RENDERDEVICE_SDL2
-    if (!RSDK::videoSettings.windowed) {
+    if (!videoSettings.windowed) {
         SDL_GetRendererOutputSize(RenderDevice::renderer, width, height);
     }
     else {
@@ -233,7 +235,7 @@ void GetWindowSize(int32 *width, int32 *height)
 #endif
 }
 
-void SwapDrawListEntries(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, int32 count)
+void RSDK::SwapDrawListEntries(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, int32 count)
 {
     if (drawGroup < DRAWGROUP_COUNT) {
         DrawList *list = &drawGroups[drawGroup];
@@ -261,7 +263,7 @@ void SwapDrawListEntries(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, 
     }
 }
 
-void FillScreen(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB)
+void RSDK::FillScreen(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB)
 {
     alphaR = clampVal(alphaR, 0x00, 0xFF);
     alphaG = clampVal(alphaG, 0x00, 0xFF);
@@ -290,7 +292,7 @@ void FillScreen(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB)
     }
 }
 
-void DrawLine(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative)
+void RSDK::DrawLine(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative)
 {
     switch (inkEffect) {
         default: break;
@@ -799,7 +801,7 @@ void DrawLine(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha,
             break;
     }
 }
-void DrawRectangle(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative)
+void RSDK::DrawRectangle(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative)
 {
     switch (inkEffect) {
         default: break;
@@ -968,7 +970,7 @@ void DrawRectangle(int32 x, int32 y, int32 width, int32 height, uint32 color, in
         }
     }
 }
-void DrawCircle(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative)
+void RSDK::DrawCircle(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative)
 {
     if (radius > 0) {
         switch (inkEffect) {
@@ -1302,7 +1304,8 @@ void DrawCircle(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, int32
         }
     }
 }
-void DrawCircleOutline(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, int32 inkEffect, bool32 screenRelative)
+void RSDK::DrawCircleOutline(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, int32 inkEffect,
+                             bool32 screenRelative)
 {
     switch (inkEffect) {
         default: break;
@@ -1584,7 +1587,7 @@ void DrawCircleOutline(int32 x, int32 y, int32 innerRadius, int32 outerRadius, u
     }
 }
 
-void DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, int32 inkEffect)
+void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, int32 inkEffect)
 {
     switch (inkEffect) {
         default: break;
@@ -1832,7 +1835,7 @@ void DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int
         }
     }
 }
-void DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, int32 alpha, int32 inkEffect)
+void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, int32 alpha, int32 inkEffect)
 {
     switch (inkEffect) {
         default: break;
@@ -2298,10 +2301,10 @@ void DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, int32 a
     }
 }
 
-void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelative)
+void RSDK::DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelative)
 {
     if (animator && animator->frames) {
-        RSDK::SpriteFrame *frame = &animator->frames[animator->frameID];
+        SpriteFrame *frame = &animator->frames[animator->frameID];
         Vector2 pos;
         if (!position)
             pos = sceneInfo.entity->position;
@@ -2319,37 +2322,37 @@ void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelati
         int32 drawFX   = sceneInfo.entity->drawFX;
         if (sceneInfo.entity->drawFX & FX_ROTATE) {
             switch (animator->rotationStyle) {
-                case RSDK::ROTSTYLE_NONE:
+                case ROTSTYLE_NONE:
                     rotation = 0;
                     if ((sceneInfo.entity->drawFX & FX_ROTATE) != FX_NONE)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTSTYLE_FULL:
+                case ROTSTYLE_FULL:
                     rotation = sceneInfo.entity->rotation & 0x1FF;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTFLAG_45DEG: // 0x00, 0x40, 0x80, 0xC0, 0x100, 0x140, 0x180, 0x1C0
+                case ROTFLAG_45DEG: // 0x00, 0x40, 0x80, 0xC0, 0x100, 0x140, 0x180, 0x1C0
                     rotation = (sceneInfo.entity->rotation + 0x20) & 0x1C0;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTSTYLE_90DEG: // 0x00, 0x80, 0x100, 0x180
+                case ROTSTYLE_90DEG: // 0x00, 0x80, 0x100, 0x180
                     rotation = (sceneInfo.entity->rotation + 0x40) & 0x180;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTSTYLE_180DEG: // 0x00, 0x100
+                case ROTSTYLE_180DEG: // 0x00, 0x100
                     rotation = (sceneInfo.entity->rotation + 0x80) & 0x100;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
 
-                case RSDK::ROTSTYLE_STATICFRAMES:
+                case ROTSTYLE_STATICFRAMES:
                     if (sceneInfo.entity->rotation >= 0x100) {
                         rotation = 0x08 - ((0x214 - sceneInfo.entity->rotation) >> 6);
                     }
@@ -2483,7 +2486,7 @@ void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelati
         }
     }
 }
-void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, int32 sprY, int32 direction, int32 inkEffect, int32 alpha,
+void RSDK::DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, int32 sprY, int32 direction, int32 inkEffect, int32 alpha,
                        int32 sheetID)
 {
     switch (inkEffect) {
@@ -3144,7 +3147,8 @@ void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, 
             break;
     }
 }
-void DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int32 width, int32 height, int32 sprX, int32 sprY, int32 scaleX, int32 scaleY,
+void RSDK::DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int32 width, int32 height, int32 sprX, int32 sprY, int32 scaleX,
+                              int32 scaleY,
                         int32 direction, int16 rotation, int32 inkEffect, int32 alpha, int32 sheetID)
 {
     switch (inkEffect) {
@@ -3485,7 +3489,7 @@ void DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int32 widt
     }
 }
 
-void DrawDeformedSprite(uint16 sheetID, int32 inkEffect, int32 alpha)
+void RSDK::DrawDeformedSprite(uint16 sheetID, int32 inkEffect, int32 alpha)
 {
     switch (inkEffect) {
         default: break;
@@ -3691,7 +3695,7 @@ void DrawDeformedSprite(uint16 sheetID, int32 inkEffect, int32 alpha)
     }
 }
 
-void DrawTile(uint16 *tiles, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative)
+void RSDK::DrawTile(uint16 *tiles, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative)
 {
     if (tiles) {
         if (!position)
@@ -3876,7 +3880,7 @@ void DrawTile(uint16 *tiles, int32 countX, int32 countY, Vector2 *position, Vect
         }
     }
 }
-void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height)
+void RSDK::DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height)
 {
 
     if (sheetID < SURFACE_MAX && tileIndex < TILE_COUNT) {
@@ -3939,7 +3943,7 @@ void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uin
     }
 }
 
-void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
+void RSDK::DrawString(Animator *animator, Vector2 *position, String *string, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
                 void *unused, Vector2 *charOffsets, bool32 screenRelative)
 {
     if (animator && string && animator->frames) {
@@ -3966,7 +3970,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int
                     for (; startFrame < endFrame; ++startFrame) {
                         uint16 curChar = string->chars[startFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
+                            SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height,
                                               frame->sprX, frame->sprY, FLIP_NONE, entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -3978,7 +3982,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int
                     for (; startFrame < endFrame; ++startFrame) {
                         uint16 curChar = string->chars[startFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
+                            SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -3995,7 +3999,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int
                     for (Vector2 *charOffset = &charOffsets[endFrame]; endFrame >= startFrame; --endFrame) {
                         uint16 curChar = string->chars[endFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
+                            SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x - frame->width + (charOffset->x >> 0x10), y + frame->pivotY + (charOffset->y >> 0x10), frame->width,
                                               frame->height, frame->sprX, frame->sprY, FLIP_NONE, entity->inkEffect, entity->alpha, frame->sheetID);
                             x = (x - frame->width) - spacing;
@@ -4007,7 +4011,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int
                     for (; endFrame >= startFrame; --endFrame) {
                         uint16 curChar = string->chars[endFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
+                            SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x - frame->width, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               entity->inkEffect, entity->alpha, frame->sheetID);
                             x = (x - frame->width) - spacing;
@@ -4018,7 +4022,7 @@ void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int
         }
     }
 }
-void DrawDevString(const char *string, int32 x, int32 y, int32 align, uint32 color)
+void RSDK::DrawDevString(const char *string, int32 x, int32 y, int32 align, uint32 color)
 {
     uint16 color16 = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 

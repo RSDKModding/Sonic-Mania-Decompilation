@@ -1,9 +1,13 @@
 #include "RSDK/Core/RetroEngine.hpp"
 #include <string>
 
+using namespace RSDK;
+
 // Start custom leaderboard code
+// 
 // this is added because we don't have access to any store APIs that would otherwise use this feature
-std::vector<RSDK::SKU::LeaderboardInfo> RSDK::SKU::leaderboardList;
+std::vector<SKU::LeaderboardInfo> RSDK::SKU::leaderboardList;
+
 // End custom leaderboard code
 
 #if RETRO_REV02

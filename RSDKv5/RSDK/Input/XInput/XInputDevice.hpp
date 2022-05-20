@@ -1,4 +1,7 @@
 
+namespace SKU
+{
+
 struct InputDeviceXInput : InputDevice {
     void UpdateInput(void);
     void ProcessInput(int32 controllerID);
@@ -37,3 +40,5 @@ InputDeviceXInput *InitXInputDevice(uint32 id);
 
 void InitXInputAPI();
 void UpdateXInputDevices();
+
+} // namespace SKU

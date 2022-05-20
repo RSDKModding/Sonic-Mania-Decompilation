@@ -8,9 +8,9 @@ namespace SKU
 {
 
 struct LeaderboardID {
-    int unknownID1;       // leaderboard id (unknown platform)
-    int unknownID2;       // leaderboard id (unknown platform)
-    int switchID;         // leaderboard id (switch)
+    int32 unknownID1;       // leaderboard id (unknown platform)
+    int32 unknownID2;       // leaderboard id (unknown platform)
+    int32 switchID;         // leaderboard id (switch)
     const char *xboxName; // XBox One Leaderboard name (making an assumption based on the MS docs)
     const char *pcName;   // Plus Leaderboard name
 };
@@ -25,26 +25,26 @@ struct LeaderboardEntry {
 #if RETRO_REV02
     String userID;
 #endif
-    int globalRank;
-    int score;
+    int32 globalRank;
+    int32 score;
     bool32 isUser;
-    int status;
+    int32 status;
 };
 
 #if RETRO_REV02
 struct LeaderboardsUnknown2 {
-    int loadType;
-    int loadStartIndex;
-    int loadEndIndex;
-    int field_C;
-    int field_10;
-    int field_14;
+    int32 loadType;
+    int32 loadStartIndex;
+    int32 loadEndIndex;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
 };
 
 struct LeaderboardsUnknown {
     void *parent;
-    int loadStatus;
-    int globalRankOffset;
+    int32 loadStatus;
+    int32 globalRankOffset;
     LeaderboardAvail entryCount;
     LeaderboardAvail entryStart;
     LeaderboardEntry entries[25];
@@ -80,7 +80,7 @@ struct UserLeaderboards {
 // this is added because we don't have access to any store APIs that would otherwise use this feature
 struct LeaderboardInfo {
     char name[0x40];
-    int score;
+    int32 score;
 };
 
 extern std::vector<LeaderboardInfo> leaderboardList;
@@ -105,7 +105,7 @@ LeaderboardAvail LeaderboardEntryLength();
 LeaderboardAvail LeaderboardEntryCount();
 void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type);
 void ClearLeaderboardInfo();
-LeaderboardEntry *ReadLeaderboardEntry(int entryID);
+LeaderboardEntry *ReadLeaderboardEntry(int32 entryID);
 #endif
 
 } // namespace SKU

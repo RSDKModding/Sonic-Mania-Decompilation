@@ -1,6 +1,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+namespace RSDK
+{
+
 #define PLAYER_COUNT      (4)
 #define INPUTDEVICE_COUNT (0x10)
 
@@ -480,6 +483,7 @@ extern int32 mostRecentControllerID;
 #endif
 
 void InitInputDevices();
+void ClearInput();
 void ProcessInput();
 
 void RemoveInputDevice(InputDevice *targetDevice);
@@ -709,5 +713,7 @@ inline void GetUnknownInputValue(int32 controllerID, int32 type, int32 *value)
     }
 }
 #endif
+
+} // namespace RSDK
 
 #endif // !INPUT_H

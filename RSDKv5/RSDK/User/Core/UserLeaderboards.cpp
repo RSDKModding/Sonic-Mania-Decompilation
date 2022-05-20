@@ -1,12 +1,14 @@
 #include "RSDK/Core/RetroEngine.hpp"
 #include <string>
 
+using namespace RSDK;
+
 #if RETRO_REV02
-RSDK::SKU::UserLeaderboards *RSDK::SKU::leaderboards = NULL;
+SKU::UserLeaderboards *RSDK::SKU::leaderboards = NULL;
 
-RSDK::SKU::LeaderboardAvail RSDK::SKU::LeaderboardEntryLength() { return leaderboards->entryInfo.entryCount; }
+SKU::LeaderboardAvail RSDK::SKU::LeaderboardEntryLength() { return leaderboards->entryInfo.entryCount; }
 
-RSDK::SKU::LeaderboardAvail RSDK::SKU::LeaderboardEntryCount() { return leaderboards->entryInfo.entryStart; }
+SKU::LeaderboardAvail RSDK::SKU::LeaderboardEntryCount() { return leaderboards->entryInfo.entryStart; }
 
 void RSDK::SKU::LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type)
 {
@@ -46,7 +48,7 @@ void RSDK::SKU::ClearLeaderboardInfo()
     // SetupLeaderboardEntries(&leaderboards->unknown);
 }
 
-RSDK::SKU::LeaderboardEntry *RSDK::SKU::ReadLeaderboardEntry(int entryID)
+SKU::LeaderboardEntry *RSDK::SKU::ReadLeaderboardEntry(int32 entryID)
 {
     if (entryID < leaderboards->entryInfo.entryStart.start
         || entryID >= leaderboards->entryInfo.entryStart.start + leaderboards->entryInfo.entryStart.length)

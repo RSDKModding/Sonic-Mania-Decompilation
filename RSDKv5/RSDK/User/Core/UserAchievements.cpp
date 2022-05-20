@@ -1,7 +1,9 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 #if RETRO_REV02
-RSDK::SKU::UserAchievements *RSDK::SKU::achievements = NULL;
+SKU::UserAchievements *RSDK::SKU::achievements = NULL;
 #endif
 
 void RSDK::SKU::ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
@@ -32,14 +34,14 @@ void RSDK::SKU::TryUnlockAchievement(const char *name)
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
 bool32 RSDK::SKU::achievementsEnabled = true;
 ushort RSDK::SKU::achievementAniFrames[2];
-RSDK::Animator RSDK::SKU::achievementAnimator[2];
+Animator RSDK::SKU::achievementAnimator[2];
 String RSDK::SKU::achievementStrings[2];
-int RSDK::SKU::achievementStringWidth[2];
-int RSDK::SKU::achievementID             = 0;
-int RSDK::SKU::achievementsDelay         = 0;
-int RSDK::SKU::achievementsDrawn         = 0;
-int RSDK::SKU::achievementStrW           = 0;
-int RSDK::SKU::achievementStrX           = 0;
+int32 RSDK::SKU::achievementStringWidth[2];
+int32 RSDK::SKU::achievementID           = 0;
+int32 RSDK::SKU::achievementsDelay       = 0;
+int32 RSDK::SKU::achievementsDrawn       = 0;
+int32 RSDK::SKU::achievementStrW         = 0;
+int32 RSDK::SKU::achievementStrX         = 0;
 bool32 RSDK::SKU::achievementsLoaded     = false;
 bool32 RSDK::SKU::achievementDrawFlag    = false;
 bool32 RSDK::SKU::achievementUnknownFlag = false;

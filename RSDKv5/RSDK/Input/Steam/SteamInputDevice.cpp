@@ -1,4 +1,6 @@
 
+using namespace RSDK::SKU;
+
 void InputDeviceSteam::UpdateInput()
 {
     // TODO (maybe): document the actual steamAPI code that sets these values
@@ -37,7 +39,7 @@ void InputDeviceSteam::ProcessInput(int32 controllerID)
     controller[controllerID].keyStart.press |= this->stateStart;
 }
 
-InputDeviceSteam *InitSteamInputDevice(uint32 id)
+InputDeviceSteam *RSDK::SKU::InitSteamInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -81,7 +83,7 @@ InputDeviceSteam *InitSteamInputDevice(uint32 id)
     return device;
 }
 
-void InitSteamInputAPI()
+void RSDK::SKU::InitSteamInputAPI()
 {
     // TODO (maybe): document this?
 }

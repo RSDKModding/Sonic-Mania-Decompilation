@@ -1,6 +1,8 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-RSDK::DataStorage RSDK::dataStorage[RSDK::DATASET_MAX];
+using namespace RSDK;
+
+DataStorage RSDK::dataStorage[DATASET_MAX];
 
 bool32 RSDK::InitStorage()
 {

@@ -11,11 +11,11 @@ const int32 NO_SUCH_CODE  = 4098;
 
 int32 codeMasks[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095 };
 
-int32 ReadGifCode(RSDK::ImageGIF *image);
-uint8 ReadGifByte(RSDK::ImageGIF *image);
+int32 ReadGifCode(ImageGIF *image);
+uint8 ReadGifByte(ImageGIF *image);
 uint8 TraceGifPrefix(uint32 *prefix, int32 code, int32 clearCode);
 
-void InitGifDecoder(RSDK::ImageGIF *image)
+void InitGifDecoder(ImageGIF *image)
 {
     uint8 val                      = ReadInt8(&image->info);
     image->decoder->fileState      = LOADING_IMAGE;
@@ -34,7 +34,7 @@ void InitGifDecoder(RSDK::ImageGIF *image)
     image->decoder->shiftData      = 0u;
     for (int32 i = 0; i <= LZ_MAX_CODE; ++i) image->decoder->prefix[i] = (uint8)NO_SUCH_CODE;
 }
-void ReadGifLine(RSDK::ImageGIF *image, uint8 *line, int32 length, int32 offset)
+void ReadGifLine(ImageGIF *image, uint8 *line, int32 length, int32 offset)
 {
     int32 i         = 0;
     int32 stackPtr  = image->decoder->stackPtr;
@@ -122,7 +122,7 @@ void ReadGifLine(RSDK::ImageGIF *image, uint8 *line, int32 length, int32 offset)
     image->decoder->stackPtr = stackPtr;
 }
 
-int32 ReadGifCode(RSDK::ImageGIF *image)
+int32 ReadGifCode(ImageGIF *image)
 {
     while (image->decoder->shiftState < image->decoder->runningBits) {
         uint8 b = ReadGifByte(image);
@@ -139,7 +139,7 @@ int32 ReadGifCode(RSDK::ImageGIF *image)
     return result;
 }
 
-uint8 ReadGifByte(RSDK::ImageGIF *image)
+uint8 ReadGifByte(ImageGIF *image)
 {
     uint8 c = '\0';
     if (image->decoder->fileState == LOAD_COMPLETE)
@@ -170,7 +170,7 @@ uint8 TraceGifPrefix(uint32 *prefix, int32 code, int32 clearCode)
 
     return code;
 }
-void ReadGifPictureData(RSDK::ImageGIF *image, int32 width, int32 height, bool32 interlaced, uint8 *gfxData)
+void ReadGifPictureData(ImageGIF *image, int32 width, int32 height, bool32 interlaced, uint8 *gfxData)
 {
     int32 array[]  = { 0, 4, 2, 1 };
     int32 array2[] = { 8, 8, 4, 2 };
@@ -186,7 +186,7 @@ void ReadGifPictureData(RSDK::ImageGIF *image, int32 width, int32 height, bool32
     for (int32 h = 0; h < height; ++h) ReadGifLine(image, gfxData, width, h * width);
 }
 
-bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
+bool32 ImageGIF::Load(const char *fileName, bool32 loadHeader)
 {
     if (!decoder)
         return false;
@@ -252,7 +252,7 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
 }
 
 #if RETRO_REV02
-void PNGUnpackGreyscale(RSDK::ImagePNG *image, uint8 *pixelData)
+void PNGUnpackGreyscale(ImagePNG *image, uint8 *pixelData)
 {
     uint8 *pixels = image->pixels;
     for (int32 c = 0; c < image->width * image->height; ++c) {
@@ -274,7 +274,7 @@ void PNGUnpackGreyscale(RSDK::ImagePNG *image, uint8 *pixelData)
     }
 }
 
-void PNGUnpackGreyscaleA(RSDK::ImagePNG *image, uint8 *pixelData)
+void PNGUnpackGreyscaleA(ImagePNG *image, uint8 *pixelData)
 {
     color *pixels = (color *)image->pixels;
     for (int32 c = 0; c < image->width * image->height; ++c) {
@@ -295,7 +295,7 @@ void PNGUnpackGreyscaleA(RSDK::ImagePNG *image, uint8 *pixelData)
     }
 }
 
-void PNGUnpackRGB(RSDK::ImagePNG *image, uint8 *pixelData)
+void PNGUnpackRGB(ImagePNG *image, uint8 *pixelData)
 {
     color *pixels = (color *)image->pixels;
     for (int32 c = 0; c < image->width * image->height; ++c) {
@@ -314,7 +314,7 @@ void PNGUnpackRGB(RSDK::ImagePNG *image, uint8 *pixelData)
     }
 }
 
-void PNGUnpackRGBA(RSDK::ImagePNG *image, uint8 *pixelData)
+void PNGUnpackRGBA(ImagePNG *image, uint8 *pixelData)
 {
     color *pixels = (color *)image->pixels;
     for (int32 c = 0; c < image->width * image->height; ++c) {
@@ -333,7 +333,7 @@ void PNGUnpackRGBA(RSDK::ImagePNG *image, uint8 *pixelData)
     }
 }
 
-void DecodePNGData(RSDK::ImagePNG *image, uint8 *dataPtr)
+void DecodePNGData(ImagePNG *image, uint8 *dataPtr)
 {
     int32 colorSize = (image->bitDepth + 7) >> 3;
     switch (image->clrType) {
@@ -842,11 +842,11 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 #endif
 
         engine.displayTime              = displayLength;
-        engine.storedShaderID           = RSDK::videoSettings.shaderID;
+        engine.storedShaderID           = videoSettings.shaderID;
         engine.storedState              = sceneInfo.state;
-        RSDK::videoSettings.dimMax      = 0.0;
-        RSDK::videoSettings.shaderID    = SHADER_RGB_IMAGE;
-        RSDK::videoSettings.screenCount = 0; // "Image Display Mode"
+        videoSettings.dimMax      = 0.0;
+        videoSettings.shaderID    = SHADER_RGB_IMAGE;
+        videoSettings.screenCount = 0; // "Image Display Mode"
         engine.skipCallback             = skipCallback;
         sceneInfo.state                 = ENGINESTATE_SHOWIMAGE;
         engine.imageDelta               = speed / 60.0;
@@ -868,11 +868,11 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 #endif
 
         engine.displayTime              = displayLength;
-        engine.storedShaderID           = RSDK::videoSettings.shaderID;
+        engine.storedShaderID           = videoSettings.shaderID;
         engine.storedState              = sceneInfo.state;
-        RSDK::videoSettings.dimMax      = 0.0;
-        RSDK::videoSettings.shaderID    = SHADER_RGB_IMAGE;
-        RSDK::videoSettings.screenCount = 0; // "Image Display Mode"
+        videoSettings.dimMax      = 0.0;
+        videoSettings.shaderID    = SHADER_RGB_IMAGE;
+        videoSettings.screenCount = 0; // "Image Display Mode"
         engine.skipCallback             = skipCallback;
         sceneInfo.state                 = ENGINESTATE_SHOWIMAGE;
         engine.imageDelta               = speed / 60.0;

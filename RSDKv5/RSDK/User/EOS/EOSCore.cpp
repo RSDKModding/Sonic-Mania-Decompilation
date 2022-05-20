@@ -1,8 +1,9 @@
 #include "RSDK/Core/RetroEngine.hpp"
-#include "zlib/zlib.h"
+
+using namespace RSDK;
 
 #if RETRO_REV02
-RSDK::SKU::EOSCore *RSDK::SKU::InitEOSCore()
+SKU::EOSCore *RSDK::SKU::InitEOSCore()
 {
     // Initalize API subsystems
     EOSCore *core = new EOSCore;

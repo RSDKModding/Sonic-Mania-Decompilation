@@ -1,4 +1,6 @@
 
+namespace SKU
+{
 
 struct InputDeviceSteam : InputDevice {
     void UpdateInput(void);
@@ -25,3 +27,5 @@ struct InputDeviceSteam : InputDevice {
 
 void InitSteamInputAPI();
 InputDeviceSteam *InitSteamInputDevice(uint32 id);
+
+} // namespace SKU

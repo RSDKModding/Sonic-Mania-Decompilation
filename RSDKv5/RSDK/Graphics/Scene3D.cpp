@@ -2,10 +2,10 @@
 
 using namespace RSDK;
 
-Model modelList[MODEL_MAX];
-Scene3D scene3DList[SCENE3D_MAX];
+Model RSDK::modelList[MODEL_MAX];
+Scene3D RSDK::scene3DList[SCENE3D_MAX];
 
-ScanEdge scanEdgeBuffer[SCREEN_YSIZE * 2];
+ScanEdge RSDK::scanEdgeBuffer[SCREEN_YSIZE * 2];
 
 enum ModelFlags {
     MODEL_NOFLAGS     = 0,
@@ -14,7 +14,7 @@ enum ModelFlags {
     MODEL_USECOLOURS  = 1 << 2,
 };
 
-void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)
+void RSDK::ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int32 top = y1 >> 16;
     int32 iy1 = y1 >> 16;
@@ -55,7 +55,7 @@ void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)
     }
 }
 
-void ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int32 y2)
+void RSDK::ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int32 iy1 = y1 >> 16;
     int32 iy2 = y2 >> 16;
@@ -139,7 +139,7 @@ void ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int3
     }
 }
 
-void SetIdentityMatrix(Matrix *matrix)
+void RSDK::SetIdentityMatrix(Matrix *matrix)
 {
     matrix->values[0][0] = 0x100;
     matrix->values[1][0] = 0;
@@ -158,7 +158,7 @@ void SetIdentityMatrix(Matrix *matrix)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
+void RSDK::MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
 {
     int32 result[4][4];
     memset(result, 0, 4 * 4 * sizeof(int32));
@@ -177,7 +177,7 @@ void MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
         dest->values[rowB][rowA] = result[rowB][rowA];
     }
 }
-void MatrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity)
+void RSDK::MatrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity)
 {
     if (setIdentity) {
         matrix->values[0][0] = 0x100;
@@ -199,7 +199,7 @@ void MatrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIde
     matrix->values[1][3] = y >> 8;
     matrix->values[2][3] = z >> 8;
 }
-void MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ)
+void RSDK::MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ)
 {
     matrix->values[0][0] = scaleX;
     matrix->values[1][0] = 0;
@@ -218,7 +218,7 @@ void MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateX(Matrix *matrix, int16 rotationX)
+void RSDK::MatrixRotateX(Matrix *matrix, int16 rotationX)
 {
     int32 sine   = sin1024LookupTable[rotationX & 0x3FF] >> 2;
     int32 cosine = cos1024LookupTable[rotationX & 0x3FF] >> 2;
@@ -240,7 +240,7 @@ void MatrixRotateX(Matrix *matrix, int16 rotationX)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateY(Matrix *matrix, int16 rotationY)
+void RSDK::MatrixRotateY(Matrix *matrix, int16 rotationY)
 {
     int32 sine           = sin1024LookupTable[rotationY & 0x3FF] >> 2;
     int32 cosine         = cos1024LookupTable[rotationY & 0x3FF] >> 2;
@@ -261,7 +261,7 @@ void MatrixRotateY(Matrix *matrix, int16 rotationY)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateZ(Matrix *matrix, int16 rotationZ)
+void RSDK::MatrixRotateZ(Matrix *matrix, int16 rotationZ)
 {
     int32 sine           = sin1024LookupTable[rotationZ & 0x3FF] >> 2;
     int32 cosine         = cos1024LookupTable[rotationZ & 0x3FF] >> 2;
@@ -282,7 +282,7 @@ void MatrixRotateZ(Matrix *matrix, int16 rotationZ)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ)
+void RSDK::MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ)
 {
     int32 sinX = sin1024LookupTable[rotationX & 0x3FF] >> 2;
     int32 cosX = cos1024LookupTable[rotationX & 0x3FF] >> 2;
@@ -308,7 +308,7 @@ void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rot
     matrix->values[3][2] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixInverse(Matrix *dest, Matrix *matrix)
+void RSDK::MatrixInverse(Matrix *dest, Matrix *matrix)
 {
     double inv[16], det;
     double m[16];
@@ -360,9 +360,8 @@ void MatrixInverse(Matrix *dest, Matrix *matrix)
     for (int32 i = 0; i < 0x10; ++i) inv[i] = (int32)((inv[i] * det) * 256);
     for (int32 i = 0; i < 0x10; ++i) dest->values[i / 4][i % 4] = inv[i];
 }
-void MatrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(Matrix)); }
 
-uint16 LoadMesh(const char *filename, Scopes scope)
+uint16 RSDK::LoadMesh(const char *filename, Scopes scope)
 {
     char fullFilePath[0x100];
     sprintf(fullFilePath, "Data/Meshes/%s", filename);
@@ -405,11 +404,11 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         model->vertCount  = ReadInt16(&info);
         model->frameCount = ReadInt16(&info);
 
-        RSDK::AllocateStorage(sizeof(ModelVertex) * model->vertCount * model->frameCount, (void **)&model->vertices, RSDK::DATASET_STG, true);
+        AllocateStorage(sizeof(ModelVertex) * model->vertCount * model->frameCount, (void **)&model->vertices, DATASET_STG, true);
         if (model->flags & MODEL_USETEXTURES)
-            RSDK::AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, RSDK::DATASET_STG, true);
+            AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, DATASET_STG, true);
         if (model->flags & MODEL_USECOLOURS)
-            RSDK::AllocateStorage(sizeof(Color) * model->vertCount, (void **)&model->colors, RSDK::DATASET_STG, true);
+            AllocateStorage(sizeof(Color) * model->vertCount, (void **)&model->colors, DATASET_STG, true);
 
         if (model->flags & MODEL_USETEXTURES) {
             for (int32 v = 0; v < model->vertCount; ++v) {
@@ -425,7 +424,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         }
 
         model->indexCount = ReadInt16(&info);
-        RSDK::AllocateStorage(sizeof(uint16) * model->indexCount, (void **)&model->indices, RSDK::DATASET_STG, true);
+        AllocateStorage(sizeof(uint16) * model->indexCount, (void **)&model->indices, DATASET_STG, true);
         for (int32 i = 0; i < model->indexCount; ++i) model->indices[i] = ReadInt16(&info);
 
         for (int32 f = 0; f < model->frameCount; ++f) {
@@ -450,7 +449,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
     }
     return -1;
 }
-uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
+uint16 RSDK::Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 {
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
@@ -481,14 +480,14 @@ uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
     scene->faceCount   = 6;
     scene->projectionX = 8;
     scene->projectionY = 8;
-    RSDK::AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, RSDK::DATASET_STG, true);
-    RSDK::AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, RSDK::DATASET_STG, true);
-    RSDK::AllocateStorage(sizeof(uint8) * vertexLimit, (void **)&scene->faceVertCounts, RSDK::DATASET_STG, true);
-    RSDK::AllocateStorage(sizeof(FaceBufferEntry) * vertexLimit, (void **)&scene->faceBuffer, RSDK::DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, DATASET_STG, true);
+    AllocateStorage(sizeof(uint8) * vertexLimit, (void **)&scene->faceVertCounts, DATASET_STG, true);
+    AllocateStorage(sizeof(FaceBufferEntry) * vertexLimit, (void **)&scene->faceBuffer, DATASET_STG, true);
 
     return id;
 }
-void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
+void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld) {
@@ -627,7 +626,8 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
         }
     }
 }
-void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
+void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals,
+                               color color)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && animator) {
@@ -790,7 +790,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
         }
     }
 }
-void Draw3DScene(uint16 sceneID)
+void RSDK::Draw3DScene(uint16 sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
         Entity *entity = sceneInfo.entity;

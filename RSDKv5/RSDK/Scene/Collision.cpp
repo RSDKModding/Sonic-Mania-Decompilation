@@ -1,30 +1,32 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-int32 collisionTolerance = 0;
-int32 collisionOffset    = 0;
-int32 collisionMaskAir   = 0;
+using namespace RSDK;
 
-int32 collisionOuter_Left   = 0;
-int32 collisionOuter_Top    = 0;
-int32 collisionOuter_Right  = 0;
-int32 collisionOuter_Bottom = 0;
+int32 RSDK::collisionTolerance = 0;
+int32 RSDK::collisionOffset    = 0;
+int32 RSDK::collisionMaskAir   = 0;
 
-int32 collisionInner_Left   = 0;
-int32 collisionInner_Top    = 0;
-int32 collisionInner_Right  = 0;
-int32 collisionInner_Bottom = 0;
+int32 RSDK::collisionOuter_Left   = 0;
+int32 RSDK::collisionOuter_Top    = 0;
+int32 RSDK::collisionOuter_Right  = 0;
+int32 RSDK::collisionOuter_Bottom = 0;
 
-Entity *collisionEntity = NULL;
+int32 RSDK::collisionInner_Left   = 0;
+int32 RSDK::collisionInner_Top    = 0;
+int32 RSDK::collisionInner_Right  = 0;
+int32 RSDK::collisionInner_Bottom = 0;
 
-CollisionSensor sensors[6];
+Entity *RSDK::collisionEntity = NULL;
+
+CollisionSensor RSDK::sensors[6];
 
 #if !RETRO_USE_ORIGINAL_CODE
-bool32 showHitboxes = false;
+bool32 RSDK::showHitboxes = false;
 
-int32 debugHitboxCount = 0;
-DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
+int32 RSDK::debugHitboxCount = 0;
+DebugHitboxInfo RSDK::debugHitboxList[DEBUG_HITBOX_MAX];
 
-int32 addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox)
+int32 RSDK::addDebugHitbox(uint8 type, uint8 dir, Entity *entity, Hitbox *hitbox)
 {
     int32 i        = 0;
     int32 entityID = GetEntityID((EntityBase *)entity);
@@ -68,7 +70,7 @@ int32 addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox
 }
 #endif
 
-bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox)
+bool32 RSDK::CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox)
 {
     int32 store = 0;
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
@@ -134,7 +136,7 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, E
     return collided;
 }
 
-uint8 CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues)
+uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
 {
     if (thisEntity && otherEntity && thisHitbox && otherHitbox) {
         int32 store            = 0;
@@ -306,7 +308,7 @@ uint8 CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Enti
     return 0;
 }
 
-bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues)
+bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
 {
     int32 store     = 0;
     bool32 collided = false;
@@ -388,7 +390,7 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox
     return collided;
 }
 
-bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, bool32 setPos)
+bool32 RSDK::ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, bool32 setPos)
 {
     int32 layerID   = 1;
     bool32 collided = false;
@@ -538,7 +540,7 @@ bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cP
         }
     }
 }
-bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, int32 tolerance)
+bool32 RSDK::ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, int32 tolerance)
 {
     int32 layerID   = 1;
     bool32 collided = false;
@@ -701,7 +703,7 @@ bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane,
     }
 }
 
-void ProcessTileCollisions(Entity *entity, RSDK::Hitbox *outerBox, RSDK::Hitbox *innerBox)
+void RSDK::ProcessTileCollisions(Entity *entity, Hitbox *outerBox, Hitbox *innerBox)
 {
     if (entity && outerBox && innerBox) {
         if (entity->tileCollisions) {
@@ -752,7 +754,7 @@ void ProcessTileCollisions(Entity *entity, RSDK::Hitbox *outerBox, RSDK::Hitbox 
     }
 }
 
-void ProcessAirCollision()
+void RSDK::ProcessAirCollision()
 {
     uint8 movingDown  = 0;
     uint8 movingUp    = 0;
@@ -1026,7 +1028,7 @@ void ProcessAirCollision()
             collisionEntity->velocity.y = 0;
     }
 }
-void ProcessPathGrip()
+void RSDK::ProcessPathGrip()
 {
     int32 xVel = 0;
     int32 yVel = 0;
@@ -1494,7 +1496,7 @@ void ProcessPathGrip()
     }
 }
 
-void SetPathGripSensors(CollisionSensor *sensors)
+void RSDK::SetPathGripSensors(CollisionSensor *sensors)
 {
     switch (collisionEntity->collisionMode) {
         case CMODE_FLOOR:
@@ -1561,7 +1563,7 @@ void SetPathGripSensors(CollisionSensor *sensors)
     }
 }
 
-void FindFloorPosition(CollisionSensor *sensor)
+void RSDK::FindFloorPosition(CollisionSensor *sensor)
 {
     int32 posX = (sensor->pos.x >> 0x10);
     int32 posY = (sensor->pos.y >> 0x10);
@@ -1611,7 +1613,7 @@ void FindFloorPosition(CollisionSensor *sensor)
         }
     }
 }
-void FindLWallPosition(CollisionSensor *sensor)
+void RSDK::FindLWallPosition(CollisionSensor *sensor)
 {
     int32 posX  = (sensor->pos.x >> 0x10);
     int32 posY  = (sensor->pos.y >> 0x10);
@@ -1658,7 +1660,7 @@ void FindLWallPosition(CollisionSensor *sensor)
         }
     }
 }
-void FindRoofPosition(CollisionSensor *sensor)
+void RSDK::FindRoofPosition(CollisionSensor *sensor)
 {
     int32 posX = (sensor->pos.x >> 0x10);
     int32 posY = (sensor->pos.y >> 0x10);
@@ -1708,7 +1710,7 @@ void FindRoofPosition(CollisionSensor *sensor)
         }
     }
 }
-void FindRWallPosition(CollisionSensor *sensor)
+void RSDK::FindRWallPosition(CollisionSensor *sensor)
 {
     int32 posX = (sensor->pos.x >> 0x10);
     int32 posY = (sensor->pos.y >> 0x10);
@@ -1759,7 +1761,7 @@ void FindRWallPosition(CollisionSensor *sensor)
     }
 }
 
-void FloorCollision(CollisionSensor *sensor)
+void RSDK::FloorCollision(CollisionSensor *sensor)
 {
     int32 posX = (sensor->pos.x >> 0x10);
     int32 posY = (sensor->pos.y >> 0x10);
@@ -1797,7 +1799,7 @@ void FloorCollision(CollisionSensor *sensor)
         }
     }
 }
-void LWallCollision(CollisionSensor *sensor)
+void RSDK::LWallCollision(CollisionSensor *sensor)
 {
     int32 posX = (sensor->pos.x >> 0x10);
     int32 posY = (sensor->pos.y >> 0x10);
@@ -1836,7 +1838,7 @@ void LWallCollision(CollisionSensor *sensor)
         }
     }
 }
-void RoofCollision(CollisionSensor *sensor)
+void RSDK::RoofCollision(CollisionSensor *sensor)
 {
     int32 posX = (sensor->pos.x >> 0x10);
     int32 posY = (sensor->pos.y >> 0x10);
@@ -1877,7 +1879,7 @@ void RoofCollision(CollisionSensor *sensor)
         }
     }
 }
-void RWallCollision(CollisionSensor *sensor)
+void RSDK::RWallCollision(CollisionSensor *sensor)
 {
     int32 posX = (sensor->pos.x >> 0x10);
     int32 posY = (sensor->pos.y >> 0x10);

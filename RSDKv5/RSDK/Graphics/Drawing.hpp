@@ -1,6 +1,9 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
+namespace RSDK
+{
+
 #define SURFACE_MAX (0x40)
 
 #if RETRO_REV02
@@ -130,13 +133,13 @@ struct WindowInfo {
             int refresh_rate;
         };
         GLFWvidmode internal;
-    }* displays;
+    } * displays;
 #else
-    struct { 
+    struct {
         int32 width;
         int32 height;
         int32 refresh_rate;
-    }* displays;
+    } * displays;
     // something for viewport
 #endif
 };
@@ -373,7 +376,7 @@ void DrawCircleOutline(int32 x, int32 y, int32 innerRadius, int32 outerRadius, u
 void DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, int32 inkEffect);
 void DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, int32 alpha, int32 inkEffect);
 
-void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelative);
+void DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelative);
 void DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, int32 sprY, int32 direction, int32 inkEffect, int32 alpha,
                        int32 sheetID);
 void DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int32 width, int32 height, int32 sprX, int32 sprY, int32 scaleX, int32 scaleY,
@@ -384,8 +387,10 @@ void DrawDeformedSprite(uint16 spriteIndex, int32 inkEffect, int32 alpha);
 void DrawTile(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
 void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
 
-void DrawString(RSDK::Animator *animator, Vector2 *position, String *string, int32 endFrame, int32 textLength, int32 align, int32 spacing,
+void DrawString(Animator *animator, Vector2 *position, String *string, int32 endFrame, int32 textLength, int32 align, int32 spacing,
                 void *unused, Vector2 *charPositions, bool32 screenRelative);
 void DrawDevString(const char *string, int32 x, int32 y, int32 align, uint32 color);
+
+} // namespace RSDK
 
 #endif // !DRAWING_H

@@ -1,6 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-#if RETRO_REV02
-RSDK::SKU::UserRichPresence *RSDK::SKU::richPresence = NULL;
+using namespace RSDK;
 
+#if RETRO_REV02
+SKU::UserRichPresence *RSDK::SKU::richPresence = NULL;
 #endif

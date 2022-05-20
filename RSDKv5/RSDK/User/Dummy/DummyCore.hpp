@@ -25,7 +25,7 @@ struct DummyCore : UserCore {
     int32 GetDefaultGamepadType(void);
     bool32 IsOverlayEnabled(uint32 overlay)
     {
-        for (int i = 0; i < InputDeviceCount; ++i) {
+        for (int32 i = 0; i < InputDeviceCount; ++i) {
             if (InputDevices[i] && InputDevices[i]->inputID == overlay) {
                 uint8 flag = (InputDevices[i]->gamePadType >> 16) & 0xFF;
                 if (flag != DEVICE_API_STEAM)
@@ -41,9 +41,9 @@ struct DummyCore : UserCore {
     int32 ShowExtensionOverlay(byte overlay);
 #if RETRO_VER_EGS
     void EpicUnknown1(void) {}
-    bool32 ShowCheckoutPage(int a1);
-    int32 ShowEncorePage(int a1);
-    void EpicUnknown4(int a1);
+    bool32 ShowCheckoutPage(int32 a1);
+    int32 ShowEncorePage(int32 a1);
+    void EpicUnknown4(int32 a1);
     void RegisterHIDDevice(void) {}
     void EpicUnknown6(void) {}
 #endif
@@ -61,7 +61,7 @@ void HandleUserStatuses();
 #endif
 
 // these are rev02 only but keeping em helps organization
-uint32 GetAPIValueID(const char *identifier, int charIndex);
+uint32 GetAPIValueID(const char *identifier, int32 charIndex);
 int32 GetAPIValue(uint32 id);
 
 } // namespace SKU

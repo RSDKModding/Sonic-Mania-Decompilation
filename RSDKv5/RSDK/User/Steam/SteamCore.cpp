@@ -1,8 +1,9 @@
 #include "RSDK/Core/RetroEngine.hpp"
-#include "zlib/zlib.h"
+
+using namespace RSDK;
 
 #if RETRO_REV02
-RSDK::SKU::SteamCore *RSDK::SKU::InitSteamCore()
+SKU::SteamCore *RSDK::SKU::InitSteamCore()
 {
     // Initalize API subsystems
     SteamCore *core = new SteamCore;

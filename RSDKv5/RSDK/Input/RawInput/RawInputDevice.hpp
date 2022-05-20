@@ -1,4 +1,7 @@
 
+namespace SKU
+{
+
 struct InputDeviceRaw : InputDevice {
     void UpdateInput(void);
     void ProcessInput(int32 controllerID);
@@ -69,3 +72,5 @@ inline InputDeviceRaw *GetRawInputDevice(uint8 *deviceID)
 void InitHIDAPI();
 void InitRawInputAPI();
 void UpdateRawInputButtonState(HRAWINPUT hRawInput);
+
+} // namespace SKU

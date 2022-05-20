@@ -26,16 +26,16 @@ bool RenderDevice::Init()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    if (!RSDK::videoSettings.bordered)
+    if (!videoSettings.bordered)
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
     GLFWmonitor *monitor = NULL;
     int w, h;
-    if (RSDK::videoSettings.windowed) {
-        w = RSDK::videoSettings.windowWidth;
-        h = RSDK::videoSettings.windowHeight;
+    if (videoSettings.windowed) {
+        w = videoSettings.windowWidth;
+        h = videoSettings.windowHeight;
     }
-    else if (RSDK::videoSettings.fsWidth <= 0 || RSDK::videoSettings.fsHeight <= 0) {
+    else if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
         monitor                 = glfwGetPrimaryMonitor();
         const GLFWvidmode *mode = glfwGetVideoMode(monitor);
         w                       = mode->width;
@@ -43,16 +43,16 @@ bool RenderDevice::Init()
     }
     else {
         monitor = glfwGetPrimaryMonitor();
-        w       = RSDK::videoSettings.fsWidth;
-        h       = RSDK::videoSettings.fsHeight;
+        w       = videoSettings.fsWidth;
+        h       = videoSettings.fsHeight;
     }
 
-    RenderDevice::window = glfwCreateWindow(w, h, RSDK::gameVerInfo.gameName, monitor, NULL);
+    RenderDevice::window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
     if (!RenderDevice::window) {
-        RSDK::PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
+        PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return false;
     }
-    RSDK::PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, RSDK::videoSettings.windowed);
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, videoSettings.windowed);
 
     glfwSetKeyCallback(window, ProcessKeyEvent);
     glfwSetJoystickCallback(ProcessJoystickEvent);
@@ -72,7 +72,7 @@ bool RenderDevice::SetupRendering()
 {
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        RSDK::PrintLog(PRINT_NORMAL, "ERROR: failed to initialize GLAD");
+        PrintLog(PRINT_NORMAL, "ERROR: failed to initialize GLAD");
         return false;
     }
 
@@ -81,13 +81,13 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int size  = RSDK::videoSettings.pixWidth >= SCREEN_YSIZE ? RSDK::videoSettings.pixWidth : SCREEN_YSIZE;
+    int size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
-    RSDK::videoSettings.windowState = WINDOWSTATE_ACTIVE;
-    RSDK::videoSettings.dimMax      = 1.0;
-    RSDK::videoSettings.dimPercent  = 1.0;
+    videoSettings.windowState = WINDOWSTATE_ACTIVE;
+    videoSettings.dimMax      = 1.0;
+    videoSettings.dimPercent  = 1.0;
 
     return true;
 }
@@ -126,8 +126,8 @@ void RenderDevice::GetDisplays()
             if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59)
                 --newDisplayCount;
 
-            if (RSDK::videoSettings.fsWidth == displayInfo.displays[newDisplayCount].width
-                && RSDK::videoSettings.fsHeight == displayInfo.displays[newDisplayCount].height)
+            if (videoSettings.fsWidth == displayInfo.displays[newDisplayCount].width
+                && videoSettings.fsHeight == displayInfo.displays[newDisplayCount].height)
                 foundFullScreenDisplay = true;
 
             ++newDisplayCount;
@@ -136,9 +136,9 @@ void RenderDevice::GetDisplays()
 
     displayCount = newDisplayCount;
     if (!foundFullScreenDisplay) {
-        RSDK::videoSettings.fsWidth     = 0;
-        RSDK::videoSettings.fsHeight    = 0;
-        RSDK::videoSettings.refreshRate = 60; // 0;
+        videoSettings.fsWidth     = 0;
+        videoSettings.fsHeight    = 0;
+        videoSettings.refreshRate = 60; // 0;
     }
 }
 
@@ -165,10 +165,10 @@ bool RenderDevice::InitGraphicsAPI()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(RenderVertex), (void *)offsetof(RenderVertex, tex));
     glEnableVertexAttribArray(2);
 
-    if (RSDK::videoSettings.windowed || !RSDK::videoSettings.exclusiveFS) {
-        if (RSDK::videoSettings.windowed) {
-            viewSize.x = RSDK::videoSettings.windowWidth;
-            viewSize.y = RSDK::videoSettings.windowHeight;
+    if (videoSettings.windowed || !videoSettings.exclusiveFS) {
+        if (videoSettings.windowed) {
+            viewSize.x = videoSettings.windowWidth;
+            viewSize.y = videoSettings.windowHeight;
         }
         else {
             viewSize.x = displayWidth[monitorIndex];
@@ -176,9 +176,9 @@ bool RenderDevice::InitGraphicsAPI()
         }
     }
     else {
-        int32 bufferWidth  = RSDK::videoSettings.fsWidth;
-        int32 bufferHeight = RSDK::videoSettings.fsWidth;
-        if (RSDK::videoSettings.fsWidth <= 0 || RSDK::videoSettings.fsHeight <= 0) {
+        int32 bufferWidth  = videoSettings.fsWidth;
+        int32 bufferHeight = videoSettings.fsWidth;
+        if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
             bufferWidth  = displayWidth[monitorIndex];
             bufferHeight = displayHeight[monitorIndex];
         }
@@ -188,15 +188,15 @@ bool RenderDevice::InitGraphicsAPI()
 
     int32 maxPixHeight = 0;
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
-        if (RSDK::videoSettings.pixHeight > maxPixHeight)
-            maxPixHeight = RSDK::videoSettings.pixHeight;
+        if (videoSettings.pixHeight > maxPixHeight)
+            maxPixHeight = videoSettings.pixHeight;
 
-        screens[s].size.y = RSDK::videoSettings.pixHeight;
+        screens[s].size.y = videoSettings.pixHeight;
 
         float viewAspect  = viewSize.x / viewSize.y;
-        int32 screenWidth = (int)((viewAspect * RSDK::videoSettings.pixHeight) + 3) & 0xFFFFFFFC;
-        if (screenWidth < RSDK::videoSettings.pixWidth)
-            screenWidth = RSDK::videoSettings.pixWidth;
+        int32 screenWidth = (int)((viewAspect * videoSettings.pixHeight) + 3) & 0xFFFFFFFC;
+        if (screenWidth < videoSettings.pixWidth)
+            screenWidth = videoSettings.pixWidth;
 
         // if (screenWidth > DEFAULT_SCREEN_XSIZE)
         //     screenWidth = DEFAULT_SCREEN_XSIZE;
@@ -264,10 +264,10 @@ bool RenderDevice::InitGraphicsAPI()
 
     lastShaderID = -1;
     InitVertexBuffer();
-    RSDK::videoSettings.viewportX = viewportPos.x;
-    RSDK::videoSettings.viewportY = viewportPos.y;
-    RSDK::videoSettings.viewportW = 1.0 / viewSize.x;
-    RSDK::videoSettings.viewportH = 1.0 / viewSize.y;
+    videoSettings.viewportX = viewportPos.x;
+    videoSettings.viewportY = viewportPos.y;
+    videoSettings.viewportW = 1.0 / viewSize.x;
+    videoSettings.viewportH = 1.0 / viewSize.y;
 
     return true;
 }
@@ -417,7 +417,7 @@ RenderVertex vertBuffer[24] =
 void RenderDevice::InitFPSCap()
 {
     lastFrame  = glfwGetTime();
-    targetFreq = 1.0 / RSDK::videoSettings.refreshRate;
+    targetFreq = 1.0 / videoSettings.refreshRate;
 }
 bool RenderDevice::CheckFPSCap()
 {
@@ -430,7 +430,7 @@ void RenderDevice::UpdateFPSCap() { lastFrame = glfwGetTime(); }
 
 void RenderDevice::CopyFrameBuffer()
 {
-    for (int s = 0; s < RSDK::videoSettings.screenCount; ++s) {
+    for (int s = 0; s < videoSettings.screenCount; ++s) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[s]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, screens[s].pitch, SCREEN_YSIZE, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, screens[s].frameBuffer);
     }
@@ -444,23 +444,23 @@ bool RenderDevice::ProcessEvents()
 
 void RenderDevice::FlipScreen()
 {
-    if (lastShaderID != RSDK::videoSettings.shaderID) {
-        lastShaderID = RSDK::videoSettings.shaderID;
+    if (lastShaderID != videoSettings.shaderID) {
+        lastShaderID = videoSettings.shaderID;
 
-        SetLinear(shaderList[RSDK::videoSettings.shaderID].linear);
+        SetLinear(shaderList[videoSettings.shaderID].linear);
 
-        glUseProgram(shaderList[RSDK::videoSettings.shaderID].programID);
+        glUseProgram(shaderList[videoSettings.shaderID].programID);
     }
 
-    if (RSDK::videoSettings.dimTimer < RSDK::videoSettings.dimLimit) {
-        if (RSDK::videoSettings.dimPercent < 1.0) {
-            RSDK::videoSettings.dimPercent += 0.05;
-            if (RSDK::videoSettings.dimPercent > 1.0)
-                RSDK::videoSettings.dimPercent = 1.0;
+    if (videoSettings.dimTimer < videoSettings.dimLimit) {
+        if (videoSettings.dimPercent < 1.0) {
+            videoSettings.dimPercent += 0.05;
+            if (videoSettings.dimPercent > 1.0)
+                videoSettings.dimPercent = 1.0;
         }
     }
-    else if (RSDK::videoSettings.dimPercent > 0.25) {
-        RSDK::videoSettings.dimPercent *= 0.9;
+    else if (videoSettings.dimPercent > 0.25) {
+        videoSettings.dimPercent *= 0.9;
     }
 
     if (windowRefreshDelay > 0) {
@@ -471,15 +471,13 @@ void RenderDevice::FlipScreen()
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
-    glUniform2fv(glGetUniformLocation(shaderList[RSDK::videoSettings.shaderID].programID, "textureSize"), 1, &textureSize.x);
-    glUniform2fv(glGetUniformLocation(shaderList[RSDK::videoSettings.shaderID].programID, "pixelSize"), 1, &pixelSize.x);
-    glUniform2fv(glGetUniformLocation(shaderList[RSDK::videoSettings.shaderID].programID, "viewSize"), 1, &viewSize.x);
-    glUniform1f(glGetUniformLocation(shaderList[RSDK::videoSettings.shaderID].programID, "screenDim"),
-                RSDK::videoSettings.dimMax * RSDK::videoSettings.dimPercent);
-
+    glUniform2fv(glGetUniformLocation(shaderList[videoSettings.shaderID].programID, "textureSize"), 1, &textureSize.x);
+    glUniform2fv(glGetUniformLocation(shaderList[videoSettings.shaderID].programID, "pixelSize"), 1, &pixelSize.x);
+    glUniform2fv(glGetUniformLocation(shaderList[videoSettings.shaderID].programID, "viewSize"), 1, &viewSize.x);
+    glUniform1f(glGetUniformLocation(shaderList[videoSettings.shaderID].programID, "screenDim"), videoSettings.dimMax * videoSettings.dimPercent);
 
     int32 startVert = 0;
-    switch (RSDK::videoSettings.screenCount) {
+    switch (videoSettings.screenCount) {
         default:
         case 0:
 #if RETRO_REV02
@@ -578,9 +576,9 @@ void RenderDevice::Release(bool32 isRefresh)
 
 bool RenderDevice::InitShaders()
 {
-    RSDK::videoSettings.shaderSupport = true;
-    int32 maxShaders                  = 0;
-    if (RSDK::videoSettings.shaderSupport) {
+    videoSettings.shaderSupport = true;
+    int32 maxShaders            = 0;
+    if (videoSettings.shaderSupport) {
         LoadShader("None", false);
         LoadShader("Clean", true);
         LoadShader("CRT-Yeetron", true);
@@ -588,7 +586,7 @@ bool RenderDevice::InitShaders()
 
 #if RETRO_USE_MOD_LOADER
         // a place for mods to load custom shaders
-        RSDK::RunModCallbacks(RSDK::MODCB_ONSHADERLOAD, NULL);
+        RunModCallbacks(MODCB_ONSHADERLOAD, NULL);
         userShaderCount = shaderCount;
 #endif
 
@@ -601,14 +599,14 @@ bool RenderDevice::InitShaders()
     else {
         for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
 
-        shaderList[0].linear = RSDK::videoSettings.windowed ? false : shaderList[0].linear;
+        shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
         shaderCount          = 1;
     }
 
-    RSDK::videoSettings.shaderID = RSDK::videoSettings.shaderID >= maxShaders ? 0 : RSDK::videoSettings.shaderID;
+    videoSettings.shaderID = videoSettings.shaderID >= maxShaders ? 0 : videoSettings.shaderID;
 
-    SetLinear(shaderList[RSDK::videoSettings.shaderID].linear || RSDK::videoSettings.screenCount > 1);
+    SetLinear(shaderList[videoSettings.shaderID].linear || videoSettings.screenCount > 1);
 
     return true;
 }
@@ -648,7 +646,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
-        RSDK::AllocateStorage(info.fileSize + 1, (void **)&fileData, RSDK::DATASET_TMP, false);
+        AllocateStorage(info.fileSize + 1, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         fileData[info.fileSize] = 0;
         CloseFile(&info);
@@ -664,7 +662,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
-        RSDK::AllocateStorage(info.fileSize + 1, (void **)&fileData, RSDK::DATASET_TMP, false);
+        AllocateStorage(info.fileSize + 1, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         fileData[info.fileSize] = 0;
         CloseFile(&info);
@@ -683,7 +681,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     glGetProgramiv(shader->programID, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shader->programID, 0x1000, NULL, infoLog);
-        RSDK::PrintLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
+        PrintLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
         return;
     }
     glDeleteShader(vert);
@@ -696,19 +694,19 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
 void RenderDevice::RefreshWindow()
 {
-    RSDK::videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
+    videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
     RenderDevice::Release(true);
-    if (!RSDK::videoSettings.bordered)
+    if (!videoSettings.bordered)
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
     GLFWmonitor *monitor = NULL;
     int w, h;
-    if (RSDK::videoSettings.windowed) {
-        w = RSDK::videoSettings.windowWidth;
-        h = RSDK::videoSettings.windowHeight;
+    if (videoSettings.windowed) {
+        w = videoSettings.windowWidth;
+        h = videoSettings.windowHeight;
     }
-    else if (RSDK::videoSettings.fsWidth <= 0 || RSDK::videoSettings.fsHeight <= 0) {
+    else if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
         monitor                 = glfwGetPrimaryMonitor();
         const GLFWvidmode *mode = glfwGetVideoMode(monitor);
         w                       = mode->width;
@@ -716,16 +714,16 @@ void RenderDevice::RefreshWindow()
     }
     else {
         monitor = glfwGetPrimaryMonitor();
-        w       = RSDK::videoSettings.fsWidth;
-        h       = RSDK::videoSettings.fsHeight;
+        w       = videoSettings.fsWidth;
+        h       = videoSettings.fsHeight;
     }
 
-    RenderDevice::window = glfwCreateWindow(w, h, RSDK::gameVerInfo.gameName, monitor, NULL);
+    RenderDevice::window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
     if (!RenderDevice::window) {
-        RSDK::PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
+        PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return;
     }
-    RSDK::PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, RSDK::videoSettings.windowed);
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, videoSettings.windowed);
 
     glfwSetKeyCallback(window, ProcessKeyEvent);
     glfwSetMouseButtonCallback(window, ProcessMouseEvent);
@@ -844,9 +842,9 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
             switch (key) {
                 case GLFW_KEY_ENTER:
                     if (mods & GLFW_MOD_ALT) {
-                        RSDK::videoSettings.windowed ^= 1;
+                        videoSettings.windowed ^= 1;
                         UpdateGameWindow();
-                        RSDK::changedVideoSettings = false;
+                        changedVideoSettings = false;
                         break;
                     }
                     // [fallthrough]
@@ -860,9 +858,9 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
                 case GLFW_KEY_ESCAPE:
                     if (engine.devMenu) {
                         if (sceneInfo.state == ENGINESTATE_DEVMENU)
-                            RSDK::CloseDevMenu();
+                            CloseDevMenu();
                         else
-                            RSDK::OpenDevMenu();
+                            OpenDevMenu();
                     }
                     else {
 #if RETRO_INPUTDEVICE_KEYBOARD
@@ -909,7 +907,7 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
 
                 case GLFW_KEY_F3:
                     if (userShaderCount)
-                        RSDK::videoSettings.shaderID = (RSDK::videoSettings.shaderID + 1) % userShaderCount;
+                        videoSettings.shaderID = (videoSettings.shaderID + 1) % userShaderCount;
                     break;
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -919,13 +917,13 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
                     break;
 
                 case GLFW_KEY_F6:
-                    if (engine.devMenu && RSDK::videoSettings.screenCount > 1)
-                        RSDK::videoSettings.screenCount--;
+                    if (engine.devMenu && videoSettings.screenCount > 1)
+                        videoSettings.screenCount--;
                     break;
 
                 case GLFW_KEY_F7:
-                    if (engine.devMenu && RSDK::videoSettings.screenCount < SCREEN_MAX)
-                        RSDK::videoSettings.screenCount++;
+                    if (engine.devMenu && videoSettings.screenCount < SCREEN_MAX)
+                        videoSettings.screenCount++;
                     break;
 
                 case GLFW_KEY_F9:
@@ -982,12 +980,12 @@ void RenderDevice::ProcessFocusEvent(GLFWwindow *, int focused)
 {
     if (!focused) {
 #if RETRO_REV02
-        RSDK::SKU::userCore->focusState = 1;
+        SKU::userCore->focusState = 1;
 #endif
     }
     else {
 #if RETRO_REV02
-        RSDK::SKU::userCore->focusState = 0;
+        SKU::userCore->focusState = 0;
 #endif
     }
 }

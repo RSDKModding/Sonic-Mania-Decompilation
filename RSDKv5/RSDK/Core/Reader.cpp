@@ -1,36 +1,38 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-RSDKFileInfo dataFileList[FILE_COUNT];
-RSDKContainer dataPacks[PACK_COUNT];
+using namespace RSDK;
 
-uint8 dataPackCount      = 0;
-uint16 dataFileListCount = 0;
+RSDKFileInfo RSDK::dataFileList[FILE_COUNT];
+RSDKContainer RSDK::dataPacks[PACK_COUNT];
 
-char gameLogicName[0x200];
+uint8 RSDK::dataPackCount      = 0;
+uint16 RSDK::dataFileListCount = 0;
 
-bool32 useDataFile = false;
+char RSDK::gameLogicName[0x200];
+
+bool32 RSDK::useDataFile = false;
 
 #if RETRO_PLATFORM == RETRO_ANDROID
 SDL_RWops *fOpen(const char *path, const char *mode)
 {
     char buffer[0x200];
     int32 a = 0;
-    if (!strncmp(path, RSDK::SKU::userFileDir, strlen(RSDK::SKU::userFileDir)))
-        a = strlen(RSDK::SKU::userFileDir);
-    sprintf(buffer, "%s%s", RSDK::SKU::userFileDir, path + a);
+    if (!strncmp(path, SKU::userFileDir, strlen(SKU::userFileDir)))
+        a = strlen(SKU::userFileDir);
+    sprintf(buffer, "%s%s", SKU::userFileDir, path + a);
 
     return SDL_RWFromFile(buffer, mode);
 }
 #endif
 
-bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
+bool32 RSDK::CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
 {
     MEM_ZERO(dataPacks[dataPackCount]);
     useDataFile = false;
     FileInfo info;
 
     char pathBuffer[0x100];
-    sprintf(pathBuffer, "%s%s", RSDK::SKU::userFileDir, filePath);
+    sprintf(pathBuffer, "%s%s", SKU::userFileDir, filePath);
 
     InitFileInfo(&info);
     info.externalFile = true;
@@ -82,7 +84,7 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
     }
 }
 
-bool32 OpenDataFile(FileInfo *info, const char *filename)
+bool32 RSDK::OpenDataFile(FileInfo *info, const char *filename)
 {
     StringLowerCase(textBuffer, filename);
     RETRO_HASH_MD5(hash);
@@ -98,7 +100,7 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
         if (!file->useFileBuffer) {
             info->file = fOpen(dataPacks[file->packID].name, "rb");
             if (!info->file) {
-                RSDK::PrintLog(PRINT_NORMAL, "File not found: %s", filename);
+                PrintLog(PRINT_NORMAL, "File not found: %s", filename);
                 return false;
             }
 
@@ -127,16 +129,16 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
         }
 
 #if !RETRO_USE_ORIGINAL_CODE
-        RSDK::PrintLog(PRINT_NORMAL, "Loaded File %s", filename);
+        PrintLog(PRINT_NORMAL, "Loaded File %s", filename);
 #endif
         return true;
     }
 
-    RSDK::PrintLog(PRINT_NORMAL, "File not found: %s", filename);
+    PrintLog(PRINT_NORMAL, "File not found: %s", filename);
     return false;
 }
 
-bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
+bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 {
     if (info->file)
         return false;
@@ -152,18 +154,18 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     }
 
     bool addPath = false;
-    if (RSDK::activeMod != -1) {
+    if (activeMod != -1) {
         char buf[0x100];
         sprintf(buf, "%s", filePathBuf);
-        sprintf(filePathBuf, "%smods/%s/%s", RSDK::SKU::userFileDir, RSDK::modList[RSDK::activeMod].id.c_str(), buf);
+        sprintf(filePathBuf, "%smods/%s/%s", SKU::userFileDir, modList[activeMod].id.c_str(), buf);
         info->externalFile = true;
         addPath            = false;
     }
     else {
-        for (int32 m = 0; m < RSDK::modList.size(); ++m) {
-            if (RSDK::modList[m].active) {
-                std::map<std::string, std::string>::const_iterator iter = RSDK::modList[m].fileMap.find(pathLower);
-                if (iter != RSDK::modList[m].fileMap.cend()) {
+        for (int32 m = 0; m < modList.size(); ++m) {
+            if (modList[m].active) {
+                std::map<std::string, std::string>::const_iterator iter = modList[m].fileMap.find(pathLower);
+                if (iter != modList[m].fileMap.cend()) {
                     strcpy(filePathBuf, iter->second.c_str());
                     info->externalFile = true;
                     break;
@@ -176,7 +178,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_ANDROID
     if (addPath) {
         char pathBuf[0x100];
-        sprintf(pathBuf, "%s%s", RSDK::SKU::userFileDir, filePathBuf);
+        sprintf(pathBuf, "%s%s", SKU::userFileDir, filePathBuf);
         sprintf(filePathBuf, "%s", pathBuf);
     }
 #endif
@@ -191,7 +193,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 
     if (!info->file) {
 #if !RETRO_USE_ORIGINAL_CODE
-        RSDK::PrintLog(PRINT_NORMAL, "File not found: %s", filePathBuf);
+        PrintLog(PRINT_NORMAL, "File not found: %s", filePathBuf);
 #endif
         return false;
     }
@@ -205,12 +207,12 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
         fSeek(info->file, 0, SEEK_SET);
     }
 #if !RETRO_USE_ORIGINAL_CODE
-    RSDK::PrintLog(PRINT_NORMAL, "Loaded file %s", filePathBuf);
+    PrintLog(PRINT_NORMAL, "Loaded file %s", filePathBuf);
 #endif
     return true;
 }
 
-void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
+void RSDK::GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
 {
     uint8 hash[0x10];
 
@@ -237,7 +239,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
     }
 }
 
-void DecryptBytes(FileInfo *info, void *buffer, size_t size)
+void RSDK::DecryptBytes(FileInfo *info, void *buffer, size_t size)
 {
     if (size) {
         uint8 *data = (uint8 *)buffer;
@@ -283,7 +285,7 @@ void DecryptBytes(FileInfo *info, void *buffer, size_t size)
         }
     }
 }
-void SkipBytes(FileInfo *info, int32 size)
+void RSDK::SkipBytes(FileInfo *info, int32 size)
 {
     if (size) {
         while (size > 0) {

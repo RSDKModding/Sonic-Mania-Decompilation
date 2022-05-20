@@ -127,9 +127,11 @@ unsigned *md5(const char *msg, int32 mlen)
     return h;
 }
 
-char textBuffer[0x400];
+using namespace RSDK;
+
+char RSDK::textBuffer[0x400];
 // Buffer is expected to be at least 16 bytes long
-void GenerateHashMD5(uint32 *buffer, int32 len)
+void RSDK::GenerateHashMD5(uint32 *buffer, int32 len)
 {
     uint8 *buf  = (uint8 *)buffer;
     unsigned *d = md5(textBuffer, len);
@@ -166,7 +168,7 @@ uint32 crc32_t[256] = {
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-void GenerateHashCRC(uint32 *id, char *inputString)
+void RSDK::GenerateHashCRC(uint32 *id, char *inputString)
 {
     *id = -1;
     if (!inputString)
@@ -191,7 +193,7 @@ uint8 utf8CharSizes[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                           2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
 
-void SetString(String *string, char *text)
+void RSDK::SetString(String *string, char *text)
 {
     if (!*text)
         return;
@@ -204,7 +206,7 @@ void SetString(String *string, char *text)
 
     if (string->size < newLength || !string->chars) {
         string->size = newLength;
-        RSDK::AllocateStorage(sizeof(uint16) * string->size, (void **)&string->chars, RSDK::DATASET_STR, false);
+        AllocateStorage(sizeof(uint16) * string->size, (void **)&string->chars, DATASET_STR, false);
     }
 
     string->length = newLength;
@@ -242,7 +244,7 @@ void SetString(String *string, char *text)
     }
 }
 
-void AppendText(String *string, char *appendString)
+void RSDK::AppendText(String *string, char *appendString)
 {
     if (!*appendString)
         return;
@@ -257,13 +259,13 @@ void AppendText(String *string, char *appendString)
     if (string->size < newSize || !string->chars) {
         if (string->chars) {
             uint16 *charsStore = string->chars;
-            RSDK::AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, RSDK::DATASET_STR, false);
+            AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, DATASET_STR, false);
 
             for (int32 c = 0; c < string->length; ++c) string->chars[c] = charsStore[c];
             charsStore = NULL;
         }
         else {
-            RSDK::AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, RSDK::DATASET_STR, false);
+            AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, DATASET_STR, false);
         }
 
         string->size = newSize;
@@ -305,20 +307,20 @@ void AppendText(String *string, char *appendString)
     string->length = newSize;
 }
 
-void AppendString(String *string, String *appendString)
+void RSDK::AppendString(String *string, String *appendString)
 {
     uint32 newSize = appendString->length + string->length;
 
     if (string->size < newSize || !string->chars) {
         if (string->chars) {
             uint16 *charsStore = string->chars;
-            RSDK::AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, RSDK::DATASET_STR, false);
+            AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, DATASET_STR, false);
 
             for (int32 c = 0; c < string->length; ++c) string->chars[c] = charsStore[c];
             charsStore = NULL;
         }
         else {
-            RSDK::AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, RSDK::DATASET_STR, false);
+            AllocateStorage(sizeof(uint16) * newSize, (void **)&string->chars, DATASET_STR, false);
         }
 
         string->size = newSize;
@@ -329,7 +331,7 @@ void AppendString(String *string, String *appendString)
     for (int32 c = 0, pos = startOffset; pos < string->length; ++pos, ++c) string->chars[pos] = appendString->chars[c];
 }
 
-bool32 CompareStrings(String *string1, String *string2, bool32 exactMatch)
+bool32 RSDK::CompareStrings(String *string1, String *string2, bool32 exactMatch)
 {
     if (string1->length != string2->length)
         return false;
@@ -355,21 +357,21 @@ bool32 CompareStrings(String *string1, String *string2, bool32 exactMatch)
     return true;
 }
 
-void InitStringList(String *stringList, int32 size)
+void RSDK::InitStringList(String *stringList, int32 size)
 {
     uint16 *text = NULL;
 
-    RSDK::AllocateStorage(sizeof(uint16) * size, (void **)&text, RSDK::DATASET_STR, false);
+    AllocateStorage(sizeof(uint16) * size, (void **)&text, DATASET_STR, false);
 
     for (int32 c = 0; c < size && c < stringList->length; ++c) text[c] = stringList->chars[c];
 
-    RSDK::CopyStorage((int32 **)stringList, (int32 **)&text);
+    CopyStorage((int32 **)stringList, (int32 **)&text);
     stringList->size = size;
     if (stringList->length > (uint16)size)
         stringList->length = size;
 }
 
-void LoadStringList(String *stringList, const char *filePath, uint32 charSize)
+void RSDK::LoadStringList(String *stringList, const char *filePath, uint32 charSize)
 {
     char fullFilePath[64];
     sprintf(fullFilePath, "Data/Strings/%s", filePath);
@@ -456,7 +458,7 @@ void LoadStringList(String *stringList, const char *filePath, uint32 charSize)
     }
 }
 
-bool32 SplitStringList(String *splitStrings, String *stringList, int32 startStringID, int32 stringCount)
+bool32 RSDK::SplitStringList(String *splitStrings, String *stringList, int32 startStringID, int32 stringCount)
 {
     if (!stringList->size || !stringList->chars)
         return false;
@@ -474,7 +476,7 @@ bool32 SplitStringList(String *splitStrings, String *stringList, int32 startStri
                 uint16 length = curCharPos - lastCharPos;
                 if (splitStrings->size < length) {
                     splitStrings->size = length;
-                    RSDK::AllocateStorage(sizeof(uint16) * length, (void **)&splitStrings->chars, RSDK::DATASET_STR, true);
+                    AllocateStorage(sizeof(uint16) * length, (void **)&splitStrings->chars, DATASET_STR, true);
                 }
                 splitStrings->length = length;
 

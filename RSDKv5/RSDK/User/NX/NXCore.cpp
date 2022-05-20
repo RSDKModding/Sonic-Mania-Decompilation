@@ -1,8 +1,9 @@
 #include "RSDK/Core/RetroEngine.hpp"
-#include "zlib/zlib.h"
+
+using namespace RSDK;
 
 #if RETRO_REV02
-RSDK::SKU::NXCore *RSDK::SKU::InitNXCore()
+SKU::NXCore *RSDK::SKU::InitNXCore()
 {
     // Initalize API subsystems
     NXCore *core = new NXCore;

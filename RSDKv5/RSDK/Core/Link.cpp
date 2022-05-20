@@ -1,5 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 void *RSDK::RSDKFunctionTable[FunctionTable_Count];
 
 #if RETRO_REV02
@@ -442,7 +444,7 @@ void RSDK::SetupFunctionTables()
 
     // Videos & "HD Images"
     ADD_RSDK_FUNCTION(FunctionTable_LoadVideo, LoadVideo);
-    ADD_RSDK_FUNCTION(FunctionTable_LoadImage, RSDK::LoadImage);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadImage, LoadImage);
 
     // Input
 #if RETRO_REV02

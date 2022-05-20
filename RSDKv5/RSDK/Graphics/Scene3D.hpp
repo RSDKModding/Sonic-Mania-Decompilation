@@ -1,6 +1,9 @@
 #ifndef SCENE3D_H
 #define SCENE3D_H
 
+namespace RSDK
+{
+
 #define RSDK_SIGNATURE_MDL (0x4C444D)
 
 #define SCENE3D_MAX      (0x20)
@@ -25,6 +28,7 @@ enum Scene3DDrawTypes {
 struct ScanEdge {
     int32 start;
     int32 end;
+
     int32 startR;
     int32 endR;
     int32 startG;
@@ -123,7 +127,7 @@ void MatrixRotateY(Matrix *matrix, int16 angle);
 void MatrixRotateZ(Matrix *matrix, int16 angle);
 void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ);
 void MatrixInverse(Matrix *dest, Matrix *matrix);
-void MatrixCopy(Matrix *matDst, Matrix *matSrc);
+inline void MatrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(Matrix)); }
 
 uint16 LoadMesh(const char *filepath, Scopes scope);
 uint16 Create3DScene(const char *name, uint16 faceCnt, Scopes scope);
@@ -142,7 +146,7 @@ inline void Prepare3DScene(uint16 sceneID)
     }
 }
 
-inline void SetMeshAnimation(uint16 model, RSDK::Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID)
+inline void SetMeshAnimation(uint16 model, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID)
 {
     if (model >= MODEL_MAX) {
         if (animator)
@@ -157,7 +161,7 @@ inline void SetMeshAnimation(uint16 model, RSDK::Animator *animator, int16 speed
     if (animator->animationID == model && !forceApply)
         return;
 
-    animator->frames          = (RSDK::SpriteFrame *)1;
+    animator->frames          = (SpriteFrame *)1;
     animator->timer           = 0;
     animator->frameID         = frameID;
     animator->frameCount      = modelList[model].frameCount;
@@ -195,7 +199,9 @@ inline void SetSpecularIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
     }
 }
 void AddModelToScene(uint16 animID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matView, color color);
-void AddMeshFrameToScene(uint16 animID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, color color);
+void AddMeshFrameToScene(uint16 animID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, color color);
 void Draw3DScene(uint16 sceneID);
+
+} // namespace RSDK
 
 #endif

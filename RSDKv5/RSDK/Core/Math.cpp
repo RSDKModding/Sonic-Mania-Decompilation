@@ -6,29 +6,29 @@ using namespace RSDK;
 // M_PI is *too* accurate, so use this instead
 #define RSDK_PI (3.1415927)
 
-int32 sin1024LookupTable[0x400];
-int32 cos1024LookupTable[0x400];
-int32 tan1024LookupTable[0x400];
-int32 asin1024LookupTable[0x400];
-int32 acos1024LookupTable[0x400];
+int32 RSDK::sin1024LookupTable[0x400];
+int32 RSDK::cos1024LookupTable[0x400];
+int32 RSDK::tan1024LookupTable[0x400];
+int32 RSDK::asin1024LookupTable[0x400];
+int32 RSDK::acos1024LookupTable[0x400];
 
-int32 sin512LookupTable[0x200];
-int32 cos512LookupTable[0x200];
-int32 tan512LookupTable[0x200];
-int32 asin512LookupTable[0x200];
-int32 acos512LookupTable[0x200];
+int32 RSDK::sin512LookupTable[0x200];
+int32 RSDK::cos512LookupTable[0x200];
+int32 RSDK::tan512LookupTable[0x200];
+int32 RSDK::asin512LookupTable[0x200];
+int32 RSDK::acos512LookupTable[0x200];
 
-int32 sin256LookupTable[0x100];
-int32 cos256LookupTable[0x100];
-int32 tan256LookupTable[0x100];
-int32 asin256LookupTable[0x100];
-int32 acos256LookupTable[0x100];
+int32 RSDK::sin256LookupTable[0x100];
+int32 RSDK::cos256LookupTable[0x100];
+int32 RSDK::tan256LookupTable[0x100];
+int32 RSDK::asin256LookupTable[0x100];
+int32 RSDK::acos256LookupTable[0x100];
 
-uint8 arcTan256LookupTable[0x100 * 0x100];
+uint8 RSDK::arcTan256LookupTable[0x100 * 0x100];
 
-uint32 randSeed = 0;
+uint32 RSDK::randSeed = 0;
 
-void CalculateTrigAngles()
+void RSDK::CalculateTrigAngles()
 {
     srand((uint32)time(NULL));
     randSeed = rand();
@@ -88,7 +88,7 @@ void CalculateTrigAngles()
     }
 }
 
-uint8 ArcTanLookup(int32 X, int32 Y)
+uint8 RSDK::ArcTanLookup(int32 X, int32 Y)
 {
     int32 x = abs(X);
     int32 y = abs(Y);
