@@ -14,7 +14,7 @@ inline void StringLowerCase(char *dest, const char *src)
     if (*src) {
         int32 srcPos = 0;
         do {
-            while (curChar - 'A' <= 0x19u) {
+            while ((uint32)curChar - 'A' < 26) {
                 destPos       = srcPos;
                 dest[destPos] = curChar + ' ';
                 curChar       = src[++srcPos];

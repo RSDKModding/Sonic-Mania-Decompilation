@@ -35,10 +35,10 @@ void RSDK::ReleaseStorage()
     }
 
     for (int32 p = 0; p < dataPackCount; ++p) {
-        if (dataPacks[p].dataPtr)
-            free(dataPacks[p].dataPtr);
+        if (dataPacks[p].fileBuffer)
+            free(dataPacks[p].fileBuffer);
 
-        dataPacks[p].dataPtr = NULL;
+        dataPacks[p].fileBuffer = NULL;
     }
 }
 

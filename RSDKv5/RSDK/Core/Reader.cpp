@@ -1,10 +1,10 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-RSDKFileInfo dataFiles[FILE_COUNT];
+RSDKFileInfo dataFileList[FILE_COUNT];
 RSDKContainer dataPacks[PACK_COUNT];
 
-uint8 dataPackCount  = 0;
-uint16 dataFileCount = 0;
+uint8 dataPackCount      = 0;
+uint16 dataFileListCount = 0;
 
 char gameLogicName[0x200];
 
@@ -14,7 +14,7 @@ bool32 useDataFile = false;
 SDL_RWops *fOpen(const char *path, const char *mode)
 {
     char buffer[0x200];
-    int a = 0;
+    int32 a = 0;
     if (!strncmp(path, RSDK::SKU::userFileDir, strlen(RSDK::SKU::userFileDir)))
         a = strlen(RSDK::SKU::userFileDir);
     sprintf(buffer, "%s%s", RSDK::SKU::userFileDir, path + a);
@@ -35,9 +35,9 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
     InitFileInfo(&info);
     info.externalFile = true;
     if (LoadFile(&info, pathBuffer, FMODE_RB)) {
-        byte signature[6] = { 'R', 'S', 'D', 'K', 'v', '5' };
-        for (int i = 0; i < 6; ++i) {
-            byte sig = ReadInt8(&info);
+        uint8 signature[6] = { 'R', 'S', 'D', 'K', 'v', '5' };
+        for (int32 i = 0; i < 6; ++i) {
+            uint8 sig = ReadInt8(&info);
             if (sig != signature[i])
                 return false;
         }
@@ -46,30 +46,30 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
         strcpy(dataPacks[dataPackCount].name, pathBuffer);
 
         dataPacks[dataPackCount].fileCount = ReadInt16(&info);
-        for (int f = 0; f < dataPacks[dataPackCount].fileCount; ++f) {
-            byte b[4];
-            for (int y = 0; y < 4; y++) {
+        for (int32 f = 0; f < dataPacks[dataPackCount].fileCount; ++f) {
+            uint8 b[4];
+            for (int32 y = 0; y < 4; y++) {
                 ReadBytes(&info, b, 4);
-                dataFiles[f].hash[y] = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | (b[3] << 0);
+                dataFileList[f].hash[y] = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | (b[3] << 0);
             }
 
-            dataFiles[f].offset = ReadInt32(&info, false);
-            dataFiles[f].size   = ReadInt32(&info, false);
+            dataFileList[f].offset = ReadInt32(&info, false);
+            dataFileList[f].size   = ReadInt32(&info, false);
 
-            dataFiles[f].encrypted = (dataFiles[f].size & 0x80000000) != 0;
-            dataFiles[f].size &= 0x7FFFFFFF;
-            dataFiles[f].useFileBuffer = useBuffer;
-            dataFiles[f].packID        = dataPackCount;
+            dataFileList[f].encrypted = (dataFileList[f].size & 0x80000000) != 0;
+            dataFileList[f].size &= 0x7FFFFFFF;
+            dataFileList[f].useFileBuffer = useBuffer;
+            dataFileList[f].packID        = dataPackCount;
         }
 
-        dataPacks[dataPackCount].dataPtr = NULL;
+        dataPacks[dataPackCount].fileBuffer = NULL;
         if (useBuffer) {
-            dataPacks[dataPackCount].dataPtr = (byte *)malloc(info.fileSize);
+            dataPacks[dataPackCount].fileBuffer = (uint8 *)malloc(info.fileSize);
             Seek_Set(&info, 0);
-            ReadBytes(&info, dataPacks[dataPackCount].dataPtr, info.fileSize);
+            ReadBytes(&info, dataPacks[dataPackCount].fileBuffer, info.fileSize);
         }
 
-        dataFileCount += dataPacks[dataPackCount].fileCount;
+        dataFileListCount += dataPacks[dataPackCount].fileCount;
         dataPackCount++;
 
         CloseFile(&info);
@@ -88,8 +88,8 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(textBuffer, hash);
 
-    for (int32 f = 0; f < dataFileCount; ++f) {
-        RSDKFileInfo *file = &dataFiles[f];
+    for (int32 f = 0; f < dataFileListCount; ++f) {
+        RSDKFileInfo *file = &dataFileList[f];
 
         if (!HASH_MATCH_MD5(hash, file->hash))
             continue;
@@ -98,22 +98,26 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
         if (!file->useFileBuffer) {
             info->file = fOpen(dataPacks[file->packID].name, "rb");
             if (!info->file) {
+                RSDK::PrintLog(PRINT_NORMAL, "File not found: %s", filename);
                 return false;
             }
 
             fSeek(info->file, file->offset, SEEK_SET);
         }
         else {
-            info->file     = NULL;
-            info->fileData = &dataPacks[file->packID].dataPtr[file->offset];
+            // a bit of a hack, but it is how it is in the original
+            info->file = (FileIO *)&dataPacks[file->packID].fileBuffer[file->offset];
+
+            uint8 *fileBuffer = (uint8 *)info->file;
+            info->fileBuffer  = fileBuffer;
         }
 
         info->fileSize   = file->size;
         info->readPos    = 0;
         info->fileOffset = file->offset;
         info->encrypted  = file->encrypted;
-        memset(info->encryptionKeyA, 0, 0x10 * sizeof(byte));
-        memset(info->encryptionKeyB, 0, 0x10 * sizeof(byte));
+        memset(info->encryptionKeyA, 0, 0x10 * sizeof(uint8));
+        memset(info->encryptionKeyB, 0, 0x10 * sizeof(uint8));
         if (info->encrypted) {
             GenerateELoadKeys(info, filename, info->fileSize);
             info->eKeyNo      = (info->fileSize / 4) & 0x7F;
@@ -121,9 +125,14 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
             info->eKeyPosB    = 8;
             info->eNybbleSwap = false;
         }
-        RSDK::PrintLog(PRINT_NORMAL, "Loaded File '%s'", filename);
+
+#if !RETRO_USE_ORIGINAL_CODE
+        RSDK::PrintLog(PRINT_NORMAL, "Loaded File %s", filename);
+#endif
         return true;
     }
+
+    RSDK::PrintLog(PRINT_NORMAL, "File not found: %s", filename);
     return false;
 }
 
@@ -138,7 +147,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 #if RETRO_USE_MOD_LOADER
     char pathLower[0x100];
     memset(pathLower, 0, sizeof(char) * 0x100);
-    for (int c = 0; c < strlen(filename); ++c) {
+    for (int32 c = 0; c < strlen(filename); ++c) {
         pathLower[c] = tolower(filename[c]);
     }
 
@@ -151,7 +160,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
         addPath            = false;
     }
     else {
-        for (int m = 0; m < RSDK::modList.size(); ++m) {
+        for (int32 m = 0; m < RSDK::modList.size(); ++m) {
             if (RSDK::modList[m].active) {
                 std::map<std::string, std::string>::const_iterator iter = RSDK::modList[m].fileMap.find(pathLower);
                 if (iter != RSDK::modList[m].fileMap.cend()) {
@@ -181,7 +190,9 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     }
 
     if (!info->file) {
-        RSDK::PrintLog(PRINT_NORMAL, "Couldn't load file '%s'", filePathBuf);
+#if !RETRO_USE_ORIGINAL_CODE
+        RSDK::PrintLog(PRINT_NORMAL, "File not found: %s", filePathBuf);
+#endif
         return false;
     }
 
@@ -190,20 +201,22 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 
     if (fileMode != FMODE_WB) {
         fSeek(info->file, 0, SEEK_END);
-        info->fileSize = (int)fTell(info->file);
+        info->fileSize = (int32)fTell(info->file);
         fSeek(info->file, 0, SEEK_SET);
     }
-    RSDK::PrintLog(PRINT_NORMAL, "Loaded file '%s'", filePathBuf);
+#if !RETRO_USE_ORIGINAL_CODE
+    RSDK::PrintLog(PRINT_NORMAL, "Loaded file %s", filePathBuf);
+#endif
     return true;
 }
 
 void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
 {
-    byte hash[0x10];
+    uint8 hash[0x10];
 
     // StringA
     StringUpperCase(textBuffer, key1);
-    GEN_HASH_MD5(textBuffer, (uint *)hash);
+    GEN_HASH_MD5(textBuffer, (uint32 *)hash);
 
     for (int32 y = 0; y < 0x10; y += 4) {
         info->encryptionKeyA[y + 3] = hash[y + 0];
@@ -214,7 +227,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
 
     // StringB
     sprintf(textBuffer, "%d", key2);
-    GEN_HASH_MD5(textBuffer, (uint *)hash);
+    GEN_HASH_MD5(textBuffer, (uint32 *)hash);
 
     for (int32 y = 0; y < 0x10; y += 4) {
         info->encryptionKeyB[y + 3] = hash[y + 0];
@@ -227,7 +240,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
 void DecryptBytes(FileInfo *info, void *buffer, size_t size)
 {
     if (size) {
-        byte *data = (byte *)buffer;
+        uint8 *data = (uint8 *)buffer;
         while (size > 0) {
             *data ^= info->eKeyNo ^ info->encryptionKeyB[info->eKeyPosB];
             if (info->eNybbleSwap)

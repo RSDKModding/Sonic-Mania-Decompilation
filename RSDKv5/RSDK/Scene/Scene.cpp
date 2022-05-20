@@ -247,14 +247,14 @@ void LoadSceneFile()
     memset(tileLayers, 0, LAYER_COUNT * sizeof(TileLayer));
 
     // Reload palette
-    for (int32 i = 0; i < 8; ++i) {
+    for (int32 b = 0; b < 8; ++b) {
         for (int32 r = 0; r < 0x10; ++r) {
-            if ((activeGlobalRows[i] >> r & 1)) {
-                for (int32 c = 0; c < 0x10; ++c) fullPalette[i][(r << 4) + c] = globalPalette[i][(r << 4) + c];
+            if ((activeGlobalRows[b] >> r & 1)) {
+                for (int32 c = 0; c < 0x10; ++c) fullPalette[b][(r << 4) + c] = globalPalette[b][(r << 4) + c];
             }
 
-            if ((activeStageRows[i] >> r & 1)) {
-                for (int32 c = 0; c < 0x10; ++c) fullPalette[i][(r << 4) + c] = stagePalette[i][(r << 4) + c];
+            if ((activeStageRows[b] >> r & 1)) {
+                for (int32 c = 0; c < 0x10; ++c) fullPalette[b][(r << 4) + c] = stagePalette[b][(r << 4) + c];
             }
         }
     }

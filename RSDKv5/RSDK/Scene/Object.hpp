@@ -5,6 +5,8 @@
 #include <functional>
 #endif
 
+#define RSDK_SIGNATURE_OBJ (0x4A424F)
+
 #define OBJECT_COUNT (0x400)
 
 // 0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation

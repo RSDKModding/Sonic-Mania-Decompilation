@@ -1,6 +1,8 @@
 #ifndef SCENE3D_H
 #define SCENE3D_H
 
+#define RSDK_SIGNATURE_MDL (0x4C444D)
+
 #define SCENE3D_MAX      (0x20)
 #define MODEL_MAX        (0x100)
 #define SCENE3D_VERT_MAX (0x4000)

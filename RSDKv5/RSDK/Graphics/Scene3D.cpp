@@ -391,7 +391,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
     if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
-        if (sig != 0x4C444D) {
+        if (sig != RSDK_SIGNATURE_MDL) {
             CloseFile(&info);
             return -1;
         }

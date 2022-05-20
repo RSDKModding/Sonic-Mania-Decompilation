@@ -127,7 +127,7 @@ void LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
     if (loaded) {
         uint32 sig = ReadInt32(&info, false);
 
-        if (sig != 0x4A424F) {
+        if (sig != RSDK_SIGNATURE_OBJ) {
             CloseFile(&info);
             return;
         }

@@ -40,7 +40,6 @@ int32 RunRetroEngine(int32 argc, char *argv[])
     InitCommonControls();
 #endif
 
-
     RenderDevice::isRunning = false;
     if (RSDK::InitStorage()) {
 #if RETRO_PLATFORM == RETRO_OSX
@@ -432,7 +431,7 @@ void ProcessEngine()
             else {
                 RSDK::videoSettings.dimMax += engine.imageDelta;
                 if (RSDK::videoSettings.dimMax >= 1.0) {
-                    engine.imageDelta         = -engine.imageDelta;
+                    engine.imageDelta          = -engine.imageDelta;
                     RSDK::videoSettings.dimMax = 1.0;
                 }
             }
@@ -446,7 +445,7 @@ void ProcessEngine()
                 sceneInfo.state = engine.storedState;
 
             currentScreen = &screens[0];
-            int32 yOff      = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
+            int32 yOff    = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
             DrawDevString(RSDK::outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
@@ -458,7 +457,7 @@ void ProcessEngine()
                 RenderDevice::isRunning = false;
 
             currentScreen = &screens[0];
-            int32 yOff = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
+            int32 yOff    = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
             DrawDevString(RSDK::outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
@@ -510,7 +509,7 @@ void ParseArguments(int32 argc, char *argv[])
         find = strstr(argv[a], "console=true");
         if (find) {
             engine.consoleEnabled = true;
-            engine.devMenu      = true;
+            engine.devMenu        = true;
         }
     }
 }
@@ -525,8 +524,7 @@ void StartGameObjects()
     sceneInfo.state          = ENGINESTATE_LOAD;
     sceneInfo.inEditor       = false;
     sceneInfo.debugMode      = engine.devMenu;
-
-    RSDK::devMenu.state            = RSDK::DevMenu_MainMenu;
+    RSDK::devMenu.state      = RSDK::DevMenu_MainMenu;
 
     for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) engine.drawLayerVisible[l] = true;
 
@@ -652,7 +650,7 @@ void LoadXMLSoundFX()
                                 sfxPath = getXMLAttributeValueString(valAttr);
 
                             const tinyxml2::XMLAttribute *playsAttr = findXMLAttribute(sfxElement, "maxConcurrentPlays");
-                            int32 maxConcurrentPlays                  = 0;
+                            int32 maxConcurrentPlays                = 0;
                             if (playsAttr)
                                 maxConcurrentPlays = getXMLAttributeValueInt(playsAttr);
 
@@ -699,7 +697,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                 const tinyxml2::XMLElement *listElement = firstXMLChildElement(doc, gameElement, "category");
                 if (listElement) {
                     do {
-                        int32 listID                             = gcListCount++;
+                        int32 listID                           = gcListCount++;
                         const tinyxml2::XMLElement *stgElement = firstXMLChildElement(doc, listElement, "stage");
 
                         SceneListInfo *list = &sceneInfo.listCategory[listID];
@@ -737,7 +735,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 
 #if RETRO_REV02
                                     const tinyxml2::XMLAttribute *filterAttr = findXMLAttribute(stgElement, "highlight");
-                                    int32 stgFilter                            = 0;
+                                    int32 stgFilter                          = 0;
                                     if (stgFilter)
                                         stgFilter = getXMLAttributeValueInt(filterAttr);
 #endif
@@ -799,7 +797,7 @@ void LoadGameConfig()
         char buffer[0x100];
         uint sig = ReadInt32(&info, false);
 
-        if (sig != 0x474643) {
+        if (sig != RSDK_SIGNATURE_CFG) {
             CloseFile(&info);
             return;
         }
@@ -811,7 +809,7 @@ void LoadGameConfig()
         ReadString(&info, RSDK::gameVerInfo.gameVersion);
 
         sceneInfo.activeCategory = ReadInt8(&info);
-        int32 startScene           = ReadInt16(&info);
+        int32 startScene         = ReadInt16(&info);
 
         byte objCnt       = ReadInt8(&info);
         globalObjectCount = TYPE_DEFAULT_COUNT;
@@ -977,20 +975,20 @@ void InitGameLink()
     info.functionTable = RSDK::RSDKFunctionTable;
     info.APITable      = RSDK::APIFunctionTable;
 
-    info.currentSKU   = &RSDK::SKU::curSKU;
-    info.gameInfo     = &RSDK::gameVerInfo;
-    info.sceneInfo    = &sceneInfo;
+    info.currentSKU = &RSDK::SKU::curSKU;
+    info.gameInfo   = &RSDK::gameVerInfo;
+    info.sceneInfo  = &sceneInfo;
 
-    info.controller   = controller;
-    info.stickL       = stickL;
-    info.stickR       = stickR;
-    info.triggerL     = triggerL;
-    info.triggerR     = triggerR;
-    info.touchMouse   = &touchMouseData;
+    info.controller = controller;
+    info.stickL     = stickL;
+    info.stickR     = stickR;
+    info.triggerL   = triggerL;
+    info.triggerR   = triggerR;
+    info.touchMouse = &touchMouseData;
 
-    info.unknown      = &RSDK::SKU::unknownInfo;
+    info.unknown = &RSDK::SKU::unknownInfo;
 
-    info.screenInfo   = screens;
+    info.screenInfo = screens;
 
 #if RETRO_USE_MOD_LOADER
     info.modTable = RSDK::modFunctionTable;
@@ -1058,7 +1056,7 @@ void InitGameLink()
         sprintf(buffer, "%s%s.so", RSDK::SKU::userFileDir, gameLogicName);
         if (!link_handle)
             link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
-        
+
         if (link_handle) {
             LogicLinkHandle linkGameLogic = (LogicLinkHandle)dlsym(link_handle, "LinkGameLogicDLL");
             if (linkGameLogic) {
@@ -1106,7 +1104,7 @@ void ProcessDebugCommands()
 {
 #if !RETRO_USE_ORIGINAL_CODE
     // This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
-    int32 id            = ControllerIDForInputID(1);
+    int32 id          = ControllerIDForInputID(1);
     uint8 gamepadType = GetControllerType(id) >> 8;
     if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN || id == CONT_ANY)
         return;
