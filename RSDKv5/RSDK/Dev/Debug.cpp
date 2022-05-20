@@ -1496,64 +1496,64 @@ void RSDK::DevMenu_DebugOptionsMenu()
     }
 
     if (devMenu.selection < viewableVarCount) {
-        ViewableVariable *value = &viewableVarList[devMenu.selection];
+        ViewableVariable *var = &viewableVarList[devMenu.selection];
 
-        switch (value->size) {
+        switch (var->size) {
             default: DrawDevString("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
 
             case sizeof(int8): {
-                int8 *valuePtr = (int8 *)value->value;
+                int8 *value = (int8 *)var->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr - 1 >= value->min)
-                        *valuePtr--;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value - 1 >= var->min)
+                        *value = *value - 1;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr + 1 <= value->max)
-                        *valuePtr++;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value + 1 <= var->max)
+                        *value = *value + 1;
                 }
                 break;
             }
 
             case sizeof(int16): {
-                int16 *valuePtr = (int16 *)value->value;
+                int16 *value = (int16 *)var->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr - 1 >= value->min)
-                        *valuePtr--;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value - 1 >= var->min)
+                        *value = *value - 1;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr + 1 <= value->max)
-                        *valuePtr++;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value + 1 <= var->max)
+                        *value = *value + 1;
                 }
                 break;
             }
 
             case sizeof(int32): {
-                int32 *valuePtr = (int32 *)value->value;
+                int32 *value = (int32 *)var->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr - 1 >= value->min)
-                        *valuePtr--;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value - 1 >= var->min)
+                        *value = *value - 1;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (!value->type)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr + 1 <= value->max)
-                        *valuePtr++;
+                    if (!var->type)
+                        *value ^= 1;
+                    else if (*value + 1 <= var->max)
+                        *value = *value + 1;
                 }
                 break;
             }

@@ -395,7 +395,7 @@ void UnfilterPNG(ImagePNG *image, uint8 *recon)
     uint8 *scanline = recon;
 
     for (int32 y = 0; y < image->height; ++y) {
-        int32 filter  = *scanline++;
+        int32 filter = *scanline++;
 
         // prev scanline
         uint8 *precon = y ? &recon[-pitch] : NULL;
@@ -497,7 +497,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                     chunkSize   = ReadInt32(&info, true);
                     chunkHeader = ReadInt32(&info, false);
 
-                    bool32 endFlag = false;
+                    bool32 finished = false;
                     if (chunkHeader == PNG_SIG_HEADER && chunkSize == 13) {
                         width       = ReadInt32(&info, true);
                         height      = ReadInt32(&info, true);
@@ -516,7 +516,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                             return true;
                     }
                     else if (chunkHeader == PNG_SIG_END) {
-                        endFlag = true;
+                        finished = true;
                     }
                     else if (chunkHeader == PNG_SIG_PALETTE) {
                         int32 colorCnt = chunkSize / 3;
@@ -544,6 +544,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                                 return false;
                             }
                         }
+
                         AllocateStorage(chunkSize, (void **)&chunkBuffer, DATASET_TMP, false);
                         ReadBytes(&info, chunkBuffer, chunkSize);
 
@@ -589,7 +590,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
 
                     chunkCRC = ReadInt32(&info, false);
 
-                    if (endFlag) {
+                    if (finished) {
                         CloseFile(&info);
                         return true;
                     }
@@ -610,28 +611,28 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
 {
     if (LoadFile(&info, fileName, FMODE_RB)) {
         // header
-        uint8 idLength     = ReadInt8(&info);
+        uint8 idLength = ReadInt8(&info);
 
         // color map type
-        uint8 colormaptype    = ReadInt8(&info);
+        uint8 colormaptype = ReadInt8(&info);
 
         // image type
-        uint8 datatypecode    = ReadInt8(&info);
+        uint8 datatypecode = ReadInt8(&info);
 
         // color map specification
-        int16 colormaporigin  = ReadInt16(&info);
-        int16 colormaplength  = ReadInt16(&info);
-        uint8 colormapdepth   = ReadInt8(&info);
+        int16 colormaporigin = ReadInt16(&info);
+        int16 colormaplength = ReadInt16(&info);
+        uint8 colormapdepth  = ReadInt8(&info);
 
         // image specification
-        int16 originX         = ReadInt16(&info);
-        int16 originY         = ReadInt16(&info);
-        width                 = ReadInt16(&info);
-        height                = ReadInt16(&info);
-        uint8 bpp             = ReadInt8(&info);
-        uint8 descriptor      = ReadInt8(&info);
+        int16 originX    = ReadInt16(&info);
+        int16 originY    = ReadInt16(&info);
+        width            = ReadInt16(&info);
+        height           = ReadInt16(&info);
+        uint8 bpp        = ReadInt8(&info);
+        uint8 descriptor = ReadInt8(&info);
 
-        bool32 reverse        = (~descriptor >> 4) & 1;
+        bool32 reverse = (~descriptor >> 4) & 1;
         if (bpp >= 16) {
             if (idLength)
                 Seek_Cur(&info, idLength);
@@ -643,7 +644,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
 
             int32 x = 0;
             switch (datatypecode) {
-                case 2:  // Uncompressed, RGB images
+                case 2: // Uncompressed, RGB images
                     switch (bpp) {
                         case 16:
                             for (int32 i = 0; i < height * width; ++i) {
@@ -651,7 +652,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                                 ReadBytes(&info, channels, sizeof(uint16));
 
                                 uint16 color16 = channels[0] + (channels[1] << 8);
-                                *pixelsPtr = 0;
+                                *pixelsPtr     = 0;
 
                                 if (color16 & 0x8000) { // alpha bit (0 = invisible, 1 = visible)
                                     uint32 R = (color16 >> 10) & 0x1F;
@@ -706,7 +707,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                     }
                     break;
 
-                case 10:  // Runlength encoded RGB images
+                case 10: // Runlength encoded RGB images
                     switch (bpp) {
                         case 16: {
                             uint8 channels[2];
@@ -716,7 +717,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                             bool32 decodingRLE = false;
                             for (int32 p = 0; p < height * width; ++p) {
                                 if (count) {
-                                    if (!decodingRLE) 
+                                    if (!decodingRLE)
                                         ReadBytes(&info, channels, sizeof(uint16));
 
                                     --count;
@@ -732,7 +733,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                                 uint16 color16 = channels[0] + (channels[1] << 8);
                                 *pixelsPtr     = 0;
 
-                                if (color16 & 0x8000) {  // alpha bit (0 = invisible, 1 = visible)
+                                if (color16 & 0x8000) { // alpha bit (0 = invisible, 1 = visible)
                                     uint32 R = (color16 >> 10) & 0x1F;
                                     uint32 G = (color16 >> 5) & 0x1F;
                                     uint32 B = (color16 >> 0) & 0x1F;

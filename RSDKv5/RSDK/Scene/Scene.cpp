@@ -816,7 +816,7 @@ void RSDK::LoadStageGIF(char *filepath)
 {
     ImageGIF tileset;
 
-    if (tileset.Load(filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x400 * TILE_SIZE) {
+    if (tileset.Load(filepath, true) && tileset.width == TILE_SIZE && tileset.height <= TILE_COUNT * TILE_SIZE) {
         tileset.pixels = tilesetPixels;
         tileset.Load(NULL, false);
 
@@ -839,6 +839,7 @@ void RSDK::LoadStageGIF(char *filepath)
             for (int32 r = 0; r < TILE_SIZE; ++r) {
                 *dstPixels-- = *srcPixels++;
             }
+
             dstPixels += (TILE_SIZE * 2);
         }
 
@@ -850,6 +851,7 @@ void RSDK::LoadStageGIF(char *filepath)
                 for (int32 x = 0; x < TILE_SIZE; ++x) {
                     *dstPixels++ = *srcPixels++;
                 }
+
                 dstPixels -= (TILE_SIZE * 2);
             }
         }
@@ -861,6 +863,7 @@ void RSDK::LoadStageGIF(char *filepath)
             for (int32 r = 0; r < TILE_SIZE; ++r) {
                 *dstPixels-- = *srcPixels++;
             }
+
             dstPixels += (TILE_SIZE * 2);
         }
 

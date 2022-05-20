@@ -1124,6 +1124,18 @@ void RenderDevice::GetDisplays()
     }
 }
 
+void RenderDevice::GetWindowSize(int32 *width, int32 *height)
+{
+    D3DDISPLAYMODE display;
+    RenderDevice::dx9Context->GetAdapterDisplayMode(RenderDevice::dxAdapter, &display);
+
+    if (width)
+        *width = display.Width;
+
+    if (height)
+        *height = display.Height;
+}
+
 void RenderDevice::ProcessEvent(MSG Msg)
 {
     bool handledMsg = false;

@@ -125,9 +125,9 @@ void RSDK::InitSystemSurfaces()
     GEN_HASH_MD5("TileBuffer", gfxSurface[0].hash);
     gfxSurface[0].scope    = SCOPE_GLOBAL;
     gfxSurface[0].width    = TILE_SIZE;
-    gfxSurface[0].height   = 0x40000;
+    gfxSurface[0].height   = TILE_COUNT * TILE_SIZE;
     gfxSurface[0].lineSize = 4; // 16px
-    gfxSurface[0].pixels  = tilesetPixels;
+    gfxSurface[0].pixels   = tilesetPixels;
 
 #if RETRO_REV02
     GEN_HASH_MD5("EngineText", gfxSurface[1].hash);
@@ -135,7 +135,7 @@ void RSDK::InitSystemSurfaces()
     gfxSurface[1].width    = 8;
     gfxSurface[1].height   = 128 * 8;
     gfxSurface[1].lineSize = 3; // 8px
-    gfxSurface[1].pixels  = devTextStencil;
+    gfxSurface[1].pixels   = devTextStencil;
 #endif
 }
 
@@ -205,35 +205,7 @@ void RSDK::GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *
     }
 }
 
-void RSDK::GetWindowSize(int32 *width, int32 *height)
-{
-#if RETRO_RENDERDEVICE_DIRECTX9
-    D3DDISPLAYMODE display;
-    RenderDevice::dx9Context->GetAdapterDisplayMode(RenderDevice::dxAdapter, &display);
-
-    if (width)
-        *width = display.Width;
-
-    if (height)
-        *height = display.Height;
-#elif RETRO_RENDERDEVICE_SDL2
-    if (!videoSettings.windowed) {
-        SDL_GetRendererOutputSize(RenderDevice::renderer, width, height);
-    }
-    else {
-        int32 currentWindowDisplay = SDL_GetWindowDisplayIndex(RenderDevice::window);
-
-        SDL_DisplayMode display;
-        SDL_GetCurrentDisplayMode(currentWindowDisplay, &display);
-
-        if (width)
-            *width = display.w;
-
-        if (height)
-            *height = display.h;
-    }
-#endif
-}
+void RSDK::GetWindowSize(int32 *width, int32 *height) { RenderDevice::GetWindowSize(width, height); }
 
 void RSDK::SwapDrawListEntries(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, int32 count)
 {

@@ -862,6 +862,25 @@ void RenderDevice::GetDisplays()
     }
 }
 
+void RenderDevice::GetWindowSize(int32 *width, int32 *height)
+{
+    if (!videoSettings.windowed) {
+        SDL_GetRendererOutputSize(RenderDevice::renderer, width, height);
+    }
+    else {
+        int32 currentWindowDisplay = SDL_GetWindowDisplayIndex(RenderDevice::window);
+
+        SDL_DisplayMode display;
+        SDL_GetCurrentDisplayMode(currentWindowDisplay, &display);
+
+        if (width)
+            *width = display.w;
+
+        if (height)
+            *height = display.h;
+    }
+}
+
 void RenderDevice::ProcessEvent(SDL_Event event)
 {
     switch (event.type) {

@@ -744,7 +744,7 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
     }
 }
 
-void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     uint32 *pixels = videoBuffer;
@@ -753,30 +753,30 @@ void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *pi
 
     for (int32 y = 0; y < height; ++y) {
         for (int32 x = 0; x < width; ++x) {
-            *pixels++ = (pixelsY[x] << 16) | 0xFF000000;
+            *pixels++ = (yPlane[x] << 16) | 0xFF000000;
         }
 
         pixels += pitch;
-        pixelsY += strideY;
+        yPlane += strideY;
     }
 
     pixels = preY;
     pitch  = RETRO_VIDEO_TEXTURE_W - (width >> 1);
     for (int32 y = 0; y < (height >> 1); ++y) {
         for (int32 x = 0; x < (width >> 1); ++x) {
-            *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+            *pixels++ |= (vPlane[x] << 0) | (uPlane[x] << 8) | 0xFF000000;
         }
 
         pixels += pitch;
-        pixelsU += strideU;
-        pixelsV += strideV;
+        uPlane += strideU;
+        vPlane += strideV;
     }
 
     glBindTexture(GL_TEXTURE_2D, imageTexture);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
 }
 
-void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     uint32 *pixels = videoBuffer;
@@ -785,47 +785,47 @@ void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *pi
 
     for (int32 y = 0; y < height; ++y) {
         for (int32 x = 0; x < width; ++x) {
-            *pixels++ = (pixelsY[x] << 16) | 0xFF000000;
+            *pixels++ = (yPlane[x] << 16) | 0xFF000000;
         }
 
         pixels += pitch;
-        pixelsY += strideY;
+        yPlane += strideY;
     }
 
     pixels = preY;
     pitch  = RETRO_VIDEO_TEXTURE_W - (width >> 1);
     for (int32 y = 0; y < height; ++y) {
         for (int32 x = 0; x < (width >> 1); ++x) {
-            *pixels++ |= (pixelsV[x] << 0) | (pixelsU[x] << 8) | 0xFF000000;
+            *pixels++ |= (vPlane[x] << 0) | (uPlane[x] << 8) | 0xFF000000;
         }
 
         pixels += pitch;
-        pixelsU += strideU;
-        pixelsV += strideV;
+        uPlane += strideU;
+        vPlane += strideV;
     }
 
     glBindTexture(GL_TEXTURE_2D, imageTexture);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
 }
-void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *pixelsY, uint8 *pixelsU, uint8 *pixelsV, int32 strideY, int32 strideU,
+void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     uint32 *pixels = videoBuffer;
     int32 pitch    = RETRO_VIDEO_TEXTURE_W - width;
 
     for (int32 y = 0; y < height; ++y) {
-        int32 pos1  = pixelsY - pixelsV;
-        int32 pos2  = pixelsU - pixelsV;
-        uint8 *pixV = pixelsV;
+        int32 pos1  = yPlane - vPlane;
+        int32 pos2  = uPlane - vPlane;
+        uint8 *pixV = vPlane;
         for (int32 x = 0; x < width; ++x) {
             *pixels++ = pixV[0] | (pixV[pos2] << 8) | (pixV[pos1] << 16) | 0xFF000000;
             pixV++;
         }
 
         pixels += pitch;
-        pixelsY += strideY;
-        pixelsU += strideU;
-        pixelsV += strideV;
+        yPlane += strideY;
+        uPlane += strideU;
+        vPlane += strideV;
     }
 
     glBindTexture(GL_TEXTURE_2D, imageTexture);
