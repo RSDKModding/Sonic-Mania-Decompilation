@@ -74,53 +74,28 @@ void RSDK::LoadScene()
     }
 #endif
 
-    // Unload Models
-    for (int32 m = 0; m < MODEL_MAX; ++m) {
-        if (modelList[m].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(modelList[m]);
-            modelList[m].scope = SCOPE_NONE;
-        }
-    }
+    // Unload stage 3DScenes & models
+    Clear3DScenes();
 
-    // Unload 3D Scenes
-    for (int32 s = 0; s < SCENE3D_MAX; ++s) {
-        if (scene3DList[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(scene3DList[s]);
-            scene3DList[s].scope = SCOPE_NONE;
-        }
-    }
+    // Unload stage sprite animations
+    ClearSpriteAnimations();
 
-    // Unload animations
-    for (int32 s = 0; s < SPRFILE_COUNT; ++s) {
-        if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(spriteAnimationList[s]);
-            spriteAnimationList[s].scope = SCOPE_NONE;
-        }
-    }
-
-    // Unload sprite sheets
-    for (int32 s = 0; s < SURFACE_MAX; ++s) {
-        if (gfxSurface[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(gfxSurface[s]);
-            gfxSurface[s].scope = SCOPE_NONE;
-        }
-    }
+    // Unload stage surfaces
+    ClearGfxSurfaces();
 
     // Unload stage sfx & audio channels
     ClearStageSfx();
 
-    // Unload static object classes
-    for (int32 o = 0; o < sceneInfo.classCount; ++o) {
-        if (objectClassList[stageObjectIDs[o]].staticVars) {
-            *objectClassList[stageObjectIDs[o]].staticVars = NULL;
-        }
-    }
+    // Unload stage objects
+    ClearStageObjects();
 
+    // Clear draw groups
     for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) {
         MEM_ZERO(drawGroups[l]);
         drawGroups[l].sorted = false;
     }
 
+    // Clear stage storage
     ClearUnusedStorage(DATASET_STG);
     ClearUnusedStorage(DATASET_SFX);
 

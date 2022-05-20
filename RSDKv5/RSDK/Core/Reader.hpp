@@ -32,8 +32,8 @@ SDL_RWops *fOpen(const char *path, const char *mode);
 namespace RSDK
 {
 
-#define FILE_COUNT (0x1000)
-#define PACK_COUNT (4)
+#define DATAFILE_COUNT (0x1000)
+#define DATAPACK_COUNT (4)
 
 enum Scopes {
     SCOPE_NONE,
@@ -73,8 +73,8 @@ struct RSDKContainer {
     int32 fileCount;
 };
 
-extern RSDKFileInfo dataFileList[FILE_COUNT];
-extern RSDKContainer dataPacks[PACK_COUNT];
+extern RSDKFileInfo dataFileList[DATAFILE_COUNT];
+extern RSDKContainer dataPacks[DATAPACK_COUNT];
 
 extern uint8 dataPackCount;
 extern uint16 dataFileListCount;
@@ -346,6 +346,14 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
     uncompress(*buffer, &destLen, *cBuffer, complen);
     *cBuffer = NULL;
     return (int32)destLen;
+}
+
+inline void ClearDataFiles()
+{
+    // Unload animations
+    for (int32 f = 0; f < DATAFILE_COUNT; ++f) {
+        HASH_CLEAR_MD5(dataFileList[f].hash);
+    }
 }
 
 } // namespace RSDK

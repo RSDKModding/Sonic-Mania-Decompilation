@@ -62,18 +62,18 @@ void RSDK::ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2
     int32 ix1 = x1 >> 16;
     int32 ix2 = x2 >> 16;
 
-    int32 top   = y1 >> 16;
-    uint32 clr1 = c1;
-    uint32 clr2 = c2;
+    int32 top     = y1 >> 16;
+    uint32 color1 = c1;
+    uint32 color2 = c2;
     if (y1 >> 16 != y2 >> 16) {
         if (y1 >> 16 > y2 >> 16) {
-            top  = y2 >> 16;
-            ix1  = x2 >> 16;
-            ix2  = x1 >> 16;
-            iy1  = y2 >> 16;
-            iy2  = y1 >> 16;
-            clr1 = c2;
-            clr2 = c1;
+            top    = y2 >> 16;
+            ix1    = x2 >> 16;
+            ix2    = x1 >> 16;
+            iy1    = y2 >> 16;
+            iy2    = y1 >> 16;
+            color1 = c2;
+            color2 = c1;
         }
 
         int32 bottom = iy2 + 1;
@@ -81,58 +81,68 @@ void RSDK::ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2
             if (bottom > currentScreen->clipBound_Y2)
                 bottom = currentScreen->clipBound_Y2;
 
-            int32 size     = iy2 - iy1;
-            int32 scanPosX = ix1 << 16;
-            int32 deltaX   = ((ix2 - ix1) << 16) / size;
+            int32 size   = iy2 - iy1;
+            int32 scanX  = ix1 << 16;
+            int32 deltaX = ((ix2 - ix1) << 16) / size;
 
-            int32 c1R      = (clr1 & 0xFF0000);
-            int32 c2R      = (clr2 & 0xFF0000);
-            int32 scanPosR = c1R;
-            int32 deltaR   = 0;
+            int32 c1R   = (color1 & 0xFF0000);
+            int32 c2R   = (color2 & 0xFF0000);
+            int32 scanR = c1R;
+
+            int32 deltaR = 0;
             if (c1R != c2R)
                 deltaR = (c2R - c1R) / size;
 
-            int32 c1G      = (clr1 & 0x00FF00) << 8;
-            int32 c2G      = (clr2 & 0x00FF00) << 8;
-            int32 scanPosG = c1G;
-            int32 deltaG   = 0;
+            int32 c1G   = (color1 & 0x00FF00) << 8;
+            int32 c2G   = (color2 & 0x00FF00) << 8;
+            int32 scanG = c1G;
+
+            int32 deltaG = 0;
             if (c1G != c2G)
                 deltaG = (c2G - c1G) / size;
 
-            int32 c1B      = (clr1 & 0x0000FF) << 16;
-            int32 c2B      = (clr2 & 0x0000FF) << 16;
-            int32 scanPosB = c1B;
-            int32 deltaB   = 0;
+            int32 c1B   = (color1 & 0x0000FF) << 16;
+            int32 c2B   = (color2 & 0x0000FF) << 16;
+            int32 scanB = c1B;
+
+            int32 deltaB = 0;
             if (c1B != c2B)
                 deltaB = (c2B - c1B) / size;
 
             if (top < 0) {
-                scanPosX -= top * deltaX;
-                scanPosR -= top * deltaR;
-                scanPosG -= top * deltaG;
-                scanPosB -= top * deltaB;
+                scanX -= top * deltaX;
+
+                scanR -= top * deltaR;
+                scanG -= top * deltaG;
+                scanB -= top * deltaB;
+
                 top = 0;
             }
 
             ScanEdge *edge = &scanEdgeBuffer[top];
             for (int32 i = top; i < bottom; ++i) {
-                int32 scanX = scanPosX >> 16;
-                if (scanX < edge->start) {
-                    edge->start  = scanX;
-                    edge->startR = scanPosR;
-                    edge->startG = scanPosG;
-                    edge->startB = scanPosB;
+                if ((scanX >> 16) < edge->start) {
+                    edge->start = scanX >> 16;
+
+                    edge->startR = scanR;
+                    edge->startG = scanG;
+                    edge->startB = scanB;
                 }
-                if (scanX > edge->end) {
-                    edge->end  = scanX;
-                    edge->endR = scanPosR;
-                    edge->endG = scanPosG;
-                    edge->endB = scanPosB;
+
+                if ((scanX >> 16) > edge->end) {
+                    edge->end = scanX >> 16;
+
+                    edge->endR = scanR;
+                    edge->endG = scanG;
+                    edge->endB = scanB;
                 }
-                scanPosX += deltaX;
-                scanPosR += deltaR;
-                scanPosG += deltaG;
-                scanPosB += deltaB;
+
+                scanX += deltaX;
+
+                scanR += deltaR;
+                scanG += deltaG;
+                scanB += deltaB;
+
                 ++edge;
             }
         }
@@ -626,8 +636,7 @@ void RSDK::AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matri
         }
     }
 }
-void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals,
-                               color color)
+void RSDK::AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && animator) {
@@ -796,9 +805,10 @@ void RSDK::Draw3DScene(uint16 sceneID)
         Entity *entity = sceneInfo.entity;
         Scene3D *scn   = &scene3DList[sceneID];
 
-        uint8 *vertCnt          = scn->faceVertCounts;
         Scene3DVertex *vertices = scn->vertices;
-        int32 vertID            = 0;
+
+        // setup face depth
+        int32 vertIndex = 0;
         for (int32 i = 0; i < scn->faceCount; ++i) {
             scn->faceBuffer[i].depth = 0;
             switch (scn->faceVertCounts[i]) {
@@ -829,10 +839,12 @@ void RSDK::Draw3DScene(uint16 sceneID)
                     vertices += 4;
                     break;
             }
-            scn->faceBuffer[i].index = vertID;
-            vertID += scn->faceVertCounts[i];
+
+            scn->faceBuffer[i].index = vertIndex;
+            vertIndex += scn->faceVertCounts[i];
         }
 
+        // sort vertices by depth
         for (int32 i = 0; i < scn->faceCount; ++i) {
             for (int32 j = scn->faceCount - 1; j > i; --j) {
                 if (scn->faceBuffer[j].depth > scn->faceBuffer[j - 1].depth) {
@@ -846,20 +858,22 @@ void RSDK::Draw3DScene(uint16 sceneID)
             }
         }
 
-        vertCnt = scn->faceVertCounts;
+        uint8 *vertCnt = scn->faceVertCounts;
         Vector2 vertPos[4];
         uint32 vertClrs[4];
+
         switch (scn->drawMode) {
             default: break;
+
             case S3D_FLATCLR_WIREFRAME:
                 for (int32 i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     for (int32 v = 0; v < *vertCnt - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].color,
-                                 entity->alpha, (InkEffects)entity->inkEffect, false);
+                                 entity->alpha, entity->inkEffect, false);
                     }
                     DrawLine(drawVert[0].x << 8, drawVert[0].y << 8, drawVert[*vertCnt - 1].x << 8, drawVert[*vertCnt - 1].y << 8, drawVert[0].color,
-                             entity->alpha, (InkEffects)entity->inkEffect, false);
+                             entity->alpha, entity->inkEffect, false);
                     vertCnt++;
                 }
                 break;
@@ -872,7 +886,7 @@ void RSDK::Draw3DScene(uint16 sceneID)
                         vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
                     }
                     DrawFace(vertPos, *vertCnt, (drawVert->color >> 16) & 0xFF, (drawVert->color >> 8) & 0xFF, (drawVert->color >> 0) & 0xFF,
-                             entity->alpha, (InkEffects)entity->inkEffect);
+                             entity->alpha, entity->inkEffect);
                     vertCnt++;
                 }
                 break;
@@ -897,28 +911,28 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                     int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular       = clampVal(specular, 0x00, 0xFF);
-                    int32 clrR = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                    int32 r = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityY;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrG = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                    specular = normalVal >> 6 >> scn->specularIntensityY;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 g  = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityZ;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrB = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                    specular = normalVal >> 6 >> scn->specularIntensityZ;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 b  = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                    clrR = clampVal(clrR, 0x00, 0xFF);
-                    clrG = clampVal(clrG, 0x00, 0xFF);
-                    clrB = clampVal(clrB, 0x00, 0xFF);
+                    r = clampVal(r, 0x00, 0xFF);
+                    g = clampVal(g, 0x00, 0xFF);
+                    b = clampVal(b, 0x00, 0xFF);
 
-                    uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                    uint32 color = (r << 16) | (g << 8) | (b << 0);
 
                     for (int32 v = 0; v < vertCount - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, color, entity->alpha,
-                                 (InkEffects)entity->inkEffect, false);
+                                 entity->inkEffect, false);
                     }
                     DrawLine(drawVert[vertCount - 1].x << 8, drawVert[vertCount - 1].y << 8, drawVert[0].x << 8, drawVert[0].y << 8, color,
-                             entity->alpha, (InkEffects)entity->inkEffect, false);
+                             entity->alpha, entity->inkEffect, false);
 
                     vertCnt++;
                 }
@@ -941,29 +955,29 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                     int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular       = clampVal(specular, 0x00, 0xFF);
-                    int32 clrR = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                    int32 r = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityY;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrG = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                    specular = normalVal >> 6 >> scn->specularIntensityY;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 g  = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityZ;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrB = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                    specular = normalVal >> 6 >> scn->specularIntensityZ;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 b  = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                    clrR = clampVal(clrR, 0x00, 0xFF);
-                    clrG = clampVal(clrG, 0x00, 0xFF);
-                    clrB = clampVal(clrB, 0x00, 0xFF);
+                    r = clampVal(r, 0x00, 0xFF);
+                    g = clampVal(g, 0x00, 0xFF);
+                    b = clampVal(b, 0x00, 0xFF);
 
-                    uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                    uint32 color = (r << 16) | (g << 8) | (b << 0);
 
                     drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                    DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha,
-                             (InkEffects)entity->inkEffect);
+                    DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
 
                     vertCnt++;
                 }
                 break;
+
             case S3D_FLATCLR_SHADED_BLENDED:
                 for (int32 i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
@@ -978,31 +992,29 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                         int32 specular = (normalVal >> 6) >> scn->specularIntensityX;
                         specular       = clampVal(specular, 0x00, 0xFF);
-                        int32 ambDif   = (int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX);
-                        int32 clrR     = specular + (ambDif >> scn->diffuseIntensityX);
+                        int32 r = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                        specular   = (normalVal >> 6) >> scn->specularIntensityY;
-                        specular   = clampVal(specular, 0x00, 0xFF);
-                        ambDif     = (int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY);
-                        int32 clrG = specular + (ambDif >> scn->diffuseIntensityY);
+                        specular = (normalVal >> 6) >> scn->specularIntensityY;
+                        specular = clampVal(specular, 0x00, 0xFF);
+                        int32 g  = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                        specular   = (normalVal >> 6) >> scn->specularIntensityZ;
-                        specular   = clampVal(specular, 0x00, 0xFF);
-                        ambDif     = (int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ);
-                        int32 clrB = specular + (ambDif >> scn->diffuseIntensityZ);
+                        specular = (normalVal >> 6) >> scn->specularIntensityZ;
+                        specular = clampVal(specular, 0x00, 0xFF);
+                        int32 b  = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                        clrR = clampVal(clrR, 0x00, 0xFF);
-                        clrG = clampVal(clrG, 0x00, 0xFF);
-                        clrB = clampVal(clrB, 0x00, 0xFF);
+                        r = clampVal(r, 0x00, 0xFF);
+                        g = clampVal(g, 0x00, 0xFF);
+                        b = clampVal(b, 0x00, 0xFF);
 
-                        vertClrs[v] = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        vertClrs[v] = (r << 16) | (g << 8) | (b << 0);
                     }
 
-                    DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
+                    DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, entity->inkEffect);
 
                     vertCnt++;
                 }
                 break;
+
             case S3D_FLATCLR_SCREEN_WIREFRAME:
                 for (int32 i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
@@ -1022,11 +1034,12 @@ void RSDK::Draw3DScene(uint16 sceneID)
                     if (v < 0xFF) {
                         for (int32 v = 0; v < *vertCnt - 1; ++v) {
                             DrawLine(vertPos[v + 0].x, drawVert[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, drawVert[0].color, entity->alpha,
-                                     (InkEffects)entity->inkEffect, true);
+                                     entity->inkEffect, true);
                         }
                         DrawLine(vertPos[0].x, vertPos[0].y, vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, drawVert[0].color, entity->alpha,
-                                 (InkEffects)entity->inkEffect, true);
+                                 entity->inkEffect, true);
                     }
+
                     vertCnt++;
                 }
                 break;
@@ -1050,7 +1063,7 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                     if (v < 0xFF) {
                         DrawFace(vertPos, *vertCnt, (drawVert[0].color >> 16) & 0xFF, (drawVert[0].color >> 8) & 0xFF,
-                                 (drawVert[0].color >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
+                                 (drawVert[0].color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
                     }
                     vertCnt++;
                 }
@@ -1081,32 +1094,29 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                         int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular       = clampVal(specular, 0x00, 0xFF);
-                        int32 clrR =
-                            specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                        int32 r = specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                         specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrG =
-                            specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                        int32 g  = specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                         specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrB =
-                            specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                        int32 b  = specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                        clrR = clampVal(clrR, 0x00, 0xFF);
-                        clrG = clampVal(clrG, 0x00, 0xFF);
-                        clrB = clampVal(clrB, 0x00, 0xFF);
+                        r = clampVal(r, 0x00, 0xFF);
+                        g = clampVal(g, 0x00, 0xFF);
+                        b = clampVal(b, 0x00, 0xFF);
 
-                        uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        uint32 color = (r << 16) | (g << 8) | (b << 0);
 
                         drawVert = &scn->vertices[scn->faceBuffer[i].index];
                         for (int32 v = 0; v < *vertCnt - 1; ++v) {
-                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, color, entity->alpha,
-                                     (InkEffects)entity->inkEffect, true);
+                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, color, entity->alpha, entity->inkEffect,
+                                     true);
                         }
                         DrawLine(vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, vertPos[0].x, vertPos[0].y, color, entity->alpha,
-                                 (InkEffects)entity->inkEffect, true);
+                                 entity->inkEffect, true);
                     }
 
                     vertCnt++;
@@ -1138,28 +1148,24 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                         int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular       = clampVal(specular, 0x00, 0xFF);
-                        int32 clrR =
-                            specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                        int32 r = specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                         specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrG =
-                            specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                        int32 g  = specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                         specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrB =
-                            specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                        int32 b  = specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                        clrR = clampVal(clrR, 0x00, 0xFF);
-                        clrG = clampVal(clrG, 0x00, 0xFF);
-                        clrB = clampVal(clrB, 0x00, 0xFF);
+                        r = clampVal(r, 0x00, 0xFF);
+                        g = clampVal(g, 0x00, 0xFF);
+                        b = clampVal(b, 0x00, 0xFF);
 
-                        uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        uint32 color = (r << 16) | (g << 8) | (b << 0);
 
                         drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                        DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha,
-                                 (InkEffects)entity->inkEffect);
+                        DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
                     }
 
                     vertCnt++;
@@ -1186,30 +1192,30 @@ void RSDK::Draw3DScene(uint16 sceneID)
 
                             int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                             specular       = clampVal(specular, 0x00, 0xFF);
-                            int32 clrR =
+                            int32 r =
                                 specular + ((int32)((drawVert[v].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                             specular = normalVal >> 6 >> scn->specularIntensityY;
                             specular = clampVal(specular, 0x00, 0xFF);
-                            int32 clrG =
+                            int32 g =
                                 specular + ((int32)((drawVert[v].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                             specular = normalVal >> 6 >> scn->specularIntensityZ;
                             specular = clampVal(specular, 0x00, 0xFF);
-                            int32 clrB =
+                            int32 b =
                                 specular + ((int32)((drawVert[v].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                            clrR = clampVal(clrR, 0x00, 0xFF);
-                            clrG = clampVal(clrG, 0x00, 0xFF);
-                            clrB = clampVal(clrB, 0x00, 0xFF);
+                            r = clampVal(r, 0x00, 0xFF);
+                            g = clampVal(g, 0x00, 0xFF);
+                            b = clampVal(b, 0x00, 0xFF);
 
-                            vertClrs[v] = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                            vertClrs[v] = (r << 16) | (g << 8) | (b << 0);
                         }
                     }
 
                     if (v < 0xFF) {
                         drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                        DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
+                        DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, entity->inkEffect);
                     }
 
                     vertCnt++;

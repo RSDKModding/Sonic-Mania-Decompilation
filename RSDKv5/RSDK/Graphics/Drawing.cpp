@@ -17,7 +17,7 @@ uint16 RSDK::subtractLookupTable[0x20 * 0x100];
 
 GFXSurface RSDK::gfxSurface[SURFACE_MAX];
 
-float RSDK::dpi   = 1;
+float RSDK::dpi         = 1;
 int32 RSDK::cameraCount = 0;
 ScreenInfo RSDK::screens[SCREEN_MAX];
 CameraInfo RSDK::cameras[CAMERA_MAX];
@@ -95,8 +95,6 @@ char RSDK::drawGroupNames[0x10][0x10] = {
     if (frameBufferClr != maskColor)                                                                                                                 \
         frameBufferClr = pixel;
 
-
-
 void RSDK::GenerateBlendLookupTable()
 {
     for (int32 y = 0; y < 0x100; y++) {
@@ -147,7 +145,7 @@ void RSDK::GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *
         return;
 
     int32 prevDisplay = *displayID;
-    int32 display      = 0;
+    int32 display     = 0;
 
     if (*displayID == -2) { // -2 == "get FS size display"
         if (videoSettings.fsWidth && videoSettings.fsHeight) {
@@ -1564,18 +1562,16 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
     switch (inkEffect) {
         default: break;
         case INK_ALPHA:
-            if (alpha > 0xFF) {
+            if (alpha > 0xFF)
                 inkEffect = INK_NONE;
-            }
             else if (alpha <= 0)
                 return;
             break;
 
         case INK_ADD:
         case INK_SUB:
-            if (alpha > 0xFF) {
+            if (alpha > 0xFF)
                 alpha = 0xFF;
-            }
             else if (alpha <= 0)
                 return;
             break;
@@ -1602,6 +1598,7 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
         topScreen = currentScreen->clipBound_Y1;
     if (topScreen > currentScreen->clipBound_Y2)
         topScreen = currentScreen->clipBound_Y2;
+
     if (bottomScreen < currentScreen->clipBound_Y1)
         bottomScreen = currentScreen->clipBound_Y1;
     if (bottomScreen > currentScreen->clipBound_Y2)
@@ -1696,6 +1693,7 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
 
             case INK_ADD: {
                 uint16 *blendTablePtr = &blendLookupTable[0x20 * alpha];
+
                 for (int32 s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
@@ -1711,6 +1709,7 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
                     for (int32 x = 0; x < count; ++x) {
                         setPixelAdditive(color16, frameBufferPtr[edge->start + x]);
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -1734,6 +1733,7 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
                     for (int32 x = 0; x < count; ++x) {
                         setPixelSubtractive(color16, frameBufferPtr[edge->start + x]);
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -1756,6 +1756,7 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
                     for (int32 x = 0; x < count; ++x) {
                         frameBufferPtr[edge->start + x] = tintLookupTable[frameBufferPtr[edge->start + x]];
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -1778,6 +1779,7 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
                         if (frameBufferPtr[edge->start + x] == maskColor)
                             frameBufferPtr[edge->start + x] = color16;
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -1800,6 +1802,7 @@ void RSDK::DrawFace(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 
                         if (frameBufferPtr[edge->start + x] != maskColor)
                             frameBufferPtr[edge->start + x] = color16;
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -1812,18 +1815,16 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
     switch (inkEffect) {
         default: break;
         case INK_ALPHA:
-            if (alpha > 0xFF) {
+            if (alpha > 0xFF)
                 inkEffect = INK_NONE;
-            }
             else if (alpha <= 0)
                 return;
             break;
 
         case INK_ADD:
         case INK_SUB:
-            if (alpha > 0xFF) {
+            if (alpha > 0xFF)
                 alpha = 0xFF;
-            }
             else if (alpha <= 0)
                 return;
             break;
@@ -1850,6 +1851,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
         topScreen = currentScreen->clipBound_Y1;
     if (topScreen > currentScreen->clipBound_Y2)
         topScreen = currentScreen->clipBound_Y2;
+
     if (bottomScreen < currentScreen->clipBound_Y1)
         bottomScreen = currentScreen->clipBound_Y1;
     if (bottomScreen > currentScreen->clipBound_Y2)
@@ -1966,6 +1968,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
                         uint16 color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         setPixelBlend(color, frameBufferPtr[edge->start + x]);
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -2026,6 +2029,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
 
             case INK_ADD: {
                 uint16 *blendTablePtr = &blendLookupTable[0x20 * alpha];
+
                 for (int32 s = topScreen; s <= bottomScreen; ++s) {
                     int32 start  = edge->start;
                     int32 count  = edge->end - edge->start;
@@ -2069,6 +2073,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
                         uint16 color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         setPixelAdditive(color, frameBufferPtr[edge->start + x]);
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -2077,6 +2082,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
 
             case INK_SUB: {
                 uint16 *subBlendTable = &subtractLookupTable[0x20 * alpha];
+
                 for (int32 s = topScreen; s <= bottomScreen; ++s) {
                     int32 start  = edge->start;
                     int32 count  = edge->end - edge->start;
@@ -2120,6 +2126,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
                         uint16 color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         setPixelSubtractive(color, frameBufferPtr[edge->start + x]);
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -2169,6 +2176,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
                         startB += deltaB;
                         frameBufferPtr[edge->start + x] = tintLookupTable[frameBufferPtr[edge->start + x]];
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -2215,6 +2223,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
                         if (frameBufferPtr[edge->start + x] == maskColor)
                             frameBufferPtr[edge->start + x] = color;
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -2265,6 +2274,7 @@ void RSDK::DrawBlendedFace(Vector2 *vertices, uint32 *colors, int32 vertCount, i
                         if (frameBufferPtr[edge->start + x] != maskColor)
                             frameBufferPtr[edge->start + x] = color;
                     }
+
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
                 }
@@ -2325,12 +2335,10 @@ void RSDK::DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelati
                     break;
 
                 case ROTSTYLE_STATICFRAMES:
-                    if (sceneInfo.entity->rotation >= 0x100) {
+                    if (sceneInfo.entity->rotation >= 0x100)
                         rotation = 0x08 - ((0x214 - sceneInfo.entity->rotation) >> 6);
-                    }
-                    else {
+                    else
                         rotation = (sceneInfo.entity->rotation + 20) >> 6;
-                    }
 
                     switch (rotation) {
                         case 0: // 0 deg
@@ -2419,6 +2427,7 @@ void RSDK::DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelati
                     default: break;
                 }
                 break;
+
             case FX_ROTATE:
                 DrawSpriteRotozoom(pos.x, pos.y, frame->pivotX, frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, 0x200, 0x200,
                                    FLIP_NONE, rotation, sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
@@ -2459,23 +2468,21 @@ void RSDK::DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelati
     }
 }
 void RSDK::DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 sprX, int32 sprY, int32 direction, int32 inkEffect, int32 alpha,
-                       int32 sheetID)
+                             int32 sheetID)
 {
     switch (inkEffect) {
         default: break;
         case INK_ALPHA:
-            if (alpha > 0xFF) {
+            if (alpha > 0xFF)
                 inkEffect = INK_NONE;
-            }
             else if (alpha <= 0)
                 return;
             break;
 
         case INK_ADD:
         case INK_SUB:
-            if (alpha > 0xFF) {
+            if (alpha > 0xFF)
                 alpha = 0xFF;
-            }
             else if (alpha <= 0)
                 return;
             break;
@@ -2501,6 +2508,7 @@ void RSDK::DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 
 
     if (height + y > currentScreen->clipBound_Y2)
         height = currentScreen->clipBound_Y2 - y;
+
     if (y < currentScreen->clipBound_Y1) {
         int32 val = y - currentScreen->clipBound_Y1;
         sprY -= val;
@@ -2519,6 +2527,7 @@ void RSDK::DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 
     uint8 *lineBuffer      = NULL;
     uint8 *gfxData         = NULL;
     uint16 *frameBufferPtr = NULL;
+
     switch (direction) {
         default: break;
 
@@ -3120,8 +3129,7 @@ void RSDK::DrawSpriteFlipped(int32 x, int32 y, int32 width, int32 height, int32 
     }
 }
 void RSDK::DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int32 width, int32 height, int32 sprX, int32 sprY, int32 scaleX,
-                              int32 scaleY,
-                        int32 direction, int16 rotation, int32 inkEffect, int32 alpha, int32 sheetID)
+                              int32 scaleY, int32 direction, int16 rotation, int32 inkEffect, int32 alpha, int32 sheetID)
 {
     switch (inkEffect) {
         default: break;
@@ -3916,7 +3924,7 @@ void RSDK::DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 src
 }
 
 void RSDK::DrawString(Animator *animator, Vector2 *position, String *string, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
-                void *unused, Vector2 *charOffsets, bool32 screenRelative)
+                      void *unused, Vector2 *charOffsets, bool32 screenRelative)
 {
     if (animator && string && animator->frames) {
         if (!position)

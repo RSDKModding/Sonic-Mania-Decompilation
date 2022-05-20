@@ -391,6 +391,17 @@ void DrawString(Animator *animator, Vector2 *position, String *string, int32 end
                 void *unused, Vector2 *charPositions, bool32 screenRelative);
 void DrawDevString(const char *string, int32 x, int32 y, int32 align, uint32 color);
 
+inline void ClearGfxSurfaces()
+{
+    // Unload sprite sheets
+    for (int32 s = 0; s < SURFACE_MAX; ++s) {
+        if (gfxSurface[s].scope != SCOPE_GLOBAL) {
+            MEM_ZERO(gfxSurface[s]);
+            gfxSurface[s].scope = SCOPE_NONE;
+        }
+    }
+}
+
 } // namespace RSDK
 
 #endif // !DRAWING_H

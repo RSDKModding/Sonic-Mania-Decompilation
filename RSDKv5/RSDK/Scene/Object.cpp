@@ -1139,3 +1139,13 @@ bool32 RSDK::CheckPosOnScreen(Vector2 *position, Vector2 *range)
 
     return false;
 }
+
+void RSDK::ClearStageObjects()
+{
+    // Unload static object classes
+    for (int32 o = 0; o < sceneInfo.classCount; ++o) {
+        if (objectClassList[stageObjectIDs[o]].staticVars) {
+            *objectClassList[stageObjectIDs[o]].staticVars = NULL;
+        }
+    }
+}

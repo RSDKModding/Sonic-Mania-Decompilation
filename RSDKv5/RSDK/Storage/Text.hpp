@@ -69,6 +69,7 @@ void GenerateHashCRC(uint32 *id, char *inputString);
     strcpy(textBuffer, text);                                                                                                                        \
     GenerateHashMD5(hash, (int32)strlen(textBuffer))
 #define HASH_COPY_MD5(dst, src) memcpy(dst, src, HASH_SIZE_MD5)
+#define HASH_CLEAR_MD5(hash)    MEM_ZERO(hash)
 
 inline void InitString(String *string, char *text, uint32 textLength)
 {

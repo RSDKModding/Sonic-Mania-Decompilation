@@ -2,8 +2,8 @@
 
 using namespace RSDK;
 
-RSDKFileInfo RSDK::dataFileList[FILE_COUNT];
-RSDKContainer RSDK::dataPacks[PACK_COUNT];
+RSDKFileInfo RSDK::dataFileList[DATAFILE_COUNT];
+RSDKContainer RSDK::dataPacks[DATAPACK_COUNT];
 
 uint8 RSDK::dataPackCount      = 0;
 uint16 RSDK::dataFileListCount = 0;

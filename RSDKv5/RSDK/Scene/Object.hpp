@@ -297,6 +297,8 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range);
 // Checks if a position is on screen & within range
 bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range);
 
+void ClearStageObjects();
+
 } // namespace RSDK
 
 #endif // !OBJECT_H

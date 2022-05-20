@@ -202,6 +202,24 @@ void AddModelToScene(uint16 animID, uint16 sceneID, uint8 drawMode, Matrix *matW
 void AddMeshFrameToScene(uint16 animID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, color color);
 void Draw3DScene(uint16 sceneID);
 
+inline void Clear3DScenes() {
+    // Unload Models
+    for (int32 m = 0; m < MODEL_MAX; ++m) {
+        if (modelList[m].scope != SCOPE_GLOBAL) {
+            MEM_ZERO(modelList[m]);
+            modelList[m].scope = SCOPE_NONE;
+        }
+    }
+
+    // Unload 3D Scenes
+    for (int32 s = 0; s < SCENE3D_MAX; ++s) {
+        if (scene3DList[s].scope != SCOPE_GLOBAL) {
+            MEM_ZERO(scene3DList[s]);
+            scene3DList[s].scope = SCOPE_NONE;
+        }
+    }
+}
+
 } // namespace RSDK
 
 #endif
