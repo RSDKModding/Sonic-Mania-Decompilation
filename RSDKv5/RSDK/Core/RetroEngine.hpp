@@ -30,6 +30,9 @@ typedef unsigned int uint;
 typedef signed long long int64;
 typedef unsigned long long uint64;
 
+namespace RSDK
+{
+
 enum GamePlatforms {
     PLATFORM_PC     = 0,
     PLATFORM_PS4    = 1,
@@ -55,6 +58,8 @@ enum GameRegions {
     REGION_JP,
     REGION_EU,
 };
+
+} // namespace RSDK
 
 #define RETRO_USE_ORIGINAL_CODE (0)
 
@@ -116,17 +121,17 @@ enum GameRegions {
 // ============================
 // RENDER DEVICE BACKENDS
 // ============================
-#define RETRO_RENDERDEVICE_SDL2      (0)
 #define RETRO_RENDERDEVICE_DIRECTX9  (0)
 #define RETRO_RENDERDEVICE_DIRECTX11 (0)
 // CUSTOM
+#define RETRO_RENDERDEVICE_SDL2      (0)
 #define RETRO_RENDERDEVICE_OPENGL3   (0)
 
 // ============================
 // AUDIO DEVICE BACKENDS
 // ============================
-#define RETRO_AUDIODEVICE_SDL2   (0)
 #define RETRO_AUDIODEVICE_XAUDIO (0)
+#define RETRO_AUDIODEVICE_SDL2   (0)
 
 // ============================
 // INPUT DEVICE BACKENDS
@@ -313,6 +318,8 @@ enum GameRegions {
 #undef RETRO_USING_MOUSE
 #endif
 
+namespace RSDK
+{
 enum EngineStates {
     ENGINESTATE_LOAD,
     ENGINESTATE_REGULAR,
@@ -329,15 +336,17 @@ enum EngineStates {
     ENGINESTATE_NONE,
 };
 
-// Utils
-#include "iniparser/iniparser.h"
-
 enum SeverityModes {
     PRINT_NORMAL,
     PRINT_POPUP,
     PRINT_ERROR,
     PRINT_FATAL,
 };
+
+} // namespace RSDK
+
+// Utils
+#include "iniparser/iniparser.h"
 
 // Engine
 #include "RSDK/Storage/Storage.hpp"
@@ -387,6 +396,9 @@ enum SeverityModes {
 #include "RSDK/Scene/Objects/DevOutput.hpp"
 #endif
 
+namespace RSDK
+{
+
 struct RetroEngine {
     RetroEngine() {}
 
@@ -430,9 +442,9 @@ struct RetroEngine {
 extern RetroEngine engine;
 
 #if RETRO_REV02
-typedef void (*LogicLinkHandle)(RSDK::GameInfo *info);
+typedef void (*LogicLinkHandle)(GameInfo *info);
 #else
-typedef void (*LogicLinkHandle)(RSDK::GameInfo info);
+typedef void (*LogicLinkHandle)(GameInfo info);
 #endif
 
 extern LogicLinkHandle linkGameLogic;
@@ -467,9 +479,11 @@ extern int32 *globalVarsPtr;
 
 inline void RegisterGlobalVariables(void **globals, int32 size)
 {
-    RSDK::AllocateStorage(size, globals, RSDK::DATASET_STG, true);
+    AllocateStorage(size, globals, DATASET_STG, true);
     globalVarsPtr = (int32 *)*globals;
 }
+
+} // namespace RSDK
 
 #include "Link.hpp"
 

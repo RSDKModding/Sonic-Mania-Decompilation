@@ -6,14 +6,16 @@
 stb_vorbis *vorbisInfo = NULL;
 stb_vorbis_alloc vorbisAlloc;
 
+using namespace RSDK;
+
+SFXInfo RSDK::sfxList[SFX_COUNT];
+ChannelInfo RSDK::channels[CHANNEL_COUNT];
+
 char streamFilePath[0x40];
 uint8 *streamBuffer    = NULL;
 int32 streamBufferSize = 0;
 int32 streamStartPos   = 0;
 int32 streamLoopPoint  = 0;
-
-SFXInfo sfxList[SFX_COUNT];
-ChannelInfo channels[CHANNEL_COUNT];
 
 float speedMixAmounts[0x400];
 
@@ -30,7 +32,7 @@ uint8 AudioDeviceBase::audioFocus               = 0;
 int32 AudioDeviceBase::mixBufferID = 0;
 float AudioDeviceBase::mixBuffer[3][MIX_BUFFER_SIZE];
 
-void UpdateStreamBuffer(ChannelInfo *channel)
+void RSDK::UpdateStreamBuffer(ChannelInfo *channel)
 {
     int32 bufferRemaining = 0x800;
     float *buffer         = channel->samplePtr;
@@ -65,7 +67,7 @@ void UpdateStreamBuffer(ChannelInfo *channel)
     }
 }
 
-void LoadStream(ChannelInfo *channel)
+void RSDK::LoadStream(ChannelInfo *channel)
 {
     if (channel->state != CHANNEL_LOADING_STREAM)
         return;
@@ -82,13 +84,13 @@ void LoadStream(ChannelInfo *channel)
     if (LoadFile(&info, streamFilePath, FMODE_RB)) {
         streamBufferSize = info.fileSize;
         streamBuffer     = NULL;
-        RSDK::AllocateStorage(info.fileSize, (void **)&streamBuffer, RSDK::DATASET_MUS, false);
+        AllocateStorage(info.fileSize, (void **)&streamBuffer, DATASET_MUS, false);
         ReadBytes(&info, streamBuffer, streamBufferSize);
         CloseFile(&info);
 
         if (streamBufferSize > 0) {
             vorbisAlloc.alloc_buffer_length_in_bytes = 0x80000;
-            RSDK::AllocateStorage(0x80000, (void **)&vorbisAlloc, RSDK::DATASET_MUS, false);
+            AllocateStorage(0x80000, (void **)&vorbisAlloc, DATASET_MUS, false);
 
             vorbisInfo = stb_vorbis_open_memory(streamBuffer, streamBufferSize, NULL, &vorbisAlloc);
             if (vorbisInfo) {
@@ -105,7 +107,7 @@ void LoadStream(ChannelInfo *channel)
         channel->state = CHANNEL_IDLE;
 }
 
-int32 PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopPoint, bool32 loadASync)
+int32 RSDK::PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopPoint, bool32 loadASync)
 {
     if (!engine.streamsEnabled)
         return -1;
@@ -162,7 +164,7 @@ int32 PlayStream(const char *filename, uint32 slot, int32 startPos, uint32 loopP
 #define WAV_SIG_HEADER 0x46464952 // RIFF
 #define WAV_SIG_DATA   0x61746164 // data
 
-void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, uint32 *format, uint16 *channels, uint32 *freq)
+void RSDK::ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, uint32 *format, uint16 *channels, uint32 *freq)
 {
     FileInfo info;
     InitFileInfo(&info);
@@ -194,7 +196,7 @@ void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, u
                 if (loop >= 0x40) {
                     if (loop != 0x100) {
                         CloseFile(&info);
-                        RSDK::PrintLog(PRINT_ERROR, "Unable to read sfx: %s", filename);
+                        PrintLog(PRINT_ERROR, "Unable to read sfx: %s", filename);
                         return;
                     }
                     else {
@@ -208,14 +210,14 @@ void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, u
             if (sampleBits == 16)
                 length >>= 1;
 
-            RSDK::AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
+            AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
             sfxList[id].length = length;
 
             float *buffer = (float *)sfxList[id].buffer;
             if (sampleBits == 8) {
                 for (int32 s = 0; s < length; ++s) {
                     int32 sample = ReadInt8(&info);
-                    *buffer++      = (sample - 128) * 0.0078125;
+                    *buffer++    = (sample - 128) * 0.0078125;
                 }
             }
             else {
@@ -231,11 +233,11 @@ void ReadSfx(char *filename, uint8 id, uint8 plays, uint8 scope, uint32 *size, u
         CloseFile(&info);
     }
     else {
-        RSDK::PrintLog(PRINT_ERROR, "Unable to open sfx: %s", filename);
+        PrintLog(PRINT_ERROR, "Unable to open sfx: %s", filename);
     }
 }
 
-void LoadSfx(char *filename, uint8 plays, uint8 scope)
+void RSDK::LoadSfx(char *filename, uint8 plays, uint8 scope)
 {
     char fullFilePath[0x80];
     sprintf(fullFilePath, "Data/SoundFX/%s", filename);
@@ -266,10 +268,10 @@ void LoadSfx(char *filename, uint8 plays, uint8 scope)
     }
     else {
         // what the
-        RSDK::PrintLog(PRINT_ERROR, "Sfx format not supported!");
+        PrintLog(PRINT_ERROR, "Sfx format not supported!");
     }
 }
-int32 PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
+int32 RSDK::PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
 {
     if (sfx >= SFX_COUNT || !sfxList[sfx].scope)
         return -1;
@@ -337,7 +339,7 @@ int32 PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
     return slot;
 }
 
-void SetChannelAttributes(uint8 channel, float volume, float panning, float speed)
+void RSDK::SetChannelAttributes(uint8 channel, float volume, float panning, float speed)
 {
     if (channel < CHANNEL_COUNT) {
         volume                   = fminf(4.0, volume);
@@ -355,7 +357,7 @@ void SetChannelAttributes(uint8 channel, float volume, float panning, float spee
     }
 }
 
-uint32 GetChannelPos(uint32 channel)
+uint32 RSDK::GetChannelPos(uint32 channel)
 {
     if (channel >= CHANNEL_COUNT)
         return 0;
@@ -373,7 +375,7 @@ uint32 GetChannelPos(uint32 channel)
     return 0;
 }
 
-double GetVideoStreamPos()
+double RSDK::GetVideoStreamPos()
 {
     if (channels[0].state == CHANNEL_STREAM && AudioDevice::audioState && AudioDevice::initializedAudioChannels && vorbisInfo->current_loc_valid) {
         return vorbisInfo->current_loc / (float)AUDIO_FREQUENCY;
@@ -382,7 +384,7 @@ double GetVideoStreamPos()
     return -1.0;
 }
 
-void ClearStageSfx()
+void RSDK::ClearStageSfx()
 {
     LockAudioDevice();
 

@@ -1,5 +1,7 @@
 
-bool32 disabledXInputDevices[PLAYER_COUNT];
+using namespace RSDK::SKU;
+
+bool32 RSDK::SKU::disabledXInputDevices[PLAYER_COUNT];
 
 void InputDeviceXInput::UpdateInput()
 {
@@ -163,7 +165,7 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
 #endif
 }
 
-InputDeviceXInput *InitXInputDevice(uint32 id)
+InputDeviceXInput *RSDK::SKU::InitXInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -196,7 +198,7 @@ InputDeviceXInput *InitXInputDevice(uint32 id)
     return device;
 }
 
-void InitXInputAPI()
+void RSDK::SKU::InitXInputAPI()
 {
     char idString[16];
 
@@ -229,7 +231,7 @@ void InitXInputAPI()
     }
 }
 
-void UpdateXInputDevices()
+void RSDK::SKU::UpdateXInputDevices()
 {
     for (int32 i = 0; i < PLAYER_COUNT; ++i) disabledXInputDevices[i] = false;
 }

@@ -1,29 +1,31 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-uint16 rgb32To16_R[0x100];
-uint16 rgb32To16_G[0x100];
-uint16 rgb32To16_B[0x100];
+using namespace RSDK;
 
-uint16 globalPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
-uint16 activeGlobalRows[PALETTE_BANK_COUNT];
-uint16 activeStageRows[PALETTE_BANK_COUNT];
-uint16 stagePalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
+uint16 RSDK::rgb32To16_R[0x100];
+uint16 RSDK::rgb32To16_G[0x100];
+uint16 RSDK::rgb32To16_B[0x100];
 
-uint16 fullPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
+uint16 RSDK::globalPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
+uint16 RSDK::activeGlobalRows[PALETTE_BANK_COUNT];
+uint16 RSDK::activeStageRows[PALETTE_BANK_COUNT];
+uint16 RSDK::stagePalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
 
-uint8 gfxLineBuffer[SCREEN_YSIZE];
+uint16 RSDK::fullPalette[PALETTE_BANK_COUNT][PALETTE_BANK_SIZE];
 
-int32 maskColor = 0;
+uint8 RSDK::gfxLineBuffer[SCREEN_YSIZE];
+
+int32 RSDK::maskColor = 0;
 #if RETRO_REV02
-uint16 *tintLookupTable = NULL;
+uint16 *RSDK::tintLookupTable = NULL;
 #else
-uint16 tintLookupTable[0x10000];
+uint16 RSDK::tintLookupTable[0x10000];
 #endif
 
 #if RETRO_REV02
-void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
+void RSDK::LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
 {
-    char fullFilePath[0x80];    
+    char fullFilePath[0x80];
     sprintf(fullFilePath, "Data/Palettes/%s", filename);
 
     FileInfo info;
@@ -32,9 +34,9 @@ void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
         for (int32 r = 0; r < 0x10; ++r) {
             if (!(rowFlags >> r & 1)) {
                 for (int32 c = 0; c < 0x10; ++c) {
-                    uint8 red                             = ReadInt8(&info);
-                    uint8 green                           = ReadInt8(&info);
-                    uint8 blue                            = ReadInt8(&info);
+                    uint8 red                         = ReadInt8(&info);
+                    uint8 green                       = ReadInt8(&info);
+                    uint8 blue                        = ReadInt8(&info);
                     fullPalette[bankID][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                 }
             }
@@ -46,9 +48,31 @@ void LoadPalette(uint8 bankID, const char *filename, uint16 rowFlags)
         CloseFile(&info);
     }
 }
+
+void RSDK::BlendColors(uint8 destBankID, uint32 *srcColorsA, uint32 *srcColorsB, int32 blendAmount, int32 startIndex, int32 count)
+{
+    if (destBankID >= PALETTE_BANK_COUNT || !srcColorsA || !srcColorsB)
+        return;
+
+    blendAmount = clampVal(blendAmount, 0x00, 0xFF);
+
+    uint8 blendA         = 0xFF - blendAmount;
+    uint16 *paletteColor = &fullPalette[destBankID][startIndex];
+    for (int32 i = startIndex; i < startIndex + count; ++i) {
+        int32 r = blendAmount * ((*srcColorsB >> 0x10) & 0xFF) + blendA * ((*srcColorsA >> 0x10) & 0xFF);
+        int32 g = blendAmount * ((*srcColorsB >> 0x08) & 0xFF) + blendA * ((*srcColorsA >> 0x08) & 0xFF);
+        int32 b = blendAmount * ((*srcColorsB >> 0x00) & 0xFF) + blendA * ((*srcColorsA >> 0x00) & 0xFF);
+
+        *paletteColor = PACK_RGB888((uint8)(r >> 8), (uint8)(g >> 8), (uint8)(b >> 8));
+
+        srcColorsA++;
+        srcColorsB++;
+        ++paletteColor;
+    }
+}
 #endif
 
-void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex)
+void RSDK::SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex)
 {
     if (destBankID >= PALETTE_BANK_COUNT || srcBankA >= PALETTE_BANK_COUNT || srcBankB >= PALETTE_BANK_COUNT)
         return;
@@ -59,48 +83,18 @@ void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blen
     if (startIndex >= endIndex)
         return;
 
-    uint32 blendA         = 0xFF - blendAmount;
-    uint16 *dst         = &fullPalette[destBankID][startIndex];
-    for (int32 l = startIndex; l <= endIndex; ++l) {
-        uint32 clrA = GetPaletteEntry(srcBankA, l);
-        uint32 clrB = GetPaletteEntry(srcBankB, l);
-        int32 rA    = (clrA >> 16) & 0xFF;
-        int32 rB    = (clrB >> 16) & 0xFF;
-        int32 gA    = (clrA >> 8) & 0xFF;
-        int32 gB    = (clrB >> 8) & 0xFF;
-        int32 bA    = (clrA >> 0) & 0xFF;
-        int32 bB    = (clrB >> 0) & 0xFF;
-        
-        *dst = PACK_RGB888((uint8)((uint16)(rB * blendAmount + blendA * rA) >> 8),
-                                (uint8)((uint16)(gB * blendAmount + blendA * gA) >> 8),
-                                (uint8)((uint16)(bB * blendAmount + blendA * bA) >> 8));
+    uint32 blendA        = 0xFF - blendAmount;
+    uint16 *paletteColor = &fullPalette[destBankID][startIndex];
+    for (int32 i = startIndex; i <= endIndex; ++i) {
+        uint32 clrA = GetPaletteEntry(srcBankA, i);
+        uint32 clrB = GetPaletteEntry(srcBankB, i);
 
-        ++dst;
+        int32 r = blendAmount * ((clrB >> 0x10) & 0xFF) + blendA * ((clrA >> 0x10) & 0xFF);
+        int32 g = blendAmount * ((clrB >> 0x08) & 0xFF) + blendA * ((clrA >> 0x08) & 0xFF);
+        int32 b = blendAmount * ((clrB >> 0x00) & 0xFF) + blendA * ((clrA >> 0x00) & 0xFF);
+
+        *paletteColor = PACK_RGB888((uint8)(r >> 8), (uint8)(g >> 8), (uint8)(b >> 8));
+
+        ++paletteColor;
     }
 }
-
-#if RETRO_REV02
-void BlendColors(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 blendAmount, int32 startIndex, int32 count)
-{
-
-    if (bankID >= PALETTE_BANK_COUNT || !colorsA || !colorsB)
-        return;
-
-    blendAmount = clampVal(blendAmount, 0x00, 0xFF);
-
-    uint8 blendA       = 0xFF - blendAmount;
-    uint16 *palettePtr = &fullPalette[bankID][startIndex];
-    for (int32 i = startIndex; i < startIndex + count; ++i) {
-        // bgrx formatted array
-        int32 r = blendAmount * colorsB[2] + blendA * colorsA[2];
-        int32 g = blendAmount * colorsB[1] + blendA * colorsA[1];
-        int32 b = blendAmount * colorsB[0] + blendA * colorsA[0];
-
-        *palettePtr = PACK_RGB888((uint8)(r >> 8), (uint8)(g >> 8), (uint8)(b >> 8));
-
-        colorsA += 4;
-        colorsB += 4;
-        ++palettePtr;
-    }
-}
-#endif

@@ -1,6 +1,9 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+namespace RSDK
+{
+
 #define TILE_COUNT    (0x400)
 #define TILE_SIZE     (0x10)
 #define TILE_DATASIZE (TILE_SIZE * TILE_SIZE)
@@ -116,7 +119,7 @@ struct CollisionMask {
 extern ScanlineInfo *scanlines;
 extern TileLayer tileLayers[LAYER_COUNT];
 
-extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per direction
+extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; // 1024 * 1 per direction
 
 #if RETRO_REV02
 extern bool32 forceHardReset;
@@ -141,7 +144,8 @@ void ProcessParallax(TileLayer *layer);
 void ProcessSceneTimer();
 
 void SetScene(const char *categoryName, const char *sceneName);
-inline void InitSceneLoad() {
+inline void InitSceneLoad()
+{
     sceneInfo.state = ENGINESTATE_LOAD;
 
     if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
@@ -161,10 +165,7 @@ inline bool32 CheckValidStage()
     return sceneInfo.listPos >= list->sceneOffsetStart && sceneInfo.listPos <= list->sceneOffsetEnd;
 }
 
-inline bool32 CheckSceneFolder(const char *folderName)
-{
-    return strcmp(folderName, sceneInfo.listData[sceneInfo.listPos].folder) == 0;
-}
+inline bool32 CheckSceneFolder(const char *folderName) { return strcmp(folderName, sceneInfo.listData[sceneInfo.listPos].folder) == 0; }
 
 inline uint16 GetTileLayerID(const char *name)
 {
@@ -218,7 +219,7 @@ inline void SetTileInfo(uint16 layerID, int32 tileX, int32 tileY, uint16 tile)
 }
 
 inline int32 GetTileAngle(uint16 tile, uint8 cLayer, uint8 cMode)
-{ 
+{
     switch (cMode) {
         default: return 0;
         case CMODE_FLOOR: return collisionMasks[cLayer & 1][tile & 0xFFF].floorAngle;
@@ -241,7 +242,8 @@ inline void SetTileAngle(uint16 tile, uint8 cLayer, uint8 cMode, int32 value)
 inline uint8 GetTileFlags(uint16 tile, uint8 cLayer) { return collisionMasks[cLayer & 1][tile & 0x3FF].flag; }
 inline void SetTileFlags(uint16 tile, uint8 cLayer, uint8 flags) { collisionMasks[cLayer & 1][tile & 0x3FF].flag = flags; }
 
-void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcLayerID, int32 startX2, int32 startY2, int32 countX, int32 countY);
+void CopyTileLayout(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
+                    int32 countY);
 
 inline void CopyTile(uint16 dest, uint16 src, uint16 count)
 {
@@ -283,5 +285,7 @@ void DrawLayerHScroll(TileLayer *layer);
 void DrawLayerVScroll(TileLayer *layer);
 void DrawLayerRotozoom(TileLayer *layer);
 void DrawLayerBasic(TileLayer *layer);
+
+} // namespace RSDK
 
 #endif

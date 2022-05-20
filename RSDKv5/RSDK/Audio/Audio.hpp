@@ -1,6 +1,9 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
+namespace RSDK
+{
+
 #define SFX_COUNT     (0x100)
 #define CHANNEL_COUNT (0x10)
 
@@ -38,7 +41,8 @@ enum ChannelStates { CHANNEL_IDLE, CHANNEL_SFX, CHANNEL_STREAM, CHANNEL_LOADING_
 extern SFXInfo sfxList[SFX_COUNT];
 extern ChannelInfo channels[CHANNEL_COUNT];
 
-class AudioDeviceBase {
+class AudioDeviceBase
+{
 public:
     static bool32 Init();
     static void Release();
@@ -155,5 +159,7 @@ void ClearStageSfx();
 #elif RETRO_AUDIODEVICE_SDL2
 #include "SDL2/SDL2AudioDevice.hpp"
 #endif
+
+} // namespace RSDK
 
 #endif

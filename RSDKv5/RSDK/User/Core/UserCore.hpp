@@ -76,9 +76,9 @@ struct UserCore {
     virtual int32 ShowExtensionOverlay(byte overlay) { return 0; }
 #if RETRO_VER_EGS
     virtual void EpicUnknown1(void) {}
-    virtual bool32 ShowCheckoutPage(int a1) { return false; }
-    virtual int32 ShowEncorePage(int a1) { return 0; }
-    virtual void EpicUnknown4(int a1) {}
+    virtual bool32 ShowCheckoutPage(int32 a1) { return false; }
+    virtual int32 ShowEncorePage(int32 a1) { return 0; }
+    virtual void EpicUnknown4(int32 a1) {}
     virtual void RegisterHIDDevice(void) {}
     virtual void EpicUnknown6(void) {}
 #endif
@@ -113,16 +113,16 @@ inline int32 ShowExtensionOverlay(byte overlay) { return userCore->ShowExtension
 bool32 GetConfirmButtonFlip();
 void LaunchManual();
 void ExitGame();
-int GetDefaultGamepadType();
-int ShowExtensionOverlay(byte overlay);
+int32 GetDefaultGamepadType();
+int32 ShowExtensionOverlay(byte overlay);
 #endif
 
 bool32 GetXYButtonFlip();
 
 #if RETRO_VER_EGS
-inline bool32 ShowCheckoutPage(int a1) { return userCore->ShowCheckoutPage(a1); }
-inline int32 ShowEncorePage(int a1) { return userCore->ShowEncorePage(a1); }
-inline void EpicUnknown4(int a1) { userCore->EpicUnknown4(a1); }
+inline bool32 ShowCheckoutPage(int32 a1) { return userCore->ShowCheckoutPage(a1); }
+inline int32 ShowEncorePage(int32 a1) { return userCore->ShowEncorePage(a1); }
+inline void EpicUnknown4(int32 a1) { userCore->EpicUnknown4(a1); }
 inline void RegisterHIDDevice(void) { userCore->RegisterHIDDevice(); }
 #endif
 
@@ -192,7 +192,7 @@ void SetVideoSetting(int32 id, int32 value);
 void LoadSettingsINI();
 void SaveSettingsINI(bool32 writeToFile);
 
-inline void writeText(FileIO *file, const char *string, ...)
+inline void WriteText(FileIO *file, const char *string, ...)
 {
     // make the full string
     char buffer[0x100];

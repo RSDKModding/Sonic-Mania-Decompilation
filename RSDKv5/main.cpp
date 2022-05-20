@@ -31,9 +31,9 @@ static void initNxLink()
 #if RETRO_RENDERDEVICE_DIRECTX9
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nShowCmd)
 {
-    RenderDevice::hInstance     = hInstance;
-    RenderDevice::hPrevInstance = hPrevInstance;
-    RenderDevice::nShowCmd      = nShowCmd;
+    RSDK::RenderDevice::hInstance     = hInstance;
+    RSDK::RenderDevice::hPrevInstance = hPrevInstance;
+    RSDK::RenderDevice::nShowCmd      = nShowCmd;
 
     return RSDK_main(1, &lpCmdLine, RSDK::LinkGameLogic);
 }
@@ -49,9 +49,9 @@ int RSDK_main(int argc, char **argv, void *linkLogicPtr)
     initNxLink();
 #endif
 
-    linkGameLogic = (LogicLinkHandle)linkLogicPtr;
+    RSDK::linkGameLogic = (RSDK::LogicLinkHandle)linkLogicPtr;
 
-    int exitCode = RunRetroEngine(argc, argv);
+    int exitCode = RSDK::RunRetroEngine(argc, argv);
 
 #ifdef __SWITCH__
     socketExit();

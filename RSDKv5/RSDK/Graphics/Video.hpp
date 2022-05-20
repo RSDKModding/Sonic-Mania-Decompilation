@@ -1,6 +1,9 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
+namespace RSDK
+{
+
 struct VideoManager {
     static FileInfo file;
 
@@ -21,5 +24,7 @@ struct VideoManager {
 
 bool32 LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)(void));
 void ProcessVideo();
+
+} // namespace RSDK
 
 #endif // VIDEO_H

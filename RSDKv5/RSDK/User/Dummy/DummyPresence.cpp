@@ -1,5 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 #if RETRO_REV02
 void RSDK::SKU::DummyRichPresence::SetPresence(int32 id, String *message)
 {

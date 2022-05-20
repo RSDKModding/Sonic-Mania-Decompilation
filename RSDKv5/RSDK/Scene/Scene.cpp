@@ -1,24 +1,26 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-uint8 tilesetPixels[TILESET_SIZE * 4];
+using namespace RSDK;
 
-ScanlineInfo *scanlines = NULL;
-TileLayer tileLayers[LAYER_COUNT];
-CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4];
+uint8 RSDK::tilesetPixels[TILESET_SIZE * 4];
+
+ScanlineInfo *RSDK::scanlines = NULL;
+TileLayer RSDK::tileLayers[LAYER_COUNT];
+CollisionMask RSDK::collisionMasks[CPATH_COUNT][TILE_COUNT * 4];
 
 #if RETRO_REV02
-bool32 forceHardReset = false;
+bool32 RSDK::forceHardReset = false;
 #endif
-char currentSceneFolder[0x10];
-char currentSceneID[0x10];
+char RSDK::currentSceneFolder[0x10];
+char RSDK::currentSceneID[0x10];
 
-SceneInfo sceneInfo;
+SceneInfo RSDK::sceneInfo;
 
-void LoadScene()
+void RSDK::LoadScene()
 {
 #if RETRO_USE_MOD_LOADER
     // run this before the game actually unloads all the objects & scene assets
-    RSDK::RunModCallbacks(RSDK::MODCB_STAGEUNLOAD, NULL);
+    RunModCallbacks(MODCB_STAGEUNLOAD, NULL);
 #endif
 
     sceneInfo.timeCounter  = 0;
@@ -39,7 +41,7 @@ void LoadScene()
 
 #if RETRO_REV02
     // Unload debug values
-    RSDK::ClearViewableVariables();
+    ClearViewableVariables();
 
     // unload tint table
     tintLookupTable = NULL;
@@ -55,9 +57,9 @@ void LoadScene()
 #if RETRO_REV02
     if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0 && !forceHardReset) {
         // Reload
-        RSDK::ClearUnusedStorage(RSDK::DATASET_STG);
+        ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
-        RSDK::PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name, sceneInfo.listData[sceneInfo.listPos].name,
+        PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name, sceneInfo.listData[sceneInfo.listPos].name,
                  sceneInfo.listData[sceneInfo.listPos].filter);
         return;
     }
@@ -66,61 +68,36 @@ void LoadScene()
 #if !RETRO_REV02
     if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0) {
         // Reload
-        RSDK::ClearUnusedStorage(RSDK::DATASET_STG);
+        ClearUnusedStorage(DATASET_STG);
         PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[sceneInfo.listPos].name);
         return;
     }
 #endif
 
-    // Unload Models
-    for (int32 m = 0; m < MODEL_MAX; ++m) {
-        if (modelList[m].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(modelList[m]);
-            modelList[m].scope = SCOPE_NONE;
-        }
-    }
+    // Unload stage 3DScenes & models
+    Clear3DScenes();
 
-    // Unload 3D Scenes
-    for (int32 s = 0; s < SCENE3D_MAX; ++s) {
-        if (scene3DList[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(scene3DList[s]);
-            scene3DList[s].scope = SCOPE_NONE;
-        }
-    }
+    // Unload stage sprite animations
+    ClearSpriteAnimations();
 
-    // Unload animations
-    for (int32 s = 0; s < SPRFILE_COUNT; ++s) {
-        if (RSDK::spriteAnimationList[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(RSDK::spriteAnimationList[s]);
-            RSDK::spriteAnimationList[s].scope = SCOPE_NONE;
-        }
-    }
-
-    // Unload sprite sheets
-    for (int32 s = 0; s < SURFACE_MAX; ++s) {
-        if (gfxSurface[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(gfxSurface[s]);
-            gfxSurface[s].scope = SCOPE_NONE;
-        }
-    }
+    // Unload stage surfaces
+    ClearGfxSurfaces();
 
     // Unload stage sfx & audio channels
     ClearStageSfx();
 
-    // Unload static object classes
-    for (int32 o = 0; o < sceneInfo.classCount; ++o) {
-        if (objectClassList[stageObjectIDs[o]].staticVars) {
-            *objectClassList[stageObjectIDs[o]].staticVars = NULL;
-        }
-    }
+    // Unload stage objects
+    ClearStageObjects();
 
+    // Clear draw groups
     for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) {
         MEM_ZERO(drawGroups[l]);
         drawGroups[l].sorted = false;
     }
 
-    RSDK::ClearUnusedStorage(RSDK::DATASET_STG);
-    RSDK::ClearUnusedStorage(RSDK::DATASET_SFX);
+    // Clear stage storage
+    ClearUnusedStorage(DATASET_STG);
+    ClearUnusedStorage(DATASET_SFX);
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
         screens[s].position.x = 0;
@@ -133,11 +110,11 @@ void LoadScene()
 #if RETRO_REV02
     forceHardReset   = false;
     sceneInfo.filter = sceneEntry->filter;
-    RSDK::PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
+    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
 #endif
 
 #if !RETRO_REV02
-    RSDK::PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
+    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
 #endif
 
     char fullFilePath[0x40];
@@ -188,7 +165,7 @@ void LoadScene()
         for (int32 o = 0; o < sceneInfo.classCount; ++o) {
             ObjectClass *objClass = &objectClassList[stageObjectIDs[o]];
             if (objClass->staticVars && !*objClass->staticVars) {
-                RSDK::AllocateStorage(objClass->staticClassSize, (void **)objClass->staticVars, RSDK::DATASET_STG, true);
+                AllocateStorage(objClass->staticClassSize, (void **)objClass->staticVars, DATASET_STG, true);
                 LoadStaticVariables((uint8 *)*objClass->staticVars, objClass->hash, sizeof(Object));
 
                 (*objClass->staticVars)->classID = o;
@@ -229,7 +206,7 @@ void LoadScene()
     sprintf(fullFilePath, "Data/Stages/%s/16x16Tiles.gif", currentSceneFolder);
     LoadStageGIF(fullFilePath);
 }
-void LoadSceneFile()
+void RSDK::LoadSceneFile()
 {
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
 
@@ -237,7 +214,7 @@ void LoadSceneFile()
     char buffer[0x40];
     sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->id);
 
-    RSDK::dataStorage[RSDK::DATASET_TMP].usedStorage = 0;
+    dataStorage[DATASET_TMP].usedStorage = 0;
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].size.y;
 
@@ -247,14 +224,14 @@ void LoadSceneFile()
     memset(tileLayers, 0, LAYER_COUNT * sizeof(TileLayer));
 
     // Reload palette
-    for (int32 i = 0; i < 8; ++i) {
+    for (int32 b = 0; b < 8; ++b) {
         for (int32 r = 0; r < 0x10; ++r) {
-            if ((activeGlobalRows[i] >> r & 1)) {
-                for (int32 c = 0; c < 0x10; ++c) fullPalette[i][(r << 4) + c] = globalPalette[i][(r << 4) + c];
+            if ((activeGlobalRows[b] >> r & 1)) {
+                for (int32 c = 0; c < 0x10; ++c) fullPalette[b][(r << 4) + c] = globalPalette[b][(r << 4) + c];
             }
 
-            if ((activeStageRows[i] >> r & 1)) {
-                for (int32 c = 0; c < 0x10; ++c) fullPalette[i][(r << 4) + c] = stagePalette[i][(r << 4) + c];
+            if ((activeStageRows[b] >> r & 1)) {
+                for (int32 c = 0; c < 0x10; ++c) fullPalette[b][(r << 4) + c] = stagePalette[b][(r << 4) + c];
             }
         }
     }
@@ -316,15 +293,14 @@ void LoadSceneFile()
 
             layer->layout = NULL;
             if (layer->xsize || layer->ysize) {
-                RSDK::AllocateStorage(sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift), (void **)&layer->layout,
-                                      RSDK::DATASET_STG, true);
+                AllocateStorage(sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift), (void **)&layer->layout, DATASET_STG, true);
                 memset(layer->layout, 0xFF, sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift));
             }
 
             int32 size = layer->xsize;
             if (size <= layer->ysize)
                 size = layer->ysize;
-            RSDK::AllocateStorage(TILE_SIZE * size, (void **)&layer->lineScroll, RSDK::DATASET_STG, true);
+            AllocateStorage(TILE_SIZE * size, (void **)&layer->lineScroll, DATASET_STG, true);
 
             layer->scrollInfoCount = ReadInt16(&info);
             for (int32 s = 0; s < layer->scrollInfoCount; ++s) {
@@ -334,7 +310,7 @@ void LoadSceneFile()
                 layer->scrollInfo[s].tilePos        = 0;
                 layer->scrollInfo[s].deform         = ReadInt8(&info);
 
-                // this isn't used anywhere in-engine, and is never set in the files. so as you might expect no one knows what it is for!
+                // this isn't used anywhere in-engine, and is never set in the files. so as you might expect, no one knows what it is for!
                 layer->scrollInfo[s].unknown = ReadInt8(&info);
             }
 
@@ -360,11 +336,11 @@ void LoadSceneFile()
         // Objects
         uint8 objectCount = ReadInt8(&info);
         editableVarList   = NULL;
-        RSDK::AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, RSDK::DATASET_TMP, false);
+        AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, DATASET_TMP, false);
 
 #if RETRO_REV02
         EntityBase *tempEntityList = NULL;
-        RSDK::AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&tempEntityList, RSDK::DATASET_TMP, true);
+        AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&tempEntityList, DATASET_TMP, true);
 #endif
 
         for (int32 i = 0; i < objectCount; ++i) {
@@ -384,14 +360,14 @@ void LoadSceneFile()
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (!classID && i >= TYPE_DEFAULT_COUNT)
-                RSDK::PrintLog(PRINT_NORMAL, "Object Class %d is unimplimented!", i);
+                PrintLog(PRINT_NORMAL, "Object Class %d is unimplimented!", i);
 #endif
 
             ObjectClass *objectClass = &objectClassList[stageObjectIDs[classID]];
 
             uint8 varCount           = ReadInt8(&info);
             EditableVarInfo *varList = NULL;
-            RSDK::AllocateStorage(sizeof(EditableVarInfo) * varCount, (void **)&varList, RSDK::DATASET_TMP, false);
+            AllocateStorage(sizeof(EditableVarInfo) * varCount, (void **)&varList, DATASET_TMP, false);
             editableVarCount = 0;
             if (classID) {
 #if RETRO_REV02
@@ -399,7 +375,7 @@ void LoadSceneFile()
 #endif
 
 #if RETRO_USE_MOD_LOADER
-                RSDK::currentObjectID = classID;
+                currentObjectID = classID;
 #endif
 
                 if (objectClass->serialize)
@@ -479,7 +455,7 @@ void LoadSceneFile()
                                 ReadBytes(&info, tempBuffer, sizeof(int32));
                             break;
 
-                        // not entirely sure on specifics here, should prolly be int32 always but the specific type implies it may not always be
+                        // not entirely sure on specifics here, should always be sizeof(int32) but it having a unique type implies it may not always be
                         case VAR_ENUM:
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int32));
@@ -492,13 +468,6 @@ void LoadSceneFile()
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(bool32));
                             else
                                 ReadBytes(&info, tempBuffer, sizeof(bool32));
-                            break;
-
-                        case VAR_COLOR:
-                            if (varList[v].active)
-                                ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(color));
-                            else
-                                ReadBytes(&info, tempBuffer, sizeof(color));
                             break;
 
                         case VAR_STRING:
@@ -533,6 +502,13 @@ void LoadSceneFile()
                             else {
                                 ReadBytes(&info, tempBuffer, sizeof(float));
                             }
+                            break;
+
+                        case VAR_COLOR:
+                            if (varList[v].active)
+                                ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(color));
+                            else
+                                ReadBytes(&info, tempBuffer, sizeof(color));
                             break;
                     }
                 }
@@ -575,7 +551,7 @@ void LoadSceneFile()
         CloseFile(&info);
     }
 }
-void LoadTileConfig(char *filepath)
+void RSDK::LoadTileConfig(char *filepath)
 {
     FileInfo info;
     InitFileInfo(&info);
@@ -811,11 +787,11 @@ void LoadTileConfig(char *filepath)
         CloseFile(&info);
     }
 }
-void LoadStageGIF(char *filepath)
+void RSDK::LoadStageGIF(char *filepath)
 {
-    RSDK::ImageGIF tileset;
+    ImageGIF tileset;
 
-    if (tileset.Load(filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x400 * TILE_SIZE) {
+    if (tileset.Load(filepath, true) && tileset.width == TILE_SIZE && tileset.height <= TILE_COUNT * TILE_SIZE) {
         tileset.pixels = tilesetPixels;
         tileset.Load(NULL, false);
 
@@ -838,6 +814,7 @@ void LoadStageGIF(char *filepath)
             for (int32 r = 0; r < TILE_SIZE; ++r) {
                 *dstPixels-- = *srcPixels++;
             }
+
             dstPixels += (TILE_SIZE * 2);
         }
 
@@ -849,6 +826,7 @@ void LoadStageGIF(char *filepath)
                 for (int32 x = 0; x < TILE_SIZE; ++x) {
                     *dstPixels++ = *srcPixels++;
                 }
+
                 dstPixels -= (TILE_SIZE * 2);
             }
         }
@@ -860,6 +838,7 @@ void LoadStageGIF(char *filepath)
             for (int32 r = 0; r < TILE_SIZE; ++r) {
                 *dstPixels-- = *srcPixels++;
             }
+
             dstPixels += (TILE_SIZE * 2);
         }
 
@@ -869,7 +848,7 @@ void LoadStageGIF(char *filepath)
     }
 }
 
-void ProcessParallaxAutoScroll()
+void RSDK::ProcessParallaxAutoScroll()
 {
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = &tileLayers[l];
@@ -881,7 +860,7 @@ void ProcessParallaxAutoScroll()
         }
     }
 }
-void ProcessParallax(TileLayer *layer)
+void RSDK::ProcessParallax(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
@@ -1080,7 +1059,7 @@ void ProcessParallax(TileLayer *layer)
     }
 }
 
-void ProcessSceneTimer()
+void RSDK::ProcessSceneTimer()
 {
     if (sceneInfo.timeEnabled) {
         sceneInfo.timeCounter += 100;
@@ -1088,32 +1067,33 @@ void ProcessSceneTimer()
         if (sceneInfo.timeCounter >= 6000) {
             sceneInfo.timeCounter -= 6025;
 
-            if (++sceneInfo.seconds > 59) {
+            if (++sceneInfo.seconds >= 60) {
                 sceneInfo.seconds = 0;
 
-                sceneInfo.minutes++;
-                if (sceneInfo.minutes > 59)
+                if (++sceneInfo.minutes >= 60)
                     sceneInfo.minutes = 0;
             }
         }
 
-        sceneInfo.milliseconds = sceneInfo.timeCounter / RSDK::videoSettings.refreshRate;
+        sceneInfo.milliseconds = sceneInfo.timeCounter / videoSettings.refreshRate;
     }
 }
 
-void SetScene(const char *categoryName, const char *sceneName)
+void RSDK::SetScene(const char *categoryName, const char *sceneName)
 {
-    RETRO_HASH_MD5(hash);
-    GEN_HASH_MD5(categoryName, hash);
+    RETRO_HASH_MD5(catHash);
+    GEN_HASH_MD5(categoryName, catHash);
+
+    RETRO_HASH_MD5(scnHash);
+    GEN_HASH_MD5(sceneName, scnHash);
 
     for (int32 i = 0; i < sceneInfo.categoryCount; ++i) {
-        if (HASH_MATCH_MD5(sceneInfo.listCategory[i].hash, hash)) {
+        if (HASH_MATCH_MD5(sceneInfo.listCategory[i].hash, catHash)) {
             sceneInfo.activeCategory = i;
             sceneInfo.listPos        = sceneInfo.listCategory[i].sceneOffsetStart;
-            GEN_HASH_MD5(sceneName, hash);
 
             for (int32 s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
-                if (HASH_MATCH_MD5(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, hash)) {
+                if (HASH_MATCH_MD5(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, scnHash)) {
                     sceneInfo.listPos = sceneInfo.listCategory[i].sceneOffsetStart + s;
                     break;
                 }
@@ -1124,30 +1104,31 @@ void SetScene(const char *categoryName, const char *sceneName)
     }
 }
 
-void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcLayerID, int32 startX2, int32 startY2, int32 countX, int32 countY)
+void RSDK::CopyTileLayout(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
+                          int32 countY)
 {
     if (dstLayerID < LAYER_COUNT && srcLayerID < LAYER_COUNT) {
         TileLayer *dstLayer = &tileLayers[dstLayerID];
         TileLayer *srcLayer = &tileLayers[srcLayerID];
 
-        if (startX1 >= 0 && startX1 < dstLayer->xsize && startY1 >= 0 && startY1 < dstLayer->ysize) {
-            if (startX2 >= 0 && startX2 < srcLayer->xsize && startY2 >= 0 && startY2 < srcLayer->ysize) {
-                if (startX1 + countX > dstLayer->xsize)
-                    countX = dstLayer->xsize - startX1;
+        if (dstStartX >= 0 && dstStartX < dstLayer->xsize && dstStartY >= 0 && dstStartY < dstLayer->ysize) {
+            if (srcStartX >= 0 && srcStartX < srcLayer->xsize && srcStartY >= 0 && srcStartY < srcLayer->ysize) {
+                if (dstStartX + countX > dstLayer->xsize)
+                    countX = dstLayer->xsize - dstStartX;
 
-                if (startY1 + countY > dstLayer->ysize)
-                    countY = dstLayer->ysize - startY1;
+                if (dstStartY + countY > dstLayer->ysize)
+                    countY = dstLayer->ysize - dstStartY;
 
-                if (startX2 + countX > srcLayer->xsize)
-                    countX = srcLayer->xsize - startX2;
+                if (srcStartX + countX > srcLayer->xsize)
+                    countX = srcLayer->xsize - srcStartX;
 
-                if (startY2 + countY > srcLayer->ysize)
-                    countY = srcLayer->ysize - startY2;
+                if (srcStartY + countY > srcLayer->ysize)
+                    countY = srcLayer->ysize - srcStartY;
 
                 for (int32 y = 0; y < countY; ++y) {
                     for (int32 x = 0; x < countX; ++x) {
-                        uint16 tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
-                        dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
+                        uint16 tile = srcLayer->layout[(x + srcStartX) + ((y + srcStartY) << srcLayer->widthShift)];
+                        dstLayer->layout[(x + dstStartX) + ((y + dstStartY) << dstLayer->widthShift)] = tile;
                     }
                 }
             }
@@ -1155,7 +1136,7 @@ void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcL
     }
 }
 
-void DrawLayerHScroll(TileLayer *layer)
+void RSDK::DrawLayerHScroll(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
@@ -1302,7 +1283,7 @@ void DrawLayerHScroll(TileLayer *layer)
         ++scanlinePtr;
     }
 }
-void DrawLayerVScroll(TileLayer *layer)
+void RSDK::DrawLayerVScroll(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
@@ -1437,7 +1418,7 @@ void DrawLayerVScroll(TileLayer *layer)
         frameBuffer++;
     }
 }
-void DrawLayerRotozoom(TileLayer *layer)
+void RSDK::DrawLayerRotozoom(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
@@ -1476,7 +1457,7 @@ void DrawLayerRotozoom(TileLayer *layer)
         ++scanlinePtr;
     }
 }
-void DrawLayerBasic(TileLayer *layer)
+void RSDK::DrawLayerBasic(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;

@@ -1,6 +1,9 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 
+namespace RSDK
+{
+
 #define PALETTE_BANK_COUNT (0x8)
 #define PALETTE_BANK_SIZE  (0x100)
 
@@ -96,9 +99,11 @@ inline void RotatePalette(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32
     }
 }
 
-void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
-void BlendColors(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 blendAmount, int32 startIndex, int32 count);
+void BlendColors(uint8 destBankID, uint32 *srcColorsA, uint32 *srcColorsB, int32 blendAmount, int32 startIndex, int32 count);
 #endif
+void SetPaletteFade(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
+
+} // namespace RSDK
 
 #endif

@@ -1,6 +1,9 @@
 #ifndef MATH_H
 #define MATH_H
 
+namespace RSDK
+{
+
 // not "math" but works best here
 #define intToVoid(x) (void *)(size_t)(x)
 #define voidToInt(x) (int)(size_t)(x)
@@ -140,5 +143,7 @@ inline int32 GetSeededRandomValue(int32 min, int32 max, int32 *randSeed)
     else
         return max;
 }
+
+} // namespace RSDK
 
 #endif // !MATH_H

@@ -1,5 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 #if RETRO_REV02
 int RSDK::SKU::DummyUserStorage::TryAuth()
 {
@@ -57,12 +59,12 @@ bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *
                 uLongf destLen = bufSize;
 
                 byte *compData = NULL;
-                RSDK::AllocateStorage(bufSize, (void **)&compData, RSDK::DATASET_TMP, false);
+                AllocateStorage(bufSize, (void **)&compData, DATASET_TMP, false);
                 memcpy(compData, buffer, bufSize);
 
                 uncompress((Bytef *)buffer, &destLen, compData, bufSize);
 
-                RSDK::RemoveStorageEntry((void **)&compData);
+                RemoveStorageEntry((void **)&compData);
             }
         }
 
@@ -88,14 +90,14 @@ bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *
     if (!noSaveActive) {
         if (compressData) {
             int *cbuf = NULL;
-            RSDK::AllocateStorage(size, (void **)&cbuf, RSDK::DATASET_TMP, false);
+            AllocateStorage(size, (void **)&cbuf, DATASET_TMP, false);
 
             uLongf clen = size;
             compress((Bytef *)cbuf, &clen, (Bytef *)buffer, (uLong)size);
 
             success = SaveUserFile(filename, cbuf, (uint32)clen);
 
-            RSDK::RemoveStorageEntry((void **)&cbuf);
+            RemoveStorageEntry((void **)&cbuf);
         }
         else {
             success = SaveUserFile(filename, buffer, size);

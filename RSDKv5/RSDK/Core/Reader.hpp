@@ -29,8 +29,11 @@ SDL_RWops *fOpen(const char *path, const char *mode);
 #include <zlib/zlib.h>
 #endif
 
-#define FILE_COUNT (0x1000)
-#define PACK_COUNT (4)
+namespace RSDK
+{
+
+#define DATAFILE_COUNT (0x1000)
+#define DATAPACK_COUNT (4)
 
 enum Scopes {
     SCOPE_NONE,
@@ -42,7 +45,7 @@ struct FileInfo {
     int32 fileSize;
     int32 externalFile;
     FileIO *file;
-    uint8 *fileData;
+    uint8 *fileBuffer;
     int32 readPos;
     int32 fileOffset;
     uint8 usingFileBuffer;
@@ -66,15 +69,15 @@ struct RSDKFileInfo {
 
 struct RSDKContainer {
     char name[0x100];
-    uint8 *dataPtr;
+    uint8 *fileBuffer;
     int32 fileCount;
 };
 
-extern RSDKFileInfo dataFiles[FILE_COUNT];
-extern RSDKContainer dataPacks[PACK_COUNT];
+extern RSDKFileInfo dataFileList[DATAFILE_COUNT];
+extern RSDKContainer dataPacks[DATAPACK_COUNT];
 
 extern uint8 dataPackCount;
-extern uint16 dataFileCount;
+extern uint16 dataFileListCount;
 
 extern char gameLogicName[0x200];
 
@@ -83,7 +86,7 @@ extern bool32 useDataFile;
 bool32 CheckDataFile(const char *filename, size_t fileOffset, bool32 useBuffer);
 bool32 OpenDataFile(FileInfo *info, const char *filename);
 
-enum FileModes { FMODE_NONE, FMODE_RB, FMODE_WB, FMODE_RB_PLUS, FMODE_4 };
+enum FileModes { FMODE_NONE, FMODE_RB, FMODE_WB, FMODE_RB_PLUS };
 
 static const char *openModes[3] = { "rb", "wb", "rb+" };
 
@@ -123,15 +126,14 @@ inline void Seek_Set(FileInfo *info, int32 count)
             SkipBytes(info, count);
         }
 
+        info->readPos = count;
         if (info->usingFileBuffer) {
-            //TODO: YELL AT RDC START SCREAMIN AAAAAAAAAAA!!!!!!!!!!
-            info->fileData -= info->readPos;
-            info->fileData += count;
+            uint8 *fileBuffer = (uint8 *)info->file;
+            info->fileBuffer  = &fileBuffer[info->readPos];
         }
         else {
-            fSeek(info->file, count + info->fileOffset, SEEK_SET);
+            fSeek(info->file, info->fileOffset + info->readPos, SEEK_SET);
         }
-        info->readPos = count;
     }
 }
 
@@ -143,7 +145,7 @@ inline void Seek_Cur(FileInfo *info, int32 count)
         SkipBytes(info, count);
 
     if (info->usingFileBuffer) {
-        info->fileData += count;
+        info->fileBuffer += count;
     }
     else {
         fSeek(info->file, count, SEEK_CUR);
@@ -156,8 +158,8 @@ inline size_t ReadBytes(FileInfo *info, void *data, int32 count)
 
     if (info->usingFileBuffer) {
         bytesRead = count;
-        memcpy(data, info->fileData, count);
-        info->fileData += count;
+        memcpy(data, info->fileBuffer, count);
+        info->fileBuffer += count;
     }
     else {
         bytesRead = fRead(data, 1, count, info->file);
@@ -177,8 +179,8 @@ inline uint8 ReadInt8(FileInfo *info)
 
     if (info->usingFileBuffer) {
         bytesRead = sizeof(int8);
-        result    = *info->fileData;
-        info->fileData++;
+        result    = *info->fileBuffer;
+        info->fileBuffer += sizeof(int8);
     }
     else {
         bytesRead = fRead(&result, 1, sizeof(int8), info->file);
@@ -198,8 +200,8 @@ inline int16 ReadInt16(FileInfo *info)
 
     if (info->usingFileBuffer) {
         bytesRead = sizeof(int16);
-        result    = *(int16 *)info->fileData;
-        info->fileData += sizeof(int16);
+        result    = *(int16 *)info->fileBuffer;
+        info->fileBuffer += sizeof(int16);
     }
     else {
         bytesRead = fRead(&result, 1, sizeof(int16), info->file);
@@ -219,8 +221,8 @@ inline int32 ReadInt32(FileInfo *info, bool32 swapEndian)
 
     if (info->usingFileBuffer) {
         bytesRead = sizeof(int32);
-        result    = *(int32 *)info->fileData;
-        info->fileData += sizeof(int32);
+        result    = *(int32 *)info->fileBuffer;
+        info->fileBuffer += sizeof(int32);
     }
     else {
         bytesRead = fRead(&result, 1, sizeof(int32), info->file);
@@ -233,8 +235,8 @@ inline int32 ReadInt32(FileInfo *info, bool32 swapEndian)
         byte bytes[sizeof(int32)];
         memcpy(bytes, &result, sizeof(int32));
 
-        int max = sizeof(int32) - 1;
-        for (int i = 0; i < sizeof(int32) / 2; ++i) {
+        int32 max = sizeof(int32) - 1;
+        for (int32 i = 0; i < sizeof(int32) / 2; ++i) {
             byte store     = bytes[i];
             bytes[i]       = bytes[max - i];
             bytes[max - i] = store;
@@ -252,8 +254,8 @@ inline int64 ReadInt64(FileInfo *info)
 
     if (info->usingFileBuffer) {
         bytesRead = sizeof(int64);
-        result    = *(int64 *)info->fileData;
-        info->fileData += sizeof(int64);
+        result    = *(int64 *)info->fileBuffer;
+        info->fileBuffer += sizeof(int64);
     }
     else {
         bytesRead = fRead(&result, 1, sizeof(int64), info->file);
@@ -273,8 +275,8 @@ inline float ReadSingle(FileInfo *info)
 
     if (info->usingFileBuffer) {
         bytesRead = sizeof(float);
-        result    = *(float *)info->fileData;
-        info->fileData += sizeof(float);
+        result    = *(float *)info->fileBuffer;
+        info->fileBuffer += sizeof(float);
     }
     else {
         bytesRead = fRead(&result, 1, sizeof(float), info->file);
@@ -304,13 +306,13 @@ inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
     uLongf destLen = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);
-    RSDK::AllocateStorage((int32)destLen, (void **)buffer, RSDK::DATASET_TMP, false);
+    AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
+    AllocateStorage((int32)destLen, (void **)buffer, DATASET_TMP, false);
     ReadBytes(info, compData, (int32)complen);
 
     uncompress(*buffer, &destLen, compData, complen);
 
-    RSDK::RemoveStorageEntry((void **)&compData);
+    RemoveStorageEntry((void **)&compData);
 
     return (int32)destLen;
 }
@@ -320,12 +322,12 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
     if (!buffer)
         return 0;
 
-    uLongf complen = cSize;
-    uint decompLE  = size;
-    uLongf destLen = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+    uLongf complen  = cSize;
+    uint32 decompLE = size;
+    uLongf destLen  = (uint32)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);
+    AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
     ReadBytes(info, compData, (int32)complen);
 
     uncompress(*buffer, &destLen, compData, complen);
@@ -345,5 +347,15 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
     *cBuffer = NULL;
     return (int32)destLen;
 }
+
+inline void ClearDataFiles()
+{
+    // Unload animations
+    for (int32 f = 0; f < DATAFILE_COUNT; ++f) {
+        HASH_CLEAR_MD5(dataFileList[f].hash);
+    }
+}
+
+} // namespace RSDK
 
 #endif

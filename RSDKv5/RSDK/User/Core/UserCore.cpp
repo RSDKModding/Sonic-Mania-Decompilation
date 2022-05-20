@@ -1,13 +1,15 @@
 #include "RSDK/Core/RetroEngine.hpp"
 #include "zlib/zlib.h"
 
+using namespace RSDK;
+
 #if RETRO_REV02
-RSDK::SKU::UserCore *RSDK::SKU::userCore = NULL;
+SKU::UserCore *RSDK::SKU::userCore = NULL;
 #endif
 
 bool32 RSDK::changedVideoSettings = false;
-RSDK::VideoSettings RSDK::videoSettings;
-RSDK::VideoSettings RSDK::videoSettingsBackup;
+VideoSettings RSDK::videoSettings;
+VideoSettings RSDK::videoSettingsBackup;
 
 void RSDK::SKU::InitUserData()
 {
@@ -101,21 +103,21 @@ void RSDK::SKU::InitUserData()
     RegisterAchievement("ACH_MMZ", "Collect 'Em All", "Gotta gacha 'em all");
     RegisterAchievement("ACH_TMZ", "Professional Hedgehog", "That elusive perfect run, only a professional can achieve");
 
-    int achievementsRAM[0x100];
-    memset(achievementsRAM, 0, 0x100 * sizeof(int));
+    int32 achievementsRAM[0x100];
+    memset(achievementsRAM, 0, 0x100 * sizeof(int32));
     bool32 loaded = false;
 #if RETRO_REV02
-    loaded = userStorage->TryLoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL);
+    loaded = userStorage->TryLoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32), NULL);
 #else
-    loaded               = LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
+    loaded               = LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
 #endif
-    for (int i = 0; i < (int)achievementList.size(); ++i) {
+    for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
         achievementList[i].achieved = achievementsRAM[i];
     }
 
     leaderboardList.clear();
-    int leaderboardsRAM[0x200];
-    memset(leaderboardsRAM, 0, 0x200 * sizeof(int));
+    int32 leaderboardsRAM[0x200];
+    memset(leaderboardsRAM, 0, 0x200 * sizeof(int32));
 #if RETRO_REV02
     loaded = userStorage->TryLoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL);
 #else
@@ -123,11 +125,11 @@ void RSDK::SKU::InitUserData()
 #endif
     if (loaded) {
         int32 pos = 1;
-        for (int i = 0; i < leaderboardsRAM[0]; ++i) {
+        for (int32 i = 0; i < leaderboardsRAM[0]; ++i) {
             leaderboardList.push_back(LeaderboardInfo());
-            int len = leaderboardsRAM[pos++];
+            int32 len = leaderboardsRAM[pos++];
             memcpy(leaderboardList[i].name, &leaderboardsRAM[pos], len);
-            int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
+            int32 size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
             pos += size;
             leaderboardList[i].score = leaderboardsRAM[pos++];
         }
@@ -144,7 +146,7 @@ void RSDK::SKU::InitUserData()
         uint32 statCount = *((uint32 *)statsRAM);
         int32 pos        = sizeof(uint32);
 
-        for (int i = 0; i < statCount; ++i) {
+        for (int32 i = 0; i < statCount; ++i) {
             StatInfo stat;
             memcpy(stat.data, &statsRAM[pos], sizeof(stat.data));
             pos += sizeof(stat.data);
@@ -196,26 +198,26 @@ void RSDK::SKU::ReleaseUserData()
 
 void RSDK::SKU::SaveUserData()
 {
-    int achievementsRAM[0x100];
-    memset(achievementsRAM, 0, 0x100 * sizeof(int));
-    for (int i = 0; i < (int)achievementList.size(); ++i) {
+    int32 achievementsRAM[0x100];
+    memset(achievementsRAM, 0, 0x100 * sizeof(int32));
+    for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
         achievementsRAM[i] = achievementList[i].achieved;
     }
 #if RETRO_REV02
-    userStorage->TrySaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL, false);
+    userStorage->TrySaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32), NULL, false);
 #else
-    SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
+    SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
 #endif
 
     int32 leaderboardsRAM[0x100];
     memset(leaderboardsRAM, 0, 0x100 * sizeof(int32));
-    leaderboardsRAM[0] = (int)leaderboardList.size();
+    leaderboardsRAM[0] = (int32)leaderboardList.size();
     int32 pos          = 1;
-    for (int32 i = 0; i < (int)leaderboardList.size(); ++i) {
+    for (int32 i = 0; i < (int32)leaderboardList.size(); ++i) {
         int32 len              = (int32)strlen(leaderboardList[i].name);
         leaderboardsRAM[pos++] = len;
         memcpy(&leaderboardsRAM[pos], leaderboardList[i].name, len);
-        int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
+        int32 size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
         pos += size;
         leaderboardsRAM[pos++] = leaderboardList[i].score;
     }
@@ -228,10 +230,10 @@ void RSDK::SKU::SaveUserData()
     uint8 *statsRAM = new uint8[0x100 * sizeof(StatInfo)];
     memset(statsRAM, 0, 0x100 * sizeof(StatInfo));
 
-    ((uint32 *)statsRAM)[0] = (int)statList.size();
+    ((uint32 *)statsRAM)[0] = (int32)statList.size();
 
     pos = sizeof(uint32);
-    for (int i = 0; i < (int)statList.size(); ++i) {
+    for (int32 i = 0; i < (int32)statList.size(); ++i) {
         memcpy(&statsRAM[pos], statList[i].data, sizeof(statList[i].data));
         pos += sizeof(statList[i].data);
     }
@@ -285,7 +287,7 @@ void RSDK::SKU::LaunchManual()
 }
 void RSDK::SKU::ExitGame() { RenderDevice::isRunning = false; }
 
-int RSDK::SKU::GetDefaultGamepadType()
+int32 RSDK::SKU::GetDefaultGamepadType()
 {
 #if RETRO_REV02
     int32 platform = curSKU.platform = PLATFORM_SWITCH;
@@ -301,7 +303,7 @@ int RSDK::SKU::GetDefaultGamepadType()
     }
 }
 
-int RSDK::SKU::ShowExtensionOverlay(byte overlay)
+int32 RSDK::SKU::ShowExtensionOverlay(byte overlay)
 {
     switch (overlay) {
         default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
@@ -331,8 +333,8 @@ int32 RSDK::GetVideoSetting(int32 id)
         case VIDEOSETTING_DIMTIMER: return videoSettings.dimTimer;
 #endif
         case VIDEOSETTING_STREAMSENABLED: return engine.streamsEnabled;
-        case VIDEOSETTING_STREAM_VOL: return (int)(engine.streamVolume * 1024.0);
-        case VIDEOSETTING_SFX_VOL: return (int)(engine.soundFXVolume * 1024.0);
+        case VIDEOSETTING_STREAM_VOL: return (int32)(engine.streamVolume * 1024.0);
+        case VIDEOSETTING_SFX_VOL: return (int32)(engine.soundFXVolume * 1024.0);
         case VIDEOSETTING_LANGUAGE:
 #if RETRO_REV02
             return SKU::curSKU.language;
@@ -470,7 +472,7 @@ void RSDK::LoadSettingsINI()
     videoSettings.pixHeight   = SCREEN_YSIZE;
     videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
-    int platform = PLATFORM_DEV;
+    int32 platform = PLATFORM_DEV;
 #if RETRO_REV02
     platform = SKU::curSKU.platform;
 #else
@@ -484,7 +486,7 @@ void RSDK::LoadSettingsINI()
 
     dictionary *ini = iniparser_load(pathBuffer);
 
-    int defKeyMaps[PLAYER_COUNT + 1][12] = {
+    int32 defKeyMaps[PLAYER_COUNT + 1][12] = {
         { KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING,
           KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING, KEYMAP_NO_MAPPING },
 
@@ -502,7 +504,7 @@ void RSDK::LoadSettingsINI()
 #if RETRO_REV02
         SKU::curSKU.language = iniparser_getint(ini, "Game:language", LANGUAGE_EN);
 #else
-        gameVerInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+        gameVerInfo.language = (int32)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #endif
 
         if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, useBuffer))
@@ -541,7 +543,7 @@ void RSDK::LoadSettingsINI()
         engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 0.8);
         engine.soundFXVolume  = iniparser_getdouble(ini, "Audio:sfxVolume", 1.0);
 
-        for (int i = 1; i <= PLAYER_COUNT; ++i) {
+        for (int32 i = 1; i <= PLAYER_COUNT; ++i) {
             char buffer[0x30];
 
             sprintf(buffer, "Keyboard Map %d:up", i);
@@ -582,9 +584,9 @@ void RSDK::LoadSettingsINI()
             }
         }
 
-        RSDK::AllocateStorage(sizeof(GamePadMappings) * gamePadCount, (void **)&gamePadMappings, RSDK::DATASET_STG, true);
+        AllocateStorage(sizeof(GamePadMappings) * gamePadCount, (void **)&gamePadMappings, DATASET_STG, true);
 
-        for (int i = 1; i <= gamePadCount; ++i) {
+        for (int32 i = 1; i <= gamePadCount; ++i) {
             char buffer[0x30];
             char buffer2[0x100];
 
@@ -604,7 +606,7 @@ void RSDK::LoadSettingsINI()
             sprintf(buffer2, "%s", iniparser_getstring(ini, buffer, 0));
 
             char *tok = strtok(buffer2, ", ");
-            for (int b = 0; tok; ++b) {
+            for (int32 b = 0; tok; ++b) {
                 gamePadMappings[i].buttons[b].mappingType = atoi(tok);
                 tok                                       = strtok(0, " ,.-");
             }
@@ -613,7 +615,7 @@ void RSDK::LoadSettingsINI()
             sprintf(buffer2, "%s", iniparser_getstring(ini, buffer, 0));
 
             tok = strtok(buffer2, ", ");
-            for (int b = 0; tok; ++b) {
+            for (int32 b = 0; tok; ++b) {
                 gamePadMappings[i].buttons[b].offset = atoi(tok);
                 tok                                  = strtok(0, " ,.-");
             }
@@ -621,9 +623,9 @@ void RSDK::LoadSettingsINI()
             sprintf(buffer, "GamePad Map %d:maskVals", i);
             sprintf(buffer2, "%s", iniparser_getstring(ini, buffer, 0));
             tok = strtok(buffer2, ", ");
-            for (int b = 0; tok; ++b) {
-                int mask = 1;
-                for (int m = 0; m < 18; ++m) {
+            for (int32 b = 0; tok; ++b) {
+                int32 mask = 1;
+                for (int32 m = 0; m < 18; ++m) {
                     if (strcmp(buttonNames[i], tok) == 0) {
                         gamePadMappings[i].buttons[b].maskVal = mask;
                         break;
@@ -651,12 +653,12 @@ void RSDK::LoadSettingsINI()
         videoSettings.fsHeight       = 0;
         videoSettings.refreshRate    = 60;
         videoSettings.shaderID       = SHADER_NONE;
-        engine.streamsEnabled       = true;
-        engine.streamVolume         = 1.0f;
-        engine.soundFXVolume        = 1.0f;
-        engine.devMenu              = false;
+        engine.streamsEnabled        = true;
+        engine.streamVolume          = 1.0f;
+        engine.soundFXVolume         = 1.0f;
+        engine.devMenu               = false;
 
-        for (int i = 1; i <= PLAYER_COUNT; ++i) {
+        for (int32 i = 1; i <= PLAYER_COUNT; ++i) {
             controller[i].keyUp.keyMap     = defKeyMaps[i][0];
             controller[i].keyDown.keyMap   = defKeyMaps[i][1];
             controller[i].keyLeft.keyMap   = defKeyMaps[i][2];
@@ -693,112 +695,135 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
 
         dictionary *ini = iniparser_load(pathBuffer);
         FileIO *file    = fOpen(pathBuffer, "wb");
-        writeText(file, "; Retro Engine Config File\n\n");
-        writeText(file, "[Game]\n");
+
+        // ================
+        // SIGNATURE
+        // ================
+        WriteText(file, "; Retro Engine Config File\n\n");
+
+        // ================
+        // GAME
+        // ================
+        WriteText(file, "[Game]\n");
         if (ini) {
             if (strcmp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound") != 0) {
-                writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
+                WriteText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
             }
 
             if (strcmp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound") != 0)
-                writeText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
+                WriteText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") != 0)
-                writeText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+                WriteText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
 
             if (strcmp(iniparser_getstring(ini, "Game:confirmButtonFlip", "optionNotFound"), "optionNotFound") != 0)
-                writeText(file, "confirmButtonFlip=%s\n", (engine.confirmFlip ? "y" : "n"));
+                WriteText(file, "confirmButtonFlip=%s\n", (engine.confirmFlip ? "y" : "n"));
             if (strcmp(iniparser_getstring(ini, "Game:xyButtonFlip", "optionNotFound"), "optionNotFound") != 0)
-                writeText(file, "xyButtonFlip=%s\n", (engine.XYFlip ? "y" : "n"));
+                WriteText(file, "xyButtonFlip=%s\n", (engine.XYFlip ? "y" : "n"));
 #endif
         }
 
 #if RETRO_REV02
-        writeText(file, "language=%d\n", SKU::curSKU.language);
+        WriteText(file, "language=%d\n", SKU::curSKU.language);
 #else
-        writeText(file, "language=%d\n", gameVerInfo.language);
+        WriteText(file, "language=%d\n", gameVerInfo.language);
 #endif
-        writeText(file, "\n[Video]\n");
-        writeText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");
-        writeText(file, "; If not listed, fullscreen will just use the desktop resolution\n");
-        writeText(file, "windowed=%s\n", (videoSettings.windowed ? "y" : "n"));
-        writeText(file, "border=%s\n", (videoSettings.bordered ? "y" : "n"));
-        writeText(file, "exclusiveFS=%s\n", (videoSettings.exclusiveFS ? "y" : "n"));
-        writeText(file, "vsync=%s\n", (videoSettings.vsync ? "y" : "n"));
-        writeText(file, "tripleBuffering=%s\n", (videoSettings.tripleBuffered ? "y" : "n"));
+
+        // ================
+        // VIDEO
+        // ================
+        WriteText(file, "\n[Video]\n");
+        WriteText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");
+        WriteText(file, "; If not listed, fullscreen will just use the desktop resolution\n");
+        WriteText(file, "windowed=%s\n", (videoSettings.windowed ? "y" : "n"));
+        WriteText(file, "border=%s\n", (videoSettings.bordered ? "y" : "n"));
+        WriteText(file, "exclusiveFS=%s\n", (videoSettings.exclusiveFS ? "y" : "n"));
+        WriteText(file, "vsync=%s\n", (videoSettings.vsync ? "y" : "n"));
+        WriteText(file, "tripleBuffering=%s\n", (videoSettings.tripleBuffered ? "y" : "n"));
         if (ini) {
             if (strcmp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound") == 0)
-                writeText(file, "pixWidth=%d\n", videoSettings.pixWidth);
+                WriteText(file, "pixWidth=%d\n", videoSettings.pixWidth);
         }
-        writeText(file, "winWidth=%d\n", videoSettings.windowWidth);
-        writeText(file, "winHeight=%d\n", videoSettings.windowHeight);
+        WriteText(file, "winWidth=%d\n", videoSettings.windowWidth);
+        WriteText(file, "winHeight=%d\n", videoSettings.windowHeight);
         if (videoSettings.fsWidth > 0)
-            writeText(file, "fsWidth=%d\n", videoSettings.fsWidth);
+            WriteText(file, "fsWidth=%d\n", videoSettings.fsWidth);
         if (videoSettings.fsHeight > 0)
-            writeText(file, "fsHeight=%d\n", videoSettings.fsHeight);
+            WriteText(file, "fsHeight=%d\n", videoSettings.fsHeight);
         if (videoSettings.refreshRate > 0)
-            writeText(file, "refreshRate=%d\n", videoSettings.refreshRate);
+            WriteText(file, "refreshRate=%d\n", videoSettings.refreshRate);
 
-        writeText(file, "shaderSupport=%s\n", (videoSettings.shaderSupport ? "y" : "n"));
-        writeText(file, "screenShader=%d\n", videoSettings.shaderID);
-        writeText(file, "\n[Audio]\n");
-        writeText(file, "streamsEnabled=%s\n", (engine.streamsEnabled ? "y" : "n"));
-        writeText(file, "streamVolume=%f\n", engine.streamVolume);
-        writeText(file, "sfxVolume=%f\n", engine.soundFXVolume);
+        WriteText(file, "shaderSupport=%s\n", (videoSettings.shaderSupport ? "y" : "n"));
+        WriteText(file, "screenShader=%d\n", videoSettings.shaderID);
 
-        for (int i = 1; i <= PLAYER_COUNT; ++i) {
-            writeText(file, "\n[Keyboard Map %d]\n", i);
-            writeText(file, "up=0x%x\n", controller[i].keyUp.keyMap);
-            writeText(file, "down=0x%x\n", controller[i].keyDown.keyMap);
-            writeText(file, "left=0x%x\n", controller[i].keyLeft.keyMap);
-            writeText(file, "right=0x%x\n", controller[i].keyRight.keyMap);
-            writeText(file, "buttonA=0x%x\n", controller[i].keyA.keyMap);
-            writeText(file, "buttonB=0x%x\n", controller[i].keyB.keyMap);
-            writeText(file, "buttonC=0x%x\n", controller[i].keyC.keyMap);
-            writeText(file, "buttonX=0x%x\n", controller[i].keyX.keyMap);
-            writeText(file, "buttonY=0x%x\n", controller[i].keyY.keyMap);
-            writeText(file, "buttonZ=0x%x\n", controller[i].keyZ.keyMap);
-            writeText(file, "start=0x%x\n", controller[i].keyStart.keyMap);
-            writeText(file, "select=0x%x\n", controller[i].keySelect.keyMap);
+        // ================
+        // AUDIO
+        // ================
+        WriteText(file, "\n[Audio]\n");
+        WriteText(file, "streamsEnabled=%s\n", (engine.streamsEnabled ? "y" : "n"));
+        WriteText(file, "streamVolume=%f\n", engine.streamVolume);
+        WriteText(file, "sfxVolume=%f\n", engine.soundFXVolume);
+
+        // ==========================
+        // OPTIONS (decomp only)
+        // ==========================
+
+        // ================
+        // KE^YBOARD MAP
+        // ================
+        for (int32 i = 1; i <= PLAYER_COUNT; ++i) {
+            WriteText(file, "\n[Keyboard Map %d]\n", i);
+            WriteText(file, "up=0x%x\n", controller[i].keyUp.keyMap);
+            WriteText(file, "down=0x%x\n", controller[i].keyDown.keyMap);
+            WriteText(file, "left=0x%x\n", controller[i].keyLeft.keyMap);
+            WriteText(file, "right=0x%x\n", controller[i].keyRight.keyMap);
+            WriteText(file, "buttonA=0x%x\n", controller[i].keyA.keyMap);
+            WriteText(file, "buttonB=0x%x\n", controller[i].keyB.keyMap);
+            WriteText(file, "buttonC=0x%x\n", controller[i].keyC.keyMap);
+            WriteText(file, "buttonX=0x%x\n", controller[i].keyX.keyMap);
+            WriteText(file, "buttonY=0x%x\n", controller[i].keyY.keyMap);
+            WriteText(file, "buttonZ=0x%x\n", controller[i].keyZ.keyMap);
+            WriteText(file, "start=0x%x\n", controller[i].keyStart.keyMap);
+            WriteText(file, "select=0x%x\n", controller[i].keySelect.keyMap);
         }
 
-        for (int i = 0; i < gamePadCount; ++i) {
-            writeText(file, "\n[Keyboard Map %d]\n", i + 1);
-            writeText(file, "name=%s\n", gamePadMappings[i].name);
-            writeText(file, "type=0x%x\n", gamePadMappings[i].type);
-            writeText(file, "vendorID=0x%x\n", gamePadMappings[i].vendorID);
-            writeText(file, "productID=0x%x\n", gamePadMappings[i].productID);
+        for (int32 i = 0; i < gamePadCount; ++i) {
+            WriteText(file, "\n[Keyboard Map %d]\n", i + 1);
+            WriteText(file, "name=%s\n", gamePadMappings[i].name);
+            WriteText(file, "type=0x%x\n", gamePadMappings[i].type);
+            WriteText(file, "vendorID=0x%x\n", gamePadMappings[i].vendorID);
+            WriteText(file, "productID=0x%x\n", gamePadMappings[i].productID);
 
-            writeText(file, "mappingTypes=");
-            for (int b = 0; b < 24; ++b) {
-                writeText(file, "%d,", gamePadMappings[i].buttons[b].mappingType);
+            WriteText(file, "mappingTypes=");
+            for (int32 b = 0; b < 24; ++b) {
+                WriteText(file, "%d,", gamePadMappings[i].buttons[b].mappingType);
             }
-            writeText(file, "\n");
-            writeText(file, "offsets=");
-            for (int b = 0; b < 24; ++b) {
-                writeText(file, "%d,", gamePadMappings[i].buttons[b].offset);
+            WriteText(file, "\n");
+            WriteText(file, "offsets=");
+            for (int32 b = 0; b < 24; ++b) {
+                WriteText(file, "%d,", gamePadMappings[i].buttons[b].offset);
             }
-            writeText(file, "\n");
-            writeText(file, "maskVals=");
-            for (int b = 0; b < 24; ++b) {
+            WriteText(file, "\n");
+            WriteText(file, "maskVals=");
+            for (int32 b = 0; b < 24; ++b) {
                 if (gamePadMappings[i].buttons[b].maskVal) {
-                    int m = 0;
+                    int32 m = 0;
                     while (true) {
                         if (1 << m == gamePadMappings[i].buttons[b].maskVal) {
-                            writeText(file, "%d,", gamePadMappings[i].buttons[b].maskVal);
+                            WriteText(file, "%d,", gamePadMappings[i].buttons[b].maskVal);
                             break;
                         }
                     }
 
                     if (m == 18)
-                        writeText(file, "?,");
+                        WriteText(file, "?,");
                 }
                 else {
-                    writeText(file, "?,");
+                    WriteText(file, "?,");
                 }
             }
-            writeText(file, "\n");
+            WriteText(file, "\n");
         }
 
         iniparser_freedict(ini);

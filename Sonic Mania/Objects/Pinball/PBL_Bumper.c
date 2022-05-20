@@ -45,7 +45,7 @@ void PBL_Bumper_Draw(void)
         RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);
         RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &PBL_Camera->matWorld);
         RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &PBL_Camera->matNormalItem);
-        RSDK.AddModelTo3DScene(PBL_Bumper->modelFrames, PBL_Bumper->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matWorld, &self->matNormal,
+        RSDK.AddModelTo3DScene(PBL_Bumper->modelFrames, PBL_Bumper->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN, &self->matWorld, &self->matNormal,
                                0xFFFFFF);
         RSDK.Draw3DScene(PBL_Bumper->sceneIndex);
     }

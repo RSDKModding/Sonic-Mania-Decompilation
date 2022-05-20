@@ -2,10 +2,10 @@
 
 using namespace RSDK;
 
-Model modelList[MODEL_MAX];
-Scene3D scene3DList[SCENE3D_MAX];
+Model RSDK::modelList[MODEL_COUNT];
+Scene3D RSDK::scene3DList[SCENE3D_COUNT];
 
-ScanEdge scanEdgeBuffer[SCREEN_YSIZE * 2];
+ScanEdge RSDK::scanEdgeBuffer[SCREEN_YSIZE * 2];
 
 enum ModelFlags {
     MODEL_NOFLAGS     = 0,
@@ -14,7 +14,7 @@ enum ModelFlags {
     MODEL_USECOLOURS  = 1 << 2,
 };
 
-void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)
+void RSDK::ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int32 top = y1 >> 16;
     int32 iy1 = y1 >> 16;
@@ -55,25 +55,25 @@ void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)
     }
 }
 
-void ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int32 y2)
+void RSDK::ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int32 iy1 = y1 >> 16;
     int32 iy2 = y2 >> 16;
     int32 ix1 = x1 >> 16;
     int32 ix2 = x2 >> 16;
 
-    int32 top   = y1 >> 16;
-    uint32 clr1 = c1;
-    uint32 clr2 = c2;
+    int32 top     = y1 >> 16;
+    uint32 color1 = c1;
+    uint32 color2 = c2;
     if (y1 >> 16 != y2 >> 16) {
         if (y1 >> 16 > y2 >> 16) {
-            top  = y2 >> 16;
-            ix1  = x2 >> 16;
-            ix2  = x1 >> 16;
-            iy1  = y2 >> 16;
-            iy2  = y1 >> 16;
-            clr1 = c2;
-            clr2 = c1;
+            top    = y2 >> 16;
+            ix1    = x2 >> 16;
+            ix2    = x1 >> 16;
+            iy1    = y2 >> 16;
+            iy2    = y1 >> 16;
+            color1 = c2;
+            color2 = c1;
         }
 
         int32 bottom = iy2 + 1;
@@ -81,65 +81,75 @@ void ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int3
             if (bottom > currentScreen->clipBound_Y2)
                 bottom = currentScreen->clipBound_Y2;
 
-            int32 size     = iy2 - iy1;
-            int32 scanPosX = ix1 << 16;
-            int32 deltaX   = ((ix2 - ix1) << 16) / size;
+            int32 size   = iy2 - iy1;
+            int32 scanX  = ix1 << 16;
+            int32 deltaX = ((ix2 - ix1) << 16) / size;
 
-            int32 c1R      = (clr1 & 0xFF0000);
-            int32 c2R      = (clr2 & 0xFF0000);
-            int32 scanPosR = c1R;
-            int32 deltaR   = 0;
+            int32 c1R   = (color1 & 0xFF0000);
+            int32 c2R   = (color2 & 0xFF0000);
+            int32 scanR = c1R;
+
+            int32 deltaR = 0;
             if (c1R != c2R)
                 deltaR = (c2R - c1R) / size;
 
-            int32 c1G      = (clr1 & 0x00FF00) << 8;
-            int32 c2G      = (clr2 & 0x00FF00) << 8;
-            int32 scanPosG = c1G;
-            int32 deltaG   = 0;
+            int32 c1G   = (color1 & 0x00FF00) << 8;
+            int32 c2G   = (color2 & 0x00FF00) << 8;
+            int32 scanG = c1G;
+
+            int32 deltaG = 0;
             if (c1G != c2G)
                 deltaG = (c2G - c1G) / size;
 
-            int32 c1B      = (clr1 & 0x0000FF) << 16;
-            int32 c2B      = (clr2 & 0x0000FF) << 16;
-            int32 scanPosB = c1B;
-            int32 deltaB   = 0;
+            int32 c1B   = (color1 & 0x0000FF) << 16;
+            int32 c2B   = (color2 & 0x0000FF) << 16;
+            int32 scanB = c1B;
+
+            int32 deltaB = 0;
             if (c1B != c2B)
                 deltaB = (c2B - c1B) / size;
 
             if (top < 0) {
-                scanPosX -= top * deltaX;
-                scanPosR -= top * deltaR;
-                scanPosG -= top * deltaG;
-                scanPosB -= top * deltaB;
+                scanX -= top * deltaX;
+
+                scanR -= top * deltaR;
+                scanG -= top * deltaG;
+                scanB -= top * deltaB;
+
                 top = 0;
             }
 
             ScanEdge *edge = &scanEdgeBuffer[top];
             for (int32 i = top; i < bottom; ++i) {
-                int32 scanX = scanPosX >> 16;
-                if (scanX < edge->start) {
-                    edge->start  = scanX;
-                    edge->startR = scanPosR;
-                    edge->startG = scanPosG;
-                    edge->startB = scanPosB;
+                if ((scanX >> 16) < edge->start) {
+                    edge->start = scanX >> 16;
+
+                    edge->startR = scanR;
+                    edge->startG = scanG;
+                    edge->startB = scanB;
                 }
-                if (scanX > edge->end) {
-                    edge->end  = scanX;
-                    edge->endR = scanPosR;
-                    edge->endG = scanPosG;
-                    edge->endB = scanPosB;
+
+                if ((scanX >> 16) > edge->end) {
+                    edge->end = scanX >> 16;
+
+                    edge->endR = scanR;
+                    edge->endG = scanG;
+                    edge->endB = scanB;
                 }
-                scanPosX += deltaX;
-                scanPosR += deltaR;
-                scanPosG += deltaG;
-                scanPosB += deltaB;
+
+                scanX += deltaX;
+
+                scanR += deltaR;
+                scanG += deltaG;
+                scanB += deltaB;
+
                 ++edge;
             }
         }
     }
 }
 
-void SetIdentityMatrix(Matrix *matrix)
+void RSDK::SetIdentityMatrix(Matrix *matrix)
 {
     matrix->values[0][0] = 0x100;
     matrix->values[1][0] = 0;
@@ -158,7 +168,7 @@ void SetIdentityMatrix(Matrix *matrix)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
+void RSDK::MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
 {
     int32 result[4][4];
     memset(result, 0, 4 * 4 * sizeof(int32));
@@ -177,7 +187,7 @@ void MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
         dest->values[rowB][rowA] = result[rowB][rowA];
     }
 }
-void MatrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity)
+void RSDK::MatrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity)
 {
     if (setIdentity) {
         matrix->values[0][0] = 0x100;
@@ -199,7 +209,7 @@ void MatrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIde
     matrix->values[1][3] = y >> 8;
     matrix->values[2][3] = z >> 8;
 }
-void MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ)
+void RSDK::MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ)
 {
     matrix->values[0][0] = scaleX;
     matrix->values[1][0] = 0;
@@ -218,7 +228,7 @@ void MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateX(Matrix *matrix, int16 rotationX)
+void RSDK::MatrixRotateX(Matrix *matrix, int16 rotationX)
 {
     int32 sine   = sin1024LookupTable[rotationX & 0x3FF] >> 2;
     int32 cosine = cos1024LookupTable[rotationX & 0x3FF] >> 2;
@@ -240,7 +250,7 @@ void MatrixRotateX(Matrix *matrix, int16 rotationX)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateY(Matrix *matrix, int16 rotationY)
+void RSDK::MatrixRotateY(Matrix *matrix, int16 rotationY)
 {
     int32 sine           = sin1024LookupTable[rotationY & 0x3FF] >> 2;
     int32 cosine         = cos1024LookupTable[rotationY & 0x3FF] >> 2;
@@ -261,7 +271,7 @@ void MatrixRotateY(Matrix *matrix, int16 rotationY)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateZ(Matrix *matrix, int16 rotationZ)
+void RSDK::MatrixRotateZ(Matrix *matrix, int16 rotationZ)
 {
     int32 sine           = sin1024LookupTable[rotationZ & 0x3FF] >> 2;
     int32 cosine         = cos1024LookupTable[rotationZ & 0x3FF] >> 2;
@@ -282,7 +292,7 @@ void MatrixRotateZ(Matrix *matrix, int16 rotationZ)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ)
+void RSDK::MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ)
 {
     int32 sinX = sin1024LookupTable[rotationX & 0x3FF] >> 2;
     int32 cosX = cos1024LookupTable[rotationX & 0x3FF] >> 2;
@@ -308,7 +318,7 @@ void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rot
     matrix->values[3][2] = 0;
     matrix->values[3][3] = 0x100;
 }
-void MatrixInverse(Matrix *dest, Matrix *matrix)
+void RSDK::MatrixInverse(Matrix *dest, Matrix *matrix)
 {
     double inv[16], det;
     double m[16];
@@ -360,9 +370,8 @@ void MatrixInverse(Matrix *dest, Matrix *matrix)
     for (int32 i = 0; i < 0x10; ++i) inv[i] = (int32)((inv[i] * det) * 256);
     for (int32 i = 0; i < 0x10; ++i) dest->values[i / 4][i % 4] = inv[i];
 }
-void MatrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(Matrix)); }
 
-uint16 LoadMesh(const char *filename, Scopes scope)
+uint16 RSDK::LoadMesh(const char *filename, Scopes scope)
 {
     char fullFilePath[0x100];
     sprintf(fullFilePath, "Data/Meshes/%s", filename);
@@ -370,19 +379,19 @@ uint16 LoadMesh(const char *filename, Scopes scope)
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(fullFilePath, hash);
 
-    for (int32 i = 0; i < MODEL_MAX; ++i) {
+    for (int32 i = 0; i < MODEL_COUNT; ++i) {
         if (HASH_MATCH_MD5(hash, modelList[i].hash)) {
             return i;
         }
     }
 
     uint16 id = -1;
-    for (id = 0; id < MODEL_MAX; ++id) {
+    for (id = 0; id < MODEL_COUNT; ++id) {
         if (modelList[id].scope == SCOPE_NONE)
             break;
     }
 
-    if (id >= MODEL_MAX)
+    if (id >= MODEL_COUNT)
         return -1;
 
     Model *model = &modelList[id];
@@ -391,7 +400,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
     if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
-        if (sig != 0x4C444D) {
+        if (sig != RSDK_SIGNATURE_MDL) {
             CloseFile(&info);
             return -1;
         }
@@ -405,11 +414,11 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         model->vertCount  = ReadInt16(&info);
         model->frameCount = ReadInt16(&info);
 
-        RSDK::AllocateStorage(sizeof(ModelVertex) * model->vertCount * model->frameCount, (void **)&model->vertices, RSDK::DATASET_STG, true);
+        AllocateStorage(sizeof(ModelVertex) * model->vertCount * model->frameCount, (void **)&model->vertices, DATASET_STG, true);
         if (model->flags & MODEL_USETEXTURES)
-            RSDK::AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, RSDK::DATASET_STG, true);
+            AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, DATASET_STG, true);
         if (model->flags & MODEL_USECOLOURS)
-            RSDK::AllocateStorage(sizeof(Color) * model->vertCount, (void **)&model->colors, RSDK::DATASET_STG, true);
+            AllocateStorage(sizeof(Color) * model->vertCount, (void **)&model->colors, DATASET_STG, true);
 
         if (model->flags & MODEL_USETEXTURES) {
             for (int32 v = 0; v < model->vertCount; ++v) {
@@ -425,7 +434,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         }
 
         model->indexCount = ReadInt16(&info);
-        RSDK::AllocateStorage(sizeof(uint16) * model->indexCount, (void **)&model->indices, RSDK::DATASET_STG, true);
+        AllocateStorage(sizeof(uint16) * model->indexCount, (void **)&model->indices, DATASET_STG, true);
         for (int32 i = 0; i < model->indexCount; ++i) model->indices[i] = ReadInt16(&info);
 
         for (int32 f = 0; f < model->frameCount; ++f) {
@@ -450,24 +459,24 @@ uint16 LoadMesh(const char *filename, Scopes scope)
     }
     return -1;
 }
-uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
+uint16 RSDK::Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 {
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
 
-    for (int32 i = 0; i < SCENE3D_MAX; ++i) {
+    for (int32 i = 0; i < SCENE3D_COUNT; ++i) {
         if (HASH_MATCH_MD5(hash, scene3DList[i].hash)) {
             return i;
         }
     }
 
     uint16 id = -1;
-    for (id = 0; id < SCENE3D_MAX; ++id) {
+    for (id = 0; id < SCENE3D_COUNT; ++id) {
         if (scene3DList[id].scope == SCOPE_NONE)
             break;
     }
 
-    if (id >= SCENE3D_MAX)
+    if (id >= SCENE3D_COUNT)
         return -1;
 
     Scene3D *scene = &scene3DList[id];
@@ -477,23 +486,24 @@ uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 
     scene->scope = scope;
     HASH_COPY_MD5(scene->hash, hash);
-    scene->vertLimit   = vertexLimit;
-    scene->faceCount   = 6;
+    scene->vertLimit = vertexLimit;
+    scene->faceCount = 6;
+
     scene->projectionX = 8;
     scene->projectionY = 8;
-    RSDK::AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, RSDK::DATASET_STG, true);
-    RSDK::AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, RSDK::DATASET_STG, true);
-    RSDK::AllocateStorage(sizeof(uint8) * vertexLimit, (void **)&scene->faceVertCounts, RSDK::DATASET_STG, true);
-    RSDK::AllocateStorage(sizeof(FaceBufferEntry) * vertexLimit, (void **)&scene->faceBuffer, RSDK::DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, DATASET_STG, true);
+    AllocateStorage(sizeof(uint8) * vertexLimit, (void **)&scene->faceVertCounts, DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DFace) * vertexLimit, (void **)&scene->faceBuffer, DATASET_STG, true);
 
     return id;
 }
-void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
+void RSDK::AddModelToScene(uint16 modelFrames, uint16 sceneIndex, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
 {
-    if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
+    if (modelFrames < MODEL_COUNT && sceneIndex < SCENE3D_COUNT) {
         if (matWorld) {
-            Model *mdl            = &modelList[modelID];
-            Scene3D *scn          = &scene3DList[sceneID];
+            Model *mdl            = &modelList[modelFrames];
+            Scene3D *scn          = &scene3DList[sceneIndex];
             uint16 *indices       = mdl->indices;
             int32 vertID          = scn->vertexCount;
             uint8 *faceVertCounts = &scn->faceVertCounts[scn->faceCount];
@@ -511,6 +521,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                     case MODEL_USECOLOURS:
                         for (; i < mdl->indexCount;) {
                             faceVertCounts[f++] = mdl->faceVertCount;
+
                             for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                 ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                 Scene3DVertex *vertex  = &scn->vertices[vertID++];
@@ -531,6 +542,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
@@ -557,6 +569,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
@@ -578,6 +591,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
                                     Color *modelColor      = &mdl->colors[indices[i++]];
@@ -605,6 +619,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
                                     Color *modelColor      = &mdl->colors[indices[i++]];
@@ -627,12 +642,13 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
         }
     }
 }
-void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
+void RSDK::AddMeshFrameToScene(uint16 modelFrames, uint16 sceneIndex, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals,
+                               color color)
 {
-    if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
+    if (modelFrames < MODEL_COUNT && sceneIndex < SCENE3D_COUNT) {
         if (matWorld && animator) {
-            Model *mdl            = &modelList[modelID];
-            Scene3D *scn          = &scene3DList[sceneID];
+            Model *mdl            = &modelList[modelFrames];
+            Scene3D *scn          = &scene3DList[sceneIndex];
             uint16 *indices       = mdl->indices;
             int32 vertID          = scn->vertexCount;
             uint8 *faceVertCounts = &scn->faceVertCounts[scn->faceCount];
@@ -657,6 +673,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                     case MODEL_USECOLOURS:
                         for (; i < mdl->indexCount;) {
                             faceVertCounts[f++] = mdl->faceVertCount;
+
                             for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                 ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                 ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -680,6 +697,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -711,6 +729,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -735,6 +754,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                         if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -766,6 +786,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                         else {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
+
                                 for (int32 c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
                                     ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
@@ -790,15 +811,16 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
         }
     }
 }
-void Draw3DScene(uint16 sceneID)
+void RSDK::Draw3DScene(uint16 sceneID)
 {
-    if (sceneID < SCENE3D_MAX) {
+    if (sceneID < SCENE3D_COUNT) {
         Entity *entity = sceneInfo.entity;
         Scene3D *scn   = &scene3DList[sceneID];
 
-        uint8 *vertCnt          = scn->faceVertCounts;
         Scene3DVertex *vertices = scn->vertices;
-        int32 vertID            = 0;
+
+        // setup face depth
+        int32 vertIndex = 0;
         for (int32 i = 0; i < scn->faceCount; ++i) {
             scn->faceBuffer[i].depth = 0;
             switch (scn->faceVertCounts[i]) {
@@ -829,10 +851,12 @@ void Draw3DScene(uint16 sceneID)
                     vertices += 4;
                     break;
             }
-            scn->faceBuffer[i].index = vertID;
-            vertID += scn->faceVertCounts[i];
+
+            scn->faceBuffer[i].index = vertIndex;
+            vertIndex += scn->faceVertCounts[i];
         }
 
+        // sort vertices by depth
         for (int32 i = 0; i < scn->faceCount; ++i) {
             for (int32 j = scn->faceCount - 1; j > i; --j) {
                 if (scn->faceBuffer[j].depth > scn->faceBuffer[j - 1].depth) {
@@ -846,33 +870,35 @@ void Draw3DScene(uint16 sceneID)
             }
         }
 
-        vertCnt = scn->faceVertCounts;
+        uint8 *vertCnt = scn->faceVertCounts;
         Vector2 vertPos[4];
         uint32 vertClrs[4];
+
         switch (scn->drawMode) {
             default: break;
-            case S3D_FLATCLR_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+
+            case S3D_WIREFRAME:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     for (int32 v = 0; v < *vertCnt - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].color,
-                                 entity->alpha, (InkEffects)entity->inkEffect, false);
+                                 entity->alpha, entity->inkEffect, false);
                     }
                     DrawLine(drawVert[0].x << 8, drawVert[0].y << 8, drawVert[*vertCnt - 1].x << 8, drawVert[*vertCnt - 1].y << 8, drawVert[0].color,
-                             entity->alpha, (InkEffects)entity->inkEffect, false);
+                             entity->alpha, entity->inkEffect, false);
                     vertCnt++;
                 }
                 break;
 
-            case S3D_FLATCLR:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     for (int32 v = 0; v < *vertCnt; ++v) {
                         vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);
                         vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
                     }
                     DrawFace(vertPos, *vertCnt, (drawVert->color >> 16) & 0xFF, (drawVert->color >> 8) & 0xFF, (drawVert->color >> 0) & 0xFF,
-                             entity->alpha, (InkEffects)entity->inkEffect);
+                             entity->alpha, entity->inkEffect);
                     vertCnt++;
                 }
                 break;
@@ -882,9 +908,9 @@ void Draw3DScene(uint16 sceneID)
             case S3D_UNUSED_1: break;
             case S3D_UNUSED_2: break;
 
-            case S3D_FLATCLR_SHADED_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_WIREFRAME_SHADED:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 ny1 = 0;
@@ -897,36 +923,36 @@ void Draw3DScene(uint16 sceneID)
 
                     int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular       = clampVal(specular, 0x00, 0xFF);
-                    int32 clrR = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                    int32 r = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityY;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrG = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                    specular = normalVal >> 6 >> scn->specularIntensityY;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 g  = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityZ;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrB = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                    specular = normalVal >> 6 >> scn->specularIntensityZ;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 b  = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                    clrR = clampVal(clrR, 0x00, 0xFF);
-                    clrG = clampVal(clrG, 0x00, 0xFF);
-                    clrB = clampVal(clrB, 0x00, 0xFF);
+                    r = clampVal(r, 0x00, 0xFF);
+                    g = clampVal(g, 0x00, 0xFF);
+                    b = clampVal(b, 0x00, 0xFF);
 
-                    uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                    uint32 color = (r << 16) | (g << 8) | (b << 0);
 
                     for (int32 v = 0; v < vertCount - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, color, entity->alpha,
-                                 (InkEffects)entity->inkEffect, false);
+                                 entity->inkEffect, false);
                     }
                     DrawLine(drawVert[vertCount - 1].x << 8, drawVert[vertCount - 1].y << 8, drawVert[0].x << 8, drawVert[0].y << 8, color,
-                             entity->alpha, (InkEffects)entity->inkEffect, false);
+                             entity->alpha, entity->inkEffect, false);
 
                     vertCnt++;
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SHADED:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 ny = 0;
@@ -941,32 +967,32 @@ void Draw3DScene(uint16 sceneID)
 
                     int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular       = clampVal(specular, 0x00, 0xFF);
-                    int32 clrR = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                    int32 r = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityY;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrG = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                    specular = normalVal >> 6 >> scn->specularIntensityY;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 g  = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                    specular   = normalVal >> 6 >> scn->specularIntensityZ;
-                    specular   = clampVal(specular, 0x00, 0xFF);
-                    int32 clrB = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                    specular = normalVal >> 6 >> scn->specularIntensityZ;
+                    specular = clampVal(specular, 0x00, 0xFF);
+                    int32 b  = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                    clrR = clampVal(clrR, 0x00, 0xFF);
-                    clrG = clampVal(clrG, 0x00, 0xFF);
-                    clrB = clampVal(clrB, 0x00, 0xFF);
+                    r = clampVal(r, 0x00, 0xFF);
+                    g = clampVal(g, 0x00, 0xFF);
+                    b = clampVal(b, 0x00, 0xFF);
 
-                    uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                    uint32 color = (r << 16) | (g << 8) | (b << 0);
 
-                    drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                    DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha,
-                             (InkEffects)entity->inkEffect);
+                    drawVert = &scn->vertices[scn->faceBuffer[f].index];
+                    DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
 
                     vertCnt++;
                 }
                 break;
-            case S3D_FLATCLR_SHADED_BLENDED:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+
+            case S3D_SOLIDCOLOR_SHADED_BLENDED:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     for (int32 v = 0; v < vertCount; ++v) {
@@ -978,34 +1004,32 @@ void Draw3DScene(uint16 sceneID)
 
                         int32 specular = (normalVal >> 6) >> scn->specularIntensityX;
                         specular       = clampVal(specular, 0x00, 0xFF);
-                        int32 ambDif   = (int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX);
-                        int32 clrR     = specular + (ambDif >> scn->diffuseIntensityX);
+                        int32 r = specular + ((int32)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                        specular   = (normalVal >> 6) >> scn->specularIntensityY;
-                        specular   = clampVal(specular, 0x00, 0xFF);
-                        ambDif     = (int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY);
-                        int32 clrG = specular + (ambDif >> scn->diffuseIntensityY);
+                        specular = (normalVal >> 6) >> scn->specularIntensityY;
+                        specular = clampVal(specular, 0x00, 0xFF);
+                        int32 g  = specular + ((int32)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                        specular   = (normalVal >> 6) >> scn->specularIntensityZ;
-                        specular   = clampVal(specular, 0x00, 0xFF);
-                        ambDif     = (int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ);
-                        int32 clrB = specular + (ambDif >> scn->diffuseIntensityZ);
+                        specular = (normalVal >> 6) >> scn->specularIntensityZ;
+                        specular = clampVal(specular, 0x00, 0xFF);
+                        int32 b  = specular + ((int32)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                        clrR = clampVal(clrR, 0x00, 0xFF);
-                        clrG = clampVal(clrG, 0x00, 0xFF);
-                        clrB = clampVal(clrB, 0x00, 0xFF);
+                        r = clampVal(r, 0x00, 0xFF);
+                        g = clampVal(g, 0x00, 0xFF);
+                        b = clampVal(b, 0x00, 0xFF);
 
-                        vertClrs[v] = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        vertClrs[v] = (r << 16) | (g << 8) | (b << 0);
                     }
 
-                    DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
+                    DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, entity->inkEffect);
 
                     vertCnt++;
                 }
                 break;
-            case S3D_FLATCLR_SCREEN_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+
+            case S3D_WIREFRAME_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
 
                     int32 v = 0;
                     for (; v < *vertCnt && v < 0xFF; ++v) {
@@ -1021,19 +1045,20 @@ void Draw3DScene(uint16 sceneID)
 
                     if (v < 0xFF) {
                         for (int32 v = 0; v < *vertCnt - 1; ++v) {
-                            DrawLine(vertPos[v + 0].x, drawVert[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, drawVert[0].color, entity->alpha,
-                                     (InkEffects)entity->inkEffect, true);
+                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, drawVert[0].color, entity->alpha,
+                                     entity->inkEffect, true);
                         }
                         DrawLine(vertPos[0].x, vertPos[0].y, vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, drawVert[0].color, entity->alpha,
-                                 (InkEffects)entity->inkEffect, true);
+                                 entity->inkEffect, true);
                     }
+
                     vertCnt++;
                 }
                 break;
 
-            case S3D_FLATCLR_SCREEN:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v = 0;
@@ -1050,15 +1075,15 @@ void Draw3DScene(uint16 sceneID)
 
                     if (v < 0xFF) {
                         DrawFace(vertPos, *vertCnt, (drawVert[0].color >> 16) & 0xFF, (drawVert[0].color >> 8) & 0xFF,
-                                 (drawVert[0].color >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
+                                 (drawVert[0].color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
                     }
                     vertCnt++;
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED_SCREEN_WIREFRAME:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_WIREFRAME_SHADED_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v   = 0;
@@ -1081,41 +1106,37 @@ void Draw3DScene(uint16 sceneID)
 
                         int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular       = clampVal(specular, 0x00, 0xFF);
-                        int32 clrR =
-                            specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                        int32 r = specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                         specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrG =
-                            specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                        int32 g  = specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                         specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrB =
-                            specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                        int32 b  = specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                        clrR = clampVal(clrR, 0x00, 0xFF);
-                        clrG = clampVal(clrG, 0x00, 0xFF);
-                        clrB = clampVal(clrB, 0x00, 0xFF);
+                        r = clampVal(r, 0x00, 0xFF);
+                        g = clampVal(g, 0x00, 0xFF);
+                        b = clampVal(b, 0x00, 0xFF);
 
-                        uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        uint32 color = (r << 16) | (g << 8) | (b << 0);
 
-                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
                         for (int32 v = 0; v < *vertCnt - 1; ++v) {
-                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, color, entity->alpha,
-                                     (InkEffects)entity->inkEffect, true);
+                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, color, entity->alpha, entity->inkEffect,
+                                     true);
                         }
                         DrawLine(vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, vertPos[0].x, vertPos[0].y, color, entity->alpha,
-                                 (InkEffects)entity->inkEffect, true);
+                                 entity->inkEffect, true);
                     }
 
                     vertCnt++;
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED_SCREEN:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SHADED_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v  = 0;
@@ -1138,37 +1159,33 @@ void Draw3DScene(uint16 sceneID)
 
                         int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular       = clampVal(specular, 0x00, 0xFF);
-                        int32 clrR =
-                            specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                        int32 r = specular + ((int32)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                         specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrG =
-                            specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                        int32 g  = specular + ((int32)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                         specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = clampVal(specular, 0x00, 0xFF);
-                        int32 clrB =
-                            specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                        int32 b  = specular + ((int32)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                        clrR = clampVal(clrR, 0x00, 0xFF);
-                        clrG = clampVal(clrG, 0x00, 0xFF);
-                        clrB = clampVal(clrB, 0x00, 0xFF);
+                        r = clampVal(r, 0x00, 0xFF);
+                        g = clampVal(g, 0x00, 0xFF);
+                        b = clampVal(b, 0x00, 0xFF);
 
-                        uint32 color = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        uint32 color = (r << 16) | (g << 8) | (b << 0);
 
-                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                        DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha,
-                                 (InkEffects)entity->inkEffect);
+                        drawVert = &scn->vertices[scn->faceBuffer[f].index];
+                        DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha, entity->inkEffect);
                     }
 
                     vertCnt++;
                 }
                 break;
 
-            case S3D_FLATCLR_SHADED_BLENDED_SCREEN:
-                for (int32 i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+            case S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN:
+                for (int32 f = 0; f < scn->faceCount; ++f) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[f].index];
                     int32 vertCount         = *vertCnt;
 
                     int32 v = 0;
@@ -1186,30 +1203,30 @@ void Draw3DScene(uint16 sceneID)
 
                             int32 specular = normalVal >> 6 >> scn->specularIntensityX;
                             specular       = clampVal(specular, 0x00, 0xFF);
-                            int32 clrR =
+                            int32 r =
                                 specular + ((int32)((drawVert[v].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                             specular = normalVal >> 6 >> scn->specularIntensityY;
                             specular = clampVal(specular, 0x00, 0xFF);
-                            int32 clrG =
+                            int32 g =
                                 specular + ((int32)((drawVert[v].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                             specular = normalVal >> 6 >> scn->specularIntensityZ;
                             specular = clampVal(specular, 0x00, 0xFF);
-                            int32 clrB =
+                            int32 b =
                                 specular + ((int32)((drawVert[v].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
-                            clrR = clampVal(clrR, 0x00, 0xFF);
-                            clrG = clampVal(clrG, 0x00, 0xFF);
-                            clrB = clampVal(clrB, 0x00, 0xFF);
+                            r = clampVal(r, 0x00, 0xFF);
+                            g = clampVal(g, 0x00, 0xFF);
+                            b = clampVal(b, 0x00, 0xFF);
 
-                            vertClrs[v] = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                            vertClrs[v] = (r << 16) | (g << 8) | (b << 0);
                         }
                     }
 
                     if (v < 0xFF) {
-                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                        DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
+                        drawVert = &scn->vertices[scn->faceBuffer[f].index];
+                        DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, entity->inkEffect);
                     }
 
                     vertCnt++;

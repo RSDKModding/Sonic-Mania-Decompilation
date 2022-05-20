@@ -168,6 +168,17 @@ inline void EditSpriteAnimation(uint16 aniFrames, uint16 animID, const char *nam
 int32 GetStringWidth(uint16 aniFrames, uint16 animID, String *string, int32 startIndex, int32 length, int32 spacing);
 void SetSpriteString(uint16 aniFrames, uint16 animID, String *string);
 
+inline void ClearSpriteAnimations()
+{
+    // Unload animations
+    for (int32 s = 0; s < SPRFILE_COUNT; ++s) {
+        if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
+            MEM_ZERO(spriteAnimationList[s]);
+            spriteAnimationList[s].scope = SCOPE_NONE;
+        }
+    }
+}
+
 } // namespace RSDK
 
 #endif

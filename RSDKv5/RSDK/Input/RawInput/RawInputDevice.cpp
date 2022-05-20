@@ -1,10 +1,12 @@
 
-bool32 HIDEnabled = false;
+using namespace RSDK::SKU;
 
-InputDevice *rawInputDevices[INPUTDEVICE_COUNT];
-int32 rawInputDeviceCount = 0;
+bool32 RSDK::SKU::HIDEnabled = false;
 
-tagRAWINPUT rawInputData;
+InputDevice *RSDK::SKU::rawInputDevices[INPUTDEVICE_COUNT];
+int32 RSDK::SKU::rawInputDeviceCount = 0;
+
+tagRAWINPUT RSDK::SKU::rawInputData;
 
 void InputDeviceRaw::UpdateInput()
 {
@@ -113,7 +115,7 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
 #endif
 }
 
-InputDeviceRaw *InitRawInputDevice(uint32 id)
+InputDeviceRaw *RSDK::SKU::InitRawInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -145,7 +147,7 @@ InputDeviceRaw *InitRawInputDevice(uint32 id)
     return device;
 }
 
-void InitHIDAPI()
+void RSDK::SKU::InitHIDAPI()
 {
     RAWINPUTDEVICE pRawInputDevices;
     pRawInputDevices.hwndTarget  = RenderDevice::windowHandle;
@@ -160,7 +162,7 @@ void InitHIDAPI()
     InitRawInputAPI();
 }
 
-void InitRawInputAPI()
+void RSDK::SKU::InitRawInputAPI()
 {
     if (HIDEnabled) {
         rawInputDeviceCount = 0;
@@ -251,7 +253,7 @@ void InitRawInputAPI()
     }
 }
 
-void UpdateRawInputButtonState(HRAWINPUT hRawInput)
+void RSDK::SKU::UpdateRawInputButtonState(HRAWINPUT hRawInput)
 {
     uint32 pcbSize;
     GetRawInputData(hRawInput, RID_INPUT, NULL, &pcbSize, sizeof(rawInputData.header));          // get size

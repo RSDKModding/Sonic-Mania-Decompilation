@@ -1,7 +1,9 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+using namespace RSDK;
+
 #if RETRO_REV02
-RSDK::SKU::UserStats *RSDK::SKU::stats = NULL;
+SKU::UserStats *RSDK::SKU::stats = NULL;
 #endif
 
 #if !RETRO_REV02

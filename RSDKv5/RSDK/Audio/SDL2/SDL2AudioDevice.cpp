@@ -25,8 +25,8 @@ bool32 AudioDevice::Init()
         audioState = true;
     }
     else {
-        RSDK::PrintLog(PRINT_NORMAL, "ERROR: Unable to open audio device!");
-        RSDK::PrintLog(PRINT_NORMAL, "ERROR: %s", SDL_GetError());
+        PrintLog(PRINT_NORMAL, "ERROR: Unable to open audio device!");
+        PrintLog(PRINT_NORMAL, "ERROR: %s", SDL_GetError());
     }
 
     return true;
@@ -169,7 +169,7 @@ void AudioDevice::InitAudioChannels()
     sfxList[SFX_COUNT - 1].scope              = SCOPE_GLOBAL;
     sfxList[SFX_COUNT - 1].maxConcurrentPlays = 1;
     sfxList[SFX_COUNT - 1].length             = MIX_BUFFER_SIZE;
-    RSDK::AllocateStorage(MIX_BUFFER_SIZE * sizeof(SAMPLE_FORMAT), (void **)&sfxList[SFX_COUNT - 1].buffer, RSDK::DATASET_MUS, false);
+    AllocateStorage(MIX_BUFFER_SIZE * sizeof(SAMPLE_FORMAT), (void **)&sfxList[SFX_COUNT - 1].buffer, DATASET_MUS, false);
 
     initializedAudioChannels = true;
 }

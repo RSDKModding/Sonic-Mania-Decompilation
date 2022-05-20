@@ -323,7 +323,7 @@ typedef struct {
     void (*RotatePalette)(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32 right);
     void (*SetLimitedFade)(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
-    void (*BlendColors)(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 blendAmount, int32 startIndex, int32 count);
+    void (*BlendColors)(uint8 destBankID, uint32 *srcColorsA, uint32 *srcColorsB, int32 blendAmount, int32 startIndex, int32 count);
 #endif
 
     // Drawing
@@ -350,9 +350,9 @@ typedef struct {
     void (*SetDiffuseColor)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetDiffuseIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetSpecularIntensity)(uint16 index, int32 x, int32 y, int32 z);
-    void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *matWorld, Matrix *matNormal, color color);
-    void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
-    void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
+    void (*AddModelTo3DScene)(uint16 modelFrames, uint16 sceneIndex, uint8 drawMode, Matrix *matWorld, Matrix *matNormal, color color);
+    void (*SetModelAnimation)(uint16 modelFrames, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
+    void (*AddMeshFrameTo3DScene)(uint16 modelFrames, uint16 sceneIndex, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
                                   color color);
     void (*Draw3DScene)(uint16 index);
 
@@ -376,7 +376,8 @@ typedef struct {
     void (*GetLayerSize)(uint16 layer, Vector2 *size, bool32 usePixelUnits);
     uint16 (*GetTileInfo)(uint16 layer, int32 x, int32 y);
     void (*SetTileInfo)(uint16 layer, int32 x, int32 y, uint16 tile);
-    int32 (*CopyTileLayer)(uint16 dstLayer, int32 startX1, int32 startY1, uint16 srcLayer, int32 startX2, int32 startY2, int32 sizeX, int32 sizeY);
+    int32 (*CopyTileLayer)(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
+                           int32 countY);
     void (*ProcessParallax)(TileLayer *TileLayer);
     ScanlineInfo *(*GetScanlines)(void);
 

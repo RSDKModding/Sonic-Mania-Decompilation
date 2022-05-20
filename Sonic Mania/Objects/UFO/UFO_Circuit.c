@@ -56,9 +56,9 @@ void UFO_Circuit_Draw(void)
         RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &UFO_Camera->matWorld);
         RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &UFO_Camera->matView);
 
-        RSDK.AddMeshFrameTo3DScene(self->ufoAnimator.animationID, UFO_Circuit->sceneIndex, &self->ufoAnimator, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+        RSDK.AddMeshFrameTo3DScene(self->ufoAnimator.animationID, UFO_Circuit->sceneIndex, &self->ufoAnimator, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN,
                                    &self->matWorld, &self->matNormal, 0xFFFFFF);
-        RSDK.AddMeshFrameTo3DScene(UFO_Circuit->emeraldModel, UFO_Circuit->sceneIndex, &self->ufoAnimator, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+        RSDK.AddMeshFrameTo3DScene(UFO_Circuit->emeraldModel, UFO_Circuit->sceneIndex, &self->ufoAnimator, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN,
                                    &self->matWorld, &self->matNormal, 0xFFFFFF);
 
         RSDK.Draw3DScene(UFO_Circuit->sceneIndex);

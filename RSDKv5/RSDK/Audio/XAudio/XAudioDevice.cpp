@@ -44,7 +44,7 @@ bool32 AudioDevice::Init()
                 }
                 else {
 #if RETRO_RENDERDEVICE_DIRECTX9
-                    if (RSDK::videoSettings.windowed) {
+                    if (videoSettings.windowed) {
                         MessageBox(RenderDevice::windowHandle, _T("Unable to create source voice. Sound will not be available during this session."),
                                    _T("AudioDevice::Init"), MB_OK);
                     }
@@ -53,7 +53,7 @@ bool32 AudioDevice::Init()
             }
             else {
 #if RETRO_RENDERDEVICE_DIRECTX9
-                if (RSDK::videoSettings.windowed) {
+                if (videoSettings.windowed) {
                     MessageBox(RenderDevice::windowHandle, _T("Unable to create mastering voice. Sound will not be available during this session."),
                                _T("AudioDevice::Init"), MB_OK);
                 }
@@ -67,11 +67,11 @@ bool32 AudioDevice::Init()
         }
         else {
 #if RETRO_RENDERDEVICE_DIRECTX9
-            if (RSDK::videoSettings.windowed) {
+            if (videoSettings.windowed) {
                 MessageBox(RenderDevice::windowHandle,
                            _T("Error Initializing XAudio2.\n"
-                           "You may need to install the Jun 2010 DirectX update to have the XAudio Drivers.\n"
-                           "Sound will not be available during this session."),
+                              "You may need to install the Jun 2010 DirectX update to have the XAudio Drivers.\n"
+                              "Sound will not be available during this session."),
                            _T("AudioDevice::Init"), MB_OK);
             }
 #endif
@@ -277,7 +277,7 @@ void AudioDevice::InitAudioChannels()
     sfxList[SFX_COUNT - 1].scope              = SCOPE_GLOBAL;
     sfxList[SFX_COUNT - 1].maxConcurrentPlays = 1;
     sfxList[SFX_COUNT - 1].length             = MIX_BUFFER_SIZE;
-    RSDK::AllocateStorage(MIX_BUFFER_SIZE * sizeof(SAMPLE_FORMAT), (void **)&sfxList[SFX_COUNT - 1].buffer, RSDK::DATASET_MUS, false);
+    AllocateStorage(MIX_BUFFER_SIZE * sizeof(SAMPLE_FORMAT), (void **)&sfxList[SFX_COUNT - 1].buffer, DATASET_MUS, false);
 
     InitializeCriticalSection(&AudioDevice::criticalSection);
     initializedAudioChannels = true;

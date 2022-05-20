@@ -49,7 +49,7 @@ void PBL_Player_Draw(void)
         RSDK.MatrixMultiply(&self->matrix3, &self->matrix4, &self->matrix2);
         RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matWorld);
         RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &PBL_Camera->matNormalItem);
-        RSDK.AddModelTo3DScene(self->animator.animationID, PBL_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matrix3,
+        RSDK.AddModelTo3DScene(self->animator.animationID, PBL_Player->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN, &self->matrix3,
                                &self->matrix4, 0xFFFFFF);
         RSDK.Draw3DScene(PBL_Player->sceneIndex);
     }

@@ -31,10 +31,10 @@ void SpecialRing_Draw(void)
     else {
         RSDK.Prepare3DScene(SpecialRing->sceneIndex);
         if (self->enabled)
-            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &self->matWorld, &self->matNormal,
+            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED, &self->matWorld, &self->matNormal,
                                    0xF0F000);
         else
-            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_WIREFRAME, &self->matWorld, &self->matNormal,
+            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_WIREFRAME_SHADED, &self->matWorld, &self->matNormal,
                                    0x609090);
         RSDK.Draw3DScene(SpecialRing->sceneIndex);
     }

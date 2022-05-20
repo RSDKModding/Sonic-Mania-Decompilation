@@ -112,7 +112,7 @@ void UFO_Decoration_StageLoad(void)
 
     UFO_Decoration->sceneIndex = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
 
-    UFO_Decoration->drawType = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
+    UFO_Decoration->drawType = S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN;
 }
 
 #if RETRO_INCLUDE_EDITOR

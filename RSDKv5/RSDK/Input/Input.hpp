@@ -1,6 +1,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+namespace RSDK
+{
+
 #define PLAYER_COUNT      (4)
 #define INPUTDEVICE_COUNT (0x10)
 
@@ -480,6 +483,7 @@ extern int32 mostRecentControllerID;
 #endif
 
 void InitInputDevices();
+void ClearInput();
 void ProcessInput();
 
 void RemoveInputDevice(InputDevice *targetDevice);
@@ -699,15 +703,17 @@ inline void GetUnknownInputValue(int32 controllerID, int32 type, int32 *value)
 {
     uint8 contID = controllerID - 1;
 
-    if (value && id < PLAYER_COUNT && activeInputDevices[contID]) {
+    if (value && type < PLAYER_COUNT && activeInputDevices[contID]) {
         switch (type) {
             default:
                 break;
-                // case 0: *value = activeInputDevices[contID].deviceType; break;
-                // case 1: *value = activeInputDevices[contID].field_4; break;
+                // case 0: *value = activeInputDevices[contID].unknown1; break;
+                // case 1: *value = activeInputDevices[contID].unknown2; break;
         }
     }
 }
 #endif
+
+} // namespace RSDK
 
 #endif // !INPUT_H

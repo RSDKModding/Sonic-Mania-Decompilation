@@ -1,4 +1,7 @@
 
+namespace SKU
+{
+
 struct InputDeviceSDL : InputDevice {
     void UpdateInput(void);
     void ProcessInput(int32 controllerID);
@@ -35,3 +38,5 @@ struct InputDeviceSDL : InputDevice {
 InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID);
 
 void InitSDL2InputAPI();
+
+} // namespace SKU

@@ -1,25 +1,27 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-InputDevice *InputDevices[INPUTDEVICE_COUNT];
-int32 InputDeviceCount = 0;
+using namespace RSDK;
 
-int32 activeControllers[PLAYER_COUNT];
-InputDevice *activeInputDevices[PLAYER_COUNT];
+InputDevice *RSDK::InputDevices[INPUTDEVICE_COUNT];
+int32 RSDK::InputDeviceCount = 0;
 
-ControllerState controller[PLAYER_COUNT + 1];
-AnalogState stickL[PLAYER_COUNT + 1];
+int32 RSDK::activeControllers[PLAYER_COUNT];
+InputDevice *RSDK::activeInputDevices[PLAYER_COUNT];
+
+ControllerState RSDK::controller[PLAYER_COUNT + 1];
+AnalogState RSDK::stickL[PLAYER_COUNT + 1];
 #if RETRO_REV02
-AnalogState stickR[PLAYER_COUNT + 1];
-TriggerState triggerL[PLAYER_COUNT + 1];
-TriggerState triggerR[PLAYER_COUNT + 1];
+AnalogState RSDK::stickR[PLAYER_COUNT + 1];
+TriggerState RSDK::triggerL[PLAYER_COUNT + 1];
+TriggerState RSDK::triggerR[PLAYER_COUNT + 1];
 #endif
-TouchMouseData touchMouseData;
+TouchMouseData RSDK::touchMouseData;
 
-GamePadMappings *gamePadMappings = NULL;
-int32 gamePadCount               = 0;
+GamePadMappings *RSDK::gamePadMappings = NULL;
+int32 RSDK::gamePadCount               = 0;
 
 #if !RETRO_REV02
-int32 mostRecentControllerID = -1;
+int32 RSDK::mostRecentControllerID = -1;
 #endif
 
 #if RETRO_INPUTDEVICE_KEYBOARD
@@ -42,7 +44,7 @@ int32 mostRecentControllerID = -1;
 #include "SDL2/SDL2InputDevice.cpp"
 #endif
 
-void RemoveInputDevice(InputDevice *targetDevice)
+void RSDK::RemoveInputDevice(InputDevice *targetDevice)
 {
     if (targetDevice) {
         for (int32 d = 0; d < InputDeviceCount; ++d) {
@@ -74,7 +76,7 @@ void RemoveInputDevice(InputDevice *targetDevice)
     }
 }
 
-void InitInputDevices()
+void RSDK::InitInputDevices()
 {
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         activeControllers[i]  = CONT_ANY;
@@ -82,27 +84,27 @@ void InitInputDevices()
     }
 
 #if RETRO_INPUTDEVICE_KEYBOARD
-    InitKeyboardInputAPI();
+    SKU::InitKeyboardInputAPI();
 #endif
 
 #if RETRO_INPUTDEVICE_RAWINPUT
-    InitHIDAPI();
+    SKU::InitHIDAPI();
 #endif
 
 #if RETRO_INPUTDEVICE_XINPUT
-    InitXInputAPI();
+    SKU::InitXInputAPI();
 #endif
 
 #if RETRO_INPUTDEVICE_STEAM
-    InitSteamInputAPI();
+    SKU::InitSteamInputAPI();
 #endif
 
 #if RETRO_INPUTDEVICE_SDL2
-    InitSDL2InputAPI();
+    SKU::InitSDL2InputAPI();
 #endif
 }
 
-void ClearInput()
+void RSDK::ClearInput()
 {
     for (int32 i = 0; i <= PLAYER_COUNT; ++i) {
         if (i != 0 && activeControllers[i - 1] == CONT_UNASSIGNED)
@@ -153,7 +155,7 @@ void ClearInput()
     }
 }
 
-void ProcessInput()
+void RSDK::ProcessInput()
 {
     ClearInput();
 
@@ -261,7 +263,7 @@ void ProcessInput()
     }
 }
 
-int32 GetControllerType(int32 inputID)
+int32 RSDK::GetControllerType(int32 inputID)
 {
     for (int32 i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i] && InputDevices[i]->inputID == inputID)
@@ -269,12 +271,13 @@ int32 GetControllerType(int32 inputID)
     }
 
 #if RETRO_REV02
-    return RSDK::SKU::userCore->GetDefaultGamepadType();
+    return SKU::userCore->GetDefaultGamepadType();
 #else
-    int32 platform = RSDK::gameVerInfo.platform;
+    int32 platform = gameVerInfo.platform;
 
     switch (platform) {
         case PLATFORM_SWITCH: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+
         case PLATFORM_PC:
         case PLATFORM_DEV:
         default: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;

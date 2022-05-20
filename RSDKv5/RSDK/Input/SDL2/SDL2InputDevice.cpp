@@ -1,4 +1,6 @@
 
+using namespace RSDK::SKU;
+
 #define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
 bool32 getControllerButton(InputDeviceSDL *device, uint8 buttonID)
@@ -160,7 +162,7 @@ void InputDeviceSDL::CloseDevice()
     this->controllerPtr = NULL;
 }
 
-InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID)
+InputDeviceSDL *RSDK::SKU::InitSDL2InputDevice(uint32 id, uint8 controllerID)
 {
     if (InputDeviceCount >= INPUTDEVICE_COUNT)
         return NULL;
@@ -205,7 +207,7 @@ InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID)
     return device;
 }
 
-void InitSDL2InputAPI()
+void RSDK::SKU::InitSDL2InputAPI()
 {
     char buffer[0x100];
     SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);

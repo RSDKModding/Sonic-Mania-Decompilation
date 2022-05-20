@@ -116,7 +116,7 @@ void PBL_Flipper_StageLoad(void)
 {
     PBL_Flipper->modelFrames     = RSDK.LoadMesh("Pinball/Flipper.bin", SCOPE_STAGE);
     PBL_Flipper->sceneIndex      = RSDK.Create3DScene("View:Pinball", 0x1000, SCOPE_STAGE);
-    PBL_Flipper->drawType        = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
+    PBL_Flipper->drawType        = S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN;
     PBL_Flipper->hitbox.left     = -52;
     PBL_Flipper->hitbox.top      = -8;
     PBL_Flipper->hitbox.right    = 12;

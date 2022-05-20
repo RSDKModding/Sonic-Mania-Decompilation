@@ -9,16 +9,18 @@
 #include <android/log.h>
 #endif
 
+using namespace RSDK;
+
 bool32 RSDK::engineDebugMode = true;
 bool32 RSDK::useEndLine      = true;
 char RSDK::outputString[0x400];
 
 #if RETRO_REV02
 int32 RSDK::viewableVarCount = 0;
-RSDK::DebugValueInfo RSDK::debugValues[VIEWVAR_LIST_COUNT];
+ViewableVariable RSDK::viewableVarList[VIEWVAR_LIST_COUNT];
 #endif
 
-RSDK::DevMenu RSDK::devMenu = RSDK::DevMenu();
+DevMenu RSDK::devMenu = DevMenu();
 
 void RSDK::PrintLog(int32 severity, const char *message, ...)
 {
@@ -41,7 +43,7 @@ void RSDK::PrintLog(int32 severity, const char *message, ...)
 
             case PRINT_POPUP:
                 if (sceneInfo.state & 3) {
-                    CreateEntity(RSDK::DevOutput->classID, outputString, 0, 0);
+                    CreateEntity(DevOutput->classID, outputString, 0, 0);
                 }
                 break;
 
@@ -61,7 +63,7 @@ void RSDK::PrintLog(int32 severity, const char *message, ...)
         }
 #endif
         if (engine.consoleEnabled) {
-            RSDK::PrintConsole(outputString);
+            PrintConsole(outputString);
         }
         else {
 #if RETRO_PLATFORM == RETRO_WIN
@@ -96,7 +98,7 @@ void RSDK::PrintLog(int32 severity, const char *message, ...)
 void RSDK::AddViewableVariable(const char *name, void *value, int32 type, int32 min, int32 max)
 {
     if (viewableVarCount < VIEWVAR_COUNT) {
-        DebugValueInfo *value = &debugValues[viewableVarCount++];
+        ViewableVariable *value = &viewableVarList[viewableVarCount++];
 
         strncpy(value->name, name, 0x10);
         value->value = value;
@@ -146,7 +148,7 @@ void RSDK::AddViewableVariable(const char *name, void *value, int32 type, int32 
 #endif
 
 #if !RETRO_REV02
-void RSDK::PrintMessage(void *msg, int32 staticVars)
+void RSDK::PrintMessage(void *msg, int32 type)
 {
     useEndLine = false;
 
@@ -229,7 +231,7 @@ void RSDK::DevMenu_MainMenu()
     uint32 selectionColors[]     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
     const char *selectionNames[] = { "Resume", "Restart", "Stage Select", "Options", "Mods", "Exit" };
 #endif
-    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
+    selectionColors[devMenu.selection] = 0xF0F0F0;
 
     // Info Box
     int32 y = currentScreen->center.y - 80;
@@ -240,10 +242,10 @@ void RSDK::DevMenu_MainMenu()
     DrawDevString("Dev Menu", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
 
     y += 16;
-    DrawDevString(RSDK::gameVerInfo.gameName, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
+    DrawDevString(gameVerInfo.gameName, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
 
     y += 8;
-    DrawDevString(RSDK::gameVerInfo.gameVersion, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
+    DrawDevString(gameVerInfo.gameVersion, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
 
     // Selections Box
     y += 24;
@@ -261,39 +263,34 @@ void RSDK::DevMenu_MainMenu()
     // Storage box
 
     // Stage Storage
-    int32 stgUsed =
-        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_STG].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_STG].storageLimit * 126.0;
+    int32 stgUsed = (sizeof(int32) * dataStorage[DATASET_STG].usedStorage) / (float)dataStorage[DATASET_STG].storageLimit * 126.0;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, stgUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("STG", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Music Storage
-    int32 musUsed =
-        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_MUS].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_MUS].storageLimit * 126.0;
+    int32 musUsed = (sizeof(int32) * dataStorage[DATASET_MUS].usedStorage) / (float)dataStorage[DATASET_MUS].storageLimit * 126.0;
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF5, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, musUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("MUS", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // SoundFX Storage
-    int32 sfxUsed =
-        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_SFX].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_SFX].storageLimit * 126.0;
+    int32 sfxUsed = (sizeof(int32) * dataStorage[DATASET_SFX].usedStorage) / (float)dataStorage[DATASET_SFX].storageLimit * 126.0;
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, sfxUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("SFX", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // String Storage
-    int32 strUsed =
-        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_STR].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_STR].storageLimit * 126.0;
+    int32 strUsed = (sizeof(int32) * dataStorage[DATASET_STR].usedStorage) / (float)dataStorage[DATASET_STR].storageLimit * 126.0;
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, strUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("STR", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Temp Storage
-    int32 tmpUsed =
-        (sizeof(int32) * RSDK::dataStorage[RSDK::DATASET_TMP].usedStorage) / (float)RSDK::dataStorage[RSDK::DATASET_TMP].storageLimit * 126.0;
+    int32 tmpUsed = (sizeof(int32) * dataStorage[DATASET_TMP].usedStorage) / (float)dataStorage[DATASET_TMP].storageLimit * 126.0;
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, tmpUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
@@ -345,9 +342,9 @@ void RSDK::DevMenu_MainMenu()
 
     bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-    if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+    if (SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (RSDK::SKU::GetConfirmButtonFlip())
+    if (SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_ANY].keyB.press;
 
@@ -358,13 +355,13 @@ void RSDK::DevMenu_MainMenu()
             case 1: sceneInfo.state = ENGINESTATE_LOAD; break;
 
             case 2:
-                devMenu.state     = RSDK::DevMenu_CategorySelectMenu;
+                devMenu.state     = DevMenu_CategorySelectMenu;
                 devMenu.selection = 0;
                 devMenu.timer     = 1;
                 break;
 
             case 3:
-                devMenu.state     = RSDK::DevMenu_OptionsMenu;
+                devMenu.state     = DevMenu_OptionsMenu;
                 devMenu.selection = 0;
                 devMenu.timer     = 1;
                 break;
@@ -373,8 +370,8 @@ void RSDK::DevMenu_MainMenu()
             case 4: engine.running = false; break;
 #else
             case 4:
-                RSDK::LoadMods(); // reload our mod list real quick
-                devMenu.state     = RSDK::DevMenu_ModsMenu;
+                LoadMods(); // reload our mod list real quick
+                devMenu.state     = DevMenu_ModsMenu;
                 devMenu.selection = 0;
                 devMenu.timer     = 1;
                 break;
@@ -391,7 +388,7 @@ void RSDK::DevMenu_CategorySelectMenu()
     uint32 selectionColors[] = {
         0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090,
     };
-    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -498,15 +495,15 @@ void RSDK::DevMenu_CategorySelectMenu()
 
     bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-    if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+    if (SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (RSDK::SKU::GetConfirmButtonFlip())
+    if (SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_ANY].keyB.press;
 
     if (controller[CONT_ANY].keyStart.press || confirm) {
         if (sceneInfo.listCategory[devMenu.selection].sceneCount) {
-            devMenu.state     = RSDK::DevMenu_SceneSelectMenu;
+            devMenu.state     = DevMenu_SceneSelectMenu;
             devMenu.listPos   = devMenu.selection;
             devMenu.scrollPos = 0;
             devMenu.selection = 0;
@@ -526,7 +523,7 @@ void RSDK::DevMenu_SceneSelectMenu()
     uint32 selectionColors[] = {
         0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090,
     };
-    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -611,9 +608,9 @@ void RSDK::DevMenu_SceneSelectMenu()
 
     bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-    if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+    if (SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (RSDK::SKU::GetConfirmButtonFlip())
+    if (SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_ANY].keyB.press;
 
@@ -646,7 +643,7 @@ void RSDK::DevMenu_OptionsMenu()
 #else
     uint32 selectionColors[] = { 0x808090, 0x808090, 0x808090, 0x808090 };
 #endif
-    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
+    selectionColors[devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -704,19 +701,19 @@ void RSDK::DevMenu_OptionsMenu()
 
     bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-    if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+    if (SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (RSDK::SKU::GetConfirmButtonFlip())
+    if (SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_ANY].keyB.press;
 
     if (controller[CONT_ANY].keyStart.press || confirm) {
         switch (devMenu.selection) {
             case 0: {
-                devMenu.windowed    = RSDK::videoSettings.windowed;
-                devMenu.windowScale = (RSDK::videoSettings.windowWidth / RSDK::videoSettings.pixWidth) - 1;
+                devMenu.windowed    = videoSettings.windowed;
+                devMenu.windowScale = (videoSettings.windowWidth / videoSettings.pixWidth) - 1;
 
-                int32 aspect = (int32)((RSDK::videoSettings.windowWidth / (float)RSDK::videoSettings.windowHeight) * (float)SCREEN_YSIZE) >> 3;
+                int32 aspect = (int32)((videoSettings.windowWidth / (float)videoSettings.windowHeight) * (float)SCREEN_YSIZE) >> 3;
                 switch (aspect) {
                     default:
                     case 40: devMenu.windowAspect = 0; break; // 4:3
@@ -726,23 +723,23 @@ void RSDK::DevMenu_OptionsMenu()
                     case 53: devMenu.windowAspect = 4; break; // 16:9
                 }
 
-                devMenu.state     = RSDK::DevMenu_VideoOptionsMenu;
+                devMenu.state     = DevMenu_VideoOptionsMenu;
                 devMenu.selection = 0;
                 break;
             }
 
             case 1:
-                devMenu.state     = RSDK::DevMenu_AudioOptionsMenu;
+                devMenu.state     = DevMenu_AudioOptionsMenu;
                 devMenu.selection = 0;
                 break;
 
             case 2:
-                devMenu.state     = RSDK::DevMenu_InputOptionsMenu;
+                devMenu.state     = DevMenu_InputOptionsMenu;
                 devMenu.selection = 0;
                 break;
 
 #if RETRO_REV02
-            case 3: devMenu.state = RSDK::DevMenu_DebugOptionsMenu; devMenu.selection = 0;
+            case 3: devMenu.state = DevMenu_DebugOptionsMenu; devMenu.selection = 0;
 
 #if !RETRO_USE_ORIGINAL_CODE
                 // reset this just to be sure there's no crashing since we can go back from prev menus unlike original RSDKv5
@@ -770,8 +767,8 @@ void RSDK::DevMenu_OptionsMenu()
 }
 void RSDK::DevMenu_VideoOptionsMenu()
 {
-    uint32 selectionColors[]                 = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
+    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -814,7 +811,7 @@ void RSDK::DevMenu_VideoOptionsMenu()
 
     dy += 8;
     DrawDevString("Screen Shader:", currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[3]);
-    DrawDevString(shaderList[RSDK::videoSettings.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevString(shaderList[videoSettings.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
 
     dy += 16;
     DrawDevString("Confirm", currentScreen->center.x, dy, ALIGN_CENTER, selectionColors[4]);
@@ -853,23 +850,23 @@ void RSDK::DevMenu_VideoOptionsMenu()
     switch (devMenu.selection) {
         case 0: // scale
             if (controller[CONT_ANY].keyLeft.press) {
-                devMenu.windowScale        = (devMenu.windowScale - 1) & 3;
-                RSDK::changedVideoSettings = true;
+                devMenu.windowScale  = (devMenu.windowScale - 1) & 3;
+                changedVideoSettings = true;
             }
             else if (controller[CONT_ANY].keyRight.press) {
-                devMenu.windowScale        = (devMenu.windowScale + 1) & 3;
-                RSDK::changedVideoSettings = true;
+                devMenu.windowScale  = (devMenu.windowScale + 1) & 3;
+                changedVideoSettings = true;
             }
             break;
 
         case 1: // aspect
             if (controller[CONT_ANY].keyLeft.press) {
                 devMenu.windowAspect--;
-                RSDK::changedVideoSettings = true;
+                changedVideoSettings = true;
             }
             else if (controller[CONT_ANY].keyRight.press) {
                 devMenu.windowAspect++;
-                RSDK::changedVideoSettings = true;
+                changedVideoSettings = true;
             }
 
             if (devMenu.windowAspect > 4)
@@ -881,58 +878,58 @@ void RSDK::DevMenu_VideoOptionsMenu()
         case 2: // fullscreen
             if (controller[CONT_ANY].keyLeft.press || controller[CONT_ANY].keyRight.press) {
                 devMenu.windowed ^= 1;
-                RSDK::changedVideoSettings = true;
+                changedVideoSettings = true;
             }
             break;
 
         case 3: // screenShader
             if (controller[CONT_ANY].keyLeft.press) {
-                RSDK::videoSettings.shaderID--;
-                RSDK::changedVideoSettings = true;
+                videoSettings.shaderID--;
+                changedVideoSettings = true;
             }
             else if (controller[CONT_ANY].keyRight.press) {
-                RSDK::videoSettings.shaderID++;
-                RSDK::changedVideoSettings = true;
+                videoSettings.shaderID++;
+                changedVideoSettings = true;
             }
 
-            if (RSDK::videoSettings.shaderID >= userShaderCount)
-                RSDK::videoSettings.shaderID = SHADER_NONE;
-            else if (RSDK::videoSettings.shaderID < SHADER_NONE)
-                RSDK::videoSettings.shaderID = userShaderCount - 1;
+            if (videoSettings.shaderID >= userShaderCount)
+                videoSettings.shaderID = SHADER_NONE;
+            else if (videoSettings.shaderID < SHADER_NONE)
+                videoSettings.shaderID = userShaderCount - 1;
             break;
 
         case 4: // confirm
         {
             bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-            if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+            if (SKU::userCore->GetConfirmButtonFlip())
 #else
-            if (RSDK::SKU::GetConfirmButtonFlip())
+            if (SKU::GetConfirmButtonFlip())
 #endif
                 confirm = controller[CONT_ANY].keyB.press;
 
             if (controller[CONT_ANY].keyStart.press || confirm) {
                 // do confirm
-                RSDK::videoSettings.windowed = devMenu.windowed;
-                shaderList[0].linear         = !devMenu.windowed;
+                videoSettings.windowed = devMenu.windowed;
+                shaderList[0].linear   = !devMenu.windowed;
                 if (!devMenu.windowScale)
-                    RSDK::videoSettings.shaderID = SHADER_NONE;
+                    videoSettings.shaderID = SHADER_NONE;
 
                 int32 width = 0;
                 switch (devMenu.windowAspect) {
-                    default: width = RSDK::videoSettings.windowWidth; break;
-                    case 0: width = 3 - (RSDK::videoSettings.pixHeight * -1.3333334f); break; // 16:9
-                    case 1: width = 3 - (RSDK::videoSettings.pixHeight * -1.5f); break;       // 4:3
-                    case 2: width = 3 - (RSDK::videoSettings.pixHeight * -1.6f); break;       // 3:2
-                    case 3: width = 3 - (RSDK::videoSettings.pixHeight * -1.6666666f); break; // 16:10
-                    case 4: width = 3 - (RSDK::videoSettings.pixHeight * -1.7777778f); break; // 5:3
+                    default: width = videoSettings.windowWidth; break;
+                    case 0: width = 3 - (videoSettings.pixHeight * -1.3333334f); break; // 16:9
+                    case 1: width = 3 - (videoSettings.pixHeight * -1.5f); break;       // 4:3
+                    case 2: width = 3 - (videoSettings.pixHeight * -1.6f); break;       // 3:2
+                    case 3: width = 3 - (videoSettings.pixHeight * -1.6666666f); break; // 16:10
+                    case 4: width = 3 - (videoSettings.pixHeight * -1.7777778f); break; // 5:3
                 }
                 width &= 0x7FF8;
                 // if (width > DEFAULT_SCREEN_XSIZE)
                 //     width = DEFAULT_SCREEN_XSIZE;
 
-                RSDK::videoSettings.windowWidth  = width * (devMenu.windowScale + 1);
-                RSDK::videoSettings.windowHeight = RSDK::videoSettings.pixHeight * (devMenu.windowScale + 1);
+                videoSettings.windowWidth  = width * (devMenu.windowScale + 1);
+                videoSettings.windowHeight = videoSettings.pixHeight * (devMenu.windowScale + 1);
                 UpdateGameWindow();
 
                 devMenu.state     = DevMenu_OptionsMenu;
@@ -945,9 +942,9 @@ void RSDK::DevMenu_VideoOptionsMenu()
         {
             bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-            if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+            if (SKU::userCore->GetConfirmButtonFlip())
 #else
-            if (RSDK::SKU::GetConfirmButtonFlip())
+            if (SKU::GetConfirmButtonFlip())
 #endif
                 confirm = controller[CONT_ANY].keyB.press;
 
@@ -968,8 +965,8 @@ void RSDK::DevMenu_VideoOptionsMenu()
 }
 void RSDK::DevMenu_AudioOptionsMenu()
 {
-    uint32 selectionColors[]                 = { 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
+    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1028,7 +1025,7 @@ void RSDK::DevMenu_AudioOptionsMenu()
         case 0:
             if (controller[CONT_ANY].keyLeft.press || controller[CONT_ANY].keyRight.press) {
                 engine.streamsEnabled ^= 1;
-                RSDK::changedVideoSettings = true;
+                changedVideoSettings = true;
             }
             break;
 
@@ -1038,7 +1035,7 @@ void RSDK::DevMenu_AudioOptionsMenu()
                 if (engine.streamVolume < 0.0)
                     engine.streamVolume = 0.0;
 
-                RSDK::changedVideoSettings = true;
+                changedVideoSettings = true;
             }
             else {
                 if (controller[CONT_ANY].keyRight.down) {
@@ -1046,7 +1043,7 @@ void RSDK::DevMenu_AudioOptionsMenu()
                     if (engine.streamVolume > 1.0)
                         engine.streamVolume = 1.0;
 
-                    RSDK::changedVideoSettings = true;
+                    changedVideoSettings = true;
                 }
             }
             break;
@@ -1057,7 +1054,7 @@ void RSDK::DevMenu_AudioOptionsMenu()
                 if (engine.soundFXVolume < 0.0)
                     engine.soundFXVolume = 0.0;
 
-                RSDK::changedVideoSettings = true;
+                changedVideoSettings = true;
             }
             else {
                 if (controller[CONT_ANY].keyRight.down) {
@@ -1065,7 +1062,7 @@ void RSDK::DevMenu_AudioOptionsMenu()
                     if (engine.soundFXVolume > 1.0)
                         engine.soundFXVolume = 1.0;
 
-                    RSDK::changedVideoSettings = true;
+                    changedVideoSettings = true;
                 }
             }
             break;
@@ -1073,9 +1070,9 @@ void RSDK::DevMenu_AudioOptionsMenu()
         case 3: {
             bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-            if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+            if (SKU::userCore->GetConfirmButtonFlip())
 #else
-            if (RSDK::SKU::GetConfirmButtonFlip())
+            if (SKU::GetConfirmButtonFlip())
 #endif
                 confirm = controller[CONT_ANY].keyB.press;
 
@@ -1096,8 +1093,8 @@ void RSDK::DevMenu_AudioOptionsMenu()
 }
 void RSDK::DevMenu_InputOptionsMenu()
 {
-    uint32 selectionColors[]                 = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[RSDK::devMenu.selection] = 0xF0F0F0;
+    uint32 selectionColors[]           = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1153,9 +1150,9 @@ void RSDK::DevMenu_InputOptionsMenu()
 
     bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-    if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+    if (SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (RSDK::SKU::GetConfirmButtonFlip())
+    if (SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_ANY].keyB.press;
 
@@ -1165,9 +1162,9 @@ void RSDK::DevMenu_InputOptionsMenu()
             devMenu.selection = 3;
         }
         else {
-            devMenu.state              = RSDK::DevMenu_KeyMappingsMenu;
-            devMenu.scrollPos          = 0;
-            RSDK::changedVideoSettings = true;
+            devMenu.state        = DevMenu_KeyMappingsMenu;
+            devMenu.scrollPos    = 0;
+            changedVideoSettings = true;
         }
     }
 
@@ -1193,7 +1190,7 @@ void RSDK::DevMenu_KeyMappingsMenu()
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 0x100, 0x48, 0x80, 0xFF, INK_NONE, true);
 
-    int32 controllerID = RSDK::devMenu.selection + 1;
+    int32 controllerID = devMenu.selection + 1;
     switch (devMenu.scrollPos) {
         case 0:
             DrawDevString("Press Key For UP", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
@@ -1302,8 +1299,8 @@ void RSDK::DevMenu_KeyMappingsMenu()
 #if RETRO_REV02
 void RSDK::DevMenu_DebugOptionsMenu()
 {
-    uint32 selectionColors[]                                     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    uint32 selectionColors[]                               = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1319,14 +1316,14 @@ void RSDK::DevMenu_DebugOptionsMenu()
 #endif
 
     bool32 confirm = controller[CONT_ANY].keyA.press;
-    if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+    if (SKU::userCore->GetConfirmButtonFlip())
         confirm = controller[CONT_ANY].keyB.press;
 
     confirm |= controller[CONT_ANY].keyStart.press;
 
     for (int32 i = 0; i < 8; ++i) {
         if (devMenu.scrollPos + i < viewableVarCount) {
-            RSDK::DebugValueInfo *value = &RSDK::debugValues[devMenu.scrollPos + i];
+            ViewableVariable *value = &viewableVarList[devMenu.scrollPos + i];
             DrawDevString(value->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, selectionColors[i]);
 
             if (!value->value) {
@@ -1499,64 +1496,64 @@ void RSDK::DevMenu_DebugOptionsMenu()
     }
 
     if (devMenu.selection < viewableVarCount) {
-        DebugValueInfo *value = &debugValues[devMenu.selection];
+        ViewableVariable *var = &viewableVarList[devMenu.selection];
 
-        switch (value->size) {
+        switch (var->size) {
             default: DrawDevString("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
 
             case sizeof(int8): {
-                int8 *valuePtr = (int8 *)value->value;
+                int8 *value = (int8 *)var->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr - 1 >= value->min)
-                        *valuePtr--;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value - 1 >= var->min)
+                        *value = *value - 1;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr + 1 <= value->max)
-                        *valuePtr++;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value + 1 <= var->max)
+                        *value = *value + 1;
                 }
                 break;
             }
 
             case sizeof(int16): {
-                int16 *valuePtr = (int16 *)value->value;
+                int16 *value = (int16 *)var->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr - 1 >= value->min)
-                        *valuePtr--;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value - 1 >= var->min)
+                        *value = *value - 1;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr + 1 <= value->max)
-                        *valuePtr++;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value + 1 <= var->max)
+                        *value = *value + 1;
                 }
                 break;
             }
 
             case sizeof(int32): {
-                int32 *valuePtr = (int32 *)value->value;
+                int32 *value = (int32 *)var->value;
 
                 if (controller[CONT_ANY].keyLeft.press) {
-                    if (value->type == VIEWVAR_DISPLAY_BOOL)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr - 1 >= value->min)
-                        *valuePtr--;
+                    if (var->type == VIEWVAR_DISPLAY_BOOL)
+                        *value ^= 1;
+                    else if (*value - 1 >= var->min)
+                        *value = *value - 1;
                 }
 
                 if (controller[CONT_ANY].keyRight.press) {
-                    if (!value->type)
-                        *valuePtr ^= 1;
-                    else if (*valuePtr + 1 <= value->max)
-                        *valuePtr++;
+                    if (!var->type)
+                        *value ^= 1;
+                    else if (*value + 1 <= var->max)
+                        *value = *value + 1;
                 }
                 break;
             }
@@ -1581,8 +1578,8 @@ void RSDK::DevMenu_DebugOptionsMenu()
 #if RETRO_USE_MOD_LOADER
 void RSDK::DevMenu_ModsMenu()
 {
-    uint32 selectionColors[]                                     = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
-    selectionColors[RSDK::devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
+    uint32 selectionColors[]                               = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    selectionColors[devMenu.selection - devMenu.scrollPos] = 0xF0F0F0;
 
     int32 dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 0x100, 0x30, 0x80, 0xFF, INK_NONE, true);
@@ -1593,10 +1590,9 @@ void RSDK::DevMenu_ModsMenu()
 
     int32 y = dy + 40;
     for (int32 i = 0; i < 8; ++i) {
-        if (devMenu.scrollPos + i < RSDK::modList.size()) {
-            DrawDevString(RSDK::modList[(devMenu.scrollPos + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, selectionColors[i]);
-            DrawDevString(RSDK::modList[(devMenu.scrollPos + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT,
-                          selectionColors[i]);
+        if (devMenu.scrollPos + i < modList.size()) {
+            DrawDevString(modList[(devMenu.scrollPos + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, selectionColors[i]);
+            DrawDevString(modList[(devMenu.scrollPos + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT, selectionColors[i]);
 
             y += 8;
             devMenu.scrollPos = devMenu.scrollPos;
@@ -1610,7 +1606,7 @@ void RSDK::DevMenu_ModsMenu()
     int32 preselection = devMenu.selection;
     if (controller[CONT_ANY].keyUp.press) {
         if (--devMenu.selection < 0)
-            devMenu.selection = (int32)(RSDK::modList.size() - 1);
+            devMenu.selection = (int32)(modList.size() - 1);
 
         if (devMenu.selection >= devMenu.scrollPos) {
             if (devMenu.selection > devMenu.scrollPos + 7)
@@ -1624,7 +1620,7 @@ void RSDK::DevMenu_ModsMenu()
     }
     else if (controller[CONT_ANY].keyUp.down) {
         if (!devMenu.timer && --devMenu.selection < 0)
-            devMenu.selection = (int32)(RSDK::modList.size() - 1);
+            devMenu.selection = (int32)(modList.size() - 1);
 
         devMenu.timer = (devMenu.timer + 1) & 7;
 
@@ -1638,7 +1634,7 @@ void RSDK::DevMenu_ModsMenu()
     }
 
     if (controller[CONT_ANY].keyDown.press) {
-        if (++devMenu.selection >= RSDK::modList.size())
+        if (++devMenu.selection >= modList.size())
             devMenu.selection = 0;
 
         if (devMenu.selection >= devMenu.scrollPos) {
@@ -1652,7 +1648,7 @@ void RSDK::DevMenu_ModsMenu()
         devMenu.timer = 1;
     }
     else if (controller[CONT_ANY].keyDown.down) {
-        if (!devMenu.timer && ++devMenu.selection >= RSDK::modList.size())
+        if (!devMenu.timer && ++devMenu.selection >= modList.size())
             devMenu.selection = 0;
 
         devMenu.timer = (devMenu.timer + 1) & 7;
@@ -1668,27 +1664,27 @@ void RSDK::DevMenu_ModsMenu()
 
     bool32 confirm = controller[CONT_ANY].keyA.press;
 #if RETRO_REV02
-    if (RSDK::SKU::userCore->GetConfirmButtonFlip())
+    if (SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (RSDK::SKU::GetConfirmButtonFlip())
+    if (SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_ANY].keyB.press;
 
     if (controller[CONT_ANY].keyStart.press || confirm || controller[CONT_ANY].keyLeft.press || controller[CONT_ANY].keyRight.press) {
-        RSDK::modList[devMenu.selection].active ^= true;
+        modList[devMenu.selection].active ^= true;
         devMenu.modsChanged = true;
     }
     else if (controller[CONT_ANY].keyC.down) {
-        RSDK::ModInfo swap               = RSDK::modList[preselection];
-        RSDK::modList[preselection]      = RSDK::modList[devMenu.selection];
-        RSDK::modList[devMenu.selection] = swap;
-        devMenu.modsChanged              = true;
+        ModInfo swap               = modList[preselection];
+        modList[preselection]      = modList[devMenu.selection];
+        modList[devMenu.selection] = swap;
+        devMenu.modsChanged        = true;
     }
     else if (controller[CONT_ANY].keyB.press) {
         devMenu.state     = DevMenu_MainMenu;
         devMenu.scrollPos = 0;
         devMenu.selection = 4;
-        RSDK::SaveMods();
+        SaveMods();
         LoadGameConfig();
     }
 }

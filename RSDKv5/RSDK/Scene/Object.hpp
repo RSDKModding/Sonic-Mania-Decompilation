@@ -5,6 +5,11 @@
 #include <functional>
 #endif
 
+namespace RSDK
+{
+
+#define RSDK_SIGNATURE_OBJ (0x4A424F)
+
 #define OBJECT_COUNT (0x400)
 
 // 0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
@@ -163,7 +168,7 @@ struct ObjectClass {
     void (*serialize)(void);
 #endif
 
-    // Classes 
+    // Classes
     Object **staticVars;
     int32 entityClassSize;
     int32 staticClassSize;
@@ -291,5 +296,9 @@ inline void BreakForeachLoop() { --foreachStackPtr; }
 bool32 CheckOnScreen(Entity *entity, Vector2 *range);
 // Checks if a position is on screen & within range
 bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range);
+
+void ClearStageObjects();
+
+} // namespace RSDK
 
 #endif // !OBJECT_H

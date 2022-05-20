@@ -1,6 +1,8 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-LogicLinkHandle linkGameLogic = NULL;
+using namespace RSDK;
+
+LogicLinkHandle RSDK::linkGameLogic = NULL;
 
 #if RETRO_PLATFORM == RETRO_WIN
 #include "Windows.h"
@@ -18,10 +20,10 @@ void *link_handle = NULL;
 #endif
 #endif
 
-int32 *globalVarsPtr = NULL;
-RetroEngine engine   = RetroEngine();
+int32 *RSDK::globalVarsPtr = NULL;
+RetroEngine RSDK::engine   = RetroEngine();
 
-int32 RunRetroEngine(int32 argc, char *argv[])
+int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 {
     ParseArguments(argc, argv);
 
@@ -40,13 +42,12 @@ int32 RunRetroEngine(int32 argc, char *argv[])
     InitCommonControls();
 #endif
 
-
     RenderDevice::isRunning = false;
-    if (RSDK::InitStorage()) {
+    if (InitStorage()) {
 #if RETRO_PLATFORM == RETRO_OSX
         char buffer[0x100];
         sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
-        RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
+        SKU::SetUserFileCallbacks(buffer, NULL, NULL);
 #elif RETRO_PLATFORM == RETRO_ANDROID
         char buffer[0x200];
 
@@ -58,23 +59,23 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
         strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
 
-        RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
+        SKU::SetUserFileCallbacks(buffer, NULL, NULL);
 
         env->DeleteLocalRef(activity);
         env->DeleteLocalRef(cls);
 #elif RETRO_PLATFORM == RETRO_LINUX
-        RSDK::SKU::SetUserFileCallbacks("./", NULL, NULL);
+        SKU::SetUserFileCallbacks("./", NULL, NULL);
 #else
-        RSDK::SKU::SetUserFileCallbacks("", NULL, NULL);
+        SKU::SetUserFileCallbacks("", NULL, NULL);
 #endif
 
-        RSDK::SKU::InitUserData();
-        RSDK::LoadSettingsINI();
+        SKU::InitUserData();
+        LoadSettingsINI();
 
         // By Default we use the dummy system so this'll never be false
         // its used in cases like steam where it gives the "Steam must be running to play this game" message and closes
 #if RETRO_REV02
-        if (!RSDK::SKU::userCore->CheckAPIInitialized()) {
+        if (!SKU::userCore->CheckAPIInitialized()) {
 #else
         if (false) { // it's more hardcoded in rev01, so lets pretend it's here
 #endif
@@ -92,7 +93,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
 #if RETRO_USE_MOD_LOADER
             // we confirmed the game actually is valid & running, lets start some callbacks
-            RSDK::RunModCallbacks(RSDK::MODCB_GAME_STARTUP, NULL);
+            RunModCallbacks(MODCB_GAME_STARTUP, NULL);
 #endif
         }
         else {
@@ -117,13 +118,13 @@ int32 RunRetroEngine(int32 argc, char *argv[])
             AudioDevice::FrameInit();
 
 #if RETRO_REV02
-            RSDK::SKU::userCore->FrameInit();
+            SKU::userCore->FrameInit();
 
-            if (RSDK::SKU::userCore->CheckEnginePause())
+            if (SKU::userCore->CheckEnginePause())
                 continue;
 
             // Focus Checks
-            if (RSDK::SKU::userCore->CheckFocusLost()) {
+            if (SKU::userCore->CheckFocusLost()) {
                 if (!(engine.focusState & 1)) {
                     engine.focusState = 1;
                     PauseSound();
@@ -136,14 +137,14 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 #endif
 
             if (!engine.initialized || (engine.focusState & 1)) {
-                if (RSDK::videoSettings.windowState != WINDOWSTATE_ACTIVE)
+                if (videoSettings.windowState != WINDOWSTATE_ACTIVE)
                     continue;
             }
             else {
                 if (!engine.hardPause)
                     ProcessEngine();
 
-                if (RSDK::videoSettings.windowState != WINDOWSTATE_ACTIVE)
+                if (videoSettings.windowState != WINDOWSTATE_ACTIVE)
                     continue;
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -154,7 +155,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
                         if (tx <= 32 && ty <= 32) {
                             if (engine.devMenu && sceneInfo.state != ENGINESTATE_DEVMENU)
-                                RSDK::OpenDevMenu();
+                                OpenDevMenu();
                         }
                     }
                 }
@@ -162,7 +163,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
 #if RETRO_REV02
                 if (!(engine.focusState & 1))
-                    RSDK::SKU::HandleUserStatuses();
+                    SKU::HandleUserStatuses();
 #endif
 
                 // Uncomment this code to add the build number to dev menu
@@ -193,11 +194,11 @@ int32 RunRetroEngine(int32 argc, char *argv[])
 
     AudioDevice::Release();
     RenderDevice::Release(false);
-    RSDK::SaveSettingsINI(false);
-    RSDK::SKU::ReleaseUserData();
-    RSDK::ReleaseStorage();
+    SaveSettingsINI(false);
+    SKU::ReleaseUserData();
+    ReleaseStorage();
 #if RETRO_USE_MOD_LOADER
-    RSDK::UnloadMods();
+    UnloadMods();
 #endif
 
 #if RETRO_PLATFORM == RETRO_WIN
@@ -221,7 +222,7 @@ int32 RunRetroEngine(int32 argc, char *argv[])
     return 0;
 }
 
-void ProcessEngine()
+void RSDK::ProcessEngine()
 {
     foreachStackPtr = foreachStackList;
 #if !RETRO_USE_ORIGINAL_CODE
@@ -229,9 +230,9 @@ void ProcessEngine()
 #endif
 
 #if RETRO_USE_MOD_LOADER
-    if (sceneInfo.state != ENGINESTATE_DEVMENU && RSDK::devMenu.modsChanged) {
-        RSDK::devMenu.modsChanged = false;
-        RSDK::SaveMods();
+    if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
+        devMenu.modsChanged = false;
+        SaveMods();
         for (int32 c = 0; c < CHANNEL_COUNT; ++c) StopChannel(c);
 #if RETRO_REV02
         forceHardReset = true;
@@ -244,7 +245,7 @@ void ProcessEngine()
             sceneInfo.listPos        = pre.listPos;
         }
 #if RETRO_RENDERDEVICE_SDL2
-        SDL_SetWindowTitle(RenderDevice::window, RSDK::gameVerInfo.gameName);
+        SDL_SetWindowTitle(RenderDevice::window, gameVerInfo.gameName);
 #endif
 
         sceneInfo.state = ENGINESTATE_LOAD;
@@ -267,16 +268,16 @@ void ProcessEngine()
                 InitObjects();
 
 #if RETRO_REV02
-                RSDK::SKU::userCore->StageLoad();
+                SKU::userCore->StageLoad();
                 for (int32 v = 0; v < DRAWGROUP_COUNT; ++v)
-                    RSDK::AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], RSDK::VIEWVAR_BOOL, false, true);
+                    AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], VIEWVAR_BOOL, false, true);
 #endif
                 // dim after 5 mins
-                RSDK::videoSettings.dimLimit = (5 * 60) * RSDK::videoSettings.refreshRate;
+                videoSettings.dimLimit = (5 * 60) * videoSettings.refreshRate;
                 ProcessInput();
                 ProcessObjects();
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                RSDK::SKU::LoadAchievementAssets();
+                SKU::LoadAchievementAssets();
 #endif
             }
             break;
@@ -297,7 +298,7 @@ void ProcessEngine()
             }
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-            RSDK::SKU::ProcessAchievements();
+            SKU::ProcessAchievements();
 #endif
             ProcessObjectDrawLists();
             break;
@@ -314,7 +315,7 @@ void ProcessEngine()
             }
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-            RSDK::SKU::ProcessAchievements();
+            SKU::ProcessAchievements();
 #endif
             ProcessObjectDrawLists();
             break;
@@ -331,7 +332,7 @@ void ProcessEngine()
             }
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-            RSDK::SKU::ProcessAchievements();
+            SKU::ProcessAchievements();
 #endif
             ProcessObjectDrawLists();
             break;
@@ -342,16 +343,16 @@ void ProcessEngine()
             InitObjects();
 
 #if RETRO_REV02
-            RSDK::SKU::userCore->StageLoad();
+            SKU::userCore->StageLoad();
             for (int32 v = 0; v < DRAWGROUP_COUNT; ++v)
-                RSDK::AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], RSDK::VIEWVAR_BOOL, false, true);
+                AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], VIEWVAR_BOOL, false, true);
 #endif
 
             ProcessInput();
             ProcessObjects();
             sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-            RSDK::SKU::LoadAchievementAssets();
+            SKU::LoadAchievementAssets();
 #endif
             break;
 
@@ -363,7 +364,7 @@ void ProcessEngine()
                 ProcessObjects();
                 ProcessParallaxAutoScroll();
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                RSDK::SKU::ProcessAchievements();
+                SKU::ProcessAchievements();
 #endif
                 ProcessObjectDrawLists();
                 engine.frameStep = false;
@@ -376,7 +377,7 @@ void ProcessEngine()
             if (engine.frameStep) {
                 ProcessPausedObjects();
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                RSDK::SKU::ProcessAchievements();
+                SKU::ProcessAchievements();
 #endif
                 ProcessObjectDrawLists();
                 engine.frameStep = false;
@@ -389,7 +390,7 @@ void ProcessEngine()
             if (engine.frameStep) {
                 ProcessFrozenObjects();
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                RSDK::SKU::ProcessAchievements();
+                SKU::ProcessAchievements();
 #endif
                 ProcessObjectDrawLists();
                 engine.frameStep = false;
@@ -400,8 +401,8 @@ void ProcessEngine()
             ProcessInput();
             currentScreen = &screens[0];
 
-            if (RSDK::devMenu.state)
-                RSDK::devMenu.state();
+            if (devMenu.state)
+                devMenu.state();
             break;
 
         case ENGINESTATE_VIDEOPLAYBACK:
@@ -412,14 +413,14 @@ void ProcessEngine()
         case ENGINESTATE_SHOWIMAGE:
             ProcessInput();
 
-            if (engine.imageDelta <= 0.0 || RSDK::videoSettings.dimMax >= 1.0) {
+            if (engine.imageDelta <= 0.0 || videoSettings.dimMax >= 1.0) {
                 if (engine.displayTime <= 0.0) {
-                    RSDK::videoSettings.dimMax += engine.imageDelta;
-                    if (RSDK::videoSettings.dimMax <= 0.0) {
-                        RSDK::videoSettings.shaderID    = engine.storedShaderID;
-                        RSDK::videoSettings.screenCount = 1;
-                        sceneInfo.state                 = engine.storedState;
-                        RSDK::videoSettings.dimMax      = 1.0;
+                    videoSettings.dimMax += engine.imageDelta;
+                    if (videoSettings.dimMax <= 0.0) {
+                        videoSettings.shaderID    = engine.storedShaderID;
+                        videoSettings.screenCount = 1;
+                        sceneInfo.state           = engine.storedState;
+                        videoSettings.dimMax      = 1.0;
                     }
                 }
                 else {
@@ -430,10 +431,10 @@ void ProcessEngine()
                 }
             }
             else {
-                RSDK::videoSettings.dimMax += engine.imageDelta;
-                if (RSDK::videoSettings.dimMax >= 1.0) {
-                    engine.imageDelta         = -engine.imageDelta;
-                    RSDK::videoSettings.dimMax = 1.0;
+                videoSettings.dimMax += engine.imageDelta;
+                if (videoSettings.dimMax >= 1.0) {
+                    engine.imageDelta    = -engine.imageDelta;
+                    videoSettings.dimMax = 1.0;
                 }
             }
             break;
@@ -446,9 +447,9 @@ void ProcessEngine()
                 sceneInfo.state = engine.storedState;
 
             currentScreen = &screens[0];
-            int32 yOff      = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
+            int32 yOff    = DevOutput_GetStringYSize(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
-            DrawDevString(RSDK::outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
         }
         case ENGINESTATE_ERRORMSG_FATAL: {
@@ -458,16 +459,16 @@ void ProcessEngine()
                 RenderDevice::isRunning = false;
 
             currentScreen = &screens[0];
-            int32 yOff = RSDK::DevOutput_GetStringYSize(RSDK::outputString);
+            int32 yOff    = DevOutput_GetStringYSize(outputString);
             DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
-            DrawDevString(RSDK::outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+            DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
         }
 #endif
     }
 }
 
-void ParseArguments(int32 argc, char *argv[])
+void RSDK::ParseArguments(int32 argc, char *argv[])
 {
     memset(currentSceneFolder, 0, sizeof(currentSceneFolder));
     memset(currentSceneID, 0, sizeof(currentSceneID));
@@ -510,12 +511,12 @@ void ParseArguments(int32 argc, char *argv[])
         find = strstr(argv[a], "console=true");
         if (find) {
             engine.consoleEnabled = true;
-            engine.devMenu      = true;
+            engine.devMenu        = true;
         }
     }
 }
 
-void StartGameObjects()
+void RSDK::StartGameObjects()
 {
     memset(&objectClassList, 0, OBJECT_COUNT * sizeof(ObjectClass));
 
@@ -525,12 +526,11 @@ void StartGameObjects()
     sceneInfo.state          = ENGINESTATE_LOAD;
     sceneInfo.inEditor       = false;
     sceneInfo.debugMode      = engine.devMenu;
-
-    RSDK::devMenu.state            = RSDK::DevMenu_MainMenu;
+    devMenu.state            = DevMenu_MainMenu;
 
     for (int32 l = 0; l < DRAWGROUP_COUNT; ++l) engine.drawLayerVisible[l] = true;
 
-    RSDK::SetupFunctionTables();
+    SetupFunctionTables();
     InitGameLink();
     LoadGameConfig();
 }
@@ -564,15 +564,15 @@ int32 getXMLAttributeValueInt(const tinyxml2::XMLAttribute *attributePtr) { retu
 bool32 getXMLAttributeValueBool(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->BoolValue(); }
 const char *getXMLAttributeValueString(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->Value(); }
 
-void LoadXMLObjects()
+void RSDK::LoadXMLObjects()
 {
     FileInfo info;
 
-    for (int32 m = 0; m < (int32)RSDK::modList.size(); ++m) {
-        if (!RSDK::modList[m].active)
+    for (int32 m = 0; m < (int32)modList.size(); ++m) {
+        if (!modList[m].active)
             continue;
 
-        RSDK::SetActiveMod(m);
+        SetActiveMod(m);
         InitFileInfo(&info);
         if (LoadFile(&info, "Data/Game/Game.xml", FMODE_RB)) {
             tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument;
@@ -611,23 +611,23 @@ void LoadXMLObjects()
                 }
             }
             else {
-                RSDK::PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
             delete doc;
         }
     }
-    RSDK::SetActiveMod(-1);
+    SetActiveMod(-1);
 }
-void LoadXMLSoundFX()
+void RSDK::LoadXMLSoundFX()
 {
     FileInfo info;
-    for (int32 m = 0; m < (int32)RSDK::modList.size(); ++m) {
-        if (!RSDK::modList[m].active)
+    for (int32 m = 0; m < (int32)modList.size(); ++m) {
+        if (!modList[m].active)
             continue;
 
-        RSDK::SetActiveMod(m);
+        SetActiveMod(m);
         InitFileInfo(&info);
         if (LoadFile(&info, "Data/Game/Game.xml", FMODE_RB)) {
             tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument;
@@ -652,7 +652,7 @@ void LoadXMLSoundFX()
                                 sfxPath = getXMLAttributeValueString(valAttr);
 
                             const tinyxml2::XMLAttribute *playsAttr = findXMLAttribute(sfxElement, "maxConcurrentPlays");
-                            int32 maxConcurrentPlays                  = 0;
+                            int32 maxConcurrentPlays                = 0;
                             if (playsAttr)
                                 maxConcurrentPlays = getXMLAttributeValueInt(playsAttr);
 
@@ -663,26 +663,26 @@ void LoadXMLSoundFX()
                 }
             }
             else {
-                RSDK::PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
             delete doc;
         }
     }
-    RSDK::SetActiveMod(-1);
+    SetActiveMod(-1);
 }
-int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
+int32 RSDK::LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 {
     FileInfo info;
     int32 listCount  = 0;
     int32 stageCount = 0;
 
-    for (int32 m = 0; m < (int32)RSDK::modList.size(); ++m) {
-        if (!RSDK::modList[m].active)
+    for (int32 m = 0; m < (int32)modList.size(); ++m) {
+        if (!modList[m].active)
             continue;
 
-        RSDK::SetActiveMod(m);
+        SetActiveMod(m);
         InitFileInfo(&info);
         if (LoadFile(&info, "Data/Game/Game.xml", FMODE_RB)) {
             tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument;
@@ -699,7 +699,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                 const tinyxml2::XMLElement *listElement = firstXMLChildElement(doc, gameElement, "category");
                 if (listElement) {
                     do {
-                        int32 listID                             = gcListCount++;
+                        int32 listID                           = gcListCount++;
                         const tinyxml2::XMLElement *stgElement = firstXMLChildElement(doc, listElement, "stage");
 
                         SceneListInfo *list = &sceneInfo.listCategory[listID];
@@ -737,7 +737,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 
 #if RETRO_REV02
                                     const tinyxml2::XMLAttribute *filterAttr = findXMLAttribute(stgElement, "highlight");
-                                    int32 stgFilter                            = 0;
+                                    int32 stgFilter                          = 0;
                                     if (stgFilter)
                                         stgFilter = getXMLAttributeValueInt(filterAttr);
 #endif
@@ -772,14 +772,14 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                 }
             }
             else {
-                RSDK::PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
             delete doc;
         }
     }
-    RSDK::SetActiveMod(-1);
+    SetActiveMod(-1);
 
     if (mode == 1)
         return listCount;
@@ -788,7 +788,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 }
 #endif
 
-void LoadGameConfig()
+void RSDK::LoadGameConfig()
 {
     FileInfo info;
     InitFileInfo(&info);
@@ -799,19 +799,19 @@ void LoadGameConfig()
         char buffer[0x100];
         uint sig = ReadInt32(&info, false);
 
-        if (sig != 0x474643) {
+        if (sig != RSDK_SIGNATURE_CFG) {
             CloseFile(&info);
             return;
         }
 
-        ReadString(&info, RSDK::gameVerInfo.gameName);
+        ReadString(&info, gameVerInfo.gameName);
         if (!useDataFile)
-            sprintf(RSDK::gameVerInfo.gameName, "%s (Data Folder)", RSDK::gameVerInfo.gameName);
-        ReadString(&info, RSDK::gameVerInfo.gameSubName);
-        ReadString(&info, RSDK::gameVerInfo.gameVersion);
+            sprintf(gameVerInfo.gameName, "%s (Data Folder)", gameVerInfo.gameName);
+        ReadString(&info, gameVerInfo.gameSubName);
+        ReadString(&info, gameVerInfo.gameVersion);
 
         sceneInfo.activeCategory = ReadInt8(&info);
-        int32 startScene           = ReadInt16(&info);
+        int32 startScene         = ReadInt16(&info);
 
         byte objCnt       = ReadInt8(&info);
         globalObjectCount = TYPE_DEFAULT_COUNT;
@@ -866,7 +866,7 @@ void LoadGameConfig()
             totalSceneCount = 1;
 
         if (strlen(currentSceneFolder) && strlen(currentSceneID)) {
-            RSDK::AllocateStorage(sizeof(SceneListEntry) * (totalSceneCount + 1), (void **)&sceneInfo.listData, RSDK::DATASET_STG, false);
+            AllocateStorage(sizeof(SceneListEntry) * (totalSceneCount + 1), (void **)&sceneInfo.listData, DATASET_STG, false);
             SceneListEntry *scene = &sceneInfo.listData[totalSceneCount];
             strcpy(scene->name, "_RSDK_SCENE");
             strcpy(scene->folder, currentSceneFolder);
@@ -883,7 +883,7 @@ void LoadGameConfig()
             currentSceneID[0]        = 0;
         }
         else {
-            RSDK::AllocateStorage(sizeof(SceneListEntry) * totalSceneCount, (void **)&sceneInfo.listData, RSDK::DATASET_STG, false);
+            AllocateStorage(sizeof(SceneListEntry) * totalSceneCount, (void **)&sceneInfo.listData, DATASET_STG, false);
         }
 
         sceneInfo.categoryCount = ReadInt8(&info);
@@ -897,7 +897,7 @@ void LoadGameConfig()
         if (!categoryCount)
             categoryCount = 1;
 
-        RSDK::AllocateStorage(sizeof(SceneListInfo) * categoryCount, (void **)&sceneInfo.listCategory, RSDK::DATASET_STG, false);
+        AllocateStorage(sizeof(SceneListInfo) * categoryCount, (void **)&sceneInfo.listCategory, DATASET_STG, false);
         sceneInfo.listPos = 0;
 
         int32 sceneID = 0;
@@ -945,7 +945,7 @@ void LoadGameConfig()
     }
 }
 
-void InitGameLink()
+void RSDK::InitGameLink()
 {
 #if RETRO_USE_MOD_LOADER
     objectClassCount = 0;
@@ -953,16 +953,16 @@ void InitGameLink()
     memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
     editableVarCount = 0;
     foreachStackPtr  = foreachStackList;
-    RSDK::currentMod = NULL;
+    currentMod       = NULL;
 #endif
-    RegisterObject((Object **)&RSDK::DefaultObject, ":DefaultObject:", sizeof(RSDK::EntityDefaultObject), sizeof(RSDK::ObjectDefaultObject),
-                   RSDK::DefaultObject_Update, RSDK::DefaultObject_LateUpdate, RSDK::DefaultObject_StaticUpdate, RSDK::DefaultObject_Draw,
-                   RSDK::DefaultObject_Create, RSDK::DefaultObject_StageLoad, RSDK::DefaultObject_EditorDraw, RSDK::DefaultObject_EditorLoad,
-                   RSDK::DefaultObject_Serialize);
+
+    RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update,
+                   DefaultObject_LateUpdate, DefaultObject_StaticUpdate, DefaultObject_Draw, DefaultObject_Create, DefaultObject_StageLoad,
+                   DefaultObject_EditorDraw, DefaultObject_EditorLoad, DefaultObject_Serialize);
 #if RETRO_REV02
-    RegisterObject((Object **)&RSDK::DevOutput, ":DevOutput:", sizeof(RSDK::EntityDevOutput), sizeof(RSDK::ObjectDevOutput), RSDK::DevOutput_Update,
-                   RSDK::DevOutput_LateUpdate, RSDK::DevOutput_StaticUpdate, RSDK::DevOutput_Draw, RSDK::DevOutput_Create, RSDK::DevOutput_StageLoad,
-                   RSDK::DevOutput_EditorDraw, RSDK::DevOutput_EditorLoad, RSDK::DevOutput_Serialize);
+    RegisterObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, DevOutput_LateUpdate,
+                   DevOutput_StaticUpdate, DevOutput_Draw, DevOutput_Create, DevOutput_StageLoad, DevOutput_EditorDraw, DevOutput_EditorLoad,
+                   DevOutput_Serialize);
 #endif
     globalObjectIDs[0] = TYPE_DEFAULTOBJECT;
 #if RETRO_REV02
@@ -972,35 +972,35 @@ void InitGameLink()
     globalObjectCount = TYPE_DEFAULT_COUNT;
 
 #if RETRO_REV02
-    RSDK::GameInfo info;
+    GameInfo info;
 
-    info.functionTable = RSDK::RSDKFunctionTable;
-    info.APITable      = RSDK::APIFunctionTable;
+    info.functionTable = RSDKFunctionTable;
+    info.APITable      = APIFunctionTable;
 
-    info.currentSKU   = &RSDK::SKU::curSKU;
-    info.gameInfo     = &RSDK::gameVerInfo;
-    info.sceneInfo    = &sceneInfo;
+    info.currentSKU = &SKU::curSKU;
+    info.gameInfo   = &gameVerInfo;
+    info.sceneInfo  = &sceneInfo;
 
-    info.controller   = controller;
-    info.stickL       = stickL;
-    info.stickR       = stickR;
-    info.triggerL     = triggerL;
-    info.triggerR     = triggerR;
-    info.touchMouse   = &touchMouseData;
+    info.controller = controller;
+    info.stickL     = stickL;
+    info.stickR     = stickR;
+    info.triggerL   = triggerL;
+    info.triggerR   = triggerR;
+    info.touchMouse = &touchMouseData;
 
-    info.unknown      = &RSDK::SKU::unknownInfo;
+    info.unknown = &SKU::unknownInfo;
 
-    info.screenInfo   = screens;
+    info.screenInfo = screens;
 
 #if RETRO_USE_MOD_LOADER
-    info.modTable = RSDK::modFunctionTable;
+    info.modTable = modFunctionTable;
 #endif
 #else
-    RSDK::GameInfo info;
+    GameInfo info;
 
-    info.functionTable = RSDK::RSDKFunctionTable;
+    info.functionTable = RSDKFunctionTable;
 
-    info.gameInfo = &RSDK::gameVerInfo;
+    info.gameInfo = &gameVerInfo;
     info.sceneInfo = &sceneInfo;
 
     info.controllerInfo = controller;
@@ -1010,7 +1010,7 @@ void InitGameLink()
     info.screenInfo = screens;
 
 #if RETRO_USE_MOD_LOADER
-    info.modTable = RSDK::modFunctionTable;
+    info.modTable = modFunctionTable;
 #endif
 #endif
 
@@ -1036,7 +1036,7 @@ void InitGameLink()
 
 #if RETRO_PLATFORM == RETRO_OSX
         char buffer[0x100];
-        sprintf(buffer, "%s%s.dylib", RSDK::SKU::userFileDir, gameLogicName);
+        sprintf(buffer, "%s%s.dylib", SKU::userFileDir, gameLogicName);
         if (!link_handle)
             link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
 
@@ -1055,10 +1055,10 @@ void InitGameLink()
 
 #if RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
         char buffer[0x100];
-        sprintf(buffer, "%s%s.so", RSDK::SKU::userFileDir, gameLogicName);
+        sprintf(buffer, "%s%s.so", SKU::userFileDir, gameLogicName);
         if (!link_handle)
             link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
-        
+
         if (link_handle) {
             LogicLinkHandle linkGameLogic = (LogicLinkHandle)dlsym(link_handle, "LinkGameLogicDLL");
             if (linkGameLogic) {
@@ -1073,7 +1073,7 @@ void InitGameLink()
 #endif
 
         if (!linked)
-            RSDK::PrintLog(PRINT_POPUP, "Failed to link game logic!");
+            PrintLog(PRINT_POPUP, "Failed to link game logic!");
     }
     else {
 #if RETRO_REV02
@@ -1084,29 +1084,29 @@ void InitGameLink()
     }
 
 #if RETRO_USE_MOD_LOADER
-    for (int32 m = 0; m < RSDK::modList.size(); ++m) {
-        if (!RSDK::modList[m].active || RSDK::modList[m].language)
+    for (int32 m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active || modList[m].language)
             continue;
 
-        RSDK::currentMod = &RSDK::modList[m];
-        for (RSDK::modLinkSTD ptr : RSDK::modList[m].linkModLogic) {
-            if (!ptr(&info, RSDK::modList[m].id.c_str())) {
-                RSDK::modList[m].active = false;
-                RSDK::PrintLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", RSDK::modList[m].id.c_str());
+        currentMod = &modList[m];
+        for (modLinkSTD ptr : modList[m].linkModLogic) {
+            if (!ptr(&info, modList[m].id.c_str())) {
+                modList[m].active = false;
+                PrintLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", modList[m].id.c_str());
             }
         }
     }
 
-    RSDK::currentMod = NULL;
-    RSDK::SortMods();
+    currentMod = NULL;
+    SortMods();
 #endif
 }
 
-void ProcessDebugCommands()
+void RSDK::ProcessDebugCommands()
 {
 #if !RETRO_USE_ORIGINAL_CODE
     // This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
-    int32 id            = ControllerIDForInputID(1);
+    int32 id          = ControllerIDForInputID(1);
     uint8 gamepadType = GetControllerType(id) >> 8;
     if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN || id == CONT_ANY)
         return;
@@ -1114,9 +1114,9 @@ void ProcessDebugCommands()
 
     if (controller[CONT_P1].keySelect.press) {
         if (sceneInfo.state == ENGINESTATE_DEVMENU)
-            RSDK::CloseDevMenu();
+            CloseDevMenu();
         else
-            RSDK::OpenDevMenu();
+            OpenDevMenu();
     }
 
     bool32 framePaused = (sceneInfo.state >> 2) & 1;

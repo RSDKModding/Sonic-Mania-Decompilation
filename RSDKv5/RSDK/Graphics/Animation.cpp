@@ -1,6 +1,8 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-RSDK::SpriteAnimation RSDK::spriteAnimationList[SPRFILE_COUNT];
+using namespace RSDK;
+
+SpriteAnimation RSDK::spriteAnimationList[SPRFILE_COUNT];
 
 uint16 RSDK::LoadSpriteAnimation(const char *filePath, int32 scope)
 {

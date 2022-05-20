@@ -1,6 +1,8 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-RSDK::DataStorage RSDK::dataStorage[RSDK::DATASET_MAX];
+using namespace RSDK;
+
+DataStorage RSDK::dataStorage[DATASET_MAX];
 
 bool32 RSDK::InitStorage()
 {
@@ -35,10 +37,10 @@ void RSDK::ReleaseStorage()
     }
 
     for (int32 p = 0; p < dataPackCount; ++p) {
-        if (dataPacks[p].dataPtr)
-            free(dataPacks[p].dataPtr);
+        if (dataPacks[p].fileBuffer)
+            free(dataPacks[p].fileBuffer);
 
-        dataPacks[p].dataPtr = NULL;
+        dataPacks[p].fileBuffer = NULL;
     }
 }
 
