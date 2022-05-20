@@ -64,11 +64,28 @@ struct ImageGIF : public Image {
 };
 
 #if RETRO_REV02
+enum PNGColorFormats {
+    PNGCLR_GREYSCALE  = 0,
+    PNGCLR_RGB        = 2,
+    PNGCLR_INDEXED    = 3,
+    PNGCLR_GREYSCALEA = 4,
+    PNGCLR_RGBA       = 6,
+};
+
+enum PNGCompressionFilters {
+    PNGFILTER_NONE,
+    PNGFILTER_SUB,
+    PNGFILTER_UP,
+    PNGFILTER_AVG,
+    PNGFILTER_PAETH,
+};
+
+
 struct ImagePNG : public Image {
     bool32 Load(const char *fileName, bool32 loadHeader);
 
     uint8 bitDepth;
-    uint8 clrType;
+    uint8 colorFormat;
     uint8 compression;
     uint8 filter;
     uint8 interlaced;

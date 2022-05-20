@@ -252,61 +252,88 @@ bool32 ImageGIF::Load(const char *fileName, bool32 loadHeader)
 }
 
 #if RETRO_REV02
-void PNGUnpackGreyscale(ImagePNG *image, uint8 *pixelData)
+void UnpackPNGPixels_Greyscale(ImagePNG *image, uint8 *pixelData)
 {
     uint8 *pixels = image->pixels;
-    for (int32 c = 0; c < image->width * image->height; ++c) {
-        int32 brightness = *pixelData++;
-        int32 alpha      = *pixelData++;
+    for (int32 p = 0; p < image->width * image->height; ++p) {
+        uint8 brightness = pixelData[0];
+        uint8 alpha      = pixelData[1];
 
         uint32 color = 0;
 
+        // red channel
         color = brightness << 16;
         pixelData++;
+
+        // green channel
         color |= brightness << 8;
         pixelData++;
+
+        // blue channel
         color |= brightness << 0;
         pixelData++;
+
+        // alpha channel
         color |= alpha << 24;
         pixelData++;
 
-        *pixels++ = color;
+        *pixels = color;
+
+        pixelData++;
+        pixels += 2;
     }
 }
 
-void PNGUnpackGreyscaleA(ImagePNG *image, uint8 *pixelData)
+void UnpackPNGPixels_GreyscaleA(ImagePNG *image, uint8 *pixelData)
 {
     color *pixels = (color *)image->pixels;
-    for (int32 c = 0; c < image->width * image->height; ++c) {
-        int32 brightness = *pixelData++;
+    for (int32 p = 0; p < image->width * image->height; ++p) {
+        uint8 brightness = *pixelData;
 
         uint32 color = 0;
 
+        // red channel
         color = brightness << 16;
         pixelData++;
+
+        // green channel
         color |= brightness << 8;
         pixelData++;
+
+        // blue channel
         color |= brightness << 0;
         pixelData++;
+
+        // alpha channel
         color |= 0xFF << 24;
         pixelData++;
 
-        *pixels++ = color;
+        *pixels = color;
+
+        pixelData++;
+        pixels++;
     }
 }
 
-void PNGUnpackRGB(ImagePNG *image, uint8 *pixelData)
+void UnpackPNGPixels_RGB(ImagePNG *image, uint8 *pixelData)
 {
     color *pixels = (color *)image->pixels;
-    for (int32 c = 0; c < image->width * image->height; ++c) {
+    for (int32 p = 0; p < image->width * image->height; ++p) {
         uint32 color = 0;
 
+        // R
         color = *pixelData << 16;
         pixelData++;
+
+        // G
         color |= *pixelData << 8;
         pixelData++;
+
+        // B
         color |= *pixelData << 0;
         pixelData++;
+
+        // A
         color |= 0xFF << 24;
         pixelData++;
 
@@ -314,18 +341,25 @@ void PNGUnpackRGB(ImagePNG *image, uint8 *pixelData)
     }
 }
 
-void PNGUnpackRGBA(ImagePNG *image, uint8 *pixelData)
+void UnpackPNGPixels_RGBA(ImagePNG *image, uint8 *pixelData)
 {
     color *pixels = (color *)image->pixels;
-    for (int32 c = 0; c < image->width * image->height; ++c) {
+    for (int32 p = 0; p < image->width * image->height; ++p) {
         uint32 color = 0;
 
+        // R
         color |= *pixelData << 16;
         pixelData++;
+
+        // G
         color |= *pixelData << 8;
         pixelData++;
+
+        // B
         color |= *pixelData << 0;
         pixelData++;
+
+        // A
         color |= *pixelData << 24;
         pixelData++;
 
@@ -333,128 +367,122 @@ void PNGUnpackRGBA(ImagePNG *image, uint8 *pixelData)
     }
 }
 
-void DecodePNGData(ImagePNG *image, uint8 *dataPtr)
+// from: https://raw.githubusercontent.com/lvandeve/lodepng/master/lodepng.cpp - paethPredictor()
+uint8 paethPredictor(int16 a, int16 b, int16 c)
 {
-    int32 colorSize = (image->bitDepth + 7) >> 3;
-    switch (image->clrType) {
-        case 2: colorSize *= 3; break;
-        case 4: colorSize *= 2; break;
-        case 6: colorSize *= 4; break;
+    int16 pa = abs(b - c);
+    int16 pb = abs(a - c);
+    int16 pc = abs(a + b - c - c);
+    /* return input value associated with smallest of pa, pb, pc (with certain priority if equal) */
+    if (pb < pa) {
+        a  = b;
+        pa = pb;
     }
 
-    int32 pitch       = colorSize * image->width;
-    uint8 *dataBuffer = dataPtr + 1;
+    return (pc < pa) ? c : a;
+}
 
-    if (*dataPtr == 1 || *dataPtr == 3) {
-        for (int32 c = 0; c < colorSize; ++c) {
-            *dataPtr++ = *dataBuffer++;
-        }
-
-        if (colorSize < pitch) {
-            uint8 *buf = &dataPtr[-colorSize];
-            for (int32 c = 0; c < pitch - colorSize; ++c) {
-                *dataPtr++ = *buf++ + *dataBuffer++;
-            }
-        }
-    }
-    else if (*dataPtr == 4) {
-        for (int32 c = 0; c < colorSize; ++c) {
-            *dataPtr++ = *dataBuffer++;
-        }
-
-        if (colorSize < pitch) {
-            uint8 *buf = &dataPtr[-colorSize];
-            for (int32 c = 0; c < pitch - colorSize; ++c) {
-                *dataPtr++ = *buf++ + *dataBuffer++;
-            }
-        }
-    }
-    else if (pitch > 0) {
-        for (int32 c = 0; c < colorSize * image->width; ++c) {
-            *dataPtr++ = *dataBuffer++;
-        }
+void UnfilterPNG(ImagePNG *image, uint8 *recon)
+{
+    int32 bpp = (image->bitDepth + 7) >> 3;
+    switch (image->colorFormat) {
+        case PNGCLR_RGB: bpp *= 3; break;
+        case PNGCLR_GREYSCALEA: bpp *= 2; break;
+        case PNGCLR_RGBA: bpp *= 4; break;
     }
 
-    for (int32 h = 1; h < image->height; ++h) {
-        int32 type = *dataBuffer++;
-        switch (type) {
-            case 1:
-                for (int32 c = 0; c < colorSize; ++c) *dataPtr++ = *dataBuffer++;
+    int32 pitch     = bpp * image->width;
+    uint8 *scanline = recon;
 
-                if (colorSize < pitch) {
-                    uint8 *buf = &dataPtr[-colorSize];
-                    for (int32 c = 0; c < pitch - colorSize; ++c) {
-                        *dataPtr++ = *buf++ + *dataBuffer++;
+    for (int32 y = 0; y < image->height; ++y) {
+        int32 filter  = *scanline++;
+
+        // prev scanline
+        uint8 *precon = y ? &recon[-pitch] : NULL;
+
+        switch (filter) {
+            case PNGFILTER_NONE: break;
+            default:
+                for (int32 c = 0; c < pitch; ++c) {
+                    recon[c] = scanline[c];
+                }
+                break;
+
+            case PNGFILTER_SUB:
+                for (int32 c = 0; c < bpp; ++c) {
+                    recon[c] = scanline[c];
+                }
+
+                for (int32 c = bpp, p = 0; c < pitch; ++c, ++p) {
+                    recon[c] = scanline[c] + recon[p];
+                }
+                break;
+
+            case PNGFILTER_UP:
+                if (precon) {
+                    for (int32 c = 0; c < pitch; ++c) {
+                        recon[c] = precon[c] + scanline[c];
+                    }
+                }
+                else {
+                    for (int32 c = 0; c < pitch; ++c) {
+                        recon[c] = scanline[c];
                     }
                 }
                 break;
-            case 2: {
-                uint8 *buf = &dataPtr[-pitch];
-                for (int32 c = 0; c < pitch; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
-                break;
-            }
-            case 3: {
-                uint8 *buf = &dataPtr[-pitch];
-                for (int32 c = 0; c < colorSize; ++c) *dataPtr++ = *dataBuffer++ + (*buf++ >> 1);
 
-                if (colorSize < pitch) {
-                    uint8 *buf  = &dataPtr[-colorSize];
-                    int32 count = colorSize - pitch;
+            case PNGFILTER_AVG:
+                if (precon) {
+                    for (int32 c = 0; c < bpp; ++c) {
+                        recon[c] = scanline[c] + (precon[c] >> 1);
+                    }
 
-                    for (int32 c = 0; c < pitch - colorSize; ++c) {
-                        *dataPtr++ = *dataBuffer++ + ((*(buf - 1) + (buf++)[count]) >> 1);
+                    for (int32 c = bpp, p = 0; c < pitch; ++c, ++p) {
+                        recon[c] = scanline[c] + ((recon[p] + precon[c]) >> 1);
+                    }
+                }
+                else {
+                    for (int32 c = 0; c < bpp; ++c) {
+                        recon[c] = scanline[c];
+                    }
+
+                    for (int32 c = bpp, p = 0; c < pitch; ++c, ++p) {
+                        recon[c] = scanline[c] + (recon[p] >> 1);
                     }
                 }
                 break;
-            }
-            case 4: {
-                uint8 *buf = &dataPtr[-pitch];
-                for (int32 c = 0; c < colorSize; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
 
-                if (colorSize < pitch) {
-                    buf           = &dataPtr[-pitch];
-                    int32 count   = pitch - colorSize;
-                    int32 countv2 = pitch - (pitch + colorSize);
+            case PNGFILTER_PAETH:
+                if (precon) {
+                    for (int32 c = 0; c < bpp; ++c) {
+                        recon[c] = (scanline[c] + precon[c]);
+                    }
 
-                    for (int32 c = 0; c < pitch - colorSize; ++c) {
-                        uint8 val1 = buf[count];
-                        uint8 val2 = *buf;
-                        uint8 val3 = buf[countv2];
-                        int32 dif  = val1 - val3 + val2;
+                    for (int32 c = bpp, p = 0; c < pitch; ++c, ++p) {
+                        recon[c] = (scanline[c] + paethPredictor(recon[c - bpp], precon[c], precon[p]));
+                    }
+                }
+                else {
+                    for (int32 c = 0; c < bpp; ++c) {
+                        recon[c] = scanline[c];
+                    }
 
-                        int32 count1 = val3 - val2;
-                        if (dif > val1)
-                            count1 = val2 - val3;
-
-                        int32 count2 = val1 - val3;
-                        if (dif <= val2)
-                            count2 = val3 - val1;
-
-                        int32 count3 = val3 - dif;
-                        if (dif > val3)
-                            count3 = dif - val3;
-
-                        if (count1 > count2 || count1 > count3) {
-                            val1 = val3;
-                            if (count2 <= count3)
-                                val1 = *buf;
-                        }
-
-                        *dataPtr++ = val1 + *dataBuffer++;
-                        ++buf;
+                    for (int32 c = bpp, p = 0; c < pitch; ++c, ++p) {
+                        recon[c] = scanline[c] + recon[p];
                     }
                 }
                 break;
-            }
-            default: {
-                for (int32 c = 0; c < pitch; ++c) *dataPtr++ = *dataBuffer++;
-                break;
-            }
         }
+
+        recon += pitch;
+        scanline += pitch;
     }
 }
 
-// PNG Chunk Header Signatures
+// PNG format signature
+#define PNG_SIGNATURE 0xA1A0A0D474E5089LL // PNG (and other bytes I don't care about)
+
+// PNG chunk header signatures
 #define PNG_SIG_HEADER  0x52444849 // IHDR
 #define PNG_SIG_END     0x444E4549 // IEND
 #define PNG_SIG_PALETTE 0x45544C50 // PLTE
@@ -464,7 +492,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
 {
     if (fileName) {
         if (LoadFile(&info, fileName, FMODE_RB)) {
-            if (ReadInt64(&info) == 0xA1A0A0D474E5089LL) {
+            if (ReadInt64(&info) == PNG_SIGNATURE) {
                 while (true) {
                     chunkSize   = ReadInt32(&info, true);
                     chunkHeader = ReadInt32(&info, false);
@@ -474,7 +502,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         width       = ReadInt32(&info, true);
                         height      = ReadInt32(&info, true);
                         bitDepth    = ReadInt8(&info);
-                        clrType     = ReadInt8(&info);
+                        colorFormat = ReadInt8(&info);
                         compression = ReadInt8(&info);
                         filter      = ReadInt8(&info);
                         interlaced  = ReadInt8(&info);
@@ -483,6 +511,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                             return false;
                         }
                         depth = 32;
+
                         if (loadHeader)
                             return true;
                     }
@@ -519,32 +548,37 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         ReadBytes(&info, chunkBuffer, chunkSize);
 
                         uint8 *pixelsPtr = NULL;
-                        switch (clrType) {
-                            case 0:
-                            case 3: pixelsPtr = &this->pixels[width * height * 3]; break;
+                        switch (colorFormat) {
+                            case PNGCLR_GREYSCALE:
+                            case PNGCLR_INDEXED: pixelsPtr = &pixels[width * height * 3]; break;
 
-                            case 2: pixelsPtr = &this->pixels[width * height * 1]; break;
+                            case PNGCLR_RGB: pixelsPtr = &pixels[width * height * 1]; break;
 
-                            case 4: pixelsPtr = &this->pixels[width * height * 2]; break;
+                            case PNGCLR_GREYSCALEA: pixelsPtr = &pixels[width * height * 2]; break;
 
-                            default: pixelsPtr = &this->pixels[0]; break;
+                            case PNGCLR_RGBA:
+                            default: pixelsPtr = &pixels[0]; break;
                         }
 
-                        ReadZLib(&info, (uint8 **)&chunkBuffer, chunkSize, (uint8 **)&this->pixels, dataSize);
-                        DecodePNGData(this, pixelsPtr);
+                        ReadZLib(&info, (uint8 **)&chunkBuffer, chunkSize, (uint8 **)&pixels, dataSize);
+                        UnfilterPNG(this, pixelsPtr);
 
-                        switch (clrType) {
-                            case 0: PNGUnpackGreyscale(this, pixelsPtr); break;
+                        switch (colorFormat) {
+                            case PNGCLR_GREYSCALE: UnpackPNGPixels_Greyscale(this, pixelsPtr); break;
 
-                            case 2: PNGUnpackRGB(this, pixelsPtr); break;
+                            case PNGCLR_RGB: UnpackPNGPixels_RGB(this, pixelsPtr); break;
 
-                            case 3:
-                                for (int32 c = 0; c < width * height; ++c) this->pixels[c] = palette[*this->pixels++] | 0xFF000000;
+                            case PNGCLR_INDEXED:
+                                for (int32 c = 0; c < width * height; ++c) {
+                                    pixels[c] = palette[*pixels] | 0xFF000000;
+
+                                    pixels++;
+                                }
                                 break;
 
-                            case 4: PNGUnpackGreyscaleA(this, pixelsPtr); break;
+                            case PNGCLR_GREYSCALEA: UnpackPNGPixels_GreyscaleA(this, pixelsPtr); break;
 
-                            case 6: PNGUnpackRGBA(this, pixelsPtr); break;
+                            case PNGCLR_RGBA: UnpackPNGPixels_RGBA(this, pixelsPtr); break;
 
                             default: break;
                         }
@@ -841,15 +875,15 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
         }
 #endif
 
-        engine.displayTime              = displayLength;
-        engine.storedShaderID           = videoSettings.shaderID;
-        engine.storedState              = sceneInfo.state;
+        engine.displayTime        = displayLength;
+        engine.storedShaderID     = videoSettings.shaderID;
+        engine.storedState        = sceneInfo.state;
         videoSettings.dimMax      = 0.0;
         videoSettings.shaderID    = SHADER_RGB_IMAGE;
         videoSettings.screenCount = 0; // "Image Display Mode"
-        engine.skipCallback             = skipCallback;
-        sceneInfo.state                 = ENGINESTATE_SHOWIMAGE;
-        engine.imageDelta               = speed / 60.0;
+        engine.skipCallback       = skipCallback;
+        sceneInfo.state           = ENGINESTATE_SHOWIMAGE;
+        engine.imageDelta         = speed / 60.0;
 
         image.palette = NULL;
         image.pixels  = NULL;
@@ -867,15 +901,15 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
         }
 #endif
 
-        engine.displayTime              = displayLength;
-        engine.storedShaderID           = videoSettings.shaderID;
-        engine.storedState              = sceneInfo.state;
+        engine.displayTime        = displayLength;
+        engine.storedShaderID     = videoSettings.shaderID;
+        engine.storedState        = sceneInfo.state;
         videoSettings.dimMax      = 0.0;
         videoSettings.shaderID    = SHADER_RGB_IMAGE;
         videoSettings.screenCount = 0; // "Image Display Mode"
-        engine.skipCallback             = skipCallback;
-        sceneInfo.state                 = ENGINESTATE_SHOWIMAGE;
-        engine.imageDelta               = speed / 60.0;
+        engine.skipCallback       = skipCallback;
+        sceneInfo.state           = ENGINESTATE_SHOWIMAGE;
+        engine.imageDelta         = speed / 60.0;
 
         image.palette = NULL;
         image.pixels  = NULL;
