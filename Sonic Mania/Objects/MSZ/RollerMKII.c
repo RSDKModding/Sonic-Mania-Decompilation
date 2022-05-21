@@ -409,7 +409,7 @@ void RollerMKII_State_Rolling_Air(void)
         }
     }
 
-    RSDK.ProcessTileCollisions(self, &RollerMKII->hitboxOuter_Rolling, &RollerMKII->hitboxInner_Rolling);
+    RSDK.ProcessObjectMovement(self, &RollerMKII->hitboxOuter_Rolling, &RollerMKII->hitboxInner_Rolling);
     self->velocity.y += 0x3800;
 
     RollerMKII_HandleCollisions();
@@ -509,7 +509,7 @@ void RollerMKII_State_Rolling_Ground(void)
         }
     }
 
-    RSDK.ProcessTileCollisions(self, &RollerMKII->hitboxOuter_Rolling, &RollerMKII->hitboxInner_Rolling);
+    RSDK.ProcessObjectMovement(self, &RollerMKII->hitboxOuter_Rolling, &RollerMKII->hitboxInner_Rolling);
 
     self->groundVel = (RSDK.Sin256(self->angle) << 13 >> 8) + self->groundVel;
     if (self->collisionMode != CMODE_FLOOR) {
@@ -534,7 +534,7 @@ void RollerMKII_State_Bumped(void)
 {
     RSDK_THIS(RollerMKII);
 
-    RSDK.ProcessTileCollisions(self, &RollerMKII->hitboxOuter_Idle, &RollerMKII->hitboxInner_Idle);
+    RSDK.ProcessObjectMovement(self, &RollerMKII->hitboxOuter_Idle, &RollerMKII->hitboxInner_Idle);
 
     self->velocity.y += 0x3800;
     RollerMKII_HandleCollisions();

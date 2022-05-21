@@ -227,7 +227,7 @@ void PBL_Player_State_Launcher(void)
     if (!self->onGround)
         self->velocity.y += 0x3800;
 
-    RSDK.ProcessTileCollisions(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
+    RSDK.ProcessObjectMovement(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
     if (++self->timer == 60) {
         self->velocity.y     = -0xE0000;
         self->timer          = 0;
@@ -258,7 +258,7 @@ void PBL_Player_State_Ground(void)
     }
     if (!self->onGround)
         self->state = PBL_Player_State_Air;
-    RSDK.ProcessTileCollisions(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
+    RSDK.ProcessObjectMovement(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
 }
 
 void PBL_Player_State_Air(void)
@@ -274,7 +274,7 @@ void PBL_Player_State_Air(void)
         }
     }
 
-    RSDK.ProcessTileCollisions(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
+    RSDK.ProcessObjectMovement(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
     if (self->left) {
         self->velocity.x -= 0x800;
     }

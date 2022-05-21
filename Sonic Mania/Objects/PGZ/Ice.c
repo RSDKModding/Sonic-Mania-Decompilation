@@ -1233,7 +1233,7 @@ void Ice_State_PlayerBlock(void)
 
     foreach_active(Player, player)
     {
-        if (player != self->playerPtr && player->stateInput != Player_ProcessP2Input_AI && player->state != Ice_State_FrozenPlayer
+        if (player != self->playerPtr && player->stateInput != Player_Input_P2_AI && player->state != Ice_State_FrozenPlayer
             && player->velocity.y > 0 && !player->onGround && player->position.y < self->position.y - 0x200000
             && Player_CheckBadnikTouch(player, self, &self->hitboxBlock)) {
             if (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_DROPDASH) {

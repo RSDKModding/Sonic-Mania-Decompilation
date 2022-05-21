@@ -62,7 +62,7 @@ void PhantomMissile_GetTargetPos(void)
     int32 distance = 0x7FFFFFFF;
     for (int32 p = SLOT_PLAYER1; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-        if (player->sidekick == true && player->stateInput != Player_ProcessP2Input_Player) {
+        if (player->sidekick == true && player->stateInput != Player_Input_P2_Player) {
             int32 storeX     = self->position.x;
             int32 storeY     = self->position.y;
             self->position.x = self->targetPos.x;

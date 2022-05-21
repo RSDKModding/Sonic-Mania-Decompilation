@@ -158,7 +158,7 @@ void PhantomShinobi_HandleTileCollisions(void)
     self->innerBox.bottom = size;
 
     self->prevOnGround = self->onGround;
-    RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
+    RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 }
 
 void PhantomShinobi_ResetStates(void)

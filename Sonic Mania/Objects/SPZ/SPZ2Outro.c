@@ -173,7 +173,7 @@ bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
                 player2->state      = Player_State_Ground;
                 player2->up         = false;
-                player2->stateInput = Player_ProcessP2Input_AI;
+                player2->stateInput = Player_Input_P2_AI;
             }
         }
     }

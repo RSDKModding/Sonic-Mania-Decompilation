@@ -110,7 +110,7 @@ bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
     unused(player2);
     unused(camera);
     if (host->timer == 30) {
-        player1->stateInput     = Player_ProcessP1Input;
+        player1->stateInput     = Player_Input_P1;
         player1->tileCollisions = true;
         player1->onGround       = true;
         player1->state          = Player_State_Ground;

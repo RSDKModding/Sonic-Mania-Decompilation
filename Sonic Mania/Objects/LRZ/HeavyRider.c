@@ -563,7 +563,7 @@ void HeavyRider_State_Moving(void)
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->thrustAnimator);
     RSDK.ProcessAnimation(&self->fireballAnimator);
-    RSDK.ProcessTileCollisions(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
+    RSDK.ProcessObjectMovement(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
 
     if (self->onGround) {
         if (self->velocity.y <= 0x20000) {
@@ -804,7 +804,7 @@ void HeavyRider_State_Turning(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->fireballAnimator);
-    RSDK.ProcessTileCollisions(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
+    RSDK.ProcessObjectMovement(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
 
     if (self->onGround) {
         if (self->velocity.y <= 0x20000) {
@@ -1141,7 +1141,7 @@ void HeavyRider_StateJimmy_RevRelease(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->thrustAnimator);
-    RSDK.ProcessTileCollisions(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
+    RSDK.ProcessObjectMovement(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
 
     if (self->onGround) {
         if (self->velocity.y <= 0x20000)

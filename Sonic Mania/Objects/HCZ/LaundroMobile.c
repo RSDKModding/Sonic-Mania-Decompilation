@@ -915,7 +915,7 @@ void LaundroMobile_StateBoss_Attacking(void)
 {
     RSDK_THIS(LaundroMobile);
 
-    RSDK.ProcessTileCollisions(self, &LaundroMobile->outerBox, &LaundroMobile->innerBox);
+    RSDK.ProcessObjectMovement(self, &LaundroMobile->outerBox, &LaundroMobile->innerBox);
 
     if (self->velocity.y < 0 && self->position.y < (ScreenInfo->position.y - 256) << 16) {
         self->onGround   = false;

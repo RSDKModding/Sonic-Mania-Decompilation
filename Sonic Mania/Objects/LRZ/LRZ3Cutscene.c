@@ -71,7 +71,7 @@ bool32 LRZ3Cutscene_Cutscene_RunRight(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             if (!player->sidekick)
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
         }
         return true;
     }

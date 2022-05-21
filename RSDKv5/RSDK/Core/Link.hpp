@@ -233,7 +233,7 @@ enum FunctionTableIDs {
     FunctionTable_CheckObjectCollisionPlatform,
     FunctionTable_ObjectTileCollision,
     FunctionTable_ObjectTileGrip,
-    FunctionTable_ProcessTileCollisions,
+    FunctionTable_ProcessObjectMovement,
     FunctionTable_GetTileAngle,
     FunctionTable_SetTileAngle,
     FunctionTable_GetTileFlags,

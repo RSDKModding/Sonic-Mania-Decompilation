@@ -151,7 +151,7 @@ void EncoreIntro_SetupCutscenePart2(void)
     EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     player1->camera         = camera;
-    player1->stateInput     = Player_ProcessP1Input;
+    player1->stateInput     = Player_Input_P1;
     player1->tileCollisions = true;
     player1->onGround       = true;
     player1->state          = Player_State_Ground;
@@ -674,11 +674,11 @@ bool32 EncoreIntro_Cutscene_MysticEscape(EntityCutsceneSeq *host)
         SceneInfo->timeEnabled = true;
 
         player->state      = Player_State_Ground;
-        player->stateInput = Player_ProcessP1Input;
+        player->stateInput = Player_Input_P1;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, true, 0);
 
         buddy->state      = Player_State_Ground;
-        buddy->stateInput = Player_ProcessP2Input_AI;
+        buddy->stateInput = Player_Input_P2_AI;
         RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_IDLE, &buddy->animator, true, 0);
         return true;
     }
@@ -1023,7 +1023,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
         player->up             = true;
         player->camera         = NULL;
         host->values[0]        = true;
-        player->stateInput     = Player_ProcessP1Input;
+        player->stateInput     = Player_Input_P1;
         player->tileCollisions = true;
         player->onGround       = true;
         player->state          = Player_State_Ground;
@@ -1207,7 +1207,7 @@ void EncoreIntro_PlayerState_InputNone(void)
     ControllerInfo[CONT_P1].keySelect.down  = false;
     ControllerInfo[CONT_P1].keySelect.press = false;
 
-    Player_ProcessP1Input();
+    Player_Input_P1();
 
     self->up        = false;
     self->down      = false;

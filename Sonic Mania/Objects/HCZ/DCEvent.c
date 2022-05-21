@@ -182,7 +182,7 @@ void DCEvent_StateInput_MoveRight(void)
 {
     RSDK_THIS(Player);
 
-    Player_ProcessP1Input();
+    Player_Input_P1();
     self->up        = false;
     self->down      = false;
     self->left      = false;
@@ -195,7 +195,7 @@ void DCEvent_StateInput_LookDown(void)
 {
     RSDK_THIS(Player);
 
-    Player_ProcessP1Input();
+    Player_Input_P1();
     self->drownTimer = 0;
     self->up         = false;
     self->down       = true;
@@ -284,7 +284,7 @@ void DCEvent_StateEggmanBomber_PlacedAllBombs(void)
 
     if (!DCEvent->canExplodeBombs) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        player1->stateInput   = Player_ProcessP1Input;
+        player1->stateInput   = Player_Input_P1;
 
         Water->targetWaterLevel = 0x8DC0000;
         Water->waterMoveSpeed   = 0x8000;

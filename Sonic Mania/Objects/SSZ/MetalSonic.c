@@ -499,7 +499,7 @@ void MetalSonic_State_Land(void)
     self->outerBox = RSDK.GetHitbox(&self->metalSonicAnimator, 0);
     self->innerBox = RSDK.GetHitbox(&self->metalSonicAnimator, 1);
 
-    RSDK.ProcessTileCollisions(self, self->outerBox, self->innerBox);
+    RSDK.ProcessObjectMovement(self, self->outerBox, self->innerBox);
     if (self->onGround) {
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_TAUNT, &self->metalSonicAnimator, false, 0);
         self->state                    = MetalSonic_State_Taunt;
@@ -1288,7 +1288,7 @@ void MetalSonic_State_PrepareFinalChase(void)
 
     self->outerBox = RSDK.GetHitbox(&self->metalSonicAnimator, 0);
     self->innerBox = RSDK.GetHitbox(&self->metalSonicAnimator, 1);
-    RSDK.ProcessTileCollisions(self, self->outerBox, self->innerBox);
+    RSDK.ProcessObjectMovement(self, self->outerBox, self->innerBox);
 
     if (self->onGround) {
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_READY, &self->metalSonicAnimator, false, 0);

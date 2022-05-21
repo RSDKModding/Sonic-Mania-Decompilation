@@ -143,7 +143,7 @@ bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 30) {
-        player1->stateInput     = Player_ProcessP1Input;
+        player1->stateInput     = Player_Input_P1;
         player1->tileCollisions = true;
         player1->onGround       = true;
         player1->state          = Player_State_Ground;
@@ -151,7 +151,7 @@ bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
         camera->target       = (Entity *)player1;
         camera->state           = Camera_State_Follow;
         if (player2->classID == Player->classID) {
-            player2->stateInput     = Player_ProcessP2Input_AI;
+            player2->stateInput     = Player_Input_P2_AI;
             player2->tileCollisions = true;
             player2->onGround       = true;
             player2->state          = Player_State_Ground;

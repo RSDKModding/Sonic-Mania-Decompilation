@@ -390,7 +390,7 @@ typedef struct {
                                   bool32 setPos);
     bool32 (*ObjectTileGrip)(void *entity, uint16 collisionLayers, uint8 collisionMode, uint8 collisionPlane, int32 xOffset, int32 yOffset,
                              int32 tolerance);
-    void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
+    void (*ProcessObjectMovement)(void *entity, Hitbox *outer, Hitbox *inner);
     int32 (*GetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode);
     void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 angle);
     uint8 (*GetTileFlags)(uint16 tileID, uint8 cPlane);

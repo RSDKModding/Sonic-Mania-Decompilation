@@ -35,7 +35,7 @@ void SilverSonic_Update(void)
         }
     }
 
-    RSDK.ProcessTileCollisions(self, self->outerBox, self->innerBox);
+    RSDK.ProcessObjectMovement(self, self->outerBox, self->innerBox);
 
     StateMachine_Run(self->state);
 }

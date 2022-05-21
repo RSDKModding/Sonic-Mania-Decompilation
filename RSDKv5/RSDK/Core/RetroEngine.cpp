@@ -272,6 +272,7 @@ void RSDK::ProcessEngine()
                 for (int32 v = 0; v < DRAWGROUP_COUNT; ++v)
                     AddViewableVariable(drawGroupNames[v], &engine.drawLayerVisible[v], VIEWVAR_BOOL, false, true);
 #endif
+
                 // dim after 5 mins
                 videoSettings.dimLimit = (5 * 60) * videoSettings.refreshRate;
                 ProcessInput();

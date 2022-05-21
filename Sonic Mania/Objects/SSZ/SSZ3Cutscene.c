@@ -105,7 +105,7 @@ bool32 SSZ3Cutscene_CutsceneIntro_PlayerRunLeft(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             if (!player->sidekick)
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
         }
 
         return true;

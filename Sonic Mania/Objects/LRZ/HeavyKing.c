@@ -740,12 +740,12 @@ void HeavyKing_StateCutscene_AttackRebound(void)
 #if MANIA_USE_PLUS
         Player->disableP2KeyCheck = false;
 #endif
-        player1->stateInput = Player_ProcessP1Input;
+        player1->stateInput = Player_Input_P1;
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (player2->classID == Player->classID) {
             CutsceneSeq_LockPlayerControl(player2);
-            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->stateInput = Player_Input_P2_AI;
         }
     }
 }

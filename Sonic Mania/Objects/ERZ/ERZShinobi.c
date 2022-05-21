@@ -141,7 +141,7 @@ void ERZShinobi_HandleTileCollisions(void)
     self->innerBox.bottom = size;
 
     self->prevOnGround = self->onGround;
-    RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
+    RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 }
 
 void ERZShinobi_State_Moving(void)

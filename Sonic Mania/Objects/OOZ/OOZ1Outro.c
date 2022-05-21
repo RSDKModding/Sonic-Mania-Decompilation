@@ -139,9 +139,9 @@ bool32 OOZ1Outro_Cutscene_FallIntoAct2(EntityCutsceneSeq *host)
     if (Smog->forceEnabled && player1->animator.animationID)
         return false;
     player1->direction  = FLIP_NONE;
-    player1->stateInput = Player_ProcessP1Input;
+    player1->stateInput = Player_Input_P1;
     if (player2->classID == Player->classID)
-        player2->stateInput = Player_ProcessP2Input_AI;
+        player2->stateInput = Player_Input_P2_AI;
     return true;
 }
 

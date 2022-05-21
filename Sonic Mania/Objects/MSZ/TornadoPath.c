@@ -316,7 +316,7 @@ void TornadoPath_State_CatchPlayer(void)
     }
 
     if (!player1->velocity.y && player1->state != Player_State_None) {
-        player1->stateInput = Player_ProcessP1Input;
+        player1->stateInput = Player_Input_P1;
         self->timer         = 0;
 
         int32 velX = 0;

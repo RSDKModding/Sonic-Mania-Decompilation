@@ -571,11 +571,11 @@ void Player_UpdateRaySwoopSFX(int32 sfxID);
 #endif
 
 // Input States
-void Player_ProcessP1Input(void);
-void Player_ProcessP2InputLag(void);
-void Player_ProcessP2Input_AI(void);
-void Player_ProcessP2Input_JumpIn(void);
-void Player_ProcessP2Input_JumpDelay(void);
-void Player_ProcessP2Input_Player(void);
+void Player_Input_P1(void);
+void Player_Input_P2_Delay(void);
+void Player_Input_P2_AI(void);
+void Player_Input_P2_JumpIn(void);
+void Player_Input_P2_JumpDelay(void);
+void Player_Input_P2_Player(void);
 
 #endif //! OBJ_PLAYER_H

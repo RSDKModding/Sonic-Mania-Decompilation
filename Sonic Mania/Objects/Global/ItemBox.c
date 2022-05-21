@@ -771,7 +771,7 @@ void ItemBox_GivePowerup(void)
                                 player2->abilityValues[0] = 0;
                                 player2->nextAirState     = StateMachine_None;
                                 player2->nextGroundState  = StateMachine_None;
-                                player2->stateInput       = Player_ProcessP2InputLag;
+                                player2->stateInput       = Player_Input_P2_Delay;
                                 player2->tileCollisions   = false;
                                 player2->interaction      = false;
                                 player2->drawOrder        = Zone->playerDrawHigh;

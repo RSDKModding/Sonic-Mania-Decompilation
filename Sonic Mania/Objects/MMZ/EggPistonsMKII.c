@@ -254,12 +254,17 @@ EntityEggPistonsMKII *EggPistonsMKII_GetNextPiston(void)
 {
     RSDK_THIS(EggPistonsMKII);
 
-    int32 pistonID                 = RSDK.Rand(0, 5);
+    int32 pistonID               = RSDK.Rand(0, 5);
     EntityEggPistonsMKII *piston = EggPistonsMKII->pistons[pistonID];
-
-    while (piston->state != EggPistonsMKII_StatePiston_Idle && (pistonID == EggPistonsMKII->pistonID - 1 || pistonID == EggPistonsMKII->pistonID + 1)) {
+    if (piston->state != EggPistonsMKII_StatePiston_Idle)
+        pistonID = EggPistonsMKII->pistonID - 1; // force another try
+    
+    while (pistonID == EggPistonsMKII->pistonID - 1 || pistonID == EggPistonsMKII->pistonID + 1) {
         pistonID = RSDK.Rand(0, 5);
         piston   = EggPistonsMKII->pistons[pistonID];
+    
+        if (piston->state != EggPistonsMKII_StatePiston_Idle)
+            pistonID = EggPistonsMKII->pistonID - 1; // force another try
     }
 
     EggPistonsMKII->pistonID = pistonID;
@@ -392,7 +397,7 @@ void EggPistonsMKII_State_PistonReveal(void)
     }
 
     if (--self->timer <= 0) {
-        player1->stateInput = Player_ProcessP1Input;
+        player1->stateInput = Player_Input_P1;
 
         for (int i = 0; i < 6; ++i) {
             EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot + 8 + i, CollapsingPlatform);

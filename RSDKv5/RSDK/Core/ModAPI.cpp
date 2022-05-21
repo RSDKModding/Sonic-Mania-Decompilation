@@ -134,9 +134,10 @@ void RSDK::SortMods()
 
 void RSDK::UnloadMods()
 {
-    for (ModInfo &mod : modList)
+    for (ModInfo &mod : modList) {
         if (mod.unloadMod)
             mod.unloadMod();
+    }
     modList.clear();
     langMap.clear();
     waitList.clear();

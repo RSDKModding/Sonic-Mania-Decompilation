@@ -133,7 +133,7 @@ bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player1->animator, true, 0);
             player2->state      = Player_State_Ground;
             player2->up         = false;
-            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->stateInput = Player_Input_P2_AI;
         }
     }
 
@@ -177,7 +177,7 @@ bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host)
         }
     }
     else {
-        player1->stateInput = Player_ProcessP1Input;
+        player1->stateInput = Player_Input_P1;
         player1->state      = Player_State_Ground;
 
         foreach_all(TitleCard, titleCard)

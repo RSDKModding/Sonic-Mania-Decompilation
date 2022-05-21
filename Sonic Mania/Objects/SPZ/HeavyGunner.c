@@ -464,13 +464,13 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
 
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->stateInput == Player_ProcessP1Input) {
+            if (player->stateInput == Player_Input_P1) {
                 player->stateInput = HeavyGunner_Input_LockedP1;
             }
-            else if (player->stateInput == Player_ProcessP2Input_Player) {
+            else if (player->stateInput == Player_Input_P2_Player) {
                 player->stateInput = HeavyGunner_Input_LockedP2;
             }
-            else if (player->stateInput == Player_ProcessP2Input_AI) {
+            else if (player->stateInput == Player_Input_P2_AI) {
                 player->stateInput = HeavyGunner_Input_LockedP2_AI;
             }
         }
@@ -571,11 +571,11 @@ void HeavyGunner_StateManager_HandlePathChange(void)
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
             if (player->stateInput == HeavyGunner_Input_LockedP1)
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
             else if (player->stateInput == HeavyGunner_Input_LockedP2)
-                player->stateInput = Player_ProcessP2Input_Player;
+                player->stateInput = Player_Input_P2_Player;
             else if (player->stateInput == HeavyGunner_Input_LockedP2_AI)
-                player->stateInput = Player_ProcessP2Input_AI;
+                player->stateInput = Player_Input_P2_AI;
         }
 
         Zone->playerBoundActiveR[0]  = true;
@@ -600,7 +600,7 @@ void HeavyGunner_Input_LockedP1(void)
 {
     RSDK_THIS(Player);
 
-    Player_ProcessP1Input();
+    Player_Input_P1();
 
     if (self->state != Player_State_None) {
         self->up        = false;
@@ -614,28 +614,28 @@ void HeavyGunner_Input_LockedP2(void)
 {
     RSDK_THIS(Player);
 
-    Player_ProcessP2Input_Player();
+    Player_Input_P2_Player();
 
     self->up        = false;
     self->down      = false;
     self->jumpPress = false;
     self->jumpHold  = false;
 
-    if (self->stateInput == Player_ProcessP2Input_AI)
+    if (self->stateInput == Player_Input_P2_AI)
         self->stateInput = HeavyGunner_Input_LockedP2_AI;
 }
 
 void HeavyGunner_Input_LockedP2_AI(void)
 {
     RSDK_THIS(Player);
-    Player_ProcessP2Input_AI();
+    Player_Input_P2_AI();
 
     self->up        = false;
     self->down      = false;
     self->jumpPress = false;
     self->jumpHold  = false;
 
-    if (self->stateInput == Player_ProcessP2Input_Player)
+    if (self->stateInput == Player_Input_P2_Player)
         self->stateInput = HeavyGunner_Input_LockedP2;
 }
 

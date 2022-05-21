@@ -152,7 +152,7 @@ void Tornado_State_MSZ1Intro(void)
         self->knuxVel.y = -0x40000;
         RSDK.SetSpriteAnimation(Tornado->knuxFrames, 4, &self->animatorKnux, false, 0);
         self->state = Tornado_State_KnuxKnockedOff;
-        foreach_active(Player, player) { player->stateInput = Player_ProcessP1Input; }
+        foreach_active(Player, player) { player->stateInput = Player_Input_P1; }
     }
 }
 

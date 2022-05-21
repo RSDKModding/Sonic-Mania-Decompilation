@@ -109,7 +109,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
             Player->disableP2KeyCheck = true;
 #endif
             player2->state      = Player_State_Ground;
-            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->stateInput = Player_Input_P2_AI;
             player2->groundVel  = 0;
         }
     }

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5", "RSDKv5\RSDKv5.vcxproj", "{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5-sdl2", "RSDKv5\RSDKv5_sdl2.vcxproj", "{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_All", "Sonic Mania\Sonic Mania_All.vcxproj", "{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}"
 EndProject

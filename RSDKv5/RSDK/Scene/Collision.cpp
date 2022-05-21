@@ -703,7 +703,7 @@ bool32 RSDK::ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 c
     }
 }
 
-void RSDK::ProcessTileCollisions(Entity *entity, Hitbox *outerBox, Hitbox *innerBox)
+void RSDK::ProcessObjectMovement(Entity *entity, Hitbox *outerBox, Hitbox *innerBox)
 {
     if (entity && outerBox && innerBox) {
         if (entity->tileCollisions) {

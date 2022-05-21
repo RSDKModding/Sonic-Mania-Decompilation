@@ -97,7 +97,7 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
         player1->right      = true;
         if (player2->classID == Player->classID) {
             player2->state      = Player_State_Ground;
-            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->stateInput = Player_Input_P2_AI;
             player2->groundVel  = 0;
         }
     }

@@ -677,7 +677,7 @@ void MSZSetup_PlayerState_PostCrashJumpIn(void)
     RSDK_THIS(Player);
     self->active        = ACTIVE_NORMAL;
     self->visible       = true;
-    self->stateInput    = Player_ProcessP2Input_AI;
+    self->stateInput    = Player_Input_P2_AI;
     Player->jumpInTimer = 240;
     Player_P2JumpBackIn();
 }

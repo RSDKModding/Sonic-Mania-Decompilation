@@ -83,7 +83,7 @@ bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)
 
         if (player2->classID == Player->classID) {
             player2->state      = Player_State_Ground;
-            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->stateInput = Player_Input_P2_AI;
             player2->groundVel  = 0;
         }
     }

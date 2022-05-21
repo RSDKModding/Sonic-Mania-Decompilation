@@ -141,7 +141,7 @@ bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
         foreach_active(Player, player2)
         {
             if (player2->sidekick && (player2->characterID != ID_KNUCKLES || checkPlayerID(ID_KNUCKLES, 2)))
-                player2->stateInput = Player_ProcessP2Input_AI;
+                player2->stateInput = Player_Input_P2_AI;
         }
     }
 

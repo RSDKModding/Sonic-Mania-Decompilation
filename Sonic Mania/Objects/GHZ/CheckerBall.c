@@ -16,7 +16,7 @@ void CheckerBall_Update(void)
     CheckerBall_HandlePlayerMovement();
     self->ballAngle += self->angleVel;
     CheckerBall_HandlePhysics();
-    RSDK.ProcessTileCollisions(self, &CheckerBall->outerBox, &CheckerBall->innerBox);
+    RSDK.ProcessObjectMovement(self, &CheckerBall->outerBox, &CheckerBall->innerBox);
     CheckerBall_HandleObjectCollisions();
     CheckerBall_HandlePlayerInteractions();
     self->roundedPos.x = self->position.x & 0xFFFF0000;

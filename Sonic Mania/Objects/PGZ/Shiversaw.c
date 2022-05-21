@@ -653,9 +653,9 @@ void Shiversaw_State_HitRecoil_Tutorial(void)
         foreach_active(Player, player)
         {
             if (player->sidekick)
-                player->stateInput = Player_ProcessP2Input_AI;
+                player->stateInput = Player_Input_P2_AI;
             else
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
         }
     }
 

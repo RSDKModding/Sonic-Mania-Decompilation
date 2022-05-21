@@ -84,11 +84,11 @@ void MegaChopper_CheckPlayerCollisions(void)
                 self->playerPos.y = (self->position.y - player->position.y) & 0xFFFF0000;
                 self->playerDir   = player->direction;
 
-                if (player->stateInput == Player_ProcessP1Input)
+                if (player->stateInput == Player_Input_P1)
                     player->stateInput = MegaChopper_PlayerInput_StateP1;
-                else if (player->stateInput == Player_ProcessP2Input_Player)
+                else if (player->stateInput == Player_Input_P2_Player)
                     player->stateInput = MegaChopper_PlayerInput_StateP2;
-                else if (player->stateInput == Player_ProcessP2Input_AI)
+                else if (player->stateInput == Player_Input_P2_AI)
                     player->stateInput = MegaChopper_PlayerInput_StateP2_AI;
 
                 self->drawOrder   = player->drawOrder + 1;
@@ -111,11 +111,11 @@ void MegaChopper_CheckOffScreen(void)
         EntityPlayer *player = self->playerPtr;
         if (player) {
             if (player->stateInput == MegaChopper_PlayerInput_StateP1) 
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
             else if (player->stateInput == MegaChopper_PlayerInput_StateP2) 
-                player->stateInput = Player_ProcessP2Input_Player;
+                player->stateInput = Player_Input_P2_Player;
             else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) 
-                player->stateInput = Player_ProcessP2Input_AI;
+                player->stateInput = Player_Input_P2_AI;
         }
         self->nibbleTimer = 0;
         self->isPermanent = false;
@@ -126,7 +126,7 @@ void MegaChopper_CheckOffScreen(void)
 void MegaChopper_PlayerInput_StateP1(void)
 {
     RSDK_THIS(Player);
-    Player_ProcessP1Input();
+    Player_Input_P1();
     if (self->state != Player_State_None) {
         self->up        = false;
         self->down      = false;
@@ -138,24 +138,24 @@ void MegaChopper_PlayerInput_StateP1(void)
 void MegaChopper_PlayerInput_StateP2(void)
 {
     RSDK_THIS(Player);
-    Player_ProcessP2Input_Player();
+    Player_Input_P2_Player();
     self->up        = false;
     self->down      = false;
     self->jumpPress = false;
     self->jumpHold  = false;
-    if (self->stateInput == Player_ProcessP2Input_AI)
+    if (self->stateInput == Player_Input_P2_AI)
         self->stateInput = MegaChopper_PlayerInput_StateP2_AI;
 }
 
 void MegaChopper_PlayerInput_StateP2_AI(void)
 {
     RSDK_THIS(Player);
-    Player_ProcessP2Input_AI();
+    Player_Input_P2_AI();
     self->up        = false;
     self->down      = false;
     self->jumpPress = false;
     self->jumpHold  = false;
-    if (self->stateInput == Player_ProcessP2Input_Player)
+    if (self->stateInput == Player_Input_P2_Player)
         self->stateInput = MegaChopper_PlayerInput_StateP2;
 }
 
@@ -286,11 +286,11 @@ void MegaChopper_State_Chopping(void)
             self->playerPtr = NULL;
 
             if (player->stateInput == MegaChopper_PlayerInput_StateP1) 
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
             else if (player->stateInput == MegaChopper_PlayerInput_StateP2) 
-                player->stateInput = Player_ProcessP2Input_Player;
+                player->stateInput = Player_Input_P2_Player;
             else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) 
-                player->stateInput = Player_ProcessP2Input_AI;
+                player->stateInput = Player_Input_P2_AI;
 
             self->velocity.y = -0x40000;
             if (self->direction == FLIP_NONE)
@@ -356,11 +356,11 @@ void MegaChopper_State_Chopping(void)
                                     self->playerPtr = NULL;
 
                                     if (player->stateInput == MegaChopper_PlayerInput_StateP1)
-                                        player->stateInput = Player_ProcessP1Input;
+                                        player->stateInput = Player_Input_P1;
                                     else if (player->stateInput == MegaChopper_PlayerInput_StateP2)
-                                        player->stateInput = Player_ProcessP2Input_Player;
+                                        player->stateInput = Player_Input_P2_Player;
                                     else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI)
-                                        player->stateInput = Player_ProcessP2Input_AI;
+                                        player->stateInput = Player_Input_P2_AI;
 
                                     self->velocity.y = -0x40000;
                                     if (self->direction == FLIP_NONE)
@@ -384,11 +384,11 @@ void MegaChopper_State_Chopping(void)
             }
             else {
                 if (player->stateInput == MegaChopper_PlayerInput_StateP1)
-                    player->stateInput = Player_ProcessP1Input;
+                    player->stateInput = Player_Input_P1;
                 else if (player->stateInput == MegaChopper_PlayerInput_StateP2)
-                    player->stateInput = Player_ProcessP2Input_Player;
+                    player->stateInput = Player_Input_P2_Player;
                 else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI)
-                    player->stateInput = Player_ProcessP2Input_AI;
+                    player->stateInput = Player_Input_P2_AI;
 
                 self->velocity.y = -0x40000;
                 if (self->direction == FLIP_NONE)

@@ -189,7 +189,7 @@ void PhantomRider_State_EnterRider(void)
             self->velocity.y = 0xC0000;
     }
     self->prevOnGround = self->onGround;
-    RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
+    RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 }
 
 void PhantomRider_State_InitialRace(void)
@@ -214,7 +214,7 @@ void PhantomRider_State_InitialRace(void)
             self->velocity.y = 0xC0000;
     }
     self->prevOnGround = self->onGround;
-    RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
+    RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 
     EntityPlatformNode *marker = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode);
     if (self->position.x > marker->position.x)
@@ -237,7 +237,7 @@ void PhantomRider_State_RacePlayer(void)
             self->velocity.y = 0xC0000;
     }
     self->prevOnGround = self->onGround;
-    RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
+    RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 
     if (++self->timer == 560) {
         self->timer         = 0;

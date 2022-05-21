@@ -255,9 +255,9 @@ bool32 LRZ1Outro_CutsceneAct2_ExitDashLift(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             if (!player->sidekick)
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
             else
-                player->stateInput = Player_ProcessP2Input_AI;
+                player->stateInput = Player_Input_P2_AI;
         }
 
         foreach_all(TitleCard, titleCard)

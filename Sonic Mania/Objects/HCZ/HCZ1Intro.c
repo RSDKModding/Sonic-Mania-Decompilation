@@ -87,7 +87,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
         if (host->timer == 8) {
             camera->target   = (Entity *)player1;
             camera->state       = Camera_State_Follow;
-            player1->stateInput = Player_ProcessP1Input;
+            player1->stateInput = Player_Input_P1;
             player1->camera     = camera;
             Water->disableWaterSplash     = 0;
         }
@@ -117,7 +117,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
             return true;
 
         if (player2->underwater) {
-            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->stateInput = Player_Input_P2_AI;
             return true;
         }
     }

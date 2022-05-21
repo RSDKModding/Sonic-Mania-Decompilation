@@ -586,7 +586,7 @@ void CPZBoss_State_Destroyed(void)
             if (player->camera)
                 player->camera->state = Camera_State_Follow;
             if (!player->sidekick)
-                player->stateInput = Player_ProcessP1Input;
+                player->stateInput = Player_Input_P1;
         }
 
         self->active = ACTIVE_BOUNDS;

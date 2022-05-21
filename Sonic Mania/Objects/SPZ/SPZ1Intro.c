@@ -166,12 +166,12 @@ bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
     if (!host->timer) {
         camera->target      = (Entity *)player1;
         camera->state       = Camera_State_Follow;
-        player1->stateInput = Player_ProcessP1Input;
+        player1->stateInput = Player_Input_P1;
         player1->state      = Player_State_Ground;
         player1->camera     = camera;
 
         if (player2->classID == Player->classID)
-            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->stateInput = Player_Input_P2_AI;
 
         SceneInfo->timeEnabled = true;
         return true;

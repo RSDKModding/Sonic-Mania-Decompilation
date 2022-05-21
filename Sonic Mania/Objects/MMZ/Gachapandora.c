@@ -293,7 +293,7 @@ void Gachapandora_Explode(int xMin, int xMax, int yMin, int yMax)
 void Gachapandora_Player_StateInput_P1Grabbed(void)
 {
     RSDK_THIS(Player);
-    Player_ProcessP1Input();
+    Player_Input_P1();
     self->up         = false;
     self->down       = false;
     self->jumpPress  = false;
@@ -305,28 +305,28 @@ void Gachapandora_Player_StateInput_P1Grabbed(void)
 void Gachapandora_Player_StateInput_P2PlayerGrabbed(void)
 {
     RSDK_THIS(Player);
-    Player_ProcessP2Input_Player();
+    Player_Input_P2_Player();
     self->up         = false;
     self->down       = false;
     self->jumpPress  = false;
     self->jumpHold   = false;
     self->velocity.x = clampVal(self->velocity.x, -0x40000, 0x40000);
     self->groundVel  = clampVal(self->groundVel, -0x40000, 0x40000);
-    if (self->stateInput == Player_ProcessP2Input_AI)
+    if (self->stateInput == Player_Input_P2_AI)
         self->stateInput = Gachapandora_Player_StateInput_P2AIGrabbed;
 }
 
 void Gachapandora_Player_StateInput_P2AIGrabbed(void)
 {
     RSDK_THIS(Player);
-    Player_ProcessP2Input_AI();
+    Player_Input_P2_AI();
     self->up         = false;
     self->down       = false;
     self->jumpPress  = false;
     self->jumpHold   = false;
     self->velocity.x = clampVal(self->velocity.x, -0x40000, 0x40000);
     self->groundVel  = clampVal(self->groundVel, -0x40000, 0x40000);
-    if (self->stateInput == Player_ProcessP2Input_Player)
+    if (self->stateInput == Player_Input_P2_Player)
         self->stateInput = Gachapandora_Player_StateInput_P2PlayerGrabbed;
 }
 
@@ -1365,11 +1365,11 @@ void Gachapandora_StatePrize_AmyJump(void)
                         RSDK.PlaySfx(Gachapandora->sfxGiggle, false, 0xFF);
                         RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 6, &self->mainAnimator, true, 0);
 
-                        if (player->stateInput == Player_ProcessP1Input)
+                        if (player->stateInput == Player_Input_P1)
                             player->stateInput = Gachapandora_Player_StateInput_P1Grabbed;
-                        else if (player->stateInput == Player_ProcessP2Input_Player)
+                        else if (player->stateInput == Player_Input_P2_Player)
                             player->stateInput = Gachapandora_Player_StateInput_P2PlayerGrabbed;
-                        else if (player->stateInput == Player_ProcessP2Input_AI)
+                        else if (player->stateInput == Player_Input_P2_AI)
                             player->stateInput = Gachapandora_Player_StateInput_P2AIGrabbed;
 
                         self->timer  = 90;
@@ -1473,11 +1473,11 @@ void Gachapandora_StatePrize_AmyGrabbed(void)
                         self->parent     = NULL;
 
                         if (parent->stateInput == Gachapandora_Player_StateInput_P1Grabbed)
-                            parent->stateInput = Player_ProcessP1Input;
+                            parent->stateInput = Player_Input_P1;
                         else if (parent->stateInput == Gachapandora_Player_StateInput_P2PlayerGrabbed)
-                            parent->stateInput = Player_ProcessP2Input_Player;
+                            parent->stateInput = Player_Input_P2_Player;
                         else if (parent->stateInput == Gachapandora_Player_StateInput_P2AIGrabbed)
-                            parent->stateInput = Player_ProcessP2Input_AI;
+                            parent->stateInput = Player_Input_P2_AI;
 
                         self->velocity.y = -0x20000;
                         if (self->direction == FLIP_NONE)
@@ -1506,11 +1506,11 @@ void Gachapandora_StatePrize_AmyGrabbed(void)
     if (self->state == Gachapandora_StatePrize_AmyGrabbed) {
         if (!--self->timer) {
             if (parent->stateInput == Gachapandora_Player_StateInput_P1Grabbed)
-                parent->stateInput = Player_ProcessP1Input;
+                parent->stateInput = Player_Input_P1;
             else if (parent->stateInput == Gachapandora_Player_StateInput_P2PlayerGrabbed)
-                parent->stateInput = Player_ProcessP2Input_Player;
+                parent->stateInput = Player_Input_P2_Player;
             else if (parent->stateInput == Gachapandora_Player_StateInput_P2AIGrabbed)
-                parent->stateInput = Player_ProcessP2Input_AI;
+                parent->stateInput = Player_Input_P2_AI;
 
             Player_CheckHit(parent, self);
             RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);

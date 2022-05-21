@@ -250,7 +250,7 @@ void AIZTornadoPath_State_CatchPlayer(void)
 
     if (self->timer == 90) {
         self->timer        = 0;
-        player->stateInput = Player_ProcessP1Input;
+        player->stateInput = Player_Input_P1;
         int32 velX         = 0;
         foreach_all(AIZTornadoPath, node)
         {

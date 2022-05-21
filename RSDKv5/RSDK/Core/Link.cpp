@@ -423,7 +423,7 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_CheckObjectCollisionPlatform, CheckObjectCollisionPlatform);
     ADD_RSDK_FUNCTION(FunctionTable_ObjectTileCollision, ObjectTileCollision);
     ADD_RSDK_FUNCTION(FunctionTable_ObjectTileGrip, ObjectTileGrip);
-    ADD_RSDK_FUNCTION(FunctionTable_ProcessTileCollisions, ProcessTileCollisions);
+    ADD_RSDK_FUNCTION(FunctionTable_ProcessObjectMovement, ProcessObjectMovement);
     ADD_RSDK_FUNCTION(FunctionTable_GetTileAngle, GetTileAngle);
     ADD_RSDK_FUNCTION(FunctionTable_SetTileAngle, SetTileAngle);
     ADD_RSDK_FUNCTION(FunctionTable_GetTileFlags, GetTileFlags);

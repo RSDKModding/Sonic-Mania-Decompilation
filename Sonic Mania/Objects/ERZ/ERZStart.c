@@ -620,7 +620,7 @@ bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host)
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;
         fxFade->speedOut     = 64;
-        player1->stateInput  = Player_ProcessP1Input;
+        player1->stateInput  = Player_Input_P1;
         if (player1->characterID == ID_KNUCKLES) {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, false, 6);
             player1->animator.rotationFlag = 1;
