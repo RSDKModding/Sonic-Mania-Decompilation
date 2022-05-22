@@ -18,7 +18,9 @@ We do not condone using this project as a means for piracy in any form, this pro
 If you want to transfer your save from the official PC versions, you can just copy your savedata into the folder containing the decompilation!
 
 # Additional Tweaks
-* Added a built in mod loader and API allowing to easily create and play mods with features such as save file redirection and XML Asset loading.
+* Added a built-in mod loader and API allowing to easily create and play mods with features such as save file redirection and XML Asset loading.
+* Added a built-in shader compiler for backends/platforms that support it.
+* Added various other backends to windows aside from the usual DirectX 9 backends
 
 
 # How to build
@@ -33,8 +35,7 @@ firstly, follow the steps in [the common dependency readme](./dependencies/all/R
 ## [Android](./dependencies/android/README.md)
 
 ## Other platforms
-Currently the only supported platforms are the ones listed above, however the backend uses libogg, libvorbis & SDL2 to power it, so the codebase is very multiplatform.
-If you've cloned this repo and ported it to a platform not on the list or made some changes you'd like to see added to this repo, submit a pull request and it'll most likely be added.
+Currently the only supported platforms are the ones listed above, however the backend is very modular, so the codebase is very multiplatform.
 
 # FAQ
 ### Q: The screen is tearing, how do I fix it?
