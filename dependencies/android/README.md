@@ -1,8 +1,10 @@
+# ANDROID SETUP
+
 * Clone the repo, then install the dependencies listed below
-* Ensure the symbolic links in `android/app/jni` are correct. If not, fix them with the following on Windows:
+* Ensure the symbolic links in `[root]/android/app/jni` are correct. If not, fix them with the following on Windows:
   * `mklink /D src ..\..\..`
   * `mklink /D SDL ..\..\..\dependencies\android\SDL`
-* Open `android/` in Android Studio, install the NDK and everything else that it asks for, and build.
+* Open `[root]/android/` in Android Studio, install the NDK and everything else that it asks for, and build.
 
 
 ## Dependencies:

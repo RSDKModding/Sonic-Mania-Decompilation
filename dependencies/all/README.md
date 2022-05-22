@@ -1,3 +1,7 @@
+# COMMON SETUP
+* Clone the repo, then install the dependencies listed below
+
+## Dependencies:
 iniparser:
 
 zlib:

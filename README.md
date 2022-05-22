@@ -22,13 +22,15 @@ If you want to transfer your save from the official PC versions, you can just co
 
 
 # How to build
-## [Windows](./dependencies/windows/SETUP.md)
+firstly, follow the steps in [the common dependency readME](./dependencies/all/README.md) to install the common dependencies, then follow the steps for your platform of choice.
 
-## [Linux](./dependencies/linux/SETUP.md)
+## [Windows](./dependencies/windows/README.md)
 
-## [Mac](./dependencies/linux/SETUP.md)
+## [Linux](./dependencies/linux/README.md)
 
-## [Android](./dependencies/android/SETUP.md)
+## [Mac](./dependencies/linux/README.md)
+
+## [Android](./dependencies/android/README.md)
 
 ## Other platforms
 Currently the only supported platforms are the ones listed above, however the backend uses libogg, libvorbis & SDL2 to power it, so the codebase is very multiplatform.
