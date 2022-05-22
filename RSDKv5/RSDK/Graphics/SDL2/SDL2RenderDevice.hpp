@@ -52,6 +52,8 @@ private:
     static unsigned long long curTicks;
     static unsigned long long prevTicks;
 
+    static RenderVertex vertexBuffer[!RETRO_REV02 ? 24 : 60];
+
     // thingo majigo for handling video/image swapping
     static uint8 lastTextureFormat;
 };

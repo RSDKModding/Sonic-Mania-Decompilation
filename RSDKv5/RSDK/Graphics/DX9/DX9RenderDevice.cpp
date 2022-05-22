@@ -180,7 +180,7 @@ void RenderDevice::FlipScreen()
     dx9Device->Clear(0, NULL, D3DCLEAR_TARGET, 0xFF000000, 1.0, 0);
     dx9Device->SetViewport(&dx9ViewPort);
 
-    if (dx9Device->BeginScene() >= 0) {
+    if (SUCCEEDED(dx9Device->BeginScene())) {
         // reload shader if needed
         if (lastShaderID != videoSettings.shaderID) {
             lastShaderID = videoSettings.shaderID;
@@ -281,7 +281,7 @@ void RenderDevice::FlipScreen()
         dx9Device->EndScene();
     }
 
-    if (dx9Device->Present(NULL, NULL, NULL, NULL) < 0)
+    if (FAILED(dx9Device->Present(NULL, NULL, NULL, NULL)))
         windowRefreshDelay = 8;
 }
 
@@ -457,126 +457,8 @@ void RenderDevice::UpdateFPSCap() { performanceCount.QuadPart = curFrequency.Qua
 
 void RenderDevice::InitVertexBuffer()
 {
-// clang-format off
-#if RETRO_REV02
-RenderVertex vertBuffer[60] = {
-    // 1 Screen (0)
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 2 Screens - Bordered (Top Screen) (6)
-    { { -0.5,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -0.5,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  0.5,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 2 Screens - Bordered (Bottom Screen) (12)
-    { { -0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -0.5, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  0.5, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  0.5,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  0.5, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 2 Screens - Stretched (Top Screen)  (18)
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 2 Screens - Stretched (Bottom Screen) (24)
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 4 Screens (Top-Left) (30)
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  0.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 4 Screens (Top-Right) (36)
-    { {  0.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { {  0.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 4 Screens (Bottom-Right) (48)
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  0.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  0.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // 4 Screens (Bottom-Left) (42)
-    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  0.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { {  0.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    
-    // Image/Video (54)
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  1.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } },
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  0.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } }
-};
-#else
-RenderVertex vertBuffer[24] =
-{
-    // 1 Screen (0)
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-
-  // 2 Screens - Stretched (Top Screen) (6)
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-  
-  // 2 Screens - Stretched (Bottom Screen) (12)
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.9375 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-    { { -1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  0.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.625,  0.9375 } },
-  
-    // Image/Video (18)
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { { -1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  1.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } },
-    { { -1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  0.0,  0.0 } },
-    { {  1.0,  1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  0.0 } },
-    { {  1.0, -1.0,  1.0 }, 0xFFFFFFFF, {  1.0,  1.0 } }
-};
-#endif
-    // clang-format on
+    RenderVertex vertBuffer[sizeof(rsdkVertexBuffer) / sizeof(RenderVertex)];
+    memcpy(vertBuffer, rsdkVertexBuffer, sizeof(rsdkVertexBuffer));
 
     float x = 0.5 / (float)viewSize.x;
     float y = 0.5 / (float)viewSize.y;
@@ -596,7 +478,7 @@ RenderVertex vertBuffer[24] =
     }
 
     RenderVertex *vertBufferPtr;
-    if (dx9VertexBuffer->Lock(0, 0, (void **)&vertBufferPtr, 0) >= 0) {
+    if (SUCCEEDED(dx9VertexBuffer->Lock(0, 0, (void **)&vertBufferPtr, 0))) {
         memcpy(vertBufferPtr, vertBuffer, sizeof(vertBuffer));
         dx9VertexBuffer->Unlock();
     }
@@ -607,7 +489,7 @@ bool RenderDevice::InitGraphicsAPI()
     videoSettings.shaderSupport = false;
 
     D3DCAPS9 pCaps;
-    if (dx9Context->GetDeviceCaps(0, D3DDEVTYPE_HAL, &pCaps) >= S_OK && (pCaps.PixelShaderVersion & 0xFF00) >= 0x300)
+    if (SUCCEEDED(dx9Context->GetDeviceCaps(0, D3DDEVTYPE_HAL, &pCaps)) && (pCaps.PixelShaderVersion & 0xFF00) >= 0x300)
         videoSettings.shaderSupport = true;
 
     viewSize.x = 0;
@@ -654,7 +536,7 @@ bool RenderDevice::InitGraphicsAPI()
 
     int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);
     if (videoSettings.shaderSupport) {
-        if (adapterStatus < S_OK)
+        if (FAILED(adapterStatus))
             return false;
 
         D3DVERTEXELEMENT9 elements[4];
@@ -687,17 +569,16 @@ bool RenderDevice::InitGraphicsAPI()
         elements[3].Usage      = 0;
         elements[3].UsageIndex = 0;
 
-        if (dx9Device->CreateVertexDeclaration(elements, &dx9VertexDeclare) < S_OK)
+        if (FAILED(dx9Device->CreateVertexDeclaration(elements, &dx9VertexDeclare)))
             return false;
 
-        if (dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, 0, D3DPOOL_DEFAULT, &dx9VertexBuffer, NULL) < S_OK)
+        if (FAILED(dx9Device->CreateVertexBuffer(sizeof(rsdkVertexBuffer), 0, 0, D3DPOOL_DEFAULT, &dx9VertexBuffer, NULL)))
             return false;
     }
     else {
-        if (adapterStatus < 0
-            || dx9Device->CreateVertexBuffer(sizeof(vertexBuffer), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT, &dx9VertexBuffer,
-                                             NULL)
-                   < S_OK)
+        if (FAILED(adapterStatus)
+            || FAILED(dx9Device->CreateVertexBuffer(sizeof(rsdkVertexBuffer), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT,
+                                                    &dx9VertexBuffer, NULL)))
             return false;
     }
 
@@ -754,14 +635,13 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
-        if (dx9Device->CreateTexture(textureSize.x, textureSize.y, 1, D3DUSAGE_DYNAMIC, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &screenTextures[s], NULL)
-            != S_OK)
+        if (FAILED(dx9Device->CreateTexture(textureSize.x, textureSize.y, 1, D3DUSAGE_DYNAMIC, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &screenTextures[s],
+                                            NULL)))
             return false;
     }
 
-    if (dx9Device->CreateTexture(RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &imageTexture,
-                                 NULL)
-        != S_OK)
+    if (FAILED(dx9Device->CreateTexture(RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT,
+                                        &imageTexture, NULL)))
         return false;
 
     lastShaderID = -1;
@@ -861,7 +741,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             if (errorBlob)
                 PrintLog(PRINT_NORMAL, "Vertex shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
 
-            if (dx9Device->CreateVertexShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->vertexShaderObject) < 0) {
+            if (FAILED(dx9Device->CreateVertexShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->vertexShaderObject))) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
                     shader->vertexShaderObject = NULL;
@@ -885,7 +765,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
 
-            if (dx9Device->CreateVertexShader((DWORD *)fileData, &shader->vertexShaderObject) < 0) {
+            if (FAILED(dx9Device->CreateVertexShader((DWORD *)fileData, &shader->vertexShaderObject))) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
                     shader->vertexShaderObject = NULL;
@@ -933,7 +813,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             if (errorBlob)
                 PrintLog(PRINT_NORMAL, "Pixel shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
 
-            if (dx9Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->pixelShaderObject) < 0) {
+            if (FAILED(dx9Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->pixelShaderObject))) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
                     shader->vertexShaderObject = NULL;
@@ -956,7 +836,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
 
-            if (dx9Device->CreatePixelShader((DWORD *)fileData, &shader->pixelShaderObject) < 0) {
+            if (FAILED(dx9Device->CreatePixelShader((DWORD *)fileData, &shader->pixelShaderObject))) {
                 if (shader->pixelShaderObject) {
                     shader->pixelShaderObject->Release();
                     shader->pixelShaderObject = NULL;

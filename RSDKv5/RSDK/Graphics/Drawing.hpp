@@ -251,8 +251,6 @@ extern ScreenInfo screens[SCREEN_MAX];
 extern CameraInfo cameras[CAMERA_MAX];
 extern ScreenInfo *currentScreen;
 
-extern RenderVertex vertexBuffer[!RETRO_REV02 ? 24 : 60];
-
 extern int32 shaderCount;
 extern ShaderEntry shaderList[SHADER_MAX];
 

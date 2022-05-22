@@ -26,8 +26,8 @@ bool32 AudioDevice::Init()
 
     audioState = false;
     if (!audioContext) {
-        if (InitContext() >= 0) {
-            if (audioContext->CreateMasteringVoice(&masteringVoice, 0, 0, 0, NULL, NULL) >= 0) {
+        if (SUCCEEDED(InitContext())) {
+            if (SUCCEEDED(audioContext->CreateMasteringVoice(&masteringVoice, 0, 0, 0, NULL, NULL))) {
                 WAVEFORMATEX format;
                 format.cbSize          = 0;
                 format.wBitsPerSample  = sizeof(SAMPLE_FORMAT) * 8;
@@ -37,7 +37,7 @@ bool32 AudioDevice::Init()
                 format.nSamplesPerSec  = AUDIO_FREQUENCY;
                 format.nAvgBytesPerSec = 352800;
 
-                if (audioContext->CreateSourceVoice(&sourceVoice, &format, 0, 2.0, &voiceCallback, NULL, NULL) >= 0) {
+                if (SUCCEEDED(audioContext->CreateSourceVoice(&sourceVoice, &format, 0, 2.0, &voiceCallback, NULL, NULL))) {
                     sourceVoice->Start(0, XAUDIO2_COMMIT_NOW);
                     InitMixBuffer();
                     audioState = true;
@@ -250,9 +250,9 @@ HRESULT AudioDevice::InitContext()
     IXAudio2 *context = nullptr;
 
     HRESULT res = XAudio2Create(&context, 0, XAUDIO2_DEFAULT_PROCESSOR);
-    if (res >= 0) {
+    if (SUCCEEDED(res)) {
         res = context->StartEngine();
-        if (res < 0)
+        if (FAILED(res))
             context->Release();
         else
             audioContext = context;
