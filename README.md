@@ -22,21 +22,13 @@ If you want to transfer your save from the official PC versions, you can just co
 
 
 # How to build
-## Windows
-* Clone the repo, then follow the instructions in the [depencencies readme for Windows](./dependencies/windows/dependencies.txt) to setup dependencies, then build via the visual studio solution (or grab a prebuilt executable from the releases section.)
+## [Windows](./dependencies/windows/SETUP.md)
 
-## Linux:
-* TODO LOLLL
+## [Linux](./dependencies/linux/SETUP.md)
 
-## Mac
-* Clone the repo, follow the instructions in the [depencencies readme for Mac](./dependencies/mac/dependencies.txt) to setup dependencies, then build via the Xcode project.
+## [Mac](./dependencies/linux/SETUP.md)
 
-## Android
-* Clone the repo, then follow the instructions in the [depencencies readme for Android](./dependencies/android/dependencies.txt).
-* Ensure the symbolic links in `android/app/jni` are correct. If not, fix them with the following on Windows:
-  * `mklink /D src ..\..\..`
-  * `mklink /D SDL ..\..\..\dependencies\android\SDL`
-* Open `android/` in Android Studio, install the NDK and everything else that it asks for, and build.
+## [Android](./dependencies/android/SETUP.md)
 
 ## Other platforms
 Currently the only supported platforms are the ones listed above, however the backend uses libogg, libvorbis & SDL2 to power it, so the codebase is very multiplatform.
