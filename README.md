@@ -22,7 +22,7 @@ If you want to transfer your save from the official PC versions, you can just co
 
 
 # How to build
-firstly, follow the steps in [the common dependency readME](./dependencies/all/README.md) to install the common dependencies, then follow the steps for your platform of choice.
+firstly, follow the steps in [the common dependency readme](./dependencies/all/README.md) to install the common dependencies, then follow the steps for your platform of choice.
 
 ## [Windows](./dependencies/windows/README.md)
 
