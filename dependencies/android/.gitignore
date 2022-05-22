@@ -1,0 +1,4 @@
+libogg/
+libtheora/
+SDL/
+!libogg/include/ogg/config_types.h

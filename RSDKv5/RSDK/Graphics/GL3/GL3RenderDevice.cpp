@@ -736,6 +736,9 @@ void RenderDevice::RefreshWindow()
         return;
 }
 
+void RenderDevice::GetWindowSize(int32 *width, int32 *height) { glfwGetWindowSize(window, width, height); }
+
+
 void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixels)
 {
     if (imagePixels) {
@@ -851,7 +854,7 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
 
                 default:
 #if RETRO_INPUTDEVICE_KEYBOARD
-                    UpdateKeyState(key);
+                    SKU::UpdateKeyState(key);
 #endif
                     break;
 
@@ -864,7 +867,7 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
                     }
                     else {
 #if RETRO_INPUTDEVICE_KEYBOARD
-                        UpdateKeyState(key);
+                        SKU::UpdateKeyState(key);
 #endif
                     }
 
@@ -963,7 +966,7 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
             switch (key) {
                 default:
 #if RETRO_INPUTDEVICE_KEYBOARD
-                    ClearKeyState(key);
+                    SKU::ClearKeyState(key);
 #endif
                     break;
 #if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
