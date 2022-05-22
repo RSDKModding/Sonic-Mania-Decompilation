@@ -116,7 +116,7 @@ enum FunctionTableIDs {
     FunctionTable_CheckValidScene,
     FunctionTable_CheckSceneFolder,
     FunctionTable_InitSceneLoad,
-    FunctionTable_GetObjectByName,
+    FunctionTable_FindObject,
     FunctionTable_ClearCameras,
     FunctionTable_AddCamera,
 #if !RETRO_REV02
@@ -213,7 +213,7 @@ enum FunctionTableIDs {
     FunctionTable_SetSpriteAnimation,
     FunctionTable_EditSpriteAnimation,
     FunctionTable_SetSpriteString,
-    FunctionTable_GetSpriteAnimation,
+    FunctionTable_FindSpriteAnimation,
     FunctionTable_GetFrame,
     FunctionTable_GetHitbox,
     FunctionTable_GetFrameID,

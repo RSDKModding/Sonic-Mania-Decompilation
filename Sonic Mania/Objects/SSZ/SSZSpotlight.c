@@ -62,7 +62,7 @@ void SSZSpotlight_Draw(void)
         vertices[3].y = drawVertex[i + 2].y;
         colors[3]     = self->colorTable[i + 2];
 
-        RSDK.DrawBlendedQuad(vertices, colors, 4, self->alpha, INK_ADD);
+        RSDK.DrawBlendedFace(vertices, colors, 4, self->alpha, INK_ADD);
     }
 }
 

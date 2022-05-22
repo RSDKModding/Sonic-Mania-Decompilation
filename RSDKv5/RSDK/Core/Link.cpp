@@ -273,7 +273,7 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_CheckValidScene, CheckValidStage);
     ADD_RSDK_FUNCTION(FunctionTable_CheckSceneFolder, CheckSceneFolder);
     ADD_RSDK_FUNCTION(FunctionTable_InitSceneLoad, InitSceneLoad);
-    ADD_RSDK_FUNCTION(FunctionTable_GetObjectByName, GetObjectByName);
+    ADD_RSDK_FUNCTION(FunctionTable_FindObject, FindObject);
 
     // Cameras
     ADD_RSDK_FUNCTION(FunctionTable_ClearCameras, ClearCameras);
@@ -399,7 +399,7 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_SetSpriteAnimation, SetSpriteAnimation);
     ADD_RSDK_FUNCTION(FunctionTable_EditSpriteAnimation, EditSpriteAnimation);
     ADD_RSDK_FUNCTION(FunctionTable_SetSpriteString, SetSpriteString);
-    ADD_RSDK_FUNCTION(FunctionTable_GetSpriteAnimation, GetSpriteAnimation);
+    ADD_RSDK_FUNCTION(FunctionTable_FindSpriteAnimation, FindSpriteAnimation);
     ADD_RSDK_FUNCTION(FunctionTable_GetFrame, GetFrame);
     ADD_RSDK_FUNCTION(FunctionTable_GetHitbox, GetHitbox);
     ADD_RSDK_FUNCTION(FunctionTable_GetFrameID, GetFrameID);

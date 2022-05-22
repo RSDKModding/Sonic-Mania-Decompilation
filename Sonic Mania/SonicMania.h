@@ -42,6 +42,9 @@
 
 #ifdef MANIA_PREPLUS
 #define MANIA_GAMEVER VER_103
+
+#undef RETRO_REV02
+#define RETRO_REV02 (0)
 #else
 #define MANIA_GAMEVER VER_106
 #endif

@@ -51,7 +51,7 @@ void ChemicalPool_Draw(void)
             surfaceColors = ChemicalPool->surfaceColorsFlash;
         else
             surfaceColors = self->surfaceColors;
-        RSDK.DrawBlendedQuad(verts, surfaceColors, 4, 0xC0, INK_NONE);
+        RSDK.DrawBlendedFace(verts, surfaceColors, 4, 0xC0, INK_NONE);
 
         verts[0].x = verts[3].x;
         verts[0].y = verts[3].y;
@@ -60,9 +60,9 @@ void ChemicalPool_Draw(void)
         verts[2].y = self->position.y + self->updateRange.y - screenY;
         verts[3].y = self->position.y + self->updateRange.y - screenY;
         if (self->timer >= 1)
-            RSDK.DrawQuad(verts, 4, 0xE0, 0xE0, 0xE0, 0xC0, INK_ALPHA);
+            RSDK.DrawFace(verts, 4, 0xE0, 0xE0, 0xE0, 0xC0, INK_ALPHA);
         else
-            RSDK.DrawQuad(verts, 4, self->r, self->g, self->b, 0xC0, INK_ALPHA);
+            RSDK.DrawFace(verts, 4, self->r, self->g, self->b, 0xC0, INK_ALPHA);
 
         vertices += 2;
     }

@@ -19,9 +19,9 @@ TYPEMAP = {
     "int16": 2,
     "int32": 4,
     "bool32": 4,
-    "ptr": 0,
+    "Pointer": 0,
     "Vector2": 0,
-    "TextInfo": 0,
+    "String": 0,
     "Animator": 0,
     "Hitbox": 0,
     "-----": 0
@@ -111,13 +111,13 @@ def deduce(delim):
     type = readuntil(" ")
     
     if infront() == "*":
-        type = "ptr"
+        type = "Pointer"
     if type.endswith("*"):
-        type = "ptr"
+        type = "Pointer"
         type.replace("*", "")
 
     if infront() == "(":
-        type = "ptr"
+        type = "Pointer"
         readuntil("*") #da name!!!
     
     if type in ALIASES:
@@ -171,11 +171,11 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                 mode = prevMode #return to where we left off
             continue
         
-        if (clnL.startswith("#ifRETRO_USE_PLUS") and not plus) or (clnL.startswith("#if!RETRO_USE_PLUS") and plus):
+        if (clnL.startswith("#ifMANIA_USE_PLUS") and not plus) or (clnL.startswith("#if!MANIA_USE_PLUS") and plus):
             prevMode = mode
             mode = 5
             continue
-        elif (clnL.startswith("#ifRETRO_USE_PLUS") and plus) or (clnL.startswith("#if!RETRO_USE_PLUS") and not plus):
+        elif (clnL.startswith("#ifMANIA_USE_PLUS") and plus) or (clnL.startswith("#if!MANIA_USE_PLUS") and not plus):
             continue #ok idc
         elif clnL.startswith("#endif"):
             continue #ok idc
@@ -213,7 +213,7 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                 backward()
                 readuntil("(")
                 stateName = readuntil(")")
-                t.append((stateName, tuple(TYPEMAP.keys()).index("ptr"), 1, []))
+                t.append((stateName, tuple(TYPEMAP.keys()).index("Pointer"), 1, []))
                 readuntil("\n") #hack :LOL:
                 continue
             if l.strip().startswith("}"):

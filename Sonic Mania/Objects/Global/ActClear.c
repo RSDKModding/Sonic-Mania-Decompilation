@@ -45,7 +45,7 @@ void ActClear_Draw(void)
         verts[1].x = drawPos.x + 0x340000;
         verts[2].x = drawPos.x + 0x440000;
         verts[3].x = drawPos.x - 0x810000;
-        RSDK.DrawQuad(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x  = 2 * self->playerNamePos.x + center;
         drawPos.y  = self->playerNamePos.y;
@@ -57,11 +57,12 @@ void ActClear_Draw(void)
         verts[1].y = drawPos.y + 0x1C0000;
         verts[2].y = drawPos.y + 0x2C0000;
         verts[3].y = drawPos.y + 0x2C0000;
-        RSDK.DrawQuad(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x = self->playerNamePos.x + center;
         drawPos.y = self->playerNamePos.y;
         RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, true);
+
         self->gotThroughAnimator.frameID = 2;
         RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
 
@@ -81,7 +82,7 @@ void ActClear_Draw(void)
         verts[1].x = drawPos.x + 0x340000;
         verts[2].x = drawPos.x + 0x440000;
         verts[3].x = drawPos.x - 0x5D0000;
-        RSDK.DrawQuad(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x  = 2 * self->playerNamePos.x + center;
         drawPos.y  = self->playerNamePos.y;
@@ -93,7 +94,7 @@ void ActClear_Draw(void)
         verts[1].y = drawPos.y + 0x1C0000;
         verts[2].y = drawPos.y + 0x2C0000;
         verts[3].y = drawPos.y + 0x2C0000;
-        RSDK.DrawQuad(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x = self->playerNamePos.x + center;
         drawPos.y = self->playerNamePos.y;

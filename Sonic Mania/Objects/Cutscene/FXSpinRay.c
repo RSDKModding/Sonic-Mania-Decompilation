@@ -59,7 +59,7 @@ void FXSpinRay_Draw(void)
         vertices[3].x = scrX + self->vertices[i + 3].x;
         vertices[3].y = scrY + self->vertices[i + 3].y;
 
-        RSDK.DrawQuad(vertices, 4, self->r, self->g, self->b, self->alpha, INK_ADD);
+        RSDK.DrawFace(vertices, 4, self->r, self->g, self->b, self->alpha, INK_ADD);
     }
 }
 

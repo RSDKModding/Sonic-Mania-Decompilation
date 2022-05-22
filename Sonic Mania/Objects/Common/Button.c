@@ -184,10 +184,10 @@ void Button_StageLoad(void)
     Button->hitboxV.right  = 16;
     Button->hitboxV.bottom = 3;
 
-    if (RSDK.GetObjectIDByName("Eggman"))
+    if (RSDK.FindObject("Eggman"))
         Button->hasEggman = true;
 
-    if (RSDK.GetObjectIDByName("PhantomRider"))
+    if (RSDK.FindObject("PhantomRider"))
         Button->hasPhantomRider = true;
 
     Button->sfxButton = RSDK.GetSfx("Stage/Button.wav");

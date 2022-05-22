@@ -148,15 +148,15 @@ typedef struct {
     bool32 (*GetStatsEnabled)(void);
     void (*SetStatsEnabled)(bool32 enabled);
 
-    // Authorization & Storage
+    // Authorization
     void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
     bool32 (*GetUsername)(String *userName);
+
+    // Storage
     void (*TryInitStorage)(void);
     int32 (*GetStorageStatus)(void);
-
-    // Saving
     int32 (*GetSaveStatus)(void);
     void (*ClearSaveStatus)(void);
     void (*SetSaveStatusContinue)(void);
@@ -234,7 +234,7 @@ typedef struct {
     bool32 (*CheckValidScene)(void);
     int32 (*CheckStageFolder)(const char *folderName);
     int32 (*LoadScene)(void);
-    int32 (*GetObjectIDByName)(const char *name);
+    int32 (*FindObject)(const char *name);
 
     // Cameras
     void (*ClearCameras)(void);
@@ -332,8 +332,8 @@ typedef struct {
     void (*DrawCircle)(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, InkEffects inkEffect,
                               bool32 screenRelative);
-    void (*DrawQuad)(Vector2 *verticies, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, InkEffects inkEffect);
-    void (*DrawBlendedQuad)(Vector2 *verticies, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
+    void (*DrawFace)(Vector2 *verticies, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, InkEffects inkEffect);
+    void (*DrawBlendedFace)(Vector2 *verticies, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheet, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawText)(Animator *animator, Vector2 *position, String *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
@@ -363,7 +363,7 @@ typedef struct {
     void (*EditSpriteAnimation)(uint16 aniFrames, uint16 listID, const char *name, int32 frameOffset, uint16 frameCount, int16 speed, uint8 loopIndex,
                                 uint8 rotationFlag);
     void (*SetSpriteString)(uint16 aniFrames, uint16 listID, String *info);
-    void *(*GetSpriteAnimation)(uint16 aniFrames, const char *name);
+    uint16 (*FindSpriteAnimation)(uint16 aniFrames, const char *name);
     SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 listID, int32 frameID);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);
     int16 (*GetFrameID)(Animator *animator);

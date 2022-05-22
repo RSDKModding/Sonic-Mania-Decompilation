@@ -32,10 +32,9 @@ void GameOver_Draw(void)
 
     EntityPlayer *player = RSDK_GET_ENTITY(SceneInfo->currentScreenID + Player->playerCount, Player);
     if (SceneInfo->currentScreenID == self->playerID || player->classID != GameOver->classID)
-        RSDK.DrawQuad(self->verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
     if (globals->gameMode != MODE_COMPETITION || SceneInfo->currentScreenID == self->playerID) {
-        self->animator.frameID = 0;
         for (self->animator.frameID = 0; self->animator.frameID < GAMEOVER_LETTER_COUNT; ++self->animator.frameID) {
             self->rotation = self->letterRotations[self->animator.frameID];
             RSDK.DrawSprite(&self->animator, &self->letterPositions[self->animator.frameID], true);

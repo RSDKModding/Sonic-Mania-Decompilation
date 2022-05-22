@@ -15,8 +15,8 @@ th_dec_ctx *VideoManager::td    = NULL;
 th_setup_info *VideoManager::ts = NULL;
 
 th_pixel_fmt VideoManager::pixelFormat;
-ogg_int64_t VideoManager::granulePos   = 0;
-bool32 VideoManager::shouldInit        = false;
+ogg_int64_t VideoManager::granulePos = 0;
+bool32 VideoManager::shouldInit      = false;
 
 bool32 RSDK::LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)(void))
 {
@@ -143,12 +143,12 @@ bool32 RSDK::LoadVideo(const char *filename, double startDelay, bool32 (*skipCal
 
                 th_setup_free(VideoManager::ts);
 
-                engine.storedShaderID           = videoSettings.shaderID;
+                engine.storedShaderID     = videoSettings.shaderID;
                 videoSettings.screenCount = 0;
-                engine.storedState              = sceneInfo.state;
-                engine.displayTime              = 0.0;
-                VideoManager::shouldInit        = true;
-                VideoManager::granulePos        = 0;
+                engine.storedState        = sceneInfo.state;
+                engine.displayTime        = 0.0;
+                VideoManager::shouldInit  = true;
+                VideoManager::granulePos  = 0;
 
                 engine.displayTime     = 0.0;
                 engine.videoStartDelay = 0.0;
@@ -164,10 +164,10 @@ bool32 RSDK::LoadVideo(const char *filename, double startDelay, bool32 (*skipCal
 
                 engine.skipCallback = NULL;
                 ProcessVideo();
-                engine.skipCallback        = skipCallback;
+                engine.skipCallback = skipCallback;
 
                 changedVideoSettings = false;
-                sceneInfo.state            = ENGINESTATE_VIDEOPLAYBACK;
+                sceneInfo.state      = ENGINESTATE_VIDEOPLAYBACK;
 
                 return true;
             }
@@ -208,7 +208,7 @@ void RSDK::ProcessVideo()
 
             ogg_sync_wrote(&VideoManager::oy, 0x1000);
 
-            while (ogg_sync_pageout(&VideoManager::oy, &VideoManager::og) >= 1) ogg_stream_pagein(&VideoManager::to, &VideoManager::og);
+            while (ogg_sync_pageout(&VideoManager::oy, &VideoManager::og) > 0) ogg_stream_pagein(&VideoManager::to, &VideoManager::og);
         }
 
         if (!finished && !th_decode_packetin(VideoManager::td, &VideoManager::op, &VideoManager::granulePos)) {
@@ -218,7 +218,7 @@ void RSDK::ProcessVideo()
             int32 dataPos = (VideoManager::ti.pic_x & 0xFFFFFFFE) + (VideoManager::ti.pic_y & 0xFFFFFFFE) * yuv[0].stride;
             switch (VideoManager::pixelFormat) {
                 default: break;
-                    
+
                 case TH_PF_444:
                     RenderDevice::SetupVideoTexture_YUV444(yuv[0].width, yuv[0].height, &yuv[0].data[dataPos], &yuv[1].data[dataPos],
                                                            &yuv[2].data[dataPos], yuv[0].stride, yuv[1].stride, yuv[2].stride);
@@ -248,10 +248,7 @@ void RSDK::ProcessVideo()
         CloseFile(&VideoManager::file);
 
         // Flush everything out
-        if (ogg_sync_pageout(&VideoManager::oy, &VideoManager::og) >= 1) {
-            do ogg_stream_pagein(&VideoManager::to, &VideoManager::og);
-            while (ogg_sync_pageout(&VideoManager::oy, &VideoManager::og) > 0);
-        }
+        while (ogg_sync_pageout(&VideoManager::oy, &VideoManager::og) > 0) ogg_stream_pagein(&VideoManager::to, &VideoManager::og);
 
         ogg_stream_clear(&VideoManager::to);
         th_decode_free(VideoManager::td);
@@ -261,6 +258,6 @@ void RSDK::ProcessVideo()
 
         videoSettings.shaderID    = engine.storedShaderID;
         videoSettings.screenCount = 1;
-        sceneInfo.state                 = engine.storedState;
+        sceneInfo.state           = engine.storedState;
     }
 }

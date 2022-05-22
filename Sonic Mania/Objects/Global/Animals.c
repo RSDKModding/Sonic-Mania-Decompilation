@@ -111,10 +111,10 @@ void Animals_StageLoad(void)
 {
     Animals->aniFrames = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE);
 
-    if (RSDK.GetObjectIDByName("Platform"))
+    if (RSDK.FindObject("Platform"))
         Animals->hasPlatform = true;
 
-    if (RSDK.GetObjectIDByName("Bridge"))
+    if (RSDK.FindObject("Bridge"))
         Animals->hasBridge = true;
 }
 

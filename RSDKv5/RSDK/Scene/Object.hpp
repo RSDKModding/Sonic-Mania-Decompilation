@@ -267,7 +267,7 @@ void ProcessPausedObjects();
 void ProcessFrozenObjects();
 void ProcessObjectDrawLists();
 
-uint16 GetObjectByName(const char *name);
+uint16 FindObject(const char *name);
 
 inline Entity *GetEntity(uint16 slot) { return &objectEntityList[slot < ENTITY_COUNT ? slot : (ENTITY_COUNT - 1)]; }
 inline int32 GetEntityID(EntityBase *entity) { return (int32)(entity - objectEntityList < ENTITY_COUNT ? entity - objectEntityList : 0); }

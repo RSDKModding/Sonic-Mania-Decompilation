@@ -157,7 +157,7 @@ void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 
             verts[2].x -= sx;
             verts[2].y -= sy;
 
-            RSDK.DrawQuad(verts, 3, red, green, blue, 0xFF, INK_NONE);
+            RSDK.DrawFace(verts, 3, red, green, blue, 0xFF, INK_NONE);
         }
     }
 }
@@ -195,7 +195,7 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeM
             verts[1].x -= sx;
             verts[2].y -= sy;
 
-            RSDK.DrawQuad(verts, 3, red, green, blue, 0xFF, ink);
+            RSDK.DrawFace(verts, 3, red, green, blue, 0xFF, ink);
         }
     }
 }
@@ -241,7 +241,7 @@ void UIWidgets_DrawParallelogram(int32 x, int32 y, int32 width, int32 height, in
         verts[2].x -= sx;
         verts[3].x -= sx;
 
-        RSDK.DrawQuad(verts, 4, red, green, blue, 0xFF, INK_NONE);
+        RSDK.DrawFace(verts, 4, red, green, blue, 0xFF, INK_NONE);
     }
 }
 void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist)

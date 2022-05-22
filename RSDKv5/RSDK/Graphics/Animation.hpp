@@ -70,7 +70,7 @@ extern SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 uint16 LoadSpriteAnimation(const char *filename, int32 scope);
 uint16 CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, int32 scope);
 
-inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
+inline uint16 FindSpriteAnimation(uint16 aniFrames, const char *name)
 {
     if (aniFrames >= SPRFILE_COUNT)
         return 0;
@@ -81,9 +81,8 @@ inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
     GEN_HASH_MD5(name, hash);
 
     for (int32 a = 0; a < spr->animCount; ++a) {
-        if (HASH_MATCH_MD5(hash, spr->animations[a].hash)) {
+        if (HASH_MATCH_MD5(hash, spr->animations[a].hash))
             return a;
-        }
     }
 
     return -1;

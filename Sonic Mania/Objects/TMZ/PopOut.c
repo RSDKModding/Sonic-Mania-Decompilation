@@ -191,7 +191,7 @@ void PopOut_StageLoad(void)
 {
     PopOut->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/PopOut.bin", SCOPE_STAGE);
 
-    if (RSDK.GetObjectIDByName("Button"))
+    if (RSDK.FindObject("Button"))
         PopOut->hasButton = true;
 }
 

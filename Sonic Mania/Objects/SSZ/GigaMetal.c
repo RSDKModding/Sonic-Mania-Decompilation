@@ -383,7 +383,7 @@ void GigaMetal_Draw_Shard(void)
     vertices[2].x = self->scale.x * RSDK.Sin1024(angle) - x + self->position.x;
     vertices[2].y = self->scale.y * RSDK.Cos1024(angle) + self->position.y - y;
 
-    RSDK.DrawQuad(vertices, 3, 0xF0, 0x00, 0x80, 0xFF, INK_ADD);
+    RSDK.DrawFace(vertices, 3, 0xF0, 0x00, 0x80, 0xFF, INK_ADD);
 }
 
 void GigaMetal_HandleCameraMovement(void)

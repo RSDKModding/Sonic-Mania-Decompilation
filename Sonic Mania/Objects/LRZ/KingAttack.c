@@ -48,7 +48,7 @@ void KingAttack_Draw(void)
                 vertices[3].y = self->laserVertPostions[i + 2].y - y;
                 colors[3]    = self->laserColors[i + 2];
 
-                RSDK.DrawBlendedQuad(vertices, colors, 4, self->alpha, INK_ADD);
+                RSDK.DrawBlendedFace(vertices, colors, 4, self->alpha, INK_ADD);
             }
             //[Fallthrough]
         default: RSDK.DrawSprite(&self->animator, NULL, false); break;

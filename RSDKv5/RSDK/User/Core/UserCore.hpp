@@ -9,7 +9,20 @@ void RegisterAchievement(const char *identifier, const char *name, const char *d
 namespace SKU
 {
 
-enum StatusCodes { STATUS_NONE = 0, STATUS_CONTINUE = 100, STATUS_OK = 200, STATUS_FORBIDDEN = 403, STATUS_NOTFOUND = 404, STATUS_ERROR = 500 };
+#undef STATUS_TIMEOUT
+
+enum StatusCodes {
+    STATUS_NONE      = 0,
+    STATUS_CONTINUE  = 100,
+    STATUS_OK        = 200,
+    STATUS_FORBIDDEN = 403,
+    STATUS_NOTFOUND  = 404,
+    STATUS_ERROR     = 500,
+    STATUS_NOWIFI    = 503,
+    STATUS_TIMEOUT   = 504,
+    STATUS_CORRUPT   = 505,
+    STATUS_NOSPACE   = 506,
+};
 
 #define API_TypeOf(strct, type) ((type *)strct)
 

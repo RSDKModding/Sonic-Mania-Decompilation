@@ -1257,7 +1257,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
 
 Object *RSDK::GetObject(const char *name)
 {
-    if (int32 o = GetObjectByName(name))
+    if (int32 o = FindObject(name))
         return *objectClassList[stageObjectIDs[o]].staticVars;
 
     return NULL;

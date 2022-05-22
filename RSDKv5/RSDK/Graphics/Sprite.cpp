@@ -245,7 +245,7 @@ bool32 ImageGIF::Load(const char *fileName, bool32 loadHeader)
 
         ReadGifPictureData(this, width, height, interlaced, pixels);
 
-        CloseFile(&info);
+        Close();
         return true;
     }
     return false;
@@ -507,7 +507,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         filter      = ReadInt8(&info);
                         interlaced  = ReadInt8(&info);
                         if (interlaced || bitDepth != 8) {
-                            CloseFile(&info);
+                            Close();
                             return false;
                         }
                         depth = 32;
@@ -526,10 +526,10 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                                 if (!palette)
                                     AllocateStorage(sizeof(uint32) * colorCnt, (void **)&palette, DATASET_TMP, true);
 
-                                uint8 clr[3];
+                                uint8 channels[3];
                                 for (int32 c = 0; c < colorCnt; ++c) {
-                                    ReadBytes(&info, clr, 3 * sizeof(uint8));
-                                    palette[c] = clr[2] + ((clr[1] + (clr[0] << 8)) << 8);
+                                    ReadBytes(&info, channels, 3 * sizeof(uint8));
+                                    palette[c] = (channels[0] << 16) | (channels[1] << 8) | (channels[2] << 0);
                                 }
                             }
                         }
@@ -540,7 +540,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                             AllocateStorage(dataSize, (void **)&pixels, DATASET_TMP, false);
 
                             if (!pixels) {
-                                CloseFile(&info);
+                                Close();
                                 return false;
                             }
                         }
@@ -570,11 +570,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                             case PNGCLR_RGB: UnpackPNGPixels_RGB(this, pixelsPtr); break;
 
                             case PNGCLR_INDEXED:
-                                for (int32 c = 0; c < width * height; ++c) {
-                                    pixels[c] = palette[*pixels] | 0xFF000000;
-
-                                    pixels++;
-                                }
+                                for (int32 c = 0; c < width * height; ++c) pixels[c] = palette[pixels[c]] | 0xFF000000;
                                 break;
 
                             case PNGCLR_GREYSCALEA: UnpackPNGPixels_GreyscaleA(this, pixelsPtr); break;
@@ -591,13 +587,13 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                     chunkCRC = ReadInt32(&info, false);
 
                     if (finished) {
-                        CloseFile(&info);
+                        Close();
                         return true;
                     }
                 }
             }
             else {
-                CloseFile(&info);
+                Close();
             }
         }
     }
@@ -821,7 +817,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                     break;
             }
 
-            CloseFile(&info);
+            Close();
             return true;
         }
     }
@@ -880,7 +876,7 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
 
         image.palette = NULL;
         image.decoder = NULL;
-        CloseFile(&image.info);
+        image.Close();
 
         return id;
     }
@@ -888,7 +884,7 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
         image.palette = NULL;
         image.pixels  = NULL;
         image.decoder = NULL;
-        CloseFile(&image.info);
+        image.Close();
         return -1;
     }
 }
@@ -928,7 +924,7 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 
         image.palette = NULL;
         image.pixels  = NULL;
-        CloseFile(&image.info);
+        image.Close();
         return true;
     }
 #elif !RETRO_REV02
@@ -954,14 +950,14 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 
         image.palette = NULL;
         image.pixels  = NULL;
-        CloseFile(&image.info);
+        image.Close();
         return true;
     }
 #endif
     else {
         image.palette = NULL;
         image.pixels  = NULL;
-        CloseFile(&image.info);
+        image.Close();
     }
     return false;
 }

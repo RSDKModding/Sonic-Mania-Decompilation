@@ -55,7 +55,7 @@ void SpecialClear_Draw(void)
     vertPos[1].y = drawPos.y - 0x140000;
     vertPos[2].y = drawPos.y - 0x40000;
     vertPos[3].y = drawPos.y - 0x40000;
-    RSDK.DrawQuad(vertPos, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+    RSDK.DrawFace(vertPos, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
     if (self->messageType > SC_MSG_SPECIALCLEAR) {
         drawPos.x    = self->messagePos1.x;
@@ -69,7 +69,7 @@ void SpecialClear_Draw(void)
         vertPos[1].y = drawPos.y + 0x1C0000;
         vertPos[2].y = drawPos.y + 0x2C0000;
         vertPos[3].y = drawPos.y + 0x2C0000;
-        RSDK.DrawQuad(vertPos, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(vertPos, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
     }
 
     drawPos.x = self->messagePos1.x;

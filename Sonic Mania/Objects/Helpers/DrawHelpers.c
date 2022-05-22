@@ -76,15 +76,15 @@ void DrawHelpers_DrawIsocelesTriangle(int32 x1, int32 y1, int32 x2, int32 y2, in
         RSDK.DrawLine(verts[2].x, verts[2].y, x2, y2, color, 255, INK_NONE, false);
     }
     else {
-        int screenX = ScreenInfo->position.x << 16;
-        int screenY = ScreenInfo->position.y << 16;
+        int32 screenX = ScreenInfo->position.x << 16;
+        int32 screenY = ScreenInfo->position.y << 16;
         verts[0].x -= screenX;
         verts[0].y -= screenY;
         verts[1].x -= screenX;
         verts[1].y -= screenY;
         verts[2].x -= screenX;
         verts[2].y -= screenY;
-        RSDK.DrawQuad(verts, 3, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, alpha, inkEffect);
+        RSDK.DrawFace(verts, 3, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, alpha, inkEffect);
     }
 }
 

@@ -713,10 +713,10 @@ void TitleCard_Draw_SlideIn(void)
 
     // Draw the BG thingos
     if (self->titleCardWord2 > 0)
-        RSDK.DrawQuad(self->word2DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->word2DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
-    RSDK.DrawQuad(self->word1DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
-    RSDK.DrawQuad(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
+    RSDK.DrawFace(self->word1DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+    RSDK.DrawFace(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 
     // Draw Act Number
 #if MANIA_USE_PLUS
@@ -752,19 +752,19 @@ void TitleCard_Draw_ShowTitleCard(void)
 
     // Draw Orange Strip
     if (self->vertMovePos[1].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Green Strip
     if (self->vertMovePos[1].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Red Strip
     if (self->vertMovePos[0].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Blue Strip
     if (self->vertMovePos[0].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw "Sonic Mania"
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
@@ -778,10 +778,10 @@ void TitleCard_Draw_ShowTitleCard(void)
 
     // Draw the BG thingos
     if (self->titleCardWord2 > 0)
-        RSDK.DrawQuad(self->word2DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->word2DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
-    RSDK.DrawQuad(self->word1DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
-    RSDK.DrawQuad(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
+    RSDK.DrawFace(self->word1DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+    RSDK.DrawFace(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 
     // Draw "ZONE"
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 170, ScreenInfo[SceneInfo->currentScreenID].width, 240);
@@ -852,25 +852,25 @@ void TitleCard_Draw_SlideAway(void)
 
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
         // Draw Yellow BG curtain "opening"
-        RSDK.DrawQuad(self->bgLCurtainVerts, 4, (colors[4] >> 16) & 0xFF, (colors[4] >> 8) & 0xFF, (colors[4] >> 0) & 0xFF, 0xFF, INK_NONE);
-        RSDK.DrawQuad(self->bgRCurtainVerts, 4, (colors[4] >> 16) & 0xFF, (colors[4] >> 8) & 0xFF, (colors[4] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->bgLCurtainVerts, 4, (colors[4] >> 16) & 0xFF, (colors[4] >> 8) & 0xFF, (colors[4] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->bgRCurtainVerts, 4, (colors[4] >> 16) & 0xFF, (colors[4] >> 8) & 0xFF, (colors[4] >> 0) & 0xFF, 0xFF, INK_NONE);
     }
 
     // Orange Strip
     if (self->vertMovePos[1].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Green Strip
     if (self->vertMovePos[1].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Red Strip
     if (self->vertMovePos[0].y < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Blue Strip
     if (self->vertMovePos[0].x < 0xF00000)
-        RSDK.DrawQuad(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw "Sonic Mania"
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
@@ -895,10 +895,10 @@ void TitleCard_Draw_SlideAway(void)
 
     // Draw the BG thingos
     if (self->titleCardWord2 > 0)
-        RSDK.DrawQuad(self->word2DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+        RSDK.DrawFace(self->word2DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
-    RSDK.DrawQuad(self->word1DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
-    RSDK.DrawQuad(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
+    RSDK.DrawFace(self->word1DecorVerts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+    RSDK.DrawFace(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 
     // Draw "ZONE"
     Vector2 drawPos;

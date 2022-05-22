@@ -931,7 +931,7 @@ void RSDK::ProcessObjectDrawLists()
     }
 }
 
-uint16 RSDK::GetObjectByName(const char *name)
+uint16 RSDK::FindObject(const char *name)
 {
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
