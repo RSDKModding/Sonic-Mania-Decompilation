@@ -10,6 +10,12 @@
 [submodule "dependencies/all/tinyxml2"]
 	path = dependencies/all/tinyxml2
 	url = https://github.com/leethomason/tinyxml2
-[submodule "dependencies/all/theoraplay"]
-	path = dependencies/all/theoraplay
-	url = https://github.com/icculus/theoraplay
+[submodule "dependencies/all/stb_vorbis"]
+	path = dependencies/all/stb_vorbis
+	url = https://github.com/nothings/stb
+[submodule "dependencies/all/iniparser"]
+	path = dependencies/all/iniparser
+	url = https://github.com/rickyah/ini-parser
+[submodule "dependencies/all/miniz"]
+	path = dependencies/all/miniz
+	url = https://github.com/richgel999/miniz
