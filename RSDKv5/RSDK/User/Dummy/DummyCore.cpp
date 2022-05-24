@@ -191,10 +191,18 @@ int32 RSDK::SKU::DummyCore::GetDefaultGamepadType()
 #endif
 
     switch (platform) {
-        case PLATFORM_SWITCH: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+        case PLATFORM_SWITCH:
+#if RETRO_INPUTDEVICE_NX
+            return currentNXControllerType;
+#else
+            return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+#endif
+
+        default: 
+        case PLATFORM_PS4:
+        case PLATFORM_XB1:
         case PLATFORM_PC:
-        case PLATFORM_DEV:
-        default: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+        case PLATFORM_DEV: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
     }
 }
 

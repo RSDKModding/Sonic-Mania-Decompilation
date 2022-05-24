@@ -123,15 +123,17 @@ enum GameRegions {
 // ============================
 #define RETRO_RENDERDEVICE_DIRECTX9  (0)
 #define RETRO_RENDERDEVICE_DIRECTX11 (0)
+#define RETRO_INPUTDEVICE_NX         (0)
 // CUSTOM
-#define RETRO_RENDERDEVICE_SDL2      (0)
-#define RETRO_RENDERDEVICE_OPENGL3   (0)
+#define RETRO_RENDERDEVICE_SDL2    (0)
+#define RETRO_RENDERDEVICE_OPENGL3 (0)
 
 // ============================
 // AUDIO DEVICE BACKENDS
 // ============================
 #define RETRO_AUDIODEVICE_XAUDIO (0)
 #define RETRO_AUDIODEVICE_SDL2   (0)
+#define RETRO_INPUTDEVICE_NX     (0)
 
 // ============================
 // INPUT DEVICE BACKENDS
@@ -140,6 +142,7 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_XINPUT   (0)
 #define RETRO_INPUTDEVICE_RAWINPUT (0)
 #define RETRO_INPUTDEVICE_STEAM    (0)
+#define RETRO_INPUTDEVICE_NX       (0)
 #define RETRO_INPUTDEVICE_SDL2     (0)
 
 #define DEFAULT_SCREEN_XSIZE (424)

@@ -127,6 +127,8 @@ const RenderVertex rsdkVertexBuffer[24] =
 
 #if RETRO_RENDERDEVICE_DIRECTX9
 #include "DX9/DX9RenderDevice.cpp"
+#elif RETRO_AUDIODEVICE_NX
+#include "NX/NXRenderDevice.cpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.cpp"
 #elif RETRO_RENDERDEVICE_OPENGL3

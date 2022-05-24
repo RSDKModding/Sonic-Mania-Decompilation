@@ -102,6 +102,15 @@
     <Filter Include="Source Files\Dependencies\miniz">
       <UniqueIdentifier>{6dd96c33-251b-4d4e-b85c-6537257095fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Input\NX">
+      <UniqueIdentifier>{3fa26e27-8a8b-4c38-8e5f-6cda0948f66a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Audio\NX">
+      <UniqueIdentifier>{ad048583-a0f5-4cfd-b62a-b05d212fd214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RSDK\Graphics\NX">
+      <UniqueIdentifier>{ae252bed-b897-42a6-aff1-102b4221b671}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
@@ -307,6 +316,15 @@
     </ClCompile>
     <ClCompile Include="..\dependencies\all\miniz\miniz.c">
       <Filter>Source Files\Dependencies\miniz</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Input\NX\NXInputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\NX</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Audio\NX\NXAudioDevice.cpp">
+      <Filter>Source Files\RSDK\Audio\NX</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Graphics\NX\NXRenderDevice.cpp">
+      <Filter>Source Files\RSDK\Graphics\NX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -516,6 +534,15 @@
     </ClInclude>
     <ClInclude Include="..\dependencies\all\miniz\miniz.h">
       <Filter>Source Files\Dependencies\miniz</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\NX\NXInputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\NX</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Audio\NX\NXAudioDevice.hpp">
+      <Filter>Source Files\RSDK\Audio\NX</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Graphics\NX\NXRenderDevice.hpp">
+      <Filter>Source Files\RSDK\Graphics\NX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

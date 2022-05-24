@@ -101,7 +101,8 @@ void InputDeviceXInput::UpdateInput()
             else
                 this->deltaRTrigger = (this->deltaRTrigger - 30.0) / 225.0;
         }
-        return this->ProcessInput(CONT_ANY);
+
+        this->ProcessInput(CONT_ANY);
     }
 }
 

@@ -84,6 +84,9 @@
     <Filter Include="Source Files\Dependencies\miniz">
       <UniqueIdentifier>{08d5baf4-9d0a-4d8e-82ef-de7ffd29ce80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Input\NX">
+      <UniqueIdentifier>{8a3bcd36-949e-492a-a1b1-c714f9ac178c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
@@ -271,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="..\dependencies\all\miniz\miniz.c">
       <Filter>Source Files\Dependencies\miniz</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Input\NX\NXInputDevice.cpp">
+      <Filter>Source Files\RSDK\Input\NX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,6 +471,9 @@
     </ClInclude>
     <ClInclude Include="..\dependencies\all\miniz\miniz.h">
       <Filter>Source Files\Dependencies\miniz</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Input\NX\NXInputDevice.hpp">
+      <Filter>Source Files\RSDK\Input\NX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

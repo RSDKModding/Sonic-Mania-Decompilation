@@ -478,13 +478,22 @@ extern int32 mostRecentControllerID;
 #include "RawInput/SteamInputDevice.hpp"
 #endif
 
+#if RETRO_INPUTDEVICE_NX
+#include "NX/NXInputDevice.hpp"
+#endif
+
 #if RETRO_INPUTDEVICE_SDL2
 #include "SDL2/SDL2InputDevice.hpp"
 #endif
 
+// Initializes the input devices & the backend APIs powering em
 void InitInputDevices();
+// clears the input states, used by ProcessInput()
 void ClearInput();
+// Processes the state of the input devices & parses that as data that RSDK can use
 void ProcessInput();
+// used to process various events on input devices, switch uses it to controller connects/disconnects/changes
+void ProcessInputDevices();
 
 void RemoveInputDevice(InputDevice *targetDevice);
 

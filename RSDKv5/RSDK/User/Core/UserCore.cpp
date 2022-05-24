@@ -14,6 +14,8 @@ VideoSettings RSDK::videoSettingsBackup;
 
 void RSDK::SKU::InitUserData()
 {
+    InitUserDirectory();
+
     int32 language     = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
     int32 region       = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
     int32 platform     = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));

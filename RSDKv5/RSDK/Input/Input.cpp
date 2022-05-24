@@ -40,6 +40,10 @@ int32 RSDK::mostRecentControllerID = -1;
 #include "Steam/SteamInputDevice.cpp"
 #endif
 
+#if RETRO_INPUTDEVICE_NX
+#include "NX/NXInputDevice.cpp"
+#endif
+
 #if RETRO_INPUTDEVICE_SDL2
 #include "SDL2/SDL2InputDevice.cpp"
 #endif
@@ -97,6 +101,10 @@ void RSDK::InitInputDevices()
 
 #if RETRO_INPUTDEVICE_STEAM
     SKU::InitSteamInputAPI();
+#endif
+
+#if RETRO_INPUTDEVICE_SWITCH
+    SKU::InitNXInputAPI();
 #endif
 
 #if RETRO_INPUTDEVICE_SDL2
@@ -263,6 +271,13 @@ void RSDK::ProcessInput()
     }
 }
 
+void RSDK::ProcessInputDevices()
+{
+#if RETRO_INPUTDEVICE_SWITCH
+    SKU::ProcessNXInputDevices();
+#endif
+}
+
 int32 RSDK::GetControllerType(int32 inputID)
 {
     for (int32 i = 0; i < InputDeviceCount; ++i) {
@@ -276,11 +291,18 @@ int32 RSDK::GetControllerType(int32 inputID)
     int32 platform = gameVerInfo.platform;
 
     switch (platform) {
-        case PLATFORM_SWITCH: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
 
+#if RETRO_INPUTDEVICE_NX
+        return currentNXControllerType;
+#else
+        return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+#endif
+
+        default:
+        case PLATFORM_PS4:
+        case PLATFORM_XB1:
         case PLATFORM_PC:
-        case PLATFORM_DEV:
-        default: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+        case PLATFORM_DEV: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
     }
 #endif
 }

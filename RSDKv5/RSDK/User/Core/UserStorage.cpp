@@ -1151,3 +1151,39 @@ bool32 RSDK::SKU::TrySaveUserFile(const char *filename, void *buffer, uint32 siz
     return success;
 }
 #endif
+
+void RSDK::SKU::InitUserDirectory()
+{
+#if RETRO_PLATFORM == RETRO_OSX
+
+    char buffer[0x100];
+    sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
+    SKU::SetUserFileCallbacks(buffer, NULL, NULL);
+
+#elif RETRO_PLATFORM == RETRO_ANDROID
+
+    char buffer[0x200];
+
+    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
+    jobject activity = (jobject)SDL_AndroidGetActivity();
+    jclass cls(env->GetObjectClass(activity));
+    jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
+    auto ret         = env->CallObjectMethod(activity, method);
+
+    strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
+
+    SKU::SetUserFileCallbacks(buffer, NULL, NULL);
+
+    env->DeleteLocalRef(activity);
+    env->DeleteLocalRef(cls);
+
+#elif RETRO_PLATFORM == RETRO_LINUX
+
+    SKU::SetUserFileCallbacks("./", NULL, NULL);
+
+#else
+
+    SKU::SetUserFileCallbacks("", NULL, NULL);
+
+#endif
+}

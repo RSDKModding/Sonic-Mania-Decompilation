@@ -253,6 +253,8 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*
 bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
 #endif
 
+void InitUserDirectory();
+
 } // namespace SKU
 
 } // namespace RSDK

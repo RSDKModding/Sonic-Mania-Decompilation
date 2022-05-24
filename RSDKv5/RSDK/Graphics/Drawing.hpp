@@ -231,6 +231,8 @@ private:
 
 #if RETRO_RENDERDEVICE_DIRECTX9
 #include "DX9/DX9RenderDevice.hpp"
+#elif RETRO_AUDIODEVICE_NX
+#include "NX/NXRenderDevice.hpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.hpp"
 #elif RETRO_RENDERDEVICE_OPENGL3
