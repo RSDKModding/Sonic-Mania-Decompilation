@@ -25,6 +25,8 @@ namespace fs = std::filesystem;
 #endif
 #endif
 
+#include "iniparser/src/iniparser.h"
+
 using namespace RSDK;
 
 int32 RSDK::currentObjectID = 0;

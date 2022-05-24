@@ -1,5 +1,6 @@
 #include "RSDK/Core/RetroEngine.hpp"
-#include "zlib/zlib.h"
+
+#include "iniparser/src/iniparser.h"
 
 using namespace RSDK;
 

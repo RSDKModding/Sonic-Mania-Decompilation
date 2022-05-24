@@ -23,11 +23,8 @@ SDL_RWops *fOpen(const char *path, const char *mode);
 #define fWrite(buffer, elementSize, elementCount, file) fwrite(buffer, elementSize, elementCount, file)
 #endif
 
-#if RETRO_PLATFORM == RETRO_ANDROID
-#include <zlib.h>
-#else
-#include <zlib/zlib.h>
-#endif
+
+#include <miniz/miniz.h>
 
 namespace RSDK
 {

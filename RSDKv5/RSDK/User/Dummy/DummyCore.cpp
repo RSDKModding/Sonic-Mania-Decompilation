@@ -1,5 +1,4 @@
 #include "RSDK/Core/RetroEngine.hpp"
-#include "zlib/zlib.h"
 
 using namespace RSDK;
 

@@ -12,9 +12,6 @@
     <Filter Include="Source Files\Dependencies">
       <UniqueIdentifier>{1e7829c1-78be-45fa-85fb-53cf48c78619}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Dependencies\zlib">
-      <UniqueIdentifier>{8bdc9495-2674-40a5-9d14-44702f102d70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Dependencies\tinyxml2">
       <UniqueIdentifier>{a654cc12-6586-4ca9-a1f5-4283b5adb333}</UniqueIdentifier>
     </Filter>
@@ -102,59 +99,11 @@
     <Filter Include="Source Files\Dependencies\stb_vorbis">
       <UniqueIdentifier>{5bef1c25-dbec-45b2-85fc-1fb313159239}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Dependencies\miniz">
+      <UniqueIdentifier>{2c2876b9-15f4-4cf8-a46e-d63df861a9cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\dependencies\all\zlib\adler32.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\compress.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\crc32.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\deflate.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\gzclose.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\gzlib.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\gzread.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\gzwrite.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\infback.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\inffast.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\inflate.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\inftrees.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\trees.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\uncompr.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\zlib\zutil.c">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\dictionary.cpp">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
       <Filter>Source Files\Dependencies\tinyxml2</Filter>
     </ClCompile>
@@ -350,50 +299,17 @@
     <ClCompile Include="..\dependencies\all\stb_vorbis\stb_vorbis.c">
       <Filter>Source Files\Dependencies\stb_vorbis</Filter>
     </ClCompile>
+    <ClCompile Include="..\dependencies\all\iniparser\src\dictionary.c">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\all\iniparser\src\iniparser.c">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\all\miniz\miniz.c">
+      <Filter>Source Files\Dependencies\miniz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\dependencies\all\zlib\crc32.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\deflate.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\gzguts.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\inffast.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\inffixed.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\inflate.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\inftrees.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\trees.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\zconf.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\zlib.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\zlib\zutil.h">
-      <Filter>Source Files\Dependencies\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\dictionary.h">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\iniparser.h">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
-    <ClInclude Include="unistd.h">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
     <ClInclude Include="..\dependencies\all\tinyxml2\tinyxml2.h">
       <Filter>Source Files\Dependencies\tinyxml2</Filter>
     </ClInclude>
@@ -591,6 +507,15 @@
     </ClInclude>
     <ClInclude Include="RSDK\Audio\SDL2\SDL2AudioDevice.hpp">
       <Filter>Source Files\RSDK\Audio\SDL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\iniparser\src\dictionary.h">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\iniparser\src\iniparser.h">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\miniz\miniz.h">
+      <Filter>Source Files\Dependencies\miniz</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
