@@ -1,2 +1,2 @@
-glfw/
-glad/
+*
+!README.md

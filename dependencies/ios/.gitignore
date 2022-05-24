@@ -1,5 +1,4 @@
-Ogg.Framework/
-Theora.framework/
-SDL2.framework/
-libSDLMain.a
+*
+!README.md
 ![Ii]nfo.plist
+!Default.png

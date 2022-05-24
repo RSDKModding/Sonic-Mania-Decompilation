@@ -1,5 +1,4 @@
-libogg/
-libtheora/
-libvorbis/
-SDL2.framework/
+*
+!README.md
 ![Ii]nfo.plist
+!cocoaHelpers.*

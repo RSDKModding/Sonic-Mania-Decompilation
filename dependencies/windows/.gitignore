@@ -1,4 +1,2 @@
-libogg/
-libtheora/
-SDL1/
-SDL2/
+*
+!README.md
