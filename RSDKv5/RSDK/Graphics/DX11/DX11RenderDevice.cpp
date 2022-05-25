@@ -574,8 +574,13 @@ void RenderDevice::InitVertexBuffer()
 bool RenderDevice::InitGraphicsAPI()
 {
     videoSettings.shaderSupport = false;
-    if (featureLevel >= D3D_FEATURE_LEVEL_11_0)
+    if (featureLevel >= D3D_FEATURE_LEVEL_11_0) {
         videoSettings.shaderSupport = true;
+    }
+    else {
+        PrintLog(PRINT_NORMAL, "ERROR: HLSL model 5 shader support not detected. shader support is required for the DX11 backend!\nIf this issue persists, maybe try using the DX9 backend instead?");
+        return false; // unlike DX9, DX11 doesn't support shaderless rendering, so just kill it here
+    }
 
     HRESULT hr = 0;
 
@@ -701,7 +706,7 @@ bool RenderDevice::InitGraphicsAPI()
 
     dx11Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    if (videoSettings.shaderSupport) {
+    {
         D3D11_BUFFER_DESC desc = {};
         desc.Usage             = D3D11_USAGE_DYNAMIC;
         desc.ByteWidth         = sizeof(RenderVertex) * ARRAYSIZE(rsdkVertexBuffer);

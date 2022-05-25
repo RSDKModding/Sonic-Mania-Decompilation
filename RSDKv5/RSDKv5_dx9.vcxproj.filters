@@ -111,6 +111,9 @@
     <Filter Include="Source Files\RSDK\Graphics\NX">
       <UniqueIdentifier>{ae252bed-b897-42a6-aff1-102b4221b671}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RSDK\Graphics\DX11">
+      <UniqueIdentifier>{f28ba5d0-33f7-40cd-8618-b7649c86188b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
@@ -325,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="RSDK\Graphics\NX\NXRenderDevice.cpp">
       <Filter>Source Files\RSDK\Graphics\NX</Filter>
+    </ClCompile>
+    <ClCompile Include="RSDK\Graphics\DX11\DX11RenderDevice.cpp">
+      <Filter>Source Files\RSDK\Graphics\DX11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -543,6 +549,9 @@
     </ClInclude>
     <ClInclude Include="RSDK\Graphics\NX\NXRenderDevice.hpp">
       <Filter>Source Files\RSDK\Graphics\NX</Filter>
+    </ClInclude>
+    <ClInclude Include="RSDK\Graphics\DX11\DX11RenderDevice.hpp">
+      <Filter>Source Files\RSDK\Graphics\DX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
