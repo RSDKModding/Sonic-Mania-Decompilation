@@ -1,26 +1,39 @@
 #include "resource.h"
 #include <D3Dcompiler.h>
 
-#define DX9_WINDOWFLAGS_BORDERED   (WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP)
-#define DX9_WINDOWFLAGS_BORDERLESS (WS_POPUP)
+#include <atlbase.h>
+
+#define DX11_WINDOWFLAGS_BORDERED   (WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP)
+#define DX11_WINDOWFLAGS_BORDERLESS (WS_POPUP)
 
 HWND RenderDevice::windowHandle;
 
 HDEVNOTIFY RenderDevice::deviceNotif = 0;
 PAINTSTRUCT RenderDevice::Paint;
 
-IDirect3D9 *RenderDevice::dx9Context;
-IDirect3DDevice9 *RenderDevice::dx9Device;
+ID3D11DeviceContext *RenderDevice::dx11Context;
+ID3D11Device *RenderDevice::dx11Device;
 UINT RenderDevice::dxAdapter;
-IDirect3DVertexDeclaration9 *RenderDevice::dx9VertexDeclare;
-IDirect3DVertexBuffer9 *RenderDevice::dx9VertexBuffer;
-IDirect3DTexture9 *RenderDevice::screenTextures[SCREEN_MAX];
-IDirect3DTexture9 *RenderDevice::imageTexture;
-D3DVIEWPORT9 RenderDevice::dx9ViewPort;
+ID3D11Buffer *RenderDevice::dx11VertexBuffer;
+ID3D11Texture2D *RenderDevice::screenTextures[SCREEN_MAX];
+ID3D11Texture2D *RenderDevice::imageTexture;
+ID3D11ShaderResourceView *RenderDevice::screenTextureViews[SCREEN_MAX];
+ID3D11ShaderResourceView *RenderDevice::imageTextureView;
+D3D11_VIEWPORT RenderDevice::dx11ViewPort;
+IDXGISwapChain *RenderDevice::swapChain;
+ID3D11RenderTargetView *RenderDevice::renderView;
 
-int RenderDevice::adapterCount = 0;
+ID3D11RasterizerState *RenderDevice::rasterState;
+ID3D11SamplerState *RenderDevice::samplerPoint;
+ID3D11SamplerState *RenderDevice::samplerLinear;
+ID3D11Buffer *RenderDevice::psConstBuffer = NULL;
+
+int32 RenderDevice::adapterCount = 0;
 RECT RenderDevice::monitorDisplayRect;
-GUID RenderDevice::deviceIdentifier;
+LUID RenderDevice::deviceIdentifier;
+
+D3D_DRIVER_TYPE RenderDevice::driverType     = D3D_DRIVER_TYPE_NULL;
+D3D_FEATURE_LEVEL RenderDevice::featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 bool RenderDevice::useFrequency = false;
 
@@ -33,6 +46,13 @@ LARGE_INTEGER RenderDevice::curFrequency;
 HINSTANCE RenderDevice::hInstance;
 HINSTANCE RenderDevice::hPrevInstance;
 INT RenderDevice::nShowCmd;
+
+struct ShaderConstants {
+    float2 pixelSize;
+    float2 textureSize;
+    float2 viewSize;
+    float2 screenDim;
+};
 
 bool RenderDevice::Init()
 {
@@ -85,13 +105,13 @@ bool RenderDevice::Init()
     }
 
     if (videoSettings.bordered && videoSettings.windowed) {
-        AdjustWindowRect(&winRect, DX9_WINDOWFLAGS_BORDERED, false);
-        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX9_WINDOWFLAGS_BORDERED, winRect.left, winRect.top,
+        AdjustWindowRect(&winRect, DX11_WINDOWFLAGS_BORDERED, false);
+        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX11_WINDOWFLAGS_BORDERED, winRect.left, winRect.top,
                                       winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
     }
     else {
-        AdjustWindowRect(&winRect, DX9_WINDOWFLAGS_BORDERLESS, false);
-        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX9_WINDOWFLAGS_BORDERLESS, winRect.left, winRect.top,
+        AdjustWindowRect(&winRect, DX11_WINDOWFLAGS_BORDERLESS, false);
+        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX11_WINDOWFLAGS_BORDERLESS, winRect.left, winRect.top,
                                       winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
     }
 
@@ -112,17 +132,14 @@ bool RenderDevice::Init()
 
 void RenderDevice::CopyFrameBuffer()
 {
-    dx9Device->SetTexture(0, NULL);
-
     for (int s = 0; s < videoSettings.screenCount; ++s) {
-        D3DLOCKED_RECT rect;
-
-        if (screenTextures[s]->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
-            WORD *pixels           = (WORD *)rect.pBits;
+        D3D11_MAPPED_SUBRESOURCE mappedResource;
+        if (SUCCEEDED(dx11Context->Map(screenTextures[s], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource))) {
+            WORD *pixels           = (WORD *)mappedResource.pData;
             uint16 *frameBufferPtr = screens[s].frameBuffer;
 
-            int screenPitch = screens[s].pitch;
-            int pitch       = (rect.Pitch >> 1) - screenPitch;
+            int32 screenPitch = screens[s].pitch;
+            int32 pitch       = (mappedResource.RowPitch >> 1) - screenPitch;
 
             for (int32 y = 0; y < SCREEN_YSIZE; ++y) {
                 int32 pixelCount = screenPitch >> 4;
@@ -151,7 +168,7 @@ void RenderDevice::CopyFrameBuffer()
                 pixels += pitch;
             }
 
-            screenTextures[s]->UnlockRect(0);
+            dx11Context->Unmap(screenTextures[s], 0);
         }
     }
 }
@@ -176,47 +193,44 @@ void RenderDevice::FlipScreen()
         return;
     }
 
-    dx9Device->SetViewport(&displayInfo.viewport);
-    dx9Device->Clear(0, NULL, D3DCLEAR_TARGET, 0xFF000000, 1.0, 0);
-    dx9Device->SetViewport(&dx9ViewPort);
+    const FLOAT clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-    if (SUCCEEDED(dx9Device->BeginScene())) {
+    dx11Context->RSSetViewports(1, &displayInfo.viewport);
+    dx11Context->ClearRenderTargetView(renderView, clearColor);
+    dx11Context->RSSetViewports(1, &dx11ViewPort);
+
+    dx11Context->OMSetRenderTargets(1, &renderView, nullptr);
+    dx11Context->RSSetState(rasterState);
+
+    if (true) {
         // reload shader if needed
         if (lastShaderID != videoSettings.shaderID) {
             lastShaderID = videoSettings.shaderID;
 
-            if (shaderList[videoSettings.shaderID].linear) {
-                dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-                dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-            }
-            else {
-                dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-                dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-            }
+            dx11Context->PSSetSamplers(0, 1, shaderList[videoSettings.shaderID].linear ? &samplerLinear : &samplerPoint);
 
+            dx11Context->IASetInputLayout(shaderList[videoSettings.shaderID].vertexDeclare);
             if (videoSettings.shaderSupport) {
-                dx9Device->SetVertexShader(shaderList[videoSettings.shaderID].vertexShaderObject);
-                dx9Device->SetPixelShader(shaderList[videoSettings.shaderID].pixelShaderObject);
-                dx9Device->SetVertexDeclaration(dx9VertexDeclare);
-                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, sizeof(RenderVertex));
-            }
-            else {
-                dx9Device->SetStreamSource(0, dx9VertexBuffer, 0, sizeof(RenderVertex));
-                dx9Device->SetFVF(D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZ);
+                dx11Context->VSSetShader(shaderList[videoSettings.shaderID].vertexShaderObject, nullptr, 0);
+                dx11Context->PSSetShader(shaderList[videoSettings.shaderID].pixelShaderObject, nullptr, 0);
             }
         }
 
         if (videoSettings.shaderSupport) {
-            float2 screenDim = { 0, 0 };
-            screenDim.x      = videoSettings.dimMax * videoSettings.dimPercent;
+            ShaderConstants constants[] = { pixelSize, textureSize, viewSize, { videoSettings.dimMax * videoSettings.dimPercent, 0 } };
 
-            dx9Device->SetPixelShaderConstantF(0, &pixelSize.x, 1);   // pixelSize
-            dx9Device->SetPixelShaderConstantF(1, &textureSize.x, 1); // textureSize
-            dx9Device->SetPixelShaderConstantF(2, &viewSize.x, 1);    // viewSize
-            dx9Device->SetPixelShaderConstantF(3, &screenDim.x, 1);   // screenDim
+            D3D11_MAPPED_SUBRESOURCE mappedResource;
+            ZeroMemory(&mappedResource, sizeof(mappedResource));
+            dx11Context->Map(psConstBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+            memcpy(mappedResource.pData, &constants, sizeof(ShaderConstants));
+            dx11Context->Unmap(psConstBuffer, 0);
+
+            dx11Context->PSSetConstantBuffers(0, 1, &psConstBuffer);
         }
 
         int32 startVert = 0;
+        ID3D11Texture2D *const tex = screenTextures[0];
+
         switch (videoSettings.screenCount) {
             default:
             case 0:
@@ -225,14 +239,13 @@ void RenderDevice::FlipScreen()
 #else
                 startVert = 18;
 #endif
-                dx9Device->SetTexture(0, imageTexture);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVert, 2);
-                dx9Device->EndScene();
+                dx11Context->PSSetShaderResources(0, 1, &imageTextureView);
+                dx11Context->Draw(6, startVert);
                 break;
 
             case 1:
-                dx9Device->SetTexture(0, screenTextures[0]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[0]);
+                dx11Context->Draw(6, 0);
                 break;
 
             case 2:
@@ -241,55 +254,56 @@ void RenderDevice::FlipScreen()
 #else
                 startVert = 6;
 #endif
-                dx9Device->SetTexture(0, screenTextures[0]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVert, 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[0]);
+                dx11Context->Draw(6, startVert);
 
 #if RETRO_REV02
                 startVert = startVertex_2P[1];
 #else
                 startVert = 12;
 #endif
-                dx9Device->SetTexture(0, screenTextures[1]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVert, 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[1]);
+                dx11Context->Draw(6, startVert);
                 break;
 
 #if RETRO_REV02
             case 3:
-                dx9Device->SetTexture(0, screenTextures[0]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVertex_3P[0], 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[0]);
+                dx11Context->Draw(6, startVertex_3P[0]);
 
-                dx9Device->SetTexture(0, screenTextures[1]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVertex_3P[1], 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[1]);
+                dx11Context->Draw(6, startVertex_3P[1]);
 
-                dx9Device->SetTexture(0, screenTextures[2]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, startVertex_3P[2], 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[2]);
+                dx11Context->Draw(6, startVertex_3P[2]);
                 break;
 
             case 4:
-                dx9Device->SetTexture(0, screenTextures[0]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 30, 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[0]);
+                dx11Context->Draw(startVert, 30);
 
-                dx9Device->SetTexture(0, screenTextures[1]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 36, 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[1]);
+                dx11Context->Draw(startVert, 36);
 
-                dx9Device->SetTexture(0, screenTextures[2]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 42, 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[2]);
+                dx11Context->Draw(startVert, 42);
 
-                dx9Device->SetTexture(0, screenTextures[3]);
-                dx9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 48, 2);
+                dx11Context->PSSetShaderResources(0, 1, &screenTextureViews[3]);
+                dx11Context->Draw(startVert, 48);
                 break;
 #endif
         }
-
-        dx9Device->EndScene();
     }
 
-    if (FAILED(dx9Device->Present(NULL, NULL, NULL, NULL)))
+    if (FAILED(swapChain->Present(videoSettings.vsync ? 1 : 0, 0)))
         windowRefreshDelay = 8;
 }
 
 void RenderDevice::Release(bool32 isRefresh)
 {
+    if (dx11Context)
+        dx11Context->ClearState();
+
     if (videoSettings.shaderSupport) {
         for (int32 i = 0; i < shaderCount; ++i) {
             if (shaderList[i].vertexShaderObject)
@@ -299,6 +313,10 @@ void RenderDevice::Release(bool32 isRefresh)
             if (shaderList[i].pixelShaderObject)
                 shaderList[i].pixelShaderObject->Release();
             shaderList[i].pixelShaderObject = NULL;
+
+            if (shaderList[i].vertexDeclare)
+                shaderList[i].vertexDeclare->Release();
+            shaderList[i].vertexDeclare = NULL;
         }
 
         shaderCount = 0;
@@ -312,11 +330,46 @@ void RenderDevice::Release(bool32 isRefresh)
         imageTexture = NULL;
     }
 
+    if (imageTextureView) {
+        imageTextureView->Release();
+        imageTextureView = NULL;
+    }
+
     for (int32 i = 0; i < SCREEN_MAX; ++i) {
         if (screenTextures[i])
             screenTextures[i]->Release();
 
         screenTextures[i] = NULL;
+
+        if (screenTextureViews[i])
+            screenTextureViews[i]->Release();
+
+        screenTextureViews[i] = NULL;
+    }
+
+    if (renderView) {
+        renderView->Release();
+        renderView = NULL;
+    }
+
+    if (psConstBuffer) {
+        psConstBuffer->Release();
+        psConstBuffer = NULL;
+    }
+
+    if (samplerPoint) {
+        samplerPoint->Release();
+        samplerPoint = NULL;
+    }
+
+    if (samplerLinear) {
+        samplerLinear->Release();
+        samplerLinear = NULL;
+    }
+
+    if (rasterState) {
+        rasterState->Release();
+        rasterState = NULL;
     }
 
     if (!isRefresh) {
@@ -325,29 +378,36 @@ void RenderDevice::Release(bool32 isRefresh)
         displayInfo.displays = NULL;
     }
 
-    if (dx9VertexBuffer) {
-        dx9VertexBuffer->Release();
-        dx9VertexBuffer = NULL;
+    if (dx11VertexBuffer) {
+        dx11VertexBuffer->Release();
+        dx11VertexBuffer = NULL;
     }
 
-    if (isRefresh && dx9VertexDeclare) {
-        dx9VertexDeclare->Release();
-        dx9VertexDeclare = NULL;
+    if (swapChain) {
+        DXGI_SWAP_CHAIN_DESC desc;
+        swapChain->GetDesc(&desc);
+        // it's not a good idea to release it while in fullscreen so, lets not!
+        if (!desc.Windowed)
+            swapChain->SetFullscreenState(FALSE, NULL);
+
+        swapChain->Release();
+        swapChain = NULL;
     }
 
-    if (dx9Device) {
-        dx9Device->Release();
-        dx9Device = NULL;
+    if (!isRefresh && dx11Device) {
+        dx11Device->Release();
+        dx11Device = NULL;
     }
 
-    if (!isRefresh && dx9Context) {
-        dx9Context->Release();
-        dx9Context = NULL;
+    if (!isRefresh && dx11Context) {
+        dx11Context->Release();
+        dx11Context = NULL;
     }
 
     if (!isRefresh) {
         if (scanlines)
             free(scanlines);
+
         scanlines = NULL;
     }
 }
@@ -361,9 +421,9 @@ void RenderDevice::RefreshWindow()
     ShowWindow(windowHandle, false);
 
     if (videoSettings.windowed && videoSettings.bordered)
-        SetWindowLong(windowHandle, GWL_STYLE, DX9_WINDOWFLAGS_BORDERED);
+        SetWindowLong(windowHandle, GWL_STYLE, DX11_WINDOWFLAGS_BORDERED);
     else
-        SetWindowLong(windowHandle, GWL_STYLE, DX9_WINDOWFLAGS_BORDERLESS);
+        SetWindowLong(windowHandle, GWL_STYLE, DX11_WINDOWFLAGS_BORDERLESS);
 
     Sleep(250); // zzzz.. mimimimi..
 
@@ -384,12 +444,20 @@ void RenderDevice::RefreshWindow()
         ClientToScreen(windowHandle, &bottomRight);
 
         if (videoSettings.windowed) {
-            D3DDISPLAYMODE displayMode;
-            dx9Context->GetAdapterDisplayMode(dxAdapter, &displayMode);
+            std::vector<IDXGIAdapter *> adapterList = GetAdapterList();
 
-            if (videoSettings.windowWidth >= displayMode.Width || videoSettings.windowHeight >= displayMode.Height) {
-                videoSettings.windowWidth  = (displayMode.Height / 480 * videoSettings.pixWidth);
-                videoSettings.windowHeight = displayMode.Height / 480 * videoSettings.pixHeight;
+            IDXGIOutput *pOutput;
+            if (SUCCEEDED(adapterList[dxAdapter]->EnumOutputs(0, &pOutput))) {
+                DXGI_OUTPUT_DESC outputDesc;
+                pOutput->GetDesc(&outputDesc);
+
+                int32 displayWidth  = outputDesc.DesktopCoordinates.right - outputDesc.DesktopCoordinates.left;
+                int32 displayHeight = outputDesc.DesktopCoordinates.bottom - outputDesc.DesktopCoordinates.top;
+
+                if (videoSettings.windowWidth >= displayWidth || videoSettings.windowHeight >= displayHeight) {
+                    videoSettings.windowWidth  = (displayHeight / 480 * videoSettings.pixWidth);
+                    videoSettings.windowHeight = displayHeight / 480 * videoSettings.pixHeight;
+                }
             }
 
             rect.left   = (bottomRight.x + topLeft.x) / 2 - videoSettings.windowWidth / 2;
@@ -398,9 +466,9 @@ void RenderDevice::RefreshWindow()
             rect.bottom = (bottomRight.y + topLeft.y) / 2 + videoSettings.windowHeight / 2;
 
             if (videoSettings.bordered)
-                AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERED, false);
+                AdjustWindowRect(&rect, DX11_WINDOWFLAGS_BORDERED, false);
             else
-                AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERLESS, false);
+                AdjustWindowRect(&rect, DX11_WINDOWFLAGS_BORDERLESS, false);
 
             if (rect.left < monitorDisplayRect.left || rect.right > monitorDisplayRect.right || rect.top < monitorDisplayRect.top
                 || rect.bottom > monitorDisplayRect.bottom) {
@@ -410,14 +478,14 @@ void RenderDevice::RefreshWindow()
                 rect.bottom = (monitorDisplayRect.top + monitorDisplayRect.bottom) / 2 + videoSettings.windowHeight / 2;
 
                 if (videoSettings.bordered)
-                    AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERED, false);
+                    AdjustWindowRect(&rect, DX11_WINDOWFLAGS_BORDERED, false);
                 else
-                    AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERLESS, false);
+                    AdjustWindowRect(&rect, DX11_WINDOWFLAGS_BORDERLESS, false);
             }
         }
         else {
             rect = monitorDisplayRect;
-            AdjustWindowRect(&monitorDisplayRect, DX9_WINDOWFLAGS_BORDERLESS, 0);
+            AdjustWindowRect(&monitorDisplayRect, DX11_WINDOWFLAGS_BORDERLESS, 0);
         }
 
         SetWindowPos(windowHandle, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0x40);
@@ -480,34 +548,57 @@ void RenderDevice::InitVertexBuffer()
             vertex->tex.y = screens[0].size.y * (1.0 / textureSize.y);
     }
 
-    RenderVertex *vertBufferPtr;
-    if (SUCCEEDED(dx9VertexBuffer->Lock(0, 0, (void **)&vertBufferPtr, 0))) {
-        memcpy(vertBufferPtr, vertBuffer, sizeof(vertBuffer));
-        dx9VertexBuffer->Unlock();
+    D3D11_MAPPED_SUBRESOURCE resource;
+    if (SUCCEEDED(dx11Context->Map(dx11VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource))) {
+        memcpy(resource.pData, vertBuffer, sizeof(vertBuffer));
+        dx11Context->Unmap(dx11VertexBuffer, 0);
     }
+
+    // Set/Update vertex buffer
+    UINT stride = sizeof(RenderVertex);
+    UINT offset = 0;
+    dx11Context->IASetVertexBuffers(0, 1, &dx11VertexBuffer, &stride, &offset);
+
+    // Init pixel shader constants
+    D3D11_BUFFER_DESC cbDesc     = {};
+    cbDesc.Usage                 = D3D11_USAGE_DYNAMIC;
+    cbDesc.ByteWidth             = sizeof(ShaderConstants);
+    cbDesc.BindFlags             = D3D11_BIND_CONSTANT_BUFFER;
+    cbDesc.CPUAccessFlags        = D3D11_CPU_ACCESS_WRITE;
+    cbDesc.MiscFlags             = 0;
+    cbDesc.StructureByteStride   = 0;
+
+    dx11Device->CreateBuffer(&cbDesc, NULL, &psConstBuffer);
 }
 
 bool RenderDevice::InitGraphicsAPI()
 {
     videoSettings.shaderSupport = false;
-
-    D3DCAPS9 pCaps;
-    if (SUCCEEDED(dx9Context->GetDeviceCaps(0, D3DDEVTYPE_HAL, &pCaps)) && (pCaps.PixelShaderVersion & 0xFF00) >= 0x300)
+    if (featureLevel >= D3D_FEATURE_LEVEL_11_0)
         videoSettings.shaderSupport = true;
 
-    viewSize.x = 0;
-    viewSize.y = 0;
+    HRESULT hr = 0;
 
-    D3DPRESENT_PARAMETERS presentParams;
-    memset(&presentParams, 0, sizeof(presentParams));
+    // Obtain DXGI factory from device (since we used nullptr for pAdapter above)
+    IDXGIFactory1 *dxgiFactory = nullptr;
+    {
+        IDXGIDevice *dxgiDevice = nullptr;
+        hr                      = dx11Device->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+        if (SUCCEEDED(hr)) {
+            IDXGIAdapter *adapter = nullptr;
+            hr                    = dxgiDevice->GetAdapter(&adapter);
+            if (SUCCEEDED(hr)) {
+                hr = adapter->GetParent(__uuidof(IDXGIFactory1), (void**) &dxgiFactory);
+                adapter->Release();
+            }
+            dxgiDevice->Release();
+        }
+    }
+
+    if (FAILED(hr))
+        return false;
+
     if (videoSettings.windowed || !videoSettings.exclusiveFS) {
-        presentParams.BackBufferFormat     = D3DFMT_UNKNOWN;
-        presentParams.BackBufferCount      = 1;
-        presentParams.SwapEffect           = D3DSWAPEFFECT_DISCARD;
-        presentParams.PresentationInterval = 0;
-        presentParams.hDeviceWindow        = windowHandle;
-        presentParams.Windowed             = true;
-
         if (videoSettings.windowed) {
             viewSize.x = videoSettings.windowWidth;
             viewSize.y = videoSettings.windowHeight;
@@ -525,65 +616,100 @@ bool RenderDevice::InitGraphicsAPI()
             bufferHeight = displayHeight[dxAdapter];
         }
 
-        presentParams.BackBufferWidth            = bufferWidth;
-        presentParams.BackBufferHeight           = bufferHeight;
-        presentParams.BackBufferCount            = (videoSettings.tripleBuffered == 1) + 1;
-        presentParams.BackBufferFormat           = D3DFMT_X8R8G8B8;
-        presentParams.PresentationInterval       = videoSettings.vsync ? 1 : 0x80000000;
-        presentParams.SwapEffect                 = D3DSWAPEFFECT_DISCARD;
-        presentParams.FullScreen_RefreshRateInHz = videoSettings.refreshRate;
-        presentParams.hDeviceWindow              = windowHandle;
-        presentParams.Windowed                   = false;
-
-        viewSize.x                               = bufferWidth;
-        viewSize.y                               = bufferHeight;
+        viewSize.x = bufferWidth;
+        viewSize.y = bufferHeight;
     }
 
-    int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);
-    if (videoSettings.shaderSupport) {
-        if (FAILED(adapterStatus))
-            return false;
+    // Create swap chain
+    IDXGIFactory2 *dxgiFactory2 = nullptr;
+    hr                          = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), (void**) &dxgiFactory2);
+    if (dxgiFactory2) {
+        // DirectX 11.1 or later
+        hr = dx11Device->QueryInterface(__uuidof(ID3D11Device1), (void **)&dx11Device);
+        if (SUCCEEDED(hr))
+            dx11Context->QueryInterface(__uuidof(ID3D11DeviceContext1), (void **)&dx11Context);
 
-        D3DVERTEXELEMENT9 elements[4];
+        DXGI_SWAP_CHAIN_DESC1 swapDesc = {};
+        swapDesc.Width                 = viewSize.x;
+        swapDesc.Height                = viewSize.y;
+        swapDesc.Format                = DXGI_FORMAT_R8G8B8A8_UNORM;
+        swapDesc.Stereo                = FALSE;
+        swapDesc.SampleDesc.Count      = 1;
+        swapDesc.SampleDesc.Quality    = 0;
+        swapDesc.BufferUsage           = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swapDesc.BufferCount           = 2;
+        swapDesc.Scaling               = DXGI_SCALING_STRETCH;
+        swapDesc.SwapEffect            = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        swapDesc.AlphaMode             = DXGI_ALPHA_MODE_UNSPECIFIED;
+        swapDesc.Flags = 0;
 
-        elements[0].Type       = D3DDECLTYPE_FLOAT3;
-        elements[0].Method     = 0;
-        elements[0].Stream     = 0;
-        elements[0].Offset     = 0;
-        elements[0].Usage      = D3DDECLUSAGE_POSITION;
-        elements[0].UsageIndex = 0;
+        DXGI_SWAP_CHAIN_FULLSCREEN_DESC fsDesc = {};
 
-        elements[1].Type       = D3DDECLTYPE_D3DCOLOR;
-        elements[1].Method     = 0;
-        elements[1].Stream     = 0;
-        elements[1].Offset     = offsetof(RenderVertex, color);
-        elements[1].Usage      = D3DDECLUSAGE_COLOR;
-        elements[1].UsageIndex = 0;
+        fsDesc.RefreshRate.Numerator   = videoSettings.refreshRate;
+        fsDesc.RefreshRate.Denominator = 1;
+        fsDesc.ScanlineOrdering        = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+        fsDesc.Scaling                 = DXGI_MODE_SCALING_UNSPECIFIED;
+        fsDesc.Windowed                = videoSettings.windowed || !videoSettings.exclusiveFS;
 
-        elements[2].Type       = D3DDECLTYPE_FLOAT2;
-        elements[2].Method     = 0;
-        elements[2].Stream     = 0;
-        elements[2].Offset     = offsetof(RenderVertex, tex);
-        elements[2].Usage      = D3DDECLUSAGE_TEXCOORD;
-        elements[2].UsageIndex = 0;
+        CComPtr<IDXGISwapChain1> swapChain1;
+        hr = dxgiFactory2->CreateSwapChainForHwnd(dx11Device, windowHandle, &swapDesc, &fsDesc, nullptr, &swapChain1);
+        if (SUCCEEDED(hr))
+            hr = swapChain1->QueryInterface(__uuidof(IDXGISwapChain), (void **)&swapChain);
 
-        elements[3].Type       = D3DDECLTYPE_UNUSED;
-        elements[3].Method     = 0;
-        elements[3].Stream     = 0xFF;
-        elements[3].Offset     = 0;
-        elements[3].Usage      = 0;
-        elements[3].UsageIndex = 0;
-
-        if (FAILED(dx9Device->CreateVertexDeclaration(elements, &dx9VertexDeclare)))
-            return false;
-
-        if (FAILED(dx9Device->CreateVertexBuffer(sizeof(rsdkVertexBuffer), 0, 0, D3DPOOL_DEFAULT, &dx9VertexBuffer, NULL)))
-            return false;
+        dxgiFactory2->Release();
     }
     else {
-        if (FAILED(adapterStatus)
-            || FAILED(dx9Device->CreateVertexBuffer(sizeof(rsdkVertexBuffer), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT,
-                                                    &dx9VertexBuffer, NULL)))
+        // DirectX 11.0 systems
+        DXGI_SWAP_CHAIN_DESC swapDesc               = {};
+        swapDesc.BufferCount                        = 1;
+        swapDesc.BufferDesc.Width                   = viewSize.x;
+        swapDesc.BufferDesc.Height                  = viewSize.y;
+        swapDesc.BufferDesc.Format                  = DXGI_FORMAT_R8G8B8A8_UNORM;
+        swapDesc.BufferDesc.RefreshRate.Numerator   = videoSettings.refreshRate;
+        swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+        swapDesc.BufferUsage                        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swapDesc.OutputWindow                       = windowHandle;
+        swapDesc.SampleDesc.Count                   = 2;
+        swapDesc.SampleDesc.Quality                 = 0;
+        swapDesc.Windowed                           = videoSettings.windowed || !videoSettings.exclusiveFS;
+        swapDesc.SwapEffect                         = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+
+        hr = dxgiFactory->CreateSwapChain(dx11Device, &swapDesc, &swapChain);
+    }
+
+    dxgiFactory->Release();
+
+    // disable the api handling ALT+Return (we handle it ourselves)
+    IDXGIFactory1 *pFactory = NULL;
+    if (SUCCEEDED(swapChain->GetParent(__uuidof(IDXGIFactory1), (void **)&pFactory))) {
+        pFactory->MakeWindowAssociation(windowHandle, DXGI_MWA_NO_ALT_ENTER);
+        pFactory->Release();
+    }
+
+    // Create a render target view
+    ID3D11Texture2D *pBackBuffer = nullptr;
+    hr                           = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void **)&pBackBuffer);
+    if (FAILED(hr))
+        return false;
+
+    hr = dx11Device->CreateRenderTargetView(pBackBuffer, nullptr, &renderView);
+    pBackBuffer->Release();
+    if (FAILED(hr))
+        return false;
+
+    dx11Context->OMSetRenderTargets(1, &renderView, nullptr);
+
+    dx11Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    if (videoSettings.shaderSupport) {
+        D3D11_BUFFER_DESC desc = {};
+        desc.Usage             = D3D11_USAGE_DYNAMIC;
+        desc.ByteWidth         = sizeof(RenderVertex) * ARRAYSIZE(rsdkVertexBuffer);
+        desc.BindFlags         = D3D11_BIND_VERTEX_BUFFER;
+        desc.CPUAccessFlags    = D3D11_CPU_ACCESS_WRITE;
+
+        hr = dx11Device->CreateBuffer(&desc, NULL, &dx11VertexBuffer);
+        if (FAILED(hr))
             return false;
     }
 
@@ -610,24 +736,45 @@ bool RenderDevice::InitGraphicsAPI()
     pixelSize.y     = screens[0].size.y;
     float pixAspect = pixelSize.x / pixelSize.y;
 
-    dx9Device->GetViewport(&displayInfo.viewport);
-    dx9ViewPort = displayInfo.viewport;
+    
+    UINT viewportCount = 0;
+    dx11Context->RSGetViewports(&viewportCount, NULL);
+    if (viewportCount) {
+        D3D11_VIEWPORT *viewports = new D3D11_VIEWPORT[viewportCount];
+        dx11Context->RSGetViewports(&viewportCount, viewports);
+        displayInfo.viewport      = viewports[0];
+        dx11ViewPort              = displayInfo.viewport;
+
+        delete[] viewports;
+    }
+    else {
+        displayInfo.viewport.TopLeftX = 0;
+        displayInfo.viewport.TopLeftY = 0;
+        displayInfo.viewport.Width    = viewSize.x;
+        displayInfo.viewport.Height   = viewSize.y;
+        displayInfo.viewport.MinDepth = 0;
+        displayInfo.viewport.MaxDepth = 1;
+
+        dx11ViewPort         = displayInfo.viewport;
+
+        dx11Context->RSSetViewports(1, &dx11ViewPort);
+    }
 
     if ((viewSize.x / viewSize.y) <= ((pixelSize.x / pixelSize.y) + 0.1)) {
         if ((pixAspect - 0.1) > (viewSize.x / viewSize.y)) {
-            viewSize.y         = (pixelSize.y / pixelSize.x) * viewSize.x;
-            dx9ViewPort.Y      = (displayInfo.viewport.Height >> 1) - (viewSize.y * 0.5);
-            dx9ViewPort.Height = viewSize.y;
+            viewSize.y            = (pixelSize.y / pixelSize.x) * viewSize.x;
+            dx11ViewPort.TopLeftY = (displayInfo.viewport.Height * 0.5) - (viewSize.y * 0.5);
+            dx11ViewPort.Height   = viewSize.y;
 
-            dx9Device->SetViewport(&dx9ViewPort);
+            dx11Context->RSSetViewports(1, &dx11ViewPort);
         }
     }
     else {
-        viewSize.x        = pixAspect * viewSize.y;
-        dx9ViewPort.X     = (displayInfo.viewport.Width >> 1) - (viewSize.x * 0.5);
-        dx9ViewPort.Width = viewSize.x;
+        viewSize.x            = pixAspect * viewSize.y;
+        dx11ViewPort.TopLeftX = (displayInfo.viewport.Width * 0.5) - (viewSize.x * 0.5);
+        dx11ViewPort.Width    = viewSize.x;
 
-        dx9Device->SetViewport(&dx9ViewPort);
+        dx11Context->RSSetViewports(1, &dx11ViewPort);
     }
 
     if (maxPixHeight <= 256) {
@@ -640,19 +787,58 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
-        if (FAILED(dx9Device->CreateTexture(textureSize.x, textureSize.y, 1, D3DUSAGE_DYNAMIC, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &screenTextures[s],
-                                            NULL)))
+        D3D11_TEXTURE2D_DESC desc = {};
+        desc.Width     = textureSize.x;
+        desc.Height    = textureSize.y;
+        desc.MipLevels = desc.ArraySize = 1;
+        desc.Format                     = DXGI_FORMAT_B5G6R5_UNORM;
+        desc.SampleDesc.Quality         = 0;
+        desc.SampleDesc.Count           = 1;
+        desc.Usage                      = D3D11_USAGE_DYNAMIC;
+        desc.BindFlags                  = D3D11_BIND_SHADER_RESOURCE;
+        desc.CPUAccessFlags             = D3D11_CPU_ACCESS_WRITE;
+        desc.MiscFlags = 0;
+
+        if (FAILED(dx11Device->CreateTexture2D(&desc, NULL, &screenTextures[s])))
+            return false;
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC resDesc;
+        resDesc.Format                    = desc.Format;
+        resDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
+        resDesc.Texture2D.MostDetailedMip = 0;
+        resDesc.Texture2D.MipLevels       = 1;
+
+        if (FAILED(dx11Device->CreateShaderResourceView(screenTextures[s], &resDesc, &screenTextureViews[s])))
             return false;
     }
 
-    if (FAILED(dx9Device->CreateTexture(RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT,
-                                        &imageTexture, NULL)))
+    D3D11_TEXTURE2D_DESC desc = {};
+    desc.Width     = RETRO_VIDEO_TEXTURE_W;
+    desc.Height    = RETRO_VIDEO_TEXTURE_H;
+    desc.MipLevels = desc.ArraySize = 1;
+    desc.Format                     = DXGI_FORMAT_B8G8R8A8_UNORM;
+    desc.SampleDesc.Quality         = 0;
+    desc.SampleDesc.Count           = 1;
+    desc.Usage                      = D3D11_USAGE_DYNAMIC;
+    desc.BindFlags                  = D3D11_BIND_SHADER_RESOURCE;
+    desc.CPUAccessFlags             = D3D11_CPU_ACCESS_WRITE;
+    desc.MiscFlags                  = 0;
+    if (FAILED(dx11Device->CreateTexture2D(&desc, NULL, &imageTexture)))
+        return false;
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC resDesc;
+    resDesc.Format                    = desc.Format;
+    resDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
+    resDesc.Texture2D.MostDetailedMip = 0;
+    resDesc.Texture2D.MipLevels       = 1;
+
+    if (FAILED(dx11Device->CreateShaderResourceView(imageTexture, &resDesc, &imageTextureView)))
         return false;
 
     lastShaderID = -1;
     InitVertexBuffer();
-    videoSettings.viewportX = dx9ViewPort.X;
-    videoSettings.viewportY = dx9ViewPort.Y;
+    videoSettings.viewportX = dx11ViewPort.TopLeftX;
+    videoSettings.viewportY = dx11ViewPort.TopLeftY;
     videoSettings.viewportW = 1.0 / viewSize.x;
     videoSettings.viewportH = 1.0 / viewSize.y;
 
@@ -676,11 +862,11 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     shader->linear      = linear;
     sprintf(shader->name, "%s", fileName);
 
-    const char *shaderFolder    = "DX9";
+    const char *shaderFolder    = "DX11"; // xbox one
     const char *vertexShaderExt = "hlsl";
     const char *pixelShaderExt  = "hlsl";
 
-    const char *bytecodeFolder    = "CSO-DX9";
+    const char *bytecodeFolder    = "CSO-DX11"; // xbox one
     const char *vertexBytecodeExt = "vso";
     const char *pixelBytecodeExt  = "fso";
 
@@ -694,6 +880,9 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     };
 
 #if !RETRO_USE_ORIGINAL_CODE
+    void *bytecode      = NULL;
+    size_t bytecodeSize = 0;
+
     sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
@@ -708,7 +897,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "VSMain", "vs_3_0", flags, 0, &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "VSMain", "vs_5_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -727,7 +916,8 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             if (errorBlob)
                 PrintLog(PRINT_NORMAL, "Vertex shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
 
-            if (FAILED(dx9Device->CreateVertexShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->vertexShaderObject))) {
+            if (FAILED(dx11Device->CreateVertexShader((DWORD *)shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL,
+                                                      &shader->vertexShaderObject))) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
                     shader->vertexShaderObject = NULL;
@@ -738,6 +928,8 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             }
         }
 
+        bytecode     = shaderBlob->GetBufferPointer();
+        bytecodeSize = shaderBlob->GetBufferSize();
         fileData = NULL;
     }
     else {
@@ -751,7 +943,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
 
-            if (FAILED(dx9Device->CreateVertexShader((DWORD *)fileData, &shader->vertexShaderObject))) {
+            if (FAILED(dx11Device->CreateVertexShader((DWORD *)fileData, info.fileSize, NULL, &shader->vertexShaderObject))) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
                     shader->vertexShaderObject = NULL;
@@ -761,12 +953,46 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
                 return;
             }
 
+            bytecode     = fileData;
+            bytecodeSize = info.fileSize;
             fileData = NULL;
         }
 
 #if !RETRO_USE_ORIGINAL_CODE
     }
 #endif
+
+    {
+        D3D11_INPUT_ELEMENT_DESC elements[2];
+
+        elements[0].SemanticName         = "SV_POSITION";
+        elements[0].SemanticIndex        = 0;
+        elements[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+        elements[0].InputSlot            = 0;
+        elements[0].AlignedByteOffset    = offsetof(RenderVertex, pos);
+        elements[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+        elements[0].InstanceDataStepRate = 0;
+
+        elements[1].SemanticName         = "TEXCOORD";
+        elements[1].SemanticIndex        = 0;
+        elements[1].Format               = DXGI_FORMAT_R32G32_FLOAT;
+        elements[1].InputSlot            = 0;
+        elements[1].AlignedByteOffset    = offsetof(RenderVertex, tex);
+        elements[1].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+        elements[1].InstanceDataStepRate = 0;
+
+        // elements[2].SemanticName         = "COLOR";
+        // elements[2].SemanticIndex        = 0;
+        // elements[2].Format               = DXGI_FORMAT_R32G32B32_UINT;
+        // elements[2].InputSlot            = 0;
+        // elements[2].AlignedByteOffset    = offsetof(RenderVertex, color);
+        // elements[2].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+        // elements[2].InstanceDataStepRate = 0;
+
+        HRESULT res = dx11Device->CreateInputLayout(elements, ARRAYSIZE(elements), bytecode, bytecodeSize, &shader->vertexDeclare);
+        if (FAILED(res))
+            return;
+    }
 
 #if !RETRO_USE_ORIGINAL_CODE
     sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, pixelShaderExt);
@@ -783,7 +1009,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "PSMain", "ps_3_0", flags, 0, &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "PSMain", "ps_5_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -799,7 +1025,8 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             if (errorBlob)
                 PrintLog(PRINT_NORMAL, "Pixel shader warnings:\n%s", (char *)errorBlob->GetBufferPointer());
 
-            if (FAILED(dx9Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), &shader->pixelShaderObject))) {
+            if (FAILED(dx11Device->CreatePixelShader((DWORD *)shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL,
+                                                     &shader->pixelShaderObject))) {
                 if (shader->vertexShaderObject) {
                     shader->vertexShaderObject->Release();
                     shader->vertexShaderObject = NULL;
@@ -822,7 +1049,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
 
-            if (FAILED(dx9Device->CreatePixelShader((DWORD *)fileData, &shader->pixelShaderObject))) {
+            if (FAILED(dx11Device->CreatePixelShader((DWORD *)fileData, info.fileSize, NULL, &shader->pixelShaderObject))) {
                 if (shader->pixelShaderObject) {
                     shader->pixelShaderObject->Release();
                     shader->pixelShaderObject = NULL;
@@ -844,14 +1071,53 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
 bool RenderDevice::InitShaders()
 {
-    dx9Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    dx9Device->SetRenderState(D3DRS_LIGHTING, false);
-    dx9Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-    dx9Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-    dx9Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-    dx9Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
-    dx9Device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-    dx9Device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+    D3D11_RASTERIZER_DESC rDesc = {};
+
+    D3D11_SAMPLER_DESC sPointDesc  = {};
+    D3D11_SAMPLER_DESC sLinearDesc = {};
+
+    // init
+    rDesc.FillMode              = D3D11_FILL_SOLID;
+    rDesc.CullMode              = D3D11_CULL_NONE;
+    rDesc.FrontCounterClockwise = FALSE;
+    rDesc.DepthBias             = D3D11_DEFAULT_DEPTH_BIAS;
+    rDesc.DepthBiasClamp        = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
+    rDesc.SlopeScaledDepthBias  = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+    rDesc.DepthClipEnable       = TRUE;
+    rDesc.ScissorEnable         = FALSE;
+    rDesc.MultisampleEnable     = FALSE;
+    rDesc.AntialiasedLineEnable = FALSE;
+
+    // init
+    sPointDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    sPointDesc.AddressU       = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sPointDesc.AddressV       = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sPointDesc.AddressW       = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sPointDesc.MipLODBias     = 0;
+    sPointDesc.MaxAnisotropy  = 1;
+    sPointDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sPointDesc.BorderColor[0] = 1.0f;
+    sPointDesc.BorderColor[1] = 1.0f;
+    sPointDesc.BorderColor[2] = 1.0f;
+    sPointDesc.BorderColor[3] = 1.0f;
+    sPointDesc.MinLOD         = -FLT_MAX;
+    sPointDesc.MaxLOD         = FLT_MAX;
+
+    sLinearDesc       = sPointDesc;
+    sLinearDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+
+
+    if (FAILED(dx11Device->CreateRasterizerState(&rDesc, &rasterState))) {
+        // uh oh...
+    }
+
+    if (FAILED(dx11Device->CreateSamplerState(&sPointDesc, &samplerPoint))) {
+        // uh oh...
+    }
+
+    if (FAILED(dx11Device->CreateSamplerState(&sLinearDesc, &samplerLinear))) {
+        // uh oh...
+    }
 
     int32 maxShaders = 0;
     if (videoSettings.shaderSupport) {
@@ -873,7 +1139,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -882,24 +1148,49 @@ bool RenderDevice::InitShaders()
 
     videoSettings.shaderID = videoSettings.shaderID >= maxShaders ? 0 : videoSettings.shaderID;
 
-    if (shaderList[videoSettings.shaderID].linear || videoSettings.screenCount > 1) {
-        dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-        dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-    }
-    else {
-        dx9Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-        dx9Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-    }
-
-    dx9Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-
     return true;
 }
 
 bool RenderDevice::SetupRendering()
 {
-    dx9Context = Direct3DCreate9(D3D_SDK_VERSION);
-    if (!dx9Context)
+    // Init DX11 context & device
+    UINT createDeviceFlags = 0;
+#ifdef _DEBUG
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    D3D_DRIVER_TYPE driverTypes[] = {
+        D3D_DRIVER_TYPE_HARDWARE,
+        D3D_DRIVER_TYPE_WARP,
+        D3D_DRIVER_TYPE_REFERENCE,
+    };
+    UINT numDriverTypes = ARRAYSIZE(driverTypes);
+
+    D3D_FEATURE_LEVEL featureLevels[] = {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+    };
+    UINT numFeatureLevels = ARRAYSIZE(featureLevels);
+
+    HRESULT hr = 0;
+    for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++) {
+        driverType = driverTypes[driverTypeIndex];
+        hr = D3D11CreateDevice(nullptr, driverType, nullptr, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &dx11Device,
+                               &featureLevel, &dx11Context);
+
+        if (hr == E_INVALIDARG) {
+            // DirectX 11.0 platforms will not recognize D3D_FEATURE_LEVEL_11_1 so we need to retry without it
+            hr = D3D11CreateDevice(nullptr, driverType, nullptr, createDeviceFlags, &featureLevels[1], numFeatureLevels - 1, D3D11_SDK_VERSION,
+                                   &dx11Device, &featureLevel, &dx11Context);
+        }
+
+        if (SUCCEEDED(hr))
+            break;
+    }
+
+    if (FAILED(hr))
         return false;
 
     memset(&deviceIdentifier, 0, sizeof(deviceIdentifier));
@@ -922,55 +1213,97 @@ bool RenderDevice::SetupRendering()
 
 void RenderDevice::GetDisplays()
 {
-    adapterCount = dx9Context->GetAdapterCount();
+    std::vector<IDXGIAdapter *> adapterList = GetAdapterList();
+    adapterCount = (int32)adapterList.size();
 
-    UINT prevAdapter = dxAdapter;
+    uint prevAdapter = dxAdapter;
 
     HMONITOR windowMonitor = MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY);
-    dxAdapter              = 0;
-    for (int a = 0; a < adapterCount; ++a) {
-        D3DDISPLAYMODE displayMode;
+    for (int32 a = 0; a < adapterCount; ++a) {
+        IDXGIOutput *pOutput;
+        if (SUCCEEDED(adapterList[a]->EnumOutputs(0, &pOutput))) {
+            DXGI_OUTPUT_DESC outputDesc;
+            pOutput->GetDesc(&outputDesc);
+            HMONITOR monitor = outputDesc.Monitor;
 
-        HMONITOR monitor = dx9Context->GetAdapterMonitor(a);
-        dx9Context->GetAdapterDisplayMode(a, &displayMode);
-        displayWidth[a]  = displayMode.Width;
-        displayHeight[a] = displayMode.Height;
+            UINT modeCount;
+            pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &modeCount, nullptr);
 
-        if (windowMonitor == monitor) {
-            MONITORINFO lpmi;
-            memset(&lpmi, 0, sizeof(lpmi));
-            lpmi.cbSize = sizeof(MONITORINFO);
+            DXGI_MODE_DESC *descArr = new DXGI_MODE_DESC[modeCount];
+            pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &modeCount, descArr);
 
-            GetMonitorInfo(windowMonitor, &lpmi);
-            dxAdapter          = a;
-            monitorDisplayRect = lpmi.rcMonitor;
+            std::vector<DXGI_MODE_DESC> adapterModeList;
+            for (UINT i = 0; i < modeCount; i++) adapterModeList.push_back(descArr[i]);
+            pOutput->Release();
+
+            displayWidth[a]  = outputDesc.DesktopCoordinates.right - outputDesc.DesktopCoordinates.left;
+            displayHeight[a] = outputDesc.DesktopCoordinates.bottom - outputDesc.DesktopCoordinates.top;
+
+            if (windowMonitor == monitor) {
+                MONITORINFO lpmi;
+                memset(&lpmi, 0, sizeof(lpmi));
+                lpmi.cbSize = sizeof(MONITORINFO);
+
+                GetMonitorInfo(windowMonitor, &lpmi);
+                dxAdapter          = a;
+                monitorDisplayRect = lpmi.rcMonitor;
+            }
+
+            delete[] descArr;
         }
     }
 
-    D3DADAPTER_IDENTIFIER9 adapterIdentifier;
+    DXGI_ADAPTER_DESC adapterIdentifier;
     memset(&adapterIdentifier, 0, sizeof(adapterIdentifier));
-    dx9Context->GetAdapterIdentifier(dxAdapter, 0, &adapterIdentifier);
+    adapterList[dxAdapter]->GetDesc(&adapterIdentifier);
 
     // no change, don't reload anything
-    if (memcmp(&deviceIdentifier, &adapterIdentifier.DeviceIdentifier, sizeof(deviceIdentifier)) == 0 && dxAdapter == prevAdapter)
+    if (memcmp(&deviceIdentifier, &adapterIdentifier.AdapterLuid, sizeof(deviceIdentifier)) == 0 && dxAdapter == prevAdapter)
         return;
 
-    deviceIdentifier = adapterIdentifier.DeviceIdentifier;
+    deviceIdentifier = adapterIdentifier.AdapterLuid;
 
-    displayCount = dx9Context->GetAdapterModeCount(dxAdapter, D3DFMT_X8R8G8B8);
+    IDXGIOutput *pOutput;
+    adapterList[dxAdapter]->EnumOutputs(0, &pOutput);
+
+    pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, (UINT *)&displayCount, nullptr);
     if (displayInfo.displays)
         free(displayInfo.displays);
 
-    displayInfo.displays          = (decltype(displayInfo.displays))malloc(sizeof(D3DDISPLAYMODE) * displayCount);
+    DXGI_MODE_DESC *descArr = new DXGI_MODE_DESC[displayCount];
+    pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, (UINT *)&displayCount, descArr);
+
+    displayInfo.displays          = (decltype(displayInfo.displays))malloc(sizeof(DXGI_MODE_DESC) * displayCount);
     int32 newDisplayCount         = 0;
     bool32 foundFullScreenDisplay = false;
 
     for (int32 d = 0; d < displayCount; ++d) {
-        dx9Context->EnumAdapterModes(dxAdapter, D3DFMT_X8R8G8B8, d, &displayInfo.displays[newDisplayCount].internal);
+        memcpy(&displayInfo.displays[newDisplayCount].internal, &descArr[d], sizeof(DXGI_MODE_DESC));
+        
+        int32 refreshRate = 0;
 
-        int32 refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
+        DXGI_RATIONAL *rate = &displayInfo.displays[newDisplayCount].refresh_rate;
+        if (rate->Numerator > 0 && rate->Denominator > 0)
+            refreshRate = rate->Numerator / rate->Denominator;
+
         if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].height >= (SCREEN_YSIZE * 2)) {
-            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59) {
+            int32 prevRefreshRate = 0;
+            if (d) {
+                rate = &displayInfo.displays[newDisplayCount - 1].refresh_rate;
+
+                if (rate->Numerator > 0 && rate->Denominator > 0)
+                    prevRefreshRate = rate->Numerator / rate->Denominator;
+            }
+
+            // remove duplicates
+            if (d && displayInfo.displays[newDisplayCount].width == displayInfo.displays[newDisplayCount - 1].width
+                && displayInfo.displays[newDisplayCount].height == displayInfo.displays[newDisplayCount - 1].height
+                && refreshRate == prevRefreshRate) {
+                memcpy(&displayInfo.displays[newDisplayCount - 1], &displayInfo.displays[newDisplayCount], sizeof(displayInfo.displays[0]));
+                --newDisplayCount;
+            }
+            // remove "duds"
+            else if (d && refreshRate == 60 && prevRefreshRate == 59) {
                 memcpy(&displayInfo.displays[newDisplayCount - 1], &displayInfo.displays[newDisplayCount], sizeof(displayInfo.displays[0]));
                 --newDisplayCount;
             }
@@ -983,6 +1316,8 @@ void RenderDevice::GetDisplays()
         }
     }
 
+    delete[] descArr;
+
     displayCount = newDisplayCount;
     if (!foundFullScreenDisplay) {
         videoSettings.fsWidth     = 0;
@@ -993,14 +1328,27 @@ void RenderDevice::GetDisplays()
 
 void RenderDevice::GetWindowSize(int32 *width, int32 *height)
 {
-    D3DDISPLAYMODE display;
-    dx9Context->GetAdapterDisplayMode(dxAdapter, &display);
+    std::vector<IDXGIAdapter *> adapterList = GetAdapterList();
+
+    IDXGIOutput *pOutput;
+    if (FAILED(adapterList[dxAdapter]->EnumOutputs(0, &pOutput))) {
+        if (width)
+            *width = 0;
+
+        if (height)
+            *height = 0;
+
+        return;
+    }
+
+    DXGI_OUTPUT_DESC outputDesc;
+    pOutput->GetDesc(&outputDesc);
 
     if (width)
-        *width = display.Width;
+        *width = outputDesc.DesktopCoordinates.right - outputDesc.DesktopCoordinates.left;
 
     if (height)
-        *height = display.Height;
+        *height = outputDesc.DesktopCoordinates.bottom - outputDesc.DesktopCoordinates.top;
 }
 
 void RenderDevice::ProcessEvent(MSG Msg)
@@ -1368,12 +1716,10 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
     if (!imagePixels)
         return;
 
-    dx9Device->SetTexture(0, NULL);
-
-    D3DLOCKED_RECT rect;
-    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
-        DWORD *pixels = (DWORD *)rect.pBits;
-        int32 pitch   = (rect.Pitch >> 2) - width;
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    if (SUCCEEDED(dx11Context->Map(imageTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource))) {
+        DWORD *pixels = (DWORD *)mappedResource.pData;
+        int32 pitch   = (mappedResource.RowPitch >> 2) - width;
 
         uint32 *imagePixels32 = (uint32 *)imagePixels;
         for (int32 y = 0; y < height; ++y) {
@@ -1384,19 +1730,17 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
             pixels += pitch;
         }
 
-        imageTexture->UnlockRect(0);
+        dx11Context->Unmap(imageTexture, 0);
     }
 }
 
 void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
-    dx9Device->SetTexture(0, NULL);
-
-    D3DLOCKED_RECT rect;
-    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
-        DWORD *pixels = (DWORD *)rect.pBits;
-        int32 pitch   = (rect.Pitch >> 2) - width;
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    if (SUCCEEDED(dx11Context->Map(imageTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource))) {
+        DWORD *pixels = (DWORD *)mappedResource.pData;
+        int32 pitch   = (mappedResource.RowPitch >> 2) - width;
 
         if (videoSettings.shaderSupport) {
             // Shaders are supported! lets watch this video in full color!
@@ -1409,8 +1753,8 @@ void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yP
                 yPlane += strideY;
             }
 
-            pixels = (DWORD *)rect.pBits;
-            pitch  = (rect.Pitch >> 2) - (width >> 1);
+            pixels = (DWORD *)mappedResource.pData;
+            pitch = (mappedResource.RowPitch >> 2) - (width >> 1);
             for (int32 y = 0; y < (height >> 1); ++y) {
                 for (int32 x = 0; x < (width >> 1); ++x) {
                     *pixels++ |= (vPlane[x] << 0) | (uPlane[x] << 8) | 0xFF000000;
@@ -1434,18 +1778,16 @@ void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yP
             }
         }
 
-        imageTexture->UnlockRect(0);
+        dx11Context->Unmap(imageTexture, 0);
     }
 }
 void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
-    dx9Device->SetTexture(0, NULL);
-
-    D3DLOCKED_RECT rect;
-    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
-        DWORD *pixels = (DWORD *)rect.pBits;
-        int32 pitch   = (rect.Pitch >> 2) - width;
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    if (SUCCEEDED(dx11Context->Map(imageTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource))) {
+        DWORD *pixels = (DWORD *)mappedResource.pData;
+        int32 pitch   = (mappedResource.RowPitch >> 2) - width;
 
         if (videoSettings.shaderSupport) {
             // Shaders are supported! lets watch this video in full color!
@@ -1458,8 +1800,8 @@ void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yP
                 yPlane += strideY;
             }
 
-            pixels = (DWORD *)rect.pBits;
-            pitch  = (rect.Pitch >> 2) - (width >> 1);
+            pixels = (DWORD *)mappedResource.pData;
+            pitch  = 0; // (rect.Pitch >> 2) - (width >> 1);
             for (int32 y = 0; y < height; ++y) {
                 for (int32 x = 0; x < (width >> 1); ++x) {
                     *pixels++ |= (vPlane[x] << 0) | (uPlane[x] << 8) | 0xFF000000;
@@ -1483,18 +1825,16 @@ void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yP
             }
         }
 
-        imageTexture->UnlockRect(0);
+        dx11Context->Unmap(imageTexture, 0);
     }
 }
 void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
-    dx9Device->SetTexture(0, NULL);
-
-    D3DLOCKED_RECT rect;
-    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
-        DWORD *pixels = (DWORD *)rect.pBits;
-        int32 pitch   = (rect.Pitch >> 2) - width;
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    if (SUCCEEDED(dx11Context->Map(imageTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource))) {
+        DWORD *pixels = (DWORD *)mappedResource.pData;
+        int32 pitch   = (mappedResource.RowPitch >> 2) - width;
 
         if (videoSettings.shaderSupport) {
             // Shaders are supported! lets watch this video in full color!
@@ -1526,6 +1866,6 @@ void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yP
             }
         }
 
-        imageTexture->UnlockRect(0);
+        dx11Context->Unmap(imageTexture, 0);
     }
 }

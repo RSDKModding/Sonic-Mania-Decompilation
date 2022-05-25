@@ -112,6 +112,17 @@ struct WindowInfo {
     } * displays;
     D3DVIEWPORT9 viewport;
 
+#elif RETRO_RENDERDEVICE_DIRECTX11
+    union {
+        struct {
+            UINT width;
+            UINT height;
+            DXGI_RATIONAL refresh_rate;
+        };
+        DXGI_MODE_DESC internal;
+    } * displays;
+    D3D11_VIEWPORT viewport;
+
 #elif RETRO_RENDERDEVICE_SDL2
     union {
         struct {
@@ -231,7 +242,9 @@ private:
 
 #if RETRO_RENDERDEVICE_DIRECTX9
 #include "DX9/DX9RenderDevice.hpp"
-#elif RETRO_AUDIODEVICE_NX
+#elif RETRO_RENDERDEVICE_DIRECTX11
+#include "DX11/DX11RenderDevice.hpp"
+#elif RETRO_RENDERDEVICE_NX
 #include "NX/NXRenderDevice.hpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.hpp"

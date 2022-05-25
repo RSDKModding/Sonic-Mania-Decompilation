@@ -127,7 +127,9 @@ const RenderVertex rsdkVertexBuffer[24] =
 
 #if RETRO_RENDERDEVICE_DIRECTX9
 #include "DX9/DX9RenderDevice.cpp"
-#elif RETRO_AUDIODEVICE_NX
+#elif RETRO_RENDERDEVICE_DIRECTX11
+#include "DX11/DX11RenderDevice.cpp"
+#elif RETRO_RENDERDEVICE_NX
 #include "NX/NXRenderDevice.cpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.cpp"
@@ -273,9 +275,15 @@ void RSDK::GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *
     if (*displayID == -2) { // -2 == "get FS size display"
         if (videoSettings.fsWidth && videoSettings.fsHeight) {
             for (display = 0; display < RenderDevice::displayCount; ++display) {
+#if RETRO_RENDERDEVICE_DIRECTX11
+                int32 refresh = RenderDevice::displayInfo.displays[display].refresh_rate.Numerator
+                                / RenderDevice::displayInfo.displays[display].refresh_rate.Denominator;
+#else
+                int32 refresh = RenderDevice::displayInfo.displays[display].refresh_rate;
+#endif
+
                 if (RenderDevice::displayInfo.displays[display].width == videoSettings.fsWidth
-                    && RenderDevice::displayInfo.displays[display].height == videoSettings.fsHeight
-                    && RenderDevice::displayInfo.displays[display].refresh_rate == videoSettings.refreshRate) {
+                    && RenderDevice::displayInfo.displays[display].height == videoSettings.fsHeight && refresh == videoSettings.refreshRate) {
                     break;
                 }
             }
@@ -295,9 +303,15 @@ void RSDK::GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *
     if (display) {
         int32 d = display - 1;
 
+#if RETRO_RENDERDEVICE_DIRECTX11
+        int32 refresh = RenderDevice::displayInfo.displays[d].refresh_rate.Numerator / RenderDevice::displayInfo.displays[d].refresh_rate.Denominator;
+#else
+        int32 refresh = RenderDevice::displayInfo.displays[d].refresh_rate;
+#endif
+
         int32 displayWidth   = RenderDevice::displayInfo.displays[d].width;
         int32 displayHeight  = RenderDevice::displayInfo.displays[d].height;
-        int32 displayRefresh = RenderDevice::displayInfo.displays[d].refresh_rate;
+        int32 displayRefresh = refresh;
 
         if (width)
             *width = displayWidth;

@@ -352,9 +352,9 @@ void RenderDevice::RefreshWindow()
 {
     videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
-    RenderDevice::Release(true);
+    Release(true);
 
-    SDL_HideWindow(RenderDevice::window);
+    SDL_HideWindow(window);
 
     if (videoSettings.windowed && videoSettings.bordered)
         SDL_SetWindowBordered(window, SDL_TRUE);
@@ -389,11 +389,11 @@ void RenderDevice::RefreshWindow()
             SDL_ShowCursor(SDL_TRUE);
         }
 
-        SDL_SetWindowSize(RenderDevice::window, winRect.w, winRect.h);
-        SDL_SetWindowPosition(RenderDevice::window, winRect.x, winRect.y);
+        SDL_SetWindowSize(window, winRect.w, winRect.h);
+        SDL_SetWindowPosition(window, winRect.x, winRect.y);
     }
 
-    SDL_ShowWindow(RenderDevice::window);
+    SDL_ShowWindow(window);
 
     if (!InitGraphicsAPI() || !InitShaders())
         return;
@@ -474,7 +474,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
     else {
         int32 bufferWidth  = videoSettings.fsWidth;
-        int32 bufferHeight = videoSettings.fsWidth;
+        int32 bufferHeight = videoSettings.fsHeight;
         if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
             bufferWidth  = displayWidth[displayModeIndex];
             bufferHeight = displayHeight[displayModeIndex];
@@ -484,8 +484,8 @@ bool RenderDevice::InitGraphicsAPI()
         viewSize.y = bufferHeight;
     }
 
-    SDL_SetWindowSize(RenderDevice::window, viewSize.x, viewSize.y);
-    SDL_SetWindowPosition(RenderDevice::window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    SDL_SetWindowSize(window, viewSize.x, viewSize.y);
+    SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
     int32 maxPixHeight = 0;
     for (int32 s = 0; s < 4; ++s) {
@@ -673,7 +673,7 @@ bool RenderDevice::SetupRendering()
         return false;
     }
 
-    RenderDevice::GetDisplays();
+    GetDisplays();
 
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
@@ -748,10 +748,10 @@ void RenderDevice::GetDisplays()
 void RenderDevice::GetWindowSize(int32 *width, int32 *height)
 {
     if (!videoSettings.windowed) {
-        SDL_GetRendererOutputSize(RenderDevice::renderer, width, height);
+        SDL_GetRendererOutputSize(renderer, width, height);
     }
     else {
-        int32 currentWindowDisplay = SDL_GetWindowDisplayIndex(RenderDevice::window);
+        int32 currentWindowDisplay = SDL_GetWindowDisplayIndex(window);
 
         SDL_DisplayMode display;
         SDL_GetCurrentDisplayMode(currentWindowDisplay, &display);
@@ -1029,7 +1029,7 @@ bool RenderDevice::ProcessEvents()
     SDL_Event sdlEvent;
 
     while (SDL_PollEvent(&sdlEvent)) {
-        RenderDevice::ProcessEvent(sdlEvent);
+        ProcessEvent(sdlEvent);
 
         if (!isRunning)
             return false;
@@ -1040,11 +1040,11 @@ bool RenderDevice::ProcessEvents()
 void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixels)
 {
     if (lastTextureFormat != SHADER_RGB_IMAGE) {
-        if (RenderDevice::imageTexture)
-            SDL_DestroyTexture(RenderDevice::imageTexture);
+        if (imageTexture)
+            SDL_DestroyTexture(imageTexture);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+        imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 
         lastTextureFormat = SHADER_RGB_IMAGE;
@@ -1052,7 +1052,7 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
 
     int32 texPitch = 0;
     uint32 *pixels = NULL;
-    SDL_LockTexture(RenderDevice::imageTexture, NULL, (void **)&pixels, &texPitch);
+    SDL_LockTexture(imageTexture, NULL, (void **)&pixels, &texPitch);
 
     int32 pitch           = (texPitch >> 2) - width;
     uint32 *imagePixels32 = (uint32 *)imagePixels;
@@ -1064,54 +1064,54 @@ void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixe
         pixels += pitch;
     }
 
-    SDL_UnlockTexture(RenderDevice::imageTexture);
+    SDL_UnlockTexture(imageTexture);
 }
 
 void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     if (lastTextureFormat != SHADER_YUV_420) {
-        if (RenderDevice::imageTexture)
-            SDL_DestroyTexture(RenderDevice::imageTexture);
+        if (imageTexture)
+            SDL_DestroyTexture(imageTexture);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
+        imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
 
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
         lastTextureFormat = SHADER_YUV_420;
     }
 
-    SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
+    SDL_UpdateYUVTexture(imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
 }
 void RenderDevice::SetupVideoTexture_YUV422(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     if (lastTextureFormat != SHADER_YUV_422) {
-        if (RenderDevice::imageTexture)
-            SDL_DestroyTexture(RenderDevice::imageTexture);
+        if (imageTexture)
+            SDL_DestroyTexture(imageTexture);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
+        imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
 
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
         lastTextureFormat = SHADER_YUV_422;
     }
 
-    SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
+    SDL_UpdateYUVTexture(imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
 }
 void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                             int32 strideV)
 {
     if (lastTextureFormat != SHADER_YUV_444) {
-        if (RenderDevice::imageTexture)
-            SDL_DestroyTexture(RenderDevice::imageTexture);
+        if (imageTexture)
+            SDL_DestroyTexture(imageTexture);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-        RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
+        imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
 
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
         lastTextureFormat = SHADER_YUV_444;
     }
 
-    SDL_UpdateYUVTexture(RenderDevice::imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
+    SDL_UpdateYUVTexture(imageTexture, NULL, yPlane, strideY, uPlane, strideU, vPlane, strideV);
 }
