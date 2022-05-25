@@ -47,8 +47,8 @@ bool RenderDevice::Init()
         h       = videoSettings.fsHeight;
     }
 
-    RenderDevice::window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
-    if (!RenderDevice::window) {
+    window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
+    if (!window) {
         PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return false;
     }
@@ -76,7 +76,7 @@ bool RenderDevice::SetupRendering()
         return false;
     }
 
-    RenderDevice::GetDisplays();
+    GetDisplays();
 
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
@@ -177,7 +177,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
     else {
         int32 bufferWidth  = videoSettings.fsWidth;
-        int32 bufferHeight = videoSettings.fsWidth;
+        int32 bufferHeight = videoSettings.fsHeight;
         if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
             bufferWidth  = displayWidth[monitorIndex];
             bufferHeight = displayHeight[monitorIndex];
@@ -578,7 +578,7 @@ void RenderDevice::RefreshWindow()
 {
     videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
-    RenderDevice::Release(true);
+    Release(true);
     if (!videoSettings.bordered)
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
@@ -600,8 +600,8 @@ void RenderDevice::RefreshWindow()
         h       = videoSettings.fsHeight;
     }
 
-    RenderDevice::window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
-    if (!RenderDevice::window) {
+    window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
+    if (!window) {
         PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return;
     }

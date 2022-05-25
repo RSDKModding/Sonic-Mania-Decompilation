@@ -184,6 +184,16 @@ enum GameRegions {
 #undef RETRO_INPUTDEVICE_RAWINPUT
 #define RETRO_INPUTDEVICE_RAWINPUT (1)
 
+#elif defined(RSDK_USE_DX11)
+#undef RETRO_RENDERDEVICE_DIRECTX11
+#define RETRO_RENDERDEVICE_DIRECTX11 (1)
+
+#undef RETRO_INPUTDEVICE_XINPUT
+#define RETRO_INPUTDEVICE_XINPUT (1)
+
+#undef RETRO_INPUTDEVICE_RAWINPUT
+#define RETRO_INPUTDEVICE_RAWINPUT (1)
+
 #elif defined(RSDK_USE_GL3)
 #undef RETRO_RENDERDEVICE_OPENGL3
 #define RETRO_RENDERDEVICE_OPENGL3 (1)
@@ -204,6 +214,12 @@ enum GameRegions {
 
 #undef RETRO_RENDERDEVICE_DIRECTX11
 #define RETRO_RENDERDEVICE_DIRECTX11 (1)
+
+#undef RETRO_AUDIODEVICE_XAUDIO
+#define RETRO_AUDIODEVICE_XAUDIO (1)
+
+#undef RETRO_INPUTDEVICE_XINPUT
+#define RETRO_INPUTDEVICE_XINPUT (1)
 
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_SWITCH
 
@@ -266,6 +282,18 @@ enum GameRegions {
 #include <dbt.h>
 
 #include <d3d9.h>
+
+#undef LoadImage
+
+#elif RETRO_RENDERDEVICE_DIRECTX11
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include <timeapi.h>
+#include <commctrl.h>
+#include <dbt.h>
+
+#include <d3d11_1.h>
 
 #undef LoadImage
 #elif RETRO_RENDERDEVICE_OPENGL3

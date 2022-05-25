@@ -10,7 +10,7 @@ bool RenderDevice::Init()
 bool RenderDevice::SetupRendering()
 {
 
-    RenderDevice::GetDisplays();
+    GetDisplays();
 
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
@@ -213,7 +213,7 @@ void RenderDevice::RefreshWindow()
 {
     videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
 
-    RenderDevice::Release(true);
+    Release(true);
 
     if (!InitGraphicsAPI() || !InitShaders())
         return;
