@@ -24,6 +24,7 @@ void GameOver_Draw(void)
 {
     RSDK_THIS(GameOver);
 
+#if MANIA_USE_PLUS
     if (self->state != GameOver_State_ExitLetters && globals->gameMode == MODE_COMPETITION) {
         if (SceneInfo->currentScreenID != self->playerID || RSDK.GetEntityCount(PauseMenu->classID, true) > 0) {
             return;
@@ -40,6 +41,18 @@ void GameOver_Draw(void)
             RSDK.DrawSprite(&self->animator, &self->letterPositions[self->animator.frameID], true);
         }
     }
+#else
+    if (((1 << SceneInfo->currentScreenID) & GameOver->activeScreens) || self->state == GameOver_State_ExitLetters) {
+        RSDK.DrawFace(self->verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
+
+        if (((1 << SceneInfo->currentScreenID) & GameOver->activeScreens)) {
+            for (self->animator.frameID = 0; self->animator.frameID < GAMEOVER_LETTER_COUNT; ++self->animator.frameID) {
+                self->rotation = self->letterRotations[self->animator.frameID];
+                RSDK.DrawSprite(&self->animator, &self->letterPositions[self->animator.frameID], true);
+            }
+        }
+    }
+#endif
 }
 
 void GameOver_Create(void *data)
@@ -239,7 +252,7 @@ void GameOver_State_ShowMessage(void)
 
     ++self->timer;
 
-    int32 id = globals->gameMode == MODE_COMPETITION ? (self->playerID + 1) : CONT_ANY;
+    int32 id = globals->gameMode == MODE_COMPETITION ? (self->playerID + 1) : INPUT_NONE;
 
     if (ControllerInfo[id].keyA.press || ControllerInfo[id].keyB.press || ControllerInfo[id].keyC.press || ControllerInfo[id].keyX.press
         || ControllerInfo[id].keyStart.press)
@@ -324,7 +337,7 @@ void GameOver_State_ExitLetters(void)
                     globals->playerID &= 0xFF;
                     int32 id                = -1;
                     saveRAM->characterFlags = -1;
-                    for (int32 i = globals->playerID; i > 0; ++id, i >>= 1)
+                    for (int32 i = GET_CHARACTER_ID(1); i > 0; ++id, i >>= 1)
                         ;
                     globals->characterFlags = 1 << id;
                     saveRAM->characterFlags = globals->characterFlags;
@@ -342,7 +355,7 @@ void GameOver_State_ExitLetters(void)
                     globals->playerID &= 0xFF;
                     int32 id                = -1;
                     saveRAM->characterFlags = -1;
-                    for (int32 i = globals->playerID; i > 0; ++id, i >>= 1)
+                    for (int32 i = GET_CHARACTER_ID(1); i > 0; ++id, i >>= 1)
                         ;
                     globals->characterFlags = 1 << id;
                     saveRAM->characterFlags = globals->characterFlags;

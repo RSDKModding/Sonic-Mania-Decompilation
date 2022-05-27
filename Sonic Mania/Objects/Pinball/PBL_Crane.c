@@ -104,10 +104,10 @@ void PBL_Crane_HandlePrizes(void)
             globals->characterFlags |= playerID;
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_BUDDY;
 
-            if (!globals->playerID) {
+            if (!GET_CHARACTER_ID(1)) {
                 globals->playerID |= playerID;
             }
-            else if (!(globals->playerID & 0xFF00)) {
+            else if (!GET_CHARACTER_ID(2)) {
                 globals->playerID |= playerID << 8;
             }
             else if (!globals->stock) {
@@ -121,11 +121,13 @@ void PBL_Crane_HandlePrizes(void)
             }
             break;
         }
+
         case PBL_CRANE_PRIZE_EGGMAN:
             PBL_Setup->rings   = 0;
             PBL_Setup->score   = 0;
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_BAD;
             break;
+
         case PBL_CRANE_PRIZE_RINGS:
             globals->restartRings += PBL_Setup->rings;
             globals->restartRings = clampVal(globals->restartRings, 0, 999);
@@ -138,6 +140,7 @@ void PBL_Crane_HandlePrizes(void)
             PBL_Setup->rings   = 0;
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_RINGS;
             break;
+
         case PBL_CRANE_PRIZE_SHIELD_BLUE:
         case PBL_CRANE_PRIZE_SHIELD_BUBBLE:
         case PBL_CRANE_PRIZE_SHIELD_FIRE:
@@ -146,6 +149,7 @@ void PBL_Crane_HandlePrizes(void)
             globals->restartPowerups |= self->displayAnimator.frameID - 6;
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_ITEM;
             break;
+            
         case PBL_CRANE_PRIZE_TABLE_RESTORE: {
             foreach_all(PBL_Bumper, bumper)
             {

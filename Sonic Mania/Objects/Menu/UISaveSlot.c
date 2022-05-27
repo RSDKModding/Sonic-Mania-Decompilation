@@ -326,11 +326,12 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
     self->drawFX |= FX_FLIP;
     self->direction = FLIP_NONE;
     switch (buddyID) {
+        default: 
+        case ID_SONIC: animator->frameID = 0; break;
         case ID_TAILS: animator->frameID = 1; break;
         case ID_KNUCKLES: animator->frameID = 2; break;
         case ID_MIGHTY: animator->frameID = 3; break;
         case ID_RAY: animator->frameID = 4; break;
-        default: animator->frameID = 0; break;
     }
 
     int32 y = drawY;
@@ -343,11 +344,12 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
     RSDK.DrawSprite(animator, &drawPos, false);
 
     switch (playerID) {
+        default: 
+        case ID_SONIC: animator->frameID = 0; break;
         case ID_TAILS: animator->frameID = 1; break;
         case ID_KNUCKLES: animator->frameID = 2; break;
         case ID_MIGHTY: animator->frameID = 3; break;
         case ID_RAY: animator->frameID = 4; break;
-        default: animator->frameID = 0; break;
     }
 
     y = drawY;
@@ -375,11 +377,12 @@ void UISaveSlot_DrawPlayerIcon_Encore(uint8 playerID, bool32 isSilhouette, uint8
 
         for (int32 f = friendCount - 1; f >= 0; --f) {
             switch (friendIDs[f]) {
+                default: 
+                case ID_SONIC: animator->frameID = 0; break;
                 case ID_TAILS: animator->frameID = 1; break;
                 case ID_KNUCKLES: animator->frameID = 2; break;
                 case ID_MIGHTY: animator->frameID = 3; break;
                 case ID_RAY: animator->frameID = 4; break;
-                default: animator->frameID = 0; break;
             }
             RSDK.DrawSprite(animator, &drawPos, false);
 
@@ -426,11 +429,12 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
 
             if (!buddyID) {
                 switch (playerID) {
+                    default: 
+                    case ID_SONIC: playerID = 0; break;
                     case ID_TAILS: playerID = 1; break;
                     case ID_KNUCKLES: playerID = 2; break;
                     case ID_MIGHTY: playerID = 4; break;
                     case ID_RAY: playerID = 5; break;
-                    default: playerID = 0; break;
                 }
 
                 self->shadowsAnimator.frameID = playerID;
@@ -467,11 +471,12 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
 
         if (!buddyID) {
             switch (playerID) {
+                default: 
+                case ID_SONIC: playerID = 0; break;
                 case ID_TAILS: playerID = 1; break;
                 case ID_KNUCKLES: playerID = 2; break;
                 case ID_MIGHTY: playerID = 4; break;
                 case ID_RAY: playerID = 5; break;
-                default: playerID = 0; break;
             }
 
             self->shadowsAnimator.frameID = playerID;
@@ -523,20 +528,22 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 
         if (self->debugEncoreDraw && SceneInfo->inEditor) {
             switch (UISaveSlot_GetPlayerIDFromID(self->dCharPoint)) {
+                default: 
+                case ID_SONIC: playerID = 0; break;
                 case ID_TAILS: playerID = 1; break;
                 case ID_KNUCKLES: playerID = 2; break;
                 case ID_MIGHTY: playerID = 3; break;
                 case ID_RAY: playerID = 4; break;
-                default: playerID = 0; break;
             }
         }
         else {
             switch (self->saveEncorePlayer) {
+                default: 
+                case ID_SONIC: playerID = 0; break;
                 case ID_TAILS: playerID = 1; break;
                 case ID_KNUCKLES: playerID = 2; break;
                 case ID_MIGHTY: playerID = 3; break;
                 case ID_RAY: playerID = 4; break;
-                default: playerID = 0; break;
             }
         }
     }
@@ -881,7 +888,7 @@ void UISaveSlot_ProcessButtonCB(void)
 
     if (control->position.x == control->targetPos.x) {
         if (control->columnCount > 1) {
-            if (UIControl->keyLeft) {
+            if (UIControl->anyLeftPress) {
                 if (control->buttonID > 0) {
                     control->buttonID--;
                     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
@@ -889,7 +896,7 @@ void UISaveSlot_ProcessButtonCB(void)
                     return;
                 }
             }
-            else if (UIControl->keyRight) {
+            else if (UIControl->anyRightPress) {
                 if (control->buttonID < control->buttonCount - 1) {
                     control->buttonID++;
                     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
@@ -906,7 +913,7 @@ void UISaveSlot_ProcessButtonCB(void)
         String msg;
         INIT_STRING(msg);
 
-        if (UIControl->keyConfirm) {
+        if (UIControl->anyConfirmPress) {
 #if MANIA_USE_PLUS
             if (API.CheckDLC(DLC_PLUS) || self->frameID < 4) {
                 UISaveSlot_SelectedCB();
@@ -919,7 +926,7 @@ void UISaveSlot_ProcessButtonCB(void)
             UISaveSlot_SelectedCB();
 #endif
         }
-        else if (UIControl->keyX && saveRAM->saveState != SAVEGAME_BLANK && self->type == UISAVESLOT_REGULAR) {
+        else if (UIControl->anyXPress && saveRAM->saveState != SAVEGAME_BLANK && self->type == UISAVESLOT_REGULAR) {
             Localization_GetString(&msg, STR_DELETEPOPUP);
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&msg, UISaveSlot_DeleteDLG_CB, NULL, false, true);
             if (dialog) {
@@ -963,12 +970,12 @@ void UISaveSlot_SelectedCB(void)
         foreach_all(UIButtonPrompt, prompt) { prompt->visible = false; }
 
 #if MANIA_USE_PLUS
-        int32 id = API_MostRecentActiveControllerID(1, 0, 5);
+        int32 id = API_MostRecentActiveControllerID(true, false, 5);
 #else
-        int32 id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
 #endif
         API_ResetControllerAssignments();
-        API_AssignControllerID(1, id);
+        API_AssignControllerID(CONT_P1, id);
 
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         RSDK.StopChannel(Music->channelID);
@@ -1172,9 +1179,9 @@ void UISaveSlot_State_NewSave(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     if (control->active == ACTIVE_ALWAYS) {
-        if (UIControl->keyUp)
+        if (UIControl->anyUpPress)
             UISaveSlot_NextCharacter();
-        else if (UIControl->keyDown)
+        else if (UIControl->anyDownPress)
             UISaveSlot_PrevCharacter();
     }
 #endif
@@ -1196,9 +1203,9 @@ void UISaveSlot_StateInput_NewSave(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     if (control->active == ACTIVE_ALWAYS) {
-        if (UIControl->keyUp)
+        if (UIControl->anyUpPress)
             UISaveSlot_NextCharacter();
-        else if (UIControl->keyDown)
+        else if (UIControl->anyDownPress)
             UISaveSlot_PrevCharacter();
     }
 }
@@ -1211,9 +1218,9 @@ void UISaveSlot_State_CompletedSave(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     if (control->active == ACTIVE_ALWAYS) {
-        if (UIControl->keyUp)
+        if (UIControl->anyUpPress)
             UISaveSlot_NextZone();
-        else if (UIControl->keyDown)
+        else if (UIControl->anyDownPress)
             UISaveSlot_PrevZone();
     }
 }

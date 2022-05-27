@@ -263,7 +263,7 @@ enum FunctionTableIDs {
     FunctionTable_ControllerUnknown1,
     FunctionTable_ControllerUnknown2,
     FunctionTable_AssignControllerID,
-    FunctionTable_InputIDIsDisconnected,
+    FunctionTable_InputIDIsConnected,
     FunctionTable_ResetControllerAssignments,
 #endif
 #if !RETRO_REV02

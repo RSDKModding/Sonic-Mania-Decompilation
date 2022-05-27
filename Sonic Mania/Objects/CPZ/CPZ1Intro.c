@@ -237,7 +237,7 @@ bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 30) {
-        if (checkPlayerID(ID_SONIC, 1))
+        if (CHECK_CHARACTER_ID(ID_SONIC, 1))
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED2, &player1->animator, false, 0);
         else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED1, &player1->animator, false, 0);
@@ -273,7 +273,7 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host)
         ParticleHelpers_SetupFallingParticles(debris->position.x, playerY, CPZ1Intro_Particle_CB);
         destroyEntity(debris);
 
-        if (checkPlayerID(ID_TAILS, 2))
+        if (CHECK_CHARACTER_ID(ID_TAILS, 2))
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);
 
         return true;
@@ -288,7 +288,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
     unused(camera);
 
     if (!host->timer) {
-        switch (globals->playerID & 0xFF) {
+        switch (GET_CHARACTER_ID(1)) {
             case ID_SONIC:
                 CPZ1Intro->playerAnimID = 0;
                 player1->state          = Player_State_None;

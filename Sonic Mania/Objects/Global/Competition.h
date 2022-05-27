@@ -52,7 +52,8 @@ void Competition_State_Manager(void);
 #if MANIA_USE_PLUS
 void Competition_ResetOptions(void);
 void Competition_ClearMatchData(void);
-void Competition_CalculateScore(int32 playerID, uint8 flags);
+void Competition_DeriveWinner(int32 playerID, uint8 finishType);
+void Competition_WinMatchFor(int32 playerID);
 #endif
 
 #endif //! OBJ_COMPETITION_H

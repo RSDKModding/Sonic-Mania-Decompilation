@@ -83,7 +83,17 @@ void PBL_Player_StageLoad(void)
         globals->characterFlags = ID_SONIC;
     }
 
-    switch (globals->playerID & 0xFF) {
+    switch (GET_CHARACTER_ID(1)) {
+        default:
+        case ID_SONIC:
+            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
+            PBL_Player->outerBox.top    = -12;
+            PBL_Player->outerBox.bottom = 12;
+            PBL_Player->innerBox.top    = -12;
+            PBL_Player->innerBox.bottom = 12;
+            break;
+
         case ID_TAILS:
             PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/TailsJump.bin", SCOPE_STAGE);
             PBL_Player->ballFrames       = RSDK.LoadMesh("Special/TailsBall.bin", SCOPE_STAGE);
@@ -92,6 +102,7 @@ void PBL_Player_StageLoad(void)
             PBL_Player->innerBox.top    = -10;
             PBL_Player->innerBox.bottom = 10;
             break;
+
         case ID_KNUCKLES:
             PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/KnuxJump.bin", SCOPE_STAGE);
             PBL_Player->ballFrames       = RSDK.LoadMesh("Special/KnuxBall.bin", SCOPE_STAGE);
@@ -100,6 +111,7 @@ void PBL_Player_StageLoad(void)
             PBL_Player->innerBox.top    = -12;
             PBL_Player->innerBox.bottom = 12;
             break;
+
         case ID_MIGHTY:
             PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/MightyJump.bin", SCOPE_STAGE);
             PBL_Player->ballFrames       = RSDK.LoadMesh("Special/MightyBall.bin", SCOPE_STAGE);
@@ -108,6 +120,7 @@ void PBL_Player_StageLoad(void)
             PBL_Player->innerBox.top    = -12;
             PBL_Player->innerBox.bottom = 12;
             break;
+
         case ID_RAY:
             PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/RayJump.bin", SCOPE_STAGE);
             PBL_Player->ballFrames       = RSDK.LoadMesh("Special/RayBall.bin", SCOPE_STAGE);
@@ -115,14 +128,6 @@ void PBL_Player_StageLoad(void)
             PBL_Player->outerBox.bottom = 10;
             PBL_Player->innerBox.top    = -10;
             PBL_Player->innerBox.bottom = 10;
-            break;
-        default:
-            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
-            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
-            PBL_Player->outerBox.top    = -12;
-            PBL_Player->outerBox.bottom = 12;
-            PBL_Player->innerBox.top    = -12;
-            PBL_Player->innerBox.bottom = 12;
             break;
     }
     PBL_Player->outerBox.left  = -10;

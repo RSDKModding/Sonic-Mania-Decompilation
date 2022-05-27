@@ -468,7 +468,7 @@ void Player_Draw(void)
 
     // Copy the colours for any other players so stuff like super forms or etc don't effect the other players aside from P1
     // Used for sidekicks, competition players with the same player or etc
-    if (self->playerID == 1 && (globals->playerID & 0xFF) == ((globals->playerID >> 8) & 0xFF) && globals->gameMode != MODE_TIMEATTACK) {
+    if (self->playerID == 1 && GET_CHARACTER_ID(1) == GET_CHARACTER_ID(2) && globals->gameMode != MODE_TIMEATTACK) {
         uint32 colorStore[6];
         switch (self->characterID) {
             case ID_SONIC:
@@ -561,7 +561,7 @@ void Player_Create(void *data)
                 self->stateAbility = Player_JumpAbility_Sonic;
                 self->sensorY      = 0x140000;
 
-                if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
+                if (globals->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT)) {
                     self->statePeelout = Player_StartPeelout;
                     for (int32 f = 0; f < 4; ++f) {
                         SpriteFrame *dst = RSDK.GetFrame(self->aniFrames, ANI_DASH, f + 1);
@@ -633,7 +633,7 @@ void Player_Create(void *data)
         }
 #endif
         else {
-            API_AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
+            API_AssignControllerID(self->controllerID, INPUT_AUTOASSIGN);
             self->stateInput = Player_Input_P2_AI;
             self->sidekick   = true;
         }
@@ -696,13 +696,13 @@ void Player_StageLoad(void)
     if (!globals->playerID)
         globals->playerID = RSDK.CheckStageFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
 
-    SceneInfo->debugMode = globals->medalMods & getMod(MEDAL_DEBUGMODE);
+    SceneInfo->debugMode = globals->medalMods & GET_MEDAL_MOD(MEDAL_DEBUGMODE);
     SceneInfo->debugMode = true; // TODO: TEMP
 #if MANIA_USE_PLUS
     RSDK.AddViewableVariable("Debug Mode", &SceneInfo->debugMode, VIEWVAR_BOOL, false, true);
 #endif
 
-    if (globals->medalMods & getMod(MEDAL_ANDKNUCKLES)) {
+    if (globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) {
         globals->playerID &= 0xFF;
         globals->playerID |= ID_KNUCKLES_ASSIST;
     }
@@ -783,14 +783,14 @@ void Player_LoadSprites(void)
 {
     foreach_all(Player, entity)
     {
-        int32 pID = globals->playerID & 0xFF;
+        int32 pID = GET_CHARACTER_ID(1);
 #if MANIA_USE_PLUS
         if (pID == ID_MIGHTY || pID == ID_RAY)
             pID = ID_SONIC;
 #endif
 
         if (pID & entity->characterID) {
-            entity->characterID = globals->playerID & 0xFF;
+            entity->characterID = GET_CHARACTER_ID(1);
             switch (entity->characterID) {
                 default:
                 case ID_SONIC:
@@ -820,7 +820,7 @@ void Player_LoadSprites(void)
         }
     }
 
-    if (((globals->playerID >> 8) & 0xFF) > 0) {
+    if (GET_CHARACTER_ID(2) > 0) {
         EntityPlayer *leader   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
@@ -868,7 +868,7 @@ void Player_LoadSpritesVS(void)
             for (int32 i = 0; i < session->playerCount; ++i, ++slotID) {
                 EntityPlayer *player = RSDK_GET_ENTITY(slotID, Player);
                 RSDK.CopyEntity(player, entity, false);
-                player->characterID = (globals->playerID >> (8 * i)) & 0xFF;
+                player->characterID = GET_CHARACTER_ID(1 + i);
                 switch (player->characterID) {
                     default:
                     case ID_SONIC:
@@ -997,7 +997,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
             entity->stateAbility = Player_JumpAbility_Sonic;
             entity->sensorY      = 0x140000;
 
-            if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
+            if (globals->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT)) {
                 entity->statePeelout = Player_StartPeelout;
                 for (int32 f = 0; f < 4; ++f) {
                     SpriteFrame *dst = RSDK.GetFrame(entity->aniFrames, ANI_DASH, f);
@@ -1188,7 +1188,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks)
 
 #if MANIA_USE_PLUS
     RSDK.StopSfx(Player->sfxSwapFail);
-    if (globals->medalMods & getMod(SECRET_SUPERDASH))
+    if (globals->medalMods & GET_MEDAL_MOD(SECRET_SUPERDASH))
         player->stateAbility = ERZStart_Player_StartSuperFly;
 #endif
 
@@ -1956,24 +1956,20 @@ void Player_HandleDeath(EntityPlayer *player)
                     if (Zone->gotTimeOver) {
                         // Time Over!!
                         player->classID = TYPE_BLANK;
+                        RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, intToVoid(true));
 
                         EntitySaveGame *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
                             int32 playerID                    = RSDK.GetEntityID(player);
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                             if (!session->finishState[playerID]) {
-#if MANIA_USE_PLUS
-                                Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
-#else
-                        CompetitionSession_DeriveWinner(playerID, FINISHFLAG_TIMEOVER);
-#endif
+                                CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
                             }
 #if MANIA_USE_PLUS
                             foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
 #endif
                         }
                         else if (saveRAM) {
-                            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, intToVoid(true));
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;
                             saveRAM->score1UP = player->score1UP;
@@ -1993,12 +1989,13 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
 
                             SaveGame_SaveFile(StateMachine_None);
-
-                            EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
-                            gameOver->activeScreens |= 1 << player->playerID;
-                            RSDK.SetEngineState(ENGINESTATE_FROZEN);
-                            SceneInfo->timeEnabled = false;
                         }
+
+                        EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
+                        gameOver->playerID       = RSDK.GetEntityID(player);
+                        GameOver->activeScreens |= 1 << player->playerID;
+                        RSDK.SetEngineState(ENGINESTATE_FROZEN);
+                        SceneInfo->timeEnabled = false;
                     }
                     else if (globals->gameMode != MODE_COMPETITION) {
                         // Regular Death, fade out and respawn
@@ -2052,12 +2049,8 @@ void Player_HandleDeath(EntityPlayer *player)
                         int32 playerID                    = RSDK.GetEntityID(player);
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         if (!session->finishState[playerID]) {
-#if MANIA_USE_PLUS
-                            Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
-#else
-                    CompetitionSession_DeriveWinner(playerID, FINISHFLAG_TIMEOVER);
-                    showGameOver = true;
-#endif
+                            CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
+                            showGameOver = !MANIA_USE_PLUS;
                         }
 #if MANIA_USE_PLUS
                         foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
@@ -2647,7 +2640,7 @@ bool32 Player_CheckItemBreak(EntityPlayer *player, void *e, bool32 hitIfNotAttac
         }
         else if (player->position.y >= entity->position.y
 #if MANIA_USE_PLUS
-                 || (checkPlayerID(ID_MIGHTY, 1) && anim == ANI_DROPDASH)
+                 || (CHECK_CHARACTER_ID(ID_MIGHTY, 1) && anim == ANI_DROPDASH)
 #endif
         ) {
             player->velocity.y -= 0x10000;
@@ -5951,6 +5944,9 @@ void Player_State_Victory(void)
                     self->onGround = false;
                 }
                 break;
+            
+            default:
+            case ID_TAILS: self->groundVel = 0; break;
 
             case ID_KNUCKLES:
                 if (self->animator.frameID != 2 || self->animator.timer != 3) {
@@ -5989,8 +5985,6 @@ void Player_State_Victory(void)
                 }
                 break;
 #endif
-            default:
-            case ID_TAILS: self->groundVel = 0; break;
         }
 
         if (self->camera)
@@ -6068,14 +6062,14 @@ void Player_JumpAbility_Sonic(void)
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
                 if (self->invincibleTimer) {
                     if (shield->classID != Shield->classID || shield->shieldAnimator.animationID != 10) {
-                        if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
+                        if (!(globals->medalMods & GET_MEDAL_MOD(MEDAL_NODROPDASH)))
                             ++self->jumpAbilityState;
                     }
                 }
                 else {
                     switch (self->shield) {
                         case SHIELD_NONE:
-                            if (globals->medalMods & getMod(MEDAL_INSTASHIELD)) {
+                            if (globals->medalMods & GET_MEDAL_MOD(MEDAL_INSTASHIELD)) {
                                 self->invincibleTimer  = -8;
                                 self->jumpAbilityState = 0;
                                 RSDK.PlaySfx(Shield->sfxInstaShield, false, 255);
@@ -6090,7 +6084,7 @@ void Player_JumpAbility_Sonic(void)
                             // returns 0 if dropdash (bit 4) is disabled
                             // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
                             // returns 2 if dropdash AND instashield are enabled
-                            if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
+                            if (!(globals->medalMods & GET_MEDAL_MOD(MEDAL_NODROPDASH)))
                                 self->jumpAbilityState = ((~(globals->medalMods & 0xFF) >> 3) & 2);
                             break;
 
@@ -6735,7 +6729,7 @@ void Player_Input_P2_Player(void)
     RSDK_THIS(Player);
 
     if (self->controllerID <= CONT_P4) {
-        if (!API_InputIDIsDisconnected(self->controllerID)) {
+        if (API_ControllerIsAssigned(self->controllerID)) {
             self->up    = ControllerInfo[self->controllerID].keyUp.down;
             self->down  = ControllerInfo[self->controllerID].keyDown.down;
             self->left  = ControllerInfo[self->controllerID].keyLeft.down;
@@ -6763,11 +6757,7 @@ void Player_Input_P2_Player(void)
             }
             else if (++Player->aiInputSwapTimer >= 600) {
                 self->stateInput = Player_Input_P2_AI;
-#if MANIA_USE_PLUS
-                RSDK.AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
-#else
-                APICallback_AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
-#endif
+                API_AssignControllerID(self->controllerID, INPUT_AUTOASSIGN);
             }
 
             if (ControllerInfo[self->controllerID].keyStart.press && SceneInfo->state == ENGINESTATE_REGULAR) {
@@ -6782,7 +6772,7 @@ void Player_Input_P2_Player(void)
         }
         else {
             self->stateInput = Player_Input_P2_AI;
-            API_AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
+            API_AssignControllerID(self->controllerID, INPUT_AUTOASSIGN);
         }
     }
 }

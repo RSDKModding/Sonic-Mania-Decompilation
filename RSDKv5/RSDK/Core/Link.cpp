@@ -459,7 +459,7 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_ControllerUnknown1, ControllerUnknown1);
     ADD_RSDK_FUNCTION(FunctionTable_ControllerUnknown2, ControllerUnknown2);
     ADD_RSDK_FUNCTION(FunctionTable_AssignControllerID, AssignControllerID);
-    ADD_RSDK_FUNCTION(FunctionTable_InputIDIsDisconnected, InputIDIsDisconnected);
+    ADD_RSDK_FUNCTION(FunctionTable_InputIDIsConnected, InputIDIsConnected);
     ADD_RSDK_FUNCTION(FunctionTable_ResetControllerAssignments, ResetControllerAssignments);
 #endif
 #if !RETRO_REV02

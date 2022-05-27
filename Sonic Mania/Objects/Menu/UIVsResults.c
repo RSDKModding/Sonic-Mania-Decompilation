@@ -210,11 +210,13 @@ void UIVsResults_DrawTrophies(void)
     }
 
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &self->trophyAnimator, true, 17);
-    for (; count >= 1; drawPos.x += 0xE0000) {
+    for (; count >= 1;) {
         count--;
 
         if (count > 0 || !self->isLoser || (UIControl->timer & 0x10))
             RSDK.DrawSprite(&self->trophyAnimator, &drawPos, false);
+
+        drawPos.x += 0xE0000;
     }
 }
 #endif
@@ -255,8 +257,8 @@ void UIVsResults_DrawResults(void)
 
     UIVsResults_DrawTrophies();
 #else
-    drawPos.x = self->position.x + (self->playerID ? 0x2D0000 : -0x2D0000);
-    drawPos.y = self->position.y - 0x1D8000;
+    drawPos.x = self->position.x - 0x2D0000;
+    drawPos.y = self->position.y + 0x1D8000;
     for (int32 r = 0; r < self->numRows; ++r) {
         UIVsResults_DrawRow(r, drawPos.x, drawPos.y);
 
@@ -265,7 +267,7 @@ void UIVsResults_DrawResults(void)
             drawPos.y += 0x20000;
     }
 
-    drawPos.x = self->position.x + 0x2D0000;
+    drawPos.x = self->position.x + (self->playerID ? 0x2D0000 : -0x2D0000);
     drawPos.y = self->position.y - 0x1D8000;
     RSDK.DrawSprite(&self->edgeAnimator, &drawPos, false);
 

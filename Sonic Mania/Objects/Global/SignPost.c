@@ -41,12 +41,14 @@ void SignPost_Draw(void)
                 RSDK.DrawSprite(face, &drawPos, false);
                 drawPos.x += -0xC00 * self->scale.x - (scale << 9);
                 break;
+
             case 1:
             case 3:
                 drawPos.x = self->position.x - (scale << 9);
                 RSDK.DrawSprite(face, &drawPos, false);
                 drawPos.x += (scale + 2 * (3 * self->scale.x - 32)) << 9;
                 break;
+
             default: break;
         }
         self->scale.x = scale;
@@ -74,14 +76,19 @@ void SignPost_Create(void *data)
     if (!SceneInfo->inEditor) {
         if (globals->gameMode != MODE_TIMEATTACK) {
             RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_EGGMAN, &self->eggPlateAnimator, true, 0);
-            switch (globals->playerID & 0xFF) {
+            switch (GET_CHARACTER_ID(1)) {
+                default:
+                case ID_SONIC: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0); break;
+
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0); break;
+
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0); break;
+
 #if MANIA_USE_PLUS
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &self->facePlateAnimator, true, 0); break;
+
                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &self->facePlateAnimator, true, 0); break;
 #endif
-                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0); break;
             }
             RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &self->postTopAnimator, true, 0);
             RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &self->sidebarAnimator, true, 1);
@@ -130,6 +137,7 @@ void SignPost_Create(void *data)
                         destroy      = false;
                     }
                     break;
+
                 case SIGNPOST_HIDDEN: // Hidden (Until Dropped)
                     if (globals->gameMode != MODE_COMPETITION) {
                         self->active = ACTIVE_XBOUNDS;
@@ -137,6 +145,7 @@ void SignPost_Create(void *data)
                         destroy      = false;
                     }
                     break;
+
                 case SIGNPOST_NORMAL_VS: // Normal (Competition Only)
                     if (globals->gameMode == MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
@@ -144,6 +153,7 @@ void SignPost_Create(void *data)
                         destroy      = false;
                     }
                     break;
+
                 case SIGNPOST_DECOR: // Decoration
                     if (globals->gameMode != MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
@@ -359,11 +369,7 @@ void SignPost_CheckTouch(void)
                         session->time[player->playerID].milliseconds = SceneInfo->milliseconds;
                         session->score[player->playerID]             = player->score;
                         session->lives[player->playerID]             = player->lives;
-#if MANIA_USE_PLUS
-                        Competition_CalculateScore(player->playerID, FINISHFLAG_FINISHED);
-#else
-                        CompetitionSession_DeriveWinner(player->playerID, FINISHFLAG_FINISHED);
-#endif
+                        CompSession_DeriveWinner(player->playerID, FINISHTYPE_PASSEDSIGNPOST);
 
                         self->activePlayers |= (1 << p);
                         if (self->activePlayers == SignPost->maxPlayerCount)
@@ -373,18 +379,25 @@ void SignPost_CheckTouch(void)
                     else {
 #if MANIA_USE_PLUS
                         if (globals->gameMode == MODE_ENCORE) {
-                            switch (globals->playerID & 0xFF) {
+                            switch (GET_CHARACTER_ID(1)) {
+                                default:
+                                case ID_SONIC:
+                                    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0);
+                                    break;
+
                                 case ID_TAILS:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0);
                                     break;
+
                                 case ID_KNUCKLES:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0);
                                     break;
+
                                 case ID_MIGHTY:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &self->facePlateAnimator, true, 0);
                                     break;
+
                                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &self->facePlateAnimator, true, 0); break;
-                                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0); break;
                             }
                         }
 #endif
@@ -473,14 +486,15 @@ void SignPost_State_Fall(void)
     if (self->type == SIGNPOST_HIDDEN) {
         self->type = SIGNPOST_NORMAL;
         if (globals->gameMode < MODE_COMPETITION) {
-            switch (globals->playerID & 0xFF) {
+            switch (GET_CHARACTER_ID(1)) {
+                default: 
+                case ID_SONIC: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0); break;
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0); break;
 #if MANIA_USE_PLUS
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &self->facePlateAnimator, true, 0); break;
                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &self->facePlateAnimator, true, 0); break;
 #endif
-                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0); break;
             }
         }
     }

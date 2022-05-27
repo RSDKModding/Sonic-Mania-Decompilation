@@ -294,23 +294,23 @@ void UIButton_ProcessButtonCB_Scroll(void)
 
         bool32 changedSelection = false;
         if (control->rowCount > 1) {
-            if (UIControl->keyUp) {
+            if (UIControl->anyUpPress) {
                 --rowID;
                 changedSelection = true;
             }
 
-            if (UIControl->keyDown) {
+            if (UIControl->anyDownPress) {
                 ++rowID;
                 changedSelection = true;
             }
         }
 
-        if (UIControl->keyLeft) {
+        if (UIControl->anyLeftPress) {
             --colID;
             changedSelection = true;
         }
 
-        if (UIControl->keyRight) {
+        if (UIControl->anyRightPress) {
             ++colID;
             changedSelection = true;
         }
@@ -372,7 +372,7 @@ void UIButton_ProcessButtonCB_Scroll(void)
         }
         else {
             bool32 hasNoAction = true;
-            if (UIControl->keyConfirm) {
+            if (UIControl->anyConfirmPress) {
                 if (self->disabled) {
                     StateMachine_Run(self->failCB);
                 }
@@ -536,12 +536,12 @@ void UIButton_ProcessButtonCB(void)
 
     bool32 movedV = false;
     if (control->rowCount > 1) {
-        if (UIControl->keyUp) {
+        if (UIControl->anyUpPress) {
             movedV = true;
             --rowID;
         }
 
-        if (UIControl->keyDown) {
+        if (UIControl->anyDownPress) {
             movedV = true;
             rowID++;
         }
@@ -557,7 +557,7 @@ void UIButton_ProcessButtonCB(void)
         SceneInfo->entity = entStore;
     }
     else {
-        if (UIControl->keyLeft) {
+        if (UIControl->anyLeftPress) {
             if (self->choiceCount <= 0 || self->choiceDir || self->disabled) {
                 if (control->columnCount > 1) {
                     movedV = true;
@@ -584,7 +584,7 @@ void UIButton_ProcessButtonCB(void)
             }
         }
 
-        if (UIControl->keyRight) {
+        if (UIControl->anyRightPress) {
             if (self->choiceCount <= 0 || self->choiceDir || self->disabled) {
                 if (control->columnCount > 1) {
                     ++columnID;
@@ -673,7 +673,7 @@ void UIButton_ProcessButtonCB(void)
     else {
         StateMachine(actionCB) = UIButton_GetActionCB();
 
-        if (UIControl->keyConfirm && (!UIChoice || actionCB)) {
+        if (UIControl->anyConfirmPress && (!UIChoice || actionCB)) {
             if (self->disabled || (self->choiceCount > 0 && choice->disabled))
                 RSDK.PlaySfx(UIWidgets->sfxFail, false, 255);
             else
@@ -777,16 +777,16 @@ void UIButton_SelectedCB(void)
 
     if (self->assignsP1) {
 #if MANIA_USE_PLUS
-        int32 id = API_MostRecentActiveControllerID(0, 0, 0);
+        int32 id = API_MostRecentActiveControllerID(false, false, 0);
 #else
-        int32 id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(CONT_P1, id);
     }
 
     if (self->freeBindP2)
-        API_AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
+        API_AssignControllerID(CONT_P2, INPUT_AUTOASSIGN);
 
     parent->backoutTimer = 30;
 

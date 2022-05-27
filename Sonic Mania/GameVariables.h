@@ -29,7 +29,8 @@ typedef enum {
     ID_DEFAULT_PLAYER  = ID_SONIC | ID_TAILS_ASSIST,
 } PlayerIDs;
 
-#define checkPlayerID(characterID, plrID) (((globals->playerID >> (8 * ((plrID)-1))) & 0xFF) == (characterID))
+#define GET_CHARACTER_ID(playerNum)            (((globals->playerID >> (8 * ((playerNum)-1))) & 0xFF))
+#define CHECK_CHARACTER_ID(characterID, plrID) (((globals->playerID >> (8 * ((plrID)-1))) & 0xFF) == (characterID))
 
 typedef enum { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT } ItemModes;
 
@@ -43,7 +44,7 @@ typedef enum {
     MEDAL_NOTIMEOVER,
 #endif
 } MedalMods;
-#define getMod(medal) (1 << medal)
+#define GET_MEDAL_MOD(medal) (1 << medal)
 
 typedef enum { FORCE_SPLIT = 2 } ScreenSplit;
 
@@ -237,12 +238,10 @@ extern GlobalVariables *globals;
 #endif
 
 // used mainly for cutscenes
-#define MANIA_GET_PLAYER(p1, p2, cam)                                                                                                                 \
+#define MANIA_GET_PLAYER(p1, p2, cam)                                                                                                                \
     EntityPlayer *p1  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);                                                                                       \
     EntityPlayer *p2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);                                                                                       \
     EntityCamera *cam = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-
-
 
 // "Base" Classes
 #define MANIA_PLATFORM_BASE                                                                                                                          \

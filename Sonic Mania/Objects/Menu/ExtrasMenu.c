@@ -113,9 +113,9 @@ void ExtrasMenu_SetupActions(void)
 void ExtrasMenu_ProcessMedallionCheat(void)
 {
     int32 key = 0;
-    if (UIControl->keyLeft)
+    if (UIControl->anyLeftPress)
         key = 1;
-    else if (UIControl->keyRight)
+    else if (UIControl->anyRightPress)
         key = 2;
 
     if (key) {

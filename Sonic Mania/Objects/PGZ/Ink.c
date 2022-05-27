@@ -37,6 +37,7 @@ void Ink_Update(void)
                     case ID_SONIC: RSDK.CopyPalette(self->type + 3, 2, 0, 2, 6); break;
 
                     case ID_TAILS: RSDK.CopyPalette(self->type + 3, 70, 0, 70, 6); break;
+                    
                     case ID_KNUCKLES: RSDK.CopyPalette(self->type + 3, 80, 0, 80, 6); break;
 
                     // This is an unused object that was scrapped before plus was created, so there's no mighty/ray code

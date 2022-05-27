@@ -1035,7 +1035,7 @@ void PhantomEgg_State_Exploding(void)
         self->position.x = PhantomEgg->boundsM;
         self->position.y = PhantomEgg->boundsB - 0x400000;
 
-        bool32 goodEnd = (checkPlayerID(ID_SONIC, 1) || (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2)))
+        bool32 goodEnd = (CHECK_CHARACTER_ID(ID_SONIC, 1) || (CHECK_CHARACTER_ID(ID_KNUCKLES, 1) && CHECK_CHARACTER_ID(ID_KNUCKLES, 2)))
                          && SaveGame->saveRAM->chaosEmeralds == 0b01111111;
 
 #if MANIA_USE_PLUS

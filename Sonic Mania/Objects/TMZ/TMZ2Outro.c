@@ -102,7 +102,7 @@ bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
     bool32 finishedMoving = true;
     foreach_active(Player, player)
     {
-        if (player->sidekick && player->characterID == ID_KNUCKLES && !checkPlayerID(ID_KNUCKLES, 1)) {
+        if (player->sidekick && player->characterID == ID_KNUCKLES && !CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
             if (player->stateInput != TMZ2Outro_PlayerStateInput_Escape) {
                 Zone->playerBoundActiveR[0] = false;
                 player->stateInput          = TMZ2Outro_PlayerStateInput_Escape;
@@ -140,7 +140,7 @@ bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
     if (finishedMoving) {
         foreach_active(Player, player2)
         {
-            if (player2->sidekick && (player2->characterID != ID_KNUCKLES || checkPlayerID(ID_KNUCKLES, 2)))
+            if (player2->sidekick && (player2->characterID != ID_KNUCKLES || CHECK_CHARACTER_ID(ID_KNUCKLES, 2)))
                 player2->stateInput = Player_Input_P2_AI;
         }
     }
@@ -633,7 +633,7 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
     if (!(SceneInfo->filter & FILTER_ENCORE))
 #endif
         hasGoodEnding =
-            (checkPlayerID(ID_SONIC, 1) || (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2))) && SaveGame->saveRAM->chaosEmeralds == 0x7F;
+            (CHECK_CHARACTER_ID(ID_SONIC, 1) || (CHECK_CHARACTER_ID(ID_KNUCKLES, 1) && CHECK_CHARACTER_ID(ID_KNUCKLES, 2))) && SaveGame->saveRAM->chaosEmeralds == 0x7F;
 
     bool32 isSaveSlot = false;
     if (!hasGoodEnding)
@@ -670,19 +670,24 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
         }
         else {
 #endif
-            switch (globals->playerID & 0xFF) {
+            switch (GET_CHARACTER_ID(1)) {
+                default: 
+                case ID_SONIC: RSDK.SetScene("Videos", "Bad End - Sonic"); break;
+
                 case ID_TAILS: RSDK.SetScene("Videos", "Bad End - Tails"); break;
+
                 case ID_KNUCKLES:
-                    if (checkPlayerID(ID_KNUCKLES, 2))
+                    if (CHECK_CHARACTER_ID(ID_KNUCKLES, 2))
                         RSDK.SetScene("Videos", "True End?");
                     else
                         RSDK.SetScene("Videos", "Bad End - Knux");
                     break;
+
 #if MANIA_USE_PLUS
                 case ID_MIGHTY: RSDK.SetScene("Videos", "Bad End - Mighty"); break;
+
                 case ID_RAY: RSDK.SetScene("Videos", "Bad End - Ray"); break;
 #endif
-                default: RSDK.SetScene("Videos", "Bad End - Sonic"); break;
             }
 #if MANIA_USE_PLUS
         }

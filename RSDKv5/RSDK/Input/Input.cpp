@@ -5,8 +5,8 @@ using namespace RSDK;
 InputDevice *RSDK::InputDevices[INPUTDEVICE_COUNT];
 int32 RSDK::InputDeviceCount = 0;
 
-int32 RSDK::activeControllers[PLAYER_COUNT];
-InputDevice *RSDK::activeInputDevices[PLAYER_COUNT];
+int32 RSDK::activeControllers[PLAYER_COUNT]         = { INPUT_NONE, INPUT_NONE, INPUT_NONE, INPUT_NONE };
+InputDevice *RSDK::activeInputDevices[PLAYER_COUNT] = { NULL, NULL, NULL, NULL };
 
 ControllerState RSDK::controller[PLAYER_COUNT + 1];
 AnalogState RSDK::stickL[PLAYER_COUNT + 1];
@@ -19,10 +19,6 @@ TouchMouseData RSDK::touchMouseData;
 
 GamePadMappings *RSDK::gamePadMappings = NULL;
 int32 RSDK::gamePadCount               = 0;
-
-#if !RETRO_REV02
-int32 RSDK::mostRecentControllerID = -1;
-#endif
 
 #if RETRO_INPUTDEVICE_KEYBOARD
 #include "Keyboard/KBInputDevice.cpp"
@@ -63,8 +59,12 @@ void RSDK::RemoveInputDevice(InputDevice *targetDevice)
                 for (int32 id = d + 1; id < InputDeviceCount; ++id) InputDevices[id - 1] = InputDevices[id];
 
                 for (int32 id = 0; id < PLAYER_COUNT; ++id) {
-                    if (activeControllers[id] == inputID)
+                    if (activeControllers[id] == inputID) {
+#if !RETRO_REV02
+                        activeControllers[id] = INPUT_NONE;
+#endif
                         activeInputDevices[id] = NULL;
+                    }
                 }
 
                 for (int32 id = 0; id < PLAYER_COUNT; ++id) {
@@ -82,10 +82,13 @@ void RSDK::RemoveInputDevice(InputDevice *targetDevice)
 
 void RSDK::InitInputDevices()
 {
-    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
-        activeControllers[i]  = CONT_ANY;
-        activeInputDevices[i] = NULL;
-    }
+#if !RETRO_USE_ORIGINAL_CODE
+    // default the controller state to "auto assign" rather than "none"
+    // this fixes the "controller disconnected" popup since the engine handles the autoassign
+    // without this, the engine has to wait for the game to tell the engine to start autoassignments
+    for (int32 i = 0; i < PLAYER_COUNT; ++i)
+        activeControllers[i]  = INPUT_AUTOASSIGN;
+#endif
 
 #if RETRO_INPUTDEVICE_KEYBOARD
     SKU::InitKeyboardInputAPI();
@@ -115,7 +118,7 @@ void RSDK::InitInputDevices()
 void RSDK::ClearInput()
 {
     for (int32 i = 0; i <= PLAYER_COUNT; ++i) {
-        if (i != 0 && activeControllers[i - 1] == CONT_UNASSIGNED)
+        if (i != 0 && activeControllers[i - 1] == INPUT_UNASSIGNED)
             continue;
 
         controller[i].keyUp.press     = false;
@@ -174,17 +177,17 @@ void RSDK::ProcessInput()
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         int32 assign = activeControllers[i];
-        if (assign && assign != CONT_UNASSIGNED) {
-            if (assign == CONT_AUTOASSIGN) {
+        if (assign && assign != INPUT_UNASSIGNED) {
+            if (assign == INPUT_AUTOASSIGN) {
                 int32 id             = GetControllerInputID();
                 activeControllers[i] = id;
                 if (id != -1)
-                    AssignControllerID(i + 1, id);
+                    AssignControllerID(CONT_P1 + i, id);
             }
             else {
                 InputDevice *device = activeInputDevices[i];
                 if (device && device->inputID == assign && device->active)
-                    device->ProcessInput(i + 1);
+                    device->ProcessInput(CONT_P1 + i);
             }
         }
     }
@@ -194,7 +197,7 @@ void RSDK::ProcessInput()
 #endif
 
     for (int32 c = 0; c <= PLAYER_COUNT; ++c) {
-        if (c <= 0 || activeControllers[c - 1] != CONT_UNASSIGNED) {
+        if (c <= 0 || activeControllers[c - 1] != INPUT_UNASSIGNED) {
             InputState *cont[] = {
                 &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
                 &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,

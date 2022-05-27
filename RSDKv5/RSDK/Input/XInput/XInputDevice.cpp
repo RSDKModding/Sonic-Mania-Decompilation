@@ -79,27 +79,21 @@ void InputDeviceXInput::UpdateInput()
                 this->vDelta_R = this->vDelta_R * ((fminf(32767.0, div) - 7864.0) / 24903.0);
             }
 
-            if (this->stateBumper_L)
-                this->deadzoneLTrigger = 1.0;
-            else
-                this->deadzoneLTrigger = 0.0;
+            this->deltaBumper_L = this->stateBumper_L ? 1.0 : 0.0;
 
-            this->deltaLTrigger = gamePad->bLeftTrigger;
-            if (this->deltaLTrigger <= 30.0)
-                this->deltaLTrigger = 0.0;
+            this->deltaTrigger_L = gamePad->bLeftTrigger;
+            if (this->deltaTrigger_L <= 30.0)
+                this->deltaTrigger_L = 0.0;
             else
-                this->deltaLTrigger = (this->deltaLTrigger - 30.0) / 225.0;
+                this->deltaTrigger_L = (this->deltaTrigger_L - 30.0) / 225.0;
 
-            if (this->stateBumper_R)
-                this->deadzoneRTrigger = 1.0;
-            else
-                this->deadzoneRTrigger = 0.0;
+            this->deltaBumper_R = this->stateBumper_R ? 1.0 : 0.0;
 
-            this->deltaRTrigger = gamePad->bRightTrigger;
-            if (this->deltaRTrigger <= 30.0)
-                this->deltaRTrigger = 0.0;
+            this->deltaTrigger_R = gamePad->bRightTrigger;
+            if (this->deltaTrigger_R <= 30.0)
+                this->deltaTrigger_R = 0.0;
             else
-                this->deltaRTrigger = (this->deltaRTrigger - 30.0) / 225.0;
+                this->deltaTrigger_R = (this->deltaTrigger_R - 30.0) / 225.0;
         }
 
         this->ProcessInput(CONT_ANY);
@@ -137,12 +131,12 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
 
     triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
-    triggerL[controllerID].deadzone = this->deadzoneLTrigger;
-    triggerL[controllerID].delta    = this->deltaLTrigger;
+    triggerL[controllerID].bumperDelta  = this->deltaBumper_L;
+    triggerL[controllerID].triggerDelta = this->deltaTrigger_L;
 
     triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
-    triggerR[controllerID].deadzone = this->deadzoneRTrigger;
-    triggerR[controllerID].delta    = this->deltaRTrigger;
+    triggerR[controllerID].bumperDelta  = this->deltaBumper_R;
+    triggerR[controllerID].triggerDelta = this->deltaTrigger_R;
 #else
     controller[controllerID].keyStickL.press |= this->stateStick_L;
     stickL[controllerID].hDeltaL = this->hDelta_L;
@@ -158,11 +152,11 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
     stickL[controllerID].vDeltaL = this->vDelta_R;
 
     controller[controllerID].keyBumperL.press |= this->stateBumper_L;
-    stickL[controllerID].deadzone      = this->deadzoneLTrigger;
-    stickL[controllerID].triggerDeltaL = this->deltaLTrigger;
+    stickL[controllerID].deadzone      = this->deltaBumper_L;
+    stickL[controllerID].triggerDeltaL = this->deltaTrigger_L;
 
     controller[controllerID].keyBumperR.press |= this->stateBumper_R;
-    stickL[controllerID].triggerDeltaR = this->deltaRTrigger;
+    stickL[controllerID].triggerDeltaR = this->deltaTrigger_R;
 #endif
 }
 

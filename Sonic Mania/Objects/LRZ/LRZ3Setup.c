@@ -57,7 +57,7 @@ void LRZ3Setup_StageLoad(void)
             }
         }
         else {
-            if (!checkPlayerID(ID_KNUCKLES, 1)) {
+            if (!CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
                 Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;
             }
             else {
@@ -67,7 +67,7 @@ void LRZ3Setup_StageLoad(void)
             }
         }
 #else
-        if (checkPlayerID(ID_KNUCKLES, 1)) 
+        if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) 
             LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->classID);
 
         if (LRZ3Setup->cutsceneOutroK)

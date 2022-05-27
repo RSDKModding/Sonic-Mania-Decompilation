@@ -174,10 +174,10 @@ void UIVsRoundPicker_ProcessButtonCB(void)
 
     int32 selection = self->val;
 
-    if (UIControl->keyLeft && self->val > 1)
+    if (UIControl->anyLeftPress && self->val > 1)
         self->val--;
 
-    if (UIControl->keyRight && self->val < self->maxVal)
+    if (UIControl->anyRightPress && self->val < self->maxVal)
         ++self->val;
 
     if (selection != self->val)

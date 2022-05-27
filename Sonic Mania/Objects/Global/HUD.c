@@ -45,6 +45,7 @@ void HUD_LateUpdate(void)
         if (SceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER && SaveGame->saveRAM->chaosEmeralds >= 0b01111111) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV)
                 HUD_GetActionButtonFrames();
+
             if (self->superButtonPos < 0x180000)
                 self->superButtonPos += 0x80000;
         }
@@ -127,7 +128,7 @@ void HUD_Draw(void)
 #if MANIA_GAMEVER != VER_100
 #if MANIA_USE_PLUS
     self->timeFlashFrame = 0;
-    if ((SceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER))) && ActClear->disableTimeBonus)
+    if ((SceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER))) && ActClear->disableTimeBonus)
         self->timeFlashFrame = (Zone->persistentTimer >> 3) & 1;
 #else
     if (SceneInfo->minutes == 9 && globals->gameMode < MODE_TIMEATTACK)
@@ -167,7 +168,7 @@ void HUD_Draw(void)
         // Draw Minutes
         lifePos.x -= 0x90000;
 #if MANIA_USE_PLUS
-        if (SceneInfo->minutes > 9 && globals->medalMods & getMod(MEDAL_NOTIMEOVER))
+        if (SceneInfo->minutes > 9 && globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER))
             HUD_DrawNumbersBase10(&lifePos, SceneInfo->minutes, 2);
         else
 #endif
@@ -595,11 +596,11 @@ void HUD_GetButtonFrame(Animator *animator, int32 buttonID)
         // Keyboard
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if MANIA_USE_PLUS
-        int32 id = RSDK.ControllerIDForInputID(player->controllerID);
+        int32 id = API_ControllerIDForInputID(player->controllerID);
 #else
-        int32 id             = CONT_ANY;
+        int32 id = INPUT_NONE;
 #endif
-        int32 contID = id == CONT_UNASSIGNED ? CONT_P1 : player->controllerID;
+        int32 contID = id == INPUT_UNASSIGNED ? CONT_P1 : player->controllerID;
 
         int32 map = 0;
         switch (buttonID) {
@@ -718,7 +719,7 @@ void HUD_State_GoOffScreen(void)
     if (lifeOffset->x < -0x500000) {
         if (globals->gameMode == MODE_COMPETITION) {
             *statePtr = StateMachine_None;
-            Competition_CalculateScore(self->screenID, FINISHFLAG_TIMEOVER);
+            CompSession_DeriveWinner(self->screenID, FINISHTYPE_GAMEOVER);
             EntityGameOver *gameOver   = RSDK_GET_ENTITY(self->screenID + Player->playerCount, GameOver);
             EntityCompetition *manager = Competition->sessionManager;
 

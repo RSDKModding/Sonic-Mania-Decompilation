@@ -8,47 +8,49 @@
 #define sku_language SKU->language
 #define sku_region   SKU->region
 
-#define API_GetConfirmButtonFlip         API.GetConfirmButtonFlip
-#define API_UnlockAchievement            API.UnlockAchievement
-#define API_SetRichPresence              API.SetRichPresence
-#define API_LaunchManual                 API.LaunchManual
-#define API_LoadUserFile                 API.LoadUserFile
-#define API_SaveUserFile                 API.SaveUserFile
-#define API_GetNoSave()                  API.GetNoSave()
-#define API_SetNoSave(status)            API.SetNoSave(status)
-#define API_GetUserAuthStatus            API.GetUserAuthStatus
-#define API_ClearPrerollErrors           API.ClearPrerollErrors
-#define API_ControllerIDForInputID       RSDK.ControllerIDForInputID
-#define API_AssignControllerID           RSDK.AssignControllerID
-#define API_InputIDIsDisconnected        RSDK.InputIDIsDisconnected
-#define API_MostRecentActiveControllerID RSDK.MostRecentActiveControllerID
-#define API_ResetControllerAssignments   RSDK.ResetControllerAssignments
-#define API_GetControllerType            RSDK.GetControllerType
-#define API_GetUsername                  API.GetUsername
-#define API_ReadLeaderboardEntry         API.ReadLeaderboardEntry
+#define API_GetConfirmButtonFlip               API.GetConfirmButtonFlip
+#define API_UnlockAchievement                  API.UnlockAchievement
+#define API_SetRichPresence                    API.SetRichPresence
+#define API_LaunchManual                       API.LaunchManual
+#define API_LoadUserFile                       API.LoadUserFile
+#define API_SaveUserFile                       API.SaveUserFile
+#define API_GetNoSave()                        API.GetNoSave()
+#define API_SetNoSave(status)                  API.SetNoSave(status)
+#define API_GetUserAuthStatus                  API.GetUserAuthStatus
+#define API_ClearPrerollErrors                 API.ClearPrerollErrors
+#define API_ControllerIDForInputID             RSDK.ControllerIDForInputID
+#define API_AssignControllerID                 RSDK.AssignControllerID
+#define API_GetAssignedControllerID(inputID)   RSDK.GetAssignedControllerID(id)
+#define API_ControllerIsAssigned(controllerID) RSDK.ControllerIsAssigned(controllerID)
+#define API_MostRecentActiveControllerID       RSDK.MostRecentActiveControllerID
+#define API_ResetControllerAssignments         RSDK.ResetControllerAssignments
+#define API_GetControllerType                  RSDK.GetControllerType
+#define API_GetUsername                        API.GetUsername
+#define API_ReadLeaderboardEntry               API.ReadLeaderboardEntry
 #else
 #define sku_platform GameInfo->platform
 #define sku_language GameInfo->language
 #define sku_region   GameInfo->region
 
-#define API_GetConfirmButtonFlip         APICallback_GetConfirmButtonFlip
-#define API_UnlockAchievement            APICallback_UnlockAchievement
-#define API_SetRichPresence              APICallback_SetRichPresence
-#define API_LaunchManual                 APICallback_LaunchManual
-#define API_LoadUserFile                 APICallback_LoadUserFile
-#define API_SaveUserFile                 APICallback_SaveUserFile
-#define API_GetNoSave()                  globals->noSave
-#define API_SetNoSave(status)            globals->noSave = status
-#define API_GetUserAuthStatus            APICallback_GetUserAuthStatus
-#define API_ClearPrerollErrors           APICallback_ClearPrerollErrors
-#define API_ControllerIDForInputID       APICallback_ControllerIDForInputID
-#define API_AssignControllerID           APICallback_AssignControllerID
-#define API_InputIDIsDisconnected        APICallback_InputIDIsDisconnected
-#define API_MostRecentActiveControllerID APICallback_MostRecentActiveControllerID
-#define API_ResetControllerAssignments   APICallback_ResetControllerAssignments
-#define API_GetControllerType            APICallback_GetControllerType
-#define API_GetUsername                  APICallback_GetUsername
-#define API_ReadLeaderboardEntry         APICallback_ReadLeaderboardEntry
+#define API_GetConfirmButtonFlip               APICallback_GetConfirmButtonFlip
+#define API_UnlockAchievement                  APICallback_UnlockAchievement
+#define API_SetRichPresence                    APICallback_SetRichPresence
+#define API_LaunchManual                       APICallback_LaunchManual
+#define API_LoadUserFile                       APICallback_LoadUserFile
+#define API_SaveUserFile                       APICallback_SaveUserFile
+#define API_GetNoSave()                        globals->noSave
+#define API_SetNoSave(status)                  globals->noSave = status
+#define API_GetUserAuthStatus                  APICallback_GetUserAuthStatus
+#define API_ClearPrerollErrors                 APICallback_ClearPrerollErrors
+#define API_ControllerIDForInputID             APICallback_ControllerIDForInputID
+#define API_AssignControllerID                 APICallback_AssignControllerID
+#define API_ControllerIsAssigned(controllerID) !APICallback_InputIDIsDisconnected(controllerID)
+#define API_GetAssignedControllerID(inputID)   ; // doesn't exist in preplus afaik
+#define API_MostRecentActiveControllerID       APICallback_MostRecentActiveControllerID
+#define API_ResetControllerAssignments         APICallback_ResetControllerAssignments
+#define API_GetControllerType                  APICallback_GetControllerType
+#define API_GetUsername                        APICallback_GetUsername
+#define API_ReadLeaderboardEntry               APICallback_ReadLeaderboardEntry
 #endif
 
 // 90% sure this is "DialogRunner" in plus/1.05

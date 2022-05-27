@@ -14,27 +14,27 @@ struct ObjectUIControl {
     bool32 isProcessingInput;
     bool32 inputLocked;
     bool32 lockInput;
-    bool32 upPress[4];
-    bool32 downPress[4];
-    bool32 leftPress[4];
-    bool32 rightPress[4];
-    bool32 backPress[4];
-    bool32 confirmPress[4];
-    bool32 yPress[4];
-    bool32 xPress[4];
+    bool32 upPress[PLAYER_MAX];
+    bool32 downPress[PLAYER_MAX];
+    bool32 leftPress[PLAYER_MAX];
+    bool32 rightPress[PLAYER_MAX];
+    bool32 backPress[PLAYER_MAX];
+    bool32 confirmPress[PLAYER_MAX];
+    bool32 yPress[PLAYER_MAX];
+    bool32 xPress[PLAYER_MAX];
 #if MANIA_USE_PLUS
-    bool32 startPress[4];
+    bool32 startPress[PLAYER_MAX];
 #endif
-    bool32 keyUp;
-    bool32 keyDown;
-    bool32 keyLeft;
-    bool32 keyRight;
-    bool32 keyConfirm;
-    bool32 keyBack;
-    bool32 keyY;
-    bool32 keyX;
+    bool32 anyUpPress;
+    bool32 anyDownPress;
+    bool32 anyLeftPress;
+    bool32 anyRightPress;
+    bool32 anyConfirmPress;
+    bool32 anyBackPress;
+    bool32 anyYPress;
+    bool32 anyXPress;
 #if MANIA_USE_PLUS
-    bool32 keyStart;
+    bool32 anyStartPress;
 #endif
     bool32 forceBackPress;
     bool32 hasTouchInput;

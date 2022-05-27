@@ -103,9 +103,9 @@ void UIButtonPrompt_StaticUpdate(void)
     UIButtonPrompt->type = UIButtonPrompt_GetGamepadType();
 
 #if MANIA_USE_PLUS
-    int32 id = API_MostRecentActiveControllerID(0, 0, 0);
+    int32 id = API_MostRecentActiveControllerID(false, false, 0);
 #else
-    int32 id = API_MostRecentActiveControllerID(0);
+    int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
 #endif
     int32 gamepadType = API_GetControllerType(id);
     int32 deviceType  = (gamepadType >> 8) & 0xFF;
@@ -187,9 +187,9 @@ int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
 int32 UIButtonPrompt_GetGamepadType(void)
 {
 #if MANIA_USE_PLUS
-    int32 id = API_MostRecentActiveControllerID(0, 0, 0);
+    int32 id = API_MostRecentActiveControllerID(false, false, 0);
 #else
-    int32 id = API_MostRecentActiveControllerID(0);
+    int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
 #endif
     int32 gamepadType = API_GetControllerType(id);
 

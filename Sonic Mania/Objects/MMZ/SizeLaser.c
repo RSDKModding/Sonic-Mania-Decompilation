@@ -117,31 +117,41 @@ void SizeLaser_Create(void *data)
 void SizeLaser_StageLoad(void)
 {
     SizeLaser->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE);
-    switch (globals->playerID & 0xFF) {
+    switch (GET_CHARACTER_ID(1)) {
         case ID_SONIC: SizeLaser->sonicFrames = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
+
         case ID_TAILS:
             SizeLaser->tailsFrames = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);
             SizeLaser->tailFrames  = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
+
         case ID_KNUCKLES: SizeLaser->knuxFrames = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
+
 #if MANIA_USE_PLUS
         case ID_MIGHTY: SizeLaser->mightyFrames = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
+
         case ID_RAY: SizeLaser->rayFrames = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
 #endif
+
         default: break;
     }
 
-    switch ((globals->playerID >> 8) & 0xFF) {
+    switch (GET_CHARACTER_ID(2)) {
         case ID_SONIC: SizeLaser->sonicFrames = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
+
         case ID_TAILS:
             SizeLaser->tailsFrames = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);
             SizeLaser->tailFrames  = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
+
         case ID_KNUCKLES: SizeLaser->knuxFrames = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
+
 #if MANIA_USE_PLUS
         case ID_MIGHTY: SizeLaser->mightyFrames = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
+
         case ID_RAY: SizeLaser->rayFrames = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
 #endif
+
         default: break;
     }
 

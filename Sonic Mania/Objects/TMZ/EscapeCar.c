@@ -50,7 +50,7 @@ void EscapeCar_Create(void *data)
         }
         else {
 #endif
-            switch (globals->playerID & 0xFF) {
+            switch (GET_CHARACTER_ID(1)) {
                 default:
                 case ID_SONIC: self->driver = ESCAPECAR_DRIVER_KNUX; break;
 
@@ -63,7 +63,7 @@ void EscapeCar_Create(void *data)
                     break;
 
                 case ID_KNUCKLES:
-                    if (checkPlayerID(ID_KNUCKLES, 2))
+                    if (CHECK_CHARACTER_ID(ID_KNUCKLES, 2))
                         self->driver = ESCAPECAR_DRIVER_KNUX;
                     else
                         self->driver = ESCAPECAR_DRIVER_SONIC;
@@ -282,7 +282,12 @@ void EscapeCar_EditorDraw(void)
     }
     else {
 #endif
-        switch (globals->playerID & 0xFF) {
+        switch (GET_CHARACTER_ID(1)) {
+            default: 
+            case ID_SONIC:
+                self->driver = ESCAPECAR_DRIVER_KNUX; 
+                break;
+
             case ID_TAILS:
 #if MANIA_USE_PLUS
             case ID_MIGHTY:
@@ -290,13 +295,13 @@ void EscapeCar_EditorDraw(void)
 #endif
                 self->driver = ESCAPECAR_DRIVER_SONIC;
                 break;
+
             case ID_KNUCKLES:
-                if (((globals->playerID >> 8) & 0xFF) == ID_KNUCKLES)
+                if (CHECK_CHARACTER_ID(ID_KNUCKLES, 2))
                     self->driver = ESCAPECAR_DRIVER_KNUX;
                 else
                     self->driver = ESCAPECAR_DRIVER_SONIC;
                 break;
-            default: self->driver = ESCAPECAR_DRIVER_KNUX; break;
         }
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 2 + self->driver, &self->driverAnimator, true, 0);
 #if MANIA_USE_PLUS

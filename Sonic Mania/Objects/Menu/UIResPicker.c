@@ -170,9 +170,9 @@ void UIResPicker_ProcessButtonCB(void)
 
     int32 selection = self->selection;
 
-    if (UIControl->keyLeft)
+    if (UIControl->anyLeftPress)
         self->selection--;
-    if (UIControl->keyRight)
+    if (UIControl->anyRightPress)
         ++self->selection;
 
     if (selection != self->selection)

@@ -141,9 +141,9 @@ void LevelSelect_Cheat_MaxContinues(void)
 void LevelSelect_Cheat_MaxControl(void)
 {
     RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
-    globals->medalMods &= ~getMod(MEDAL_NODROPDASH);
-    globals->medalMods |= getMod(MEDAL_INSTASHIELD);
-    globals->medalMods |= getMod(MEDAL_PEELOUT);
+    globals->medalMods &= ~GET_MEDAL_MOD(MEDAL_NODROPDASH);
+    globals->medalMods |= GET_MEDAL_MOD(MEDAL_INSTASHIELD);
+    globals->medalMods |= GET_MEDAL_MOD(MEDAL_PEELOUT);
 }
 
 void LevelSelect_Cheat_RickyMode(void)
@@ -167,8 +167,8 @@ void LevelSelect_Cheat_SwapGameMode(void)
         }
         else {
             globals->gameMode = MODE_ENCORE;
-            if ((globals->medalMods & getMod(MEDAL_ANDKNUCKLES))) {
-                globals->medalMods &= -getMod(MEDAL_ANDKNUCKLES);
+            if ((globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES))) {
+                globals->medalMods &= -GET_MEDAL_MOD(MEDAL_ANDKNUCKLES);
             }
         }
     }
@@ -176,7 +176,7 @@ void LevelSelect_Cheat_SwapGameMode(void)
 
 void LevelSelect_Cheat_UnlockAllMedals(void)
 {
-    if (globals->superSecret && (globals->secrets & getMod(SECRET_RICKYMODE))) {
+    if (globals->superSecret && (globals->secrets & GET_MEDAL_MOD(SECRET_RICKYMODE))) {
         RSDK.PlaySfx(LevelSelect->sfxMedalGot, false, 255);
         GameProgress_UnlockAllMedals();
         GameProgress_UnlockAll();
@@ -283,11 +283,11 @@ void LevelSelect_State_SetupEntities(void)
     }
 
     int32 id = 0;
-    for (int32 i = globals->playerID & 0xFF; i > 0; ++id) i >>= 1;
+    for (int32 i = GET_CHARACTER_ID(1); i > 0; ++id) i >>= 1;
     self->leaderCharacterID = id;
 
     id = 0;
-    for (int32 i = globals->playerID >> 8; i > 0; ++id) i >>= 1;
+    for (int32 i = GET_CHARACTER_ID(2); i > 0; ++id) i >>= 1;
     self->sidekickCharacterID = id;
 
     foreach_all(UIPicture, picture)
@@ -702,7 +702,7 @@ void LevelSelect_HandleNewStagePos(void)
         globals->playerID = leaderID | (sidekickID << 8);
 
         // MSZ1K check
-        if (checkPlayerID(ID_KNUCKLES, 1) && curLabel->data0 == 15)
+        if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1) && curLabel->data0 == 15)
             ++SceneInfo->listPos;
 
         self->timer     = 0;

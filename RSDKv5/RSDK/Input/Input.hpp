@@ -7,14 +7,18 @@ namespace RSDK
 #define PLAYER_COUNT      (4)
 #define INPUTDEVICE_COUNT (0x10)
 
+enum InputIds {
+    INPUT_UNASSIGNED = -2,
+    INPUT_AUTOASSIGN = -1,
+    INPUT_NONE       = 0,
+};
+
 enum ControllerIDs {
-    CONT_UNASSIGNED = -2,
-    CONT_AUTOASSIGN = -1,
-    CONT_ANY        = 0,
-    CONT_P1         = 1,
-    CONT_P2         = 2,
-    CONT_P3         = 3,
-    CONT_P4         = 4,
+    CONT_ANY,
+    CONT_P1,
+    CONT_P2,
+    CONT_P3,
+    CONT_P4,
 };
 
 enum InputDeviceTypes {
@@ -411,8 +415,8 @@ struct AnalogState {
 struct TriggerState {
     InputState keyBumper;
     InputState keyTrigger;
-    float deadzone;
-    float delta;
+    float bumperDelta;
+    float triggerDelta;
 };
 #endif
 
@@ -457,10 +461,6 @@ extern TouchMouseData touchMouseData;
 
 extern GamePadMappings *gamePadMappings;
 extern int32 gamePadCount;
-
-#if !RETRO_REV02
-extern int32 mostRecentControllerID;
-#endif
 
 #if RETRO_INPUTDEVICE_KEYBOARD
 #include "Keyboard/KBInputDevice.hpp"
@@ -564,11 +564,47 @@ inline int32 MostRecentActiveControllerID(bool32 confirmOnly, bool32 unassignedO
     return mostRecentID;
 }
 #else
-inline int32 MostRecentActiveControllerID()
+inline int32 MostRecentActiveControllerID(uint32 inputID)
 {
-    // TODO: fix pre-plus input API
-    return InputDevices[0] ? InputDevices[0]->inputID : CONT_UNASSIGNED;
-    /*mostRecentControllerID;*/
+    bool32 confirmOnly = false;
+    bool32 unassignedOnly = false;
+
+    uint mostRecentTime = -1;
+    int32 mostRecentValidID = 0;
+    int32 mostRecentID = 0;
+    uint maxTime = -1;
+
+    if (InputDeviceCount) {
+        for (int32 i = 0; i < InputDeviceCount; ++i) {
+            if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled
+                && (!InputDevices[i]->assignedControllerID || !unassignedOnly)) {
+
+                if (inputID && InputDevices[i]->inputID == inputID)
+                    continue;
+
+                if (InputDevices[i]->inactiveTimer[confirmOnly] < mostRecentTime) {
+                    mostRecentTime = InputDevices[i]->inactiveTimer[confirmOnly];
+                    if (InputDevices[i]->inactiveTimer[confirmOnly] <= maxTime)
+                        mostRecentValidID = InputDevices[i]->inputID;
+                    mostRecentID = InputDevices[i]->inputID;
+                }
+            }
+        }
+
+        if (mostRecentValidID)
+            return mostRecentValidID;
+    }
+
+    if (mostRecentID)
+        return mostRecentID;
+
+    for (int32 i = 0; i < InputDeviceCount; ++i) {
+        if (InputDevices[i] && InputDevices[i]->active && !InputDevices[i]->disabled && (!InputDevices[i]->assignedControllerID || !unassignedOnly)) {
+            return InputDevices[i]->inputID;
+        }
+    }
+
+    return mostRecentID;
 }
 #endif
 
@@ -650,11 +686,10 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
 {
     uint8 contID = controllerID - 1;
 
-#if RETRO_REV02 || true
     if (contID < PLAYER_COUNT) {
-        if (inputID && inputID != CONT_AUTOASSIGN) {
-            if (inputID == CONT_UNASSIGNED) {
-                activeControllers[contID] = CONT_UNASSIGNED;
+        if (inputID && inputID != INPUT_AUTOASSIGN) {
+            if (inputID == INPUT_UNASSIGNED) {
+                activeControllers[contID] = INPUT_UNASSIGNED;
             }
             else {
                 for (int32 i = 0; i < InputDeviceCount; ++i) {
@@ -674,25 +709,34 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
             activeControllers[contID] = inputID;
         }
     }
-#else
-    activeControllers[contID] = inputID;
-#endif
 }
 
+#if RETRO_REV02
+inline bool32 InputIDIsConnected(uint8 controllerID)
+{
+    uint8 contID = controllerID - 1;
+
+    if (contID < PLAYER_COUNT)
+        return activeControllers[contID] != INPUT_NONE;
+
+    return false;
+}
+#else
 inline bool32 InputIDIsDisconnected(uint8 controllerID)
 {
     uint8 contID = controllerID - 1;
 
     if (contID < PLAYER_COUNT)
-        return activeControllers[contID] != CONT_ANY;
+        return activeControllers[contID] == INPUT_NONE;
 
     return false;
 }
+#endif
 
 inline void ResetControllerAssignments()
 {
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
-        activeControllers[i]  = CONT_ANY;
+        activeControllers[i]  = INPUT_NONE;
         activeInputDevices[i] = NULL;
     }
 

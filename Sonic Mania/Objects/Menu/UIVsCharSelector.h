@@ -66,9 +66,7 @@ void UIVsCharSelector_ProcessButtonCB_CharSelected(void);
 void UIVsCharSelector_State_ResetState(void);
 void UIVsCharSelector_State_CharSelect(void);
 void UIVsCharSelector_State_WaitingForPlayer(void);
-#if MANIA_USE_PLUS
 void UIVsCharSelector_State_HandlePlayerJoin(void);
-#endif
 void UIVsCharSelector_State_Selected(void);
 
 #endif //! OBJ_UIVSCHARSELECTOR_H

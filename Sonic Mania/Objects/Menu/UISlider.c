@@ -156,24 +156,24 @@ void UISlider_ButtonPressCB(void)
 
     bool32 moveV = false;
     if (parent->rowCount > 1) {
-        if (UIControl->keyUp) {
+        if (UIControl->anyUpPress) {
             --rowID;
             moveV = true;
         }
 
-        if (UIControl->keyDown) {
+        if (UIControl->anyDownPress) {
             ++rowID;
             moveV = true;
         }
     }
 
     bool32 valueChanged = false;
-    if (UIControl->keyLeft && self->sliderPos > UISlider_MinVal) {
+    if (UIControl->anyLeftPress && self->sliderPos > UISlider_MinVal) {
         self->sliderPos = (self->sliderPos & -UISlider_Increment) - UISlider_Increment;
         valueChanged    = true;
     }
 
-    if (UIControl->keyRight && self->sliderPos < UISlider_MaxVal) {
+    if (UIControl->anyRightPress && self->sliderPos < UISlider_MaxVal) {
         self->sliderPos = (self->sliderPos & -UISlider_Increment) + UISlider_Increment;
         valueChanged    = true;
     }

@@ -28,10 +28,10 @@ struct InputDeviceXInput : InputDevice {
     float vDelta_L;
     float hDelta_R;
     float vDelta_R;
-    float deadzoneLTrigger;
-    float deltaLTrigger;
-    float deadzoneRTrigger;
-    float deltaRTrigger;
+    float deltaBumper_L;
+    float deltaTrigger_L;
+    float deltaBumper_R;
+    float deltaTrigger_R;
 };
 
 extern bool32 disabledXInputDevices[PLAYER_COUNT];

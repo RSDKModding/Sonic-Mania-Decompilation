@@ -805,9 +805,9 @@ void UITAZoneModule_TouchCB_Left(void)
     if (self->zoneID != 7 || self->characterID == 3) {
         self->actID = 0;
 
-        int32 id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
         API_ResetControllerAssignments();
-        API_AssignControllerID(1, id);
+        API_AssignControllerID(CONT_P1, id);
 
         parent->state = StateMachine_None;
         self->timer   = 0;
@@ -823,9 +823,9 @@ void UITAZoneModule_TouchCB_Right(void)
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    int32 id = API_MostRecentActiveControllerID(0);
+    int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
     API_ResetControllerAssignments();
-    API_AssignControllerID(1, id);
+    API_AssignControllerID(CONT_P1, id);
 
     parent->state = StateMachine_None;
     self->timer   = 0;
@@ -841,24 +841,24 @@ void UITAZoneModule_ProcessButtonCB_Expanded(void)
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    if (UIControl->keyLeft && self->actID == 1 && (self->zoneID != 7 || self->characterID == 3)) {
+    if (UIControl->anyLeftPress && self->actID == 1 && (self->zoneID != 7 || self->characterID == 3)) {
         self->actID = 0;
         self->rank  = 0;
 
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         self->expandTimer = 0;
     }
-    if (UIControl->keyRight && !self->actID && (self->zoneID != 7 || self->characterID == 3)) {
+    if (UIControl->anyRightPress && !self->actID && (self->zoneID != 7 || self->characterID == 3)) {
         self->actID = 1;
         self->rank  = 0;
 
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         self->expandTimer = 0;
     }
-    else if (UIControl->keyConfirm) {
-        int32 id = API_MostRecentActiveControllerID(0);
+    else if (UIControl->anyConfirmPress) {
+        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
         API_ResetControllerAssignments();
-        API_AssignControllerID(1, id);
+        API_AssignControllerID(CONT_P1, id);
 
         parent->state = StateMachine_None;
         self->timer   = 0;
@@ -868,13 +868,13 @@ void UITAZoneModule_ProcessButtonCB_Expanded(void)
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     }
     else {
-        if (MenuSetup && UIControl->keyY) {
+        if (MenuSetup && UIControl->anyYPress) {
             UITAZoneModule_ShowLeaderboards(self->characterID, self->zoneID, self->actID, false, UITAZoneModule_ShowLeaderboards_CB);
 
             RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         }
 
-        if (UIControl->keyBack) {
+        if (UIControl->anyBackPress) {
             self->timer           = 0;
             self->state           = UITAZoneModule_State_ContractModule;
             self->processButtonCB = StateMachine_None;

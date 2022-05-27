@@ -276,7 +276,7 @@ void HCZSetup_HandleActTransition(void)
 
 void HCZSetup_StageFinishCB_Act2(void)
 {
-    if (globals->gameMode == MODE_MANIA && checkPlayerID(ID_KNUCKLES, 1))
+    if (globals->gameMode == MODE_MANIA && CHECK_CHARACTER_ID(ID_KNUCKLES, 1))
         RSDK.SetScene("Cutscenes", "Mirage Saloon K Intro");
 
     Zone_StartFadeOut(10, 0x000000);

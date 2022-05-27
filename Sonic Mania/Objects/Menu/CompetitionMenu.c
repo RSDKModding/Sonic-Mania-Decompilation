@@ -294,11 +294,11 @@ void CompetitionMenu_ResetControllerAssignments(void)
         EntityUIVsCharSelector *selector = buttons[p];
         int32 id                         = API_ControllerIDForInputID(p + 1);
 
-        if (id && id != CONT_AUTOASSIGN) {
+        if (id && id != INPUT_AUTOASSIGN) {
             if (playerID < p)
-                API_AssignControllerID(p, CONT_ANY);
+                API_AssignControllerID(p, INPUT_NONE);
 
-            API_AssignControllerID(playerID + 1, id);
+            API_AssignControllerID(CONT_P1 + playerID, id);
 
             buttons[playerID]->frameID = selector->frameID;
             if (playerID < p)
@@ -308,7 +308,7 @@ void CompetitionMenu_ResetControllerAssignments(void)
         }
     }
 
-    for (; playerID < PLAYER_MAX; ++playerID) RSDK.AssignControllerID(playerID + 1, CONT_ANY);
+    for (; playerID < PLAYER_MAX; ++playerID) API_AssignControllerID(CONT_P1 + playerID, INPUT_NONE);
 }
 
 void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount)
@@ -457,7 +457,7 @@ void CompetitionMenu_VS_ProcessInputCB(void)
             StateMachine_Run(charSel->processButtonCB);
             SceneInfo->entity = entStore;
 
-            RSDK.ControllerIDForInputID(charSel->playerID + 1);
+            API_ControllerIDForInputID(charSel->playerID + 1);
         }
 
         EntityUIButtonPrompt *goPrompt = NULL;
@@ -495,8 +495,8 @@ void CompetitionMenu_VS_MenuSetupCB(void)
         charSel->ready           = false;
         charSel->processButtonCB = UIVsCharSelector_ProcessButtonCB;
 
-        if (!API_ControllerIDForInputID(charSel->playerID + 1))
-            API_AssignControllerID(charSel->playerID + 1, CONT_AUTOASSIGN);
+        if (!API_ControllerIDForInputID(CONT_P1 + charSel->playerID))
+            API_AssignControllerID(CONT_P1 + charSel->playerID, INPUT_AUTOASSIGN);
     }
 
     for (int32 i = 0; i < self->promptCount; ++i) {
@@ -594,8 +594,8 @@ void CompetitionMenu_RulesButton_ActionCB(void)
     session->playerCount = 0;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *charSel = (EntityUIVsCharSelector *)control->buttons[i];
-        int32 id                        = RSDK.ControllerIDForInputID(i + 1);
-        if (id && id != CONT_UNASSIGNED) {
+        int32 id                        = API_ControllerIDForInputID(CONT_P1 + i);
+        if (id && id != INPUT_UNASSIGNED) {
             switch (charSel->frameID) {
                 case 0: session->playerID[i] = ID_SONIC; break;
                 case 1: session->playerID[i] = ID_TAILS; break;
@@ -628,7 +628,7 @@ void CompetitionMenu_GotoCompTotal(void) { UIControl_MatchMenuTag("Competition T
 void CompetitionMenu_Round_ProcessInputCB(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    if (UIControl->keyConfirm) {
+    if (UIControl->anyConfirmPress) {
         bool32 toCompTotal = false;
 
         int32 activePlayers = 0;
@@ -729,7 +729,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
         }
 
-        printf(buffer, "%d", session->totalRings[p]);
+        sprintf(buffer, "%d", session->totalRings[p]);
         if (!SceneInfo->inEditor) {
             RSDK.InitString(&results->rowText[1], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
@@ -753,7 +753,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
 
-        if (session->finishState[p] != FINISHFLAG_TIMEOVER) {
+        if (session->finishState[p] != FINISHTYPE_GAMEOVER) {
             results->row0Highlight = session->rings[p] == bestRings;
             results->row1Highlight = session->totalRings[p] == bestTotalRings;
             results->row2Highlight = session->score[p] == bestScore;
@@ -792,7 +792,7 @@ void CompetitionMenu_GotoCompetition(void) { UIControl_MatchMenuTag(API.CheckDLC
 void CompetitionMenu_Results_ProcessInputCB(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    if (UIControl->keyConfirm) {
+    if (UIControl->anyConfirmPress) {
         int32 mostWins = 0;
         for (int32 p = 0; p < session->playerCount; ++p) {
             if (session->wins[p] > mostWins)

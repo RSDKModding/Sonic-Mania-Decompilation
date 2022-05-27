@@ -122,7 +122,7 @@ void Zone_LateUpdate(void)
             {
                 bool32 canDie = true;
 #if MANIA_USE_PLUS
-                if (globals->gameMode == MODE_COMPETITION && (session->finishState[playerLoop->playerID]) == FINISHFLAG_FINISHED)
+                if (globals->gameMode == MODE_COMPETITION && (session->finishState[playerLoop->playerID]) == FINISHTYPE_PASSEDSIGNPOST)
                     canDie = false;
 #endif
                 if (!playerLoop->sidekick && canDie)
@@ -222,16 +222,16 @@ void Zone_StageLoad(void)
         if (globals->characterFlags == ID_NONE) {
             globals->characterFlags = 0;
 
-            if ((globals->playerID >> 0) & 0xFF) {
+            if (GET_CHARACTER_ID(1)) {
                 int32 charID = -1;
-                for (int32 i = ((globals->playerID >> 0) & 0xFF); i > 0; ++charID) i >>= 1;
+                for (int32 i = GET_CHARACTER_ID(1); i > 0; ++charID) i >>= 1;
 
                 globals->characterFlags |= 1 << charID;
             }
 
-            if ((globals->playerID >> 8) & 0xFF) {
+            if (GET_CHARACTER_ID(2)) {
                 int32 charID = -1;
-                for (int32 i = ((globals->playerID >> 8) & 0xFF); i > 0; ++charID) i >>= 1;
+                for (int32 i = GET_CHARACTER_ID(2); i > 0; ++charID) i >>= 1;
 
                 globals->characterFlags |= 1 << charID;
             }
@@ -766,7 +766,7 @@ int32 Zone_GetManiaStageID(void)
     int32 maniaListPos = 0;
     if (encoreOffset >= 15) {
         if (encoreOffset == 15) {
-            if (checkPlayerID(ID_KNUCKLES, 1))
+            if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1))
                 maniaListPos = maniaOffset + 16;
             else
                 maniaListPos = maniaOffset + 15;
@@ -1058,7 +1058,7 @@ void Zone_HandlePlayerSwap(void)
         RSDK.CopyEntity(shield, &Zone->entityStorage[4 + p], false);
         shield->player = storedPlayer;
 
-        EntityImageTrail *trail = RSDK_GET_ENTITY(Player->playerCount + Zone->swappedPlayerIDs[p], ImageTrail);
+        EntityImageTrail *trail = RSDK_GET_ENTITY((2 * Player->playerCount) + Zone->swappedPlayerIDs[p], ImageTrail);
         RSDK.CopyEntity(trail, &Zone->entityStorage[12 + p], false);
         trail->player = storedPlayer;
 
@@ -1067,158 +1067,224 @@ void Zone_HandlePlayerSwap(void)
             cam->position.x = player->position.x;
             cam->position.y = player->position.y;
         }
+
         memset(&Zone->entityStorage[0 + p], 0, ENTITY_SIZE);
         memset(&Zone->entityStorage[4 + p], 0, ENTITY_SIZE);
         memset(&Zone->entityStorage[8 + p], 0, ENTITY_SIZE);
         memset(&Zone->entityStorage[12 + p], 0, ENTITY_SIZE);
     }
 #else
-    int32 preSwapPlayerIDs[] = { 0, 1, 1, 1 };
-    int32 swappedPlayerIDs[] = { 1, 0, 0, 0 };
-
-    EntityPlayer *storedPlayers[] = { NULL, NULL, NULL, NULL };
-    EntityShield *storedShields[] = { NULL, NULL, NULL, NULL };
-    EntityCamera *storedCameras[] = { NULL, NULL, NULL, NULL };
-    Entity *storedPowerups[] = { NULL, NULL, NULL, NULL };
-    Vector2 screenPos[4];
-
-    // Store Player info
     for (int32 p = 0; p < Player->playerCount; ++p) {
-        EntityPlayer *player = RSDK_GET_ENTITY(preSwapPlayerIDs[p], Player);
-
-        storedPlayers[p] = (EntityPlayer *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
-        RSDK.CopyEntity(storedPlayers[p], player, false);
-
-        cameraBoundsL[p]        = Zone->cameraBoundsL[p];
-        cameraBoundsR[p]        = Zone->cameraBoundsR[p];
-        cameraBoundsT[p]        = Zone->cameraBoundsT[p];
-        cameraBoundsB[p]        = Zone->cameraBoundsB[p];
-        playerBoundsL[p]        = Zone->playerBoundsL[p];
-        playerBoundsR[p]        = Zone->playerBoundsR[p];
-        playerBoundsT[p]        = Zone->playerBoundsT[p];
-        playerBoundsB[p]        = Zone->playerBoundsB[p];
-        deathBounds[p]          = Zone->deathBoundary[p];
-        playerBoundActiveL[p]   = Zone->playerBoundActiveL[p];
-        playerBoundActiveR[p]   = Zone->playerBoundActiveR[p];
-        playerBoundActiveT[p]   = Zone->playerBoundActiveT[p];
-        playerBoundActiveB[p]   = Zone->playerBoundActiveB[p];
+        cameraBoundsL[p] = Zone->cameraBoundsL[p];
+        cameraBoundsR[p] = Zone->cameraBoundsR[p];
+        cameraBoundsT[p] = Zone->cameraBoundsT[p];
+        cameraBoundsB[p] = Zone->cameraBoundsB[p];
+        playerBoundsL[p] = Zone->playerBoundsL[p];
+        playerBoundsR[p] = Zone->playerBoundsR[p];
+        playerBoundsT[p] = Zone->playerBoundsT[p];
+        playerBoundsB[p] = Zone->playerBoundsB[p];
+        deathBounds[p] = Zone->deathBoundary[p];
+        playerBoundActiveL[p] = Zone->playerBoundActiveL[p];
+        playerBoundActiveR[p] = Zone->playerBoundActiveR[p];
+        playerBoundActiveT[p] = Zone->playerBoundActiveT[p];
+        playerBoundActiveB[p] = Zone->playerBoundActiveB[p];
 
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
             if (layer)
-                layerPlanes[l] = layer->drawLayer[preSwapPlayerIDs[p]];
+                layerPlanes[l] = layer->drawLayer[p];
             else
                 layerPlanes[l] = DRAWGROUP_COUNT;
         }
-
-        EntityCamera *camera = player->camera;
-        storedCameras[p] = (EntityCamera *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
-        RSDK.CopyEntity(storedCameras[p], camera, false);
-        screenPos[p].x = ScreenInfo[camera->screenID].position.x;
-        screenPos[p].y = ScreenInfo[camera->screenID].position.y;
-
-        storedShields[p] = (EntityShield *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
-        storedPowerups[p] = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
-        RSDK.CopyEntity(storedShields[p], RSDK_GET_ENTITY(Player->playerCount + preSwapPlayerIDs[p], Shield), false);
-        RSDK.CopyEntity(storedPowerups[p], RSDK_GET_ENTITY((2 * Player->playerCount) + preSwapPlayerIDs[p], ImageTrail), false);
     }
 
-    // Reload & Swap Player info
-    for (int32 p = 0; p < Player->playerCount; ++p) {
-        EntityPlayer *player = RSDK_GET_ENTITY(swappedPlayerIDs[p], Player);
-        EntityPlayer *storedPlayer = (EntityPlayer *)storedPlayers[p];
-        void *state = storedPlayer->state;
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    Entity *playerStorage = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+    RSDK.CopyEntity(playerStorage, player1, false);
 
+    EntityCamera camStore;
+    memcpy(&camStore, RSDK_GET_ENTITY(SLOT_CAMERA1, Camera), sizeof(camStore));
+
+    for (int32 p = 1; p < Player->playerCount; ++p) {
+        int32 curPlayerID = p;
+        int32 newPlayerID = p - 1;
+
+        EntityPlayer *newPlayer = RSDK_GET_ENTITY(newPlayerID, Player);
+        EntityPlayer *curPlayer = RSDK_GET_ENTITY(curPlayerID, Player);
+
+        void *state = curPlayer->state;
         if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll_Ground
             || state == Player_State_ForceRoll_Air) {
-            player->state = state;
-            player->nextAirState = storedPlayer->nextAirState;
-            player->nextGroundState = storedPlayer->nextGroundState;
-            player->onGround = storedPlayer->onGround;
-            player->groundedStore = storedPlayer->groundedStore;
-            for (int i = 0; i < 8; ++i) {
-                player->abilityValues[i] = storedPlayer->abilityValues[i];
-                player->abilityPtrs[i] = storedPlayer->abilityPtrs[i];
+            newPlayer->state = state;
+            newPlayer->nextAirState = curPlayer->nextAirState;
+            newPlayer->nextGroundState = curPlayer->nextGroundState;
+            newPlayer->onGround = curPlayer->onGround;
+            newPlayer->groundedStore = curPlayer->groundedStore;
+            for (int32 i = 0; i < 8; ++i) {
+                newPlayer->abilityValues[i] = curPlayer->abilityValues[i];
+                newPlayer->abilityPtrs[i] = curPlayer->abilityPtrs[i];
             }
-            player->angle = storedPlayer->angle;
-            player->rotation = storedPlayer->rotation;
-            player->direction = storedPlayer->direction;
-            player->tileCollisions = storedPlayer->tileCollisions;
-            player->interaction = storedPlayer->interaction;
-            RSDK.SetSpriteAnimation(player->aniFrames, storedPlayer->animator.animationID, &player->animator, false, 0);
+            newPlayer->angle = curPlayer->angle;
+            newPlayer->rotation = curPlayer->rotation;
+            newPlayer->direction = curPlayer->direction;
+            newPlayer->tileCollisions = curPlayer->tileCollisions;
+            newPlayer->interaction = curPlayer->interaction;
+            RSDK.SetSpriteAnimation(newPlayer->aniFrames, curPlayer->animator.animationID, &newPlayer->animator, false, 0);
         }
         else {
-            player->state = Player_State_Air;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-            player->tileCollisions = true;
-            player->interaction = true;
+            newPlayer->state = Player_State_Air;
+            RSDK.SetSpriteAnimation(newPlayer->aniFrames, ANI_JUMP, &newPlayer->animator, false, 0);
+            newPlayer->tileCollisions = true;
+            newPlayer->interaction = true;
         }
 
-        player->position.x = storedPlayer->position.x;
-        player->position.y = storedPlayer->position.y;
-        player->velocity.x = storedPlayer->velocity.x;
-        player->velocity.y = storedPlayer->velocity.y;
-        player->groundVel = storedPlayer->groundVel;
-        player->shield = storedPlayer->shield;
-        player->collisionLayers = storedPlayer->collisionLayers;
-        player->collisionPlane = storedPlayer->collisionPlane;
-        player->collisionMode = storedPlayer->collisionMode;
-        player->invincibleTimer = storedPlayer->invincibleTimer;
-        player->speedShoesTimer = storedPlayer->speedShoesTimer;
-        player->blinkTimer = storedPlayer->blinkTimer;
-        player->visible = storedPlayer->visible;
-        Player_UpdatePhysicsState(player);
-        Zone->cameraBoundsL[swappedPlayerIDs[p]] = cameraBoundsL[p];
-        Zone->cameraBoundsR[swappedPlayerIDs[p]] = cameraBoundsR[p];
-        Zone->cameraBoundsT[swappedPlayerIDs[p]] = cameraBoundsT[p];
-        Zone->cameraBoundsB[swappedPlayerIDs[p]] = cameraBoundsB[p];
-        Zone->playerBoundsL[swappedPlayerIDs[p]] = playerBoundsL[p];
-        Zone->playerBoundsR[swappedPlayerIDs[p]] = playerBoundsR[p];
-        Zone->playerBoundsT[swappedPlayerIDs[p]] = playerBoundsT[p];
-        Zone->playerBoundsB[swappedPlayerIDs[p]] = playerBoundsB[p];
-        Zone->deathBoundary[swappedPlayerIDs[p]] = deathBounds[p];
-        Zone->playerBoundActiveL[swappedPlayerIDs[p]] = playerBoundActiveL[p];
-        Zone->playerBoundActiveR[swappedPlayerIDs[p]] = playerBoundActiveR[p];
-        Zone->playerBoundActiveT[swappedPlayerIDs[p]] = playerBoundActiveT[p];
-        Zone->playerBoundActiveB[swappedPlayerIDs[p]] = playerBoundActiveB[p];
+        newPlayer->position.x = curPlayer->position.x;
+        newPlayer->position.y = curPlayer->position.y;
+        newPlayer->velocity.x = curPlayer->velocity.x;
+        newPlayer->velocity.y = curPlayer->velocity.y;
+        newPlayer->groundVel = curPlayer->groundVel;
+        newPlayer->shield = curPlayer->shield;
+        newPlayer->collisionLayers = curPlayer->collisionLayers;
+        newPlayer->collisionPlane = curPlayer->collisionPlane;
+        newPlayer->collisionMode = curPlayer->collisionMode;
+        newPlayer->invincibleTimer = curPlayer->invincibleTimer;
+        newPlayer->speedShoesTimer = curPlayer->speedShoesTimer;
+        newPlayer->blinkTimer = curPlayer->blinkTimer;
+        newPlayer->visible = curPlayer->visible;
+        Player_UpdatePhysicsState(newPlayer);
 
-        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
+        Zone->cameraBoundsL[newPlayerID] = cameraBoundsL[curPlayerID];
+        Zone->cameraBoundsR[newPlayerID] = cameraBoundsR[curPlayerID];
+        Zone->cameraBoundsT[newPlayerID] = cameraBoundsT[curPlayerID];
+        Zone->cameraBoundsB[newPlayerID] = cameraBoundsB[curPlayerID];
+        Zone->playerBoundsL[newPlayerID] = playerBoundsL[curPlayerID];
+        Zone->playerBoundsR[newPlayerID] = playerBoundsR[curPlayerID];
+        Zone->playerBoundsT[newPlayerID] = playerBoundsT[curPlayerID];
+        Zone->playerBoundsB[newPlayerID] = playerBoundsB[curPlayerID];
+        Zone->deathBoundary[newPlayerID] = deathBounds[curPlayerID];
+        Zone->playerBoundActiveL[newPlayerID] = playerBoundActiveL[curPlayerID];
+        Zone->playerBoundActiveR[newPlayerID] = playerBoundActiveR[curPlayerID];
+        Zone->playerBoundActiveT[newPlayerID] = playerBoundActiveT[curPlayerID];
+        Zone->playerBoundActiveB[newPlayerID] = playerBoundActiveB[curPlayerID];
+
+        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * curPlayerID];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
-            layer->drawLayer[swappedPlayerIDs[p]] = layerPlanes[l];
+            layer->drawLayer[newPlayerID] = layerPlanes[l];
         }
+        EntityCamera *newCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + newPlayerID, Camera);
+        EntityCamera *curCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + curPlayerID, Camera);
 
-        EntityCamera *camera = player->camera;
-        void *camTarget = camera->target;
-        void *camState = camera->state;
-        int32 camScreen = camera->screenID;
-        RSDK.CopyEntity(camera, storedCameras[p], false);
-        camera->target = camTarget;
-        camera->screenID = camScreen;
-        camera->state = camState;
-        ScreenInfo[camScreen].position.x = screenPos[p].x;
-        ScreenInfo[camScreen].position.y = screenPos[p].y;
+        void *camTarget = newCamera->target;
+        void *camState = newCamera->state;
+        int32 camScreen = newCamera->screenID;
+        RSDK.CopyEntity(newCamera, curCamera, false);
+        newCamera->target = camTarget;
+        newCamera->screenID = camScreen;
+        newCamera->state = camState;
 
-        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + swappedPlayerIDs[p], Shield);
-        RSDK.CopyEntity(shield, storedShields[p], false);
-        shield->player = storedPlayer;
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + newPlayerID, Shield);
+        destroyEntity(shield);
+        Player_ApplyShield(newPlayer);
 
-        EntityImageTrail *trail = RSDK_GET_ENTITY(Player->playerCount + swappedPlayerIDs[p], ImageTrail);
-        RSDK.CopyEntity(trail, storedPowerups[p], false);
-        trail->player = storedPlayer;
-
-        EntityCamera *cam = storedPlayer->camera;
+        EntityCamera *cam = newPlayer->camera;
         if (cam) {
-            cam->position.x = player->position.x;
-            cam->position.y = player->position.y;
+            cam->position.x = newPlayer->position.x;
+            cam->position.y = newPlayer->position.y;
+        }
+    }
+
+    if (Player->playerCount >= 2) {
+        int32 curPlayerID = 0;
+        int32 newPlayerID = Player->playerCount - 1;
+
+        EntityPlayer *newPlayer = RSDK_GET_ENTITY(newPlayerID, Player);
+        EntityPlayer *curPlayer = (EntityPlayer *)playerStorage;
+
+        void *state = curPlayer->state;
+        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll_Ground
+            || state == Player_State_ForceRoll_Air) {
+            newPlayer->state = state;
+            newPlayer->nextAirState = curPlayer->nextAirState;
+            newPlayer->nextGroundState = curPlayer->nextGroundState;
+            newPlayer->onGround = curPlayer->onGround;
+            newPlayer->groundedStore = curPlayer->groundedStore;
+            for (int32 i = 0; i < 8; ++i) {
+                newPlayer->abilityValues[i] = curPlayer->abilityValues[i];
+                newPlayer->abilityPtrs[i] = curPlayer->abilityPtrs[i];
+            }
+            newPlayer->angle = curPlayer->angle;
+            newPlayer->rotation = curPlayer->rotation;
+            newPlayer->direction = curPlayer->direction;
+            newPlayer->tileCollisions = curPlayer->tileCollisions;
+            newPlayer->interaction = curPlayer->interaction;
+            RSDK.SetSpriteAnimation(newPlayer->aniFrames, curPlayer->animator.animationID, &newPlayer->animator, false, 0);
+        }
+        else {
+            newPlayer->state = Player_State_Air;
+            RSDK.SetSpriteAnimation(newPlayer->aniFrames, ANI_JUMP, &newPlayer->animator, false, 0);
+            newPlayer->tileCollisions = true;
+            newPlayer->interaction = true;
         }
 
-        destroyEntity(storedPlayers[p]);
-        destroyEntity(storedShields[p]);
-        destroyEntity(storedCameras[p]);
-        destroyEntity(storedPowerups[p]);
+        newPlayer->position.x = curPlayer->position.x;
+        newPlayer->position.y = curPlayer->position.y;
+        newPlayer->velocity.x = curPlayer->velocity.x;
+        newPlayer->velocity.y = curPlayer->velocity.y;
+        newPlayer->groundVel = curPlayer->groundVel;
+        newPlayer->shield = curPlayer->shield;
+        newPlayer->collisionLayers = curPlayer->collisionLayers;
+        newPlayer->collisionPlane = curPlayer->collisionPlane;
+        newPlayer->collisionMode = curPlayer->collisionMode;
+        newPlayer->invincibleTimer = curPlayer->invincibleTimer;
+        newPlayer->speedShoesTimer = curPlayer->speedShoesTimer;
+        newPlayer->blinkTimer = curPlayer->blinkTimer;
+        newPlayer->visible = curPlayer->visible;
+        Player_UpdatePhysicsState(newPlayer);
+
+        Zone->cameraBoundsL[newPlayerID] = cameraBoundsL[curPlayerID];
+        Zone->cameraBoundsR[newPlayerID] = cameraBoundsR[curPlayerID];
+        Zone->cameraBoundsT[newPlayerID] = cameraBoundsT[curPlayerID];
+        Zone->cameraBoundsB[newPlayerID] = cameraBoundsB[curPlayerID];
+        Zone->playerBoundsL[newPlayerID] = playerBoundsL[curPlayerID];
+        Zone->playerBoundsR[newPlayerID] = playerBoundsR[curPlayerID];
+        Zone->playerBoundsT[newPlayerID] = playerBoundsT[curPlayerID];
+        Zone->playerBoundsB[newPlayerID] = playerBoundsB[curPlayerID];
+        Zone->deathBoundary[newPlayerID] = deathBounds[curPlayerID];
+        Zone->playerBoundActiveL[newPlayerID] = playerBoundActiveL[curPlayerID];
+        Zone->playerBoundActiveR[newPlayerID] = playerBoundActiveR[curPlayerID];
+        Zone->playerBoundActiveT[newPlayerID] = playerBoundActiveT[curPlayerID];
+        Zone->playerBoundActiveB[newPlayerID] = playerBoundActiveB[curPlayerID];
+
+        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * curPlayerID];
+        for (int32 l = 0; l < LAYER_COUNT; ++l) {
+            TileLayer *layer = RSDK.GetTileLayer(l);
+            layer->drawLayer[newPlayerID] = layerPlanes[l];
+        }
+        EntityCamera *curCamera = &camStore;
+        EntityCamera *newCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + newPlayerID, Camera);
+
+        void *camTarget = newCamera->target;
+        void *camState = newCamera->state;
+        int32 camScreen = newCamera->screenID;
+        RSDK.CopyEntity(newCamera, curCamera, false);
+        newCamera->target = camTarget;
+        newCamera->screenID = camScreen;
+        newCamera->state = camState;
+
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + newPlayerID, Shield);
+        destroyEntity(shield);
+        Player_ApplyShield(newPlayer);
+
+        EntityCamera *cam = newPlayer->camera;
+        if (cam) {
+            cam->position.x = newPlayer->position.x;
+            cam->position.y = newPlayer->position.y;
+        }
     }
+
+    destroyEntity(playerStorage);
 #endif
 }
 

@@ -251,6 +251,7 @@ void Ice_Create(void *data)
                         switch (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->characterID) {
                             default:
                             case ID_SONIC: break;
+                            
                             case ID_TAILS: ++self->altContentsAnimator.frameID; break;
                             case ID_KNUCKLES: self->altContentsAnimator.frameID += 2; break;
 #if MANIA_USE_PLUS

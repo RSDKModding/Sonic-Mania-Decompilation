@@ -101,7 +101,7 @@ void GHZCutsceneST_SetupObjects(void)
 
 void GHZCutsceneST_SetupKnuxCutscene(void)
 {
-    if (checkPlayerID(ID_KNUCKLES, 1)) {
+    if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
         EntityPlatform *platform       = GHZCutsceneST->platform;
         EntityAIZKingClaw *claw        = GHZCutsceneST->claw;
         EntityFXRuby *fxRuby           = GHZCutsceneST->fxRuby;

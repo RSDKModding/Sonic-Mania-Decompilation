@@ -525,7 +525,7 @@ void OptionsMenu_ControlsMenuButton_Default_ActionCB(void) { UIControl_MatchMenu
 
 void OptionsMenu_ControlsMenuButton_ActionCB(void)
 {
-    int32 id          = API_MostRecentActiveControllerID(1, 0, 5);
+    int32 id          = API_MostRecentActiveControllerID(true, false, 5);
     int32 gamepadType = API_GetControllerType(id);
 
     String message;

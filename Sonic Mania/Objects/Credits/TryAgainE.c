@@ -42,7 +42,7 @@ void TryAgainE_Draw(void)
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + 0x2E0000;
 
-        if (globals->playerID >= 0x100)
+        if (GET_CHARACTER_ID(2) != ID_NONE)
             drawPos.x = self->position.x - 0x140000;
 
         if (self->player1Animator.animationID == 2)
@@ -56,7 +56,7 @@ void TryAgainE_Draw(void)
             drawPos.y -= 0x40000;
         }
 
-        if (globals->playerID > 255) {
+        if (GET_CHARACTER_ID(2) != ID_NONE) {
             drawPos.x += 0x280000;
             self->direction = FLIP_X;
 
@@ -94,12 +94,12 @@ void TryAgainE_Create(void *data)
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &self->handDownAnimator, true, 3);
 
         int32 playerID = -1;
-        for (int32 id = (globals->playerID & 0xFF); id > 0; ++playerID) id >>= 1;
+        for (int32 id = GET_CHARACTER_ID(1); id > 0; ++playerID) id >>= 1;
         RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * playerID, &self->player1Animator, true, 3);
 
-        if (globals->playerID >= 0x100) {
+        if (GET_CHARACTER_ID(2) != ID_NONE) {
             int32 playerID = -1;
-            for (int32 id = ((globals->playerID >> 8) & 0xFF); id > 0; ++playerID) id >>= 1;
+            for (int32 id = GET_CHARACTER_ID(2); id > 0; ++playerID) id >>= 1;
 
             RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * playerID, &self->player2Animator, true, 3);
         }
@@ -142,7 +142,7 @@ void TryAgainE_State_Stinger(void)
     RSDK.ProcessAnimation(&self->handDownAnimator);
     RSDK.ProcessAnimation(&self->player1Animator);
 
-    if (globals->playerID >= 0x100)
+    if (GET_CHARACTER_ID(2) != ID_NONE)
         RSDK.ProcessAnimation(&self->player2Animator);
 
     if ((self->timer & 0x7F) == 1) {

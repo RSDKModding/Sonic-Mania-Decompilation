@@ -103,11 +103,11 @@ void Summary_State_SetupText(void)
     }
 
     int32 id = 0;
-    for (int32 i = globals->playerID & 0xFF; i > 0; ++id) i >>= 1;
+    for (int32 i = GET_CHARACTER_ID(1); i > 0; ++id) i >>= 1;
     self->leaderCharacterID = id;
 
     id = 0;
-    for (int32 i = globals->playerID >> 8; i > 0; ++id) i >>= 1;
+    for (int32 i = GET_CHARACTER_ID(2); i > 0; ++id) i >>= 1;
     self->sidekickCharacterID = id;
 
     foreach_all(UIPicture, picture)

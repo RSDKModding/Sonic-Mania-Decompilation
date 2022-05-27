@@ -157,7 +157,7 @@ void CPZBoss_State_SetupArena(void)
                 player->velocity.y = 0;
         }
 
-        switch (globals->playerID & 0xFF) {
+        switch (GET_CHARACTER_ID(1)) {
             default:
             case ID_SONIC: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMSonic.bin", SCOPE_STAGE); break;
             case ID_TAILS: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMTails.bin", SCOPE_STAGE); break;

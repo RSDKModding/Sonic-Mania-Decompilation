@@ -204,7 +204,7 @@ void ReplayRecorder_StageLoad(void)
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
             if (param->viewReplay && replayPtr->header.isNotEmpty) {
                 if (param->showGhost) {
-                    globals->playerID        = (globals->playerID & 0xFF) | ((globals->playerID & 0xFF) << 8);
+                    globals->playerID        = GET_CHARACTER_ID(1) | (GET_CHARACTER_ID(1) << 8);
                     Player->configureGhostCB = ReplayRecorder_ConfigureGhost_CB;
                 }
                 else {
@@ -799,8 +799,8 @@ void ReplayRecorder_Play(EntityPlayer *player)
         else {
             Zone->timer              = replayPtr->header.oscillation;
             player->stateInputReplay = ReplayRecorder_PlayBackInput;
-            player->controllerID     = 2;
-            RSDK.AssignControllerID(2, CONT_UNASSIGNED);
+            player->controllerID     = CONT_P2;
+            API_AssignControllerID(CONT_P2, INPUT_UNASSIGNED);
             ReplayRecorder->hasSetupGhostView = true;
         }
 

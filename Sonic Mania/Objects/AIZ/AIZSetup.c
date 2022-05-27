@@ -198,7 +198,7 @@ void AIZSetup_StageLoad(void)
     AIZSetup->sfxImpact    = RSDK.GetSfx("Stage/Impact4.wav");
     AIZSetup->sfxHeliWoosh = RSDK.GetSfx("SPZ1/HeliWooshIn.wav");
 
-    if (checkPlayerID(ID_KNUCKLES, 1)) {
+    if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
         foreach_all(AIZTornado, tornado) { destroyEntity(tornado); }
         foreach_all(AIZTornadoPath, node) { destroyEntity(node); }
     }
@@ -308,7 +308,7 @@ void AIZSetup_SetupObjects(void)
 
 void AIZSetup_GetCutsceneSetupPtr(void)
 {
-    switch (globals->playerID & 0xFF) {
+    switch (GET_CHARACTER_ID(1)) {
         default:
         case ID_SONIC:
         case ID_TAILS:
@@ -569,7 +569,7 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
             AIZSetup->decorations[0]->rotSpeed = 0;
             AIZSetup->decorations[1]->rotSpeed = 0;
 
-            if (checkPlayerID(ID_TAILS, 2))
+            if (CHECK_CHARACTER_ID(ID_TAILS, 2))
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);
 
             RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0x00);

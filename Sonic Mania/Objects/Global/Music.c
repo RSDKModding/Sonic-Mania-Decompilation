@@ -607,6 +607,10 @@ void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
         Music->nextTrack = Music->prevTrack & 0xF;
         music            = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
     }
+    else {
+        Music->nextTrack = trackID & 0xF;
+        music            = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
+    }
 #endif
 
     if (music && (music->classID != Music->classID || music->state != Music_State_TransitionTrack)) {

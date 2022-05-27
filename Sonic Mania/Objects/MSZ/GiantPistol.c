@@ -248,7 +248,7 @@ void GiantPistol_State_Aiming(void)
 #if MANIA_USE_PLUS
     if (GiantPistol->inCutscene) {
 #else
-    if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
+    if (!Zone->actID && !CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
 #endif
         if (self->angle == 118 && self->activePlayers > 0) {
 #if MANIA_USE_PLUS
@@ -303,11 +303,11 @@ void GiantPistol_State_Aiming(void)
                     player->state           = GiantPistol_PlayerState_PistolAir;
                     player->nextGroundState = GiantPistol_PlayerState_PistolGround;
                 }
-                else if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
+                else if (!Zone->actID && !CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
                     player->jumpAbilityState = 0;
                 }
 #else
-                if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1))
+                if (!Zone->actID && !CHECK_CHARACTER_ID(ID_KNUCKLES, 1))
                     player->jumpAbilityState = 0;
 #endif
 

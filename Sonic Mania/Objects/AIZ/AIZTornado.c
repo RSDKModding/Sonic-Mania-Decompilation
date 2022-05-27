@@ -68,7 +68,7 @@ void AIZTornado_Create(void *data)
         RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 0, &self->animatorTornado, true, 0);
         RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 1, &self->animatorPropeller, true, 0);
         RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 2, &self->animatorFlame, true, 0);
-        if (globals->playerID & 1) // if tails is the leader
+        if (GET_CHARACTER_ID(1) == ID_TAILS) // if tails is the leader
             RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 6, &self->animatorPilot, true, 0);
         else
             RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 3, &self->animatorPilot, true, 0);

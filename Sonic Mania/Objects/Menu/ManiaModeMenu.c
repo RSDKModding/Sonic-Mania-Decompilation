@@ -179,8 +179,7 @@ void ManiaModeMenu_ChangeMenuTrack(void)
 
     if (!RSDK.ChannelActive(Music->channelID))
         Music_PlayTrack(trackID);
-
-    if (Music->activeTrack != trackID)
+    else if (Music->activeTrack != trackID)
         Music_TransitionTrack(trackID, 0.12);
 }
 

@@ -289,8 +289,8 @@ typedef struct {
 typedef struct {
     InputState keyBumper;
     InputState keyTrigger;
-    float deadzone;
-    float delta;
+    float bumperDelta;
+    float triggerDelta;
 } RSDKTriggerState;
 #endif
 
@@ -512,14 +512,23 @@ typedef enum { FLIP_NONE, FLIP_X, FLIP_Y, FLIP_XY } FlipFlags;
 
 typedef enum { TYPE_BLANK } DefaultObjTypes;
 
+
+
+enum InputIds {
+};
+
 typedef enum {
-    CONT_UNASSIGNED = -2,
-    CONT_AUTOASSIGN = -1,
-    CONT_ANY        = 0,
-    CONT_P1         = 1,
-    CONT_P2         = 2,
-    CONT_P3         = 3,
-    CONT_P4         = 4,
+    INPUT_UNASSIGNED = -2,
+    INPUT_AUTOASSIGN = -1,
+    INPUT_NONE       = 0,
+} InputIds;
+
+typedef enum {
+    CONT_ANY,
+    CONT_P1,
+    CONT_P2,
+    CONT_P3,
+    CONT_P4,
 } ControllerIDs;
 
 typedef enum {

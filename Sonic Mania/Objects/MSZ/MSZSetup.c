@@ -165,9 +165,9 @@ void MSZSetup_StageLoad(void)
 #endif
 
 #if MANIA_USE_PLUS
-            if (!(SceneInfo->filter & FILTER_ENCORE) && (globals->playerID & ID_KNUCKLES)) {
+            if (!(SceneInfo->filter & FILTER_ENCORE) && GET_CHARACTER_ID(1) == ID_KNUCKLES) {
 #else
-            if (globals->playerID & ID_KNUCKLES) {
+            if (GET_CHARACTER_ID(1) == ID_KNUCKLES) {
 #endif
                 Zone->cameraBoundsL[0] = 0;
                 Zone->cameraBoundsL[1] = 0;
@@ -238,7 +238,7 @@ void MSZSetup_StageLoad(void)
                 }
             }
 #else
-            if (checkPlayerID(ID_KNUCKLES, 1)) {
+            if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
                 RSDK.ResetEntitySlot(17, MSZSetup->classID, MSZSetup_State_ManageFade_K);
                 if (!PlayerHelpers_CheckIntro())
                     FXFade_StopAll();

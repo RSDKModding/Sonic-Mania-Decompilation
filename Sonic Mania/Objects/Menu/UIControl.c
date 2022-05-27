@@ -169,25 +169,25 @@ void UIControl_ClearInputs(uint8 buttonID)
 #endif
     }
 
-    UIControl->keyUp    = false;
-    UIControl->keyDown  = false;
-    UIControl->keyLeft  = false;
-    UIControl->keyRight = false;
-    UIControl->keyY     = buttonID == UIBUTTONPROMPT_BUTTON_Y;
-    UIControl->keyX     = buttonID == UIBUTTONPROMPT_BUTTON_X;
+    UIControl->anyUpPress    = false;
+    UIControl->anyDownPress  = false;
+    UIControl->anyLeftPress  = false;
+    UIControl->anyRightPress = false;
+    UIControl->anyYPress     = buttonID == UIBUTTONPROMPT_BUTTON_Y;
+    UIControl->anyXPress     = buttonID == UIBUTTONPROMPT_BUTTON_X;
 #if MANIA_USE_PLUS
-    UIControl->keyStart = buttonID == UIBUTTONPROMPT_BUTTON_SELECT;
+    UIControl->anyStartPress = buttonID == UIBUTTONPROMPT_BUTTON_SELECT;
 #endif
 
     if (API_GetConfirmButtonFlip()) {
-        UIControl->keyConfirm     = buttonID == UIBUTTONPROMPT_BUTTON_B;
-        UIControl->keyBack        = buttonID == UIBUTTONPROMPT_BUTTON_A;
-        UIControl->forceBackPress = buttonID == UIBUTTONPROMPT_BUTTON_A;
+        UIControl->anyConfirmPress = buttonID == UIBUTTONPROMPT_BUTTON_B;
+        UIControl->anyBackPress    = buttonID == UIBUTTONPROMPT_BUTTON_A;
+        UIControl->forceBackPress  = buttonID == UIBUTTONPROMPT_BUTTON_A;
     }
     else {
-        UIControl->keyConfirm     = buttonID == UIBUTTONPROMPT_BUTTON_A;
-        UIControl->keyBack        = buttonID == UIBUTTONPROMPT_BUTTON_B;
-        UIControl->forceBackPress = buttonID == UIBUTTONPROMPT_BUTTON_B;
+        UIControl->anyConfirmPress = buttonID == UIBUTTONPROMPT_BUTTON_A;
+        UIControl->anyBackPress    = buttonID == UIBUTTONPROMPT_BUTTON_B;
+        UIControl->forceBackPress  = buttonID == UIBUTTONPROMPT_BUTTON_B;
     }
 
     UIControl->lockInput   = true;
@@ -201,11 +201,11 @@ void UIControl_ProcessInputs(void)
     UIControl_HandlePosition();
 
     if (!UIControl->inputLocked) {
-        for (int32 i = 0; i < 4; ++i) {
-            UIControl->upPress[i]    = ControllerInfo[i + 1].keyUp.press || AnalogStickInfoL[i + 1].keyUp.press;
-            UIControl->downPress[i]  = ControllerInfo[i + 1].keyDown.press || AnalogStickInfoL[i + 1].keyDown.press;
-            UIControl->leftPress[i]  = ControllerInfo[i + 1].keyLeft.press || AnalogStickInfoL[i + 1].keyLeft.press;
-            UIControl->rightPress[i] = ControllerInfo[i + 1].keyRight.press || AnalogStickInfoL[i + 1].keyRight.press;
+        for (int32 i = 0; i < PLAYER_MAX; ++i) {
+            UIControl->upPress[i]    = ControllerInfo[CONT_P1 + i].keyUp.press || AnalogStickInfoL[CONT_P1 + i].keyUp.press;
+            UIControl->downPress[i]  = ControllerInfo[CONT_P1 + i].keyDown.press || AnalogStickInfoL[CONT_P1 + i].keyDown.press;
+            UIControl->leftPress[i]  = ControllerInfo[CONT_P1 + i].keyLeft.press || AnalogStickInfoL[CONT_P1 + i].keyLeft.press;
+            UIControl->rightPress[i] = ControllerInfo[CONT_P1 + i].keyRight.press || AnalogStickInfoL[CONT_P1 + i].keyRight.press;
 
             if (UIControl->upPress[i] && UIControl->downPress[i]) {
                 UIControl->upPress[i]   = false;
@@ -217,51 +217,53 @@ void UIControl_ProcessInputs(void)
                 UIControl->rightPress[i] = false;
             }
 
-            UIControl->yPress[i] = ControllerInfo[i + 1].keyY.press;
-            UIControl->xPress[i] = ControllerInfo[i + 1].keyX.press;
+            UIControl->yPress[i] = ControllerInfo[CONT_P1 + i].keyY.press;
+            UIControl->xPress[i] = ControllerInfo[CONT_P1 + i].keyX.press;
 #if MANIA_USE_PLUS
-            UIControl->startPress[i] = ControllerInfo[i + 1].keyStart.press;
+            UIControl->startPress[i] = ControllerInfo[CONT_P1 + i].keyStart.press;
 #endif
 
+            UIControl->confirmPress[i] = ControllerInfo[CONT_P1 + i].keyStart.press;
             if (API_GetConfirmButtonFlip()) {
-                UIControl->confirmPress[i] = ControllerInfo[i + 1].keyStart.press || ControllerInfo[i + 1].keyB.press;
-                UIControl->backPress[i]    = ControllerInfo[i + 1].keyA.press;
+                UIControl->confirmPress[i] |= ControllerInfo[CONT_P1 + i].keyB.press;
+                UIControl->backPress[i] = ControllerInfo[CONT_P1 + i].keyA.press;
             }
             else {
-                UIControl->confirmPress[i] = ControllerInfo[i + 1].keyStart.press || ControllerInfo[i + 1].keyA.press;
-                UIControl->backPress[i]    = ControllerInfo[i + 1].keyB.press;
+                UIControl->confirmPress[i] |= ControllerInfo[CONT_P1 + i].keyA.press;
+                UIControl->backPress[i] = ControllerInfo[CONT_P1 + i].keyB.press;
             }
         }
 
-        UIControl->keyUp    = ControllerInfo->keyUp.press || AnalogStickInfoL->keyUp.press;
-        UIControl->keyDown  = ControllerInfo->keyDown.press || AnalogStickInfoL->keyDown.press;
-        UIControl->keyLeft  = ControllerInfo->keyLeft.press || AnalogStickInfoL->keyLeft.press;
-        UIControl->keyRight = ControllerInfo->keyRight.press || AnalogStickInfoL->keyRight.press;
-        UIControl->keyY     = ControllerInfo->keyY.press;
-        UIControl->keyX     = ControllerInfo->keyX.press;
+        UIControl->anyUpPress    = ControllerInfo->keyUp.press || AnalogStickInfoL->keyUp.press;
+        UIControl->anyDownPress  = ControllerInfo->keyDown.press || AnalogStickInfoL->keyDown.press;
+        UIControl->anyLeftPress  = ControllerInfo->keyLeft.press || AnalogStickInfoL->keyLeft.press;
+        UIControl->anyRightPress = ControllerInfo->keyRight.press || AnalogStickInfoL->keyRight.press;
+        UIControl->anyYPress     = ControllerInfo->keyY.press;
+        UIControl->anyXPress     = ControllerInfo->keyX.press;
 #if MANIA_USE_PLUS
-        UIControl->keyStart = ControllerInfo->keyStart.press;
+        UIControl->anyStartPress = ControllerInfo->keyStart.press;
 #endif
 
+        UIControl->anyConfirmPress = ControllerInfo->keyStart.press;
         if (API_GetConfirmButtonFlip()) {
-            UIControl->keyConfirm = ControllerInfo->keyStart.press || ControllerInfo->keyB.press;
-            UIControl->keyBack    = ControllerInfo->keyA.press;
+            UIControl->anyConfirmPress |= ControllerInfo->keyB.press;
+            UIControl->anyBackPress = ControllerInfo->keyA.press;
         }
         else {
-            UIControl->keyConfirm = ControllerInfo->keyStart.press || ControllerInfo->keyA.press;
-            UIControl->keyBack    = ControllerInfo->keyB.press;
+            UIControl->anyConfirmPress |= ControllerInfo->keyA.press;
+            UIControl->anyBackPress = ControllerInfo->keyB.press;
         }
 
-        UIControl->keyBack |= Unknown_pausePress;
-        UIControl->keyBack |= UIControl->forceBackPress;
+        UIControl->anyBackPress |= Unknown_pausePress;
+        UIControl->anyBackPress |= UIControl->forceBackPress;
 
-        if (UIControl->keyBack) {
-            UIControl->keyConfirm = false;
-            UIControl->keyY       = false;
+        if (UIControl->anyBackPress) {
+            UIControl->anyConfirmPress = false;
+            UIControl->anyYPress       = false;
         }
 
-        if (UIControl->keyConfirm) {
-            UIControl->keyY = false;
+        if (UIControl->anyConfirmPress) {
+            UIControl->anyYPress = false;
         }
 
         UIControl->inputLocked = true;
@@ -270,7 +272,7 @@ void UIControl_ProcessInputs(void)
     if (!self->selectionDisabled) {
         bool32 backPressed = false;
 
-        if (UIControl->keyBack) {
+        if (UIControl->anyBackPress) {
             if (!self->childHasFocus && !self->dialogHasFocus
 #if MANIA_USE_PLUS
                 && !self->popoverHasFocus
@@ -280,7 +282,7 @@ void UIControl_ProcessInputs(void)
                     backPressed = self->backPressCB();
 
                     if (!backPressed) {
-                        UIControl->keyBack = false;
+                        UIControl->anyBackPress = false;
                     }
                     else {
                         if (self->buttons[self->buttonID])
@@ -289,7 +291,7 @@ void UIControl_ProcessInputs(void)
                 }
                 else {
                     if (self->parentTag.length <= 0) {
-                        UIControl->keyBack = false;
+                        UIControl->anyBackPress = false;
                     }
                     else {
                         self->selectionDisabled = true;
@@ -321,7 +323,7 @@ void UIControl_ProcessInputs(void)
             UIControl_ProcessButtonInput();
 
         if (!self->selectionDisabled) {
-            if (UIControl->keyY) {
+            if (UIControl->anyYPress) {
                 if (!self->childHasFocus && !self->dialogHasFocus
 #if MANIA_USE_PLUS
                     && !self->popoverHasFocus
@@ -330,10 +332,10 @@ void UIControl_ProcessInputs(void)
                     StateMachine_Run(self->yPressCB);
                 }
 
-                UIControl->keyY = false;
+                UIControl->anyYPress = false;
             }
 
-            if (UIControl->keyX) {
+            if (UIControl->anyXPress) {
                 if (!self->childHasFocus && !self->dialogHasFocus
 #if MANIA_USE_PLUS
                     && !self->popoverHasFocus
@@ -342,7 +344,7 @@ void UIControl_ProcessInputs(void)
                     StateMachine_Run(self->xPressCB);
                 }
 
-                UIControl->keyX = false;
+                UIControl->anyXPress = false;
             }
         }
     }
@@ -365,28 +367,13 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
         EntityUIButton *entity = RSDK_GET_ENTITY(i, UIButton);
 
         if (entity) {
-            int32 left   = -ScreenInfo->width >> 1;
-            int32 right  = ScreenInfo->width >> 1;
-            int32 bottom = -ScreenInfo->height >> 1;
-            int32 top    = ScreenInfo->height >> 1;
+            int32 left   = minVal(-ScreenInfo->width >> 1, ScreenInfo->width >> 1) << 16;
+            int32 right  = maxVal(-ScreenInfo->width >> 1, ScreenInfo->width >> 1) << 16;
+            int32 top    = minVal(-ScreenInfo->height >> 1, ScreenInfo->height >> 1) << 16;
+            int32 bottom = maxVal(-ScreenInfo->height >> 1, ScreenInfo->height >> 1) << 16;
 
-            int32 x = right;
-            int32 y = top;
-
-            if (left < right)
-                x = left;
-
-            if (right > left)
-                left = right;
-
-            if (bottom < top)
-                y = bottom;
-
-            if (top > bottom)
-                bottom = top;
-
-            if (entity->position.x >= control->position.x + (x << 16) && entity->position.x <= control->position.x + (left << 16)) {
-                if (entity->position.y >= control->position.y + (y << 16) && entity->position.y <= control->position.y + (bottom << 16)) {
+            if (entity->position.x >= control->position.x + left && entity->position.x <= control->position.x + right) {
+                if (entity->position.y >= control->position.y + top && entity->position.y <= control->position.y + bottom) {
                     int32 slot = RSDK.GetEntityID(entity);
 
                     SceneInfo->entity = (Entity *)entity;

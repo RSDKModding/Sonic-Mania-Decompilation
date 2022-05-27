@@ -6,14 +6,19 @@
 #if !MANIA_USE_PLUS
 // preplus was always 2P
 #define COMPETITION_PLAYER_COUNT (2)
+
+#define CompSession_DeriveWinner CompetitionSession_DeriveWinner
+#else
+
+#define CompSession_DeriveWinner Competition_DeriveWinner
 #endif
 
 #define COMPETITION_STAGE_COUNT (12)
 
 typedef enum {
-    FINISHFLAG_NOTFINISHED,
-    FINISHFLAG_TIMEOVER,
-    FINISHFLAG_FINISHED,
+    FINISHTYPE_NOTFINISHED,
+    FINISHTYPE_GAMEOVER,
+    FINISHTYPE_PASSEDSIGNPOST,
 } vsFinishFlags;
 
 typedef enum {
@@ -91,8 +96,8 @@ void CompetitionSession_Serialize(void);
 #if !MANIA_USE_PLUS
 void CompetitionSession_ResetOptions(void);
 void CompetitionSession_ClearMatchData(void);
-void CompetitionSession_DeriveWinner(int32 playerID, int32 flags);
-void CompetitionSession_WinMatchFor(int32 player);
+void CompetitionSession_DeriveWinner(int32 playerID, int32 finishType);
+void CompetitionSession_WinMatchFor(int32 playerID);
 #endif
 
 #endif //! OBJ_COMPETITIONSESSION_H

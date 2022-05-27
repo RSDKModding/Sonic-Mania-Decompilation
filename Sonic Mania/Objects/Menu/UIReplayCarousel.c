@@ -138,7 +138,7 @@ void UIReplayCarousel_ProcessButtonCB(void)
         int32 id         = self->curReplayID;
         bool32 movedUp   = false;
         bool32 movedDown = false;
-        if (UIControl->keyUp) {
+        if (UIControl->anyUpPress) {
             if (self->curReplayID) {
                 --id;
                 movedDown = true;
@@ -149,7 +149,7 @@ void UIReplayCarousel_ProcessButtonCB(void)
             }
         }
 
-        if (UIControl->keyDown && self->curReplayID < self->sortedRowCount - 1) {
+        if (UIControl->anyDownPress && self->curReplayID < self->sortedRowCount - 1) {
             movedDown = true;
             id++;
         }
@@ -176,7 +176,7 @@ void UIReplayCarousel_ProcessButtonCB(void)
                 self->curReplayID = id;
             }
 
-            if (UIControl->keyConfirm) {
+            if (UIControl->anyConfirmPress) {
                 if (self->disabled) {
                     StateMachine_Run(self->failCB);
                 }

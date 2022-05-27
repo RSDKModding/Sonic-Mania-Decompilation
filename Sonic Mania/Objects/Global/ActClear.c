@@ -37,7 +37,7 @@ void ActClear_Draw(void)
     verts[1].y = drawPos.y - 0x140000;
     verts[2].y = drawPos.y - 0x40000;
     verts[3].y = drawPos.y - 0x40000;
-    if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
+    if ((GET_CHARACTER_ID(1)) == ID_KNUCKLES) {
         int32 center = (ScreenInfo->centerX << 16) + 0x100000;
 
         drawPos.x  = 2 * self->gotThroughPos.x + center;
@@ -101,7 +101,7 @@ void ActClear_Draw(void)
         RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, true);
 
 #if MANIA_USE_PLUS
-        if ((globals->playerID & 0xFF) == ID_MIGHTY)
+        if ((GET_CHARACTER_ID(1)) == ID_MIGHTY)
             self->gotThroughAnimator.frameID = 2;
         else
 #endif
@@ -328,14 +328,14 @@ void ActClear_Create(void *data)
             StatInfo stat;
             uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
 #if MANIA_USE_PLUS
-            switch (globals->playerID & 0xFF) {
+            switch (GET_CHARACTER_ID(1)) {
                 case ID_SONIC: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score); break;
                 case ID_TAILS: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 2, time, player1->rings, player1->score); break;
                 case ID_KNUCKLES: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 3, time, player1->rings, player1->score); break;
                 case ID_MIGHTY: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 4, time, player1->rings, player1->score); break;
                 default:
                 case ID_RAY:
-                    if ((globals->playerID & 0xFF) == ID_RAY)
+                    if ((GET_CHARACTER_ID(1)) == ID_RAY)
                         TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 5, time, player1->rings, player1->score);
                     else
                         TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score);
@@ -343,7 +343,7 @@ void ActClear_Create(void *data)
             }
             API.TryTrackStat(&stat);
 #else
-            switch (globals->playerID & 0xFF) {
+            switch (GET_CHARACTER_ID(1)) {
                 case ID_SONIC: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score); break;
                 case ID_TAILS: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 2, time, player1->rings, player1->score); break;
                 case ID_KNUCKLES: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 3, time, player1->rings, player1->score); break;
@@ -372,7 +372,7 @@ void ActClear_Create(void *data)
                 case 9:
                     if (!SceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && SceneInfo->seconds == 59) {
 #if MANIA_USE_PLUS
-                        if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER)))
+                        if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER)))
 #endif
                             self->timeBonus = 100000;
                     }
@@ -416,7 +416,7 @@ void ActClear_Create(void *data)
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &self->timeElementsAnimator, true, 12);
 #endif
 
-        switch (globals->playerID & 0xFF) {
+        switch (GET_CHARACTER_ID(1)) {
             default:
             case ID_SONIC: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 0); break;
             case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 1); break;

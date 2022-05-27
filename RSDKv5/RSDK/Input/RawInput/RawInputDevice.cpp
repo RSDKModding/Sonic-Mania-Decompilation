@@ -84,13 +84,13 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
 
     triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
     triggerL[controllerID].keyTrigger.press |= this->stateTrigger_L;
-    triggerL[controllerID].deadzone = this->triggerDeltaL;
-    triggerL[controllerID].delta    = this->triggerDeltaL;
+    triggerL[controllerID].bumperDelta  = this->triggerDeltaL;
+    triggerL[controllerID].triggerDelta = this->triggerDeltaL;
 
     triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
     triggerR[controllerID].keyTrigger.press |= this->stateTrigger_R;
-    triggerR[controllerID].deadzone = this->triggerDeltaR;
-    triggerR[controllerID].delta    = this->triggerDeltaR;
+    triggerR[controllerID].bumperDelta     = this->triggerDeltaR;
+    triggerR[controllerID].triggerDelta = this->triggerDeltaR;
 #else
     controller[controllerID].keyStickL.press |= this->stateStick_L;
     stickL[controllerID].hDeltaL = this->hDelta_L;
@@ -106,12 +106,11 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
 
     controller[controllerID].keyBumperL.press |= this->stateBumper_L;
     controller[controllerID].keyTriggerL.press |= this->stateTrigger_L;
-    stickL[controllerID].deadzone = this->triggerDeltaL;
-    stickL[controllerID].triggerDeltaL      = this->triggerDeltaL;
+    stickL[controllerID].triggerDeltaL = this->triggerDeltaL;
 
     controller[controllerID].keyBumperR.press |= this->stateBumper_R;
     controller[controllerID].keyTriggerR.press |= this->stateTrigger_R;
-    stickL[controllerID].triggerDeltaR    = this->triggerDeltaR;
+    stickL[controllerID].triggerDeltaR = this->triggerDeltaR;
 #endif
 }
 

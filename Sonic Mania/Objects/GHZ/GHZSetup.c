@@ -114,7 +114,7 @@ void GHZSetup_StageLoad(void)
 
 void GHZSetup_SetupStartingBG(void)
 {
-    if (checkPlayerID(ID_KNUCKLES, 1)) {
+    if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
         BGSwitch->layerIDs[0] = GHZ_BG_CAVES;
         BGSwitch->layerIDs[1] = GHZ_BG_CAVES;
         BGSwitch->layerIDs[2] = GHZ_BG_CAVES;

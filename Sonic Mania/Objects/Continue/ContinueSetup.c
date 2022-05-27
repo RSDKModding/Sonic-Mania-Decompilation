@@ -81,7 +81,7 @@ void ContinueSetup_Create(void *data)
         self->updateRange.x = 0x4000000;
 
         self->updateRange.y = 0x4000000;
-        switch (globals->playerID & 0xFF) {
+        switch (GET_CHARACTER_ID(1)) {
             default:
             case ID_SONIC: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 0); break;
             case ID_TAILS: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 1); break;

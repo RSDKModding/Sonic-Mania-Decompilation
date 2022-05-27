@@ -39,7 +39,7 @@ void ContinuePlayer_Create(void *data)
         self->active    = ACTIVE_NORMAL;
 
         if (!self->isPlayer2) {
-            switch (globals->playerID & 0xFF) {
+            switch (GET_CHARACTER_ID(1)) {
                 default:
                 case ID_SONIC:
                     RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_SONIC, &self->animator, true, 0);
@@ -87,7 +87,7 @@ void ContinuePlayer_StageLoad(void)
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;
 
-    switch (globals->playerID & 0xFF) {
+    switch (GET_CHARACTER_ID(1)) {
         default:
         case ID_SONIC: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE); break;
         case ID_TAILS: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE); break;

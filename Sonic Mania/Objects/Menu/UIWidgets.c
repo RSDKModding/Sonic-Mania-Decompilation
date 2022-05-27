@@ -275,12 +275,12 @@ void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 }
 Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color rightColor)
 {
-    UIWidgets_DrawRightTriangle(x, y, 13, (leftColor >> 16) & 0xFF, (leftColor >> 8) & 0xFF, leftColor & 0xFF);
-    UIWidgets_DrawRightTriangle(x + 0xE0000, y + 0xC0000, -13, (rightColor >> 16) & 0xFF, (rightColor >> 8) & 0xFF, rightColor & 0xFF);
-
     Vector2 newPos;
     newPos.x = x + 0xE0000;
     newPos.y = y;
+
+    UIWidgets_DrawRightTriangle(newPos.x, newPos.y, 13, (leftColor >> 16) & 0xFF, (leftColor >> 8) & 0xFF, leftColor & 0xFF);
+    UIWidgets_DrawRightTriangle(newPos.x, newPos.y + 0xC0000, -13, (rightColor >> 16) & 0xFF, (rightColor >> 8) & 0xFF, rightColor & 0xFF);
 
     return newPos;
 }

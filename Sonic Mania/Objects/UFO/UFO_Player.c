@@ -109,7 +109,7 @@ void UFO_Player_Create(void *data)
 
         UFO_Player_ChangeMachState();
         self->stateInput   = UFO_Player_ProcessPlayerControl;
-        self->controllerID = CONT_ANY;
+        self->controllerID = INPUT_NONE;
         self->state        = UFO_Player_State_Run;
 
         RSDK.SetModelAnimation(UFO_Player->jogModel, &self->animator, 128, 0, true, 0);
@@ -121,7 +121,7 @@ void UFO_Player_StageLoad(void)
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;
 
-    switch (globals->playerID & 0xFF) {
+    switch (GET_CHARACTER_ID(1)) {
         default:
         case ID_SONIC:
             UFO_Player->jogModel    = RSDK.LoadMesh("Special/SonicJog.bin", SCOPE_STAGE);

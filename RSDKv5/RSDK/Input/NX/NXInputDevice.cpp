@@ -260,13 +260,13 @@ void InputDeviceNX::ProcessInput(int32 controllerID)
 
     triggerL[controllerID].keyBumper.press |= (buttonMasks & HidNpadButton_L);
     triggerL[controllerID].keyTrigger.press |= (buttonMasks & HidNpadButton_ZL);
-    triggerL[controllerID].deadzone = triggerL[controllerID].keyBumper.press ? 1.0 : 0.0;
-    triggerL[controllerID].delta    = triggerL[controllerID].keyTrigger.press ? 1.0 : 0.0;
+    triggerL[controllerID].bumperDelta  = triggerL[controllerID].keyBumper.press ? 1.0 : 0.0;
+    triggerL[controllerID].triggerDelta = triggerL[controllerID].keyTrigger.press ? 1.0 : 0.0;
 
     triggerR[controllerID].keyBumper.press |= (buttonMasks & HidNpadButton_R);
     triggerR[controllerID].keyTrigger.press |= (buttonMasks & HidNpadButton_ZR);
-    triggerR[controllerID].deadzone = triggerR[controllerID].keyBumper.press ? 1.0 : 0.0;
-    triggerR[controllerID].delta    = triggerR[controllerID].keyTrigger.press ? 1.0 : 0.0;
+    triggerR[controllerID].bumperDelta  = triggerR[controllerID].keyBumper.press ? 1.0 : 0.0;
+    triggerR[controllerID].triggerDelta = triggerR[controllerID].keyTrigger.press ? 1.0 : 0.0;
 #else
     controller[controllerID].keyStickL.press |= (buttonMasks & HidNpadButton_StickL);
     stickL[controllerID].hDeltaL = this->hDelta_L;

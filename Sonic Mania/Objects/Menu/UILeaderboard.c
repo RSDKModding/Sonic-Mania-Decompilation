@@ -445,13 +445,13 @@ void UILeaderboard_ProcessButtonCB(void)
     LeaderboardAvail entryCount = API.LeaderboardEntryCount();
 
     int32 newID = self->entryOffset;
-    if (UIControl->keyUp)
+    if (UIControl->anyUpPress)
         newID--;
-    else if (UIControl->keyDown)
+    else if (UIControl->anyDownPress)
         newID++;
-    else if (UIControl->keyLeft)
+    else if (UIControl->anyLeftPress)
         newID -= 5;
-    else if (UIControl->keyRight)
+    else if (UIControl->anyRightPress)
         newID += 5;
 
     int32 end = entryCount.start + entryCount.length;
@@ -479,16 +479,16 @@ void UILeaderboard_ProcessButtonCB(void)
         }
     }
 
-    if (UIControl->keyY && self->yPressCBEnabled) {
+    if (UIControl->anyYPress && self->yPressCBEnabled) {
 #else
     int32 newID = self->entryOffset;
-    if (UIControl->keyUp)
+    if (UIControl->anyUpPress)
         newID--;
-    else if (UIControl->keyDown)
+    else if (UIControl->anyDownPress)
         newID++;
-    else if (UIControl->keyLeft)
+    else if (UIControl->anyLeftPress)
         newID -= 5;
-    else if (UIControl->keyRight)
+    else if (UIControl->anyRightPress)
         newID += 5;
 
     int32 end = self->entryOffset + self->entryLength;
@@ -503,7 +503,7 @@ void UILeaderboard_ProcessButtonCB(void)
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
 
-    if (UIControl->keyY && self->taRecord) {
+    if (UIControl->anyYPress && self->taRecord) {
 #endif
         self->yPressCB();
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);

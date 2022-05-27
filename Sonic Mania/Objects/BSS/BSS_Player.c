@@ -90,11 +90,11 @@ void BSS_Player_Draw(void)
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 
     // if we're tails, draw his tail
-    if (checkPlayerID(ID_TAILS, 1) && self->animator.animationID == 1)
+    if (CHECK_CHARACTER_ID(ID_TAILS, 1) && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #if MANIA_USE_PLUS
     // if we're ray, draw his tail
-    else if (checkPlayerID(ID_RAY, 1) && self->animator.animationID == 1)
+    else if (CHECK_CHARACTER_ID(ID_RAY, 1) && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #endif
 }
@@ -110,7 +110,7 @@ void BSS_Player_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
-        switch (globals->playerID & 0xFF) {
+        switch (GET_CHARACTER_ID(1)) {
             default:
             case ID_SONIC: self->aniFrames = BSS_Player->sonicFrames; break;
 

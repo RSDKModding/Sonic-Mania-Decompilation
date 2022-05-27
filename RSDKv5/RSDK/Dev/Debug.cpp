@@ -623,7 +623,7 @@ void RSDK::DevMenu_SceneSelectMenu()
         // rev01 had this here, rev02 does not.
         // This can cause an annoying popup when starting a stage, so it's re-added for anyone who doesn't like that popup
 #if !RETRO_REV02 || !RETRO_USE_ORIGINAL_CODE
-        AssignControllerID(CONT_P1, CONT_AUTOASSIGN);
+        AssignControllerID(CONT_P1, INPUT_AUTOASSIGN);
 #endif
     }
 #if !RETRO_USE_ORIGINAL_CODE

@@ -1085,9 +1085,9 @@ void RSDK::ProcessDebugCommands()
 {
 #if !RETRO_USE_ORIGINAL_CODE
     // This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
-    int32 id          = ControllerIDForInputID(1);
+    int32 id          = ControllerIDForInputID(CONT_P1);
     uint8 gamepadType = GetControllerType(id) >> 8;
-    if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN || id == CONT_ANY)
+    if (gamepadType != DEVICE_TYPE_CONTROLLER || id == INPUT_UNASSIGNED || id == INPUT_AUTOASSIGN || id == CONT_ANY)
         return;
 #endif
 

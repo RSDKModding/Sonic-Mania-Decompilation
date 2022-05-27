@@ -410,6 +410,7 @@ void SP500_State_PrintFinished(void)
                     case ID_SONIC: RSDK.CopyPalette(6, 2, 0, 2, 6); break;
 
                     case ID_TAILS: RSDK.CopyPalette(6, 70, 0, 70, 6); break;
+                    
                     case ID_KNUCKLES:
                         RSDK.CopyPalette(6, 80, 0, 80, 6);
                         break;

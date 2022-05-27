@@ -194,15 +194,15 @@ void UIModeButton_SelectedCB(void)
 
     if (self->buttonID == UIMODEBUTTON_COMPETITION) {
 #if MANIA_USE_PLUS
-        int32 id = API_MostRecentActiveControllerID(1, 0, 5);
+        int32 id = API_MostRecentActiveControllerID(true, false, 5);
 #else
-        int32 id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
 #endif
         API_ResetControllerAssignments();
-        API_AssignControllerID(1, id);
-        API_AssignControllerID(2, CONT_AUTOASSIGN);
-        API_AssignControllerID(3, CONT_AUTOASSIGN);
-        API_AssignControllerID(4, CONT_AUTOASSIGN);
+        API_AssignControllerID(CONT_P1, id);
+        API_AssignControllerID(CONT_P2, INPUT_AUTOASSIGN);
+        API_AssignControllerID(CONT_P3, INPUT_AUTOASSIGN);
+        API_AssignControllerID(CONT_P4, INPUT_AUTOASSIGN);
     }
 
     UITransition_StartTransition(self->actionCB, 14);

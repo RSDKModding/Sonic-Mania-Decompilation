@@ -244,13 +244,13 @@ void DASetup_State_ManageControl(void)
     back    = ControllerInfo->keyB.press;
 
     int32 prevTrack = DASetup->trackID;
-    if (UIControl->keyRight || right)
+    if (UIControl->anyRightPress || right)
         DASetup->trackID++;
-    else if (UIControl->keyLeft || left)
+    else if (UIControl->anyLeftPress || left)
         DASetup->trackID--;
-    else if (UIControl->keyUp || up)
+    else if (UIControl->anyUpPress || up)
         DASetup->trackID += 10;
-    else if (UIControl->keyDown || down)
+    else if (UIControl->anyDownPress || down)
         DASetup->trackID -= 10;
 #else
     int32 prevTrack = DASetup->trackID;
@@ -275,7 +275,7 @@ void DASetup_State_ManageControl(void)
     }
 
 #if MANIA_USE_TOUCH_CONTROLS
-    if (UIControl->keyConfirm || confirm) {
+    if (UIControl->anyConfirmPress || confirm) {
 #else
     if (UIControl->keyConfirm) {
 #endif
@@ -300,7 +300,7 @@ void DASetup_State_ManageControl(void)
 
     if (!DASetup->returnToMenu) {
 #if MANIA_USE_TOUCH_CONTROLS
-        if (UIControl->keyBack || back) {
+        if (UIControl->anyBackPress || back) {
 #else
         if (UIControl->keyBack) {
 #endif

@@ -69,9 +69,9 @@ void Tornado_Create(void *data)
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 0, &self->animatorTornado, true, 0);
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &self->animatorPropeller, true, 0);
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &self->animatorFlame, true, 0);
-        if (checkPlayerID(ID_TAILS, 1)
+        if (CHECK_CHARACTER_ID(ID_TAILS, 1)
 #if MANIA_USE_PLUS
-            || checkPlayerID(ID_MIGHTY, 1) || checkPlayerID(ID_RAY, 1)
+            || CHECK_CHARACTER_ID(ID_MIGHTY, 1) || CHECK_CHARACTER_ID(ID_RAY, 1)
 #endif
         ) {
             RSDK.SetSpriteAnimation(Tornado->aniFrames, 3, &self->animatorPilot, true, 0);
@@ -80,7 +80,7 @@ void Tornado_Create(void *data)
             RSDK.SetSpriteAnimation(Tornado->aniFrames, 6, &self->animatorPilot, true, 0);
         }
 
-        if ((globals->playerID & 0xFF) != ID_KNUCKLES && !StarPost->postIDs[0])
+        if (GET_CHARACTER_ID(1) != ID_KNUCKLES && !StarPost->postIDs[0])
             RSDK.SetSpriteAnimation(Tornado->knuxFrames, 6, &self->animatorKnux, false, 0);
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -93,7 +93,7 @@ void Tornado_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MSZ") || RSDK.CheckStageFolder("MSZCutscene")) {
         Tornado->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Tornado.bin", SCOPE_STAGE);
-        if (!checkPlayerID(ID_KNUCKLES, 1))
+        if (!CHECK_CHARACTER_ID(ID_KNUCKLES, 1))
             Tornado->knuxFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
     }
 

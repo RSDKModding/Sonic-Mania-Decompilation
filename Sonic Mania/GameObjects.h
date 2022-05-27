@@ -426,7 +426,7 @@ typedef struct {
     int32 (*ControllerUnknown1)(uint8 controllerID, int32 unknown1, int32 unknown2);
     int32 (*ControllerUnknown2)(uint8 controllerID, int32 unknown1, int32 unknown2);
     void (*AssignControllerID)(uint8 controllerID, uint32 inputID);
-    bool32 (*InputIDIsDisconnected)(uint8 controllerID);
+    bool32 (*ControllerIsAssigned)(uint8 controllerID);
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_REV02
