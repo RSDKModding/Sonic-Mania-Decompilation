@@ -89,7 +89,7 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
 
     triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
     triggerR[controllerID].keyTrigger.press |= this->stateTrigger_R;
-    triggerR[controllerID].bumperDelta     = this->triggerDeltaR;
+    triggerR[controllerID].bumperDelta  = this->triggerDeltaR;
     triggerR[controllerID].triggerDelta = this->triggerDeltaR;
 #else
     controller[controllerID].keyStickL.press |= this->stateStick_L;
@@ -233,7 +233,7 @@ void RSDK::SKU::InitRawInputAPI()
                                     device->deviceHandle = pRawInputDeviceList[d].hDevice;
                                     memcpy(device->buttons, gamePadMappings[g].buttons, sizeof(device->buttons));
                                     RSDK::PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name,
-                                             deviceInfo.mouse.dwId, deviceInfo.mouse.dwNumberOfButtons);
+                                                   deviceInfo.mouse.dwId, deviceInfo.mouse.dwNumberOfButtons);
                                     rawInputDevices[rawInputDeviceCount++] = device;
                                 }
                             }

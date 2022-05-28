@@ -4,7 +4,7 @@
 using namespace RSDK;
 
 // Start custom leaderboard code
-// 
+//
 // this is added because we don't have access to any store APIs that would otherwise use this feature
 std::vector<SKU::LeaderboardInfo> RSDK::SKU::leaderboardList;
 

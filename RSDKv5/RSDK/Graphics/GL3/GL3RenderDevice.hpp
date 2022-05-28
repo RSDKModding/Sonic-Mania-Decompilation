@@ -16,7 +16,7 @@ public:
                                          int32 strideV);
     static void SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                          int32 strideV);
-                                         
+
     static bool ProcessEvents();
 
     static void InitFPSCap();
@@ -44,7 +44,7 @@ private:
     static void ProcessFocusEvent(GLFWwindow *, int focused);
     static void ProcessMouseEvent(GLFWwindow *, int button, int action, int mods);
     static void ProcessJoystickEvent(int ID, int event);
-    static void ProcessMaximizeEvent(GLFWwindow*, int maximized);
+    static void ProcessMaximizeEvent(GLFWwindow *, int maximized);
 
     static void SetLinear(bool32 linear);
 
@@ -56,7 +56,7 @@ private:
     static double lastFrame;
     static double targetFreq;
 
-    static uint32* videoBuffer;
+    static uint32 *videoBuffer;
 };
 
 struct ShaderEntry : public ShaderEntryBase {

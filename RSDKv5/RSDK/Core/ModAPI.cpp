@@ -222,7 +222,7 @@ void RSDK::LoadMods()
 void loadCfg(RSDK::ModInfo *info, std::string path)
 {
     RSDK::FileInfo *cfg = new RSDK::FileInfo();
-    cfg->externalFile = true;
+    cfg->externalFile   = true;
     // CFG FILE READ
     if (LoadFile(cfg, path.c_str(), RSDK::FMODE_RB)) {
         int32 catCount = ReadInt8(cfg);
@@ -352,7 +352,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
 #if RETRO_PLATFORM == RETRO_WIN
                     autodec = ".dll";
 #elif RETRO_PLATFORM == RETRO_OSX
-                    autodec        = ".dylib";
+                    autodec = ".dylib";
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                     autodec = ".so";
 #elif RETRO_PLATFORM == RETRO_SWITCH
@@ -401,7 +401,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     std::string fl = file.string().c_str();
 #if RETRO_PLATFORM == RETRO_ANDROID
                     // only load ones that are compiled. this is to still allow lang mods to work
-                    fl                = "lib" + buf;
+                    fl = "lib" + buf;
 #endif
                     void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
 #define getAddress dlsym
@@ -437,17 +437,17 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
 #if RETRO_REV02
                         linkInfo.functionTable = RSDKFunctionTable;
                         linkInfo.APITable      = APIFunctionTable;
-                        linkInfo.currentSKU   = &SKU::curSKU;
-                        linkInfo.gameInfo     = &gameVerInfo;
-                        linkInfo.sceneInfo    = &sceneInfo;
-                        linkInfo.controller   = controller;
-                        linkInfo.stickL       = stickL;
-                        linkInfo.stickR       = stickR;
-                        linkInfo.triggerL     = triggerL;
-                        linkInfo.triggerR     = triggerR;
-                        linkInfo.touchMouse   = &touchMouseData;
-                        linkInfo.unknown      = &SKU::unknownInfo;
-                        linkInfo.screenInfo   = screens;
+                        linkInfo.currentSKU    = &SKU::curSKU;
+                        linkInfo.gameInfo      = &gameVerInfo;
+                        linkInfo.sceneInfo     = &sceneInfo;
+                        linkInfo.controller    = controller;
+                        linkInfo.stickL        = stickL;
+                        linkInfo.stickR        = stickR;
+                        linkInfo.triggerL      = triggerL;
+                        linkInfo.triggerR      = triggerR;
+                        linkInfo.touchMouse    = &touchMouseData;
+                        linkInfo.unknown       = &SKU::unknownInfo;
+                        linkInfo.screenInfo    = screens;
                         linkInfo.modTable      = modFunctionTable;
 #else
                         linkInfo.functionTable  = RSDKFunctionTable;
@@ -457,7 +457,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                         linkInfo.stickInfo      = stickL;
                         linkInfo.touchInfo      = &touchMouseData;
                         linkInfo.screenInfo     = screens;
-                        linkInfo.modTable        = modFunctionTable;
+                        linkInfo.modTable       = modFunctionTable;
 #endif
 
                         const char *fid = info->id.c_str();
@@ -1074,16 +1074,16 @@ void SuperInternal(RSDK::ObjectClass *super, RSDK::ModSuper callback, void *data
             }
             // if overriding, force it all to be that object and don't set it back
             *super->inherited->staticVars = *super->staticVars;
-            super                   = super->inherited;
+            super                         = super->inherited;
         }
         ++superLevels;
     }
     else if (super->inherited) {
         // if we're just inheriting, set it back properly afterward
-        before                  = *super->inherited->staticVars;
+        before                        = *super->inherited->staticVars;
         *super->inherited->staticVars = *super->staticVars;
-        super                   = super->inherited;
-        superLevels             = 1;
+        super                         = super->inherited;
+        superLevels                   = 1;
     }
 
     switch (callback) {
@@ -1134,8 +1134,8 @@ void SuperInternal(RSDK::ObjectClass *super, RSDK::ModSuper callback, void *data
     }
 
     *super->staticVars = before;
-    superLevels  = 1;
-    currentMod   = curMod;
+    superLevels        = 1;
+    currentMod         = curMod;
 }
 
 void RSDK::Super(int32 objectID, ModSuper callback, void *data) { return SuperInternal(&objectClassList[stageObjectIDs[objectID]], callback, data); }
@@ -1184,13 +1184,13 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
 
-    int32 superSlot     = preCount;
+    int32 superSlot      = preCount;
     ObjectClass *inherit = NULL;
     for (int32 i = 0; i < objectClassCount; ++i) {
         if (HASH_MATCH_MD5(objectClassList[i].hash, hash)) {
             objectClassCount = i;
-            superSlot   = i;
-            inherit     = new ObjectClass(objectClassList[i]);
+            superSlot        = i;
+            inherit          = new ObjectClass(objectClassList[i]);
             --preCount;
             if (!inherited)
                 inherited = name;
@@ -1222,7 +1222,7 @@ void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 en
         if (HASH_MATCH_MD5(info->hash, inherit->hash)) {
             // we override an obj and lets check for structPtr
             if (!info->staticVars) {
-                info->staticVars       = inherit->staticVars;
+                info->staticVars      = inherit->staticVars;
                 info->staticClassSize = inherit->staticClassSize;
             }
         }

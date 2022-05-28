@@ -455,7 +455,8 @@ void RSDK::LoadSceneFile()
                                 ReadBytes(&info, tempBuffer, sizeof(int32));
                             break;
 
-                        // not entirely sure on specifics here, should always be sizeof(int32) but it having a unique type implies it may not always be
+                        // not entirely sure on specifics here, should always be sizeof(int32) but it having a unique type implies it may not always
+                        // be
                         case VAR_ENUM:
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int32));

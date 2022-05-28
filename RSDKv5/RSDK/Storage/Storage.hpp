@@ -19,7 +19,7 @@ struct DataStorage {
     int32 *memoryTable;
     uint32 usedStorage;
     uint32 storageLimit;
-    int32 **dataEntries[STORAGE_ENTRY_COUNT]; // pointer to the actual variable
+    int32 **dataEntries[STORAGE_ENTRY_COUNT];   // pointer to the actual variable
     int32 *storageEntries[STORAGE_ENTRY_COUNT]; // pointer to the storage in "memoryTable"
     uint32 entryCount;
     uint32 clearCount;

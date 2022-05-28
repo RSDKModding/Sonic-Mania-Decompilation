@@ -38,7 +38,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
     return RSDK_main(1, &lpCmdLine, RSDK::LinkGameLogic);
 }
 #else
-int main(int argc, char *argv[]) { return RSDK_main(argc, argv, (void*)RSDK::LinkGameLogic); }
+int main(int argc, char *argv[]) { return RSDK_main(argc, argv, (void *)RSDK::LinkGameLogic); }
 #endif
 
 #endif

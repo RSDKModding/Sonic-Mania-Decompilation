@@ -53,7 +53,7 @@ InputDeviceSteam *RSDK::SKU::InitSteamInputDevice(uint32 id)
     InputDevices[InputDeviceCount] = new InputDeviceSteam();
 
     InputDeviceSteam *device = (InputDeviceSteam *)InputDevices[InputDeviceCount];
-    
+
     device->gamePadType = (DEVICE_API_STEAM << 16) | (DEVICE_TYPE_STEAMOVERLAY << 8) | (DEVICE_KEYBOARD << 0);
     device->disabled    = false;
     device->inputID     = id;

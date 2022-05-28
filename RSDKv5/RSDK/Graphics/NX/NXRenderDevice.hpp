@@ -16,7 +16,7 @@ public:
                                          int32 strideV);
     static void SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yPlane, uint8 *uPlane, uint8 *vPlane, int32 strideY, int32 strideU,
                                          int32 strideV);
-                                         
+
     static bool ProcessEvents();
 
     static void InitFPSCap();
@@ -25,7 +25,7 @@ public:
 
     static void LoadShader(const char *fileName, bool32 linear);
 
-    static inline void ShowCursor(bool32 shown) { }
+    static inline void ShowCursor(bool32 shown) {}
 
 private:
     static bool InitShaders();
@@ -37,5 +37,4 @@ private:
 };
 
 struct ShaderEntry : public ShaderEntryBase {
-    
 };

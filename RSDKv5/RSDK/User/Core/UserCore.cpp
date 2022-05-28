@@ -25,7 +25,7 @@ void RSDK::SKU::InitUserData()
     || RETRO_PLATFORM == RETRO_iOS
     // platform = PLATFORM_PC;
 #elif RETRO_PLATFORM == RETRO_PS4
-    platform             = PLATFORM_PS4;
+    platform = PLATFORM_PS4;
 #elif RETRO_PLATFORM == RETRO_XB1
     platform = PLATFORM_XB1;
 #elif RETRO_PLATFORM == RETRO_SWITCH || RETRO_PLATFORM == RETRO_ANDROID
@@ -112,7 +112,7 @@ void RSDK::SKU::InitUserData()
 #if RETRO_REV02
     loaded = userStorage->TryLoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32), NULL);
 #else
-    loaded               = LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
+    loaded = LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
 #endif
     for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
         achievementList[i].achieved = achievementsRAM[i];
@@ -124,7 +124,7 @@ void RSDK::SKU::InitUserData()
 #if RETRO_REV02
     loaded = userStorage->TryLoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL);
 #else
-    loaded               = LoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
+    loaded = LoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
 #endif
     if (loaded) {
         int32 pos = 1;
@@ -143,7 +143,7 @@ void RSDK::SKU::InitUserData()
 #if RETRO_REV02
     loaded = userStorage->TryLoadUserFile("Stats.bin", statsRAM, 0x1000 * sizeof(StatInfo), NULL);
 #else
-    loaded               = LoadUserFile("Stats.bin", statsRAM, 0x1000 * sizeof(StatInfo));
+    loaded = LoadUserFile("Stats.bin", statsRAM, 0x1000 * sizeof(StatInfo));
 #endif
     if (loaded) {
         uint32 statCount = *((uint32 *)statsRAM);

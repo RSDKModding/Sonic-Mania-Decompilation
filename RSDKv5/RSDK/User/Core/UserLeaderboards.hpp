@@ -8,9 +8,9 @@ namespace SKU
 {
 
 struct LeaderboardID {
-    int32 unknownID1;       // leaderboard id (unknown platform)
-    int32 unknownID2;       // leaderboard id (unknown platform)
-    int32 switchID;         // leaderboard id (switch)
+    int32 unknownID1;     // leaderboard id (unknown platform)
+    int32 unknownID2;     // leaderboard id (unknown platform)
+    int32 switchID;       // leaderboard id (switch)
     const char *xboxName; // XBox One Leaderboard name (making an assumption based on the MS docs)
     const char *pcName;   // Plus Leaderboard name
 };

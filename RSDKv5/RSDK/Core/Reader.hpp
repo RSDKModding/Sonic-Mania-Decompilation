@@ -23,7 +23,6 @@ SDL_RWops *fOpen(const char *path, const char *mode);
 #define fWrite(buffer, elementSize, elementCount, file) fwrite(buffer, elementSize, elementCount, file)
 #endif
 
-
 #include <miniz/miniz.h>
 
 namespace RSDK

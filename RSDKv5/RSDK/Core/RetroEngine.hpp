@@ -209,7 +209,6 @@ enum GameRegions {
 
 #endif //! RSDK_USE_SDL2
 
-
 #elif RETRO_PLATFORM == RETRO_XB1
 
 #undef RETRO_RENDERDEVICE_DIRECTX11
@@ -249,7 +248,7 @@ enum GameRegions {
 #undef RETRO_USING_MOUSE
 #endif
 
-#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID     
+#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
 
 #undef RETRO_RENDERDEVICE_SDL2
 #define RETRO_RENDERDEVICE_SDL2 (1)
@@ -263,7 +262,6 @@ enum GameRegions {
 #endif
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_UWP
-
 
 #if RETRO_AUDIODEVICE_XAUDIO
 #include <XAudio2.h>
@@ -297,7 +295,7 @@ enum GameRegions {
 
 #undef LoadImage
 #elif RETRO_RENDERDEVICE_OPENGL3
-#include <glad/glad.h> 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #endif
 
@@ -328,7 +326,7 @@ enum GameRegions {
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_SWITCH
 
 #if RETRO_RENDERDEVICE_OPENGL3
-#include <glad/glad.h> 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #endif
 

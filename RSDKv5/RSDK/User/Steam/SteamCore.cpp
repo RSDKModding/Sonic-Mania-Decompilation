@@ -28,13 +28,13 @@ SKU::SteamCore *RSDK::SKU::InitSteamCore()
         delete userStorage;
     userStorage = new SteamUserStorage;
 
-    //Setup default values
+    // Setup default values
 
     engine.hasPlus   = false; // TODO: DLC check
     core->values[0]  = (bool32 *)&engine.hasPlus;
     core->valueCount = 1;
 
-    //TODO: remove
+    // TODO: remove
     leaderboards->userRank = 0;
     leaderboards->isUser   = false;
 

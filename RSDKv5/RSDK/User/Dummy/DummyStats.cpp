@@ -4,10 +4,10 @@ using namespace RSDK;
 
 // Start Dummy Stats
 std::vector<SKU::StatInfo> RSDK::SKU::statList;
-//End Dummy Stats
+// End Dummy Stats
 
 #if !RETRO_REV02
-    // TODO: maybe?
+// TODO: maybe?
 #else
 #define voidToInt(x)   (int)(size_t)(x)
 #define voidToFloat(x) *(float *)&(x)
@@ -39,7 +39,7 @@ void RSDK::SKU::DummyStats::TryTrackStat(StatInfo *stat)
                 char *actName    = (char *)stat->data[1];
                 char *playerName = (char *)stat->data[2];
                 char *mode       = (char *)stat->data[3];
-                int32 time         = voidToInt(stat->data[4]);
+                int32 time       = voidToInt(stat->data[4]);
                 PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%s, %s, %s, %s, %d)", zoneName, actName, playerName, mode, time);
                 break;
             }
@@ -49,8 +49,8 @@ void RSDK::SKU::DummyStats::TryTrackStat(StatInfo *stat)
                 char *actName    = (char *)stat->data[1];
                 char *playerName = (char *)stat->data[2];
                 bool32 encore    = voidToInt(stat->data[3]);
-                int32 enemyX       = voidToInt(stat->data[4]);
-                int32 enemyY       = voidToInt(stat->data[5]);
+                int32 enemyX     = voidToInt(stat->data[4]);
+                int32 enemyY     = voidToInt(stat->data[5]);
                 PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%s, %s, %s, %s, %d, %d)", zoneName, actName, playerName, encore ? "true" : "false",
                          enemyX, enemyY);
                 break;

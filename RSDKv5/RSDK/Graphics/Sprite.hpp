@@ -80,7 +80,6 @@ enum PNGCompressionFilters {
     PNGFILTER_PAETH,
 };
 
-
 struct ImagePNG : public Image {
     bool32 Load(const char *fileName, bool32 loadHeader);
 

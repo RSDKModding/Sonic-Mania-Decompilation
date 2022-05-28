@@ -57,4 +57,3 @@ private:
     // thingo majigo for handling video/image swapping
     static uint8 lastTextureFormat;
 };
-

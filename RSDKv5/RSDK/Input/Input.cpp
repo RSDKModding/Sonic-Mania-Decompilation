@@ -86,8 +86,7 @@ void RSDK::InitInputDevices()
     // default the controller state to "auto assign" rather than "none"
     // this fixes the "controller disconnected" popup since the engine handles the autoassign
     // without this, the engine has to wait for the game to tell the engine to start autoassignments
-    for (int32 i = 0; i < PLAYER_COUNT; ++i)
-        activeControllers[i]  = INPUT_AUTOASSIGN;
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) activeControllers[i] = INPUT_AUTOASSIGN;
 #endif
 
 #if RETRO_INPUTDEVICE_KEYBOARD

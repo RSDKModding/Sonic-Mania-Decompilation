@@ -8,7 +8,6 @@ bool32 AudioDevice::Init()
         InitAudioChannels();
     }
 
-
     return true;
 }
 

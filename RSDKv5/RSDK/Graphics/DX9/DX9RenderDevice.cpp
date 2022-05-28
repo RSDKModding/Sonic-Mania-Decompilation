@@ -535,8 +535,8 @@ bool RenderDevice::InitGraphicsAPI()
         presentParams.hDeviceWindow              = windowHandle;
         presentParams.Windowed                   = false;
 
-        viewSize.x                               = bufferWidth;
-        viewSize.y                               = bufferHeight;
+        viewSize.x = bufferWidth;
+        viewSize.y = bufferHeight;
     }
 
     int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);

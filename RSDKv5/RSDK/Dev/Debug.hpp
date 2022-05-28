@@ -126,7 +126,7 @@ inline void OpenDevMenu()
     devMenu.timer      = 0;
 
     videoSettings.screenCount = sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK ? 1 : videoSettings.screenCount;
-    sceneInfo.state                 = ENGINESTATE_DEVMENU;
+    sceneInfo.state           = ENGINESTATE_DEVMENU;
     PauseSound();
 }
 

@@ -228,7 +228,7 @@ void RenderDevice::FlipScreen()
             dx11Context->PSSetConstantBuffers(0, 1, &psConstBuffer);
         }
 
-        int32 startVert = 0;
+        int32 startVert            = 0;
         ID3D11Texture2D *const tex = screenTextures[0];
 
         switch (videoSettings.screenCount) {
@@ -560,13 +560,13 @@ void RenderDevice::InitVertexBuffer()
     dx11Context->IASetVertexBuffers(0, 1, &dx11VertexBuffer, &stride, &offset);
 
     // Init pixel shader constants
-    D3D11_BUFFER_DESC cbDesc     = {};
-    cbDesc.Usage                 = D3D11_USAGE_DYNAMIC;
-    cbDesc.ByteWidth             = sizeof(ShaderConstants);
-    cbDesc.BindFlags             = D3D11_BIND_CONSTANT_BUFFER;
-    cbDesc.CPUAccessFlags        = D3D11_CPU_ACCESS_WRITE;
-    cbDesc.MiscFlags             = 0;
-    cbDesc.StructureByteStride   = 0;
+    D3D11_BUFFER_DESC cbDesc   = {};
+    cbDesc.Usage               = D3D11_USAGE_DYNAMIC;
+    cbDesc.ByteWidth           = sizeof(ShaderConstants);
+    cbDesc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
+    cbDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+    cbDesc.MiscFlags           = 0;
+    cbDesc.StructureByteStride = 0;
 
     dx11Device->CreateBuffer(&cbDesc, NULL, &psConstBuffer);
 }
@@ -578,7 +578,8 @@ bool RenderDevice::InitGraphicsAPI()
         videoSettings.shaderSupport = true;
     }
     else {
-        PrintLog(PRINT_NORMAL, "ERROR: HLSL model 5 shader support not detected. shader support is required for the DX11 backend!\nIf this issue persists, maybe try using the DX9 backend instead?");
+        PrintLog(PRINT_NORMAL, "ERROR: HLSL model 5 shader support not detected. shader support is required for the DX11 backend!\nIf this issue "
+                               "persists, maybe try using the DX9 backend instead?");
         return false; // unlike DX9, DX11 doesn't support shaderless rendering, so just kill it here
     }
 
@@ -593,7 +594,7 @@ bool RenderDevice::InitGraphicsAPI()
             IDXGIAdapter *adapter = nullptr;
             hr                    = dxgiDevice->GetAdapter(&adapter);
             if (SUCCEEDED(hr)) {
-                hr = adapter->GetParent(__uuidof(IDXGIFactory1), (void**) &dxgiFactory);
+                hr = adapter->GetParent(__uuidof(IDXGIFactory1), (void **)&dxgiFactory);
                 adapter->Release();
             }
             dxgiDevice->Release();
@@ -627,7 +628,7 @@ bool RenderDevice::InitGraphicsAPI()
 
     // Create swap chain
     IDXGIFactory2 *dxgiFactory2 = nullptr;
-    hr                          = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), (void**) &dxgiFactory2);
+    hr                          = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), (void **)&dxgiFactory2);
     if (dxgiFactory2) {
         // DirectX 11.1 or later
         hr = dx11Device->QueryInterface(__uuidof(ID3D11Device1), (void **)&dx11Device);
@@ -646,7 +647,7 @@ bool RenderDevice::InitGraphicsAPI()
         swapDesc.Scaling               = DXGI_SCALING_STRETCH;
         swapDesc.SwapEffect            = DXGI_SWAP_EFFECT_FLIP_DISCARD;
         swapDesc.AlphaMode             = DXGI_ALPHA_MODE_UNSPECIFIED;
-        swapDesc.Flags = 0;
+        swapDesc.Flags                 = 0;
 
         DXGI_SWAP_CHAIN_FULLSCREEN_DESC fsDesc = {};
 
@@ -741,14 +742,13 @@ bool RenderDevice::InitGraphicsAPI()
     pixelSize.y     = screens[0].size.y;
     float pixAspect = pixelSize.x / pixelSize.y;
 
-    
     UINT viewportCount = 0;
     dx11Context->RSGetViewports(&viewportCount, NULL);
     if (viewportCount) {
         D3D11_VIEWPORT *viewports = new D3D11_VIEWPORT[viewportCount];
         dx11Context->RSGetViewports(&viewportCount, viewports);
-        displayInfo.viewport      = viewports[0];
-        dx11ViewPort              = displayInfo.viewport;
+        displayInfo.viewport = viewports[0];
+        dx11ViewPort         = displayInfo.viewport;
 
         delete[] viewports;
     }
@@ -760,7 +760,7 @@ bool RenderDevice::InitGraphicsAPI()
         displayInfo.viewport.MinDepth = 0;
         displayInfo.viewport.MaxDepth = 1;
 
-        dx11ViewPort         = displayInfo.viewport;
+        dx11ViewPort = displayInfo.viewport;
 
         dx11Context->RSSetViewports(1, &dx11ViewPort);
     }
@@ -793,8 +793,8 @@ bool RenderDevice::InitGraphicsAPI()
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
         D3D11_TEXTURE2D_DESC desc = {};
-        desc.Width     = textureSize.x;
-        desc.Height    = textureSize.y;
+        desc.Width                = textureSize.x;
+        desc.Height               = textureSize.y;
         desc.MipLevels = desc.ArraySize = 1;
         desc.Format                     = DXGI_FORMAT_B5G6R5_UNORM;
         desc.SampleDesc.Quality         = 0;
@@ -802,7 +802,7 @@ bool RenderDevice::InitGraphicsAPI()
         desc.Usage                      = D3D11_USAGE_DYNAMIC;
         desc.BindFlags                  = D3D11_BIND_SHADER_RESOURCE;
         desc.CPUAccessFlags             = D3D11_CPU_ACCESS_WRITE;
-        desc.MiscFlags = 0;
+        desc.MiscFlags                  = 0;
 
         if (FAILED(dx11Device->CreateTexture2D(&desc, NULL, &screenTextures[s])))
             return false;
@@ -818,8 +818,8 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     D3D11_TEXTURE2D_DESC desc = {};
-    desc.Width     = RETRO_VIDEO_TEXTURE_W;
-    desc.Height    = RETRO_VIDEO_TEXTURE_H;
+    desc.Width                = RETRO_VIDEO_TEXTURE_W;
+    desc.Height               = RETRO_VIDEO_TEXTURE_H;
     desc.MipLevels = desc.ArraySize = 1;
     desc.Format                     = DXGI_FORMAT_B8G8R8A8_UNORM;
     desc.SampleDesc.Quality         = 0;
@@ -935,7 +935,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         bytecode     = shaderBlob->GetBufferPointer();
         bytecodeSize = shaderBlob->GetBufferSize();
-        fileData = NULL;
+        fileData     = NULL;
     }
     else {
 #endif
@@ -960,7 +960,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
             bytecode     = fileData;
             bytecodeSize = info.fileSize;
-            fileData = NULL;
+            fileData     = NULL;
         }
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -1108,9 +1108,8 @@ bool RenderDevice::InitShaders()
     sPointDesc.MinLOD         = -FLT_MAX;
     sPointDesc.MaxLOD         = FLT_MAX;
 
-    sLinearDesc       = sPointDesc;
+    sLinearDesc        = sPointDesc;
     sLinearDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-
 
     if (FAILED(dx11Device->CreateRasterizerState(&rDesc, &rasterState))) {
         // uh oh...
@@ -1182,8 +1181,8 @@ bool RenderDevice::SetupRendering()
     HRESULT hr = 0;
     for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++) {
         driverType = driverTypes[driverTypeIndex];
-        hr = D3D11CreateDevice(nullptr, driverType, nullptr, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &dx11Device,
-                               &featureLevel, &dx11Context);
+        hr         = D3D11CreateDevice(nullptr, driverType, nullptr, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION,
+                               &dx11Device, &featureLevel, &dx11Context);
 
         if (hr == E_INVALIDARG) {
             // DirectX 11.0 platforms will not recognize D3D_FEATURE_LEVEL_11_1 so we need to retry without it
@@ -1219,7 +1218,7 @@ bool RenderDevice::SetupRendering()
 void RenderDevice::GetDisplays()
 {
     std::vector<IDXGIAdapter *> adapterList = GetAdapterList();
-    adapterCount = (int32)adapterList.size();
+    adapterCount                            = (int32)adapterList.size();
 
     uint prevAdapter = dxAdapter;
 
@@ -1284,7 +1283,7 @@ void RenderDevice::GetDisplays()
 
     for (int32 d = 0; d < displayCount; ++d) {
         memcpy(&displayInfo.displays[newDisplayCount].internal, &descArr[d], sizeof(DXGI_MODE_DESC));
-        
+
         int32 refreshRate = 0;
 
         DXGI_RATIONAL *rate = &displayInfo.displays[newDisplayCount].refresh_rate;
@@ -1759,7 +1758,7 @@ void RenderDevice::SetupVideoTexture_YUV420(int32 width, int32 height, uint8 *yP
             }
 
             pixels = (DWORD *)mappedResource.pData;
-            pitch = (mappedResource.RowPitch >> 2) - (width >> 1);
+            pitch  = (mappedResource.RowPitch >> 2) - (width >> 1);
             for (int32 y = 0; y < (height >> 1); ++y) {
                 for (int32 x = 0; x < (width >> 1); ++x) {
                     *pixels++ |= (vPlane[x] << 0) | (uPlane[x] << 8) | 0xFF000000;

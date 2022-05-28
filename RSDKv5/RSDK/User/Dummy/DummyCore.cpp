@@ -52,7 +52,7 @@ int32 RSDK::SKU::GetAPIValue(uint32 id)
 #if RETRO_REV02
 SKU::DummyCore *RSDK::SKU::InitDummyCore()
 {
-    //Initalize API subsystems
+    // Initalize API subsystems
     DummyCore *core = new DummyCore;
 
     if (achievements)
@@ -75,9 +75,9 @@ SKU::DummyCore *RSDK::SKU::InitDummyCore()
         delete userStorage;
     userStorage = new DummyUserStorage;
 
-    //Setup default values
+    // Setup default values
 
-    core->values[0]   = &engine.hasPlus;
+    core->values[0]  = &engine.hasPlus;
     core->valueCount = 1;
 
     leaderboards->userRank = 0;
@@ -174,7 +174,7 @@ void RSDK::SKU::DummyCore::LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
 #if RETRO_RENDERDEVICE_SDL2
-    //SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
+    // SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
     PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
 #else
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
@@ -198,7 +198,7 @@ int32 RSDK::SKU::DummyCore::GetDefaultGamepadType()
             return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
 #endif
 
-        default: 
+        default:
         case PLATFORM_PS4:
         case PLATFORM_XB1:
         case PLATFORM_PC:
