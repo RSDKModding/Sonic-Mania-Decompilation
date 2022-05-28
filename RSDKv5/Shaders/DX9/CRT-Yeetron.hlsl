@@ -84,11 +84,11 @@ float4 PSMain(PixelInput input) : SV_TARGET
     newTexPos.x = clamp(-abs(invTexPos.x * 0.5) + 1.5, 0.8, 1.25);
     newTexPos.y = clamp(-abs(invTexPos.y * 2.0) + 1.25, 0.5, 1.0);
 
-    scanlineIntencity.a *= newTexPos.x;
-
     float2 colorMod;
     colorMod.x = newTexPos.x * newTexPos.y;
     colorMod.y = newTexPos.x * ((scanlineIntencity.a + newTexPos.y) * 0.5);
+
+    scanlineIntencity.a *= newTexPos.x;
 
     float2 texPos   = ((pixelPos.xy + -clamp(pixelPos.xy, float2(-0.25, -0.25), float2(0.25, 0.25))) * 2.0 + roundedPixelPos + 0.5) / textureSize.xy;
     float4 texColor = tex2D(texDiffuse, texPos.xy);
