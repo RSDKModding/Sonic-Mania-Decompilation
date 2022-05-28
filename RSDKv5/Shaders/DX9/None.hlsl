@@ -19,36 +19,22 @@ float2 screenDim: register(c3);         // screen dimming percent
 
 struct VertexInput
 {
-    float4 pos      : POSITION0;
-    float4 color    : COLOR0;
-    float4 tex      : TEXCOORD0;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float4 tex      : TEXCOORD;
 };
 
 struct VertexOutput
 {
-    float4 pos      : POSITION0;
-    float4 color    : COLOR0;
-    float4 tex      : TEXCOORD0;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float4 tex      : TEXCOORD;
 };
 
 struct PixelInput
 {
-    float2 tex : TEXCOORD0;
+    float2 tex : TEXCOORD;
 };
-
-
-// =======================
-// FUNCTIONS
-// =======================
-
-float4 cmp(float4 src0, float4 src1, float4 src2) {
-	return float4(
-		src0.x >= 0 ? src1.x : src2.x,
-		src0.y >= 0 ? src1.y : src2.y,
-		src0.z >= 0 ? src1.z : src2.z,
-		src0.w >= 0 ? src1.w : src2.w
-	);
-}
 
 // =======================
 // ENTRY POINTS
@@ -67,23 +53,22 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(PixelInput input) : SV_TARGET
 {
-	float4 temp;
-	float4 pixelPerfectColor, pixelImperfectColor;
-    
-    temp.x = frac((1.0 / pixelSize.x) * viewSize.x);
-    temp.y = frac((1.0 / pixelSize.y) * viewSize.y);
+    float2 viewScale;
+    viewScale.x = frac((1.0 / pixelSize.x) * viewSize.x) - 0.01;
+    viewScale.y = frac((1.0 / pixelSize.y) * viewSize.y) - 0.01;
 
-    temp    = temp + -0.01;
-    temp.y  = cmp(temp.y, 0.0, 1.0).y;
-    temp.x  = cmp(temp.x, 0.0, temp.y).x;
-
-    if (temp.x != -temp.x) {
+    // if viewSize is an integer scale of pixelSize (within a small margin of error)
+    if (viewScale.x < 0 && viewScale.y < 0) {
+        // just get the pixel at this fragment with no filtering
 #if defined(RETRO_REV02) 
         return tex2D(texDiffuse, input.tex) * screenDim.x;
 #else
         return tex2D(texDiffuse, input.tex);
 #endif
     }
+
+    // otherwise, it's not pixel perfect... do a bit of pixel filtering
+    // we have to do it manually here since the engine samples this shader using the "point" filter, rather than "linear"
 
     float2 adjacent;
     adjacent.x = abs(ddx(input.tex.x));
@@ -108,14 +93,14 @@ float4 PSMain(PixelInput input) : SV_TARGET
     blend.z = (blendFactor.z * blendFactor.x) / strength;
     blend.w = (blendFactor.w * blendFactor.y) / strength;
 
-    float4 blendedColor = 
+    float4 filteredColor = 
         blend.x * tex2D(texDiffuse, texPos.xy) + 
         blend.y * tex2D(texDiffuse, texPos.wz) + 
         blend.z * tex2D(texDiffuse, texPos.xz) +
         blend.w * tex2D(texDiffuse, texPos.wy); 
     
 #if defined(RETRO_REV02) 
-    blendedColor *= screenDim.x;
+    filteredColor *= screenDim.x;
 #endif
-    return blendedColor;
+    return filteredColor;
 }
