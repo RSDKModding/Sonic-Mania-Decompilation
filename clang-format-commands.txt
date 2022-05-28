@@ -1,0 +1,2 @@
+[in the root dir]  find ./RSDKv5 -iname *.hpp -o -iname *.cpp | xargs clang-format -i -verbose -style=file
+[in ./Sonic Mania] find ./Objects -iname '*.h' -o -iname '*.c' | xargs clang-format -i -verbose -style=file
