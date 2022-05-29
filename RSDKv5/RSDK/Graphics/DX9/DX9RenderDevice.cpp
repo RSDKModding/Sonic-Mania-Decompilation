@@ -698,8 +698,14 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
         CloseFile(&info);
 
         UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-        if (engine.devMenu)
+        if (engine.devMenu) {
             flags |= D3DCOMPILE_DEBUG;
+            flags |= D3DCOMPILE_OPTIMIZATION_LEVEL0;
+            flags |= D3DCOMPILE_WARNINGS_ARE_ERRORS;
+        }
+        else {
+            flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+        }
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
@@ -774,8 +780,14 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
         CloseFile(&info);
 
         UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-        if (engine.devMenu)
+        if (engine.devMenu) {
             flags |= D3DCOMPILE_DEBUG;
+            flags |= D3DCOMPILE_OPTIMIZATION_LEVEL0;
+            flags |= D3DCOMPILE_WARNINGS_ARE_ERRORS;
+        }
+        else {
+            flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+        }
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;

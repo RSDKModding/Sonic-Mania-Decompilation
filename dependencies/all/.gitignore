@@ -1,6 +1,9 @@
 *
-!iniparser/
-!iniparser/*
+iniparser/
+!iniparser/iniparser.cpp
+!iniparser/iniparser.h
+!iniparser/dictionary.cpp
+!iniparser/dictionary.h
 !stb_vorbis/
 !tinyxml2
 !README.md
