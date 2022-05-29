@@ -1,19 +1,20 @@
 #version 330 core
+
+// =======================
+// VARIABLES
+// =======================
 in vec2 ex_UV;
 in vec4 ex_color;
 out vec4 out_color;
 
-uniform sampler2D texDiffuse;
+uniform sampler2D texDiffuse; // screen display texture
 
-uniform float screenDim;
-uniform vec2 pixelSize;
-uniform vec2 textureSize;
-uniform vec2 viewSize;
-
-vec4 cmp(vec4 src0, vec4 src1, vec4 src2)
-{
-    return vec4(src0.x >= 0 ? src1.x : src2.x, src0.y >= 0 ? src1.y : src2.y, src0.z >= 0 ? src1.z : src2.z, src0.w >= 0 ? src1.w : src2.w);
-}
+uniform vec2 pixelSize;   // internal game resolution (usually 424x240 or smth)
+uniform vec2 textureSize; // size of the internal framebuffer texture
+uniform vec2 viewSize;    // window viewport size
+#if defined(RETRO_REV02)  // if RETRO_REV02 is defined it assumes the engine is plus/rev02 RSDKv5, else it assumes pre-plus/Rev01 RSDKv5
+uniform float screenDim; // screen dimming percent
+#endif
 
 void main()
 {
@@ -32,5 +33,8 @@ void main()
 
     vec2 mod_texel = texel_floored + f;
 
-    out_color = texture2D(texDiffuse, (mod_texel / textureSize.xy)) * screenDim;
+    out_color = texture2D(texDiffuse, (mod_texel / textureSize.xy));
+#if defined(RETRO_REV02)
+    out_color.rgb *= screenDim;
+#endif
 }
