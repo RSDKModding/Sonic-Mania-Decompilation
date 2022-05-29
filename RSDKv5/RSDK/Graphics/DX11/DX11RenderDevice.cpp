@@ -1,5 +1,7 @@
 #include "resource.h"
+#if !RETRO_USE_ORIGINAL_CODE
 #include <D3Dcompiler.h>
+#endif
 
 #include <atlbase.h>
 
@@ -867,14 +869,6 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     shader->linear      = linear;
     sprintf(shader->name, "%s", fileName);
 
-    const char *shaderFolder    = "DX11"; // xbox one
-    const char *vertexShaderExt = "hlsl";
-    const char *pixelShaderExt  = "hlsl";
-
-    const char *bytecodeFolder    = "CSO-DX11"; // xbox one
-    const char *vertexBytecodeExt = "vso";
-    const char *pixelBytecodeExt  = "fso";
-
     const D3D_SHADER_MACRO defines[] = {
 #if RETRO_REV02
         "RETRO_REV02",
@@ -888,7 +882,8 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     void *bytecode      = NULL;
     size_t bytecodeSize = 0;
 
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
+    // Try to compile the vertex shader source if it exists
+    sprintf(buffer, "Data/Shaders/DX11/%s.hlsl", fileName);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
@@ -939,8 +934,8 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     }
     else {
 #endif
-
-        sprintf(buffer, "Data/Shaders/%s/%s.%s", bytecodeFolder, fileName, vertexBytecodeExt);
+        // if the vertex shader source doesn't exist, fall back and try to load the vertex shader bytecode
+        sprintf(buffer, "Data/Shaders/CSO-DX11/%s.vso", fileName);
         InitFileInfo(&info);
         if (LoadFile(&info, buffer, FMODE_RB)) {
             byte *fileData = NULL;
@@ -967,6 +962,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     }
 #endif
 
+    // create the vertex layout stuff using the vertex shader
     {
         D3D11_INPUT_ELEMENT_DESC elements[2];
 
@@ -1000,7 +996,8 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, pixelShaderExt);
+    // Try to compile the pixel shader source if it exists
+    sprintf(buffer, "Data/Shaders/DX11/%s.hsl", fileName);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
@@ -1041,12 +1038,13 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
                 return;
             }
         }
-#endif
 
         fileData = NULL;
     }
     else {
-        sprintf(buffer, "Data/Shaders/%s/%s.%s", bytecodeFolder, fileName, pixelBytecodeExt);
+#endif
+        // if the pixel shader source doesn't exist, fall back and try to load the pixel shader bytecode
+        sprintf(buffer, "Data/Shaders/CSO-DX11/%s.fso", fileName);
         InitFileInfo(&info);
         if (LoadFile(&info, buffer, FMODE_RB)) {
             byte *fileData = NULL;

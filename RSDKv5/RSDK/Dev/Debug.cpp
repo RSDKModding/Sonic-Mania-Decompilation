@@ -29,11 +29,12 @@ void RSDK::PrintLog(int32 severity, const char *message, ...)
         // make the full string
         va_list args;
         va_start(args, message);
-        vsprintf(outputString, message, args);
+
+        vsnprintf(outputString, sizeof(outputString), message, args);
         if (useEndLine)
-            sprintf(outputString, "%s\n", outputString);
+            sprintf(outputString, "%.*s\n", sizeof(outputString) - 1, outputString);
         else
-            sprintf(outputString, "%s", outputString);
+            sprintf(outputString, "%.*s", sizeof(outputString) - 1, outputString);
         va_end(args);
 
 #if RETRO_REV02
