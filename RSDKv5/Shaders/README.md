@@ -1,12 +1,12 @@
 # RSDKv5 Shaders
 
-These shaders have been decompiled back from their CSO objects into their HLSL equivalents. Both pre-plus and post-plus (which added screen dimming) have been decompiled.
+These shaders have been decompiled back from compiled bytecode objects into their HLSL equivalents. Both pre-plus (RSDKv5 Rev01) and post-plus (RSDKv5 Rev02, which added screen dimming) have been decompiled.
 
 ## Compiling from HLSL
-
-In order to compile the HLSL shaders, you must: 
-* Add the DirectX HLSL compiler to PATH, of which is included in the Windows SDK from Windows 8 and onwards. It is located in `C:\Program Files (x86)\Windows Kits\10\bin\[SDK ver]\x86\fxc.exe` by default.
-* Run the `compileVSO` and `compileFSO` batch files with the shader you want to compile as the first argument.
+* The decompilation will automatically compile loaded shader source files that are in `Data/Shaders/[folder name]/` during runtime.
+* the DirectX shader compiler can be used to compile HLSL shader source code into compiled bytecode objects. Information on the DirectX shader compiler can be found [here](https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-part1).
+* An example command for the DirectX shader compiler would be:
+`fxc.exe /D RETRO_REV02=1 /T ps_3_0 /Fe log.txt /Zi /E PSMain /Fo example.fso example.hlsl`. This compiles the file `example.hlsl` as an HLSL model 3.0 pixel shader with an entry point of `PSMain` with post-plus (RSDKv5 Rev02) features enabled. More information on how to use the DirectX shader compiler from the command line can be found [here](https://docs.microsoft.com/en-us/windows/win32/direct3dtools/dx-graphics-tools-fxc-syntax).
 
 ## Notice
 Please note that the **only** official shaders are of DX9 and DX11. All other directories are ported from HLSL as to match the added render devices.
