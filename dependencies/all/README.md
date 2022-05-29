@@ -2,7 +2,9 @@
 * Clone the repo, then install the dependencies listed below
 
 ## Dependencies:
-iniparser, tinyxml2 & stb-vorbis: FCUCK YOU!!!!
+iniparser: Comes with the repo, no need to do anything
+
+tinyxml2 & stb-vorbis: Comes with the repo as submodules
 
 miniz: https://github.com/richgel999/miniz/releases
 download the source code of the latest release and unzip it in "./miniz/"
