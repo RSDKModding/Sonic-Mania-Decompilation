@@ -62,8 +62,6 @@ void UIVsScoreboard_SetupSprites(void)
 
 void UIVsScoreboard_SetScores(EntityUIVsScoreboard *scoreboard, uint32 p1Score, uint32 p2Score)
 {
-    RSDK_THIS(UIVsScoreboard);
-
     if (!SceneInfo->inEditor) {
         char text[64];
         memset(text, 0, sizeof(text));

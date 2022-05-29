@@ -99,7 +99,7 @@ static unsigned strstrip(char * s)
     *last = (char)0;
 
     memmove(dest,s,last - s + 1);
-    return last - s;
+    return (unsigned)(last - s);
 }
 
 static int default_error_callback(const char *format, ...)
@@ -553,19 +553,19 @@ static line_status iniparser_line(
         /* Section name */
         sscanf(line, "[%[^]]", section);
         strstrip(section);
-        strlwc(section, section, len);
+        strlwc(section, section, (unsigned)len);
         sta = LINE_SECTION ;
     } else if (sscanf (line, "%[^=] = \"%[^\"]\"", key, value) == 2
            ||  sscanf (line, "%[^=] = '%[^\']'",   key, value) == 2) {
         /* Usual key=value with quotes, with or without comments */
         strstrip(key);
-        strlwc(key, key, len);
+        strlwc(key, key, (unsigned)len);
         /* Don't strip spaces from values surrounded with quotes */
         sta = LINE_VALUE ;
     } else if (sscanf (line, "%[^=] = %[^;#]", key, value) == 2) {
         /* Usual key=value without quotes, with or without comments */
         strstrip(key);
-        strlwc(key, key, len);
+        strlwc(key, key, (unsigned)len);
         strstrip(value);
         /*
          * sscanf cannot handle '' or "" as empty values
@@ -584,7 +584,7 @@ static line_status iniparser_line(
          * key=#
          */
         strstrip(key);
-        strlwc(key, key, len);
+        strlwc(key, key, (unsigned)len);
         value[0]=0 ;
         sta = LINE_VALUE ;
     } else {

@@ -96,7 +96,7 @@ struct UserCore {
     virtual void EpicUnknown6(void) {}
 #endif
 
-    bool32 *values[8];
+    bool32 *values[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
     byte valueCount = 0;
 
     // Not Original, but I gotta store it somewhere /shrug

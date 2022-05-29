@@ -32,9 +32,9 @@ void RSDK::PrintLog(int32 severity, const char *message, ...)
 
         vsnprintf(outputString, sizeof(outputString), message, args);
         if (useEndLine)
-            sprintf(outputString, "%.*s\n", sizeof(outputString) - 1, outputString);
+            sprintf(outputString, "%.*s\n", (int32)sizeof(outputString) - 1, outputString);
         else
-            sprintf(outputString, "%.*s", sizeof(outputString) - 1, outputString);
+            sprintf(outputString, "%.*s", (int32)sizeof(outputString) - 1, outputString);
         va_end(args);
 
 #if RETRO_REV02
@@ -99,51 +99,52 @@ void RSDK::PrintLog(int32 severity, const char *message, ...)
 void RSDK::AddViewableVariable(const char *name, void *value, int32 type, int32 min, int32 max)
 {
     if (viewableVarCount < VIEWVAR_COUNT) {
-        ViewableVariable *value = &viewableVarList[viewableVarCount++];
-
-        strncpy(value->name, name, 0x10);
-        value->value = value;
+        ViewableVariable *viewVar = &viewableVarList[viewableVarCount++];
+        
+        strncpy(viewVar->name, name, 0x10);
+        viewVar->value = value;
+        
         switch (type) {
             case VIEWVAR_BOOL:
-                value->type = VIEWVAR_DISPLAY_BOOL;
-                value->size = sizeof(bool32);
+                viewVar->type = VIEWVAR_DISPLAY_BOOL;
+                viewVar->size = sizeof(bool32);
                 break;
 
             case VIEWVAR_UINT8:
-                value->type = VIEWVAR_DISPLAY_UNSIGNED;
-                value->size = sizeof(uint8);
+                viewVar->type = VIEWVAR_DISPLAY_UNSIGNED;
+                viewVar->size = sizeof(uint8);
                 break;
 
             case VIEWVAR_UINT16:
-                value->type = VIEWVAR_DISPLAY_UNSIGNED;
-                value->size = sizeof(uint16);
+                viewVar->type = VIEWVAR_DISPLAY_UNSIGNED;
+                viewVar->size = sizeof(uint16);
                 break;
 
             case VIEWVAR_UINT32:
-                value->type = VIEWVAR_DISPLAY_UNSIGNED;
-                value->size = sizeof(uint32);
+                viewVar->type = VIEWVAR_DISPLAY_UNSIGNED;
+                viewVar->size = sizeof(uint32);
                 break;
 
             case VIEWVAR_INT8:
-                value->type = VIEWVAR_DISPLAY_SIGNED;
-                value->size = sizeof(int8);
+                viewVar->type = VIEWVAR_DISPLAY_SIGNED;
+                viewVar->size = sizeof(int8);
                 break;
 
             case VIEWVAR_INT16:
-                value->type = VIEWVAR_DISPLAY_SIGNED;
-                value->size = sizeof(int16);
+                viewVar->type = VIEWVAR_DISPLAY_SIGNED;
+                viewVar->size = sizeof(int16);
                 break;
 
             case VIEWVAR_INT32:
-                value->type = VIEWVAR_DISPLAY_SIGNED;
-                value->size = sizeof(int32);
+                viewVar->type = VIEWVAR_DISPLAY_SIGNED;
+                viewVar->size = sizeof(int32);
                 break;
 
             default: break;
         }
 
-        value->min = min;
-        value->max = max;
+        viewVar->min = min;
+        viewVar->max = max;
     }
 }
 #endif

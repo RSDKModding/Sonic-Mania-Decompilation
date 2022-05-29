@@ -512,11 +512,6 @@ typedef enum { FLIP_NONE, FLIP_X, FLIP_Y, FLIP_XY } FlipFlags;
 
 typedef enum { TYPE_BLANK } DefaultObjTypes;
 
-
-
-enum InputIds {
-};
-
 typedef enum {
     INPUT_UNASSIGNED = -2,
     INPUT_AUTOASSIGN = -1,

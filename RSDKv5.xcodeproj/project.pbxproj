@@ -18,21 +18,6 @@
 		C968886625DF3EF300BEE4B8 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C968886425DF3EF300BEE4B8 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C968886E25DF3F4C00BEE4B8 /* dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968886A25DF3F4B00BEE4B8 /* dictionary.cpp */; };
 		C968886F25DF3F4C00BEE4B8 /* iniparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968886D25DF3F4C00BEE4B8 /* iniparser.cpp */; };
-		C968889325DF48CE00BEE4B8 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = C968887725DF48CC00BEE4B8 /* inffast.c */; };
-		C968889425DF48CE00BEE4B8 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = C968887A25DF48CC00BEE4B8 /* inftrees.c */; };
-		C968889625DF48CE00BEE4B8 /* infback.c in Sources */ = {isa = PBXBuildFile; fileRef = C968887D25DF48CC00BEE4B8 /* infback.c */; };
-		C968889725DF48CE00BEE4B8 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = C968887E25DF48CC00BEE4B8 /* zutil.c */; };
-		C968889825DF48CE00BEE4B8 /* gzwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888025DF48CD00BEE4B8 /* gzwrite.c */; };
-		C968889925DF48CE00BEE4B8 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888125DF48CD00BEE4B8 /* compress.c */; };
-		C968889A25DF48CE00BEE4B8 /* gzlib.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888225DF48CD00BEE4B8 /* gzlib.c */; };
-		C968889B25DF48CE00BEE4B8 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888625DF48CD00BEE4B8 /* deflate.c */; };
-		C968889C25DF48CE00BEE4B8 /* gzclose.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888725DF48CD00BEE4B8 /* gzclose.c */; };
-		C968889D25DF48CE00BEE4B8 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888A25DF48CD00BEE4B8 /* adler32.c */; };
-		C968889E25DF48CE00BEE4B8 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888C25DF48CD00BEE4B8 /* trees.c */; };
-		C968889F25DF48CE00BEE4B8 /* gzread.c in Sources */ = {isa = PBXBuildFile; fileRef = C968888D25DF48CD00BEE4B8 /* gzread.c */; };
-		C96888A125DF48CE00BEE4B8 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = C968889025DF48CD00BEE4B8 /* inflate.c */; };
-		C96888A225DF48CE00BEE4B8 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = C968889125DF48CD00BEE4B8 /* crc32.c */; };
-		C96888A325DF48CE00BEE4B8 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = C968889225DF48CD00BEE4B8 /* uncompr.c */; };
 		C9CDC73027F9165F00E4C97E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC72F27F9165F00E4C97E /* main.cpp */; };
 		C9CDC73C27F9197C00E4C97E /* Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC73A27F9197B00E4C97E /* Audio.cpp */; };
 		C9CDC74727F9198800E4C97E /* Math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC74127F9198700E4C97E /* Math.cpp */; };
@@ -85,6 +70,7 @@
 		C9CDC7D527F91A2F00E4C97E /* SteamStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC7CE27F91A2E00E4C97E /* SteamStorage.cpp */; };
 		C9CDC7DB27F91A4100E4C97E /* DefaultObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC7D927F91A4100E4C97E /* DefaultObject.cpp */; };
 		C9CDC7DC27F91A4100E4C97E /* DevOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC7DA27F91A4100E4C97E /* DevOutput.cpp */; };
+		C9CDC803284362FA00E4C97E /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC802284362FA00E4C97E /* miniz.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -119,32 +105,6 @@
 		C968886B25DF3F4B00BEE4B8 /* dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dictionary.h; path = dependencies/all/iniparser/dictionary.h; sourceTree = SOURCE_ROOT; };
 		C968886C25DF3F4B00BEE4B8 /* iniparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iniparser.h; path = dependencies/all/iniparser/iniparser.h; sourceTree = SOURCE_ROOT; };
 		C968886D25DF3F4C00BEE4B8 /* iniparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iniparser.cpp; path = dependencies/all/iniparser/iniparser.cpp; sourceTree = SOURCE_ROOT; };
-		C968887725DF48CC00BEE4B8 /* inffast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = inffast.c; path = dependencies/all/zlib/inffast.c; sourceTree = SOURCE_ROOT; };
-		C968887825DF48CC00BEE4B8 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = dependencies/all/zlib/zlib.h; sourceTree = SOURCE_ROOT; };
-		C968887925DF48CC00BEE4B8 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zconf.h; path = dependencies/all/zlib/zconf.h; sourceTree = SOURCE_ROOT; };
-		C968887A25DF48CC00BEE4B8 /* inftrees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = inftrees.c; path = dependencies/all/zlib/inftrees.c; sourceTree = SOURCE_ROOT; };
-		C968887B25DF48CC00BEE4B8 /* deflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = deflate.h; path = dependencies/all/zlib/deflate.h; sourceTree = SOURCE_ROOT; };
-		C968887D25DF48CC00BEE4B8 /* infback.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = infback.c; path = dependencies/all/zlib/infback.c; sourceTree = SOURCE_ROOT; };
-		C968887E25DF48CC00BEE4B8 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zutil.c; path = dependencies/all/zlib/zutil.c; sourceTree = SOURCE_ROOT; };
-		C968887F25DF48CD00BEE4B8 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zutil.h; path = dependencies/all/zlib/zutil.h; sourceTree = SOURCE_ROOT; };
-		C968888025DF48CD00BEE4B8 /* gzwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzwrite.c; path = dependencies/all/zlib/gzwrite.c; sourceTree = SOURCE_ROOT; };
-		C968888125DF48CD00BEE4B8 /* compress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compress.c; path = dependencies/all/zlib/compress.c; sourceTree = SOURCE_ROOT; };
-		C968888225DF48CD00BEE4B8 /* gzlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzlib.c; path = dependencies/all/zlib/gzlib.c; sourceTree = SOURCE_ROOT; };
-		C968888325DF48CD00BEE4B8 /* inftrees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inftrees.h; path = dependencies/all/zlib/inftrees.h; sourceTree = SOURCE_ROOT; };
-		C968888425DF48CD00BEE4B8 /* inflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inflate.h; path = dependencies/all/zlib/inflate.h; sourceTree = SOURCE_ROOT; };
-		C968888525DF48CD00BEE4B8 /* trees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = trees.h; path = dependencies/all/zlib/trees.h; sourceTree = SOURCE_ROOT; };
-		C968888625DF48CD00BEE4B8 /* deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = deflate.c; path = dependencies/all/zlib/deflate.c; sourceTree = SOURCE_ROOT; };
-		C968888725DF48CD00BEE4B8 /* gzclose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzclose.c; path = dependencies/all/zlib/gzclose.c; sourceTree = SOURCE_ROOT; };
-		C968888825DF48CD00BEE4B8 /* inffixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inffixed.h; path = dependencies/all/zlib/inffixed.h; sourceTree = SOURCE_ROOT; };
-		C968888925DF48CD00BEE4B8 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crc32.h; path = dependencies/all/zlib/crc32.h; sourceTree = SOURCE_ROOT; };
-		C968888A25DF48CD00BEE4B8 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = adler32.c; path = dependencies/all/zlib/adler32.c; sourceTree = SOURCE_ROOT; };
-		C968888B25DF48CD00BEE4B8 /* gzguts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gzguts.h; path = dependencies/all/zlib/gzguts.h; sourceTree = SOURCE_ROOT; };
-		C968888C25DF48CD00BEE4B8 /* trees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = trees.c; path = dependencies/all/zlib/trees.c; sourceTree = SOURCE_ROOT; };
-		C968888D25DF48CD00BEE4B8 /* gzread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzread.c; path = dependencies/all/zlib/gzread.c; sourceTree = SOURCE_ROOT; };
-		C968888F25DF48CD00BEE4B8 /* inffast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inffast.h; path = dependencies/all/zlib/inffast.h; sourceTree = SOURCE_ROOT; };
-		C968889025DF48CD00BEE4B8 /* inflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = inflate.c; path = dependencies/all/zlib/inflate.c; sourceTree = SOURCE_ROOT; };
-		C968889125DF48CD00BEE4B8 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crc32.c; path = dependencies/all/zlib/crc32.c; sourceTree = SOURCE_ROOT; };
-		C968889225DF48CD00BEE4B8 /* uncompr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uncompr.c; path = dependencies/all/zlib/uncompr.c; sourceTree = SOURCE_ROOT; };
 		C9CDC72E27F9165F00E4C97E /* main.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
 		C9CDC72F27F9165F00E4C97E /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C9CDC73A27F9197B00E4C97E /* Audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Audio.cpp; path = RSDK/Audio/Audio.cpp; sourceTree = "<group>"; };
@@ -255,6 +215,8 @@
 		C9CDC7E6282E4A1100E4C97E /* SDL2RenderDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDL2RenderDevice.cpp; path = RSDK/Graphics/SDL2/SDL2RenderDevice.cpp; sourceTree = "<group>"; };
 		C9CDC7E9282E4AAC00E4C97E /* SDL2AudioDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDL2AudioDevice.cpp; path = RSDK/Audio/SDL2/SDL2AudioDevice.cpp; sourceTree = "<group>"; };
 		C9CDC7EA282E4AAC00E4C97E /* SDL2AudioDevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SDL2AudioDevice.hpp; path = RSDK/Audio/SDL2/SDL2AudioDevice.hpp; sourceTree = "<group>"; };
+		C9CDC801284362FA00E4C97E /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = miniz.h; path = dependencies/all/miniz/miniz.h; sourceTree = SOURCE_ROOT; };
+		C9CDC802284362FA00E4C97E /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = miniz.c; path = dependencies/all/miniz/miniz.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -312,8 +274,8 @@
 				C9CDC72D27F9165300E4C97E /* sources */,
 				C9555DAB2744FDBB006E1353 /* tinyXML2 */,
 				C928353A26A3F25D00D51CCE /* helpers */,
-				C968887625DF488300BEE4B8 /* zlib */,
-				C968886925DF3F3C00BEE4B8 /* iniParser */,
+				C968887625DF488300BEE4B8 /* miniz */,
+				C968886925DF3F3C00BEE4B8 /* iniparser */,
 				C9CDC7DE282E44CB00E4C97E /* stb_vorbis */,
 				C96881FE25DF3C8B00BEE4B8 /* Assets.xcassets */,
 				C96881F925DF3C8A00BEE4B8 /* Info.plist */,
@@ -332,7 +294,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C968886925DF3F3C00BEE4B8 /* iniParser */ = {
+		C968886925DF3F3C00BEE4B8 /* iniparser */ = {
 			isa = PBXGroup;
 			children = (
 				C968886A25DF3F4B00BEE4B8 /* dictionary.cpp */,
@@ -340,40 +302,16 @@
 				C968886D25DF3F4C00BEE4B8 /* iniparser.cpp */,
 				C968886C25DF3F4B00BEE4B8 /* iniparser.h */,
 			);
-			name = iniParser;
+			name = iniparser;
 			sourceTree = "<group>";
 		};
-		C968887625DF488300BEE4B8 /* zlib */ = {
+		C968887625DF488300BEE4B8 /* miniz */ = {
 			isa = PBXGroup;
 			children = (
-				C968888A25DF48CD00BEE4B8 /* adler32.c */,
-				C968888125DF48CD00BEE4B8 /* compress.c */,
-				C968889125DF48CD00BEE4B8 /* crc32.c */,
-				C968888925DF48CD00BEE4B8 /* crc32.h */,
-				C968888625DF48CD00BEE4B8 /* deflate.c */,
-				C968887B25DF48CC00BEE4B8 /* deflate.h */,
-				C968888725DF48CD00BEE4B8 /* gzclose.c */,
-				C968888B25DF48CD00BEE4B8 /* gzguts.h */,
-				C968888225DF48CD00BEE4B8 /* gzlib.c */,
-				C968888D25DF48CD00BEE4B8 /* gzread.c */,
-				C968888025DF48CD00BEE4B8 /* gzwrite.c */,
-				C968887D25DF48CC00BEE4B8 /* infback.c */,
-				C968887725DF48CC00BEE4B8 /* inffast.c */,
-				C968888F25DF48CD00BEE4B8 /* inffast.h */,
-				C968888825DF48CD00BEE4B8 /* inffixed.h */,
-				C968889025DF48CD00BEE4B8 /* inflate.c */,
-				C968888425DF48CD00BEE4B8 /* inflate.h */,
-				C968887A25DF48CC00BEE4B8 /* inftrees.c */,
-				C968888325DF48CD00BEE4B8 /* inftrees.h */,
-				C968888C25DF48CD00BEE4B8 /* trees.c */,
-				C968888525DF48CD00BEE4B8 /* trees.h */,
-				C968889225DF48CD00BEE4B8 /* uncompr.c */,
-				C968887925DF48CC00BEE4B8 /* zconf.h */,
-				C968887825DF48CC00BEE4B8 /* zlib.h */,
-				C968887E25DF48CC00BEE4B8 /* zutil.c */,
-				C968887F25DF48CD00BEE4B8 /* zutil.h */,
+				C9CDC802284362FA00E4C97E /* miniz.c */,
+				C9CDC801284362FA00E4C97E /* miniz.h */,
 			);
-			name = zlib;
+			name = miniz;
 			sourceTree = "<group>";
 		};
 		C9CDC72D27F9165300E4C97E /* sources */ = {
@@ -704,11 +642,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C968889325DF48CE00BEE4B8 /* inffast.c in Sources */,
 				C9CDC79C27F91A0A00E4C97E /* DummyCore.cpp in Sources */,
 				C9CDC76127F9199D00E4C97E /* Scene3D.cpp in Sources */,
 				C9CDC7D527F91A2F00E4C97E /* SteamStorage.cpp in Sources */,
-				C968889D25DF48CE00BEE4B8 /* adler32.c in Sources */,
 				C9CDC77627F919C200E4C97E /* Text.cpp in Sources */,
 				C9CDC78A27F919FB00E4C97E /* UserStats.cpp in Sources */,
 				C9CDC79D27F91A0A00E4C97E /* DummyPresence.cpp in Sources */,
@@ -724,21 +660,19 @@
 				C9CDC78B27F919FB00E4C97E /* UserStorage.cpp in Sources */,
 				C9CDC74B27F9198800E4C97E /* RetroEngine.cpp in Sources */,
 				C9CDC7C027F91A2300E4C97E /* NXCore.cpp in Sources */,
+				C9CDC803284362FA00E4C97E /* miniz.c in Sources */,
 				C9CDC79A27F91A0A00E4C97E /* DummyAchievements.cpp in Sources */,
 				C9CDC7AC27F91A1700E4C97E /* EOSAchievements.cpp in Sources */,
 				C9CDC78827F919FB00E4C97E /* UserAchievements.cpp in Sources */,
 				C968886F25DF3F4C00BEE4B8 /* iniparser.cpp in Sources */,
 				C9CDC7D227F91A2F00E4C97E /* SteamLeaderboards.cpp in Sources */,
 				C9CDC7AF27F91A1700E4C97E /* EOSStats.cpp in Sources */,
-				C968889C25DF48CE00BEE4B8 /* gzclose.c in Sources */,
-				C968889425DF48CE00BEE4B8 /* inftrees.c in Sources */,
 				C9CDC7D427F91A2F00E4C97E /* SteamStats.cpp in Sources */,
 				C9CDC7C227F91A2300E4C97E /* NXPresence.cpp in Sources */,
 				C9CDC7BE27F91A2300E4C97E /* NXStorage.cpp in Sources */,
 				C9CDC76F27F919B800E4C97E /* Scene.cpp in Sources */,
 				C9CDC77027F919B800E4C97E /* Collision.cpp in Sources */,
 				C9CDC74927F9198800E4C97E /* ModAPI.cpp in Sources */,
-				C968889725DF48CE00BEE4B8 /* zutil.c in Sources */,
 				C9CDC7DC27F91A4100E4C97E /* DevOutput.cpp in Sources */,
 				C9CDC7D327F91A2F00E4C97E /* SteamPresence.cpp in Sources */,
 				C9CDC7B027F91A1700E4C97E /* EOSCore.cpp in Sources */,
@@ -749,27 +683,17 @@
 				C9CDC7C127F91A2300E4C97E /* NXLeaderboards.cpp in Sources */,
 				C9CDC76227F9199D00E4C97E /* Video.cpp in Sources */,
 				C9CDC76E27F919B800E4C97E /* Object.cpp in Sources */,
-				C96888A125DF48CE00BEE4B8 /* inflate.c in Sources */,
-				C968889E25DF48CE00BEE4B8 /* trees.c in Sources */,
-				C968889F25DF48CE00BEE4B8 /* gzread.c in Sources */,
 				C9CDC78C27F919FB00E4C97E /* UserCore.cpp in Sources */,
 				C9CDC73027F9165F00E4C97E /* main.cpp in Sources */,
 				C9CDC7AD27F91A1700E4C97E /* EOSLeaderboards.cpp in Sources */,
-				C968889A25DF48CE00BEE4B8 /* gzlib.c in Sources */,
 				C9CDC7D127F91A2F00E4C97E /* SteamAchievements.cpp in Sources */,
-				C96888A325DF48CE00BEE4B8 /* uncompr.c in Sources */,
 				C9CDC74827F9198800E4C97E /* Link.cpp in Sources */,
 				C9CDC76427F9199D00E4C97E /* Animation.cpp in Sources */,
 				C9CDC74727F9198800E4C97E /* Math.cpp in Sources */,
 				C9CDC7D027F91A2F00E4C97E /* SteamCore.cpp in Sources */,
-				C968889625DF48CE00BEE4B8 /* infback.c in Sources */,
 				C9555DAE2744FE06006E1353 /* tinyxml2.cpp in Sources */,
-				C968889B25DF48CE00BEE4B8 /* deflate.c in Sources */,
 				C9CDC77527F919C200E4C97E /* Storage.cpp in Sources */,
-				C968889825DF48CE00BEE4B8 /* gzwrite.c in Sources */,
 				C9CDC74A27F9198800E4C97E /* Reader.cpp in Sources */,
-				C96888A225DF48CE00BEE4B8 /* crc32.c in Sources */,
-				C968889925DF48CE00BEE4B8 /* compress.c in Sources */,
 				C9CDC75F27F9199D00E4C97E /* Drawing.cpp in Sources */,
 				C9CDC79E27F91A0A00E4C97E /* DummyStats.cpp in Sources */,
 				C9CDC79F27F91A0A00E4C97E /* DummyStorage.cpp in Sources */,

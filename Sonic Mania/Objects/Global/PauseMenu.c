@@ -370,6 +370,8 @@ void PauseMenu_CheckAndReassignControllers(void)
     int32 inputID = API_ControllerIDForInputID(CONT_P1 + (entity->triggerPlayer ^ 1));
 
 #if MANIA_USE_PLUS
+    unused(inputID); // be quiet compiler I know it aint used!!
+    
     int32 id = API_MostRecentActiveControllerID(true, true, 5);
 #else
     int32 id = API_MostRecentActiveControllerID(inputID);

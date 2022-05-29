@@ -138,7 +138,6 @@ void UFO_Setup_StageLoad(void)
         memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int32)));
     }
     else {
-        int32 *deformData = NULL;
         if (RSDK.CheckStageFolder("UFO4")) {
             UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO4;
 
