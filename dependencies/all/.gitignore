@@ -1,5 +1,6 @@
 *
 !iniparser/
+!iniparser/*
 !stb_vorbis/
 !tinyxml2
 !README.md
