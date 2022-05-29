@@ -36,7 +36,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 #endif
     }
 
-#if RETRO_RENDERDEVICE_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
     MSG Msg;
     PeekMessage(&Msg, NULL, 0, 0, true);
     InitCommonControls();
@@ -73,7 +73,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
         }
         else {
             // No render device, throw a "QUIT" msg onto the message loop and call it a day :)
-#if RETRO_RENDERDEVICE_DIRECTX9
+#if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
             PostQuitMessage(0);
 #endif
         }
