@@ -145,13 +145,13 @@ void InputDeviceSDL::ProcessInput(int32 controllerID)
 
     triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
     triggerL[controllerID].keyTrigger.press |= this->triggerDeltaL > 0.3;
-    triggerL[controllerID].deadzone = this->triggerDeltaL;
-    triggerL[controllerID].delta    = this->triggerDeltaL;
+    triggerL[controllerID].bumperDelta  = this->triggerDeltaL;
+    triggerL[controllerID].triggerDelta = this->triggerDeltaL;
 
     triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
     triggerR[controllerID].keyTrigger.press |= this->triggerDeltaR > 0.3;
-    triggerR[controllerID].deadzone = this->triggerDeltaR;
-    triggerR[controllerID].delta    = this->triggerDeltaR;
+    triggerR[controllerID].bumperDelta  = this->triggerDeltaR;
+    triggerR[controllerID].triggerDelta = this->triggerDeltaR;
 }
 
 void InputDeviceSDL::CloseDevice()

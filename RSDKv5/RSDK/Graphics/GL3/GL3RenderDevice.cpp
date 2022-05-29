@@ -281,18 +281,44 @@ void RenderDevice::InitVertexBuffer()
     float y = 0.5 / (float)viewSize.y;
 
     // ignore the last 6 verts, they're scaled to the 1024x512 textures already!
+    // we do the negation of DX9/DX11 here because there are different texture origins
     int32 vertCount = (RETRO_REV02 ? 60 : 24) - 6;
     for (int32 v = 0; v < vertCount; ++v) {
         RenderVertex *vertex = &vertBuffer[v];
-        vertex->pos.x        = vertex->pos.x - x;
-        vertex->pos.y        = vertex->pos.y + y;
+        vertex->pos.x        = -vertex->pos.x + x;
+        vertex->pos.y        = -vertex->pos.y - y;
 
-        if (vertex->tex.x)
-            vertex->tex.x = screens[0].size.x * (1.0 / textureSize.x);
+        if (!vertex->tex.x)
+            vertex->tex.x = (float)screens[0].size.x / textureSize.x;
+        else
+            vertex->tex.x = 0;
 
-        if (vertex->tex.y)
-            vertex->tex.y = screens[0].size.y * (1.0 / textureSize.y);
+        if (!vertex->tex.y)
+            vertex->tex.y = (float)screens[0].size.y / textureSize.y;
+        else
+            vertex->tex.y = 0;
+
     }
+
+    for (int32 v = vertCount; v < vertCount + 6; ++v) {
+        RenderVertex *vertex = &vertBuffer[v];
+        vertex->pos.x        = -vertex->pos.x;
+        vertex->pos.y        = -vertex->pos.y;
+
+        if (!vertex->tex.x)
+            vertex->tex.x = 1;
+        else
+            vertex->tex.x = 0;
+
+        if (!vertex->tex.y)
+            vertex->tex.y = 1;
+        else
+            vertex->tex.y = 0;
+
+    }
+
+
+
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(RenderVertex) * (!RETRO_REV02 ? 24 : 60), vertBuffer);
 }
 
@@ -509,22 +535,11 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     shader->linear      = linear;
     sprintf(shader->name, "%s", fileName);
 
-    const char *shaderFolder    = "Dummy"; // nothing should ever be in "Data/Shaders/Dummy" so it works out to never load anything
-    const char *vertexShaderExt = "txt";
-    const char *pixelShaderExt  = "txt";
-
-    const char *bytecodeFolder    = "CSO-Dummy"; // nothing should ever be in "Data/Shaders/CSO-Dummy" so it works out to never load anything
-    const char *vertexBytecodeExt = "bin";
-    const char *pixelBytecodeExt  = "bin";
-
-    shaderFolder    = "GL3";
-    vertexShaderExt = "vs";
-    pixelShaderExt  = "fs";
 
     GLint success;
     char infoLog[0x1000];
     GLuint vert, frag;
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
+    sprintf(buffer, "Data/Shaders/GL3/None.vs", fileName);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
@@ -540,7 +555,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     }
     else
         return;
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, pixelShaderExt);
+    sprintf(buffer, "Data/Shaders/GL3/%s.fs", fileName);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
@@ -563,7 +578,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     glGetProgramiv(shader->programID, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shader->programID, 0x1000, NULL, infoLog);
-        PrintLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
+        PrintLog(PRINT_NORMAL, "OpenGL shader linking failed:\n%s", infoLog);
         return;
     }
     glDeleteShader(vert);
