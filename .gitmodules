@@ -13,6 +13,3 @@
 [submodule "dependencies/all/stb_vorbis"]
 	path = dependencies/all/stb_vorbis
 	url = https://github.com/nothings/stb
-[submodule "dependencies/all/iniparser"]
-	path = dependencies/all/iniparser
-	url = https://github.com/ndevilla/iniparser
