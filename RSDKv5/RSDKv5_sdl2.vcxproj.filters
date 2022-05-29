@@ -302,17 +302,17 @@
     <ClCompile Include="..\dependencies\all\stb_vorbis\stb_vorbis.c">
       <Filter>Source Files\Dependencies\stb_vorbis</Filter>
     </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\src\dictionary.c">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\src\iniparser.c">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
     <ClCompile Include="..\dependencies\all\miniz\miniz.c">
       <Filter>Source Files\Dependencies\miniz</Filter>
     </ClCompile>
     <ClCompile Include="RSDK\Input\NX\NXInputDevice.cpp">
       <Filter>Source Files\RSDK\Input\NX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\all\iniparser\dictionary.cpp">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -514,17 +514,17 @@
     <ClInclude Include="RSDK\Audio\SDL2\SDL2AudioDevice.hpp">
       <Filter>Source Files\RSDK\Audio\SDL2</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\src\dictionary.h">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\src\iniparser.h">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
     <ClInclude Include="..\dependencies\all\miniz\miniz.h">
       <Filter>Source Files\Dependencies\miniz</Filter>
     </ClInclude>
     <ClInclude Include="RSDK\Input\NX\NXInputDevice.hpp">
       <Filter>Source Files\RSDK\Input\NX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\iniparser\dictionary.h">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\iniparser\iniparser.h">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

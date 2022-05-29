@@ -311,12 +311,6 @@
     <ClCompile Include="RSDK\Audio\XAudio\XAudioDevice.cpp">
       <Filter>Source Files\RSDK\Audio\XAudio</Filter>
     </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\src\iniparser.c">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\src\dictionary.c">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClCompile>
     <ClCompile Include="..\dependencies\all\miniz\miniz.c">
       <Filter>Source Files\Dependencies\miniz</Filter>
     </ClCompile>
@@ -331,6 +325,12 @@
     </ClCompile>
     <ClCompile Include="RSDK\Graphics\DX11\DX11RenderDevice.cpp">
       <Filter>Source Files\RSDK\Graphics\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\all\iniparser\dictionary.cpp">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -532,12 +532,6 @@
     <ClInclude Include="RSDK\Audio\XAudio\XAudioDevice.hpp">
       <Filter>Source Files\RSDK\Audio\XAudio</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\src\iniparser.h">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\src\dictionary.h">
-      <Filter>Source Files\Dependencies\iniparser</Filter>
-    </ClInclude>
     <ClInclude Include="..\dependencies\all\miniz\miniz.h">
       <Filter>Source Files\Dependencies\miniz</Filter>
     </ClInclude>
@@ -552,6 +546,12 @@
     </ClInclude>
     <ClInclude Include="RSDK\Graphics\DX11\DX11RenderDevice.hpp">
       <Filter>Source Files\RSDK\Graphics\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\iniparser\dictionary.h">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\iniparser\iniparser.h">
+      <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
