@@ -55,9 +55,9 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(PixelInput input) : SV_TARGET
 {
+	float4 outColor = texDiffuse.Sample(sampDiffuse, input.tex.xy);
 #if defined(RETRO_REV02) 
-	return texDiffuse.Sample(sampDiffuse, input.tex.xy) * screenDim.x;
-#else
-	return texDiffuse.Sample(sampDiffuse, input.tex.xy);
+	outColor *= screenDim.x;
 #endif
+	return outColor;
 }

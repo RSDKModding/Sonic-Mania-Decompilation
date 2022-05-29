@@ -87,17 +87,11 @@ float4 PSMain(PixelInput input) : SV_TARGET
 
     float strength = adjacent.x * adjacent.y * 0.500501 * 2.002;
 
-    float4 blend;
-    blend.x = (blendFactor.x * blendFactor.y) / strength;
-    blend.y = (blendFactor.z * blendFactor.w) / strength;
-    blend.z = (blendFactor.z * blendFactor.x) / strength;
-    blend.w = (blendFactor.w * blendFactor.y) / strength;
-
     float4 filteredColor = 
-        blend.x * tex2D(texDiffuse, texPos.xy) + 
-        blend.y * tex2D(texDiffuse, texPos.wz) + 
-        blend.z * tex2D(texDiffuse, texPos.xz) +
-        blend.w * tex2D(texDiffuse, texPos.wy); 
+        ((blendFactor.x * blendFactor.y) / strength) * tex2D(texDiffuse, texPos.xy) + 
+        ((blendFactor.z * blendFactor.w) / strength) * tex2D(texDiffuse, texPos.wz) + 
+        ((blendFactor.z * blendFactor.x) / strength) * tex2D(texDiffuse, texPos.xz) +
+        ((blendFactor.w * blendFactor.y) / strength) * tex2D(texDiffuse, texPos.wy); 
     
 #if defined(RETRO_REV02) 
     filteredColor *= screenDim.x;

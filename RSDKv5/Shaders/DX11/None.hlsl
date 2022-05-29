@@ -40,19 +40,6 @@ struct PixelInput
 };
 
 // =======================
-// FUNCTIONS
-// =======================
-
-float4 cmp(float4 src0, float4 src1, float4 src2) {
-	return float4(
-		src0.x >= 0 ? src1.x : src2.x,
-		src0.y >= 0 ? src1.y : src2.y,
-		src0.z >= 0 ? src1.z : src2.z,
-		src0.w >= 0 ? src1.w : src2.w
-	);
-}
-
-// =======================
 // ENTRY POINTS
 // =======================
 
@@ -68,69 +55,48 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(PixelInput input) : SV_TARGET
 {
-	float4 r0, r2, r3, r4, r5;
-	float4 pixelPerfectColor, pixelImperfectColor;
-    
-    r0.x = frac((1.0 / pixelSize.x) * viewSize.x);
-    r0.y = frac((1.0 / pixelSize.y) * viewSize.y);
+    float2 viewScale;
+    viewScale.x = frac((1.0 / pixelSize.x) * viewSize.x) - 0.01;
+    viewScale.y = frac((1.0 / pixelSize.y) * viewSize.y) - 0.01;
 
-    r0.xy = (r0 + -0.00999999978).xy;
-    r0.y = cmp(r0.y, 0.0, 1.0).y;
-    r0.x = cmp(r0.x, 0.0, r0.y).x;
-
-    if (r0.x != -r0.x) {
+    // if viewSize is an integer scale of pixelSize (within a small margin of error)
+    if (viewScale.x < 0 && viewScale.y < 0) {
+        // just get the pixel at this fragment with no filtering
 #if defined(RETRO_REV02) 
-        pixelPerfectColor = texDiffuse.Sample(sampDiffuse, input.tex.xy) * screenDim.x;
+        return texDiffuse.Sample(sampDiffuse, input.tex) * screenDim.x;
 #else
-        pixelPerfectColor = texDiffuse.Sample(sampDiffuse, input.tex.xy);
+        return texDiffuse.Sample(sampDiffuse, input.tex);
 #endif
     }
-    else {
-        pixelPerfectColor = 0.0;
-    }
 
-    r0.w = abs(ddx(input.tex.x));
-    r0.z = abs(ddy(input.tex.y));
-    r0.y = (r0.w * (r0.z * 0.5005005)) * 2.002002;
+    // otherwise, it's not pixel perfect... do a bit of pixel filtering
+    // we have to do it manually here since the engine samples this shader using the "point" filter, rather than "linear"
 
-    r2.zw = mad(r0, 0.5005005, input.tex.xyyx).zw;
-    r2.xy = mad(r0.wzzw, -0.5005005, input.tex.xyxy).xy;
-    r3.y = 1.0 / textureSize.x;
-    r3.x = 1.0 / textureSize.y;
+    float2 adjacent;
+    adjacent.x = abs(ddx(input.tex.x));
+    adjacent.y = abs(ddy(input.tex.y));
 
-    r0.zw = mad(input.tex.xyyx, textureSize.xyyx, 0.5).zw;
-    r3.zw = frac(r0).zw;
-    r0.zw = (r0 + -r3).zw;
-    r0.zw = (r3.xyxy * r0).zw;
-    r3.xy = max(r0.zwzw, r2.yxzw).xy;
-    r0.zw = min(r2, r3.xyxy).zw;
+    float4 texPos;
+    texPos.zw = adjacent.yx * float2(0.500501, 0.500501) + input.tex.yx;
+    texPos.xy = -adjacent.xy * float2(0.500501, 0.500501) + input.tex.xy;
 
-    r3.xy = (-r2 + r0.wzzw).xy;
-    r0.zw = (-r0 + r2).zw;
-    r3.zw = (r0 * r3.xyxy).zw;
-    r0.y = 1.0 / r0.y;
-    r3.zw = (r0.y * r3).zw;
-
-    r4 = texDiffuse.Sample(sampDiffuse, r2.xz);
-    r0.z = r0.z * r0.w;
-    r0.z = r0.z * r0.y;
-
-    r5 = texDiffuse.Sample(sampDiffuse, r2.wz);
-    r5 = r0.z * r5;
-    r4 = mad(r3.z, r4, r5);
-
-    r0.z = r3.y * r3.x;
-    r0.y = r0.y * r0.z;
-    r5 = texDiffuse.Sample(sampDiffuse, r2.xy);
-
-    r4 = mad(r0.y, r5, r4);
-
-    r2 = texDiffuse.Sample(sampDiffuse, r2.wy);
+    float2 texSize  = float2(1.0, 1.0) / textureSize.yx;
+    float2 texCoord = clamp(texSize.xy * round(input.tex.yx / texSize.xy), texPos.yx, texPos.zw);
     
-    pixelImperfectColor = mad(r3.w, r2, r4);
+    float4 blendFactor;
+    blendFactor.xy = -texPos.xy +  texCoord.yx;
+    blendFactor.zw =  texPos.zw + -texCoord.xy;
+
+    float strength = adjacent.x * adjacent.y * 0.500501 * 2.002;
+
+    float4 filteredColor = 
+        ((blendFactor.x * blendFactor.y) / strength) * texDiffuse.Sample(sampDiffuse, texPos.xy) + 
+        ((blendFactor.z * blendFactor.w) / strength) * texDiffuse.Sample(sampDiffuse, texPos.wz) + 
+        ((blendFactor.z * blendFactor.x) / strength) * texDiffuse.Sample(sampDiffuse, texPos.xz) +
+        ((blendFactor.w * blendFactor.y) / strength) * texDiffuse.Sample(sampDiffuse, texPos.wy); 
+    
 #if defined(RETRO_REV02) 
-    pixelImperfectColor = pixelImperfectColor * screenDim.x;
+    filteredColor *= screenDim.x;
 #endif
-    
-    return cmp(-r0.x, pixelImperfectColor, pixelPerfectColor);
+    return filteredColor;
 }

@@ -19,21 +19,21 @@ float2 screenDim: register(c3);         // screen dimming percent
 
 struct VertexInput
 {
-    float4 pos      : POSITION0;
-    float4 color    : COLOR0;
-    float4 tex      : TEXCOORD0;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float4 tex      : TEXCOORD;
 };
 
 struct VertexOutput
 {
-    float4 pos      : POSITION0;
-    float4 color    : COLOR0;
-    float4 tex      : TEXCOORD0;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float4 tex      : TEXCOORD;
 };
 
 struct PixelInput
 {
-    float2 tex : TEXCOORD0;
+    float2 tex : TEXCOORD;
 };
 
 // =======================
@@ -56,20 +56,19 @@ float4 PSMain(PixelInput input) : SV_TARGET
 	// Adapted from https://github.com/rsn8887/Sharp-Bilinear-Shaders/releases, used in RetroArch 
 	
     float2 texel = input.tex.xy * float4(textureSize, 1.0 / textureSize).xy;
-    float2 scale = float2(2, 2);
 
     float2 texelFloored = floor(texel);
     float2 s            = frac(texel);
-    float2 regionRange  = 0.5 - 0.5 / scale;
+    float2 regionRange  = 0.5 - 0.5 / 2.0;
 
     float2 centerDist   = s - 0.5;
-    float2 f            = (centerDist - clamp(centerDist, -regionRange, regionRange)) * scale + 0.5;
+    float2 f            = (centerDist - clamp(centerDist, -regionRange, regionRange)) * 2.0 + 0.5;
 
     float2 modTexel = texelFloored + f;
 	
+    float4 outColor = tex2D(texDiffuse, modTexel / textureSize.xy);
 #if defined(RETRO_REV02) 
-	return tex2D(texDiffuse, (modTexel / textureSize.xy)) * screenDim.x;
-#else
-	return tex2D(texDiffuse, (modTexel / textureSize.xy));
+	outColor *= screenDim.x;
 #endif
+	return outColor;
 }

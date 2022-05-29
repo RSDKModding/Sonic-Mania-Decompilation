@@ -58,20 +58,19 @@ float4 PSMain(PixelInput input) : SV_TARGET
 	// Adapted from https://github.com/rsn8887/Sharp-Bilinear-Shaders/releases, used in RetroArch 
 	
     float2 texel = input.tex.xy * float4(textureSize, 1.0 / textureSize).xy;
-    float2 scale = float2(2, 2);
 
     float2 texelFloored = floor(texel);
     float2 s            = frac(texel);
-    float2 regionRange  = 0.5 - 0.5 / scale;
+    float2 regionRange  = 0.5 - 0.5 / 2.0;
 
     float2 centerDist   = s - 0.5;
-    float2 f            = (centerDist - clamp(centerDist, -regionRange, regionRange)) * scale + 0.5;
+    float2 f            = (centerDist - clamp(centerDist, -regionRange, regionRange)) * 2.0 + 0.5;
 
     float2 modTexel = texelFloored + f;
 	
+    float4 outColor = texDiffuse.Sample(sampDiffuse, modTexel / textureSize.xy);
 #if defined(RETRO_REV02) 
-    return texDiffuse.Sample(sampDiffuse, (modTexel / textureSize.xy)) * screenDim.x;
-#else
-    return texDiffuse.Sample(sampDiffuse, (modTexel / textureSize.xy));
+	outColor *= screenDim.x;
 #endif
+	return outColor;
 }

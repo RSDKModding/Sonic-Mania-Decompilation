@@ -1003,7 +1003,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
 #if !RETRO_USE_ORIGINAL_CODE
     // Try to compile the pixel shader source if it exists
-    sprintf(buffer, "Data/Shaders/DX11/%s.hsl", fileName);
+    sprintf(buffer, "Data/Shaders/DX11/%s.hlsl", fileName);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;

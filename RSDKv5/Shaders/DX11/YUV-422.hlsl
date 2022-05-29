@@ -68,8 +68,7 @@ float4 PSMain(PixelInput input) : SV_TARGET
     outColor.a = 1.0;
 
 #if defined(RETRO_REV02) 
-    return outColor * screenDim.x;
-#else
-    return outColor;
+	outColor *= screenDim.x;
 #endif
+	return outColor;
 }

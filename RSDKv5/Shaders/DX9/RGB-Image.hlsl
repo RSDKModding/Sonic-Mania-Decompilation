@@ -19,21 +19,21 @@ float2 screenDim: register(c3);         // screen dimming percent
 
 struct VertexInput
 {
-    float4 pos      : POSITION0;
-    float4 color    : COLOR0;
-    float4 tex      : TEXCOORD0;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float4 tex      : TEXCOORD;
 };
 
 struct VertexOutput
 {
-    float4 pos      : POSITION0;
-    float4 color    : COLOR0;
-    float4 tex      : TEXCOORD0;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float4 tex      : TEXCOORD;
 };
 
 struct PixelInput
 {
-    float2 tex : TEXCOORD0;
+    float2 tex : TEXCOORD;
 };
 
 // =======================
@@ -53,9 +53,9 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(PixelInput input) : SV_TARGET
 {
+    float4 outColor = tex2D(texDiffuse, input.tex.xy);
 #if defined(RETRO_REV02) 
-	return tex2D(texDiffuse, input.tex.xy) * screenDim.x;
-#else
-	return tex2D(texDiffuse, input.tex.xy);
+	outColor *= screenDim.x;
 #endif
+	return outColor;
 }
