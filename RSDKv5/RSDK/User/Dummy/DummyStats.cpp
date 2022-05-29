@@ -6,9 +6,7 @@ using namespace RSDK;
 std::vector<SKU::StatInfo> RSDK::SKU::statList;
 // End Dummy Stats
 
-#if !RETRO_REV02
-// TODO: maybe?
-#else
+#if RETRO_REV02
 #define voidToInt(x)   (int)(size_t)(x)
 #define voidToFloat(x) *(float *)&(x)
 

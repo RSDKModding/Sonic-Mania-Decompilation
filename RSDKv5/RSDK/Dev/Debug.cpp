@@ -84,7 +84,7 @@ void RSDK::PrintLog(int32 severity, const char *message, ...)
 
 #if !RETRO_USE_ORIGINAL_CODE
         char pathBuffer[0x100];
-        sprintf(pathBuffer, BASE_PATH "log.txt");
+        sprintf_s(pathBuffer, (int32)sizeof(pathBuffer), BASE_PATH "log.txt");
         FileIO *file = fOpen(pathBuffer, "a");
         if (file) {
             fWrite(&outputString, 1, strlen(outputString), file);
@@ -178,8 +178,8 @@ void DevMenu_HandleTouchControls()
     if (!controller[CONT_ANY].keyStart.down && !controller[CONT_ANY].keyUp.down && !controller[CONT_ANY].keyDown.down) {
         for (int32 t = 0; t < touchMouseData.count; ++t) {
             if (touchMouseData.down[t] && !(touchTimer % 8)) {
-                int32 tx = touchMouseData.x[t] * screens->size.x;
-                int32 ty = touchMouseData.y[t] * screens->size.y;
+                int32 tx = (int32)(touchMouseData.x[t] * screens->size.x);
+                int32 ty = (int32)(touchMouseData.y[t] * screens->size.y);
 
                 if (tx < screens->center.x) {
                     if (ty >= screens->center.y) {
@@ -265,34 +265,34 @@ void RSDK::DevMenu_MainMenu()
     // Storage box
 
     // Stage Storage
-    int32 stgUsed = (sizeof(int32) * dataStorage[DATASET_STG].usedStorage) / (float)dataStorage[DATASET_STG].storageLimit * 126.0;
+    int32 stgUsed = (int32)((sizeof(int32) * dataStorage[DATASET_STG].usedStorage) / (float)dataStorage[DATASET_STG].storageLimit * 126.0);
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, stgUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("STG", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Music Storage
-    int32 musUsed = (sizeof(int32) * dataStorage[DATASET_MUS].usedStorage) / (float)dataStorage[DATASET_MUS].storageLimit * 126.0;
+    int32 musUsed = (int32)((sizeof(int32) * dataStorage[DATASET_MUS].usedStorage) / (float)dataStorage[DATASET_MUS].storageLimit * 126.0);
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF5, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, musUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("MUS", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // SoundFX Storage
-    int32 sfxUsed = (sizeof(int32) * dataStorage[DATASET_SFX].usedStorage) / (float)dataStorage[DATASET_SFX].storageLimit * 126.0;
+    int32 sfxUsed = (int32)((sizeof(int32) * dataStorage[DATASET_SFX].usedStorage) / (float)dataStorage[DATASET_SFX].storageLimit * 126.0);
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, sfxUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("SFX", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // String Storage
-    int32 strUsed = (sizeof(int32) * dataStorage[DATASET_STR].usedStorage) / (float)dataStorage[DATASET_STR].storageLimit * 126.0;
+    int32 strUsed = (int32)((sizeof(int32) * dataStorage[DATASET_STR].usedStorage) / (float)dataStorage[DATASET_STR].storageLimit * 126.0);
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, strUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
     DrawDevString("STR", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Temp Storage
-    int32 tmpUsed = (sizeof(int32) * dataStorage[DATASET_TMP].usedStorage) / (float)dataStorage[DATASET_TMP].storageLimit * 126.0;
+    int32 tmpUsed = (int32)((sizeof(int32) * dataStorage[DATASET_TMP].usedStorage) / (float)dataStorage[DATASET_TMP].storageLimit * 126.0);
     y += 10;
     DrawRectangle(currentScreen->center.x - 40, y, 0x80, 0x08, 0x80, 0xFF, INK_NONE, true);
     DrawRectangle(currentScreen->center.x - 39, y + 1, tmpUsed, 6, 0xF0F0F0, 0xFF, INK_NONE, true);
@@ -920,11 +920,11 @@ void RSDK::DevMenu_VideoOptionsMenu()
                 int32 width = 0;
                 switch (devMenu.windowAspect) {
                     default: width = videoSettings.windowWidth; break;
-                    case 0: width = 3 - (videoSettings.pixHeight * -1.3333334f); break; // 16:9
-                    case 1: width = 3 - (videoSettings.pixHeight * -1.5f); break;       // 4:3
-                    case 2: width = 3 - (videoSettings.pixHeight * -1.6f); break;       // 3:2
-                    case 3: width = 3 - (videoSettings.pixHeight * -1.6666666f); break; // 16:10
-                    case 4: width = 3 - (videoSettings.pixHeight * -1.7777778f); break; // 5:3
+                    case 0: width = 3 - (int32)(videoSettings.pixHeight * -1.3333334f); break; // 16:9
+                    case 1: width = 3 - (int32)(videoSettings.pixHeight * -1.5f); break;       // 4:3
+                    case 2: width = 3 - (int32)(videoSettings.pixHeight * -1.6f); break;       // 3:2
+                    case 3: width = 3 - (int32)(videoSettings.pixHeight * -1.6666666f); break; // 16:10
+                    case 4: width = 3 - (int32)(videoSettings.pixHeight * -1.7777778f); break; // 5:3
                 }
                 width &= 0x7FF8;
                 // if (width > DEFAULT_SCREEN_XSIZE)
@@ -985,12 +985,12 @@ void RSDK::DevMenu_AudioOptionsMenu()
     dy += 16;
     DrawDevString("Streams Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[1]);
     DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0x000000, 0xFF, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x + 9, dy + 1, engine.streamVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x + 9, dy + 1, (int32)(engine.streamVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
 
     dy += 16;
     DrawDevString("SoundFX Vol:", currentScreen->center.x - 96, dy, 0, selectionColors[2]);
     DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0x000000, 0xFF, INK_NONE, true);
-    DrawRectangle(currentScreen->center.x + 9, dy + 1, engine.soundFXVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->center.x + 9, dy + 1, (int32)(engine.soundFXVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
     DrawDevString("Back", currentScreen->center.x, dy + 16, ALIGN_CENTER, selectionColors[3]);
 
 #if !RETRO_USE_ORIGINAL_CODE

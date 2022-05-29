@@ -49,7 +49,7 @@ void *GetAPIFunction(const char *name)
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
 
-    for (int f = 0; f < RSDK::APIFunctionTableCount; ++f) {
+    for (int32 f = 0; f < RSDK::APIFunctionTableCount; ++f) {
         if (HASH_MATCH_MD5(hash, RSDK::APIFunctionTable[f].hash))
             return RSDK::APIFunctionTable[f].ptr;
     }

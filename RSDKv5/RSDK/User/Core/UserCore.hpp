@@ -79,14 +79,14 @@ struct UserCore {
     virtual void ExitGame(void) {}
     virtual int32 GetDefaultGamepadType(void) { return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); }
     virtual bool32 IsOverlayEnabled(uint32 inputID) { return false; }
-    virtual bool32 CheckDLC(byte id)
+    virtual bool32 CheckDLC(uint8 id)
     {
         if (id < 8)
             return *values[id];
         else
             return 0;
     }
-    virtual int32 ShowExtensionOverlay(byte overlay) { return 0; }
+    virtual int32 ShowExtensionOverlay(uint8 overlay) { return 0; }
 #if RETRO_VER_EGS
     virtual void EpicUnknown1(void) {}
     virtual bool32 ShowCheckoutPage(int32 a1) { return false; }
@@ -97,7 +97,7 @@ struct UserCore {
 #endif
 
     bool32 *values[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-    byte valueCount = 0;
+    uint8 valueCount = 0;
 
     // Not Original, but I gotta store it somewhere /shrug
     uint8 focusState = 0;
@@ -120,14 +120,14 @@ inline bool32 GetConfirmButtonFlip(void) { return userCore->GetConfirmButtonFlip
 inline void ExitGame(void) { userCore->ExitGame(); }
 inline void LaunchManual(void) { userCore->LaunchManual(); }
 inline bool32 IsOverlayEnabled(uint32 overlay) { return userCore->IsOverlayEnabled(overlay); }
-inline bool32 CheckDLC(byte id) { return userCore->CheckDLC(id); }
-inline int32 ShowExtensionOverlay(byte overlay) { return userCore->ShowExtensionOverlay(overlay); }
+inline bool32 CheckDLC(uint8 id) { return userCore->CheckDLC(id); }
+inline int32 ShowExtensionOverlay(uint8 overlay) { return userCore->ShowExtensionOverlay(overlay); }
 #else
 bool32 GetConfirmButtonFlip();
 void LaunchManual();
 void ExitGame();
 int32 GetDefaultGamepadType();
-int32 ShowExtensionOverlay(byte overlay);
+int32 ShowExtensionOverlay(uint8 overlay);
 #endif
 
 bool32 GetXYButtonFlip();

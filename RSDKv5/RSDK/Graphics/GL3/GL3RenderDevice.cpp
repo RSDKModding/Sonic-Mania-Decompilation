@@ -14,7 +14,7 @@ GLuint RenderDevice::imageTexture;
 double RenderDevice::lastFrame;
 double RenderDevice::targetFreq;
 
-int RenderDevice::monitorIndex;
+int32 RenderDevice::monitorIndex;
 
 uint32 *RenderDevice::videoBuffer;
 
@@ -30,7 +30,7 @@ bool RenderDevice::Init()
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
     GLFWmonitor *monitor = NULL;
-    int w, h;
+    int32 w, h;
     if (videoSettings.windowed) {
         w = videoSettings.windowWidth;
         h = videoSettings.windowHeight;
@@ -81,7 +81,7 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
+    int32 size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
@@ -98,10 +98,10 @@ void RenderDevice::GetDisplays()
     if (!monitor)
         monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode *displayMode = glfwGetVideoMode(monitor);
-    int monitorCount;
+    int32 monitorCount;
     GLFWmonitor **monitors = glfwGetMonitors(&monitorCount);
 
-    for (int m = 0; m < monitorCount; ++m) {
+    for (int32 m = 0; m < monitorCount; ++m) {
         const GLFWvidmode *vidMode = glfwGetVideoMode(monitors[m]);
         displayWidth[m]            = vidMode->width;
         displayHeight[m]           = vidMode->height;
@@ -115,13 +115,13 @@ void RenderDevice::GetDisplays()
         free(displayInfo.displays);
 
     displayInfo.displays        = (decltype(displayInfo.displays))malloc(sizeof(GLFWvidmode) * displayCount);
-    int newDisplayCount         = 0;
-    bool foundFullScreenDisplay = false;
+    int32  newDisplayCount         = 0;
+    bool32 foundFullScreenDisplay = false;
 
-    for (int d = 0; d < displayCount; ++d) {
+    for (int32 d = 0; d < displayCount; ++d) {
         memcpy(&displayInfo.displays[newDisplayCount].internal, &displayModes[d], sizeof(GLFWvidmode));
 
-        int refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
+        int32 refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
         if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].height >= (SCREEN_YSIZE * 2)) {
             if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59)
                 --newDisplayCount;
@@ -242,7 +242,7 @@ bool RenderDevice::InitGraphicsAPI()
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(SCREEN_MAX, screenTextures);
 
-    for (int i = 0; i < SCREEN_MAX; ++i) {
+    for (int32 i = 0; i < SCREEN_MAX; ++i) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureSize.x, textureSize.y, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
 
@@ -338,7 +338,7 @@ void RenderDevice::UpdateFPSCap() { lastFrame = glfwGetTime(); }
 
 void RenderDevice::CopyFrameBuffer()
 {
-    for (int s = 0; s < videoSettings.screenCount; ++s) {
+    for (int32 s = 0; s < videoSettings.screenCount; ++s) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[s]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, screens[s].pitch, SCREEN_YSIZE, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, screens[s].frameBuffer);
     }
@@ -459,7 +459,7 @@ void RenderDevice::Release(bool32 isRefresh)
     glDeleteTextures(1, &imageTexture);
     if (videoBuffer)
         delete[] videoBuffer;
-    for (int i = 0; i < shaderCount; ++i) {
+    for (int32 i = 0; i < shaderCount; ++i) {
         glDeleteProgram(shaderList[i].programID);
     }
     shaderCount     = 0;
@@ -505,7 +505,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -520,10 +520,10 @@ bool RenderDevice::InitShaders()
 }
 void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 {
-    char buffer[0x100];
+    char fullFilePath[0x100];
     FileInfo info;
 
-    for (int i = 0; i < shaderCount; ++i) {
+    for (int32 i = 0; i < shaderCount; ++i) {
         if (strcmp(shaderList[i].name, fileName) == 0)
             return;
     }
@@ -533,16 +533,16 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
     ShaderEntry *shader = &shaderList[shaderCount];
     shader->linear      = linear;
-    sprintf(shader->name, "%s", fileName);
+    sprintf_s(shader->name, (int32)sizeof(shader->name), "%s", fileName);
 
 
     GLint success;
     char infoLog[0x1000];
     GLuint vert, frag;
-    sprintf(buffer, "Data/Shaders/GL3/None.vs", fileName);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/GL3/None.vs", fileName);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize + 1, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         fileData[info.fileSize] = 0;
@@ -555,10 +555,11 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     }
     else
         return;
-    sprintf(buffer, "Data/Shaders/GL3/%s.fs", fileName);
+
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/GL3/%s.fs", fileName);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize + 1, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         fileData[info.fileSize] = 0;
@@ -571,6 +572,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     }
     else
         return;
+
     shader->programID = glCreateProgram();
     glAttachShader(shader->programID, vert);
     glAttachShader(shader->programID, frag);
@@ -598,7 +600,7 @@ void RenderDevice::RefreshWindow()
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
     GLFWmonitor *monitor = NULL;
-    int w, h;
+    int32 w, h;
     if (videoSettings.windowed) {
         w = videoSettings.windowWidth;
         h = videoSettings.windowHeight;
@@ -731,7 +733,7 @@ void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yP
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
 }
 
-void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int action, int mods)
+void RenderDevice::ProcessKeyEvent(GLFWwindow *, int32 key, int32 scancode, int32 action, int32 mods)
 {
     switch (action) {
         case GLFW_PRESS: {
@@ -875,7 +877,7 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int key, int scancode, int acti
         }
     }
 }
-void RenderDevice::ProcessFocusEvent(GLFWwindow *, int focused)
+void RenderDevice::ProcessFocusEvent(GLFWwindow *, int32 focused)
 {
     if (!focused) {
 #if RETRO_REV02
@@ -888,7 +890,7 @@ void RenderDevice::ProcessFocusEvent(GLFWwindow *, int focused)
 #endif
     }
 }
-void RenderDevice::ProcessMouseEvent(GLFWwindow *, int button, int action, int mods)
+void RenderDevice::ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, int32 mods)
 {
     switch (action) {
         case GLFW_PRESS: {
@@ -909,6 +911,7 @@ void RenderDevice::ProcessMouseEvent(GLFWwindow *, int button, int action, int m
             }
             break;
         }
+
         case GLFW_RELEASE: {
             switch (button) {
                 case GLFW_MOUSE_BUTTON_LEFT: touchMouseData.down[0] = false; touchMouseData.count = 0;
@@ -929,8 +932,8 @@ void RenderDevice::ProcessMouseEvent(GLFWwindow *, int button, int action, int m
         }
     }
 }
-void RenderDevice::ProcessJoystickEvent(int ID, int event) {}
-void RenderDevice::ProcessMaximizeEvent(GLFWwindow *, int maximized)
+void RenderDevice::ProcessJoystickEvent(int32 ID, int32 event) {}
+void RenderDevice::ProcessMaximizeEvent(GLFWwindow *, int32 maximized)
 {
     // i don't know why this is a thing
     if (maximized) {
@@ -940,7 +943,7 @@ void RenderDevice::ProcessMaximizeEvent(GLFWwindow *, int maximized)
 
 void RenderDevice::SetLinear(bool32 linear)
 {
-    for (int i = 0; i < SCREEN_MAX; ++i) {
+    for (int32 i = 0; i < SCREEN_MAX; ++i) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[i]);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR : GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);

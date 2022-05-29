@@ -246,7 +246,7 @@ void Summary_LoadTimes(void)
     }
     else {
         char text[0x20];
-        sprintf(text, "%s %d", "SAVE SLOT", globals->saveSlotID);
+        sprintf_s(text, (int32)sizeof(text), "%s %d", "SAVE SLOT", globals->saveSlotID);
 
         Summary_SetTextString(0, self->saveFileLabel, text);
     }

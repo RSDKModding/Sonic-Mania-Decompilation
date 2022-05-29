@@ -38,7 +38,7 @@ struct DummyCore : UserCore {
         return false;
     }
     // CheckDLC(id)
-    int32 ShowExtensionOverlay(byte overlay);
+    int32 ShowExtensionOverlay(uint8 overlay);
 #if RETRO_VER_EGS
     void EpicUnknown1(void) {}
     bool32 ShowCheckoutPage(int32 a1);

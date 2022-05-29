@@ -125,8 +125,8 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 #if !RETRO_USE_ORIGINAL_CODE
                 for (int32 t = 0; t < touchMouseData.count; ++t) {
                     if (touchMouseData.down[t]) {
-                        int32 tx = touchMouseData.x[t] * screens->size.x;
-                        int32 ty = touchMouseData.y[t] * screens->size.y;
+                        int32 tx = (int32)(touchMouseData.x[t] * screens->size.x);
+                        int32 ty = (int32)(touchMouseData.y[t] * screens->size.y);
 
                         if (tx <= 32 && ty <= 32) {
                             if (engine.devMenu && sceneInfo.state != ENGINESTATE_DEVMENU)
@@ -688,7 +688,7 @@ int32 RSDK::LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                             if (nameAttr)
                                 lstName = getXMLAttributeValueString(nameAttr);
 
-                            sprintf(list->name, "%s", lstName);
+                            sprintf_s(list->name, (int32)sizeof(list->name), "%s", lstName);
                             GEN_HASH_MD5(list->name, list->hash);
 
                             list->sceneOffsetStart = gcStageCount;
@@ -723,10 +723,10 @@ int32 RSDK::LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 
                                     SceneListEntry *scene = &sceneInfo.listData[gcStageCount];
 
-                                    sprintf(scene->name, "%s", stgName);
+                                    sprintf_s(scene->name, (int32)sizeof(scene->name), "%s", stgName);
                                     GEN_HASH_MD5(scene->name, scene->hash);
-                                    sprintf(scene->folder, "%s", stgFolder);
-                                    sprintf(scene->id, "%s", stgID);
+                                    sprintf_s(scene->folder, (int32)sizeof(scene->folder), "%s", stgFolder);
+                                    sprintf_s(scene->id, (int32)sizeof(scene->id), "%s", stgID);
 
 #if RETRO_REV02
                                     scene->filter = stgFilter;
@@ -776,7 +776,7 @@ void RSDK::LoadGameConfig()
 
     if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
         char buffer[0x100];
-        uint sig = ReadInt32(&info, false);
+        uint32 sig = ReadInt32(&info, false);
 
         if (sig != RSDK_SIGNATURE_CFG) {
             CloseFile(&info);
@@ -785,14 +785,14 @@ void RSDK::LoadGameConfig()
 
         ReadString(&info, gameVerInfo.gameName);
         if (!useDataFile)
-            sprintf(gameVerInfo.gameName, "%s (Data Folder)", gameVerInfo.gameName);
+            sprintf_s(gameVerInfo.gameName, (int32)sizeof(gameVerInfo.gameName), "%s (Data Folder)", gameVerInfo.gameName);
         ReadString(&info, gameVerInfo.gameSubName);
         ReadString(&info, gameVerInfo.gameVersion);
 
         sceneInfo.activeCategory = ReadInt8(&info);
         int32 startScene         = ReadInt16(&info);
 
-        byte objCnt       = ReadInt8(&info);
+        uint8 objCnt       = ReadInt8(&info);
         globalObjectCount = TYPE_DEFAULT_COUNT;
         for (int32 i = 0; i < objCnt; ++i) {
             ReadString(&info, textBuffer);
@@ -816,9 +816,9 @@ void RSDK::LoadGameConfig()
             for (int32 r = 0; r < 0x10; ++r) {
                 if ((activeGlobalRows[i] >> r & 1)) {
                     for (int32 c = 0; c < 0x10; ++c) {
-                        byte red                       = ReadInt8(&info);
-                        byte green                     = ReadInt8(&info);
-                        byte blue                      = ReadInt8(&info);
+                        uint8 red                       = ReadInt8(&info);
+                        uint8 green                     = ReadInt8(&info);
+                        uint8 blue                      = ReadInt8(&info);
                         globalPalette[i][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                     }
                 }
@@ -828,14 +828,14 @@ void RSDK::LoadGameConfig()
             }
         }
 
-        byte sfxCnt = ReadInt8(&info);
+        uint8 sfxCnt = ReadInt8(&info);
         for (int32 i = 0; i < sfxCnt; ++i) {
             ReadString(&info, buffer);
-            byte maxConcurrentPlays = ReadInt8(&info);
+            uint8 maxConcurrentPlays = ReadInt8(&info);
             LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
         }
 
-        ushort totalSceneCount = ReadInt16(&info);
+        uint16 totalSceneCount = ReadInt16(&info);
 
 #if RETRO_USE_MOD_LOADER
         gcSceneCount = totalSceneCount;
@@ -905,7 +905,7 @@ void RSDK::LoadGameConfig()
             sceneID += category->sceneCount;
         }
 
-        byte varCount = ReadInt8(&info);
+        uint8 varCount = ReadInt8(&info);
         for (int32 i = 0; i < varCount && globalVarsPtr; ++i) {
             int32 offset = ReadInt32(&info, false);
             int32 count  = ReadInt32(&info, false);

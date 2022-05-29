@@ -95,7 +95,7 @@ uint16 RSDK::SKU::InitUserDB(const char *name, ...)
     userDBStorage->userDB[tableID].name   = name;
     GenerateHashCRC(&userDBStorage->userDB[tableID].uuid, (char *)name);
     InitUserDBValues(&userDBStorage->userDB[tableID], list);
-    UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
+    UserDBRefreshRowSortList(userDBStorage->userDB[tableID].parent);
     va_end(list);
     return tableID;
 }
@@ -333,7 +333,7 @@ uint16 RSDK::SKU::SetupUserDBRowSorting(uint16 tableID)
 {
     if (tableID == (uint16)-1)
         return 0;
-    UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
+    UserDBRefreshRowSortList(userDBStorage->userDB[tableID].parent);
 
     return userDBStorage->userDB[tableID].sortedRowCount;
 }
@@ -347,7 +347,7 @@ void RSDK::SKU::SetupRowSortIDs(UserDB *userDB)
         ++userDB->sortedRowCount;
     }
 }
-void RSDK::SKU::UserDBRefreshRowUnknown(UserDB *userDB)
+void RSDK::SKU::UserDBRefreshRowSortList(UserDB *userDB)
 {
     userDB->sortedRowList.Clear();
 
@@ -376,6 +376,7 @@ int32 RSDK::SKU::SortUserDBRows(uint16 tableID, int32 type, const char *name, bo
 {
     if (tableID == (uint16)-1)
         return 0;
+
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
         return 0;
@@ -398,6 +399,7 @@ int32 RSDK::SKU::GetSortedUserDBRowID(uint16 tableID, uint16 sortedRowID)
 {
     if (tableID == (uint16)-1)
         return -1;
+
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active || userDB->rowsChanged || sortedRowID >= userDB->sortedRowCount)
         return -1;
@@ -411,12 +413,12 @@ void RSDK::SKU::InitUserDBValues(UserDB *userDB, va_list list)
     int32 cnt = 0;
     while (true) {
         int32 type = va_arg(list, int32);
-        if (type == 0)
+        if (!type)
             break;
 
         userDB->columnTypes[cnt] = type;
         memset(userDB->columnNames[cnt], 0, 0x10);
-        sprintf(userDB->columnNames[cnt], "%s", va_arg(list, const char *));
+        sprintf_s(userDB->columnNames[cnt], (int32)sizeof(userDB->columnNames[cnt]), "%s", va_arg(list, const char *));
         GenerateHashCRC(&userDB->columnUUIDs[cnt], userDB->columnNames[cnt]);
         ++cnt;
     }
@@ -603,7 +605,7 @@ bool32 RSDK::SKU::LoadDBFromBuffer(UserDB *userDB, uint8 *buffer)
         userDB->columnTypes[c] = *buffer;
         buffer++;
 
-        sprintf(userDB->columnNames[c], "%s", (char *)buffer);
+        sprintf_s(userDB->columnNames[c], (int32)sizeof(userDB->columnNames[c]), "%s", (char *)buffer);
         buffer += 0x10;
 
         GenerateHashCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
@@ -661,7 +663,7 @@ void RSDK::SKU::SaveDBToBuffer(UserDB *userDB, int32 totalSize, uint8 *buffer)
         }
         if (size + 0x10 * sizeof(uint8) < totalSize) {
             memset(buffer, 0, 0x10 * sizeof(uint8));
-            sprintf((char *)buffer, "%s", userDB->columnNames[c]);
+            sprintf_s((char *)buffer, (int32)sizeof(userDB->columnNames[c]), "%s", userDB->columnNames[c]);
             size += 0x10;
             buffer += 0x10;
         }
@@ -918,7 +920,7 @@ int32 RSDK::SKU::UserDBLoadCB(uint16 tableID, int32 status)
     if (status == STATUS_OK) {
         result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (uint8 *)userDBStorage->readBuffer[tableID]);
         if (result) {
-            UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
+            UserDBRefreshRowSortList(userDBStorage->userDB[tableID].parent);
         }
     }
     else {
@@ -1055,11 +1057,11 @@ bool32 RSDK::SKU::LoadUserFile(const char *filename, void *buffer, uint32 bufSiz
     if (preLoadSaveFileCB)
         preLoadSaveFileCB();
 
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    PrintLog(PRINT_NORMAL, "Attempting to load user file: %s", pathBuffer);
+    char fullFilePath[0x400];
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "%s%s", userFileDir, filename);
+    PrintLog(PRINT_NORMAL, "Attempting to load user file: %s", fullFilePath);
 
-    FileIO *file = fOpen(pathBuffer, "rb");
+    FileIO *file = fOpen(fullFilePath, "rb");
     if (file) {
         fSeek(file, 0, SEEK_END);
         int32 fSize = (int32)fTell(file);
@@ -1089,11 +1091,11 @@ bool32 RSDK::SKU::SaveUserFile(const char *filename, void *buffer, uint32 bufSiz
     if (preLoadSaveFileCB)
         preLoadSaveFileCB();
 
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    PrintLog(PRINT_NORMAL, "Attempting to save user file: %s", pathBuffer);
+    char fullFilePath[0x400];
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "%s%s", userFileDir, filename);
+    PrintLog(PRINT_NORMAL, "Attempting to save user file: %s", fullFilePath);
 
-    FileIO *file = fOpen(pathBuffer, "wb");
+    FileIO *file = fOpen(fullFilePath, "wb");
     if (file) {
         fWrite(buffer, 1, bufSize, file);
         fClose(file);
@@ -1116,10 +1118,10 @@ bool32 RSDK::SKU::DeleteUserFile(const char *filename)
     if (preLoadSaveFileCB)
         preLoadSaveFileCB();
 
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    PrintLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
-    int32 status = remove(pathBuffer);
+    char fullFilePath[0x400];
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "%s%s", userFileDir, filename);
+    PrintLog(PRINT_NORMAL, "Attempting to delete user file: %s", fullFilePath);
+    int32 status = remove(fullFilePath);
 
     if (postLoadSaveFileCB)
         postLoadSaveFileCB();
@@ -1157,7 +1159,7 @@ void RSDK::SKU::InitUserDirectory()
 #if RETRO_PLATFORM == RETRO_OSX
 
     char buffer[0x100];
-    sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
+    sprintf_s(buffer, (int32)sizeof(buffer), "%s/RSDKv5/", getResourcesPath());
     SKU::SetUserFileCallbacks(buffer, NULL, NULL);
 
 #elif RETRO_PLATFORM == RETRO_ANDROID

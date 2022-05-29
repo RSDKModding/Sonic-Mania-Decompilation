@@ -180,10 +180,10 @@ uint32 RemoveDBRow(uint16 tableID, uint32 rowID);
 bool32 RemoveAllDBRows(uint16 tableID);
 uint32 GetDBRowUUID(uint16 tableID, int32 rowID);
 
-// UserDB Row Unknowns
+// UserDB Row Sorting
 uint16 SetupUserDBRowSorting(uint16 tableID);
 void SetupRowSortIDs(UserDB *userDB);
-void UserDBRefreshRowUnknown(UserDB *userDB);
+void UserDBRefreshRowSortList(UserDB *userDB);
 int32 AddUserDBRowSortFilter(uint16 tableID, int32 type, const char *name, void *value);
 int32 SortUserDBRows(uint16 tableID, int32 type, const char *name, bool32 active);
 int32 GetSortedUserDBRowCount(uint16 tableID);

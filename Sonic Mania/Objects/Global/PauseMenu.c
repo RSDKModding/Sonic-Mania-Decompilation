@@ -524,7 +524,7 @@ void PauseMenu_ExitFadeCB(void)
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
 
-        sprintf(param->menuTag, "Competition Zones");
+        sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Competition Zones");
         param->menuSelection = session->stageIndex;
     }
 

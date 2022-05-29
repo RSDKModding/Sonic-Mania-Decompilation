@@ -64,8 +64,7 @@ void UIVsScoreboard_SetScores(EntityUIVsScoreboard *scoreboard, uint32 p1Score, 
 {
     if (!SceneInfo->inEditor) {
         char text[64];
-        memset(text, 0, sizeof(text));
-        sprintf(text, "%d : %d", p1Score, p2Score);
+        sprintf_s(text, (int32)sizeof(text), "%d : %d", p1Score, p2Score);
 
         scoreboard->p1Score = p1Score;
         scoreboard->p2Score = p2Score;

@@ -313,7 +313,7 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
         ReplayRecorder->replayRowID = rowID;
 
         char fileName[0x20];
-        sprintf(fileName, "Replay_%08X.bin", ReplayRecorder->replayID);
+        sprintf_s(fileName, (int32)sizeof(fileName), "Replay_%08X.bin", ReplayRecorder->replayID);
         LogHelpers_Print("Replay Filename: %s", fileName);
         UIWaitSpinner_StartWait();
 
@@ -401,7 +401,7 @@ void ReplayRecorder_ReplaySave_CB(bool32 success)
         INIT_STRING(message);
 
         char fileName[0x20];
-        sprintf(fileName, "Replay_%08X.bin", ReplayRecorder->replayID);
+        sprintf_s(fileName, (int32)sizeof(fileName), "Replay_%08X.bin", ReplayRecorder->replayID);
 
         if (ReplayRecorder->replayRowID != -1)
             API.RemoveDBRow(globals->replayTableID, ReplayRecorder->replayRowID);
@@ -1456,7 +1456,7 @@ uint32 ReplayRecorder_AddReplayID(uint8 zoneID, uint8 act, uint8 characterID, in
 
         uint32 UUID = API.GetUserDBRowUUID(globals->replayTableID, rowID);
         char createTime[24];
-        sprintf(createTime, "");
+        sprintf_s(createTime, (int32)sizeof(createTime), "");
         API.GetUserDBRowCreationTime(globals->replayTableID, rowID, createTime, 23, "%Y/%m/%d %H:%M:%S");
 
         LogHelpers_Print("Replay DB Added Entry");
@@ -1491,7 +1491,7 @@ void ReplayRecorder_DeleteReplay(int32 row, void (*callback)(bool32 success), bo
     }
 
     char filename[0x20];
-    sprintf(filename, "Replay_%08X.bin", id);
+    sprintf_s(filename, (int32)sizeof(filename), "Replay_%08X.bin", id);
     if (!useAltCB)
         API.DeleteUserFile(filename, ReplayRecorder_DeleteReplay_CB);
     else

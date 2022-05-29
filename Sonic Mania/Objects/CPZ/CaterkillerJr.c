@@ -228,7 +228,7 @@ void CaterkillerJr_State_Move(void)
             }
 
             destroyEntity(self);
-            self->active = ACTIVE_NEVER2;
+            self->active = ACTIVE_DISABLED;
             foreach_break;
         }
 

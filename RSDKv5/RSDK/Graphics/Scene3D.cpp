@@ -368,13 +368,13 @@ void RSDK::MatrixInverse(Matrix *dest, Matrix *matrix)
     det = 1.0 / det;
 
     for (int32 i = 0; i < 0x10; ++i) inv[i] = (int32)((inv[i] * det) * 256);
-    for (int32 i = 0; i < 0x10; ++i) dest->values[i / 4][i % 4] = inv[i];
+    for (int32 i = 0; i < 0x10; ++i) dest->values[i / 4][i % 4] = (int32)inv[i];
 }
 
 uint16 RSDK::LoadMesh(const char *filename, Scopes scope)
 {
     char fullFilePath[0x100];
-    sprintf(fullFilePath, "Data/Meshes/%s", filename);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Meshes/%s", filename);
 
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(fullFilePath, hash);
@@ -439,17 +439,17 @@ uint16 RSDK::LoadMesh(const char *filename, Scopes scope)
 
         for (int32 f = 0; f < model->frameCount; ++f) {
             for (int32 v = 0; v < model->vertCount; ++v) {
-                model->vertices[(f * model->vertCount) + v].x = ReadSingle(&info) * 256.0f;
-                model->vertices[(f * model->vertCount) + v].y = ReadSingle(&info) * 256.0f;
-                model->vertices[(f * model->vertCount) + v].z = ReadSingle(&info) * 256.0f;
+                model->vertices[(f * model->vertCount) + v].x = (int32)(ReadSingle(&info) * 0x100);
+                model->vertices[(f * model->vertCount) + v].y = (int32)(ReadSingle(&info) * 0x100);
+                model->vertices[(f * model->vertCount) + v].z = (int32)(ReadSingle(&info) * 0x100);
 
                 model->vertices[(f * model->vertCount) + v].nx = 0;
                 model->vertices[(f * model->vertCount) + v].ny = 0;
                 model->vertices[(f * model->vertCount) + v].nz = 0;
                 if (model->flags & MODEL_USENORMALS) {
-                    model->vertices[(f * model->vertCount) + v].nx = ReadSingle(&info) * 65536.0f;
-                    model->vertices[(f * model->vertCount) + v].ny = ReadSingle(&info) * 65536.0f;
-                    model->vertices[(f * model->vertCount) + v].nz = ReadSingle(&info) * 65536.0f;
+                    model->vertices[(f * model->vertCount) + v].nx = (int32)(ReadSingle(&info) * 0x10000);
+                    model->vertices[(f * model->vertCount) + v].ny = (int32)(ReadSingle(&info) * 0x10000);
+                    model->vertices[(f * model->vertCount) + v].nz = (int32)(ReadSingle(&info) * 0x10000);
                 }
             }
         }

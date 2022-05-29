@@ -43,7 +43,7 @@ void RSDK::LoadScene()
     // Unload debug values
     ClearViewableVariables();
 
-    // unload tint table
+    // "unload" tint table
     tintLookupTable = NULL;
 #endif
 
@@ -118,10 +118,13 @@ void RSDK::LoadScene()
 #endif
 
     char fullFilePath[0x40];
-    sprintf(fullFilePath, "Data/Stages/%s/TileConfig.bin", currentSceneFolder);
+
+    // Load TileConfig
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Stages/%s/TileConfig.bin", currentSceneFolder);
     LoadTileConfig(fullFilePath);
 
-    sprintf(fullFilePath, "Data/Stages/%s/StageConfig.bin", currentSceneFolder);
+    // Load StageConfig
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Stages/%s/StageConfig.bin", currentSceneFolder);
 
     FileInfo info;
     InitFileInfo(&info);
@@ -203,7 +206,7 @@ void RSDK::LoadScene()
         CloseFile(&info);
     }
 
-    sprintf(fullFilePath, "Data/Stages/%s/16x16Tiles.gif", currentSceneFolder);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Stages/%s/16x16Tiles.gif", currentSceneFolder);
     LoadStageGIF(fullFilePath);
 }
 void RSDK::LoadSceneFile()
@@ -211,8 +214,8 @@ void RSDK::LoadSceneFile()
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
 
     SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
-    char buffer[0x40];
-    sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->id);
+    char fullFilePath[0x40];
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->id);
 
     dataStorage[DATASET_TMP].usedStorage = 0;
 
@@ -238,7 +241,7 @@ void RSDK::LoadSceneFile()
 
     FileInfo info;
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
         if (sig != RSDK_SIGNATURE_SCN) {

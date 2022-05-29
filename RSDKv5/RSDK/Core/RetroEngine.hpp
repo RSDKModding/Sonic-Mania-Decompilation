@@ -18,27 +18,22 @@ typedef signed short int16;
 typedef unsigned short uint16;
 typedef signed int int32;
 typedef unsigned int uint32;
-
-typedef uint32 bool32;
-
-typedef uint32 color;
-
-typedef unsigned char byte;
-typedef signed char sbyte;
-typedef unsigned short ushort;
-typedef unsigned int uint;
 typedef signed long long int64;
 typedef unsigned long long uint64;
+
+typedef uint32 bool32;
+typedef uint32 color;
 
 namespace RSDK
 {
 
 enum GamePlatforms {
-    PLATFORM_PC     = 0,
-    PLATFORM_PS4    = 1,
-    PLATFORM_XB1    = 2,
-    PLATFORM_SWITCH = 3,
-    PLATFORM_DEV    = 0xFF,
+    PLATFORM_PC,
+    PLATFORM_PS4,
+    PLATFORM_XB1,
+    PLATFORM_SWITCH,
+
+    PLATFORM_DEV = 0xFF,
 };
 
 enum GameLanguages {

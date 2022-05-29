@@ -25,7 +25,7 @@ bool RenderDevice::Init()
 
     SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
-    byte flags = 0;
+    uint8 flags = 0;
 
 #if RETRO_PLATFORM == RETRO_ANDROID
     videoSettings.windowed = false;
@@ -34,8 +34,8 @@ bool RenderDevice::Init()
     float hdp = 0, vdp = 0;
 
     bool landscape = dm.h < dm.w;
-    int h          = landscape ? dm.w : dm.h;
-    int w          = landscape ? dm.h : dm.w;
+    int32 h          = landscape ? dm.w : dm.h;
+    int32 w          = landscape ? dm.h : dm.w;
 
     videoSettings.windowWidth = ((float)SCREEN_YSIZE * h / w);
 
@@ -545,90 +545,7 @@ bool RenderDevice::InitGraphicsAPI()
     return true;
 }
 
-void RenderDevice::LoadShader(const char *fileName, bool32 linear)
-{
-    char buffer[0x100];
-    FileInfo info;
-
-    for (int i = 0; i < shaderCount; ++i) {
-        if (strcmp(shaderList[i].name, fileName) == 0)
-            return;
-    }
-
-    if (shaderCount == SHADER_MAX)
-        return;
-
-    ShaderEntry *shader = &shaderList[shaderCount];
-    shader->linear      = linear;
-    sprintf(shader->name, "%s", fileName);
-
-    const char *shaderFolder    = "Dummy"; // nothing should ever be in "Data/Shaders/Dummy" so it works out to never load anything
-    const char *vertexShaderExt = "txt";
-    const char *pixelShaderExt  = "txt";
-
-    const char *bytecodeFolder    = "CSO-Dummy"; // nothing should ever be in "Data/Shaders/CSO-Dummy" so it works out to never load anything
-    const char *vertexBytecodeExt = "bin";
-    const char *pixelBytecodeExt  = "bin";
-
-#if !RETRO_USE_ORIGINAL_CODE
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
-    InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
-        AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
-        ReadBytes(&info, fileData, info.fileSize);
-        CloseFile(&info);
-
-        fileData = NULL;
-    }
-    else {
-#endif
-
-        sprintf(buffer, "Data/Shaders/%s/%s.%s", bytecodeFolder, fileName, vertexBytecodeExt);
-        InitFileInfo(&info);
-        if (LoadFile(&info, buffer, FMODE_RB)) {
-            byte *fileData = NULL;
-            AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
-            ReadBytes(&info, fileData, info.fileSize);
-            CloseFile(&info);
-
-            fileData = NULL;
-        }
-
-#if !RETRO_USE_ORIGINAL_CODE
-    }
-#endif
-
-#if !RETRO_USE_ORIGINAL_CODE
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, pixelShaderExt);
-    InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
-        AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
-        ReadBytes(&info, fileData, info.fileSize);
-        CloseFile(&info);
-
-        fileData = NULL;
-    }
-    else {
-#endif
-        sprintf(buffer, "Data/Shaders/%s/%s.%s", bytecodeFolder, fileName, pixelBytecodeExt);
-        InitFileInfo(&info);
-        if (LoadFile(&info, buffer, FMODE_RB)) {
-            byte *fileData = NULL;
-            AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
-            ReadBytes(&info, fileData, info.fileSize);
-            CloseFile(&info);
-
-            fileData = NULL;
-        }
-
-#if !RETRO_USE_ORIGINAL_CODE
-    }
-#endif
-
-    shaderCount++;
-}
+void RenderDevice::LoadShader(const char *fileName, bool32 linear) { PrintLog(PRINT_NORMAL, "This render device does not support shaders!"); }
 
 bool RenderDevice::InitShaders()
 {
@@ -652,7 +569,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -678,7 +595,7 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
+    int32 size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
@@ -691,15 +608,15 @@ bool RenderDevice::SetupRendering()
 
 void RenderDevice::GetDisplays()
 {
-    int currentWindowDisplay = SDL_GetWindowDisplayIndex(window);
+    int32 currentWindowDisplay = SDL_GetWindowDisplayIndex(window);
 
-    int dispCount = SDL_GetNumVideoDisplays();
+    int32 dispCount = SDL_GetNumVideoDisplays();
 
     SDL_DisplayMode currentDisplay;
     SDL_GetCurrentDisplayMode(currentWindowDisplay, &currentDisplay);
 
     displayModeIndex = 0;
-    for (int a = 0; a < dispCount; ++a) {
+    for (int32 a = 0; a < dispCount; ++a) {
         SDL_DisplayMode displayMode;
 
         SDL_GetCurrentDisplayMode(currentWindowDisplay, &displayMode);
@@ -716,13 +633,13 @@ void RenderDevice::GetDisplays()
         free(displayInfo.displays);
 
     displayInfo.displays        = (decltype(displayInfo.displays))malloc(sizeof(SDL_DisplayMode) * displayCount);
-    int newDisplayCount         = 0;
-    bool foundFullScreenDisplay = false;
+    int32  newDisplayCount         = 0;
+    bool32 foundFullScreenDisplay = false;
 
-    for (int d = displayCount - 1; d >= 0; --d) {
+    for (int32 d = displayCount - 1; d >= 0; --d) {
         SDL_GetDisplayMode(currentWindowDisplay, d, &displayInfo.displays[newDisplayCount].internal);
 
-        int refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
+        int32 refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
         if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].height >= (SCREEN_YSIZE * 2)) {
             if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59) {
                 memcpy(&displayInfo.displays[newDisplayCount - 1], &displayInfo.displays[newDisplayCount], sizeof(displayInfo.displays[0]));
@@ -795,9 +712,9 @@ void RenderDevice::ProcessEvent(SDL_Event event)
 
         case SDL_CONTROLLERDEVICEADDED: {
             uint32 id;
-            char buffer[0x20];
-            sprintf(buffer, "%s%d", "SDLDevice", event.cdevice.which);
-            GenerateHashCRC(&id, buffer);
+            char idBuffer[0x20];
+            sprintf_s(idBuffer, (int32)sizeof(idBuffer), "%s%d", "SDLDevice", event.cdevice.which);
+            GenerateHashCRC(&id, idBuffer);
 
             SKU::InitSDL2InputDevice(id, event.cdevice.which);
             break;
@@ -805,9 +722,9 @@ void RenderDevice::ProcessEvent(SDL_Event event)
 
         case SDL_CONTROLLERDEVICEREMOVED: {
             uint32 id;
-            char buffer[0x20];
-            sprintf(buffer, "%s%d", "SDLDevice", event.cdevice.which);
-            GenerateHashCRC(&id, buffer);
+            char idBuffer[0x20];
+            sprintf_s(idBuffer, (int32)sizeof(idBuffer), "%s%d", "SDLDevice", event.cdevice.which);
+            GenerateHashCRC(&id, idBuffer);
 
             RemoveInputDevice(InputDeviceFromID(id));
             break;

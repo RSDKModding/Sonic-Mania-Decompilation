@@ -137,7 +137,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
             self->selection = 1;
 
         char buffer[0x10];
-        sprintf(buffer, "%ix", self->selection);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%ix", self->selection);
 
         RSDK.SetString(&entityPtr->text, buffer);
 #if MANIA_GAMEVER != VER_100

@@ -75,7 +75,7 @@ void RSDK::DevOutput_EditorLoad() {}
 
 void RSDK::DevOutput_Serialize() {}
 
-int RSDK::DevOutput_GetStringYSize(char *string)
+int32 RSDK::DevOutput_GetStringYSize(char *string)
 {
     if (!*string)
         return 24;

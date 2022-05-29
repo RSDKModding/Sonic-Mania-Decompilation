@@ -19,33 +19,33 @@ SDL_RWops *fOpen(const char *path, const char *mode)
     int32 a = 0;
     if (!strncmp(path, SKU::userFileDir, strlen(SKU::userFileDir)))
         a = strlen(SKU::userFileDir);
-    sprintf(buffer, "%s%s", SKU::userFileDir, path + a);
+    sprintf_s(buffer, (int32)sizeof(buffer), "%s%s", SKU::userFileDir, path + a);
 
     return SDL_RWFromFile(buffer, mode);
 }
 #endif
 
-bool32 RSDK::CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
+bool32 RSDK::LoadDataPack(const char *filePath, size_t fileOffset, bool32 useBuffer)
 {
     MEM_ZERO(dataPacks[dataPackCount]);
     useDataFile = false;
     FileInfo info;
 
-    char pathBuffer[0x100];
-    sprintf(pathBuffer, "%s%s", SKU::userFileDir, filePath);
+    char dataPackPath[0x100];
+    sprintf_s(dataPackPath, (int32)sizeof(dataPackPath), "%s%s", SKU::userFileDir, filePath);
 
     InitFileInfo(&info);
     info.externalFile = true;
-    if (LoadFile(&info, pathBuffer, FMODE_RB)) {
+    if (LoadFile(&info, dataPackPath, FMODE_RB)) {
         uint8 signature[6] = { 'R', 'S', 'D', 'K', 'v', '5' };
-        for (int32 i = 0; i < 6; ++i) {
+        for (int32 s = 0; s < 6; ++s) {
             uint8 sig = ReadInt8(&info);
-            if (sig != signature[i])
+            if (sig != signature[s])
                 return false;
         }
         useDataFile = true;
 
-        strcpy(dataPacks[dataPackCount].name, pathBuffer);
+        strcpy(dataPacks[dataPackCount].name, dataPackPath);
 
         dataPacks[dataPackCount].fileCount = ReadInt16(&info);
         for (int32 f = 0; f < dataPacks[dataPackCount].fileCount; ++f) {
@@ -143,8 +143,8 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     if (info->file)
         return false;
 
-    char filePathBuf[0x100];
-    strcpy(filePathBuf, filename);
+    char fullFilePath[0x100];
+    strcpy(fullFilePath, filename);
 
 #if RETRO_USE_MOD_LOADER
     char pathLower[0x100];
@@ -156,8 +156,8 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     bool addPath = false;
     if (activeMod != -1) {
         char buf[0x100];
-        sprintf(buf, "%s", filePathBuf);
-        sprintf(filePathBuf, "%smods/%s/%s", SKU::userFileDir, modList[activeMod].id.c_str(), buf);
+        sprintf_s(buf, (int32)sizeof(buf), "%s", fullFilePath);
+        sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "%smods/%s/%s", SKU::userFileDir, modList[activeMod].id.c_str(), buf);
         info->externalFile = true;
         addPath            = false;
     }
@@ -166,7 +166,7 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
             if (modList[m].active) {
                 std::map<std::string, std::string>::const_iterator iter = modList[m].fileMap.find(pathLower);
                 if (iter != modList[m].fileMap.cend()) {
-                    strcpy(filePathBuf, iter->second.c_str());
+                    strcpy(fullFilePath, iter->second.c_str());
                     info->externalFile = true;
                     break;
                 }
@@ -178,8 +178,8 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_ANDROID
     if (addPath) {
         char pathBuf[0x100];
-        sprintf(pathBuf, "%s%s", SKU::userFileDir, filePathBuf);
-        sprintf(filePathBuf, "%s", pathBuf);
+        sprintf_s(pathBuf, (int32)sizeof(pathBuf), "%s%s", SKU::userFileDir, fullFilePath);
+        sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "%s", pathBuf);
     }
 #endif
 
@@ -188,12 +188,12 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     }
 
     if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {
-        info->file = fOpen(filePathBuf, openModes[fileMode - 1]);
+        info->file = fOpen(fullFilePath, openModes[fileMode - 1]);
     }
 
     if (!info->file) {
 #if !RETRO_USE_ORIGINAL_CODE
-        PrintLog(PRINT_NORMAL, "File not found: %s", filePathBuf);
+        PrintLog(PRINT_NORMAL, "File not found: %s", fullFilePath);
 #endif
         return false;
     }
@@ -207,7 +207,7 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
         fSeek(info->file, 0, SEEK_SET);
     }
 #if !RETRO_USE_ORIGINAL_CODE
-    PrintLog(PRINT_NORMAL, "Loaded file %s", filePathBuf);
+    PrintLog(PRINT_NORMAL, "Loaded file %s", fullFilePath);
 #endif
     return true;
 }
@@ -228,7 +228,7 @@ void RSDK::GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
     }
 
     // StringB
-    sprintf(textBuffer, "%d", key2);
+    sprintf_s(textBuffer, (int32)sizeof(textBuffer), "%d", key2);
     GEN_HASH_MD5(textBuffer, (uint32 *)hash);
 
     for (int32 y = 0; y < 0x10; y += 4) {

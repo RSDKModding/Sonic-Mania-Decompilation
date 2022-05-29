@@ -479,7 +479,7 @@ extern ModFunctionTable Mod;
 #define RSDK_EDITABLE_ARRAY(object, type, var, count, arrType)                                                                                       \
     for (int i = 0; i < (count); ++i) {                                                                                                              \
         char buffer[0x40];                                                                                                                           \
-        sprintf(buffer, "%s%d", #var, i);                                                                                                            \
+        sprintf_s(buffer, (int32)sizeof(buffer), "%s%d", #var, i);                                                                                   \
         RSDK.SetEditableVar(type, buffer, (uint8)object->classID, offsetof(Entity##object, var) + sizeof(arrType) * i);                              \
     }
 

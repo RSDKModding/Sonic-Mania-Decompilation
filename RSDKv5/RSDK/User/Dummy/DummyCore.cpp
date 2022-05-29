@@ -206,7 +206,7 @@ int32 RSDK::SKU::DummyCore::GetDefaultGamepadType()
     }
 }
 
-int32 RSDK::SKU::DummyCore::ShowExtensionOverlay(byte overlay)
+int32 RSDK::SKU::DummyCore::ShowExtensionOverlay(uint8 overlay)
 {
     switch (overlay) {
         default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;

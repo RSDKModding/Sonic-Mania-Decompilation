@@ -17,7 +17,7 @@ struct UserRichPresence {
     virtual void OnUnknownEvent(void) {}
     virtual void SetPresence(int32 id, String *message) {}
 
-    int curID = 0;
+    int32 curID = 0;
 };
 
 extern UserRichPresence *richPresence;

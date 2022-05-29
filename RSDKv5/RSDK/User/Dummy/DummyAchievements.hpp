@@ -20,7 +20,7 @@ struct DummyAchievements : UserAchievements {
     inline bool32 CheckAchievementsEnabled(void) { return true; }
     void GetAchievementNames(String *names, int32 count);
     String *GetAchievementString(String *string);
-    String *GetAchievementName(String *name, uint id);
+    String *GetAchievementName(String *name, uint32 id);
     inline bool32 Unknown8() { return true; }
     int32 GetNextAchievementID();
     void RemoveLastAchievementID();

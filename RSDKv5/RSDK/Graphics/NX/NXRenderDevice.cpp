@@ -15,7 +15,7 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
+    int32 size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
@@ -95,7 +95,7 @@ void RenderDevice::FlipScreen()
 void RenderDevice::Release(bool32 isRefresh)
 {
 
-    for (int i = 0; i < shaderCount; ++i) {
+    for (int32 i = 0; i < shaderCount; ++i) {
     }
     shaderCount     = 0;
     userShaderCount = 0;
@@ -137,7 +137,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -152,10 +152,10 @@ bool RenderDevice::InitShaders()
 }
 void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 {
-    char buffer[0x100];
+    char fullFilePath[0x100];
     FileInfo info;
 
-    for (int i = 0; i < shaderCount; ++i) {
+    for (int32 i = 0; i < shaderCount; ++i) {
         if (strcmp(shaderList[i].name, fileName) == 0)
             return;
     }
@@ -165,7 +165,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
     ShaderEntry *shader = &shaderList[shaderCount];
     shader->linear      = linear;
-    sprintf(shader->name, "%s", fileName);
+    sprintf_s(shader->name, (int32)sizeof(shader->name), "%s", fileName);
 
     const char *shaderFolder    = "Dummy"; // nothing should ever be in "Data/Shaders/Dummy" so it works out to never load anything
     const char *vertexShaderExt = "txt";
@@ -182,10 +182,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     GLint success;
     char infoLog[0x1000];
     GLuint vert, frag;
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/%s/%s.%s", shaderFolder, fileName, vertexShaderExt);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize + 1, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         fileData[info.fileSize] = 0;
@@ -194,10 +194,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     else
         return;
 
-    sprintf(buffer, "Data/Shaders/%s/%s.%s", shaderFolder, fileName, pixelShaderExt);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/%s/%s.%s", shaderFolder, fileName, pixelShaderExt);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize + 1, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         fileData[info.fileSize] = 0;

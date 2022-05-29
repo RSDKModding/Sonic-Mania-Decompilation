@@ -116,15 +116,15 @@ void RenderDevice::CopyFrameBuffer()
 {
     dx9Device->SetTexture(0, NULL);
 
-    for (int s = 0; s < videoSettings.screenCount; ++s) {
+    for (int32 s = 0; s < videoSettings.screenCount; ++s) {
         D3DLOCKED_RECT rect;
 
-        if (screenTextures[s]->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
+        if (SUCCEEDED(screenTextures[s]->LockRect(0, &rect, NULL, D3DLOCK_DISCARD))) {
             WORD *pixels           = (WORD *)rect.pBits;
             uint16 *frameBufferPtr = screens[s].frameBuffer;
 
-            int screenPitch = screens[s].pitch;
-            int pitch       = (rect.Pitch >> 1) - screenPitch;
+            int32 screenPitch = screens[s].pitch;
+            int32 pitch       = (rect.Pitch >> 1) - screenPitch;
 
             for (int32 y = 0; y < SCREEN_YSIZE; ++y) {
                 int32 pixelCount = screenPitch >> 4;
@@ -161,14 +161,14 @@ void RenderDevice::CopyFrameBuffer()
 void RenderDevice::FlipScreen()
 {
     if (videoSettings.dimTimer < videoSettings.dimLimit) {
-        if (videoSettings.dimPercent < 1.0) {
-            videoSettings.dimPercent += 0.05;
-            if (videoSettings.dimPercent > 1.0)
-                videoSettings.dimPercent = 1.0;
+        if (videoSettings.dimPercent < 1.0f) {
+            videoSettings.dimPercent += 0.05f;
+            if (videoSettings.dimPercent > 1.0f)
+                videoSettings.dimPercent = 1.0f;
         }
     }
-    else if (videoSettings.dimPercent > 0.25) {
-        videoSettings.dimPercent *= 0.9;
+    else if (videoSettings.dimPercent > 0.25f) {
+        videoSettings.dimPercent *= 0.9f;
     }
 
     if (windowRefreshDelay > 0) {
@@ -511,12 +511,12 @@ bool RenderDevice::InitGraphicsAPI()
         presentParams.Windowed             = true;
 
         if (videoSettings.windowed) {
-            viewSize.x = videoSettings.windowWidth;
-            viewSize.y = videoSettings.windowHeight;
+            viewSize.x = (float)videoSettings.windowWidth;
+            viewSize.y = (float)videoSettings.windowHeight;
         }
         else {
-            viewSize.x = displayWidth[dxAdapter];
-            viewSize.y = displayHeight[dxAdapter];
+            viewSize.x = (float)displayWidth[dxAdapter];
+            viewSize.y = (float)displayHeight[dxAdapter];
         }
     }
     else {
@@ -537,8 +537,8 @@ bool RenderDevice::InitGraphicsAPI()
         presentParams.hDeviceWindow              = windowHandle;
         presentParams.Windowed                   = false;
 
-        viewSize.x = bufferWidth;
-        viewSize.y = bufferHeight;
+        viewSize.x = (float)bufferWidth;
+        viewSize.y = (float)bufferHeight;
     }
 
     int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);
@@ -608,8 +608,8 @@ bool RenderDevice::InitGraphicsAPI()
         SetScreenSize(s, screenWidth, screens[s].size.y);
     }
 
-    pixelSize.x     = screens[0].size.x;
-    pixelSize.y     = screens[0].size.y;
+    pixelSize.x     = (float)screens[0].size.x;
+    pixelSize.y     = (float)screens[0].size.y;
     float pixAspect = pixelSize.x / pixelSize.y;
 
     dx9Device->GetViewport(&displayInfo.viewport);
@@ -618,16 +618,16 @@ bool RenderDevice::InitGraphicsAPI()
     if ((viewSize.x / viewSize.y) <= ((pixelSize.x / pixelSize.y) + 0.1)) {
         if ((pixAspect - 0.1) > (viewSize.x / viewSize.y)) {
             viewSize.y         = (pixelSize.y / pixelSize.x) * viewSize.x;
-            dx9ViewPort.Y      = (displayInfo.viewport.Height >> 1) - (viewSize.y * 0.5);
-            dx9ViewPort.Height = viewSize.y;
+            dx9ViewPort.Y      = (DWORD)((displayInfo.viewport.Height >> 1) - (viewSize.y * 0.5));
+            dx9ViewPort.Height = (DWORD)viewSize.y;
 
             dx9Device->SetViewport(&dx9ViewPort);
         }
     }
     else {
         viewSize.x        = pixAspect * viewSize.y;
-        dx9ViewPort.X     = (displayInfo.viewport.Width >> 1) - (viewSize.x * 0.5);
-        dx9ViewPort.Width = viewSize.x;
+        dx9ViewPort.X     = (DWORD)((displayInfo.viewport.Width >> 1) - (viewSize.x * 0.5));
+        dx9ViewPort.Width = (DWORD)viewSize.x;
 
         dx9Device->SetViewport(&dx9ViewPort);
     }
@@ -642,8 +642,8 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
-        if (FAILED(dx9Device->CreateTexture(textureSize.x, textureSize.y, 1, D3DUSAGE_DYNAMIC, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &screenTextures[s],
-                                            NULL)))
+        if (FAILED(dx9Device->CreateTexture((UINT)textureSize.x, (UINT)textureSize.y, 1, D3DUSAGE_DYNAMIC, D3DFMT_R5G6B5, D3DPOOL_DEFAULT,
+                                            &screenTextures[s], NULL)))
             return false;
     }
 
@@ -653,8 +653,8 @@ bool RenderDevice::InitGraphicsAPI()
 
     lastShaderID = -1;
     InitVertexBuffer();
-    videoSettings.viewportX = dx9ViewPort.X;
-    videoSettings.viewportY = dx9ViewPort.Y;
+    videoSettings.viewportX = (float)dx9ViewPort.X;
+    videoSettings.viewportY = (float)dx9ViewPort.Y;
     videoSettings.viewportW = 1.0 / viewSize.x;
     videoSettings.viewportH = 1.0 / viewSize.y;
 
@@ -663,10 +663,10 @@ bool RenderDevice::InitGraphicsAPI()
 
 void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 {
-    char buffer[0x100];
+    char fullFilePath[0x100];
     FileInfo info;
 
-    for (int i = 0; i < shaderCount; ++i) {
+    for (int32 i = 0; i < shaderCount; ++i) {
         if (strcmp(shaderList[i].name, fileName) == 0)
             return;
     }
@@ -676,7 +676,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
     ShaderEntry *shader = &shaderList[shaderCount];
     shader->linear      = linear;
-    sprintf(shader->name, "%s", fileName);
+    sprintf_s(shader->name, (int32)sizeof(shader->name), "%s", fileName);
 
     const D3D_SHADER_MACRO defines[] = {
 #if RETRO_REV02
@@ -689,10 +689,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
 #if !RETRO_USE_ORIGINAL_CODE
     // Try to compile the vertex shader source if it exists
-    sprintf(buffer, "Data/Shaders/DX9/%s.hlsl", fileName);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/DX9/%s.hlsl", fileName);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         CloseFile(&info);
@@ -709,7 +709,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "VSMain", "vs_3_0", flags, 0, &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, fullFilePath, defines, NULL, "VSMain", "vs_3_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -744,10 +744,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     else {
 #endif
         // if the vertex shader source doesn't exist, fall back and try to load the vertex shader bytecode
-        sprintf(buffer, "Data/Shaders/CSO-DX9/%s.vso", fileName);
+        sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/CSO-DX9/%s.vso", fileName);
         InitFileInfo(&info);
-        if (LoadFile(&info, buffer, FMODE_RB)) {
-            byte *fileData = NULL;
+        if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+            uint8 *fileData = NULL;
             AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
@@ -771,10 +771,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
 #if !RETRO_USE_ORIGINAL_CODE
     // Try to compile the pixel shader source if it exists
-    sprintf(buffer, "Data/Shaders/DX9/%s.hlsl", fileName);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/DX9/%s.hlsl", fileName);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         CloseFile(&info);
@@ -791,7 +791,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "PSMain", "ps_3_0", flags, 0, &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, fullFilePath, defines, NULL, "PSMain", "ps_3_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -824,10 +824,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     else {
 #endif
         // if the pixel shader source doesn't exist, fall back and try to load the pixel shader bytecode
-        sprintf(buffer, "Data/Shaders/CSO-DX9/%s.fso", fileName);
+        sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/CSO-DX9/%s.fso", fileName);
         InitFileInfo(&info);
-        if (LoadFile(&info, buffer, FMODE_RB)) {
-            byte *fileData = NULL;
+        if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+            uint8 *fileData = NULL;
             AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
@@ -883,7 +883,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -919,7 +919,7 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
+    int32 size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
@@ -938,7 +938,7 @@ void RenderDevice::GetDisplays()
 
     HMONITOR windowMonitor = MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY);
     dxAdapter              = 0;
-    for (int a = 0; a < adapterCount; ++a) {
+    for (int32 a = 0; a < adapterCount; ++a) {
         D3DDISPLAYMODE displayMode;
 
         HMONITOR monitor = dx9Context->GetAdapterMonitor(a);

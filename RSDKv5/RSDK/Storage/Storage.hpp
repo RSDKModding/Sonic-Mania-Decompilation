@@ -69,10 +69,10 @@ public:
         count++;
         return entry;
     }
-    void Remove(uint index)
+    void Remove(uint32 index)
     {
         // move every item back one
-        for (int i = index; i < count; i++) {
+        for (int32 i = index; i < count; i++) {
             if (i + 1 < count) {
                 entries[i] = entries[i + 1];
             }
@@ -91,11 +91,11 @@ public:
         }
     }
 
-    inline T *At(int index) { return &entries[index]; }
+    inline T *At(int32 index) { return &entries[index]; }
 
     inline void Clear(bool32 dealloc = false)
     {
-        for (int i = count - 1; i >= 0; i--) {
+        for (int32 i = count - 1; i >= 0; i--) {
             Remove(i);
         }
 

@@ -35,7 +35,7 @@ void RSDK::SKU::FillDummyLeaderboardEntries()
                                  "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
 
     leaderboards->entryInfo.loadStatus = STATUS_OK;
-    for (int e = 0; e < leaderboards->entryInfo.entryCount.start; ++e) {
+    for (int32 e = 0; e < leaderboards->entryInfo.entryCount.start; ++e) {
         LeaderboardEntry *entry = &leaderboards->entryInfo.entries[e];
 
         entry->status     = STATUS_OK;
@@ -82,8 +82,8 @@ void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 
     if (!leaderboard)
         return;
 
-    int id = -1;
-    for (int i = 0; i < leaderboardList.size(); ++i) {
+    int32 id = -1;
+    for (int32 i = 0; i < leaderboardList.size(); ++i) {
         if (std::string(leaderboardList[i].name) == leaderboard->pcName) {
             id = i;
             break;
@@ -92,7 +92,7 @@ void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 
 
     if (id == -1) {
         LeaderboardInfo info;
-        sprintf(info.name, "%s", leaderboard->pcName);
+        sprintf_s(info.name, (int32)sizeof(info.name), "%s", leaderboard->pcName);
         info.score = 0x7FFFFFFF;
         id         = (int32)leaderboardList.size();
         leaderboardList.push_back(info);

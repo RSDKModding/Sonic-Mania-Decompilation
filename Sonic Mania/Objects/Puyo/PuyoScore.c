@@ -46,9 +46,9 @@ void PuyoScore_DrawScore(int score)
 
     char buffer[8];
     if (self->counter)
-        sprintf(buffer, "%d", score);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%d", score);
     else
-        sprintf(buffer, "%06d", score);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%06d", score);
 
     Vector2 drawPos = self->position;
     for (int32 i = 0; i < 6; ++i) {

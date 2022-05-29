@@ -170,8 +170,8 @@ Object *GetObject(const char *name);
 
 void RegisterAchievement(const char *identifier, const char *name, const char *desc);
 void GetAchievementInfo(uint32 id, String *name, String *description, String *identifer, bool32 *achieved);
-int GetAchievementIndexByID(const char *id);
-int GetAchievementCount();
+int32 GetAchievementIndexByID(const char *id);
+int32 GetAchievementCount();
 #endif
 
 } // namespace RSDK

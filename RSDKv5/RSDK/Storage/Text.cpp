@@ -373,8 +373,8 @@ void RSDK::InitStringList(String *stringList, int32 size)
 
 void RSDK::LoadStringList(String *stringList, const char *filePath, uint32 charSize)
 {
-    char fullFilePath[64];
-    sprintf(fullFilePath, "Data/Strings/%s", filePath);
+    char fullFilePath[0x40];
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Strings/%s", filePath);
 
     FileInfo info;
     InitFileInfo(&info);

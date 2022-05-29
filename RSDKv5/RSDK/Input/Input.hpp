@@ -530,10 +530,10 @@ inline int32 ControllerIDForInputID(uint8 controllerID)
 #if RETRO_REV02
 inline int32 MostRecentActiveControllerID(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer)
 {
-    uint mostRecentTime     = -1;
+    uint32 mostRecentTime     = -1;
     int32 mostRecentValidID = 0;
     int32 mostRecentID      = 0;
-    uint maxTime            = maxInactiveTimer ? maxInactiveTimer : -1;
+    uint32 maxTime            = maxInactiveTimer ? maxInactiveTimer : -1;
 
     if (InputDeviceCount) {
         for (int32 i = 0; i < InputDeviceCount; ++i) {
@@ -569,10 +569,10 @@ inline int32 MostRecentActiveControllerID(uint32 inputID)
     bool32 confirmOnly = false;
     bool32 unassignedOnly = false;
 
-    uint mostRecentTime = -1;
+    uint32 mostRecentTime = -1;
     int32 mostRecentValidID = 0;
     int32 mostRecentID = 0;
-    uint maxTime = -1;
+    uint32 maxTime = -1;
 
     if (InputDeviceCount) {
         for (int32 i = 0; i < InputDeviceCount; ++i) {

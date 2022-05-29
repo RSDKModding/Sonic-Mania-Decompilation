@@ -13,7 +13,7 @@ void RSDK::SKU::TryUnlockAchievement(const char *name)
 {
     PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
-    int i = 0;
+    int32 i = 0;
     for (; i < (int)achievementList.size(); ++i) {
         if (achievementList[i].identifier == name) {
             if (!achievementList[i].achieved) {
@@ -33,7 +33,7 @@ void RSDK::SKU::TryUnlockAchievement(const char *name)
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
 bool32 RSDK::SKU::achievementsEnabled = true;
-ushort RSDK::SKU::achievementAniFrames[2];
+uint16 RSDK::SKU::achievementAniFrames[2];
 Animator RSDK::SKU::achievementAnimator[2];
 String RSDK::SKU::achievementStrings[2];
 int32 RSDK::SKU::achievementStringWidth[2];
@@ -131,7 +131,7 @@ void RSDK::SKU::DrawAchievements()
             CopyString(&achievementStrings[0], achievements->GetAchievementString(&buffer));
             CopyString(&achievementStrings[1], achievements->GetAchievementName(&buffer, achievementID));
 
-            int drawX = achievementStrX + currentScreen->size.x - achievementStrW;
+            int32 drawX = achievementStrX + currentScreen->size.x - achievementStrW;
             DrawRectangle(drawX, currentScreen->size.y - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 255, INK_NONE, true);
 
             Vector2 vertices[3];

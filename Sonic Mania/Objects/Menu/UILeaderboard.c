@@ -159,7 +159,7 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
                 if (entry->globalRank < 1)
                     strcpy(buffer, "--");
                 else
-                    sprintf(buffer, "%d", entry->globalRank);
+                    sprintf_s(buffer, (int32)sizeof(buffer), "%d", entry->globalRank);
                 RSDK.SetString(&entity->rankText[i], buffer);
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
@@ -360,11 +360,11 @@ void UILeaderboard_DrawTime(int32 mins, int32 secs, int32 millisecs, int32 x, in
     char scoreText[0x10];
 
     if (mins == 99 && secs == 99 && millisecs == 99)
-        sprintf(scoreText, "<<:<<;<<");
+        sprintf_s(scoreText, (int32)sizeof(scoreText), "<<:<<;<<");
     else if (!mins && !secs && !millisecs)
-        sprintf(scoreText, "<<:<<;<<");
+        sprintf_s(scoreText, (int32)sizeof(scoreText), "<<:<<;<<");
     else
-        sprintf(scoreText, "%02d:%02d;%02d", mins, secs, millisecs);
+        sprintf_s(scoreText, (int32)sizeof(scoreText), "%02d:%02d;%02d", mins, secs, millisecs);
 
     drawPos.x = x;
     drawPos.y = y;

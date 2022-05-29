@@ -40,7 +40,7 @@ inline void PrintString(int32 severity, String *message)
 
     useEndLine = true;
 }
-inline void PrintUInt32(int32 severity, const char *message, uint integer) { PrintLog(severity, "%s: %d", message, integer); }
+inline void PrintUInt32(int32 severity, const char *message, uint32 integer) { PrintLog(severity, "%s: %d", message, integer); }
 inline void PrintInt32(int32 severity, const char *message, int32 integer) { PrintLog(severity, "%s: %d", message, integer); }
 inline void PrintFloat(int32 severity, const char *message, float f) { PrintLog(severity, "%s: %f", message, f); }
 inline void PrintVector2(int32 severity, const char *message, int32 x, int32 y)

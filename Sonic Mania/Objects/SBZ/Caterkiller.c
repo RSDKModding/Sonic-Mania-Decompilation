@@ -215,7 +215,7 @@ void Caterkiller_HandlePlayerInteractions(void)
                         }
 
                         destroyEntity(self);
-                        self->active = ACTIVE_NEVER2;
+                        self->active = ACTIVE_DISABLED;
                         break;
                     }
                 }

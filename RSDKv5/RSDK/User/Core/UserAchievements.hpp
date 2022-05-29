@@ -23,7 +23,7 @@ struct UserAchievements {
     virtual bool32 CheckAchievementsEnabled(void) { return false; }
     virtual void GetAchievementNames(String *names, int32 count) {}
     virtual String *GetAchievementString(String *string) { return NULL; }
-    virtual String *GetAchievementName(String *name, uint id) { return NULL; }
+    virtual String *GetAchievementName(String *name, uint32 id) { return NULL; }
     virtual bool32 Unknown8() { return false; }
     virtual int32 GetNextAchievementID() { return 0; }
     virtual void RemoveLastAchievementID() {}
@@ -56,7 +56,7 @@ void ClearAchievements();
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
 extern bool32 achievementsEnabled;
-extern ushort achievementAniFrames[2];
+extern uint16 achievementAniFrames[2];
 extern Animator achievementAnimator[2];
 extern String achievementStrings[2];
 extern int32 achievementStringWidth[2];

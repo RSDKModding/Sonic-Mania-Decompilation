@@ -800,11 +800,11 @@ void InputDeviceKeyboard::ProcessInput(int32 controllerID)
 
 void RSDK::SKU::InitKeyboardInputAPI()
 {
-    char buffer[0x10];
+    char idBuffer[0x10];
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
-        sprintf(buffer, "KBDevice%d", i);
+        sprintf_s(idBuffer, (int32)sizeof(idBuffer), "KBDevice%d", i);
         uint32 id = 0;
-        GenerateHashCRC(&id, buffer);
+        GenerateHashCRC(&id, idBuffer);
 
         InputDeviceKeyboard *device = InitKeyboardDevice(id);
         if (device) {

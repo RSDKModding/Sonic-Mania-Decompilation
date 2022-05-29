@@ -40,15 +40,15 @@ private:
 
     static void GetDisplays();
 
-    static void ProcessKeyEvent(GLFWwindow *, int key, int scancode, int action, int mods);
-    static void ProcessFocusEvent(GLFWwindow *, int focused);
-    static void ProcessMouseEvent(GLFWwindow *, int button, int action, int mods);
-    static void ProcessJoystickEvent(int ID, int event);
-    static void ProcessMaximizeEvent(GLFWwindow *, int maximized);
+    static void ProcessKeyEvent(GLFWwindow *, int32 key, int32 scancode, int32 action, int32 mods);
+    static void ProcessFocusEvent(GLFWwindow *, int32 focused);
+    static void ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, int32 mods);
+    static void ProcessJoystickEvent(int32 ID, int32 event);
+    static void ProcessMaximizeEvent(GLFWwindow *, int32 maximized);
 
     static void SetLinear(bool32 linear);
 
-    static int monitorIndex;
+    static int32 monitorIndex;
 
     static GLuint VAO;
     static GLuint VBO;

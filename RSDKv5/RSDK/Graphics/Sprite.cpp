@@ -829,7 +829,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
 uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
 {
     char fullFilePath[0x100];
-    sprintf(fullFilePath, "Data/Sprites/%s", filename);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Sprites/%s", filename);
 
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(filename, hash);
@@ -892,7 +892,7 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
 bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void))
 {
     char fullFilePath[0x100];
-    sprintf(fullFilePath, "Data/Images/%s", filename);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Images/%s", filename);
 
 #if RETRO_REV02
     ImagePNG image;

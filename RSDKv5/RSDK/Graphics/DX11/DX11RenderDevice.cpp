@@ -134,7 +134,7 @@ bool RenderDevice::Init()
 
 void RenderDevice::CopyFrameBuffer()
 {
-    for (int s = 0; s < videoSettings.screenCount; ++s) {
+    for (int32 s = 0; s < videoSettings.screenCount; ++s) {
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         if (SUCCEEDED(dx11Context->Map(screenTextures[s], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource))) {
             WORD *pixels           = (WORD *)mappedResource.pData;
@@ -854,10 +854,10 @@ bool RenderDevice::InitGraphicsAPI()
 
 void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 {
-    char buffer[0x100];
+    char fullFilePath[0x100];
     FileInfo info;
 
-    for (int i = 0; i < shaderCount; ++i) {
+    for (int32 i = 0; i < shaderCount; ++i) {
         if (strcmp(shaderList[i].name, fileName) == 0)
             return;
     }
@@ -867,7 +867,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
     ShaderEntry *shader = &shaderList[shaderCount];
     shader->linear      = linear;
-    sprintf(shader->name, "%s", fileName);
+    sprintf_s(shader->name, (int32)sizeof(shader->name), "%s", fileName);
 
     const D3D_SHADER_MACRO defines[] = {
 #if RETRO_REV02
@@ -883,10 +883,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     size_t bytecodeSize = 0;
 
     // Try to compile the vertex shader source if it exists
-    sprintf(buffer, "Data/Shaders/DX11/%s.hlsl", fileName);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/DX11/%s.hlsl", fileName);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         CloseFile(&info);
@@ -903,7 +903,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "VSMain", "vs_5_0", flags, 0, &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, fullFilePath, defines, NULL, "VSMain", "vs_5_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -941,10 +941,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     else {
 #endif
         // if the vertex shader source doesn't exist, fall back and try to load the vertex shader bytecode
-        sprintf(buffer, "Data/Shaders/CSO-DX11/%s.vso", fileName);
+        sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/CSO-DX11/%s.vso", fileName);
         InitFileInfo(&info);
-        if (LoadFile(&info, buffer, FMODE_RB)) {
-            byte *fileData = NULL;
+        if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+            uint8 *fileData = NULL;
             AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
@@ -1003,10 +1003,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
 #if !RETRO_USE_ORIGINAL_CODE
     // Try to compile the pixel shader source if it exists
-    sprintf(buffer, "Data/Shaders/DX11/%s.hlsl", fileName);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/DX11/%s.hlsl", fileName);
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
-        byte *fileData = NULL;
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+        uint8 *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         CloseFile(&info);
@@ -1023,7 +1023,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
         ID3DBlob *shaderBlob = nullptr;
         ID3DBlob *errorBlob  = nullptr;
-        HRESULT result       = D3DCompile(fileData, info.fileSize, buffer, defines, NULL, "PSMain", "ps_5_0", flags, 0, &shaderBlob, &errorBlob);
+        HRESULT result       = D3DCompile(fileData, info.fileSize, fullFilePath, defines, NULL, "PSMain", "ps_5_0", flags, 0, &shaderBlob, &errorBlob);
 
         if (FAILED(result)) {
             if (errorBlob) {
@@ -1056,10 +1056,10 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     else {
 #endif
         // if the pixel shader source doesn't exist, fall back and try to load the pixel shader bytecode
-        sprintf(buffer, "Data/Shaders/CSO-DX11/%s.fso", fileName);
+        sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Shaders/CSO-DX11/%s.fso", fileName);
         InitFileInfo(&info);
-        if (LoadFile(&info, buffer, FMODE_RB)) {
-            byte *fileData = NULL;
+        if (LoadFile(&info, fullFilePath, FMODE_RB)) {
+            uint8 *fileData = NULL;
             AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
             ReadBytes(&info, fileData, info.fileSize);
             CloseFile(&info);
@@ -1214,7 +1214,7 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
+    int32 size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
@@ -1230,7 +1230,7 @@ void RenderDevice::GetDisplays()
     std::vector<IDXGIAdapter *> adapterList = GetAdapterList();
     adapterCount                            = (int32)adapterList.size();
 
-    uint prevAdapter = dxAdapter;
+    uint32 prevAdapter = dxAdapter;
 
     HMONITOR windowMonitor = MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY);
     for (int32 a = 0; a < adapterCount; ++a) {

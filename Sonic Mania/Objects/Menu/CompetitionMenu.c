@@ -518,7 +518,7 @@ void CompetitionMenu_StartMatch(void)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
 
-    sprintf(param->menuTag, "Competition Round");
+    sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Competition Round");
     session->stageIndex  = CompetitionMenu->compZoneControl->buttonID;
     session->zoneID      = param->vsZoneID;
     session->actID       = param->vsActID;
@@ -675,7 +675,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     Localization_GetZoneName(&roundLabelStr, session->zoneID);
     if (session->zoneID < 12) {
         char buf[16];
-        sprintf(buf, " ZONE %d", session->actID + 1);
+        sprintf_s(buf, (int32)sizeof(buf), " ZONE %d", session->actID + 1);
         RSDK.AppendText(&roundLabelStr, buf);
     }
 
@@ -723,31 +723,31 @@ void CompetitionMenu_Round_MenuSetupCB(void)
         results->trophyCount = session->wins[p];
         memset(buffer, 0, sizeof(buffer));
 
-        sprintf(buffer, "%d", session->rings[p]);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%d", session->rings[p]);
         if (!SceneInfo->inEditor) {
             RSDK.InitString(&results->rowText[0], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
         }
 
-        sprintf(buffer, "%d", session->totalRings[p]);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%d", session->totalRings[p]);
         if (!SceneInfo->inEditor) {
             RSDK.InitString(&results->rowText[1], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
         }
 
-        sprintf(buffer, "%d", session->score[p]);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%d", session->score[p]);
         if (!SceneInfo->inEditor) {
             RSDK.InitString(&results->rowText[2], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[2]);
         }
 
-        sprintf(buffer, "%d", session->items[p]);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%d", session->items[p]);
         if (!SceneInfo->inEditor) {
             RSDK.InitString(&results->rowText[3], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[3]);
         }
 
-        sprintf(buffer, "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
         if (!SceneInfo->inEditor) {
             RSDK.InitString(&results->rowText[4], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
@@ -877,7 +877,7 @@ void CompetitionMenu_Results_MenuSetupCB(void)
 
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
-            sprintf(buffer, "%d", session->matchWinner[r]);
+            sprintf_s(buffer, (int32)sizeof(buffer), "%d", session->matchWinner[r]);
 
             if (!SceneInfo->inEditor) {
                 RSDK.InitString(&results->rowText[r], buffer, 0);

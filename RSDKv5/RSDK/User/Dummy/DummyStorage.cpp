@@ -3,7 +3,7 @@
 using namespace RSDK;
 
 #if RETRO_REV02
-int RSDK::SKU::DummyUserStorage::TryAuth()
+int32 RSDK::SKU::DummyUserStorage::TryAuth()
 {
     if (authStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
@@ -17,7 +17,7 @@ int RSDK::SKU::DummyUserStorage::TryAuth()
     }
     return authStatus;
 }
-int RSDK::SKU::DummyUserStorage::TryInitStorage()
+int32 RSDK::SKU::DummyUserStorage::TryInitStorage()
 {
     if (storageStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
@@ -53,12 +53,12 @@ bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *
         success = LoadUserFile(filename, buffer, bufSize);
 
         if (bufSize >= 4) {
-            byte *bufTest = (byte *)buffer;
+            uint8 *bufTest = (uint8 *)buffer;
             // quick and dirty zlib check
             if (bufTest[0] == 0x78 && (bufTest[1] == 0x01 || bufTest[1] == 0x9C)) {
                 uLongf destLen = bufSize;
 
-                byte *compData = NULL;
+                uint8 *compData = NULL;
                 AllocateStorage(bufSize, (void **)&compData, DATASET_TMP, false);
                 memcpy(compData, buffer, bufSize);
 
@@ -89,7 +89,7 @@ bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *
     bool32 success = false;
     if (!noSaveActive) {
         if (compressData) {
-            int *cbuf = NULL;
+            int32 *cbuf = NULL;
             AllocateStorage(size, (void **)&cbuf, DATASET_TMP, false);
 
             uLongf clen = size;

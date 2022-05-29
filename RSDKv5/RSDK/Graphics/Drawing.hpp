@@ -138,10 +138,10 @@ struct WindowInfo {
 #elif RETRO_RENDERDEVICE_OPENGL3
     union {
         struct {
-            int width;
-            int height;
-            int _pad[3];
-            int refresh_rate;
+            int32 width;
+            int32 height;
+            int32 _pad[3];
+            int32 refresh_rate;
         };
         GLFWvidmode internal;
     } * displays;
@@ -285,7 +285,7 @@ void GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *refres
 void GetWindowSize(int32 *width, int32 *height);
 
 #if RETRO_REV02
-inline void SetScreenRenderVertices(sbyte startVert2P_S1, sbyte startVert2P_S2, sbyte startVert3P_S1, sbyte startVert3P_S2, sbyte startVert3P_S3)
+inline void SetScreenRenderVertices(uint8 startVert2P_S1, uint8 startVert2P_S2, uint8 startVert3P_S1, uint8 startVert3P_S2, uint8 startVert3P_S3)
 {
     RenderDevice::startVertex_2P[0] = startVert2P_S1;
     RenderDevice::startVertex_2P[1] = startVert2P_S2;

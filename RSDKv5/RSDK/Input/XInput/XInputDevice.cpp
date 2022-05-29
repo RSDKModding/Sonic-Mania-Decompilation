@@ -197,7 +197,7 @@ void RSDK::SKU::InitXInputAPI()
 {
     char idString[16];
 
-    sprintf(idString, "%s", "XInputDevice0");
+    sprintf_s(idString, (int32)sizeof(idString), "%s", "XInputDevice0");
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         idString[12] = '0' + i;

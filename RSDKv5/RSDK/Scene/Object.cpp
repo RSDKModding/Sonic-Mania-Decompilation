@@ -77,11 +77,11 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 {
     FileInfo info;
 
-    char buffer[0x40];
+    char fullFilePath[0x40];
     const char *hexChars = "0123456789ABCDEF";
 
     char hashBuf[0x21];
-    sprintf(hashBuf, "%s", "00000000000000000000000000000000");
+    sprintf_s(hashBuf, (int32)sizeof(hashBuf), "%s", "00000000000000000000000000000000");
 
     int32 strPos = 0;
     for (int32 i = 0; i < 32; i += 4) {
@@ -104,27 +104,12 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
         hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
 
-    bool loaded = false;
+    bool32 loaded = false;
 
-    // TODO: remove
-    // This is done so Static/ can be loaded first, ensuring smoother development
-#if !RETRO_USE_ORIGINAL_CODE
-    sprintf(buffer, "Static/%s.bin", hashBuf);
-
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Objects/Static/%s.bin", hashBuf);
     InitFileInfo(&info);
-    info.externalFile = true;
-    loaded            = LoadFile(&info, buffer, FMODE_RB);
 
-    if (!loaded) {
-#endif
-        sprintf(buffer, "Data/Objects/Static/%s.bin", hashBuf);
-        InitFileInfo(&info);
-        loaded = LoadFile(&info, buffer, FMODE_RB);
-#if !RETRO_USE_ORIGINAL_CODE
-    }
-#endif
-
-    if (loaded) {
+    if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
         if (sig != RSDK_SIGNATURE_OBJ) {
@@ -376,7 +361,8 @@ void RSDK::ProcessObjects()
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->classID) {
             switch (sceneInfo.entity->active) {
-                default: break;
+                default:
+                case ACTIVE_DISABLED: break;
 
                 case ACTIVE_NEVER:
                 case ACTIVE_PAUSED: sceneInfo.entity->inBounds = false; break;
@@ -618,7 +604,8 @@ void RSDK::ProcessFrozenObjects()
 
         if (sceneInfo.entity->classID) {
             switch (sceneInfo.entity->active) {
-                default: break;
+                default:
+                case ACTIVE_DISABLED: break;
 
                 case ACTIVE_NEVER:
                 case ACTIVE_PAUSED: sceneInfo.entity->inBounds = false; break;

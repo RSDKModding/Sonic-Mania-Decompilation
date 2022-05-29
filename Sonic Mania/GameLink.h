@@ -481,10 +481,10 @@ typedef struct {
 } StatInfo;
 
 typedef enum {
-    PLATFORM_PC     = 0,
-    PLATFORM_PS4    = 1,
-    PLATFORM_XB1    = 2,
-    PLATFORM_SWITCH = 3,
+    PLATFORM_PC,
+    PLATFORM_PS4,
+    PLATFORM_XB1,
+    PLATFORM_SWITCH,
 
     PLATFORM_DEV = 0xFF,
 } GamePlatforms;
@@ -634,7 +634,9 @@ typedef enum {
     ACTIVE_XBOUNDS,
     ACTIVE_YBOUNDS,
     ACTIVE_RBOUNDS,
-    ACTIVE_NEVER2 = 0xFF,
+
+    // Not really even a real active value, but some objects set their active states to this so here it is I suppose
+    ACTIVE_DISABLED = 0xFF,
 } ActiveFlags;
 
 typedef enum {

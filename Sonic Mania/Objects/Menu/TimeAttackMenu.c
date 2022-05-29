@@ -462,12 +462,12 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
 
     UIWaitSpinner_StartWait();
 
-    char fileBuffer[0x20];
-    sprintf(fileBuffer, "Replay_%08X.bin", uuid);
+    char fileName[0x20];
+    sprintf_s(fileName, (int32)sizeof(fileName), "Replay_%08X.bin", uuid);
 
     memset(globals->replayTempRBuffer, 0, sizeof(globals->replayTempRBuffer));
     memset(globals->replayReadBuffer, 0, sizeof(globals->replayReadBuffer));
-    ReplayRecorder_Buffer_LoadFile(fileBuffer, globals->replayTempRBuffer, TimeAttackMenu_ReplayLoad_CB);
+    ReplayRecorder_Buffer_LoadFile(fileName, globals->replayTempRBuffer, TimeAttackMenu_ReplayLoad_CB);
 }
 
 void TimeAttackMenu_ReplayLoad_CB(bool32 success)
@@ -511,7 +511,7 @@ void TimeAttackMenu_WatchReplayActionCB_ReplaysMenu(void)
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
     EntityUIButton *button           = control->buttons[0];
 
-    sprintf(param->menuTag, "Replays");
+    sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Replays");
     param->replayRankID = button->selection;
     param->replayID     = carousel->curReplayID;
 
@@ -527,7 +527,7 @@ void TimeAttackMenu_ChallengeReplayActionCB_ReplaysMenu(void)
     EntityUIReplayCarousel *carousel = TimeAttackMenu->replayCarousel;
     EntityUIButton *button           = control->buttons[0];
 
-    sprintf(param->menuTag, "Replays");
+    sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Replays");
     param->replayRankID = button->selection;
     param->replayID     = carousel->curReplayID;
 
@@ -688,7 +688,7 @@ void TimeAttackMenu_StartTAAttempt(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    sprintf(param->menuTag, "Time Attack Detail");
+    sprintf_s(param->menuTag, (int32)sizeof(param->menuTag), "Time Attack Detail");
     param->menuSelection = 0;
     param->inTimeAttack  = true;
     param->isEncoreMode  = TimeAttackMenu->encoreMode;

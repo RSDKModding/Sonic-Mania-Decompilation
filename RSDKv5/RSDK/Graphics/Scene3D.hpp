@@ -58,8 +58,8 @@ struct ModelVertex {
 };
 
 struct TexCoord {
-    int32 x;
-    int32 y;
+    float x;
+    float y;
 };
 
 struct Model {

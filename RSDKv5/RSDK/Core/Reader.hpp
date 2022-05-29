@@ -79,7 +79,7 @@ extern char gameLogicName[0x200];
 
 extern bool32 useDataFile;
 
-bool32 CheckDataFile(const char *filename, size_t fileOffset, bool32 useBuffer);
+bool32 LoadDataPack(const char *filename, size_t fileOffset, bool32 useBuffer);
 bool32 OpenDataFile(FileInfo *info, const char *filename);
 
 enum FileModes { FMODE_NONE, FMODE_RB, FMODE_WB, FMODE_RB_PLUS };
@@ -228,12 +228,12 @@ inline int32 ReadInt32(FileInfo *info, bool32 swapEndian)
         DecryptBytes(info, &result, bytesRead);
 
     if (swapEndian) {
-        byte bytes[sizeof(int32)];
+        uint8 bytes[sizeof(int32)];
         memcpy(bytes, &result, sizeof(int32));
 
         int32 max = sizeof(int32) - 1;
         for (int32 i = 0; i < sizeof(int32) / 2; ++i) {
-            byte store     = bytes[i];
+            uint8 store     = bytes[i];
             bytes[i]       = bytes[max - i];
             bytes[max - i] = store;
         }
@@ -287,7 +287,7 @@ inline float ReadSingle(FileInfo *info)
 
 inline void ReadString(FileInfo *info, char *buffer)
 {
-    byte size = ReadInt8(info);
+    uint8 size = ReadInt8(info);
     ReadBytes(info, buffer, size);
     buffer[size] = 0;
 }
@@ -298,10 +298,10 @@ inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
         return 0;
 
     uLongf complen = ReadInt32(info, false) - 4;
-    uint decompLE  = ReadInt32(info, false);
-    uLongf destLen = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+    uint32 decompLE  = ReadInt32(info, false);
+    uLongf destLen = (uint32)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
-    byte *compData = NULL;
+    uint8 *compData = NULL;
     AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
     AllocateStorage((int32)destLen, (void **)buffer, DATASET_TMP, false);
     ReadBytes(info, compData, (int32)complen);
@@ -322,7 +322,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
     uint32 decompLE = size;
     uLongf destLen  = (uint32)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
-    byte *compData = NULL;
+    uint8 *compData = NULL;
     AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
     ReadBytes(info, compData, (int32)complen);
 

@@ -77,6 +77,9 @@ enum ActiveFlags {
     ACTIVE_XBOUNDS, // update only if in x bounds (y bounds dont matter)
     ACTIVE_YBOUNDS, // update only if in y bounds (x bounds dont matter)
     ACTIVE_RBOUNDS, // update based on radius boundaries (updateRange.x == radius)
+
+    // Not really even a real active value, but some objects set their active states to this so here it is I suppose
+    ACTIVE_DISABLED = 0xFF,
 };
 
 enum DefaultObjects {

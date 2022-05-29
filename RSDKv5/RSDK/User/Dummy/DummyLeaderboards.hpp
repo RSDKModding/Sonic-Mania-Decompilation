@@ -23,7 +23,7 @@ struct DummyLeaderboards : UserLeaderboards {
     int32 loadTime;
     int32 trackTime;
     int32 trackRank;
-    void (*trackCB)(bool32 success, int rank);
+    void (*trackCB)(bool32 success, int32 rank);
 };
 #endif
 

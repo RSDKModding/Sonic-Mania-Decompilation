@@ -119,7 +119,7 @@ void SaveGame_LoadSaveData(void)
                 if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
                     Entity *entity   = RSDK_GET_ENTITY_GEN(e);
                     entity->classID  = TYPE_BLANK;
-                    entity->active   = ACTIVE_NEVER2;
+                    entity->active   = ACTIVE_DISABLED;
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
                     EntityItemBox *itemBox = RSDK_GET_ENTITY(e, ItemBox);
@@ -277,7 +277,7 @@ void SaveGame_SaveGameState(void)
 
     for (int32 i = RESERVE_ENTITY_COUNT; i < RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT; ++i) {
         EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);
-        if (itemBox->classID || (itemBox->active != ACTIVE_NEVER2)) {
+        if (itemBox->classID || (itemBox->active != ACTIVE_DISABLED)) {
             if (itemBox->classID == ItemBox->classID) {
                 if (itemBox->state == ItemBox_State_Broken) {
                     globals->atlEntityData[(0x200 * 1) + i] = 2;

@@ -46,7 +46,7 @@ public:
     static IDirect3DDevice9 *dx9Device;
 
     static UINT dxAdapter;
-    static int adapterCount;
+    static int32 adapterCount;
 
     // WinMain args
     static HINSTANCE hInstance;

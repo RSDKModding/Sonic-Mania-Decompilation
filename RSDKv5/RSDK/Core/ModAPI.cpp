@@ -144,7 +144,7 @@ void RSDK::LoadMods()
     using namespace std;
     UnloadMods();
     char modBuf[0x100];
-    sprintf(modBuf, "%smods/", SKU::userFileDir);
+    sprintf_s(modBuf, (int32)sizeof(modBuf), "%smods/", SKU::userFileDir);
     fs::path modPath(modBuf);
 
     if (fs::exists(modPath) && fs::is_directory(modPath)) {
@@ -213,11 +213,11 @@ void loadCfg(RSDK::ModInfo *info, std::string path)
             int32 keyCount = ReadInt8(cfg);
             for (int32 k = 0; k < keyCount; ++k) {
                 // ReadString except w packing the type bit
-                byte size    = ReadInt8(cfg);
+                uint8 size    = ReadInt8(cfg);
                 char *keyBuf = new char[size & 0x7F];
                 ReadBytes(cfg, keyBuf, size & 0x7F);
                 keyBuf[size & 0x7F] = 0;
-                byte type           = size & 0x80;
+                uint8 type           = size & 0x80;
                 if (!type) {
                     char buf[0xFFFF];
                     ReadString(cfg, buf);
@@ -470,18 +470,18 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
 
         if (saveCfg && info->config.size()) {
             FileIO *cfg = fOpen((modDir + "/modConfig.cfg").c_str(), "wb");
-            byte ct     = info->config.size();
+            uint8 ct     = info->config.size();
             fWrite(&ct, 1, 1, cfg);
             for (auto kv : info->config) {
                 if (!kv.first.length())
                     continue; // don't save no-categories
-                byte len = kv.first.length();
+                uint8 len = kv.first.length();
                 fWrite(&len, 1, 1, cfg);
                 WriteText(cfg, kv.first.c_str());
-                byte kt = kv.second.size();
+                uint8 kt = kv.second.size();
                 fWrite(&kt, 1, 1, cfg);
                 for (auto kkv : kv.second) {
-                    byte len     = (byte)(kkv.first.length()) & 0x7F;
+                    uint8 len     = (uint8)(kkv.first.length()) & 0x7F;
                     bool32 isint = false;
                     int32 r      = 0;
                     try {
@@ -495,7 +495,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     if (isint)
                         fWrite(&r, sizeof(int32), 1, cfg);
                     else {
-                        byte len = kkv.second.length();
+                        uint8 len = kkv.second.length();
                         fWrite(&len, 1, 1, cfg);
                         WriteText(cfg, kkv.second.c_str());
                     }
@@ -517,7 +517,7 @@ void RSDK::SaveMods()
 {
     ModInfo *cur = currentMod;
     char modBuf[0x100];
-    sprintf(modBuf, "%smods/", SKU::userFileDir);
+    sprintf_s(modBuf, (int32)sizeof(modBuf), "%smods/", SKU::userFileDir);
     fs::path modPath(modBuf);
 
     SortMods();
@@ -661,7 +661,7 @@ void RSDK::GetModPath(const char *id, String *result)
         return;
 
     char buf[0x200];
-    sprintf(buf, "%smods/%s", SKU::userFileDir, id);
+    sprintf_s(buf, (int32)sizeof(buf), "%smods/%s", SKU::userFileDir, id);
     InitString(result, buf, (int)strlen(buf));
 }
 
@@ -960,7 +960,7 @@ void SuperInternal(RSDK::ObjectClass *super, RSDK::ModSuper callback, void *data
     Object *before  = NULL;
     ModInfo *curMod = currentMod;
     if (HASH_MATCH_MD5(super->hash, super->inherited->hash)) {
-        for (int i = 0; i < superLevels; i++) {
+        for (int32 i = 0; i < superLevels; i++) {
             before = *super->staticVars;
             if (!super->inherited) {
                 superLevels = i;
@@ -1044,7 +1044,7 @@ void RSDK::ModRegisterGlobalVariables(const char *globalsPath, void **globals, u
 
     int32 *varPtr = *(int32 **)globals;
     if (LoadFile(&info, globalsPath, FMODE_RB)) {
-        byte varCount = ReadInt8(&info);
+        uint8 varCount = ReadInt8(&info);
         for (int32 i = 0; i < varCount && globalVarsPtr; ++i) {
             int32 offset = ReadInt32(&info, false);
             int32 count  = ReadInt32(&info, false);
@@ -1177,14 +1177,14 @@ void RSDK::GetAchievementInfo(uint32 id, String *name, String *description, Stri
         *achieved = SKU::achievementList[id].achieved;
 }
 
-int RSDK::GetAchievementIndexByID(const char *id)
+int32 RSDK::GetAchievementIndexByID(const char *id)
 {
-    for (int i = 0; i < SKU::achievementList.size(); ++i) {
+    for (int32 i = 0; i < SKU::achievementList.size(); ++i) {
         if (SKU::achievementList[i].identifier == std::string(id))
             return i;
     }
 
     return -1;
 }
-int RSDK::GetAchievementCount() { return (int)SKU::achievementList.size(); }
+int32 RSDK::GetAchievementCount() { return (int)SKU::achievementList.size(); }
 #endif

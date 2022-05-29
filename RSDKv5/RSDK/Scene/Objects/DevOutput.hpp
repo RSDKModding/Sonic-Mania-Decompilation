@@ -40,7 +40,7 @@ void DevOutput_EditorLoad();
 void DevOutput_Serialize();
 
 // Extra Entity Functions
-int DevOutput_GetStringYSize(char *string);
+int32 DevOutput_GetStringYSize(char *string);
 
 } // namespace RSDK
 #endif

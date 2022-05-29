@@ -19,9 +19,7 @@ bool32 AudioDevice::Init()
         contextInitialized = true;
         InitAudioChannels();
 
-#if RETRO_AUDIODEVICE_XAUDIO
         CoInitializeEx(NULL, 0);
-#endif
     }
 
     audioState = false;

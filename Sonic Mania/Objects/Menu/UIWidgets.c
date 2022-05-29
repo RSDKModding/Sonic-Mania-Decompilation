@@ -306,15 +306,15 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
     drawPos.y -= 0x20000;
     if (minutes) {
         if (minutes != 99 || seconds != 99 || milliseconds != 99)
-            sprintf(strBuf, "%02d:%02d;%02d", minutes, seconds, milliseconds);
+            sprintf_s(strBuf, (int32)sizeof(strBuf), "%02d:%02d;%02d", minutes, seconds, milliseconds);
         else
-            sprintf(strBuf, "<<:<<;<<");
+            sprintf_s(strBuf, (int32)sizeof(strBuf), "<<:<<;<<");
     }
     else {
         if (!seconds && !milliseconds)
-            sprintf(strBuf, "<<:<<;<<");
+            sprintf_s(strBuf, (int32)sizeof(strBuf), "<<:<<;<<");
         else
-            sprintf(strBuf, "%02d:%02d;%02d", minutes, seconds, milliseconds);
+            sprintf_s(strBuf, (int32)sizeof(strBuf), "%02d:%02d;%02d", minutes, seconds, milliseconds);
     }
 
     for (int32 i = 0; i < 8; ++i) {

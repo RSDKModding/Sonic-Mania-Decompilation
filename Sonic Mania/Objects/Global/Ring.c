@@ -178,7 +178,7 @@ void Ring_Collect(void)
                 }
 
                 destroyEntity(self);
-                self->active = ACTIVE_NEVER2; // not sure what the purpose of this is but sure
+                self->active = ACTIVE_DISABLED; // not sure what the purpose of this is but sure
                 foreach_return;
             }
         }

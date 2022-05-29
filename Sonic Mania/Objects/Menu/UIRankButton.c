@@ -132,9 +132,9 @@ void UIRankButton_SetRankText(EntityUIRankButton *button, int32 rank)
 {
     char buffer[8];
     if (rank)
-        sprintf(buffer, "%d", rank);
+        sprintf_s(buffer, (int32)sizeof(buffer), "%d", rank);
     else
-        sprintf(buffer, "-");
+        sprintf_s(buffer, (int32)sizeof(buffer), "-");
 
     RSDK.SetString(&button->rankText, buffer);
     RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &button->rankText);

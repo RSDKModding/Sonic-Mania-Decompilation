@@ -7,7 +7,7 @@ SpriteAnimation RSDK::spriteAnimationList[SPRFILE_COUNT];
 uint16 RSDK::LoadSpriteAnimation(const char *filePath, int32 scope)
 {
     char fullFilePath[0x100];
-    sprintf(fullFilePath, "Data/Sprites/%s", filePath);
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Sprites/%s", filePath);
 
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(filePath, hash);
@@ -106,8 +106,8 @@ uint16 RSDK::LoadSpriteAnimation(const char *filePath, int32 scope)
 
 uint16 RSDK::CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, int32 scope)
 {
-    char buffer[0x100];
-    sprintf(buffer, "Data/Sprites/%s", filename);
+    char fullFilePath[0x100];
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Sprites/%s", filename);
 
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(filename, hash);

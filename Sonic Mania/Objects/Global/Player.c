@@ -2515,7 +2515,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
 
         if (destroy) {
             destroyEntity(entity);
-            entity->active = ACTIVE_NEVER2;
+            entity->active = ACTIVE_DISABLED;
         }
 
         return true;

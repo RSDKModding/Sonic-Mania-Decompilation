@@ -164,7 +164,7 @@ void UIVsZoneButton_SetNameText(void)
 
             if (self->zoneID < UIVSZONEBUTTON_FUZZ) {
                 char buffer[0x10];
-                sprintf(buffer, " %d", self->act + 1);
+                sprintf_s(buffer, (int32)sizeof(buffer), " %d", self->act + 1);
                 RSDK.AppendText(&self->nameText, buffer);
             }
         }

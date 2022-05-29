@@ -3393,8 +3393,8 @@ void RSDK::DrawSpriteRotozoom(int32 x, int32 y, int32 pivotX, int32 pivotY, int3
         int32 fullX            = (sprX + width) << 16;
         int32 fullY            = (sprY + height) << 16;
         validDraw              = true;
-        int32 fullScaleX       = (float)((512.0 / (float)scaleX) * 512.0);
-        int32 fullScaleY       = (float)((512.0 / (float)scaleY) * 512.0);
+        int32 fullScaleX       = (int32)((512.0 / (float)scaleX) * 512.0);
+        int32 fullScaleY       = (int32)((512.0 / (float)scaleY) * 512.0);
         int32 deltaXLen        = fullScaleX * sine >> 2;
         int32 deltaX           = fullScaleX * cosine >> 2;
         int32 pitch            = currentScreen->pitch - xSize;
