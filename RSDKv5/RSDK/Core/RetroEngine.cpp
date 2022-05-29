@@ -1064,7 +1064,7 @@ void RSDK::InitGameLink()
 
 #if RETRO_USE_MOD_LOADER
     for (int32 m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active || modList[m].language)
+        if (!modList[m].active)
             continue;
 
         currentMod = &modList[m];

@@ -266,10 +266,10 @@
     <ClCompile Include="RSDK\Graphics\GL3\GL3RenderDevice.cpp">
       <Filter>Source Files\RSDK\Graphics\GL3</Filter>
     </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\src\dictionary.c">
+    <ClCompile Include="..\dependencies\all\iniparser\dictionary.cpp">
       <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClCompile>
-    <ClCompile Include="..\dependencies\all\iniparser\src\iniparser.c">
+    <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp">
       <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClCompile>
     <ClCompile Include="..\dependencies\all\miniz\miniz.c">
@@ -463,10 +463,10 @@
     <ClInclude Include="RSDK\Graphics\GL3\GL3RenderDevice.hpp">
       <Filter>Source Files\RSDK\Graphics\GL3</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\src\dictionary.h">
+    <ClInclude Include="..\dependencies\all\iniparser\dictionary.h">
       <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClInclude>
-    <ClInclude Include="..\dependencies\all\iniparser\src\iniparser.h">
+    <ClInclude Include="..\dependencies\all\iniparser\iniparser.h">
       <Filter>Source Files\Dependencies\iniparser</Filter>
     </ClInclude>
     <ClInclude Include="..\dependencies\all\miniz\miniz.h">

@@ -100,7 +100,6 @@ struct ModInfo {
     void (*unloadMod)() = NULL;
     std::map<std::string, std::map<std::string, std::string>> settings;
     std::map<std::string, std::map<std::string, std::string>> config;
-    const char *language = NULL;
 };
 
 extern std::vector<ModInfo> modList;

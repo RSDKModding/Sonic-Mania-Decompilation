@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\dependencies\all\iniparser\src\dictionary.c" />
-    <ClCompile Include="..\dependencies\all\iniparser\src\iniparser.c" />
+    <ClCompile Include="..\dependencies\all\iniparser\dictionary.cpp" />
+    <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp" />
     <ClCompile Include="..\dependencies\all\miniz\miniz.c" />
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="..\dependencies\gl3\glad\src\glad.c" />
@@ -114,8 +114,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\dependencies\all\iniparser\src\dictionary.h" />
-    <ClInclude Include="..\dependencies\all\iniparser\src\iniparser.h" />
+    <ClInclude Include="..\dependencies\all\iniparser\dictionary.h" />
+    <ClInclude Include="..\dependencies\all\iniparser\iniparser.h" />
     <ClInclude Include="..\dependencies\all\miniz\miniz.h" />
     <ClInclude Include="..\dependencies\all\tinyxml2\tinyxml2.h" />
     <ClInclude Include="main.hpp" />

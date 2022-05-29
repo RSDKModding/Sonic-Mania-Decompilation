@@ -148,7 +148,8 @@ RSDK_SOURCES += \
     RSDKv5/RSDK/User/Core/UserStorage     	\
     dependencies/all/tinyxml2/tinyxml2 		\
 	dependencies/all/iniparser/iniparser 	\
-	dependencies/all/iniparser/dictionary
+	dependencies/all/iniparser/dictionary   \
+	dependencies/all/miniz/miniz
 
 
 RSDK_SOURCES += \

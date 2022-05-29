@@ -25,7 +25,7 @@ namespace fs = std::filesystem;
 #endif
 #endif
 
-#include "iniparser/src/iniparser.h"
+#include "iniparser/iniparser.h"
 
 using namespace RSDK;
 
@@ -34,17 +34,12 @@ int32 RSDK::currentObjectID = 0;
 // this helps later on just trust me
 #define MODAPI_ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
 
-std::map<std::string, size_t> langMap;
-
 std::vector<RSDK::ModInfo> RSDK::modList;
 int32 RSDK::activeMod = -1;
 std::vector<RSDK::ModCallbackSTD> RSDK::modCallbackList[RSDK::MODCB_MAX];
 RSDK::ModInfo *RSDK::currentMod;
 
 std::vector<RSDK::ModPublicFunctionInfo> gamePublicFuncs;
-
-// did we try to load a logic of a different lang? load it later
-std::vector<int32> waitList;
 
 void *RSDK::modFunctionTable[RSDK::ModTable_Max];
 
@@ -141,8 +136,6 @@ void RSDK::UnloadMods()
             mod.unloadMod();
     }
     modList.clear();
-    langMap.clear();
-    waitList.clear();
     for (int32 c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
 }
 
@@ -169,22 +162,10 @@ void RSDK::LoadMods()
                 ModInfo info;
                 bool32 active = iniparser_getboolean(ini, keys[m], false);
                 bool32 loaded = LoadMod(&info, modPath.string(), string(keys[m] + 5), active);
-                if (info.language && active) {
-                    if (info.language == (const char *)1 && !loaded)
-                        waitList.push_back((int)modList.size());
-                    else
-                        langMap.insert(pair<string, size_t>(info.language, modList.size()));
-                }
                 if (!loaded)
                     info.active = false;
                 modList.push_back(info);
             }
-        }
-
-        // try the waitlist
-        for (int32 &m : waitList) {
-            LoadMod(&modList[m], modPath.string(), modList[m].id, true);
-            modList[m].language = 0;
         }
 
         try {
@@ -213,7 +194,7 @@ void RSDK::LoadMods()
                 }
             }
         } catch (fs::filesystem_error fe) {
-            PrintLog(PRINT_ERROR, "Mods Folder Scanning Error: %s", fe.what());
+            PrintLog(PRINT_ERROR, "Mods folder scanning error: %s", fe.what());
         }
     }
     SortMods();
@@ -285,9 +266,9 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
         // DATA
         fs::path dataPath(modDir + "/Data");
 
-        if (fs::exists(dataPath) && fs::is_directory(dataPath)) {
+        if (active && fs::exists(dataPath) && fs::is_directory(dataPath)) {
             try {
-                auto data_rdi = fs::recursive_directory_iterator(dataPath);
+                auto data_rdi = fs::recursive_directory_iterator(dataPath, fs::directory_options::follow_directory_symlink);
                 for (auto data_de : data_rdi) {
                     if (data_de.is_regular_file()) {
                         char modBuf[0x100];
@@ -334,8 +315,8 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
             std::istringstream stream(logic);
             std::string buf;
             while (std::getline(stream, buf, ',')) {
-                int32 mode = 0;
-                buf        = trim(buf);
+                bool32 exists = false;
+                buf           = trim(buf);
 #if RETRO_PLATFORM == RETRO_WIN
                 if (MODAPI_ENDS_WITH(".dll"))
 #elif RETRO_PLATFORM == RETRO_OSX
@@ -343,10 +324,10 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                 if (MODAPI_ENDS_WITH(".so"))
 #endif
-                    mode = 1;
+                    exists = true;
                 fs::path file(modDir + "/" + buf);
 
-                if (!mode) {
+                if (!exists) {
                     // autodec
                     std::string autodec = "";
 #if RETRO_PLATFORM == RETRO_WIN
@@ -361,128 +342,41 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     file += autodec;
                     if (fs::exists(file)) {
                         buf += autodec;
-                        mode = 1;
+                        exists = true;
                     }
-                }
-                if (!mode) {
-                    // lang mod time
-                    int32 i    = 0;
-                    bool found = false;
-                    for (auto ext : langMap) {
-                        i++;
-                        if (MODAPI_ENDS_WITH(ext.first.c_str())) {
-                            found = true;
-                            break;
-                        }
-                        file += ext.first;
-                        if (fs::exists(file)) {
-                            buf += ext.first;
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (found)
-                        mode = i + 1;
                 }
 
-                if (!mode) {
+                if (!exists) {
                     // can be a lang not seen yet, set the language flag
-                    info->language = (const char *)1;
                     iniparser_freedict(ini);
                     return false;
                 }
 
                 bool linked = false;
-                if (mode == 1) {
 #if RETRO_PLATFORM == RETRO_WIN
-                    HMODULE link_handle = LoadLibraryA(file.string().c_str());
+                HMODULE link_handle = LoadLibraryA(file.string().c_str());
 #define getAddress GetProcAddress
 #elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
-                    std::string fl = file.string().c_str();
+                std::string fl = file.string().c_str();
 #if RETRO_PLATFORM == RETRO_ANDROID
-                    // only load ones that are compiled. this is to still allow lang mods to work
-                    fl = "lib" + buf;
+                // only load ones that are compiled. this is to still allow lang mods to work
+                fl = "lib" + buf;
 #endif
-                    void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
+                void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
 #define getAddress dlsym
 #elif RETRO_PLATFORM == RETRO_SWITCH
-                    // TODO
-                    void *link_handle = NULL;
+                // TODO
+                void *link_handle = NULL;
 #define getAddress(x, y) NULL
 #endif
 
-                    if (link_handle) {
-                        langSetup languageSetup = (langSetup)getAddress(link_handle, "SetupLanguage");
-                        if (languageSetup) {
-                            modLink newLogicLink = (modLink)getAddress(link_handle, "NewLogicLink");
-                            if (newLogicLink) {
-                                info->language = (const char *)languageSetup; // little bit of cheating
-                                info->linkModLogic.push_back(newLogicLink);
-                                linked = true;
-                            }
-                        }
-                        else {
-                            modLink linkGameLogic = (modLink)getAddress(link_handle, "LinkModLogic");
-                            if (linkGameLogic) {
-                                info->linkModLogic.push_back(linkGameLogic);
-                                linked = true;
-                            }
-                        }
-                        info->unloadMod = (void (*)())getAddress(link_handle, "UnloadMod");
+                if (link_handle) {
+                    modLink linkGameLogic = (modLink)getAddress(link_handle, "LinkModLogic");
+                    if (linkGameLogic) {
+                        info->linkModLogic.push_back(linkGameLogic);
+                        linked = true;
                     }
-
-                    if (info->language) {
-                        GameInfo linkInfo;
-
-#if RETRO_REV02
-                        linkInfo.functionTable = RSDKFunctionTable;
-                        linkInfo.APITable      = APIFunctionTable;
-                        linkInfo.currentSKU    = &SKU::curSKU;
-                        linkInfo.gameInfo      = &gameVerInfo;
-                        linkInfo.sceneInfo     = &sceneInfo;
-                        linkInfo.controller    = controller;
-                        linkInfo.stickL        = stickL;
-                        linkInfo.stickR        = stickR;
-                        linkInfo.triggerL      = triggerL;
-                        linkInfo.triggerR      = triggerR;
-                        linkInfo.touchMouse    = &touchMouseData;
-                        linkInfo.unknown       = &SKU::unknownInfo;
-                        linkInfo.screenInfo    = screens;
-                        linkInfo.modTable      = modFunctionTable;
-#else
-                        linkInfo.functionTable  = RSDKFunctionTable;
-                        linkInfo.gameInfo       = &gameVerInfo;
-                        linkInfo.sceneInfo      = &sceneInfo;
-                        linkInfo.controllerInfo = controller;
-                        linkInfo.stickInfo      = stickL;
-                        linkInfo.touchInfo      = &touchMouseData;
-                        linkInfo.screenInfo     = screens;
-                        linkInfo.modTable       = modFunctionTable;
-#endif
-
-                        const char *fid = info->id.c_str();
-                        currentMod      = info;
-                        std::string res = ((langSetup)info->language)(&linkInfo, fid);
-                        res             = "." + res;
-                        char buf[0x10];
-                        memset(buf, 0, 0x10); // hwhat
-                        res.copy(buf, res.size());
-                        info->language = buf;
-                    }
-                }
-                else { // mode must be over 1
-                    // index
-                    auto it = langMap.begin();
-                    std::advance(it, mode - 2);
-                    const char *fid = info->id.c_str();
-                    const char *log = buf.c_str();
-                    int32 isSTD     = 0;
-                    modLink res     = (*(newLangLink *)modList[it->second].linkModLogic[0].target<modLink>())(fid, log, &isSTD);
-                    if (isSTD)
-                        info->linkModLogic.push_back(*(modLinkSTD *)res);
-                    else
-                        info->linkModLogic.push_back(res);
-                    linked = true;
+                    info->unloadMod = (void (*)())getAddress(link_handle, "UnloadMod");
                 }
 
                 if (!linked) {
@@ -491,7 +385,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     return false;
                 }
             }
-        }
+        } 
         // SETTINGS
         FileIO *set = fOpen((modDir + "/modSettings.ini").c_str(), "r");
         if (set) {
