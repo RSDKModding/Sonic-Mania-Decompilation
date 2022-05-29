@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "..\\..\\SonicMania.sln",
+    "projects": [
+      "RSDKv5\\RSDKv5_dx11.vcxproj",
+      "Sonic Mania\\Sonic Mania_All.vcxproj"
+    ]
+  }
+}
