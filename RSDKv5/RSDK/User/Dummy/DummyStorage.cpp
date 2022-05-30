@@ -1,5 +1,3 @@
-#include "RSDK/Core/RetroEngine.hpp"
-
 using namespace RSDK;
 
 #if RETRO_REV02

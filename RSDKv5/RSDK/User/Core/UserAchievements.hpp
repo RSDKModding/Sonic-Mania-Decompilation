@@ -16,11 +16,11 @@ namespace SKU
 struct UserAchievements {
     UserAchievements() {}
 
-    virtual void FrameInit(void) {}
-    virtual void StageLoad(void) {}
-    virtual void OnUnknownEvent(void) {}
+    virtual void FrameInit() {}
+    virtual void StageLoad() {}
+    virtual void OnUnknownEvent() {}
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-    virtual bool32 CheckAchievementsEnabled(void) { return false; }
+    virtual bool32 CheckAchievementsEnabled() { return false; }
     virtual void GetAchievementNames(String *names, int32 count) {}
     virtual String *GetAchievementString(String *string) { return NULL; }
     virtual String *GetAchievementName(String *name, uint32 id) { return NULL; }
@@ -38,12 +38,37 @@ struct UserAchievements {
 #if RETRO_REV02
 extern UserAchievements *achievements;
 
+
+// ====================
+// API Cores
+// ====================
+
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyAchievements.hpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamAchievements.hpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSAchievements.hpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXAchievements.hpp"
+#endif
+
 inline bool32 GetAchievementsEnabled() { return achievements->enabled; }
 inline void SetAchievementsEnabled(bool32 enabled) { achievements->enabled = enabled; }
 #endif
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-inline bool32 CheckAchievementsEnabled(void) { return achievements->CheckAchievementsEnabled(); }
+inline bool32 CheckAchievementsEnabled() { return achievements->CheckAchievementsEnabled(); }
 inline void GetAchievementNames(String *names, int32 count) { achievements->GetAchievementNames(names, count); }
 #endif
 

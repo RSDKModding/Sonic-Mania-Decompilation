@@ -26,18 +26,18 @@ void NullFunc() {}
 
 void SetAPIFunction(const char *name, void *ptr)
 {
-    if (RSDK::APIFunctionTableCount < APITABLE_COUNT) {
+    if (APIFunctionTableCount < APITABLE_COUNT) {
         RETRO_HASH_MD5(hash);
         GEN_HASH_MD5(name, hash);
 
-        for (int32 f = 0; f < RSDK::APIFunctionTableCount; ++f) {
-            if (HASH_MATCH_MD5(hash, RSDK::APIFunctionTable[f].hash))
+        for (int32 f = 0; f < APIFunctionTableCount; ++f) {
+            if (HASH_MATCH_MD5(hash, APIFunctionTable[f].hash))
                 return; // already exists, ignore this call
         }
 
-        HASH_COPY_MD5(RSDK::APIFunctionTable[RSDK::APIFunctionTableCount].hash, hash);
-        RSDK::APIFunctionTable[RSDK::APIFunctionTableCount].ptr = ptr;
-        RSDK::APIFunctionTableCount++;
+        HASH_COPY_MD5(APIFunctionTable[APIFunctionTableCount].hash, hash);
+        APIFunctionTable[APIFunctionTableCount].ptr = ptr;
+        APIFunctionTableCount++;
     }
 }
 
@@ -49,9 +49,9 @@ void *GetAPIFunction(const char *name)
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(name, hash);
 
-    for (int32 f = 0; f < RSDK::APIFunctionTableCount; ++f) {
-        if (HASH_MATCH_MD5(hash, RSDK::APIFunctionTable[f].hash))
-            return RSDK::APIFunctionTable[f].ptr;
+    for (int32 f = 0; f < APIFunctionTableCount; ++f) {
+        if (HASH_MATCH_MD5(hash, APIFunctionTable[f].hash))
+            return APIFunctionTable[f].ptr;
     }
 
     if (engine.consoleEnabled)
@@ -343,7 +343,7 @@ void RSDK::SetupFunctionTables()
 #endif
 
     // Spritesheets
-    ADD_RSDK_FUNCTION(FunctionTable_LoadSpriteSheet, RSDK::LoadSpriteSheet);
+    ADD_RSDK_FUNCTION(FunctionTable_LoadSpriteSheet, LoadSpriteSheet);
 
     // Palettes & Colors
 #if RETRO_REV02

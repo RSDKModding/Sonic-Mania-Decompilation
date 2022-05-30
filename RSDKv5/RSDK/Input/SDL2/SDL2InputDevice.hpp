@@ -3,7 +3,7 @@ namespace SKU
 {
 
 struct InputDeviceSDL : InputDevice {
-    void UpdateInput(void);
+    void UpdateInput();
     void ProcessInput(int32 controllerID);
     void CloseDevice();
 

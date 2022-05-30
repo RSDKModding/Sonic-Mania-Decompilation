@@ -53,17 +53,17 @@ struct LeaderboardsUnknown {
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
 struct UserLeaderboards {
-    virtual void StageLoad(void) {}
-    virtual void FrameInit(void) {}
-    virtual void OnUnknownEvent(void) {}
-    virtual int32 unknown4(void) { return 0; }
+    virtual void StageLoad() {}
+    virtual void FrameInit() {}
+    virtual void OnUnknownEvent() {}
+    virtual int32 unknown4() { return 0; }
 #if RETRO_VER_EGS
-    virtual int32 unknown6(void) { return 0; }
+    virtual int32 unknown6() { return 0; }
 #endif
     virtual void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser) {}
-    virtual void unknown5(void) {}
+    virtual void unknown5() {}
     virtual void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank)) {}
-    virtual int32 GetStatus(void) { return 0; }
+    virtual int32 GetStatus() { return 0; }
 
     LeaderboardID *currentLeaderboard;
     LeaderboardsUnknown2 unknown2;
@@ -90,16 +90,40 @@ extern std::vector<LeaderboardInfo> leaderboardList;
 #if RETRO_REV02
 extern UserLeaderboards *leaderboards;
 
-inline int32 leaderboardsUnknown4(void) { return leaderboards->unknown4(); }
+// ====================
+// API Cores
+// ====================
+
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyLeaderboards.hpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamLeaderboards.hpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSLeaderboards.hpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXLeaderboards.hpp"
+#endif
+
+inline int32 leaderboardsUnknown4() { return leaderboards->unknown4(); }
 #if RETRO_VER_EGS
-inline int32 leaderboardsUnknown6(void) { return leaderboards->unknown6(); }
+inline int32 leaderboardsUnknown6() { return leaderboards->unknown6(); }
 #endif
 inline void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser) { leaderboards->FetchLeaderboard(leaderboard, isUser); }
 inline void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
 {
     leaderboards->TrackScore(leaderboard, score, callback);
 }
-inline int32 GetLeaderboardsStatus(void) { return leaderboards->GetStatus(); }
+inline int32 GetLeaderboardsStatus() { return leaderboards->GetStatus(); }
 
 LeaderboardAvail LeaderboardEntryLength();
 LeaderboardAvail LeaderboardEntryCount();

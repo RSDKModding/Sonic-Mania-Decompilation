@@ -1,4 +1,3 @@
-#include "RSDK/Core/RetroEngine.hpp"
 #include <string>
 
 using namespace RSDK;

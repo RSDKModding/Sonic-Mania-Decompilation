@@ -93,7 +93,7 @@ struct CameraInfo {
 struct DrawList {
     uint16 entries[ENTITY_COUNT];
     uint16 layerDrawList[LAYER_COUNT];
-    void (*callback)(void);
+    void (*callback)();
     bool32 sorted;
     int32 entityCount;
     int32 layerCount;
@@ -368,7 +368,7 @@ inline Entity *GetDrawListRefPtr(uint8 drawGroup, uint16 entityID)
         return &objectEntityList[listPtr->entries[entityID]];
 }
 
-inline void SetDrawLayerProperties(uint8 drawGroup, bool32 sorted, void (*callback)(void))
+inline void SetDrawLayerProperties(uint8 drawGroup, bool32 sorted, void (*callback)())
 {
     if (drawGroup < DRAWGROUP_COUNT) {
         DrawList *list = &drawGroups[drawGroup];

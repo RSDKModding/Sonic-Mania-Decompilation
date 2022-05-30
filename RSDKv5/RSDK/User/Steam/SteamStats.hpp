@@ -1,12 +1,3 @@
-#ifndef STEAM_STATS_H
-#define STEAM_STATS_H
-
-namespace RSDK
-{
-
-namespace SKU
-{
-
 #if RETRO_REV02
 
 struct SteamStats : UserStats {
@@ -17,9 +8,3 @@ struct SteamStats : UserStats {
 };
 
 #endif
-
-} // namespace SKU
-
-} // namespace RSDK
-
-#endif // STEAM_STATS_H

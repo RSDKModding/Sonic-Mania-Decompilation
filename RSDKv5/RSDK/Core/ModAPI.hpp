@@ -125,13 +125,13 @@ void RunModCallbacks(int32 callbackID, void *data);
 
 // Mod API
 void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint32 size);
-void ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
-                       void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                       void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
-void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
-                           std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
-                           std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
-                           std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited);
+void ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(), void (*lateUpdate)(),
+                       void (*staticUpdate)(), void (*draw)(), void (*create)(void *), void (*stageLoad)(), void (*editorDraw)(),
+                       void (*editorLoad)(), void (*serialize)(), const char *inherited);
+void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void()> update,
+                           std::function<void()> lateUpdate, std::function<void()> staticUpdate, std::function<void()> draw,
+                           std::function<void(void *)> create, std::function<void()> stageLoad, std::function<void()> editorDraw,
+                           std::function<void()> editorLoad, std::function<void()> serialize, const char *inherited);
 void *GetGlobals();
 
 bool32 LoadModInfo(const char *folder, String *name, String *description, String *version, bool32 *active);
@@ -167,12 +167,25 @@ void Super(int32 objectID, ModSuper callback, void *data);
 #undef GetObject // winAPI so annoying
 #endif
 Object *GetObject(const char *name);
-
-void RegisterAchievement(const char *identifier, const char *name, const char *desc);
 void GetAchievementInfo(uint32 id, String *name, String *description, String *identifer, bool32 *achieved);
 int32 GetAchievementIndexByID(const char *id);
 int32 GetAchievementCount();
 #endif
+
+void RegisterAchievement(const char *identifier, const char *name, const char *desc);
+
+// Start Dummy Achievment code
+struct AchievementInfo {
+    std::string identifier;
+    std::string name;
+    std::string description;
+    bool32 achieved;
+};
+
+extern std::vector<AchievementInfo> achievementList;
+extern std::vector<int> achievementStack;
+
+// End Dummy Achievement code
 
 } // namespace RSDK
 

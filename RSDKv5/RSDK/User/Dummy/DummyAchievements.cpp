@@ -1,11 +1,4 @@
-#include "RSDK/Core/RetroEngine.hpp"
-
 using namespace RSDK;
-
-// Start Dummy Achievements
-std::vector<RSDK::SKU::AchievementInfo> RSDK::SKU::achievementList;
-std::vector<int> RSDK::SKU::achievementStack;
-// End Dummy Achievements
 
 #if RETRO_REV02
 void RSDK::SKU::DummyAchievements::TryUnlockAchievement(const char *name)
@@ -39,8 +32,8 @@ void RSDK::SKU::DummyAchievements::TryUnlockAchievement(const char *name)
 void RSDK::SKU::DummyAchievements::GetAchievementNames(String *names, int32 count)
 {
     int32 i = 0;
-    for (; i < count && i < (int)RSDK::SKU::achievementStack.size(); ++i) {
-        InitString(&names[i], (char *)RSDK::SKU::achievementList[i].name.c_str(), 0);
+    for (; i < count && i < (int)achievementStack.size(); ++i) {
+        InitString(&names[i], (char *)achievementList[i].name.c_str(), 0);
     }
     for (; i < count; ++i) {
         InitString(&names[i], (char *)"Dummy Achievement", 0);

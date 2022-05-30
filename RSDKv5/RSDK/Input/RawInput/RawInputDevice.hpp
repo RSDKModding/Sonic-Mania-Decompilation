@@ -3,7 +3,7 @@ namespace SKU
 {
 
 struct InputDeviceRaw : InputDevice {
-    void UpdateInput(void);
+    void UpdateInput();
     void ProcessInput(int32 controllerID);
 
     HANDLE deviceHandle;

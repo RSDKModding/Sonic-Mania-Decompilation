@@ -2,6 +2,35 @@
 
 #include "iniparser/iniparser.h"
 
+
+// ====================
+// API Cores
+// ====================
+
+namespace RSDK::SKU
+{
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyCore.cpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamCore.cpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSCore.cpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXCore.cpp"
+#endif
+
+} // namespace RSDK::SKU
+
 using namespace RSDK;
 
 #if RETRO_REV02
@@ -16,72 +45,53 @@ void RSDK::SKU::InitUserData()
 {
     InitUserDirectory();
 
-    int32 language     = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
-    int32 region       = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
-    int32 platform     = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
-    engine.confirmFlip = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
-
-#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
-    || RETRO_PLATFORM == RETRO_iOS
-    // platform = PLATFORM_PC;
-#elif RETRO_PLATFORM == RETRO_PS4
-    platform = PLATFORM_PS4;
-#elif RETRO_PLATFORM == RETRO_XB1
-    platform = PLATFORM_XB1;
-#elif RETRO_PLATFORM == RETRO_SWITCH || RETRO_PLATFORM == RETRO_ANDROID
-    platform = PLATFORM_SWITCH;
-#endif
-
 #if RETRO_REV02
-    curSKU.platform = platform;
-    curSKU.language = language;
-    curSKU.region   = region;
-#else
-    gameVerInfo.platform = platform;
-    gameVerInfo.language = language;
-    gameVerInfo.region   = region;
-#endif
-
-    int32 value = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_STATUS", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_STATUS", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME", 0));
-    value       = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME", 0));
-
-#if RETRO_REV02
+#if RETRO_USERCORE_DUMMY
     if (dummyCore)
         delete dummyCore;
     dummyCore = InitDummyCore();
+#endif
 
     // Initalize platform-specific subsystems here
 
-    // Examples
-    // if (usingSteamAPI)
-    //     userCore = InitSteamCore();
-    // if (usingEGSAPI)
-    //     userCore = InitEOSCore();
-    // if (usingSwitchAPI)
-    //     userCore = InitNXCore();
+#if RETRO_USERCORE_STEAM
+    userCore = InitSteamCore();
+#endif
 
-    if (!userCore) // no platform core, so default to dummy funcs
+#if RETRO_USERCORE_STEAM
+    userCore = InitEOSCore();
+#endif
+
+#if RETRO_USERCORE_STEAM
+    userCore = InitNXCore();
+#endif
+
+#if RETRO_USERCORE_DUMMY
+    if (!userCore) { // no platform core, so default to dummy funcs
         userCore = dummyCore;
+    }
     else if (dummyCore) {
         delete dummyCore;
         dummyCore = nullptr;
     }
+#endif
 
     if (!userDBStorage)
         userDBStorage = (UserDBStorage *)malloc(sizeof(UserDBStorage));
 
     InitUserStorageDB(userDBStorage);
+#endif
+
+#if RETRO_REV02
+    curSKU.platform    = userCore->GetUserPlatform();
+    curSKU.language    = userCore->GetUserLanguage();
+    curSKU.region      = userCore->GetUserRegion();
+    engine.confirmFlip = userCore->GetConfirmButtonFlip();
+#else
+    gameVerInfo.platform = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
+    gameVerInfo.language = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
+    gameVerInfo.region   = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
+    engine.confirmFlip   = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
 #endif
 
     // Add achievements
@@ -106,6 +116,7 @@ void RSDK::SKU::InitUserData()
     RegisterAchievement("ACH_MMZ", "Collect 'Em All", "Gotta gacha 'em all");
     RegisterAchievement("ACH_TMZ", "Professional Hedgehog", "That elusive perfect run, only a professional can achieve");
 
+#if RETRO_USERCORE_DUMMY
     int32 achievementsRAM[0x100];
     memset(achievementsRAM, 0, 0x100 * sizeof(int32));
     bool32 loaded = false;
@@ -117,6 +128,7 @@ void RSDK::SKU::InitUserData()
     for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
         achievementList[i].achieved = achievementsRAM[i];
     }
+#endif
 }
 void RSDK::SKU::ReleaseUserData()
 {
@@ -155,13 +167,16 @@ void RSDK::SKU::ReleaseUserData()
         delete userCore;
     }
 
+#if RETRO_USERCORE_DUMMY
     dummyCore = nullptr;
+#endif
     userCore  = nullptr;
 #endif
 }
 
 void RSDK::SKU::SaveUserData()
 {
+#if RETRO_USERCORE_DUMMY
     int32 achievementsRAM[0x100];
     memset(achievementsRAM, 0, 0x100 * sizeof(int32));
     for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
@@ -171,6 +186,7 @@ void RSDK::SKU::SaveUserData()
     userStorage->TrySaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32), NULL, false);
 #else
     SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
+#endif
 #endif
 }
 

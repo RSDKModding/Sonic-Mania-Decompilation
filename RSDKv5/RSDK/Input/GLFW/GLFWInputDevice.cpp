@@ -4,9 +4,9 @@
 #include "GLFWInputDevice.hpp"
 #endif
 
-using namespace RSDK::SKU;
+using namespace RSDK;
 
-void InputDeviceGLFW::UpdateInput()
+void RSDK::SKU::InputDeviceGLFW::UpdateInput()
 {
     currentState ^= 1;
     glfwGetGamepadState(jid, &states[currentState]);
@@ -35,7 +35,7 @@ void InputDeviceGLFW::UpdateInput()
     ProcessInput(CONT_ANY);
 }
 
-void InputDeviceGLFW::ProcessInput(int32 controllerID)
+void RSDK::SKU::InputDeviceGLFW::ProcessInput(int32 controllerID)
 {
     controller[controllerID].keyUp.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP];
     controller[controllerID].keyDown.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN];
@@ -77,14 +77,14 @@ void InputDeviceGLFW::ProcessInput(int32 controllerID)
     triggerR[controllerID].triggerDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
 }
 
-void InputDeviceGLFW::CloseDevice()
+void RSDK::SKU::InputDeviceGLFW::CloseDevice()
 {
     this->active               = false;
     this->assignedControllerID = false;
     this->jid                  = GLFW_JOYSTICK_LAST;
 }
 
-InputDeviceGLFW *RSDK::SKU::InitGLFWInputDevice(uint32 id, uint8 controllerID)
+RSDK::SKU::InputDeviceGLFW *RSDK::SKU::InitGLFWInputDevice(uint32 id, uint8 controllerID)
 {
     if (InputDeviceCount >= INPUTDEVICE_COUNT)
         return NULL;

@@ -86,7 +86,7 @@ void AddViewableVariable(const char *name, void *value, int32 type, int32 min, i
 #endif
 
 struct DevMenu {
-    void (*state)(void);
+    void (*state)();
     int32 selection;
     int32 scrollPos;
     int32 timer;

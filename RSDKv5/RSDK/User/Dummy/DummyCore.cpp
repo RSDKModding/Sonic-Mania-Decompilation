@@ -1,24 +1,8 @@
-#include "RSDK/Core/RetroEngine.hpp"
-
 using namespace RSDK;
 
 #if RETRO_REV02
 SKU::DummyCore *RSDK::SKU::dummyCore = NULL;
 #endif
-
-// Start custom achievement code
-// this is added because we don't have access to any store APIs that would otherwise use this featur
-void RSDK::RegisterAchievement(const char *identifier, const char *name, const char *desc)
-{
-    SKU::AchievementInfo info;
-    info.identifier  = identifier;
-    info.name        = name;
-    info.description = desc;
-    info.achieved    = false;
-    SKU::achievementList.push_back(info);
-}
-
-// End custom achievement code
 
 uint32 RSDK::SKU::GetAPIValueID(const char *identifier, int32 charIndex)
 {
@@ -32,24 +16,51 @@ int32 RSDK::SKU::GetAPIValue(uint32 id)
 {
     switch (id) {
         default: break;
-        case 0x3D6BD740: return PLATFORM_DEV; // SYSTEM_PLATFORM
-        case 0xD9F55367: return REGION_US;    // SYSTEM_REGION
-        case 0x0CC0762D: return LANGUAGE_EN;  // SYSTEM_LANGUAGE
-        case 0xA2ACEF21: return false;        // SYSTEM_CONFIRM_FLIP
-        case 0x4205582D: return 120;          // SYSTEM_LEADERBOARD_LOAD_TIME
-        case 0xDEF3F8B5: return STATUS_OK;    // SYSTEM_LEADERBOARD_STATUS
-        case 0x5AD68EAB: return STATUS_OK;    // SYSTEM_USERSTORAGE_AUTH_STATUS
-        case 0x884E705A: return STATUS_OK;    // SYSTEM_USERSTORAGE_STORAGE_STATUS
-        case 0xBDF4E94A: return 30;           // SYSTEM_USERSTORAGE_AUTH_TIME
-        case 0xD77E98BE: return 30;           // SYSTEM_USERSTORAGE_STORAGE_INIT_TIME
-        case 0x5AF715C2: return 30;           // SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME
-        case 0x54378EC5: return 30;           // SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME
-        case 0xCD44607D: return 30;           // SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME
+
+        case 0x3D6BD740: // SYSTEM_PLATFORM
+
+            // Platform Overrides
+#if RETRO_PLATFORM == RETRO_PS4
+            return PLATFORM_PS4;
+#elif RETRO_PLATFORM == RETRO_XB1
+            return PLATFORM_XB1;
+#elif RETRO_PLATFORM == RETRO_SWITCH || RETRO_PLATFORM == RETRO_ANDROID
+            return PLATFORM_SWITCH;
+#endif
+
+            // default to PC (or dev if dev stuff is enabled)
+            return engine.devMenu ? PLATFORM_DEV : PLATFORM_PC;
+
+        case 0xD9F55367: return REGION_US; // SYSTEM_REGION
+
+        case 0x0CC0762D: return LANGUAGE_EN; // SYSTEM_LANGUAGE
+
+        case 0xA2ACEF21: return engine.confirmFlip; // SYSTEM_CONFIRM_FLIP
+
+        case 0x4205582D: return 120; // SYSTEM_LEADERBOARD_LOAD_TIME
+
+        case 0xDEF3F8B5: return STATUS_OK; // SYSTEM_LEADERBOARD_STATUS
+
+        case 0x5AD68EAB: return STATUS_OK; // SYSTEM_USERSTORAGE_AUTH_STATUS
+
+        case 0x884E705A: return STATUS_OK; // SYSTEM_USERSTORAGE_STORAGE_STATUS
+
+        case 0xBDF4E94A: return 30; // SYSTEM_USERSTORAGE_AUTH_TIME
+
+        case 0xD77E98BE: return 30; // SYSTEM_USERSTORAGE_STORAGE_INIT_TIME
+
+        case 0x5AF715C2: return 30; // SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME
+
+        case 0x54378EC5: return 30; // SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME
+
+        case 0xCD44607D: return 30; // SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME
     }
+
     return 0;
 }
 
 #if RETRO_REV02
+
 SKU::DummyCore *RSDK::SKU::InitDummyCore()
 {
     // Initalize API subsystems
@@ -165,11 +176,11 @@ void RSDK::SKU::DummyCore::StageLoad()
 
 bool32 RSDK::SKU::DummyCore::CheckFocusLost() { return focusState != 0; }
 
-bool32 RSDK::SKU::DummyCore::GetConfirmButtonFlip()
-{
-    // PrintLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
-    return engine.confirmFlip;
-}
+int32 RSDK::SKU::DummyCore::GetUserLanguage() { return GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0)); }
+int32 RSDK::SKU::DummyCore::GetUserRegion() { return GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0)); }
+int32 RSDK::SKU::DummyCore::GetUserPlatform() { return GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0)); }
+bool32 RSDK::SKU::DummyCore::GetConfirmButtonFlip() { return GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0)); }
+
 void RSDK::SKU::DummyCore::LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it

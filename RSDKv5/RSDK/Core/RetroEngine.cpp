@@ -136,7 +136,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
                 }
 #endif
 
-#if RETRO_REV02
+#if RETRO_REV02 && RETRO_USERCORE_DUMMY
                 if (!(engine.focusState & 1))
                     SKU::HandleUserStatuses();
 #endif

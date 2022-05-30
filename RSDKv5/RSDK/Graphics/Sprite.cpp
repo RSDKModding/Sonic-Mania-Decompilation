@@ -889,7 +889,7 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
     }
 }
 
-bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void))
+bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed, bool32 (*skipCallback)())
 {
     char fullFilePath[0x100];
     sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Images/%s", filename);

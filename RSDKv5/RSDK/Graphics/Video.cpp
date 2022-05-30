@@ -18,7 +18,7 @@ th_pixel_fmt VideoManager::pixelFormat;
 ogg_int64_t VideoManager::granulePos = 0;
 bool32 VideoManager::shouldInit      = false;
 
-bool32 RSDK::LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)(void))
+bool32 RSDK::LoadVideo(const char *filename, double startDelay, bool32 (*skipCallback)())
 {
     if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
         return false;

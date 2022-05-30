@@ -21,16 +21,16 @@ namespace SKU
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
 struct UserStorage {
-    virtual void FrameInit(void) {}
-    virtual void StageLoad(void) {}
-    virtual void OnUnknownEvent(void) {}
-    virtual int32 TryAuth(void) { return 0; }
-    virtual int32 TryInitStorage(void) { return 0; }
+    virtual void FrameInit() {}
+    virtual void StageLoad() {}
+    virtual void OnUnknownEvent() {}
+    virtual int32 TryAuth() { return 0; }
+    virtual int32 TryInitStorage() { return 0; }
     virtual bool32 GetUsername(String *userName) { return false; }
     virtual bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32)) { return false; }
     virtual bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress) { return false; }
     virtual bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32)) { return false; }
-    virtual void ClearPrerollErrors(void) {}
+    virtual void ClearPrerollErrors() {}
 
     int32 authStatus    = 0;
     int32 storageStatus = 0;
@@ -107,7 +107,7 @@ struct UserDB {
     uint8 valid;
     UserDB *parent;
     uint8 rowsChanged;
-    RSDK::List<int32> sortedRowList;
+    List<int32> sortedRowList;
     int32 sortedRowIDs[RETRO_USERDB_ROW_MAX];
     int32 sortedRowCount;
     int32 columnCount;
@@ -133,8 +133,32 @@ struct UserDBStorage {
 
 extern UserDBStorage *userDBStorage;
 
-inline int32 TryAuth(void) { return userStorage->TryAuth(); }
-inline int32 TryInitStorage(void) { return userStorage->TryInitStorage(); }
+// ====================
+// API Cores
+// ====================
+
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyStorage.hpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamStorage.hpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSStorage.hpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXStorage.hpp"
+#endif
+
+inline int32 TryAuth() { return userStorage->TryAuth(); }
+inline int32 TryInitStorage() { return userStorage->TryInitStorage(); }
 inline bool32 GetUsername(String *userName) { return userStorage->GetUsername(userName); }
 inline bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32))
 {
@@ -145,7 +169,7 @@ inline bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, i
     return userStorage->TrySaveUserFile(filename, buffer, size, callback, compress);
 }
 inline bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32)) { return userStorage->TryDeleteUserFile(filename, callback); }
-inline void ClearPrerollErrors(void) { userStorage->ClearPrerollErrors(); }
+inline void ClearPrerollErrors() { userStorage->ClearPrerollErrors(); }
 
 int32 GetUserAuthStatus();
 int32 GetUserStorageStatus();
@@ -237,7 +261,7 @@ extern void (*preLoadSaveFileCB)();
 extern void (*postLoadSaveFileCB)();
 extern char userFileDir[0x100];
 
-inline void SetUserFileCallbacks(const char *userDir, void (*preCB)(void), void (*postCB)(void))
+inline void SetUserFileCallbacks(const char *userDir, void (*preCB)(), void (*postCB)())
 {
     preLoadSaveFileCB  = preCB;
     postLoadSaveFileCB = postCB;

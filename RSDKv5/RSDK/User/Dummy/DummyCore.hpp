@@ -1,34 +1,22 @@
-#ifndef DUMMY_CORE_H
-#define DUMMY_CORE_H
-
-#include "RSDK/User/Dummy/DummyAchievements.hpp"
-#include "RSDK/User/Dummy/DummyLeaderboards.hpp"
-#include "RSDK/User/Dummy/DummyStats.hpp"
-#include "RSDK/User/Dummy/DummyPresence.hpp"
-#include "RSDK/User/Dummy/DummyStorage.hpp"
-
-namespace RSDK
-{
-
-namespace SKU
-{
 #if RETRO_REV02
 
 // This is the "dummy" struct, it serves as the base in the event a suitable API isn't loaded (such as in this decomp)
 // This struct should never be removed, other structs such as "SteamUserCore" would be added and "userCore" would be set to that instead
 struct DummyCore : UserCore {
-    void StageLoad(void);
-    bool32 CheckFocusLost(void);
-    bool32 GetConfirmButtonFlip(void);
-    void LaunchManual(void);
-    void ExitGame(void);
-    int32 GetDefaultGamepadType(void);
+    void StageLoad();
+    bool32 CheckFocusLost();
+    int32 GetUserLanguage();
+    int32 GetUserRegion();
+    int32 GetUserPlatform();
+    bool32 GetConfirmButtonFlip();
+    void LaunchManual();
+    void ExitGame();
+    int32 GetDefaultGamepadType();
     bool32 IsOverlayEnabled(uint32 overlay)
     {
         for (int32 i = 0; i < InputDeviceCount; ++i) {
             if (InputDevices[i] && InputDevices[i]->inputID == overlay) {
-                uint8 flag = (InputDevices[i]->gamePadType >> 16) & 0xFF;
-                if (flag != DEVICE_API_STEAM)
+                if (((InputDevices[i]->gamePadType >> 16) & 0xFF) != DEVICE_API_STEAM)
                     return false;
 
                 return false; // not implemented, sorry!
@@ -40,12 +28,12 @@ struct DummyCore : UserCore {
     // CheckDLC(id)
     int32 ShowExtensionOverlay(uint8 overlay);
 #if RETRO_VER_EGS
-    void EpicUnknown1(void) {}
+    void EpicUnknown1() {}
     bool32 ShowCheckoutPage(int32 a1);
     int32 ShowEncorePage(int32 a1);
     void EpicUnknown4(int32 a1);
-    void RegisterHIDDevice(void) {}
-    void EpicUnknown6(void) {}
+    void RegisterHIDDevice() {}
+    void EpicUnknown6() {}
 #endif
 
     uint16 field_25;
@@ -63,9 +51,3 @@ void HandleUserStatuses();
 // these are rev02 only but keeping em helps organization
 uint32 GetAPIValueID(const char *identifier, int32 charIndex);
 int32 GetAPIValue(uint32 id);
-
-} // namespace SKU
-
-} // namespace RSDK
-
-#endif // !DUMMY_CORE_H

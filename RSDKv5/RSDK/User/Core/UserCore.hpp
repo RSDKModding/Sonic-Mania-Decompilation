@@ -4,8 +4,6 @@
 namespace RSDK
 {
 
-void RegisterAchievement(const char *identifier, const char *name, const char *desc);
-
 namespace SKU
 {
 
@@ -63,21 +61,21 @@ extern UnknownInfo unknownInfo;
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
 struct UserCore {
-    virtual void Shutdown(void) {}
-    virtual bool32 CheckAPIInitialized(void) { return true; }
-    virtual bool32 CheckFocusLost(void) { return false; }
-    virtual bool32 CheckEnginePause(void) { return false; }
-    virtual void StageLoad(void);
-    virtual void FrameInit(void);
+    virtual void Shutdown() {}
+    virtual bool32 CheckAPIInitialized() { return true; }
+    virtual bool32 CheckFocusLost() { return false; }
+    virtual bool32 CheckEnginePause() { return false; }
+    virtual void StageLoad();
+    virtual void FrameInit();
     // I do not know what this is, both PC & Switch vers never call it as far as I can see
-    virtual void OnUnknownEvent(void);
-    virtual int32 GetUserLanguage(void) { return curSKU.language; }
-    virtual int32 GetUserRegion(void) { return curSKU.region; }
-    virtual int32 GetUserPlatform(void) { return curSKU.platform; }
-    virtual bool32 GetConfirmButtonFlip(void) { return false; }
-    virtual void LaunchManual(void) {}
-    virtual void ExitGame(void) {}
-    virtual int32 GetDefaultGamepadType(void) { return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); }
+    virtual void OnUnknownEvent();
+    virtual int32 GetUserLanguage() { return LANGUAGE_EN; }
+    virtual int32 GetUserRegion() { return REGION_US; }
+    virtual int32 GetUserPlatform() { return PLATFORM_PC; }
+    virtual bool32 GetConfirmButtonFlip() { return false; }
+    virtual void LaunchManual() {}
+    virtual void ExitGame() {}
+    virtual int32 GetDefaultGamepadType() { return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); }
     virtual bool32 IsOverlayEnabled(uint32 inputID) { return false; }
     virtual bool32 CheckDLC(uint8 id)
     {
@@ -88,12 +86,12 @@ struct UserCore {
     }
     virtual int32 ShowExtensionOverlay(uint8 overlay) { return 0; }
 #if RETRO_VER_EGS
-    virtual void EpicUnknown1(void) {}
+    virtual void EpicUnknown1() {}
     virtual bool32 ShowCheckoutPage(int32 a1) { return false; }
     virtual int32 ShowEncorePage(int32 a1) { return 0; }
     virtual void EpicUnknown4(int32 a1) {}
-    virtual void RegisterHIDDevice(void) {}
-    virtual void EpicUnknown6(void) {}
+    virtual void RegisterHIDDevice() {}
+    virtual void EpicUnknown6() {}
 #endif
 
     bool32 *values[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
@@ -104,6 +102,31 @@ struct UserCore {
 };
 
 extern UserCore *userCore;
+
+// ====================
+// API Cores
+// ====================
+
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyCore.hpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamCore.hpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSCore.hpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXCore.hpp"
+#endif
+
 #endif
 
 void InitUserData();
@@ -115,10 +138,10 @@ void HandleUserStatuses();
 #endif
 
 #if RETRO_REV02
-inline int32 GetUserLanguage(void) { return userCore->GetUserLanguage(); }
-inline bool32 GetConfirmButtonFlip(void) { return userCore->GetConfirmButtonFlip(); }
-inline void ExitGame(void) { userCore->ExitGame(); }
-inline void LaunchManual(void) { userCore->LaunchManual(); }
+inline int32 GetUserLanguage() { return userCore->GetUserLanguage(); }
+inline bool32 GetConfirmButtonFlip() { return userCore->GetConfirmButtonFlip(); }
+inline void ExitGame() { userCore->ExitGame(); }
+inline void LaunchManual() { userCore->LaunchManual(); }
 inline bool32 IsOverlayEnabled(uint32 overlay) { return userCore->IsOverlayEnabled(overlay); }
 inline bool32 CheckDLC(uint8 id) { return userCore->CheckDLC(id); }
 inline int32 ShowExtensionOverlay(uint8 overlay) { return userCore->ShowExtensionOverlay(overlay); }
@@ -136,7 +159,7 @@ bool32 GetXYButtonFlip();
 inline bool32 ShowCheckoutPage(int32 a1) { return userCore->ShowCheckoutPage(a1); }
 inline bool32 ShowEncorePage(int32 a1) { return userCore->ShowEncorePage(a1); }
 inline void EpicUnknown4(int32 a1) { userCore->EpicUnknown4(a1); }
-inline void RegisterHIDDevice(void) { userCore->RegisterHIDDevice(); }
+inline void RegisterHIDDevice() { userCore->RegisterHIDDevice(); }
 #endif
 
 } // namespace SKU

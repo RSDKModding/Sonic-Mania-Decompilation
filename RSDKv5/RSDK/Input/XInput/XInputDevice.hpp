@@ -3,7 +3,7 @@ namespace SKU
 {
 
 struct InputDeviceXInput : InputDevice {
-    void UpdateInput(void);
+    void UpdateInput();
     void ProcessInput(int32 controllerID);
 
     XINPUT_STATE inputState[2];

@@ -34,7 +34,7 @@ void RSDK::DefaultObject_Create(void *data)
     RSDK_THIS(DefaultObject);
 
     self->active                = ACTIVE_ALWAYS;
-    RSDK::DefaultObject->active = ACTIVE_ALWAYS;
+    DefaultObject->active = ACTIVE_ALWAYS;
 }
 
 void RSDK::DefaultObject_StageLoad() {}

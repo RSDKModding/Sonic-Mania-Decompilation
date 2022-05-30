@@ -1,9 +1,9 @@
 
-using namespace RSDK::SKU;
+using namespace RSDK;
 
 #define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
-bool32 getControllerButton(InputDeviceSDL *device, uint8 buttonID)
+bool32 getControllerButton(RSDK::SKU::InputDeviceSDL *device, uint8 buttonID)
 {
     if (buttonID == (uint8)SDL_CONTROLLER_BUTTON_INVALID || !device)
         return false;
@@ -14,7 +14,7 @@ bool32 getControllerButton(InputDeviceSDL *device, uint8 buttonID)
     return false;
 }
 
-void InputDeviceSDL::UpdateInput()
+void RSDK::SKU::InputDeviceSDL::UpdateInput()
 {
     int32 buttonMap[] = {
         SDL_CONTROLLER_BUTTON_DPAD_UP,   SDL_CONTROLLER_BUTTON_DPAD_DOWN,  SDL_CONTROLLER_BUTTON_DPAD_LEFT,    SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
@@ -115,7 +115,7 @@ void InputDeviceSDL::UpdateInput()
     ProcessInput(CONT_ANY);
 }
 
-void InputDeviceSDL::ProcessInput(int32 controllerID)
+void RSDK::SKU::InputDeviceSDL::ProcessInput(int32 controllerID)
 {
     controller[controllerID].keyUp.press |= this->stateUp;
     controller[controllerID].keyDown.press |= this->stateDown;
@@ -157,7 +157,7 @@ void InputDeviceSDL::ProcessInput(int32 controllerID)
     triggerR[controllerID].triggerDelta = this->triggerDeltaR;
 }
 
-void InputDeviceSDL::CloseDevice()
+void RSDK::SKU::InputDeviceSDL::CloseDevice()
 {
     this->active               = false;
     this->assignedControllerID = false;
@@ -165,7 +165,7 @@ void InputDeviceSDL::CloseDevice()
     this->controllerPtr = NULL;
 }
 
-InputDeviceSDL *RSDK::SKU::InitSDL2InputDevice(uint32 id, uint8 controllerID)
+RSDK::SKU::InputDeviceSDL *RSDK::SKU::InitSDL2InputDevice(uint32 id, uint8 controllerID)
 {
     if (InputDeviceCount >= INPUTDEVICE_COUNT)
         return NULL;

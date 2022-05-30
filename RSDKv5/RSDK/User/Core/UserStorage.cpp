@@ -1,6 +1,37 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
 #if RETRO_REV02
+
+// ====================
+// API Cores
+// ====================
+
+namespace RSDK::SKU
+{
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyStorage.cpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamStorage.cpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSStorage.cpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXStorage.cpp"
+#endif
+
+} // namespace RSDK::SKU
+
+using namespace RSDK;
+
 RSDK::SKU::UserStorage *RSDK::SKU::userStorage     = NULL;
 RSDK::SKU::UserDBStorage *RSDK::SKU::userDBStorage = NULL;
 
@@ -122,7 +153,7 @@ uint16 RSDK::SKU::LoadUserDB(const char *filename, void (*callback)(int32))
         return -1;
     }
 
-    RSDK::AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], RSDK::DATASET_TMP, true);
+    AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], DATASET_TMP, true);
     userDBStorage->userLoadCB[tableID] = UserDBLoadCB;
     userDBStorage->callbacks[tableID]  = callback;
     TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->loadCallback[tableID]);
@@ -139,7 +170,7 @@ bool32 RSDK::SKU::SaveUserDB(uint16 tableID, void (*callback)(int32))
     bool32 success = false;
     if (userDB->active) {
         int32 totalSize = (int32)GetUserDBWriteSize(userDB);
-        RSDK::AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], RSDK::DATASET_TMP, true);
+        AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], DATASET_TMP, true);
         SaveDBToBuffer(userDB, totalSize, (uint8 *)userDBStorage->writeBuffer[tableID]);
         userDBStorage->userSaveCB[tableID] = UserDBSaveCB;
         userDBStorage->callbacks[tableID]  = callback;
@@ -926,7 +957,7 @@ int32 RSDK::SKU::UserDBLoadCB(uint16 tableID, int32 status)
     else {
         ClearUserDB(tableID);
     }
-    RSDK::RemoveStorageEntry((void **)&userDBStorage->readBuffer[tableID]);
+    RemoveStorageEntry((void **)&userDBStorage->readBuffer[tableID]);
 
     if (userDBStorage->callbacks[tableID]) {
         userDBStorage->callbacks[tableID](result ? status : STATUS_ERROR);
@@ -936,7 +967,7 @@ int32 RSDK::SKU::UserDBLoadCB(uint16 tableID, int32 status)
 }
 int32 RSDK::SKU::UserDBSaveCB(uint16 tableID, int32 status)
 {
-    RSDK::RemoveStorageEntry((void **)&userDBStorage->writeBuffer[tableID]);
+    RemoveStorageEntry((void **)&userDBStorage->writeBuffer[tableID]);
     if (status != STATUS_OK)
         userDBStorage->userDB[tableID].valid = false;
 

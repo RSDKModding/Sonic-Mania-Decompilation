@@ -101,7 +101,7 @@ struct ImageTGA : public Image {
 #endif
 
 uint16 LoadSpriteSheet(const char *filename, int32 scope);
-bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)(void));
+bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)());
 
 } // namespace RSDK
 

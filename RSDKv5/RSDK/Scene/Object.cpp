@@ -22,22 +22,22 @@ ForeachStackInfo RSDK::foreachStackList[FOREACH_STACK_COUNT];
 ForeachStackInfo *RSDK::foreachStackPtr = NULL;
 
 #if RETRO_USE_MOD_LOADER
-void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
-                          void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
-                          void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
+void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(),
+                          void (*lateUpdate)(), void (*staticUpdate)(), void (*draw)(), void (*create)(void *), void (*stageLoad)(),
+                          void (*editorDraw)(), void (*editorLoad)(), void (*serialize)())
 {
     return RegisterObject_STD(staticVars, name, entityClassSize, staticClassSize, update, lateUpdate, staticUpdate, draw, create, stageLoad,
                               editorDraw, editorLoad, serialize);
 }
 
-void RSDK::RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void(void)> update,
-                              std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
-                              std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
-                              std::function<void(void)> editorLoad, std::function<void(void)> serialize)
+void RSDK::RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void()> update,
+                              std::function<void()> lateUpdate, std::function<void()> staticUpdate, std::function<void()> draw,
+                              std::function<void(void *)> create, std::function<void()> stageLoad, std::function<void()> editorDraw,
+                              std::function<void()> editorLoad, std::function<void()> serialize)
 #else
-void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
-                          void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
-                          void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
+void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(),
+                          void (*lateUpdate)(), void (*staticUpdate)(), void (*draw)(), void (*create)(void *), void (*stageLoad)(),
+                          void (*editorDraw)(), void (*editorLoad)(), void (*serialize)())
 #endif
 {
     if (objectClassCount < OBJECT_COUNT) {

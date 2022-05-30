@@ -1,6 +1,34 @@
 #include "RSDK/Core/RetroEngine.hpp"
 #include <string>
 
+// ====================
+// API Cores
+// ====================
+
+namespace RSDK::SKU
+{
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyLeaderboards.cpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamLeaderboards.cpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSLeaderboards.cpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXLeaderboards.cpp"
+#endif
+
+} // namespace RSDK::SKU
+
 using namespace RSDK;
 
 #if RETRO_REV02

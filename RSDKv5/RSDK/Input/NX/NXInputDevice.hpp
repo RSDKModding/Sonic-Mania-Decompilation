@@ -14,23 +14,23 @@ struct InputDeviceNX : InputDevice {
 };
 
 struct InputDeviceNXHandheld : InputDeviceNX {
-    void UpdateInput(void);
+    void UpdateInput();
 };
 
 struct InputDeviceNXJoyL : InputDeviceNX {
-    void UpdateInput(void);
+    void UpdateInput();
 };
 
 struct InputDeviceNXJoyR : InputDeviceNX {
-    void UpdateInput(void);
+    void UpdateInput();
 };
 
 struct InputDeviceNXJoyGrip : InputDeviceNX {
-    void UpdateInput(void);
+    void UpdateInput();
 };
 
 struct InputDeviceNXPro : InputDeviceNX {
-    void UpdateInput(void);
+    void UpdateInput();
 };
 
 extern int32 currentNXControllerType;

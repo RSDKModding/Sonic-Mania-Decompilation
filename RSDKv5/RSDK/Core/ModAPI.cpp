@@ -1,5 +1,10 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+// Start Dummy Achievements
+std::vector<RSDK::AchievementInfo> RSDK::achievementList;
+std::vector<int> RSDK::achievementStack;
+// End Dummy Achievements
+
 #if RETRO_USE_MOD_LOADER
 
 #include <filesystem>
@@ -200,12 +205,12 @@ void RSDK::LoadMods()
     SortMods();
 }
 
-void loadCfg(RSDK::ModInfo *info, std::string path)
+void loadCfg(ModInfo *info, std::string path)
 {
-    RSDK::FileInfo *cfg = new RSDK::FileInfo();
+    FileInfo *cfg = new FileInfo();
     cfg->externalFile   = true;
     // CFG FILE READ
-    if (LoadFile(cfg, path.c_str(), RSDK::FMODE_RB)) {
+    if (LoadFile(cfg, path.c_str(), FMODE_RB)) {
         int32 catCount = ReadInt8(cfg);
         for (int32 c = 0; c < catCount; ++c) {
             char catBuf[0x100];
@@ -213,11 +218,11 @@ void loadCfg(RSDK::ModInfo *info, std::string path)
             int32 keyCount = ReadInt8(cfg);
             for (int32 k = 0; k < keyCount; ++k) {
                 // ReadString except w packing the type bit
-                uint8 size    = ReadInt8(cfg);
+                uint8 size   = ReadInt8(cfg);
                 char *keyBuf = new char[size & 0x7F];
                 ReadBytes(cfg, keyBuf, size & 0x7F);
                 keyBuf[size & 0x7F] = 0;
-                uint8 type           = size & 0x80;
+                uint8 type          = size & 0x80;
                 if (!type) {
                     char buf[0xFFFF];
                     ReadString(cfg, buf);
@@ -360,7 +365,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                 std::string fl = file.string().c_str();
 #if RETRO_PLATFORM == RETRO_ANDROID
                 // only load ones that are compiled. this is to still allow lang mods to work
-                fl = "lib" + buf;
+                fl                = "lib" + buf;
 #endif
                 void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
 #define getAddress dlsym
@@ -385,7 +390,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     return false;
                 }
             }
-        } 
+        }
         // SETTINGS
         FileIO *set = fOpen((modDir + "/modSettings.ini").c_str(), "r");
         if (set) {
@@ -470,7 +475,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
 
         if (saveCfg && info->config.size()) {
             FileIO *cfg = fOpen((modDir + "/modConfig.cfg").c_str(), "wb");
-            uint8 ct     = info->config.size();
+            uint8 ct    = info->config.size();
             fWrite(&ct, 1, 1, cfg);
             for (auto kv : info->config) {
                 if (!kv.first.length())
@@ -481,7 +486,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                 uint8 kt = kv.second.size();
                 fWrite(&kt, 1, 1, cfg);
                 for (auto kkv : kv.second) {
-                    uint8 len     = (uint8)(kkv.first.length()) & 0x7F;
+                    uint8 len    = (uint8)(kkv.first.length()) & 0x7F;
                     bool32 isint = false;
                     int32 r      = 0;
                     try {
@@ -668,13 +673,13 @@ void RSDK::GetModPath(const char *id, String *result)
 std::string GetModPath_i(const char *id)
 {
     int32 m;
-    for (m = 0; m < RSDK::modList.size(); ++m)
-        if (RSDK::modList[m].active && RSDK::modList[m].id == id)
+    for (m = 0; m < modList.size(); ++m)
+        if (modList[m].active && modList[m].id == id)
             break;
-    if (m == RSDK::modList.size())
+    if (m == modList.size())
         return std::string();
 
-    return std::string(RSDK::SKU::userFileDir) + "mods/" + id;
+    return std::string(SKU::userFileDir) + "mods/" + id;
 }
 
 std::string GetModSettingsValue(const char *id, const char *key)
@@ -686,7 +691,7 @@ std::string GetModSettingsValue(const char *id, const char *key)
     std::string cat  = skey.substr(0, skey.find(":"));
     std::string rkey = skey.substr(skey.find(":") + 1);
 
-    for (RSDK::ModInfo &m : RSDK::modList) {
+    for (ModInfo &m : modList) {
         if (m.active && m.id == id) {
             try {
                 return m.settings.at(cat).at(rkey);
@@ -765,7 +770,7 @@ void RSDK::GetSettingsString(const char *id, const char *key, String *result, co
 
 std::string GetNidConfigValue(const char *key)
 {
-    if (!RSDK::currentMod || !RSDK::currentMod->active)
+    if (!currentMod || !currentMod->active)
         return std::string();
     std::string skey(key);
     if (!strchr(key, ':'))
@@ -775,7 +780,7 @@ std::string GetNidConfigValue(const char *key)
     std::string rkey = skey.substr(skey.find(":") + 1);
 
     try {
-        return RSDK::currentMod->config.at(cat).at(rkey);
+        return currentMod->config.at(cat).at(rkey);
     } catch (std::out_of_range) {
         return std::string();
     }
@@ -907,7 +912,7 @@ bool32 RSDK::ForeachConfig(String *config)
 
 void SetModSettingsValue(const char *key, std::string val)
 {
-    if (!RSDK::currentMod)
+    if (!currentMod)
         return;
     std::string skey(key);
     if (!strchr(key, ':'))
@@ -916,7 +921,7 @@ void SetModSettingsValue(const char *key, std::string val)
     std::string cat  = skey.substr(0, skey.find(":"));
     std::string rkey = skey.substr(skey.find(":") + 1);
 
-    RSDK::currentMod->settings[cat][rkey] = val;
+    currentMod->settings[cat][rkey] = val;
 }
 
 void RSDK::SetSettingsBool(const char *key, bool32 val) { SetModSettingsValue(key, val ? "Y" : "N"); }
@@ -1038,7 +1043,7 @@ void *RSDK::GetGlobals() { return (void *)globalVarsPtr; }
 
 void RSDK::ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint32 size)
 {
-    RSDK::AllocateStorage(size, globals, RSDK::DATASET_STG, true);
+    AllocateStorage(size, globals, DATASET_STG, true);
     FileInfo info;
     InitFileInfo(&info);
 
@@ -1057,19 +1062,19 @@ void RSDK::ModRegisterGlobalVariables(const char *globalsPath, void **globals, u
     }
 }
 
-void RSDK::ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void),
-                             void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *),
-                             void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void),
+void RSDK::ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(),
+                             void (*lateUpdate)(), void (*staticUpdate)(), void (*draw)(), void (*create)(void *),
+                             void (*stageLoad)(), void (*editorDraw)(), void (*editorLoad)(), void (*serialize)(),
                              const char *inherited)
 {
     return ModRegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,
                                  editorLoad, serialize, inherited);
 }
 
-void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
-                                 std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
-                                 std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
-                                 std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
+void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void()> update,
+                                 std::function<void()> lateUpdate, std::function<void()> staticUpdate, std::function<void()> draw,
+                                 std::function<void(void *)> create, std::function<void()> stageLoad, std::function<void()> editorDraw,
+                                 std::function<void()> editorLoad, std::function<void()> serialize, const char *inherited)
 {
     // TODO: i think i introduced a memleak somewhere here??
 
@@ -1161,30 +1166,44 @@ Object *RSDK::GetObject(const char *name)
 
 void RSDK::GetAchievementInfo(uint32 id, String *name, String *description, String *identifer, bool32 *achieved)
 {
-    if (id >= SKU::achievementList.size())
+    if (id >= achievementList.size())
         return;
 
     if (name)
-        InitString(name, (char *)SKU::achievementList[id].name.c_str(), 0);
+        InitString(name, (char *)achievementList[id].name.c_str(), 0);
 
     if (description)
-        InitString(description, (char *)SKU::achievementList[id].description.c_str(), 0);
+        InitString(description, (char *)achievementList[id].description.c_str(), 0);
 
     if (identifer)
-        InitString(identifer, (char *)SKU::achievementList[id].identifier.c_str(), 0);
+        InitString(identifer, (char *)achievementList[id].identifier.c_str(), 0);
 
     if (achieved)
-        *achieved = SKU::achievementList[id].achieved;
+        *achieved = achievementList[id].achieved;
 }
 
 int32 RSDK::GetAchievementIndexByID(const char *id)
 {
-    for (int32 i = 0; i < SKU::achievementList.size(); ++i) {
-        if (SKU::achievementList[i].identifier == std::string(id))
+    for (int32 i = 0; i < achievementList.size(); ++i) {
+        if (achievementList[i].identifier == std::string(id))
             return i;
     }
 
     return -1;
 }
-int32 RSDK::GetAchievementCount() { return (int)SKU::achievementList.size(); }
+int32 RSDK::GetAchievementCount() { return (int)achievementList.size(); }
 #endif
+
+// Start custom achievement code
+// this is added because we don't have access to any store APIs that would otherwise use this featur
+void RSDK::RegisterAchievement(const char *identifier, const char *name, const char *desc)
+{
+    AchievementInfo info;
+    info.identifier  = identifier;
+    info.name        = name;
+    info.description = desc;
+    info.achieved    = false;
+    achievementList.push_back(info);
+}
+
+// End custom achievement code

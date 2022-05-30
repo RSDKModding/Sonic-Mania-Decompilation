@@ -5,7 +5,7 @@ namespace SKU
 extern int32 keyState[PLAYER_COUNT];
 
 struct InputDeviceKeyboard : InputDevice {
-    void UpdateInput(void);
+    void UpdateInput();
     void ProcessInput(int32 controllerID);
 
     uint16 inputFlags;

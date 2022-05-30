@@ -3,7 +3,7 @@ namespace SKU
 {
 
 struct InputDeviceSteam : InputDevice {
-    void UpdateInput(void);
+    void UpdateInput();
     void ProcessInput(int32 controllerID);
 
     int32 keyMasks[9];

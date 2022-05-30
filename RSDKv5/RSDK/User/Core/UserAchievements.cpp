@@ -1,5 +1,34 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
+
+// ====================
+// API Cores
+// ====================
+
+namespace RSDK::SKU
+{
+// Dummy API
+#if RETRO_USERCORE_DUMMY
+#include "RSDK/User/Dummy/DummyAchievements.cpp"
+#endif
+
+// Steam API
+#if RETRO_USERCORE_STEAM
+#include "RSDK/User/Steam/SteamAchievements.cpp"
+#endif
+
+// Epic Games API
+#if RETRO_USERCORE_EOS
+#include "RSDK/User/EOS/EOSAchievements.cpp"
+#endif
+
+// Switch API
+#if RETRO_USERCORE_NX
+#include "RSDK/User/NX/NXAchievements.cpp"
+#endif
+
+} // namespace RSDK::SKU
+
 using namespace RSDK;
 
 #if RETRO_REV02

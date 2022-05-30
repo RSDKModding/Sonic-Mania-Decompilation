@@ -144,6 +144,16 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_SDL2     (0)
 #define RETRO_INPUTDEVICE_GLFW     (0)
 
+// ============================
+// USER CORE BACKENDS
+// ============================
+#define RETRO_USERCORE_ID (0)
+
+#define RETRO_USERCORE_DUMMY (!(RETRO_USERCORE_ID & 0x80)) // bit 7 disables the dummy core stuff if you ever need that for some odd reason
+#define RETRO_USERCORE_STEAM (RETRO_USERCORE_ID == 1)
+#define RETRO_USERCORE_EOS   (RETRO_USERCORE_ID == 2)
+#define RETRO_USERCORE_NX    (RETRO_USERCORE_ID == 3)
+
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false
 #define RETRO_USING_MOUSE
@@ -400,20 +410,6 @@ enum SeverityModes {
 #include "RSDK/Core/ModAPI.hpp"
 #endif
 
-// APIs
-
-// Dummy API
-#include "RSDK/User/Dummy/DummyCore.hpp"
-
-// Steam API
-#include "RSDK/User/Steam/SteamCore.hpp"
-
-// Epic Games API
-#include "RSDK/User/EOS/EOSCore.hpp"
-
-// Switch API
-#include "RSDK/User/NX/NXCore.hpp"
-
 // Default Objects
 #include "RSDK/Scene/Objects/DefaultObject.hpp"
 #if RETRO_REV02
@@ -456,7 +452,7 @@ struct RetroEngine {
     double displayTime           = 0.0;
     double videoStartDelay       = 0.0;
     double imageDelta            = 0.0;
-    bool32 (*skipCallback)(void) = NULL;
+    bool32 (*skipCallback)() = NULL;
 
     bool32 streamsEnabled = true;
     float streamVolume    = 1.0;

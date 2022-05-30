@@ -150,25 +150,25 @@ struct ObjectClass {
 
     // Events
 #if RETRO_USE_MOD_LOADER // using std::function makes it easier to use stuff like lambdas
-    std::function<void(void)> update;
-    std::function<void(void)> lateUpdate;
-    std::function<void(void)> staticUpdate;
-    std::function<void(void)> draw;
+    std::function<void()> update;
+    std::function<void()> lateUpdate;
+    std::function<void()> staticUpdate;
+    std::function<void()> draw;
     std::function<void(void *)> create;
-    std::function<void(void)> stageLoad;
-    std::function<void(void)> editorDraw;
-    std::function<void(void)> editorLoad;
-    std::function<void(void)> serialize;
+    std::function<void()> stageLoad;
+    std::function<void()> editorDraw;
+    std::function<void()> editorLoad;
+    std::function<void()> serialize;
 #else
-    void (*update)(void);
-    void (*lateUpdate)(void);
-    void (*staticUpdate)(void);
-    void (*draw)(void);
+    void (*update)();
+    void (*lateUpdate)();
+    void (*staticUpdate)();
+    void (*draw)();
     void (*create)(void *);
-    void (*stageLoad)(void);
-    void (*editorDraw)(void);
-    void (*editorLoad)(void);
-    void (*serialize)(void);
+    void (*stageLoad)();
+    void (*editorDraw)();
+    void (*editorLoad)();
+    void (*serialize)();
 #endif
 
     // Classes
@@ -219,15 +219,15 @@ extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 extern bool32 validDraw;
 
-void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
-                    void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
-                    void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
+void RegisterObject(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(),
+                    void (*lateUpdate)(), void (*staticUpdate)(), void (*draw)(), void (*create)(void *), void (*stageLoad)(),
+                    void (*editorDraw)(), void (*editorLoad)(), void (*serialize)());
 
 #if RETRO_USE_MOD_LOADER
-void RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void(void)> update,
-                        std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
-                        std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
-                        std::function<void(void)> editorLoad, std::function<void(void)> serialize);
+void RegisterObject_STD(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, std::function<void()> update,
+                        std::function<void()> lateUpdate, std::function<void()> staticUpdate, std::function<void()> draw,
+                        std::function<void(void *)> create, std::function<void()> stageLoad, std::function<void()> editorDraw,
+                        std::function<void()> editorLoad, std::function<void()> serialize);
 #endif
 
 #if RETRO_REV02
