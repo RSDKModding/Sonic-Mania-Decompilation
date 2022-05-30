@@ -3,7 +3,7 @@
 
 #include <switch/services/hid.h>
 
-using namespace RSDK;
+using namespace RSDK::SKU;
 
 HidNpadIdType npadTypes[5] = { HidNpadIdType_Handheld, HidNpadIdType_No1, HidNpadIdType_No2, HidNpadIdType_No3, HidNpadIdType_No4 };
 int32 nxVibrateDeviceCount = 0;
