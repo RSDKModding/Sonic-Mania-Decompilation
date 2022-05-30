@@ -12,12 +12,14 @@ enum APITableIDs {
     APITable_LaunchManual,
     APITable_IsOverlayEnabled,
     APITable_CheckDLC,
-    APITable_ShowExtensionOverlay,
 #if RETRO_VER_EGS
-    APITable_ShowCheckoutPage,
-    APITable_ShowEncorePage,
-    APITable_EGS_Unknown4,
-    APITable_RegisterHIDDevice,
+    APITable_CanShowExtensionOverlay,
+    APITable_ShowExtensionOverlay,
+    APITable_ShowAltExtensionOverlay,
+    APITable_ShowLimitedVideoOptions,
+    APITable_InitInputDevices,
+#else
+    APITable_ShowExtensionOverlay,
 #endif
     APITable_UnlockAchievement,
     APITable_GetAchievementsEnabled,
@@ -26,9 +28,9 @@ enum APITableIDs {
     APITable_CheckAchievementsEnabled,
     APITable_GetAchievementNames,
 #endif
-    APITable_LeaderboardsUnknown4,
+    APITable_InitLeaderboards,
 #if RETRO_VER_EGS
-    APITable_EGS_LeaderboardsUnknown4,
+    APITable_CheckLeaderboardsEnabled,
 #endif
     APITable_FetchLeaderboard,
     APITable_TrackScore,

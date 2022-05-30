@@ -10,8 +10,8 @@ int32 RSDK::SKU::DummyUserStorage::TryAuth()
     }
 
     if (!authStatus) {
-        authStatus                                          = STATUS_CONTINUE;
-        API_TypeOf(userStorage, DummyUserStorage)->authTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
+        authStatus = STATUS_CONTINUE;
+        authTime   = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
     }
     return authStatus;
 }
@@ -23,8 +23,8 @@ int32 RSDK::SKU::DummyUserStorage::TryInitStorage()
         PrintLog(PRINT_NORMAL, str.c_str());
     }
     else {
-        storageStatus                                              = STATUS_CONTINUE;
-        API_TypeOf(userStorage, DummyUserStorage)->storageInitTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
+        storageStatus   = STATUS_CONTINUE;
+        storageInitTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
     }
     return storageStatus;
 }
@@ -43,31 +43,80 @@ void RSDK::SKU::DummyUserStorage::ClearPrerollErrors()
         storageStatus = STATUS_NONE;
 }
 
+void RSDK::SKU::DummyUserStorage::ProcessFileLoadTime()
+{
+
+    for (int32 f = fileList.Count() - 1; f >= 0; --f) {
+        DummyFileInfo *file = fileList.At(f);
+        if (!file)
+            continue;
+
+        if (!file->storageTime) {
+            int32 status   = 0;
+            bool32 success = false;
+            switch (file->type) {
+                case 1:
+                    success = LoadUserFile(file->path, file->fileBuffer, file->fileSize);
+                    status  = STATUS_NOTFOUND;
+
+                    if (file->fileSize >= 4) {
+                        uint8 *bufTest = (uint8 *)file->fileBuffer;
+                        // quick and dirty zlib check
+                        if (bufTest[0] == 0x78 && (bufTest[1] == 0x01 || bufTest[1] == 0x9C)) {
+                            uLongf destLen = file->fileSize;
+
+                            uint8 *compData = NULL;
+                            AllocateStorage(file->fileSize, (void **)&compData, DATASET_TMP, false);
+                            memcpy(compData, file->fileBuffer, file->fileSize);
+
+                            uncompress((Bytef *)file->fileBuffer, &destLen, compData, file->fileSize);
+
+                            RemoveStorageEntry((void **)&compData);
+                        }
+                    }
+                    break;
+
+                case 2:
+                    success = SaveUserFile(file->path, file->fileBuffer, file->fileSize);
+                    status  = STATUS_ERROR;
+                    break;
+
+                case 3:
+                    success = DeleteUserFile(file->path);
+                    status  = STATUS_ERROR;
+                    break;
+            }
+
+            if (success)
+                status = STATUS_OK;
+
+            if (file->callback)
+                file->callback(status);
+
+            fileList.Remove(f);
+        }
+        else {
+            --file->storageTime;
+        }
+    }
+}
+
 bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 bufSize, int32 (*callback)(int32))
 {
     bool32 success = false;
     memset(buffer, 0, bufSize);
+
     if (!noSaveActive) {
-        success = LoadUserFile(filename, buffer, bufSize);
+        DummyFileInfo *file = fileList.Append();
+        file->callback      = callback;
+        memset(file->path, 0, sizeof(file->path));
+        file->fileBuffer = buffer;
+        file->fileSize   = bufSize;
+        file->type       = 1;
+        strncpy(file->path, filename, sizeof(file->path));
+        file->storageTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME", 0));
 
-        if (bufSize >= 4) {
-            uint8 *bufTest = (uint8 *)buffer;
-            // quick and dirty zlib check
-            if (bufTest[0] == 0x78 && (bufTest[1] == 0x01 || bufTest[1] == 0x9C)) {
-                uLongf destLen = bufSize;
-
-                uint8 *compData = NULL;
-                AllocateStorage(bufSize, (void **)&compData, DATASET_TMP, false);
-                memcpy(compData, buffer, bufSize);
-
-                uncompress((Bytef *)buffer, &destLen, compData, bufSize);
-
-                RemoveStorageEntry((void **)&compData);
-            }
-        }
-
-        if (callback)
-            callback(STATUS_OK);
+        success = true;
     }
     else {
         std::string str = __FILE__;
@@ -82,27 +131,30 @@ bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *
 
     return success;
 }
-bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compressData)
+bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compressed)
 {
     bool32 success = false;
     if (!noSaveActive) {
-        if (compressData) {
-            int32 *cbuf = NULL;
-            AllocateStorage(size, (void **)&cbuf, DATASET_TMP, false);
+        DummyFileInfo *file = fileList.Append();
+        file->callback      = callback;
+        memset(file->path, 0, sizeof(file->path));
+        file->type = 2;
+        strncpy(file->path, filename, sizeof(file->path));
+        file->storageTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME", 0));
 
-            uLongf clen = size;
-            compress((Bytef *)cbuf, &clen, (Bytef *)buffer, (uLong)size);
+        if (compressed) {
+            AllocateStorage(size, (void **)&file->fileSize, DATASET_TMP, false);
 
-            success = SaveUserFile(filename, cbuf, (uint32)clen);
-
-            RemoveStorageEntry((void **)&cbuf);
+            uLongf clen = 0;
+            compress((Bytef *)file->fileBuffer, &clen, (Bytef *)file->fileBuffer, (uLong)size);
+            file->fileSize = clen;
         }
         else {
-            success = SaveUserFile(filename, buffer, size);
+            file->fileBuffer = buffer;
+            file->fileSize   = size;
         }
 
-        if (callback)
-            callback(STATUS_OK);
+        success = true;
     }
     else {
         std::string str = __FILE__;
@@ -120,10 +172,14 @@ bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *
 bool32 RSDK::SKU::DummyUserStorage::TryDeleteUserFile(const char *filename, int32 (*callback)(int32))
 {
     if (!noSaveActive) {
-        DeleteUserFile(filename);
-
-        if (callback)
-            callback(STATUS_OK);
+        DummyFileInfo *file = fileList.Append();
+        file->callback      = callback;
+        memset(file->path, 0, sizeof(file->path));
+        file->fileBuffer = NULL;
+        file->fileSize   = 0;
+        file->type       = 3;
+        strncpy(file->path, filename, sizeof(file->path));
+        file->storageTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME", 0));
     }
     else {
         std::string str = __FILE__;
@@ -136,6 +192,6 @@ bool32 RSDK::SKU::DummyUserStorage::TryDeleteUserFile(const char *filename, int3
             callback(STATUS_ERROR);
     }
 
-    return false;
+    return true;
 }
 #endif

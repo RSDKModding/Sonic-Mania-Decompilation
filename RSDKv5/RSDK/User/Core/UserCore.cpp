@@ -37,10 +37,6 @@ using namespace RSDK;
 SKU::UserCore *RSDK::SKU::userCore = NULL;
 #endif
 
-bool32 RSDK::changedVideoSettings = false;
-VideoSettings RSDK::videoSettings;
-VideoSettings RSDK::videoSettingsBackup;
-
 void RSDK::SKU::InitUserData()
 {
     InitUserDirectory();
@@ -88,10 +84,20 @@ void RSDK::SKU::InitUserData()
     curSKU.region      = userCore->GetUserRegion();
     engine.confirmFlip = userCore->GetConfirmButtonFlip();
 #else
-    gameVerInfo.platform = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
-    gameVerInfo.language = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
-    gameVerInfo.region   = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
-    engine.confirmFlip   = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
+
+#if RETRO_PLATFORM == RETRO_PS4
+    gameVerInfo.platform = PLATFORM_PS4;
+#elif RETRO_PLATFORM == RETRO_XB1
+    gameVerInfo.platform = PLATFORM_XB1;
+#elif RETRO_PLATFORM == RETRO_SWITCH || RETRO_PLATFORM == RETRO_ANDROID
+    gameVerInfo.platform = PLATFORM_SWITCH;
+#endif
+
+    // default to PC (or dev if dev stuff is enabled)
+    gameVerInfo.platform = engine.devMenu ? PLATFORM_DEV : PLATFORM_PC;
+    gameVerInfo.language = LANGUAGE_EN;
+    gameVerInfo.region   = REGION_US;
+    engine.confirmFlip   = false;
 #endif
 
     // Add achievements
@@ -120,11 +126,7 @@ void RSDK::SKU::InitUserData()
     int32 achievementsRAM[0x100];
     memset(achievementsRAM, 0, 0x100 * sizeof(int32));
     bool32 loaded = false;
-#if RETRO_REV02
-    loaded = userStorage->TryLoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32), NULL);
-#else
-    loaded = LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
-#endif
+    loaded        = LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
     for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
         achievementList[i].achieved = achievementsRAM[i];
     }
@@ -182,11 +184,7 @@ void RSDK::SKU::SaveUserData()
     for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
         achievementsRAM[i] = achievementList[i].achieved;
     }
-#if RETRO_REV02
-    userStorage->TrySaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32), NULL, false);
-#else
     SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
-#endif
 #endif
 }
 
@@ -248,163 +246,15 @@ int32 RSDK::SKU::GetDefaultGamepadType()
     }
 }
 
-int32 RSDK::SKU::ShowExtensionOverlay(uint8 overlay)
+bool32 RSDK::SKU::ShowExtensionOverlay(uint8 overlay)
 {
     switch (overlay) {
         default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
-        case 0: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d (Plus Upsell Screen)", overlay); break;
     }
-    return 1;
+    return false;
 }
 #endif
 
-int32 RSDK::GetVideoSetting(int32 id)
-{
-    switch (id) {
-        case VIDEOSETTING_WINDOWED: return videoSettings.windowed;
-        case VIDEOSETTING_BORDERED: return videoSettings.bordered;
-        case VIDEOSETTING_EXCLUSIVEFS: return videoSettings.exclusiveFS;
-        case VIDEOSETTING_VSYNC: return videoSettings.vsync;
-        case VIDEOSETTING_TRIPLEBUFFERED: return videoSettings.tripleBuffered;
-        case VIDEOSETTING_WINDOW_WIDTH: return videoSettings.windowWidth;
-        case VIDEOSETTING_WINDOW_HEIGHT: return videoSettings.windowHeight;
-        case VIDEOSETTING_FSWIDTH: return videoSettings.fsWidth;
-        case VIDEOSETTING_FSHEIGHT: return videoSettings.fsHeight;
-        case VIDEOSETTING_REFRESHRATE: return videoSettings.refreshRate;
-        case VIDEOSETTING_SHADERSUPPORT: return videoSettings.shaderSupport;
-        case VIDEOSETTING_SHADERID: return videoSettings.shaderID;
-        case VIDEOSETTING_SCREENCOUNT: return videoSettings.screenCount;
-#if RETRO_REV02
-        case VIDEOSETTING_DIMTIMER: return videoSettings.dimTimer;
-#endif
-        case VIDEOSETTING_STREAMSENABLED: return engine.streamsEnabled;
-        case VIDEOSETTING_STREAM_VOL: return (int32)(engine.streamVolume * 1024.0);
-        case VIDEOSETTING_SFX_VOL: return (int32)(engine.soundFXVolume * 1024.0);
-        case VIDEOSETTING_LANGUAGE:
-#if RETRO_REV02
-            return SKU::curSKU.language;
-#else
-            return gameVerInfo.language;
-#endif
-        case VIDEOSETTING_CHANGED: return changedVideoSettings;
-
-        default: break;
-    }
-
-    return 0;
-}
-
-void RSDK::SetVideoSetting(int32 id, int32 value)
-{
-    bool32 boolVal = value;
-    switch (id) {
-        case VIDEOSETTING_WINDOWED:
-            if (videoSettings.windowed != boolVal) {
-                videoSettings.windowed = boolVal;
-                changedVideoSettings   = true;
-            }
-            break;
-
-        case VIDEOSETTING_BORDERED:
-            if (videoSettings.bordered != boolVal) {
-                videoSettings.bordered = boolVal;
-                changedVideoSettings   = true;
-            }
-            break;
-
-        case VIDEOSETTING_EXCLUSIVEFS:
-            if (videoSettings.exclusiveFS != boolVal) {
-                videoSettings.exclusiveFS = boolVal;
-                changedVideoSettings      = true;
-            }
-            break;
-
-        case VIDEOSETTING_VSYNC:
-            if (videoSettings.vsync != boolVal) {
-                videoSettings.vsync  = boolVal;
-                changedVideoSettings = true;
-            }
-            break;
-
-        case VIDEOSETTING_TRIPLEBUFFERED:
-            if (videoSettings.tripleBuffered != boolVal) {
-                videoSettings.tripleBuffered = boolVal;
-                changedVideoSettings         = true;
-            }
-            break;
-
-        case VIDEOSETTING_WINDOW_WIDTH:
-            if (videoSettings.windowWidth != value) {
-                videoSettings.windowWidth = value;
-                changedVideoSettings      = true;
-            }
-            break;
-
-        case VIDEOSETTING_WINDOW_HEIGHT:
-            if (videoSettings.windowHeight != value) {
-                videoSettings.windowHeight = value;
-                changedVideoSettings       = true;
-            }
-            break;
-
-        case VIDEOSETTING_FSWIDTH: videoSettings.fsWidth = value; break;
-        case VIDEOSETTING_FSHEIGHT: videoSettings.fsHeight = value; break;
-        case VIDEOSETTING_REFRESHRATE: videoSettings.refreshRate = value; break;
-        case VIDEOSETTING_SHADERSUPPORT: videoSettings.shaderSupport = value; break;
-        case VIDEOSETTING_SHADERID:
-            if (videoSettings.shaderID != value) {
-                videoSettings.shaderID = value;
-                changedVideoSettings   = true;
-            }
-            break;
-
-        case VIDEOSETTING_SCREENCOUNT: videoSettings.screenCount = value; break;
-#if RETRO_REV02
-        case VIDEOSETTING_DIMTIMER: videoSettings.dimLimit = value; break;
-#endif
-        case VIDEOSETTING_STREAMSENABLED:
-            if (engine.streamsEnabled != boolVal)
-                changedVideoSettings = true;
-
-            engine.streamsEnabled = boolVal;
-            break;
-
-        case VIDEOSETTING_STREAM_VOL:
-            if (engine.streamVolume != (value / 1024.0f)) {
-                engine.streamVolume  = (float)value / 1024.0f;
-                changedVideoSettings = true;
-            }
-            break;
-
-        case VIDEOSETTING_SFX_VOL:
-            if (engine.soundFXVolume != ((float)value / 1024.0f)) {
-                engine.soundFXVolume = (float)value / 1024.0f;
-                changedVideoSettings = true;
-            }
-            break;
-
-        case VIDEOSETTING_LANGUAGE:
-#if RETRO_REV02
-            SKU::curSKU.language = value;
-#else
-            gameVerInfo.language = value;
-#endif
-            break;
-
-        case VIDEOSETTING_STORE: memcpy(&videoSettingsBackup, &videoSettings, sizeof(videoSettings)); break;
-
-        case VIDEOSETTING_RELOAD:
-            changedVideoSettings = true;
-            memcpy(&videoSettings, &videoSettingsBackup, sizeof(videoSettingsBackup));
-            break;
-
-        case VIDEOSETTING_CHANGED: changedVideoSettings = boolVal; break;
-
-        case VIDEOSETTING_WRITE: SaveSettingsINI(value); break;
-
-        default: break;
-    }
-}
 #if RETRO_PLATFORM == RETRO_ANDROID
 #include <jni.h>
 #endif

@@ -151,8 +151,14 @@ enum GameRegions {
 
 #define RETRO_USERCORE_DUMMY (!(RETRO_USERCORE_ID & 0x80)) // bit 7 disables the dummy core stuff if you ever need that for some odd reason
 #define RETRO_USERCORE_STEAM (RETRO_USERCORE_ID == 1)
-#define RETRO_USERCORE_EOS   (RETRO_USERCORE_ID == 2)
-#define RETRO_USERCORE_NX    (RETRO_USERCORE_ID == 3)
+#define RETRO_USERCORE_PS4   (RETRO_USERCORE_ID == 2)
+#define RETRO_USERCORE_XB1   (RETRO_USERCORE_ID == 3)
+#define RETRO_USERCORE_NX    (RETRO_USERCORE_ID == 4)
+#define RETRO_USERCORE_EOS   (RETRO_USERCORE_ID == 5)
+
+// ============================
+// ENGINE CONFIG
+// ============================
 
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false
@@ -169,6 +175,10 @@ enum GameRegions {
 
 // enables the use of the mod loader
 #define RETRO_USE_MOD_LOADER (!RETRO_USE_ORIGINAL_CODE && 1)
+
+// ============================
+// PLATFORM INIT
+// ============================
 
 #if RETRO_PLATFORM == RETRO_WIN
 
@@ -355,34 +365,10 @@ enum GameRegions {
 #undef RETRO_USING_MOUSE
 #endif
 
-namespace RSDK
-{
-enum EngineStates {
-    ENGINESTATE_LOAD,
-    ENGINESTATE_REGULAR,
-    ENGINESTATE_PAUSED,
-    ENGINESTATE_FROZEN,
-    ENGINESTATE_STEPOVER = 4,
-    ENGINESTATE_DEVMENU  = 8,
-    ENGINESTATE_VIDEOPLAYBACK,
-    ENGINESTATE_SHOWIMAGE,
-#if RETRO_REV02
-    ENGINESTATE_ERRORMSG,
-    ENGINESTATE_ERRORMSG_FATAL,
-#endif
-    ENGINESTATE_NONE,
-};
+// ============================
+// ENGINE INCLUDES
+// ============================
 
-enum SeverityModes {
-    PRINT_NORMAL,
-    PRINT_POPUP,
-    PRINT_ERROR,
-    PRINT_FATAL,
-};
-
-} // namespace RSDK
-
-// Engine
 #include "RSDK/Storage/Storage.hpp"
 #include "RSDK/Core/Math.hpp"
 #include "RSDK/Storage/Text.hpp"
@@ -398,13 +384,13 @@ enum SeverityModes {
 #include "RSDK/Scene/Scene.hpp"
 #include "RSDK/Graphics/Sprite.hpp"
 #include "RSDK/Graphics/Video.hpp"
+#include "RSDK/Dev/Debug.hpp"
+#include "RSDK/User/Core/UserCore.hpp"
 #include "RSDK/User/Core/UserAchievements.hpp"
 #include "RSDK/User/Core/UserLeaderboards.hpp"
 #include "RSDK/User/Core/UserStats.hpp"
 #include "RSDK/User/Core/UserPresence.hpp"
 #include "RSDK/User/Core/UserStorage.hpp"
-#include "RSDK/User/Core/UserCore.hpp"
-#include "RSDK/Dev/Debug.hpp"
 #include "RSDK/Core/Link.hpp"
 #if RETRO_USE_MOD_LOADER
 #include "RSDK/Core/ModAPI.hpp"
@@ -431,7 +417,6 @@ struct RetroEngine {
     bool32 devMenu        = false;
     bool32 consoleEnabled = false;
 
-    bool32 hasPlus     = true;  // are sonic mania plus features enabled?
     bool32 confirmFlip = false; // swaps A/B, used for nintendo and etc controllers
     bool32 XYFlip      = false; // swaps X/Y, used for nintendo and etc controllers
 
@@ -468,6 +453,10 @@ typedef void (*LogicLinkHandle)(GameInfo info);
 #endif
 
 extern LogicLinkHandle linkGameLogic;
+
+// ============================
+// CORE ENGINE FUNCTIONS
+// ============================
 
 int32 RunRetroEngine(int32 argc, char *argv[]);
 void ProcessEngine();

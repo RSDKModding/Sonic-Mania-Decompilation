@@ -53,17 +53,27 @@ struct LeaderboardsUnknown {
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
 struct UserLeaderboards {
-    virtual void StageLoad() {}
+    virtual void StageLoad()
+    {
+        currentLeaderboard = 0;
+        // callback           = 0;
+        // field_18           = 0;
+        // downloadCallback   = 0;
+        // end                = 0;
+        // start              = 0;
+        status             = STATUS_NONE;
+        // ClearUnknown1(&unknown);
+    }
     virtual void FrameInit() {}
     virtual void OnUnknownEvent() {}
-    virtual int32 unknown4() { return 0; }
 #if RETRO_VER_EGS
-    virtual int32 unknown6() { return 0; }
+    virtual bool32 CheckLeaderboardsEnabled() { return true; }
 #endif
+    virtual int32 InitLeaderboards() { return 0; }
     virtual void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser) {}
-    virtual void unknown5() {}
+    virtual void LoadLeaderboards(void *info) {}
     virtual void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank)) {}
-    virtual int32 GetStatus() { return 0; }
+    virtual int32 GetStatus() { return status; }
 
     LeaderboardID *currentLeaderboard;
     LeaderboardsUnknown2 unknown2;
@@ -114,9 +124,9 @@ extern UserLeaderboards *leaderboards;
 #include "RSDK/User/NX/NXLeaderboards.hpp"
 #endif
 
-inline int32 leaderboardsUnknown4() { return leaderboards->unknown4(); }
+inline void InitLeaderboards() { leaderboards->InitLeaderboards(); }
 #if RETRO_VER_EGS
-inline int32 leaderboardsUnknown6() { return leaderboards->unknown6(); }
+inline bool32 CheckLeaderboardsEnabled() { return leaderboards->CheckLeaderboardsEnabled(); }
 #endif
 inline void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser) { leaderboards->FetchLeaderboard(leaderboard, isUser); }
 inline void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))

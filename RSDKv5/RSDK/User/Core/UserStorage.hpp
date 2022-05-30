@@ -21,8 +21,16 @@ namespace SKU
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
 struct UserStorage {
-    virtual void FrameInit() {}
-    virtual void StageLoad() {}
+    virtual void FrameInit()
+    {
+        if (!saveStatus) {
+            if (authStatus == STATUS_ERROR || storageStatus == STATUS_ERROR)
+                saveStatus = STATUS_ERROR;
+            else if (storageStatus == STATUS_OK)
+                saveStatus = STATUS_OK;
+        }
+    }
+    virtual void StageLoad() { saveStatus = STATUS_NONE; }
     virtual void OnUnknownEvent() {}
     virtual int32 TryAuth() { return 0; }
     virtual int32 TryInitStorage() { return 0; }

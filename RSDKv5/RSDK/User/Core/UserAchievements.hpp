@@ -17,18 +17,30 @@ struct UserAchievements {
     UserAchievements() {}
 
     virtual void FrameInit() {}
-    virtual void StageLoad() {}
+    virtual void StageLoad() { enabled = true; }
     virtual void OnUnknownEvent() {}
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
     virtual bool32 CheckAchievementsEnabled() { return false; }
     virtual void GetAchievementNames(String *names, int32 count) {}
-    virtual String *GetAchievementString(String *string) { return NULL; }
-    virtual String *GetAchievementName(String *name, uint32 id) { return NULL; }
+    virtual String *GetAchievementString(String *string)
+    {
+        string->chars  = NULL;
+        string->length = 0;
+        string->size   = 0;
+        return string;
+    }
+    virtual String *GetAchievementName(String *name, uint32 id)
+    {
+        name->chars  = NULL;
+        name->length = 0;
+        name->size   = 0;
+        return name;
+    }
     virtual bool32 CheckAchievementPopupEnabled() { return false; }
     virtual int32 GetNextAchievementID() { return 0; }
     virtual void RemoveLastAchievementID() {}
 #endif
-    virtual void TryUnlockAchievement(const char *name) {}
+    virtual void TryUnlockAchievement(const char *name) { PrintLog(PRINT_POPUP, "Achievement Unlocked: %s", name); }
 
     bool32 enabled = false;
 };

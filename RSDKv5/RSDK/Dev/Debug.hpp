@@ -11,6 +11,13 @@
 namespace RSDK
 {
 
+enum PrintModes {
+    PRINT_NORMAL,
+    PRINT_POPUP,
+    PRINT_ERROR,
+    PRINT_FATAL,
+};
+
 extern bool32 engineDebugMode;
 extern bool32 useEndLine;
 extern char outputString[0x400];

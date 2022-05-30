@@ -200,7 +200,7 @@ void RSDK::ProcessInput()
     }
 
 #if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
-    HandleSpecialKeys();
+    RSDK::SKU::HandleSpecialKeys();
 #endif
 
     for (int32 c = 0; c <= PLAYER_COUNT; ++c) {

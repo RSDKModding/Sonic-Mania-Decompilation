@@ -2,7 +2,6 @@ using namespace RSDK;
 
 #if RETRO_REV02
 SKU::DummyCore *RSDK::SKU::dummyCore = NULL;
-#endif
 
 uint32 RSDK::SKU::GetAPIValueID(const char *identifier, int32 charIndex)
 {
@@ -59,8 +58,6 @@ int32 RSDK::SKU::GetAPIValue(uint32 id)
     return 0;
 }
 
-#if RETRO_REV02
-
 SKU::DummyCore *RSDK::SKU::InitDummyCore()
 {
     // Initalize API subsystems
@@ -88,8 +85,11 @@ SKU::DummyCore *RSDK::SKU::InitDummyCore()
 
     // Setup default values
 
-    core->values[0]  = &engine.hasPlus;
+    // are sonic mania plus features enabled?
+    core->values[0]  = false;
     core->valueCount = 1;
+
+    for (int32 v = 0; v < core->valueCount; ++v) core->values[v] = true;
 
     leaderboards->userRank = 0;
     leaderboards->isUser   = false;
@@ -105,64 +105,6 @@ SKU::DummyCore *RSDK::SKU::InitDummyCore()
     return core;
 }
 
-void RSDK::SKU::HandleUserStatuses()
-{
-    if (userStorage) {
-        if (userStorage->authStatus == STATUS_CONTINUE) {
-            if (API_TypeOf(userStorage, DummyUserStorage)->authTime)
-                API_TypeOf(userStorage, DummyUserStorage)->authTime--;
-            else
-                userStorage->authStatus = STATUS_OK;
-        }
-
-        if (userStorage->storageStatus == STATUS_CONTINUE) {
-            if (API_TypeOf(userStorage, DummyUserStorage)->storageInitTime)
-                API_TypeOf(userStorage, DummyUserStorage)->storageInitTime--;
-            else
-                userStorage->storageStatus = STATUS_OK;
-        }
-    }
-
-    if (leaderboards) {
-        if (leaderboards->status == STATUS_CONTINUE) {
-            if (API_TypeOf(leaderboards, DummyLeaderboards)->loadTime) {
-                API_TypeOf(leaderboards, DummyLeaderboards)->loadTime--;
-            }
-            else {
-                leaderboards->status = STATUS_OK;
-
-                if (!leaderboards->isUser) {
-                    leaderboards->entryInfo.entryStart.start  = 1;
-                    leaderboards->entryInfo.entryStart.length = 20;
-                    leaderboards->entryInfo.globalRankOffset  = 1;
-                    leaderboards->entryInfo.entryCount.start  = 20;
-                }
-                else {
-                    leaderboards->entryInfo.entryStart.start  = leaderboards->userRank - 10;
-                    leaderboards->entryInfo.entryStart.length = 20;
-                    leaderboards->entryInfo.globalRankOffset  = leaderboards->userRank - 10;
-                    leaderboards->entryInfo.entryCount.start  = 20;
-                }
-
-                FillDummyLeaderboardEntries();
-            }
-        }
-
-        if (API_TypeOf(leaderboards, DummyLeaderboards)->trackTime != 0) {
-            API_TypeOf(leaderboards, DummyLeaderboards)->trackTime--;
-        }
-        else {
-            leaderboards->status = STATUS_OK;
-
-            if (API_TypeOf(leaderboards, DummyLeaderboards)->trackCB) {
-                API_TypeOf(leaderboards, DummyLeaderboards)->trackCB(true, API_TypeOf(leaderboards, DummyLeaderboards)->trackRank);
-            }
-
-            API_TypeOf(leaderboards, DummyLeaderboards)->trackTime = -1;
-            API_TypeOf(leaderboards, DummyLeaderboards)->trackCB   = NULL;
-        }
-    }
-}
 #endif
 
 #if RETRO_REV02
@@ -171,7 +113,7 @@ void RSDK::SKU::DummyCore::StageLoad()
 {
     UserCore::StageLoad();
 
-    for (int32 v = 0; v < valueCount; ++v) AddViewableVariable(userValueNames[v], values[v], VIEWVAR_BOOL, false, true);
+    for (int32 v = 0; v < valueCount; ++v) AddViewableVariable(userValueNames[v], &values[v], VIEWVAR_BOOL, false, true);
 }
 
 bool32 RSDK::SKU::DummyCore::CheckFocusLost() { return focusState != 0; }
@@ -216,27 +158,4 @@ int32 RSDK::SKU::DummyCore::GetDefaultGamepadType()
         case PLATFORM_DEV: return (DEVICE_API_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
     }
 }
-
-int32 RSDK::SKU::DummyCore::ShowExtensionOverlay(uint8 overlay)
-{
-    switch (overlay) {
-        default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
-        case 0: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d (Plus Upsell Screen)", overlay); break;
-    }
-    return 1;
-}
-#endif
-
-#if RETRO_VER_EGS
-bool32 RSDK::SKU::DummyCore::ShowCheckoutPage(int32 a1)
-{
-    PrintLog(PRINT_POPUP, "ShowCheckoutPage(%d)");
-    return true;
-}
-int32 RSDK::SKU::DummyCore::ShowEncorePage(int32 a1)
-{
-    PrintLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
-    return 1;
-}
-void RSDK::SKU::DummyCore::EpicUnknown4(int32 a1) { PrintLog(PRINT_POPUP, "EpicUnknown4(%d)", a1); }
 #endif

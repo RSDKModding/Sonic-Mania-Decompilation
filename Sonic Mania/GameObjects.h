@@ -109,12 +109,14 @@ typedef struct {
     void (*LaunchManual)(void);
     bool32 (*IsOverlayEnabled)(uint32 inputID);
     bool32 (*CheckDLC)(int32 dlc);
-    void (*ShowExtensionOverlay)(uint8 overlay);
 #if MANIA_USE_EGS
-    bool32 (*ShowCheckoutPage)(int32 value);
-    bool32 (*ShowEncorePage)(int32 value);
-    void (*CoreUnknown4)(int32 value);
-    void (*RegisterHIDDevice)(void);
+    bool32 (*CanShowExtensionOverlay)(int32 overlay);
+#endif
+    bool32 (*ShowExtensionOverlay)(int32 overlay);
+#if MANIA_USE_EGS
+    bool32 (*ShowAltExtensionOverlay)(int32 overlay);
+    void (*ShowLimitedVideoOptions)(int32 overlay);
+    void (*InitInputDevices)(void);
 #endif
 
     // Achievements
@@ -127,10 +129,10 @@ typedef struct {
 #endif
 
     // Leaderboards
-    void (*LeaderboardsUnknown4)(void);
 #if MANIA_USE_EGS
-    void (*LeaderboardUnknown1)(void);
+    bool32 (*CheckLeaderboardsEnabled)(void);
 #endif
+    void (*InitLeaderboards)(void);
     void (*FetchLeaderboard)(LeaderboardID *leaderboard, bool32 isUser);
     void (*TrackScore)(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank));
     int32 (*GetLeaderboardsStatus)(void);

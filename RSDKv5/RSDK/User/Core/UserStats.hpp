@@ -19,7 +19,7 @@ struct StatInfo {
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
 struct UserStats {
-    virtual void StageLoad() {}
+    virtual void StageLoad() { enabled = true; }
     virtual void FrameInit() {}
     virtual void OnUnknownEvent() {}
     virtual void TryTrackStat(StatInfo *stat) {}

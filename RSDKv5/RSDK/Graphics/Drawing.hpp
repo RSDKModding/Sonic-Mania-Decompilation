@@ -155,6 +155,60 @@ struct WindowInfo {
 #endif
 };
 
+struct VideoSettings {
+    uint8 windowed;
+    uint8 bordered;
+    uint8 exclusiveFS;
+    uint8 vsync;
+    uint8 tripleBuffered;
+    uint8 shaderSupport;
+    int32 fsWidth;
+    int32 fsHeight;
+    int32 refreshRate;
+    int32 windowWidth;
+    int32 windowHeight;
+    int32 pixWidth;
+    int32 pixHeight;
+    int32 windowState;
+    int32 shaderID;
+    int32 screenCount;
+    uint32 dimTimer;
+    int32 dimLimit;
+    float dimMax;
+    float dimPercent;
+    float viewportW;
+    float viewportH;
+    float viewportX;
+    float viewportY;
+};
+
+enum VideoSettingsValues {
+    VIDEOSETTING_WINDOWED,
+    VIDEOSETTING_BORDERED,
+    VIDEOSETTING_EXCLUSIVEFS,
+    VIDEOSETTING_VSYNC,
+    VIDEOSETTING_TRIPLEBUFFERED,
+    VIDEOSETTING_WINDOW_WIDTH,
+    VIDEOSETTING_WINDOW_HEIGHT,
+    VIDEOSETTING_FSWIDTH,
+    VIDEOSETTING_FSHEIGHT,
+    VIDEOSETTING_REFRESHRATE,
+    VIDEOSETTING_SHADERSUPPORT,
+    VIDEOSETTING_SHADERID,
+    VIDEOSETTING_SCREENCOUNT,
+#if RETRO_REV02
+    VIDEOSETTING_DIMTIMER,
+#endif
+    VIDEOSETTING_STREAMSENABLED,
+    VIDEOSETTING_STREAM_VOL,
+    VIDEOSETTING_SFX_VOL,
+    VIDEOSETTING_LANGUAGE,
+    VIDEOSETTING_STORE,
+    VIDEOSETTING_RELOAD,
+    VIDEOSETTING_CHANGED,
+    VIDEOSETTING_WRITE,
+};
+
 struct float4 {
     float x;
     float y;
@@ -269,6 +323,10 @@ extern ScreenInfo *currentScreen;
 extern int32 shaderCount;
 extern ShaderEntry shaderList[SHADER_MAX];
 
+extern VideoSettings videoSettings;
+extern VideoSettings videoSettingsBackup;
+extern bool32 changedVideoSettings;
+
 #if RETRO_USE_MOD_LOADER
 extern int32 userShaderCount;
 #else
@@ -343,6 +401,9 @@ inline void SetClipBounds(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2
         screen->clipBound_Y2 = clampVal(y2, 0, screen->size.y);
     }
 }
+
+int32 GetVideoSetting(int32 id);
+void SetVideoSetting(int32 id, int32 value);
 
 inline void AddDrawListRef(uint8 drawGroup, uint16 entityID)
 {

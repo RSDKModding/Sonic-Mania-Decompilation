@@ -40,6 +40,23 @@ struct SceneListEntry {
 #endif
 };
 
+enum EngineStates {
+    ENGINESTATE_LOAD,
+    ENGINESTATE_REGULAR,
+    ENGINESTATE_PAUSED,
+    ENGINESTATE_FROZEN,
+    ENGINESTATE_STEPOVER = 4,
+    ENGINESTATE_DEVMENU  = 8,
+    ENGINESTATE_VIDEOPLAYBACK,
+    ENGINESTATE_SHOWIMAGE,
+#if RETRO_REV02
+    ENGINESTATE_ERRORMSG,
+    ENGINESTATE_ERRORMSG_FATAL,
+#endif
+    ENGINESTATE_NONE,
+};
+
+
 struct SceneInfo {
     Entity *entity;
     SceneListEntry *listData;

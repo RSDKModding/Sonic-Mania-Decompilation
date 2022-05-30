@@ -279,7 +279,7 @@ Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color right
     newPos.x = x + 0xE0000;
     newPos.y = y;
 
-    UIWidgets_DrawRightTriangle(newPos.x, newPos.y, 13, (leftColor >> 16) & 0xFF, (leftColor >> 8) & 0xFF, leftColor & 0xFF);
+    UIWidgets_DrawRightTriangle(x, newPos.y, 13, (leftColor >> 16) & 0xFF, (leftColor >> 8) & 0xFF, leftColor & 0xFF);
     UIWidgets_DrawRightTriangle(newPos.x, newPos.y + 0xC0000, -13, (rightColor >> 16) & 0xFF, (rightColor >> 8) & 0xFF, rightColor & 0xFF);
 
     return newPos;

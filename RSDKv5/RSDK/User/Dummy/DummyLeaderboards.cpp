@@ -10,7 +10,7 @@ std::vector<SKU::LeaderboardInfo> RSDK::SKU::leaderboardList;
 // End custom leaderboard code
 
 #if RETRO_REV02
-void RSDK::SKU::FillDummyLeaderboardEntries()
+void RSDK::SKU::DummyLeaderboards::FillLeaderboardEntries()
 {
     const char *dummyNames[] = { "ORCIHILLARY124",      "AUCTORJOLIE521",       "SENECTUSFLORENCE789", "MAGNAAVRAM503",       "SITVERNON320",
                                  "DUICHRISTEN429",      "NULLAKERMIT649",       "INTEGERGEORGE708",    "HENDRERITDREW443",    "UTULYSSES507",
@@ -33,14 +33,14 @@ void RSDK::SKU::FillDummyLeaderboardEntries()
                                  "FACILISISIVY303",     "TELLUSHARLAN339",      "METUSSOPOLINE75",     "NUNCKYLYNN927",       "PROINHERMIONE775",
                                  "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
 
-    leaderboards->entryInfo.loadStatus = STATUS_OK;
-    for (int32 e = 0; e < leaderboards->entryInfo.entryCount.start; ++e) {
-        LeaderboardEntry *entry = &leaderboards->entryInfo.entries[e];
+    entryInfo.loadStatus = STATUS_OK;
+    for (int32 e = 0; e < entryInfo.entryCount.start; ++e) {
+        LeaderboardEntry *entry = &entryInfo.entries[e];
 
         entry->status     = STATUS_OK;
-        entry->globalRank = leaderboards->entryInfo.globalRankOffset + e;
+        entry->globalRank = entryInfo.globalRankOffset + e;
         entry->score      = (4 * entry->globalRank + 2400) % 59999;
-        entry->isUser     = leaderboards->isUser && entry->globalRank == leaderboards->userRank;
+        entry->isUser     = isUser && entry->globalRank == userRank;
 
         memset(&entry->username, 0, sizeof(entry->username));
         memset(&entry->userID, 0, sizeof(entry->userID));
@@ -66,14 +66,14 @@ void RSDK::SKU::DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, 
     }
     else {
         PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", leaderboard->pcName, isUser ? "true" : "false");
-        isUser   = isUser;
-        userRank = 0;
+        this->isUser   = isUser;
+        this->userRank = 0;
         if (isUser)
             userRank = rand() % 9999 + 1;
 
         status = STATUS_CONTINUE;
 
-        API_TypeOf(leaderboards, DummyLeaderboards)->loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
+        loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
     }
 }
 void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
@@ -107,8 +107,8 @@ void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 
     PrintLog(PRINT_NORMAL, str.c_str());
 
     if (callback) {
-        API_TypeOf(leaderboards, DummyLeaderboards)->trackRank = rand() % 61 + 30;
-        API_TypeOf(leaderboards, DummyLeaderboards)->trackCB   = callback;
+        trackRank = rand() % 61 + 30;
+        trackCB   = callback;
     }
 }
 #endif

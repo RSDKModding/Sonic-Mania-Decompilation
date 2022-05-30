@@ -95,12 +95,14 @@ void RSDK::SetupFunctionTables()
     ADD_API_FUNCTION(APITable_LaunchManual, LaunchManual);
     ADD_API_FUNCTION(APITable_IsOverlayEnabled, IsOverlayEnabled);
     ADD_API_FUNCTION(APITable_CheckDLC, CheckDLC);
+#if RETRO_VER_EGS
+    ADD_API_FUNCTION(APITable_CanShowExtensionOverlay, CanShowExtensionOverlay);
+#endif
     ADD_API_FUNCTION(APITable_ShowExtensionOverlay, ShowExtensionOverlay);
 #if RETRO_VER_EGS
-    ADD_API_FUNCTION(APITable_ShowCheckoutPage, ShowCheckoutPage);
-    ADD_API_FUNCTION(APITable_ShowEncorePage, ShowEncorePage);
-    ADD_API_FUNCTION(APITable_EGS_Unknown4, EpicUnknown4);
-    ADD_API_FUNCTION(APITable_RegisterHIDDevice, RegisterHIDDevice);
+    ADD_API_FUNCTION(APITable_ShowAltExtensionOverlay, ShowAltExtensionOverlay);
+    ADD_API_FUNCTION(APITable_ShowLimitedVideoOptions, ShowLimitedVideoOptions);
+    ADD_API_FUNCTION(APITable_InitInputDevices, SKU::InitInputDevices);
 #endif
 
     // Achievements
@@ -113,9 +115,9 @@ void RSDK::SetupFunctionTables()
 #endif
 
     // Leaderboards
-    ADD_API_FUNCTION(APITable_LeaderboardsUnknown4, leaderboardsUnknown4); // LeaderboardsUnknown4);
+    ADD_API_FUNCTION(APITable_InitLeaderboards, InitLeaderboards);
 #if RETRO_VER_EGS
-    ADD_API_FUNCTION(APITable_EGS_LeaderboardsUnknown4, leaderboardsUnknown6); // EGS_LeaderboardsUnknown4);
+    ADD_API_FUNCTION(APITable_CheckLeaderboardsEnabled, CheckLeaderboardsEnabled);
 #endif
     ADD_API_FUNCTION(APITable_FetchLeaderboard, FetchLeaderboard);
     ADD_API_FUNCTION(APITable_TrackScore, TrackScore);

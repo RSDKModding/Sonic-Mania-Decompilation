@@ -21,6 +21,19 @@ void TimeAttackMenu_LateUpdate(void) {}
 
 void TimeAttackMenu_StaticUpdate(void)
 {
+#if MANIA_USE_EGS
+    if (TimeAttackMenu->taDetailsControl && !API.CheckLeaderboardsEnabled()) {
+        for (int32 p = 0; p < TimeAttackMenu->taDetailsControl->promptCount; ++p) {
+            EntityUIButtonPrompt *prompt = TimeAttackMenu->taDetailsControl->prompts[p];
+            if (!prompt)
+                continue;
+
+            if (prompt->promptID == 5)
+                prompt->visible = false;
+        }
+    }
+#endif
+
     EntityUIButtonPrompt *switchModePrompt = TimeAttackMenu->switchModePrompt;
 
     if (switchModePrompt) {
@@ -202,7 +215,10 @@ void TimeAttackMenu_SetupActions(void)
     zoneSelControl->yPressCB    = TimeAttackMenu_YPressCB_ZoneSel;
     zoneSelControl->backPressCB = TimeAttackMenu_BackPressCB_ZoneSel;
 
-    detailsControl->yPressCB    = TimeAttackMenu_YPressCB_Details;
+#if MANIA_USE_EGS
+    if (API.CheckLeaderboardsEnabled())
+#endif
+        detailsControl->yPressCB = TimeAttackMenu_YPressCB_Details;
     detailsControl->xPressCB    = TimeAttackMenu_XPressCB_Details;
     detailsControl->menuSetupCB = TimeAttackMenu_MenuSetupCB_Details;
 
@@ -866,7 +882,7 @@ void TimeAttackMenu_CharButton_ActionCB(void)
     int32 characterID  = self->characterID + 1;
     param->characterID = characterID;
 
-    API.LeaderboardsUnknown4();
+    API.InitLeaderboards();
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUITAZoneModule *charButton = (EntityUITAZoneModule *)control->buttons[i];

@@ -28,8 +28,8 @@ SKU::EOSCore *RSDK::SKU::InitEOSCore()
 
     // Setup default values
 
-    engine.hasPlus   = false; // actual store API dlc check would go here
-    core->values[0]  = (bool32 *)&engine.hasPlus;
+    memset(core->values, 0, sizeof(core->values));
+    core->values[0]  = false;
     core->valueCount = 1;
 
     // TODO: remove

@@ -257,12 +257,12 @@ void MainMenu_MenuButton_ActionCB(void)
             break;
 
         case 6: // Buy Plus DLC
-            API.ShowExtensionOverlay(0);
-
 #if MANIA_USE_EGS
+            API.CanShowExtensionOverlay(0);
+
             if (!API.CheckDLC(DLC_PLUS)) {
-                if (API.ShowCheckoutPage(0)) {
-                    API.ShowEncorePage(0);
+                if (API.ShowExtensionOverlay(0)) {
+                    API.ShowAltExtensionOverlay(0);
                 }
                 else {
                     String message;
@@ -272,6 +272,8 @@ void MainMenu_MenuButton_ActionCB(void)
                     UIDialog_CreateDialogOkCancel(&message, MainMenu_BuyPlusDialogCB, StateMachine_None, true, true);
                 }
             }
+#else
+            API.ShowExtensionOverlay(0);
 #endif
             break;
 
@@ -280,7 +282,7 @@ void MainMenu_MenuButton_ActionCB(void)
 }
 
 #if MANIA_USE_EGS
-void MainMenu_BuyPlusDialogCB(void) { API.CoreUnknown4(0); }
+void MainMenu_BuyPlusDialogCB(void) { API.ShowLimitedVideoOptions(0); }
 #endif
 
 void MainMenu_HandleUnlocks(void)

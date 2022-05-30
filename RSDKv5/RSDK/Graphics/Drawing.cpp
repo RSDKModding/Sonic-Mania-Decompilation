@@ -153,6 +153,10 @@ ScreenInfo *RSDK::currentScreen = NULL;
 int32 RSDK::shaderCount = 0;
 ShaderEntry RSDK::shaderList[SHADER_MAX];
 
+bool32 RSDK::changedVideoSettings = false;
+VideoSettings RSDK::videoSettings;
+VideoSettings RSDK::videoSettingsBackup;
+
 #if RETRO_USE_MOD_LOADER
 int32 RSDK::userShaderCount = 0;
 #endif
@@ -341,6 +345,153 @@ void RSDK::GetDisplayInfo(int32 *displayID, int32 *width, int32 *height, int32 *
 }
 
 void RSDK::GetWindowSize(int32 *width, int32 *height) { RenderDevice::GetWindowSize(width, height); }
+int32 RSDK::GetVideoSetting(int32 id)
+{
+    switch (id) {
+        case VIDEOSETTING_WINDOWED: return videoSettings.windowed;
+        case VIDEOSETTING_BORDERED: return videoSettings.bordered;
+        case VIDEOSETTING_EXCLUSIVEFS: return videoSettings.exclusiveFS;
+        case VIDEOSETTING_VSYNC: return videoSettings.vsync;
+        case VIDEOSETTING_TRIPLEBUFFERED: return videoSettings.tripleBuffered;
+        case VIDEOSETTING_WINDOW_WIDTH: return videoSettings.windowWidth;
+        case VIDEOSETTING_WINDOW_HEIGHT: return videoSettings.windowHeight;
+        case VIDEOSETTING_FSWIDTH: return videoSettings.fsWidth;
+        case VIDEOSETTING_FSHEIGHT: return videoSettings.fsHeight;
+        case VIDEOSETTING_REFRESHRATE: return videoSettings.refreshRate;
+        case VIDEOSETTING_SHADERSUPPORT: return videoSettings.shaderSupport;
+        case VIDEOSETTING_SHADERID: return videoSettings.shaderID;
+        case VIDEOSETTING_SCREENCOUNT: return videoSettings.screenCount;
+#if RETRO_REV02
+        case VIDEOSETTING_DIMTIMER: return videoSettings.dimTimer;
+#endif
+        case VIDEOSETTING_STREAMSENABLED: return engine.streamsEnabled;
+        case VIDEOSETTING_STREAM_VOL: return (int32)(engine.streamVolume * 1024.0);
+        case VIDEOSETTING_SFX_VOL: return (int32)(engine.soundFXVolume * 1024.0);
+        case VIDEOSETTING_LANGUAGE:
+#if RETRO_REV02
+            return SKU::curSKU.language;
+#else
+            return gameVerInfo.language;
+#endif
+        case VIDEOSETTING_CHANGED: return changedVideoSettings;
+
+        default: break;
+    }
+
+    return 0;
+}
+
+void RSDK::SetVideoSetting(int32 id, int32 value)
+{
+    bool32 boolVal = value;
+    switch (id) {
+        case VIDEOSETTING_WINDOWED:
+            if (videoSettings.windowed != boolVal) {
+                videoSettings.windowed = boolVal;
+                changedVideoSettings   = true;
+            }
+            break;
+
+        case VIDEOSETTING_BORDERED:
+            if (videoSettings.bordered != boolVal) {
+                videoSettings.bordered = boolVal;
+                changedVideoSettings   = true;
+            }
+            break;
+
+        case VIDEOSETTING_EXCLUSIVEFS:
+            if (videoSettings.exclusiveFS != boolVal) {
+                videoSettings.exclusiveFS = boolVal;
+                changedVideoSettings      = true;
+            }
+            break;
+
+        case VIDEOSETTING_VSYNC:
+            if (videoSettings.vsync != boolVal) {
+                videoSettings.vsync  = boolVal;
+                changedVideoSettings = true;
+            }
+            break;
+
+        case VIDEOSETTING_TRIPLEBUFFERED:
+            if (videoSettings.tripleBuffered != boolVal) {
+                videoSettings.tripleBuffered = boolVal;
+                changedVideoSettings         = true;
+            }
+            break;
+
+        case VIDEOSETTING_WINDOW_WIDTH:
+            if (videoSettings.windowWidth != value) {
+                videoSettings.windowWidth = value;
+                changedVideoSettings      = true;
+            }
+            break;
+
+        case VIDEOSETTING_WINDOW_HEIGHT:
+            if (videoSettings.windowHeight != value) {
+                videoSettings.windowHeight = value;
+                changedVideoSettings       = true;
+            }
+            break;
+
+        case VIDEOSETTING_FSWIDTH: videoSettings.fsWidth = value; break;
+        case VIDEOSETTING_FSHEIGHT: videoSettings.fsHeight = value; break;
+        case VIDEOSETTING_REFRESHRATE: videoSettings.refreshRate = value; break;
+        case VIDEOSETTING_SHADERSUPPORT: videoSettings.shaderSupport = value; break;
+        case VIDEOSETTING_SHADERID:
+            if (videoSettings.shaderID != value) {
+                videoSettings.shaderID = value;
+                changedVideoSettings   = true;
+            }
+            break;
+
+        case VIDEOSETTING_SCREENCOUNT: videoSettings.screenCount = value; break;
+#if RETRO_REV02
+        case VIDEOSETTING_DIMTIMER: videoSettings.dimLimit = value; break;
+#endif
+        case VIDEOSETTING_STREAMSENABLED:
+            if (engine.streamsEnabled != boolVal)
+                changedVideoSettings = true;
+
+            engine.streamsEnabled = boolVal;
+            break;
+
+        case VIDEOSETTING_STREAM_VOL:
+            if (engine.streamVolume != (value / 1024.0f)) {
+                engine.streamVolume  = (float)value / 1024.0f;
+                changedVideoSettings = true;
+            }
+            break;
+
+        case VIDEOSETTING_SFX_VOL:
+            if (engine.soundFXVolume != ((float)value / 1024.0f)) {
+                engine.soundFXVolume = (float)value / 1024.0f;
+                changedVideoSettings = true;
+            }
+            break;
+
+        case VIDEOSETTING_LANGUAGE:
+#if RETRO_REV02
+            SKU::curSKU.language = value;
+#else
+            gameVerInfo.language = value;
+#endif
+            break;
+
+        case VIDEOSETTING_STORE: memcpy(&videoSettingsBackup, &videoSettings, sizeof(videoSettings)); break;
+
+        case VIDEOSETTING_RELOAD:
+            changedVideoSettings = true;
+            memcpy(&videoSettings, &videoSettingsBackup, sizeof(videoSettingsBackup));
+            break;
+
+        case VIDEOSETTING_CHANGED: changedVideoSettings = boolVal; break;
+
+        case VIDEOSETTING_WRITE: SaveSettingsINI(value); break;
+
+        default: break;
+    }
+}
 
 void RSDK::SwapDrawListEntries(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, int32 count)
 {

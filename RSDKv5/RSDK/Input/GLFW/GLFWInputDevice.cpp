@@ -25,9 +25,6 @@ void RSDK::SKU::InputDeviceGLFW::UpdateInput()
         && ((states[currentState].buttons[GLFW_GAMEPAD_BUTTON_A] != states[currentState ^ 1].buttons[GLFW_GAMEPAD_BUTTON_A])
             || states[currentState].buttons[GLFW_GAMEPAD_BUTTON_START] != states[currentState ^ 1].buttons[GLFW_GAMEPAD_BUTTON_START])) {
         this->inactiveTimer[1] = 0;
-#if !RETRO_REV02
-        mostRecentControllerID = device->controllerID;
-#endif
     }
     else
         ++this->inactiveTimer[1];
@@ -50,6 +47,7 @@ void RSDK::SKU::InputDeviceGLFW::ProcessInput(int32 controllerID)
     controller[controllerID].keyStart.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_START];
     controller[controllerID].keySelect.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_BACK];
 
+#if RETRO_REV02
     stickL[controllerID].keyStick.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB];
     stickL[controllerID].hDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_X];
     stickL[controllerID].vDelta = -this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
@@ -75,6 +73,28 @@ void RSDK::SKU::InputDeviceGLFW::ProcessInput(int32 controllerID)
     triggerR[controllerID].keyTrigger.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > 0.3;
     triggerR[controllerID].bumperDelta  = triggerR[controllerID].keyBumper.press ? 1.0f : 0.0f;
     triggerR[controllerID].triggerDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
+#else
+    controller[controllerID].keyStickL.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB];
+    stickL[controllerID].hDeltaL = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_X];
+    stickL[controllerID].vDeltaL = -this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
+    stickL[controllerID].keyUp.press |= stickL[controllerID].vDeltaL > 0.3;
+    stickL[controllerID].keyDown.press |= stickL[controllerID].vDeltaL < -0.3;
+    stickL[controllerID].keyLeft.press |= stickL[controllerID].hDeltaL < -0.3;
+    stickL[controllerID].keyRight.press |= stickL[controllerID].hDeltaL > 0.3;
+
+    controller[controllerID].keyStickR.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB];
+    stickL[controllerID].hDeltaR = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
+    stickL[controllerID].vDeltaR = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
+
+
+    controller[controllerID].keyBumperL.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
+    controller[controllerID].keyTriggerL.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > 0.3;
+    stickL[controllerID].triggerDeltaL = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
+
+    controller[controllerID].keyBumperR.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER];
+    controller[controllerID].keyTriggerR.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > 0.3;
+    stickL[controllerID].triggerDeltaR = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
+#endif
 }
 
 void RSDK::SKU::InputDeviceGLFW::CloseDevice()

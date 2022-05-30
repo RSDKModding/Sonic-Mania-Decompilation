@@ -12,28 +12,40 @@ struct DummyCore : UserCore {
     void LaunchManual();
     void ExitGame();
     int32 GetDefaultGamepadType();
-    bool32 IsOverlayEnabled(uint32 overlay)
+    bool32 IsOverlayEnabled(uint32 overlay) { return false; }
+#if RETRO_VER_EGS
+    bool32 CanShowExtensionOverlay(int32 overlay)
     {
-        for (int32 i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i] && InputDevices[i]->inputID == overlay) {
-                if (((InputDevices[i]->gamePadType >> 16) & 0xFF) != DEVICE_API_STEAM)
-                    return false;
-
-                return false; // not implemented, sorry!
-            }
+        PrintLog(PRINT_POPUP, "Can Show Extension Overlay?: %d", overlay);
+        return true;
+    }
+    bool32 ShowExtensionOverlay(int32 overlay)
+    {
+        PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay);
+        return true;
+    }
+    bool32 ShowAltExtensionOverlay(int32 overlay)
+    {
+        PrintLog(PRINT_POPUP, "Show Alternate Extension Overlay: %d", overlay);
+        return true;
+    }
+    bool32 ShowLimitedVideoOptions(int32 overlay)
+    {
+        PrintLog(PRINT_POPUP, "Show Limited Video Options?");
+        return false;
+    }
+    void InitInputDevices() {}
+    void Unknown() {}
+#else
+    bool32 ShowExtensionOverlay(int32 overlay)
+    {
+        switch (overlay) {
+            default: PrintLog(PRINT_POPUP, "Show Unknown Extension Overlay: %d", overlay); break;
+            case 0: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d (Plus Upsell Screen)", overlay); break;
         }
 
         return false;
     }
-    // CheckDLC(id)
-    int32 ShowExtensionOverlay(uint8 overlay);
-#if RETRO_VER_EGS
-    void EpicUnknown1() {}
-    bool32 ShowCheckoutPage(int32 a1);
-    int32 ShowEncorePage(int32 a1);
-    void EpicUnknown4(int32 a1);
-    void RegisterHIDDevice() {}
-    void EpicUnknown6() {}
 #endif
 
     uint16 field_25;
@@ -43,8 +55,6 @@ struct DummyCore : UserCore {
 extern DummyCore *dummyCore;
 
 DummyCore *InitDummyCore();
-
-void HandleUserStatuses();
 
 #endif
 

@@ -136,11 +136,6 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
                 }
 #endif
 
-#if RETRO_REV02 && RETRO_USERCORE_DUMMY
-                if (!(engine.focusState & 1))
-                    SKU::HandleUserStatuses();
-#endif
-
                 // Uncomment this code to add the build number to dev menu
                 // overrides the game subtitle, used in switch dev menu
                 if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
