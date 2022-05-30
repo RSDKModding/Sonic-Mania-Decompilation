@@ -24,7 +24,7 @@ struct UserAchievements {
     virtual void GetAchievementNames(String *names, int32 count) {}
     virtual String *GetAchievementString(String *string) { return NULL; }
     virtual String *GetAchievementName(String *name, uint32 id) { return NULL; }
-    virtual bool32 Unknown8() { return false; }
+    virtual bool32 CheckAchievementPopupEnabled() { return false; }
     virtual int32 GetNextAchievementID() { return 0; }
     virtual void RemoveLastAchievementID() {}
 #endif
@@ -61,13 +61,13 @@ extern Animator achievementAnimator[2];
 extern String achievementStrings[2];
 extern int32 achievementStringWidth[2];
 extern int32 achievementID;
-extern int32 achievementsDelay;
+extern int32 achievementDisplayDuration;
 extern int32 achievementsDrawn;
 extern int32 achievementStrW;
 extern int32 achievementStrX;
 extern bool32 achievementsLoaded;
-extern bool32 achievementDrawFlag;
-extern bool32 achievementUnknownFlag;
+extern bool32 achievementDrawReady;
+extern bool32 achievementForceReset;
 
 void LoadAchievementAssets();
 void ProcessAchievements();

@@ -117,45 +117,6 @@ void RSDK::SKU::InitUserData()
     for (int32 i = 0; i < (int32)achievementList.size(); ++i) {
         achievementList[i].achieved = achievementsRAM[i];
     }
-
-    leaderboardList.clear();
-    int32 leaderboardsRAM[0x200];
-    memset(leaderboardsRAM, 0, 0x200 * sizeof(int32));
-#if RETRO_REV02
-    loaded = userStorage->TryLoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL);
-#else
-    loaded = LoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
-#endif
-    if (loaded) {
-        int32 pos = 1;
-        for (int32 i = 0; i < leaderboardsRAM[0]; ++i) {
-            leaderboardList.push_back(LeaderboardInfo());
-            int32 len = leaderboardsRAM[pos++];
-            memcpy(leaderboardList[i].name, &leaderboardsRAM[pos], len);
-            int32 size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
-            pos += size;
-            leaderboardList[i].score = leaderboardsRAM[pos++];
-        }
-    }
-
-    statList.clear();
-    uint8 *statsRAM = new uint8[0x1000 * sizeof(StatInfo)];
-#if RETRO_REV02
-    loaded = userStorage->TryLoadUserFile("Stats.bin", statsRAM, 0x1000 * sizeof(StatInfo), NULL);
-#else
-    loaded = LoadUserFile("Stats.bin", statsRAM, 0x1000 * sizeof(StatInfo));
-#endif
-    if (loaded) {
-        uint32 statCount = *((uint32 *)statsRAM);
-        int32 pos        = sizeof(uint32);
-
-        for (int32 i = 0; i < statCount; ++i) {
-            StatInfo stat;
-            memcpy(stat.data, &statsRAM[pos], sizeof(stat.data));
-            pos += sizeof(stat.data);
-        }
-    }
-    delete[] statsRAM;
 }
 void RSDK::SKU::ReleaseUserData()
 {
@@ -211,41 +172,6 @@ void RSDK::SKU::SaveUserData()
 #else
     SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int32));
 #endif
-
-    int32 leaderboardsRAM[0x100];
-    memset(leaderboardsRAM, 0, 0x100 * sizeof(int32));
-    leaderboardsRAM[0] = (int32)leaderboardList.size();
-    int32 pos          = 1;
-    for (int32 i = 0; i < (int32)leaderboardList.size(); ++i) {
-        int32 len              = (int32)strlen(leaderboardList[i].name);
-        leaderboardsRAM[pos++] = len;
-        memcpy(&leaderboardsRAM[pos], leaderboardList[i].name, len);
-        int32 size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
-        pos += size;
-        leaderboardsRAM[pos++] = leaderboardList[i].score;
-    }
-#if RETRO_REV02
-    userStorage->TrySaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL, false);
-#else
-    SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
-#endif
-
-    uint8 *statsRAM = new uint8[0x100 * sizeof(StatInfo)];
-    memset(statsRAM, 0, 0x100 * sizeof(StatInfo));
-
-    ((uint32 *)statsRAM)[0] = (int32)statList.size();
-
-    pos = sizeof(uint32);
-    for (int32 i = 0; i < (int32)statList.size(); ++i) {
-        memcpy(&statsRAM[pos], statList[i].data, sizeof(statList[i].data));
-        pos += sizeof(statList[i].data);
-    }
-#if RETRO_REV02
-    userStorage->TrySaveUserFile("Stats.bin", statsRAM, sizeof(0x1000 * sizeof(StatInfo)), NULL, false);
-#else
-    SaveUserFile("Stats.bin", statsRAM, sizeof(0x1000 * sizeof(StatInfo)));
-#endif
-    delete[] statsRAM;
 }
 
 // Found this in Switch 1.00, doesn't seem to show up in rev02 variants but its neat nonetheless

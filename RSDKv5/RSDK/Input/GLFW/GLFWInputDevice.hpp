@@ -11,7 +11,7 @@ struct InputDeviceGLFW : InputDevice {
     GLFWgamepadstate states[2];
     uint32 jid;
 
-    bool32 swapABXY = false;
+    bool32 swapABXY;
 };
 
 InputDeviceGLFW *InitGLFWInputDevice(uint32 id, uint8 controllerID);

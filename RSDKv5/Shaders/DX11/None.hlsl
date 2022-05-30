@@ -55,9 +55,7 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(PixelInput input) : SV_TARGET
 {
-    float2 viewScale;
-    viewScale.x = frac((1.0 / pixelSize.x) * viewSize.x) - 0.01;
-    viewScale.y = frac((1.0 / pixelSize.y) * viewSize.y) - 0.01;
+    float2 viewScale = frac((1.0 / pixelSize) * viewSize) - 0.01;
 
     // if viewSize is an integer scale of pixelSize (within a small margin of error)
     if (viewScale.x < 0 && viewScale.y < 0) {
@@ -77,10 +75,10 @@ float4 PSMain(PixelInput input) : SV_TARGET
     adjacent.y = abs(ddy(input.tex.y));
 
     float4 texPos;
-    texPos.zw = adjacent.yx * float2(0.500501, 0.500501) + input.tex.yx;
-    texPos.xy = -adjacent.xy * float2(0.500501, 0.500501) + input.tex.xy;
+    texPos.zw = adjacent.yx * 0.500501 + input.tex.yx;
+    texPos.xy = -adjacent.xy * 0.500501 + input.tex.xy;
 
-    float2 texSize  = float2(1.0, 1.0) / textureSize.yx;
+    float2 texSize  = 1.0 / textureSize.yx;
     float2 texCoord = clamp(texSize.xy * round(input.tex.yx / texSize.xy), texPos.yx, texPos.zw);
     
     float4 blendFactor;

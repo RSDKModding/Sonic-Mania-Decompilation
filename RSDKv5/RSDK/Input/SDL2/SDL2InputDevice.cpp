@@ -70,6 +70,9 @@ void InputDeviceSDL::UpdateInput()
     triggerDeltaL = NORMALIZE(SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERLEFT), 0, 32767);
     triggerDeltaR = NORMALIZE(SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT), 0, 32767);
 
+    bumperDeltaL = (this->inputFlags & KEYMASK_BUMPERL) != 0 ? 1.0 : 0.0;
+    bumperDeltaR = (this->inputFlags & KEYMASK_BUMPERR) != 0 ? 1.0 : 0.0;
+
     int32 changedButtons = ~this->prevInputFlags & (this->prevInputFlags ^ this->inputFlags);
 
     if (changedButtons || hDelta_L != prevHDeltaL || vDelta_L != prevVDeltaL || hDelta_R != prevHDeltaR || vDelta_R != prevVDeltaR
@@ -145,12 +148,12 @@ void InputDeviceSDL::ProcessInput(int32 controllerID)
 
     triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
     triggerL[controllerID].keyTrigger.press |= this->triggerDeltaL > 0.3;
-    triggerL[controllerID].bumperDelta  = this->triggerDeltaL;
+    triggerL[controllerID].bumperDelta  = this->bumperDeltaL;
     triggerL[controllerID].triggerDelta = this->triggerDeltaL;
 
     triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
     triggerR[controllerID].keyTrigger.press |= this->triggerDeltaR > 0.3;
-    triggerR[controllerID].bumperDelta  = this->triggerDeltaR;
+    triggerR[controllerID].bumperDelta  = this->bumperDeltaR;
     triggerR[controllerID].triggerDelta = this->triggerDeltaR;
 }
 
@@ -181,7 +184,9 @@ InputDeviceSDL *RSDK::SKU::InitSDL2InputDevice(uint32 id, uint8 controllerID)
 
     const char *name = SDL_GameControllerName(device->controllerPtr);
 
+    device->swapABXY     = false;
     uint8 controllerType = DEVICE_XBOX;
+
     if (strstr(name, "Xbox"))
         controllerType = DEVICE_XBOX;
     else if (strstr(name, "PS4") || strstr(name, "PS5"))
@@ -211,29 +216,34 @@ InputDeviceSDL *RSDK::SKU::InitSDL2InputDevice(uint32 id, uint8 controllerID)
 
 void RSDK::SKU::InitSDL2InputAPI()
 {
-    char buffer[0x100];
     SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
-#if RETRO_PLATFORM == RETRO_SWITCH
-    SDL_GameControllerAddMapping("53776974636820436f6e74726f6c6c65,Switch "
-                                 "Controller,a:b0,b:b1,back:b11,dpdown:b15,dpleft:b12,dpright:b14,dpup:b13,leftshoulder:b6,leftstick:b4,lefttrigger:"
-                                 "b8,leftx:a0,lefty:a1,rightshoulder:b7,rightstick:b5,righttrigger:b9,rightx:a2,righty:a3,start:b10,x:b3,y:b2,");
-    // Support for extra controller types SDL doesn't recognise
-#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_UWP
-    // if (!usingCWD)
-    //    sprintf(buffer, "%s/controllerdb.txt", getResourcesPath());
-    // else
-    //    sprintf(buffer, "%scontrollerdb.txt", gamePath);
-    sprintf(buffer, BASE_PATH "controllerdb.txt");
-#else
-    sprintf(buffer, BASE_PATH "controllerdb.txt");
-#endif // ! RETRO_PLATFORM == RETRO_SWITCH
 
-    FileIO *file = fOpen(buffer, "rb");
-    if (file) {
-        fClose(file);
+    return;
 
-        int32 nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
-        if (nummaps >= 0)
-            RSDK::PrintLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
+    // TODO: this
+    for (int32 g = 0; g < gamePadCount; ++g) {
+        char mappingBuffer[0x100];
+        
+        sprintf_s(mappingBuffer, sizeof(mappingBuffer),
+                  "%d,%s,"
+                  "a:b1,b:b2,y:b3,x:b0,start:b9,guide:b12,back:b8,"
+                  "dpup:h0.3,dpleft:h0.3,dpdown:h0.3,dpright:h0.3,"
+                  "leftshoulder:b4,rightshoulder:b5,leftstick:b10,rightstick:b11,"
+                  "leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b6,righttrigger:b7",
+                  gamePadMappings[g].productID, gamePadMappings[g].name);
+
+        if (SDL_GameControllerAddMapping(mappingBuffer) >= 0) {
+            // char deviceName[0x100];
+            // memset(deviceName, 0, sizeof(deviceName));
+            // 
+            // uint32 id;
+            // GenerateHashCRC(&id, deviceName);
+            // device = InitSDL2InputDevice(id);
+            // 
+            // device->gamePadType |= gamePadMappings[g].type;
+            // memcpy(device->buttons, gamePadMappings[g].buttons, sizeof(device->buttons));
+            // PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name, deviceInfo.mouse.dwId,
+            //                deviceInfo.mouse.dwNumberOfButtons);
+        }
     }
 }

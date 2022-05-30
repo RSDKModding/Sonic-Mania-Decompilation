@@ -42,7 +42,7 @@ void MainMenu_StartExitGame(void);
 void MainMenu_MenuButton_ActionCB(void);
 
 #if MANIA_USE_EGS
-void MainMenu_BuyPlusDialogCB(void)
+void MainMenu_BuyPlusDialogCB(void);
 #endif
 
 void MainMenu_HandleUnlocks(void);

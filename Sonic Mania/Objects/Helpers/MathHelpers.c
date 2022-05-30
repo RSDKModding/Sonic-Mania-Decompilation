@@ -122,25 +122,21 @@ Vector2 MathHelpers_GetBezierPoint(int32 percent, int32 x1, int32 y1, int32 x2, 
 
 int32 MathHelpers_SquareRoot(uint32 num)
 {
-    int32 val = 0x40000000;
-    int32 id  = 0;
-    while (val > num)
-        val >>= 2;
+    int32 rem  = 1 << 30; // 1 << 31 would result in the value having to be unsigned, so this is the max
+    while (rem > num) rem >>= 2;
 
-    while (val) {
-        if (num >= val + id) {
-            num -= val + id;
-            id += 2 * val;
+    int32 root = 0;
+    while (rem) {
+        if (num >= rem + root) {
+            num -= rem + root;
+            root += rem << 1;
         }
 
-        val >>= 2;
-        id >>= 1;
+        rem >>= 2;
+        root >>= 1;
     }
 
-    if (num <= id)
-        return id;
-    else
-        return id + 1;
+    return num <= root ? root : (root + 1);
 }
 
 int32 MathHelpers_GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4)

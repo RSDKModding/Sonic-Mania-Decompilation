@@ -32,52 +32,48 @@ void RSDK::SKU::TryUnlockAchievement(const char *name)
 #endif
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-bool32 RSDK::SKU::achievementsEnabled = true;
-uint16 RSDK::SKU::achievementAniFrames[2];
+bool32 RSDK::SKU::achievementsEnabled     = true;
+uint16 RSDK::SKU::achievementAniFrames[2] = { 0, 0 };
 Animator RSDK::SKU::achievementAnimator[2];
 String RSDK::SKU::achievementStrings[2];
-int32 RSDK::SKU::achievementStringWidth[2];
-int32 RSDK::SKU::achievementID           = 0;
-int32 RSDK::SKU::achievementsDelay       = 0;
-int32 RSDK::SKU::achievementsDrawn       = 0;
-int32 RSDK::SKU::achievementStrW         = 0;
-int32 RSDK::SKU::achievementStrX         = 0;
-bool32 RSDK::SKU::achievementsLoaded     = false;
-bool32 RSDK::SKU::achievementDrawFlag    = false;
-bool32 RSDK::SKU::achievementUnknownFlag = false;
+int32 RSDK::SKU::achievementStringWidth[2]  = { 0, 0 };
+int32 RSDK::SKU::achievementID              = 0;
+int32 RSDK::SKU::achievementDisplayDuration = 0;
+int32 RSDK::SKU::achievementsDrawn          = 0;
+int32 RSDK::SKU::achievementStrW            = 0;
+int32 RSDK::SKU::achievementStrX            = 0;
+bool32 RSDK::SKU::achievementsLoaded        = false;
+bool32 RSDK::SKU::achievementDrawReady      = false;
+bool32 RSDK::SKU::achievementForceReset     = false;
 
 void RSDK::SKU::LoadAchievementAssets()
 {
-    if (achievementsEnabled) {
-        if (achievements) {
-            if (achievements->CheckAchievementsEnabled()) {
-                if (achievements->Unknown8()) {
-                    if (achievementUnknownFlag) {
-                        achievementUnknownFlag = false;
-                        achievementID          = 0;
-                        achievementDrawFlag    = false;
-                        achievementsDelay      = 0;
-                        achievementsDrawn      = 0;
-                    }
-                    else {
-                        if (achievementID)
-                            achievementsDelay = 180;
-                    }
-
-                    achievementsLoaded = !(CheckSceneFolder("Logos") || CheckSceneFolder("Title"));
-
-                    if (achievementsLoaded) {
-                        achievementAniFrames[0] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
-                        SetSpriteAnimation(achievementAniFrames[0], 0, &achievementAnimator[0], true, 0);
-
-                        achievementAniFrames[1] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
-                        SetSpriteAnimation(achievementAniFrames[1], 0, &achievementAnimator[1], true, 0);
-                    }
-                }
-                else {
-                    achievementsLoaded = false;
-                }
+    if (achievements && achievementsEnabled && achievements->CheckAchievementsEnabled()) {
+        if (achievements->CheckAchievementPopupEnabled()) {
+            if (achievementForceReset) {
+                achievementForceReset     = false;
+                achievementID              = 0;
+                achievementDrawReady       = false;
+                achievementDisplayDuration = 0;
+                achievementsDrawn          = false;
             }
+            else {
+                if (achievementID)
+                    achievementDisplayDuration = 3 * 60; // 3 seconds
+            }
+
+            achievementsLoaded = !CheckSceneFolder("Logos") && !CheckSceneFolder("Title");
+
+            if (achievementsLoaded) {
+                achievementAniFrames[0] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+                SetSpriteAnimation(achievementAniFrames[0], 0, &achievementAnimator[0], true, 0);
+
+                achievementAniFrames[1] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+                SetSpriteAnimation(achievementAniFrames[1], 0, &achievementAnimator[1], true, 0);
+            }
+        }
+        else {
+            achievementsLoaded = false;
         }
     }
 }
@@ -88,14 +84,15 @@ void RSDK::SKU::ProcessAchievements()
             if (!achievementID) {
                 achievementID = achievements->GetNextAchievementID();
                 if (achievementID) {
-                    achievementDrawFlag = true;
-                    achievementsDelay   = 180;
-                    achievementsDrawn   = false;
+                    achievementDrawReady       = true;
+                    achievementDisplayDuration = 3 * 60; // 3 seconds
+                    achievementsDrawn          = false;
                     achievements->RemoveLastAchievementID();
 
                     String buffer;
                     CopyString(&achievementStrings[0], achievements->GetAchievementString(&buffer));
                     CopyString(&achievementStrings[1], achievements->GetAchievementName(&buffer, achievementID));
+
                     if (curSKU.language == LANGUAGE_JP) {
                         achievementStringWidth[0] = 13 * achievementStrings[0].length;
                         achievementStringWidth[1] = 13 * achievementStrings[1].length;
@@ -113,9 +110,9 @@ void RSDK::SKU::ProcessAchievements()
             }
 
             if (achievementsDrawn) {
-                if (!--achievementsDelay) {
-                    achievementID       = 0;
-                    achievementDrawFlag = false;
+                if (!--achievementDisplayDuration) {
+                    achievementID        = 0;
+                    achievementDrawReady = false;
                 }
             }
         }
@@ -124,7 +121,7 @@ void RSDK::SKU::ProcessAchievements()
 void RSDK::SKU::DrawAchievements()
 {
     if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
-        if (achievementsLoaded && achievementDrawFlag && achievementID) {
+        if (achievementsLoaded && achievementDrawReady && achievementID) {
             Vector2 drawPos;
 
             String buffer;
@@ -132,16 +129,16 @@ void RSDK::SKU::DrawAchievements()
             CopyString(&achievementStrings[1], achievements->GetAchievementName(&buffer, achievementID));
 
             int32 drawX = achievementStrX + currentScreen->size.x - achievementStrW;
-            DrawRectangle(drawX, currentScreen->size.y - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 255, INK_NONE, true);
+            DrawRectangle(drawX, currentScreen->size.y - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 0x10, INK_NONE, true);
 
             Vector2 vertices[3];
             vertices[0].x = (drawX - 40) << 16;
-            vertices[1].y = (currentScreen->size.y - 40) << 16;
             vertices[0].y = currentScreen->size.y << 16;
             vertices[1].x = drawX << 16;
+            vertices[1].y = (currentScreen->size.y - 40) << 16;
             vertices[2].x = drawX << 16;
             vertices[2].y = currentScreen->size.y << 16;
-            DrawFace(vertices, 3, 255, 16, 124, 255, INK_NONE);
+            DrawFace(vertices, 3, 0xFF, 0x10, 0x7C, 0x10, INK_NONE);
 
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
             drawPos.y = vertices[1].y + 0xA0000;

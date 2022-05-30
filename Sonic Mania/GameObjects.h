@@ -111,8 +111,8 @@ typedef struct {
     bool32 (*CheckDLC)(int32 dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
 #if MANIA_USE_EGS
-    void (*ShowCheckoutPage)(int32 value);
-    void (*ShowEncorePage)(int32 value);
+    bool32 (*ShowCheckoutPage)(int32 value);
+    bool32 (*ShowEncorePage)(int32 value);
     void (*CoreUnknown4)(int32 value);
     void (*RegisterHIDDevice)(void);
 #endif

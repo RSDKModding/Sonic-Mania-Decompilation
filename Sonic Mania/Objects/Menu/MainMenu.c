@@ -267,7 +267,7 @@ void MainMenu_MenuButton_ActionCB(void)
                 else {
                     String message;
                     INIT_STRING(message);
-                    Localization_GetString(&message, STR_CONNECTINGTOEGS);
+                    Localization_GetString(&message, STR_CONNECTEGS);
 
                     UIDialog_CreateDialogOkCancel(&message, MainMenu_BuyPlusDialogCB, StateMachine_None, true, true);
                 }

@@ -86,16 +86,16 @@ float4 PSMain(PixelInput input) : SV_TARGET
         scanlineIntencity.rgb = intencity.yzx;
 
     float3 color1  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2( 1, -1))   + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
-    float3 color2  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(-2, 0))    + 0.5)      / textureSize.xy).rgb * factor.z * brightness;
-    float3 color3  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(-1, 0))    + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
-    float3 color4  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2( 1, 0))    + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
+    float3 color2  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(-2,  0))   + 0.5)      / textureSize.xy).rgb * factor.z * brightness;
+    float3 color3  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(-1,  0))   + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
+    float3 color4  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2( 1,  0))   + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
     float3 color5  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + 0)                + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
-    float3 color6  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(-1, 1))    + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
-    float3 color7  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(2, 0))     + 0.5)      / textureSize.xy).rgb * factor.w * brightness;
+    float3 color6  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(-1,  1))   + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
+    float3 color7  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2( 2,  0))   + 0.5)      / textureSize.xy).rgb * factor.w * brightness;
     float3 color8  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + -1)               + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
-    float3 color9  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2(0, -1))    + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
+    float3 color9  = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + float2( 0, -1))   + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
     float3 color10 = texDiffuse.Sample(sampDiffuse, (floor(size.zw * textureSize.xy   + 1)                + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
-    float3 color11 = texDiffuse.Sample(sampDiffuse, (floor(size.xy * textureSize.xy   + float2(0, 1))     + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
+    float3 color11 = texDiffuse.Sample(sampDiffuse, (floor(size.xy * textureSize.xy   + float2( 0,  1))   + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
 
     float3 final = 
         power.x * (color2 + color3 + color4 + color5 + color7) / (factor.z + factor.x + factor.y + factor2 + factor.w) +

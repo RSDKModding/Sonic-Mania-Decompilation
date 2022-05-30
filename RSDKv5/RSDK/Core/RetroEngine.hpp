@@ -142,6 +142,7 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_STEAM    (0)
 #define RETRO_INPUTDEVICE_NX       (0)
 #define RETRO_INPUTDEVICE_SDL2     (0)
+#define RETRO_INPUTDEVICE_GLFW     (0)
 
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false

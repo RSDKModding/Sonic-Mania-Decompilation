@@ -1,5 +1,5 @@
 
-using namespace RSDK::SKU;
+using namespace RSDK;
 
 void InputDeviceSteam::UpdateInput()
 {

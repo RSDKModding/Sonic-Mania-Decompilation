@@ -1,9 +1,9 @@
 
 // NOTE: I'm using enums & structs from the libNX homebrew lib, but they should have the same values as the official APIs
 
-// TODO: include libNX files
+#include <switch/services/hid.h>
 
-using namespace RSDK::SKU;
+using namespace RSDK;
 
 HidNpadIdType npadTypes[5] = { HidNpadIdType_Handheld, HidNpadIdType_No1, HidNpadIdType_No2, HidNpadIdType_No3, HidNpadIdType_No4 };
 int32 nxVibrateDeviceCount = 0;
@@ -33,14 +33,14 @@ void UpdateInputNX(InputDeviceNX *device, int64 *buttonMasks, int32 *hDelta, int
         device->vDelta_L = 0.0;
     }
     else {
-        device->hDelta_L = device->hDelta_L * (fminf(div, 127.0) + -15728.0) / 17039.0);
-        device->vDelta_L = device->vDelta_L * (fminf(div, 127.0) + -15728.0) / 17039.0);
+        device->hDelta_L = device->hDelta_L * ((fminf(div, 127.0) + -15728.0) / 17039.0);
+        device->vDelta_L = device->vDelta_L * ((fminf(div, 127.0) + -15728.0) / 17039.0);
     }
 
     device->hDelta_R = hDelta[1] + 128.0;
     device->vDelta_R = vDelta[1] + 128.0;
 
-    float div        = sqrtf((device->hDelta_R * device->hDelta_R) + (device->vDelta_R * device->vDelta_R));
+    div        = sqrtf((device->hDelta_R * device->hDelta_R) + (device->vDelta_R * device->vDelta_R));
     device->hDelta_R = device->hDelta_R / div;
     device->vDelta_R = device->vDelta_R / div;
     if (div <= 15728.0) {
@@ -48,8 +48,8 @@ void UpdateInputNX(InputDeviceNX *device, int64 *buttonMasks, int32 *hDelta, int
         device->vDelta_R = 0.0;
     }
     else {
-        device->hDelta_R = device->hDelta_R * (fminf(div, 127.0) + -15728.0) / 17039.0);
-        device->vDelta_R = device->vDelta_R * (fminf(div, 127.0) + -15728.0) / 17039.0);
+        device->hDelta_R = device->hDelta_R * ((fminf(div, 127.0) + -15728.0) / 17039.0);
+        device->vDelta_R = device->vDelta_R * ((fminf(div, 127.0) + -15728.0) / 17039.0);
     }
 
     int32 changedButtons = device->inputFlags & ~prevInputFlags;
@@ -79,12 +79,12 @@ void InputDeviceNXHandheld::UpdateInput()
     HidNpadHandheldState state;
 
     hidGetNpadStatesHandheld(this->npadType, &state, 1);
-    hDelta[0] = -state.stickL.x;
-    hDelta[1] = -state.stickR.x;
-    vDelta[0] = -state.stickL.y;
-    vDelta[1] = -state.stickR.y;
+    hDelta[0] = -state.analog_stick_l.x;
+    hDelta[1] = -state.analog_stick_r.x;
+    vDelta[0] = -state.analog_stick_l.y;
+    vDelta[1] = -state.analog_stick_r.y;
 
-    UpdateInputNX(this, &state.buttonMasks, hDelta, vDelta);
+    UpdateInputNX(this, &state.buttons, hDelta, vDelta);
 }
 
 void InputDeviceNXJoyL::UpdateInput()
@@ -94,31 +94,31 @@ void InputDeviceNXJoyL::UpdateInput()
     HidNpadHandheldState state;
 
     hidGetNpadStatesJoyLeft(this->npadType, &state, 1);
-    hDelta[0] = -state.stickL.x;
-    hDelta[1] = -state.stickR.x;
-    vDelta[0] = -state.stickL.y;
-    vDelta[1] = -state.stickR.y;
+    hDelta[0] = -state.analog_stick_l.x;
+    hDelta[1] = -state.analog_stick_r.x;
+    vDelta[0] = -state.analog_stick_l.y;
+    vDelta[1] = -state.analog_stick_r.y;
 
-    int64 correctedButtonMasks = state.buttonMasks;
+    int64 correctedButtonMasks = state.buttons;
 
     // "Rotate" the buttons
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_Down) ? HidNpadButton_A : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_Left) ? HidNpadButton_B : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_Right) ? HidNpadButton_X : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_Up) ? HidNpadButton_Y : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_StickL) ? HidNpadButton_StickL : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_Plus) ? HidNpadButton_Plus : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_Down) ? HidNpadButton_A : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_Left) ? HidNpadButton_B : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_Right) ? HidNpadButton_X : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_Up) ? HidNpadButton_Y : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_StickL) ? HidNpadButton_StickL : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_Plus) ? HidNpadButton_Plus : 0;
 
     correctedButtonMasks &= ~HidNpadButton_L;
-    if (state.buttonMasks & HidNpadButton_LeftSL)
+    if (state.buttons & HidNpadButton_LeftSL)
         correctedButtonMasks |= HidNpadButton_L;
 
     correctedButtonMasks &= ~HidNpadButton_R;
-    if (state.buttonMasks & HidNpadButton_LeftSR)
+    if (state.buttons & HidNpadButton_LeftSR)
         correctedButtonMasks |= HidNpadButton_R;
 
     UpdateInputNX(this, &correctedButtonMasks, hDelta, vDelta);
-    if (state.buttonMasks & HidNpadButton_L) {
+    if (state.buttons & HidNpadButton_L) {
         // if (this->npadType >= HidNpadIdType_No4)
         //     OnAssertionFailure(2, "", "", "", 0);
 
@@ -136,31 +136,31 @@ void InputDeviceNXJoyR::UpdateInput()
     HidNpadHandheldState state;
 
     hidGetNpadStatesJoyRight(this->npadType, &state, 1);
-    hDelta[0] = -state.stickL.x;
-    hDelta[1] = -state.stickR.x;
-    vDelta[0] = -state.stickL.y;
-    vDelta[1] = -state.stickR.y;
+    hDelta[0] = -state.analog_stick_l.x;
+    hDelta[1] = -state.analog_stick_r.x;
+    vDelta[0] = -state.analog_stick_l.y;
+    vDelta[1] = -state.analog_stick_r.y;
 
-    int64 correctedButtonMasks = state.buttonMasks;
+    int64 correctedButtonMasks = state.buttons;
 
     // "Rotate" the buttons
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_A) ? HidNpadButton_B : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_B) ? HidNpadButton_Y : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_X) ? HidNpadButton_A : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_Y) ? HidNpadButton_X : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_StickR) ? HidNpadButton_StickL : 0;
-    correctedButtonMasks |= (state.buttonMasks & HidNpadButton_Plus) ? HidNpadButton_Plus : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_A) ? HidNpadButton_B : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_B) ? HidNpadButton_Y : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_X) ? HidNpadButton_A : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_Y) ? HidNpadButton_X : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_StickR) ? HidNpadButton_StickL : 0;
+    correctedButtonMasks |= (state.buttons & HidNpadButton_Plus) ? HidNpadButton_Plus : 0;
 
     correctedButtonMasks &= ~HidNpadButton_L;
-    if (state.buttonMasks & HidNpadButton_RightSL)
+    if (state.buttons & HidNpadButton_RightSL)
         correctedButtonMasks |= HidNpadButton_L;
 
     correctedButtonMasks &= ~HidNpadButton_R;
-    if (state.buttonMasks & HidNpadButton_RightSR)
+    if (state.buttons & HidNpadButton_RightSR)
         correctedButtonMasks |= HidNpadButton_R;
 
     UpdateInputNX(this, &correctedButtonMasks, hDelta, vDelta);
-    if (state.buttonMasks & HidNpadButton_R) {
+    if (state.buttons & HidNpadButton_R) {
         // if (this->npadType >= HidNpadIdType_No4)
         //     OnAssertionFailure(2, "", "", "", 0);
 
@@ -178,17 +178,17 @@ void InputDeviceNXJoyGrip::UpdateInput()
     HidNpadHandheldState state;
 
     hidGetNpadStatesJoyDual(this->npadType, &state, 1);
-    hDelta[0] = -state.stickL.x;
-    hDelta[1] = -state.stickR.x;
-    vDelta[0] = -state.stickL.y;
-    vDelta[1] = -state.stickR.y;
+    hDelta[0] = -state.analog_stick_l.x;
+    hDelta[1] = -state.analog_stick_r.x;
+    vDelta[0] = -state.analog_stick_l.y;
+    vDelta[1] = -state.analog_stick_r.y;
 
-    UpdateInputNX(this, &state.buttonMasks, hDelta, vDelta);
+    UpdateInputNX(this, &state.buttons, hDelta, vDelta);
 
     // if (this->npadType >= HidNpadIdType_No4)
     //     OnAssertionFailure(2, "", "", "", 0);
 
-    int32 masks = (int32)state.buttonMasks;
+    int32 masks = (int32)state.buttons;
     if ((masks & HidNpadButton_LeftSL) && (masks & HidNpadButton_LeftSR)) {
         for (int32 id = HidNpadIdType_No1; id <= HidNpadIdType_No4; ++id) {
             if (!hidGetNpadStyleSet(id)) {
@@ -218,12 +218,12 @@ void InputDeviceNXPro::UpdateInput()
     HidNpadHandheldState state;
 
     hidGetNpadStatesFullKey(this->npadType, &state, 1);
-    hDelta[0] = -state.stickL.x;
-    hDelta[1] = -state.stickR.x;
-    vDelta[0] = -state.stickL.y;
-    vDelta[1] = -state.stickR.y;
+    hDelta[0] = -state.analog_stick_l.x;
+    hDelta[1] = -state.analog_stick_r.x;
+    vDelta[0] = -state.analog_stick_l.y;
+    vDelta[1] = -state.analog_stick_r.y;
 
-    UpdateInputNX(this, &state.buttonMasks, hDelta, vDelta);
+    UpdateInputNX(this, &state.buttons, hDelta, vDelta);
 }
 
 void InputDeviceNX::ProcessInput(int32 controllerID)
@@ -454,13 +454,14 @@ void RSDK::SKU::InitNXInputAPI()
     hidSetSupportedNpadStyleSet(HidNpadStyleTag_NpadFullKey | HidNpadStyleTag_NpadHandheld | HidNpadStyleTag_NpadJoyDual | HidNpadStyleTag_NpadJoyLeft
                                 | HidNpadStyleTag_NpadJoyRight);
     hidSetSupportedNpadIdType(npadTypes, 5);
-    hidSetNpadJoyHoldType(HidNpadJoyDeviceType_Right);
+    hidSetNpadJoyHoldType(HidNpadJoyHoldType_Horizontal);
 
     ProcessInput();
 
-    HidVibrationDeviceHandle handles[2];
-    hidInitializeVibrationDevices(handles, 2, 8, HidNpadStyleTag_NpadFullKey); // dunno what 8 is but whatever /shrug
-    nxVibrateDeviceCount = 2;
+    // Unsure about this one, hope its right :)
+    HidVibrationDeviceHandle handles[8];
+    hidInitializeVibrationDevices(handles, 8, HidNpadIdType_No3, HidNpadStyleTag_NpadFullKey);
+    nxVibrateDeviceCount = 8;
 }
 
 void RSDK::SKU::ProcessNXInputDevices()
@@ -540,7 +541,7 @@ void RSDK::SKU::ProcessNXInputDevices()
 
                 if (device) {
                     hidSetNpadJoyAssignmentModeSingleByDefault(npadTypes[c]);
-                    hidSetNpadJoyHoldType(HidNpadJoyDeviceType_Right);
+                    hidSetNpadJoyHoldType(HidNpadJoyHoldType_Horizontal);
                 }
 
                 activeNPadTypes[c] = 3;
@@ -559,7 +560,7 @@ void RSDK::SKU::ProcessNXInputDevices()
 
                 if (device) {
                     hidSetNpadJoyAssignmentModeSingleByDefault(npadTypes[c]);
-                    hidSetNpadJoyHoldType(HidNpadJoyDeviceType_Right);
+                    hidSetNpadJoyHoldType(HidNpadJoyHoldType_Horizontal);
                 }
 
                 activeNPadTypes[c] = 4;

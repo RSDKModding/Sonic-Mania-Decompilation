@@ -25,6 +25,8 @@ struct InputDeviceSDL : InputDevice {
     uint8 stateBumper_R;
     uint8 stateStick_L;
     uint8 stateStick_R;
+    float bumperDeltaL;
+    float bumperDeltaR;
     float triggerDeltaL;
     float triggerDeltaR;
     float hDelta_L;
@@ -33,7 +35,7 @@ struct InputDeviceSDL : InputDevice {
     float hDelta_R;
 
     SDL_GameController *controllerPtr;
-    bool32 swapABXY = false;
+    bool32 swapABXY;
 };
 
 InputDeviceSDL *InitSDL2InputDevice(uint32 id, uint8 controllerID);

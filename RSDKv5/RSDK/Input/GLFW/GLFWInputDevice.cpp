@@ -68,12 +68,12 @@ void InputDeviceGLFW::ProcessInput(int32 controllerID)
 
     triggerL[controllerID].keyBumper.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
     triggerL[controllerID].keyTrigger.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > 0.3;
-    triggerL[controllerID].bumperDelta  = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
+    triggerL[controllerID].bumperDelta  = triggerL[controllerID].keyBumper.press ? 1.0f : 0.0f;
     triggerL[controllerID].triggerDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
 
     triggerR[controllerID].keyBumper.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER];
     triggerR[controllerID].keyTrigger.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > 0.3;
-    triggerR[controllerID].bumperDelta  = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
+    triggerR[controllerID].bumperDelta  = triggerR[controllerID].keyBumper.press ? 1.0f : 0.0f;
     triggerR[controllerID].triggerDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
 }
 
@@ -103,7 +103,9 @@ InputDeviceGLFW *RSDK::SKU::InitGLFWInputDevice(uint32 id, uint8 controllerID)
 
     const char *name = glfwGetGamepadName(controllerID);
 
+    device->swapABXY     = true;
     uint8 controllerType = DEVICE_XBOX;
+
     if (strstr(name, "Xbox"))
         controllerType = DEVICE_XBOX;
     else if (strstr(name, "PS4") || strstr(name, "PS5"))

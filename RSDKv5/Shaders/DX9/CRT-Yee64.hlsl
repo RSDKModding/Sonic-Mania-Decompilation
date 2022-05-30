@@ -85,16 +85,16 @@ float4 PSMain(PixelInput input) : SV_TARGET
         scanlineIntencity.rgb = intencity.yzx;
 
     float3 color1  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2( 1, -1))   + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
-    float3 color2  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(-2, 0))    + 0.5)      / textureSize.xy).rgb * factor.z * brightness;
-    float3 color3  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(-1, 0))    + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
-    float3 color4  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2( 1, 0))    + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
+    float3 color2  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(-2,  0))   + 0.5)      / textureSize.xy).rgb * factor.z * brightness;
+    float3 color3  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(-1,  0))   + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
+    float3 color4  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2( 1,  0))   + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
     float3 color5  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + 0)                + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
-    float3 color6  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(-1, 1))    + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
-    float3 color7  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(2, 0))     + 0.5)      / textureSize.xy).rgb * factor.w * brightness;
+    float3 color6  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(-1,  1))   + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
+    float3 color7  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2( 2,  0))   + 0.5)      / textureSize.xy).rgb * factor.w * brightness;
     float3 color8  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + -1)               + 0.5)      / textureSize.xy).rgb * factor.x * brightness;
-    float3 color9  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2(0, -1))    + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
+    float3 color9  = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + float2( 0, -1))   + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
     float3 color10 = tex2D(texDiffuse, (floor(size.zw * textureSize.xy   + 1)                + 0.5)      / textureSize.xy).rgb * factor.y * brightness;
-    float3 color11 = tex2D(texDiffuse, (floor(size.xy * textureSize.xy   + float2(0, 1))     + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
+    float3 color11 = tex2D(texDiffuse, (floor(size.xy * textureSize.xy   + float2( 0,  1))   + 0.5)      / textureSize.xy).rgb * factor2  * brightness;
 
     float3 final = 
         power.x * (color2 + color3 + color4 + color5 + color7) / (factor.z + factor.x + factor.y + factor2 + factor.w) +

@@ -1,5 +1,5 @@
 
-using namespace RSDK::SKU;
+using namespace RSDK;
 
 bool32 RSDK::SKU::HIDEnabled = false;
 
@@ -8,7 +8,7 @@ int32 RSDK::SKU::rawInputDeviceCount = 0;
 
 tagRAWINPUT RSDK::SKU::rawInputData;
 
-void InputDeviceRaw::UpdateInput()
+void RSDK::SKU::InputDeviceRaw::UpdateInput()
 {
     this->prevInputFlags = this->inputFlags;
     this->inputFlags     = this->activeButtons;
@@ -50,7 +50,7 @@ void InputDeviceRaw::UpdateInput()
     this->ProcessInput(CONT_ANY);
 }
 
-void InputDeviceRaw::ProcessInput(int32 controllerID)
+void RSDK::SKU::InputDeviceRaw::ProcessInput(int32 controllerID)
 {
     controller[controllerID].keyUp.press |= this->stateUp;
     controller[controllerID].keyDown.press |= this->stateDown;
@@ -114,7 +114,7 @@ void InputDeviceRaw::ProcessInput(int32 controllerID)
 #endif
 }
 
-InputDeviceRaw *RSDK::SKU::InitRawInputDevice(uint32 id)
+RSDK::SKU::InputDeviceRaw *RSDK::SKU::InitRawInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -155,7 +155,7 @@ void RSDK::SKU::InitHIDAPI()
     pRawInputDevices.dwFlags     = 0;
 
     if (!RegisterRawInputDevices(&pRawInputDevices, 1, sizeof(pRawInputDevices)))
-        RSDK::PrintLog(PRINT_NORMAL, "Unable to Register HID Device.\n");
+        PrintLog(PRINT_NORMAL, "Unable to Register HID Device.\n");
 
     HIDEnabled = true;
     InitRawInputAPI();
@@ -168,23 +168,22 @@ void RSDK::SKU::InitRawInputAPI()
 
         UINT puiNumDevices;
         if (GetRawInputDeviceList(0, &puiNumDevices, sizeof(tagRAWINPUTDEVICELIST))) {
-            RSDK::PrintLog(PRINT_NORMAL, "Could not get Input Device Count.\n");
+            PrintLog(PRINT_NORMAL, "Could not get Input Device Count.\n");
             return;
         }
 
         tagRAWINPUTDEVICELIST *pRawInputDeviceList;
-        RSDK::AllocateStorage(sizeof(tagRAWINPUTDEVICELIST) * puiNumDevices, (void **)&pRawInputDeviceList, RSDK::DATASET_TMP, false);
+        AllocateStorage(sizeof(tagRAWINPUTDEVICELIST) * puiNumDevices, (void **)&pRawInputDeviceList, DATASET_TMP, false);
         if (!pRawInputDeviceList) {
-            RSDK::PrintLog(PRINT_NORMAL, "Could not allocate memory for Input Device List.\n");
+            PrintLog(PRINT_NORMAL, "Could not allocate memory for Input Device List.\n");
             return;
         }
 
         int32 rawInputListSize = GetRawInputDeviceList(pRawInputDeviceList, (PUINT)&puiNumDevices, sizeof(tagRAWINPUTDEVICELIST));
         if (rawInputListSize == -1) {
-            RSDK::PrintLog(PRINT_NORMAL, "Wrong Device Count.\n");
+            PrintLog(PRINT_NORMAL, "Wrong Device Count.\n");
         }
         else {
-
             RID_DEVICE_INFO deviceInfo;
             deviceInfo.cbSize         = sizeof(RID_DEVICE_INFO);
             uint8 deviceID            = 0;
@@ -232,8 +231,8 @@ void RSDK::SKU::InitRawInputAPI()
                                     device->gamePadType |= gamePadMappings[g].type;
                                     device->deviceHandle = pRawInputDeviceList[d].hDevice;
                                     memcpy(device->buttons, gamePadMappings[g].buttons, sizeof(device->buttons));
-                                    RSDK::PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name,
-                                                   deviceInfo.mouse.dwId, deviceInfo.mouse.dwNumberOfButtons);
+                                    PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name,
+                                             deviceInfo.hid.dwVendorId, deviceInfo.hid.dwProductId);
                                     rawInputDevices[rawInputDeviceCount++] = device;
                                 }
                             }
@@ -245,10 +244,10 @@ void RSDK::SKU::InitRawInputAPI()
                 }
             }
 
-            RSDK::PrintLog(PRINT_NORMAL, "Total HID GamePad Count: %d\n", rawInputDeviceCount);
+            PrintLog(PRINT_NORMAL, "Total HID GamePad Count: %d\n", rawInputDeviceCount);
         }
 
-        RSDK::RemoveStorageEntry((void **)&pRawInputDeviceList);
+        RemoveStorageEntry((void **)&pRawInputDeviceList);
     }
 }
 

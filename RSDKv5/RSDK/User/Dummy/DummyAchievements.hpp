@@ -21,7 +21,7 @@ struct DummyAchievements : UserAchievements {
     void GetAchievementNames(String *names, int32 count);
     String *GetAchievementString(String *string);
     String *GetAchievementName(String *name, uint32 id);
-    inline bool32 Unknown8() { return true; }
+    inline bool32 CheckAchievementPopupEnabled() { return true; }
     int32 GetNextAchievementID();
     void RemoveLastAchievementID();
 #endif

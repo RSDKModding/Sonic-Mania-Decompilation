@@ -1,9 +1,9 @@
 
-using namespace RSDK::SKU;
+using namespace RSDK;
 
 bool32 RSDK::SKU::disabledXInputDevices[PLAYER_COUNT];
 
-void InputDeviceXInput::UpdateInput()
+void RSDK::SKU::InputDeviceXInput::UpdateInput()
 {
     XINPUT_STATE *inputState = &this->inputState[this->activeState];
     if (disabledXInputDevices[this->controllerID]) {
@@ -100,7 +100,7 @@ void InputDeviceXInput::UpdateInput()
     }
 }
 
-void InputDeviceXInput::ProcessInput(int32 controllerID)
+void RSDK::SKU::InputDeviceXInput::ProcessInput(int32 controllerID)
 {
     controller[controllerID].keyUp.press |= this->stateUp;
     controller[controllerID].keyDown.press |= this->stateDown;
@@ -160,7 +160,7 @@ void InputDeviceXInput::ProcessInput(int32 controllerID)
 #endif
 }
 
-InputDeviceXInput *RSDK::SKU::InitXInputDevice(uint32 id)
+RSDK::SKU::InputDeviceXInput *RSDK::SKU::InitXInputDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;

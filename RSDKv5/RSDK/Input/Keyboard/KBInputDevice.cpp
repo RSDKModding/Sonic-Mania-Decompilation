@@ -1,5 +1,5 @@
 
-using namespace RSDK::SKU;
+using namespace RSDK;
 
 int32 RSDK::SKU::keyState[PLAYER_COUNT];
 
@@ -678,7 +678,7 @@ int32 GLFWToWinAPIMappings(int32 mapping)
 }
 #endif
 
-InputDeviceKeyboard *RSDK::SKU::InitKeyboardDevice(uint32 id)
+RSDK::SKU::InputDeviceKeyboard *RSDK::SKU::InitKeyboardDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -708,7 +708,7 @@ InputDeviceKeyboard *RSDK::SKU::InitKeyboardDevice(uint32 id)
     return device;
 }
 
-void InputDeviceKeyboard::UpdateInput()
+void RSDK::SKU::InputDeviceKeyboard::UpdateInput()
 {
     if (!this->controllerID) {
 #if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
@@ -729,8 +729,8 @@ void InputDeviceKeyboard::UpdateInput()
         float prevX = touchMouseData.x[0];
         float prevY = touchMouseData.y[0];
 
-        touchMouseData.x[0] = (cursorPos.x - RSDK::videoSettings.viewportX) * RSDK::videoSettings.viewportW;
-        touchMouseData.y[0] = (cursorPos.y - RSDK::videoSettings.viewportY) * RSDK::videoSettings.viewportH;
+        touchMouseData.x[0] = (cursorPos.x - videoSettings.viewportX) * videoSettings.viewportW;
+        touchMouseData.y[0] = (cursorPos.y - videoSettings.viewportY) * videoSettings.viewportH;
 
         if (touchMouseData.x[0] == prevX && touchMouseData.y[0] == prevY) {
             if (this->mouseHideTimer < 120 + 1) {
@@ -780,7 +780,7 @@ void InputDeviceKeyboard::UpdateInput()
     this->ProcessInput(CONT_ANY);
 }
 
-void InputDeviceKeyboard::ProcessInput(int32 controllerID)
+void RSDK::SKU::InputDeviceKeyboard::ProcessInput(int32 controllerID)
 {
     ControllerState *cont = &controller[controllerID];
 

@@ -134,7 +134,7 @@ bool32 GetXYButtonFlip();
 
 #if RETRO_VER_EGS
 inline bool32 ShowCheckoutPage(int32 a1) { return userCore->ShowCheckoutPage(a1); }
-inline int32 ShowEncorePage(int32 a1) { return userCore->ShowEncorePage(a1); }
+inline bool32 ShowEncorePage(int32 a1) { return userCore->ShowEncorePage(a1); }
 inline void EpicUnknown4(int32 a1) { userCore->EpicUnknown4(a1); }
 inline void RegisterHIDDevice(void) { userCore->RegisterHIDDevice(); }
 #endif

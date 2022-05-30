@@ -61,7 +61,7 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(PixelInput input) : SV_TARGET
 {
-    float2 viewPos      = floor((textureSize.xy / pixelSize.xy) * input.tex.xy * viewSize.xy) + float2(0.5, 0.5);
+    float2 viewPos      = floor((textureSize.xy / pixelSize.xy) * input.tex.xy * viewSize.xy) + 0.5;
     float intencityPos  = frac((viewPos.y * 3.0 + viewPos.x) * 0.166667);
 
     float4 scanlineIntencity;
@@ -76,9 +76,9 @@ float4 PSMain(PixelInput input) : SV_TARGET
     float2 roundedPixelPos  = floor(pixelPos.xy);
 
     scanlineIntencity.a = clamp(abs(sin(pixelPos.y * RSDK_PI)) + 0.25, 0.5, 1.0);
-    pixelPos.xy         = frac(pixelPos.xy) + float2(-0.5, -0.5);
+    pixelPos.xy         = frac(pixelPos.xy) + -0.5;
 
-    float2 invTexPos = -input.tex.xy * textureSize.xy + (roundedPixelPos + float2(0.5, 0.5));
+    float2 invTexPos = -input.tex.xy * textureSize.xy + (roundedPixelPos + 0.5);
     
     float2 newTexPos;
     newTexPos.x = clamp(-abs(invTexPos.x * 0.5) + 1.5, 0.8, 1.25);
@@ -90,7 +90,7 @@ float4 PSMain(PixelInput input) : SV_TARGET
 
     scanlineIntencity.a *= newTexPos.x;
 
-    float2 texPos   = ((pixelPos.xy + -clamp(pixelPos.xy, float2(-0.25, -0.25), float2(0.25, 0.25))) * 2.0 + roundedPixelPos + 0.5) / textureSize.xy;
+    float2 texPos   = ((pixelPos.xy + -clamp(pixelPos.xy, -0.25, 0.25)) * 2.0 + roundedPixelPos + 0.5) / textureSize.xy;
     float4 texColor = tex2D(texDiffuse, texPos.xy);
 
     float3 blendedColor;
