@@ -72,7 +72,10 @@ enum GameRegions {
 #define RETRO_ANDROID (7)
 #define RETRO_UWP     (8)
 
+#define sprintf_s(x, _,...) sprintf(x, __VA_ARGS__)
+
 #if defined _WIN32
+#undef sprintf_s
 
 #if defined WINAPI_FAMILY
 #if WINAPI_FAMILY != WINAPI_FAMILY_APP
