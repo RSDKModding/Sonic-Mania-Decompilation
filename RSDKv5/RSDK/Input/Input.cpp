@@ -44,6 +44,10 @@ int32 RSDK::gamePadCount               = 0;
 #include "SDL2/SDL2InputDevice.cpp"
 #endif
 
+#if RETRO_INPUTDEVICE_GLFW
+#include "GLFW/GLFWInputDevice.cpp"
+#endif
+
 void RSDK::RemoveInputDevice(InputDevice *targetDevice)
 {
     if (targetDevice) {
@@ -111,6 +115,10 @@ void RSDK::InitInputDevices()
 
 #if RETRO_INPUTDEVICE_SDL2
     SKU::InitSDL2InputAPI();
+#endif
+
+#if RETRO_INPUTDEVICE_GLFW
+    SKU::InitGLFWInputAPI();
 #endif
 }
 

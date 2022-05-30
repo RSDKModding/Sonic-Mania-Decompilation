@@ -91,11 +91,11 @@ void InputDeviceSDL::UpdateInput()
     this->stateDown     = (this->inputFlags & KEYMASK_DOWN) != 0;
     this->stateLeft     = (this->inputFlags & KEYMASK_LEFT) != 0;
     this->stateRight    = (this->inputFlags & KEYMASK_RIGHT) != 0;
-    this->stateA        = (this->inputFlags & KEYMASK_A) != 0;
-    this->stateB        = (this->inputFlags & KEYMASK_B) != 0;
+    this->stateA        = (this->inputFlags & swapABXY ? KEYMASK_B : KEYMASK_A) != 0;
+    this->stateB        = (this->inputFlags & swapABXY ? KEYMASK_A : KEYMASK_B) != 0;
     this->stateC        = (this->inputFlags & KEYMASK_C) != 0;
-    this->stateX        = (this->inputFlags & KEYMASK_X) != 0;
-    this->stateY        = (this->inputFlags & KEYMASK_Y) != 0;
+    this->stateX        = (this->inputFlags & swapABXY ? KEYMASK_Y : KEYMASK_X) != 0;
+    this->stateY        = (this->inputFlags & swapABXY ? KEYMASK_X : KEYMASK_Y) != 0;
     this->stateZ        = (this->inputFlags & KEYMASK_Z) != 0;
     this->stateStart    = (this->inputFlags & KEYMASK_START) != 0;
     this->stateSelect   = (this->inputFlags & KEYMASK_SELECT) != 0;
@@ -186,8 +186,10 @@ InputDeviceSDL *RSDK::SKU::InitSDL2InputDevice(uint32 id, uint8 controllerID)
         controllerType = DEVICE_XBOX;
     else if (strstr(name, "PS4") || strstr(name, "PS5"))
         controllerType = DEVICE_PS4;
-    else if (strstr(name, "Nintendo") || strstr(name, "Switch"))
+    else if (strstr(name, "Nintendo") || strstr(name, "Switch")) {
         controllerType = DEVICE_SWITCH_PRO;
+        device->swapABXY = true;
+    }
     else if (strstr(name, "Saturn"))
         controllerType = DEVICE_SATURN;
 

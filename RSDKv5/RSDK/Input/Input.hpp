@@ -475,7 +475,7 @@ extern int32 gamePadCount;
 #endif
 
 #if RETRO_INPUTDEVICE_STEAM
-#include "RawInput/SteamInputDevice.hpp"
+#include "Steam/SteamInputDevice.hpp"
 #endif
 
 #if RETRO_INPUTDEVICE_NX
@@ -484,6 +484,10 @@ extern int32 gamePadCount;
 
 #if RETRO_INPUTDEVICE_SDL2
 #include "SDL2/SDL2InputDevice.hpp"
+#endif
+
+#if RETRO_INPUTDEVICE_GLFW
+#include "GLFW/GLFWInputDevice.hpp"
 #endif
 
 // Initializes the input devices & the backend APIs powering em

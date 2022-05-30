@@ -81,8 +81,8 @@ bool RenderDevice::SetupRendering()
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
 
-    int32 size  = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
-    scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
+    int32 size = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
+    scanlines  = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
     videoSettings.windowState = WINDOWSTATE_ACTIVE;
@@ -114,8 +114,8 @@ void RenderDevice::GetDisplays()
     if (displayInfo.displays)
         free(displayInfo.displays);
 
-    displayInfo.displays        = (decltype(displayInfo.displays))malloc(sizeof(GLFWvidmode) * displayCount);
-    int32  newDisplayCount         = 0;
+    displayInfo.displays          = (decltype(displayInfo.displays))malloc(sizeof(GLFWvidmode) * displayCount);
+    int32 newDisplayCount         = 0;
     bool32 foundFullScreenDisplay = false;
 
     for (int32 d = 0; d < displayCount; ++d) {
@@ -297,7 +297,6 @@ void RenderDevice::InitVertexBuffer()
             vertex->tex.y = (float)screens[0].size.y / textureSize.y;
         else
             vertex->tex.y = 0;
-
     }
 
     for (int32 v = vertCount; v < vertCount + 6; ++v) {
@@ -314,10 +313,7 @@ void RenderDevice::InitVertexBuffer()
             vertex->tex.y = 1;
         else
             vertex->tex.y = 0;
-
     }
-
-
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(RenderVertex) * (!RETRO_REV02 ? 24 : 60), vertBuffer);
 }
@@ -534,7 +530,6 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
     ShaderEntry *shader = &shaderList[shaderCount];
     shader->linear      = linear;
     sprintf_s(shader->name, (int32)sizeof(shader->name), "%s", fileName);
-
 
     GLint success;
     char infoLog[0x1000];
@@ -932,7 +927,20 @@ void RenderDevice::ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, i
         }
     }
 }
-void RenderDevice::ProcessJoystickEvent(int32 ID, int32 event) {}
+void RenderDevice::ProcessJoystickEvent(int32 ID, int32 event)
+{
+    if (!glfwJoystickIsGamepad(ID))
+        return;
+    uint32 hash;
+    char idBuffer[0x20];
+    sprintf_s(idBuffer, (int32)sizeof(idBuffer), "%s%d", "GLFWDevice", ID);
+    GenerateHashCRC(&hash, idBuffer);
+
+    if (event == GLFW_CONNECTED)
+        SKU::InitGLFWInputDevice(hash, ID);
+    else
+        RemoveInputDevice(InputDeviceFromID(hash));
+}
 void RenderDevice::ProcessMaximizeEvent(GLFWwindow *, int32 maximized)
 {
     // i don't know why this is a thing
