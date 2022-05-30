@@ -1,9 +1,7 @@
-using namespace RSDK;
-
 #if RETRO_REV02
-SKU::DummyCore *RSDK::SKU::dummyCore = NULL;
+DummyCore *dummyCore = NULL;
 
-uint32 RSDK::SKU::GetAPIValueID(const char *identifier, int32 charIndex)
+uint32 GetAPIValueID(const char *identifier, int32 charIndex)
 {
     if (identifier[charIndex])
         return (33 * GetAPIValueID(identifier, charIndex + 1)) ^ identifier[charIndex];
@@ -11,7 +9,7 @@ uint32 RSDK::SKU::GetAPIValueID(const char *identifier, int32 charIndex)
         return 5381;
 }
 
-int32 RSDK::SKU::GetAPIValue(uint32 id)
+int32 GetAPIValue(uint32 id)
 {
     switch (id) {
         default: break;
@@ -58,7 +56,7 @@ int32 RSDK::SKU::GetAPIValue(uint32 id)
     return 0;
 }
 
-SKU::DummyCore *RSDK::SKU::InitDummyCore()
+DummyCore *InitDummyCore()
 {
     // Initalize API subsystems
     DummyCore *core = new DummyCore;
@@ -109,21 +107,21 @@ SKU::DummyCore *RSDK::SKU::InitDummyCore()
 
 #if RETRO_REV02
 const char *userValueNames[8] = { "Ext <PLUS>" };
-void RSDK::SKU::DummyCore::StageLoad()
+void DummyCore::StageLoad()
 {
     UserCore::StageLoad();
 
     for (int32 v = 0; v < valueCount; ++v) AddViewableVariable(userValueNames[v], &values[v], VIEWVAR_BOOL, false, true);
 }
 
-bool32 RSDK::SKU::DummyCore::CheckFocusLost() { return focusState != 0; }
+bool32 DummyCore::CheckFocusLost() { return focusState != 0; }
 
-int32 RSDK::SKU::DummyCore::GetUserLanguage() { return GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0)); }
-int32 RSDK::SKU::DummyCore::GetUserRegion() { return GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0)); }
-int32 RSDK::SKU::DummyCore::GetUserPlatform() { return GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0)); }
-bool32 RSDK::SKU::DummyCore::GetConfirmButtonFlip() { return GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0)); }
+int32 DummyCore::GetUserLanguage() { return GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0)); }
+int32 DummyCore::GetUserRegion() { return GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0)); }
+int32 DummyCore::GetUserPlatform() { return GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0)); }
+bool32 DummyCore::GetConfirmButtonFlip() { return GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0)); }
 
-void RSDK::SKU::DummyCore::LaunchManual()
+void DummyCore::LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
 #if RETRO_RENDERDEVICE_SDL2
@@ -133,9 +131,9 @@ void RSDK::SKU::DummyCore::LaunchManual()
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
 #endif
 }
-void RSDK::SKU::DummyCore::ExitGame() { RenderDevice::isRunning = false; }
+void DummyCore::ExitGame() { RenderDevice::isRunning = false; }
 
-int32 RSDK::SKU::DummyCore::GetDefaultGamepadType()
+int32 DummyCore::GetDefaultGamepadType()
 {
 #if RETRO_REV02
     int32 platform = curSKU.platform;

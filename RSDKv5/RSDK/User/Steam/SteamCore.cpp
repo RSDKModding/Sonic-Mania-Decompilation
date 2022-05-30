@@ -1,7 +1,5 @@
-using namespace RSDK;
-
 #if RETRO_REV02
-SKU::SteamCore *RSDK::SKU::InitSteamCore()
+SKU::SteamCore *InitSteamCore()
 {
     // Initalize API subsystems
     SteamCore *core = new SteamCore;

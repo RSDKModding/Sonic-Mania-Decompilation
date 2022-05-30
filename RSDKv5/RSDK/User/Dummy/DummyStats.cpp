@@ -1,14 +1,12 @@
-using namespace RSDK;
-
 // Start Dummy Stats
-std::vector<SKU::StatInfo> RSDK::SKU::statList;
+std::vector<StatInfo> statList;
 // End Dummy Stats
 
 #if RETRO_REV02
 #define voidToInt(x)   (int)(size_t)(x)
 #define voidToFloat(x) *(float *)&(x)
 
-void RSDK::SKU::DummyStats::TryTrackStat(StatInfo *stat)
+void DummyStats::TryTrackStat(StatInfo *stat)
 {
     if (enabled) {
         std::string str = __FILE__;

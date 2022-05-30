@@ -1,7 +1,5 @@
-using namespace RSDK;
-
 #if RETRO_REV02
-int32 RSDK::SKU::DummyUserStorage::TryAuth()
+int32 DummyUserStorage::TryAuth()
 {
     if (authStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
@@ -15,7 +13,7 @@ int32 RSDK::SKU::DummyUserStorage::TryAuth()
     }
     return authStatus;
 }
-int32 RSDK::SKU::DummyUserStorage::TryInitStorage()
+int32 DummyUserStorage::TryInitStorage()
 {
     if (storageStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
@@ -28,12 +26,12 @@ int32 RSDK::SKU::DummyUserStorage::TryInitStorage()
     }
     return storageStatus;
 }
-bool32 RSDK::SKU::DummyUserStorage::GetUsername(String *name)
+bool32 DummyUserStorage::GetUsername(String *name)
 {
     InitString(name, (char *)"IntegerGeorge802", false);
     return true;
 }
-void RSDK::SKU::DummyUserStorage::ClearPrerollErrors()
+void DummyUserStorage::ClearPrerollErrors()
 {
     if (authStatus != STATUS_OK)
         authStatus = STATUS_NONE;
@@ -43,7 +41,7 @@ void RSDK::SKU::DummyUserStorage::ClearPrerollErrors()
         storageStatus = STATUS_NONE;
 }
 
-void RSDK::SKU::DummyUserStorage::ProcessFileLoadTime()
+void DummyUserStorage::ProcessFileLoadTime()
 {
 
     for (int32 f = fileList.Count() - 1; f >= 0; --f) {
@@ -101,7 +99,7 @@ void RSDK::SKU::DummyUserStorage::ProcessFileLoadTime()
     }
 }
 
-bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 bufSize, int32 (*callback)(int32))
+bool32 DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 bufSize, int32 (*callback)(int32))
 {
     bool32 success = false;
     memset(buffer, 0, bufSize);
@@ -131,7 +129,7 @@ bool32 RSDK::SKU::DummyUserStorage::TryLoadUserFile(const char *filename, void *
 
     return success;
 }
-bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compressed)
+bool32 DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compressed)
 {
     bool32 success = false;
     if (!noSaveActive) {
@@ -169,7 +167,7 @@ bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *
 
     return success;
 }
-bool32 RSDK::SKU::DummyUserStorage::TryDeleteUserFile(const char *filename, int32 (*callback)(int32))
+bool32 DummyUserStorage::TryDeleteUserFile(const char *filename, int32 (*callback)(int32))
 {
     if (!noSaveActive) {
         DummyFileInfo *file = fileList.Append();

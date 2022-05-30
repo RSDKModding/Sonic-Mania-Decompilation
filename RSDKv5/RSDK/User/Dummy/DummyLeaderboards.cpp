@@ -1,16 +1,14 @@
 #include <string>
 
-using namespace RSDK;
-
 // Start custom leaderboard code
 //
 // this is added because we don't have access to any store APIs that would otherwise use this feature
-std::vector<SKU::LeaderboardInfo> RSDK::SKU::leaderboardList;
+std::vector<LeaderboardInfo> leaderboardList;
 
 // End custom leaderboard code
 
 #if RETRO_REV02
-void RSDK::SKU::DummyLeaderboards::FillLeaderboardEntries()
+void DummyLeaderboards::FillLeaderboardEntries()
 {
     const char *dummyNames[] = { "ORCIHILLARY124",      "AUCTORJOLIE521",       "SENECTUSFLORENCE789", "MAGNAAVRAM503",       "SITVERNON320",
                                  "DUICHRISTEN429",      "NULLAKERMIT649",       "INTEGERGEORGE708",    "HENDRERITDREW443",    "UTULYSSES507",
@@ -54,7 +52,7 @@ void RSDK::SKU::DummyLeaderboards::FillLeaderboardEntries()
         InitString(&entry->userID, (char *)"DUMMY_USER_ID", 0);
     }
 }
-void RSDK::SKU::DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser)
+void DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser)
 {
     if (!leaderboard)
         return;
@@ -76,7 +74,7 @@ void RSDK::SKU::DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, 
         loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
     }
 }
-void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
+void DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
 {
     if (!leaderboard)
         return;

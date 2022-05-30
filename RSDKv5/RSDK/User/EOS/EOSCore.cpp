@@ -1,7 +1,6 @@
-using namespace RSDK;
 
 #if RETRO_REV02
-SKU::EOSCore *RSDK::SKU::InitEOSCore()
+EOSCore *InitEOSCore()
 {
     // Initalize API subsystems
     EOSCore *core = new EOSCore;

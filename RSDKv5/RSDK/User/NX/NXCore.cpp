@@ -1,7 +1,5 @@
-using namespace RSDK;
-
 #if RETRO_REV02
-SKU::NXCore *RSDK::SKU::InitNXCore()
+SKU::NXCore *InitNXCore()
 {
     // Initalize API subsystems
     NXCore *core = new NXCore;

@@ -1,7 +1,5 @@
-using namespace RSDK;
-
 #if RETRO_REV02
-void RSDK::SKU::DummyRichPresence::SetPresence(int32 id, String *message)
+void DummyRichPresence::SetPresence(int32 id, String *message)
 {
     char buffer[0xFF];
     GetCString(buffer, message);
