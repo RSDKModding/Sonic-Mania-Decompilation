@@ -73,6 +73,11 @@ void RSDK::RegisterStaticVariables(void **staticVars, const char *name, uint32 c
 }
 #endif
 
+#define ALIGN_TO(type)                                                                                                                               \
+    aligned = (dataPos & -(int32)sizeof(type)) + sizeof(type);                                                                                       \
+    if (aligned < dataPos)                                                                                                                           \
+        dataPos = aligned;
+
 void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 {
     FileInfo info;
@@ -123,11 +128,19 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
             int32 arraySize = ReadInt32(&info, false);
 
             // bit 7 == "hasValues"
+
+            int32 aligned = 0;
             if (dataType & 0x80) {
                 uint32 dataSize = ReadInt32(&info, false);
                 dataType &= 0x7F;
 
                 switch (dataType) {
+                    default:
+#if !RETRO_USE_ORIGINAL_CODE
+                        PrintLog(PRINT_NORMAL, "Invalid static variable type: %d", dataType);
+#endif
+                        break;
+
                     case SVAR_UINT8:
                     case SVAR_INT8:
                         if (info.readPos + dataSize <= info.fileSize && &classPtr[dataPos]) {
@@ -143,10 +156,7 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 
                     case SVAR_UINT16:
                     case SVAR_INT16: {
-                        int32 tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
-                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
-                            tmp = dataPos;
-                        dataPos = tmp;
+                        ALIGN_TO(int16);
 
                         if (info.readPos + (dataSize * sizeof(int16)) <= info.fileSize && &classPtr[dataPos]) {
                             for (int32 i = 0; i < dataSize * sizeof(int16); i += sizeof(int16))
@@ -156,16 +166,13 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                             info.readPos += (dataSize * sizeof(int16));
                         }
 
-                        dataPos = tmp + sizeof(int16) * dataSize;
+                        dataPos += sizeof(int16) * dataSize;
                         break;
                     }
 
                     case SVAR_UINT32:
                     case SVAR_INT32: {
-                        int32 tmp = (dataPos & -(int32)sizeof(int32)) + sizeof(int32);
-                        if ((dataPos & -(int32)sizeof(int32)) >= dataPos)
-                            tmp = dataPos;
-                        dataPos = tmp;
+                        ALIGN_TO(int32);
 
                         if (info.readPos + (dataSize * sizeof(int32)) <= info.fileSize && &classPtr[dataPos]) {
                             for (int32 i = 0; i < dataSize * sizeof(int32); i += sizeof(int32))
@@ -175,15 +182,12 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                             info.readPos += (dataSize * sizeof(int32));
                         }
 
-                        dataPos = tmp + sizeof(int32) * dataSize;
+                        dataPos += sizeof(int32) * dataSize;
                         break;
                     }
 
                     case SVAR_BOOL: {
-                        int32 tmp = (dataPos & -(int32)sizeof(bool32)) + sizeof(int32);
-                        if ((dataPos & -(int32)sizeof(bool32)) >= dataPos)
-                            tmp = dataPos;
-                        dataPos = tmp;
+                        ALIGN_TO(bool32);
 
                         if (info.readPos + (dataSize * sizeof(bool32)) <= info.fileSize && &classPtr[dataPos]) {
                             for (int32 i = 0; i < dataSize * sizeof(bool32); i += sizeof(bool32))
@@ -193,90 +197,68 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                             info.readPos += (dataSize * sizeof(bool32));
                         }
 
-                        dataPos = tmp + sizeof(bool32) * dataSize;
+                        dataPos += sizeof(bool32) * dataSize;
                         break;
                     }
                 }
             }
             else {
-                int32 tmp = 0;
                 switch (dataType) {
                     case SVAR_UINT8:
                     case SVAR_INT8: dataPos += sizeof(uint8) * arraySize; break;
 
                     case SVAR_UINT16:
                     case SVAR_INT16:
-                        tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
-                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
-                            tmp = dataPos;
-
-                        dataPos = tmp + sizeof(int16) * arraySize;
+                        ALIGN_TO(int16);
+                        dataPos += sizeof(int16) * arraySize;
                         break;
 
                     case SVAR_UINT32:
                     case SVAR_INT32:
-                        tmp = (dataPos & -(int32)sizeof(int32)) + sizeof(int32);
-                        if ((dataPos & -(int32)sizeof(int32)) >= dataPos)
-                            tmp = dataPos;
-
-                        dataPos = tmp + sizeof(int32) * arraySize;
+                        ALIGN_TO(int32);
+                        dataPos += sizeof(int32) * arraySize;
                         break;
 
                     case SVAR_BOOL:
-                        tmp = (dataPos & -(int32)sizeof(bool32)) + sizeof(bool32);
-                        if ((dataPos & -(int32)sizeof(bool32)) >= dataPos)
-                            tmp = dataPos;
-
-                        dataPos = tmp + sizeof(bool32) * arraySize;
+                        ALIGN_TO(bool32);
+                        dataPos += sizeof(bool32) * arraySize;
                         break;
 
                     case SVAR_POINTER:
-                        tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
-                        if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
-                            tmp = dataPos;
-
-                        dataPos = tmp + sizeof(void *) * arraySize; // 4/8
+                        ALIGN_TO(void *);
+                        dataPos += sizeof(void *) * arraySize;
                         break;
 
                     case SVAR_VECTOR2:
-                        tmp = (dataPos & -(int32)sizeof(int32)) + sizeof(int32);
-                        if ((dataPos & -(int32)sizeof(int32)) >= dataPos)
-                            tmp = dataPos;
-
-                        dataPos = tmp + sizeof(Vector2) * arraySize; // 8
+                        ALIGN_TO(int32);
+                        dataPos += sizeof(Vector2) * arraySize;
                         break;
 
                     case SVAR_STRING:
-                        tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
-                        if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
-                            tmp = dataPos;
-
-                        dataPos = tmp + sizeof(String) * arraySize; // 8/16
+                        ALIGN_TO(void *);
+                        dataPos += sizeof(String) * arraySize;
                         break;
 
                     case SVAR_ANIMATOR:
-                        tmp = (dataPos & -(int32)sizeof(void *)) + sizeof(void *);
-                        if ((dataPos & -(int32)sizeof(void *)) >= dataPos)
-                            tmp = dataPos;
-                        dataPos = tmp + sizeof(Animator) * arraySize; // 24/32
+                        ALIGN_TO(void *);
+                        dataPos += sizeof(Animator) * arraySize;
                         break;
 
                     case SVAR_HITBOX:
-                        tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
-                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
-                            tmp = dataPos;
-                        dataPos = tmp + sizeof(Hitbox) * arraySize; // 8
+                        ALIGN_TO(int16);
+                        dataPos += sizeof(Hitbox) * arraySize;
                         break;
 
-                    case SVAR_UNKNOWN: // ???
-                        tmp = (dataPos & -(int32)sizeof(int16)) + sizeof(int16);
-                        if ((dataPos & -(int32)sizeof(int16)) >= dataPos)
-                            tmp = dataPos;
-
-                        dataPos = tmp + sizeof(UnknownStruct) * arraySize; // 18 (0x12) (2 * 9)
+                    case SVAR_SPRITEFRAME:
+                        ALIGN_TO(int16);
+                        dataPos += sizeof(GameSpriteFrame) * arraySize;
                         break;
 
-                    default: break;
+                    default:
+#if !RETRO_USE_ORIGINAL_CODE
+                        PrintLog(PRINT_NORMAL, "Invalid data type: %d", dataType);
+#endif
+                        break;
                 }
             }
         }

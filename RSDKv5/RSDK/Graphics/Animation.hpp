@@ -21,7 +21,8 @@ struct Hitbox {
     int16 bottom;
 };
 
-struct SpriteFrame {
+// this is all the data the game can access
+static struct {
     int16 sprX;
     int16 sprY;
     int16 width;
@@ -31,7 +32,16 @@ struct SpriteFrame {
     uint16 duration;
     uint16 unicodeChar;
     uint8 sheetID;
-    uint8 hitboxCnt;
+} GameSpriteFrame;
+
+// hitboxCount & hitboxes are "private"
+// the proof of this is that "GetHitbox(animator, uint8 hitboxID)" exists, which means that Animator::frames must be a void*
+// otherwise you could just do animator->frames[x].hitboxes[y]
+// further proof of this is SVAR_SPRITEFRAME, to which the ONLY matching in the entire engine struct is "SpriteFrame" without the hitbox stuff.
+struct SpriteFrame : decltype(GameSpriteFrame) {
+    typedef decltype(GameSpriteFrame) frame;
+
+    uint8 hitboxCount;
     Hitbox hitboxes[FRAMEHITBOX_COUNT];
 };
 

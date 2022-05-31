@@ -396,12 +396,10 @@ typedef struct {
     uint16 delay;
     int16 id;
     uint8 sheetID;
-    uint8 hitboxCnt;
-    Hitbox hitboxes[8];
 } SpriteFrame;
 
 typedef struct {
-    SpriteFrame *frames;
+    void *frames;
     int32 frameID;
     int16 animationID;
     int16 prevAnimationID;

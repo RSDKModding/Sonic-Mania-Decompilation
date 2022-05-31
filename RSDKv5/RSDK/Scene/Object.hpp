@@ -41,7 +41,7 @@ enum StaticVariableTypes {
     SVAR_STRING,
     SVAR_ANIMATOR,
     SVAR_HITBOX,
-    SVAR_UNKNOWN,
+    SVAR_SPRITEFRAME,
 };
 
 enum TypeGroups {
@@ -89,19 +89,6 @@ enum DefaultObjects {
 #endif
 
     TYPE_DEFAULT_COUNT, // max
-};
-
-// lmao
-struct UnknownStruct {
-    int16 unknown1;
-    int16 unknown2;
-    int16 unknown3;
-    int16 unknown4;
-    int16 unknown5;
-    int16 unknown6;
-    int16 unknown7;
-    int16 unknown8;
-    int16 unknown9;
 };
 
 struct Object {

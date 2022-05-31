@@ -359,7 +359,7 @@ uint32 RSDK::SKU::GetDBRowUUID(uint16 tableID, int32 rowID)
     return userDB->rows[rowID].uuid;
 }
 
-// UserDB Row Unknowns
+// UserDB Row Sorting
 uint16 RSDK::SKU::SetupUserDBRowSorting(uint16 tableID)
 {
     if (tableID == (uint16)-1)
