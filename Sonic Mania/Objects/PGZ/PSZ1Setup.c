@@ -293,7 +293,7 @@ void PSZ1Setup_TriggerCB_AchievementArea(void)
         }
 
         if (!count) {
-            API_UnlockAchievement("ACH_PGZ");
+            API_UnlockAchievement(&achievementList[ACH_PGZ]);
             PSZ1Setup->hasAchievement = true;
         }
     }

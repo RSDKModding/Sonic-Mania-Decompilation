@@ -83,11 +83,15 @@ struct UserCore {
             return 0;
     }
 #if RETRO_VER_EGS
+    virtual bool32 SetupExtensionOverlay() { return true; }
     virtual bool32 CanShowExtensionOverlay(int32 overlay) { return true; }
     virtual bool32 ShowExtensionOverlay(int32 overlay) { return false; }
-    virtual bool32 ShowAltExtensionOverlay(int32 overlay) { return false; }
-    virtual bool32 ShowLimitedVideoOptions(int32 overlay) { return false; }
+    virtual bool32 CanShowAltExtensionOverlay(int32 overlay) { return false; }
+    virtual bool32 ShowAltExtensionOverlay(int32 overlay) { return ShowExtensionOverlay(overlay); }
+    virtual int32 GetConnectingStringID() { return -1; }
+    virtual bool32 ShowLimitedVideoOptions(int32 id) { return false; }
     virtual void InitInputDevices() {}
+    virtual void Unknown() {}
 #else
     virtual bool32 ShowExtensionOverlay(uint8 overlay) { return false; }
 #endif
@@ -154,10 +158,12 @@ bool32 ShowExtensionOverlay(uint8 overlay);
 bool32 GetXYButtonFlip();
 
 #if RETRO_VER_EGS
+inline bool32 SetupExtensionOverlay() { return userCore->SetupExtensionOverlay(); }
 inline bool32 CanShowExtensionOverlay(int32 overlay) { return userCore->CanShowExtensionOverlay(overlay); }
+inline bool32 CanShowAltExtensionOverlay(int32 overlay) { return userCore->CanShowAltExtensionOverlay(overlay); }
 inline bool32 ShowAltExtensionOverlay(int32 overlay) { return userCore->ShowAltExtensionOverlay(overlay); }
-inline void ShowLimitedVideoOptions(int32 overlay) { userCore->ShowLimitedVideoOptions(overlay); }
-inline void InitInputDevices() { userCore->InitInputDevices(); }
+inline int32 GetConnectingStringID() { return userCore->GetConnectingStringID(); }
+inline void ShowLimitedVideoOptions(int32 id) { userCore->ShowLimitedVideoOptions(id); }
 #endif
 
 } // namespace SKU

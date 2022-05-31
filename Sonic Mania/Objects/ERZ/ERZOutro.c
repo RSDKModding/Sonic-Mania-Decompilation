@@ -416,9 +416,11 @@ bool32 ERZOutro_Cutscene_FadeOut(EntityCutsceneSeq *host)
 {
     EntityFXRuby *fxRuby = (EntityFXRuby *)ERZOutro->fxRuby;
     ERZOutro_HandleRubyHover();
+
     if (host->timer >= 90) {
         if (fxRuby->fadeBlack < 512)
             fxRuby->fadeBlack += 8;
+
         return host->timer == 150;
     }
     return false;
@@ -430,15 +432,18 @@ bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host)
         if (!host->timer) {
             ERZOutro->savedGame = false;
             SaveGame_SaveProgress();
-            GameProgress_GiveEnding(2);
+            GameProgress_GiveEnding(GAMEPROGRESS_ENDING_GOOD);
             SaveGame_SaveFile(ERZOutro_SaveFileCB);
             UIWaitSpinner_StartWait();
         }
         if (!ERZOutro->savedGame)
             return false;
+
         UIWaitSpinner_FinishWait();
     }
-    API_UnlockAchievement("ACH_GAME_CLEARED");
+
+    API_UnlockAchievement(&achievementList[ACH_GAME_CLEARED]);
+
     if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1) && CHECK_CHARACTER_ID(ID_KNUCKLES, 2))
         RSDK.SetScene("Videos", "True End?");
     else

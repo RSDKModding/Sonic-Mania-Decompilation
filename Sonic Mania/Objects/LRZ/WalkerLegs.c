@@ -176,7 +176,7 @@ void WalkerLegs_CheckObjectCrush(void)
                     if (RSDK.CheckObjectCollisionTouchBox(rexon, &Rexon->hitboxShell, self, &WalkerLegs->hitbox)) {
                         Rexon_Destroy(rexon, true);
                         if (!WalkerLegs->hasAchievement) {
-                            API_UnlockAchievement("ACH_LRZ");
+                            API_UnlockAchievement(&achievementList[ACH_LRZ]);
                             WalkerLegs->hasAchievement = true;
                         }
                     }

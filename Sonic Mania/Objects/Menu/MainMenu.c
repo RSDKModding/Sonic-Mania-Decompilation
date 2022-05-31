@@ -258,18 +258,23 @@ void MainMenu_MenuButton_ActionCB(void)
 
         case 6: // Buy Plus DLC
 #if MANIA_USE_EGS
-            API.CanShowExtensionOverlay(0);
+            API.SetupExtensionOverlay();
 
             if (!API.CheckDLC(DLC_PLUS)) {
-                if (API.ShowExtensionOverlay(0)) {
-                    API.ShowAltExtensionOverlay(0);
-                }
-                else {
-                    String message;
-                    INIT_STRING(message);
-                    Localization_GetString(&message, STR_CONNECTEGS);
+                if (!API.CanShowExtensionOverlay(0) || !API.ShowExtensionOverlay(0)) {
+                    if (API.CanShowAltExtensionOverlay(0)) {
+                        int32 connectingMessage = API.GetConnectingStringID();
+                        if (connectingMessage >= 0) {
+                            String message;
+                            INIT_STRING(message);
+                            Localization_GetString(&message, connectingMessage);
 
-                    UIDialog_CreateDialogOkCancel(&message, MainMenu_BuyPlusDialogCB, StateMachine_None, true, true);
+                            UIDialog_CreateDialogOkCancel(&message, MainMenu_BuyPlusDialogCB, StateMachine_None, true, true);
+                        }
+                        else {
+                            API.ShowAltExtensionOverlay(0);
+                        }
+                    }
                 }
             }
 #else
@@ -282,7 +287,7 @@ void MainMenu_MenuButton_ActionCB(void)
 }
 
 #if MANIA_USE_EGS
-void MainMenu_BuyPlusDialogCB(void) { API.ShowLimitedVideoOptions(0); }
+void MainMenu_BuyPlusDialogCB(void) { API.ShowAltExtensionOverlay(0); }
 #endif
 
 void MainMenu_HandleUnlocks(void)

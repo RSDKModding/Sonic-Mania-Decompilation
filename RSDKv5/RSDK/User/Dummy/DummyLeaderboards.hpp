@@ -56,9 +56,3 @@ struct DummyLeaderboards : UserLeaderboards {
 };
 #endif
 
-// Start custom leaderboard code
-
-extern std::vector<LeaderboardInfo> leaderboardList;
-
-// End custom leaderboard code
-

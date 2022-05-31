@@ -1,12 +1,5 @@
 #include <string>
 
-// Start custom leaderboard code
-//
-// this is added because we don't have access to any store APIs that would otherwise use this feature
-std::vector<LeaderboardInfo> leaderboardList;
-
-// End custom leaderboard code
-
 #if RETRO_REV02
 void DummyLeaderboards::FillLeaderboardEntries()
 {
@@ -63,7 +56,7 @@ void DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUs
         PrintLog(PRINT_NORMAL, str.c_str());
     }
     else {
-        PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", leaderboard->pcName, isUser ? "true" : "false");
+        PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", leaderboard->idPC, isUser ? "true" : "false");
         this->isUser   = isUser;
         this->userRank = 0;
         if (isUser)
@@ -78,25 +71,6 @@ void DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void
 {
     if (!leaderboard)
         return;
-
-    int32 id = -1;
-    for (int32 i = 0; i < leaderboardList.size(); ++i) {
-        if (std::string(leaderboardList[i].name) == leaderboard->pcName) {
-            id = i;
-            break;
-        }
-    }
-
-    if (id == -1) {
-        LeaderboardInfo info;
-        sprintf_s(info.name, (int32)sizeof(info.name), "%s", leaderboard->pcName);
-        info.score = 0x7FFFFFFF;
-        id         = (int32)leaderboardList.size();
-        leaderboardList.push_back(info);
-    }
-
-    leaderboardList[id].score = score;
-    SaveUserData();
 
     std::string str = __FILE__;
     str += ": TrackScore() # TrackScore ";

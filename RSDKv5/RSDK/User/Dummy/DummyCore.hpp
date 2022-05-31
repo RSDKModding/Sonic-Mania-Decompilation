@@ -24,18 +24,23 @@ struct DummyCore : UserCore {
         PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay);
         return true;
     }
+    bool32 CanShowAltExtensionOverlay(int32 overlay)
+    {
+        PrintLog(PRINT_POPUP, "Can Show Alternate Extension Overlay?: %d", overlay);
+        return false;
+    }
     bool32 ShowAltExtensionOverlay(int32 overlay)
     {
         PrintLog(PRINT_POPUP, "Show Alternate Extension Overlay: %d", overlay);
-        return true;
+        return ShowExtensionOverlay(overlay);
     }
-    bool32 ShowLimitedVideoOptions(int32 overlay)
+    int32 GetConnectingStringID() { return -1; }
+    bool32 ShowLimitedVideoOptions(int32 id)
     {
         PrintLog(PRINT_POPUP, "Show Limited Video Options?");
         return false;
     }
     void InitInputDevices() {}
-    void Unknown() {}
 #else
     bool32 ShowExtensionOverlay(int32 overlay)
     {

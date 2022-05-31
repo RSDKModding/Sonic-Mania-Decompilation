@@ -315,7 +315,7 @@ void Current_State_WaterLeft(void)
                         self->activePlayers &= ~(1 << playerID);
                         if (RSDK.CheckStageFolder("FBZ") && !player->sidekick && self->fbzAchievement && self->playerPositions[playerID].x >= x
                             && player->position.x < self->position.x) {
-                            API_UnlockAchievement("ACH_FBZ");
+                            API_UnlockAchievement(&achievementList[ACH_FBZ]);
                         }
                         self->playerPositions[playerID].x = 0;
                         self->playerPositions[playerID].y = 0;

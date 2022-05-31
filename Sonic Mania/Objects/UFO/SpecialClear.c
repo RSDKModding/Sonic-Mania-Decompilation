@@ -496,8 +496,9 @@ void SpecialClear_State_EnterBonuses(void)
         self->machBonusPos.x -= 0x100000;
 
     if (self->continuePos.x <= 0) {
-        if (self->messageType == SC_MSG_ALLEMERALDS)
-            API_UnlockAchievement("ACH_EMERALDS");
+        if (self->messageType == SC_MSG_ALLEMERALDS) {
+            API_UnlockAchievement(&achievementList[ACH_EMERALDS]);
+        }
 
         self->state = SpecialClear_State_ScoreShownDelay;
     }

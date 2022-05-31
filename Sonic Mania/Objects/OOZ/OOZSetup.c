@@ -421,7 +421,7 @@ bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle)
 void OOZSetup_GenericTriggerCB(void)
 {
     if (!OOZSetup->hasAchievement) {
-        API_UnlockAchievement("ACH_OOZ");
+        API_UnlockAchievement(&achievementList[ACH_OOZ]);
         OOZSetup->hasAchievement = true;
     }
 }

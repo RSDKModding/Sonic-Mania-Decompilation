@@ -1,15 +1,15 @@
 #if RETRO_REV02
-void DummyAchievements::TryUnlockAchievement(const char *name)
+void DummyAchievements::TryUnlockAchievement(AchievementID *id)
 {
     if (enabled) {
-        PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
+        PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", id->identifier);
 
         int32 i = 0;
         for (; i < (int)achievementList.size(); ++i) {
-            if (achievementList[i].identifier == name) {
+            if (achievementList[i].identifier == id->identifier) {
                 if (!achievementList[i].achieved) {
                     achievementStack.push_back(i);
-                    PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
+                    PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", id->identifier, i);
                     achievementList[i].achieved = true;
                     SaveUserData();
                 }
@@ -18,7 +18,7 @@ void DummyAchievements::TryUnlockAchievement(const char *name)
         }
 
         if (i == achievementList.size())
-            PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
+            PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", id->identifier);
     }
     else {
         std::string str = __FILE__;
@@ -27,14 +27,18 @@ void DummyAchievements::TryUnlockAchievement(const char *name)
     }
 }
 
-void DummyAchievements::GetAchievementNames(String *names, int32 count)
+void DummyAchievements::SetAchievementNames(String **names, int32 count)
 {
-    int32 i = 0;
-    for (; i < count && i < (int)achievementStack.size(); ++i) {
-        InitString(&names[i], (char *)achievementList[i].name.c_str(), 0);
-    }
-    for (; i < count; ++i) {
-        InitString(&names[i], (char *)"Dummy Achievement", 0);
+    if (count <= 0)
+        return;
+
+    char nameBuffer[0x40];
+    GetCString(nameBuffer, names[0]);
+    achievementText = nameBuffer;
+
+    for (int32 i = 1; i < count && i < (int)achievementList.size(); ++i) {
+        GetCString(nameBuffer, names[i]);
+        achievementList[i].name = nameBuffer;
     }
 }
 

@@ -1,6 +1,5 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-
 // ====================
 // API Cores
 // ====================
@@ -38,16 +37,16 @@ SKU::UserAchievements *RSDK::SKU::achievements = NULL;
 void RSDK::SKU::ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
 
 #if !RETRO_REV02
-void RSDK::SKU::TryUnlockAchievement(const char *name)
+void RSDK::SKU::TryUnlockAchievement(AchievementID *id)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
+    PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", id->identifier);
 
     int32 i = 0;
     for (; i < (int)achievementList.size(); ++i) {
-        if (achievementList[i].identifier == name) {
+        if (achievementList[i].identifier == id->identifier) {
             if (!achievementList[i].achieved) {
                 achievementStack.push_back(i);
-                PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
+                PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", id->identifier, i);
                 achievementList[i].achieved = true;
                 SaveUserData();
             }
@@ -56,7 +55,7 @@ void RSDK::SKU::TryUnlockAchievement(const char *name)
     }
 
     if (i == achievementList.size())
-        PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
+        PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", id->identifier);
 }
 #endif
 
@@ -80,7 +79,7 @@ void RSDK::SKU::LoadAchievementAssets()
     if (achievements && achievementsEnabled && achievements->CheckAchievementsEnabled()) {
         if (achievements->CheckAchievementPopupEnabled()) {
             if (achievementForceReset) {
-                achievementForceReset     = false;
+                achievementForceReset      = false;
                 achievementID              = 0;
                 achievementDrawReady       = false;
                 achievementDisplayDuration = 0;
@@ -118,8 +117,8 @@ void RSDK::SKU::ProcessAchievements()
                     achievementsDrawn          = false;
                     achievements->RemoveLastAchievementID();
 
+                    InitString(&achievementStrings[0], (char *)achievementText.c_str(), 0);
                     String buffer;
-                    CopyString(&achievementStrings[0], achievements->GetAchievementString(&buffer));
                     CopyString(&achievementStrings[1], achievements->GetAchievementName(&buffer, achievementID));
 
                     if (curSKU.language == LANGUAGE_JP) {
@@ -153,8 +152,8 @@ void RSDK::SKU::DrawAchievements()
         if (achievementsLoaded && achievementDrawReady && achievementID) {
             Vector2 drawPos;
 
+            InitString(&achievementStrings[0], (char *)achievementText.c_str(), 0);
             String buffer;
-            CopyString(&achievementStrings[0], achievements->GetAchievementString(&buffer));
             CopyString(&achievementStrings[1], achievements->GetAchievementName(&buffer, achievementID));
 
             int32 drawX = achievementStrX + currentScreen->size.x - achievementStrW;

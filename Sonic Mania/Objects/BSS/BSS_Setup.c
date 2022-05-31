@@ -691,11 +691,13 @@ void BSS_Setup_HandleSteppedObjects(void)
                             if (medal)
                                 GameProgress_GiveMedal(pos, medal);
 
-                            if (progress->allGoldMedals && progress->goldMedalCount == 31)
-                                API_UnlockAchievement("ACH_GOLD_MEDAL");
+                            if (progress->allGoldMedals && progress->goldMedalCount == 31) {
+                                API_UnlockAchievement(&achievementList[ACH_GOLD_MEDAL]);
+                            }
 
-                            if (progress->allSilverMedals && progress->silverMedalCount == 31)
-                                API_UnlockAchievement("ACH_SILVER_MEDAL");
+                            if (progress->allSilverMedals && progress->silverMedalCount == 31) {
+                                API_UnlockAchievement(&achievementList[ACH_SILVER_MEDAL]);
+                            }
                         }
                     }
                 }

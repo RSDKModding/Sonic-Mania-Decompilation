@@ -2,7 +2,7 @@
 
 struct EOSAchievements : UserAchievements {
     bool32 CheckAchievementsEnabled() { return true; }
-    void GetAchievementNames(String *names, int32 count)
+    void SetAchievementNames(String **names, int32 count)
     {
         // set achievement names
     }
@@ -26,7 +26,7 @@ struct EOSAchievements : UserAchievements {
     {
         // remove achievement from the list
     }
-    void TryUnlockAchievement(const char *name)
+    void TryUnlockAchievement(AchievementID *id)
     {
         // unload EGS achievement
     }

@@ -692,7 +692,8 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
 #if MANIA_USE_PLUS
         }
 #endif
-        API_UnlockAchievement("ACH_GAME_CLEARED");
+
+        API_UnlockAchievement(&achievementList[ACH_GAME_CLEARED]);
         RSDK.LoadScene();
         return true;
     }

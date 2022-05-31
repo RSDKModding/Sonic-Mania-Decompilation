@@ -10,6 +10,12 @@ namespace RSDK
 namespace SKU
 {
 
+struct AchievementID {
+    uint8 idPS4;            // achievement ID (PS4)
+    int32 idUnknown;        // achievement ID (unknown platform)
+    const char *identifier; // achievement ID (as a string, used for most platforms)
+};
+
 #if RETRO_REV02
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
@@ -21,7 +27,7 @@ struct UserAchievements {
     virtual void OnUnknownEvent() {}
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
     virtual bool32 CheckAchievementsEnabled() { return false; }
-    virtual void GetAchievementNames(String *names, int32 count) {}
+    virtual void SetAchievementNames(String **names, int32 count) {}
     virtual String *GetAchievementString(String *string)
     {
         string->chars  = NULL;
@@ -40,7 +46,7 @@ struct UserAchievements {
     virtual int32 GetNextAchievementID() { return 0; }
     virtual void RemoveLastAchievementID() {}
 #endif
-    virtual void TryUnlockAchievement(const char *name) { PrintLog(PRINT_POPUP, "Achievement Unlocked: %s", name); }
+    virtual void TryUnlockAchievement(AchievementID *id) { PrintLog(PRINT_POPUP, "Achievement Unlocked: %s", id->identifier); }
 
     bool32 enabled = false;
 };
@@ -81,13 +87,13 @@ inline void SetAchievementsEnabled(bool32 enabled) { achievements->enabled = ena
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
 inline bool32 CheckAchievementsEnabled() { return achievements->CheckAchievementsEnabled(); }
-inline void GetAchievementNames(String *names, int32 count) { achievements->GetAchievementNames(names, count); }
+inline void SetAchievementNames(String **names, int32 count) { achievements->SetAchievementNames(names, count); }
 #endif
 
 #if RETRO_REV02
-inline void TryUnlockAchievement(const char *name) { achievements->TryUnlockAchievement(name); }
+inline void TryUnlockAchievement(AchievementID *id) { achievements->TryUnlockAchievement(id); }
 #else
-void TryUnlockAchievement(const char *name);
+void TryUnlockAchievement(AchievementID *id);
 #endif
 void ClearAchievements();
 

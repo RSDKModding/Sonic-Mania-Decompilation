@@ -13,11 +13,13 @@ enum APITableIDs {
     APITable_IsOverlayEnabled,
     APITable_CheckDLC,
 #if RETRO_VER_EGS
+    APITable_SetupExtensionOverlay,
     APITable_CanShowExtensionOverlay,
     APITable_ShowExtensionOverlay,
+    APITable_CanShowAltExtensionOverlay,
     APITable_ShowAltExtensionOverlay,
+    APITable_GetConnectingStringID,
     APITable_ShowLimitedVideoOptions,
-    APITable_InitInputDevices,
 #else
     APITable_ShowExtensionOverlay,
 #endif
@@ -26,7 +28,7 @@ enum APITableIDs {
     APITable_SetAchievementsEnabled,
 #if RETRO_VER_EGS
     APITable_CheckAchievementsEnabled,
-    APITable_GetAchievementNames,
+    APITable_SetAchievementNames,
 #endif
     APITable_InitLeaderboards,
 #if RETRO_VER_EGS

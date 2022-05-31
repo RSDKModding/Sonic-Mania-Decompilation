@@ -266,8 +266,8 @@ void PuyoMatch_State_HandleCombos(void)
     RSDK_THIS(PuyoMatch);
 
     self->comboBeanCount = 0;
-    if (++self->comboCount == 3 && self->stateInput == PuyoBean_StateInput_HandlePlayerInputs)
-        API_UnlockAchievement("ACH_CPZ");
+    if (++self->comboCount == 3 && self->stateInput == PuyoBean_StateInput_HandlePlayerInputs) 
+        API_UnlockAchievement(&achievementList[ACH_CPZ]);
 
     uint8 comboColors          = 0;
     EntityPuyoBean *targetBean = NULL;

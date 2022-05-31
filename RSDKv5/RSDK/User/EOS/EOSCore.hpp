@@ -26,18 +26,29 @@ struct EOSCore : UserCore {
     void LaunchManual() {}
     void ExitGame() { RenderDevice::isRunning = false; }
     bool32 IsOverlayEnabled(uint32 overlay) { return false; }
+
+    bool32 SetupExtensionOverlay()
+    {
+        // show a popup or something?
+        return true;
+    }
     virtual bool32 CanShowExtensionOverlay(int32 overlay) { return false; }
     virtual bool32 ShowExtensionOverlay(int32 overlay)
     {
         // do some EGS api stuff
         return true;
     }
+    virtual bool32 CanShowAltExtensionOverlay(int32 overlay) { return true; }
     virtual bool32 ShowAltExtensionOverlay(int32 overlay)
     {
         // show the user: https://store.epicgames.com/en-US/p/sonic-mania--encore-dlc
         return true;
     }
-    virtual bool32 ShowLimitedVideoOptions(int32 overlay) { return false; }
+    int32 GetConnectingStringID()
+    {
+        return 68; // STR_CONNECTEGS
+    }
+    virtual bool32 ShowLimitedVideoOptions(int32 id) { return false; }
     void InitInputDevices() { RSDK::InitInputDevices(); }
 };
 

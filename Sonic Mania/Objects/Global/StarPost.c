@@ -346,30 +346,32 @@ void StarPost_State_BallSpin(void)
 
     self->angle += self->ballSpeed;
     if (!StarPost->hasAchievement && self->timer == 10) {
-        API_UnlockAchievement("ACH_STARPOST");
+        API_UnlockAchievement(&achievementList[ACH_STARPOST]);
         StarPost->hasAchievement = true;
     }
 
     bool32 isIdle = false;
     if (self->ballSpeed <= 0) {
-        if (self->angle <= -768) {
+        if (self->angle <= -0x300) {
             ++self->timer;
-            self->angle += 1024;
-            if (self->ballSpeed + 8 > -32)
+            self->angle += 0x400;
+
+            self->ballSpeed += 8;
+            if (self->ballSpeed > -32)
                 self->ballSpeed = -32;
-            else
-                self->ballSpeed += 8;
+
             isIdle = self->ballSpeed == -32;
         }
     }
     else {
-        if (self->angle >= 1280) {
+        if (self->angle >= 0x500) {
             ++self->timer;
             self->angle -= 0x400;
-            if (self->ballSpeed - 8 < 32)
+
+            self->ballSpeed -= 8;
+            if (self->ballSpeed < 32)
                 self->ballSpeed = 32;
-            else
-                self->ballSpeed -= 8;
+
             isIdle = self->ballSpeed == 32;
         }
     }
@@ -378,7 +380,7 @@ void StarPost_State_BallSpin(void)
         self->state              = StarPost_State_Idle;
         self->ballAnimator.speed = 64;
         self->ballSpeed          = 0;
-        self->angle              = 256;
+        self->angle              = 0x100;
 
         if (!self->bonusStageID)
             self->active = ACTIVE_BOUNDS;

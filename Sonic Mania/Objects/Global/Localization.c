@@ -92,12 +92,12 @@ void Localization_LoadStrings(void)
 
 #if MANIA_USE_EGS
     if (API.CheckAchievementsEnabled()) {
-        String names[STR_STRING_COUNT - STR_ACHIEVEMENT];
-        for (int32 i = STR_ACHIEVEMENT; i < STR_STRING_COUNT; ++i) {
-            names[i] = Localization->strings[i];
+        String *names[STR_STRING_COUNT - STR_ACHIEVEMENT];
+        for (int32 i = 0; i < (STR_STRING_COUNT - STR_ACHIEVEMENT); ++i) {
+            names[i] = &Localization->strings[i + STR_ACHIEVEMENT];
         }
 
-        API.GetAchievementNames(names, STR_STRING_COUNT - STR_ACHIEVEMENT);
+        API.SetAchievementNames(names, STR_STRING_COUNT - STR_ACHIEVEMENT);
     }
 #endif
 }

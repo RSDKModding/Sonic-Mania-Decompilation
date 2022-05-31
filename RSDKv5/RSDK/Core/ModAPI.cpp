@@ -1,6 +1,7 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
 // Start Dummy Achievements
+std::string RSDK::achievementText = "Achievement!";
 std::vector<RSDK::AchievementInfo> RSDK::achievementList;
 std::vector<int> RSDK::achievementStack;
 // End Dummy Achievements
@@ -207,8 +208,8 @@ void RSDK::LoadMods()
 
 void loadCfg(ModInfo *info, std::string path)
 {
-    FileInfo *cfg = new FileInfo();
-    cfg->externalFile   = true;
+    FileInfo *cfg     = new FileInfo();
+    cfg->externalFile = true;
     // CFG FILE READ
     if (LoadFile(cfg, path.c_str(), FMODE_RB)) {
         int32 catCount = ReadInt8(cfg);
@@ -1062,10 +1063,9 @@ void RSDK::ModRegisterGlobalVariables(const char *globalsPath, void **globals, u
     }
 }
 
-void RSDK::ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(),
-                             void (*lateUpdate)(), void (*staticUpdate)(), void (*draw)(), void (*create)(void *),
-                             void (*stageLoad)(), void (*editorDraw)(), void (*editorLoad)(), void (*serialize)(),
-                             const char *inherited)
+void RSDK::ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(), void (*lateUpdate)(),
+                             void (*staticUpdate)(), void (*draw)(), void (*create)(void *), void (*stageLoad)(), void (*editorDraw)(),
+                             void (*editorLoad)(), void (*serialize)(), const char *inherited)
 {
     return ModRegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,
                                  editorLoad, serialize, inherited);

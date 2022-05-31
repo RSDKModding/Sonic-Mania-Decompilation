@@ -451,11 +451,17 @@ typedef struct {
 } TileLayer;
 
 typedef struct {
-    int32 unknownID1;       // leaderboard id (unknown platform)
-    int32 unknownID2;       // leaderboard id (unknown platform)
-    int32 switchID;         // leaderboard id (switch)
-    const char *xboxName; // Xbox One Leaderboard name (making an assumption based on the MS docs)
-    const char *pcName;   // Plus Leaderboard name
+    uint8 idPS4;     // achievement ID (PS4)
+    int32 idUnknown; // achievement ID (unknown platform)
+    const char *id;  // achievement ID (as a string, used for most platforms)
+} AchievementID;
+
+typedef struct {
+    int32 idPS4;        // leaderboard id (PS4)
+    int32 idUnknown;    // leaderboard id (unknown platform)
+    int32 idSwitch;     // leaderboard id (switch)
+    const char *idXbox; // Xbox One Leaderboard id (making an assumption based on the MS docs)
+    const char *idPC;   // Leaderboard id (as a string, used for PC platforms)
 } LeaderboardID;
 
 typedef struct {

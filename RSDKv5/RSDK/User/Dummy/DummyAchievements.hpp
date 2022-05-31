@@ -9,14 +9,14 @@ struct DummyAchievements : UserAchievements {
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
     inline bool32 CheckAchievementsEnabled() { return true; }
-    void GetAchievementNames(String *names, int32 count);
+    void SetAchievementNames(String **names, int32 count);
     String *GetAchievementString(String *string);
     String *GetAchievementName(String *name, uint32 id);
     inline bool32 CheckAchievementPopupEnabled() { return true; }
     int32 GetNextAchievementID();
     void RemoveLastAchievementID();
 #endif
-    void TryUnlockAchievement(const char *name);
+    void TryUnlockAchievement(AchievementID *id);
 
 #if RETRO_VER_EGS
 

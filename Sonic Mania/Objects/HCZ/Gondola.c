@@ -251,7 +251,7 @@ void Gondola_HandlePlayerInteractions(void)
                     if (!Gondola->taggedBoatIDs[self->boatID]) {
                         Gondola->taggedBoatIDs[self->boatID] = true;
                         if (Gondola->taggedBoatIDs[0] && Gondola->taggedBoatIDs[1] && Gondola->taggedBoatIDs[2]) {
-                            API_UnlockAchievement("ACH_HCZ");
+                            API_UnlockAchievement(&achievementList[ACH_HCZ]);
                             Gondola->hasAchievement = true;
                         }
                     }

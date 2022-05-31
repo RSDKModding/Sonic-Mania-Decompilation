@@ -552,8 +552,8 @@ void SignPost_State_Fall(void)
                     itemBox->state      = ItemBox_State_Falling;
                     self->itemBounceCount++;
                     self->velocity.y = -0x20000;
-                    if (self->itemBounceCount == 2)
-                        API_UnlockAchievement("ACH_SIGNPOST");
+                    if (self->itemBounceCount == 2) 
+                        API_UnlockAchievement(&achievementList[ACH_SIGNPOST]);
                 }
             }
         }

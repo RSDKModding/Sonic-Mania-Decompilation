@@ -512,7 +512,7 @@ void OptionsMenu_VideoMenuButton_ActionCB(void)
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         RSDK.SetVideoSetting(VIDEOSETTING_STORE, false);
 #if MANIA_USE_EGS  
-        API.InitInputDevices();
+        API.ShowLimitedVideoOptions(8);
 #endif
         UIControl_MatchMenuTag("Video WIN");
     }

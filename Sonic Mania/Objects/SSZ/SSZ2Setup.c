@@ -183,7 +183,7 @@ void SSZ2Setup_GenericTriggerCB_CheckSSZAchievement(void)
 {
     if (!SSZ2Setup->hasAchievement) {
         if (!SceneInfo->minutes) {
-            API_UnlockAchievement("ACH_SSZ");
+            API_UnlockAchievement(&achievementList[ACH_SSZ]);
             SSZ2Setup->hasAchievement = true;
         }
     }

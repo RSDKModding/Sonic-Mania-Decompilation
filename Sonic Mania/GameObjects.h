@@ -110,22 +110,24 @@ typedef struct {
     bool32 (*IsOverlayEnabled)(uint32 inputID);
     bool32 (*CheckDLC)(int32 dlc);
 #if MANIA_USE_EGS
+    bool32 (*SetupExtensionOverlay)(void);
     bool32 (*CanShowExtensionOverlay)(int32 overlay);
 #endif
     bool32 (*ShowExtensionOverlay)(int32 overlay);
 #if MANIA_USE_EGS
+    bool32 (*CanShowAltExtensionOverlay)(int32 overlay);
     bool32 (*ShowAltExtensionOverlay)(int32 overlay);
-    void (*ShowLimitedVideoOptions)(int32 overlay);
-    void (*InitInputDevices)(void);
+    int32 (*GetConnectingStringID)(void);
+    void (*ShowLimitedVideoOptions)(int32 id);
 #endif
 
     // Achievements
-    void (*UnlockAchievement)(const char *identifier);
+    void (*UnlockAchievement)(AchievementID *id);
     bool32 (*GetAchievementsEnabled)(void);
     void (*SetAchievementsEnabled)(bool32 enabled);
 #if MANIA_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
-    void (*GetAchievementNames)(String *names, int32 count);
+    void (*SetAchievementNames)(String **names, int32 count);
 #endif
 
     // Leaderboards

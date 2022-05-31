@@ -96,13 +96,15 @@ void RSDK::SetupFunctionTables()
     ADD_API_FUNCTION(APITable_IsOverlayEnabled, IsOverlayEnabled);
     ADD_API_FUNCTION(APITable_CheckDLC, CheckDLC);
 #if RETRO_VER_EGS
+    ADD_API_FUNCTION(APITable_SetupExtensionOverlay, SetupExtensionOverlay);
     ADD_API_FUNCTION(APITable_CanShowExtensionOverlay, CanShowExtensionOverlay);
 #endif
     ADD_API_FUNCTION(APITable_ShowExtensionOverlay, ShowExtensionOverlay);
 #if RETRO_VER_EGS
+    ADD_API_FUNCTION(APITable_CanShowAltExtensionOverlay, CanShowAltExtensionOverlay);
     ADD_API_FUNCTION(APITable_ShowAltExtensionOverlay, ShowAltExtensionOverlay);
+    ADD_API_FUNCTION(APITable_GetConnectingStringID, GetConnectingStringID);
     ADD_API_FUNCTION(APITable_ShowLimitedVideoOptions, ShowLimitedVideoOptions);
-    ADD_API_FUNCTION(APITable_InitInputDevices, SKU::InitInputDevices);
 #endif
 
     // Achievements
@@ -111,7 +113,7 @@ void RSDK::SetupFunctionTables()
     ADD_API_FUNCTION(APITable_SetAchievementsEnabled, SetAchievementsEnabled);
 #if RETRO_VER_EGS
     ADD_API_FUNCTION(APITable_CheckAchievementsEnabled, CheckAchievementsEnabled);
-    ADD_API_FUNCTION(APITable_GetAchievementNames, GetAchievementNames);
+    ADD_API_FUNCTION(APITable_SetAchievementNames, SetAchievementNames);
 #endif
 
     // Leaderboards

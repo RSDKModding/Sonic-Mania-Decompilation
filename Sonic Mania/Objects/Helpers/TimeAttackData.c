@@ -522,15 +522,16 @@ int32 TimeAttackData_AddTimeAttackDBEntry(uint8 zoneID, uint8 act, uint8 charact
     if (globals->taTableLoaded != STATUS_OK)
         return -1;
 
-    uint16 rowID = API.AddUserDBRow(globals->taTableID);
-    int32 encore = mode & 1;
+    uint16 rowID    = API.AddUserDBRow(globals->taTableID);
+    uint8 encore    = mode & 1;
+    uint32 replayID = 0;
 
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "zoneID", &zoneID);
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "act", &act);
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "characterID", &characterID);
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "encore", &encore);
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT32, "score", &score);
-    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT32, "replayID", NULL);
+    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT32, "replayID", &replayID);
 
     uint32 uuid = API.GetUserDBRowUUID(globals->taTableID, rowID);
     char buf[0x20];

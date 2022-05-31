@@ -32,6 +32,29 @@ typedef enum {
     GAMEPROGRESS_MEDAL_GOLD,
 } GameProgressMedalIDs;
 
+typedef enum {
+    ACH_GOLD_MEDAL,
+    ACH_SILVER_MEDAL,
+    ACH_EMERALDS,
+    ACH_GAME_CLEARED,
+    ACH_STARPOST,
+    ACH_SIGNPOST,
+    ACH_GHZ,
+    ACH_CPZ,
+    ACH_SPZ,
+    ACH_FBZ,
+    ACH_PGZ,
+    ACH_SSZ,
+    ACH_HCZ,
+    ACH_MSZ,
+    ACH_OOZ,
+    ACH_LRZ,
+    ACH_MMZ,
+    ACH_TMZ,
+} AchievementIDs;
+
+extern AchievementID achievementList[];
+
 // Object Class
 struct ObjectGameProgress {
     RSDK_OBJECT

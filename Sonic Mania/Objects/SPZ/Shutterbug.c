@@ -308,8 +308,8 @@ void Shutterbug_TryTakePicture(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Shutterbug->hitboxAchievement) && ++Shutterbug->pictureCount == 10)
-            API_UnlockAchievement("ACH_SPZ");
+        if (Player_CheckCollisionTouch(player, self, &Shutterbug->hitboxAchievement) && ++Shutterbug->pictureCount == 10) 
+            API_UnlockAchievement(&achievementList[ACH_SPZ]);
     }
 }
 

@@ -100,7 +100,8 @@ void SpikeLog_State_Main(void)
         }
         else if (Player_CheckCollisionTouch(player, self, &SpikeLog->hitboxSpikeLog)) {
             if (!SpikeLog->hasAchievement) {
-                API_UnlockAchievement("ACH_GHZ");
+                API_UnlockAchievement(&achievementList[ACH_GHZ]);
+
                 SpikeLog->hasAchievement = true;
             }
             CREATE_ENTITY(BurningLog, intToVoid(16), self->position.x, self->position.y);

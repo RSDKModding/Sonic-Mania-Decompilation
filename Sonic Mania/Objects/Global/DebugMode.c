@@ -13,17 +13,10 @@ void DebugMode_Update(void)
 {
     RSDK_THIS(DebugMode);
 
-    // Disables Achievements
-#if MANIA_USE_PLUS
-    API.SetAchievementsEnabled(false);
-#else
-    if (!APICallback->achievementsDisabled)
-        APICallback->achievementsDisabled = true;
-#endif
+    API_SetAchievementsEnabled(false);
 
-    // TODO: uncomment this in the final
-    // if (Zone)
-    //    Zone->stageFinishCallback = NULL;
+    if (Zone)
+        Zone->stageFinishCallback = StateMachine_None;
 
     bool32 moved = false;
 

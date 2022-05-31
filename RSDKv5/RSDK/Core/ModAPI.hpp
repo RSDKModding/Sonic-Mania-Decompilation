@@ -182,6 +182,7 @@ struct AchievementInfo {
     bool32 achieved;
 };
 
+extern std::string achievementText;
 extern std::vector<AchievementInfo> achievementList;
 extern std::vector<int> achievementStack;
 

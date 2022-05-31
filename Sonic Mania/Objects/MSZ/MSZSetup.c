@@ -405,7 +405,7 @@ void MSZSetup_StageFinishCB_MSZ2(void) { MSZSetup->msz2Cutscene->active = ACTIVE
 void MSZSetup_GenericTriggerCB_GetAchievement(void)
 {
     if (!MSZSetup->hasAchievement) {
-        API_UnlockAchievement("ACH_MSZ");
+        API_UnlockAchievement(&achievementList[ACH_MSZ]);
         MSZSetup->hasAchievement = true;
     }
 }

@@ -7,6 +7,29 @@
 
 #include "SonicMania.h"
 
+// clang-format off
+AchievementID achievementList[] = {
+    { 0, 19, "ACH_GOLD_MEDAL" },
+    { 1, 20, "ACH_SILVER_MEDAL" },
+    { 2, 21, "ACH_EMERALDS" },
+    { 3, 22, "ACH_GAME_CLEARED" },
+    { 4, 23, "ACH_STARPOST" },
+    { 5, 24, "ACH_SIGNPOST" },
+    { 6, 25, "ACH_GHZ" },
+    { 7, 26, "ACH_CPZ" },
+    { 8, 27, "ACH_SPZ" },
+    { 9, 28, "ACH_FBZ" },
+    { 10, 29, "ACH_PGZ" },
+    { 11, 30, "ACH_SSZ" },
+    { 12, 31, "ACH_HCZ" },
+    { 13, 32, "ACH_MSZ" },
+    { 14, 33, "ACH_OOZ" },
+    { 15, 34, "ACH_LRZ" },
+    { 16, 35, "ACH_MMZ" },
+    { 17, 36, "ACH_TMZ" },
+};
+// clang-format on
+
 ObjectGameProgress *GameProgress;
 
 void GameProgress_Update(void) {}

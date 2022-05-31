@@ -444,8 +444,9 @@ void ERZKing_State_Explode(void)
     }
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        GameProgress_GiveEnding(2);
-        API_UnlockAchievement("ACH_GAME_CLEARED");
+        GameProgress_GiveEnding(GAMEPROGRESS_ENDING_GOOD);
+        API_UnlockAchievement(&achievementList[ACH_GAME_CLEARED]);
+
         RSDK.SetScene("Presentation", "Credits");
         Zone_StartFadeOut(10, 0x000000);
         Music_FadeOut(0.025);

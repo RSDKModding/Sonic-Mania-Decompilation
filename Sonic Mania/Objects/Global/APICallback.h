@@ -10,6 +10,8 @@
 
 #define API_GetConfirmButtonFlip               API.GetConfirmButtonFlip
 #define API_UnlockAchievement                  API.UnlockAchievement
+#define API_SetAchievementsEnabled(enabled)    API.SetAchievementsEnabled(enabled)
+#define API_GetAchievementsEnabled()           API.GetAchievementsEnabled()
 #define API_SetRichPresence                    API.SetRichPresence
 #define API_LaunchManual                       API.LaunchManual
 #define API_LoadUserFile                       API.LoadUserFile
@@ -34,6 +36,8 @@
 
 #define API_GetConfirmButtonFlip               APICallback_GetConfirmButtonFlip
 #define API_UnlockAchievement                  APICallback_UnlockAchievement
+#define API_SetAchievementsEnabled(enabled)    APICallback->achievementsDisabled = !(enabled)
+#define API_GetAchievementsEnabled()           !APICallback->achievementsDisabled
 #define API_SetRichPresence                    APICallback_SetRichPresence
 #define API_LaunchManual                       APICallback_LaunchManual
 #define API_LoadUserFile                       APICallback_LoadUserFile
