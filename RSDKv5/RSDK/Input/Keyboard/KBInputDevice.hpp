@@ -8,8 +8,8 @@ struct InputDeviceKeyboard : InputDevice {
     void UpdateInput();
     void ProcessInput(int32 controllerID);
 
-    uint16 inputFlags;
-    uint16 prevInputFlags;
+    uint16 buttonMasks;
+    uint16 prevButtonMasks;
     uint8 controllerID;
     int32 mouseHideTimer;
     uint8 stateUp;

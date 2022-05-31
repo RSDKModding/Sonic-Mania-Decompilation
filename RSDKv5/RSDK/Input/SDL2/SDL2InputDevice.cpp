@@ -26,7 +26,7 @@ void RSDK::SKU::InputDeviceSDL::UpdateInput()
     int32 keyMasks[] = { KEYMASK_UP, KEYMASK_DOWN, KEYMASK_LEFT,  KEYMASK_RIGHT,  KEYMASK_A,      KEYMASK_B,      KEYMASK_C,       KEYMASK_X,
                          KEYMASK_Y,  KEYMASK_Z,    KEYMASK_START, KEYMASK_SELECT, KEYMASK_STICKL, KEYMASK_STICKR, KEYMASK_BUMPERL, KEYMASK_BUMPERR };
 
-    this->prevInputFlags = this->inputFlags;
+    this->prevButtonMasks = this->buttonMasks;
 
     float prevHDeltaL       = hDelta_L;
     float prevVDeltaL       = vDelta_L;
@@ -35,10 +35,10 @@ void RSDK::SKU::InputDeviceSDL::UpdateInput()
     float prevTriggerDeltaL = triggerDeltaL;
     float prevTriggerDeltaR = triggerDeltaR;
 
-    this->inputFlags = 0;
+    this->buttonMasks = 0;
     for (int32 i = 0; i < KEY_MAX + 4; ++i) {
         if (getControllerButton(this, buttonMap[i]))
-            this->inputFlags |= keyMasks[i];
+            this->buttonMasks |= keyMasks[i];
     }
 
     int32 delta = SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_LEFTX);
@@ -70,10 +70,10 @@ void RSDK::SKU::InputDeviceSDL::UpdateInput()
     triggerDeltaL = NORMALIZE(SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERLEFT), 0, 32767);
     triggerDeltaR = NORMALIZE(SDL_GameControllerGetAxis(controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT), 0, 32767);
 
-    bumperDeltaL = (this->inputFlags & KEYMASK_BUMPERL) != 0 ? 1.0 : 0.0;
-    bumperDeltaR = (this->inputFlags & KEYMASK_BUMPERR) != 0 ? 1.0 : 0.0;
+    bumperDeltaL = (this->buttonMasks & KEYMASK_BUMPERL) != 0 ? 1.0 : 0.0;
+    bumperDeltaR = (this->buttonMasks & KEYMASK_BUMPERR) != 0 ? 1.0 : 0.0;
 
-    int32 changedButtons = ~this->prevInputFlags & (this->prevInputFlags ^ this->inputFlags);
+    int32 changedButtons = ~this->prevButtonMasks & (this->prevButtonMasks ^ this->buttonMasks);
 
     if (changedButtons || hDelta_L != prevHDeltaL || vDelta_L != prevVDeltaL || hDelta_R != prevHDeltaR || vDelta_R != prevVDeltaR
         || triggerDeltaL != prevTriggerDeltaL || triggerDeltaR != prevTriggerDeltaR) {
@@ -90,22 +90,22 @@ void RSDK::SKU::InputDeviceSDL::UpdateInput()
     else
         ++this->inactiveTimer[1];
 
-    this->stateUp       = (this->inputFlags & KEYMASK_UP) != 0;
-    this->stateDown     = (this->inputFlags & KEYMASK_DOWN) != 0;
-    this->stateLeft     = (this->inputFlags & KEYMASK_LEFT) != 0;
-    this->stateRight    = (this->inputFlags & KEYMASK_RIGHT) != 0;
-    this->stateA        = (this->inputFlags & swapABXY ? KEYMASK_B : KEYMASK_A) != 0;
-    this->stateB        = (this->inputFlags & swapABXY ? KEYMASK_A : KEYMASK_B) != 0;
-    this->stateC        = (this->inputFlags & KEYMASK_C) != 0;
-    this->stateX        = (this->inputFlags & swapABXY ? KEYMASK_Y : KEYMASK_X) != 0;
-    this->stateY        = (this->inputFlags & swapABXY ? KEYMASK_X : KEYMASK_Y) != 0;
-    this->stateZ        = (this->inputFlags & KEYMASK_Z) != 0;
-    this->stateStart    = (this->inputFlags & KEYMASK_START) != 0;
-    this->stateSelect   = (this->inputFlags & KEYMASK_SELECT) != 0;
-    this->stateBumper_L = (this->inputFlags & KEYMASK_BUMPERL) != 0;
-    this->stateBumper_R = (this->inputFlags & KEYMASK_BUMPERR) != 0;
-    this->stateStick_L  = (this->inputFlags & KEYMASK_STICKL) != 0;
-    this->stateStick_R  = (this->inputFlags & KEYMASK_STICKR) != 0;
+    this->stateUp       = (this->buttonMasks & KEYMASK_UP) != 0;
+    this->stateDown     = (this->buttonMasks & KEYMASK_DOWN) != 0;
+    this->stateLeft     = (this->buttonMasks & KEYMASK_LEFT) != 0;
+    this->stateRight    = (this->buttonMasks & KEYMASK_RIGHT) != 0;
+    this->stateA        = (this->buttonMasks & swapABXY ? KEYMASK_B : KEYMASK_A) != 0;
+    this->stateB        = (this->buttonMasks & swapABXY ? KEYMASK_A : KEYMASK_B) != 0;
+    this->stateC        = (this->buttonMasks & KEYMASK_C) != 0;
+    this->stateX        = (this->buttonMasks & swapABXY ? KEYMASK_Y : KEYMASK_X) != 0;
+    this->stateY        = (this->buttonMasks & swapABXY ? KEYMASK_X : KEYMASK_Y) != 0;
+    this->stateZ        = (this->buttonMasks & KEYMASK_Z) != 0;
+    this->stateStart    = (this->buttonMasks & KEYMASK_START) != 0;
+    this->stateSelect   = (this->buttonMasks & KEYMASK_SELECT) != 0;
+    this->stateBumper_L = (this->buttonMasks & KEYMASK_BUMPERL) != 0;
+    this->stateBumper_R = (this->buttonMasks & KEYMASK_BUMPERR) != 0;
+    this->stateStick_L  = (this->buttonMasks & KEYMASK_STICKL) != 0;
+    this->stateStick_R  = (this->buttonMasks & KEYMASK_STICKR) != 0;
 
     ProcessInput(CONT_ANY);
 }
@@ -129,47 +129,47 @@ void RSDK::SKU::InputDeviceSDL::ProcessInput(int32 controllerID)
     stickL[controllerID].keyStick.press |= this->stateStick_L;
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     stickR[controllerID].keyStick.press |= this->stateStick_R;
     stickR[controllerID].hDelta = this->vDelta_R;
     stickR[controllerID].vDelta = this->hDelta_R;
-    stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
-    stickR[controllerID].keyDown.press |= this->vDelta_R < -0.3;
-    stickR[controllerID].keyLeft.press |= this->hDelta_R < -0.3;
-    stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
+    stickR[controllerID].keyUp.press |= this->vDelta_R > INPUT_DEADZONE;
+    stickR[controllerID].keyDown.press |= this->vDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyLeft.press |= this->hDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyRight.press |= this->hDelta_R > INPUT_DEADZONE;
 
     triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
-    triggerL[controllerID].keyTrigger.press |= this->triggerDeltaL > 0.3;
+    triggerL[controllerID].keyTrigger.press |= this->triggerDeltaL > INPUT_DEADZONE;
     triggerL[controllerID].bumperDelta  = this->bumperDeltaL;
     triggerL[controllerID].triggerDelta = this->triggerDeltaL;
 
     triggerR[controllerID].keyBumper.press |= this->stateBumper_R;
-    triggerR[controllerID].keyTrigger.press |= this->triggerDeltaR > 0.3;
+    triggerR[controllerID].keyTrigger.press |= this->triggerDeltaR > INPUT_DEADZONE;
     triggerR[controllerID].bumperDelta  = this->bumperDeltaR;
     triggerR[controllerID].triggerDelta = this->triggerDeltaR;
 #else
     controller[controllerID].keyStickL.press |= this->stateStick_L;
     stickL[controllerID].hDeltaL = this->hDelta_L;
     stickL[controllerID].vDeltaL = this->vDelta_L;
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     controller[controllerID].keyStickR.press |= this->stateStick_R;
     stickL[controllerID].hDeltaR = this->vDelta_R;
     stickL[controllerID].vDeltaR = this->hDelta_R;
 
     controller[controllerID].keyBumperL.press |= this->stateBumper_L;
-    controller[controllerID].keyTriggerL.press |= this->triggerDeltaL > 0.3;
+    controller[controllerID].keyTriggerL.press |= this->triggerDeltaL > INPUT_DEADZONE;
     stickL[controllerID].triggerDeltaL = this->triggerDeltaL;
 
     controller[controllerID].keyBumperR.press |= this->stateBumper_R;
-    controller[controllerID].keyTriggerR.press |= this->triggerDeltaR > 0.3;
+    controller[controllerID].keyTriggerR.press |= this->triggerDeltaR > INPUT_DEADZONE;
     stickL[controllerID].triggerDeltaR = this->triggerDeltaR;
 #endif
 }
@@ -240,14 +240,14 @@ void RSDK::SKU::InitSDL2InputAPI()
     // TODO: this
     for (int32 g = 0; g < gamePadCount; ++g) {
         char mappingBuffer[0x100];
-        
+
         sprintf_s(mappingBuffer, sizeof(mappingBuffer),
                   "%d,%s,"
                   "a:b1,b:b2,y:b3,x:b0,start:b9,guide:b12,back:b8,"
-                  "dpup:h0.3,dpleft:h0.3,dpdown:h0.3,dpright:h0.3,"
+                  "dpup:hI%f,dpleft:h%f,dpdown:h%f,dpright:h%f,"
                   "leftshoulder:b4,rightshoulder:b5,leftstick:b10,rightstick:b11,"
                   "leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b6,righttrigger:b7",
-                  gamePadMappings[g].productID, gamePadMappings[g].name);
+                  gamePadMappings[g].productID, gamePadMappings[g].name, INPUT_DEADZONE, INPUT_DEADZONE, INPUT_DEADZONE, INPUT_DEADZONE);
 
         if (SDL_GameControllerAddMapping(mappingBuffer) >= 0) {
             // char deviceName[0x100];

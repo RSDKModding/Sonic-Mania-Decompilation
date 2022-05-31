@@ -23,7 +23,7 @@ struct InputDeviceXInput : InputDevice {
     uint8 stateBumper_R;
     uint8 stateStick_L;
     uint8 stateStick_R;
-    int32 unknown;
+    int32 unused;
     float hDelta_L;
     float vDelta_L;
     float hDelta_R;

@@ -5,7 +5,7 @@ namespace SKU
 struct InputDeviceNX : InputDevice {
     void ProcessInput(int32 controllerID);
 
-    int64 inputFlags;
+    int64 buttonMasks;
     float hDelta_L;
     float hDelta_R;
     float vDelta_L;

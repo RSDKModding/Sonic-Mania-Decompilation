@@ -19,8 +19,8 @@ int32 RSDK::SKU::currentNXControllerType = (DEVICE_API_NONE << 16) | (DEVICE_TYP
 
 void UpdateInputNX(InputDeviceNX *device, int64 *buttonMasks, int32 *hDelta, int32 *vDelta)
 {
-    int32 prevInputFlags = device->inputFlags;
-    device->inputFlags   = *buttonMasks;
+    int32 prevButtonMasks = device->buttonMasks;
+    device->buttonMasks   = *buttonMasks;
 
     device->hDelta_L = hDelta[0] + 128.0;
     device->vDelta_L = vDelta[0] + 128.0;
@@ -52,7 +52,7 @@ void UpdateInputNX(InputDeviceNX *device, int64 *buttonMasks, int32 *hDelta, int
         device->vDelta_R = device->vDelta_R * ((fminf(div, 127.0) + -15728.0) / 17039.0);
     }
 
-    int32 changedButtons = device->inputFlags & ~prevInputFlags;
+    int32 changedButtons = device->buttonMasks & ~prevButtonMasks;
 
     if (changedButtons) {
         currentNXControllerType  = device->gamePadType;
@@ -228,7 +228,7 @@ void InputDeviceNXPro::UpdateInput()
 
 void InputDeviceNX::ProcessInput(int32 controllerID)
 {
-    int32 buttonMasks = (int32)this->inputFlags;
+    int32 buttonMasks = (int32)this->buttonMasks;
 
     controller[controllerID].keyUp.press |= (buttonMasks & HidNpadButton_Up);
     controller[controllerID].keyDown.press |= (buttonMasks & HidNpadButton_Down);
@@ -245,18 +245,18 @@ void InputDeviceNX::ProcessInput(int32 controllerID)
     stickL[controllerID].keyStick.press |= (buttonMasks & HidNpadButton_StickL);
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     stickR[controllerID].keyStick.press |= (buttonMasks & HidNpadButton_StickR);
     stickR[controllerID].hDelta = this->hDelta_R;
     stickR[controllerID].vDelta = this->vDelta_R;
-    stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
-    stickR[controllerID].keyDown.press |= this->vDelta_R < -0.3;
-    stickR[controllerID].keyLeft.press |= this->hDelta_R < -0.3;
-    stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
+    stickR[controllerID].keyUp.press |= this->vDelta_R > INPUT_DEADZONE;
+    stickR[controllerID].keyDown.press |= this->vDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyLeft.press |= this->hDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyRight.press |= this->hDelta_R > INPUT_DEADZONE;
 
     triggerL[controllerID].keyBumper.press |= (buttonMasks & HidNpadButton_L);
     triggerL[controllerID].keyTrigger.press |= (buttonMasks & HidNpadButton_ZL);
@@ -271,10 +271,10 @@ void InputDeviceNX::ProcessInput(int32 controllerID)
     controller[controllerID].keyStickL.press |= (buttonMasks & HidNpadButton_StickL);
     stickL[controllerID].hDeltaL = this->hDelta_L;
     stickL[controllerID].vDeltaL = this->vDelta_L;
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     controller[controllerID].keyStickR.press |= (buttonMasks & HidNpadButton_StickR);
     stickL[controllerID].hDeltaL = this->hDelta_R;

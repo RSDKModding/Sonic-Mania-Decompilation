@@ -10,10 +10,10 @@ tagRAWINPUT RSDK::SKU::rawInputData;
 
 void RSDK::SKU::InputDeviceRaw::UpdateInput()
 {
-    this->prevInputFlags = this->inputFlags;
-    this->inputFlags     = this->activeButtons;
+    this->prevButtonMasks = this->buttonMasks;
+    this->buttonMasks     = this->activeButtons;
 
-    int32 changedButtons = ~this->prevInputFlags & (this->prevInputFlags ^ this->inputFlags);
+    int32 changedButtons = ~this->prevButtonMasks & (this->prevButtonMasks ^ this->buttonMasks);
     if (changedButtons) {
         this->inactiveTimer[0] = 0;
         this->anyPress         = true;
@@ -28,24 +28,24 @@ void RSDK::SKU::InputDeviceRaw::UpdateInput()
     else
         ++this->inactiveTimer[1];
 
-    this->stateUp        = (this->inputFlags & KEYMASK_UP) != 0;
-    this->stateDown      = (this->inputFlags & KEYMASK_DOWN) != 0;
-    this->stateLeft      = (this->inputFlags & KEYMASK_LEFT) != 0;
-    this->stateRight     = (this->inputFlags & KEYMASK_RIGHT) != 0;
-    this->stateA         = (this->inputFlags & KEYMASK_A) != 0;
-    this->stateB         = (this->inputFlags & KEYMASK_B) != 0;
-    this->stateC         = (this->inputFlags & KEYMASK_C) != 0;
-    this->stateX         = (this->inputFlags & KEYMASK_X) != 0;
-    this->stateY         = (this->inputFlags & KEYMASK_Y) != 0;
-    this->stateZ         = (this->inputFlags & KEYMASK_Z) != 0;
-    this->stateStart     = (this->inputFlags & KEYMASK_START) != 0;
-    this->stateSelect    = (this->inputFlags & KEYMASK_SELECT) != 0;
-    this->stateBumper_L  = (this->inputFlags & KEYMASK_BUMPERL) != 0;
-    this->stateBumper_R  = (this->inputFlags & KEYMASK_BUMPERR) != 0;
-    this->stateStick_L   = (this->inputFlags & KEYMASK_STICKL) != 0;
-    this->stateStick_R   = (this->inputFlags & KEYMASK_STICKR) != 0;
-    this->stateTrigger_L = (this->inputFlags & KEYMASK_TRIGGERL) != 0;
-    this->stateTrigger_R = (this->inputFlags & KEYMASK_TRIGGERR) != 0;
+    this->stateUp        = (this->buttonMasks & KEYMASK_UP) != 0;
+    this->stateDown      = (this->buttonMasks & KEYMASK_DOWN) != 0;
+    this->stateLeft      = (this->buttonMasks & KEYMASK_LEFT) != 0;
+    this->stateRight     = (this->buttonMasks & KEYMASK_RIGHT) != 0;
+    this->stateA         = (this->buttonMasks & KEYMASK_A) != 0;
+    this->stateB         = (this->buttonMasks & KEYMASK_B) != 0;
+    this->stateC         = (this->buttonMasks & KEYMASK_C) != 0;
+    this->stateX         = (this->buttonMasks & KEYMASK_X) != 0;
+    this->stateY         = (this->buttonMasks & KEYMASK_Y) != 0;
+    this->stateZ         = (this->buttonMasks & KEYMASK_Z) != 0;
+    this->stateStart     = (this->buttonMasks & KEYMASK_START) != 0;
+    this->stateSelect    = (this->buttonMasks & KEYMASK_SELECT) != 0;
+    this->stateBumper_L  = (this->buttonMasks & KEYMASK_BUMPERL) != 0;
+    this->stateBumper_R  = (this->buttonMasks & KEYMASK_BUMPERR) != 0;
+    this->stateStick_L   = (this->buttonMasks & KEYMASK_STICKL) != 0;
+    this->stateStick_R   = (this->buttonMasks & KEYMASK_STICKR) != 0;
+    this->stateTrigger_L = (this->buttonMasks & KEYMASK_TRIGGERL) != 0;
+    this->stateTrigger_R = (this->buttonMasks & KEYMASK_TRIGGERR) != 0;
 
     this->ProcessInput(CONT_ANY);
 }
@@ -69,18 +69,18 @@ void RSDK::SKU::InputDeviceRaw::ProcessInput(int32 controllerID)
     stickL[controllerID].keyStick.press |= this->stateStick_L;
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     stickR[controllerID].keyStick.press |= this->stateStick_R;
     stickR[controllerID].hDelta = this->vDelta_R;
     stickR[controllerID].vDelta = this->hDelta_R;
-    stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
-    stickR[controllerID].keyDown.press |= this->vDelta_R < -0.3;
-    stickR[controllerID].keyLeft.press |= this->hDelta_R < -0.3;
-    stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
+    stickR[controllerID].keyUp.press |= this->vDelta_R > INPUT_DEADZONE;
+    stickR[controllerID].keyDown.press |= this->vDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyLeft.press |= this->hDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyRight.press |= this->hDelta_R > INPUT_DEADZONE;
 
     triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
     triggerL[controllerID].keyTrigger.press |= this->stateTrigger_L;
@@ -95,10 +95,10 @@ void RSDK::SKU::InputDeviceRaw::ProcessInput(int32 controllerID)
     controller[controllerID].keyStickL.press |= this->stateStick_L;
     stickL[controllerID].hDeltaL = this->hDelta_L;
     stickL[controllerID].vDeltaL = this->vDelta_L;
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     controller[controllerID].keyStickR.press |= this->stateStick_R;
     stickL[controllerID].hDeltaR = this->vDelta_R;
@@ -308,8 +308,8 @@ void RSDK::SKU::UpdateRawInputButtonState(HRAWINPUT hRawInput)
                     case 2:
                     case 3: break;
 
-                    case 4: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * -0.0078125; break;
-                    case 5: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * 0.0078125; break;
+                    case 4: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * -(1.0 / 128); break;
+                    case 5: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * (1.0 / 128); break;
                 }
 
                 switch (b) {

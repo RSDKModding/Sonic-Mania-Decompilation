@@ -5,10 +5,10 @@ void InputDeviceSteam::UpdateInput()
 {
     // TODO (maybe): document the actual steamAPI code that sets these values
 
-    this->prevInputFlags = this->inputFlags;
-    this->inputFlags     = this->activeButtons;
+    this->prevButtonMasks = this->buttonMasks;
+    this->buttonMasks     = this->activeButtons;
 
-    int32 changedButtons = ~this->prevInputFlags & (this->prevInputFlags ^ this->inputFlags);
+    int32 changedButtons = ~this->prevButtonMasks & (this->prevButtonMasks ^ this->buttonMasks);
     if (changedButtons) {
         this->inactiveTimer[0] = 0;
         this->anyPress         = true;
@@ -69,8 +69,8 @@ InputDeviceSteam *RSDK::SKU::InitSteamInputDevice(uint32 id)
     device->keyMasks[7] = KEYMASK_Y;
     device->keyMasks[8] = KEYMASK_START;
 
-    device->inputFlags     = 0;
-    device->prevInputFlags = 0;
+    device->buttonMasks     = 0;
+    device->prevButtonMasks = 0;
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         if (activeControllers[i] == id) {

@@ -8,8 +8,8 @@ struct InputDeviceSteam : InputDevice {
 
     int32 keyMasks[9];
 
-    uint16 inputFlags;
-    uint16 prevInputFlags;
+    uint16 buttonMasks;
+    uint16 prevButtonMasks;
     uint8 controllerID;
     uint8 stateUp;
     uint8 stateDown;

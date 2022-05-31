@@ -51,36 +51,36 @@ void RSDK::SKU::InputDeviceGLFW::ProcessInput(int32 controllerID)
     stickL[controllerID].keyStick.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB];
     stickL[controllerID].hDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_X];
     stickL[controllerID].vDelta = -this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
-    stickL[controllerID].keyUp.press |= stickL[controllerID].vDelta > 0.3;
-    stickL[controllerID].keyDown.press |= stickL[controllerID].vDelta < -0.3;
-    stickL[controllerID].keyLeft.press |= stickL[controllerID].hDelta < -0.3;
-    stickL[controllerID].keyRight.press |= stickL[controllerID].hDelta > 0.3;
+    stickL[controllerID].keyUp.press |= stickL[controllerID].vDelta > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= stickL[controllerID].vDelta < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= stickL[controllerID].hDelta < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= stickL[controllerID].hDelta > INPUT_DEADZONE;
 
     stickR[controllerID].keyStick.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB];
     stickR[controllerID].hDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
     stickR[controllerID].vDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
-    stickR[controllerID].keyUp.press |= stickR[controllerID].vDelta > 0.3;
-    stickR[controllerID].keyDown.press |= stickR[controllerID].vDelta < -0.3;
-    stickR[controllerID].keyLeft.press |= stickR[controllerID].hDelta < -0.3;
-    stickR[controllerID].keyRight.press |= stickR[controllerID].hDelta  > 0.3;
+    stickR[controllerID].keyUp.press |= stickR[controllerID].vDelta > INPUT_DEADZONE;
+    stickR[controllerID].keyDown.press |= stickR[controllerID].vDelta < -INPUT_DEADZONE;
+    stickR[controllerID].keyLeft.press |= stickR[controllerID].hDelta < -INPUT_DEADZONE;
+    stickR[controllerID].keyRight.press |= stickR[controllerID].hDelta  > INPUT_DEADZONE;
 
     triggerL[controllerID].keyBumper.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
-    triggerL[controllerID].keyTrigger.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > 0.3;
+    triggerL[controllerID].keyTrigger.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > INPUT_DEADZONE;
     triggerL[controllerID].bumperDelta  = triggerL[controllerID].keyBumper.press ? 1.0f : 0.0f;
     triggerL[controllerID].triggerDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
 
     triggerR[controllerID].keyBumper.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER];
-    triggerR[controllerID].keyTrigger.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > 0.3;
+    triggerR[controllerID].keyTrigger.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > INPUT_DEADZONE;
     triggerR[controllerID].bumperDelta  = triggerR[controllerID].keyBumper.press ? 1.0f : 0.0f;
     triggerR[controllerID].triggerDelta = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
 #else
     controller[controllerID].keyStickL.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB];
     stickL[controllerID].hDeltaL = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_X];
     stickL[controllerID].vDeltaL = -this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
-    stickL[controllerID].keyUp.press |= stickL[controllerID].vDeltaL > 0.3;
-    stickL[controllerID].keyDown.press |= stickL[controllerID].vDeltaL < -0.3;
-    stickL[controllerID].keyLeft.press |= stickL[controllerID].hDeltaL < -0.3;
-    stickL[controllerID].keyRight.press |= stickL[controllerID].hDeltaL > 0.3;
+    stickL[controllerID].keyUp.press |= stickL[controllerID].vDeltaL > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= stickL[controllerID].vDeltaL < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= stickL[controllerID].hDeltaL < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= stickL[controllerID].hDeltaL > INPUT_DEADZONE;
 
     controller[controllerID].keyStickR.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB];
     stickL[controllerID].hDeltaR = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
@@ -88,11 +88,11 @@ void RSDK::SKU::InputDeviceGLFW::ProcessInput(int32 controllerID)
 
 
     controller[controllerID].keyBumperL.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
-    controller[controllerID].keyTriggerL.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > 0.3;
+    controller[controllerID].keyTriggerL.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > INPUT_DEADZONE;
     stickL[controllerID].triggerDeltaL = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
 
     controller[controllerID].keyBumperR.press |= this->states[currentState].buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER];
-    controller[controllerID].keyTriggerR.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > 0.3;
+    controller[controllerID].keyTriggerR.press |= this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > INPUT_DEADZONE;
     stickL[controllerID].triggerDeltaR = this->states[currentState].axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
 #endif
 }

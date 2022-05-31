@@ -117,18 +117,18 @@ void RSDK::SKU::InputDeviceXInput::ProcessInput(int32 controllerID)
     stickL[controllerID].keyStick.press |= this->stateStick_L;
     stickL[controllerID].hDelta = this->hDelta_L;
     stickL[controllerID].vDelta = this->vDelta_L;
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     stickR[controllerID].keyStick.press |= this->stateStick_R;
     stickR[controllerID].hDelta = this->hDelta_R;
     stickR[controllerID].vDelta = this->vDelta_R;
-    stickR[controllerID].keyUp.press |= this->vDelta_R > 0.3;
-    stickR[controllerID].keyDown.press |= this->vDelta_R < -0.3;
-    stickR[controllerID].keyLeft.press |= this->hDelta_R < -0.3;
-    stickR[controllerID].keyRight.press |= this->hDelta_R > 0.3;
+    stickR[controllerID].keyUp.press |= this->vDelta_R > INPUT_DEADZONE;
+    stickR[controllerID].keyDown.press |= this->vDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyLeft.press |= this->hDelta_R < -INPUT_DEADZONE;
+    stickR[controllerID].keyRight.press |= this->hDelta_R > INPUT_DEADZONE;
 
     triggerL[controllerID].keyBumper.press |= this->stateBumper_L;
     triggerL[controllerID].bumperDelta  = this->deltaBumper_L;
@@ -142,10 +142,10 @@ void RSDK::SKU::InputDeviceXInput::ProcessInput(int32 controllerID)
     stickL[controllerID].hDeltaL = this->hDelta_L;
     stickL[controllerID].vDeltaL = this->vDelta_L;
 
-    stickL[controllerID].keyUp.press |= this->vDelta_L > 0.3;
-    stickL[controllerID].keyDown.press |= this->vDelta_L < -0.3;
-    stickL[controllerID].keyLeft.press |= this->hDelta_L < -0.3;
-    stickL[controllerID].keyRight.press |= this->hDelta_L > 0.3;
+    stickL[controllerID].keyUp.press |= this->vDelta_L > INPUT_DEADZONE;
+    stickL[controllerID].keyDown.press |= this->vDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyLeft.press |= this->hDelta_L < -INPUT_DEADZONE;
+    stickL[controllerID].keyRight.press |= this->hDelta_L > INPUT_DEADZONE;
 
     controller[controllerID].keyStickR.press |= this->stateStick_R;
     stickL[controllerID].hDeltaL = this->hDelta_R;

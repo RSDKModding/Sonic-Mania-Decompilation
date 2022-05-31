@@ -7,6 +7,8 @@ namespace RSDK
 #define PLAYER_COUNT      (4)
 #define INPUTDEVICE_COUNT (0x10)
 
+#define INPUT_DEADZONE (0.3)
+
 enum InputIds {
     INPUT_UNASSIGNED = -2,
     INPUT_AUTOASSIGN = -1,
@@ -438,15 +440,6 @@ struct TouchMouseData {
     bool32 unknown2;
 #endif
 };
-
-#if !RETRO_REV02
-struct ActiveControllerInfo {
-    int32 deviceType;
-    int32 unknown2;
-    int32 inputID;
-    int32 unknown3;
-};
-#endif
 
 extern InputDevice *InputDevices[INPUTDEVICE_COUNT];
 extern int32 InputDeviceCount;

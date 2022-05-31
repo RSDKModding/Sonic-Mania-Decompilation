@@ -7,8 +7,8 @@ struct InputDeviceSDL : InputDevice {
     void ProcessInput(int32 controllerID);
     void CloseDevice();
 
-    int32 inputFlags;
-    int32 prevInputFlags;
+    int32 buttonMasks;
+    int32 prevButtonMasks;
     uint8 stateUp;
     uint8 stateDown;
     uint8 stateLeft;

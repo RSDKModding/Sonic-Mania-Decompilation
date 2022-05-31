@@ -746,10 +746,10 @@ void RSDK::SKU::InputDeviceKeyboard::UpdateInput()
         }
     }
 
-    this->prevInputFlags = this->inputFlags;
-    this->inputFlags     = keyState[this->controllerID];
+    this->prevButtonMasks = this->buttonMasks;
+    this->buttonMasks     = keyState[this->controllerID];
 
-    int32 changedKeys = ~this->prevInputFlags & (this->inputFlags ^ this->prevInputFlags);
+    int32 changedKeys = ~this->prevButtonMasks & (this->buttonMasks ^ this->prevButtonMasks);
     if (changedKeys) {
         this->inactiveTimer[0] = 0;
         this->anyPress         = true;
@@ -764,18 +764,18 @@ void RSDK::SKU::InputDeviceKeyboard::UpdateInput()
     else
         ++this->inactiveTimer[1];
 
-    this->stateUp     = (this->inputFlags & KEYMASK_UP) != 0;
-    this->stateDown   = (this->inputFlags & KEYMASK_DOWN) != 0;
-    this->stateLeft   = (this->inputFlags & KEYMASK_LEFT) != 0;
-    this->stateRight  = (this->inputFlags & KEYMASK_RIGHT) != 0;
-    this->stateA      = (this->inputFlags & KEYMASK_A) != 0;
-    this->stateB      = (this->inputFlags & KEYMASK_B) != 0;
-    this->stateC      = (this->inputFlags & KEYMASK_C) != 0;
-    this->stateX      = (this->inputFlags & KEYMASK_X) != 0;
-    this->stateY      = (this->inputFlags & KEYMASK_Y) != 0;
-    this->stateZ      = (this->inputFlags & KEYMASK_Z) != 0;
-    this->stateStart  = (this->inputFlags & KEYMASK_START) != 0;
-    this->stateSelect = (this->inputFlags & KEYMASK_SELECT) != 0;
+    this->stateUp     = (this->buttonMasks & KEYMASK_UP) != 0;
+    this->stateDown   = (this->buttonMasks & KEYMASK_DOWN) != 0;
+    this->stateLeft   = (this->buttonMasks & KEYMASK_LEFT) != 0;
+    this->stateRight  = (this->buttonMasks & KEYMASK_RIGHT) != 0;
+    this->stateA      = (this->buttonMasks & KEYMASK_A) != 0;
+    this->stateB      = (this->buttonMasks & KEYMASK_B) != 0;
+    this->stateC      = (this->buttonMasks & KEYMASK_C) != 0;
+    this->stateX      = (this->buttonMasks & KEYMASK_X) != 0;
+    this->stateY      = (this->buttonMasks & KEYMASK_Y) != 0;
+    this->stateZ      = (this->buttonMasks & KEYMASK_Z) != 0;
+    this->stateStart  = (this->buttonMasks & KEYMASK_START) != 0;
+    this->stateSelect = (this->buttonMasks & KEYMASK_SELECT) != 0;
 
     this->ProcessInput(CONT_ANY);
 }

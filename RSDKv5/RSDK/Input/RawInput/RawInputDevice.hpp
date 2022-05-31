@@ -9,8 +9,8 @@ struct InputDeviceRaw : InputDevice {
     HANDLE deviceHandle;
 
     int32 activeButtons;
-    int32 inputFlags;
-    int32 prevInputFlags;
+    int32 buttonMasks;
+    int32 prevButtonMasks;
     uint8 stateUp;
     uint8 stateDown;
     uint8 stateLeft;
@@ -35,8 +35,8 @@ struct InputDeviceRaw : InputDevice {
     float vDelta_L;
     float vDelta_R;
     float hDelta_R;
-    int32 unknown1;
-    int32 unknown2;
+    float unused1;
+    float unused2;
     GamePadButtonMap buttons[24];
 };
 
