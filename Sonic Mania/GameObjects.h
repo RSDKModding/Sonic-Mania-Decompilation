@@ -172,7 +172,7 @@ typedef struct {
 
     // User File Management
     void (*LoadUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status));                  // load user file from game dir
-    void (*SaveUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status), bool32 compress); // save user file to game dir
+    void (*SaveUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status), bool32 compressed); // save user file to game dir
     void (*DeleteUserFile)(const char *name, void (*callback)(int32 status)); // delete user file from game dir
 
     // User DBs

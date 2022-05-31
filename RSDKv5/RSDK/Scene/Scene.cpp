@@ -50,7 +50,7 @@ void RSDK::LoadScene()
     // Unload TileLayers
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         MEM_ZERO(tileLayers[l]);
-        tileLayers[l].drawLayer[0] = -1;
+        for (int32 c = 0; c < CAMERA_MAX; ++c) tileLayers[l].drawLayer[c] = -1;
     }
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
@@ -249,7 +249,41 @@ void RSDK::LoadSceneFile()
             return;
         }
 
-        // Editor Metadata (mostly unknown)
+        // Editor Metadata
+
+        // I'm leaving this section here so that the "format" can be documented, since the official code is 3 lines and just skips it lol
+
+        /*
+        uint8 unknown1 = ReadInt8(&info); // usually 3, sometimes 4, LRZ1 (old) is 2
+
+        uint8 b                = ReadInt8(&info);
+        uint8 g                = ReadInt8(&info);
+        uint8 r                = ReadInt8(&info);
+        uint8 a                = ReadInt8(&info);
+        color backgroundColor1 = (a << 24) | (r << 16) | (g << 8) | (b << 0);
+
+        b                      = ReadInt8(&info);
+        g                      = ReadInt8(&info);
+        r                      = ReadInt8(&info);
+        a                      = ReadInt8(&info);
+        color backgroundColor2 = (a << 24) | (r << 16) | (g << 8) | (b << 0);
+
+        uint8 unknown2 = ReadInt8(&info); // always 1 afaik
+        uint8 unknown3 = ReadInt8(&info); // always 1 afaik
+        uint8 unknown4 = ReadInt8(&info); // always 4 afaik
+        uint8 unknown5 = ReadInt8(&info); // always 0 afaik
+        uint8 unknown6 = ReadInt8(&info); // always 1 afaik
+        uint8 unknown7 = ReadInt8(&info); // always 4 afaik
+        uint8 unknown8 = ReadInt8(&info); // always 0 afaik
+
+        char stampName[0x20];
+        ReadString(&info, stampName);
+
+        uint8 unknown9 = ReadInt8(&info); // usually 3, 4, or 5
+        */
+        
+
+        // Skip over Metadata, since we won't be using it at all in-game
         Seek_Cur(&info, 0x10);
         uint8 strLen = ReadInt8(&info);
         Seek_Cur(&info, strLen + 1);
@@ -458,8 +492,7 @@ void RSDK::LoadSceneFile()
                                 ReadBytes(&info, tempBuffer, sizeof(int32));
                             break;
 
-                        // not entirely sure on specifics here, should always be sizeof(int32) but it having a unique type implies it may not always
-                        // be
+                        // not entirely sure on specifics here, should always be sizeof(int32) but it having a unique type implies it isn't always
                         case VAR_ENUM:
                             if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(int32));
@@ -500,12 +533,10 @@ void RSDK::LoadSceneFile()
 
                         // Never used in mania so we don't know for sure, but it's our best guess!
                         case VAR_FLOAT:
-                            if (varList[v].active) {
+                            if (varList[v].active)
                                 ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(float));
-                            }
-                            else {
+                            else 
                                 ReadBytes(&info, tempBuffer, sizeof(float));
-                            }
                             break;
 
                         case VAR_COLOR:

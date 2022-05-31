@@ -99,17 +99,17 @@ void DummyUserStorage::ProcessFileLoadTime()
     }
 }
 
-bool32 DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 bufSize, int32 (*callback)(int32))
+bool32 DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status))
 {
     bool32 success = false;
-    memset(buffer, 0, bufSize);
+    memset(buffer, 0, size);
 
     if (!noSaveActive) {
         DummyFileInfo *file = fileList.Append();
         file->callback      = callback;
         memset(file->path, 0, sizeof(file->path));
         file->fileBuffer = buffer;
-        file->fileSize   = bufSize;
+        file->fileSize   = size;
         file->type       = 1;
         strncpy(file->path, filename, sizeof(file->path));
         file->storageTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME", 0));
@@ -129,7 +129,7 @@ bool32 DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uin
 
     return success;
 }
-bool32 DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compressed)
+bool32 DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status), bool32 compressed)
 {
     bool32 success = false;
     if (!noSaveActive) {
@@ -167,7 +167,7 @@ bool32 DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uin
 
     return success;
 }
-bool32 DummyUserStorage::TryDeleteUserFile(const char *filename, int32 (*callback)(int32))
+bool32 DummyUserStorage::TryDeleteUserFile(const char *filename, void (*callback)(int32 status))
 {
     if (!noSaveActive) {
         DummyFileInfo *file = fileList.Append();

@@ -2,7 +2,7 @@
 #if RETRO_REV02
 
 struct DummyFileInfo {
-    int32 (*callback)(int32 status);
+    void (*callback)(int32 status);
     int32 type;
     char path[64];
     void *fileBuffer;
@@ -46,9 +46,9 @@ struct DummyUserStorage : UserStorage {
     int32 TryAuth();
     int32 TryInitStorage();
     bool32 GetUsername(String *name);
-    bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
-    bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress);
-    bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32));
+    bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status));
+    bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status), bool32 compressed);
+    bool32 TryDeleteUserFile(const char *filename, void (*callback)(int32 status));
     void ClearPrerollErrors();
 
     void ProcessFileLoadTime();

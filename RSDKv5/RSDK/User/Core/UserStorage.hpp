@@ -35,9 +35,9 @@ struct UserStorage {
     virtual int32 TryAuth() { return 0; }
     virtual int32 TryInitStorage() { return 0; }
     virtual bool32 GetUsername(String *userName) { return false; }
-    virtual bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32)) { return false; }
-    virtual bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress) { return false; }
-    virtual bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32)) { return false; }
+    virtual bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status)) { return false; }
+    virtual bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status), bool32 compress) { return false; }
+    virtual bool32 TryDeleteUserFile(const char *filename, void (*callback)(int32 status)) { return false; }
     virtual void ClearPrerollErrors() {}
 
     int32 authStatus    = 0;
@@ -94,49 +94,113 @@ struct UserDB;
 struct UserDBRow;
 
 struct UserDBValue {
-    UserDBRow *parent;
-    uint8 size;
+    UserDBValue() { memset(data, 0, sizeof(data)); }
+    ~UserDBValue() {}
+
+    bool32 CheckMatch(int32 row, int32 column);
+    void Set(int32 type, void *data);
+    void Get(int32 type, void *data);
+
+    UserDBRow *parent = NULL;
+    uint8 size        = 0;
     uint8 data[0x10];
 };
 
 struct UserDBRow {
-    UserDB *parent;
-    uint32 uuid;
+    UserDBRow()
+    {
+        memset(&createTime, 0, sizeof(createTime));
+        memset(&changeTime, 0, sizeof(changeTime));
+        memset(values, 0, sizeof(values));
+    }
+    ~UserDBRow() {}
+
+    bool32 AddValue(int32 type, char *name, void *value);
+    bool32 GetValue(int32 type, char *name, void *value);
+
+    bool32 Compare(UserDBRow *other, int32 type, char *name, bool32 sortAscending);
+
+    UserDB *parent = NULL;
+    uint32 uuid    = 0;
     tm createTime;
     tm changeTime;
     UserDBValue values[8];
 };
 
 struct UserDB {
-    const char *name;
-    uint32 uuid;
-    uint8 loaded;
-    uint8 active;
-    uint8 valid;
-    UserDB *parent;
-    uint8 rowsChanged;
+    UserDB()
+    {
+        MEM_ZERO(sortedRowIDs);
+        MEM_ZERO(columnTypes);
+        MEM_ZERO(columnNames);
+        MEM_ZERO(columnUUIDs);
+        MEM_ZERO(rows);
+    }
+    ~UserDB() { sortedRowList.Clear(true); }
+
+    void Init(va_list list);
+    bool32 Load(uint8 *buffer);
+    void Save(int32 totalSize, uint8 *buffer);
+    void Clear();
+
+    int32 GetColumnID(const char *name);
+
+    int32 AddRow();
+    uint16 GetRowByID(uint32 uuid);
+    bool32 RemoveRow(uint32 row);
+    bool32 RemoveAllRows();
+
+    void FilterValues(UserDBValue *value, int32 column);
+    void AddSortFilter(const char *name, void *value);
+
+    void SetupRowSortIDs();
+    void RefreshSortList();
+    void SortRows(int32 type, char *name, bool32 sortAscending);
+
+    uint32 CreateRowUUID();
+    void Refresh();
+    size_t GetSize();
+
+    const char *name  = "";
+    uint32 uuid       = 0;
+    uint8 loaded      = false;
+    uint8 active      = false;
+    uint8 valid       = false;
+    UserDB *parent    = NULL;
+    uint8 rowsChanged = false;
     List<int32> sortedRowList;
     int32 sortedRowIDs[RETRO_USERDB_ROW_MAX];
-    int32 sortedRowCount;
-    int32 columnCount;
+    int32 sortedRowCount = 0;
+    int32 columnCount    = 0;
     int32 columnTypes[RETRO_USERDB_COL_MAX];
     char columnNames[RETRO_USERDB_COL_MAX][0x10];
     uint32 columnUUIDs[RETRO_USERDB_COL_MAX];
-    uint16 rowCount;
+    uint16 rowCount = 0;
     UserDBRow rows[RETRO_USERDB_ROW_MAX];
 };
 
 struct UserDBStorage {
+    UserDBStorage();
+
+    uint16 InitUserDB(const char *name, va_list list);
+    uint16 LoadUserDB(const char *filename, void (*callback)(int32 status));
+    bool32 SaveUserDB(uint16 tableID, void (*callback)(int32 status));
+    void ClearUserDB(uint16 tableID);
+    void ClearAllUserDBs();
+
+    static bool32 LoadCB(uint16 tableID, int32 status);
+    static bool32 SaveCB(uint16 tableID, int32 status);
+
     UserDB userDB[RETRO_USERDB_MAX];
-    uint8 unknown1;
+    uint8 unknown;
     int32 *writeBuffer[RETRO_USERDB_MAX];
     void *readBuffer[RETRO_USERDB_MAX];
-    int32 (*loadCallback[RETRO_USERDB_MAX])(int32);
-    int32 (*saveCallback[RETRO_USERDB_MAX])(int32);
-    int32 (*userLoadCB[RETRO_USERDB_MAX])(uint16 table, int32 status);
-    int32 (*userSaveCB[RETRO_USERDB_MAX])(uint16 table, int32 status);
+    void (*loadCallback[RETRO_USERDB_MAX])(int32 status);
+    void (*saveCallback[RETRO_USERDB_MAX])(int32 status);
+    bool32 (*dbLoadCB[RETRO_USERDB_MAX])(uint16 table, int32 status);
+    bool32 (*dbSaveCB[RETRO_USERDB_MAX])(uint16 table, int32 status);
     void (*callbacks[RETRO_USERDB_MAX])(int32);
-    int32 unknown2[RETRO_USERDB_MAX];
+    int32 unused[RETRO_USERDB_MAX];
 };
 
 extern UserDBStorage *userDBStorage;
@@ -165,104 +229,171 @@ extern UserDBStorage *userDBStorage;
 #include "RSDK/User/NX/NXStorage.hpp"
 #endif
 
+// =======================
+// USER STORAGE
+// =======================
+
 inline int32 TryAuth() { return userStorage->TryAuth(); }
 inline int32 TryInitStorage() { return userStorage->TryInitStorage(); }
 inline bool32 GetUsername(String *userName) { return userStorage->GetUsername(userName); }
-inline bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32))
+inline bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status))
 {
     return userStorage->TryLoadUserFile(filename, buffer, size, callback);
 }
-inline bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress)
+inline bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status), bool32 compressed)
 {
-    return userStorage->TrySaveUserFile(filename, buffer, size, callback, compress);
+    return userStorage->TrySaveUserFile(filename, buffer, size, callback, compressed);
 }
-inline bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32)) { return userStorage->TryDeleteUserFile(filename, callback); }
+inline bool32 TryDeleteUserFile(const char *filename, void (*callback)(int32 status)) { return userStorage->TryDeleteUserFile(filename, callback); }
 inline void ClearPrerollErrors() { userStorage->ClearPrerollErrors(); }
 
-int32 GetUserAuthStatus();
-int32 GetUserStorageStatus();
-int32 GetSaveStatus();
-void SetSaveStatusOK();
-void SetSaveStatusForbidden();
-void SetSaveStatusError();
-void ClearSaveStatus();
-void SetSaveStatusContinue();
-void SetUserStorageNoSave(int32 state);
-int32 GetUserStorageNoSave();
+inline int32 GetUserAuthStatus() { return userStorage->authStatus; }
+inline int32 GetUserStorageStatus()
+{
+    if (userStorage->saveStatus == STATUS_ERROR)
+        return STATUS_ERROR;
+    else
+        return userStorage->storageStatus;
+}
 
-void InitUserStorageDB(UserDBStorage *storage);
-void ReleaseUserStorageDB(UserDBStorage *storage);
+inline int32 GetSaveStatus()
+{
+    if (userStorage->noSaveActive)
+        return STATUS_OK;
+    else
+        return userStorage->saveStatus;
+}
+inline void SetSaveStatusOK()
+{
+    if (userStorage->saveStatus == STATUS_CONTINUE)
+        userStorage->saveStatus = STATUS_OK;
+}
+inline void SetSaveStatusForbidden()
+{
+    if (userStorage->saveStatus == STATUS_CONTINUE)
+        userStorage->saveStatus = STATUS_FORBIDDEN;
+}
+inline void SetSaveStatusError()
+{
+    if (userStorage->saveStatus == STATUS_CONTINUE)
+        userStorage->saveStatus = STATUS_ERROR;
+}
+inline void ClearSaveStatus() { userStorage->saveStatus = STATUS_NONE; }
+inline void SetSaveStatusContinue() { userStorage->saveStatus = STATUS_CONTINUE; }
+inline void SetUserStorageNoSave(int32 state) { userStorage->noSaveActive = state; }
+inline int32 GetUserStorageNoSave() { return userStorage->noSaveActive; }
 
-// UserDB Management
-uint16 InitUserDB(const char *name, ...);
-uint16 LoadUserDB(const char *filename, void (*callback)(int32));
-bool32 SaveUserDB(uint16 tableID, void (*callback)(int32));
-void ClearUserDB(uint16 tableID);
-void ClearAllUserDBs();
-uint16 GetUserDBRowByID(uint16 tableID, uint32 uuid);
+// =======================
+// USER DB API
+// =======================
 
-// UserDB Columns
-bool32 AddUserDBColumn(UserDBRow *userDB, int32 type, char *name, void *value);
-int32 GetDBColumnID(UserDB *userDB, const char *name);
-bool32 GetUserDBColumn(UserDBRow *userDB, int32 type, char *name, void *value);
+// UserDB management
+inline uint16 InitUserDB(const char *name, ...)
+{
+    va_list list;
+    va_start(list, name);
+    uint16 id = userDBStorage->InitUserDB(name, list);
+    va_end(list);
+    return id;
+}
+inline uint16 LoadUserDB(const char *filename, void (*callback)(int32 status)) { return userDBStorage->LoadUserDB(filename, callback); }
+inline bool32 SaveUserDB(uint16 tableID, void (*callback)(int32 status)) { return userDBStorage->SaveUserDB(tableID, callback); }
+inline void ClearUserDB(uint16 tableID) { userDBStorage->ClearUserDB(tableID); }
+inline void ClearAllUserDBs() { userDBStorage->ClearAllUserDBs(); }
 
-// UserDB Rows
-int32 AddUserDBRow(uint16 tableID);
-uint32 RemoveDBRow(uint16 tableID, uint32 rowID);
-bool32 RemoveAllDBRows(uint16 tableID);
-uint32 GetDBRowUUID(uint16 tableID, int32 rowID);
+// UserDB rows
+inline int32 AddUserDBRow(uint16 tableID)
+{
+    if (tableID == (uint16)-1)
+        return -1;
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    if (!userDB->active)
+        return -1;
+
+    return userDB->AddRow();
+}
+inline bool32 RemoveDBRow(uint16 tableID, uint32 rowID)
+{
+    if (tableID == (uint16)-1 || rowID == (uint16)-1)
+        return false;
+
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    if (!userDB->active)
+        return false;
+
+    return userDB->RemoveRow(rowID);
+}
+inline bool32 RemoveAllDBRows(uint16 tableID)
+{
+    if (tableID == (uint16)-1)
+        return false;
+
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    if (!userDB->active)
+        return false;
+
+    return userDB->RemoveAllRows();
+}
+inline uint16 GetUserDBRowByID(uint16 tableID, uint32 uuid)
+{
+    if (tableID == (uint16)-1 || !uuid)
+        return -1;
+
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    if (!userDB->active)
+        return -1;
+
+    return userDB->GetRowByID(uuid);
+}
+
+inline uint32 GetDBRowUUID(uint16 tableID, int32 rowID)
+{
+    if (tableID == (uint16)-1 || rowID == (uint16)-1)
+        return 0;
+
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    if (!userDB->active)
+        return 0;
+
+    return userDB->rows[rowID].uuid;
+}
 
 // UserDB Row Sorting
 uint16 SetupUserDBRowSorting(uint16 tableID);
-void SetupRowSortIDs(UserDB *userDB);
-void UserDBRefreshRowSortList(UserDB *userDB);
 int32 AddUserDBRowSortFilter(uint16 tableID, int32 type, const char *name, void *value);
-int32 SortUserDBRows(uint16 tableID, int32 type, const char *name, bool32 active);
+int32 SortUserDBRows(uint16 tableID, int32 type, const char *name, bool32 sortAscending);
 int32 GetSortedUserDBRowCount(uint16 tableID);
 int32 GetSortedUserDBRowID(uint16 tableID, uint16 entryID);
 
 // UserDB Values
-void InitUserDBValues(UserDB *userDB, va_list list);
 bool32 GetUserDBValue(uint16 tableID, uint32 rowID, int32 type, char *name, void *value);
 bool32 SetUserDBValue(uint16 tableID, uint32 rowID, int32 type, char *name, void *value);
-bool32 CheckDBValueMatch(UserDBValue *valueA, int32 row, int32 column);
-void StoreUserDBValue(UserDBValue *value, int32 type, void *data);
-void RetrieveUserDBValue(UserDBValue *value, int32 type, void *data);
 
 // UserDB Misc
 int32 GetUserDBRowsChanged(uint16 tableID);
 void GetUserDBRowCreationTime(uint16 tableID, int32 entryID, char *buf, size_t size, char *format);
-void UpdateUserDBParents(UserDB *userDB);
-size_t GetUserDBWriteSize(UserDB *userDB);
-bool32 LoadDBFromBuffer(UserDB *userDB, uint8 *buffer);
-void SaveDBToBuffer(UserDB *userDB, int32 totalSize, uint8 *buffer);
-void HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *value, int32 column);
-void FilterSortedUserDBRows(UserDB *userDB, const char *name, void *value);
-bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int32 type, char *name, bool32 flag);
-void HandleUserDBSorting(UserDB *userDB, int32 type, char *name, bool32 flag);
-uint32 CreateRowUUID(UserDB *userDB);
 
-// User Storage CBs
-int32 UserDBLoadCB(uint16 tableID, int32 status);
-int32 UserDBSaveCB(uint16 tableID, int32 status);
+// =======================
+// USER DB CALLBACKS
+// =======================
 
-int32 UserDBStorage_LoadCB1(int32 status);
-int32 UserDBStorage_LoadCB2(int32 status);
-int32 UserDBStorage_LoadCB3(int32 status);
-int32 UserDBStorage_LoadCB4(int32 status);
-int32 UserDBStorage_LoadCB5(int32 status);
-int32 UserDBStorage_LoadCB6(int32 status);
-int32 UserDBStorage_LoadCB7(int32 status);
-int32 UserDBStorage_LoadCB8(int32 status);
+void UserDBStorage_LoadCB1(int32 status);
+void UserDBStorage_LoadCB2(int32 status);
+void UserDBStorage_LoadCB3(int32 status);
+void UserDBStorage_LoadCB4(int32 status);
+void UserDBStorage_LoadCB5(int32 status);
+void UserDBStorage_LoadCB6(int32 status);
+void UserDBStorage_LoadCB7(int32 status);
+void UserDBStorage_LoadCB8(int32 status);
 
-int32 UserDBStorage_SaveCB1(int32 status);
-int32 UserDBStorage_SaveCB2(int32 status);
-int32 UserDBStorage_SaveCB3(int32 status);
-int32 UserDBStorage_SaveCB4(int32 status);
-int32 UserDBStorage_SaveCB5(int32 status);
-int32 UserDBStorage_SaveCB6(int32 status);
-int32 UserDBStorage_SaveCB7(int32 status);
-int32 UserDBStorage_SaveCB8(int32 status);
+void UserDBStorage_SaveCB1(int32 status);
+void UserDBStorage_SaveCB2(int32 status);
+void UserDBStorage_SaveCB3(int32 status);
+void UserDBStorage_SaveCB4(int32 status);
+void UserDBStorage_SaveCB5(int32 status);
+void UserDBStorage_SaveCB6(int32 status);
+void UserDBStorage_SaveCB7(int32 status);
+void UserDBStorage_SaveCB8(int32 status);
 #endif
 
 extern void (*preLoadSaveFileCB)();
@@ -281,8 +412,8 @@ bool32 SaveUserFile(const char *filename, void *buffer, uint32 bufSize);
 bool32 DeleteUserFile(const char *filename);
 
 #if !RETRO_REV02
-bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
-bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
+bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status));
+bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status));
 #endif
 
 void InitUserDirectory();

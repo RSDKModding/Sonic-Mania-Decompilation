@@ -73,9 +73,7 @@ void RSDK::SKU::InitUserData()
 #endif
 
     if (!userDBStorage)
-        userDBStorage = (UserDBStorage *)malloc(sizeof(UserDBStorage));
-
-    InitUserStorageDB(userDBStorage);
+        userDBStorage = new UserDBStorage;
 #endif
 
 #if RETRO_REV02
@@ -158,10 +156,8 @@ void RSDK::SKU::ReleaseUserData()
         delete userStorage;
     userStorage = nullptr;
 
-    ReleaseUserStorageDB(userDBStorage);
-
     if (userDBStorage)
-        free(userDBStorage);
+        delete userDBStorage;
     userDBStorage = nullptr;
 
     if (userCore) {
