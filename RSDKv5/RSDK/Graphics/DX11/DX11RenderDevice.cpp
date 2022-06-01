@@ -106,16 +106,15 @@ bool RenderDevice::Init()
         winRect.bottom = winRect.top + videoSettings.fsHeight;
     }
 
-    if (videoSettings.bordered && videoSettings.windowed) {
-        AdjustWindowRect(&winRect, DX11_WINDOWFLAGS_BORDERED, false);
-        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX11_WINDOWFLAGS_BORDERED, winRect.left, winRect.top,
-                                      winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
-    }
-    else {
-        AdjustWindowRect(&winRect, DX11_WINDOWFLAGS_BORDERLESS, false);
-        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX11_WINDOWFLAGS_BORDERLESS, winRect.left, winRect.top,
-                                      winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
-    }
+    uint32 windowFlags = 0;
+    if (videoSettings.bordered && videoSettings.windowed)
+        windowFlags = DX11_WINDOWFLAGS_BORDERED;
+    else
+        windowFlags = DX11_WINDOWFLAGS_BORDERLESS;
+
+    AdjustWindowRect(&winRect, windowFlags, false);
+    windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, windowFlags, winRect.left, winRect.top, winRect.right - winRect.left,
+                                  winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
 
     PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, videoSettings.windowed);
 
@@ -420,7 +419,7 @@ void RenderDevice::RefreshWindow()
 
     Release(true);
 
-    ShowWindow(windowHandle, false);
+    ShowWindow(windowHandle, SW_HIDE);
 
     if (videoSettings.windowed && videoSettings.bordered)
         SetWindowLong(windowHandle, GWL_STYLE, DX11_WINDOWFLAGS_BORDERED);
@@ -490,7 +489,7 @@ void RenderDevice::RefreshWindow()
             AdjustWindowRect(&monitorDisplayRect, DX11_WINDOWFLAGS_BORDERLESS, 0);
         }
 
-        SetWindowPos(windowHandle, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0x40);
+        SetWindowPos(windowHandle, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_SHOWWINDOW);
     }
 
     ShowWindow(windowHandle, SW_SHOW);
@@ -1690,7 +1689,7 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT message
         }
 
 #if RETRO_INPUTDEVICE_RAWINPUT
-        case WM_INPUT: SKU::UpdateRawInputButtonState((HRAWINPUT)lParam); break;
+        case WM_INPUT: SKU::UpdateHIDButtonStates((HRAWINPUT)lParam); break;
 #endif
 
         case WM_SYSCOMMAND: {

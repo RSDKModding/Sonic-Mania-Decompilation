@@ -68,7 +68,7 @@ bool RenderDevice::Init()
         SDL_SetWindowBordered(window, SDL_FALSE);
     }
 
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", videoSettings.windowWidth, videoSettings.windowHeight, videoSettings.windowed);
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d", videoSettings.windowWidth, videoSettings.windowHeight, videoSettings.windowed);
 
     if (!SetupRendering() || !AudioDevice::Init())
         return false;

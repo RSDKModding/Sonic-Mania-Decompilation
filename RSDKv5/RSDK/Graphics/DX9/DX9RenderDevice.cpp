@@ -3,7 +3,7 @@
 #include <D3Dcompiler.h>
 #endif
 
-#define DX9_WINDOWFLAGS_BORDERED   (WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_GROUP)
+#define DX9_WINDOWFLAGS_BORDERED   (WS_POPUP | (WS_BORDER | WS_DLGFRAME) | (WS_SYSMENU | WS_GROUP))
 #define DX9_WINDOWFLAGS_BORDERLESS (WS_POPUP)
 
 HWND RenderDevice::windowHandle;
@@ -50,7 +50,7 @@ bool RenderDevice::Init()
 
     HMODULE handle = GetModuleHandle(NULL);
 
-    WNDCLASS wndClass;
+    WNDCLASS wndClass      = {};
     wndClass.style         = CS_VREDRAW | CS_HREDRAW;
     wndClass.lpfnWndProc   = WindowEventCallback;
     wndClass.cbClsExtra    = 0;
@@ -86,18 +86,17 @@ bool RenderDevice::Init()
         winRect.bottom = winRect.top + videoSettings.fsHeight;
     }
 
-    if (videoSettings.bordered && videoSettings.windowed) {
-        AdjustWindowRect(&winRect, DX9_WINDOWFLAGS_BORDERED, false);
-        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX9_WINDOWFLAGS_BORDERED, winRect.left, winRect.top,
-                                      winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
-    }
-    else {
-        AdjustWindowRect(&winRect, DX9_WINDOWFLAGS_BORDERLESS, false);
-        windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, DX9_WINDOWFLAGS_BORDERLESS, winRect.left, winRect.top,
-                                      winRect.right - winRect.left, winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
-    }
+    uint32 windowFlags = 0;
+    if (videoSettings.bordered && videoSettings.windowed)
+        windowFlags = DX9_WINDOWFLAGS_BORDERED;
+    else 
+        windowFlags = DX9_WINDOWFLAGS_BORDERLESS;
 
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", winRect.right - winRect.left, winRect.bottom - winRect.top, videoSettings.windowed);
+    AdjustWindowRect(&winRect, windowFlags, false);
+    windowHandle = CreateWindowEx(WS_EX_LEFT, gameTitle, gameTitle, windowFlags, winRect.left, winRect.top, winRect.right - winRect.left,
+                                  winRect.bottom - winRect.top, NULL, NULL, hInstance, NULL);
+
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d", winRect.right - winRect.left, winRect.bottom - winRect.top, videoSettings.windowed);
 
     if (!windowHandle)
         return false;
@@ -360,7 +359,7 @@ void RenderDevice::RefreshWindow()
 
     Release(true);
 
-    ShowWindow(windowHandle, false);
+    ShowWindow(windowHandle, SW_HIDE);
 
     if (videoSettings.windowed && videoSettings.bordered)
         SetWindowLong(windowHandle, GWL_STYLE, DX9_WINDOWFLAGS_BORDERED);
@@ -394,10 +393,10 @@ void RenderDevice::RefreshWindow()
                 videoSettings.windowHeight = displayMode.Height / 480 * videoSettings.pixHeight;
             }
 
-            rect.left   = (bottomRight.x + topLeft.x) / 2 - videoSettings.windowWidth / 2;
-            rect.top    = (bottomRight.y + topLeft.y) / 2 - videoSettings.windowHeight / 2;
-            rect.right  = (bottomRight.x + topLeft.x) / 2 + videoSettings.windowWidth / 2;
-            rect.bottom = (bottomRight.y + topLeft.y) / 2 + videoSettings.windowHeight / 2;
+            rect.left   = (topLeft.x + bottomRight.x) / 2 - videoSettings.windowWidth / 2;
+            rect.top    = (topLeft.y + bottomRight.y) / 2 - videoSettings.windowHeight / 2;
+            rect.right  = (topLeft.x + bottomRight.x) / 2 + videoSettings.windowWidth / 2;
+            rect.bottom = (topLeft.y + bottomRight.y) / 2 + videoSettings.windowHeight / 2;
 
             if (videoSettings.bordered)
                 AdjustWindowRect(&rect, DX9_WINDOWFLAGS_BORDERED, false);
@@ -422,7 +421,7 @@ void RenderDevice::RefreshWindow()
             AdjustWindowRect(&monitorDisplayRect, DX9_WINDOWFLAGS_BORDERLESS, 0);
         }
 
-        SetWindowPos(windowHandle, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 0x40);
+        SetWindowPos(windowHandle, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_SHOWWINDOW);
     }
 
     ShowWindow(windowHandle, SW_SHOW);
@@ -529,7 +528,7 @@ bool RenderDevice::InitGraphicsAPI()
 
         presentParams.BackBufferWidth            = bufferWidth;
         presentParams.BackBufferHeight           = bufferHeight;
-        presentParams.BackBufferCount            = (videoSettings.tripleBuffered == 1) + 1;
+        presentParams.BackBufferCount            = videoSettings.tripleBuffered ? 2 : 1;
         presentParams.BackBufferFormat           = D3DFMT_X8R8G8B8;
         presentParams.PresentationInterval       = videoSettings.vsync ? 1 : 0x80000000;
         presentParams.SwapEffect                 = D3DSWAPEFFECT_DISCARD;
@@ -541,10 +540,10 @@ bool RenderDevice::InitGraphicsAPI()
         viewSize.y = (float)bufferHeight;
     }
 
-    int32 adapterStatus = dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, 0x20, &presentParams, &dx9Device);
+    if (FAILED(dx9Context->CreateDevice(dxAdapter, D3DDEVTYPE_HAL, windowHandle, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &presentParams, &dx9Device)))
+        return false;
+
     if (videoSettings.shaderSupport) {
-        if (FAILED(adapterStatus))
-            return false;
 
         D3DVERTEXELEMENT9 elements[4];
 
@@ -583,9 +582,8 @@ bool RenderDevice::InitGraphicsAPI()
             return false;
     }
     else {
-        if (FAILED(adapterStatus)
-            || FAILED(dx9Device->CreateVertexBuffer(sizeof(rsdkVertexBuffer), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT,
-                                                    &dx9VertexBuffer, NULL)))
+        if (FAILED(dx9Device->CreateVertexBuffer(sizeof(rsdkVertexBuffer), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT,
+                                                 &dx9VertexBuffer, NULL)))
             return false;
     }
 
@@ -597,7 +595,7 @@ bool RenderDevice::InitGraphicsAPI()
         screens[s].size.y = videoSettings.pixHeight;
 
         float viewAspect  = viewSize.x / viewSize.y;
-        int32 screenWidth = (int)((viewAspect * videoSettings.pixHeight) + 3) & 0xFFFFFFFC;
+        int32 screenWidth = (int32)((viewAspect * videoSettings.pixHeight) + 3) & 0xFFFFFFFC;
         if (screenWidth < videoSettings.pixWidth)
             screenWidth = videoSettings.pixWidth;
 
@@ -1338,7 +1336,7 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT message
         }
 
 #if RETRO_INPUTDEVICE_RAWINPUT
-        case WM_INPUT: SKU::UpdateRawInputButtonState((HRAWINPUT)lParam); break;
+        case WM_INPUT: SKU::UpdateHIDButtonStates((HRAWINPUT)lParam); break;
 #endif
 
         case WM_SYSCOMMAND: {

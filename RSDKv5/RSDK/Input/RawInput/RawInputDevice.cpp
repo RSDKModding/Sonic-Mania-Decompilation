@@ -1,4 +1,6 @@
 
+#include <hidusage.h>
+
 using namespace RSDK;
 
 bool32 RSDK::SKU::HIDEnabled = false;
@@ -148,76 +150,68 @@ RSDK::SKU::InputDeviceRaw *RSDK::SKU::InitRawInputDevice(uint32 id)
 
 void RSDK::SKU::InitHIDAPI()
 {
-    RAWINPUTDEVICE pRawInputDevices;
-    pRawInputDevices.hwndTarget  = RenderDevice::windowHandle;
-    pRawInputDevices.usUsagePage = 1;
-    pRawInputDevices.usUsage     = 5;
-    pRawInputDevices.dwFlags     = 0;
+    RAWINPUTDEVICE rawInputDevice = {};
+    rawInputDevice.hwndTarget  = RenderDevice::windowHandle;
+    rawInputDevice.usUsagePage = HID_USAGE_PAGE_GENERIC;
+    rawInputDevice.usUsage     = HID_USAGE_GENERIC_GAMEPAD;
+    rawInputDevice.dwFlags     = 0;
 
-    if (!RegisterRawInputDevices(&pRawInputDevices, 1, sizeof(pRawInputDevices)))
-        PrintLog(PRINT_NORMAL, "Unable to Register HID Device.\n");
+    if (!RegisterRawInputDevices(&rawInputDevice, 1, sizeof(rawInputDevice)))
+        PrintLog(PRINT_NORMAL, "Unable to Register HID Device.");
 
     HIDEnabled = true;
-    InitRawInputAPI();
+    InitHIDDevices();
 }
 
-void RSDK::SKU::InitRawInputAPI()
+void RSDK::SKU::InitHIDDevices()
 {
     if (HIDEnabled) {
         rawInputDeviceCount = 0;
 
-        UINT puiNumDevices;
-        if (GetRawInputDeviceList(0, &puiNumDevices, sizeof(tagRAWINPUTDEVICELIST))) {
-            PrintLog(PRINT_NORMAL, "Could not get Input Device Count.\n");
+        UINT puiNumDevices = 0;
+        if (GetRawInputDeviceList(NULL, &puiNumDevices, sizeof(tagRAWINPUTDEVICELIST))) {
+            PrintLog(PRINT_NORMAL, "Could not get Input Device Count.");
             return;
         }
 
         tagRAWINPUTDEVICELIST *pRawInputDeviceList;
         AllocateStorage(sizeof(tagRAWINPUTDEVICELIST) * puiNumDevices, (void **)&pRawInputDeviceList, DATASET_TMP, false);
         if (!pRawInputDeviceList) {
-            PrintLog(PRINT_NORMAL, "Could not allocate memory for Input Device List.\n");
+            PrintLog(PRINT_NORMAL, "Could not allocate memory for Input Device List.");
             return;
         }
 
-        int32 rawInputListSize = GetRawInputDeviceList(pRawInputDeviceList, (PUINT)&puiNumDevices, sizeof(tagRAWINPUTDEVICELIST));
+        int32 rawInputListSize = GetRawInputDeviceList(pRawInputDeviceList, &puiNumDevices, sizeof(tagRAWINPUTDEVICELIST));
         if (rawInputListSize == -1) {
-            PrintLog(PRINT_NORMAL, "Wrong Device Count.\n");
+            PrintLog(PRINT_NORMAL, "Wrong Device Count.");
         }
         else {
             RID_DEVICE_INFO deviceInfo;
             deviceInfo.cbSize         = sizeof(RID_DEVICE_INFO);
+
             uint8 deviceID            = 0;
             InputDeviceRaw *devicePtr = GetRawInputDevice(&deviceID);
             if (devicePtr) {
-                for (int32 i = 0; i < InputDeviceCount; ++i) {
-                    if (!InputDevices[i])
-                        return;
-
-                    InputDeviceRaw *device = (InputDeviceRaw *)InputDevices[i];
-
-                    if ((device->gamePadType >> 16) & 0xFF == DEVICE_API_RAWINPUT) {
-                        int32 id = 0;
-                        for (; id < rawInputListSize; ++id) {
-                            if (device->deviceHandle == pRawInputDeviceList[id].hDevice)
-                                break;
-                        }
-
-                        if (id == rawInputListSize)
-                            RemoveInputDevice(device);
-                    }
+                int32 id = 0;
+                for (; id < rawInputListSize; ++id) {
+                    if (devicePtr->deviceHandle == pRawInputDeviceList[id].hDevice)
+                        break;
                 }
+
+                if (id == rawInputListSize)
+                    RemoveInputDevice(devicePtr);
             }
 
             for (int32 d = 0; d < rawInputListSize; ++d) {
                 uint32 deviceInfoSize = deviceInfo.cbSize;
-                GetRawInputDeviceInfoA(pRawInputDeviceList[d].hDevice, RIDI_DEVICEINFO, &deviceInfo, &deviceInfoSize);
+                UINT allocatedBytes = GetRawInputDeviceInfo(pRawInputDeviceList[d].hDevice, RIDI_DEVICEINFO, &deviceInfo, &deviceInfoSize);
 
                 char deviceName[0x100];
                 memset(deviceName, 0, sizeof(deviceName));
                 uint32 deviceNameSize = sizeof(deviceName);
-                GetRawInputDeviceInfoA(pRawInputDeviceList[d].hDevice, RIDI_DEVICENAME, deviceName, &deviceNameSize);
+                allocatedBytes        = GetRawInputDeviceInfoA(pRawInputDeviceList[d].hDevice, RIDI_DEVICENAME, deviceName, &deviceNameSize);
 
-                if (deviceInfo.dwType == RIM_TYPEHID && deviceInfo.hid.usUsage == 5) {
+                if (deviceInfo.dwType == RIM_TYPEHID && deviceInfo.hid.usUsage == HID_USAGE_GENERIC_GAMEPAD) {
                     uint32 id;
                     GenerateHashCRC(&id, deviceName);
 
@@ -231,7 +225,7 @@ void RSDK::SKU::InitRawInputAPI()
                                     device->gamePadType |= gamePadMappings[g].type;
                                     device->deviceHandle = pRawInputDeviceList[d].hDevice;
                                     memcpy(device->buttons, gamePadMappings[g].buttons, sizeof(device->buttons));
-                                    PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name,
+                                    PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x", gamePadMappings[g].name,
                                              deviceInfo.hid.dwVendorId, deviceInfo.hid.dwProductId);
                                     rawInputDevices[rawInputDeviceCount++] = device;
                                 }
@@ -244,14 +238,14 @@ void RSDK::SKU::InitRawInputAPI()
                 }
             }
 
-            PrintLog(PRINT_NORMAL, "Total HID GamePad Count: %d\n", rawInputDeviceCount);
+            PrintLog(PRINT_NORMAL, "Total HID GamePad Count: %d", rawInputDeviceCount);
         }
 
         RemoveStorageEntry((void **)&pRawInputDeviceList);
     }
 }
 
-void RSDK::SKU::UpdateRawInputButtonState(HRAWINPUT hRawInput)
+void RSDK::SKU::UpdateHIDButtonStates(HRAWINPUT hRawInput)
 {
     uint32 pcbSize;
     GetRawInputData(hRawInput, RID_INPUT, NULL, &pcbSize, sizeof(rawInputData.header));          // get size
@@ -262,63 +256,63 @@ void RSDK::SKU::UpdateRawInputButtonState(HRAWINPUT hRawInput)
 
         if (device && device->deviceHandle == rawInputData.header.hDevice) {
             device->activeButtons = 0;
-            for (int32 b = 0; b < 18; ++b) {
+            for (int32 b = 0; b < RAWBUTTON_TRIGGER_L; ++b) {
                 int32 offset = device->buttons[b].offset;
 
                 switch (device->buttons[b].mappingType) {
                     default:
-                    case 0:
-                    case 4:
-                    case 5: break;
+                    case RAWMAP_NONE:
+                    case RAWMAP_ANALOG_NEG:
+                    case RAWMAP_ANALOG_POS: break;
 
-                    case 1:
+                    case RAWMAP_ONBUTTONDOWN:
                         if (((1 << (offset & 7)) & rawInputData.data.hid.bRawData[offset >> 3]) != 0)
                             device->activeButtons |= device->buttons[b].maskVal;
                         break;
 
-                    case 2:
+                    case RAWMAP_ONBUTTONUP:
                         if (((1 << (offset & 7)) & rawInputData.data.hid.bRawData[offset >> 3]) == 0)
                             device->activeButtons |= device->buttons[b].maskVal;
                         break;
 
-                    case 3:
+                    case RAWMAP_DIRECTIONAL:
                         switch (rawInputData.data.hid.bRawData[offset >> 3] & 0xF) {
-                            case 0: device->activeButtons |= 1; break;
-                            case 1: device->activeButtons |= 9; break;
-                            case 2: device->activeButtons |= 8; break;
-                            case 3: device->activeButtons |= 10; break;
-                            case 4: device->activeButtons |= 2; break;
-                            case 5: device->activeButtons |= 6; break;
-                            case 6: device->activeButtons |= 4; break;
-                            case 7: device->activeButtons |= 5; break;
+                            case 0: device->activeButtons |= KEYMASK_UP; break;
+                            case 1: device->activeButtons |= KEYMASK_UP | KEYMASK_RIGHT; break;
+                            case 2: device->activeButtons |= KEYMASK_RIGHT; break;
+                            case 3: device->activeButtons |= KEYMASK_DOWN | KEYMASK_RIGHT; break;
+                            case 4: device->activeButtons |= KEYMASK_DOWN; break;
+                            case 5: device->activeButtons |= KEYMASK_UP | KEYMASK_DOWN; break;
+                            case 6: device->activeButtons |= KEYMASK_LEFT; break;
+                            case 7: device->activeButtons |= KEYMASK_UP | KEYMASK_LEFT; break;
                             default: break;
                         }
                         break;
                 }
             }
 
-            for (int32 b = 18; b < 24; ++b) {
+            for (int32 b = RAWBUTTON_TRIGGER_L; b < RAWBUTTON_COUNT; ++b) {
                 float delta  = 0;
                 int32 offset = device->buttons[b].offset;
 
                 switch (device->buttons[b].mappingType) {
                     default:
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3: break;
+                    case RAWMAP_NONE:
+                    case RAWMAP_ONBUTTONDOWN:
+                    case RAWMAP_ONBUTTONUP:
+                    case RAWMAP_DIRECTIONAL: break;
 
-                    case 4: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * -(1.0 / 128); break;
-                    case 5: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * (1.0 / 128); break;
+                    case RAWMAP_ANALOG_NEG: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * -(1.0 / 128); break;
+                    case RAWMAP_ANALOG_POS: delta = (rawInputData.data.hid.bRawData[offset >> 3] - 128.0) * (1.0 / 128); break;
                 }
 
                 switch (b) {
-                    case 18: device->triggerDeltaL = delta; break;
-                    case 19: device->triggerDeltaR = delta; break;
-                    case 20: device->hDelta_L = delta; break;
-                    case 21: device->vDelta_L = delta; break;
-                    case 22: device->hDelta_R = delta; break;
-                    case 23: device->vDelta_R = delta; break;
+                    case RAWBUTTON_TRIGGER_L: device->triggerDeltaL = delta; break;
+                    case RAWBUTTON_TRIGGER_R: device->triggerDeltaR = delta; break;
+                    case RAWBUTTON_HDELTA_L: device->hDelta_L = delta; break;
+                    case RAWBUTTON_VDELTA_L: device->vDelta_L = delta; break;
+                    case RAWBUTTON_HDELTA_R: device->hDelta_R = delta; break;
+                    case RAWBUTTON_VDELTA_R: device->vDelta_R = delta; break;
                 }
             }
         }

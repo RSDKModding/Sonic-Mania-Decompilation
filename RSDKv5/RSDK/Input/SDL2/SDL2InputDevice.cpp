@@ -259,7 +259,7 @@ void RSDK::SKU::InitSDL2InputAPI()
             // 
             // device->gamePadType |= gamePadMappings[g].type;
             // memcpy(device->buttons, gamePadMappings[g].buttons, sizeof(device->buttons));
-            // PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[g].name, deviceInfo.mouse.dwId,
+            // PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x", gamePadMappings[g].name, deviceInfo.mouse.dwId,
             //                deviceInfo.mouse.dwNumberOfButtons);
         }
     }

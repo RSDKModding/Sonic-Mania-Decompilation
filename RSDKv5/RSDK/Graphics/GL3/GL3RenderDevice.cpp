@@ -52,7 +52,7 @@ bool RenderDevice::Init()
         PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return false;
     }
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, videoSettings.windowed);
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d", w, h, videoSettings.windowed);
 
     glfwSetKeyCallback(window, ProcessKeyEvent);
     glfwSetJoystickCallback(ProcessJoystickEvent);
@@ -617,7 +617,7 @@ void RenderDevice::RefreshWindow()
         PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
         return;
     }
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d\n", w, h, videoSettings.windowed);
+    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d", w, h, videoSettings.windowed);
 
     glfwSetKeyCallback(window, ProcessKeyEvent);
     glfwSetMouseButtonCallback(window, ProcessMouseEvent);

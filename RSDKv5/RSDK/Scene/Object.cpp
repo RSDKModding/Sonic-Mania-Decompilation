@@ -42,7 +42,7 @@ void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityCl
 {
     if (objectClassCount < OBJECT_COUNT) {
         if (entityClassSize > sizeof(EntityBase))
-            printf("Class exceeds max entity memory: %s \n", name);
+            printf("Class exceeds max entity memory: %s", name);
 
         ObjectClass *info = &objectClassList[objectClassCount];
         GEN_HASH_MD5(name, info->hash);

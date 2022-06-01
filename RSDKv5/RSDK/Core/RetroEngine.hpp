@@ -290,27 +290,19 @@ enum GameRegions {
 #include <Xinput.h>
 #endif
 
+#if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include <timeapi.h>
+#include <commctrl.h>
+#include <dbt.h>
+
 #if RETRO_RENDERDEVICE_DIRECTX9
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-#include <timeapi.h>
-#include <commctrl.h>
-#include <dbt.h>
-
 #include <d3d9.h>
-
-#undef LoadImage
-
 #elif RETRO_RENDERDEVICE_DIRECTX11
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-#include <timeapi.h>
-#include <commctrl.h>
-#include <dbt.h>
-
 #include <d3d11_1.h>
+#endif
 
 #undef LoadImage
 #elif RETRO_RENDERDEVICE_OPENGL3
