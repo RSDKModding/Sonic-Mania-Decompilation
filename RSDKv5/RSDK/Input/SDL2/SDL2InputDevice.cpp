@@ -94,11 +94,11 @@ void RSDK::SKU::InputDeviceSDL::UpdateInput()
     this->stateDown     = (this->buttonMasks & KEYMASK_DOWN) != 0;
     this->stateLeft     = (this->buttonMasks & KEYMASK_LEFT) != 0;
     this->stateRight    = (this->buttonMasks & KEYMASK_RIGHT) != 0;
-    this->stateA        = (this->buttonMasks & swapABXY ? KEYMASK_B : KEYMASK_A) != 0;
-    this->stateB        = (this->buttonMasks & swapABXY ? KEYMASK_A : KEYMASK_B) != 0;
+    this->stateA        = (this->buttonMasks & (swapABXY ? KEYMASK_B : KEYMASK_A)) != 0;
+    this->stateB        = (this->buttonMasks & (swapABXY ? KEYMASK_A : KEYMASK_B)) != 0;
     this->stateC        = (this->buttonMasks & KEYMASK_C) != 0;
-    this->stateX        = (this->buttonMasks & swapABXY ? KEYMASK_Y : KEYMASK_X) != 0;
-    this->stateY        = (this->buttonMasks & swapABXY ? KEYMASK_X : KEYMASK_Y) != 0;
+    this->stateX        = (this->buttonMasks & (swapABXY ? KEYMASK_Y : KEYMASK_X)) != 0;
+    this->stateY        = (this->buttonMasks & (swapABXY ? KEYMASK_X : KEYMASK_Y)) != 0;
     this->stateZ        = (this->buttonMasks & KEYMASK_Z) != 0;
     this->stateStart    = (this->buttonMasks & KEYMASK_START) != 0;
     this->stateSelect   = (this->buttonMasks & KEYMASK_SELECT) != 0;

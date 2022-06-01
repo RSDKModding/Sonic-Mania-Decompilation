@@ -109,8 +109,6 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
         hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
 
-    bool32 loaded = false;
-
     sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Objects/Static/%s.bin", hashBuf);
     InitFileInfo(&info);
 

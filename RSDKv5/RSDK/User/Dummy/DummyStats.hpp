@@ -5,9 +5,3 @@
 struct DummyStats : UserStats {
     void TryTrackStat(StatInfo *stat);
 };
-
-// Start Dummy Stats code
-
-extern std::vector<StatInfo> statList;
-
-// End Dummy Stats code

@@ -1,7 +1,3 @@
-// Start Dummy Stats
-std::vector<StatInfo> statList;
-// End Dummy Stats
-
 #if RETRO_REV02
 #define voidToInt(x)   (int)(size_t)(x)
 #define voidToFloat(x) *(float *)&(x)

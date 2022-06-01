@@ -145,7 +145,7 @@ bool32 DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uin
 
             uLongf clen = 0;
             compress((Bytef *)file->fileBuffer, &clen, (Bytef *)file->fileBuffer, (uLong)size);
-            file->fileSize = clen;
+            file->fileSize = (int32)clen;
         }
         else {
             file->fileBuffer = buffer;

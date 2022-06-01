@@ -10,6 +10,12 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#define sprintf_s(x, _,...) sprintf(x, __VA_ARGS__)
+
+#if defined _WIN32
+#undef sprintf_s
+#endif
+
 // ================
 // STANDARD TYPES
 // ================
