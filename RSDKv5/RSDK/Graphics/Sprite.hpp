@@ -83,6 +83,17 @@ enum PNGCompressionFilters {
 struct ImagePNG : public Image {
     bool32 Load(const char *fileName, bool32 loadHeader);
 
+    void UnpackPixels_Greyscale(uint8 *pixelData);
+    void UnpackPixels_GreyscaleA(uint8 *pixelData);
+    void UnpackPixels_Indexed(uint8 *pixelData);
+    void UnpackPixels_RGB(uint8 *pixelData);
+    void UnpackPixels_RGBA(uint8 *pixelData);
+
+    void Unfilter(uint8 *recon);
+
+    bool32 AllocatePixels();
+    void ProcessScanlines();
+
     uint8 bitDepth;
     uint8 colorFormat;
     uint8 compression;

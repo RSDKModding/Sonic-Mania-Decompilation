@@ -42,22 +42,22 @@ void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityCl
 {
     if (objectClassCount < OBJECT_COUNT) {
         if (entityClassSize > sizeof(EntityBase))
-            printf("Class exceeds max entity memory: %s", name);
+            PrintLog(PRINT_NORMAL, "Class exceeds max entity memory: %s", name);
 
-        ObjectClass *info = &objectClassList[objectClassCount];
-        GEN_HASH_MD5(name, info->hash);
-        info->staticVars      = staticVars;
-        info->entityClassSize = entityClassSize;
-        info->staticClassSize = staticClassSize;
-        info->update          = update;
-        info->lateUpdate      = lateUpdate;
-        info->staticUpdate    = staticUpdate;
-        info->draw            = draw;
-        info->create          = create;
-        info->stageLoad       = stageLoad;
-        info->editorDraw      = editorDraw;
-        info->editorLoad      = editorLoad;
-        info->serialize       = serialize;
+        ObjectClass *classInfo = &objectClassList[objectClassCount];
+        GEN_HASH_MD5(name, classInfo->hash);
+        classInfo->staticVars      = staticVars;
+        classInfo->entityClassSize = entityClassSize;
+        classInfo->staticClassSize = staticClassSize;
+        classInfo->update          = update;
+        classInfo->lateUpdate      = lateUpdate;
+        classInfo->staticUpdate    = staticUpdate;
+        classInfo->draw            = draw;
+        classInfo->create          = create;
+        classInfo->stageLoad       = stageLoad;
+        classInfo->editorDraw      = editorDraw;
+        classInfo->editorLoad      = editorLoad;
+        classInfo->serialize       = serialize;
 
         ++objectClassCount;
     }
@@ -80,38 +80,21 @@ void RSDK::RegisterStaticVariables(void **staticVars, const char *name, uint32 c
 
 void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 {
-    FileInfo info;
-
     char fullFilePath[0x40];
-    const char *hexChars = "0123456789ABCDEF";
 
-    char hashBuf[0x21];
-    sprintf_s(hashBuf, (int32)sizeof(hashBuf), "%s", "00000000000000000000000000000000");
+    const char *hexChars = "0123456789ABCDEF";
+    char classHash[]     = "00000000000000000000000000000000";
 
     int32 strPos = 0;
-    for (int32 i = 0; i < 32; i += 4) {
-        int32 charVal     = hash[0] >> i;
-        hashBuf[strPos++] = hexChars[charVal & 0xF];
-    }
+    for (int32 i = 0; i < 32; i += 4) classHash[strPos++] = hexChars[(hash[0] >> i) & 0xF];
+    for (int32 i = 0; i < 32; i += 4) classHash[strPos++] = hexChars[(hash[1] >> i) & 0xF];
+    for (int32 i = 0; i < 32; i += 4) classHash[strPos++] = hexChars[(hash[2] >> i) & 0xF];
+    for (int32 i = 0; i < 32; i += 4) classHash[strPos++] = hexChars[(hash[3] >> i) & 0xF];
 
-    for (int32 i = 0; i < 32; i += 4) {
-        int32 charVal     = hash[1] >> i;
-        hashBuf[strPos++] = hexChars[charVal & 0xF];
-    }
+    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Objects/Static/%s.bin", classHash);
 
-    for (int32 i = 0; i < 32; i += 4) {
-        int32 charVal     = hash[2] >> i;
-        hashBuf[strPos++] = hexChars[charVal & 0xF];
-    }
-
-    for (int32 i = 0; i < 32; i += 4) {
-        int32 charVal     = hash[3] >> i;
-        hashBuf[strPos++] = hexChars[charVal & 0xF];
-    }
-
-    sprintf_s(fullFilePath, (int32)sizeof(fullFilePath), "Data/Objects/Static/%s.bin", hashBuf);
+    FileInfo info;
     InitFileInfo(&info);
-
     if (LoadFile(&info, fullFilePath, FMODE_RB)) {
         uint32 sig = ReadInt32(&info, false);
 
@@ -122,15 +105,15 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 
         int32 dataPos = readOffset;
         while (info.readPos < info.fileSize) {
-            int32 type  = ReadInt8(&info);
+            int32 type      = ReadInt8(&info);
             int32 arraySize = ReadInt32(&info, false);
 
-            // bit 7 == "hasValues"
+            bool32 hasValues = (type & 0x80) != 0;
+            type &= 0x7F;
 
             int32 aligned = 0;
-            if (type & 0x80) {
+            if (hasValues) {
                 uint32 count = ReadInt32(&info, false);
-                type &= 0x7F;
 
                 switch (type) {
                     default:
@@ -142,11 +125,10 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                     case SVAR_UINT8:
                     case SVAR_INT8:
                         if (info.readPos + (count * sizeof(uint8)) <= info.fileSize && &classPtr[dataPos]) {
-                            for (int32 i = 0; i < count * sizeof(uint8); i += sizeof(uint8))
-                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(uint8));
+                            for (int32 i = 0; i < count * sizeof(uint8); i += sizeof(uint8)) ReadBytes(&info, &classPtr[dataPos + i], sizeof(uint8));
                         }
                         else {
-                            for (int32 i = 0; i < count * sizeof(uint8); ++i) ReadInt8(&info);
+                            info.readPos += count * sizeof(uint8);
                         }
 
                         dataPos += count * sizeof(uint8);
@@ -157,11 +139,10 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                         ALIGN_TO(int16);
 
                         if (info.readPos + (count * sizeof(int16)) <= info.fileSize && &classPtr[dataPos]) {
-                            for (int32 i = 0; i < count * sizeof(int16); i += sizeof(int16))
-                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(int16));
+                            for (int32 i = 0; i < count * sizeof(int16); i += sizeof(int16)) ReadBytes(&info, &classPtr[dataPos + i], sizeof(int16));
                         }
                         else {
-                            info.readPos += (count * sizeof(int16));
+                            info.readPos += count * sizeof(int16);
                         }
 
                         dataPos += sizeof(int16) * count;
@@ -173,11 +154,10 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                         ALIGN_TO(int32);
 
                         if (info.readPos + (count * sizeof(int32)) <= info.fileSize && &classPtr[dataPos]) {
-                            for (int32 i = 0; i < count * sizeof(int32); i += sizeof(int32))
-                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(int32));
+                            for (int32 i = 0; i < count * sizeof(int32); i += sizeof(int32)) ReadBytes(&info, &classPtr[dataPos + i], sizeof(int32));
                         }
                         else {
-                            info.readPos += (count * sizeof(int32));
+                            info.readPos += count * sizeof(int32);
                         }
 
                         dataPos += sizeof(int32) * count;
@@ -189,10 +169,10 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 
                         if (info.readPos + (count * sizeof(bool32)) <= info.fileSize && &classPtr[dataPos]) {
                             for (int32 i = 0; i < count * sizeof(bool32); i += sizeof(bool32))
-                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(int32));
+                                ReadBytes(&info, &classPtr[dataPos + i], sizeof(bool32));
                         }
                         else {
-                            info.readPos += (count * sizeof(bool32));
+                            info.readPos += count * sizeof(bool32);
                         }
 
                         dataPos += sizeof(bool32) * count;

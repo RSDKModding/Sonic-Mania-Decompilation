@@ -168,6 +168,19 @@ inline void ShowLimitedVideoOptions(int32 id) { userCore->ShowLimitedVideoOption
 
 } // namespace SKU
 
+#if !RETRO_USE_ORIGINAL_CODE
+struct CustomSettings {
+    int8 region;
+    bool32 confirmButtonFlip;
+    bool32 xyButtonFlip;
+    bool32 enableControllerDebugging;
+    bool32 disableFocusPause;
+    int32 maxPixWidth;
+};
+
+extern CustomSettings customSettings;
+#endif
+
 void LoadSettingsINI();
 void SaveSettingsINI(bool32 writeToFile);
 

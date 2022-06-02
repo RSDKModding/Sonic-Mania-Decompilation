@@ -20,7 +20,6 @@ uint8 RenderDevice::lastTextureFormat = -1;
 
 bool RenderDevice::Init()
 {
-
     const char *gameTitle = gameVerInfo.gameName;
 
     SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
@@ -499,8 +498,13 @@ bool RenderDevice::InitGraphicsAPI()
         if (screenWidth < videoSettings.pixWidth)
             screenWidth = videoSettings.pixWidth;
 
-        // if (screenWidth > DEFAULT_SCREEN_XSIZE)
-        //     screenWidth = DEFAULT_SCREEN_XSIZE;
+#if !RETRO_USE_ORIGINAL_CODE
+        if (customSettings.maxPixWidth && screenWidth > customSettings.maxPixWidth)
+            screenWidth = customSettings.maxPixWidth;
+#else
+        if (screenWidth > DEFAULT_PIXWIDTH)
+            screenWidth = DEFAULT_PIXWIDTH;
+#endif
 
         memset(&screens[s].frameBuffer, 0, sizeof(screens[s].frameBuffer));
         SetScreenSize(s, screenWidth, screens[s].size.y);

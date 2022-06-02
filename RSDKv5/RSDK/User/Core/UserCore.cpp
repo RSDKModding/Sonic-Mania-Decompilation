@@ -255,6 +255,10 @@ bool32 RSDK::SKU::ShowExtensionOverlay(uint8 overlay)
 #include <jni.h>
 #endif
 
+#if !RETRO_USE_ORIGINAL_CODE
+CustomSettings RSDK::customSettings;
+#endif
+
 char buttonNames[18][8] = { "U", "D", "L", "R", "START", "SELECT", "LSTICK", "RSTICK", "L1", "R1", "C", "Z", "A", "B", "X", "Y", "L2", "R2" };
 
 void RSDK::LoadSettingsINI()
@@ -295,23 +299,34 @@ void RSDK::LoadSettingsINI()
 #if RETRO_REV02
         SKU::curSKU.language = iniparser_getint(ini, "Game:language", LANGUAGE_EN);
 #else
-        gameVerInfo.language = (int32)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+        gameVerInfo.language = iniparser_getint(ini, "Game:language", LANGUAGE_EN);
 #endif
 
+        engine.devMenu = true;
         if (LoadDataPack(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, useBuffer))
             engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
-        else
-            engine.devMenu = true;
 
 #if !RETRO_USE_ORIGINAL_CODE
         sprintf_s(gameLogicName, (int32)sizeof(gameLogicName), "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
 
-        engine.confirmFlip = iniparser_getboolean(ini, "Game:confirmButtonFlip", false);
-        engine.XYFlip      = iniparser_getboolean(ini, "Game:xyButtonFlip", false);
+        customSettings.region                    = iniparser_getint(ini, "Game:region", -1);
+        customSettings.confirmButtonFlip         = iniparser_getboolean(ini, "Game:confirmButtonFlip", false);
+        customSettings.xyButtonFlip              = iniparser_getboolean(ini, "Game:xyButtonFlip", false);
+        customSettings.enableControllerDebugging = iniparser_getboolean(ini, "Game:enableControllerDebugging", false);
+        customSettings.disableFocusPause         = iniparser_getboolean(ini, "Game:disableFocusPause", false); 
+
+        if (customSettings.region >= 0) {
+#if RETRO_REV02
+            SKU::curSKU.region = customSettings.region;
+#else
+            gameVerInfo.region = customSettings.region;
+#endif
+        }
+
+        engine.confirmFlip = customSettings.confirmButtonFlip;
+        engine.XYFlip      = customSettings.xyButtonFlip;
 #else
         sprintf_s(gameLogicName, (int32)sizeof(gameLogicName), "Game"));
-        engine.confirmFlip = false;
-        engine.XYFlip = false;
 #endif
 
         videoSettings.windowed       = iniparser_getboolean(ini, "Video:windowed", true);
@@ -320,15 +335,19 @@ void RSDK::LoadSettingsINI()
         videoSettings.vsync          = iniparser_getboolean(ini, "Video:vsync", false);
         videoSettings.tripleBuffered = iniparser_getboolean(ini, "Video:tripleBuffering", false);
 
-        videoSettings.pixWidth = iniparser_getint(ini, "Video:pixWidth", DEFAULT_SCREEN_XSIZE);
+        videoSettings.pixWidth = iniparser_getint(ini, "Video:pixWidth", DEFAULT_PIXWIDTH);
 
-        videoSettings.windowWidth   = iniparser_getint(ini, "Video:winWidth", DEFAULT_SCREEN_XSIZE);
+        videoSettings.windowWidth   = iniparser_getint(ini, "Video:winWidth", DEFAULT_PIXWIDTH);
         videoSettings.windowHeight  = iniparser_getint(ini, "Video:winHeight", SCREEN_YSIZE);
         videoSettings.fsWidth       = iniparser_getint(ini, "Video:fsWidth", 0);
         videoSettings.fsHeight      = iniparser_getint(ini, "Video:fsHeight", 0);
         videoSettings.refreshRate   = iniparser_getint(ini, "Video:refreshRate", 60);
         videoSettings.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
-        videoSettings.shaderID      = iniparser_getint(ini, "Video:screenShader", 0);
+        videoSettings.shaderID      = iniparser_getint(ini, "Video:screenShader", SHADER_NONE);
+
+#if !RETRO_USE_ORIGINAL_CODE
+        customSettings.maxPixWidth = iniparser_getint(ini, "Video:maxPixWidth", DEFAULT_PIXWIDTH);
+#endif
 
         engine.streamsEnabled = iniparser_getboolean(ini, "Audio:streamsEnabled", true);
         engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 0.8);
@@ -448,7 +467,7 @@ void RSDK::LoadSettingsINI()
         videoSettings.vsync          = true;
         videoSettings.tripleBuffered = false;
         videoSettings.shaderSupport  = true;
-        videoSettings.pixWidth       = DEFAULT_SCREEN_XSIZE;
+        videoSettings.pixWidth       = DEFAULT_PIXWIDTH;
         videoSettings.fsWidth        = 0;
         videoSettings.windowWidth    = videoSettings.pixWidth * 1;
         videoSettings.windowHeight   = SCREEN_YSIZE * 1;
@@ -519,10 +538,16 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
             if (strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") != 0)
                 WriteText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
 
-            if (strcmp(iniparser_getstring(ini, "Game:confirmButtonFlip", "optionNotFound"), "optionNotFound") != 0)
-                WriteText(file, "confirmButtonFlip=%s\n", (engine.confirmFlip ? "y" : "n"));
-            if (strcmp(iniparser_getstring(ini, "Game:xyButtonFlip", "optionNotFound"), "optionNotFound") != 0)
-                WriteText(file, "xyButtonFlip=%s\n", (engine.XYFlip ? "y" : "n"));
+            WriteText(file, "confirmButtonFlip=%s\n", (customSettings.confirmButtonFlip ? "y" : "n"));
+            WriteText(file, "xyButtonFlip=%s\n", (customSettings.xyButtonFlip ? "y" : "n"));
+
+            WriteText(file, "enableControllerDebugging=%s\n", (customSettings.enableControllerDebugging ? "y" : "n"));
+
+            WriteText(file, "; Determines if the engine should pause when window focus is lost or not\n");
+            WriteText(file, "disableFocusPause=%s\n", (customSettings.disableFocusPause ? "y" : "n"));
+
+            WriteText(file, "; if -1, the game will decide what region to use, if 0 or higher, forces a specific region\n");
+            WriteText(file, "region=%d\n", customSettings.region);
 #endif
         }
 
@@ -558,6 +583,11 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
 
         WriteText(file, "shaderSupport=%s\n", (videoSettings.shaderSupport ? "y" : "n"));
         WriteText(file, "screenShader=%d\n", videoSettings.shaderID);
+
+#if !RETRO_USE_ORIGINAL_CODE
+        WriteText(file, "; Maximum width the screen will be allowed to be. A value of 0 will disable the maximum width\n");
+        WriteText(file, "maxPixWidth=%d\n", customSettings.maxPixWidth);
+#endif
 
         // ================
         // AUDIO

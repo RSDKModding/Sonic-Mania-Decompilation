@@ -169,7 +169,7 @@ uint8 RenderDeviceBase::startVertex_2P[] = { 18, 24 };
 uint8 RenderDeviceBase::startVertex_3P[] = { 30, 36, 12 };
 #endif
 
-float2 RenderDeviceBase::pixelSize   = { DEFAULT_SCREEN_XSIZE, SCREEN_YSIZE };
+float2 RenderDeviceBase::pixelSize   = { DEFAULT_PIXWIDTH, SCREEN_YSIZE };
 float2 RenderDeviceBase::textureSize = { 512.0, 256.0 };
 float2 RenderDeviceBase::viewSize    = { 0, 0 };
 

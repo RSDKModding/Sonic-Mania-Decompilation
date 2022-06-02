@@ -160,11 +160,6 @@ enum GameRegions {
 // ENGINE CONFIG
 // ============================
 
-#define DEFAULT_SCREEN_XSIZE (424)
-#define DEFAULT_FULLSCREEN   false
-#define RETRO_USING_MOUSE
-#define RETRO_USING_TOUCH
-
 // Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
 #define RETRO_REV02 (1)
 // Determines if the engine should use EGS features like achievements or not (must be rev02)

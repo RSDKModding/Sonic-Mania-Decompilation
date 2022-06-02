@@ -13,6 +13,8 @@ namespace RSDK
 #endif
 #define CAMERA_MAX (4)
 
+#define DEFAULT_PIXWIDTH (424)
+
 #define LAYER_COUNT     (8)
 #define DRAWGROUP_COUNT (16)
 

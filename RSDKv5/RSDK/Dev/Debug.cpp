@@ -937,8 +937,14 @@ void RSDK::DevMenu_VideoOptionsMenu()
                     case 4: width = 3 - (int32)(videoSettings.pixHeight * -1.7777778f); break; // 5:3
                 }
                 width &= 0x7FF8;
-                // if (width > DEFAULT_SCREEN_XSIZE)
-                //     width = DEFAULT_SCREEN_XSIZE;
+
+#if !RETRO_USE_ORIGINAL_CODE
+                if (customSettings.maxPixWidth && width > customSettings.maxPixWidth)
+                    width = customSettings.maxPixWidth;
+#else
+                if (width > DEFAULT_PIXWIDTH)
+                    width = DEFAULT_PIXWIDTH;
+#endif
 
                 videoSettings.windowWidth  = width * (devMenu.windowScale + 1);
                 videoSettings.windowHeight = videoSettings.pixHeight * (devMenu.windowScale + 1);

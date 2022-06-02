@@ -252,73 +252,72 @@ bool32 ImageGIF::Load(const char *fileName, bool32 loadHeader)
 }
 
 #if RETRO_REV02
-void UnpackPNGPixels_Greyscale(ImagePNG *image, uint8 *pixelData)
+void RSDK::ImagePNG::UnpackPixels_Greyscale(uint8 *pixelData)
 {
-    uint8 *pixels = image->pixels;
-    for (int32 p = 0; p < image->width * image->height; ++p) {
-        uint8 brightness = pixelData[0];
-        uint8 alpha      = pixelData[1];
+    uint8 *pixels = this->pixels;
+    for (int32 p = 0; p < this->width * this->height; ++p) {
+        uint8 brightness = *pixelData;
+        pixelData++;
 
         uint32 color = 0;
 
         // red channel
         color = brightness << 16;
-        pixelData++;
 
         // green channel
         color |= brightness << 8;
-        pixelData++;
 
         // blue channel
         color |= brightness << 0;
-        pixelData++;
 
         // alpha channel
-        color |= alpha << 24;
-        pixelData++;
+        color |= brightness << 24;
 
         *pixels = color;
 
-        pixelData++;
         pixels += 2;
     }
 }
 
-void UnpackPNGPixels_GreyscaleA(ImagePNG *image, uint8 *pixelData)
+void RSDK::ImagePNG::UnpackPixels_GreyscaleA(uint8 *pixelData)
 {
-    color *pixels = (color *)image->pixels;
-    for (int32 p = 0; p < image->width * image->height; ++p) {
+    color *pixels = (color *)this->pixels;
+    for (int32 p = 0; p < this->width * this->height; ++p) {
         uint8 brightness = *pixelData;
+        pixelData++;
 
         uint32 color = 0;
 
         // red channel
         color = brightness << 16;
-        pixelData++;
 
         // green channel
         color |= brightness << 8;
-        pixelData++;
 
         // blue channel
         color |= brightness << 0;
-        pixelData++;
 
         // alpha channel
         color |= 0xFF << 24;
-        pixelData++;
 
         *pixels = color;
 
-        pixelData++;
         pixels++;
     }
 }
 
-void UnpackPNGPixels_RGB(ImagePNG *image, uint8 *pixelData)
+void RSDK::ImagePNG::UnpackPixels_Indexed(uint8 *pixelData)
 {
-    color *pixels = (color *)image->pixels;
-    for (int32 p = 0; p < image->width * image->height; ++p) {
+    color *pixels = (color *)this->pixels;
+    for (int32 p = 0; p < this->width * this->height; ++p) {
+        pixels[p] = palette[pixelData[p]] | 0xFF000000;
+    }
+}
+
+void RSDK::ImagePNG::UnpackPixels_RGB(uint8 *pixelData)
+{
+    color *pixels = (color *)this->pixels;
+    for (int32 p = 0; p < this->width * this->height; ++p) {
         uint32 color = 0;
 
         // R
@@ -335,16 +334,15 @@ void UnpackPNGPixels_RGB(ImagePNG *image, uint8 *pixelData)
 
         // A
         color |= 0xFF << 24;
-        pixelData++;
 
         *pixels++ = color;
     }
 }
 
-void UnpackPNGPixels_RGBA(ImagePNG *image, uint8 *pixelData)
+void RSDK::ImagePNG::UnpackPixels_RGBA(uint8 *pixelData)
 {
-    color *pixels = (color *)image->pixels;
-    for (int32 p = 0; p < image->width * image->height; ++p) {
+    color *pixels = (color *)this->pixels;
+    for (int32 p = 0; p < this->width * this->height; ++p) {
         uint32 color = 0;
 
         // R
@@ -382,27 +380,37 @@ uint8 paethPredictor(int16 a, int16 b, int16 c)
     return (pc < pa) ? c : a;
 }
 
-void UnfilterPNG(ImagePNG *image, uint8 *recon)
+void RSDK::ImagePNG::Unfilter(uint8 *recon)
 {
-    int32 bpp = (image->bitDepth + 7) >> 3;
-    switch (image->colorFormat) {
+    int32 bpp = (this->bitDepth + 7) >> 3;
+    switch (this->colorFormat) {
+        default: break;
+
         case PNGCLR_RGB: bpp *= sizeof(color) - 1; break;
-        case PNGCLR_GREYSCALEA: bpp *= 2; break;
+
+        case PNGCLR_GREYSCALEA: bpp *= 2 * sizeof(uint8); break;
+
         case PNGCLR_RGBA: bpp *= sizeof(color); break;
     }
 
-    int32 pitch     = bpp * image->width;
+    int32 pitch     = bpp * this->width;
     uint8 *scanline = recon;
 
-    for (int32 y = 0; y < image->height; ++y) {
+    for (int32 y = 0; y < this->height; ++y) {
         int32 filter = *scanline++;
 
         // prev scanline
         uint8 *precon = y ? &recon[-pitch] : NULL;
 
         switch (filter) {
-            case PNGFILTER_NONE: break;
             default:
+#if !RETRO_USE_ORIGINAL_CODE
+                PrintLog(PRINT_NORMAL, "Invalid PNG Filter: %d", filter);
+                return;
+#else
+                // [Fallthrough]
+#endif
+            case PNGFILTER_NONE:
                 for (int32 c = 0; c < pitch; ++c) {
                     recon[c] = scanline[c];
                 }
@@ -479,6 +487,59 @@ void UnfilterPNG(ImagePNG *image, uint8 *recon)
     }
 }
 
+bool32 RSDK::ImagePNG::AllocatePixels()
+{
+    dataSize = sizeof(color) * height * (width + 1);
+    if (!pixels) {
+        AllocateStorage(dataSize, (void **)&pixels, DATASET_TMP, false);
+
+        if (!pixels) {
+            Close();
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void RSDK::ImagePNG::ProcessScanlines()
+{
+    uint8 *pixelsPtr = NULL;
+    switch (colorFormat) {
+        case PNGCLR_GREYSCALE:
+        case PNGCLR_INDEXED: pixelsPtr = &pixels[3 * width * height]; break;
+
+        case PNGCLR_RGB: pixelsPtr = &pixels[1 * width * height]; break;
+
+        case PNGCLR_GREYSCALEA: pixelsPtr = &pixels[2 * width * height]; break;
+
+        case PNGCLR_RGBA:
+        default: pixelsPtr = &pixels[0 * width * height]; break;
+    }
+
+    // the original v5 decodes IDAT sections one at a time, so the compressed buffer is extracted into pixels every time here
+    // again, this is a BAD idea!! IDAT chunks should be stored and processed as a group at the end of reading
+
+    // decode all loaded IDAT chunks into pixels
+    ReadZLib(&info, (uint8 **)&chunkBuffer, chunkSize, (uint8 **)&pixelsPtr, dataSize);
+
+    Unfilter(pixelsPtr);
+
+    switch (colorFormat) {
+        case PNGCLR_GREYSCALE: UnpackPixels_Greyscale(pixelsPtr); break;
+
+        case PNGCLR_RGB: UnpackPixels_RGB(pixelsPtr); break;
+
+        case PNGCLR_INDEXED: UnpackPixels_Indexed(pixelsPtr); break;
+
+        case PNGCLR_GREYSCALEA: UnpackPixels_GreyscaleA(pixelsPtr); break;
+
+        case PNGCLR_RGBA: UnpackPixels_RGBA(pixelsPtr); break;
+
+        default: break;
+    }
+}
+
 // PNG format signature
 #define PNG_SIGNATURE 0xA1A0A0D474E5089LL // PNG (and other bytes I don't care about)
 
@@ -512,6 +573,12 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         }
                         depth = 32;
 
+#if !RETRO_USE_ORIGINAL_CODE
+                        // image size should be enough space to hold all the IDAT chunks
+                        AllocateStorage(sizeof(color) * height * (width + 1), (void **)&chunkBuffer, DATASET_TMP, true);
+                        dataSize = 0;
+#endif
+
                         if (loadHeader)
                             return true;
                     }
@@ -535,50 +602,21 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         }
                     }
                     else if (chunkHeader == PNG_SIG_DATA) {
-                        dataSize = sizeof(uint32) * height * (width + 1);
-                        if (!pixels) {
-                            AllocateStorage(dataSize, (void **)&pixels, DATASET_TMP, false);
+#if RETRO_USE_ORIGINAL_CODE
+                        if (!AllocatePixels())
+                            return false;
 
-                            if (!pixels) {
-                                Close();
-                                return false;
-                            }
-                        }
-
+                        // read this chunk into the chunk buffer storage (we're processing each IDAT section by itself
+                        // this is a BAD idea!!! though it's kept here for reference as to how the original v5 works
                         AllocateStorage(chunkSize, (void **)&chunkBuffer, DATASET_TMP, false);
                         ReadBytes(&info, chunkBuffer, chunkSize);
 
-                        uint8 *pixelsPtr = NULL;
-                        switch (colorFormat) {
-                            case PNGCLR_GREYSCALE:
-                            case PNGCLR_INDEXED: pixelsPtr = &pixels[width * height * 3]; break;
-
-                            case PNGCLR_RGB: pixelsPtr = &pixels[width * height * 1]; break;
-
-                            case PNGCLR_GREYSCALEA: pixelsPtr = &pixels[width * height * 2]; break;
-
-                            case PNGCLR_RGBA:
-                            default: pixelsPtr = &pixels[0]; break;
-                        }
-
-                        ReadZLib(&info, (uint8 **)&chunkBuffer, chunkSize, (uint8 **)&pixels, dataSize);
-                        UnfilterPNG(this, pixelsPtr);
-
-                        switch (colorFormat) {
-                            case PNGCLR_GREYSCALE: UnpackPNGPixels_Greyscale(this, pixelsPtr); break;
-
-                            case PNGCLR_RGB: UnpackPNGPixels_RGB(this, pixelsPtr); break;
-
-                            case PNGCLR_INDEXED:
-                                for (int32 c = 0; c < width * height; ++c) pixels[c] = palette[pixels[c]] | 0xFF000000;
-                                break;
-
-                            case PNGCLR_GREYSCALEA: UnpackPNGPixels_GreyscaleA(this, pixelsPtr); break;
-
-                            case PNGCLR_RGBA: UnpackPNGPixels_RGBA(this, pixelsPtr); break;
-
-                            default: break;
-                        }
+                        // decode the scanlines into usable RGBA pixels
+                        ProcessScanlines();
+#else
+                        // read this chunk into the chunk buffer storage (we process em all at the end)
+                        dataSize += ReadBytes(&info, chunkBuffer + dataSize, chunkSize);
+#endif
                     }
                     else {
                         Seek_Cur(&info, chunkSize);
@@ -588,6 +626,20 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
 
                     if (finished) {
                         Close();
+
+#if !RETRO_USE_ORIGINAL_CODE
+                        // copy this over, since we only "borrowed" it after all :)
+                        // chunkSize is the size of chunkBuffer
+                        chunkSize = dataSize;
+                        if (!AllocatePixels())
+                            return false;
+
+                        // decode the scanlines into usable RGBA pixels
+                        ProcessScanlines();
+
+                        RemoveStorageEntry((void **)&chunkBuffer);
+#endif
+
                         return true;
                     }
                 }

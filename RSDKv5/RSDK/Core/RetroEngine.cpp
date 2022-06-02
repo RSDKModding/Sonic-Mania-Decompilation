@@ -99,6 +99,11 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
                 continue;
 
             // Focus Checks
+#if !RETRO_USE_ORIGINAL_CODE
+            if (customSettings.disableFocusPause)
+                engine.focusState = 0;
+#endif
+
             if (SKU::userCore->CheckFocusLost()) {
                 if (!(engine.focusState & 1)) {
                     engine.focusState = 1;
@@ -1083,6 +1088,9 @@ void RSDK::ProcessDebugCommands()
     int32 id          = ControllerIDForInputID(CONT_P1);
     uint8 gamepadType = GetControllerType(id) >> 8;
     if (gamepadType != DEVICE_TYPE_CONTROLLER || id == INPUT_UNASSIGNED || id == INPUT_AUTOASSIGN || id == CONT_ANY)
+        return;
+
+    if (!customSettings.enableControllerDebugging)
         return;
 #endif
 

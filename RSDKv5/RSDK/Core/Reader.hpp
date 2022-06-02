@@ -326,7 +326,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
     AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
     ReadBytes(info, compData, (int32)complen);
 
-    uncompress(*buffer, &destLen, compData, complen);
+    int32 result = uncompress(*buffer, &destLen, compData, complen);
     compData = NULL;
     return (int32)destLen;
 }
@@ -339,7 +339,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
     uLongf complen = cSize;
     uLongf destLen = size;
 
-    uncompress(*buffer, &destLen, *cBuffer, complen);
+    int32 result = uncompress(*buffer, &destLen, *cBuffer, complen);
     *cBuffer = NULL;
     return (int32)destLen;
 }
