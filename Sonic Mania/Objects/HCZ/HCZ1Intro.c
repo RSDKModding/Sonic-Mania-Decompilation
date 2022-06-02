@@ -49,32 +49,35 @@ void HCZ1Intro_StageLoad(void)
 bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
 {
     RSDK_THIS(HCZ1Intro);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     if (!host->timer) {
-        player1->position.x = self->position.x;
-        camera->position.x  = self->position.x;
-        camera->position.y  = 0;
-        player1->position.x -= 0x200000;
+        camera->position.x = self->position.x;
+        camera->position.y = 0;
+
+        player1->position.x = self->position.x - 0x200000;
         player1->camera     = NULL;
         player1->onGround   = false;
         player1->state      = Player_State_Air;
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
+
 #if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLUME, &player1->animator, false, 0);
 #else
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
 #endif
+
         if (player2->classID == Player->classID) {
-            player2->position.x = player1->position.x;
+            player2->position.x = player1->position.x - 0x200000;
             player2->position.y = player1->position.y;
             player2->state      = Player_State_Air;
             player2->onGround   = false;
             player2->stateInput = StateMachine_None;
-            player2->position.x = player1->position.x - 0x200000;
+
 #if MANIA_USE_PLUS
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_FLUME, &player2->animator, false, 0);
 #else
@@ -85,17 +88,18 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
 
     if (host->timer >= 8) {
         if (host->timer == 8) {
-            camera->target   = (Entity *)player1;
-            camera->state       = Camera_State_Follow;
-            player1->stateInput = Player_Input_P1;
-            player1->camera     = camera;
-            Water->disableWaterSplash     = 0;
+            camera->target            = (Entity *)player1;
+            camera->state             = Camera_State_Follow;
+            player1->stateInput       = Player_Input_P1;
+            player1->camera           = camera;
+            Water->disableWaterSplash = 0;
         }
     }
     else {
         player1->position.y = 0;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
+
         if (player2->classID == Player->classID) {
             player2->position.y = 0;
             player2->velocity.x = 0;
@@ -121,6 +125,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
             return true;
         }
     }
+
     return false;
 }
 
@@ -128,6 +133,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
 void HCZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(HCZ1Intro);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

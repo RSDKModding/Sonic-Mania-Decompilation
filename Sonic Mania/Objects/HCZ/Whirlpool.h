@@ -37,7 +37,7 @@ void Whirlpool_Update(void);
 void Whirlpool_LateUpdate(void);
 void Whirlpool_StaticUpdate(void);
 void Whirlpool_Draw(void);
-void Whirlpool_Create(void* data);
+void Whirlpool_Create(void *data);
 void Whirlpool_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Whirlpool_EditorDraw(void);
@@ -49,4 +49,4 @@ void Whirlpool_Serialize(void);
 void WhirlPool_DrawSprites(void);
 void Whirlpool_SetupBubbles(void);
 
-#endif //!OBJ_WHIRLPOOL_H
+#endif //! OBJ_WHIRLPOOL_H

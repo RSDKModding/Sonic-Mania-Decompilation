@@ -11,7 +11,7 @@ typedef enum {
     LAUNDROMOBILE_BLOCK,
     LAUNDROMOBILE_SPIKES,
     LAUNDROMOBILE_DELAYEDSPLASH,
-}LaundroMobileTypes;
+} LaundroMobileTypes;
 
 // Object Class
 struct ObjectLaundroMobile {
@@ -39,10 +39,10 @@ struct ObjectLaundroMobile {
     uint8 useStageWrap;
     EntityLaundroMobile *laundroMobile;
     TABLE(int32 debrisInfo[73], { 12,       6,        0, -0x50000, -0x40000, 0, 0,        7,        0, 0x50000,  -0x40000, 0, 0,        10,       0,
-                             -0x50000, -0x40000, 0, 0,        11,       0, 0x50000,  -0x40000, 0, 0,        10,       0, -0x50000, -0x40000, 0,
-                             0x200000, 11,       0, 0x50000,  -0x40000, 0, 0x200000, 10,       0, -0x50000, -0x40000, 0, 0x400000, 11,       0,
-                             0x50000,  -0x40000, 0, 0x400000, 8,        0, -0x50000, -0x40000, 0, 0x400000, 9,        0, 0x50000,  -0x40000, 0,
-                             0x400000, 12,       0, -0x50000, -0x40000, 0, 0x400000, 13,       0, 0x50000,  -0x40000, 0, 0x400000 });
+                                  -0x50000, -0x40000, 0, 0,        11,       0, 0x50000,  -0x40000, 0, 0,        10,       0, -0x50000, -0x40000, 0,
+                                  0x200000, 11,       0, 0x50000,  -0x40000, 0, 0x200000, 10,       0, -0x50000, -0x40000, 0, 0x400000, 11,       0,
+                                  0x50000,  -0x40000, 0, 0x400000, 8,        0, -0x50000, -0x40000, 0, 0x400000, 9,        0, 0x50000,  -0x40000, 0,
+                                  0x400000, 12,       0, -0x50000, -0x40000, 0, 0x400000, 13,       0, 0x50000,  -0x40000, 0, 0x400000 });
     uint16 aniFrames;
     uint16 eggmanFrames;
     Hitbox hitboxBoss;
@@ -78,7 +78,7 @@ struct EntityLaundroMobile {
     int32 timer;
     int32 startY;
     Vector2 originPos;
-    Vector2 unusedPos; //updated in the level wrap, but never used aside from that
+    Vector2 unusedPos; // updated in the level wrap, but never used aside from that
     EntityWhirlpool *whirlpool;
     Animator mainAnimator;
     Animator propellerAnimator;

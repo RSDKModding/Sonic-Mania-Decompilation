@@ -32,7 +32,7 @@ void Buggernaut_Update(void);
 void Buggernaut_LateUpdate(void);
 void Buggernaut_StaticUpdate(void);
 void Buggernaut_Draw(void);
-void Buggernaut_Create(void* data);
+void Buggernaut_Create(void *data);
 void Buggernaut_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Buggernaut_EditorDraw(void);
@@ -56,4 +56,4 @@ void Buggernaut_State_FlyAway(void);
 
 void Buggernaut_State_Child(void);
 
-#endif //!OBJ_BUGGERNAUT_H
+#endif //! OBJ_BUGGERNAUT_H

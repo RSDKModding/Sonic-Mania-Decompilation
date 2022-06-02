@@ -12,6 +12,7 @@ ObjectHangConveyor *HangConveyor;
 void HangConveyor_Update(void)
 {
     RSDK_THIS(HangConveyor);
+
     RSDK.ProcessAnimation(&self->endAnimator);
     RSDK.ProcessAnimation(&self->startAnimator);
     RSDK.ProcessAnimation(&self->middleAnimator);
@@ -21,10 +22,11 @@ void HangConveyor_Update(void)
         self->active = ACTIVE_NORMAL;
     }
     else {
-        for (int32 i = 0; i < 4; ++i) {
-            self->playerPositions[i].x = 0;
-            self->playerPositions[i].y = 0;
+        for (int32 p = 0; p < PLAYER_MAX; ++p) {
+            self->playerPositions[p].x = 0;
+            self->playerPositions[p].y = 0;
         }
+
         self->active = ACTIVE_BOUNDS;
     }
 }
@@ -38,16 +40,18 @@ void HangConveyor_Draw(void) { HangConveyor_DrawSprites(); }
 void HangConveyor_Create(void *data)
 {
     RSDK_THIS(HangConveyor);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     HangConveyor_SetupHitboxes();
     self->updateRange.x += (self->hitboxFallCheckTop.right - self->hitboxFallCheckTop.left) << 16;
+
     RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 0, &self->endAnimator, true, 0);
     RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 1, &self->startAnimator, true, 0);
     RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 2, &self->middleAnimator, true, 0);
@@ -58,10 +62,8 @@ void HangConveyor_StageLoad(void) { HangConveyor->aniFrames = RSDK.LoadSpriteAni
 void HangConveyor_DrawSprites(void)
 {
     RSDK_THIS(HangConveyor);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     drawPos.x += -0x80000 * (self->length != 1 ? self->length - 1 : 0);
     int32 dirStore = self->direction;
 
@@ -81,16 +83,11 @@ void HangConveyor_DrawSprites(void)
     drawPos.x       = self->position.x;
     drawPos.y       = self->position.y;
 
+    int32 len = self->length == 1 ? 4 : (self->length + 3);
     if (dirStore) {
-        int32 len = self->length + 3;
-        if (self->length == 1)
-            len = 4;
         drawPos.x += len << 19;
     }
     else {
-        int32 len = self->length + 3;
-        if (self->length == 1)
-            len = 4;
         drawPos.x += -0x80000 * len;
     }
     RSDK.DrawSprite(&self->endAnimator, &drawPos, false);
@@ -100,15 +97,9 @@ void HangConveyor_DrawSprites(void)
     drawPos.y       = self->position.y;
 
     if (dirStore) {
-        int32 len = self->length + 3;
-        if (self->length == 1)
-            len = 4;
         drawPos.x += -0x80000 * len;
     }
     else {
-        int32 len = self->length + 3;
-        if (self->length == 1)
-            len = 4;
         drawPos.x += len << 19;
     }
     RSDK.DrawSprite(&self->startAnimator, &drawPos, false);
@@ -343,7 +334,7 @@ void HangConveyor_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(HangConveyor, direction);
     RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flipped", FLIP_X);
 }
 #endif
 

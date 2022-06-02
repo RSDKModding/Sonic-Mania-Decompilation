@@ -29,7 +29,7 @@ void HCZSpikeBall_Update(void);
 void HCZSpikeBall_LateUpdate(void);
 void HCZSpikeBall_StaticUpdate(void);
 void HCZSpikeBall_Draw(void);
-void HCZSpikeBall_Create(void* data);
+void HCZSpikeBall_Create(void *data);
 void HCZSpikeBall_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HCZSpikeBall_EditorDraw(void);
@@ -43,4 +43,4 @@ void HCZSpikeBall_LinkToConveyor(void);
 void HCZSpikeBall_HandlePlayerInteractions(void);
 void HCZSpikeBall_HandleConveyorMovement(void);
 
-#endif //!OBJ_HCZSPIKEBALL_H
+#endif //! OBJ_HCZSPIKEBALL_H

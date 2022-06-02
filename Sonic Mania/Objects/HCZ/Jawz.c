@@ -12,6 +12,7 @@ ObjectJawz *Jawz;
 void Jawz_Update(void)
 {
     RSDK_THIS(Jawz);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,12 +23,14 @@ void Jawz_StaticUpdate(void) {}
 void Jawz_Draw(void)
 {
     RSDK_THIS(Jawz);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Jawz_Create(void *data)
 {
     RSDK_THIS(Jawz);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
@@ -56,6 +59,7 @@ void Jawz_StageLoad(void)
 void Jawz_DebugSpawn(void)
 {
     RSDK_THIS(Jawz);
+
     CREATE_ENTITY(Jawz, NULL, self->position.x, self->position.y);
 }
 
@@ -68,6 +72,7 @@ void Jawz_DebugDraw(void)
 void Jawz_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Jawz);
+
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Jawz->hitboxBadnik) && !Player_CheckBadnikBreak(player, self, true)) {
@@ -128,7 +133,8 @@ void Jawz_State_CheckPlayerTrigger(void)
     if (self->velocity.x) {
         self->active  = ACTIVE_NORMAL;
         self->visible = true;
-        self->state   = Jawz_State_Triggered;
+
+        self->state = Jawz_State_Triggered;
         Jawz_State_Triggered();
     }
     else {
@@ -140,13 +146,16 @@ void Jawz_State_CheckPlayerTrigger(void)
 void Jawz_State_Triggered(void)
 {
     RSDK_THIS(Jawz);
+
     self->position.x += self->velocity.x;
     RSDK.ProcessAnimation(&self->animator);
+
     Jawz_CheckPlayerCollisions();
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
+
         Jawz_Create(NULL);
     }
 }

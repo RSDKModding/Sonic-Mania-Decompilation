@@ -15,13 +15,14 @@ void TwistingSlide_Update(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        int32 storeX   = player->position.x;
-        int32 storeY   = player->position.y;
+
+        int32 storeX = player->position.x;
+        int32 storeY = player->position.y;
+
         if (player->state != Player_State_None)
             self->activePlayers &= ~(1 << playerID);
 
-        if (!Player_CheckCollisionTouch(player, self, &self->hitboxSlide) || (player->position.y < self->minY)
-            || player->position.y > self->maxY) {
+        if (!Player_CheckCollisionTouch(player, self, &self->hitboxSlide) || (player->position.y < self->minY) || player->position.y > self->maxY) {
             self->activePlayers &= ~(1 << playerID);
         }
         else if (self->direction) {
@@ -32,12 +33,14 @@ void TwistingSlide_Update(void)
                             self->playerAngles[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
                             self->activePlayers |= 1 << playerID;
                         }
+
                         int32 angle = 221 * self->playerAngles[playerID];
                         if (221 * self->playerAngles[playerID] >= 0x3FC0)
                             angle = 170 * self->playerAngles[playerID];
 
                         player->position.x = 0x2800 * RSDK.Cos256((angle >> 8) + 0xC0) + self->position.x;
                         player->position.y = self->position.y + ((self->playerAngles[playerID] - 74) << 16);
+
                         if (player->groundVel > 0 && Player_CheckCollisionTouch(player, self, &self->hitboxSlideStart)) {
                             self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
@@ -120,6 +123,7 @@ void TwistingSlide_Update(void)
                             self->playerAngles[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
                             self->activePlayers |= 1 << playerID;
                         }
+
                         int32 angle = 221 * self->playerAngles[playerID];
                         if (221 * self->playerAngles[playerID] >= 0x3FC0)
                             angle = 170 * self->playerAngles[playerID];
@@ -142,7 +146,7 @@ void TwistingSlide_Update(void)
                             player->velocity.y     = 0;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                             self->playerAngles[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
-                            self->activePlayers |= (1 << playerID);
+                            self->activePlayers |= 1 << playerID;
                         }
                     }
                     break;
@@ -153,6 +157,7 @@ void TwistingSlide_Update(void)
                             self->playerAngles[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
                         }
+
                         player->position.x = 0xAA00 * self->playerAngles[playerID] + self->position.x - 0x800000;
                         player->position.y = self->position.y + ((self->playerAngles[playerID] - 0xC0) << 16);
                     }
@@ -164,6 +169,7 @@ void TwistingSlide_Update(void)
                             self->playerAngles[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
                         }
+
                         player->position.x = self->position.x - 0x2800 * RSDK.Cos256(((170 * self->playerAngles[playerID]) >> 8) + 0x40);
                         player->position.y = self->position.y + ((self->playerAngles[playerID] - 0xC0) << 16);
                     }
@@ -175,8 +181,10 @@ void TwistingSlide_Update(void)
                             self->playerAngles[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
                         }
+
                         player->position.x = self->position.x + 0xAA00 * self->playerAngles[playerID] - ((self->endLen / 3) << 16);
                         player->position.y = self->position.y + (self->playerAngles[playerID] << 16) - (self->endLen << 15);
+
                         if (player->groundVel > 0 && Player_CheckCollisionTouch(player, self, &self->hitboxSlideEnd)) {
                             self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
@@ -191,9 +199,10 @@ void TwistingSlide_Update(void)
                         player->state          = Player_State_None;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
+
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         self->playerAngles[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
-                        self->activePlayers |= (1 << playerID);
+                        self->activePlayers |= 1 << playerID;
                     }
                     break;
 
@@ -204,26 +213,30 @@ void TwistingSlide_Update(void)
         if (((1 << playerID) & self->activePlayers)) {
             if (self->direction) {
                 self->playerAngles[playerID] += ((-player->groundVel >> 16) * RSDK.Sin256(40)) >> 8;
+
                 if (player->groundVel <= 0)
                     player->groundVel -= 20 * RSDK.Cos256(40);
                 else
                     player->groundVel -= 80 * RSDK.Cos256(40);
+
                 if (player->groundVel < -0x180000)
                     player->groundVel = -0x180000;
             }
             else {
                 self->playerAngles[playerID] += ((player->groundVel >> 16) * RSDK.Sin256(40)) >> 8;
+
                 if (player->groundVel <= 0)
                     player->groundVel += 20 * RSDK.Cos256(40);
                 else
                     player->groundVel += 80 * RSDK.Cos256(40);
+
                 if (player->groundVel > 0x180000)
                     player->groundVel = 0x180000;
             }
 
-            if (player->characterID == ID_TAILS) 
+            if (player->characterID == ID_TAILS)
                 player->animator.speed = 120;
-            else 
+            else
                 player->animator.speed = ((abs(player->groundVel) * 0xF0) / 0x60000) + 0x30;
 
             if (player->animator.speed > 0xF0)
@@ -236,6 +249,7 @@ void TwistingSlide_Update(void)
                     x = storeX - player->position.x;
                     y = storeY - player->position.y;
                 }
+
                 player->angle    = RSDK.ATan2(x, y);
                 player->rotation = 2 * player->angle;
             }
@@ -252,33 +266,35 @@ void TwistingSlide_Draw(void) {}
 void TwistingSlide_Create(void *data)
 {
     RSDK_THIS(TwistingSlide);
+
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_BOUNDS;
+
         switch (self->type) {
             case TWISTINGSLIDE_START:
                 self->updateRange.y = 0x780000;
                 self->updateRange.x = 0x800000;
-                self->minY      = self->position.y - 0x4A0000;
-                self->maxY      = self->position.y + 0x780000;
+                self->minY          = self->position.y - 0x4A0000;
+                self->maxY          = self->position.y + 0x780000;
                 break;
 
             case TWISTINGSLIDE_STRIP:
                 self->updateRange.x = 0xC00000;
                 self->updateRange.y = 0xC00000;
-                self->minY      = self->position.y - 0xC00000;
-                self->maxY      = self->position.y + 0xC00000;
+                self->minY          = self->position.y - 0xC00000;
+                self->maxY          = self->position.y + 0xC00000;
                 break;
 
             case TWISTINGSLIDE_TWIST:
                 self->updateRange.y = 0xC00000;
                 self->updateRange.x = 0x800000;
-                self->minY      = self->position.y - 0xC00000;
-                self->maxY      = self->position.y + 0xC00000;
+                self->minY          = self->position.y - 0xC00000;
+                self->maxY          = self->position.y + 0xC00000;
                 break;
 
             case TWISTINGSLIDE_END:
-                self->minY      = self->position.y - (self->endLen << 15);
-                self->maxY      = self->position.y + (self->endLen << 15);
+                self->minY          = self->position.y - (self->endLen << 15);
+                self->maxY          = self->position.y + (self->endLen << 15);
                 self->updateRange.y = 0xC00000;
                 self->updateRange.x = 0x800000;
                 break;
@@ -343,6 +359,7 @@ void TwistingSlide_SetupHitboxes(void)
 void TwistingSlide_EditorDraw(void)
 {
     RSDK_THIS(TwistingSlide);
+
     TwistingSlide_SetupHitboxes();
 
     if (showGizmos()) {

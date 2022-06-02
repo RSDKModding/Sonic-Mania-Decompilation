@@ -26,7 +26,7 @@ struct ObjectHCZSetup {
 
 // Entity Class
 struct EntityHCZSetup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -37,7 +37,7 @@ void HCZSetup_Update(void);
 void HCZSetup_LateUpdate(void);
 void HCZSetup_StaticUpdate(void);
 void HCZSetup_Draw(void);
-void HCZSetup_Create(void* data);
+void HCZSetup_Create(void *data);
 void HCZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HCZSetup_EditorDraw(void);
@@ -50,4 +50,4 @@ void HCZSetup_BGWaterLineScanlineCB(ScanlineInfo *scanlines);
 void HCZSetup_HandleActTransition(void);
 void HCZSetup_StageFinishCB_Act2(void);
 
-#endif //!OBJ_HCZSETUP_H
+#endif //! OBJ_HCZSETUP_H

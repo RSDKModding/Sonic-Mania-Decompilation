@@ -34,6 +34,7 @@ void Wisp_Draw(void)
 void Wisp_Create(void *data)
 {
     RSDK_THIS(Wisp);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
@@ -48,6 +49,7 @@ void Wisp_Create(void *data)
     self->buzzCount     = 4;
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 1, &self->wingAnimator, true, 0);
+
     self->state = Wisp_State_Setup;
 }
 
@@ -114,8 +116,8 @@ void Wisp_State_Setup(void)
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = 0;
     self->velocity.y = 0;
-    self->state      = Wisp_State_Idle;
 
+    self->state      = Wisp_State_Idle;
     Wisp_State_Idle();
 }
 
@@ -135,7 +137,9 @@ void Wisp_State_Idle(void)
             self->state      = Wisp_State_FlyAway;
         }
     }
+
     RSDK.ProcessAnimation(&self->wingAnimator);
+
     Wisp_HandlePlayerInteractions();
     Wisp_CheckOffScreen();
 }

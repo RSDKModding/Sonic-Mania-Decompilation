@@ -12,6 +12,7 @@ ObjectJellygnite *Jellygnite;
 void Jellygnite_Update(void)
 {
     RSDK_THIS(Jellygnite);
+
     RSDK.ProcessAnimation(&self->bodyAnimator);
     RSDK.ProcessAnimation(&self->backTentacleAnimator);
     RSDK.ProcessAnimation(&self->frontTentacleAnimator);
@@ -21,6 +22,7 @@ void Jellygnite_Update(void)
     if (self->state != Jellygnite_State_Setup && self->classID == Jellygnite->classID) {
         if (self->grabDelay > 0)
             self->grabDelay--;
+
         Jellygnite_CheckPlayerCollisions();
 
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -35,6 +37,7 @@ void Jellygnite_Update(void)
             self->shakeTimer         = 0;
             self->shakeCount         = 0;
             self->lastShakeFlags     = 0;
+
             Jellygnite_Create(NULL);
         }
     }
@@ -50,8 +53,10 @@ void Jellygnite_StaticUpdate(void)
 void Jellygnite_Draw(void)
 {
     RSDK_THIS(Jellygnite);
+
     Jellygnite_DrawBackTentacle();
     Jellygnite_DrawFrontTentacle();
+
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 }
 
@@ -60,8 +65,7 @@ void Jellygnite_Create(void *data)
     RSDK_THIS(Jellygnite);
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
@@ -91,6 +95,7 @@ void Jellygnite_StageLoad(void)
 void Jellygnite_DebugSpawn(void)
 {
     RSDK_THIS(Jellygnite);
+
     EntityJellygnite *jellygnite = CREATE_ENTITY(Jellygnite, NULL, self->position.x, self->position.y);
     jellygnite->direction        = self->direction;
     jellygnite->startDir         = self->direction;
@@ -138,6 +143,7 @@ void Jellygnite_CheckPlayerCollisions(void)
         if (player != self->grabbedPlayer) {
             if (Player_CheckCollisionTouch(player, self, &Jellygnite->hitbox) && self->state == Jellygnite_State_Swimming
                 && player->position.y >= self->position.y) {
+
                 self->state = Jellygnite_State_GrabbedPlayer;
                 Jellygnite_SetupAnimations(JELLYGNITE_ANI_ANGRY);
                 self->grabbedPlayer = player;
@@ -179,6 +185,7 @@ void Jellygnite_CheckPlayerCollisions(void)
 void Jellygnite_HandlePlayerStruggle(void)
 {
     RSDK_THIS(Jellygnite);
+
     EntityPlayer *player = self->grabbedPlayer;
 
     if (player) {
@@ -245,12 +252,12 @@ bool32 Jellygnite_CheckInWater(EntityPlayer *player)
 void Jellygnite_DrawBackTentacle(void)
 {
     RSDK_THIS(Jellygnite);
-    Vector2 drawPos;
 
     int32 angle = self->angle & 0x1FF;
     int32 y     = self->position.y + 0x70000;
 
     for (int32 i = 0; i < 4; ++i) {
+        Vector2 drawPos;
         drawPos.x = self->position.x + (RSDK.Cos512(angle) << 9);
         drawPos.y = y + (RSDK.Sin512(angle) << 8);
         RSDK.DrawSprite(&self->backTentacleAnimator, &drawPos, false);
@@ -263,7 +270,6 @@ void Jellygnite_DrawBackTentacle(void)
 void Jellygnite_DrawFrontTentacle(void)
 {
     RSDK_THIS(Jellygnite);
-    Vector2 drawPos;
 
     int32 x   = 0;
     int32 y   = 0;
@@ -273,6 +279,7 @@ void Jellygnite_DrawFrontTentacle(void)
         x += 0x312 * RSDK.Sin512(angle);
         y += 0x312 * RSDK.Cos512(angle);
 
+        Vector2 drawPos;
         drawPos.x = x + self->position.x - 0xD0000;
         drawPos.y = y + self->position.y + 0x10000;
         RSDK.DrawSprite(&self->frontTentacleAnimator, &drawPos, false);
@@ -288,6 +295,7 @@ void Jellygnite_DrawFrontTentacle(void)
 void Jellygnite_State_Setup(void)
 {
     RSDK_THIS(Jellygnite);
+
     if (self->position.y >= Water->waterLevel) {
         self->active             = ACTIVE_NORMAL;
         self->timer              = 0;
@@ -299,6 +307,7 @@ void Jellygnite_State_Setup(void)
         self->shakeCount         = 0;
         self->lastShakeFlags     = 0;
         Jellygnite_SetupAnimations(JELLYGNITE_ANI_FLOATING);
+
         self->state = Jellygnite_State_Swimming;
         Jellygnite_State_Swimming();
     }
@@ -322,11 +331,13 @@ void Jellygnite_State_Swimming(void)
         if (Jellygnite_CheckInWater(playerPtr)) {
             if (self->position.y <= playerPtr->position.y - 0x200000) {
                 self->velocity.y += 0x800;
+
                 if (self->velocity.y >= 0xC000)
                     self->velocity.y = 0xC000;
             }
             else {
                 self->velocity.y -= 0x800;
+
                 if (self->velocity.y <= -0xC000)
                     self->velocity.y = -0xC000;
             }
@@ -337,6 +348,7 @@ void Jellygnite_State_Swimming(void)
     }
 
     self->position.y += self->velocity.y;
+
     if (self->position.y - 0x100000 < Water->waterLevel && self->velocity.y < 0) {
         self->position.y = self->position.y - self->velocity.y;
         self->velocity.y = -self->velocity.y;
@@ -346,6 +358,7 @@ void Jellygnite_State_Swimming(void)
 void Jellygnite_State_GrabbedPlayer(void)
 {
     RSDK_THIS(Jellygnite);
+
     if (self->frontTentacleAngle >= 0x600) {
         self->state = Jellygnite_State_Explode;
         Jellygnite_SetupAnimations(JELLYGNITE_ANI_FLASHING);
@@ -363,16 +376,20 @@ void Jellygnite_State_GrabbedPlayer(void)
 void Jellygnite_State_Explode(void)
 {
     RSDK_THIS(Jellygnite);
+
     Jellygnite_HandlePlayerStruggle();
 
     if (++self->timer == 60) {
         EntityPlayer *player = self->grabbedPlayer;
         if (player && player->state == Player_State_None) {
             Player_CheckHit(player, self);
+
             if (player->state != Player_State_Hit && Player_CheckValidState(player))
                 player->state = Player_State_Air;
+
             self->grabbedPlayer = NULL;
         }
+
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         destroyEntity(self);

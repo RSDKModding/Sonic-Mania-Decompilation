@@ -27,6 +27,7 @@ void Whirlpool_Update(void)
         // LaundroMobile - whirlpool finishing
         if (self->activePlayers == 0xFD) {
             self->alpha -= 2;
+
             if (self->alpha <= 0)
                 destroyEntity(self);
         }
@@ -34,24 +35,22 @@ void Whirlpool_Update(void)
             foreach_active(Player, player)
             {
                 int32 playerID = RSDK.GetEntityID(player);
+
                 if (!((1 << playerID) & self->activePlayers)) {
                     if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                         self->active = ACTIVE_NORMAL;
                         self->activePlayers |= (1 << playerID);
-                        player->nextGroundState     = 0;
-                        player->nextAirState        = 0;
-                        player->velocity.x          = 0;
-                        player->velocity.y          = 0;
-                        player->groundVel           = 0;
-                        player->onGround            = false;
-                        player->tileCollisions      = true;
-                        player->state               = Player_State_Air;
+                        player->nextGroundState         = 0;
+                        player->nextAirState            = 0;
+                        player->velocity.x              = 0;
+                        player->velocity.y              = 0;
+                        player->groundVel               = 0;
+                        player->onGround                = false;
+                        player->tileCollisions          = true;
+                        player->state                   = Player_State_Air;
                         self->playerAmplitude[playerID] = abs(player->position.x - self->position.x) >> 16;
 
-                        if (player->position.x > self->position.x)
-                            self->playerAngle[playerID] = 0x000;
-                        else
-                            self->playerAngle[playerID] = 0x200;
+                        self->playerAngle[playerID] = player->position.x > self->position.x ? 0x000 : 0x200;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, true, 0);
                     }
                 }
@@ -68,11 +67,7 @@ void Whirlpool_Update(void)
                         int32 newY         = player->position.y + (self->yVel << 15);
                         player->velocity.x = newX - player->position.x;
                         player->velocity.y = newY - player->position.y;
-
-                        if (self->playerAngle[playerID] <= 0x200)
-                            player->drawOrder = Zone->playerDrawHigh;
-                        else
-                            player->drawOrder = Zone->playerDrawLow;
+                        player->drawOrder  = self->playerAngle[playerID] <= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
 
                         if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->animator.animationID != ANI_FAN) {
                             self->activePlayers &= ~(1 << playerID);
@@ -135,6 +130,7 @@ void Whirlpool_Draw(void) { WhirlPool_DrawSprites(); }
 void Whirlpool_Create(void *data)
 {
     RSDK_THIS(Whirlpool);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
@@ -143,14 +139,14 @@ void Whirlpool_Create(void *data)
     self->updateRange.x = 0x800000 + self->size.x;
     self->updateRange.y = 0x800000 + self->size.y;
     self->drawFX        = FX_FLIP;
-    self->alpha         = 256;
+    self->alpha         = 0x100;
     if (data)
-        self->size = *(Vector2 *)data;
+        self->size = *((Vector2 *)data);
 
-    self->hitbox.right  = self->size.x >> 17;
     self->hitbox.left   = -(self->size.x >> 17);
-    self->hitbox.bottom = self->size.y >> 17;
     self->hitbox.top    = -(self->size.y >> 17);
+    self->hitbox.right  = self->size.x >> 17;
+    self->hitbox.bottom = self->size.y >> 17;
 
     if (SceneInfo->inEditor) {
         if (!self->size.x && !self->size.y) {
@@ -184,14 +180,17 @@ void WhirlPool_DrawSprites(void)
     RSDK_THIS(Whirlpool);
     Vector2 drawPos;
 
-    drawPos    = self->position;
+    drawPos      = self->position;
     int32 offset = (self->yVel * Zone->timer % (self->size.y >> 15)) << 15;
+
     for (int32 i = 0; i < 0x80; ++i) {
         int32 angle = self->angle + self->bubbleAngles[i];
         if (angle < 0)
             angle += 0x400;
+
         drawPos.x = self->position.x + (self->bubbleAngles[i] >> 16) * (RSDK.Cos1024(angle % 0x3FF) << 6);
         drawPos.y = self->position.y + offset % self->size.y + (2 * (i & 1) - 1) * (((i % 6) << 17) & 0xFFFC0000) - (self->size.y >> 1);
+
         RSDK.SetSpriteAnimation(Whirlpool->aniFrames, 3, &self->animator, true, (i & 3) + 3);
         RSDK.DrawSprite(&self->animator, &drawPos, false);
 
@@ -205,10 +204,12 @@ void Whirlpool_SetupBubbles(void)
 
     for (int32 i = 0; i < 0x80; ++i) {
         // bubble angle proper
-        int32 angle_high = RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16;
+        int32 angle_high = RSDK.Rand(self->hitbox.left, self->hitbox.right);
+
         // Extra subpixel randomization
-        int32 angle_low       = RSDK.Rand(0, 0x400);
-        self->bubbleAngles[i] = angle_high | angle_low;
+        int32 angle_low = RSDK.Rand(0, 0x400);
+
+        self->bubbleAngles[i] = (angle_high << 16) | angle_low;
     }
 }
 
@@ -216,6 +217,8 @@ void Whirlpool_SetupBubbles(void)
 void Whirlpool_EditorDraw(void)
 {
     RSDK_THIS(Whirlpool);
+
+    Whirlpool_Create(NULL);
 
     DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 }

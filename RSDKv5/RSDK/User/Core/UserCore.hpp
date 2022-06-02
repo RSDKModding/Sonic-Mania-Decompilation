@@ -132,7 +132,7 @@ extern UserCore *userCore;
 #endif
 
 void InitUserData();
-void ReleaseUserData();
+void ReleaseUserCore();
 void SaveUserData();
 
 #if RETRO_REV02

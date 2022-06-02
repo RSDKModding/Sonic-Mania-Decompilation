@@ -12,6 +12,7 @@ ObjectDCEvent *DCEvent;
 void DCEvent_Update(void)
 {
     RSDK_THIS(DCEvent);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void DCEvent_StaticUpdate(void) {}
 void DCEvent_Draw(void)
 {
     RSDK_THIS(DCEvent);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -33,7 +35,7 @@ void DCEvent_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible = true;
 
-        int type = voidToInt(data);
+        int32 type = voidToInt(data);
         if (self->type == DCEVENT_BUBBLE)
             type = DCEVENT_BUBBLE;
 
@@ -150,10 +152,11 @@ void DCEvent_StateEggmanBomber_AwaitPlayer(void)
     RSDK_THIS(DCEvent);
 
     RSDK.ProcessAnimation(&self->animator);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (player1->position.x > self->position.x - 0x100000)
-        player1->stateInput = DCEvent_StateInput_MoveRight;
+        player1->stateInput = DCEvent_Input_MoveRight;
 
     if (player1->position.x > self->position.x) {
         player1->velocity.x      = 0;
@@ -161,7 +164,7 @@ void DCEvent_StateEggmanBomber_AwaitPlayer(void)
         player1->groundVel       = 0;
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
-        player1->stateInput      = DCEvent_StateInput_LookDown;
+        player1->stateInput      = DCEvent_Input_LookDown;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &self->animator, true, 0);
 
@@ -178,7 +181,7 @@ void DCEvent_StateEggmanBomber_AwaitPlayer(void)
     }
 }
 
-void DCEvent_StateInput_MoveRight(void)
+void DCEvent_Input_MoveRight(void)
 {
     RSDK_THIS(Player);
 
@@ -191,7 +194,7 @@ void DCEvent_StateInput_MoveRight(void)
     self->jumpHold  = false;
 }
 
-void DCEvent_StateInput_LookDown(void)
+void DCEvent_Input_LookDown(void)
 {
     RSDK_THIS(Player);
 
@@ -203,6 +206,7 @@ void DCEvent_StateInput_LookDown(void)
     self->right      = false;
     self->jumpPress  = false;
     self->jumpHold   = false;
+
     if (self->onGround)
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_CROUCH, &self->animator, false, 1);
 }
@@ -221,6 +225,7 @@ void DCEvent_StateEggmanBomber_Swimming(void)
     RSDK_THIS(DCEvent);
 
     RSDK.ProcessAnimation(&self->animator);
+
     self->position.x += self->velocity.x;
 
     if (self->velocity.y > 0) {
@@ -262,17 +267,19 @@ void DCEvent_StateEggmanBomber_PlaceBomb(void)
     RSDK_THIS(DCEvent);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID >= self->animator.frameCount - 1) {
-        EntityDCEvent *child = CREATE_ENTITY(DCEvent, intToVoid(DCEVENT_BOMB), self->position.x, self->position.y + 0x20000);
+        EntityDCEvent *bomb = CREATE_ENTITY(DCEvent, intToVoid(DCEVENT_BOMB), self->position.x, self->position.y + 0x20000);
         if (self->direction)
-            child->position.x += 0x1A0000;
+            bomb->position.x += 0x1A0000;
         else
-            child->position.x -= 0x1A0000;
+            bomb->position.x -= 0x1A0000;
 
         RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &self->animator, false, 0);
 
         if (self->remainingBombs == 1)
             self->direction = FLIP_X;
+
         self->timer = 160;
         self->state = DCEvent_StateEggmanBomber_Swimming;
     }
@@ -296,6 +303,7 @@ void DCEvent_StateEggmanBomber_PlacedAllBombs(void)
 void DCEvent_StateEggmanSwim_AwaitPlayer(void)
 {
     RSDK_THIS(DCEvent);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     RSDK.ProcessAnimation(&self->animator);
@@ -362,6 +370,7 @@ void DCEvent_State_Bomb(void)
         // Spawn Bricks
         for (int32 i = 0; i < 8; ++i) {
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, self->position.y);
+
             RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &debris->animator, true, 0);
             debris->position.x += RSDK.Rand(-8, 8) << 16;
             debris->position.y += RSDK.Rand(-8, 8) << 16;
@@ -371,11 +380,12 @@ void DCEvent_State_Bomb(void)
                 debris->velocity.x = RSDK.Rand(-8, 0) << 15;
             else
                 debris->velocity.x = RSDK.Rand(1, 9) << 15;
-            debris->velocity.y = RSDK.Rand(-8, 5) << 16;
-            debris->direction  = RSDK.Rand(0, 4);
-            debris->drawFX     = FX_FLIP;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->gravityStrength    = 0x3800;
+            debris->velocity.y      = RSDK.Rand(-8, 5) << 16;
+            debris->direction       = RSDK.Rand(0, 4);
+            debris->drawFX          = FX_FLIP;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->gravityStrength = 0x3800;
+
             RSDK.CopyTileLayer(Zone->moveLayer, 1038, 146, Zone->moveLayer, 1068, 8, 20, 6);
         }
 

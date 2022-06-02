@@ -7,7 +7,7 @@ typedef enum {
     JAWS_TRIGGER_BOTH,
     JAWS_TRIGGER_LEFT,
     JAWS_TRIGGER_RIGHT,
-}JawzTriggerDirs;
+} JawzTriggerDirs;
 
 // Object Class
 struct ObjectJawz {
@@ -33,7 +33,7 @@ void Jawz_Update(void);
 void Jawz_LateUpdate(void);
 void Jawz_StaticUpdate(void);
 void Jawz_Draw(void);
-void Jawz_Create(void* data);
+void Jawz_Create(void *data);
 void Jawz_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Jawz_EditorDraw(void);
@@ -48,4 +48,4 @@ void Jawz_CheckPlayerCollisions(void);
 void Jawz_State_CheckPlayerTrigger(void);
 void Jawz_State_Triggered(void);
 
-#endif //!OBJ_JAWZ_H
+#endif //! OBJ_JAWZ_H

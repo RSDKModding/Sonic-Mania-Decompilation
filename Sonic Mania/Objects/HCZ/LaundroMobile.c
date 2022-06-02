@@ -12,6 +12,7 @@ ObjectLaundroMobile *LaundroMobile;
 void LaundroMobile_Update(void)
 {
     RSDK_THIS(LaundroMobile);
+
     StateMachine_Run(self->state);
 }
 
@@ -25,6 +26,7 @@ void LaundroMobile_StaticUpdate(void)
                 RSDK.PlaySfx(LaundroMobile->sfxWash, true, 0xFF);
             else
                 RSDK.PlaySfx(LaundroMobile->sfxFan, 47208, 0xFF);
+
             LaundroMobile->playingLoopSfx = true;
         }
     }
@@ -32,6 +34,7 @@ void LaundroMobile_StaticUpdate(void)
         if (LaundroMobile->playingLoopSfx) {
             RSDK.StopSfx(LaundroMobile->sfxFan);
             RSDK.StopSfx(LaundroMobile->sfxWash);
+
             LaundroMobile->playingLoopSfx = false;
         }
     }
@@ -45,6 +48,7 @@ void LaundroMobile_StaticUpdate(void)
 void LaundroMobile_Draw(void)
 {
     RSDK_THIS(LaundroMobile);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -69,10 +73,11 @@ void LaundroMobile_Create(void *data)
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 3, &self->propellerAnimator, true, 0);
                     RSDK.SetSpriteAnimation(LaundroMobile->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
-                    self->startY                      = self->position.y;
-                    self->updateRange.x               = 0x800000;
-                    self->updateRange.y               = 0x800000;
-                    LaundroMobile->health             = 5 + 8;
+                    self->startY        = self->position.y;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+
+                    LaundroMobile->health             = 5 + 8; // phase1 health + phase 2 health
                     LaundroMobile->invincibilityTimer = 0;
                     LaundroMobile->nextLoopPoint      = 0;
                     LaundroMobile->attackDir          = FLIP_NONE;
@@ -92,20 +97,22 @@ void LaundroMobile_Create(void *data)
                     LaundroMobile->rocketSpeeds[0] = 0;
                     LaundroMobile->rocketSpeeds[1] = 0;
                     LaundroMobile->isUnderwater    = false;
-                    self->tileCollisions           = true;
-                    self->collisionLayers          = Zone->collisionLayers;
-                    self->collisionPlane           = 0;
-                    self->state                    = LaundroMobile_StateBoss_AwaitPlayer_Phase1;
-                    self->stateDraw                = LaundroMobile_Draw_Boss;
+
+                    self->tileCollisions  = true;
+                    self->collisionLayers = Zone->collisionLayers;
+                    self->collisionPlane  = 0;
+                    self->state           = LaundroMobile_StateBoss_AwaitPlayer_Phase1;
+                    self->stateDraw       = LaundroMobile_Draw_Boss;
                     break;
 
                 case LAUNDROMOBILE_BOMB:
-                    self->active      = ACTIVE_BOUNDS;
-                    self->visible     = true;
-                    self->drawOrder   = Zone->objectDrawLow;
-                    self->originPos.x = self->position.x;
-                    self->originPos.y = self->position.y;
+                    self->active    = ACTIVE_BOUNDS;
+                    self->visible   = true;
+                    self->drawOrder = Zone->objectDrawLow;
+                    self->originPos = self->position;
+
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 7, &self->mainAnimator, true, 0);
+
                     self->updateRange.x = 0x1800000;
                     self->updateRange.y = 0x1800000;
                     self->state         = LaundroMobile_StateBomb_Spawner;
@@ -116,9 +123,11 @@ void LaundroMobile_Create(void *data)
                     self->active    = ACTIVE_XBOUNDS;
                     self->visible   = true;
                     self->drawOrder = Zone->objectDrawLow + 1;
+
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 1, &self->propellerAnimator, true, 0);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 2, &self->eggmanAnimator, true, 0);
+
                     self->updateRange.x = 0x2000000;
                     self->updateRange.y = 0x800000;
                     self->state         = LaundroMobile_State_Laundry;
@@ -128,12 +137,13 @@ void LaundroMobile_Create(void *data)
                 case LAUNDROMOBILE_LOOPPOINT: LaundroMobile->loopPoints[LaundroMobile->nextLoopPoint++] = (Entity *)self; break;
 
                 case LAUNDROMOBILE_BLOCK:
-                    self->active      = ACTIVE_BOUNDS;
-                    self->visible     = true;
-                    self->drawOrder   = Zone->objectDrawLow;
-                    self->originPos.x = self->position.x;
-                    self->originPos.y = self->position.y;
+                    self->active    = ACTIVE_BOUNDS;
+                    self->visible   = true;
+                    self->drawOrder = Zone->objectDrawLow;
+                    self->originPos = self->position;
+
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &self->mainAnimator, true, RSDK.Rand(0, 3));
+
                     self->updateRange.x = 0x1800000;
                     self->updateRange.y = 0x1800000;
                     self->velocity.x    = LaundroMobile->currentVelocity - 0x18000;
@@ -142,12 +152,13 @@ void LaundroMobile_Create(void *data)
                     break;
 
                 case LAUNDROMOBILE_SPIKES:
-                    self->active      = ACTIVE_BOUNDS;
-                    self->visible     = true;
-                    self->drawOrder   = Zone->objectDrawLow;
-                    self->originPos.x = self->position.x;
-                    self->originPos.y = self->position.y;
+                    self->active    = ACTIVE_BOUNDS;
+                    self->visible   = true;
+                    self->drawOrder = Zone->objectDrawLow;
+                    self->originPos = self->position;
+
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &self->mainAnimator, true, RSDK.Rand(0, 3) + 3);
+
                     self->updateRange.x = 0x1800000;
                     self->updateRange.y = 0x1800000;
                     self->velocity.x    = LaundroMobile->currentVelocity - 0x18000;
@@ -232,13 +243,14 @@ void LaundroMobile_CheckPlayerCollisions(void)
         LaundroMobile->invincibilityTimer--;
     }
     else {
-        int storeX = self->position.x;
-        int storeY = self->position.y;
+        int32 storeX = self->position.x;
+        int32 storeY = self->position.y;
         foreach_active(Player, player)
         {
-            for (int i = 0; i < 4 && LaundroMobile->rocketActive; ++i) {
+            for (int32 i = 0; i < 4 && LaundroMobile->rocketActive; ++i) {
                 self->position.x = LaundroMobile->rocketPositions[i].x;
                 self->position.y = LaundroMobile->rocketPositions[i].y;
+
                 if (Player_CheckCollisionTouch(player, self, &LaundroMobile->hitboxMissile)) {
 #if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
@@ -250,8 +262,8 @@ void LaundroMobile_CheckPlayerCollisions(void)
             self->position.x = storeX;
             self->position.y = storeY;
 
-            int velX = player->velocity.x;
-            int velY = player->velocity.y;
+            int32 velX = player->velocity.x;
+            int32 velY = player->velocity.y;
             if (Player_CheckBadnikTouch(player, self, &LaundroMobile->hitboxBoss) && Player_CheckBossHit(player, self)) {
                 if (LaundroMobile->health)
                     LaundroMobile->health--;
@@ -301,15 +313,16 @@ void LaundroMobile_Explode(void)
 {
     RSDK_THIS(LaundroMobile);
 
-    int interval = LaundroMobile->health > 8 ? 7 : 3;
+    int32 interval = LaundroMobile->health > 8 ? 7 : 3;
 
     if (!(Zone->timer % interval)) {
         RSDK.PlaySfx(LaundroMobile->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
-            int x                      = self->position.x + (RSDK.Rand(-19, 20) << 16);
-            int y                      = self->position.y + (RSDK.Rand(-24, 25) << 16);
+            int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+
+            explosion->drawOrder = Zone->objectDrawHigh + 2;
             if (LaundroMobile->health > 8)
                 explosion->velocity.x = 0x24000;
         }
@@ -323,11 +336,12 @@ void LaundroMobile_HandleStageWrap(void)
     if (!(Zone->timer & 3)) {
         EntityCurrent *current = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), ScreenInfo->position.x << 16,
                                                (8 * RSDK.Rand(0, ScreenInfo->height >> 3) + ScreenInfo->position.y) << 16);
-        current->drawOrder     = Zone->playerDrawLow;
-        current->strength      = 6;
-        current->type          = CURRENT_C_RIGHT;
-        current->alpha         = 0xF0;
-        current->size.x        = (ScreenInfo->position.x + ScreenInfo->width + 0x1000) << 16;
+
+        current->drawOrder = Zone->playerDrawLow;
+        current->strength  = 6;
+        current->type      = CURRENT_C_RIGHT;
+        current->alpha     = 0xF0;
+        current->size.x    = (ScreenInfo->position.x + ScreenInfo->width + 0x1000) << 16;
     }
 
     foreach_active(Player, player)
@@ -355,10 +369,11 @@ void LaundroMobile_HandleStageWrap(void)
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                     }
 
+                    player->velocity.y = 0;
                     if (player->up)
                         player->velocity.y = -0x18000;
-                    else
-                        player->velocity.y = player->down ? 0x18000 : 0;
+                    else if (player->down)
+                        player->velocity.y = 0x18000;
                 }
             }
         }
@@ -377,8 +392,8 @@ void LaundroMobile_HandleStageWrap(void)
         else {
             Entity *loopPoint = LaundroMobile->loopPoints[LaundroMobile->nextLoopPoint];
             if (player1->position.x >= loopPoint->position.x + 0xE000000) {
-                int startOffsetX = player1->position.x - loopPoint->position.x - 0xE000000;
-                int startOffsetY = player1->position.y - loopPoint->position.y;
+                int32 startOffsetX = player1->position.x - loopPoint->position.x - 0xE000000;
+                int32 startOffsetY = player1->position.y - loopPoint->position.y;
                 if (LaundroMobile->health <= 8) {
                     LaundroMobile->nextLoopPoint = 5;
                     boss->state                  = LaundroMobile_StateBoss_WaitForLastStageWrap;
@@ -388,7 +403,7 @@ void LaundroMobile_HandleStageWrap(void)
                         LaundroMobile->travelledPaths = 0;
                     }
 
-                    int prevLoopPoint = LaundroMobile->nextLoopPoint;
+                    int32 prevLoopPoint = LaundroMobile->nextLoopPoint;
                     while (LaundroMobile->nextLoopPoint == prevLoopPoint) {
                         // LoopPoints 1-4 are valid to use as attacks, 5 is reserved for the final stage wrap
                         LaundroMobile->nextLoopPoint = RSDK.Rand(1, 5);
@@ -397,13 +412,13 @@ void LaundroMobile_HandleStageWrap(void)
                             LaundroMobile->nextLoopPoint = RSDK.Rand(1, 5);
                         }
                     }
-                    
+
                     LaundroMobile->travelledPaths |= 1 << LaundroMobile->nextLoopPoint;
                 }
                 loopPoint = LaundroMobile->loopPoints[LaundroMobile->nextLoopPoint];
 
-                int offsetX = player1->position.x - startOffsetX - loopPoint->position.x;
-                int offsetY = player1->position.y - loopPoint->position.y - startOffsetY;
+                int32 offsetX = player1->position.x - startOffsetX - loopPoint->position.x;
+                int32 offsetY = player1->position.y - loopPoint->position.y - startOffsetY;
                 player1->position.x -= offsetX;
                 player1->position.y -= offsetY;
 
@@ -488,16 +503,16 @@ void LaundroMobile_HandleRocketMovement(void)
 {
     RSDK_THIS(LaundroMobile);
 
-    for (int32 i = 0; i < 2; ++i) {
-        LaundroMobile->rocketPositions[i].x = self->position.x + 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[i] >> 8);
-        LaundroMobile->rocketPositions[i].y = self->position.y + 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[i] >> 8);
-        LaundroMobile->rocketAngles[i] += LaundroMobile->rocketSpeeds[0];
+    for (int32 r = 0; r < 2; ++r) {
+        LaundroMobile->rocketPositions[r].x = self->position.x + 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[r] >> 8);
+        LaundroMobile->rocketPositions[r].y = self->position.y + 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[r] >> 8);
+        LaundroMobile->rocketAngles[r] += LaundroMobile->rocketSpeeds[0];
     }
 
-    for (int32 i = 2; i < 4; ++i) {
-        LaundroMobile->rocketPositions[i].x = self->position.x - 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[i] >> 8);
-        LaundroMobile->rocketPositions[i].y = self->position.y + 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[i] >> 8);
-        LaundroMobile->rocketAngles[i] += LaundroMobile->rocketSpeeds[1];
+    for (int32 r = 2; r < 4; ++r) {
+        LaundroMobile->rocketPositions[r].x = self->position.x - 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[r] >> 8);
+        LaundroMobile->rocketPositions[r].y = self->position.y + 0x1400 * RSDK.Cos256(LaundroMobile->rocketAngles[r] >> 8);
+        LaundroMobile->rocketAngles[r] += LaundroMobile->rocketSpeeds[1];
     }
 }
 
@@ -506,6 +521,7 @@ void LaundroMobile_HandleEggmanAnimations(void)
     RSDK_THIS(LaundroMobile);
 
     RSDK.ProcessAnimation(&self->eggmanAnimator);
+
     bool32 playerHurt = false;
     foreach_active(Player, player)
     {
@@ -551,6 +567,7 @@ void LaundroMobile_HandleEggmanAnimations(void)
                     RSDK.SetSpriteAnimation(LaundroMobile->eggmanFrames, 1, &self->eggmanAnimator, true, 0);
             }
             break;
+
         default: break;
     }
 }
@@ -592,7 +609,8 @@ void LaundroMobile_StateBoss_AwaitPlayer_Phase1(void)
         self->timer  = 0;
         self->active = ACTIVE_NORMAL;
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (self->position.x >= 0x60800000) {
+
+        if (self->position.x >= (24704 << 16)) {
             // did this use to only have 12 health at some point during dev?
             if (LaundroMobile->health == (MANIA_USE_PLUS ? (5 + 8) : (4 + 8))) {
                 LaundroMobile->health = 8;
@@ -617,20 +635,22 @@ void LaundroMobile_StateBoss_AwaitPlayer_Phase1(void)
 void LaundroMobile_StateBoss_SetupArena_Phase1(void)
 {
     RSDK_THIS(LaundroMobile);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, BreakBar)->releaseTimer = 0;
     player1->jumpPress                                                 = false;
+
     if (player1->position.x > self->position.x + 0x1700000) {
         Music_TransitionTrack(TRACK_EGGMAN1, 0.0125);
         RSDK.GetTileLayer(4)->drawLayer[0] = DRAWGROUP_COUNT;
-        LaundroMobile->nextLoopPoint        = 0;
-        Water->waterLevel                   = 0;
-        Water->targetWaterLevel             = 0;
-        self->timer                         = 120;
-        self->propellerAnimator.speed       = 0;
-        self->visible                       = true;
-        self->state                         = LaundroMobile_StateBoss_EnterEggman_Phase1;
+        LaundroMobile->nextLoopPoint       = 0;
+        Water->waterLevel                  = 0;
+        Water->targetWaterLevel            = 0;
+        self->timer                        = 120;
+        self->propellerAnimator.speed      = 0;
+        self->visible                      = true;
+        self->state                        = LaundroMobile_StateBoss_EnterEggman_Phase1;
     }
 }
 
@@ -651,6 +671,7 @@ void LaundroMobile_StateBoss_EnterEggman_Phase1(void)
         self->state                 = LaundroMobile_StateBoss_StartupPropellers;
         LaundroMobile->useStageWrap = true;
     }
+
     LaundroMobile_CheckPlayerCollisions();
 }
 
@@ -660,6 +681,7 @@ void LaundroMobile_StateBoss_StartupPropellers(void)
 
     RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, BreakBar)->releaseTimer = 0;
     RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->jumpPress                   = false;
+
     RSDK.ProcessAnimation(&self->propellerAnimator);
 
     if (self->propellerAnimator.speed >= 0x200) {
@@ -682,7 +704,9 @@ void LaundroMobile_StateBoss_HandlePhase1(void)
     RSDK_THIS(LaundroMobile);
 
     LaundroMobile_HandleEggmanAnimations();
+
     RSDK.ProcessAnimation(&self->propellerAnimator);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     self->position.y = self->originPos.y;
@@ -700,11 +724,13 @@ void LaundroMobile_StateBoss_HandlePhase1(void)
     else if (self->velocity.y) {
         if (self->velocity.y <= 0) {
             self->velocity.y += 0x1000;
+
             if (self->velocity.y > 0)
                 self->velocity.y = 0;
         }
         else {
             self->velocity.y -= 0x1000;
+
             if (self->velocity.y < 0)
                 self->velocity.y = 0;
         }
@@ -719,6 +745,7 @@ void LaundroMobile_StateBoss_HandlePhase1(void)
     else {
         self->originPos.y = self->position.y;
     }
+
     self->position.x += LaundroMobile->currentVelocity;
 
     ++LaundroMobile->loopSfxTimer;
@@ -730,29 +757,30 @@ void LaundroMobile_StateBoss_Destroyed_Phase1(void)
     RSDK_THIS(LaundroMobile);
 
     LaundroMobile_Explode();
+
     RSDK.ProcessAnimation(&self->propellerAnimator);
+
     self->position.y = self->originPos.y;
     LaundroMobile_HandleTileCollisions();
 
-    if (self->position.y == self->originPos.y) {
-        self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 10);
-    }
-    else {
-        self->originPos.y = self->position.y;
-    }
-
     self->position.x += LaundroMobile->currentVelocity - 0x8000;
+
+    if (self->position.y == self->originPos.y)
+        self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 10);
+    else
+        self->originPos.y = self->position.y;
 
     LaundroMobile_CheckPlayerCollisions();
     if (--self->timer <= 0) {
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
+
         RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 4, &debris->animator, true, 0);
-        debris->velocity.x    = 0x50000;
-        debris->velocity.y    = -0x28000;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawHigh;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = 0x50000;
+        debris->velocity.y      = -0x28000;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawHigh;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
         RSDK.SetSpriteAnimation(-1, 0, &self->propellerAnimator, true, 0);
         self->state = LaundroMobile_StateBoss_Explode_Phase1;
     }
@@ -763,18 +791,18 @@ void LaundroMobile_StateBoss_Explode_Phase1(void)
     RSDK_THIS(LaundroMobile);
 
     LaundroMobile_Explode();
+
     RSDK.ProcessAnimation(&self->propellerAnimator);
 
     self->position.y = self->originPos.y;
     LaundroMobile_HandleTileCollisions();
 
-    if (self->position.y == self->originPos.y) {
-        self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 10);
-    }
-    else {
-        self->originPos.y = self->position.y;
-    }
     self->position.x += LaundroMobile->currentVelocity - 0x10000;
+
+    if (self->position.y == self->originPos.y)
+        self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 10);
+    else
+        self->originPos.y = self->position.y;
 
     LaundroMobile_CheckPlayerCollisions();
 }
@@ -783,11 +811,12 @@ void LaundroMobile_StateBoss_WaitForLastStageWrap(void)
 {
     RSDK_THIS(LaundroMobile);
 
-    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > 0x6D800000) {
+    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > (28032 << 16)) {
         LaundroMobile->useStageWrap = false;
         foreach_active(Player, player) { player->state = Player_State_Air; }
         self->state = LaundroMobile_StateBoss_AwaitPlayer_Phase2;
     }
+
     LaundroMobile_CheckPlayerCollisions();
 }
 
@@ -796,6 +825,7 @@ void LaundroMobile_StateBoss_AwaitPlayer_Phase2(void)
     RSDK_THIS(LaundroMobile);
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
     if (player1->onGround && !player1->angle) { // wait till we're on flat ground
         self->timer = 60;
         RSDK.SetSpriteAnimation(LaundroMobile->eggmanFrames, 1, &self->eggmanAnimator, true, 0);
@@ -811,10 +841,12 @@ void LaundroMobile_StateBoss_SetupArena_Phase2(void)
     RSDK_THIS(LaundroMobile);
 
     if (--self->timer <= 0) {
-        self->position.x = 0x6E000000;
+        self->position.x = 28160 << 16;
         self->timer      = 104;
         self->position.y = (ScreenInfo->position.y - 64) << 16;
+
         LaundroMobile_HandleRocketMovement();
+
         self->stateDraw = LaundroMobile_Draw_Boss_Destroyed;
         self->state     = LaundroMobile_StateBoss_EnterEggman_Phase2;
     }
@@ -827,6 +859,7 @@ void LaundroMobile_StateBoss_EnterEggman_Phase2(void)
     RSDK_THIS(LaundroMobile);
 
     self->position.y += 0x10000;
+
     LaundroMobile_HandleRocketMovement();
 
     if (--self->timer <= 0) {
@@ -898,15 +931,13 @@ void LaundroMobile_StateBoss_RiseUpToAttack(void)
     LaundroMobile_HandleRocketMovement();
 
     if (--self->timer <= 0) {
-        if (LaundroMobile->attackDir)
-            self->position.x += 0x580000;
-        else
-            self->position.x -= 0x580000;
+        self->position.x += LaundroMobile->attackDir ? 0x580000 : -0x580000;
         self->velocity.y = 0x50000;
         RSDK.PlaySfx(LaundroMobile->sfxRoll, false, 255);
         LaundroMobile->attackCount = LaundroMobile->attackCounts[RSDK.Rand(0, 8)];
         self->state                = LaundroMobile_StateBoss_Attacking;
     }
+
     LaundroMobile_CheckPlayerCollisions();
     LaundroMobile_HandleEggmanAnimations();
 }
@@ -927,23 +958,22 @@ void LaundroMobile_StateBoss_Attacking(void)
     if (self->position.y <= Water->waterLevel) {
         if (LaundroMobile->isUnderwater) {
             LaundroMobile->isUnderwater = false;
+
             CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
             CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x - 0x100000, Water->waterLevel);
             CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x + 0x100000, Water->waterLevel);
 
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
             if (--LaundroMobile->attackCount <= 0) {
-                self->onGround = false;
-                self->state    = LaundroMobile_StateBoss_ReturnToLaundry;
-                if (LaundroMobile->attackDir == FLIP_NONE)
-                    self->velocity.x = -0x18000;
-                else
-                    self->velocity.x = 0x18000;
+                self->onGround   = false;
+                self->state      = LaundroMobile_StateBoss_ReturnToLaundry;
+                self->velocity.x = LaundroMobile->attackDir == FLIP_NONE ? -0x18000 : 0x18000;
             }
         }
     }
     else if (!LaundroMobile->isUnderwater) {
         LaundroMobile->isUnderwater = true;
+
         CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
         CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x - 0x100000, Water->waterLevel);
         CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x + 0x100000, Water->waterLevel);
@@ -963,8 +993,8 @@ void LaundroMobile_StateBoss_ReturnToLaundry(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x2800;
 
-    if ((LaundroMobile->attackDir && self->position.x >= 0x6E000000) || (!LaundroMobile->attackDir && self->position.x <= 0x6E000000)) {
-        self->position.x = 0x6E000000;
+    if ((LaundroMobile->attackDir && self->position.x >= (28160 << 16)) || (!LaundroMobile->attackDir && self->position.x <= (28160 << 16))) {
+        self->position.x = 28160 << 16;
         RSDK.SetSpriteAnimation(-1, 0, &self->flameAnimator, true, 0);
         LaundroMobile->rocketActive = false;
         RSDK.PlaySfx(LaundroMobile->sfxHullClose, false, 255);
@@ -1035,10 +1065,9 @@ void LaundroMobile_StateBoss_StartupWhirlpool(void)
             self->state = LaundroMobile_StateBoss_WhirlpoolActive;
         }
         else {
-            Vector2 pos;
-            pos.x                    = 0x1000000;
-            pos.y                    = 0x1000000;
-            whirlpool                = CREATE_ENTITY(Whirlpool, &pos, self->position.x, self->originPos.y - 0x200000);
+            Vector2 pos = { 0x1000000, 0x1000000 };
+            whirlpool   = CREATE_ENTITY(Whirlpool, &pos, self->position.x, self->originPos.y - 0x200000);
+
             whirlpool->activePlayers = 0xFF;
             whirlpool->angVel        = 10;
             whirlpool->alpha         = 0;
@@ -1109,6 +1138,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
                     }
                     LaundroMobile->playerRadius[playerID] >>= 8;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
+
                     player->state = Player_State_None;
                 }
             }
@@ -1131,8 +1161,10 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
         if (whirlpool) {
             if (whirlpool->classID == Whirlpool->classID)
                 whirlpool->activePlayers = -3;
+
             self->whirlpool = NULL;
         }
+
         self->state = LaundroMobile_StateBoss_PrepareRockets;
     }
 
@@ -1161,7 +1193,8 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
+
         if (player->state == Player_State_None) {
             player->velocity.x = player->position.x - LaundroMobile->playerRadius[playerID] * RSDK.Cos256(LaundroMobile->playerAngles[playerID] - 3)
                                  - self->position.x;
@@ -1184,20 +1217,15 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void)
                 debris->animator.speed = 0;
 
                 if (debris->position.y >= self->position.y) {
-                    if (debris->position.x < self->position.x)
-                        debris->velocity.x = -0x20000;
-                    else
-                        debris->velocity.x = 0x20000;
+                    debris->velocity.x = debris->position.x < self->position.x ? -0x20000 : 0x20000;
                     debris->velocity.y = -0x10000;
                 }
                 else {
-                    if (debris->position.x < self->position.x)
-                        debris->velocity.x = -0x40000;
-                    else
-                        debris->velocity.x = 0x40000;
+                    debris->velocity.x = debris->position.x < self->position.x ? -0x40000 : 0x40000;
                     debris->velocity.y = -0x20000;
                 }
-                debris->gravityStrength                     = 0x3800;
+
+                debris->gravityStrength             = 0x3800;
                 debris->drawOrder                   = Zone->objectDrawHigh;
                 debris->updateRange.x               = 0x400000;
                 debris->updateRange.y               = 0x400000;
@@ -1227,9 +1255,12 @@ void LaundroMobile_StateBoss_Explode_Phase2(void)
         Water->targetWaterLevel += 0x780000;
         Water->waterMoveSpeed = 0x10000;
         self->timer           = 0;
+
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
+
         CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
                       (ScreenInfo->position.y - 48) << 16);
+
 #if MANIA_USE_PLUS
         Zone->stageFinishCallback = LaundroMobile_StageFinishCB_Blank;
         self->state               = LaundroMobile_StateOutro_StartCutscene;
@@ -1267,6 +1298,7 @@ void LaundroMobile_StateOutro_StartCutscene(void)
                 player2->stateInput = StateMachine_None;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             }
+
             self->state = LaundroMobile_StateOutro_Rumble;
         }
     }
@@ -1306,21 +1338,23 @@ void LaundroMobile_StateOutro_Rumble(void)
         }
 
         for (int32 i = 0; i < 0x20; ++i) {
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, 0x6EB00000, 0xAE00000);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, 28336 << 16, 2784 << 16);
+
             RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &debris->animator, true, 0);
             debris->position.x += 0x60000 * RSDK.Rand(-8, 8);
             debris->position.y += 0x60000 * RSDK.Rand(-8, 8);
-            debris->velocity.x = RSDK.Rand(-8, 8) << 16;
-            debris->velocity.y = RSDK.Rand(-8, 8) << 16;
-            debris->velocity.x = RSDK.Rand(-8, 9) << 15;
-            debris->velocity.y = RSDK.Rand(-8, 5) << 16;
-            debris->direction  = RSDK.Rand(0, 4);
-            debris->drawFX     = FX_FLIP;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->gravityStrength    = 0x3800;
+            debris->velocity.x      = RSDK.Rand(-8, 8) << 16;
+            debris->velocity.y      = RSDK.Rand(-8, 8) << 16;
+            debris->velocity.x      = RSDK.Rand(-8, 9) << 15;
+            debris->velocity.y      = RSDK.Rand(-8, 5) << 16;
+            debris->direction       = RSDK.Rand(0, 4);
+            debris->drawFX          = FX_FLIP;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->gravityStrength = 0x3800;
         }
 
         RSDK.CopyTileLayer(Zone->fgHigh, 1763, 172, Zone->fgHigh, 1919, 172, 11, 4);
+
         RSDK.PlaySfx(LaundroMobile->sfxImpact, false, 255);
         RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
@@ -1344,6 +1378,7 @@ void LaundroMobile_StateOutro_WaterGush(void)
         {
             gush->position.y += 0x8000;
             gush->alpha -= 2;
+
             if (gush->position.x > self->position.x) {
                 if (gush->position.x - gush->gushPos < player1->position.x) {
                     player1->velocity.x = -0x30000;
@@ -1362,9 +1397,12 @@ void LaundroMobile_StateOutro_WaterGush(void)
         {
             gush->position.y += 0x8000;
             gush->alpha -= 2;
+
             if (gush->position.x > self->position.x && gush->alpha <= 0) {
                 destroyEntity(gush);
+
                 for (int32 p = 0; p < PLAYER_MAX; ++p) Zone->playerBoundActiveR[p] = false;
+
                 self->timer = 0;
                 self->state = LaundroMobile_StateOutro_ExitHCZ;
             }
@@ -1394,12 +1432,13 @@ void LaundroMobile_StateOutro_ExitHCZ(void)
 void LaundroMobile_Draw_Boss(void)
 {
     RSDK_THIS(LaundroMobile);
-    Vector2 drawPos;
 
     if (LaundroMobile->invincibilityTimer & 1) {
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
         RSDK.SetPaletteEntry(1, 128, 0xE0E0E0);
     }
+
+    Vector2 drawPos;
     drawPos.x = self->position.x - 0x20000;
     drawPos.y = self->position.y - 0x1B0000;
 
@@ -1438,9 +1477,9 @@ void LaundroMobile_Draw_Boss_Destroyed(void)
         RSDK.SetPaletteEntry(1, 128, 0xE0E0E0);
     }
 
-    for (int p = 0; p < 4; ++p) {
-        self->direction = p >= 2 ? FLIP_X : FLIP_NONE;
-        uint8 angle     = LaundroMobile->rocketAngles[p] >> 8;
+    for (int32 r = 0; r < 4; ++r) {
+        self->direction = r >= 2 ? FLIP_X : FLIP_NONE;
+        uint8 angle     = LaundroMobile->rocketAngles[r] >> 8;
         if (angle >= 0x80) {
             self->propellerAnimator.frameID = angle >> 4;
 
@@ -1448,8 +1487,8 @@ void LaundroMobile_Draw_Boss_Destroyed(void)
             if (!(Zone->timer & 1))
                 self->flameAnimator.frameID = self->propellerAnimator.frameID;
 
-            RSDK.DrawSprite(&self->propellerAnimator, &LaundroMobile->rocketPositions[p], false);
-            RSDK.DrawSprite(&self->flameAnimator, &LaundroMobile->rocketPositions[p], false);
+            RSDK.DrawSprite(&self->propellerAnimator, &LaundroMobile->rocketPositions[r], false);
+            RSDK.DrawSprite(&self->flameAnimator, &LaundroMobile->rocketPositions[r], false);
         }
     }
 
@@ -1461,9 +1500,9 @@ void LaundroMobile_Draw_Boss_Destroyed(void)
     self->mainAnimator.frameID = 1;
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-    for (int p = 0; p < 4; ++p) {
-        self->direction = p >= 2 ? FLIP_X : FLIP_NONE;
-        uint8 angle     = LaundroMobile->rocketAngles[p] >> 8;
+    for (int r = 0; r < 4; ++r) {
+        self->direction = r >= 2 ? FLIP_X : FLIP_NONE;
+        uint8 angle     = LaundroMobile->rocketAngles[r] >> 8;
         if (angle < 0x80) {
             self->propellerAnimator.frameID = angle >> 4;
 
@@ -1473,12 +1512,12 @@ void LaundroMobile_Draw_Boss_Destroyed(void)
 
             angle = (angle + 64) & 0xFF;
             if (angle <= 0x80)
-                RSDK.DrawSprite(&self->flameAnimator, &LaundroMobile->rocketPositions[p], false);
+                RSDK.DrawSprite(&self->flameAnimator, &LaundroMobile->rocketPositions[r], false);
 
-            RSDK.DrawSprite(&self->propellerAnimator, &LaundroMobile->rocketPositions[p], false);
+            RSDK.DrawSprite(&self->propellerAnimator, &LaundroMobile->rocketPositions[r], false);
 
             if (angle > 0x80)
-                RSDK.DrawSprite(&self->flameAnimator, &LaundroMobile->rocketPositions[p], false);
+                RSDK.DrawSprite(&self->flameAnimator, &LaundroMobile->rocketPositions[r], false);
         }
     }
 
@@ -1521,12 +1560,14 @@ void LaundroMobile_StateBomb_Bomb_Idle(void)
     foreach_active(Player, player)
     {
         int32 velX = player->velocity.x;
+
         if (Player_CheckCollisionBox(player, self, &LaundroMobile->hitboxBox) == C_LEFT) {
             RSDK.PlaySfx(LaundroMobile->sfxButton, false, 255);
             self->velocity.x = LaundroMobile->currentVelocity + 0x18000;
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 8, &self->mainAnimator, true, 0);
             self->state = LaundroMobile_StateBomb_Bomb_Activated;
         }
+
         player->velocity.x = velX;
     }
 
@@ -1543,12 +1584,13 @@ void LaundroMobile_StateBomb_Bomb_Idle(void)
 
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                 RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 7, &debris->animator, true, 0);
-                debris->velocity.y    = -0x28000;
-                debris->velocity.x    = LaundroMobile->currentVelocity + 0x28000;
-                debris->gravityStrength       = 0x3800;
-                debris->drawOrder     = Zone->objectDrawHigh;
-                debris->updateRange.x = 0x400000;
-                debris->updateRange.y = 0x400000;
+                debris->velocity.y      = -0x28000;
+                debris->velocity.x      = LaundroMobile->currentVelocity + 0x28000;
+                debris->gravityStrength = 0x3800;
+                debris->drawOrder       = Zone->objectDrawHigh;
+                debris->updateRange.x   = 0x400000;
+                debris->updateRange.y   = 0x400000;
+
                 destroyEntity(self);
                 foreach_break;
             }
@@ -1613,6 +1655,7 @@ void LaundroMobile_StateBomb_Bomb_Activated(void)
 void LaundroMobile_Draw_Simple(void)
 {
     RSDK_THIS(LaundroMobile);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
@@ -1623,13 +1666,15 @@ void LaundroMobile_StateBlock_Spawner(void)
     if (self->active == ACTIVE_BOUNDS) {
         if (self->position.x + 0x200000 > ScreenInfo->position.x << 16) {
             if (self->position.x - 0x200000 <= (ScreenInfo->position.x + ScreenInfo->width) << 16) {
-                self->visible              = false;
+                self->visible = false;
+
                 EntityLaundroMobile *block = CREATE_ENTITY(LaundroMobile, intToVoid(self->type), self->position.x, self->position.y);
                 block->velocity.x          = LaundroMobile->currentVelocity - 0x20000;
                 block->active              = ACTIVE_NORMAL;
                 block->state               = LaundroMobile_StateBlock_Block;
                 block->isPermanent         = true;
-                self->active               = ACTIVE_NORMAL;
+
+                self->active = ACTIVE_NORMAL;
             }
         }
     }
@@ -1666,6 +1711,7 @@ void LaundroMobile_StateBlock_Block(void)
                 Hitbox *hitbox = &LaundroMobile->hitboxBomb;
                 if (self->type != LAUNDROMOBILE_SPIKES)
                     hitbox = &LaundroMobile->hitboxBox;
+
                 if (RSDK.CheckObjectCollisionTouchBox(laundroMobile, &LaundroMobile->hitboxBoss, self, hitbox)
                     || laundroMobile->state == LaundroMobile_StateBoss_Explode_Phase1) {
                     RSDK.PlaySfx(LaundroMobile->sfxLedgeBreak, false, 255);
@@ -1675,62 +1721,62 @@ void LaundroMobile_StateBlock_Block(void)
                         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y - 0x80000);
                         RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 18);
                         debris->drawFX |= FX_ROTATE;
-                        debris->velocity.x    = LaundroMobile->currentVelocity + 0x18000;
-                        debris->velocity.y    = -0x28000;
-                        debris->gravityStrength       = 0x3800;
-                        debris->rotSpeed      = RSDK.Rand(-8, 8);
-                        debris->drawOrder     = Zone->objectDrawHigh;
-                        debris->updateRange.x = 0x400000;
-                        debris->updateRange.y = 0x400000;
+                        debris->velocity.x      = LaundroMobile->currentVelocity + 0x18000;
+                        debris->velocity.y      = -0x28000;
+                        debris->gravityStrength = 0x3800;
+                        debris->rotSpeed        = RSDK.Rand(-8, 8);
+                        debris->drawOrder       = Zone->objectDrawHigh;
+                        debris->updateRange.x   = 0x400000;
+                        debris->updateRange.y   = 0x400000;
 
                         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y + 0x80000);
                         RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 18);
                         debris->drawFX |= FX_ROTATE;
-                        debris->velocity.x    = LaundroMobile->currentVelocity + 0x18000;
-                        debris->velocity.y    = -0x20000;
-                        debris->gravityStrength       = 0x3800;
-                        debris->rotSpeed      = RSDK.Rand(-8, 8);
-                        debris->drawOrder     = Zone->objectDrawHigh;
-                        debris->updateRange.x = 0x400000;
-                        debris->updateRange.y = 0x400000;
+                        debris->velocity.x      = LaundroMobile->currentVelocity + 0x18000;
+                        debris->velocity.y      = -0x20000;
+                        debris->gravityStrength = 0x3800;
+                        debris->rotSpeed        = RSDK.Rand(-8, 8);
+                        debris->drawOrder       = Zone->objectDrawHigh;
+                        debris->updateRange.x   = 0x400000;
+                        debris->updateRange.y   = 0x400000;
                         self->position.x += 0x100000;
                     }
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 6);
-                    debris->velocity.y    = -0x28000;
-                    debris->velocity.x    = LaundroMobile->currentVelocity + 0x20000;
-                    debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->objectDrawHigh;
-                    debris->updateRange.x = 0x400000;
-                    debris->updateRange.y = 0x400000;
+                    debris->velocity.y      = -0x28000;
+                    debris->velocity.x      = LaundroMobile->currentVelocity + 0x20000;
+                    debris->gravityStrength = 0x3800;
+                    debris->drawOrder       = Zone->objectDrawHigh;
+                    debris->updateRange.x   = 0x400000;
+                    debris->updateRange.y   = 0x400000;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 7);
-                    debris->velocity.y    = -0x28000;
-                    debris->velocity.x    = LaundroMobile->currentVelocity + 0x28000;
-                    debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->objectDrawHigh;
-                    debris->updateRange.x = 0x400000;
-                    debris->updateRange.y = 0x400000;
+                    debris->velocity.y      = -0x28000;
+                    debris->velocity.x      = LaundroMobile->currentVelocity + 0x28000;
+                    debris->gravityStrength = 0x3800;
+                    debris->drawOrder       = Zone->objectDrawHigh;
+                    debris->updateRange.x   = 0x400000;
+                    debris->updateRange.y   = 0x400000;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 8);
-                    debris->velocity.y    = -0x20000;
-                    debris->velocity.x    = LaundroMobile->currentVelocity + 0x20000;
-                    debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->objectDrawHigh;
-                    debris->updateRange.x = 0x400000;
-                    debris->updateRange.y = 0x400000;
+                    debris->velocity.y      = -0x20000;
+                    debris->velocity.x      = LaundroMobile->currentVelocity + 0x20000;
+                    debris->gravityStrength = 0x3800;
+                    debris->drawOrder       = Zone->objectDrawHigh;
+                    debris->updateRange.x   = 0x400000;
+                    debris->updateRange.y   = 0x400000;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 9);
-                    debris->velocity.y    = -0x20000;
-                    debris->velocity.x    = LaundroMobile->currentVelocity + 0x28000;
-                    debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->objectDrawHigh;
-                    debris->updateRange.x = 0x400000;
-                    debris->updateRange.y = 0x400000;
+                    debris->velocity.y      = -0x20000;
+                    debris->velocity.x      = LaundroMobile->currentVelocity + 0x28000;
+                    debris->gravityStrength = 0x3800;
+                    debris->drawOrder       = Zone->objectDrawHigh;
+                    debris->updateRange.x   = 0x400000;
+                    debris->updateRange.y   = 0x400000;
 
                     destroyEntity(self);
                     foreach_break;
@@ -1749,12 +1795,15 @@ void LaundroMobile_State_Laundry(void)
 
     self->propellerAnimator.speed = LaundroMobile->animSpeed;
     self->eggmanAnimator.speed    = LaundroMobile->animSpeed;
+
     RSDK.ProcessAnimation(&self->propellerAnimator);
     RSDK.ProcessAnimation(&self->eggmanAnimator);
+
     Zone->playerBoundActiveL[0] = true;
     Zone->playerBoundActiveR[0] = true;
     Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
     Zone->cameraBoundsR[0]      = ScreenInfo->centerX + (self->position.x >> 16);
+
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x - 0xC00000)
         Zone->cameraBoundsT[0] = ScreenInfo->position.y;
 
@@ -1767,10 +1816,8 @@ void LaundroMobile_State_Laundry(void)
 void LaundroMobile_Draw_Laundry(void)
 {
     RSDK_THIS(LaundroMobile);
-    Vector2 drawPos;
 
-    drawPos.x                  = self->position.x;
-    drawPos.y                  = self->position.y;
+    Vector2 drawPos            = self->position;
     self->mainAnimator.frameID = 2;
     RSDK.DrawSprite(&self->mainAnimator, 0, false);
     RSDK.DrawSprite(&self->propellerAnimator, 0, false);
@@ -1806,6 +1853,7 @@ void LaundroMobile_EditorDraw(void)
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 0, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 3, &self->propellerAnimator, true, 0);
             RSDK.SetSpriteAnimation(LaundroMobile->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
+
             self->startY        = self->position.y;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
@@ -1815,7 +1863,9 @@ void LaundroMobile_EditorDraw(void)
         case LAUNDROMOBILE_BOMB:
             self->originPos.x = self->position.x;
             self->originPos.y = self->position.y;
+
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 7, &self->mainAnimator, true, 0);
+
             self->updateRange.x = 0x1800000;
             self->updateRange.y = 0x1800000;
             self->stateDraw     = LaundroMobile_Draw_Simple;
@@ -1825,6 +1875,7 @@ void LaundroMobile_EditorDraw(void)
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 0, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 1, &self->propellerAnimator, true, 0);
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 2, &self->eggmanAnimator, true, 0);
+
             self->updateRange.x = 0x2000000;
             self->updateRange.y = 0x800000;
             self->stateDraw     = LaundroMobile_Draw_Laundry;
@@ -1832,23 +1883,26 @@ void LaundroMobile_EditorDraw(void)
 
         case LAUNDROMOBILE_LOOPPOINT:
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 0, &self->mainAnimator, true, 0);
+
             RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             self->stateDraw = StateMachine_None;
             break;
 
         case LAUNDROMOBILE_BLOCK:
-            self->originPos.x = self->position.x;
-            self->originPos.y = self->position.y;
+            self->originPos = self->position;
+
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &self->mainAnimator, false, 0);
+
             self->updateRange.x = 0x1800000;
             self->updateRange.y = 0x1800000;
             self->stateDraw     = LaundroMobile_Draw_Simple;
             break;
 
         case LAUNDROMOBILE_SPIKES:
-            self->originPos.x = self->position.x;
-            self->originPos.y = self->position.y;
+            self->originPos = self->position;
+
             RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &self->mainAnimator, false, 3);
+
             self->updateRange.x = 0x1800000;
             self->updateRange.y = 0x1800000;
             self->stateDraw     = LaundroMobile_Draw_Simple;

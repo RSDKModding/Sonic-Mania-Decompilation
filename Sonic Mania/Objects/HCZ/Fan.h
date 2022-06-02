@@ -62,7 +62,7 @@ void Fan_Update(void);
 void Fan_LateUpdate(void);
 void Fan_StaticUpdate(void);
 void Fan_Draw(void);
-void Fan_Create(void* data);
+void Fan_Create(void *data);
 void Fan_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Fan_EditorDraw(void);
@@ -87,4 +87,4 @@ void Fan_Deactivate_Button(void);
 void Fan_Activate_Platform(void);
 void Fan_Activate(void);
 
-#endif //!OBJ_FAN_H
+#endif //! OBJ_FAN_H

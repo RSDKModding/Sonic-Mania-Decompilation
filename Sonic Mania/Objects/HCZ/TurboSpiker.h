@@ -6,17 +6,17 @@
 typedef enum {
     TURBOSPIKER_VISIBLE,
     TURBOSPIKER_HIDDEN,
-}TurboSpikerTypes;
+} TurboSpikerTypes;
 
 // Object Class
 struct ObjectTurboSpiker {
-	RSDK_OBJECT
-	Hitbox hitboxBadnik;
-	Hitbox hitboxSpike;
-	Hitbox hitboxRange;
-	uint16 aniFrames;
-	uint16 sfxLaunch;
-	uint16 sfxSplash;
+    RSDK_OBJECT
+    Hitbox hitboxBadnik;
+    Hitbox hitboxSpike;
+    Hitbox hitboxRange;
+    uint16 aniFrames;
+    uint16 sfxLaunch;
+    uint16 sfxSplash;
 };
 
 // Entity Class
@@ -42,7 +42,7 @@ void TurboSpiker_Update(void);
 void TurboSpiker_LateUpdate(void);
 void TurboSpiker_StaticUpdate(void);
 void TurboSpiker_Draw(void);
-void TurboSpiker_Create(void* data);
+void TurboSpiker_Create(void *data);
 void TurboSpiker_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TurboSpiker_EditorDraw(void);
@@ -72,4 +72,4 @@ void TurboSpiker_State_Spike(void);
 
 void TurboSpiker_State_Ember(void);
 
-#endif //!OBJ_TURBOSPIKER_H
+#endif //! OBJ_TURBOSPIKER_H

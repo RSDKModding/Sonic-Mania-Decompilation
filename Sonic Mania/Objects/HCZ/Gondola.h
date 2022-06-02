@@ -43,7 +43,7 @@ void Gondola_Update(void);
 void Gondola_LateUpdate(void);
 void Gondola_StaticUpdate(void);
 void Gondola_Draw(void);
-void Gondola_Create(void* data);
+void Gondola_Create(void *data);
 void Gondola_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Gondola_EditorDraw(void);
@@ -59,4 +59,4 @@ void Gondola_HandleMoveVelocity(void);
 void Gondola_HandleTileCollisions(void);
 void Gondola_HandlePlayerInteractions(void);
 
-#endif //!OBJ_GONDOLA_H
+#endif //! OBJ_GONDOLA_H

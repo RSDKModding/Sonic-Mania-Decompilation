@@ -54,7 +54,7 @@ void HCZSetup_StaticUpdate(void)
         RSDK.DrawAniTiles(HCZSetup->pendulumAniTiles, 874, 0, 16 * pendulumAniTileFrame, 32, 16);
 
     if (!(Zone->timer & 1)) {
-        for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) ++RSDK.GetTileLayer(layerID)->deformationOffsetW;
+        for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) RSDK.GetTileLayer(layerID)->deformationOffsetW++;
     }
 
 #if MANIA_USE_PLUS
@@ -84,6 +84,7 @@ void HCZSetup_StaticUpdate(void)
             Hitbox *hitbox = Player_GetHitbox(player);
             uint16 tile =
                 RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
+
             if (((tile >= 226 && tile <= 224) || (tile >= 880 && tile <= 888)) && player->collisionPlane == 1) {
                 if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
                     if (player->onGround) {
@@ -211,7 +212,7 @@ void HCZSetup_StageLoad(void)
     }
     else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         Zone->forcePlayerOnScreen = true;
-        Zone->stageFinishCallback     = HCZSetup_HandleActTransition;
+        Zone->stageFinishCallback = HCZSetup_HandleActTransition;
     }
 
 #if MANIA_USE_PLUS
@@ -245,21 +246,21 @@ void HCZSetup_BGWaterLineScanlineCB(ScanlineInfo *scanlines)
     // scanlinePtr->position.y handles the cool "water line" effect
 
     // if above OR below, if it's equal, the water covers it all anyways
-    if (screenY > waterLevel) {      // below the waterline
-        int32 scanlineY = 0x4D00000; // y = 1,232 (bottom most tile of the water tiles)
+    if (screenY > waterLevel) {       // below the waterline
+        int32 scanlineY = 1232 << 16; // bottom most tile of the water tiles
         for (int32 i = 0; i < screenY - waterLevel; ++i) {
-            // 0x3540000 = 852 (top most tile of the below water tiles)
-            scanlinePtr->position.x = (((0x3540000 - 0xC000 * (scanlineY >> 16)) / 100 + 0x10000) * screen->position.x) & 0x1FFFFFF;
+            // 852 = (top most tile of the below water tiles)
+            scanlinePtr->position.x = ((((852 << 16) - 0xC000 * (scanlineY >> 16)) / 100 + 0x10000) * screen->position.x) & 0x1FFFFFF;
             scanlinePtr->position.y = scanlineY;
             scanlineY -= scanlineHeight;
             --scanlinePtr;
         }
     }
-    else if (screenY < waterLevel) { // above the waterline
-        int32 scanlineY = 0x40C0000; // y = 1,036 (top most tile of the water tiles)
+    else if (screenY < waterLevel) {  // above the waterline
+        int32 scanlineY = 1036 << 16; // top most tile of the water tiles
         for (int32 i = 0; i < waterLevel - screenY; ++i) {
-            // y = 0x46C = 1,132 (bottom most tile of the above water tiles)
-            int32 distance          = 0x46C - (scanlineY >> 16);
+            // 1132 = bottom most tile of the above water tiles
+            int32 distance          = 1132 - (scanlineY >> 16);
             scanlinePtr->position.x = (((-0xC000 * distance) / 100 + 0x10000) * screen->position.x) & 0x1FFFFFF;
             scanlinePtr->position.y = scanlineY;
             scanlineY += scanlineHeight;

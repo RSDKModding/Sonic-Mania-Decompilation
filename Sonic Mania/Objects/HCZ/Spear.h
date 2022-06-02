@@ -42,7 +42,7 @@ void Spear_Update(void);
 void Spear_LateUpdate(void);
 void Spear_StaticUpdate(void);
 void Spear_Draw(void);
-void Spear_Create(void* data);
+void Spear_Create(void *data);
 void Spear_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Spear_EditorDraw(void);
@@ -53,5 +53,4 @@ void Spear_Serialize(void);
 // Extra Entity Functions
 void Spear_SetupHitboxes(void);
 
-
-#endif //!OBJ_SPEAR_H
+#endif //! OBJ_SPEAR_H

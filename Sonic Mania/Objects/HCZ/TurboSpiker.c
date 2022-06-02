@@ -17,6 +17,7 @@ ObjectTurboSpiker *TurboSpiker;
 void TurboSpiker_Update(void)
 {
     RSDK_THIS(TurboSpiker);
+
     StateMachine_Run(self->state);
 }
 
@@ -27,6 +28,7 @@ void TurboSpiker_StaticUpdate(void) {}
 void TurboSpiker_Draw(void)
 {
     RSDK_THIS(TurboSpiker);
+
     RSDK.DrawSprite(&self->shellAnimator, NULL, false);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
@@ -34,8 +36,9 @@ void TurboSpiker_Draw(void)
 void TurboSpiker_Create(void *data)
 {
     RSDK_THIS(TurboSpiker);
+
     self->playedLaunchSfx = false;
-    self->visible      = true;
+    self->visible         = true;
     self->drawFX |= FX_FLIP;
     self->drawOrder     = Zone->objectDrawLow + 1;
     self->startPos      = self->position;
@@ -64,18 +67,18 @@ void TurboSpiker_StageLoad(void)
     TurboSpiker->hitboxBadnik.right  = 14;
     TurboSpiker->hitboxBadnik.bottom = 14;
 
-    TurboSpiker->hitboxSpike.left    = -5;
-    TurboSpiker->hitboxSpike.top     = -31;
-    TurboSpiker->hitboxSpike.right   = 9;
-    TurboSpiker->hitboxSpike.bottom  = 2;
+    TurboSpiker->hitboxSpike.left   = -5;
+    TurboSpiker->hitboxSpike.top    = -31;
+    TurboSpiker->hitboxSpike.right  = 9;
+    TurboSpiker->hitboxSpike.bottom = 2;
 
-    TurboSpiker->hitboxRange.left       = -128;
-    TurboSpiker->hitboxRange.top        = -512;
-    TurboSpiker->hitboxRange.right      = 128;
-    TurboSpiker->hitboxRange.bottom     = 512;
+    TurboSpiker->hitboxRange.left   = -128;
+    TurboSpiker->hitboxRange.top    = -512;
+    TurboSpiker->hitboxRange.right  = 128;
+    TurboSpiker->hitboxRange.bottom = 512;
 
-    TurboSpiker->sfxLaunch           = RSDK.GetSfx("Stage/Launch.wav");
-    TurboSpiker->sfxSplash           = RSDK.GetSfx("Stage/Splash.wav");
+    TurboSpiker->sfxLaunch = RSDK.GetSfx("Stage/Launch.wav");
+    TurboSpiker->sfxSplash = RSDK.GetSfx("Stage/Splash.wav");
 
     DEBUGMODE_ADD_OBJ(TurboSpiker);
 }
@@ -91,7 +94,6 @@ void TurboSpiker_DebugSpawn(void)
     RSDK_THIS(TurboSpiker);
     CREATE_ENTITY(TurboSpiker, NULL, self->position.x, self->position.y);
 }
-
 
 void TurboSpiker_Hermit_Collide(void)
 {
@@ -224,9 +226,9 @@ void TurboSpiker_State_Hidden(void)
             ember->direction         = self->direction;
             ember->drawOrder         = self->drawOrder + 1;
             RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 6, &ember->shellAnimator, true, 0);
-            ember->state  = TurboSpiker_State_Ember;
-            self->timer = 60;
-            self->state = TurboSpiker_State_FireShell;
+            ember->state = TurboSpiker_State_Ember;
+            self->timer  = 60;
+            self->state  = TurboSpiker_State_FireShell;
             TurboSpiker_State_FireShell();
             foreach_return;
         }
@@ -341,7 +343,7 @@ void TurboSpiker_State_FireShell(void)
 
         self->velocity.x = 0x20000 * (self->direction ? 1 : -1);
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 0, &self->shellAnimator, true, 0);
-        self->state          = TurboSpiker_State_Moving;
+        self->state               = TurboSpiker_State_Moving;
         self->shellAnimator.speed = 2;
         TurboSpiker_HandleMovement();
     }
@@ -359,7 +361,7 @@ void TurboSpiker_HandleSpikeCollisions(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
-            Player_CheckHit(player, self);
+                Player_CheckHit(player, self);
         }
     }
 }

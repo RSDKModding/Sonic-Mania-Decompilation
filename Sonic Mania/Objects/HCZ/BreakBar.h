@@ -6,7 +6,7 @@
 typedef enum {
     BREAKBAR_V,
     BREAKBAR_H,
-}BreakBarOrientations;
+} BreakBarOrientations;
 
 // Object Class
 struct ObjectBreakBar {
@@ -39,7 +39,7 @@ void BreakBar_Update(void);
 void BreakBar_LateUpdate(void);
 void BreakBar_StaticUpdate(void);
 void BreakBar_Draw(void);
-void BreakBar_Create(void* data);
+void BreakBar_Create(void *data);
 void BreakBar_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BreakBar_EditorDraw(void);
@@ -56,4 +56,4 @@ void BreakBar_HandlePlayerInteractions(EntityPlayer *player);
 void BreakBar_State_Setup(void);
 void BreakBar_State_Main(void);
 
-#endif //!OBJ_BREAKBAR_H
+#endif //! OBJ_BREAKBAR_H

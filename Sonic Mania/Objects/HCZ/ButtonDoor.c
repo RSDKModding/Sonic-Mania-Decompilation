@@ -12,6 +12,7 @@ ObjectButtonDoor *ButtonDoor;
 void ButtonDoor_Update(void)
 {
     RSDK_THIS(ButtonDoor);
+
     EntityButton *button = self->taggedButton;
     if (button && button->activated) {
 
@@ -25,6 +26,7 @@ void ButtonDoor_Update(void)
                 case BUTTONDOOR_DOWN: self->position.y = self->startPos.y + self->movePos * (self->size.y / self->duration); break;
                 case BUTTONDOOR_RIGHT: self->position.x = self->startPos.x + self->movePos * (self->size.x / self->duration); break;
             }
+
             self->movePos++;
         }
         else {
@@ -58,14 +60,15 @@ void ButtonDoor_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = self->size.x + 0x800000;
     self->updateRange.y = self->size.y + 0x800000;
+
     ButtonDoor_SetupSize();
     ButtonDoor_SetupTagLink();
+
     RSDK.SetSpriteAnimation(ButtonDoor->aniFrames, 0, &self->animator, true, 0);
 }
 
@@ -158,7 +161,7 @@ void ButtonDoor_SetupTagLink(void)
                 {
                     if (turretSwitch->tag == self->buttonTag) {
                         taggedButton = (EntityButton *)turretSwitch;
-                        tagged = true;
+                        tagged       = true;
                         foreach_break;
                     }
                 }
@@ -169,15 +172,16 @@ void ButtonDoor_SetupTagLink(void)
             if ((Button && taggedButton->classID == Button->classID) || (TurretSwitch && taggedButton->classID == TurretSwitch->classID)
                 || (PullChain && taggedButton->classID == PullChain->classID)) {
                 if (self) {
-                    int32 distX = abs(self->position.x - taggedButton->position.x);
-                    int32 distY = abs(self->position.y - taggedButton->position.y);
+                    int32 distX = abs(self->position.x - taggedButton->position.x) + 0x800000;
+                    int32 distY = abs(self->position.y - taggedButton->position.y) + 0x800000;
 
-                    if (self->updateRange.x < 0x800000 + distX)
-                        self->updateRange.x = 0x800000 + distX;
+                    if (self->updateRange.x < distX)
+                        self->updateRange.x = distX;
 
-                    if (self->updateRange.y < 0x800000 + distY)
-                        self->updateRange.y = 0x800000 + distY;
+                    if (self->updateRange.y < distY)
+                        self->updateRange.y = distY;
                 }
+
                 self->taggedButton = taggedButton;
             }
         }
@@ -187,10 +191,8 @@ void ButtonDoor_SetupTagLink(void)
 void ButtonDoor_DrawSprites(void)
 {
     RSDK_THIS(ButtonDoor);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
 
     int32 incX = 0, incY = 0;
     if (self->orientation == BUTTONDOOR_UP || self->orientation == BUTTONDOOR_DOWN) {
@@ -204,6 +206,7 @@ void ButtonDoor_DrawSprites(void)
 
     for (int32 i = 0; i < self->length; ++i) {
         RSDK.DrawSprite(&self->animator, &drawPos, false);
+
         drawPos.x += incX;
         drawPos.y += incY;
     }

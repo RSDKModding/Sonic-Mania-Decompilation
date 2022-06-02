@@ -60,8 +60,8 @@ void DCEvent_Serialize(void);
 void DCEvent_State_Collapse(void);
 void DCEvent_StateEggmanBomber_AwaitPlayer(void);
 
-void DCEvent_StateInput_MoveRight(void);
-void DCEvent_StateInput_LookDown(void);
+void DCEvent_Input_MoveRight(void);
+void DCEvent_Input_LookDown(void);
 
 void DCEvent_StateEggmanBomber_WaitForLookDown(void);
 void DCEvent_StateEggmanBomber_Swimming(void);

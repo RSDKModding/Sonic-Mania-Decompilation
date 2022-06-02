@@ -7,7 +7,7 @@ typedef enum {
     JELLYGNITE_ANI_FLOATING,
     JELLYGNITE_ANI_ANGRY,
     JELLYGNITE_ANI_FLASHING,
-}JellygniteAnimIDs;
+} JellygniteAnimIDs;
 
 // Object Class
 struct ObjectJellygnite {
@@ -47,7 +47,7 @@ void Jellygnite_Update(void);
 void Jellygnite_LateUpdate(void);
 void Jellygnite_StaticUpdate(void);
 void Jellygnite_Draw(void);
-void Jellygnite_Create(void* data);
+void Jellygnite_Create(void *data);
 void Jellygnite_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Jellygnite_EditorDraw(void);
@@ -73,4 +73,4 @@ void Jellygnite_State_Swimming(void);
 void Jellygnite_State_GrabbedPlayer(void);
 void Jellygnite_State_Explode(void);
 
-#endif //!OBJ_JELLYGNITE_H
+#endif //! OBJ_JELLYGNITE_H

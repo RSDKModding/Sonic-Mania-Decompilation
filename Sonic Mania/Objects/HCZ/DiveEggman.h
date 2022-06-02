@@ -6,7 +6,7 @@
 typedef enum {
     DIVEEGGMAN_EGGMAN,
     DIVEEGGMAN_BOMB,
-}DiveEggmanTypes;
+} DiveEggmanTypes;
 
 // Object Class
 struct ObjectDiveEggman {
@@ -42,7 +42,7 @@ void DiveEggman_Update(void);
 void DiveEggman_LateUpdate(void);
 void DiveEggman_StaticUpdate(void);
 void DiveEggman_Draw(void);
-void DiveEggman_Create(void* data);
+void DiveEggman_Create(void *data);
 void DiveEggman_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DiveEggman_EditorDraw(void);
@@ -51,6 +51,7 @@ void DiveEggman_EditorLoad(void);
 void DiveEggman_Serialize(void);
 
 // Extra Entity Functions
+void DiveEggman_Hit(void);
 void DiveEggman_Explode(void);
 
 void DiveEggman_StateEggman_AwaitPlayer(void);
@@ -69,4 +70,4 @@ void DiveEggman_StateBomb_InWhirlpool(void);
 void DiveEggman_StateBomb_WhirlpoolRise(void);
 void DiveEggman_StateBomb_Falling(void);
 
-#endif //!OBJ_DIVEEGGMAN_H
+#endif //! OBJ_DIVEEGGMAN_H

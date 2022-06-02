@@ -38,7 +38,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 
 #if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
     MSG Msg;
-    PeekMessage(&Msg, NULL, 0, 0, true);
+    PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE);
     InitCommonControls();
 #endif
 
@@ -139,7 +139,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
                 // Uncomment this code to add the build number to dev menu
                 // overrides the game subtitle, used in switch dev menu
                 if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
-                    // Switch 1.04 build # is 18403, 1.00 is 17051
+                    // Switch 1.00 build # is 17051, 1.04 is 18403
                     // char buffer[0x40];
                     // sprintf(buffer, "Build #%d", 18403);
                     // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
@@ -165,7 +165,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
     AudioDevice::Release();
     RenderDevice::Release(false);
     SaveSettingsINI(false);
-    SKU::ReleaseUserData();
+    SKU::ReleaseUserCore();
     ReleaseStorage();
 #if RETRO_USE_MOD_LOADER
     UnloadMods();

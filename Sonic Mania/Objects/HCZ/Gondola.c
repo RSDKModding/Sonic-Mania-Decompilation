@@ -12,6 +12,7 @@ ObjectGondola *Gondola;
 void Gondola_Update(void)
 {
     RSDK_THIS(Gondola);
+
     self->collisionOffset.x = -self->drawPos.x;
     self->collisionOffset.y = -self->drawPos.y;
     self->centerPos.x += self->velocity.x;
@@ -21,19 +22,24 @@ void Gondola_Update(void)
         if (self->stoodAngle < self->maxStoodAngle)
             self->stoodAngle += 4;
     }
-    else if (self->stoodAngle > 0)
-        self->stoodAngle -= 4;
+    else {
+        if (self->stoodAngle > 0)
+            self->stoodAngle -= 4;
+    }
 
     Gondola_HandleWaterFloating();
     Gondola_HandleTilting();
     Gondola_HandleMoveVelocity();
+
     if (self->onGround && self->velocity.y > 0)
         self->velocity.y = 0;
 
     self->drawPos.x = self->centerPos.x + (RSDK.Sin256(self->stoodAngle) << 10);
     self->drawPos.y = self->centerPos.y + (RSDK.Sin512(self->floatAngle * 2) * 0x180);
+
     if (!self->onGround)
         ++self->floatAngle;
+
     self->position.x = self->drawPos.x & 0xFFFF0000;
     self->position.y = self->drawPos.y & 0xFFFF0000;
     Gondola_HandleTileCollisions();
@@ -58,6 +64,7 @@ void Gondola_Draw(void)
 void Gondola_Create(void *data)
 {
     RSDK_THIS(Gondola);
+
     self->active    = ACTIVE_NORMAL;
     self->drawOrder = Zone->playerDrawHigh;
 
@@ -84,6 +91,7 @@ void Gondola_StageLoad(void) { Gondola->aniFrames = RSDK.LoadSpriteAnimation("HC
 int32 Gondola_GetWaterLevel(void)
 {
     RSDK_THIS(Gondola);
+
     if (self->position.y < Water->waterLevel) {
         foreach_active(Water, water)
         {
@@ -92,12 +100,14 @@ int32 Gondola_GetWaterLevel(void)
             }
         }
     }
+
     return Water->waterLevel;
 }
 
 void Gondola_HandleWaterFloating(void)
 {
     RSDK_THIS(Gondola);
+
     int32 waterLevel = Gondola_GetWaterLevel();
 
     self->waterDistance = self->centerPos.y - waterLevel;
@@ -129,6 +139,7 @@ void Gondola_HandleWaterFloating(void)
     if (self->minY) {
         if (self->centerPos.y <= self->minY << 16) {
             self->centerPos.y = self->minY << 16;
+
             if (self->velocity.y < 0)
                 self->velocity.y = 0;
         }
@@ -137,6 +148,7 @@ void Gondola_HandleWaterFloating(void)
     if (self->maxY) {
         if (self->centerPos.y >= self->maxY << 16) {
             self->centerPos.y = self->maxY << 16;
+
             if (self->velocity.y > 0)
                 self->velocity.y = 0;
         }
@@ -148,6 +160,7 @@ void Gondola_HandleTilting(void)
     RSDK_THIS(Gondola);
 
     int32 targetRotation = 0;
+
     if (!self->onGround) {
         foreach_active(Player, player)
         {
@@ -165,10 +178,12 @@ void Gondola_HandleTilting(void)
 void Gondola_HandleMoveVelocity(void)
 {
     RSDK_THIS(Gondola);
+
     if (!self->onGround) {
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);
+
             if (!player->sidekick) {
                 if (((1 << playerID) & self->activePlayers)) {
                     self->velocity.x = (player->position.x - self->centerPos.x) >> 5;
@@ -176,11 +191,13 @@ void Gondola_HandleMoveVelocity(void)
                 else {
                     if (self->velocity.x > 0) {
                         self->velocity.x -= 0x200;
+
                         if (self->velocity.x < 0)
                             self->velocity.x = 0;
                     }
                     else if (self->velocity.x < 0) {
                         self->velocity.x += 0x200;
+
                         if (self->velocity.x > 0)
                             self->velocity.x = 0;
                     }
@@ -196,8 +213,10 @@ void Gondola_HandleTileCollisions(void)
 
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->hitbox.bottom << 16, true)) {
         self->maxStoodAngle = 0;
+
         if (self->velocity.y > 0)
             self->velocity.y = 0;
+
         self->onGround = true;
     }
     else {
@@ -213,6 +232,7 @@ void Gondola_HandleTileCollisions(void)
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, (self->hitbox.left - 8) << 16, 0, true)) {
         if (self->velocity.x < 0)
             self->velocity.x = 0;
+
         self->stoppedL = true;
     }
     else {
@@ -223,6 +243,7 @@ void Gondola_HandleTileCollisions(void)
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, (self->hitbox.right + 8) << 16, 0, true)) {
         if (self->velocity.x > 0)
             self->velocity.x = 0;
+
         self->stoppedR = true;
     }
     else {
@@ -236,6 +257,7 @@ void Gondola_HandleTileCollisions(void)
 void Gondola_HandlePlayerInteractions(void)
 {
     RSDK_THIS(Gondola);
+
     if (self->onGround) {
         self->activePlayers = 0;
     }
@@ -243,6 +265,7 @@ void Gondola_HandlePlayerInteractions(void)
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);
+
             if (((1 << playerID) & self->activePlayers)) {
                 player->position.x += self->collisionOffset.x;
                 player->position.y += self->collisionOffset.y + 0x10000;
@@ -250,6 +273,7 @@ void Gondola_HandlePlayerInteractions(void)
                 if (!player->sidekick && !Gondola->hasAchievement) {
                     if (!Gondola->taggedBoatIDs[self->boatID]) {
                         Gondola->taggedBoatIDs[self->boatID] = true;
+
                         if (Gondola->taggedBoatIDs[0] && Gondola->taggedBoatIDs[1] && Gondola->taggedBoatIDs[2]) {
                             API_UnlockAchievement(&achievementList[ACH_HCZ]);
                             Gondola->hasAchievement = true;
@@ -259,7 +283,7 @@ void Gondola_HandlePlayerInteractions(void)
             }
 
             if (Player_CheckCollisionPlatform(player, self, &self->hitbox))
-                self->activePlayers |= (1 << playerID);
+                self->activePlayers |= 1 << playerID;
             else
                 self->activePlayers &= ~(1 << playerID);
         }

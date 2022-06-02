@@ -51,7 +51,7 @@ void ScrewMobile_Update(void);
 void ScrewMobile_LateUpdate(void);
 void ScrewMobile_StaticUpdate(void);
 void ScrewMobile_Draw(void);
-void ScrewMobile_Create(void* data);
+void ScrewMobile_Create(void *data);
 void ScrewMobile_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ScrewMobile_EditorDraw(void);
@@ -70,4 +70,4 @@ void ScrewMobile_StateDepthCharge_Active(void);
 void ScrewMobile_StateDepthCharge_Debris(void);
 void ScrewMobile_Draw_DepthCharge(void);
 
-#endif //!OBJ_SCREWMOBILE_H
+#endif //! OBJ_SCREWMOBILE_H

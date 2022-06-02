@@ -130,7 +130,7 @@ void RSDK::SKU::InitUserData()
     }
 #endif
 }
-void RSDK::SKU::ReleaseUserData()
+void RSDK::SKU::ReleaseUserCore()
 {
     SaveUserData();
 

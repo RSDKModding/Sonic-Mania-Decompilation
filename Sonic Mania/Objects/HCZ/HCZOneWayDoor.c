@@ -13,19 +13,20 @@ void HCZOneWayDoor_Update(void)
 {
     RSDK_THIS(HCZOneWayDoor);
 
-    bool32 shouldShut   = false;
-    int32 storeX = self->position.x;
-    int32 storeY = self->position.y;
+    bool32 shouldShut = false;
+    int32 storeX      = self->position.x;
+    int32 storeY      = self->position.y;
 
-    foreach_active(Player, player) {
+    foreach_active(Player, player)
+    {
         self->position.x = storeX;
         self->position.y = storeY;
         Player_CheckCollisionBox(player, self, &self->hitboxSolid);
+
         self->position = self->startPos;
         if (!player->sidekick) {
-            if (Player_CheckCollisionTouch(player, self, &self->hitboxTrigger)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitboxTrigger))
                 shouldShut = true;
-            }
         }
     }
 
@@ -35,22 +36,21 @@ void HCZOneWayDoor_Update(void)
     if (shouldShut) {
         if (self->movePos >= self->duration) {
             switch (self->orientation) {
-                case HCZONEWAYDOOR_UP:    self->position.y = self->startPos.y - self->size.y; break;
-                case HCZONEWAYDOOR_LEFT:  self->position.x = self->startPos.x - self->size.x; break;
-                case HCZONEWAYDOOR_DOWN:  self->position.y = self->startPos.y + self->size.y; break;
+                case HCZONEWAYDOOR_UP: self->position.y = self->startPos.y - self->size.y; break;
+                case HCZONEWAYDOOR_LEFT: self->position.x = self->startPos.x - self->size.x; break;
+                case HCZONEWAYDOOR_DOWN: self->position.y = self->startPos.y + self->size.y; break;
                 case HCZONEWAYDOOR_RIGHT: self->position.x = self->startPos.x + self->size.x; break;
             }
         }
         else {
             switch (self->orientation) {
-                case HCZONEWAYDOOR_UP:      self->position.y = self->startPos.y - self->movePos * (self->size.y / self->duration); break;
-                case HCZONEWAYDOOR_LEFT:    self->position.x = self->startPos.x - self->movePos * (self->size.x / self->duration); break;
-                case HCZONEWAYDOOR_DOWN:    self->position.y = self->startPos.y + self->movePos * (self->size.y / self->duration); break;
-                case HCZONEWAYDOOR_RIGHT:   self->position.x = self->startPos.x + self->movePos * (self->size.x / self->duration); break;
+                case HCZONEWAYDOOR_UP: self->position.y = self->startPos.y - self->movePos * (self->size.y / self->duration); break;
+                case HCZONEWAYDOOR_LEFT: self->position.x = self->startPos.x - self->movePos * (self->size.x / self->duration); break;
+                case HCZONEWAYDOOR_DOWN: self->position.y = self->startPos.y + self->movePos * (self->size.y / self->duration); break;
+                case HCZONEWAYDOOR_RIGHT: self->position.x = self->startPos.x + self->movePos * (self->size.x / self->duration); break;
             }
 
-            self->movePos++;
-            if (self->movePos >= self->duration) {
+            if (++self->movePos >= self->duration) {
                 if (self->activeScreens)
                     RSDK.PlaySfx(HCZOneWayDoor->sfxClack, false, 255);
             }
@@ -65,8 +65,7 @@ void HCZOneWayDoor_Update(void)
                 case HCZONEWAYDOOR_RIGHT: self->position.x = self->startPos.x + self->movePos * (self->size.x / self->duration); break;
             }
 
-            self->movePos--;
-            if (self->movePos <= 0) {
+            if (--self->movePos <= 0) {
                 if (self->activeScreens)
                     RSDK.PlaySfx(HCZOneWayDoor->sfxClack, false, 255);
             }
@@ -82,31 +81,25 @@ void HCZOneWayDoor_Update(void)
     }
 }
 
-void HCZOneWayDoor_LateUpdate(void)
-{
+void HCZOneWayDoor_LateUpdate(void) {}
 
-}
-
-void HCZOneWayDoor_StaticUpdate(void)
-{
-
-}
+void HCZOneWayDoor_StaticUpdate(void) {}
 
 void HCZOneWayDoor_Draw(void) { HCZOneWayDoor_DrawSprites(); }
 
-void HCZOneWayDoor_Create(void* data)
+void HCZOneWayDoor_Create(void *data)
 {
     RSDK_THIS(HCZOneWayDoor);
 
     if (!self->duration)
         self->duration = 6;
+
     if (!self->length)
         self->length = 2;
 
     self->active    = ACTIVE_BOUNDS;
     self->drawOrder = Zone->objectDrawLow;
-    self->startPos.x  = self->position.x;
-    self->startPos.y  = self->position.y;
+    self->startPos  = self->position;
     self->visible   = true;
     self->drawFX    = FX_FLIP;
     HCZOneWayDoor_SetupHitboxes();
@@ -117,7 +110,7 @@ void HCZOneWayDoor_Create(void* data)
 
 void HCZOneWayDoor_StageLoad(void)
 {
-    HCZOneWayDoor->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
+    HCZOneWayDoor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
 
     HCZOneWayDoor->sfxClack = RSDK.GetSfx("Stage/Clack2.wav");
 }
@@ -126,20 +119,21 @@ void HCZOneWayDoor_SetupHitboxes(void)
 {
     RSDK_THIS(HCZOneWayDoor);
 
-    self->size.x = 0x200000;
-    self->size.y = 0x200000;
+    self->size.x        = 0x200000;
+    self->size.y        = 0x200000;
     self->initialSize.x = self->size.x;
     self->initialSize.y = self->size.y;
 
-    if (self->orientation == HCZONEWAYDOOR_UP || self->orientation == HCZONEWAYDOOR_DOWN) 
+    if (self->orientation == HCZONEWAYDOOR_UP || self->orientation == HCZONEWAYDOOR_DOWN)
         self->size.y = self->length << 21;
-    else if (self->orientation == HCZONEWAYDOOR_LEFT || self->orientation == HCZONEWAYDOOR_RIGHT) 
+    else if (self->orientation == HCZONEWAYDOOR_LEFT || self->orientation == HCZONEWAYDOOR_RIGHT)
         self->size.x = self->length << 21;
 
     self->hitboxSolid.right  = self->size.x >> 17;
     self->hitboxSolid.bottom = self->size.y >> 17;
     self->hitboxSolid.left   = -(self->size.x >> 17);
     self->hitboxSolid.top    = -(self->size.y >> 17);
+
     switch (self->orientation) {
         case HCZONEWAYDOOR_UP:
         case HCZONEWAYDOOR_DOWN:
@@ -148,9 +142,9 @@ void HCZOneWayDoor_SetupHitboxes(void)
             self->hitboxTrigger.right  = self->size.x >> 17;
             self->hitboxTrigger.bottom = self->size.y >> 17;
 
-            if (self->detectDirection == FLIP_X) 
+            if (self->detectDirection == FLIP_X)
                 self->hitboxTrigger.right = (self->size.x >> 17) + (self->initialSize.y >> 14);
-            else if (self->detectDirection == FLIP_NONE) 
+            else if (self->detectDirection == FLIP_NONE)
                 self->hitboxTrigger.left = -(self->size.x >> 17) - (self->initialSize.y >> 14);
             break;
 
@@ -161,11 +155,12 @@ void HCZOneWayDoor_SetupHitboxes(void)
             self->hitboxTrigger.left   = -(self->size.x >> 17);
             self->hitboxTrigger.bottom = self->size.y >> 17;
 
-            if (self->detectDirection == FLIP_X) 
+            if (self->detectDirection == FLIP_X)
                 self->hitboxTrigger.top = -(self->size.y >> 17) - (self->initialSize.x >> 14);
-            else if (self->detectDirection == FLIP_NONE) 
+            else if (self->detectDirection == FLIP_NONE)
                 self->hitboxTrigger.bottom = (self->size.y >> 17) + (self->initialSize.x >> 14);
             break;
+
         default: break;
     }
 }
@@ -173,10 +168,8 @@ void HCZOneWayDoor_SetupHitboxes(void)
 void HCZOneWayDoor_DrawSprites(void)
 {
     RSDK_THIS(HCZOneWayDoor);
-    Vector2 drawPos;
 
-    drawPos.x  = self->position.x;
-    drawPos.y  = self->position.y;
+    Vector2 drawPos = self->position;
 
     int32 offsetX = 0, offsetY = 0;
     if (self->orientation == HCZONEWAYDOOR_UP || self->orientation == HCZONEWAYDOOR_DOWN) {
@@ -186,9 +179,8 @@ void HCZOneWayDoor_DrawSprites(void)
     else if (self->orientation == HCZONEWAYDOOR_LEFT || self->orientation == HCZONEWAYDOOR_RIGHT) {
         drawPos.x = (self->initialSize.x >> 1) + self->position.x - (self->size.x >> 1);
         offsetX   = self->initialSize.x;
-
     }
-    
+
     for (int32 i = 0; i < self->length; ++i) {
         RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += offsetX;
@@ -210,8 +202,8 @@ void HCZOneWayDoor_EditorLoad(void)
     RSDK_ENUM_VAR("Right", HCZONEWAYDOOR_RIGHT);
 
     RSDK_ACTIVE_VAR(HCZOneWayDoor, detectDirection);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);    // Left/Top
-    RSDK_ENUM_VAR("Flip X", FLIP_X);        // Right/Bottom
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE); // Left/Top
+    RSDK_ENUM_VAR("Flipped", FLIP_X);    // Right/Bottom
 }
 #endif
 
@@ -222,4 +214,3 @@ void HCZOneWayDoor_Serialize(void)
     RSDK_EDITABLE_VAR(HCZOneWayDoor, VAR_UINT8, orientation);
     RSDK_EDITABLE_VAR(HCZOneWayDoor, VAR_UINT8, detectDirection);
 }
-

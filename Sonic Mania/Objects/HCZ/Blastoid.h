@@ -28,7 +28,7 @@ void Blastoid_Update(void);
 void Blastoid_LateUpdate(void);
 void Blastoid_StaticUpdate(void);
 void Blastoid_Draw(void);
-void Blastoid_Create(void* data);
+void Blastoid_Create(void *data);
 void Blastoid_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Blastoid_EditorDraw(void);
@@ -46,4 +46,4 @@ void Blastoid_State_Setup(void);
 void Blastoid_State_Body(void);
 void Blastoid_State_Projectile(void);
 
-#endif //!OBJ_BLASTOID_H
+#endif //! OBJ_BLASTOID_H

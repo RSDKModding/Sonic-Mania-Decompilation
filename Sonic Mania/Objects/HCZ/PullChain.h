@@ -5,11 +5,20 @@
 
 typedef enum {
     PULLCHAIN_NORMAL,
-}PullChainTypes;
+} PullChainTypes;
+
+typedef enum {
+    PULLCHAIN_INPUT_NONE,
+    PULLCHAIN_INPUT_LEFT,
+    PULLCHAIN_INPUT_RIGHT,
+    PULLCHAIN_INPUT_UP,
+    PULLCHAIN_INPUT_DOWN,
+} PullChainInputMasks;
 
 // Object Class
 struct ObjectPullChain {
     RSDK_OBJECT
+    // left, left, left, right, right, right, up, up, up!
     TABLE(int32 dunkeyCode[18], { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 });
     uint16 aniFrames;
     uint16 sfxPullChain;
@@ -28,7 +37,7 @@ struct EntityPullChain {
     int32 unused;
     int32 chainOffset;
     int32 grabDelay[PLAYER_MAX];
-    uint8 codeInputFlags;
+    uint8 codeButtonMasks;
     int32 cheatCodeInputs[18];
     Hitbox hitbox;
     Animator chainAnimator;
@@ -42,7 +51,7 @@ void PullChain_Update(void);
 void PullChain_LateUpdate(void);
 void PullChain_StaticUpdate(void);
 void PullChain_Draw(void);
-void PullChain_Create(void* data);
+void PullChain_Create(void *data);
 void PullChain_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PullChain_EditorDraw(void);
@@ -55,4 +64,4 @@ void PullChain_Serialize(void);
 bool32 PullChain_HandleDunkeyCode(EntityPlayer *player);
 #endif
 
-#endif //!OBJ_PULLCHAIN_H
+#endif //! OBJ_PULLCHAIN_H

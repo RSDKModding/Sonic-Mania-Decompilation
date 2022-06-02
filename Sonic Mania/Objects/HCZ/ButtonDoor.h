@@ -8,7 +8,7 @@ typedef enum {
     BUTTONDOOR_LEFT,
     BUTTONDOOR_DOWN,
     BUTTONDOOR_RIGHT,
-}ButtonDoorOrientations;
+} ButtonDoorOrientations;
 
 // Object Class
 struct ObjectButtonDoor {
@@ -42,7 +42,7 @@ void ButtonDoor_Update(void);
 void ButtonDoor_LateUpdate(void);
 void ButtonDoor_StaticUpdate(void);
 void ButtonDoor_Draw(void);
-void ButtonDoor_Create(void* data);
+void ButtonDoor_Create(void *data);
 void ButtonDoor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ButtonDoor_EditorDraw(void);
@@ -55,4 +55,4 @@ void ButtonDoor_SetupSize(void);
 void ButtonDoor_SetupTagLink(void);
 void ButtonDoor_DrawSprites(void);
 
-#endif //!OBJ_BUTTONDOOR_H
+#endif //! OBJ_BUTTONDOOR_H

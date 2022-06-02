@@ -12,6 +12,7 @@ ObjectPullChain *PullChain;
 void PullChain_Update(void)
 {
     RSDK_THIS(PullChain);
+
     if (!self->decorMode) {
         if (self->currentlyActive)
             self->currentlyActive = false;
@@ -19,6 +20,7 @@ void PullChain_Update(void)
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);
+
             if (self->grabDelay[playerID] > 0)
                 self->grabDelay[playerID]--;
 
@@ -26,18 +28,21 @@ void PullChain_Update(void)
                 if (((1 << playerID) & self->activePlayers)) {
                     if (self->chainOffset < 0x100000)
                         self->chainOffset += 0x8000;
-                    if (self->chainOffset > 0x100000) 
+
+                    if (self->chainOffset > 0x100000)
                         self->chainOffset = 0x100000;
 
                     if (self->chainOffset == 0x100000) {
                         if (!self->down) {
                             self->currentlyActive = true;
-                            self->activated = true;
-                            self->toggled = !self->toggled;
+                            self->activated       = true;
+                            self->toggled         = !self->toggled;
                         }
+
                         self->down = true;
                     }
                 }
+
                 self->position.y = self->basePos.y + self->chainOffset;
             }
 
@@ -46,10 +51,12 @@ void PullChain_Update(void)
                     if (!Current || !((1 << playerID) & Current->activePlayers)) {
                         int32 x = abs(player->position.x - self->position.x);
                         int32 y = abs((player->position.y - 0x180000) - self->position.y);
-                        if (MathHelpers_SquareRoot((y >> 16) * (y >> 16) + (x >> 16) * (x >> 16)) <= 8 && player->state != Player_State_None
+
+                        if (MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) <= 8 && player->state != Player_State_None
                             && !self->grabDelay[playerID]) {
-                            self->activePlayers |= (1 << playerID);
-                            self->releasedPlayers |= (1 << playerID);
+                            self->activePlayers |= 1 << playerID;
+                            self->releasedPlayers |= 1 << playerID;
+
                             RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
 
                             if (!player->sidekick)
@@ -64,8 +71,7 @@ void PullChain_Update(void)
 
                             // Reset the dunky code inputs if a proper player grabs it
                             if (!player->sidekick) {
-                                for (int32 i = 0; i < 18; ++i) 
-                                    self->cheatCodeInputs[i] = 0;
+                                for (int32 i = 0; i < 18; ++i) self->cheatCodeInputs[i] = 0;
                             }
                         }
                     }
@@ -76,6 +82,7 @@ void PullChain_Update(void)
                 player->position.x = self->position.x;
                 player->position.y = self->position.y + 0x1C0000;
 
+                // R.I.P dunkey mode, you are very missed :(
 #if MANIA_GAMEVER == VER_100
                 if (!player->sidekick && PullChain_HandleDunkeyCode(player)) {
                     HandLauncher->dunkeyMode = true;
@@ -94,6 +101,7 @@ void PullChain_Update(void)
                         player->velocity.y = -0x20000;
                         player->state      = Player_State_Air;
                     }
+
                     self->grabDelay[playerID] = 30;
                 }
 
@@ -130,11 +138,10 @@ void PullChain_StaticUpdate(void) {}
 void PullChain_Draw(void)
 {
     RSDK_THIS(PullChain);
+
     RSDK.DrawSprite(&self->hookAnimator, NULL, false);
 
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     for (int32 i = 0; i < self->length; ++i) {
         RSDK.DrawSprite(&self->chainAnimator, &drawPos, false);
         drawPos.y -= 0x80000;
@@ -149,11 +156,9 @@ void PullChain_Draw(void)
 void PullChain_Create(void *data)
 {
     RSDK_THIS(PullChain);
-    self->active = ACTIVE_BOUNDS;
-    if (!self->decorMode)
-        self->drawOrder = Zone->playerDrawLow;
-    else
-        self->drawOrder = Zone->objectDrawLow;
+
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = self->decorMode ? Zone->objectDrawLow : Zone->playerDrawLow;
     self->basePos       = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -171,7 +176,7 @@ void PullChain_Create(void *data)
 
 void PullChain_StageLoad(void)
 {
-    PullChain->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/PullChain.bin", SCOPE_STAGE);
+    PullChain->aniFrames = RSDK.LoadSpriteAnimation("HCZ/PullChain.bin", SCOPE_STAGE);
 
     PullChain->sfxPullChain = RSDK.GetSfx("HCZ/PullChain.wav");
 }
@@ -184,35 +189,37 @@ bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
     if (HandLauncher->dunkeyMode)
         return false;
 
-    uint8 inputFlags = 0;
+    uint8 buttonMasks = PULLCHAIN_INPUT_NONE;
     if (player->left)
-        inputFlags = 1;
-    if (player->right)
-        inputFlags |= 2;
-    if (player->up)
-        inputFlags |= 4;
-    if (player->down)
-        inputFlags |= 8;
+        buttonMasks = 1;
 
-    if (inputFlags == self->codeInputFlags)
+    if (player->right)
+        buttonMasks |= 2;
+
+    if (player->up)
+        buttonMasks |= 4;
+
+    if (player->down)
+        buttonMasks |= 8;
+
+    if (buttonMasks == self->codeButtonMasks)
         return false;
 
-    for (int32 i = 1; i < 18; ++i)
-        self->cheatCodeInputs[i - 1] = self->cheatCodeInputs[i];
+    for (int32 i = 1; i < 18; ++i) self->cheatCodeInputs[i - 1] = self->cheatCodeInputs[i];
 
-    self->cheatCodeInputs[17] = 0;
+    self->cheatCodeInputs[17] = PULLCHAIN_INPUT_NONE;
     if (player->left)
-        self->cheatCodeInputs[17] = 1;
+        self->cheatCodeInputs[17] = PULLCHAIN_INPUT_LEFT;
     else if (player->right)
-        self->cheatCodeInputs[17] = 2;
+        self->cheatCodeInputs[17] = PULLCHAIN_INPUT_RIGHT;
     else if (player->up)
-        self->cheatCodeInputs[17] = 3;
+        self->cheatCodeInputs[17] = PULLCHAIN_INPUT_UP;
     else if (player->down)
-        self->cheatCodeInputs[17] = 4;
+        self->cheatCodeInputs[17] = PULLCHAIN_INPUT_DOWN;
 
     bool32 activatedCheatCode = true;
     for (int32 i = 0; i < 18; ++i) activatedCheatCode &= (self->cheatCodeInputs[i] == PullChain->dunkeyCode[i]);
-    self->codeInputFlags = inputFlags;
+    self->codeButtonMasks = buttonMasks;
 
     return activatedCheatCode;
 }
@@ -223,10 +230,7 @@ void PullChain_EditorDraw(void)
 {
     RSDK_THIS(PullChain);
 
-    if (!self->decorMode)
-        self->drawOrder = Zone->playerDrawLow;
-    else
-        self->drawOrder = Zone->objectDrawLow;
+    self->drawOrder = self->decorMode ? Zone->objectDrawLow : Zone->playerDrawLow;
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 0, &self->hookAnimator, true, self->decorMode);
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 1, &self->chainAnimator, true, self->decorMode);
 

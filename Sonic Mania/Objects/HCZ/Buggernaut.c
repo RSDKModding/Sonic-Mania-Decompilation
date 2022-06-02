@@ -16,6 +16,7 @@ ObjectBuggernaut *Buggernaut;
 void Buggernaut_Update(void)
 {
     RSDK_THIS(Buggernaut);
+
     StateMachine_Run(self->state);
 }
 
@@ -26,6 +27,7 @@ void Buggernaut_StaticUpdate(void) {}
 void Buggernaut_Draw(void)
 {
     RSDK_THIS(Buggernaut);
+
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
     self->inkEffect = INK_ALPHA;
@@ -43,8 +45,7 @@ void Buggernaut_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->drawFX |= FX_FLIP;
-        self->startPos.x    = self->position.x;
-        self->startPos.y    = self->position.y;
+        self->startPos      = self->position;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -52,8 +53,10 @@ void Buggernaut_Create(void *data)
         self->alpha         = 128;
         self->timer         = 16;
         self->buzzCount     = -1;
+
         RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->wingAnimator, true, 0);
+
         self->state = Buggernaut_State_Setup;
     }
 }
@@ -78,6 +81,7 @@ void Buggernaut_StageLoad(void)
 void Buggernaut_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Buggernaut, NULL, self->position.x, self->position.y);
 }
 
@@ -119,16 +123,17 @@ bool32 Buggernaut_HandleTileCollisionsX(void)
 
     bool32 collided = false;
     if (self->velocity.x <= 0) {
-        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x90000, -0x80000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x90000, -0x80000, false);
         collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x90000, 0x80000, false);
     }
     else {
-        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x90000, -0x80000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x90000, -0x80000, false);
         collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x90000, 0x80000, false);
     }
 
     if (collided)
         self->velocity.x = -self->velocity.x;
+
     return collided;
 }
 
@@ -138,11 +143,11 @@ bool32 Buggernaut_HandleTileCollisionsY(void)
 
     bool32 collided = false;
     if (self->velocity.y <= 0) {
-        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x80000, -0x90000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x80000, -0x90000, false);
         collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
     }
     else {
-        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x80000, 0x90000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x80000, 0x90000, false);
         collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
     }
 
@@ -171,14 +176,15 @@ void Buggernaut_State_Setup(void)
     child->passThrough = self->passThrough;
     child->isPermanent = true;
     child->state       = Buggernaut_State_Child;
-    self->state        = Buggernaut_State_Idle;
+
+    self->state = Buggernaut_State_Idle;
     Buggernaut_State_Idle();
 }
 
 void Buggernaut_State_Idle(void)
 {
     RSDK_THIS(Buggernaut);
-    self->timer--;
+
     if (--self->timer <= 0) {
         if (--self->buzzCount) {
             self->velocity.y = -0x10000;
@@ -196,7 +202,9 @@ void Buggernaut_State_Idle(void)
             self->state      = Buggernaut_State_FlyAway;
         }
     }
+
     RSDK.ProcessAnimation(&self->wingAnimator);
+
     Buggernaut_CheckPlayerCollisions();
     Buggernaut_CheckOffScreen();
 }
@@ -204,6 +212,7 @@ void Buggernaut_State_Idle(void)
 void Buggernaut_State_FlyTowardTarget(void)
 {
     RSDK_THIS(Buggernaut);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
@@ -211,24 +220,30 @@ void Buggernaut_State_FlyTowardTarget(void)
     if (player) {
         if (player->position.x >= self->position.x) {
             self->velocity.x += 0x1000;
+
             if (self->velocity.x > 0x20000)
                 self->velocity.x = 0x20000;
+
             self->direction = FLIP_X;
         }
         else {
             self->velocity.x -= 0x1000;
+
             if (self->velocity.x < -0x20000)
                 self->velocity.x = -0x20000;
+
             self->direction = FLIP_NONE;
         }
 
         if (player->position.y >= self->position.y) {
             self->velocity.y += 0x1000;
+
             if (self->velocity.y > 0x20000)
                 self->velocity.y = 0x20000;
         }
         else {
             self->velocity.y -= 0x1000;
+
             if (self->velocity.y < -0x20000)
                 self->velocity.y = -0x20000;
         }
@@ -264,6 +279,7 @@ void Buggernaut_State_FlyTowardTarget(void)
 void Buggernaut_State_FlyAway(void)
 {
     RSDK_THIS(Buggernaut);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
@@ -271,6 +287,7 @@ void Buggernaut_State_FlyAway(void)
 
     if (!self->bodyAnimator.animationID)
         Buggernaut_CheckPlayerCollisions();
+
     Buggernaut_CheckOffScreen();
 }
 
@@ -307,24 +324,30 @@ void Buggernaut_State_Child(void)
     if (self->parent) {
         if (parent->position.x >= self->position.x) {
             self->velocity.x += 0x2000;
+
             if (self->velocity.x > 0x20000)
                 self->velocity.x = 0x20000;
+
             self->direction = FLIP_X;
         }
         else {
             self->velocity.x -= 0x2000;
+
             if (self->velocity.x < -0x20000)
                 self->velocity.x = -0x20000;
+
             self->direction = FLIP_NONE;
         }
 
         if (parent->position.y >= self->position.y) {
             self->velocity.y += 0x2000;
+
             if (self->velocity.y > 0x20000)
                 self->velocity.y = 0x20000;
         }
         else {
             self->velocity.y -= 0x2000;
+
             if (self->velocity.y < -0x20000)
                 self->velocity.y = -0x20000;
         }
@@ -353,6 +376,7 @@ void Buggernaut_State_Child(void)
 void Buggernaut_EditorDraw(void)
 {
     RSDK_THIS(Buggernaut);
+
     self->drawFX = FX_FLIP;
     self->alpha  = 0x80;
     RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->bodyAnimator, true, 0);

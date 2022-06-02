@@ -537,36 +537,73 @@ void Water_State_Palette(void)
                     }
 
                     if (player->shield != SHIELD_BUBBLE) {
-                        ++player->drownTimer;
                         Water_SpawnBubble(player, playerID);
 
-                        bool32 playAlertSfx = true;
-                        switch (player->drownTimer) {
-                            default: playAlertSfx = false; break;
+                        bool32 playAlertSfx = false;
+                        switch (++player->drownTimer) {
+                            default: break;
 
-                            case 960:
-                            case 660:
                             case 360:
+                            case 660:
+                            case 960:
                                 if (!player->sidekick)
                                     RSDK.PlaySfx(Water->sfxWarning, false, 0xFF);
+
+                                playAlertSfx = true;
                                 break;
 
-                            case 1080: Water_SpawnCountDownBubble(player, playerID, 5); break;
-                            case 1200: Water_SpawnCountDownBubble(player, playerID, 4); break;
-                            case 1320: Water_SpawnCountDownBubble(player, playerID, 3); break;
-                            case 1440: Water_SpawnCountDownBubble(player, playerID, 2); break;
-                            case 1560: Water_SpawnCountDownBubble(player, playerID, 1); break;
-                            case 1680: Water_SpawnCountDownBubble(player, playerID, 0); break;
+                            case 1080:
+                                if (globals->gameMode != MODE_COMPETITION && globals->gameMode != MODE_ENCORE) {
+                                    if (!player->sidekick)
+                                        Music_PlayQueuedTrack(TRACK_DROWNING);
+                                }
+
+                                Water_SpawnCountDownBubble(player, playerID, 5);
+                                playAlertSfx = true;
+                                break;
+
+                            case 1140: playAlertSfx = true; break;
+
+                            case 1200:
+                                Water_SpawnCountDownBubble(player, playerID, 4);
+                                playAlertSfx = true;
+                                break;
+
+                            case 1260: playAlertSfx = true; break;
+
+                            case 1320:
+                                Water_SpawnCountDownBubble(player, playerID, 3);
+                                playAlertSfx = true;
+                                break;
+
+                            case 1380: playAlertSfx = true; break;
+
+                            case 1440:
+                                Water_SpawnCountDownBubble(player, playerID, 2);
+                                playAlertSfx = true;
+                                break;
+
+                            case 1500: playAlertSfx = true; break;
+
+                            case 1560:
+                                Water_SpawnCountDownBubble(player, playerID, 1);
+                                playAlertSfx = true;
+                                break;
+
+                            case 1620: playAlertSfx = true; break;
+
+                            case 1680:
+                                Water_SpawnCountDownBubble(player, playerID, 0);
+                                playAlertSfx = true;
+                                break;
+
+                            case 1740: playAlertSfx = true; break;
 
                             case 1800:
                                 player->deathType = PLAYER_DEATH_DROWN;
                                 if (!water)
                                     player->drawOrder = Zone->playerDrawHigh;
-                                break;
-
-                            case 1140:
-                            case 1380:
-                                // trust me dude
+                                playAlertSfx = true;
                                 break;
                         }
 
@@ -1102,7 +1139,7 @@ void Water_State_Bubbler(void)
                 self->bubbleType1 = rand % 6;
                 self->bubbleType2 = rand & 12;
 
-                if (!--self->dudsRemaining) {
+                if (!self->dudsRemaining--) {
                     self->bubbleFlags |= 2;
                     self->dudsRemaining = self->numDuds;
                 }

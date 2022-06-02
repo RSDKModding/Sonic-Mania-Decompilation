@@ -74,9 +74,9 @@ void RSDK::RegisterStaticVariables(void **staticVars, const char *name, uint32 c
 #endif
 
 #define ALIGN_TO(type)                                                                                                                               \
-    aligned = (dataPos & -(int32)sizeof(type)) + sizeof(type);                                                                                       \
+    aligned = dataPos & -(int32)sizeof(type);                                                                                                        \
     if (aligned < dataPos)                                                                                                                           \
-        dataPos = aligned;
+        dataPos = aligned + sizeof(type);
 
 void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 {
@@ -122,49 +122,49 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
 
         int32 dataPos = readOffset;
         while (info.readPos < info.fileSize) {
-            int32 dataType  = ReadInt8(&info);
+            int32 type  = ReadInt8(&info);
             int32 arraySize = ReadInt32(&info, false);
 
             // bit 7 == "hasValues"
 
             int32 aligned = 0;
-            if (dataType & 0x80) {
-                uint32 dataSize = ReadInt32(&info, false);
-                dataType &= 0x7F;
+            if (type & 0x80) {
+                uint32 count = ReadInt32(&info, false);
+                type &= 0x7F;
 
-                switch (dataType) {
+                switch (type) {
                     default:
 #if !RETRO_USE_ORIGINAL_CODE
-                        PrintLog(PRINT_NORMAL, "Invalid static variable type: %d", dataType);
+                        PrintLog(PRINT_NORMAL, "Invalid static variable type: %d", type);
 #endif
                         break;
 
                     case SVAR_UINT8:
                     case SVAR_INT8:
-                        if (info.readPos + dataSize <= info.fileSize && &classPtr[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(uint8); i += sizeof(uint8))
+                        if (info.readPos + (count * sizeof(uint8)) <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < count * sizeof(uint8); i += sizeof(uint8))
                                 ReadBytes(&info, &classPtr[dataPos + i], sizeof(uint8));
                         }
                         else {
-                            for (int32 i = 0; i < dataSize * sizeof(uint8); ++i) ReadInt8(&info);
+                            for (int32 i = 0; i < count * sizeof(uint8); ++i) ReadInt8(&info);
                         }
 
-                        dataPos += dataSize * sizeof(uint8);
+                        dataPos += count * sizeof(uint8);
                         break;
 
                     case SVAR_UINT16:
                     case SVAR_INT16: {
                         ALIGN_TO(int16);
 
-                        if (info.readPos + (dataSize * sizeof(int16)) <= info.fileSize && &classPtr[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(int16); i += sizeof(int16))
+                        if (info.readPos + (count * sizeof(int16)) <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < count * sizeof(int16); i += sizeof(int16))
                                 ReadBytes(&info, &classPtr[dataPos + i], sizeof(int16));
                         }
                         else {
-                            info.readPos += (dataSize * sizeof(int16));
+                            info.readPos += (count * sizeof(int16));
                         }
 
-                        dataPos += sizeof(int16) * dataSize;
+                        dataPos += sizeof(int16) * count;
                         break;
                     }
 
@@ -172,89 +172,98 @@ void RSDK::LoadStaticVariables(uint8 *classPtr, uint32 *hash, int32 readOffset)
                     case SVAR_INT32: {
                         ALIGN_TO(int32);
 
-                        if (info.readPos + (dataSize * sizeof(int32)) <= info.fileSize && &classPtr[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(int32); i += sizeof(int32))
+                        if (info.readPos + (count * sizeof(int32)) <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < count * sizeof(int32); i += sizeof(int32))
                                 ReadBytes(&info, &classPtr[dataPos + i], sizeof(int32));
                         }
                         else {
-                            info.readPos += (dataSize * sizeof(int32));
+                            info.readPos += (count * sizeof(int32));
                         }
 
-                        dataPos += sizeof(int32) * dataSize;
+                        dataPos += sizeof(int32) * count;
                         break;
                     }
 
                     case SVAR_BOOL: {
                         ALIGN_TO(bool32);
 
-                        if (info.readPos + (dataSize * sizeof(bool32)) <= info.fileSize && &classPtr[dataPos]) {
-                            for (int32 i = 0; i < dataSize * sizeof(bool32); i += sizeof(bool32))
+                        if (info.readPos + (count * sizeof(bool32)) <= info.fileSize && &classPtr[dataPos]) {
+                            for (int32 i = 0; i < count * sizeof(bool32); i += sizeof(bool32))
                                 ReadBytes(&info, &classPtr[dataPos + i], sizeof(int32));
                         }
                         else {
-                            info.readPos += (dataSize * sizeof(bool32));
+                            info.readPos += (count * sizeof(bool32));
                         }
 
-                        dataPos += sizeof(bool32) * dataSize;
+                        dataPos += sizeof(bool32) * count;
                         break;
                     }
                 }
             }
             else {
-                switch (dataType) {
+                switch (type) {
                     case SVAR_UINT8:
                     case SVAR_INT8: dataPos += sizeof(uint8) * arraySize; break;
 
                     case SVAR_UINT16:
                     case SVAR_INT16:
                         ALIGN_TO(int16);
+
                         dataPos += sizeof(int16) * arraySize;
                         break;
 
                     case SVAR_UINT32:
                     case SVAR_INT32:
                         ALIGN_TO(int32);
+
                         dataPos += sizeof(int32) * arraySize;
                         break;
 
                     case SVAR_BOOL:
                         ALIGN_TO(bool32);
+
                         dataPos += sizeof(bool32) * arraySize;
                         break;
 
                     case SVAR_POINTER:
                         ALIGN_TO(void *);
+
                         dataPos += sizeof(void *) * arraySize;
                         break;
 
                     case SVAR_VECTOR2:
                         ALIGN_TO(int32);
+
                         dataPos += sizeof(Vector2) * arraySize;
                         break;
 
                     case SVAR_STRING:
                         ALIGN_TO(void *);
+
                         dataPos += sizeof(String) * arraySize;
                         break;
 
                     case SVAR_ANIMATOR:
                         ALIGN_TO(void *);
+
                         dataPos += sizeof(Animator) * arraySize;
                         break;
 
                     case SVAR_HITBOX:
                         ALIGN_TO(int16);
+
                         dataPos += sizeof(Hitbox) * arraySize;
                         break;
 
                     case SVAR_SPRITEFRAME:
                         ALIGN_TO(int16);
+
                         dataPos += sizeof(GameSpriteFrame) * arraySize;
                         break;
 
                     default:
 #if !RETRO_USE_ORIGINAL_CODE
-                        PrintLog(PRINT_NORMAL, "Invalid data type: %d", dataType);
+                        PrintLog(PRINT_NORMAL, "Invalid data type: %d", type);
 #endif
                         break;
                 }

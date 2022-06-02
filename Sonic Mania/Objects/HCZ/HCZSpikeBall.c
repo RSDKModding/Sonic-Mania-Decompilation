@@ -8,8 +8,9 @@
 #include "SonicMania.h"
 
 // NOTE:
-// This is a mania-fied version of the spikeballs present on S3 hang conveyors
-// However, they're never played in any stage
+// This is a mania-fied version of the spikeballs present on S3 hang conveyors.
+// This object is 100% fully functional.
+// However, they're never placed in any stage, Making them unused.
 
 ObjectHCZSpikeBall *HCZSpikeBall;
 
@@ -26,6 +27,7 @@ void HCZSpikeBall_StaticUpdate(void) {}
 void HCZSpikeBall_Draw(void)
 {
     RSDK_THIS(HCZSpikeBall);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -180,19 +182,18 @@ void HCZSpikeBall_HandleConveyorMovement(void)
                 self->position.x = conveyX + (len >> 1);
             else
                 self->position.x = conveyX - (len >> 1);
+
             self->position.x += 0x15555 * timer * (2 * (self->conveyor->direction != FLIP_NONE) - 1);
             self->position.y = conveyY - 0x160000;
         }
-        else if (timer < len / 0x15555 + 51) {
+        else if (timer < (len / 0x15555) + 51) {
             int32 angle = timer - (len / 0x15555);
             if (self->conveyor->direction == FLIP_NONE)
                 self->position.x = conveyX - (len >> 1);
             else
                 self->position.x = conveyX + (len >> 1);
 
-            int32 mult = 5;
-            if (self->conveyor->direction == FLIP_NONE)
-                mult = -5;
+            int32 mult = self->conveyor->direction == FLIP_NONE ? -5 : 5;
 
             self->position.y = conveyY;
             self->position.x += 0xB00 * RSDK.Cos512(angle * mult + 0x180);
@@ -205,9 +206,7 @@ void HCZSpikeBall_HandleConveyorMovement(void)
             else
                 self->position.x = conveyX - (len >> 1);
 
-            int32 mult = 5;
-            if (self->conveyor->direction == FLIP_NONE)
-                mult = -5;
+            int32 mult = self->conveyor->direction == FLIP_NONE ? -5 : 5;
 
             self->position.y = conveyY;
             self->position.x += 0xB00 * RSDK.Cos512(angle * mult + 0x80);
@@ -218,6 +217,7 @@ void HCZSpikeBall_HandleConveyorMovement(void)
                 self->position.x = conveyX - (len >> 1);
             else
                 self->position.x = conveyX + (len >> 1);
+
             self->position.x += 0x15555 * (-51 - (len / 0x15555) + timer) * (2 * (self->conveyor->direction == FLIP_NONE) - 1);
             self->position.y = conveyY + 0x160000;
         }

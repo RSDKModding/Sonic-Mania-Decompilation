@@ -37,7 +37,7 @@ void HandLauncher_Update(void);
 void HandLauncher_LateUpdate(void);
 void HandLauncher_StaticUpdate(void);
 void HandLauncher_Draw(void);
-void HandLauncher_Create(void* data);
+void HandLauncher_Create(void *data);
 void HandLauncher_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HandLauncher_EditorDraw(void);
@@ -56,4 +56,4 @@ void HandLauncher_State_AwaitPlayer(void);
 void HandLauncher_State_TryGrabPlayer(void);
 void HandLauncher_State_GrabbedPlayer(void);
 
-#endif //!OBJ_HANDLAUNCHER_H
+#endif //! OBJ_HANDLAUNCHER_H

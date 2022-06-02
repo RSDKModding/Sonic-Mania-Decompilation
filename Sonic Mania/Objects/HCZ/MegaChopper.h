@@ -16,7 +16,7 @@ struct EntityMegaChopper {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
-    EntityPlayer *playerPtr;
+    EntityPlayer *grabbedPlayer;
     Vector2 playerPos;
     uint8 playerDir;
     uint16 shakeTimer;
@@ -34,7 +34,7 @@ void MegaChopper_Update(void);
 void MegaChopper_LateUpdate(void);
 void MegaChopper_StaticUpdate(void);
 void MegaChopper_Draw(void);
-void MegaChopper_Create(void* data);
+void MegaChopper_Create(void *data);
 void MegaChopper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MegaChopper_EditorDraw(void);
@@ -49,9 +49,9 @@ void MegaChopper_DebugDraw(void);
 void MegaChopper_CheckPlayerCollisions(void);
 void MegaChopper_CheckOffScreen(void);
 
-void MegaChopper_PlayerInput_StateP1(void);
-void MegaChopper_PlayerInput_StateP2(void);
-void MegaChopper_PlayerInput_StateP2_AI(void);
+void MegaChopper_Input_GrabbedP1(void);
+void MegaChopper_Input_GrabbedP2(void);
+void MegaChopper_Input_GrabbedP2_AI(void);
 
 void MegaChopper_State_Setup(void);
 void MegaChopper_State_InWater(void);
@@ -59,4 +59,4 @@ void MegaChopper_State_OutOfWater(void);
 void MegaChopper_State_Chopping(void);
 void MegaChopper_State_ShakenOff(void);
 
-#endif //!OBJ_MEGACHOPPER_H
+#endif //! OBJ_MEGACHOPPER_H

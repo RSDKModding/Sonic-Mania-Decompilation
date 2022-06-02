@@ -12,6 +12,7 @@ ObjectCurrent *Current;
 void Current_Update(void)
 {
     RSDK_THIS(Current);
+
     EntityButton *button = self->taggedButton;
     if (!button || button->activated) {
         self->activated = true;
@@ -26,6 +27,7 @@ void Current_StaticUpdate(void)
     if (Water) {
         int32 offsetH = 0;
         int32 offsetV = 0;
+
         foreach_active(Water, water)
         {
             if (water->state == Water_State_HCZBubble && water->activePlayers) {
@@ -37,10 +39,13 @@ void Current_StaticUpdate(void)
                                                       current->direction, &current->hitbox)) {
                             if (current->state == Current_State_WaterUp)
                                 offsetV -= strength;
+
                             if (current->state == Current_State_WaterDown)
                                 offsetV += strength;
+
                             if (current->state == Current_State_WaterLeft)
                                 offsetH -= strength;
+
                             if (current->state == Current_State_WaterRight)
                                 offsetH += strength;
                         }
@@ -49,24 +54,28 @@ void Current_StaticUpdate(void)
 
                 if (water->bubbleVelocity.x < offsetH) {
                     water->bubbleVelocity.x += 0x6000;
+
                     if (water->bubbleVelocity.x > offsetH)
                         water->bubbleVelocity.x = offsetH;
                 }
 
                 if (water->bubbleVelocity.x > offsetH) {
                     water->bubbleVelocity.x -= 0x6000;
+
                     if (water->bubbleVelocity.x < offsetH)
                         water->bubbleVelocity.x = offsetH;
                 }
 
                 if (water->bubbleVelocity.y < offsetV) {
                     water->bubbleVelocity.y += 0x6000;
+
                     if (water->bubbleVelocity.y > offsetV)
                         water->bubbleVelocity.y = offsetV;
                 }
 
                 if (water->bubbleVelocity.y > offsetV) {
                     water->bubbleVelocity.y -= 0x6000;
+
                     if (water->bubbleVelocity.y < offsetV)
                         water->bubbleVelocity.y = offsetV;
                 }
@@ -86,7 +95,7 @@ void Current_StaticUpdate(void)
                     if ((current->planeFilter <= 0 || player->collisionPlane == ((uint8)(current->planeFilter - 1) & 1))
                         && (!current->waterOnly || player->underwater)) {
                         if (Player_CheckCollisionTouch(player, current, &current->hitbox)) {
-                            Current->activePlayers |= (1 << playerID);
+                            Current->activePlayers |= 1 << playerID;
                             active = true;
                             foreach_break;
                         }
@@ -103,6 +112,7 @@ void Current_StaticUpdate(void)
 void Current_Draw(void)
 {
     RSDK_THIS(Current);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -118,6 +128,7 @@ void Current_Create(void *data)
             self->visible       = true;
             self->updateRange.x = 0x2000000;
             self->updateRange.y = 0x1000000;
+
             if (voidToInt(data) == CURRENT_CHILD_WIND) {
                 self->drawFX  = FX_SCALE | FX_FLIP;
                 self->scale.x = 0x400;
@@ -128,6 +139,7 @@ void Current_Create(void *data)
                 RSDK.SetSpriteAnimation(Water->aniFrames, 5, &self->animator, true, 0);
                 self->alpha = 0x200;
             }
+
             self->state = Current_State_Child;
         }
         else {
@@ -203,14 +215,14 @@ void Current_SetupTagLink(void)
 
     if (taggedButton) {
         if ((Button && taggedButton->classID == Button->classID) || (PullChain && taggedButton->classID == PullChain->classID)) {
-            int32 distX = abs(self->position.x - taggedButton->position.x);
-            int32 distY = abs(self->position.y - taggedButton->position.y);
+            int32 distX = abs(self->position.x - taggedButton->position.x) + 0x800000;
+            int32 distY = abs(self->position.y - taggedButton->position.y) + 0x800000;
 
-            if (self->updateRange.x < 0x800000 + distX)
-                self->updateRange.x = 0x800000 + distX;
+            if (self->updateRange.x < distX)
+                self->updateRange.x = distX;
 
-            if (self->updateRange.y < 0x800000 + distY)
-                self->updateRange.y = 0x800000 + distY;
+            if (self->updateRange.y < distY)
+                self->updateRange.y = distY;
 
             self->taggedButton = taggedButton;
         }
@@ -220,7 +232,6 @@ void Current_SetupTagLink(void)
 Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
 {
     RSDK_THIS(Current);
-    Vector2 bubblePos;
 
     int32 x = 0;
     if (right) {
@@ -247,6 +258,7 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
     if (!randMax)
         randMax = 1;
 
+    Vector2 bubblePos;
     bubblePos.x = x;
     if (randMax <= 0)
         bubblePos.y = maxY;
@@ -258,7 +270,6 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
 Vector2 Current_GetBubbleSpawnPosVertical(uint8 down)
 {
     RSDK_THIS(Current);
-    Vector2 bubblePos;
 
     int32 y = 0;
     if (down) {
@@ -285,6 +296,7 @@ Vector2 Current_GetBubbleSpawnPosVertical(uint8 down)
     if (!max)
         max = 1;
 
+    Vector2 bubblePos;
     if (max <= 0) {
         bubblePos.x = maxX;
         bubblePos.y = y;
@@ -303,6 +315,7 @@ void Current_State_WaterLeft(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
+
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
 
             if (Player_CheckValidState(player)) {
@@ -324,7 +337,7 @@ void Current_State_WaterLeft(void)
                 else if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                     self->playerPositions[playerID].x = player->position.x;
                     self->playerPositions[playerID].y = player->position.y;
-                    self->activePlayers |= (1 << playerID);
+                    self->activePlayers |= 1 << playerID;
                 }
 
                 if ((1 << playerID) & self->activePlayers) {
@@ -333,13 +346,14 @@ void Current_State_WaterLeft(void)
                         inBubble = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->animator.animationID;
+                        int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
                             player->velocity.x      = -(self->strength << 15);
                             player->groundVel       = player->velocity.x;
+
                             if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
@@ -368,10 +382,11 @@ void Current_State_WaterLeft(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(false);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->objectDrawHigh;
-            child->strength      = (self->strength + (self->strength >> 3)) >> 1;
-            child->size.x        = self->position.x - (self->size.x >> 1) + 0x400000;
-            child->drawOrder     = Zone->playerDrawLow;
+
+            child->drawOrder = Zone->objectDrawHigh;
+            child->strength  = (self->strength + (self->strength >> 3)) >> 1;
+            child->size.x    = self->position.x - (self->size.x >> 1) + 0x400000;
+            child->drawOrder = Zone->playerDrawLow;
             if (child->position.x < (self->position.x + (self->size.x >> 1)))
                 child->alpha = 0xF0;
         }
@@ -384,7 +399,8 @@ void Current_State_WaterRight(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
+
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
 
             if (Player_CheckValidState(player)) {
@@ -396,7 +412,7 @@ void Current_State_WaterRight(void)
                     }
                 }
                 else if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-                    self->activePlayers |= (1 << playerID);
+                    self->activePlayers |= 1 << playerID;
 
                 if ((1 << playerID) & self->activePlayers) {
                     bool32 inBubble = false;
@@ -439,11 +455,12 @@ void Current_State_WaterRight(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(true);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->objectDrawHigh;
-            child->strength      = (self->strength + (self->strength >> 3)) >> 1;
-            child->size.x        = (self->size.x >> 1) + self->position.x - 0x400000;
-            child->type          = CURRENT_C_RIGHT;
-            child->drawOrder     = Zone->playerDrawLow;
+
+            child->drawOrder = Zone->objectDrawHigh;
+            child->strength  = (self->strength + (self->strength >> 3)) >> 1;
+            child->size.x    = (self->size.x >> 1) + self->position.x - 0x400000;
+            child->type      = CURRENT_C_RIGHT;
+            child->drawOrder = Zone->playerDrawLow;
             if (child->position.x > (self->position.x - (self->size.x >> 1)))
                 child->alpha = 0xF0;
         }
@@ -456,7 +473,8 @@ void Current_State_WaterUp(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
+
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
 
             if (Player_CheckValidState(player)) {
@@ -468,7 +486,7 @@ void Current_State_WaterUp(void)
                     }
                 }
                 else if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-                    self->activePlayers |= (1 << playerID);
+                    self->activePlayers |= 1 << playerID;
 
                 if ((1 << playerID) & self->activePlayers) {
                     bool32 inBubble = false;
@@ -515,11 +533,12 @@ void Current_State_WaterUp(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(false);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->objectDrawHigh;
-            child->strength      = (self->strength + (self->strength >> 3)) >> 1;
-            child->size.y        = (self->position.y - (self->size.y >> 1)) + 0x400000;
-            child->type          = CURRENT_C_UP;
-            child->drawOrder     = Zone->playerDrawLow;
+
+            child->drawOrder = Zone->objectDrawHigh;
+            child->strength  = (self->strength + (self->strength >> 3)) >> 1;
+            child->size.y    = (self->position.y - (self->size.y >> 1)) + 0x400000;
+            child->type      = CURRENT_C_UP;
+            child->drawOrder = Zone->playerDrawLow;
             if (child->position.y < (self->position.y + (self->size.y >> 1)))
                 child->alpha = 0xF0;
         }
@@ -533,6 +552,7 @@ void Current_State_WaterDown(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
+
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
 
             if (Player_CheckValidState(player)) {
@@ -540,11 +560,12 @@ void Current_State_WaterDown(void)
                     if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_StartJumpIn) {
                         if (player->state != Player_State_StartJumpIn)
                             player->state = Player_State_Air;
+
                         self->activePlayers &= ~(1 << playerID);
                     }
                 }
                 else if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-                    self->activePlayers |= (1 << playerID);
+                    self->activePlayers |= 1 << playerID;
 
                 if ((1 << playerID) & self->activePlayers) {
                     bool32 inBubble = false;
@@ -592,11 +613,12 @@ void Current_State_WaterDown(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(true);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->objectDrawHigh;
-            child->strength      = (self->strength + (self->strength >> 3)) >> 1;
-            child->size.y        = (self->size.y >> 1) + self->position.y - 0x400000;
-            child->type          = CURRENT_C_DOWN;
-            child->drawOrder     = Zone->playerDrawLow;
+
+            child->drawOrder = Zone->objectDrawHigh;
+            child->strength  = (self->strength + (self->strength >> 3)) >> 1;
+            child->size.y    = (self->size.y >> 1) + self->position.y - 0x400000;
+            child->type      = CURRENT_C_DOWN;
+            child->drawOrder = Zone->playerDrawLow;
             if (child->position.y > (self->position.y - (self->size.y >> 1)))
                 child->alpha = 0xF0;
         }
@@ -621,9 +643,10 @@ void Current_State_PushLeft(void)
     if (!(Zone->timer & 7)) {
         Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(0);
         EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_WIND), pos.x, pos.y);
-        child->drawOrder     = Zone->objectDrawHigh;
-        child->strength      = 4 * self->strength + RSDK.Rand(1 - self->strength, 5);
-        child->size.x        = self->position.x - (self->size.x >> 1) + 0x400000;
+
+        child->drawOrder = Zone->objectDrawHigh;
+        child->strength  = 4 * self->strength + RSDK.Rand(1 - self->strength, 5);
+        child->size.x    = self->position.x - (self->size.x >> 1) + 0x400000;
         if (child->position.x < (self->position.x + (self->size.x >> 1)))
             child->alpha = 0xF0;
     }
@@ -719,7 +742,7 @@ void Current_State_Child(void)
         case CURRENT_C_DOWN:
             self->position.y += self->strength << 17;
             if (self->position.y >= self->size.y) {
-                if (self->alpha < 240)
+                if (self->alpha < 0xF0)
                     self->alpha += 8;
             }
             else {
@@ -737,6 +760,7 @@ void Current_State_Child(void)
 void Current_PlayerState_CurrentLeft(void)
 {
     RSDK_THIS(Player);
+
     Hitbox *hitbox = Player_GetHitbox(self);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_ROOF, self->collisionPlane, hitbox->left << 16, hitbox->top << 16, true);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->left << 16, hitbox->bottom << 16, true);
@@ -745,6 +769,7 @@ void Current_PlayerState_CurrentLeft(void)
 void Current_PlayerState_CurrentRight(void)
 {
     RSDK_THIS(Player);
+
     Hitbox *hitbox = Player_GetHitbox(self);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_ROOF, self->collisionPlane, hitbox->right << 16, hitbox->top << 16, true);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->right << 16, hitbox->bottom << 16, true);
@@ -753,6 +778,7 @@ void Current_PlayerState_CurrentRight(void)
 void Current_PlayerState_CurrentUp(void)
 {
     RSDK_THIS(Player);
+
     Hitbox *hitbox = Player_GetHitbox(self);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, hitbox->top << 16, true);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, hitbox->top << 16, true);
@@ -761,6 +787,7 @@ void Current_PlayerState_CurrentUp(void)
 void Current_PlayerState_CurrentDown(void)
 {
     RSDK_THIS(Player);
+
     Hitbox *hitbox = Player_GetHitbox(self);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, hitbox->bottom << 16, true);
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, hitbox->bottom << 16, true);
@@ -776,6 +803,7 @@ void Current_EditorDraw(void)
 
     RSDK.SetSpriteAnimation(Current->aniFrames, 1, &Current->animator, true, 0);
     self->direction = FLIP_NONE;
+
     RSDK.DrawSprite(&Current->animator, NULL, false);
 
     if (showGizmos()) {

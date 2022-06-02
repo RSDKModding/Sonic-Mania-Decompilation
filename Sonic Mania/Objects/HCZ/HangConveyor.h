@@ -44,7 +44,7 @@ void HangConveyor_Update(void);
 void HangConveyor_LateUpdate(void);
 void HangConveyor_StaticUpdate(void);
 void HangConveyor_Draw(void);
-void HangConveyor_Create(void* data);
+void HangConveyor_Create(void *data);
 void HangConveyor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HangConveyor_EditorDraw(void);
@@ -58,5 +58,4 @@ void HangConveyor_DrawSprites(void);
 void HangConveyor_SetupHitboxes(void);
 void HangConveyor_HandlePlayerInteractions(void);
 
-
-#endif //!OBJ_HANGCONVEYOR_H
+#endif //! OBJ_HANGCONVEYOR_H

@@ -24,7 +24,7 @@ TYPEMAP = {
     "String": 0,
     "Animator": 0,
     "Hitbox": 0,
-    "-----": 0
+    "SpriteFrame": 0
 }
 
 ALIASES = {

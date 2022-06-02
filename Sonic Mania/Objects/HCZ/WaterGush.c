@@ -14,6 +14,7 @@ void WaterGush_Update(void)
     RSDK_THIS(WaterGush);
 
     WaterGush_SetupHitboxes();
+
     bool32 wasActivated = self->activated;
     self->direction     = FLIP_NONE;
 
@@ -23,10 +24,13 @@ void WaterGush_Update(void)
         if (!((1 << playerID) & self->activePlayers)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitboxGush)) {
                 self->active = ACTIVE_NORMAL;
+
                 if (!player->sidekick)
                     self->activated = true;
+
                 RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
                 self->activePlayers |= 1 << playerID;
+
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, true, 6);
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
@@ -91,6 +95,7 @@ void WaterGush_Update(void)
         if (self->finishedExtending) {
             if (self->orientation == WATERGUSH_UP) {
                 self->gravityStrength += 0x3800;
+
                 if (self->gushPos > 0)
                     self->gushPos -= self->gravityStrength;
 
@@ -119,6 +124,7 @@ void WaterGush_Update(void)
         self->gravityStrength   = 0;
         self->active            = ACTIVE_BOUNDS;
     }
+
     RSDK.ProcessAnimation(&self->plumeAnimator);
     RSDK.ProcessAnimation(&self->topAnimator);
 }
@@ -130,6 +136,7 @@ void WaterGush_StaticUpdate(void) {}
 void WaterGush_Draw(void)
 {
     RSDK_THIS(WaterGush);
+
     if (self->gushPos > 0)
         WaterGush_DrawSprites();
 }
@@ -138,12 +145,12 @@ void WaterGush_Create(void *data)
 {
     RSDK_THIS(WaterGush);
 
-    self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->active     = ACTIVE_BOUNDS;
+    self->drawOrder  = Zone->objectDrawLow;
     self->startPos.x = self->position.x;
     self->startPos.y = self->position.y;
-    self->visible       = true;
-    self->drawFX        = FX_FLIP;
+    self->visible    = true;
+    self->drawFX     = FX_FLIP;
 
     self->updateRange.x = 0x800000;
     if (self->orientation == WATERGUSH_LEFT || self->orientation == WATERGUSH_RIGHT)
@@ -214,14 +221,15 @@ void WaterGush_SetupHitboxes(void)
             if (Music->activeTrack == TRACK_EGGMAN1) {
                 self->hitboxGush.left   = -192;
                 self->hitboxGush.top    = -16;
+                self->hitboxGush.right  = 0;
                 self->hitboxGush.bottom = 16;
             }
             else {
                 self->hitboxGush.left   = -16;
                 self->hitboxGush.top    = -32;
+                self->hitboxGush.right  = 0;
                 self->hitboxGush.bottom = 32;
             }
-            self->hitboxGush.right = 0;
             break;
 
         case WATERGUSH_LEFT:
@@ -241,11 +249,9 @@ void WaterGush_SetupHitboxes(void)
 void WaterGush_DrawSprites(void)
 {
     RSDK_THIS(WaterGush);
-    Vector2 drawPos, drawPosTop;
 
-    uint8 storeDir = self->direction;
-    drawPosTop.x   = self->position.x;
-    drawPosTop.y   = self->position.y;
+    uint8 storeDir     = self->direction;
+    Vector2 drawPosTop = self->position;
 
     int32 offsetX = 0;
     int32 offsetY = 0;
@@ -274,8 +280,7 @@ void WaterGush_DrawSprites(void)
             break;
     }
 
-    drawPos.x = drawPosTop.x;
-    drawPos.y = drawPosTop.y;
+    Vector2 drawPos = drawPosTop;
     if (self->gushPos > 0) {
         int32 count = ((self->gushPos - 1) >> 22) + 1;
         for (int32 i = 0; i < count; ++i) {
@@ -300,6 +305,7 @@ void WaterGush_SpawnBrickDebris(void)
 
     switch (self->orientation) {
         default: break;
+
         case WATERGUSH_UP:
             brickPos[0].x = self->position.x - 0x200000;
             brickPos[0].y = self->position.y;
@@ -384,53 +390,53 @@ void WaterGush_SpawnBrickDebris(void)
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &brick->animator, true, 0);
         brick->position.x += RSDK.Rand(-0x80000, 0x80000);
         brick->position.y += RSDK.Rand(-0x80000, 0x80000);
-        brick->velocity.x = brickVel[0].x;
-        brick->velocity.y = brickVel[0].y >> i;
-        brick->direction  = brickDir[0];
-        brick->drawFX     = FX_FLIP;
-        brick->drawOrder  = Zone->objectDrawHigh;
-        brick->gravityStrength    = 0x3800;
+        brick->velocity.x      = brickVel[0].x;
+        brick->velocity.y      = brickVel[0].y >> i;
+        brick->direction       = brickDir[0];
+        brick->drawFX          = FX_FLIP;
+        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->gravityStrength = 0x3800;
 
         brick = CREATE_ENTITY(Debris, Debris_State_Fall, brickPos[1].x, brickPos[1].y);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &brick->animator, true, 0);
         brick->position.x += RSDK.Rand(-0x80000, 0x80000);
         brick->position.y += RSDK.Rand(-0x80000, 0x80000);
-        brick->velocity.x = brickVel[1].x;
-        brick->velocity.y = brickVel[1].y >> i;
-        brick->direction  = brickDir[1];
-        brick->drawFX     = FX_SCALE | FX_FLIP;
-        brick->drawOrder  = Zone->objectDrawHigh;
-        brick->gravityStrength    = 0x3800;
-        brick->scale.x    = 0x200;
-        brick->scale.y    = 0x200;
-        brick->scaleSpeed.x = 8 >> i;
-        brick->scaleSpeed.y = 8 >> i;
+        brick->velocity.x      = brickVel[1].x;
+        brick->velocity.y      = brickVel[1].y >> i;
+        brick->direction       = brickDir[1];
+        brick->drawFX          = FX_SCALE | FX_FLIP;
+        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->gravityStrength = 0x3800;
+        brick->scale.x         = 0x200;
+        brick->scale.y         = 0x200;
+        brick->scaleSpeed.x    = 8 >> i;
+        brick->scaleSpeed.y    = 8 >> i;
 
         brick = CREATE_ENTITY(Debris, Debris_State_Fall, brickPos[2].x, brickPos[2].y);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &brick->animator, true, 0);
         brick->position.x += RSDK.Rand(-0x80000, 0x80000);
         brick->position.y += RSDK.Rand(-0x80000, 0x80000);
-        brick->velocity.x = brickVel[2].x;
-        brick->velocity.y = brickVel[2].y >> i;
-        brick->direction  = brickDir[2];
-        brick->drawFX     = FX_SCALE | FX_FLIP;
-        brick->drawOrder  = Zone->objectDrawHigh;
-        brick->gravityStrength    = 0x3800;
-        brick->scale.x    = 512;
-        brick->scale.y    = 512;
-        brick->scaleSpeed.x = 8 >> i;
-        brick->scaleSpeed.y = 8 >> i;
+        brick->velocity.x      = brickVel[2].x;
+        brick->velocity.y      = brickVel[2].y >> i;
+        brick->direction       = brickDir[2];
+        brick->drawFX          = FX_SCALE | FX_FLIP;
+        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->gravityStrength = 0x3800;
+        brick->scale.x         = 512;
+        brick->scale.y         = 512;
+        brick->scaleSpeed.x    = 8 >> i;
+        brick->scaleSpeed.y    = 8 >> i;
 
         brick = CREATE_ENTITY(Debris, Debris_State_Fall, brickPos[3].x, brickPos[3].y);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &brick->animator, true, 0);
         brick->position.x += RSDK.Rand(-0x80000, 0x80000);
         brick->position.y += RSDK.Rand(-0x80000, 0x80000);
-        brick->velocity.x = brickVel[3].x;
-        brick->velocity.y = brickVel[3].y >> i;
-        brick->direction  = brickDir[3];
-        brick->drawFX     = FX_FLIP;
-        brick->drawOrder  = Zone->objectDrawHigh;
-        brick->gravityStrength    = 0x3800;
+        brick->velocity.x      = brickVel[3].x;
+        brick->velocity.y      = brickVel[3].y >> i;
+        brick->direction       = brickDir[3];
+        brick->drawFX          = FX_FLIP;
+        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->gravityStrength = 0x3800;
     }
 }
 
@@ -458,10 +464,7 @@ void WaterGush_EditorDraw(void)
 
         case WATERGUSH_RIGHT:
         case WATERGUSH_LEFT:
-            if (self->orientation == WATERGUSH_LEFT)
-                self->direction = FLIP_X;
-            else
-                self->direction = FLIP_NONE;
+            self->direction = self->orientation == WATERGUSH_LEFT ? FLIP_X : FLIP_NONE;
 
             RSDK.SetSpriteAnimation(WaterGush->aniFrames, 1, &self->plumeAnimator, true, 0);
             RSDK.SetSpriteAnimation(WaterGush->aniFrames, 3, &self->topAnimator, true, 0);

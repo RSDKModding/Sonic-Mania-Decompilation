@@ -12,6 +12,7 @@ ObjectBlastoid *Blastoid;
 void Blastoid_Update(void)
 {
     RSDK_THIS(Blastoid);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,12 +23,14 @@ void Blastoid_StaticUpdate(void) {}
 void Blastoid_Draw(void)
 {
     RSDK_THIS(Blastoid);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Blastoid_Create(void *data)
 {
     RSDK_THIS(Blastoid);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
@@ -73,6 +76,7 @@ void Blastoid_StageLoad(void)
 void Blastoid_DebugSpawn(void)
 {
     RSDK_THIS(Blastoid);
+
     CREATE_ENTITY(Blastoid, NULL, self->position.x, self->position.y);
 }
 
@@ -118,6 +122,7 @@ void Blastoid_State_Body(void)
     RSDK_THIS(Blastoid);
 
     RSDK.ProcessAnimation(&self->animator);
+
     switch (++self->timer) {
         case 1:
         case 16:
@@ -203,6 +208,7 @@ void Blastoid_State_Projectile(void)
 void Blastoid_EditorDraw(void)
 {
     RSDK_THIS(Blastoid);
+
     RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &self->animator, false, 0);
 
     Blastoid_Draw();
@@ -223,10 +229,10 @@ void Blastoid_EditorLoad(void)
     Blastoid->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Blastoid.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Blastoid, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
-    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
-    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Left (Flipped)", FLIP_Y);
+    RSDK_ENUM_VAR("Right (Flipped)", FLIP_XY);
 }
 #endif
 

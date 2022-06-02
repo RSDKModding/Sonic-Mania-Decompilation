@@ -12,6 +12,7 @@ ObjectDiveEggman *DiveEggman;
 void DiveEggman_Update(void)
 {
     RSDK_THIS(DiveEggman);
+
     StateMachine_Run(self->state);
 }
 
@@ -98,6 +99,25 @@ void DiveEggman_StageLoad(void)
     DiveEggman->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
 }
 
+void DiveEggman_Hit(void)
+{
+    RSDK_THIS(DiveEggman);
+
+    RSDK.PlaySfx(DiveEggman->sfxHit, false, 255);
+
+    self->invincibilityTimer = 30;
+    if (self->health)
+        self->health--;
+
+    if (!self->health) {
+        self->timer            = 120;
+        self->drawOrder        = Zone->hudDrawOrder - 1;
+        self->state            = DiveEggman_StateEggman_Destroyed;
+        SceneInfo->timeEnabled = false;
+        Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
+    }
+}
+
 void DiveEggman_Explode(void)
 {
     RSDK_THIS(DiveEggman);
@@ -109,6 +129,7 @@ void DiveEggman_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+
             if (self->timer <= 40)
                 explosion->drawOrder = self->drawOrder;
             else
@@ -120,6 +141,7 @@ void DiveEggman_Explode(void)
 void DiveEggman_StateEggman_AwaitPlayer(void)
 {
     RSDK_THIS(DiveEggman);
+
     EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
 
     RSDK.ProcessAnimation(&self->animator);
@@ -141,6 +163,7 @@ void DiveEggman_StateEggman_AwaitPlayer(void)
 void DiveEggman_StateEggman_Swimming(void)
 {
     RSDK_THIS(DiveEggman);
+
     EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
 
     RSDK.ProcessAnimation(&self->animator);
@@ -169,6 +192,7 @@ void DiveEggman_StateEggman_Swimming(void)
             self->direction  = FLIP_X;
             self->velocity.x = -0x8000;
         }
+
         RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 2, &self->animator, false, 0);
         self->state = DiveEggman_StateEggman_InWhirlpool;
     }
@@ -183,9 +207,11 @@ void DiveEggman_StateEggman_Swimming(void)
 void DiveEggman_StateEggman_InWhirlpool(void)
 {
     RSDK_THIS(DiveEggman);
+
     EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
 
@@ -196,8 +222,8 @@ void DiveEggman_StateEggman_InWhirlpool(void)
 
     if (screwMobile->propellerAnimator.speed >= 0x100) {
         if (abs(self->position.x - screwMobile->position.x) < 0x100000) {
-            int x = self->position.x - screwMobile->position.x;
-            int y = MathHelpers_SquareRoot(0x100 - (x >> 16) * (x >> 16)) << 16;
+            int32 x = self->position.x - screwMobile->position.x;
+            int32 y = MathHelpers_SquareRoot(0x100 - (x >> 16) * (x >> 16)) << 16;
 
             self->angle = RSDK.ATan2(x, y);
             if (self->angle < 0x80)
@@ -213,6 +239,7 @@ void DiveEggman_StateEggman_InWhirlpool(void)
             self->velocity.x = -0x10000;
         else
             self->velocity.x = 0x10000;
+
         RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 1, &self->animator, false, 0);
         self->state = DiveEggman_StateEggman_Swimming;
     }
@@ -221,14 +248,17 @@ void DiveEggman_StateEggman_InWhirlpool(void)
 void DiveEggman_StateEggman_WhirlpoolRise(void)
 {
     RSDK_THIS(DiveEggman);
+
     EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
 
-    self->position.y -= 0x10000;
     self->position.x = (RSDK.Cos256(self->angle) << 12) + screwMobile->position.x;
+    self->position.y -= 0x10000;
+
     if ((self->angle & 0xFF) < 0x80)
         self->drawOrder = Zone->playerDrawLow + 2;
     else
@@ -237,18 +267,7 @@ void DiveEggman_StateEggman_WhirlpoolRise(void)
 
     if (screwMobile->propellerAnimator.speed >= 0x100) {
         if (self->position.y < screwMobile->position.y + 0x280000) {
-            RSDK.PlaySfx(DiveEggman->sfxHit, false, 255);
-            self->invincibilityTimer = 30;
-            if (self->health)
-                self->health--;
-
-            if (!self->health) {
-                self->timer            = 120;
-                self->drawOrder        = Zone->hudDrawOrder - 1;
-                self->state            = DiveEggman_StateEggman_Destroyed;
-                SceneInfo->timeEnabled = false;
-                Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
-            }
+            DiveEggman_Hit();
             screwMobile->whirlPoolTimer = 60;
         }
     }
@@ -266,6 +285,7 @@ void DiveEggman_StateEggman_Falling(void)
     RSDK_THIS(DiveEggman);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
 
@@ -276,11 +296,9 @@ void DiveEggman_StateEggman_Falling(void)
     if (self->position.y >= Water->waterLevel) {
         self->velocity.y >>= 2;
         CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
+
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
-        if (self->direction == FLIP_NONE)
-            self->velocity.x = -0x10000;
-        else
-            self->velocity.x = 0x10000;
+        self->velocity.x = self->direction == FLIP_NONE ? -0x10000 : 0x10000;
         RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 1, &self->animator, false, 0);
         self->state = DiveEggman_StateEggman_Swimming;
     }
@@ -291,15 +309,14 @@ void DiveEggman_StateEggman_PlaceBomb(void)
     RSDK_THIS(DiveEggman);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
 
     if (self->animator.frameID >= self->animator.frameCount - 1) {
         EntityDiveEggman *bomb = CREATE_ENTITY(DiveEggman, intToVoid(DIVEEGGMAN_BOMB), self->position.x, self->position.y + 0x20000);
-        if (self->direction)
-            bomb->position.x += 0x1A0000;
-        else
-            bomb->position.x -= 0x1A0000;
+        bomb->position.x += self->direction ? 0x1A0000 : -0x1A0000;
+
         RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 1, &self->animator, false, 0);
         self->state = DiveEggman_StateEggman_Swimming;
     }
@@ -330,17 +347,21 @@ void DiveEggman_StateEggman_Finish(void)
     RSDK_THIS(DiveEggman);
 
     EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
+
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
+
     self->position.x += self->velocity.x;
 
     self->position.y += self->velocity.y;
     self->velocity.y += self->timer;
+
     if (self->timer == 0x2000 && self->position.y >= Water->waterLevel) {
         self->velocity.y >>= 2;
         self->timer = 0x1000;
+
         CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
     }
@@ -361,12 +382,14 @@ bool32 DiveEggman_CheckNoBombExplode(void)
     if (!--self->timer) {
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
+
         EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
         water->velocity.y  = -0x8800;
         water->angle       = 2 * RSDK.Rand(0, 256);
         water->bubbleX     = water->position.x;
         water->childPtr    = 0;
         RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
+
         destroyEntity(self);
         return false;
     }
@@ -392,12 +415,10 @@ void DiveEggman_StateBomb_Idle(void)
 
     if (DiveEggman_CheckNoBombExplode()) {
         EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
+
         if (screwMobile->propellerAnimator.speed >= 0xFF) {
-            self->state = DiveEggman_StateBomb_InWhirlpool;
-            if (self->position.x > screwMobile->position.x)
-                self->velocity.x = -0x10000;
-            else
-                self->velocity.x = 0x10000;
+            self->state      = DiveEggman_StateBomb_InWhirlpool;
+            self->velocity.x = self->position.x > screwMobile->position.x ? -0x10000 : 0x10000;
         }
     }
 }
@@ -405,6 +426,7 @@ void DiveEggman_StateBomb_Idle(void)
 void DiveEggman_StateBomb_InWhirlpool(void)
 {
     RSDK_THIS(DiveEggman);
+
     EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
 
     if (DiveEggman_CheckNoBombExplode()) {
@@ -423,6 +445,7 @@ void DiveEggman_StateBomb_InWhirlpool(void)
                     self->drawOrder = Zone->playerDrawLow + 2;
                 else
                     self->drawOrder = Zone->hudDrawOrder - 1;
+
                 self->state = DiveEggman_StateBomb_WhirlpoolRise;
             }
         }
@@ -435,11 +458,13 @@ void DiveEggman_StateBomb_InWhirlpool(void)
 void DiveEggman_StateBomb_WhirlpoolRise(void)
 {
     RSDK_THIS(DiveEggman);
+
     EntityScrewMobile *screwMobile = DiveEggman->screwMobile;
 
     if (DiveEggman_CheckNoBombExplode()) {
-        self->position.y -= 0x10000;
         self->position.x = (RSDK.Cos256(self->angle) << 12) + screwMobile->position.x;
+        self->position.y -= 0x10000;
+
         if ((self->angle & 0xFF) < 0x80)
             self->drawOrder = Zone->playerDrawLow + 2;
         else
@@ -460,6 +485,7 @@ void DiveEggman_StateBomb_WhirlpoolRise(void)
                         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player1), Shield);
                         if (shield->classID == Shield->classID)
                             destroyEntity(shield);
+
                         player1->shield     = SHIELD_NONE;
                         player1->blinkTimer = 120;
                         RSDK.PlaySfx(Player->sfxHurt, false, 255);
@@ -476,6 +502,7 @@ void DiveEggman_StateBomb_WhirlpoolRise(void)
                                 Ring_LoseRings(player1, player1->rings, player1->collisionPlane);
                             else
                                 Ring_LoseHyperRings(player1, player1->rings, player1->collisionPlane);
+
                             player1->hyperRing     = false;
                             player1->rings         = 0;
                             player1->ringExtraLife = 100;
@@ -507,8 +534,10 @@ void DiveEggman_StateBomb_Falling(void)
 
         if (self->position.y >= Water->waterLevel) {
             self->velocity.y >>= 2;
+
             CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
+
             self->state = DiveEggman_StateBomb_Idle;
         }
     }
@@ -518,6 +547,7 @@ void DiveEggman_StateBomb_Falling(void)
 void DiveEggman_EditorDraw(void)
 {
     RSDK_THIS(DiveEggman);
+
     RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 0, &self->animator, true, 0);
 
     DiveEggman_Draw();

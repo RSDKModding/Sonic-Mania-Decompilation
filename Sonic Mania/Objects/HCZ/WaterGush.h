@@ -7,7 +7,7 @@ typedef enum {
     WATERGUSH_UP,
     WATERGUSH_RIGHT,
     WATERGUSH_LEFT,
-}WaterGushOrientations;
+} WaterGushOrientations;
 
 // Object Class
 struct ObjectWaterGush {
@@ -44,7 +44,7 @@ void WaterGush_Update(void);
 void WaterGush_LateUpdate(void);
 void WaterGush_StaticUpdate(void);
 void WaterGush_Draw(void);
-void WaterGush_Create(void* data);
+void WaterGush_Create(void *data);
 void WaterGush_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void WaterGush_EditorDraw(void);
@@ -57,4 +57,4 @@ void WaterGush_SetupHitboxes(void);
 void WaterGush_DrawSprites(void);
 void WaterGush_SpawnBrickDebris(void);
 
-#endif //!OBJ_WATERGUSH_H
+#endif //! OBJ_WATERGUSH_H

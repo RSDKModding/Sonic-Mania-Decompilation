@@ -15,7 +15,8 @@ void HandLauncher_Update(void)
 
     if (self->handAnimator.animationID == 2 && self->handAnimator.frameID == self->handAnimator.frameCount - 1) // Finished "Hand Grab" Animation
         RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 3, &self->handAnimator, true, 0);
-    else if (self->handAnimator.animationID == 4 && self->handAnimator.frameID == self->handAnimator.frameCount - 1)  // Finished "Hand Release" Animation
+    else if (self->handAnimator.animationID == 4
+             && self->handAnimator.frameID == self->handAnimator.frameCount - 1) // Finished "Hand Release" Animation
         RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &self->handAnimator, true, 0);
 
     StateMachine_Run(self->state);
@@ -37,6 +38,7 @@ void HandLauncher_StaticUpdate(void)
 void HandLauncher_Draw(void)
 {
     RSDK_THIS(HandLauncher);
+
     if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
         if (self->state == HandLauncher_State_GrabbedPlayer)
             RSDK.DrawSprite(&self->handAnimator, NULL, false);
@@ -56,8 +58,10 @@ void HandLauncher_Create(void *data)
     self->drawOrder = Zone->objectDrawLow;
     self->visible   = true;
     self->drawFX    = FX_FLIP;
+
     if (!self->speed)
         self->speed = 16;
+
     self->startPos      = self->position;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -93,10 +97,12 @@ void HandLauncher_StageLoad(void)
 void HandLauncher_CheckPlayerCollisions(void)
 {
     RSDK_THIS(HandLauncher);
+
     if (self->grabDelay <= 0) {
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);
+
             if ((self->state == HandLauncher_State_GrabbedPlayer || !player->sidekick) && !((1 << playerID) & self->activePlayers)) {
                 if (player->onGround) {
                     if (Player_CheckCollisionTouch(player, self, &HandLauncher->hitboxGrab)) {
@@ -127,14 +133,15 @@ void HandLauncher_CheckPlayerCollisions(void)
 bool32 HandLauncher_CheckPlayerInRange(void)
 {
     RSDK_THIS(HandLauncher);
+
     if (self->activePlayers)
         return true;
 
-    int32 storeX       = self->position.x;
-    int32 storeY       = self->position.y;
+    int32 storeX   = self->position.x;
+    int32 storeY   = self->position.y;
     self->position = self->playerPos;
 
-    bool32 inRange      = false;
+    bool32 inRange = false;
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &HandLauncher->hitboxRange)) {
@@ -151,11 +158,13 @@ bool32 HandLauncher_CheckPlayerInRange(void)
 void HandLauncher_ReleasePlayers(void)
 {
     RSDK_THIS(HandLauncher);
+
     int32 releaseVel = self->speed * (2 * (self->direction == FLIP_NONE) - 1);
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
+
         if (((1 << playerID) & self->activePlayers)) {
             self->activePlayers &= ~(1 << playerID);
             player->onGround  = true;
@@ -168,6 +177,7 @@ void HandLauncher_ReleasePlayers(void)
 void HandLauncher_HandleGrabbedPlayers(void)
 {
     RSDK_THIS(HandLauncher);
+
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
@@ -176,8 +186,7 @@ void HandLauncher_HandleGrabbedPlayers(void)
             player->velocity.y = 0;
             player->direction  = self->direction != FLIP_NONE;
             player->position.x = self->position.x;
-            player->position.y = self->position.y;
-            player->position.y -= 0x140000;
+            player->position.y = self->position.y - 0x140000;
             if (self->playerPos.y - 0x140000 < player->position.y)
                 player->position.y -= 0x140000;
         }
@@ -187,10 +196,13 @@ void HandLauncher_HandleGrabbedPlayers(void)
 void HandLauncher_State_Setup(void)
 {
     RSDK_THIS(HandLauncher);
+
     self->hiddenPos = self->startPos;
     self->hiddenPos.y += 0x4E0000;
+
     self->playerPos = self->hiddenPos;
     self->playerPos.y -= 0x360000;
+
     self->position = self->hiddenPos;
 
     RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &self->baseAnimator, true, 0);
@@ -207,8 +219,10 @@ void HandLauncher_State_AwaitPlayer(void)
     // Out of range, lower "Hand Position" to hide it
     self->position = self->hiddenPos;
     self->position.y -= ((self->hiddenPos.y - self->playerPos.y) >> 3) * minVal(self->timer, 8);
+
     if (self->timer > 0)
         self->timer--;
+
     if (self->timer < 0)
         self->timer = 0;
 
@@ -223,17 +237,20 @@ void HandLauncher_State_TryGrabPlayer(void)
     // In Range, raise "Hand Position" to show it
     self->position = self->hiddenPos;
     self->position.y -= ((self->hiddenPos.y - self->playerPos.y) >> 3) * minVal(self->timer, 8);
+
     if (self->timer < 8)
         self->timer++;
+
     if (self->timer > 8)
         self->timer = 8;
 
     HandLauncher_CheckPlayerCollisions();
+
     if (self->activePlayers) {
         RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 2, &self->handAnimator, true, 0);
-        self->timer                 = 0;
+        self->timer              = 0;
         self->baseAnimator.speed = 1;
-        self->state                    = HandLauncher_State_GrabbedPlayer;
+        self->state              = HandLauncher_State_GrabbedPlayer;
     }
 
     HandLauncher_HandleGrabbedPlayers();
@@ -248,13 +265,12 @@ void HandLauncher_State_GrabbedPlayer(void)
 
     if (self->timer < 3) {
         self->position = self->playerPos;
-        int32 dist     = (self->playerPos.y - self->startPos.y) / 3;
-        if (self->timer <= 3) {
+
+        int32 dist = (self->playerPos.y - self->startPos.y) / 3;
+        if (self->timer <= 3)
             self->position.y -= dist * self->timer;
-        }
-        else {
+        else
             self->position.y -= dist * 3;
-        }
     }
     else {
         if (self->timer < 63) {
@@ -290,6 +306,7 @@ void HandLauncher_State_GrabbedPlayer(void)
 void HandLauncher_EditorDraw(void)
 {
     RSDK_THIS(HandLauncher);
+
     RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &self->baseAnimator, true, 0);
     RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &self->handAnimator, true, 0);
 
