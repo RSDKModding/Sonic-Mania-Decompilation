@@ -23,7 +23,6 @@ extern bool32 useEndLine;
 extern char outputString[0x400];
 
 void PrintLog(int32 severity, const char *message, ...);
-inline void PrintConsole(const char *message) { printf("%s", message); }
 
 #if !RETRO_REV02
 enum PrintMessageTypes {

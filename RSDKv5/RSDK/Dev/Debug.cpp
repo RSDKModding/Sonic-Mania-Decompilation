@@ -22,6 +22,8 @@ ViewableVariable RSDK::viewableVarList[VIEWVAR_LIST_COUNT];
 
 DevMenu RSDK::devMenu = DevMenu();
 
+inline void PrintConsole(const char *message) { printf("%s", message); }
+
 void RSDK::PrintLog(int32 severity, const char *message, ...)
 {
 #ifndef RETRO_DISABLE_LOG

@@ -101,65 +101,55 @@ RSDK_CFLAGS += `$(PKGCONFIG) --cflags --static theora theoradec zlib`
 RSDK_LIBS += `$(PKGCONFIG) --libs --static theora theoradec zlib`
 
 CFLAGS_ALL += $(CFLAGS) \
-               -fsigned-char 
+			   -fsigned-char 
 		
 CXXFLAGS_ALL += $(CXXFLAGS) \
-               -std=c++17 \
-               -fsigned-char \
+			   -std=c++17 \
+			   -fsigned-char \
 			   -fpermissive 
 
 LDFLAGS_ALL = $(LDFLAGS)
 
 RSDK_INCLUDES  += \
-    -I./RSDKv5/ 					\
-    -I./dependencies/all/ 			\
-    -I./dependencies/all/tinyxml2/ 	\
+	-I./RSDKv5/ 					\
+	-I./dependencies/all/ 			\
+	-I./dependencies/all/tinyxml2/ 	\
 	-I./dependencies/all/iniparser/
 
 # Main Sources
 RSDK_SOURCES += \
-    RSDKv5/main 							\
-    RSDKv5/RSDK/Core/RetroEngine  			\
-    RSDKv5/RSDK/Core/Math         			\
-    RSDKv5/RSDK/Core/Reader       			\
-    RSDKv5/RSDK/Core/Link        			\
-    RSDKv5/RSDK/Core/ModAPI       			\
-    RSDKv5/RSDK/Dev/Debug        			\
-    RSDKv5/RSDK/Storage/Storage       		\
-    RSDKv5/RSDK/Storage/Text         		\
-    RSDKv5/RSDK/Graphics/Drawing      		\
-    RSDKv5/RSDK/Graphics/Scene3D      		\
-    RSDKv5/RSDK/Graphics/Animation    		\
-    RSDKv5/RSDK/Graphics/Sprite       		\
-    RSDKv5/RSDK/Graphics/Palette      		\
-    RSDKv5/RSDK/Graphics/Video     			\
-    RSDKv5/RSDK/Audio/Audio        			\
-    RSDKv5/RSDK/Input/Input        			\
-    RSDKv5/RSDK/Scene/Scene        			\
-    RSDKv5/RSDK/Scene/Collision    			\
-    RSDKv5/RSDK/Scene/Object       			\
-    RSDKv5/RSDK/Scene/Objects/DefaultObject \
-    RSDKv5/RSDK/Scene/Objects/DevOutput     \
-    RSDKv5/RSDK/User/Core/UserAchievements  \
-    RSDKv5/RSDK/User/Core/UserCore     		\
-    RSDKv5/RSDK/User/Core/UserLeaderboards  \
-    RSDKv5/RSDK/User/Core/UserPresence     	\
-    RSDKv5/RSDK/User/Core/UserStats     	\
-    RSDKv5/RSDK/User/Core/UserStorage     	\
-    dependencies/all/tinyxml2/tinyxml2 		\
+	RSDKv5/main 							\
+	RSDKv5/RSDK/Core/RetroEngine  			\
+	RSDKv5/RSDK/Core/Math         			\
+	RSDKv5/RSDK/Core/Reader       			\
+	RSDKv5/RSDK/Core/Link        			\
+	RSDKv5/RSDK/Core/ModAPI       			\
+	RSDKv5/RSDK/Dev/Debug        			\
+	RSDKv5/RSDK/Storage/Storage       		\
+	RSDKv5/RSDK/Storage/Text         		\
+	RSDKv5/RSDK/Graphics/Drawing      		\
+	RSDKv5/RSDK/Graphics/Scene3D      		\
+	RSDKv5/RSDK/Graphics/Animation    		\
+	RSDKv5/RSDK/Graphics/Sprite       		\
+	RSDKv5/RSDK/Graphics/Palette      		\
+	RSDKv5/RSDK/Graphics/Video     			\
+	RSDKv5/RSDK/Audio/Audio        			\
+	RSDKv5/RSDK/Input/Input        			\
+	RSDKv5/RSDK/Scene/Scene        			\
+	RSDKv5/RSDK/Scene/Collision    			\
+	RSDKv5/RSDK/Scene/Object       			\
+	RSDKv5/RSDK/Scene/Objects/DefaultObject \
+	RSDKv5/RSDK/Scene/Objects/DevOutput     \
+	RSDKv5/RSDK/User/Core/UserAchievements  \
+	RSDKv5/RSDK/User/Core/UserCore     		\
+	RSDKv5/RSDK/User/Core/UserLeaderboards  \
+	RSDKv5/RSDK/User/Core/UserPresence     	\
+	RSDKv5/RSDK/User/Core/UserStats     	\
+	RSDKv5/RSDK/User/Core/UserStorage     	\
+	dependencies/all/tinyxml2/tinyxml2 		\
 	dependencies/all/iniparser/iniparser 	\
 	dependencies/all/iniparser/dictionary   \
-	dependencies/all/miniz/miniz
-
-
-RSDK_SOURCES += \
-    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Achievements   	\
-    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Core     		\
-    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Leaderboards   	\
-    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Presence    	\
-    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Stats     		\
-    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Storage         
-
+	dependencies/all/miniz/miniz   
 
 
 GAME_INCLUDES = \

@@ -1,7 +1,7 @@
 
 // NOTE: I'm using enums & structs from the libNX homebrew lib, but they should have the same values as the official APIs
 
-#include <switch/services/hid.h>
+#include <switch.h>
 
 using namespace RSDK::SKU;
 
@@ -454,6 +454,7 @@ void RSDK::SKU::InitNXInputAPI()
     hidSetSupportedNpadStyleSet(HidNpadStyleTag_NpadFullKey | HidNpadStyleTag_NpadHandheld | HidNpadStyleTag_NpadJoyDual | HidNpadStyleTag_NpadJoyLeft
                                 | HidNpadStyleTag_NpadJoyRight);
     hidSetSupportedNpadIdType(npadTypes, 5);
+
     hidSetNpadJoyHoldType(HidNpadJoyHoldType_Horizontal);
 
     ProcessInput();

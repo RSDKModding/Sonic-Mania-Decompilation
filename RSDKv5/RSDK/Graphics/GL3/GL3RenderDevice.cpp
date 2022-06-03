@@ -31,6 +31,12 @@ bool RenderDevice::Init()
 
     GLFWmonitor *monitor = NULL;
     int32 w, h;
+#if RETRO_PLATFORM == RETRO_SWITCH
+    videoSettings.windowed = false;
+    videoSettings.exclusiveFS = true;
+    videoSettings.fsWidth = w = 1920;
+    videoSettings.fsHeight = h = 1080;
+#else
     if (videoSettings.windowed) {
         w = videoSettings.windowWidth;
         h = videoSettings.windowHeight;
@@ -46,6 +52,7 @@ bool RenderDevice::Init()
         w       = videoSettings.fsWidth;
         h       = videoSettings.fsHeight;
     }
+#endif
 
     window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
     if (!window) {
@@ -935,6 +942,7 @@ void RenderDevice::ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, i
 }
 void RenderDevice::ProcessJoystickEvent(int32 ID, int32 event)
 {
+#if RETRO_INPUTDEVICE_GLFW
     if (!glfwJoystickIsGamepad(ID))
         return;
     uint32 hash;
@@ -946,6 +954,7 @@ void RenderDevice::ProcessJoystickEvent(int32 ID, int32 event)
         SKU::InitGLFWInputDevice(hash, ID);
     else
         RemoveInputDevice(InputDeviceFromID(hash));
+#endif
 }
 void RenderDevice::ProcessMaximizeEvent(GLFWwindow *, int32 maximized)
 {

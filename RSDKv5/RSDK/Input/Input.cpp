@@ -109,7 +109,7 @@ void RSDK::InitInputDevices()
     SKU::InitSteamInputAPI();
 #endif
 
-#if RETRO_INPUTDEVICE_SWITCH
+#if RETRO_INPUTDEVICE_NX
     SKU::InitNXInputAPI();
 #endif
 
@@ -283,7 +283,7 @@ void RSDK::ProcessInput()
 
 void RSDK::ProcessInputDevices()
 {
-#if RETRO_INPUTDEVICE_SWITCH
+#if RETRO_INPUTDEVICE_NX
     SKU::ProcessNXInputDevices();
 #endif
 }
