@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Sol_MaxFlameOrbs (4)
+#define SOL_FLAMEORB_COUNT (4)
 
 // Object Class
 struct ObjectSol {
@@ -20,8 +20,8 @@ struct EntitySol {
     Vector2 startPos;
     uint8 startDir;
     uint8 activeOrbs;
-    Vector2 positions[Sol_MaxFlameOrbs];
-    int32 xOffset;
+    Vector2 positions[SOL_FLAMEORB_COUNT];
+    int32 oscillateAngle;
     bool32 isFlameFX;
     bool32 fireOrbs;
     Animator mainAnimator;
@@ -36,7 +36,7 @@ void Sol_Update(void);
 void Sol_LateUpdate(void);
 void Sol_StaticUpdate(void);
 void Sol_Draw(void);
-void Sol_Create(void* data);
+void Sol_Create(void *data);
 void Sol_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Sol_EditorDraw(void);
@@ -65,4 +65,4 @@ void Sol_State_FlameDissipate(void);
 void Sol_State_FireballOilFlame(void);
 void Sol_State_OilFlame(void);
 
-#endif //!OBJ_SOL_H
+#endif //! OBJ_SOL_H

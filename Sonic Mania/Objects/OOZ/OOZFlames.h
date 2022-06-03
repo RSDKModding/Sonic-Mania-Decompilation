@@ -26,7 +26,7 @@ void OOZFlames_Update(void);
 void OOZFlames_LateUpdate(void);
 void OOZFlames_StaticUpdate(void);
 void OOZFlames_Draw(void);
-void OOZFlames_Create(void* data);
+void OOZFlames_Create(void *data);
 void OOZFlames_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void OOZFlames_EditorDraw(void);
@@ -38,5 +38,4 @@ void OOZFlames_Serialize(void);
 void OOZFlames_State_Appear(void);
 void OOZFlames_State_Rise(void);
 
-
-#endif //!OBJ_OOZFLAMES_H
+#endif //! OBJ_OOZFLAMES_H

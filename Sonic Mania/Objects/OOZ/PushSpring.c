@@ -26,6 +26,7 @@ void PushSpring_StaticUpdate(void) {}
 void PushSpring_Draw(void)
 {
     RSDK_THIS(PushSpring);
+
     if (self->pushOffset) {
         StateMachine_Run(self->stateDraw);
     }
@@ -38,6 +39,7 @@ void PushSpring_Draw(void)
 void PushSpring_Create(void *data)
 {
     RSDK_THIS(PushSpring);
+
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
@@ -45,6 +47,7 @@ void PushSpring_Create(void *data)
         self->drawOrder     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         RSDK.SetSpriteAnimation(PushSpring->aniFrames, self->type, &self->animator, true, 0);
 
         if (self->type != PUSHSPRING_V) {
@@ -57,12 +60,14 @@ void PushSpring_Create(void *data)
                 self->stateCollide = PushSpring_Collide_Right;
             }
 
-            self->groundVel     = 0x4000;
+            self->groundVel = 0x4000;
+
             self->hitbox.left   = -20;
             self->hitbox.top    = -16;
             self->hitbox.right  = 20;
             self->hitbox.bottom = 16;
-            self->state         = PushSpring_State_WaitForPushed;
+
+            self->state = PushSpring_State_WaitForPushed;
         }
         else {
             if (self->direction) {
@@ -75,12 +80,14 @@ void PushSpring_Create(void *data)
                 self->stateCollide = PushSpring_Collide_Top;
             }
 
-            self->groundVel     = 0x20000;
+            self->groundVel = 0x20000;
+
             self->hitbox.left   = -16;
             self->hitbox.top    = -20;
             self->hitbox.right  = 16;
             self->hitbox.bottom = 20;
-            self->state         = PushSpring_State_WaitForPushed;
+
+            self->state = PushSpring_State_WaitForPushed;
         }
     }
 }
@@ -97,6 +104,7 @@ void PushSpring_StageLoad(void)
 void PushSpring_Collide_Top(void)
 {
     RSDK_THIS(PushSpring);
+
     self->hitbox.top = (self->pushOffset >> 16) - 22;
 
     foreach_active(Player, player)
@@ -104,16 +112,19 @@ void PushSpring_Collide_Top(void)
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
             player->position.y += 0x20000;
             self->beingPushed |= true;
+
             if (self->pushOffset >= 0x120000) {
                 player->collisionMode = 0;
                 player->onGround      = false;
                 player->state         = Player_State_Air;
                 player->velocity.y    = -0xA0000;
-                int32 anim            = player->animator.animationID;
+
+                int32 anim = player->animator.animationID;
                 if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                     player->animationReserve = player->animator.animationID;
                 else
                     player->animationReserve = ANI_WALK;
+
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                 RSDK.PlaySfx(PushSpring->sfxSpring, false, 255);
                 self->state = PushSpring_State_PushRecoil;
@@ -125,11 +136,13 @@ void PushSpring_Collide_Top(void)
 void PushSpring_Collide_Bottom(void)
 {
     RSDK_THIS(PushSpring);
+
     self->hitbox.top = (self->pushOffset >> 16) - 22;
 
     foreach_active(Player, player)
     {
         int32 yvel = player->velocity.y;
+
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
             if (yvel < 0) {
                 player->velocity.y = yvel + 0x3800;
@@ -152,6 +165,7 @@ void PushSpring_Collide_Bottom(void)
 void PushSpring_Collide_Left(void)
 {
     RSDK_THIS(PushSpring);
+
     self->hitbox.right = 22 - (self->pushOffset >> 16);
 
     foreach_active(Player, player)
@@ -182,6 +196,7 @@ void PushSpring_Collide_Left(void)
 void PushSpring_Collide_Right(void)
 {
     RSDK_THIS(PushSpring);
+
     self->hitbox.right = 22 - (self->pushOffset >> 16);
 
     foreach_active(Player, player)
@@ -213,9 +228,7 @@ void PushSpring_Draw_Top(void)
 {
     RSDK_THIS(PushSpring);
 
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     drawPos.y += self->pushOffset;
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -236,9 +249,7 @@ void PushSpring_Draw_Bottom(void)
 {
     RSDK_THIS(PushSpring);
 
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     drawPos.y -= self->pushOffset;
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -259,9 +270,7 @@ void PushSpring_Draw_Left(void)
 {
     RSDK_THIS(PushSpring);
 
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     drawPos.x += self->pushOffset;
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -282,9 +291,7 @@ void PushSpring_Draw_Right(void)
 {
     RSDK_THIS(PushSpring);
 
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     drawPos.x -= self->pushOffset;
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -304,6 +311,7 @@ void PushSpring_Draw_Right(void)
 void PushSpring_State_WaitForPushed(void)
 {
     RSDK_THIS(PushSpring);
+
     if (self->beingPushed) {
         self->timer = 0;
         self->state = PushSpring_State_BeingPushed;
@@ -313,8 +321,10 @@ void PushSpring_State_WaitForPushed(void)
 void PushSpring_State_BeingPushed(void)
 {
     RSDK_THIS(PushSpring);
+
     if (self->beingPushed) {
         self->pushOffset += self->groundVel;
+
         if (self->pushOffset < 0x120000) {
             if (!(self->timer % 10))
                 RSDK.PlaySfx(PushSpring->sfxPush, false, 0xFF);
@@ -322,6 +332,7 @@ void PushSpring_State_BeingPushed(void)
         else {
             self->pushOffset = 0x120000;
         }
+
         ++self->timer;
     }
     else {
@@ -332,12 +343,14 @@ void PushSpring_State_BeingPushed(void)
 void PushSpring_State_PushRecoil(void)
 {
     RSDK_THIS(PushSpring);
+
     if (self->beingPushed) {
         self->timer = 0;
         self->state = PushSpring_State_BeingPushed;
     }
     else {
         self->pushOffset -= 0x20000;
+
         if (self->pushOffset <= 0) {
             self->pushOffset = 0;
             self->state      = PushSpring_State_WaitForPushed;

@@ -12,6 +12,7 @@ ObjectSol *Sol;
 void Sol_Update(void)
 {
     RSDK_THIS(Sol);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,7 +23,8 @@ void Sol_StaticUpdate(void) {}
 void Sol_Draw(void)
 {
     RSDK_THIS(Sol);
-    for (int32 i = 0; i < Sol_MaxFlameOrbs; ++i) {
+
+    for (int32 i = 0; i < SOL_FLAMEORB_COUNT; ++i) {
         if ((1 << i) & self->activeOrbs)
             RSDK.DrawSprite(&self->ballAnimator, &self->positions[i], false);
     }
@@ -33,6 +35,7 @@ void Sol_Draw(void)
 void Sol_Create(void *data)
 {
     RSDK_THIS(Sol);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX    = FX_FLIP;
@@ -52,14 +55,11 @@ void Sol_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->activeOrbs    = 2 | 8;
+
         RSDK.SetSpriteAnimation(Sol->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(Sol->aniFrames, 1, &self->ballAnimator, true, 0);
-        self->state = Sol_State_Setup;
-
-        if (self->direction == FLIP_NONE)
-            self->velocity.x = -0x4000;
-        else
-            self->velocity.x = 0x4000;
+        self->state      = Sol_State_Setup;
+        self->velocity.x = self->direction == FLIP_NONE ? -0x4000 : 0x4000;
     }
 }
 
@@ -84,6 +84,7 @@ void Sol_StageLoad(void)
 void Sol_DebugSpawn(void)
 {
     RSDK_THIS(Sol);
+
     CREATE_ENTITY(Sol, NULL, self->position.x, self->position.y);
 }
 
@@ -99,10 +100,12 @@ void Sol_HandlePlayerInteractions(void)
 
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
-    for (int32 i = 0; i < Sol_MaxFlameOrbs; ++i) {
+
+    for (int32 i = 0; i < SOL_FLAMEORB_COUNT; ++i) {
         if ((1 << i) & self->activeOrbs) {
             self->position.x = self->positions[i].x;
             self->position.y = self->positions[i].y;
+
             foreach_active(Player, player)
             {
 #if MANIA_USE_PLUS
@@ -123,11 +126,12 @@ void Sol_HandlePlayerInteractions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Sol->hitboxBadnik) && Player_CheckBadnikBreak(player, self, false)) {
             int32 angle = self->angle;
-            for (int32 i = 0; i < Sol_MaxFlameOrbs; ++i) {
+            for (int32 i = 0; i < SOL_FLAMEORB_COUNT; ++i) {
                 if ((1 << i) & self->activeOrbs) {
                     self->position.x = self->positions[i].x;
                     self->position.y = self->positions[i].y;
-                    EntitySol *sol   = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
+
+                    EntitySol *sol = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
 
                     sol->state = Sol_State_ActiveFireball;
 #if MANIA_USE_PLUS
@@ -137,8 +141,10 @@ void Sol_HandlePlayerInteractions(void)
                     sol->velocity.x = 0x380 * RSDK.Cos256(angle);
                     sol->velocity.y = 0x380 * RSDK.Sin256(angle);
                 }
-                angle += (0x100 / Sol_MaxFlameOrbs);
+
+                angle += (0x100 / SOL_FLAMEORB_COUNT);
             }
+
             destroyEntity(self);
         }
     }
@@ -147,6 +153,7 @@ void Sol_HandlePlayerInteractions(void)
 void Sol_HandlePlayerHurt(void)
 {
     RSDK_THIS(Sol);
+
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Sol->hitboxOrb)) {
@@ -165,18 +172,20 @@ void Sol_HandleRotation(void)
     else
         self->angle = (angle + 1) & 0xFF;
 
-    for (int32 i = 0; i < Sol_MaxFlameOrbs; ++i) {
+    for (int32 i = 0; i < SOL_FLAMEORB_COUNT; ++i) {
         if ((1 << i) & self->activeOrbs) {
             self->positions[i].x = (RSDK.Cos256(angle) << 12) + self->position.x;
             self->positions[i].y = (RSDK.Sin256(angle) << 12) + self->position.y;
         }
-        angle += (0x100 / Sol_MaxFlameOrbs);
+
+        angle += (0x100 / SOL_FLAMEORB_COUNT);
     }
 }
 
 void Sol_CheckOffScreen(void)
 {
     RSDK_THIS(Sol);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position  = self->startPos;
         self->direction = self->startDir;
@@ -187,19 +196,23 @@ void Sol_CheckOffScreen(void)
 void Sol_State_Setup(void)
 {
     RSDK_THIS(Sol);
+
     self->active = ACTIVE_NORMAL;
-    self->state  = Sol_State_Moving;
+
+    self->state = Sol_State_Moving;
     Sol_State_Moving();
 }
 
 void Sol_State_Moving(void)
 {
     RSDK_THIS(Sol);
+
     RSDK.ProcessAnimation(&self->ballAnimator);
 
-    self->position.y = (RSDK.Sin256(self->xOffset) << 10) + self->startPos.y;
-    self->xOffset += 4;
     self->position.x += self->velocity.x;
+    self->position.y = (RSDK.Sin256(self->oscillateAngle) << 10) + self->startPos.y;
+    self->oscillateAngle += 4;
+
     Sol_HandleRotation();
     Sol_HandlePlayerInteractions();
 
@@ -207,6 +220,7 @@ void Sol_State_Moving(void)
         EntityPlayer *playerPtr = NULL;
         int32 distanceX         = 0x7FFFFFFF;
         int32 distanceY         = 0x7FFFFFFF;
+
         foreach_active(Player, player)
         {
             if (abs(player->position.y - self->position.y) < distanceY)
@@ -232,7 +246,7 @@ void Sol_State_Moving(void)
             playerPtr = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         if (distanceX <= 0x800000) {
-            self->state             = Sol_State_ShootingOrbs;
+            self->state                = Sol_State_ShootingOrbs;
             self->mainAnimator.frameID = 1;
         }
 
@@ -245,51 +259,52 @@ void Sol_State_Moving(void)
 void Sol_State_ShootingOrbs(void)
 {
     RSDK_THIS(Sol);
+
     RSDK.ProcessAnimation(&self->ballAnimator);
 
-    self->position.y = (RSDK.Sin256(self->xOffset) << 10) + self->startPos.y;
-    self->xOffset += 4;
     self->position.x += self->velocity.x;
+    self->position.y = (RSDK.Sin256(self->oscillateAngle) << 10) + self->startPos.y;
+    self->oscillateAngle += 4;
+
     int32 angle = self->angle;
     Sol_HandleRotation();
 
-    for (int32 i = 0; i < Sol_MaxFlameOrbs; ++i) {
-        if (angle == 64) {
+    for (int32 i = 0; i < SOL_FLAMEORB_COUNT; ++i) {
+        if (angle == 0x40) {
             if ((1 << i) & self->activeOrbs) {
                 self->activeOrbs &= ~(1 << i);
-                EntitySol *sol = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
-                if (self->direction == FLIP_NONE)
-                    sol->velocity.x = -0x20000;
-                else
-                    sol->velocity.x = 0x20000;
+                EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
+                sol->velocity.x = self->direction == FLIP_NONE ? -0x20000 : 0x20000;
             }
-            angle += (0x100 / Sol_MaxFlameOrbs);
+
+            angle += (0x100 / SOL_FLAMEORB_COUNT);
         }
     }
+
     Sol_HandlePlayerInteractions();
 
     if (!self->activeOrbs) {
-        self->state = Sol_State_NoOrbs;
-        if (self->direction == FLIP_NONE)
-            self->velocity.x = -0x4000;
-        else
-            self->velocity.x = 0x4000;
+        self->state      = Sol_State_NoOrbs;
+        self->velocity.x = self->direction == FLIP_NONE ? -0x4000 : 0x4000;
     }
 
     if (self->mainAnimator.timer >= 0x10)
         self->mainAnimator.frameID = 2;
     else
         self->mainAnimator.timer++;
+
     Sol_CheckOffScreen();
 }
 
 void Sol_State_NoOrbs(void)
 {
     RSDK_THIS(Sol);
+
     RSDK.ProcessAnimation(&self->ballAnimator);
-    self->position.y = (RSDK.Sin256(self->xOffset) << 10) + self->startPos.y;
-    self->xOffset += 4;
+
     self->position.x += self->velocity.x;
+    self->position.y = (RSDK.Sin256(self->oscillateAngle) << 10) + self->startPos.y;
+    self->oscillateAngle += 4;
 
     Sol_HandleRotation();
     Sol_HandlePlayerInteractions();
@@ -299,8 +314,11 @@ void Sol_State_NoOrbs(void)
 void Sol_State_SmallFireball(void)
 {
     RSDK_THIS(Sol);
+
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     self->position.x += self->velocity.x;
+
     if (RSDK.CheckOnScreen(self, &self->updateRange))
         Sol_HandlePlayerHurt();
     else
@@ -310,18 +328,20 @@ void Sol_State_SmallFireball(void)
 void Sol_State_ActiveFireball(void)
 {
     RSDK_THIS(Sol);
+
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
         self->velocity.y += 0x3800;
+
         self->rotation = 2 * RSDK.ATan2(self->velocity.x >> 16, self->velocity.y >> 16) + 384;
 
         int32 offsetX = RSDK.Sin512(512 - self->rotation) << 10;
         int32 offsetY = RSDK.Cos512(512 - self->rotation) << 10;
-        int32 cmode   = 3 - (((self->rotation - 64) >> 7) & 3);
+        int32 cmode   = 3 - (((self->rotation - 0x40) >> 7) & 3);
 
         bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, cmode, 1, offsetX, offsetY, true);
-        if (!collided) 
+        if (!collided)
             collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, cmode, 0, offsetX, offsetY, true);
 
         if (collided) {
@@ -350,8 +370,8 @@ void Sol_State_ActiveFireball(void)
             sol->velocity.x = 0x40000;
             sol->velocity.y = 0;
             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
-            sol->state    = Sol_State_FireballOilFlame;
-            sol->xOffset = sol->position.x & 0xF00000;
+            sol->state          = Sol_State_FireballOilFlame;
+            sol->oscillateAngle = sol->position.x & 0xF00000;
 
             if (tileFlags == OOZ_TFLAGS_OILPOOL) {
                 self->position.y = (self->position.y & 0xFFF00000) + 0x20000;
@@ -375,7 +395,9 @@ void Sol_State_ActiveFireball(void)
 void Sol_State_FlameDissipate(void)
 {
     RSDK_THIS(Sol);
+
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange) || self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
         destroyEntity(self);
     }
@@ -384,6 +406,7 @@ void Sol_State_FlameDissipate(void)
 void Sol_State_FireballOilFlame(void)
 {
     RSDK_THIS(Sol);
+
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         bool32 collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 1, 0, 0x80000, 16);
         if (!collided)
@@ -393,6 +416,7 @@ void Sol_State_FireballOilFlame(void)
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
             if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
+
             self->rotation = 2 * RSDK.GetTileAngle(tile, 0, 0);
         }
 
@@ -412,13 +436,17 @@ void Sol_State_FireballOilFlame(void)
         }
         else {
             self->position.y -= 0x80000;
-            if ((self->position.x & 0xF00000) != self->xOffset)
+            if ((self->position.x & 0xF00000) != self->oscillateAngle)
                 OOZSetup_StartFire((self->position.x & 0xFFF00000) + 0x70000, self->position.y & 0xFFFF0000, self->rotation >> 1);
-            self->xOffset = self->position.x & 0xF00000;
+
+            self->oscillateAngle = self->position.x & 0xF00000;
         }
+
         self->position.x += self->velocity.x;
         self->position.y += 0x80000;
+
         RSDK.ProcessAnimation(&self->mainAnimator);
+
         Sol_HandlePlayerHurt();
     }
     else {
@@ -429,22 +457,27 @@ void Sol_State_FireballOilFlame(void)
 void Sol_State_OilFlame(void)
 {
     RSDK_THIS(Sol);
+
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
         if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
 
         if (RSDK.GetTileFlags(tile, 0) == OOZ_TFLAGS_OILPOOL) {
-            if ((self->position.x & 0xF00000) != self->xOffset)
+            if ((self->position.x & 0xF00000) != self->oscillateAngle)
                 OOZSetup_StartFire((self->position.x & 0xFFF00000) + 0x70000, self->position.y & 0xFFFF0000, self->rotation >> 1);
-            self->xOffset = self->position.x & 0xF00000;
+
+            self->oscillateAngle = self->position.x & 0xF00000;
         }
         else {
             RSDK.SetSpriteAnimation(Sol->aniFrames, 2, &self->mainAnimator, true, 0);
             self->state = Sol_State_FlameDissipate;
         }
+
         self->position.x += self->velocity.x;
+
         RSDK.ProcessAnimation(&self->mainAnimator);
+
         Sol_HandlePlayerHurt();
     }
     else {
@@ -464,7 +497,14 @@ void Sol_EditorDraw(void)
     Sol_Draw();
 }
 
-void Sol_EditorLoad(void) { Sol->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE); }
+void Sol_EditorLoad(void)
+{
+    Sol->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Sol, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
 #endif
 
 void Sol_Serialize(void)

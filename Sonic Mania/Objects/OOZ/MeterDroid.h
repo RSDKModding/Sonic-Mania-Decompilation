@@ -6,13 +6,14 @@
 // Object Class
 struct ObjectMeterDroid {
     RSDK_OBJECT
-    TABLE(int32 debrisSpeeds[21], { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
+    TABLE(int32 debrisSpeeds[21],
+          { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
     Hitbox hitboxBoss;
     Hitbox hitboxPropellor;
     Hitbox hitboxWrench;
     int32 boundsL;
     int32 boundsR;
-    int32 startX;
+    int32 boundsM;
     int32 boundsT;
     int32 boundsB;
     uint16 sfxHit;
@@ -56,7 +57,7 @@ void MeterDroid_Update(void);
 void MeterDroid_LateUpdate(void);
 void MeterDroid_StaticUpdate(void);
 void MeterDroid_Draw(void);
-void MeterDroid_Create(void* data);
+void MeterDroid_Create(void *data);
 void MeterDroid_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MeterDroid_EditorDraw(void);
@@ -69,6 +70,7 @@ void MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip(void);
 void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void);
 void MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip(void);
 void MeterDroid_Hit(void);
+void MeterDroid_Explode(void);
 void MeterDroid_GetTargetValve(void);
 void MeterDroid_PopPlatforms(void);
 
@@ -93,4 +95,4 @@ void MeterDroid_State_WatchPlatformsPopUp(void);
 void MeterDroid_State_Destroyed(void);
 void MeterDroid_State_FinishAct(void);
 
-#endif //!OBJ_METERDROID_H
+#endif //! OBJ_METERDROID_H

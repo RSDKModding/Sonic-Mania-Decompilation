@@ -12,6 +12,7 @@ ObjectGasPlatform *GasPlatform;
 void GasPlatform_Update(void)
 {
     RSDK_THIS(GasPlatform);
+
     if (self->state == Platform_State_Fixed) {
         switch (self->type) {
             case GASPLATFORM_INTERVAL:
@@ -20,19 +21,21 @@ void GasPlatform_Update(void)
                 break;
 
             case GASPLATFORM_CONTACT: {
-                int32 id = 0;
+                int32 playerID = 0;
                 foreach_active(Player, player)
                 {
-                    if ((1 << id) & self->stoodPlayers && !player->sidekick) {
+                    if ((1 << playerID) & self->stoodPlayers && !player->sidekick) {
                         if (abs(player->position.x - self->position.x) < 0x40000) {
                             player->position.x = self->position.x;
                             player->state      = Player_State_None;
                             player->velocity.x = 0;
                             player->groundVel  = 0;
+
                             GasPlatform_PopPlatform();
                         }
                     }
-                    ++id;
+
+                    ++playerID;
                 }
                 break;
             }
@@ -59,6 +62,7 @@ void GasPlatform_Draw(void)
 void GasPlatform_Create(void *data)
 {
     RSDK_THIS(GasPlatform);
+
     if (!self->interval)
         self->interval = 1;
 
@@ -66,6 +70,7 @@ void GasPlatform_Create(void *data)
     self->collision = PLATFORM_C_SOLID_TOP;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->gasAnimator, true, 0);
+
     self->stateCollide = Platform_Collision_AllSolid;
     self->state        = Platform_State_Fixed;
 }
@@ -77,11 +82,11 @@ void GasPlatform_StageLoad(void)
     GasPlatform->hitboxGas.right  = 16;
     GasPlatform->hitboxGas.bottom = 0;
 
-    GasPlatform->range.x       = 0x800000;
-    GasPlatform->range.y       = 0x180000;
+    GasPlatform->range.x = 0x800000;
+    GasPlatform->range.y = 0x180000;
 
-    GasPlatform->sfxGasPop     = RSDK.GetSfx("OOZ/GasPop.wav");
-    GasPlatform->sfxSpring     = RSDK.GetSfx("Global/Spring.wav");
+    GasPlatform->sfxGasPop = RSDK.GetSfx("OOZ/GasPop.wav");
+    GasPlatform->sfxSpring = RSDK.GetSfx("Global/Spring.wav");
 }
 
 void GasPlatform_PopPlatform(void)
@@ -90,6 +95,7 @@ void GasPlatform_PopPlatform(void)
 
     if (RSDK.CheckOnScreen(self, &GasPlatform->range))
         RSDK.PlaySfx(GasPlatform->sfxGasPop, false, 255);
+
     self->active     = ACTIVE_NORMAL;
     self->velocity.y = -0x96800;
     self->state      = GasPlatform_State_Popped;
@@ -100,6 +106,7 @@ void GasPlatform_State_Popped(void)
     RSDK_THIS(GasPlatform);
 
     self->drawPos.y += self->velocity.y;
+
     if (self->drawPos.y >= self->centerPos.y) {
         self->drawPos.y = self->centerPos.y;
         if (self->velocity.y <= 0x10000) {
@@ -107,23 +114,23 @@ void GasPlatform_State_Popped(void)
             self->state  = Platform_State_Fixed;
             return;
         }
+
         self->velocity.y = -(self->velocity.y >> 2);
     }
     else {
         self->velocity.y += 0x3800;
     }
 
-    int32 dist = self->centerPos.y - self->drawPos.y;
-    if (dist > 0x180000) {
+    if (self->centerPos.y - self->drawPos.y > 0x180000) {
         RSDK.ProcessAnimation(&self->gasAnimator);
-        int32 storeX         = self->position.x;
-        int32 storeY         = self->position.y;
+        int32 storeX     = self->position.x;
+        int32 storeY     = self->position.y;
         self->position.x = self->centerPos.x;
         self->position.y = self->centerPos.y;
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &GasPlatform->hitboxGas)) 
+            if (Player_CheckCollisionTouch(player, self, &GasPlatform->hitboxGas))
                 Player_CheckElementalHit(player, self, SHIELD_FIRE);
         }
 
@@ -136,6 +143,7 @@ void GasPlatform_State_Popped(void)
         foreach_active(Player, player)
         {
             int32 launchY = self->centerPos.y - 0x780000;
+
             if (self->position.y <= launchY) {
                 self->position.y = launchY;
                 if ((1 << playerID) & self->stoodPlayers) {
@@ -145,7 +153,7 @@ void GasPlatform_State_Popped(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                     RSDK.PlaySfx(GasPlatform->sfxSpring, false, 255);
                     self->timer = 240;
-                    self->state         = GasPlatform_State_SpringCooldown;
+                    self->state = GasPlatform_State_SpringCooldown;
                 }
             }
             else if ((1 << playerID) & self->stoodPlayers) {
@@ -156,6 +164,7 @@ void GasPlatform_State_Popped(void)
                     player->groundVel  = 0;
                 }
             }
+
             ++playerID;
         }
     }
@@ -164,20 +173,23 @@ void GasPlatform_State_Popped(void)
 void GasPlatform_State_SpringCooldown(void)
 {
     RSDK_THIS(GasPlatform);
+
     RSDK.ProcessAnimation(&self->gasAnimator);
-    int32 storeX         = self->position.x;
-    int32 storeY         = self->position.y;
+
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
+
     self->position.x = self->centerPos.x;
     self->position.y = self->centerPos.y;
-
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &GasPlatform->hitboxGas)) 
+        if (Player_CheckCollisionTouch(player, self, &GasPlatform->hitboxGas))
             Player_CheckElementalHit(player, self, SHIELD_FIRE);
     }
 
     self->position.x = storeX;
     self->position.y = storeY;
+
     if (!--self->timer) {
         self->velocity.y = 0;
         self->state      = GasPlatform_State_Popped;
@@ -187,8 +199,10 @@ void GasPlatform_State_SpringCooldown(void)
 void GasPlatform_State_Shaking(void)
 {
     RSDK_THIS(GasPlatform);
+
     self->drawPos.x = (RSDK.Rand(-1, 1) << 16) + self->centerPos.x;
     self->drawPos.y = (RSDK.Rand(-2, 2) << 16) + self->centerPos.y;
+
     if (self->timer <= 0) {
         RSDK.PlaySfx(GasPlatform->sfxGasPop, false, 255);
         self->active     = ACTIVE_NORMAL;
@@ -204,6 +218,7 @@ void GasPlatform_State_Shaking(void)
 void GasPlatform_EditorDraw(void)
 {
     RSDK_THIS(GasPlatform);
+
     self->drawPos = self->position;
 
     GasPlatform_Draw();
@@ -213,7 +228,7 @@ void GasPlatform_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(GasPlatform, type);
     RSDK_ENUM_VAR("Pop On Interval", GASPLATFORM_INTERVAL);
-    RSDK_ENUM_VAR("Pop On Contact", GASPLATFORM_CONTACT);
+    RSDK_ENUM_VAR("Pop On Contact", GASPLATFORM_CONTACT); // never used in mania afaik, it's used in S2 though
 }
 #endif
 

@@ -26,7 +26,7 @@ void Valve_Update(void);
 void Valve_LateUpdate(void);
 void Valve_StaticUpdate(void);
 void Valve_Draw(void);
-void Valve_Create(void* data);
+void Valve_Create(void *data);
 void Valve_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Valve_EditorDraw(void);
@@ -36,5 +36,4 @@ void Valve_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_VALVE_H
+#endif //! OBJ_VALVE_H

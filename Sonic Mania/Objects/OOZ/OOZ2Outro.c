@@ -14,7 +14,7 @@ void OOZ2Outro_Update(void)
 {
     RSDK_THIS(OOZ2Outro);
 
-    EntityMegaOctus *boss = MegaOctus->bossPtr;
+    EntityMegaOctus *boss = MegaOctus->bossEntity;
     if (globals->gameMode < MODE_TIMEATTACK && boss && !boss->classID) {
         self->scrollOffset.x = self->moveOffset.x & 0xFFFF0000;
         self->scrollOffset.y = self->moveOffset.y & 0xFFFF0000;
@@ -28,6 +28,7 @@ void OOZ2Outro_Update(void)
                 layer->scrollPos               = -self->scrollOffset.y;
                 layer->scrollInfo[0].scrollPos = -self->scrollOffset.x;
             }
+
             player->collisionLayers |= Zone->moveMask;
             player->moveLayerPosition.x = -(int32)(self->moveOffset.x & 0xFFFF0000);
             player->moveLayerPosition.y = -(int32)(self->moveOffset.y & 0xFFFF0000);
@@ -49,14 +50,17 @@ void OOZ2Outro_Draw(void) {}
 void OOZ2Outro_Create(void *data)
 {
     RSDK_THIS(OOZ2Outro);
+
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->active  = ACTIVE_BOUNDS;
             self->visible = false;
+
             if (!self->size.x)
                 self->size.x = WIDE_SCR_XSIZE << 16;
             if (!self->size.y)
                 self->size.y = SCREEN_YSIZE << 16;
+
             self->moveLayer   = RSDK.GetTileLayer(Zone->moveLayer);
             self->updateRange = self->size;
             foreach_all(EggPrison, prison)
@@ -85,13 +89,14 @@ void OOZ2Outro_StageFinishCB_Act2(void)
     foreach_active(Player, player)
     {
         player->state      = Player_State_Air;
-        player->stateInput = 0;
-        player->left       = false;
-        player->right      = true;
-        player->up         = false;
-        player->down       = false;
-        player->jumpPress  = false;
-        player->jumpHold   = false;
+        player->stateInput = StateMachine_None;
+
+        player->left      = false;
+        player->right     = true;
+        player->up        = false;
+        player->down      = false;
+        player->jumpPress = false;
+        player->jumpHold  = false;
     }
 
     foreach_active(OOZ2Outro, outro) { outro->state = OOZ2Outro_State_BoardSub; }
@@ -102,6 +107,7 @@ void OOZ2Outro_StageFinishCB_Act2(void)
 void OOZ2Outro_State_SubFloat(void)
 {
     RSDK_THIS(OOZ2Outro);
+
     self->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
 }
 
@@ -111,8 +117,10 @@ void OOZ2Outro_CheckSkip(void)
         globals->suppressTitlecard = false;
         globals->suppressAutoMusic = false;
         globals->enableIntro       = false;
+
         RSDK.SetEngineState(ENGINESTATE_FROZEN);
-        Zone_StartFadeOut(20, 0);
+
+        Zone_StartFadeOut(20, 0x000000);
         Music_FadeOut(0.03);
     }
 }
@@ -120,13 +128,16 @@ void OOZ2Outro_CheckSkip(void)
 void OOZ2Outro_State_BoardSub(void)
 {
     RSDK_THIS(OOZ2Outro);
+
     OOZ2Outro_CheckSkip();
+
     self->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
 
     bool32 keepMoving = false;
     foreach_active(Player, player)
     {
         player->jumpPress = false;
+
         if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
@@ -160,15 +171,18 @@ void OOZ2Outro_State_BoardSub(void)
     if (self->timer > 60) {
         self->timer = 0;
         self->state = OOZ2Outro_State_SubActivate;
+
         foreach_active(Player, player)
         {
             player->groundVel  = 0;
             player->velocity.x = 0;
             player->right      = false;
             player->state      = Player_State_None;
+
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
             Zone->playerBoundActiveR[player->playerID] = 0;
-            EntityCamera *camera                       = player->camera;
+
+            EntityCamera *camera = player->camera;
             if (camera)
                 camera->state = StateMachine_None;
         }
@@ -178,7 +192,9 @@ void OOZ2Outro_State_BoardSub(void)
 void OOZ2Outro_State_SubActivate(void)
 {
     RSDK_THIS(OOZ2Outro);
+
     OOZ2Outro_CheckSkip();
+
     self->moveOffset.y -= 0x6000;
 
     if (!(Zone->timer & 0xF)) {
@@ -203,9 +219,12 @@ void OOZ2Outro_State_SubLaunch(void)
 
     if (self->velocity.y < -0x8000)
         self->velocity.y += 0x3800;
+
     self->velocity.x += 0x1800;
+
     self->moveOffset.x += self->velocity.x;
     self->moveOffset.y += self->velocity.y;
+
     foreach_active(Player, player) { player->position.x += self->velocity.x; }
 
     if (++self->timer > 140) {
@@ -216,22 +235,16 @@ void OOZ2Outro_State_SubLaunch(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void OOZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(OOZ2Outro);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void OOZ2Outro_EditorLoad(void) {}
+#endif
 
 void OOZ2Outro_Serialize(void) { RSDK_EDITABLE_VAR(OOZ2Outro, VAR_VECTOR2, size); }
 #endif

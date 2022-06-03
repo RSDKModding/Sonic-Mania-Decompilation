@@ -12,7 +12,9 @@ ObjectOOZFlames *OOZFlames;
 void OOZFlames_Update(void)
 {
     RSDK_THIS(OOZFlames);
+
     RSDK.ProcessAnimation(&self->animator);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,9 +25,10 @@ void OOZFlames_StaticUpdate(void) {}
 void OOZFlames_Draw(void)
 {
     RSDK_THIS(OOZFlames);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = (ScreenInfo[SceneInfo->currentScreenID].centerX - 240) << 16;
+
     for (int32 angle = 0; angle < 0x100; angle += 0x10) {
         drawPos.y = (RSDK.Sin256(4 * (angle + Zone->timer)) << 11) + self->flamePos;
         RSDK.DrawSprite(&self->animator, &drawPos, true);
@@ -59,7 +62,7 @@ void OOZFlames_State_Appear(void)
 {
     RSDK_THIS(OOZFlames);
 
-    if (self->flamePos > 0xE00000) 
+    if (self->flamePos > 0xE00000)
         self->flamePos -= 0x20000;
 
     if (++self->timer == 120) {
@@ -72,7 +75,7 @@ void OOZFlames_State_Rise(void)
 {
     RSDK_THIS(OOZFlames);
 
-    if (self->scale.y < 0x1000) 
+    if (self->scale.y < 0x1000)
         self->scale.y += 0x10;
 }
 

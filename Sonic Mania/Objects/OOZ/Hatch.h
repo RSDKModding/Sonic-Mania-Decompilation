@@ -9,7 +9,7 @@ typedef enum {
     HATCH_GO_SUBENTRYHATCH_SMOGONLY,
     HATCH_GO_SUBEXIT,
     HATCH_GO_SUBEXITHATCH_NOCOPY,
-}HatchGoTypes;
+} HatchGoTypes;
 
 // Object Class
 struct ObjectHatch {
@@ -59,7 +59,7 @@ void Hatch_Update(void);
 void Hatch_LateUpdate(void);
 void Hatch_StaticUpdate(void);
 void Hatch_Draw(void);
-void Hatch_Create(void* data);
+void Hatch_Create(void *data);
 void Hatch_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Hatch_EditorDraw(void);
@@ -80,4 +80,4 @@ void Hatch_State_SubExit(void);
 void Hatch_State_FadeOut(void);
 void Hatch_State_SubExitHatch(void);
 
-#endif //!OBJ_HATCH_H
+#endif //! OBJ_HATCH_H

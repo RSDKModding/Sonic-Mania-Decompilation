@@ -37,7 +37,7 @@ void PullSwitch_Update(void);
 void PullSwitch_LateUpdate(void);
 void PullSwitch_StaticUpdate(void);
 void PullSwitch_Draw(void);
-void PullSwitch_Create(void* data);
+void PullSwitch_Create(void *data);
 void PullSwitch_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PullSwitch_EditorDraw(void);
@@ -47,5 +47,4 @@ void PullSwitch_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_PULLSWITCH_H
+#endif //! OBJ_PULLSWITCH_H

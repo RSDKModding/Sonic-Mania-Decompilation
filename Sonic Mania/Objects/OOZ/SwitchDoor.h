@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SWITCHDOOR_GO_INSIDE1,
+    SWITCHDOOR_GO_INSIDE2,
+    SWITCHDOOR_GO_INSIDE2_ALT,
+} SwitchDoorGoModes;
+
 // Object Class
 struct ObjectSwitchDoor {
     RSDK_OBJECT
@@ -27,7 +33,7 @@ void SwitchDoor_Update(void);
 void SwitchDoor_LateUpdate(void);
 void SwitchDoor_StaticUpdate(void);
 void SwitchDoor_Draw(void);
-void SwitchDoor_Create(void* data);
+void SwitchDoor_Create(void *data);
 void SwitchDoor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SwitchDoor_EditorDraw(void);
@@ -38,5 +44,4 @@ void SwitchDoor_Serialize(void);
 // Extra Entity Functions
 void SwitchDoor_DrawSprites(void);
 
-
-#endif //!OBJ_SWITCHDOOR_H
+#endif //! OBJ_SWITCHDOOR_H

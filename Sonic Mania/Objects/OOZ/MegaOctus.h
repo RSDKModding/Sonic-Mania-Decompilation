@@ -19,7 +19,7 @@ typedef enum {
 // Object Class
 struct ObjectMegaOctus {
     RSDK_OBJECT
-    EntityMegaOctus *bossPtr;
+    EntityMegaOctus *bossEntity;
     Animator noseAnimator;
     Animator boltsAnimator;
     Animator eggmanAnimator;
@@ -89,6 +89,7 @@ void MegaOctus_Serialize(void);
 // Extra Entity Functions
 void MegaOctus_CheckPlayerCollisions_Body(void);
 void MegaOctus_HandleEggmanAnim(void);
+void MegaOctus_Hit(void);
 void MegaOctus_Explode(void);
 void MegaOctus_HandleDirectionChange(void);
 

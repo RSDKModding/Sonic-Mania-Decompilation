@@ -18,6 +18,7 @@ void OOZ1Outro_Update(void)
         CutsceneSeq_StartSequence(self, OOZ1Outro_Cutscene_FadeIn, OOZ1Outro_Cutscene_PostActClearSetup, OOZ1Outro_Cutscene_FallIntoAct2,
                                   OOZ1Outro_Cutscene_BeginAct, StateMachine_None);
     }
+
     self->active = ACTIVE_NEVER;
 }
 
@@ -30,6 +31,7 @@ void OOZ1Outro_Draw(void) {}
 void OOZ1Outro_Create(void *data)
 {
     RSDK_THIS(OOZ1Outro);
+
     if (!SceneInfo->inEditor) {
         self->active  = ACTIVE_NORMAL;
         self->visible = false;
@@ -99,10 +101,12 @@ bool32 OOZ1Outro_Cutscene_FadeIn(EntityCutsceneSeq *host)
 bool32 OOZ1Outro_Cutscene_PostActClearSetup(EntityCutsceneSeq *host)
 {
     RSDK_THIS(OOZ1Outro);
+
     if (host->fadeWhite > 0)
         host->fadeWhite -= 4;
 
     CutsceneSeq_LockAllPlayerControl();
+
     if (ActClear->finished) {
         foreach_active(Player, player)
         {
@@ -114,16 +118,19 @@ bool32 OOZ1Outro_Cutscene_PostActClearSetup(EntityCutsceneSeq *host)
             player->stateInput     = StateMachine_None;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
         }
+
         Zone->cameraBoundsL[0] = self->boundsL;
         Zone->cameraBoundsR[0] = self->boundsR;
         Zone->cameraBoundsT[0] = self->boundsT;
         Zone->cameraBoundsB[0] = self->boundsB;
+
 #if MANIA_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
         return true;
     }
+
     return false;
 }
 
@@ -131,17 +138,22 @@ bool32 OOZ1Outro_Cutscene_FallIntoAct2(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+
     if (host->timer == 48) {
         player1->interaction = true;
         if (player2->classID == Player->classID)
             player2->interaction = true;
     }
+
     if (Smog->forceEnabled && player1->animator.animationID)
         return false;
+
     player1->direction  = FLIP_NONE;
     player1->stateInput = Player_Input_P1;
+
     if (player2->classID == Player->classID)
         player2->stateInput = Player_Input_P2_AI;
+
     return true;
 }
 
@@ -149,6 +161,7 @@ bool32 OOZ1Outro_Cutscene_BeginAct(EntityCutsceneSeq *host)
 {
     if (host->timer == 120) {
         globals->suppressTitlecard = true;
+
         foreach_all(TitleCard, titlecard)
         {
             titlecard->active    = ACTIVE_NORMAL;
@@ -160,24 +173,19 @@ bool32 OOZ1Outro_Cutscene_BeginAct(EntityCutsceneSeq *host)
         Music_PlayTrack(TRACK_STAGE);
         return true;
     }
+
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void OOZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(OOZ1Outro);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void OOZ1Outro_EditorLoad(void) {}
+#endif
 
 void OOZ1Outro_Serialize(void) { RSDK_EDITABLE_VAR(OOZ1Outro, VAR_VECTOR2, size); }

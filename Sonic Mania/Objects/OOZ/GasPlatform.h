@@ -7,7 +7,7 @@ typedef enum {
     GASPLATFORM_INTERVAL,
     GASPLATFORM_CONTACT,
     GASPLATFORM_BOSS,
-}GasPlatformTypes;
+} GasPlatformTypes;
 
 // Object Class
 struct ObjectGasPlatform {
@@ -34,7 +34,7 @@ void GasPlatform_Update(void);
 void GasPlatform_LateUpdate(void);
 void GasPlatform_StaticUpdate(void);
 void GasPlatform_Draw(void);
-void GasPlatform_Create(void* data);
+void GasPlatform_Create(void *data);
 void GasPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GasPlatform_EditorDraw(void);
@@ -48,5 +48,4 @@ void GasPlatform_State_Popped(void);
 void GasPlatform_State_SpringCooldown(void);
 void GasPlatform_State_Shaking(void);
 
-
-#endif //!OBJ_GASPLATFORM_H
+#endif //! OBJ_GASPLATFORM_H

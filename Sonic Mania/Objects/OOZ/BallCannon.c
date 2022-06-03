@@ -12,6 +12,7 @@ ObjectBallCannon *BallCannon;
 void BallCannon_Update(void)
 {
     RSDK_THIS(BallCannon);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,12 +23,14 @@ void BallCannon_StaticUpdate(void) {}
 void BallCannon_Draw(void)
 {
     RSDK_THIS(BallCannon);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void BallCannon_Create(void *data)
 {
     RSDK_THIS(BallCannon);
+
     self->drawOrder = Zone->playerDrawLow;
     self->visible   = true;
 
@@ -37,6 +40,7 @@ void BallCannon_Create(void *data)
             self->drawFX        = FX_ROTATE;
             self->active        = ACTIVE_NORMAL;
             self->rotationSpeed = RSDK.Rand(-8, 8);
+
             RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &self->animator, true, voidToInt(data));
             self->state = BallCannon_State_CorkDebris;
         }
@@ -52,6 +56,7 @@ void BallCannon_Create(void *data)
                         self->direction = FLIP_X;
 
                     self->rotation = (self->angle + self->direction + 1) << 7;
+
                     switch (self->angle) {
                         case BALLCANNON_DIR_RIGHT_CW: // Right -> Down
                         case BALLCANNON_DIR_LEFT_CCW: // Left -> Down
@@ -138,8 +143,9 @@ void BallCannon_CheckPlayerEntry(void)
                     }
                     else {
                         if (Player_CheckCollisionTouch(player, self, &BallCannon->hitboxCannon)) {
-                            RSDK.PlaySfx(Player->sfxRoll, false, 255);
+                            RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+
                             player->position.x     = self->position.x;
                             player->position.y     = self->position.y;
                             player->velocity.x     = 0;
@@ -172,7 +178,9 @@ void BallCannon_State_Idle(void) { BallCannon_CheckPlayerEntry(); }
 void BallCannon_State_Inserted(void)
 {
     RSDK_THIS(BallCannon);
+
     BallCannon_CheckPlayerEntry();
+
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
@@ -185,7 +193,9 @@ void BallCannon_State_Inserted(void)
 void BallCannon_State_Turning(void)
 {
     RSDK_THIS(BallCannon);
+
     BallCannon_CheckPlayerEntry();
+
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
@@ -199,7 +209,9 @@ void BallCannon_State_Turning(void)
 void BallCannon_State_EjectPlayer(void)
 {
     RSDK_THIS(BallCannon);
+
     BallCannon_CheckPlayerEntry();
+
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
@@ -210,8 +222,10 @@ void BallCannon_State_EjectPlayer(void)
 
                 if (((1 << playerID) & self->activePlayers)) {
                     RSDK.PlaySfx(BallCannon->sfxFire, false, 0xFF);
+
                     player->velocity = self->velocity;
                     player->visible  = true;
+
                     if (self->exit) {
                         player->onGround       = false;
                         player->applyJumpCap   = false;
@@ -219,11 +233,13 @@ void BallCannon_State_EjectPlayer(void)
                         player->tileCollisions = true;
                         player->interaction    = true;
                     }
+
                     self->activePlayers &= ~(1 << playerID);
                     self->playerTimers[playerID] = 15;
                 }
             }
         }
+
         self->state = BallCannon_State_Idle;
     }
 }
@@ -235,6 +251,7 @@ void BallCannon_State_CorkBlocked(void)
     foreach_active(Player, player)
     {
         Animator animator;
+
         memcpy(&animator, &player->animator, sizeof(Animator));
         int32 storeX    = player->position.x;
         int32 storeY    = player->position.y;
@@ -257,6 +274,7 @@ void BallCannon_State_CorkBlocked(void)
                     }
 
                     RSDK.PlaySfx(BallCannon->sfxLedgeBreak, false, 0xFF);
+
                     memcpy(&player->animator, &animator, sizeof(Animator));
                     player->velocity.x = storeVelX;
                     player->velocity.y = storeVelY;
@@ -266,6 +284,7 @@ void BallCannon_State_CorkBlocked(void)
                     self->active       = ACTIVE_NORMAL;
                     self->visible      = false;
                     self->state        = BallCannon_State_CorkOpened;
+
                     foreach_break;
                 }
             }
@@ -289,6 +308,7 @@ void BallCannon_State_CorkOpened(void)
                 if (Player_CheckCollisionTouch(player, self, &BallCannon->hitboxCorkEntry)) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     RSDK.PlaySfx(BallCannon->sfxFire, false, 0xFF);
+
                     player->state                = Player_State_None;
                     player->nextGroundState      = StateMachine_None;
                     player->nextAirState         = StateMachine_None;
@@ -312,9 +332,11 @@ void BallCannon_State_CorkOpened(void)
 void BallCannon_State_CorkDebris(void)
 {
     RSDK_THIS(BallCannon);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     self->rotation += self->rotationSpeed;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
@@ -340,6 +362,7 @@ void BallCannon_EditorDraw(void)
         case BALLCANNON_CANNON:
             if (self->angle >= 4)
                 self->direction = FLIP_X;
+
             self->rotation = (self->angle + self->direction + 1) << 7;
 
             switch (self->angle) {

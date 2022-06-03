@@ -13,13 +13,13 @@ struct ObjectOOZSetup {
     RSDK_OBJECT
     int32 palTimer;
     uint16 aniTiles;
-    TileLayer* bgPtr;
+    TileLayer* background1;
     TABLE(int32 deformData[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
                                 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
-    int32 aniTilesTimer;
-    int32 aniTilesFrame;
-    STATIC(int32 aniTilesDelay, 60);
-    TABLE(int32 aniTileDelays[9], { 60, 60, 3, 3, 3, 3, 3, 3, 4 });
+    int32 oilAniTimer;
+    int32 glowLightAniFrame;
+    STATIC(int32 glowLightAniTimer, 60);
+    TABLE(int32 glowLightAniDurations[9], { 60, 60, 3, 3, 3, 3, 3, 3, 4 });
     int32 swimmingPlayerCount;
     int32 smogTimer;
     int32 useSmogEffect;

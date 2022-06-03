@@ -35,7 +35,7 @@ void PushSpring_Update(void);
 void PushSpring_LateUpdate(void);
 void PushSpring_StaticUpdate(void);
 void PushSpring_Draw(void);
-void PushSpring_Create(void* data);
+void PushSpring_Create(void *data);
 void PushSpring_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PushSpring_EditorDraw(void);
@@ -58,5 +58,4 @@ void PushSpring_State_WaitForPushed(void);
 void PushSpring_State_BeingPushed(void);
 void PushSpring_State_PushRecoil(void);
 
-
-#endif //!OBJ_PUSHSPRING_H
+#endif //! OBJ_PUSHSPRING_H

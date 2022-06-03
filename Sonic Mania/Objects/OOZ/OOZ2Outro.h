@@ -34,10 +34,12 @@ void OOZ2Outro_Update(void);
 void OOZ2Outro_LateUpdate(void);
 void OOZ2Outro_StaticUpdate(void);
 void OOZ2Outro_Draw(void);
-void OOZ2Outro_Create(void* data);
+void OOZ2Outro_Create(void *data);
 void OOZ2Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void OOZ2Outro_EditorDraw(void);
 void OOZ2Outro_EditorLoad(void);
+#endif
 void OOZ2Outro_Serialize(void);
 
 // Extra Entity Functions
@@ -50,4 +52,4 @@ void OOZ2Outro_State_SubLaunch(void);
 
 #endif
 
-#endif //!OBJ_OOZ2OUTRO_H
+#endif //! OBJ_OOZ2OUTRO_H

@@ -44,6 +44,7 @@ void PullSwitch_Update(void)
             player->position.x = self->position.x;
             player->position.y = self->position.y - (playerHitbox->top << 16) + 0x1A0000;
             self->activated    = true;
+
             if (player->state == Player_State_None) {
                 if (player->jumpPress) {
                     self->activePlayers &= ~(1 << playerID);
@@ -69,6 +70,7 @@ void PullSwitch_Update(void)
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, false, 0);
+
                 player->velocity.x  = 0;
                 player->velocity.y  = 0;
                 player->groundVel   = 0;
@@ -88,9 +90,11 @@ void PullSwitch_StaticUpdate(void) {}
 void PullSwitch_Draw(void)
 {
     RSDK_THIS(PullSwitch);
+
     SpriteFrame *frame = RSDK.GetFrame(PullSwitch->aniFrames, 0, 1);
-    frame->height      = (self->position.y - self->handlePos.y) >> 16;
-    frame->sprY        = self->sprY + self->sprHeight - frame->height;
+
+    frame->height = (self->position.y - self->handlePos.y) >> 16;
+    frame->sprY   = self->sprY + self->sprHeight - frame->height;
     RSDK.DrawSprite(&self->chainAnimator, &self->handlePos, false);
     RSDK.DrawSprite(&self->handleAnimator, NULL, false);
     RSDK.DrawSprite(&self->dispenserAnimator, &self->handlePos, false);
@@ -99,6 +103,7 @@ void PullSwitch_Draw(void)
 void PullSwitch_Create(void *data)
 {
     RSDK_THIS(PullSwitch);
+
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
@@ -108,9 +113,11 @@ void PullSwitch_Create(void *data)
         self->handlePos     = self->position;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &self->handleAnimator, true, 2);
         RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &self->dispenserAnimator, true, 0);
         RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &self->chainAnimator, true, 1);
+
         SpriteFrame *frame = RSDK.GetFrame(PullSwitch->aniFrames, 0, 1);
         self->sprY         = frame->sprY;
         self->sprHeight    = frame->height;
@@ -135,7 +142,9 @@ void PullSwitch_StageLoad(void)
 void PullSwitch_EditorDraw(void)
 {
     RSDK_THIS(PullSwitch);
+
     self->handlePos = self->position;
+
     RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &self->handleAnimator, false, 2);
     RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &self->dispenserAnimator, false, 0);
     RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &self->chainAnimator, false, 1);

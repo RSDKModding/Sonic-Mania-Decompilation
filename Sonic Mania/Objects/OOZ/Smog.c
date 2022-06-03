@@ -12,9 +12,10 @@ ObjectSmog *Smog;
 void Smog_Update(void)
 {
     RSDK_THIS(Smog);
+
     if (Smog->forceEnabled) {
         OOZSetup->smogTimer = 0;
-        self->alpha         = 128;
+        self->alpha         = 0x80;
         RSDK.SetLimitedFade(0, 1, 2, 224, 0, 255);
     }
     else {
@@ -23,10 +24,12 @@ void Smog_Update(void)
                 RSDK.SetLimitedFade(0, 1, 2, 0, 0, 255);
                 self->alpha -= 8;
             }
+
             self->timer = 0;
         }
         else {
             RSDK.SetLimitedFade(0, 1, 2, (OOZSetup->smogTimer - 600) >> 2, 0, 255);
+
             if (self->alpha < 0x80)
                 self->alpha++;
         }
@@ -34,6 +37,7 @@ void Smog_Update(void)
 
     if (OOZSetup->smogTimer > 1800) {
         ++self->timer;
+
         foreach_active(Player, player)
         {
             if (player->superState != SUPERSTATE_SUPER) {
@@ -47,6 +51,7 @@ void Smog_Update(void)
                     Player_GiveRings(player, -1, true);
             }
         }
+
         if (self->timer == 60)
             self->timer = 0;
     }
@@ -57,6 +62,7 @@ void Smog_LateUpdate(void) {}
 void Smog_StaticUpdate(void)
 {
     globals->tempFlags = OOZSetup->useSmogEffect;
+
     if (Smog->starPostID != StarPost->postIDs[0]) {
         Smog->starPostID      = StarPost->postIDs[0];
         globals->restartFlags = OOZSetup->useSmogEffect;
@@ -66,14 +72,15 @@ void Smog_StaticUpdate(void)
 void Smog_Draw(void)
 {
     RSDK_THIS(Smog);
+
     ScanlineInfo *scanlinePtr = Smog->scanlines;
 
-    int32 y       = (Zone->timer + 2 * ScreenInfo->position.y) << 14;
+    int32 y      = (Zone->timer + 2 * ScreenInfo->position.y) << 14;
     uint8 defPos = ((ScreenInfo->position.y >> 1) + 2 * Zone->timer);
 
     ScanlineInfo *scanline = NULL;
     for (int32 i = 0; i < ScreenInfo->height; ++i) {
-        scanline  = (ScanlineInfo *)&Smog->scanlineData[defPos++ * sizeof(ScanlineInfo)];
+        scanline                = (ScanlineInfo *)&Smog->scanlineData[defPos++ * sizeof(ScanlineInfo)];
         scanlinePtr->position.x = scanline->position.x + (ScreenInfo->position.x << 16);
         scanlinePtr->position.y = y;
         scanlinePtr->deform.x   = scanline->deform.x;
@@ -99,6 +106,7 @@ void Smog_Create(void *data)
         self->visible   = true;
         self->inkEffect = INK_ALPHA;
         self->drawOrder = Zone->hudDrawOrder - 1;
+
         OOZSetup->smogTimer = 0;
 
         if (!(SceneInfo->milliseconds || SceneInfo->seconds || SceneInfo->minutes)
@@ -119,7 +127,6 @@ void Smog_Create(void *data)
                 Zone_StartFadeOut_MusicFade(10, 0x000000);
             }
         }
-
     }
 }
 
@@ -129,7 +136,7 @@ void Smog_StageLoad(void)
     Smog->scanlines = RSDK.GetScanlines();
 
     ScanlineInfo *scanline = (ScanlineInfo *)Smog->scanlineData;
-    int32 angle              = 0;
+    int32 angle            = 0;
     for (int32 i = 0; i < 0x100; ++i) {
         scanline[i].deform.x   = (RSDK.Sin256(angle >> 1) << 6) + 0x10000;
         scanline[i].deform.y   = (RSDK.Sin256(angle >> 1) << 5) + 0x10000;

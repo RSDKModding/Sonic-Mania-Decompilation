@@ -12,6 +12,7 @@ ObjectAquis *Aquis;
 void Aquis_Update(void)
 {
     RSDK_THIS(Aquis);
+
     StateMachine_Run(self->state);
 }
 
@@ -35,6 +36,7 @@ void Aquis_Draw(void)
 void Aquis_Create(void *data)
 {
     RSDK_THIS(Aquis);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
@@ -117,9 +119,8 @@ void Aquis_CheckOffScreen(void)
     RSDK_THIS(Aquis);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Aquis_Create(NULL);
     }
 }
@@ -127,9 +128,11 @@ void Aquis_CheckOffScreen(void)
 void Aquis_State_Setup(void)
 {
     RSDK_THIS(Aquis);
+
     self->active = ACTIVE_NORMAL;
     self->timer  = 32;
-    self->state  = Aquis_State_Idle;
+
+    self->state = Aquis_State_Idle;
     Aquis_State_Idle();
 }
 
@@ -146,6 +149,7 @@ void Aquis_State_Idle(void)
         }
         else {
             self->velocity.y = 0;
+
             if (self->direction == FLIP_X) {
                 self->velocity.x = 0;
                 self->state      = Aquis_State_Turning;
@@ -160,6 +164,7 @@ void Aquis_State_Idle(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->wingAnimator);
+
     Aquis_CheckPlayerCollisions();
     Aquis_CheckOffScreen();
 }
@@ -170,19 +175,24 @@ void Aquis_State_Moving(void)
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     EntityPlayer *playerPtr = Player_GetNearestPlayer();
     if (playerPtr) {
         bool32 changeDir = false;
         if (playerPtr->position.x >= self->position.x) {
-            self->velocity.x += 4096;
+            self->velocity.x += 0x1000;
+
             if (self->velocity.x > 0x10000)
                 self->velocity.x = 0x10000;
+
             changeDir = self->direction == FLIP_NONE;
         }
         else {
-            self->velocity.x -= 4096;
+            self->velocity.x -= 0x1000;
+
             if (self->velocity.x < -0x10000)
                 self->velocity.x = -0x10000;
+
             changeDir = self->direction == FLIP_X;
         }
 
@@ -190,13 +200,16 @@ void Aquis_State_Moving(void)
             self->state = Aquis_State_Turning;
             RSDK.SetSpriteAnimation(Aquis->aniFrames, 4, &self->mainAnimator, true, 0);
         }
+
         if (playerPtr->position.y >= self->position.y) {
             self->velocity.y += 0x1000;
+
             if (self->velocity.y > 0x10000)
                 self->velocity.y = 0x10000;
         }
         else {
             self->velocity.y -= 0x1000;
+
             if (self->velocity.y < -0x10000)
                 self->velocity.y = -0x10000;
         }
@@ -221,6 +234,7 @@ void Aquis_State_Moving(void)
                     self->timer         = 64;
                     RSDK.SetSpriteAnimation(Aquis->aniFrames, 1, &self->mainAnimator, true, 0);
                     self->state = Aquis_State_Shoot;
+
                     if (player->position.x >= self->position.x) {
                         if (player->velocity.x <= (self->position.x - player->position.x) >> 5) {
                             RSDK.SetSpriteAnimation(Aquis->aniFrames, 4, &self->mainAnimator, true, 0);
@@ -235,8 +249,10 @@ void Aquis_State_Moving(void)
             }
         }
     }
+
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->wingAnimator);
+
     Aquis_CheckPlayerCollisions();
     Aquis_CheckOffScreen();
 }
@@ -248,6 +264,7 @@ void Aquis_State_Shoot(void)
     if (--self->timer) {
         if (self->timer == 33) {
             EntityAquis *shot = CREATE_ENTITY(Aquis, intToVoid(true), self->position.x, self->position.y);
+
             if (self->direction) {
                 shot->position.x += 0x100000;
                 shot->velocity.x = 0x30000;
@@ -256,6 +273,7 @@ void Aquis_State_Shoot(void)
                 shot->position.x -= 0x100000;
                 shot->velocity.x = -0x30000;
             }
+
             shot->position.y -= 0xA0000;
             shot->velocity.y = 0x20000;
             shot->direction  = self->direction;
@@ -273,6 +291,7 @@ void Aquis_State_Shoot(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->wingAnimator);
+
     Aquis_CheckPlayerCollisions();
     Aquis_CheckOffScreen();
 }
@@ -283,19 +302,23 @@ void Aquis_State_Turning(void)
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     RSDK.ProcessAnimation(&self->mainAnimator);
 
     if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Aquis->aniFrames, 0, &self->mainAnimator, true, 0);
         self->direction ^= FLIP_X;
+
         if (self->remainingTurns < 0) {
             self->velocity.x = -0x20000;
-            self->state      = Aquis_State_Flee;
+
+            self->state = Aquis_State_Flee;
             Aquis_State_Flee();
         }
         else if (self->playerInRange) {
             self->timer = 64;
             RSDK.SetSpriteAnimation(Aquis->aniFrames, 1, &self->mainAnimator, true, 0);
+
             self->state = Aquis_State_Shoot;
             Aquis_State_Shoot();
         }
@@ -329,11 +352,13 @@ void Aquis_State_Flee(void)
 void Aquis_State_Shot(void)
 {
     RSDK_THIS(Aquis);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
     if (RSDK.CheckOnScreen(self, NULL)) {
         RSDK.ProcessAnimation(&self->mainAnimator);
+
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Aquis->hitboxProjectile))
@@ -349,6 +374,7 @@ void Aquis_State_Shot(void)
 void Aquis_EditorDraw(void)
 {
     RSDK_THIS(Aquis);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     RSDK.DrawSprite(&self->wingAnimator, NULL, false);
 }

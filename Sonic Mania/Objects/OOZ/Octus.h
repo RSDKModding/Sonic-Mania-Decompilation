@@ -33,7 +33,7 @@ void Octus_Update(void);
 void Octus_LateUpdate(void);
 void Octus_StaticUpdate(void);
 void Octus_Draw(void);
-void Octus_Create(void* data);
+void Octus_Create(void *data);
 void Octus_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Octus_EditorDraw(void);
@@ -56,4 +56,4 @@ void Octus_State_Shoot(void);
 void Octus_State_Fall(void);
 void Octus_State_Shot(void);
 
-#endif //!OBJ_OCTUS_H
+#endif //! OBJ_OCTUS_H

@@ -34,7 +34,7 @@ void Aquis_Update(void);
 void Aquis_LateUpdate(void);
 void Aquis_StaticUpdate(void);
 void Aquis_Draw(void);
-void Aquis_Create(void* data);
+void Aquis_Create(void *data);
 void Aquis_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Aquis_EditorDraw(void);
@@ -58,4 +58,4 @@ void Aquis_State_Flee(void);
 
 void Aquis_State_Shot(void);
 
-#endif //!OBJ_AQUIS_H
+#endif //! OBJ_AQUIS_H
