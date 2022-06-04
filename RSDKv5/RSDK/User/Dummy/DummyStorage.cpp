@@ -28,7 +28,14 @@ int32 DummyUserStorage::TryInitStorage()
 }
 bool32 DummyUserStorage::GetUsername(String *name)
 {
+#if !RETRO_USE_ORIGINAL_CODE
+    if (strlen(customSettings.username) > 0)
+        InitString(name, (char *)customSettings.username, false);
+    else
+        InitString(name, (char *)"IntegerGeorge802", false);
+#else
     InitString(name, (char *)"IntegerGeorge802", false);
+#endif
     return true;
 }
 void DummyUserStorage::ClearPrerollErrors()

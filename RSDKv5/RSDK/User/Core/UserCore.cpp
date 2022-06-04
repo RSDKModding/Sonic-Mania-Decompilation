@@ -307,13 +307,15 @@ void RSDK::LoadSettingsINI()
             engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
 
 #if !RETRO_USE_ORIGINAL_CODE
-        sprintf_s(gameLogicName, (int32)sizeof(gameLogicName), "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
 
         customSettings.region                    = iniparser_getint(ini, "Game:region", -1);
         customSettings.confirmButtonFlip         = iniparser_getboolean(ini, "Game:confirmButtonFlip", false);
         customSettings.xyButtonFlip              = iniparser_getboolean(ini, "Game:xyButtonFlip", false);
         customSettings.enableControllerDebugging = iniparser_getboolean(ini, "Game:enableControllerDebugging", false);
-        customSettings.disableFocusPause         = iniparser_getboolean(ini, "Game:disableFocusPause", false); 
+        customSettings.disableFocusPause         = iniparser_getboolean(ini, "Game:disableFocusPause", false);
+
+        sprintf_s(gameLogicName, (int32)sizeof(gameLogicName), "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+        sprintf_s(customSettings.username, (int32)sizeof(customSettings.username), "%s", iniparser_getstring(ini, "Game:username", ""));
 
         if (customSettings.region >= 0) {
 #if RETRO_REV02
@@ -397,7 +399,7 @@ void RSDK::LoadSettingsINI()
         while (true) {
             char buffer[0x30];
             sprintf_s(buffer, (int32)sizeof(buffer), "GamePad Map %d:name", gamePadCount + 1);
-            if (strcmp(iniparser_getstring(ini, buffer, "optionNotFound"), "optionNotFound") != 0) {
+            if (strcmp(iniparser_getstring(ini, buffer, ";unknown;"), ";unknown;") != 0) {
                 gamePadCount++;
             }
             else {
@@ -527,15 +529,15 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
         // ================
         WriteText(file, "[Game]\n");
         if (ini) {
-            if (strcmp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound") != 0) {
+            if (strcmp(iniparser_getstring(ini, "Game:dataFile", ";unknown;"), ";unknown;") != 0) {
                 WriteText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
             }
 
-            if (strcmp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound") != 0)
+            if (strcmp(iniparser_getstring(ini, "Game:devMenu", ";unknown;"), ";unknown;") != 0)
                 WriteText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
 
 #if !RETRO_USE_ORIGINAL_CODE
-            if (strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") != 0)
+            if (strcmp(iniparser_getstring(ini, "Game:gameLogic", ";unknown;"), ";unknown;") != 0)
                 WriteText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
 
             WriteText(file, "confirmButtonFlip=%s\n", (customSettings.confirmButtonFlip ? "y" : "n"));
@@ -545,6 +547,9 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
 
             WriteText(file, "; Determines if the engine should pause when window focus is lost or not\n");
             WriteText(file, "disableFocusPause=%s\n", (customSettings.disableFocusPause ? "y" : "n"));
+
+            if (strcmp(iniparser_getstring(ini, "Game:username", ";unknown;"), ";unknown;") != 0)
+                WriteText(file, "username=%s\n", iniparser_getstring(ini, "Game:username", ""));
 
             WriteText(file, "; if -1, the game will decide what region to use, if 0 or higher, forces a specific region\n");
             WriteText(file, "region=%d\n", customSettings.region);
@@ -569,7 +574,7 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
         WriteText(file, "vsync=%s\n", (videoSettings.vsync ? "y" : "n"));
         WriteText(file, "tripleBuffering=%s\n", (videoSettings.tripleBuffered ? "y" : "n"));
         if (ini) {
-            if (strcmp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound") == 0)
+            if (strcmp(iniparser_getstring(ini, "Video:pixWidth", ";unknown;"), ";unknown;") == 0)
                 WriteText(file, "pixWidth=%d\n", videoSettings.pixWidth);
         }
         WriteText(file, "winWidth=%d\n", videoSettings.windowWidth);

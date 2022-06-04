@@ -176,6 +176,7 @@ struct CustomSettings {
     bool32 enableControllerDebugging;
     bool32 disableFocusPause;
     int32 maxPixWidth;
+    char username[0x80];
 };
 
 extern CustomSettings customSettings;

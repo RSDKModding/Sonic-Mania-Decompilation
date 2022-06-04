@@ -1081,12 +1081,6 @@ void RSDK::InitGameLink()
 void RSDK::ProcessDebugCommands()
 {
 #if !RETRO_USE_ORIGINAL_CODE
-    // This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
-    int32 id          = ControllerIDForInputID(CONT_P1);
-    uint8 gamepadType = GetControllerType(id) >> 8;
-    if (gamepadType != DEVICE_TYPE_CONTROLLER || id == INPUT_UNASSIGNED || id == INPUT_AUTOASSIGN || id == CONT_ANY)
-        return;
-
     if (!customSettings.enableControllerDebugging)
         return;
 #endif
@@ -1102,7 +1096,7 @@ void RSDK::ProcessDebugCommands()
 
 #if RETRO_REV02
     if (triggerL[CONT_P1].keyBumper.down) {
-        if (triggerL[CONT_P1].keyTrigger.down) {
+        if (triggerL[CONT_P1].keyTrigger.down || triggerL[CONT_P1].triggerDelta >= 0.3) {
             if (!framePaused)
                 sceneInfo.state ^= ENGINESTATE_STEPOVER;
         }
@@ -1117,10 +1111,7 @@ void RSDK::ProcessDebugCommands()
                 engine.frameStep = true;
         }
         else {
-            if (triggerR[CONT_P1].keyTrigger.down)
-                engine.gameSpeed = 8;
-            else
-                engine.gameSpeed = 1;
+            engine.gameSpeed = (triggerR[CONT_P1].keyTrigger.down || triggerR[CONT_P1].triggerDelta >= 0.3) ? 8 : 1;
         }
     }
     else {
@@ -1132,7 +1123,7 @@ void RSDK::ProcessDebugCommands()
     }
 #else
     if (controller[CONT_P1].keyBumperL.down) {
-        if (controller[CONT_P1].keyTriggerL.down) {
+        if (controller[CONT_P1].keyTriggerL.down || stickL[CONT_P1].triggerDeltaL >= 0.3) {
             if (!framePaused)
                 sceneInfo.state ^= ENGINESTATE_STEPOVER;
         }
@@ -1147,7 +1138,7 @@ void RSDK::ProcessDebugCommands()
                 engine.frameStep = true;
         }
         else {
-            engine.gameSpeed = controller[CONT_P1].keyTriggerR.down ? 8 : 1;
+            engine.gameSpeed = (controller[CONT_P1].keyTriggerR.down || stickL[CONT_P1].triggerDeltaR >= 0.3) ? 8 : 1;
         }
     }
     else {
