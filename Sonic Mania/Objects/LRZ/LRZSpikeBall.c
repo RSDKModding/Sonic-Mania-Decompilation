@@ -50,6 +50,7 @@ void LRZSpikeBall_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (!self->interval)
         self->interval = 240;
 
@@ -63,12 +64,12 @@ void LRZSpikeBall_Create(void *data)
     self->hitboxBall.right  = 10;
     self->hitboxBall.bottom = 10;
 
-    self->state             = LRZSpikeBall_State_Setup;
+    self->state = LRZSpikeBall_State_Setup;
 }
 
 void LRZSpikeBall_StageLoad(void)
 {
-    LRZSpikeBall->aniFrames    = RSDK.LoadSpriteAnimation("LRZ2/LRZSpikeBall.bin", SCOPE_STAGE);
+    LRZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZSpikeBall.bin", SCOPE_STAGE);
 
     LRZSpikeBall->sfxCharge    = RSDK.GetSfx("LRZ/Charge.wav");
     LRZSpikeBall->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
@@ -116,6 +117,7 @@ void LRZSpikeBall_CheckPlayerBallCollisions(void)
 
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
+
     self->position.x += self->ballOffset.x;
     self->position.y += self->ballOffset.y;
 
@@ -139,9 +141,10 @@ void LRZSpikeBall_State_Setup(void)
 
     RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 0, &self->baseAnimator, true, 0);
     RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->ballAnimator, true, 0);
+
     self->ballOffset.x = 0;
     self->ballOffset.y = 0;
-    self->state    = LRZSpikeBall_State_AwaitInterval;
+    self->state        = LRZSpikeBall_State_AwaitInterval;
 }
 
 void LRZSpikeBall_State_AwaitInterval(void)
@@ -176,9 +179,10 @@ void LRZSpikeBall_State_LaunchedBall(void)
 
     self->ballOffset.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (self->velocity.y >= 0 && self->ballOffset.y >= 0) {
-        self->ballOffset.y   = 0;
-        self->velocity.y = 0;
+        self->ballOffset.y = 0;
+        self->velocity.y   = 0;
         RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->ballAnimator, true, 0);
         self->active = ACTIVE_BOUNDS;
         self->state  = LRZSpikeBall_State_AwaitInterval;
@@ -189,8 +193,10 @@ void LRZSpikeBall_State_LaunchedBall(void)
 void LRZSpikeBall_EditorDraw(void)
 {
     RSDK_THIS(LRZSpikeBall);
+
     RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 0, &self->baseAnimator, true, 0);
     RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->ballAnimator, true, 0);
+
     self->ballOffset.x = 0;
     self->ballOffset.y = 0;
 

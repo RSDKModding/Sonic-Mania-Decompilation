@@ -103,7 +103,7 @@ void HeavyRider_Update(void);
 void HeavyRider_LateUpdate(void);
 void HeavyRider_StaticUpdate(void);
 void HeavyRider_Draw(void);
-void HeavyRider_Create(void* data);
+void HeavyRider_Create(void *data);
 void HeavyRider_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HeavyRider_EditorDraw(void);
@@ -147,4 +147,4 @@ void HeavyRider_StateJimmy_Idle(void);
 void HeavyRider_StateJimmy_RevRelease(void);
 void HeavyRider_StateJimmy_RevUp(void);
 
-#endif //!OBJ_HEAVYRIDER_H
+#endif //! OBJ_HEAVYRIDER_H

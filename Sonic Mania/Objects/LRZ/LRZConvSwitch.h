@@ -36,7 +36,7 @@ void LRZConvSwitch_Update(void);
 void LRZConvSwitch_LateUpdate(void);
 void LRZConvSwitch_StaticUpdate(void);
 void LRZConvSwitch_Draw(void);
-void LRZConvSwitch_Create(void* data);
+void LRZConvSwitch_Create(void *data);
 void LRZConvSwitch_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZConvSwitch_EditorDraw(void);
@@ -47,5 +47,4 @@ void LRZConvSwitch_Serialize(void);
 // Extra Entity Functions
 void LRZConvSwitch_Calibrate(void);
 
-
-#endif //!OBJ_LRZCONVSWITCH_H
+#endif //! OBJ_LRZCONVSWITCH_H

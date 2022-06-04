@@ -4,10 +4,10 @@
 #include "SonicMania.h"
 
 typedef enum {
-    LRZCONVEYOR_BEHAVIOUR_0,
-    LRZCONVEYOR_BEHAVIOUR_1,
-    LRZCONVEYOR_BEHAVIOUR_2,
-    LRZCONVEYOR_BEHAVIOUR_3,
+    LRZCONVEYOR_BEHAVIOR_CHANGEACTIVE,
+    LRZCONVEYOR_BEHAVIOR_CHANGEACTIVE_TOGGLE,
+    LRZCONVEYOR_BEHAVIOR_CHANGEDIR,
+    LRZCONVEYOR_BEHAVIOR_CHANGEDIR_TOGGLE,
 } LRZConveyorButtonBehaviours;
 
 // Object Class
@@ -45,7 +45,7 @@ void LRZConveyor_Update(void);
 void LRZConveyor_LateUpdate(void);
 void LRZConveyor_StaticUpdate(void);
 void LRZConveyor_Draw(void);
-void LRZConveyor_Create(void* data);
+void LRZConveyor_Create(void *data);
 void LRZConveyor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZConveyor_EditorDraw(void);
@@ -61,4 +61,4 @@ void LRZConveyor_DrawWheels(void);
 void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 len, color *color);
 void LRZConveyor_DrawConveyorLines(void);
 
-#endif //!OBJ_LRZCONVEYOR_H
+#endif //! OBJ_LRZCONVEYOR_H

@@ -14,6 +14,7 @@ void TurretSwitch_Update(void)
     RSDK_THIS(TurretSwitch);
 
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -24,6 +25,7 @@ void TurretSwitch_StaticUpdate(void) {}
 void TurretSwitch_Draw(void)
 {
     RSDK_THIS(TurretSwitch);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -37,6 +39,7 @@ void TurretSwitch_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (voidToInt(data) == true) {
         RSDK.SetSpriteAnimation(TurretSwitch->aniFrames, 1, &self->animator, true, 0);
         self->state     = TurretSwitch_State_Projectile;
@@ -96,7 +99,9 @@ void TurretSwitch_Break(EntityTurretSwitch *turret, EntityPlayer *player)
 {
     player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), turret->position.x, turret->position.y)->drawOrder = Zone->objectDrawHigh;
+
     RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
+
     turret->visible         = false;
     turret->state           = StateMachine_None;
     turret->currentlyActive = true;
@@ -124,6 +129,7 @@ void TurretSwitch_State_Turret(void)
             if (!self->timer) {
                 EntityTurretSwitch *projectile = CREATE_ENTITY(TurretSwitch, intToVoid(true), self->position.x, self->position.y);
                 projectile->velocity.y         = 0x20000;
+
                 if (self->direction == FLIP_NONE) {
                     projectile->position.x += 0x80000;
                     projectile->velocity.x = 0x20000;
@@ -132,8 +138,10 @@ void TurretSwitch_State_Turret(void)
                     projectile->position.x -= 0x80000;
                     projectile->velocity.x = -0x20000;
                 }
+
                 projectile->position.y += 0x80000;
                 RSDK.PlaySfx(TurretSwitch->sfxShot, false, 255);
+
                 self->timer = 40;
             }
             foreach_break;
@@ -142,12 +150,14 @@ void TurretSwitch_State_Turret(void)
 
     if (self->timer > 0)
         self->timer--;
+
     TurretSwitch_CheckPlayerCollisions();
 }
 
 void TurretSwitch_State_Projectile(void)
 {
     RSDK_THIS(TurretSwitch);
+
     if (!RSDK.CheckOnScreen(self, NULL)) {
         destroyEntity(self);
     }
@@ -177,6 +187,7 @@ void TurretSwitch_EditorDraw(void)
     RSDK_THIS(TurretSwitch);
 
     RSDK.SetSpriteAnimation(TurretSwitch->aniFrames, 0, &self->animator, false, 0);
+
     TurretSwitch_Draw();
 }
 

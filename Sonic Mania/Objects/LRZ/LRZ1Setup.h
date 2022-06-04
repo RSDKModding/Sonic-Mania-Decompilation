@@ -10,7 +10,7 @@ struct ObjectLRZ1Setup {
     RSDK_OBJECT
     int32 palTimer;
     int32 fadeTimer;
-    TileLayer* background1;
+    TileLayer *background1;
     TileLayer *background2;
 #if MANIA_USE_PLUS
     TileLayer *fgLow;
@@ -23,7 +23,7 @@ struct ObjectLRZ1Setup {
 
 // Entity Class
 struct EntityLRZ1Setup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -34,7 +34,7 @@ void LRZ1Setup_Update(void);
 void LRZ1Setup_LateUpdate(void);
 void LRZ1Setup_StaticUpdate(void);
 void LRZ1Setup_Draw(void);
-void LRZ1Setup_Create(void* data);
+void LRZ1Setup_Create(void *data);
 void LRZ1Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZ1Setup_EditorDraw(void);
@@ -46,4 +46,4 @@ void LRZ1Setup_Serialize(void);
 void LRZ1Setup_StageFinishCB(void);
 void LRZ1Setup_DrawLayerCB(void);
 
-#endif //!OBJ_LRZ1SETUP_H
+#endif //! OBJ_LRZ1SETUP_H

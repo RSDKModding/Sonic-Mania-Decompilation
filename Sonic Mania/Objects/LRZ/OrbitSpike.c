@@ -14,6 +14,7 @@ void OrbitSpike_Update(void)
     RSDK_THIS(OrbitSpike);
 
     uint8 angle = 2 * ((self->offset & 0xFF) + (Zone->timer & 0xFF));
+
     if (self->amplitude.x) {
         if (angle >= 0x80) {
             self->drawOrder = Zone->objectDrawLow;
@@ -42,6 +43,7 @@ void OrbitSpike_Update(void)
 
     self->position.x = (self->amplitude.x >> 8) * RSDK.Cos256(angle) + self->center.x;
     self->position.y = (self->amplitude.y >> 8) * RSDK.Sin256(angle) + self->center.y;
+
     if (self->drawOrder == Zone->objectDrawHigh) {
         foreach_active(Player, player)
         {
@@ -49,7 +51,7 @@ void OrbitSpike_Update(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                    Player_CheckHit(player, self);
             }
         }
     }
@@ -62,20 +64,22 @@ void OrbitSpike_StaticUpdate(void) {}
 void OrbitSpike_Draw(void)
 {
     RSDK_THIS(OrbitSpike);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void OrbitSpike_Create(void *data)
 {
     RSDK_THIS(OrbitSpike);
+
     if (!SceneInfo->inEditor) {
-        self->center.x      = self->position.x;
-        self->center.y      = self->position.y;
+        self->center        = self->position;
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_SCALE;
+
         RSDK.SetSpriteAnimation(OrbitSpike->aniFrames, 0, &self->animator, true, 0);
         self->drawOrder = Zone->objectDrawHigh;
     }
@@ -83,9 +87,9 @@ void OrbitSpike_Create(void *data)
 
 void OrbitSpike_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1")) 
+    if (RSDK.CheckStageFolder("LRZ1"))
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/OrbitSpike.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2")) 
+    else if (RSDK.CheckStageFolder("LRZ2"))
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
 
     OrbitSpike->hitbox.left   = -12;
@@ -98,8 +102,8 @@ void OrbitSpike_StageLoad(void)
 void OrbitSpike_EditorDraw(void)
 {
     RSDK_THIS(OrbitSpike);
-    self->center.x      = self->position.x;
-    self->center.y      = self->position.y;
+
+    self->center        = self->position;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->drawFX        = FX_SCALE;

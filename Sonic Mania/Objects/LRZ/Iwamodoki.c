@@ -24,6 +24,7 @@ void Iwamodoki_Update(void)
         self->moveOffset.x = 0;
         self->moveOffset.y = 0;
     }
+
     self->postMovePos.x = self->position.x;
     self->postMovePos.y = self->position.y;
 
@@ -46,8 +47,7 @@ void Iwamodoki_Create(void *data)
     RSDK_THIS(Iwamodoki);
 
     self->drawFX |= FX_FLIP;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->startDir      = self->direction;
     self->visible       = true;
     self->active        = ACTIVE_BOUNDS;
@@ -126,10 +126,10 @@ void Iwamodoki_HandlePlayerCollisions(void)
 void Iwamodoki_CheckOffScreen(void)
 {
     RSDK_THIS(Iwamodoki);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Iwamodoki_Create(NULL);
     }
 }
@@ -140,7 +140,8 @@ void Iwamodoki_State_Setup(void)
 
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = -0x10000;
-    self->state      = Iwamodoki_State_AwaitPlayer;
+
+    self->state = Iwamodoki_State_AwaitPlayer;
     Iwamodoki_State_AwaitPlayer();
 }
 
@@ -164,6 +165,7 @@ void Iwamodoki_State_Appear(void)
     RSDK_THIS(Iwamodoki);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == 6) {
         RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 1, &self->animator, true, 0);
         self->chargeCount = 15;
@@ -207,6 +209,7 @@ void Iwamodoki_State_Explode(void)
 
     if (!--self->timer) {
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+
         if (self->activeScreens == 1)
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 

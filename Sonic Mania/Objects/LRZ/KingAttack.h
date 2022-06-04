@@ -48,7 +48,7 @@ void KingAttack_Update(void);
 void KingAttack_LateUpdate(void);
 void KingAttack_StaticUpdate(void);
 void KingAttack_Draw(void);
-void KingAttack_Create(void* data);
+void KingAttack_Create(void *data);
 void KingAttack_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void KingAttack_EditorDraw(void);
@@ -74,4 +74,4 @@ void KingAttack_State_LargeBullet_TwinShot(void);
 void KingAttack_State_SmallBullet(void);
 void KingAttack_State_SmallBullet_Impact(void);
 
-#endif //!OBJ_KINGATTACK_H
+#endif //! OBJ_KINGATTACK_H

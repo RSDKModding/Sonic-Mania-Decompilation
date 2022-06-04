@@ -35,7 +35,7 @@ void HPZEmerald_Update(void);
 void HPZEmerald_LateUpdate(void);
 void HPZEmerald_StaticUpdate(void);
 void HPZEmerald_Draw(void);
-void HPZEmerald_Create(void* data);
+void HPZEmerald_Create(void *data);
 void HPZEmerald_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HPZEmerald_EditorDraw(void);
@@ -45,5 +45,4 @@ void HPZEmerald_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_HPZEMERALD_H
+#endif //! OBJ_HPZEMERALD_H

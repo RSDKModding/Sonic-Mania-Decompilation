@@ -43,7 +43,7 @@ void BuckwildBall_Update(void);
 void BuckwildBall_LateUpdate(void);
 void BuckwildBall_StaticUpdate(void);
 void BuckwildBall_Draw(void);
-void BuckwildBall_Create(void* data);
+void BuckwildBall_Create(void *data);
 void BuckwildBall_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BuckwildBall_EditorDraw(void);
@@ -65,4 +65,4 @@ void BuckwildBall_State_Falling(void);
 void BuckwildBall_State_Rolling(void);
 void BuckwildBall_State_Debris(void);
 
-#endif //!OBJ_BUCKWILDBALL_H
+#endif //! OBJ_BUCKWILDBALL_H

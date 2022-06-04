@@ -14,7 +14,9 @@ void Turbine_Update(void)
     RSDK_THIS(Turbine);
 
     self->angle = (6 * Zone->timer) & 0x1FF;
+
     RSDK.SetSpriteAnimation(Turbine->aniFrames, self->type, &self->animator, true, (self->angle >> 3) & 7);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,6 +25,7 @@ void Turbine_LateUpdate(void) {}
 void Turbine_StaticUpdate(void)
 {
     bool32 playingSfx = false;
+
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
 
         foreach_active(Turbine, turbine)
@@ -47,12 +50,14 @@ void Turbine_StaticUpdate(void)
 void Turbine_Draw(void)
 {
     RSDK_THIS(Turbine);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Turbine_Create(void *data)
 {
     RSDK_THIS(Turbine);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
@@ -68,6 +73,7 @@ void Turbine_Create(void *data)
             default:
             case TURBINE_WALLDECOR: self->state = StateMachine_None; break;
         }
+
         self->drawOrder = Zone->objectDrawHigh;
     }
 }
@@ -77,17 +83,17 @@ void Turbine_StageLoad(void)
     if (RSDK.CheckStageFolder("LRZ2"))
         Turbine->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Turbine.bin", SCOPE_STAGE);
 
-    Turbine->hitboxHandle.left      = -16;
-    Turbine->hitboxHandle.right     = 16;
-    Turbine->hitboxHandle.top       = -48;
-    Turbine->hitboxHandle.bottom    = 48;
+    Turbine->hitboxHandle.left   = -16;
+    Turbine->hitboxHandle.right  = 16;
+    Turbine->hitboxHandle.top    = -48;
+    Turbine->hitboxHandle.bottom = 48;
 
     Turbine->hitboxSpikes.left   = -6;
     Turbine->hitboxSpikes.right  = 6;
     Turbine->hitboxSpikes.top    = -44;
     Turbine->hitboxSpikes.bottom = 44;
 
-    Turbine->sfxTurbine        = RSDK.GetSfx("LRZ/Turbine.wav");
+    Turbine->sfxTurbine = RSDK.GetSfx("LRZ/Turbine.wav");
 }
 
 void Turbine_State_Handles(void)
@@ -113,13 +119,11 @@ void Turbine_State_Handles(void)
                     player->groundVel       = 0;
                     player->onGround        = false;
                     player->state           = Player_State_None;
+
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, true, 0);
                     player->animator.speed = 0;
 
-                    if (player->position.y >= self->position.y)
-                        self->playerAngles[playerID] = 0x80;
-                    else
-                        self->playerAngles[playerID] = 0x180;
+                    self->playerAngles[playerID] = player->position.y >= self->position.y ? 0x80 : 0x180;
                     self->playerAngles[playerID] += self->angle & 0x3F;
 
                     RSDK.PlaySfx(Player->sfxGrab, false, 255);
@@ -127,14 +131,15 @@ void Turbine_State_Handles(void)
             }
         }
         else if ((1 << playerID) & self->activePlayers) {
-            player->velocity.x           = 0;
-            player->velocity.y           = 0;
-            player->groundVel            = 0;
-            self->playerAngles[playerID] = (self->playerAngles[playerID] + 6) % 512;
-            player->position.x           = self->position.x;
-            player->position.y           = self->position.y;
+            player->velocity.x = 0;
+            player->velocity.y = 0;
+            player->groundVel  = 0;
 
-            player->position.y += 0x1700 * RSDK.Sin512(self->playerAngles[playerID]) + 0x20000;
+            self->playerAngles[playerID] = (self->playerAngles[playerID] + 6) % 512;
+
+            player->position.x = self->position.x;
+            player->position.y = self->position.y + (0x1700 * RSDK.Sin512(self->playerAngles[playerID]) + 0x20000);
+
             if ((uint32)(self->playerAngles[playerID] - 0x81) > 0xFF)
                 player->drawOrder = Zone->playerDrawLow;
             else
@@ -181,7 +186,9 @@ void Turbine_State_Spikes(void)
 void Turbine_EditorDraw(void)
 {
     RSDK_THIS(Turbine);
+
     RSDK.SetSpriteAnimation(Turbine->aniFrames, self->type, &self->animator, true, 0);
+
     Turbine_Draw();
 }
 

@@ -36,8 +36,7 @@ void LRZ3Setup_StageLoad(void)
         Zone_StartFadeIn(10, 0x000000);
     }
 
-    if (isMainGameMode() && globals->enableIntro && (!PlayerHelpers_CheckStageReload()
-        || !PlayerHelpers_CheckStageReload())) {
+    if (isMainGameMode() && globals->enableIntro && (!PlayerHelpers_CheckStageReload() || !PlayerHelpers_CheckStageReload())) {
         CREATE_ENTITY(LRZ3Cutscene, NULL, 0, 0);
     }
 
@@ -67,7 +66,7 @@ void LRZ3Setup_StageLoad(void)
             }
         }
 #else
-        if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) 
+        if (CHECK_CHARACTER_ID(ID_KNUCKLES, 1))
             LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->classID);
 
         if (LRZ3Setup->cutsceneOutroK)

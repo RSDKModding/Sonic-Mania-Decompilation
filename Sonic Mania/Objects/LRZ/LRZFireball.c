@@ -12,6 +12,7 @@ ObjectLRZFireball *LRZFireball;
 void LRZFireball_Update(void)
 {
     RSDK_THIS(LRZFireball);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void LRZFireball_StaticUpdate(void) {}
 void LRZFireball_Draw(void)
 {
     RSDK_THIS(LRZFireball);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -96,6 +98,7 @@ void LRZFireball_CheckOffScreen(void)
     RSDK_THIS(LRZFireball);
 
     self->alpha -= 0x20;
+
     if (self->alpha <= 0 || (self->alpha && RSDK.CheckOnScreen(self, &self->updateRange))) {
         RSDK.ProcessAnimation(&self->animator);
         LRZFireball_CheckPlayerCollisions();
@@ -216,6 +219,7 @@ void LRZFireball_StateFireball_LauncherGravity(void)
 void LRZFireball_Draw_Simple(void)
 {
     RSDK_THIS(LRZFireball);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 

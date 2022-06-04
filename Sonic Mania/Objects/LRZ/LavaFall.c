@@ -12,6 +12,7 @@ ObjectLavaFall *LavaFall;
 void LavaFall_Update(void)
 {
     RSDK_THIS(LavaFall);
+
     StateMachine_Run(self->state);
 }
 
@@ -24,6 +25,7 @@ void LavaFall_StaticUpdate(void)
             RSDK.PlaySfx(LavaFall->sfxLava, 81870, 0xFF);
             LavaFall->playingLavaSfx = true;
         }
+
         LavaFall->lavaSfxTimer = 0;
     }
     else if (LavaFall->playingLavaSfx) {
@@ -35,6 +37,7 @@ void LavaFall_StaticUpdate(void)
 void LavaFall_Draw(void)
 {
     RSDK_THIS(LavaFall);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -131,6 +134,7 @@ void LavaFall_State_Lava(void)
 void LavaFall_EditorDraw(void)
 {
     RSDK_THIS(LavaFall);
+
     RSDK.SetSpriteAnimation(LavaFall->aniFrames, 0, &self->animator, true, 0);
 
     LavaFall_Draw();

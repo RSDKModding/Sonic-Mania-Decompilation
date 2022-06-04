@@ -12,7 +12,9 @@ ObjectSkyTeleporter *SkyTeleporter;
 void SkyTeleporter_Update(void)
 {
     RSDK_THIS(SkyTeleporter);
+
     foreach_active(Player, player) { Player_CheckCollisionBox(player, self, &self->hitbox); }
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -26,6 +28,7 @@ void SkyTeleporter_StaticUpdate(void)
 void SkyTeleporter_Draw(void)
 {
     RSDK_THIS(SkyTeleporter);
+
     if (SceneInfo->currentDrawGroup == Zone->objectDrawLow)
         RSDK.DrawSprite(&self->animator, NULL, false);
     else
@@ -35,6 +38,7 @@ void SkyTeleporter_Draw(void)
 void SkyTeleporter_Create(void *data)
 {
     RSDK_THIS(SkyTeleporter);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
@@ -71,6 +75,7 @@ void SkyTeleporter_DrawTeleportBeam(void)
 void SkyTeleporter_EditorDraw(void)
 {
     RSDK_THIS(SkyTeleporter);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 

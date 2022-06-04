@@ -6,7 +6,7 @@
 typedef enum {
     LAVAGEYSER_INTERVAL,
     LAVAGEYSER_REPEAT,
-}LavaGeyserTypes;
+} LavaGeyserTypes;
 
 // Object Class
 struct ObjectLavaGeyser {
@@ -44,7 +44,7 @@ void LavaGeyser_Update(void);
 void LavaGeyser_LateUpdate(void);
 void LavaGeyser_StaticUpdate(void);
 void LavaGeyser_Draw(void);
-void LavaGeyser_Create(void* data);
+void LavaGeyser_Create(void *data);
 void LavaGeyser_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LavaGeyser_EditorDraw(void);
@@ -64,4 +64,4 @@ void LavaGeyser_State_Erupted(void);
 void LavaGeyser_State_Recede(void);
 void LavaGeyser_State_HandleFinish(void);
 
-#endif //!OBJ_LAVAGEYSER_H
+#endif //! OBJ_LAVAGEYSER_H

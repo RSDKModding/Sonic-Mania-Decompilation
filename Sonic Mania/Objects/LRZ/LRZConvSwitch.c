@@ -36,6 +36,7 @@ void LRZConvSwitch_Update(void)
             bool32 collided =
                 MathHelpers_CheckPositionOverlap(player->position.x, player->position.y, self->playerPositions[playerID].x,
                                                  self->playerPositions[playerID].y, self->position.x, self->position.y, extendX2, extendY2);
+
             if (!self->dir && !player->sidekick) {
                 if (dir < 0) {
                     if (collided && !self->conveyorDir) {
@@ -61,10 +62,12 @@ void LRZConvSwitch_Update(void)
     }
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.animationID == 1 && self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 2, &self->animator, true, 0);
         self->dir = 0;
     }
+
     if (self->animator.animationID == 3 && self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 0, &self->animator, true, 0);
         self->dir = 0;
@@ -88,19 +91,20 @@ void LRZConvSwitch_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     LRZConvSwitch_Calibrate();
 }
 
 void LRZConvSwitch_StageLoad(void)
 {
     LRZConvSwitch->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConvSwitch.bin", SCOPE_STAGE);
-    LRZConvSwitch->sfxClack  = RSDK.GetSfx("Stage/Clack.wav");
+
+    LRZConvSwitch->sfxClack = RSDK.GetSfx("Stage/Clack.wav");
 }
 
 void LRZConvSwitch_Calibrate(void)
@@ -108,6 +112,7 @@ void LRZConvSwitch_Calibrate(void)
     RSDK_THIS(LRZConvSwitch);
 
     self->conveyorDir = self->calibration ^ LRZ2Setup->conveyorDir;
+
     if (!self->conveyorDir)
         RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 0, &self->animator, true, 0);
     else if (self->conveyorDir == 1)
@@ -124,6 +129,7 @@ void LRZConvSwitch_EditorDraw(void)
 void LRZConvSwitch_EditorLoad(void)
 {
     LRZConvSwitch->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConvSwitch.bin", SCOPE_STAGE);
+
     RSDK_ACTIVE_VAR(LRZConvSwitch, calibration);
     RSDK_ENUM_VAR("Right", LRZCONVSWITCH_RIGHT);
     RSDK_ENUM_VAR("Left", LRZCONVSWITCH_LEFT);

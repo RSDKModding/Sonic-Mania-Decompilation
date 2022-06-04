@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Rexon_SegmentCount (5)
+#define REXON_SEGMENT_COUNT (5)
 
 typedef enum {
     REXON_MAIN,
@@ -31,10 +31,10 @@ struct EntityRexon {
     int32 type;
     Vector2 startPos;
     uint8 startDir;
-    Vector2 positions[Rexon_SegmentCount + 1]; // neck + head
-    int32 segmentMagnitude[Rexon_SegmentCount];
-    int32 segmentAmplitude[Rexon_SegmentCount];
-    uint8 segmentDirections[Rexon_SegmentCount];
+    Vector2 positions[REXON_SEGMENT_COUNT + 1]; // neck + head
+    int32 segmentMagnitude[REXON_SEGMENT_COUNT];
+    int32 segmentAmplitude[REXON_SEGMENT_COUNT];
+    uint8 segmentDirections[REXON_SEGMENT_COUNT];
     uint8 segmentID;
     int32 timer;
     int32 destroyDelay;
@@ -51,7 +51,7 @@ void Rexon_Update(void);
 void Rexon_LateUpdate(void);
 void Rexon_StaticUpdate(void);
 void Rexon_Draw(void);
-void Rexon_Create(void* data);
+void Rexon_Create(void *data);
 void Rexon_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Rexon_EditorDraw(void);
@@ -77,4 +77,4 @@ void Rexon_State_Explode(void);
 void Rexon_State_Debris(void);
 void Rexon_State_Projectile(void);
 
-#endif //!OBJ_REXON_H
+#endif //! OBJ_REXON_H

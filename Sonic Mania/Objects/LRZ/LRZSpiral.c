@@ -12,6 +12,7 @@ ObjectLRZSpiral *LRZSpiral;
 void LRZSpiral_Update(void)
 {
     RSDK_THIS(LRZSpiral);
+
     StateMachine_Run(self->state);
 }
 
@@ -33,38 +34,46 @@ void LRZSpiral_Create(void *data)
         switch (self->type) {
             default: break;
             case LRZSPIRAL_CYLINDER: {
-                self->state                = LRZSpiral_State_Cylinder;
-                self->updateRange.x        = 0x800000;
-                self->updateRange.y        = (self->height + 1) << 22;
+                int32 height = self->height << 25 >> 19;
+
+                self->state = LRZSpiral_State_Cylinder;
+
+                self->updateRange.x = 0x800000;
+                self->updateRange.y = (self->height + 1) << 22;
+
                 self->hitboxTrigger.left   = -16;
                 self->hitboxTrigger.right  = 16;
-                int32 height               = self->height << 25 >> 19;
                 self->hitboxTrigger.top    = -height;
                 self->hitboxTrigger.bottom = 128 - height;
-                self->height               = (self->height << 25) - 0x1000000;
+
+                self->height = (self->height << 25) - 0x1000000;
                 break;
             }
 
             case LRZSPIRAL_J_CURVE:
-                self->direction            = FLIP_NONE;
-                self->updateRange.y        = (self->height + 64) << 16;
+                self->direction     = FLIP_NONE;
+                self->updateRange.x = 0x800000;
+                self->updateRange.y = (self->height + 64) << 16;
+
                 self->hitboxTrigger.left   = -112;
                 self->hitboxTrigger.top    = -180;
                 self->hitboxTrigger.right  = -104;
                 self->hitboxTrigger.bottom = -172;
-                self->state                = LRZSpiral_State_J_Curve;
-                self->updateRange.x        = 0x800000;
+
+                self->state = LRZSpiral_State_J_Curve;
                 break;
 
             case LRZSPIRAL_C_CURVE:
-                self->direction            = FLIP_X;
-                self->updateRange.y        = (self->height + 64) << 16;
+                self->direction     = FLIP_X;
+                self->updateRange.x = 0x800000;
+                self->updateRange.y = (self->height + 64) << 16;
+
                 self->hitboxTrigger.left   = -146;
                 self->hitboxTrigger.top    = -180;
                 self->hitboxTrigger.right  = -138;
                 self->hitboxTrigger.bottom = -172;
-                self->state                = LRZSpiral_State_C_Curve;
-                self->updateRange.x        = 0x800000;
+
+                self->state = LRZSpiral_State_C_Curve;
                 break;
         }
     }
@@ -76,9 +85,11 @@ void LRZSpiral_HandlePlayerExit(EntityPlayer *player)
 {
     if (abs(player->groundVel) < player->maxRunSpeed) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 1);
+
         player->animator.speed = (abs(player->groundVel) >> 12) + 96;
         if (player->animator.speed > 0x200)
             player->animator.speed = 0x200;
+
         player->maxJogSpeed = 0x58000;
         player->maxRunSpeed = 0xC0000;
     }
@@ -94,9 +105,11 @@ void LRZSpiral_State_Cylinder(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
+
         if ((1 << playerID) & self->activePlayers) {
             if (player->state == Player_State_None) {
                 self->playerSpiralPos[playerID] += player->groundVel;
+
                 if (self->playerSpiralPos[playerID] < 0) {
                     self->activePlayers &= ~(1 << playerID);
                 }
@@ -148,6 +161,7 @@ void LRZSpiral_State_Cylinder(void)
                 player->onGround   = false;
                 player->velocity.x = 0;
                 player->velocity.y = 0;
+
                 if (player->groundVel < 0x60000)
                     player->groundVel = 0x60000;
 
@@ -167,17 +181,20 @@ void LRZSpiral_State_Cylinder(void)
 void LRZSpiral_State_J_Curve(void)
 {
     RSDK_THIS(LRZSpiral);
+
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
         if ((1 << playerID) & self->activePlayers) {
             if (player->state == Player_State_None) {
                 self->playerSpiralPos[playerID] += player->groundVel;
+
                 if (self->playerSpiralPos[playerID] < 0) {
                     self->activePlayers &= ~(1 << playerID);
                 }
                 else {
                     self->playerSpiralPos[playerID] += player->groundVel >> 17;
+
                     if (player->groundVel < 0x100000)
                         player->groundVel += 0x1000;
 
@@ -214,8 +231,10 @@ void LRZSpiral_State_J_Curve(void)
                 player->onGround   = false;
                 player->velocity.x = 0;
                 player->velocity.y = 0;
+
                 if (player->groundVel < 0x40000)
                     player->groundVel = 0x40000;
+
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->animator, false, 0);
 
                 player->animator.speed  = 0;
@@ -223,6 +242,7 @@ void LRZSpiral_State_J_Curve(void)
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
                 player->tileCollisions  = false;
+
                 self->activePlayers |= 1 << playerID;
                 self->playerSpiralPos[playerID] = 0;
                 self->active                    = ACTIVE_NORMAL;
@@ -236,9 +256,11 @@ void LRZSpiral_State_C_Curve(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
+
         if ((1 << playerID) & self->activePlayers) {
             if (player->state == Player_State_None) {
                 self->playerSpiralPos[playerID] -= player->groundVel;
+
                 if (self->playerSpiralPos[playerID] < 0) {
                     self->activePlayers &= ~(1 << playerID);
                 }
@@ -279,14 +301,17 @@ void LRZSpiral_State_C_Curve(void)
                 player->onGround   = false;
                 player->velocity.x = 0;
                 player->velocity.y = 0;
+
                 if (player->groundVel > -0x40000)
                     player->groundVel = -0x40000;
+
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->animator, false, 0);
                 player->animator.speed  = 0;
                 player->state           = Player_State_None;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
                 player->tileCollisions  = false;
+
                 self->activePlayers |= 1 << playerID;
                 self->playerSpiralPos[playerID] = 0;
                 self->active                    = ACTIVE_NORMAL;
@@ -304,31 +329,35 @@ void LRZSpiral_EditorDraw(void)
     switch (self->type) {
         default: break;
         case LRZSPIRAL_CYLINDER: {
-            height                     = self->height << 25 >> 19;
-            self->updateRange.x        = 0x800000;
-            self->updateRange.y        = (self->height + 1) << 22;
+            height              = self->height << 25 >> 19;
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = (self->height + 1) << 22;
+
             self->hitboxTrigger.left   = -16;
             self->hitboxTrigger.right  = 16;
             self->hitboxTrigger.top    = -height;
             self->hitboxTrigger.bottom = 128 - height;
+
             height <<= 1;
             break;
         }
 
         case LRZSPIRAL_J_CURVE:
-            self->direction            = FLIP_NONE;
-            self->updateRange.y        = height << 16;
+            self->direction     = FLIP_NONE;
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = height << 16;
+
             self->hitboxTrigger.left   = -112;
             self->hitboxTrigger.top    = -180;
             self->hitboxTrigger.right  = -104;
             self->hitboxTrigger.bottom = -172;
-            self->updateRange.x        = 0x800000;
             break;
 
         case LRZSPIRAL_C_CURVE:
-            self->direction            = FLIP_X;
-            self->updateRange.y        = height << 16;
-            self->updateRange.x        = 0x800000;
+            self->direction     = FLIP_X;
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = height << 16;
+
             self->hitboxTrigger.left   = -146;
             self->hitboxTrigger.top    = -180;
             self->hitboxTrigger.right  = -138;

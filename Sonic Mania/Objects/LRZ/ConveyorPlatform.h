@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CONVEYORPLATFORM_FIXED,
+    CONVEYORPLATFORM_MOVING,
+} ConveyorPlatformTypes;
+
 // Object Class
 struct ObjectConveyorPlatform {
     RSDK_OBJECT
@@ -38,7 +43,7 @@ struct EntityConveyorPlatform {
     uint16 interval;
     uint16 intervalOffset;
     uint16 flipCount;
-    uint8 timer2;
+    uint8 flipTimer;
 };
 
 // Object Struct
@@ -49,7 +54,7 @@ void ConveyorPlatform_Update(void);
 void ConveyorPlatform_LateUpdate(void);
 void ConveyorPlatform_StaticUpdate(void);
 void ConveyorPlatform_Draw(void);
-void ConveyorPlatform_Create(void* data);
+void ConveyorPlatform_Create(void *data);
 void ConveyorPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ConveyorPlatform_EditorDraw(void);
@@ -59,5 +64,4 @@ void ConveyorPlatform_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_CONVEYORPLATFORM_H
+#endif //! OBJ_CONVEYORPLATFORM_H

@@ -222,14 +222,17 @@ void PaperRoller_DrawPaperLines(void)
             offsetY1 = 0x10000;
             offsetY2 = -0x10000;
             break;
+
         case 1:
             offsetX1 = -0x10000;
             offsetX2 = 0x10000;
             break;
+
         case 2:
             offsetY1 = -0x10000;
             offsetY2 = 0x10000;
             break;
+
         case 3:
             offsetX1 = 0x10000;
             offsetX2 = -0x10000;

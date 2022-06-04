@@ -12,7 +12,7 @@ struct ObjectDashLift {
 // Entity Class
 struct EntityDashLift {
     RSDK_ENTITY
-    //Platform Base
+    // Platform Base
     StateMachine(state);
     StateMachine(stateCollide);
     int32 type;
@@ -34,7 +34,7 @@ struct EntityDashLift {
     Hitbox hitbox;
     Animator animator;
     int32 childCount;
-    //Dash Lift
+    // Dash Lift
     int32 startOff;
     uint8 activePlayers;
 };
@@ -47,7 +47,7 @@ void DashLift_Update(void);
 void DashLift_LateUpdate(void);
 void DashLift_StaticUpdate(void);
 void DashLift_Draw(void);
-void DashLift_Create(void* data);
+void DashLift_Create(void *data);
 void DashLift_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DashLift_EditorDraw(void);
@@ -61,4 +61,4 @@ void DashLift_CheckOffScreen(void);
 void DashLift_State_Setup(void);
 void DashLift_State_HandleDash(void);
 
-#endif //!OBJ_DASHLIFT_H
+#endif //! OBJ_DASHLIFT_H

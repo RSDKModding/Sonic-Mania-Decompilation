@@ -16,8 +16,9 @@ void LRZ1Setup_LateUpdate(void) {}
 void LRZ1Setup_StaticUpdate(void)
 {
     LRZ1Setup->palTimer += 24;
-    if (LRZ1Setup->palTimer > 255) {
+    if (LRZ1Setup->palTimer >= 256) {
         LRZ1Setup->palTimer -= 256;
+
         RSDK.RotatePalette(1, 208, 211, true);
         RSDK.RotatePalette(2, 208, 211, true);
         RSDK.RotatePalette(3, 208, 211, true);
@@ -25,28 +26,21 @@ void LRZ1Setup_StaticUpdate(void)
     }
 
     if (LRZ1Setup->fadeTimer <= 0) {
-        int32 cos   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
-        int32 blend = cos >> 3;
-        if (blend >= 0)
-            RSDK.SetLimitedFade(5, 1, 4, cos >> 3, 208, 211);
-        else
-            RSDK.SetLimitedFade(5, 1, 3, -blend, 208, 211);
+        int32 blend = RSDK.Cos1024(2 * (Zone->timer & 0x1FF)) >> 3;
+        RSDK.SetLimitedFade(5, 1, blend >= 0 ? 4 : 3, abs(blend), 208, 211);
         RSDK.RotatePalette(3, 208, 211, true);
         RSDK.RotatePalette(4, 208, 211, true);
 
-        if (blend >= 0)
-            RSDK.SetLimitedFade(6, 2, 4, blend, 208, 211);
-        else
-            RSDK.SetLimitedFade(6, 2, 3, -blend, 208, 211);
+        RSDK.SetLimitedFade(6, 2, blend >= 0 ? 4 : 3, abs(blend), 208, 211);
         RSDK.RotatePalette(3, 208, 211, false);
         RSDK.RotatePalette(4, 208, 211, false);
 
         RSDK.SetLimitedFade(0, 5, 6, LRZ1Setup->palTimer, 208, 211);
     }
     else {
-        if (LRZ1Setup->fadeTimer == 1) {
+        if (LRZ1Setup->fadeTimer == 1)
             RSDK.CopyPalette(0, 208, 1, 208, 5);
-        }
+
         RSDK.SetLimitedFade(0, 1, 7, LRZ1Setup->fadeTimer, 208, 212);
 
         if (LRZ1Setup->fadeTimer < 256)
@@ -96,9 +90,10 @@ void LRZ1Setup_StageLoad(void)
 
     LRZ1Setup->background1 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 1"));
     LRZ1Setup->background2 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 2"));
+
 #if MANIA_USE_PLUS
-    LRZ1Setup->fgLow       = RSDK.GetTileLayer(Zone->fgLow);
-    LRZ1Setup->fgHigh      = RSDK.GetTileLayer(Zone->fgHigh);
+    LRZ1Setup->fgLow  = RSDK.GetTileLayer(Zone->fgLow);
+    LRZ1Setup->fgHigh = RSDK.GetTileLayer(Zone->fgHigh);
 #endif
 
     RSDK.SetDrawLayerProperties(0, false, LRZ1Setup_DrawLayerCB);
@@ -131,10 +126,10 @@ void LRZ1Setup_StageLoad(void)
         foreach_all(LRZ1Intro, intro) { destroyEntity(intro); }
     }
 #else
-    Zone->cameraBoundsL[0] = 648;
-    Zone->cameraBoundsL[1] = 648;
-    Zone->cameraBoundsL[2] = 648;
-    Zone->cameraBoundsL[3] = 648;
+    Zone->cameraBoundsL[0]  = 648;
+    Zone->cameraBoundsL[1]  = 648;
+    Zone->cameraBoundsL[2]  = 648;
+    Zone->cameraBoundsL[3]  = 648;
 #endif
 }
 
@@ -142,7 +137,8 @@ void LRZ1Setup_StageFinishCB(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0); }
 
 void LRZ1Setup_DrawLayerCB(void)
 {
-    int32 scroll                      = minVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
+    int32 scroll = minVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
+
     LRZ1Setup->background1->scrollPos = scroll;
     LRZ1Setup->background2->scrollPos = scroll;
 }

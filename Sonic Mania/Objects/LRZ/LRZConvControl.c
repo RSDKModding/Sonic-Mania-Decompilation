@@ -33,10 +33,11 @@ void LRZConvControl_Draw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     if (self->triggerMode == LRZCONVCTRL_TRIGGER_PLAYER) {
-        self->hitbox.left   = -self->hitboxSize.x >> 17;
-        self->hitbox.top    = -self->hitboxSize.y >> 17;
+        self->hitbox.left   = -(self->hitboxSize.x >> 17);
+        self->hitbox.top    = -(self->hitboxSize.y >> 17);
         self->hitbox.right  = self->hitboxSize.x >> 17;
         self->hitbox.bottom = self->hitboxSize.y >> 17;
+
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, self->direction, 0xFFFFFF);
     }
 }
@@ -54,10 +55,11 @@ void LRZConvControl_Create(void *data)
 
     switch (self->triggerMode) {
         case LRZCONVCTRL_TRIGGER_PLAYER:
-            self->hitbox.left   = -self->hitboxSize.x >> 17;
-            self->hitbox.top    = -self->hitboxSize.y >> 17;
+            self->hitbox.left   = -(self->hitboxSize.x >> 17);
+            self->hitbox.top    = -(self->hitboxSize.y >> 17);
             self->hitbox.right  = self->hitboxSize.x >> 17;
             self->hitbox.bottom = self->hitboxSize.y >> 17;
+
             self->updateRange.x += self->hitboxSize.x;
             self->updateRange.y += self->hitboxSize.y;
             break;
@@ -75,7 +77,7 @@ void LRZConvControl_HandlePlayerTrigger(void)
     bool32 interacted = false;
     foreach_active(Player, player)
     {
-        int32 playerID    = RSDK.GetEntityID(player);
+        int32 playerID  = RSDK.GetEntityID(player);
         bool32 collided = Player_CheckCollisionTouch(player, self, &self->hitbox);
 
         if ((1 << playerID) & self->activePlayers) {
@@ -86,7 +88,8 @@ void LRZConvControl_HandlePlayerTrigger(void)
             if (collided) {
                 if (!player->sidekick)
                     interacted = true;
-                self->activePlayers |= (1 << playerID);
+
+                self->activePlayers |= 1 << playerID;
             }
         }
     }
@@ -118,6 +121,7 @@ void LRZConvControl_HandleButtonTrigger(void)
                 case LRZCONVCTRL_BEHAVIOR_ONOFF_SWAP:
                     if (self->wasToggled != button->toggled)
                         LRZ2Setup->conveyorOff = !LRZ2Setup->conveyorOff;
+
                     self->wasToggled = button->toggled;
                     break;
 
@@ -129,6 +133,7 @@ void LRZConvControl_HandleButtonTrigger(void)
                 case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SWAP:
                     if (button->toggled != self->wasToggled)
                         LRZ2Setup->conveyorDir = !LRZ2Setup->conveyorDir;
+
                     self->wasToggled = button->toggled;
                     break;
                 default: break;
@@ -162,8 +167,8 @@ void LRZConvControl_EditorDraw(void)
             case LRZCONVCTRL_TRIGGER_PLAYER:
                 RSDK_DRAWING_OVERLAY(true);
 
-                self->hitbox.left   = -self->hitboxSize.x >> 17;
-                self->hitbox.top    = -self->hitboxSize.y >> 17;
+                self->hitbox.left   = -(self->hitboxSize.x >> 17);
+                self->hitbox.top    = -(self->hitboxSize.y >> 17);
                 self->hitbox.right  = self->hitboxSize.x >> 17;
                 self->hitbox.bottom = self->hitboxSize.y >> 17;
                 DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, self->direction, 0xFFFFFF);

@@ -7,7 +7,7 @@ typedef enum {
     LRZSPIRAL_CYLINDER,
     LRZSPIRAL_J_CURVE,
     LRZSPIRAL_C_CURVE,
-}LRZSpiralTypes;
+} LRZSpiralTypes;
 
 // Object Class
 struct ObjectLRZSpiral {
@@ -41,7 +41,7 @@ struct EntityLRZSpiral {
     int32 height;
     int32 radius;
     uint8 activePlayers;
-    int32 playerSpiralPos[4];
+    int32 playerSpiralPos[PLAYER_MAX];
     Hitbox hitboxTrigger;
 };
 
@@ -53,7 +53,7 @@ void LRZSpiral_Update(void);
 void LRZSpiral_LateUpdate(void);
 void LRZSpiral_StaticUpdate(void);
 void LRZSpiral_Draw(void);
-void LRZSpiral_Create(void* data);
+void LRZSpiral_Create(void *data);
 void LRZSpiral_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZSpiral_EditorDraw(void);
@@ -67,5 +67,4 @@ void LRZSpiral_State_Cylinder(void);
 void LRZSpiral_State_J_Curve(void);
 void LRZSpiral_State_C_Curve(void);
 
-
-#endif //!OBJ_LRZSPIRAL_H
+#endif //! OBJ_LRZSPIRAL_H

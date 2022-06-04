@@ -27,7 +27,7 @@ void Stalactite_Update(void);
 void Stalactite_LateUpdate(void);
 void Stalactite_StaticUpdate(void);
 void Stalactite_Draw(void);
-void Stalactite_Create(void* data);
+void Stalactite_Create(void *data);
 void Stalactite_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Stalactite_EditorDraw(void);
@@ -42,4 +42,4 @@ void Stalactite_State_Landed(void);
 void Stalactite_State_Falling_Boss(void);
 void Stalactite_State_Debris(void);
 
-#endif //!OBJ_STALACTITE_H
+#endif //! OBJ_STALACTITE_H

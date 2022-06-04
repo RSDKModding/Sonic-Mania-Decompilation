@@ -40,7 +40,7 @@ void LRZConvControl_Update(void);
 void LRZConvControl_LateUpdate(void);
 void LRZConvControl_StaticUpdate(void);
 void LRZConvControl_Draw(void);
-void LRZConvControl_Create(void* data);
+void LRZConvControl_Create(void *data);
 void LRZConvControl_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZConvControl_EditorDraw(void);
@@ -52,4 +52,4 @@ void LRZConvControl_Serialize(void);
 void LRZConvControl_HandlePlayerTrigger(void);
 void LRZConvControl_HandleButtonTrigger(void);
 
-#endif //!OBJ_LRZCONVCONTROL_H
+#endif //! OBJ_LRZCONVCONTROL_H

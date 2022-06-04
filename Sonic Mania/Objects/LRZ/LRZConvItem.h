@@ -6,7 +6,7 @@
 typedef enum {
     LRZCONVITEM_ROCK,
     LRZCONVITEM_SPIKEBALL,
-}LRZConvItemTypes;
+} LRZConvItemTypes;
 
 // Object Class
 struct ObjectLRZConvItem {
@@ -35,7 +35,7 @@ void LRZConvItem_Update(void);
 void LRZConvItem_LateUpdate(void);
 void LRZConvItem_StaticUpdate(void);
 void LRZConvItem_Draw(void);
-void LRZConvItem_Create(void* data);
+void LRZConvItem_Create(void *data);
 void LRZConvItem_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZConvItem_EditorDraw(void);
@@ -50,4 +50,4 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e);
 void LRZConvItem_State_Rock(void);
 void LRZConvItem_State_SpikeBall(void);
 
-#endif //!OBJ_LRZCONVITEM_H
+#endif //! OBJ_LRZCONVITEM_H

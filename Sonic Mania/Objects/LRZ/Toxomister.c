@@ -12,6 +12,7 @@ ObjectToxomister *Toxomister;
 void Toxomister_Update(void)
 {
     RSDK_THIS(Toxomister);
+
     StateMachine_Run(self->state);
 }
 
@@ -29,6 +30,7 @@ void Toxomister_Draw(void)
 
         self->animator.frameID = 0;
     }
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -37,14 +39,15 @@ void Toxomister_Create(void *data)
     RSDK_THIS(Toxomister);
 
     self->drawFX |= FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         self->startDir      = self->direction;
-        self->startPos.x    = self->position.x;
-        self->startPos.y    = self->position.y;
+        self->startPos      = self->position;
         self->visible       = true;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
+
         if (data) {
             self->active    = ACTIVE_NORMAL;
             self->drawOrder = Zone->playerDrawLow + 1;
@@ -123,10 +126,10 @@ void Toxomister_CheckOffScreen(void)
         if (self->parent)
             destroyEntity(self->parent);
 
-        self->parent       = NULL;
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
+        self->parent    = NULL;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
+
         Toxomister_Create(NULL);
     }
 }
@@ -134,6 +137,7 @@ void Toxomister_CheckOffScreen(void)
 void Toxomister_CheckCloudOnScreen(void)
 {
     RSDK_THIS(Toxomister);
+
     if (!RSDK.CheckOnScreen(self, NULL)) {
         self->parent->parent = NULL;
         destroyEntity(self);
@@ -160,7 +164,8 @@ void Toxomister_State_Setup(void)
     RSDK_THIS(Toxomister);
 
     self->active = ACTIVE_NORMAL;
-    self->state  = Toxomister_State_CreateClouds;
+
+    self->state = Toxomister_State_CreateClouds;
     Toxomister_State_CreateClouds();
 }
 
@@ -232,6 +237,7 @@ void Toxomister_StateCloud_ReachedFloor(void)
     RSDK_THIS(Toxomister);
 
     RSDK.ProcessAnimation(&self->animator);
+
     Toxomister_CheckPlayerCloudCollisions();
     Toxomister_CheckCloudOnScreen();
 }
@@ -243,6 +249,7 @@ void Toxomister_StateCloud_GrabbedPlayer(void)
     RSDK.ProcessAnimation(&self->animator);
 
     EntityPlayer *player = self->grabbedPlayer;
+
     if (!player) {
         self->parent->parent = NULL;
         RSDK.SetSpriteAnimation(Toxomister->aniFrames, 3, &self->animator, true, 0);
@@ -254,11 +261,8 @@ void Toxomister_StateCloud_GrabbedPlayer(void)
 
             if (!player->rings || player->sidekick) {
                 Player_Hit(player);
-                if (player->position.x > self->position.x)
-                    player->velocity.x = 0x20000;
-                else
-                    player->velocity.x = -0x20000;
-                self->grabbedPlayer                    = NULL;
+                player->velocity.x   = player->position.x > self->position.x ? 0x20000 : -0x20000;
+                self->grabbedPlayer  = NULL;
                 self->parent->parent = NULL;
                 RSDK.SetSpriteAnimation(Toxomister->aniFrames, 3, &self->animator, true, 0);
                 self->state = Toxomister_StateCloud_Dissipate;
@@ -281,6 +285,7 @@ void Toxomister_StateCloud_GrabbedPlayer(void)
         if (self->state == Toxomister_StateCloud_GrabbedPlayer) {
             self->position.x = player->position.x;
             self->position.y = player->position.y;
+
             if (player->onGround) {
                 player->groundVel = clampVal(player->groundVel, -0x20000, 0x20000);
             }
@@ -315,7 +320,7 @@ void Toxomister_StateCloud_GrabbedPlayer(void)
                         if (shakeFlags != 3 && shakeFlags != self->prevShakeFlags) {
                             self->prevShakeFlags = shakeFlags;
                             if (++self->shakeCount >= 6) {
-                                self->grabbedPlayer                    = NULL;
+                                self->grabbedPlayer  = NULL;
                                 self->parent->parent = NULL;
                                 RSDK.SetSpriteAnimation(Toxomister->aniFrames, 3, &self->animator, true, 0);
                                 self->state = Toxomister_StateCloud_Dissipate;
@@ -341,6 +346,7 @@ void Toxomister_StateCloud_Dissipate(void)
     RSDK_THIS(Toxomister);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID >= self->animator.frameCount - 1)
         destroyEntity(self);
 }
@@ -349,6 +355,7 @@ void Toxomister_StateCloud_Dissipate(void)
 void Toxomister_EditorDraw(void)
 {
     RSDK_THIS(Toxomister);
+
     int32 dir = self->direction;
     self->direction *= FLIP_Y;
 

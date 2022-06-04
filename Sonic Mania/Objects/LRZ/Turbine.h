@@ -34,7 +34,7 @@ void Turbine_Update(void);
 void Turbine_LateUpdate(void);
 void Turbine_StaticUpdate(void);
 void Turbine_Draw(void);
-void Turbine_Create(void* data);
+void Turbine_Create(void *data);
 void Turbine_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Turbine_EditorDraw(void);
@@ -46,4 +46,4 @@ void Turbine_Serialize(void);
 void Turbine_State_Handles(void);
 void Turbine_State_Spikes(void);
 
-#endif //!OBJ_TURBINE_H
+#endif //! OBJ_TURBINE_H

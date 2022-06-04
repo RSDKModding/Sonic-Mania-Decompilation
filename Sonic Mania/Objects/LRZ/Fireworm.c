@@ -12,6 +12,7 @@ ObjectFireworm *Fireworm;
 void Fireworm_Update(void)
 {
     RSDK_THIS(Fireworm);
+
     StateMachine_Run(self->state);
 }
 
@@ -30,7 +31,7 @@ void Fireworm_Draw(void)
     self->drawFX |= FX_FLIP;
     if (self->state) {
         // Draw Body
-        for (int32 i = Fireworm_SegmentCount - 1; i > 0; --i) {
+        for (int32 i = FIREWORM_SEGMENT_COUNT - 1; i > 0; --i) {
             self->direction = self->bodyDirections[i];
             RSDK.DrawSprite(&self->bodyAnimators[i], &self->bodyPositions[i], false);
             RSDK.DrawSprite(&self->flameAnimators[i], &self->bodyPositions[i], false);
@@ -45,20 +46,20 @@ void Fireworm_Draw(void)
 void Fireworm_Create(void *data)
 {
     RSDK_THIS(Fireworm);
+
     self->drawFX |= FX_FLIP;
 
     // Head
     RSDK.SetSpriteAnimation(Fireworm->aniFrames, 0, &self->bodyAnimators[0], true, 0);
 
     if (!SceneInfo->inEditor) {
-        for (int32 i = 0; i < Fireworm_SegmentCount; ++i) {
+        for (int32 i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
             self->bodyPositions[i].x = self->position.x;
             self->bodyPositions[i].y = self->position.y;
             self->bodyOriginY[i]     = self->position.y;
         }
 
-        self->startPos.x    = self->position.x;
-        self->startPos.y    = self->position.y;
+        self->startPos      = self->position;
         self->startDir      = self->direction;
         self->visible       = true;
         self->active        = ACTIVE_BOUNDS;
@@ -113,23 +114,25 @@ void Fireworm_CheckPlayerCollisions(void)
         // Collide with the head
         self->position.x = self->bodyPositions[0].x;
         self->position.y = self->bodyPositions[0].y;
+
         if (Player_CheckBadnikTouch(player, self, &Fireworm->hitboxBadnik) && Player_CheckBadnikBreak(player, self, false)) {
-            for (int32 i = 1; i < Fireworm_SegmentCount; ++i) {
+            for (int32 i = 1; i < FIREWORM_SEGMENT_COUNT; ++i) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPositions[i].x, self->bodyPositions[i].y);
                 RSDK.SetSpriteAnimation(Fireworm->aniFrames, 3, &debris->animator, true, 0);
-                debris->velocity.x    = RSDK.Rand(-0x40000, 0x40000);
-                debris->velocity.y    = RSDK.Rand(-0x40000, 0x40000);
-                debris->gravityStrength       = 0x3800;
-                debris->drawOrder     = Zone->objectDrawLow;
-                debris->updateRange.x = 0x400000;
-                debris->updateRange.y = 0x400000;
+                debris->velocity.x      = RSDK.Rand(-0x40000, 0x40000);
+                debris->velocity.y      = RSDK.Rand(-0x40000, 0x40000);
+                debris->gravityStrength = 0x3800;
+                debris->drawOrder       = Zone->objectDrawLow;
+                debris->updateRange.x   = 0x400000;
+                debris->updateRange.y   = 0x400000;
             }
+
             self->state = StateMachine_None;
             foreach_break;
         }
         else {
             // Collide with the rest of the body
-            for (int32 i = 1; i < Fireworm_SegmentCount; ++i) {
+            for (int32 i = 1; i < FIREWORM_SEGMENT_COUNT; ++i) {
                 self->position.x = self->bodyPositions[i].x;
                 self->position.y = self->bodyPositions[i].y;
 
@@ -154,19 +157,21 @@ void Fireworm_CheckOffScreen(void)
     RSDK_THIS(Fireworm);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->timer      = 0;
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
-        for (int32 i = 0; i < Fireworm_SegmentCount; ++i) {
+        self->timer     = 0;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
+
+        for (int32 i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
             self->bodyVelocities[i].x = 0;
             self->bodyAngles[i]       = 0;
             self->bodyTimers[i]       = 0;
+
             if (i > 0) {
                 RSDK.SetSpriteAnimation(-1, 0, &self->bodyAnimators[i], true, 0);
                 RSDK.SetSpriteAnimation(-1, 0, &self->flameAnimators[i], true, 0);
             }
         }
+
         Fireworm_Create(NULL);
     }
 }
@@ -176,7 +181,8 @@ void Fireworm_State_Setup(void)
     RSDK_THIS(Fireworm);
 
     self->active = ACTIVE_NORMAL;
-    self->state  = Fireworm_State_AwaitPlayer;
+
+    self->state = Fireworm_State_AwaitPlayer;
     Fireworm_State_AwaitPlayer();
 }
 
@@ -187,11 +193,12 @@ void Fireworm_State_AwaitPlayer(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Fireworm->hitboxRange)) {
-            for (int32 i = 0; i < Fireworm_SegmentCount; ++i) {
+            for (int32 i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
                 self->bodyDirections[i] = player->position.x >= self->position.x;
             }
 
             self->startDir = self->bodyDirections[0];
+
             if (self->startDir) {
                 self->bodyVelocities[0].x = 0x10000;
                 self->boundsL             = self->position.x - 0x3C0000;
@@ -202,6 +209,7 @@ void Fireworm_State_AwaitPlayer(void)
                 self->boundsL             = self->position.x - 0xBC0000;
                 self->boundsR             = self->position.x + 0x3C0000;
             }
+
             self->state = Fireworm_State_HeadAppear;
             foreach_break;
         }
@@ -216,11 +224,13 @@ void Fireworm_State_HeadAppear(void)
     RSDK_THIS(Fireworm);
 
     RSDK.ProcessAnimation(&self->bodyAnimators[0]);
+
     if (self->bodyAnimators[0].frameID == 3) {
-        for (int32 i = 1; i < Fireworm_SegmentCount; ++i) {
+        for (int32 i = 1; i < FIREWORM_SEGMENT_COUNT; ++i) {
             RSDK.SetSpriteAnimation(Fireworm->aniFrames, 3, &self->bodyAnimators[i], true, 0);
             self->flameExhaustDelays[i] = RSDK.Rand(0, 60);
         }
+
         self->state = Fireworm_State_BodyAppear;
     }
 }
@@ -230,14 +240,12 @@ void Fireworm_State_BodyAppear(void)
     RSDK_THIS(Fireworm);
 
     ++self->timer;
-    for (int i = 0; i < Fireworm_SegmentCount; ++i) {
-        if (self->timer == (i * 10) + 4) {
-            if (!self->bodyDirections[i])
-                self->bodyVelocities[i].x = -0x10000;
-            else
-                self->bodyVelocities[i].x = 0x10000;
 
-            if (i == Fireworm_SegmentCount - 1) {
+    for (int i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
+        if (self->timer == (i * 10) + 4) {
+            self->bodyVelocities[i].x = self->bodyDirections[i] ? 0x10000 : -0x10000;
+
+            if (i == FIREWORM_SEGMENT_COUNT - 1) {
                 self->timer = 0;
                 self->state = Fireworm_State_FlyAround;
             }
@@ -251,7 +259,7 @@ void Fireworm_State_FlyAround(void)
 {
     RSDK_THIS(Fireworm);
 
-    for (int32 i = 0; i < Fireworm_SegmentCount; ++i) {
+    for (int32 i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
         if (!self->bodyVelocities[i].x)
             continue;
 
@@ -263,11 +271,13 @@ void Fireworm_State_FlyAround(void)
         if (self->bodyVelocities[i].x <= 0) {
             if (self->bodyPositions[i].x > self->boundsL) {
                 self->bodyVelocities[i].x -= 0xC00;
+
                 if (self->bodyVelocities[i].x < -0x10000)
                     self->bodyVelocities[i].x = -0x10000;
             }
             else {
                 self->bodyVelocities[i].x += 0xC00;
+
                 if (self->bodyVelocities[i].x > 0x10000)
                     self->bodyVelocities[i].x = 0x10000;
 
@@ -277,23 +287,22 @@ void Fireworm_State_FlyAround(void)
                     else
                         RSDK.SetSpriteAnimation(Fireworm->aniFrames, 2, &self->bodyAnimators[i], true, 0);
 
-                    self->bodyDirections[i] = FLIP_X;
-                    if (!self->startDir)
-                        self->bodyVelocities[i].y = -0x10000;
-                    else
-                        self->bodyVelocities[i].y = 0x10000;
-                    self->bodyTimers[i] = 32;
+                    self->bodyDirections[i]   = FLIP_X;
+                    self->bodyVelocities[i].y = self->startDir ? 0x10000 : -0x10000;
+                    self->bodyTimers[i]       = 32;
                 }
             }
         }
         else {
             if (self->bodyPositions[i].x < self->boundsR) {
                 self->bodyVelocities[i].x += 0xC00;
+
                 if (self->bodyVelocities[i].x > 0x10000)
                     self->bodyVelocities[i].x = 0x10000;
             }
             else {
                 self->bodyVelocities[i].x -= 0xC00;
+
                 if (self->bodyVelocities[i].x < -0x10000)
                     self->bodyVelocities[i].x = -0x10000;
 
@@ -302,12 +311,10 @@ void Fireworm_State_FlyAround(void)
                         RSDK.SetSpriteAnimation(Fireworm->aniFrames, 4, &self->bodyAnimators[i], true, 0);
                     else
                         RSDK.SetSpriteAnimation(Fireworm->aniFrames, 2, &self->bodyAnimators[i], true, 0);
-                    self->bodyDirections[i] = FLIP_NONE;
-                    if (!self->startDir)
-                        self->bodyVelocities[i].y = 0x10000;
-                    else
-                        self->bodyVelocities[i].y = -0x10000;
-                    self->bodyTimers[i] = 32;
+
+                    self->bodyDirections[i]   = FLIP_NONE;
+                    self->bodyVelocities[i].y = self->startDir ? -0x10000 : 0x10000;
+                    self->bodyTimers[i]       = 32;
                 }
             }
         }
@@ -326,6 +333,7 @@ void Fireworm_State_FlyAround(void)
         self->bodyPositions[i].y = (RSDK.Sin1024(self->bodyAngles[i]) << 8) + self->bodyOriginY[i];
         self->bodyAngles[i] %= 0xC00;
     }
+
     Fireworm_CheckPlayerCollisions();
     Fireworm_CheckOffScreen();
 }
@@ -335,7 +343,7 @@ void Fireworm_EditorDraw(void)
 {
     RSDK_THIS(Fireworm);
 
-    for (int i = 0; i < Fireworm_SegmentCount; ++i) {
+    for (int i = 0; i < FIREWORM_SEGMENT_COUNT; ++i) {
         self->bodyPositions[i].x = self->position.x + (self->direction ? 0x100000 : -0x100000) * i;
         self->bodyPositions[i].y = self->position.y;
         self->bodyOriginY[i]     = self->position.y;
@@ -345,7 +353,7 @@ void Fireworm_EditorDraw(void)
     self->startPos.y = self->position.y;
     self->startDir   = self->direction;
 
-    for (int32 i = 1; i < Fireworm_SegmentCount; ++i) {
+    for (int32 i = 1; i < FIREWORM_SEGMENT_COUNT; ++i) {
         RSDK.SetSpriteAnimation(Fireworm->aniFrames, 3, &self->bodyAnimators[i], true, 0);
     }
 

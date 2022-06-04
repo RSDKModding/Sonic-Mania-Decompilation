@@ -33,9 +33,11 @@ void HPZEmerald_Update(void)
     if (!self->onGround) {
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;
+
         if (self->position.y >= self->startPos.y && self->velocity.y > 0) {
             self->position.y = self->startPos.y;
             self->velocity.y = -(self->velocity.y >> 1);
+
             if (!self->velocity.y)
                 self->onGround = true;
         }
@@ -66,6 +68,7 @@ void HPZEmerald_Draw(void)
 void HPZEmerald_Create(void *data)
 {
     RSDK_THIS(HPZEmerald);
+
     if (!SceneInfo->inEditor) {
         self->visible = true;
 
@@ -84,8 +87,7 @@ void HPZEmerald_Create(void *data)
                 break;
         }
 
-        self->startPos.x    = self->position.x;
-        self->startPos.y    = self->position.y;
+        self->startPos      = self->position;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -98,6 +100,7 @@ void HPZEmerald_Create(void *data)
             RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &self->emeraldAnimator, true, 0);
             RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &self->overlayAnimator, true, 1);
         }
+
         self->hitbox = RSDK.GetHitbox(&self->emeraldAnimator, 0);
     }
 }
@@ -111,9 +114,10 @@ void HPZEmerald_EditorDraw(void)
 
     self->solid = false;
     switch (self->type) {
-        case HPZEMERALD_MASTER:
         default:
+        case HPZEMERALD_MASTER:
         case HPZEMERALD_EMERALD_LOW: self->solid = true; break;
+
         case HPZEMERALD_EMERALD_HIGH: self->solid = true; break;
     }
 

@@ -12,6 +12,7 @@ ObjectLRZRockPile *LRZRockPile;
 void LRZRockPile_Update(void)
 {
     RSDK_THIS(LRZRockPile);
+
     StateMachine_Run(self->state);
 
     if (self->timer > 0)
@@ -25,6 +26,7 @@ void LRZRockPile_StaticUpdate(void) {}
 void LRZRockPile_Draw(void)
 {
     RSDK_THIS(LRZRockPile);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -312,6 +314,7 @@ void LRZRockPile_SetupDebris(void)
 void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
 {
     RSDK_THIS(LRZRockPile);
+
     LRZRockPile_SetupDebris();
 
     int32 sizeX = (self->hitbox.right - self->hitbox.left) << 16;
@@ -335,12 +338,12 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
             EntityDebris *rock = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
 
             RSDK.SetSpriteAnimation(LRZRockPile->particleFrames, animationID, &rock->animator, true, frameID);
-            rock->drawOrder     = self->drawOrder;
-            rock->delay         = delay;
-            rock->direction     = direction;
-            rock->gravityStrength       = 0x3800;
-            rock->updateRange.x = 0x800000;
-            rock->updateRange.y = 0x800000;
+            rock->drawOrder       = self->drawOrder;
+            rock->delay           = delay;
+            rock->direction       = direction;
+            rock->gravityStrength = 0x3800;
+            rock->updateRange.x   = 0x800000;
+            rock->updateRange.y   = 0x800000;
 
             rock->velocity.x = (velX >> 8) * ((abs(x - spawnX) / (sizeX >> 16)) >> 8);
             if (velX)
@@ -358,13 +361,13 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, spawnY);
         RSDK.SetSpriteAnimation(LRZRockPile->aniFrames, 0, &debris->animator, true, 1);
-        debris->drawFX        = FX_ROTATE | FX_FLIP;
-        debris->drawOrder     = self->drawOrder;
-        debris->gravityStrength       = 0x3800;
-        debris->direction     = self->direction;
-        debris->updateRange.x = 0x800000;
-        debris->updateRange.y = 0x800000;
-        debris->rotSpeed      = 8 * (velX <= 0) - 4;
+        debris->drawFX          = FX_ROTATE | FX_FLIP;
+        debris->drawOrder       = self->drawOrder;
+        debris->gravityStrength = 0x3800;
+        debris->direction       = self->direction;
+        debris->updateRange.x   = 0x800000;
+        debris->updateRange.y   = 0x800000;
+        debris->rotSpeed        = 8 * (velX <= 0) - 4;
 
         debris->velocity.x = (velX >> 8) * (abs(abs(x - self->position.x) / (sizeX >> 16)) >> 8);
         if (velX)
@@ -380,14 +383,14 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
 
         debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, spawnY);
         RSDK.SetSpriteAnimation(LRZRockPile->aniFrames, 0, &debris->animator, true, 2);
-        debris->drawFX        = FX_ROTATE | FX_FLIP;
-        debris->drawOrder     = self->drawOrder;
-        debris->gravityStrength       = 0x3800;
-        debris->direction     = self->direction;
-        debris->updateRange.x = 0x800000;
-        debris->updateRange.y = 0x800000;
-        debris->rotSpeed      = 8 * (velX > 0) - 4;
-        debris->velocity.x    = (velX >> 8) * ((abs(x - self->position.x) / sizeX) >> 8);
+        debris->drawFX          = FX_ROTATE | FX_FLIP;
+        debris->drawOrder       = self->drawOrder;
+        debris->gravityStrength = 0x3800;
+        debris->direction       = self->direction;
+        debris->updateRange.x   = 0x800000;
+        debris->updateRange.y   = 0x800000;
+        debris->rotSpeed        = 8 * (velX > 0) - 4;
+        debris->velocity.x      = (velX >> 8) * ((abs(x - self->position.x) / sizeX) >> 8);
 
         if (velX)
             debris->velocity.x += ((RSDK.Rand(0, 16) + 8) * (2 * (velX > 1) - 1)) << 12;
@@ -438,9 +441,10 @@ void LRZRockPile_State_Wall(void)
                         else
                             LRZRockPile_SpawnRockDebris(player->position.x, player->position.y, 0x40000, -0x20000);
                     }
-                    continue; // it's broken now, we don't want to check any solid collisions
+                    continue; // rock's broken now, we don't want to check any solid collisions
                 }
             }
+
             Player_CheckCollisionBox(player, self, &self->hitbox);
         }
     }

@@ -12,8 +12,10 @@ ObjectLRZ3OutroK *LRZ3OutroK;
 void LRZ3OutroK_Update(void)
 {
     RSDK_THIS(LRZ3OutroK);
+
     if (!self->activated) {
         LRZ3OutroK_StartCutscene();
+
         self->activated = true;
     }
 }
@@ -75,6 +77,7 @@ void LRZ3OutroK_StartCutscene(void)
 bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ3OutroK);
+
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
@@ -84,17 +87,22 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
     if (!host->timer) {
         LRZ3OutroK->prison->notSolid = true;
-        Zone->cameraBoundsT[0]       = 0;
-        Zone->cameraBoundsT[1]       = 0;
-        Zone->cameraBoundsR[0]       = (self->position.x + self->size.x) >> 16;
-        Zone->cameraBoundsR[1]       = (self->position.x + self->size.x) >> 16;
-        Zone->playerBoundActiveR[0]   = false;
-        Zone->playerBoundActiveR[1]   = false;
+
+        Zone->cameraBoundsT[0] = 0;
+        Zone->cameraBoundsT[1] = 0;
+        Zone->cameraBoundsR[0] = (self->position.x + self->size.x) >> 16;
+        Zone->cameraBoundsR[1] = (self->position.x + self->size.x) >> 16;
+
+        Zone->playerBoundActiveR[0] = false;
+        Zone->playerBoundActiveR[1] = false;
+
         CutsceneSeq_LockAllPlayerControl();
+
         player1->stateInput = StateMachine_None;
         player1->state      = Player_State_Ground;
         player1->groundVel  = 0;
         player1->right      = true;
+
         if (player2->classID == Player->classID) {
             player2->state      = Player_State_Ground;
             player2->stateInput = Player_Input_P2_AI;
@@ -107,7 +115,7 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
 
     if (player1->onGround && player1->position.x >= teleporter->position.x - 0x500000 && !host->values[0]) {
         player1->jumpPress = true;
-        host->values[0]  = true;
+        host->values[0]    = true;
         return true;
     }
 
@@ -126,6 +134,7 @@ bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host)
         CutsceneSeq_LockPlayerControl(player1);
         if (player2->classID == Player->classID && player2->onGround)
             CutsceneSeq_LockPlayerControl(player2);
+
         return true;
     }
 
@@ -135,19 +144,23 @@ bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host)
 bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ3OutroK);
+
     EntitySkyTeleporter *teleporter = LRZ3OutroK->teleporter;
 
     if (host->timer == 30) {
         foreach_active(Player, player)
         {
             player->state           = Player_State_None;
-            player->nextGroundState = 0;
-            player->nextAirState    = 0;
+            player->nextGroundState = StateMachine_None;
+            player->nextAirState    = StateMachine_None;
+
             RSDK.SetSpriteAnimation(SkyTeleporter->aniFrames, 1, &teleporter->animator, true, 0);
+
             if (player->characterID == ID_KNUCKLES)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, true, 3);
             else
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, false, 0);
+
             self->playerPos[player->playerID].x = player->position.x;
             self->playerPos[player->playerID].y = player->position.y;
         }
@@ -172,17 +185,18 @@ bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
                 player->position.y = self->playerPos[player->playerID].y;
             }
             else {
-                if (angle < 256) {
+                if (angle < 0x100) {
                     player->position.x = self->playerPos[player->playerID].x;
                     player->position.y = self->playerPos[player->playerID].y;
-                    player->position.x += ((RSDK.Sin512(angle + 384) >> 2) + 128) * ((x - self->playerPos[player->playerID].x) >> 8);
-                    player->position.y += ((RSDK.Sin512(angle + 384) >> 2) + 128) * ((y - self->playerPos[player->playerID].y) >> 8);
+                    player->position.x += ((RSDK.Sin512(angle + 0x180) >> 2) + 0x80) * ((x - self->playerPos[player->playerID].x) >> 8);
+                    player->position.y += ((RSDK.Sin512(angle + 0x180) >> 2) + 0x80) * ((y - self->playerPos[player->playerID].y) >> 8);
                 }
                 else {
                     player->position.x = x;
                     player->position.y = y;
                 }
             }
+
             player->position.x &= 0xFFFF0000;
             player->position.y &= 0xFFFF0000;
         }
@@ -197,6 +211,7 @@ bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
             player->position.x = x;
             player->position.y = y;
         }
+
         return true;
     }
 
@@ -222,6 +237,7 @@ bool32 LRZ3OutroK_Cutscene_TeleporterActivated(EntityCutsceneSeq *host)
             return true;
         }
     }
+
     return false;
 }
 

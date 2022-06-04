@@ -12,6 +12,7 @@ ObjectRockDrill *RockDrill;
 void RockDrill_Update(void)
 {
     RSDK_THIS(RockDrill);
+
     StateMachine_Run(self->state);
 }
 
@@ -24,6 +25,7 @@ void RockDrill_StaticUpdate(void)
             RSDK.PlaySfx(RockDrill->sfxDrill, 43643, 0xFF);
             RockDrill->playingDrillSfx = true;
         }
+
         RockDrill->drillSfxTimer = 0;
     }
     else if (RockDrill->playingDrillSfx) {
@@ -35,17 +37,17 @@ void RockDrill_StaticUpdate(void)
 void RockDrill_Draw(void)
 {
     RSDK_THIS(RockDrill);
-    Vector2 drawPos;
 
-    if ((self->invincibilityTimer & 1) != 0) {
+    if (self->invincibilityTimer & 1) {
         RSDK.SetPaletteEntry(0, 32, 0xE0E0E0);
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
     }
 
     // Piston (L1)
     self->animator.frameID = 1;
-    drawPos.x              = self->position.x - 0x260000;
-    drawPos.y              = self->position.y - self->pistonPos[0];
+    Vector2 drawPos;
+    drawPos.x = self->position.x - 0x260000;
+    drawPos.y = self->position.y - self->pistonPos[0];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
     // Drill (L1)
@@ -105,7 +107,9 @@ void RockDrill_Create(void *data)
         self->updateRange.y  = 0x800000;
         self->drillDelay[0]  = 4;
         self->pistonDelay[0] = 4;
+
         RSDK.SetSpriteAnimation(RockDrill->aniFrames, 0, &self->animator, true, 0);
+
         self->drawOrder = Zone->objectDrawLow;
         self->state     = RockDrill_State_Setup;
     }
@@ -148,6 +152,7 @@ void RockDrill_StageLoad(void)
 void RockDrill_CheckPlayerCollisions(void)
 {
     RSDK_THIS(RockDrill);
+
     if (self->invincibilityTimer) {
         self->invincibilityTimer--;
     }
@@ -157,8 +162,7 @@ void RockDrill_CheckPlayerCollisions(void)
             if (Player_CheckBadnikTouch(player, self, &RockDrill->hitboxBody) || Player_CheckBadnikTouch(player, self, &RockDrill->hitboxPistonL)
                 || Player_CheckBadnikTouch(player, self, &RockDrill->hitboxPistonR)) {
                 if (Player_CheckBossHit(player, self)) {
-                    RSDK.PlaySfx(RockDrill->sfxHit, false, 255);
-                    self->invincibilityTimer = 30;
+                    RockDrill_Hit();
                 }
             }
             else {
@@ -169,27 +173,51 @@ void RockDrill_CheckPlayerCollisions(void)
     }
 }
 
+void RockDrill_Hit(void)
+{
+    RSDK_THIS(RockDrill);
+    RSDK.PlaySfx(RockDrill->sfxHit, false, 255);
+    self->invincibilityTimer = 30;
+}
+
+void RockDrill_Explode(void)
+{
+    RSDK_THIS(RockDrill);
+
+    if (!(Zone->timer & 3)) {
+        RSDK.PlaySfx(Drillerdroid->sfxExplosion, false, 255);
+
+        if (!(Zone->timer & 3)) {
+            int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+
+            explosion->drawOrder = Zone->objectDrawHigh + 2;
+        }
+    }
+}
+
 void RockDrill_SpawnDebris(int offset)
 {
     RSDK_THIS(RockDrill);
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, offset + self->position.x, self->position.y + 0x400000);
     RSDK.SetSpriteAnimation(RockDrill->aniFrames, 1, &debris->animator, true, RSDK.Rand(0, 8));
-    debris->velocity.x    = RSDK.Rand(0, 6) << 15;
-    debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
-    debris->gravityStrength       = 0x3800;
-    debris->drawOrder     = Zone->objectDrawLow;
-    debris->updateRange.x = 0x400000;
-    debris->updateRange.y = 0x400000;
+    debris->velocity.x      = RSDK.Rand(0, 6) << 15;
+    debris->velocity.y      = RSDK.Rand(-12, -8) << 15;
+    debris->gravityStrength = 0x3800;
+    debris->drawOrder       = Zone->objectDrawLow;
+    debris->updateRange.x   = 0x400000;
+    debris->updateRange.y   = 0x400000;
 
     debris = CREATE_ENTITY(Debris, Debris_State_Fall, offset + self->position.x, self->position.y + 0x400000);
     RSDK.SetSpriteAnimation(RockDrill->aniFrames, 1, &debris->animator, true, RSDK.Rand(0, 8));
-    debris->velocity.x    = RSDK.Rand(-6, 0) << 15;
-    debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
-    debris->gravityStrength       = 0x3800;
-    debris->drawOrder     = Zone->objectDrawLow;
-    debris->updateRange.x = 0x400000;
-    debris->updateRange.y = 0x400000;
+    debris->velocity.x      = RSDK.Rand(-6, 0) << 15;
+    debris->velocity.y      = RSDK.Rand(-12, -8) << 15;
+    debris->gravityStrength = 0x3800;
+    debris->drawOrder       = Zone->objectDrawLow;
+    debris->updateRange.x   = 0x400000;
+    debris->updateRange.y   = 0x400000;
 }
 
 void RockDrill_State_Setup(void)
@@ -205,15 +233,18 @@ void RockDrill_State_Setup(void)
 
     self->active = ACTIVE_NORMAL;
     self->state  = RockDrill_State_Drilling;
+
     if (self->lockCamera) {
-        self->boundsL          = Zone->cameraBoundsL[0];
-        self->boundsR          = Zone->cameraBoundsR[0];
-        self->boundsT          = Zone->cameraBoundsT[0];
-        self->boundsB          = Zone->cameraBoundsB[0];
+        self->boundsL = Zone->cameraBoundsL[0];
+        self->boundsR = Zone->cameraBoundsR[0];
+        self->boundsT = Zone->cameraBoundsT[0];
+        self->boundsB = Zone->cameraBoundsB[0];
+
         Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX - 96;
         Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX - 96;
         Zone->cameraBoundsB[0] = (self->position.y >> 16) + 96;
     }
+
     self->timer = 120;
 }
 
@@ -270,6 +301,7 @@ void RockDrill_State_Drilling(void)
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
     if (!camera->shakePos.y)
         camera->shakePos.y = 4;
+
     self->position.y ^= 0x10000;
     RockDrill_CheckPlayerCollisions();
 
@@ -293,6 +325,7 @@ void RockDrill_State_Drilling(void)
             Zone->cameraBoundsT[0] = self->boundsT;
             Zone->cameraBoundsB[0] = self->boundsB;
         }
+
         self->timer  = 30;
         self->state  = RockDrill_State_Falling;
         self->active = ACTIVE_NORMAL;
@@ -309,6 +342,7 @@ void RockDrill_State_Falling(void)
 
         uint16 tileLow  = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
         uint16 tileHigh = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
+
         if (RSDK.GetTileFlags(tileLow, 0) == LRZ2_TFLAGS_LAVA || RSDK.GetTileFlags(tileHigh, 0) == LRZ2_TFLAGS_LAVA) {
             self->timer      = 0;
             self->velocity.y = 0x8000;
@@ -325,108 +359,101 @@ void RockDrill_State_Falling(void)
 void RockDrill_State_Explode(void)
 {
     RSDK_THIS(RockDrill);
+
     self->position.y += self->velocity.y;
 
-    if (!(Zone->timer & 3)) {
-        RSDK.PlaySfx(Drillerdroid->sfxExplosion, false, 255);
-        if (!(Zone->timer & 3)) {
-            int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
-            int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
-        }
-    }
+    RockDrill_Explode();
 
     if (++self->timer > 120) {
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(0, 2) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(0, 2) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(0, 2) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(0, 2) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 3);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 5);
-        debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
-        debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->objectDrawLow;
-        debris->updateRange.x = 0x400000;
-        debris->updateRange.y = 0x400000;
+        debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
+        debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow;
+        debris->updateRange.x   = 0x400000;
+        debris->updateRange.y   = 0x400000;
 
         destroyEntity(self);
     }
@@ -436,11 +463,13 @@ void RockDrill_State_Explode(void)
 void RockDrill_EditorDraw(void)
 {
     RSDK_THIS(RockDrill);
+
     self->active         = ACTIVE_BOUNDS;
     self->updateRange.x  = 0x800000;
     self->updateRange.y  = 0x800000;
     self->drillDelay[0]  = 4;
     self->pistonDelay[0] = 4;
+
     RSDK.SetSpriteAnimation(RockDrill->aniFrames, 0, &self->animator, true, 0);
 
     RockDrill_Draw();

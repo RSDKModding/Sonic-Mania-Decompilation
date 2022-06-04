@@ -15,15 +15,16 @@ void Rexon_Update(void)
 
     StateMachine_Run(self->state);
 
-    self->positions[Rexon_SegmentCount].x = self->position.x;
-    self->positions[Rexon_SegmentCount].y = self->position.y;
-    if (self->direction)
-        self->positions[Rexon_SegmentCount].x += 0x1C0000;
-    else
-        self->positions[Rexon_SegmentCount].x -= 0x1C0000;
-    self->positions[Rexon_SegmentCount].y += 0x110000;
+    self->positions[REXON_SEGMENT_COUNT].x = self->position.x;
+    self->positions[REXON_SEGMENT_COUNT].y = self->position.y;
 
-    for (int32 i = Rexon_SegmentCount - 1; i >= 0; --i) {
+    if (self->direction)
+        self->positions[REXON_SEGMENT_COUNT].x += 0x1C0000;
+    else
+        self->positions[REXON_SEGMENT_COUNT].x -= 0x1C0000;
+    self->positions[REXON_SEGMENT_COUNT].y += 0x110000;
+
+    for (int32 i = REXON_SEGMENT_COUNT - 1; i >= 0; --i) {
         int32 y = self->segmentAmplitude[i] >> 1;
         if (self->direction == FLIP_X)
             y = (0x80 - y) & 0xFF;
@@ -42,9 +43,10 @@ void Rexon_Draw(void)
     RSDK_THIS(Rexon);
 
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
+
     if (self->state != Rexon_State_Destroyed && self->state != Rexon_State_Explode) {
         RSDK.DrawSprite(&self->headAnimator, self->positions, false);
-        for (int32 i = 1; i < Rexon_SegmentCount; ++i) RSDK.DrawSprite(&self->neckAnimator, &self->positions[i], false);
+        for (int32 i = 1; i < REXON_SEGMENT_COUNT; ++i) RSDK.DrawSprite(&self->neckAnimator, &self->positions[i], false);
     }
 }
 
@@ -53,8 +55,7 @@ void Rexon_Create(void *data)
     RSDK_THIS(Rexon);
 
     self->drawFX |= FX_FLIP;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->startDir      = self->direction;
     self->visible       = true;
     self->active        = ACTIVE_BOUNDS;
@@ -69,7 +70,7 @@ void Rexon_Create(void *data)
             if (!self->noMove)
                 self->velocity.x = -0x2000;
 
-            for (int32 i = 0; i < Rexon_SegmentCount; ++i) {
+            for (int32 i = 0; i < REXON_SEGMENT_COUNT; ++i) {
                 self->segmentMagnitude[i]  = 0;
                 self->segmentAmplitude[i]  = 0x170;
                 self->segmentDirections[i] = FLIP_NONE;
@@ -147,9 +148,8 @@ void Rexon_CheckOffScreen(void)
     RSDK_THIS(Rexon);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Rexon_Create(NULL);
     }
 }
@@ -178,7 +178,7 @@ void Rexon_CheckPlayerCollisions(void)
                 }
                 else {
                     // Check hitboxes for all body parts individually, too
-                    for (int32 i = 1; i < Rexon_SegmentCount; ++i) {
+                    for (int32 i = 1; i < REXON_SEGMENT_COUNT; ++i) {
                         self->position.x = self->positions[i].x;
                         self->position.y = self->positions[i].y;
                         if (Player_CheckCollisionTouch(player, self, &Rexon->hitboxBadnik))
@@ -196,8 +196,9 @@ void Rexon_CheckPlayerCollisions(void)
 void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
 {
     if (rexon->state != Rexon_State_Destroyed && rexon->state != Rexon_State_Explode) {
-        int32 x           = rexon->position.x;
-        int32 y           = rexon->position.y;
+        int32 x = rexon->position.x;
+        int32 y = rexon->position.y;
+
         rexon->position.x = rexon->positions[0].x;
         rexon->position.y = rexon->positions[0].y;
 
@@ -209,7 +210,7 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
         rexon->position.y = y;
 
         int32 velocities[] = { -0x8000, 0x10000, -0x10000, 0x8000 };
-        for (int32 i = 1; i < Rexon_SegmentCount; ++i) {
+        for (int32 i = 1; i < REXON_SEGMENT_COUNT; ++i) {
             EntityRexon *debris = CREATE_ENTITY(Rexon, intToVoid(REXON_DEBRIS), rexon->positions[i].x, rexon->positions[i].y);
             debris->direction   = rexon->direction;
             debris->velocity.x  = velocities[(i - 1) & 3];
@@ -231,7 +232,8 @@ void Rexon_State_Setup(void)
     RSDK_THIS(Rexon);
 
     self->active = ACTIVE_NORMAL;
-    self->state  = Rexon_State_Hidden;
+
+    self->state = Rexon_State_Hidden;
     Rexon_State_Hidden();
 }
 
@@ -278,7 +280,7 @@ void Rexon_State_Rising(void)
         self->segmentAmplitude[i] += 2;
     }
 
-    if (self->segmentID == Rexon_SegmentCount)
+    if (self->segmentID == REXON_SEGMENT_COUNT)
         self->state = Rexon_State_Shooting;
 
     Rexon_CheckPlayerCollisions();
@@ -291,7 +293,7 @@ void Rexon_State_Shooting(void)
 
     RSDK.ProcessAnimation(&self->headAnimator);
 
-    for (int32 i = 0; i < Rexon_SegmentCount; ++i) {
+    for (int32 i = 0; i < REXON_SEGMENT_COUNT; ++i) {
         if (self->segmentDirections[i]) {
             if (--self->segmentAmplitude[i] <= 0x160)
                 self->segmentDirections[i] = FLIP_NONE;
@@ -303,6 +305,7 @@ void Rexon_State_Shooting(void)
 
     if (self->segmentAmplitude[0] == 0x160) {
         RSDK.PlaySfx(Rexon->sfxShot, false, 255);
+
         EntityRexon *shot = CREATE_ENTITY(Rexon, intToVoid(REXON_SHOT), self->positions[0].x, self->positions[0].y);
         if (self->direction) {
             shot->position.x += 0xE0000;
@@ -312,6 +315,7 @@ void Rexon_State_Shooting(void)
             shot->position.x -= 0xE0000;
             shot->velocity.x = -0x10000;
         }
+
         shot->position.y += 0x60000;
         shot->velocity.y = 0x8000;
     }
@@ -342,6 +346,7 @@ void Rexon_State_Explode(void)
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(Rexon->sfxExplosion, false, 255);
+
         if (Zone->timer & 4) {
             int32 x                    = self->position.x + (RSDK.Rand(Rexon->hitboxShell.left, Rexon->hitboxShell.right) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(Rexon->hitboxShell.top, Rexon->hitboxShell.bottom) << 16);
@@ -361,6 +366,7 @@ void Rexon_State_Debris(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     self->visible ^= true;
 
     if (!RSDK.CheckOnScreen(self, NULL))
@@ -397,7 +403,7 @@ void Rexon_EditorDraw(void)
 {
     RSDK_THIS(Rexon);
 
-    for (int32 i = 0; i < Rexon_SegmentCount; ++i) {
+    for (int32 i = 0; i < REXON_SEGMENT_COUNT; ++i) {
         self->segmentMagnitude[i] = 0xF00;
         self->segmentAmplitude[i] = 0x170;
     }
@@ -407,15 +413,16 @@ void Rexon_EditorDraw(void)
     RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &self->headAnimator, true, 2);
     RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &self->neckAnimator, true, 0);
 
-    self->positions[Rexon_SegmentCount].x = self->position.x;
-    self->positions[Rexon_SegmentCount].y = self->position.y;
-    if (self->direction)
-        self->positions[Rexon_SegmentCount].x += 0x1C0000;
-    else
-        self->positions[Rexon_SegmentCount].x -= 0x1C0000;
-    self->positions[Rexon_SegmentCount].y += 0x110000;
+    self->positions[REXON_SEGMENT_COUNT].x = self->position.x;
+    self->positions[REXON_SEGMENT_COUNT].y = self->position.y;
 
-    for (int32 i = Rexon_SegmentCount - 1; i >= 0; --i) {
+    if (self->direction)
+        self->positions[REXON_SEGMENT_COUNT].x += 0x1C0000;
+    else
+        self->positions[REXON_SEGMENT_COUNT].x -= 0x1C0000;
+    self->positions[REXON_SEGMENT_COUNT].y += 0x110000;
+
+    for (int32 i = REXON_SEGMENT_COUNT - 1; i >= 0; --i) {
         int32 y = self->segmentAmplitude[i] >> 1;
         if (self->direction == FLIP_X)
             y = (0x80 - y) & 0xFF;

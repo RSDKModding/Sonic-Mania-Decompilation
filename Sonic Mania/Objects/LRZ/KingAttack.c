@@ -12,6 +12,7 @@ ObjectKingAttack *KingAttack;
 void KingAttack_Update(void)
 {
     RSDK_THIS(KingAttack);
+
     StateMachine_Run(self->state);
 }
 
@@ -34,19 +35,19 @@ void KingAttack_Draw(void)
 
                 vertices[0].x = self->laserVertPostions[i].x - x;
                 vertices[0].y = self->laserVertPostions[i].y - y;
-                colors[0]    = self->laserColors[i];
+                colors[0]     = self->laserColors[i];
 
                 vertices[1].x = self->laserVertPostions[i + 1].x - x;
                 vertices[1].y = self->laserVertPostions[i + 1].y - y;
-                colors[1]    = self->laserColors[i + 1];
+                colors[1]     = self->laserColors[i + 1];
 
                 vertices[2].x = self->laserVertPostions[i + 3].x - x;
                 vertices[2].y = self->laserVertPostions[i + 3].y - y;
-                colors[2]    = self->laserColors[i + 3];
+                colors[2]     = self->laserColors[i + 3];
 
                 vertices[3].x = self->laserVertPostions[i + 2].x - x;
                 vertices[3].y = self->laserVertPostions[i + 2].y - y;
-                colors[3]    = self->laserColors[i + 2];
+                colors[3]     = self->laserColors[i + 2];
 
                 RSDK.DrawBlendedFace(vertices, colors, 4, self->alpha, INK_ADD);
             }
@@ -72,19 +73,22 @@ void KingAttack_Create(void *data)
 
         switch (self->type) {
             case KINGATTACK_LASER:
-                self->inkEffect              = INK_ADD;
-                self->visible                = true;
-                self->laserColors           = KingAttack->laserColors;
-                self->state                  = KingAttack_State_Laser;
+                self->inkEffect   = INK_ADD;
+                self->visible     = true;
+                self->laserColors = KingAttack->laserColors;
+                self->state       = KingAttack_State_Laser;
+
                 KingAttack->laserEruptActive = false;
+
                 RSDK.PlaySfx(KingAttack->sfxLaserSweep, false, 255);
                 RSDK.SetSpriteAnimation(KingAttack->aniFrames, 21, &self->animator, true, 0);
                 break;
 
             case KINGATTACK_LASERBLAST:
                 RSDK.SetSpriteAnimation(KingAttack->aniFrames, 23, &self->animator, true, 0);
-                self->state         = KingAttack_State_LaserBlast_Delay;
-                self->drawFX        = FX_FLIP;
+                self->state  = KingAttack_State_LaserBlast_Delay;
+                self->drawFX = FX_FLIP;
+
                 self->hitbox.left   = -16;
                 self->hitbox.top    = -64;
                 self->hitbox.right  = 16;
@@ -95,7 +99,9 @@ void KingAttack_Create(void *data)
                 self->drawFX  = FX_SCALE;
                 self->visible = true;
                 RSDK.SetSpriteAnimation(KingAttack->aniFrames, 20, &self->animator, true, RSDK.Rand(0, 6));
-                self->state         = KingAttack_State_OrbitAppear;
+
+                self->state = KingAttack_State_OrbitAppear;
+
                 self->hitbox.left   = -10;
                 self->hitbox.top    = -10;
                 self->hitbox.right  = 10;
@@ -108,13 +114,16 @@ void KingAttack_Create(void *data)
                 self->visible   = true;
                 self->alpha     = 0xC0;
                 RSDK.SetSpriteAnimation(KingAttack->aniFrames, 24, &self->animator, true, 0);
+
                 self->state = KingAttack_State_Trail;
                 break;
 
             case KINGATTACK_LARGEBULLET:
                 self->drawFX  = FX_SCALE;
                 self->visible = true;
+
                 RSDK.SetSpriteAnimation(KingAttack->aniFrames, 20, &self->animator, true, RSDK.Rand(0, 6));
+
                 self->scale.x = 0x100;
                 self->scale.y = 0x100;
                 self->state   = KingAttack_State_LargeBullet_Appear;
@@ -123,18 +132,22 @@ void KingAttack_Create(void *data)
             case KINGATTACK_ENERGYLINE:
                 self->drawOrder = Zone->objectDrawLow;
                 self->visible   = true;
-                self->state     = KingAttack_State_EnergyLine;
-                self->angle     = RSDK.Rand(0, 256);
-                self->timer     = 0x4000;
-                self->alpha     = 0x100;
+
+                self->state = KingAttack_State_EnergyLine;
+
+                self->angle = RSDK.Rand(0, 256);
+                self->timer = 0x4000;
+                self->alpha = 0x100;
                 break;
 
             case KINGATTACK_SMALLBULLET:
                 self->drawOrder = Zone->objectDrawLow;
                 self->drawFX    = FX_ROTATE;
                 self->visible   = true;
+
                 RSDK.SetSpriteAnimation(KingAttack->aniFrames, 21, &self->animator, true, 0);
-                self->state         = KingAttack_State_SmallBullet;
+                self->state = KingAttack_State_SmallBullet;
+
                 self->hitbox.left   = -4;
                 self->hitbox.top    = -4;
                 self->hitbox.right  = 4;
@@ -158,14 +171,15 @@ void KingAttack_StageLoad(void)
     KingAttack->sfxElecPulse = RSDK.GetSfx("Stage/ElecPulse.wav");
     KingAttack->sfxTwinShot  = RSDK.GetSfx("LRZ/TwinShot.wav");
 
-    int id = Soundboard_LoadSFX("LRZ/ElecIdle.wav", true, KingAttack_ElecIdleCheckCB, NULL);
-    if (id >= 0)
-        Soundboard->sfxFadeOutDuration[id] = 30;
+    int32 sfxID = Soundboard_LoadSFX("LRZ/ElecIdle.wav", true, KingAttack_ElecIdleCheckCB, NULL);
+    if (sfxID >= 0)
+        Soundboard->sfxFadeOutDuration[sfxID] = 30;
 }
 
 bool32 KingAttack_ElecIdleCheckCB(void)
 {
-    int count = 0;
+    int32 count = 0;
+
     foreach_active(KingAttack, attack)
     {
         if (attack->type == KINGATTACK_ORBIT)
@@ -224,8 +238,10 @@ void KingAttack_State_Laser(void)
     RSDK_THIS(KingAttack);
 
     RSDK.ProcessAnimation(&self->animator);
+
     self->position.x += self->velocity.x;
     ++self->timer;
+
     KingAttack_HandleLaserPositions();
 
     if (self->timer < 16) {
@@ -253,6 +269,7 @@ void KingAttack_State_LaserBlast_Delay(void)
     if (++self->timer == 30) {
         self->timer   = 0;
         self->visible = true;
+
         if (KingAttack->laserEruptActive) {
             KingAttack->laserEruptActive = false;
         }
@@ -261,6 +278,7 @@ void KingAttack_State_LaserBlast_Delay(void)
             RSDK.PlaySfx(KingAttack->sfxLaserErupt, false, 255);
             KingAttack->laserEruptActive = true;
         }
+
         self->state = KingAttack_State_LaserBlast_Erupt;
     }
 }
@@ -300,16 +318,19 @@ void KingAttack_State_OrbitAppear(void)
         x = RSDK.Cos1024(self->angle) - 0x240;
     else
         x = RSDK.Cos1024(self->angle) + 0x240;
+
     self->position.x = (x << 12) + king->position.x;
     self->position.y = (((RSDK.Sin1024(self->angle) - 0x300) << 12) + king->position.y);
+
     self->velocity.x = self->position.x - self->velocity.x;
     self->velocity.y = self->position.y - self->velocity.y;
+
     KingAttack_CheckPlayerCollisions();
+
     if (++self->timer == 120) {
-        self->timer       = 0;
-        self->targetPos.x = king->position.x;
-        self->targetPos.y = king->position.y;
-        self->state       = KingAttack_State_Orbiting;
+        self->timer     = 0;
+        self->targetPos = king->position;
+        self->state     = KingAttack_State_Orbiting;
     }
 }
 
@@ -323,6 +344,7 @@ void KingAttack_State_Orbiting(void)
 
     self->position.x += king->position.x - self->targetPos.x;
     self->position.y += king->position.y - self->targetPos.y;
+
     if (self->position.x <= king->position.x) {
         if (self->position.x < king->position.x)
             self->velocity.x += 0x4000;
@@ -357,12 +379,14 @@ void KingAttack_State_Orbiting(void)
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    self->targetPos.x = king->position.x;
-    self->targetPos.y = king->position.y;
+
+    self->targetPos = king->position;
 
     self->angle = (self->angle + 12) & 0x3FF;
+
     self->scale.x += (0x180 - self->scale.x - (RSDK.Sin1024(self->angle) >> 3)) >> 3;
     self->scale.y = self->scale.x;
+
     KingAttack_CheckPlayerCollisions();
 
     if (self->angle < 512)
@@ -376,6 +400,7 @@ void KingAttack_State_OrbitLaunched(void)
     RSDK_THIS(KingAttack);
 
     RSDK.ProcessAnimation(&self->animator);
+
     ++self->timer;
     if (!(self->timer & 3))
         CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_TRAIL), self->position.x, self->position.y);
@@ -387,8 +412,10 @@ void KingAttack_State_OrbitLaunched(void)
 
     self->velocity.x += ((self->targetVelocity.x - self->velocity.x) >> 3);
     self->velocity.y += ((self->targetVelocity.y - self->velocity.y) >> 3);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     KingAttack_CheckPlayerCollisions();
 
     if (!RSDK.CheckOnScreen(self, NULL))
@@ -401,6 +428,7 @@ void KingAttack_State_Trail(void)
 
     if (self->timer++ >= 8) {
         self->alpha -= 8;
+
         if (self->alpha <= 0)
             destroyEntity(self);
     }
@@ -416,11 +444,12 @@ void KingAttack_State_LargeBullet_Appear(void)
 
     if (self->scale.x < 0x400)
         self->scale.x += 4;
+
     self->scale.y = self->scale.x;
 
     ++self->timer;
-    self->position.x = king->position.x;
-    self->position.y = king->position.y;
+
+    self->position = king->position;
     if (king->direction)
         self->position.x -= 0x240000;
     else
@@ -444,18 +473,21 @@ void KingAttack_State_EnergyLine(void)
 
     EntityKingAttack *parent = (EntityKingAttack *)self->parent;
 
-    self->position.x  = self->timer * RSDK.Cos256(self->angle);
-    self->position.y  = self->timer * RSDK.Sin256(self->angle);
+    self->position.x = self->timer * RSDK.Cos256(self->angle);
+    self->position.y = self->timer * RSDK.Sin256(self->angle);
+
     self->targetPos.x = self->position.x - (self->position.x >> 3);
     self->targetPos.y = self->position.y - (self->position.y >> 3);
 
     self->position.x += parent->position.x;
     self->position.y += parent->position.y;
+
     self->targetPos.x += parent->position.x;
     self->targetPos.y += parent->position.y;
 
     self->alpha -= 16;
     self->timer -= 0x200;
+
     if (self->timer < 0x400)
         destroyEntity(self);
 }
@@ -468,16 +500,15 @@ void KingAttack_State_LargeBullet_TwinShot(void)
 
     RSDK.ProcessAnimation(&self->animator);
 
-    self->position.x = king->position.x;
-    self->position.y = king->position.y;
+    self->position = king->position;
 
     if (king->direction)
         self->position.x -= 0x240000;
     else
         self->position.x += 0x240000;
     self->position.y -= 0x300000;
-    ++self->timer;
 
+    ++self->timer;
     if (!(self->timer & 6))
         RSDK.PlaySfx(KingAttack->sfxTwinShot, false, 255);
 
@@ -497,6 +528,7 @@ void KingAttack_State_LargeBullet_TwinShot(void)
     if (self->timer > 60) {
         self->scale.x -= 4;
         self->scale.y = self->scale.x;
+
         if (!self->scale.x)
             destroyEntity(self);
     }
@@ -507,9 +539,12 @@ void KingAttack_State_SmallBullet(void)
     RSDK_THIS(KingAttack);
 
     RSDK.ProcessAnimation(&self->animator);
+
     self->rotation = (self->rotation + 16) & 0x1FF;
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     KingAttack_CheckPlayerCollisions();
 
     foreach_active(HPZEmerald, emerald)
@@ -539,6 +574,7 @@ void KingAttack_State_SmallBullet_Impact(void)
     RSDK_THIS(KingAttack);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 }
@@ -547,7 +583,9 @@ void KingAttack_State_SmallBullet_Impact(void)
 void KingAttack_EditorDraw(void)
 {
     RSDK_THIS(KingAttack);
+
     RSDK.SetSpriteAnimation(KingAttack->aniFrames, 20, &self->animator, true, 0);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 

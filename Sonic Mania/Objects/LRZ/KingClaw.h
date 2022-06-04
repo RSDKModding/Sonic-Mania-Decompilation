@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define KingClaw_ChainCount (12)
+#define KINGCLAW_CHAIN_COUNT (12)
 
 // Object Class
 struct ObjectKingClaw {
@@ -19,7 +19,7 @@ struct EntityKingClaw {
     StateMachine(state);
     int32 timer;
     int32 targetY;
-    Vector2 chainPos[KingClaw_ChainCount];
+    Vector2 chainPos[KINGCLAW_CHAIN_COUNT];
     Vector2 drawPos;
     EntityHPZEmerald *masterEmerald;
     bool32 forceHighDrawOrder;
@@ -37,7 +37,7 @@ void KingClaw_Update(void);
 void KingClaw_LateUpdate(void);
 void KingClaw_StaticUpdate(void);
 void KingClaw_Draw(void);
-void KingClaw_Create(void* data);
+void KingClaw_Create(void *data);
 void KingClaw_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void KingClaw_EditorDraw(void);
@@ -55,4 +55,4 @@ void KingClaw_State_Swinging(void);
 void KingClaw_State_LowerClaw(void);
 void KingClaw_State_RaiseClaw(void);
 
-#endif //!OBJ_KINGCLAW_H
+#endif //! OBJ_KINGCLAW_H

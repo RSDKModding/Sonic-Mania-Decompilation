@@ -44,7 +44,7 @@ void WalkerLegs_Update(void);
 void WalkerLegs_LateUpdate(void);
 void WalkerLegs_StaticUpdate(void);
 void WalkerLegs_Draw(void);
-void WalkerLegs_Create(void* data);
+void WalkerLegs_Create(void *data);
 void WalkerLegs_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void WalkerLegs_EditorDraw(void);
@@ -68,4 +68,4 @@ void WalkerLegs_State_Idle(void);
 void WalkerLegs_State_Stepping(void);
 void WalkerLegs_State_TryToReset(void);
 
-#endif //!OBJ_WALKERLEGS_H
+#endif //! OBJ_WALKERLEGS_H

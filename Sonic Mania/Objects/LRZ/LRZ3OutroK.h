@@ -15,7 +15,7 @@ struct ObjectLRZ3OutroK {
 
 // Entity Class
 struct EntityLRZ3OutroK {
-	MANIA_CUTSCENE_BASE
+    MANIA_CUTSCENE_BASE
     Vector2 playerPos[2];
 };
 
@@ -27,10 +27,12 @@ void LRZ3OutroK_Update(void);
 void LRZ3OutroK_LateUpdate(void);
 void LRZ3OutroK_StaticUpdate(void);
 void LRZ3OutroK_Draw(void);
-void LRZ3OutroK_Create(void* data);
+void LRZ3OutroK_Create(void *data);
 void LRZ3OutroK_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LRZ3OutroK_EditorDraw(void);
 void LRZ3OutroK_EditorLoad(void);
+#endif
 void LRZ3OutroK_Serialize(void);
 
 // Extra Entity Functions
@@ -41,4 +43,4 @@ bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host);
 bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host);
 bool32 LRZ3OutroK_Cutscene_TeleporterActivated(EntityCutsceneSeq *host);
 
-#endif //!OBJ_LRZ3OUTROK_H
+#endif //! OBJ_LRZ3OUTROK_H

@@ -26,7 +26,7 @@ void ConveyorBelt_Update(void);
 void ConveyorBelt_LateUpdate(void);
 void ConveyorBelt_StaticUpdate(void);
 void ConveyorBelt_Draw(void);
-void ConveyorBelt_Create(void* data);
+void ConveyorBelt_Create(void *data);
 void ConveyorBelt_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ConveyorBelt_EditorDraw(void);
@@ -36,5 +36,4 @@ void ConveyorBelt_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_CONVEYORBELT_H
+#endif //! OBJ_CONVEYORBELT_H

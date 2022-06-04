@@ -1048,6 +1048,12 @@ void RenderDevice::ProcessEvent(MSG Msg)
                         isRunning = false;
                     handledMsg = true;
                     break;
+
+                case VK_F10:
+                    if (engine.devMenu)
+                        engine.showPaletteOverlay ^= 1;
+                    handledMsg = true;
+                    break;
             }
 
             break;

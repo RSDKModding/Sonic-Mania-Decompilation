@@ -56,7 +56,9 @@ void RockDrill_Serialize(void);
 
 // Extra Entity Functions
 void RockDrill_CheckPlayerCollisions(void);
-void RockDrill_SpawnDebris(int offset);
+void RockDrill_Hit(void);
+void RockDrill_Explode(void);
+void RockDrill_SpawnDebris(int32 offset);
 
 void RockDrill_State_Setup(void);
 void RockDrill_State_Drilling(void);

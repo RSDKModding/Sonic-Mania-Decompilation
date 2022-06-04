@@ -12,6 +12,7 @@ ObjectRisingLava *RisingLava;
 void RisingLava_Update(void)
 {
     RSDK_THIS(RisingLava);
+
     StateMachine_Run(self->state);
 }
 
@@ -24,11 +25,12 @@ void RisingLava_Draw(void) {}
 void RisingLava_Create(void *data)
 {
     RSDK_THIS(RisingLava);
+
     if (!SceneInfo->inEditor) {
+        self->hitbox.left   = -(self->size.x >> 17);
+        self->hitbox.top    = -(self->size.y >> 17);
         self->hitbox.right  = self->size.x >> 17;
-        self->hitbox.left   = -self->hitbox.right;
         self->hitbox.bottom = self->size.y >> 17;
-        self->hitbox.top    = -self->hitbox.bottom;
 
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -49,10 +51,10 @@ void RisingLava_State_CheckRiseStart(void)
         if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
             TileLayer *move               = RSDK.GetTileLayer(Zone->moveLayer);
             move->drawLayer[0]            = 5;
-            move->scrollPos               = -self->offset.y;
             move->scrollInfo[0].scrollPos = -self->offset.x;
-            self->active                = ACTIVE_NORMAL;
-            self->state                 = RisingLava_State_RiseShake;
+            move->scrollPos               = -self->offset.y;
+            self->active                  = ACTIVE_NORMAL;
+            self->state                   = RisingLava_State_RiseShake;
         }
     }
 }
@@ -60,6 +62,7 @@ void RisingLava_State_CheckRiseStart(void)
 void RisingLava_State_RiseShake(void)
 {
     RSDK_THIS(RisingLava);
+
     TileLayer *move = RSDK.GetTileLayer(Zone->moveLayer);
 
     move->scrollPos += 0x8000;

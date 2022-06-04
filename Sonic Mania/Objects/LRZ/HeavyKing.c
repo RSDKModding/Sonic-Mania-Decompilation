@@ -33,9 +33,11 @@ void HeavyKing_Draw(void)
     if (self->invincibilityTimer & 1) {
         RSDK.CopyPalette(2, 16, 0, 16, 16);
         RSDK.CopyPalette(2, 192, 0, 192, 16);
+
         RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
         RSDK.DrawSprite(&self->scepterAnimator, NULL, false);
         RSDK.DrawSprite(&self->electricityAnimator, NULL, false);
+
         RSDK.CopyPalette(1, 16, 0, 16, 16);
         RSDK.CopyPalette(1, 192, 0, 192, 16);
     }
@@ -62,6 +64,7 @@ void HeavyKing_Create(void *data)
             self->updateRange.y = 0x800000;
             self->health        = 8;
             self->state         = HeavyKing_State_SetupArena;
+
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 7, &self->bodyAnimator, true, 0);
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 16, &self->scepterAnimator, true, 0);
         }
@@ -134,12 +137,15 @@ void HeavyKing_Hit(void)
     if (--self->health <= 0) {
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 6, &self->bodyAnimator, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 15, &self->scepterAnimator, false, 0);
+
         self->state      = HeavyKing_State_Destroyed;
         self->velocity.y = -0x40000;
         self->onGround   = false;
         self->timer      = 0;
         RSDK.StopSfx(HeavyKing->sfxTwinCharge);
+
         foreach_active(KingAttack, attack) { destroyEntity(attack); }
+
         SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
@@ -152,11 +158,28 @@ void HeavyKing_Hit(void)
             self->stateStore            = self->state;
             self->storedBodyAnimator    = self->bodyAnimator;
             self->storedScepterAnimator = self->scepterAnimator;
+
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 6, &self->bodyAnimator, false, 0);
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 15, &self->scepterAnimator, false, 0);
             self->state = HeavyKing_State_HitRecoil;
         }
+
         RSDK.PlaySfx(HeavyKing->sfxHit, false, 255);
+    }
+}
+
+void HeavyKing_Explode(void)
+{
+    RSDK_THIS(HeavyKing);
+
+    if (!(Zone->timer & 7)) {
+        RSDK.PlaySfx(HeavyKing->sfxExplosion, false, 255);
+
+        if (!(Zone->timer & 0xF)) {
+            int32 x = self->position.x + RSDK.Rand(-0x180000, 0x180000);
+            int32 y = self->position.y + RSDK.Rand(-0x180000, 0x180000);
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
+        }
     }
 }
 
@@ -167,8 +190,8 @@ void HeavyKing_HandleClawMovement(void)
     EntityKingClaw *claw = self->claw;
 
     if (claw) {
-        self->position.x = claw->position.x;
-        self->position.y = claw->position.y;
+        self->position = claw->position;
+
         if (self->direction == FLIP_NONE)
             self->position.x += 0x300000;
         else
@@ -183,6 +206,7 @@ void HeavyKing_HandleAnimators(void)
 
     self->bodyAnimator.speed    = 0;
     self->scepterAnimator.speed = 0;
+
     if (self->velocity.y >= 0) {
         if (self->velocity.y <= 0x10000) {
             self->bodyAnimator.frameID    = 7;
@@ -220,21 +244,18 @@ void HeavyKing_HandleHoverMovement(void)
     int32 rot   = 2 * angle;
 
     if (abs(rot) >= abs(rot - 0x200)) {
-        if (abs(rot - 0x200) < abs(rot + 0x200)) {
+        if (abs(rot - 0x200) < abs(rot + 0x200))
             self->rotation += ((rot - 0x200) >> 5);
-        }
-        else {
+        else
             self->rotation += ((rot + 0x200) >> 5);
-        }
     }
     else {
-        if (abs(rot) < abs(rot + 0x200)) {
+        if (abs(rot) < abs(rot + 0x200))
             self->rotation += (rot >> 5);
-        }
-        else {
+        else
             self->rotation += ((rot + 0x200) >> 5);
-        }
     }
+
     self->rotation &= 0x1FF;
 
     int32 rx         = (self->position.x - HeavyKing->boundsM) >> 16;
@@ -249,14 +270,14 @@ void HeavyKing_FindTargetEmerald(void)
     RSDK_THIS(HeavyKing);
 
     EntityHPZEmerald *targetEmerald = NULL;
-    int emeraldDist                 = 0x7FFFFFFF;
+    int32 emeraldDist               = 0x7FFFFFFF;
 
     if (self->onGround) {
         if (self->direction == FLIP_X) {
             foreach_active(HPZEmerald, emerald)
             {
                 if (emerald->type != HPZEMERALD_MASTER) {
-                    int dist = emerald->position.x - self->position.x;
+                    int32 dist = emerald->position.x - self->position.x;
                     if (dist < emeraldDist && dist >= 0 && self->targetEmerald != emerald) {
                         emeraldDist   = dist;
                         targetEmerald = emerald;
@@ -342,10 +363,12 @@ void HeavyKing_HandleAttackFinish(void)
     RSDK_THIS(HeavyKing);
 
     HeavyKing_FindTargetEmerald();
+
     self->velocity.x = 0;
     self->velocity.y = 0;
     self->onGround   = false;
     self->state      = HeavyKing_State_JumpToTargetEmerald;
+
     RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 3, &self->bodyAnimator, false, 6);
     RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 12, &self->scepterAnimator, false, 6);
 }
@@ -363,6 +386,7 @@ void HeavyKing_CreateSpinRayFX(void)
         ray              = CREATE_ENTITY(FXSpinRay, NULL, self->position.x + 0x240000, self->position.y - 0x300000);
         ray->offsetPos.x = 0x240000;
     }
+
     ray->parent      = (Entity *)self;
     ray->offsetPos.y = -0x300000;
 }
@@ -384,6 +408,7 @@ void HeavyKing_CreateLaser(void)
 
     EntityKingAttack *attack = CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_LASER), self->position.x, HeavyKing->spinRaySpawnPos);
     attack->parent           = (Entity *)self;
+
     if (self->direction) {
         attack->position.x -= 0xC00000;
         attack->velocity.x = 0x100000;
@@ -411,20 +436,23 @@ void HeavyKing_State_SetupArena(void)
 
     if (++self->timer >= 8) {
         self->timer = 0;
-        foreach_active(KingClaw, claw) { self->claw = claw; }
-        EntityKingClaw *kingClaw = self->claw;
 
+        foreach_active(KingClaw, claw) { self->claw = claw; }
+
+        EntityKingClaw *kingClaw = self->claw;
         if (kingClaw) {
-            HeavyKing->boundsL          = kingClaw->position.x - 0xA00000;
-            HeavyKing->boundsM          = kingClaw->position.x;
-            HeavyKing->boundsR          = kingClaw->position.x + 0x600000;
+            HeavyKing->boundsL = kingClaw->position.x - 0xA00000;
+            HeavyKing->boundsM = kingClaw->position.x;
+            HeavyKing->boundsR = kingClaw->position.x + 0x600000;
+
             Zone->playerBoundActiveL[0] = true;
-            Zone->cameraBoundsL[0]      = (kingClaw->position.x >> 16) - 320;
             Zone->playerBoundActiveR[0] = true;
+            Zone->cameraBoundsL[0]      = (kingClaw->position.x >> 16) - 320;
             Zone->cameraBoundsR[0]      = (kingClaw->position.x >> 16) + 320;
             Zone->cameraBoundsT[0]      = (kingClaw->position.y >> 16);
-            HeavyKing->spinRaySpawnPos  = kingClaw->position.y + 0x2400000;
-            self->active                = ACTIVE_NORMAL;
+
+            HeavyKing->spinRaySpawnPos = kingClaw->position.y + 0x2400000;
+            self->active               = ACTIVE_NORMAL;
             HeavyKing_HandleClawMovement();
             self->state = HeavyKing_State_HandleCutsceneSetup;
         }
@@ -434,20 +462,24 @@ void HeavyKing_State_SetupArena(void)
 void HeavyKing_State_HandleCutsceneSetup(void)
 {
     RSDK_THIS(HeavyKing);
+
     EntityKingClaw *claw = self->claw;
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > self->position.x - 0x1800000) {
         CutsceneSeq_LockPlayerControl(player1);
+
         player1->stateInput = StateMachine_None;
         player1->jumpPress  = false;
         player1->jumpHold   = false;
         player1->right      = true;
         player1->pushing    = false;
         player1->state      = Player_State_Ground;
+
 #if MANIA_USE_PLUS
         Player->disableP2KeyCheck = true;
 #endif
+
         if (player1->velocity.x > 0x20000) {
             player1->groundVel  = 0x20000;
             player1->velocity.x = 0x20000;
@@ -459,6 +491,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->velocity.x = 0;
         player1->right      = false;
         player1->state      = Player_State_None;
+
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, false, 0);
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -470,10 +503,12 @@ void HeavyKing_State_HandleCutsceneSetup(void)
             player2->stateInput = StateMachine_None;
             player2->up         = true;
         }
+
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.0125);
         claw->state   = KingClaw_State_EnterClaw;
         self->visible = true;
         self->state   = HeavyKing_StateCutscene_PlayerLookUp;
+
         Camera_ShakeScreen(0, 6, 6);
         RSDK.PlaySfx(HeavyKing->sfxImpact6, false, 255);
     }
@@ -499,8 +534,10 @@ void HeavyKing_StateCutscene_PlayerLookUp(void)
                 Camera_SetupLerp(CAMERA_LERP_SIN1024_2, 0, emerald->position.x - 0x500000, emerald->position.y - 0x800000, 3);
             }
         }
+
         self->state = HeavyKing_StateCutscene_EnterKing;
     }
+
     HeavyKing_HandleClawMovement();
 }
 
@@ -520,6 +557,7 @@ void HeavyKing_StateCutscene_EnterKing(void)
 #endif
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
     }
+
     HeavyKing_HandleClawMovement();
 }
 
@@ -529,6 +567,7 @@ void HeavyKing_StateCutscene_ReturnCamToPlayer(void)
 
     if (!RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->state) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
 #if MANIA_USE_PLUS
         if (player1->characterID == ID_KNUCKLES) {
 #endif
@@ -537,30 +576,35 @@ void HeavyKing_StateCutscene_ReturnCamToPlayer(void)
 #if MANIA_USE_PLUS
         }
 #endif
+
         self->state = HeavyKing_StateCutscene_GrabMasterEmerald;
     }
+
     HeavyKing_HandleClawMovement();
 }
 
 void HeavyKing_StateCutscene_GrabMasterEmerald(void)
 {
     RSDK_THIS(HeavyKing);
+
     EntityKingClaw *claw = self->claw;
 
     HeavyKing_HandleClawMovement();
-    if (++self->timer == 180) {
+
+    if (++self->timer == 180)
         claw->state = KingClaw_State_Grab;
-    }
 
     if (self->timer == 240) {
         self->timer = 0;
         Camera_ShakeScreen(0, 6, 6);
         RSDK.PlaySfx(HeavyKing->sfxImpact6, false, 255);
+
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if MANIA_USE_PLUS
         if (player1->characterID == ID_KNUCKLES)
 #endif
             RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 1, &player1->animator, false, 0);
+
         self->state = HeavyKing_StateCutscene_FinishThinking;
     }
 }
@@ -572,6 +616,7 @@ void HeavyKing_StateCutscene_FinishThinking(void)
     HeavyKing_HandleClawMovement();
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
 #if MANIA_USE_PLUS
     if (player1->characterID == ID_KNUCKLES) {
 #endif
@@ -590,6 +635,7 @@ void HeavyKing_StateCutscene_FinishThinking(void)
 void HeavyKing_StateCutscene_GetHigherGround(void)
 {
     RSDK_THIS(HeavyKing);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
@@ -619,11 +665,13 @@ void HeavyKing_StateCutscene_GetHigherGround(void)
         case 124:
             RSDK.PlaySfx(Player->sfxJump, false, 255);
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
+
             player1->velocity.x   = -0x1C000;
             player1->velocity.y   = -0x66000;
             player1->applyJumpCap = false;
             player1->onGround     = false;
             player1->state        = Player_State_Air;
+
             Camera_SetupLerp(CAMERA_LERP_SIN512, 0, camera->startLerpPos.x, camera->startLerpPos.y + 0x200000, 4);
             break;
 
@@ -650,9 +698,11 @@ void HeavyKing_StateCutscene_GetHigherGround(void)
 void HeavyKing_StateCutscene_Complaining(void)
 {
     RSDK_THIS(HeavyKing);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     HeavyKing_HandleClawMovement();
+
     if (++self->timer == 90) {
         self->timer    = 0;
         player1->down  = true;
@@ -664,6 +714,7 @@ void HeavyKing_StateCutscene_Complaining(void)
 void HeavyKing_StateCutscene_ChargeSpindash(void)
 {
     RSDK_THIS(HeavyKing);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     HeavyKing_HandleClawMovement();
@@ -682,6 +733,7 @@ void HeavyKing_StateCutscene_ChargeSpindash(void)
 void HeavyKing_StateCutscene_AttackClaw(void)
 {
     RSDK_THIS(HeavyKing);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     HeavyKing_HandleClawMovement();
@@ -690,6 +742,7 @@ void HeavyKing_StateCutscene_AttackClaw(void)
         player1->jumpPress   = true;
         player1->jumpHold    = true;
         player1->scrollDelay = 160;
+
         if (self->masterEmerald)
             Camera_SetupLerp(CAMERA_LERP_SIN1024_2, 0, self->masterEmerald->position.x, self->masterEmerald->position.y + 0x300000, 4);
     }
@@ -702,8 +755,10 @@ void HeavyKing_StateCutscene_AttackClaw(void)
         self->velocity.y = -0x20000;
         self->velocity.x = 0x10000;
         self->state      = HeavyKing_StateCutscene_AttackRebound;
+
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 6, &self->bodyAnimator, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 15, &self->scepterAnimator, false, 0);
+
         player1->velocity.x = -0x24000;
         player1->velocity.y = -0x20000;
 
@@ -712,6 +767,7 @@ void HeavyKing_StateCutscene_AttackClaw(void)
         claw->timer          = 128;
         if (claw->masterEmerald)
             claw->masterEmerald->onGround = false;
+
         RSDK.PlaySfx(HeavyKing->sfxImpact5, false, 255);
     }
 }
@@ -737,6 +793,7 @@ void HeavyKing_StateCutscene_AttackRebound(void)
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 4, &self->bodyAnimator, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 13, &self->scepterAnimator, false, 0);
         HeavyKing_StartLeap(0);
+
 #if MANIA_USE_PLUS
         Player->disableP2KeyCheck = false;
 #endif
@@ -758,6 +815,7 @@ void HeavyKing_State_JumpToTargetEmerald(void)
 
     if (self->onGround) {
         HeavyKing_StartLeap(4);
+
         if (!self->attacksRemaining) {
             EntityHPZEmerald *masterEmerald = self->masterEmerald;
             if (abs(self->position.x - HeavyKing->boundsM) < 0x100000) {
@@ -774,6 +832,7 @@ void HeavyKing_State_JumpToTargetEmerald(void)
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -783,6 +842,7 @@ void HeavyKing_State_Leaping(void)
 
     if (self->bodyAnimator.frameID >= 5) {
         HeavyKing_HandleAnimators();
+
         RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, HeavyKing->hitboxBody.bottom >> 15, true);
 
         if (!self->onGround) {
@@ -810,6 +870,7 @@ void HeavyKing_State_Leaping(void)
                     }
                 }
             }
+
             self->position.y += self->velocity.y;
         }
         else {
@@ -827,6 +888,7 @@ void HeavyKing_State_Leaping(void)
             }
         }
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -836,6 +898,7 @@ void HeavyKing_State_LeapToMasterEmerald(void)
 
     if (self->bodyAnimator.frameID >= 5) {
         HeavyKing_HandleAnimators();
+
         EntityHPZEmerald *masterEmerald = self->masterEmerald;
 
         if (!self->onGround) {
@@ -847,14 +910,17 @@ void HeavyKing_State_LeapToMasterEmerald(void)
             masterEmerald->solid = false;
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 4, &self->bodyAnimator, false, 0);
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 13, &self->scepterAnimator, false, 0);
+
             foreach_active(KingAttack, attack)
             {
                 if (attack->state == KingAttack_State_Orbiting)
                     destroyEntity(attack);
             }
+
             self->state = HeavyKing_State_LandedOnMasterEmerald;
         }
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -867,6 +933,7 @@ void HeavyKing_State_LandedOnMasterEmerald(void)
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 10, &self->scepterAnimator, false, 0);
         self->state = HeavyKing_State_ChargeStart;
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -882,6 +949,7 @@ void HeavyKing_State_ChargeStart(void)
         self->state            = HeavyKing_State_Charging;
         self->attacksRemaining = (self->health >= 2) + 1;
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -930,16 +998,18 @@ void HeavyKing_State_PrepareHover(void)
 
     if (self->bodyAnimator.frameID == 5) {
         self->position.y -= 0x60000;
-        self->originPos.x = self->position.x;
-        self->originPos.y = self->position.y;
-        self->velocity.x  = 0;
-        self->velocity.y  = -0x10000;
+        self->originPos  = self->position;
+        self->velocity.x = 0;
+        self->velocity.y = -0x10000;
+
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 5, &self->bodyAnimator, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 14, &self->scepterAnimator, false, 0);
+
         self->targetEmerald = NULL;
         self->onGround      = false;
         self->state         = HeavyKing_State_StartHovering;
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -969,9 +1039,11 @@ void HeavyKing_State_Hovering(void)
     BadnikHelpers_Oscillate(self->originPos.y, 2, 11);
 
     if (++self->timer == 120) {
-        self->timer     = 0;
+        self->timer = 0;
+
         self->curAttack = HeavyKing->attackPattern[HeavyKing->attackPatternPos++];
         HeavyKing->attackPatternPos &= 0x1F;
+
         if (self->attacksRemaining > 0)
             self->attacksRemaining--;
 
@@ -996,6 +1068,7 @@ void HeavyKing_State_Hovering(void)
                 break;
         }
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -1024,6 +1097,7 @@ void HeavyKing_State_ExpandRingAttack(void)
     RSDK_THIS(HeavyKing);
 
     HeavyKing_HandleHoverMovement();
+
     BadnikHelpers_Oscillate(self->originPos.y, 2, 11);
 
     if (++self->timer == 16)
@@ -1033,6 +1107,7 @@ void HeavyKing_State_ExpandRingAttack(void)
         self->timer = 0;
         HeavyKing_HandleAttackFinish();
     }
+
     HeavyKing_CheckPlayerCollisions();
 }
 
@@ -1063,20 +1138,15 @@ void HeavyKing_State_Destroyed(void)
 {
     RSDK_THIS(HeavyKing);
 
-    if (!(Zone->timer & 7)) {
-        RSDK.PlaySfx(HeavyKing->sfxExplosion, false, 255);
-        if (!(Zone->timer & 0xF)) {
-            int x = self->position.x + RSDK.Rand(-0x180000, 0x180000);
-            int y = self->position.y + RSDK.Rand(-0x180000, 0x180000);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
-        }
-    }
+    HeavyKing_Explode();
 
     RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, HeavyKing->hitboxBody.bottom >> 15, true);
+
     if (!self->onGround) {
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;
     }
+
     if (++self->timer == 60)
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 17, &self->scepterAnimator, false, 0);
 
@@ -1087,22 +1157,26 @@ void HeavyKing_State_Destroyed(void)
             centerX = self->position.x + 0x280000;
 
         for (int i = 0; i < 6; ++i) {
-            int spawnY           = (self->position.y - 0x300000) + RSDK.Rand(-0x40000, 0x40000);
-            int spawnX           = centerX + RSDK.Rand(-0x40000, 0x40000);
-            EntityDebris *debris = CREATE_ENTITY(Debris, NULL, spawnX, spawnY);
-            debris->state        = Debris_State_Fall;
-            debris->gravityStrength      = 0x3800;
-            debris->velocity.x   = RSDK.Rand(0, 0x20000);
+            int y                = (self->position.y - 0x300000) + RSDK.Rand(-0x40000, 0x40000);
+            int x                = centerX + RSDK.Rand(-0x40000, 0x40000);
+            EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
+
+            debris->state           = Debris_State_Fall;
+            debris->gravityStrength = 0x3800;
+            debris->velocity.x      = RSDK.Rand(0, 0x20000);
             if (debris->position.x < centerX)
                 debris->velocity.x = -debris->velocity.x;
+
             debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
             debris->drawFX     = FX_FLIP;
             debris->direction  = i & 3;
             debris->drawOrder  = Zone->objectDrawHigh;
             debris->timer      = 120;
+
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 19, &debris->animator, true, RSDK.Rand(0, 3));
         }
     }
+
     if (self->timer == 120) {
         EntityKingClaw *claw        = self->claw;
         self->bodyAnimator.speed    = 0;
@@ -1113,6 +1187,7 @@ void HeavyKing_State_Destroyed(void)
             claw->position.x = self->position.x - 0x300000;
         else
             claw->position.x = self->position.x + 0x300000;
+
         claw->state              = KingClaw_State_LowerClaw;
         claw->velocity.y         = 0x10000;
         claw->forceHighDrawOrder = true;
@@ -1138,6 +1213,7 @@ void HeavyKing_State_Escape(void)
         int x = self->position.x - 0x2C0000;
         if (self->direction == FLIP_NONE)
             x = self->position.x + 0x2C0000;
+
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, self->position.y - 0x300000)->drawOrder = Zone->objectDrawHigh;
     }
 
@@ -1153,6 +1229,7 @@ void HeavyKing_State_Escape(void)
 void HeavyKing_State_Finish(void)
 {
     RSDK_THIS(HeavyKing);
+
     HeavyKing_HandleClawMovement();
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
@@ -1167,10 +1244,19 @@ void HeavyKing_State_Finish(void)
 void HeavyKing_EditorDraw(void)
 {
     RSDK_THIS(HeavyKing);
+
     RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 7, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 16, &self->scepterAnimator, true, 0);
 
     HeavyKing_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawArenaBounds(-320, -SCREEN_YSIZE, 320, SCREEN_YCENTER, 1 | 2 | 4 | 0, 0x00C0F0);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void HeavyKing_EditorLoad(void) { HeavyKing->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyKing.bin", SCOPE_STAGE); }

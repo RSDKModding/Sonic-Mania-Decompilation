@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectLRZ1Outro {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -23,7 +23,7 @@ void LRZ1Outro_Update(void);
 void LRZ1Outro_LateUpdate(void);
 void LRZ1Outro_StaticUpdate(void);
 void LRZ1Outro_Draw(void);
-void LRZ1Outro_Create(void* data);
+void LRZ1Outro_Create(void *data);
 void LRZ1Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZ1Outro_EditorDraw(void);
@@ -43,4 +43,4 @@ bool32 LRZ1Outro_CutsceneAct1_UsingDashLift(EntityCutsceneSeq *host);
 bool32 LRZ1Outro_CutsceneAct2_UsingDashLift(EntityCutsceneSeq *host);
 bool32 LRZ1Outro_CutsceneAct2_ExitDashLift(EntityCutsceneSeq *host);
 
-#endif //!OBJ_LRZ1OUTRO_H
+#endif //! OBJ_LRZ1OUTRO_H

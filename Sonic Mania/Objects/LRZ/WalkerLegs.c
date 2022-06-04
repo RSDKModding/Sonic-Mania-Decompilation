@@ -17,6 +17,7 @@ void WalkerLegs_Update(void)
 
     ++self->smokeSpawnTimer[0];
     ++self->smokeSpawnTimer[1];
+
     self->position.x = self->legPos[0].x;
     self->position.y = self->legPos[0].y;
 
@@ -37,14 +38,17 @@ void WalkerLegs_Create(void *data)
     self->active    = ACTIVE_BOUNDS;
     self->drawOrder = Zone->objectDrawLow;
     self->startPos  = self->position;
+
     self->legPos[0] = self->position;
     self->legPos[1] = self->position;
     self->legPos[1].x += (2 * (self->direction == FLIP_NONE) - 1) << 22;
+
     self->visible       = true;
     self->drawFX        = FX_ROTATE | FX_FLIP;
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
-    self->state         = WalkerLegs_State_Setup;
+
+    self->state = WalkerLegs_State_Setup;
 }
 
 void WalkerLegs_StageLoad(void)
@@ -77,7 +81,6 @@ void WalkerLegs_DrawSprites(void)
     RSDK.DrawSprite(&WalkerLegs->legAnimator, &self->legPos[0], false);
     RSDK.DrawSprite(&WalkerLegs->legAnimator, &self->legPos[1], false);
 
-
     int32 moveX = (self->legPos[1].x - self->legPos[0].x) >> 3;
     int32 moveY = (self->legPos[1].y - self->legPos[0].y) >> 3;
 
@@ -96,10 +99,9 @@ void WalkerLegs_CheckOffScreen(void)
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         if (!RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-            self->position.x = self->startPos.x;
-            self->position.y = self->startPos.y;
-            self->visible    = false;
-            self->state      = WalkerLegs_State_TryToReset;
+            self->position = self->startPos;
+            self->visible  = false;
+            self->state    = WalkerLegs_State_TryToReset;
         }
     }
 }
@@ -110,8 +112,10 @@ void WalkerLegs_HandlePlayerMovement(void)
 
     Vector2 *legPos[2];
     Vector2 *collisionOffset[2];
-    legPos[0]          = &self->legPos[0];
-    legPos[1]          = &self->legPos[1];
+
+    legPos[0] = &self->legPos[0];
+    legPos[1] = &self->legPos[1];
+
     collisionOffset[0] = &self->legCollisionOffset[0];
     collisionOffset[1] = &self->legCollisionOffset[1];
 
@@ -132,7 +136,7 @@ void WalkerLegs_HandlePlayerMovement(void)
             }
 
             if (Player_CheckCollisionPlatform(player, self, &WalkerLegs->hitbox) == C_TOP)
-                self->activePlayers[l] |= (1 << playerID);
+                self->activePlayers[l] |= 1 << playerID;
             else
                 self->activePlayers[l] &= ~(1 << playerID);
         }
@@ -147,12 +151,15 @@ void WalkerLegs_CheckObjectCrush(void)
     RSDK_THIS(WalkerLegs);
 
     Vector2 *legPos[2];
-    legPos[0]                 = &self->legPos[0];
-    legPos[1]                 = &self->legPos[1];
+
+    legPos[0] = &self->legPos[0];
+    legPos[1] = &self->legPos[1];
+
     WalkerLegs->hitbox.top    = -WalkerLegs->hitbox.top;
     WalkerLegs->hitbox.bottom = -WalkerLegs->hitbox.bottom;
-    int32 storeX              = self->position.x;
-    int32 storeY              = self->position.y;
+
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
     foreach_active(Player, player)
     {
@@ -175,6 +182,7 @@ void WalkerLegs_CheckObjectCrush(void)
 
                     if (RSDK.CheckObjectCollisionTouchBox(rexon, &Rexon->hitboxShell, self, &WalkerLegs->hitbox)) {
                         Rexon_Destroy(rexon, true);
+
                         if (!WalkerLegs->hasAchievement) {
                             API_UnlockAchievement(&achievementList[ACH_LRZ]);
                             WalkerLegs->hasAchievement = true;
@@ -202,15 +210,18 @@ void WalkerLegs_CheckObjectCrush(void)
                     int32 x              = spikes->position.x + (((2 * (l != 0) - 1) * (spikes->type == SPIKES_UP)) << 19);
                     int32 y              = spikes->position.y + (((2 * (l != 0) - 1) * (spikes->type != SPIKES_UP)) << 19);
                     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
+
                     RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 4, &debris->animator, true, spikes->type >> 1);
+
                     debris->drawOrder = Zone->objectDrawHigh;
                     debris->direction = spikes->direction;
                     debris->drawFX |= FX_ROTATE;
-                    debris->gravityStrength    = 0x3800;
-                    debris->rotSpeed   = RSDK.Rand(-32, 32);
-                    debris->velocity.x = RSDK.Rand(-0x28000, 0x28000);
-                    debris->velocity.y = -0x1000 * RSDK.Rand(32, 96);
+                    debris->gravityStrength = 0x3800;
+                    debris->rotSpeed        = RSDK.Rand(-32, 32);
+                    debris->velocity.x      = RSDK.Rand(-0x28000, 0x28000);
+                    debris->velocity.y      = -0x1000 * RSDK.Rand(32, 96);
                 }
+
                 destroyEntity(spikes);
 
                 RSDK.PlaySfx(BuckwildBall->sfxSharp, false, 255);
@@ -222,8 +233,9 @@ void WalkerLegs_CheckObjectCrush(void)
 
     WalkerLegs->hitbox.top    = -WalkerLegs->hitbox.top;
     WalkerLegs->hitbox.bottom = -WalkerLegs->hitbox.bottom;
-    self->position.x          = storeX;
-    self->position.y          = storeY;
+
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void WalkerLegs_CheckStepTrigger(void)
@@ -295,6 +307,7 @@ void WalkerLegs_CheckTileCollisions(void)
     if (hitGround) {
         self->angleVel = 0;
         Camera_ShakeScreen(0, 0, 5);
+
         ++self->stepCount;
         self->state        = WalkerLegs_State_Idle;
         self->finishedStep = true;
@@ -377,9 +390,9 @@ void WalkerLegs_CreateDebris(bool32 isRightLeg, bool32 isMagma)
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
 
             RSDK.SetSpriteAnimation(WalkerLegs->particleFrames, !isMagma, &debris->animator, true, 0);
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->gravityStrength    = 0x3800;
-            debris->velocity.x = 0x180 * (abs(spawnX - x) >> 8) / size;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->gravityStrength = 0x3800;
+            debris->velocity.x      = 0x180 * (abs(spawnX - x) >> 8) / size;
             if (debris->position.x < self->position.x) {
                 debris->direction  = FLIP_X;
                 debris->velocity.x = -debris->velocity.x;
@@ -420,27 +433,31 @@ void WalkerLegs_State_Setup(void)
 {
     RSDK_THIS(WalkerLegs);
 
-    self->stepCount               = 0;
-    self->angleVel                = 0;
-    self->activeLeg               = 0;
-    self->angle                   = 0;
-    self->finishedStep            = false;
-    self->visible                 = true;
-    self->active                  = ACTIVE_BOUNDS;
-    self->activePlayers[0]        = 0;
-    self->activePlayers[1]        = 0;
-    self->position                = self->startPos;
-    self->legPos[0]               = self->startPos;
-    self->legPos[1]               = self->startPos;
-    self->smokeSpawnY[0]          = self->legPos[0].y;
+    self->stepCount        = 0;
+    self->angleVel         = 0;
+    self->activeLeg        = 0;
+    self->angle            = 0;
+    self->finishedStep     = false;
+    self->visible          = true;
+    self->active           = ACTIVE_BOUNDS;
+    self->activePlayers[0] = 0;
+    self->activePlayers[1] = 0;
+
+    self->position       = self->startPos;
+    self->legPos[0]      = self->startPos;
+    self->legPos[1]      = self->startPos;
+    self->smokeSpawnY[0] = self->legPos[0].y;
+
     self->legCollisionOffset[0].x = 0;
     self->legCollisionOffset[0].y = 0;
     self->legCollisionOffset[1].x = 0;
     self->legCollisionOffset[1].y = 0;
+
     self->legPos[1].x += (2 * (self->direction == FLIP_NONE) - 1) << 22;
     self->smokeSpawnY[0] -= (WalkerLegs->hitbox.top << 16);
     self->smokeSpawnY[1] = self->legPos[1].y - (WalkerLegs->hitbox.top << 16);
-    self->state          = WalkerLegs_State_Idle;
+
+    self->state = WalkerLegs_State_Idle;
 }
 
 void WalkerLegs_State_Idle(void)
@@ -460,14 +477,11 @@ void WalkerLegs_State_Idle(void)
     WalkerLegs_HandlePlayerMovement();
 
     if (self->finishedStep) {
-        int32 x = 0;
-        if (self->direction)
-            x = self->legPos[0].x - self->legPos[1].x;
-        else
-            x = self->legPos[1].x - self->legPos[0].x;
+        int32 x            = self->direction ? (self->legPos[0].x - self->legPos[1].x) : (self->legPos[1].x - self->legPos[0].x);
         self->finishedStep = false;
         self->angle        = RSDK.ATan2(x, self->legPos[1].y - self->legPos[0].y) << 17;
     }
+
     WalkerLegs_CheckStepTrigger();
     WalkerLegs_CheckOffScreen();
 }
@@ -479,6 +493,7 @@ void WalkerLegs_State_Stepping(void)
     self->prevLegPos[0] = self->legPos[0];
     self->prevLegPos[1] = self->legPos[1];
     self->finishedStep  = false;
+
     WalkerLegs_CheckStoodLava();
     WalkerLegs_CheckTileCollisions();
 
@@ -486,6 +501,7 @@ void WalkerLegs_State_Stepping(void)
     self->legCollisionOffset[0].y = self->legPos[0].y - self->prevLegPos[0].y;
     self->legCollisionOffset[1].x = self->legPos[1].x - self->prevLegPos[1].x;
     self->legCollisionOffset[1].y = self->legPos[1].y - self->prevLegPos[1].y;
+
     WalkerLegs_HandlePlayerMovement();
     WalkerLegs_CheckObjectCrush();
     WalkerLegs_CheckOffScreen();

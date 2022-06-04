@@ -37,7 +37,7 @@ void LRZConvDropper_Update(void);
 void LRZConvDropper_LateUpdate(void);
 void LRZConvDropper_StaticUpdate(void);
 void LRZConvDropper_Draw(void);
-void LRZConvDropper_Create(void* data);
+void LRZConvDropper_Create(void *data);
 void LRZConvDropper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZConvDropper_EditorDraw(void);
@@ -49,4 +49,4 @@ void LRZConvDropper_Serialize(void);
 void LRZConvDropper_SetupDropperChildren(void);
 void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity);
 
-#endif //!OBJ_LRZCONVDROPPER_H
+#endif //! OBJ_LRZCONVDROPPER_H

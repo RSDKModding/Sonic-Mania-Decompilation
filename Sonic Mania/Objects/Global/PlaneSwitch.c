@@ -95,10 +95,7 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
     RSDK.Sin256(self->negAngle);
 
     if (!self->onPath || other->onGround) {
-        int32 xDif = abs(scanX - self->position.x);
-        int32 yDif = abs(scanY - self->position.y);
-
-        if (xDif < 0x180000 && yDif < size << 19) {
+        if (abs(scanX - self->position.x) < 0x180000 && abs(scanY - self->position.y) < size << 19) {
             if (scanX + pos >= self->position.x) {
                 other->collisionPlane = (flags >> 3) & 1; // collision plane bit
                 if (switchDrawOrder) {

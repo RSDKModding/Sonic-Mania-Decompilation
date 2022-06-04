@@ -31,7 +31,7 @@ void LRZ3Outro_Update(void);
 void LRZ3Outro_LateUpdate(void);
 void LRZ3Outro_StaticUpdate(void);
 void LRZ3Outro_Draw(void);
-void LRZ3Outro_Create(void* data);
+void LRZ3Outro_Create(void *data);
 void LRZ3Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZ3Outro_EditorDraw(void);
@@ -53,4 +53,4 @@ bool32 LRZ3Outro_Cutscene_LightUpLittlePlanet(EntityCutsceneSeq *host);
 
 #endif
 
-#endif //!OBJ_LRZ3OUTRO_H
+#endif //! OBJ_LRZ3OUTRO_H

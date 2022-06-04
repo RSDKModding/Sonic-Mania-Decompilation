@@ -12,6 +12,7 @@ ObjectLavaGeyser *LavaGeyser;
 void LavaGeyser_Update(void)
 {
     RSDK_THIS(LavaGeyser);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,10 +23,8 @@ void LavaGeyser_StaticUpdate(void) {}
 void LavaGeyser_Draw(void)
 {
     RSDK_THIS(LavaGeyser);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     RSDK.DrawSprite(&self->plumeAnimator, NULL, false);
 
     if (self->height > 0) {
@@ -51,6 +50,7 @@ void LavaGeyser_Draw(void)
 void LavaGeyser_Create(void *data)
 {
     RSDK_THIS(LavaGeyser);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
@@ -96,12 +96,15 @@ void LavaGeyser_CheckPlayerCollisions(void)
 void LavaGeyser_HandleSetup(void)
 {
     RSDK_THIS(LavaGeyser);
+
     self->velocity.y = self->force;
     self->visible    = true;
     self->active     = ACTIVE_NORMAL;
+
     RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->plumeAnimator, true, 0);
     RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &self->flowAnimator, true, 0);
     RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->plumeLoopAnimator, true, 16);
+
     self->state = LavaGeyser_State_ShowPlume;
 }
 
@@ -120,6 +123,7 @@ void LavaGeyser_State_ShowPlume(void)
     RSDK_THIS(LavaGeyser);
 
     RSDK.ProcessAnimation(&self->plumeAnimator);
+
     if (self->plumeAnimator.frameID == 16) {
         --self->plumeAnimator.timer;
         RSDK.PlaySfx(LavaGeyser->sfxLavaGeyser, false, 0xFF);
@@ -138,14 +142,15 @@ void LavaGeyser_State_Erupting(void)
 
     self->height += self->velocity.y;
     self->velocity.y -= 0x1800;
+
     LavaGeyser_CheckPlayerCollisions();
 
     if (self->velocity.y < 0) {
         if (self->duration) {
             self->startingHeight = self->height;
-            self->angle    = 0;
-            self->timer    = self->duration;
-            self->state    = LavaGeyser_State_Erupted;
+            self->angle          = 0;
+            self->timer          = self->duration;
+            self->state          = LavaGeyser_State_Erupted;
         }
         else {
             self->state = LavaGeyser_State_Recede;
@@ -160,9 +165,12 @@ void LavaGeyser_State_Erupted(void)
     RSDK.ProcessAnimation(&self->plumeAnimator);
     RSDK.ProcessAnimation(&self->flowAnimator);
     RSDK.ProcessAnimation(&self->plumeLoopAnimator);
+
     self->angle += 2;
     self->height = 0x600 * RSDK.Cos256(self->angle) + self->startingHeight;
+
     LavaGeyser_CheckPlayerCollisions();
+
     if (!--self->timer)
         self->state = LavaGeyser_State_Recede;
 }
@@ -174,10 +182,12 @@ void LavaGeyser_State_Recede(void)
     RSDK.ProcessAnimation(&self->plumeAnimator);
     RSDK.ProcessAnimation(&self->flowAnimator);
     RSDK.ProcessAnimation(&self->plumeLoopAnimator);
+
     self->height += self->velocity.y;
     self->velocity.y -= 0x1800;
 
     LavaGeyser_CheckPlayerCollisions();
+
     if (self->height < 0) {
         self->height     = 0;
         self->velocity.y = 0;
@@ -191,13 +201,16 @@ void LavaGeyser_State_HandleFinish(void)
     RSDK_THIS(LavaGeyser);
 
     RSDK.ProcessAnimation(&self->plumeAnimator);
+
     if (self->plumeAnimator.frameID == self->plumeAnimator.frameCount - 1) {
         if (self->interval) {
             self->visible = false;
+
             if (!self->type)
                 self->state = LavaGeyser_State_Intervals;
             else
                 self->state = LavaGeyser_State_Setup;
+
             self->active = ACTIVE_BOUNDS;
         }
         else {
@@ -210,6 +223,7 @@ void LavaGeyser_State_HandleFinish(void)
 void LavaGeyser_EditorDraw(void)
 {
     RSDK_THIS(LavaGeyser);
+
     RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->plumeAnimator, true, 16);
     RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &self->flowAnimator, true, 0);
     RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->plumeLoopAnimator, true, 16);

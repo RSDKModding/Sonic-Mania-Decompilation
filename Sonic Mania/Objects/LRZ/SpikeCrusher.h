@@ -25,7 +25,7 @@ void SpikeCrusher_Update(void);
 void SpikeCrusher_LateUpdate(void);
 void SpikeCrusher_StaticUpdate(void);
 void SpikeCrusher_Draw(void);
-void SpikeCrusher_Create(void* data);
+void SpikeCrusher_Create(void *data);
 void SpikeCrusher_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpikeCrusher_EditorDraw(void);
@@ -43,4 +43,4 @@ void SpikeCrusher_State_CrushBounce(void);
 void SpikeCrusher_State_ActivateFlames(void);
 void SpikeCrusher_State_MovingUp(void);
 
-#endif //!OBJ_SPIKECRUSHER_H
+#endif //! OBJ_SPIKECRUSHER_H

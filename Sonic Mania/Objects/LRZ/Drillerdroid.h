@@ -7,7 +7,7 @@ typedef enum {
     DRILLERDROID_MAIN,
     DRILLERDROID_TARGET,
     DRILLERDROID_UNUSED,
-}DrillerdroidTypes;
+} DrillerdroidTypes;
 
 // Object Class
 struct ObjectDrillerdroid {
@@ -32,7 +32,7 @@ struct ObjectDrillerdroid {
     uint8 jumpsRemaining;
     uint8 canBreakSegment;
     int32 stalatiteOffset;
-    EntityDrillerdroid* boss;
+    EntityDrillerdroid *boss;
     uint16 aniFrames;
     uint16 ticFrames;
     uint16 sfxHit;
@@ -56,7 +56,7 @@ struct EntityDrillerdroid {
     Animator mainAnimator;
     Animator armorAnimator;
     Animator targetLockAnimator;
-    EntityPlayer* target;
+    EntityPlayer *target;
     Vector2 targetEdgeOffset;
     int32 startY;
     int32 timer;
@@ -72,7 +72,7 @@ void Drillerdroid_Update(void);
 void Drillerdroid_LateUpdate(void);
 void Drillerdroid_StaticUpdate(void);
 void Drillerdroid_Draw(void);
-void Drillerdroid_Create(void* data);
+void Drillerdroid_Create(void *data);
 void Drillerdroid_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Drillerdroid_EditorDraw(void);
@@ -117,4 +117,4 @@ void Drillerdroid_Draw_Simple(void);
 void Drillerdroid_State_Target(void);
 void Drillerdroid_Draw_Target(void);
 
-#endif //!OBJ_DRILLERDROID_H
+#endif //! OBJ_DRILLERDROID_H

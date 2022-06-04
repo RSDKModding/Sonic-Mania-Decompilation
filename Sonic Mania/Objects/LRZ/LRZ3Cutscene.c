@@ -9,7 +9,7 @@
 
 ObjectLRZ3Cutscene *LRZ3Cutscene;
 
-// This is the LRZ3 Intro
+// INFO: This is the LRZ3 Intro
 
 void LRZ3Cutscene_Update(void)
 {
@@ -28,6 +28,7 @@ void LRZ3Cutscene_Draw(void) {}
 void LRZ3Cutscene_Create(void *data)
 {
     RSDK_THIS(LRZ3Cutscene);
+
     self->active = ACTIVE_NORMAL;
 }
 
@@ -38,6 +39,7 @@ bool32 LRZ3Cutscene_Cutscene_FadeIn(EntityCutsceneSeq *host)
         {
             player->groundVel  = 0x40000;
             player->velocity.x = 0x40000;
+
             if (!player->sidekick) {
                 player->stateInput = StateMachine_None;
                 CutsceneSeq_LockAllPlayerControl();
@@ -49,6 +51,7 @@ bool32 LRZ3Cutscene_Cutscene_FadeIn(EntityCutsceneSeq *host)
             }
         }
     }
+
     if (host->timer >= 8) {
         if (globals->suppressTitlecard) {
             foreach_all(TitleCard, titlecard)
@@ -60,8 +63,10 @@ bool32 LRZ3Cutscene_Cutscene_FadeIn(EntityCutsceneSeq *host)
             globals->suppressTitlecard = false;
             globals->suppressAutoMusic = false;
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -73,15 +78,19 @@ bool32 LRZ3Cutscene_Cutscene_RunRight(EntityCutsceneSeq *host)
             if (!player->sidekick)
                 player->stateInput = Player_Input_P1;
         }
+
         return true;
     }
+
     return false;
 }
 
 void LRZ3Cutscene_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void LRZ3Cutscene_EditorDraw(void) {}
 
 void LRZ3Cutscene_EditorLoad(void) {}
+#endif
 
 void LRZ3Cutscene_Serialize(void) {}

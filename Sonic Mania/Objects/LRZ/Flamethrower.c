@@ -14,6 +14,7 @@ void Flamethrower_Update(void)
     RSDK_THIS(Flamethrower);
 
     RSDK.ProcessAnimation(&self->animator);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void Flamethrower_LateUpdate(void) {}
 void Flamethrower_StaticUpdate(void)
 {
     int32 activeFlamethrowerCount = 0;
+
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
         foreach_active(Flamethrower, flamethrower)
         {
@@ -46,6 +48,7 @@ void Flamethrower_StaticUpdate(void)
 void Flamethrower_Draw(void)
 {
     RSDK_THIS(Flamethrower);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -74,10 +77,13 @@ void Flamethrower_Create(void *data)
     if (SceneInfo->inEditor) {
         if (!self->maxDist)
             self->maxDist = 96;
+
         if (!self->spread)
             self->spread = 42;
+
         if (!self->duration)
             self->duration = 120;
+
         if (!self->interval)
             self->interval = 60;
     }
@@ -129,6 +135,7 @@ void Flamethrower_StageLoad(void)
 void Flamethrower_SetupOrientation(uint8 orientation)
 {
     RSDK_THIS(Flamethrower);
+
     if (orientation == FLAMETHROWER_ORIENTATION_DOWN || orientation == FLAMETHROWER_ORIENTATION_UP)
         RSDK.SetSpriteAnimation(Flamethrower->aniFrames, 1, &self->animator, true, 0);
     else
@@ -138,6 +145,7 @@ void Flamethrower_SetupOrientation(uint8 orientation)
 Hitbox Flamethrower_GetHitbox(void)
 {
     RSDK_THIS(Flamethrower);
+
     switch (self->animator.animationID) {
         case 2:
         case 5: return Flamethrower->hitboxSmallFireball;
@@ -206,10 +214,7 @@ void Flamethrower_HandleAngles(void)
         }
     }
     else {
-        if (self->orientation == FLAMETHROWER_ORIENTATION_UP)
-            self->rotation = 0x100;
-        else
-            self->rotation = 0;
+        self->rotation = self->orientation == FLAMETHROWER_ORIENTATION_UP ? 0x100 : 0;
     }
 }
 
@@ -267,13 +272,13 @@ void Flamethrower_CheckMouthCollisions(void)
     RSDK_THIS(Flamethrower);
 
     if (Flamethrower->hitboxMouthH.left) {
-        Hitbox hitbox;
+        Hitbox *hitbox;
         if (self->orientation == FLAMETHROWER_ORIENTATION_DOWN || self->orientation == FLAMETHROWER_ORIENTATION_UP)
-            hitbox = Flamethrower->hitboxMouthV;
+            hitbox = &Flamethrower->hitboxMouthV;
         else
-            hitbox = Flamethrower->hitboxMouthH;
+            hitbox = &Flamethrower->hitboxMouthH;
 
-        foreach_active(Player, player) { Player_CheckCollisionBox(player, self, &hitbox); }
+        foreach_active(Player, player) { Player_CheckCollisionBox(player, self, hitbox); }
     }
 }
 
@@ -364,6 +369,7 @@ void Flamethrower_State_EmittingFlames(void)
 
     ++self->timer;
     ++self->flameAngle;
+
     Flamethrower_CheckMouthCollisions();
 }
 
@@ -374,6 +380,7 @@ void Flamethrower_State_SetupFireball(void)
     self->timer  = 0;
     self->active = ACTIVE_NORMAL;
     self->drawFX = FX_ROTATE | FX_FLIP;
+
     Flamethrower_HandleAnimations();
 
     switch (self->orientation) {
@@ -389,10 +396,11 @@ void Flamethrower_State_SetupFireball(void)
     else
         self->drawOrder = Zone->objectDrawLow;
 
-    self->state      = Flamethrower_State_Fireball;
-    self->lastPos.x = 0;
-    self->lastPos.y = 0;
-    self->lastYVelocity   = 0;
+    self->state         = Flamethrower_State_Fireball;
+    self->lastPos.x     = 0;
+    self->lastPos.y     = 0;
+    self->lastYVelocity = 0;
+
     Flamethrower_State_Fireball();
 }
 
@@ -444,6 +452,8 @@ void Flamethrower_State_Fireball(void)
 void Flamethrower_EditorDraw(void)
 {
     RSDK_THIS(Flamethrower);
+
+    Flamethrower_Create(NULL);
     Flamethrower_SetupOrientation(self->orientation);
 
     switch (self->orientation) {

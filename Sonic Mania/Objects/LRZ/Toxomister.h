@@ -34,7 +34,7 @@ void Toxomister_Update(void);
 void Toxomister_LateUpdate(void);
 void Toxomister_StaticUpdate(void);
 void Toxomister_Draw(void);
-void Toxomister_Create(void* data);
+void Toxomister_Create(void *data);
 void Toxomister_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Toxomister_EditorDraw(void);
@@ -60,4 +60,4 @@ void Toxomister_StateCloud_ReachedFloor(void);
 void Toxomister_StateCloud_GrabbedPlayer(void);
 void Toxomister_StateCloud_Dissipate(void);
 
-#endif //!OBJ_TOXOMISTER_H
+#endif //! OBJ_TOXOMISTER_H

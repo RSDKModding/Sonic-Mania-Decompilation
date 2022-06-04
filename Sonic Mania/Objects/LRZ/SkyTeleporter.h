@@ -29,7 +29,7 @@ void SkyTeleporter_Update(void);
 void SkyTeleporter_LateUpdate(void);
 void SkyTeleporter_StaticUpdate(void);
 void SkyTeleporter_Draw(void);
-void SkyTeleporter_Create(void* data);
+void SkyTeleporter_Create(void *data);
 void SkyTeleporter_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SkyTeleporter_EditorDraw(void);
@@ -40,4 +40,4 @@ void SkyTeleporter_Serialize(void);
 // Extra Entity Functions
 void SkyTeleporter_DrawTeleportBeam(void);
 
-#endif //!OBJ_SKYTELEPORTER_H
+#endif //! OBJ_SKYTELEPORTER_H

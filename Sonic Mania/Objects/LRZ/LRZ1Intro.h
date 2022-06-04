@@ -32,7 +32,7 @@ void LRZ1Intro_Update(void);
 void LRZ1Intro_LateUpdate(void);
 void LRZ1Intro_StaticUpdate(void);
 void LRZ1Intro_Draw(void);
-void LRZ1Intro_Create(void* data);
+void LRZ1Intro_Create(void *data);
 void LRZ1Intro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZ1Intro_EditorDraw(void);
@@ -55,4 +55,4 @@ void LRZ1Intro_State_SubSinking(void);
 
 #endif
 
-#endif //!OBJ_LRZ1INTRO_H
+#endif //! OBJ_LRZ1INTRO_H

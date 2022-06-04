@@ -8,7 +8,7 @@ typedef enum {
     THOUGHTBUBBLE_2DOTS,
     THOUGHTBUBBLE_BUBBLE,
     THOUGHTBUBBLE_THOUGHTS,
-}ThoughtBubbleTypes;
+} ThoughtBubbleTypes;
 
 // Object Class
 struct ObjectThoughtBubble {
@@ -38,7 +38,7 @@ void ThoughtBubble_Update(void);
 void ThoughtBubble_LateUpdate(void);
 void ThoughtBubble_StaticUpdate(void);
 void ThoughtBubble_Draw(void);
-void ThoughtBubble_Create(void* data);
+void ThoughtBubble_Create(void *data);
 void ThoughtBubble_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ThoughtBubble_EditorDraw(void);
@@ -53,4 +53,4 @@ void ThoughtBubble_HaveOtherThoughts(void);
 void ThoughtBubble_BubbleDisappear(void);
 void ThoughtBubble_DestroyBubble(void);
 
-#endif //!OBJ_THOUGHTBUBBLE_H
+#endif //! OBJ_THOUGHTBUBBLE_H

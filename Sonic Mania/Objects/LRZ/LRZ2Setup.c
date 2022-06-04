@@ -17,8 +17,9 @@ void LRZ2Setup_StaticUpdate(void)
 {
     // Lava
     LRZ2Setup->lavaPalTimer += 24;
-    if (LRZ2Setup->lavaPalTimer > 255) {
+    if (LRZ2Setup->lavaPalTimer >= 256) {
         LRZ2Setup->lavaPalTimer -= 256;
+
         RSDK.RotatePalette(1, 224, 227, true);
         RSDK.RotatePalette(2, 224, 227, true);
         RSDK.RotatePalette(3, 224, 227, true);
@@ -34,21 +35,21 @@ void LRZ2Setup_StaticUpdate(void)
 
         if (LRZ2Setup->conveyorDstPal > 3)
             LRZ2Setup->conveyorDstPal = 1;
+
         if (LRZ2Setup->conveyorSrcPal > 3)
             LRZ2Setup->conveyorSrcPal = 1;
     }
 
-    RSDK.SetLimitedFade(0, LRZ2Setup->conveyorSrcPal, LRZ2Setup->conveyorDstPal, (RSDK.Cos256(LRZ2Setup->conveyorPalTimer) >> 1) + 128, 160, 168);
+    RSDK.SetLimitedFade(0, LRZ2Setup->conveyorSrcPal, LRZ2Setup->conveyorDstPal, (RSDK.Cos256(LRZ2Setup->conveyorPalTimer) >> 1) + 0x80, 160, 168);
     if (!LRZ2Setup->conveyorOff && !(Zone->timer & 1))
         RSDK.RotatePalette(0, 228, 231, (LRZ2Setup->conveyorDir & 0xFF));
 
     // Rock Hues
-    int32 blend = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
-
-    RSDK.SetLimitedFade(5, 1, 4, abs(blend >> 3), 224, 227);
+    RSDK.SetLimitedFade(5, 1, 4, abs(RSDK.Cos1024(2 * (Zone->timer & 0x1FF)) >> 3), 224, 227);
     RSDK.RotatePalette(3, 224, 227, true);
     RSDK.RotatePalette(4, 224, 227, true);
-    RSDK.SetLimitedFade(6, 2, 4, abs(blend >> 3), 224, 227);
+
+    RSDK.SetLimitedFade(6, 2, 4, abs(RSDK.Cos1024(2 * (Zone->timer & 0x1FF)) >> 3), 224, 227);
     RSDK.RotatePalette(3, 224, 227, false);
     RSDK.RotatePalette(4, 224, 227, false);
 
@@ -84,6 +85,7 @@ void LRZ2Setup_StaticUpdate(void)
                     int32 solid = 1 << 14;
                     if (player->collisionPlane)
                         solid = 1 << 12;
+
                     if ((solid & tileInfo) && player->shield != SHIELD_FIRE)
                         Player_CheckHitFlip(player);
                     break;
@@ -137,6 +139,7 @@ void LRZ2Setup_StageLoad(void)
 
     LRZ2Setup->conveyorDstPal = 1;
     LRZ2Setup->conveyorSrcPal = 2;
+
     if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION)
         GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = NULL;
     else
@@ -145,9 +148,8 @@ void LRZ2Setup_StageLoad(void)
 
 void LRZ2Setup_HandleStageReload(void)
 {
-    Vector2 pos;
-    pos.x = 0;
-    pos.y = 0;
+    Vector2 pos = { 0, 0 };
+
     foreach_all(DashLift, lift)
     {
         pos.x = lift->position.x;
@@ -172,9 +174,8 @@ void LRZ2Setup_GenericTrigger_CB(void)
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
 #if MANIA_USE_PLUS
-        if (globals->gameMode == MODE_ENCORE) {
-            globals->tempFlags = player1->position.y > 0x4000000;
-        }
+        if (globals->gameMode == MODE_ENCORE)
+            globals->tempFlags = player1->position.y > (1024 << 16);
 #endif
 
         if (player1->stateInput) {
@@ -185,9 +186,11 @@ void LRZ2Setup_GenericTrigger_CB(void)
             for (int32 p = 0; p < Player->playerCount; ++p) StarPost->postIDs[p] = 0;
 
             SaveGame_SavePlayerState();
+
             globals->enableIntro       = true;
             globals->suppressAutoMusic = true;
             globals->suppressTitlecard = true;
+
             ++SceneInfo->listPos;
             if (!RSDK.CheckValidScene())
                 RSDK.SetScene("Presentation", "Title Screen");
@@ -195,9 +198,8 @@ void LRZ2Setup_GenericTrigger_CB(void)
             Zone_StartFadeOut(10, 0x000000);
         }
 
-        if (player1->superState == SUPERSTATE_SUPER || player1->state == Player_State_Transform) {
+        if (player1->superState == SUPERSTATE_SUPER || player1->state == Player_State_Transform)
             globals->restartPowerups |= 0x80;
-        }
 
         globals->restartMusicID = Music->activeTrack;
     }
@@ -253,48 +255,49 @@ EntityButton *LRZ2Setup_SetupTagLink(int32 tag, Entity *entity)
     return taggedButton;
 }
 
-void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, int32 *tileInfo, uint8 *behaviour)
+void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, int32 *tile, uint8 *flags)
 {
-    int32 tileInfoLow   = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
-    int32 tileInfoHigh  = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);
-    int32 behaviourLow  = RSDK.GetTileFlags(tileInfoLow, cPlane);
-    int32 behaviourHigh = RSDK.GetTileFlags(tileInfoHigh, cPlane);
+    int32 tileLow  = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
+    int32 tileHigh = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);
 
-    int32 tileInfoMove  = 0;
-    int32 behaviourMove = 0;
+    int32 flagsLow  = RSDK.GetTileFlags(tileLow, cPlane);
+    int32 flagsHigh = RSDK.GetTileFlags(tileHigh, cPlane);
+
+    int32 tileMove  = 0;
+    int32 flagsMove = 0;
     if (Zone->moveLayer) {
-        tileInfoMove  = RSDK.GetTileInfo(Zone->moveLayer, (moveOffsetX + x) >> 20, (moveOffsetY + y) >> 20);
-        behaviourMove = RSDK.GetTileFlags(tileInfoMove, cPlane);
+        tileMove  = RSDK.GetTileInfo(Zone->moveLayer, (moveOffsetX + x) >> 20, (moveOffsetY + y) >> 20);
+        flagsMove = RSDK.GetTileFlags(tileMove, cPlane);
     }
 
     int32 tileSolidLow  = 0;
     int32 tileSolidHigh = 0;
     int32 tileSolidMove = 0;
     if (cPlane) {
-        tileSolidHigh = tileInfoHigh >> 14;
-        tileSolidLow  = tileInfoLow >> 14;
+        tileSolidHigh = tileHigh >> 14;
+        tileSolidLow  = tileLow >> 14;
     }
     else {
-        tileSolidHigh = tileInfoHigh >> 12;
-        tileSolidLow  = tileInfoLow >> 12;
+        tileSolidHigh = tileHigh >> 12;
+        tileSolidLow  = tileLow >> 12;
     }
 
     if (Zone->moveLayer)
-        tileSolidMove = tileInfoMove >> 12;
+        tileSolidMove = tileMove >> 12;
 
-    *tileInfo  = 0;
-    *behaviour = LRZ2_TFLAGS_NORMAL;
-    if (behaviourMove && (tileSolidMove & 3)) {
-        *tileInfo  = tileInfoMove;
-        *behaviour = behaviourMove;
+    *tile  = 0;
+    *flags = LRZ2_TFLAGS_NORMAL;
+    if (flagsMove && (tileSolidMove & 3)) {
+        *tile  = tileMove;
+        *flags = flagsMove;
     }
-    else if (behaviourHigh && (tileSolidHigh & 3)) {
-        *tileInfo  = tileInfoHigh;
-        *behaviour = behaviourHigh;
+    else if (flagsHigh && (tileSolidHigh & 3)) {
+        *tile  = tileHigh;
+        *flags = flagsHigh;
     }
-    else if (behaviourLow && (tileSolidLow & 3)) {
-        *tileInfo  = tileInfoLow;
-        *behaviour = behaviourLow;
+    else if (flagsLow && (tileSolidLow & 3)) {
+        *tile  = tileLow;
+        *flags = flagsLow;
     }
 }
 

@@ -14,7 +14,7 @@ struct ObjectLRZ3Setup {
 
 // Entity Class
 struct EntityLRZ3Setup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -25,7 +25,7 @@ void LRZ3Setup_Update(void);
 void LRZ3Setup_LateUpdate(void);
 void LRZ3Setup_StaticUpdate(void);
 void LRZ3Setup_Draw(void);
-void LRZ3Setup_Create(void* data);
+void LRZ3Setup_Create(void *data);
 void LRZ3Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZ3Setup_EditorDraw(void);
@@ -36,4 +36,4 @@ void LRZ3Setup_Serialize(void);
 // Extra Entity Functions
 void LRZ3Setup_StartCutscene(void);
 
-#endif //!OBJ_LRZ3SETUP_H
+#endif //! OBJ_LRZ3SETUP_H

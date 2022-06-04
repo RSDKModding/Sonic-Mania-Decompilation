@@ -12,6 +12,7 @@ ObjectStalactite *Stalactite;
 void Stalactite_Update(void)
 {
     RSDK_THIS(Stalactite);
+
     StateMachine_Run(self->state);
 }
 

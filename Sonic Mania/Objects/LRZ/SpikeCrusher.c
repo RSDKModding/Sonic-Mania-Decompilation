@@ -41,6 +41,7 @@ void SpikeCrusher_Create(void *data)
         self->updateRange.y = self->position.y - self->centerPos.y + 0x200000;
         if (self->startDir == FLIP_X)
             self->drawPos.y = self->position.y;
+
         self->position.y = self->centerPos.y;
         self->state      = SpikeCrusher_State_Setup;
     }
@@ -57,7 +58,7 @@ void SpikeCrusher_CheckOffScreen(void)
     RSDK_THIS(SpikeCrusher);
 
     if (!RSDK.CheckPosOnScreen(&self->drawPos, &self->updateRange) && !RSDK.CheckPosOnScreen(&self->centerPos, &self->updateRange)) {
-        self->drawPos       = self->centerPos;
+        self->drawPos    = self->centerPos;
         self->position   = self->centerPos;
         self->velocity.y = 0;
         self->timer      = 0;
@@ -98,11 +99,12 @@ void SpikeCrusher_State_MovingDown(void)
         if (self->activeScreens)
             RSDK.PlaySfx(SpikeCrusher->sfxImpact, false, 0xFF);
 
-        self->timer         = 0;
-        self->velocity.y    = 0;
-        self->state         = SpikeCrusher_State_Crushing;
+        self->timer      = 0;
+        self->velocity.y = 0;
+        self->state      = SpikeCrusher_State_Crushing;
     }
-    self->drawPos  = self->position;
+
+    self->drawPos = self->position;
 
     self->position.x = storeX;
     self->position.y = storeY;
@@ -118,9 +120,9 @@ void SpikeCrusher_State_Crushing(void)
     self->spikeAnimator.frameID = self->timer + 5;
 
     if (self->timer >= 6) {
-        self->timer = 15;
-        self->drawPos.y     = self->drawPos.y + 0x8000;
-        self->state         = SpikeCrusher_State_CrushBounce;
+        self->timer     = 15;
+        self->drawPos.y = self->drawPos.y + 0x8000;
+        self->state     = SpikeCrusher_State_CrushBounce;
     }
     SpikeCrusher_CheckOffScreen();
 }
@@ -151,8 +153,9 @@ void SpikeCrusher_State_ActivateFlames(void)
 
     if (++self->timer >= 8) {
         self->timer = 0;
-        self->state         = SpikeCrusher_State_MovingUp;
+        self->state = SpikeCrusher_State_MovingUp;
     }
+
     SpikeCrusher_CheckOffScreen();
 }
 
@@ -170,9 +173,9 @@ void SpikeCrusher_State_MovingUp(void)
 
     ++self->timer;
     if (self->drawPos.y <= self->centerPos.y) {
-        self->timer = 0;
-        self->drawPos.y     = self->centerPos.y;
-        self->state         = SpikeCrusher_State_MovingDown;
+        self->timer     = 0;
+        self->drawPos.y = self->centerPos.y;
+        self->state     = SpikeCrusher_State_MovingDown;
     }
 
     self->velocity.y = -0x10000;
@@ -183,6 +186,7 @@ void SpikeCrusher_State_MovingUp(void)
 void SpikeCrusher_EditorDraw(void)
 {
     RSDK_THIS(SpikeCrusher);
+
     if (Platform) {
         self->drawPos = self->position;
         RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 4);

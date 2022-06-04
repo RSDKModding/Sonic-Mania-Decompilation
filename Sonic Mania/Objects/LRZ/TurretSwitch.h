@@ -14,7 +14,7 @@ struct ObjectTurretSwitch {
 // Entity Class
 struct EntityTurretSwitch {
     MANIA_BUTTON_BASE
-          
+
     Animator animator;
     StateMachine(state);
     int32 timer;
@@ -31,7 +31,7 @@ void TurretSwitch_Update(void);
 void TurretSwitch_LateUpdate(void);
 void TurretSwitch_StaticUpdate(void);
 void TurretSwitch_Draw(void);
-void TurretSwitch_Create(void* data);
+void TurretSwitch_Create(void *data);
 void TurretSwitch_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TurretSwitch_EditorDraw(void);
@@ -47,4 +47,4 @@ void TurretSwitch_State_Setup(void);
 void TurretSwitch_State_Turret(void);
 void TurretSwitch_State_Projectile(void);
 
-#endif //!OBJ_TURRETSWITCH_H
+#endif //! OBJ_TURRETSWITCH_H

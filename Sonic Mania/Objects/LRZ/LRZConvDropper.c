@@ -39,7 +39,7 @@ void LRZConvDropper_Update(void)
                 if (!((1 << playerID) & self->activePlayers) && triggered) {
                     if (!player->sidekick)
                         playerEntered = true;
-                    self->activePlayers |= (1 << playerID);
+                    self->activePlayers |= 1 << playerID;
                 }
 
                 if ((1 << playerID) & self->activePlayers) {
@@ -77,6 +77,7 @@ void LRZConvDropper_Draw(void)
     RSDK_THIS(LRZConvDropper);
 
     RSDK.DrawSprite(&self->animator, NULL, false);
+
     if (self->triggerMode == LRZCONVDROP_TRIGGER_PLAYER) {
         int32 x = self->detectOffset.x + self->position.x;
         int32 y = self->detectOffset.y + self->position.y;
@@ -95,6 +96,7 @@ void LRZConvDropper_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (self->triggerMode == LRZCONVDROP_TRIGGER_PLAYER) {
         self->updateRange.x = (self->detectSize.x >> 1) + 0x1000000;
         self->updateRange.y = (self->detectSize.y >> 1) + 0x1000000;
@@ -104,7 +106,9 @@ void LRZConvDropper_Create(void *data)
     self->hitbox.top    = -(self->detectSize.y >> 17);
     self->hitbox.right  = self->detectSize.x >> 17;
     self->hitbox.bottom = self->detectSize.y >> 17;
+
     LRZConvDropper_SetupDropperChildren();
+
     RSDK.SetSpriteAnimation(LRZConvDropper->aniFrames, 0, &self->animator, true, 0);
 }
 
@@ -125,7 +129,7 @@ void LRZConvDropper_SetupDropperChildren(void)
 void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
 {
     if (entity->seqCount && entity->seqPos < entity->seqCount) {
-        int32 slot                  = RSDK.GetEntityID(entity);
+        int32 slot                = RSDK.GetEntityID(entity);
         int32 seqPos              = entity->seqPos - entity->seqCount;
         EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(slot + seqPos, LRZConvItem);
 
@@ -168,11 +172,13 @@ void LRZConvDropper_EditorDraw(void)
     RSDK_THIS(LRZConvDropper);
 
     RSDK.DrawSprite(&self->animator, NULL, false);
+
     if (self->triggerMode == LRZCONVDROP_TRIGGER_PLAYER && showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
         int32 x = self->detectOffset.x + self->position.x;
         int32 y = self->detectOffset.y + self->position.y;
+
         RSDK.DrawLine(self->position.x, self->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
         DrawHelpers_DrawHitboxOutline(x, y, &self->hitbox, 0, 0xFFFFFF);
 

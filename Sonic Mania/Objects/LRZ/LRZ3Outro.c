@@ -13,6 +13,7 @@ ObjectLRZ3Outro *LRZ3Outro;
 void LRZ3Outro_Update(void)
 {
     RSDK_THIS(LRZ3Outro);
+
     StateMachine_Run(self->state);
 }
 
@@ -29,9 +30,12 @@ void LRZ3Outro_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active      = ACTIVE_NORMAL;
         self->isPermanent = true;
-        self->background1         = RSDK.GetTileLayer(1);
-        self->background2         = RSDK.GetTileLayer(2);
+
+        self->background1 = RSDK.GetTileLayer(1);
+        self->background2 = RSDK.GetTileLayer(2);
+
         foreach_active(ParallaxSprite, sprite) { self->littlePlanet = sprite; }
+
         self->state = LRZ3Outro_State_BlastOff;
     }
 }
@@ -46,8 +50,8 @@ void LRZ3Outro_HandleExplosions(void)
 {
     RSDK_THIS(LRZ3Outro);
 
-    int32 x                      = (RSDK.Rand(-ScreenInfo->centerX, ScreenInfo->centerX) + ScreenInfo->centerX + ScreenInfo->position.x);
-    int32 y                      = (ScreenInfo->position.y + 32 + ScreenInfo->height);
+    int32 x                    = (RSDK.Rand(-ScreenInfo->centerX, ScreenInfo->centerX) + ScreenInfo->centerX + ScreenInfo->position.x);
+    int32 y                    = ScreenInfo->position.y + 32 + ScreenInfo->height;
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x << 16, y << 16);
 
     explosion->velocity.x = RSDK.Rand(-0x20000, 0x20000);
@@ -69,12 +73,13 @@ void LRZ3Outro_State_BlastOff(void)
 
     if (self->timer == 1) {
         self->blastoffChannel = RSDK.PlaySfx(LRZ3Outro->sfxBlastoff, 56628, 0xFF);
-        self->blastoffVolume = 1.0;
+        self->blastoffVolume  = 1.0;
     }
 
     if (self->timer == 60) {
-        self->timer                       = 0;
-        self->state                         = LRZ3Outro_State_RocketLaunch;
+        self->timer = 0;
+        self->state = LRZ3Outro_State_RocketLaunch;
+
         RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
         RSDK.GetTileLayer(1)->drawLayer[0] = 0;
     }
@@ -152,7 +157,7 @@ void LRZ3Outro_State_EnterLittlePlanet(void)
 
     if (littlePlanet->scrollPos.y < -0x1000000) {
         littlePlanet->scrollSpeed.y = 0;
-        self->state               = StateMachine_None;
+        self->state                 = StateMachine_None;
     }
 }
 
@@ -167,6 +172,7 @@ void LRZ3Outro_StageFinishCB(void)
 
     if (cutscene) {
         CutsceneSeq_StartSequence(cutscene, LRZ3Outro_Cutscene_StopPlayers, LRZ3Outro_Cutscene_LightUpLittlePlanet, StateMachine_None);
+
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
@@ -178,6 +184,7 @@ void LRZ3Outro_StageFinishCB(void)
 bool32 LRZ3Outro_Cutscene_StopPlayers(EntityCutsceneSeq *host)
 {
     foreach_active(Player, player) { player->state = Player_State_None; }
+
     return true;
 }
 

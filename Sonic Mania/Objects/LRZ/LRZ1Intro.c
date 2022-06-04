@@ -13,6 +13,7 @@ ObjectLRZ1Intro *LRZ1Intro;
 void LRZ1Intro_Update(void)
 {
     RSDK_THIS(LRZ1Intro);
+
     StateMachine_Run(self->state);
 }
 
@@ -25,13 +26,16 @@ void LRZ1Intro_Draw(void)
     RSDK_THIS(LRZ1Intro);
 
     RSDK.SetActivePalette(6, 0, ScreenInfo->height);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
+
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
 void LRZ1Intro_Create(void *data)
 {
     RSDK_THIS(LRZ1Intro);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
@@ -63,6 +67,7 @@ void LRZ1Intro_HandlePlayerCollisions(void)
     {
         if (Player_CheckCollisionPlatform(player, self, hitboxTopDeck))
             player->position.y += 0x20000;
+
         if (Player_CheckCollisionPlatform(player, self, hitboxBottomDeck))
             player->position.y += 0x20000;
     }
@@ -76,6 +81,7 @@ void LRZ1Intro_HandlePlayerMovement(void)
     {
         player->velocity.x = 0;
         player->velocity.y = 0;
+
         player->position.x = self->position.x + self->playerOffset[player->playerID].x;
         player->position.y = self->position.y + self->playerOffset[player->playerID].y;
     }
@@ -97,9 +103,11 @@ void LRZ1Intro_HandleLavaContact(void)
             geyser->visible          = true;
             geyser->active           = ACTIVE_NORMAL;
             geyser->velocity.y       = 0x40000;
+
             RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &geyser->plumeAnimator, true, 0);
             RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &geyser->flowAnimator, true, 0);
             RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &geyser->plumeLoopAnimator, true, 16);
+
             geyser->state = LavaGeyser_State_Erupting;
         }
     }
@@ -119,6 +127,7 @@ void LRZ1Intro_HandleExplosions(void)
 void LRZ1Intro_State_SetupActors(void)
 {
     RSDK_THIS(LRZ1Intro);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     Hitbox *playerHitbox = Player_GetHitbox(player1);
@@ -163,7 +172,9 @@ void LRZ1Intro_State_IntroDelay(void)
         self->timer      = 0;
         self->velocity.x = 0x100000;
         self->state      = LRZ1Intro_State_EnterSub;
+
         RSDK.PlaySfx(LRZ1Intro->sfxSubLand, false, 255);
+
         Zone->cameraBoundsL[0] = 2732;
         Zone->cameraBoundsL[1] = 2732;
         Zone->cameraBoundsL[2] = 2732;
@@ -191,10 +202,13 @@ void LRZ1Intro_State_EnterSub(void)
         Zone->playerBoundActiveL[0] = true;
         self->spawnPosY             = self->position.y + 0x380000;
         self->state                 = LRZ1Intro_State_RidingSub;
+
         Camera_ShakeScreen(0, 0, 6);
         camera->lookPos.y &= 0xFFFE;
+
         RSDK.PlaySfx(LRZ1Intro->sfxWalkerLegs2, false, 255);
     }
+
     LRZ1Intro_HandlePlayerMovement();
 }
 

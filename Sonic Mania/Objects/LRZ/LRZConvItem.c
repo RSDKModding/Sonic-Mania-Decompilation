@@ -12,7 +12,9 @@ ObjectLRZConvItem *LRZConvItem;
 void LRZConvItem_Update(void)
 {
     RSDK_THIS(LRZConvItem);
+
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -23,6 +25,7 @@ void LRZConvItem_StaticUpdate(void) {}
 void LRZConvItem_Draw(void)
 {
     RSDK_THIS(LRZConvItem);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -40,6 +43,7 @@ void LRZConvItem_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     RSDK.SetSpriteAnimation(LRZConvItem->aniFrames, self->type, &self->animator, true, 0);
 
     if (!SceneInfo->inEditor) {
@@ -53,7 +57,9 @@ void LRZConvItem_Create(void *data)
 void LRZConvItem_StageLoad(void)
 {
     LRZConvItem->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConvItem.bin", SCOPE_STAGE);
+
     LRZConvItem_SetupHitboxes();
+
     LRZConvItem->sfxSizzle = RSDK.GetSfx("LRZ/Sizzle.wav");
 }
 
@@ -121,7 +127,8 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
             if (!RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)
                 || !RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)) {
                 if (RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4)) {
-                    tileCollided = RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4);
+                    tileCollided =
+                        RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4);
                 }
             }
         }
@@ -156,14 +163,17 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
 
             case LRZ2_TFLAGS_LAVA:
                 entity->active = ACTIVE_NORMAL;
+
                 if (prevY > entity->position.y)
                     entity->position.y = prevY;
+
                 lavaCollided = true;
                 break;
 
             case LRZ2_TFLAGS_CONVEYOR_L:
                 tileConveyorCollided = true;
                 entity->active       = ACTIVE_NORMAL;
+
                 if (entity->onGround) {
                     if (LRZ2Setup->conveyorOff)
                         entity->velocity.x = 0;
@@ -175,6 +185,7 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
             case LRZ2_TFLAGS_CONVEYOR_R:
                 tileConveyorCollided = true;
                 entity->active       = ACTIVE_NORMAL;
+
                 if (entity->onGround) {
                     if (LRZ2Setup->conveyorOff)
                         entity->velocity.x = 0;
@@ -263,6 +274,7 @@ void LRZConvItem_State_Rock(void)
                 if (moveOffset.y >= 0)
                     player->collisionFlagV |= 2;
                 break;
+
             default: break;
         }
     }
@@ -292,6 +304,7 @@ void LRZConvItem_State_SpikeBall(void)
 void LRZConvItem_EditorDraw(void)
 {
     RSDK_THIS(LRZConvItem);
+
     RSDK.SetSpriteAnimation(LRZConvItem->aniFrames, self->type, &self->animator, true, 0);
 
     LRZConvItem_Draw();
