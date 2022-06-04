@@ -140,19 +140,23 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
                     }
                 }
 #endif
+                if (engine.inFocus == 1) {
+                    // Uncomment this code to add the build number to dev menu
+                    // overrides the game subtitle, used in switch dev menu
+                    if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
+                        // Switch 1.00 build # is 17051, 1.04 is 18403
+                        // char buffer[0x40];
+                        // sprintf(buffer, "Build #%d", 18403);
+                        // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
+                        // DrawDevString(buffer, currentScreen->center.x, currentScreen->center.y - 48, 1, 0xF0F0F0);
+                    }
 
-                // Uncomment this code to add the build number to dev menu
-                // overrides the game subtitle, used in switch dev menu
-                if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
-                    // Switch 1.00 build # is 17051, 1.04 is 18403
-                    // char buffer[0x40];
-                    // sprintf(buffer, "Build #%d", 18403);
-                    // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
-                    // DrawDevString(buffer, currentScreen->center.x, currentScreen->center.y - 48, 1, 0xF0F0F0);
+                    RenderDevice::CopyFrameBuffer();
                 }
-
-                RenderDevice::CopyFrameBuffer();
             }
+
+            if ((engine.focusState & 1) || engine.inFocus == 1)
+                RenderDevice::ProcessDimming();
 
             RenderDevice::FlipScreen();
         }

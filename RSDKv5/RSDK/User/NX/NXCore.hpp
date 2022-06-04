@@ -1,7 +1,12 @@
 #if RETRO_REV02
+
+#include <switch.h>
+
 struct NXCore : UserCore {
+    NXCore() { nxFocusState = 0; }
+
     bool32 CheckAPIInitialized() { return true; }
-    bool32 CheckFocusLost() { return focusState != 1; }
+    bool32 CheckFocusLost() { return nxFocusState != AppletFocusState_InFocus; }
     bool32 CheckEnginePause() { return false; }
     int32 GetUserLanguage()
     {
@@ -43,7 +48,7 @@ struct NXCore : UserCore {
         return true;
     }
 
-    int32 focusState;
+    int32 nxFocusState;
 };
 
 NXCore *InitNXCore();

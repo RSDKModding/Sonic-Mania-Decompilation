@@ -224,6 +224,20 @@ char RSDK::drawGroupNames[0x10][0x10] = {
     if (frameBufferClr != maskColor)                                                                                                                 \
         frameBufferClr = pixel;
 
+void RSDK::RenderDeviceBase::ProcessDimming()
+{
+    if (videoSettings.dimTimer < videoSettings.dimLimit) {
+        if (videoSettings.dimPercent < 1.0) {
+            videoSettings.dimPercent += 0.05f;
+            if (videoSettings.dimPercent > 1.0)
+                videoSettings.dimPercent = 1.0;
+        }
+    }
+    else if (videoSettings.dimPercent > 0.25) {
+        videoSettings.dimPercent *= 0.9f;
+    }
+}
+
 void RSDK::GenerateBlendLookupTable()
 {
     for (int32 y = 0; y < 0x100; y++) {

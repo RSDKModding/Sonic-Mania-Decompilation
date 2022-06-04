@@ -427,6 +427,7 @@ struct RetroEngine {
     bool32 XYFlip      = false; // swaps X/Y, used for nintendo and etc controllers
 
     uint8 focusState = 0;
+    uint8 inFocus    = 0;
 
     bool32 initialized = false;
     bool32 hardPause   = false;

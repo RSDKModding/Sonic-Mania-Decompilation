@@ -176,17 +176,6 @@ void RenderDevice::CopyFrameBuffer()
 
 void RenderDevice::FlipScreen()
 {
-    if (videoSettings.dimTimer < videoSettings.dimLimit) {
-        if (videoSettings.dimPercent < 1.0) {
-            videoSettings.dimPercent += 0.05;
-            if (videoSettings.dimPercent > 1.0)
-                videoSettings.dimPercent = 1.0;
-        }
-    }
-    else if (videoSettings.dimPercent > 0.25) {
-        videoSettings.dimPercent *= 0.9;
-    }
-
     if (windowRefreshDelay > 0) {
         if (!--windowRefreshDelay)
             UpdateGameWindow();
@@ -848,6 +837,7 @@ bool RenderDevice::InitGraphicsAPI()
 
     lastShaderID = -1;
     InitVertexBuffer();
+    engine.inFocus          = 1;
     videoSettings.viewportX = dx11ViewPort.TopLeftX;
     videoSettings.viewportY = dx11ViewPort.TopLeftY;
     videoSettings.viewportW = 1.0 / viewSize.x;

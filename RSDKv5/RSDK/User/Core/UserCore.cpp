@@ -54,11 +54,11 @@ void RSDK::SKU::InitUserData()
     userCore = InitSteamCore();
 #endif
 
-#if RETRO_USERCORE_STEAM
+#if RETRO_USERCORE_EOS
     userCore = InitEOSCore();
 #endif
 
-#if RETRO_USERCORE_STEAM
+#if RETRO_USERCORE_NX
     userCore = InitNXCore();
 #endif
 

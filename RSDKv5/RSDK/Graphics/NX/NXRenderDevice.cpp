@@ -41,6 +41,7 @@ bool RenderDevice::InitGraphicsAPI()
 
     lastShaderID = -1;
     InitVertexBuffer();
+    engine.inFocus          = 1;
     videoSettings.viewportX = 0;
     videoSettings.viewportY = 0;
     videoSettings.viewportW = 1.0 / viewSize.x;
@@ -71,17 +72,6 @@ void RenderDevice::FlipScreen()
         SetLinear(shaderList[videoSettings.shaderID].linear);
 
         glUseProgram(shaderList[videoSettings.shaderID].programID);
-    }
-
-    if (videoSettings.dimTimer < videoSettings.dimLimit) {
-        if (videoSettings.dimPercent < 1.0) {
-            videoSettings.dimPercent += 0.05;
-            if (videoSettings.dimPercent > 1.0)
-                videoSettings.dimPercent = 1.0;
-        }
-    }
-    else if (videoSettings.dimPercent > 0.25) {
-        videoSettings.dimPercent *= 0.9;
     }
 
     if (windowRefreshDelay > 0) {
