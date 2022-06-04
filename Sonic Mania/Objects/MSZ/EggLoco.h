@@ -43,7 +43,7 @@ void EggLoco_Update(void);
 void EggLoco_LateUpdate(void);
 void EggLoco_StaticUpdate(void);
 void EggLoco_Draw(void);
-void EggLoco_Create(void* data);
+void EggLoco_Create(void *data);
 void EggLoco_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EggLoco_EditorDraw(void);
@@ -59,4 +59,4 @@ void EggLoco_State_TootDelay(void);
 void EggLoco_State_Whistle(void);
 void EggLoco_State_Tooting(void);
 
-#endif //!OBJ_EGGLOCO_H
+#endif //! OBJ_EGGLOCO_H

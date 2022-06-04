@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectSwingRope {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxGrabHandle;
+    Hitbox hitboxHandle;
     uint16 aniFrames;
 };
 
@@ -18,7 +18,7 @@ struct EntitySwingRope {
     int32 ropeGrabDelay;
     int32 rotatedAngle;
     int32 rotatedOffset;
-    int32 playerLayers[4];
+    int32 playerLayers[PLAYER_MAX];
     int32 angleOffset;
     Vector2 ropePos;
     Vector2 rotatePos;

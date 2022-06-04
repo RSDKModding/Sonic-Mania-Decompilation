@@ -344,6 +344,7 @@ void UIButtonPrompt_SetButtonSprites(void)
 bool32 UIButtonPrompt_CheckTouch(void)
 {
     RSDK_THIS(UIButtonPrompt);
+
     EntityUIControl *control = (EntityUIControl *)self->parent;
     if (control && !control->dialogHasFocus && !control->selectionDisabled) {
         if (TouchInfo->count) {
@@ -382,9 +383,11 @@ bool32 UIButtonPrompt_CheckTouch(void)
 void UIButtonPrompt_State_CheckIfSelected(void)
 {
     RSDK_THIS(UIButtonPrompt);
+
     if (self->visible) {
         if (UIButtonPrompt_CheckTouch()) {
             self->scaleMax = 0x280;
+
             if (self->scaleSpeed < 0x10)
                 self->scaleSpeed = 0x10;
         }
@@ -399,6 +402,7 @@ void UIButtonPrompt_State_Selected(void)
     RSDK_THIS(UIButtonPrompt);
 
     self->scaleMax = 0x280;
+
     if (++self->timer == 16) {
         self->timer       = 0;
         self->textVisible = true;
@@ -410,6 +414,7 @@ void UIButtonPrompt_State_Selected(void)
 
         UIControl_ClearInputs(buttonID);
     }
+
     self->textVisible = !((self->timer >> 1) & 1);
 }
 

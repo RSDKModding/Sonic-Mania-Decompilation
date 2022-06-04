@@ -14,6 +14,7 @@ void Flipper_Update(void)
     RSDK_THIS(Flipper);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.animationID == 1 && self->animator.frameID == self->animator.frameCount - 1)
         RSDK.SetSpriteAnimation(Flipper->aniFrames, 0, &self->animator, false, 0);
 
@@ -26,11 +27,13 @@ void Flipper_Update(void)
                 self->hitbox.top = ((player->position.x - self->position.x - 0x40000) >> 17) - 20;
             else
                 self->hitbox.top = -20;
+
             self->hitbox.bottom = self->hitbox.top + 16;
 
             if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
-                self->activePlayers |= (1 << playerID);
+                self->activePlayers |= 1 << playerID;
                 player->position.y += 0x80000;
+
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
                 if (player->jumpPress) {
@@ -53,14 +56,16 @@ void Flipper_Update(void)
                 else {
                     player->tileCollisions = true;
                     player->state          = Player_State_Air;
+
                     if (player->groundVel >= 0x10000) {
                         if (player->groundVel > 0x20000)
                             player->groundVel = 0x20000;
-                        player->groundVel += 4096;
+
+                        player->groundVel += 0x1000;
                     }
                     else {
                         player->groundVel = 0x10000;
-                        player->groundVel += 4096;
+                        player->groundVel += 0x1000;
                     }
                 }
             }
@@ -78,10 +83,11 @@ void Flipper_Update(void)
                 self->hitbox.top = ((self->position.x - player->position.x - 0x40000) >> 17) - 20;
             else
                 self->hitbox.top = -20;
+
             self->hitbox.bottom = self->hitbox.top + 16;
 
             if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
-                self->activePlayers |= (1 << playerID);
+                self->activePlayers |= 1 << playerID;
                 player->position.y += 0x80000;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
@@ -98,6 +104,7 @@ void Flipper_Update(void)
                             playerPtr->velocity.y       = -0x68000 - (vel >> 3);
                         }
                     }
+
                     RSDK.SetSpriteAnimation(Flipper->aniFrames, 1, &self->animator, false, 0);
                     RSDK.PlaySfx(Flipper->sfxFlipper, false, 255);
                 }
@@ -107,6 +114,7 @@ void Flipper_Update(void)
                     if (player->groundVel <= -0x10000) {
                         if (player->groundVel < -0x20000)
                             player->groundVel = -0x20000;
+
                         player->groundVel -= 0x1000;
                     }
                     else {
@@ -129,6 +137,7 @@ void Flipper_StaticUpdate(void) {}
 void Flipper_Draw(void)
 {
     RSDK_THIS(Flipper);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -138,6 +147,7 @@ void Flipper_Create(void *data)
 
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
+
         RSDK.SetSpriteAnimation(Flipper->aniFrames, 0, &self->animator, true, 0);
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -163,7 +173,9 @@ void Flipper_StageLoad(void)
 void Flipper_EditorDraw(void)
 {
     RSDK_THIS(Flipper);
+
     RSDK.SetSpriteAnimation(Flipper->aniFrames, 0, &self->animator, true, 0);
+
     Flipper_Draw();
 }
 

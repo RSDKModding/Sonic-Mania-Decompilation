@@ -42,6 +42,7 @@ void BarStool_Update(void)
                 if (abs(self->spinSpeed) <= 0x10000)
                     canTurntable = false;
             }
+
 #if MANIA_USE_PLUS
             canTurntable = canTurntable && player->state != Player_State_MightyHammerDrop;
 #endif
@@ -51,11 +52,13 @@ void BarStool_Update(void)
                 if (player->state != Player_State_None) {
                     if (velY >= 0)
                         self->spinSpeed += player->velocity.x;
+
                     self->playerAngle[playerID] = 0;
                     self->playerPos[playerID]   = (player->position.x - self->position.x) >> 1;
-                    player->state               = Player_State_None;
-                    player->nextAirState        = StateMachine_None;
-                    player->nextGroundState     = StateMachine_None;
+
+                    player->state           = Player_State_None;
+                    player->nextAirState    = StateMachine_None;
+                    player->nextGroundState = StateMachine_None;
                 }
 
                 player->velocity.x = 0;
@@ -147,6 +150,7 @@ void BarStool_StaticUpdate(void) {}
 void BarStool_Draw(void)
 {
     RSDK_THIS(BarStool);
+
     RSDK.DrawSprite(&self->poleAnimator, NULL, false);
     RSDK.DrawSprite(&self->stoolAnimator, NULL, false);
 }
@@ -154,9 +158,11 @@ void BarStool_Draw(void)
 void BarStool_Create(void *data)
 {
     RSDK_THIS(BarStool);
+
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(BarStool->aniFrames, 0, &self->stoolAnimator, true, 0);
         RSDK.SetSpriteAnimation(BarStool->aniFrames, 1, &self->poleAnimator, true, self->height);
+
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -182,6 +188,7 @@ void BarStool_StageLoad(void)
 void BarStool_EditorDraw(void)
 {
     RSDK_THIS(BarStool);
+
     RSDK.SetSpriteAnimation(BarStool->aniFrames, 0, &self->stoolAnimator, true, 0);
     RSDK.SetSpriteAnimation(BarStool->aniFrames, 1, &self->poleAnimator, true, self->height);
 

@@ -69,7 +69,7 @@ void MSZSetup_Update(void);
 void MSZSetup_LateUpdate(void);
 void MSZSetup_StaticUpdate(void);
 void MSZSetup_Draw(void);
-void MSZSetup_Create(void* data);
+void MSZSetup_Create(void *data);
 void MSZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSZSetup_EditorDraw(void);
@@ -117,4 +117,4 @@ void MSZSetup_State_StoreMSZ1ScrollPos_ST(void);
 void MSZSetup_PlayerState_Pilot(void);
 void MSZSetup_PlayerState_PostCrashJumpIn(void);
 
-#endif //!OBJ_MSZSETUP_H
+#endif //! OBJ_MSZSETUP_H

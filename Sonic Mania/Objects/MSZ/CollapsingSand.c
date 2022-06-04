@@ -12,7 +12,9 @@ ObjectCollapsingSand *CollapsingSand;
 void CollapsingSand_Update(void)
 {
     RSDK_THIS(CollapsingSand);
+
     self->visible = DebugMode->debugActive;
+
     StateMachine_Run(self->state);
 }
 
@@ -102,6 +104,7 @@ void CollapsingSand_State_CollapseDelay(void)
         self->collapseDuration.x = self->size.x >> 20;
         self->collapseDuration.y = self->size.y >> 20;
         self->collapseTimer      = 0;
+
         if (!self->collapseLeft) {
             self->state     = CollapsingSand_State_CollapseRight;
             self->tilePos.x = ((self->size.x >> 1) + self->position.x - 0x80000) >> 20;
@@ -182,6 +185,7 @@ void CollapsingSand_State_CollapseLeft(void)
                         itembox->state = ItemBox_State_Falling;
                 }
             }
+
             destroyEntity(self);
         }
     }
@@ -238,6 +242,7 @@ void CollapsingSand_State_CollapseRight(void)
                 --self->tilePos.y;
                 --self->collapseDuration.y;
             }
+
             self->collapseTimer = (self->collapseTimer + 1) & 3;
         }
         else {

@@ -65,15 +65,15 @@ typedef enum {
 
 // for "characterID" in editor
 typedef enum {
-    CHAR_NONE,
-    CHAR_SONIC,
-    CHAR_TAILS,
-    CHAR_SONIC_TAILS,
-    CHAR_KNUX,
-    CHAR_SONIC_KNUX,
-    CHAR_TAILS_KNUX,
-    CHAR_SONIC_TAILS_KNUX,
-} CharacterIDS;
+    PLAYER_CHAR_NONE,
+    PLAYER_CHAR_SONIC,
+    PLAYER_CHAR_TAILS,
+    PLAYER_CHAR_SONIC_TAILS,
+    PLAYER_CHAR_KNUX,
+    PLAYER_CHAR_SONIC_KNUX,
+    PLAYER_CHAR_TAILS_KNUX,
+    PLAYER_CHAR_SONIC_TAILS_KNUX,
+} PlayerCharacterIDS;
 
 typedef enum {
     SHIELD_NONE,

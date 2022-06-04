@@ -12,7 +12,9 @@ ObjectBumpalo *Bumpalo;
 void Bumpalo_Update(void)
 {
     RSDK_THIS(Bumpalo);
+
     RSDK.ProcessAnimation(&self->huffAnimator);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,8 +25,10 @@ void Bumpalo_StaticUpdate(void) {}
 void Bumpalo_Draw(void)
 {
     RSDK_THIS(Bumpalo);
+
     RSDK.DrawSprite(&self->badnikAnimator, NULL, false);
     RSDK.DrawSprite(&self->huffAnimator, NULL, false);
+
     if (self->state == Bumpalo_State_Charging)
         RSDK.DrawSprite(&self->dustAnimator, NULL, false);
 }
@@ -32,6 +36,7 @@ void Bumpalo_Draw(void)
 void Bumpalo_Create(void *data)
 {
     RSDK_THIS(Bumpalo);
+
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow + 1;
     self->drawFX        = FX_FLIP;
@@ -40,6 +45,7 @@ void Bumpalo_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 1, &self->badnikAnimator, true, 0);
     self->state = Bumpalo_State_Setup;
 }
@@ -85,6 +91,7 @@ void Bumpalo_StageLoad(void)
 void Bumpalo_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     EntityBumpalo *bumpalo = CREATE_ENTITY(Bumpalo, NULL, self->position.x, self->position.y);
     bumpalo->direction     = self->direction;
     bumpalo->startDir      = self->direction;
@@ -99,6 +106,7 @@ void Bumpalo_DebugDraw(void)
 void Bumpalo_CheckOffScreen(void)
 {
     RSDK_THIS(Bumpalo);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position  = self->startPos;
         self->direction = self->startDir;
@@ -111,6 +119,7 @@ void Bumpalo_BumpPlayer(EntityPlayer *player)
     RSDK_THIS(Bumpalo);
 
     RSDK.PlaySfx(Bumpalo->sfxBumper, false, 0xFF);
+
     int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
     int32 velX  = 0x700 * RSDK.Cos256(angle);
     int32 velY  = 0x700 * RSDK.Sin256(angle);
@@ -133,6 +142,7 @@ void Bumpalo_BumpPlayer(EntityPlayer *player)
         player->groundVel    = velX;
         player->applyJumpCap = false;
     }
+
     player->velocity.y     = velY;
     player->onGround       = false;
     player->tileCollisions = true;
@@ -177,11 +187,8 @@ void Bumpalo_CheckPlayerCollisions(void)
                         RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                         RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
                         self->state      = Bumpalo_State_Bumped;
+                        self->velocity.x = self->direction == FLIP_NONE ? 0x10000 : -0x10000;
                         self->velocity.y = -0x20000;
-                        if (self->direction == FLIP_NONE)
-                            self->velocity.x = 0x10000;
-                        else
-                            self->velocity.x = -0x10000;
                     }
                     else
 #endif
@@ -204,11 +211,8 @@ void Bumpalo_CheckPlayerCollisions(void)
                     RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                     RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
                     self->state      = Bumpalo_State_Bumped;
+                    self->velocity.x = self->direction == FLIP_NONE ? 0x10000 : -0x10000;
                     self->velocity.y = -0x20000;
-                    if (self->direction == FLIP_NONE)
-                        self->velocity.x = 0x10000;
-                    else
-                        self->velocity.x = -0x10000;
                 }
                 else
 #endif
@@ -242,11 +246,8 @@ void Bumpalo_CheckPlayerCollisions(void)
                             RSDK.PlaySfx(Bumpalo->sfxImpact, false, 255);
                             RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
                             self->state      = Bumpalo_State_Bumped;
+                            self->velocity.x = self->direction == FLIP_NONE ? 0x10000 : -0x10000;
                             self->velocity.y = -0x20000;
-                            if (self->direction == FLIP_NONE)
-                                self->velocity.x = 0x10000;
-                            else
-                                self->velocity.x = -0x10000;
                         }
                         else
 #endif
@@ -293,15 +294,20 @@ void Bumpalo_HandlePlatformCollisions(EntityPlatform *platform)
             int32 velX             = self->velocity.x;
 
             switch (RSDK.CheckObjectCollisionBox(platform, platformHitbox, self, &Bumpalo->hitboxBadnik, true)) {
-                default: break;
+                default:
+                case C_NONE:
+                case C_BOTTOM: break;
+
                 case C_TOP:
                     if (self->velocity.y > 0)
                         self->onGround |= true;
                     break;
+
                 case C_LEFT:
                     if (velX > 0)
                         self->wallCollided |= true;
                     break;
+
                 case C_RIGHT:
                     if (velX < 0)
                         self->wallCollided |= true;
@@ -325,15 +331,20 @@ void Bumpalo_HandleObjectCollisions(void)
         int32 velX = self->velocity.x;
 
         switch (RSDK.CheckObjectCollisionBox(platform, &platform->hitbox, self, &Bumpalo->hitboxBadnik, true)) {
-            default: break;
+            default:
+            case C_NONE:
+            case C_BOTTOM: break;
+
             case C_TOP:
                 if (self->velocity.y > 0)
                     self->onGround |= true;
                 break;
+
             case C_LEFT:
                 if (velX > 0)
                     self->wallCollided |= true;
                 break;
+
             case C_RIGHT:
                 if (velX < 0)
                     self->wallCollided |= true;
@@ -346,15 +357,20 @@ void Bumpalo_HandleObjectCollisions(void)
         int32 velX = self->velocity.x;
 
         switch (RSDK.CheckObjectCollisionBox(wall, &wall->hitbox, self, &Bumpalo->hitboxBadnik, true)) {
-            default: break;
+            default:
+            case C_NONE:
+            case C_BOTTOM: break;
+
             case C_TOP:
                 if (self->velocity.y > 0)
                     self->onGround |= true;
                 break;
+
             case C_LEFT:
                 if (velX > 0)
                     self->wallCollided |= true;
                 break;
+
             case C_RIGHT:
                 if (velX < 0)
                     self->wallCollided |= true;
@@ -372,11 +388,9 @@ void Bumpalo_State_Setup(void)
 {
     RSDK_THIS(Bumpalo);
 
-    self->active = ACTIVE_NORMAL;
-    if (self->direction == FLIP_NONE)
-        self->velocity.x = -0x10000;
-    else
-        self->velocity.x = 0x10000;
+    self->active     = ACTIVE_NORMAL;
+    self->velocity.x = self->direction == FLIP_NONE ? -0x10000 : 0x10000;
+
     self->state = Bumpalo_State_Moving;
     Bumpalo_State_Moving();
 }
@@ -416,12 +430,10 @@ void Bumpalo_State_Moving(void)
         if (self->wallCollided) {
             RSDK.PlaySfx(Bumpalo->sfxImpact, false, 0xFF);
             RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &self->badnikAnimator, true, 0);
+
             self->state      = Bumpalo_State_Bumped;
+            self->velocity.x = self->direction == FLIP_NONE ? 0x10000 : -0x10000;
             self->velocity.y = -0x20000;
-            if (self->direction == FLIP_NONE)
-                self->velocity.x = 0x10000;
-            else
-                self->velocity.x = -0x10000;
         }
     }
     else if (self->wallCollided) {
@@ -444,6 +456,7 @@ void Bumpalo_State_Moving(void)
     }
 
     RSDK.ProcessAnimation(&self->badnikAnimator);
+
     Bumpalo_CheckPlayerCollisions();
     Bumpalo_CheckOffScreen();
 }
@@ -453,6 +466,7 @@ void Bumpalo_State_Idle(void)
     RSDK_THIS(Bumpalo);
 
     RSDK.ProcessAnimation(&self->badnikAnimator);
+
     if (++self->timer == 48) {
         RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 5, &self->badnikAnimator, true, 0);
         self->state = Bumpalo_State_Turning;
@@ -490,12 +504,10 @@ void Bumpalo_State_Turning(void)
 
     if (self->badnikAnimator.frameID == self->badnikAnimator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 1, &self->badnikAnimator, true, 0);
+
         self->state = Bumpalo_State_Moving;
         self->direction ^= FLIP_X;
-        if (self->direction == FLIP_NONE)
-            self->velocity.x = -0x10000;
-        else
-            self->velocity.x = 0x10000;
+        self->velocity.x = self->direction == FLIP_NONE ? -0x10000 : 0x10000;
         Bumpalo_State_Moving();
     }
     else {
@@ -509,6 +521,7 @@ void Bumpalo_State_Bumped(void)
     RSDK_THIS(Bumpalo);
 
     RSDK.ProcessAnimation(&self->badnikAnimator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.x;
     self->velocity.y += 0x3800;
@@ -526,10 +539,7 @@ void Bumpalo_State_Bumped(void)
     if (self->badnikAnimator.frameID == self->badnikAnimator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 1, &self->badnikAnimator, true, 0);
         if (self->onGround) {
-            if (self->direction == FLIP_NONE)
-                self->velocity.x = -0x10000;
-            else
-                self->velocity.x = 0x10000;
+            self->velocity.x = self->direction == FLIP_NONE ? -0x10000 : 0x10000;
 
             if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
                 self->state = Bumpalo_State_Moving;
@@ -557,6 +567,7 @@ void Bumpalo_State_Falling(void)
     RSDK_THIS(Bumpalo);
 
     RSDK.ProcessAnimation(&self->badnikAnimator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -582,6 +593,7 @@ void Bumpalo_State_Falling(void)
 void Bumpalo_EditorDraw(void)
 {
     RSDK_THIS(Bumpalo);
+
     RSDK.DrawSprite(&self->badnikAnimator, NULL, false);
 }
 

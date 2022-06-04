@@ -28,7 +28,7 @@ void Flipper_Update(void);
 void Flipper_LateUpdate(void);
 void Flipper_StaticUpdate(void);
 void Flipper_Draw(void);
-void Flipper_Create(void* data);
+void Flipper_Create(void *data);
 void Flipper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Flipper_EditorDraw(void);
@@ -38,5 +38,4 @@ void Flipper_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_FLIPPER_H
+#endif //! OBJ_FLIPPER_H

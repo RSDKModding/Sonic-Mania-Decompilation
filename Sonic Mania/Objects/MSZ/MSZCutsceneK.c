@@ -12,6 +12,7 @@ ObjectMSZCutsceneK *MSZCutsceneK;
 void MSZCutsceneK_Update(void)
 {
     RSDK_THIS(MSZCutsceneK);
+
     if (!self->activated) {
         MSZCutsceneK_StartCutscene();
         self->activated = true;
@@ -60,7 +61,7 @@ void MSZCutsceneK_StageLoad(void)
 void MSZCutsceneK_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
-    SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 0, 3);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(ZONE_MSZ, ACT_1, CHAR_KNUX);
 }
 #endif
 
@@ -83,6 +84,7 @@ void MSZCutsceneK_SetupP2(int32 x, int32 y)
 {
     Player->sonicFrames = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE);
     Player->superFrames = RSDK.LoadSpriteAnimation("Players/SuperSonic.bin", SCOPE_STAGE);
+
     RSDK.ResetEntitySlot(SLOT_PLAYER2, Player->classID, NULL);
 
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -136,6 +138,7 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityTornado *tornado = MSZCutsceneK->tornado;
 
     if (!host->timer) {
@@ -153,7 +156,8 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
 
     tornado->position.x += tornado->velocity.x;
     tornado->position.y += tornado->velocity.y;
-    if (tornado->velocity.y >= tornado->movePos.y) {
+
+    if (tornado->position.y >= tornado->movePos.y) {
         tornado->velocity.y = 0;
         tornado->position.y = tornado->movePos.y;
     }
@@ -176,7 +180,7 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
             globals->suppressAutoMusic = true;
             globals->enableIntro       = true;
             RSDK.SetScene("Mania Mode", "");
-            SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 0, 3);
+            SceneInfo->listPos += TimeAttackData_GetManiaListPos(ZONE_MSZ, ACT_1, CHAR_KNUX);
             Zone_StartFadeOut(10, 0x000000);
         }
         else if (host->timer - host->storedTimer == 60) {
@@ -186,9 +190,9 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
     }
     else if (player1->position.y > tornado->position.y) {
         TornadoPath->camera = NULL;
-        host->values[1]        = true;
-        host->storedTimer      = host->timer;
-        MSZCutsceneK->pos3     = camera->position;
+        host->values[1]     = true;
+        host->storedTimer   = host->timer;
+        MSZCutsceneK->pos3  = camera->position;
         MSZCutsceneK->pos3.y += 0x1E00000;
         Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, MSZCutsceneK->pos3.x, MSZCutsceneK->pos3.y, 3);
     }
@@ -202,6 +206,7 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
 void MSZCutsceneK_EditorDraw(void)
 {
     RSDK_THIS(MSZCutsceneK);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

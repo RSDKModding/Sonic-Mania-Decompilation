@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    ROTSPIKES_PRIO_LOW,
+    ROTSPIKES_PRIO_HIGH,
+} RotatingSpikesPriorities;
+
 // Object Class
 struct ObjectRotatingSpikes {
     RSDK_OBJECT
@@ -30,7 +35,7 @@ void RotatingSpikes_Update(void);
 void RotatingSpikes_LateUpdate(void);
 void RotatingSpikes_StaticUpdate(void);
 void RotatingSpikes_Draw(void);
-void RotatingSpikes_Create(void* data);
+void RotatingSpikes_Create(void *data);
 void RotatingSpikes_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RotatingSpikes_EditorDraw(void);
@@ -40,5 +45,4 @@ void RotatingSpikes_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_ROTATINGSPIKES_H
+#endif //! OBJ_ROTATINGSPIKES_H

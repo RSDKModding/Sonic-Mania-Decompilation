@@ -25,7 +25,7 @@ void LocoSmoke_Update(void);
 void LocoSmoke_LateUpdate(void);
 void LocoSmoke_StaticUpdate(void);
 void LocoSmoke_Draw(void);
-void LocoSmoke_Create(void* data);
+void LocoSmoke_Create(void *data);
 void LocoSmoke_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LocoSmoke_EditorDraw(void);
@@ -35,5 +35,4 @@ void LocoSmoke_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_LOCOSMOKE_H
+#endif //! OBJ_LOCOSMOKE_H

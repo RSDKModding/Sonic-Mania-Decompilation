@@ -40,17 +40,14 @@ void CutsceneSeq_LateUpdate(void)
         }
     }
 
+    self->visible = false;
     for (int32 p = 0; p < CUTSCENESEQ_POINT_COUNT; ++p) {
-        Vector2 *point = &self->points[p];
-        if (point->x && point->y) {
+        if (self->points[p].x && self->points[p].y) 
             self->visible = true;
-            return;
-        }
     }
 
-    if (self->fadeWhite <= 0 && self->fadeBlack <= 0) {
-        self->visible = false;
-    }
+    if (self->fadeWhite > 0 || self->fadeBlack > 0) 
+        self->visible = true;
 }
 
 void CutsceneSeq_StaticUpdate(void) {}

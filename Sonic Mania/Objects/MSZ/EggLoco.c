@@ -12,6 +12,7 @@ ObjectEggLoco *EggLoco;
 void EggLoco_Update(void)
 {
     RSDK_THIS(EggLoco);
+
     RSDK.ProcessAnimation(&self->eggmanAnimator);
     RSDK.ProcessAnimation(&self->lanternAnimator);
     RSDK.ProcessAnimation(&self->smallWheelAnimator);
@@ -33,14 +34,13 @@ void EggLoco_StaticUpdate(void) {}
 void EggLoco_Draw(void)
 {
     RSDK_THIS(EggLoco);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - 2 * self->tootPullPos;
     RSDK.DrawSprite(&self->eggmanTootAnimator, 0, false);
     RSDK.DrawSprite(&self->whistleAnimator, &drawPos, false);
 
-    drawPos.x                          = self->position.x;
     drawPos.x                          = self->position.x - 0x2D0000;
     drawPos.y                          = self->position.y - 0x3F0000;
     self->drawFX                       = FX_ROTATE;
@@ -56,9 +56,9 @@ void EggLoco_Draw(void)
 
     self->whistleCableAnimator.frameID = 2;
     RSDK.DrawSprite(&self->whistleCableAnimator, &drawPos, false);
-    RSDK.DrawSprite(&self->eggmanTootAnimator, 0, false);
-    RSDK.DrawSprite(&self->eggmanAnimator, 0, false);
-    RSDK.DrawSprite(&self->locomotiveAnimator, 0, false);
+    RSDK.DrawSprite(&self->eggmanTootAnimator, NULL, false);
+    RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
+    RSDK.DrawSprite(&self->locomotiveAnimator, NULL, false);
 
     drawPos.x      = self->position.x - 0x680000;
     drawPos.y      = self->position.y + 0x380000;
@@ -71,7 +71,7 @@ void EggLoco_Draw(void)
 
     drawPos.x += 0x4A0000;
     self->drawFX   = FX_ROTATE;
-    self->rotation = self->couplingAngle + 256;
+    self->rotation = self->couplingAngle + 0x100;
     RSDK.DrawSprite(&self->bigWheelAnimator, &drawPos, false);
 
     self->drawFX = FX_NONE;
@@ -113,6 +113,7 @@ void EggLoco_Draw(void)
 void EggLoco_Create(void *data)
 {
     RSDK_THIS(EggLoco);
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
@@ -154,9 +155,9 @@ bool32 EggLoco_ChuggaCheckCB(void)
 
     foreach_all(EggLoco, eggLoco)
     {
-        int32 distX = abs(screenX - eggLoco->position.x);
-        int32 distY = abs(screenY - eggLoco->position.y);
-        int32 root  = MathHelpers_SquareRoot((distY >> 16) * (distY >> 16) + (distX >> 16) * (distX >> 16));
+        int32 distX = abs(screenX - eggLoco->position.x) >> 16;
+        int32 distY = abs(screenY - eggLoco->position.y) >> 16;
+        int32 root  = MathHelpers_SquareRoot(distX * distX + distY * distY);
         if (root <= 840)
             count++;
     }
@@ -168,11 +169,13 @@ void EggLoco_ChuggaUpdateCB(int32 sfx)
 {
     int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     int32 screenY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+
     foreach_all(EggLoco, eggLoco)
     {
-        int32 distX = abs(screenX - eggLoco->position.x);
-        int32 distY = abs(screenY - eggLoco->position.y);
-        int32 vol   = minVal(MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)), 840);
+        int32 distX = abs(screenX - eggLoco->position.x) >> 16;
+        int32 distY = abs(screenY - eggLoco->position.y) >> 16;
+        int32 vol   = minVal(MathHelpers_SquareRoot(distX * distX + distY * distY), 840);
+
         RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (vol / 840.0), 0.0, 1.0);
         foreach_break;
     }
@@ -233,6 +236,7 @@ void EggLoco_State_Tooting(void)
 void EggLoco_EditorDraw(void)
 {
     RSDK_THIS(EggLoco);
+
     self->updateRange.x = 0xA00000;
     self->updateRange.y = 0x600000;
 

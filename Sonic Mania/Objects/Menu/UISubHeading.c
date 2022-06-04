@@ -414,11 +414,11 @@ void UISubHeading_SaveButton_ActionCB(void)
         globals->stock          = saveRAM->stock;
         globals->characterFlags = saveRAM->characterFlags;
         RSDK.SetScene("Encore Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(self->saveZoneID, 0, self->frameID);
+        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(self->saveZoneID, ACT_1, self->frameID);
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, 0, self->frameID);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, ACT_1, self->frameID);
     }
 
     if (!loadingSave) {

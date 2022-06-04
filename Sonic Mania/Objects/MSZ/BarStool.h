@@ -36,7 +36,7 @@ void BarStool_Update(void);
 void BarStool_LateUpdate(void);
 void BarStool_StaticUpdate(void);
 void BarStool_Draw(void);
-void BarStool_Create(void* data);
+void BarStool_Create(void *data);
 void BarStool_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BarStool_EditorDraw(void);
@@ -46,5 +46,4 @@ void BarStool_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_BARSTOOL_H
+#endif //! OBJ_BARSTOOL_H

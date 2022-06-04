@@ -18,7 +18,7 @@ typedef enum {
     TORNADOPATH_GOTOSTOP,
     TORNADOPATH_SETUPMSZ1CUTSCENEST,
     TORNADOPATH_CRASHFINISH,
-}TornadoPathTypes;
+} TornadoPathTypes;
 
 // Object Class
 struct ObjectTornadoPath {
@@ -43,7 +43,7 @@ struct EntityTornadoPath {
     Vector2 size;
     int32 forceSpeed;
     Hitbox hitbox;
-    int32 targetSpeedStore;
+    int32 currentSpeed;
     Animator animator;
 };
 
@@ -55,7 +55,7 @@ void TornadoPath_Update(void);
 void TornadoPath_LateUpdate(void);
 void TornadoPath_StaticUpdate(void);
 void TornadoPath_Draw(void);
-void TornadoPath_Create(void* data);
+void TornadoPath_Create(void *data);
 void TornadoPath_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TornadoPath_EditorDraw(void);
@@ -78,4 +78,4 @@ void TornadoPath_State_GoToStopNode(void);
 void TornadoPath_State_SetupMSZ1CutsceneST(void);
 void TornadoPath_State_FinishCrash(void);
 
-#endif //!OBJ_TORNADOPATH_H
+#endif //! OBJ_TORNADOPATH_H

@@ -31,7 +31,7 @@ struct EntityMSZCutsceneST {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
-    EntityTornadoPath* pathNode;
+    EntityTornadoPath *pathNode;
     int32 unused1;
     int32 unused2;
     int32 unused3;
@@ -49,7 +49,7 @@ void MSZCutsceneST_Update(void);
 void MSZCutsceneST_LateUpdate(void);
 void MSZCutsceneST_StaticUpdate(void);
 void MSZCutsceneST_Draw(void);
-void MSZCutsceneST_Create(void* data);
+void MSZCutsceneST_Create(void *data);
 void MSZCutsceneST_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSZCutsceneST_EditorDraw(void);
@@ -73,4 +73,4 @@ bool32 MSZCutsceneST_Cutscene_SetPlayerMSZ2SpawnPos(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_PanCameraToPlayer(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_SetupMSZ2(EntityCutsceneSeq *host);
 
-#endif //!OBJ_MSZCUTSCENEST_H
+#endif //! OBJ_MSZCUTSCENEST_H

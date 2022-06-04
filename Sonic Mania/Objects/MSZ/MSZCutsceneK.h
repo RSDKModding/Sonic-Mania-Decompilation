@@ -19,7 +19,7 @@ struct ObjectMSZCutsceneK {
 
 // Entity Class
 struct EntityMSZCutsceneK {
-	MANIA_CUTSCENE_BASE
+    MANIA_CUTSCENE_BASE
 };
 
 // Object Struct
@@ -30,7 +30,7 @@ void MSZCutsceneK_Update(void);
 void MSZCutsceneK_LateUpdate(void);
 void MSZCutsceneK_StaticUpdate(void);
 void MSZCutsceneK_Draw(void);
-void MSZCutsceneK_Create(void* data);
+void MSZCutsceneK_Create(void *data);
 void MSZCutsceneK_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSZCutsceneK_EditorDraw(void);
@@ -48,4 +48,4 @@ void MSZCutsceneK_SetupP2(int32 x, int32 y);
 bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host);
 bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host);
 
-#endif //!OBJ_MSZCUTSCENEK_H
+#endif //! OBJ_MSZCUTSCENEK_H

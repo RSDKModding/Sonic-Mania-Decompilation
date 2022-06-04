@@ -12,6 +12,7 @@ ObjectPinata *Pinata;
 void Pinata_Update(void)
 {
     RSDK_THIS(Pinata);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void Pinata_StaticUpdate(void) {}
 void Pinata_Draw(void)
 {
     RSDK_THIS(Pinata);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -29,15 +31,13 @@ void Pinata_Create(void *data)
 {
     RSDK_THIS(Pinata);
 
-    if (self->priority)
-        self->drawOrder = Zone->objectDrawLow;
-    else
-        self->drawOrder = Zone->objectDrawHigh;
+    self->drawOrder     = self->priority != PINATA_PRIO_HIGH ? Zone->objectDrawLow : Zone->objectDrawHigh;
     self->visible       = true;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     self->state         = Pinata_State_CheckPlayerCollisions;
+
     RSDK.SetSpriteAnimation(Pinata->aniFrames, 3, &self->animator, true, 0);
 }
 
@@ -64,12 +64,14 @@ void Pinata_DebugDraw(void)
 void Pinata_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Pinata, NULL, self->position.x, self->position.y);
 }
 
 void Pinata_State_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Pinata);
+
     RSDK.ProcessAnimation(&self->animator);
 
     foreach_active(Player, player)
@@ -120,6 +122,7 @@ void Pinata_State_CheckPlayerCollisions(void)
                 debris->velocity.x   = RSDK.Rand(0, 0x20000);
                 if (debris->position.x < self->position.x)
                     debris->velocity.x = -debris->velocity.x;
+
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
@@ -137,11 +140,8 @@ void Pinata_State_CheckPlayerCollisions(void)
 void Pinata_State_Destroyed(void)
 {
     RSDK_THIS(Pinata);
-    Vector2 range;
 
-    range.x = 0x1000000;
-    range.y = 0x1000000;
-
+    Vector2 range = { 0x1000000, 0x1000000 };
     if (!RSDK.CheckOnScreen(self, &range)) {
         self->state   = Pinata_State_CheckPlayerCollisions;
         self->visible = true;
@@ -157,8 +157,8 @@ void Pinata_EditorLoad(void)
     Pinata->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Pinata.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Pinata, priority);
-    RSDK_ENUM_VAR("High", 0);
-    RSDK_ENUM_VAR("Low", 1);
+    RSDK_ENUM_VAR("High", PINATA_PRIO_HIGH);
+    RSDK_ENUM_VAR("Low", PINATA_PRIO_LOW);
 }
 #endif
 

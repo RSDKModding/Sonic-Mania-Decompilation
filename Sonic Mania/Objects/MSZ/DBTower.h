@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define DBTower_SegmentCount (4)
+#define DBTOWER_SEGMENT_COUNT (4)
 
 // Object Class
 struct ObjectDBTower {
@@ -29,17 +29,17 @@ struct EntityDBTower {
     int32 invincibilityTimer;
     int32 health;
     Vector2 originPos;
-    Vector2 bodyPositions[DBTower_SegmentCount];
-    int32 segmentUnused1[DBTower_SegmentCount];
-    int32 segmentUnused2[DBTower_SegmentCount];
-    int32 segmentUnused3[DBTower_SegmentCount];
-    int32 bodyAngles[DBTower_SegmentCount];
+    Vector2 bodyPositions[DBTOWER_SEGMENT_COUNT];
+    int32 segmentUnused1[DBTOWER_SEGMENT_COUNT];
+    int32 segmentUnused2[DBTOWER_SEGMENT_COUNT];
+    int32 segmentUnused3[DBTOWER_SEGMENT_COUNT];
+    int32 bodyAngles[DBTOWER_SEGMENT_COUNT];
     int32 wobbleAngle;
     int32 wobbleAngleVel;
     int32 segmentOffsetY;
     int32 xOffsetAngle;
     uint8 connectedSegmentCount;
-    Animator *segmentAnimators[DBTower_SegmentCount];
+    Animator *segmentAnimators[DBTOWER_SEGMENT_COUNT];
     uint8 playerTimers[PLAYER_MAX];
     Animator headAnimator;
     Animator bodyAnimator;
@@ -53,7 +53,7 @@ void DBTower_Update(void);
 void DBTower_LateUpdate(void);
 void DBTower_StaticUpdate(void);
 void DBTower_Draw(void);
-void DBTower_Create(void* data);
+void DBTower_Create(void *data);
 void DBTower_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DBTower_EditorDraw(void);
@@ -66,7 +66,9 @@ void DBTower_CheckPlayerCollisions_Head(void);
 void DBTower_Explode(void);
 
 void DBTower_State_SetupArena(void);
+#if MANIA_USE_PLUS
 void DBTower_State_Setup_Encore(void);
+#endif
 void DBTower_State_HandleBoss(void);
 void DBTower_State_Destroyed(void);
 void DBTower_State_Finish(void);
@@ -78,4 +80,4 @@ void DBTower_CheckPlayerCollisions_Body(void);
 void DBTower_State_BodyBouncing(void);
 void DBTower_State_BodyRolling(void);
 
-#endif //!OBJ_DBTOWER_H
+#endif //! OBJ_DBTOWER_H

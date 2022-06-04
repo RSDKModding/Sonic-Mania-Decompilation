@@ -63,6 +63,7 @@ void SeeSaw_Update(void)
 
             if (self->orbPos.x < self->position.x)
                 self->velocity.x = -self->velocity.x;
+
             self->state  = SeeSaw_State_OrbLaunched;
             self->active = ACTIVE_NORMAL;
         }
@@ -106,7 +107,9 @@ void SeeSaw_Update(void)
     }
 
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->orbAnimator);
+
     self->tiltTimerL = 0;
     self->tiltTimerM = 0;
     self->tiltTimerR = 0;
@@ -115,6 +118,7 @@ void SeeSaw_Update(void)
     foreach_active(Player, player)
     {
         SeeSaw_SetupHitbox(player->position.x, self->prevTilt);
+
         if (SeeSaw->hitboxPlank.right) {
             if (player->velocity.y > self->launchVelocity)
                 SeeSaw->launchVelocity = player->velocity.y + 0x7000;
@@ -130,11 +134,13 @@ void SeeSaw_Update(void)
 #endif
 
                 self->stood = true;
+
                 if (self->tilt != self->prevTilt) {
                     int32 top = SeeSaw->hitboxPlank.top;
                     SeeSaw_SetupHitbox(player->position.x, self->tilt);
                     player->position.y += (SeeSaw->hitboxPlank.top - top) << 16;
                 }
+
                 player->position.y += 0x20000;
 
                 if (self->orbSide) {
@@ -147,10 +153,12 @@ void SeeSaw_Update(void)
                     if (SeeSaw->launchVelocity) {
                         player->state    = Player_State_Air;
                         player->onGround = false;
+
                         if (self->state == SeeSaw_State_NoOrb || self->orbTimer)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                         else
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+
                         RSDK.PlaySfx(SeeSaw->sfxSpring, false, 255);
                         player->velocity.y = -SeeSaw->launchVelocity;
                     }
@@ -204,6 +212,7 @@ void SeeSaw_Update(void)
                     Player_CheckHit(player, self);
             }
         }
+
         self->position.x = storeX;
         self->position.y = storeY;
     }
@@ -216,6 +225,7 @@ void SeeSaw_StaticUpdate(void) {}
 void SeeSaw_Draw(void)
 {
     RSDK_THIS(SeeSaw);
+
     RSDK.DrawSprite(&self->orbAnimator, &self->orbPos, false);
     RSDK.DrawSprite(&self->plankAnimator, NULL, false);
     RSDK.DrawSprite(&self->pivotAnimator, NULL, false);
@@ -230,16 +240,19 @@ void SeeSaw_Create(void *data)
         RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 0, &self->pivotAnimator, true, 0);
         RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 1, &self->plankAnimator, true, 0);
         RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 2, &self->orbAnimator, true, 0);
+
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawHigh;
-        if (self->side == 1) {
+
+        if (self->side == FLIP_X) {
             self->targetTilt = SEESAW_TILT_R;
             self->orbPos.x   = self->position.x;
         }
+
         self->state = SeeSaw_State_OrbIdle;
     }
 }
@@ -273,6 +286,7 @@ void SeeSaw_SetupHitbox(int32 playerX, int32 tilt)
             SeeSaw->hitboxPlank.top = SeeSaw->tiltHeightTable[47 - distance] + 12;
         SeeSaw->hitboxPlank.right = 40;
     }
+
     SeeSaw->hitboxPlank.bottom = SeeSaw->hitboxPlank.top + 24;
     SeeSaw->hitboxPlank.left   = -SeeSaw->hitboxPlank.right;
 }
@@ -280,6 +294,7 @@ void SeeSaw_SetupHitbox(int32 playerX, int32 tilt)
 void SeeSaw_State_OrbIdle(void)
 {
     RSDK_THIS(SeeSaw);
+
     self->orbPos.x       = self->position.x + SeeSaw->orbTargetPos.x;
     self->orbPos.y       = self->position.y + SeeSaw->orbTargetPos.y;
     self->launchVelocity = 0;
@@ -292,14 +307,18 @@ void SeeSaw_State_NoOrb(void) {}
 void SeeSaw_State_OrbLaunched(void)
 {
     RSDK_THIS(SeeSaw);
+
     self->orbPos.x += self->velocity.x;
     self->orbPos.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (self->velocity.y > 0) {
         SeeSaw->orbTargetPos.y += self->position.y;
+
         if (self->orbPos.y >= SeeSaw->orbTargetPos.y) {
             self->orbPos.y = SeeSaw->orbTargetPos.y;
             self->state    = SeeSaw_State_OrbIdle;
+
             if (self->orbTimer && self->velocity.x)
                 self->orbTimer = 0;
 
@@ -311,6 +330,7 @@ void SeeSaw_State_OrbLaunched(void)
                 self->targetTilt = SEESAW_TILT_L;
                 self->orbSide    = 1;
             }
+
             self->active = ACTIVE_BOUNDS;
         }
     }
@@ -320,8 +340,10 @@ void SeeSaw_State_OrbLaunched(void)
 void SeeSaw_EditorDraw(void)
 {
     RSDK_THIS(SeeSaw);
+
     self->orbPos.x = self->position.x;
     self->orbPos.y = self->position.y;
+
     RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 0, &self->pivotAnimator, true, 0);
     RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 1, &self->plankAnimator, true, 0);
     RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 2, &self->orbAnimator, true, 0);

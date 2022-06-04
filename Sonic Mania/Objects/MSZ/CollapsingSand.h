@@ -33,7 +33,7 @@ void CollapsingSand_Update(void);
 void CollapsingSand_LateUpdate(void);
 void CollapsingSand_StaticUpdate(void);
 void CollapsingSand_Draw(void);
-void CollapsingSand_Create(void* data);
+void CollapsingSand_Create(void *data);
 void CollapsingSand_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CollapsingSand_EditorDraw(void);
@@ -47,4 +47,4 @@ void CollapsingSand_State_CollapseDelay(void);
 void CollapsingSand_State_CollapseLeft(void);
 void CollapsingSand_State_CollapseRight(void);
 
-#endif //!OBJ_COLLAPSINGSAND_H
+#endif //! OBJ_COLLAPSINGSAND_H

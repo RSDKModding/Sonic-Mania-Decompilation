@@ -109,6 +109,7 @@ void MSZSetup_Create(void *data)
             destroyEntity(self);
 #if MANIA_USE_PLUS
         }
+
         RSDK.CopyPalette(0, 128, 1, 128, 128);
         RSDK.CopyPalette(0, 128, 2, 128, 128);
         RSDK.RotatePalette(2, 204, 207, false);
@@ -137,6 +138,7 @@ void MSZSetup_StageLoad(void)
     if (RSDK.CheckStageFolder("MSZCutscene")) {
         RSDK.CopyPalette(0, 204, 4, 204, 4);
         RSDK.CopyPalette(3, 128, 0, 128, 128);
+
         MSZSetup_StoreBGParallax();
         MSZSetup_ReloadBGParallax_Multiply(0x400);
     }
@@ -173,6 +175,7 @@ void MSZSetup_StageLoad(void)
                 Zone->cameraBoundsL[1] = 0;
                 Zone->cameraBoundsL[2] = 0;
                 Zone->cameraBoundsL[3] = 0;
+
                 if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x1440000, 0x4C0000, 0x1F40000, 0x2340000)) {
                     Zone->cameraBoundsB[0] = 564;
                     Zone->cameraBoundsB[1] = 564;
@@ -204,14 +207,17 @@ void MSZSetup_StageLoad(void)
                     MSZSetup->msz2Cutscene = cutscene;
                     foreach_break;
                 }
+
                 Zone->stageFinishCallback = MSZSetup_StageFinishCB_MSZ2;
             }
+
             GenericTrigger->callbacks[MSZ_GENERICTRIGGER_ACHIEVEMENT] = MSZSetup_GenericTriggerCB_GetAchievement;
         }
         else {
 #if MANIA_USE_PLUS
             if ((SceneInfo->filter & FILTER_ENCORE)) {
                 RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_E);
+
                 if (isMainGameMode()) {
                     if (PlayerHelpers_CheckAct1())
                         Zone->stageFinishCallback = MSZSetup_StageFinishCB_E;
@@ -220,18 +226,20 @@ void MSZSetup_StageLoad(void)
             else {
                 if (RSDK.GetEntityCount(Tornado->classID, false) <= 0) {
                     RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_K);
+
                     if (!PlayerHelpers_CheckIntro())
                         FXFade_StopAll();
 
                     if (PlayerHelpers_CheckAct1Regular()) {
                         Zone->forcePlayerOnScreen = true;
-                        Zone->stageFinishCallback     = MSZSetup_StageFinishCB_K;
+                        Zone->stageFinishCallback = MSZSetup_StageFinishCB_K;
                     }
                 }
                 else {
                     MSZSetup_StoreBGParallax();
                     MSZSetup_ReloadBGParallax_Multiply(0x400);
                     RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_ST);
+
                     if (PlayerHelpers_CheckAct1Regular())
                         Zone->stageFinishCallback = MSZSetup_StageFinishCB_ST;
                     GiantPistol->inCutscene = true;
@@ -245,7 +253,7 @@ void MSZSetup_StageLoad(void)
 
                 if (PlayerHelpers_CheckAct1Regular()) {
                     Zone->forcePlayerOnScreen = true;
-                    Zone->stageFinishCallback     = MSZSetup_StageFinishCB_K;
+                    Zone->stageFinishCallback = MSZSetup_StageFinishCB_K;
                 }
             }
             else {
@@ -361,6 +369,7 @@ void MSZSetup_ReloadBGParallax_Multiply(int32 parallaxMultiplier)
 void MSZSetup_State_ManageFade_ST(void)
 {
     RSDK_THIS(MSZSetup);
+
     if (ScreenInfo->position.x + ScreenInfo->centerX > 0x1980) {
         self->state = MSZSetup_State_SwitchPalettes;
     }
@@ -369,6 +378,7 @@ void MSZSetup_State_ManageFade_ST(void)
 void MSZSetup_State_ManageFade_K(void)
 {
     RSDK_THIS(MSZSetup);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x < 0x21000000 && player1->position.y < 0x6400000)
         self->state = MSZSetup_State_SwitchPalettes;
@@ -384,6 +394,7 @@ void MSZSetup_State_ManageFade_E(void)
         if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
             decoration->animator.speed = 0;
     }
+
     self->state = MSZSetup_State_CheckFadeTrigger_E;
 }
 #endif
@@ -413,6 +424,7 @@ void MSZSetup_GenericTriggerCB_GetAchievement(void)
 void MSZSetup_State_SwitchPalettes(void)
 {
     RSDK_THIS(MSZSetup);
+
     self->timer += 4;
     RSDK.SetLimitedFade(0, 3, 4, self->timer, 128, 255);
 
@@ -425,11 +437,13 @@ void MSZSetup_State_SwitchPalettes(void)
         }
 #endif
         MSZSetup->usingRegularPalette = true;
+
         RSDK.CopyPalette(4, 128, 0, 128, 128);
 #if MANIA_USE_PLUS
         RSDK.CopyPalette(4, 128, 1, 128, 128);
         RSDK.CopyPalette(4, 128, 2, 128, 128);
         RSDK.RotatePalette(2, 204, 207, false);
+
         if ((SceneInfo->filter & FILTER_ENCORE))
             self->state = MSZSetup_State_CheckTrainStart;
         else
@@ -467,6 +481,7 @@ void MSZSetup_State_CheckFadeTrigger_E(void)
 void MSZSetup_State_CheckTrainStart(void)
 {
     RSDK_THIS(MSZSetup);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > 0x2B600000) {
         foreach_all(Decoration, decoration)
@@ -474,17 +489,22 @@ void MSZSetup_State_CheckTrainStart(void)
             if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
                 decoration->animator.speed = 1;
         }
-        Zone->cameraBoundsL[0]  = 0x2980;
-        Zone->playerBoundsL[0]  = 0x29800000;
+
+        Zone->cameraBoundsL[0] = 10624;
+        Zone->playerBoundsL[0] = 10624 << 16;
+
         MSZSetup->chuggaChannel = RSDK.PlaySfx(MSZSetup->sfxLocoChugga, 1, 255);
         RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, 0.0, 0.0, 1.0);
+
         MSZSetup_StoreBGParallax();
         MSZSetup_ReloadBGParallax_Multiply(0x000);
         Camera_ShakeScreen(0, 4, 4);
+
         RSDK.CopyTileLayer(4, 640, 94, 5, 0, 0, 62, 16);
         RSDK.CopyTileLayer(4, 655, 0, 5, 0, 0, 17, 70);
         RSDK.CopyTileLayer(3, 655, 0, 5, 0, 0, 17, 70);
         RSDK.CopyTileLayer(2, 655, 0, 5, 0, 0, 17, 70);
+
         self->state = MSZSetup_State_TrainStarting;
     }
 }
@@ -492,6 +512,7 @@ void MSZSetup_State_CheckTrainStart(void)
 void MSZSetup_State_TrainStarting(void)
 {
     RSDK_THIS(MSZSetup);
+
     RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, ++MSZSetup->chuggaVolume * (1 / 256.0f), 0.0, 1.0);
     MSZSetup_ReloadBGParallax_Multiply(8 * MSZSetup->chuggaVolume);
 
@@ -504,9 +525,9 @@ void MSZSetup_State_TrainStarting(void)
 void MSZSetup_State_TrainSequence_MSZ1E(void)
 {
     RSDK_THIS(MSZSetup);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     TileLayer *fgSupaLow  = RSDK.GetTileLayer(3);
-    // HIBYTE(layer->scrollInfo[1].scrollPos)            = 0;
     fgSupaLow->scrollInfo[1].scrollPos &= 0x00FFFFFF;
     fgSupaLow->scrollInfo[1].scrollSpeed = 0x600 * MSZSetup->chuggaVolume;
 
@@ -519,14 +540,15 @@ void MSZSetup_State_TrainSequence_MSZ1E(void)
 void MSZSetup_State_Boss_MSZ1E(void)
 {
     RSDK_THIS(MSZSetup);
+
     TileLayer *fgSupaLow = RSDK.GetTileLayer(3);
-    // HIBYTE(layer->scrollInfo[1].scrollPos)            = 0;
     fgSupaLow->scrollInfo[1].scrollPos &= 0x00FFFFFF;
     fgSupaLow->scrollInfo[1].scrollSpeed = 0x600 * MSZSetup->chuggaVolume;
 
     if (!MSZSetup->parallaxMult) {
         MSZSetup->chuggaVolume -= 4;
         RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, MSZSetup->chuggaVolume * (1 / 256.0f), 0.0, 1.0);
+
         if (MSZSetup->chuggaVolume <= 0) {
             fgSupaLow->scrollInfo[1].scrollSpeed = 0;
             fgSupaLow->scrollInfo[1].scrollPos   = 0;
@@ -567,6 +589,7 @@ void MSZSetup_State_AwaitActClearFinish(void)
             player->jumpHold  = false;
             player->state     = Player_State_Ground;
         }
+
         self->state = MSZSetup_State_MoveToMSZ2Start;
     }
 }
@@ -574,6 +597,7 @@ void MSZSetup_State_AwaitActClearFinish(void)
 void MSZSetup_State_MoveToMSZ2Start(void)
 {
     RSDK_THIS(MSZSetup);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player1->right        = true;
 
@@ -594,6 +618,7 @@ void MSZSetup_State_MoveToMSZ2Start(void)
 void MSZSetup_State_AwaitPlayerStopped(void)
 {
     RSDK_THIS(MSZSetup);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->groundVel <= 0) {
         player1->groundVel = 0;
@@ -607,6 +632,7 @@ void MSZSetup_State_AwaitPlayerStopped(void)
 void MSZSetup_State_StoreMSZ1ScrollPos_E(void)
 {
     RSDK_THIS(MSZSetup);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player1->direction    = FLIP_NONE;
 
@@ -632,6 +658,7 @@ void MSZSetup_State_StoreMSZ1ScrollPos_E(void)
         Zone_StoreEntities((ScreenInfo->centerX + 16640) << 16, 1440 << 16);
         globals->atlEnabled = true;
         RSDK.LoadScene();
+
         destroyEntity(self);
     }
 }
@@ -662,6 +689,7 @@ void MSZSetup_State_StoreMSZ1ScrollPos_ST(void)
 void MSZSetup_PlayerState_Pilot(void)
 {
     RSDK_THIS(Player);
+
     self->position.x    = 0;
     self->position.y    = 0;
     self->active        = ACTIVE_NEVER;
@@ -675,10 +703,12 @@ void MSZSetup_PlayerState_Pilot(void)
 void MSZSetup_PlayerState_PostCrashJumpIn(void)
 {
     RSDK_THIS(Player);
+
     self->active        = ACTIVE_NORMAL;
     self->visible       = true;
     self->stateInput    = Player_Input_P2_AI;
     Player->jumpInTimer = 240;
+
     Player_P2JumpBackIn();
 }
 

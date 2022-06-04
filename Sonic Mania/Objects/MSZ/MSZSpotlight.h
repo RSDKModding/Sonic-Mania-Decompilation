@@ -7,7 +7,7 @@ typedef enum {
     MSZSPOTLIGHT_RED,
     MSZSPOTLIGHT_GREEN,
     MSZSPOTLIGHT_BLUE,
-}MSZSpotlightColors;
+} MSZSpotlightColors;
 
 // Object Class
 struct ObjectMSZSpotlight {
@@ -34,7 +34,7 @@ void MSZSpotlight_Update(void);
 void MSZSpotlight_LateUpdate(void);
 void MSZSpotlight_StaticUpdate(void);
 void MSZSpotlight_Draw(void);
-void MSZSpotlight_Create(void* data);
+void MSZSpotlight_Create(void *data);
 void MSZSpotlight_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSZSpotlight_EditorDraw(void);
@@ -49,4 +49,4 @@ void MSZSpotlight_State_Idle(void);
 void MSZSpotlight_State_MoveToBox(void);
 void MSZSpotlight_State_Disappear(void);
 
-#endif //!OBJ_MSZSPOTLIGHT_H
+#endif //! OBJ_MSZSPOTLIGHT_H

@@ -8,8 +8,8 @@ struct ObjectSeltzerBottle {
     RSDK_OBJECT
     Hitbox hitboxBottle;
     Hitbox hitboxButton;
-    uint16 layerID;
     uint16 seltzerPathLayer;
+    uint16 seltzerPathLayerMask;
     uint16 aniFrames;
     uint16 sfxSpray;
 };
@@ -36,7 +36,7 @@ void SeltzerBottle_Update(void);
 void SeltzerBottle_LateUpdate(void);
 void SeltzerBottle_StaticUpdate(void);
 void SeltzerBottle_Draw(void);
-void SeltzerBottle_Create(void* data);
+void SeltzerBottle_Create(void *data);
 void SeltzerBottle_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SeltzerBottle_EditorDraw(void);
@@ -48,4 +48,4 @@ void SeltzerBottle_Serialize(void);
 void SeltzerBottle_State_Spraying(void);
 void SeltzerBottle_State_TryReset(void);
 
-#endif //!OBJ_SELTZERBOTTLE_H
+#endif //! OBJ_SELTZERBOTTLE_H

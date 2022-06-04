@@ -533,7 +533,7 @@ void CompetitionMenu_StartMatch(void)
         RSDK.SetScene("Encore Mode", "");
     else
         RSDK.SetScene("Mania Mode", "");
-    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, param->vsActID, 0);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, param->vsActID, CHAR_SONIC);
 
     SaveGame_ResetPlayerState();
 

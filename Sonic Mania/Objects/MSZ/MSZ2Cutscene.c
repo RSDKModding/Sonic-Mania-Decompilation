@@ -12,8 +12,10 @@ ObjectMSZ2Cutscene *MSZ2Cutscene;
 void MSZ2Cutscene_Update(void)
 {
     RSDK_THIS(MSZ2Cutscene);
+
     if (!self->activated) {
         MSZ2Cutscene_SetupCutscene();
+
         self->activated = true;
     }
 }
@@ -56,6 +58,7 @@ void MSZ2Cutscene_SetupCutscene(void)
 
     CutsceneSeq_StartSequence(self, MSZ2Cutscene_Cutscene_GoToPistol, MSZ2Cutscene_Cutscene_EnterPistol, MSZ2Cutscene_Cutscene_PistolFired,
                               MSZ2Cutscene_Cutscene_AppearInBG, StateMachine_None);
+
 #if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
@@ -104,6 +107,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         player1->state     = Player_State_Ground;
         player1->groundVel = 0;
+
         if (player2->classID == Player->classID) {
 #if MANIA_USE_PLUS
             Player->disableP2KeyCheck = true;
@@ -113,15 +117,14 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
             player2->groundVel  = 0;
         }
     }
+
     EntityGiantPistol *pistol = MSZ2Cutscene->pistol;
 
     player1->right = player1->position.x < pistol->position.x - 0xD00000;
     if (player1->position.x < pistol->position.x - 0xD00000) {
-        if (player2) {
-            if (player2->jumpPress) {
-                player2->velocity.x = 0x44000;
-                player2->velocity.y = -0x80000;
-            }
+        if (player2 && player2->jumpPress) {
+            player2->velocity.x = 0x44000;
+            player2->velocity.y = -0x80000;
         }
     }
     else {
@@ -133,6 +136,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
         player1->jumpHold   = true;
         return true;
     }
+
     return false;
 }
 
@@ -168,9 +172,10 @@ bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host)
     if (pistol->rotation == 448) {
         player1->jumpPress = true;
         player1->camera    = NULL;
-        camera->target  = NULL;
+        camera->target     = NULL;
         return true;
     }
+
     return false;
 }
 
@@ -212,6 +217,7 @@ bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
         }
         return true;
     }
+
     return false;
 }
 
@@ -235,12 +241,10 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
             player2->scale.x    = 0x40;
             player2->scale.y    = 0x40;
             player2->state      = Player_State_None;
-            player2->position.x = player1->position.x;
-            player2->position.y = player1->position.y;
+            player2->position.x = player1->position.x - 0x63000;
+            player2->position.y = player1->position.y - 0x24000;
             player2->velocity.x = 0;
             player2->velocity.y = 0;
-            player2->position.x -= 0x63000;
-            player2->position.y -= 0x24000;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->animator, false, 0);
             player1->animator.speed = 60;
         }
@@ -249,11 +253,13 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
     if (host->timer > 0) {
         player1->velocity.x = 0xB000;
         player1->velocity.y = host->storedTimer;
+
         if (player2->classID == Player->classID) {
             player2->state      = Player_State_None;
             player2->velocity.x = 0xB000;
             player2->velocity.y = player1->velocity.y;
         }
+
         host->storedTimer += 144;
     }
 
@@ -267,6 +273,7 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
 void MSZ2Cutscene_EditorDraw(void)
 {
     RSDK_THIS(MSZ2Cutscene);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

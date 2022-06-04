@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { PINATA_PRIO_HIGH, PINATA_PRIO_LOW } PinataPriorities;
+
 // Object Class
 struct ObjectPinata {
     RSDK_OBJECT

@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Rattlekiller_SegmentCount (10)
+#define RATTLEKILLER_SEGMENT_COUNT (10)
 
 typedef enum {
     RATTLEKILLER_IDLE,
@@ -30,15 +30,15 @@ struct EntityRattlekiller {
     StateMachine(state);     // Unused
     StateMachine(stateDraw); // Unused
     int32 timer;
-    int32 bodyStates[Rattlekiller_SegmentCount];
-    Vector2 bodyPositions[Rattlekiller_SegmentCount];
-    Vector2 bodyOriginPos[Rattlekiller_SegmentCount];
-    Vector2 bodyVelocities[Rattlekiller_SegmentCount];
-    int32 bodyAngles[Rattlekiller_SegmentCount];
-    int32 bodyDepth[Rattlekiller_SegmentCount];
-    int32 bodyDelays[Rattlekiller_SegmentCount];
-    int32 bodyIDs[Rattlekiller_SegmentCount];
-    Animator *bodyAnimators[Rattlekiller_SegmentCount];
+    int32 bodyStates[RATTLEKILLER_SEGMENT_COUNT];
+    Vector2 bodyPositions[RATTLEKILLER_SEGMENT_COUNT];
+    Vector2 bodyOriginPos[RATTLEKILLER_SEGMENT_COUNT];
+    Vector2 bodyVelocities[RATTLEKILLER_SEGMENT_COUNT];
+    int32 bodyAngles[RATTLEKILLER_SEGMENT_COUNT];
+    int32 bodyDepth[RATTLEKILLER_SEGMENT_COUNT];
+    int32 bodyDelays[RATTLEKILLER_SEGMENT_COUNT];
+    int32 bodyIDs[RATTLEKILLER_SEGMENT_COUNT];
+    Animator *bodyAnimators[RATTLEKILLER_SEGMENT_COUNT];
     Vector2 topBounds;
     Vector2 bottomBounds;
     Vector2 targetPos;

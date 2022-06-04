@@ -25,7 +25,7 @@ void MSZ2Cutscene_Update(void);
 void MSZ2Cutscene_LateUpdate(void);
 void MSZ2Cutscene_StaticUpdate(void);
 void MSZ2Cutscene_Draw(void);
-void MSZ2Cutscene_Create(void* data);
+void MSZ2Cutscene_Create(void *data);
 void MSZ2Cutscene_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSZ2Cutscene_EditorDraw(void);
@@ -42,4 +42,4 @@ bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host);
 bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host);
 bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host);
 
-#endif //!OBJ_MSZ2CUTSCENE_H
+#endif //! OBJ_MSZ2CUTSCENE_H

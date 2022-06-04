@@ -1231,7 +1231,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, 0, self->frameID);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, ACT_1, self->frameID);
     }
 
     if (!loadingSave) {
@@ -1507,7 +1507,7 @@ void MenuSetup_VS_StartMatch(void)
     session->actID      = param->vsActID;
 
     RSDK.SetScene("Mania Mode", "");
-    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, param->vsActID, 0);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, param->vsActID, CHAR_SONIC);
 
     SaveGame_ResetPlayerState();
 

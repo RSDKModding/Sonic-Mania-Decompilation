@@ -6791,14 +6791,14 @@ void Player_EditorLoad(void)
     Player->sonicFrames = RSDK.LoadSpriteAnimation("Editor/PlayerIcons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Player, characterID);
-    RSDK_ENUM_VAR("None", CHAR_NONE);
-    RSDK_ENUM_VAR("Sonic", CHAR_SONIC);
-    RSDK_ENUM_VAR("Tails", CHAR_TAILS);
-    RSDK_ENUM_VAR("Sonic & Tails", CHAR_SONIC_TAILS);
-    RSDK_ENUM_VAR("Knuckles", CHAR_KNUX);
-    RSDK_ENUM_VAR("Sonic & Knuckles", CHAR_SONIC_KNUX);
-    RSDK_ENUM_VAR("Tails & Knuckles", CHAR_TAILS_KNUX);
-    RSDK_ENUM_VAR("Sonic, Tails & Knuckles", CHAR_SONIC_TAILS_KNUX);
+    RSDK_ENUM_VAR("None", PLAYER_CHAR_NONE);
+    RSDK_ENUM_VAR("Sonic", PLAYER_CHAR_SONIC);
+    RSDK_ENUM_VAR("Tails", PLAYER_CHAR_TAILS);
+    RSDK_ENUM_VAR("Sonic & Tails", PLAYER_CHAR_SONIC_TAILS);
+    RSDK_ENUM_VAR("Knuckles", PLAYER_CHAR_KNUX);
+    RSDK_ENUM_VAR("Sonic & Knuckles", PLAYER_CHAR_SONIC_KNUX);
+    RSDK_ENUM_VAR("Tails & Knuckles", PLAYER_CHAR_TAILS_KNUX);
+    RSDK_ENUM_VAR("Sonic, Tails & Knuckles", PLAYER_CHAR_SONIC_TAILS_KNUX);
 }
 #endif
 

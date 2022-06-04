@@ -12,6 +12,7 @@ ObjectDBTower *DBTower;
 void DBTower_Update(void)
 {
     RSDK_THIS(DBTower);
+
     StateMachine_Run(self->state);
 }
 
@@ -37,6 +38,7 @@ void DBTower_Draw(void)
 
         self->direction ^= FLIP_X;
         self->rotation = 0;
+
         if (self->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
 
@@ -48,6 +50,7 @@ void DBTower_Draw(void)
 void DBTower_Create(void *data)
 {
     RSDK_THIS(DBTower);
+
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->drawFX        = FX_ROTATE | FX_FLIP;
@@ -70,7 +73,7 @@ void DBTower_Create(void *data)
                 self->timer     = 0;
                 self->direction = FLIP_X;
 
-                for (int32 i = 0; i < DBTower_SegmentCount; ++i) {
+                for (int32 i = 0; i < DBTOWER_SEGMENT_COUNT; ++i) {
                     self->segmentAnimators[i] = &self->bodyAnimator;
                     self->segmentUnused3[i]   = 0;
                     self->bodyAngles[i]       = 0xC0;
@@ -84,8 +87,10 @@ void DBTower_Create(void *data)
                 self->wobbleAngleVel        = 640;
                 self->xOffsetAngle          = 64;
                 self->connectedSegmentCount = 0;
+
                 RSDK.SetSpriteAnimation(DBTower->aniFrames, 0, &self->headAnimator, true, 0);
                 RSDK.SetSpriteAnimation(DBTower->aniFrames, 2, &self->bodyAnimator, true, 0);
+
                 self->state = DBTower_State_SetupArena;
             }
         }
@@ -138,10 +143,12 @@ void DBTower_CheckPlayerCollisions_Head(void)
 
                 if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment) && Player_CheckBossHit(player, self)) {
                     self->wobbleAngleVel = 2048;
+
                     if (--self->health <= 0) {
                         SceneInfo->timeEnabled = false;
                         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                         RSDK.PlaySfx(DBTower->sfxExplosion2, false, 255);
+
                         self->timer = 120;
                         self->state = DBTower_State_Destroyed;
                     }
@@ -149,10 +156,11 @@ void DBTower_CheckPlayerCollisions_Head(void)
                         self->invincibilityTimer = 48;
                         RSDK.PlaySfx(DBTower->sfxHit, false, 255);
                     }
+
                     foreach_break;
                 }
                 else {
-                    for (int32 i = 1; i < DBTower_SegmentCount; ++i) {
+                    for (int32 i = 1; i <= self->connectedSegmentCount; ++i) {
                         self->position.x = self->bodyPositions[i].x;
                         self->position.y = self->bodyPositions[i].y;
 
@@ -183,6 +191,7 @@ void DBTower_CheckPlayerCollisions_Head(void)
 void DBTower_Explode(void)
 {
     RSDK_THIS(DBTower);
+
     if (!(Zone->timer & 3)) {
         RSDK.PlaySfx(UberCaterkiller->sfxExplosion2, false, 255);
 
@@ -201,11 +210,12 @@ void DBTower_State_SetupArena(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
-        self->active                = ACTIVE_NORMAL;
-        self->timer                 = 0;
+
+        self->active = ACTIVE_NORMAL;
+        self->timer  = 0;
         self->position.x += (ScreenInfo->centerX - 64) << 16;
 
         self->originPos.x = self->position.x;
@@ -213,7 +223,7 @@ void DBTower_State_SetupArena(void)
 
         self->bodyPositions[0].x = self->position.x;
         self->bodyPositions[0].y = self->originPos.y;
-        for (int32 i = 1; i < DBTower_SegmentCount; ++i) {
+        for (int32 i = 1; i < DBTOWER_SEGMENT_COUNT; ++i) {
             self->bodyPositions[i].x = self->originPos.x;
             self->bodyPositions[i].y = 0x7FFF0000;
         }
@@ -238,9 +248,11 @@ void DBTower_State_SetupArena(void)
     }
 }
 
+#if MANIA_USE_PLUS
 void DBTower_State_Setup_Encore(void)
 {
     RSDK_THIS(DBTower);
+
     if (--self->timer <= 0) {
         RSDK.PlaySfx(DBTower->sfxAssemble, false, 255);
         self->bodyPositions[++self->connectedSegmentCount].y = 0x7FFF0000;
@@ -249,6 +261,7 @@ void DBTower_State_Setup_Encore(void)
         self->state = DBTower_State_HandleBoss;
     }
 }
+#endif
 
 void DBTower_State_HandleBoss(void)
 {
@@ -256,10 +269,11 @@ void DBTower_State_HandleBoss(void)
 
     ++self->xOffsetAngle;
     self->angle = (RSDK.Sin256(self->wobbleAngle >> 8) >> 5) + 0xC0;
+
     if (self->headAnimator.frameID != 0)
         RSDK.ProcessAnimation(&self->headAnimator);
 
-    int32 x = 0x3600 * ((DBTower_SegmentCount - 1) - self->connectedSegmentCount) * RSDK.Cos256(self->angle);
+    int32 x = 0x3600 * ((DBTOWER_SEGMENT_COUNT - 1) - self->connectedSegmentCount) * RSDK.Cos256(self->angle);
     self->bodyPositions[self->connectedSegmentCount].x = self->originPos.x + x + (RSDK.Cos256(self->xOffsetAngle) << 12);
     self->bodyPositions[self->connectedSegmentCount].y = self->originPos.y + self->segmentOffsetY;
 
@@ -319,8 +333,9 @@ void DBTower_State_HandleBoss(void)
     }
     else {
         self->segmentOffsetY -= 0x10000;
+
         if (self->segmentOffsetY <= 0) {
-            if (self->connectedSegmentCount < DBTower_SegmentCount - 1) {
+            if (self->connectedSegmentCount < DBTOWER_SEGMENT_COUNT - 1) {
                 self->connectedSegmentCount++;
                 self->bodyPositions[self->connectedSegmentCount].y = 0x7FFF0000;
                 self->segmentOffsetY += 0x360000;
@@ -333,6 +348,7 @@ void DBTower_State_HandleBoss(void)
 void DBTower_State_Destroyed(void)
 {
     RSDK_THIS(DBTower);
+
     DBTower_Explode();
 
     if (--self->timer <= 0) {
@@ -341,7 +357,7 @@ void DBTower_State_Destroyed(void)
         fxFade->speedOut     = 32;
         RSDK.PlaySfx(DBTower->sfxExplosion3, false, 255);
 
-        for (int32 i = 1; i < DBTower_SegmentCount; ++i) {
+        for (int32 i = 1; i < DBTOWER_SEGMENT_COUNT; ++i) {
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPositions[i].x, self->bodyPositions[i].y);
             RSDK.SetSpriteAnimation(DBTower->aniFrames, self->segmentAnimators[i]->animationID, &debris->animator, true,
                                     self->segmentAnimators[i]->frameID);
@@ -365,9 +381,11 @@ void DBTower_State_Finish(void)
     RSDK_THIS(DBTower);
 
     DBTower_Explode();
+
     self->position.y += self->velocity.y;
-    self->bodyPositions[0].y = self->position.y;
     self->velocity.y += 0x3800;
+
+    self->bodyPositions[0].y = self->position.y;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         DBTower->defeated = true;
@@ -459,6 +477,7 @@ void DBTower_State_BodyBouncing(void)
     self->bodyPositions[0] = self->position;
     self->bodyAngles[0]    = (self->bodyAngles[0] - 8) & 0xFF;
     self->rotation         = self->bodyAngles[0] << 1;
+
     if (RSDK.CheckOnScreen(self, &self->updateRange))
         DBTower_CheckPlayerCollisions_Body();
     else
@@ -487,8 +506,17 @@ void DBTower_State_BodyRolling(void)
 void DBTower_EditorDraw(void)
 {
     RSDK_THIS(DBTower);
+
     RSDK.SetSpriteAnimation(DBTower->aniFrames, 0, &self->headAnimator, true, 0);
     RSDK.DrawSprite(&self->headAnimator, NULL, false);
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER, -SCREEN_YCENTER, WIDE_SCR_XCENTER, SCREEN_YCENTER, 1 | 0 | 4 | 0, 0x00C0F0);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void DBTower_EditorLoad(void) { DBTower->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Sandworm.bin", SCOPE_STAGE); }

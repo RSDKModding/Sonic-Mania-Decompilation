@@ -33,6 +33,7 @@ void LocoSmoke_Update(void)
 
     if (self->timer > 0x20) {
         self->alpha -= 0x10;
+
         if (self->alpha <= 0)
             destroyEntity(self);
     }
@@ -45,17 +46,20 @@ void LocoSmoke_StaticUpdate(void) {}
 void LocoSmoke_Draw(void)
 {
     RSDK_THIS(LocoSmoke);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void LocoSmoke_Create(void *data)
 {
     RSDK_THIS(LocoSmoke);
+
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->inkEffect = INK_ALPHA;
     self->alpha     = 0x100;
+
     RSDK.SetSpriteAnimation(LocoSmoke->aniFrames, 8, &self->animator, true, 0);
 }
 
@@ -65,7 +69,9 @@ void LocoSmoke_StageLoad(void) { LocoSmoke->aniFrames = RSDK.LoadSpriteAnimation
 void LocoSmoke_EditorDraw(void)
 {
     RSDK_THIS(LocoSmoke);
+
     RSDK.SetSpriteAnimation(LocoSmoke->aniFrames, 8, &self->animator, true, 0);
+
     LocoSmoke_Draw();
 }
 

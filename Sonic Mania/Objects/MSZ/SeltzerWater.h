@@ -28,7 +28,7 @@ void SeltzerWater_Update(void);
 void SeltzerWater_LateUpdate(void);
 void SeltzerWater_StaticUpdate(void);
 void SeltzerWater_Draw(void);
-void SeltzerWater_Create(void* data);
+void SeltzerWater_Create(void *data);
 void SeltzerWater_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SeltzerWater_EditorDraw(void);
@@ -41,4 +41,4 @@ void SeltzerWater_State_Sprayed(void);
 void SeltzerWater_State_Falling(void);
 void SeltzerWater_State_Splash(void);
 
-#endif //!OBJ_SELTZERWATER_H
+#endif //! OBJ_SELTZERWATER_H

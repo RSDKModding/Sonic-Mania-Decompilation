@@ -13,7 +13,7 @@ void SwingRope_Update(void)
 {
     RSDK_THIS(SwingRope);
 
-    int32 sine              = 11 * RSDK.Sin512(self->angleOffset + 3 * Zone->timer);
+    int32 sine          = 11 * RSDK.Sin512(self->angleOffset + 3 * Zone->timer);
     self->rotatedAngle  = sine;
     self->rotatedOffset = sine >> 3;
     self->rotatePos.x   = self->position.x;
@@ -26,41 +26,42 @@ void SwingRope_Update(void)
         sine += self->rotatedOffset;
     }
 
-    int32 rotateX   = self->rotatePos.x;
-    int32 rotateY   = self->rotatePos.y;
-    self->angle = (sine >> 6) & 0x1FF;
+    int32 rotateX = self->rotatePos.x;
+    int32 rotateY = self->rotatePos.y;
+    self->angle   = (sine >> 6) & 0x1FF;
     rotateY += 0x700 * RSDK.Cos512(self->angle);
     self->rotatePos.x -= RSDK.Sin512(self->angle) << 11;
     self->rotatePos.y += RSDK.Cos512(self->angle) << 11;
 
-    int32 storeX         = self->position.x;
-    int32 storeY         = self->position.y;
+    int32 storeX     = self->position.x;
+    int32 storeY     = self->position.y;
     self->position.x = self->rotatePos.x;
     self->position.y = self->rotatePos.y;
-    self->velocity.x = self->rotatePos.x - self->ropePos.x;
-    self->velocity.y = self->rotatePos.y - self->ropePos.y;
+    self->velocity.x = self->position.x - self->ropePos.x;
+    self->velocity.y = self->position.y - self->ropePos.y;
     if (self->ropeGrabDelay > 0)
         self->ropeGrabDelay--;
 
     foreach_active(Player, player)
     {
         if (player->state == Player_State_None) {
-            if (Player_CheckCollisionTouch(player, self, &SwingRope->hitbox2)) {
+            if (Player_CheckCollisionTouch(player, self, &SwingRope->hitboxHandle)) {
                 if (player->jumpPress) {
                     player->jumpAbilityState = 1;
                     player->state            = Player_State_Air;
                     player->drawOrder        = self->playerLayers[player->playerID];
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+
                     player->velocity.x = self->velocity.x >> 1;
-                    if (player->left) {
+                    if (player->left)
                         player->velocity.x = -0x20000;
-                    }
-                    else if (player->right) {
+                    else if (player->right)
                         player->velocity.x = 0x20000;
-                    }
-                    player->velocity.y    = (self->velocity.y >> 1) - 0x38000;
-                    player->onGround      = false;
-                    player->applyJumpCap  = false;
+
+                    player->velocity.y   = (self->velocity.y >> 1) - 0x38000;
+                    player->onGround     = false;
+                    player->applyJumpCap = false;
+
                     self->ropeGrabDelay = 30;
                 }
                 else {
@@ -76,10 +77,11 @@ void SwingRope_Update(void)
             otherHitbox.right  = playerHitbox->right;
             otherHitbox.top    = 0;
             otherHitbox.bottom = 0;
-            if (RSDK.CheckObjectCollisionTouchBox(self, &SwingRope->hitbox1, player, &otherHitbox)) {
+
+            if (RSDK.CheckObjectCollisionTouchBox(self, &SwingRope->hitboxGrabHandle, player, &otherHitbox)) {
                 self->playerLayers[player->playerID] = player->drawOrder;
-                player->drawOrder                      = Zone->objectDrawLow;
-                player->state                          = Player_State_None;
+                player->drawOrder                    = Zone->objectDrawLow;
+                player->state                        = Player_State_None;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, 0, 0);
                 player->velocity.x = 0;
                 player->velocity.y = 0;
@@ -90,6 +92,7 @@ void SwingRope_Update(void)
             }
         }
     }
+
     self->position.x = storeX;
     self->position.y = storeY;
 }
@@ -103,8 +106,8 @@ void SwingRope_Draw(void)
     RSDK_THIS(SwingRope);
 
     self->ropeAnimator.frameID = (self->rotatedAngle >> 10) & 0x1F;
-    self->rotation         = (self->rotatedAngle >> 6) & 0xF;
-    self->drawFX           = FX_ROTATE;
+    self->rotation             = (self->rotatedAngle >> 6) & 0xF;
+    self->drawFX               = FX_ROTATE;
     RSDK.DrawSprite(&self->ropeAnimator, NULL, false);
 
     self->ropePos.x = self->position.x;
@@ -117,9 +120,10 @@ void SwingRope_Draw(void)
         self->ropePos.x -= RSDK.Sin512(self->angle) << 11;
         self->ropePos.y += RSDK.Cos512(self->angle) << 11;
         rotAngle += self->rotatedOffset;
-        angle                    = rotAngle >> 6;
+
+        angle                      = rotAngle >> 6;
         self->ropeAnimator.frameID = (rotAngle >> 10) & 0x1F;
-        self->rotation         = (rotAngle >> 6) & 0xF;
+        self->rotation             = (rotAngle >> 6) & 0xF;
         RSDK.DrawSprite(&self->ropeAnimator, &self->ropePos, false);
     }
 
@@ -133,12 +137,14 @@ void SwingRope_Draw(void)
 void SwingRope_Create(void *data)
 {
     RSDK_THIS(SwingRope);
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeAnimator, true, 0);
         RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleAnimator, true, 0);
         RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotAnimator, true, 0);
@@ -152,14 +158,17 @@ void SwingRope_StageLoad(void)
     else if (RSDK.CheckStageFolder("AIZ"))
         SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 
-    SwingRope->hitbox1.left   = -10;
-    SwingRope->hitbox1.top    = -8;
-    SwingRope->hitbox1.right  = 10;
-    SwingRope->hitbox1.bottom = 24;
-    SwingRope->hitbox2.left   = -8;
-    SwingRope->hitbox2.top    = -4;
-    SwingRope->hitbox2.right  = 8;
-    SwingRope->hitbox2.bottom = 20;
+    // for when trying to grab on
+    SwingRope->hitboxGrabHandle.left   = -10;
+    SwingRope->hitboxGrabHandle.top    = -8;
+    SwingRope->hitboxGrabHandle.right  = 10;
+    SwingRope->hitboxGrabHandle.bottom = 24;
+
+    // for when already grabbed on
+    SwingRope->hitboxHandle.left   = -8;
+    SwingRope->hitboxHandle.top    = -4;
+    SwingRope->hitboxHandle.right  = 8;
+    SwingRope->hitboxHandle.bottom = 20;
 
     DEBUGMODE_ADD_OBJ(SwingRope);
 }
@@ -167,18 +176,21 @@ void SwingRope_StageLoad(void)
 void SwingRope_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void SwingRope_DebugSpawn(void)
 {
     RSDK_THIS(SwingRope);
+
     EntitySwingRope *rope = CREATE_ENTITY(SwingRope, NULL, self->position.x, self->position.y);
     rope->ropeSize        = 6;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SwingRope_EditorDraw(void)
 {
     RSDK_THIS(SwingRope);
+
     RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeAnimator, true, 0);
     RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleAnimator, true, 0);
     RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotAnimator, true, 0);
@@ -196,6 +208,7 @@ void SwingRope_EditorLoad(void)
     else if (RSDK.CheckStageFolder("AIZ"))
         SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 }
+#endif
 
 void SwingRope_Serialize(void)
 {

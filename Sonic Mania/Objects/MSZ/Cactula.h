@@ -31,7 +31,7 @@ void Cactula_Update(void);
 void Cactula_LateUpdate(void);
 void Cactula_StaticUpdate(void);
 void Cactula_Draw(void);
-void Cactula_Create(void* data);
+void Cactula_Create(void *data);
 void Cactula_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Cactula_EditorDraw(void);
@@ -50,4 +50,4 @@ void Cactula_State_CheckPlayerInRange(void);
 void Cactula_State_Rising(void);
 void Cactula_State_DropBomb(void);
 
-#endif //!OBJ_CACTULA_H
+#endif //! OBJ_CACTULA_H

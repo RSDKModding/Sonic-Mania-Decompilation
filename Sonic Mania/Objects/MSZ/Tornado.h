@@ -53,7 +53,7 @@ void Tornado_Update(void);
 void Tornado_LateUpdate(void);
 void Tornado_StaticUpdate(void);
 void Tornado_Draw(void);
-void Tornado_Create(void* data);
+void Tornado_Create(void *data);
 void Tornado_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Tornado_EditorDraw(void);
@@ -72,4 +72,4 @@ void Tornado_State_Mayday(void);
 void Tornado_State_FlyAway_Right(void);
 void Tornado_State_FlyAway_Left(void);
 
-#endif //!OBJ_TORNADO_H
+#endif //! OBJ_TORNADO_H

@@ -40,7 +40,7 @@ void Bumpalo_Update(void);
 void Bumpalo_LateUpdate(void);
 void Bumpalo_StaticUpdate(void);
 void Bumpalo_Draw(void);
-void Bumpalo_Create(void* data);
+void Bumpalo_Create(void *data);
 void Bumpalo_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Bumpalo_EditorDraw(void);
@@ -66,4 +66,4 @@ void Bumpalo_State_Turning(void);
 void Bumpalo_State_Bumped(void);
 void Bumpalo_State_Falling(void);
 
-#endif //!OBJ_BUMPALO_H
+#endif //! OBJ_BUMPALO_H

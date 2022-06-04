@@ -39,7 +39,7 @@ void Vultron_Update(void);
 void Vultron_LateUpdate(void);
 void Vultron_StaticUpdate(void);
 void Vultron_Draw(void);
-void Vultron_Create(void* data);
+void Vultron_Create(void *data);
 void Vultron_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Vultron_EditorDraw(void);
@@ -64,4 +64,4 @@ void Vultron_State_PrepareDive(void);
 
 void Vultron_State_Targeting(void);
 
-#endif //!OBJ_VULTRON_H
+#endif //! OBJ_VULTRON_H

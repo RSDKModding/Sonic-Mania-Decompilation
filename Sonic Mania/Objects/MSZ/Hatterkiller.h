@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Hatterkiller_SegmentCount (10)
+#define HATTERKILLER_SEGMENT_COUNT (10)
 
 // Object Class
 struct ObjectHatterkiller {
@@ -19,10 +19,10 @@ struct ObjectHatterkiller {
 struct EntityHatterkiller {
     RSDK_ENTITY
     int32 timer;
-    Vector2 bodyPositions[Hatterkiller_SegmentCount];
-    Vector2 bodyVelocities[Hatterkiller_SegmentCount];
-    int32 bodyDelays[Hatterkiller_SegmentCount];
-    Animator *bodyAnimators[Hatterkiller_SegmentCount];
+    Vector2 bodyPositions[HATTERKILLER_SEGMENT_COUNT];
+    Vector2 bodyVelocities[HATTERKILLER_SEGMENT_COUNT];
+    int32 bodyDelays[HATTERKILLER_SEGMENT_COUNT];
+    Animator *bodyAnimators[HATTERKILLER_SEGMENT_COUNT];
     Animator headAnimator;
     Animator bodyAnimator;
     Animator tailAnimator;
@@ -36,7 +36,7 @@ void Hatterkiller_Update(void);
 void Hatterkiller_LateUpdate(void);
 void Hatterkiller_StaticUpdate(void);
 void Hatterkiller_Draw(void);
-void Hatterkiller_Create(void* data);
+void Hatterkiller_Create(void *data);
 void Hatterkiller_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Hatterkiller_EditorDraw(void);
@@ -48,4 +48,4 @@ void Hatterkiller_Serialize(void);
 void Hatterkiller_DebugDraw(void);
 void Hatterkiller_DebugSpawn(void);
 
-#endif //!OBJ_HATTERKILLER_H
+#endif //! OBJ_HATTERKILLER_H

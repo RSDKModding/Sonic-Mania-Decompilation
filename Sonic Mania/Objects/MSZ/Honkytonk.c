@@ -80,26 +80,23 @@ void Honkytonk_StaticUpdate(void) {}
 void Honkytonk_Draw(void)
 {
     RSDK_THIS(Honkytonk);
-    Vector2 drawPos;
 
     self->animator.frameID = 4;
     self->scale.y          = 0x200;
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     self->animator.frameID = 1;
-    drawPos.x              = self->position.x;
-    drawPos.y              = self->position.y;
-    drawPos.x += -0xC00 * RSDK.Sin256(self->angle);
-    drawPos.y += -0xC00 * RSDK.Cos256(self->angle);
+
+    Vector2 drawPos;
+    drawPos.x     = self->position.x + (-0xC00 * RSDK.Sin256(self->angle));
+    drawPos.y     = self->position.y + (-0xC00 * RSDK.Cos256(self->angle));
     self->scale.y = ((self->depression + 0x20000) >> 7) / 24;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
     self->animator.frameID = 3;
-    drawPos.x              = self->position.x;
-    drawPos.y              = self->position.y;
-    drawPos.x -= ((0x80000 - self->depression) >> 8) * RSDK.Sin256(self->angle);
-    drawPos.y -= ((0x80000 - self->depression) >> 8) * RSDK.Cos256(self->angle);
-    self->scale.y = 0x200 + ((self->depression >> 7) / 24);
+    drawPos.x              = self->position.x - (((0x80000 - self->depression) >> 8) * RSDK.Sin256(self->angle));
+    drawPos.y              = self->position.y - (((0x80000 - self->depression) >> 8) * RSDK.Cos256(self->angle));
+    self->scale.y          = 0x200 + ((self->depression >> 7) / 24);
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
     self->animator.frameID = 2;
@@ -112,8 +109,10 @@ void Honkytonk_Draw(void)
 void Honkytonk_Create(void *data)
 {
     RSDK_THIS(Honkytonk);
+
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Honkytonk->aniFrames, 0, &self->animator, true, 0);
+
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -148,14 +147,15 @@ void Honkytonk_StageLoad(void)
 void Honkytonk_EditorDraw(void)
 {
     RSDK_THIS(Honkytonk);
+
     RSDK.SetSpriteAnimation(Honkytonk->aniFrames, 0, &self->animator, true, 0);
 
     int32 angle = self->angle;
     self->angle &= 0xFF;
-    self->negAngle  = 0x100 - self->angle;
-    self->drawFX    = FX_SCALE | FX_ROTATE;
-    self->scale.x   = 0x200;
-    self->rotation  = self->negAngle << 1;
+    self->negAngle = 0x100 - self->angle;
+    self->drawFX   = FX_SCALE | FX_ROTATE;
+    self->scale.x  = 0x200;
+    self->rotation = self->negAngle << 1;
 
     Honkytonk_Draw();
 

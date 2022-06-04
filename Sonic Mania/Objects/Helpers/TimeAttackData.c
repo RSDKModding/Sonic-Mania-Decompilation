@@ -336,27 +336,27 @@ int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 act, int32 characterID)
 {
     int32 listPos = 0;
     switch (zoneID) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5: listPos = act + 2 * zoneID; break;
+        case ZONE_GHZ:
+        case ZONE_CPZ:
+        case ZONE_SPZ:
+        case ZONE_FBZ:
+        case ZONE_PGZ:
+        case ZONE_SSZ: listPos = act + 2 * zoneID; break;
 
-        case 6: listPos = act + (2 * zoneID + 1); break;
+        case ZONE_HCZ: listPos = act + (2 * zoneID + 1); break;
 
-        case 7:
-            if (act)
+        case ZONE_MSZ:
+            if (act != ACT_1)
                 listPos = 2 * zoneID + 3;
             else
-                listPos = (characterID == 3) + 1 + 2 * zoneID;
+                listPos = (characterID == CHAR_KNUX) + 1 + 2 * zoneID;
             break;
 
-        case 8:
-        case 9: listPos = act + 2 * (zoneID + 1); break;
+        case ZONE_OOZ:
+        case ZONE_LRZ: listPos = act + 2 * (zoneID + 1); break;
 
-        case 10:
-        case 11: listPos = act + (2 * zoneID + 3); break;
+        case ZONE_MMZ:
+        case ZONE_TMZ: listPos = act + (2 * zoneID + 3); break;
 
         default: break;
     }
@@ -370,20 +370,20 @@ int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID
 {
     int32 listPos = 0;
     switch (zoneID) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5: listPos = act + 2 * zoneID; break;
+        case ZONE_GHZ:
+        case ZONE_CPZ:
+        case ZONE_SPZ:
+        case ZONE_FBZ:
+        case ZONE_PGZ:
+        case ZONE_SSZ: listPos = act + 2 * zoneID; break;
 
-        case 6:
-        case 7:
-        case 8:
-        case 9: listPos = act + 2 * zoneID + 1; break;
+        case ZONE_HCZ:
+        case ZONE_MSZ:
+        case ZONE_OOZ:
+        case ZONE_LRZ: listPos = act + 2 * zoneID + 1; break;
 
-        case 10:
-        case 11: listPos = act + 2 * (zoneID + 1); break;
+        case ZONE_MMZ:
+        case ZONE_TMZ: listPos = act + 2 * (zoneID + 1); break;
 
         default: break;
     }
@@ -393,18 +393,16 @@ int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID
     return listPos;
 }
 
-void TimeAttackData_GetUnpackedTime(int32 time, int32 *minsPtr, int32 *secsPtr, int32 *millisecsPtr)
+void TimeAttackData_GetUnpackedTime(int32 time, int32 *minutes, int32 *seconds, int32 *milliseconds)
 {
-    int32 m  = time / 6000;
-    int32 s  = time % 6000 / 100;
-    int32 ms = time % 100;
+    if (minutes)
+        *minutes = time / 6000;
 
-    if (minsPtr)
-        *minsPtr = m;
-    if (secsPtr)
-        *secsPtr = s;
-    if (millisecsPtr)
-        *millisecsPtr = ms;
+    if (seconds)
+        *seconds = time % 6000 / 100;
+
+    if (milliseconds)
+        *milliseconds = time % 100;
 }
 
 uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank)
@@ -498,15 +496,15 @@ void TimeAttackData_MigrateLegacySaves(void)
         LogHelpers_Print("Migrating Legacy TA Data...");
         LogHelpers_Print("===========================");
 
-        for (int32 zone = 0; zone < 12; ++zone) {
-            for (int32 act = 0; act < 2; ++act) {
-                for (int32 charID = 0; charID < 3; ++charID) {
+        for (int32 zone = ZONE_GHZ; zone <= ZONE_TMZ; ++zone) {
+            for (int32 act = ACT_1; act <= ACT_2; ++act) {
+                for (int32 charID = CHAR_SONIC; charID <= CHAR_KNUX; ++charID) {
                     for (int32 rank = 0; rank < 3; ++rank) {
-                        uint16 *records = TimeAttackData_GetRecordedTime(zone, act, charID + 1, rank);
+                        uint16 *records = TimeAttackData_GetRecordedTime(zone, act, charID, rank);
                         if (records && *records) {
                             int32 score = *records;
-                            LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID + 1, rank, score);
-                            TimeAttackData_AddTADBEntry(zone, act, charID + 1, MODE_MANIA, score, NULL);
+                            LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID, rank, score);
+                            TimeAttackData_AddTADBEntry(zone, act, charID, MODE_MANIA, score, NULL);
                         }
                     }
                 }

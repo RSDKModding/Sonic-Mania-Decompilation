@@ -28,7 +28,7 @@ void PaintingEyes_Update(void);
 void PaintingEyes_LateUpdate(void);
 void PaintingEyes_StaticUpdate(void);
 void PaintingEyes_Draw(void);
-void PaintingEyes_Create(void* data);
+void PaintingEyes_Create(void *data);
 void PaintingEyes_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PaintingEyes_EditorDraw(void);
@@ -38,5 +38,4 @@ void PaintingEyes_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_PAINTINGEYES_H
+#endif //! OBJ_PAINTINGEYES_H

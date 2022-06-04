@@ -13,10 +13,8 @@ void SideBarrel_Update(void)
 {
     RSDK_THIS(SideBarrel);
 
-    if (self->activePlayers <= 0)
-        self->barrelAnimator.speed = 0;
-    else
-        self->barrelAnimator.speed = 128;
+    self->barrelAnimator.speed = self->activePlayers <= 0 ? 0 : 128;
+
     RSDK.ProcessAnimation(&self->barrelAnimator);
 
     int32 playerID = 0;
@@ -30,11 +28,11 @@ void SideBarrel_Update(void)
         else {
             if (player->state == Player_State_KnuxGlideDrop) {
                 self->playerTimer[playerID] = 0;
-                self->playerPos[playerID] = 128;
+                self->playerPos[playerID]   = 128;
             }
 
             if (self->playerTimer[playerID]) {
-                if (--self->playerTimer[playerID] <= 0) 
+                if (--self->playerTimer[playerID] <= 0)
                     self->activePlayers &= ~(1 << playerID);
             }
             else {
@@ -50,12 +48,13 @@ void SideBarrel_Update(void)
                     if (player->state != Player_State_KnuxGlideDrop) {
                         if (self->playerPos[playerID] > 176) {
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 1);
-                            player->onGround           = false;
-                            player->state              = Player_State_Air;
+                            player->onGround            = false;
+                            player->state               = Player_State_Air;
                             self->playerTimer[playerID] = 48;
                             RSDK.PlaySfx(SideBarrel->sfxDrop, false, 0xFF);
                         }
-                        self->activePlayers |= (1 << playerID);
+
+                        self->activePlayers |= 1 << playerID;
                     }
                 }
                 else {
@@ -63,6 +62,7 @@ void SideBarrel_Update(void)
                 }
             }
         }
+
         playerID++;
     }
 }
@@ -74,19 +74,24 @@ void SideBarrel_StaticUpdate(void) {}
 void SideBarrel_Draw(void)
 {
     RSDK_THIS(SideBarrel);
+
     RSDK.DrawSprite(&self->barrelAnimator, NULL, false);
 }
 
 void SideBarrel_Create(void *data)
 {
     RSDK_THIS(SideBarrel);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
+
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SideBarrel->aniFrames, 0, &self->barrelAnimator, true, 0);
+
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         self->hitboxBarrel.left   = -32;
         self->hitboxBarrel.top    = -32;
         self->hitboxBarrel.right  = 32;
@@ -98,7 +103,7 @@ void SideBarrel_StageLoad(void)
 {
     SideBarrel->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SideBarrel.bin", SCOPE_STAGE);
 
-    SideBarrel->sfxDrop   = RSDK.GetSfx("Stage/Drop.wav");
+    SideBarrel->sfxDrop = RSDK.GetSfx("Stage/Drop.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

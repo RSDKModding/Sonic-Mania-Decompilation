@@ -12,11 +12,13 @@ ObjectSeltzerWater *SeltzerWater;
 void SeltzerWater_Update(void)
 {
     RSDK_THIS(SeltzerWater);
+
     StateMachine_Run(self->state);
 
     if (self->scale.x < 0x200) {
         self->scale.x += 0x10;
         self->scale.y = self->scale.x;
+
         if (self->scale.x == 0x200)
             self->drawFX = FX_NONE;
     }
@@ -29,14 +31,17 @@ void SeltzerWater_StaticUpdate(void) {}
 void SeltzerWater_Draw(void)
 {
     RSDK_THIS(SeltzerWater);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void SeltzerWater_Create(void *data)
 {
     RSDK_THIS(SeltzerWater);
+
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SeltzerWater->aniFrames, 4, &self->animator, true, RSDK.Rand(0, 8));
+
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
@@ -67,7 +72,8 @@ void SeltzerWater_State_Sprayed(void)
         self->velocity.y = (RSDK.Sin256(self->offsetAngle) << 4) - self->oscillateRadius * RSDK.Sin256(self->angle);
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
-        if (x * x + y * y < 80)
+
+        if (x * x + y * y < 0x50)
             ++self->nodeSlot;
 
         self->offsetAngle++;

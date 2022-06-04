@@ -12,8 +12,9 @@ ObjectMSZ1KIntro *MSZ1KIntro;
 void MSZ1KIntro_Update(void)
 {
     RSDK_THIS(MSZ1KIntro);
+
     if (!self->activated) {
-        if (isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
             self->active = ACTIVE_NEVER;
         }
         else {
@@ -41,6 +42,7 @@ void MSZ1KIntro_Create(void *data)
     INIT_ENTITY(self);
     CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
     self->active = ACTIVE_NORMAL;
+
     if (!globals->suppressTitlecard)
         destroyEntity(self);
 }
@@ -48,7 +50,8 @@ void MSZ1KIntro_Create(void *data)
 void MSZ1KIntro_StageLoad(void)
 {
     MSZ1KIntro->playerFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
-    MSZ1KIntro->sfxImpact    = RSDK.GetSfx("Stage/Impact3.wav");
+
+    MSZ1KIntro->sfxImpact = RSDK.GetSfx("Stage/Impact3.wav");
 }
 
 bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
@@ -69,11 +72,13 @@ bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
     }
 
     RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 4, &player1->animator, false, 0);
+
     if (player1->onGround) {
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
         player1->state = Player_State_None;
         return true;
     }
+
     return false;
 }
 
@@ -88,15 +93,19 @@ bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
         player1->state          = Player_State_None;
         player1->tileCollisions = false;
     }
+
     if (player1->animator.animationID == 5 && player1->animator.frameID == 1 && !host->values[0]) {
         RSDK.PlaySfx(MSZ1KIntro->sfxImpact, false, 0xFF);
         Camera_ShakeScreen(0, 0, 4);
         host->values[0] = true;
     }
+
     if (host->timer == 60)
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 7, &player1->animator, false, 0);
+
     if (host->timer == 180)
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 3, &player1->animator, true, 0);
+
     if (player1->animator.animationID == 3 && player1->animator.frameID == player1->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->animator, true, 0);
         return true;
@@ -109,11 +118,13 @@ bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     if (host->timer == 30) {
         player1->stateInput     = Player_Input_P1;
         player1->tileCollisions = true;
         player1->onGround       = true;
         player1->state          = Player_State_Ground;
+
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active    = ACTIVE_NORMAL;
@@ -121,9 +132,11 @@ bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
             titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
+
         Music_PlayTrack(TRACK_STAGE);
         return true;
     }
+
     return false;
 }
 
@@ -131,6 +144,7 @@ bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
 void MSZ1KIntro_EditorDraw(void)
 {
     RSDK_THIS(MSZ1KIntro);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

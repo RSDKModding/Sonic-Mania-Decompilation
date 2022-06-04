@@ -12,6 +12,7 @@ ObjectArmadiloid *Armadiloid;
 void Armadiloid_Update(void)
 {
     RSDK_THIS(Armadiloid);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void Armadiloid_StaticUpdate(void) {}
 void Armadiloid_Draw(void)
 {
     RSDK_THIS(Armadiloid);
+
     RSDK.DrawSprite(&self->boosterAnimator, NULL, false);
     RSDK.DrawSprite(&self->headAnimator, NULL, false);
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
@@ -30,6 +32,7 @@ void Armadiloid_Draw(void)
 void Armadiloid_Create(void *data)
 {
     RSDK_THIS(Armadiloid);
+
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
@@ -46,6 +49,7 @@ void Armadiloid_Create(void *data)
         self->hitbox.top    = -40;
         self->hitbox.right  = 10;
         self->hitbox.bottom = -20;
+
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 4, &self->bodyAnimator, true, 0);
     }
     else {
@@ -53,7 +57,8 @@ void Armadiloid_Create(void *data)
         self->hitbox.top    = -15;
         self->hitbox.right  = 24;
         self->hitbox.bottom = -7;
-        self->velocity.x    = 0x8000;
+
+        self->velocity.x = 0x8000;
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 1, &self->headAnimator, true, 0);
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 3, &self->boosterAnimator, true, 0);
@@ -116,8 +121,10 @@ void Armadiloid_State_PlatformFlying(void)
     RSDK.ProcessAnimation(&self->boosterAnimator);
 
     self->position.x += self->velocity.x;
+
     if (self->parent) {
         EntityPlayer *player = Player_GetNearestPlayerX();
+
         if (abs(self->position.x - player->position.x) < 0x800000) {
             RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 2, &self->headAnimator, true, 0);
             self->state = Armadiloid_PlatformShootDelay;
@@ -134,7 +141,9 @@ void Armadiloid_State_PlatformFlying(void)
 void Armadiloid_PlatformShootDelay(void)
 {
     RSDK_THIS(Armadiloid);
+
     RSDK.ProcessAnimation(&self->boosterAnimator);
+
     self->position.x += self->velocity.x;
 
     if (self->parent) {
@@ -158,8 +167,10 @@ void Armadiloid_PlatformShootDelay(void)
 void Armadiloid_State_PlatformShoot(void)
 {
     RSDK_THIS(Armadiloid);
+
     RSDK.ProcessAnimation(&self->boosterAnimator);
     RSDK.ProcessAnimation(&self->headAnimator);
+
     self->position.x += self->velocity.x;
 
     if (self->headAnimator.frameID != 4 || self->timer) {
@@ -194,6 +205,7 @@ void Armadiloid_State_PlatformShoot(void)
 void Armadiloid_State_Rider(void)
 {
     RSDK_THIS(Armadiloid);
+
     RSDK.ProcessAnimation(&self->bodyAnimator);
 
     EntityArmadiloid *child = self->child;

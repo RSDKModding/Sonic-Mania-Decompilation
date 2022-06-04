@@ -12,6 +12,7 @@ ObjectMSZSpotlight *MSZSpotlight;
 void MSZSpotlight_Update(void)
 {
     RSDK_THIS(MSZSpotlight);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,18 +23,20 @@ void MSZSpotlight_StaticUpdate(void) {}
 void MSZSpotlight_Draw(void)
 {
     RSDK_THIS(MSZSpotlight);
+
     RSDK.DrawSprite(&self->animatorSpotlight, NULL, false);
 }
 
 void MSZSpotlight_Create(void *data)
 {
     RSDK_THIS(MSZSpotlight);
+
     if (!SceneInfo->inEditor) {
-        self->visible    = true;
-        self->drawOrder  = Zone->objectDrawHigh;
-        self->startPos   = self->position;
-        self->inkEffect  = INK_ADD;
-        self->angle      = RSDK.Rand(0, 256);
+        self->visible   = true;
+        self->drawOrder = Zone->objectDrawHigh;
+        self->startPos  = self->position;
+        self->inkEffect = INK_ADD;
+        self->angle     = RSDK.Rand(0, 256);
 
         switch (self->color) {
             case MSZSPOTLIGHT_RED: self->angleOffset = -4; break;
@@ -91,6 +94,7 @@ void MSZSpotlight_State_Circling(void)
 void MSZSpotlight_State_Idle(void)
 {
     RSDK_THIS(MSZSpotlight);
+
     if (++self->timer == 30) {
         self->timer = 0;
         foreach_active(HeavyMystic, mystic)
@@ -100,6 +104,7 @@ void MSZSpotlight_State_Idle(void)
                 self->startPos.y = mystic->position.y;
             }
         }
+
         self->velocity.x = (self->startPos.x - self->position.x) >> 4;
         self->velocity.y = (self->startPos.y - self->position.y) >> 4;
         self->state      = MSZSpotlight_State_MoveToBox;
@@ -112,6 +117,7 @@ void MSZSpotlight_State_MoveToBox(void)
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     int32 rx = (self->startPos.x - self->position.x) >> 16;
     int32 ry = (self->startPos.y - self->position.y) >> 16;
 
@@ -123,6 +129,7 @@ void MSZSpotlight_State_MoveToBox(void)
                 RSDK.PlaySfx(HeavyMystic->sfxClack, false, 255);
             }
         }
+
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
         self->drawFX     = FX_SCALE;
@@ -138,6 +145,7 @@ void MSZSpotlight_State_Disappear(void)
 
     self->scale.x += 0x20;
     self->scale.y += 0x20;
+
     if (self->scale.x < 0x300)
         self->alpha = 0x100;
 
@@ -151,6 +159,7 @@ void MSZSpotlight_State_Disappear(void)
 void MSZSpotlight_EditorDraw(void)
 {
     RSDK_THIS(MSZSpotlight);
+
     RSDK.SetSpriteAnimation(MSZSpotlight->aniFrames, 9, &self->animatorSpotlight, true, self->color);
     RSDK.DrawSprite(&self->animatorSpotlight, NULL, false);
 }

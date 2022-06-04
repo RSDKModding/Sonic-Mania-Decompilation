@@ -3,6 +3,24 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CHAR_SONIC_AND_TAILS,
+    CHAR_SONIC,
+    CHAR_TAILS,
+    CHAR_KNUX,
+#if MANIA_USE_PLUS
+    CHAR_MIGHTY,
+    CHAR_RAY,
+#endif
+} CharacterIDs;
+
+typedef enum {
+    ACT_1,
+    ACT_2,
+    ACT_3,
+    ACT_NOID,
+} CharacterIDs;
+
 // Object Class
 struct ObjectTimeAttackData {
 #if !MANIA_USE_PLUS
@@ -57,7 +75,7 @@ void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, 
 void TimeAttackData_Clear(void);
 int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 act, int32 characterID);
 int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID);
-void TimeAttackData_GetUnpackedTime(int32 time, int32 *minsPtr, int32 *secsPtr, int32 *millisecsPtr);
+void TimeAttackData_GetUnpackedTime(int32 time, int32 *minutes, int32 *seconds, int32 *milliseconds);
 uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank);
 
 #if MANIA_USE_PLUS

@@ -28,7 +28,7 @@ struct EntityRollerMKII {
     uint8 startDir;
     uint8 timer;
     bool32 touchedGround;
-    EntityPlayer* playerPtr;
+    EntityPlayer *playerPtr;
     Animator animator;
 };
 
@@ -40,7 +40,7 @@ void RollerMKII_Update(void);
 void RollerMKII_LateUpdate(void);
 void RollerMKII_StaticUpdate(void);
 void RollerMKII_Draw(void);
-void RollerMKII_Create(void* data);
+void RollerMKII_Create(void *data);
 void RollerMKII_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RollerMKII_EditorDraw(void);
@@ -68,4 +68,4 @@ void RollerMKII_State_Rolling_Air(void);
 void RollerMKII_State_Rolling_Ground(void);
 void RollerMKII_State_Bumped(void);
 
-#endif //!OBJ_ROLLERMKII_H
+#endif //! OBJ_ROLLERMKII_H

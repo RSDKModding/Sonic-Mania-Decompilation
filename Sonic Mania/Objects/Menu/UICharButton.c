@@ -246,6 +246,7 @@ void UICharButton_State_Selected(void)
                 default: break;
             }
         }
+
         ++self->timer;
     }
 }

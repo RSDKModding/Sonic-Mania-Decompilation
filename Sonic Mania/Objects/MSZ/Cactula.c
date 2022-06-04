@@ -12,6 +12,7 @@ ObjectCactula *Cactula;
 void Cactula_Update(void)
 {
     RSDK_THIS(Cactula);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,10 +23,11 @@ void Cactula_StaticUpdate(void) {}
 void Cactula_Draw(void)
 {
     RSDK_THIS(Cactula);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + self->offsetY;
+
     RSDK.DrawSprite(&self->bodyBottomAnimator, &drawPos, false);
     RSDK.DrawSprite(&self->propellerAnimator, &drawPos, false);
     RSDK.DrawSprite(&self->bodyTopAnimator, NULL, false);
@@ -34,6 +36,7 @@ void Cactula_Draw(void)
 void Cactula_Create(void *data)
 {
     RSDK_THIS(Cactula);
+
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow + 1;
     self->drawFX        = FX_FLIP;
@@ -41,9 +44,11 @@ void Cactula_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->offsetY       = 0x80000;
+
     RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->bodyTopAnimator, true, 0);
     RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->bodyBottomAnimator, true, 1);
     RSDK.SetSpriteAnimation(Cactula->aniFrames, 1, &self->propellerAnimator, true, 0);
+
     self->state = Cactula_State_CheckPlayerInRange;
 }
 
@@ -66,6 +71,7 @@ void Cactula_StageLoad(void)
 void Cactula_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Cactula, NULL, self->position.x, self->position.y);
 }
 
@@ -78,6 +84,7 @@ void Cactula_DebugDraw(void)
 void Cactula_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Cactula);
+
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Cactula->hitboxBadnik))
@@ -88,11 +95,13 @@ void Cactula_CheckPlayerCollisions(void)
 bool32 Cactula_CheckCB(void)
 {
     int32 count = 0;
+
     foreach_active(Cactula, cactula)
     {
         if (cactula->state == Cactula_State_Rising || cactula->state == Cactula_State_DropBomb)
             ++count;
     }
+
     return count > 0;
 }
 
@@ -106,6 +115,7 @@ void Cactula_State_CheckPlayerInRange(void)
         self->velocity.y = -0x20000;
         self->state      = Cactula_State_Rising;
     }
+
     Cactula_CheckPlayerCollisions();
 }
 
@@ -117,6 +127,7 @@ void Cactula_State_Rising(void)
 
     self->offsetY += self->velocity.y;
     self->velocity.y += 0x4000;
+
     if (self->offsetY >= 0 && self->velocity.y >= 0) {
         self->offsetY    = 0;
         self->velocity.y = -0xA000;

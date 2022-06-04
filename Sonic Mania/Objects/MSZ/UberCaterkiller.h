@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define UberCaterkiller_SegmentCount (10)
+#define UBERCATERKILLER_SEGMENT_COUNT (10)
 
 // Object Class
 struct ObjectUberCaterkiller {
@@ -27,13 +27,13 @@ struct EntityUberCaterkiller {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    Vector2 bodyPositions[UberCaterkiller_SegmentCount];
-    Vector2 bodyVelocity[UberCaterkiller_SegmentCount];
-    int32 bodyTimers[UberCaterkiller_SegmentCount];
-    int32 bodyScales[UberCaterkiller_SegmentCount];
-    int32 bodyInAir[UberCaterkiller_SegmentCount];
-    int32 bodyAngles[UberCaterkiller_SegmentCount];
-    Animator *bodyAnimators[UberCaterkiller_SegmentCount];
+    Vector2 bodyPositions[UBERCATERKILLER_SEGMENT_COUNT];
+    Vector2 bodyVelocity[UBERCATERKILLER_SEGMENT_COUNT];
+    int32 bodyTimers[UBERCATERKILLER_SEGMENT_COUNT];
+    int32 bodyScales[UBERCATERKILLER_SEGMENT_COUNT];
+    int32 bodyInAir[UBERCATERKILLER_SEGMENT_COUNT];
+    int32 bodyAngles[UBERCATERKILLER_SEGMENT_COUNT];
+    Animator *bodyAnimators[UBERCATERKILLER_SEGMENT_COUNT];
     uint8 aniID;
     uint8 jumpsRemain;
     int32 targetScale;
@@ -51,7 +51,7 @@ void UberCaterkiller_Update(void);
 void UberCaterkiller_LateUpdate(void);
 void UberCaterkiller_StaticUpdate(void);
 void UberCaterkiller_Draw(void);
-void UberCaterkiller_Create(void* data);
+void UberCaterkiller_Create(void *data);
 void UberCaterkiller_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UberCaterkiller_EditorDraw(void);
@@ -64,6 +64,7 @@ void UberCaterkiller_DebugSpawn(void);
 void UberCaterkiller_DebugDraw(void);
 
 void UberCaterkiller_CheckPlayerCollisions(void);
+void UberCaterkiller_Hit(void);
 void UberCaterkiller_Explode(void);
 void UberCaterkiller_HandleSegmentMoveFX(int32 segmentID);
 void UberCaterkiller_SetupBodySegments(int32 x, int32 y);
@@ -81,4 +82,4 @@ void UberCaterkiller_State_RepeatedJumps(void);
 void UberCaterkiller_State_Destroyed(void);
 void UberCaterkiller_State_Finish(void);
 
-#endif //!OBJ_UBERCATERKILLER_H
+#endif //! OBJ_UBERCATERKILLER_H

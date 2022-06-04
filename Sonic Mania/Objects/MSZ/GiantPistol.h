@@ -45,7 +45,7 @@ void GiantPistol_Update(void);
 void GiantPistol_LateUpdate(void);
 void GiantPistol_StaticUpdate(void);
 void GiantPistol_Draw(void);
-void GiantPistol_Create(void* data);
+void GiantPistol_Create(void *data);
 void GiantPistol_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GiantPistol_EditorDraw(void);
@@ -65,4 +65,4 @@ void GiantPistol_PlayerState_PistolAir(void);
 void GiantPistol_PlayerState_PistolGround(void);
 #endif
 
-#endif //!OBJ_GIANTPISTOL_H
+#endif //! OBJ_GIANTPISTOL_H
