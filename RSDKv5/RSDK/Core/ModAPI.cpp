@@ -140,6 +140,26 @@ void RSDK::UnloadMods()
     for (ModInfo &mod : modList) {
         if (mod.unloadMod)
             mod.unloadMod();
+
+        for (modLogicHandle &handle : mod.modLogicHandles) {
+#if RETRO_PLATFORM == RETRO_WIN
+            if (handle) {
+                FreeLibrary(handle);
+                handle = NULL;
+            }
+#endif
+
+#if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX
+            if (handle)
+                dlclose(handle);
+#endif
+
+#if RETRO_PLATFORM == RETRO_SWITCH
+            if (handle)
+                dlclose(handle);
+#endif
+        }
+        mod.modLogicHandles.clear();
     }
     modList.clear();
     for (int32 c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
@@ -372,8 +392,10 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                 }
 
                 bool linked = false;
+
+                modLogicHandle link_handle;
 #if RETRO_PLATFORM == RETRO_WIN
-                HMODULE link_handle = LoadLibraryA(file.string().c_str());
+                link_handle = LoadLibraryA(file.string().c_str());
 #define getAddress GetProcAddress
 #elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                 std::string fl = file.string().c_str();
@@ -381,11 +403,11 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                 // only load ones that are compiled. this is to still allow lang mods to work
                 fl                = "lib" + buf;
 #endif
-                void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
+                link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
 #define getAddress dlsym
 #elif RETRO_PLATFORM == RETRO_SWITCH
                 // TODO
-                void *link_handle = NULL;
+                link_handle = NULL;
 #define getAddress(x, y) NULL
 #endif
 
@@ -396,6 +418,7 @@ bool32 RSDK::LoadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                         linked = true;
                     }
                     info->unloadMod = (void (*)())getAddress(link_handle, "UnloadMod");
+                    info->modLogicHandles.push_back(link_handle);
                 }
 
                 if (!linked) {

@@ -77,6 +77,15 @@ typedef enum {
 typedef void (*ModCallback)(void *);
 typedef std::function<void(void *)> ModCallbackSTD;
 
+
+#if RETRO_PLATFORM == RETRO_WIN
+typedef HMODULE modLogicHandle;
+#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
+typedef void *modLogicHandle;
+#elif RETRO_PLATFORM == RETRO_SWITCH
+typedef void *modLogicHandle;
+#endif
+
 struct ModPublicFunctionInfo {
     std::string name;
     void *ptr;
@@ -96,6 +105,7 @@ struct ModInfo {
     std::vector<ModPublicFunctionInfo> functionList;
     std::string id;
     bool active;
+    std::vector<modLogicHandle> modLogicHandles;
     std::vector<modLinkSTD> linkModLogic;
     void (*unloadMod)() = NULL;
     std::map<std::string, std::map<std::string, std::string>> settings;

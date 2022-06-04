@@ -162,13 +162,6 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
         }
     }
 
-#if RETRO_PLATFORM == RETRO_WIN
-    if (hLibModule) {
-        FreeLibrary(hLibModule);
-        hLibModule = NULL;
-    }
-#endif
-
     // Shutdown
 
     AudioDevice::Release();
