@@ -426,7 +426,7 @@ struct TriggerState {
 };
 #endif
 
-struct TouchMouseData {
+struct TouchInfo {
     float x[0x10];
     float y[0x10];
     bool32 down[0x10];
@@ -454,7 +454,7 @@ extern AnalogState stickR[PLAYER_COUNT + 1];
 extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 #endif
-extern TouchMouseData touchMouseData;
+extern TouchInfo touchInfo;
 
 extern GamePadMappings *gamePadMappings;
 extern int32 gamePadCount;

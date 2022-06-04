@@ -600,13 +600,13 @@ void RSDK::SKU::ProcessNXInputDevices()
     HidTouchScreenState touchState;
     hidGetTouchScreenStates(&touchState, 1);
 
-    touchMouseData.count = 0;
+    touchInfo.count = 0;
     for (int32 f = 0; f < touchState.count; ++f) {
         if (!touchState.touches[f].finger_id) {
-            touchMouseData.down[0] = true;
-            touchMouseData.x[0]    = touchState.touches[0].x / 1280.0;
-            touchMouseData.y[0]    = touchState.touches[0].y / 720.0;
-            touchMouseData.count++;
+            touchInfo.down[0] = true;
+            touchInfo.x[0]    = touchState.touches[0].x / 1280.0;
+            touchInfo.y[0]    = touchState.touches[0].y / 720.0;
+            touchInfo.count++;
         }
     }
 }

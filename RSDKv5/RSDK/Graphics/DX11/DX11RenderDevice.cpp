@@ -1561,14 +1561,14 @@ void RenderDevice::ProcessEvent(MSG Msg)
         }
 
         case WM_LBUTTONDOWN:
-            touchMouseData.down[0] = 1;
-            touchMouseData.count   = 1;
+            touchInfo.down[0] = 1;
+            touchInfo.count   = 1;
             handledMsg             = true;
             break;
 
         case WM_LBUTTONUP:
-            touchMouseData.down[0] = 0;
-            touchMouseData.count   = 0;
+            touchInfo.down[0] = 0;
+            touchInfo.count   = 0;
             handledMsg             = true;
             break;
 
@@ -1639,8 +1639,8 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT message
                 videoSettings.windowState = WINDOWSTATE_ACTIVE;
             }
             else {
-                touchMouseData.down[0] = false;
-                touchMouseData.count   = 0;
+                touchInfo.down[0] = false;
+                touchInfo.count   = 0;
                 if (!videoSettings.windowState)
                     return 0;
 #if !RETRO_USE_ORIGINAL_CODE
@@ -1694,8 +1694,8 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT message
         case WM_SYSCOMMAND: {
             int32 param = wParam & 0xFFF0;
             if (param == SC_MINIMIZE) {
-                touchMouseData.down[0] = 0;
-                touchMouseData.count   = 0;
+                touchInfo.down[0] = 0;
+                touchInfo.count   = 0;
                 if (videoSettings.windowState) {
                     PauseSound();
                     videoSettings.windowState = WINDOWSTATE_INACTIVE;
@@ -1711,8 +1711,8 @@ LRESULT CALLBACK RenderDevice::WindowEventCallback(HWND hRecipient, UINT message
 
         case WM_MENUSELECT:
         case WM_ENTERSIZEMOVE:
-            touchMouseData.down[0] = 0;
-            touchMouseData.count   = 0;
+            touchInfo.down[0] = 0;
+            touchInfo.count   = 0;
             break;
 
         case WM_EXITSIZEMOVE: GetDisplays(); break;

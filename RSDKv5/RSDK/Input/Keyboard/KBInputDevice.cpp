@@ -726,13 +726,13 @@ void RSDK::SKU::InputDeviceKeyboard::UpdateInput()
         cursorPos.y = cursorY;
 #endif
 
-        float prevX = touchMouseData.x[0];
-        float prevY = touchMouseData.y[0];
+        float prevX = touchInfo.x[0];
+        float prevY = touchInfo.y[0];
 
-        touchMouseData.x[0] = (cursorPos.x - videoSettings.viewportX) * videoSettings.viewportW;
-        touchMouseData.y[0] = (cursorPos.y - videoSettings.viewportY) * videoSettings.viewportH;
+        touchInfo.x[0] = (cursorPos.x - videoSettings.viewportX) * videoSettings.viewportW;
+        touchInfo.y[0] = (cursorPos.y - videoSettings.viewportY) * videoSettings.viewportH;
 
-        if (touchMouseData.x[0] == prevX && touchMouseData.y[0] == prevY) {
+        if (touchInfo.x[0] == prevX && touchInfo.y[0] == prevY) {
             if (this->mouseHideTimer < 120 + 1) {
                 if (++this->mouseHideTimer == 120) {
                     RenderDevice::ShowCursor(false);
@@ -879,21 +879,21 @@ void RSDK::SKU::ClearKeyState(int32 keyCode)
 void RSDK::SKU::HandleSpecialKeys()
 {
     if (specialKeyStates[0] || specialKeyStates[3]) {
-        touchMouseData.pausePress = !touchMouseData.pauseHold;
-        touchMouseData.pauseHold  = true;
+        touchInfo.pausePress = !touchInfo.pauseHold;
+        touchInfo.pauseHold  = true;
     }
     else {
-        touchMouseData.pausePress = false;
-        touchMouseData.pauseHold  = false;
+        touchInfo.pausePress = false;
+        touchInfo.pauseHold  = false;
     }
 
     if (buttonDownCount) {
-        touchMouseData.anyKeyHold  = true;
-        touchMouseData.anyKeyPress = prevButtonDownCount < buttonDownCount;
+        touchInfo.anyKeyHold  = true;
+        touchInfo.anyKeyPress = prevButtonDownCount < buttonDownCount;
     }
     else {
-        touchMouseData.anyKeyPress = false;
-        touchMouseData.anyKeyHold  = false;
+        touchInfo.anyKeyPress = false;
+        touchInfo.anyKeyHold  = false;
     }
 
     prevButtonDownCount = buttonDownCount;

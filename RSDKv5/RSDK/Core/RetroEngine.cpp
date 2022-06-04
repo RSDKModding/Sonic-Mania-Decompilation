@@ -128,10 +128,10 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
                     continue;
 
 #if !RETRO_USE_ORIGINAL_CODE
-                for (int32 t = 0; t < touchMouseData.count; ++t) {
-                    if (touchMouseData.down[t]) {
-                        int32 tx = (int32)(touchMouseData.x[t] * screens->size.x);
-                        int32 ty = (int32)(touchMouseData.y[t] * screens->size.y);
+                for (int32 t = 0; t < touchInfo.count; ++t) {
+                    if (touchInfo.down[t]) {
+                        int32 tx = (int32)(touchInfo.x[t] * screens->size.x);
+                        int32 ty = (int32)(touchInfo.y[t] * screens->size.y);
 
                         if (tx <= 32 && ty <= 32) {
                             if (engine.devMenu && sceneInfo.state != ENGINESTATE_DEVMENU)
@@ -969,7 +969,7 @@ void RSDK::InitGameLink()
     info.stickR     = stickR;
     info.triggerL   = triggerL;
     info.triggerR   = triggerR;
-    info.touchMouse = &touchMouseData;
+    info.touchMouse = &touchInfo;
 
     info.unknown = &SKU::unknownInfo;
 
@@ -988,7 +988,7 @@ void RSDK::InitGameLink()
 
     info.controllerInfo = controller;
     info.stickInfo = stickL;
-    info.touchInfo = &touchMouseData;
+    info.touchInfo = &touchInfo;
 
     info.screenInfo = screens;
 

@@ -15,7 +15,7 @@ AnalogState RSDK::stickR[PLAYER_COUNT + 1];
 TriggerState RSDK::triggerL[PLAYER_COUNT + 1];
 TriggerState RSDK::triggerR[PLAYER_COUNT + 1];
 #endif
-TouchMouseData RSDK::touchMouseData;
+TouchInfo RSDK::touchInfo;
 
 GamePadMappings *RSDK::gamePadMappings = NULL;
 int32 RSDK::gamePadCount               = 0;
@@ -177,10 +177,21 @@ void RSDK::ProcessInput()
 {
     ClearInput();
 
+    bool32 anyPress = false;
     for (int32 i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i])
+        if (InputDevices[i]) {
             InputDevices[i]->UpdateInput();
+
+            anyPress |= InputDevices[i]->anyPress;
+        }
     }
+
+#if RETRO_REV02
+    if (anyPress || touchInfo.count)
+        videoSettings.dimTimer = 0;
+    else if (videoSettings.dimTimer < videoSettings.dimLimit)
+        ++videoSettings.dimTimer;
+#endif
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         int32 assign = activeControllers[i];

@@ -337,7 +337,7 @@ struct GameInfo {
     AnalogState *stickR;
     TriggerState *triggerL;
     TriggerState *triggerR;
-    TouchMouseData *touchMouse;
+    TouchInfo *touchMouse;
 
     SKU::UnknownInfo *unknown;
 
@@ -357,7 +357,7 @@ struct GameInfo {
     ControllerState *controllerInfo;
     AnalogState *stickInfo;
 
-    TouchMouseData *touchInfo;
+    TouchInfo *touchInfo;
 
     ScreenInfo *screenInfo;
 

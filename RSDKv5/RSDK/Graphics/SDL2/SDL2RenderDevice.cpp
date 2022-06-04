@@ -740,7 +740,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
 
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button) {
-                case SDL_BUTTON_LEFT: touchMouseData.down[0] = true; touchMouseData.count = 1;
+                case SDL_BUTTON_LEFT: touchInfo.down[0] = true; touchInfo.count = 1;
 #if !RETRO_REV02
                     if (RSDK::SKU::buttonDownCount > 0)
                         RSDK::SKU::buttonDownCount--;
@@ -758,7 +758,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
 
         case SDL_MOUSEBUTTONUP:
             switch (event.button.button) {
-                case SDL_BUTTON_LEFT: touchMouseData.down[0] = false; touchMouseData.count = 0;
+                case SDL_BUTTON_LEFT: touchInfo.down[0] = false; touchInfo.count = 0;
 #if !RETRO_REV02
                     if (RSDK::SKU::buttonDownCount > 0)
                         RSDK::SKU::buttonDownCount--;
@@ -778,14 +778,14 @@ void RenderDevice::ProcessEvent(SDL_Event event)
         case SDL_FINGERDOWN:
         case SDL_FINGERUP: {
             int32 count          = SDL_GetNumTouchFingers(event.tfinger.touchId);
-            touchMouseData.count = 0;
+            touchInfo.count = 0;
             for (int32 i = 0; i < count; i++) {
                 SDL_Finger *finger = SDL_GetTouchFinger(event.tfinger.touchId, i);
                 if (finger) {
-                    touchMouseData.down[touchMouseData.count] = true;
-                    touchMouseData.x[touchMouseData.count]    = finger->x;
-                    touchMouseData.y[touchMouseData.count]    = finger->y;
-                    touchMouseData.count++;
+                    touchInfo.down[touchInfo.count] = true;
+                    touchInfo.x[touchInfo.count]    = finger->x;
+                    touchInfo.y[touchInfo.count]    = finger->y;
+                    touchInfo.count++;
                 }
             }
             break;

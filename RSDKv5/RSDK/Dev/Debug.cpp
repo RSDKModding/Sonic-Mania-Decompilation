@@ -178,10 +178,10 @@ namespace RSDK
 void DevMenu_HandleTouchControls()
 {
     if (!controller[CONT_ANY].keyStart.down && !controller[CONT_ANY].keyUp.down && !controller[CONT_ANY].keyDown.down) {
-        for (int32 t = 0; t < touchMouseData.count; ++t) {
-            if (touchMouseData.down[t] && !(touchTimer % 8)) {
-                int32 tx = (int32)(touchMouseData.x[t] * screens->size.x);
-                int32 ty = (int32)(touchMouseData.y[t] * screens->size.y);
+        for (int32 t = 0; t < touchInfo.count; ++t) {
+            if (touchInfo.down[t] && !(touchTimer % 8)) {
+                int32 tx = (int32)(touchInfo.x[t] * screens->size.x);
+                int32 ty = (int32)(touchInfo.y[t] * screens->size.y);
 
                 if (tx < screens->center.x) {
                     if (ty >= screens->center.y) {

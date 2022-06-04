@@ -893,7 +893,7 @@ void RenderDevice::ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, i
     switch (action) {
         case GLFW_PRESS: {
             switch (button) {
-                case GLFW_MOUSE_BUTTON_LEFT: touchMouseData.down[0] = true; touchMouseData.count = 1;
+                case GLFW_MOUSE_BUTTON_LEFT: touchInfo.down[0] = true; touchInfo.count = 1;
 #if !RETRO_REV02
                     if (RSDK::SKU::buttonDownCount > 0)
                         RSDK::SKU::buttonDownCount--;
@@ -912,7 +912,7 @@ void RenderDevice::ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, i
 
         case GLFW_RELEASE: {
             switch (button) {
-                case GLFW_MOUSE_BUTTON_LEFT: touchMouseData.down[0] = false; touchMouseData.count = 0;
+                case GLFW_MOUSE_BUTTON_LEFT: touchInfo.down[0] = false; touchInfo.count = 0;
 #if !RETRO_REV02
                     if (RSDK::SKU::buttonDownCount > 0)
                         RSDK::SKU::buttonDownCount--;
