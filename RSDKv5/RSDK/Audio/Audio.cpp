@@ -407,3 +407,27 @@ void RSDK::ClearStageSfx()
 
     UnlockAudioDevice();
 }
+
+#if RETRO_USE_MOD_LOADER
+void RSDK::ClearGlobalSfx()
+{
+    LockAudioDevice();
+
+    for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
+        if (channels[c].state == CHANNEL_SFX || channels[c].state == (CHANNEL_SFX | CHANNEL_PAUSED)) {
+            channels[c].soundID = -1;
+            channels[c].state   = CHANNEL_IDLE;
+        }
+    }
+
+    // Unload global SFX
+    for (int32 s = 0; s < SFX_COUNT; ++s) {
+        if (sfxList[s].scope == SCOPE_GLOBAL) {
+            MEM_ZERO(sfxList[s]);
+            sfxList[s].scope = SCOPE_NONE;
+        }
+    }
+
+    UnlockAudioDevice();
+}
+#endif

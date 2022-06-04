@@ -143,12 +143,25 @@ void RSDK::UnloadMods()
     }
     modList.clear();
     for (int32 c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
+
+    // Clear stage storage
+    ClearUnusedStorage(DATASET_STG);
+    ClearUnusedStorage(DATASET_SFX);
+    dataStorage[DATASET_TMP].usedStorage = 0;
 }
 
 void RSDK::LoadMods()
 {
-    using namespace std;
     UnloadMods();
+
+#if RETRO_USE_MOD_LOADER
+    if (AudioDevice::initializedAudioChannels) {
+        // we're about to reload these, so clear anything we already have
+        ClearGlobalSfx();
+    }
+#endif
+
+    using namespace std;
     char modBuf[0x100];
     sprintf_s(modBuf, (int32)sizeof(modBuf), "%smods/", SKU::userFileDir);
     fs::path modPath(modBuf);

@@ -153,6 +153,9 @@ uint32 GetChannelPos(uint32 channel);
 double GetVideoStreamPos();
 
 void ClearStageSfx();
+#if RETRO_USE_MOD_LOADER
+void ClearGlobalSfx();
+#endif
 
 #if RETRO_AUDIODEVICE_XAUDIO
 #include "XAudio/XAudioDevice.hpp"

@@ -233,7 +233,7 @@ inline int32 ReadInt32(FileInfo *info, bool32 swapEndian)
 
         int32 max = sizeof(int32) - 1;
         for (int32 i = 0; i < sizeof(int32) / 2; ++i) {
-            uint8 store     = bytes[i];
+            uint8 store    = bytes[i];
             bytes[i]       = bytes[max - i];
             bytes[max - i] = store;
         }
@@ -297,9 +297,9 @@ inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
     if (!buffer)
         return 0;
 
-    uLongf complen = ReadInt32(info, false) - 4;
-    uint32 decompLE  = ReadInt32(info, false);
-    uLongf destLen = (uint32)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+    uLongf complen  = ReadInt32(info, false) - 4;
+    uint32 decompLE = ReadInt32(info, false);
+    uLongf destLen  = (uint32)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     uint8 *compData = NULL;
     AllocateStorage((int32)complen, (void **)&compData, DATASET_TMP, false);
@@ -327,7 +327,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
     ReadBytes(info, compData, (int32)complen);
 
     int32 result = uncompress(*buffer, &destLen, compData, complen);
-    compData = NULL;
+    compData     = NULL;
     return (int32)destLen;
 }
 
@@ -340,13 +340,13 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
     uLongf destLen = size;
 
     int32 result = uncompress(*buffer, &destLen, *cBuffer, complen);
-    *cBuffer = NULL;
+    *cBuffer     = NULL;
     return (int32)destLen;
 }
 
 inline void ClearDataFiles()
 {
-    // Unload animations
+    // Unload file list
     for (int32 f = 0; f < DATAFILE_COUNT; ++f) {
         HASH_CLEAR_MD5(dataFileList[f].hash);
     }
