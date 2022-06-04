@@ -257,6 +257,10 @@ enum GameRegions {
 #endif //! RSDK_USE_SDL2
 
 #elif RETRO_PLATFORM == RETRO_SWITCH
+#undef RETRO_USERCORE_ID
+#define RETRO_USERCORE_ID (4)
+// #define RETRO_USERCORE_ID (4 | 0x80)
+
 #ifdef RSDK_USE_SDL2
 #undef RETRO_RENDERDEVICE_SDL2
 #define RETRO_RENDERDEVICE_SDL2 (1)
@@ -360,6 +364,12 @@ enum GameRegions {
 #endif // ! RETRO_RENDERDEVICE_SDL2
 
 #include <theora/theoradec.h>
+
+#if RETRO_PLATFORM == RETRO_SWITCH
+#define PrintConsole _PrintConsole
+#include <switch.h>
+#undef PrintConsole
+#endif
 
 #elif RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>

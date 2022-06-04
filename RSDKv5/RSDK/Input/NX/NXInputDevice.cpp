@@ -1,8 +1,6 @@
 
 // NOTE: I'm using enums & structs from the libNX homebrew lib, but they should have the same values as the official APIs
 
-#include <switch.h>
-
 using namespace RSDK::SKU;
 
 HidNpadIdType npadTypes[5] = { HidNpadIdType_Handheld, HidNpadIdType_No1, HidNpadIdType_No2, HidNpadIdType_No3, HidNpadIdType_No4 };

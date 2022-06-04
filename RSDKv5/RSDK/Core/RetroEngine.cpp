@@ -34,6 +34,9 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 
         freopen("CON", "w", stdout);
 #endif
+#if RETRO_PLATFORM == RETRO_SWITCH
+        consoleInit(NULL);
+#endif
     }
 
 #if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
@@ -103,7 +106,6 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
             if (customSettings.disableFocusPause)
                 engine.focusState = 0;
 #endif
-
             if (SKU::userCore->CheckFocusLost()) {
                 if (!(engine.focusState & 1)) {
                     engine.focusState = 1;

@@ -18,8 +18,8 @@ typedef enum {
     ACT_1,
     ACT_2,
     ACT_3,
-    ACT_NOID,
-} CharacterIDs;
+    ACT_NONE,
+} ActIDs;
 
 // Object Class
 struct ObjectTimeAttackData {

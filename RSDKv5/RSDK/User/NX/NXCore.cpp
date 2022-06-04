@@ -1,15 +1,23 @@
 #if RETRO_REV02
 
-uint8 messageLoopThreadStack[16384];
-Thread messageLoopThread;
+// release switch has the stack and other stuff predefined for the loop thread to use
+// issue is it MUST be page-aligned (& 0xFFF of location must be 0), which we don't know how to do
+// so bc we're using libNX we can pass null for it to do it for us
+// uint8 messageLoopThreadStack[16384];
 
+// Thread messageLoopThread;
+
+// normally this func looks a little different
+// but libNX sucks and won't properly thread things for us
+// 4 am note: this literally doesn't work anyway fuck libNX we do a hack at the bottom
 void MessageLoopThreadCB(SKU::NXCore *core)
 {
     uint32 msg     = 0;
     uint32 unknown = 0;
 
-    while (true) {
-        appletGetMessage(&msg);
+    while (R_SUCCEEDED(appletGetMessage(&msg))) {
+        appletProcessMessage(msg);
+        PrintLog(PRINT_NORMAL, "yo whatup %d", msg);
 
         switch (msg) {
             case AppletMessage_ExitRequest: unknown = 1; break;
@@ -31,7 +39,7 @@ void MessageLoopThreadCB(SKU::NXCore *core)
 
             case AppletMessage_PerformanceModeChanged: break;
 
-            default: PrintLog(PRINT_NORMAL, "Unhandled message = 0x%08x\n", v2); break;
+            default: PrintLog(PRINT_NORMAL, "Unhandled message = 0x%08x\n", msg); break;
         }
     }
 }
@@ -67,16 +75,17 @@ SKU::NXCore *InitNXCore()
     core->values[0]  = false;
     core->valueCount = 1;
 
-    core->focusState = = appletGetFocusState();
-    if (engine.inFocus) 
+    core->focusState = appletGetFocusState();
+    if (engine.inFocus)
         engine.inFocus = (core->focusState == AppletFocusState_InFocus) ? 1 : 2;
     appletSetFocusHandlingMode(AppletFocusHandlingMode_NoSuspend);
     // nn::oe::SetResumeNotificationEnabled(true);
     // nn::oe::SetOperationModeChangedNotificationEnabled(true);
 
-    // if (nn::os::CreateThread(&messageLoopThread, MessageLoopThreadCB, userCore, messageLoopThreadStack, sizeof(messageLoopThreadStack), 0))
-    //     nn::diag::detail::OnAssertionFailure(2, &blankString, &blankString, &blankString, 0);
-    // nn::os::StartThread(&messageLoopThread);
+    // int32 rc = threadCreate(&messageLoopThread, MessageLoopThreadCB, userCore, NULL, 0x4000, 28, -2);
+    // PrintLog(PRINT_NORMAL, "%d %d", R_MODULE(rc), R_DESCRIPTION(rc));
+
+    // threadStart(&messageLoopThread);
 
     // TODO: remove
     leaderboards->userRank = 0;
@@ -91,5 +100,17 @@ SKU::NXCore *InitNXCore()
     userStorage->noSaveActive  = false;
 
     return core;
+}
+
+void NXCore::FrameInit()
+{
+    MessageLoopThreadCB(this);
+
+    // hack to ensure focus state
+    this->focusState = appletGetFocusState();
+    if (engine.inFocus)
+        engine.inFocus = (this->focusState == AppletFocusState_InFocus) ? 1 : 2;
+
+    UserCore::FrameInit();
 }
 #endif

@@ -155,8 +155,8 @@ void RSDK::UnloadMods()
 #endif
 
 #if RETRO_PLATFORM == RETRO_SWITCH
-            if (handle)
-                dlclose(handle);
+            //if (handle)
+            //    dlclose(handle);
 #endif
         }
         mod.modLogicHandles.clear();
