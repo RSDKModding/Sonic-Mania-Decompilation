@@ -103,10 +103,10 @@ enum GameRegions {
 #endif
 #elif defined __ANDROID__
 #define RETRO_PLATFORM (RETRO_ANDROID)
-#elif defined __linux__
-#define RETRO_PLATFORM (RETRO_LINUX)
 #elif defined __SWITCH__
 #define RETRO_PLATFORM (RETRO_SWITCH)
+#elif defined __linux__
+#define RETRO_PLATFORM (RETRO_LINUX)
 #else
 #define RETRO_PLATFORM (RETRO_WIN)
 #endif
@@ -121,17 +121,19 @@ enum GameRegions {
 // ============================
 #define RETRO_RENDERDEVICE_DIRECTX9  (0)
 #define RETRO_RENDERDEVICE_DIRECTX11 (0)
-#define RETRO_INPUTDEVICE_NX         (0)
+#define RETRO_RENDERDEVICE_NX        (0)
 // CUSTOM
-#define RETRO_RENDERDEVICE_SDL2    (0)
-#define RETRO_RENDERDEVICE_OPENGL3 (0)
+#define RETRO_RENDERDEVICE_SDL2     (0)
+#define RETRO_RENDERDEVICE_GLFW     (0)
+#define RETRO_RENDERDEVICE_EGL      (0)
 
 // ============================
 // AUDIO DEVICE BACKENDS
 // ============================
 #define RETRO_AUDIODEVICE_XAUDIO (0)
+#define RETRO_AUDIODEVICE_NX     (0)
+// CUSTOM
 #define RETRO_AUDIODEVICE_SDL2   (0)
-#define RETRO_INPUTDEVICE_NX     (0)
 
 // ============================
 // INPUT DEVICE BACKENDS
@@ -141,6 +143,7 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_RAWINPUT (0)
 #define RETRO_INPUTDEVICE_STEAM    (0)
 #define RETRO_INPUTDEVICE_NX       (0)
+// CUSTOM
 #define RETRO_INPUTDEVICE_SDL2     (0)
 #define RETRO_INPUTDEVICE_GLFW     (0)
 
@@ -181,14 +184,10 @@ enum GameRegions {
 #undef RETRO_RENDERDEVICE_SDL2
 #define RETRO_RENDERDEVICE_SDL2 (1)
 
-#undef RETRO_AUDIODEVICE_SDL2
-#define RETRO_AUDIODEVICE_SDL2 (1)
-
 #undef RETRO_INPUTDEVICE_SDL2
 #define RETRO_INPUTDEVICE_SDL2 (1)
-#else //! RSDK_USE_SDL2
 
-#ifdef RSDK_USE_DX9
+#elif defined(RSDK_USE_DX9)
 #undef RETRO_RENDERDEVICE_DIRECTX9
 #define RETRO_RENDERDEVICE_DIRECTX9 (1)
 
@@ -209,17 +208,22 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_RAWINPUT (1)
 
 #elif defined(RSDK_USE_GL3)
-#undef RETRO_RENDERDEVICE_OPENGL3
-#define RETRO_RENDERDEVICE_OPENGL3 (1)
+#undef RETRO_RENDERDEVICE_GLFW
+#define RETRO_RENDERDEVICE_GLFW (1)
 
 #undef RETRO_INPUTDEVICE_GLFW
 #define RETRO_INPUTDEVICE_GLFW (1)
 #else
-#error One of RSDK_USE_SDL2, RSDK_USE_DX9, or RSDK_USE_GL3 must be defined.
-#endif //! RSDK_USE_DX9
+#error One of RSDK_USE_DX9, RSDK_USE_DX11, RSDK_USE_SDL2, or RSDK_USE_GL3 must be defined.
+#endif
 
+#ifndef _MINGW
 #undef RETRO_AUDIODEVICE_XAUDIO
 #define RETRO_AUDIODEVICE_XAUDIO (1)
+#else
+#undef RETRO_AUDIODEVICE_SDL2
+#define RETRO_AUDIODEVICE_SDL2 (1)
+#endif
 
 #endif //! RSDK_USE_SDL2
 
@@ -245,8 +249,8 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_SDL2 (1)
 
 #elif defined(RSDK_USE_GL3)
-#undef RETRO_RENDERDEVICE_OPENGL3
-#define RETRO_RENDERDEVICE_OPENGL3 (1)
+#undef RETRO_RENDERDEVICE_GLFW
+#define RETRO_RENDERDEVICE_GLFW (1)
 #undef RETRO_INPUTDEVICE_GLFW
 #define RETRO_INPUTDEVICE_GLFW (1)
 #undef RETRO_AUDIODEVICE_SDL2
@@ -270,15 +274,23 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_SDL2 (1)
 
 #elif defined(RSDK_USE_GL3)
-#undef RETRO_RENDERDEVICE_OPENGL3
-#define RETRO_RENDERDEVICE_OPENGL3 (1)
+#undef RETRO_RENDERDEVICE_EGL
+#define RETRO_RENDERDEVICE_EGL (1)
 #undef RETRO_INPUTDEVICE_NX
 #define RETRO_INPUTDEVICE_NX (1)
 #undef RETRO_AUDIODEVICE_SDL2
 #define RETRO_AUDIODEVICE_SDL2 (1)
 
+#elif defined(RSDK_USE_NX)
+#undef RETRO_RENDERDEVICE_NX
+#define RETRO_RENDERDEVICE_NX (1)
+#undef RETRO_INPUTDEVICE_NX
+#define RETRO_INPUTDEVICE_NX (1)
+#undef RETRO_AUDIODEVICE_NX
+#define RETRO_AUDIODEVICE_NX (1)
 #else
-#error RSDK_USE_SDL2 or RSDK_USE_GL3 must be defined.
+
+#error RSDK_USE_NX, RSDK_USE_SDL2, or RSDK_USE_GL3 must be defined.
 #endif //! RSDK_USE_SDL2
 
 #undef RETRO_INPUTDEVICE_KEYBOARD
@@ -324,7 +336,7 @@ enum GameRegions {
 #endif
 
 #undef LoadImage
-#elif RETRO_RENDERDEVICE_OPENGL3
+#elif RETRO_RENDERDEVICE_GLFW
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #endif
@@ -356,7 +368,7 @@ enum GameRegions {
 #include "cocoaHelpers.hpp"
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_SWITCH
 
-#if RETRO_RENDERDEVICE_OPENGL3
+#if RETRO_RENDERDEVICE_GLFW
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #endif

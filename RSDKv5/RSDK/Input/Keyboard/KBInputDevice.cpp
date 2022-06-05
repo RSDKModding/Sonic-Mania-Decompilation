@@ -718,7 +718,7 @@ void RSDK::SKU::InputDeviceKeyboard::UpdateInput()
 #elif RETRO_RENDERDEVICE_SDL2
         Vector2 cursorPos;
         SDL_GetMouseState(&cursorPos.x, &cursorPos.y);
-#elif RETRO_RENDERDEVICE_OPENGL3
+#elif RETRO_RENDERDEVICE_GLFW
         float2 cursorPos;
         double cursorX, cursorY;
         glfwGetCursorPos(RenderDevice::window, &cursorX, &cursorY);

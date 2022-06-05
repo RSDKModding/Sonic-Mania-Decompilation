@@ -137,7 +137,7 @@ struct WindowInfo {
         SDL_DisplayMode internal;
     } * displays;
     SDL_Rect viewport;
-#elif RETRO_RENDERDEVICE_OPENGL3
+#elif RETRO_RENDERDEVICE_GLFW
     union {
         struct {
             int32 width;
@@ -305,8 +305,10 @@ private:
 #include "NX/NXRenderDevice.hpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.hpp"
-#elif RETRO_RENDERDEVICE_OPENGL3
-#include "GL3/GL3RenderDevice.hpp"
+#elif RETRO_RENDERDEVICE_GLFW
+#include "GLFW/GLFWRenderDevice.hpp"
+#elif RETRO_RENDERDEVICE_EGL
+#include "EGL/EGLRenderDevice.hpp"
 #endif
 
 extern DrawList drawGroups[DRAWGROUP_COUNT];

@@ -133,8 +133,10 @@ const RenderVertex rsdkVertexBuffer[24] =
 #include "NX/NXRenderDevice.cpp"
 #elif RETRO_RENDERDEVICE_SDL2
 #include "SDL2/SDL2RenderDevice.cpp"
-#elif RETRO_RENDERDEVICE_OPENGL3
-#include "GL3/GL3RenderDevice.cpp"
+#elif RETRO_RENDERDEVICE_GLFW
+#include "GLFW/GLFWRenderDevice.cpp"
+#elif RETRO_RENDERDEVICE_EGL
+#include "EGL/EGLRenderDevice.cpp"
 #endif
 
 DrawList RSDK::drawGroups[DRAWGROUP_COUNT];
