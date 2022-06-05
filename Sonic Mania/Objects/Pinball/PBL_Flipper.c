@@ -56,17 +56,19 @@ void PBL_Flipper_Update(void)
 void PBL_Flipper_LateUpdate(void)
 {
     RSDK_THIS(PBL_Flipper);
-    int32 z     = self->position.y;
-    int32 y     = self->height;
-    int32 x     = self->position.x;
-    Matrix *mat = &PBL_Camera->matWorld;
 
-    self->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    int32 z = self->position.y;
+    int32 y = self->height;
+    int32 x = self->position.x;
+
+    Matrix *m     = &PBL_Camera->matWorld;
+    self->depth3D = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
+
     if (self->depth3D >= 0x4000) {
-        int32 depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
-                       + ((mat->values[0][1] * (self->height >> 8)) & 0xFFFFFF00));
+        int32 depth = ((m->values[0][3] << 8) + ((m->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((m->values[0][0] * (x >> 8)) & 0xFFFFFF00)
+                       + ((m->values[0][1] * (self->height >> 8)) & 0xFFFFFF00));
         depth /= self->depth3D;
-        self->visible = abs(depth) < 256;
+        self->visible = abs(depth) < 0x100;
     }
 }
 
@@ -75,18 +77,24 @@ void PBL_Flipper_StaticUpdate(void) {}
 void PBL_Flipper_Draw(void)
 {
     RSDK_THIS(PBL_Flipper);
+
     if (self->depth3D >= 0x4000 && self->minCraneID <= PBL_Setup->sectorID) {
         RSDK.Prepare3DScene(PBL_Flipper->sceneIndex);
+
         RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.y, 0x100);
         RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height, self->position.y, false);
         RSDK.MatrixRotateY(&self->matNormal, self->angle >> 8);
+
         RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);
         RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &PBL_Camera->matWorld);
+
         if (PBL_Camera->useAltMatNormal)
             RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &PBL_Camera->matNormal);
         else
             RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &PBL_Camera->matNormalItem);
+
         RSDK.AddModelTo3DScene(PBL_Flipper->modelFrames, PBL_Flipper->sceneIndex, PBL_Flipper->drawType, &self->matWorld, &self->matNormal, 0xFFFFFF);
+
         RSDK.Draw3DScene(PBL_Flipper->sceneIndex);
     }
 }
@@ -95,11 +103,8 @@ void PBL_Flipper_Create(void *data)
 {
     RSDK_THIS(PBL_Flipper);
     if (!SceneInfo->inEditor) {
-        self->visible = true;
-        if (self->direction == FLIP_NONE)
-            self->scale.x = 0x100;
-        else
-            self->scale.x = -0x100;
+        self->visible       = true;
+        self->scale.x       = self->direction == FLIP_NONE ? 0x100 : -0x100;
         self->drawOrder     = 4;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x400000;
@@ -108,23 +113,29 @@ void PBL_Flipper_Create(void *data)
         self->scale.y       = 0x100;
         self->flipperActive = true;
         self->state         = PBL_Flipper_State_AwaitFlip;
+
         RSDK.SetModelAnimation(PBL_Flipper->modelFrames, &self->animator, 96, 0, true, 0);
     }
 }
 
 void PBL_Flipper_StageLoad(void)
 {
-    PBL_Flipper->modelFrames     = RSDK.LoadMesh("Pinball/Flipper.bin", SCOPE_STAGE);
-    PBL_Flipper->sceneIndex      = RSDK.Create3DScene("View:Pinball", 0x1000, SCOPE_STAGE);
-    PBL_Flipper->drawType        = S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN;
-    PBL_Flipper->hitbox.left     = -52;
-    PBL_Flipper->hitbox.top      = -8;
-    PBL_Flipper->hitbox.right    = 12;
-    PBL_Flipper->hitbox.bottom   = 8;
-    PBL_Flipper->hitbox2.left    = -52;
-    PBL_Flipper->hitbox2.top     = -24;
-    PBL_Flipper->hitbox2.right   = 12;
-    PBL_Flipper->hitbox2.bottom  = 8;
+    PBL_Flipper->modelFrames = RSDK.LoadMesh("Pinball/Flipper.bin", SCOPE_STAGE);
+
+    PBL_Flipper->sceneIndex = RSDK.Create3DScene("View:Pinball", 0x1000, SCOPE_STAGE);
+
+    PBL_Flipper->drawType = S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN;
+
+    PBL_Flipper->hitbox.left   = -52;
+    PBL_Flipper->hitbox.top    = -8;
+    PBL_Flipper->hitbox.right  = 12;
+    PBL_Flipper->hitbox.bottom = 8;
+
+    PBL_Flipper->hitboxUnused.left   = -52;
+    PBL_Flipper->hitboxUnused.top    = -24;
+    PBL_Flipper->hitboxUnused.right  = 12;
+    PBL_Flipper->hitboxUnused.bottom = 8;
+
     PBL_Flipper->sfxFlipperStage = RSDK.GetSfx("Stage/Flipper.wav");
     PBL_Flipper->sfxFlipper      = RSDK.GetSfx("Pinball/Flipper.wav");
 }
@@ -132,7 +143,8 @@ void PBL_Flipper_StageLoad(void)
 void PBL_Flipper_HandlePlayerInteractions(void)
 {
     RSDK_THIS(PBL_TargetBumper);
-    if (self->scale.y >= 128) {
+
+    if (self->scale.y >= 0x80) {
         int32 angle    = self->angle >> 10;
         int32 negAngle = 0;
         if (self->direction == FLIP_X) {
@@ -178,6 +190,7 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                     player->velocity.x = velStoreX;
                     player->velocity.y = velStoreY;
                     break;
+
                 case C_TOP:
                     if (velY < 0) {
                         player->velocity.x = velStoreX;
@@ -189,27 +202,34 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                             velY >>= 2;
                         if (velY > 0x80000)
                             velY = 0x80000;
+
                         player->onGround = false;
+
                         if (velY > 0x40000)
                             player->velocity.x >>= 2;
+
                         if (self->state == PBL_Flipper_State_RiseFlipper && self->velocity.y == 0x2000) {
                             player->velocity.y -= (0xE0000 * force) >> 8;
                             player->onGround = false;
                             player->angle    = 0;
                         }
+
                         Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                         Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     }
                     break;
+
                 case C_LEFT:
                     if (velX < 0) {
                         player->velocity.x = velX;
                     }
                     else {
                         player->velocity.x = -(velX >> 2);
+
                         if (player->velocity.x <= -0x10000) {
                             if (player->velocity.x < -0x80000)
                                 player->velocity.x = -0x80000;
+
                             player->velocity.y -= 0x20000;
                         }
                         else {
@@ -221,15 +241,18 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                         Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     }
                     break;
+
                 case C_RIGHT:
                     if (velX > 0) {
                         player->velocity.x = velX;
                     }
                     else {
                         player->velocity.x = -(velX >> 2);
+
                         if (player->velocity.x >= 0x10000) {
                             if (player->velocity.x > 0x80000)
                                 player->velocity.x = 0x80000;
+
                             player->velocity.y -= 0x20000;
                         }
                         else {
@@ -241,11 +264,14 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                     Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     break;
+
                 case C_BOTTOM:
                     player->velocity.y = -(velY >> 2);
+
                     Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     break;
+
                 default: break;
             }
         }
@@ -255,11 +281,13 @@ void PBL_Flipper_HandlePlayerInteractions(void)
 void PBL_Flipper_State_AwaitFlip(void)
 {
     RSDK_THIS(PBL_Flipper);
+
     if (self->buttonDown) {
         self->velocity.y = 0x2000;
         self->state      = PBL_Flipper_State_RiseFlipper;
         RSDK.PlaySfx(PBL_Flipper->sfxFlipper, false, 255);
     }
+
     PBL_Flipper_HandlePlayerInteractions();
 }
 
@@ -268,6 +296,7 @@ void PBL_Flipper_State_RiseFlipper(void)
     RSDK_THIS(PBL_Flipper);
 
     self->angle += self->velocity.y;
+
     if (self->angle < 0x4000 || self->velocity.y < 0) {
         if (self->velocity.y < 0x2000)
             self->velocity.y += 0x400;
@@ -275,18 +304,22 @@ void PBL_Flipper_State_RiseFlipper(void)
     else {
         self->angle      = 0x4000;
         self->velocity.y = -(self->velocity.y >> 2);
+
         if (!self->buttonDown) {
             self->velocity.y = -0x2000;
             self->state      = PBL_Flipper_State_LowerFlipper;
         }
     }
+
     PBL_Flipper_HandlePlayerInteractions();
 }
 
 void PBL_Flipper_State_LowerFlipper(void)
 {
     RSDK_THIS(PBL_Flipper);
+
     self->angle += self->velocity.y;
+
     if (self->angle > -0x4000 || self->velocity.y > 0) {
         if (self->velocity.y > -0x2000)
             self->velocity.y -= 0x400;
@@ -294,11 +327,13 @@ void PBL_Flipper_State_LowerFlipper(void)
     else {
         self->angle      = -0x4000;
         self->velocity.y = -(self->velocity.y >> 2);
+
         if (self->velocity.y < 0x800) {
             self->velocity.y = 0;
             self->state      = PBL_Flipper_State_AwaitFlip;
         }
     }
+
     PBL_Flipper_HandlePlayerInteractions();
 }
 
@@ -308,8 +343,8 @@ void PBL_Flipper_EditorDraw(void) {}
 void PBL_Flipper_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(PBL_Flipper, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 }
 #endif
 

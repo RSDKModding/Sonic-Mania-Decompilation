@@ -13,6 +13,7 @@ ObjectPBL_Crane *PBL_Crane;
 void PBL_Crane_Update(void)
 {
     RSDK_THIS(PBL_Crane);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,6 +24,7 @@ void PBL_Crane_StaticUpdate(void) {}
 void PBL_Crane_Draw(void)
 {
     RSDK_THIS(PBL_Crane);
+
     if (self->stateDraw) {
         StateMachine_Run(self->stateDraw);
     }
@@ -34,35 +36,45 @@ void PBL_Crane_Draw(void)
 void PBL_Crane_Create(void *data)
 {
     RSDK_THIS(PBL_Crane);
+
     if (!SceneInfo->inEditor) {
         self->drawOrder = 9;
         self->active    = ACTIVE_NORMAL;
         self->type      = voidToInt(data);
+
         switch (self->type) {
             case PBL_CRANE_MANAGER:
                 self->position.x = ScreenInfo->centerX << 16;
                 self->position.y = 0;
-                self->alpha      = 0xFF;
-                self->scale.x    = 0x600;
-                self->scale.y    = 0x200;
+
+                self->alpha   = 0xFF;
+                self->scale.x = 0x600;
+                self->scale.y = 0x200;
+
                 RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 2, &self->displayAnimator, true, 0);
                 RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 0, &self->machineAnimator, true, 1);
+
                 self->stateDraw = PBL_Crane_Draw_CraneMachine;
                 break;
             case PBL_CRANE_CRANE:
                 self->visible = true;
+
                 RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 3, &self->bgAnimator, true, 0);
                 RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 4, &self->craneBackAnimator, true, 0);
                 RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 5, &self->craneFrontAnimator, true, 0);
-                self->scale.x   = 0x200;
-                self->scale.y   = 0x200;
+
+                self->scale.x = 0x200;
+                self->scale.y = 0x200;
+
                 self->state     = PBL_Crane_StateCrane_Lower;
                 self->stateDraw = PBL_Crane_Draw_Crane;
                 break;
             case PBL_CRANE_PRIZEDISPLAY:
                 self->visible = true;
+
                 RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 6, &self->displayAnimator, true, 0);
                 RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 2, &self->bgAnimator, true, 4);
+
                 self->state     = PBL_Crane_StatePrizeDisplay_Move;
                 self->stateDraw = PBL_Crane_Draw_PrizeDisplay;
                 break;
@@ -72,7 +84,8 @@ void PBL_Crane_Create(void *data)
                 self->scale.x   = 0x180;
                 self->scale.y   = 0x180;
                 self->drawFX    = FX_SCALE;
-                self->state     = PBL_Crane_StatePrize_Bounce;
+
+                self->state = PBL_Crane_StatePrize_Bounce;
                 break;
             default: break;
         }
@@ -81,7 +94,8 @@ void PBL_Crane_Create(void *data)
 
 void PBL_Crane_StageLoad(void)
 {
-    PBL_Crane->aniFrames    = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE);
+    PBL_Crane->aniFrames = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE);
+
     PBL_Crane->sfxBackGlass = RSDK.GetSfx("Pinball/Backglass.wav");
     PBL_Crane->sfxCraneMove = RSDK.GetSfx("Pinball/CraneMove.wav");
     PBL_Crane->sfxCraneDrop = RSDK.GetSfx("Pinball/CraneDrop.wav");
@@ -94,6 +108,7 @@ void PBL_Crane_StageLoad(void)
 void PBL_Crane_HandlePrizes(void)
 {
     RSDK_THIS(PBL_Crane);
+
     switch (self->displayAnimator.frameID) {
         case PBL_CRANE_PRIZE_SONIC:
         case PBL_CRANE_PRIZE_TAILS:
@@ -131,12 +146,14 @@ void PBL_Crane_HandlePrizes(void)
         case PBL_CRANE_PRIZE_RINGS:
             globals->restartRings += PBL_Setup->rings;
             globals->restartRings = clampVal(globals->restartRings, 0, 999);
+
             if (globals->gameMode == MODE_MANIA && globals->restartRings >= globals->restart1UP) {
                 PBL_Setup_GiveLife();
                 globals->restart1UP += 100;
                 if (globals->restart1UP > 300)
                     globals->restart1UP = 1000;
             }
+
             PBL_Setup->rings   = 0;
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_RINGS;
             break;
@@ -147,9 +164,10 @@ void PBL_Crane_HandlePrizes(void)
         case PBL_CRANE_PRIZE_SHIELD_ELECTRIC:
             globals->restartPowerups &= ~0x40;
             globals->restartPowerups |= self->displayAnimator.frameID - 6;
+
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_ITEM;
             break;
-            
+
         case PBL_CRANE_PRIZE_TABLE_RESTORE: {
             foreach_all(PBL_Bumper, bumper)
             {
@@ -168,14 +186,17 @@ void PBL_Crane_HandlePrizes(void)
                     ring->state = PBL_Ring_State_Ring;
                 }
             }
+
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_TBLRESTORE;
             break;
         }
         case PBL_CRANE_PRIZE_1UP:
             if (SaveGame->saveRAM->lives < 99)
                 SaveGame->saveRAM->lives++;
+
             if (globals->restartLives[0] < 99)
                 globals->restartLives[0]++;
+
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_1UP;
             break;
         default: break;
@@ -185,24 +206,27 @@ void PBL_Crane_HandlePrizes(void)
 void PBL_Crane_Draw_CraneMachine(void)
 {
     RSDK_THIS(PBL_Crane);
+
     self->position.x = ScreenInfo->centerX << 16;
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
         self->displayAnimator.frameID = 1;
-        self->inkEffect         = INK_NONE;
+        self->inkEffect               = INK_NONE;
         RSDK.DrawSprite(&self->displayAnimator, NULL, true);
         RSDK.DrawSprite(&self->machineAnimator, NULL, true);
 
         RSDK.AddDrawListRef(11, SceneInfo->entitySlot);
+
         RSDK.SetClipBounds(0, ScreenInfo->centerX - 96, 0, ScreenInfo->centerX + 96, (self->position.y >> 16) + 64);
     }
     else {
         RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+
         self->displayAnimator.frameID = 0;
         RSDK.DrawSprite(&self->displayAnimator, NULL, true);
 
         self->displayAnimator.frameID = 2;
-        self->drawFX            = FX_SCALE;
-        self->inkEffect         = INK_ADD;
+        self->drawFX                  = FX_SCALE;
+        self->inkEffect               = INK_ADD;
         RSDK.DrawSprite(&self->displayAnimator, NULL, true);
 
         self->displayAnimator.frameID = 3;
@@ -215,6 +239,7 @@ void PBL_Crane_Draw_CraneMachine(void)
 void PBL_Crane_Draw_PrizeDisplay(void)
 {
     RSDK_THIS(PBL_Crane);
+
     RSDK.DrawSprite(&self->bgAnimator, NULL, true);
     RSDK.DrawSprite(&self->displayAnimator, NULL, true);
 }
@@ -222,6 +247,7 @@ void PBL_Crane_Draw_PrizeDisplay(void)
 void PBL_Crane_Draw_Crane(void)
 {
     RSDK_THIS(PBL_Crane);
+
     Vector2 drawPos;
 
     drawPos.x = self->position.x;
@@ -239,15 +265,18 @@ void PBL_Crane_Draw_Crane(void)
 void PBL_Crane_State_CreatePrizes(void)
 {
     RSDK_THIS(PBL_Crane);
-    self->position.y       = 0;
+
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
-    camera->worldY           = 0x1000000;
-    self->cameraTarget         = camera->target;
-    camera->target        = NULL;
-    self->visible          = true;
-    int32 spawnX               = self->position.x - 0x6C0000;
-    int32 spawnY               = 0x600000 + self->position.y;
-    self->state            = PBL_Crane_State_DisplayPrizes;
+
+    self->position.y   = 0;
+    camera->worldY     = 0x1000000;
+    self->cameraTarget = camera->target;
+    camera->target     = NULL;
+    self->visible      = true;
+
+    int32 spawnX = self->position.x - 0x6C0000;
+    int32 spawnY = 0x600000 + self->position.y;
+    self->state  = PBL_Crane_State_DisplayPrizes;
 
     for (int32 i = 1; i < 6; ++i) {
         EntityPBL_Crane *prize = CREATE_ENTITY(PBL_Crane, intToVoid(PBL_CRANE_PRIZEDISPLAY), spawnX, spawnY);
@@ -273,8 +302,10 @@ void PBL_Crane_State_CreatePrizes(void)
     }
 
     CREATE_ENTITY(PBL_Crane, intToVoid(PBL_CRANE_CRANE), self->position.x, -0x180000)->parent = self;
+
     if (PBL_Setup->sectorID < PBL_Setup->sectorCount)
         PBL_Setup->sectorID++;
+
     PBL_Crane->prizeID = PBL_CRANE_PRIZEID_NOTHING;
 }
 
@@ -287,12 +318,15 @@ void PBL_Crane_State_DisplayPrizes(void)
         self->state = StateMachine_None;
     }
     else {
-        self->position.y += 0x10000;
         EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
+
+        self->position.y += 0x10000;
         camera->worldY += 0x28000;
         camera->position.y -= 0x14000;
+
         if (!self->timer)
             --camera->rotationY;
+
         self->timer = (self->timer + 1) & 3;
     }
 }
@@ -300,11 +334,13 @@ void PBL_Crane_State_DisplayPrizes(void)
 void PBL_Crane_StatePrizeDisplay_Move(void)
 {
     RSDK_THIS(PBL_Crane);
+
     EntityPBL_Crane *parent = self->parent;
 
     self->position.x -= 0x10000;
-    int32 dist           = abs(self->position.x - parent->position.x);
+    int32 dist       = abs(self->position.x - parent->position.x);
     self->position.y = (dist >> 13) * (dist >> 13) + (parent->position.y + 0x300000);
+
     if (self->position.x < parent->position.x - 0x980000) {
         self->position.x += 0x1100000;
     }
@@ -313,12 +349,13 @@ void PBL_Crane_StatePrizeDisplay_Move(void)
 void PBL_Crane_StateCrane_Lower(void)
 {
     RSDK_THIS(PBL_Crane);
+
     EntityPBL_Crane *parent = self->parent;
 
     if (!parent->state) {
-        if (self->position.y >= 0x100000) 
+        if (self->position.y >= 0x100000)
             self->state = PBL_Crane_StateCrane_Move;
-        else 
+        else
             self->position.y += 0x8000;
     }
 }
@@ -328,6 +365,7 @@ void PBL_Crane_StateCrane_Move(void)
     RSDK_THIS(PBL_Crane);
 
     self->velocity.x = (-((ControllerInfo[1].keyLeft.down || AnalogStickInfoL[1].keyLeft.down) != 0) & 0xFFFF0000) + 0x8000;
+
     if (++self->timer == 30) {
         self->timer = 0;
         self->state = PBL_Crane_StateCrane_Controlled;
@@ -338,6 +376,7 @@ void PBL_Crane_StateCrane_Move(void)
 void PBL_Crane_StateCrane_Controlled(void)
 {
     RSDK_THIS(PBL_Crane);
+
     EntityPBL_Crane *parent = self->parent;
 
     if (AnalogStickInfoL[1].keyLeft.press || ControllerInfo[1].keyLeft.press) {
@@ -355,6 +394,7 @@ void PBL_Crane_StateCrane_Controlled(void)
     }
 
     self->position.x += self->velocity.x;
+
     if (self->velocity.x <= 0) {
         if (self->position.x <= parent->position.x - 0x600000)
             self->velocity.x = -self->velocity.x;
@@ -374,19 +414,21 @@ void PBL_Crane_StateCrane_Controlled(void)
 void PBL_Crane_StateCrane_Drop(void)
 {
     RSDK_THIS(PBL_Crane);
+
     EntityPBL_Crane *parent = self->parent;
 
     self->position.y += 0x10000;
     if (self->position.y >= parent->position.y + 0x180000) {
         foreach_active(PBL_Crane, crane)
         {
-            if (crane->type == 2) {
+            if (crane->type == PBL_CRANE_PRIZEDISPLAY) {
                 if (abs(crane->position.x - self->position.x) < 0x100000) {
                     memcpy(&self->displayAnimator, &crane->displayAnimator, sizeof(Animator));
                     RSDK.SetSpriteAnimation(-1, 0, &crane->displayAnimator, false, 0);
                 }
             }
         }
+
         self->state = PBL_Crane_StateCrane_Grab;
         RSDK.PlaySfx(PBL_Crane->sfxCraneGrab, false, 255);
     }
@@ -395,14 +437,16 @@ void PBL_Crane_StateCrane_Drop(void)
 void PBL_Crane_StateCrane_Grab(void)
 {
     RSDK_THIS(PBL_Crane);
+
     ++self->timer;
-    if (self->scale.x > 384) {
-        self->scale.x -= 16;
-        self->scale.y -= 16;
+
+    if (self->scale.x > 0x180) {
+        self->scale.x -= 0x10;
+        self->scale.y -= 0x10;
     }
 
     if (self->timer > 8) {
-        self->craneBackAnimator.frameID = (self->timer - 8) >> 1;
+        self->craneBackAnimator.frameID  = (self->timer - 8) >> 1;
         self->craneFrontAnimator.frameID = (self->timer - 8) >> 1;
     }
 
@@ -416,12 +460,14 @@ void PBL_Crane_StateCrane_Grab(void)
 void PBL_Crane_StateCrane_Rise(void)
 {
     RSDK_THIS(PBL_Crane);
-    EntityPBL_Crane *parent = (EntityPBL_Crane *)self->parent;
+
+    EntityPBL_Crane *parent = self->parent;
 
     self->position.y -= 0x10000;
+
     if (self->scale.x > 0x180) {
-        self->scale.x -= 16;
-        self->scale.y -= 16;
+        self->scale.x -= 0x10;
+        self->scale.y -= 0x10;
     }
 
     if (self->position.y <= 0x100000) {
@@ -431,11 +477,9 @@ void PBL_Crane_StateCrane_Rise(void)
             crane->parent          = self->parent;
             RSDK.SetSpriteAnimation(-1, 0, &self->displayAnimator, false, 0);
 
+            crane->velocity.x = self->position.x > parent->position.x ? 0x20000 : -0x20000;
             crane->velocity.y = -0x20000;
-            if (self->position.x > parent->position.x)
-                crane->velocity.x = 0x20000;
-            else
-                crane->velocity.x = -0x20000;
+
             if (crane->displayAnimator.frameID != 5) {
                 RSDK.PlaySfx(PBL_Crane->sfxPrizeGood, false, 255);
                 self->state = StateMachine_None;
@@ -457,19 +501,21 @@ void PBL_Crane_StatePrize_Bounce(void)
 {
     RSDK_THIS(PBL_Crane);
 
-    if (self->scale.x >= 512) {
+    if (self->scale.x >= 0x200) {
         self->drawFX = FX_NONE;
     }
     else {
-        self->scale.x += 16;
-        self->scale.y += 16;
+        self->scale.x += 0x10;
+        self->scale.y += 0x10;
     }
 
     self->velocity.y += 0x2800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (self->position.y > 0x500000) {
         self->velocity.y = -(self->velocity.y >> 1);
+
         if (++self->timer == 2) {
             self->timer = 0;
             self->state = PBL_Crane_StatePrize_Flash;
@@ -480,7 +526,9 @@ void PBL_Crane_StatePrize_Bounce(void)
 void PBL_Crane_StatePrize_Flash(void)
 {
     RSDK_THIS(PBL_Crane);
+
     self->visible = (++self->timer >> 2) & 1;
+
     if (self->timer == 60) {
         PBL_Crane_HandlePrizes();
         self->parent->state = PBL_Crane_StatePrize_PrizeGet;
@@ -491,6 +539,7 @@ void PBL_Crane_StatePrize_Flash(void)
 void PBL_Crane_StatePrize_PrizeGet(void)
 {
     RSDK_THIS(PBL_Crane);
+
     if (++self->timer == 24) {
         foreach_active(PBL_HUD, hud)
         {
@@ -506,6 +555,7 @@ void PBL_Crane_StatePrize_PrizeGet(void)
             if (crane != self)
                 destroyEntity(crane);
         }
+
         self->timer = 0;
         self->state = StateMachine_None;
 
@@ -514,9 +564,11 @@ void PBL_Crane_StatePrize_PrizeGet(void)
             if (sector->craneID == PBL_Setup->sectorID)
                 sector->active = ACTIVE_NORMAL;
         }
+
         RSDK.PrintInt32(PRINT_NORMAL, "Sector", PBL_Setup->sectorID);
-        camera->target = self->cameraTarget;
+        camera->target    = self->cameraTarget;
         camera->rotationY = -96;
+
         foreach_active(PBL_HUD, hud)
         {
             switch (PBL_Crane->prizeID) {
@@ -535,15 +587,25 @@ void PBL_Crane_StatePrize_PrizeGet(void)
         self->position.y = self->position.y - 0x10000;
         camera->worldY -= 0x28000;
         camera->position.y += 0x14000;
+
         if ((self->timer & 3) == 1)
             ++camera->rotationY;
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PBL_Crane_EditorDraw(void) {}
+void PBL_Crane_EditorDraw(void)
+{
+    RSDK_THIS(PBL_Crane);
 
-void PBL_Crane_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 4, &self->craneBackAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PBL_Crane->aniFrames, 5, &self->craneFrontAnimator, true, 0);
+
+    RSDK.DrawSprite(&self->craneBackAnimator, NULL, false);
+    RSDK.DrawSprite(&self->craneFrontAnimator, NULL, false);
+}
+
+void PBL_Crane_EditorLoad(void) { PBL_Crane->aniFrames = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE); }
 #endif
 
 void PBL_Crane_Serialize(void) {}

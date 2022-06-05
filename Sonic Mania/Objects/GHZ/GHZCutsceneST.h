@@ -26,7 +26,7 @@ struct EntityGHZCutsceneST {
     int32 unused2;
     int32 unused3;
     int32 unused4;
-    Hitbox hitbox2;
+    Hitbox hitboxUnused;
 
     // Unique Variables
     Hitbox hitbox;

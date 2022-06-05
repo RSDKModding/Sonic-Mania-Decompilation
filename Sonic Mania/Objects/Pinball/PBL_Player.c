@@ -13,24 +13,27 @@ ObjectPBL_Player *PBL_Player;
 void PBL_Player_Update(void)
 {
     RSDK_THIS(PBL_Player);
+
     StateMachine_Run(self->stateInput);
     StateMachine_Run(self->state);
 
     self->angleX   = ((uint16)self->angleX - (uint16)((abs(self->velocity.y) + abs(self->velocity.x)) >> 12)) & 0x3FF;
     self->rotation = 4 * RSDK.ATan2(-self->velocity.y, self->velocity.x);
+
     if (!(self->angleX & 0x100))
         self->animator.animationID = PBL_Player->jumpFrames;
     else
         self->animator.animationID = PBL_Player->ballFrames;
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
 void PBL_Player_LateUpdate(void)
 {
     RSDK_THIS(PBL_Player);
+
     Matrix *mat = &PBL_Camera->matWorld;
 
-    
     self->depth3D = mat->values[2][3] + mat->values[2][0] * (self->position.x >> 0x10) + mat->values[2][2] * (self->position.y >> 0x10)
                     + mat->values[2][1] * (self->height >> 0x10);
 }
@@ -40,17 +43,22 @@ void PBL_Player_StaticUpdate(void) {}
 void PBL_Player_Draw(void)
 {
     RSDK_THIS(PBL_Player);
+
     if (self->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(PBL_Player->sceneIndex);
-        RSDK.MatrixTranslateXYZ(&self->matrix2, self->position.x, self->height + 0x100000, self->position.y, true);
-        RSDK.MatrixRotateX(&self->matrix1, self->angleX);
-        RSDK.MatrixRotateY(&self->matrix3, self->rotation);
-        RSDK.MatrixMultiply(&self->matrix4, &self->matrix1, &self->matrix3);
-        RSDK.MatrixMultiply(&self->matrix3, &self->matrix4, &self->matrix2);
-        RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matWorld);
-        RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &PBL_Camera->matNormalItem);
-        RSDK.AddModelTo3DScene(self->animator.animationID, PBL_Player->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN, &self->matrix3,
-                               &self->matrix4, 0xFFFFFF);
+
+        RSDK.MatrixTranslateXYZ(&self->matTranslate, self->position.x, self->height + 0x100000, self->position.y, true);
+        RSDK.MatrixRotateX(&self->matRotate, self->angleX);
+        RSDK.MatrixRotateY(&self->matWorld, self->rotation);
+
+        RSDK.MatrixMultiply(&self->matNormal, &self->matRotate, &self->matWorld);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTranslate);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &PBL_Camera->matWorld);
+        RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &PBL_Camera->matNormalItem);
+
+        RSDK.AddModelTo3DScene(self->animator.animationID, PBL_Player->sceneIndex, S3D_SOLIDCOLOR_SHADED_BLENDED_SCREEN, &self->matWorld,
+                               &self->matNormal, 0xFFFFFF);
+
         RSDK.Draw3DScene(PBL_Player->sceneIndex);
     }
 }
@@ -58,18 +66,22 @@ void PBL_Player_Draw(void)
 void PBL_Player_Create(void *data)
 {
     RSDK_THIS(PBL_Player);
+
     if (!SceneInfo->inEditor) {
-        self->active          = ACTIVE_NORMAL;
-        self->visible         = true;
-        self->updateRange.x   = 0x800000;
-        self->updateRange.y   = 0x800000;
-        self->drawOrder       = 4;
-        self->stateInput      = PBL_Player_ProcessPlayerControl;
-        self->state           = PBL_Player_State_Launcher;
-        self->controllerID    = 1;
+        self->active        = ACTIVE_NORMAL;
+        self->visible       = true;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->drawOrder     = 4;
+
+        self->stateInput   = PBL_Player_ProcessPlayerControl;
+        self->state        = PBL_Player_State_Launcher;
+        self->controllerID = 1;
+
         self->onGround        = false;
         self->tileCollisions  = true;
         self->collisionLayers = 1 << PBL_Setup->tableHigh;
+
         RSDK.SetModelAnimation(PBL_Player->jumpFrames, &self->animator, 128, 0, true, 0);
 
         foreach_all(PBL_Camera, camera) { camera->target = (Entity *)self; }
@@ -86,8 +98,9 @@ void PBL_Player_StageLoad(void)
     switch (GET_CHARACTER_ID(1)) {
         default:
         case ID_SONIC:
-            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
-            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
+
             PBL_Player->outerBox.top    = -12;
             PBL_Player->outerBox.bottom = 12;
             PBL_Player->innerBox.top    = -12;
@@ -95,8 +108,9 @@ void PBL_Player_StageLoad(void)
             break;
 
         case ID_TAILS:
-            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/TailsJump.bin", SCOPE_STAGE);
-            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/TailsBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames = RSDK.LoadMesh("Special/TailsJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames = RSDK.LoadMesh("Special/TailsBall.bin", SCOPE_STAGE);
+
             PBL_Player->outerBox.top    = -10;
             PBL_Player->outerBox.bottom = 10;
             PBL_Player->innerBox.top    = -10;
@@ -104,8 +118,9 @@ void PBL_Player_StageLoad(void)
             break;
 
         case ID_KNUCKLES:
-            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/KnuxJump.bin", SCOPE_STAGE);
-            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/KnuxBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames = RSDK.LoadMesh("Special/KnuxJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames = RSDK.LoadMesh("Special/KnuxBall.bin", SCOPE_STAGE);
+
             PBL_Player->outerBox.top    = -12;
             PBL_Player->outerBox.bottom = 12;
             PBL_Player->innerBox.top    = -12;
@@ -113,8 +128,9 @@ void PBL_Player_StageLoad(void)
             break;
 
         case ID_MIGHTY:
-            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/MightyJump.bin", SCOPE_STAGE);
-            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/MightyBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames = RSDK.LoadMesh("Special/MightyJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames = RSDK.LoadMesh("Special/MightyBall.bin", SCOPE_STAGE);
+
             PBL_Player->outerBox.top    = -12;
             PBL_Player->outerBox.bottom = 12;
             PBL_Player->innerBox.top    = -12;
@@ -122,20 +138,23 @@ void PBL_Player_StageLoad(void)
             break;
 
         case ID_RAY:
-            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/RayJump.bin", SCOPE_STAGE);
-            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/RayBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames = RSDK.LoadMesh("Special/RayJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames = RSDK.LoadMesh("Special/RayBall.bin", SCOPE_STAGE);
+
             PBL_Player->outerBox.top    = -10;
             PBL_Player->outerBox.bottom = 10;
             PBL_Player->innerBox.top    = -10;
             PBL_Player->innerBox.bottom = 10;
             break;
     }
+
     PBL_Player->outerBox.left  = -10;
     PBL_Player->outerBox.right = 10;
     PBL_Player->innerBox.left  = -10;
     PBL_Player->innerBox.right = 10;
 
     PBL_Player->sceneIndex = RSDK.Create3DScene("View:Pinball", 4096, SCOPE_STAGE);
+
     RSDK.SetDiffuseColor(PBL_Player->sceneIndex, 0xA0, 0xA0, 0xA0);
     RSDK.SetDiffuseIntensity(PBL_Player->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(PBL_Player->sceneIndex, 15, 15, 15);
@@ -146,6 +165,7 @@ void PBL_Player_StageLoad(void)
 void PBL_Player_ProcessPlayerControl(void)
 {
     RSDK_THIS(PBL_Player);
+
     if (self->controllerID < PLAYER_MAX) {
 #if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
@@ -193,10 +213,10 @@ void PBL_Player_ProcessPlayerControl(void)
 #endif
 
         RSDKControllerState *controller = &ControllerInfo[self->controllerID];
-        self->up                  = controller->keyUp.down;
-        self->down                = controller->keyDown.down;
-        self->left                = controller->keyLeft.down;
-        self->right               = controller->keyRight.down;
+        self->up                        = controller->keyUp.down;
+        self->down                      = controller->keyDown.down;
+        self->left                      = controller->keyLeft.down;
+        self->right                     = controller->keyRight.down;
 
         self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
         self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
@@ -229,10 +249,12 @@ void PBL_Player_ProcessPlayerControl(void)
 void PBL_Player_State_Launcher(void)
 {
     RSDK_THIS(PBL_Player);
+
     if (!self->onGround)
         self->velocity.y += 0x3800;
 
     RSDK.ProcessObjectMovement(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
+
     if (++self->timer == 60) {
         self->velocity.y     = -0xE0000;
         self->timer          = 0;
@@ -246,12 +268,13 @@ void PBL_Player_State_Launcher(void)
 void PBL_Player_State_Ground(void)
 {
     RSDK_THIS(PBL_Player);
-    if (!self->angle) {
-        if (abs(self->groundVel) < 0x10000)
-            self->groundVel = RSDK.Rand(-0x20000, 0x20000);
+
+    if (!self->angle && abs(self->groundVel) < 0x10000) {
+        self->groundVel = RSDK.Rand(-0x20000, 0x20000);
     }
 
     self->groundVel += 0x2800 * RSDK.Sin256(self->angle) >> 8;
+
     if (self->collisionMode) {
         if (self->angle >= 0x40 && self->angle <= 0xC0 && abs(self->groundVel) < 0x20000) {
             self->velocity.x    = (self->groundVel * RSDK.Cos256(self->angle)) >> 8;
@@ -261,34 +284,38 @@ void PBL_Player_State_Ground(void)
             self->collisionMode = CMODE_FLOOR;
         }
     }
+
     if (!self->onGround)
         self->state = PBL_Player_State_Air;
+
     RSDK.ProcessObjectMovement(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
 }
 
 void PBL_Player_State_Air(void)
 {
     RSDK_THIS(PBL_Player);
+
     self->velocity.y += 0x2800;
+
     if (abs(self->velocity.x) > abs(self->velocity.y)) {
-        if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, self->velocity.x + 0x100000, 0, false)) {
+        if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, self->velocity.x + 0x100000, 0, false))
             self->velocity.x = -(self->velocity.x >> 1);
-        }
-        if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, self->velocity.x - 0x100000, 0, false)) {
+
+        if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, self->velocity.x - 0x100000, 0, false))
             self->velocity.x = -(self->velocity.x >> 1);
-        }
     }
 
     RSDK.ProcessObjectMovement(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
-    if (self->left) {
+
+    if (self->left)
         self->velocity.x -= 0x800;
-    }
-    else if (self->right) {
+    else if (self->right)
         self->velocity.x += 0x800;
-    }
+
     if (self->onGround) {
         if (!self->collisionMode)
             self->collisionPlane = 0;
+
         self->state = PBL_Player_State_Ground;
     }
 }
@@ -297,6 +324,7 @@ void PBL_Player_State_Air(void)
 void PBL_Player_EditorDraw(void)
 {
     RSDK_THIS(PBL_Player);
+
     RSDK.SetSpriteAnimation(PBL_Player->aniFrames, 0, &self->animator, true, 7);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }

@@ -14,7 +14,7 @@ typedef enum {
     PBL_HUD_MSG_SHOW_FALL,
     PBL_HUD_MSG_FLASH,
     PBL_HUD_MSG_FLASH_CRANE,
-}PBL_HUDMessageTypes;
+} PBL_HUDMessageTypes;
 
 // Object Class
 struct ObjectPBL_HUD {
@@ -44,7 +44,7 @@ void PBL_HUD_Update(void);
 void PBL_HUD_LateUpdate(void);
 void PBL_HUD_StaticUpdate(void);
 void PBL_HUD_Draw(void);
-void PBL_HUD_Create(void* data);
+void PBL_HUD_Create(void *data);
 void PBL_HUD_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PBL_HUD_EditorDraw(void);
@@ -71,4 +71,4 @@ void PBL_HUD_State_RevealCrane(void);
 void PBL_HUD_State_HideCrane(void);
 #endif
 
-#endif //!OBJ_PBL_HUD_H
+#endif //! OBJ_PBL_HUD_H

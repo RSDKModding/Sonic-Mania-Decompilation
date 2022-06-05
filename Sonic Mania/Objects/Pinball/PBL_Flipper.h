@@ -9,7 +9,7 @@ struct ObjectPBL_Flipper {
     RSDK_OBJECT
     Animator unusedAnimator1;
     Hitbox hitbox;
-    Hitbox hitbox2;
+    Hitbox hitboxUnused;
     int32 drawType;
     uint16 aniFrames;
     uint16 modelFrames;
@@ -43,7 +43,7 @@ void PBL_Flipper_Update(void);
 void PBL_Flipper_LateUpdate(void);
 void PBL_Flipper_StaticUpdate(void);
 void PBL_Flipper_Draw(void);
-void PBL_Flipper_Create(void* data);
+void PBL_Flipper_Create(void *data);
 void PBL_Flipper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PBL_Flipper_EditorDraw(void);
@@ -59,4 +59,4 @@ void PBL_Flipper_State_LowerFlipper(void);
 
 #endif
 
-#endif //!OBJ_PBL_FLIPPER_H
+#endif //! OBJ_PBL_FLIPPER_H

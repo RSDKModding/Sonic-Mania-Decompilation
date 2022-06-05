@@ -41,7 +41,7 @@ void PBL_Camera_Update(void);
 void PBL_Camera_LateUpdate(void);
 void PBL_Camera_StaticUpdate(void);
 void PBL_Camera_Draw(void);
-void PBL_Camera_Create(void* data);
+void PBL_Camera_Create(void *data);
 void PBL_Camera_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PBL_Camera_EditorDraw(void);
@@ -55,4 +55,4 @@ void PBL_Camera_State_Normal(void);
 
 #endif
 
-#endif //!OBJ_PBL_CAMERA_H
+#endif //! OBJ_PBL_CAMERA_H

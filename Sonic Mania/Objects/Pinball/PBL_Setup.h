@@ -39,7 +39,7 @@ void PBL_Setup_Update(void);
 void PBL_Setup_LateUpdate(void);
 void PBL_Setup_StaticUpdate(void);
 void PBL_Setup_Draw(void);
-void PBL_Setup_Create(void* data);
+void PBL_Setup_Create(void *data);
 void PBL_Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PBL_Setup_EditorDraw(void);
@@ -62,4 +62,4 @@ void PBL_Setup_SaveAndChangeScene(void);
 
 #endif
 
-#endif //!OBJ_PBL_SETUP_H
+#endif //! OBJ_PBL_SETUP_H
