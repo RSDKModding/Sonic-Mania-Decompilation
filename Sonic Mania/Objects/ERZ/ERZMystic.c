@@ -17,6 +17,7 @@ void ERZMystic_Update(void)
         self->invincibilityTimer--;
 
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->mysticAnimator);
 }
 
@@ -41,25 +42,31 @@ void ERZMystic_Create(void *data)
     RSDK_THIS(ERZMystic);
 
     self->drawFX = FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->unused1[0]    = 0;
-        self->unused1[1]    = 1;
-        self->unused1[2]    = 2;
-        self->cupAlpha[0]   = 0xC0;
-        self->cupAlpha[1]   = 0x00;
-        self->cupAlpha[2]   = 0xC0;
+
+        self->unused1[0] = 0;
+        self->unused1[1] = 1;
+        self->unused1[2] = 2;
+
+        self->cupAlpha[0] = 0xC0;
+        self->cupAlpha[1] = 0x00;
+        self->cupAlpha[2] = 0xC0;
+
         self->hitbox.left   = -12;
         self->hitbox.top    = -12;
         self->hitbox.right  = 12;
         self->hitbox.bottom = 12;
-        self->correctCup    = 1;
-        self->state         = ERZMystic_State_Setup;
-        self->stateDraw     = ERZMystic_Draw_CupSetup;
+
+        self->correctCup = 1;
+        self->state      = ERZMystic_State_Setup;
+        self->stateDraw  = ERZMystic_Draw_CupSetup;
+
         RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 2, &self->mysticAnimator, true, 0);
         RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 0, &self->cupAnimator, true, 0);
         RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 0, &self->cupSilhouetteAnimator, true, 1);
@@ -73,16 +80,16 @@ void ERZMystic_CheckPlayerCollisions(void)
 {
     RSDK_THIS(ERZMystic);
 
-    int storeX       = self->position.x;
-    int storeY       = self->position.y;
+    int storeX = self->position.x;
+    int storeY = self->position.y;
+
     self->position.x = self->mysticPos.x;
     self->position.y = self->mysticPos.y;
 
     foreach_active(Player, player)
     {
         if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
-            self->invincibilityTimer = 48;
-            RSDK.PlaySfx(ERZKing->sfxHit, false, 255);
+            ERZMystic_Hit();
         }
 
         if (self->cupBlastAnimator.frameID > 8 && self->cupBlastAnimator.frameID < 26) {
@@ -100,6 +107,14 @@ void ERZMystic_CheckPlayerCollisions(void)
 
     self->position.x = storeX;
     self->position.y = storeY;
+}
+
+void ERZMystic_Hit(void)
+{
+    RSDK_THIS(ERZMystic);
+
+    self->invincibilityTimer = 48;
+    RSDK.PlaySfx(ERZKing->sfxHit, false, 255);
 }
 
 void ERZMystic_SetupNewCupSwap(void)
@@ -124,10 +139,11 @@ void ERZMystic_SetupNewCupSwap(void)
 void ERZMystic_Draw_CupSetup(void)
 {
     RSDK_THIS(ERZMystic);
-    Vector2 drawPos;
 
     RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
+
     for (int i = 0; i < 3; ++i) {
+        Vector2 drawPos;
         drawPos.x = self->position.x + self->cupPos[i];
         if (i == 1) {
             drawPos.y    = self->middleCupY;
@@ -159,13 +175,13 @@ void ERZMystic_Draw_CupSetup(void)
 void ERZMystic_Draw_CupSwap(void)
 {
     RSDK_THIS(ERZMystic);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     if (self->invincibilityTimer & 1) {
         RSDK.CopyPalette(2, 128, 0, 128, 128);
+
         RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
+
         RSDK.CopyPalette(1, 128, 0, 128, 128);
     }
     else {
@@ -203,7 +219,8 @@ void ERZMystic_State_Setup(void)
     self->mysticVelY  = -0x80000;
     self->mysticPos.y = self->position.y;
     self->middleCupY  = self->position.y;
-    self->state       = ERZMystic_State_SetupInitialCupPos;
+
+    self->state = ERZMystic_State_SetupInitialCupPos;
 }
 
 void ERZMystic_State_SetupInitialCupPos(void)
@@ -212,6 +229,7 @@ void ERZMystic_State_SetupInitialCupPos(void)
 
     self->mysticVelY += 0x3800;
     self->mysticPos.y += self->mysticVelY;
+
     self->velocity.y -= 0x2800;
     self->middleCupY += self->velocity.y;
 
@@ -241,8 +259,10 @@ void ERZMystic_State_MoveCupsDownwards(void)
 
     self->mysticVelY += 0x3800;
     self->mysticPos.y += self->mysticVelY;
+
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
+
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x380000, true))
         self->velocity.y = 0;
 
@@ -261,9 +281,11 @@ void ERZMystic_State_RotateMiddleCup(void)
     // This does continue to move the side cups downwards too if they're not on the ground yet
     self->velocity.y += 0x4000;
     self->position.y += self->velocity.y;
+
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x380000, true)) {
         if (!self->onGround)
             Camera_ShakeScreen(0, 0, 4);
+
         self->velocity.y = 0;
         self->onGround   = true;
     }
@@ -298,7 +320,7 @@ void ERZMystic_State_PrepareCupSwap(void)
     RSDK_THIS(ERZMystic);
 
     ++self->timer;
-    if (self->cupAlpha[0] < 144) {
+    if (self->cupAlpha[0] < 0x90) {
         self->cupAlpha[0] += 4;
         self->cupAlpha[2] += 4;
     }
@@ -314,6 +336,7 @@ void ERZMystic_State_PrepareCupSwap(void)
 void ERZMystic_State_CupSwapping(void)
 {
     RSDK_THIS(ERZMystic);
+
     if (abs(self->swapCup2Pos - self->swapCup1Pos) <= 0x800000)
         self->timer += 16;
     else
@@ -346,6 +369,7 @@ void ERZMystic_State_CupSwapping(void)
 
     if (self->timer == 0x100) {
         self->timer = 0;
+
         if (self->cupSwapCount <= 1) {
             self->middleCupY -= 0x600000;
             self->mysticPos.x = self->position.x + self->cupPos[self->correctCup];
@@ -369,9 +393,11 @@ void ERZMystic_State_RevealMystic(void)
 
     self->velocity.y -= 0x3800;
     self->position.y += self->velocity.y;
+
     self->cupAlpha[0] -= self->cupAlpha[0] >> 4;
     self->cupAlpha[1] -= self->cupAlpha[1] >> 4;
     self->cupAlpha[2] -= self->cupAlpha[2] >> 4;
+
     if (self->position.y <= self->middleCupY) {
         RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 3, &self->cupBlastAnimator, true, 0);
         self->velocity.y = 0;
@@ -390,9 +416,11 @@ void ERZMystic_State_CupBlast(void)
     RSDK_THIS(ERZMystic);
 
     RSDK.ProcessAnimation(&self->cupBlastAnimator);
+
     self->cupAlpha[0] -= self->cupAlpha[0] >> 4;
     self->cupAlpha[1] -= self->cupAlpha[1] >> 4;
     self->cupAlpha[2] -= self->cupAlpha[2] >> 4;
+
     if (self->cupBlastAnimator.frameID == self->cupBlastAnimator.frameCount - 1) {
         self->mysticVelY = 0;
         self->state      = ERZMystic_State_MoveCupsToMystic;
@@ -407,9 +435,10 @@ void ERZMystic_State_MoveCupsToMystic(void)
 {
     RSDK_THIS(ERZMystic);
 
-    self->cupPos[0] += ((self->cupPos[self->correctCup] - self->cupPos[0]) >> 3);
-    self->cupPos[1] += ((self->cupPos[self->correctCup] - self->cupPos[1]) >> 3);
-    self->cupPos[2] += ((self->cupPos[self->correctCup] - self->cupPos[2]) >> 3);
+    self->cupPos[0] += (self->cupPos[self->correctCup] - self->cupPos[0]) >> 3;
+    self->cupPos[1] += (self->cupPos[self->correctCup] - self->cupPos[1]) >> 3;
+    self->cupPos[2] += (self->cupPos[self->correctCup] - self->cupPos[2]) >> 3;
+
     self->mysticVelY -= 0x3000;
     self->mysticPos.y += self->mysticVelY;
 
@@ -431,11 +460,14 @@ void ERZMystic_State_MoveCupsToMystic(void)
 void ERZMystic_EditorDraw(void)
 {
     RSDK_THIS(ERZMystic);
-    self->mysticPos   = self->position;
-    self->middleCupY  = self->position.y;
+
+    self->mysticPos  = self->position;
+    self->middleCupY = self->position.y;
+
     self->cupAlpha[0] = 0x60;
     self->cupAlpha[1] = 0;
     self->cupAlpha[2] = 0x60;
+
     RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 2, &self->mysticAnimator, true, 0);
     RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 0, &self->cupAnimator, true, 0);
     RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 0, &self->cupSilhouetteAnimator, true, 1);

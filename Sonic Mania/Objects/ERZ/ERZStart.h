@@ -35,7 +35,7 @@ void ERZStart_Update(void);
 void ERZStart_LateUpdate(void);
 void ERZStart_StaticUpdate(void);
 void ERZStart_Draw(void);
-void ERZStart_Create(void* data);
+void ERZStart_Create(void *data);
 void ERZStart_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZStart_EditorDraw(void);
@@ -70,4 +70,4 @@ void ERZStart_State_PlayerSuperFly(void);
 void ERZStart_Player_StartSuperFly(void);
 void ERZStart_State_PlayerRebound(void);
 
-#endif //!OBJ_ERZSTART_H
+#endif //! OBJ_ERZSTART_H

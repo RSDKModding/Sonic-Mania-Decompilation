@@ -12,9 +12,12 @@ ObjectERZShinobi *ERZShinobi;
 void ERZShinobi_Update(void)
 {
     RSDK_THIS(ERZShinobi);
+
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
+
     StateMachine_Run(self->state);
+
     self->rotStore = (self->rotStore + 8) & 0x1FF;
 }
 
@@ -28,6 +31,7 @@ void ERZShinobi_Draw(void)
 
     if ((self->invincibilityTimer & 1))
         RSDK.CopyPalette(2, 128, 0, 128, 128);
+
     self->rotation = self->rotStore;
 
     for (int32 i = 0; i < 8; ++i) {
@@ -46,6 +50,7 @@ void ERZShinobi_Draw(void)
     }
 
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
+
     if ((self->invincibilityTimer & 1))
         RSDK.CopyPalette(1, 128, 0, 128, 128);
 }
@@ -53,6 +58,7 @@ void ERZShinobi_Draw(void)
 void ERZShinobi_Create(void *data)
 {
     RSDK_THIS(ERZShinobi);
+
     if (!SceneInfo->inEditor) {
         self->visible         = true;
         self->drawFX          = FX_ROTATE | FX_FLIP;
@@ -64,6 +70,7 @@ void ERZShinobi_Create(void *data)
         self->tileCollisions  = true;
         self->finRadius       = 0x1600;
         self->state           = ERZShinobi_State_Moving;
+
         RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->armAnimator, true, 1);
         RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 1, &self->finAnimator, true, 0);
@@ -87,8 +94,7 @@ void ERZShinobi_CheckPlayerCollisions(void)
     foreach_active(Player, playerLoop)
     {
         if (!self->invincibilityTimer && Player_CheckBadnikTouch(playerLoop, self, &ERZShinobi->hitbox) && Player_CheckBossHit(playerLoop, self)) {
-            self->invincibilityTimer = 48;
-            RSDK.PlaySfx(ERZKing->sfxHit, false, 255);
+            ERZShinobi_Hit();
             foreach_return;
         }
     }
@@ -98,23 +104,35 @@ void ERZShinobi_CheckPlayerCollisions(void)
     int32 angle  = self->rotStore;
     foreach_active(Player, player)
     {
-        self->position.x = storeX + self->finRadius * RSDK.Sin512(angle);
-        self->position.y = storeY - self->finRadius * RSDK.Cos512(angle);
-        if (RSDK.CheckObjectCollisionTouchCircle(player, 0xC0000, self, 0x80000)) {
-            Player_CheckHit(player, self);
+        for (int32 f = 0; f < 8; ++f) {
+            self->position.x = storeX + self->finRadius * RSDK.Sin512(angle);
+            self->position.y = storeY - self->finRadius * RSDK.Cos512(angle);
+            if (RSDK.CheckObjectCollisionTouchCircle(player, 0xC0000, self, 0x80000)) {
+                Player_CheckHit(player, self);
+            }
+            angle += 0x40;
         }
-        angle += 64;
     }
 
     self->position.x = storeX;
     self->position.y = storeY;
 }
 
+void ERZShinobi_Hit(void)
+{
+    RSDK_THIS(ERZShinobi);
+
+    self->invincibilityTimer = 48;
+    RSDK.PlaySfx(ERZKing->sfxHit, false, 255);
+}
+
 void ERZShinobi_HandleTileCollisions(void)
 {
     RSDK_THIS(ERZShinobi);
+
     if (self->onGround) {
         self->finRadius += (0x1000 - self->finRadius) >> 3;
+
         if (!self->prevOnGround) {
             if (self->numBounces > 0) {
                 self->velocity.y = -0x30000;
@@ -127,26 +145,31 @@ void ERZShinobi_HandleTileCollisions(void)
         self->velocity.y += 0x3800;
         if (self->velocity.y > 0xC0000)
             self->velocity.y = 0xC0000;
+
         self->finRadius += (0x1600 - self->finRadius) >> 3;
     }
 
-    int32 size            = self->finRadius / 88;
+    int32 size = self->finRadius / 88;
+
     self->outerBox.right  = size;
     self->outerBox.bottom = size;
     self->outerBox.left   = -size;
     self->outerBox.top    = -size;
+
     self->innerBox.left   = 2 - size;
     self->innerBox.right  = size - 2;
     self->innerBox.top    = -size;
     self->innerBox.bottom = size;
 
     self->prevOnGround = self->onGround;
+
     RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 }
 
 void ERZShinobi_State_Moving(void)
 {
     RSDK_THIS(ERZShinobi);
+
     ERZShinobi_HandleTileCollisions();
 
     if (++self->timer == 60) {
@@ -167,6 +190,7 @@ void ERZShinobi_EditorDraw(void)
     RSDK_THIS(ERZShinobi);
 
     self->finRadius = 0x1600;
+
     RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->bodyAnimator, false, 0);
     RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->armAnimator, false, 1);
     RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 1, &self->finAnimator, false, 0);

@@ -34,7 +34,7 @@ void ERZRider_Update(void);
 void ERZRider_LateUpdate(void);
 void ERZRider_StaticUpdate(void);
 void ERZRider_Draw(void);
-void ERZRider_Create(void* data);
+void ERZRider_Create(void *data);
 void ERZRider_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZRider_EditorDraw(void);
@@ -45,4 +45,4 @@ void ERZRider_Serialize(void);
 // Extra Entity Functions
 void ERZRider_Draw_Rider(void);
 
-#endif //!OBJ_ERZRIDER_H
+#endif //! OBJ_ERZRIDER_H

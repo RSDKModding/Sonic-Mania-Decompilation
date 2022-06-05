@@ -35,7 +35,7 @@ struct EntityERZMystic {
     Animator mysticAnimator;
     Animator cupAnimator;
     Animator cupSilhouetteAnimator;
-    Animator cupSpikeAnimator;      // Not actually ever drawn...
+    Animator cupSpikeAnimator; // Not actually ever drawn...
     Animator cupBlastAnimator;
     Hitbox hitbox;
 };
@@ -48,7 +48,7 @@ void ERZMystic_Update(void);
 void ERZMystic_LateUpdate(void);
 void ERZMystic_StaticUpdate(void);
 void ERZMystic_Draw(void);
-void ERZMystic_Create(void* data);
+void ERZMystic_Create(void *data);
 void ERZMystic_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZMystic_EditorDraw(void);
@@ -58,6 +58,7 @@ void ERZMystic_Serialize(void);
 
 // Extra Entity Functions
 void ERZMystic_CheckPlayerCollisions(void);
+void ERZMystic_Hit(void);
 void ERZMystic_SetupNewCupSwap(void);
 
 void ERZMystic_Draw_CupSetup(void);
@@ -74,4 +75,4 @@ void ERZMystic_State_RevealMystic(void);
 void ERZMystic_State_CupBlast(void);
 void ERZMystic_State_MoveCupsToMystic(void);
 
-#endif //!OBJ_ERZMYSTIC_H
+#endif //! OBJ_ERZMYSTIC_H

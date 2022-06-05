@@ -42,7 +42,7 @@ struct EntityPhantomKing {
     Vector2 unused;
     bool32 drawRuby;
     bool32 canLaunchAttacks;
-    Entity *parent;
+    EntityPhantomKing *parent;
     int32 armRadius;
     int32 armAngle;
     int32 armAngleOffset;
@@ -80,6 +80,7 @@ void PhantomKing_Serialize(void);
 // Extra Entity Functions
 void PhantomKing_CheckPlayerCollisions(void);
 void PhantomKing_Hit(void);
+void PhantomKing_Explode(void);
 void PhantomKing_HandleFrames(void);
 void PhantomKing_HandleAttacks(void);
 void PhantomKing_SwitchToEggman(void);

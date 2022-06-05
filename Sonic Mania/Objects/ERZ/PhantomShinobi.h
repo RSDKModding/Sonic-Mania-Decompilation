@@ -41,7 +41,7 @@ void PhantomShinobi_Update(void);
 void PhantomShinobi_LateUpdate(void);
 void PhantomShinobi_StaticUpdate(void);
 void PhantomShinobi_Draw(void);
-void PhantomShinobi_Create(void* data);
+void PhantomShinobi_Create(void *data);
 void PhantomShinobi_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomShinobi_EditorDraw(void);
@@ -51,6 +51,7 @@ void PhantomShinobi_Serialize(void);
 
 // Extra Entity Functions
 void PhantomShinobi_CheckPlayerCollisions(void);
+void PhantomShinobi_Hit(void);
 void PhantomShinobi_HandleTileCollisions(void);
 void PhantomShinobi_ResetStates(void);
 
@@ -65,4 +66,4 @@ void PhantomShinobi_State_FinishedAttack(void);
 
 bool32 PhantomShinobi_BladeCheckCB(void);
 
-#endif //!OBJ_PHANTOMSHINOBI_H
+#endif //! OBJ_PHANTOMSHINOBI_H

@@ -32,7 +32,7 @@ void RingField_Update(void);
 void RingField_LateUpdate(void);
 void RingField_StaticUpdate(void);
 void RingField_Draw(void);
-void RingField_Create(void* data);
+void RingField_Create(void *data);
 void RingField_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RingField_EditorDraw(void);
@@ -41,7 +41,6 @@ void RingField_EditorLoad(void);
 void RingField_Serialize(void);
 
 // Extra Entity Functions
-void RingField_GetPos(Vector2 *pos);
+void RingField_GetRingSpawnPos(Vector2 *pos);
 
-
-#endif //!OBJ_RINGFIELD_H
+#endif //! OBJ_RINGFIELD_H

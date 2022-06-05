@@ -45,7 +45,7 @@ void PhantomRuby_Update(void);
 void PhantomRuby_LateUpdate(void);
 void PhantomRuby_StaticUpdate(void);
 void PhantomRuby_Draw(void);
-void PhantomRuby_Create(void* data);
+void PhantomRuby_Create(void *data);
 void PhantomRuby_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomRuby_EditorDraw(void);
@@ -67,4 +67,4 @@ void PhantomRuby_State_MoveToPos(void);
 #endif
 void PhantomRuby_State_RotateToOrigin(void);
 
-#endif //!OBJ_PHANTOMRUBY_H
+#endif //! OBJ_PHANTOMRUBY_H

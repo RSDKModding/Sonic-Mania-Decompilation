@@ -38,7 +38,7 @@ struct EntityPhantomMystic {
     Animator mysticAnimator;
     Animator cupAnimator;
     Animator cupSilhouetteAnimator;
-    Animator cupSpikeAnimator;      // Not actually ever drawn...
+    Animator cupSpikeAnimator; // Not actually ever drawn...
     Animator cupBlastAnimator;
     Hitbox hitbox;
 };
@@ -51,7 +51,7 @@ void PhantomMystic_Update(void);
 void PhantomMystic_LateUpdate(void);
 void PhantomMystic_StaticUpdate(void);
 void PhantomMystic_Draw(void);
-void PhantomMystic_Create(void* data);
+void PhantomMystic_Create(void *data);
 void PhantomMystic_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomMystic_EditorDraw(void);
@@ -61,11 +61,12 @@ void PhantomMystic_Serialize(void);
 
 // Extra Entity Functions
 void PhantomMystic_CheckPlayerCollisions(void);
+void PhantomMystic_Hit(void);
 void PhantomMystic_SetupNewCupSwap(void);
-     
+
 void PhantomMystic_Draw_CupSetup(void);
 void PhantomMystic_Draw_CupSwap(void);
-     
+
 void PhantomMystic_State_Setup(void);
 void PhantomMystic_State_SetupInitialCupPos(void);
 void PhantomMystic_State_MoveCupsDownwards(void);
@@ -77,5 +78,4 @@ void PhantomMystic_State_RevealMystic(void);
 void PhantomMystic_State_CupBlast(void);
 void PhantomMystic_State_MoveCupsToMystic(void);
 
-
-#endif //!OBJ_PHANTOMMYSTIC_H
+#endif //! OBJ_PHANTOMMYSTIC_H

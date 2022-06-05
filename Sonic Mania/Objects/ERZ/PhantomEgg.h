@@ -3,6 +3,10 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PHANTOMEGG_EGGMAN,
+} PhantomEggTypes;
+
 // Names for the values in the attack tables
 // Tables can only have int constants so we cant put these in there directly
 typedef enum {
@@ -11,7 +15,7 @@ typedef enum {
     PHANTOMEGG_ATTACK_SHOCK,
     PHANTOMEGG_ATTACK_MISSILES,
     PHANTOMEGG_ATTACK_WARP,
-}PhantomEggAttackIDs;
+} PhantomEggAttackIDs;
 
 // Object Class
 struct ObjectPhantomEgg {
@@ -84,7 +88,7 @@ void PhantomEgg_Update(void);
 void PhantomEgg_LateUpdate(void);
 void PhantomEgg_StaticUpdate(void);
 void PhantomEgg_Draw(void);
-void PhantomEgg_Create(void* data);
+void PhantomEgg_Create(void *data);
 void PhantomEgg_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomEgg_EditorDraw(void);
@@ -135,4 +139,4 @@ void PhantomEgg_SaveGameCB(bool32 success);
 void PhantomEgg_SaveGameCB(void);
 #endif
 
-#endif //!OBJ_PHANTOMEGG_H
+#endif //! OBJ_PHANTOMEGG_H

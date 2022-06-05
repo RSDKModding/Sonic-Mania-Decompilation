@@ -18,16 +18,20 @@ void ERZStart_Update(void)
         {
             if (!player->sidekick && Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 CutsceneSeq_StartSequence(self, ERZStart_Cutscene_FadeIn, ERZStart_Cutscene_ShrinkRubyWarpFX, ERZStart_Cutscene_EnterKing,
-                                          ERZStart_Cutscene_KingMovingRuby, ERZStart_Cutscene_KingAttatchHornRuby, ERZStart_Cutscene_SetupEggmanReveal,
-                                          ERZStart_Cutscene_EnterEggman, ERZStart_Cutscene_EggmanKingWrestling, ERZStart_Cutscene_PostWrestleFadeIn,
-                                          ERZStart_Cutscene_ReturnCamToSonic, ERZStart_Cutscene_PreparePlayerTransform, ERZStart_Cutscene_PlayerTransform,
-                                          ERZStart_Cutscene_StartFight, ERZStart_Cutscene_Fight, StateMachine_None);
+                                          ERZStart_Cutscene_KingMovingRuby, ERZStart_Cutscene_KingAttatchHornRuby,
+                                          ERZStart_Cutscene_SetupEggmanReveal, ERZStart_Cutscene_EnterEggman, ERZStart_Cutscene_EggmanKingWrestling,
+                                          ERZStart_Cutscene_PostWrestleFadeIn, ERZStart_Cutscene_ReturnCamToSonic,
+                                          ERZStart_Cutscene_PreparePlayerTransform, ERZStart_Cutscene_PlayerTransform, ERZStart_Cutscene_StartFight,
+                                          ERZStart_Cutscene_Fight, StateMachine_None);
+
                 self->activated = true;
             }
         }
     }
 
+    // Have the timer go haywire
     if (--self->timer <= 0) {
+        // update every 15, 30, 45 or 60 frames
         self->timer             = 15 * RSDK.Rand(0, 4);
         SceneInfo->seconds      = RSDK.Rand(0, 100);
         SceneInfo->milliseconds = RSDK.Rand(0, 100);
@@ -57,6 +61,7 @@ void ERZStart_Draw(void) {}
 void ERZStart_Create(void *data)
 {
     RSDK_THIS(ERZStart);
+
     if (!SceneInfo->inEditor) {
         INIT_ENTITY(self);
         CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
@@ -111,9 +116,8 @@ void ERZStart_SetupObjects(void)
 
 void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, int posY)
 {
-
-    player->position.x = 0x300000;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
+    player->position.x = 0x300000;
     player->position.x += (player->position.x - player->position.x) >> 3;
     player->position.y += (posY + 0xA00 * RSDK.Sin256(2 * (seq->timer - seq->storedTimer + 64)) - player->position.y) >> 3;
     player->state = Player_State_None;
@@ -130,13 +134,14 @@ bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
     EntityFXRuby *fxRuby    = ERZStart->fxRuby;
 
     if (!host->timer) {
         player1->position.y = ruby->position.y;
         player1->state      = Player_State_None;
-        player1->stateInput = 0;
+        player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         camera->position.x = 0;
         camera->position.y = 0;
@@ -183,6 +188,7 @@ bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
             }
         }
     }
+
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
     return false;
 }
@@ -192,6 +198,7 @@ bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
     EntityFXRuby *fxRuby    = ERZStart->fxRuby;
 
@@ -207,6 +214,7 @@ bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host)
         king->state     = PhantomKing_State_SetupArms;
         return true;
     }
+
     return false;
 }
 
@@ -215,6 +223,7 @@ bool32 ERZStart_Cutscene_EnterKing(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
@@ -224,6 +233,7 @@ bool32 ERZStart_Cutscene_EnterKing(EntityCutsceneSeq *host)
         ruby->state = ERZStart_RubyMove;
         return true;
     }
+
     return false;
 }
 
@@ -231,13 +241,14 @@ bool32 ERZStart_Cutscene_KingMovingRuby(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     EntityPhantomKing *king = ERZStart->king;
     if (!host->timer) {
-        camera->target           = NULL;
+        camera->target              = NULL;
         player1->camera             = NULL;
         Zone->playerBoundActiveL[0] = false;
         Zone->playerBoundActiveR[0] = false;
@@ -248,6 +259,7 @@ bool32 ERZStart_Cutscene_KingMovingRuby(EntityCutsceneSeq *host)
     int32 pos = host->storedTimer;
     if (king->position.x - 0x400000 > pos)
         pos = king->position.x - 0x400000;
+
     camera->position.x = pos;
 
     if (king->finishedMovingRuby) {
@@ -263,6 +275,7 @@ bool32 ERZStart_Cutscene_KingAttatchHornRuby(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
@@ -276,6 +289,7 @@ bool32 ERZStart_Cutscene_KingAttatchHornRuby(EntityCutsceneSeq *host)
     if (host->timer > 0) {
         if (host->timer == 60) {
             RSDK.PlaySfx(ERZStart->sfxClack, false, 255);
+
             king->drawRuby   = true;
             ruby->position.x = -0x400000;
             ruby->state      = StateMachine_None;
@@ -292,6 +306,7 @@ bool32 ERZStart_Cutscene_KingAttatchHornRuby(EntityCutsceneSeq *host)
         ruby->position.x += (pos.x - ruby->position.x) >> 2;
         ruby->position.y += (pos.y - ruby->position.y) >> 2;
     }
+
     return false;
 }
 
@@ -299,6 +314,7 @@ bool32 ERZStart_Cutscene_SetupEggmanReveal(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
@@ -316,6 +332,7 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
@@ -325,12 +342,12 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
 
     uint16 eggmanSlot              = RSDK.GetEntityID(eggman);
     EntityKleptoMobile *eggmanHand = RSDK_GET_ENTITY(eggmanSlot - 2, KleptoMobile);
-    EntityKleptoMobile *eggmanArm1 = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
-    EntityKleptoMobile *eggmanArm2 = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
+    EntityKleptoMobile *eggmanArmL = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
+    EntityKleptoMobile *eggmanArmR = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
 
     uint16 kingSlot             = RSDK.GetEntityID(king);
-    EntityPhantomKing *kingArm1 = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
-    EntityPhantomKing *kingArm2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
+    EntityPhantomKing *kingArmL = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
+    EntityPhantomKing *kingArmR = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 
     if (!host->timer) {
         host->storedTimer          = camera->position.x;
@@ -355,66 +372,68 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
     }
 
     eggmanHand->state = KleptoMobile_StateHand_Boss;
-    eggmanArm1->state = KleptoMobile_StateArm_Idle;
-    eggmanArm2->state = KleptoMobile_StateArm_Idle;
+    eggmanArmL->state = KleptoMobile_StateArm_Idle;
+    eggmanArmR->state = KleptoMobile_StateArm_Idle;
 
     eggmanHand->position.x = eggman->originPos.x;
     eggmanHand->position.y = eggman->originPos.y;
     eggmanHand->position.x += 0x3C0000;
     eggmanHand->position.y -= 0x3E0000;
-    eggmanHand->drawOrder = eggmanArm1->drawOrder + 1;
+    eggmanHand->drawOrder = eggmanArmL->drawOrder + 1;
 
-    eggmanArm1->position.x = eggman->originPos.x;
-    eggmanArm1->position.x -= 0x40000;
-    eggmanArm1->position.y = eggman->originPos.y;
-    eggmanArm1->position.y -= 0x360000;
-    eggmanArm1->armBezierPos.x          = eggman->originPos.x - 0x600000;
-    eggmanArm1->armBezierPos.y          = eggman->originPos.y - 0x280000;
-    eggmanArm1->finger1Animator.speed   = 0;
-    eggmanArm1->finger2Animator.frameID = 0;
-    eggmanArm1->finger2Animator.speed   = 0;
-    eggmanArm1->finger1Animator.frameID = 0;
+    eggmanArmL->position.x = eggman->originPos.x;
+    eggmanArmL->position.x -= 0x40000;
+    eggmanArmL->position.y = eggman->originPos.y;
+    eggmanArmL->position.y -= 0x360000;
+    eggmanArmL->armBezierPos.x          = eggman->originPos.x - 0x600000;
+    eggmanArmL->armBezierPos.y          = eggman->originPos.y - 0x280000;
+    eggmanArmL->finger1Animator.speed   = 0;
+    eggmanArmL->finger2Animator.frameID = 0;
+    eggmanArmL->finger2Animator.speed   = 0;
+    eggmanArmL->finger1Animator.frameID = 0;
 
-    eggmanArm2->position.x = eggman->originPos.x;
-    eggmanArm2->position.x += 0x2E0000;
-    eggmanArm2->position.y = eggman->originPos.y;
-    eggmanArm2->position.y += 0x400000;
-    eggmanArm2->armBezierPos.x          = eggman->originPos.x - 0x3A0000;
-    eggmanArm2->armBezierPos.y          = eggman->originPos.y + 0x300000;
-    eggmanArm2->finger1Animator.speed   = 0;
-    eggmanArm2->finger2Animator.frameID = 0;
-    eggmanArm2->finger2Animator.speed   = 0;
-    eggmanArm2->finger1Animator.frameID = 0;
+    eggmanArmR->position.x = eggman->originPos.x;
+    eggmanArmR->position.x += 0x2E0000;
+    eggmanArmR->position.y = eggman->originPos.y;
+    eggmanArmR->position.y += 0x400000;
+    eggmanArmR->armBezierPos.x          = eggman->originPos.x - 0x3A0000;
+    eggmanArmR->armBezierPos.y          = eggman->originPos.y + 0x300000;
+    eggmanArmR->finger1Animator.speed   = 0;
+    eggmanArmR->finger2Animator.frameID = 0;
+    eggmanArmR->finger2Animator.speed   = 0;
+    eggmanArmR->finger1Animator.frameID = 0;
 
     camera->position.x = maxVal(eggman->originPos.x + 0x200000, host->storedTimer);
 
-    kingArm1->state = PhantomKing_StateArm_WrestleEggman;
-    kingArm2->state = PhantomKing_StateArm_WrestleEggman;
+    kingArmL->state = PhantomKing_StateArm_WrestleEggman;
+    kingArmR->state = PhantomKing_StateArm_WrestleEggman;
 
-    kingArm1->position.x           = king->originPos.x - 0x700000;
-    kingArm1->position.y           = king->originPos.y - 0x1C0000;
-    kingArm1->armBezierPos.x       = king->originPos.x + 0x100000;
-    kingArm1->armBezierPos.y       = king->originPos.y - 0x2A0000;
-    kingArm1->handAnimator.frameID = 1;
-    kingArm1->drawOrder            = eggmanArm1->drawOrder + 1;
-    kingArm1->handAnimator.speed   = 0;
+    kingArmL->position.x           = king->originPos.x - 0x700000;
+    kingArmL->position.y           = king->originPos.y - 0x1C0000;
+    kingArmL->armBezierPos.x       = king->originPos.x + 0x100000;
+    kingArmL->armBezierPos.y       = king->originPos.y - 0x2A0000;
+    kingArmL->handAnimator.frameID = 1;
+    kingArmL->drawOrder            = eggmanArmL->drawOrder + 1;
+    kingArmL->handAnimator.speed   = 0;
 
-    kingArm2->position.x           = king->originPos.x - 0x3E0000;
-    kingArm2->position.y           = king->originPos.y + 0x520000;
-    kingArm2->armBezierPos.x       = king->originPos.x + 0x380000;
-    kingArm2->armBezierPos.y       = king->originPos.y + 0x380000;
-    kingArm2->handAnimator.frameID = 1;
-    kingArm2->drawOrder            = eggmanArm2->drawOrder + 1;
-    kingArm2->handAnimator.speed   = 0;
+    kingArmR->position.x           = king->originPos.x - 0x3E0000;
+    kingArmR->position.y           = king->originPos.y + 0x520000;
+    kingArmR->armBezierPos.x       = king->originPos.x + 0x380000;
+    kingArmR->armBezierPos.y       = king->originPos.y + 0x380000;
+    kingArmR->handAnimator.frameID = 1;
+    kingArmR->drawOrder            = eggmanArmR->drawOrder + 1;
+    kingArmR->handAnimator.speed   = 0;
 
     if (eggman->position.x >= king->originPos.x - 0x580000) {
         eggman->position.x = king->originPos.x - 0x580000;
         eggman->velocity.x = 0;
         eggman->velocity.y = 0;
+
         Camera_ShakeScreen(0, 5, 0);
         RSDK.PlaySfx(ERZStart->sfxHullClose, false, 255);
         return true;
     }
+
     return false;
 }
 
@@ -423,10 +442,9 @@ bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
     EntityFXRuby *fxRuby    = ERZStart->fxRuby;
-
-    ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     EntityKleptoMobile *eggman = ERZStart->eggman;
     EntityPhantomKing *king    = ERZStart->king;
@@ -438,6 +456,8 @@ bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
     uint16 kingSlot               = RSDK.GetEntityID(king);
     EntityPhantomKing *kingChild1 = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
     EntityPhantomKing *kingChild2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
+
+    ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (host->timer > 6 && !(host->timer % 6))
         Camera_ShakeScreen(0, 1, 0);
@@ -455,6 +475,7 @@ bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
         fxRuby->position.x = king->position.x;
         fxRuby->position.y = king->position.y;
         fxRuby->fadeWhite  = 0x300;
+
         RSDK.StopSfx(ERZStart->sfxRumble);
         return true;
     }
@@ -464,6 +485,7 @@ bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
         eggmanHand2->position.x += RSDK.Sin256(16 * host->timer) << 8;
         kingChild2->position.x += RSDK.Sin256(16 * host->timer) << 8;
     }
+
     return false;
 }
 
@@ -472,22 +494,23 @@ bool32 ERZStart_Cutscene_PostWrestleFadeIn(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
     EntityFXRuby *fxRuby    = ERZStart->fxRuby;
-
-    ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     EntityKleptoMobile *eggman = ERZStart->eggman;
     EntityPhantomKing *king    = ERZStart->king;
 
     uint16 eggmanSlot              = RSDK.GetEntityID(eggman);
     EntityKleptoMobile *eggmanHand = RSDK_GET_ENTITY(eggmanSlot - 2, KleptoMobile);
-    EntityKleptoMobile *eggmanArm1 = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
-    EntityKleptoMobile *eggmanArm2 = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
+    EntityKleptoMobile *eggmanArmL = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
+    EntityKleptoMobile *eggmanArmR = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
 
     uint16 kingSlot             = RSDK.GetEntityID(king);
-    EntityPhantomKing *kingArm1 = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
-    EntityPhantomKing *kingArm2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
+    EntityPhantomKing *kingArmL = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
+    EntityPhantomKing *kingArmR = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
+
+    ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (!king->rubyAnimator.frameID)
         king->rubyAnimator.speed = 0;
@@ -497,17 +520,17 @@ bool32 ERZStart_Cutscene_PostWrestleFadeIn(EntityCutsceneSeq *host)
         eggman->position.y = -0x3C0000;
         eggman->state      = StateMachine_None;
         eggmanHand->state  = KleptoMobile_StateHand_Cutscene;
-        eggmanArm1->state  = KleptoMobile_StateArm_Cutscene;
-        eggmanArm2->state  = KleptoMobile_StateArm_Cutscene;
+        eggmanArmL->state  = KleptoMobile_StateArm_Cutscene;
+        eggmanArmR->state  = KleptoMobile_StateArm_Cutscene;
 
         eggmanHand->drawOrder = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 12, &eggmanHand->handAnimator, true, 5);
 
-        kingArm1->state     = PhantomKing_StateArm_Idle;
-        kingArm2->state     = PhantomKing_StateArm_Idle;
+        kingArmL->state     = PhantomKing_StateArm_Idle;
+        kingArmR->state     = PhantomKing_StateArm_Idle;
         king->drawOrder     = Zone->objectDrawLow;
-        kingArm1->drawOrder = Zone->objectDrawLow;
-        kingArm2->drawOrder = Zone->objectDrawLow;
+        kingArmL->drawOrder = Zone->objectDrawLow;
+        kingArmR->drawOrder = Zone->objectDrawLow;
     }
 
     if (fxRuby->fadeWhite > 0)
@@ -520,6 +543,7 @@ bool32 ERZStart_Cutscene_ReturnCamToSonic(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
@@ -537,6 +561,7 @@ bool32 ERZStart_Cutscene_ReturnCamToSonic(EntityCutsceneSeq *host)
         Music_TransitionTrack(TRACK_ERZBOSS, 0.0215);
         return true;
     }
+
     return false;
 }
 
@@ -545,6 +570,7 @@ bool32 ERZStart_Cutscene_PreparePlayerTransform(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
     unused(camera);
+
     EntityPhantomRuby *ruby = ERZStart->ruby;
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
@@ -558,8 +584,10 @@ bool32 ERZStart_Cutscene_PreparePlayerTransform(EntityCutsceneSeq *host)
             emerald->scale.x = 0x200;
             emerald->scale.y = 0x200;
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -570,6 +598,7 @@ bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
     unused(camera);
 
     EntityPhantomRuby *ruby = ERZStart->ruby;
+
     if (++ERZStart->timer > 96) {
         ERZStart->timer = 0;
         return true;
@@ -578,9 +607,11 @@ bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
         for (int32 i = 0; i < 7; ++i) {
             EntityChaosEmerald *emerald = ERZStart->emeralds[i];
             emerald->drawOrder          = Zone->objectDrawLow;
-            emerald->radius -= 96;
+            emerald->radius -= 0x60;
+
             if (emerald->radius <= 0)
                 emerald->visible = false;
+
             emerald->groundVel += 32;
             emerald->scale.x -= 3;
             emerald->scale.y -= 3;
@@ -596,6 +627,7 @@ bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
             ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
         }
     }
+
     return false;
 }
 
@@ -606,42 +638,52 @@ bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host)
     unused(player2);
 
     EntityPhantomKing *king = ERZStart->king;
+
     if (player1->animator.animationID != ANI_TRANSFORM) {
-        Zone->cameraBoundsR[0]      = 0x610;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsT[0]      = 0;
         Zone->playerBoundActiveT[0] = true;
-        player1->state              = ERZStart_State_PlayerSuperFly;
-        player1->abilityValues[0]   = 60;
-        player1->velocity.x         = 0x160000;
-        player1->onGround           = false;
-        player1->stateAbility       = ERZStart_Player_StartSuperFly;
+        Zone->cameraBoundsR[0]      = 0x610;
+        Zone->cameraBoundsT[0]      = 0;
+
+        player1->state            = ERZStart_State_PlayerSuperFly;
+        player1->abilityValues[0] = 60;
+        player1->velocity.x       = 0x160000;
+        player1->onGround         = false;
+        player1->stateAbility     = ERZStart_Player_StartSuperFly;
         RSDK.PlaySfx(Player->sfxPeelRelease, false, 255);
+
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;
         fxFade->speedOut     = 64;
         player1->stateInput  = Player_Input_P1;
+
         if (player1->characterID == ID_KNUCKLES) {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, false, 6);
-            player1->animator.rotationFlag = 1;
+            player1->animator.rotationFlag = 1; // full rotation
         }
         else {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, false, 0);
         }
+
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveT[0] = true;
+
         PhantomKing_SetupKing(king);
+
         Camera_SetTargetEntity(0, player1);
-        camera->target = (Entity *)player1;
-        camera->offset.x  = 0;
-        camera->offset.y  = 0;
-        camera->state     = Camera_State_Follow;
-        player1->camera   = camera;
+        camera->target   = (Entity *)player1;
+        camera->offset.x = 0;
+        camera->offset.y = 0;
+        camera->state    = Camera_State_Follow;
+        player1->camera  = camera;
+
         foreach_all(RingField, field) { field->running = true; }
+
         SceneInfo->timeEnabled = true;
         return true;
     }
+
     return false;
 }
 
@@ -658,6 +700,7 @@ bool32 ERZStart_Cutscene_Fight(EntityCutsceneSeq *host)
     else if (player1->deathType != PLAYER_DEATH_DIE_USESFX) {
         player1->deathType = PLAYER_DEATH_DIE_USESFX;
     }
+
     return false;
 }
 
@@ -665,8 +708,10 @@ void ERZStart_RubyHover(void)
 {
     EntityPhantomRuby *ruby = ERZStart->ruby;
     EntityFXRuby *fxRuby    = ERZStart->fxRuby;
+
     ruby->angle += 2;
-    ruby->position.y   = (RSDK.Sin256(ruby->angle) << 10) + ruby->startPos.y;
+    ruby->position.y = (RSDK.Sin256(ruby->angle) << 10) + ruby->startPos.y;
+
     fxRuby->position.x = ruby->position.x;
     fxRuby->position.y = ruby->position.y;
 }
@@ -678,6 +723,7 @@ void ERZStart_RubyMove(void)
 
     if (self->velocity.x < 0x40000)
         self->velocity.x += 0x1800;
+
     ruby->angle += 2;
     ruby->position.x += ruby->velocity.x;
     ruby->position.y = (RSDK.Sin256(ruby->angle) << 10) + ruby->startPos.y;
@@ -687,43 +733,37 @@ void ERZStart_Player_HandleSuperDash(EntityPlayer *player)
 {
     RSDK_THIS(Player);
 
-    uint8 moveDir = 0;
+    uint8 dashDir = 0;
     if (player->up)
-        moveDir |= 1;
-    if (player->down)
-        moveDir |= 2;
-    if (player->left)
-        moveDir |= 4;
-    if (player->right)
-        moveDir |= 8;
+        dashDir |= 1;
 
-    int32 angle = 0;
-    switch (moveDir) {
-        case 0:
-            angle = 0;
-            if (player->direction)
-                angle = 0x80;
-            break;
-        case 1: angle = 0xC0; break;
-        case 2: angle = 0x40; break;
-        case 4: angle = 0x80; break;
-        case 5: angle = 0xA0; break;
-        case 6: angle = 0x60; break;
-        case 8: angle = 0x00; break;
-        case 9: angle = 0xE0; break;
-        case 10: angle = 0x20; break;
-        default: break;
-    }
+    if (player->down)
+        dashDir |= 2;
+
+    if (player->left)
+        dashDir |= 4;
+
+    if (player->right)
+        dashDir |= 8;
+
+    int32 dashAngle    = 0;
+    uint8 dashAngles[] = { 0x00, 0xC0, 0x40, 0x00, 0x80, 0xA0, 0x60, 0x00, 0x00, 0xE0, 0x20 };
+
+    if (dashDir == 0 && player->direction)
+        dashAngle = 0x80;
+    else
+        dashAngle = dashAngles[dashDir];
 
     player->rings -= 5;
     if (player->rings < 0)
         player->rings = 0;
 
-    player->velocity.x = 0x1600 * RSDK.Cos256(angle);
-    player->velocity.y = 0x1600 * RSDK.Sin256(angle);
+    player->velocity.x = 0x1600 * RSDK.Cos256(dashAngle);
+    player->velocity.y = 0x1600 * RSDK.Sin256(dashAngle);
 
     RSDK.PlaySfx(ItemBox->sfxHyperRing, false, 0xFF);
     RSDK.PlaySfx(Player->sfxPeelRelease, false, 0xFF);
+
     if (player->characterID == ID_KNUCKLES) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 6);
         player->animator.rotationFlag = 1; // full rotation
@@ -731,6 +771,7 @@ void ERZStart_Player_HandleSuperDash(EntityPlayer *player)
     else {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 0);
     }
+
     player->state            = ERZStart_State_PlayerSuperFly;
     player->abilityValues[0] = 60;
 
@@ -739,6 +780,7 @@ void ERZStart_Player_HandleSuperDash(EntityPlayer *player)
         fxFade->speedIn      = 256;
         fxFade->speedOut     = 64;
     }
+
 #if MANIA_USE_PLUS
     Player->superDashCooldown = 30;
 #else
@@ -749,6 +791,7 @@ void ERZStart_Player_HandleSuperDash(EntityPlayer *player)
 void ERZStart_State_PlayerSuperFly(void)
 {
     RSDK_THIS(Player);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (player1->onGround) {
@@ -759,6 +802,7 @@ void ERZStart_State_PlayerSuperFly(void)
         if (player1->up) {
             if (self->velocity.y > -player1->topSpeed) {
                 self->velocity.y -= player1->acceleration;
+
                 if (player1->velocity.y > 0)
                     self->velocity.y -= player1->acceleration;
             }
@@ -766,6 +810,7 @@ void ERZStart_State_PlayerSuperFly(void)
         else if (player1->down) {
             if (self->velocity.y < player1->topSpeed) {
                 self->velocity.y += player1->acceleration;
+
                 if (player1->velocity.y < 0)
                     self->velocity.y += player1->acceleration;
             }
@@ -774,11 +819,13 @@ void ERZStart_State_PlayerSuperFly(void)
             if (player1->velocity.y) {
                 if (player1->velocity.y < 0) {
                     player1->velocity.y += player1->deceleration;
+
                     if (player1->velocity.y > 0)
                         player1->velocity.y = 0;
                 }
                 else {
                     player1->velocity.y -= player1->deceleration;
+
                     if (player1->velocity.y < 0)
                         player1->velocity.y = 0;
                 }
@@ -797,32 +844,40 @@ void ERZStart_State_PlayerSuperFly(void)
         if (player1->left) {
             if (player1->characterID == ID_KNUCKLES && self->direction == FLIP_NONE)
                 RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, true, 0);
+
             if (self->velocity.x > -player1->topSpeed) {
                 self->velocity.x -= player1->acceleration;
+
                 if (player1->velocity.x > 0)
                     self->velocity.x -= player1->acceleration;
             }
+
             player1->direction = FLIP_X;
         }
         else if (player1->right) {
             if (player1->characterID == ID_KNUCKLES && self->direction == FLIP_X)
                 RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, true, 0);
+
             if (self->velocity.x < player1->topSpeed) {
                 self->velocity.x += player1->acceleration;
+
                 if (player1->velocity.x < 0)
                     self->velocity.x += player1->acceleration;
             }
+
             player1->direction = FLIP_NONE;
         }
         else {
             if (player1->velocity.x) {
                 if (player1->velocity.x < 0) {
                     player1->velocity.x += player1->deceleration;
+
                     if (player1->velocity.x > 0)
                         player1->velocity.x = 0;
                 }
                 else {
                     player1->velocity.x -= player1->deceleration;
+
                     if (player1->velocity.x < 0)
                         player1->velocity.x = 0;
                 }
@@ -860,6 +915,7 @@ void ERZStart_Player_StartSuperFly(void)
         else {
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
         }
+
         self->state = ERZStart_State_PlayerSuperFly;
     }
 }
@@ -867,6 +923,7 @@ void ERZStart_Player_StartSuperFly(void)
 void ERZStart_State_PlayerRebound(void)
 {
     EntityPlayer *entity = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
     if (entity->characterID == ID_KNUCKLES) {
         RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->animator, false, 6);
         entity->animator.rotationFlag = 1;
@@ -877,6 +934,7 @@ void ERZStart_State_PlayerRebound(void)
 
     entity->rotation += 0x20;
     entity->onGround = false;
+
     if (entity->rotation == 0x600) {
         entity->rotation = 0;
         entity->state    = ERZStart_State_PlayerSuperFly;
@@ -887,6 +945,7 @@ void ERZStart_State_PlayerRebound(void)
 void ERZStart_EditorDraw(void)
 {
     RSDK_THIS(ERZStart);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

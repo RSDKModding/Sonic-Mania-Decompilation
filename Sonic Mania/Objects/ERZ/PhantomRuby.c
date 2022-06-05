@@ -12,11 +12,14 @@ ObjectPhantomRuby *PhantomRuby;
 void PhantomRuby_Update(void)
 {
     RSDK_THIS(PhantomRuby);
+
     StateMachine_Run(self->state);
 
+    // flash
     if (self->rubyAnimator.animationID == 1 && self->rubyAnimator.frameID == self->rubyAnimator.frameCount - 1)
         RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->rubyAnimator, true, 0);
 
+    // flash add
     if (self->flashAnimator.animationID == 2 && self->flashAnimator.frameID == self->flashAnimator.frameCount - 1)
         RSDK.SetSpriteAnimation(-1, 0xFFFF, &self->flashAnimator, true, 0);
 
@@ -31,11 +34,14 @@ void PhantomRuby_StaticUpdate(void) {}
 void PhantomRuby_Draw(void)
 {
     RSDK_THIS(PhantomRuby);
+
     RSDK.DrawSprite(&self->rubyAnimator, NULL, false);
+
     if (self->flashAnimator.animationID != -1) {
         self->inkEffect = INK_ADD;
         self->alpha     = 0xFF;
         RSDK.DrawSprite(&self->flashAnimator, NULL, false);
+
         self->inkEffect = INK_NONE;
     }
 }
@@ -43,16 +49,18 @@ void PhantomRuby_Draw(void)
 void PhantomRuby_Create(void *data)
 {
     RSDK_THIS(PhantomRuby);
-    self->active        = ACTIVE_BOUNDS;
+
+    self->active = ACTIVE_BOUNDS;
     if (!SceneInfo->inEditor)
         self->drawOrder = Zone->objectDrawHigh;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->state         = PhantomRuby_State_FinishedFlash;
+
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->rubyAnimator, true, 0);
 }
 
@@ -79,10 +87,10 @@ void PhantomRuby_StageLoad(void)
 void PhantomRuby_PlaySFX(uint8 sfxID)
 {
     if (sfxID) {
-        uint8 sfx    = sfxID - 1;
-        int32 channel = RSDK.PlaySfx(PhantomRuby->sfxL[sfx], false, 0x00);
+        int32 channel = RSDK.PlaySfx(PhantomRuby->sfxL[sfxID - 1], false, 0x00);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-        channel = RSDK.PlaySfx(PhantomRuby->sfxR[sfx], false, 0x00);
+
+        channel = RSDK.PlaySfx(PhantomRuby->sfxR[sfxID - 1], false, 0x00);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
     }
 }
@@ -92,14 +100,17 @@ void PhantomRuby_SetupFlash(EntityPhantomRuby *ruby)
     ruby->flashFinished = false;
     ruby->hasFlashed    = false;
     ruby->timer         = 0;
+
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 1, &ruby->rubyAnimator, true, 0);
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 2, &ruby->flashAnimator, true, 0);
+
     ruby->state = PhantomRuby_State_PlaySfx;
 }
 
 void PhantomRuby_State_FinishedFlash(void)
 {
     RSDK_THIS(PhantomRuby);
+
     if (self->flashFinished)
         self->flashFinished = false;
 }
@@ -110,6 +121,7 @@ void PhantomRuby_State_PlaySfx(void)
 
     if (self->timer == 38) {
         PhantomRuby_PlaySFX(self->sfx);
+
         self->flashFinished = true;
         self->hasFlashed    = true;
         self->timer         = 0;
@@ -123,6 +135,7 @@ void PhantomRuby_State_PlaySfx(void)
 void PhantomRuby_State_Oscillate(void)
 {
     RSDK_THIS(PhantomRuby);
+
     self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 }
 
@@ -152,6 +165,7 @@ void PhantomRuby_State_MoveRotateGravity(void)
 void PhantomRuby_State_MoveRotateGravity_CheckGround(void)
 {
     RSDK_THIS(PhantomRuby);
+
     PhantomRuby_State_MoveRotateGravity();
 
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
@@ -167,18 +181,21 @@ void PhantomRuby_State_MoveRotateGravity_CheckGround(void)
 void PhantomRuby_State_MoveToPos(void)
 {
     RSDK_THIS(PhantomRuby);
+
     int32 rx    = (self->startPos.x - self->position.x) >> 16;
     int32 ry    = (self->startPos.y - self->position.y) >> 16;
     int32 angle = RSDK.ATan2(rx, ry);
+
     self->velocity.x += RSDK.Cos256(angle) << 3;
     self->velocity.y += RSDK.Sin256(angle) << 3;
 
     int32 r = rx * rx + ry * ry;
-    if (r >= 16) {
-        if (r < 2304) {
+    if (r >= 0x10) {
+        if (r < 0x900) {
             self->velocity.x = (self->startPos.x - self->position.x) >> 4;
             self->velocity.y = (self->startPos.y - self->position.y) >> 4;
         }
+
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
     }
@@ -195,6 +212,7 @@ void PhantomRuby_State_RotateToOrigin(void)
     RSDK_THIS(PhantomRuby);
 
     self->rotation += 6;
+
     if (self->rotation > 0x200) {
         self->rotation = 0;
         self->drawFX   = FX_NONE;
@@ -227,7 +245,4 @@ void PhantomRuby_EditorLoad(void)
 }
 #endif
 
-void PhantomRuby_Serialize(void)
-{
-    RSDK_EDITABLE_VAR(PhantomRuby, VAR_UINT8, sfx);
-}
+void PhantomRuby_Serialize(void) { RSDK_EDITABLE_VAR(PhantomRuby, VAR_UINT8, sfx); }

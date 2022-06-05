@@ -77,7 +77,7 @@ void KleptoMobile_Update(void);
 void KleptoMobile_LateUpdate(void);
 void KleptoMobile_StaticUpdate(void);
 void KleptoMobile_Draw(void);
-void KleptoMobile_Create(void* data);
+void KleptoMobile_Create(void *data);
 void KleptoMobile_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void KleptoMobile_EditorDraw(void);
@@ -89,6 +89,7 @@ void KleptoMobile_Serialize(void);
 void KleptoMobile_HandleAnimations(void);
 void KleptoMobile_CheckPlayerCollisions(void);
 void KleptoMobile_Hit(void);
+void KleptoMobile_Explode(void);
 void KleptoMobile_HandleFrames(void);
 void KleptoMobile_SwitchToKing(void);
 
@@ -120,4 +121,4 @@ void KleptoMobile_State_Destroyed(void);
 void KleptoMobile_State_Explode(void);
 void KleptoMobile_State_CutsceneExplode(void);
 
-#endif //!OBJ_KLEPTOMOBILE_H
+#endif //! OBJ_KLEPTOMOBILE_H

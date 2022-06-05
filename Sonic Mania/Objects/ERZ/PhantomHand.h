@@ -23,7 +23,7 @@ struct EntityPhantomHand {
     int32 timerDecreaseSpeed;
     int32 scaleAngle;
     Vector2 targetPos;
-    Entity* parent;
+    Entity *parent;
     bool32 doScanlineCB;
     Animator handAnimator;
     Animator crystalAnimator;
@@ -38,7 +38,7 @@ void PhantomHand_Update(void);
 void PhantomHand_LateUpdate(void);
 void PhantomHand_StaticUpdate(void);
 void PhantomHand_Draw(void);
-void PhantomHand_Create(void* data);
+void PhantomHand_Create(void *data);
 void PhantomHand_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomHand_EditorDraw(void);
@@ -60,4 +60,4 @@ void PhantomHand_State_Shine(void);
 void PhantomHand_State_BreakApart(void);
 void PhantomHand_State_Disappear(void);
 
-#endif //!OBJ_PHANTOMHAND_H
+#endif //! OBJ_PHANTOMHAND_H

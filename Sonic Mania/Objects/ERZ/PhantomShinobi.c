@@ -12,8 +12,10 @@ ObjectPhantomShinobi *PhantomShinobi;
 void PhantomShinobi_Update(void)
 {
     RSDK_THIS(PhantomShinobi);
+
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
+
     StateMachine_Run(self->state);
 
     self->rotStore += self->rotSpeed;
@@ -70,11 +72,12 @@ void PhantomShinobi_Create(void *data)
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;
         self->collisionLayers = Zone->collisionLayers;
-        self->startPos.x      = self->position.x;
-        self->startPos.y      = self->position.y;
+        self->startPos        = self->position;
         self->tileCollisions  = true;
         self->finRadius       = 0x1600;
+
         PhantomShinobi_ResetStates();
+
         RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->armAnimator, true, 1);
         RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 1, &self->finAnimator, true, 0);
@@ -104,8 +107,7 @@ void PhantomShinobi_CheckPlayerCollisions(void)
     {
         if (!self->invincibilityTimer && Player_CheckBadnikTouch(playerLoop, self, &PhantomShinobi->hitbox)
             && Player_CheckBossHit(playerLoop, self)) {
-            self->invincibilityTimer = 48;
-            RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
+            PhantomShinobi_Hit();
             foreach_return;
         }
     }
@@ -113,25 +115,38 @@ void PhantomShinobi_CheckPlayerCollisions(void)
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
     int32 angle  = self->rotStore;
+
     foreach_active(Player, player)
     {
-        self->position.x = storeX + self->finRadius * RSDK.Sin512(angle);
-        self->position.y = storeY - self->finRadius * RSDK.Cos512(angle);
-        if (RSDK.CheckObjectCollisionTouchCircle(player, 0xC0000, self, 0x80000)) {
-            Player_CheckHit(player, self);
+        for (int32 f = 0; f < 8; ++f) {
+            self->position.x = storeX + self->finRadius * RSDK.Sin512(angle);
+            self->position.y = storeY - self->finRadius * RSDK.Cos512(angle);
+            if (RSDK.CheckObjectCollisionTouchCircle(player, 0xC0000, self, 0x80000)) {
+                Player_CheckHit(player, self);
+            }
+
+            angle += 0x40;
         }
-        angle += 64;
     }
 
     self->position.x = storeX;
     self->position.y = storeY;
 }
 
+void PhantomShinobi_Hit(void)
+{
+    RSDK_THIS(PhantomShinobi);
+
+    self->invincibilityTimer = 48;
+    RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
+}
+
 void PhantomShinobi_HandleTileCollisions(void)
 {
     RSDK_THIS(PhantomShinobi);
+
     if (self->onGround) {
-        self->finRadius += (4096 - self->finRadius) >> 3;
+        self->finRadius += (0x1000 - self->finRadius) >> 3;
         if (!self->prevOnGround) {
             if (self->numBounces > 0) {
                 self->velocity.y = -0x30000;
@@ -144,14 +159,17 @@ void PhantomShinobi_HandleTileCollisions(void)
         self->velocity.y += 0x3800;
         if (self->velocity.y > 0xC0000)
             self->velocity.y = 0xC0000;
+
         self->finRadius += (0x1600 - self->finRadius) >> 3;
     }
 
-    int32 size            = self->finRadius / 88;
+    int32 size = self->finRadius / 88;
+
     self->outerBox.right  = size;
     self->outerBox.bottom = size;
     self->outerBox.left   = -size;
     self->outerBox.top    = -size;
+
     self->innerBox.left   = 2 - size;
     self->innerBox.right  = size - 2;
     self->innerBox.top    = -size;
@@ -165,13 +183,13 @@ void PhantomShinobi_ResetStates(void)
 {
     RSDK_THIS(PhantomShinobi);
 
-    self->position.x = self->startPos.x;
-    self->position.y = self->startPos.y;
+    self->position = self->startPos;
     self->position.y -= 0x400000;
     self->finRadius   = 0;
     self->attackCount = 0;
-    self->state       = PhantomShinobi_State_EnterShinobi;
-    self->direction   = RSDK.Rand(0, 2);
+
+    self->state     = PhantomShinobi_State_EnterShinobi;
+    self->direction = RSDK.Rand(FLIP_NONE, FLIP_X + 1);
 }
 
 void PhantomShinobi_State_EnterShinobi(void)
@@ -219,16 +237,18 @@ void PhantomShinobi_State_SetupAttack(void)
             self->velocity.y = -0x30000;
         }
     }
-    else if (self->rotSpeed >= 0x600) {
-        self->rotSpeed   = 0x600;
-        self->velocity.x = 0x20000;
-        self->state      = PhantomShinobi_State_Moving;
-        self->onGround   = false;
-        self->numBounces = 1;
-        self->velocity.y = -0x30000;
-    }
     else {
-        self->rotSpeed += 12;
+        if (self->rotSpeed >= 0x600) {
+            self->rotSpeed   = 0x600;
+            self->velocity.x = 0x20000;
+            self->state      = PhantomShinobi_State_Moving;
+            self->onGround   = false;
+            self->numBounces = 1;
+            self->velocity.y = -0x30000;
+        }
+        else {
+            self->rotSpeed += 12;
+        }
     }
 
     PhantomShinobi_CheckPlayerCollisions();
@@ -239,24 +259,21 @@ void PhantomShinobi_State_Moving(void)
     RSDK_THIS(PhantomShinobi);
 
     PhantomShinobi_HandleTileCollisions();
+
     if (self->onGround && !self->prevOnGround) {
-        if (self->direction == FLIP_NONE)
-            self->groundVel = 0x80000;
-        else
-            self->groundVel = -0x80000;
+        self->groundVel = self->direction == FLIP_NONE ? 0x80000 : -0x80000;
     }
 
     if (!self->groundVel) {
         self->onGround   = false;
+        self->velocity.x = self->direction == FLIP_NONE ? -0x38000 : 0x38000;
         self->velocity.y = -0x40000;
-        if (self->direction == FLIP_NONE)
-            self->velocity.x = -0x38000;
-        else
-            self->velocity.x = 0x38000;
+
         self->numBounces = 1;
         self->direction ^= FLIP_X;
         self->state = PhantomShinobi_State_PrepareFinAttack;
     }
+
     PhantomShinobi_CheckPlayerCollisions();
 }
 
@@ -281,6 +298,7 @@ void PhantomShinobi_State_PrepareFinAttack(void)
     else {
         self->rotSpeed -= (self->rotSpeed >> 5);
     }
+
     PhantomShinobi_CheckPlayerCollisions();
 }
 
@@ -292,9 +310,11 @@ void PhantomShinobi_State_ExtendFins(void)
     if (++self->timer == 24) {
         self->timer      = 0;
         self->velocity.x = 0x400;
+
         RSDK.PlaySfx(PhantomShinobi->sfxHit, false, 255);
         self->state = PhantomShinobi_State_RetractFins;
     }
+
     PhantomShinobi_CheckPlayerCollisions();
 }
 
@@ -307,8 +327,10 @@ void PhantomShinobi_State_RetractFins(void)
         self->velocity.x = -0xC00;
 
     self->finRadius += self->velocity.x;
+
     if (self->velocity.x < 0 && self->finRadius < 0x1600) {
         self->finRadius = 0x1600;
+
         if (++self->attackCount == 2) {
             PhantomEgg_SetupScanlineCB();
             self->timer = 0;
@@ -318,6 +340,7 @@ void PhantomShinobi_State_RetractFins(void)
             self->state = PhantomShinobi_State_AttackDelay;
         }
     }
+
     PhantomShinobi_CheckPlayerCollisions();
 }
 
@@ -342,6 +365,7 @@ bool32 PhantomShinobi_BladeCheckCB(void)
             foreach_return true;
         }
     }
+
     return false;
 }
 
@@ -351,6 +375,7 @@ void PhantomShinobi_EditorDraw(void)
     RSDK_THIS(PhantomShinobi);
 
     self->finRadius = 0x1600;
+
     RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->bodyAnimator, false, 0);
     RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->armAnimator, false, 1);
     RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 1, &self->finAnimator, false, 0);

@@ -37,7 +37,7 @@ void ERZShinobi_Update(void);
 void ERZShinobi_LateUpdate(void);
 void ERZShinobi_StaticUpdate(void);
 void ERZShinobi_Draw(void);
-void ERZShinobi_Create(void* data);
+void ERZShinobi_Create(void *data);
 void ERZShinobi_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZShinobi_EditorDraw(void);
@@ -47,7 +47,8 @@ void ERZShinobi_Serialize(void);
 
 // Extra Entity Functions
 void ERZShinobi_CheckPlayerCollisions(void);
+void ERZShinobi_Hit(void);
 void ERZShinobi_HandleTileCollisions(void);
 void ERZShinobi_State_Moving(void);
 
-#endif //!OBJ_ERZSHINOBI_H
+#endif //! OBJ_ERZSHINOBI_H

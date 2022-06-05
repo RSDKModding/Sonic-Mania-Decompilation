@@ -18,7 +18,7 @@ struct ObjectERZGunner {
     RSDK_OBJECT
     // Technically a "Vector2" but since that can't be saved in static objects, it's an int array
     TABLE(int32 rocketOffsets[32], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
-                              10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
+                                     10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
     int32 launchedRocketID;
     Hitbox hitboxNapalm;
     Hitbox hitboxMortar;
@@ -33,7 +33,7 @@ struct EntityERZGunner {
     StateMachine(stateDraw);
     Vector2 originPos;
     int32 type;
-    Entity *parent;
+    EntityERZGunner *parent;
     int32 timer;
     int32 invincibilityTimer;
     int32 fireAnimTimer;
@@ -56,7 +56,7 @@ void ERZGunner_Update(void);
 void ERZGunner_LateUpdate(void);
 void ERZGunner_StaticUpdate(void);
 void ERZGunner_Draw(void);
-void ERZGunner_Create(void* data);
+void ERZGunner_Create(void *data);
 void ERZGunner_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZGunner_EditorDraw(void);
@@ -71,6 +71,7 @@ void ERZGunner_SpawnDust(void);
 void ERZGunner_HandleRotations(int angle);
 void ERZGunner_CheckPlayerMissileCollisions(void);
 void ERZGunner_CheckPlayerExplosionCollisions(void);
+void ERZGunner_Hit(EntityERZGunner *entity);
 
 void ERZGunner_Draw_Gunner(void);
 void ERZGunner_Draw_RocketLaunch(void);
@@ -90,4 +91,4 @@ void ERZGunner_State_Dud_Explode(void);
 void ERZGunner_State_NapalmExplosion(void);
 void ERZGunner_State_MortarExplosion(void);
 
-#endif //!OBJ_ERZGUNNER_H
+#endif //! OBJ_ERZGUNNER_H

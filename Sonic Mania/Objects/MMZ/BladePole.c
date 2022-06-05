@@ -12,8 +12,10 @@ ObjectBladePole *BladePole;
 void BladePole_Update(void)
 {
     RSDK_THIS(BladePole);
+
     RSDK.ProcessAnimation(&self->bladeTopAnimator);
     RSDK.ProcessAnimation(&self->bladeBottomAnimator);
+
     StateMachine_Run(self->state);
 }
 

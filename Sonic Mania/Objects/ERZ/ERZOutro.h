@@ -6,13 +6,13 @@
 // Object Class
 struct ObjectERZOutro {
     RSDK_OBJECT
-    int32 unused;           // Might be "ushort aniFrames" and was used inEditor but I do not know
+    int32 unused; // Might be "ushort aniFrames" and was used inEditor but I do not know
     Vector2 playerPos;
-    Entity *fxRuby;
-    Entity *king;
-    Entity *eggman;
-    Entity *rubyPortal;
-    Entity *ruby;
+    EntityFXRuby *fxRuby;
+    EntityPhantomKing *king;
+    EntityKleptoMobile *eggman;
+    EntityRubyPortal *rubyPortal;
+    EntityPhantomRuby *ruby;
     int32 rubyPortalAcceleration;
     int32 rubyPortalRadius;
     int32 rubyPortalAngle;
@@ -32,7 +32,7 @@ void ERZOutro_Update(void);
 void ERZOutro_LateUpdate(void);
 void ERZOutro_StaticUpdate(void);
 void ERZOutro_Draw(void);
-void ERZOutro_Create(void* data);
+void ERZOutro_Create(void *data);
 void ERZOutro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZOutro_EditorDraw(void);
@@ -58,4 +58,4 @@ void ERZOutro_SaveFileCB(bool32 success);
 void ERZOutro_SaveFileCB(void);
 #endif
 
-#endif //!OBJ_ERZOUTRO_H
+#endif //! OBJ_ERZOUTRO_H

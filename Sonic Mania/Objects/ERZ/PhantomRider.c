@@ -65,36 +65,43 @@ void PhantomRider_Create(void *data)
         else {
             self->active = ACTIVE_BOUNDS;
             self->drawFX = FX_FLIP;
+
             RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 0, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 4, &self->jimmyAnimator, true, 0);
             RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 5, &self->wheelAnimator, true, 0);
             RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 6, &self->thrustAnimator, true, 0);
+
             self->direction       = FLIP_X;
             self->collisionPlane  = 1;
             self->collisionLayers = Zone->collisionLayers;
             self->startPos        = self->position;
-            self->hitbox.left     = -24;
-            self->hitbox.top      = 0;
-            self->hitbox.right    = 24;
-            self->hitbox.bottom   = 20;
+            self->tileCollisions  = true;
+
+            self->hitbox.left   = -24;
+            self->hitbox.top    = 0;
+            self->hitbox.right  = 24;
+            self->hitbox.bottom = 20;
+
             self->outerBox.left   = -12;
             self->outerBox.top    = 0;
             self->outerBox.right  = 12;
             self->outerBox.bottom = 30;
+
             self->innerBox.left   = -11;
             self->innerBox.top    = 0;
-            self->tileCollisions  = true;
             self->innerBox.right  = 11;
             self->innerBox.bottom = 30;
-            self->stateDraw       = PhantomRider_Draw_Rider;
-            self->state           = PhantomRider_State_HandleBegin;
+
+            self->stateDraw = PhantomRider_Draw_Rider;
+            self->state     = PhantomRider_State_HandleBegin;
         }
     }
 }
 
 void PhantomRider_StageLoad(void)
 {
-    PhantomRider->aniFrames      = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE);
+    PhantomRider->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE);
+
     PhantomRider->sfxRiderLaunch = RSDK.GetSfx("LRZ/RiderLaunch.wav");
 }
 
@@ -102,9 +109,11 @@ void PhantomRider_ProcessAutoScroll(void)
 {
     if (Zone->autoScrollSpeed > 0x80000) {
         Zone->autoScrollSpeed -= 0x2000;
+
         if (Zone->autoScrollSpeed < 0x80000)
             Zone->autoScrollSpeed = 0x80000;
     }
+
     if (Zone->autoScrollSpeed < 0x80000) {
         Zone->autoScrollSpeed += 0x2000;
 
@@ -116,11 +125,21 @@ void PhantomRider_ProcessAutoScroll(void)
     {
         if (player->groundVel < Zone->autoScrollSpeed - 0x20000)
             player->groundVel = Zone->autoScrollSpeed - 0x20000;
+
         player->direction = FLIP_NONE;
         player->topSpeed  = Zone->autoScrollSpeed + 0x20000;
+
         if (player->groundVel > player->topSpeed)
             player->groundVel = player->topSpeed;
     }
+}
+
+void PhantomRider_Hit(void)
+{
+    RSDK_THIS(PhantomRider);
+
+    self->invincibilityTimer = 48;
+    RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
 }
 
 void PhantomRider_Draw_Rider(void)
@@ -136,22 +155,25 @@ void PhantomRider_Draw_Rider(void)
 void PhantomRider_State_HandleBegin(void)
 {
     RSDK_THIS(PhantomRider);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (player1->position.x > self->position.x) {
         EntityPhantomRider *child = CREATE_ENTITY(PhantomRider, intToVoid(PHANTOMRIDER_JIMMY), player1->position.x, player1->position.y);
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->target    = (Entity*)child;
+        camera->target       = (Entity *)child;
         camera->state        = Camera_State_Follow;
 
         player1->camera       = NULL;
         Zone->autoScrollSpeed = player1->velocity.x;
-        self->groundVel     = 0;
-        self->velocity.x    = 0;
-        self->child         = (Entity *)child;
-        self->active        = ACTIVE_NORMAL;
-        self->state         = PhantomRider_State_EnterRider;
+
+        self->groundVel  = 0;
+        self->velocity.x = 0;
+        self->child      = child;
+        self->active     = ACTIVE_NORMAL;
+        self->state      = PhantomRider_State_EnterRider;
+
         foreach_active(PopOut, popOut)
         {
             popOut->active    = ACTIVE_NORMAL;
@@ -170,6 +192,7 @@ void PhantomRider_State_EnterRider(void)
     RSDK.ProcessAnimation(&self->jimmyAnimator);
     RSDK.ProcessAnimation(&self->wheelAnimator);
     RSDK.ProcessAnimation(&self->thrustAnimator);
+
     PhantomRider_ProcessAutoScroll();
 
     if (++self->timer > 48) {
@@ -179,15 +202,18 @@ void PhantomRider_State_EnterRider(void)
 
     if (self->position.x > self->child->position.x + 0x200000) {
         self->timer = 0;
+
         RSDK.PlaySfx(PhantomRider->sfxRiderLaunch, false, 0xFF);
         self->state = PhantomRider_State_InitialRace;
     }
 
     if (!self->onGround) {
         self->velocity.y += 0x3800;
+
         if (self->velocity.y > 0xC0000)
             self->velocity.y = 0xC0000;
     }
+
     self->prevOnGround = self->onGround;
     RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 }
@@ -200,19 +226,23 @@ void PhantomRider_State_InitialRace(void)
     RSDK.ProcessAnimation(&self->jimmyAnimator);
     RSDK.ProcessAnimation(&self->wheelAnimator);
     RSDK.ProcessAnimation(&self->thrustAnimator);
+
     PhantomRider_ProcessAutoScroll();
 
     if (self->groundVel > Zone->autoScrollSpeed - 0x10000) {
         self->groundVel -= 0x2000;
+
         if (self->groundVel < Zone->autoScrollSpeed - 0x4000)
             self->groundVel = Zone->autoScrollSpeed - 0x4000;
     }
 
     if (!self->onGround) {
         self->velocity.y += 0x3800;
+
         if (self->velocity.y > 0xC0000)
             self->velocity.y = 0xC0000;
     }
+
     self->prevOnGround = self->onGround;
     RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 
@@ -229,21 +259,26 @@ void PhantomRider_State_RacePlayer(void)
     RSDK.ProcessAnimation(&self->jimmyAnimator);
     RSDK.ProcessAnimation(&self->wheelAnimator);
     RSDK.ProcessAnimation(&self->thrustAnimator);
+
     PhantomRider_ProcessAutoScroll();
 
     if (!self->onGround) {
         self->velocity.y += 0x3800;
+
         if (self->velocity.y > 0xC0000)
             self->velocity.y = 0xC0000;
     }
+
     self->prevOnGround = self->onGround;
     RSDK.ProcessObjectMovement(self, &self->outerBox, &self->innerBox);
 
     if (++self->timer == 560) {
-        self->timer         = 0;
+        self->timer           = 0;
         Zone->autoScrollSpeed = 0;
+
         PhantomEgg_SetupScanlineCB();
         self->state = PhantomRider_State_ExitRider;
+
         foreach_active(PopOut, popOut) { popOut->shouldAppear = false; }
         foreach_active(Player, player) { Player_UpdatePhysicsState(player); }
     }
@@ -253,13 +288,14 @@ void PhantomRider_State_RacePlayer(void)
         if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, spikes, &spikes->hitbox) == C_TOP) {
             EntityPopOut *popOut = RSDK_GET_ENTITY(RSDK.GetEntityID(spikes) - 1, PopOut);
             popOut->shouldAppear = false;
+
             foreach_active(Button, button)
             {
                 if (button->tag == popOut->tag)
                     button->activated = false;
             }
-            self->invincibilityTimer = 48;
-            RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
+
+            PhantomRider_Hit();
         }
     }
 }
@@ -283,7 +319,7 @@ void PhantomRider_State_ExitRider(void)
 
         foreach_active(Button, button)
         {
-            button->active   = ACTIVE_BOUNDS;
+            button->active    = ACTIVE_BOUNDS;
             button->activated = false;
         }
 
@@ -321,12 +357,13 @@ void PhantomRider_State_Jimmy(void)
 void PhantomRider_EditorDraw(void)
 {
     RSDK_THIS(PhantomRider);
-    self->drawFX = FX_FLIP;
+
+    self->drawFX    = FX_FLIP;
+    self->direction = FLIP_X;
     RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 0, &self->mainAnimator, true, 0);
     RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 4, &self->jimmyAnimator, true, 0);
     RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 5, &self->wheelAnimator, true, 0);
     RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 6, &self->thrustAnimator, true, 0);
-    self->direction = FLIP_X;
 
     PhantomRider_Draw_Rider();
 }

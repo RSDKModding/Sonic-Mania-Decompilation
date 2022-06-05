@@ -20,7 +20,7 @@ struct EntityPhantomMissile {
     int32 reattachRadius;
     int32 id;
     Vector2 targetPos;
-    Entity *parent;
+    EntityPhantomEgg *parent;
     Animator missileAnimator;
     Animator targetOutsideAnimator;
     Animator targetInsideAnimator;
@@ -35,7 +35,7 @@ void PhantomMissile_Update(void);
 void PhantomMissile_LateUpdate(void);
 void PhantomMissile_StaticUpdate(void);
 void PhantomMissile_Draw(void);
-void PhantomMissile_Create(void* data);
+void PhantomMissile_Create(void *data);
 void PhantomMissile_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomMissile_EditorDraw(void);
@@ -46,6 +46,7 @@ void PhantomMissile_Serialize(void);
 // Extra Entity Functions
 void PhantomMissile_GetTargetPos(void);
 void PhantomMissile_HandleExhaust(void);
+
 void PhantomMissile_State_Attached(void);
 void PhantomMissile_State_PrepareLaunch(void);
 void PhantomMissile_State_Launched(void);
@@ -54,4 +55,4 @@ void PhantomMissile_State_Explode(void);
 void PhantomMissile_State_Reattach(void);
 void PhantomMissile_State_Destroyed(void);
 
-#endif //!OBJ_PHANTOMMISSILE_H
+#endif //! OBJ_PHANTOMMISSILE_H

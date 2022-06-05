@@ -24,7 +24,7 @@ struct EntityPhantomRider {
     int32 unused;
     int32 type;
     bool32 prevOnGround;
-    Entity *child;
+    EntityPhantomRider *child;
     Hitbox hitbox;
     Hitbox outerBox;
     Hitbox innerBox;
@@ -44,7 +44,7 @@ void PhantomRider_Update(void);
 void PhantomRider_LateUpdate(void);
 void PhantomRider_StaticUpdate(void);
 void PhantomRider_Draw(void);
-void PhantomRider_Create(void* data);
+void PhantomRider_Create(void *data);
 void PhantomRider_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomRider_EditorDraw(void);
@@ -54,6 +54,7 @@ void PhantomRider_Serialize(void);
 
 // Extra Entity Functions
 void PhantomRider_ProcessAutoScroll(void);
+void PhantomRider_Hit(void);
 
 void PhantomRider_Draw_Rider(void);
 
@@ -65,4 +66,4 @@ void PhantomRider_State_ExitRider(void);
 
 void PhantomRider_State_Jimmy(void);
 
-#endif //!OBJ_PHANTOMRIDER_H
+#endif //! OBJ_PHANTOMRIDER_H

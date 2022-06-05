@@ -44,7 +44,7 @@ struct EntityERZKing {
     Vector2 framePositions[10];
     Vector2 rubyPos;
     Vector2 unused;
-    Entity *parent;
+    EntityERZKing *parent;
     Animator basicAnimator;
     Animator headAnimator;
     Animator bodyAnimator;
@@ -67,7 +67,7 @@ void ERZKing_Update(void);
 void ERZKing_LateUpdate(void);
 void ERZKing_StaticUpdate(void);
 void ERZKing_Draw(void);
-void ERZKing_Create(void* data);
+void ERZKing_Create(void *data);
 void ERZKing_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZKing_EditorDraw(void);
@@ -77,6 +77,7 @@ void ERZKing_Serialize(void);
 
 // Extra Entity Functions
 void ERZKing_CheckPlayerCollisions(void);
+void ERZKing_Hit(void);
 void ERZKing_HandleFrames(void);
 
 void ERZKing_Draw_Body(void);
@@ -90,4 +91,4 @@ void ERZKing_State_ChangeHBH(void);
 void ERZKing_State_Arm(void);
 void ERZKing_State_Explode(void);
 
-#endif //!OBJ_ERZKING_H
+#endif //! OBJ_ERZKING_H

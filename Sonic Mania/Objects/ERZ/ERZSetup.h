@@ -8,7 +8,7 @@ struct ObjectERZSetup {
     RSDK_OBJECT
     int32 aniTileTimer;
     int32 timer;
-    uint16 skySheet;
+    uint16 aniTiles;
 };
 
 // Entity Class
@@ -24,7 +24,7 @@ void ERZSetup_Update(void);
 void ERZSetup_LateUpdate(void);
 void ERZSetup_StaticUpdate(void);
 void ERZSetup_Draw(void);
-void ERZSetup_Create(void* data);
+void ERZSetup_Create(void *data);
 void ERZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ERZSetup_EditorDraw(void);
@@ -33,6 +33,6 @@ void ERZSetup_EditorLoad(void);
 void ERZSetup_Serialize(void);
 
 // Extra Entity Functions
-void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines);
+void ERZSetup_Sky_ScanlineCB(ScanlineInfo *scanlines);
 
-#endif //!OBJ_ERZSETUP_H
+#endif //! OBJ_ERZSETUP_H

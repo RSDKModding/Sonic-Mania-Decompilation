@@ -18,7 +18,7 @@ struct ObjectPhantomGunner {
     RSDK_OBJECT
     // Technically a "Vector2" but since that can't be saved in static objects, it's an int array
     TABLE(int32 rocketOffsets[0x20], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
-                              10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
+                                       10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
     int32 launchedRocketID;
     Hitbox hitboxNapalm;
     Hitbox hitboxMortar;
@@ -35,7 +35,7 @@ struct EntityPhantomGunner {
     Vector2 originPos;
     Vector2 startPos;
     int32 type;
-    Entity *parent;
+    EntityPhantomGunner *parent;
     int32 timer;
     int32 invincibilityTimer;
     int32 unused;
@@ -59,7 +59,7 @@ void PhantomGunner_Update(void);
 void PhantomGunner_LateUpdate(void);
 void PhantomGunner_StaticUpdate(void);
 void PhantomGunner_Draw(void);
-void PhantomGunner_Create(void* data);
+void PhantomGunner_Create(void *data);
 void PhantomGunner_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PhantomGunner_EditorDraw(void);
@@ -74,6 +74,7 @@ void PhantomGunner_SpawnDust(void);
 void PhantomGunner_HandleRotations(int angle);
 void PhantomGunner_CheckPlayerMissileCollisions(void);
 void PhantomGunner_CheckPlayerExplosionCollisions(void);
+void PhantomGunner_Hit(EntityPhantomGunner *entity);
 
 void PhantomGunner_Draw_Gunner(void);
 void PhantomGunner_Draw_RocketLaunch(void);
@@ -94,5 +95,4 @@ void PhantomGunner_State_Dud_Explode(void);
 void PhantomGunner_State_NapalmExplosion(void);
 void PhantomGunner_State_MortarExplosion(void);
 
-
-#endif //!OBJ_PHANTOMGUNNER_H
+#endif //! OBJ_PHANTOMGUNNER_H

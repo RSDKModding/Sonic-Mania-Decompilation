@@ -12,6 +12,7 @@ ObjectPhantomGunner *PhantomGunner;
 void PhantomGunner_Update(void)
 {
     RSDK_THIS(PhantomGunner);
+
     StateMachine_Run(self->state);
 }
 
@@ -52,30 +53,36 @@ void PhantomGunner_Create(void *data)
             case PHANTOMGUNNER_BOSS:
                 self->drawFX = FX_FLIP;
                 self->active = ACTIVE_NEVER;
+
                 RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 0, &self->mainAnimator, true, 0);
                 RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 1, &self->fxAnimator, true, 0);
+
                 self->originPos   = self->position;
                 self->screenPos.x = (self->position.x >> 16) - ScreenInfo->centerX;
                 self->screenPos.y = (self->position.y >> 16) - ScreenInfo->centerY;
-                self->stateDraw   = PhantomGunner_Draw_Gunner;
-                self->state       = PhantomGunner_State_Idle;
+
+                self->stateDraw = PhantomGunner_Draw_Gunner;
+                self->state     = PhantomGunner_State_Idle;
                 break;
 
             case PHANTOMGUNNER_LAUNCHROCKET:
                 RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 10, &self->mainAnimator, true, 0);
                 RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 11, &self->fxAnimator, true, 0);
+
                 self->stateDraw = PhantomGunner_Draw_RocketLaunch;
                 self->state     = PhantomGunner_State_LaunchedRocket;
                 break;
 
             case PHANTOMGUNNER_NAPALM_EXPLOSION:
                 self->originPos = self->position;
-                self->state     = PhantomGunner_State_NapalmExplosion;
+
+                self->state = PhantomGunner_State_NapalmExplosion;
                 break;
 
             case PHANTOMGUNNER_MORTAR_EXPLOSION:
                 self->originPos = self->position;
-                self->state     = PhantomGunner_State_MortarExplosion;
+
+                self->state = PhantomGunner_State_MortarExplosion;
                 break;
 
             default: break;
@@ -108,10 +115,12 @@ void PhantomGunner_StageLoad(void)
 void PhantomGunner_HandleDudExhaust(void)
 {
     RSDK_THIS(PhantomGunner);
+
     if (!(Zone->timer & 7)) {
-        int32 x              = RSDK.Sin512(self->rotation) << 11;
-        int32 y              = RSDK.Cos512(self->rotation) << 11;
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + x, self->position.y - y);
+        int32 x              = self->position.x + (RSDK.Sin512(self->rotation) << 11);
+        int32 y              = self->position.y - (RSDK.Cos512(self->rotation) << 11);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
+
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(self->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(self->rotation) << 4;
@@ -126,9 +135,10 @@ void PhantomGunner_HandleMalfunctionDudExhaust(void)
 
     if (Zone->timer & 3) {
         if ((Zone->timer & 3) == 2) {
-            int32 x              = 0x600 * RSDK.Sin512(self->rotation);
-            int32 y              = 0x600 * RSDK.Cos512(self->rotation);
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + x, self->position.y - y);
+            int32 x              = self->position.x + (RSDK.Sin512(self->rotation) * 0x600);
+            int32 y              = self->position.y - (RSDK.Cos512(self->rotation) * 0x600);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
+
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
             debris->drawOrder = Zone->objectDrawHigh;
             debris->drawFX    = FX_SCALE;
@@ -138,9 +148,10 @@ void PhantomGunner_HandleMalfunctionDudExhaust(void)
         }
     }
     else {
-        int32 x              = RSDK.Sin512(self->rotation) << 11;
-        int32 y              = RSDK.Cos512(self->rotation) << 11;
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + x, self->position.y - y);
+        int32 x              = self->position.x + (RSDK.Sin512(self->rotation) << 11);
+        int32 y              = self->position.y - (RSDK.Cos512(self->rotation) << 11);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
+
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(self->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(self->rotation) << 4;
@@ -169,24 +180,21 @@ void PhantomGunner_HandleRotations(int angle)
     RSDK_THIS(PhantomGunner);
 
     int32 ang = angle - self->rotation;
+
     if (abs(angle - self->rotation) >= abs(angle - self->rotation - 0x200)) {
-        if (abs(angle - self->rotation - 0x200) < abs(angle - self->rotation + 0x200)) {
-            self->rotation += ((ang - 0x200) >> 4);
-            self->rotation &= 0x1FF;
-        }
-        else {
-            self->rotation += ((ang + 0x200) >> 4);
-            self->rotation &= 0x1FF;
-        }
-    }
-    else if (abs(angle - self->rotation) < abs(angle - self->rotation + 0x200)) {
-        self->rotation += (ang >> 4);
-        self->rotation &= 0x1FF;
+        if (abs(angle - self->rotation - 0x200) < abs(angle - self->rotation + 0x200))
+            self->rotation += (ang - 0x200) >> 4;
+        else
+            self->rotation += (ang + 0x200) >> 4;
     }
     else {
-        self->rotation += ((ang + 0x200) >> 4);
-        self->rotation &= 0x1FF;
+        if (abs(angle - self->rotation) < abs(angle - self->rotation + 0x200))
+            self->rotation += ang >> 4;
+        else
+            self->rotation += (ang + 0x200) >> 4;
     }
+
+    self->rotation &= 0x1FF;
 }
 
 void PhantomGunner_CheckPlayerMissileCollisions(void)
@@ -235,11 +243,19 @@ void PhantomGunner_CheckPlayerExplosionCollisions(void)
     }
 }
 
+void PhantomGunner_Hit(EntityPhantomGunner *entity)
+{
+    RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
+    entity->invincibilityTimer = 48;
+}
+
 void PhantomGunner_Draw_Gunner(void)
 {
     RSDK_THIS(PhantomGunner);
+
     if (self->invincibilityTimer & 1) {
         RSDK.CopyPalette(6, 128, 4, 128, 128);
+
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
         self->direction = FLIP_X;
@@ -264,7 +280,8 @@ void PhantomGunner_Draw_Gunner(void)
 void PhantomGunner_Draw_RocketLaunch(void)
 {
     RSDK_THIS(PhantomGunner);
-    EntityPhantomGunner *parent = (EntityPhantomGunner *)self->parent;
+
+    EntityPhantomGunner *parent = self->parent;
 
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ((self->originPos.y + parent->position.y) >> 16) - ScreenInfo->position.y);
 
@@ -274,6 +291,7 @@ void PhantomGunner_Draw_RocketLaunch(void)
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+
     drawPos.y = parent->position.y + self->originPos.y;
     RSDK.DrawSprite(&self->fxAnimator, &drawPos, false);
 }
@@ -300,6 +318,7 @@ void PhantomGunner_State_ResetState(void)
     self->screenPos = ScreenInfo->position;
 
     RSDK.ProcessAnimation(&self->fxAnimator);
+
     if (++self->timer == 60) {
         self->position          = self->startPos;
         self->originPos         = self->startPos;
@@ -340,6 +359,7 @@ void PhantomGunner_State_Idle(void)
             PhantomGunner->launchedRocketID = 0;
             self->timer                     = 0;
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 2, &self->mainAnimator, true, 0);
+
             self->state = PhantomGunner_State_LaunchRockets;
             PhantomGunner_CheckPlayerExplosionCollisions();
         }
@@ -357,22 +377,25 @@ void PhantomGunner_State_LaunchRockets(void)
     self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
 
     self->screenPos = ScreenInfo->position;
+
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->fxAnimator);
 
     if (++self->timer == 8) {
-        EntityPhantomGunner *child = CREATE_ENTITY(PhantomGunner, intToVoid(PHANTOMGUNNER_LAUNCHROCKET), self->position.x, self->position.y);
-        child->parent              = (Entity *)self;
-        child->originPos.x         = PhantomGunner->rocketOffsets[self->rocketOffsetID] << 16;
-        child->originPos.y         = PhantomGunner->rocketOffsets[self->rocketOffsetID + 1] << 16;
-        child->position.x += child->originPos.x;
-        child->position.y += child->originPos.y + 0x100000;
+        EntityPhantomGunner *rocket = CREATE_ENTITY(PhantomGunner, intToVoid(PHANTOMGUNNER_LAUNCHROCKET), self->position.x, self->position.y);
+        rocket->parent              = self;
+        rocket->originPos.x         = PhantomGunner->rocketOffsets[self->rocketOffsetID] << 16;
+        rocket->originPos.y         = PhantomGunner->rocketOffsets[self->rocketOffsetID + 1] << 16;
+        rocket->position.x += rocket->originPos.x;
+        rocket->position.y += rocket->originPos.y + 0x100000;
         self->rocketOffsetID = (self->rocketOffsetID - 14) & 0x1F;
+
         RSDK.PlaySfx(PhantomGunner->sfxCannonFire, false, 255);
     }
 
     if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
         self->timer = 0;
+
         if (--self->fireAnimTimer > 0) {
             if (!(self->fireAnimTimer & 1))
                 RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 2, &self->mainAnimator, true, 0);
@@ -384,6 +407,7 @@ void PhantomGunner_State_LaunchRockets(void)
             self->state = PhantomGunner_State_Idle;
         }
     }
+
     PhantomGunner_CheckPlayerExplosionCollisions();
 }
 
@@ -393,15 +417,18 @@ void PhantomGunner_State_LaunchedRocket(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->fxAnimator);
+
     self->position.y -= 0x80000;
+
     if (++self->timer == 60) {
-        EntityPhantomGunner *parent = (EntityPhantomGunner *)self->parent;
+        EntityPhantomGunner *parent = self->parent;
 
         self->timer = 0;
         if ((PhantomGunner->launchedRocketID & 3) == 3)
             self->type = PHANTOMGUNNER_DUD;
         else
             self->type = (PhantomGunner->launchedRocketID & 1) + PHANTOMGUNNER_MORTAR;
+
         ++PhantomGunner->launchedRocketID;
         self->drawOrder  = Zone->objectDrawLow;
         self->position.y = (ScreenInfo->position.y - 64) << 16;
@@ -425,6 +452,7 @@ void PhantomGunner_State_LaunchedRocket(void)
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 4, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 5, &self->tailAnimator, true, 0);
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 12, &self->parachuteAnimator, true, 0);
+
             self->state     = PhantomGunner_State_Mortar;
             self->timer     = RSDK.Rand(0, 2) << 8;
             self->stateDraw = PhantomGunner_Draw_Rocket;
@@ -432,19 +460,19 @@ void PhantomGunner_State_LaunchedRocket(void)
         else if (self->type == PHANTOMGUNNER_NAPALM) {
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 6, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 7, &self->tailAnimator, true, 0);
+
             self->state     = PhantomGunner_State_Napalm;
             self->stateDraw = PhantomGunner_Draw_Rocket;
         }
         else if (self->type == PHANTOMGUNNER_DUD) {
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 8, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 9, &self->tailAnimator, true, 0);
+
             self->position.x = parent->position.x;
             self->drawFX     = FX_ROTATE;
-            self->state      = PhantomGunner_State_Dud_Active;
-            if (!(Zone->timer & 1))
-                self->velocity.x = 0x40000;
-            else
-                self->velocity.x = -0x40000;
+            self->velocity.x = (Zone->timer & 1) ? -0x40000 : 0x40000;
+
+            self->state     = PhantomGunner_State_Dud_Active;
             self->stateDraw = PhantomGunner_Draw_Rocket;
         }
     }
@@ -461,23 +489,22 @@ void PhantomGunner_State_Mortar(void)
         self->drawFX = FX_ROTATE;
         if (self->velocity.y > 0xC000)
             self->velocity.y -= 0x3800;
+
         self->rotation = RSDK.Sin512(self->timer) >> 6;
         self->timer    = (self->timer + 4) & 0x1FF;
     }
     else if (self->velocity.y < 0x40000)
         self->velocity.y += 0x3800;
+
     self->position.y += self->velocity.y;
 
     PhantomGunner_CheckPlayerMissileCollisions();
     if (self->classID) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == PHANTOMGUNNER_NAPALM) {
-                EntityPhantomGunner *child =
+                EntityPhantomGunner *napalm =
                     CREATE_ENTITY(PhantomGunner, intToVoid(PHANTOMGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
-                if (self->velocity.y > 0x20000)
-                    child->velocity.x = 0x80000;
-                else
-                    child->velocity.x = 0x40000;
+                napalm->velocity.x = self->velocity.y > 0x20000 ? 0x80000 : 0x40000;
                 destroyEntity(self);
             }
             else {
@@ -491,22 +518,21 @@ void PhantomGunner_State_Mortar(void)
 void PhantomGunner_State_Napalm(void)
 {
     RSDK_THIS(PhantomGunner);
+
     RSDK.ProcessAnimation(&self->tailAnimator);
 
     if (self->velocity.y < 0x40000)
         self->velocity.y += 0x1800;
+
     self->position.y += self->velocity.y;
 
     PhantomGunner_CheckPlayerMissileCollisions();
     if (self->classID) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == PHANTOMGUNNER_NAPALM) {
-                EntityPhantomGunner *child =
+                EntityPhantomGunner *napalm =
                     CREATE_ENTITY(PhantomGunner, intToVoid(PHANTOMGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
-                if (self->velocity.y > 0x20000)
-                    child->velocity.x = 0x80000;
-                else
-                    child->velocity.x = 0x40000;
+                napalm->velocity.x = self->velocity.y > 0x20000 ? 0x80000 : 0x40000;
                 destroyEntity(self);
             }
             else {
@@ -522,7 +548,7 @@ void PhantomGunner_State_Dud_Active(void)
     RSDK_THIS(PhantomGunner);
 
     RSDK.ProcessAnimation(&self->tailAnimator);
-    EntityPhantomGunner *parent = (EntityPhantomGunner *)self->parent;
+    EntityPhantomGunner *parent = self->parent;
 
     ++self->timer;
 
@@ -531,6 +557,7 @@ void PhantomGunner_State_Dud_Active(void)
         if (self->velocity.y < 0x20000)
             self->velocity.y += 0x2000;
     }
+
     if (self->position.y > parent->position.y - 0x200000) {
         if (self->velocity.y > -0x20000)
             self->velocity.y -= 0x2000;
@@ -542,6 +569,7 @@ void PhantomGunner_State_Dud_Active(void)
 
     int32 angle = RSDK.ATan2(self->velocity.y, -self->velocity.x);
     PhantomGunner_HandleRotations(2 * angle);
+
     if (self->timer == 320) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
         explosion->interaction     = false;
@@ -573,9 +601,10 @@ void PhantomGunner_State_Dud_HitByPlayer(void)
 
     self->angle += self->groundVel;
     self->rotation = self->angle >> 8;
-    self->groundVel -= (self->groundVel >> 3);
+    self->groundVel -= self->groundVel >> 3;
 
     PhantomGunner_HandleDudExhaust();
+
     if (self->groundVel < 128) {
         RSDK.PlaySfx(PhantomEgg->sfxRocketJet, false, 255);
         self->state = PhantomGunner_State_Dud_Malfunction;
@@ -587,10 +616,12 @@ void PhantomGunner_State_Dud_Malfunction(void)
     RSDK_THIS(PhantomGunner);
 
     RSDK.ProcessAnimation(&self->tailAnimator);
-    EntityPhantomGunner *parent = (EntityPhantomGunner *)self->parent;
+
+    EntityPhantomGunner *parent = self->parent;
 
     int32 angle = RSDK.ATan2((parent->position.y - self->position.y) >> 16, -((parent->position.x - self->position.x) >> 16));
     PhantomGunner_HandleRotations(2 * angle);
+
     self->rotation &= 0x1FF;
     self->position.x -= RSDK.Sin512(self->rotation) << 9;
     self->scale.x -= 6;
@@ -598,13 +629,13 @@ void PhantomGunner_State_Dud_Malfunction(void)
     self->scale.y = self->scale.x;
 
     PhantomGunner_HandleMalfunctionDudExhaust();
-    if (self->scale.x < 128) {
-        RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
-        parent->invincibilityTimer = 48;
-        self->position.x           = parent->position.x;
-        self->position.y           = parent->position.y;
-        self->visible              = false;
-        self->state                = PhantomGunner_State_Dud_Explode;
+    if (self->scale.x < 0x80) {
+        PhantomGunner_Hit(parent);
+
+        self->position.x = parent->position.x;
+        self->position.y = parent->position.y;
+        self->visible    = false;
+        self->state      = PhantomGunner_State_Dud_Explode;
     }
 }
 
@@ -635,6 +666,7 @@ void PhantomGunner_State_NapalmExplosion(void)
     }
 
     self->napalmExplosionPos += self->velocity.x;
+
     if (++self->timer == 16)
         destroyEntity(self);
 }
@@ -647,6 +679,7 @@ void PhantomGunner_State_MortarExplosion(void)
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
 
     self->position.y -= 0x40000;
+
     if (++self->timer == 16)
         destroyEntity(self);
 }
@@ -655,9 +688,11 @@ void PhantomGunner_State_MortarExplosion(void)
 void PhantomGunner_EditorDraw(void)
 {
     RSDK_THIS(PhantomGunner);
+
     self->drawFX = FX_FLIP;
     RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 0, &self->mainAnimator, false, 0);
     RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 1, &self->fxAnimator, false, 0);
+
     self->originPos   = self->position;
     self->screenPos.x = (self->position.x >> 16) - ScreenInfo->centerX;
     self->screenPos.y = (self->position.y >> 16) - ScreenInfo->centerY;

@@ -30,6 +30,7 @@ void ERZOutro_Draw(void) {}
 void ERZOutro_Create(void *data)
 {
     RSDK_THIS(ERZOutro);
+
     INIT_ENTITY(self);
     CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
     self->active = ACTIVE_NEVER;
@@ -39,26 +40,26 @@ void ERZOutro_StageLoad(void)
 {
     foreach_all(RubyPortal, portal)
     {
-        ERZOutro->rubyPortal = (Entity *)portal;
+        ERZOutro->rubyPortal = portal;
         foreach_break;
     }
 
     foreach_all(PhantomRuby, ruby)
     {
-        ERZOutro->ruby = (Entity *)ruby;
+        ERZOutro->ruby = ruby;
         foreach_break;
     }
 
     foreach_all(FXRuby, fxRuby)
     {
-        ERZOutro->fxRuby = (Entity *)fxRuby;
+        ERZOutro->fxRuby = fxRuby;
         foreach_break;
     }
 
     foreach_all(PhantomKing, king)
     {
         if (!king->type)
-            ERZOutro->king = (Entity *)king;
+            ERZOutro->king = king;
     }
 
     foreach_all(ChaosEmerald, emerald) { ERZStart->emeralds[emerald->type] = emerald; }
@@ -66,7 +67,7 @@ void ERZOutro_StageLoad(void)
     foreach_all(KleptoMobile, eggman)
     {
         if (!eggman->type)
-            ERZOutro->eggman = (Entity *)eggman;
+            ERZOutro->eggman = eggman;
     }
 
     ERZOutro->savedGame = false;
@@ -74,7 +75,7 @@ void ERZOutro_StageLoad(void)
 
 void ERZOutro_SetEmeraldStates(void)
 {
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)ERZOutro->ruby;
+    EntityPhantomRuby *ruby = ERZOutro->ruby;
 
     for (int e = 0; e < 7; ++e) {
         EntityChaosEmerald *emerald = ERZStart->emeralds[e];
@@ -88,12 +89,12 @@ void ERZOutro_SetEmeraldStates(void)
 
 void ERZOutro_HandleRubyHover(void)
 {
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)ERZOutro->ruby;
-    EntityFXRuby *fxRuby    = (EntityFXRuby *)ERZOutro->fxRuby;
+    EntityPhantomRuby *ruby = ERZOutro->ruby;
+    EntityFXRuby *fxRuby    = ERZOutro->fxRuby;
 
     ruby->angle += 2;
-    int amp          = abs(RSDK.Sin256(Zone->timer)) >> 6;
-    int32 offset     = amp == 0 ? 0 : RSDK.Rand(-amp, amp);
+    int amplitude = abs(RSDK.Sin256(Zone->timer)) >> 6;
+    int32 offset  = amplitude == 0 ? 0 : RSDK.Rand(-amplitude, amplitude);
 
     ruby->position.x = (offset << 16) + ruby->startPos.x;
     ruby->position.y = (offset << 16) + ruby->startPos.y + (RSDK.Sin256(ruby->angle) << 8);
@@ -105,14 +106,14 @@ void ERZOutro_HandleRubyHover(void)
 bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityKleptoMobile *eggman = (EntityKleptoMobile *)ERZOutro->eggman;
-    EntityFXRuby *fxRuby       = (EntityFXRuby *)ERZOutro->fxRuby;
+    EntityKleptoMobile *eggman = ERZOutro->eggman;
+    EntityFXRuby *fxRuby       = ERZOutro->fxRuby;
     EntityERZOutro *entity     = (EntityERZOutro *)host->activeEntity;
 
     uint16 eggmanSlot              = RSDK.GetEntityID(eggman);
     EntityKleptoMobile *eggmanHand = RSDK_GET_ENTITY(eggmanSlot - 2, KleptoMobile);
-    EntityKleptoMobile *eggmanArm1 = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
-    EntityKleptoMobile *eggmanArm2 = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
+    EntityKleptoMobile *eggmanArmL = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
+    EntityKleptoMobile *eggmanArmR = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
 
     if (!host->timer) {
         host->storedValue = player1->rings;
@@ -121,13 +122,16 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, false, 6);
         else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, false, 0);
+
         player1->state           = ERZStart_State_PlayerSuperFly;
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
         player1->onGround        = false;
         player1->stateInput      = StateMachine_None;
+
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-        fxRuby->fadeWhite           = 768;
+        fxRuby->fadeWhite = 768;
+
         Zone->playerBoundActiveT[0] = false;
         CutsceneSeq_LockPlayerControl(player1);
         SceneInfo->timeEnabled = false;
@@ -142,7 +146,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
     if (fxRuby->fadeWhite > 0)
         fxRuby->fadeWhite -= 8;
 
-    int32 posX = (entity->position.x - entity->size.x);
+    int32 posX = entity->position.x - entity->size.x;
     int32 posY = entity->position.y;
 
     if (host->timer <= 0) {
@@ -153,6 +157,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, false, 6);
         else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, false, 0);
+
         int32 x           = player1->position.x;
         int32 y           = player1->position.y;
         player1->position = MathHelpers_GetBezierPoint((host->timer << 16) / 120, ERZOutro->playerPos.x, ERZOutro->playerPos.y, ERZOutro->playerPos.x,
@@ -170,7 +175,8 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
         player1->right      = true;
         ERZStart_Player_HandleSuperDash(player1);
         player1->velocity.y >>= 1;
-        player1->right    = false;
+        player1->right = false;
+
         eggman->originPos = entity->position;
         eggman->originPos.x += entity->size.x;
         eggman->position   = eggman->originPos;
@@ -187,17 +193,17 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
         eggmanHand->position.x  = eggman->position.x;
         eggmanHand->position.y  = eggman->position.y;
 
-        eggmanArm1->state       = KleptoMobile_StateArm_Cutscene;
-        eggmanArm1->originPos.x = eggman->position.x;
-        eggmanArm1->originPos.y = eggman->position.y;
-        eggmanArm1->position.x  = eggman->position.x;
-        eggmanArm1->position.y  = eggman->position.y;
+        eggmanArmL->state       = KleptoMobile_StateArm_Cutscene;
+        eggmanArmL->originPos.x = eggman->position.x;
+        eggmanArmL->originPos.y = eggman->position.y;
+        eggmanArmL->position.x  = eggman->position.x;
+        eggmanArmL->position.y  = eggman->position.y;
 
-        eggmanArm2->state       = KleptoMobile_StateArm_Cutscene;
-        eggmanArm2->originPos.x = eggman->position.x;
-        eggmanArm2->originPos.y = eggman->position.y;
-        eggmanArm2->position.x  = eggman->position.x;
-        eggmanArm2->position.y  = eggman->position.y;
+        eggmanArmR->state       = KleptoMobile_StateArm_Cutscene;
+        eggmanArmR->originPos.x = eggman->position.x;
+        eggmanArmR->originPos.y = eggman->position.y;
+        eggmanArmR->position.x  = eggman->position.x;
+        eggmanArmR->position.y  = eggman->position.y;
         return true;
     }
 
@@ -209,10 +215,10 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(player2);
 
-    EntityKleptoMobile *eggman = (EntityKleptoMobile *)ERZOutro->eggman;
-    EntityFXRuby *fxRuby       = (EntityFXRuby *)ERZOutro->fxRuby;
-    EntityRubyPortal *portal   = (EntityRubyPortal *)ERZOutro->rubyPortal;
-    EntityPhantomRuby *ruby    = (EntityPhantomRuby *)ERZOutro->ruby;
+    EntityKleptoMobile *eggman = ERZOutro->eggman;
+    EntityFXRuby *fxRuby       = ERZOutro->fxRuby;
+    EntityRubyPortal *portal   = ERZOutro->rubyPortal;
+    EntityPhantomRuby *ruby    = ERZOutro->ruby;
 
     fxRuby->position = eggman->rubyPos;
     int x            = eggman->position.x - 0x400000;
@@ -220,7 +226,8 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
 
     if (!host->values[0]) {
         if (player1->position.x >= eggman->position.x - 0x200000) {
-            host->storedTimer   = player1->position.y;
+            host->storedTimer = player1->position.y;
+
             player1->position.x = eggman->position.x - 0x200000;
             player1->velocity.x = -0x40000;
             player1->velocity.y = -0x40000;
@@ -228,15 +235,18 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
             player1->superState = SUPERSTATE_FADEOUT;
             player1->shield     = SHIELD_NONE;
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, true, 0);
-            host->values[0]   = 1;
+
+            host->values[0]   = true;
             fxRuby->state     = FXRuby_State_Expanding;
             fxRuby->drawOrder = Zone->objectDrawLow - 1;
             player1->camera   = 0;
-            camera->target = 0;
+            camera->target    = 0;
             Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, x, y, 3);
+
             portal->position.x = x;
             portal->position.y = y;
             Music_TransitionTrack(TRACK_EGGMAN1, 0.2);
+
             RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 16, &eggman->eggmanAnimator, true, 0);
             eggman->holdingRuby        = false;
             eggman->state              = KleptoMobile_State_CutsceneExplode;
@@ -244,6 +254,7 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
             eggman->invincibilityTimer = 48;
             eggman->velocity.x         = 0x60000;
             RSDK.PlaySfx(KleptoMobile->sfxHit, false, 255);
+
             ruby->visible  = true;
             ruby->startPos = eggman->rubyPos;
             ruby->position = eggman->rubyPos;
@@ -253,10 +264,11 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
         if (!host->values[1]) {
             ruby->startPos.x += 0x20000;
             if (eggman->velocity.x <= 0x10000)
-                host->values[1] = 1;
+                host->values[1] = true;
             else
                 eggman->velocity.x -= 0x2000;
         }
+
         if (!host->values[2]) {
             player1->velocity.y += 0x3800;
             if (player1->velocity.y > 0 && player1->position.y >= host->storedTimer) {
@@ -264,20 +276,24 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
                 player1->position.y = host->storedTimer;
                 player1->velocity.x = 0;
                 player1->velocity.y = 0;
-                host->values[2]     = 1;
+                host->values[2]     = true;
             }
         }
+
         ERZOutro_HandleRubyHover();
+
         if (host->values[1] && host->values[2])
             return true;
     }
+
     player1->rings = host->storedValue;
     return false;
 }
 
 bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host)
 {
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)ERZOutro->ruby;
+    EntityPhantomRuby *ruby = ERZOutro->ruby;
+
     ERZOutro_HandleRubyHover();
 
     if (!host->timer) {
@@ -286,9 +302,9 @@ bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host)
             EntityChaosEmerald *emerald = ERZStart->emeralds[e];
             emerald->angle              = angle;
             emerald->radius             = 0;
-            emerald->scale.x            = 512;
-            emerald->scale.y            = 512;
-            emerald->groundVel          = 512;
+            emerald->scale.x            = 0x200;
+            emerald->scale.y            = 0x200;
+            emerald->groundVel          = 0x200;
             emerald->state              = ChaosEmerald_State_Rotate;
             emerald->visible            = true;
 
@@ -297,55 +313,60 @@ bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host)
     }
 
     if (host->timer >= 30) {
-        for (int e = 0; e < 7; ++e) {
-            ERZStart->emeralds[e]->radius = 0x2000;
-        }
+        for (int e = 0; e < 7; ++e) ERZStart->emeralds[e]->radius = 0x2000;
     }
     else {
-        for (int e = 0; e < 7; ++e) {
-            ERZStart->emeralds[e]->radius = (host->timer << 13) / 30;
-        }
+        for (int e = 0; e < 7; ++e) ERZStart->emeralds[e]->radius = (host->timer << 13) / 30;
     }
 
     for (int e = 0; e < 7; ++e) ERZStart->emeralds[e]->originPos = ruby->startPos;
+
     return host->timer == 90;
 }
 
 bool32 ERZOutro_Cutscene_OpenPortal(EntityCutsceneSeq *host)
 {
-    EntityRubyPortal *portal = (EntityRubyPortal *)ERZOutro->rubyPortal;
+    EntityRubyPortal *portal = ERZOutro->rubyPortal;
+
     ERZOutro_HandleRubyHover();
+
     if (host->timer == 90) {
         portal->state     = RubyPortal_State_Opened;
         portal->drawOrder = Zone->objectDrawLow;
         portal->visible   = true;
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
     }
+
     if (host->timer >= 90) {
         ERZOutro_SetEmeraldStates();
         return portal->state == StateMachine_None;
     }
+
     return false;
 }
 
 bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPhantomRuby *ruby  = (EntityPhantomRuby *)ERZOutro->ruby;
-    EntityFXRuby *fxRuby     = (EntityFXRuby *)ERZOutro->fxRuby;
-    EntityRubyPortal *portal = (EntityRubyPortal *)ERZOutro->rubyPortal;
+    EntityPhantomRuby *ruby  = ERZOutro->ruby;
+    EntityFXRuby *fxRuby     = ERZOutro->fxRuby;
+    EntityRubyPortal *portal = ERZOutro->rubyPortal;
 
     ERZOutro_SetEmeraldStates();
+
     if (!host->timer) {
         ERZOutro->rubyPortalAcceleration = 0;
-        host->storedTimer                = RSDK.ATan2(player1->position.x - portal->position.x, player1->position.y - portal->position.y) << 16;
-        int32 rx                         = abs(portal->position.x - player1->position.x) >> 16;
-        int32 ry                         = abs(portal->position.y - player1->position.y) >> 16;
-        host->storedValue                = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
+
+        host->storedTimer = RSDK.ATan2(player1->position.x - portal->position.x, player1->position.y - portal->position.y) << 16;
+        int32 rx          = abs(portal->position.x - player1->position.x) >> 16;
+        int32 ry          = abs(portal->position.y - player1->position.y) >> 16;
+        host->storedValue = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
+
         player1->drawFX |= FX_SCALE;
         player1->scale.x = 0x200;
         player1->scale.y = 0x200;
     }
+
     if (host->timer == 60)
         PhantomRuby_SetupFlash(ruby);
 
@@ -355,18 +376,23 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
     else {
         if (host->timer == 108) {
             ERZOutro_HandleRubyHover();
-            ruby->startPos.x           = ruby->position.x;
-            ruby->startPos.y           = ruby->position.y;
+
+            ruby->startPos.x = ruby->position.x;
+            ruby->startPos.y = ruby->position.y;
+
             ERZOutro->rubyPortalAngle  = RSDK.ATan2(ruby->position.x - portal->position.x, ruby->position.y - portal->position.y) << 16;
             int32 rx                   = abs(portal->position.x - ruby->position.x) >> 16;
             int32 ry                   = abs(portal->position.y - ruby->position.y) >> 16;
             ERZOutro->rubyPortalRadius = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
+
             ruby->drawFX |= FX_SCALE;
             ruby->scale.x = 0x200;
             ruby->scale.y = 0x200;
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+
             Music_FadeOut(0.2);
         }
+
         ERZOutro->rubyPortalAcceleration += 0x800;
 
         host->storedTimer += ERZOutro->rubyPortalAcceleration;
@@ -384,9 +410,10 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
         ruby->position.y += ((ERZOutro->rubyPortalRadius >> 9) & 0xFFFFFF80) * RSDK.Sin512(ERZOutro->rubyPortalAngle >> 15);
 
         if (fxRuby->fadeWhite >= 0x200)
-            host->values[0] = 1;
+            host->values[0] = true;
         else
             fxRuby->fadeWhite += 2;
+
         int32 rx   = abs(portal->position.x - player1->position.x) >> 16;
         int32 ry   = abs(portal->position.y - player1->position.y) >> 16;
         int32 dist = MathHelpers_SquareRoot(rx * rx + ry * ry);
@@ -404,11 +431,13 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
             ERZOutro->rubyPortalRadius -= 0x8000;
 
         if (host->storedValue <= 0)
-            host->values[1] = 1;
+            host->values[1] = true;
         else
             host->storedValue -= 0x8000;
+
         return host->values[0] && host->values[1];
     }
+
     return false;
 }
 
@@ -423,6 +452,7 @@ bool32 ERZOutro_Cutscene_FadeOut(EntityCutsceneSeq *host)
 
         return host->timer == 150;
     }
+
     return false;
 }
 
@@ -436,6 +466,7 @@ bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host)
             SaveGame_SaveFile(ERZOutro_SaveFileCB);
             UIWaitSpinner_StartWait();
         }
+
         if (!ERZOutro->savedGame)
             return false;
 
@@ -448,6 +479,7 @@ bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host)
         RSDK.SetScene("Videos", "True End?");
     else
         RSDK.SetScene("Videos", "Good End");
+
     RSDK.LoadScene();
     return true;
 }
@@ -462,6 +494,7 @@ void ERZOutro_SaveFileCB(void) { ERZOutro->savedGame = true; }
 void ERZOutro_EditorDraw(void)
 {
     RSDK_THIS(ERZOutro);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
