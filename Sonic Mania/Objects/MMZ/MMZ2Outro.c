@@ -13,6 +13,7 @@ ObjectMMZ2Outro *MMZ2Outro;
 void MMZ2Outro_Update(void)
 {
     RSDK_THIS(MMZ2Outro);
+
     MMZ2Outro_StartCutscene();
     self->active = ACTIVE_NEVER;
 }
@@ -42,16 +43,20 @@ void MMZ2Outro_StartCutscene(void)
     RSDK_THIS(MMZ2Outro);
 
     CutsceneSeq_StartSequence(self, MMZ2Outro_Cutscene_PowerDown, MMZ2Outro_Cutscene_Rumble, MMZ2Outro_Cutscene_CameraMoveToWindow,
-                              MMZ2Outro_Cutscene_PlayerMoveToWindow, MMZ2Outro_Cutscene_EnterMonarchEyes, MMZ2Outro_Cutscene_ViewMonarch, StateMachine_None);
+                              MMZ2Outro_Cutscene_PlayerMoveToWindow, MMZ2Outro_Cutscene_EnterMonarchEyes, MMZ2Outro_Cutscene_ViewMonarch,
+                              StateMachine_None);
 
     RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
+
     for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0x000000);
     for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
+
     RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
     RSDK.GetTileLayer(1)->drawLayer[0] = DRAWGROUP_COUNT;
     RSDK.GetTileLayer(2)->drawLayer[0] = 0;
     RSDK.GetTileLayer(3)->drawLayer[0] = 0;
     RSDK.GetTileLayer(4)->drawLayer[0] = 0;
+
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
@@ -61,6 +66,7 @@ void MMZ2Outro_StartCutscene(void)
 bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
 {
     RSDK_THIS(MMZ2Outro);
+
     if (++self->timer == 60) {
         self->timer = 0;
         Camera_ShakeScreen(0, 0, 4);
@@ -68,6 +74,7 @@ bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             player->stateInput = StateMachine_None;
+
             if (player->onGround) {
                 player->state = Player_State_None;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
@@ -77,10 +84,13 @@ bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
                 player->velocity.x = 0;
             }
         }
+
         RSDK.PlaySfx(MMZ2Outro->sfxLightsOut, false, 0xFF);
         Zone->cameraBoundsT[0] = 0;
+
         return true;
     }
+
     return false;
 }
 
@@ -108,6 +118,7 @@ bool32 MMZ2Outro_Cutscene_Rumble(EntityCutsceneSeq *host)
             }
         }
     }
+
     return false;
 }
 
@@ -134,10 +145,12 @@ bool32 MMZ2Outro_Cutscene_CameraMoveToWindow(EntityCutsceneSeq *host)
         Zone->playerBoundsR[p] += 0x2400000;
     }
 
-    self->position.x                                = (Zone->cameraBoundsR[0] - ScreenInfo->centerX) << 16;
-    self->position.y                                = (Zone->cameraBoundsB[0] - ScreenInfo->centerY) << 16;
+    self->position.x = (Zone->cameraBoundsR[0] - ScreenInfo->centerX) << 16;
+    self->position.y = (Zone->cameraBoundsB[0] - ScreenInfo->centerY) << 16;
+
     RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     Camera_SetupLerp(CAMERA_LERP_SIN512, 0, self->position.x, self->position.y, 2);
+
     return true;
 }
 
@@ -150,6 +163,7 @@ bool32 MMZ2Outro_Cutscene_PlayerMoveToWindow(EntityCutsceneSeq *host)
     foreach_active(Player, player)
     {
         player->jumpPress = false;
+
         if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
@@ -157,8 +171,10 @@ bool32 MMZ2Outro_Cutscene_PlayerMoveToWindow(EntityCutsceneSeq *host)
         else if (player->velocity.y > 0x20000) {
             player->jumpHold = false;
         }
+
         if (player->groundVel > 0x40000)
             player->groundVel = 0x40000;
+
         if (player->position.x <= self->position.x - 0x180000 * player->playerID - 0x200000) {
             finished = false;
         }
@@ -184,7 +200,7 @@ bool32 MMZ2Outro_Cutscene_EnterMonarchEyes(EntityCutsceneSeq *host)
     if (self->timer == 512) {
         foreach_active(Player, player) { player->up = true; }
     }
-    
+
     if (self->timer == 768) {
         self->timer      = 0;
         self->flashTimer = 0;
@@ -201,6 +217,7 @@ bool32 MMZ2Outro_Cutscene_ViewMonarch(EntityCutsceneSeq *host)
     if (--self->flashTimer <= 0) {
         CREATE_ENTITY(MMZLightning, MMZLightning_State_BeginFadeIn, 0, 0);
         CREATE_ENTITY(MMZLightning, MMZLightning_State_SetupLightningBig, 0, 0);
+
         RSDK.PlaySfx(MMZ2Outro->sfxThunda, false, 255);
         self->flashTimer = RSDK.Rand(120, 240);
 

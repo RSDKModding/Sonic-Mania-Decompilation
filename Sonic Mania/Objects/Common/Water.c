@@ -1479,10 +1479,10 @@ void Water_EditorLoad(void)
     RSDK_ENUM_VAR("Ride Bubble Spawner", WATER_BUBBLE_SPAWNER);
 
     RSDK_ACTIVE_VAR(Water, priority);
-    RSDK_ENUM_VAR("Object Layer (Low)", WATER_PRIORITY_OBJECT_LOW);
-    RSDK_ENUM_VAR("Player Layer (Low)", WATER_PRIORITY_PLAYER_LOW);
-    RSDK_ENUM_VAR("Player Layer (High)", WATER_PRIORITY_PLAYER_HIGH);
-    RSDK_ENUM_VAR("HUD Layer (Low)", WATER_PRIORITY_HUD_LOW);
+    RSDK_ENUM_VAR("Object Group (Low)", WATER_PRIORITY_OBJECT_LOW);
+    RSDK_ENUM_VAR("Player Group (Low)", WATER_PRIORITY_PLAYER_LOW);
+    RSDK_ENUM_VAR("Player Group (High)", WATER_PRIORITY_PLAYER_HIGH);
+    RSDK_ENUM_VAR("HUD Group (Low)", WATER_PRIORITY_HUD_LOW);
 }
 #endif
 

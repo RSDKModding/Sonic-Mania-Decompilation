@@ -28,17 +28,19 @@ void BladePole_Draw(void) { BladePole_DrawSprites(); }
 void BladePole_Create(void *data)
 {
     RSDK_THIS(BladePole);
+
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawOrder     = Zone->objectDrawLow;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     RSDK.SetSpriteAnimation(BladePole->aniFrames, 0, &self->poleAnimator, true, 0);
     RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->bladeTopAnimator, true, 0);
     RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->bladeBottomAnimator, true, 0);
 
-    // WHy is this initialized here?? wouldn't StageLoad be better?
+    // Why is this initialized here?? wouldn't StageLoad be better?
     BladePole->hitboxBottom.left   = -24;
     BladePole->hitboxBottom.top    = 20;
     BladePole->hitboxBottom.right  = 24;
@@ -49,7 +51,7 @@ void BladePole_Create(void *data)
     BladePole->hitboxTop.right  = 24;
     BladePole->hitboxTop.bottom = BladePole->hitboxTop.top + 24;
 
-    self->state             = BladePole_State_TopBladeActive;
+    self->state = BladePole_State_TopBladeActive;
 }
 
 void BladePole_StageLoad(void) { BladePole->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BladePole.bin", SCOPE_STAGE); }
@@ -57,11 +59,9 @@ void BladePole_StageLoad(void) { BladePole->aniFrames = RSDK.LoadSpriteAnimation
 void BladePole_DrawSprites(void)
 {
     RSDK_THIS(BladePole);
-    Vector2 drawPos;
 
     self->direction = FLIP_NONE;
-    drawPos.x         = self->position.x;
-    drawPos.y         = self->position.y;
+    Vector2 drawPos = self->position;
     RSDK.DrawSprite(&self->poleAnimator, &drawPos, false);
 
     drawPos.y -= 0xC0000;
@@ -92,6 +92,7 @@ bool32 BladePole_SetAnimation(Animator *animator)
 
     switch (animator->animationID) {
         case 1: RSDK.SetSpriteAnimation(BladePole->aniFrames, 2, animator, true, 0); break;
+
         case 2:
             if (animator->frameID == animator->frameCount - 1)
                 RSDK.SetSpriteAnimation(BladePole->aniFrames, 3, animator, true, 0);
@@ -111,6 +112,7 @@ bool32 BladePole_SetAnimation(Animator *animator)
 
         default: break;
     }
+
     return false;
 }
 
@@ -121,13 +123,15 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, hitbox)) {
-            int32 storeX         = self->position.x;
-            int32 storeY         = self->position.y;
+            int32 storeX = self->position.x;
+            int32 storeY = self->position.y;
+
             self->position.y = ((BladePole->hitboxBottom.bottom - BladePole->hitboxBottom.top) << 15) + storeY;
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
+
             self->position.x = storeX;
             self->position.y = storeY;
         }

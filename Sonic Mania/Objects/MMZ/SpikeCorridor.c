@@ -12,6 +12,7 @@ ObjectSpikeCorridor *SpikeCorridor;
 void SpikeCorridor_Update(void)
 {
     RSDK_THIS(SpikeCorridor);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void SpikeCorridor_StaticUpdate(void) {}
 void SpikeCorridor_Draw(void)
 {
     RSDK_THIS(SpikeCorridor);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -32,14 +34,18 @@ void SpikeCorridor_Create(void *data)
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->active    = ACTIVE_BOUNDS;
+
     if (SceneInfo->inEditor) {
         if (self->colWidth < 20)
             self->colWidth = 20;
+
         if (self->rowHeight < 1)
             self->rowHeight = 1;
+
         if (self->yOffset < 64)
             self->yOffset = 64;
     }
+
     self->updateRange.x = 0x2000000;
     self->updateRange.y = 0x2000000;
     self->state         = SpikeCorridor_StateDropper_Setup;
@@ -48,6 +54,7 @@ void SpikeCorridor_Create(void *data)
 void SpikeCorridor_StageLoad(void)
 {
     SpikeCorridor->aniFrames    = RSDK.LoadSpriteAnimation("MMZ/SpikeCorridor.bin", SCOPE_STAGE);
+
     SpikeCorridor->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
     SpikeCorridor->sfxImpact    = RSDK.GetSfx("Stage/Impact2.wav");
     SpikeCorridor->sfxIndicator = RSDK.GetSfx("MMZ/Indicator.wav");
@@ -56,6 +63,7 @@ void SpikeCorridor_StageLoad(void)
 void SpikeCorridor_SetupHitboxes(void)
 {
     RSDK_THIS(SpikeCorridor);
+
     int32 size = (-8 * self->colWidth) >> 1;
 
     self->hitboxes[0].left   = size;
@@ -72,9 +80,10 @@ void SpikeCorridor_SetupHitboxes(void)
 void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, bool32 useWarnAnim)
 {
     RSDK_THIS(SpikeCorridor);
-    Vector2 drawPos;
 
     int32 startX = self->position.x - (self->colWidth << 18);
+
+    Vector2 drawPos;
     drawPos.x    = 0;
     drawPos.y    = self->position.y + offsetY;
 
@@ -101,33 +110,33 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
             startX += 0x100000;
         }
         else {
-            if (w - x < 4) {
-                switch (w - x) {
-                    case 3:
-                        RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 3, animator, true, 0);
-                        x += 2;
-                        startX += 0x100000;
-                        break;
+            switch (w - x) {
+                case 0:
+                    RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim, animator, true, 0);
+                    x += 2;
+                    startX += 0x100000;
+                    break;
 
-                    case 2:
-                        RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 2, animator, true, 0);
-                        ++x;
-                        startX += 0x80000;
-                        break;
+                case 1: RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 1, animator, true, 0); break;
 
-                    case 1: RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 1, animator, true, 0); break;
+                case 2:
+                    RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 2, animator, true, 0);
+                    ++x;
+                    startX += 0x80000;
+                    break;
 
-                    case 0:
-                        RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim, animator, true, 0);
-                        x += 2;
-                        startX += 0x100000;
-                        break;
-                }
-            }
-            else {
-                RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 4, animator, true, 0);
-                x += 3;
-                startX += 0x180000;
+                case 3:
+                    RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 3, animator, true, 0);
+                    x += 2;
+                    startX += 0x100000;
+                    break;
+
+                default:
+                case 4:
+                    RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 4, animator, true, 0);
+                    x += 3;
+                    startX += 0x180000;
+                    break;
             }
         }
 
@@ -142,19 +151,22 @@ void SpikeCorridor_SetupNextSpikeRow(void)
     RSDK_THIS(SpikeCorridor);
 
     int32 max  = (int8)(self->colWidth - 9);
-    int32 rand = RSDK.Rand(3, max);
+    int32 size = RSDK.Rand(3, max);
+
     if (self->lastSize <= -1) {
-        self->size     = rand;
-        self->lastSize = rand;
+        self->size     = size;
+        self->lastSize = size;
     }
     else {
         while (true) {
-            if (abs(rand - self->lastSize) >= 6 || abs(rand - self->lastSize) == 3)
+            if (abs(size - self->lastSize) >= 6 || abs(size - self->lastSize) == 3)
                 break;
-            rand = RSDK.Rand(3, max);
+
+            size = RSDK.Rand(3, max);
         }
-        self->size     = rand;
-        self->lastSize = rand;
+
+        self->size     = size;
+        self->lastSize = size;
     }
 }
 
@@ -186,8 +198,8 @@ void SpikeCorridor_StateDropper_Setup(void)
     self->hitbox.top    = self->yOffset;
     self->hitbox.right  = (8 * self->colWidth) >> 1;
     self->hitbox.bottom = self->yOffset + 24 * self->rowHeight;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+
+    self->startPos    = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->rowID         = 0;
@@ -196,6 +208,7 @@ void SpikeCorridor_StateDropper_Setup(void)
 
     SpikeCorridor_StateDropper_CheckForPlayer();
     self->state     = SpikeCorridor_StateDropper_CheckForPlayer;
+
     self->stateDraw = StateMachine_None;
 }
 
@@ -214,12 +227,14 @@ void SpikeCorridor_StateDropper_CheckForPlayer(void)
             if (player->position.x <= self->position.x) {
                 if (player->position.x + (playerHitbox->left << 16) >= self->position.x + (self->hitbox.left << 16)) {
                     SpikeCorridor_SetupNextSpikeRow();
+
                     self->state     = SpikeCorridor_StateDropper_DropWarn;
                     self->stateDraw = SpikeCorridor_Draw_DropWarn;
                 }
             }
             else if (player->position.x + (playerHitbox->right << 16) <= self->position.x + (self->hitbox.right << 16)) {
                 SpikeCorridor_SetupNextSpikeRow();
+
                 self->state     = SpikeCorridor_StateDropper_DropWarn;
                 self->stateDraw = SpikeCorridor_Draw_DropWarn;
             }
@@ -238,6 +253,7 @@ void SpikeCorridor_StateDropper_DropWarn(void)
     else {
         if (!(self->timer % 40))
             RSDK.PlaySfx(SpikeCorridor->sfxIndicator, false, 255);
+
         ++self->timer;
     }
 }
@@ -248,17 +264,18 @@ void SpikeCorridor_StateDropper_SpawnSpikes(void)
 
     RSDK.PlaySfx(SpikeCorridor->sfxDrop, false, 255);
 
-    EntitySpikeCorridor *child = CREATE_ENTITY(SpikeCorridor, self, self->startPos.x, self->startPos.y);
-    child->isPermanent         = true;
-    child->state               = SpikeCorridor_StateSpikes_Setup;
-    child->active              = ACTIVE_NORMAL;
-    child->storedRowID         = self->rowID;
-    child->size                = self->size;
-    child->parent              = (Entity *)self;
-    child->drawOrder           = self->drawOrder;
-    child->colWidth            = self->colWidth;
-    child->yOffset             = 0;
-    child->fallOffset          = (self->yOffset + 24 * (self->rowHeight - self->rowID++ - 1)) << 16;
+    EntitySpikeCorridor *fallRow = CREATE_ENTITY(SpikeCorridor, self, self->startPos.x, self->startPos.y);
+    fallRow->isPermanent         = true;
+    fallRow->state               = SpikeCorridor_StateSpikes_Setup;
+    fallRow->active              = ACTIVE_NORMAL;
+    fallRow->storedRowID         = self->rowID;
+    fallRow->size                = self->size;
+    fallRow->parent              = self;
+    fallRow->drawOrder           = self->drawOrder;
+    fallRow->colWidth            = self->colWidth;
+    fallRow->yOffset             = 0;
+    fallRow->fallOffset          = (self->yOffset + 24 * (self->rowHeight - self->rowID++ - 1)) << 16;
+
     self->timer                = 0;
 
     if (self->rowID >= self->rowHeight) {
@@ -288,11 +305,14 @@ void SpikeCorridor_StateDropper_DropWait(void)
 void SpikeCorridor_StateSpikes_Setup(void)
 {
     RSDK_THIS(SpikeCorridor);
+
     SpikeCorridor_SetupHitboxes();
+
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->state     = SpikeCorridor_StateSpikes_Fall;
     self->stateDraw = SpikeCorridor_Draw_Spikes;
+
+    self->state     = SpikeCorridor_StateSpikes_Fall;
     SpikeCorridor_StateSpikes_Fall();
 }
 
@@ -303,6 +323,7 @@ void SpikeCorridor_StateSpikes_Fall(void)
     if (self->yOffset >= self->fallOffset) {
         RSDK.StopSfx(SpikeCorridor->sfxDrop);
         RSDK.PlaySfx(SpikeCorridor->sfxImpact, false, 255);
+
         Camera_ShakeScreen(0, 0, 5);
         self->active = ACTIVE_ALWAYS;
         self->state  = SpikeCorridor_StateSpikes_Land;
@@ -310,10 +331,13 @@ void SpikeCorridor_StateSpikes_Fall(void)
     else {
         self->velocity.y += 0x3800;
         self->yOffset += self->velocity.y;
+
         if (self->yOffset > self->fallOffset)
             self->yOffset = self->fallOffset;
-        self->position.y = self->yOffset + ((EntitySpikeCorridor *)self->parent)->startPos.y;
+
+        self->position.y = self->yOffset + self->parent->startPos.y;
     }
+
     SpikeCorridor_CheckPlayerCollisions();
 }
 
@@ -321,21 +345,24 @@ void SpikeCorridor_StateSpikes_Land(void) { SpikeCorridor_CheckPlayerCollisions(
 
 void SpikeCorridor_Draw_DropWarn(void)
 {
+    RSDK_THIS(SpikeCorridor);
+
     Animator animator;
     memset(&animator, 0, sizeof(Animator));
-    RSDK_THIS(SpikeCorridor);
 
     int32 yOff = 0;
     if ((ScreenInfo->position.y << 16) - self->startPos.y > 0)
         yOff = (ScreenInfo->position.y << 16) - self->startPos.y;
+
     SpikeCorridor_HandleDrawing(&animator, yOff, self->size, true);
 }
 
 void SpikeCorridor_Draw_Spikes(void)
 {
+    RSDK_THIS(SpikeCorridor);
+
     Animator animator;
     memset(&animator, 0, sizeof(Animator));
-    RSDK_THIS(SpikeCorridor);
 
     SpikeCorridor_HandleDrawing(&animator, 0, self->size, false);
 }
@@ -344,25 +371,31 @@ void SpikeCorridor_Draw_Spikes(void)
 void SpikeCorridor_EditorDraw(void)
 {
     RSDK_THIS(SpikeCorridor);
+
     Animator animator;
+    memset(&animator, 0, sizeof(Animator));
 
     self->inkEffect = INK_NONE;
-    memset(&animator, 0, sizeof(Animator));
     SpikeCorridor_HandleDrawing(&animator, 0, self->colWidth, true);
 
-    int yOffset      = 0;
-    self->fallOffset = (self->yOffset + 24 * (self->rowHeight - 1)) << 16;
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
 
-    while (yOffset < self->fallOffset) {
-        self->velocity.y += 0x3800;
-        yOffset += self->velocity.y;
-        if (yOffset > self->fallOffset)
-            yOffset = self->fallOffset;
+        int yOffset      = 0;
+        self->fallOffset = (self->yOffset + 24 * (self->rowHeight - 1)) << 16;
+
+        while (yOffset < self->fallOffset) {
+            self->velocity.y += 0x3800;
+            yOffset += self->velocity.y;
+            if (yOffset > self->fallOffset)
+                yOffset = self->fallOffset;
+        }
+
+        self->inkEffect = INK_BLEND;
+        SpikeCorridor_HandleDrawing(&animator, yOffset, self->colWidth, false);
+
+        RSDK_DRAWING_OVERLAY(false);
     }
-
-    self->inkEffect = INK_BLEND;
-    memset(&animator, 0, sizeof(Animator));
-    SpikeCorridor_HandleDrawing(&animator, yOffset, self->colWidth, false);
 }
 
 void SpikeCorridor_EditorLoad(void) { SpikeCorridor->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SpikeCorridor.bin", SCOPE_STAGE); }

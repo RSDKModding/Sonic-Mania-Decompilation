@@ -27,7 +27,7 @@ void MMZ2Outro_Update(void);
 void MMZ2Outro_LateUpdate(void);
 void MMZ2Outro_StaticUpdate(void);
 void MMZ2Outro_Draw(void);
-void MMZ2Outro_Create(void* data);
+void MMZ2Outro_Create(void *data);
 void MMZ2Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MMZ2Outro_EditorDraw(void);
@@ -46,4 +46,4 @@ bool32 MMZ2Outro_Cutscene_EnterMonarchEyes(EntityCutsceneSeq *host);
 bool32 MMZ2Outro_Cutscene_ViewMonarch(EntityCutsceneSeq *host);
 #endif
 
-#endif //!OBJ_MMZ2OUTRO_H
+#endif //! OBJ_MMZ2OUTRO_H

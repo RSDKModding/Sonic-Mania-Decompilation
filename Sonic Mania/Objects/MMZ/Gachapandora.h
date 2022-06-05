@@ -15,14 +15,14 @@ typedef enum {
     GACHAPANDORA_FIREBALL,
     GACHAPANDORA_DEBRIS,
     GACHAPANDORA_SPARK,
-}GachapandoraTypes;
+} GachapandoraTypes;
 
 // Object Class
 struct ObjectGachapandora {
     RSDK_OBJECT
     TABLE(int32 capsuleOffsets[56],
           { 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 49, 50, 50, 50, 51, 51, 51, 51, 52, 52, 52, 52, 53, 53, 53, 53,
-                            54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 53, 53, 52, 52, 52, 52, 51, 51, 51, 50, 50, 50, 50, 49, 49, 48, 48 });
+            54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 53, 53, 52, 52, 52, 52, 51, 51, 51, 50, 50, 50, 50, 49, 49, 48, 48 });
     uint8 destroyedToys;
     uint8 handleDir;
     uint8 eggmanDir;
@@ -37,7 +37,7 @@ struct ObjectGachapandora {
     uint8 capsuleTypeR[4];
     uint8 capsuleDelayR[4];
     int16 handleSpinTimer;
-    uint8 nextChildType;
+    uint8 nextPrizeType;
     int8 nextCapsuleL;
     int8 nextCapsuleR;
     int8 lastCapsuleType;
@@ -81,7 +81,7 @@ struct EntityGachapandora {
     int32 invincibilityTimer;
     uint8 health;
     Vector2 originPos;
-    Entity *parent;
+    EntityGachapandora *parent;
     Animator mainAnimator;
     Animator eggmanAnimator;
     Animator handleAnimator;
@@ -97,7 +97,7 @@ void Gachapandora_Update(void);
 void Gachapandora_LateUpdate(void);
 void Gachapandora_StaticUpdate(void);
 void Gachapandora_Draw(void);
-void Gachapandora_Create(void* data);
+void Gachapandora_Create(void *data);
 void Gachapandora_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Gachapandora_EditorDraw(void);
@@ -161,4 +161,4 @@ void Gachapandora_StateEggman_Falling(void);
 void Gachapandora_StateEggman_Escape(void);
 void Gachapandora_StateEggman_RunAway(void);
 
-#endif //!OBJ_GACHAPANDORA_H
+#endif //! OBJ_GACHAPANDORA_H

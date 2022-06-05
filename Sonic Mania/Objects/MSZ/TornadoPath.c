@@ -470,7 +470,7 @@ void TornadoPath_EditorLoad(void)
     RSDK_ENUM_VAR("Enter Tornado Sequence", TORNADOPATH_ENTERTORNADO);
     RSDK_ENUM_VAR("Enter Tornado Sequence (Fly to Boss Node)", TORNADOPATH_ENTERTORNADO_FLYTOBOSS);
     RSDK_ENUM_VAR("Handle Uber Caterkiller Boss", TORNADOPATH_HANDLEBOSS_MSZ1ST);
-    RSDK_ENUM_VAR("Set Tornado Speed (Set High Layer)", TORNADOPATH_SETSPEED_HIGH);
+    RSDK_ENUM_VAR("Set Tornado Speed (Set High Group)", TORNADOPATH_SETSPEED_HIGH);
     RSDK_ENUM_VAR("Goto \"Stop Tornado\" Node", TORNADOPATH_GOTOSTOP);
     RSDK_ENUM_VAR("Setup MSZ1CutsceneST", TORNADOPATH_SETUPMSZ1CUTSCENEST);
     RSDK_ENUM_VAR("Finish Crash", TORNADOPATH_CRASHFINISH);

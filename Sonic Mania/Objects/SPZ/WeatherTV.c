@@ -389,14 +389,14 @@ void WeatherTV_Draw_SuperHot(void)
     RSDK.DrawSprite(&self->rainAnimator, &self->rainPos, false);
 
     self->inkEffect = INK_NONE;
-    RSDK.DrawRect(self->position.x - 0x500000, self->position.y - 0x300000, 0xA00000, 0x600000, 0xF04000u, self->rectAlpha, INK_ALPHA, false);
+    RSDK.DrawRect(self->position.x - 0x500000, self->position.y - 0x300000, 0xA00000, 0x600000, 0xF04000, self->rectAlpha, INK_ALPHA, false);
 
     self->weatherIconAnimator.frameID = 0;
     RSDK.DrawSprite(&self->weatherIconAnimator, &self->weatherIconPos, false);
 
     drawPos.x = self->weatherIconPos.x;
     drawPos.y = self->weatherIconPos.y + 0xC0000 - (self->timer << 13);
-    RSDK.DrawRect(self->weatherIconPos.x - 0x30000, drawPos.y, 0x60000, self->timer << 13, 0xE00000u, 255, INK_NONE, false);
+    RSDK.DrawRect(self->weatherIconPos.x - 0x30000, drawPos.y, 0x60000, self->timer << 13, 0xE00000, 0xFF, INK_NONE, false);
 
     self->weatherIconAnimator.frameID = 2;
     RSDK.DrawSprite(&self->weatherIconAnimator, &drawPos, false);

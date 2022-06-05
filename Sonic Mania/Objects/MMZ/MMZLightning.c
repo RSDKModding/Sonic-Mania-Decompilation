@@ -13,6 +13,7 @@ ObjectMMZLightning *MMZLightning;
 void MMZLightning_Update(void)
 {
     RSDK_THIS(MMZLightning);
+
     StateMachine_Run(self->state);
 }
 
@@ -46,8 +47,10 @@ void MMZLightning_StageLoad(void) { MMZLightning->aniFrames = RSDK.LoadSpriteAni
 void MMZLightning_State_BeginFadeIn(void)
 {
     RSDK_THIS(MMZLightning);
+
     if (!self->timer)
         RSDK.SetLimitedFade(0, 0, 5, 192, 0, 255);
+
     if (++self->timer == 4) {
         self->timer = 0;
         self->state = MMZLightning_State_FadeIn;
@@ -57,6 +60,7 @@ void MMZLightning_State_BeginFadeIn(void)
 void MMZLightning_State_FadeIn(void)
 {
     RSDK_THIS(MMZLightning);
+
     RSDK.SetLimitedFade(0, 4, 1, self->timer, false, 255);
 
     self->timer += 4;
@@ -67,7 +71,9 @@ void MMZLightning_State_FadeIn(void)
 void MMZLightning_State_SetupLightningBig(void)
 {
     RSDK_THIS(MMZLightning);
+
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 0, &self->animator, true, 0);
+
     self->position.x = (ScreenInfo->centerX + RSDK.Rand(-140, 140)) << 16;
     self->position.y = RSDK.Rand(0x200000, 0x400000);
     self->visible    = true;
@@ -76,12 +82,14 @@ void MMZLightning_State_SetupLightningBig(void)
     self->alpha      = 0x200;
     self->inkEffect  = INK_ADD;
     self->drawOrder  = 1;
-    self->state      = MMZLightning_State_ShowLightningBig;
+
+    self->state = MMZLightning_State_ShowLightningBig;
 }
 
 void MMZLightning_State_ShowLightningBig(void)
 {
     RSDK_THIS(MMZLightning);
+
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1)
@@ -101,7 +109,9 @@ void MMZLightning_State_LightningBigFadeOut(void)
 void MMZLightning_State_SetupLightningSmall(void)
 {
     RSDK_THIS(MMZLightning);
+
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 4));
+
     self->position.x = (ScreenInfo->centerX + RSDK.Rand(-64, 64)) << 16;
     self->position.y = RSDK.Rand(0x400000, 0x600000);
     self->visible    = true;
@@ -110,7 +120,8 @@ void MMZLightning_State_SetupLightningSmall(void)
     self->alpha      = 320;
     self->inkEffect  = INK_ADD;
     self->drawOrder  = 1;
-    self->state      = MMZLightning_State_LightningSmallFadeOut;
+
+    self->state = MMZLightning_State_LightningSmallFadeOut;
 }
 
 void MMZLightning_State_LightningSmallFadeOut(void)

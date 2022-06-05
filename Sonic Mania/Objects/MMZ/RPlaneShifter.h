@@ -37,7 +37,7 @@ void RPlaneShifter_Update(void);
 void RPlaneShifter_LateUpdate(void);
 void RPlaneShifter_StaticUpdate(void);
 void RPlaneShifter_Draw(void);
-void RPlaneShifter_Create(void* data);
+void RPlaneShifter_Create(void *data);
 void RPlaneShifter_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RPlaneShifter_EditorDraw(void);
@@ -55,4 +55,4 @@ void RPlaneShifter_State_AwaitPlayer(void);
 void RPlaneShifter_State_Spinning(void);
 void RPlaneShifter_State_FinishSpin(void);
 
-#endif //!OBJ_RPLANESHIFTER_H
+#endif //! OBJ_RPLANESHIFTER_H

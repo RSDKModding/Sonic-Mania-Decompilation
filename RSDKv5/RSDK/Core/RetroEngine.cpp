@@ -5,8 +5,6 @@ using namespace RSDK;
 LogicLinkHandle RSDK::linkGameLogic = NULL;
 
 #if RETRO_PLATFORM == RETRO_WIN
-#include "Windows.h"
-
 HMODULE hLibModule = NULL;
 #endif
 
@@ -176,15 +174,15 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 #endif
 
 #if RETRO_PLATFORM == RETRO_WIN
-    if (hLibModule) {
+    if (hLibModule)
         FreeLibrary(hLibModule);
-        hLibModule = NULL;
-    }
+    hLibModule = NULL;
 #endif
 
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX
     if (link_handle)
         dlclose(link_handle);
+    link_handle = NULL;
 #endif
 
     if (engine.consoleEnabled) {

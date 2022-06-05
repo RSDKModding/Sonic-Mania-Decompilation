@@ -30,7 +30,7 @@ void PlaneSeeSaw_Update(void);
 void PlaneSeeSaw_LateUpdate(void);
 void PlaneSeeSaw_StaticUpdate(void);
 void PlaneSeeSaw_Draw(void);
-void PlaneSeeSaw_Create(void* data);
+void PlaneSeeSaw_Create(void *data);
 void PlaneSeeSaw_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PlaneSeeSaw_EditorDraw(void);
@@ -46,4 +46,4 @@ void PlaneSeeSaw_State_Launch(void);
 void PlaneSeeSaw_PlayerState_ToBG(void);
 void PlaneSeeSaw_PlayerState_ToFG(void);
 
-#endif //!OBJ_PLANESEESAW_H
+#endif //! OBJ_PLANESEESAW_H

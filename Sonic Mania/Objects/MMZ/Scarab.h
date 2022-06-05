@@ -41,7 +41,7 @@ void Scarab_Update(void);
 void Scarab_LateUpdate(void);
 void Scarab_StaticUpdate(void);
 void Scarab_Draw(void);
-void Scarab_Create(void* data);
+void Scarab_Create(void *data);
 void Scarab_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Scarab_EditorDraw(void);
@@ -62,4 +62,4 @@ void Scarab_State_Setup(void);
 void Scarab_State_Move(void);
 void Scarab_State_Wait(void);
 
-#endif //!OBJ_SCARAB_H
+#endif //! OBJ_SCARAB_H

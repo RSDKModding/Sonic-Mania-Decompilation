@@ -12,6 +12,7 @@ ObjectVanishPlatform *VanishPlatform;
 void VanishPlatform_Update(void)
 {
     RSDK_THIS(VanishPlatform);
+
     if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Platform_State_Fixed) {
         self->active        = ACTIVE_NORMAL;
         self->timer = self->duration;
@@ -26,6 +27,7 @@ void VanishPlatform_Update(void)
         self->stateCollide = Platform_Collision_TopSolid;
         self->collision    = PLATFORM_C_SOLID_TOP;
     }
+
     Platform_Update();
 }
 
@@ -36,15 +38,19 @@ void VanishPlatform_StaticUpdate(void) {}
 void VanishPlatform_Draw(void)
 {
     RSDK_THIS(VanishPlatform);
+
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void VanishPlatform_Create(void *data)
 {
     RSDK_THIS(VanishPlatform);
+
     self->collision = PLATFORM_C_SOLID_TOP;
     Platform_Create(NULL);
+
     RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 0);
+
     self->drawFX  = FX_SCALE;
     self->scale.x = 0;
     self->scale.y = 0x200;
@@ -81,10 +87,25 @@ void VanishPlatform_State_Disappear(void)
 void VanishPlatform_EditorDraw(void)
 {
     RSDK_THIS(VanishPlatform);
+
     self->drawPos = self->position;
     self->drawFX  = FX_NONE;
 
     VanishPlatform_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
+            Entity *child = RSDK_GET_ENTITY_GEN(s + i);
+            if (!child)
+                continue;
+
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xE0E0E0, INK_NONE, 0xFF);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void VanishPlatform_EditorLoad(void) {}

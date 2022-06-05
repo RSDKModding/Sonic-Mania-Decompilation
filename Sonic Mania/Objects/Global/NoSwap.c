@@ -65,13 +65,13 @@ void NoSwap_Draw(void)
     RSDK_THIS(NoSwap);
 
     RSDK.DrawLine(self->position.x - 16 * self->size.x, self->position.y - 16 * self->size.y, self->position.x + 16 * self->size.x,
-                  self->position.y - 16 * self->size.y, 0xFF0000, 255, INK_NONE, false);
+                  self->position.y - 16 * self->size.y, 0xFF0000, 0xFF, INK_NONE, false);
     RSDK.DrawLine(self->position.x - 16 * self->size.x, self->position.y + 16 * self->size.y, self->position.x + 16 * self->size.x,
-                  self->position.y + 16 * self->size.y, 0xFF0000, 255, INK_NONE, false);
+                  self->position.y + 16 * self->size.y, 0xFF0000, 0xFF, INK_NONE, false);
     RSDK.DrawLine(self->position.x - 16 * self->size.x, self->position.y - 16 * self->size.y, self->position.x - 16 * self->size.x,
-                  self->position.y + 16 * self->size.y, 0xFF0000, 255, INK_NONE, false);
+                  self->position.y + 16 * self->size.y, 0xFF0000, 0xFF, INK_NONE, false);
     RSDK.DrawLine(self->position.x + 16 * self->size.x, self->position.y - 16 * self->size.y, self->position.x + 16 * self->size.x,
-                  self->position.y + 16 * self->size.y, 0xFF0000, 255, INK_NONE, false);
+                  self->position.y + 16 * self->size.y, 0xFF0000, 0xFF, INK_NONE, false);
 }
 
 void NoSwap_Create(void *data)
@@ -100,9 +100,13 @@ void NoSwap_EditorDraw(void)
     self->updateRange.x = TILE_SIZE * self->size.x;
     self->updateRange.y = TILE_SIZE * self->size.y;
 
-    RSDK_DRAWING_OVERLAY(true);
-    NoSwap_Draw();
-    RSDK_DRAWING_OVERLAY(false);
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        NoSwap_Draw();
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 
     RSDK.SetSpriteAnimation(NoSwap->aniFrames, 0, &self->unusedAnimator1, true, 8);
     RSDK.DrawSprite(&self->unusedAnimator1, NULL, false);

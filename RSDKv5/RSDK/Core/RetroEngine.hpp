@@ -308,10 +308,11 @@ enum GameRegions {
 #include <Xinput.h>
 #endif
 
-#if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
+// All windows systems need windows API for LoadLibrary()
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
 #include <timeapi.h>
 #include <commctrl.h>
 #include <dbt.h>
@@ -337,6 +338,7 @@ enum GameRegions {
 #endif // ! RETRO_RENDERDEVICE_SDL2
 
 #include <theora/theoradec.h>
+
 #endif // ! RETRO_WIN
 
 #if RETRO_PLATFORM == RETRO_OSX

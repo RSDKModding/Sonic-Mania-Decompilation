@@ -38,7 +38,7 @@ void PohBee_Update(void);
 void PohBee_LateUpdate(void);
 void PohBee_StaticUpdate(void);
 void PohBee_Draw(void);
-void PohBee_Create(void* data);
+void PohBee_Create(void *data);
 void PohBee_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PohBee_EditorDraw(void);
@@ -61,4 +61,4 @@ void PohBee_SetupHitboxes(void);
 void PohBee_State_Setup(void);
 void PohBee_State_Move(void);
 
-#endif //!OBJ_POHBEE_H
+#endif //! OBJ_POHBEE_H

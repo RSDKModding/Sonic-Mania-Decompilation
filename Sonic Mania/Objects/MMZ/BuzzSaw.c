@@ -12,6 +12,7 @@ ObjectBuzzSaw *BuzzSaw;
 void BuzzSaw_Update(void)
 {
     RSDK_THIS(BuzzSaw);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void BuzzSaw_StaticUpdate(void) {}
 void BuzzSaw_Draw(void)
 {
     RSDK_THIS(BuzzSaw);
+
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
@@ -37,9 +39,10 @@ void BuzzSaw_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, self->type, &self->animator, true, 0);
+
         self->active        = ACTIVE_BOUNDS;
-        self->updateRange.x = (abs(self->speed * self->amplitude.x) + 64) << 17;
-        self->updateRange.y = (abs(self->speed * self->amplitude.y) + 64) << 17;
+        self->updateRange.x = (abs(self->speed * self->amplitude.x) + 0x40) << 17;
+        self->updateRange.y = (abs(self->speed * self->amplitude.y) + 0x40) << 17;
         self->amplitude.x >>= 10;
         self->amplitude.y >>= 10;
         self->visible   = true;
@@ -106,6 +109,7 @@ void BuzzSaw_UpdateCB(int32 sfx)
 void BuzzSaw_CheckPlayerCollisions(void)
 {
     RSDK_THIS(BuzzSaw);
+
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
 
@@ -118,6 +122,7 @@ void BuzzSaw_CheckPlayerCollisions(void)
                 Player_CheckHit(player, self);
         }
     }
+
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
 }
@@ -125,9 +130,12 @@ void BuzzSaw_CheckPlayerCollisions(void)
 void BuzzSaw_State_Attatched(void)
 {
     RSDK_THIS(BuzzSaw);
-    self->drawPos.x = self->amplitude.x * RSDK.Sin1024(self->speed * Zone->timer) + self->startPos.x;
-    self->drawPos.y = self->amplitude.y * RSDK.Sin1024(self->speed * Zone->timer) + self->startPos.y;
+
+    self->drawPos.x = self->startPos.x + self->amplitude.x * RSDK.Sin1024(self->speed * Zone->timer);
+    self->drawPos.y = self->startPos.y + self->amplitude.y * RSDK.Sin1024(self->speed * Zone->timer);
+
     RSDK.ProcessAnimation(&self->animator);
+
     BuzzSaw_CheckPlayerCollisions();
 }
 
@@ -144,7 +152,7 @@ void BuzzSaw_State_Stray_Waiting(void)
 
         int32 rx = (abs(player->position.x - self->position.x) >> 16) * (abs(player->position.x - self->position.x) >> 16);
         int32 ry = (abs(player->position.y - self->position.y) >> 16) * (abs(player->position.y - self->position.y) >> 16);
-        if (angle + 32 - (self->angle & 0xFF) < 0x40 && (rx + ry) - 0x4000 < 0x5000) {
+        if (((angle + 0x20 - (self->angle & 0xFF)) & 0xFF) < 0x40 && (uint32)((rx + ry) - 0x4000) < 0x5000) {
             self->active     = ACTIVE_NORMAL;
             self->velocity.x = 0x600 * RSDK.Cos256(self->angle);
             self->velocity.y = 0x600 * RSDK.Sin256(self->angle);
@@ -159,20 +167,24 @@ void BuzzSaw_State_Stray_Released(void)
 
     if (self->alpha < 0x100)
         self->alpha += 0x10;
+
     self->drawPos.x += self->velocity.x;
     self->drawPos.y += self->velocity.y;
+
     RSDK.ProcessAnimation(&self->animator);
+
     BuzzSaw_CheckPlayerCollisions();
+
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->drawPos.x  = self->startPos.x;
-        self->drawPos.y  = self->startPos.y;
-        self->alpha      = 0x00;
-        self->state      = BuzzSaw_State_FreeMove_Reset;
+        self->position = self->startPos;
+        self->drawPos  = self->startPos;
+        self->alpha    = 0x00;
+        self->state    = BuzzSaw_State_FreeMove_Reset;
     }
+
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
 }
@@ -180,6 +192,7 @@ void BuzzSaw_State_Stray_Released(void)
 void BuzzSaw_State_FreeMove_Reset(void)
 {
     RSDK_THIS(BuzzSaw);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->state = BuzzSaw_State_Stray_Waiting;
         BuzzSaw_Create(NULL);
@@ -194,18 +207,47 @@ void BuzzSaw_EditorDraw(void)
     self->drawFX    = FX_ROTATE;
     self->inkEffect = INK_NONE;
     self->rotation  = 0;
-    if (!self->type)
+
+    if (self->type == BUZZSAW_ATTACHED)
         self->rotation = self->angle;
     else
         self->inkEffect = INK_ADD;
 
     RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, self->type, &self->animator, true, 0);
     self->active        = ACTIVE_BOUNDS;
-    self->updateRange.x = (abs(self->speed * self->amplitude.x) + 64) << 17;
-    self->updateRange.y = (abs(self->speed * self->amplitude.y) + 64) << 17;
+    self->updateRange.x = (abs(self->speed * self->amplitude.x) + 0x40) << 17;
+    self->updateRange.y = (abs(self->speed * self->amplitude.y) + 0x40) << 17;
     self->drawPos       = self->position;
 
     BuzzSaw_Draw();
+
+    if (showGizmos() && self->type == BUZZSAW_ATTACHED) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        Vector2 pos;
+        Vector2 amplitude;
+        amplitude.x         = self->amplitude.x >> 10;
+        amplitude.y         = self->amplitude.y >> 10;
+
+        self->updateRange.x = (abs(self->speed * self->amplitude.x) + 0x40) << 17;
+        self->updateRange.y = (abs(self->speed * self->amplitude.y) + 0x40) << 17;
+
+        // draw distance previews
+        self->inkEffect = INK_BLEND;
+        self->drawPos.x = amplitude.x * RSDK.Sin1024(0x100) + self->position.x;
+        self->drawPos.y = amplitude.y * RSDK.Sin1024(0x100) + self->position.y;
+        pos             = self->drawPos;
+        BuzzSaw_Draw();
+
+        self->drawPos.x = amplitude.x * RSDK.Sin1024(0x300) + self->position.x;
+        self->drawPos.y = amplitude.y * RSDK.Sin1024(0x300) + self->position.y;
+        BuzzSaw_Draw();
+
+        RSDK.DrawLine(pos.x, pos.y, self->drawPos.x, self->drawPos.y, 0x00FF00, 0, INK_NONE, false);
+
+        self->inkEffect = INK_NONE;
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void BuzzSaw_EditorLoad(void)
@@ -213,7 +255,7 @@ void BuzzSaw_EditorLoad(void)
     BuzzSaw->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BuzzSaw.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(BuzzSaw, type);
-    RSDK_ENUM_VAR("Attatched", BUZZSAW_ATTACHED);
+    RSDK_ENUM_VAR("Attached", BUZZSAW_ATTACHED);
     RSDK_ENUM_VAR("Stray", BUZZSAW_STRAY);
 }
 #endif

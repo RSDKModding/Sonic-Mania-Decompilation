@@ -19,18 +19,10 @@ void ConveyorWheel_Update(void)
             if (player->state == Player_State_KnuxGlideDrop || player->state == Player_State_GlideSlide)
                 player->state = Player_State_Ground;
 
-            if (self->direction) {
-                if (player->groundVel > -0x40000)
-                    player->groundVel = -0x40000;
-                if (player->groundVel < -0xF0000)
-                    player->groundVel = -0xF0000;
-            }
-            else {
-                if (player->groundVel < 0x40000)
-                    player->groundVel = 0x40000;
-                if (player->groundVel > 0xF0000)
-                    player->groundVel = 0xF0000;
-            }
+            if (self->direction)
+                player->groundVel = clampVal(player->groundVel, -0xF0000, -0x40000);
+            else
+                player->groundVel = clampVal(player->groundVel, 0x40000, 0xF0000);
         }
     }
 
@@ -46,12 +38,14 @@ void ConveyorWheel_Draw(void) {}
 void ConveyorWheel_Create(void *data)
 {
     RSDK_THIS(ConveyorWheel);
+
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     self->drawOrder     = Zone->objectDrawHigh;
+
     RSDK.SetSpriteAnimation(ConveyorWheel->aniFrames, 0, &self->animator, true, 0);
 }
 
@@ -70,12 +64,26 @@ void ConveyorWheel_StageLoad(void)
 void ConveyorWheel_EditorDraw(void)
 {
     RSDK_THIS(ConveyorWheel);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &ConveyorWheel->hitbox, FLIP_NONE, 0xFF0000);
+    
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void ConveyorWheel_EditorLoad(void)
 {
     ConveyorWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE);
+
+    ConveyorWheel->hitbox.left   = -49;
+    ConveyorWheel->hitbox.top    = -49;
+    ConveyorWheel->hitbox.right  = 49;
+    ConveyorWheel->hitbox.bottom = 49;
 
     RSDK_ACTIVE_VAR(ConveyorWheel, direction);
     RSDK_ENUM_VAR("Right", FLIP_NONE);

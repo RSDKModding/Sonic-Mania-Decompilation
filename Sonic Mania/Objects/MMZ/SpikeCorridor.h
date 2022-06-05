@@ -29,7 +29,7 @@ struct EntitySpikeCorridor {
     int32 fallOffset;
     Hitbox hitbox;
     Hitbox hitboxes[4];
-    Entity* parent;
+    EntitySpikeCorridor *parent;
 };
 
 // Object Struct

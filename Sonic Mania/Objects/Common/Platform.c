@@ -2400,7 +2400,7 @@ void Platform_EditorDraw(void)
 
             Platform_EditorDraw_Normal();
 
-            if (showGizmos()) {
+            if (showGizmos() && (amplitude.x || amplitude.y)) {
                 RSDK_DRAWING_OVERLAY(true);
 
                 self->inkEffect = INK_BLEND;
@@ -2443,7 +2443,7 @@ void Platform_EditorDraw(void)
                 Platform_EditorDraw_Normal();
             }
 
-            if (showGizmos() && !self->hasTension) {
+            if (showGizmos() && !self->hasTension && (amplitude.x || amplitude.y)) {
                 RSDK_DRAWING_OVERLAY(true);
 
                 self->inkEffect = INK_BLEND;
@@ -2630,7 +2630,7 @@ void Platform_EditorDraw(void)
             self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
             Platform_EditorDraw_Swinging(amplitude);
 
-            if (showGizmos()) {
+            if (showGizmos() && (amplitude.x || amplitude.y)) {
                 RSDK_DRAWING_OVERLAY(true);
 
                 if (self->type == PLATFORM_SWINGING) {
@@ -2702,7 +2702,7 @@ void Platform_EditorDraw(void)
 
             Platform_EditorDraw_Normal();
 
-            if (showGizmos()) {
+            if (showGizmos() && (amplitude.x || amplitude.y)) {
                 RSDK_DRAWING_OVERLAY(true);
 
                 Vector2 storePos = self->drawPos;
@@ -2768,7 +2768,7 @@ void Platform_EditorDraw(void)
 
             Platform_EditorDraw_Swinging(amplitude);
 
-            if (showGizmos()) {
+            if (showGizmos() && (amplitude.x || amplitude.y)) {
                 RSDK_DRAWING_OVERLAY(true);
 
                 self->inkEffect = INK_BLEND;
@@ -2800,7 +2800,7 @@ void Platform_EditorDraw(void)
 
             Platform_EditorDraw_Normal();
 
-            if (showGizmos()) {
+            if (showGizmos() && (amplitude.x || amplitude.y)) {
                 RSDK_DRAWING_OVERLAY(true);
 
                 self->inkEffect = INK_BLEND;

@@ -12,8 +12,10 @@ ObjectSizeLaser *SizeLaser;
 void SizeLaser_Update(void)
 {
     RSDK_THIS(SizeLaser);
+
     self->mainAnimator.frameID   = (Zone->timer >> 2) & 1;
     self->impactAnimator.frameID = (Zone->timer >> 2) & 1;
+
     StateMachine_Run(self->state);
 }
 
@@ -29,21 +31,21 @@ void SizeLaser_StaticUpdate(void)
         SizeLaser->playerPositions[playerID].y = player->position.y;
 
         if (player->scale.x > 0x200) {
-           
-            Hitbox *playerHitbox = Player_GetHitbox(player);
 
+            Hitbox *playerHitbox                       = Player_GetHitbox(player);
             SizeLaser->playerOuterBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
             SizeLaser->playerOuterBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
             SizeLaser->playerOuterBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
             SizeLaser->playerOuterBox[playerID].bottom = (player->scale.x * playerHitbox->bottom) >> 9;
 
-            playerHitbox = Player_GetAltHitbox(player);
+            playerHitbox                               = Player_GetAltHitbox(player);
             SizeLaser->playerInnerBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
             SizeLaser->playerInnerBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
             SizeLaser->playerInnerBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
             SizeLaser->playerInnerBox[playerID].bottom = (player->scale.x * playerHitbox->bottom) >> 9;
-            player->outerbox                           = &SizeLaser->playerOuterBox[playerID];
-            player->innerbox                           = &SizeLaser->playerInnerBox[playerID];
+
+            player->outerbox = &SizeLaser->playerOuterBox[playerID];
+            player->innerbox = &SizeLaser->playerInnerBox[playerID];
         }
     }
 }
@@ -51,6 +53,7 @@ void SizeLaser_StaticUpdate(void)
 void SizeLaser_Draw(void)
 {
     RSDK_THIS(SizeLaser);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     if (self->state == SizeLaser_State_Impact)
@@ -63,12 +66,12 @@ void SizeLaser_Create(void *data)
 
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        int32 subtype       = voidToInt(data);
+        int32 type          = voidToInt(data);
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
-        if (!subtype) {
+        if (!type) {
             self->active    = ACTIVE_BOUNDS;
             self->drawOrder = Zone->objectDrawLow + 1;
 
@@ -87,17 +90,18 @@ void SizeLaser_Create(void *data)
             }
         }
         else {
-            subtype--;
+            type--;
             self->active      = ACTIVE_NORMAL;
             self->drawOrder   = Zone->objectDrawLow;
-            self->orientation = subtype >> 2;
-            self->type        = subtype & 1;
+            self->orientation = type >> 2;
+            self->type        = type & 1;
 
             self->state = SizeLaser_State_Laser;
             switch (self->orientation) {
                 default:
                 case SIZELASER_ORIENTATION_DOWN:
                     self->velocity.y = 0x40000;
+
                     RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * (self->type + 2), &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * (self->type + 4), &self->impactAnimator, true, 0);
                     break;
@@ -106,6 +110,7 @@ void SizeLaser_Create(void *data)
                 case SIZELASER_ORIENTATION_LEFT:
                     self->direction  = self->orientation == SIZELASER_ORIENTATION_LEFT ? FLIP_X : FLIP_NONE;
                     self->velocity.x = self->orientation == SIZELASER_ORIENTATION_LEFT ? -0x40000 : 0x40000;
+
                     RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * self->type + 5, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * self->type + 9, &self->impactAnimator, true, 0);
                     break;
@@ -117,6 +122,7 @@ void SizeLaser_Create(void *data)
 void SizeLaser_StageLoad(void)
 {
     SizeLaser->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE);
+
     switch (GET_CHARACTER_ID(1)) {
         case ID_SONIC: SizeLaser->sonicFrames = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
 
@@ -169,11 +175,13 @@ void SizeLaser_StageLoad(void)
 bool32 SizeLaser_LaserSfxCheck(void)
 {
     int32 activeCount = 0;
+
     foreach_active(SizeLaser, entity)
     {
         if (entity->activeScreens)
             ++activeCount;
     }
+
     return activeCount > 0;
 }
 
@@ -255,7 +263,9 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
 
 void SizeLaser_P2JumpInResize(void)
 {
-    EntityPlayer *self    = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    // ???
+    EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     self->position.x = player1->position.x;
@@ -263,28 +273,33 @@ void SizeLaser_P2JumpInResize(void)
 
     self->position.x += self->abilityValues[0];
     self->position.y += self->abilityValues[1];
+
     if (self->abilityValues[0] <= 0) {
         if (self->abilityValues[0] < 0) {
-            self->abilityValues[0] -= (self->abilityValues[0] >> 4);
+            self->abilityValues[0] -= self->abilityValues[0] >> 4;
+
             if (self->abilityValues[0] > 0)
                 self->abilityValues[0] = 0;
         }
     }
     else {
-        self->abilityValues[0] -= (self->abilityValues[0] >> 4);
+        self->abilityValues[0] -= self->abilityValues[0] >> 4;
+
         if (self->abilityValues[0] < 0)
             self->abilityValues[0] = 0;
     }
 
     if (self->abilityValues[1] <= 0) {
         if (self->abilityValues[1] < 0) {
-            self->abilityValues[1] -= (self->abilityValues[0] >> 4);
+            self->abilityValues[1] -= self->abilityValues[0] >> 4;
+
             if (self->abilityValues[1] > 0)
                 self->abilityValues[1] = 0;
         }
     }
     else {
-        self->abilityValues[1] -= (self->abilityValues[0] >> 4);
+        self->abilityValues[1] -= self->abilityValues[0] >> 4;
+
         if (self->abilityValues[1] < 0)
             self->abilityValues[1] = 0;
     }
@@ -303,7 +318,9 @@ void SizeLaser_P2JumpInResize(void)
 
 void SizeLaser_P2JumpInGrow(void)
 {
-    EntityPlayer *self  = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    // ???
+    EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+
     StateMachine(state) = self->abilityPtrs[0];
     StateMachine_Run(state);
 
@@ -315,10 +332,7 @@ void SizeLaser_P2JumpInGrow(void)
         self->interaction = true;
         self->state       = Player_State_Air;
         Player_UpdatePhysicsState(self);
-        if (self->characterID == ID_TAILS)
-            self->jumpOffset = 0;
-        else
-            self->jumpOffset = 0x50000;
+        self->jumpOffset = self->characterID == ID_TAILS ? 0 : 0x50000;
     }
     else {
         self->state = SizeLaser_P2JumpInGrow;
@@ -329,7 +343,9 @@ void SizeLaser_P2JumpInGrow(void)
 
 void SizeLaser_P2JumpInShrink(void)
 {
-    EntityPlayer *self  = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    // ???
+    EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+
     StateMachine(state) = self->abilityPtrs[0];
     StateMachine_Run(state);
 
@@ -363,6 +379,7 @@ void SizeLaser_P2JumpInShrink(void)
                 break;
 #endif
         }
+
         self->jumpOffset = 0x40000;
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->animator, false, 0);
         self->isChibi = true;
@@ -370,7 +387,8 @@ void SizeLaser_P2JumpInShrink(void)
         self->scale.x     = 0x200;
         self->scale.y     = 0x200;
         self->interaction = true;
-        self->state       = Player_State_Air;
+
+        self->state = Player_State_Air;
         Player_UpdatePhysicsState(self);
     }
     else {
@@ -404,6 +422,7 @@ void SizeLaser_PlayerState_Grow(void)
 void SizeLaser_CheckPlayerCollisions(void)
 {
     RSDK_THIS(SizeLaser);
+
     int32 entityX = self->position.x;
     int32 entityY = self->position.y;
 
@@ -413,6 +432,8 @@ void SizeLaser_CheckPlayerCollisions(void)
     int32 extendY2[2];
 
     switch (self->orientation) {
+        default: break;
+
         case SIZELASER_ORIENTATION_DOWN:
             extendX1[0] = entityX - 0x80000;
             extendX1[1] = entityX + 0x80000;
@@ -472,10 +493,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                         player->velocity.y      = -0x40000;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
-                        if (!player->direction)
-                            player->velocity.x = -0x20000;
-                        else
-                            player->velocity.x = 0x20000;
+                        player->velocity.x      = player->direction ? 0x20000 : -0x20000;
                         player->drawFX |= FX_SCALE;
                         player->scale.x        = 0x200;
                         player->scale.y        = 0x200;
@@ -491,10 +509,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                     player->velocity.y      = -0x40000;
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
-                    if (!player->direction)
-                        player->velocity.x = -0x20000;
-                    else
-                        player->velocity.x = 0x20000;
+                    player->velocity.x      = player->direction ? 0x20000 : -0x20000;
                     player->drawFX |= FX_SCALE;
                     player->scale.x = 0x140;
                     player->scale.y = 0x140;
@@ -530,6 +545,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                             break;
 #endif
                     }
+
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(SizeLaser->sfxGrow2, false, 255);
                     player->tileCollisions = true;
@@ -543,10 +559,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                 player->velocity.y      = -0x40000;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
-                if (!player->direction)
-                    player->velocity.x = -0x20000;
-                else
-                    player->velocity.x = 0x20000;
+                player->velocity.x      = player->direction ? 0x20000 : -0x20000;
                 player->drawFX |= FX_SCALE;
                 player->scale.x = 0x200;
                 player->scale.y = 0x200;
@@ -574,6 +587,7 @@ void SizeLaser_State_Emitter(void)
 void SizeLaser_State_Laser(void)
 {
     RSDK_THIS(SizeLaser);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
@@ -594,6 +608,7 @@ void SizeLaser_State_Laser(void)
 void SizeLaser_State_Impact(void)
 {
     RSDK_THIS(SizeLaser);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
@@ -622,6 +637,8 @@ void SizeLaser_EditorDraw(void)
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
         int32 extendX = 0, extendY = 0;
         switch (self->orientation) {
             case SIZELASER_ORIENTATION_DOWN: extendY = (self->extend << 16); break;
@@ -632,6 +649,8 @@ void SizeLaser_EditorDraw(void)
         }
 
         DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + extendX, self->position.y + extendY, 0x00FF00, INK_NONE, 0xFF);
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

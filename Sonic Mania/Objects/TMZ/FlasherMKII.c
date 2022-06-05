@@ -198,7 +198,7 @@ void FlasherMKII_State_Idle(void)
 
                 case FLASHERMKII_ORIENTATION_RIGHT:
                     if (player->position.y >= self->position.y) {
-                        if ((uint32)(ry + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xC0000, 0x600000, 2u)) {
+                        if ((uint32)(ry + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xC0000, 0x600000, 2)) {
                             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                             self->direction  = FLIP_Y;
                             self->velocity.y = 0x220000;
@@ -217,7 +217,7 @@ void FlasherMKII_State_Idle(void)
 
                 case FLASHERMKII_ORIENTATION_LEFT:
                     if (player->position.y >= self->position.y) {
-                        if ((uint32)(ry + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, 0xC0000, 0x600000, 2u)) {
+                        if ((uint32)(ry + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, 0xC0000, 0x600000, 2)) {
                             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                             self->velocity.y = 0x220000;
                             self->direction  = FLIP_XY;

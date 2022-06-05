@@ -37,7 +37,7 @@ void MechaBu_Update(void);
 void MechaBu_LateUpdate(void);
 void MechaBu_StaticUpdate(void);
 void MechaBu_Draw(void);
-void MechaBu_Create(void* data);
+void MechaBu_Create(void *data);
 void MechaBu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MechaBu_EditorDraw(void);
@@ -58,4 +58,4 @@ void MechaBu_State_Moving(void);
 void MechaBu_State_Stopped(void);
 void MechaBu_State_Falling(void);
 
-#endif //!OBJ_MECHABU_H
+#endif //! OBJ_MECHABU_H

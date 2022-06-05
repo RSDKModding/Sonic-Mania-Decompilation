@@ -12,27 +12,33 @@ ObjectScarab *Scarab;
 void Scarab_Update(void)
 {
     RSDK_THIS(Scarab);
+
     RSDK.ProcessAnimation(&self->bodyAnimator);
     RSDK.ProcessAnimation(&self->backLegAnimator);
     RSDK.ProcessAnimation(&self->frontLegAnimator);
 
     self->moveOffset.x = -self->position.x;
     self->moveOffset.y = -self->position.y;
+
     StateMachine_Run(self->state);
+
     self->moveOffset.x += self->position.x;
     self->moveOffset.y += self->position.y;
 
     Scarab_CheckPlayerCollisions();
     Scarab_HandleChildMove();
     Scarab_HandlePlayerGrab();
+
     if (self->state != Scarab_State_Setup) {
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-            int32 x            = -self->position.x;
-            int32 y            = -self->position.y;
+            int32 x = -self->position.x;
+            int32 y = -self->position.y;
+
             self->direction    = self->startDir;
             self->position     = self->startPos;
             self->moveOffset.x = self->position.x + x;
             self->moveOffset.y = self->position.y + y;
+
             Scarab_HandleChildMove();
             Scarab_Create(NULL);
         }
@@ -49,6 +55,7 @@ void Scarab_StaticUpdate(void)
 void Scarab_Draw(void)
 {
     RSDK_THIS(Scarab);
+
     if (SceneInfo->currentDrawGroup == self->drawOrderHigh) {
         RSDK.DrawSprite(&self->frontLegAnimator, NULL, false);
     }
@@ -61,6 +68,7 @@ void Scarab_Draw(void)
 void Scarab_Create(void *data)
 {
     RSDK_THIS(Scarab);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
 
@@ -68,6 +76,7 @@ void Scarab_Create(void *data)
         self->drawOrderLow  = Zone->objectDrawLow;
         self->drawOrderHigh = Zone->playerDrawHigh;
     }
+
     if ((uint8)(self->planeFilter - 1) & 2) {
         self->drawOrderLow  = Zone->objectDrawHigh;
         self->drawOrderHigh = Zone->playerDrawHigh;
@@ -81,8 +90,10 @@ void Scarab_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (!self->amplitude)
         self->amplitude = 100;
+
     self->startPos = self->position;
     self->startDir = self->direction;
     self->state    = Scarab_State_Setup;
@@ -111,6 +122,7 @@ void Scarab_StageLoad(void)
 void Scarab_DebugSpawn(void)
 {
     RSDK_THIS(Scarab);
+
     EntityScarab *scarab = CREATE_ENTITY(Scarab, NULL, self->position.x, self->position.y);
     scarab->direction    = self->direction;
     scarab->startDir     = self->direction;
@@ -144,7 +156,7 @@ void Scarab_CheckPlayerCollisions(void)
             if (!self->childCount) {
                 if (Player_CheckCollisionTouch(player, self, &Scarab->hitboxGrab)) {
                     if (!((1 << playerID) & self->grabbedPlayers) && !self->playerTimers[playerID]) {
-                        self->grabbedPlayers |= (1 << playerID);
+                        self->grabbedPlayers |= 1 << playerID;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->groundVel       = 0;
                         player->onGround        = false;
@@ -169,6 +181,7 @@ void Scarab_HandleChildMove(void)
         EntityItemBox *child = RSDK_GET_ENTITY(slot + c, ItemBox);
         child->position.x += self->moveOffset.x;
         child->position.y += self->moveOffset.y;
+
         if (child->classID == ItemBox->classID)
             child->moveOffset = self->moveOffset;
     }
@@ -185,22 +198,21 @@ void Scarab_HandlePlayerGrab(void)
             if (self->playerTimers[playerID] < 60 && player->interaction && player->state == Player_State_None) {
                 player->position.x = self->position.x + ((2 * (self->direction != FLIP_NONE) - 1) << 21);
                 player->position.y = self->position.y - 0xA0000;
-                if (self->state == Scarab_State_Move)
-                    player->velocity.x = 0x6000 * self->moveDir;
-                else
-                    player->velocity.x = 0;
+                player->velocity.x = self->state == Scarab_State_Move ? (0x6000 * self->moveDir) : 0;
                 player->velocity.y = 0;
                 ++self->playerTimers[playerID];
             }
             else {
                 self->grabbedPlayers &= ~(1 << playerID);
                 self->playerTimers[playerID] = -10;
+
                 if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn) {
                     player->tileCollisions = true;
                     player->state          = Player_State_Air;
                     player->velocity.x     = 0xA0000 * (2 * (self->direction != FLIP_NONE) - 1);
                     player->velocity.y     = 0;
                 }
+
                 self->isPermanent = false;
             }
         }
@@ -222,12 +234,14 @@ void Scarab_HandlePlayerRelease(void)
         if ((1 << playerID) & self->grabbedPlayers) {
             self->grabbedPlayers &= ~(1 << playerID);
             self->playerTimers[playerID] = -10;
+
             if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn) {
                 player->tileCollisions = true;
                 player->state          = Player_State_Air;
                 player->velocity.x     = 0xA0000 * (2 * (self->direction != FLIP_NONE) - 1);
                 player->velocity.y     = 0;
             }
+
             self->isPermanent = false;
         }
     }
@@ -242,15 +256,18 @@ void Scarab_State_Setup(void)
     self->pullCount = 0;
     self->timer     = 0;
     self->moveDir   = 2 * (self->direction != FLIP_NONE) - 1;
+
     RSDK.SetSpriteAnimation(Scarab->aniFrames, 1, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Scarab->aniFrames, 5, &self->backLegAnimator, true, 0);
     RSDK.SetSpriteAnimation(Scarab->aniFrames, 3, &self->frontLegAnimator, true, 0);
+
     Scarab_State_Move();
 }
 
 void Scarab_State_Move(void)
 {
     RSDK_THIS(Scarab);
+
     if (self->frontLegAnimator.frameID == self->frontLegAnimator.frameCount - 1)
         ++self->pullCount;
 
@@ -274,6 +291,7 @@ void Scarab_State_Move(void)
         self->position.x = self->startPos.x + (self->amplitude << 16) * self->moveDir;
         self->moveDir    = -self->moveDir;
     }
+
     RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x60000, 4);
 }
 
@@ -285,6 +303,7 @@ void Scarab_State_Wait(void)
         RSDK.SetSpriteAnimation(Scarab->aniFrames, 1, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(Scarab->aniFrames, 5, &self->backLegAnimator, true, 0);
         RSDK.SetSpriteAnimation(Scarab->aniFrames, 3, &self->frontLegAnimator, true, 0);
+
         self->pullCount = 0;
         self->state     = Scarab_State_Move;
     }
@@ -298,14 +317,28 @@ void Scarab_EditorDraw(void)
 {
     RSDK_THIS(Scarab);
 
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 4, &self->backLegAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 0, &self->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 4, &self->backLegAnimator, true, 0);
     RSDK.DrawSprite(&self->backLegAnimator, NULL, false);
 
     RSDK.SetSpriteAnimation(Scarab->aniFrames, 2, &self->frontLegAnimator, true, 0);
     RSDK.DrawSprite(&self->frontLegAnimator, NULL, false);
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
+            Entity *child = RSDK_GET_ENTITY_GEN(s + i);
+            if (!child)
+                continue;
+
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xE0E0E0, INK_NONE, 0xFF);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void Scarab_EditorLoad(void)

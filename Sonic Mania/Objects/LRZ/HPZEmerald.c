@@ -138,8 +138,8 @@ void HPZEmerald_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(HPZEmerald, type);
     RSDK_ENUM_VAR("Master Emerald", HPZEMERALD_MASTER);
-    RSDK_ENUM_VAR("Stone Emerald (Low Layer)", HPZEMERALD_EMERALD_LOW);
-    RSDK_ENUM_VAR("Stone Emerald (High Layer)", HPZEMERALD_EMERALD_HIGH);
+    RSDK_ENUM_VAR("Stone Emerald (Low Group)", HPZEMERALD_EMERALD_LOW);
+    RSDK_ENUM_VAR("Stone Emerald (High Group)", HPZEMERALD_EMERALD_HIGH);
 }
 #endif
 

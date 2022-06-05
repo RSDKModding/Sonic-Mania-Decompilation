@@ -41,7 +41,7 @@ struct EntityEggPistonsMKII {
     uint8 type;
     int32 timer;
     int32 pistonID;
-    Entity *parent;
+    EntityEggPistonsMKII *parent;
     Animator mainAnimator;
     Animator altAnimator;
     Hitbox hitbox;
@@ -74,7 +74,7 @@ void EggPistonsMKII_Explode(void);
 
 EntityEggPistonsMKII *EggPistonsMKII_GetNextPiston(void);
 void EggPistonsMKII_SpawnElecBall(void);
-bool32 EggPistonsMKII_CheckPlayerAttacking(void *p);
+bool32 EggPistonsMKII_CheckPlayerAttacking(EntityPlayer *player);
 
 void EggPistonsMKII_State_SetupArena(void);
 void EggPistonsMKII_State_EnterBoss(void);

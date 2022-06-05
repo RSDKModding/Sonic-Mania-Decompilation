@@ -147,8 +147,9 @@ void SeltzerBottle_State_Spraying(void)
                     if (player->groundVel < 0x50000)
                         player->groundVel = 0x50000;
                 }
-                else if (player->groundVel > -0x50000) {
-                    player->groundVel = -0x50000;
+                else {
+                    if (player->groundVel > -0x50000)
+                        player->groundVel = -0x50000;
                 }
             }
         }
@@ -197,6 +198,42 @@ void SeltzerBottle_EditorDraw(void)
     self->waterLevel = 0x400000;
 
     SeltzerBottle_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        self->inkEffect = INK_BLEND;
+
+        int32 slotID   = SceneInfo->entitySlot;
+        int32 nextSlot = SceneInfo->entitySlot + 1;
+
+        if (nextSlot != -1) {
+            EntityPlatformNode *lastNode = RSDK_GET_ENTITY(slotID, PlatformNode);
+            while (lastNode) {
+                EntityPlatformNode *nextNode = RSDK_GET_ENTITY(nextSlot, PlatformNode);
+                if (!nextNode || nextNode->classID != PlatformNode->classID)
+                    break;
+
+                DrawHelpers_DrawArrow(lastNode->position.x, lastNode->position.y, nextNode->position.x, nextNode->position.y, 0xFFFF00, INK_NONE,
+                                      0xFF);
+
+                if (slotID >= nextSlot) {
+                    nextSlot--;
+                    slotID--;
+                }
+                else {
+                    nextSlot++;
+                    slotID++;
+                }
+
+                lastNode = nextNode;
+            }
+        }
+
+        self->inkEffect = INK_NONE;
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void SeltzerBottle_EditorLoad(void)

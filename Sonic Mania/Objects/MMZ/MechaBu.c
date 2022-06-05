@@ -12,6 +12,7 @@ ObjectMechaBu *MechaBu;
 void MechaBu_Update(void)
 {
     RSDK_THIS(MechaBu);
+
     StateMachine_Run(self->state);
 
     Vector2 offset = MechaBu_GetSawOffset();
@@ -26,6 +27,7 @@ void MechaBu_StaticUpdate(void) {}
 void MechaBu_Draw(void)
 {
     RSDK_THIS(MechaBu);
+
     RSDK.DrawSprite(&self->badnikAnimator, NULL, false);
     RSDK.DrawSprite(&self->sawAnimator, &self->sawPos, false);
     RSDK.DrawSprite(&self->hornAnimator, NULL, false);
@@ -40,15 +42,18 @@ void MechaBu_Create(void *data)
         self->drawOrder = Zone->objectDrawHigh;
     else
         self->drawOrder = Zone->objectDrawLow;
+
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     RSDK.SetSpriteAnimation(MechaBu->aniFrames, 1, &self->badnikAnimator, true, 0);
     RSDK.SetSpriteAnimation(MechaBu->aniFrames, 3, &self->hornAnimator, true, 0);
     RSDK.SetSpriteAnimation(MechaBu->aniFrames, 7, &self->sawAnimator, true, 0);
+
     self->state = MechaBu_State_Setup;
 }
 
@@ -76,6 +81,7 @@ void MechaBu_StageLoad(void)
 void MechaBu_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(MechaBu, NULL, self->position.x, self->position.y);
 }
 
@@ -101,12 +107,12 @@ void MechaBu_CheckPlayerCollisions(void)
             else if (Player_CheckBadnikTouch(player, self, &MechaBu->hitboxSaw) && Player_CheckBadnikBreak(player, self, false)) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->sawPos.x, self->sawPos.y);
                 RSDK.SetSpriteAnimation(MechaBu->aniFrames, 7, &debris->animator, false, 0);
-                debris->velocity.x    = RSDK.Rand(-2, 3) << 16;
-                debris->velocity.y    = RSDK.Rand(-4, -1) << 16;
-                debris->gravityStrength       = 0x3800;
-                debris->drawOrder     = self->drawOrder;
-                debris->updateRange.x = 0x200000;
-                debris->updateRange.y = 0x200000;
+                debris->velocity.x      = RSDK.Rand(-2, 3) << 16;
+                debris->velocity.y      = RSDK.Rand(-4, -1) << 16;
+                debris->gravityStrength = 0x3800;
+                debris->drawOrder       = self->drawOrder;
+                debris->updateRange.x   = 0x200000;
+                debris->updateRange.y   = 0x200000;
                 destroyEntity(self);
             }
         }
@@ -116,10 +122,10 @@ void MechaBu_CheckPlayerCollisions(void)
 void MechaBu_CheckOffScreen(void)
 {
     RSDK_THIS(MechaBu);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         MechaBu_Create(NULL);
     }
 }
@@ -128,39 +134,42 @@ Vector2 MechaBu_GetSawOffset(void)
 {
     RSDK_THIS(MechaBu);
 
-    Vector2 result;
+    Vector2 offset;
     switch (self->hornAnimator.animationID) {
         case 4:
-            result.x = MechaBu->sawOffsets[8];
-            result.y = MechaBu->sawOffsets[9];
+            offset.x = MechaBu->sawOffsets[8];
+            offset.y = MechaBu->sawOffsets[9];
             break;
 
         case 5:
-            result.x = MechaBu->sawOffsets[2 * (4 - self->hornAnimator.frameID) + 0];
-            result.y = MechaBu->sawOffsets[2 * (4 - self->hornAnimator.frameID) + 1];
+            offset.x = MechaBu->sawOffsets[2 * (4 - self->hornAnimator.frameID) + 0];
+            offset.y = MechaBu->sawOffsets[2 * (4 - self->hornAnimator.frameID) + 1];
             break;
 
         case 6:
-            result.x = MechaBu->sawOffsets[(2 * self->hornAnimator.frameID) + 0];
-            result.y = MechaBu->sawOffsets[(2 * self->hornAnimator.frameID) + 1];
+            offset.x = MechaBu->sawOffsets[(2 * self->hornAnimator.frameID) + 0];
+            offset.y = MechaBu->sawOffsets[(2 * self->hornAnimator.frameID) + 1];
             break;
 
         default:
-            result.x = MechaBu->sawOffsets[0];
-            result.y = MechaBu->sawOffsets[1];
+            offset.x = MechaBu->sawOffsets[0];
+            offset.y = MechaBu->sawOffsets[1];
             break;
     }
-    return result;
+
+    return offset;
 }
 
 void MechaBu_State_Setup(void)
 {
     RSDK_THIS(MechaBu);
+
     self->active     = ACTIVE_NORMAL;
+    self->sawTimer   = 0;
     self->velocity.x = -0x10000;
-    self->sawTimer     = 0;
     self->velocity.y = 0;
-    self->state      = MechaBu_State_Moving;
+
+    self->state = MechaBu_State_Moving;
     MechaBu_State_Moving();
 }
 
@@ -188,6 +197,7 @@ void MechaBu_State_Moving(void)
     }
 
     self->position.x += self->velocity.x;
+
     if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         bool32 collidedWall  = false;
         bool32 collidedFloor = false;
@@ -215,11 +225,9 @@ void MechaBu_State_Moving(void)
         else
             collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
 
-        if (collided)
-            self->state = MechaBu_State_Stopped;
-        else
-            self->state = MechaBu_State_Falling;
+        self->state = collided ? MechaBu_State_Stopped : MechaBu_State_Falling;
     }
+
     MechaBu_CheckPlayerCollisions();
     MechaBu_CheckOffScreen();
 }
@@ -231,11 +239,14 @@ void MechaBu_State_Stopped(void)
     RSDK.ProcessAnimation(&self->badnikAnimator);
     RSDK.ProcessAnimation(&self->hornAnimator);
     RSDK.ProcessAnimation(&self->sawAnimator);
+
     if (++self->timer == 48) {
         self->velocity.x = -self->velocity.x;
-        self->state      = MechaBu_State_Moving;
+
+        self->state = MechaBu_State_Moving;
         MechaBu_State_Moving();
     }
+
     MechaBu_CheckPlayerCollisions();
     MechaBu_CheckOffScreen();
 }
@@ -255,6 +266,7 @@ void MechaBu_State_Falling(void)
     if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(MechaBu->aniFrames, 0, &self->badnikAnimator, true, 0);
+
         self->state = MechaBu_State_Moving;
         MechaBu_State_Moving();
     }
@@ -267,6 +279,7 @@ void MechaBu_State_Falling(void)
 
         if (collided)
             self->velocity.x = 0;
+
         MechaBu_CheckPlayerCollisions();
         MechaBu_CheckOffScreen();
     }
@@ -276,6 +289,7 @@ void MechaBu_State_Falling(void)
 void MechaBu_EditorDraw(void)
 {
     RSDK_THIS(MechaBu);
+
     self->sawPos.x = self->position.x + -0x150000;
     self->sawPos.y = self->position.y + -0xF0000;
 

@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define FARPLANE_ENTITY_COUNT (256)
+
 // Object Class
 struct ObjectFarPlane {
     RSDK_OBJECT
@@ -25,7 +27,7 @@ struct EntityFarPlane {
     RSDK_ENTITY
     Vector2 size;
     Vector2 origin;
-    uint16 entityIDs[0x100];
+    uint16 entitySlots[FARPLANE_ENTITY_COUNT];
     int32 entityCount;
     Animator animator;
 };
@@ -38,7 +40,7 @@ void FarPlane_Update(void);
 void FarPlane_LateUpdate(void);
 void FarPlane_StaticUpdate(void);
 void FarPlane_Draw(void);
-void FarPlane_Create(void* data);
+void FarPlane_Create(void *data);
 void FarPlane_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FarPlane_EditorDraw(void);
@@ -53,4 +55,4 @@ void FarPlane_DrawLayerCB_Low(void);
 void FarPlane_DrawLayerCB_High(void);
 void FarPlane_ScanlineCB(ScanlineInfo *scanline);
 
-#endif //!OBJ_FARPLANE_H
+#endif //! OBJ_FARPLANE_H

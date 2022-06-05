@@ -49,7 +49,7 @@ void MatryoshkaBom_Update(void);
 void MatryoshkaBom_LateUpdate(void);
 void MatryoshkaBom_StaticUpdate(void);
 void MatryoshkaBom_Draw(void);
-void MatryoshkaBom_Create(void* data);
+void MatryoshkaBom_Create(void *data);
 void MatryoshkaBom_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MatryoshkaBom_EditorDraw(void);
@@ -73,4 +73,4 @@ void MatryoshkaBom_State_ReleaseSmallerBuddy(void);
 void MatryoshkaBom_State_Hatched(void);
 void MatryoshkaBom_State_Shrapnel(void);
 
-#endif //!OBJ_MATRYOSHKABOM_H
+#endif //! OBJ_MATRYOSHKABOM_H

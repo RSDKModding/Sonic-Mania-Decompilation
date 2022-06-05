@@ -1185,7 +1185,7 @@ void MegaOctus_Draw_Orb(void)
     int32 y     = self->position.y + 0xF80000;
 
     if (self->invincibilityTimer & 1)
-        RSDK.SetPaletteEntry(0, 128u, 0xE0E0E0);
+        RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
 
     Vector2 drawPos;
     for (int32 i = 0; i < 16; ++i) {

@@ -55,7 +55,7 @@ void SizeLaser_Update(void);
 void SizeLaser_LateUpdate(void);
 void SizeLaser_StaticUpdate(void);
 void SizeLaser_Draw(void);
-void SizeLaser_Create(void* data);
+void SizeLaser_Create(void *data);
 void SizeLaser_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SizeLaser_EditorDraw(void);
@@ -78,4 +78,4 @@ void SizeLaser_State_Emitter(void);
 void SizeLaser_State_Laser(void);
 void SizeLaser_State_Impact(void);
 
-#endif //!OBJ_SIZELASER_H
+#endif //! OBJ_SIZELASER_H

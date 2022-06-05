@@ -28,7 +28,7 @@ void MMZLightning_Update(void);
 void MMZLightning_LateUpdate(void);
 void MMZLightning_StaticUpdate(void);
 void MMZLightning_Draw(void);
-void MMZLightning_Create(void* data);
+void MMZLightning_Create(void *data);
 void MMZLightning_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MMZLightning_EditorDraw(void);
@@ -47,4 +47,4 @@ void MMZLightning_State_LightningSmallFadeOut(void);
 
 #endif
 
-#endif //!OBJ_MMZLIGHTNING_H
+#endif //! OBJ_MMZLIGHTNING_H
