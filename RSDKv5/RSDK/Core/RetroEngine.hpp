@@ -225,8 +225,6 @@ enum GameRegions {
 #define RETRO_AUDIODEVICE_SDL2 (1)
 #endif
 
-#endif //! RSDK_USE_SDL2
-
 #elif RETRO_PLATFORM == RETRO_XB1
 
 #undef RETRO_RENDERDEVICE_DIRECTX11
