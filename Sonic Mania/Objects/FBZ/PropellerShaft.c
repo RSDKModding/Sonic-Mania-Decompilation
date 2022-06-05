@@ -15,7 +15,7 @@ void PropellerShaft_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
             if (!Player_CheckCollisionTouch(player, self, &self->hitbox)) {
@@ -84,7 +84,7 @@ void PropellerShaft_LateUpdate(void)
 
     foreach_active(Player, player)
     {
-        if (((1 << RSDK.GetEntityID(player)) & self->activePlayers)) {
+        if (((1 << RSDK.GetEntitySlot(player)) & self->activePlayers)) {
             if (player->animator.frameID > 5)
                 player->drawOrder = Zone->playerDrawLow - 3;
             else

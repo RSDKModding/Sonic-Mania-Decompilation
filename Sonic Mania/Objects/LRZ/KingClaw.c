@@ -22,7 +22,7 @@ void KingClaw_LateUpdate(void) {}
 
 void KingClaw_StaticUpdate(void)
 {
-    foreach_active(KingClaw, claw) { RSDK.AddDrawListRef(1, RSDK.GetEntityID(claw)); }
+    foreach_active(KingClaw, claw) { RSDK.AddDrawListRef(1, RSDK.GetEntitySlot(claw)); }
 }
 
 void KingClaw_Draw(void)

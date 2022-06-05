@@ -19,7 +19,7 @@ void GreenScreen_StaticUpdate(void)
 
     foreach_active(GreenScreen, screen)
     {
-        RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(screen));
+        RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(screen));
         ++count;
     }
 

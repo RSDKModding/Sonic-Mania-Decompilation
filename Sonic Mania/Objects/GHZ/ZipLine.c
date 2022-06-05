@@ -21,7 +21,7 @@ void ZipLine_Update(void)
     self->position = self->handlePos;
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (self->grabDelay[playerID])
             self->grabDelay[playerID]--;
 
@@ -256,7 +256,7 @@ void ZipLine_ForceReleasePlayers(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if ((1 << playerID) & self->activePlayers) {
             self->grabDelay[playerID] = 60;
             player->velocity.y        = self->velocity.y;
@@ -393,7 +393,7 @@ void ZipLine_State_Moving(void)
             self->state              = StateMachine_None;
             foreach_active(Player, player)
             {
-                if ((1 << RSDK.GetEntityID(player)) & endMarker->activePlayers) {
+                if ((1 << RSDK.GetEntitySlot(player)) & endMarker->activePlayers) {
                     Hitbox *playerHitbox = Player_GetHitbox(player);
                     player->velocity.x   = 0;
                     player->velocity.y   = 0;

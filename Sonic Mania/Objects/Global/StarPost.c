@@ -237,7 +237,7 @@ void StarPost_CheckCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (!((1 << playerID) & self->interactedPlayers) && !player->sidekick) {
             if (Player_CheckCollisionTouch(player, self, &StarPost->hitbox)) {
                 self->state = StarPost_State_BallSpin;

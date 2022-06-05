@@ -16,7 +16,7 @@ void PlayerProbe_Update(void)
     // Pretty much just an edit of the PlaneSwitch collision code
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         int32 x     = (player->position.x - self->position.x) >> 8;
         int32 y     = (player->position.y - self->position.y) >> 8;

@@ -43,7 +43,7 @@ void Scarab_LateUpdate(void) {}
 
 void Scarab_StaticUpdate(void)
 {
-    foreach_active(Scarab, scarab) { RSDK.AddDrawListRef(scarab->drawOrderHigh, RSDK.GetEntityID(scarab)); }
+    foreach_active(Scarab, scarab) { RSDK.AddDrawListRef(scarab->drawOrderHigh, RSDK.GetEntitySlot(scarab)); }
 }
 
 void Scarab_Draw(void)
@@ -135,7 +135,7 @@ void Scarab_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
             if (Player_CheckBadnikTouch(player, self, &Scarab->hitboxBadnik)) {
                 Scarab_HandlePlayerRelease();
                 Player_CheckBadnikBreak(player, self, true);
@@ -180,7 +180,7 @@ void Scarab_HandlePlayerGrab(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if ((1 << playerID) & self->grabbedPlayers) {
             if (self->playerTimers[playerID] < 60 && player->interaction && player->state == Player_State_None) {
                 player->position.x = self->position.x + ((2 * (self->direction != FLIP_NONE) - 1) << 21);
@@ -217,7 +217,7 @@ void Scarab_HandlePlayerRelease(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->grabbedPlayers) {
             self->grabbedPlayers &= ~(1 << playerID);

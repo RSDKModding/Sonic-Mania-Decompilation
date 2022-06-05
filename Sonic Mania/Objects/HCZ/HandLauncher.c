@@ -32,7 +32,7 @@ void HandLauncher_LateUpdate(void) {}
 
 void HandLauncher_StaticUpdate(void)
 {
-    foreach_active(HandLauncher, launcher) { RSDK.AddDrawListRef(Zone->playerDrawHigh, RSDK.GetEntityID(launcher)); }
+    foreach_active(HandLauncher, launcher) { RSDK.AddDrawListRef(Zone->playerDrawHigh, RSDK.GetEntitySlot(launcher)); }
 }
 
 void HandLauncher_Draw(void)
@@ -101,7 +101,7 @@ void HandLauncher_CheckPlayerCollisions(void)
     if (self->grabDelay <= 0) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if ((self->state == HandLauncher_State_GrabbedPlayer || !player->sidekick) && !((1 << playerID) & self->activePlayers)) {
                 if (player->onGround) {
@@ -163,7 +163,7 @@ void HandLauncher_ReleasePlayers(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (((1 << playerID) & self->activePlayers)) {
             self->activePlayers &= ~(1 << playerID);
@@ -180,7 +180,7 @@ void HandLauncher_HandleGrabbedPlayers(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (((1 << playerID) & self->activePlayers)) {
             player->velocity.x = 0;
             player->velocity.y = 0;

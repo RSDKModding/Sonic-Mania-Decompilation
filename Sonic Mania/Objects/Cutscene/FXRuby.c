@@ -23,7 +23,7 @@ void FXRuby_StaticUpdate(void)
     if (Zone) {
         foreach_active(FXRuby, fxRuby)
         {
-            RSDK.AddDrawListRef(Zone->hudDrawOrder + 1, RSDK.GetEntityID(fxRuby));
+            RSDK.AddDrawListRef(Zone->hudDrawOrder + 1, RSDK.GetEntitySlot(fxRuby));
             foreach_break;
         }
     }

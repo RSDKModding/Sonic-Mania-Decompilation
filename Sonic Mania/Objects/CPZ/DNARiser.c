@@ -33,7 +33,7 @@ void DNARiser_LateUpdate(void) {}
 
 void DNARiser_StaticUpdate(void)
 {
-    foreach_active(DNARiser, entity) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(entity)); }
+    foreach_active(DNARiser, entity) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(entity)); }
 }
 
 void DNARiser_Draw(void)
@@ -164,7 +164,7 @@ void DNARiser_State_HandleInteractions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (!((1 << playerID) & self->activePlayers)) {
             if (Player_CheckCollisionTouch(player, self, &DNARiser->hitbox)) {
@@ -268,7 +268,7 @@ void DNARiser_State_HelixRise(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (!((1 << playerID) & self->activePlayers)) {
             if (Player_CheckCollisionTouch(player, self, &DNARiser->hitbox)) {
                 RSDK.PlaySfx(DNARiser->sfxGrab, false, 255);
@@ -321,7 +321,7 @@ void DNARiser_State_HelixRise(void)
     if (popped) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
             if (((1 << playerID) & self->activePlayers)) {
                 player->drawOrder      = Zone->playerDrawLow;
                 player->tileCollisions = true;

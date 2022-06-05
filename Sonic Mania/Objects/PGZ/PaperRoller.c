@@ -294,7 +294,7 @@ void PaperRoller_HandleRollerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (self->playerTimer[playerID] <= 0) {
             int32 distX = abs(self->position.x - player->position.x);
             int32 distY = abs(self->position.y - player->position.y);
@@ -343,7 +343,7 @@ void PaperRoller_HandlePrintCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (player->jumpPress)
             self->lastJumpTimer[playerID] = 0;

@@ -87,7 +87,7 @@ void UIControl_Create(void *data)
         self->startPos.y = self->position.y;
 
 #if MANIA_USE_PLUS
-        int32 slotID = RSDK.GetEntityID(self);
+        int32 slotID = RSDK.GetEntitySlot(self);
         if (UIButtonPrompt && slotID != SLOT_DIALOG_UICONTROL) {
             foreach_all(UIButtonPrompt, prompt)
             {
@@ -374,7 +374,7 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
 
             if (entity->position.x >= control->position.x + left && entity->position.x <= control->position.x + right) {
                 if (entity->position.y >= control->position.y + top && entity->position.y <= control->position.y + bottom) {
-                    int32 slot = RSDK.GetEntityID(entity);
+                    int32 slot = RSDK.GetEntitySlot(entity);
 
                     SceneInfo->entity = (Entity *)entity;
                     if (UIButton && entity->classID == UIButton->classID) {
@@ -544,7 +544,7 @@ void UIControl_SetupButtons(void)
 {
     RSDK_THIS(UIControl);
 
-    int32 slotID = RSDK.GetEntityID(self);
+    int32 slotID = RSDK.GetEntitySlot(self);
 
     Hitbox hitboxRange;
     if (UIHeading && slotID != SLOT_DIALOG_UICONTROL) {

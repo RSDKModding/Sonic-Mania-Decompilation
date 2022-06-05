@@ -235,7 +235,7 @@ void Rattlekiller_LateUpdate(void) {}
 
 void Rattlekiller_StaticUpdate(void)
 {
-    foreach_active(Rattlekiller, rattlekiller) { RSDK.AddDrawListRef(Zone->objectDrawLow - 1, RSDK.GetEntityID(rattlekiller)); }
+    foreach_active(Rattlekiller, rattlekiller) { RSDK.AddDrawListRef(Zone->objectDrawLow - 1, RSDK.GetEntitySlot(rattlekiller)); }
 }
 
 void Rattlekiller_Draw(void)

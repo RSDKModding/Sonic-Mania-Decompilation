@@ -99,7 +99,7 @@ enum FunctionTableIDs {
     FunctionTable_BreakForeachLoop,
     FunctionTable_SetEditableVar,
     FunctionTable_GetEntity,
-    FunctionTable_GetEntityID,
+    FunctionTable_GetEntitySlot,
     FunctionTable_GetEntityCount,
     FunctionTable_GetDrawListRef,
     FunctionTable_GetDrawListRefPtr,

@@ -312,7 +312,7 @@ void PhantomKing_SetupKing(EntityPhantomKing *king)
     PhantomKing->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
     PhantomKing->boundsB = (Zone->cameraBoundsB[0] - 96) << 16;
 
-    int32 slot                                    = RSDK.GetEntityID(king);
+    int32 slot                                    = RSDK.GetEntitySlot(king);
     RSDK_GET_ENTITY(slot - 1, PhantomKing)->state = PhantomKing_StateArm_Idle;
     RSDK_GET_ENTITY(slot + 1, PhantomKing)->state = PhantomKing_StateArm_Idle;
     king->state                                   = PhantomKing_State_FlyAround;
@@ -823,7 +823,7 @@ void PhantomKing_DestroyEntity(void)
 {
     RSDK_THIS(PhantomKing);
 
-    int32 slot              = RSDK.GetEntityID(self);
+    int32 slot              = RSDK.GetEntitySlot(self);
     EntityPhantomKing *armL = RSDK_GET_ENTITY(slot - 1, PhantomKing);
     EntityPhantomKing *armR = RSDK_GET_ENTITY(slot + 1, PhantomKing);
 

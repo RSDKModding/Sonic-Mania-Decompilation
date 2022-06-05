@@ -23,7 +23,7 @@ void RPlaneShifter_LateUpdate(void) {}
 
 void RPlaneShifter_StaticUpdate(void)
 {
-    foreach_active(RPlaneShifter, shifter) { RSDK.AddDrawListRef(Zone->playerDrawHigh + 1, RSDK.GetEntityID(shifter)); }
+    foreach_active(RPlaneShifter, shifter) { RSDK.AddDrawListRef(Zone->playerDrawHigh + 1, RSDK.GetEntitySlot(shifter)); }
 }
 
 void RPlaneShifter_Draw(void) { RPlaneShifter_DrawSprites(); }
@@ -152,7 +152,7 @@ void RPlaneShifter_State_AwaitPlayer(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (!((1 << playerID) & self->activePlayers) && !((1 << playerID) & self->stoodPlayers)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->onGround && !player->isChibi) {
@@ -271,7 +271,7 @@ void RPlaneShifter_State_Spinning(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (!((1 << playerID) & self->activePlayers) && !((1 << playerID) & self->stoodPlayers)
             && Player_CheckCollisionTouch(player, self, &self->hitbox) && player->onGround && !player->isChibi) {
@@ -319,7 +319,7 @@ void RPlaneShifter_State_FinishSpin(void)
     RSDK_THIS(RPlaneShifter);
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
             self->activePlayers &= ~(1 << playerID);

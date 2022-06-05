@@ -64,17 +64,17 @@ void MSZCutsceneST_StageLoad(void)
 
         if (hbh->characterID == HBH_ROUGE_FANG) {
             MSZCutsceneST->rouges[0]         = hbh;
-            MSZCutsceneST->rougePlatforms[0] = RSDK_GET_ENTITY(RSDK.GetEntityID(hbh) + 1, Armadiloid);
+            MSZCutsceneST->rougePlatforms[0] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
         }
 
         if (hbh->characterID == HBH_ROUGE_BEAN) {
             MSZCutsceneST->rouges[1]         = hbh;
-            MSZCutsceneST->rougePlatforms[1] = RSDK_GET_ENTITY(RSDK.GetEntityID(hbh) + 1, Armadiloid);
+            MSZCutsceneST->rougePlatforms[1] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
         }
 
         if (hbh->characterID == HBH_ROUGE_BARK) {
             MSZCutsceneST->rouges[2]         = hbh;
-            MSZCutsceneST->rougePlatforms[2] = RSDK_GET_ENTITY(RSDK.GetEntityID(hbh) + 1, Armadiloid);
+            MSZCutsceneST->rougePlatforms[2] = RSDK_GET_ENTITY(RSDK.GetEntitySlot(hbh) + 1, Armadiloid);
         }
     }
 

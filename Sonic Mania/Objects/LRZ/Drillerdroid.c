@@ -187,7 +187,7 @@ void Drillerdroid_CheckPlayerCollisions(void)
         foreach_active(Player, player)
         {
             if (!self->invincibilityTimer) {
-                int32 playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntitySlot(player);
 
                 if (Drillerdroid->playerTimers[playerID]) {
                     Drillerdroid->playerTimers[playerID]--;

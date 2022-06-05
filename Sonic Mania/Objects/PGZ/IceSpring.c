@@ -23,7 +23,7 @@ void IceSpring_Update(void)
             // Bug Details:
             // due to this foreach loop using playerID as a variable instead of player->playerID there's a bug where if you have P2 hit the spring
             // while P1 is in debug mode the animator will be copied into P1's slot instead of P2's one Fix: use player->playerID or playerID =
-            // RSDK.GetEntityID(player) instead of a manual playerID variable
+            // RSDK.GetEntitySlot(player) instead of a manual playerID variable
             int32 playerID = 0;
 
             foreach_active(Player, player)
@@ -58,7 +58,7 @@ void IceSpring_Update(void)
                             memcpy(&IceSpring->animators[playerID], &player->animator, sizeof(Animator));
                         }
 
-                        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
                         if (player->state != Ice_State_FrozenPlayer && shield->shieldAnimator.animationID != 2
 #if MANIA_USE_PLUS
                             && player->state != Player_State_MightyHammerDrop

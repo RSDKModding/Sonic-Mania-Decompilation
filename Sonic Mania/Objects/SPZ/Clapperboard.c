@@ -148,7 +148,7 @@ void Clapperboard_Collide_Left(void)
 
             player->position.y += (self->clapSpeed + 2) << 16;
             if (standPos > (clapStartPos >> 2)) {
-                self->stoodPlayers |= RSDK.GetEntityID(player) + 1;
+                self->stoodPlayers |= RSDK.GetEntitySlot(player) + 1;
                 if (self->state == Clapperboard_State_ClapReboundL
                     || (abs(player->groundVel) > 0x80000 && standPos > clapStartPos - (clapStartPos >> 2))) {
                     player->onGround   = false;
@@ -211,7 +211,7 @@ void Clapperboard_Collide_Right(void)
 
             player->position.y += (self->clapSpeed + 2) << 16;
             if (standPos > clapStartPos >> 2) {
-                self->stoodPlayers |= RSDK.GetEntityID(player) + 1;
+                self->stoodPlayers |= RSDK.GetEntitySlot(player) + 1;
                 if (self->state == Clapperboard_State_ClapReboundR
                     || (abs(player->groundVel) > 0x80000 && standPos > clapStartPos - (clapStartPos >> 2))) {
                     player->onGround   = false;

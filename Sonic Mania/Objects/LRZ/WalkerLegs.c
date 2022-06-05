@@ -124,7 +124,7 @@ void WalkerLegs_HandlePlayerMovement(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         for (int32 l = 0; l < 2; ++l) {
             self->position.x = legPos[l]->x;
@@ -245,7 +245,7 @@ void WalkerLegs_CheckStepTrigger(void)
     if (!self->steps || self->stepCount < self->steps) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (!player->sidekick && ((1 << playerID) & self->activePlayers[self->activeLeg != 0])) {
                 self->startAngle = self->angle;

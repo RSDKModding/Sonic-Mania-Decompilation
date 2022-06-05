@@ -15,7 +15,7 @@ void OOZSetup_LateUpdate(void) {}
 
 void OOZSetup_StaticUpdate(void)
 {
-    foreach_all(OOZSetup, setup) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntityID(setup)); }
+    foreach_all(OOZSetup, setup) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntitySlot(setup)); }
 
     OOZSetup->palTimer += 128;
     if (OOZSetup->palTimer >= 256) {
@@ -54,7 +54,7 @@ void OOZSetup_StaticUpdate(void)
     OOZSetup->swimmingPlayerCount = 0;
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (player->state != Player_State_None) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             uint16 tile =
@@ -211,7 +211,7 @@ void OOZSetup_Draw(void)
     if (SceneInfo->currentDrawGroup != self->drawOrder) {
         foreach_active(Player, player)
         {
-            if ((1 << RSDK.GetEntityID(player)) & OOZSetup->activePlayers)
+            if ((1 << RSDK.GetEntitySlot(player)) & OOZSetup->activePlayers)
                 RSDK.DrawSprite(&OOZSetup->animator, &player->position, false);
         }
     }

@@ -75,7 +75,7 @@ void PBL_TargetBumper_Create(void *data)
         self->scale.x       = 0x100;
         self->scale.y       = 0x100;
         self->state         = PBL_TargetBumper_State_Active;
-        self->color         = 2 * (RSDK.GetEntityID(self) % 3);
+        self->color         = 2 * (RSDK.GetEntitySlot(self) % 3);
 
         RSDK.SetModelAnimation(PBL_TargetBumper->modelFrames, &self->animator, 96, 0, true, 0);
     }

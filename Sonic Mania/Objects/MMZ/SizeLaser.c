@@ -23,7 +23,7 @@ void SizeLaser_StaticUpdate(void)
 {
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         SizeLaser->playerPositions[playerID].x = player->position.x;
         SizeLaser->playerPositions[playerID].y = player->position.y;
@@ -458,7 +458,7 @@ void SizeLaser_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (MathHelpers_CheckPositionOverlap(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
                                              player->position.y, extendX1[0], extendY1[0], extendX2[0], extendY2[0])
             || MathHelpers_CheckPositionOverlap(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,

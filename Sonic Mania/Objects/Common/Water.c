@@ -414,7 +414,7 @@ void Water_State_Palette(void)
                     if (RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, player, &Water->hitboxPoint)) {
                         waterPtr        = water;
                         water->childPtr = player;
-                        underwater      = RSDK.GetEntityID(water);
+                        underwater      = RSDK.GetEntitySlot(water);
                     }
                     else if (water->childPtr == player) {
                         water->childPtr = NULL;
@@ -446,7 +446,7 @@ void Water_State_Palette(void)
 
                     player->underwater = false;
                     Player_UpdatePhysicsState(player);
-                    if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))
+                    if (player->velocity.y && (!Current || !((1 << RSDK.GetEntitySlot(player)) & Current->activePlayers))
                         && (Player_CheckValidState(player) || player->state == Player_State_FlyIn)) {
                         if (!Water->disableWaterSplash) {
                             if (waterSection) {
@@ -495,7 +495,7 @@ void Water_State_Palette(void)
 
                 if (notUnderwater) {
                     Player_UpdatePhysicsState(player);
-                    if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))) {
+                    if (player->velocity.y && (!Current || !((1 << RSDK.GetEntitySlot(player)) & Current->activePlayers))) {
                         if (!Water->disableWaterSplash) {
                             if (waterPtr) {
                                 EntityWater *splash =
@@ -526,13 +526,13 @@ void Water_State_Palette(void)
                         if (player->shield == SHIELD_FIRE) {
                             // No cool smoke fx in mania, just a loss of shield :(
                             player->shield = SHIELD_NONE;
-                            destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield));
+                            destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield));
                         }
 
                         if (player->shield == SHIELD_LIGHTNING) {
                             // No cool electric flash fx in mania, just a loss of shield :(
                             player->shield = SHIELD_NONE;
-                            destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield));
+                            destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield));
                         }
                     }
 
@@ -709,7 +709,7 @@ void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut)
 
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
             if ((1 << playerID) & self->activePlayers) {
                 if (jumpedOut) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
@@ -908,7 +908,7 @@ void Water_State_ShrinkPlayerBubble(void)
 
 EntityWater *Water_GetPlayerBubble(EntityPlayer *player)
 {
-    int32 playerID = RSDK.GetEntityID(player);
+    int32 playerID = RSDK.GetEntitySlot(player);
 
     foreach_active(Water, water)
     {
@@ -945,7 +945,7 @@ void Water_State_HCZBubble(void)
     if (self->animator.animationID != 6) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
             if (!Player_CheckValidState(player) || !player->underwater) {
                 continue;
             }
@@ -957,7 +957,7 @@ void Water_State_HCZBubble(void)
                 if (Player_CheckCollisionTouch(player, self, &Water->hitboxPlayerBubble) && !Water_GetPlayerBubble(player)) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_BREATHE, &player->animator, true, 0);
                     player->state        = Player_State_None;
-                    EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                    EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
                     if (shield)
                         shield->visible = false;
 
@@ -968,7 +968,7 @@ void Water_State_HCZBubble(void)
                     RSDK.PlaySfx(Water->sfxDNAGrab, false, 255);
                     self->activePlayers |= 1 << playerID;
                     self->releasedPlayers |= 1 << playerID;
-                    if (RSDK.GetEntityID(self) >= RESERVE_ENTITY_COUNT) {
+                    if (RSDK.GetEntitySlot(self) >= RESERVE_ENTITY_COUNT) {
                         int32 id = SLOT_HCZBUBBLE_P1;
                         for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX; ++id) {
                             if (RSDK_GET_ENTITY_GEN(id)->classID == TYPE_BLANK)
@@ -1264,7 +1264,7 @@ void Water_State_Adjustable(void)
     if (!activated) {
         foreach_active(Player, player)
         {
-            if (!RSDK.GetEntityID(player)) {
+            if (!RSDK.GetEntitySlot(player)) {
                 if (abs(self->position.x - player->position.x) < self->updateRange.x) {
                     if (abs(self->position.y - player->position.y) < self->updateRange.y) {
                         activated = true;

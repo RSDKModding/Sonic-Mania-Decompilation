@@ -46,7 +46,7 @@ void Hatch_LateUpdate(void) {}
 
 void Hatch_StaticUpdate(void)
 {
-    foreach_all(Hatch, hatch) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(hatch)); }
+    foreach_all(Hatch, hatch) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(hatch)); }
 }
 
 void Hatch_Draw(void)
@@ -305,7 +305,7 @@ void Hatch_State_Descend(void)
             player->state            = Player_State_Air;
             EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (warpDoor->classID == WarpDoor->classID) {
-                Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
+                Zone->cameraBoundsB[RSDK.GetEntitySlot(player)] = 0x7FFF;
                 warpDoor->hitbox                              = self->hitboxWarpDoor;
                 warpDoor->position.y                          = self->position.y;
                 player->tileCollisions                        = true;
@@ -466,7 +466,7 @@ void Hatch_State_FadeOut(void)
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
 
         if (warpDoor->classID == WarpDoor->classID) {
-            Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
+            Zone->cameraBoundsB[RSDK.GetEntitySlot(player)] = 0x7FFF;
 
             warpDoor->hitbox     = self->hitboxWarpDoor;
             warpDoor->position.y = player->position.y;

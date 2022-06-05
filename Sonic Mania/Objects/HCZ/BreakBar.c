@@ -101,7 +101,7 @@ void BreakBar_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (((1 << playerID) & self->activePlayersGrabbed) && !((1 << playerID) & self->activePlayersReleased)) {
             if (!Player_CheckValidState(player)) {
                 self->activePlayersGrabbed &= ~(1 << playerID);
@@ -215,7 +215,7 @@ void BreakBar_State_Main(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((player->sidekick && Player->jumpInTimer >= 239) || !Player_CheckValidState(player)) {
             self->activePlayersReleased &= ~(1 << playerID);

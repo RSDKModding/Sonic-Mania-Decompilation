@@ -47,7 +47,7 @@ void Jellygnite_LateUpdate(void) {}
 
 void Jellygnite_StaticUpdate(void)
 {
-    foreach_active(Jellygnite, jellygnite) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(jellygnite)); }
+    foreach_active(Jellygnite, jellygnite) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(jellygnite)); }
 }
 
 void Jellygnite_Draw(void)

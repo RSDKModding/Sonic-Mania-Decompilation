@@ -23,7 +23,7 @@ void FBZFan_Update(void)
     {
         bool32 isFanning = false;
 
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionBox(player, self, &FBZFan->hitboxSolid);
 
         if (player->state != Player_State_None && Player_CheckValidState(player) && player->animator.animationID != ANI_HURT

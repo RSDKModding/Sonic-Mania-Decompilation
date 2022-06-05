@@ -79,7 +79,7 @@ void Spikes_Update(void)
         foreach_active(Player, player)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
-                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
                 if (!Ice || (player->state != Ice_State_FrozenPlayer && shield->shieldAnimator.animationID != 2) || Press) {
                     int32 playerVelX = player->velocity.x;
                     int32 playerVelY = player->velocity.y;

@@ -112,7 +112,7 @@ void TwistingDoor_Create(void *data)
     }
 
     self->taggedButton         = NULL;
-    EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+    EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Button);
 
     if (self->buttonTag > 0) {
         foreach_all(Button, button)
@@ -238,7 +238,7 @@ void TwistingDoor_EditorDraw(void)
 
     if (showGizmos()) {
         self->taggedButton         = NULL;
-        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Button);
 
         if (self->buttonTag > 0) {
             foreach_all(Button, button)

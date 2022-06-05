@@ -34,7 +34,7 @@ void Whirlpool_Update(void)
         else {
             foreach_active(Player, player)
             {
-                int32 playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntitySlot(player);
 
                 if (!((1 << playerID) & self->activePlayers)) {
                     if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {

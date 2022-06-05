@@ -482,7 +482,7 @@ void DiveEggman_StateBomb_WhirlpoolRise(void)
                 // Hit that player!
                 if (!player1->blinkTimer && !player1->invincibleTimer) {
                     if (player1->shield) {
-                        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player1), Shield);
+                        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player1), Shield);
                         if (shield->classID == Shield->classID)
                             destroyEntity(shield);
 

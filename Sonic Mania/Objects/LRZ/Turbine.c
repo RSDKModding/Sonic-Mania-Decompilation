@@ -102,7 +102,7 @@ void Turbine_State_Handles(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (self->playerTimers[playerID] > 0)
             self->playerTimers[playerID]--;

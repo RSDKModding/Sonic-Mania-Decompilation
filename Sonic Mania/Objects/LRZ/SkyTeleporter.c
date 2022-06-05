@@ -22,7 +22,7 @@ void SkyTeleporter_LateUpdate(void) {}
 
 void SkyTeleporter_StaticUpdate(void)
 {
-    foreach_active(SkyTeleporter, teleporter) { RSDK.AddDrawListRef(Zone->playerDrawHigh + 1, RSDK.GetEntityID(teleporter)); }
+    foreach_active(SkyTeleporter, teleporter) { RSDK.AddDrawListRef(Zone->playerDrawHigh + 1, RSDK.GetEntitySlot(teleporter)); }
 }
 
 void SkyTeleporter_Draw(void)

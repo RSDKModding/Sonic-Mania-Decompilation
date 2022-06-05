@@ -286,7 +286,7 @@ void PhantomRider_State_RacePlayer(void)
     foreach_active(Spikes, spikes)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, spikes, &spikes->hitbox) == C_TOP) {
-            EntityPopOut *popOut = RSDK_GET_ENTITY(RSDK.GetEntityID(spikes) - 1, PopOut);
+            EntityPopOut *popOut = RSDK_GET_ENTITY(RSDK.GetEntitySlot(spikes) - 1, PopOut);
             popOut->shouldAppear = false;
 
             foreach_active(Button, button)

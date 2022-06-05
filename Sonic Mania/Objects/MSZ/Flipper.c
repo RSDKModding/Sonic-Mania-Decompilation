@@ -21,7 +21,7 @@ void Flipper_Update(void)
     if (self->direction == FLIP_NONE) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (player->position.x >= self->position.x + 0x40000)
                 self->hitbox.top = ((player->position.x - self->position.x - 0x40000) >> 17) - 20;
@@ -77,7 +77,7 @@ void Flipper_Update(void)
     else {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (player->position.x <= self->position.x - 0x40000)
                 self->hitbox.top = ((self->position.x - player->position.x - 0x40000) >> 17) - 20;

@@ -340,12 +340,12 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
     EntityKleptoMobile *eggman = ERZStart->eggman;
     EntityPhantomKing *king    = ERZStart->king;
 
-    uint16 eggmanSlot              = RSDK.GetEntityID(eggman);
+    uint16 eggmanSlot              = RSDK.GetEntitySlot(eggman);
     EntityKleptoMobile *eggmanHand = RSDK_GET_ENTITY(eggmanSlot - 2, KleptoMobile);
     EntityKleptoMobile *eggmanArmL = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
     EntityKleptoMobile *eggmanArmR = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
 
-    uint16 kingSlot             = RSDK.GetEntityID(king);
+    uint16 kingSlot             = RSDK.GetEntitySlot(king);
     EntityPhantomKing *kingArmL = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
     EntityPhantomKing *kingArmR = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 
@@ -449,11 +449,11 @@ bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
     EntityKleptoMobile *eggman = ERZStart->eggman;
     EntityPhantomKing *king    = ERZStart->king;
 
-    uint16 eggmanSlot               = RSDK.GetEntityID(eggman);
+    uint16 eggmanSlot               = RSDK.GetEntitySlot(eggman);
     EntityKleptoMobile *eggmanHand1 = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
     EntityKleptoMobile *eggmanHand2 = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
 
-    uint16 kingSlot               = RSDK.GetEntityID(king);
+    uint16 kingSlot               = RSDK.GetEntitySlot(king);
     EntityPhantomKing *kingChild1 = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
     EntityPhantomKing *kingChild2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 
@@ -501,12 +501,12 @@ bool32 ERZStart_Cutscene_PostWrestleFadeIn(EntityCutsceneSeq *host)
     EntityKleptoMobile *eggman = ERZStart->eggman;
     EntityPhantomKing *king    = ERZStart->king;
 
-    uint16 eggmanSlot              = RSDK.GetEntityID(eggman);
+    uint16 eggmanSlot              = RSDK.GetEntitySlot(eggman);
     EntityKleptoMobile *eggmanHand = RSDK_GET_ENTITY(eggmanSlot - 2, KleptoMobile);
     EntityKleptoMobile *eggmanArmL = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
     EntityKleptoMobile *eggmanArmR = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
 
-    uint16 kingSlot             = RSDK.GetEntityID(king);
+    uint16 kingSlot             = RSDK.GetEntitySlot(king);
     EntityPhantomKing *kingArmL = RSDK_GET_ENTITY(kingSlot - 1, PhantomKing);
     EntityPhantomKing *kingArmR = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 

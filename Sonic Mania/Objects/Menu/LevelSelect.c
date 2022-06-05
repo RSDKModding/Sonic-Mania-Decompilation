@@ -80,7 +80,7 @@ void LevelSelect_StageLoad(void)
     foreach_all(Music, music)
     {
         if (!LevelSelect->startMusicID) {
-            LevelSelect->startMusicID = RSDK.GetEntityID(music);
+            LevelSelect->startMusicID = RSDK.GetEntitySlot(music);
         }
         ++LevelSelect->soundTestMax;
     }

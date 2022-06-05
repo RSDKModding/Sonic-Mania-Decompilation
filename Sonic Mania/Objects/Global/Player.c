@@ -207,7 +207,7 @@ void Player_LateUpdate(void)
         self->underwater     = false;
         Player_UpdatePhysicsState(self);
 
-        destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield));
+        destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield));
 
         switch (self->deathType) {
             default: break;
@@ -549,7 +549,7 @@ void Player_Create(void *data)
         self->characterID = ID_SONIC;
     }
     else {
-        self->playerID = RSDK.GetEntityID(self);
+        self->playerID = RSDK.GetEntitySlot(self);
 
         // Handle character specific stuff
         switch (self->characterID) {
@@ -965,7 +965,7 @@ void Player_GiveLife(EntityPlayer *entity)
 void Player_ApplyShield(EntityPlayer *player)
 {
     if (player->shield && player->superState != SUPERSTATE_SUPER && player->invincibleTimer <= 0) {
-        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
         RSDK.ResetEntityPtr(shield, Shield->classID, player);
     }
 }
@@ -1810,7 +1810,7 @@ void Player_ResetBoundaries(EntityPlayer *player)
 {
     Vector2 size;
 
-    int32 screen = RSDK.GetEntityID(player);
+    int32 screen = RSDK.GetEntitySlot(player);
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
 
     Zone->cameraBoundsL[screen]      = 0;
@@ -1960,13 +1960,13 @@ void Player_HandleDeath(EntityPlayer *player)
 
                         EntitySaveGame *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
-                            int32 playerID                    = RSDK.GetEntityID(player);
+                            int32 playerID                    = RSDK.GetEntitySlot(player);
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                             if (!session->finishState[playerID]) {
                                 CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
                             }
 #if MANIA_USE_PLUS
-                            foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
+                            foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntitySlot(player)] = HUD_State_GoOffScreen; }
 #endif
                         }
                         else if (saveRAM) {
@@ -1992,7 +1992,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         }
 
                         EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
-                        gameOver->playerID       = RSDK.GetEntityID(player);
+                        gameOver->playerID       = RSDK.GetEntitySlot(player);
                         GameOver->activeScreens |= 1 << player->playerID;
                         RSDK.SetEngineState(ENGINESTATE_FROZEN);
                         SceneInfo->timeEnabled = false;
@@ -2046,21 +2046,21 @@ void Player_HandleDeath(EntityPlayer *player)
                     bool32 showGameOver = true;
                     if (globals->gameMode == MODE_COMPETITION) {
                         showGameOver                      = false;
-                        int32 playerID                    = RSDK.GetEntityID(player);
+                        int32 playerID                    = RSDK.GetEntitySlot(player);
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         if (!session->finishState[playerID]) {
                             CompSession_DeriveWinner(playerID, FINISHTYPE_GAMEOVER);
                             showGameOver = !MANIA_USE_PLUS;
                         }
 #if MANIA_USE_PLUS
-                        foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
+                        foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntitySlot(player)] = HUD_State_GoOffScreen; }
 #endif
                     }
 
                     if (showGameOver) {
                         EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                         RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(false));
-                        gameOver->playerID = RSDK.GetEntityID(player);
+                        gameOver->playerID = RSDK.GetEntitySlot(player);
                         GameOver->activeScreens |= 1 << screenID;
                         RSDK.SetEngineState(ENGINESTATE_FROZEN);
                         SceneInfo->timeEnabled = false;
@@ -2093,7 +2093,7 @@ void Player_HandleDeath(EntityPlayer *player)
 
                     EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                     RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(false));
-                    gameOver->playerID = RSDK.GetEntityID(player);
+                    gameOver->playerID = RSDK.GetEntitySlot(player);
                     GameOver->activeScreens |= 1 << screenID;
                     RSDK.SetEngineState(ENGINESTATE_FROZEN);
                     SceneInfo->timeEnabled = false;
@@ -2161,7 +2161,7 @@ void Player_HandleQuickRespawn(EntityPlayer *player)
     player->active         = ACTIVE_NORMAL;
     player->ringExtraLife  = 100;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
-    int32 screen = RSDK.GetEntityID(player);
+    int32 screen = RSDK.GetEntitySlot(player);
 
     player->position.x  = StarPost->playerPositions[screen].x;
     player->position.y  = StarPost->playerPositions[screen].y;
@@ -3084,7 +3084,7 @@ bool32 Player_SwapMainPlayer(bool32 forceSwap)
     sidekick->speedShoesTimer = 0;
     sidekick->camera          = sidekickCam;
     sidekick->hyperRing       = false;
-    sidekick->playerID        = RSDK.GetEntityID(sidekick);
+    sidekick->playerID        = RSDK.GetEntitySlot(sidekick);
     Player_UpdatePhysicsState(sidekick);
 
     if (sidekick->superState == SUPERSTATE_SUPER)
@@ -3197,7 +3197,7 @@ void Player_Hit(EntityPlayer *player)
         hurtType = PLAYER_HURT_HASSHIELD;
     }
     else {
-        int32 entityID       = RSDK.GetEntityID(player);
+        int32 entityID       = RSDK.GetEntitySlot(player);
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + entityID, Shield);
         if (shield->classID == Shield->classID) {
             player->shield = SHIELD_NONE;
@@ -3293,7 +3293,7 @@ void Player_CheckStartFlyCarry(EntityPlayer *leader)
         bool32 canFlyCarry = (leader->state == Player_State_Roll || leader->state == Player_State_LookUp || leader->state == Player_State_Crouch
                               || leader->state == Player_State_Air || leader->state == Player_State_Ground);
         if (LottoMachine)
-            canFlyCarry = canFlyCarry && (!((1 << RSDK.GetEntityID(leader)) & LottoMachine->activePlayers));
+            canFlyCarry = canFlyCarry && (!((1 << RSDK.GetEntitySlot(leader)) & LottoMachine->activePlayers));
 
         if (canFlyCarry && (leader->animator.animationID != ANI_FAN)) {
             if (abs(self->position.x - leader->position.x) < 0xC0000 && abs(off - leader->position.y) < 0xC0000 && !self->flyCarryTimer
@@ -4488,7 +4488,7 @@ void Player_State_BubbleBounce(void)
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
             self->animator.speed = (abs(self->groundVel) >> 12) + 0x30;
 
-            EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
+            EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield);
             RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &shield->fxAnimator, true, 0);
             RSDK.SetSpriteAnimation(-1, 0, &shield->shieldAnimator, true, 0);
             shield->state = Shield_State_BubbleBounced;
@@ -5199,7 +5199,7 @@ void Player_State_MightyHammerDrop(void)
 
         RSDK.StopSfx(Player->sfxMightyDrill);
         RSDK.PlaySfx(Player->sfxMightyLand, false, 0xFF);
-        Camera_ShakeScreen(RSDK.GetEntityID(self), 0, 4);
+        Camera_ShakeScreen(RSDK.GetEntitySlot(self), 0, 4);
 
         Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 0);
         Player_SpawnMightyHammerdropDust(0x10000, hitbox);
@@ -6059,7 +6059,7 @@ void Player_JumpAbility_Sonic(void)
                 && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
             ) {
-                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield);
                 if (self->invincibleTimer) {
                     if (shield->classID != Shield->classID || shield->shieldAnimator.animationID != 10) {
                         if (!(globals->medalMods & GET_MEDAL_MOD(MEDAL_NODROPDASH)))
@@ -6240,7 +6240,7 @@ void Player_JumpAbility_Mighty(void)
                 self->nextGroundState = StateMachine_None;
                 RSDK.PlaySfx(Player->sfxRelease, false, 0xFF);
 
-                EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(self), ImageTrail);
+                EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntitySlot(self), ImageTrail);
                 RSDK.ResetEntityPtr(trail, ImageTrail->classID, self);
                 if (self->camera && !Zone->autoScrollSpeed) {
                     self->scrollDelay   = 8;

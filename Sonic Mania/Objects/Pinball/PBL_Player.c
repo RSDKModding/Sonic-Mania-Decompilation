@@ -202,7 +202,7 @@ void PBL_Player_ProcessPlayerControl(void)
                         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                         if (!pauseMenu->classID) {
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-                            pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
+                            pauseMenu->triggerPlayer  = RSDK.GetEntitySlot(self);
                             pauseMenu->disableRestart = true;
                         }
                     }
@@ -238,7 +238,7 @@ void PBL_Player_ProcessPlayerControl(void)
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->classID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-                    pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
+                    pauseMenu->triggerPlayer  = RSDK.GetEntitySlot(self);
                     pauseMenu->disableRestart = true;
                 }
             }

@@ -84,7 +84,7 @@ int32 TeeterTotter_CheckPlayerCollisions(void)
             self->position.y = (self->segmentPosition[i] + storeY) & 0xFFFF0000;
             foreach_active(Player, player)
             {
-                int32 playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntitySlot(player);
                 if (self->playerIDs[playerID] == i) {
                     player->position.y += self->segmentVelocity[i];
                     player->position.y += 0x10000;

@@ -187,7 +187,7 @@ void SP500MkII_CheckPlayerCollisions(void)
     int32 buttonPos = 0;
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         int32 bottom   = player->position.y + (Player_GetHitbox(player)->bottom << 16);
 
         Player_CheckCollisionBox(player, self, &SP500MkII->hitboxPrinter);

@@ -23,7 +23,7 @@ void Tuesday_StaticUpdate(void)
     foreach_all(Tuesday, tuesday)
     {
         if (!tuesday->velocity.y) {
-            RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntityID(tuesday));
+            RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntitySlot(tuesday));
         }
     }
 }
@@ -89,7 +89,7 @@ void Tuesday_Create(void *data)
                 self->updateRange = self->parent->updateRange;
             }
 
-            int32 slotID         = RSDK.GetEntityID(self->parent);
+            int32 slotID         = RSDK.GetEntitySlot(self->parent);
             EntityTuesday *child = RSDK_GET_ENTITY(slotID, Tuesday);
             while (child->classID == Tuesday->classID || child->classID == Platform->classID) {
                 if (child != self && child->classID == Tuesday->classID) {

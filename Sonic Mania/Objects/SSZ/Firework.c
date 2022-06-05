@@ -130,7 +130,7 @@ void Firework_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (!((1 << playerID) & self->activePlayers)) {
             if (player->state != Player_State_None && !self->playerTimers[playerID]
@@ -183,7 +183,7 @@ void Firework_HandlePlayerTimers(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (self->playerTimers[playerID])
             self->playerTimers[playerID]--;
@@ -194,7 +194,7 @@ void Firework_RemovePlayers(bool32 crashed)
 {
     foreach_active(Player, player)
     {
-        RSDK.GetEntityID(player); // so true tbh
+        RSDK.GetEntitySlot(player); // so true tbh
         Firework_HandlePlayerRemoval(player, crashed);
     }
 }
@@ -203,7 +203,7 @@ void Firework_HandlePlayerRemoval(EntityPlayer *player, bool32 crashed)
 {
     RSDK_THIS(Firework);
 
-    int32 playerID = RSDK.GetEntityID(player);
+    int32 playerID = RSDK.GetEntitySlot(player);
 
     if ((1 << playerID) & self->activePlayers) {
         player->state          = Player_State_Air;
@@ -232,8 +232,8 @@ void Firework_HandlePlayerJump(void)
 
     foreach_active(Player, player)
     {
-        if ((1 << RSDK.GetEntityID(player)) & self->activePlayers && player->jumpPress) {
-            int32 playerID = RSDK.GetEntityID(player);
+        if ((1 << RSDK.GetEntitySlot(player)) & self->activePlayers && player->jumpPress) {
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if ((1 << playerID) & self->activePlayers) {
                 player->state                = Player_State_Air;
@@ -256,7 +256,7 @@ void Firework_HandlePlayerControl(void)
 
     foreach_active(Player, player)
     {
-        if (!player->sidekick && (1 << RSDK.GetEntityID(player)) & self->activePlayers) {
+        if (!player->sidekick && (1 << RSDK.GetEntitySlot(player)) & self->activePlayers) {
             if (player->left)
                 --self->angle;
             else if (player->right)

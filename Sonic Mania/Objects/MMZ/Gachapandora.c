@@ -17,7 +17,7 @@ void Gachapandora_Update(void)
 
 void Gachapandora_LateUpdate(void) {}
 
-void Gachapandora_StaticUpdate(void) { RSDK.AddDrawListRef(Zone->objectDrawLow + 1, RSDK.GetEntityID(Gachapandora->eggman)); }
+void Gachapandora_StaticUpdate(void) { RSDK.AddDrawListRef(Zone->objectDrawLow + 1, RSDK.GetEntitySlot(Gachapandora->eggman)); }
 
 void Gachapandora_Draw(void)
 {

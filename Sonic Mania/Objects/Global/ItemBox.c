@@ -528,7 +528,7 @@ void ItemBox_GivePowerup(void)
 
         case ITEMBOX_INVINCIBLE:
             if (player->superState == SUPERSTATE_NONE) {
-                EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars);
+                EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), InvincibleStars);
                 RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->classID, player);
                 player->invincibleTimer = 1260;
                 Music_PlayQueuedTrack(TRACK_INVINCIBLE);
@@ -540,7 +540,7 @@ void ItemBox_GivePowerup(void)
             Player_UpdatePhysicsState(player);
             if (player->superState == SUPERSTATE_NONE) {
                 Music_PlayQueuedTrack(TRACK_SNEAKERS);
-                EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail);
+                EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntitySlot(player), ImageTrail);
                 RSDK.ResetEntityPtr(powerup, ImageTrail->classID, player);
             }
             break;
@@ -833,7 +833,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 {
     if (globals->gameMode == MODE_COMPETITION) {
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-        ++session->items[RSDK.GetEntityID(player)];
+        ++session->items[RSDK.GetEntitySlot(player)];
     }
 
     RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
@@ -1015,7 +1015,7 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
 #if MANIA_USE_PLUS
         self->parent = (Entity *)platform;
 #else
-        self->groundVel = RSDK.GetEntityID(platform);
+        self->groundVel = RSDK.GetEntitySlot(platform);
 #endif
 
         self->scale.x = (self->position.x - platform->drawPos.x) & 0xFFFF0000;

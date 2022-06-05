@@ -132,7 +132,7 @@ void DBTower_CheckPlayerCollisions_Head(void)
     else {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (self->playerTimers[playerID]) {
                 --self->playerTimers[playerID];
@@ -431,7 +431,7 @@ void DBTower_CheckPlayerCollisions_Body(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (self->playerTimers[playerID]) {
             self->playerTimers[playerID]--;

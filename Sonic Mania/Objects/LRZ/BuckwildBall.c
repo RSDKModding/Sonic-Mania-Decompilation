@@ -317,7 +317,7 @@ void BuckwildBall_State_Falling(void)
             self->drawOrder      = Zone->objectDrawHigh;
         }
         else {
-            int32 slot                                                                        = RSDK.GetEntityID(Drillerdroid->boss);
+            int32 slot                                                                        = RSDK.GetEntitySlot(Drillerdroid->boss);
             RSDK_GET_ENTITY(slot + 6 + self->bossBallSlot, CollapsingPlatform)->collapseDelay = 1;
             Drillerdroid->platformActive[self->bossBallSlot]                                  = -1;
             self->velocity.y                                                                  = -0x40000;

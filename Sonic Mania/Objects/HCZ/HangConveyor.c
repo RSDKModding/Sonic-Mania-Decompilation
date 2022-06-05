@@ -150,7 +150,7 @@ void HangConveyor_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckValidState(player)) {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             int32 playerY = player->position.y;
             if (player->animator.animationID != ANI_POLESWINGH && player->animator.animationID != ANI_SHIMMYMOVE)

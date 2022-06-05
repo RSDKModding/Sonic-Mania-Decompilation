@@ -108,11 +108,11 @@ void TitleCard_Create(void *data)
             Player_ApplyShield(player);
 
             if (player->invincibleTimer > 0 && player->superState != SUPERSTATE_SUPER)
-                RSDK.ResetEntityPtr(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars), InvincibleStars->classID,
+                RSDK.ResetEntityPtr(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), InvincibleStars), InvincibleStars->classID,
                                     player);
 
             if (player->speedShoesTimer > 0 || player->superState == SUPERSTATE_SUPER)
-                RSDK.ResetEntityPtr(RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail), ImageTrail->classID, player);
+                RSDK.ResetEntityPtr(RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntitySlot(player), ImageTrail), ImageTrail->classID, player);
 
             memset(Zone->entityStorage[0], 0, ENTITY_SIZE);
             memset(Zone->entityStorage[8], 0, ENTITY_SIZE);

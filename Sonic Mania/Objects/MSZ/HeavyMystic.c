@@ -34,7 +34,7 @@ void HeavyMystic_StaticUpdate(void)
     foreach_active(HeavyMystic, mysticBox)
     {
         if (mysticBox->type == MYSTIC_BOX) {
-            RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(mysticBox));
+            RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(mysticBox));
         }
     }
 }

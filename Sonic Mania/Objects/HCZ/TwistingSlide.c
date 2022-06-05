@@ -14,7 +14,7 @@ void TwistingSlide_Update(void)
     RSDK_THIS(TwistingSlide);
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         int32 storeX = player->position.x;
         int32 storeY = player->position.y;

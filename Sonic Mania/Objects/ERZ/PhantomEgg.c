@@ -318,7 +318,7 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
     }
 
     if (targetPhantom) {
-        int32 phantomSlot              = RSDK.GetEntityID(targetPhantom);
+        int32 phantomSlot              = RSDK.GetEntitySlot(targetPhantom);
         EntityPlatformNode *nodeTop    = RSDK_GET_ENTITY(phantomSlot + 1, PlatformNode);
         EntityPlatformNode *nodeBottom = RSDK_GET_ENTITY(phantomSlot + 2, PlatformNode);
         EntityPlatformNode *nodeLeft   = RSDK_GET_ENTITY(phantomSlot + 3, PlatformNode);

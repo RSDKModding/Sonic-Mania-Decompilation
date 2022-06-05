@@ -122,7 +122,7 @@ void TwistedTubes_State_HandleInteractions(void)
     {
         if (player->state != Player_State_TransportTube) {
             Player_CheckCollisionBox(player, self, &TwistedTubes->hitboxSolid);
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             bool32 entered = false;
             if (Player_CheckCollisionTouch(player, self, &TwistedTubes->hitboxEntryL)) {
@@ -191,7 +191,7 @@ void TwistedTubes_State_FirstLoopR(void)
     RSDK_THIS(TwistedTubes);
 
     EntityPlayer *player = self->player;
-    int32 playerID       = RSDK.GetEntityID(player);
+    int32 playerID       = RSDK.GetEntitySlot(player);
 
     self->angle += 8;
     player->position.x = self->position.x + 0x3800 * RSDK.Cos256(self->angle);
@@ -216,7 +216,7 @@ void TwistedTubes_State_TubeLoops(void)
     RSDK_THIS(TwistedTubes);
 
     EntityPlayer *player = self->player;
-    int32 playerID       = RSDK.GetEntityID(player);
+    int32 playerID       = RSDK.GetEntitySlot(player);
 
     self->angle += 8;
     player->position.x = self->position.x - 0x3800 * RSDK.Cos256(self->angle);
@@ -275,7 +275,7 @@ void TwistedTubes_State_FirstLoopL(void)
     }
 
     if (!Player_CheckValidState(player)) {
-        TwistedTubes->playerActive[RSDK.GetEntityID(player)] = false;
+        TwistedTubes->playerActive[RSDK.GetEntitySlot(player)] = false;
         destroyEntity(self);
     }
 }

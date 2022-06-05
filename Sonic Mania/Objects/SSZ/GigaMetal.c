@@ -74,7 +74,7 @@ void GigaMetal_Create(void *data)
             self->drawOrder     = Zone->objectDrawLow - 1;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            int32 slot          = RSDK.GetEntityID(self);
+            int32 slot          = RSDK.GetEntitySlot(self);
 
             if (data)
                 self->aniID = voidToInt(data);

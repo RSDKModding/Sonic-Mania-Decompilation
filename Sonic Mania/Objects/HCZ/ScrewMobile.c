@@ -23,7 +23,7 @@ void ScrewMobile_StaticUpdate(void)
     foreach_active(ScrewMobile, screwMobile)
     {
         if (screwMobile->state != ScrewMobile_StateDepthCharge_Active) {
-            RSDK.AddDrawListRef(Zone->playerDrawLow - 1, RSDK.GetEntityID(screwMobile));
+            RSDK.AddDrawListRef(Zone->playerDrawLow - 1, RSDK.GetEntitySlot(screwMobile));
         }
     }
 

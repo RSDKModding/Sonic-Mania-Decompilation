@@ -73,11 +73,11 @@ void EncoreIntro_Create(void *data)
             ruby->flashAnimator.animationID = -1;
         }
         else {
-            int32 id = RSDK.GetEntityID(self);
+            int32 id = RSDK.GetEntitySlot(self);
 
             foreach_all(Animals, animal)
             {
-                if (RSDK.GetEntityID(animal) < id) {
+                if (RSDK.GetEntitySlot(animal) < id) {
                     destroyEntity(animal);
                 }
                 else {

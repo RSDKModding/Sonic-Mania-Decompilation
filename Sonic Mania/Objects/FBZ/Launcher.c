@@ -54,7 +54,7 @@ void Launcher_Collide_Normal(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (Player_CheckCollisionPlatform(player, self, hitbox)) {
             self->stoodPlayers |= 1 << playerID;
@@ -103,7 +103,7 @@ void Launcher_State_HandleLaunch(void)
     if (--self->releaseDelay < 0) {
         foreach_active(Player, player)
         {
-            if (((1 << RSDK.GetEntityID(player)) & self->stoodPlayers)) {
+            if (((1 << RSDK.GetEntitySlot(player)) & self->stoodPlayers)) {
                 player->groundVel  = self->velocity.x;
                 player->velocity.x = self->velocity.x;
             }

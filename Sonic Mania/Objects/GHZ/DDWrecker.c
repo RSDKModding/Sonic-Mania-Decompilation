@@ -938,7 +938,7 @@ void DDWrecker_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(true);
         DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0, 1 | 0 | 4 | 8, 0x00C0F0);
 
-        int32 slot = RSDK.GetEntityID(self);
+        int32 slot = RSDK.GetEntitySlot(self);
         for (int32 i = 0; i < 6; ++i) {
             EntityDDWrecker *child = RSDK_GET_ENTITY(slot + 1 + i, DDWrecker);
 

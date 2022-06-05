@@ -53,7 +53,7 @@ void Platform_Update(void)
 #if MANIA_USE_PLUS
                     itemBox->parent = (Entity *)self;
 #else
-                    itemBox->groundVel = RSDK.GetEntityID(self);
+                    itemBox->groundVel = RSDK.GetEntitySlot(self);
 #endif
                     itemBox->scale.x       = itemBox->position.x - self->centerPos.x;
                     itemBox->scale.y       = itemBox->position.y - self->centerPos.y;
@@ -380,7 +380,7 @@ void Platform_Create(void *data)
         }
 
         for (int32 i = 0; i < self->childCount; ++i) {
-            EntityPlatform *child = RSDK_GET_ENTITY((i + RSDK.GetEntityID(self) + 1), Platform);
+            EntityPlatform *child = RSDK_GET_ENTITY((i + RSDK.GetEntitySlot(self) + 1), Platform);
             child->tileCollisions = false;
             if (HangPoint && child->classID == HangPoint->classID) {
                 EntityHangPoint *hang = (EntityHangPoint *)child;
@@ -583,7 +583,7 @@ void Platform_State_Collapse_StartFall(void)
         self->state = Platform_State_Collapse_Falling;
         foreach_active(Player, player)
         {
-            if ((1 << RSDK.GetEntityID(player)) & self->stoodPlayers)
+            if ((1 << RSDK.GetEntitySlot(player)) & self->stoodPlayers)
                 player->velocity.y = self->velocity.y - 0x10000;
         }
     }
@@ -697,7 +697,7 @@ void Platform_State_Pushable(void)
 
     foreach_active(Player, playerLoop)
     {
-        uint8 id = 1 << RSDK.GetEntityID(playerLoop);
+        uint8 id = 1 << RSDK.GetEntitySlot(playerLoop);
         if (id & self->pushPlayersL)
             self->velocity.x += self->speed;
         if (id & self->pushPlayersR)
@@ -733,7 +733,7 @@ void Platform_State_Pushable(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int32 bitID          = 1 << RSDK.GetEntityID(player);
+        int32 bitID          = 1 << RSDK.GetEntitySlot(player);
         if (bitID & self->pushPlayersL)
             player->position.x = self->drawPos.x + ((self->hitbox.left - playerHitbox->right) << 16);
         if (bitID & self->pushPlayersR)
@@ -1364,7 +1364,7 @@ void Platform_Collision_AllSolid(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionPlatform(player, self, platformHitbox);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
@@ -1465,7 +1465,7 @@ void Platform_Collision_BottomHazard(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionPlatform(player, self, platformHitbox);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
@@ -1551,7 +1551,7 @@ void Platform_Collision_LRHazard(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        uint16 playerID = RSDK.GetEntityID(player);
+        uint16 playerID = RSDK.GetEntitySlot(player);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP:
@@ -1650,7 +1650,7 @@ void Platform_Collision_Tiles(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         Hitbox hitbox;
         hitbox.left   = self->hitbox.left - 16;
@@ -1751,7 +1751,7 @@ void Platform_Collision_Sticky(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        uint16 playerID = RSDK.GetEntityID(player);
+        uint16 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionPlatform(player, self, platformHitbox);
 
         int32 side = Player_CheckCollisionBox(player, self, solidHitbox);
@@ -1850,7 +1850,7 @@ void Platform_Collision_TopHazard(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        uint16 playerID = RSDK.GetEntityID(player);
+        uint16 playerID = RSDK.GetEntitySlot(player);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP:
@@ -1934,7 +1934,7 @@ void Platform_Collision_TopSolid(void)
     self->stoodPlayers = 0;
     foreach_active(Player, player)
     {
-        uint16 playerID = RSDK.GetEntityID(player);
+        uint16 playerID = RSDK.GetEntitySlot(player);
         int32 yVel      = player->velocity.y;
 
         if (self->collisionOffset.y < 0)
@@ -1984,7 +1984,7 @@ void Platform_Collision_TurnTable(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        uint16 playerID = RSDK.GetEntityID(player);
+        uint16 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionPlatform(player, self, platformHitbox);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
@@ -2096,7 +2096,7 @@ void Platform_Collision_Twister(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        uint16 playerID = RSDK.GetEntityID(player);
+        uint16 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionPlatform(player, self, platformHitbox);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
@@ -2225,7 +2225,7 @@ void Platform_Collision_AllSolid_NoCrush(void)
     self->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        uint16 playerID = RSDK.GetEntityID(player);
+        uint16 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionPlatform(player, self, platformHitbox);
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {

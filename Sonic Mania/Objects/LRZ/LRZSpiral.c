@@ -104,7 +104,7 @@ void LRZSpiral_State_Cylinder(void)
     RSDK_THIS(LRZSpiral);
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
             if (player->state == Player_State_None) {
@@ -184,7 +184,7 @@ void LRZSpiral_State_J_Curve(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if ((1 << playerID) & self->activePlayers) {
             if (player->state == Player_State_None) {
                 self->playerSpiralPos[playerID] += player->groundVel;
@@ -255,7 +255,7 @@ void LRZSpiral_State_C_Curve(void)
     RSDK_THIS(LRZSpiral);
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
             if (player->state == Player_State_None) {

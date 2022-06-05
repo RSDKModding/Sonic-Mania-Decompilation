@@ -17,7 +17,7 @@ void Ink_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         Player_CheckCollisionBox(player, self, &Ink->hitboxBottleL);
         Player_CheckCollisionBox(player, self, &Ink->hitboxBottleR);

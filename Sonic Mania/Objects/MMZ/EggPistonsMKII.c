@@ -730,7 +730,7 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
 
     if (!--EggPistonsMKII->alarmTimer) {
         for (int i = 0; i < 2; ++i) {
-            int32 slot                      = RSDK.GetEntityID(EggPistonsMKII->controller);
+            int32 slot                      = RSDK.GetEntitySlot(EggPistonsMKII->controller);
             EntityEggPistonsMKII *barrier = RSDK_GET_ENTITY(slot + 14 + i, EggPistonsMKII);
 
             for (int d = 0; d < 4; ++d) {

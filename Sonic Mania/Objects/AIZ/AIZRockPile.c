@@ -35,7 +35,7 @@ void AIZRockPile_Update(void)
                         if (side == C_LEFT || side == C_RIGHT) {
                             bool32 canBreak = jumping && player->onGround && abs(groundVel) >= 0x48000;
                             if (player->shield == SHIELD_FIRE) {
-                                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
                                 canBreak |= shield->shieldAnimator.animationID == 2; // fire dash
                             }
 

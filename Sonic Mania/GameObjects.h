@@ -215,7 +215,7 @@ typedef struct {
     void (*BreakForeachLoop)(void);
     void (*SetEditableVar)(uint8 type, const char *name, uint8 classID, int32 storeOffset);
     void *(*GetEntity)(uint16 slot);
-    int32 (*GetEntityID)(void *entity);
+    int32 (*GetEntitySlot)(void *entity);
     int32 (*GetEntityCount)(uint16 classID, bool32 isActive);
     int32 (*GetDrawListRef)(uint8 drawGroup, uint16 entitySlot);
     void *(*GetDrawListRefPtr)(uint8 drawGroup, uint16 entitySlot);

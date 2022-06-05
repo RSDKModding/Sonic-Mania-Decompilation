@@ -125,7 +125,7 @@ void Shuriken_HandleSolidCollisions(void)
             if (!player->onGround && !player->sidekick && !self->dropTimer)
                 self->dropTimer = 1;
 
-            self->activePlayers |= 1 << RSDK.GetEntityID(player);
+            self->activePlayers |= 1 << RSDK.GetEntitySlot(player);
             player->position.y &= 0xFFFF0000;
         }
     }

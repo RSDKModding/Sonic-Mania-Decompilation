@@ -17,7 +17,7 @@ void SpinBooster_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         int32 distX    = (player->position.x - self->position.x) >> 8;
         int32 distY    = (player->position.y - self->position.y) >> 8;
         int32 x        = (distY * RSDK.Sin256(negAngle)) + distX * RSDK.Cos256(negAngle) + self->position.x;

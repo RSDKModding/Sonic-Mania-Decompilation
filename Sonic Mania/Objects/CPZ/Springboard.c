@@ -19,7 +19,7 @@ void Springboard_Update(void)
     // source: it was exactly like that in S2 '13
     foreach_active(Player, playerPtr)
     {
-        if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntityID(playerPtr)) & self->activePlayers)) {
+        if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntitySlot(playerPtr)) & self->activePlayers)) {
             int32 pos = clampVal((playerPtr->position.x - self->position.x + 0x1C0000) >> 17, 0, 28);
 
             if ((self->direction & FLIP_X))
@@ -52,7 +52,7 @@ void Springboard_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID   = RSDK.GetEntityID(player);
+        int32 playerID   = RSDK.GetEntitySlot(player);
 
         int32 playerGndVel = player->groundVel;
         int32 playerVelX   = player->velocity.x;

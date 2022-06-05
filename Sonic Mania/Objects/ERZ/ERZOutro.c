@@ -110,7 +110,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
     EntityFXRuby *fxRuby       = ERZOutro->fxRuby;
     EntityERZOutro *entity     = (EntityERZOutro *)host->activeEntity;
 
-    uint16 eggmanSlot              = RSDK.GetEntityID(eggman);
+    uint16 eggmanSlot              = RSDK.GetEntitySlot(eggman);
     EntityKleptoMobile *eggmanHand = RSDK_GET_ENTITY(eggmanSlot - 2, KleptoMobile);
     EntityKleptoMobile *eggmanArmL = RSDK_GET_ENTITY(eggmanSlot - 1, KleptoMobile);
     EntityKleptoMobile *eggmanArmR = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);

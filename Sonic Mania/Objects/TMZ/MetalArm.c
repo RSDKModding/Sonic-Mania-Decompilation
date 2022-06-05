@@ -150,7 +150,7 @@ void MetalArm_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 id = RSDK.GetEntityID(player);
+        int32 id = RSDK.GetEntitySlot(player);
         if ((1 << id) & self->stoodPlayers) {
             player->position.x += self->moveOffset.x;
             player->position.y += self->moveOffset.y;

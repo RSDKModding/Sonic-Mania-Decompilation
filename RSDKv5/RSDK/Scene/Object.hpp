@@ -260,7 +260,7 @@ void ProcessObjectDrawLists();
 uint16 FindObject(const char *name);
 
 inline Entity *GetEntity(uint16 slot) { return &objectEntityList[slot < ENTITY_COUNT ? slot : (ENTITY_COUNT - 1)]; }
-inline int32 GetEntityID(EntityBase *entity) { return (int32)(entity - objectEntityList < ENTITY_COUNT ? entity - objectEntityList : 0); }
+inline int32 GetEntitySlot(EntityBase *entity) { return (int32)(entity - objectEntityList < ENTITY_COUNT ? entity - objectEntityList : 0); }
 int32 GetEntityCount(uint16 classID, bool32 isActive);
 
 void ResetEntityPtr(Entity *entity, uint16 classID, void *data);

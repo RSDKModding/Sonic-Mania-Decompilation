@@ -79,7 +79,7 @@ void HCZSetup_StaticUpdate(void)
     HCZSetup->waterslidingPlayerCount = 0;
     foreach_active(Player, player)
     {
-        RSDK.GetEntityID(player);
+        RSDK.GetEntitySlot(player);
         if (player->state != Player_State_None) {
             Hitbox *hitbox = Player_GetHitbox(player);
             uint16 tile =

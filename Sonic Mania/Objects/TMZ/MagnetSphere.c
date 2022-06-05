@@ -92,7 +92,7 @@ void MagnetSphere_CheckPlayerCollision(void)
     RSDK_THIS(MagnetSphere);
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
             if (player->state != Player_State_None) {

@@ -25,7 +25,7 @@ void WeatherTV_LateUpdate(void) {}
 void WeatherTV_StaticUpdate(void)
 {
     if (WeatherTV->useHighLayer) {
-        foreach_active(WeatherTV, weatherTV) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(weatherTV)); }
+        foreach_active(WeatherTV, weatherTV) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(weatherTV)); }
     }
 
     int32 count = 0;

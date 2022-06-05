@@ -460,7 +460,7 @@ void BreakableWall_HandleSidesBreak(void)
                 bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
 
                 if (player->shield == SHIELD_FIRE) {
-                    EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                    EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
                     canBreak |= shield->shieldAnimator.animationID == 2;
                 }
 

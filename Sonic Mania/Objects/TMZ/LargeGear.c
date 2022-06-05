@@ -18,7 +18,7 @@ void LargeGear_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         int32 id      = 0;
         int32 storedID = -1;

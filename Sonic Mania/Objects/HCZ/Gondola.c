@@ -164,7 +164,7 @@ void Gondola_HandleTilting(void)
     if (!self->onGround) {
         foreach_active(Player, player)
         {
-            if (((1 << RSDK.GetEntityID(player)) & self->activePlayers))
+            if (((1 << RSDK.GetEntitySlot(player)) & self->activePlayers))
                 targetRotation += (player->position.x - self->centerPos.x) >> 21;
         }
     }
@@ -182,7 +182,7 @@ void Gondola_HandleMoveVelocity(void)
     if (!self->onGround) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (!player->sidekick) {
                 if (((1 << playerID) & self->activePlayers)) {
@@ -264,7 +264,7 @@ void Gondola_HandlePlayerInteractions(void)
     else {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (((1 << playerID) & self->activePlayers)) {
                 player->position.x += self->collisionOffset.x;

@@ -29,7 +29,7 @@ void LRZConvDropper_Update(void)
             self->position.y += self->detectOffset.y;
             foreach_active(Player, player)
             {
-                int32 playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntitySlot(player);
 
                 bool32 triggered = false;
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
@@ -118,7 +118,7 @@ void LRZConvDropper_SetupDropperChildren(void)
 {
     RSDK_THIS(LRZConvDropper);
 
-    int32 slot = RSDK.GetEntityID(self) - self->seqCount;
+    int32 slot = RSDK.GetEntitySlot(self) - self->seqCount;
     for (int32 i = 0; i < self->seqCount; ++i) {
         EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
         child->active            = ACTIVE_NEVER;
@@ -129,7 +129,7 @@ void LRZConvDropper_SetupDropperChildren(void)
 void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
 {
     if (entity->seqCount && entity->seqPos < entity->seqCount) {
-        int32 slot                = RSDK.GetEntityID(entity);
+        int32 slot                = RSDK.GetEntitySlot(entity);
         int32 seqPos              = entity->seqPos - entity->seqCount;
         EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(slot + seqPos, LRZConvItem);
 
@@ -182,7 +182,7 @@ void LRZConvDropper_EditorDraw(void)
         RSDK.DrawLine(self->position.x, self->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
         DrawHelpers_DrawHitboxOutline(x, y, &self->hitbox, 0, 0xFFFFFF);
 
-        int32 slot = RSDK.GetEntityID(self) - self->seqCount;
+        int32 slot = RSDK.GetEntitySlot(self) - self->seqCount;
         for (int32 i = 0; i < self->seqCount; ++i) {
             EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
 

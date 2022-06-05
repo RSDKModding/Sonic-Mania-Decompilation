@@ -114,7 +114,7 @@ void Acetone_CheckPlayerCollisions(void)
                     // case ID_RAY: RSDK.CopyPalette(6, 113, 0, 113, 6); break;
             }
 
-            Ink->playerColors[RSDK.GetEntityID(player)] = 0;
+            Ink->playerColors[RSDK.GetEntitySlot(player)] = 0;
         }
     }
 }

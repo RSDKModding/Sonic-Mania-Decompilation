@@ -21,7 +21,7 @@ void Turntable_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (!((1 << playerID) & self->activePlayers)) {
             if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {

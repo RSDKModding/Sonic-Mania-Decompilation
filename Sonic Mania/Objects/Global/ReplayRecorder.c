@@ -27,7 +27,7 @@ void ReplayRecorder_LateUpdate(void)
         StateMachine_Run(self->stateLate);
 
         Replay *replayPtr = NULL;
-        if (RSDK.GetEntityID(self) == SLOT_REPLAYRECORDER_RECORD)
+        if (RSDK.GetEntitySlot(self) == SLOT_REPLAYRECORDER_RECORD)
             replayPtr = ReplayRecorder->recordBuffer;
         else
             replayPtr = ReplayRecorder->playbackBuffer;
@@ -118,7 +118,7 @@ void ReplayRecorder_StaticUpdate(void)
 
                     if (!RSDK.GetEntityCount(TitleCard->classID, false) && !pauseMenu->classID && allowPause) {
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-                        pauseMenu->triggerPlayer = RSDK.GetEntityID(SceneInfo->entity);
+                        pauseMenu->triggerPlayer = RSDK.GetEntitySlot(SceneInfo->entity);
                         if (globals->gameMode == MODE_COMPETITION)
                             pauseMenu->disableRestart = true;
                     }
@@ -196,7 +196,7 @@ void ReplayRecorder_StageLoad(void)
             ReplayRecorder->startPlayback  = false;
 
             Replay *replayPtr = NULL;
-            if (RSDK.GetEntityID(ReplayRecorder->playbackManager) == SLOT_REPLAYRECORDER_RECORD)
+            if (RSDK.GetEntitySlot(ReplayRecorder->playbackManager) == SLOT_REPLAYRECORDER_RECORD)
                 replayPtr = ReplayRecorder->recordBuffer;
             else
                 replayPtr = ReplayRecorder->playbackBuffer;
@@ -220,7 +220,7 @@ void ReplayRecorder_StageLoad(void)
 void ReplayRecorder_TitleCardCB(void)
 {
     Replay *buffer = NULL;
-    if (RSDK.GetEntityID(ReplayRecorder->playbackManager) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(ReplayRecorder->playbackManager) == SLOT_REPLAYRECORDER_RECORD)
         buffer = ReplayRecorder->recordBuffer;
     else
         buffer = ReplayRecorder->playbackBuffer;
@@ -266,7 +266,7 @@ void ReplayRecorder_FinishCB(void)
 void ReplayRecorder_Buffer_Move(void)
 {
     Replay *replayPtr = NULL;
-    if (RSDK.GetEntityID(ReplayRecorder->recordingManager) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(ReplayRecorder->recordingManager) == SLOT_REPLAYRECORDER_RECORD)
         replayPtr = ReplayRecorder->recordBuffer;
     else
         replayPtr = ReplayRecorder->playbackBuffer;
@@ -779,7 +779,7 @@ void ReplayRecorder_Play(EntityPlayer *player)
     EntityReplayRecorder *recorder = ReplayRecorder->playbackManager;
 
     Replay *replayPtr = NULL;
-    if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(recorder) == SLOT_REPLAYRECORDER_RECORD)
         replayPtr = ReplayRecorder->recordBuffer;
     else
         replayPtr = ReplayRecorder->playbackBuffer;
@@ -828,7 +828,7 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame)
     recorder->replayFrame = frame;
 
     ReplayFrame *frameBuffer = NULL;
-    if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(recorder) == SLOT_REPLAYRECORDER_RECORD)
         frameBuffer = ReplayRecorder->recordingFrames;
     else
         frameBuffer = ReplayRecorder->playbackFrames;
@@ -861,7 +861,7 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame)
 void ReplayRecorder_SeekFunc(EntityReplayRecorder *recorder)
 {
     ReplayFrame *framePtr = NULL;
-    if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(recorder) == SLOT_REPLAYRECORDER_RECORD)
         framePtr = ReplayRecorder->recordingFrames;
     else
         framePtr = ReplayRecorder->playbackFrames;
@@ -1034,14 +1034,14 @@ void ReplayRecorder_PlayBackInput(void)
     EntityReplayRecorder *recorder = ReplayRecorder->playbackManager;
 
     Replay *replayPtr = NULL;
-    if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(recorder) == SLOT_REPLAYRECORDER_RECORD)
         replayPtr = ReplayRecorder->recordBuffer;
     else
         replayPtr = ReplayRecorder->playbackBuffer;
 
     if (ReplayRecorder->frameCounter >= replayPtr->header.startingFrame && self == recorder->player) {
         ReplayFrame *frameBuffer = NULL;
-        if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_RECORD)
+        if (RSDK.GetEntitySlot(recorder) == SLOT_REPLAYRECORDER_RECORD)
             frameBuffer = ReplayRecorder->recordingFrames;
         else
             frameBuffer = ReplayRecorder->playbackFrames;
@@ -1108,7 +1108,7 @@ void ReplayRecorder_PlayerState_PlaybackReplay(void)
         self->animator.speed = 0;
 
         ReplayFrame *frameBuffer = NULL;
-        if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_RECORD)
+        if (RSDK.GetEntitySlot(recorder) == SLOT_REPLAYRECORDER_RECORD)
             frameBuffer = ReplayRecorder->recordingFrames;
         else
             frameBuffer = ReplayRecorder->playbackFrames;
@@ -1172,13 +1172,13 @@ void ReplayRecorder_State_SetupPlayback(void)
     RSDK_THIS(ReplayRecorder);
 
     Replay *replayPtr = NULL;
-    if (RSDK.GetEntityID(self) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(self) == SLOT_REPLAYRECORDER_RECORD)
         replayPtr = ReplayRecorder->recordBuffer;
     else
         replayPtr = ReplayRecorder->playbackBuffer;
 
     ReplayFrame *frameBuffer = NULL;
-    if (RSDK.GetEntityID(self) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(self) == SLOT_REPLAYRECORDER_RECORD)
         frameBuffer = ReplayRecorder->recordingFrames;
     else
         frameBuffer = ReplayRecorder->playbackFrames;
@@ -1229,7 +1229,7 @@ void ReplayRecorder_Late_Playback(void)
     }
 
     ReplayFrame *frameBuffer = NULL;
-    if (RSDK.GetEntityID(self) == SLOT_REPLAYRECORDER_RECORD)
+    if (RSDK.GetEntitySlot(self) == SLOT_REPLAYRECORDER_RECORD)
         frameBuffer = ReplayRecorder->recordingFrames;
     else
         frameBuffer = ReplayRecorder->playbackFrames;

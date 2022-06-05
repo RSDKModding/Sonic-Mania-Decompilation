@@ -489,7 +489,7 @@ void Ice_State_FrozenPlayer(void)
 
             Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
             RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-            Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
+            Ice->playerTimers[RSDK.GetEntitySlot(self)] = 30;
 
             self->skidding       = 0;
             self->pushing        = 0;
@@ -514,7 +514,7 @@ void Ice_State_FrozenPlayer(void)
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, true, 0);
                     Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
                     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-                    Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
+                    Ice->playerTimers[RSDK.GetEntitySlot(self)] = 30;
                     self->skidding                            = 0;
                     self->pushing                             = 0;
                     self->timer                               = 0;
@@ -605,7 +605,7 @@ void Ice_BreakPlayerBlock(EntityPlayer *player)
 {
     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
     Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
-    Ice->playerTimers[RSDK.GetEntityID(player)] = 30;
+    Ice->playerTimers[RSDK.GetEntitySlot(player)] = 30;
 
     player->skidding       = 0;
     player->pushing        = 0;
@@ -870,7 +870,7 @@ void Ice_State_IceBlock(void)
                         foreach_return;
                     }
                     else if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0) {
-                        if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->shieldAnimator.animationID == 2) {
+                        if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield)->shieldAnimator.animationID == 2) {
                             if (player->position.x >= self->position.x) {
                                 if (player->velocity.x <= -0x78000) {
                                     Ice_FullShatter(player, player->velocity.x, 0);

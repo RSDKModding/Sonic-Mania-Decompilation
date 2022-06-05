@@ -72,7 +72,7 @@ void UFO_Circuit_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
-        int32 id         = RSDK.GetEntityID(self);
+        int32 id         = RSDK.GetEntitySlot(self);
 
         EntityUFO_Circuit *next = RSDK_GET_ENTITY(id + 1, UFO_Circuit);
         if (next->classID == UFO_Circuit->classID) {
@@ -355,7 +355,7 @@ void UFO_Circuit_EditorDraw(void)
     if (self->startNode && showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        int32 id = RSDK.GetEntityID(self) + 1;
+        int32 id = RSDK.GetEntitySlot(self) + 1;
 
         EntityUFO_Circuit *lastNode = self;
         EntityUFO_Circuit *nextNode = RSDK_GET_ENTITY(id++, UFO_Circuit);

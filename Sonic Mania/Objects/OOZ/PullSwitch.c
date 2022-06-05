@@ -34,7 +34,7 @@ void PullSwitch_Update(void)
     self->activated = false;
     foreach_active(Player, player)
     {
-        int32 playerID       = RSDK.GetEntityID(player);
+        int32 playerID       = RSDK.GetEntitySlot(player);
         Hitbox *playerHitbox = Player_GetHitbox(player);
 
         if (self->playerTimers[playerID]) {

@@ -152,7 +152,7 @@ void SP500_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (self->playerTimers[playerID]) {
             self->playerTimers[playerID]--;

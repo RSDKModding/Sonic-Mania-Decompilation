@@ -110,7 +110,7 @@ void HangPoint_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (self->playerTimer[playerID] > 0)
             self->playerTimer[playerID]--;
@@ -247,7 +247,7 @@ void HangPoint_Update(void)
 
                                                 player->position.x = point->position.x;
 
-                                                if (RSDK.GetEntityID(point) < SceneInfo->entitySlot)
+                                                if (RSDK.GetEntitySlot(point) < SceneInfo->entitySlot)
                                                     HangPoint_HandlePlayerMovement(point, player, playerID);
                                                 HangPoint_HandlePlayerMovement(self, player, playerID);
 
@@ -289,7 +289,7 @@ void HangPoint_Update(void)
 
                                                 player->position.x = point->position.x;
 
-                                                if (RSDK.GetEntityID(point) < SceneInfo->entitySlot)
+                                                if (RSDK.GetEntitySlot(point) < SceneInfo->entitySlot)
                                                     HangPoint_HandlePlayerMovement(point, player, playerID);
                                                 HangPoint_HandlePlayerMovement(self, player, playerID);
 

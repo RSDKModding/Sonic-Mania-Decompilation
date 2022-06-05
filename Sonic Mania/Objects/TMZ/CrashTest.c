@@ -22,7 +22,7 @@ void CrashTest_LateUpdate(void) {}
 
 void CrashTest_StaticUpdate(void)
 {
-    foreach_active(CrashTest, crashtest) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntityID(crashtest)); }
+    foreach_active(CrashTest, crashtest) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntitySlot(crashtest)); }
 }
 
 void CrashTest_Draw(void)
@@ -146,7 +146,7 @@ void CrashTest_HandlePlayerCrash(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if ((1 << playerID) & self->activePlayers) {
             self->activePlayers &= ~(1 << playerID);
             bool32 isSidekick = player->sidekick;
@@ -173,7 +173,7 @@ void CrashTest_CheckPlayerCollisionsSolid(void)
 
     foreach_active(Player, player)
     {
-        RSDK.GetEntityID(player);
+        RSDK.GetEntitySlot(player);
         if (self->state != CrashTest_State_Crashed) {
             self->position.y = carY;
             self->position.x = carX;
@@ -210,7 +210,7 @@ void CrashTest_CheckPlayerRide(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID]) {
             if (Player_CheckCollisionTouch(player, self, &self->hitboxSeat)) {
                 self->activePlayers |= 1 << playerID;
@@ -239,7 +239,7 @@ void CrashTest_CheckPlayerJump(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if ((1 << playerID) & self->activePlayers) {
             player->velocity.x = 0;
             player->velocity.y = 0;

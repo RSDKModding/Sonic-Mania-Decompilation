@@ -254,7 +254,7 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_BreakForeachLoop, BreakForeachLoop);
     ADD_RSDK_FUNCTION(FunctionTable_SetEditableVar, SetEditableVar);
     ADD_RSDK_FUNCTION(FunctionTable_GetEntity, GetEntity);
-    ADD_RSDK_FUNCTION(FunctionTable_GetEntityID, GetEntityID);
+    ADD_RSDK_FUNCTION(FunctionTable_GetEntitySlot, GetEntitySlot);
     ADD_RSDK_FUNCTION(FunctionTable_GetEntityCount, GetEntityCount);
     ADD_RSDK_FUNCTION(FunctionTable_GetDrawListRef, GetDrawListRef);
     ADD_RSDK_FUNCTION(FunctionTable_GetDrawListRefPtr, GetDrawListRefPtr);

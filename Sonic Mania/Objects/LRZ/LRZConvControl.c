@@ -77,7 +77,7 @@ void LRZConvControl_HandlePlayerTrigger(void)
     bool32 interacted = false;
     foreach_active(Player, player)
     {
-        int32 playerID  = RSDK.GetEntityID(player);
+        int32 playerID  = RSDK.GetEntitySlot(player);
         bool32 collided = Player_CheckCollisionTouch(player, self, &self->hitbox);
 
         if ((1 << playerID) & self->activePlayers) {

@@ -131,7 +131,7 @@ void BallCannon_CheckPlayerEntry(void)
         foreach_all(Player, player)
         {
             if (Player_CheckValidState(player)) {
-                int32 playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntitySlot(player);
 
                 if (self->playerTimers[playerID]) {
                     self->playerTimers[playerID]--;
@@ -218,7 +218,7 @@ void BallCannon_State_EjectPlayer(void)
         foreach_all(Player, player)
         {
             if (Player_CheckValidState(player)) {
-                int32 playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntitySlot(player);
 
                 if (((1 << playerID) & self->activePlayers)) {
                     RSDK.PlaySfx(BallCannon->sfxFire, false, 0xFF);
@@ -299,7 +299,7 @@ void BallCannon_State_CorkOpened(void)
     if (RSDK.CheckOnScreen(self, NULL)) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (self->playerTimers[playerID]) {
                 self->playerTimers[playerID]--;

@@ -24,7 +24,7 @@ void Zone_LateUpdate(void)
         {
             int32 playerID = SLOT_PLAYER1;
             if (!player->sidekick)
-                playerID = RSDK.GetEntityID(player);
+                playerID = RSDK.GetEntitySlot(player);
 
             Hitbox *playerHitbox = Player_GetHitbox(player);
 
@@ -457,7 +457,7 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
     {
         player->position.x -= xOffset;
         player->position.y -= yOffset;
-        globals->atlEntitySlot[count] = RSDK.GetEntityID(player);
+        globals->atlEntitySlot[count] = RSDK.GetEntitySlot(player);
         RSDK.CopyEntity(&globals->atlEntityData[dataPos], player, false);
         count++;
         dataPos += 0x200;
@@ -467,7 +467,7 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
     {
         signPost->position.x -= xOffset;
         signPost->position.y -= yOffset;
-        globals->atlEntitySlot[count] = RSDK.GetEntityID(signPost);
+        globals->atlEntitySlot[count] = RSDK.GetEntitySlot(signPost);
         RSDK.CopyEntity(&globals->atlEntityData[dataPos], signPost, false);
         count++;
         dataPos += 0x200;
@@ -477,7 +477,7 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
     {
         itemBox->position.x -= xOffset;
         itemBox->position.y -= yOffset;
-        globals->atlEntitySlot[count] = RSDK.GetEntityID(itemBox);
+        globals->atlEntitySlot[count] = RSDK.GetEntitySlot(itemBox);
         RSDK.CopyEntity(&globals->atlEntityData[dataPos], itemBox, false);
         count++;
         dataPos += 0x200;
@@ -511,7 +511,7 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
             player->shield             = storedPlayer->shield;
 
             if (player->shield && player->superState != SUPERSTATE_SUPER && player->invincibleTimer <= 0) {
-                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
                 RSDK.ResetEntityPtr(shield, Shield->classID, player);
             }
         }

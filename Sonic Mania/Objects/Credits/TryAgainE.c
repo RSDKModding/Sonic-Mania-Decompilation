@@ -21,7 +21,7 @@ void TryAgainE_LateUpdate(void) {}
 
 void TryAgainE_StaticUpdate(void)
 {
-    foreach_active(TryAgainE, tryAgainE) { RSDK.AddDrawListRef(2, RSDK.GetEntityID(tryAgainE)); }
+    foreach_active(TryAgainE, tryAgainE) { RSDK.AddDrawListRef(2, RSDK.GetEntitySlot(tryAgainE)); }
 }
 
 void TryAgainE_Draw(void)

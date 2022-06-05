@@ -1020,7 +1020,7 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
             }
             else {
                 parent->nextRoboID++;
-                self->parent  = RSDK_GET_ENTITY(RSDK.GetEntityID(parent) - parent->nextRoboID, HeavyGunner);
+                self->parent  = RSDK_GET_ENTITY(RSDK.GetEntitySlot(parent) - parent->nextRoboID, HeavyGunner);
                 parent->state = HeavyGunner_StateHeli_EscapeMissile;
                 self->state   = HeavyGunner_StateMissile_AttackRobo;
                 RSDK.PlaySfx(HeavyGunner->sfxWooshOut, false, 255);

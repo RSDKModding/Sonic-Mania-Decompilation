@@ -33,7 +33,7 @@ void SpikeFlail_LateUpdate(void) {}
 
 void SpikeFlail_StaticUpdate(void)
 {
-    foreach_active(SpikeFlail, flail) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(flail)); }
+    foreach_active(SpikeFlail, flail) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(flail)); }
 }
 
 void SpikeFlail_Draw(void)

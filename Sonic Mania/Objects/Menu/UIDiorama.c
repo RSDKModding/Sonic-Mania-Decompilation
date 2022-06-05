@@ -51,7 +51,7 @@ void UIDiorama_StaticUpdate(void)
     if (!(UIWidgets->timer & 3))
         RSDK.RotatePalette(0, 60, 63, true);
 
-    foreach_all(UIDiorama, diorama) { RSDK.AddDrawListRef(diorama->drawOrder + 1, RSDK.GetEntityID(diorama)); }
+    foreach_all(UIDiorama, diorama) { RSDK.AddDrawListRef(diorama->drawOrder + 1, RSDK.GetEntitySlot(diorama)); }
 }
 
 void UIDiorama_Draw(void)

@@ -20,7 +20,7 @@ void UberCaterkiller_LateUpdate(void) {}
 
 void UberCaterkiller_StaticUpdate(void)
 {
-    foreach_all(UberCaterkiller, boss) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(boss)); }
+    foreach_all(UberCaterkiller, boss) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(boss)); }
 }
 
 void UberCaterkiller_Draw(void)
@@ -165,7 +165,7 @@ void UberCaterkiller_CheckPlayerCollisions(void)
     else {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (self->playerTimers[playerID]) {
                 --self->playerTimers[playerID];

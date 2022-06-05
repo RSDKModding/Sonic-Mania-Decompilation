@@ -72,7 +72,7 @@ void TVPole_State_CheckGrab(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (self->playerTimers[playerID] > 0)
             self->playerTimers[playerID]--;
@@ -128,7 +128,7 @@ void TVPole_State_ForceRelease(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         self->playerTimers[playerID] = 0;
         if ((1 << playerID) & self->activePlayers) {

@@ -72,7 +72,7 @@ void WarpDoor_Update(void)
                             player->scrollDelay                     = 0;
                             WarpDoor_SetupBoundaries(boundID, &newPos);
 
-                            int32 playerID                = RSDK.GetEntityID(player);
+                            int32 playerID                = RSDK.GetEntitySlot(player);
                             camera->boundsL               = Zone->cameraBoundsL[playerID];
                             camera->boundsR               = Zone->cameraBoundsR[playerID];
                             camera->boundsT               = Zone->cameraBoundsT[playerID];

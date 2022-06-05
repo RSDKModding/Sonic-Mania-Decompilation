@@ -145,7 +145,7 @@ void CPZBoss_State_SetupArena(void)
 
         foreach_active(HUD, hud)
         {
-            CPZBoss->hudSlotID = RSDK.GetEntityID(hud);
+            CPZBoss->hudSlotID = RSDK.GetEntitySlot(hud);
             hud->state         = HUD_State_GoOffScreen;
         }
 
@@ -499,7 +499,7 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
                 player->state      = Player_State_Air;
                 player->onGround   = false;
                 player->velocity.y = -0x20000;
-                RSDK.AddDrawListRef(Zone->playerDrawLow, RSDK.GetEntityID(&player));
+                RSDK.AddDrawListRef(Zone->playerDrawLow, RSDK.GetEntitySlot(&player));
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.SetSpriteAnimation(-1, 0, &self->characterAnimator, false, 0);
                 RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);

@@ -131,7 +131,7 @@ bool32 LaunchSpring_CheckFireworkActive(EntityPlayer *player)
     if (!Firework)
         return false;
 
-    int32 playerID        = RSDK.GetEntityID(player);
+    int32 playerID        = RSDK.GetEntitySlot(player);
     bool32 fireworkActive = false;
     foreach_active(Firework, firework)
     {

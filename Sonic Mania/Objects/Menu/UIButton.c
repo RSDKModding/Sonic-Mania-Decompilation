@@ -121,7 +121,7 @@ void UIButton_Create(void *data)
         self->startListID  = self->listID;
         self->startFrameID = self->frameID;
 
-        int32 slot = RSDK.GetEntityID(self) - self->choiceCount;
+        int32 slot = RSDK.GetEntitySlot(self) - self->choiceCount;
         for (int32 i = 0; i < self->choiceCount; ++i) {
             EntityUIButton *item = RSDK_GET_ENTITY(slot + i, UIButton);
 
@@ -148,7 +148,7 @@ void UIButton_StageLoad(void) {}
 void UIButton_ManageChoices(EntityUIButton *button)
 {
     for (int32 i = 0; i < button->choiceCount; ++i) {
-        EntityUIButton *choice = RSDK_GET_ENTITY(i % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button), UIButton);
+        EntityUIButton *choice = RSDK_GET_ENTITY(i % button->choiceCount - button->choiceCount + RSDK.GetEntitySlot(button), UIButton);
         if (button->choiceCount > 0
             && (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
                 || choice->classID == UIWinSize->classID)) {
@@ -164,7 +164,7 @@ EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 selection)
     if (button->choiceCount <= 0)
         return NULL;
 
-    EntityUIButton *choice = RSDK_GET_ENTITY(RSDK.GetEntityID(button) - button->choiceCount + (selection % button->choiceCount), UIButton);
+    EntityUIButton *choice = RSDK_GET_ENTITY(RSDK.GetEntitySlot(button) - button->choiceCount + (selection % button->choiceCount), UIButton);
     if (choice->classID == UIChoice->classID || choice->classID == UIVsRoundPicker->classID || choice->classID == UIResPicker->classID
         || choice->classID == UIWinSize->classID) {
         return choice;
@@ -903,7 +903,7 @@ void UIButton_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        int32 slot = RSDK.GetEntityID(self) - self->choiceCount;
+        int32 slot = RSDK.GetEntitySlot(self) - self->choiceCount;
         for (int32 i = 0; i < self->choiceCount; ++i) {
             EntityUIButton *item = RSDK_GET_ENTITY(slot + i, UIButton);
 

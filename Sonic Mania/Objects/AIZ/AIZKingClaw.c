@@ -37,7 +37,7 @@ void AIZKingClaw_LateUpdate(void) {}
 
 void AIZKingClaw_StaticUpdate(void)
 {
-    foreach_active(AIZKingClaw, claw) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(claw)); }
+    foreach_active(AIZKingClaw, claw) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(claw)); }
 }
 
 void AIZKingClaw_Draw(void)

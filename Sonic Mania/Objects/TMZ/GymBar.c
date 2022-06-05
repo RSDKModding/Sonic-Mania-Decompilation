@@ -108,7 +108,7 @@ void GymBar_HandlePlayerInteractions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (player->animator.animationID != ANI_HURT && player->state != Player_State_FlyCarried) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 if (!self->playerTimers[playerID]) {

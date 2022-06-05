@@ -83,7 +83,7 @@ void Snowflakes_LateUpdate(void) {}
 
 void Snowflakes_StaticUpdate(void)
 {
-    foreach_active(Snowflakes, snowflake) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(snowflake)); }
+    foreach_active(Snowflakes, snowflake) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(snowflake)); }
 }
 
 void Snowflakes_Draw(void)

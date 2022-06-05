@@ -19,7 +19,7 @@ void PullChain_Update(void)
 
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (self->grabDelay[playerID] > 0)
                 self->grabDelay[playerID]--;

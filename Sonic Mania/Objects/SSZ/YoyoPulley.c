@@ -27,7 +27,7 @@ void YoyoPulley_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (((1 << playerID) & self->activePlayers) || self->playerTimers[playerID]) {
             if (player->state == Player_State_None) {

@@ -29,7 +29,7 @@ DebugHitboxInfo RSDK::debugHitboxList[DEBUG_HITBOX_MAX];
 int32 RSDK::addDebugHitbox(uint8 type, uint8 dir, Entity *entity, Hitbox *hitbox)
 {
     int32 i        = 0;
-    int32 entityID = GetEntityID((EntityBase *)entity);
+    int32 entityID = GetEntitySlot((EntityBase *)entity);
     for (; i < debugHitboxCount; ++i) {
         if (debugHitboxList[i].hitbox.left == hitbox->left && debugHitboxList[i].hitbox.top == hitbox->top
             && debugHitboxList[i].hitbox.right == hitbox->right && debugHitboxList[i].hitbox.bottom == hitbox->bottom

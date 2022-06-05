@@ -94,7 +94,7 @@ void FrostThrower_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !Ice->playerTimers[playerID])
             Ice_FreezePlayer(player);

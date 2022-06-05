@@ -1090,7 +1090,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
     if (--self->timer > 0) {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
             if (player->position.y > Water->waterLevel) {
                 if (player->state == Player_State_None) {
                     player->onGround        = false;
@@ -1147,7 +1147,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
     else {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
             if (player->state == Player_State_None) {
                 player->velocity.x = player->position.x
                                      - LaundroMobile->playerRadius[playerID] * RSDK.Cos256(LaundroMobile->playerAngles[playerID] - 3)
@@ -1193,7 +1193,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (player->state == Player_State_None) {
             player->velocity.x = player->position.x - LaundroMobile->playerRadius[playerID] * RSDK.Cos256(LaundroMobile->playerAngles[playerID] - 3)

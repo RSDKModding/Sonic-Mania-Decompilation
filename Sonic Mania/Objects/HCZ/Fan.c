@@ -107,7 +107,7 @@ void Fan_StaticUpdate(void)
             if (conveyor->movementActivePlayers) {
                 foreach_active(Player, player)
                 {
-                    int32 playerID = RSDK.GetEntityID(player);
+                    int32 playerID = RSDK.GetEntitySlot(player);
 
                     if (((1 << playerID) & conveyor->movementActivePlayers)) {
                         bool32 fanning = false;
@@ -271,7 +271,7 @@ void Fan_SetupTagLink(void)
     RSDK_THIS(Fan);
 
     self->taggedButton         = NULL;
-    EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+    EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Button);
 
     if (self->buttonTag > 0) {
         bool32 matchedTag = false;

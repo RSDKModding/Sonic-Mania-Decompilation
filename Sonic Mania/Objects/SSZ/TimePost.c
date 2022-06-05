@@ -126,7 +126,7 @@ void TimePost_CheckPlayerCollisions(void)
     int32 playerID = 0;
     foreach_active(Player, player)
     {
-        if ((!RSDK.GetEntityID(player) || globals->gameMode == MODE_COMPETITION) && !((1 << playerID) & self->activePlayers)
+        if ((!RSDK.GetEntitySlot(player) || globals->gameMode == MODE_COMPETITION) && !((1 << playerID) & self->activePlayers)
             && player->position.x > self->position.x) {
             RSDK.PlaySfx(TimePost->sfxFuture, false, 255);
 

@@ -50,7 +50,7 @@ void PBL_Setup_StaticUpdate(void)
 
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
         pauseMenu->disableRestart  = true;
-        pauseMenu->triggerPlayer   = RSDK.GetEntityID(self);
+        pauseMenu->triggerPlayer   = RSDK.GetEntitySlot(self);
     }
 }
 

@@ -39,7 +39,7 @@ void JacobsLadder_Update(void)
 
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (((1 << playerID) & self->activePlayers)) {
                 if (player->state == Player_State_None && player->shield == SHIELD_LIGHTNING) {
@@ -96,7 +96,7 @@ void JacobsLadder_Update(void)
     else {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (((1 << playerID) & self->activePlayers)) {
                 self->activePlayers &= ~(1 << playerID);

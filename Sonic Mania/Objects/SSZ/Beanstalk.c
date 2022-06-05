@@ -104,7 +104,7 @@ int32 Beanstalk_GetNextNodeDistance(void)
 {
     RSDK_THIS(Beanstalk);
 
-    EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
+    EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) + 1, Beanstalk);
 
     if (self->forceEnd || next->classID != Beanstalk->classID)
         return 0;
@@ -125,7 +125,7 @@ int32 Beanstalk_GetRemainingDistance(void)
 
     int32 len = 0;
     while (self->type) {
-        EntityBeanstalk *prev = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Beanstalk);
+        EntityBeanstalk *prev = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Beanstalk);
         if (prev->classID != Beanstalk->classID)
             break;
 
@@ -147,7 +147,7 @@ int32 Beanstalk_GetBezierInc(void)
 {
     RSDK_THIS(Beanstalk);
 
-    EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
+    EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) + 1, Beanstalk);
 
     if (self->forceEnd || next->classID != Beanstalk->classID)
         return 0;
@@ -168,7 +168,7 @@ void Beanstalk_DrawNodes(void)
     RSDK_THIS(Beanstalk);
 
     if (!self->forceEnd) {
-        EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
+        EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) + 1, Beanstalk);
 
         if (next->classID == Beanstalk->classID) {
             if (SceneInfo->inEditor) {
@@ -234,7 +234,7 @@ void Beanstalk_DrawCreationNode(void)
 
     // Draw the node that "walks" along the path and "creates" the beanstalk behind it
     if (!self->forceEnd) {
-        EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
+        EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) + 1, Beanstalk);
 
         if (next->classID == Beanstalk->classID) {
             if (self->curBezierPos) {
@@ -260,7 +260,7 @@ void Beanstalk_HandleNodeMovement(void)
         EntityBeanstalk *node = NULL;
 
         if (!self->forceEnd) {
-            node = RSDK_GET_ENTITY(RSDK.GetEntityID(self) + 1, Beanstalk);
+            node = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) + 1, Beanstalk);
             if (node->classID != Beanstalk->classID)
                 node = NULL;
         }
@@ -328,7 +328,7 @@ void Beanstalk_CheckPlayerCollisions_Platform(void)
     self->activePlayers = 0;
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (Player_CheckCollisionPlatform(player, self, &Beanstalk->hitboxPlatform)) {
             player->position.x += self->position.x - storeX;
 

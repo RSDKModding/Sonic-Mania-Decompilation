@@ -20,7 +20,7 @@ void PuyoMatch_LateUpdate(void) {}
 
 void PuyoMatch_StaticUpdate(void)
 {
-    foreach_active(PuyoMatch, match) { RSDK.AddDrawListRef(Zone->hudDrawOrder, RSDK.GetEntityID(match)); }
+    foreach_active(PuyoMatch, match) { RSDK.AddDrawListRef(Zone->hudDrawOrder, RSDK.GetEntitySlot(match)); }
 }
 
 void PuyoMatch_Draw(void)

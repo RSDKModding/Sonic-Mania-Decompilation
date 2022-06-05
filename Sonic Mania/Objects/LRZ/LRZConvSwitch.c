@@ -21,7 +21,7 @@ void LRZConvSwitch_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (self->playerPositions[playerID].x || self->playerPositions[playerID].y) {
             int32 dir = 0;

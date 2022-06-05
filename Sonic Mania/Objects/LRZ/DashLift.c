@@ -74,7 +74,7 @@ void DashLift_State_HandleDash(void)
     int32 totalSpeed = 0;
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (!((1 << playerID) & self->stoodPlayers)) {
             if (((1 << playerID) & self->activePlayers)) {

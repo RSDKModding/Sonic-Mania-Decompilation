@@ -142,7 +142,7 @@ bool32 Crate_Collide(void)
         int32 storeGrounded  = player->onGround;
         Hitbox *playerHitbox = Player_GetHitbox(player);
 
-        int32 shieldAnim = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->shieldAnimator.animationID;
+        int32 shieldAnim = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield)->shieldAnimator.animationID;
 
         switch (RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, playerHitbox, false)) {
             default:

@@ -96,7 +96,7 @@ void Jawz_State_CheckPlayerTrigger(void)
     if (player) {
         if (abs(player->position.x - self->position.x) < 0x1800000) {
 
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
             switch (self->triggerDir) {
                 case JAWS_TRIGGER_BOTH:
                     if (player->position.x > self->position.x) {

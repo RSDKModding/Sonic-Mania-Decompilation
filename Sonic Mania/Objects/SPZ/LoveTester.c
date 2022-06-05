@@ -23,7 +23,7 @@ void LoveTester_LateUpdate(void) {}
 
 void LoveTester_StaticUpdate(void)
 {
-    foreach_active(LoveTester, loveTester) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(loveTester)); }
+    foreach_active(LoveTester, loveTester) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(loveTester)); }
 }
 
 void LoveTester_Draw(void)
@@ -215,7 +215,7 @@ void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick)
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
         if (allowSidekick || !player->sidekick) {
             if (!((1 << playerID) & self->activePlayers)) {
                 if (Player_CheckBadnikTouch(player, self, &LoveTester->hitboxEntry)) {

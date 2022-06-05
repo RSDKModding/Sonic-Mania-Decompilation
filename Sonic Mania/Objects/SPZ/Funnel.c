@@ -271,7 +271,7 @@ void Funnel_LateUpdate(void) {}
 
 void Funnel_StaticUpdate(void)
 {
-    foreach_all(Funnel, funnel) { RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntityID(funnel)); }
+    foreach_all(Funnel, funnel) { RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntitySlot(funnel)); }
 }
 
 void Funnel_Draw(void)

@@ -15,7 +15,7 @@ void PlatformControl_Update(void)
 
     self->active = ACTIVE_NORMAL;
 
-    int32 startNodeSlot = RSDK.GetEntityID(self) + 1;
+    int32 startNodeSlot = RSDK.GetEntitySlot(self) + 1;
     int32 platformSlot  = startNodeSlot + self->nodeCount;
 
     if (self->isActive) {
@@ -157,7 +157,7 @@ void PlatformControl_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_BOUNDS;
 
-        int32 id = RSDK.GetEntityID(self) + 1;
+        int32 id = RSDK.GetEntitySlot(self) + 1;
         for (int32 i = 0; i < self->nodeCount; ++i) {
             Entity *node = RSDK_GET_ENTITY_GEN(id++);
 
@@ -175,7 +175,7 @@ void PlatformControl_Create(void *data)
         self->updateRange.y += 0x800000;
 
         self->taggedButton         = NULL;
-        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Button);
         if (self->buttonTag > 0) {
             bool32 foundButton = false;
             if (Button) {
@@ -276,7 +276,7 @@ void PlatformControl_EditorDraw(void)
     if (showGizmos()) {
 
         self->taggedButton         = NULL;
-        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Button);
         if (self->buttonTag > 0) {
             bool32 foundButton = false;
             if (Button) {
@@ -332,7 +332,7 @@ void PlatformControl_EditorDraw(void)
                                   INK_NONE, 0xFF);
         }
 
-        int32 startNodeSlot = RSDK.GetEntityID(self) + 1;
+        int32 startNodeSlot = RSDK.GetEntitySlot(self) + 1;
 
         EntityPlatformNode *lastNode = RSDK_GET_ENTITY(startNodeSlot, PlatformNode);
         for (int32 n = 1; n < self->nodeCount; ++n) {

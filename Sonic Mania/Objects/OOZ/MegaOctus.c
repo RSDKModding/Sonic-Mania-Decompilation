@@ -23,7 +23,7 @@ void MegaOctus_StaticUpdate(void)
     foreach_active(MegaOctus, boss)
     {
         if (boss->type == MEGAOCTUS_ARM)
-            RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntityID(boss));
+            RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntitySlot(boss));
     }
 }
 
@@ -272,7 +272,7 @@ void MegaOctus_CheckPlayerCollisions_Body(void)
     {
         int32 playerRadius = 0x100000;
 
-        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
         if (shield->classID == Shield->classID && shield->state == Shield_State_Insta)
             playerRadius = 0x160000;
 
@@ -1252,7 +1252,7 @@ void MegaOctus_StateArm_GrabPlatform(void)
             }
         }
 
-        int32 slot = RSDK.GetEntityID(MegaOctus->bossEntity) + 4;
+        int32 slot = RSDK.GetEntitySlot(MegaOctus->bossEntity) + 4;
 
         EntityCollapsingPlatform *collapsingPlatform = RSDK_GET_ENTITY(slot, CollapsingPlatform);
         collapsingPlatform->collapseDelay            = 24;
@@ -1554,7 +1554,7 @@ void MegaOctus_EditorDraw(void)
     MegaOctus_Draw_Body();
 
     if (showGizmos()) {
-        int32 slot = RSDK.GetEntityID(self);
+        int32 slot = RSDK.GetEntitySlot(self);
 
         RSDK_DRAWING_OVERLAY(true);
 

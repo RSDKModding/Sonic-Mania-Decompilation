@@ -14,7 +14,7 @@ void CorkscrewPath_Update(void)
     RSDK_THIS(CorkscrewPath);
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntitySlot(player);
 
         if (abs(self->position.x - player->position.x) >> 16 > self->xSize) {
             self->activePlayers &= ~playerID;

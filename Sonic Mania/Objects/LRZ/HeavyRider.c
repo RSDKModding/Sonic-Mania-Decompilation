@@ -223,7 +223,7 @@ void HeavyRider_CheckObjectCollisions(void)
     else {
         foreach_active(Player, player)
         {
-            int32 playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntitySlot(player);
 
             if (HeavyRider->playerTimers[playerID])
                 HeavyRider->playerTimers[playerID]--;
