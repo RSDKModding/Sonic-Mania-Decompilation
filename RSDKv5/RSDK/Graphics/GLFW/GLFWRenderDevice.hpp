@@ -1,6 +1,19 @@
 class RenderDevice : public RenderDeviceBase
 {
 public:
+    struct WindowInfo {
+        union {
+            struct {
+                int32 width;
+                int32 height;
+                int32 _pad[3];
+                int32 refresh_rate;
+            };
+            GLFWvidmode internal;
+        } * displays;
+    };
+    static WindowInfo displayInfo;
+
     static bool Init();
     static void CopyFrameBuffer();
     static void FlipScreen();

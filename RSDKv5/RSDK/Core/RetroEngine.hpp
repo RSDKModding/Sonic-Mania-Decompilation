@@ -56,6 +56,15 @@ enum GameRegions {
 
 } // namespace RSDK
 
+// =================
+// INTELLISENSE HACKS (hopefully rdc doesn't kill me)
+// =================
+
+#ifdef _INTELLISENSE_NX
+#undef __unix__
+#undef __linux__
+#endif
+
 #define RETRO_USE_ORIGINAL_CODE (0)
 
 #ifndef RETRO_STANDALONE
@@ -259,8 +268,8 @@ enum GameRegions {
 #endif //! RSDK_USE_SDL2
 
 #elif RETRO_PLATFORM == RETRO_SWITCH
-#undef RETRO_USERCORE_ID
-#define RETRO_USERCORE_ID (4)
+// #undef RETRO_USERCORE_ID
+// #define RETRO_USERCORE_ID (4)
 // #define RETRO_USERCORE_ID (4 | 0x80)
 
 #ifdef RSDK_USE_SDL2
@@ -369,6 +378,10 @@ enum GameRegions {
 #if RETRO_RENDERDEVICE_GLFW
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#elif RETRO_RENDERDEVICE_EGL
+#include <glad/glad.h>
+#include <EGL/egl.h>    // EGL library
+#include <EGL/eglext.h> // EGL extensions
 #endif
 
 #if RETRO_RENDERDEVICE_SDL2 || RETRO_INPUTDEVICE_SDL2 || RETRO_AUDIODEVICE_SDL2

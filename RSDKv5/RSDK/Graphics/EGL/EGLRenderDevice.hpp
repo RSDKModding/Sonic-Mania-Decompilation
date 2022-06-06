@@ -1,6 +1,24 @@
 class RenderDevice : public RenderDeviceBase
 {
 public:
+#if RETRO_PLATFORM == RETRO_SWITCH
+    struct WindowInfo {
+        union {
+            struct {
+                uint8 _pad1[offsetof(NWindow, width)];
+                uint32 width;
+                uint32 height;
+                uint8 _pad2[offsetof(NWindow, swap_interval) - offsetof(NWindow, width)];
+                uint32 refresh_rate;
+            };
+            NWindow internal;
+        } * displays;
+    };
+#elif RETRO_PLATFORM == RETRO_ANDROID
+
+#endif
+    static WindowInfo displayInfo;
+
     static bool Init();
     static void CopyFrameBuffer();
     static void FlipScreen();
@@ -25,12 +43,18 @@ public:
 
     static void LoadShader(const char *fileName, bool32 linear);
 
-    static inline void ShowCursor(bool32 shown) { glfwSetInputMode(window, GLFW_CURSOR, shown ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN); }
+    static inline void ShowCursor(bool32 shown){};
 
     static EGLDisplay display;
     static EGLContext context;
     static EGLSurface surface;
+    static EGLConfig config;
 
+#if RETRO_PLATFORM == RETRO_SWITCH
+    static NWindow *window;
+#elif RETRO_PLATFORM == RETRO_ANDROID
+    static ANativeWindow *window;
+#endif
 
     static GLuint screenTextures[SCREEN_MAX];
     static GLuint imageTexture;
@@ -42,12 +66,6 @@ private:
     static bool InitGraphicsAPI();
 
     static void GetDisplays();
-
-    static void ProcessKeyEvent(GLFWwindow *, int32 key, int32 scancode, int32 action, int32 mods);
-    static void ProcessFocusEvent(GLFWwindow *, int32 focused);
-    static void ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, int32 mods);
-    static void ProcessJoystickEvent(int32 ID, int32 event);
-    static void ProcessMaximizeEvent(GLFWwindow *, int32 maximized);
 
     static void SetLinear(bool32 linear);
 

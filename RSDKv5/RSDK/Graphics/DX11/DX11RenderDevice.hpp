@@ -3,6 +3,19 @@ const auto _wapiShowCursor = ShowCursor;
 class RenderDevice : public RenderDeviceBase
 {
 public:
+    struct WindowInfo {
+        union {
+            struct {
+                UINT width;
+                UINT height;
+                DXGI_RATIONAL refresh_rate;
+            };
+            DXGI_MODE_DESC internal;
+        } * displays;
+        D3D11_VIEWPORT viewport;
+    };
+    static WindowInfo displayInfo;
+
     static bool Init();
     static void CopyFrameBuffer();
     static void FlipScreen();

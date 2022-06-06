@@ -139,6 +139,8 @@ const RenderVertex rsdkVertexBuffer[24] =
 #include "EGL/EGLRenderDevice.cpp"
 #endif
 
+RenderDevice::WindowInfo RenderDevice::displayInfo;
+
 DrawList RSDK::drawGroups[DRAWGROUP_COUNT];
 
 uint16 RSDK::blendLookupTable[0x20 * 0x100];
@@ -178,7 +180,6 @@ float2 RenderDeviceBase::viewSize    = { 0, 0 };
 int32 RenderDeviceBase::displayWidth[16];
 int32 RenderDeviceBase::displayHeight[16];
 int32 RenderDeviceBase::displayCount = 0;
-WindowInfo RenderDeviceBase::displayInfo;
 
 int32 RenderDeviceBase::lastShaderID = -1;
 

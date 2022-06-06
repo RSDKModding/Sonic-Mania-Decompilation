@@ -3,6 +3,21 @@ using ShaderEntry = ShaderEntryBase;
 class RenderDevice : public RenderDeviceBase
 {
 public:
+    struct WindowInfo {
+        union {
+            struct {
+                // i wanna do uint32 : 32 but idk if other compilers like that
+                uint32 _pad;
+                int32 width;
+                int32 height;
+                int32 refresh_rate;
+            };
+            SDL_DisplayMode internal;
+        } * displays;
+        SDL_Rect viewport;
+    };
+    static WindowInfo displayInfo;
+
     static bool Init();
     static void CopyFrameBuffer();
     static void FlipScreen();

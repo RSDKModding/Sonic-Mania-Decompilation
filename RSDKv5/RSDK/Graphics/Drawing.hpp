@@ -101,62 +101,6 @@ struct DrawList {
     int32 layerCount;
 };
 
-struct WindowInfo {
-#if RETRO_RENDERDEVICE_DIRECTX9
-    // rdc gonna hate me frfr 😈
-    union {
-        struct {
-            UINT width;
-            UINT height;
-            UINT refresh_rate;
-        };
-        D3DDISPLAYMODE internal;
-    } * displays;
-    D3DVIEWPORT9 viewport;
-
-#elif RETRO_RENDERDEVICE_DIRECTX11
-    union {
-        struct {
-            UINT width;
-            UINT height;
-            DXGI_RATIONAL refresh_rate;
-        };
-        DXGI_MODE_DESC internal;
-    } * displays;
-    D3D11_VIEWPORT viewport;
-
-#elif RETRO_RENDERDEVICE_SDL2
-    union {
-        struct {
-            // i wanna do uint32 : 32 but idk if other compilers like that
-            uint32 _pad;
-            int32 width;
-            int32 height;
-            int32 refresh_rate;
-        };
-        SDL_DisplayMode internal;
-    } * displays;
-    SDL_Rect viewport;
-#elif RETRO_RENDERDEVICE_GLFW
-    union {
-        struct {
-            int32 width;
-            int32 height;
-            int32 _pad[3];
-            int32 refresh_rate;
-        };
-        GLFWvidmode internal;
-    } * displays;
-#else
-    struct {
-        int32 width;
-        int32 height;
-        int32 refresh_rate;
-    } * displays;
-    // something for viewport
-#endif
-};
-
 struct VideoSettings {
     uint8 windowed;
     uint8 bordered;
@@ -275,7 +219,6 @@ public:
     static int32 displayWidth[16];
     static int32 displayHeight[16];
     static int32 displayCount;
-    static WindowInfo displayInfo;
 
     static int32 lastShaderID;
 

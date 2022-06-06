@@ -1,11 +1,38 @@
-#ifdef STFU_INTELLISENSE
+#ifdef _INTELLISENSE
+#ifdef _INTELLISENSE_NX
+#undef __unix__
+#undef __linux__
+#endif
 #include <glad/glad.h>
-#include <EGL/egl.h>    // EGL library
-#include <EGL/eglext.h> // EGL extensions
 #include "EGLRenderDevice.hpp"
+//#include "RetroEngine.hpp"
 #endif
 
-GLFWwindow *RenderDevice::window;
+#include <chrono>
+
+#if RETRO_PLATFORM == RETRO_SWITCH
+#define _GLVERSION "#version 330 core\n"
+#elif RETRO_PLATFORM == RETRO_ANDROID
+#define _GLVERSION "#version 310 es\n"
+#endif
+
+#if RETRO_REV02
+#define _GLDEFINE "#define RETRO_REV02 (1)\n"
+#else
+#define _GLDEFINE "\n"
+#endif
+
+EGLDisplay RenderDevice::display;
+EGLContext RenderDevice::context;
+EGLSurface RenderDevice::surface;
+EGLConfig RenderDevice::config;
+
+#if RETRO_PLATFORM == RETRO_SWITCH
+NWindow *RenderDevice::window;
+#elif RETRO_PLATFORM == RETRO_ANDROID
+ANativeWindow *RenderDevice::window;
+#endif
+
 GLuint RenderDevice::VAO;
 GLuint RenderDevice::VBO;
 
@@ -21,73 +48,107 @@ uint32 *RenderDevice::videoBuffer;
 
 bool RenderDevice::Init()
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-    if (!videoSettings.bordered)
-        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-
-    GLFWmonitor *monitor = NULL;
-    int32 w, h;
-#if RETRO_PLATFORM == RETRO_SWITCH
-    videoSettings.windowed = false;
-    videoSettings.exclusiveFS = true;
-    videoSettings.fsWidth = w = 1920;
-    videoSettings.fsHeight = h = 1080;
-#else
-    if (videoSettings.windowed) {
-        w = videoSettings.windowWidth;
-        h = videoSettings.windowHeight;
-    }
-    else if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
-        monitor                 = glfwGetPrimaryMonitor();
-        const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-        w                       = mode->width;
-        h                       = mode->height;
-    }
-    else {
-        monitor = glfwGetPrimaryMonitor();
-        w       = videoSettings.fsWidth;
-        h       = videoSettings.fsHeight;
-    }
-#endif
-
-    window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
-    if (!window) {
-        PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
+    display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    if (!display) {
+        PrintLog(PRINT_NORMAL, "[EGL] Could not connect to display: %d", eglGetError());
         return false;
     }
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d", w, h, videoSettings.windowed);
 
-    glfwSetKeyCallback(window, ProcessKeyEvent);
-    glfwSetJoystickCallback(ProcessJoystickEvent);
-    glfwSetMouseButtonCallback(window, ProcessMouseEvent);
-    glfwSetWindowFocusCallback(window, ProcessFocusEvent);
-    glfwSetWindowMaximizeCallback(window, ProcessMaximizeEvent);
+    eglInitialize(display, nullptr, nullptr);
+    PrintLog(PRINT_NORMAL, "EGL init");
+
+#if RETRO_PLATFORM == RETRO_SWITCH
+    if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE)
+    {
+        PrintLog(PRINT_NORMAL, "[EGL] eglBindApi failure: %d", eglGetError());
+        return false;
+    }
+#elif RETRO_PLATFORM == RETRO_ANDROID
+#endif
+
+    EGLint numConfigs;
+    // clang-format off
+    static const EGLint framebufferAttributeList[] = {
+        EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT, 
+        EGL_RED_SIZE,        8, 
+        EGL_GREEN_SIZE,      8, 
+        EGL_BLUE_SIZE,       8, 
+        EGL_DEPTH_SIZE,   24,
+        EGL_STENCIL_SIZE, 8,
+        EGL_NONE
+    };
+    // clang-format on
+    eglChooseConfig(display, framebufferAttributeList, &config, 1, &numConfigs);
+    if (numConfigs == 0) {
+        PrintLog(PRINT_NORMAL, "[EGL] No configs found: %d", eglGetError());
+        return false;
+    }
 
     // TODO: icon, best way i can see we do it is stb_image
     if (!SetupRendering() || !AudioDevice::Init())
         return false;
+        PrintLog(PRINT_NORMAL, "postaudio");
 
     InitInputDevices();
+            PrintLog(PRINT_NORMAL, "postinput");
+
     return true;
 }
 
 bool RenderDevice::SetupRendering()
 {
-    glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        PrintLog(PRINT_NORMAL, "ERROR: failed to initialize GLAD");
+#if RETRO_PLATFORM == RETRO_SWITCH
+    window = nwindowGetDefault();
+    nwindowSetDimensions(window, 1920, 1080);
+#elif RETRO_PLATFORM == RETRO_ANDROID
+    EGLint format;
+    if (!eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format) {
+        PrintLog(PRINT_NORMAL, "[EGL] EGL_NATIVE_VISUAL_ID fetch failed: %d", eglGetError());
         return false;
     }
 
+    // get window somehow
+    ANativeWindow_setBuffersGeometry(window, 0, 0, format);
+#endif
+    PrintLog(PRINT_NORMAL, "EGL presurf");
+
+    surface = eglCreateWindowSurface(display, config, window, nullptr);
+    if (!surface) {
+        PrintLog(PRINT_NORMAL, "[EGL] Surface creation failed: %d", eglGetError());
+        return false;
+    }
+        PrintLog(PRINT_NORMAL, "postsurf");
+
+#if RETRO_PLATFORM == RETRO_SWITCH
+    // clang-format off
+    static const EGLint contextAttributeList[] = { 
+        EGL_CONTEXT_OPENGL_PROFILE_MASK, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT,
+        EGL_CONTEXT_MAJOR_VERSION,       4, 
+        EGL_CONTEXT_MINOR_VERSION,       3,
+        EGL_NONE 
+    };
+    // clang-format on
+#elif RETRO_PLATFORM == RETRO_ANDROID
+    EGLint *contextAttributeList = NULL;
+#endif
+
+    context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttributeList);
+    if (!context) {
+        PrintLog(PRINT_NORMAL, "[EGL] Context creation failed: %d", eglGetError());
+        return false;
+    }
+    
+    PrintLog(PRINT_NORMAL, "ctx");
+
+    eglMakeCurrent(display, surface, surface, context);
+        PrintLog(PRINT_NORMAL, "make current");
+
     GetDisplays();
+        PrintLog(PRINT_NORMAL, "postdisp");
 
     if (!InitGraphicsAPI() || !InitShaders())
         return false;
+        PrintLog(PRINT_NORMAL, "postshader");
 
     int32 size = videoSettings.pixWidth >= SCREEN_YSIZE ? videoSettings.pixWidth : SCREEN_YSIZE;
     scanlines  = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
@@ -102,56 +163,22 @@ bool RenderDevice::SetupRendering()
 
 void RenderDevice::GetDisplays()
 {
-    GLFWmonitor *monitor = glfwGetWindowMonitor(window);
-    if (!monitor)
-        monitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode *displayMode = glfwGetVideoMode(monitor);
-    int32 monitorCount;
-    GLFWmonitor **monitors = glfwGetMonitors(&monitorCount);
+    displayCount         = 1;
+    displayInfo.displays = (decltype(displayInfo.displays))malloc(sizeof(displayInfo.displays->internal));
+    memcpy(&displayInfo.displays[0].internal, window, sizeof(displayInfo.displays->internal));
+        PrintLog(PRINT_NORMAL, "display memcpy");
 
-    for (int32 m = 0; m < monitorCount; ++m) {
-        const GLFWvidmode *vidMode = glfwGetVideoMode(monitors[m]);
-        displayWidth[m]            = vidMode->width;
-        displayHeight[m]           = vidMode->height;
-        if (!memcmp(vidMode, displayMode, sizeof(GLFWvidmode))) {
-            monitorIndex = m;
-        }
-    }
-
-    const GLFWvidmode *displayModes = glfwGetVideoModes(monitor, &displayCount);
-    if (displayInfo.displays)
-        free(displayInfo.displays);
-
-    displayInfo.displays          = (decltype(displayInfo.displays))malloc(sizeof(GLFWvidmode) * displayCount);
-    int32 newDisplayCount         = 0;
-    bool32 foundFullScreenDisplay = false;
-
-    for (int32 d = 0; d < displayCount; ++d) {
-        memcpy(&displayInfo.displays[newDisplayCount].internal, &displayModes[d], sizeof(GLFWvidmode));
-
-        int32 refreshRate = displayInfo.displays[newDisplayCount].refresh_rate;
-        if (refreshRate >= 59 && (refreshRate <= 60 || refreshRate >= 120) && displayInfo.displays[newDisplayCount].height >= (SCREEN_YSIZE * 2)) {
-            if (d && refreshRate == 60 && displayInfo.displays[newDisplayCount - 1].refresh_rate == 59)
-                --newDisplayCount;
-
-            if (videoSettings.fsWidth == displayInfo.displays[newDisplayCount].width
-                && videoSettings.fsHeight == displayInfo.displays[newDisplayCount].height)
-                foundFullScreenDisplay = true;
-
-            ++newDisplayCount;
-        }
-    }
-
-    displayCount = newDisplayCount;
-    if (!foundFullScreenDisplay) {
-        videoSettings.fsWidth     = 0;
-        videoSettings.fsHeight    = 0;
-        videoSettings.refreshRate = 60; // 0;
-    }
+    displayWidth[0]  = displayInfo.displays[0].width;
+    displayHeight[0] = displayInfo.displays[0].height;
 }
 
 bool RenderDevice::InitGraphicsAPI()
 {
+    if (!gladLoadGL()) {
+        PrintLog(PRINT_NORMAL, "[EGL] gladLoadGL failure");
+        return false;
+    }
+
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_DITHER);
@@ -173,6 +200,15 @@ bool RenderDevice::InitGraphicsAPI()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(RenderVertex), (void *)offsetof(RenderVertex, tex));
     glEnableVertexAttribArray(2);
 
+#if RETRO_PLATFORM == RETRO_SWITCH
+    videoSettings.fsWidth  = 1920;
+    videoSettings.fsHeight = 1080;
+#elif RETRO_PLATFORM == RETRO_ANDROID
+    customSettings.maxPixWidth = 510;
+#endif
+
+    // EGL should only be fullscreen only apps
+#if false
     if (videoSettings.windowed || !videoSettings.exclusiveFS) {
         if (videoSettings.windowed) {
             viewSize.x = videoSettings.windowWidth;
@@ -183,7 +219,9 @@ bool RenderDevice::InitGraphicsAPI()
             viewSize.y = displayHeight[monitorIndex];
         }
     }
-    else {
+    else
+#endif
+    {
         int32 bufferWidth  = videoSettings.fsWidth;
         int32 bufferHeight = videoSettings.fsHeight;
         if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
@@ -223,21 +261,18 @@ bool RenderDevice::InitGraphicsAPI()
     float pixAspect = pixelSize.x / pixelSize.y;
 
     Vector2 viewportPos{};
-    Vector2 lastViewSize;
-
-    glfwGetWindowSize(window, &lastViewSize.x, &lastViewSize.y);
-    Vector2 viewportSize = lastViewSize;
+    Vector2 viewportSize{ displayWidth[0], displayHeight[0] };
 
     if ((viewSize.x / viewSize.y) <= ((pixelSize.x / pixelSize.y) + 0.1)) {
         if ((pixAspect - 0.1) > (viewSize.x / viewSize.y)) {
             viewSize.y     = (pixelSize.y / pixelSize.x) * viewSize.x;
-            viewportPos.y  = (lastViewSize.y >> 1) - (viewSize.y * 0.5);
+            viewportPos.y  = (displayHeight[0] >> 1) - (viewSize.y * 0.5);
             viewportSize.y = viewSize.y;
         }
     }
     else {
         viewSize.x     = pixAspect * viewSize.y;
-        viewportPos.x  = (lastViewSize.x >> 1) - ((pixAspect * viewSize.y) * 0.5);
+        viewportPos.x  = (displayWidth[0] >> 1) - ((pixAspect * viewSize.y) * 0.5);
         viewportSize.x = (pixAspect * viewSize.y);
     }
 
@@ -282,6 +317,9 @@ bool RenderDevice::InitGraphicsAPI()
     videoSettings.viewportY = viewportPos.y;
     videoSettings.viewportW = 1.0 / viewSize.x;
     videoSettings.viewportH = 1.0 / viewSize.y;
+
+    PrintLog(PRINT_NORMAL, "posttex");
+
 
     return true;
 }
@@ -332,19 +370,10 @@ void RenderDevice::InitVertexBuffer()
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(RenderVertex) * (!RETRO_REV02 ? 24 : 60), vertBuffer);
 }
 
-void RenderDevice::InitFPSCap()
-{
-    lastFrame  = glfwGetTime();
-    targetFreq = 1.0 / videoSettings.refreshRate;
-}
-bool RenderDevice::CheckFPSCap()
-{
-    if (lastFrame + targetFreq < glfwGetTime())
-        return true;
+void RenderDevice::InitFPSCap() {}
 
-    return false;
-}
-void RenderDevice::UpdateFPSCap() { lastFrame = glfwGetTime(); }
+bool RenderDevice::CheckFPSCap() { return true; }
+void RenderDevice::UpdateFPSCap() {}
 
 void RenderDevice::CopyFrameBuffer()
 {
@@ -356,8 +385,8 @@ void RenderDevice::CopyFrameBuffer()
 
 bool RenderDevice::ProcessEvents()
 {
-    glfwPollEvents();
-    return !glfwWindowShouldClose(window);
+    // events aren't processed by EGL
+    return true;
 }
 
 void RenderDevice::FlipScreen()
@@ -390,7 +419,7 @@ void RenderDevice::FlipScreen()
 #if RETRO_REV02
             startVert = 54;
 #else
-            startVert = 18;
+            startVert   = 18;
 #endif
             glBindTexture(GL_TEXTURE_2D, imageTexture);
             glDrawArrays(GL_TRIANGLES, startVert, 6);
@@ -406,7 +435,7 @@ void RenderDevice::FlipScreen()
 #if RETRO_REV02
             startVert = startVertex_2P[0];
 #else
-            startVert = 6;
+            startVert   = 6;
 #endif
             glBindTexture(GL_TEXTURE_2D, screenTextures[0]);
             glDrawArrays(GL_TRIANGLES, startVert, 6);
@@ -414,7 +443,7 @@ void RenderDevice::FlipScreen()
 #if RETRO_REV02
             startVert = startVertex_2P[1];
 #else
-            startVert = 12;
+            startVert   = 12;
 #endif
             glBindTexture(GL_TEXTURE_2D, screenTextures[1]);
             glDrawArrays(GL_TRIANGLES, startVert, 6);
@@ -449,7 +478,7 @@ void RenderDevice::FlipScreen()
     }
 
     glFlush();
-    glfwSwapBuffers(window);
+    eglSwapBuffers(display, surface);
 }
 
 void RenderDevice::Release(bool32 isRefresh)
@@ -464,21 +493,20 @@ void RenderDevice::Release(bool32 isRefresh)
     shaderCount     = 0;
     userShaderCount = 0;
 
-    glfwDestroyWindow(window);
+    if (displayInfo.displays)
+        free(displayInfo.displays);
+    displayInfo.displays = NULL;
 
-    if (!isRefresh) {
-        if (displayInfo.displays)
-            free(displayInfo.displays);
-        displayInfo.displays = NULL;
+    if (scanlines)
+        free(scanlines);
+    scanlines = NULL;
 
-        if (scanlines)
-            free(scanlines);
-        scanlines = NULL;
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
-        glfwTerminate();
-    }
+    eglDestroyContext(display, context);
+    eglDestroySurface(display, surface);
+    eglTerminate(display);
 }
 
 bool RenderDevice::InitShaders()
@@ -546,9 +574,9 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
         fileData[info.fileSize] = 0;
         CloseFile(&info);
 
-        const GLchar *glchar[] = { (const GLchar *)fileData };
+        const GLchar *glchar[] = { _GLVERSION, _GLDEFINE, (const GLchar *)fileData };
         vert                   = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vert, 1, glchar, NULL);
+        glShaderSource(vert, 3, glchar, NULL);
         glCompileShader(vert);
     }
     else
@@ -563,9 +591,9 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
         fileData[info.fileSize] = 0;
         CloseFile(&info);
 
-        const GLchar *glchar[] = { (const GLchar *)fileData };
+        const GLchar *glchar[] = { _GLVERSION, _GLDEFINE, (const GLchar *)fileData };
         frag                   = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(frag, 1, glchar, NULL);
+        glShaderSource(frag, 3, glchar, NULL);
         glCompileShader(frag);
     }
     else
@@ -591,49 +619,17 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
 
 void RenderDevice::RefreshWindow()
 {
-    videoSettings.windowState = WINDOWSTATE_UNINITIALIZED;
-
-    Release(true);
-    if (!videoSettings.bordered)
-        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-
-    GLFWmonitor *monitor = NULL;
-    int32 w, h;
-    if (videoSettings.windowed) {
-        w = videoSettings.windowWidth;
-        h = videoSettings.windowHeight;
-    }
-    else if (videoSettings.fsWidth <= 0 || videoSettings.fsHeight <= 0) {
-        monitor                 = glfwGetPrimaryMonitor();
-        const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-        w                       = mode->width;
-        h                       = mode->height;
-    }
-    else {
-        monitor = glfwGetPrimaryMonitor();
-        w       = videoSettings.fsWidth;
-        h       = videoSettings.fsHeight;
-    }
-
-    window = glfwCreateWindow(w, h, gameVerInfo.gameName, monitor, NULL);
-    if (!window) {
-        PrintLog(PRINT_NORMAL, "ERROR: [GLFW] window creation failed");
-        return;
-    }
-    PrintLog(PRINT_NORMAL, "w: %d h: %d windowed: %d", w, h, videoSettings.windowed);
-
-    glfwSetKeyCallback(window, ProcessKeyEvent);
-    glfwSetMouseButtonCallback(window, ProcessMouseEvent);
-    glfwSetWindowFocusCallback(window, ProcessFocusEvent);
-    glfwSetWindowMaximizeCallback(window, ProcessMaximizeEvent);
-
-    glfwMakeContextCurrent(window);
-
-    if (!InitGraphicsAPI() || !InitShaders())
-        return;
+    // do nothing probably
+    // there's literally 0 moment where this is needed
 }
 
-void RenderDevice::GetWindowSize(int32 *width, int32 *height) { glfwGetWindowSize(window, width, height); }
+void RenderDevice::GetWindowSize(int32 *width, int32 *height)
+{
+    if (width)
+        eglQuerySurface(display, surface, EGL_WIDTH, width);
+    if (height)
+        eglQuerySurface(display, surface, EGL_HEIGHT, width);
+}
 
 void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixels)
 {
@@ -729,230 +725,6 @@ void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yP
 
     glBindTexture(GL_TEXTURE_2D, imageTexture);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, RETRO_VIDEO_TEXTURE_W, RETRO_VIDEO_TEXTURE_H, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, videoBuffer);
-}
-
-void RenderDevice::ProcessKeyEvent(GLFWwindow *, int32 key, int32 scancode, int32 action, int32 mods)
-{
-    switch (action) {
-        case GLFW_PRESS: {
-#if !RETRO_REV02
-            ++RSDK::SKU::buttonDownCount;
-#endif
-            switch (key) {
-                case GLFW_KEY_ENTER:
-                    if (mods & GLFW_MOD_ALT) {
-                        videoSettings.windowed ^= 1;
-                        UpdateGameWindow();
-                        changedVideoSettings = false;
-                        break;
-                    }
-
-#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
-                    RSDK::SKU::specialKeyStates[1] = true;
-#endif
-
-                    // [fallthrough]
-
-                default:
-#if RETRO_INPUTDEVICE_KEYBOARD
-                    SKU::UpdateKeyState(key);
-#endif
-                    break;
-
-                case GLFW_KEY_ESCAPE:
-                    if (engine.devMenu) {
-                        if (sceneInfo.state == ENGINESTATE_DEVMENU)
-                            CloseDevMenu();
-                        else
-                            OpenDevMenu();
-                    }
-                    else {
-#if RETRO_INPUTDEVICE_KEYBOARD
-                        SKU::UpdateKeyState(key);
-#endif
-                    }
-
-#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
-                    RSDK::SKU::specialKeyStates[0] = true;
-#endif
-                    break;
-
-#if !RETRO_USE_ORIGINAL_CODE
-                case GLFW_KEY_F1:
-                    sceneInfo.listPos--;
-                    if (sceneInfo.listPos < sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart) {
-                        sceneInfo.activeCategory--;
-                        if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
-                            sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
-                        }
-                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd - 1;
-                    }
-
-                    InitSceneLoad();
-                    break;
-
-                case GLFW_KEY_F2:
-                    sceneInfo.listPos++;
-                    if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
-                        sceneInfo.activeCategory++;
-                        if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
-                            sceneInfo.activeCategory = 0;
-                        }
-                        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart;
-                    }
-
-                    InitSceneLoad();
-                    break;
-#endif
-
-                case GLFW_KEY_F3:
-                    if (userShaderCount)
-                        videoSettings.shaderID = (videoSettings.shaderID + 1) % userShaderCount;
-                    break;
-
-#if !RETRO_USE_ORIGINAL_CODE
-                case GLFW_KEY_F5:
-                    // Quick-Reload
-                    InitSceneLoad();
-                    break;
-
-                case GLFW_KEY_F6:
-                    if (engine.devMenu && videoSettings.screenCount > 1)
-                        videoSettings.screenCount--;
-                    break;
-
-                case GLFW_KEY_F7:
-                    if (engine.devMenu && videoSettings.screenCount < SCREEN_MAX)
-                        videoSettings.screenCount++;
-                    break;
-
-                case GLFW_KEY_F9:
-                    if (engine.devMenu)
-                        showHitboxes ^= 1;
-                    break;
-
-                case GLFW_KEY_F10:
-                    if (engine.devMenu)
-                        engine.showPaletteOverlay ^= 1;
-                    break;
-#endif
-                case GLFW_KEY_BACKSPACE:
-                    if (engine.devMenu)
-                        engine.gameSpeed = engine.fastForwardSpeed;
-                    break;
-
-                case GLFW_KEY_F11:
-                case GLFW_KEY_INSERT:
-                    if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
-                        engine.frameStep = true;
-                    break;
-
-                case GLFW_KEY_F12:
-                case GLFW_KEY_PAUSE:
-                    if (engine.devMenu) {
-                        sceneInfo.state ^= ENGINESTATE_STEPOVER;
-                    }
-                    break;
-            }
-            break;
-        }
-        case GLFW_RELEASE: {
-#if !RETRO_REV02
-            --RSDK::SKU::buttonDownCount;
-#endif
-            switch (key) {
-                default:
-#if RETRO_INPUTDEVICE_KEYBOARD
-                    SKU::ClearKeyState(key);
-#endif
-                    break;
-#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
-                case GLFW_KEY_ESCAPE: RSDK::SKU::specialKeyStates[0] = false; break;
-                case GLFW_KEY_ENTER: RSDK::SKU::specialKeyStates[1] = false; break;
-#endif
-                case GLFW_KEY_BACKSPACE: engine.gameSpeed = 1; break;
-            }
-            break;
-        }
-    }
-}
-void RenderDevice::ProcessFocusEvent(GLFWwindow *, int32 focused)
-{
-    if (!focused) {
-#if RETRO_REV02
-        SKU::userCore->focusState = 1;
-#endif
-    }
-    else {
-#if RETRO_REV02
-        SKU::userCore->focusState = 0;
-#endif
-    }
-}
-void RenderDevice::ProcessMouseEvent(GLFWwindow *, int32 button, int32 action, int32 mods)
-{
-    switch (action) {
-        case GLFW_PRESS: {
-            switch (button) {
-                case GLFW_MOUSE_BUTTON_LEFT: touchInfo.down[0] = true; touchInfo.count = 1;
-#if !RETRO_REV02
-                    if (RSDK::SKU::buttonDownCount > 0)
-                        RSDK::SKU::buttonDownCount--;
-#endif
-                    break;
-
-                case GLFW_MOUSE_BUTTON_RIGHT:
-#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
-                    RSDK::SKU::specialKeyStates[3] = true;
-                    RSDK::SKU::buttonDownCount++;
-#endif
-                    break;
-            }
-            break;
-        }
-
-        case GLFW_RELEASE: {
-            switch (button) {
-                case GLFW_MOUSE_BUTTON_LEFT: touchInfo.down[0] = false; touchInfo.count = 0;
-#if !RETRO_REV02
-                    if (RSDK::SKU::buttonDownCount > 0)
-                        RSDK::SKU::buttonDownCount--;
-#endif
-                    break;
-
-                case GLFW_MOUSE_BUTTON_RIGHT:
-#if !RETRO_REV02 && RETRO_INPUTDEVICE_KEYBOARD
-                    RSDK::SKU::specialKeyStates[3] = false;
-                    RSDK::SKU::buttonDownCount--;
-#endif
-                    break;
-            }
-            break;
-        }
-    }
-}
-void RenderDevice::ProcessJoystickEvent(int32 ID, int32 event)
-{
-#if RETRO_INPUTDEVICE_GLFW
-    if (!glfwJoystickIsGamepad(ID))
-        return;
-    uint32 hash;
-    char idBuffer[0x20];
-    sprintf_s(idBuffer, (int32)sizeof(idBuffer), "%s%d", "GLFWDevice", ID);
-    GenerateHashCRC(&hash, idBuffer);
-
-    if (event == GLFW_CONNECTED)
-        SKU::InitGLFWInputDevice(hash, ID);
-    else
-        RemoveInputDevice(InputDeviceFromID(hash));
-#endif
-}
-void RenderDevice::ProcessMaximizeEvent(GLFWwindow *, int32 maximized)
-{
-    // i don't know why this is a thing
-    if (maximized) {
-        // set fullscreen idk about the specifics rn
-    }
 }
 
 void RenderDevice::SetLinear(bool32 linear)
