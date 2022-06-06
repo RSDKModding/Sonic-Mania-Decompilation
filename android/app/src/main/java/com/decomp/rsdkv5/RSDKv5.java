@@ -1,37 +1,38 @@
 package com.decomp.rsdkv5;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
+import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import java.io.File;
 
-import org.libsdl.app.*;
-
-
-public class RSDKv5 extends SDLActivity {
+public class RSDKv5 extends Activity implements SurfaceHolder.Callback {
     @Override
     protected void onStart() {
         super.onStart();
+        nativeOnStart();
         getBasePath();
     }
 
-    //Idk what the hell "has multi window" is, but I do NOT have multiple windows and therefore DO wanna pause/resume these threads
     @Override
     protected void onPause() {
         super.onPause();
-        if (mHasMultiWindow) {
-            pauseNativeThread();
-        }
+        nativeOnPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        
-        if (mHasMultiWindow) {
-            resumeNativeThread();
-        }
+        nativeOnResume();
+    }
+
+
+    protected void onStop() {
+        super.onStop();
+        nativeOnStop();
     }
 
     public String getBasePath() {
@@ -42,4 +43,33 @@ public class RSDKv5 extends SDLActivity {
         new File(p).mkdirs();
         return p + "/";
     }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int w, int h) {
+        nativeSetSurface(surfaceHolder.getSurface());
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        nativeSetSurface(null);
+    }
+
+
+    // NATIVE START
+    static {
+        System.loadLibrary("main");
+    }
+    // RENDER
+    public static native void nativeOnStart();
+    public static native void nativeOnResume();
+    public static native void nativeOnPause();
+    public static native void nativeOnStop();
+    public static native void nativeSetSurface(Surface surface);
+    // INPUT
+    // AUDIO
 }
