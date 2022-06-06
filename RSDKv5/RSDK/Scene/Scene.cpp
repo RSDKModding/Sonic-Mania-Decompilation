@@ -99,7 +99,7 @@ void RSDK::LoadScene()
     ClearUnusedStorage(DATASET_STG);
     ClearUnusedStorage(DATASET_SFX);
 
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         screens[s].position.x = 0;
         screens[s].position.y = 0;
     }
@@ -219,7 +219,7 @@ void RSDK::LoadSceneFile()
 
     dataStorage[DATASET_TMP].usedStorage = 0;
 
-    for (int32 s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].size.y;
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) screens[s].waterDrawPos = screens[s].size.y;
 
     if (screens[0].size.y > 0)
         memset(gfxLineBuffer, 0, screens[0].size.y * sizeof(uint8));
