@@ -12,7 +12,7 @@ typedef enum {
 // Object Class
 struct ObjectInk {
     RSDK_OBJECT
-    uint8 playerColors[PLAYER_MAX];
+    uint8 playerColors[PLAYER_COUNT];
     uint16 aniFrames;
     Hitbox hitboxBottleL;
     Hitbox hitboxBottleR;

@@ -22,7 +22,7 @@ void HangConveyor_Update(void)
         self->active = ACTIVE_NORMAL;
     }
     else {
-        for (int32 p = 0; p < PLAYER_MAX; ++p) {
+        for (int32 p = 0; p < PLAYER_COUNT; ++p) {
             self->playerPositions[p].x = 0;
             self->playerPositions[p].y = 0;
         }

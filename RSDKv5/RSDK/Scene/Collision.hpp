@@ -18,7 +18,7 @@ struct CollisionSensor {
 };
 
 #if !RETRO_USE_ORIGINAL_CODE
-#define DEBUG_HITBOX_MAX (0x400)
+#define DEBUG_HITBOX_COUNT (0x400)
 
 struct DebugHitboxInfo {
     uint8 type;
@@ -32,7 +32,7 @@ enum DebugHitboxTypes { H_TYPE_TOUCH, H_TYPE_CIRCLE, H_TYPE_BOX, H_TYPE_PLAT };
 
 extern bool32 showHitboxes;
 extern int32 debugHitboxCount;
-extern DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
+extern DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_COUNT];
 
 int32 addDebugHitbox(uint8 type, uint8 dir, Entity *entity, Hitbox *hitbox);
 #endif

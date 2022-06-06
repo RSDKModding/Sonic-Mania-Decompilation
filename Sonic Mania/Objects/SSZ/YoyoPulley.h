@@ -23,7 +23,7 @@ struct EntityYoyoPulley {
     int32 speed;
     int32 pullVelocity;
     int32 pulleyLength;
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerTimers[PLAYER_COUNT];
     Vector2 handlePos;
 };
 

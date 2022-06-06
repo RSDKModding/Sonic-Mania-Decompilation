@@ -17,7 +17,7 @@ struct EntityLargeGear {
     int32 rotSpeed;
     int32 rotOffset;
     uint8 activePlayers;
-    int32 playerIDs[PLAYER_MAX];
+    int32 playerIDs[PLAYER_COUNT];
     Vector2 positions[8];
     Vector2 origin;
     int32 unused;

@@ -11,9 +11,9 @@ namespace RSDK
 
 #define CPATH_COUNT (2)
 
-#define RSDK_SIGNATURE_CFG (0x474643)
-#define RSDK_SIGNATURE_SCN (0x4E4353)
-#define RSDK_SIGNATURE_TIL (0x4C4954)
+#define RSDK_SIGNATURE_CFG (0x474643) // "CFG"
+#define RSDK_SIGNATURE_SCN (0x4E4353) // "SCN"
+#define RSDK_SIGNATURE_TIL (0x4C4954) // "TIL"
 
 enum LayerTypes {
     LAYER_HSCROLL,
@@ -100,7 +100,7 @@ struct ScanlineInfo {
 
 struct TileLayer {
     uint8 type;
-    uint8 drawLayer[CAMERA_MAX];
+    uint8 drawLayer[CAMERA_COUNT];
     uint8 widthShift;
     uint8 heightShift;
     uint16 xsize;

@@ -17,10 +17,10 @@ struct EntitySpeedBooster {
     RSDK_ENTITY
     StateMachine(state);
     uint8 speed;
-    int32 playerPos[PLAYER_MAX];
+    int32 playerPos[PLAYER_COUNT];
     Vector2 drawPos;
     uint8 timer;
-    uint8 playerTimer[PLAYER_MAX];
+    uint8 playerTimer[PLAYER_COUNT];
     Animator animator;
 };
 

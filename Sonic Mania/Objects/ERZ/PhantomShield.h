@@ -16,7 +16,7 @@ struct EntityPhantomShield {
     StateMachine(state);
     bool32 shieldActive;
     int32 blendAmount;
-    int32 playerTimer[4];
+    int32 playerTimer[PLAYER_COUNT];
     Entity *parent;
     Animator animator;
 };

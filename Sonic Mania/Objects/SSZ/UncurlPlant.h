@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define UncurlPlant_NodeCount (8)
+#define UNCURLPLANT_NODE_COUNT (8)
 
 // Object Class
 struct ObjectUncurlPlant {
@@ -20,16 +20,16 @@ struct EntityUncurlPlant {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 unused;
-    Vector2 drawPositions[UncurlPlant_NodeCount];
-    Vector2 nodePositions[UncurlPlant_NodeCount];
-    int32 nodeAngles[UncurlPlant_NodeCount];
-    int32 targetNodeAngles[UncurlPlant_NodeCount];
+    Vector2 drawPositions[UNCURLPLANT_NODE_COUNT];
+    Vector2 nodePositions[UNCURLPLANT_NODE_COUNT];
+    int32 nodeAngles[UNCURLPLANT_NODE_COUNT];
+    int32 targetNodeAngles[UNCURLPLANT_NODE_COUNT];
     int32 stood;
     int32 uncurlPercent;
     int32 stoodNodeID;
     int32 uncurlMode;
     Animator nodeAnimator;
-    Animator decorAnimators[UncurlPlant_NodeCount];
+    Animator decorAnimators[UNCURLPLANT_NODE_COUNT];
 };
 
 // Object Struct

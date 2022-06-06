@@ -42,8 +42,8 @@ struct EntityTransportTube {
     int32 directionCount;
     Vector2 dirVelocity[8];
     int32 directionIDs[8];
-    int32 playerTimers[4];
-    EntityPlayer *players[4];
+    int32 playerTimers[PLAYER_COUNT];
+    EntityPlayer *players[PLAYER_COUNT];
     Animator animator;
 };
 

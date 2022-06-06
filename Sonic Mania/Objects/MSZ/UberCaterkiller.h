@@ -38,7 +38,7 @@ struct EntityUberCaterkiller {
     uint8 jumpsRemain;
     int32 targetScale;
     int32 targetBodyPos;
-    uint8 playerTimers[PLAYER_MAX];
+    uint8 playerTimers[PLAYER_COUNT];
     Animator headAnimator;
     Animator bodyAnimator;
 };

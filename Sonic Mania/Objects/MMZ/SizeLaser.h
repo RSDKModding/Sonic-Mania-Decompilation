@@ -18,9 +18,9 @@ typedef enum {
 struct ObjectSizeLaser {
     RSDK_OBJECT
     Hitbox hitbox;
-    Hitbox playerOuterBox[4];
-    Hitbox playerInnerBox[4];
-    Vector2 playerPositions[4];
+    Hitbox playerOuterBox[PLAYER_COUNT];
+    Hitbox playerInnerBox[PLAYER_COUNT];
+    Vector2 playerPositions[PLAYER_COUNT];
     uint16 aniFrames;
     uint16 sonicFrames;
     uint16 tailsFrames;

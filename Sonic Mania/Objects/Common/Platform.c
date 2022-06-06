@@ -98,7 +98,7 @@ void Platform_LateUpdate(void) {}
 
 void Platform_StaticUpdate(void)
 {
-    for (int32 i = 0; i < PLAYER_MAX; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         Platform->stoodPos[i].x = 0;
         Platform->stoodPos[i].y = 0;
     }

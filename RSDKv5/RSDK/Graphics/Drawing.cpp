@@ -146,16 +146,16 @@ DrawList RSDK::drawGroups[DRAWGROUP_COUNT];
 uint16 RSDK::blendLookupTable[0x20 * 0x100];
 uint16 RSDK::subtractLookupTable[0x20 * 0x100];
 
-GFXSurface RSDK::gfxSurface[SURFACE_MAX];
+GFXSurface RSDK::gfxSurface[SURFACE_COUNT];
 
 float RSDK::dpi         = 1;
 int32 RSDK::cameraCount = 0;
-ScreenInfo RSDK::screens[SCREEN_MAX];
-CameraInfo RSDK::cameras[CAMERA_MAX];
+ScreenInfo RSDK::screens[SCREEN_COUNT];
+CameraInfo RSDK::cameras[CAMERA_COUNT];
 ScreenInfo *RSDK::currentScreen = NULL;
 
 int32 RSDK::shaderCount = 0;
-ShaderEntry RSDK::shaderList[SHADER_MAX];
+ShaderEntry RSDK::shaderList[SHADER_COUNT];
 
 bool32 RSDK::changedVideoSettings = false;
 VideoSettings RSDK::videoSettings;
@@ -4168,7 +4168,7 @@ void RSDK::DrawTile(uint16 *tiles, int32 countX, int32 countY, Vector2 *position
 void RSDK::DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height)
 {
 
-    if (sheetID < SURFACE_MAX && tileIndex < TILE_COUNT) {
+    if (sheetID < SURFACE_COUNT && tileIndex < TILE_COUNT) {
         GFXSurface *surface = &gfxSurface[sheetID];
 
         // FLIP_NONE

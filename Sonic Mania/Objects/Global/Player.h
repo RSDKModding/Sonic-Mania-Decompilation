@@ -221,7 +221,7 @@ struct ObjectPlayer {
     uint16 sfxMightyUnspin;
     int32 raySwoopTimer;
     int32 rayDiveTimer;
-    bool32 gotHit[4];
+    bool32 gotHit[PLAYER_COUNT];
     StateMachine(configureGhostCB);
     bool32 (*canSuperCB)(bool32 isHUD);
     int32 superDashCooldown;
@@ -308,7 +308,7 @@ struct ObjectPlayer {
     uint16 sfxSlide;
     uint16 sfxOuttahere;
     uint16 sfxTransform2;
-    bool32 gotHit[4];
+    bool32 gotHit[PLAYER_COUNT];
 };
 #endif
 

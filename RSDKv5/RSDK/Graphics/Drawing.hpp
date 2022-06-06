@@ -4,21 +4,21 @@
 namespace RSDK
 {
 
-#define SURFACE_MAX (0x40)
+#define SURFACE_COUNT (0x40)
 
 #if RETRO_REV02
-#define SCREEN_MAX (4)
+#define SCREEN_COUNT (4)
 #else
-#define SCREEN_MAX (2)
+#define SCREEN_COUNT (2)
 #endif
-#define CAMERA_MAX (4)
+#define CAMERA_COUNT (4)
 
 #define DEFAULT_PIXWIDTH (424)
 
 #define LAYER_COUNT     (8)
 #define DRAWGROUP_COUNT (16)
 
-#define SHADER_MAX (0x20)
+#define SHADER_COUNT (0x20)
 
 // Also for "Images" but it's a cleaner name as is
 #define RETRO_VIDEO_TEXTURE_W (1024)
@@ -260,16 +260,16 @@ extern char drawGroupNames[0x10][0x10];
 extern uint16 blendLookupTable[0x20 * 0x100];
 extern uint16 subtractLookupTable[0x20 * 0x100];
 
-extern GFXSurface gfxSurface[SURFACE_MAX];
+extern GFXSurface gfxSurface[SURFACE_COUNT];
 
 extern float dpi;
 extern int32 cameraCount;
-extern ScreenInfo screens[SCREEN_MAX];
-extern CameraInfo cameras[CAMERA_MAX];
+extern ScreenInfo screens[SCREEN_COUNT];
+extern CameraInfo cameras[CAMERA_COUNT];
 extern ScreenInfo *currentScreen;
 
 extern int32 shaderCount;
-extern ShaderEntry shaderList[SHADER_MAX];
+extern ShaderEntry shaderList[SHADER_COUNT];
 
 extern VideoSettings videoSettings;
 extern VideoSettings videoSettingsBackup;
@@ -304,7 +304,7 @@ inline void SetScreenRenderVertices(uint8 startVert2P_S1, uint8 startVert2P_S2, 
 
 inline void SetScreenSize(uint8 screenID, uint16 width, uint16 height)
 {
-    if (screenID < SCREEN_MAX) {
+    if (screenID < SCREEN_COUNT) {
         ScreenInfo *screen = &screens[screenID];
 
         screen->size.x   = width;
@@ -324,7 +324,7 @@ inline void SetScreenSize(uint8 screenID, uint16 width, uint16 height)
 
 inline void AddCamera(Vector2 *targetPos, int32 offsetX, int32 offsetY, bool32 worldRelative)
 {
-    if (cameraCount < CAMERA_MAX) {
+    if (cameraCount < CAMERA_COUNT) {
         cameras[cameraCount].targetPos     = targetPos;
         cameras[cameraCount].offset.x      = offsetX;
         cameras[cameraCount].offset.y      = offsetY;
@@ -340,7 +340,7 @@ inline void SetClipBounds(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2
 {
     ScreenInfo *screen;
 
-    if (screenID < SCREEN_MAX) {
+    if (screenID < SCREEN_COUNT) {
         screen = &screens[screenID];
 
         screen->clipBound_X1 = clampVal(x1, 0, screen->size.x);
@@ -416,7 +416,7 @@ void DrawDevString(const char *string, int32 x, int32 y, int32 align, uint32 col
 inline void ClearGfxSurfaces()
 {
     // Unload sprite sheets
-    for (int32 s = 0; s < SURFACE_MAX; ++s) {
+    for (int32 s = 0; s < SURFACE_COUNT; ++s) {
         if (gfxSurface[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(gfxSurface[s]);
             gfxSurface[s].scope = SCOPE_NONE;

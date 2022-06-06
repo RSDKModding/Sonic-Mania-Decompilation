@@ -194,7 +194,7 @@ void Zone_Draw(void)
 {
     RSDK_THIS(Zone);
 
-    if (self->screenID >= PLAYER_MAX || self->screenID == SceneInfo->currentScreenID) {
+    if (self->screenID >= PLAYER_COUNT || self->screenID == SceneInfo->currentScreenID) {
         StateMachine_Run(self->stateDraw);
     }
 }
@@ -314,7 +314,7 @@ void Zone_StageLoad(void)
 #if MANIA_USE_PLUS
     if (!Zone->swapGameMode) {
 #endif
-        for (int32 s = 0; s < PLAYER_MAX; ++s) {
+        for (int32 s = 0; s < PLAYER_COUNT; ++s) {
             Zone->cameraBoundsL[s] = 0;
             Zone->cameraBoundsR[s] = layerSize.x;
             Zone->cameraBoundsT[s] = 0;
@@ -364,7 +364,7 @@ void Zone_StageLoad(void)
             }
         }
         else {
-            session->playerCount = clampVal(session->playerCount, 2, PLAYER_MAX);
+            session->playerCount = clampVal(session->playerCount, 2, PLAYER_COUNT);
             RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, session->playerCount);
         }
     }
@@ -556,7 +556,7 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColor)
 
     zone->fadeColor = fadeColor;
     zone->fadeSpeed = fadeSpeed;
-    zone->screenID  = PLAYER_MAX;
+    zone->screenID  = PLAYER_COUNT;
     zone->timer     = 0;
     zone->state     = Zone_State_Fadeout;
     zone->stateDraw = Zone_Draw_Fade;
@@ -570,7 +570,7 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor)
 
     zone->fadeColor = fadeColor;
     zone->fadeSpeed = fadeSpeed;
-    zone->screenID  = PLAYER_MAX;
+    zone->screenID  = PLAYER_COUNT;
     zone->timer     = 640;
     zone->state     = Zone_State_FadeIn;
     zone->stateDraw = Zone_Draw_Fade;
@@ -584,7 +584,7 @@ void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor)
 
     zone->fadeColor = fadeColor;
     zone->fadeSpeed = fadeSpeed;
-    zone->screenID  = PLAYER_MAX;
+    zone->screenID  = PLAYER_COUNT;
     zone->timer     = 0;
     zone->state     = Zone_State_Fadeout;
     zone->stateDraw = Zone_Draw_Fade;
@@ -599,7 +599,7 @@ void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor)
 
     zone->fadeColor = fadeColor;
     zone->fadeSpeed = fadeSpeed;
-    zone->screenID  = PLAYER_MAX;
+    zone->screenID  = PLAYER_COUNT;
     zone->timer     = 0;
     zone->state     = Zone_State_Fadeout_Competition;
     zone->stateDraw = Zone_Draw_Fade;
@@ -649,7 +649,7 @@ void Zone_StartTeleportAction(void)
 
     entity->fadeColor = 0xF0F0F0;
     entity->timer     = 640;
-    entity->screenID  = PLAYER_MAX;
+    entity->screenID  = PLAYER_COUNT;
     entity->fadeSpeed = 16;
     entity->state     = Zone_State_SwapPlayers;
     entity->stateDraw = Zone_Draw_Fade;
@@ -925,19 +925,19 @@ void Zone_State_Fadeout_Destroy(void)
 
 void Zone_HandlePlayerSwap(void)
 {
-    int32 playerBoundActiveB[PLAYER_MAX];
-    int32 playerBoundActiveT[PLAYER_MAX];
-    int32 playerBoundActiveR[PLAYER_MAX];
-    int32 playerBoundActiveL[PLAYER_MAX];
-    int32 deathBounds[PLAYER_MAX];
-    int32 playerBoundsB[PLAYER_MAX];
-    int32 playerBoundsT[PLAYER_MAX];
-    int32 playerBoundsR[PLAYER_MAX];
-    int32 playerBoundsL[PLAYER_MAX];
-    int32 cameraBoundsB[PLAYER_MAX];
-    int32 cameraBoundsT[PLAYER_MAX];
-    int32 cameraBoundsR[PLAYER_MAX];
-    int32 cameraBoundsL[PLAYER_MAX];
+    int32 playerBoundActiveB[PLAYER_COUNT];
+    int32 playerBoundActiveT[PLAYER_COUNT];
+    int32 playerBoundActiveR[PLAYER_COUNT];
+    int32 playerBoundActiveL[PLAYER_COUNT];
+    int32 deathBounds[PLAYER_COUNT];
+    int32 playerBoundsB[PLAYER_COUNT];
+    int32 playerBoundsT[PLAYER_COUNT];
+    int32 playerBoundsR[PLAYER_COUNT];
+    int32 playerBoundsL[PLAYER_COUNT];
+    int32 cameraBoundsB[PLAYER_COUNT];
+    int32 cameraBoundsT[PLAYER_COUNT];
+    int32 cameraBoundsR[PLAYER_COUNT];
+    int32 cameraBoundsL[PLAYER_COUNT];
     int32 layerIDs[LAYER_COUNT];
 
 #if MANIA_USE_PLUS

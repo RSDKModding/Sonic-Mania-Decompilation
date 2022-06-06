@@ -8,9 +8,9 @@ struct ObjectStarPost {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 hasAchievement;
-    Vector2 playerPositions[PLAYER_MAX];
-    uint8 playerDirections[PLAYER_MAX];
-    uint16 postIDs[PLAYER_MAX];
+    Vector2 playerPositions[PLAYER_COUNT];
+    uint8 playerDirections[PLAYER_COUNT];
+    uint16 postIDs[PLAYER_COUNT];
     uint8 storedMinutes;
     uint8 storedSeconds;
     uint8 storedMS;

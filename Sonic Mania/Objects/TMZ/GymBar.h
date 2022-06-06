@@ -18,7 +18,7 @@ struct EntityGymBar {
     int32 type;
     int32 size;
     bool32 noSwing;
-    uint8 playerTimers[PLAYER_MAX];
+    uint8 playerTimers[PLAYER_COUNT];
     int32 maxX;
     int32 minX;
     Animator animator;

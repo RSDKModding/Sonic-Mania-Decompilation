@@ -31,7 +31,7 @@ struct EntityPopcornMachine {
     int32 timer;
     EntityPopcornMachine *parent;
     EntityPlayer *player;
-    int32 bounds[PLAYER_MAX];
+    int32 bounds[PLAYER_COUNT];
     Vector2 dispenserHolderPos;
     Vector2 dispenserPos;
     Animator animator;

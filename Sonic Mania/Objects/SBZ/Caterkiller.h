@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Caterkiller_BodyCount (3)
+#define CATERKILLER_BODY_COUNT (3)
 
 // Object Class
 struct ObjectCaterkiller {
@@ -18,9 +18,9 @@ struct EntityCaterkiller {
     StateMachine(state);
     StateMachine(stateDraw);
     int32 planeFilter;
-    Vector2 bodyPosition[Caterkiller_BodyCount];
-    uint8 bodyDirection[Caterkiller_BodyCount];
-    uint8 bodyOffset[Caterkiller_BodyCount];
+    Vector2 bodyPosition[CATERKILLER_BODY_COUNT];
+    uint8 bodyDirection[CATERKILLER_BODY_COUNT];
+    uint8 bodyOffset[CATERKILLER_BODY_COUNT];
     uint8 headOffset;
     uint8 timer;
     Vector2 startPos;
@@ -37,7 +37,7 @@ void Caterkiller_Update(void);
 void Caterkiller_LateUpdate(void);
 void Caterkiller_StaticUpdate(void);
 void Caterkiller_Draw(void);
-void Caterkiller_Create(void* data);
+void Caterkiller_Create(void *data);
 void Caterkiller_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Caterkiller_EditorDraw(void);
@@ -46,9 +46,8 @@ void Caterkiller_EditorLoad(void);
 void Caterkiller_Serialize(void);
 
 // Extra Entity Functions
-void Caterkiller_DebugDraw(void);
-
 void Caterkiller_DebugSpawn(void);
+void Caterkiller_DebugDraw(void);
 
 void Caterkiller_CheckOffScreen(void);
 void Caterkiller_CheckTileCollisions(void);
@@ -59,15 +58,15 @@ void Caterkiller_Draw_Segment(void);
 void Caterkiller_HandlePlayerInteractions(void);
 bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir);
 
-//Body States
+// Body States
 void Caterkiller_State_Setup(void);
 void Caterkiller_State_Contract(void);
 void Caterkiller_State_LiftHead(void);
 void Caterkiller_State_Uncontract(void);
 void Caterkiller_State_LowerHead(void);
 
-//Split States
+// Split States
 void Caterkiller_StateSplit_Head(void);
 void Caterkiller_StateSplit_Body(void);
 
-#endif //!OBJ_CATERKILLER_H
+#endif //! OBJ_CATERKILLER_H

@@ -21,7 +21,7 @@ struct EntityCrashTest {
     int32 length;
     bool32 debugParticles;
     uint8 activePlayers;
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerTimers[PLAYER_COUNT];
     Vector2 startPos;
     int32 timer;
     int32 travelDistance;

@@ -140,7 +140,7 @@ void SaveGame_LoadSaveData(void)
     }
     else if (!Zone || Zone->listPos != Zone->prevListPos) {
         if (StarPost) {
-            for (int32 p = 0; p < PLAYER_MAX; ++p) {
+            for (int32 p = 0; p < PLAYER_COUNT; ++p) {
                 StarPost->playerPositions[p].x = 0;
                 StarPost->playerPositions[p].y = 0;
                 StarPost->playerDirections[p]  = FLIP_NONE;
@@ -244,7 +244,7 @@ void SaveGame_SaveGameState(void)
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     globals->recallEntities = true;
 
-    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) {
         globals->restartPos[(p * 2) + 0] = StarPost->playerPositions[p].x;
         globals->restartPos[(p * 2) + 1] = StarPost->playerPositions[p].y;
         globals->restartDir[p]           = StarPost->playerDirections[p];

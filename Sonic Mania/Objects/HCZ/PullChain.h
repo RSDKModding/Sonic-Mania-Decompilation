@@ -36,7 +36,7 @@ struct EntityPullChain {
     Vector2 basePos;
     int32 unused;
     int32 chainOffset;
-    int32 grabDelay[PLAYER_MAX];
+    int32 grabDelay[PLAYER_COUNT];
     uint8 codeButtonMasks;
     int32 cheatCodeInputs[18];
     Hitbox hitbox;

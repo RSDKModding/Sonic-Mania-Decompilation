@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define BouncePlant_NodeCount (8)
+#define BOUNCEPLANT_NODE_COUNT (8)
 
 // Object Class
 struct ObjectBouncePlant {
@@ -18,16 +18,16 @@ struct EntityBouncePlant {
     RSDK_ENTITY
     StateMachine(state);
     int32 recoilDuration;
-    Vector2 drawPos[BouncePlant_NodeCount];
-    Vector2 nodeStartPos[BouncePlant_NodeCount];
-    int32 recoilVelocity[BouncePlant_NodeCount];
+    Vector2 drawPos[BOUNCEPLANT_NODE_COUNT];
+    Vector2 nodeStartPos[BOUNCEPLANT_NODE_COUNT];
+    int32 recoilVelocity[BOUNCEPLANT_NODE_COUNT];
     Vector2 stoodPos;
     bool32 stood;
     bool32 instantRecoil;
     int32 depression;
     int32 centerX;
     Animator nodeAnimator;
-    Animator decorAnimators[BouncePlant_NodeCount];
+    Animator decorAnimators[BOUNCEPLANT_NODE_COUNT];
 };
 
 // Object Struct
@@ -38,7 +38,7 @@ void BouncePlant_Update(void);
 void BouncePlant_LateUpdate(void);
 void BouncePlant_StaticUpdate(void);
 void BouncePlant_Draw(void);
-void BouncePlant_Create(void* data);
+void BouncePlant_Create(void *data);
 void BouncePlant_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BouncePlant_EditorDraw(void);
@@ -51,4 +51,4 @@ void BoucePlant_SetupNodePositions(void);
 int32 BoucePlant_GetNodeStandY(int32 x);
 int32 BoucePlant_GetNodeY(int32 x);
 
-#endif //!OBJ_BOUNCEPLANT_H
+#endif //! OBJ_BOUNCEPLANT_H

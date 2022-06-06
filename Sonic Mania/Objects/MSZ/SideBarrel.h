@@ -16,8 +16,8 @@ struct EntitySideBarrel {
     int32 unused1;
     int32 unused2;
     int32 activePlayers;
-    int32 playerPos[PLAYER_MAX];
-    int32 playerTimer[PLAYER_MAX];
+    int32 playerPos[PLAYER_COUNT];
+    int32 playerTimer[PLAYER_COUNT];
     bool32 timeAttackFreeze;
     Hitbox hitboxBarrel;
     Animator barrelAnimator;

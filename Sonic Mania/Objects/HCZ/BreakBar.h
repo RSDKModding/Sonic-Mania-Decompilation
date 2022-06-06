@@ -23,7 +23,7 @@ struct EntityBreakBar {
     uint16 length;
     uint8 activePlayersGrabbed;
     uint8 activePlayersReleased;
-    uint8 playerTimers[4];
+    uint8 playerTimers[PLAYER_COUNT];
     Vector2 startPos;
     int32 releaseTimer;
     bool32 isBroken;

@@ -1660,7 +1660,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
         announcer->playerID        = session->playerID[winner];
     }
 
-    uint32 times[PLAYER_MAX];
+    uint32 times[PLAYER_COUNT];
     for (int32 p = 0; p < COMPETITION_PLAYER_COUNT; ++p) {
         times[p] = session->time[p].milliseconds + 100 * (session->time[p].seconds + 4 * (16 * session->time[p].minutes - session->time[p].minutes));
     }

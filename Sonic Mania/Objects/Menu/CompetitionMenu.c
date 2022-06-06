@@ -284,13 +284,13 @@ int32 CompetitionMenu_GetTotalPlayerCount(void)
 
 void CompetitionMenu_ResetControllerAssignments(void)
 {
-    EntityUIVsCharSelector *buttons[PLAYER_MAX];
+    EntityUIVsCharSelector *buttons[PLAYER_COUNT];
     EntityUIControl *control = CompetitionMenu->competitionControl;
 
     int32 playerID = 0;
-    for (int32 p = 0; p < PLAYER_MAX; ++p) buttons[p] = (EntityUIVsCharSelector *)control->buttons[p];
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) buttons[p] = (EntityUIVsCharSelector *)control->buttons[p];
 
-    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) {
         EntityUIVsCharSelector *selector = buttons[p];
         int32 id                         = API_ControllerIDForInputID(p + 1);
 
@@ -308,7 +308,7 @@ void CompetitionMenu_ResetControllerAssignments(void)
         }
     }
 
-    for (; playerID < PLAYER_MAX; ++playerID) API_AssignControllerID(CONT_P1 + playerID, INPUT_NONE);
+    for (; playerID < PLAYER_COUNT; ++playerID) API_AssignControllerID(CONT_P1 + playerID, INPUT_NONE);
 }
 
 void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount)
@@ -422,7 +422,7 @@ void CompetitionMenu_SetupResultsUI(EntityUIControl *roundControl)
     int32 offsets[] = { -580000, 0x580000, 0x0, 0x0, -0x7A0000, 0x000000, 0x7A0000, 0x000000, -0x9C0000, -0x340000, 0x340000, 0x9C0000 };
 
     int32 offsetPtr = 4 * (session->playerCount - 2);
-    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) {
         EntityUIButton *button = roundControl->buttons[p];
         if (session->playerCount <= p) {
             button->visible = false;
@@ -687,7 +687,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     uint32 bestScore      = 0;
     uint32 bestItems      = 0;
     uint32 bestTime       = 0xFFFFFFFF;
-    uint32 times[PLAYER_MAX];
+    uint32 times[PLAYER_COUNT];
 
     for (int32 p = 0; p < session->playerCount; ++p) {
         if (session->rings[p] > bestRings)

@@ -46,7 +46,7 @@ typedef enum {
 struct ObjectPlatform {
     RSDK_OBJECT
     uint16 aniFrames;
-    Vector2 stoodPos[PLAYER_MAX];
+    Vector2 stoodPos[PLAYER_COUNT];
     uint16 sfxClacker;
     uint16 sfxClang;
     uint16 sfxPush;

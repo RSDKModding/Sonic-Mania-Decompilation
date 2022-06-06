@@ -20,7 +20,7 @@ struct EntityLRZ1Intro {
     int32 timer;
     int32 originY;
     int32 spawnPosY;
-    Vector2 playerOffset[PLAYER_MAX];
+    Vector2 playerOffset[PLAYER_COUNT];
     Animator animator;
 };
 

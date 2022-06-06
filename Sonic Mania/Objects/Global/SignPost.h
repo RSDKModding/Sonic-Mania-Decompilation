@@ -52,7 +52,7 @@ struct EntitySignPost {
     int32 maxAngle;
     int32 sparkleType;
     int32 itemBounceCount;
-    Vector2 playerPosStore[PLAYER_MAX];
+    Vector2 playerPosStore[PLAYER_COUNT];
     Animator eggPlateAnimator;
     Animator facePlateAnimator;
     Animator sidebarAnimator;

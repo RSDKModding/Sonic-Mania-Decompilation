@@ -481,8 +481,8 @@ uint16 RSDK::Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 
     Scene3D *scene = &scene3DList[id];
 
-    if (vertexLimit > SCENE3D_VERT_MAX || !vertexLimit)
-        vertexLimit = SCENE3D_VERT_MAX;
+    if (vertexLimit > SCENE3D_VERT_COUNT || !vertexLimit)
+        vertexLimit = SCENE3D_VERT_COUNT;
 
     scene->scope = scope;
     HASH_COPY_MD5(scene->hash, hash);

@@ -21,7 +21,7 @@ struct EntityPullSwitch {
     int32 sprY;
     int32 sprHeight;
     bool32 activated;
-    uint8 playerTimers[PLAYER_MAX];
+    uint8 playerTimers[PLAYER_COUNT];
     uint8 activePlayers;
     Vector2 handlePos;
     Animator handleAnimator;

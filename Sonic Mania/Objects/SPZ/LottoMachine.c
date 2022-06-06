@@ -400,7 +400,7 @@ void LottoMachine_GiveRings(void)
     int32 bonus      = 0;
 
     int32 playerCount = 0;
-    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) {
         uint8 reward = self->collectedBallTypes[p] & 0xFF;
         switch (self->collectedBallTypes[p] >> 8) {
             case LOTTOBALL_BLUE:
@@ -733,7 +733,7 @@ void LottoMachine_State_StopSpinning(void)
     self->motorAnimator.speed -= self->motorAnimator.speed >> 4;
 
     if (self->timer == 30) {
-        for (int32 p = 0; p < PLAYER_MAX; ++p) self->playerPtrs[p] = NULL;
+        for (int32 p = 0; p < PLAYER_COUNT; ++p) self->playerPtrs[p] = NULL;
         self->playerCount           = 0;
         self->collectedBallCount    = 0;
         self->chuteAnimator.frameID = 0;

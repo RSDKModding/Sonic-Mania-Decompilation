@@ -25,7 +25,7 @@ struct ObjectDrillerdroid {
     int32 drillMoveDir[2];
     uint8 platformActive[5];
     uint8 arenaSegment;
-    uint8 playerTimers[4];
+    uint8 playerTimers[PLAYER_COUNT];
     uint8 drillSfxTimer;
     bool32 playingDrillSfx;
     uint8 armorHealth;

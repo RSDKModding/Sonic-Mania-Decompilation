@@ -29,7 +29,7 @@ struct EntityTubinaut {
     int16 reAdjustTimers[TUBINAUT_ORB_COUNT];
     bool32 ballsVisible[TUBINAUT_ORB_COUNT]; // hehe
     Animator ballAnimators[TUBINAUT_ORB_COUNT];
-    uint16 playerTimers[PLAYER_MAX];
+    uint16 playerTimers[PLAYER_COUNT];
     int32 attackTimer;
     uint16 activeOrbs;
     uint8 orbCount;

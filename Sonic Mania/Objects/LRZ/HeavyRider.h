@@ -52,7 +52,7 @@ struct ObjectHeavyRider {
     uint8 health;
     uint8 invincibilityTimer;
     uint8 spawnDelay;
-    uint8 playerTimers[PLAYER_MAX];
+    uint8 playerTimers[PLAYER_COUNT];
     int32 spawnFireballs;
     int32 startY;
     uint8 chargeTimer;

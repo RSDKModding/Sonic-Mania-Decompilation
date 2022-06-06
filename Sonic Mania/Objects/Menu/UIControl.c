@@ -155,7 +155,7 @@ EntityUIControl *UIControl_GetUIControl(void)
 
 void UIControl_ClearInputs(uint8 buttonID)
 {
-    for (int32 i = 0; i < PLAYER_MAX; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         UIControl->upPress[i]      = false;
         UIControl->downPress[i]    = false;
         UIControl->leftPress[i]    = false;
@@ -201,7 +201,7 @@ void UIControl_ProcessInputs(void)
     UIControl_HandlePosition();
 
     if (!UIControl->inputLocked) {
-        for (int32 i = 0; i < PLAYER_MAX; ++i) {
+        for (int32 i = 0; i < PLAYER_COUNT; ++i) {
             UIControl->upPress[i]    = ControllerInfo[CONT_P1 + i].keyUp.press || AnalogStickInfoL[CONT_P1 + i].keyUp.press;
             UIControl->downPress[i]  = ControllerInfo[CONT_P1 + i].keyDown.press || AnalogStickInfoL[CONT_P1 + i].keyDown.press;
             UIControl->leftPress[i]  = ControllerInfo[CONT_P1 + i].keyLeft.press || AnalogStickInfoL[CONT_P1 + i].keyLeft.press;

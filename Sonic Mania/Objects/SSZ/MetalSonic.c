@@ -138,7 +138,7 @@ void MetalSonic_HandleStageWrap(void)
         Zone->deathBoundary[0] = (marker->position.y >> 16) + 16;
         marker->position.y     = -0x200000;
 
-        for (int32 i = 0; i < PLAYER_MAX; ++i) {
+        for (int32 i = 0; i < PLAYER_COUNT; ++i) {
             Zone->cameraBoundsL[i]      = (wall->position.x >> 16) - 95;
             Zone->cameraBoundsR[i]      = (wall->position.x >> 16) + 392;
             Zone->playerBoundActiveL[i] = true;
@@ -1634,7 +1634,7 @@ void MetalSonic_State_AccelerateSpikeWall(void)
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
 
-        for (int i = 0; i < PLAYER_MAX; ++i) {
+        for (int i = 0; i < PLAYER_COUNT; ++i) {
             Zone->cameraBoundsL[i] = 0;
             Zone->cameraBoundsR[i] = size.x + 0x400;
             Zone->playerBoundActiveL[i] = false;

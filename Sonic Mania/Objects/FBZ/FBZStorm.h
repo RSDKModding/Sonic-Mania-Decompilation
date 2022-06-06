@@ -22,8 +22,8 @@ struct EntityFBZStorm {
     StateMachine(state);
     int32 thunderTimer;
     int32 blendAmount;
-    int32 stormAngle[SCREEN_MAX];
-    int32 screenPosX[SCREEN_MAX];
+    int32 stormAngle[SCREEN_COUNT];
+    int32 screenPosX[SCREEN_COUNT];
     bool32 enabled;
     Animator animator;
 };

@@ -22,8 +22,8 @@ struct EntityBarStool {
     int32 spinSpeed;
     int32 spinAngle;
     int32 activePlayers;
-    int32 playerAngle[PLAYER_MAX];
-    int32 playerPos[PLAYER_MAX];
+    int32 playerAngle[PLAYER_COUNT];
+    int32 playerPos[PLAYER_COUNT];
     Animator stoolAnimator;
     Animator poleAnimator;
 };

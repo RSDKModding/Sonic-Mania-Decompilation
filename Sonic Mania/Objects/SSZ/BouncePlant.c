@@ -122,16 +122,16 @@ void BouncePlant_Update(void)
     }
 
     if (self->stood) {
-        for (int32 i = 0; i < BouncePlant_NodeCount; ++i) self->drawPos[i].y = self->stoodPos.y + BoucePlant_GetNodeY(self->drawPos[i].x);
+        for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) self->drawPos[i].y = self->stoodPos.y + BoucePlant_GetNodeY(self->drawPos[i].x);
     }
     else {
         if (self->recoilDuration <= 0) {
-            for (int32 i = 0; i < BouncePlant_NodeCount; ++i) self->drawPos[i] = self->nodeStartPos[i];
+            for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) self->drawPos[i] = self->nodeStartPos[i];
         }
         else {
             self->recoilDuration--;
 
-            for (int32 i = 0; i < BouncePlant_NodeCount; ++i) {
+            for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) {
                 self->recoilVelocity[i] += ((self->nodeStartPos[i].y - self->drawPos[i].y) >> 3) - (self->recoilVelocity[i] >> 3);
                 self->drawPos[i].y += self->recoilVelocity[i];
             }
@@ -147,7 +147,7 @@ void BouncePlant_Draw(void)
 {
     RSDK_THIS(BouncePlant);
 
-    for (int32 i = 0; i < BouncePlant_NodeCount; ++i) {
+    for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) {
         RSDK.DrawSprite(&self->nodeAnimator, &self->drawPos[i], false);
         RSDK.DrawSprite(&self->decorAnimators[i], &self->drawPos[i], false);
     }
@@ -174,7 +174,7 @@ void BouncePlant_Create(void *data)
         }
 
         RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &self->nodeAnimator, true, 0);
-        for (int32 i = 0; i < BouncePlant_NodeCount; ++i) {
+        for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) {
             RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &self->decorAnimators[i], true, RSDK.Rand(1, 8));
             self->drawPos[i].x = self->nodeStartPos[i].x;
             self->drawPos[i].y = self->nodeStartPos[i].y;
@@ -200,21 +200,21 @@ void BoucePlant_SetupNodePositions(void)
 
     if (self->direction == FLIP_NONE) {
         int32 x = self->position.x - 0x2A0000;
-        for (int32 i = 0; i < BouncePlant_NodeCount; ++i) {
+        for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) {
             self->nodeStartPos[i].x = x;
             x += 0xC0000;
         }
     }
     else {
         int32 x = self->position.x + 0x2A0000;
-        for (int32 i = 0; i < BouncePlant_NodeCount; ++i) {
+        for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) {
             self->nodeStartPos[i].x = x;
             x -= 0xC0000;
         }
     }
 
     int32 y = self->position.y + 0x2A0000;
-    for (int32 i = 0; i < BouncePlant_NodeCount; ++i) {
+    for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) {
         self->nodeStartPos[i].y = y;
         y -= 0xC0000;
     }
@@ -258,8 +258,8 @@ int32 BoucePlant_GetNodeY(int32 x)
     if (self->direction) {
         y = (x - self->stoodPos.x) >> 15;
         if (x < self->stoodPos.x) {
-            distanceX = (self->stoodPos.x - self->nodeStartPos[BouncePlant_NodeCount - 1].x) >> 16;
-            distanceY = (self->stoodPos.y - self->nodeStartPos[BouncePlant_NodeCount - 1].y) >> 16;
+            distanceX = (self->stoodPos.x - self->nodeStartPos[BOUNCEPLANT_NODE_COUNT - 1].x) >> 16;
+            distanceY = (self->stoodPos.y - self->nodeStartPos[BOUNCEPLANT_NODE_COUNT - 1].y) >> 16;
         }
         else {
             distanceX = (self->nodeStartPos[0].x - self->stoodPos.x) >> 16;
@@ -269,8 +269,8 @@ int32 BoucePlant_GetNodeY(int32 x)
     else {
         y = (self->stoodPos.x - x) >> 15;
         if (x > self->stoodPos.x) {
-            distanceX = (self->nodeStartPos[BouncePlant_NodeCount - 1].x - self->stoodPos.x) >> 16;
-            distanceY = (self->stoodPos.y - self->nodeStartPos[BouncePlant_NodeCount - 1].y) >> 16;
+            distanceX = (self->nodeStartPos[BOUNCEPLANT_NODE_COUNT - 1].x - self->stoodPos.x) >> 16;
+            distanceY = (self->stoodPos.y - self->nodeStartPos[BOUNCEPLANT_NODE_COUNT - 1].y) >> 16;
         }
         else {
             distanceX = (self->stoodPos.x - self->nodeStartPos[0].x) >> 16;
@@ -303,7 +303,7 @@ void BouncePlant_EditorDraw(void)
     }
 
     RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &self->nodeAnimator, true, 0);
-    for (int32 i = 0; i < BouncePlant_NodeCount; ++i) {
+    for (int32 i = 0; i < BOUNCEPLANT_NODE_COUNT; ++i) {
         RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &self->decorAnimators[i], true, 1);
         self->drawPos[i].x = self->nodeStartPos[i].x;
         self->drawPos[i].y = self->nodeStartPos[i].y;

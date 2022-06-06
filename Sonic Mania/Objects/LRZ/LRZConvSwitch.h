@@ -19,7 +19,7 @@ struct EntityLRZConvSwitch {
     uint8 calibration;
     uint8 conveyorDir;
     int32 dir;
-    Vector2 playerPositions[PLAYER_MAX];
+    Vector2 playerPositions[PLAYER_COUNT];
     int32 unused1;
     Vector2 startPos;
     int32 unused2;

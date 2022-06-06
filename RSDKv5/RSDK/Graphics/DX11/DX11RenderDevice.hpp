@@ -101,8 +101,8 @@ private:
     static PAINTSTRUCT Paint;
 
     static ID3D11Buffer *dx11VertexBuffer;
-    static ID3D11Texture2D *screenTextures[SCREEN_MAX];
-    static ID3D11ShaderResourceView *screenTextureViews[SCREEN_MAX];
+    static ID3D11Texture2D *screenTextures[SCREEN_COUNT];
+    static ID3D11ShaderResourceView *screenTextureViews[SCREEN_COUNT];
     static ID3D11ShaderResourceView *imageTextureView;
     static D3D11_VIEWPORT dx11ViewPort;
 

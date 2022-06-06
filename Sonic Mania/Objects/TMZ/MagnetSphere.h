@@ -7,8 +7,8 @@
 struct ObjectMagnetSphere {
     RSDK_OBJECT
     Hitbox hitbox;
-    uint8 sphereAngle[PLAYER_MAX];
-    uint8 playerAngles[PLAYER_MAX];
+    uint8 sphereAngle[PLAYER_COUNT];
+    uint8 playerAngles[PLAYER_COUNT];
     TABLE(int32 angleTable[16], { 0x20, 0x20, 0x20, 0x30, 0x40, 0x50, 0x60, 0x60, 0x60, 0xA0, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xE0 });
     uint16 aniFrames;
     uint16 sfxBumper;
@@ -19,7 +19,7 @@ struct ObjectMagnetSphere {
 struct EntityMagnetSphere {
     RSDK_ENTITY
     uint8 activePlayers;
-    uint8 playerTimers[PLAYER_MAX];
+    uint8 playerTimers[PLAYER_COUNT];
     Animator unusedAnimator;
     Animator glassInnerAnimator;
     Animator glassOuterAnimator;

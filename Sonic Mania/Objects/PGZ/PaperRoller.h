@@ -18,8 +18,8 @@ struct EntityPaperRoller {
     Vector2 startPos;
     int32 unused;
     int32 divotAngle;
-    int32 playerTimer[PLAYER_MAX];
-    int32 lastJumpTimer[PLAYER_MAX]; //not used, is set and updated, idk what it was for
+    int32 playerTimer[PLAYER_COUNT];
+    int32 lastJumpTimer[PLAYER_COUNT]; //not used, is set and updated, idk what it was for
     Vector2 deformPosTop;
     Vector2 deformPosBottom;
     Hitbox hitbox;

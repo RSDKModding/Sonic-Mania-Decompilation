@@ -13,7 +13,7 @@ void BGSwitch_Update(void)
 {
     RSDK_THIS(BGSwitch);
 
-    for (BGSwitch->screenID = 0; BGSwitch->screenID < SCREEN_MAX; BGSwitch->screenID++) {
+    for (BGSwitch->screenID = 0; BGSwitch->screenID < SCREEN_COUNT; BGSwitch->screenID++) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1 + BGSwitch->screenID, Camera);
         if (!camera->classID)
             break;

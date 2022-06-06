@@ -108,7 +108,7 @@ int32 TeeterTotter_CheckPlayerCollisions(void)
     self->position.x = storeX;
     self->position.y = storeY;
 
-    for (int32 i = 0; i < PLAYER_MAX; ++i) self->playerIDs[i] = stoodSegmentIDs[i];
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) self->playerIDs[i] = stoodSegmentIDs[i];
 
     return heaviestSegment;
 }

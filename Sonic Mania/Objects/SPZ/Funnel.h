@@ -18,11 +18,11 @@ struct EntityFunnel {
     RSDK_ENTITY
     StateMachine(state);
     uint8 activePlayers;
-    int32 playerAngle[PLAYER_MAX];
-    int32 playerXVel[PLAYER_MAX];
-    int32 playerScoreTimer[PLAYER_MAX];
-    int32 playerYVel[PLAYER_MAX];
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerAngle[PLAYER_COUNT];
+    int32 playerXVel[PLAYER_COUNT];
+    int32 playerScoreTimer[PLAYER_COUNT];
+    int32 playerYVel[PLAYER_COUNT];
+    int32 playerTimers[PLAYER_COUNT];
     Animator animator;
 };
 

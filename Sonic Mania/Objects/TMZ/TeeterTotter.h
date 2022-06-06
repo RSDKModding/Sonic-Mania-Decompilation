@@ -24,7 +24,7 @@ struct EntityTeeterTotter {
     uint32 length;
     Vector2 origin;
     int32 unused1; // never even set
-    int32 playerIDs[PLAYER_MAX];
+    int32 playerIDs[PLAYER_COUNT];
     int32 inactiveSegments;
     int32 fallPos;
     int32 fallVelocity;

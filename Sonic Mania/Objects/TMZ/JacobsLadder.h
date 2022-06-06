@@ -25,8 +25,8 @@ struct EntityJacobsLadder {
     bool32 showElectricity;
     bool32 electricFadeOut;
     uint8 activePlayers;
-    uint8 playerTimers[PLAYER_MAX];
-    Vector2 playerPositions[PLAYER_MAX];
+    uint8 playerTimers[PLAYER_COUNT];
+    Vector2 playerPositions[PLAYER_COUNT];
     Hitbox hitbox;
     Animator sideAnimator;
     Animator electricAnimator;
