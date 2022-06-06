@@ -1,4 +1,3 @@
-#version 330 core
 in vec3 in_pos;
 in vec4 in_color;
 in vec2 in_UV;
