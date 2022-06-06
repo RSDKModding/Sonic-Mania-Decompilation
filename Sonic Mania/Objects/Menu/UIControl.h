@@ -14,16 +14,16 @@ struct ObjectUIControl {
     bool32 isProcessingInput;
     bool32 inputLocked;
     bool32 lockInput;
-    bool32 upPress[PLAYER_MAX];
-    bool32 downPress[PLAYER_MAX];
-    bool32 leftPress[PLAYER_MAX];
-    bool32 rightPress[PLAYER_MAX];
-    bool32 backPress[PLAYER_MAX];
-    bool32 confirmPress[PLAYER_MAX];
-    bool32 yPress[PLAYER_MAX];
-    bool32 xPress[PLAYER_MAX];
+    bool32 upPress[PLAYER_COUNT];
+    bool32 downPress[PLAYER_COUNT];
+    bool32 leftPress[PLAYER_COUNT];
+    bool32 rightPress[PLAYER_COUNT];
+    bool32 backPress[PLAYER_COUNT];
+    bool32 confirmPress[PLAYER_COUNT];
+    bool32 yPress[PLAYER_COUNT];
+    bool32 xPress[PLAYER_COUNT];
 #if MANIA_USE_PLUS
-    bool32 startPress[PLAYER_MAX];
+    bool32 startPress[PLAYER_COUNT];
 #endif
     bool32 anyUpPress;
     bool32 anyDownPress;

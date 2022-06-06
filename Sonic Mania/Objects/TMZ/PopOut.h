@@ -7,7 +7,7 @@ typedef enum {
     POPOUT_CHILD_SPRING_YELLOW,
     POPOUT_CHILD_SPRING_RED,
     POPOUT_CHILD_SPIKES,
-}PopOutChildTypes;
+} PopOutChildTypes;
 
 // Object Class
 struct ObjectPopOut {
@@ -44,7 +44,7 @@ void PopOut_Update(void);
 void PopOut_LateUpdate(void);
 void PopOut_StaticUpdate(void);
 void PopOut_Draw(void);
-void PopOut_Create(void* data);
+void PopOut_Create(void *data);
 void PopOut_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PopOut_EditorDraw(void);
@@ -55,4 +55,4 @@ void PopOut_Serialize(void);
 // Extra Entity Functions
 void PopOut_SetupHitboxes(void);
 
-#endif //!OBJ_POPOUT_H
+#endif //! OBJ_POPOUT_H

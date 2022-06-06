@@ -4,6 +4,15 @@
 #include "GLFWRenderDevice.hpp"
 #endif
 
+#define _GLVERSION "#version 330 core\n"
+
+#if RETRO_REV02
+#define _GLDEFINE "#define RETRO_REV02 (1)\n"
+#else
+#define _GLDEFINE "\n"
+#endif
+
+
 GLFWwindow *RenderDevice::window;
 GLuint RenderDevice::VAO;
 GLuint RenderDevice::VBO;
@@ -545,9 +554,9 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
         fileData[info.fileSize] = 0;
         CloseFile(&info);
 
-        const GLchar *glchar[] = { (const GLchar *)fileData };
+        const GLchar *glchar[] = { _GLVERSION, _GLDEFINE, (const GLchar *)fileData };
         vert                   = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vert, 1, glchar, NULL);
+        glShaderSource(vert, 3, glchar, NULL);
         glCompileShader(vert);
     }
     else
@@ -562,9 +571,9 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
         fileData[info.fileSize] = 0;
         CloseFile(&info);
 
-        const GLchar *glchar[] = { (const GLchar *)fileData };
+        const GLchar *glchar[] = { _GLVERSION, _GLDEFINE, (const GLchar *)fileData };
         frag                   = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(frag, 1, glchar, NULL);
+        glShaderSource(frag, 3, glchar, NULL);
         glCompileShader(frag);
     }
     else

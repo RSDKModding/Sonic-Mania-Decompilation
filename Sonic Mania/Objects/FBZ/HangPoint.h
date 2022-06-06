@@ -15,8 +15,8 @@ struct ObjectHangPoint {
 struct EntityHangPoint {
     RSDK_ENTITY
     uint8 activePlayers;
-    int32 moveDistance[PLAYER_MAX];
-    int32 playerTimer[PLAYER_MAX];
+    int32 moveDistance[PLAYER_COUNT];
+    int32 playerTimer[PLAYER_COUNT];
     int32 pullPos;
     int32 maxVel;
     int32 length;

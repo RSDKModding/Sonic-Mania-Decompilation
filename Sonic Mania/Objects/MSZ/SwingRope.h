@@ -18,7 +18,7 @@ struct EntitySwingRope {
     int32 ropeGrabDelay;
     int32 rotatedAngle;
     int32 rotatedOffset;
-    int32 playerLayers[PLAYER_MAX];
+    int32 playerLayers[PLAYER_COUNT];
     int32 angleOffset;
     Vector2 ropePos;
     Vector2 rotatePos;

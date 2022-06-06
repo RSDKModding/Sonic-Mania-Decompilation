@@ -353,7 +353,7 @@ void RSDK::SetupFunctionTables()
 #if RETRO_REV02
     ADD_RSDK_FUNCTION(FunctionTable_SetTintLookupTable, SetTintLookupTable);
 #else
-    // cant be bothered to change the enum name, but in rev01, this returns a ptr to the tint lookup table
+    // cant be bothered to change the enum name lol
     ADD_RSDK_FUNCTION(FunctionTable_SetTintLookupTable, GetTintLookupTable);
 #endif
     ADD_RSDK_FUNCTION(FunctionTable_SetPaletteMask, SetPaletteMask);

@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Shiversaw_SawCount (2)
+#define SHIVERSAW_SAW_COUNT (2)
 
 // Object Class
 struct ObjectShiversaw {
@@ -33,19 +33,19 @@ struct ObjectShiversaw {
 struct EntityShiversaw {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateSaw[Shiversaw_SawCount]);
+    StateMachine(stateSaw[SHIVERSAW_SAW_COUNT]);
     uint8 sawID;
     int32 timer;
-    int32 sawTimers[Shiversaw_SawCount];
-    int32 sawRadiusVel[Shiversaw_SawCount];
+    int32 sawTimers[SHIVERSAW_SAW_COUNT];
+    int32 sawRadiusVel[SHIVERSAW_SAW_COUNT];
     int32 unused1;
     int32 unused2;
     int32 startY;
     Vector2 origin;
-    int32 sawRadius[Shiversaw_SawCount];
-    int32 sawAngles[Shiversaw_SawCount];
-    int32 sawTargetAngles[Shiversaw_SawCount];
-    Vector2 sawPos[Shiversaw_SawCount];
+    int32 sawRadius[SHIVERSAW_SAW_COUNT];
+    int32 sawAngles[SHIVERSAW_SAW_COUNT];
+    int32 sawTargetAngles[SHIVERSAW_SAW_COUNT];
+    Vector2 sawPos[SHIVERSAW_SAW_COUNT];
     int32 storedVelX;
     int32 circleRadius;
     Animator tanksAnimator;
@@ -53,7 +53,7 @@ struct EntityShiversaw {
     Animator connectorAnimator;
     Animator armAnimator;
     Animator spinnerAnimator;
-    Animator sawAnimator[Shiversaw_SawCount];
+    Animator sawAnimator[SHIVERSAW_SAW_COUNT];
 };
 
 // Object Struct

@@ -98,7 +98,7 @@ struct ObjectIce {
     uint16 aniFrames;
     Hitbox hitboxPlayerBlockInner;
     Hitbox hitboxPlayerBlockOuter;
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerTimers[PLAYER_COUNT];
     uint16 sfxFreeze;
     uint16 sfxLedgeBreak;
     uint16 sfxWindowShatter;

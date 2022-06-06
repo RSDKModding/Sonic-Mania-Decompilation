@@ -3,9 +3,9 @@
 
 #include "SonicMania.h"
 
-#define UISlider_MinVal    (0)
-#define UISlider_MaxVal    (0x400)
-#define UISlider_Increment (UISlider_MaxVal / 0x10)
+#define UISLIDER_MIN       (0)
+#define UISLIDER_MAX       (0x400)
+#define UISLIDER_INCREMENT (UISLIDER_MAX / 0x10)
 
 // Object Class
 struct ObjectUISlider {

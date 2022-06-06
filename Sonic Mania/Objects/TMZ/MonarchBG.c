@@ -23,8 +23,8 @@ void MonarchBG_StaticUpdate(void) {}
 void MonarchBG_Draw(void)
 {
     RSDK_THIS(MonarchBG);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x - ((self->position.x - ((ScreenInfo->position.x + ScreenInfo->centerX) << 16)) >> 1);
     drawPos.y = self->position.y - 208 * ((self->position.y - ((ScreenInfo->position.y + ScreenInfo->centerY) << 16)) >> 8);
 
@@ -59,7 +59,10 @@ void MonarchBG_Create(void *data)
 
 void MonarchBG_StageLoad(void)
 {
-    MonarchBG->aniFrames  = RSDK.LoadSpriteAnimation("TMZ1/MonarchBG.bin", SCOPE_STAGE);
+    MonarchBG->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MonarchBG.bin", SCOPE_STAGE);
+
+    // Code for loading the MonarchBG mesh???
+    // Does this mean the mesh was intended to be in the BG instead of the sprite at one point?
     MonarchBG->meshIndex  = RSDK.LoadMesh("TMZ/MonarchBG.bin", SCOPE_STAGE);
     MonarchBG->sceneIndex = RSDK.Create3DScene("View:Monarch", 0x2000, SCOPE_STAGE);
 
@@ -76,6 +79,7 @@ void MonarchBG_EditorDraw(void)
     self->position.x = 0x8000000;
     self->position.y = 0xC000000;
     self->drawFX     = FX_FLIP;
+
     RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 0, &self->animatorTop, true, 0);
     RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 1, &self->animatorBottom, true, 0);
 

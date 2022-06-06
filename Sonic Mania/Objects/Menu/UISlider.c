@@ -83,7 +83,7 @@ void UISlider_Create(void *data)
     self->checkSelectedCB    = UISlider_CheckSelectedCB;
 
     self->textVisible = true;
-    self->sliderPos   = (UISlider_MaxVal - UISlider_MinVal) / 2;
+    self->sliderPos   = (UISLIDER_MAX - UISLIDER_MIN) / 2;
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
     self->textFrames = UIWidgets->textFrames;
 }
@@ -168,13 +168,13 @@ void UISlider_ButtonPressCB(void)
     }
 
     bool32 valueChanged = false;
-    if (UIControl->anyLeftPress && self->sliderPos > UISlider_MinVal) {
-        self->sliderPos = (self->sliderPos & -UISlider_Increment) - UISlider_Increment;
+    if (UIControl->anyLeftPress && self->sliderPos > UISLIDER_MIN) {
+        self->sliderPos = (self->sliderPos & -UISLIDER_INCREMENT) - UISLIDER_INCREMENT;
         valueChanged    = true;
     }
 
-    if (UIControl->anyRightPress && self->sliderPos < UISlider_MaxVal) {
-        self->sliderPos = (self->sliderPos & -UISlider_Increment) + UISlider_Increment;
+    if (UIControl->anyRightPress && self->sliderPos < UISLIDER_MAX) {
+        self->sliderPos = (self->sliderPos & -UISLIDER_INCREMENT) + UISLIDER_INCREMENT;
         valueChanged    = true;
     }
 
@@ -247,10 +247,9 @@ bool32 UISlider_TouchCB(void)
                     if (self->touchPosSizeS.x - 0x70000 < self->sliderPosTouch)
                         self->sliderPosTouch = self->touchPosSizeS.x - 0x70000;
 
-                    int32 sliderPos =
-                        16
-                        * (minVal(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosSizeS.x - 0xE0000) + 2, UISlider_MaxVal)
-                           & -(UISlider_Increment / 0x10));
+                    int32 sliderPos = 16
+                                      * (minVal(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosSizeS.x - 0xE0000) + 2, UISLIDER_MAX)
+                                         & -(UISLIDER_INCREMENT / 0x10));
                     if (sliderPos != self->sliderPos) {
                         self->sliderPos = sliderPos;
                         StateMachine_Run(self->sliderChangedCB);

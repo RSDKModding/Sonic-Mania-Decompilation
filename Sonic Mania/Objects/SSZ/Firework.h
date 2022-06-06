@@ -24,7 +24,7 @@ struct EntityFirework {
     int32 outerRadius;
     StateMachine(state);
     uint8 activePlayers;
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerTimers[PLAYER_COUNT];
     int32 sparkID;
     bool32 activated;
     int32 timer;

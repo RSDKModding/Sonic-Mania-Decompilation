@@ -20,18 +20,18 @@ struct EntityLottoMachine {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerCount;
-    EntityPlayer *playerPtrs[PLAYER_MAX];
+    EntityPlayer *playerPtrs[PLAYER_COUNT];
     int32 timer;
     int32 spinSpeed;
     int32 playerDir;
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerTimers[PLAYER_COUNT];
     int32 collectedBallCount;
     int32 collectedBallTypes[4];
     int32 chutePos;
     int32 chuteTargetPos;
     int32 chuteVel;
     uint8 drawOrderHigh;
-    int32 playerAngles[PLAYER_MAX];
+    int32 playerAngles[PLAYER_COUNT];
     Animator machineAnimator;
     Animator supportAnimator;
     Animator chuteAnimator;

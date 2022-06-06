@@ -29,9 +29,9 @@ struct ObjectWater {
     int32 newWaterLevel;
     int32 targetWaterLevel;
     int32 waterMoveSpeed;
-    int32 constBubbleTimer[PLAYER_MAX];
-    int32 randBubbleTimer[PLAYER_MAX];
-    int32 unused1[PLAYER_MAX]; // unused but set to 0 on bubble timer sets. maybe an old bubble timer?
+    int32 constBubbleTimer[PLAYER_COUNT];
+    int32 randBubbleTimer[PLAYER_COUNT];
+    int32 unused1[PLAYER_COUNT]; // unused but set to 0 on bubble timer sets. maybe an old bubble timer?
     TABLE(int32 bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
     uint16 aniFrames;
     uint16 bigBubbleFrames;
@@ -56,8 +56,8 @@ struct ObjectWater {
     int32 waterLevelVolume;
     int32 waterPalette;
     bool32 disableWaterSplash; // this is never set except for once and it's used in if ! statements to link the player or not
-    int32 wakePosX[PLAYER_MAX];
-    uint8 wakeDir[PLAYER_MAX];
+    int32 wakePosX[PLAYER_COUNT];
+    uint8 wakeDir[PLAYER_COUNT];
     Animator wakeAnimator;
     int32 unused3;
     bool32 playingSkimSFX;

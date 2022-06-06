@@ -49,11 +49,11 @@ struct ObjectZone {
     StateMachine(vsSwapCB[0x10]);
     int32 vsSwapCBCount;
 #if MANIA_USE_PLUS
-    int32 playerSwapEnabled[PLAYER_MAX];
+    int32 playerSwapEnabled[PLAYER_COUNT];
     uint8 swapPlayerID;
     uint8 swapPlayerCount;
-    uint8 preSwapPlayerIDs[PLAYER_MAX];
-    uint8 swappedPlayerIDs[PLAYER_MAX];
+    uint8 preSwapPlayerIDs[PLAYER_COUNT];
+    uint8 swappedPlayerIDs[PLAYER_COUNT];
 #else
     bool32 playerSwapEnabled;
 #endif
@@ -62,19 +62,19 @@ struct ObjectZone {
     int32 ringFrame;
     int32 timer;
     int32 persistentTimer;
-    int32 cameraBoundsL[PLAYER_MAX];
-    int32 cameraBoundsR[PLAYER_MAX];
-    int32 cameraBoundsT[PLAYER_MAX];
-    int32 cameraBoundsB[PLAYER_MAX];
-    int32 playerBoundsL[PLAYER_MAX];
-    int32 playerBoundsR[PLAYER_MAX];
-    int32 playerBoundsT[PLAYER_MAX];
-    int32 playerBoundsB[PLAYER_MAX];
-    int32 deathBoundary[PLAYER_MAX];
-    int32 playerBoundActiveL[PLAYER_MAX];
-    int32 playerBoundActiveR[PLAYER_MAX];
-    int32 playerBoundActiveT[PLAYER_MAX];
-    int32 playerBoundActiveB[PLAYER_MAX];
+    int32 cameraBoundsL[PLAYER_COUNT];
+    int32 cameraBoundsR[PLAYER_COUNT];
+    int32 cameraBoundsT[PLAYER_COUNT];
+    int32 cameraBoundsB[PLAYER_COUNT];
+    int32 playerBoundsL[PLAYER_COUNT];
+    int32 playerBoundsR[PLAYER_COUNT];
+    int32 playerBoundsT[PLAYER_COUNT];
+    int32 playerBoundsB[PLAYER_COUNT];
+    int32 deathBoundary[PLAYER_COUNT];
+    int32 playerBoundActiveL[PLAYER_COUNT];
+    int32 playerBoundActiveR[PLAYER_COUNT];
+    int32 playerBoundActiveT[PLAYER_COUNT];
+    int32 playerBoundActiveB[PLAYER_COUNT];
     int32 autoScrollSpeed;
     bool32 setATLBounds;
     bool32 gotTimeOver;
@@ -99,8 +99,8 @@ struct ObjectZone {
     uint16 sfxFail;
 #if MANIA_USE_PLUS
     uint8 entityStorage[16][ENTITY_SIZE];
-    int32 screenPosX[PLAYER_MAX];
-    int32 screenPosY[PLAYER_MAX];
+    int32 screenPosX[PLAYER_COUNT];
+    int32 screenPosY[PLAYER_COUNT];
     bool32 swapGameMode;
     bool32 teleportActionActive;
     int32 randSeed;

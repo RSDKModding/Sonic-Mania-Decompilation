@@ -12,7 +12,9 @@ ObjectFlasherMKII *FlasherMKII;
 void FlasherMKII_Update(void)
 {
     RSDK_THIS(FlasherMKII);
+
     RSDK.ProcessAnimation(&self->animator);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,14 +25,15 @@ void FlasherMKII_StaticUpdate(void) {}
 void FlasherMKII_Draw(void)
 {
     RSDK_THIS(FlasherMKII);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void FlasherMKII_Create(void *data)
 {
     RSDK_THIS(FlasherMKII);
-    self->drawFX |= FX_FLIP;
 
+    self->drawFX |= FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -38,6 +41,7 @@ void FlasherMKII_Create(void *data)
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
         self->startPos      = self->position;
+
         switch (self->orientation) {
             case FLASHERMKII_ORIENTATION_UP:
                 self->type      = 0;
@@ -61,6 +65,7 @@ void FlasherMKII_Create(void *data)
 
             default: break;
         }
+
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type, &self->animator, true, 0);
         self->state = FlasherMKII_State_Idle;
     }
@@ -80,6 +85,7 @@ void FlasherMKII_StageLoad(void)
 void FlasherMKII_DebugSpawn(void)
 {
     RSDK_THIS(FlasherMKII);
+
     CREATE_ENTITY(FlasherMKII, NULL, self->position.x, self->position.y);
 }
 
@@ -92,6 +98,7 @@ void FlasherMKII_DebugDraw(void)
 void FlasherMKII_CheckOffScreen(void)
 {
     RSDK_THIS(FlasherMKII);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange))
         FlasherMKII_Create(NULL);
 }
@@ -103,6 +110,7 @@ void FlasherMKII_HandlePlayerCollisions(void)
     foreach_active(Player, player)
     {
         Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 0);
+
         if (Player_CheckBadnikTouch(player, self, hitbox)) {
             if ((self->animator.animationID & 3) == 3) {
                 if (player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) {
@@ -151,6 +159,7 @@ void FlasherMKII_State_Idle(void)
     if (player) {
         int32 rx = (self->position.x - player->position.x) >> 16;
         int32 ry = (self->position.y - player->position.y) >> 16;
+
         if (!self->timer && rx * rx + ry * ry < 0x1000) {
             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 2, &self->animator, false, 0);
             RSDK.PlaySfx(FlasherMKII->sfxZap, false, 255);
@@ -168,7 +177,7 @@ void FlasherMKII_State_Idle(void)
                             break;
                         }
                     }
-                    else if ((rx - 65) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x600000, 0xC0000, 2)) {
+                    else if ((uint32)(rx - 65) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x600000, 0xC0000, 2)) {
                         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                         self->direction  = FLIP_NONE;
                         self->velocity.x = -0x220000;
@@ -187,7 +196,7 @@ void FlasherMKII_State_Idle(void)
                             break;
                         }
                     }
-                    else if ((rx - 65) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, -0x600000, -0xC0000, 2)) {
+                    else if ((uint32)(rx - 65) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, -0x600000, -0xC0000, 2)) {
                         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                         self->direction  = FLIP_Y;
                         self->velocity.x = -0x220000;
@@ -206,7 +215,7 @@ void FlasherMKII_State_Idle(void)
                             break;
                         }
                     }
-                    else if ((ry - 65) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xC0000, -0x600000, 2)) {
+                    else if ((uint32)(ry - 65) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xC0000, -0x600000, 2)) {
                         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                         self->direction  = FLIP_NONE;
                         self->velocity.y = -0x220000;
@@ -250,9 +259,11 @@ void FlasherMKII_State_Moving(void)
     if ((self->animator.frameID == 5 || self->animator.frameID == 12) && self->animator.timer == 1) {
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
+
         if (self->activeScreens == 1)
             RSDK.PlaySfx(FlasherMKII->sfxFlop, false, 255);
     }
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type, &self->animator, false, 0);
         self->state = FlasherMKII_State_Idle;
@@ -285,6 +296,7 @@ void FlasherMKII_State_StrongFlash(void)
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 2, &self->animator, false, 0);
         self->state = FlasherMKII_State_FinishedFlashing;
     }
+
     FlasherMKII_HandleHarmPlayerCollisions();
     FlasherMKII_CheckOffScreen();
 }
@@ -297,6 +309,7 @@ void FlasherMKII_State_FinishedFlashing(void)
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type, &self->animator, false, 0);
         self->state = FlasherMKII_State_Idle;
     }
+
     FlasherMKII_HandlePlayerCollisions();
     FlasherMKII_CheckOffScreen();
 }
@@ -305,7 +318,9 @@ void FlasherMKII_State_FinishedFlashing(void)
 void FlasherMKII_EditorDraw(void)
 {
     RSDK_THIS(FlasherMKII);
+
     self->startPos = self->position;
+
     switch (self->orientation) {
         case FLASHERMKII_ORIENTATION_UP:
             self->type      = 0;
@@ -326,6 +341,7 @@ void FlasherMKII_EditorDraw(void)
             self->direction = FLIP_X;
             self->type      = 4;
             break;
+
         default: break;
     }
 

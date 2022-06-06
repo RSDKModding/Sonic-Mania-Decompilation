@@ -20,7 +20,7 @@ struct EntityZipLine {
     Vector2 startPos;
     Vector2 endPos;
     Vector2 handlePos;
-    uint8 grabDelay[PLAYER_MAX];
+    uint8 grabDelay[PLAYER_COUNT];
     Vector2 joinPos;
     int32 unused1;
 };

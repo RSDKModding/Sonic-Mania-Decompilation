@@ -14,7 +14,9 @@ void TMZFlames_Update(void)
     RSDK_THIS(TMZFlames);
 
     self->active = ACTIVE_NORMAL;
+
     RSDK.ProcessAnimation(&self->animator);
+
     StateMachine_Run(self->state);
 }
 
@@ -25,12 +27,13 @@ void TMZFlames_StaticUpdate(void) {}
 void TMZFlames_Draw(void)
 {
     RSDK_THIS(TMZFlames);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.y = (ScreenInfo[SceneInfo->currentScreenID].centerY - 112) << 16;
     for (int32 i = 0; i < 0x80; i += 0x10) {
         drawPos.x = (RSDK.Sin256(4 * (i + Zone->timer)) << 11) + self->offset;
         RSDK.DrawSprite(&self->animator, &drawPos, true);
+
         drawPos.y += 0x200000;
     }
 }
@@ -38,6 +41,7 @@ void TMZFlames_Draw(void)
 void TMZFlames_Create(void *data)
 {
     RSDK_THIS(TMZFlames);
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawHigh;
@@ -50,7 +54,8 @@ void TMZFlames_Create(void *data)
         self->scale.x       = 0x400;
         self->scale.y       = 0x200;
         self->offset        = -0x800000;
-        self->state         = TMZFlames_State_Delay;
+
+        self->state = TMZFlames_State_Delay;
         RSDK.SetSpriteAnimation(TMZFlames->aniFrames, 0, &self->animator, true, 0);
     }
 }
@@ -60,6 +65,7 @@ void TMZFlames_StageLoad(void) { TMZFlames->aniFrames = RSDK.LoadSpriteAnimation
 void TMZFlames_State_Delay(void)
 {
     RSDK_THIS(TMZFlames);
+
     if (++self->timer == 240) {
         self->timer = 0;
         self->state = TMZFlames_State_EnterFlames;

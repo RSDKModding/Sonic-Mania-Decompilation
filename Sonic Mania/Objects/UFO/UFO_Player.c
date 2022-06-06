@@ -197,7 +197,7 @@ void UFO_Player_ProcessPlayerControl(void)
 {
     RSDK_THIS(UFO_Player);
 
-    if (self->controllerID < PLAYER_MAX) {
+    if (self->controllerID < PLAYER_COUNT) {
 #if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);

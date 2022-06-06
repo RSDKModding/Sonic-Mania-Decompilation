@@ -40,7 +40,7 @@ struct EntityDBTower {
     int32 xOffsetAngle;
     uint8 connectedSegmentCount;
     Animator *segmentAnimators[DBTOWER_SEGMENT_COUNT];
-    uint8 playerTimers[PLAYER_MAX];
+    uint8 playerTimers[PLAYER_COUNT];
     Animator headAnimator;
     Animator bodyAnimator;
 };

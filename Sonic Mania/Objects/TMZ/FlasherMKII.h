@@ -8,7 +8,7 @@ typedef enum {
     FLASHERMKII_ORIENTATION_DOWN,
     FLASHERMKII_ORIENTATION_RIGHT,
     FLASHERMKII_ORIENTATION_LEFT,
-}FlasherMKIIOrientations;
+} FlasherMKIIOrientations;
 
 // Object Class
 struct ObjectFlasherMKII {
@@ -37,7 +37,7 @@ void FlasherMKII_Update(void);
 void FlasherMKII_LateUpdate(void);
 void FlasherMKII_StaticUpdate(void);
 void FlasherMKII_Draw(void);
-void FlasherMKII_Create(void* data);
+void FlasherMKII_Create(void *data);
 void FlasherMKII_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FlasherMKII_EditorDraw(void);
@@ -60,4 +60,4 @@ void FlasherMKII_State_WeakFlash(void);
 void FlasherMKII_State_StrongFlash(void);
 void FlasherMKII_State_FinishedFlashing(void);
 
-#endif //!OBJ_FLASHERMKII_H
+#endif //! OBJ_FLASHERMKII_H

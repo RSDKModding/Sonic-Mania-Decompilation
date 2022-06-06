@@ -9,7 +9,7 @@ struct ObjectTwistedTubes {
     Hitbox hitboxSolid;
     Hitbox hitboxEntryL;
     Hitbox hitboxEntryR;
-    bool32 playerActive[PLAYER_MAX];
+    bool32 playerActive[PLAYER_COUNT];
     uint16 aniFrames;
     uint16 sfxTravel;
 };

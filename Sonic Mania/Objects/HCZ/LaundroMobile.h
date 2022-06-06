@@ -33,8 +33,8 @@ struct ObjectLaundroMobile {
     Vector2 rocketPositions[4];
     uint8 unused[4]; // no clue, never even touched
     int32 rocketSpeeds[2];
-    int32 playerRadius[4];
-    int32 playerAngles[4];
+    int32 playerRadius[PLAYER_COUNT];
+    int32 playerAngles[PLAYER_COUNT];
     uint8 travelledPaths;
     uint8 useStageWrap;
     EntityLaundroMobile *laundroMobile;

@@ -33,7 +33,7 @@ struct EntityLottoBall {
     int32 gravityStrength;
     int32 angleVel;
     EntityLottoMachine *parent;
-    int32 isVisible[PLAYER_MAX];
+    int32 isVisible[PLAYER_COUNT];
     bool32 isUIBall;
     Animator ballAnimator;
     Animator leftNumAnimator;

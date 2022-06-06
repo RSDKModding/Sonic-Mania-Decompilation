@@ -15,7 +15,7 @@ struct ObjectIceSpring {
     uint16 aniFrames;
     uint16 sfxBounce;
     uint16 sfxShatter;
-    Animator animators[4];
+    Animator animators[PLAYER_COUNT];
 };
 
 // Entity Class

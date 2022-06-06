@@ -50,7 +50,7 @@ void RSDK::LoadScene()
     // Unload TileLayers
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         MEM_ZERO(tileLayers[l]);
-        for (int32 c = 0; c < CAMERA_MAX; ++c) tileLayers[l].drawLayer[c] = -1;
+        for (int32 c = 0; c < CAMERA_COUNT; ++c) tileLayers[l].drawLayer[c] = -1;
     }
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
@@ -99,7 +99,7 @@ void RSDK::LoadScene()
     ClearUnusedStorage(DATASET_STG);
     ClearUnusedStorage(DATASET_SFX);
 
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         screens[s].position.x = 0;
         screens[s].position.y = 0;
     }
@@ -219,7 +219,7 @@ void RSDK::LoadSceneFile()
 
     dataStorage[DATASET_TMP].usedStorage = 0;
 
-    for (int32 s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].size.y;
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) screens[s].waterDrawPos = screens[s].size.y;
 
     if (screens[0].size.y > 0)
         memset(gfxLineBuffer, 0, screens[0].size.y * sizeof(uint8));
@@ -302,7 +302,7 @@ void RSDK::LoadSceneFile()
 
             layer->type         = ReadInt8(&info);
             layer->drawLayer[0] = ReadInt8(&info);
-            for (int32 s = 1; s < CAMERA_MAX; ++s) layer->drawLayer[s] = layer->drawLayer[0];
+            for (int32 s = 1; s < CAMERA_COUNT; ++s) layer->drawLayer[s] = layer->drawLayer[0];
 
             layer->xsize = ReadInt16(&info);
             int32 shift  = 1;

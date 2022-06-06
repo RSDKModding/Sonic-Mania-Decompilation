@@ -17,9 +17,9 @@ ID3D11DeviceContext *RenderDevice::dx11Context;
 ID3D11Device *RenderDevice::dx11Device;
 UINT RenderDevice::dxAdapter;
 ID3D11Buffer *RenderDevice::dx11VertexBuffer;
-ID3D11Texture2D *RenderDevice::screenTextures[SCREEN_MAX];
+ID3D11Texture2D *RenderDevice::screenTextures[SCREEN_COUNT];
 ID3D11Texture2D *RenderDevice::imageTexture;
-ID3D11ShaderResourceView *RenderDevice::screenTextureViews[SCREEN_MAX];
+ID3D11ShaderResourceView *RenderDevice::screenTextureViews[SCREEN_COUNT];
 ID3D11ShaderResourceView *RenderDevice::imageTextureView;
 D3D11_VIEWPORT RenderDevice::dx11ViewPort;
 IDXGISwapChain *RenderDevice::swapChain;
@@ -325,7 +325,7 @@ void RenderDevice::Release(bool32 isRefresh)
         imageTextureView = NULL;
     }
 
-    for (int32 i = 0; i < SCREEN_MAX; ++i) {
+    for (int32 i = 0; i < SCREEN_COUNT; ++i) {
         if (screenTextures[i])
             screenTextures[i]->Release();
 
@@ -710,7 +710,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     int32 maxPixHeight = 0;
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         if (videoSettings.pixHeight > maxPixHeight)
             maxPixHeight = videoSettings.pixHeight;
 
@@ -786,7 +786,7 @@ bool RenderDevice::InitGraphicsAPI()
         textureSize.y = 512.0;
     }
 
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         D3D11_TEXTURE2D_DESC desc = {};
         desc.Width                = textureSize.x;
         desc.Height               = textureSize.y;
@@ -856,7 +856,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             return;
     }
 
-    if (shaderCount == SHADER_MAX)
+    if (shaderCount == SHADER_COUNT)
         return;
 
     ShaderEntry *shader = &shaderList[shaderCount];
@@ -1147,7 +1147,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_COUNT; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -1503,7 +1503,7 @@ void RenderDevice::ProcessEvent(MSG Msg)
                     break;
 
                 case VK_F7:
-                    if (engine.devMenu && videoSettings.screenCount < SCREEN_MAX)
+                    if (engine.devMenu && videoSettings.screenCount < SCREEN_COUNT)
                         videoSettings.screenCount++;
                     break;
 

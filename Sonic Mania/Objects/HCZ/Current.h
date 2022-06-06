@@ -38,7 +38,7 @@ struct EntityCurrent {
     uint8 strength;
     Hitbox hitbox;
     uint8 activePlayers;
-    Vector2 playerPositions[PLAYER_MAX];
+    Vector2 playerPositions[PLAYER_COUNT];
     int32 buttonTag;
     EntityButton *taggedButton;
     bool32 activated;

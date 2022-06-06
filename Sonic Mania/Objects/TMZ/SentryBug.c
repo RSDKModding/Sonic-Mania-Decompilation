@@ -29,11 +29,13 @@ void SentryBug_Draw(void)
 
     if (self->orbsDetatched) {
         RSDK.DrawSprite(&self->bugAnimator, NULL, false);
+
         if (self->showNet) {
             RSDK.MatrixScaleXYZ(&self->matTransform, self->netScale >> 4, self->netScale >> 4, self->netScale >> 4);
             RSDK.MatrixTranslateXYZ(&self->matTransform, self->netPos.x, self->netPos.y, 0, false);
             RSDK.MatrixRotateXYZ(&self->matWorld, self->netRotation, self->netRotation, 0);
             RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &self->matTransform);
+
             RSDK.Prepare3DScene(SentryBug->sceneIndex);
             RSDK.AddModelTo3DScene(SentryBug->meshFrames, SentryBug->sceneIndex, S3D_WIREFRAME, &self->matWorld, NULL, self->netColor);
 
@@ -56,7 +58,9 @@ void SentryBug_Draw(void)
         RSDK.DrawSprite(&self->orbAnimator, &self->orbPositions[0], false);
         RSDK.DrawSprite(&self->orbAnimator, &self->orbPositions[1], false);
         RSDK.DrawSprite(&self->orbAnimator, &self->orbPositions[2], false);
+
         RSDK.DrawSprite(&self->bugAnimator, NULL, false);
+
         RSDK.DrawSprite(&self->orbAnimator, &self->orbPositions[3], false);
         RSDK.DrawSprite(&self->orbAnimator, &self->orbPositions[4], false);
         RSDK.DrawSprite(&self->orbAnimator, &self->orbPositions[5], false);
@@ -80,6 +84,7 @@ void SentryBug_Create(void *data)
         self->startPos  = self->position;
         self->netColor  = 0xF02000;
         self->alpha     = 0x100;
+
         if (!self->speed)
             self->speed = 4;
 
@@ -87,6 +92,7 @@ void SentryBug_Create(void *data)
             RSDK.SetSpriteAnimation(SentryBug->aniFrames, 1, &self->bugAnimator, true, 6);
         else
             RSDK.SetSpriteAnimation(SentryBug->aniFrames, 0, &self->bugAnimator, true, 6);
+
         RSDK.SetSpriteAnimation(SentryBug->aniFrames, 2, &self->orbAnimator, true, 0);
 
         self->state     = SentryBug_State_AwaitPlayer;
@@ -162,18 +168,15 @@ void SentryBug_StateOrbs_Attached(void)
 {
     RSDK_THIS(SentryBug);
 
-    int32 *posPtrs = NULL;
+    Vector2 *offsets = NULL;
     if (self->bugAnimator.animationID == 1)
-        posPtrs = &SentryBug->orbOffsets_Attatched[12 * self->bugAnimator.frameID];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[12 * self->bugAnimator.frameID];
     else
-        posPtrs = &SentryBug->orbOffsets_Attatched[-12 * self->bugAnimator.frameID + 72];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[-12 * self->bugAnimator.frameID + 72];
 
-    int32 pos = 0;
     for (int32 i = 0; i < 6; ++i) {
-        self->orbPositions[i].x = self->position.x + posPtrs[pos + 0];
-        self->orbPositions[i].y = self->position.y + posPtrs[pos + 1];
-
-        pos += 2;
+        self->orbPositions[i].x = self->position.x + offsets[i].x;
+        self->orbPositions[i].y = self->position.y + offsets[i].y;
     }
 }
 
@@ -203,10 +206,11 @@ void SentryBug_StateOrbs_BeginNetRotation(void)
         self->orbPositions[i].y += self->orbVelocities[i].y;
         angle += 42;
     }
+
     self->netRotation += 4;
 }
 
-void SentryBug_State_RotateAroundNet(void)
+void SentryBug_StateOrbs_RotateAroundNet(void)
 {
     RSDK_THIS(SentryBug);
 
@@ -224,15 +228,15 @@ void SentryBug_StateOrbs_ReturnToSlots(void)
 {
     RSDK_THIS(SentryBug);
 
-    int32 *offset = NULL;
+    Vector2 *offsets = NULL;
     if (self->bugAnimator.animationID == 1)
-        offset = &SentryBug->orbOffsets_Attatched[12 * self->bugAnimator.frameID];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[12 * self->bugAnimator.frameID];
     else
-        offset = &SentryBug->orbOffsets_Attatched[-12 * self->bugAnimator.frameID + 72];
+        offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[-12 * self->bugAnimator.frameID + 72];
 
     for (int32 i = 0; i < 6; ++i) {
-        self->orbVelocities[i].x = clampVal((self->position.x + offset[0] - self->orbPositions[i].x) >> 3, -0xC0000, 0xC0000);
-        self->orbVelocities[i].y = clampVal((self->position.y + offset[1] - self->orbPositions[i].y) >> 3, -0xC0000, 0xC0000);
+        self->orbVelocities[i].x = clampVal((self->position.x + offsets[i].x - self->orbPositions[i].x) >> 3, -0xC0000, 0xC0000);
+        self->orbVelocities[i].y = clampVal((self->position.y + offsets[i].y - self->orbPositions[i].y) >> 3, -0xC0000, 0xC0000);
 
         self->orbPositions[i].x += self->orbVelocities[i].x;
         self->orbPositions[i].y += self->orbVelocities[i].y;
@@ -258,6 +262,7 @@ void SentryBug_State_AwaitPlayer(void)
         if (!self->timer) {
             int32 rx = (self->position.x - player->position.x) >> 16;
             int32 ry = (self->position.y - player->position.y) >> 16;
+
             if (rx * rx + ry * ry < 0x2400) {
                 self->originPos.x = self->position.x;
                 self->originPos.y = self->position.y;
@@ -268,19 +273,23 @@ void SentryBug_State_AwaitPlayer(void)
                 self->active      = ACTIVE_NORMAL;
 
                 RSDK.PlaySfx(SentryBug->sfxPon, false, 255);
+
                 SentryBug_SetupOrbDropVelocity();
                 self->stateOrbs = SentryBug_StateOrbs_Dropped;
+
                 RSDK.PlaySfx(SentryBug->sfxSwarm, false, 255);
                 self->state = SentryBug_State_DropOrbs;
             }
         }
     }
+
     SentryBug_CheckPlayerCollisions();
 }
 
 void SentryBug_State_DropOrbs(void)
 {
     RSDK_THIS(SentryBug);
+
     EntityPlayer *player = self->playerPtr;
 
     self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 4, 10);
@@ -291,7 +300,7 @@ void SentryBug_State_DropOrbs(void)
     if (++self->timer == 120) {
         self->timer     = 0;
         self->netScale  = 0x6000;
-        self->stateOrbs = SentryBug_State_RotateAroundNet;
+        self->stateOrbs = SentryBug_StateOrbs_RotateAroundNet;
         self->showNet   = true;
         self->state     = SentryBug_State_NetAppear;
     }
@@ -307,15 +316,17 @@ void SentryBug_State_DropOrbs(void)
 void SentryBug_State_NetAppear(void)
 {
     RSDK_THIS(SentryBug);
+
     EntityPlayer *player = self->playerPtr;
 
     self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 4, 10);
 
     self->netPos.x += (player->position.x - self->netPos.x) >> 3;
-    self->netPos.y += ((player->position.y - self->netPos.y) >> 3);
+    self->netPos.y += (player->position.y - self->netPos.y) >> 3;
     SentryBug_CheckPlayerCollisions();
 
-    self->alpha = (RSDK.Sin256(4 * Zone->timer) >> 2) + 0xA0;
+    self->alpha = 0xA0 + (RSDK.Sin256(4 * Zone->timer) >> 2);
+
     if (++self->timer == 60) {
         self->timer = 0;
         self->state = SentryBug_State_NetShrink;
@@ -325,6 +336,7 @@ void SentryBug_State_NetAppear(void)
 void SentryBug_State_NetShrink(void)
 {
     RSDK_THIS(SentryBug);
+
     EntityPlayer *player = self->playerPtr;
 
     self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 4, 10);
@@ -332,14 +344,16 @@ void SentryBug_State_NetShrink(void)
     self->netPos.x += (player->position.x - self->netPos.x) >> 3;
     self->netPos.y += ((player->position.y - self->netPos.y) >> 3);
 
-    int32 rx    = (self->netPos.x - self->position.x) >> 16;
-    int32 ry    = (self->netPos.y - self->position.y) >> 16;
-    self->alpha = (RSDK.Sin256(4 * Zone->timer) >> 2) + 160;
+    int32 rx = (self->netPos.x - self->position.x) >> 16;
+    int32 ry = (self->netPos.y - self->position.y) >> 16;
+
+    self->alpha = 0xA0 + (RSDK.Sin256(4 * Zone->timer) >> 2);
 
     if (rx * rx + ry * ry <= 0x40000) {
         if (self->netScale <= 0x1800) {
             int32 rx = (self->netPos.x - player->position.x) >> 16;
             int32 ry = (self->netPos.y - player->position.y) >> 16;
+
             if (rx * rx + ry * ry < 0x200 && Player_CheckValidState(player)) {
                 self->showNet     = true;
                 self->alpha       = 0x100;
@@ -363,8 +377,10 @@ void SentryBug_State_NetShrink(void)
     else {
         self->orbAnimator.frameID = 0;
         self->orbsDetatched       = false;
-        self->stateOrbs           = SentryBug_StateOrbs_ReturnToSlots;
-        self->state               = SentryBug_State_ReturnToSlots;
+
+        self->stateOrbs = SentryBug_StateOrbs_ReturnToSlots;
+        self->state     = SentryBug_State_ReturnToSlots;
+
         RSDK.StopSfx(SentryBug->sfxSwarm);
     }
 }
@@ -372,30 +388,34 @@ void SentryBug_State_NetShrink(void)
 void SentryBug_State_NetFlash(void)
 {
     RSDK_THIS(SentryBug);
+
     EntityPlayer *player = self->playerPtr;
 
     self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 4, 10);
 
     self->netPos.x = player->position.x;
     self->netPos.y = player->position.y;
+
     player->groundVel >>= 2;
     player->velocity.x >>= 2;
     player->velocity.y >>= 2;
-    if (Zone->timer & 2)
-        self->netColor = 0xF0F000;
-    else
-        self->netColor = 0xF02000;
+
+    self->netColor = (Zone->timer & 2) ? 0xF0F000 : 0xF02000;
+
     if (++self->timer == 30) {
         self->timer = 0;
         Player_CheckHit(player, self);
+
         self->orbAnimator.frameID = 0;
         self->netColor            = 0xF02000;
         self->orbsDetatched       = false;
         self->stateOrbs           = SentryBug_StateOrbs_ReturnToSlots;
         self->state               = SentryBug_State_ReturnToSlots;
+
         RSDK.StopSfx(SentryBug->sfxSwarm);
         self->isPermanent = false;
     }
+
     SentryBug_CheckPlayerCollisions();
 }
 
@@ -404,12 +424,16 @@ void SentryBug_State_ReturnToSlots(void)
     RSDK_THIS(SentryBug);
 
     if (self->alpha > 0)
-        self->alpha -= 64;
+        self->alpha -= 0x40;
+
     self->velocity.x = (self->startPos.x - self->position.x) >> 4;
     self->velocity.y = (self->startPos.y - self->position.y) >> 4;
+
     RSDK.SetSpriteAnimation(SentryBug->aniFrames, self->velocity.x > 0, &self->bugAnimator, false, 0);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (++self->timer == 60) {
         self->originPos.x = self->startPos.x;
         self->originPos.y = self->startPos.y;
@@ -420,6 +444,7 @@ void SentryBug_State_ReturnToSlots(void)
         self->stateOrbs   = SentryBug_StateOrbs_Attached;
         self->state       = SentryBug_State_AwaitPlayer;
     }
+
     SentryBug_CheckPlayerCollisions();
 }
 
@@ -428,6 +453,9 @@ void SentryBug_EditorDraw(void)
 {
     RSDK_THIS(SentryBug);
 
+    if (!self->speed)
+        self->speed = 4;
+
     self->originPos = self->position;
     self->startPos  = self->position;
 
@@ -435,6 +463,7 @@ void SentryBug_EditorDraw(void)
         RSDK.SetSpriteAnimation(SentryBug->aniFrames, 1, &self->bugAnimator, true, 6);
     else
         RSDK.SetSpriteAnimation(SentryBug->aniFrames, 0, &self->bugAnimator, true, 6);
+
     RSDK.SetSpriteAnimation(SentryBug->aniFrames, 2, &self->orbAnimator, true, 0);
 
     RSDK.DrawSprite(&self->bugAnimator, NULL, false);

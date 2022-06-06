@@ -23,13 +23,13 @@ void UncurlPlant_Update(void)
             for (int32 n = 0; n < self->stoodNodeID; ++n)
                 self->targetNodeAngles[n] += (UncurlPlant->targetNodeAnglesStood[n] - self->targetNodeAngles[n]) >> 2;
 
-            for (int32 n = self->stoodNodeID; n < UncurlPlant_NodeCount; ++n)
+            for (int32 n = self->stoodNodeID; n < UNCURLPLANT_NODE_COUNT; ++n)
                 self->targetNodeAngles[n] += (UncurlPlant->targetNodeAnglesReleased[n] - self->targetNodeAngles[n]) >> 2;
         }
         else {
             for (int32 n = 0; n < self->stoodNodeID; ++n) self->targetNodeAngles[n] = UncurlPlant->targetNodeAnglesStood[n];
 
-            for (int32 n = self->stoodNodeID; n < UncurlPlant_NodeCount; ++n) self->targetNodeAngles[n] = UncurlPlant->targetNodeAnglesReleased[n];
+            for (int32 n = self->stoodNodeID; n < UNCURLPLANT_NODE_COUNT; ++n) self->targetNodeAngles[n] = UncurlPlant->targetNodeAnglesReleased[n];
         }
 
         if (self->uncurlMode > 1)
@@ -38,7 +38,7 @@ void UncurlPlant_Update(void)
             self->uncurlPercent += 0x20;
     }
 
-    for (int32 n = 0; n < UncurlPlant_NodeCount; ++n)
+    for (int32 n = 0; n < UNCURLPLANT_NODE_COUNT; ++n)
         self->nodeAngles[n] =
             UncurlPlant->startingNodeAngles[n] + ((self->uncurlPercent * (self->targetNodeAngles[n] - UncurlPlant->startingNodeAngles[n])) >> 8);
 
@@ -52,7 +52,7 @@ void UncurlPlant_Update(void)
     {
         int32 angle  = 0;
         int32 nodeID = 0;
-        for (int32 n = 0; n < UncurlPlant_NodeCount; ++n) {
+        for (int32 n = 0; n < UNCURLPLANT_NODE_COUNT; ++n) {
             angle += self->nodeAngles[n];
             if (angle >= 0x90)
                 break;
@@ -95,7 +95,7 @@ void UncurlPlant_Draw(void)
 {
     RSDK_THIS(UncurlPlant);
 
-    for (int32 i = 0; i < UncurlPlant_NodeCount; ++i) {
+    for (int32 i = 0; i < UNCURLPLANT_NODE_COUNT; ++i) {
         RSDK.DrawSprite(&self->nodeAnimator, &self->drawPositions[i], false);
         RSDK.DrawSprite(&self->decorAnimators[i], &self->drawPositions[i], false);
     }
@@ -124,7 +124,7 @@ void UncurlPlant_Create(void *data)
         UncurlPlant_CalculatePositions();
 
         RSDK.SetSpriteAnimation(UncurlPlant->aniFrames, 1, &self->nodeAnimator, true, 0);
-        for (int32 i = 0; i < UncurlPlant_NodeCount; ++i) {
+        for (int32 i = 0; i < UNCURLPLANT_NODE_COUNT; ++i) {
             RSDK.SetSpriteAnimation(UncurlPlant->aniFrames, 1, &self->decorAnimators[i], true, RSDK.Rand(1, 8));
             self->nodeAngles[i] = UncurlPlant->startingNodeAngles[i];
         }
@@ -150,14 +150,14 @@ void UncurlPlant_CalculateDrawPositions(void)
     self->drawPositions[0].y = self->position.y;
 
     if (self->direction == FLIP_NONE) {
-        for (int32 i = 1; i < UncurlPlant_NodeCount; ++i) {
+        for (int32 i = 1; i < UNCURLPLANT_NODE_COUNT; ++i) {
             angle += self->nodeAngles[i];
             self->drawPositions[i].x = self->drawPositions[i - 1].x + (RSDK.Cos1024(angle) << 10);
             self->drawPositions[i].y = self->drawPositions[i - 1].y - (RSDK.Sin1024(angle) << 10);
         }
     }
     else {
-        for (int32 i = 1; i < UncurlPlant_NodeCount; ++i) {
+        for (int32 i = 1; i < UNCURLPLANT_NODE_COUNT; ++i) {
             angle += self->nodeAngles[i];
             self->drawPositions[i].x = self->drawPositions[i - 1].x - (RSDK.Cos1024(angle) << 10);
             self->drawPositions[i].y = self->drawPositions[i - 1].y - (RSDK.Sin1024(angle) << 10);
@@ -174,14 +174,14 @@ void UncurlPlant_CalculatePositions(void)
     self->nodePositions[0].y = self->position.y;
 
     if (self->direction == FLIP_NONE) {
-        for (int32 i = 1; i < UncurlPlant_NodeCount; ++i) {
+        for (int32 i = 1; i < UNCURLPLANT_NODE_COUNT; ++i) {
             angle += UncurlPlant->targetNodeAnglesStood[i];
             self->nodePositions[i].x = self->nodePositions[i - 1].x + (RSDK.Cos1024(angle) << 10);
             self->nodePositions[i].y = self->nodePositions[i - 1].y - (RSDK.Sin1024(angle) << 10);
         }
     }
     else {
-        for (int32 i = 1; i < UncurlPlant_NodeCount; ++i) {
+        for (int32 i = 1; i < UNCURLPLANT_NODE_COUNT; ++i) {
             angle += UncurlPlant->targetNodeAnglesStood[i];
             self->nodePositions[i].x = self->nodePositions[i - 1].x - (RSDK.Cos1024(angle) << 10);
             self->nodePositions[i].y = self->nodePositions[i - 1].y - (RSDK.Sin1024(angle) << 10);
@@ -197,7 +197,7 @@ void UncurlPlant_EditorDraw(void)
     RSDK.SetSpriteAnimation(UncurlPlant->aniFrames, 1, &self->nodeAnimator, false, 0);
     UncurlPlant_CalculateDrawPositions();
 
-    for (int32 i = 0; i < UncurlPlant_NodeCount; ++i) RSDK.DrawSprite(&self->nodeAnimator, &self->drawPositions[i], false);
+    for (int32 i = 0; i < UNCURLPLANT_NODE_COUNT; ++i) RSDK.DrawSprite(&self->nodeAnimator, &self->drawPositions[i], false);
 }
 
 void UncurlPlant_EditorLoad(void)

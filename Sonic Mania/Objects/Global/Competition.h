@@ -23,7 +23,7 @@ struct ObjectCompetition {
 struct EntityCompetition {
     RSDK_ENTITY
     StateMachine(state);
-    bool32 playerFinished[PLAYER_MAX];
+    bool32 playerFinished[PLAYER_COUNT];
     int32 timer;
     int32 seconds;
     int32 unused1;

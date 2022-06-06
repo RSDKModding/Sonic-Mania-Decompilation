@@ -886,19 +886,19 @@ uint16 RSDK::LoadSpriteSheet(const char *filename, int32 scope)
     RETRO_HASH_MD5(hash);
     GEN_HASH_MD5(filename, hash);
 
-    for (int32 i = 0; i < SURFACE_MAX; ++i) {
+    for (int32 i = 0; i < SURFACE_COUNT; ++i) {
         if (HASH_MATCH_MD5(gfxSurface[i].hash, hash)) {
             return i;
         }
     }
 
     uint16 id = -1;
-    for (id = 0; id < SURFACE_MAX; ++id) {
+    for (id = 0; id < SURFACE_COUNT; ++id) {
         if (gfxSurface[id].scope == SCOPE_NONE)
             break;
     }
 
-    if (id >= SURFACE_MAX)
+    if (id >= SURFACE_COUNT)
         return -1;
 
     GFXSurface *surface = &gfxSurface[id];

@@ -21,10 +21,12 @@ void TMZ1Outro_Update(void)
         CutsceneSeq_StartSequence(self, TMZ1Outro_CutsceneAct1_SetupPlayers, TMZ1Outro_CutsceneAct1_ElevatorRide,
                                   TMZ1Outro_CutsceneAct1_HeadForEntrance, TMZ1Outro_CutsceneAct1_EnterMonarch, StateMachine_None);
     }
+
 #if MANIA_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
+
     self->active = ACTIVE_NEVER;
 }
 
@@ -37,6 +39,7 @@ void TMZ1Outro_Draw(void) {}
 void TMZ1Outro_Create(void *data)
 {
     RSDK_THIS(TMZ1Outro);
+
     if (!SceneInfo->inEditor) {
         self->active  = ACTIVE_NORMAL;
         self->visible = false;
@@ -67,7 +70,7 @@ bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
 
     if (host->timer == 160) {
         Camera_ShakeScreen(0, 0, 6);
-        CrimsonEye->targetElevatorSpeed            = -0x10000;
+        CrimsonEye->targetElevatorSpeed    = -0x10000;
         TileLayer *moveLayer               = RSDK.GetTileLayer(Zone->moveLayer);
         moveLayer->drawLayer[0]            = 0;
         moveLayer->scrollPos               = 0x5000000;
@@ -90,7 +93,16 @@ bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
         }
     }
 
-    foreach_active(ItemBox, itembox) { itembox->position.y -= CrimsonEye->targetElevatorSpeed; }
+    foreach_active(ItemBox, itembox)
+    {
+        // NOTE:
+        // broken monitors are carried up due to the differences how they work compared to unbroken ones
+        // unbroken monitors do not do any collision/gravity checks, so they're moved offscreen as expected
+        // however, unbroken monitors DO do gravity & collision, so the elevator collision overrides the code here and allows em to be carried into
+        // act 2
+        itembox->position.y -= CrimsonEye->targetElevatorSpeed; 
+    }
+
     foreach_active(SignPost, signPost) { signPost->position.y -= CrimsonEye->targetElevatorSpeed; }
 
     return false;
@@ -102,17 +114,18 @@ bool32 TMZ1Outro_CutsceneAct1_HeadForEntrance(EntityCutsceneSeq *host)
 
     if (host->timer >= 30) {
         bool32 finishedMoving = true;
+
         foreach_active(Player, player)
         {
             if (abs(self->position.x - player->position.x) >= 0x100000) {
                 if (player->position.x > self->position.x) {
-                    player->left = true;
-                    finishedMoving         = false;
+                    player->left   = true;
+                    finishedMoving = false;
                 }
 
                 if (player->position.x < self->position.x) {
-                    player->right = true;
-                    finishedMoving          = false;
+                    player->right  = true;
+                    finishedMoving = false;
                 }
             }
             else {
@@ -125,12 +138,14 @@ bool32 TMZ1Outro_CutsceneAct1_HeadForEntrance(EntityCutsceneSeq *host)
 
             player->jumpPress = false;
             player->jumpHold  = true;
+
             if (player->animator.animationID == ANI_PUSH)
                 player->jumpPress = true;
 
             if (!player->onGround || player->velocity.x)
                 finishedMoving = false;
         }
+
         return finishedMoving;
     }
     return false;
@@ -139,6 +154,7 @@ bool32 TMZ1Outro_CutsceneAct1_HeadForEntrance(EntityCutsceneSeq *host)
 bool32 TMZ1Outro_CutsceneAct1_EnterMonarch(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ1Outro);
+
     self->alpha += 4;
     RSDK.SetLimitedFade(0, 3, 5, self->alpha, 128, 256);
 
@@ -149,10 +165,13 @@ bool32 TMZ1Outro_CutsceneAct1_EnterMonarch(EntityCutsceneSeq *host)
     if (self->alpha == 320) {
         globals->suppressTitlecard = true;
         globals->suppressAutoMusic = true;
+
         Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
         RSDK.LoadScene();
+
         return true;
     }
+
     return false;
 }
 
@@ -162,18 +181,22 @@ bool32 TMZ1Outro_CutsceneAct2_BeginAct2(EntityCutsceneSeq *host)
 
     self->alpha += 4;
     RSDK.SetLimitedFade(0, 5, 4, self->alpha, 128, 256);
+
     if (self->alpha >= 0x100) {
         foreach_all(TitleCard, titleCard)
         {
-            titleCard->active              = ACTIVE_NORMAL;
-            titleCard->state               = TitleCard_State_SetupBGElements;
-            titleCard->stateDraw           = TitleCard_Draw_SlideIn;
+            titleCard->active    = ACTIVE_NORMAL;
+            titleCard->state     = TitleCard_State_SetupBGElements;
+            titleCard->stateDraw = TitleCard_Draw_SlideIn;
+
             globals->suppressAutoMusic = false;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -181,6 +204,7 @@ bool32 TMZ1Outro_CutsceneAct2_BeginAct2(EntityCutsceneSeq *host)
 void TMZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(TMZ1Outro);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

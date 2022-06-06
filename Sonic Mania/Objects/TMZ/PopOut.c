@@ -13,9 +13,10 @@ void PopOut_Update(void)
 {
     RSDK_THIS(PopOut);
 
-    int32 storeDir      = self->direction;
-    int32 storeX        = self->position.x;
-    int32 storeY        = self->position.y;
+    int32 storeDir = self->direction;
+    int32 storeX   = self->position.x;
+    int32 storeY   = self->position.y;
+
     EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
     if (child->classID != Spring->classID && child->classID != Spikes->classID)
         child = NULL;
@@ -47,7 +48,7 @@ void PopOut_Update(void)
             if (self->appearTimer < 8) {
                 self->appearTimer++;
                 if (self->childType <= POPOUT_CHILD_SPRING_YELLOW && child && self->appearTimer == 8) {
-                    child->sfxTimer            = 0;
+                    child->sfxTimer         = 0;
                     child->animator.speed   = 0;
                     child->animator.frameID = 0;
                 }
@@ -59,7 +60,7 @@ void PopOut_Update(void)
         if (self->appearTimer > 0) {
             self->appearTimer--;
             if (self->childType <= POPOUT_CHILD_SPRING_YELLOW && child && self->appearTimer == 7) {
-                child->sfxTimer            = 0;
+                child->sfxTimer         = 0;
                 child->animator.speed   = 0;
                 child->animator.frameID = 0;
             }
@@ -77,7 +78,7 @@ void PopOut_Update(void)
         }
     }
 
-    self->active     = (self->appearTimer <= 0) ? ACTIVE_BOUNDS : ACTIVE_NORMAL;
+    self->active = (self->appearTimer <= 0) ? ACTIVE_BOUNDS : ACTIVE_NORMAL;
 
     self->position.x = -32 * self->appearVelocity.x + self->position.x + 4 * self->appearTimer * self->appearVelocity.x;
     self->position.y = -32 * self->appearVelocity.y + self->position.y + 4 * self->appearTimer * self->appearVelocity.y;
@@ -116,6 +117,7 @@ void PopOut_Draw(void)
     }
 
     RSDK.DrawSprite(&self->mountAnimator, NULL, false);
+
     if (self->appearTimer < 8)
         RSDK.DrawSprite(&self->childAnimator, NULL, false);
 
@@ -145,10 +147,7 @@ void PopOut_Create(void *data)
             child = NULL;
 
         if (child->classID == Spring->classID) {
-            if (child->type & 1)
-                self->childType = POPOUT_CHILD_SPRING_RED;
-            else
-                self->childType = POPOUT_CHILD_SPRING_YELLOW;
+            self->childType = (child->type & 1) ? POPOUT_CHILD_SPRING_RED : POPOUT_CHILD_SPRING_YELLOW;
             RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &self->childAnimator, true, self->childType);
         }
         else {
@@ -198,10 +197,10 @@ void PopOut_StageLoad(void)
 void PopOut_SetupHitboxes(void)
 {
     RSDK_THIS(PopOut);
-    self->hitboxRange.left    = 0;
-    self->hitboxRange.top     = 0;
-    self->hitboxRange.right   = 0;
-    self->hitboxRange.bottom  = 0;
+    self->hitboxRange.left   = 0;
+    self->hitboxRange.top    = 0;
+    self->hitboxRange.right  = 0;
+    self->hitboxRange.bottom = 0;
 
     self->hitboxSolid.left   = 0;
     self->hitboxSolid.top    = 0;
@@ -214,8 +213,8 @@ void PopOut_SetupHitboxes(void)
             self->hitboxRange.top    = -64;
             self->hitboxRange.bottom = 32;
 
-            self->hitboxSolid.left  = -20;
-            self->hitboxSolid.top   = -32;
+            self->hitboxSolid.left = -20;
+            self->hitboxSolid.top  = -32;
             break;
 
         case 1:
@@ -228,45 +227,45 @@ void PopOut_SetupHitboxes(void)
             break;
 
         case 2:
-            self->hitboxRange.left    = -80;
-            self->hitboxRange.top     = -32;
-            self->hitboxRange.bottom  = 64;
+            self->hitboxRange.left   = -80;
+            self->hitboxRange.top    = -32;
+            self->hitboxRange.bottom = 64;
 
             self->hitboxSolid.right  = 32;
             self->hitboxSolid.bottom = 32;
             break;
 
         case 3:
-            self->hitboxRange.left    = -64;
-            self->hitboxRange.top     = -80;
-            self->hitboxRange.right   = 32;
+            self->hitboxRange.left  = -64;
+            self->hitboxRange.top   = -80;
+            self->hitboxRange.right = 32;
 
             self->hitboxSolid.left   = -32;
             self->hitboxSolid.bottom = 32;
             break;
 
         case 4:
-            self->hitboxRange.left    = -80;
-            self->hitboxRange.top     = -63;
-            self->hitboxRange.bottom  = 32;
+            self->hitboxRange.left   = -80;
+            self->hitboxRange.top    = -63;
+            self->hitboxRange.bottom = 32;
 
             self->hitboxSolid.top    = -32;
             self->hitboxSolid.bottom = 32;
             break;
 
         case 5:
-            self->hitboxRange.top     = -80;
-            self->hitboxRange.right   = 64;
-            self->hitboxRange.left    = -32;
+            self->hitboxRange.top   = -80;
+            self->hitboxRange.right = 64;
+            self->hitboxRange.left  = -32;
 
             self->hitboxSolid.right  = 32;
             self->hitboxSolid.bottom = 32;
             break;
 
         case 6:
-            self->hitboxRange.right   = 80;
-            self->hitboxRange.bottom  = 64;
-            self->hitboxRange.top     = -32;
+            self->hitboxRange.right  = 80;
+            self->hitboxRange.bottom = 64;
+            self->hitboxRange.top    = -32;
 
             self->hitboxSolid.left   = -32;
             self->hitboxSolid.bottom = 32;
@@ -278,8 +277,8 @@ void PopOut_SetupHitboxes(void)
             self->hitboxRange.bottom = 32;
             self->hitboxRange.left   = -64;
 
-            self->hitboxSolid.left  = -20;
-            self->hitboxSolid.top   = -32;
+            self->hitboxSolid.left = -20;
+            self->hitboxSolid.top  = -32;
             break;
     }
 }
@@ -289,22 +288,31 @@ void PopOut_EditorDraw(void)
 {
     RSDK_THIS(PopOut);
 
+    PopOut->hasButton = false;
+    if (RSDK.FindObject("Button"))
+        PopOut->hasButton = true;
+
     RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &self->mountAnimator, true, 0);
 
     EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
     if (child->classID != Spring->classID && child->classID != Spikes->classID)
         child = NULL;
+
     if (child && child->classID == Spring->classID) {
-        if (child->type & 1)
-            self->childType = POPOUT_CHILD_SPRING_RED;
-        else
-            self->childType = POPOUT_CHILD_SPRING_YELLOW;
+        self->childType = (child->type & 1) ? POPOUT_CHILD_SPRING_RED : POPOUT_CHILD_SPRING_YELLOW;
         RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &self->childAnimator, true, self->childType);
     }
     else {
         self->childType = POPOUT_CHILD_SPIKES;
         RSDK.SetSpriteAnimation(PopOut->aniFrames, 2, &self->childAnimator, true, 0);
     }
+
+    self->appearTimer      = 0;
+    self->appearVelocity.x = 0;
+    self->appearVelocity.y = 0;
+
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
     PopOut_Draw();
 
@@ -340,9 +348,6 @@ void PopOut_EditorDraw(void)
 
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxRange, FLIP_NONE, 0xFF0000);
 
-        int32 storeX = self->position.x;
-        int32 storeY = self->position.y;
-
         self->appearTimer = 8;
         self->position.x  = -16 * self->appearVelocity.x + self->position.x + 2 * self->appearTimer * self->appearVelocity.x;
         self->position.y  = -16 * self->appearVelocity.y + self->position.y + 2 * self->appearTimer * self->appearVelocity.y;
@@ -353,6 +358,26 @@ void PopOut_EditorDraw(void)
         self->inkEffect  = INK_NONE;
         self->position.x = storeX;
         self->position.y = storeY;
+
+        if (self->manualTrigger && PopOut->hasButton) {
+            EntityButton *taggedButton = NULL;
+            foreach_all(Button, button)
+            {
+                if (button->tag == self->tag) {
+                    taggedButton = button;
+                    foreach_break;
+                }
+            }
+
+            if (taggedButton) {
+                RSDK_DRAWING_OVERLAY(true);
+                if (taggedButton) {
+                    DrawHelpers_DrawArrow(taggedButton->position.x, taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00, INK_NONE,
+                                          0xFF);
+                }
+                RSDK_DRAWING_OVERLAY(false);
+            }
+        }
     }
 }
 

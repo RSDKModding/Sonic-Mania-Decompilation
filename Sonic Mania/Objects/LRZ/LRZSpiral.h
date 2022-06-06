@@ -41,7 +41,7 @@ struct EntityLRZSpiral {
     int32 height;
     int32 radius;
     uint8 activePlayers;
-    int32 playerSpiralPos[PLAYER_MAX];
+    int32 playerSpiralPos[PLAYER_COUNT];
     Hitbox hitboxTrigger;
 };
 

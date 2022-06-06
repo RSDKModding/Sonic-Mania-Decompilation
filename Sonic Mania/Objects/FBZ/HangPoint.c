@@ -21,7 +21,7 @@ void HangPoint_Update(void)
                 isActive = false;
         }
 
-        for (int32 i = 0; i < PLAYER_MAX; ++i) {
+        for (int32 i = 0; i < PLAYER_COUNT; ++i) {
             if (self->moveDistance[i])
                 isActive = false;
         }
@@ -162,7 +162,7 @@ void HangPoint_Update(void)
         else {
             if (player->state == Player_State_Hit) {
                 player->tileCollisions = true;
-                self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_MAX));
+                self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_COUNT));
                 self->moveDistance[playerID] = 0;
                 if (player->left || player->right || player->down || player->state == Player_State_Hit)
                     self->playerTimer[playerID] = 64;
@@ -203,7 +203,7 @@ void HangPoint_Update(void)
                             player->jumpAbilityState = 1;
                             player->state            = Player_State_Air;
                             player->tileCollisions   = true;
-                            self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_MAX));
+                            self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_COUNT));
 
                             if (player->left || player->right || player->down || player->state == Player_State_Hit) {
                                 self->playerTimer[playerID] = 64;

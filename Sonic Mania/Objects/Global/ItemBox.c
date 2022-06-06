@@ -219,6 +219,7 @@ void ItemBox_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 
     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &DebugMode->animator, true, DebugMode->itemType);
+
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - 0x30000;
@@ -258,7 +259,9 @@ void ItemBox_State_ContentsShown(void)
 
     if (self->contentsSpeed >= 0) {
         self->contentsSpeed = 0;
+
         ItemBox_GivePowerup();
+
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 5, &self->contentsAnimator, true, 0);
         self->state = ItemBox_State_ContentsDisappear;
     }
@@ -300,6 +303,7 @@ void ItemBox_State_Normal(void)
 #if MANIA_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
+
         if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
             self->contentsAnimator.frameID = 0;
     }
@@ -336,6 +340,7 @@ void ItemBox_State_Falling(void)
 #if MANIA_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
+
         if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
             self->contentsAnimator.frameID = 0;
     }
@@ -346,6 +351,7 @@ void ItemBox_State_Falling(void)
     }
     else {
         RSDK.ProcessAnimation(&self->debrisAnimator);
+
         if (!self->debrisAnimator.frameID) {
             self->timer                        = RSDK.Rand(1, 15);
             self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
@@ -370,6 +376,7 @@ void ItemBox_State_Conveyor(void)
 #if MANIA_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
+
         if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
             self->contentsAnimator.frameID = 0;
     }
@@ -380,6 +387,7 @@ void ItemBox_State_Conveyor(void)
     }
     else {
         RSDK.ProcessAnimation(&self->debrisAnimator);
+
         if (!self->debrisAnimator.frameID) {
             self->timer                        = RSDK.Rand(1, 15);
             self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
@@ -410,10 +418,12 @@ void ItemBox_CheckHit(void)
             if (player->sidekick) {
                 self->position.x -= self->moveOffset.x;
                 self->position.y -= self->moveOffset.y;
-                int32 px           = player->position.x;
-                int32 py           = player->position.y;
+                int32 px = player->position.x;
+                int32 py = player->position.y;
+
                 uint8 side         = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
                 player->position.x = px;
+
                 player->position.y = py;
                 self->position.x += self->moveOffset.x;
                 self->position.y += self->moveOffset.y;
@@ -425,6 +435,7 @@ void ItemBox_CheckHit(void)
                         self->state = ItemBox_State_Falling;
 
                     self->velocity.y = -0x20000;
+
                     if (!player->onGround)
                         player->velocity.y = 0x20000;
                 }
@@ -455,9 +466,11 @@ void ItemBox_CheckHit(void)
                 if (!attacking) {
                     self->position.x -= self->moveOffset.x;
                     self->position.y -= self->moveOffset.y;
-                    int32 px           = player->position.x;
-                    int32 py           = player->position.y;
-                    uint8 side         = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
+                    int32 px = player->position.x;
+                    int32 py = player->position.y;
+
+                    uint8 side = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
+
                     player->position.x = px;
                     player->position.y = py;
                     self->position.x += self->moveOffset.x;
@@ -465,9 +478,12 @@ void ItemBox_CheckHit(void)
 
                     if (side == C_BOTTOM) {
                         self->active = ACTIVE_ALWAYS;
+
                         if (!self->lrzConvPhys)
                             self->state = ItemBox_State_Falling;
+
                         self->velocity.y = -0x20000;
+
                         if (!player->onGround)
                             player->velocity.y = 0x20000;
                     }
@@ -715,13 +731,15 @@ void ItemBox_GivePowerup(void)
                         globals->characterFlags |= (1 << self->contentsAnimator.frameID);
                         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (player2->classID) {
+
                             int32 id = 0;
                             while ((globals->stock >> id) & 0xFF) id += 8;
+
                             globals->stock |= (1 << self->contentsAnimator.frameID << id);
                             HUD->stockFlashTimers[(id >> 3) + 1] = 120;
                         }
                         else {
-                            player2->classID   = Player->classID;
+                            player2->classID    = Player->classID;
                             Player->jumpInTimer = 0;
                             EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
 
@@ -754,18 +772,9 @@ void ItemBox_GivePowerup(void)
                                     player2->state            = Player_State_JumpIn;
                                     player2->abilityValues[0] = ((ScreenInfo->position.y + ScreenInfo->height + 16) << 16) - player->position.y;
                                     player2->drawFX |= FX_SCALE;
-                                    player2->scale.x = 0x400;
-                                    player2->scale.y = 0x400;
-                                    int32 spd        = player2->abilityValues[0] / -12;
-                                    if (spd >= -0x68000 || spd > -0xE0000) {
-                                        if (spd < -0x68000)
-                                            player2->velocity.y = player2->abilityValues[0] / -12;
-                                        else
-                                            player2->velocity.y = -0x68000;
-                                    }
-                                    else {
-                                        player2->velocity.y = -0xE0000;
-                                    }
+                                    player2->scale.x    = 0x400;
+                                    player2->scale.y    = 0x400;
+                                    player2->velocity.y = clampVal(player2->abilityValues[0] / -12, -0xE0000, -0x68000);
                                 }
                                 player2->abilityPtrs[0]   = dust;
                                 player2->abilityValues[0] = 0;
@@ -966,10 +975,10 @@ bool32 ItemBox_HandleFallingCollision(void)
         return false;
     }
 }
-bool32 ItemBox_HandlePlatformCollision(void *p)
+bool32 ItemBox_HandlePlatformCollision(void *plat)
 {
     RSDK_THIS(ItemBox);
-    EntityPlatform *platform = (EntityPlatform *)p;
+    EntityPlatform *platform = (EntityPlatform *)plat;
 
     bool32 collided = false;
     if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
@@ -1121,7 +1130,7 @@ void ItemBox_HandleObjectCollisions(void)
         else {
             foreach_active(Crate, crate)
             {
-                if (!crate->ignoreItemBox && ItemBox_HandlePlatformCollision((EntityPlatform *)crate))
+                if (!crate->ignoreItemBox && ItemBox_HandlePlatformCollision(crate))
                     platformCollided = true;
             }
         }

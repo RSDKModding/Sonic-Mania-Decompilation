@@ -46,7 +46,7 @@ struct EntityBallCannon {
     bool32 exit;
     uint8 unused1;
     uint8 activePlayers;
-    uint8 playerTimers[4];
+    uint8 playerTimers[PLAYER_COUNT];
     int32 unused2;
     int32 rotationSpeed;
     Animator animator;

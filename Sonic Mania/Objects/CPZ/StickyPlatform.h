@@ -27,7 +27,7 @@ struct EntityStickyPlatform {
     bool32 oscillate;
     int32 unused;
     int32 activePlayers;
-    int32 playerTimer[4];
+    int32 playerTimer[PLAYER_COUNT];
     Vector2 centerPos;
     Hitbox hitbox;
     Animator animator;

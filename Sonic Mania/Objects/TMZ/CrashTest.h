@@ -21,7 +21,7 @@ struct EntityCrashTest {
     int32 length;
     bool32 debugParticles;
     uint8 activePlayers;
-    int32 playerTimers[4];
+    int32 playerTimers[PLAYER_COUNT];
     Vector2 startPos;
     int32 timer;
     int32 travelDistance;
@@ -49,7 +49,7 @@ void CrashTest_Update(void);
 void CrashTest_LateUpdate(void);
 void CrashTest_StaticUpdate(void);
 void CrashTest_Draw(void);
-void CrashTest_Create(void* data);
+void CrashTest_Create(void *data);
 void CrashTest_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CrashTest_EditorDraw(void);
@@ -72,4 +72,4 @@ void CrashTest_State_Rev(void);
 void CrashTest_State_Move(void);
 void CrashTest_State_Crashed(void);
 
-#endif //!OBJ_CRASHTEST_H
+#endif //! OBJ_CRASHTEST_H

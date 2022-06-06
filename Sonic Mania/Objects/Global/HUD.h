@@ -30,9 +30,9 @@ struct ObjectHUD {
     uint16 sfxStarpost;
     bool32 showTAPrompt;
     bool32 replaySaveEnabled;
-    int32 screenBorderType[PLAYER_MAX];
+    int32 screenBorderType[PLAYER_COUNT];
     int32 swapCooldown;
-    int32 stockFlashTimers[PLAYER_MAX];
+    int32 stockFlashTimers[PLAYER_COUNT];
 #endif
 };
 
@@ -45,20 +45,20 @@ struct EntityHUD {
     Vector2 ringsOffset;
     Vector2 lifeOffset;
 #if MANIA_USE_PLUS
-    int32 lifeFrameIDs[PLAYER_MAX];
-    int32 lives[PLAYER_MAX];
+    int32 lifeFrameIDs[PLAYER_COUNT];
+    int32 lives[PLAYER_COUNT];
 #endif
     int32 maxOffset;
 #if MANIA_GAMEVER != VER_100
     int32 superButtonPos;
 #endif
 #if MANIA_USE_PLUS
-    StateMachine(vsStates[PLAYER_MAX]);
-    Vector2 vsScoreOffsets[PLAYER_MAX];
-    Vector2 vsTimeOffsets[PLAYER_MAX];
-    Vector2 vsRingsOffsets[PLAYER_MAX];
-    Vector2 vsLifeOffsets[PLAYER_MAX];
-    int32 vsMaxOffsets[PLAYER_MAX];
+    StateMachine(vsStates[PLAYER_COUNT]);
+    Vector2 vsScoreOffsets[PLAYER_COUNT];
+    Vector2 vsTimeOffsets[PLAYER_COUNT];
+    Vector2 vsRingsOffsets[PLAYER_COUNT];
+    Vector2 vsLifeOffsets[PLAYER_COUNT];
+    int32 vsMaxOffsets[PLAYER_COUNT];
     int32 screenID;
 #endif
 #if MANIA_GAMEVER != VER_100

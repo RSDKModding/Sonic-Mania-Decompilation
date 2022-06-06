@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Orbinaut_MaxOrbs (4)
+#define ORBINAUT_ORB_COUNT (4)
 
 // Object Class
 struct ObjectOrbinaut {
@@ -21,7 +21,7 @@ struct EntityOrbinaut {
     Vector2 startPos;
     uint8 startDir;
     uint8 activeOrbs;
-    Vector2 orbPositions[Orbinaut_MaxOrbs];
+    Vector2 orbPositions[ORBINAUT_ORB_COUNT];
     bool32 fireOrbs;
     Animator animatorFace;
     Animator animatorOrb;

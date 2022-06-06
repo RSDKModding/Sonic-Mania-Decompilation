@@ -12,15 +12,17 @@ ObjectJacobsLadder *JacobsLadder;
 void JacobsLadder_Update(void)
 {
     RSDK_THIS(JacobsLadder);
-    self->electricFadeOut  = false;
-    self->showElectricity  = false;
-    self->direction = self->flip ? FLIP_Y : FLIP_NONE;
+
+    self->electricFadeOut = false;
+    self->showElectricity = false;
+    self->direction       = self->flip ? FLIP_Y : FLIP_NONE;
 
     int32 timer = (self->intervalOffset + Zone->timer) % self->interval;
 
     if (timer < self->duration) {
         if (!self->showElectricity && self->activeScreens == 1)
             RSDK.PlaySfx(JacobsLadder->sfxLadder, false, 255);
+
         self->showElectricity = true;
     }
     else if (timer < self->duration + 12)
@@ -32,8 +34,8 @@ void JacobsLadder_Update(void)
     }
 
     if (self->showElectricity) {
-        int32 storeX       = self->position.x;
-        int32 storeY       = self->position.y;
+        int32 storeX      = self->position.x;
+        int32 storeY      = self->position.y;
         self->electricPos = timer * ((self->height << 20) / self->duration);
         self->position.y += (2 * self->flip - 1) * (self->electricPos + 0x300000);
 
@@ -48,8 +50,9 @@ void JacobsLadder_Update(void)
                         self->activePlayers &= ~(1 << playerID);
                         player->jumpAbilityState = 1;
                         player->state            = Player_State_Air;
-                        SceneInfo->entity        = (Entity *)player;
-                        player->stateAbility();
+
+                        SceneInfo->entity = (Entity *)player;
+                        StateMachine_Run(player->stateAbility);
                         SceneInfo->entity = (Entity *)self;
                     }
                     else {
@@ -70,14 +73,17 @@ void JacobsLadder_Update(void)
                         if (player->shield == SHIELD_LIGHTNING) {
                             if (player->state != Player_State_None) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                                player->state                       = Player_State_None;
-                                player->nextAirState                = StateMachine_None;
-                                player->nextGroundState             = StateMachine_None;
+                                player->state           = Player_State_None;
+                                player->nextAirState    = StateMachine_None;
+                                player->nextGroundState = StateMachine_None;
+
                                 self->playerPositions[playerID].x = player->position.x - self->position.x;
                                 self->playerPositions[playerID].y = player->position.y - self->position.y;
-                                player->velocity.x                  = 0;
-                                player->velocity.y                  = 0;
-                                player->groundVel                   = 0;
+
+                                player->velocity.x = 0;
+                                player->velocity.y = 0;
+                                player->groundVel  = 0;
+
                                 self->activePlayers |= 1 << playerID;
                             }
                         }
@@ -91,6 +97,7 @@ void JacobsLadder_Update(void)
 
         self->position.x = storeX;
         self->position.y = storeY;
+
         RSDK.ProcessAnimation(&self->electricAnimator);
     }
     else {
@@ -98,8 +105,9 @@ void JacobsLadder_Update(void)
         {
             int32 playerID = RSDK.GetEntitySlot(player);
 
-            if (((1 << playerID) & self->activePlayers)) {
+            if ((1 << playerID) & self->activePlayers) {
                 self->activePlayers &= ~(1 << playerID);
+
                 if (player->state == Player_State_None) {
                     player->velocity.x       = 0;
                     player->velocity.y       = 0;
@@ -119,20 +127,22 @@ void JacobsLadder_StaticUpdate(void) {}
 void JacobsLadder_Draw(void)
 {
     RSDK_THIS(JacobsLadder);
-    Vector2 drawPos;
+
     self->drawFX    = FX_FLIP;
     self->inkEffect = INK_NONE;
-    self->alpha     = 255;
+    self->alpha     = 0xFF;
 
-    // lmao
+    // what a line of code tbh
     int32 direction = -(-(int32)self->flip != false) & 0xFFFFFF02;
 
     int32 yOff = 0x300000 * (2 * (self->flip != false) - 1);
-    int32 side   = 0;
+    int32 side = 0;
     for (int32 i = 0; i < 2; ++i) {
         self->direction = direction ^ side;
-        drawPos.x       = self->position.x + ((2 * (side != false) - 1) << 21);
-        drawPos.y       = self->position.y;
+
+        Vector2 drawPos;
+        drawPos.x = self->position.x + ((2 * (side != false) - 1) << 21);
+        drawPos.y = self->position.y;
         RSDK.SetSpriteAnimation(JacobsLadder->aniFrames, 0, &self->sideAnimator, true, 0);
         RSDK.DrawSprite(&self->sideAnimator, &drawPos, false);
 
@@ -154,6 +164,7 @@ void JacobsLadder_Draw(void)
         if (self->electricFadeOut)
             self->alpha = 21 * (self->duration - (self->intervalOffset + Zone->timer) % self->interval) + 255;
 
+        Vector2 drawPos;
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + (2 * (self->flip != false) - 1) * (self->electricPos + 0x300000);
         RSDK.DrawSprite(&self->electricAnimator, &drawPos, false);
@@ -164,6 +175,7 @@ void JacobsLadder_Draw(void)
 void JacobsLadder_Create(void *data)
 {
     RSDK_THIS(JacobsLadder);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
@@ -175,6 +187,7 @@ void JacobsLadder_Create(void *data)
 
     if (!self->interval)
         self->interval = 120;
+
     if (!self->duration)
         self->duration = 60;
 
@@ -189,11 +202,16 @@ void JacobsLadder_Create(void *data)
 void JacobsLadder_StageLoad(void)
 {
     JacobsLadder->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/JacobsLadder.bin", SCOPE_STAGE);
+
     JacobsLadder->sfxLadder = RSDK.GetSfx("TMZ1/JacobsLadder.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR
-void JacobsLadder_EditorDraw(void) { JacobsLadder_Draw(); }
+void JacobsLadder_EditorDraw(void)
+{
+    JacobsLadder_Create(NULL);
+    JacobsLadder_Draw();
+}
 
 void JacobsLadder_EditorLoad(void) { JacobsLadder->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/JacobsLadder.bin", SCOPE_STAGE); }
 #endif

@@ -29,8 +29,8 @@ void Shiversaw_Draw(void)
     RSDK_THIS(Shiversaw);
     Vector2 drawPos;
 
-    self->sawID = Shiversaw_SawCount;
-    for (int32 s = 0; s < Shiversaw_SawCount; ++s) {
+    self->sawID = SHIVERSAW_SAW_COUNT;
+    for (int32 s = 0; s < SHIVERSAW_SAW_COUNT; ++s) {
         --self->sawID;
         self->direction = self->sawID;
 
@@ -113,7 +113,7 @@ void Shiversaw_Create(void *data)
 
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            for (int32 s = 0; s < Shiversaw_SawCount; ++s) {
+            for (int32 s = 0; s < SHIVERSAW_SAW_COUNT; ++s) {
                 self->stateSaw[s]  = Shiversaw_StateSaw_Setup;
                 self->sawAngles[s] = 0x80 + ((s & 1) != 0) * 0x100;
             }
@@ -246,7 +246,7 @@ void Shiversaw_CheckPlayerCollisions(void)
     if (!Shiversaw->invincibilityTimer) {
         foreach_active(Player, player)
         {
-            for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+            for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
                 if (self->sawAnimator[i].animationID == 3) {
                     if (Player_CheckCollisionTouch(player, &self->sawPos[i], &Shiversaw->hitboxSaw))
                         Shiversaw_CheckSawHit(player, i);
@@ -268,7 +268,7 @@ void Shiversaw_SetupSawPos(void)
 {
     RSDK_THIS(Shiversaw);
 
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
         if (i & 1)
             self->sawPos[i].x = self->position.x - 0x210000;
         else
@@ -305,7 +305,7 @@ void Shiversaw_Hit(void)
 
         self->sawID = 0;
 
-        for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+        for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
             if (self->stateSaw[self->sawID] != Shiversaw_StateSaw_Destroyed) {
                 RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
                 self->position.x = self->sawPos[self->sawID].x;
@@ -618,7 +618,7 @@ void Shiversaw_State_EnterShiversaw(void)
         self->state      = Shiversaw_State_Idle;
     }
 
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
         self->sawID = i;
         StateMachine_Run(self->stateSaw[i]);
     }
@@ -633,7 +633,7 @@ void Shiversaw_State_HitRecoil_Tutorial(void)
     self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 10);
 
     int32 id = 0;
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
         self->sawID = i;
 
         if (self->stateSaw[i]) {
@@ -646,7 +646,7 @@ void Shiversaw_State_HitRecoil_Tutorial(void)
             id++;
     }
 
-    if (id == Shiversaw_SawCount) {
+    if (id == SHIVERSAW_SAW_COUNT) {
         self->timer = 120;
         self->state = Shiversaw_State_Idle;
 
@@ -671,7 +671,7 @@ void Shiversaw_State_Idle(void)
 
     self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 10);
 
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
         self->sawID = i;
         StateMachine_Run(self->stateSaw[i]);
     }
@@ -691,7 +691,7 @@ void Shiversaw_State_MoveToPlayer(void)
     self->velocity.y      = 0;
 
     bool32 isActive = true;
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) isActive &= self->stateSaw[i] == Shiversaw_StateSaw_Active;
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) isActive &= self->stateSaw[i] == Shiversaw_StateSaw_Active;
 
     if (isActive) {
         int32 x = self->position.x;
@@ -742,7 +742,7 @@ void Shiversaw_State_MoveToPlayer(void)
     }
 
     self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 10);
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
         self->sawID = i;
         StateMachine_Run(self->stateSaw[i]);
     }
@@ -780,7 +780,7 @@ void Shiversaw_State_HitRecoil(void)
     self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 10);
 
     int32 id = 0;
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
         self->sawID = i;
 
         if (self->stateSaw[i]) {
@@ -798,7 +798,7 @@ void Shiversaw_State_HitRecoil(void)
         Shiversaw_CheckPlayerCollisions();
     }
     else {
-        if (id == Shiversaw_SawCount) {
+        if (id == SHIVERSAW_SAW_COUNT) {
             self->timer = 120;
             self->state = Shiversaw_State_Idle;
         }
@@ -812,7 +812,7 @@ void Shiversaw_State_Destroyed(void)
     RSDK_THIS(Shiversaw);
     RSDK.ProcessAnimation(&self->bellowsAnimator);
 
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
         self->sawID = i;
         StateMachine_Run(self->stateSaw[i]);
     }
@@ -1281,7 +1281,7 @@ void Shiversaw_EditorDraw(void)
 
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    for (int32 s = 0; s < Shiversaw_SawCount; ++s) self->sawAngles[s] = 0x80 + ((s & 1) != 0) * 0x100;
+    for (int32 s = 0; s < SHIVERSAW_SAW_COUNT; ++s) self->sawAngles[s] = 0x80 + ((s & 1) != 0) * 0x100;
     Shiversaw_SetupSawPos();
 
     Shiversaw_Draw();

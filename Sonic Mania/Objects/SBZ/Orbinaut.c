@@ -22,7 +22,7 @@ void Orbinaut_StaticUpdate(void) {}
 void Orbinaut_Draw(void)
 {
     RSDK_THIS(Orbinaut);
-    for (int32 o = 0; o < Orbinaut_MaxOrbs; ++o) {
+    for (int32 o = 0; o < ORBINAUT_ORB_COUNT; ++o) {
         if ((1 << o) & self->activeOrbs) {
             RSDK.DrawSprite(&self->animatorOrb, &self->orbPositions[o], false);
         }
@@ -103,7 +103,7 @@ void Orbinaut_HandlePlayerInteractions(void)
 
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
-    for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
+    for (int32 i = 0; i < ORBINAUT_ORB_COUNT; ++i) {
         if ((1 << i) & self->activeOrbs) {
             self->position.x = self->orbPositions[i].x;
             self->position.y = self->orbPositions[i].y;
@@ -125,7 +125,7 @@ void Orbinaut_HandlePlayerInteractions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Orbinaut->hitboxBadnik) && Player_CheckBadnikBreak(player, self, false)) {
             int32 angle = self->angle;
-            for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
+            for (int32 i = 0; i < ORBINAUT_ORB_COUNT; ++i) {
                 if ((1 << i) & self->activeOrbs) {
                     self->position.x = self->orbPositions[i].x;
                     self->position.y = self->orbPositions[i].y;
@@ -135,7 +135,7 @@ void Orbinaut_HandlePlayerInteractions(void)
                     orb->velocity.x = 0x380 * RSDK.Cos256(angle);
                     orb->velocity.y = 0x380 * RSDK.Sin256(angle);
                 }
-                angle += (0x100 / Orbinaut_MaxOrbs);
+                angle += (0x100 / ORBINAUT_ORB_COUNT);
             }
             destroyEntity(self);
         }
@@ -152,12 +152,12 @@ void Orbinaut_HandleRotation(void)
     else
         self->angle = (angle + 1) & 0xFF;
 
-    for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
+    for (int32 i = 0; i < ORBINAUT_ORB_COUNT; ++i) {
         if ((1 << i) & self->activeOrbs) {
             self->orbPositions[i].x = (RSDK.Cos256(angle) << 12) + self->position.x;
             self->orbPositions[i].y = (RSDK.Sin256(angle) << 12) + self->position.y;
         }
-        angle += (0x100 / Orbinaut_MaxOrbs);
+        angle += (0x100 / ORBINAUT_ORB_COUNT);
     }
 }
 
@@ -233,7 +233,7 @@ void Orbinaut_State_ReleasingOrbs(void)
     int32 angle = self->angle;
     Orbinaut_HandleRotation();
 
-    for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
+    for (int32 i = 0; i < ORBINAUT_ORB_COUNT; ++i) {
         if (angle == 64) {
             if ((1 << i) & self->activeOrbs) {
                 self->activeOrbs &= ~(1 << i);
@@ -243,7 +243,7 @@ void Orbinaut_State_ReleasingOrbs(void)
                 else
                     sol->velocity.x = 0x20000;
             }
-            angle += (0x100 / Orbinaut_MaxOrbs);
+            angle += (0x100 / ORBINAUT_ORB_COUNT);
         }
     }
     Orbinaut_HandlePlayerInteractions();

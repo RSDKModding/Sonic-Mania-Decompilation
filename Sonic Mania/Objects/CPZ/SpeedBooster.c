@@ -15,7 +15,7 @@ void SpeedBooster_Update(void)
 
     StateMachine_Run(self->state);
 
-    for (int32 i = 0; i < PLAYER_MAX; i++) {
+    for (int32 i = 0; i < PLAYER_COUNT; i++) {
         if (self->playerTimer[i])
             self->playerTimer[i]--;
     }

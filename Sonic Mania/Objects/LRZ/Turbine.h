@@ -21,8 +21,8 @@ struct EntityTurbine {
     StateMachine(state);
     uint8 type;
     uint8 activePlayers;
-    int32 playerAngles[PLAYER_MAX];
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerAngles[PLAYER_COUNT];
+    int32 playerTimers[PLAYER_COUNT];
     Animator animator;
 };
 

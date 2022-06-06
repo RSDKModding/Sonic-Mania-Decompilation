@@ -36,7 +36,7 @@ void TMZ2Outro_Update(void);
 void TMZ2Outro_LateUpdate(void);
 void TMZ2Outro_StaticUpdate(void);
 void TMZ2Outro_Draw(void);
-void TMZ2Outro_Create(void* data);
+void TMZ2Outro_Create(void *data);
 void TMZ2Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TMZ2Outro_EditorDraw(void);
@@ -70,8 +70,8 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host);
 
 #if MANIA_USE_PLUS
 void TMZ2Outro_SaveFileCB(bool32 success);
-#else 
+#else
 void TMZ2Outro_SaveFileCB(void);
 #endif
 
-#endif //!OBJ_TMZ2OUTRO_H
+#endif //! OBJ_TMZ2OUTRO_H

@@ -86,7 +86,7 @@ private:
 
     static IDirect3DVertexDeclaration9 *dx9VertexDeclare;
     static IDirect3DVertexBuffer9 *dx9VertexBuffer;
-    static IDirect3DTexture9 *screenTextures[SCREEN_MAX];
+    static IDirect3DTexture9 *screenTextures[SCREEN_COUNT];
     static D3DVIEWPORT9 dx9ViewPort;
 
     static RECT monitorDisplayRect;

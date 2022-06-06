@@ -58,20 +58,20 @@ struct EntityCompetitionSession {
     int32 swapType;
 #endif
     bool32 completedStages[COMPETITION_STAGE_COUNT];
-    uint8 playerID[PLAYER_MAX];
+    uint8 playerID[PLAYER_COUNT];
     uint8 matchWinner[COMPETITION_STAGE_COUNT];
-    int32 rings[PLAYER_MAX];
-    int32 score[PLAYER_MAX];
-    int32 items[PLAYER_MAX];
-    vsTime time[PLAYER_MAX];
-    uint8 finishState[PLAYER_MAX];
-    int32 totalRings[PLAYER_MAX];
-    int32 wins[PLAYER_MAX];
-    int32 lives[PLAYER_MAX];
+    int32 rings[PLAYER_COUNT];
+    int32 score[PLAYER_COUNT];
+    int32 items[PLAYER_COUNT];
+    vsTime time[PLAYER_COUNT];
+    uint8 finishState[PLAYER_COUNT];
+    int32 totalRings[PLAYER_COUNT];
+    int32 wins[PLAYER_COUNT];
+    int32 lives[PLAYER_COUNT];
 #if MANIA_USE_PLUS
-    int32 screenBorderType[SCREEN_MAX];
+    int32 screenBorderType[SCREEN_COUNT];
     int32 displayMode;
-    int32 controllerIDs[PLAYER_MAX];
+    int32 controllerIDs[PLAYER_COUNT];
     int32 prevMatchID;
 #endif
 };

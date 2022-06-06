@@ -23,8 +23,8 @@ struct EntityWhirlpool {
     Vector2 startPos;
     int32 unused;
     int32 bubbleAngles[128];
-    int32 playerAngle[PLAYER_MAX];
-    int32 playerAmplitude[PLAYER_MAX];
+    int32 playerAngle[PLAYER_COUNT];
+    int32 playerAmplitude[PLAYER_COUNT];
     Hitbox hitbox;
     Animator animator;
 };

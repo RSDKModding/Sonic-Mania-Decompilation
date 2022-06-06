@@ -76,7 +76,7 @@ void Water_StaticUpdate(void)
     }
 
     bool32 wakeActive = false;
-    for (int32 i = 0; i < PLAYER_MAX; ++i) wakeActive |= Water->wakePosX[i] > 0;
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) wakeActive |= Water->wakePosX[i] > 0;
 
     if (wakeActive) {
         if (pauseMenu->classID != PauseMenu->classID)
@@ -970,12 +970,12 @@ void Water_State_HCZBubble(void)
                     self->releasedPlayers |= 1 << playerID;
                     if (RSDK.GetEntitySlot(self) >= RESERVE_ENTITY_COUNT) {
                         int32 id = SLOT_HCZBUBBLE_P1;
-                        for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX; ++id) {
+                        for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_COUNT; ++id) {
                             if (RSDK_GET_ENTITY_GEN(id)->classID == TYPE_BLANK)
                                 break;
                         }
 
-                        if (id >= 0 && id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX) {
+                        if (id >= 0 && id < SLOT_HCZBUBBLE_P1 + PLAYER_COUNT) {
                             RSDK.AddDrawListRef(self->drawOrder, id);
                             RSDK.CopyEntity(RSDK_GET_ENTITY(id, Water), self, true);
                             foreach_return;
@@ -1303,7 +1303,7 @@ void Water_Draw_Palette(void)
     }
 
     self->drawFX |= FX_FLIP;
-    for (int32 i = 0; i < PLAYER_MAX; ++i) {
+    for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         if (Water->wakePosX[i] > 0) {
             self->direction = Water->wakeDir[i];
             drawPos.x       = Water->wakePosX[i];

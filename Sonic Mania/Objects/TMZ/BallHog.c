@@ -23,6 +23,7 @@ void BallHog_StaticUpdate(void) {}
 void BallHog_Draw(void)
 {
     RSDK_THIS(BallHog);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -35,6 +36,7 @@ void BallHog_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (data) {
         RSDK.SetSpriteAnimation(BallHog->aniFrames, 4, &self->animator, true, 0);
         self->state = BallHog_State_Bomb;
@@ -42,15 +44,19 @@ void BallHog_Create(void *data)
     else {
         self->startPos = self->position;
         self->startDir = self->direction;
+
         if (!self->bombTime)
             self->bombTime = 6;
+
         if (!self->numJumps)
             self->numJumps = 3;
 
         self->drawFX |= FX_FLIP;
         self->jumpCount = self->numJumps;
         self->timer     = 20;
+
         RSDK.SetSpriteAnimation(BallHog->aniFrames, 0, &self->animator, true, 0);
+
         self->state = BallHog_State_Setup;
     }
 }
@@ -65,10 +71,10 @@ void BallHog_StageLoad(void)
     BallHog->hitboxBadnik.right  = 12;
     BallHog->hitboxBadnik.bottom = 18;
 
-    BallHog->hitboxBomb.left     = -6;
-    BallHog->hitboxBomb.top      = -6;
-    BallHog->hitboxBomb.right    = 6;
-    BallHog->hitboxBomb.bottom   = 6;
+    BallHog->hitboxBomb.left   = -6;
+    BallHog->hitboxBomb.top    = -6;
+    BallHog->hitboxBomb.right  = 6;
+    BallHog->hitboxBomb.bottom = 6;
 
     BallHog->sfxExplosion = RSDK.GetSfx("Stage/Explosion.wav");
     BallHog->sfxArrowHit  = RSDK.GetSfx("PSZ/ArrowHit.wav");
@@ -81,6 +87,7 @@ void BallHog_StageLoad(void)
 void BallHog_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(BallHog, NULL, self->position.x, self->position.y);
 }
 
@@ -104,10 +111,10 @@ void BallHog_CheckPlayerCollisions(void)
 void BallHog_CheckOffScreen(void)
 {
     RSDK_THIS(BallHog);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->direction  = self->startDir;
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         BallHog_Create(NULL);
     }
 }
@@ -115,20 +122,25 @@ void BallHog_CheckOffScreen(void)
 void BallHog_State_Setup(void)
 {
     RSDK_THIS(BallHog);
+
     self->active = ACTIVE_NORMAL;
-    self->state  = BallHog_State_Idle;
+
+    self->state = BallHog_State_Idle;
     BallHog_State_Idle();
 }
 
 void BallHog_State_Idle(void)
 {
     RSDK_THIS(BallHog);
+
     if (!--self->timer) {
         self->timer = 20;
         RSDK.SetSpriteAnimation(BallHog->aniFrames, 1, &self->animator, true, 0);
         self->state = BallHog_State_Jump;
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     BallHog_CheckPlayerCollisions();
     BallHog_CheckOffScreen();
 }
@@ -138,8 +150,7 @@ void BallHog_State_Jump(void)
     RSDK_THIS(BallHog);
 
     if (self->timer) {
-        self->timer--;
-        if (!self->timer) {
+        if (!--self->timer) {
             RSDK.PlaySfx(BallHog->sfxJump, false, 255);
             self->velocity.y = -0x203D9;
             self->position.y -= 0x29999;
@@ -156,7 +167,9 @@ void BallHog_State_Jump(void)
             self->state = BallHog_State_Land;
         }
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     BallHog_CheckPlayerCollisions();
     BallHog_CheckOffScreen();
 }
@@ -178,7 +191,9 @@ void BallHog_State_Land(void)
             self->state = BallHog_State_Idle;
         }
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     BallHog_CheckPlayerCollisions();
     BallHog_CheckOffScreen();
 }
@@ -204,11 +219,15 @@ void BallHog_State_DropBomb(void)
             bomb->position.x -= 0x40000;
             bomb->velocity.x = -0x10000;
         }
+
         bomb->position.y += 0xC0000;
-        bomb->timer   = 60 * self->bombTime;
+        bomb->timer = 60 * self->bombTime;
+
         self->state = BallHog_State_Land;
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     BallHog_CheckPlayerCollisions();
     BallHog_CheckOffScreen();
 }
@@ -238,6 +257,7 @@ void BallHog_State_Bomb(void)
             if (self->velocity.x <= 0 ? y1 < y2 : y2 < y1)
                 self->velocity.x = -self->velocity.x;
         }
+
         RSDK.ProcessAnimation(&self->animator);
 
         bool32 shouldExplode = false;
@@ -259,6 +279,7 @@ void BallHog_State_Bomb(void)
         if (shouldExplode || !--self->timer) {
             RSDK.PlaySfx(BallHog->sfxExplosion, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+
             destroyEntity(self);
         }
     }
@@ -270,7 +291,14 @@ void BallHog_State_Bomb(void)
 #if RETRO_INCLUDE_EDITOR
 void BallHog_EditorDraw(void) { BallHog_Draw(); }
 
-void BallHog_EditorLoad(void) { BallHog->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/BallHog.bin", SCOPE_STAGE); }
+void BallHog_EditorLoad(void)
+{
+    BallHog->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/BallHog.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(BallHog, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
 #endif
 
 void BallHog_Serialize(void)

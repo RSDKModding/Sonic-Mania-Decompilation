@@ -36,7 +36,7 @@ void BallHog_Update(void);
 void BallHog_LateUpdate(void);
 void BallHog_StaticUpdate(void);
 void BallHog_Draw(void);
-void BallHog_Create(void* data);
+void BallHog_Create(void *data);
 void BallHog_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BallHog_EditorDraw(void);
@@ -59,4 +59,4 @@ void BallHog_State_DropBomb(void);
 
 void BallHog_State_Bomb(void);
 
-#endif //!OBJ_BALLHOG_H
+#endif //! OBJ_BALLHOG_H

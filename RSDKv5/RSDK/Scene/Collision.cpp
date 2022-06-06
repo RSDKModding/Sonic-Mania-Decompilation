@@ -24,7 +24,7 @@ CollisionSensor RSDK::sensors[6];
 bool32 RSDK::showHitboxes = false;
 
 int32 RSDK::debugHitboxCount = 0;
-DebugHitboxInfo RSDK::debugHitboxList[DEBUG_HITBOX_MAX];
+DebugHitboxInfo RSDK::debugHitboxList[DEBUG_HITBOX_COUNT];
 
 int32 RSDK::addDebugHitbox(uint8 type, uint8 dir, Entity *entity, Hitbox *hitbox)
 {
@@ -39,7 +39,7 @@ int32 RSDK::addDebugHitbox(uint8 type, uint8 dir, Entity *entity, Hitbox *hitbox
         }
     }
 
-    if (i < DEBUG_HITBOX_MAX) {
+    if (i < DEBUG_HITBOX_COUNT) {
         debugHitboxList[i].type          = type;
         debugHitboxList[i].entityID      = entityID;
         debugHitboxList[i].collision     = 0;

@@ -26,7 +26,7 @@ void TMZAlert_Update(void);
 void TMZAlert_LateUpdate(void);
 void TMZAlert_StaticUpdate(void);
 void TMZAlert_Draw(void);
-void TMZAlert_Create(void* data);
+void TMZAlert_Create(void *data);
 void TMZAlert_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TMZAlert_EditorDraw(void);
@@ -39,5 +39,4 @@ void TMZAlert_State_Activating(void);
 void TMZAlert_State_Alerting(void);
 void TMZAlert_State_ShuttingDown(void);
 
-
-#endif //!OBJ_TMZALERT_H
+#endif //! OBJ_TMZALERT_H

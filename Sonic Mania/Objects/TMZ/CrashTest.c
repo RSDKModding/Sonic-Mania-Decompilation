@@ -12,8 +12,11 @@ ObjectCrashTest *CrashTest;
 void CrashTest_Update(void)
 {
     RSDK_THIS(CrashTest);
+
     StateMachine_Run(self->state);
+
     CrashTest_HandleLightAnims();
+
     RSDK.ProcessAnimation(&self->driverAnimator);
     RSDK.ProcessAnimation(&self->carAnimator);
 }
@@ -28,19 +31,18 @@ void CrashTest_StaticUpdate(void)
 void CrashTest_Draw(void)
 {
     RSDK_THIS(CrashTest);
-    Vector2 carPos;
-    Vector2 lightPos;
-    Vector2 stopperPos;
 
-    lightPos = self->startPos;
+    Vector2 lightPos = self->startPos;
     lightPos.x += 0x300000 * (2 * (self->direction != FLIP_NONE) - 1);
 
-    carPos = self->startPos;
+    Vector2 carPos = self->startPos;
     carPos.x += self->travelDistance * (2 * (self->direction != FLIP_NONE) - 1);
 
+    Vector2 stopperPos;
     stopperPos.x =
         (2 * (self->direction != FLIP_NONE) - 1) * (self->length << 16) + self->startPos.x + 0x340000 * (2 * (self->direction != FLIP_NONE) - 1);
     stopperPos.y = self->startPos.y;
+
     if (SceneInfo->currentDrawGroup == Zone->playerDrawLow + 1) {
         if (self->state != CrashTest_State_Crashed)
             RSDK.DrawSprite(&self->carAnimator, &carPos, false);
@@ -48,6 +50,7 @@ void CrashTest_Draw(void)
     else {
         RSDK.DrawSprite(&self->lightAnimator, &lightPos, false);
         RSDK.DrawSprite(&self->stopperAnimator, &stopperPos, false);
+
         if (self->state != CrashTest_State_Crashed)
             RSDK.DrawSprite(&self->driverAnimator, &carPos, false);
     }
@@ -64,17 +67,15 @@ void CrashTest_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = (self->length + 128) << 16;
     self->updateRange.y = 0x800000;
+
     CrashTest_SetupHitboxes();
 
-    int32 positions[] = { -0x100000, -0x180000, 0x80000,  -0x1A0000, -0x100000, -0x180000, 0x00000,  -0x100000,
-                          -0x200000, -0x80000,  0x100000, -0x100000, -0x40000,  -0x180000, -0x40000, -0x80000 };
+    Vector2 positions[] = { { -0x100000, -0x180000 }, { 0x80000, -0x1A0000 },  { -0x100000, -0x180000 }, { 0x00000, -0x100000 },
+                            { -0x200000, -0x80000 },  { 0x100000, -0x100000 }, { -0x40000, -0x180000 },  { -0x40000, -0x80000 } };
 
-    int32 pos = 0;
     for (int32 i = 0; i < 8; ++i) {
-        self->debrisOffsets[i].x = positions[pos + 0];
-        self->debrisOffsets[i].y = positions[pos + 1];
-
-        pos += 2;
+        self->debrisOffsets[i].x = positions[i].x;
+        self->debrisOffsets[i].y = positions[i].y;
     }
 
     self->state = CrashTest_State_Setup;
@@ -133,10 +134,9 @@ void CrashTest_CheckOffScreen(void)
     RSDK_THIS(CrashTest);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x = self->startPos.x;
-        self->position.y = self->startPos.y;
-        self->active     = ACTIVE_BOUNDS;
-        self->state      = CrashTest_State_Setup;
+        self->position = self->startPos;
+        self->active   = ACTIVE_BOUNDS;
+        self->state    = CrashTest_State_Setup;
     }
 }
 
@@ -150,8 +150,10 @@ void CrashTest_HandlePlayerCrash(void)
         if ((1 << playerID) & self->activePlayers) {
             self->activePlayers &= ~(1 << playerID);
             bool32 isSidekick = player->sidekick;
-            player->sidekick  = true;
+
+            player->sidekick = true;
             Player_Hit(player);
+
             player->sidekick = isSidekick;
         }
     }
@@ -160,6 +162,7 @@ void CrashTest_HandlePlayerCrash(void)
 void CrashTest_CheckPlayerCollisionsSolid(void)
 {
     RSDK_THIS(CrashTest);
+
     int32 storeDir = self->direction;
 
     int32 storeX = self->position.x;
@@ -178,15 +181,18 @@ void CrashTest_CheckPlayerCollisionsSolid(void)
             self->position.y = carY;
             self->position.x = carX;
             self->direction  = storeDir;
+
             Player_CheckCollisionBox(player, self, &self->hitboxFront);
             Player_CheckCollisionBox(player, self, &self->hitboxFloor);
             Player_CheckCollisionBox(player, self, &self->hitboxBack);
+
             if (self->boosterActive) {
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxBooster)) {
                     Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }
         }
+
         self->position.x = stopperX;
         self->position.y = stopperY;
         self->direction  = FLIP_NONE;
@@ -211,17 +217,21 @@ void CrashTest_CheckPlayerRide(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
+
         if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID]) {
             if (Player_CheckCollisionTouch(player, self, &self->hitboxSeat)) {
                 self->activePlayers |= 1 << playerID;
                 player->groundVel = 0;
+
                 RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 4);
+
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 player->state           = Player_State_None;
             }
         }
+
         if (self->playerTimers[playerID] > 0)
             self->playerTimers[playerID]--;
     }
@@ -240,24 +250,22 @@ void CrashTest_CheckPlayerJump(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
+
         if ((1 << playerID) & self->activePlayers) {
             player->velocity.x = 0;
             player->velocity.y = 0;
-            if (self->direction == FLIP_NONE)
-                player->velocity.x = -self->velocity.x;
-            else
-                player->velocity.x = self->velocity.x;
+
+            player->velocity.x = self->direction == FLIP_NONE ? -self->velocity.x : self->velocity.x;
             player->direction  = self->direction == FLIP_NONE;
+
             player->position.x = x;
             player->position.y = y;
             player->position.y -= 0x100000;
+
             if (player->jumpPress) {
                 self->activePlayers &= ~(1 << playerID);
                 Player_StartJump(player);
-                if (self->direction == FLIP_NONE)
-                    player->velocity.x = -self->velocity.x;
-                else
-                    player->velocity.x = self->velocity.x;
+                player->velocity.x           = self->direction == FLIP_NONE ? -self->velocity.x : self->velocity.x;
                 self->playerTimers[playerID] = 10;
             }
         }
@@ -282,6 +290,7 @@ void CrashTest_HandleLightAnims(void)
         else
             RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &self->lightAnimator, false, 0);
     }
+
     self->prevTurningGreen = self->turningGreen;
 
     RSDK.ProcessAnimation(&self->lightAnimator);
@@ -295,6 +304,7 @@ void CrashTest_State_Setup(void)
     RSDK.SetSpriteAnimation(CrashTest->aniFrames, 2, &self->driverAnimator, true, 0);
     RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &self->lightAnimator, true, 0);
     RSDK.SetSpriteAnimation(CrashTest->aniFrames, 4, &self->stopperAnimator, true, 0);
+
     self->travelDistance   = 0;
     self->timer            = 0;
     self->activePlayers    = 0;
@@ -302,7 +312,8 @@ void CrashTest_State_Setup(void)
     self->boosterActive    = false;
     self->turningGreen     = false;
     self->prevTurningGreen = false;
-    self->state            = CrashTest_State_AwaitPlayer;
+
+    self->state = CrashTest_State_AwaitPlayer;
 }
 
 void CrashTest_State_AwaitPlayer(void)
@@ -327,8 +338,10 @@ void CrashTest_State_Rev(void)
 
     if (self->timer <= 0) {
         self->boosterActive = true;
+
         RSDK.SetSpriteAnimation(CrashTest->aniFrames, 1, &self->carAnimator, true, 0);
         RSDK.SetSpriteAnimation(CrashTest->aniFrames, 3, &self->driverAnimator, true, 0);
+
         self->active       = ACTIVE_NORMAL;
         self->turningGreen = true;
         self->state        = CrashTest_State_Move;
@@ -345,16 +358,19 @@ void CrashTest_State_Move(void)
 
     if (self->velocity.x < 0x100000) {
         self->velocity.x += 0x2000;
+
         if (self->velocity.x > 0x100000)
             self->velocity.x = 0x100000;
     }
 
     self->travelDistance += self->velocity.x;
+
     bool32 crashed = false;
     if (self->travelDistance >= self->length << 16) {
         self->travelDistance = self->length << 16;
         crashed              = true;
     }
+
     CrashTest_CheckPlayerCollisionsSolid();
     CrashTest_CheckPlayerRide();
     CrashTest_CheckPlayerJump();
@@ -365,10 +381,13 @@ void CrashTest_State_Move(void)
 
         Camera_ShakeScreen(0, 5, 5);
         CrashTest_HandlePlayerCrash();
+
         self->timer = 0;
         RSDK.PlaySfx(CrashTest->sfxCrash, false, 255);
-        int32 storeX       = self->position.x;
-        int32 storeY       = self->position.y;
+
+        int32 storeX = self->position.x;
+        int32 storeY = self->position.y;
+
         self->state        = CrashTest_State_Crashed;
         self->turningGreen = false;
 
@@ -378,15 +397,12 @@ void CrashTest_State_Move(void)
             RSDK.SetSpriteAnimation(CrashTest->aniFrames, 5, &debris->animator, true, i);
             debris->drawFX |= FX_ROTATE;
 
-            if (self->direction == FLIP_NONE)
-                debris->rotSpeed = -8;
-            else
-                debris->rotSpeed = 8;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->gravityStrength    = 0x3800;
-            debris->direction  = self->direction;
-            debris->velocity.x = (RSDK.Rand(-32, 32) << 12) + (self->velocity.x >> 1) * (2 * (self->direction != FLIP_NONE) - 1);
-            debris->velocity.y = -0x1000 * RSDK.Rand(32, 128);
+            debris->rotSpeed        = self->direction == FLIP_NONE ? -8 : 8;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->gravityStrength = 0x3800;
+            debris->direction       = self->direction;
+            debris->velocity.x      = (RSDK.Rand(-32, 32) << 12) + (self->velocity.x >> 1) * (2 * (self->direction != FLIP_NONE) - 1);
+            debris->velocity.y      = -0x1000 * RSDK.Rand(32, 128);
         }
 
         self->position.x = storeX;
@@ -400,10 +416,9 @@ void CrashTest_State_Crashed(void)
 
     CrashTest_CheckOffScreen();
     CrashTest_CheckPlayerCollisionsSolid();
+
     if (self->timer >= 30) {
-        Vector2 range;
-        range.x = 0x200000;
-        range.y = 0x200000;
+        Vector2 range = { 0x200000, 0x200000 };
 
         if (!RSDK.CheckPosOnScreen(&self->startPos, &range))
             self->state = CrashTest_State_Setup;
@@ -421,6 +436,7 @@ void CrashTest_State_Crashed(void)
                 explosion->drawOrder       = Zone->objectDrawHigh;
             }
         }
+
         ++self->timer;
     }
 }
@@ -429,21 +445,19 @@ void CrashTest_State_Crashed(void)
 void CrashTest_EditorDraw(void)
 {
     RSDK_THIS(CrashTest);
+
     RSDK.SetSpriteAnimation(CrashTest->aniFrames, 0, &self->carAnimator, false, 0);
     RSDK.SetSpriteAnimation(CrashTest->aniFrames, 2, &self->driverAnimator, false, 0);
     RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &self->lightAnimator, false, 0);
     RSDK.SetSpriteAnimation(CrashTest->aniFrames, 4, &self->stopperAnimator, false, 0);
 
-    Vector2 carPos;
-    Vector2 lightPos;
-    Vector2 stopperPos;
-
-    lightPos = self->startPos;
+    Vector2 lightPos = self->startPos;
     lightPos.x += 0x300000 * (2 * (self->direction != FLIP_NONE) - 1);
 
-    carPos = self->startPos;
+    Vector2 carPos = self->startPos;
     carPos.x += self->travelDistance * (2 * (self->direction != FLIP_NONE) - 1);
 
+    Vector2 stopperPos;
     stopperPos.x =
         (2 * (self->direction != FLIP_NONE) - 1) * (self->length << 16) + self->startPos.x + 0x340000 * (2 * (self->direction != FLIP_NONE) - 1);
     stopperPos.y = self->startPos.y;
@@ -454,7 +468,16 @@ void CrashTest_EditorDraw(void)
     RSDK.DrawSprite(&self->carAnimator, &carPos, false);
 }
 
-void CrashTest_EditorLoad(void) { CrashTest->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/CrashTest.bin", SCOPE_STAGE); }
+void CrashTest_EditorLoad(void)
+{
+    CrashTest->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/CrashTest.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(CrashTest, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+
+    // dunno what "debugParticles" is, maybe a way for the devs to test the "particles" of this object in editor?
+}
 #endif
 
 void CrashTest_Serialize(void)

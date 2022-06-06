@@ -56,7 +56,7 @@ void CompetitionSession_ClearMatchData(void)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
     session->matchWinner[session->matchID] = 0;
-    for (int32 p = 0; p < PLAYER_MAX; ++p) {
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) {
         session->finishState[p]       = FINISHTYPE_NOTFINISHED;
         session->time[p].minutes      = 0;
         session->time[p].seconds      = 0;
@@ -104,7 +104,7 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 finishType)
             uint32 winnerItems      = 0;
             uint32 winnerTotalRings = 0;
 
-            int32 times[4];
+            int32 times[PLAYER_COUNT];
             for (int32 p = 0; p < session->playerCount; ++p) {
                 int32 mins = session->time[p].minutes;
                 int32 secs = session->time[p].seconds;
@@ -127,7 +127,7 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 finishType)
                     winnerTime = times[p];
             }
 
-            int32 scores[4];
+            int32 scores[PLAYER_COUNT];
             memset(scores, 0, 4 * sizeof(int32));
             int32 winner = 0;
             for (int32 p = 0; p < session->playerCount; ++p) {

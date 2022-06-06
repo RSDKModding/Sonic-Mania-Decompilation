@@ -775,7 +775,7 @@ void Player_StageLoad(void)
 #endif
 
     // Handle gotHit values (used for TMZ1 achievement)
-    for (int32 p = 0; p < PLAYER_MAX; ++p) Player->gotHit[p] = false;
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) Player->gotHit[p] = false;
 }
 
 // Extra Entity Functions
@@ -1739,10 +1739,10 @@ bool32 Player_CheckP2KeyPress(void)
 #endif
 
 #if MANIA_USE_PLUS
-    if (self->controllerID > PLAYER_MAX || Player->disableP2KeyCheck)
+    if (self->controllerID > PLAYER_COUNT || Player->disableP2KeyCheck)
         return false;
 #else
-    if (self->controllerID > PLAYER_MAX)
+    if (self->controllerID > PLAYER_COUNT)
         return false;
 #endif
 
@@ -6323,7 +6323,7 @@ void Player_Input_P1(void)
 {
     RSDK_THIS(Player);
 
-    if (self->controllerID < PLAYER_MAX) {
+    if (self->controllerID < PLAYER_COUNT) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
 #if MANIA_USE_TOUCH_CONTROLS
             for (int32 t = 0; t < TouchInfo->count; ++t) {

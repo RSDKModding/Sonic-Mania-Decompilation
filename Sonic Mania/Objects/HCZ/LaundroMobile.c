@@ -1401,7 +1401,7 @@ void LaundroMobile_StateOutro_WaterGush(void)
             if (gush->position.x > self->position.x && gush->alpha <= 0) {
                 destroyEntity(gush);
 
-                for (int32 p = 0; p < PLAYER_MAX; ++p) Zone->playerBoundActiveR[p] = false;
+                for (int32 p = 0; p < PLAYER_COUNT; ++p) Zone->playerBoundActiveR[p] = false;
 
                 self->timer = 0;
                 self->state = LaundroMobile_StateOutro_ExitHCZ;

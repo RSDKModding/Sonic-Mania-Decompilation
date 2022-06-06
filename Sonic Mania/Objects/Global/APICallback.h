@@ -107,7 +107,7 @@ struct ObjectAPICallback {
     int32 prevIsUser;
     int32 prevRank;
     LeaderboardEntry leaderboardEntry;
-    int32 controllerIDs[4];
+    int32 controllerIDs[PLAYER_COUNT];
     int32 controllerCount;
     Entity *activeEntity;
     int32 authStatus;

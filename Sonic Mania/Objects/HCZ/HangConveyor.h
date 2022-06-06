@@ -22,10 +22,10 @@ struct EntityHangConveyor {
     Vector2 endPosTopRight;
     Vector2 endPosBottomLeft;
     Vector2 endPosBottomRight;
-    int32 grabDelayTop[PLAYER_MAX];
-    int32 grabDelayBottom[PLAYER_MAX];
-    Vector2 playerPositions[PLAYER_MAX];
-    int32 fanTimer[PLAYER_MAX];
+    int32 grabDelayTop[PLAYER_COUNT];
+    int32 grabDelayBottom[PLAYER_COUNT];
+    Vector2 playerPositions[PLAYER_COUNT];
+    int32 fanTimer[PLAYER_COUNT];
     Vector2 startPos;
     int32 unused;
     Hitbox hitboxFallCheckTop;

@@ -298,7 +298,7 @@ void HUD_Draw(void)
 
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
-        for (int32 p = 0; p < PLAYER_MAX; ++p) {
+        for (int32 p = 0; p < PLAYER_COUNT; ++p) {
             if (HUD->stockFlashTimers[p] > 0)
                 HUD->stockFlashTimers[p]--;
         }
@@ -452,7 +452,7 @@ void HUD_Create(void *data)
 #endif
 
 #if MANIA_USE_PLUS
-        for (int32 i = 0; i < SCREEN_MAX; ++i) {
+        for (int32 i = 0; i < SCREEN_COUNT; ++i) {
             self->vsScoreOffsets[i].x = self->scoreOffset.x;
             self->vsScoreOffsets[i].y = self->scoreOffset.y;
             self->vsTimeOffsets[i].x  = self->timeOffset.x;

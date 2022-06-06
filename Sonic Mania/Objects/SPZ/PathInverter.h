@@ -21,9 +21,9 @@ struct EntityPathInverter {
     uint8 type;
     Vector2 size2x;
     Vector2 size;
-    EntityPlayer *playerPtrs[PLAYER_MAX];
-    int32 groundVelStore[PLAYER_MAX];
-    int32 playerFlipFlags[PLAYER_MAX];
+    EntityPlayer *playerPtrs[PLAYER_COUNT];
+    int32 groundVelStore[PLAYER_COUNT];
+    int32 playerFlipFlags[PLAYER_COUNT];
     Animator animator;
 };
 

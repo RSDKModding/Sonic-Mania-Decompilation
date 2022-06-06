@@ -33,8 +33,9 @@ ALIASES = {
 }
 
 DEFINES = {
-    "PLAYER_MAX": 4,
-    "SCREEN_MAX": 4
+    "PLAYER_COUNT": 4,
+    "CAMERA_COUNT": 4,
+    "SCREEN_COUNT": 4,
 }
 
 objects: Dict[str, List[Tuple[str, int, int, List[int]]]] = {}

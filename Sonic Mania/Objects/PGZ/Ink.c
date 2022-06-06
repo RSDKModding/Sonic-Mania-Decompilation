@@ -108,7 +108,7 @@ void Ink_StageLoad(void)
     Ink->hitboxBottleBottom.right  = 24;
     Ink->hitboxBottleBottom.bottom = 30;
 
-    for (int32 p = 0; p < PLAYER_MAX; ++p) Ink->playerColors[p] = 0;
+    for (int32 p = 0; p < PLAYER_COUNT; ++p) Ink->playerColors[p] = 0;
 }
 
 #if RETRO_INCLUDE_EDITOR

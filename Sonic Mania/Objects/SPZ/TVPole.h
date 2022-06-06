@@ -15,7 +15,7 @@ struct EntityTVPole {
     StateMachine(state);
     uint16 length;
     int32 activePlayers;
-    int32 playerTimers[PLAYER_MAX];
+    int32 playerTimers[PLAYER_COUNT];
     Hitbox hitbox;
     Animator animator;
 };

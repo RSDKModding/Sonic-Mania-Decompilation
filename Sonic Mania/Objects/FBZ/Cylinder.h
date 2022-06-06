@@ -31,8 +31,8 @@ struct EntityCylinder {
     int32 length;
     int32 radius;
     int32 unused1;
-    int32 playerStatus[PLAYER_MAX];
-    int32 playerAngles[PLAYER_MAX];
+    int32 playerStatus[PLAYER_COUNT];
+    int32 playerAngles[PLAYER_COUNT];
     Hitbox hitboxRange;
     Hitbox hitboxSize;
     Hitbox hitboxL;

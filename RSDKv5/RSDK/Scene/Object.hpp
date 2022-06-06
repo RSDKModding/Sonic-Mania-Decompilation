@@ -8,7 +8,7 @@
 namespace RSDK
 {
 
-#define RSDK_SIGNATURE_OBJ (0x4A424F)
+#define RSDK_SIGNATURE_OBJ (0x4A424F) // "OBJ"
 
 #define OBJECT_COUNT (0x400)
 

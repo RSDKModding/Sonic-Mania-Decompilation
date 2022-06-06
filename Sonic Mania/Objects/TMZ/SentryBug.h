@@ -60,7 +60,7 @@ void SentryBug_Update(void);
 void SentryBug_LateUpdate(void);
 void SentryBug_StaticUpdate(void);
 void SentryBug_Draw(void);
-void SentryBug_Create(void* data);
+void SentryBug_Create(void *data);
 void SentryBug_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SentryBug_EditorDraw(void);
@@ -78,7 +78,7 @@ void SentryBug_SetupOrbDropVelocity(void);
 void SentryBug_StateOrbs_Attached(void);
 void SentryBug_StateOrbs_Dropped(void);
 void SentryBug_StateOrbs_BeginNetRotation(void);
-void SentryBug_State_RotateAroundNet(void);
+void SentryBug_StateOrbs_RotateAroundNet(void);
 void SentryBug_StateOrbs_ReturnToSlots(void);
 
 void SentryBug_State_AwaitPlayer(void);
@@ -88,4 +88,4 @@ void SentryBug_State_NetShrink(void);
 void SentryBug_State_NetFlash(void);
 void SentryBug_State_ReturnToSlots(void);
 
-#endif //!OBJ_SENTRYBUG_H
+#endif //! OBJ_SENTRYBUG_H

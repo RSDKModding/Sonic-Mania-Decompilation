@@ -23,7 +23,7 @@ struct EntityTwistingSlide {
     uint8 type;
     int32 endLen;
     int32 activePlayers;
-    int32 playerAngles[PLAYER_MAX];
+    int32 playerAngles[PLAYER_COUNT];
     int32 minY;
     int32 maxY;
     Hitbox hitboxSlideStart;

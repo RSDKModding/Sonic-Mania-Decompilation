@@ -23,9 +23,9 @@ struct EntityTurntable {
     Vector2 size;
     Vector2 origin;
     int32 unused;
-    int32 playerAngles[PLAYER_MAX];
-    int32 playerDistance[PLAYER_MAX];
-    int32 playerFrames[PLAYER_MAX];
+    int32 playerAngles[PLAYER_COUNT];
+    int32 playerDistance[PLAYER_COUNT];
+    int32 playerFrames[PLAYER_COUNT];
     Hitbox hitbox;
     Animator animator;
 };
