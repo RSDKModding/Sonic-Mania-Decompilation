@@ -18,7 +18,7 @@ struct EntityGymBar {
     int32 type;
     int32 size;
     bool32 noSwing;
-    uint8 playerTimers[4];
+    uint8 playerTimers[PLAYER_MAX];
     int32 maxX;
     int32 minX;
     Animator animator;
@@ -33,7 +33,7 @@ void GymBar_Update(void);
 void GymBar_LateUpdate(void);
 void GymBar_StaticUpdate(void);
 void GymBar_Draw(void);
-void GymBar_Create(void* data);
+void GymBar_Create(void *data);
 void GymBar_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GymBar_EditorDraw(void);
@@ -52,4 +52,4 @@ void GymBar_PlayerState_SwingV(void);
 void GymBar_PlayerState_Hang(void);
 void GymBar_PlayerState_SwingH(void);
 
-#endif //!OBJ_GYMBAR_H
+#endif //! OBJ_GYMBAR_H

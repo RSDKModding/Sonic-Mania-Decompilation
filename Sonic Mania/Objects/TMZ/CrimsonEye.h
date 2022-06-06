@@ -62,7 +62,7 @@ struct ObjectCrimsonEye {
     uint16 sfxHullClose;
     uint16 sfxButton;
     uint16 sfxImpact;
-    TileLayer *elevatorBG;
+    TileLayer *liftBackground;
     TileLayer *bg2Layer;
 };
 
@@ -88,7 +88,7 @@ void CrimsonEye_Update(void);
 void CrimsonEye_LateUpdate(void);
 void CrimsonEye_StaticUpdate(void);
 void CrimsonEye_Draw(void);
-void CrimsonEye_Create(void* data);
+void CrimsonEye_Create(void *data);
 void CrimsonEye_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CrimsonEye_EditorDraw(void);
@@ -98,6 +98,7 @@ void CrimsonEye_Serialize(void);
 
 // Extra Entity Functions
 void CrimsonEye_Explode(void);
+void CrimsonEye_Hit(void);
 
 void CrimsonEye_SetupBG2Layer(void);
 void CrimsonEye_DrawLayerCB_DisableFGSilhouette(void);
@@ -150,4 +151,4 @@ void CrimsonEye_State_Shot(void);
 void CrimsonEye_State_Arrow(void);
 void CrimsonEye_Draw_Arrow(void);
 
-#endif //!OBJ_CRIMSONEYE_H
+#endif //! OBJ_CRIMSONEYE_H

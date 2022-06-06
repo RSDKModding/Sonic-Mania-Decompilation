@@ -15,6 +15,7 @@ void TMZ2Outro_Update(void)
 
     TMZ2Outro_SetupCutscene();
     self->active = ACTIVE_NEVER;
+
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
@@ -42,7 +43,7 @@ void TMZ2Outro_StageLoad(void)
     TMZ2Outro->sfxImpact  = RSDK.GetSfx("Stage/Impact2.wav");
     TMZ2Outro->sfxRubyGet = RSDK.GetSfx("TMZ3/RubyGet.wav");
 
-    TMZ2Outro->playerID   = ID_NONE;
+    TMZ2Outro->playerID = ID_NONE;
 }
 
 void TMZ2Outro_SetupCutscene(void)
@@ -59,9 +60,9 @@ void TMZ2Outro_SetupCutscene(void)
     }
     else {
         if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
-            CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman,
-                                      TMZ2Outro_Cutscene_EggmanFall, TMZ2Outro_Cutscene_StartRubyRampage, TMZ2Outro_Cutscene_OuttaHere,
-                                      TMZ2Outro_Cutscene_TeamEscape, TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
+            CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman, TMZ2Outro_Cutscene_EggmanFall,
+                                      TMZ2Outro_Cutscene_StartRubyRampage, TMZ2Outro_Cutscene_OuttaHere, TMZ2Outro_Cutscene_TeamEscape,
+                                      TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
         }
         else {
             self->heavyKing = CutsceneHBH_GetEntity(HBH_KINGTMZ2);
@@ -89,10 +90,7 @@ bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host)
 
     foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
 
-    for (int32 i = 0; i < 0x100; ++i) {
-        color clr = RSDK.GetPaletteEntry(1, i);
-        RSDK.SetPaletteEntry(7, i, clr & 0xFF0000);
-    }
+    for (int32 c = 0; c < 0x100; ++c) RSDK.SetPaletteEntry(7, c, RSDK.GetPaletteEntry(1, c) & 0xFF0000);
 
     return true;
 }
@@ -100,6 +98,7 @@ bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host)
 bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
 {
     bool32 finishedMoving = true;
+
     foreach_active(Player, player)
     {
         if (player->sidekick && player->characterID == ID_KNUCKLES && !CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
@@ -110,10 +109,12 @@ bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
         }
         else {
             int32 targetPos = PhantomEgg->boundsM + (player->playerID << 21);
+
             if (player->position.x >= targetPos + 0x300000) {
                 if (player->position.x <= targetPos + 0x700000) {
                     player->left  = false;
                     player->right = false;
+
                     if (abs(player->groundVel) < 0x8000) {
                         player->groundVel = 0;
                         player->direction = FLIP_X;
@@ -133,6 +134,7 @@ bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
                 player->left  = false;
                 player->right = true;
             }
+
             finishedMoving = false;
         }
     }
@@ -158,7 +160,8 @@ void TMZ2Outro_PlayerStateInput_Escape(void)
     self->right     = true;
     self->jumpPress = false;
     self->jumpHold  = false;
-    if (self->position.x >= 0xAC80000) {
+
+    if (self->position.x >= (2760 << 16)) {
         self->visible        = false;
         self->interaction    = false;
         self->tileCollisions = false;
@@ -169,11 +172,13 @@ void TMZ2Outro_PlayerStateInput_Escape(void)
 bool32 TMZ2Outro_Cutscene_EggmanFall(EntityCutsceneSeq *host)
 {
     bool32 eggmanOnGround = false;
+
     foreach_active(Eggman, eggman)
     {
         if (eggman->onGround) {
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 8, &eggman->animator, true, 0);
             foreach_active(Player, player) { player->up = false; }
+
             eggmanOnGround = true;
             foreach_break;
         }
@@ -186,6 +191,7 @@ bool32 TMZ2Outro_Cutscene_StartAlert(EntityCutsceneSeq *host)
 {
     if (host->timer == 120) {
         RSDK.PlaySfx(TMZ2Outro->sfxAlarm, true, 255);
+
         foreach_active(TMZAlert, alert)
         {
             alert->alpha = 16 * RSDK.Rand(-32, -8);
@@ -194,6 +200,7 @@ bool32 TMZ2Outro_Cutscene_StartAlert(EntityCutsceneSeq *host)
 
         return true;
     }
+
     return false;
 }
 bool32 TMZ2Outro_Cutscene_TimeToEscape(EntityCutsceneSeq *host)
@@ -206,10 +213,13 @@ bool32 TMZ2Outro_Cutscene_TimeToEscape(EntityCutsceneSeq *host)
     if (host->timer == 128) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player1->right        = true;
+
         Zone->cameraBoundsR[0] += 832;
         Zone->playerBoundActiveR[0] = false;
+
         return true;
     }
+
     return false;
 }
 
@@ -227,21 +237,27 @@ bool32 TMZ2Outro_Cutscene_HurryToCar(EntityCutsceneSeq *host)
 
     if (escapeCar->position.x - player1->position.x < 0x1800000)
         player1->right = false;
+
     if (escapeCar->position.x - player1->position.x < 0xC00000) {
         player1->jumpPress = player1->onGround;
         player1->jumpHold  = true;
     }
+
     if (host->timer == 248)
         RSDK.PlaySfx(TMZ2Outro->sfxGrab, false, 255);
+
     if (host->timer == 384) {
         Zone->cameraBoundsR[0] = 0x2000;
-        EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->position.x      = (camera->boundsR - ScreenInfo->centerX) << 16;
-        camera->boundsR         = 0x2000;
-        camera->state           = StateMachine_None;
-        self->velocity.x      = 0;
+
+        EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+        camera->position.x   = (camera->boundsR - ScreenInfo->centerX) << 16;
+        camera->boundsR      = 0x2000;
+        camera->state        = StateMachine_None;
+
+        self->velocity.x = 0;
         return true;
     }
+
     return false;
 }
 bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host)
@@ -260,23 +276,29 @@ bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host)
 
     if (self->velocity.x < 0x170000)
         self->velocity.x += 0x2000;
+
     camera->position.x += self->velocity.x;
 
     if (host->timer == 200) {
         Music_FadeOut(0.0125);
         RSDK.PlaySfx(PhantomEgg->sfxExplosion3, false, 255);
     }
+
     if (host->timer == 260)
         RSDK.PlaySfx(PhantomEgg->sfxExplosion3, false, 255);
+
     if (host->timer == 320) {
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 32;
         fxFade->wait         = 90;
         fxFade->speedOut     = 16;
         fxFade->fadeOutBlack = true;
+
         RSDK.PlaySfx(PhantomEgg->sfxExplosion3, false, 255);
+
         return true;
     }
+
     return false;
 }
 
@@ -286,11 +308,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
     if (host->timer == 60) {
         foreach_active(PhantomRuby, ruby)
         {
-            int pos = ScreenInfo->position.x;
-            if (SaveGame->saveRAM->chaosEmeralds == 0b01111111)
-                pos += 64;
-            else
-                pos += 96;
+            int pos           = ScreenInfo->position.x + (SaveGame->saveRAM->chaosEmeralds == 0b01111111 ? 64 : 96);
             ruby->startPos.x  = pos << 16;
             ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
             ruby->velocity.y  = 0;
@@ -307,6 +325,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
             if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
+
                 if (player->groundVel < -0x20000)
                     player->groundVel = -0x20000;
             }
@@ -327,7 +346,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
         }
 
         for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colors[i]);
-        
+
         if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
             CREATE_ENTITY(RubyPortal, RubyPortal_State_EncoreEnd, (ScreenInfo->position.x + 64) << 16,
                           (ScreenInfo->position.y + ScreenInfo->centerY) << 16);
@@ -335,6 +354,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
 
         return true;
     }
+
     return false;
 }
 bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
@@ -356,6 +376,7 @@ bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
             if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
+
                 if (player->groundVel < -0x20000)
                     player->groundVel = -0x20000;
             }
@@ -388,9 +409,11 @@ bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
                 player->left  = false;
                 player->right = true;
             }
+
             return true;
         }
     }
+
     return false;
 }
 bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
@@ -417,6 +440,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
     if (host->timer == 240) {
         if (self->heavyKing) {
             RSDK.SetSpriteAnimation(self->heavyKing->aniFrames, 3, &self->heavyKing->mainAnimator, false, 0);
+
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y -= 0x100000;
@@ -433,6 +457,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
             spinRay->r               = 240;
             spinRay->g               = 0;
             spinRay->b               = 240;
+
             RSDK.PlaySfx(TMZ2Outro->sfxRubyGet, false, 255);
         }
     }
@@ -440,6 +465,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
     if (host->timer == 408) {
         if (self->heavyKing) {
             RSDK.SetSpriteAnimation(self->heavyKing->aniFrames, 4, &self->heavyKing->mainAnimator, false, 0);
+
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y += 0x180000;
@@ -455,9 +481,11 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
         fxFade->speedOut     = 16;
         fxFade->fadeOutBlack = true;
         fxFade->isPermanent  = true;
+
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
         return true;
     }
+
     return false;
 }
 bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
@@ -473,7 +501,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             }
 
-            Zone->cameraBoundsR[0]     = 0x2000;
+            Zone->cameraBoundsR[0]      = 0x2000;
             Zone->playerBoundActiveR[0] = false;
         }
         else if (host->timer == 290) {
@@ -493,6 +521,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
             if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
+
                 if (player->groundVel < -0x20000)
                     player->groundVel = -0x20000;
             }
@@ -509,9 +538,11 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
         foreach_active(Eggman, eggman)
         {
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
+
             eggman->direction  = FLIP_NONE;
             eggman->state      = Eggman_State_WalkOffScreen;
             eggman->velocity.x = 0x10000;
+
             RSDK.ObjectTileGrip(eggman, Zone->collisionLayers, CMODE_FLOOR, eggman->collisionPlane, 0, 0x1C0000, 14);
         }
     }
@@ -523,9 +554,12 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
             ruby->isPermanent = true;
             ruby->active      = ACTIVE_NORMAL;
         }
+
         RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->state = StateMachine_None;
+
         return true;
     }
+
     return false;
 }
 bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
@@ -598,12 +632,15 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
                 player->stateInput = StateMachine_None;
             }
         }
+
         Zone->deathBoundary[0] = 0x8000000;
         RSDK.PlaySfx(Player->sfxTransform2, false, 255);
         Music_FadeOut(0.0125);
     }
+
     if (host->timer == 420)
         RSDK.PlaySfx(TMZ2Outro->sfxDrop, false, 255);
+
     if (host->timer == 512) {
 
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
@@ -617,6 +654,7 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
         RSDK.SetChannelAttributes(RSDK.PlaySfx(PhantomRuby->sfxR[0], false, 0), 1.0, 1.0, 1.0);
         return true;
     }
+
     return false;
 }
 #endif
@@ -624,16 +662,18 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
 bool32 TMZ2Outro_Cutscene_FadeOut(EntityCutsceneSeq *host)
 {
     RSDK.StopSfx(TMZ2Outro->sfxAlarm);
+
     return host->timer == 180;
 }
 bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
 {
     bool32 hasGoodEnding = false;
+
 #if MANIA_USE_PLUS
     if (!(SceneInfo->filter & FILTER_ENCORE))
 #endif
-        hasGoodEnding =
-            (CHECK_CHARACTER_ID(ID_SONIC, 1) || (CHECK_CHARACTER_ID(ID_KNUCKLES, 1) && CHECK_CHARACTER_ID(ID_KNUCKLES, 2))) && SaveGame->saveRAM->chaosEmeralds == 0x7F;
+        hasGoodEnding = (CHECK_CHARACTER_ID(ID_SONIC, 1) || (CHECK_CHARACTER_ID(ID_KNUCKLES, 1) && CHECK_CHARACTER_ID(ID_KNUCKLES, 2)))
+                        && SaveGame->saveRAM->chaosEmeralds == 0x7F;
 
     bool32 isSaveSlot = false;
     if (!hasGoodEnding)
@@ -641,13 +681,16 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
 
     if (isSaveSlot) {
         if (!host->timer) {
-            globals->playerID = TMZ2Outro->playerID;
-            TMZ2Outro->finishedSaving  = false;
+            globals->playerID         = TMZ2Outro->playerID;
+            TMZ2Outro->finishedSaving = false;
+
             SaveGame_SaveProgress();
             if (Zone_IsZoneLastAct())
                 GameProgress_MarkZoneCompleted(Zone_GetZoneID());
+
             GameProgress_GiveEnding(1);
             SaveGame_SaveFile(TMZ2Outro_SaveFileCB);
+
             UIWaitSpinner_StartWait();
         }
 
@@ -671,7 +714,7 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
         else {
 #endif
             switch (GET_CHARACTER_ID(1)) {
-                default: 
+                default:
                 case ID_SONIC: RSDK.SetScene("Videos", "Bad End - Sonic"); break;
 
                 case ID_TAILS: RSDK.SetScene("Videos", "Bad End - Tails"); break;
@@ -695,8 +738,10 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
 
         API_UnlockAchievement(&achievementList[ACH_GAME_CLEARED]);
         RSDK.LoadScene();
+
         return true;
     }
+
     return false;
 }
 

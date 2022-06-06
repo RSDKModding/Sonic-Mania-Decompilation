@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+#define TEETERTOTTER_SEGMENT_COUNT (32)
+
+typedef enum {
+    TEETERTOTTER_COLOR_ORANGEBLUE,
+    TEETERTOTTER_COLOR_BLUEORANGE,
+}TeeterTotterColors;
+
 // Object Class
 struct ObjectTeeterTotter {
     RSDK_OBJECT
@@ -17,13 +24,13 @@ struct EntityTeeterTotter {
     uint32 length;
     Vector2 origin;
     int32 unused1; // never even set
-    int32 playerIDs[4];
+    int32 playerIDs[PLAYER_MAX];
     int32 inactiveSegments;
     int32 fallPos;
     int32 fallVelocity;
     int32 unused2; // set, but never used
-    int32 segmentPosition[32];
-    int32 segmentVelocity[32];
+    int32 segmentPosition[TEETERTOTTER_SEGMENT_COUNT];
+    int32 segmentVelocity[TEETERTOTTER_SEGMENT_COUNT];
     Hitbox hitbox;
     Animator animator;
 };
@@ -36,7 +43,7 @@ void TeeterTotter_Update(void);
 void TeeterTotter_LateUpdate(void);
 void TeeterTotter_StaticUpdate(void);
 void TeeterTotter_Draw(void);
-void TeeterTotter_Create(void* data);
+void TeeterTotter_Create(void *data);
 void TeeterTotter_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TeeterTotter_EditorDraw(void);
@@ -53,4 +60,4 @@ void TeeterTotter_State_Setup(void);
 void TeeterTotter_State_Teeter(void);
 void TeeterTotter_State_Fall(void);
 
-#endif //!OBJ_TEETERTOTTER_H
+#endif //! OBJ_TEETERTOTTER_H

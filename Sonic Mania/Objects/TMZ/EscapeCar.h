@@ -6,7 +6,7 @@
 typedef enum {
     ESCAPECAR_DRIVER_SONIC = 0,
     ESCAPECAR_DRIVER_KNUX  = 3,
-}EscapeCarDrivers;
+} EscapeCarDrivers;
 
 // Object Class
 struct ObjectEscapeCar {
@@ -38,7 +38,7 @@ void EscapeCar_Update(void);
 void EscapeCar_LateUpdate(void);
 void EscapeCar_StaticUpdate(void);
 void EscapeCar_Draw(void);
-void EscapeCar_Create(void* data);
+void EscapeCar_Create(void *data);
 void EscapeCar_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EscapeCar_EditorDraw(void);
@@ -57,4 +57,4 @@ void EscapeCar_StateEncore_BadEnd(void);
 void EscapeCar_StateEncore_GoodEnd(void);
 #endif
 
-#endif //!OBJ_ESCAPECAR_H
+#endif //! OBJ_ESCAPECAR_H

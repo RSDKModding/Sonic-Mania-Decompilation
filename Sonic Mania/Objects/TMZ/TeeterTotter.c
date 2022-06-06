@@ -12,7 +12,9 @@ ObjectTeeterTotter *TeeterTotter;
 void TeeterTotter_Update(void)
 {
     RSDK_THIS(TeeterTotter);
+
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -33,7 +35,9 @@ void TeeterTotter_Draw(void)
             Vector2 drawPos;
             drawPos.x = (offsetX + (i << 21)) & 0xFFFF0000;
             drawPos.y = (self->segmentPosition[i] + y) & 0xFFFF0000;
+
             RSDK.SetSpriteAnimation(TeeterTotter->aniFrames, 0, &self->animator, true, (i + self->color) % 2);
+
             RSDK.DrawSprite(&self->animator, &drawPos, false);
         }
     }
@@ -43,7 +47,7 @@ void TeeterTotter_Create(void *data)
 {
     RSDK_THIS(TeeterTotter);
 
-    self->length        = clampVal(self->length, 1, 0x10);
+    self->length        = clampVal(self->length, 1, TEETERTOTTER_SEGMENT_COUNT / 2);
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
     self->origin        = self->position;
@@ -56,8 +60,8 @@ void TeeterTotter_Create(void *data)
     self->hitbox.top    = -16;
     self->hitbox.right  = 16;
     self->hitbox.bottom = 16;
-    
-    self->state         = TeeterTotter_State_Setup;
+
+    self->state = TeeterTotter_State_Setup;
 }
 
 void TeeterTotter_StageLoad(void)
@@ -69,30 +73,33 @@ void TeeterTotter_StageLoad(void)
 int32 TeeterTotter_CheckPlayerCollisions(void)
 {
     RSDK_THIS(TeeterTotter);
-    int32 id = -1;
 
-    int32 ids[] = { -1, -1, -1, -1 };
+    int32 heaviestSegment   = -1;
+    int32 stoodSegmentIDs[] = { -1, -1, -1, -1 };
 
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
 
     int32 x = 0x100000 - (self->length << 21) + self->position.x;
 
-    for (int32 i = 0; i < 2 * self->length; ++i) {
-        if (!((1 << id) & self->inactiveSegments)) {
-            self->position.x = (x + (i << 21)) & 0xFFFF0000;
-            self->position.y = (self->segmentPosition[i] + storeY) & 0xFFFF0000;
+    for (int32 s = 0; s < 2 * self->length; ++s) {
+        if (!((1 << heaviestSegment) & self->inactiveSegments)) {
+            self->position.x = (x + (s << 21)) & 0xFFFF0000;
+            self->position.y = (self->segmentPosition[s] + storeY) & 0xFFFF0000;
+
             foreach_active(Player, player)
             {
                 int32 playerID = RSDK.GetEntitySlot(player);
-                if (self->playerIDs[playerID] == i) {
-                    player->position.y += self->segmentVelocity[i];
+                if (self->playerIDs[playerID] == s) {
+                    player->position.y += self->segmentVelocity[s];
                     player->position.y += 0x10000;
                 }
+
                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
                     if (!player->sidekick)
-                        id = i;
-                    ids[playerID] = i;
+                        heaviestSegment = s;
+
+                    stoodSegmentIDs[playerID] = s;
                 }
             }
         }
@@ -101,9 +108,9 @@ int32 TeeterTotter_CheckPlayerCollisions(void)
     self->position.x = storeX;
     self->position.y = storeY;
 
-    for (int32 i = 0; i < PLAYER_MAX; ++i) self->playerIDs[i] = ids[i];
+    for (int32 i = 0; i < PLAYER_MAX; ++i) self->playerIDs[i] = stoodSegmentIDs[i];
 
-    return id;
+    return heaviestSegment;
 }
 
 void TeeterTotter_ProcessSegmentGravity(void)
@@ -119,10 +126,10 @@ void TeeterTotter_ProcessSegmentGravity(void)
             self->segmentVelocity[i] += 0x3800;
             self->segmentPosition[i] += self->segmentVelocity[i];
 
-            Vector2 pos;
-            pos.x = (offsetX + (i << 21)) & 0xFFFF0000;
-            pos.y = (self->segmentPosition[i] + y) & 0xFFFF0000;
-            if (!RSDK.CheckPosOnScreen(&pos, &self->updateRange))
+            Vector2 segmentPos;
+            segmentPos.x = (offsetX + (i << 21)) & 0xFFFF0000;
+            segmentPos.y = (self->segmentPosition[i] + y) & 0xFFFF0000;
+            if (!RSDK.CheckPosOnScreen(&segmentPos, &self->updateRange))
                 self->inactiveSegments |= 1 << i;
         }
     }
@@ -137,6 +144,7 @@ void TeeterTotter_HandleSegmentPositions(void)
         int8 pos = i - len + 1;
         if (i - len < 0)
             pos = i - len;
+
         self->segmentPosition[i] = (self->fallPos >> 1) * (int8)(2 * pos + 2 * ((int8)(2 * pos) <= 0) - 1);
     }
 }
@@ -145,12 +153,12 @@ void TeeterTotter_State_Setup(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    self->unused2 = 0;
-    self->fallPos = 0;
+    self->unused2      = 0;
+    self->fallPos      = 0;
     self->fallVelocity = 0;
 
     for (int32 i = 0; i < 2 * self->length; ++i) {
-        self->segmentPosition[i]  = 0;
+        self->segmentPosition[i] = 0;
         self->segmentVelocity[i] = 0;
     }
     self->inactiveSegments = 0;
@@ -164,7 +172,7 @@ void TeeterTotter_State_Teeter(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    int32 prevVal[32];
+    int32 prevVal[TEETERTOTTER_SEGMENT_COUNT];
     for (int32 i = 0; i < 2 * self->length; ++i) {
         prevVal[i] = self->segmentPosition[i];
     }
@@ -180,8 +188,10 @@ void TeeterTotter_State_Teeter(void)
         int32 segment = id - self->length;
         if (segment >= 0)
             ++segment;
+
         self->fallVelocity += 32 * segment;
     }
+
     self->fallPos += self->fallVelocity;
 
     if (abs(self->fallPos) > 0x200000)
@@ -191,20 +201,18 @@ void TeeterTotter_State_Teeter(void)
 void TeeterTotter_State_Fall(void)
 {
     RSDK_THIS(TeeterTotter);
+
     TeeterTotter_ProcessSegmentGravity();
 
     bool32 fullyInactive = true;
-    for (int32 i = 0; i < 2 * self->length; ++i) {
-        fullyInactive &= ((1 << i) & self->inactiveSegments) != 0;
-    }
+    for (int32 i = 0; i < 2 * self->length; ++i) fullyInactive &= ((1 << i) & self->inactiveSegments) != 0;
 
     if (fullyInactive || !(2 * self->length)) {
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->origin, &self->updateRange)) {
-            self->position.x = self->origin.x;
-            self->position.y = self->origin.y;
-            self->visible    = false;
-            self->active     = ACTIVE_BOUNDS;
-            self->state      = TeeterTotter_State_Setup;
+            self->position = self->origin;
+            self->visible  = false;
+            self->active   = ACTIVE_BOUNDS;
+            self->state    = TeeterTotter_State_Setup;
         }
     }
 }
@@ -214,7 +222,7 @@ void TeeterTotter_EditorDraw(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    self->length = clampVal(self->length, 1, 0x10);
+    self->length        = clampVal(self->length, 1, TEETERTOTTER_SEGMENT_COUNT / 2);
     self->origin        = self->position;
     self->updateRange.x = (self->length + 2) << 22;
     self->updateRange.y = (self->length + 4) << 21;
@@ -222,7 +230,14 @@ void TeeterTotter_EditorDraw(void)
     TeeterTotter_Draw();
 }
 
-void TeeterTotter_EditorLoad(void) { TeeterTotter->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/TeeterTotter.bin", SCOPE_STAGE); }
+void TeeterTotter_EditorLoad(void)
+{
+    TeeterTotter->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/TeeterTotter.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TeeterTotter, color);
+    RSDK_ENUM_VAR("Orange, Blue", TEETERTOTTER_COLOR_ORANGEBLUE);
+    RSDK_ENUM_VAR("Blue, Orange", TEETERTOTTER_COLOR_BLUEORANGE);
+}
 #endif
 
 void TeeterTotter_Serialize(void)

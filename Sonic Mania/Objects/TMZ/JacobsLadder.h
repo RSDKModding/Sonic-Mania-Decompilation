@@ -25,8 +25,8 @@ struct EntityJacobsLadder {
     bool32 showElectricity;
     bool32 electricFadeOut;
     uint8 activePlayers;
-    uint8 playerTimers[4];
-    Vector2 playerPositions[4];
+    uint8 playerTimers[PLAYER_MAX];
+    Vector2 playerPositions[PLAYER_MAX];
     Hitbox hitbox;
     Animator sideAnimator;
     Animator electricAnimator;
@@ -40,7 +40,7 @@ void JacobsLadder_Update(void);
 void JacobsLadder_LateUpdate(void);
 void JacobsLadder_StaticUpdate(void);
 void JacobsLadder_Draw(void);
-void JacobsLadder_Create(void* data);
+void JacobsLadder_Create(void *data);
 void JacobsLadder_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void JacobsLadder_EditorDraw(void);
@@ -50,5 +50,4 @@ void JacobsLadder_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_JACOBSLADDER_H
+#endif //! OBJ_JACOBSLADDER_H

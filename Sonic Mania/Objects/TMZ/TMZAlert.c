@@ -12,6 +12,7 @@ ObjectTMZAlert *TMZAlert;
 void TMZAlert_Update(void)
 {
     RSDK_THIS(TMZAlert);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,14 +23,16 @@ void TMZAlert_StaticUpdate(void) {}
 void TMZAlert_Draw(void)
 {
     RSDK_THIS(TMZAlert);
-    self->drawFX           = FX_NONE;
-    self->inkEffect        = INK_NONE;
+
+    self->drawFX                 = FX_NONE;
+    self->inkEffect              = INK_NONE;
     self->screenAnimator.frameID = 0;
     RSDK.DrawSprite(&self->screenAnimator, NULL, false);
 
     if (self->scale.y != 0x200)
         self->drawFX = FX_SCALE;
-    self->inkEffect        = INK_ALPHA;
+
+    self->inkEffect              = INK_ALPHA;
     self->screenAnimator.frameID = 1;
     RSDK.DrawSprite(&self->screenAnimator, NULL, false);
 
@@ -39,6 +42,7 @@ void TMZAlert_Draw(void)
 void TMZAlert_Create(void *data)
 {
     RSDK_THIS(TMZAlert);
+
     if (!SceneInfo->inEditor) {
         self->inkEffect     = INK_ALPHA;
         self->visible       = true;
@@ -48,7 +52,8 @@ void TMZAlert_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->scale.x       = 0x200;
-        self->alpha         = 16 * (RSDK.Rand(-32, -8) - 16);
+        self->alpha         = 0x10 * (RSDK.Rand(-32, -8) - 16);
+
         RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 0, &self->screenAnimator, true, 0);
     }
 }
@@ -67,6 +72,7 @@ void TMZAlert_State_Activating(void)
         self->alpha += 0x20;
         if (self->alpha > 0x100)
             self->alpha = 0x100;
+
         self->scale.y = 2 * self->alpha;
     }
 }
@@ -74,9 +80,9 @@ void TMZAlert_State_Alerting(void)
 {
     RSDK_THIS(TMZAlert);
 
-    self->alpha = (RSDK.Cos256(8 * ++self->timer) >> 2) + 0xE0;
+    self->alpha = 0xE0 + (RSDK.Cos256(8 * ++self->timer) >> 2);
 
-    if (!(self->timer & 0xF)) 
+    if (!(self->timer & 0xF))
         RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 1, &self->messageAnimator, true, RSDK.Rand(0, 2));
 
     if (self->timer == 320) {
@@ -89,18 +95,17 @@ void TMZAlert_State_ShuttingDown(void)
 {
     RSDK_THIS(TMZAlert);
 
-    if (self->alpha <= 16) {
+    if (self->alpha <= 0x10)
         self->state = StateMachine_None;
-    }
-    else {
+    else
         self->alpha -= 8;
-    }
 }
 
 #if RETRO_INCLUDE_EDITOR
 void TMZAlert_EditorDraw(void)
 {
     RSDK_THIS(TMZAlert);
+
     RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 0, &self->screenAnimator, true, 0);
 
     TMZAlert_Draw();

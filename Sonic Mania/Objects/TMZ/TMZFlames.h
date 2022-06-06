@@ -26,7 +26,7 @@ void TMZFlames_Update(void);
 void TMZFlames_LateUpdate(void);
 void TMZFlames_StaticUpdate(void);
 void TMZFlames_Draw(void);
-void TMZFlames_Create(void* data);
+void TMZFlames_Create(void *data);
 void TMZFlames_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TMZFlames_EditorDraw(void);
@@ -39,4 +39,4 @@ void TMZFlames_State_Delay(void);
 void TMZFlames_State_EnterFlames(void);
 void TMZFlames_State_FlamesEnlarge(void);
 
-#endif //!OBJ_TMZFLAMES_H
+#endif //! OBJ_TMZFLAMES_H

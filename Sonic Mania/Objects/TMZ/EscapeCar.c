@@ -12,6 +12,7 @@ ObjectEscapeCar *EscapeCar;
 void EscapeCar_Update(void)
 {
     RSDK_THIS(EscapeCar);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,8 +23,10 @@ void EscapeCar_StaticUpdate(void) {}
 void EscapeCar_Draw(void)
 {
     RSDK_THIS(EscapeCar);
+
     if (SceneInfo->currentDrawGroup == Zone->objectDrawLow) {
         RSDK.DrawSprite(&self->driverAnimator, NULL, false);
+
         if (!SceneInfo->currentScreenID)
             RSDK.AddDrawListRef(Zone->objectDrawHigh, SceneInfo->entitySlot);
     }
@@ -43,6 +46,7 @@ void EscapeCar_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             self->state = EscapeCar_StateEncore_Setup;
@@ -62,18 +66,14 @@ void EscapeCar_Create(void *data)
                     self->driver = ESCAPECAR_DRIVER_SONIC;
                     break;
 
-                case ID_KNUCKLES:
-                    if (CHECK_CHARACTER_ID(ID_KNUCKLES, 2))
-                        self->driver = ESCAPECAR_DRIVER_KNUX;
-                    else
-                        self->driver = ESCAPECAR_DRIVER_SONIC;
-                    break;
+                case ID_KNUCKLES: self->driver = CHECK_CHARACTER_ID(ID_KNUCKLES, 2) ? ESCAPECAR_DRIVER_KNUX : ESCAPECAR_DRIVER_SONIC; break;
             }
             self->state = EscapeCar_StateMania_AwaitPlayer;
             RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 2 + self->driver, &self->driverAnimator, true, 0);
 #if MANIA_USE_PLUS
         }
 #endif
+
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 0, &self->carAnimator, true, 0);
     }
 }
@@ -97,7 +97,7 @@ void EscapeCar_StateMania_AwaitPlayer(void)
 
     RSDK.ProcessAnimation(&self->driverAnimator);
 
-    //Why does this func have encore checks??? Encore has its own states..
+    // Why does this func have encore checks??? Encore has its own states..
 
     bool32 allAboard = true;
     foreach_active(Player, player)
@@ -118,6 +118,7 @@ void EscapeCar_StateMania_AwaitPlayer(void)
             player->velocity.y = 0;
             player->position.x = self->position.x;
             player->position.y = self->position.y;
+
             if (player->sidekick) {
                 player->position.x -= 0x140000;
                 player->position.y -= 0x140000;
@@ -126,6 +127,7 @@ void EscapeCar_StateMania_AwaitPlayer(void)
                 player->position.x -= 0xC0000;
                 player->position.y -= 0x80000;
             }
+
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->animator, false, 0);
             player->animator.speed = 0;
         }
@@ -155,11 +157,13 @@ void EscapeCar_StateMania_EnteredCar(void)
 
     RSDK.ProcessAnimation(&self->driverAnimator);
     RSDK.ProcessAnimation(&self->thrustAnimator);
+
     if (++self->timer == 60)
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 1, &self->thrustAnimator, true, 0);
 
     if (self->timer == 160) {
         foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->animator, true, 0); }
+
         self->timer      = 0;
         self->velocity.x = 0x10000;
         self->state      = EscapeCar_StateMania_Ride;
@@ -175,6 +179,7 @@ void EscapeCar_StateMania_Ride(void)
 
     if (self->velocity.x < 0x180000)
         self->velocity.x += 0x2800;
+
     self->position.x += self->velocity.x;
 
     foreach_active(Player, player)
@@ -184,6 +189,7 @@ void EscapeCar_StateMania_Ride(void)
         player->velocity.y = 0;
         player->position.x = self->position.x;
         player->position.y = self->position.y;
+
         if (player->sidekick) {
             player->position.x -= 0x140000;
             player->position.y -= 0x140000;
@@ -202,6 +208,7 @@ void EscapeCar_StateEncore_Setup(void)
 
     if (self->position.x - 0x800000 < (ScreenInfo->position.x + ScreenInfo->centerX) << 16) {
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 1, &self->thrustAnimator, true, 0);
+
         self->velocity.x = 0x6000;
         if (SaveGame->saveRAM->chaosEmeralds == 0b01111111)
             self->state = EscapeCar_StateEncore_GoodEnd;
@@ -219,6 +226,7 @@ void EscapeCar_StateEncore_BadEnd(void)
 
     if (self->velocity.x < 0x80000)
         self->velocity.x += 0x2800;
+
     self->position.x += self->velocity.x;
 }
 
@@ -233,26 +241,26 @@ void EscapeCar_StateEncore_GoodEnd(void)
         self->velocity.x += 0x2800;
 
     self->position.x += self->velocity.x;
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (abs(player1->position.x - self->position.x) < 0x100000) {
-        EntityDebris *debris = CREATE_ENTITY(Debris, NULL, self->position.x, self->position.y);
-        debris->state        = Debris_State_Fall;
-        debris->gravityStrength      = 0x3800;
-        debris->velocity.x   = 0x30000;
-        debris->velocity.y   = -0x78000;
-        debris->drawFX       = FX_SCALE | FX_ROTATE;
-        debris->scale.x      = 0x200;
-        debris->scale.y      = 0x200;
-        debris->drawOrder    = Zone->objectDrawLow + 1;
-        debris->rotSpeed     = 2;
+        EntityDebris *debris    = CREATE_ENTITY(Debris, NULL, self->position.x, self->position.y);
+        debris->state           = Debris_State_Fall;
+        debris->gravityStrength = 0x3800;
+        debris->velocity.x      = 0x30000;
+        debris->velocity.y      = -0x78000;
+        debris->drawFX          = FX_SCALE | FX_ROTATE;
+        debris->scale.x         = 0x200;
+        debris->scale.y         = 0x200;
+        debris->drawOrder       = Zone->objectDrawLow + 1;
+        debris->rotSpeed        = 2;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 7, &debris->animator, true, 0);
         debris->animator.rotationFlag = 1;
         debris->isPermanent           = true;
 
         debris                        = CREATE_ENTITY(Debris, NULL, self->position.x, self->position.y);
         debris->state                 = Debris_State_Fall;
-        debris->gravityStrength               = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->velocity.x            = 0x40000;
         debris->velocity.y            = -0x48000;
         debris->drawFX                = FX_ROTATE;
@@ -272,9 +280,11 @@ void EscapeCar_StateEncore_GoodEnd(void)
 void EscapeCar_EditorDraw(void)
 {
     RSDK_THIS(EscapeCar);
+
     self->drawOrder     = Zone->objectDrawLow;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
         self->state = EscapeCar_StateEncore_Setup;
@@ -283,10 +293,8 @@ void EscapeCar_EditorDraw(void)
     else {
 #endif
         switch (GET_CHARACTER_ID(1)) {
-            default: 
-            case ID_SONIC:
-                self->driver = ESCAPECAR_DRIVER_KNUX; 
-                break;
+            default:
+            case ID_SONIC: self->driver = ESCAPECAR_DRIVER_KNUX; break;
 
             case ID_TAILS:
 #if MANIA_USE_PLUS
@@ -296,17 +304,14 @@ void EscapeCar_EditorDraw(void)
                 self->driver = ESCAPECAR_DRIVER_SONIC;
                 break;
 
-            case ID_KNUCKLES:
-                if (CHECK_CHARACTER_ID(ID_KNUCKLES, 2))
-                    self->driver = ESCAPECAR_DRIVER_KNUX;
-                else
-                    self->driver = ESCAPECAR_DRIVER_SONIC;
-                break;
+            case ID_KNUCKLES: self->driver = CHECK_CHARACTER_ID(ID_KNUCKLES, 2) ? ESCAPECAR_DRIVER_KNUX : ESCAPECAR_DRIVER_SONIC; break;
         }
+
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 2 + self->driver, &self->driverAnimator, true, 0);
 #if MANIA_USE_PLUS
     }
 #endif
+
     RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 0, &self->carAnimator, true, 0);
 
     RSDK.DrawSprite(&self->driverAnimator, NULL, false);

@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    WALLBUMPER_H,
+    WALLBUMPER_V,
+} WallBumperTypes;
+
 // Object Class
 struct ObjectWallBumper {
     RSDK_OBJECT
@@ -29,7 +34,7 @@ void WallBumper_Update(void);
 void WallBumper_LateUpdate(void);
 void WallBumper_StaticUpdate(void);
 void WallBumper_Draw(void);
-void WallBumper_Create(void* data);
+void WallBumper_Create(void *data);
 void WallBumper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void WallBumper_EditorDraw(void);
@@ -43,4 +48,4 @@ void WallBumper_DebugDraw(void);
 
 void WallBumper_HandleInteractions(void);
 
-#endif //!OBJ_WALLBUMPER_H
+#endif //! OBJ_WALLBUMPER_H

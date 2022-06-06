@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define TMZCable_JointCount (8)
+#define TMZCABLE_JOINT_COUNT (8)
 
 // Object Class
 struct ObjectTMZCable {
@@ -18,8 +18,8 @@ struct EntityTMZCable {
     int32 timer;
     int32 cableID;
     Vector2 offset;
-    Vector2 drawPos[TMZCable_JointCount];
-    bool32 drawFlags[TMZCable_JointCount];
+    Vector2 jointPos[TMZCABLE_JOINT_COUNT];
+    bool32 jointVisible[TMZCABLE_JOINT_COUNT];
     Vector2 *parentPos;
     Animator animator;
 };
@@ -32,7 +32,7 @@ void TMZCable_Update(void);
 void TMZCable_LateUpdate(void);
 void TMZCable_StaticUpdate(void);
 void TMZCable_Draw(void);
-void TMZCable_Create(void* data);
+void TMZCable_Create(void *data);
 void TMZCable_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TMZCable_EditorDraw(void);
@@ -42,10 +42,11 @@ void TMZCable_Serialize(void);
 
 // Extra Entity Functions
 void TMZCable_HandleDrawPositions(void);
+
 void TMZCable_State_Idle(void);
 void TMZCable_State_Charge(void);
 void TMZCable_State_Live(void);
 void TMZCable_State_Fade(void);
 void TMZCable_State_Destroyed(void);
 
-#endif //!OBJ_TMZCABLE_H
+#endif //! OBJ_TMZCABLE_H

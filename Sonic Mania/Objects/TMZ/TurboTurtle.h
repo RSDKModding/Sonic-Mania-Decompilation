@@ -7,7 +7,7 @@ typedef enum {
     TURBOTURTLE_FANDIR_TOP,
     TURBOTURTLE_FANDIR_RIGHT,
     TURBOTURTLE_FANDIR_LEFT,
-}TurboTurtleFanDirs;
+} TurboTurtleFanDirs;
 
 // Object Class
 struct ObjectTurboTurtle {
@@ -55,7 +55,7 @@ void TurboTurtle_Update(void);
 void TurboTurtle_LateUpdate(void);
 void TurboTurtle_StaticUpdate(void);
 void TurboTurtle_Draw(void);
-void TurboTurtle_Create(void* data);
+void TurboTurtle_Create(void *data);
 void TurboTurtle_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TurboTurtle_EditorDraw(void);
@@ -70,7 +70,7 @@ void TurboTurtle_DebugDraw(void);
 void TurboTurtle_CheckPlayerCollisions(void);
 void TurboTurtle_SetupState(void);
 void TurboTurtle_HandleFans(void);
-void TurboTurtle_HandleFanDebris(uint8 type, int strength, int length);
+void TurboTurtle_HandleFanParticles(uint8 type, int32 strength, int32 length);
 
 bool32 TurboTurtle_FanCheckCB(void);
 
@@ -83,4 +83,4 @@ void TurboTurtle_State_FanRight(void);
 void TurboTurtle_State_TurnFanLeft(void);
 void TurboTurtle_State_FanLeft(void);
 
-#endif //!OBJ_TURBOTURTLE_H
+#endif //! OBJ_TURBOTURTLE_H

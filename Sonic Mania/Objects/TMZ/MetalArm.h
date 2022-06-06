@@ -42,7 +42,7 @@ void MetalArm_Update(void);
 void MetalArm_LateUpdate(void);
 void MetalArm_StaticUpdate(void);
 void MetalArm_Draw(void);
-void MetalArm_Create(void* data);
+void MetalArm_Create(void *data);
 void MetalArm_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MetalArm_EditorDraw(void);
@@ -59,4 +59,4 @@ void MetalArm_State_MoveToHold(void);
 void MetalArm_State_Holding(void);
 void MetalArm_State_MoveToStart(void);
 
-#endif //!OBJ_METALARM_H
+#endif //! OBJ_METALARM_H

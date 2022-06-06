@@ -10,20 +10,25 @@ typedef enum {
     TMZ1_STAGESTATE_LIFT = 2,
 } TMZ1StageStates;
 
+typedef enum {
+    TMZ1_BG_CITY,
+    TMZ1_BG_LIFT,
+} BGSwitchIDsTMZ1;
+
 // Object Class
 struct ObjectTMZ1Setup {
     RSDK_OBJECT
     bool32 paletteInit;
-    int32 aniTileDelay;
+    int32 aniTileDuration;
     int32 angle;
     int32 unused1;
-    int32 aniTileFrame;
+    int32 bannerAniFrame;
     int32 stageState;
     int32 unused2;
     int32 unused3;
     bool32 hasAchievement;
     uint16 aniTiles;
-    TileLayer* bgPtr;
+    TileLayer *background1;
 };
 
 // Entity Class
@@ -41,10 +46,12 @@ void TMZ1Setup_Update(void);
 void TMZ1Setup_LateUpdate(void);
 void TMZ1Setup_StaticUpdate(void);
 void TMZ1Setup_Draw(void);
-void TMZ1Setup_Create(void* data);
+void TMZ1Setup_Create(void *data);
 void TMZ1Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TMZ1Setup_EditorDraw(void);
 void TMZ1Setup_EditorLoad(void);
+#endif
 void TMZ1Setup_Serialize(void);
 
 // Extra Entity Functions
@@ -60,4 +67,4 @@ void TMZ1Setup_State_ShowCityBG(void);
 void TMZ1Setup_State_ShowSkyBG(void);
 void TMZ1Setup_State_FadeIntoOutsideBGs(void);
 
-#endif //!OBJ_TMZ1SETUP_H
+#endif //! OBJ_TMZ1SETUP_H
