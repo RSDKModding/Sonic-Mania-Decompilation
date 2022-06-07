@@ -124,10 +124,10 @@ void RSDK::SetupFunctionTables()
     ADD_API_FUNCTION(APITable_FetchLeaderboard, FetchLeaderboard);
     ADD_API_FUNCTION(APITable_TrackScore, TrackScore);
     ADD_API_FUNCTION(APITable_GetLeaderboardsStatus, GetLeaderboardsStatus);
-    ADD_API_FUNCTION(APITable_LeaderboardEntryCount, LeaderboardEntryCount);
-    ADD_API_FUNCTION(APITable_LeaderboardEntryLength, LeaderboardEntryLength);
-    ADD_API_FUNCTION(APITable_LoadNewLeaderboardEntries, LoadNewLeaderboardEntries);
-    ADD_API_FUNCTION(APITable_ClearLeaderboardInfo, ClearLeaderboardInfo);
+    ADD_API_FUNCTION(APITable_LeaderboardEntryViewSize, LeaderboardEntryViewSize);
+    ADD_API_FUNCTION(APITable_LeaderboardEntryLoadSize, LeaderboardEntryLoadSize);
+    ADD_API_FUNCTION(APITable_LoadLeaderboardEntries, LoadLeaderboardEntries);
+    ADD_API_FUNCTION(APITable_ResetLeaderboardInfo, ResetLeaderboardInfo);
     ADD_API_FUNCTION(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
 
     // Rich Presence

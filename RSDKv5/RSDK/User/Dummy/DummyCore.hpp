@@ -3,6 +3,15 @@
 // This is the "dummy" struct, it serves as the base in the event a suitable API isn't loaded (such as in this decomp)
 // This struct should never be removed, other structs such as "SteamUserCore" would be added and "userCore" would be set to that instead
 struct DummyCore : UserCore {
+    DummyCore()
+    {
+        // are sonic mania plus features enabled?
+        values[0]  = false;
+        valueCount = 1;
+
+        for (int32 v = 0; v < valueCount; ++v) values[v] = true;
+    }
+
     void StageLoad();
     bool32 CheckFocusLost();
     int32 GetUserLanguage();
@@ -52,9 +61,6 @@ struct DummyCore : UserCore {
         return false;
     }
 #endif
-
-    uint16 field_25;
-    uint8 field_27;
 };
 
 extern DummyCore *dummyCore;

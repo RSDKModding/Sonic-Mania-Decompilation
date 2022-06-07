@@ -50,7 +50,6 @@ void DummyUserStorage::ClearPrerollErrors()
 
 void DummyUserStorage::ProcessFileLoadTime()
 {
-
     for (int32 f = fileList.Count() - 1; f >= 0; --f) {
         DummyFileInfo *file = fileList.At(f);
         if (!file)
@@ -84,6 +83,9 @@ void DummyUserStorage::ProcessFileLoadTime()
                 case 2:
                     success = SaveUserFile(file->path, file->fileBuffer, file->fileSize);
                     status  = STATUS_ERROR;
+
+                    if (file->compressed)
+                        RemoveStorageEntry((void **)&file->fileBuffer);
                     break;
 
                 case 3:
@@ -148,11 +150,12 @@ bool32 DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uin
         file->storageTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME", 0));
 
         if (compressed) {
-            AllocateStorage(size, (void **)&file->fileSize, DATASET_TMP, false);
+            AllocateStorage(size, (void **)&file->fileBuffer, DATASET_TMP, false);
 
-            uLongf clen = 0;
-            compress((Bytef *)file->fileBuffer, &clen, (Bytef *)file->fileBuffer, (uLong)size);
-            file->fileSize = (int32)clen;
+            uLongf clen = size;
+            compress((Bytef *)file->fileBuffer, &clen, (Bytef *)buffer, (uLong)size);
+            file->fileSize   = (int32)clen;
+            file->compressed = true;
         }
         else {
             file->fileBuffer = buffer;

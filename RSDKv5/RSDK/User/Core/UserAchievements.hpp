@@ -48,7 +48,7 @@ struct UserAchievements {
 #endif
     virtual void TryUnlockAchievement(AchievementID *id) { PrintLog(PRINT_POPUP, "Achievement Unlocked: %s", id->identifier); }
 
-    bool32 enabled = false;
+    bool32 enabled = true;
 };
 
 #endif

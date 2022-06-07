@@ -442,7 +442,7 @@ void UILeaderboard_ProcessButtonCB(void)
     RSDK_THIS(UILeaderboard);
 
 #if MANIA_USE_PLUS
-    LeaderboardAvail entryCount = API.LeaderboardEntryCount();
+    LeaderboardAvail avail = API.LeaderboardEntryViewSize();
 
     int32 newID = self->entryOffset;
     if (UIControl->anyUpPress)
@@ -454,28 +454,28 @@ void UILeaderboard_ProcessButtonCB(void)
     else if (UIControl->anyRightPress)
         newID += 5;
 
-    int32 end = entryCount.start + entryCount.length;
+    int32 end = avail.start + avail.length;
     if (newID >= end)
         newID = end - 5;
-    if (newID < entryCount.start)
-        newID = entryCount.start;
+    if (newID < avail.start)
+        newID = avail.start;
 
-    if (entryCount.length && self->entryOffset != newID) {
+    if (avail.length && self->entryOffset != newID) {
         LogHelpers_Print("old: %d, new: %d", self->entryOffset, newID);
         self->entryOffset = newID;
 
         UILeaderboard_LoadEntries(self);
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
 
-        if (entryCount.start <= 1 || newID >= entryCount.start + 2) {
-            if (newID > (entryCount.start + entryCount.length - 7)) {
+        if (avail.start <= 1 || newID >= avail.start + 2) {
+            if (newID > (avail.start + avail.length - 7)) {
                 LogHelpers_Print("Load down");
-                API.LoadNewLeaderboardEntries(entryCount.start, entryCount.length + 20, 2);
+                API.LoadLeaderboardEntries(avail.start, avail.length + 20, 2);
             }
         }
         else {
             LogHelpers_Print("Load up");
-            API.LoadNewLeaderboardEntries(entryCount.start - 20, entryCount.length + 20, 1);
+            API.LoadLeaderboardEntries(avail.start - 20, avail.length + 20, 1);
         }
     }
 

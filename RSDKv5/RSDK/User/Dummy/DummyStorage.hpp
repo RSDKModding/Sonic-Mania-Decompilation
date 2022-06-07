@@ -8,6 +8,7 @@ struct DummyFileInfo {
     void *fileBuffer;
     int32 fileSize;
     int32 storageTime;
+    bool32 compressed;
 };
 
 // This is the "dummy" struct, it serves as the base in the event a suitable API isn't loaded (such as in this decomp)
