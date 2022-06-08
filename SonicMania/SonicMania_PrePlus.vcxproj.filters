@@ -503,9 +503,6 @@
     <ClInclude Include="Objects\OOZ\Sol.h">
       <Filter>Sources\Objects\OOZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\OOZ\SwitchDoor.h">
-      <Filter>Sources\Objects\OOZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\OOZ\Valve.h">
       <Filter>Sources\Objects\OOZ</Filter>
     </ClInclude>
@@ -1640,12 +1637,6 @@
     <ClInclude Include="Objects\LRZ\BuckwildBall.h">
       <Filter>Sources\Objects\LRZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\LRZ\ConveyorBelt.h">
-      <Filter>Sources\Objects\LRZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\LRZ\ConveyorPlatform.h">
-      <Filter>Sources\Objects\LRZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\LRZ\DashLift.h">
       <Filter>Sources\Objects\LRZ</Filter>
     </ClInclude>
@@ -1948,6 +1939,15 @@
     </ClInclude>
     <ClInclude Include="Objects\Credits\TAEmerald.h">
       <Filter>Sources\Objects\Credits</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\FBZ\SwitchDoor.h">
+      <Filter>Sources\Objects\FBZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\MMZ\ConveyorBelt.h">
+      <Filter>Sources\Objects\MMZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\MMZ\ConveyorPlatform.h">
+      <Filter>Sources\Objects\MMZ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2342,9 +2342,6 @@
       <Filter>Sources\Objects\OOZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Sol.c">
-      <Filter>Sources\Objects\OOZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\OOZ\SwitchDoor.c">
       <Filter>Sources\Objects\OOZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Valve.c">
@@ -3481,12 +3478,6 @@
     <ClCompile Include="Objects\LRZ\BuckwildBall.c">
       <Filter>Sources\Objects\LRZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\LRZ\ConveyorBelt.c">
-      <Filter>Sources\Objects\LRZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\LRZ\ConveyorPlatform.c">
-      <Filter>Sources\Objects\LRZ</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\LRZ\DashLift.c">
       <Filter>Sources\Objects\LRZ</Filter>
     </ClCompile>
@@ -3783,6 +3774,15 @@
     </ClCompile>
     <ClCompile Include="Objects\Credits\TAEmerald.c">
       <Filter>Sources\Objects\Credits</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\FBZ\SwitchDoor.c">
+      <Filter>Sources\Objects\FBZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\MMZ\ConveyorBelt.c">
+      <Filter>Sources\Objects\MMZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\MMZ\ConveyorPlatform.c">
+      <Filter>Sources\Objects\MMZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

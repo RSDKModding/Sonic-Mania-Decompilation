@@ -9,7 +9,7 @@
 #define sku_region   SKU->region
 
 #define API_GetConfirmButtonFlip               API.GetConfirmButtonFlip
-#define API_UnlockAchievement                  API.UnlockAchievement
+#define API_UnlockAchievement(info)            API.UnlockAchievement(info)
 #define API_SetAchievementsEnabled(enabled)    API.SetAchievementsEnabled(enabled)
 #define API_GetAchievementsEnabled()           API.GetAchievementsEnabled()
 #define API_SetRichPresence                    API.SetRichPresence
@@ -35,7 +35,7 @@
 #define sku_region   GameInfo->region
 
 #define API_GetConfirmButtonFlip               APICallback_GetConfirmButtonFlip
-#define API_UnlockAchievement                  APICallback_UnlockAchievement
+#define API_UnlockAchievement(info)            APICallback_UnlockAchievement((info)->id)
 #define API_SetAchievementsEnabled(enabled)    APICallback->achievementsDisabled = !(enabled)
 #define API_GetAchievementsEnabled()           !APICallback->achievementsDisabled
 #define API_SetRichPresence                    APICallback_SetRichPresence

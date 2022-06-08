@@ -553,7 +553,11 @@ void Water_State_Palette(void)
                                 break;
 
                             case 1080:
+#if MANIA_USE_PLUS
                                 if (globals->gameMode != MODE_COMPETITION && globals->gameMode != MODE_ENCORE) {
+#else
+                                if (globals->gameMode != MODE_COMPETITION) {
+#endif
                                     if (!player->sidekick)
                                         Music_PlayQueuedTrack(TRACK_DROWNING);
                                 }

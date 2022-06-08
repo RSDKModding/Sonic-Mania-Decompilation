@@ -158,6 +158,7 @@
     <ClInclude Include="Objects\FBZ\PropellerShaft.h" />
     <ClInclude Include="Objects\FBZ\SpiderMobile.h" />
     <ClInclude Include="Objects\FBZ\SpiralPlatform.h" />
+    <ClInclude Include="Objects\FBZ\SwitchDoor.h" />
     <ClInclude Include="Objects\FBZ\Technosqueek.h" />
     <ClInclude Include="Objects\FBZ\TetherBall.h" />
     <ClInclude Include="Objects\FBZ\Tuesday.h" />
@@ -271,8 +272,6 @@
     <ClInclude Include="Objects\HPZ\Redz.h" />
     <ClInclude Include="Objects\HPZ\Stegway.h" />
     <ClInclude Include="Objects\LRZ\BuckwildBall.h" />
-    <ClInclude Include="Objects\LRZ\ConveyorBelt.h" />
-    <ClInclude Include="Objects\LRZ\ConveyorPlatform.h" />
     <ClInclude Include="Objects\LRZ\DashLift.h" />
     <ClInclude Include="Objects\LRZ\Drillerdroid.h" />
     <ClInclude Include="Objects\LRZ\DrillerdroidO.h" />
@@ -373,6 +372,8 @@
     <ClInclude Include="Objects\Menu\UIWinSize.h" />
     <ClInclude Include="Objects\MMZ\BladePole.h" />
     <ClInclude Include="Objects\MMZ\BuzzSaw.h" />
+    <ClInclude Include="Objects\MMZ\ConveyorBelt.h" />
+    <ClInclude Include="Objects\MMZ\ConveyorPlatform.h" />
     <ClInclude Include="Objects\MMZ\ConveyorWheel.h" />
     <ClInclude Include="Objects\MMZ\EggPistonsMKII.h" />
     <ClInclude Include="Objects\MMZ\FarPlane.h" />
@@ -440,7 +441,6 @@
     <ClInclude Include="Objects\OOZ\PushSpring.h" />
     <ClInclude Include="Objects\OOZ\Smog.h" />
     <ClInclude Include="Objects\OOZ\Sol.h" />
-    <ClInclude Include="Objects\OOZ\SwitchDoor.h" />
     <ClInclude Include="Objects\OOZ\Valve.h" />
     <ClInclude Include="Objects\PGZ\Acetone.h" />
     <ClInclude Include="Objects\PGZ\Crate.h" />
@@ -907,6 +907,7 @@
     </ClCompile>
     <ClCompile Include="Objects\FBZ\SpiralPlatform.c">
     </ClCompile>
+    <ClCompile Include="Objects\FBZ\SwitchDoor.c" />
     <ClCompile Include="Objects\FBZ\Technosqueek.c">
     </ClCompile>
     <ClCompile Include="Objects\FBZ\TetherBall.c">
@@ -1126,10 +1127,6 @@
     </ClCompile>
     <ClCompile Include="Objects\LRZ\BuckwildBall.c">
     </ClCompile>
-    <ClCompile Include="Objects\LRZ\ConveyorBelt.c">
-    </ClCompile>
-    <ClCompile Include="Objects\LRZ\ConveyorPlatform.c">
-    </ClCompile>
     <ClCompile Include="Objects\LRZ\DashLift.c">
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Drillerdroid.c">
@@ -1330,6 +1327,8 @@
     </ClCompile>
     <ClCompile Include="Objects\MMZ\BuzzSaw.c">
     </ClCompile>
+    <ClCompile Include="Objects\MMZ\ConveyorBelt.c" />
+    <ClCompile Include="Objects\MMZ\ConveyorPlatform.c" />
     <ClCompile Include="Objects\MMZ\ConveyorWheel.c">
     </ClCompile>
     <ClCompile Include="Objects\MMZ\EggPistonsMKII.c">
@@ -1463,8 +1462,6 @@
     <ClCompile Include="Objects\OOZ\Smog.c">
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Sol.c">
-    </ClCompile>
-    <ClCompile Include="Objects\OOZ\SwitchDoor.c">
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Valve.c">
     </ClCompile>
