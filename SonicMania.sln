@@ -3,19 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5-sdl2", "RSDKv5\RSDKv5_sdl2.vcxproj", "{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_All", "SonicMania\SonicMania_All.vcxproj", "{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5-dx9", "RSDKv5\RSDKv5_dx9.vcxproj", "{A082FD51-53AF-4EF7-B03E-BCE50E144BD4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania", "SonicMania\SonicMania.vcxproj", "{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5-gl3", "RSDKv5\RSDKv5_gl3.vcxproj", "{A842E0D8-1D55-4B5D-92B2-5B6770021626}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5-dx11", "RSDKv5\RSDKv5_dx11.vcxproj", "{D7519639-FF5E-4DF7-ADC7-2EAA7C22096E}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_All", "Sonic Mania\Sonic Mania_All.vcxproj", "{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania", "Sonic Mania\Sonic Mania.vcxproj", "{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_PrePlus", "Sonic Mania\Sonic Mania_PrePlus.vcxproj", "{EEE41353-F9F9-491E-A325-85A98CF0B9AB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_PrePlus", "SonicMania\SonicMania_PrePlus.vcxproj", "{EEE41353-F9F9-491E-A325-85A98CF0B9AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
