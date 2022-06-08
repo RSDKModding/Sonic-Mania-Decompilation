@@ -32,57 +32,100 @@ struct LeaderboardEntry {
 };
 
 #if RETRO_REV02
-struct LeaderboardsUnknown2 {
-    int32 loadType;
-    int32 loadStartIndex;
-    int32 loadEndIndex;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
+enum LeaderboardLoadTypes {
+    LEADERBOARD_LOAD_INIT,
+    LEADERBOARD_LOAD_PREV,
+    LEADERBOARD_LOAD_NEXT,
 };
 
-struct LeaderboardsUnknown {
-    void *parent;
-    int32 loadStatus;
-    int32 globalRankOffset;
-    LeaderboardAvail entryCount;
-    LeaderboardAvail entryStart;
-    LeaderboardEntry entries[25];
+struct UserLeaderboards;
+struct LeaderboardLoadList;
+
+struct LeaderboardLoadInfo
+{
+    LeaderboardLoadList *parent;
+    int32 status;
+    LeaderboardAvail avail;
+    LeaderboardEntry entries[20];
+    uint8 disableLoadPrev;
+    uint8 disableLoadNext;
+    LeaderboardLoadInfo *prev;
+    LeaderboardLoadInfo *next;
+    int32 unused;
+};
+
+struct LeaderboardLoadList {
+    LeaderboardLoadInfo *InitLoadInfo();
+    void Clear();
+    void AddLoadInfoPrev(LeaderboardLoadInfo *info);
+    void AddLoadInfoNext(LeaderboardLoadInfo *info);
+    void RemoveLoadInfoPrev();
+    void RemoveLoadInfoNext();
+
+    UserLeaderboards *parent;
+    void *unused;
+    int32 count;
+    LeaderboardLoadInfo *prev;
+    LeaderboardLoadInfo *next;
+    LeaderboardLoadInfo *last;
+};
+
+struct LeaderboardEntryInfo {
+    void Setup();
+    void HandleTimers();
+    void LoadLeaderboardEntries(int32 start, uint32 length, int32 type);
+
+    UserLeaderboards *parent;
+    LeaderboardLoadList *loadList;
+    LeaderboardLoadTypes loadType;
+    LeaderboardAvail loadSize;
+    LeaderboardAvail viewSize;
+    LeaderboardEntry *entries[200];
 };
 
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
 struct UserLeaderboards {
+    UserLeaderboards()
+    {
+        memset(&loadList, 0, sizeof(loadList));
+        memset(&entryInfo, 0, sizeof(entryInfo));
+
+        loadList.parent       = this;
+        entryInfo.loadList = &loadList;
+        entryInfo.parent      = this;
+    }
+
     virtual void StageLoad()
     {
-        currentLeaderboard = 0;
-        // callback           = 0;
-        // field_18           = 0;
-        // downloadCallback   = 0;
-        // end                = 0;
-        // start              = 0;
-        status             = STATUS_NONE;
-        // ClearUnknown1(&unknown);
+        this->currentLeaderboard = NULL;
+        this->status             = STATUS_NONE;
+
+        this->loadList.prev       = NULL;
+        this->loadList.next       = NULL;
+        this->loadList.last       = NULL;
+        this->loadList.count      = 0;
+        this->loadList.unused     = 0;
+
+        this->entryInfo.Setup();
     }
-    virtual void FrameInit() {}
+    virtual void FrameInit() { entryInfo.HandleTimers(); }
     virtual void OnUnknownEvent() {}
 #if RETRO_VER_EGS
     virtual bool32 CheckLeaderboardsEnabled() { return true; }
 #endif
     virtual int32 InitLeaderboards() { return 0; }
     virtual void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser) {}
-    virtual void LoadLeaderboards(void *info) {}
+    virtual void LoadLeaderboards(LeaderboardLoadInfo *info) {}
     virtual void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank)) {}
-    virtual int32 GetStatus() { return status; }
+    virtual int32 GetStatus() { return this->status; }
 
     LeaderboardID *currentLeaderboard;
-    LeaderboardsUnknown2 unknown2;
-    LeaderboardsUnknown entryInfo;
-    int32 status   = 0;
+    LeaderboardLoadList loadList;
+    LeaderboardEntryInfo entryInfo;
+    int32 status   = STATUS_NONE;
     int32 userRank = 0;
     bool32 isUser  = false;
-    int32 list     = 0;
-    int32 listSize = 0;
 };
 #endif
 
@@ -135,10 +178,13 @@ inline void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)
 }
 inline int32 GetLeaderboardsStatus() { return leaderboards->GetStatus(); }
 
-LeaderboardAvail LeaderboardEntryLength();
-LeaderboardAvail LeaderboardEntryCount();
-void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type);
-void ClearLeaderboardInfo();
+inline LeaderboardAvail LeaderboardEntryViewSize() { return leaderboards->entryInfo.viewSize; }
+inline LeaderboardAvail LeaderboardEntryLoadSize() { return leaderboards->entryInfo.loadSize; }
+inline void LoadLeaderboardEntries(int32 start, uint32 length, int32 type)
+{
+    leaderboards->entryInfo.LoadLeaderboardEntries(start, length, type);
+}
+void ResetLeaderboardInfo();
 LeaderboardEntry *ReadLeaderboardEntry(int32 entryID);
 #endif
 

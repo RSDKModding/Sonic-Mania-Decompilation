@@ -24,7 +24,7 @@ struct UserStats {
     virtual void OnUnknownEvent() {}
     virtual void TryTrackStat(StatInfo *stat) {}
 
-    bool32 enabled;
+    bool32 enabled = true;
 };
 
 extern UserStats *stats;

@@ -40,9 +40,9 @@ struct UserStorage {
     virtual bool32 TryDeleteUserFile(const char *filename, void (*callback)(int32 status)) { return false; }
     virtual void ClearPrerollErrors() {}
 
-    int32 authStatus    = 0;
-    int32 storageStatus = 0;
-    int32 saveStatus    = 0;
+    int32 authStatus    = STATUS_NONE;
+    int32 storageStatus = STATUS_NONE;
+    int32 saveStatus    = STATUS_NONE;
     int32 noSaveActive  = false;
 };
 

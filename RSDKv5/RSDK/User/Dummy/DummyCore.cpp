@@ -81,25 +81,6 @@ DummyCore *InitDummyCore()
         delete userStorage;
     userStorage = new DummyUserStorage;
 
-    // Setup default values
-
-    // are sonic mania plus features enabled?
-    core->values[0]  = false;
-    core->valueCount = 1;
-
-    for (int32 v = 0; v < core->valueCount; ++v) core->values[v] = true;
-
-    leaderboards->userRank = 0;
-    leaderboards->isUser   = false;
-
-    achievements->enabled      = true;
-    leaderboards->status       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
-    stats->enabled             = true;
-    userStorage->authStatus    = STATUS_NONE;
-    userStorage->storageStatus = STATUS_NONE;
-    userStorage->saveStatus    = STATUS_NONE;
-    userStorage->noSaveActive  = false;
-
     return core;
 }
 

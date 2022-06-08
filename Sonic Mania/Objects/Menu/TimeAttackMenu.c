@@ -346,21 +346,21 @@ void TimeAttackMenu_MenuUpdateCB_LB(void)
 
     if (control->active == ACTIVE_ALWAYS) {
         EntityUICarousel *carousel = control->carousel;
-        LeaderboardAvail avail     = API.LeaderboardEntryCount();
+        LeaderboardAvail avail     = API.LeaderboardEntryViewSize();
 
         if (avail.start <= 1 || carousel->scrollOffset >= avail.start + 2) {
             if (carousel->scrollOffset > avail.length - control->buttonCount + avail.start - 2) {
                 // Load Down
-                API.LoadNewLeaderboardEntries(avail.start, avail.length + 20, 2);
+                API.LoadLeaderboardEntries(avail.start, avail.length + 20, 2);
             }
         }
         else {
             // Load Up
-            API.LoadNewLeaderboardEntries(avail.start - 20, avail.length + 20, 1);
+            API.LoadLeaderboardEntries(avail.start - 20, avail.length + 20, 1);
         }
 
         // Load the new entry count after (possibly) reloading new entries
-        avail               = API.LeaderboardEntryCount();
+        avail               = API.LeaderboardEntryViewSize();
         carousel->minOffset = maxVal(avail.start, 1);
         carousel->maxOffset = maxVal(avail.start + avail.length, carousel->minOffset + 5);
 
@@ -982,7 +982,7 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel)
 {
     EntityUIControl *parent = (EntityUIControl *)carousel->parent;
 
-    LeaderboardAvail avail = API.LeaderboardEntryCount();
+    LeaderboardAvail avail = API.LeaderboardEntryViewSize();
     carousel->minOffset    = maxVal(avail.start, 1);
     carousel->maxOffset    = maxVal(avail.start + avail.length, carousel->minOffset + 5);
 

@@ -375,16 +375,19 @@ void RSDK::SKU::UserDB::Save(int32 totalSize, uint8 *buffer)
         *(uint32 *)buffer = RETRO_USERDB_SIGNATURE;
         buffer += sizeof(uint32);
     }
+
     if (size + sizeof(uint32) < totalSize) {
         size += sizeof(uint32);
         *(uint32 *)buffer = (int32)GetSize(); // used size
         buffer += sizeof(uint32);
     }
+
     if (size + sizeof(uint16) < totalSize) {
         size += sizeof(uint16);
         *(uint16 *)buffer = rowCount;
         buffer += sizeof(uint16);
     }
+
     if (size + sizeof(uint8) < totalSize) {
         ++size;
         *buffer++ = columnCount;
