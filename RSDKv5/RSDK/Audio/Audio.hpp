@@ -163,6 +163,8 @@ void ClearGlobalSfx();
 #include "NX/NXAudioDevice.hpp"
 #elif RETRO_AUDIODEVICE_SDL2
 #include "SDL2/SDL2AudioDevice.hpp"
+#elif RETRO_AUDIODEVICE_AAUDIO
+#include "AAudio/AAudioDevice.hpp"
 #endif
 
 } // namespace RSDK

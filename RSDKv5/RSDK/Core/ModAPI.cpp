@@ -26,9 +26,6 @@ namespace fs = std::filesystem;
 
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
 #include <dlfcn.h>
-#if RETRO_PLATFORM == RETRO_ANDROID
-#define dlopen(file, flags) SDL_LoadObject(file)
-#endif
 #endif
 
 #include "iniparser/iniparser.h"

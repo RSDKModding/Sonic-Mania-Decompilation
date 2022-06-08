@@ -17,7 +17,7 @@ GLFWwindow *RenderDevice::window;
 GLuint RenderDevice::VAO;
 GLuint RenderDevice::VBO;
 
-GLuint RenderDevice::screenTextures[SCREEN_MAX];
+GLuint RenderDevice::screenTextures[SCREEN_COUNT];
 GLuint RenderDevice::imageTexture;
 
 double RenderDevice::lastFrame;
@@ -203,7 +203,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     int32 maxPixHeight = 0;
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         if (videoSettings.pixHeight > maxPixHeight)
             maxPixHeight = videoSettings.pixHeight;
 
@@ -261,9 +261,9 @@ bool RenderDevice::InitGraphicsAPI()
     glViewport(viewportPos.x, viewportPos.y, viewportSize.x, viewportSize.y);
 
     glActiveTexture(GL_TEXTURE0);
-    glGenTextures(SCREEN_MAX, screenTextures);
+    glGenTextures(SCREEN_COUNT, screenTextures);
 
-    for (int32 i = 0; i < SCREEN_MAX; ++i) {
+    for (int32 i = 0; i < SCREEN_COUNT; ++i) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureSize.x, textureSize.y, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
 
@@ -462,7 +462,7 @@ void RenderDevice::FlipScreen()
 
 void RenderDevice::Release(bool32 isRefresh)
 {
-    glDeleteTextures(SCREEN_MAX, screenTextures);
+    glDeleteTextures(SCREEN_COUNT, screenTextures);
     glDeleteTextures(1, &imageTexture);
     if (videoBuffer)
         delete[] videoBuffer;
@@ -512,7 +512,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_COUNT; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -535,7 +535,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             return;
     }
 
-    if (shaderCount == SHADER_MAX)
+    if (shaderCount == SHADER_COUNT)
         return;
 
     ShaderEntry *shader = &shaderList[shaderCount];
@@ -830,7 +830,7 @@ void RenderDevice::ProcessKeyEvent(GLFWwindow *, int32 key, int32 scancode, int3
                     break;
 
                 case GLFW_KEY_F7:
-                    if (engine.devMenu && videoSettings.screenCount < SCREEN_MAX)
+                    if (engine.devMenu && videoSettings.screenCount < SCREEN_COUNT)
                         videoSettings.screenCount++;
                     break;
 
@@ -965,7 +965,7 @@ void RenderDevice::ProcessMaximizeEvent(GLFWwindow *, int32 maximized)
 
 void RenderDevice::SetLinear(bool32 linear)
 {
-    for (int32 i = 0; i < SCREEN_MAX; ++i) {
+    for (int32 i = 0; i < SCREEN_COUNT; ++i) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[i]);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR : GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);

@@ -42,7 +42,7 @@ public:
 
     static GLFWwindow *window;
 
-    static GLuint screenTextures[SCREEN_MAX];
+    static GLuint screenTextures[SCREEN_COUNT];
     static GLuint imageTexture;
 
 private:

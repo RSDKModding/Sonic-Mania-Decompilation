@@ -1,22 +1,23 @@
 class RenderDevice : public RenderDeviceBase
 {
 public:
-#if RETRO_PLATFORM == RETRO_SWITCH
     struct WindowInfo {
+        // WindowInfo mad useless in EGL so we cheat
+        typedef struct {
+            uint32 width;
+            uint32 height;
+            uint32 refresh_rate;
+        } BasicWindowInfo;
         union {
             struct {
-                uint8 _pad1[offsetof(NWindow, width)];
                 uint32 width;
                 uint32 height;
-                uint8 _pad2[offsetof(NWindow, swap_interval) - offsetof(NWindow, width)];
                 uint32 refresh_rate;
             };
-            NWindow internal;
+            BasicWindowInfo internal;
         } * displays;
     };
-#elif RETRO_PLATFORM == RETRO_ANDROID
 
-#endif
     static WindowInfo displayInfo;
 
     static bool Init();
@@ -56,7 +57,7 @@ public:
     static ANativeWindow *window;
 #endif
 
-    static GLuint screenTextures[SCREEN_MAX];
+    static GLuint screenTextures[SCREEN_COUNT];
     static GLuint imageTexture;
 
 private:

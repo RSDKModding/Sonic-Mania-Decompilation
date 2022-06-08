@@ -2,12 +2,7 @@
 #define READER_H
 
 #if RETRO_RENDERDEVICE_SDL2 || RETRO_AUDIODEVICE_SDL2 || RETRO_INPUTDEVICE_SDL2
-#define FileIO SDL_RWops
-#if RETRO_PLATFORM != RETRO_ANDROID
-#define fOpen(path, mode) SDL_RWFromFile(path, mode)
-#else
-SDL_RWops *fOpen(const char *path, const char *mode);
-#endif
+#define FileIO                                          SDL_RWops
 #define fRead(buffer, elementSize, elementCount, file)  SDL_RWread(file, buffer, elementSize, elementCount)
 #define fSeek(file, offset, whence)                     SDL_RWseek(file, offset, whence)
 #define fTell(file)                                     SDL_RWtell(file)
@@ -21,6 +16,11 @@ SDL_RWops *fOpen(const char *path, const char *mode);
 #define fTell(file)                                     ftell(file)
 #define fClose(file)                                    fclose(file)
 #define fWrite(buffer, elementSize, elementCount, file) fwrite(buffer, elementSize, elementCount, file)
+#endif
+
+#if RETRO_PLATFORM == RETRO_ANDROID
+#undef fOpen
+FileIO *fOpen(const char *path, const char *mode);
 #endif
 
 #include <miniz/miniz.h>

@@ -143,6 +143,7 @@ enum GameRegions {
 #define RETRO_AUDIODEVICE_NX     (0)
 // CUSTOM
 #define RETRO_AUDIODEVICE_SDL2   (0)
+#define RETRO_AUDIODEVICE_AAUDIO (0)
 
 // ============================
 // INPUT DEVICE BACKENDS
@@ -155,6 +156,7 @@ enum GameRegions {
 // CUSTOM
 #define RETRO_INPUTDEVICE_SDL2     (0)
 #define RETRO_INPUTDEVICE_GLFW     (0)
+#define RETRO_INPUTDEVICE_ANDROID  (0)
 
 // ============================
 // USER CORE BACKENDS
@@ -304,7 +306,20 @@ enum GameRegions {
 #define RETRO_INPUTDEVICE_KEYBOARD (0)
 #undef RETRO_USING_MOUSE
 
-#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
+#elif RETRO_PLATFORM == RETRO_ANDROID
+
+#if defined RSDK_USE_GL3
+#undef RETRO_RENDERDEVICE_EGL
+#define RETRO_RENDERDEVICE_EGL (1)
+#undef RETRO_INPUTDEVICE_ANDROID
+#define RETRO_INPUTDEVICE_ANDROID (1)
+#undef RETRO_AUDIODEVICE_AAUDIO
+#define RETRO_AUDIODEVICE_AAUDIO (1)
+#else
+#error RSDK_USE_GL3 must be defined.
+#endif
+
+#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_iOS
 
 #undef RETRO_RENDERDEVICE_SDL2
 #define RETRO_RENDERDEVICE_SDL2 (1)
@@ -381,7 +396,6 @@ enum GameRegions {
 #elif RETRO_RENDERDEVICE_EGL
 #include <glad/glad.h>
 #include <EGL/egl.h>    // EGL library
-#include <EGL/eglext.h> // EGL extensions
 #endif
 
 #if RETRO_RENDERDEVICE_SDL2 || RETRO_INPUTDEVICE_SDL2 || RETRO_AUDIODEVICE_SDL2
@@ -397,12 +411,15 @@ enum GameRegions {
 #endif
 
 #elif RETRO_PLATFORM == RETRO_ANDROID
-#include <SDL.h>
+
+#if RETRO_RENDERDEVICE_EGL
+#include <EGL/egl.h>    // EGL library
+#include <GLES3/gl31.h>
+#endif
+
+#include <androidHelpers.h>
 #include <theora/theoradec.h>
 
-//#include "androidHelpers.hpp"
-#undef RETRO_STANDALONE
-#define RETRO_STANDALONE (0)
 #undef RETRO_USING_MOUSE
 #endif
 

@@ -46,7 +46,7 @@ public:
 
     static SDL_Window *window;
     static SDL_Renderer *renderer;
-    static SDL_Texture *screenTexture[SCREEN_MAX];
+    static SDL_Texture *screenTexture[SCREEN_COUNT];
 
     static SDL_Texture *imageTexture;
 

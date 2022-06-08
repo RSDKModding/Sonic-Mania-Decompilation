@@ -724,6 +724,8 @@ void RSDK::SKU::InputDeviceKeyboard::UpdateInput()
         glfwGetCursorPos(RenderDevice::window, &cursorX, &cursorY);
         cursorPos.x = cursorX;
         cursorPos.y = cursorY;
+#else
+        Vector2 cursorPos{};
 #endif
 
         float prevX = touchInfo.x[0];

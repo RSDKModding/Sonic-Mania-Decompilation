@@ -25,6 +25,8 @@ float speedMixAmounts[0x400];
 #include "NX/NXAudioDevice.cpp"
 #elif RETRO_AUDIODEVICE_SDL2
 #include "SDL2/SDL2AudioDevice.cpp"
+#elif RETRO_AUDIODEVICE_AAUDIO
+#include "AAudio/AAudioDevice.cpp"
 #endif
 
 uint8 AudioDeviceBase::initializedAudioChannels = false;

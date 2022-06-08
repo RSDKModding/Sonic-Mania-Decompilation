@@ -127,7 +127,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_COUNT; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -150,7 +150,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             return;
     }
 
-    if (shaderCount == SHADER_MAX)
+    if (shaderCount == SHADER_COUNT)
         return;
 
     ShaderEntry *shader = &shaderList[shaderCount];

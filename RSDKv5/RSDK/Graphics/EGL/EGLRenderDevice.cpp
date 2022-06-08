@@ -14,6 +14,9 @@
 #define _GLVERSION "#version 330 core\n"
 #elif RETRO_PLATFORM == RETRO_ANDROID
 #define _GLVERSION "#version 310 es\n"
+
+#define GL_BGRA GL_RGB
+#define GL_UNSIGNED_INT_8_8_8_8_REV GL_UNSIGNED_INT
 #endif
 
 #if RETRO_REV02
@@ -36,7 +39,7 @@ ANativeWindow *RenderDevice::window;
 GLuint RenderDevice::VAO;
 GLuint RenderDevice::VBO;
 
-GLuint RenderDevice::screenTextures[SCREEN_MAX];
+GLuint RenderDevice::screenTextures[SCREEN_COUNT];
 GLuint RenderDevice::imageTexture;
 
 double RenderDevice::lastFrame;
@@ -69,12 +72,14 @@ bool RenderDevice::Init()
     EGLint numConfigs;
     // clang-format off
     static const EGLint framebufferAttributeList[] = {
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT, 
+#if RETRO_PLATFORM == RETRO_SWITCH
+        EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
+#else
+        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+#endif 
         EGL_RED_SIZE,        8, 
         EGL_GREEN_SIZE,      8, 
         EGL_BLUE_SIZE,       8, 
-        EGL_DEPTH_SIZE,   24,
-        EGL_STENCIL_SIZE, 8,
         EGL_NONE
     };
     // clang-format on
@@ -102,11 +107,11 @@ bool RenderDevice::SetupRendering()
     nwindowSetDimensions(window, 1920, 1080);
 #elif RETRO_PLATFORM == RETRO_ANDROID
     EGLint format;
-    if (!eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format) {
+    if (!eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format)) {
         PrintLog(PRINT_NORMAL, "[EGL] EGL_NATIVE_VISUAL_ID fetch failed: %d", eglGetError());
         return false;
     }
-
+    PrintLog(PRINT_NORMAL, "before window %d", window);
     // get window somehow
     ANativeWindow_setBuffersGeometry(window, 0, 0, format);
 #endif
@@ -163,21 +168,24 @@ bool RenderDevice::SetupRendering()
 
 void RenderDevice::GetDisplays()
 {
-    displayCount         = 1;
-    displayInfo.displays = (decltype(displayInfo.displays))malloc(sizeof(displayInfo.displays->internal));
-    memcpy(&displayInfo.displays[0].internal, window, sizeof(displayInfo.displays->internal));
-        PrintLog(PRINT_NORMAL, "display memcpy");
 
-    displayWidth[0]  = displayInfo.displays[0].width;
-    displayHeight[0] = displayInfo.displays[0].height;
+    displayCount         = 1;
+    GetWindowSize(&displayWidth[0], &displayHeight[0]);
+    // reacting to me lying
+    displayInfo.displays = (decltype(displayInfo.displays))malloc(sizeof(displayInfo.displays->internal));
+    displayInfo.displays[0].width = displayWidth[0];
+    displayInfo.displays[0].height = displayHeight[0];
+    displayInfo.displays[0].refresh_rate = videoSettings.refreshRate;
 }
 
 bool RenderDevice::InitGraphicsAPI()
 {
+#if RETRO_PLATFORM == RETRO_SWITCH
     if (!gladLoadGL()) {
         PrintLog(PRINT_NORMAL, "[EGL] gladLoadGL failure");
         return false;
     }
+#endif
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glDisable(GL_DEPTH_TEST);
@@ -233,7 +241,7 @@ bool RenderDevice::InitGraphicsAPI()
     }
 
     int32 maxPixHeight = 0;
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         if (videoSettings.pixHeight > maxPixHeight)
             maxPixHeight = videoSettings.pixHeight;
 
@@ -288,9 +296,9 @@ bool RenderDevice::InitGraphicsAPI()
     glViewport(viewportPos.x, viewportPos.y, viewportSize.x, viewportSize.y);
 
     glActiveTexture(GL_TEXTURE0);
-    glGenTextures(SCREEN_MAX, screenTextures);
+    glGenTextures(SCREEN_COUNT, screenTextures);
 
-    for (int32 i = 0; i < SCREEN_MAX; ++i) {
+    for (int32 i = 0; i < SCREEN_COUNT; ++i) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureSize.x, textureSize.y, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
 
@@ -483,7 +491,7 @@ void RenderDevice::FlipScreen()
 
 void RenderDevice::Release(bool32 isRefresh)
 {
-    glDeleteTextures(SCREEN_MAX, screenTextures);
+    glDeleteTextures(SCREEN_COUNT, screenTextures);
     glDeleteTextures(1, &imageTexture);
     if (videoBuffer)
         delete[] videoBuffer;
@@ -532,7 +540,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_COUNT; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -555,7 +563,7 @@ void RenderDevice::LoadShader(const char *fileName, bool32 linear)
             return;
     }
 
-    if (shaderCount == SHADER_MAX)
+    if (shaderCount == SHADER_COUNT)
         return;
 
     ShaderEntry *shader = &shaderList[shaderCount];
@@ -729,7 +737,7 @@ void RenderDevice::SetupVideoTexture_YUV444(int32 width, int32 height, uint8 *yP
 
 void RenderDevice::SetLinear(bool32 linear)
 {
-    for (int32 i = 0; i < SCREEN_MAX; ++i) {
+    for (int32 i = 0; i < SCREEN_COUNT; ++i) {
         glBindTexture(GL_TEXTURE_2D, screenTextures[i]);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR : GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);

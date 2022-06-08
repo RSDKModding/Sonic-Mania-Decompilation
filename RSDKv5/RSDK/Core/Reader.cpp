@@ -13,7 +13,7 @@ char RSDK::gameLogicName[0x200];
 bool32 RSDK::useDataFile = false;
 
 #if RETRO_PLATFORM == RETRO_ANDROID
-SDL_RWops *fOpen(const char *path, const char *mode)
+FileIO *fOpen(const char *path, const char *mode)
 {
     char buffer[0x200];
     int32 a = 0;
@@ -21,7 +21,7 @@ SDL_RWops *fOpen(const char *path, const char *mode)
         a = strlen(SKU::userFileDir);
     sprintf_s(buffer, (int32)sizeof(buffer), "%s%s", SKU::userFileDir, path + a);
 
-    return SDL_RWFromFile(buffer, mode);
+    return fopen(buffer, mode);
 }
 #endif
 

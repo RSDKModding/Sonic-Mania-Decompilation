@@ -1157,5 +1157,5 @@ bool32 LinkModLogic(EngineInfo *info, const char *id)
 int32 RSDK_main(int32 argc, char **argv, void *linkLogicPtr); // make sure other side has a void* too
 
 // SDL Entry point
-int32 SDL_main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
+int32 GAME_MAIN(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
 #endif

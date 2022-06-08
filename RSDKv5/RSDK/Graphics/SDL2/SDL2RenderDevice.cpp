@@ -1,7 +1,7 @@
 
 SDL_Window *RenderDevice::window     = nullptr;
 SDL_Renderer *RenderDevice::renderer = nullptr;
-SDL_Texture *RenderDevice::screenTexture[SCREEN_MAX];
+SDL_Texture *RenderDevice::screenTexture[SCREEN_COUNT];
 
 SDL_Texture *RenderDevice::imageTexture = nullptr;
 
@@ -304,7 +304,7 @@ void RenderDevice::FlipScreen()
 void RenderDevice::Release(bool32 isRefresh)
 {
 
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         if (screenTexture[s])
             SDL_DestroyTexture(screenTexture[s]);
         screenTexture[s] = NULL;
@@ -514,7 +514,7 @@ bool RenderDevice::InitGraphicsAPI()
         textureSize.y = 512.0;
     }
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-    for (int32 s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_COUNT; ++s) {
         screenTexture[s] = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, textureSize.x, textureSize.y);
 
         if (!screenTexture[s]) {
@@ -563,7 +563,7 @@ bool RenderDevice::InitShaders()
         maxShaders = shaderCount;
     }
     else {
-        for (int32 s = 0; s < SHADER_MAX; ++s) shaderList[s].linear = true;
+        for (int32 s = 0; s < SHADER_COUNT; ++s) shaderList[s].linear = true;
 
         shaderList[0].linear = videoSettings.windowed ? false : shaderList[0].linear;
         maxShaders           = 1;
@@ -878,7 +878,7 @@ void RenderDevice::ProcessEvent(SDL_Event event)
                     break;
 
                 case SDL_SCANCODE_F7:
-                    if (engine.devMenu && videoSettings.screenCount < SCREEN_MAX)
+                    if (engine.devMenu && videoSettings.screenCount < SCREEN_COUNT)
                         videoSettings.screenCount++;
                     break;
 

@@ -13,8 +13,7 @@ public class RSDKv5 extends Activity implements SurfaceHolder.Callback {
     @Override
     protected void onStart() {
         super.onStart();
-        nativeOnStart();
-        getBasePath();
+        nativeOnStart(getBasePath());
     }
 
     @Override
@@ -62,10 +61,10 @@ public class RSDKv5 extends Activity implements SurfaceHolder.Callback {
 
     // NATIVE START
     static {
-        System.loadLibrary("main");
+        System.loadLibrary("RSDK");
     }
     // RENDER
-    public static native void nativeOnStart();
+    public static native void nativeOnStart(String basepath);
     public static native void nativeOnResume();
     public static native void nativeOnPause();
     public static native void nativeOnStop();

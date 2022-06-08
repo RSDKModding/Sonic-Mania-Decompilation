@@ -58,8 +58,8 @@ include makefiles/$(PLATFORM).cfg
 DEFINES += -DRSDK_USE_$(SUBSYSTEM)
 
 OUTDIR = bin/$(PLATFORM)/$(SUBSYSTEM)
-RSDK_OBJDIR = bin/obj/RSDKv5/$(PLATFORM)/$(SUBSYSTEM)
-GAME_OBJDIR = bin/obj/$(GAME_NAME)/$(PLATFORM)
+RSDK_OBJDIR = bin/obj/$(PLATFORM)/$(SUBSYSTEM)/RSDKv5
+GAME_OBJDIR = bin/obj/$(PLATFORM)/$(GAME_NAME)
 
 
 # =============================================================================
@@ -96,9 +96,6 @@ ifeq ($(STATICGAME),0)
 else
 	DEFINES += -DRETRO_STANDALONE=0
 endif
-
-RSDK_CFLAGS += `$(PKGCONFIG) --cflags --static theora theoradec zlib`
-RSDK_LIBS += `$(PKGCONFIG) --libs --static theora theoradec zlib`
 
 CFLAGS_ALL += $(CFLAGS) \
 			   -fsigned-char 
