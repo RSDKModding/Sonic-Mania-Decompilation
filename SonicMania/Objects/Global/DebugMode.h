@@ -1,7 +1,7 @@
 #ifndef OBJ_DEBUGMODE_H
 #define OBJ_DEBUGMODE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define DEBUGMODE_ADD_OBJ(object) DebugMode_AddObject(object->classID, object##_DebugDraw, object##_DebugSpawn)
 #define DEBUGMODE_OBJECT_COUNT     (0x100)

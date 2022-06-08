@@ -1,7 +1,7 @@
 #ifndef OBJ_HUD_H
 #define OBJ_HUD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HUDOFF_SCORE,

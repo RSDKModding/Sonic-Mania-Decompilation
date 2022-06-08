@@ -1,7 +1,7 @@
 #ifndef OBJ_PRESS_H
 #define OBJ_PRESS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPress {

@@ -1,7 +1,7 @@
 #ifndef OBJ_ZONE_H
 #define OBJ_ZONE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Macro to reduce ifdefs needed when calling RandSeeded with Zone->randSeed, ensures easy pre-plus compatibility
 #if MANIA_USE_PLUS

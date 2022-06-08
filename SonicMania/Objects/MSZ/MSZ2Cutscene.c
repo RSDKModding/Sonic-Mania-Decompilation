@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Game.h"
 
 ObjectMSZ2Cutscene *MSZ2Cutscene;
 

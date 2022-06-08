@@ -1,7 +1,7 @@
 #ifndef OBJ_CRANE_H
 #define OBJ_CRANE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CRANE_START_UP,

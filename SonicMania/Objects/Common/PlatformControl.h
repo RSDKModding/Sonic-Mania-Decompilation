@@ -1,7 +1,7 @@
 #ifndef OBJ_PLATFORMCONTROL_H
 #define OBJ_PLATFORMCONTROL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PLATFORMCONTROL_LOOP,

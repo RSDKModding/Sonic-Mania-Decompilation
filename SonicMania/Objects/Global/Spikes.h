@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIKES_H
 #define OBJ_SPIKES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPIKES_UP,

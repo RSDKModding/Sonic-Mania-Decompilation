@@ -1,7 +1,7 @@
 #ifndef OBJ_PENDULUM_H
 #define OBJ_PENDULUM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPendulum {

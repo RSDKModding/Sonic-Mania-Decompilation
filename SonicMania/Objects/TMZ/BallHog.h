@@ -1,7 +1,7 @@
 #ifndef OBJ_BALLHOG_H
 #define OBJ_BALLHOG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBallHog {

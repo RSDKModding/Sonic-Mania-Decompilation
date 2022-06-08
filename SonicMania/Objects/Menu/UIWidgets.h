@@ -1,7 +1,7 @@
 #ifndef OBJ_UIWIDGETS_H
 #define OBJ_UIWIDGETS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUIWidgets {

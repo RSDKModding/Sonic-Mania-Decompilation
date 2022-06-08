@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZCONVEYOR_H
 #define OBJ_LRZCONVEYOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LRZCONVEYOR_BEHAVIOR_CHANGEACTIVE,

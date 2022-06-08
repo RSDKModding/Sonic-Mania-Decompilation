@@ -1,7 +1,7 @@
 #ifndef OBJ_COLORHELPERS_H
 #define OBJ_COLORHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectColorHelpers {

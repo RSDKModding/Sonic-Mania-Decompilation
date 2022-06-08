@@ -1,7 +1,7 @@
 #ifndef OBJ_UNCURLPLANT_H
 #define OBJ_UNCURLPLANT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UNCURLPLANT_NODE_COUNT (8)
 

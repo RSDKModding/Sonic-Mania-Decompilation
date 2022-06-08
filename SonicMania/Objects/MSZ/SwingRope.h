@@ -1,7 +1,7 @@
 #ifndef OBJ_SWINGROPE_H
 #define OBJ_SWINGROPE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSwingRope {

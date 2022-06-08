@@ -1,7 +1,7 @@
 #ifndef OBJ_DECORATION_H
 #define OBJ_DECORATION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DECORATION_NONE,

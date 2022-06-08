@@ -1,7 +1,7 @@
 #ifndef OBJ_ERZSTART_H
 #define OBJ_ERZSTART_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectERZStart {

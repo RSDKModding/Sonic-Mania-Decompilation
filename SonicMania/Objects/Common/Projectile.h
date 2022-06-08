@@ -1,7 +1,7 @@
 #ifndef OBJ_PROJECTILE_H
 #define OBJ_PROJECTILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PROJECTILE_NOTHING,

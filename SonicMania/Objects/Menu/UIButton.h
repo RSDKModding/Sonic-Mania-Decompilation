@@ -1,7 +1,7 @@
 #ifndef OBJ_UIBUTTON_H
 #define OBJ_UIBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIBUTTON_ALIGN_LEFT,

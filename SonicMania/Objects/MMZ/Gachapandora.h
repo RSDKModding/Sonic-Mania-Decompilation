@@ -1,7 +1,7 @@
 #ifndef OBJ_GACHAPANDORA_H
 #define OBJ_GACHAPANDORA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define GACHAPANDORA_CAPSULE_COUNT (4)
 

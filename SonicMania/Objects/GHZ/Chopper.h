@@ -1,7 +1,7 @@
 #ifndef OBJ_CHOPPER_H
 #define OBJ_CHOPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { CHOPPER_JUMP, CHOPPER_SWIM } ChopperTypes;
 

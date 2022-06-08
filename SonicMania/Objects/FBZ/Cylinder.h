@@ -1,7 +1,7 @@
 #ifndef OBJ_CYLINDER_H
 #define OBJ_CYLINDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CYLINDER_TUBE_H,

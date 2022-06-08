@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Game.h"
 
 ObjectTitle3DSprite *Title3DSprite;
 

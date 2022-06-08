@@ -1,7 +1,7 @@
 #ifndef OBJ_MSHOLOGRAM_H
 #define OBJ_MSHOLOGRAM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectMSHologram {

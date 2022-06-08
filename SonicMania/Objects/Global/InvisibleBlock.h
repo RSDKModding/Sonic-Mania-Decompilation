@@ -1,7 +1,7 @@
 #ifndef OBJ_INVISIBLEBLOCK_H
 #define OBJ_INVISIBLEBLOCK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectInvisibleBlock {

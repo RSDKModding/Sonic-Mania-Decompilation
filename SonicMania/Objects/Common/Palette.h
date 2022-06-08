@@ -1,7 +1,7 @@
 #ifndef OBJ_PALETTE_H
 #define OBJ_PALETTE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_LAUNCHER_H
 #define OBJ_LAUNCHER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLauncher {

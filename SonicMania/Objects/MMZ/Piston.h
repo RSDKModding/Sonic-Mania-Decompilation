@@ -1,7 +1,7 @@
 #ifndef OBJ_PISTON_H
 #define OBJ_PISTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PISTON_MOVE_VERTICAL,

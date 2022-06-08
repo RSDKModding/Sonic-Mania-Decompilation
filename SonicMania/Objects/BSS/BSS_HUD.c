@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Game.h"
 
 ObjectBSS_HUD *BSS_HUD;
 

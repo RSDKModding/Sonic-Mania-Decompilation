@@ -1,7 +1,7 @@
 #ifndef OBJ_BREAKABLEWALL_H
 #define OBJ_BREAKABLEWALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BREAKWALL_TYPE_SIDES,

@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_HUD_H
 #define OBJ_BSS_HUD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBSS_HUD {

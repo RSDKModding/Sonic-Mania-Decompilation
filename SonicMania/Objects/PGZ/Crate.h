@@ -1,7 +1,7 @@
 #ifndef OBJ_CRATE_H
 #define OBJ_CRATE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CRATE_FRAME_BLUE,

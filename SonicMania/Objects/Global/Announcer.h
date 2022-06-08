@@ -1,7 +1,7 @@
 #ifndef OBJ_ANNOUNCER_H
 #define OBJ_ANNOUNCER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectAnnouncer {

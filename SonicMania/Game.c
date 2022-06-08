@@ -1,4 +1,16 @@
-#include "SonicMania.h"
+#include "Game.h"
+
+// -------------------------
+// ENGINE VARIABLES
+// -------------------------
+
+RSDKFunctionTable RSDK;
+#if MANIA_USE_PLUS
+APIFunctionTable API;
+#endif
+#if RETRO_USE_MOD_LOADER
+ModFunctionTable Mod;
+#endif
 
 RSDKSceneInfo *SceneInfo = NULL;
 
@@ -22,16 +34,15 @@ RSDKUnknownInfo *UnknownInfo = NULL;
 
 RSDKScreenInfo *ScreenInfo = NULL;
 
-RSDKFunctionTable RSDK;
-#if MANIA_USE_PLUS
-APIFunctionTable API;
-#endif
+// -------------------------
+// GAME VARIABLES
+// -------------------------
 
-#if RETRO_USE_MOD_LOADER
-ModFunctionTable Mod;
+GlobalVariables *globals;
 
-#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void *)(func))
-#endif
+// -------------------------
+// LINK GAME/MOD LOGIC
+// -------------------------
 
 void InitGameLogic(void);
 #if RETRO_USE_MOD_LOADER
@@ -816,6 +827,8 @@ void InitGameLogic(void)
 }
 
 #if RETRO_USE_MOD_LOADER
+#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void *)(func))
+
 void InitModAPI(void)
 {
     // ===============
@@ -1152,6 +1165,10 @@ bool32 LinkModLogic(EngineInfo *info, const char *id)
     return true;
 }
 #endif
+
+// -------------------------
+// ENTRY POINT
+// -------------------------
 
 #if !RETRO_STANDALONE
 int32 RSDK_main(int32 argc, char **argv, void *linkLogicPtr); // make sure other side has a void* too

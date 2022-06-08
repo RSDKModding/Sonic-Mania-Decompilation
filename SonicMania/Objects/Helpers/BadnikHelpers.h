@@ -1,7 +1,7 @@
 #ifndef OBJ_BADNIKHELPERS_H
 #define OBJ_BADNIKHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBadnikHelpers {

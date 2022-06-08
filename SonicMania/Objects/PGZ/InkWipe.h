@@ -1,7 +1,7 @@
 #ifndef OBJ_INKWIPE_H
 #define OBJ_INKWIPE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectInkWipe {

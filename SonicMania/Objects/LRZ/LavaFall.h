@@ -1,7 +1,7 @@
 #ifndef OBJ_LAVAFALL_H
 #define OBJ_LAVAFALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLavaFall {

@@ -1,7 +1,7 @@
 #ifndef OBJ_IMAGETRAIL_H
 #define OBJ_IMAGETRAIL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 //Extras lol
 #define ImageTrail_TrackCount (7)

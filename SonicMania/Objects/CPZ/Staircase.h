@@ -1,7 +1,7 @@
 #ifndef OBJ_STAIRCASE_H
 #define OBJ_STAIRCASE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define STAIRCASE_STAIR_COUNT (4)
 

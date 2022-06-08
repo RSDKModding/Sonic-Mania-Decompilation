@@ -1,7 +1,7 @@
 #ifndef OBJ_WOODROW_H
 #define OBJ_WOODROW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { WOODROW_BADNIK, WOODROW_BOMB } WoodrowTypes;
 

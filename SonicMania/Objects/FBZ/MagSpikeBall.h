@@ -1,7 +1,7 @@
 #ifndef OBJ_MAGSPIKEBALL_H
 #define OBJ_MAGSPIKEBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectMagSpikeBall {

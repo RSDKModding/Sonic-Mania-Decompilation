@@ -1,7 +1,7 @@
 #ifndef OBJ_UIBACKGROUND_H
 #define OBJ_UIBACKGROUND_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { UIBACKGROUND_UNUSED } UIBackgroundTypes;
 

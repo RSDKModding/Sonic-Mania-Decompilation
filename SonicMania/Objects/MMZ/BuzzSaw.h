@@ -1,7 +1,7 @@
 #ifndef OBJ_BUZZSAW_H
 #define OBJ_BUZZSAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BUZZSAW_ATTACHED,

@@ -1,7 +1,7 @@
 #ifndef OBJ_MEGAOCTUS_H
 #define OBJ_MEGAOCTUS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MEGAOCTUS_BODY,

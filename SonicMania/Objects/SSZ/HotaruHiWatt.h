@@ -1,7 +1,7 @@
 #ifndef OBJ_HOTARUHIWATT_H
 #define OBJ_HOTARUHIWATT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HHW_BOSS,

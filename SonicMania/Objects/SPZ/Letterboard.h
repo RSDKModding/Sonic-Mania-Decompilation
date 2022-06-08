@@ -1,7 +1,7 @@
 #ifndef OBJ_LETTERBOARD_H
 #define OBJ_LETTERBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLetterboard {

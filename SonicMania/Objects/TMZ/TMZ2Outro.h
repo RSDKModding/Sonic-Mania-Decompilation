@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZ2OUTRO_H
 #define OBJ_TMZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTMZ2Outro {

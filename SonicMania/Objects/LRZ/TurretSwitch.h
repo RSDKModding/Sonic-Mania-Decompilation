@@ -1,7 +1,7 @@
 #ifndef OBJ_TURRETSWITCH_H
 #define OBJ_TURRETSWITCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTurretSwitch {

@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_PLASMA_H
 #define OBJ_UFO_PLASMA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUFO_Plasma {

@@ -1,7 +1,7 @@
 #ifndef OBJ_SWEEP_H
 #define OBJ_SWEEP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSweep {

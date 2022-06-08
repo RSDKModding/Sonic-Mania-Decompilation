@@ -1,7 +1,7 @@
 #ifndef OBJ_REXON_H
 #define OBJ_REXON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define REXON_SEGMENT_COUNT (5)
 

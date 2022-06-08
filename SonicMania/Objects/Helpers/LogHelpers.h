@@ -1,7 +1,7 @@
 #ifndef OBJ_LOGHELPERS_H
 #define OBJ_LOGHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLogHelpers {

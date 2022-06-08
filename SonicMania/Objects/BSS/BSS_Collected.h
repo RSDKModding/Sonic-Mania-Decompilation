@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_COLLECTED_H
 #define OBJ_BSS_COLLECTED_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BSS_COLLECTED_RING,

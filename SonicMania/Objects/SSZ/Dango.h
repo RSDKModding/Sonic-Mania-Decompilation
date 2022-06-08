@@ -1,7 +1,7 @@
 #ifndef OBJ_DANGO_H
 #define OBJ_DANGO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectDango {

@@ -1,7 +1,7 @@
 #ifndef OBJ_SPRING_H
 #define OBJ_SPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPRING_VERT_YELLOW,

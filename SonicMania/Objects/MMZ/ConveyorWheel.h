@@ -1,7 +1,7 @@
 #ifndef OBJ_CONVEYORWHEEL_H
 #define OBJ_CONVEYORWHEEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectConveyorWheel {

@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_MESSAGE_H
 #define OBJ_UFO_MESSAGE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_MESSAGE_CATCHUFO,

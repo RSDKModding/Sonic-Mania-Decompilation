@@ -1,7 +1,7 @@
 #ifndef OBJ_CHEMBUBBLE_H
 #define OBJ_CHEMBUBBLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectChemBubble {

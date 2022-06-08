@@ -1,7 +1,7 @@
 #ifndef OBJ_PATHINVERTER_H
 #define OBJ_PATHINVERTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PATHINVERTER_H,

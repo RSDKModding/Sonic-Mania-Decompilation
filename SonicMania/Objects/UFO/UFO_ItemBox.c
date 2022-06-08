@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Game.h"
 
 ObjectUFO_ItemBox *UFO_ItemBox;
 

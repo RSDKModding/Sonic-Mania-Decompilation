@@ -1,7 +1,7 @@
 #ifndef OBJ_MONKEYDUDE_H
 #define OBJ_MONKEYDUDE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define MonkeyDude_ArmJointCount (4)
 

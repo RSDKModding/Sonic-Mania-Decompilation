@@ -1,7 +1,7 @@
 #ifndef OBJ_CPZ1INTRO_H
 #define OBJ_CPZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectCPZ1Intro {

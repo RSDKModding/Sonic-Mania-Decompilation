@@ -1,7 +1,7 @@
 #ifndef OBJ_DEROBOT_H
 #define OBJ_DEROBOT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DEROBOT_BODY,

@@ -1,7 +1,7 @@
 #ifndef OBJ_SPZ2SETUP_H
 #define OBJ_SPZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // (Old) Object Class
 // NOTE: this struct is not used anywhere in the game, it was recreated from the data inside the "static object" file

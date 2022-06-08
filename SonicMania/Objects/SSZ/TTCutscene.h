@@ -1,7 +1,7 @@
 #ifndef OBJ_TTCUTSCENE_H
 #define OBJ_TTCUTSCENE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTTCutscene {

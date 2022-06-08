@@ -1,7 +1,7 @@
 #ifndef OBJ_UICHOICE_H
 #define OBJ_UICHOICE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUIChoice {

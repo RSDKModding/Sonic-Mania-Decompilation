@@ -1,7 +1,7 @@
 #ifndef OBJ_LOCOSMOKE_H
 #define OBJ_LOCOSMOKE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLocoSmoke {

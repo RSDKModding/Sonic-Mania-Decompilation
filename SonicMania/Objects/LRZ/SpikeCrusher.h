@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIKECRUSHER_H
 #define OBJ_SPIKECRUSHER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSpikeCrusher {

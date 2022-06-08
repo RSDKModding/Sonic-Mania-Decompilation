@@ -1,7 +1,7 @@
 #ifndef OBJ_PRINTBLOCK_H
 #define OBJ_PRINTBLOCK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PRINTBLOCK_LETTER_E,

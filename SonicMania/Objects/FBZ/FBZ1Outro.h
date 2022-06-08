@@ -1,7 +1,7 @@
 #ifndef OBJ_FBZ1OUTRO_H
 #define OBJ_FBZ1OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectFBZ1Outro {

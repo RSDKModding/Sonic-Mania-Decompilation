@@ -1,7 +1,7 @@
 #ifndef OBJ_TORNADOPATH_H
 #define OBJ_TORNADOPATH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TORNADOPATH_START,

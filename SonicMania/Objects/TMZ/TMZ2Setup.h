@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZ2SETUP_H
 #define OBJ_TMZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { TMZ2_WARPDOOR_EFFECT_MIST = 1 } TMZ2WarpDoorEffects;
 

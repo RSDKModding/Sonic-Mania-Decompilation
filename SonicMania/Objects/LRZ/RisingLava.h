@@ -1,7 +1,7 @@
 #ifndef OBJ_RISINGLAVA_H
 #define OBJ_RISINGLAVA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectRisingLava {

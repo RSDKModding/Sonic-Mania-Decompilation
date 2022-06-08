@@ -1,7 +1,7 @@
 #ifndef OBJ_PLATFORMNODE_H
 #define OBJ_PLATFORMNODE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPlatformNode {

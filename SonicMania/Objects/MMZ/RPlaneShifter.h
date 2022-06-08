@@ -1,7 +1,7 @@
 #ifndef OBJ_RPLANESHIFTER_H
 #define OBJ_RPLANESHIFTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectRPlaneShifter {

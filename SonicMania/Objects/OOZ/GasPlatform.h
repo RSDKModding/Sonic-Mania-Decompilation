@@ -1,7 +1,7 @@
 #ifndef OBJ_GASPLATFORM_H
 #define OBJ_GASPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     GASPLATFORM_INTERVAL,

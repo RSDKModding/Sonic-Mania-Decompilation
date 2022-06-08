@@ -1,7 +1,7 @@
 #ifndef OBJ_LARGEGEAR_H
 #define OBJ_LARGEGEAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLargeGear {

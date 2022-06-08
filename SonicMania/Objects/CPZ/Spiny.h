@@ -1,7 +1,7 @@
 #ifndef OBJ_SPINY_H
 #define OBJ_SPINY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPINY_FLOOR,

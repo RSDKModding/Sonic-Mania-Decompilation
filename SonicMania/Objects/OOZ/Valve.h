@@ -1,7 +1,7 @@
 #ifndef OBJ_VALVE_H
 #define OBJ_VALVE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectValve {

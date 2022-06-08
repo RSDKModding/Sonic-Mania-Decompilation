@@ -1,7 +1,7 @@
 #ifndef OBJ_UISLIDER_H
 #define OBJ_UISLIDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UISLIDER_MIN       (0)
 #define UISLIDER_MAX       (0x400)

@@ -1,7 +1,7 @@
 #ifndef OBJ_CAMERA_H
 #define OBJ_CAMERA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CAMERA_LERP_NORMAL,

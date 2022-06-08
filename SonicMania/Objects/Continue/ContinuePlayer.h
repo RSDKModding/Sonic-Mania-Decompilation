@@ -1,7 +1,7 @@
 #ifndef OBJ_CONTINUEPLAYER_H
 #define OBJ_CONTINUEPLAYER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CONTPLR_ANI_IDLE_SONIC,

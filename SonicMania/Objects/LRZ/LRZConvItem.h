@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZCONVITEM_H
 #define OBJ_LRZCONVITEM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LRZCONVITEM_ROCK,

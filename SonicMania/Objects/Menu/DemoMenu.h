@@ -1,7 +1,7 @@
 #ifndef OBJ_DEMOMENU_H
 #define OBJ_DEMOMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectDemoMenu {

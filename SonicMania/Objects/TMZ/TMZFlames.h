@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZFLAMES_H
 #define OBJ_TMZFLAMES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTMZFlames {

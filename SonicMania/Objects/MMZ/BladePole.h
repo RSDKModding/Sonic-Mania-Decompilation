@@ -1,7 +1,7 @@
 #ifndef OBJ_BLADEPOLE_H
 #define OBJ_BLADEPOLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBladePole {

@@ -1,7 +1,7 @@
 #ifndef OBJ_HANGPOINT_H
 #define OBJ_HANGPOINT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectHangPoint {

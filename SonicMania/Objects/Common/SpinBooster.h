@@ -1,7 +1,7 @@
 #ifndef OBJ_SPINBOOSTER_H
 #define OBJ_SPINBOOSTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSpinBooster {

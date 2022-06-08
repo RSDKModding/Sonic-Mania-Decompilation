@@ -1,7 +1,7 @@
 #ifndef OBJ_CIRCLEBUMPER_H
 #define OBJ_CIRCLEBUMPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CIRCLEBUMPER_FIXED,

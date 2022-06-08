@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZ1SETUP_H
 #define OBJ_LRZ1SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { LRZ1_TFLAGS_NORMAL, LRZ1_TFLAGS_LAVA } TileFlagsLRZ1;
 

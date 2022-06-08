@@ -1,7 +1,7 @@
 #ifndef OBJ_SIDEBARREL_H
 #define OBJ_SIDEBARREL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSideBarrel {

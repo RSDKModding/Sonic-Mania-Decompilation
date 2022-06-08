@@ -1,7 +1,7 @@
 #ifndef OBJ_SPARKRAIL_H
 #define OBJ_SPARKRAIL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSparkRail {

@@ -1,7 +1,7 @@
 #ifndef OBJ_FLINGRAMP_H
 #define OBJ_FLINGRAMP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectFlingRamp {

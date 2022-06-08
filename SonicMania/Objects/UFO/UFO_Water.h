@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_WATER_H
 #define OBJ_UFO_WATER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUFO_Water {

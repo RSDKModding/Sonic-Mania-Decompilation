@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_ITEMBOX_H
 #define OBJ_UFO_ITEMBOX_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_ITEMBOX_RING,

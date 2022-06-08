@@ -1,7 +1,7 @@
 #ifndef OBJ_PKINGATTACK_H
 #define OBJ_PKINGATTACK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PKINGATTACK_LASER, // Leftover from LRZ/KingAttack, not used here

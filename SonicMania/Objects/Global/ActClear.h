@@ -1,7 +1,7 @@
 #ifndef OBJ_ACTCLEAR_H
 #define OBJ_ACTCLEAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectActClear {

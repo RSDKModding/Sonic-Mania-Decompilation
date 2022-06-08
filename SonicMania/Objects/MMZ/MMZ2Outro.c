@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 ObjectMMZ2Outro *MMZ2Outro;

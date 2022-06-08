@@ -1,7 +1,7 @@
 #ifndef OBJ_UIUSERNAMEPOPUP_H
 #define OBJ_UIUSERNAMEPOPUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUIUsernamePopup {

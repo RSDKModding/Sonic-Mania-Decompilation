@@ -1,7 +1,7 @@
 #ifndef OBJ_MSFACTORY_H
 #define OBJ_MSFACTORY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectMSFactory {

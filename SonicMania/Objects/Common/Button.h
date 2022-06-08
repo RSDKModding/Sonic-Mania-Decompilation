@@ -1,7 +1,7 @@
 #ifndef OBJ_BUTTON_H
 #define OBJ_BUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { BUTTON_FLOOR, BUTTON_ROOF, BUTTON_RWALL, BUTTON_LWALL } ButtonTypes;
 

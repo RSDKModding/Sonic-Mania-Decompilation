@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIRALPLATFORM_H
 #define OBJ_SPIRALPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSpiralPlatform {

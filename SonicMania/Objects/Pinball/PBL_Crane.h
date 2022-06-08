@@ -1,7 +1,7 @@
 #ifndef OBJ_PBL_CRANE_H
 #define OBJ_PBL_CRANE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 

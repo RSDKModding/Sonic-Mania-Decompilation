@@ -1,7 +1,7 @@
 #ifndef OBJ_LIGHTBULB_H
 #define OBJ_LIGHTBULB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LIGHTBULB_PRIO_HIGH,

@@ -1,7 +1,7 @@
 #ifndef OBJ_HEAVYKING_H
 #define OBJ_HEAVYKING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectHeavyKing {

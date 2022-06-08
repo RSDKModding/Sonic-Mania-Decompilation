@@ -1,7 +1,7 @@
 #ifndef OBJ_SUPERSPARKLE_H
 #define OBJ_SUPERSPARKLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSuperSparkle {

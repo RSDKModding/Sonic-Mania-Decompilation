@@ -1,7 +1,7 @@
 #ifndef OBJ_PSZDOOR_H
 #define OBJ_PSZDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PSZDOOR_ORIENATION_D,

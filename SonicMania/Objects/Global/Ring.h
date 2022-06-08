@@ -1,7 +1,7 @@
 #ifndef OBJ_RING_H
 #define OBJ_RING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     RING_TYPE_NORMAL,

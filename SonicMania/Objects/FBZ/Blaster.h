@@ -1,7 +1,7 @@
 #ifndef OBJ_BLASTER_H
 #define OBJ_BLASTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BLASTER_BADNIK,

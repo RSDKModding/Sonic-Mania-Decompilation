@@ -1,7 +1,7 @@
 #ifndef OBJ_BRIDGE_H
 #define OBJ_BRIDGE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBridge {

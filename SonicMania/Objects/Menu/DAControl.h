@@ -1,7 +1,7 @@
 #ifndef OBJ_DACONTROL_H
 #define OBJ_DACONTROL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectDAControl {

@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZROCKPILE_H
 #define OBJ_LRZROCKPILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LRZROCKPILE_WALL,

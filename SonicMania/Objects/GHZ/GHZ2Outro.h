@@ -1,7 +1,7 @@
 #ifndef OBJ_GHZ2OUTRO_H
 #define OBJ_GHZ2OUTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectGHZ2Outro {

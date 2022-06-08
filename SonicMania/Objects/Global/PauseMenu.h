@@ -1,7 +1,7 @@
 #ifndef OBJ_PAUSEMENU_H
 #define OBJ_PAUSEMENU_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define PAUSEMENU_BUTTON_COUNT (3)
 

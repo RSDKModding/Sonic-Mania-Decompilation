@@ -1,7 +1,7 @@
 #ifndef OBJ_DOORTRIGGER_H
 #define OBJ_DOORTRIGGER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     DOORTRIGGER_ORIENATION_L,

@@ -1,7 +1,7 @@
 #ifndef OBJ_ACETONE_H
 #define OBJ_ACETONE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectAcetone {

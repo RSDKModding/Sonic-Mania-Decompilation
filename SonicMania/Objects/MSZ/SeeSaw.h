@@ -1,7 +1,7 @@
 #ifndef OBJ_SEESAW_H
 #define OBJ_SEESAW_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SEESAW_TILT_L,

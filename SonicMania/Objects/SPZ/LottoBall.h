@@ -1,7 +1,7 @@
 #ifndef OBJ_LOTTOBALL_H
 #define OBJ_LOTTOBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LOTTOBALL_BLUE,

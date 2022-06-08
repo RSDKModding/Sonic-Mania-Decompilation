@@ -1,7 +1,7 @@
 #ifndef OBJ_SAVEGAME_H
 #define OBJ_SAVEGAME_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SAVEGAME_BLANK,

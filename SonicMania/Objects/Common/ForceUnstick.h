@@ -1,7 +1,7 @@
 #ifndef OBJ_FORCEUNSTICK_H
 #define OBJ_FORCEUNSTICK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectForceUnstick {

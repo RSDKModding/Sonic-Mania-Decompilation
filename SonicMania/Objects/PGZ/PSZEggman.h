@@ -1,7 +1,7 @@
 #ifndef OBJ_PSZEGGMAN_H
 #define OBJ_PSZEGGMAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPSZEggman {

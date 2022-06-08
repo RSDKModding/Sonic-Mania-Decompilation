@@ -1,7 +1,7 @@
 #ifndef OBJ_TRANSPORTTUBE_H
 #define OBJ_TRANSPORTTUBE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TRANSPORTTUBE_CHANGEDIR,

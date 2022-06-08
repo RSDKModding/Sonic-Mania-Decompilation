@@ -1,7 +1,7 @@
 #ifndef OBJ_FIREWORK_H
 #define OBJ_FIREWORK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectFirework {

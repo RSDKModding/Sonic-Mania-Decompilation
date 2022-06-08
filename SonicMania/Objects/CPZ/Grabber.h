@@ -1,7 +1,7 @@
 #ifndef OBJ_GRABBER_H
 #define OBJ_GRABBER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectGrabber {

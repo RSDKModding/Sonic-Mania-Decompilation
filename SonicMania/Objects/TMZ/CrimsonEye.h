@@ -1,7 +1,7 @@
 #ifndef OBJ_CRIMSONEYE_H
 #define OBJ_CRIMSONEYE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CRIMSONEYE_CONTAINER,

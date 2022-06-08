@@ -1,7 +1,7 @@
 #ifndef OBJ_BSS_COLLECTABLE_H
 #define OBJ_BSS_COLLECTABLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 enum BSSCollectableTypes {
     BSS_NONE          = 0,

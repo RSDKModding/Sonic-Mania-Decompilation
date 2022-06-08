@@ -1,7 +1,7 @@
 #ifndef OBJ_METERDROID_H
 #define OBJ_METERDROID_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectMeterDroid {

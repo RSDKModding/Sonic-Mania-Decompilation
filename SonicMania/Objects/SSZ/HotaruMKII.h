@@ -1,7 +1,7 @@
 #ifndef OBJ_HOTARUMKII_H
 #define OBJ_HOTARUMKII_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HOTARUMKII_MAIN,

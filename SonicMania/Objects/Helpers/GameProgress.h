@@ -1,7 +1,7 @@
 #ifndef OBJ_GAMEPROGRESS_H
 #define OBJ_GAMEPROGRESS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define GAMEPROGRESS_MEDAL_COUNT   (32)
 #define GAMEPROGRESS_ZONE_COUNT    (12)

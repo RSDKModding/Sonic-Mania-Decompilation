@@ -1,7 +1,7 @@
 #ifndef OBJ_METALSONIC_H
 #define OBJ_METALSONIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MS_ANI_IDLE,

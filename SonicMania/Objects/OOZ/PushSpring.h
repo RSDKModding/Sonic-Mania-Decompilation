@@ -1,7 +1,7 @@
 #ifndef OBJ_PUSHSPRING_H
 #define OBJ_PUSHSPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { PUSHSPRING_V, PUSHSPRING_H } PushSpringTypes;
 

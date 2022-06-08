@@ -1,7 +1,7 @@
 #ifndef OBJ_BURNINGLOG_H
 #define OBJ_BURNINGLOG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBurningLog {

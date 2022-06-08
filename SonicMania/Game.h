@@ -1,14 +1,14 @@
-#ifndef SONIC_MANIA_H
-#define SONIC_MANIA_H
+#ifndef GAME_H
+#define GAME_H
 
 // =====================================================================
 // RSDK Project: Sonic Mania (Plus)
 // Decompiled by: Rubberduckycooly & RMGRich
 // =====================================================================
 
-// --------------------
+// -------------------------
 // ENGINE VERSIONS
-// --------------------
+// -------------------------
 
 // RSDKv5 was revised & updated for plus onwards
 // this is basically the same functionality as "MANIA_USE_PLUS"
@@ -20,7 +20,7 @@
 #define RETRO_INCLUDE_EDITOR (1)
 
 #ifndef RETRO_USE_MOD_LOADER
-#define RETRO_USE_MOD_LOADER (0)
+#define RETRO_USE_MOD_LOADER (1)
 #endif
 
 #define RETRO_MOD_LOADER_VER (1)
@@ -30,9 +30,9 @@
 #define RETRO_STANDALONE (1)
 #endif
 
-// --------------------
+// -------------------------
 // GAME VERSIONS
-// --------------------
+// -------------------------
 
 #define VER_100 (0) // 1.00 (initial console release)
 #define VER_103 (3) // 1.03 (PC release/console patch)
@@ -54,30 +54,12 @@
 
 #define MANIA_USE_TOUCH_CONTROLS (1)
 
-// --------------------
+// -------------------------
 // GAME LOGIC
-// --------------------
+// -------------------------
 
 #include "GameLink.h"
 #include "GameVariables.h"
 #include "GameObjects.h"
 
-extern RSDKSceneInfo *SceneInfo;
-extern RSDKGameInfo *GameInfo;
-#if MANIA_USE_PLUS
-extern RSDKSKUInfo *SKU;
-#endif
-extern RSDKControllerState *ControllerInfo;
-extern RSDKAnalogState *AnalogStickInfoL;
-#if MANIA_USE_PLUS
-extern RSDKAnalogState *AnalogStickInfoR;
-extern RSDKTriggerState *TriggerInfoL;
-extern RSDKTriggerState *TriggerInfoR;
-#endif
-extern RSDKTouchInfo *TouchInfo;
-#if MANIA_USE_PLUS
-extern RSDKUnknownInfo *UnknownInfo;
-#endif
-extern RSDKScreenInfo *ScreenInfo;
-
-#endif //! SONIC_MANIA_H
+#endif //! GAME_H

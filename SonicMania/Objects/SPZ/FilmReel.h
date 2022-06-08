@@ -1,7 +1,7 @@
 #ifndef OBJ_FILMREEL_H
 #define OBJ_FILMREEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectFilmReel {

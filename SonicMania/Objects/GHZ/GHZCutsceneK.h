@@ -1,7 +1,7 @@
 #ifndef OBJ_GHZCUTSCENEK_H
 #define OBJ_GHZCUTSCENEK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectGHZCutsceneK {

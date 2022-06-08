@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZCONVCONTROL_H
 #define OBJ_LRZCONVCONTROL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { LRZCONVCTRL_TRIGGER_PLAYER, LRZCONVCTRL_TRIGGER_BUTTON } LRZConvControlTriggerModes;
 typedef enum {

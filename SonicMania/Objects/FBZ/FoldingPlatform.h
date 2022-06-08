@@ -1,7 +1,7 @@
 #ifndef OBJ_FOLDINGPLATFORM_H
 #define OBJ_FOLDINGPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectFoldingPlatform {

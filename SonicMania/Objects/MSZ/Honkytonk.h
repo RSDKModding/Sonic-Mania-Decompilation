@@ -1,7 +1,7 @@
 #ifndef OBJ_HONKYTONK_H
 #define OBJ_HONKYTONK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectHonkytonk {

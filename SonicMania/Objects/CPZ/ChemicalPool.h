@@ -1,7 +1,7 @@
 #ifndef OBJ_CHEMICALPOOL_H
 #define OBJ_CHEMICALPOOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { CHEMICALPOOL_BLUE, CHEMICALPOOL_GREEN, CHEMICALPOOL_CYAN } ChemicalPoolTypes;
 

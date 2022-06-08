@@ -1,7 +1,7 @@
 #ifndef OBJ_CATERKILLER_H
 #define OBJ_CATERKILLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define CATERKILLER_BODY_COUNT (3)
 

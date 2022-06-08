@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_PLAYER_H
 #define OBJ_UFO_PLAYER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUFO_Player {

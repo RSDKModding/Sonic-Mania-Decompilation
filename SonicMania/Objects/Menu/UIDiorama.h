@@ -1,7 +1,7 @@
 #ifndef OBJ_UIDIORAMA_H
 #define OBJ_UIDIORAMA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 

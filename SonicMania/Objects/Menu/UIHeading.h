@@ -1,7 +1,7 @@
 #ifndef OBJ_UIHEADING_H
 #define OBJ_UIHEADING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIHEADING_MAINMENU,

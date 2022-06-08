@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGJANKEN_H
 #define OBJ_EGGJANKEN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define EGGJANKEN_ARM_COUNT     (2)
 #define EGGJANKEN_JOINT_COUNT   (3)

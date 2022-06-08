@@ -1,7 +1,7 @@
 #ifndef OBJ_SELTZERWATER_H
 #define OBJ_SELTZERWATER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSeltzerWater {

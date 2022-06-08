@@ -1,7 +1,7 @@
 #ifndef OBJ_KLEPTOMOBILE_H
 #define OBJ_KLEPTOMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     KLEPTOMOBILE_EGGMAN,

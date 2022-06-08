@@ -1,7 +1,7 @@
 #ifndef OBJ_LOTTOMACHINE_H
 #define OBJ_LOTTOMACHINE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLottoMachine {

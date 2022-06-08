@@ -1,7 +1,7 @@
 #ifndef OBJ_AIZROCKPILE_H
 #define OBJ_AIZROCKPILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 

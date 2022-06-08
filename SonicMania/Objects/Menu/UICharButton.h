@@ -1,7 +1,7 @@
 #ifndef OBJ_UICHARBUTTON_H
 #define OBJ_UICHARBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UICHARBUTTON_SONIC,

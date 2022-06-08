@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZ2SETUP_H
 #define OBJ_LRZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { GENERICTRIGGER_LRZ2_OUTRO } GenericTriggerTypesLRZ2;
 

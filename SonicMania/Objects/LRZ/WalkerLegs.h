@@ -1,7 +1,7 @@
 #ifndef OBJ_WALKERLEGS_H
 #define OBJ_WALKERLEGS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectWalkerLegs {

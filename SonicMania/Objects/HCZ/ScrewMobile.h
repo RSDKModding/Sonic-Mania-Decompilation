@@ -1,7 +1,7 @@
 #ifndef OBJ_SCREWMOBILE_H
 #define OBJ_SCREWMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SCREWMOBILE_MOBILE,

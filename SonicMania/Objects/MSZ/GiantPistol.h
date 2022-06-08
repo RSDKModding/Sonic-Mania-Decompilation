@@ -1,7 +1,7 @@
 #ifndef OBJ_GIANTPISTOL_H
 #define OBJ_GIANTPISTOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectGiantPistol {

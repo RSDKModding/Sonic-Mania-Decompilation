@@ -1,7 +1,7 @@
 #ifndef OBJ_WEATHERMOBILE_H
 #define OBJ_WEATHERMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     WEATHERMOBILE_EGGMAN,

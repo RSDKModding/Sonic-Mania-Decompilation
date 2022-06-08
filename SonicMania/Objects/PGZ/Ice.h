@@ -1,7 +1,7 @@
 #ifndef OBJ_ICE_H
 #define OBJ_ICE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 typedef enum {

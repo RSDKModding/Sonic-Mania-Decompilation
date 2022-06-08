@@ -1,7 +1,7 @@
 #ifndef OBJ_SOL_H
 #define OBJ_SOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define SOL_FLAMEORB_COUNT (4)
 

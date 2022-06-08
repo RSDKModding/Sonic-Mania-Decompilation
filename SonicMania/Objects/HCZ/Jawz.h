@@ -1,7 +1,7 @@
 #ifndef OBJ_JAWZ_H
 #define OBJ_JAWZ_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     JAWS_TRIGGER_BOTH,

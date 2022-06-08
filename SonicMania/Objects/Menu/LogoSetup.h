@@ -1,7 +1,7 @@
 #ifndef OBJ_LOGOSETUP_H
 #define OBJ_LOGOSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLogoSetup {

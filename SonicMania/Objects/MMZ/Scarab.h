@@ -1,7 +1,7 @@
 #ifndef OBJ_SCARAB_H
 #define OBJ_SCARAB_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectScarab {

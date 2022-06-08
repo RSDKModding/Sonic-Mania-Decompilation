@@ -1,7 +1,7 @@
 #ifndef OBJ_UIRESPICKER_H
 #define OBJ_UIRESPICKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUIResPicker {

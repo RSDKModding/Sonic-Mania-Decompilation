@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZALERT_H
 #define OBJ_TMZALERT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTMZAlert {

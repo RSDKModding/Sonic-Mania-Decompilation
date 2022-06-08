@@ -110,7 +110,7 @@
     <ClInclude Include="GameLink.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="SonicMania.h">
+    <ClInclude Include="Game.h">
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Global\ActClear.h">
@@ -1907,9 +1907,6 @@
     <ClInclude Include="Objects\Unused\Wisp.h">
       <Filter>Sources\Objects\Unused</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Helpers\CompetitionSession.h">
       <Filter>Sources\Objects\Helpers</Filter>
     </ClInclude>
@@ -1951,9 +1948,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameObjects.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Global\ActClear.c">
       <Filter>Sources\Objects\Global</Filter>
     </ClCompile>
@@ -3760,9 +3754,6 @@
     <ClCompile Include="Objects\HCZ\Jawz.c">
       <Filter>Sources\Objects\HCZ</Filter>
     </ClCompile>
-    <ClCompile Include="GameVariables.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Global\Player.c">
       <Filter>Sources\Objects\Global</Filter>
     </ClCompile>
@@ -3783,6 +3774,9 @@
     </ClCompile>
     <ClCompile Include="Objects\MMZ\ConveyorPlatform.c">
       <Filter>Sources\Objects\MMZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.c">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

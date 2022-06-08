@@ -1,7 +1,7 @@
 #ifndef OBJ_TWISTEDTUBES_H
 #define OBJ_TWISTEDTUBES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTwistedTubes {

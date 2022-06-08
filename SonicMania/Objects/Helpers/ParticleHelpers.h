@@ -1,7 +1,7 @@
 #ifndef OBJ_PARTICLEHELPERS_H
 #define OBJ_PARTICLEHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectParticleHelpers {

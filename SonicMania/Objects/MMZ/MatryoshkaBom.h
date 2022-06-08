@@ -1,7 +1,7 @@
 #ifndef OBJ_MATRYOSHKABOM_H
 #define OBJ_MATRYOSHKABOM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     MATRYOSHKA_SIZE_BIG,

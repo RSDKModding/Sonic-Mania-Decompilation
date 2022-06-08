@@ -1,7 +1,7 @@
 #ifndef OBJ_OPTIONS_H
 #define OBJ_OPTIONS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectOptions {

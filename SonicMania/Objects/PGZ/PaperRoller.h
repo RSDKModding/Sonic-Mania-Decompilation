@@ -1,7 +1,7 @@
 #ifndef OBJ_PAPERROLLER_H
 #define OBJ_PAPERROLLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPaperRoller {

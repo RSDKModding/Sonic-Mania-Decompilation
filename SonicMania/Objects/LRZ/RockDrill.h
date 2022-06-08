@@ -1,7 +1,7 @@
 #ifndef OBJ_ROCKDRILL_H
 #define OBJ_ROCKDRILL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectRockDrill {

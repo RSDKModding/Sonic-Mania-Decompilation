@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMMYSTIC_H
 #define OBJ_PHANTOMMYSTIC_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPhantomMystic {

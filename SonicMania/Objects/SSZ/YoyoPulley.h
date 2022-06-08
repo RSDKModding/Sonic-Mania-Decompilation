@@ -1,7 +1,7 @@
 #ifndef OBJ_YOYOPULLEY_H
 #define OBJ_YOYOPULLEY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectYoyoPulley {

@@ -1,7 +1,7 @@
 #ifndef OBJ_THOUGHTBUBBLE_H
 #define OBJ_THOUGHTBUBBLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     THOUGHTBUBBLE_1DOT,

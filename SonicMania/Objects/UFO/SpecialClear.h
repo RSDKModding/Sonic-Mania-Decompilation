@@ -1,7 +1,7 @@
 #ifndef OBJ_SPECIALCLEAR_H
 #define OBJ_SPECIALCLEAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SC_MSG_SPECIALCLEAR,

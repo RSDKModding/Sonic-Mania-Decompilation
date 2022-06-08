@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOGAME_H
 #define OBJ_PUYOGAME_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PUYOGAME_PLAYER1,

@@ -1,7 +1,7 @@
 #ifndef OBJ_SPEARBLOCK_H
 #define OBJ_SPEARBLOCK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSpearBlock {

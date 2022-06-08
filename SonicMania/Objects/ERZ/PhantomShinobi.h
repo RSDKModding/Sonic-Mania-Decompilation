@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMSHINOBI_H
 #define OBJ_PHANTOMSHINOBI_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPhantomShinobi {

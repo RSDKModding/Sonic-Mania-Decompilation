@@ -1,7 +1,7 @@
 #ifndef OBJ_HANGGLIDER_H
 #define OBJ_HANGGLIDER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectHangGlider {

@@ -1,7 +1,7 @@
 #ifndef OBJ_FILMPROJECTOR_H
 #define OBJ_FILMPROJECTOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectFilmProjector {

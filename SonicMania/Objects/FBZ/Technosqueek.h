@@ -1,7 +1,7 @@
 #ifndef OBJ_TECHNOSQUEEK_H
 #define OBJ_TECHNOSQUEEK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TECHNOSQUEEK_H,

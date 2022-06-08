@@ -1,7 +1,7 @@
 #ifndef OBJ_UIVSZONEBUTTON_H
 #define OBJ_UIVSZONEBUTTON_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UIVSZONEBUTTON_GHZ,

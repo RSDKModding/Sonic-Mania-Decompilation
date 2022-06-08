@@ -1,7 +1,7 @@
 #ifndef OBJ_KABASIRA_H
 #define OBJ_KABASIRA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define KABASIRA_BODY_COUNT (4)
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_CURRENT_H
 #define OBJ_CURRENT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CURRENT_C_LEFT,

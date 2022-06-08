@@ -1,7 +1,7 @@
 #ifndef OBJ_ROCKEMSOCKEM_H
 #define OBJ_ROCKEMSOCKEM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Extras
 #define ROCKEMSOCKEM_COIL_COUNT (6)

@@ -1,7 +1,7 @@
 #ifndef OBJ_WOODCHIPPER_H
 #define OBJ_WOODCHIPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectWoodChipper {

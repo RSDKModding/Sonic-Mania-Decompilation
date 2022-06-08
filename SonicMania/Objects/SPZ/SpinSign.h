@@ -1,7 +1,7 @@
 #ifndef OBJ_SPINSIGN_H
 #define OBJ_SPINSIGN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPINSIGN_SONIC_H,

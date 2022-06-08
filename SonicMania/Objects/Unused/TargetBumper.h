@@ -1,7 +1,7 @@
 #ifndef OBJ_TARGETBUMPER_H
 #define OBJ_TARGETBUMPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { TARGETBUMP_HORIZONTAL, TARGETBUMP_VERTICAL, TARGETBUMP_DIAGONAL } TargetBumperTypes;
 

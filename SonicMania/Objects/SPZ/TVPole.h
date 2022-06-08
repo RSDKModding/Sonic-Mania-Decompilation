@@ -1,7 +1,7 @@
 #ifndef OBJ_TVPOLE_H
 #define OBJ_TVPOLE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTVPole {

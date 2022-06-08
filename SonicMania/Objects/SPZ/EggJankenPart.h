@@ -1,7 +1,7 @@
 #ifndef OBJ_EGGJANKENPART_H
 #define OBJ_EGGJANKENPART_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     EGGJANKENPART_FACEPLATE,

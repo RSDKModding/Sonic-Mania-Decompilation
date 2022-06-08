@@ -1,7 +1,7 @@
 #ifndef OBJ_ESCAPECAR_H
 #define OBJ_ESCAPECAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ESCAPECAR_DRIVER_SONIC = 0,

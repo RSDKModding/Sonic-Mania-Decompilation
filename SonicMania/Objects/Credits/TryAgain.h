@@ -1,7 +1,7 @@
 #ifndef OBJ_TRYAGAIN_H
 #define OBJ_TRYAGAIN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTryAgain {

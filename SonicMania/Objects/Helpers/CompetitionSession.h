@@ -1,7 +1,7 @@
 #ifndef OBJ_COMPETITIONSESSION_H
 #define OBJ_COMPETITIONSESSION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if !MANIA_USE_PLUS
 // preplus was always 2P

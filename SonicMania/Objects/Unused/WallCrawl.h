@@ -1,7 +1,7 @@
 #ifndef OBJ_WALLCRAWL_H
 #define OBJ_WALLCRAWL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectWallCrawl {

@@ -5,7 +5,7 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
-#include "SonicMania.h"
+#include "Game.h"
 
 //This Object is COMPLETELY unused, knux uses GHZCutsceneST anyways, so it's no surprise that its not finished either
 

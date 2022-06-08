@@ -1,7 +1,7 @@
 #ifndef OBJ_HCZONEWAYDOOR_H
 #define OBJ_HCZONEWAYDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     HCZONEWAYDOOR_UP,

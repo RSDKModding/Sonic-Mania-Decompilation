@@ -1,7 +1,7 @@
 #ifndef OBJ_SWITCHDOOR_H
 #define OBJ_SWITCHDOOR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SWITCHDOOR_GO_INSIDE1,

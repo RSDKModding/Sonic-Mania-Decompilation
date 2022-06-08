@@ -1,7 +1,7 @@
 #ifndef OBJ_ERZGUNNER_H
 #define OBJ_ERZGUNNER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ERZGUNNER_BOSS,

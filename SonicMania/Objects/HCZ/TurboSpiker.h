@@ -1,7 +1,7 @@
 #ifndef OBJ_TURBOSPIKER_H
 #define OBJ_TURBOSPIKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TURBOSPIKER_VISIBLE,

@@ -1,7 +1,7 @@
 #ifndef OBJ_CREDITSSETUP_H
 #define OBJ_CREDITSSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectCreditsSetup {

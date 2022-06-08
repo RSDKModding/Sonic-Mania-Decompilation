@@ -666,11 +666,10 @@
     <ClInclude Include="Objects\Unused\TargetBumper.h" />
     <ClInclude Include="Objects\Unused\WallCrawl.h" />
     <ClInclude Include="Objects\Unused\Wisp.h" />
-    <ClInclude Include="SonicMania.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameObjects.c" />
-    <ClCompile Include="GameVariables.c" />
+    <ClCompile Include="Game.c" />
     <ClCompile Include="Objects\AIZ\AIZEggRobo.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -4333,6 +4332,7 @@
     <ProjectGuid>{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}</ProjectGuid>
     <RootNamespace>SonicMania</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>SonicMania (All)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

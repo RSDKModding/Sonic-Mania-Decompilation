@@ -1,7 +1,7 @@
 #ifndef OBJ_UIINFOLABEL_H
 #define OBJ_UIINFOLABEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUIInfoLabel {

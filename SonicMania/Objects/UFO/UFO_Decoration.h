@@ -1,7 +1,7 @@
 #ifndef OBJ_UFO_DECORATION_H
 #define OBJ_UFO_DECORATION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     UFO_DECOR_TREE,

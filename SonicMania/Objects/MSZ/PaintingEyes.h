@@ -1,7 +1,7 @@
 #ifndef OBJ_PAINTINGEYES_H
 #define OBJ_PAINTINGEYES_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPaintingEyes {

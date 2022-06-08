@@ -1,7 +1,7 @@
 #ifndef OBJ_CPZBOSS_H
 #define OBJ_CPZBOSS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CPZBOSS_PLAYER,

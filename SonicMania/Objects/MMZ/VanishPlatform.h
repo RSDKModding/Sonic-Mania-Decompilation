@@ -1,7 +1,7 @@
 #ifndef OBJ_VANISHPLATFORM_H
 #define OBJ_VANISHPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectVanishPlatform {

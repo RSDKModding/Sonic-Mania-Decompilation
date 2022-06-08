@@ -1,7 +1,7 @@
 #ifndef OBJ_TITLECARD_H
 #define OBJ_TITLECARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTitleCard {

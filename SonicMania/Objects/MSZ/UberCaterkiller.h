@@ -1,7 +1,7 @@
 #ifndef OBJ_UBERCATERKILLER_H
 #define OBJ_UBERCATERKILLER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UBERCATERKILLER_SEGMENT_COUNT (10)
 

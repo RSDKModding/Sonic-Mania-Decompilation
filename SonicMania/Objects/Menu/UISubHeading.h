@@ -1,7 +1,7 @@
 #ifndef OBJ_UISUBHEADING_H
 #define OBJ_UISUBHEADING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUISubHeading {

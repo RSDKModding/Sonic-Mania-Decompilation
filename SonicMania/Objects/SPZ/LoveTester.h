@@ -1,7 +1,7 @@
 #ifndef OBJ_LOVETESTER_H
 #define OBJ_LOVETESTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LOVETESTER_LIST_NONE,

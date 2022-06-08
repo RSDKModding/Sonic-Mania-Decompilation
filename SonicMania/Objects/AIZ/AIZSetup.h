@@ -1,7 +1,7 @@
 #ifndef OBJ_AIZSETUP_H
 #define OBJ_AIZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     AIZ_BG_JUNGLE,

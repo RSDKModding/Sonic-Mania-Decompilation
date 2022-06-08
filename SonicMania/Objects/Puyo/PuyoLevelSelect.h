@@ -1,7 +1,7 @@
 #ifndef OBJ_PUYOLEVELSELECT_H
 #define OBJ_PUYOLEVELSELECT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPuyoLevelSelect {

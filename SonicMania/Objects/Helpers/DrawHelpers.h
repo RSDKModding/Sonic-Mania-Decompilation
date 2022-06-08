@@ -1,7 +1,7 @@
 #ifndef OBJ_DRAWHELPERS_H
 #define OBJ_DRAWHELPERS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectDrawHelpers {

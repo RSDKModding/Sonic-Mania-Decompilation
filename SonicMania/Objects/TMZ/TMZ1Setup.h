@@ -1,7 +1,7 @@
 #ifndef OBJ_TMZ1SETUP_H
 #define OBJ_TMZ1SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TMZ1_STAGESTATE_NONE = -1,

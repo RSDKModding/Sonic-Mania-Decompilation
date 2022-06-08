@@ -1,7 +1,7 @@
 #ifndef OBJ_TVVAN_H
 #define OBJ_TVVAN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     TVVAN_VAN_LEFT,

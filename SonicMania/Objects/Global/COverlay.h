@@ -1,7 +1,7 @@
 #ifndef OBJ_COVERLAY_H
 #define OBJ_COVERLAY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectCOverlay {

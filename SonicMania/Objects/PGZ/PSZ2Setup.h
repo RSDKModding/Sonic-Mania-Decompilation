@@ -1,7 +1,7 @@
 #ifndef OBJ_PSZ2SETUP_H
 #define OBJ_PSZ2SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { GENERICTRIGGER_PSZ2_PETALSINACTIVE, GENERICTRIGGER_PSZ2_PETALSACTIVE } GenericTriggerTypesPSZ2;
 

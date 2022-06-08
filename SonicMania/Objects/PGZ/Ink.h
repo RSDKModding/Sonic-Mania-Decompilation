@@ -1,7 +1,7 @@
 #ifndef OBJ_INK_H
 #define OBJ_INK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     INK_C,

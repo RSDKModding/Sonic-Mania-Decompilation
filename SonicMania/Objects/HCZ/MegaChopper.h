@@ -1,7 +1,7 @@
 #ifndef OBJ_MEGACHOPPER_H
 #define OBJ_MEGACHOPPER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectMegaChopper {

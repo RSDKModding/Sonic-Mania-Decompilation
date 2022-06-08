@@ -1,7 +1,7 @@
 #ifndef OBJ_GYMBAR_H
 #define OBJ_GYMBAR_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { GYMBAR_HORIZONTAL, GYMBAR_VERTICAL } GymBarTypes;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMEGG_H
 #define OBJ_PHANTOMEGG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PHANTOMEGG_EGGMAN,

@@ -1,7 +1,7 @@
 #ifndef OBJ_RINGFIELD_H
 #define OBJ_RINGFIELD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectRingField {

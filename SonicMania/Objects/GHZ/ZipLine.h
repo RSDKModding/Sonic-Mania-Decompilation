@@ -1,7 +1,7 @@
 #ifndef OBJ_ZIPLINE_H
 #define OBJ_ZIPLINE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectZipLine {

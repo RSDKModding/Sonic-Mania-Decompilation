@@ -1,7 +1,7 @@
 #ifndef OBJ_TIMEATTACKDATA_H
 #define OBJ_TIMEATTACKDATA_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CHAR_SONIC_AND_TAILS,

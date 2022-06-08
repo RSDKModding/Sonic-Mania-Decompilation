@@ -1,7 +1,7 @@
 #ifndef OBJ_POHBEE_H
 #define OBJ_POHBEE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPohBee {

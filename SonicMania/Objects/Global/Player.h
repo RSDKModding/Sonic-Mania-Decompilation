@@ -1,7 +1,7 @@
 #ifndef OBJ_PLAYER_H
 #define OBJ_PLAYER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ANI_IDLE,

@@ -1,7 +1,7 @@
 #ifndef OBJ_BUMPALO_H
 #define OBJ_BUMPALO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBumpalo {

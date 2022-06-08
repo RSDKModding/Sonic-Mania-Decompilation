@@ -1,7 +1,7 @@
 #ifndef OBJ_TILEPLATFORM_H
 #define OBJ_TILEPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectTilePlatform {

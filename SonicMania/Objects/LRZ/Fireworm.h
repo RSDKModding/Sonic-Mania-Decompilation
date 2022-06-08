@@ -1,7 +1,7 @@
 #ifndef OBJ_FIREWORM_H
 #define OBJ_FIREWORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define FIREWORM_SEGMENT_COUNT (1 + 4) // Head + 4 Segments
 

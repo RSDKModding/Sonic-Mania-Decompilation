@@ -1,7 +1,7 @@
 #ifndef OBJ_FBZSETUP_H
 #define OBJ_FBZSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { FBZ_GENERICTRIGGER_EXTERIOR, FBZ_GENERICTRIGGER_INTERIOR } GenericTriggerTypesFBZ;
 

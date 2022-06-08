@@ -1,7 +1,7 @@
 #ifndef OBJ_ENCOREROUTE_H
 #define OBJ_ENCOREROUTE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #if MANIA_USE_PLUS
 

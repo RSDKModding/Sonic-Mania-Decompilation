@@ -1,7 +1,7 @@
 #ifndef OBJ_CONSTELLATION_H
 #define OBJ_CONSTELLATION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CONSTELLATION_SONIC,

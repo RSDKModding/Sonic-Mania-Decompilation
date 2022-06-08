@@ -1,7 +1,7 @@
 #ifndef OBJ_BUNGEE_H
 #define OBJ_BUNGEE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectBungee {

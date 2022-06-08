@@ -1,7 +1,7 @@
 #ifndef OBJ_AIZEGGROBO_H
 #define OBJ_AIZEGGROBO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectAIZEggRobo {

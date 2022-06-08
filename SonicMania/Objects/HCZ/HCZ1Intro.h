@@ -1,7 +1,7 @@
 #ifndef OBJ_HCZ1INTRO_H
 #define OBJ_HCZ1INTRO_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectHCZ1Intro {

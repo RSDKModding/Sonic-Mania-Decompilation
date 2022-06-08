@@ -1,7 +1,7 @@
 #ifndef OBJ_MAGPLATFORM_H
 #define OBJ_MAGPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectMagPlatform {

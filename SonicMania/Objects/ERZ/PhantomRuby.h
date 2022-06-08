@@ -1,7 +1,7 @@
 #ifndef OBJ_PHANTOMRUBY_H
 #define OBJ_PHANTOMRUBY_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     RUBYSFX_NONE,

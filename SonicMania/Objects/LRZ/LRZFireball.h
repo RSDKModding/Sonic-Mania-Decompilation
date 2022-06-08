@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZFIREBALL_H
 #define OBJ_LRZFIREBALL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     LRZFIREBALL_SPAWNER,

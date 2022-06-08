@@ -1,7 +1,7 @@
 #ifndef OBJ_BARSTOOL_H
 #define OBJ_BARSTOOL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum { BARSTOOL_HEIGHT_SHORT, BARSTOOL_HEIGHT_TALL } BarStoolHeights;
 

@@ -1,7 +1,7 @@
 #ifndef OBJ_CUTSCENESEQ_H
 #define OBJ_CUTSCENESEQ_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define CUTSCENESEQ_POINT_COUNT (8)
 

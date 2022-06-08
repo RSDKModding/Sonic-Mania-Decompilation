@@ -1,7 +1,7 @@
 #ifndef OBJ_CONVEYORPLATFORM_H
 #define OBJ_CONVEYORPLATFORM_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     CONVEYORPLATFORM_FIXED,

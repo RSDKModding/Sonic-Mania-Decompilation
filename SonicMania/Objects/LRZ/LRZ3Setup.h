@@ -1,7 +1,7 @@
 #ifndef OBJ_LRZ3SETUP_H
 #define OBJ_LRZ3SETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectLRZ3Setup {

@@ -1,7 +1,7 @@
 #ifndef OBJ_LEDPANEL_H
 #define OBJ_LEDPANEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define LEDPANEL_TEXT_COUNT (8)
 #define LEDPANEL_ROW_COUNT  (2)

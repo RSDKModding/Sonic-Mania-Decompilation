@@ -1,7 +1,7 @@
 #ifndef OBJ_IWAMODOKI_H
 #define OBJ_IWAMODOKI_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectIwamodoki {

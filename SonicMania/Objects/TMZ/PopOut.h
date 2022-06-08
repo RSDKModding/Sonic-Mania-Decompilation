@@ -1,7 +1,7 @@
 #ifndef OBJ_POPOUT_H
 #define OBJ_POPOUT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     POPOUT_CHILD_SPRING_YELLOW,

@@ -1,7 +1,7 @@
 #ifndef OBJ_POINTDEXTER_H
 #define OBJ_POINTDEXTER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectPointdexter {

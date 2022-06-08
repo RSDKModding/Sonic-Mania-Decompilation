@@ -1,7 +1,7 @@
 #ifndef OBJ_PULLCHAIN_H
 #define OBJ_PULLCHAIN_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PULLCHAIN_NORMAL,

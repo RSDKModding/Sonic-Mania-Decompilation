@@ -1,7 +1,7 @@
 #ifndef OBJ_BOUNCEPLANT_H
 #define OBJ_BOUNCEPLANT_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define BOUNCEPLANT_NODE_COUNT (8)
 

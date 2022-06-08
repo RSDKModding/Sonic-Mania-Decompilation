@@ -1,7 +1,7 @@
 #ifndef OBJ_THANKSSETUP_H
 #define OBJ_THANKSSETUP_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectThanksSetup {

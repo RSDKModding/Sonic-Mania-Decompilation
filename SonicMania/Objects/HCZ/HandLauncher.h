@@ -1,7 +1,7 @@
 #ifndef OBJ_HANDLAUNCHER_H
 #define OBJ_HANDLAUNCHER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectHandLauncher {

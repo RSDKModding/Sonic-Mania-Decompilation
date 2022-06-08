@@ -1,7 +1,7 @@
 #ifndef OBJ_UICONTROL_H
 #define OBJ_UICONTROL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 #define UICONTROL_BUTTON_COUNT (64)
 #if MANIA_USE_PLUS

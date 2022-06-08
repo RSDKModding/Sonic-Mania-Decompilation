@@ -1,7 +1,7 @@
 #ifndef OBJ_ICESPRING_H
 #define OBJ_ICESPRING_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     ICESPRING_VERTICAL,

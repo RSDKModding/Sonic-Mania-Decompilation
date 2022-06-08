@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="All.h" />
     <ClInclude Include="GameLink.h" />
     <ClInclude Include="GameObjects.h" />
     <ClInclude Include="GameVariables.h" />
@@ -632,12 +631,10 @@
     <ClInclude Include="Objects\Unused\TargetBumper.h" />
     <ClInclude Include="Objects\Unused\WallCrawl.h" />
     <ClInclude Include="Objects\Unused\Wisp.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="SonicMania.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameObjects.c" />
-    <ClCompile Include="GameVariables.c" />
+    <ClCompile Include="Game.c" />
     <ClCompile Include="Objects\AIZ\AIZEggRobo.c">
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZEncoreTutorial.c">

@@ -1,7 +1,7 @@
 #ifndef OBJ_UIVSRESULTS_H
 #define OBJ_UIVSRESULTS_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUIVsResults {

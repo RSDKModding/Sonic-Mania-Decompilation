@@ -1,7 +1,7 @@
 #ifndef OBJ_UITRANSITION_H
 #define OBJ_UITRANSITION_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUITransition {

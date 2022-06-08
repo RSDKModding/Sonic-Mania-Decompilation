@@ -1,7 +1,7 @@
 #ifndef OBJ_CLAPPERBOARD_H
 #define OBJ_CLAPPERBOARD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectClapperboard {

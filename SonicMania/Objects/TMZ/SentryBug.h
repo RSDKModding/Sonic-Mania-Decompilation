@@ -1,7 +1,7 @@
 #ifndef OBJ_SENTRYBUG_H
 #define OBJ_SENTRYBUG_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectSentryBug {

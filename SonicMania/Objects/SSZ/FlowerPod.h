@@ -1,7 +1,7 @@
 #ifndef OBJ_FLOWERPOD_H
 #define OBJ_FLOWERPOD_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectFlowerPod {

@@ -1,7 +1,7 @@
 #ifndef OBJ_MSPANEL_H
 #define OBJ_MSPANEL_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectMSPanel {

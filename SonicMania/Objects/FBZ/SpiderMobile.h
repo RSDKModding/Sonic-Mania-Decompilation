@@ -1,7 +1,7 @@
 #ifndef OBJ_SPIDERMOBILE_H
 #define OBJ_SPIDERMOBILE_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     SPIDERMOBILE_BOSS,

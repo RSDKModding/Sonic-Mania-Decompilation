@@ -1,7 +1,7 @@
 #ifndef OBJ_PLANESWITCH_H
 #define OBJ_PLANESWITCH_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     PLANESWITCH_LOWLAYER_LEFT   = 0,

@@ -1,7 +1,7 @@
 #ifndef OBJ_UIVSROUNDPICKER_H
 #define OBJ_UIVSROUNDPICKER_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 // Object Class
 struct ObjectUIVsRoundPicker {

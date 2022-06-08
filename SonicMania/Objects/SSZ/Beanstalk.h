@@ -1,7 +1,7 @@
 #ifndef OBJ_BEANSTALK_H
 #define OBJ_BEANSTALK_H
 
-#include "SonicMania.h"
+#include "Game.h"
 
 typedef enum {
     BEANSTALK_BEGIN,
