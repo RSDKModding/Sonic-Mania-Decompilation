@@ -1,3 +1,0 @@
-# IOS SETUP
-
-* todo: this

@@ -1,12 +1,3 @@
-[submodule "mods/v5py"]
-	path = mods/v5py
-	url = https://github.com/MGRich/v5py
-[submodule "mods/PZTC"]
-	path = mods/PZTC
-	url = https://github.com/MGRich/PerZoneTitleCards
-[submodule "mods/ManiaModMenu"]
-	path = mods/ManiaModMenu
-	url = https://github.com/MGRich/ManiaModMenu
 [submodule "dependencies/all/tinyxml2"]
 	path = dependencies/all/tinyxml2
 	url = https://github.com/leethomason/tinyxml2

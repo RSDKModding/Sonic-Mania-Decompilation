@@ -1,3 +1,0 @@
-# LINUX SETUP
-
-* todo: this
