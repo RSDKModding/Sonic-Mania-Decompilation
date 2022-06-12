@@ -69,10 +69,7 @@ bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
     int32 id = 0;
     foreach_all(HangGlider, glider)
     {
-        if (id > Player->playerCount) {
-            destroyEntity(glider);
-        }
-        else {
+        if (id < Player->playerCount) {
             EntityPlayer *player   = RSDK_GET_ENTITY(id, Player);
             player->position.x     = glider->position.x;
             player->position.y     = glider->position.y;
@@ -101,6 +98,9 @@ bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
             }
 
             self->gliders[id] = glider;
+        }
+        else {
+            destroyEntity(glider);
         }
 
         ++id;
