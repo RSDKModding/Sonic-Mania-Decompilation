@@ -330,7 +330,7 @@ void TitleSetup_State_WaitForEnter(void)
 
         const char *nextScene = "Menu";
         // Switch 1.0 dev level select cheat (Skips all the funky API setup stuff the menu does, so it was known for causin a bunch of issues)
-#if MANIA_GAMEVER == VER_100
+#if GAME_VERSION == VER_100
         if (ControllerInfo->keyA.down && (ControllerInfo->keyX.down || ControllerInfo->keyC.down))
             nextScene = "Level Select";
 #endif

@@ -67,7 +67,7 @@ void DebugMode_Update(void)
             self->velocity.y = 0x100000;
     }
 
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     bool32 keyBack  = ControllerInfo[CONT_P1].keyY.press;
     bool32 keySpawn = ControllerInfo[CONT_P1].keyX.press;
 #else

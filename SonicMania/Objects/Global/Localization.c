@@ -67,7 +67,7 @@ void Localization_LoadStrings(void)
             RSDK.LoadStringList(&Localization->text, "StringsJP.txt", 16);
             break;
 
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
         case LANGUAGE_KO:
             LogHelpers_Print("Loading KO strings...");
             RSDK.LoadStringList(&Localization->text, "StringsKO.txt", 16);

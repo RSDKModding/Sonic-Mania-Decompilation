@@ -82,13 +82,13 @@ void MSZSetup_Create(void *data)
     if (SceneInfo->minutes || SceneInfo->seconds || SceneInfo->milliseconds) {
         if (SceneInfo->minutes == globals->tempMinutes && SceneInfo->seconds == globals->tempSeconds
             && SceneInfo->milliseconds == globals->tempMilliseconds)
-            MSZSetup->usingRegularPalette = (MANIA_GAMEVER != VER_100 ? globals->tempFlags : globals->restartMusicID);
+            MSZSetup->usingRegularPalette = (GAME_VERSION != VER_100 ? globals->tempFlags : globals->restartMusicID);
         else
             MSZSetup->usingRegularPalette = globals->restartFlags;
     }
     else {
         globals->restartFlags = 0;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
         globals->tempFlags = 0;
 #else
         globals->restartMusicID = 0;

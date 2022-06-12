@@ -136,7 +136,7 @@ void ExtrasMenu_ProcessInputs(void)
 {
     RSDK_THIS(UIControl);
 
-#if MANIA_GAMEVER == VER_106
+#if GAME_VERSION == VER_106
     // this "cheat" is technically PC only, but I can't be bothered to ifdef it and it's cooler to have on all platforms
 
     // buttonID == 2: DAGarden

@@ -403,6 +403,14 @@ typedef struct {
 } EngineInfo;
 #endif
 
+#if RETRO_USE_MOD_LOADER
+typedef struct {
+    uint8 engineVer;
+    uint8 gameVer;
+    uint8 modLoaderVer;
+} ModVersionInfo;
+#endif
+
 typedef struct {
     int32 values[4][4];
 } Matrix;
@@ -786,7 +794,7 @@ typedef enum {
     LANGUAGE_GE,
     LANGUAGE_SP,
     LANGUAGE_JP,
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     LANGUAGE_KO,
     LANGUAGE_SC,
     LANGUAGE_TC,
@@ -1630,6 +1638,8 @@ extern APIFunctionTable API;
 #endif
 #if RETRO_USE_MOD_LOADER
 extern ModFunctionTable Mod;
+
+extern const char *modID;
 #endif
 
 extern RSDKSceneInfo *SceneInfo;

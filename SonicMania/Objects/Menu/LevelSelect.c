@@ -420,7 +420,7 @@ void LevelSelect_State_HandleMenu(void)
 #endif
         }
     }
-#if MANIA_GAMEVER == VER_100 || MANIA_USE_TOUCH_CONTROLS
+#if GAME_VERSION == VER_100 || MANIA_USE_TOUCH_CONTROLS
     else if (TouchInfo->count) {
 
         self->timer = (self->timer + 1) & 0xF;

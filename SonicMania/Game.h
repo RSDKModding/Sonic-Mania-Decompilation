@@ -10,10 +10,14 @@
 // ENGINE VERSIONS
 // -------------------------
 
+#define RETRO_REVISION (2)
+
+#define RETRO_REV01 (RETRO_REVISION == 1)
+
 // RSDKv5 was revised & updated for plus onwards
 // this is basically the same functionality as "MANIA_USE_PLUS"
 // but I split this one to be more specific about engine changes vs game changes
-#define RETRO_REV02 (1)
+#define RETRO_REV02 (RETRO_REVISION == 2)
 
 // Controls whether EditorLoad & EditorDraw should be included in the final product or not
 // This is a copy of what the original game likely had, as the original game does not include EditorLoad or EditorDraw funcs for any objects
@@ -41,16 +45,16 @@
 #define VER_107 (7) // 1.07 (EGS/Origin releases)
 
 #ifdef MANIA_PREPLUS
-#define MANIA_GAMEVER VER_103
+#define GAME_VERSION VER_103
 
 #undef RETRO_REV02
 #define RETRO_REV02 (0)
 #else
-#define MANIA_GAMEVER VER_106
+#define GAME_VERSION VER_106
 #endif
 
-#define MANIA_USE_PLUS (MANIA_GAMEVER >= VER_105)
-#define MANIA_USE_EGS  (MANIA_GAMEVER == VER_107)
+#define MANIA_USE_PLUS (GAME_VERSION >= VER_105)
+#define MANIA_USE_EGS  (GAME_VERSION == VER_107)
 
 #define MANIA_USE_TOUCH_CONTROLS (1)
 

@@ -10,7 +10,18 @@ APIFunctionTable API;
 #endif
 #if RETRO_USE_MOD_LOADER
 ModFunctionTable Mod;
+
+DLLExport ModVersionInfo modInfo = { RETRO_REVISION, GAME_VERSION, RETRO_MOD_LOADER_VER };
+
+const char *modID = "SonicMania";
 #endif
+
+typedef struct {
+    int myFunkyValue;
+    int myOtherFunkyValue;
+} Funky;
+
+__declspec(dllexport) Funky funk = { 15, 72 };
 
 RSDKSceneInfo *SceneInfo = NULL;
 

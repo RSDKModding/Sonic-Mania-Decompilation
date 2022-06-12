@@ -244,7 +244,7 @@ void RubyPortal_State_Opened(void)
 
                 SaveGame_SavePlayerState();
 
-#if !MANIA_USE_PLUS && MANIA_GAMEVER != VER_100
+#if !MANIA_USE_PLUS && GAME_VERSION != VER_100
                 if (player1->superState == SUPERSTATE_SUPER)
                     globals->restartPowerups |= 0x80;
 #endif

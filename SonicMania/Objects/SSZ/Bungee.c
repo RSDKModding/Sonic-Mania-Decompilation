@@ -17,7 +17,7 @@ void Bungee_Update(void)
         EntityPlayer *player = self->attatchedPlayer;
 
         self->timer = 2;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
         if (player && !Player_CheckValidState(player)) {
             self->attatchedPlayer    = NULL;
             self->hasAttatchedPlayer = false;
@@ -34,7 +34,7 @@ void Bungee_Update(void)
             player->drawFX     = FX_ROTATE | FX_FLIP;
             player->position   = self->bungeePos;
             player->position.y += 0x1A0000;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
         }
 #endif
 

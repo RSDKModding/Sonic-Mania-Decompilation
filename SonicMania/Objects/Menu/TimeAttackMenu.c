@@ -494,7 +494,7 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 success)
     if (success) {
         Replay *replayPtr = (Replay *)globals->replayTempRBuffer;
 
-        if (replayPtr->header.version == MANIA_GAMEVER) {
+        if (replayPtr->header.version == GAME_VERSION) {
             LogHelpers_Print("WARNING: Replay Load OK");
             ReplayRecorder_Buffer_Unpack(globals->replayReadBuffer, globals->replayTempRBuffer);
             TimeAttackMenu_LoadScene_Fadeout();

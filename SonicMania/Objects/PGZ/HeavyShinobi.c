@@ -94,7 +94,7 @@ void HeavyShinobi_Create(void *data)
                     // Bug Details: Remember the PGZ2 boss skip?
                     // you guessed it, this is the fix, isPermanent just says "DO NOT OVERWRITE THIS ENTITY"
                     // since all entities spawned via RSDK.CreateEntity use the last 0x100 slots, and it loops around
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
                     self->isPermanent = true;
 #endif
 

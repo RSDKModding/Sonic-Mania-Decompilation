@@ -22,7 +22,7 @@ typedef enum {
 struct ObjectHUD {
     RSDK_OBJECT
     uint16 aniFrames;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     uint16 superButtonFrames;
 #endif
 #if MANIA_USE_PLUS
@@ -49,7 +49,7 @@ struct EntityHUD {
     int32 lives[PLAYER_COUNT];
 #endif
     int32 maxOffset;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     int32 superButtonPos;
 #endif
 #if MANIA_USE_PLUS
@@ -61,7 +61,7 @@ struct EntityHUD {
     int32 vsMaxOffsets[PLAYER_COUNT];
     int32 screenID;
 #endif
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     int32 timeFlashFrame;
 #endif
     int32 ringFlashFrame;
@@ -72,7 +72,7 @@ struct EntityHUD {
     Animator hyperNumbersAnimator;
     Animator lifeIconAnimator;
     Animator playerIDAnimator;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     Animator superIconAnimator;
     Animator superButtonAnimator;
 #endif

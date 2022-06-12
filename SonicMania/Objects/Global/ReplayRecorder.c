@@ -650,7 +650,7 @@ void ReplayRecorder_SetupWriteBuffer(void)
     Replay *replayPtr      = ReplayRecorder->recordBuffer;
 
     replayPtr->header.signature     = REPLAY_SIGNATURE;
-    replayPtr->header.version       = MANIA_GAMEVER;
+    replayPtr->header.version       = GAME_VERSION;
     replayPtr->header.isPacked      = false;
     replayPtr->header.isNotEmpty    = true;
     replayPtr->header.startingFrame = ReplayRecorder->frameCounter;

@@ -235,7 +235,7 @@ void SpecialRing_State_Normal(void)
                     self->state         = SpecialRing_State_Warp;
 
                     EntitySaveGame *saveRAM = SaveGame->saveRAM;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
                     // rings spawned via debug mode give you 50 rings, always
                     if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {
 #else

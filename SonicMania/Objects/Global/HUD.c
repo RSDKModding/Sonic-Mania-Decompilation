@@ -39,7 +39,7 @@ void HUD_LateUpdate(void)
     StateMachine_Run(self->state);
 #endif
 
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (SceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER && SaveGame->saveRAM->chaosEmeralds >= 0b01111111) {
@@ -125,7 +125,7 @@ void HUD_Draw(void)
 
     self->ringFlashFrame = player->rings ? 0 : ((Zone->persistentTimer >> 3) & 1);
 
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
 #if MANIA_USE_PLUS
     self->timeFlashFrame = 0;
     if ((SceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER))) && ActClear->disableTimeBonus)
@@ -242,7 +242,7 @@ void HUD_Draw(void)
         RSDK.DrawSprite(&self->thumbsUpButtonAnimator, &lifePos, true);
     }
 #endif
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     else if (self->superButtonPos > -0x200000) {
         // Draw Super Icon
         lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].width << 16) - self->superButtonPos;
@@ -447,7 +447,7 @@ void HUD_Create(void *data)
         self->ringsOffset.y = 0x2C0000;
         self->lifeOffset.x  = 0x100000;
         self->lifeOffset.y  = (ScreenInfo->height - 12) << 16;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
         self->superButtonPos = -0x200000;
 #endif
 
@@ -476,7 +476,7 @@ void HUD_Create(void *data)
         RSDK.SetSpriteAnimation(HUD->aniFrames, 8, &self->playerIDAnimator, true, 0);
 #endif
 
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
         RSDK.SetSpriteAnimation(HUD->superButtonFrames, 0, &self->superIconAnimator, true, 0);
         HUD_GetActionButtonFrames();
 #endif
@@ -490,7 +490,7 @@ void HUD_Create(void *data)
 void HUD_StageLoad(void)
 {
     HUD->aniFrames = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     HUD->superButtonFrames = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
 #endif
 
@@ -581,7 +581,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value)
     RSDK.DrawSprite(&self->hyperNumbersAnimator, drawPos, true);
 }
 
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
 void HUD_GetButtonFrame(Animator *animator, int32 buttonID)
 {
     int32 gamepadType = UIButtonPrompt_GetGamepadType();

@@ -140,7 +140,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
         sprintf_s(buffer, (int32)sizeof(buffer), "%ix", self->selection);
 
         RSDK.SetString(&entityPtr->text, buffer);
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
         if (Localization->language == LANGUAGE_TC) {
             for (int32 c = 0; c < entityPtr->text.length; ++c) {
                 if (entityPtr->text.chars[c] == 'x')

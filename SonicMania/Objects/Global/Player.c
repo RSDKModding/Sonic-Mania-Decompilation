@@ -3424,7 +3424,7 @@ void Player_ForceSuperTransform(void)
 #endif
 
     self->state = Player_State_Ground;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     Player_State_Ground();
 #endif
 }
@@ -5524,7 +5524,7 @@ void Player_State_FlyIn(void)
     Player->jumpInTimer  = 0;
     self->tileCollisions = false;
     self->interaction    = false;
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     if (SizeLaser) {
         if (leader->isChibi != self->isChibi)
             SizeLaser_SetP2State(self, leader->isChibi);
@@ -6055,7 +6055,7 @@ void Player_JumpAbility_Sonic(void)
         if (self->stateInput != Player_Input_P2_AI) {
 #endif
             if (self->jumpPress
-#if MANIA_GAMEVER == VER_100
+#if GAME_VERSION == VER_100
                 && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
             ) {
@@ -6125,7 +6125,7 @@ void Player_JumpAbility_Sonic(void)
                     }
                 }
             }
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
             else {
                 if (ControllerInfo[self->controllerID].keyY.press)
                     Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
@@ -6158,7 +6158,7 @@ void Player_JumpAbility_Tails(void)
                 && globals->gameMode != MODE_ENCORE
 #endif
                 ))
-#if MANIA_GAMEVER == VER_100
+#if GAME_VERSION == VER_100
         && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
     ) {
@@ -6175,7 +6175,7 @@ void Player_JumpAbility_Tails(void)
             self->nextAirState    = StateMachine_None;
         }
     }
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
         Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
 #endif
@@ -6191,7 +6191,7 @@ void Player_JumpAbility_Knux(void)
                 && globals->gameMode != MODE_ENCORE
 #endif
                 ))
-#if MANIA_GAMEVER == VER_100
+#if GAME_VERSION == VER_100
         && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
     ) {
@@ -6218,7 +6218,7 @@ void Player_JumpAbility_Knux(void)
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->animator, false, 6);
         }
     }
-#if MANIA_GAMEVER != VER_100
+#if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
         Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
 #endif
