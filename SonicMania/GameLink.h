@@ -1266,7 +1266,7 @@ typedef struct {
     bool32 (*CheckOnScreen)(void *entity, Vector2 *range);
     bool32 (*CheckPosOnScreen)(Vector2 *position, Vector2 *range);
     void (*AddDrawListRef)(uint8 drawGroup, uint16 entityID);
-    void (*SwapDrawListEntries)(uint8 drawGroup, uint16 startSlotID, uint16 endSlotID, uint16 count);
+    void (*SwapDrawListEntries)(uint8 drawGroup, uint16 slot1, uint16 slot2, uint16 count);
     void (*SetDrawLayerProperties)(uint8 drawGroup, bool32 sorted, void (*callback)(void));
 
     // Scene Management
