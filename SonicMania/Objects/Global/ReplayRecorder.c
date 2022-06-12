@@ -568,7 +568,7 @@ void ReplayRecorder_ConfigureGhost_CB(void)
     LogHelpers_Print("ConfigureGhost_CB()");
     LogHelpers_Print("Ghost Slot %d", self->playerID);
 
-    RSDK.PrintVector2(0, "Ghost pos ", self->position.x, self->position.y);
+    RSDK.PrintVector2(PRINT_NORMAL, "Ghost pos ", self->position);
     self->isGhost        = true;
     self->stateInput     = StateMachine_None;
     self->state          = ReplayRecorder_PlayerState_PlaybackReplay;

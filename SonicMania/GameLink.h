@@ -1438,7 +1438,7 @@ typedef struct {
     int32 (*GetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode);
     void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 angle);
     uint8 (*GetTileFlags)(uint16 tileID, uint8 cPlane);
-    void (*SetTileFlags)(uint16 tileID, uint8 cPlane, uint8 flags);
+    void (*SetTileFlags)(uint16 tileID, uint8 cPlane, uint8 flag);
 
     // Audio
     int32 (*GetSfx)(const char *path);
@@ -1483,14 +1483,14 @@ typedef struct {
 
     // Printing (Rev02)
 #if RETRO_REV02
-    void (*PrintLog)(PrintModes printType, const char *message, ...);
-    void (*PrintText)(PrintModes printType, const char *message);
-    void (*PrintString)(PrintModes printType, String *message);
-    void (*PrintUInt32)(PrintModes printType, const char *message, uint32 i);
-    void (*PrintInt32)(PrintModes printType, const char *message, int32 i);
-    void (*PrintFloat)(PrintModes printType, const char *message, float f);
-    void (*PrintVector2)(PrintModes printType, const char *message, int32 x, int32 y);
-    void (*PrintHitbox)(PrintModes printType, const char *message, Hitbox *hitbox);
+    void (*PrintLog)(PrintModes mode, const char *message, ...);
+    void (*PrintText)(PrintModes mode, const char *message);
+    void (*PrintString)(PrintModes mode, String *message);
+    void (*PrintUInt32)(PrintModes mode, const char *message, uint32 i);
+    void (*PrintInt32)(PrintModes mode, const char *message, int32 i);
+    void (*PrintFloat)(PrintModes mode, const char *message, float f);
+    void (*PrintVector2)(PrintModes mode, const char *message, Vector2 vec);
+    void (*PrintHitbox)(PrintModes mode, const char *message, Hitbox hitbox);
 #endif
 
     // Editor

@@ -70,7 +70,7 @@ void CutsceneSeq_Draw(void)
         Vector2 *point = &self->points[p];
         if (point->x || point->y) {
 #if MANIA_USE_PLUS
-            RSDK.PrintVector2(0, "Draw poi ", point->x, point->y);
+            RSDK.PrintVector2(PRINT_NORMAL, "Draw poi ", *point);
 #endif
             DrawHelpers_DrawCross(point->x, point->y, 0x200000, 0x200000, colors[p]);
         }
