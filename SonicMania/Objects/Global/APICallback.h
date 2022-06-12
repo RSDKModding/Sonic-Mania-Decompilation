@@ -9,7 +9,7 @@
 #define sku_region   SKU->region
 
 #define API_GetConfirmButtonFlip               API.GetConfirmButtonFlip
-#define API_UnlockAchievement(info)            API.UnlockAchievement(info)
+#define API_UnlockAchievement(info)            API.TryUnlockAchievement(info)
 #define API_SetAchievementsEnabled(enabled)    API.SetAchievementsEnabled(enabled)
 #define API_GetAchievementsEnabled()           API.GetAchievementsEnabled()
 #define API_SetRichPresence                    API.SetRichPresence

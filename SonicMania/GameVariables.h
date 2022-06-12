@@ -1,5 +1,5 @@
-#ifndef GAME_OPTIONS_H
-#define GAME_OPTIONS_H
+#ifndef GAME_VARIABLES_H
+#define GAME_VARIABLES_H
 
 // =========================
 // GAME ENUMS
@@ -325,4 +325,4 @@ extern GlobalVariables *globals;
     Animator animator; /* unused, afaik */                                                                                                           \
     Hitbox hitbox;
 
-#endif //! GAME_OPTIONS_H
+#endif //! GAME_VARIABLES_H

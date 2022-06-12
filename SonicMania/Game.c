@@ -932,6 +932,13 @@ void InitModAPI(void)
     ADD_PUBLIC_FUNC(Player_CheckProjectileHit);
     ADD_PUBLIC_FUNC(Player_CheckItemBreak);
 
+    ADD_PUBLIC_FUNC(Player_Input_P1);
+    ADD_PUBLIC_FUNC(Player_Input_P2_AI);
+    ADD_PUBLIC_FUNC(Player_Input_P2_Player);
+    ADD_PUBLIC_FUNC(Player_Input_P2_Delay);
+    ADD_PUBLIC_FUNC(Player_Input_P2_JumpDelay);
+    ADD_PUBLIC_FUNC(Player_Input_P2_JumpIn);
+
     ADD_PUBLIC_FUNC(DebugMode_AddObject);
 
     ADD_PUBLIC_FUNC(Ice_State_FrozenPlayer);

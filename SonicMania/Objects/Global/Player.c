@@ -6455,28 +6455,11 @@ void Player_Input_P1(void)
                     RSDK.PlaySfx(Player->sfxTransform2, false, 0xFE);
                     Zone_StartFadeOut(64, 0xF0F0F0);
                 }
-                // TODO: TEMP!! I SOULD REMOVE THIS!!!
-                else if (sku_platform == PLATFORM_DEV && controller->keySelect.press) {
-                    self->characterID <<= 1;
-                    if (self->characterID > ID_RAY)
-                        self->characterID = 1;
-
-                    Player_ChangeCharacter(self, self->characterID);
-                }
 
                 if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
                     if (HUD->swapCooldown || !Player_CheckValidState(self) || !Player_SwapMainPlayer(false)) {
                         RSDK.PlaySfx(Player->sfxSwapFail, false, 0xFF);
                     }
-                }
-#else
-                // TODO: TEMP!! I SOULD REMOVE THIS!!!
-                if (GameInfo->platform == PLATFORM_DEV && controller->keySelect.press) {
-                    self->characterID <<= 1;
-                    if (self->characterID > ID_KNUCKLES)
-                        self->characterID = 1;
-
-                    Player_ChangeCharacter(self, self->characterID);
                 }
 #endif
 

@@ -1114,7 +1114,7 @@ typedef struct {
     bool32 (*ForeachConfig)(String *textInfo);
     bool32 (*ForeachConfigCategory)(String *textInfo);
 
-    Object *(*GetObject)(const char *name);
+    void *(*FindObject)(const char *name);
 
     // Achievements
     void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
@@ -1124,6 +1124,10 @@ typedef struct {
 
     // Shaders
     void (*LoadShader)(const char *shaderName, bool32 linear);
+
+    // StateMachine
+    void (*StateMachineRun)(void *state);
+    void (*RegisterStateHook)(void *state, void *hook, bool32 priority);
 } ModFunctionTable;
 #endif
 
@@ -1150,7 +1154,7 @@ typedef struct {
 #endif
 
     // Achievements
-    void (*UnlockAchievement)(AchievementID *id);
+    void (*TryUnlockAchievement)(AchievementID *id);
     bool32 (*GetAchievementsEnabled)(void);
     void (*SetAchievementsEnabled)(bool32 enabled);
 #if MANIA_USE_EGS
@@ -1505,10 +1509,14 @@ typedef struct {
 #define Type_StateMachine void (*)(void)
 // used for variable decl
 #define StateMachine(name) void (*name)(void)
-#define StateMachine_Run(func)                                                                                                                       \
-    if (func) {                                                                                                                                      \
-        func();                                                                                                                                      \
+#if RETRO_USE_MOD_LOADER
+#define StateMachine_Run(state) Mod.StateMachineRun(state)
+#else
+#define StateMachine_Run(state)                                                                                                                      \
+    if (state) {                                                                                                                                     \
+        state();                                                                                                                                     \
     }
+#endif
 #define StateMachine_None NULL
 
 // Fancy macro + build magic to make tables & static vars
