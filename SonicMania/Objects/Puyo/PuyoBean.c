@@ -103,6 +103,9 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
     RSDK_THIS(PuyoBean);
 
     if (self->controllerID < PLAYER_COUNT) {
+        RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+        RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];
+
 #if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -118,22 +121,22 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
                     switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                         case 0:
                             ControllerInfo->keyRight.down |= true;
-                            ControllerInfo[self->controllerID].keyRight.down = true;
+                            controller->keyRight.down = true;
                             break;
 
                         case 1:
                             ControllerInfo->keyDown.down |= true;
-                            ControllerInfo[self->controllerID].keyDown.down = true;
+                            controller->keyDown.down = true;
                             break;
 
                         case 2:
                             ControllerInfo->keyLeft.down |= true;
-                            ControllerInfo[self->controllerID].keyLeft.down = true;
+                            controller->keyLeft.down = true;
                             break;
 
                         case 3:
                             ControllerInfo->keyUp.down |= true;
-                            ControllerInfo[self->controllerID].keyUp.down = true;
+                            controller->keyUp.down = true;
                             break;
                     }
                     break;
@@ -141,7 +144,10 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
             }
         }
 
-        int32 halfX = ScreenInfo->centerX / 2;
+        // fixes a bug with button vs touch
+        bool32 touchedRotL = false;
+        bool32 touchedRotR = false;
+        int32 halfX        = ScreenInfo->centerX / 2;
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -149,27 +155,31 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
             if (TouchInfo->down[t]) {
                 if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= (ScreenInfo->width - halfX) && ty <= ScreenInfo->height) {
                     ControllerInfo->keyA.down |= true;
-                    ControllerInfo[self->controllerID].keyA.down = true;
+                    controller->keyA.down = true;
+                    touchedRotR           = true;
                     break;
                 }
                 else if (tx >= (ScreenInfo->centerX + halfX) && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
                     ControllerInfo->keyB.down |= true;
-                    ControllerInfo[self->controllerID].keyB.down = true;
+                    controller->keyB.down = true;
+                    touchedRotL           = true;
                     break;
                 }
             }
         }
 
-        if (!self->touchLeft) {
-            ControllerInfo->keyA.press |= ControllerInfo->keyB.down;
-            ControllerInfo[self->controllerID].keyB.press |= ControllerInfo[self->controllerID].keyB.down;
+        if (!self->touchLeft && touchedRotL) {
+            ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
+            controller->keyB.press |= controller->keyB.down;
         }
-        if (!self->touchRight) {
+
+        if (!self->touchRight && touchedRotR) {
             ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-            ControllerInfo[self->controllerID].keyA.press |= ControllerInfo[self->controllerID].keyA.down;
+            controller->keyA.press |= controller->keyA.down;
         }
-        self->touchLeft  = ControllerInfo[self->controllerID].keyB.down;
-        self->touchRight = ControllerInfo[self->controllerID].keyA.down;
+
+        self->touchLeft  = controller->keyB.down;
+        self->touchRight = controller->keyA.down;
 
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -192,27 +202,26 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
         }
 #endif
 
-        self->down  = ControllerInfo[self->controllerID].keyDown.down;
-        self->left  = ControllerInfo[self->controllerID].keyLeft.down;
-        self->right = ControllerInfo[self->controllerID].keyRight.down;
+        self->down  = controller->keyDown.down;
+        self->left  = controller->keyLeft.down;
+        self->right = controller->keyRight.down;
 
 #if MANIA_USE_PLUS
-        self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
-        self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
-        self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+        self->down |= stick->vDelta < -0.3;
+        self->left |= stick->hDelta < -0.3;
+        self->right |= stick->hDelta > 0.3;
 #else
-        self->down |= AnalogStickInfoL[self->controllerID].vDeltaL < -0.3;
-        self->left |= AnalogStickInfoL[self->controllerID].hDeltaL < -0.3;
-        self->right |= AnalogStickInfoL[self->controllerID].hDeltaL > 0.3;
+        self->down |= stick->vDeltaL < -0.3;
+        self->left |= stick->hDeltaL < -0.3;
+        self->right |= stick->hDeltaL > 0.3;
 #endif
 
         if (self->left && self->right) {
             self->left  = false;
             self->right = false;
         }
-        self->rotateLeft = ControllerInfo[self->controllerID].keyB.press || ControllerInfo[self->controllerID].keyC.press
-                           || ControllerInfo[self->controllerID].keyY.press;
-        self->rotateRight      = ControllerInfo[self->controllerID].keyA.press || ControllerInfo[self->controllerID].keyX.press;
+        self->rotateLeft       = controller->keyB.press || controller->keyC.press || controller->keyY.press;
+        self->rotateRight      = controller->keyA.press || controller->keyX.press;
         self->forceRotateLeft  = false;
         self->forceRotateRight = false;
     }

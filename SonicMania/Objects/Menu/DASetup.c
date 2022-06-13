@@ -180,14 +180,17 @@ void DASetup_State_ManageControl(void)
                         ControllerInfo->keyRight.down |= true;
                         dir = 0;
                         break;
+
                     case 1:
                         ControllerInfo->keyDown.down |= true;
                         dir = 1;
                         break;
+
                     case 2:
                         ControllerInfo->keyLeft.down |= true;
                         dir = 2;
                         break;
+
                     case 3:
                         ControllerInfo->keyUp.down |= true;
                         dir = 3;
@@ -198,6 +201,9 @@ void DASetup_State_ManageControl(void)
         }
     }
 
+    // fixes a bug with button vs touch
+    bool32 touchedConfirm = false;
+    bool32 touchedBack = false;
     for (int32 t = 0; t < TouchInfo->count; ++t) {
         int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
         int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -205,11 +211,13 @@ void DASetup_State_ManageControl(void)
         if (TouchInfo->down[t]) {
             if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
                 ControllerInfo->keyA.down |= true;
+                touchedConfirm = true;
                 break;
             }
 
             if (tx >= ScreenInfo->centerX && ty < 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
                 ControllerInfo->keyB.down |= true;
+                touchedBack = true;
                 break;
             }
         }
@@ -227,9 +235,9 @@ void DASetup_State_ManageControl(void)
     if (dir != DASetup->touchDir && ControllerInfo->keyRight.down)
         ControllerInfo->keyRight.press |= ControllerInfo->keyRight.down;
 
-    if (!DASetup->touchConfirm)
+    if (!DASetup->touchConfirm && touchedConfirm)
         ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-    if (!DASetup->touchBack)
+    if (!DASetup->touchBack && touchedBack)
         ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
 
     DASetup->touchConfirm = ControllerInfo->keyA.down;
@@ -254,13 +262,13 @@ void DASetup_State_ManageControl(void)
         DASetup->trackID -= 10;
 #else
     int32 prevTrack = DASetup->trackID;
-    if (UIControl->keyRight)
+    if (UIControl->anyRightPress)
         DASetup->trackID++;
-    else if (UIControl->keyLeft)
+    else if (UIControl->anyLeftPress)
         DASetup->trackID--;
-    else if (UIControl->keyUp)
+    else if (UIControl->anyUpPress)
         DASetup->trackID += 10;
-    else if (UIControl->keyDown)
+    else if (UIControl->anyDownPress)
         DASetup->trackID -= 10;
 #endif
 
@@ -277,7 +285,7 @@ void DASetup_State_ManageControl(void)
 #if MANIA_USE_TOUCH_CONTROLS
     if (UIControl->anyConfirmPress || confirm) {
 #else
-    if (UIControl->keyConfirm) {
+    if (UIControl->anyConfirmPress) {
 #endif
         if (DASetup->activeTrack == DASetup->trackID) {
             RSDK.StopChannel(Music->channelID);
@@ -302,7 +310,7 @@ void DASetup_State_ManageControl(void)
 #if MANIA_USE_TOUCH_CONTROLS
         if (UIControl->anyBackPress || back) {
 #else
-        if (UIControl->keyBack) {
+        if (UIControl->anyBackPress) {
 #endif
             DASetup->returnToMenu = true;
             EntityFXFade *fade    = DASetup->fxFade;

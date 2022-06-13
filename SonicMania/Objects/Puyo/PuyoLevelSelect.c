@@ -18,7 +18,12 @@ void PuyoLevelSelect_Update(void)
 
         int32 controllerID = self->playerID + 1;
 
+        RSDKControllerState *controller = &ControllerInfo[controllerID];
+
 #if MANIA_USE_TOUCH_CONTROLS
+        // fixes a bug with button vs touch
+        bool32 touched = false;
+
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -35,14 +40,16 @@ void PuyoLevelSelect_Update(void)
 
                         case 1:
                             ControllerInfo->keyDown.down |= true;
-                            ControllerInfo[controllerID].keyDown.down = true;
+                            controller->keyDown.down = true;
+                            touched                  = true;
                             break;
 
                         case 2: break;
 
                         case 3:
                             ControllerInfo->keyUp.down |= true;
-                            ControllerInfo[controllerID].keyUp.down = true;
+                            controller->keyUp.down = true;
+                            touched                = true;
                             break;
                     }
                     break;
@@ -50,17 +57,17 @@ void PuyoLevelSelect_Update(void)
             }
         }
 
-        if (!getBit(self->touchFlags, 0)) {
+        if (!getBit(self->touchFlags, 0) && touched) {
             ControllerInfo->keyUp.press |= ControllerInfo->keyUp.down;
-            ControllerInfo[controllerID].keyUp.press |= ControllerInfo[controllerID].keyUp.down;
+            controller->keyUp.press |= controller->keyUp.down;
         }
 
-        if (!getBit(self->touchFlags, 1)) {
+        if (!getBit(self->touchFlags, 1) && touched) {
             ControllerInfo->keyDown.press |= ControllerInfo->keyDown.down;
-            ControllerInfo[controllerID].keyDown.press |= ControllerInfo[controllerID].keyDown.down;
+            controller->keyDown.press |= controller->keyDown.down;
         }
-        setBit(self->touchFlags, ControllerInfo[controllerID].keyUp.down, 0);
-        setBit(self->touchFlags, ControllerInfo[controllerID].keyDown.down, 1);
+        setBit(self->touchFlags, controller->keyUp.down, 0);
+        setBit(self->touchFlags, controller->keyDown.down, 1);
 
         int32 halfX = ScreenInfo->centerX / 2;
         for (int32 t = 0; t < TouchInfo->count; ++t) {
@@ -70,39 +77,41 @@ void PuyoLevelSelect_Update(void)
             if (TouchInfo->down[t]) {
                 if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= (ScreenInfo->width - halfX) && ty <= ScreenInfo->height) {
                     ControllerInfo->keyB.down |= true;
-                    ControllerInfo[controllerID].keyB.down = true;
+                    controller->keyB.down = true;
+                    touched               = true;
                     break;
                 }
                 else if (tx >= (ScreenInfo->centerX + halfX) && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
                     ControllerInfo->keyA.down |= true;
-                    ControllerInfo[controllerID].keyA.down = true;
+                    controller->keyA.down = true;
+                    touched               = true;
                     break;
                 }
             }
         }
 
-        if (!getBit(self->touchFlags, 2)) {
+        if (!getBit(self->touchFlags, 2) && touched) {
             ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-            ControllerInfo[controllerID].keyA.press |= ControllerInfo[controllerID].keyA.down;
+            controller->keyA.press |= controller->keyA.down;
         }
-        if (!getBit(self->touchFlags, 3)) {
+        if (!getBit(self->touchFlags, 3) && touched) {
             ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
-            ControllerInfo[controllerID].keyB.press |= ControllerInfo[controllerID].keyB.down;
+            controller->keyB.press |= controller->keyB.down;
         }
-        setBit(self->touchFlags, ControllerInfo[controllerID].keyA.down, 2);
-        setBit(self->touchFlags, ControllerInfo[controllerID].keyB.down, 3);
+        setBit(self->touchFlags, controller->keyA.down, 2);
+        setBit(self->touchFlags, controller->keyB.down, 3);
 #endif
 
-        self->up   = ControllerInfo[controllerID].keyUp.press || AnalogStickInfoL[controllerID].keyUp.press;
-        self->down = ControllerInfo[controllerID].keyDown.press || AnalogStickInfoL[controllerID].keyDown.press;
+        self->up   = controller->keyUp.press || AnalogStickInfoL[controllerID].keyUp.press;
+        self->down = controller->keyDown.press || AnalogStickInfoL[controllerID].keyDown.press;
 
         if (API_GetConfirmButtonFlip()) {
-            self->confirmPress = ControllerInfo[controllerID].keyB.press;
-            self->backPress    = ControllerInfo[controllerID].keyA.press;
+            self->confirmPress = controller->keyB.press;
+            self->backPress    = controller->keyA.press;
         }
         else {
-            self->confirmPress = ControllerInfo[controllerID].keyA.press;
-            self->backPress    = ControllerInfo[controllerID].keyB.press;
+            self->confirmPress = controller->keyA.press;
+            self->backPress    = controller->keyB.press;
         }
 
         PuyoLevelSelect_HandleMenuMovement();

@@ -1746,10 +1746,12 @@ bool32 Player_CheckP2KeyPress(void)
         return false;
 #endif
 
-    return ControllerInfo[self->controllerID].keyUp.down || ControllerInfo[self->controllerID].keyDown.down
-           || ControllerInfo[self->controllerID].keyLeft.down || ControllerInfo[self->controllerID].keyRight.down
-           || ControllerInfo[self->controllerID].keyA.down || ControllerInfo[self->controllerID].keyB.down
-           || ControllerInfo[self->controllerID].keyC.down || ControllerInfo[self->controllerID].keyX.down;
+    RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+
+    return controller->keyUp.down || controller->keyDown.down
+           || controller->keyLeft.down || controller->keyRight.down
+           || controller->keyA.down || controller->keyB.down
+           || controller->keyC.down || controller->keyX.down;
 }
 EntityPlayer *Player_GetNearestPlayerX(void)
 {
@@ -2149,11 +2151,8 @@ void Player_HandleDeath(EntityPlayer *player)
 }
 void Player_HandleQuickRespawn(EntityPlayer *player)
 {
-    player->drawOrder = Zone->playerDrawLow;
-    if (!player->sidekick)
-        player->stateInput = Player_Input_P1;
-    else
-        player->stateInput = Player_Input_P2_AI;
+    player->drawOrder      = Zone->playerDrawLow;
+    player->stateInput     = player->sidekick ? Player_Input_P2_AI : Player_Input_P1;
     player->tileCollisions = true;
     player->interaction    = true;
     player->collisionPlane = 0;
@@ -6325,6 +6324,8 @@ void Player_Input_P1(void)
 
     if (self->controllerID < PLAYER_COUNT) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
+            RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+
 #if MANIA_USE_TOUCH_CONTROLS
             for (int32 t = 0; t < TouchInfo->count; ++t) {
                 int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -6340,19 +6341,22 @@ void Player_Input_P1(void)
                         switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                             case 0:
                                 ControllerInfo->keyRight.down |= true;
-                                ControllerInfo[self->controllerID].keyRight.down = true;
+                                controller->keyRight.down = true;
                                 break;
+
                             case 1:
                                 ControllerInfo->keyDown.down |= true;
-                                ControllerInfo[self->controllerID].keyDown.down = true;
+                                controller->keyDown.down = true;
                                 break;
+
                             case 2:
                                 ControllerInfo->keyLeft.down |= true;
-                                ControllerInfo[self->controllerID].keyLeft.down = true;
+                                controller->keyLeft.down = true;
                                 break;
+
                             case 3:
                                 ControllerInfo->keyUp.down |= true;
-                                ControllerInfo[self->controllerID].keyUp.down = true;
+                                controller->keyUp.down = true;
                                 break;
                         }
                         break;
@@ -6360,6 +6364,8 @@ void Player_Input_P1(void)
                 }
             }
 
+            // fixes a bug with button vs touch
+            bool32 touchedJump = false;
             for (int32 t = 0; t < TouchInfo->count; ++t) {
                 int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
                 int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
@@ -6367,17 +6373,18 @@ void Player_Input_P1(void)
                 if (TouchInfo->down[t]) {
                     if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
                         ControllerInfo->keyA.down |= true;
-                        ControllerInfo[self->controllerID].keyA.down = true;
+                        controller->keyA.down = true;
+                        touchedJump           = true;
                         break;
                     }
                 }
             }
 
-            if (!self->touchJump) {
+            if (!self->touchJump && touchedJump) {
                 ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-                ControllerInfo[self->controllerID].keyA.press |= ControllerInfo[self->controllerID].keyA.down;
+                controller->keyA.press |= controller->keyA.down;
             }
-            self->touchJump = ControllerInfo[self->controllerID].keyA.down;
+            self->touchJump = controller->keyA.down;
 
             for (int32 t = 0; t < TouchInfo->count; ++t) {
                 int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -6423,7 +6430,6 @@ void Player_Input_P1(void)
 #endif
 #endif
 
-            RSDKControllerState *controller = &ControllerInfo[self->controllerID];
             self->up                        = controller->keyUp.down;
             self->down                      = controller->keyDown.down;
             self->left                      = controller->keyLeft.down;
@@ -6713,10 +6719,12 @@ void Player_Input_P2_Player(void)
 
     if (self->controllerID <= CONT_P4) {
         if (API_ControllerIsAssigned(self->controllerID)) {
-            self->up    = ControllerInfo[self->controllerID].keyUp.down;
-            self->down  = ControllerInfo[self->controllerID].keyDown.down;
-            self->left  = ControllerInfo[self->controllerID].keyLeft.down;
-            self->right = ControllerInfo[self->controllerID].keyRight.down;
+            RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+
+            self->up    = controller->keyUp.down;
+            self->down  = controller->keyDown.down;
+            self->left  = controller->keyLeft.down;
+            self->right = controller->keyRight.down;
 
 #if MANIA_USE_PLUS
             self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
@@ -6730,10 +6738,10 @@ void Player_Input_P2_Player(void)
                 self->right = false;
             }
 
-            self->jumpPress = ControllerInfo[self->controllerID].keyA.press || ControllerInfo[self->controllerID].keyB.press
-                              || ControllerInfo[self->controllerID].keyC.press || ControllerInfo[self->controllerID].keyX.press;
-            self->jumpHold = ControllerInfo[self->controllerID].keyA.down || ControllerInfo[self->controllerID].keyB.down
-                             || ControllerInfo[self->controllerID].keyC.down || ControllerInfo[self->controllerID].keyX.down;
+            self->jumpPress = controller->keyA.press || controller->keyB.press
+                              || controller->keyC.press || controller->keyX.press;
+            self->jumpHold = controller->keyA.down || controller->keyB.down
+                             || controller->keyC.down || controller->keyX.down;
 
             if (self->right || self->up || self->down || self->left) {
                 Player->aiInputSwapTimer = 0;
@@ -6743,7 +6751,7 @@ void Player_Input_P2_Player(void)
                 API_AssignControllerID(self->controllerID, INPUT_AUTOASSIGN);
             }
 
-            if (ControllerInfo[self->controllerID].keyStart.press && SceneInfo->state == ENGINESTATE_REGULAR) {
+            if (controller->keyStart.press && SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!RSDK.GetEntityCount(TitleCard->classID, false) && !pauseMenu->classID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);

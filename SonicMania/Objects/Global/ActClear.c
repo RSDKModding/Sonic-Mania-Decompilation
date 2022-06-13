@@ -844,7 +844,7 @@ void ActClear_State_ShowResultsTA(void)
 
             if (TouchInfo->down[t]) {
                 if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
-                    ControllerInfo->keyY.press |= 1;
+                    ControllerInfo->keyY.press |= true;
                     break;
                 }
             }

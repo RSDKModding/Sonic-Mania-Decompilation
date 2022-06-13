@@ -167,6 +167,9 @@ void PBL_Player_ProcessPlayerControl(void)
     RSDK_THIS(PBL_Player);
 
     if (self->controllerID < PLAYER_COUNT) {
+        RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+        RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];
+
 #if MANIA_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -180,13 +183,16 @@ void PBL_Player_ProcessPlayerControl(void)
             }
         }
 
+        // fixes a bug with button vs touch
+        bool32 touchedJump = false;
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
             int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
             if (TouchInfo->down[t]) {
                 if (tx >= 0 && ty >= ScreenInfo->centerY && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
-                    ControllerInfo[1].keyB.down = true;
+                    controller->keyB.down = true;
+                    touchedJump           = true;
                     break;
                 }
             }
@@ -212,20 +218,20 @@ void PBL_Player_ProcessPlayerControl(void)
         }
 #endif
 
-        RSDKControllerState *controller = &ControllerInfo[self->controllerID];
-        self->up                        = controller->keyUp.down;
-        self->down                      = controller->keyDown.down;
-        self->left                      = controller->keyLeft.down;
-        self->right                     = controller->keyRight.down;
+        self->up    = controller->keyUp.down;
+        self->down  = controller->keyDown.down;
+        self->left  = controller->keyLeft.down;
+        self->right = controller->keyRight.down;
 
-        self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
-        self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
-        self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
-        self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
-        self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
-        self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
-        self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
-        self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+        self->up |= stick->keyUp.down;
+        self->down |= stick->keyDown.down;
+        self->left |= stick->keyLeft.down;
+        self->right |= stick->keyRight.down;
+
+        self->up |= stick->vDelta > 0.3;
+        self->down |= stick->vDelta < -0.3;
+        self->left |= stick->hDelta < -0.3;
+        self->right |= stick->hDelta > 0.3;
 
         if (self->left && self->right) {
             self->left  = false;
