@@ -16,8 +16,8 @@ struct EntityPaintingEyes {
     int32 coverPos;
     bool32 hideEyes;
     Animator coverAnimator;
-    Animator bgAnimator;
-    Animator eyesAnimator;
+    Animator irisAnimator;
+    Animator pupilAnimator;
 };
 
 // Object Struct

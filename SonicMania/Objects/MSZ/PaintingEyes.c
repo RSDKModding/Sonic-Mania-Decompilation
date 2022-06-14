@@ -51,15 +51,14 @@ void PaintingEyes_Draw(void)
 {
     RSDK_THIS(PaintingEyes);
 
-    Vector2 drawPos = self->position;
-    drawPos.x += clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 10) - (self->position.x >> 6), -0x10000, 0x10000);
-    drawPos.y += clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 10) - (self->position.y >> 6), -0x10000, 0x10000);
-    RSDK.DrawSprite(&self->bgAnimator, &drawPos, false);
+    Vector2 drawPos;
+    drawPos.x = self->position.x + clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 10) - (self->position.x >> 6), -0x10000, 0x10000);
+    drawPos.y = self->position.y + clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 10) - (self->position.y >> 6), -0x10000, 0x10000);
+    RSDK.DrawSprite(&self->irisAnimator, &drawPos, false);
 
-    drawPos   = self->position;
-    drawPos.x = clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 11) - (self->position.x >> 5), -0x10000, 0x20000);
-    drawPos.y = clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 11) - (self->position.y >> 5), -0x10000, 0x20000);
-    RSDK.DrawSprite(&self->eyesAnimator, &drawPos, false);
+    drawPos.x = self->position.x + clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 11) - (self->position.x >> 5), -0x20000, 0x20000);
+    drawPos.y = self->position.y + clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 11) - (self->position.y >> 5), -0x20000, 0x20000);
+    RSDK.DrawSprite(&self->pupilAnimator, &drawPos, false);
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + self->coverPos;
@@ -72,8 +71,8 @@ void PaintingEyes_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->coverAnimator, true, 0);
-        RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->bgAnimator, true, 1);
-        RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->eyesAnimator, true, 2);
+        RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->irisAnimator, true, 1);
+        RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->pupilAnimator, true, 2);
 
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x100000;
@@ -91,11 +90,11 @@ void PaintingEyes_EditorDraw(void)
     RSDK_THIS(PaintingEyes);
 
     RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->coverAnimator, false, 0);
-    RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->bgAnimator, false, 1);
-    RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->eyesAnimator, false, 2);
+    RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->irisAnimator, false, 1);
+    RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &self->pupilAnimator, false, 2);
 
-    RSDK.DrawSprite(&self->bgAnimator, NULL, false);
-    RSDK.DrawSprite(&self->eyesAnimator, NULL, false);
+    RSDK.DrawSprite(&self->irisAnimator, NULL, false);
+    RSDK.DrawSprite(&self->pupilAnimator, NULL, false);
     RSDK.DrawSprite(&self->coverAnimator, NULL, false);
 }
 
