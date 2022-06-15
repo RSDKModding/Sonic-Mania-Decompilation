@@ -2075,7 +2075,9 @@ void MetalSonic_State_Finish(void)
     }
 }
 
-void MetalSonic_State_None(void) {}
+void MetalSonic_State_None(void) {
+    // common preplus L
+}
 
 void MetalSonic_StateWall_Fall(void)
 {

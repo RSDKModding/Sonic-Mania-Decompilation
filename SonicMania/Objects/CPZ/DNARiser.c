@@ -403,7 +403,9 @@ void DNARiser_State_OrbSetup(void)
     self->state     = DNARiser_State_OrbIdle;
 }
 
-void DNARiser_State_OrbIdle(void) {}
+void DNARiser_State_OrbIdle(void) {
+    // 20220614 rdc said i could come back and comment these >:] 
+}
 
 void DNARiser_State_OrbFall(void)
 {

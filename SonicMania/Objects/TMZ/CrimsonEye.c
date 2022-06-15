@@ -1199,7 +1199,9 @@ void CrimsonEye_State_Shot(void)
         destroyEntity(self);
 }
 
-void CrimsonEye_State_Arrow(void) {}
+void CrimsonEye_State_Arrow(void) {
+    // hi poe
+}
 
 void CrimsonEye_Draw_Arrow(void)
 {
