@@ -58,7 +58,7 @@ void PBL_Player_EditorLoad(void);
 void PBL_Player_Serialize(void);
 
 // Extra Entity Functions
-void PBL_Player_ProcessPlayerControl(void);
+void PBL_Player_Input_P1(void);
 
 // States
 void PBL_Player_State_Launcher(void);

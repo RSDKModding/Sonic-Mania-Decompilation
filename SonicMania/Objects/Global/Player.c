@@ -697,7 +697,6 @@ void Player_StageLoad(void)
         globals->playerID = RSDK.CheckStageFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
 
     SceneInfo->debugMode = globals->medalMods & GET_MEDAL_MOD(MEDAL_DEBUGMODE);
-    SceneInfo->debugMode = true; // TODO: TEMP
 #if MANIA_USE_PLUS
     RSDK.AddViewableVariable("Debug Mode", &SceneInfo->debugMode, VIEWVAR_BOOL, false, true);
 #endif

@@ -490,7 +490,9 @@ void EggJanken_State_InitialArmRaise(void)
     }
 }
 
-void EggJanken_State_None(void) {}
+void EggJanken_State_None(void) {
+    // we just chillin tbh
+}
 
 void EggJanken_State_Destroyed(void)
 {
@@ -996,9 +998,13 @@ void EggJanken_Eyes_ChangeSlots(void)
     }
 }
 
-void EggJanken_Eyes_None(void) {}
+void EggJanken_Eyes_None(void) {
+    // we are NOT playing Janken rn..
+}
 
-void EggJanken_Arm_None(void) {}
+void EggJanken_Arm_None(void) {
+    // no arm movement
+}
 
 void EggJanken_Arm_Idle(void)
 {

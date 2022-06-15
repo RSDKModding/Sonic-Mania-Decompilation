@@ -1109,18 +1109,21 @@ typedef struct {
     // Mod Settings
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int32 (*GetSettingsInteger)(const char *id, const char *key, int32 fallback);
+    float (*GetSettingsFloat)(const char *id, const char *key, float fallback);
     void (*GetSettingsString)(const char *id, const char *key, String *result, const char *fallback);
     void (*SetSettingsBool)(const char *key, bool32 val);
     void (*SetSettingsInteger)(const char *key, int32 val);
+    void (*SetSettingsFloat)(const char *key, float val);
     void (*SetSettingsString)(const char *key, String *val);
     void (*SaveSettings)(void);
 
     // Config
     bool32 (*GetConfigBool)(const char *key, bool32 fallback);
     int32 (*GetConfigInteger)(const char *key, int32 fallback);
+    float (*GetConfigFloat)(const char *key, float fallback);
     void (*GetConfigString)(const char *key, String *result, const char *fallback);
-    bool32 (*ForeachConfig)(String *textInfo);
-    bool32 (*ForeachConfigCategory)(String *textInfo);
+    bool32 (*ForeachConfig)(String *string);
+    bool32 (*ForeachConfigCategory)(String *string);
 
     void *(*FindObject)(const char *name);
 
@@ -1134,8 +1137,8 @@ typedef struct {
     void (*LoadShader)(const char *shaderName, bool32 linear);
 
     // StateMachine
-    void (*StateMachineRun)(void *state);
-    void (*RegisterStateHook)(void *state, void *hook, bool32 priority);
+    void (*StateMachineRun)(void (*state)(void));
+    void (*RegisterStateHook)(void (*state)(void), bool32 (*hook)(bool32 skippedState), bool32 priority);
 } ModFunctionTable;
 #endif
 

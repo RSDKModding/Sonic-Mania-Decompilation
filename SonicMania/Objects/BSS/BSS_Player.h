@@ -53,7 +53,7 @@ void BSS_Player_EditorLoad(void);
 void BSS_Player_Serialize(void);
 
 // Extra Entity Functions
-void BSS_Player_ProcessP1Input(void);
-void BSS_Player_ProcessP2Input(void);
+void BSS_Player_Input_P1(void);
+void BSS_Player_Input_P2(void);
 
 #endif //! OBJ_BSS_PLAYER_H

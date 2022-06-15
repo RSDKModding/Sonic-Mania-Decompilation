@@ -475,7 +475,9 @@ void MegaOctus_State_SetupArena(void)
     }
 }
 
-void MegaOctus_State_None(void) {}
+void MegaOctus_State_None(void) {
+    // :3
+}
 
 void MegaOctus_State_EnterMegaOctus(void)
 {

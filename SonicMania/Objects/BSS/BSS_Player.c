@@ -133,11 +133,11 @@ void BSS_Player_Create(void *data)
 
         // The BSS Player gets reset into P1 slot, no other player entities ever get set, so sidekick BSS player behaviour goes unused...
         if (SceneInfo->entitySlot) {
-            self->stateInput = BSS_Player_ProcessP2Input;
+            self->stateInput = BSS_Player_Input_P2;
             self->sidekick   = true;
         }
         else {
-            self->stateInput   = BSS_Player_ProcessP1Input;
+            self->stateInput   = BSS_Player_Input_P1;
             self->controllerID = CONT_P1;
             self->sidekick     = false;
         }
@@ -162,7 +162,7 @@ void BSS_Player_StageLoad(void)
     BSS_Player->sfxJump = RSDK.GetSfx("Global/Jump.wav");
 }
 
-void BSS_Player_ProcessP1Input(void)
+void BSS_Player_Input_P1(void)
 {
     RSDK_THIS(BSS_Player);
 
@@ -291,7 +291,7 @@ void BSS_Player_ProcessP1Input(void)
     }
 }
 
-void BSS_Player_ProcessP2Input(void)
+void BSS_Player_Input_P2(void)
 {
     RSDK_THIS(BSS_Player);
 

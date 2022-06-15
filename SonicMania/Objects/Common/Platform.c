@@ -2210,7 +2210,9 @@ void Platform_Collision_Twister(void)
         }
     }
 }
-void Platform_Collision_None(void) {}
+void Platform_Collision_None(void) {
+    // hehe
+}
 
 void Platform_Collision_AllSolid_NoCrush(void)
 {

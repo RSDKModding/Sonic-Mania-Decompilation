@@ -943,6 +943,14 @@ void InitModAPI(void)
     ADD_PUBLIC_FUNC(Player_Input_P2_JumpDelay);
     ADD_PUBLIC_FUNC(Player_Input_P2_JumpIn);
 
+    ADD_PUBLIC_FUNC(HUD_DrawNumbersBase10);
+    ADD_PUBLIC_FUNC(HUD_DrawNumbersBase16);
+    ADD_PUBLIC_FUNC(HUD_DrawNumbersHyperRing);
+    ADD_PUBLIC_FUNC(HUD_GetButtonFrame);
+    ADD_PUBLIC_FUNC(HUD_GetActionButtonFrames);
+    ADD_PUBLIC_FUNC(HUD_State_ComeOnScreen);
+    ADD_PUBLIC_FUNC(HUD_State_GoOffScreen);
+
     ADD_PUBLIC_FUNC(DebugMode_AddObject);
 
     ADD_PUBLIC_FUNC(Ice_State_FrozenPlayer);
@@ -1144,10 +1152,40 @@ void InitModAPI(void)
     // ===============
     // Blue Spheres
     // ===============
+    ADD_PUBLIC_FUNC(BSS_Setup_GetStageID);
+    ADD_PUBLIC_FUNC(BSS_Setup_SetupPalette);
+    ADD_PUBLIC_FUNC(BSS_Setup_SetupFrustum);
+    ADD_PUBLIC_FUNC(BSS_Setup_CollectRing);
+    ADD_PUBLIC_FUNC(BSS_Setup_GetStartupInfo);
+    ADD_PUBLIC_FUNC(BSS_Setup_Finished);
+    ADD_PUBLIC_FUNC(BSS_Setup_HandleSteppedObjects);
+    ADD_PUBLIC_FUNC(BSS_Setup_HandleCollectableMovement);
+    ADD_PUBLIC_FUNC(BSS_Setup_State_FinishWalk);
+    ADD_PUBLIC_FUNC(BSS_Setup_State_PinkSphereWarp);
+    ADD_PUBLIC_FUNC(BSS_Setup_State_Exit);
+    ADD_PUBLIC_FUNC(BSS_Setup_State_HandleStage);
+    ADD_PUBLIC_FUNC(BSS_Setup_State_SpinLeft);
+    ADD_PUBLIC_FUNC(BSS_Setup_State_SpinRight);
+    ADD_PUBLIC_FUNC(BSS_Setup_State_PostPinkSphereWarp);
+    ADD_PUBLIC_FUNC(BSS_Setup_CheckSphereValid);
+    ADD_PUBLIC_FUNC(BSS_Setup_LaunchSpheres);
+    ADD_PUBLIC_FUNC(BSS_Setup_SetupFinishSequence);
+    ADD_PUBLIC_FUNC(BSS_Setup_ScanSphereChain_Up);
+    ADD_PUBLIC_FUNC(BSS_Setup_ScanSphereChain_Down);
+    ADD_PUBLIC_FUNC(BSS_Setup_ScanSphereChain_Left);
+    ADD_PUBLIC_FUNC(BSS_Setup_ScanSphereChain_Right);
+    ADD_PUBLIC_FUNC(BSS_Setup_GetChainedSphereCount);
+    ADD_PUBLIC_FUNC(BSS_Setup_ProcessChain);
+
+    ADD_PUBLIC_FUNC(BSS_Player_Input_P1);
+    ADD_PUBLIC_FUNC(BSS_Player_Input_P2);
+
+    ADD_PUBLIC_FUNC(BSS_HUD_DrawNumbers);
 
     // ===============
     // UFO
     // ===============
+    ADD_PUBLIC_FUNC(UFO_Player_Input_P1);
 
 #if MANIA_USE_PLUS
     // ===============
@@ -1158,6 +1196,58 @@ void InitModAPI(void)
     // ===============
     // Puyo
     // ===============
+
+    // ===============
+    // Cutscene
+    // ===============
+    ADD_PUBLIC_FUNC(CutsceneSeq_NewState);
+#if MANIA_USE_PLUS
+    ADD_PUBLIC_FUNC(CutsceneSeq_CheckSkip);
+#endif
+    ADD_PUBLIC_FUNC(CutsceneSeq_GetEntity);
+    ADD_PUBLIC_FUNC(CutsceneSeq_LockPlayerControl);
+    ADD_PUBLIC_FUNC(CutsceneSeq_LockAllPlayerControl);
+    ADD_PUBLIC_FUNC(CutsceneSeq_StartSequence);
+
+    ADD_PUBLIC_FUNC(PhantomRuby_PlaySFX);
+    ADD_PUBLIC_FUNC(PhantomRuby_SetupFlash);
+    ADD_PUBLIC_FUNC(PhantomRuby_State_FinishedFlash);
+    ADD_PUBLIC_FUNC(PhantomRuby_State_PlaySfx);
+    ADD_PUBLIC_FUNC(PhantomRuby_State_Oscillate);
+    ADD_PUBLIC_FUNC(PhantomRuby_State_MoveGravity);
+    ADD_PUBLIC_FUNC(PhantomRuby_State_MoveRotateGravity);
+    ADD_PUBLIC_FUNC(PhantomRuby_State_MoveRotateGravity_CheckGround);
+#if MANIA_USE_PLUS
+    ADD_PUBLIC_FUNC(PhantomRuby_State_MoveToPos);
+#endif
+    ADD_PUBLIC_FUNC(PhantomRuby_State_RotateToOrigin);
+
+    ADD_PUBLIC_FUNC(FXFade_StopAll);
+    ADD_PUBLIC_FUNC(FXFade_State_FadeIn);
+    ADD_PUBLIC_FUNC(FXFade_State_Wait);
+    ADD_PUBLIC_FUNC(FXFade_State_FadeOut);
+    ADD_PUBLIC_FUNC(FXFade_State_FadeOutBlack);
+
+    ADD_PUBLIC_FUNC(FXRuby_SetupLayerDeformation);
+    ADD_PUBLIC_FUNC(FXRuby_HandleLayerDeform);
+    ADD_PUBLIC_FUNC(FXRuby_State_Expanding);
+    ADD_PUBLIC_FUNC(FXRuby_State_Shrinking);
+    ADD_PUBLIC_FUNC(FXRuby_State_None);
+    ADD_PUBLIC_FUNC(FXRuby_State_IncreaseStageDeform);
+    ADD_PUBLIC_FUNC(FXRuby_State_DecreaseStageDeform);
+    ADD_PUBLIC_FUNC(FXRuby_State_ShrinkAndDestroy);
+
+    ADD_PUBLIC_FUNC(CutsceneHBH_SetupColors);
+    ADD_PUBLIC_FUNC(CutsceneHBH_SetupPalettes);
+    ADD_PUBLIC_FUNC(CutsceneHBH_StorePalette);
+    ADD_PUBLIC_FUNC(CutsceneHBH_RestorePalette);
+    ADD_PUBLIC_FUNC(CutsceneHBH_LoadSprites);
+    ADD_PUBLIC_FUNC(CutsceneHBH_GetEntity);
+    ADD_PUBLIC_FUNC(CutsceneHBH_ShinobiJumpSetup);
+    ADD_PUBLIC_FUNC(CutsceneHBH_ShinobiBounceSetup);
+    ADD_PUBLIC_FUNC(CutsceneHBH_RiderSetup);
+    ADD_PUBLIC_FUNC(CutsceneHBH_KingSetup);
+    ADD_PUBLIC_FUNC(CutsceneHBH_KingTMZ2Setup);
 
     // ===============
     // Menu

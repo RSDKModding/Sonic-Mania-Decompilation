@@ -108,7 +108,7 @@ void UFO_Player_Create(void *data)
         self->onGround           = true;
 
         UFO_Player_ChangeMachState();
-        self->stateInput   = UFO_Player_ProcessPlayerControl;
+        self->stateInput   = UFO_Player_Input_P1;
         self->controllerID = INPUT_NONE;
         self->state        = UFO_Player_State_Run;
 
@@ -193,7 +193,7 @@ void UFO_Player_StageLoad(void)
     RSDK.AddCamera(&player1->position, 0x100000, 0x100000, true);
 }
 
-void UFO_Player_ProcessPlayerControl(void)
+void UFO_Player_Input_P1(void)
 {
     RSDK_THIS(UFO_Player);
 

@@ -35,28 +35,6 @@ void BSS_HUD_Draw(void)
     drawPos.x += 0x380000;
     drawPos.y = 0x110000;
     BSS_HUD_DrawNumbers(BSS_Setup->ringCount, &drawPos);
-
-    // DEBUG, TODO: REMOVE
-    if (false) {
-        uint16 *playFields[3] = { BSS_Setup->playField, BSS_Setup->sphereChainTable, BSS_Setup->sphereCollectedTable };
-
-        uint32 colors[24] = {
-            0x000000, 0x0000FF, 0xFF0000, 0xFFFFFF, 0xFFFF00, 0x00FF00, 0xFF00FF, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
-            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000
-        };
-
-        for (int32 p = 0; p < 3; ++p) {
-            for (int32 y = 0; y < BSS_PLAYFIELD_H; ++y) {
-                for (int32 x = 0; x < BSS_PLAYFIELD_W; ++x) {
-                    int32 playFieldPos = (x * BSS_PLAYFIELD_H) + y;
-                    uint16 type        = playFields[p][playFieldPos] & 0x7F;
-
-                    RSDK.DrawRect((ScreenInfo->width - 64) + (x << 1), (ScreenInfo->height - (3 * 64)) + (p * 64) + (y << 1), 2, 2, colors[type],
-                                  0xFF, INK_NONE, true);
-                }
-            }
-        }
-    }
 }
 
 void BSS_HUD_Create(void *data)

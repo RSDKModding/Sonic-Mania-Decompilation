@@ -80,7 +80,7 @@ void UFO_Player_EditorLoad(void);
 void UFO_Player_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Player_ProcessPlayerControl(void);
+void UFO_Player_Input_P1(void);
 void UFO_Player_ChangeMachState(void);
 void UFO_Player_HandleBumperTiles(void);
 void UFO_Player_HandleSpeedUp(void);

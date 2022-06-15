@@ -24,7 +24,7 @@
 #define RETRO_INCLUDE_EDITOR (1)
 
 #ifndef RETRO_USE_MOD_LOADER
-#define RETRO_USE_MOD_LOADER (0)
+#define RETRO_USE_MOD_LOADER (1)
 #endif
 
 #define RETRO_MOD_LOADER_VER (1)
@@ -56,7 +56,7 @@
 #define MANIA_USE_PLUS (GAME_VERSION >= VER_105)
 #define MANIA_USE_EGS  (GAME_VERSION == VER_107)
 
-#define MANIA_USE_TOUCH_CONTROLS (1)
+#define MANIA_USE_TOUCH_CONTROLS (0)
 
 // -------------------------
 // GAME LOGIC

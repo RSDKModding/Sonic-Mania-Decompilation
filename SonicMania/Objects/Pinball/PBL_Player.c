@@ -74,7 +74,7 @@ void PBL_Player_Create(void *data)
         self->updateRange.y = 0x800000;
         self->drawOrder     = 4;
 
-        self->stateInput   = PBL_Player_ProcessPlayerControl;
+        self->stateInput   = PBL_Player_Input_P1;
         self->state        = PBL_Player_State_Launcher;
         self->controllerID = 1;
 
@@ -162,7 +162,7 @@ void PBL_Player_StageLoad(void)
     PBL_Player->sfxPlunger = RSDK.GetSfx("Pinball/Plunger.wav");
 }
 
-void PBL_Player_ProcessPlayerControl(void)
+void PBL_Player_Input_P1(void)
 {
     RSDK_THIS(PBL_Player);
 

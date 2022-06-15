@@ -221,7 +221,9 @@ void PuyoGame_State_Setup(void)
     self->state = PuyoGame_State_None;
 }
 
-void PuyoGame_State_None(void) {}
+void PuyoGame_State_None(void) {
+    // Gaming(?)
+}
 
 void PuyoGame_State_SelectingLevel(void)
 {

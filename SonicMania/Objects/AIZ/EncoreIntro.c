@@ -379,7 +379,7 @@ bool32 EncoreIntro_Cutscene_CapsuleFound(EntityCutsceneSeq *host)
             StarPost->playerPositions[0] = player->position;
             StarPost->playerPositions[1] = player->position;
             player->state                = EncoreIntro_PlayerState_BuddySel;
-            player->stateInput           = EncoreIntro_PlayerState_InputNone;
+            player->stateInput           = EncoreIntro_PlayerInput_None;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, true, 0);
 
             EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
@@ -1192,7 +1192,7 @@ void EncoreIntro_PlayerState_HandleAir(void)
     Player_HandleAirMovement();
 }
 
-void EncoreIntro_PlayerState_InputNone(void)
+void EncoreIntro_PlayerInput_None(void)
 {
     RSDK_THIS(Player);
 
