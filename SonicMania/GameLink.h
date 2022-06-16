@@ -1090,6 +1090,8 @@ typedef struct {
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
     void *RegisterObject_STD;
+    void (*RegisterObjectHook)(Object **staticVars, const char *staticName);
+    void *(*FindObject)(const char *name);
     void *(*GetGlobals)(void);
     void (*Super)(int32 classID, ModSuper callback, void *data);
 
@@ -1124,8 +1126,6 @@ typedef struct {
     void (*GetConfigString)(const char *key, String *result, const char *fallback);
     bool32 (*ForeachConfig)(String *string);
     bool32 (*ForeachConfigCategory)(String *string);
-
-    void *(*FindObject)(const char *name);
 
     // Achievements
     void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
@@ -1570,6 +1570,8 @@ typedef struct {
     Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
                        object##_Serialize, inherit)
+
+#define MOD_REGISTER_OBJECT_HOOK(object) Mod.RegisterObjectHook((Object **)&object, #object)
 #endif
 
 #if RETRO_REV02

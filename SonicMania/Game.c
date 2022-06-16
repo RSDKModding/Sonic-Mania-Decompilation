@@ -1150,6 +1150,15 @@ void InitModAPI(void)
     // ===============
 
     // ===============
+    // Misc
+    // ===============
+    ADD_PUBLIC_FUNC(SpearBlock_State_SetupSpears);
+    ADD_PUBLIC_FUNC(SpearBlock_State_SpearRetracted);
+    ADD_PUBLIC_FUNC(SpearBlock_State_ExtendSpears);
+    ADD_PUBLIC_FUNC(SpearBlock_State_SpearExtended);
+    ADD_PUBLIC_FUNC(SpearBlock_State_RetractSpears);
+
+    // ===============
     // Blue Spheres
     // ===============
     ADD_PUBLIC_FUNC(BSS_Setup_GetStageID);
