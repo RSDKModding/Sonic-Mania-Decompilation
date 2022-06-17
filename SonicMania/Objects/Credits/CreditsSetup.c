@@ -36,19 +36,6 @@ void CreditsSetup_StaticUpdate(void)
                 fade->oneWay   = false;
                 Music_FadeOut(0.0125);
             }
-#if MANIA_USE_TOUCH_CONTROLS
-            else if (TouchInfo->count) {
-                CreditsSetup->skipped = true;
-
-                fade->state    = FXFade_State_FadeIn;
-                fade->speedIn  = 8;
-                fade->wait     = 64;
-                fade->speedOut = 8;
-                fade->timer    = 0;
-                fade->oneWay   = false;
-                Music_FadeOut(0.0125);
-            }
-#endif
         }
         else {
             if (fade->state == FXFade_State_Wait && fade->wait == 1) {

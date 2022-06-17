@@ -410,9 +410,6 @@ struct EntityPlayer {
 #if MANIA_USE_PLUS
     int32 uncurlTimer;
 #endif
-#if MANIA_USE_TOUCH_CONTROLS
-    int32 touchJump;
-#endif
 };
 
 // Object Struct

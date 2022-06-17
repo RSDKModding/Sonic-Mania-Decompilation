@@ -6324,126 +6324,23 @@ void Player_Input_P1(void)
     if (self->controllerID < PLAYER_COUNT) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
             RSDKControllerState *controller = &ControllerInfo[self->controllerID];
-
-#if MANIA_USE_TOUCH_CONTROLS
-            for (int32 t = 0; t < TouchInfo->count; ++t) {
-                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-                if (TouchInfo->down[t]) {
-                    if (tx >= 0 && ty >= 96 && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
-                        int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-                        int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-                        tx -= 64;
-                        ty -= 192;
-
-                        switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
-                            case 0:
-                                ControllerInfo->keyRight.down |= true;
-                                controller->keyRight.down = true;
-                                break;
-
-                            case 1:
-                                ControllerInfo->keyDown.down |= true;
-                                controller->keyDown.down = true;
-                                break;
-
-                            case 2:
-                                ControllerInfo->keyLeft.down |= true;
-                                controller->keyLeft.down = true;
-                                break;
-
-                            case 3:
-                                ControllerInfo->keyUp.down |= true;
-                                controller->keyUp.down = true;
-                                break;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            // fixes a bug with button vs touch
-            bool32 touchedJump = false;
-            for (int32 t = 0; t < TouchInfo->count; ++t) {
-                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-                if (TouchInfo->down[t]) {
-                    if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
-                        ControllerInfo->keyA.down |= true;
-                        controller->keyA.down = true;
-                        touchedJump           = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!self->touchJump && touchedJump) {
-                ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-                controller->keyA.press |= controller->keyA.down;
-            }
-            self->touchJump = controller->keyA.down;
-
-            for (int32 t = 0; t < TouchInfo->count; ++t) {
-                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-                if (TouchInfo->down[t]) {
-                    if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
-                        if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                            EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                            bool32 allowPause          = true;
-#if MANIA_USE_PLUS
-                            if (ActClear && ActClear->actClearActive)
-                                allowPause = false;
-#endif
-                            if (!RSDK.GetEntityCount(TitleCard->classID, false) && !pauseMenu->classID && allowPause) {
-                                RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-                                pauseMenu->triggerPlayer = self->playerID;
-                                if (globals->gameMode == MODE_COMPETITION)
-                                    pauseMenu->disableRestart = true;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-
-#if MANIA_USE_PLUS
-            for (int32 t = 0; t < TouchInfo->count; ++t) {
-                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-                if (TouchInfo->down[t]) {
-                    if (tx >= ScreenInfo->width - 0x100 && ty >= 0 && tx <= ScreenInfo->width - 0x80 && ty <= 0x40) {
-                        if (globals->gameMode == MODE_ENCORE) {
-                            if (HUD->swapCooldown || !Player_CheckValidState(self) || !Player_SwapMainPlayer(false)) {
-                                RSDK.PlaySfx(Player->sfxSwapFail, false, 0xFF);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-#endif
-#endif
+            RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];
 
             self->up                        = controller->keyUp.down;
             self->down                      = controller->keyDown.down;
             self->left                      = controller->keyLeft.down;
             self->right                     = controller->keyRight.down;
 
-            self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
-            self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
-            self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
-            self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
+            self->up |= stick->keyUp.down;
+            self->down |= stick->keyDown.down;
+            self->left |= stick->keyLeft.down;
+            self->right |= stick->keyRight.down;
 
 #if MANIA_USE_PLUS
-            self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
-            self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
-            self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
-            self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+            self->up |= stick->vDelta > 0.3;
+            self->down |= stick->vDelta < -0.3;
+            self->left |= stick->hDelta < -0.3;
+            self->right |= stick->hDelta > 0.3;
 #endif
 
             if (self->left && self->right) {

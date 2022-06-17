@@ -116,9 +116,6 @@ void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq)
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void))
 {
     bool32 skipPress = ControllerInfo->keyStart.press;
-#if MANIA_USE_TOUCH_CONTROLS
-    skipPress |= TouchInfo->count;
-#endif
 
     if (skipType && skipPress && (SceneInfo->state & ENGINESTATE_REGULAR)) {
         bool32 loadNewScene = false;
