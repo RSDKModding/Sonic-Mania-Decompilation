@@ -106,9 +106,9 @@ void FarPlane_StageLoad(void)
 
         RSDK.CopyTileLayer(FarPlane->layerID, 0, 192, Zone->fgLow, 0, 192, 1024, 208);
 
-        for (int s = 0; s < PLAYER_COUNT; ++s) {
-            Zone->cameraBoundsB[s] -= 0x800;
-            Zone->deathBoundary[s] -= 0x8000000;
+        for (int32 s = 0; s < PLAYER_COUNT; ++s) {
+            Zone->cameraBoundsB[s] -= 2048;
+            Zone->deathBoundary[s] -= 2048 << 16;
         }
 
         ++Zone->objectDrawLow;
