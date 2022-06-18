@@ -238,7 +238,7 @@ void TurboTurtle_HandleFans(void)
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &self->hitboxFanL)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitboxFanR)) {
                 int32 anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                     int32 right = (self->hitboxFanR.right << 16) + self->position.x;
@@ -246,7 +246,7 @@ void TurboTurtle_HandleFans(void)
                         right = player->position.x;
 
                     int32 pos = self->position.x + (self->hitboxFanR.left << 16);
-                    player->position.x += (strength * (((length << 16) - right + ((pos != 0) ? (length << 16) - right + pos : 0)) / length)) >> 1;
+                    player->position.x += (strength * ((((length << 16) - right + pos != 0) ? (length << 16) - right + pos : 0) / length)) >> 1;
                 }
             }
         }
