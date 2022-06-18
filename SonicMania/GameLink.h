@@ -1572,6 +1572,8 @@ typedef struct {
                        object##_Serialize, inherit)
 
 #define MOD_REGISTER_OBJECT_HOOK(object) Mod.RegisterObjectHook((Object **)&object, #object)
+
+#define GET_PUBLIC_FUNC(modID, name, returnType, ...) returnType (*name)(__VA_ARGS__) = Mod.GetPublicFunction(modID, #name)
 #endif
 
 #if RETRO_REV02
