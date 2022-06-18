@@ -118,7 +118,6 @@ void LinkGameLogicDLL(EngineInfo info)
 // This is actually part of "LinkGameLogicDLL" but since we have 2 versions of it, its easier to use shared code this way
 void InitGameLogic(void)
 {
-
     RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables));
 
     RSDK_REGISTER_OBJECT(Acetone);

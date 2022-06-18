@@ -602,7 +602,7 @@ void CrimsonEye_StateContainer_HandleElevator(void)
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-        if (player->classID)
+        if (player->classID == Player->classID)
             player->gravityStrength = 0x3800 - CrimsonEye->elevatorSpeed / 0x30;
     }
 
