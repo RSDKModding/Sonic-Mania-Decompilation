@@ -19,7 +19,7 @@ for path in Path(sys.argv[1]).rglob("*.h"):
         if (line != line.lstrip()): 
             continue
         line = line.rstrip()
-        if (match := re.fullmatch(r"([a-zA-z0-9]* ?\**) *([^(]*)\((.*)\);", line)) != None:
+        if (match := re.fullmatch(r"([a-zA-Z0-9]* ?\**) *([^(]*)\((.*)\);", line)) != None:
             ret, name, args = match.groups()
             if name.endswith(events):
                 continue
