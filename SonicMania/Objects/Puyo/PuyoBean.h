@@ -82,10 +82,6 @@ struct EntityPuyoBean {
     bool32 forceRotateLeft;
     bool32 forceRotateRight;
     Animator beanAnimator;
-#if MANIA_USE_TOUCH_CONTROLS
-    int32 touchRight;
-    int32 touchLeft;
-#endif
 };
 
 // Object Struct
@@ -106,7 +102,7 @@ void PuyoBean_Serialize(void);
 
 // Extra Entity Functions
 EntityPuyoBean *PuyoBean_GetPuyoBean(int32 playerID, int32 x, int32 y);
-void PuyoBean_StateInput_HandlePlayerInputs(void);
+void PuyoBean_Input_Player(void);
 void PuyoBean_DestroyPuyoBeans(void);
 void PuyoBean_HandleBeanLinks(void);
 void PuyoBean_CheckBeanLinks(EntityPuyoBean *bean, EntityPuyoBean *curLink);

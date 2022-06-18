@@ -20,11 +20,6 @@ struct ObjectDASetup {
     uint16 sfxMedal;
     uint16 sfxSSExit;
     uint16 sfxScoreTotal;
-#if MANIA_USE_TOUCH_CONTROLS
-    uint8 touchDir;
-    uint8 touchConfirm;
-    uint8 touchBack;
-#endif
 };
 
 // Entity Class

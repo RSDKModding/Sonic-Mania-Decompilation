@@ -125,8 +125,9 @@ void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCa
             loadNewScene = true;
         }
         else {
-            if (skipCallback && skipType == SKIPTYPE_CALLBACK)
-                skipCallback();
+            if (skipType == SKIPTYPE_CALLBACK) {
+                StateMachine_Run(skipCallback);
+            }
 
             loadNewScene = seq && (seq->skipType == SKIPTYPE_CALLBACK || seq->skipType == SKIPTYPE_RELOADSCN);
         }

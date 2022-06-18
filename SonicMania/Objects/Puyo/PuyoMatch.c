@@ -52,7 +52,7 @@ void PuyoMatch_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
-        self->stateInput      = PuyoBean_StateInput_HandlePlayerInputs;
+        self->stateInput      = PuyoBean_Input_Player;
         self->comboBonusTable = PuyoMatch->comboBonus;
         self->beanDropPos     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode)->position;
         self->timer           = 60;
@@ -266,7 +266,7 @@ void PuyoMatch_State_HandleCombos(void)
     RSDK_THIS(PuyoMatch);
 
     self->comboBeanCount = 0;
-    if (++self->comboCount == 3 && self->stateInput == PuyoBean_StateInput_HandlePlayerInputs) 
+    if (++self->comboCount == 3 && self->stateInput == PuyoBean_Input_Player) 
         API_UnlockAchievement(&achievementList[ACH_CPZ]);
 
     uint8 comboColors          = 0;

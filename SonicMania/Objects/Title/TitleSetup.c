@@ -130,12 +130,6 @@ bool32 TitleSetup_VideoSkipCB(void)
         RSDK.StopChannel(Music->channelID);
         return true;
     }
-#if MANIA_USE_TOUCH_CONTROLS
-    else if (TouchInfo->count) {
-        RSDK.StopChannel(Music->channelID);
-        return true;
-    }
-#endif
 
     return false;
 }

@@ -943,8 +943,7 @@ void PauseMenu_State_HandleFadeout(void)
     self->paused = true;
 
     if (self->fadeTimer >= 1024) {
-        if (self->fadeoutCB)
-            self->fadeoutCB();
+        StateMachine_Run(self->fadeoutCB);
     }
 }
 

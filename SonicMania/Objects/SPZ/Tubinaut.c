@@ -443,8 +443,12 @@ void Tubinaut_State_Move(void)
 
     RSDK.ProcessAnimation(&self->fieldAnimator);
 
+#if RETRO_USE_MOD_LOADER
+    StateMachine_Run(self->orbState);
+#else
     // Explitly called, no StateMachine call for some reason
     self->orbState();
+#endif
 
     Tubinaut_CheckPlayerCollisions();
     Tubinaut_CheckOffScreen();

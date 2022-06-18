@@ -216,7 +216,11 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection)
         if (button->choiceChangeCB) {
             Entity *entStore  = SceneInfo->entity;
             SceneInfo->entity = (Entity *)button;
+#if RETRO_USE_MOD_LOADER
+            StateMachine_Run(button->choiceChangeCB);
+#else
             button->choiceChangeCB();
+#endif
             SceneInfo->entity = entStore;
         }
     }
@@ -553,7 +557,11 @@ void UIButton_ProcessButtonCB(void)
     if (choice && self->choiceCount == 1 && choice->processButtonCB && !self->choiceDir && !self->disabled) {
         Entity *entStore  = SceneInfo->entity;
         SceneInfo->entity = (Entity *)choice;
+#if RETRO_USE_MOD_LOADER
+        StateMachine_Run(choice->processButtonCB);
+#else
         choice->processButtonCB();
+#endif
         SceneInfo->entity = entStore;
     }
     else {

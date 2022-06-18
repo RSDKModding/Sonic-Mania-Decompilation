@@ -56,6 +56,7 @@ void PBL_Crane_Create(void *data)
 
                 self->stateDraw = PBL_Crane_Draw_CraneMachine;
                 break;
+
             case PBL_CRANE_CRANE:
                 self->visible = true;
 
@@ -69,6 +70,7 @@ void PBL_Crane_Create(void *data)
                 self->state     = PBL_Crane_StateCrane_Lower;
                 self->stateDraw = PBL_Crane_Draw_Crane;
                 break;
+
             case PBL_CRANE_PRIZEDISPLAY:
                 self->visible = true;
 
@@ -78,6 +80,7 @@ void PBL_Crane_Create(void *data)
                 self->state     = PBL_Crane_StatePrizeDisplay_Move;
                 self->stateDraw = PBL_Crane_Draw_PrizeDisplay;
                 break;
+
             case PBL_CRANE_PRIZE:
                 self->drawOrder = 12;
                 self->visible   = true;
@@ -87,6 +90,7 @@ void PBL_Crane_Create(void *data)
 
                 self->state = PBL_Crane_StatePrize_Bounce;
                 break;
+
             default: break;
         }
     }
@@ -190,6 +194,7 @@ void PBL_Crane_HandlePrizes(void)
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_TBLRESTORE;
             break;
         }
+
         case PBL_CRANE_PRIZE_1UP:
             if (SaveGame->saveRAM->lives < 99)
                 SaveGame->saveRAM->lives++;
@@ -199,6 +204,7 @@ void PBL_Crane_HandlePrizes(void)
 
             PBL_Crane->prizeID = PBL_CRANE_PRIZEID_1UP;
             break;
+
         default: break;
     }
 }
@@ -364,7 +370,7 @@ void PBL_Crane_StateCrane_Move(void)
 {
     RSDK_THIS(PBL_Crane);
 
-    self->velocity.x = (-((ControllerInfo[1].keyLeft.down || AnalogStickInfoL[1].keyLeft.down) != 0) & 0xFFFF0000) + 0x8000;
+    self->velocity.x = (-((ControllerInfo[CONT_P1].keyLeft.down || AnalogStickInfoL[CONT_P1].keyLeft.down) != 0) & 0xFFFF0000) + 0x8000;
 
     if (++self->timer == 30) {
         self->timer = 0;
@@ -379,17 +385,17 @@ void PBL_Crane_StateCrane_Controlled(void)
 
     EntityPBL_Crane *parent = self->parent;
 
-    if (AnalogStickInfoL[1].keyLeft.press || ControllerInfo[1].keyLeft.press) {
+    if (AnalogStickInfoL[CONT_P1].keyLeft.press || ControllerInfo[CONT_P1].keyLeft.press) {
         ++self->timer;
         self->velocity.x = -0x18000;
         RSDK.PlaySfx(PBL_Crane->sfxCraneMove, false, 0xFF);
     }
-    else if (AnalogStickInfoL[1].keyRight.press || ControllerInfo[1].keyRight.press) {
+    else if (AnalogStickInfoL[CONT_P1].keyRight.press || ControllerInfo[CONT_P1].keyRight.press) {
         ++self->timer;
         self->velocity.x = 0x18000;
         RSDK.PlaySfx(PBL_Crane->sfxCraneMove, false, 0xFF);
     }
-    else if (AnalogStickInfoL[1].keyDown.press || ControllerInfo[1].keyDown.press) {
+    else if (AnalogStickInfoL[CONT_P1].keyDown.press || ControllerInfo[CONT_P1].keyDown.press) {
         self->timer = 4;
     }
 

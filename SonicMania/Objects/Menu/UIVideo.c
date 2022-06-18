@@ -46,14 +46,6 @@ bool32 UIVideo_SkipCB(void)
         UIVideo->playing = true;
         return true;
     }
-#if MANIA_USE_TOUCH_CONTROLS
-    else if (TouchInfo->count) {
-        Music_FadeOut(0.0125);
-
-        UIVideo->playing = true;
-        return true;
-    }
-#endif
 
     return false;
 }

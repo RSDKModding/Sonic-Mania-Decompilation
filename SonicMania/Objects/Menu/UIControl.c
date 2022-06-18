@@ -317,8 +317,9 @@ void UIControl_ProcessInputs(void)
 #endif
         }
 
-        if (self->processButtonInputCB)
-            self->processButtonInputCB();
+        if (self->processButtonInputCB) {
+            StateMachine_Run(self->processButtonInputCB);
+        }
         else
             UIControl_ProcessButtonInput();
 
@@ -478,7 +479,11 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
     if (entity->menuSetupCB) {
         Entity *storeEntity = SceneInfo->entity;
         SceneInfo->entity   = (Entity *)entity;
+#if RETRO_USE_MOD_LOADER
+        StateMachine_Run(entity->menuSetupCB);
+#else
         entity->menuSetupCB();
+#endif
         SceneInfo->entity = storeEntity;
     }
 }
@@ -843,8 +848,13 @@ void UIControl_ProcessButtonInput(void)
                 Entity *storeEntity = SceneInfo->entity;
                 SceneInfo->entity   = (Entity *)button;
                 if (button->processButtonCB) {
-                    if (!button->checkSelectedCB || !button->checkSelectedCB())
+                    if (!button->checkSelectedCB || !button->checkSelectedCB()) {
+#if RETRO_USE_MOD_LOADER
+                        StateMachine_Run(button->processButtonCB);
+#else
                         button->processButtonCB();
+#endif
+                    }
                 }
                 SceneInfo->entity = storeEntity;
             }

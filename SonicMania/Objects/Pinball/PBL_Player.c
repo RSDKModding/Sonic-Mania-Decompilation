@@ -170,54 +170,6 @@ void PBL_Player_Input_P1(void)
         RSDKControllerState *controller = &ControllerInfo[self->controllerID];
         RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];
 
-#if MANIA_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < TouchInfo->count; ++t) {
-            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-            if (TouchInfo->down[t]) {
-                if (tx >= ScreenInfo->centerX && ty >= ScreenInfo->centerY && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
-                    ControllerInfo[1].keyX.down = true;
-                    break;
-                }
-            }
-        }
-
-        // fixes a bug with button vs touch
-        bool32 touchedJump = false;
-        for (int32 t = 0; t < TouchInfo->count; ++t) {
-            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-            if (TouchInfo->down[t]) {
-                if (tx >= 0 && ty >= ScreenInfo->centerY && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
-                    controller->keyB.down = true;
-                    touchedJump           = true;
-                    break;
-                }
-            }
-        }
-
-        for (int32 t = 0; t < TouchInfo->count; ++t) {
-            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-            if (TouchInfo->down[t]) {
-                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
-                    if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                        EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                        if (!pauseMenu->classID) {
-                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-                            pauseMenu->triggerPlayer  = RSDK.GetEntitySlot(self);
-                            pauseMenu->disableRestart = true;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-#endif
-
         self->up    = controller->keyUp.down;
         self->down  = controller->keyDown.down;
         self->left  = controller->keyLeft.down;
@@ -237,9 +189,11 @@ void PBL_Player_Input_P1(void)
             self->left  = false;
             self->right = false;
         }
+
+        // I don't think this is used, ever LOL
         self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
 
-        if (controller[self->controllerID].keyStart.press || Unknown_pausePress) {
+        if (controller->keyStart.press || Unknown_pausePress) {
             if (SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->classID) {
