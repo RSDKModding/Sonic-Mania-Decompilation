@@ -45,7 +45,7 @@ void InkWipe_Create(void *data)
 
 void InkWipe_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         InkWipe->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
 }
 

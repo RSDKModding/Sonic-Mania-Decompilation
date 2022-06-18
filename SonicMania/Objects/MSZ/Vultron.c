@@ -76,7 +76,7 @@ void Vultron_StageLoad(void)
 {
     Vultron->sfxVultron = RSDK.GetSfx("MSZ/Vultron.wav");
 
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         Vultron->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Vultron.bin", SCOPE_STAGE);
 
     Vultron->hitboxRange.left   = 0;

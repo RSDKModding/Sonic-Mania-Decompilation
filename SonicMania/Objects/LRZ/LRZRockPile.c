@@ -69,7 +69,7 @@ void LRZRockPile_Create(void *data)
 
 void LRZRockPile_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckSceneFolder("LRZ1")) {
         LRZRockPile->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/LRZRockPile.bin", SCOPE_STAGE);
         LRZRockPile->particleFrames = RSDK.LoadSpriteAnimation("LRZ1/Particles.bin", SCOPE_STAGE);
 
@@ -78,7 +78,7 @@ void LRZRockPile_StageLoad(void)
         LRZRockPile->hitboxWall.right  = 16;
         LRZRockPile->hitboxWall.bottom = 40;
     }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckSceneFolder("LRZ2")) {
         LRZRockPile->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZRockPile.bin", SCOPE_STAGE);
 
         LRZRockPile->hitboxWall.left   = -16;
@@ -321,7 +321,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
     int32 sizeY = (self->hitbox.bottom - self->hitbox.top) << 16;
 
     int32 destroyDelay = 0;
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckSceneFolder("LRZ1")) {
         for (int32 i = 0; i < self->debrisCount; ++i) {
             int32 animationID = self->rockDebrisInfo[(i * 6) + 0];
             int32 frameID     = self->rockDebrisInfo[(i * 6) + 1];
@@ -356,7 +356,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
             destroyDelay = maxVal(destroyDelay, delay);
         }
     }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckSceneFolder("LRZ2")) {
         int32 spawnY = self->position.y - 0x100000;
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, spawnY);
@@ -548,11 +548,11 @@ void LRZRockPile_EditorDraw(void)
 
 void LRZRockPile_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckSceneFolder("LRZ1")) {
         LRZRockPile->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/LRZRockPile.bin", SCOPE_STAGE);
         LRZRockPile->particleFrames = RSDK.LoadSpriteAnimation("LRZ1/Particles.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckSceneFolder("LRZ2")) {
         LRZRockPile->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZRockPile.bin", SCOPE_STAGE);
     }
 

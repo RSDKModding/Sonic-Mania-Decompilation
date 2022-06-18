@@ -96,9 +96,9 @@ void Kabasira_Create(void *data)
 
 void Kabasira_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Kabasira->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Kabasira.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Kabasira->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Kabasira.bin", SCOPE_STAGE);
 
     Kabasira->hitboxBadnik.left   = -6;
@@ -308,9 +308,9 @@ void Kabasira_EditorDraw(void)
 
 void Kabasira_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Kabasira->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Kabasira.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Kabasira->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Kabasira.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Kabasira, direction);

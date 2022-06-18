@@ -51,7 +51,7 @@ void ConveyorWheel_Create(void *data)
 
 void ConveyorWheel_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         ConveyorWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE);
 
     ConveyorWheel->hitbox.left   = -49;

@@ -602,6 +602,10 @@ void CrimsonEye_StateContainer_HandleElevator(void)
 
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
+        // NOTE:
+        // according to IDA, the original code is 
+        // if (player->classID)
+        // but this crashes the game when super & without a sidekick so this fix will stay
         if (player->classID == Player->classID)
             player->gravityStrength = 0x3800 - CrimsonEye->elevatorSpeed / 0x30;
     }

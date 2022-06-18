@@ -169,11 +169,11 @@ void CollapsingPlatform_StageLoad(void)
     CollapsingPlatform->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(CollapsingPlatform->aniFrames, 0, &CollapsingPlatform->animator, true, 0);
 
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         CollapsingPlatform->shift = 1;
 
-    if (RSDK.CheckStageFolder("FBZ") || RSDK.CheckStageFolder("HCZ") || RSDK.CheckStageFolder("LRZ1") || RSDK.CheckStageFolder("LRZ2")
-        || RSDK.CheckStageFolder("AIZ")) {
+    if (RSDK.CheckSceneFolder("FBZ") || RSDK.CheckSceneFolder("HCZ") || RSDK.CheckSceneFolder("LRZ1") || RSDK.CheckSceneFolder("LRZ2")
+        || RSDK.CheckSceneFolder("AIZ")) {
         CollapsingPlatform->sfxCrumble = RSDK.GetSfx("Stage/LedgeBreak3.wav");
     }
     else {

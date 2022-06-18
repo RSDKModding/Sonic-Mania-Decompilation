@@ -53,7 +53,7 @@ void Stegway_Create(void *data)
 
 void Stegway_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HPZ"))
+    if (RSDK.CheckSceneFolder("HPZ"))
         Stegway->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Stegway.bin", SCOPE_STAGE);
 
     Stegway->hitboxBadnik.left   = -20;

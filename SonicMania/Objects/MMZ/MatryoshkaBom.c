@@ -106,7 +106,7 @@ void MatryoshkaBom_Create(void *data)
 
 void MatryoshkaBom_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         MatryoshkaBom->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MatryoshkaBom.bin", SCOPE_STAGE);
 
     MatryoshkaBom->hitboxHurt.left   = -12;

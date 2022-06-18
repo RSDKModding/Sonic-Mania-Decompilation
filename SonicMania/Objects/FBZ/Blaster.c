@@ -60,7 +60,7 @@ void Blaster_Create(void *data)
 
 void Blaster_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         Blaster->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Blaster.bin", SCOPE_STAGE);
 
     Blaster->hitboxBadnik.left   = -16;

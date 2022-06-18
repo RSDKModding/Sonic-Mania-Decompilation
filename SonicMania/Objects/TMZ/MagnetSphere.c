@@ -65,7 +65,7 @@ void MagnetSphere_Create(void *data)
 
 void MagnetSphere_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+    if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
         MagnetSphere->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MagnetSphere.bin", SCOPE_STAGE);
 
     MagnetSphere->hitbox.left   = -56;

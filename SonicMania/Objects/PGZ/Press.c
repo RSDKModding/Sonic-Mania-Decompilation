@@ -125,7 +125,7 @@ void Press_Create(void *data)
 
 void Press_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Press->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Press.bin", SCOPE_STAGE);
 
     Press->hitbox.left   = -112;

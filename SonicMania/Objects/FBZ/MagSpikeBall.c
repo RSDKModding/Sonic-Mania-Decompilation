@@ -82,7 +82,7 @@ void MagSpikeBall_Create(void *data)
 
 void MagSpikeBall_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         MagSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("FBZ/MagSpikeBall.bin", SCOPE_STAGE);
 
     MagSpikeBall->hitboxSpikeBall.left   = -12;

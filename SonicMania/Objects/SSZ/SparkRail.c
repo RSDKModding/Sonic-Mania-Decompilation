@@ -62,7 +62,7 @@ void SparkRail_Create(void *data)
 
 void SparkRail_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Spark.bin", SCOPE_STAGE);
     else
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Spark.bin", SCOPE_STAGE);
@@ -91,7 +91,7 @@ void SparkRail_EditorDraw(void)
 
 void SparkRail_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Spark.bin", SCOPE_STAGE);
     else
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Spark.bin", SCOPE_STAGE);

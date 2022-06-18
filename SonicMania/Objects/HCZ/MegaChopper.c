@@ -45,7 +45,7 @@ void MegaChopper_Create(void *data)
 
 void MegaChopper_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ"))
+    if (RSDK.CheckSceneFolder("HCZ"))
         MegaChopper->aniFrames = RSDK.LoadSpriteAnimation("HCZ/MegaChopper.bin", SCOPE_STAGE);
 
     MegaChopper->hitboxBadnik.left   = -8;

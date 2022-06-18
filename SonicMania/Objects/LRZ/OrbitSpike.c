@@ -87,9 +87,9 @@ void OrbitSpike_Create(void *data)
 
 void OrbitSpike_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/OrbitSpike.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2"))
+    else if (RSDK.CheckSceneFolder("LRZ2"))
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
 
     OrbitSpike->hitbox.left   = -12;
@@ -153,9 +153,9 @@ void OrbitSpike_EditorDraw(void)
 
 void OrbitSpike_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/OrbitSpike.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2"))
+    else if (RSDK.CheckSceneFolder("LRZ2"))
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(OrbitSpike, direction);

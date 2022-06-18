@@ -59,7 +59,7 @@ void ConveyorBelt_Create(void *data)
 
 void ConveyorBelt_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         ConveyorBelt->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE);
 }
 

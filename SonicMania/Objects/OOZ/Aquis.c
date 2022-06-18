@@ -65,7 +65,7 @@ void Aquis_Create(void *data)
 
 void Aquis_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         Aquis->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Aquis.bin", SCOPE_STAGE);
 
     Aquis->hitboxBadnik.left   = -10;

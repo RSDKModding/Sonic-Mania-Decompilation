@@ -42,14 +42,14 @@ void OneWayDoor_Create(void *data)
 
     RSDK.SetSpriteAnimation(OneWayDoor->aniFrames, 0, &self->animator, true, 0);
 
-    if (RSDK.CheckStageFolder("MMZ")) {
+    if (RSDK.CheckSceneFolder("MMZ")) {
 #if MANIA_USE_PLUS
         RSDK.SetSpriteAnimation(OneWayDoor->aniFrames, self->direction ? 4 : 2, &self->animator, true, 0);
 #endif
         self->stateDraw = OneWayDoor_Draw_MMZ;
         self->groundVel = 0x60000;
     }
-    else if (RSDK.CheckStageFolder("CPZ")) {
+    else if (RSDK.CheckSceneFolder("CPZ")) {
         self->stateDraw = OneWayDoor_Draw_CPZ;
         self->groundVel = 0x80000;
     }
@@ -57,9 +57,9 @@ void OneWayDoor_Create(void *data)
 
 void OneWayDoor_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         OneWayDoor->aniFrames = RSDK.LoadSpriteAnimation("MMZ/OneWayDoor.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("CPZ"))
+    else if (RSDK.CheckSceneFolder("CPZ"))
         OneWayDoor->aniFrames = RSDK.LoadSpriteAnimation("CPZ/OneWayDoor.bin", SCOPE_STAGE);
 
     OneWayDoor->hitboxTop.left   = -8;
@@ -87,7 +87,7 @@ void OneWayDoor_HandlePlayerInteractions(void)
     self->state = OneWayDoor_State_MoveDown;
 
     bool32 isMMZ1 = false;
-    if (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1)
+    if (RSDK.CheckSceneFolder("MMZ") && Zone->actID == 1)
         isMMZ1 = true;
 
     bool32 isBehind = false;
@@ -183,11 +183,11 @@ void OneWayDoor_EditorDraw(void)
 {
     RSDK_THIS(OneWayDoor);
 
-    if (RSDK.CheckStageFolder("MMZ")) {
+    if (RSDK.CheckSceneFolder("MMZ")) {
         RSDK.SetSpriteAnimation(OneWayDoor->aniFrames, self->direction ? 4 : 2, &self->animator, true, 0);
         OneWayDoor_Draw_MMZ();
     }
-    else if (RSDK.CheckStageFolder("CPZ")) {
+    else if (RSDK.CheckSceneFolder("CPZ")) {
         RSDK.SetSpriteAnimation(OneWayDoor->aniFrames, 0, &self->animator, true, 0);
         OneWayDoor_Draw_CPZ();
     }
@@ -195,9 +195,9 @@ void OneWayDoor_EditorDraw(void)
 
 void OneWayDoor_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         OneWayDoor->aniFrames = RSDK.LoadSpriteAnimation("MMZ/OneWayDoor.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("CPZ"))
+    else if (RSDK.CheckSceneFolder("CPZ"))
         OneWayDoor->aniFrames = RSDK.LoadSpriteAnimation("CPZ/OneWayDoor.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(OneWayDoor, direction);

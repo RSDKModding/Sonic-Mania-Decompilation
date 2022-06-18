@@ -45,7 +45,7 @@ void Stalactite_Create(void *data)
 
 void Stalactite_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         Stalactite->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Stalactite.bin", SCOPE_STAGE);
 
     Stalactite->hitboxStalactite.left   = -8;

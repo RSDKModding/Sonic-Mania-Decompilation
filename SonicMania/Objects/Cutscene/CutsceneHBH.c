@@ -62,7 +62,7 @@ void CutsceneHBH_Create(void *data)
     CutsceneHBH_LoadSprites();
     CutsceneHBH_SetupColors();
 
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         self->noGlobalTimer = true;
     else
         self->useCustomPalettes = true;

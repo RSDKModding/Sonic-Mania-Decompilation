@@ -46,7 +46,7 @@ void Pointdexter_Create(void *data)
 
 void Pointdexter_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ"))
+    if (RSDK.CheckSceneFolder("HCZ"))
         Pointdexter->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Pointdexter.bin", SCOPE_STAGE);
 
     Pointdexter->hitbox.left   = -16;

@@ -73,7 +73,7 @@ void DiveEggman_Create(void *data)
 
 void DiveEggman_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ")) {
+    if (RSDK.CheckSceneFolder("HCZ")) {
         DiveEggman->diveFrames = RSDK.LoadSpriteAnimation("HCZ/DiveEggman.bin", SCOPE_STAGE);
         DiveEggman->aniFrames  = RSDK.LoadSpriteAnimation("Eggman/EggmanHCZ1.bin", SCOPE_STAGE);
     }

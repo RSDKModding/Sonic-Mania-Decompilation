@@ -141,7 +141,7 @@ void YoyoPulley_Create(void *data)
 
 void YoyoPulley_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         YoyoPulley->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE);
 
     YoyoPulley->hitboxHandle.top    = -12;

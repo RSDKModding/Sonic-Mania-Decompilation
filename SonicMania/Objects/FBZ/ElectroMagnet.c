@@ -77,7 +77,7 @@ void ElectroMagnet_StageLoad(void)
 {
     ElectroMagnet->active = ACTIVE_ALWAYS;
 
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         ElectroMagnet->aniFrames = RSDK.LoadSpriteAnimation("FBZ/ElectroMagnet.bin", SCOPE_STAGE);
 
     ElectroMagnet->hitboxPlayer.left   = -1;

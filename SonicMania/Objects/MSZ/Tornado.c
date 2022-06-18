@@ -96,7 +96,7 @@ void Tornado_Create(void *data)
 
 void Tornado_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ") || RSDK.CheckStageFolder("MSZCutscene")) {
+    if (RSDK.CheckSceneFolder("MSZ") || RSDK.CheckSceneFolder("MSZCutscene")) {
         Tornado->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Tornado.bin", SCOPE_STAGE);
         if (!CHECK_CHARACTER_ID(ID_KNUCKLES, 1))
             Tornado->knuxFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
@@ -112,7 +112,7 @@ void Tornado_State_Setup(void)
 
     self->active = ACTIVE_NORMAL;
 
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         self->state = Tornado_State_SetupMSZ1Intro;
     else
         self->state = Tornado_HandlePlayerCollisions;

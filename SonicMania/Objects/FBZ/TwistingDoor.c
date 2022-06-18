@@ -135,7 +135,7 @@ void TwistingDoor_Create(void *data)
 
 void TwistingDoor_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         TwistingDoor->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TwistingDoor.bin", SCOPE_STAGE);
 
     TwistingDoor->sfxOpen = RSDK.GetSfx("Stage/Open.wav");

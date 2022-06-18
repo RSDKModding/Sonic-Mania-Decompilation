@@ -69,7 +69,7 @@ void FlameSpring_Create(void *data)
 
 void FlameSpring_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         FlameSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FlameSpring.bin", SCOPE_STAGE);
 
     FlameSpring->hitboxSpring.left   = -16;

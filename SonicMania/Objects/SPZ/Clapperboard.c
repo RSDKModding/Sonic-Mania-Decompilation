@@ -110,7 +110,7 @@ void Clapperboard_Create(void *data)
 
 void Clapperboard_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Clapperboard.bin", SCOPE_STAGE);
     else
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Clapperboard.bin", SCOPE_STAGE);
@@ -310,7 +310,7 @@ void Clapperboard_EditorDraw(void)
 
 void Clapperboard_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Clapperboard.bin", SCOPE_STAGE);
     else
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Clapperboard.bin", SCOPE_STAGE);

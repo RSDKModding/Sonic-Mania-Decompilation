@@ -53,7 +53,7 @@ void LaunchSpring_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
-        self->visible       = RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2");
+        self->visible       = RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2");
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
@@ -108,12 +108,12 @@ void LaunchSpring_Create(void *data)
 
         LaunchSpring->sfxGrab = RSDK.GetSfx("Global/Grab.wav");
 
-        if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
+        if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2")) {
             LaunchSpring->isTMZ           = false;
             LaunchSpring->sfxClack        = RSDK.GetSfx("Stage/Clack.wav");
             LaunchSpring->sfxSpeedBooster = RSDK.GetSfx("Stage/SpeedBooster.wav");
         }
-        else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2")) {
+        else if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2")) {
             LaunchSpring->isTMZ           = true;
             LaunchSpring->sfxSpeedBooster = RSDK.GetSfx("Stage/CannonFire.wav");
         }
@@ -122,9 +122,9 @@ void LaunchSpring_Create(void *data)
 
 void LaunchSpring_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/LaunchSpring.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/LaunchSpring.bin", SCOPE_STAGE);
 
     LaunchSpring->hitbox.top    = -24;
@@ -458,7 +458,7 @@ void LaunchSpring_EditorDraw(void)
 {
     RSDK_THIS(LaunchSpring);
 
-    if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
+    if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2")) {
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &self->jointAnimator, true, 0);
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
@@ -476,9 +476,9 @@ void LaunchSpring_EditorDraw(void)
 
 void LaunchSpring_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/LaunchSpring.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/LaunchSpring.bin", SCOPE_STAGE);
     else
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);

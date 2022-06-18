@@ -81,9 +81,9 @@ void Dragonfly_Create(void *data)
 
 void Dragonfly_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Dragonfly->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Dragonfly.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         Dragonfly->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Dragonfly.bin", SCOPE_STAGE);
 
     Dragonfly->hitboxBadnik.left   = -8;
@@ -263,9 +263,9 @@ void Dragonfly_EditorDraw(void)
 
 void Dragonfly_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Dragonfly->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Dragonfly.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         Dragonfly->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Dragonfly.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Dragonfly, dir);

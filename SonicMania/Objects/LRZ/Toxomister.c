@@ -67,9 +67,9 @@ void Toxomister_Create(void *data)
 
 void Toxomister_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         Toxomister->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Toxomister.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         Toxomister->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Toxomister.bin", SCOPE_STAGE);
 
     Toxomister->hitboxBadnik.left   = -5;
@@ -370,9 +370,9 @@ void Toxomister_EditorDraw(void)
 
 void Toxomister_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         Toxomister->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Toxomister.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         Toxomister->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Toxomister.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Toxomister, direction);

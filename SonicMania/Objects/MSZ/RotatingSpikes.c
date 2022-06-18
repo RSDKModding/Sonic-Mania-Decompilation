@@ -82,9 +82,9 @@ void RotatingSpikes_Create(void *data)
 
 void RotatingSpikes_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         RotatingSpikes->aniFrames = RSDK.LoadSpriteAnimation("MSZ/RotatingSpikes.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ1"))
+    else if (RSDK.CheckSceneFolder("SSZ1"))
         RotatingSpikes->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/RotatingSpikes.bin", SCOPE_STAGE);
 }
 
@@ -116,9 +116,9 @@ void RotatingSpikes_EditorDraw(void)
 
 void RotatingSpikes_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         RotatingSpikes->aniFrames = RSDK.LoadSpriteAnimation("MSZ/RotatingSpikes.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ1"))
+    else if (RSDK.CheckSceneFolder("SSZ1"))
         RotatingSpikes->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/RotatingSpikes.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(RotatingSpikes, priority);

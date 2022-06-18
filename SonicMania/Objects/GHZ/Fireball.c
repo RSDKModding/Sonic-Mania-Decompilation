@@ -58,7 +58,7 @@ void Fireball_Create(void *data)
 
 void Fireball_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Fireball->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE);
 
     Fireball->hitboxFireball.left   = -6;

@@ -76,9 +76,9 @@ void Jellygnite_Create(void *data)
 
 void Jellygnite_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HPZ"))
+    if (RSDK.CheckSceneFolder("HPZ"))
         Jellygnite->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Jellygnite.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("HCZ"))
+    else if (RSDK.CheckSceneFolder("HCZ"))
         Jellygnite->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Jellygnite.bin", SCOPE_STAGE);
 
     Jellygnite->hitbox.left   = -14;
@@ -406,9 +406,9 @@ void Jellygnite_EditorDraw(void)
 
 void Jellygnite_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("HPZ"))
+    if (RSDK.CheckSceneFolder("HPZ"))
         Jellygnite->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Jellygnite.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("HCZ"))
+    else if (RSDK.CheckSceneFolder("HCZ"))
         Jellygnite->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Jellygnite.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Jellygnite, direction);

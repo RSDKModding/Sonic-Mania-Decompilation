@@ -65,7 +65,7 @@ void Sol_Create(void *data)
 
 void Sol_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         Sol->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE);
 
     Sol->hitboxBadnik.left   = -8;

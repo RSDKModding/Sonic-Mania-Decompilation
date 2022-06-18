@@ -83,7 +83,7 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
     Vector2 moveOffset;
     moveOffset.x = 0;
     moveOffset.y = 0;
-    if (RSDK.CheckStageFolder("LRZ2")) {
+    if (RSDK.CheckSceneFolder("LRZ2")) {
         int32 storeX = entity->position.x;
         int32 storeY = entity->position.y;
 

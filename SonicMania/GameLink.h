@@ -1279,7 +1279,7 @@ typedef struct {
     void (*ForceHardReset)(bool32 shouldHardReset);
 #endif
     bool32 (*CheckValidScene)(void);
-    int32 (*CheckStageFolder)(const char *folderName);
+    int32 (*CheckSceneFolder)(const char *folderName);
     int32 (*LoadScene)(void);
     int32 (*FindObject)(const char *name);
 

@@ -133,7 +133,7 @@ void Fan_StaticUpdate(void)
         }
     }
 
-    if (RSDK.CheckStageFolder("HCZ")) {
+    if (RSDK.CheckSceneFolder("HCZ")) {
         int32 count = 0;
 
         if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID != PauseMenu->classID) {
@@ -218,7 +218,7 @@ void Fan_Create(void *data)
 
 void Fan_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2")) {
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2")) {
         Fan->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Fan.bin", SCOPE_STAGE);
 
         Fan->hitboxTop.left  = -64;
@@ -237,7 +237,7 @@ void Fan_StageLoad(void)
         Fan->hitboxSides.left   = -112;
         Fan->hitboxSides.right  = 32;
     }
-    else if (RSDK.CheckStageFolder("HCZ")) {
+    else if (RSDK.CheckSceneFolder("HCZ")) {
         Fan->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Fan.bin", SCOPE_STAGE);
 
         Fan->hitboxTop.left  = -16;
@@ -569,9 +569,9 @@ void Fan_EditorDraw(void)
 
 void Fan_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         Fan->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Fan.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("HCZ"))
+    else if (RSDK.CheckSceneFolder("HCZ"))
         Fan->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Fan.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Fan, type);

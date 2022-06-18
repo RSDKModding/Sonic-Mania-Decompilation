@@ -84,11 +84,11 @@ void CircleBumper_Create(void *data)
 
 void CircleBumper_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/CircleBumper.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ2"))
+    else if (RSDK.CheckSceneFolder("SPZ2"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CircleBumper.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CircleBumper.bin", SCOPE_STAGE);
 
     CircleBumper->hitboxBumper.left   = -7;
@@ -375,11 +375,11 @@ void CircleBumper_EditorDraw(void)
 
 void CircleBumper_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/CircleBumper.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ2"))
+    else if (RSDK.CheckSceneFolder("SPZ2"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CircleBumper.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CircleBumper.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(CircleBumper, type);

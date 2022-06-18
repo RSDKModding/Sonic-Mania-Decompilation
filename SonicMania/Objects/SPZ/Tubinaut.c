@@ -85,7 +85,7 @@ void Tubinaut_Create(void *data)
 
 void Tubinaut_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         Tubinaut->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Tubinaut.bin", SCOPE_STAGE);
     else
         Tubinaut->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Tubinaut.bin", SCOPE_STAGE);
@@ -574,7 +574,7 @@ void Tubinaut_EditorDraw(void)
 
 void Tubinaut_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         Tubinaut->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Tubinaut.bin", SCOPE_STAGE);
     else
         Tubinaut->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Tubinaut.bin", SCOPE_STAGE);

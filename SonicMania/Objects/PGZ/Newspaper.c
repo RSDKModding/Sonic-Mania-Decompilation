@@ -80,7 +80,7 @@ void Newspaper_StageLoad(void)
 
     Newspaper->sfxPaperStack = RSDK.GetSfx("PSZ/PaperStack.wav");
 #else
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
 #endif
 }
@@ -186,7 +186,7 @@ void Newspaper_EditorLoad(void)
     RSDK_ENUM_VAR("Blue (BG)", NEWSPAPER_WHITE_BG);
 
 #else
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
 #endif
 }

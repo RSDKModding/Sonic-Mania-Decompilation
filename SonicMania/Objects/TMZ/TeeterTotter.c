@@ -66,7 +66,7 @@ void TeeterTotter_Create(void *data)
 
 void TeeterTotter_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+    if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
         TeeterTotter->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/TeeterTotter.bin", SCOPE_STAGE);
 }
 

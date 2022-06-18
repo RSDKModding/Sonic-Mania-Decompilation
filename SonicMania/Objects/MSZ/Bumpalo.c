@@ -52,7 +52,7 @@ void Bumpalo_Create(void *data)
 
 void Bumpalo_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         Bumpalo->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Bumpalo.bin", SCOPE_STAGE);
 
     Bumpalo->hitboxBadnik.left   = -20;

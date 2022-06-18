@@ -31,7 +31,7 @@ void Water_StaticUpdate(void)
             Water->waterLevelVolume = clampVal(Water->waterLevelVolume, 0, 30);
         }
         else {
-            if (RSDK.CheckStageFolder("HCZ") && Water->moveWaterLevel) {
+            if (RSDK.CheckSceneFolder("HCZ") && Water->moveWaterLevel) {
                 if (!(Water->waterLevelVolume % 5))
                     Camera_ShakeScreen(0, 0, 1);
                 ++Water->waterLevelVolume;
@@ -111,14 +111,14 @@ void Water_Create(void *data)
 
         switch (self->type) {
             case WATER_PALETTE:
-                if (globals->gameMode == MODE_COMPETITION && RSDK.CheckStageFolder("CPZ")) {
+                if (globals->gameMode == MODE_COMPETITION && RSDK.CheckSceneFolder("CPZ")) {
                     destroyEntity(self);
                 }
                 else {
                     self->active    = ACTIVE_NORMAL;
                     self->inkEffect = INK_ADD;
                     self->drawOrder = Zone->hudDrawOrder - 1;
-                    self->alpha     = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
+                    self->alpha     = RSDK.CheckSceneFolder("AIZ") ? 0x60 : 0xE0;
                     RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
                     self->state     = Water_State_Palette;
                     self->stateDraw = Water_Draw_Palette;
@@ -271,7 +271,7 @@ void Water_StageLoad(void)
     Water->sfxDrownAlert = RSDK.GetSfx("Stage/DrownAlert.wav");
     Water->sfxSkim       = RSDK.GetSfx("HCZ/Skim.wav");
 
-    if (RSDK.CheckStageFolder("HCZ")) {
+    if (RSDK.CheckSceneFolder("HCZ")) {
         Water->wakeFrames      = RSDK.LoadSpriteAnimation("HCZ/Wake.bin", SCOPE_STAGE);
         Water->bigBubbleFrames = RSDK.LoadSpriteAnimation("HCZ/BigBubble.bin", SCOPE_STAGE);
 
@@ -1383,7 +1383,7 @@ void Water_EditorDraw(void)
     switch (self->type) {
         case WATER_PALETTE:
             self->inkEffect = INK_ADD;
-            self->alpha     = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
+            self->alpha     = RSDK.CheckSceneFolder("AIZ") ? 0x60 : 0xE0;
             RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
 
             Water->waterLevel = self->position.y;
@@ -1468,7 +1468,7 @@ void Water_EditorDraw(void)
 void Water_EditorLoad(void)
 {
     Water->aniFrames = RSDK.LoadSpriteAnimation("Global/Water.bin", SCOPE_STAGE);
-    if (RSDK.CheckStageFolder("HCZ")) {
+    if (RSDK.CheckSceneFolder("HCZ")) {
         Water->wakeFrames      = RSDK.LoadSpriteAnimation("HCZ/Wake.bin", SCOPE_STAGE);
         Water->bigBubbleFrames = RSDK.LoadSpriteAnimation("HCZ/BigBubble.bin", SCOPE_STAGE);
         RSDK.SetSpriteAnimation(Water->wakeFrames, 0, &Water->wakeAnimator, true, 0);

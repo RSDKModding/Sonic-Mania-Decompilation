@@ -53,11 +53,11 @@ void WalkerLegs_Create(void *data)
 
 void WalkerLegs_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckSceneFolder("LRZ1")) {
         WalkerLegs->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/WalkerLegs.bin", SCOPE_STAGE);
         WalkerLegs->particleFrames = RSDK.LoadSpriteAnimation("LRZ1/Particles.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckSceneFolder("LRZ2")) {
         WalkerLegs->aniFrames      = RSDK.LoadSpriteAnimation("LRZ2/WalkerLegs.bin", SCOPE_STAGE);
         WalkerLegs->particleFrames = RSDK.LoadSpriteAnimation("LRZ2/Particles.bin", SCOPE_STAGE);
     }
@@ -375,7 +375,7 @@ void WalkerLegs_CreateDebris(bool32 isRightLeg, bool32 isMagma)
 {
     RSDK_THIS(WalkerLegs);
 
-    if (!RSDK.CheckStageFolder("LRZ2") || isMagma) {
+    if (!RSDK.CheckSceneFolder("LRZ2") || isMagma) {
         int32 x = self->legPos[isRightLeg != false].x;
         int32 y = self->legPos[isRightLeg != false].y;
 
@@ -542,11 +542,11 @@ void WalkerLegs_EditorDraw(void)
 
 void WalkerLegs_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckSceneFolder("LRZ1")) {
         WalkerLegs->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/WalkerLegs.bin", SCOPE_STAGE);
         WalkerLegs->particleFrames = RSDK.LoadSpriteAnimation("LRZ1/Particles.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckSceneFolder("LRZ2")) {
         WalkerLegs->aniFrames      = RSDK.LoadSpriteAnimation("LRZ2/WalkerLegs.bin", SCOPE_STAGE);
         WalkerLegs->particleFrames = RSDK.LoadSpriteAnimation("LRZ2/Particles.bin", SCOPE_STAGE);
     }

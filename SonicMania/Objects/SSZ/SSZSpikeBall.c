@@ -96,7 +96,7 @@ void SSZSpikeBall_Create(void *data)
 
 void SSZSpikeBall_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         SSZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpikeBall.bin", SCOPE_STAGE);
     else
         SSZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/SpikeBall.bin", SCOPE_STAGE);
@@ -447,7 +447,7 @@ void SSZSpikeBall_EditorDraw(void)
 
 void SSZSpikeBall_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         SSZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpikeBall.bin", SCOPE_STAGE);
     else
         SSZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/SpikeBall.bin", SCOPE_STAGE);

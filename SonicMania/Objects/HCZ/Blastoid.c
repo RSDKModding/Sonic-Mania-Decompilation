@@ -55,7 +55,7 @@ void Blastoid_Create(void *data)
 
 void Blastoid_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ"))
+    if (RSDK.CheckSceneFolder("HCZ"))
         Blastoid->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Blastoid.bin", SCOPE_STAGE);
 
     Blastoid->hitboxBody.left   = -12;

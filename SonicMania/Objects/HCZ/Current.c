@@ -171,7 +171,7 @@ void Current_Create(void *data)
 
 void Current_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         Current->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Current.bin", SCOPE_STAGE);
     else
         Current->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
@@ -326,7 +326,7 @@ void Current_State_WaterLeft(void)
 
                         int32 x = self->position.x + ((self->hitbox.right - 32) << 16);
                         self->activePlayers &= ~(1 << playerID);
-                        if (RSDK.CheckStageFolder("FBZ") && !player->sidekick && self->fbzAchievement && self->playerPositions[playerID].x >= x
+                        if (RSDK.CheckSceneFolder("FBZ") && !player->sidekick && self->fbzAchievement && self->playerPositions[playerID].x >= x
                             && player->position.x < self->position.x) {
                             API_UnlockAchievement(&achievementList[ACH_FBZ]);
                         }

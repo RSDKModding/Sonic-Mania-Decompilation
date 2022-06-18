@@ -58,7 +58,7 @@ void Flamethrower_Create(void *data)
 
     self->active = ACTIVE_BOUNDS;
 
-    if (!RSDK.CheckStageFolder("LRZ3")) {
+    if (!RSDK.CheckSceneFolder("LRZ3")) {
         if (Flamethrower->hitboxMouthH.left)
             self->drawOrder = Zone->playerDrawLow;
         else
@@ -120,10 +120,10 @@ void Flamethrower_StageLoad(void)
 
     Flamethrower->sfxFlame = RSDK.GetSfx("Stage/Flame2.wav");
 
-    if (RSDK.CheckStageFolder("LRZ2")) {
+    if (RSDK.CheckSceneFolder("LRZ2")) {
         Flamethrower->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Flamethrower.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("LRZ3")) {
+    else if (RSDK.CheckSceneFolder("LRZ3")) {
         Flamethrower->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/Flamethrower.bin", SCOPE_STAGE);
 
         Flamethrower->hitboxMouthH.left = 0;
@@ -298,7 +298,7 @@ void Flamethrower_State_Setup(void)
     }
 
     Flamethrower_SetupOrientation(self->orientation);
-    if (!RSDK.CheckStageFolder("LRZ3")) {
+    if (!RSDK.CheckSceneFolder("LRZ3")) {
         if (Flamethrower->hitboxMouthH.left)
             self->drawOrder = Zone->playerDrawLow;
         else
@@ -344,7 +344,7 @@ void Flamethrower_State_EmittingFlames(void)
         EntityFlamethrower *flame = CREATE_ENTITY(Flamethrower, self, self->position.x, self->position.y);
         flame->active             = ACTIVE_NORMAL;
         flame->visible            = true;
-        if (RSDK.CheckStageFolder("LRZ3"))
+        if (RSDK.CheckSceneFolder("LRZ3"))
             flame->drawOrder = Zone->objectDrawLow - 1;
         else
             flame->drawOrder = Zone->objectDrawLow;
@@ -391,7 +391,7 @@ void Flamethrower_State_SetupFireball(void)
         case FLAMETHROWER_ORIENTATION_UP: self->direction = FLIP_Y; break;
     }
 
-    if (RSDK.CheckStageFolder("LRZ3"))
+    if (RSDK.CheckSceneFolder("LRZ3"))
         self->drawOrder = Zone->objectDrawLow - 1;
     else
         self->drawOrder = Zone->objectDrawLow;
@@ -469,9 +469,9 @@ void Flamethrower_EditorDraw(void)
 
 void Flamethrower_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ2"))
+    if (RSDK.CheckSceneFolder("LRZ2"))
         Flamethrower->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Flamethrower.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ3"))
         Flamethrower->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/Flamethrower.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Flamethrower, orientation);

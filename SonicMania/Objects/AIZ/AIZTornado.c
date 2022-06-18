@@ -57,7 +57,7 @@ void AIZTornado_Create(void *data)
         self->offsetX       = 0x80000;
         self->showFlame     = true;
 
-        if (RSDK.CheckStageFolder("AIZ") || RSDK.CheckStageFolder("Credits"))
+        if (RSDK.CheckSceneFolder("AIZ") || RSDK.CheckSceneFolder("Credits"))
             self->active = ACTIVE_NORMAL;
 
         if (!StarPost->postIDs[0]) {
@@ -77,7 +77,7 @@ void AIZTornado_Create(void *data)
 
 void AIZTornado_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("AIZ") || RSDK.CheckStageFolder("Credits"))
+    if (RSDK.CheckSceneFolder("AIZ") || RSDK.CheckSceneFolder("Credits"))
         AIZTornado->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZTornado.bin", SCOPE_STAGE);
 }
 

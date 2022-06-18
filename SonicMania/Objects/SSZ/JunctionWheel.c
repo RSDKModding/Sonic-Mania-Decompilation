@@ -146,7 +146,7 @@ void JunctionWheel_Create(void *data)
 
 void JunctionWheel_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         JunctionWheel->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/JunctionWheel.bin", SCOPE_STAGE);
 
     JunctionWheel->hitboxWheelRange.left   = -192;

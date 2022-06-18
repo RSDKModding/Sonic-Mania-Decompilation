@@ -51,9 +51,9 @@ void Motobug_Create(void *data)
 
 void Motobug_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Motobug->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         Motobug->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
 
     Motobug->hitboxBadnik.left   = -14;
@@ -244,9 +244,9 @@ void Motobug_EditorDraw(void) { Motobug_Draw(); }
 
 void Motobug_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Motobug->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         Motobug->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
 }
 #endif

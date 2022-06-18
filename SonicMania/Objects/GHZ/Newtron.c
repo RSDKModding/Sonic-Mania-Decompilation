@@ -73,7 +73,7 @@ void Newtron_Create(void *data)
 
 void Newtron_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Newtron->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Newtron.bin", SCOPE_STAGE);
 
     Newtron->hitboxShoot.left   = -12;

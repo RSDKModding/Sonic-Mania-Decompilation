@@ -49,7 +49,7 @@ void RollerMKII_Create(void *data)
 
 void RollerMKII_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         RollerMKII->aniFrames = RSDK.LoadSpriteAnimation("MSZ/RollerMKII.bin", SCOPE_STAGE);
 
     RollerMKII->hitboxOuter_Rolling.left   = -9;

@@ -53,9 +53,9 @@ void CheckerBall_Create(void *data)
 
 void CheckerBall_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         CheckerBall->aniFrames = RSDK.LoadSpriteAnimation("GHZ/CheckerBall.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         CheckerBall->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CheckerBall.bin", SCOPE_STAGE);
 
     CheckerBall->outerBox.left   = -9;
@@ -687,9 +687,9 @@ void CheckerBall_EditorDraw(void) { CheckerBall_Draw(); }
 
 void CheckerBall_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         CheckerBall->aniFrames = RSDK.LoadSpriteAnimation("GHZ/CheckerBall.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         CheckerBall->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CheckerBall.bin", SCOPE_STAGE);
 }
 #endif

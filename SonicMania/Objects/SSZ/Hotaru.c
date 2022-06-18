@@ -110,9 +110,9 @@ void Hotaru_Create(void *data)
 
 void Hotaru_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Hotaru->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Hotaru.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Hotaru->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Hotaru.bin", SCOPE_STAGE);
 
     Hotaru->hitboxBadnik.top    = -6;
@@ -499,9 +499,9 @@ void Hotaru_EditorDraw(void)
 
 void Hotaru_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Hotaru->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Hotaru.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Hotaru->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Hotaru.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Hotaru, quality);

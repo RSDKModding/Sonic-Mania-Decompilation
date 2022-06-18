@@ -77,9 +77,9 @@ void Canista_Create(void *data)
 
 void Canista_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         Canista->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Canista.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ2"))
+    else if (RSDK.CheckSceneFolder("SPZ2"))
         Canista->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Canista.bin", SCOPE_STAGE);
 
     Canista->hitboxBadnik.left   = -14;
@@ -482,9 +482,9 @@ void Canista_EditorDraw(void)
 
 void Canista_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         Canista->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Canista.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ2"))
+    else if (RSDK.CheckSceneFolder("SPZ2"))
         Canista->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Canista.bin", SCOPE_STAGE);
 
     Canista->hitboxRange.left   = -128;

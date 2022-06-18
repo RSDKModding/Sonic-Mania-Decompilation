@@ -602,7 +602,7 @@ void HeavyMystic_StateMischief_PrepareMagicTrick(void)
     HeavyMystic_HandleParticleFX();
 
     if (++self->timer == 60) {
-        if (RSDK.CheckStageFolder("MSZCutscene")) {
+        if (RSDK.CheckSceneFolder("MSZCutscene")) {
             self->state = HeavyMystic_StateMischief_Idle;
         }
         else {

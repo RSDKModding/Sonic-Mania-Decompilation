@@ -59,11 +59,11 @@ void Eggman_Create(void *data)
 
 void Eggman_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZCutscene"))
+    if (RSDK.CheckSceneFolder("GHZCutscene"))
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanGHZCutt.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("FBZ"))
+    else if (RSDK.CheckSceneFolder("FBZ"))
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanFBZ.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("TMZ3"))
+    else if (RSDK.CheckSceneFolder("TMZ3"))
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanTMZ.bin", SCOPE_STAGE);
     else
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanAll.bin", SCOPE_STAGE);
@@ -180,11 +180,11 @@ void Eggman_EditorDraw(void)
 
 void Eggman_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZCutscene"))
+    if (RSDK.CheckSceneFolder("GHZCutscene"))
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanGHZCutt.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("FBZ"))
+    else if (RSDK.CheckSceneFolder("FBZ"))
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanFBZ.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("TMZ3"))
+    else if (RSDK.CheckSceneFolder("TMZ3"))
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanTMZ.bin", SCOPE_STAGE);
     else
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanAll.bin", SCOPE_STAGE);

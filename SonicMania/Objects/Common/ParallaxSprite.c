@@ -139,19 +139,19 @@ void ParallaxSprite_Create(void *data)
 
 void ParallaxSprite_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("AIZ"))
+    if (RSDK.CheckSceneFolder("AIZ"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("CPZ"))
+    else if (RSDK.CheckSceneFolder("CPZ"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("CPZ/CPZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ1"))
+    else if (RSDK.CheckSceneFolder("SPZ1"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/SPZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("FBZ"))
+    else if (RSDK.CheckSceneFolder("FBZ"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FBZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("MSZ") || RSDK.CheckStageFolder("MSZCutscene"))
+    else if (RSDK.CheckSceneFolder("MSZ") || RSDK.CheckSceneFolder("MSZCutscene"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("MSZ/MSZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("OOZ2"))
+    else if (RSDK.CheckSceneFolder("OOZ2"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("OOZ/OOZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZParallax.bin", SCOPE_STAGE);
 }
 
@@ -267,19 +267,19 @@ void ParallaxSprite_EditorDraw(void)
 
 void ParallaxSprite_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("AIZ"))
+    if (RSDK.CheckSceneFolder("AIZ"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("CPZ"))
+    else if (RSDK.CheckSceneFolder("CPZ"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("CPZ/CPZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ1"))
+    else if (RSDK.CheckSceneFolder("SPZ1"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/SPZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("FBZ"))
+    else if (RSDK.CheckSceneFolder("FBZ"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FBZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("MSZ") || RSDK.CheckStageFolder("MSZCutscene"))
+    else if (RSDK.CheckSceneFolder("MSZ") || RSDK.CheckSceneFolder("MSZCutscene"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("MSZ/MSZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("OOZ2"))
+    else if (RSDK.CheckSceneFolder("OOZ2"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("OOZ/OOZParallax.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZParallax.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(ParallaxSprite, attribute);

@@ -261,7 +261,7 @@ void OOZSetup_StageLoad(void)
     RSDK.SetSpriteAnimation(OOZSetup->splashFrames, 0, &OOZSetup->animator, true, 0);
 #endif
 
-    if (RSDK.CheckStageFolder("OOZ2")) {
+    if (RSDK.CheckSceneFolder("OOZ2")) {
         foreach_all(OOZ1Outro, cutscene)
         {
             OOZSetup->cutscenePtr = (Entity *)cutscene;

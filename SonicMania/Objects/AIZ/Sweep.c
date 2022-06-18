@@ -83,10 +83,10 @@ void Sweep_Create(void *data)
 
 void Sweep_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ"))
+    if (RSDK.CheckSceneFolder("CPZ"))
         Sweep->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Sweep.bin", SCOPE_STAGE);
 #if MANIA_USE_PLUS
-    else if (RSDK.CheckStageFolder("AIZ"))
+    else if (RSDK.CheckSceneFolder("AIZ"))
         Sweep->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Sweep.bin", SCOPE_STAGE);
 #endif
 
@@ -350,10 +350,10 @@ void Sweep_EditorDraw(void)
 
 void Sweep_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ"))
+    if (RSDK.CheckSceneFolder("CPZ"))
         Sweep->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Sweep.bin", SCOPE_STAGE);
 #if MANIA_USE_PLUS
-    else if (RSDK.CheckStageFolder("AIZ"))
+    else if (RSDK.CheckSceneFolder("AIZ"))
         Sweep->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Sweep.bin", SCOPE_STAGE);
 #endif
 }

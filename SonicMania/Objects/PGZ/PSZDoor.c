@@ -220,7 +220,7 @@ void PSZDoor_Create(void *data)
 
 void PSZDoor_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         PSZDoor->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PSZDoor.bin", SCOPE_STAGE);
 
     PSZDoor->hitboxes[0].top    = -56;

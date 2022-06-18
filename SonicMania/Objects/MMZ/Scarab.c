@@ -101,7 +101,7 @@ void Scarab_Create(void *data)
 
 void Scarab_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         Scarab->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Scarab.bin", SCOPE_STAGE);
 
     Scarab->hitboxBadnik.left   = -16;

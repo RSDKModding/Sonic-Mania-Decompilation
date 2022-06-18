@@ -91,7 +91,7 @@ void Camera_StageLoad(void)
 {
     // I don't think this object is in the final credits right...?
     // Likely a holdover from the earlier credits revision
-    if (!RSDK.CheckStageFolder("Credits")) {
+    if (!RSDK.CheckSceneFolder("Credits")) {
         for (int32 i = 0; i < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++i)
             RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->classID, intToVoid(i));
 

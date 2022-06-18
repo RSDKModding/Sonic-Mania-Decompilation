@@ -58,7 +58,7 @@ void Staircase_Create(void *data)
 
 void Staircase_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ")) {
+    if (RSDK.CheckSceneFolder("CPZ")) {
         Staircase->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Staircase.bin", SCOPE_STAGE);
 
         // What a name tbh

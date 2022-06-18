@@ -133,7 +133,7 @@ void BreakableWall_StageLoad(void)
     BreakableWall->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(BreakableWall->aniFrames, 0, &BreakableWall->animator, true, 0);
 
-    if (RSDK.CheckStageFolder("AIZ"))
+    if (RSDK.CheckSceneFolder("AIZ"))
         BreakableWall->sfxBreak = RSDK.GetSfx("Stage/LedgeBreak3.wav");
     else
         BreakableWall->sfxBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");

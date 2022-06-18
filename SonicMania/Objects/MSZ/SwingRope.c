@@ -153,9 +153,9 @@ void SwingRope_Create(void *data)
 
 void SwingRope_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         SwingRope->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("AIZ"))
+    else if (RSDK.CheckSceneFolder("AIZ"))
         SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 
     // for when trying to grab on
@@ -203,9 +203,9 @@ void SwingRope_EditorDraw(void)
 
 void SwingRope_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         SwingRope->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("AIZ"))
+    else if (RSDK.CheckSceneFolder("AIZ"))
         SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 }
 #endif

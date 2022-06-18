@@ -368,7 +368,7 @@ void PuyoMatch_State_Lose(void)
 
                 StateMachine_Run(match->matchLoseCB);
 
-                if (RSDK.CheckStageFolder("CPZ"))
+                if (RSDK.CheckSceneFolder("CPZ"))
                     match->state = StateMachine_None;
             }
         }

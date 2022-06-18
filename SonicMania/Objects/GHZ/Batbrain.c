@@ -42,7 +42,7 @@ void Batbrain_Create(void *data)
 
 void Batbrain_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Batbrain->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Batbrain.bin", SCOPE_STAGE);
 
     Batbrain->hitboxBadnik.left   = -12;

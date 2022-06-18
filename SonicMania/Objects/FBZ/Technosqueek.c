@@ -76,7 +76,7 @@ void Technosqueek_Create(void *data)
 
 void Technosqueek_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         Technosqueek->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Technosqueek.bin", SCOPE_STAGE);
 
     Technosqueek->hitboxBadnik.left   = -4;

@@ -179,7 +179,7 @@ void DoorTrigger_Create(void *data)
 
 void DoorTrigger_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         DoorTrigger->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/DoorTrigger.bin", SCOPE_STAGE);
 
     // Active

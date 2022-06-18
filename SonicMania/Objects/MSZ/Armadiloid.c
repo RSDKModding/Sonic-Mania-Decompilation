@@ -68,7 +68,7 @@ void Armadiloid_Create(void *data)
 
 void Armadiloid_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         Armadiloid->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Armadiloid.bin", SCOPE_STAGE);
 
     DEBUGMODE_ADD_OBJ(Armadiloid);

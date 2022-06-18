@@ -114,7 +114,7 @@ void SP500_Create(void *data)
 
 void SP500_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         SP500->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/SP500.bin", SCOPE_STAGE);
 
     SP500->hitboxSideL.left   = -32;

@@ -263,7 +263,7 @@ void Tuesday_Create(void *data)
 
 void Tuesday_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         Tuesday->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Tuesday.bin", SCOPE_STAGE);
 
     Tuesday->hitboxNode.left   = -16;

@@ -54,7 +54,7 @@ void Cactula_Create(void *data)
 
 void Cactula_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         Cactula->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Cactula.bin", SCOPE_STAGE);
 
     Cactula->hitboxBadnik.left   = -12;

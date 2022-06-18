@@ -87,7 +87,7 @@ void DCEvent_Create(void *data)
 
 void DCEvent_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ")) {
+    if (RSDK.CheckSceneFolder("HCZ")) {
         DCEvent->aniFrames = RSDK.LoadSpriteAnimation("HCZ/DiveEggman.bin", SCOPE_STAGE);
         // Never actually used
         DCEvent->eggmanFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanHCZ1.bin", SCOPE_STAGE);

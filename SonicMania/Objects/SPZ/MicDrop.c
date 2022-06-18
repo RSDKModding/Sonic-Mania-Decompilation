@@ -71,7 +71,7 @@ void MicDrop_Create(void *data)
 
 void MicDrop_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         MicDrop->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/MicDrop.bin", SCOPE_STAGE);
     else
         MicDrop->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/MicDrop.bin", SCOPE_STAGE);
@@ -308,7 +308,7 @@ void MicDrop_EditorDraw(void)
 
 void MicDrop_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         MicDrop->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/MicDrop.bin", SCOPE_STAGE);
     else
         MicDrop->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/MicDrop.bin", SCOPE_STAGE);

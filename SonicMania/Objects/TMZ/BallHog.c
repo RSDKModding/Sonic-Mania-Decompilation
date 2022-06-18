@@ -63,7 +63,7 @@ void BallHog_Create(void *data)
 
 void BallHog_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+    if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
         BallHog->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/BallHog.bin", SCOPE_STAGE);
 
     BallHog->hitboxBadnik.left   = -12;

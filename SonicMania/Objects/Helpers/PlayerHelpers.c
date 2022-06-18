@@ -23,11 +23,11 @@ void PlayerHelpers_StageLoad(void) {}
 
 bool32 PlayerHelpers_CheckAct1(void)
 {
-    if ((RSDK.CheckStageFolder("GHZ") && !Zone->actID) || (RSDK.CheckStageFolder("CPZ") && !Zone->actID) || RSDK.CheckStageFolder("SPZ1")
-        || (RSDK.CheckStageFolder("FBZ") && !Zone->actID) || RSDK.CheckStageFolder("PSZ1") || RSDK.CheckStageFolder("SSZ1")
-        || (RSDK.CheckStageFolder("HCZ") && !Zone->actID) || (RSDK.CheckStageFolder("MSZ") && !Zone->actID)
-        || (RSDK.CheckStageFolder("OOZ") && !Zone->actID) || RSDK.CheckStageFolder("LRZ1") || (RSDK.CheckStageFolder("MMZ") && !Zone->actID)
-        || RSDK.CheckStageFolder("TMZ1")) {
+    if ((RSDK.CheckSceneFolder("GHZ") && !Zone->actID) || (RSDK.CheckSceneFolder("CPZ") && !Zone->actID) || RSDK.CheckSceneFolder("SPZ1")
+        || (RSDK.CheckSceneFolder("FBZ") && !Zone->actID) || RSDK.CheckSceneFolder("PSZ1") || RSDK.CheckSceneFolder("SSZ1")
+        || (RSDK.CheckSceneFolder("HCZ") && !Zone->actID) || (RSDK.CheckSceneFolder("MSZ") && !Zone->actID)
+        || (RSDK.CheckSceneFolder("OOZ") && !Zone->actID) || RSDK.CheckSceneFolder("LRZ1") || (RSDK.CheckSceneFolder("MMZ") && !Zone->actID)
+        || RSDK.CheckSceneFolder("TMZ1")) {
         return true;
     }
 
@@ -35,10 +35,10 @@ bool32 PlayerHelpers_CheckAct1(void)
 }
 bool32 PlayerHelpers_CheckAct2(void)
 {
-    if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
-        || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2") || RSDK.CheckStageFolder("SSZ2")
-        || (RSDK.CheckStageFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("MSZ") && Zone->actID == 1) || RSDK.CheckStageFolder("OOZ2")
-        || RSDK.CheckStageFolder("LRZ3") || (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1) || RSDK.CheckStageFolder("TMZ2")) {
+    if ((RSDK.CheckSceneFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckSceneFolder("CPZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("SPZ2")
+        || (RSDK.CheckSceneFolder("FBZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("PSZ2") || RSDK.CheckSceneFolder("SSZ2")
+        || (RSDK.CheckSceneFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckSceneFolder("MSZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("OOZ2")
+        || RSDK.CheckSceneFolder("LRZ3") || (RSDK.CheckSceneFolder("MMZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("TMZ2")) {
         return true;
     }
 

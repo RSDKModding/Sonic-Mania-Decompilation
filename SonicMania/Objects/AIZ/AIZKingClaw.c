@@ -65,7 +65,7 @@ void AIZKingClaw_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x1000000;
         self->startY        = self->position.y - 0x300000;
-        if (RSDK.CheckStageFolder("AIZ")) {
+        if (RSDK.CheckSceneFolder("AIZ")) {
             self->position.y -= 0x1000000;
             RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->clawBackAnimator, true, 0);
             RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 0);
@@ -82,10 +82,10 @@ void AIZKingClaw_Create(void *data)
 
 void AIZKingClaw_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("AIZ")) {
+    if (RSDK.CheckSceneFolder("AIZ")) {
         AIZKingClaw->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Claw.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("GHZCutscene")) {
+    else if (RSDK.CheckSceneFolder("GHZCutscene")) {
         AIZKingClaw->aniFrames = RSDK.LoadSpriteAnimation("GHZCutscene/Claw.bin", SCOPE_STAGE);
     }
 
@@ -139,7 +139,7 @@ void AIZKingClaw_EditorDraw(void)
 {
     RSDK_THIS(AIZKingClaw);
     int32 y = self->position.y;
-    if (RSDK.CheckStageFolder("AIZ")) {
+    if (RSDK.CheckSceneFolder("AIZ")) {
         self->position.y -= 0x1000000;
         RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->clawBackAnimator, true, 0);
         RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 0);
@@ -166,9 +166,9 @@ void AIZKingClaw_EditorDraw(void)
 
 void AIZKingClaw_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("AIZ"))
+    if (RSDK.CheckSceneFolder("AIZ"))
         AIZKingClaw->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Claw.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("GHZCutscene"))
+    else if (RSDK.CheckSceneFolder("GHZCutscene"))
         AIZKingClaw->aniFrames = RSDK.LoadSpriteAnimation("GHZCutscene/Claw.bin", SCOPE_STAGE);
 }
 #endif

@@ -49,9 +49,9 @@ void Dango_Create(void *data)
 
 void Dango_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Dango->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Dango.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Dango->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Dango.bin", SCOPE_STAGE);
 
     Dango->hitboxBadnik.top    = -14;
@@ -471,9 +471,9 @@ void Dango_EditorDraw(void) { Dango_Draw(); }
 
 void Dango_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Dango->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Dango.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Dango->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Dango.bin", SCOPE_STAGE);
 }
 #endif

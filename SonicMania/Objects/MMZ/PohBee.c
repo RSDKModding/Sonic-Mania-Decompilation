@@ -53,7 +53,7 @@ void PohBee_Create(void *data)
 
 void PohBee_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         PohBee->aniFrames = RSDK.LoadSpriteAnimation("MMZ/PohBee.bin", SCOPE_STAGE);
 
     PohBee->hitbox.left   = -16;

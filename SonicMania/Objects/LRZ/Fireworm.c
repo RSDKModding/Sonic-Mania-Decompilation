@@ -72,9 +72,9 @@ void Fireworm_Create(void *data)
 
 void Fireworm_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         Fireworm->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Fireworm.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         Fireworm->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Fireworm.bin", SCOPE_STAGE);
 
     RSDK.SetSpriteAnimation(Fireworm->aniFrames, 6, &Fireworm->holeAnimator, true, 0);
@@ -362,9 +362,9 @@ void Fireworm_EditorDraw(void)
 
 void Fireworm_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         Fireworm->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Fireworm.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         Fireworm->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Fireworm.bin", SCOPE_STAGE);
 
     RSDK.SetSpriteAnimation(Fireworm->aniFrames, 6, &Fireworm->holeAnimator, true, 0);

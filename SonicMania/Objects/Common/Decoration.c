@@ -49,7 +49,7 @@ void Decoration_Create(void *data)
         if (self->rotSpeed)
             self->drawFX |= FX_ROTATE;
 
-        if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+        if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
             self->isTMZ = true;
 
         if (self->isTMZ) {
@@ -70,31 +70,31 @@ void Decoration_Create(void *data)
 
 void Decoration_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("CPZ"))
+    else if (RSDK.CheckSceneFolder("CPZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ1"))
+    else if (RSDK.CheckSceneFolder("SPZ1"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("FBZ"))
+    else if (RSDK.CheckSceneFolder("FBZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("SSZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("MMZ1") || RSDK.CheckStageFolder("MMZ2"))
+    else if (RSDK.CheckSceneFolder("MMZ1") || RSDK.CheckSceneFolder("MMZ2"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("MSZ"))
+    else if (RSDK.CheckSceneFolder("MSZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Decoration.bin", SCOPE_STAGE);
 #if MANIA_USE_PLUS
-    else if (RSDK.CheckStageFolder("MSZEnding"))
+    else if (RSDK.CheckSceneFolder("MSZEnding"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Ending.bin", SCOPE_STAGE);
 #endif
-    else if (RSDK.CheckStageFolder("HCZ"))
+    else if (RSDK.CheckSceneFolder("HCZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+    else if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("TMZ3"))
+    else if (RSDK.CheckSceneFolder("TMZ3"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Decoration.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("AIZ"))
+    else if (RSDK.CheckSceneFolder("AIZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
 }
 

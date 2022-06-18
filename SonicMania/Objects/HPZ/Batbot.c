@@ -56,7 +56,7 @@ void Batbot_Create(void *data)
 
 void Batbot_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HPZ"))
+    if (RSDK.CheckSceneFolder("HPZ"))
         Batbot->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Batbot.bin", SCOPE_STAGE);
 
     Batbot->hitboxBadnik.left   = -16;

@@ -51,9 +51,9 @@ void RTeleporter_Create(void *data)
 
 void RTeleporter_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
+    if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2"))
         RTeleporter->aniFrames = RSDK.LoadSpriteAnimation("SSZ/RTeleporter.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("MMZ1") || RSDK.CheckStageFolder("MMZ2"))
+    else if (RSDK.CheckSceneFolder("MMZ1") || RSDK.CheckSceneFolder("MMZ2"))
         RTeleporter->aniFrames = RSDK.LoadSpriteAnimation("MMZ/RTeleporter.bin", SCOPE_STAGE);
 
     RTeleporter->hitboxTeleporter.top    = -32;
@@ -167,9 +167,9 @@ void RTeleporter_EditorDraw(void)
 
 void RTeleporter_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
+    if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2"))
         RTeleporter->aniFrames = RSDK.LoadSpriteAnimation("SSZ/RTeleporter.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("MMZ1") || RSDK.CheckStageFolder("MMZ2"))
+    else if (RSDK.CheckSceneFolder("MMZ1") || RSDK.CheckSceneFolder("MMZ2"))
         RTeleporter->aniFrames = RSDK.LoadSpriteAnimation("MMZ/RTeleporter.bin", SCOPE_STAGE);
 }
 #endif

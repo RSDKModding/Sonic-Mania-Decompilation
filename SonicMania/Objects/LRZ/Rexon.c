@@ -99,9 +99,9 @@ void Rexon_Create(void *data)
 
 void Rexon_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         Rexon->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Rexon.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         Rexon->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Rexon.bin", SCOPE_STAGE);
 
     Rexon->hitboxBadnik.left   = -8;
@@ -436,9 +436,9 @@ void Rexon_EditorDraw(void)
 
 void Rexon_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         Rexon->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Rexon.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         Rexon->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Rexon.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Rexon, direction);

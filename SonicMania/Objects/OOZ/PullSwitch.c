@@ -126,7 +126,7 @@ void PullSwitch_Create(void *data)
 
 void PullSwitch_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         PullSwitch->aniFrames = RSDK.LoadSpriteAnimation("OOZ/PullSwitch.bin", SCOPE_STAGE);
 
     PullSwitch->hitbox.left   = -16;

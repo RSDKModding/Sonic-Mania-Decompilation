@@ -80,7 +80,7 @@ void WallBumper_Create(void *data)
 
 void WallBumper_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+    if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
         WallBumper->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/WallBumper.bin", SCOPE_STAGE);
 
     WallBumper->sfxBouncer = RSDK.GetSfx("TMZ1/Bouncer.wav");

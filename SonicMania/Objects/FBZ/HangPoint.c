@@ -394,7 +394,7 @@ void HangPoint_Create(void *data)
 
 void HangPoint_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         HangPoint->aniFrames = RSDK.LoadSpriteAnimation("FBZ/HangPoint.bin", SCOPE_STAGE);
 
     RSDK.SetSpriteAnimation(HangPoint->aniFrames, 0, &HangPoint->animator, true, 0);

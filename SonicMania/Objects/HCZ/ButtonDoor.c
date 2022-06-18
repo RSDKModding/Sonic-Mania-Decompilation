@@ -56,7 +56,7 @@ void ButtonDoor_Create(void *data)
         self->duration = 6;
 
     if (!self->length)
-        self->length = 2 - (RSDK.CheckStageFolder("HCZ") != true);
+        self->length = 2 - (RSDK.CheckSceneFolder("HCZ") != true);
 
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
@@ -74,15 +74,15 @@ void ButtonDoor_Create(void *data)
 
 void ButtonDoor_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckSceneFolder("LRZ1")) {
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/ButtonDoor.bin", SCOPE_STAGE);
         ButtonDoor->sfxOpen   = RSDK.GetSfx("Stage/Open.wav");
     }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckSceneFolder("LRZ2")) {
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/ButtonDoor.bin", SCOPE_STAGE);
         ButtonDoor->sfxOpen   = RSDK.GetSfx("Stage/Open.wav");
     }
-    else if (RSDK.CheckStageFolder("HCZ")) {
+    else if (RSDK.CheckSceneFolder("HCZ")) {
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
         ButtonDoor->sfxOpen   = RSDK.GetSfx("Stage/Clack.wav");
     }
@@ -92,15 +92,15 @@ void ButtonDoor_SetupSize(void)
 {
     RSDK_THIS(ButtonDoor);
 
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckSceneFolder("LRZ1")) {
         self->size.y = 0x800000;
         self->size.x = 0x200000;
     }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckSceneFolder("LRZ2")) {
         self->size.y = 0x400000;
         self->size.x = 0x200000;
     }
-    else if (RSDK.CheckStageFolder("HCZ")) {
+    else if (RSDK.CheckSceneFolder("HCZ")) {
         self->size.y = 0x200000;
         self->size.x = 0x200000;
     }
@@ -126,7 +126,7 @@ void ButtonDoor_SetupTagLink(void)
 
     self->taggedButton = NULL;
 
-    if (RSDK.CheckStageFolder("LRZ2")) {
+    if (RSDK.CheckSceneFolder("LRZ2")) {
         self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
     }
     else {
@@ -234,11 +234,11 @@ void ButtonDoor_EditorDraw(void)
 
 void ButtonDoor_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/ButtonDoor.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2"))
+    else if (RSDK.CheckSceneFolder("LRZ2"))
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/ButtonDoor.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("HCZ"))
+    else if (RSDK.CheckSceneFolder("HCZ"))
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(ButtonDoor, orientation);

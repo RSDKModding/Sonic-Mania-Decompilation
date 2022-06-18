@@ -350,7 +350,7 @@ void Zone_StageLoad(void)
     // Setup Competition options (or ensure they're not active if not in competition mode)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION) {
-        if (RSDK.CheckStageFolder("Puyo")) {
+        if (RSDK.CheckSceneFolder("Puyo")) {
             if (globals->gameMode == MODE_COMPETITION) {
                 RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, 1);
             }
@@ -413,34 +413,34 @@ void Zone_StageLoad(void)
 
 int32 Zone_GetZoneID(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         return ZONE_GHZ;
-    if (RSDK.CheckStageFolder("CPZ"))
+    if (RSDK.CheckSceneFolder("CPZ"))
         return ZONE_CPZ;
-    if (RSDK.CheckStageFolder("SPZ1") || RSDK.CheckStageFolder("SPZ2"))
+    if (RSDK.CheckSceneFolder("SPZ1") || RSDK.CheckSceneFolder("SPZ2"))
         return ZONE_SPZ;
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         return ZONE_FBZ;
-    if (RSDK.CheckStageFolder("PSZ1") || RSDK.CheckStageFolder("PSZ2"))
+    if (RSDK.CheckSceneFolder("PSZ1") || RSDK.CheckSceneFolder("PSZ2"))
         return ZONE_PGZ;
-    if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
+    if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2"))
         return ZONE_SSZ;
-    if (RSDK.CheckStageFolder("HCZ"))
+    if (RSDK.CheckSceneFolder("HCZ"))
         return ZONE_HCZ;
-    if (RSDK.CheckStageFolder("MSZ"))
+    if (RSDK.CheckSceneFolder("MSZ"))
         return ZONE_MSZ;
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         return ZONE_OOZ;
-    if (RSDK.CheckStageFolder("LRZ1") || RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+    if (RSDK.CheckSceneFolder("LRZ1") || RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3"))
         return ZONE_LRZ;
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         return ZONE_MMZ;
-    if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2") || RSDK.CheckStageFolder("TMZ3"))
+    if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2") || RSDK.CheckSceneFolder("TMZ3"))
         return ZONE_TMZ;
-    if (RSDK.CheckStageFolder("ERZ"))
+    if (RSDK.CheckSceneFolder("ERZ"))
         return ZONE_ERZ;
 #if MANIA_USE_PLUS
-    if (RSDK.CheckStageFolder("AIZ") && globals->gameMode == MODE_ENCORE)
+    if (RSDK.CheckSceneFolder("AIZ") && globals->gameMode == MODE_ENCORE)
         return ZONE_AIZ;
 #endif
     return ZONE_INVALID;
@@ -705,18 +705,18 @@ void Zone_ApplyWorldBounds(void)
 // Generally, this is just "isAct2", however stuff like LRZ3, SSZ boss, TMZ3 & ERZ's cases prove thats not always the case
 bool32 Zone_IsZoneLastAct(void)
 {
-    if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
-        || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2")) {
+    if ((RSDK.CheckSceneFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckSceneFolder("CPZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("SPZ2")
+        || (RSDK.CheckSceneFolder("FBZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("PSZ2")) {
         return true;
     }
 
-    if (RSDK.CheckStageFolder("SSZ2")) {
+    if (RSDK.CheckSceneFolder("SSZ2")) {
         if (RSDK.GetTileLayerID("Tower") < LAYER_COUNT)
             return true;
     }
-    else if ((RSDK.CheckStageFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("MSZ") && Zone->actID == 1) || RSDK.CheckStageFolder("OOZ2")
-             || RSDK.CheckStageFolder("LRZ3") || (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1) || RSDK.CheckStageFolder("TMZ3")
-             || RSDK.CheckStageFolder("ERZ")) {
+    else if ((RSDK.CheckSceneFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckSceneFolder("MSZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("OOZ2")
+             || RSDK.CheckSceneFolder("LRZ3") || (RSDK.CheckSceneFolder("MMZ") && Zone->actID == 1) || RSDK.CheckSceneFolder("TMZ3")
+             || RSDK.CheckSceneFolder("ERZ")) {
         return true;
     }
 

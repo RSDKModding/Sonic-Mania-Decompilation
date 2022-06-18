@@ -63,7 +63,7 @@ void LavaFall_Create(void *data)
 
 void LavaFall_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         LavaFall->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/LavaFall.bin", SCOPE_STAGE);
 
     LavaFall->hitbox.left   = -32;

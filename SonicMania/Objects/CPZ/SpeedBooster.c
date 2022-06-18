@@ -37,7 +37,7 @@ void SpeedBooster_Create(void *data)
     RSDK_THIS(SpeedBooster);
 
     self->visible = true;
-    if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
+    if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2"))
         self->drawOrder = Zone->playerDrawLow;
     else
         self->drawOrder = Zone->objectDrawHigh;
@@ -55,7 +55,7 @@ void SpeedBooster_Create(void *data)
     else {
         self->active = ACTIVE_BOUNDS;
         if (!self->speed)
-            self->speed = RSDK.CheckStageFolder("CPZ") ? 10 : 16;
+            self->speed = RSDK.CheckSceneFolder("CPZ") ? 10 : 16;
         self->groundVel = self->speed << 16;
 
         RSDK.SetSpriteAnimation(SpeedBooster->aniFrames, 0, &self->animator, true, 0);
@@ -65,7 +65,7 @@ void SpeedBooster_Create(void *data)
 
 void SpeedBooster_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ")) {
+    if (RSDK.CheckSceneFolder("CPZ")) {
         SpeedBooster->aniFrames = RSDK.LoadSpriteAnimation("CPZ/SpeedBooster.bin", SCOPE_STAGE);
 
         SpeedBooster->hitbox.left   = -16;
@@ -77,8 +77,8 @@ void SpeedBooster_StageLoad(void)
 
         SpeedBooster->defaultState = SpeedBooster_State_SpeedBooster;
     }
-    else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
-        if (RSDK.CheckStageFolder("SSZ1"))
+    else if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2")) {
+        if (RSDK.CheckSceneFolder("SSZ1"))
             SpeedBooster->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpeedBooster.bin", SCOPE_STAGE);
         else
             SpeedBooster->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/SpeedBooster.bin", SCOPE_STAGE);
@@ -122,7 +122,7 @@ void SpeedBooster_HandleInteractions(void)
 {
     RSDK_THIS(SpeedBooster);
 
-    bool32 isSSZ = RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2");
+    bool32 isSSZ = RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2");
 
     foreach_active(Player, player)
     {
@@ -241,7 +241,7 @@ void SpeedBooster_EditorDraw(void)
 
     self->active        = ACTIVE_BOUNDS;
     if (!self->speed)
-        self->speed = RSDK.CheckStageFolder("CPZ") ? 10 : 16;
+        self->speed = RSDK.CheckSceneFolder("CPZ") ? 10 : 16;
     self->groundVel = self->speed << 16;
 
     RSDK.SetSpriteAnimation(SpeedBooster->aniFrames, 0, &self->animator, true, 0);
@@ -251,11 +251,11 @@ void SpeedBooster_EditorDraw(void)
 
 void SpeedBooster_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ")) {
+    if (RSDK.CheckSceneFolder("CPZ")) {
         SpeedBooster->aniFrames = RSDK.LoadSpriteAnimation("CPZ/SpeedBooster.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
-        if (RSDK.CheckStageFolder("SSZ1"))
+    else if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2")) {
+        if (RSDK.CheckSceneFolder("SSZ1"))
             SpeedBooster->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpeedBooster.bin", SCOPE_STAGE);
         else
             SpeedBooster->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/SpeedBooster.bin", SCOPE_STAGE);

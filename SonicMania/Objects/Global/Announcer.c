@@ -42,7 +42,7 @@ void Announcer_StageLoad(void)
 {
     Announcer->finishedCountdown = false;
 
-    if (RSDK.CheckStageFolder("Menu")) {
+    if (RSDK.CheckSceneFolder("Menu")) {
 #if !MANIA_USE_PLUS
         Announcer->sfxNewRecordTop = RSDK.GetSfx("VO/NewRecordTop.wav");
         Announcer->sfxNewRecordMid = RSDK.GetSfx("VO/NewRecordMid.wav");

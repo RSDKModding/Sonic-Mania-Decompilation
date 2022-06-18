@@ -80,9 +80,9 @@ void JuggleSaw_Create(void *data)
 
 void JuggleSaw_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         JuggleSaw->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/JuggleSaw.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         JuggleSaw->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/JuggleSaw.bin", SCOPE_STAGE);
 
     JuggleSaw->hitboxBadnik.left   = -12;
@@ -471,9 +471,9 @@ void JuggleSaw_EditorDraw(void)
 
 void JuggleSaw_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         JuggleSaw->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/JuggleSaw.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         JuggleSaw->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/JuggleSaw.bin", SCOPE_STAGE);
 
     JuggleSaw->hitboxFriendRange.left   = -512;

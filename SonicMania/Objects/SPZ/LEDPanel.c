@@ -116,7 +116,7 @@ void LEDPanel_Create(void *data)
 
 void LEDPanel_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         LEDPanel->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/LED.bin", SCOPE_STAGE);
 
     RSDK.InitString(&LEDPanel->text, " ", 0);

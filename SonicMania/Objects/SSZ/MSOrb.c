@@ -48,7 +48,7 @@ void MSOrb_Create(void *data)
 
 void MSOrb_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ2"))
+    if (RSDK.CheckSceneFolder("SSZ2"))
         MSOrb->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MetalSonic.bin", SCOPE_STAGE);
 
     MSOrb->hitboxOrb.left   = -6;

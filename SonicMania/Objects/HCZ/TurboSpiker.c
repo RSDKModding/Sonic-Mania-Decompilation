@@ -59,7 +59,7 @@ void TurboSpiker_Create(void *data)
 
 void TurboSpiker_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ"))
+    if (RSDK.CheckSceneFolder("HCZ"))
         TurboSpiker->aniFrames = RSDK.LoadSpriteAnimation("HCZ/TurboSpiker.bin", SCOPE_STAGE);
 
     TurboSpiker->hitboxBadnik.left   = -14;

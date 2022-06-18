@@ -398,68 +398,68 @@ void Platform_Create(void *data)
 void Platform_StageLoad(void)
 {
     Platform->useClack = false;
-    if (RSDK.CheckStageFolder("GHZ")) {
+    if (RSDK.CheckSceneFolder("GHZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("GHZCutscene")) {
+    else if (RSDK.CheckSceneFolder("GHZCutscene")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("GHZCutscene/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("CPZ")) {
+    else if (RSDK.CheckSceneFolder("CPZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("SPZ1")) {
+    else if (RSDK.CheckSceneFolder("SPZ1")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("SPZ2")) {
+    else if (RSDK.CheckSceneFolder("SPZ2")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("FBZ")) {
+    else if (RSDK.CheckSceneFolder("FBZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Platform.bin", SCOPE_STAGE);
         Platform->sfxClack  = RSDK.GetSfx("Stage/Clack2.wav");
         Platform->useClack  = true;
     }
-    else if (RSDK.CheckStageFolder("PSZ1")) {
+    else if (RSDK.CheckSceneFolder("PSZ1")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("PSZ2")) {
+    else if (RSDK.CheckSceneFolder("PSZ2")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("SSZ1")) {
+    else if (RSDK.CheckSceneFolder("SSZ1")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("SSZ2")) {
+    else if (RSDK.CheckSceneFolder("SSZ2")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("HCZ")) {
+    else if (RSDK.CheckSceneFolder("HCZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Platform.bin", SCOPE_STAGE);
         Platform->sfxClack  = RSDK.GetSfx("Stage/Clack2.wav");
         Platform->useClack  = true;
     }
-    else if (RSDK.CheckStageFolder("MSZ")) {
+    else if (RSDK.CheckSceneFolder("MSZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2")) {
+    else if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("LRZ1")) {
+    else if (RSDK.CheckSceneFolder("LRZ1")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3")) {
+    else if (RSDK.CheckSceneFolder("LRZ2") || RSDK.CheckSceneFolder("LRZ3")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("MMZ")) {
+    else if (RSDK.CheckSceneFolder("MMZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2")) {
+    else if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("AIZ")) {
+    else if (RSDK.CheckSceneFolder("AIZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("SBZ")) { // SBZ once was a planned zone?
+    else if (RSDK.CheckSceneFolder("SBZ")) { // SBZ once was a planned zone?
         Platform->aniFrames = RSDK.LoadSpriteAnimation("SBZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("Blueprint")) {
+    else if (RSDK.CheckSceneFolder("Blueprint")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Platform.bin", SCOPE_STAGE);
     }
 

@@ -117,7 +117,7 @@ void RockDrill_Create(void *data)
 
 void RockDrill_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         RockDrill->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/RockDrill.bin", SCOPE_STAGE);
 
     RockDrill->hitboxBody.left   = -47;

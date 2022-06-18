@@ -83,9 +83,9 @@ void BuzzBomber_Create(void *data)
 
 void BuzzBomber_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
 
     BuzzBomber->hitboxBadnik.left   = -24;
@@ -302,9 +302,9 @@ void BuzzBomber_EditorDraw(void)
 
 void BuzzBomber_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint"))
+    else if (RSDK.CheckSceneFolder("Blueprint"))
         BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(BuzzBomber, direction);

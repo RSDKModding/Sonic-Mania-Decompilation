@@ -54,10 +54,10 @@ void RubyPortal_Create(void *data)
         if (data) {
             self->state = (Type_StateMachine)data;
         }
-        else if (RSDK.CheckStageFolder("ERZ")) {
+        else if (RSDK.CheckSceneFolder("ERZ")) {
             self->state = StateMachine_None;
         }
-        else if (RSDK.CheckStageFolder("TMZ2")) {
+        else if (RSDK.CheckSceneFolder("TMZ2")) {
             EntityWarpDoor *door = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
 
             if (door->classID == WarpDoor->classID) {
@@ -81,7 +81,7 @@ void RubyPortal_Create(void *data)
 #else
         self->state = StateMachine_None;
 
-        if (!RSDK.CheckStageFolder("ERZ")) {
+        if (!RSDK.CheckSceneFolder("ERZ")) {
             EntityWarpDoor *door = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
 
             if (door->classID == WarpDoor->classID) {
@@ -105,14 +105,14 @@ void RubyPortal_Create(void *data)
 
 void RubyPortal_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("ERZ"))
+    if (RSDK.CheckSceneFolder("ERZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
 #if MANIA_USE_PLUS
-    else if (RSDK.CheckStageFolder("AIZ"))
+    else if (RSDK.CheckSceneFolder("AIZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
     else
 #else // preplus has an explicit check
-    else if (RSDK.CheckStageFolder("TMZ2"))
+    else if (RSDK.CheckSceneFolder("TMZ2"))
 #endif
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
 
@@ -234,7 +234,7 @@ void RubyPortal_State_Opened(void)
     RSDK_THIS(RubyPortal);
 
     if (self->alpha >= 0x100) {
-        if (RSDK.CheckStageFolder("ERZ")) {
+        if (RSDK.CheckSceneFolder("ERZ")) {
             self->state = StateMachine_None;
         }
         else {
@@ -437,14 +437,14 @@ void RubyPortal_EditorDraw(void)
 
 void RubyPortal_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("ERZ"))
+    if (RSDK.CheckSceneFolder("ERZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
 #if MANIA_USE_PLUS
-    else if (RSDK.CheckStageFolder("AIZ"))
+    else if (RSDK.CheckSceneFolder("AIZ"))
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
     else
 #else // preplus has an explicit check
-    else if (RSDK.CheckStageFolder("TMZ2"))
+    else if (RSDK.CheckSceneFolder("TMZ2"))
 #endif
         RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
 }

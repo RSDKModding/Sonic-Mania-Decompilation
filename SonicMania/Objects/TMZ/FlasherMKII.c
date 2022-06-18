@@ -73,7 +73,7 @@ void FlasherMKII_Create(void *data)
 
 void FlasherMKII_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+    if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
         FlasherMKII->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/FlasherMKII.bin", SCOPE_STAGE);
 
     DEBUGMODE_ADD_OBJ(FlasherMKII);

@@ -65,7 +65,7 @@ void Bomb_Create(void *data)
 
 void Bomb_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         Bomb->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Bomb.bin", SCOPE_STAGE);
 
     Bomb->hitboxHurt.left       = -12;

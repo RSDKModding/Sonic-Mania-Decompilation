@@ -86,9 +86,9 @@ void IceBomba_Create(void *data)
 
 void IceBomba_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1")) // PGZ1 doesn't have this badnik anywhere, the anim file doesn't even exist in the files...
+    if (RSDK.CheckSceneFolder("PSZ1")) // PGZ1 doesn't have this badnik anywhere, the anim file doesn't even exist in the files...
         IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/IceBomba.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/IceBomba.bin", SCOPE_STAGE);
 
     IceBomba->hitboxBadnik.left   = -12;
@@ -361,9 +361,9 @@ void IceBomba_EditorDraw(void)
 
 void IceBomba_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/IceBomba.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/IceBomba.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(IceBomba, dir);

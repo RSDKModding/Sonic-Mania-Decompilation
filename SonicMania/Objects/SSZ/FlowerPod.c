@@ -56,7 +56,7 @@ void FlowerPod_Create(void *data)
 
 void FlowerPod_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         FlowerPod->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/FlowerPod.bin", SCOPE_STAGE);
 
     FlowerPod->hitboxPod.top    = -36;

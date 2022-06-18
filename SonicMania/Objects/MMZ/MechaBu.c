@@ -59,7 +59,7 @@ void MechaBu_Create(void *data)
 
 void MechaBu_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         MechaBu->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MechaBu.bin", SCOPE_STAGE);
 
     MechaBu->hitboxSaw.left   = -14;

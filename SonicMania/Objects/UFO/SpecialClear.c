@@ -232,7 +232,7 @@ void SpecialClear_Create(void *data)
         self->showFade  = true;
         self->state     = SpecialClear_State_SetupDelay;
 
-        if (RSDK.CheckStageFolder("SpecialBS")) {
+        if (RSDK.CheckSceneFolder("SpecialBS")) {
             // Blue Spheres...?
             // This screen doesn't show up in regular BSS gameplay
 

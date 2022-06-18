@@ -56,7 +56,7 @@ void Rhinobot_Create(void *data)
 
 void Rhinobot_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("AIZ"))
+    if (RSDK.CheckSceneFolder("AIZ"))
         Rhinobot->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Rhinobot.bin", SCOPE_STAGE);
 
     Rhinobot->hitboxBadnik.left   = -14;

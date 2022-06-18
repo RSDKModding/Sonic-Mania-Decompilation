@@ -694,7 +694,7 @@ void Player_Create(void *data)
 void Player_StageLoad(void)
 {
     if (!globals->playerID)
-        globals->playerID = RSDK.CheckStageFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
+        globals->playerID = RSDK.CheckSceneFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
 
     SceneInfo->debugMode = globals->medalMods & GET_MEDAL_MOD(MEDAL_DEBUGMODE);
 #if MANIA_USE_PLUS

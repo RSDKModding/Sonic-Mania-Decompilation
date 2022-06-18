@@ -35,7 +35,7 @@ void FXFade_Create(void *data)
         self->visible = true;
         self->active  = ACTIVE_NORMAL;
 
-        if (RSDK.CheckStageFolder("Menu"))
+        if (RSDK.CheckSceneFolder("Menu"))
             self->drawOrder = 14;
         else if (Zone)
             self->drawOrder = self->overHUD ? Zone->hudDrawOrder : Zone->hudDrawOrder - 1;

@@ -41,7 +41,7 @@ void Chopper_Create(void *data)
 
 void Chopper_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Chopper->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE);
 
     Chopper->hitboxJump.left   = -10;

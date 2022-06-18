@@ -310,9 +310,9 @@ void Ice_Create(void *data)
 
 void Ice_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1")) // PGZ1 doesn't have ice anywhere, likely leftover from an earlier revision
+    if (RSDK.CheckSceneFolder("PSZ1")) // PGZ1 doesn't have ice anywhere, likely leftover from an earlier revision
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ice.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Ice.bin", SCOPE_STAGE);
 
     Ice->hitboxPlayerBlockInner.left   = -15;
@@ -1556,9 +1556,9 @@ void Ice_EditorDraw(void)
 
 void Ice_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ice.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Ice.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Ice, size);

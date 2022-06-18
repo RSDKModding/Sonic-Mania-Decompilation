@@ -382,10 +382,10 @@ void Spikes_StageLoad(void)
 {
     Spikes->stateDraw = Spikes_Draw_Stage;
 
-    if (RSDK.CheckStageFolder("FBZ")) {
+    if (RSDK.CheckSceneFolder("FBZ")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
-    if (RSDK.CheckStageFolder("PSZ2")) {
+    if (RSDK.CheckSceneFolder("PSZ2")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
     }
     else {
@@ -712,10 +712,10 @@ void Spikes_EditorLoad(void)
 {
     Spikes->stateDraw = Spikes_Draw_Stage;
 
-    if (RSDK.CheckStageFolder("FBZ")) {
+    if (RSDK.CheckSceneFolder("FBZ")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
-    if (RSDK.CheckStageFolder("PSZ2")) {
+    if (RSDK.CheckSceneFolder("PSZ2")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
     }
     else {

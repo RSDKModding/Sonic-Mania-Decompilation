@@ -80,9 +80,9 @@ void Woodrow_Create(void *data)
 
 void Woodrow_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Woodrow->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Woodrow.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         Woodrow->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Woodrow.bin", SCOPE_STAGE);
 
     Woodrow->hitboxBadnik.left   = -32;
@@ -464,9 +464,9 @@ void Woodrow_EditorDraw(void)
 
 void Woodrow_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Woodrow->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Woodrow.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2"))
+    else if (RSDK.CheckSceneFolder("PSZ2"))
         Woodrow->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Woodrow.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Woodrow, type);

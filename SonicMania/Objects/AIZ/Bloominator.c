@@ -49,7 +49,7 @@ void Bloominator_Create(void *data)
 
 void Bloominator_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("AIZ"))
+    if (RSDK.CheckSceneFolder("AIZ"))
         Bloominator->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
 
     Bloominator->hitboxBadnik.left   = -12;

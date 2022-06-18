@@ -100,7 +100,7 @@ void PrintBlock_Create(void *data)
 
 void PrintBlock_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         PrintBlock->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PrintBlock.bin", SCOPE_STAGE);
 
     RSDK.SetSpriteAnimation(PrintBlock->aniFrames, 12, &PrintBlock->animator, true, 0);

@@ -41,7 +41,7 @@ void UIPicture_Create(void *data)
     RSDK.SetSpriteAnimation(UIPicture->aniFrames, self->listID, &self->animator, true, self->frameID);
 
     if (!SceneInfo->inEditor) {
-        if (RSDK.CheckStageFolder("Menu")) {
+        if (RSDK.CheckSceneFolder("Menu")) {
             self->active    = ACTIVE_BOUNDS;
             self->visible   = true;
             self->drawOrder = 2;
@@ -50,13 +50,13 @@ void UIPicture_Create(void *data)
         // Not sure what happened, but sometime during dev this must've been shuffled around
         // setting it to ACTIVE_NORMAL fixes the sonic ball sprites
         // setting the draw order to 8 fixes the thanks for playing sprite
-        // else if (RSDK.CheckStageFolder("Thanks")) {
+        // else if (RSDK.CheckSceneFolder("Thanks")) {
         //     self->active    = ACTIVE_NORMAL;
         //     self->visible   = true;
         //     self->drawOrder = 8;
         // }
         else {
-            if (RSDK.CheckStageFolder("Logos") || RSDK.CheckStageFolder("LSelect") || RSDK.CheckStageFolder("Summary"))
+            if (RSDK.CheckSceneFolder("Logos") || RSDK.CheckSceneFolder("LSelect") || RSDK.CheckSceneFolder("Summary"))
                 self->active = ACTIVE_NORMAL;
             self->visible   = true;
             self->drawOrder = 2;
@@ -66,9 +66,9 @@ void UIPicture_Create(void *data)
 
 void UIPicture_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("Menu"))
+    if (RSDK.CheckSceneFolder("Menu"))
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Logos"))
+    else if (RSDK.CheckSceneFolder("Logos"))
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 }
 
@@ -84,9 +84,9 @@ void UIPicture_EditorDraw(void)
 
 void UIPicture_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("Menu"))
+    if (RSDK.CheckSceneFolder("Menu"))
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Logos"))
+    else if (RSDK.CheckSceneFolder("Logos"))
         UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 
     // Never used afaik

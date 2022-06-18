@@ -138,7 +138,7 @@ void Hatch_Create(void *data)
 void Hatch_StageLoad(void)
 {
     // OOZ1 Check...? why? its never used in OOZ1...
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         Hatch->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Hatch.bin", SCOPE_STAGE);
 
     Hatch->hitboxSubExit.left   = -16;

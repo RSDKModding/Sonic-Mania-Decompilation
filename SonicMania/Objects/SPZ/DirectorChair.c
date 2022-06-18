@@ -85,7 +85,7 @@ void DirectorChair_Create(void *data)
 
 void DirectorChair_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         DirectorChair->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/DirectorChair.bin", SCOPE_STAGE);
 
     DirectorChair->hitboxChair.top    = -18;

@@ -894,9 +894,9 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 allow
     if (player) {
         player->tailFrames = -1;
 
-        if (RSDK.CheckStageFolder("MMZ") || RSDK.CheckStageFolder("PSZ2")) {
+        if (RSDK.CheckSceneFolder("MMZ") || RSDK.CheckSceneFolder("PSZ2")) {
             if (allowSpriteChanges) {
-                if (RSDK.CheckStageFolder("MMZ")) {
+                if (RSDK.CheckSceneFolder("MMZ")) {
                     switch (player->characterID) {
                         default:
                         case ID_SONIC: player->aniFrames = SizeLaser->sonicFrames; break;
@@ -911,7 +911,7 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 allow
                         case ID_RAY: player->aniFrames = SizeLaser->rayFrames; break;
                     }
                 }
-                else if (RSDK.CheckStageFolder("PSZ2")) {
+                else if (RSDK.CheckSceneFolder("PSZ2")) {
                     player->aniFrames = Ice->aniFrames;
                 }
             }
@@ -986,13 +986,13 @@ bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *recorder)
 {
     EntityPlayer *player = recorder->player;
 
-    if (!player || (!RSDK.CheckStageFolder("MMZ") && !RSDK.CheckStageFolder("PSZ2")))
+    if (!player || (!RSDK.CheckSceneFolder("MMZ") && !RSDK.CheckSceneFolder("PSZ2")))
         return false;
 
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         return player->isChibi;
 
-    if (RSDK.CheckStageFolder("PSZ2"))
+    if (RSDK.CheckSceneFolder("PSZ2"))
         return player->state == Ice_State_FrozenPlayer;
 
     return false;
@@ -1283,7 +1283,7 @@ void ReplayRecorder_Late_RecordFrames(void)
         EntityIce *ice = player->abilityPtrs[1];
 
         Animator *animator = &player->animator;
-        if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && ice->classID == Ice->classID)
+        if (isGimmickState && RSDK.CheckSceneFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && ice->classID == Ice->classID)
             animator = &ice->contentsAnimator;
 
         self->animID  = animator->animationID;

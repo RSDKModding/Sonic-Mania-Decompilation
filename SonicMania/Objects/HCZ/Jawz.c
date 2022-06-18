@@ -45,7 +45,7 @@ void Jawz_Create(void *data)
 
 void Jawz_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ"))
+    if (RSDK.CheckSceneFolder("HCZ"))
         Jawz->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Jawz.bin", SCOPE_STAGE);
 
     Jawz->hitboxBadnik.left   = -20;

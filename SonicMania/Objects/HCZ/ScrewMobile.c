@@ -103,7 +103,7 @@ void ScrewMobile_Create(void *data)
 
 void ScrewMobile_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ"))
+    if (RSDK.CheckSceneFolder("HCZ"))
         ScrewMobile->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ScrewMobile.bin", SCOPE_STAGE);
 
     ScrewMobile->hitboxCockpit.left   = -32;

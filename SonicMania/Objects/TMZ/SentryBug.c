@@ -102,7 +102,7 @@ void SentryBug_Create(void *data)
 
 void SentryBug_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
+    if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
         SentryBug->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/SentryBug.bin", SCOPE_STAGE);
 
     SentryBug->meshFrames = RSDK.LoadMesh("TMZ/OrbNet.bin", SCOPE_STAGE);

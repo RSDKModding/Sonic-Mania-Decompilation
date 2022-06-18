@@ -42,7 +42,7 @@ void SpikeLog_Create(void *data)
 
 void SpikeLog_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         SpikeLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
 
     SpikeLog->hitboxSpikeLog.left   = -8;

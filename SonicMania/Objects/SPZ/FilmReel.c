@@ -248,7 +248,7 @@ void FilmReel_Create(void *data)
 
 void FilmReel_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         FilmReel->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/FilmReel.bin", SCOPE_STAGE);
     else
         FilmReel->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/FilmReel.bin", SCOPE_STAGE);
@@ -469,7 +469,7 @@ void FilmReel_EditorDraw(void)
 
 void FilmReel_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1"))
+    if (RSDK.CheckSceneFolder("SPZ1"))
         FilmReel->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/FilmReel.bin", SCOPE_STAGE);
     else
         FilmReel->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/FilmReel.bin", SCOPE_STAGE);

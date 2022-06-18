@@ -93,7 +93,7 @@ void WarpDoor_Update(void)
                         WarpDoor_CheckAllBounds();
 
                         if (!player->sidekick) {
-                            if (RSDK.CheckStageFolder("TMZ2")) {
+                            if (RSDK.CheckSceneFolder("TMZ2")) {
                                 if (self->effect == TMZ2_WARPDOOR_EFFECT_MIST) {
                                     int32 sfx     = RSDK.Rand(0, 6);
                                     int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
@@ -113,14 +113,14 @@ void WarpDoor_Update(void)
                                         TMZ2_DrawDynTiles_Ruby();
                                 }
                             }
-                            else if (RSDK.CheckStageFolder("OOZ2")) {
+                            else if (RSDK.CheckSceneFolder("OOZ2")) {
                                 if (self->effect == OOZ_WARPDOOR_EFFECT_TO_SUB || self->effect == OOZ_WARPDOOR_EFFECT_FROM_SUB) {
                                     OOZSetup->useSmogEffect = self->effect == OOZ_WARPDOOR_EFFECT_FROM_SUB ? 1 : 0;
                                     destroyEntity(self);
                                     foreach_return;
                                 }
                             }
-                            else if (RSDK.CheckStageFolder("FBZ")) {
+                            else if (RSDK.CheckSceneFolder("FBZ")) {
                                 RSDK.PlaySfx(WarpDoor->sfxWarpDoor, false, 0xFF);
                                 warped = false;
                                 if (self->go) {
@@ -188,7 +188,7 @@ void WarpDoor_Draw(void)
         WarpDoor_DrawDebug();
 
     if (self->fadeTimer > 0) {
-        if (RSDK.CheckStageFolder("FBZ")) {
+        if (RSDK.CheckSceneFolder("FBZ")) {
             if (self->fadeOut)
                 RSDK.FillScreen(0x000000, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
             else
@@ -230,10 +230,10 @@ void WarpDoor_StageLoad(void)
 
     for (int32 i = 0; i < 0x100; ++i) WarpDoor->tags[i] = NULL;
 
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         WarpDoor->sfxWarpDoor = RSDK.GetSfx("FBZ/WarpDoor.wav");
 
-    if (RSDK.CheckStageFolder("TMZ2")) {
+    if (RSDK.CheckSceneFolder("TMZ2")) {
         WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK1 - 1] = RSDK.GetSfx("Ruby/Attack1_L.wav");
         WarpDoor->sfxRubyAttackR[RUBYSFX_ATTACK1 - 1] = RSDK.GetSfx("Ruby/Attack1_R.wav");
         WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK2 - 1] = RSDK.GetSfx("Ruby/Attack2_L.wav");

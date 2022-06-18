@@ -70,7 +70,7 @@ void LRZFireball_Create(void *data)
 
 void LRZFireball_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         LRZFireball->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/LRZFireball.bin", SCOPE_STAGE);
 
     LRZFireball->hitboxFireball.left   = -6;

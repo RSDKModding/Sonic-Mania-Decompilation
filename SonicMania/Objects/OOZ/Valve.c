@@ -57,7 +57,7 @@ void Valve_Create(void *data)
 
 void Valve_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+    if (RSDK.CheckSceneFolder("OOZ1") || RSDK.CheckSceneFolder("OOZ2"))
         Valve->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Valve.bin", SCOPE_STAGE);
 
     Valve->hitbox.left   = -16;

@@ -90,7 +90,7 @@ void Ink_Create(void *data)
 
 void Ink_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1"))
+    if (RSDK.CheckSceneFolder("PSZ1"))
         Ink->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ink.bin", SCOPE_STAGE);
 
     Ink->hitboxBottleL.left   = -24;

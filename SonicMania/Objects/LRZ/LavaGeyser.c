@@ -64,9 +64,9 @@ void LavaGeyser_Create(void *data)
 
 void LavaGeyser_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         LavaGeyser->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/LavaGeyser.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2"))
+    else if (RSDK.CheckSceneFolder("LRZ2"))
         LavaGeyser->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LavaGeyser.bin", SCOPE_STAGE);
 
     LavaGeyser->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
@@ -247,9 +247,9 @@ void LavaGeyser_EditorDraw(void)
 
 void LavaGeyser_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1"))
+    if (RSDK.CheckSceneFolder("LRZ1"))
         LavaGeyser->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/LavaGeyser.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("LRZ2"))
+    else if (RSDK.CheckSceneFolder("LRZ2"))
         LavaGeyser->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LavaGeyser.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(LavaGeyser, type);

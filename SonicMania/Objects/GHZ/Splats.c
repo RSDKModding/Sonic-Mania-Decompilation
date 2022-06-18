@@ -81,12 +81,12 @@ void Splats_Create(void *data)
 
 void Splats_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ")) {
+    if (RSDK.CheckSceneFolder("GHZ")) {
         Splats->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Splats.bin", SCOPE_STAGE);
 
         Splats->initialState = Splats_State_BounceAround;
     }
-    else if (RSDK.CheckStageFolder("PSZ1")) {
+    else if (RSDK.CheckSceneFolder("PSZ1")) {
         Splats->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Splats.bin", SCOPE_STAGE);
 
         Splats->initialState = Splats_State_InkJarSpawner;
@@ -403,7 +403,7 @@ void Splats_EditorDraw(void)
 {
     RSDK_THIS(Splats);
 
-    if (RSDK.CheckStageFolder("GHZ")) {
+    if (RSDK.CheckSceneFolder("GHZ")) {
         self->drawFX |= FX_FLIP;
         self->drawOrder = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
@@ -419,9 +419,9 @@ void Splats_EditorDraw(void)
 
 void Splats_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ"))
+    if (RSDK.CheckSceneFolder("GHZ"))
         Splats->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Splats.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ1"))
+    else if (RSDK.CheckSceneFolder("PSZ1"))
         Splats->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Splats.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Splats, direction);

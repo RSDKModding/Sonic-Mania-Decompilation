@@ -123,7 +123,7 @@ void SDashWheel_StageLoad(void)
 
     SDashWheel->sfxBumper = RSDK.GetSfx("Stage/Bumper3.wav");
 
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Soundboard_LoadSFX("SSZ1/MGZDoor.wav", true, SDashWheel_CheckCB_SfxMGZDoor, SDashWheel_UpdateCB_SfxMGZDoor);
 }
 

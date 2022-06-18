@@ -85,9 +85,9 @@ void MSHologram_Create(void *data)
 
 void MSHologram_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         MSHologram->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/MSHologram.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         MSHologram->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MSHologram.bin", SCOPE_STAGE);
 
     MSHologram->hitbox.left   = -12;
@@ -196,9 +196,9 @@ void MSHologram_EditorDraw(void)
 
 void MSHologram_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         MSHologram->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/MSHologram.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         MSHologram->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MSHologram.bin", SCOPE_STAGE);
 }
 #endif

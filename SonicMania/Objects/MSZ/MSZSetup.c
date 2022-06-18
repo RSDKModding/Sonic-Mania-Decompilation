@@ -135,7 +135,7 @@ void MSZSetup_StageLoad(void)
     MSZSetup->aniTiles    = RSDK.LoadSpriteSheet("MSZ/AniTiles.gif", SCOPE_STAGE);
     MSZSetup->background1 = RSDK.GetTileLayer(0);
 
-    if (RSDK.CheckStageFolder("MSZCutscene")) {
+    if (RSDK.CheckSceneFolder("MSZCutscene")) {
         RSDK.CopyPalette(0, 204, 4, 204, 4);
         RSDK.CopyPalette(3, 128, 0, 128, 128);
 

@@ -58,9 +58,9 @@ void Kanabun_Create(void *data)
 
 void Kanabun_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Kanabun.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Kanabun.bin", SCOPE_STAGE);
 
     Kanabun->hitboxBadnik.left   = -6;
@@ -206,9 +206,9 @@ void Kanabun_EditorDraw(void)
 
 void Kanabun_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("SSZ1"))
+    if (RSDK.CheckSceneFolder("SSZ1"))
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Kanabun.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SSZ2"))
+    else if (RSDK.CheckSceneFolder("SSZ2"))
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Kanabun.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Kanabun, direction);

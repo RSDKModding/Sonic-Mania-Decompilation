@@ -406,7 +406,7 @@ uint8 PauseMenu_GetPlayerCount(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
-    if (RSDK.CheckStageFolder("Puyo")) {
+    if (RSDK.CheckSceneFolder("Puyo")) {
         if (param->puyoSelection >= PUYO_SELECTION_VS_2P)
             return 2;
     }
@@ -420,7 +420,7 @@ void PauseMenu_ResumeButtonCB(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
-    if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))
+    if (globals->gameMode != MODE_COMPETITION || RSDK.CheckSceneFolder("Puyo"))
         pauseMenu->state = PauseMenu_State_Resume;
     else
         pauseMenu->state = PauseMenu_State_ResumeCompetition;
@@ -558,7 +558,7 @@ void PauseMenu_State_SetupButtons(void)
         if (PauseMenu->controllerDisconnect)
             self->disconnectCheck = PauseMenu_IsDisconnected;
 
-        if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))
+        if (globals->gameMode != MODE_COMPETITION || RSDK.CheckSceneFolder("Puyo"))
             self->state = PauseMenu_State_ForcedPause;
         else
             self->state = PauseMenu_State_ForcedPauseCompetition;
@@ -578,7 +578,7 @@ void PauseMenu_State_SetupButtons(void)
         PauseMenu_HandleButtonPositions();
         PauseMenu_SetupMenu();
 
-        if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))
+        if (globals->gameMode != MODE_COMPETITION || RSDK.CheckSceneFolder("Puyo"))
             self->state = PauseMenu_State_StartPause;
         else
             self->state = PauseMenu_State_StartPauseCompetition;
@@ -681,7 +681,7 @@ void PauseMenu_State_Paused(void)
     EntityUIControl *manager = self->manager;
     if (Unknown_pausePress && !manager->dialogHasFocus) {
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-        if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))
+        if (globals->gameMode != MODE_COMPETITION || RSDK.CheckSceneFolder("Puyo"))
             pauseMenu->state = PauseMenu_State_Resume;
         else
             pauseMenu->state = PauseMenu_State_ResumeCompetition;
@@ -736,7 +736,7 @@ void PauseMenu_State_ForcedPause(void)
     ++self->timer;
     if (!UIDialog->activeDialog) {
         if (self->forcePaused) {
-            if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo")) {
+            if (globals->gameMode != MODE_COMPETITION || RSDK.CheckSceneFolder("Puyo")) {
                 RSDK.SetEngineState(ENGINESTATE_REGULAR);
                 PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
                 PauseMenu_ResumeSound();

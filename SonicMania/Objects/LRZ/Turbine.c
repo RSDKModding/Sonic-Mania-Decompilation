@@ -80,7 +80,7 @@ void Turbine_Create(void *data)
 
 void Turbine_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ2"))
+    if (RSDK.CheckSceneFolder("LRZ2"))
         Turbine->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Turbine.bin", SCOPE_STAGE);
 
     Turbine->hitboxHandle.left   = -16;

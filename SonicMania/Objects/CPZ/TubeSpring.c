@@ -47,9 +47,9 @@ void TubeSpring_Create(void *data)
 
 void TubeSpring_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ"))
+    if (RSDK.CheckSceneFolder("CPZ"))
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TubeSpring.bin", SCOPE_STAGE);
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TubeSpring.bin", SCOPE_STAGE);
 
     TubeSpring->sfxExit = RSDK.GetSfx("Tube/Exit.wav");
@@ -135,9 +135,9 @@ void TubeSpring_EditorDraw(void)
 
 void TubeSpring_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ"))
+    if (RSDK.CheckSceneFolder("CPZ"))
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TubeSpring.bin", SCOPE_STAGE);
-    if (RSDK.CheckStageFolder("FBZ"))
+    if (RSDK.CheckSceneFolder("FBZ"))
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TubeSpring.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(TubeSpring, type);

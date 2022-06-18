@@ -69,7 +69,7 @@ void Orbinaut_Create(void *data)
 
 void Orbinaut_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ"))
+    if (RSDK.CheckSceneFolder("MMZ"))
         Orbinaut->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Orbinaut.bin", SCOPE_STAGE);
 
     Orbinaut->hitboxBadnik.left   = -8;
