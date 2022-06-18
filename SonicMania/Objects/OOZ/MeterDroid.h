@@ -71,7 +71,7 @@ void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void);
 void MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip(void);
 void MeterDroid_Hit(void);
 void MeterDroid_Explode(void);
-void MeterDroid_GetTargetValve(void);
+void MeterDroid_FindTargetValve(void);
 void MeterDroid_PopPlatforms(void);
 
 void MeterDroid_Draw_Normal(void);

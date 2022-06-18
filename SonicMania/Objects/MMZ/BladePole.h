@@ -41,7 +41,7 @@ void BladePole_Serialize(void);
 void BladePole_DrawSprites(void);
 
 bool32 BladePole_SetAnimation(Animator *animator);
-void BladePole_CheckPlayerCollision(Hitbox *hitbox);
+void BladePole_CheckPlayerCollisions(Hitbox *hitbox);
 
 void BladePole_State_TopBladeActive(void);
 void BladePole_State_BottomBladeActive(void);

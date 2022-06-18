@@ -1,3 +1,10 @@
+#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void *)(func))
+
+// NOTE:
+// In the end we decided every func in mania is prolly important to *someone*
+// so we just wrote up a script to include every single one of em here
+// sorry if this lags any mods :)
+
 void InitPublicFunctions()
 {
     // AIZ/AIZEncoreTutorial
@@ -549,7 +556,7 @@ void InitPublicFunctions()
 
     // CPZ/SpeedBooster
     ADD_PUBLIC_FUNC(SpeedBooster_DebugSpawn);
-#endif
+    ADD_PUBLIC_FUNC(SpeedBooster_DebugDraw);
     ADD_PUBLIC_FUNC(SpeedBooster_State_SpeedBooster);
     ADD_PUBLIC_FUNC(SpeedBooster_HandleInteractions);
     ADD_PUBLIC_FUNC(SpeedBooster_State_SSZFire);
@@ -1587,6 +1594,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Announcer_State_AnnounceWinPlayer);
 
     // Global/APICallback
+#if !MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(APICallback_SetRichPresence);
     ADD_PUBLIC_FUNC(APICallback_GetUserLanguage);
     ADD_PUBLIC_FUNC(APICallback_GetConfirmButtonFlip);
@@ -1633,15 +1641,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(APICallback_UnlockAchievement);
     ADD_PUBLIC_FUNC(APICallback_CheckUserAuth_OK);
     ADD_PUBLIC_FUNC(APICallback_CheckUserAuth_CB);
-#if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(APICallback_TrackGameProgressCB);
-#else
     ADD_PUBLIC_FUNC(APICallback_TrackGameProgressCB);
     ADD_PUBLIC_FUNC(APICallback_GetNextNotif);
-#endif
     ADD_PUBLIC_FUNC(APICallback_ManageNotifs);
     ADD_PUBLIC_FUNC(APICallback_CheckUnreadNotifs);
     ADD_PUBLIC_FUNC(APICallback_NotifyAutosave);
+#endif
 
     // Global/BoundsMarker
     ADD_PUBLIC_FUNC(BoundsMarker_CheckBounds);
@@ -3096,6 +3101,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(DemoMenu_State_Disappear);
 
     // Menu/E3MenuSetup
+#if !MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(E3MenuSetup_SetupUI);
     ADD_PUBLIC_FUNC(E3MenuSetup_SetupButtons);
     ADD_PUBLIC_FUNC(E3MenuSetup_Callback_LoadScene);
@@ -3104,6 +3110,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(E3MenuSetup_ActionCB_Tails);
     ADD_PUBLIC_FUNC(E3MenuSetup_ActionCB_Knux);
     ADD_PUBLIC_FUNC(E3MenuSetup_State_FadeOut);
+#endif
 
     // Menu/ExtrasMenu
     ADD_PUBLIC_FUNC(ExtrasMenu_Initialize);
@@ -3184,6 +3191,7 @@ void InitPublicFunctions()
 
     // Menu/MenuSetup
     ADD_PUBLIC_FUNC(MenuSetup_StartTransition);
+#if !MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(MenuSetup_Initialize);
     ADD_PUBLIC_FUNC(MenuSetup_InitAPI);
     ADD_PUBLIC_FUNC(MenuSetup_SetupActions);
@@ -3203,12 +3211,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MenuSetup_State_HandleTransition);
     ADD_PUBLIC_FUNC(MenuSetup_GetMedalMods);
     ADD_PUBLIC_FUNC(MenuSetup_OpenSaveSelectMenu);
-#if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(MenuSetup_SaveFileCB);
-#else
     ADD_PUBLIC_FUNC(MenuSetup_SaveFileCB);
     ADD_PUBLIC_FUNC(MenuSetup_SaveSlot_ActionCB);
-#endif
     ADD_PUBLIC_FUNC(MenuSetup_SaveSel_MenuUpdateCB);
     ADD_PUBLIC_FUNC(MenuSetup_OpenSecretsMenu);
     ADD_PUBLIC_FUNC(MenuSetup_SaveSel_YPressCB);
@@ -3276,6 +3280,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MenuSetup_Extras_BSS_3K_ActionCB);
     ADD_PUBLIC_FUNC(MenuSetup_Extras_Start_BSS_Mania);
     ADD_PUBLIC_FUNC(MenuSetup_Extras_BSS_Mania_ActionCB);
+#endif
 
     // Menu/OptionsMenu
     ADD_PUBLIC_FUNC(OptionsMenu_Initialize);
@@ -3866,7 +3871,7 @@ void InitPublicFunctions()
     // MMZ/BladePole
     ADD_PUBLIC_FUNC(BladePole_DrawSprites);
     ADD_PUBLIC_FUNC(BladePole_SetAnimation);
-    ADD_PUBLIC_FUNC(BladePole_CheckPlayerCollision);
+    ADD_PUBLIC_FUNC(BladePole_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(BladePole_State_TopBladeActive);
     ADD_PUBLIC_FUNC(BladePole_State_BottomBladeActive);
 
@@ -4526,7 +4531,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip);
     ADD_PUBLIC_FUNC(MeterDroid_Hit);
     ADD_PUBLIC_FUNC(MeterDroid_Explode);
-    ADD_PUBLIC_FUNC(MeterDroid_GetTargetValve);
+    ADD_PUBLIC_FUNC(MeterDroid_FindTargetValve);
     ADD_PUBLIC_FUNC(MeterDroid_PopPlatforms);
     ADD_PUBLIC_FUNC(MeterDroid_Draw_Normal);
     ADD_PUBLIC_FUNC(MeterDroid_Draw_SpinningValve);
@@ -4643,7 +4648,7 @@ void InitPublicFunctions()
 
     // PGZ/Dragonfly
     ADD_PUBLIC_FUNC(Dragonfly_DebugSpawn);
-#endif
+    ADD_PUBLIC_FUNC(Dragonfly_DebugDraw);
     ADD_PUBLIC_FUNC(Dragonfly_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Dragonfly_State_Setup);
     ADD_PUBLIC_FUNC(Dragonfly_State_Move);
@@ -4723,7 +4728,7 @@ void InitPublicFunctions()
 
     // PGZ/JuggleSaw
     ADD_PUBLIC_FUNC(JuggleSaw_DebugSpawn);
-#endif
+    ADD_PUBLIC_FUNC(JuggleSaw_DebugDraw);
     ADD_PUBLIC_FUNC(JuggleSaw_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(JuggleSaw_CheckOffScreen);
     ADD_PUBLIC_FUNC(JuggleSaw_StateCrab_Setup);
@@ -5382,7 +5387,7 @@ void InitPublicFunctions()
 
     // SPZ/Shutterbug
     ADD_PUBLIC_FUNC(Shutterbug_DebugSpawn);
-#endif
+    ADD_PUBLIC_FUNC(Shutterbug_DebugDraw);
     ADD_PUBLIC_FUNC(Shutterbug_CheckOffScreen);
     ADD_PUBLIC_FUNC(Shutterbug_State_Setup);
     ADD_PUBLIC_FUNC(Shutterbug_State_FlyAround);
@@ -5789,6 +5794,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MetalSonic_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(MetalSonic_Hit);
     ADD_PUBLIC_FUNC(MetalSonic_Explode);
+#endif
     ADD_PUBLIC_FUNC(MetalSonic_State_SetupArena);
     ADD_PUBLIC_FUNC(MetalSonic_State_AwaitPlayer);
     ADD_PUBLIC_FUNC(MetalSonic_State_WaitForHologram);
