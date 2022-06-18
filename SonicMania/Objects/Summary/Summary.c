@@ -145,11 +145,7 @@ void Summary_State_Wait(void)
 {
     RSDK_THIS(Summary);
 
-    if (ControllerInfo->keyStart.press || (API_GetConfirmButtonFlip() ? ControllerInfo->keyB.press : ControllerInfo->keyA.press)
-#if MANIA_USE_TOUCH_CONTROLS
-        || TouchInfo->count
-#endif
-    ) {
+    if (ControllerInfo->keyStart.press || (API_GetConfirmButtonFlip() ? ControllerInfo->keyB.press : ControllerInfo->keyA.press)) {
         RSDK.SetScene("Presentation", "Menu");
         self->timer     = 0;
         self->state     = Summary_State_FadeOut;

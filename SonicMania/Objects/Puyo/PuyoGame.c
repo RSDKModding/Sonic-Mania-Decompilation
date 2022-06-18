@@ -29,28 +29,6 @@ void PuyoGame_Update(void)
         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
         RSDK.SetEngineState(ENGINESTATE_FROZEN);
     }
-
-#if MANIA_USE_TOUCH_CONTROLS
-    for (int32 t = 0; t < TouchInfo->count; ++t) {
-        int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-        int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-        if (TouchInfo->down[t]) {
-            if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
-                if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                    EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                    if (!pauseMenu->classID) {
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-                        pauseMenu->triggerPlayer = 1;
-                        RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
-                        RSDK.SetEngineState(ENGINESTATE_FROZEN);
-                    }
-                }
-                break;
-            }
-        }
-    }
-#endif
 }
 
 void PuyoGame_LateUpdate(void) {}
@@ -350,10 +328,6 @@ void PuyoGame_State_ShowRoundResults(void)
                              || controller[i].keyY.down || controller[i].keyZ.down;
         }
 
-#if MANIA_USE_TOUCH_CONTROLS
-        buttonPressed |= TouchInfo->count != 0;
-#endif
-
         if (buttonPressed) {
             PuyoGame_DestroyPuyoBeans();
             self->timer = 0;
@@ -380,10 +354,6 @@ void PuyoGame_State_ShowMatchResults(void)
             buttonPressed |= controller[i].keyA.down || controller[i].keyB.down || controller[i].keyC.down || controller[i].keyX.down
                              || controller[i].keyY.down || controller[i].keyZ.down;
         }
-
-#if MANIA_USE_TOUCH_CONTROLS
-        buttonPressed |= TouchInfo->count != 0;
-#endif
 
         if (buttonPressed) {
             EntityFXFade *fxFade = PuyoGame->fxFade;

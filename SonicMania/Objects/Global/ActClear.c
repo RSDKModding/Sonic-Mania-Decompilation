@@ -694,11 +694,7 @@ void ActClear_State_TallyScore(void)
         Player_GiveScore(player, 100);
     }
 
-#if MANIA_USE_TOUCH_CONTROLS
-    if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press || TouchInfo->count) {
-#else
     if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press) {
-#endif
         Player_GiveScore(player, self->timeBonus + self->ringBonus + self->coolBonus);
         self->totalScore += self->timeBonus + self->ringBonus + self->coolBonus;
         self->timeBonus = 0;
@@ -837,22 +833,6 @@ void ActClear_State_ShowResultsTA(void)
     }
 
     if (!ActClear->isSavingGame && !ActClear->disableResultsInput) {
-#if MANIA_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < TouchInfo->count; ++t) {
-            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-            if (TouchInfo->down[t]) {
-                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
-                    ControllerInfo->keyY.press |= true;
-                    break;
-                }
-            }
-        }
-
-        ControllerInfo->keyStart.press |= TouchInfo->count && !ControllerInfo->keyY.press;
-#endif
-
         if (ControllerInfo->keyY.press) {
             if (!ActClear->hasSavedReplay) {
                 if (HUD->replaySaveEnabled) {

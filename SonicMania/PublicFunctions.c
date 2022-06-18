@@ -5005,7 +5005,7 @@ void InitPublicFunctions()
 
     // Puyo/PuyoBean
     ADD_PUBLIC_FUNC(PuyoBean_GetPuyoBean);
-    ADD_PUBLIC_FUNC(PuyoBean_StateInput_HandlePlayerInputs);
+    ADD_PUBLIC_FUNC(PuyoBean_Input_Player);
     ADD_PUBLIC_FUNC(PuyoBean_DestroyPuyoBeans);
     ADD_PUBLIC_FUNC(PuyoBean_HandleBeanLinks);
     ADD_PUBLIC_FUNC(PuyoBean_CheckBeanLinks);

@@ -505,7 +505,12 @@ void UILeaderboard_ProcessButtonCB(void)
 
     if (UIControl->anyYPress && self->taRecord) {
 #endif
+
+#if RETRO_USE_MOD_LOADER
+        StateMachine_Run(self->yPressCB);
+#else
         self->yPressCB();
+#endif
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
 

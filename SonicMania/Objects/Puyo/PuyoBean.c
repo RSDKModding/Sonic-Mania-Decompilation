@@ -98,109 +98,13 @@ EntityPuyoBean *PuyoBean_GetPuyoBean(int32 playerID, int32 x, int32 y)
     return NULL;
 }
 
-void PuyoBean_StateInput_HandlePlayerInputs(void)
+void PuyoBean_Input_Player(void)
 {
     RSDK_THIS(PuyoBean);
 
     if (self->controllerID < PLAYER_COUNT) {
         RSDKControllerState *controller = &ControllerInfo[self->controllerID];
         RSDKAnalogState *stick          = &AnalogStickInfoL[self->controllerID];
-
-#if MANIA_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < TouchInfo->count; ++t) {
-            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-            if (TouchInfo->down[t]) {
-                if (tx >= 0 && ty >= 96 && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
-                    int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-                    int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-                    tx -= 64;
-                    ty -= 192;
-
-                    switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
-                        case 0:
-                            ControllerInfo->keyRight.down |= true;
-                            controller->keyRight.down = true;
-                            break;
-
-                        case 1:
-                            ControllerInfo->keyDown.down |= true;
-                            controller->keyDown.down = true;
-                            break;
-
-                        case 2:
-                            ControllerInfo->keyLeft.down |= true;
-                            controller->keyLeft.down = true;
-                            break;
-
-                        case 3:
-                            ControllerInfo->keyUp.down |= true;
-                            controller->keyUp.down = true;
-                            break;
-                    }
-                    break;
-                }
-            }
-        }
-
-        // fixes a bug with button vs touch
-        bool32 touchedRotL = false;
-        bool32 touchedRotR = false;
-        int32 halfX        = ScreenInfo->centerX / 2;
-        for (int32 t = 0; t < TouchInfo->count; ++t) {
-            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-            if (TouchInfo->down[t]) {
-                if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= (ScreenInfo->width - halfX) && ty <= ScreenInfo->height) {
-                    ControllerInfo->keyA.down |= true;
-                    controller->keyA.down = true;
-                    touchedRotR           = true;
-                    break;
-                }
-                else if (tx >= (ScreenInfo->centerX + halfX) && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
-                    ControllerInfo->keyB.down |= true;
-                    controller->keyB.down = true;
-                    touchedRotL           = true;
-                    break;
-                }
-            }
-        }
-
-        if (!self->touchLeft && touchedRotL) {
-            ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
-            controller->keyB.press |= controller->keyB.down;
-        }
-
-        if (!self->touchRight && touchedRotR) {
-            ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-            controller->keyA.press |= controller->keyA.down;
-        }
-
-        self->touchLeft  = controller->keyB.down;
-        self->touchRight = controller->keyA.down;
-
-        for (int32 t = 0; t < TouchInfo->count; ++t) {
-            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
-            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
-
-            if (TouchInfo->down[t]) {
-                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
-                    if (SceneInfo->state == ENGINESTATE_REGULAR) {
-                        EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                        if (!pauseMenu->classID) {
-                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
-                            pauseMenu->triggerPlayer = self->playerID;
-                            if (globals->gameMode == MODE_COMPETITION)
-                                pauseMenu->disableRestart = true;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-#endif
 
         self->down  = controller->keyDown.down;
         self->left  = controller->keyLeft.down;

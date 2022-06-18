@@ -15,18 +15,18 @@ void PBL_Flipper_Update(void)
     RSDK_THIS(PBL_Flipper);
 
     if (self->direction) {
-        self->buttonPress =
-            TriggerInfoL[1].keyBumper.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyC.press || ControllerInfo[1].keyX.press;
+        self->buttonPress = TriggerInfoL[CONT_P1].keyBumper.press || ControllerInfo[CONT_P1].keyA.press || ControllerInfo[CONT_P1].keyX.press
+                            || ControllerInfo[CONT_P1].keyC.press;
 
-        self->buttonDown =
-            TriggerInfoL[1].keyBumper.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyC.down || ControllerInfo[1].keyX.down;
+        self->buttonDown = TriggerInfoL[CONT_P1].keyBumper.down || ControllerInfo[CONT_P1].keyA.down || ControllerInfo[CONT_P1].keyX.down
+                           || ControllerInfo[CONT_P1].keyC.down;
     }
     else {
-        self->buttonPress =
-            TriggerInfoR[1].keyBumper.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyB.press || ControllerInfo[1].keyC.press;
+        self->buttonPress = TriggerInfoR[CONT_P1].keyBumper.press || ControllerInfo[CONT_P1].keyA.press || ControllerInfo[CONT_P1].keyB.press
+                            || ControllerInfo[CONT_P1].keyC.press;
 
-        self->buttonDown =
-            TriggerInfoR[1].keyBumper.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyB.down || ControllerInfo[1].keyC.down;
+        self->buttonDown = TriggerInfoR[CONT_P1].keyBumper.down || ControllerInfo[CONT_P1].keyA.down || ControllerInfo[CONT_P1].keyB.down
+                           || ControllerInfo[CONT_P1].keyC.down;
     }
 
     StateMachine_Run(self->state);

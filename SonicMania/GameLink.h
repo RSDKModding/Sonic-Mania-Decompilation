@@ -1062,6 +1062,8 @@ typedef enum {
     MODCB_ONDRAW,
     MODCB_STAGEUNLOAD,
     MODCB_ONSHADERLOAD,
+    MODCB_ONVIDEOSKIPCB,
+    MODCB_ONSCANLINECB,
 } ModCallbackEvents;
 
 typedef enum {

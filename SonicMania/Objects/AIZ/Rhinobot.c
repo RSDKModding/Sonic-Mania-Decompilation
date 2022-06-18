@@ -216,7 +216,11 @@ void Rhinobot_State_Moving(void)
 
                 if (!self->velocity.x || (self->skidDir && self->velocity.x >= self->topSpeed)
                     || (!self->skidDir && self->velocity.x <= self->topSpeed)) {
+#if RETRO_USE_MOD_LOADER
+                    StateMachine_Run(self->stateDelay);
+#else
                     self->stateDelay();
+#endif
                 }
             }
         }
@@ -275,8 +279,13 @@ void Rhinobot_State_Idle(void)
 
     RSDK.ProcessAnimation(&self->dustAnimator);
 
-    if (--self->timer <= 0)
+    if (--self->timer <= 0) {
+#if RETRO_USE_MOD_LOADER
+        StateMachine_Run(self->stateDelay);
+#else
         self->stateDelay();
+#endif
+    }
 
     Rhinobot_CheckPlayerCollisions();
     Rhinobot_CheckOffScreen();

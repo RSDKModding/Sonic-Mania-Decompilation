@@ -739,10 +739,10 @@ void WeatherTV_State_CardSpinning(void)
     self->angle += self->cardSpinSpeed;
     self->scale.x = RSDK.Sin512(self->angle);
 
-    if (!self->angle || self->angle < WeatherTV->prevCardAngle)
+    if (!self->angle || (self->angle & 0xFF) < WeatherTV->prevCardAngle)
         RSDK.PlaySfx(WeatherTV->sfxCardAppear, false, 255);
 
-    WeatherTV->prevCardAngle            = self->angle;
+    WeatherTV->prevCardAngle            = self->angle & 0xFF;
     self->weatherIconBGAnimator.frameID = self->scale.x >= 0;
 
     if (self->angle >= 0x200) {

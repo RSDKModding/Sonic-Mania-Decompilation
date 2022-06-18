@@ -224,7 +224,11 @@ bool32 UIVsRoundPicker_ProcessTouchCB(void)
             }
         }
         else if (self->touchPressed && self->touchID == i && !self->disabled) {
+#if RETRO_USE_MOD_LOADER
+            StateMachine_Run(callbacks[i]);
+#else
             callbacks[i]();
+#endif
         }
     }
 

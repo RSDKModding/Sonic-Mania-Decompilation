@@ -288,7 +288,11 @@ void UITransition_State_TransitionOut(void)
         if (self->callback && !UIDialog->activeDialog) {
             Entity *storeEntity = SceneInfo->entity;
             SceneInfo->entity   = self->prevEntity;
+#if RETRO_USE_MOD_LOADER
+            StateMachine_Run(self->callback);
+#else
             self->callback();
+#endif
             self->callback    = StateMachine_None;
             SceneInfo->entity = storeEntity;
         }

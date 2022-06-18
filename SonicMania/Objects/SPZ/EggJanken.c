@@ -28,8 +28,12 @@ void EggJanken_Update(void)
         }
     }
 
+#if RETRO_USE_MOD_LOADER
+    StateMachine_Run(self->state);
+#else
     // Direct call, no StateMachine for some reason
     self->state();
+#endif
 
     self->rotation   = self->fullRotation >> 8;
     self->position.x = self->origin.x;
@@ -44,13 +48,21 @@ void EggJanken_Update(void)
     RSDK.ProcessAnimation(&self->propellorLAnimator);
     RSDK.ProcessAnimation(&self->propellorRAnimator);
 
+#if RETRO_USE_MOD_LOADER
+    StateMachine_Run(self->stateEyes);
+#else
     // Another direct call, no StateMachine for some reason
     self->stateEyes();
+#endif
 
     for (self->armID = 0; self->armID < EGGJANKEN_ARM_COUNT; ++self->armID) {
         for (self->armJointID = 0; self->armJointID < EGGJANKEN_SEGMENT_COUNT; ++self->armJointID) {
+#if RETRO_USE_MOD_LOADER
+            StateMachine_Run(self->stateArm[self->armID]);
+#else
             // More direct calls, no StateMachine for some reason
             self->stateArm[self->armID]();
+#endif
         }
     }
 

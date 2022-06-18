@@ -104,7 +104,7 @@ void MetalArm_Create(void *data)
 
     self->hitbox.left   = -56;
     self->hitbox.top    = -27;
-    self->hitbox.right  = 35;
+    self->hitbox.right  = 56;
     self->hitbox.bottom = -7;
 
     RSDK.SetSpriteAnimation(MetalArm->aniFrames, 0, &self->baseAnimator, true, 0);
