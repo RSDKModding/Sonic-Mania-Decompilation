@@ -5,62 +5,96 @@
 
 typedef enum {
     ANI_IDLE,
-    ANI_BORED1,
-    ANI_BORED2,
-    ANI_LOOKUP,
+    ANI_BORED_1,
+    ANI_BORED_2,
+    ANI_LOOK_UP,
     ANI_CROUCH,
     ANI_WALK,
-    ANI_AIRWALK,
+    ANI_AIR_WALK,
     ANI_JOG,
     ANI_RUN,
     ANI_DASH,
     ANI_JUMP,
-    ANI_SPRINGTWIRL,
-    ANI_SPRINGDIAGONAL,
+    ANI_SPRING_TWIRL,
+    ANI_SPRING_DIAGONAL,
     ANI_SKID,
-    ANI_SKIDTURN,
+    ANI_SKID_TURN,
     ANI_SPINDASH,
-    ANI_DROPDASH,
+    ANI_ABILITY_0,
     ANI_PUSH,
     ANI_HURT,
     ANI_DIE,
     ANI_DROWN,
-    ANI_BALANCE1,
-    ANI_BALANCE2,
-    ANI_SPRINGCS,
-    ANI_STANDCS,
+    ANI_BALANCE_1,
+    ANI_BALANCE_2,
+    ANI_SPRING_CS,
+    ANI_STAND_CS,
     ANI_FAN,
     ANI_VICTORY,
-    ANI_OUTTAHERE,
+    ANI_OUTTA_HERE,
     ANI_HANG,
-    ANI_HANGMOVE,
-    ANI_POLESWINGH,
-    ANI_POLESWINGV,
-    ANI_SHAFTSWING,
+    ANI_HANG_MOVE,
+    ANI_POLE_SWING_H,
+    ANI_POLE_SWING_V,
+    ANI_SHAFT_SWING,
     ANI_TURNTABLE,
     ANI_TWISTER,
-    ANI_SPIRALRUN,
+    ANI_SPIRAL_RUN,
     ANI_STICK,
-    ANI_PULLEYHOLD,
-    ANI_SHIMMYIDLE,
-    ANI_SHIMMYMOVE,
+    ANI_PULLEY_HOLD,
+    ANI_SHIMMY_IDLE,
+    ANI_SHIMMY_MOVE,
     ANI_BREATHE,
     ANI_BUBBLE,
     ANI_RIDE,
     ANI_CLING,
     ANI_BUNGEE,
-    ANI_TWISTRUN,
+    ANI_TWIST_RUN,
 #if MANIA_USE_PLUS
     ANI_FLUME,
 #endif
     ANI_TRANSFORM,
-    ANI_FLY,
-    ANI_FLYTIRED,
-    ANI_FLYLIFT,
-    ANI_FLYLIFTTIRED,
-    ANI_SWIM,
-    ANI_SWIMTIRED,
-    ANI_SWIMLIFT,
+    ANI_ABILITY_1,
+    ANI_ABILITY_2,
+    ANI_ABILITY_3,
+    ANI_ABILITY_4,
+    ANI_ABILITY_5,
+    ANI_ABILITY_6,
+    ANI_ABILITY_7,
+
+    // Sonic Ability Anim Aliases
+    ANI_DROPDASH = ANI_ABILITY_0,
+    ANI_PEELOUT  = ANI_ABILITY_1,
+
+    // Tails Ability Anim Aliases
+    ANI_FLY            = ANI_ABILITY_1,
+    ANI_FLY_TIRED      = ANI_ABILITY_2,
+    ANI_FLY_LIFT       = ANI_ABILITY_3,
+    ANI_FLY_LIFT_TIRED = ANI_ABILITY_4,
+    ANI_SWIM           = ANI_ABILITY_5,
+    ANI_SWIM_TIRED     = ANI_ABILITY_6,
+    ANI_SWIM_LIFT      = ANI_ABILITY_7,
+
+    // Knux Ability Anim Aliases
+    ANI_LEDGE_PULL_UP = ANI_ABILITY_0,
+    ANI_GLIDE         = ANI_ABILITY_1,
+    ANI_GLIDE_DROP    = ANI_ABILITY_2,
+    ANI_GLIDE_LAND    = ANI_ABILITY_3,
+    ANI_GLIDE_SLIDE   = ANI_ABILITY_4,
+    ANI_CLIMB_IDLE    = ANI_ABILITY_5,
+    ANI_CLIMB_UP      = ANI_ABILITY_6,
+    ANI_CLIMB_DOWN    = ANI_ABILITY_7,
+
+#if MANIA_USE_PLUS
+    // Mighty Ability Anim Aliases
+    ANI_HAMMERDROP = ANI_ABILITY_0,
+    ANI_UNSPIN     = ANI_ABILITY_1,
+
+    // Ray Ability Anim Aliases
+    ANI_HANG2    = ANI_ABILITY_0,
+    ANI_FLY_UP   = ANI_ABILITY_1,
+    ANI_FLY_DOWN = ANI_ABILITY_2,
+#endif
 } PlayerAnimationIDs;
 
 // for "characterID" in editor
@@ -502,8 +536,9 @@ void Player_HandleAirMovement(void);
 void Player_HandleAirFriction(void);
 void Player_StartJump(EntityPlayer *entity);
 void Player_StartRoll(void);
-bool32 Player_SwapMainPlayer(bool32 forceSwap);
+void Player_StartSpindash(void);
 void Player_StartPeelout(void);
+bool32 Player_SwapMainPlayer(bool32 forceSwap);
 void Player_HandleRollDeceleration(void);
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);

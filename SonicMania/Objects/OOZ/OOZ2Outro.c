@@ -179,7 +179,7 @@ void OOZ2Outro_State_BoardSub(void)
             player->right      = false;
             player->state      = Player_State_None;
 
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1, &player->animator, false, 0);
             Zone->playerBoundActiveR[player->playerID] = 0;
 
             EntityCamera *camera = player->camera;
@@ -209,7 +209,7 @@ void OOZ2Outro_State_SubActivate(void)
         self->timer      = 0;
         self->velocity.y = -0x30000;
         self->state      = OOZ2Outro_State_SubLaunch;
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE2, &player->animator, false, 0); }
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_2, &player->animator, false, 0); }
     }
 }
 

@@ -113,7 +113,7 @@ void BarStool_Update(void)
                         player->onGround   = false;
                         player->velocity.y = -0x20000;
                         player->state      = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIR_WALK, &player->animator, false, 0);
                         RSDK.PlaySfx(BarStool->sfxHop, false, 0xFF);
                     }
                 }

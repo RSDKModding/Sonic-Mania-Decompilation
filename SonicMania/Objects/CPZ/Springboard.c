@@ -31,7 +31,7 @@ void Springboard_Update(void)
 
                 if (self->animator.frameID == 2) {
                     int32 anim = playerPtr->animator.animationID;
-                    if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
+                    if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                         playerPtr->animationReserve = playerPtr->animator.animationID;
                     else
                         playerPtr->animationReserve = ANI_WALK;
@@ -39,7 +39,7 @@ void Springboard_Update(void)
                     playerPtr->state          = Player_State_Air;
                     playerPtr->onGround       = false;
                     playerPtr->tileCollisions = true;
-                    RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRINGCS, &playerPtr->animator, true, 1);
+                    RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRING_CS, &playerPtr->animator, true, 1);
                     playerPtr->groundVel    = playerPtr->velocity.x;
                     playerPtr->velocity.y   = Springboard->springPower[minVal(2 * pos - 16, 39)] - playerPtr->gravityStrength - self->force;
                     playerPtr->applyJumpCap = false;

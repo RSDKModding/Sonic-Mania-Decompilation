@@ -726,7 +726,7 @@ void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut)
                         self->activePlayers &= ~(1 << playerID);
                     }
                     else {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->animator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIR_WALK, &player->animator, true, 0);
                         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + playerID, Shield);
                         if (shield)
                             shield->visible = true;
@@ -833,12 +833,12 @@ void Water_State_Bubble(void)
 
                                     int32 anim = player->animator.animationID;
                                     if (player->characterID == ID_TAILS) {
-                                        canBreathe = anim != ANI_FLY && anim != ANI_FLYTIRED && anim != ANI_FLYLIFT && anim != ANI_SWIM
-                                                     && anim != ANI_SWIMLIFT;
+                                        canBreathe = anim != ANI_FLY && anim != ANI_FLY_TIRED && anim != ANI_FLY_LIFT && anim != ANI_SWIM
+                                                     && anim != ANI_SWIM_LIFT;
                                     }
                                     else if (player->characterID == ID_KNUCKLES) {
-                                        canBreathe = anim != ANI_DROPDASH && anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && anim != ANI_SWIM
-                                                     && anim != ANI_SWIMTIRED && anim != ANI_SWIMLIFT;
+                                        canBreathe = anim != ANI_LEDGE_PULL_UP && anim != ANI_GLIDE && anim != ANI_GLIDE_SLIDE && anim != ANI_CLIMB_IDLE
+                                                     && anim != ANI_CLIMB_UP && anim != ANI_CLIMB_DOWN;
                                     }
 
                                     if (canBreathe && (anim != ANI_FAN && anim != ANI_CLING)) {

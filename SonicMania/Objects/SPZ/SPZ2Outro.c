@@ -128,13 +128,13 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 15) {
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOK_UP, &player1->animator, true, 0);
         player1->state     = Player_State_LookUp;
         player1->up        = true;
         player1->direction = player1->position.x > weatherTV->position.x;
 
         if (player2->classID == Player->classID) {
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOKUP, &player2->animator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOK_UP, &player2->animator, true, 0);
             player2->state     = Player_State_LookUp;
             player2->up        = true;
             player2->direction = player2->position.x > weatherTV->position.x;

@@ -142,7 +142,7 @@ void Piston_StateMove_Up(void)
                 player->velocity.y = -0x100000;
                 player->state      = Player_State_Air;
                 player->onGround   = false;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
             }
         }
 
@@ -293,7 +293,7 @@ void Piston_StateActive_LaunchPlayers(void)
                 player->velocity.y = -0x100000;
                 player->state      = Player_State_Air;
                 player->onGround   = false;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
             }
         }
 

@@ -387,7 +387,7 @@ void UIDiorama_State_TimeAttack(void)
     if (self->needsSetup) {
         self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 5, &info->dioramaAnimator, true, 0);
-        RSDK.SetSpriteAnimation(UIDiorama->sonicFrames, ANI_BORED2, &info->sonicAnimator, true, 3);
+        RSDK.SetSpriteAnimation(UIDiorama->sonicFrames, ANI_BORED_2, &info->sonicAnimator, true, 3);
         info->sonicAnimator.loopIndex  = 3;
         info->sonicAnimator.frameCount = 65;
 
@@ -423,10 +423,10 @@ void UIDiorama_State_Competition(void)
         info->tailsAngle = 85;
 
         RSDK.SetSpriteAnimation(UIDiorama->knuxFramesHCZ, 4, &info->knuxAnimator, true, 0);
-        RSDK.SetSpriteAnimation(UIDiorama->rayFrames, ANI_FLY, &info->rayAnimator, true, 5);
+        RSDK.SetSpriteAnimation(UIDiorama->rayFrames, ANI_FLY_UP, &info->rayAnimator, true, 5);
         info->rayAngle = 0;
 
-        RSDK.SetSpriteAnimation(UIDiorama->mightyFrames, ANI_LOOKUP, &info->mightyAnimator, true, 5);
+        RSDK.SetSpriteAnimation(UIDiorama->mightyFrames, ANI_LOOK_UP, &info->mightyAnimator, true, 5);
         self->needsSetup = false;
     }
     else {
@@ -554,7 +554,7 @@ void UIDiorama_State_Exit(void)
     if (self->needsSetup) {
         self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 9, &info->dioramaAnimator, true, 0);
-        RSDK.SetSpriteAnimation(UIDiorama->sonicFrames, ANI_OUTTAHERE, &info->sonicAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIDiorama->sonicFrames, ANI_OUTTA_HERE, &info->sonicAnimator, true, 0);
         info->sonicAnimator.loopIndex  = 5;
         info->sonicAnimator.frameCount = 11;
         self->needsSetup               = false;

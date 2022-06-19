@@ -303,7 +303,7 @@ void BreakableWall_HandleTopBreak_All(void)
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
 #if MANIA_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
+            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
                     bool32 canBreak = player->animator.animationID == ANI_JUMP;
@@ -394,7 +394,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP && !player->sidekick
             && ((player->collisionPlane == 1 && self->type == BREAKWALL_TYPE_TOPCHUNK_B) || self->type == BREAKWALL_TYPE_TOPCHUNK)) {
 #if MANIA_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
+            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
                     bool32 canBreak = player->animator.animationID == ANI_JUMP;
@@ -454,7 +454,7 @@ void BreakableWall_HandleSidesBreak(void)
     foreach_active(Player, player)
     {
 #if MANIA_USE_PLUS
-        if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
+        if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
 #endif
             if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
                 bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
@@ -483,15 +483,15 @@ void BreakableWall_HandleSidesBreak(void)
                         BreakableWall_HandleBlockBreak_H(self, player->position.x > self->position.x);
 
                         if (player->characterID == ID_KNUCKLES) {
-                            if (player->animator.animationID == ANI_FLY) {
+                            if (player->animator.animationID == ANI_GLIDE) {
                                 player->abilitySpeed -= player->abilitySpeed >> 2;
                                 player->velocity.x -= player->velocity.x >> 2;
                                 if (abs(player->velocity.x) <= 0x30000) {
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_GLIDE_DROP, &player->animator, false, 0);
                                     player->state = Player_State_KnuxGlideDrop;
                                 }
                             }
-                            else if (player->animator.animationID == ANI_FLYLIFTTIRED) {
+                            else if (player->animator.animationID == ANI_GLIDE_SLIDE) {
                                 player->abilitySpeed -= player->abilitySpeed >> 2;
                                 player->velocity.x -= player->velocity.x >> 2;
                             }
@@ -519,7 +519,7 @@ void BreakableWall_HandleBottomBreak_Chunks(void)
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
 #if MANIA_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
+            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
                     if (!player->sidekick) {

@@ -1888,8 +1888,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_HandleAirFriction);
     ADD_PUBLIC_FUNC(Player_StartJump);
     ADD_PUBLIC_FUNC(Player_StartRoll);
-    ADD_PUBLIC_FUNC(Player_SwapMainPlayer);
+    ADD_PUBLIC_FUNC(Player_StartSpindash);
     ADD_PUBLIC_FUNC(Player_StartPeelout);
+    ADD_PUBLIC_FUNC(Player_SwapMainPlayer);
     ADD_PUBLIC_FUNC(Player_HandleRollDeceleration);
     ADD_PUBLIC_FUNC(Player_Hit);
     ADD_PUBLIC_FUNC(Player_CheckValidState);

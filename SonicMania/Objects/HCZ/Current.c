@@ -347,7 +347,7 @@ void Current_State_WaterLeft(void)
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
                         int32 anim = player->animator.animationID;
-                        if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
+                        if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
@@ -421,7 +421,7 @@ void Current_State_WaterRight(void)
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
                         int32 anim = player->animator.animationID;
-                        if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
+                        if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
@@ -495,7 +495,7 @@ void Current_State_WaterUp(void)
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
                         int32 anim = player->animator.animationID;
-                        if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
+                        if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
@@ -574,7 +574,7 @@ void Current_State_WaterDown(void)
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
                         int32 anim = player->animator.animationID;
-                        if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
+                        if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
@@ -634,7 +634,7 @@ void Current_State_PushLeft(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_CLING && anim != ANI_SHAFTSWING)
+                if (anim != ANI_CLING && anim != ANI_SHAFT_SWING)
                     player->position.x += -(self->strength << 15);
             }
         }
@@ -661,7 +661,7 @@ void Current_State_PushRight(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_CLING && anim != ANI_SHAFTSWING)
+                if (anim != ANI_CLING && anim != ANI_SHAFT_SWING)
                     player->position.x += self->strength << 15;
             }
         }
@@ -677,7 +677,7 @@ void Current_State_PushUp(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_CLING && anim != ANI_SHAFTSWING && !player->onGround)
+                if (anim != ANI_CLING && anim != ANI_SHAFT_SWING && !player->onGround)
                     player->position.y += -(self->strength << 15);
             }
         }
@@ -693,7 +693,7 @@ void Current_State_PushDown(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_CLING && anim != ANI_SHAFTSWING && !player->onGround)
+                if (anim != ANI_CLING && anim != ANI_SHAFT_SWING && !player->onGround)
                     player->position.y += self->strength << 15;
             }
         }

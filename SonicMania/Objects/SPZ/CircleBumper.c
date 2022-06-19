@@ -144,7 +144,7 @@ void CircleBumper_CheckPlayerCollisions(void)
             else {
 #endif
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && player->state != Player_State_TailsFlight) {
+                if (anim != ANI_FLY && anim != ANI_FLY_LIFT_TIRED && player->state != Player_State_TailsFlight) {
                     if (player->state != Player_State_DropDash)
                         player->state = Player_State_Air;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)

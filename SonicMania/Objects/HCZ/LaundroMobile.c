@@ -357,7 +357,7 @@ void LaundroMobile_HandleStageWrap(void)
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
                     player->state           = Current_PlayerState_CurrentRight;
-                    if (player->animator.animationID != ANI_CLING && player->animator.animationID != ANI_SHAFTSWING) {
+                    if (player->animator.animationID != ANI_CLING && player->animator.animationID != ANI_SHAFT_SWING) {
                         if (player->position.x >= boss->position.x + 0xC00000) {
                             player->velocity.x = LaundroMobile->currentVelocity;
                             player->groundVel  = player->velocity.x;
@@ -480,7 +480,7 @@ void LaundroMobile_HandleStageWrap(void)
                         trail->position.y -= offsetY;
                         trail->currentPos.x -= offsetX;
                         trail->currentPos.y -= offsetY;
-                        for (int i = 0; i < ImageTrail_TrackCount; ++i) {
+                        for (int i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) {
                             trail->statePos[i].x -= offsetX;
                             trail->statePos[i].y -= offsetY;
                         }

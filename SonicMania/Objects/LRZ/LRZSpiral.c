@@ -165,7 +165,7 @@ void LRZSpiral_State_Cylinder(void)
                 if (player->groundVel < 0x60000)
                     player->groundVel = 0x60000;
 
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPIRALRUN, &player->animator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPIRAL_RUN, &player->animator, false, 0);
                 player->animator.speed  = 0;
                 player->state           = Player_State_None;
                 player->nextAirState    = StateMachine_None;
@@ -235,7 +235,7 @@ void LRZSpiral_State_J_Curve(void)
                 if (player->groundVel < 0x40000)
                     player->groundVel = 0x40000;
 
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->animator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWIST_RUN, &player->animator, false, 0);
 
                 player->animator.speed  = 0;
                 player->state           = Player_State_None;
@@ -305,7 +305,7 @@ void LRZSpiral_State_C_Curve(void)
                 if (player->groundVel > -0x40000)
                     player->groundVel = -0x40000;
 
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->animator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWIST_RUN, &player->animator, false, 0);
                 player->animator.speed  = 0;
                 player->state           = Player_State_None;
                 player->nextAirState    = StateMachine_None;

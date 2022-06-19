@@ -49,14 +49,14 @@ void ImageTrail_LateUpdate(void)
     }
 
     // Update recordings
-    for (int32 i = ImageTrail_TrackCount - 1; i > 0; --i) {
+    for (int32 i = IMAGETRAIL_TRACK_COUNT - 1; i > 0; --i) {
         self->statePos[i].x     = self->statePos[i - 1].x;
         self->statePos[i].y     = self->statePos[i - 1].y;
         self->stateRotation[i]  = self->stateRotation[i - 1];
         self->stateScale[i]     = self->stateScale[i - 1];
         self->stateDirection[i] = self->stateDirection[i - 1];
         self->stateVisible[i]   = self->stateVisible[i - 1];
-        memcpy(&self->stateAnim[i], &self->stateAnim[i - 1], sizeof(Animator));
+        memcpy(&self->stateAnimator[i], &self->stateAnimator[i - 1], sizeof(Animator));
     }
 
     self->statePos[0].x     = self->currentPos.x;
@@ -65,7 +65,7 @@ void ImageTrail_LateUpdate(void)
     self->stateDirection[0] = self->currentDirection;
     self->stateScale[0]     = self->currentScale;
     self->stateVisible[0]   = self->currentVisible;
-    memcpy(&self->stateAnim[0], &self->currentAnimData, sizeof(Animator));
+    memcpy(&self->stateAnimator[0], &self->currentAnimator, sizeof(Animator));
 
     // Record Player
     self->drawOrder        = player->drawOrder - 1;
@@ -73,7 +73,7 @@ void ImageTrail_LateUpdate(void)
     self->currentPos.y     = player->position.y;
     self->currentRotation  = player->rotation;
     self->currentDirection = player->direction;
-    memcpy(&self->currentAnimData, &player->animator, sizeof(Animator));
+    memcpy(&self->currentAnimator, &player->animator, sizeof(Animator));
     if (player->isChibi || !(player->drawFX & FX_SCALE))
         self->currentScale = 0x200;
     else
@@ -82,7 +82,7 @@ void ImageTrail_LateUpdate(void)
     // Check if we have enough speed to be visible
     if (abs(player->velocity.x) >= 0x10000 || abs(player->velocity.y) >= 0x10000)
         self->currentVisible = player->visible;
-    else 
+    else
         self->currentVisible = false;
 }
 
@@ -92,11 +92,11 @@ void ImageTrail_Draw(void)
 {
     RSDK_THIS(ImageTrail);
 
-    //int32 alpha[3] = { 0xA0 * self->baseAlpha >> 8, self->baseAlpha >> 1, 0x60 * self->baseAlpha >> 8 };
+    // int32 alpha[3] = { 0xA0 * self->baseAlpha >> 8, self->baseAlpha >> 1, 0x60 * self->baseAlpha >> 8 };
     int32 alpha = 0x60 * self->baseAlpha >> 8;
-    int32 inc   = 0x40 / (ImageTrail_TrackCount / 3);
+    int32 inc   = 0x40 / (IMAGETRAIL_TRACK_COUNT / 3);
 
-    for (int32 i = (ImageTrail_TrackCount / 3); i >= 0; --i) {
+    for (int32 i = (IMAGETRAIL_TRACK_COUNT / 3); i >= 0; --i) {
         int32 id = (i * 3) - (i - 1);
         if (self->stateVisible[id]) {
             if (self->stateScale[id] != 0x200) {
@@ -104,11 +104,11 @@ void ImageTrail_Draw(void)
                 self->scale.x = self->stateScale[id];
                 self->scale.y = self->stateScale[id];
             }
-            self->alpha     = alpha;
+            self->alpha = alpha;
             alpha += inc;
             self->rotation  = self->stateRotation[id];
             self->direction = self->stateDirection[id];
-            RSDK.DrawSprite(&self->stateAnim[id], &self->statePos[id], 0);
+            RSDK.DrawSprite(&self->stateAnimator[id], &self->statePos[id], 0);
             self->drawFX &= ~FX_SCALE;
         }
     }
@@ -128,7 +128,7 @@ void ImageTrail_Create(void *data)
         self->drawFX         = FX_FLIP | FX_SCALE | FX_ROTATE;
         self->inkEffect      = INK_ALPHA;
 
-        for (int32 i = ImageTrail_TrackCount - 1; i >= 0; --i) {
+        for (int32 i = IMAGETRAIL_TRACK_COUNT - 1; i >= 0; --i) {
             self->statePos[i].x     = player->position.x;
             self->statePos[i].y     = player->position.y;
             self->stateRotation[i]  = player->rotation;

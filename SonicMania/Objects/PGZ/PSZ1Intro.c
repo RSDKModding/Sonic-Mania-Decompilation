@@ -79,7 +79,7 @@ bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
             glider->velocity.x     = 0x40000;
             glider->velocity.y     = -0x20000;
 
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &glider->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_DIAGONAL, &glider->playerAnimator, true, 0);
             glider->playerAnimator.rotationFlag = 1; // full rotation
             glider->rotation                    = 128;
             glider->drawFX                      = FX_ROTATE;

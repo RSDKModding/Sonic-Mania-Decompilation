@@ -28,7 +28,7 @@ void Propeller_Update(void)
         bool32 propellerActive = false;
 
         int32 anim = player->animator.animationID;
-        if (anim != ANI_SHAFTSWING && anim != ANI_HURT && self->fanEnabled
+        if (anim != ANI_SHAFT_SWING && anim != ANI_HURT && self->fanEnabled
             && RSDK.CheckObjectCollisionTouchBox(self, &self->hitboxFan, player, &self->hitboxPlayer)) {
             propellerActive = true;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);

@@ -87,7 +87,7 @@ void YoyoPulley_Update(void)
                 player->direction      = self->direction ^ FLIP_X;
                 player->tileCollisions = false;
 
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->animator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEY_HOLD, &player->animator, true, 0);
                 player->state = Player_State_None;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
             }

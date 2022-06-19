@@ -579,11 +579,11 @@ bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host)
         mystic->position.y -= 0x18000;
         mystic->velocity.y = -0x18000;
         if (host->timer > 24) {
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->animator, false, 1);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOK_UP, &player->animator, false, 1);
             if (player->animator.frameID == 5)
                 player->animator.speed = 0;
 
-            RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->animator, false, 1);
+            RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOK_UP, &buddy->animator, false, 1);
             if (buddy->animator.frameID == 5)
                 buddy->animator.speed = 0;
         }
@@ -592,11 +592,11 @@ bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host)
         HeavyMystic_HandleParticleFX();
     }
     else {
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->animator, false, 1);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOK_UP, &player->animator, false, 1);
         if (player->animator.frameID == 5)
             player->animator.speed = 0;
 
-        RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->animator, false, 1);
+        RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOK_UP, &buddy->animator, false, 1);
         if (buddy->animator.frameID == 5)
             buddy->animator.speed = 0;
 

@@ -136,7 +136,7 @@ void Firework_CheckPlayerCollisions(void)
             if (player->state != Player_State_None && !self->playerTimers[playerID]
                 && Player_CheckCollisionTouch(player, self, &Firework->hitboxFireworkGrab)) {
                 player->tileCollisions = false;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->animator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEY_HOLD, &player->animator, false, 0);
 
                 player->state = Player_State_None;
                 self->activePlayers |= 1 << playerID;

@@ -132,7 +132,7 @@ void LRZ1Intro_State_SetupActors(void)
 
     Hitbox *playerHitbox = Player_GetHitbox(player1);
     player1->state       = Player_State_None;
-    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE2, &player1->animator, false, 0);
+    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE_2, &player1->animator, false, 0);
 
     self->playerOffset[0].x = 0x600000;
     self->playerOffset[0].y = -0x10000 * playerHitbox->bottom;
@@ -145,7 +145,7 @@ void LRZ1Intro_State_SetupActors(void)
             self->playerOffset[p].x = 0x400000;
             self->playerOffset[p].y = -0x10000 * hitbox->bottom;
             playerPtr->state        = Player_State_None;
-            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_BALANCE2, &playerPtr->animator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_BALANCE_2, &playerPtr->animator, false, 0);
         }
     }
 

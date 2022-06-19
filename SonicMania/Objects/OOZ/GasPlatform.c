@@ -150,7 +150,7 @@ void GasPlatform_State_Popped(void)
                     player->velocity.y = -0x100000;
                     player->state      = Player_State_Air;
                     player->onGround   = false;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
                     RSDK.PlaySfx(GasPlatform->sfxSpring, false, 255);
                     self->timer = 240;
                     self->state = GasPlatform_State_SpringCooldown;

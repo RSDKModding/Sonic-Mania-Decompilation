@@ -120,12 +120,12 @@ void PushSpring_Collide_Top(void)
                 player->velocity.y    = -0xA0000;
 
                 int32 anim = player->animator.animationID;
-                if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
+                if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                     player->animationReserve = player->animator.animationID;
                 else
                     player->animationReserve = ANI_WALK;
 
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_DIAGONAL, &player->animator, true, 0);
                 RSDK.PlaySfx(PushSpring->sfxSpring, false, 255);
                 self->state = PushSpring_State_PushRecoil;
             }

@@ -88,14 +88,14 @@ void RockemSockem_Update(void)
                         player->velocity.x = (0x500 * RSDK.Cos256(angle) + player->velocity.x) >> 1;
                         player->velocity.y = -(abs(RSDK.Sin256(angle)) * 0x500);
 
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, false, 0);
                         break;
 
                     case 2:
                         player->velocity.x = (0x700 * RSDK.Cos256(angle) + player->velocity.x) >> 1;
                         player->velocity.y = -(abs(RSDK.Sin256(angle)) * 0x700);
 
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, false, 0);
                         break;
 
                     case 3: break;

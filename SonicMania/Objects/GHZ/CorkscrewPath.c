@@ -18,7 +18,7 @@ void CorkscrewPath_Update(void)
 
         if (abs(self->position.x - player->position.x) >> 16 > self->xSize) {
             self->activePlayers &= ~playerID;
-            if (player->animator.animationID != ANI_SPRINGCS)
+            if (player->animator.animationID != ANI_SPRING_CS)
                 player->direction &= ~FLIP_Y;
         }
         else {
@@ -38,11 +38,11 @@ void CorkscrewPath_Update(void)
                     if (player->animator.animationID != ANI_JUMP) {
                         if (player->groundVel < 0) {
                             player->direction |= FLIP_Y;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, CorkscrewPath->frameTable[frame]);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, CorkscrewPath->frameTable[frame]);
                         }
                         else {
                             player->direction &= ~FLIP_Y;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
                         }
                     }
                 }
@@ -59,11 +59,11 @@ void CorkscrewPath_Update(void)
                 if (player->animator.animationID != ANI_JUMP) {
                     if (player->groundVel < 0) {
                         player->direction |= FLIP_Y;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, CorkscrewPath->frameTable[frame]);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, CorkscrewPath->frameTable[frame]);
                     }
                     else {
                         player->direction &= ~FLIP_Y;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
                     }
                 }
             }

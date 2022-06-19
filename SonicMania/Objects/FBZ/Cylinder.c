@@ -161,7 +161,7 @@ void Cylinder_State_TubeH(void)
 
                 if (!player->onGround && player->velocity.y >= 0 && player->state != Player_State_FlyCarried
                     && player->animator.animationID != ANI_SKID) {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true,
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true,
                                             24 * self->playerAngles[player->playerID] / 1024);
                 }
 
@@ -184,7 +184,7 @@ void Cylinder_State_TubeH(void)
                     player->onGround = true;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true,
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true,
                                             24 * self->playerAngles[player->playerID] / 1024);
                     player->onGround = true;
                 }
@@ -216,7 +216,7 @@ void Cylinder_State_TubeV(void)
                 self->playerAngles[player->playerID] = (self->playerAngles[player->playerID] + 16) & 0x3FF;
                 player->position.x                   = radius * RSDK.Cos1024(self->playerAngles[player->playerID]) + self->position.x;
                 player->rotation                     = 0x80;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true,
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true,
                                         (24 * self->playerAngles[player->playerID] / 1024 + 12) % 24);
                 player->animator.rotationFlag = 1; // full rotation
                 player->direction             = player->velocity.y < 0;
@@ -295,7 +295,7 @@ void Cylinder_State_Spiral(void)
                         if (distance < right) {
                             player->rotation  = 256;
                             player->direction = FLIP_NONE;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 17 - 6 * distance / right);
                             player->animator.rotationFlag = 1;
                         }
 
@@ -315,7 +315,7 @@ void Cylinder_State_Spiral(void)
                     if (distance < right) {
                         player->rotation  = 256;
                         player->direction = FLIP_X;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 17 - 6 * distance / right);
                         player->animator.rotationFlag = 1;
                         player->onGround              = true;
                         player->velocity.y            = 0;
@@ -351,7 +351,7 @@ void Cylinder_State_Spiral(void)
                     player->tileCollisions               = true;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame % 24);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame % 24);
                     player->animator.rotationFlag = 1;
                     player->onGround              = true;
                     player->velocity.y            = 0;
@@ -424,7 +424,7 @@ void Cylinder_State_Spiral(void)
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_X;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 17 - 6 * distance / right);
                                 player->animator.rotationFlag = 1;
                             }
                         }
@@ -434,7 +434,7 @@ void Cylinder_State_Spiral(void)
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_NONE;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 17 - 6 * distance / right);
                                 player->animator.rotationFlag = 1;
                             }
                         }
@@ -478,9 +478,9 @@ void Cylinder_State_InkRoller(void)
                     if (player->state == Cylinder_PlayerState_InkRoller_Stand) {
                         int32 frame = (24 - (24 * angle) / 1024) % 24;
                         if (player->groundVel)
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
                         else
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_STANDCS, &player->animator, true, frame);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_STAND_CS, &player->animator, true, frame);
 
                         player->animator.rotationFlag = 1; // full rotation
                         player->rotation              = 0x100;
@@ -553,11 +553,11 @@ void Cylinder_State_InkRoller(void)
                     player->velocity.y                   = 0;
                     self->playerStatus[player->playerID] = 1;
 
-                    int32 frame = (ANI_STANDCS - 24 * ((self->playerAngles[player->playerID] + 8) & 0x3FF) / 1024) % ANI_STANDCS;
+                    int32 frame = (ANI_STAND_CS - 24 * ((self->playerAngles[player->playerID] + 8) & 0x3FF) / 1024) % ANI_STAND_CS;
                     if (player->groundVel)
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
                     else
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_STANDCS, &player->animator, true, frame);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_STAND_CS, &player->animator, true, frame);
                     player->animator.rotationFlag = 1; // full rotation
 
                     player->rotation = 0x100;
@@ -636,7 +636,7 @@ void Cylinder_State_Pillar(void)
                     self->playerAngles[player->playerID] = angle;
                     player->drawOrder                    = angle >= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
 
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
                     player->animator.rotationFlag = 1; // full rotation
 
                     player->abilityValue = player->position.x < self->position.x ? 0 : 0x80;
@@ -672,7 +672,7 @@ void Cylinder_State_Pillar(void)
                             player->groundVel = -player->velocity.y;
                     }
 
-                    if (player->animator.animationID == ANI_SPRINGCS) {
+                    if (player->animator.animationID == ANI_SPRING_CS) {
                         if (abs(player->groundVel) < 0xC0000) {
                             if (abs(player->groundVel) < 0x60000) {
                                 if (abs(player->groundVel) < 0x40000)

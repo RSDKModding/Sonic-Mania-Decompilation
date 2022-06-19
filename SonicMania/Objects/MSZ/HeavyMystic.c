@@ -310,7 +310,7 @@ void HeavyMystic_CheckPlayerCollisions_Bark(void)
             if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
 #if MANIA_USE_PLUS
 
-                if (self->animator.animationID == ANI_SKIDTURN
+                if (self->animator.animationID == ANI_SKID_TURN
                     && ((self->direction == FLIP_NONE && player->position.x > self->position.x)
                         || (self->direction == FLIP_X && player->position.x < self->position.x))) {
                     if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))

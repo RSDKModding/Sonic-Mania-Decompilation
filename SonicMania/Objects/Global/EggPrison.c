@@ -69,14 +69,14 @@ void EggPrison_Update(void)
 
                         if (self->type == EGGPRISON_SPRING) {
                             int32 anim = player->animator.animationID;
-                            if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
+                            if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                                 player->animationReserve = player->animator.animationID;
                             else
                                 player->animationReserve = ANI_WALK;
                             player->state      = Player_State_Air;
                             player->onGround   = false;
                             player->velocity.y = -0xA0000;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
                             RSDK.PlaySfx(EggPrison->sfxSpring, false, 255);
                         }
                         else {

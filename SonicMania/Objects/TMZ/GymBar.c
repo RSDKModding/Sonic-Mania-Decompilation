@@ -120,9 +120,9 @@ void GymBar_HandlePlayerInteractions(void)
                             player->position.x = self->position.x;
                             player->direction  = FLIP_NONE;
                             if (player->velocity.x <= 0)
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGV, &player->animator, false, 2);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_V, &player->animator, false, 2);
                             else
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGV, &player->animator, false, 9);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_V, &player->animator, false, 9);
                             player->animator.speed   = 0xE0 + ((abs(player->velocity.x) - 0x40000) >> 12);
                             player->abilityValues[0] = 0;
                             player->abilityValues[1] = player->animator.frameID;
@@ -136,16 +136,16 @@ void GymBar_HandlePlayerInteractions(void)
                         player->position.y = self->position.y;
 
                         if (abs(player->velocity.y) < 0x40000 || self->noSwing) {
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_H, &player->animator, false, 0);
                             player->animator.speed = 0;
                             player->abilityPtrs[0] = self;
                             player->state          = GymBar_PlayerState_Hang;
                         }
                         else {
                             if (player->velocity.y <= 0)
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, false, 2);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_H, &player->animator, false, 2);
                             else
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, false, 9);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_H, &player->animator, false, 9);
                             player->animator.speed   = 0x100 + ((abs(player->velocity.y) - 0x40000) >> 12);
                             player->abilityValues[0] = 0;
                             player->abilityValues[1] = player->animator.frameID;
@@ -217,7 +217,7 @@ void GymBar_PlayerState_SwingV(void)
     self->abilityValues[1] = self->animator.frameID;
     if (self->abilityValues[0] >= 2) {
         if (self->abilityValues[2] <= 0)
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SPRINGDIAGONAL, &self->animator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SPRING_DIAGONAL, &self->animator, false, 0);
         else
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 0);
 
@@ -241,18 +241,18 @@ void GymBar_PlayerState_Hang(void)
         if (self->position.x > gymbar->maxX)
             self->position.x -= 0x10000;
 
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SHIMMYMOVE, &self->animator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SHIMMY_MOVE, &self->animator, false, 0);
         self->direction = FLIP_X;
     }
     else if (self->right) {
         if (self->position.x < gymbar->minX)
             self->position.x += 0x10000;
 
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SHIMMYMOVE, &self->animator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SHIMMY_MOVE, &self->animator, false, 0);
         self->direction = FLIP_NONE;
     }
     else {
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SHIMMYIDLE, &self->animator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SHIMMY_IDLE, &self->animator, false, 0);
     }
 
     if (self->jumpPress)

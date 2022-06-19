@@ -238,9 +238,9 @@ bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host)
 
     if (host->timer == 30) {
         if (CHECK_CHARACTER_ID(ID_SONIC, 1))
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED2, &player1->animator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED_2, &player1->animator, false, 0);
         else
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED1, &player1->animator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED_1, &player1->animator, false, 0);
     }
 
     return host->timer == 60;
@@ -306,7 +306,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
                 player1->animator.prevAnimationID = 0xFF;
 #else
                 // Same Code as 2P AI, it's unknown why tails' anim was cut in pre-plus, but it's in plus so hooray
-                RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, true, 0);
+                RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOK_UP, &player1->animator, true, 0);
                 player1->up    = true;
                 player1->state = Player_State_LookUp;
 #endif
@@ -338,7 +338,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 60 && player2->classID == Player->classID) {
-        RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOKUP, &player2->animator, true, 0);
+        RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOK_UP, &player2->animator, true, 0);
         player2->up    = true;
         player2->state = Player_State_LookUp;
     }

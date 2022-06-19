@@ -68,11 +68,11 @@ void DebugMode_Update(void)
     }
 
 #if GAME_VERSION != VER_100
-    bool32 keyBack  = ControllerInfo[CONT_P1].keyY.press;
-    bool32 keySpawn = ControllerInfo[CONT_P1].keyX.press;
-#else
-    bool32 keyBack  = ControllerInfo[CONT_P1].keyX.press;
     bool32 keySpawn = ControllerInfo[CONT_P1].keyY.press;
+    bool32 keyBack  = ControllerInfo[CONT_P1].keyX.press;
+#else
+    bool32 keySpawn = ControllerInfo[CONT_P1].keyX.press;
+    bool32 keyBack  = ControllerInfo[CONT_P1].keyY.press;
 #endif
 
     if (ControllerInfo[CONT_P1].keyA.press) {
@@ -80,7 +80,7 @@ void DebugMode_Update(void)
         DebugMode->itemID %= DebugMode->itemCount;
         DebugMode->itemType = 0;
     }
-    else if (keySpawn) {
+    else if (keyBack) {
         // Do this so we can access the player variables again
         RSDK_THIS(Player);
         self->classID       = Player->classID;
@@ -104,7 +104,7 @@ void DebugMode_Update(void)
         DebugMode->debugActive = false;
     }
     else if (ControllerInfo[CONT_P1].keyA.down) {
-        if (ControllerInfo[CONT_P1].keyC.press || keyBack) {
+        if (ControllerInfo[CONT_P1].keyC.press || keySpawn) {
             if (--DebugMode->itemID < 0)
                 DebugMode->itemID = DebugMode->itemCount - 1;
 
@@ -118,7 +118,7 @@ void DebugMode_Update(void)
                 DebugMode->itemType = DebugMode->itemTypeCount - 1;
         }
     }
-    else if (ControllerInfo[CONT_P1].keyC.press || keyBack) {
+    else if (ControllerInfo[CONT_P1].keyC.press || keySpawn) {
         StateMachine_Run(DebugMode->spawn[DebugMode->itemID]);
     }
     else if (ControllerInfo[CONT_P1].keyB.press) {

@@ -214,7 +214,7 @@ void MetalSonic_HandleStageWrap(void)
             {
                 trail->position.x += 0xE000000;
                 trail->currentPos.x += 0xE000000;
-                for (int32 i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x += 0xE000000;
+                for (int32 i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) trail->statePos[i].x += 0xE000000;
             }
 
             foreach_active(Platform, platform)
@@ -269,7 +269,7 @@ void MetalSonic_HandleStageWrap(void)
         {
             trail->position.x -= 0xE000000;
             trail->currentPos.x -= 0xE000000;
-            for (int32 i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x -= 0xE000000;
+            for (int32 i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) trail->statePos[i].x -= 0xE000000;
         }
 
         foreach_active(Platform, platform)

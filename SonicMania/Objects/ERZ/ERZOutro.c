@@ -119,7 +119,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
         host->storedValue = player1->rings;
         eggman->state     = StateMachine_None;
         if (player1->characterID == ID_KNUCKLES)
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, false, 6);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_GLIDE, &player1->animator, false, 6);
         else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, false, 0);
 
@@ -154,7 +154,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
     }
     else if (host->timer < 120) {
         if (player1->characterID == ID_KNUCKLES)
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, false, 6);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_GLIDE, &player1->animator, false, 6);
         else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, false, 0);
 

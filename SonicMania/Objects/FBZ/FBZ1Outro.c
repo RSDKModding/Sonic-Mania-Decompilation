@@ -137,13 +137,13 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         player1->stateInput = StateMachine_None;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE1, &player1->animator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE_1, &player1->animator, false, 0);
 
         player1->state = Player_State_None;
         CutsceneSeq_LockPlayerControl(player1);
 
         if (player2->classID == Player->classID) {
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_BALANCE1, &player2->animator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_BALANCE_1, &player2->animator, false, 0);
 
             player2->state = Player_State_None;
             CutsceneSeq_LockPlayerControl(player2);

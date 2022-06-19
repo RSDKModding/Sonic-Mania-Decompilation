@@ -114,7 +114,7 @@ void Dust_State_GlideSlide(void)
         }
 
         self->timer = (self->timer + 1) & 7;
-        if (player->animator.animationID != ANI_FLYLIFTTIRED || !player->groundVel)
+        if (player->animator.animationID != ANI_GLIDE_SLIDE || !player->groundVel)
             destroyEntity(self);
     }
 }

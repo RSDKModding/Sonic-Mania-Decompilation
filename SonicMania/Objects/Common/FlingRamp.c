@@ -29,7 +29,7 @@ void FlingRamp_Update(void)
                     // Fix: set the state to Player_State_Air (see fix commented below)
                     // player->state    = Player_State_Air;
                     player->onGround = false;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 0);
                 }
             }
             else if (right && (player->direction & FLIP_X) && player->velocity.x <= -0x40000) {
@@ -42,7 +42,7 @@ void FlingRamp_Update(void)
                     // Fix: set the state to Player_State_Air (see fix commented below)
                     // player->state    = Player_State_Air;
                     player->onGround = false;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 0);
                 }
             }
         }

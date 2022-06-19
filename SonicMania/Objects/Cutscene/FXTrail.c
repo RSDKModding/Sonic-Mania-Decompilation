@@ -55,7 +55,7 @@ void FXTrail_Draw(void)
     RSDK_THIS(FXTrail);
 
     int32 alpha = 0x60 * self->baseAlpha >> 8;
-    int32 inc   = 0x40 / (ImageTrail_TrackCount / 3);
+    int32 inc   = 0x40 / (IMAGETRAIL_TRACK_COUNT / 3);
 
     for (int32 i = 2; i >= 0; --i) {
         int32 id = (i * 3) - (i - 1);

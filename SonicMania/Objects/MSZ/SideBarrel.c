@@ -47,7 +47,7 @@ void SideBarrel_Update(void)
                     player->position.y += 0x40000;
                     if (player->state != Player_State_KnuxGlideDrop) {
                         if (self->playerPos[playerID] > 176) {
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 1);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, false, 1);
                             player->onGround            = false;
                             player->state               = Player_State_Air;
                             self->playerTimer[playerID] = 48;

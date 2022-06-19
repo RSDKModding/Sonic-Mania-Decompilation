@@ -241,7 +241,7 @@ void LottoMachine_CheckPlayerCollisions(void)
                 int32 velX = radius * RSDK.Cos256(angle);
                 int32 velY = radius * RSDK.Sin256(angle);
 
-                if ((player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) || player->state == Player_State_FlyCarried
+                if ((player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_GLIDE) || player->state == Player_State_FlyCarried
 #if MANIA_USE_PLUS
                     || player->state == Player_State_RayGlide
 #endif

@@ -155,7 +155,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                     int32 velX  = 0x380 * RSDK.Cos256(angle);
                     int32 velY  = 0x380 * RSDK.Sin256(angle);
 
-                    if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED) {
+                    if (anim != ANI_FLY && anim != ANI_FLY_LIFT_TIRED) {
                         if (player->state != Player_State_TailsFlight) {
                             if (player->state != Player_State_DropDash)
                                 player->state = Player_State_Air;
@@ -170,8 +170,8 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                         player->velocity.x   = velX;
                         player->groundVel    = velX;
                         player->applyJumpCap = false;
-                        if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
+                        if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_GLIDE) {
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_GLIDE_DROP, &player->animator, false, 0);
                             player->state = Player_State_KnuxGlideDrop;
                         }
                         player->velocity.y     = velY;

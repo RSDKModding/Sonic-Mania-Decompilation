@@ -47,9 +47,9 @@ void DoorTrigger_Update(void)
             if (!player->sidekick && Player_CheckAttacking(player, self)) {
                 if (Player_CheckCollisionTouch(player, self, &DoorTrigger->hitboxBulb[self->baseAnimator.frameID])) {
                     self->bulbAnimator.frameID = 1;
-                    if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
+                    if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_GLIDE) {
                         player->velocity.x = -player->velocity.x >> 1;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_GLIDE_DROP, &player->animator, false, 0);
                         player->state = Player_State_KnuxGlideDrop;
                     }
                     else {
@@ -73,7 +73,7 @@ void DoorTrigger_Update(void)
 
                         int32 angle = RSDK.ATan2(x, y);
 #if MANIA_USE_PLUS
-                        if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH) {
+                        if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP) {
                             player->velocity.y -= 0x10000;
                         }
                         else {

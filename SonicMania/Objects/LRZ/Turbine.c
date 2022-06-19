@@ -120,7 +120,7 @@ void Turbine_State_Handles(void)
                     player->onGround        = false;
                     player->state           = Player_State_None;
 
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_H, &player->animator, true, 0);
                     player->animator.speed = 0;
 
                     self->playerAngles[playerID] = player->position.y >= self->position.y ? 0x80 : 0x180;
@@ -150,7 +150,7 @@ void Turbine_State_Handles(void)
             if (player->jumpPress) {
                 player->velocity.y = 0x600 * RSDK.Cos512(self->playerAngles[playerID]);
                 if (player->velocity.y < 0)
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
                 else
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_WALK, &player->animator, true, 0);
 
@@ -158,7 +158,7 @@ void Turbine_State_Handles(void)
                 player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;
             }
-            else if (player->animator.animationID != ANI_POLESWINGH || player->state != Player_State_None) {
+            else if (player->animator.animationID != ANI_POLE_SWING_H || player->state != Player_State_None) {
                 self->activePlayers &= ~(1 << playerID);
                 player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;

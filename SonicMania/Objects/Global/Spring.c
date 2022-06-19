@@ -143,7 +143,7 @@ void Spring_State_Vertical(void)
 
                 if (col == C_TOP) {
                     int32 anim = player->animator.animationID;
-                    if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
+                    if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                         player->animationReserve = player->animator.animationID;
                     else
                         player->animationReserve = ANI_WALK;
@@ -153,7 +153,7 @@ void Spring_State_Vertical(void)
                             player->state = Player_State_ForceRoll_Air;
                         }
                         else {
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
                             player->state = Player_State_Air;
                         }
                     }
@@ -327,11 +327,11 @@ void Spring_State_Diagonal(void)
                     if (self->direction < FLIP_Y) {
                         if (player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
                             int32 anim = player->animator.animationID;
-                            if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
+                            if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                                 player->animationReserve = player->animator.animationID;
                             else
                                 player->animationReserve = ANI_WALK;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_DIAGONAL, &player->animator, true, 0);
                         }
                     }
 

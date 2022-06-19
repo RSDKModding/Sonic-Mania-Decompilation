@@ -2104,7 +2104,7 @@ void Platform_Collision_Twister(void)
                 if ((1 << playerID) & stoodPlayers) {
                     if (player->state == Player_State_None) {
                         player->state = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIR_WALK, &player->animator, false, 0);
                     }
                 }
                 break;

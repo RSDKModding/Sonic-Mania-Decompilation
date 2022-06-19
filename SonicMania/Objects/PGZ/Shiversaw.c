@@ -193,9 +193,9 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
 #if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY) {
         int32 anim = player->animator.animationID;
-        if (anim != ANI_JUMP && anim != ANI_SPINDASH && anim != ANI_DROPDASH)
+        if (anim != ANI_JUMP && anim != ANI_SPINDASH && anim != ANI_HAMMERDROP)
             return Player_CheckHit(player, &self->sawPos[sawID]);
-        if (anim != ANI_DROPDASH)
+        if (anim != ANI_HAMMERDROP)
             return Player_CheckMightyUnspin(player, 768, true, &player->uncurlTimer);
 
         if (!(player->direction & FLIP_X))

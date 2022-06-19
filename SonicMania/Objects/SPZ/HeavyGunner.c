@@ -412,7 +412,7 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
             {
                 imageTrail->position.x -= 0x8000000;
                 imageTrail->currentPos.x -= 0x8000000;
-                for (int32 i = 0; i < ImageTrail_TrackCount; ++i) imageTrail->statePos[i].x -= 0x8000000;
+                for (int32 i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) imageTrail->statePos[i].x -= 0x8000000;
             }
         }
 
@@ -564,7 +564,7 @@ void HeavyGunner_StateManager_HandlePathChange(void)
         {
             imageTrail->position.x -= 0x10000000;
             imageTrail->currentPos.x -= 0x10000000;
-            for (int32 i = 0; i < ImageTrail_TrackCount; ++i) imageTrail->statePos[i].x -= 0x10000000;
+            for (int32 i = 0; i < IMAGETRAIL_TRACK_COUNT; ++i) imageTrail->statePos[i].x -= 0x10000000;
         }
 
         for (int32 p = 0; p < Player->playerCount; ++p) {

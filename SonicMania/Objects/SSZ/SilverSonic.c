@@ -198,8 +198,8 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
                         }
                     }
 
-                    if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
+                    if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_GLIDE) {
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_GLIDE_DROP, &player->animator, false, 0);
                         player->state = Player_State_KnuxGlideDrop;
                     }
 

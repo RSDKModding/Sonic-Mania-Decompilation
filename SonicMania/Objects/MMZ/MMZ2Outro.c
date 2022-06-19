@@ -77,7 +77,7 @@ bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
 
             if (player->onGround) {
                 player->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1, &player->animator, false, 0);
             }
             else {
                 player->state      = Player_State_Air;
@@ -114,7 +114,7 @@ bool32 MMZ2Outro_Cutscene_Rumble(EntityCutsceneSeq *host)
             if (player->onGround && player->state != Player_State_None) {
                 player->state     = Player_State_None;
                 player->groundVel = 0;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1, &player->animator, false, 0);
             }
         }
     }

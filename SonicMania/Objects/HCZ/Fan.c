@@ -330,7 +330,7 @@ void Fan_HandlePlayerInteractions_Top(void)
                 if (Water && player->position.y > Water->waterLevel)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 1);
                 else
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 1);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, false, 1);
 
                 player->state          = Player_State_Air;
                 player->tileCollisions = true;

@@ -106,7 +106,7 @@ void PathInverter_HandlePathSwitch(EntityPlayer *player)
         else
             player->direction |= FLIP_Y;
 
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
     }
 
     player->onGround   = true;

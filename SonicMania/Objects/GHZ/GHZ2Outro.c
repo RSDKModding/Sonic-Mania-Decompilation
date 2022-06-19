@@ -203,7 +203,7 @@ bool32 GHZ2Outro_Cutscene_SpyOnEggman(EntityCutsceneSeq *host)
                 if (player->onGround && player->groundedStore) {
                     player->state = Player_State_None;
                     if (player->characterID == ID_TAILS)
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE2, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_2, &player->animator, false, 0);
                     else
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
                 }

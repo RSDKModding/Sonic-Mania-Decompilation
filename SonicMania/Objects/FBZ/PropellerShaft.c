@@ -64,7 +64,7 @@ void PropellerShaft_Update(void)
                     if (player->position.y > ((self->size - 9) << 16) + self->position.y)
                         player->position.y = ((self->size - 9) << 16) + self->position.y;
 
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHAFTSWING, &player->animator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHAFT_SWING, &player->animator, false, 0);
                     player->rotation        = 0;
                     player->direction       = FLIP_NONE;
                     player->onGround        = false;

@@ -79,7 +79,7 @@ void Projectile_CheckPlayerCollisions(void)
                     if (self->isProjectile
 #if MANIA_USE_PLUS
                         || (player->characterID == ID_MIGHTY
-                            && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH))
+                            && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_HAMMERDROP))
 #endif
                     ) {
                         if (Player_CheckProjectileHit(player, self)) {

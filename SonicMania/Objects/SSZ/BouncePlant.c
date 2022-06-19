@@ -81,7 +81,7 @@ void BouncePlant_Update(void)
                         player->velocity.y = -0xB4000;
                         player->onGround   = false;
                         player->state      = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_DIAGONAL, &player->animator, false, 0);
                         RSDK.PlaySfx(BouncePlant->sfxBouncePlant, false, 255);
                     }
                     else if (abs(player->groundVel) <= 0xC00000) {
@@ -109,7 +109,7 @@ void BouncePlant_Update(void)
                         player->velocity.y = -0xB4000;
                         player->onGround   = false;
                         player->state      = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_DIAGONAL, &player->animator, false, 0);
                         RSDK.PlaySfx(BouncePlant->sfxBouncePlant, false, 255);
                     }
                     self->stood          = true;

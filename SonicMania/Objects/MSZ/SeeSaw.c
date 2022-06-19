@@ -157,7 +157,7 @@ void SeeSaw_Update(void)
                         if (self->state == SeeSaw_State_NoOrb || self->orbTimer)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                         else
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
 
                         RSDK.PlaySfx(SeeSaw->sfxSpring, false, 255);
                         player->velocity.y = -SeeSaw->launchVelocity;

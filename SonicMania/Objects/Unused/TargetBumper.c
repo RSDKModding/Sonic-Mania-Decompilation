@@ -167,7 +167,7 @@ void TargetBumper_CheckPlayerCollisions(void)
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
             int32 anim = player->animator.animationID;
-            if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && player->state != Player_State_TailsFlight) {
+            if (anim != ANI_FLY && anim != ANI_FLY_LIFT_TIRED && player->state != Player_State_TailsFlight) {
                 player->state = Player_State_Air;
                 if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                     player->animator.animationID = ANI_WALK;

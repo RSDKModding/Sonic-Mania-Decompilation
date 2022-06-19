@@ -237,7 +237,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
         dust->drawOrder  = player->drawOrder;
         RSDK.PlaySfx(Tubinaut->sfxPowerdown, false, 255);
 #if MANIA_USE_PLUS
-        if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_DROPDASH) {
+        if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_HAMMERDROP) {
 #endif
             int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
@@ -255,7 +255,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
             }
 #endif
 
-            if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_FLY) {
+            if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_GLIDE) {
                 player->velocity.x   = velX;
                 player->groundVel    = velX;
                 player->applyJumpCap = false;
@@ -311,7 +311,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int32 playerID)
             int32 velX  = 0x700 * RSDK.Cos256(angle);
             int32 velY  = 0x700 * RSDK.Sin256(angle);
 
-            if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_FLY) {
+            if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_GLIDE) {
                 player->velocity.x   = velX;
                 player->groundVel    = velX;
                 player->applyJumpCap = false;

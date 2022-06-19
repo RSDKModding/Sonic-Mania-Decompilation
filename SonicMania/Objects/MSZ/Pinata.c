@@ -86,7 +86,7 @@ void Pinata_State_CheckPlayerCollisions(void)
                     RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED) {
+                if (anim != ANI_FLY && anim != ANI_FLY_LIFT_TIRED) {
                     if (player->state != Player_State_TailsFlight) {
                         if (player->state != Player_State_DropDash)
                             player->state = Player_State_Air;

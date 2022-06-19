@@ -191,7 +191,7 @@ void TurboTurtle_HandleFans(void)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitboxFanT)) {
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
+                if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                     if (!player->onGround) {
                         player->velocity.y -= player->gravityStrength;
                         if (player->velocity.y > 0)
@@ -219,7 +219,7 @@ void TurboTurtle_HandleFans(void)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitboxFanL)) {
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
+                if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                     int32 left = (self->hitboxFanL.left << 16) + self->position.x;
                     if (player->position.x > left)
                         left = player->position.x;
@@ -240,7 +240,7 @@ void TurboTurtle_HandleFans(void)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitboxFanR)) {
                 int32 anim = player->animator.animationID;
-                if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
+                if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                     int32 right = (self->hitboxFanR.right << 16) + self->position.x;
                     if (player->position.x < right)
                         right = player->position.x;

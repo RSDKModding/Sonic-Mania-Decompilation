@@ -393,7 +393,7 @@ bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
         {
             player->up    = false;
             player->state = Player_State_None;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1 + player->playerID, &player->animator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1 + player->playerID, &player->animator, false, 0);
         }
 
         RSDK.PlaySfx(TMZ2Outro->sfxRumble, false, 255);

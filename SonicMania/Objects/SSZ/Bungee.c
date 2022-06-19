@@ -49,7 +49,7 @@ void Bungee_Update(void)
                 if (self->attatchedPlayer) {
                     player->tileCollisions = true;
                     player->velocity       = self->velocity;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
 
                     player->rotation       = 0;
                     player->animator.speed = 48;

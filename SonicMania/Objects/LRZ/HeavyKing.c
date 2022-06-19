@@ -492,7 +492,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->right      = false;
         player1->state      = Player_State_None;
 
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOK_UP, &player1->animator, false, 0);
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (player2->classID == Player->classID) {

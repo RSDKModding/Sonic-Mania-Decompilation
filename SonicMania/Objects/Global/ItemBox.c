@@ -457,9 +457,9 @@ void ItemBox_CheckHit(void)
                     anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || self->direction || player->state == Ice_State_FrozenPlayer);
                 switch (player->characterID) {
                     case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
-                    case ID_KNUCKLES: attacking |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;
+                    case ID_KNUCKLES: attacking |= anim == ANI_GLIDE || anim == ANI_GLIDE_SLIDE; break;
 #if MANIA_USE_PLUS
-                    case ID_MIGHTY: attacking |= anim == ANI_DROPDASH || player->jumpAbilityState > 1; break;
+                    case ID_MIGHTY: attacking |= anim == ANI_HAMMERDROP || player->jumpAbilityState > 1; break;
 #endif
                 }
 
@@ -848,7 +848,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
     RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
 
 #if MANIA_USE_PLUS
-    if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)
+    if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)
         player->velocity.y -= 0x10000;
     else
 #endif

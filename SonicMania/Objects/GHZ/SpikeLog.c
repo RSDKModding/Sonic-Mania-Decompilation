@@ -70,14 +70,14 @@ void SpikeLog_State_Main(void)
 #if MANIA_USE_PLUS
                 if (player->characterID == ID_MIGHTY) {
                     int32 anim = player->animator.animationID;
-                    if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
+                    if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_HAMMERDROP) {
                         if (!player->invincibleTimer && player->blinkTimer <= 0) {
                             if (abs(player->velocity.x) < 0x10000 || !player->groundedStore) {
                                 player->velocity.y       = -0x48000;
                                 player->onGround         = false;
                                 player->applyJumpCap     = false;
                                 player->jumpAbilityState = 0;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_UNSPIN, &player->animator, false, 0);
                                 RSDK.PlaySfx(Player->sfxMightyUnspin, false, 255);
                             }
 
@@ -87,7 +87,7 @@ void SpikeLog_State_Main(void)
                             }
                         }
                     }
-                    else if (player->animator.animationID != ANI_FLY)
+                    else if (player->animator.animationID != ANI_UNSPIN)
                         Player_CheckHit(player, self);
                 }
                 else {
