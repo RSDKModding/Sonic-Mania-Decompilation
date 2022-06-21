@@ -659,7 +659,7 @@ bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host)
 
         if (player1->characterID == ID_KNUCKLES) {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_GLIDE, &player1->animator, false, 6);
-            player1->animator.rotationFlag = 1; // full rotation
+            player1->animator.rotationStyle = ROTSTYLE_FULL;
         }
         else {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, false, 0);
@@ -766,7 +766,7 @@ void ERZStart_Player_HandleSuperDash(EntityPlayer *player)
 
     if (player->characterID == ID_KNUCKLES) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_GLIDE, &player->animator, false, 6);
-        player->animator.rotationFlag = 1; // full rotation
+        player->animator.rotationStyle = ROTSTYLE_FULL;
     }
     else {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 0);
@@ -910,7 +910,7 @@ void ERZStart_Player_StartSuperFly(void)
     if (self->jumpAbilityState == 1 && self->jumpPress) {
         if (self->characterID == ID_KNUCKLES) {
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_GLIDE, &self->animator, false, 6);
-            self->animator.rotationFlag = 1;
+            self->animator.rotationStyle = ROTSTYLE_FULL;
         }
         else {
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
@@ -926,7 +926,7 @@ void ERZStart_State_PlayerRebound(void)
 
     if (entity->characterID == ID_KNUCKLES) {
         RSDK.SetSpriteAnimation(entity->aniFrames, ANI_GLIDE, &entity->animator, false, 6);
-        entity->animator.rotationFlag = 1;
+        entity->animator.rotationStyle = ROTSTYLE_FULL;
     }
     else {
         RSDK.SetSpriteAnimation(entity->aniFrames, ANI_RUN, &entity->animator, false, 0);

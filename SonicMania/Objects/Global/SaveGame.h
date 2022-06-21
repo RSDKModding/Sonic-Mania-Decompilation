@@ -7,7 +7,25 @@ typedef enum {
     SAVEGAME_BLANK,
     SAVEGAME_INPROGRESS,
     SAVEGAME_COMPLETE,
-}SaveGameStates;
+} SaveGameStates;
+
+// Object Class
+struct ObjectSaveGame {
+#if !MANIA_USE_PLUS
+    RSDK_OBJECT
+    Entity *loadEntityPtr;
+    void (*loadCallback)(bool32 success);
+    Entity *saveEntityPtr;
+    void (*saveCallback)(void);
+#else
+    Entity *loadEntityPtr;
+    void (*loadCallback)(bool32 success);
+    Entity *saveEntityPtr;
+    void (*saveCallback)(bool32 success);
+#endif
+    EntitySaveGame *saveRAM;
+    int32 unused1;
+};
 
 // Entity Class
 struct EntitySaveGame {
@@ -36,24 +54,6 @@ struct EntitySaveGame {
 #endif
 };
 
-// Object Class
-struct ObjectSaveGame {
-#if !MANIA_USE_PLUS
-    RSDK_OBJECT
-    Entity *loadEntityPtr;
-    void (*loadCallback)(bool32 success);
-    Entity *saveEntityPtr;
-    void (*saveCallback)(void);
-#else
-    Entity *loadEntityPtr;
-    void (*loadCallback)(bool32 success);
-    Entity *saveEntityPtr;
-    void (*saveCallback)(bool32 success);
-#endif
-    EntitySaveGame *saveRAM;
-    int32 unused1;
-};
-
 extern ObjectSaveGame *SaveGame;
 
 // Standard Entity Events
@@ -69,7 +69,7 @@ void SaveGame_EditorLoad(void);
 #endif
 void SaveGame_Serialize(void);
 
-//Funcs
+// Funcs
 #if MANIA_USE_PLUS
 int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore);
 #else
@@ -92,4 +92,4 @@ void SaveGame_ResetPlayerState(void);
 void SaveGame_LoadFile_CB(int32 status);
 void SaveGame_SaveFile_CB(int32 status);
 
-#endif //!OBJ_SAVEGAME_H
+#endif //! OBJ_SAVEGAME_H

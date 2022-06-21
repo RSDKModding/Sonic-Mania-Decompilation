@@ -450,7 +450,7 @@ typedef struct {
     int16 frameDuration;
     int16 frameCount;
     uint8 loopIndex;
-    uint8 rotationFlag;
+    uint8 rotationStyle;
 } Animator;
 
 typedef struct {
@@ -688,6 +688,8 @@ typedef enum {
     // Not really even a real active value, but some objects set their active states to this so here it is I suppose
     ACTIVE_DISABLED = 0xFF,
 } ActiveFlags;
+
+typedef enum { ROTSTYLE_NONE, ROTSTYLE_FULL, ROTFLAG_45DEG, ROTSTYLE_90DEG, ROTSTYLE_180DEG, ROTSTYLE_STATICFRAMES } RotationSyles;
 
 typedef enum {
     LAYER_HSCROLL,

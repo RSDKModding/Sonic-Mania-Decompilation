@@ -415,15 +415,32 @@ void ItemBox_CheckHit(void)
             }
 #endif
 
-            if (player->sidekick) {
+            int32 anim = player->animator.animationID;
+            bool32 attacking =
+                anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || self->direction || player->state == Ice_State_FrozenPlayer);
+            switch (player->characterID) {
+                case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
+                case ID_KNUCKLES: attacking |= anim == ANI_GLIDE || anim == ANI_GLIDE_SLIDE; break;
+#if MANIA_USE_PLUS
+                case ID_MIGHTY: attacking |= anim == ANI_HAMMERDROP || player->jumpAbilityState > 1; break;
+#endif
+            }
+
+            if (attacking && !player->sidekick) {
+                if (Player_CheckBadnikTouch(player, self, &ItemBox->hitboxItemBox)) {
+                    ItemBox_Break(self, player);
+                    foreach_break;
+                }
+            }
+            else {
                 self->position.x -= self->moveOffset.x;
                 self->position.y -= self->moveOffset.y;
                 int32 px = player->position.x;
                 int32 py = player->position.y;
 
-                uint8 side         = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
-                player->position.x = px;
+                uint8 side = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
 
+                player->position.x = px;
                 player->position.y = py;
                 self->position.x += self->moveOffset.x;
                 self->position.y += self->moveOffset.y;
@@ -449,59 +466,6 @@ void ItemBox_CheckHit(void)
                         player->position.x = px;
                         player->position.y = py;
                     }
-                }
-            }
-            else {
-                int32 anim = player->animator.animationID;
-                bool32 attacking =
-                    anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || self->direction || player->state == Ice_State_FrozenPlayer);
-                switch (player->characterID) {
-                    case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
-                    case ID_KNUCKLES: attacking |= anim == ANI_GLIDE || anim == ANI_GLIDE_SLIDE; break;
-#if MANIA_USE_PLUS
-                    case ID_MIGHTY: attacking |= anim == ANI_HAMMERDROP || player->jumpAbilityState > 1; break;
-#endif
-                }
-
-                if (!attacking) {
-                    self->position.x -= self->moveOffset.x;
-                    self->position.y -= self->moveOffset.y;
-                    int32 px = player->position.x;
-                    int32 py = player->position.y;
-
-                    uint8 side = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
-
-                    player->position.x = px;
-                    player->position.y = py;
-                    self->position.x += self->moveOffset.x;
-                    self->position.y += self->moveOffset.y;
-
-                    if (side == C_BOTTOM) {
-                        self->active = ACTIVE_ALWAYS;
-
-                        if (!self->lrzConvPhys)
-                            self->state = ItemBox_State_Falling;
-
-                        self->velocity.y = -0x20000;
-
-                        if (!player->onGround)
-                            player->velocity.y = 0x20000;
-                    }
-                    else if (side == C_TOP) {
-                        player->position.x += self->moveOffset.x;
-                        player->position.y += self->moveOffset.y;
-                    }
-
-                    if (Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox) == C_BOTTOM) {
-                        if (player->onGround) {
-                            player->position.x = px;
-                            player->position.y = py;
-                        }
-                    }
-                }
-                else if (Player_CheckBadnikTouch(player, self, &ItemBox->hitboxItemBox)) {
-                    ItemBox_Break(self, player);
-                    foreach_break;
                 }
             }
         }

@@ -255,20 +255,20 @@ void EscapeCar_StateEncore_GoodEnd(void)
         debris->drawOrder       = Zone->objectDrawLow + 1;
         debris->rotSpeed        = 2;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 7, &debris->animator, true, 0);
-        debris->animator.rotationFlag = 1;
-        debris->isPermanent           = true;
+        debris->animator.rotationStyle = ROTSTYLE_FULL;
+        debris->isPermanent            = true;
 
-        debris                        = CREATE_ENTITY(Debris, NULL, self->position.x, self->position.y);
-        debris->state                 = Debris_State_Fall;
-        debris->gravityStrength       = 0x3800;
-        debris->velocity.x            = 0x40000;
-        debris->velocity.y            = -0x48000;
-        debris->drawFX                = FX_ROTATE;
-        debris->drawOrder             = Zone->objectDrawLow + 1;
-        debris->rotSpeed              = -4;
-        debris->animator              = self->carAnimator;
-        debris->isPermanent           = true;
-        debris->animator.rotationFlag = 1;
+        debris                         = CREATE_ENTITY(Debris, NULL, self->position.x, self->position.y);
+        debris->state                  = Debris_State_Fall;
+        debris->gravityStrength        = 0x3800;
+        debris->velocity.x             = 0x40000;
+        debris->velocity.y             = -0x48000;
+        debris->drawFX                 = FX_ROTATE;
+        debris->drawOrder              = Zone->objectDrawLow + 1;
+        debris->rotSpeed               = -4;
+        debris->animator               = self->carAnimator;
+        debris->isPermanent            = true;
+        debris->animator.rotationStyle = ROTSTYLE_FULL;
 
         RSDK.PlaySfx(EscapeCar->sfxBumper, false, 255);
         destroyEntity(self);

@@ -104,8 +104,10 @@ void HUD_Serialize(void);
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 digitCount);
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int32 value);
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value);
+
 void HUD_GetButtonFrame(Animator *animator, int32 buttonID);
 void HUD_GetActionButtonFrames(void);
+
 void HUD_State_ComeOnScreen(void);
 void HUD_State_GoOffScreen(void);
 

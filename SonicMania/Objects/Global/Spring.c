@@ -19,6 +19,7 @@ void Spring_Update(void)
     StateMachine_Run(self->state);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == 8)
         self->animator.speed = 0;
 }
@@ -143,10 +144,10 @@ void Spring_State_Vertical(void)
 
                 if (col == C_TOP) {
                     int32 anim = player->animator.animationID;
+
+                    player->animationReserve = ANI_WALK;
                     if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                         player->animationReserve = player->animator.animationID;
-                    else
-                        player->animationReserve = ANI_WALK;
 
                     if (player->state != Ice_State_FrozenPlayer) {
                         if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
@@ -177,26 +178,27 @@ void Spring_State_Vertical(void)
     else {
         foreach_active(Player, player)
         {
-            if ((!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))
-                && Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
-                if (player->state != Ice_State_FrozenPlayer) {
-                    if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground)
-                        player->state = Player_State_ForceRoll_Air;
-                    else
-                        player->state = Player_State_Air;
-                }
+            if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
+                if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
+                    if (player->state != Ice_State_FrozenPlayer) {
+                        if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground)
+                            player->state = Player_State_ForceRoll_Air;
+                        else
+                            player->state = Player_State_Air;
+                    }
 
-                player->onGround       = false;
-                player->velocity.y     = self->velocity.y;
-                player->tileCollisions = true;
+                    player->onGround       = false;
+                    player->velocity.y     = self->velocity.y;
+                    player->tileCollisions = true;
 
-                self->animator.speed   = 0x80;
-                self->animator.timer   = 0;
-                self->animator.frameID = 1;
+                    self->animator.speed   = 0x80;
+                    self->animator.timer   = 0;
+                    self->animator.frameID = 1;
 
-                if (!self->sfxTimer) {
-                    RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                    self->sfxTimer = 8;
+                    if (!self->sfxTimer) {
+                        RSDK.PlaySfx(Spring->sfxSpring, false, 255);
+                        self->sfxTimer = 8;
+                    }
                 }
             }
         }
@@ -209,44 +211,42 @@ void Spring_State_Horizontal(void)
     if (self->direction == FLIP_NONE) {
         foreach_active(Player, player)
         {
-            if ((!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))
-                && Player_CheckCollisionBox(player, self, &self->hitbox) == C_RIGHT && (!self->onGround || player->onGround)) {
-                if (player->collisionMode == CMODE_ROOF) {
-                    player->velocity.x = -self->velocity.x;
-                    player->groundVel  = -self->velocity.x;
-                }
-                else {
-                    player->velocity.x = self->velocity.x;
-                    player->groundVel  = player->velocity.x;
-                }
-
-                if (player->state != Ice_State_FrozenPlayer) {
-                    if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air
-                        && player->state != Player_State_ForceRoll_Ground) {
-                        if (player->onGround)
-                            player->state = Player_State_Ground;
-                        else
-                            player->state = Player_State_Air;
+            if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
+                if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_RIGHT && (!self->onGround || player->onGround)) {
+                    if (player->collisionMode == CMODE_ROOF) {
+                        player->velocity.x = -self->velocity.x;
+                        player->groundVel  = -self->velocity.x;
+                    }
+                    else {
+                        player->velocity.x = self->velocity.x;
+                        player->groundVel  = player->velocity.x;
                     }
 
-                    int32 anim = player->animator.animationID;
-                    if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                        player->animator.animationID = ANI_WALK;
-                }
+                    if (player->state != Ice_State_FrozenPlayer) {
+                        if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air
+                            && player->state != Player_State_ForceRoll_Ground) {
+                            player->state = player->onGround ? Player_State_Ground : Player_State_Air;
+                        }
 
-                player->controlLock    = 16;
-                player->skidding       = false;
-                player->pushing        = false;
-                player->direction      = FLIP_NONE;
-                player->tileCollisions = true;
+                        int32 anim = player->animator.animationID;
+                        if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
+                            player->animator.animationID = ANI_WALK;
+                    }
 
-                self->animator.speed   = 0x80;
-                self->animator.timer   = 0;
-                self->animator.frameID = 1;
+                    player->controlLock    = 16;
+                    player->skidding       = false;
+                    player->pushing        = false;
+                    player->direction      = FLIP_NONE;
+                    player->tileCollisions = true;
 
-                if (self->sfxTimer == 0) {
-                    RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                    self->sfxTimer = 8;
+                    self->animator.speed   = 0x80;
+                    self->animator.timer   = 0;
+                    self->animator.frameID = 1;
+
+                    if (self->sfxTimer == 0) {
+                        RSDK.PlaySfx(Spring->sfxSpring, false, 255);
+                        self->sfxTimer = 8;
+                    }
                 }
             }
         }
@@ -254,44 +254,42 @@ void Spring_State_Horizontal(void)
     else {
         foreach_active(Player, player)
         {
-            if ((!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))
-                && Player_CheckCollisionBox(player, self, &self->hitbox) == C_LEFT && (!self->onGround || player->onGround)) {
-                if (player->collisionMode == CMODE_ROOF) {
-                    player->velocity.x = -self->velocity.x;
-                    player->groundVel  = -self->velocity.x;
-                }
-                else {
-                    player->velocity.x = self->velocity.x;
-                    player->groundVel  = player->velocity.x;
-                }
-
-                if (player->state != Ice_State_FrozenPlayer) {
-                    if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air
-                        && player->state != Player_State_ForceRoll_Ground) {
-                        if (player->onGround)
-                            player->state = Player_State_Ground;
-                        else
-                            player->state = Player_State_Air;
+            if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
+                if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_LEFT && (!self->onGround || player->onGround)) {
+                    if (player->collisionMode == CMODE_ROOF) {
+                        player->velocity.x = -self->velocity.x;
+                        player->groundVel  = -self->velocity.x;
+                    }
+                    else {
+                        player->velocity.x = self->velocity.x;
+                        player->groundVel  = player->velocity.x;
                     }
 
-                    int32 anim = player->animator.animationID;
-                    if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                        player->animator.animationID = ANI_WALK;
-                }
+                    if (player->state != Ice_State_FrozenPlayer) {
+                        if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air
+                            && player->state != Player_State_ForceRoll_Ground) {
+                            player->state = player->onGround ? Player_State_Ground : Player_State_Air;
+                        }
 
-                player->controlLock    = 16;
-                player->skidding       = 0;
-                player->pushing        = false;
-                player->direction      = FLIP_X;
-                player->tileCollisions = true;
+                        int32 anim = player->animator.animationID;
+                        if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
+                            player->animator.animationID = ANI_WALK;
+                    }
 
-                self->animator.speed   = 0x80;
-                self->animator.timer   = 0;
-                self->animator.frameID = 1;
+                    player->controlLock    = 16;
+                    player->skidding       = 0;
+                    player->pushing        = false;
+                    player->direction      = FLIP_X;
+                    player->tileCollisions = true;
 
-                if (self->sfxTimer == 0) {
-                    RSDK.PlaySfx(Spring->sfxSpring, false, 255);
-                    self->sfxTimer = 8;
+                    self->animator.speed   = 0x80;
+                    self->animator.timer   = 0;
+                    self->animator.frameID = 1;
+
+                    if (self->sfxTimer == 0) {
+                        RSDK.PlaySfx(Spring->sfxSpring, false, 255);
+                        self->sfxTimer = 8;
+                    }
                 }
             }
         }
@@ -326,11 +324,10 @@ void Spring_State_Diagonal(void)
 
                     if (self->direction < FLIP_Y) {
                         if (player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
-                            int32 anim = player->animator.animationID;
+                            int32 anim               = player->animator.animationID;
+                            player->animationReserve = ANI_WALK;
                             if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                                 player->animationReserve = player->animator.animationID;
-                            else
-                                player->animationReserve = ANI_WALK;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_DIAGONAL, &player->animator, true, 0);
                         }
                     }
@@ -359,8 +356,10 @@ void Spring_State_Diagonal(void)
 void Spring_EditorDraw(void)
 {
     RSDK_THIS(Spring);
+
     RSDK.SetSpriteAnimation(Spring->aniFrames, self->type, &self->animator, true, 0);
     self->direction = self->flipFlag;
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 

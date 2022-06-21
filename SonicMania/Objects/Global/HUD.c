@@ -203,11 +203,11 @@ void HUD_Draw(void)
             // Draw Player YPos
             lifePos.x = (ScreenInfo[player->camera->screenID].width - 16) << 16;
             lifePos.y += 0x100000;
-            HUD_DrawNumbersBase16(&lifePos, (player->position.y >> 0x10));
+            HUD_DrawNumbersBase16(&lifePos, player->position.y >> 0x10);
 
             // Draw Player XPos
             lifePos.x -= 0x90000;
-            HUD_DrawNumbersBase16(&lifePos, (player->position.x >> 0x10));
+            HUD_DrawNumbersBase16(&lifePos, player->position.x >> 0x10);
         }
     }
 #if MANIA_USE_PLUS
