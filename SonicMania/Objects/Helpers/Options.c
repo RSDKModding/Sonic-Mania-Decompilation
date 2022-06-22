@@ -23,7 +23,7 @@ void Options_StageLoad(void)
 {
 #if !MANIA_USE_PLUS
     Options->changed = false;
-    if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_PC) {
+    if (sku_platform == PLATFORM_DEV || sku_platform == PLATFORM_PC) {
         Options_Reload();
     }
     else {

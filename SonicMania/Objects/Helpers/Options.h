@@ -54,7 +54,7 @@ void Options_EditorLoad(void);
 #endif
 void Options_Serialize(void);
 
-// Funcs
+// Extra Entity Functions
 void Options_Reload(void);
 void Options_GetWinSize(void);
 void Options_LoadCallback(bool32 success);

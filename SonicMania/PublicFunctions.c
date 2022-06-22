@@ -2481,8 +2481,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(GameProgress_TrackGameProgress);
     ADD_PUBLIC_FUNC(GameProgress_ClearBSSSave);
 #endif
-    ADD_PUBLIC_FUNC(GameProgress_UnlockAllMedals);
     ADD_PUBLIC_FUNC(GameProgress_UnlockAll);
+    ADD_PUBLIC_FUNC(GameProgress_LockAllSpecialClear);
     ADD_PUBLIC_FUNC(GameProgress_ClearProgress);
     ADD_PUBLIC_FUNC(GameProgress_MarkZoneCompleted);
     ADD_PUBLIC_FUNC(GameProgress_CheckZoneClear);

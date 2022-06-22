@@ -106,8 +106,8 @@ void GameProgress_TrackGameProgress(void (*callback)(bool32 success));
 void GameProgress_TrackGameProgress(void (*callback)(void));
 #endif
 void GameProgress_ClearBSSSave(void);
-void GameProgress_UnlockAllMedals(void);
 void GameProgress_UnlockAll(void);
+void GameProgress_LockAllSpecialClear(void);
 void GameProgress_ClearProgress(void);
 void GameProgress_MarkZoneCompleted(int32 zoneID);
 bool32 GameProgress_CheckZoneClear(void);

@@ -122,8 +122,8 @@ bool32 DASetup_HandleMedallionDebug(void)
 
         case 46:
             if (!progress->allGoldMedals) {
-                GameProgress_UnlockAllMedals();
-                progress->allSpecialCleared = false;
+                GameProgress_UnlockAll();
+                GameProgress_LockAllSpecialClear();
                 RSDK.PlaySfx(DASetup->sfxEmerald, false, 255);
                 return true;
             }

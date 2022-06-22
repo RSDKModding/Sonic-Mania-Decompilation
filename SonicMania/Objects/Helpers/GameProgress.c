@@ -203,7 +203,7 @@ void GameProgress_ClearBSSSave(void)
     progress->silverMedalCount   = 0;
     memset(progress->medals, 0, sizeof(progress->medals));
 }
-void GameProgress_UnlockAllMedals(void)
+void GameProgress_UnlockAll(void)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
@@ -231,10 +231,10 @@ void GameProgress_UnlockAllMedals(void)
     }
 }
 
-void GameProgress_UnlockAll(void)
+void GameProgress_LockAllSpecialClear(void)
 {
     if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
-        LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
+        LogHelpers_Print("WARNING GameProgress Attempted to lock special clear before loading SaveGame file");
     }
     else {
         EntityGameProgress *progress = GameProgress_GetGameProgress();

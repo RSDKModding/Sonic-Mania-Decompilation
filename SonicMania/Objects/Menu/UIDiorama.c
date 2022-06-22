@@ -14,24 +14,22 @@ void UIDiorama_Update(void)
 {
     RSDK_THIS(UIDiorama);
 
+    bool32 changeDiorama = self->lastDioramaID != self->dioramaID;
+
     EntityUIControl *parent = self->parent;
     if (parent) {
         if (parent->active != ACTIVE_ALWAYS)
             self->timer = 2;
 
+        if (self->parentActivity != parent->active && parent->active == ACTIVE_ALWAYS) 
+            changeDiorama = true;
+
         self->parentActivity = parent->active;
-        if (self->parentActivity == parent->active || parent->active != ACTIVE_ALWAYS) {
-            if (self->lastDioramaID != self->dioramaID) {
-                self->timer = 12;
-                UIDiorama_ChangeDiorama(self->dioramaID);
-            }
-        }
     }
-    else {
-        if (self->lastDioramaID != self->dioramaID) {
-            self->timer = 12;
-            UIDiorama_ChangeDiorama(self->dioramaID);
-        }
+
+    if (changeDiorama) {
+        self->timer = 12;
+        UIDiorama_ChangeDiorama(self->dioramaID);
     }
 
     if (self->timer > 0) {

@@ -178,8 +178,8 @@ void LevelSelect_Cheat_UnlockAllMedals(void)
 {
     if (globals->superSecret && (globals->secrets & GET_MEDAL_MOD(SECRET_RICKYMODE))) {
         RSDK.PlaySfx(LevelSelect->sfxMedalGot, false, 255);
-        GameProgress_UnlockAllMedals();
         GameProgress_UnlockAll();
+        GameProgress_LockAllSpecialClear();
     }
     else {
         RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
