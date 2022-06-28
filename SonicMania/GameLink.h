@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#define sprintf_s(x, _,...) sprintf(x, __VA_ARGS__)
+#define sprintf_s(x, _, ...) sprintf(x, __VA_ARGS__)
 
 #if defined _WIN32
 #undef sprintf_s
@@ -97,6 +97,10 @@ typedef struct {
 } Vector2;
 
 typedef struct {
+#if RETRO_REV0U
+    // used for languages such as beeflang that always have vfTables in classes
+    void *vfTable;
+#endif
     Vector2 position;
     Vector2 scale;
     Vector2 velocity;
@@ -137,7 +141,37 @@ typedef struct {
     uint16 classID;                                                                                                                                  \
     uint8 active;
 
-#if RETRO_REV02
+#if RETRO_REV0U
+#define RSDK_ENTITY                                                                                                                                  \
+    void *vfTable;                                                                                                                                   \
+    Vector2 position;                                                                                                                                \
+    Vector2 scale;                                                                                                                                   \
+    Vector2 velocity;                                                                                                                                \
+    Vector2 updateRange;                                                                                                                             \
+    int32 angle;                                                                                                                                     \
+    int32 alpha;                                                                                                                                     \
+    int32 rotation;                                                                                                                                  \
+    int32 groundVel;                                                                                                                                 \
+    int32 depth3D;                                                                                                                                   \
+    uint16 group;                                                                                                                                    \
+    uint16 classID;                                                                                                                                  \
+    bool32 inBounds;                                                                                                                                 \
+    bool32 isPermanent;                                                                                                                              \
+    bool32 tileCollisions;                                                                                                                           \
+    bool32 interaction;                                                                                                                              \
+    bool32 onGround;                                                                                                                                 \
+    uint8 active;                                                                                                                                    \
+    uint8 filter;                                                                                                                                    \
+    uint8 direction;                                                                                                                                 \
+    uint8 drawOrder;                                                                                                                                 \
+    uint8 collisionLayers;                                                                                                                           \
+    uint8 collisionPlane;                                                                                                                            \
+    uint8 collisionMode;                                                                                                                             \
+    uint8 drawFX;                                                                                                                                    \
+    uint8 inkEffect;                                                                                                                                 \
+    uint8 visible;                                                                                                                                   \
+    uint8 activeScreens;
+#elif RETRO_REV02
 #define RSDK_ENTITY                                                                                                                                  \
     Vector2 position;                                                                                                                                \
     Vector2 scale;                                                                                                                                   \
@@ -489,6 +523,29 @@ typedef struct {
     uint16 *layout;
     uint8 *lineScroll;
 } TileLayer;
+
+#if RETRO_REV0U
+typedef struct {
+    Vector2 position;
+    bool32 collided;
+    uint8 angle;
+} CollisionSensor;
+
+typedef struct {
+    uint8 floorMasks[TILE_SIZE];
+    uint8 lWallMasks[TILE_SIZE];
+    uint8 roofMasks[TILE_SIZE];
+    uint8 rWallMasks[TILE_SIZE];
+} CollisionMask;
+
+typedef struct {
+    uint8 floorAngle;
+    uint8 lWallAngle;
+    uint8 rWallAngle;
+    uint8 roofAngle;
+    uint8 flag;
+} TileInfo;
+#endif
 
 typedef struct {
     uint8 idPS4;     // achievement ID (PS4)
@@ -1075,6 +1132,9 @@ typedef enum {
     SUPER_DRAW,
     SUPER_CREATE,
     SUPER_STAGELOAD,
+#if RETRO_REV0U
+    SUPER_STATICLOAD,
+#endif
     SUPER_EDITORDRAW,
     SUPER_EDITORLOAD,
     SUPER_SERIALIZE
@@ -1089,10 +1149,18 @@ typedef enum {
 // Mod Table
 typedef struct {
     // Registration & Core
+#if RETRO_REV0U
+    void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size, void (*initCB)(void *globals));
+    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                           void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                           void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), void (*staticLoad)(void *staticVars),
+                           const char *inherited);
+#else
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size);
     void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
+#endif
     void *RegisterObject_STD;
     void (*RegisterObjectHook)(Object **staticVars, const char *staticName);
     void *(*FindObject)(const char *name);
@@ -1154,6 +1222,9 @@ typedef struct {
     bool32 (*GetConfirmButtonFlip)(void);
     void (*ExitGame)(void);
     void (*LaunchManual)(void);
+#if RETRO_REV0U
+    int32 (*GetDefaultGamepadType)(void);
+#endif
     bool32 (*IsOverlayEnabled)(uint32 inputID);
     bool32 (*CheckDLC)(int32 dlc);
 #if MANIA_USE_EGS
@@ -1248,10 +1319,17 @@ typedef struct {
 // Function Table
 typedef struct {
     // Registration
+#if RETRO_REV0U
+    void (*RegisterGlobalVariables)(void **globals, int32 size, void (*initCB)(void *globals));
+    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
+                           void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
+                           void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), void (*staticLoad)(void *staticVars));
+#else
     void (*RegisterGlobalVariables)(void **globals, int32 size);
     void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
                            void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
+#endif
 #if RETRO_REV02
     void (*RegisterStaticVariables)(void **varClass, const char *name, uint32 classSize);
 #endif
@@ -1392,6 +1470,9 @@ typedef struct {
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(uint16 dest, uint16 src, uint16 count);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
+#if RETRO_REV0U
+    void (*DrawDynamicAniTiles)(Animator *animator, uint16 tileIndex);
+#endif
     void (*FillScreen)(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB);
 
     // Meshes & 3D Scenes
@@ -1442,15 +1523,35 @@ typedef struct {
     bool32 (*ObjectTileGrip)(void *entity, uint16 collisionLayers, uint8 collisionMode, uint8 collisionPlane, int32 xOffset, int32 yOffset,
                              int32 tolerance);
     void (*ProcessObjectMovement)(void *entity, Hitbox *outer, Hitbox *inner);
+#if RETRO_REV0U
+    void (*SetupCollisionConfig)(int32 minDistance, uint8 lowTolerance, uint8 highTolerance, uint8 floorAngleTolerance, uint8 wallAngleTolerance,
+                                 uint8 roofAngleTolerance);
+    void (*SetPathGripSensors)(CollisionSensor *sensors); // expects 5 sensors
+    void (*FindFloorPosition)(CollisionSensor *sensor);
+    void (*FindLWallPosition)(CollisionSensor *sensor);
+    void (*FindRoofPosition)(CollisionSensor *sensor);
+    void (*FindRWallPosition)(CollisionSensor *sensor);
+    void (*FloorCollision)(CollisionSensor *sensor);
+    void (*LWallCollision)(CollisionSensor *sensor);
+    void (*RoofCollision)(CollisionSensor *sensor);
+    void (*RWallCollision)(CollisionSensor *sensor);
+#endif
     int32 (*GetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode);
     void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 angle);
     uint8 (*GetTileFlags)(uint16 tileID, uint8 cPlane);
     void (*SetTileFlags)(uint16 tileID, uint8 cPlane, uint8 flag);
+#if RETRO_REV0U
+    void (*CopyCollisionMask)(uint16 dst, uint16 src, uint8 cPlane, uint8 cMode);
+    void (*GetCollisionInfo)(CollisionMask **masks, TileInfo **tileInfo);
+#endif
 
     // Audio
     int32 (*GetSfx)(const char *path);
     int32 (*PlaySfx)(uint16 sfx, int32 loopPoint, int32 priority);
     void (*StopSfx)(uint16 sfx);
+#if RETRO_REV0U
+    void (*StopAllSfx)(void);
+#endif
     int32 (*PlayStream)(const char *filename, uint32 channel, uint32 startPos, uint32 loopPoint, bool32 loadASync);
     void (*SetChannelAttributes)(uint8 channel, float volume, float pan, float speed);
     void (*StopChannel)(uint32 channel);
@@ -1504,15 +1605,21 @@ typedef struct {
     void (*SetActiveVariable)(int32 classID, const char *name);
     void (*AddVarEnumValue)(const char *name);
 
+    // Printing (Rev01)
+#if !RETRO_REV02
+    void (*PrintMessage)(void *message, uint8 type);
+#endif
+
     // Debugging
 #if RETRO_REV02
     void (*ClearViewableVariables)(void);
     void (*AddViewableVariable)(const char *name, void *value, ViewableVarTypes type, int32 min, int32 max);
 #endif
 
-    // Printing (Rev01)
-#if !RETRO_REV02
-    void (*PrintMessage)(void *message, uint8 type);
+#if RETRO_REV0U
+    // Origins Extras
+    void (*NotifyStats)(int32 id, int32 param1, int32 param2, int32 param3);
+    void (*SetGameFinished)(void);
 #endif
 } RSDKFunctionTable;
 
@@ -1559,21 +1666,51 @@ typedef struct {
 
 #define RSDK_DRAWING_OVERLAY(isDrawingOverlay) SceneInfo->debugMode = isDrawingOverlay
 
+#if RETRO_REV0U
+#define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
+                        object##_Serialize, NULL)
+
+#define RSDK_REGISTER_OBJECT_STATICLOAD(object)                                                                                                      \
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
+                        object##_Serialize, object##_StaticLoad)
+#else
 #define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
                         object##_Serialize)
+#endif
+
+#else
+
+#if RETRO_REV0U
+#define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize,                   \
+                        object##_StaticLoad)
 #else
 #define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize)
 #endif
 
+#endif
+
 #if RETRO_USE_MOD_LOADER
+
+#if RETRO_REV0U
+#define MOD_REGISTER_OBJECT(object, inherit)                                                                                                         \
+    Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
+                       object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
+                       object##_Serialize, object##_StaticLoad, inherit)
+#else
 #define MOD_REGISTER_OBJECT(object, inherit)                                                                                                         \
     Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
                        object##_Serialize, inherit)
+#endif
 
 #define MOD_REGISTER_OBJECT_HOOK(object) Mod.RegisterObjectHook((Object **)&object, #object)
 

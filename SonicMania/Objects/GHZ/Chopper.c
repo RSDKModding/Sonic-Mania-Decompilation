@@ -145,17 +145,17 @@ void Chopper_State_Jump(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
 
-    if (self->velocity.y >= -0x38000) {
-        if (self->velocity.y <= 0x38000) {
-            self->animator.speed = 2;
-        }
-        else {
+    if (self->velocity.y < -0x38000) {
+        self->animator.speed = 1;
+    }
+    else {
+        if (self->velocity.y > 0x38000) {
             self->animator.frameID = 0;
             self->animator.speed   = 0;
         }
-    }
-    else {
-        self->animator.speed = 1;
+        else {
+            self->animator.speed = 2;
+        }
     }
 
     if (self->position.y > self->startPos.y) {

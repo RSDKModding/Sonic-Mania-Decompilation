@@ -37,7 +37,7 @@ void Music_Create(void *data)
                 Music_SetMusicTrack(trackName, self->trackID, self->trackLoop);
 
                 if (self->playOnLoad)
-                    self->state = Music_State_PlayAutoMusic;
+                    self->state = Music_State_PlayOnLoad;
                 else
                     destroyEntity(self);
             }
@@ -94,7 +94,7 @@ void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint)
     Music->trackLoops[track]         = loopPoint;
 }
 
-void Music_State_PlayAutoMusic(void)
+void Music_State_PlayOnLoad(void)
 {
     RSDK_THIS(Music);
 

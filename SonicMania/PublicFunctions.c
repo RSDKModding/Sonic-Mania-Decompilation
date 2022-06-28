@@ -1769,7 +1769,7 @@ void InitPublicFunctions()
 
     // Global/Music
     ADD_PUBLIC_FUNC(Music_SetMusicTrack);
-    ADD_PUBLIC_FUNC(Music_State_PlayAutoMusic);
+    ADD_PUBLIC_FUNC(Music_State_PlayOnLoad);
     ADD_PUBLIC_FUNC(Music_PlayQueuedTrack);
     ADD_PUBLIC_FUNC(Music_PlayTrack);
     ADD_PUBLIC_FUNC(Music_PlayTrackPtr);

@@ -931,7 +931,16 @@ void TitleCard_EditorDraw(void)
     RSDK.DrawSprite(&self->decorationAnimator, NULL, false);
 }
 
-void TitleCard_EditorLoad(void) { TitleCard->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void TitleCard_EditorLoad(void)
+{
+    TitleCard->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TitleCard, actID);
+    RSDK_ENUM_VAR("Act 1", ACT_1);
+    RSDK_ENUM_VAR("Act 2", ACT_2);
+    RSDK_ENUM_VAR("Act 3", ACT_3);
+    RSDK_ENUM_VAR("No Act", ACT_NONE);
+}
 #endif
 
 void TitleCard_Serialize(void)

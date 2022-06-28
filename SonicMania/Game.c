@@ -44,6 +44,27 @@ RSDKScreenInfo *ScreenInfo = NULL;
 
 GlobalVariables *globals;
 
+#if RETRO_REV0U
+void GlobalVariables_InitCB(GlobalVariables *globals)
+{
+    memset(globals, 0, sizeof(GlobalVariables));
+
+    globals->saveSlotID = NO_SAVE_SLOT;
+
+    globals->presenceID = -1;
+
+#if MANIA_USE_PLUS
+    globals->replayTableID = 0xFFFF;
+    globals->taTableID     = 0xFFFF;
+
+    globals->stock          = (ID_RAY << 16) | (ID_KNUCKLES << 8) | ID_TAILS;
+    globals->characterFlags = ID_SONIC | ID_TAILS | ID_KNUCKLES | ID_MIGHTY | ID_RAY;
+
+    globals->superMusicEnabled = true;
+#endif
+}
+#endif
+
 // -------------------------
 // LINK GAME/MOD LOGIC
 // -------------------------
@@ -118,7 +139,11 @@ void LinkGameLogicDLL(EngineInfo info)
 // This is actually part of "LinkGameLogicDLL" but since we have 2 versions of it, its easier to use shared code this way
 void InitGameLogic(void)
 {
+#if RETRO_REV0U
+    RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables), GlobalVariables_InitCB);
+#else
     RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables));
+#endif
 
     RSDK_REGISTER_OBJECT(Acetone);
     RSDK_REGISTER_OBJECT(ActClear);

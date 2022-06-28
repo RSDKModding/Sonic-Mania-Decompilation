@@ -130,7 +130,7 @@ void SignPost_Create(void *data)
             bool32 destroy = true;
             switch (self->type) {
                 default: break;
-                case SIGNPOST_NORMAL: // Normal (Main Game Only)
+                case SIGNPOST_RUNPAST: // Normal (Main Game Only)
                     if (globals->gameMode != MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
                         self->state  = SignPost_State_Setup;
@@ -138,7 +138,7 @@ void SignPost_Create(void *data)
                     }
                     break;
 
-                case SIGNPOST_HIDDEN: // Hidden (Until Dropped)
+                case SIGNPOST_DROP: // Hidden (Until Dropped)
                     if (globals->gameMode != MODE_COMPETITION) {
                         self->active = ACTIVE_XBOUNDS;
                         self->state  = StateMachine_None;
@@ -146,7 +146,7 @@ void SignPost_Create(void *data)
                     }
                     break;
 
-                case SIGNPOST_NORMAL_VS: // Normal (Competition Only)
+                case SIGNPOST_COMP: // Normal (Competition Only)
                     if (globals->gameMode == MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
                         self->state  = SignPost_State_Setup;
@@ -483,8 +483,8 @@ void SignPost_State_Fall(void)
     RSDK_THIS(SignPost);
     self->active           = ACTIVE_NORMAL;
     SceneInfo->timeEnabled = false;
-    if (self->type == SIGNPOST_HIDDEN) {
-        self->type = SIGNPOST_NORMAL;
+    if (self->type == SIGNPOST_DROP) {
+        self->type = SIGNPOST_RUNPAST;
         if (globals->gameMode < MODE_COMPETITION) {
             switch (GET_CHARACTER_ID(1)) {
                 default: 
@@ -658,10 +658,9 @@ void SignPost_EditorLoad(void)
     SignPost->aniFrames = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(SignPost, type);
-    RSDK_ENUM_VAR("Normal (Main Game Only)", SIGNPOST_NORMAL);
-    RSDK_ENUM_VAR("Hidden", SIGNPOST_HIDDEN);
-    RSDK_ENUM_VAR("Normal (Competition Only)", SIGNPOST_NORMAL_VS);
-    // RSDK_ENUM_VAR("Decoration", SIGNPOST_DECOR);
+    RSDK_ENUM_VAR("Run Past", SIGNPOST_RUNPAST);
+    RSDK_ENUM_VAR("Drop", SIGNPOST_DROP);
+    RSDK_ENUM_VAR("Competition", SIGNPOST_COMP);
 }
 #endif
 

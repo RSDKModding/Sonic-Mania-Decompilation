@@ -96,7 +96,7 @@ void Music_Serialize(void);
 
 // Extra Entity Functions
 void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint);
-void Music_State_PlayAutoMusic(void);
+void Music_State_PlayOnLoad(void);
 // Plays a track, and manages the music stack so it can be returned to
 void Music_PlayQueuedTrack(uint8 trackID);
 // Plays a track, doesn't use the music stack at all

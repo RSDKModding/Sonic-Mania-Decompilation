@@ -4,9 +4,9 @@
 #include "Game.h"
 
 typedef enum {
-    SIGNPOST_NORMAL,
-    SIGNPOST_HIDDEN,
-    SIGNPOST_NORMAL_VS,
+    SIGNPOST_RUNPAST,
+    SIGNPOST_DROP,
+    SIGNPOST_COMP,
     SIGNPOST_DECOR,
 }SignPostTypes;
 

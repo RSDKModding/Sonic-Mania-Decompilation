@@ -10,14 +10,18 @@
 // ENGINE VERSIONS
 // -------------------------
 
-#define RETRO_REVISION (2)
+#define RETRO_REVISION (3)
 
 #define RETRO_REV01 (RETRO_REVISION == 1)
 
 // RSDKv5 was revised & updated for plus onwards
 // this is basically the same functionality as "MANIA_USE_PLUS"
 // but I split this one to be more specific about engine changes vs game changes
-#define RETRO_REV02 (RETRO_REVISION == 2)
+#define RETRO_REV02 (RETRO_REVISION >= 2)
+
+// RSDKv5 was revised & updated to v5U for sonic origins
+// enabling this will add the RSDKv5U funcs and allow this to run properly on that engine ver
+#define RETRO_REV0U (RETRO_REVISION >= 3)
 
 // Controls whether EditorLoad & EditorDraw should be included in the final product or not
 // This is a copy of what the original game likely had, as the original game does not include EditorLoad or EditorDraw funcs for any objects
