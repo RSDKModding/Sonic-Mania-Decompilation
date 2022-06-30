@@ -632,9 +632,9 @@ void UISaveSlot_SetupButtonElements(void)
     self->checkSelectedCB    = UISaveSlot_CheckSelectedCB;
 
 #if MANIA_USE_PLUS
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID);
 #endif
 
     if (self->type == UISAVESLOT_NOSAVE) {
@@ -731,9 +731,9 @@ void UISaveSlot_LoadSaveInfo(void)
     RSDK_THIS(UISaveSlot);
 
 #if MANIA_USE_PLUS
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID);
 #endif
 
     int32 saveState = saveRAM->saveState;
@@ -873,9 +873,9 @@ void UISaveSlot_ProcessButtonCB(void)
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)self->parent;
 #if MANIA_USE_PLUS
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID);
 #endif
 
     self->active = ACTIVE_NORMAL;
@@ -1130,9 +1130,9 @@ void UISaveSlot_HandleSaveIconChange(void)
     RSDK_THIS(UISaveSlot);
 
 #if MANIA_USE_PLUS
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
 #else
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID);
 #endif
 
     if (saveRAM->saveState == SAVEGAME_BLANK) {

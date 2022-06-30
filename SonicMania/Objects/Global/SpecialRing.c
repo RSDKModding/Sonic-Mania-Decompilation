@@ -148,7 +148,7 @@ void SpecialRing_State_StartWarp(void)
         RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 0xFE);
         destroyEntity(self);
 
-        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        SaveRAM *saveRAM      = SaveGame->saveRAM;
         saveRAM->storedStageID  = SceneInfo->listPos;
         RSDK.SetScene("Special Stage", "");
         SceneInfo->listPos += saveRAM->nextSpecialStage;
@@ -234,7 +234,7 @@ void SpecialRing_State_Normal(void)
                     self->sparkleRadius = 0x100000;
                     self->state         = SpecialRing_State_Warp;
 
-                    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+                    SaveRAM *saveRAM = SaveGame->saveRAM;
 #if GAME_VERSION != VER_100
                     // rings spawned via debug mode give you 50 rings, always
                     if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {

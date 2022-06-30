@@ -27,7 +27,7 @@ void Options_StageLoad(void)
         Options_Reload();
     }
     else {
-        EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+        OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
         options->vSync           = false;
         options->windowed        = false;
@@ -39,7 +39,7 @@ void Options_StageLoad(void)
 
 void Options_Reload(void)
 {
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     options->overrideLanguage = true;
 
@@ -68,7 +68,7 @@ void Options_Reload(void)
 
 void Options_GetWinSize(void)
 {
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     bool32 windowed = RSDK.GetVideoSetting(VIDEOSETTING_WINDOWED);
     if (!windowed) {
@@ -166,7 +166,7 @@ void Options_SaveOptionsBin(void (*callback)(void))
 
 void Options_SetLanguage(int32 language)
 {
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     if (language >= 0) {
         options->language         = language;
@@ -183,7 +183,7 @@ void Options_SetLanguage(int32 language)
     Options->changed = true;
 }
 
-void Options_LoadValuesFromSettings(EntityOptions *options)
+void Options_LoadValuesFromSettings(OptionsRAM *options)
 {
     Localization->language = options->overrideLanguage ? options->language : sku_language;
 
@@ -199,7 +199,7 @@ void Options_LoadValuesFromSettings(EntityOptions *options)
 
 void Options_LoadOptionsCallback(int32 status)
 {
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
     bool32 success         = false;
 
 #if MANIA_USE_PLUS
@@ -212,7 +212,7 @@ void Options_LoadOptionsCallback(int32 status)
 
         LogHelpers_Print("dataPtr.language = %d", options->language);
         LogHelpers_Print("dataPtr.overrideLanguage = %d", options->overrideLanguage);
-        Options_LoadValuesFromSettings((EntityOptions *)globals->optionsRAM);
+        Options_LoadValuesFromSettings((OptionsRAM *)globals->optionsRAM);
 
         RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, options->screenShader);
         RSDK.SetVideoSetting(VIDEOSETTING_STREAM_VOL, options->volMusic);

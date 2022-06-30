@@ -3,6 +3,29 @@
 
 #include "Game.h"
 
+// Using a seperate OptionsRAM struct
+// Normally (and officially) the EntityOptions struct was used here
+// but due to v5U updating the entity (and thus the OptionsRAM "spec")
+// EntityOptions is no longer easily compatible across versions
+// so I gave it dummy data and will be using this struct to interact with optionsRAM
+typedef struct {
+    uint8 padding[0x58];
+
+    uint8 language;
+    int32 overrideLanguage;
+    int32 screenShader;
+    bool32 overrideShader;
+    int32 volMusic;
+    bool32 overrideMusicVol;
+    int32 volSfx;
+    bool32 overrideSfxVol;
+    bool32 vSync;
+    uint8 windowSize;
+    bool32 windowBorder;
+    bool32 windowed;
+    bool32 tripleBuffering;
+} OptionsRAM;
+
 // Object Class
 struct ObjectOptions {
 #if !MANIA_USE_PLUS
@@ -23,19 +46,9 @@ struct ObjectOptions {
 // Entity Class
 struct EntityOptions {
     RSDK_ENTITY
-    uint8 language;
-    int32 overrideLanguage;
-    int32 screenShader;
-    bool32 overrideShader;
-    int32 volMusic;
-    bool32 overrideMusicVol;
-    int32 volSfx;
-    bool32 overrideSfxVol;
-    bool32 vSync;
-    uint8 windowSize;
-    bool32 windowBorder;
-    bool32 windowed;
-    bool32 tripleBuffering;
+    // padding to match whatever it would be normally
+    // not required, but its for safety :)
+    uint8 padding[sizeof(OptionsRAM) - sizeof(Entity)];
 };
 
 // Object Struct
@@ -65,7 +78,7 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success));
 void Options_SaveOptionsBin(void (*callback)(void));
 #endif
 void Options_SetLanguage(int32 language);
-void Options_LoadValuesFromSettings(EntityOptions *options);
+void Options_LoadValuesFromSettings(OptionsRAM *options);
 void Options_LoadOptionsCallback(int32 status);
 void Options_SaveOptionsCallback(int32 status);
 

@@ -1959,7 +1959,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->classID = TYPE_BLANK;
                         RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, intToVoid(true));
 
-                        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
                             int32 playerID                    = RSDK.GetEntitySlot(player);
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -2000,7 +2000,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                     else if (globals->gameMode != MODE_COMPETITION) {
                         // Regular Death, fade out and respawn
-                        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame->saveRAM;
                         if (saveRAM) {
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;

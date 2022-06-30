@@ -225,7 +225,7 @@ void PBL_Setup_GiveScore(int32 score)
     if (PBL_Setup->score > PBL_Setup->score1UP) {
         RSDK.PlaySfx(PBL_Setup->sfxContinue, false, 255);
 
-        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        SaveRAM *saveRAM = SaveGame->saveRAM;
         if (saveRAM->continues < 20)
             saveRAM->continues++;
 
@@ -237,7 +237,7 @@ void PBL_Setup_GiveScore(int32 score)
 
 void PBL_Setup_GiveLife(void)
 {
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame->saveRAM;
 
     if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
         if (saveRAM->lives < 99)
@@ -281,7 +281,7 @@ void PBL_Setup_SaveAndChangeScene(void)
     RSDK_THIS(PBL_Setup);
 
     if (self->timer >= 1024) {
-        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        SaveRAM *saveRAM = SaveGame->saveRAM;
         if (saveRAM) {
             saveRAM->characterFlags = globals->characterFlags;
             saveRAM->stock          = globals->stock;

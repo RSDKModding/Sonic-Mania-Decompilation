@@ -682,7 +682,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 if (param->bssSelection == BSS_SELECTION_NONE && globals->gameMode < MODE_TIMEATTACK) {
                     int32 pos = BSS_Setup_GetStageID();
                     if (pos >= 0) {
-                        EntityGameProgress *progress = GameProgress_GetGameProgress();
+                        ProgressRAM *progress = GameProgress_GetGameProgress();
                         if (progress) {
                             uint8 medal = BSS_Setup->playField[fieldPos] == BSS_MEDAL_SILVER ? 1
                                           : BSS_Setup->playField[fieldPos] == BSS_MEDAL_GOLD ? 2

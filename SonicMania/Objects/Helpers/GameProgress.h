@@ -55,14 +55,16 @@ typedef enum {
 
 extern AchievementID achievementList[];
 
-// Object Class
-struct ObjectGameProgress {
-    RSDK_OBJECT
-};
-
-// Entity Class
-struct EntityGameProgress {
+// Using a seperate ProgressRAM struct
+// Normally (and officially) the ObjectGameProgress struct was used here
+// but due to v5U updating the entity (and thus the ProgressRAM "spec")
+// ObjectGameProgress is no longer easily compatible across versions
+// so I gave it dummy data and will be using this struct to interact with progressRAM
+// this one was also broken with plus since medals[] were aligned by 1 byte
+// so when "filter" was added, all medals were offset by 1 without this fix
+typedef struct {
     uint8 padding[0x56]; // aka sizeof(Entity) for pre-plus
+
     uint8 medals[GAMEPROGRESS_MEDAL_COUNT];
     bool32 allGoldMedals;
     bool32 allSilverMedals;
@@ -76,6 +78,19 @@ struct EntityGameProgress {
     bool32 unlockedEndingID;
     int32 goldMedalCount;
     int32 silverMedalCount;
+} ProgressRAM;
+
+// Object Class
+struct ObjectGameProgress {
+    RSDK_OBJECT
+};
+
+// Entity Class
+struct EntityGameProgress {
+    RSDK_ENTITY
+    // padding to match whatever it would be normally
+    // not required, but its for safety :)
+    uint8 padding[sizeof(ProgressRAM) - sizeof(Entity)];
 };
 
 // Object Struct
@@ -97,9 +112,9 @@ void GameProgress_Serialize(void);
 // Extra Entity Events
 int32 GameProgress_GetNotifStringID(int32 type);
 void GameProgress_ShuffleBSSID(void);
-EntityGameProgress *GameProgress_GetGameProgress(void);
+ProgressRAM *GameProgress_GetGameProgress(void);
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID);
-float GameProgress_GetCompletionPercent(EntityGameProgress *progress);
+float GameProgress_GetCompletionPercent(ProgressRAM *progress);
 #if MANIA_USE_PLUS
 void GameProgress_TrackGameProgress(void (*callback)(bool32 success));
 #else

@@ -26,7 +26,7 @@ void SpecialClear_Draw(void)
 
     Vector2 vertPos[4];
     Vector2 drawPos;
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame->saveRAM;
 
     int32 centerX = ScreenInfo->centerX << 16;
     drawPos.x     = centerX - 0x600000;
@@ -253,7 +253,7 @@ void SpecialClear_Create(void *data)
             if (globals->gameMode < MODE_TIMEATTACK && self->machBonus + self->ringBonus >= 10000)
                 self->hasContinues = true;
 
-            EntitySaveGame *saveRAM = SaveGame->saveRAM;
+            SaveRAM *saveRAM       = SaveGame->saveRAM;
             self->score             = saveRAM->score;
             self->score1UP          = saveRAM->score1UP;
             self->lives             = saveRAM->lives;
@@ -583,7 +583,7 @@ void SpecialClear_State_ShowTotalScore_Continues(void)
     if (self->timer == 360) {
         self->timer = 0;
 
-        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        SaveRAM *saveRAM       = SaveGame->saveRAM;
         saveRAM->score          = self->score;
         globals->restartScore   = self->score;
         saveRAM->score1UP       = self->score1UP;
@@ -614,7 +614,7 @@ void SpecialClear_State_ShowTotalScore_NoContinues(void)
 
     if (++self->timer == 120) {
         self->timer             = 0;
-        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        SaveRAM *saveRAM       = SaveGame->saveRAM;
         saveRAM->score          = self->score;
         globals->restartScore   = self->score;
 
@@ -687,7 +687,7 @@ void SpecialClear_State_ExitFadeOut(void)
             RSDK.LoadScene();
         }
         else {
-            EntitySaveGame *saveRAM = SaveGame->saveRAM;
+            SaveRAM *saveRAM = SaveGame->saveRAM;
 #if MANIA_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
                 RSDK.SetScene("Encore Mode", "");

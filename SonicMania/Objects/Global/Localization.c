@@ -21,7 +21,7 @@ void Localization_Create(void *data) {}
 
 void Localization_StageLoad(void)
 {
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
     if (globals->optionsLoaded >= STATUS_OK && options->overrideLanguage) {
         Localization->language = options->language;
         Localization_LoadStrings();

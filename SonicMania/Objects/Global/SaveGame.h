@@ -9,27 +9,14 @@ typedef enum {
     SAVEGAME_COMPLETE,
 } SaveGameStates;
 
-// Object Class
-struct ObjectSaveGame {
-#if !MANIA_USE_PLUS
-    RSDK_OBJECT
-    Entity *loadEntityPtr;
-    void (*loadCallback)(bool32 success);
-    Entity *saveEntityPtr;
-    void (*saveCallback)(void);
-#else
-    Entity *loadEntityPtr;
-    void (*loadCallback)(bool32 success);
-    Entity *saveEntityPtr;
-    void (*saveCallback)(bool32 success);
-#endif
-    EntitySaveGame *saveRAM;
-    int32 unused1;
-};
+// Using a seperate SaveRAM struct
+// Normally (and officially) the EntitySaveGame struct was used here
+// but due to v5U updating the entity (and thus the SaveGame "spec")
+// EntitySaveGame is no longer easily compatible across versions
+// so I gave it dummy data and will be using this struct to interact with saveRAM
+typedef struct {
+    uint8 padding[0x58];
 
-// Entity Class
-struct EntitySaveGame {
-    RSDK_ENTITY
     int32 saveState;
     int32 characterID;
     int32 zoneID;
@@ -52,6 +39,32 @@ struct EntitySaveGame {
     int32 stock;
     int32 playerID; // encore playerID
 #endif
+} SaveRAM;
+
+// Object Class
+struct ObjectSaveGame {
+#if !MANIA_USE_PLUS
+    RSDK_OBJECT
+    Entity *loadEntityPtr;
+    void (*loadCallback)(bool32 success);
+    Entity *saveEntityPtr;
+    void (*saveCallback)(void);
+#else
+    Entity *loadEntityPtr;
+    void (*loadCallback)(bool32 success);
+    Entity *saveEntityPtr;
+    void (*saveCallback)(bool32 success);
+#endif
+    SaveRAM *saveRAM;
+    int32 unused1;
+};
+
+// Entity Class
+struct EntitySaveGame {
+    RSDK_ENTITY
+    // padding to match whatever it would be normally
+    // not required, but its for safety :)
+    uint8 padding[sizeof(SaveRAM) - sizeof(Entity)];
 };
 
 extern ObjectSaveGame *SaveGame;

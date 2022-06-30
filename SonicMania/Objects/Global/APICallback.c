@@ -815,7 +815,7 @@ void APICallback_GetNextNotif(void)
         return;
     }
     else {
-        EntityGameProgress *progress                        = GameProgress_GetGameProgress();
+        ProgressRAM *progress                               = GameProgress_GetGameProgress();
         progress->unreadNotifs[GameProgress_GetNextNotif()] = true;
     }
 }

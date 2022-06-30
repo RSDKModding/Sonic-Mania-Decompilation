@@ -210,7 +210,7 @@ void StarPost_CheckBonusStageEntry(void)
                 RSDK.SetEngineState(ENGINESTATE_FROZEN);
 
 #if MANIA_USE_PLUS
-                EntityGameProgress *progress = GameProgress_GetGameProgress();
+                ProgressRAM *progress = GameProgress_GetGameProgress();
                 if ((API.CheckDLC(DLC_PLUS) && progress && progress->allGoldMedals) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM->storedStageID = SceneInfo->listPos;
                     RSDK.SetScene("Pinball", "");

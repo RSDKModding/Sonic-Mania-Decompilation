@@ -374,7 +374,7 @@ void OptionsMenu_InitVideoOptionsMenu(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         EntityUIControl *videoControl_Win = OptionsMenu->videoControl_Windows;
-        EntityOptions *optionsRAM         = (EntityOptions *)globals->optionsRAM;
+        OptionsRAM *optionsRAM            = (OptionsRAM *)globals->optionsRAM;
 
         Options_GetWinSize();
 
@@ -693,7 +693,7 @@ void OptionsMenu_ShaderButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     options->screenShader   = self->selection;
     options->overrideShader = true;
@@ -707,7 +707,7 @@ void OptionsMenu_WindowScaleButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
     if (self->selection != 4) {
         RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, WIDE_SCR_XSIZE * (self->selection + 1));
         RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
@@ -721,7 +721,7 @@ void OptionsMenu_BorderlessButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     options->windowBorder = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_BORDERED, self->selection);
@@ -733,7 +733,7 @@ void OptionsMenu_FullScreenButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     options->windowed = self->selection ^ 1;
     RSDK.SetVideoSetting(VIDEOSETTING_WINDOWED, self->selection ^ 1);
@@ -745,7 +745,7 @@ void OptionsMenu_VSyncButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     options->vSync = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_VSYNC, self->selection);
@@ -757,7 +757,7 @@ void OptionsMenu_TripleBufferButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     options->tripleBuffering = self->selection;
     RSDK.SetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED, self->selection);
@@ -769,7 +769,7 @@ void OptionsMenu_UISlider_ChangedCB(void)
 {
     RSDK_THIS(UISlider);
 
-    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    OptionsRAM *options = (OptionsRAM *)globals->optionsRAM;
 
     // Bug Details (?):
     // what the hell is up with this???????

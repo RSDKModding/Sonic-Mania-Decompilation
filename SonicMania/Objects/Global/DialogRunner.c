@@ -56,7 +56,7 @@ void DialogRunner_StageLoad(void)
 
     Options->changed = false;
     if (sku_platform && sku_platform != PLATFORM_DEV) {
-        EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
+        OptionsRAM *options      = (OptionsRAM *)globals->optionsRAM;
         options->vSync           = false;
         options->windowed        = false;
         options->windowBorder    = false;
@@ -246,7 +246,7 @@ void DialogRunner_GetNextNotif(void)
         return;
     }
     else {
-        EntityGameProgress *progress = GameProgress_GetGameProgress();
+        ProgressRAM *progress = GameProgress_GetGameProgress();
         int32 id                     = GameProgress_GetNextNotif();
         if (id >= 0)
             progress->unreadNotifs[id] = true;

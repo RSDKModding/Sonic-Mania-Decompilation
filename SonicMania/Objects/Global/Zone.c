@@ -217,7 +217,7 @@ void Zone_StageLoad(void)
     Zone->randSeed = (uint32)time(NULL);
 
     // Setup encore character flags & stock if needed
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame->saveRAM;
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == ID_NONE) {
             globals->characterFlags = 0;

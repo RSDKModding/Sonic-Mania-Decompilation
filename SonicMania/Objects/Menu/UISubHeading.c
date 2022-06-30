@@ -176,7 +176,7 @@ void UISubHeading_SetupActions(void)
 void UISubHeading_HandleMenuReturn(int32 slot)
 {
     EntityUIControl *control = ManiaModeMenu->secretsMenu;
-    EntitySaveGame *saveGame = (EntitySaveGame *)SaveGame_GetDataPtr(slot, false);
+    SaveRAM *saveGame       = (SaveRAM *)SaveGame_GetDataPtr(slot, false);
 
     UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER)) != 0);
     UIButton_SetChoiceSelection(control->buttons[1], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) != 0);
@@ -314,7 +314,7 @@ void UISubHeading_SaveButton_ActionCB(void)
     EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
+    SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
     TimeAttackData_Clear();
 
     RSDK.GetCString(param->menuTag, &control->tag);

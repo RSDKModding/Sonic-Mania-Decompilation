@@ -323,7 +323,7 @@ void GameOver_State_ExitLetters(void)
             RSDK.LoadScene();
         }
         else {
-            EntitySaveGame *saveRAM = SaveGame->saveRAM;
+            SaveRAM *saveRAM = SaveGame->saveRAM;
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 RSDK.SetScene("Presentation", "Menu");
             }

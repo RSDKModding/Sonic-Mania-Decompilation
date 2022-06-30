@@ -232,7 +232,7 @@ void BSS_Message_State_LoadPrevScene(void)
         globals->blueSpheresInit = true;
         GameProgress_ShuffleBSSID();
 
-        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        SaveRAM *saveRAM = SaveGame->saveRAM;
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "");

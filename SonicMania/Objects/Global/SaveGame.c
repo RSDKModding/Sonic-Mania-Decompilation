@@ -52,17 +52,17 @@ void SaveGame_LoadSaveData(void)
     int32 slot = globals->saveSlotID;
 
     if (slot == NO_SAVE_SLOT)
-        SaveGame->saveRAM = (EntitySaveGame *)globals->noSaveSlot;
+        SaveGame->saveRAM = (SaveRAM *)globals->noSaveSlot;
     else
 #if MANIA_USE_PLUS
-        SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
+        SaveGame->saveRAM = (SaveRAM *)SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
 #else
-        SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot);
+        SaveGame->saveRAM = (SaveRAM *)SaveGame_GetDataPtr(slot);
 #endif
 
     LogHelpers_Print("dataPtr: %X", SaveGame->saveRAM);
 
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame->saveRAM;
     if (!saveRAM->lives)
         saveRAM->lives = 3;
 
@@ -241,7 +241,7 @@ void SaveGame_SaveLoadedCB(bool32 success)
 
 void SaveGame_SaveGameState(void)
 {
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame->saveRAM;
     globals->recallEntities = true;
 
     for (int32 p = 0; p < PLAYER_COUNT; ++p) {
@@ -294,7 +294,7 @@ void SaveGame_SaveGameState(void)
 }
 void SaveGame_SaveProgress(void)
 {
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame->saveRAM;
 
     saveRAM->lives    = Player->savedLives;
     saveRAM->score    = Player->savedScore;
@@ -336,7 +336,7 @@ void SaveGame_ClearRestartData(void)
 }
 void SaveGame_SavePlayerState(void)
 {
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM    = SaveGame->saveRAM;
     EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     globals->restartSlot[0] = 0;

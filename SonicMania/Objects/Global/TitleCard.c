@@ -74,8 +74,8 @@ void TitleCard_Create(void *data)
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 2, &self->zoneLetterAnimator, true, 0);
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 3, &self->actNumbersAnimator, true, 0);
 
-        if (self->actID > 3)
-            self->actID = 3;
+        if (self->actID > ACT_NONE)
+            self->actID = ACT_NONE;
 
         self->actNumbersAnimator.frameID = self->actID;
         self->actNumPos.y                = 0xA80000;

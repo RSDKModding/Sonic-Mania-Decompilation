@@ -247,7 +247,7 @@ void Summary_LoadTimes(void)
         Summary_SetTextString(0, self->saveFileLabel, text);
     }
 
-    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    SaveRAM *saveRAM = SaveGame->saveRAM;
     char playTime[0x100];
     memset(playTime, 0, 0x100);
     int32 totalTime = 0;
