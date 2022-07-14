@@ -67,39 +67,23 @@ bool32 WaterfallSound_CheckCB(void)
         sound->sfxPos.x  = 0;
         sound->sfxPos.y  = 0;
 
-        int32 x    = sound->position.x;
-        int32 y    = sound->position.y;
-        int32 sx12 = sound->size.x >> 12;
-        int32 sy12 = sound->size.y >> 12;
-
         Hitbox hitbox;
         hitbox.left   = -(sound->size.x >> 12);
         hitbox.top    = -(sound->size.y >> 12);
         hitbox.right  = sound->size.x >> 12;
         hitbox.bottom = sound->size.y >> 12;
 
-        if (worldCenterX >= x - (abs(sx12) << 16) && worldCenterX <= x + (abs(sx12) << 16) && worldCenterY >= y - (abs(sy12) << 16)
-            && worldCenterY <= y + (abs(sy12) << 16)) {
+        if (MathHelpers_PointInHitbox(sound->position.x, sound->position.y, worldCenterX, worldCenterY, FLIP_NONE, &hitbox)) {
             ++count;
             sound->sfxActive = true;
             sound->sfxPos.x  = worldCenterX;
             sound->sfxPos.y  = worldCenterY;
         }
         else {
-            int32 distX = abs(worldCenterX - x) >> 16;
-            int32 distY = abs(worldCenterY - y) >> 16;
-
-            int32 rx = distX * distX;
-            int32 ry = distY * distY;
-
-            if ((MathHelpers_SquareRoot(ry + rx) << 16) - 8 * sound->size.y - 8 * sound->size.x <= 0x2800000) {
+            if (MathHelpers_Distance(sound->position.x, sound->position.y, worldCenterX, worldCenterY) - 8 * sound->size.y - 8 * sound->size.x
+                <= 0x2800000) {
                 if (MathHelpers_ConstrainToBox(&sound->sfxPos, worldCenterX, worldCenterY, sound->position, hitbox)) {
-                    distX = abs(worldCenterX - sound->sfxPos.x) >> 16;
-                    distY = abs(worldCenterY - sound->sfxPos.y) >> 16;
-                    rx    = distX * distX;
-                    ry    = distY * distY;
-
-                    if (MathHelpers_SquareRoot(ry + rx) << 16 <= 0x2800000) {
+                    if (MathHelpers_Distance(sound->sfxPos.x, sound->sfxPos.y, worldCenterX, worldCenterY) <= 0x2800000) {
                         sound->sfxActive = true;
                         ++count;
                     }
@@ -125,10 +109,7 @@ void WaterfallSound_UpdateCB(int32 sfxID)
     foreach_all(WaterfallSound, sound)
     {
         if (sound->sfxActive) {
-            int32 x = abs(worldCenterX - sound->sfxPos.x);
-            int32 y = abs(worldCenterY - sound->sfxPos.y);
-
-            int16 sqRoot   = minVal(MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
+            int16 sqRoot   = minVal(MathHelpers_Distance(sound->sfxPos.x, sound->sfxPos.y, worldCenterX, worldCenterY) >> 16, 640);
             float volume   = (sqRoot / -640.0f) + 1.0f;
             float distance = -1.0;
             if (sound->sfxPos.x > worldLeft) {

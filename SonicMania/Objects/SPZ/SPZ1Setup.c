@@ -96,7 +96,7 @@ void SPZ1Setup_StageLoad(void)
         FXFade_StopAll();
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-        Zone->forcePlayerOnScreen = true;
+        Zone->shouldRecoverPlayers = true;
         Zone->stageFinishCallback = SPZ1Setup_StageFinishCB;
     }
 

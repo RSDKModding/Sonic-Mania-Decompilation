@@ -292,7 +292,7 @@ void DNARiser_State_HelixRise(void)
                 if (player->jumpPress) {
                     player->velocity.y = 0;
                     player->velocity.x = 0;
-                    Player_StartJump(player);
+                    Player_Action_Jump(player);
                     DNARiser_SetupBurst();
                 }
 

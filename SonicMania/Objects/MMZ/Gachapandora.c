@@ -458,7 +458,7 @@ void Gachapandora_HandleAnimations(void)
                 bool32 wasHit = false;
                 foreach_active(Player, player)
                 {
-                    if (player->state == Player_State_Hit || player->state == Player_State_Die)
+                    if (player->state == Player_State_Hurt || player->state == Player_State_Death)
                         wasHit = true;
                 }
 
@@ -475,7 +475,7 @@ void Gachapandora_HandleAnimations(void)
         bool32 wasHit = false;
         foreach_active(Player, player)
         {
-            if (player->state == Player_State_Hit || player->state == Player_State_Die)
+            if (player->state == Player_State_Hurt || player->state == Player_State_Death)
                 wasHit = true;
         }
 

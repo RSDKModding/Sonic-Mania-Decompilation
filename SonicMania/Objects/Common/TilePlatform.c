@@ -26,7 +26,7 @@ void TilePlatform_Create(void *data)
 {
     RSDK_THIS(TilePlatform);
 
-    self->collision = PLATFORM_C_USE_TILES;
+    self->collision = PLATFORM_C_TILED;
     Platform_Create(NULL);
 
     if (!SceneInfo->inEditor) {
@@ -85,22 +85,22 @@ void TilePlatform_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(TilePlatform, type);
     RSDK_ENUM_VAR("Fixed", PLATFORM_FIXED);
-    RSDK_ENUM_VAR("Collapsing", PLATFORM_COLLAPSING);
-    RSDK_ENUM_VAR("Moving (Smooth)", PLATFORM_MOVING);
+    RSDK_ENUM_VAR("Collapsing", PLATFORM_FALL);
+    RSDK_ENUM_VAR("Moving (Smooth)", PLATFORM_LINEAR);
     RSDK_ENUM_VAR("Circlular", PLATFORM_CIRCULAR);
-    RSDK_ENUM_VAR("Swinging", PLATFORM_SWINGING);
-    RSDK_ENUM_VAR("Controlled", PLATFORM_CONTROLLED);
-    RSDK_ENUM_VAR("Pushable", PLATFORM_PUSHABLE);
+    RSDK_ENUM_VAR("Swinging", PLATFORM_SWING);
+    RSDK_ENUM_VAR("Controlled", PLATFORM_PATH);
+    RSDK_ENUM_VAR("Pushable", PLATFORM_PUSH);
     RSDK_ENUM_VAR("Moving (Static)", PLATFORM_TRACK);
-    RSDK_ENUM_VAR("Wait for Player", PLATFORM_WAIT);
-    RSDK_ENUM_VAR("Wait for Player (Oscillate)", PLATFORM_WAIT_OSC);
-    RSDK_ENUM_VAR("Activate when Above", PLATFORM_ACTIVEABOVE);
-    RSDK_ENUM_VAR("Controlled (Activates PlatformControl)", PLATFORM_CONT_ACTIVATER);
-    RSDK_ENUM_VAR("Wait for Player, then Move with Arc", PLATFORM_WAIT_ARC);
-    RSDK_ENUM_VAR("Sticky", PLATFORM_STICKY);
-    RSDK_ENUM_VAR("Swinging (Clackers)", PLATFORM_SWING_CLACK);
-    RSDK_ENUM_VAR("Static", PLATFORM_STATIC);
-    RSDK_ENUM_VAR("Wait for Player, then Sink", PLATFORM_SINKER);
+    RSDK_ENUM_VAR("Wait for Player", PLATFORM_REACT);
+    RSDK_ENUM_VAR("Wait for Player (Oscillate)", PLATFORM_HOVER_REACT);
+    RSDK_ENUM_VAR("Activate when Above", PLATFORM_DOORSLIDE);
+    RSDK_ENUM_VAR("Controlled (Activates PlatformControl)", PLATFORM_PATH_REACT);
+    RSDK_ENUM_VAR("Wait for Player, then Move with Arc", PLATFORM_SWING_REACT);
+    RSDK_ENUM_VAR("Sticky", PLATFORM_TRACK_REACT);
+    RSDK_ENUM_VAR("Swinging (Clackers)", PLATFORM_CLACKER);
+    RSDK_ENUM_VAR("Static", PLATFORM_CHILD);
+    RSDK_ENUM_VAR("Wait for Player, then Sink", PLATFORM_DIPROCK);
 }
 #endif
 

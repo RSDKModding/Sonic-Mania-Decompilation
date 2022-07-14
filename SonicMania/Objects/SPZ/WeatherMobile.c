@@ -610,7 +610,7 @@ void WeatherMobile_StateLights_Shine(void)
             int32 x          = parent->position.x + RSDK.Rand(-0x140000, 0x140000);
             int32 y          = parent->position.y + RSDK.Rand(-0x180000, -0x140000);
             EntityDust *dust = CREATE_ENTITY(Dust, self, x, y);
-            dust->state      = Dust_State_Move;
+            dust->state      = Dust_State_DustPuff;
             dust->drawOrder  = parent->drawOrder;
         }
 

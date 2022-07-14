@@ -167,7 +167,7 @@ void AIZTornadoPath_State_SetPlayerCamera(void)
     EntityCamera *camera = AIZTornadoPath->camera;
 
     if (camera) {
-        camera->state          = Camera_State_Follow;
+        camera->state          = Camera_State_FollowXY;
         player->camera         = camera;
         AIZTornadoPath->camera = NULL;
     }
@@ -195,7 +195,7 @@ void AIZTornadoPath_State_ExitTornadoSequence(void)
         EntityCamera *camera = AIZTornadoPath->camera;
 
         if (camera) {
-            camera->state          = Camera_State_Follow;
+            camera->state          = Camera_State_FollowXY;
             player->camera         = camera;
             player->collisionPlane = 0;
             player->interaction    = true;
@@ -204,7 +204,7 @@ void AIZTornadoPath_State_ExitTornadoSequence(void)
             AIZTornadoPath->camera = NULL;
         }
         player->groundVel = AIZTornadoPath->moveVel.x;
-        Player_StartJump(player);
+        Player_Action_Jump(player);
         player->right                = true;
         tornado->disableInteractions = true;
     }

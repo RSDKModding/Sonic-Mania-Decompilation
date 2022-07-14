@@ -206,7 +206,7 @@ void Scarab_HandlePlayerGrab(void)
                 self->grabbedPlayers &= ~(1 << playerID);
                 self->playerTimers[playerID] = -10;
 
-                if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn) {
+                if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer) {
                     player->tileCollisions = true;
                     player->state          = Player_State_Air;
                     player->velocity.x     = 0xA0000 * (2 * (self->direction != FLIP_NONE) - 1);
@@ -235,7 +235,7 @@ void Scarab_HandlePlayerRelease(void)
             self->grabbedPlayers &= ~(1 << playerID);
             self->playerTimers[playerID] = -10;
 
-            if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn) {
+            if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer) {
                 player->tileCollisions = true;
                 player->state          = Player_State_Air;
                 player->velocity.x     = 0xA0000 * (2 * (self->direction != FLIP_NONE) - 1);

@@ -69,9 +69,9 @@ void UFO_Setup_StageLoad(void)
 
     RSDK.GetTileLayer(UFO_Setup->playFieldLayer)->scanlineCallback = UFO_Setup_ScanlineCallback_Playfield;
 
-    RSDK.SetDrawLayerProperties(1, false, UFO_Setup_DrawLayerCallback);
-    RSDK.SetDrawLayerProperties(3, false, UFO_Setup_DrawLayerCallback);
-    RSDK.SetDrawLayerProperties(4, true, NULL);
+    RSDK.SetDrawGroupProperties(1, false, UFO_Setup_DrawLayerCallback);
+    RSDK.SetDrawGroupProperties(3, false, UFO_Setup_DrawLayerCallback);
+    RSDK.SetDrawGroupProperties(4, true, NULL);
 
     UFO_Setup->sfxBlueSphere = RSDK.GetSfx("Special/BlueSphere2.wav");
     UFO_Setup->sfxSSExit     = RSDK.GetSfx("Special/SSExit.wav");

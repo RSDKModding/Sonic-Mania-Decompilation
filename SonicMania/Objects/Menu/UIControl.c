@@ -436,7 +436,7 @@ void UIControl_SetActiveMenuButtonPrompts(EntityUIControl *entity)
 void UIControl_SetActiveMenu(EntityUIControl *entity)
 {
 #if MANIA_USE_PLUS
-    RSDK.PrintString(PRINT_NORMAL, &entity->tag);
+    LogHelpers_PrintString(&entity->tag);
 #endif
 
     entity->active  = ACTIVE_ALWAYS;

@@ -21,6 +21,32 @@ void LogHelpers_Create(void *data) {}
 
 void LogHelpers_StageLoad(void) {}
 
+void LogHelpers_PrintText(const char *message)
+{
+#if MANIA_USE_PLUS
+    if (!SceneInfo->inEditor)
+        RSDK.PrintText(PRINT_NORMAL, message);
+#else
+    LogHelpers_Print("%s", message);
+#endif
+}
+#if MANIA_USE_PLUS
+void LogHelpers_PrintString(String *message)
+{
+    if (!SceneInfo->inEditor)
+        RSDK.PrintString(PRINT_NORMAL, message);
+}
+#endif
+void LogHelpers_PrintInt32(const char *message, int32 value)
+{
+#if MANIA_USE_PLUS
+    if (!SceneInfo->inEditor)
+        RSDK.PrintInt32(PRINT_NORMAL, message, value);
+#else
+    LogHelpers_Print("%s: %d", message, value);
+#endif
+}
+
 void LogHelpers_Print(const char *message, ...)
 {
     if (!SceneInfo->inEditor) {
@@ -43,6 +69,14 @@ void LogHelpers_Print(const char *message, ...)
         va_end(args);
     }
 }
+
+#if MANIA_USE_PLUS
+void LogHelpers_PrintVector2(const char *message, Vector2 value)
+{
+    if (!SceneInfo->inEditor)
+        RSDK.PrintVector2(PRINT_NORMAL, message, value);
+}
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void LogHelpers_EditorDraw(void) {}

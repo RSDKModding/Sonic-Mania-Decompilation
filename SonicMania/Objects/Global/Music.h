@@ -21,9 +21,9 @@ typedef enum {
     TRACK_ERZBOSS      = 10,
 #if MANIA_USE_PLUS
     TRACK_HBHMISCHIEF = 11,
-    TRACK_NOLOAD      = 12,
+    TRACK_SOUNDTEST   = 12,
 #else
-    TRACK_NOLOAD      = 11,
+    TRACK_SOUNDTEST   = 11,
     TRACK_HBHMISCHIEF = 12,
 #endif
     TRACK_1UP = 13,

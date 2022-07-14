@@ -95,7 +95,7 @@ int32 Gondola_GetWaterLevel(void)
     if (self->position.y < Water->waterLevel) {
         foreach_active(Water, water)
         {
-            if (water->type == WATER_TINT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
+            if (water->type == WATER_POOL && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
                 return water->position.y + (water->hitbox.top << 16);
             }
         }

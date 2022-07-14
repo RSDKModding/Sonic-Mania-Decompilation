@@ -97,7 +97,7 @@ void TwistingDoor_Create(void *data)
 {
     RSDK_THIS(TwistingDoor);
 
-    self->collision = PLATFORM_C_SOLID_ALL;
+    self->collision = PLATFORM_C_SOLID;
     Platform_Create(NULL);
 
     self->drawFX = FX_FLIP;

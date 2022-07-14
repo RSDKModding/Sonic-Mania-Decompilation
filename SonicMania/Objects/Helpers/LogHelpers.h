@@ -30,6 +30,15 @@ void LogHelpers_EditorLoad(void);
 void LogHelpers_Serialize(void);
 
 // Extra Entity Functions
+void LogHelpers_PrintText(const char *message);
+#if MANIA_USE_PLUS
+void LogHelpers_PrintString(String *message);
+#endif
+void LogHelpers_PrintInt32(const char *message, int32 value);
 void LogHelpers_Print(const char *message, ...);
+#if MANIA_USE_PLUS
+void LogHelpers_PrintVector2(const char *message, Vector2 value);
+#endif
+
 
 #endif //! OBJ_LOGHELPERS_H

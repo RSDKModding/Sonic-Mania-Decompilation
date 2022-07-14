@@ -69,18 +69,18 @@ void BSS_Setup_Create(void *data)
         self->speedupInterval = 1800;
         self->stopMovement    = false;
 
-        RSDK.SetSpriteAnimation(BSS_Setup->globeMappings, 0, &self->globeSpinAnimator, true, 0);
-        RSDK.SetSpriteAnimation(BSS_Setup->globeMappings, 1, &self->shadowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(BSS_Setup->globeFrames, 0, &self->globeSpinAnimator, true, 0);
+        RSDK.SetSpriteAnimation(BSS_Setup->globeFrames, 1, &self->shadowAnimator, true, 0);
 
         BSS_Setup_GetStartupInfo();
 
-        self->state = BSS_Setup_State_HandleStage;
+        self->state = BSS_Setup_State_GlobeMoveZ;
     }
 }
 
 void BSS_Setup_StageLoad(void)
 {
-    BSS_Setup->globeMappings = RSDK.LoadSpriteAnimation("SpecialBS/Globe.bin", SCOPE_STAGE);
+    BSS_Setup->globeFrames = RSDK.LoadSpriteAnimation("SpecialBS/Globe.bin", SCOPE_STAGE);
 
     BSS_Setup->bgLayer        = RSDK.GetTileLayerID("Background");
     BSS_Setup->globeLayer     = RSDK.GetTileLayerID("Globe");
@@ -406,7 +406,7 @@ void BSS_Setup_GetStartupInfo(void)
     RSDK.GetTileLayer(BSS_Setup->bgLayer)->scrollInfo[0].scrollPos = self->angle << 18;
 }
 
-void BSS_Setup_Finished(void)
+void BSS_Setup_State_GlobeJettison(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -448,7 +448,7 @@ void BSS_Setup_Finished(void)
         player->stateInput       = false;
         player->jumpPress        = false;
 
-        self->state = BSS_Setup_State_FinishWalk;
+        self->state = BSS_Setup_State_GlobeEmerald;
     }
 }
 
@@ -479,7 +479,7 @@ void BSS_Setup_HandleSteppedObjects(void)
 
                 if (BSS_Setup->sphereCount <= 0) {
                     BSS_Setup->sphereCount = 0;
-                    self->state            = BSS_Setup_Finished;
+                    self->state            = BSS_Setup_State_GlobeJettison;
                     RSDK.PlaySfx(BSS_Setup->sfxSSJettison, false, 255);
                     Music_FadeOut(0.0125);
                 }
@@ -490,8 +490,8 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
 
         case BSS_SPHERE_RED:
-            if (self->state != BSS_Setup_State_Exit && self->globeTimer < 32) {
-                self->state        = BSS_Setup_State_Exit;
+            if (self->state != BSS_Setup_State_GlobeExit && self->globeTimer < 32) {
+                self->state        = BSS_Setup_State_GlobeExit;
                 self->stopMovement = true;
                 self->spinTimer    = 0;
                 self->globeTimer   = 0;
@@ -546,8 +546,8 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
 
         case BSS_SPHERE_PINK:
-            if (self->state != BSS_Setup_State_PinkSphereWarp && self->globeTimer < 64) {
-                self->state      = BSS_Setup_State_PinkSphereWarp;
+            if (self->state != BSS_Setup_State_StartGlobeTeleport && self->globeTimer < 64) {
+                self->state      = BSS_Setup_State_StartGlobeTeleport;
                 self->spinTimer  = 0;
                 self->globeTimer = 0;
                 RSDK.PlaySfx(BSS_Setup->sfxTeleport, false, 255);
@@ -591,7 +591,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 if (BSS_Setup->sphereCount <= 0) {
                     BSS_Setup->sphereCount = 0;
                     RSDK.PlaySfx(BSS_Setup->sfxMedal, false, 255);
-                    self->state = BSS_Setup_Finished;
+                    self->state = BSS_Setup_State_GlobeJettison;
                     RSDK.PlaySfx(BSS_Setup->sfxSSJettison, false, 255);
                     Music_FadeOut(0.0125);
                 }
@@ -602,9 +602,9 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
 
         case BSS_SPHERE_RED:
-            if (self->state != BSS_Setup_State_Exit && self->globeTimer > 224) {
+            if (self->state != BSS_Setup_State_GlobeExit && self->globeTimer > 224) {
                 self->palettePage ^= 1;
-                self->state      = BSS_Setup_State_Exit;
+                self->state      = BSS_Setup_State_GlobeExit;
                 self->spinTimer  = 0;
                 self->globeTimer = 0;
 
@@ -703,7 +703,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 }
 
                 self->palettePage ^= 1;
-                self->state      = BSS_Setup_State_Exit;
+                self->state      = BSS_Setup_State_GlobeExit;
                 self->spinTimer  = 0;
                 self->globeTimer = 0;
 
@@ -801,7 +801,7 @@ void BSS_Setup_HandleCollectableMovement(void)
     }
 }
 
-void BSS_Setup_State_FinishWalk(void)
+void BSS_Setup_State_GlobeEmerald(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -836,7 +836,7 @@ void BSS_Setup_State_FinishWalk(void)
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_State_PinkSphereWarp(void)
+void BSS_Setup_State_StartGlobeTeleport(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -918,12 +918,12 @@ void BSS_Setup_State_PinkSphereWarp(void)
         BSS_Setup->playField[self->playerPos.y + (BSS_PLAYFIELD_H * self->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
 
         self->timer = 100;
-        self->state = BSS_Setup_State_PostPinkSphereWarp;
+        self->state = BSS_Setup_State_FinishGlobeTeleport;
     }
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_State_Exit(void)
+void BSS_Setup_State_GlobeExit(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -961,7 +961,7 @@ void BSS_Setup_State_Exit(void)
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_State_HandleStage(void)
+void BSS_Setup_State_GlobeMoveZ(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -1000,19 +1000,19 @@ void BSS_Setup_State_HandleStage(void)
         self->spinState = 0;
     }
 
-    if (self->state == BSS_Setup_State_HandleStage) {
+    if (self->state == BSS_Setup_State_GlobeMoveZ) {
         if (self->globeSpeed > 0) {
             if (self->globeTimer >= 0x100) {
                 switch (self->spinState) {
                     case 0: self->globeTimer -= 256; break;
 
                     case 1:
-                        self->state      = BSS_Setup_State_SpinLeft;
+                        self->state      = BSS_Setup_State_GlobeTurnLeft;
                         self->globeTimer = 0;
                         break;
 
                     case 2:
-                        self->state      = BSS_Setup_State_SpinRight;
+                        self->state      = BSS_Setup_State_GlobeTurnRight;
                         self->globeTimer = 0;
                         break;
                 }
@@ -1040,12 +1040,12 @@ void BSS_Setup_State_HandleStage(void)
                     break;
 
                 case 1:
-                    self->state      = BSS_Setup_State_SpinLeft;
+                    self->state      = BSS_Setup_State_GlobeTurnLeft;
                     self->globeTimer = 0;
                     break;
 
                 case 2:
-                    self->state      = BSS_Setup_State_SpinRight;
+                    self->state      = BSS_Setup_State_GlobeTurnRight;
                     self->globeTimer = 0;
                     break;
             }
@@ -1061,7 +1061,7 @@ void BSS_Setup_State_HandleStage(void)
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_State_SpinLeft(void)
+void BSS_Setup_State_GlobeTurnLeft(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -1083,9 +1083,9 @@ void BSS_Setup_State_SpinLeft(void)
         self->spinTimer = 0;
         self->palettePage ^= 1;
         if (!self->timer)
-            self->state = BSS_Setup_State_HandleStage;
+            self->state = BSS_Setup_State_GlobeMoveZ;
         else
-            self->state = BSS_Setup_State_PostPinkSphereWarp;
+            self->state = BSS_Setup_State_FinishGlobeTeleport;
 
         BSS_Setup_HandleCollectableMovement();
     }
@@ -1103,7 +1103,7 @@ void BSS_Setup_State_SpinLeft(void)
     }
 }
 
-void BSS_Setup_State_SpinRight(void)
+void BSS_Setup_State_GlobeTurnRight(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -1123,9 +1123,9 @@ void BSS_Setup_State_SpinRight(void)
 
         self->spinTimer = 0;
         if (!self->timer)
-            self->state = BSS_Setup_State_HandleStage;
+            self->state = BSS_Setup_State_GlobeMoveZ;
         else
-            self->state = BSS_Setup_State_PostPinkSphereWarp;
+            self->state = BSS_Setup_State_FinishGlobeTeleport;
 
         BSS_Setup_HandleCollectableMovement();
     }
@@ -1146,7 +1146,7 @@ void BSS_Setup_State_SpinRight(void)
     }
 }
 
-void BSS_Setup_State_PostPinkSphereWarp(void)
+void BSS_Setup_State_FinishGlobeTeleport(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -1156,16 +1156,16 @@ void BSS_Setup_State_PostPinkSphereWarp(void)
         if (player->up)
             self->timer = 1;
         else if (player->left)
-            self->state = BSS_Setup_State_SpinLeft;
+            self->state = BSS_Setup_State_GlobeTurnLeft;
         else if (player->right)
-            self->state = BSS_Setup_State_SpinRight;
+            self->state = BSS_Setup_State_GlobeTurnRight;
     }
     else {
         self->alpha -= 8;
     }
 
     if (!--self->timer) {
-        self->state = BSS_Setup_State_HandleStage;
+        self->state = BSS_Setup_State_GlobeMoveZ;
 
         EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
         if (player1->onGround)

@@ -156,7 +156,7 @@ void EncoreIntro_SetupCutscenePart2(void)
     player1->onGround       = true;
     player1->state          = Player_State_Ground;
     camera->target          = (Entity *)player1;
-    camera->state           = Camera_State_Follow;
+    camera->state           = Camera_State_FollowXY;
     camera->position.x      = player1->position.x;
 
     Vector2 size;
@@ -223,7 +223,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
             Music_TransitionTrack(TRACK_EGGMAN1, 0.01);
             foreach_active(Animals, animal)
             {
-                animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
+                animal->behaviour = ANIMAL_BEHAVE_FREE;
                 animal->active    = ACTIVE_NORMAL;
             }
         }
@@ -1031,7 +1031,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
 
         Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, camera->position.x, camera->position.y, 0);
         camera->target = (Entity *)player;
-        camera->state  = Camera_State_Follow;
+        camera->state  = Camera_State_FollowXY;
 
         Hitbox *playerHitbox = Player_GetHitbox(player);
         while (

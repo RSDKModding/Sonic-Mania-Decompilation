@@ -31,7 +31,7 @@ void Music_Create(void *data)
         self->active = ACTIVE_ALWAYS + ((SceneInfo->state & 3) != ENGINESTATE_FROZEN);
 
         if (self->trackFile.length) {
-            if (self->trackID != TRACK_NOLOAD) {
+            if (self->trackID != TRACK_SOUNDTEST) {
                 char trackName[0x20];
                 RSDK.GetCString(trackName, &self->trackFile);
                 Music_SetMusicTrack(trackName, self->trackID, self->trackLoop);
@@ -282,7 +282,7 @@ void Music_PlayTrack(uint8 trackID)
             case TRACK_INVINCIBLE:
             case TRACK_SNEAKERS:
             case TRACK_SUPER:
-            case TRACK_NOLOAD:
+            case TRACK_SOUNDTEST:
             case TRACK_HBHMISCHIEF:
             case TRACK_1UP: regularTrack = false; break;
         }
@@ -741,7 +741,7 @@ void Music_State_TransitionTrack(void)
                 case TRACK_INVINCIBLE:
                 case TRACK_SNEAKERS:
                 case TRACK_SUPER:
-                case TRACK_NOLOAD:
+                case TRACK_SOUNDTEST:
                 case TRACK_HBHMISCHIEF:
                 case TRACK_1UP: regularTrack = false; break;
             }
@@ -813,7 +813,31 @@ void Music_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void Music_EditorLoad(void) { Music->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void Music_EditorLoad(void)
+{
+    Music->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Music, trackID);
+    RSDK_ENUM_VAR("Zone Act", TRACK_STAGE);
+    RSDK_ENUM_VAR("Invincible", TRACK_INVINCIBLE);
+    RSDK_ENUM_VAR("Power Sneakers", TRACK_SNEAKERS);
+    RSDK_ENUM_VAR("Mini Boss", TRACK_MINIBOSS);
+    RSDK_ENUM_VAR("HBH Boss", TRACK_HBHBOSS);
+    RSDK_ENUM_VAR("Eggman Boss 1", TRACK_EGGMAN1);
+    RSDK_ENUM_VAR("Eggman Boss 2", TRACK_EGGMAN2);
+    RSDK_ENUM_VAR("Act Clear", TRACK_ACTCLEAR);
+    RSDK_ENUM_VAR("Drowning", TRACK_DROWNING);
+    RSDK_ENUM_VAR("Game Over", TRACK_GAMEOVER);
+    RSDK_ENUM_VAR("Super Sonic", TRACK_SUPER);
+#if MANIA_USE_PLUS
+    RSDK_ENUM_VAR("HBH Mischief", TRACK_HBHMISCHIEF);
+    RSDK_ENUM_VAR("Sound Test", TRACK_SOUNDTEST);
+#else
+    RSDK_ENUM_VAR("Sound Test", TRACK_SOUNDTEST);
+    RSDK_ENUM_VAR("HBH Mischief", TRACK_HBHMISCHIEF);
+#endif
+    RSDK_ENUM_VAR("1UP", TRACK_1UP);
+}
 #endif
 
 void Music_Serialize(void)

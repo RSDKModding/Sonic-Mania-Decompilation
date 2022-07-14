@@ -54,7 +54,9 @@ void Press_EditorLoad(void);
 void Press_Serialize(void);
 
 // Extra Entity Functions
+#if MANIA_USE_PLUS
 bool32 Press_SuperCheckCB(bool32 hud);
+#endif
 void Press_Move(void);
 void Press_State_Crush(void);
 void Press_State_FinalCrush(void);

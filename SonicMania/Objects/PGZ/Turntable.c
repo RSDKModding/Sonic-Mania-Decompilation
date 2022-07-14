@@ -97,7 +97,7 @@ void Turntable_Update(void)
             player->animator.frameID = (self->playerFrames[playerID] + frame) % -24;
 
             if (player->jumpPress)
-                Player_StartJump(player);
+                Player_Action_Jump(player);
             else if (player->animator.animationID == ANI_TWISTER && player->state == Player_State_None)
                 continue;
 

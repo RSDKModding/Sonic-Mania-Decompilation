@@ -509,7 +509,7 @@ void TitleCard_State_ShowingTitle(void)
                 EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 player->camera         = camera;
                 camera->target         = (Entity *)player;
-                camera->state          = Camera_State_Follow;
+                camera->state          = Camera_State_FollowXY;
                 Camera->centerBounds.x = 0x20000;
                 Camera->centerBounds.y = 0x20000;
             }

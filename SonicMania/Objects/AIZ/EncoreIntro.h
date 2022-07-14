@@ -3,6 +3,8 @@
 
 #include "Game.h"
 
+#if MANIA_USE_PLUS
+
 // Object Class
 struct ObjectEncoreIntro {
     RSDK_OBJECT
@@ -96,5 +98,7 @@ void EncoreIntro_PhantomRuby_CapsuleFallDown(void);
 void EncoreIntro_PlayerState_BuddySel(void);
 void EncoreIntro_PlayerState_HandleAir(void);
 void EncoreIntro_PlayerInput_None(void);
+
+#endif
 
 #endif //! OBJ_ENCOREINTRO_H

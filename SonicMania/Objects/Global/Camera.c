@@ -79,10 +79,10 @@ void Camera_Create(void *data)
         if (self->target) {
             self->position.x = self->target->position.x;
             self->position.y = self->target->position.y;
-            self->state      = Camera_State_Follow;
+            self->state      = Camera_State_FollowXY;
         }
         else {
-            self->state = Camera_State_Roam;
+            self->state = Camera_State_MapView;
         }
     }
 }
@@ -274,7 +274,7 @@ void Camera_SetupLerp(int32 type, int32 screen, int32 x, int32 y, int32 speed)
 }
 
 // States
-void Camera_State_Roam(void)
+void Camera_State_MapView(void)
 {
     RSDK_THIS(Camera);
 
@@ -306,15 +306,15 @@ void Camera_State_Roam(void)
     if (self->position.y >= screen->centerY) {
         if (self->position.y > Zone->cameraBoundsB[self->screenID] - screen->centerY)
             self->position.y = Zone->cameraBoundsB[self->screenID] - screen->centerY;
-        self->position.x <<= 0x10;
-        self->position.y <<= 0x10;
     }
     else {
-        self->position.x <<= 0x10;
-        self->position.y <<= 0x10;
+        self->position.y = screen->centerY;
     }
+
+    self->position.x <<= 0x10;
+    self->position.y <<= 0x10;
 }
-void Camera_State_Follow(void)
+void Camera_State_FollowXY(void)
 {
     RSDK_THIS(Camera);
 
@@ -365,7 +365,7 @@ void Camera_State_Follow(void)
         }
     }
 }
-void Camera_State_HLock(void)
+void Camera_State_FollowX(void)
 {
     RSDK_THIS(Camera);
 
@@ -393,7 +393,7 @@ void Camera_State_HLock(void)
         }
     }
 }
-void Camera_State_VLock(void)
+void Camera_State_FollowY(void)
 {
     RSDK_THIS(Camera);
 

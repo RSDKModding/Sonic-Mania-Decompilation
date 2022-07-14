@@ -16,11 +16,11 @@ void TippingPlatform_Update(void)
     if (self->bossID) {
         if (self->animator.frameID) {
             self->stateCollide = Platform_Collision_None;
-            self->collision    = PLATFORM_C_SOLID_NONE;
+            self->collision    = PLATFORM_C_NONE;
         }
         else {
-            self->stateCollide = Platform_Collision_TopSolid;
-            self->collision    = PLATFORM_C_SOLID_TOP;
+            self->stateCollide = Platform_Collision_Platform;
+            self->collision    = PLATFORM_C_PLATFORM;
         }
 
         if (!self->stoodAngle && self->bossID > TIPPINGPLATFORM_EGGMAN && self->syringe->activated) {
@@ -66,12 +66,12 @@ void TippingPlatform_Update(void)
             isSolid = self->animator.frameID == 6;
 
         if (isSolid) {
-            self->stateCollide = Platform_Collision_TopSolid;
-            self->collision    = PLATFORM_C_SOLID_TOP;
+            self->stateCollide = Platform_Collision_Platform;
+            self->collision    = PLATFORM_C_PLATFORM;
         }
         else {
             self->stateCollide = Platform_Collision_None;
-            self->collision    = PLATFORM_C_SOLID_NONE;
+            self->collision    = PLATFORM_C_NONE;
         }
     }
 
@@ -99,7 +99,7 @@ void TippingPlatform_Create(void *data)
     if (!self->duration)
         self->duration = 120;
 
-    self->collision = PLATFORM_C_SOLID_TOP;
+    self->collision = PLATFORM_C_PLATFORM;
     Platform_Create(NULL);
 
     if (self->bossID) {
@@ -121,8 +121,8 @@ void TippingPlatform_Create(void *data)
                         self->updateRange.x = abs(self->position.x - syringe->position.x) + 0x400000;
                         self->updateRange.y = abs(self->position.y - syringe->position.y) + 0x400000;
                     }
-                    self->stateCollide = Platform_Collision_AllSolid;
-                    self->collision    = PLATFORM_C_SOLID_ALL;
+                    self->stateCollide = Platform_Collision_Solid;
+                    self->collision    = PLATFORM_C_SOLID;
                     foreach_break;
                 }
             }
@@ -202,7 +202,7 @@ void TippingPlatform_EditorDraw(void)
 {
     RSDK_THIS(TippingPlatform);
 
-    self->collision = PLATFORM_C_SOLID_TOP;
+    self->collision = PLATFORM_C_PLATFORM;
     Platform_Create(NULL);
 
     if (self->bossID) {

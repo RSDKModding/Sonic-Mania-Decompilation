@@ -211,7 +211,7 @@ struct ObjectPlayer {
     Vector2 leaderPositionBuffer[16];
     Vector2 targetLeaderPosition;
     int32 autoJumpTimer;
-    int32 jumpInTimer;
+    int32 respawnTimer;
     int32 aiInputSwapTimer;
     bool32 disableP2KeyCheck;
     int32 rings;
@@ -290,7 +290,7 @@ struct ObjectPlayer {
     Vector2 leaderPositionBuffer[16];
     Vector2 targetLeaderPosition;
     int32 autoJumpTimer;
-    int32 jumpInTimer;
+    int32 respawnTimer;
     int32 aiInputSwapTimer;
     bool32 disableP2KeyCheck;
     int32 rings;
@@ -355,9 +355,9 @@ struct EntityPlayer {
     EntityCamera *camera;
     Animator animator;
     Animator tailAnimator;
-    int32 maxWalkSpeed;
-    int32 maxJogSpeed;
-    int32 maxRunSpeed;
+    int32 minJogVelocity;
+    int32 minRunVelocity;
+    int32 minDashVelocity;
     int32 unused; //the only used variable in the player struct, I cant find a ref to it anywhere so...
     int32 tailRotation;
     int32 tailDirection;
@@ -471,7 +471,7 @@ void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx);
 void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShield(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int32 character);
-bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks);
+bool32 Player_TryTransform(EntityPlayer *player, uint8 emeraldMasks);
 void Player_BlendSuperSonicColors(int32 bankID);
 void Player_BlendSuperTailsColors(int32 bankID);
 void Player_BlendSuperKnuxColors(int32 bankID);
@@ -530,37 +530,41 @@ bool32 Player_CheckItemBreak(EntityPlayer *player, void *entity, bool32 hitIfNot
 
 // State helpers
 void Player_UpdatePhysicsState(EntityPlayer *entity);
+void Player_HandleIdleAnimation(void);
+void Player_HandleGroundAnimation(void);
 void Player_HandleGroundMovement(void);
 void Player_HandleGroundRotation(void);
 void Player_HandleAirMovement(void);
 void Player_HandleAirFriction(void);
-void Player_StartJump(EntityPlayer *entity);
-void Player_StartRoll(void);
-void Player_StartSpindash(void);
-void Player_StartPeelout(void);
+void Player_Action_Jump(EntityPlayer *entity);
+void Player_Action_Roll(void);
+void Player_Action_Spindash(void);
+void Player_Action_Peelout(void);
+#if MANIA_USE_PLUS
 bool32 Player_SwapMainPlayer(bool32 forceSwap);
+#endif
 void Player_HandleRollDeceleration(void);
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
-void Player_CheckStartFlyCarry(EntityPlayer *leader);
-void Player_P2JumpBackIn(void);
-void Player_ForceSuperTransform(void);
+void Player_HandleFlyCarry(EntityPlayer *leader);
+void Player_HandleSidekickRespawn(void);
+void Player_State_StartSuper(void);
 
 // States
 void Player_State_None(void);
 void Player_State_Ground(void);
 void Player_State_Air(void);
 void Player_State_Roll(void);
-void Player_State_ForceRoll_Ground(void);
-void Player_State_ForceRoll_Air(void);
+void Player_State_TubeRoll(void);
+void Player_State_TubeAirRoll(void);
 void Player_State_LookUp(void);
 void Player_State_Crouch(void);
 void Player_State_Spindash(void);
 void Player_State_Peelout(void);
 void Player_State_OuttaHere(void);
 void Player_State_Transform(void);
-void Player_State_Hit(void);
-void Player_State_Die(void);
+void Player_State_Hurt(void);
+void Player_State_Death(void);
 void Player_State_Drown(void);
 void Player_State_DropDash(void);
 void Player_State_BubbleBounce(void);
@@ -579,16 +583,21 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox);
 bool32 Player_CheckMightyUnspin(EntityPlayer *player, int32 bounceDistance, bool32 checkHammerDrop, int32 *uncurlTimer);
 void Player_State_RayGlide(void);
 #endif
-void Player_State_FlyIn(void);
-void Player_State_JumpIn(void);
-void Player_State_StartJumpIn(void);
-void Player_EndFlyJumpIn(EntityPlayer *player, EntityPlayer *leader);
+void Player_State_FlyToPlayer(void);
+void Player_State_ReturnToPlayer(void);
+void Player_State_HoldRespawn(void);
+void Player_FinishedReturnToPlayer(EntityPlayer *player, EntityPlayer *leader);
 void Player_State_EncoreRespawn(void);
 void Player_State_Victory(void);
 void Player_State_Bubble(void);
 void Player_State_WaterSlide(void);
 void Player_State_TransportTube(void);
 
+// Gravity States
+void Player_Gravity_True(void);
+void Player_Gravity_False(void);
+
+// Jump Ability States
 void Player_JumpAbility_Sonic(void);
 void Player_JumpAbility_Tails(void);
 void Player_JumpAbility_Knux(void);
@@ -606,8 +615,8 @@ void Player_UpdateRaySwoopSFX(int32 sfxID);
 void Player_Input_P1(void);
 void Player_Input_P2_Delay(void);
 void Player_Input_P2_AI(void);
-void Player_Input_P2_JumpIn(void);
-void Player_Input_P2_JumpDelay(void);
+void Player_Input_AI_SpindashPt1(void);
+void Player_Input_AI_SpindashPt2(void);
 void Player_Input_P2_Player(void);
 
 #endif //! OBJ_PLAYER_H

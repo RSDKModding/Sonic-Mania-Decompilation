@@ -39,7 +39,7 @@ struct ObjectItemBox {
     uint16 sfxHyperRing;
 #if MANIA_USE_PLUS
     uint16 sfxPowerDown;
-    uint16 sfxRevovery;
+    uint16 sfxRecovery;
 #endif
 };
 
@@ -95,9 +95,9 @@ void ItemBox_HandleObjectCollisions(void);
 
 // Entity States
 void ItemBox_State_Broken(void);
-void ItemBox_State_ContentsShown(void);
-void ItemBox_State_ContentsDisappear(void);
-void ItemBox_State_Normal(void);
+void ItemBox_State_Break(void);
+void ItemBox_State_IconFinish(void);
+void ItemBox_State_Idle(void);
 void ItemBox_State_Falling(void);
 void ItemBox_State_Conveyor(void);
 

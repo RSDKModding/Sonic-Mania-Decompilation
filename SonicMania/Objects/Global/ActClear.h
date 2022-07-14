@@ -79,7 +79,7 @@ void ActClear_Serialize(void);
 
 // Extra Entity Functions
 #if MANIA_USE_PLUS
-void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
+void ActClear_DrawTime(Vector2 *drawPosPtr, int32 mins, int32 secs, int32 millisecs);
 #endif
 void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount);
 void ActClear_CheckPlayerVictory(void);
@@ -100,9 +100,9 @@ void ActClear_State_SaveGameProgress(void);
 #if MANIA_USE_PLUS
 void ActClear_State_ShowResultsTA(void);
 #endif
-void ActClear_State_WaitForSaveFinish(void);
+void ActClear_State_WaitForSave(void);
 void ActClear_State_ExitActClear(void);
 
-void ActClear_State_ForcePlayerOnScreen(void);
+void ActClear_State_RecoverPlayers(void);
 
 #endif //! OBJ_ACTCLEAR_H

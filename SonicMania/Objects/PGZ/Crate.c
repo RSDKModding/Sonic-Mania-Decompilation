@@ -13,7 +13,7 @@ void Crate_Update(void)
 {
     RSDK_THIS(Crate);
 
-    if (self->collision != PLATFORM_C_SOLID_ALL || !Crate_Collide()) {
+    if (self->collision != PLATFORM_C_SOLID || !Crate_Collide()) {
         if (self->animator.animationID) {
             StateMachine_Run(self->state);
         }
@@ -39,9 +39,9 @@ void Crate_Create(void *data)
 
     int32 frameID = self->frameID;
     if (frameID == 3)
-        self->collision = PLATFORM_C_SOLID_NONE;
+        self->collision = PLATFORM_C_NONE;
     else
-        self->collision = PLATFORM_C_SOLID_ALL;
+        self->collision = PLATFORM_C_SOLID;
 
     Platform_Create(NULL);
     self->frameID = frameID;

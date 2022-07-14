@@ -402,9 +402,12 @@ void OOZSetup_HandleActiveFlames(void)
                 OOZSetup->flamePositions[i].y = frame | (frameTimer << 8) | (OOZSetup->flamePositions[i].y & 0xFFFF0000);
             }
 
+            Vector2 storePos = self->position;
             foreach_active(Player, player)
             {
-                if (Player_CheckCollisionTouch(player, &OOZSetup->flamePositions[i], &Sol->hitboxBadnik)) {
+                self->position = OOZSetup->flamePositions[i];
+                if (Player_CheckCollisionTouch(player, self, &Sol->hitboxBadnik)) {
+                    self->position = storePos;
                     Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }
@@ -570,7 +573,7 @@ void OOZSetup_PlayerState_OilSlide(void)
     }
 
     if (self->jumpPress) {
-        Player_StartJump(self);
+        Player_Action_Jump(self);
 
         if (self->angle <= 0x80) {
             if (self->velocity.x < 0)
@@ -629,7 +632,7 @@ void OOZSetup_PlayerState_OilFall(void)
     self->nextAirState     = Player_State_Air;
 
     if (self->jumpPress) {
-        Player_StartJump(self);
+        Player_Action_Jump(self);
 
         self->jumpAbilityState = 0;
         self->timer            = 0;

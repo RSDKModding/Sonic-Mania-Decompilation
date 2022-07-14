@@ -147,7 +147,7 @@ void StickyPlatform_Interact(void)
                         if (player->jumpPress) {
                             player->angle     = self->rotation;
                             player->groundVel = 0;
-                            Player_StartJump(player);
+                            Player_Action_Jump(player);
 
                             player->velocity.x = (320 * player->velocity.x) >> 8;
                             player->velocity.y = (320 * player->velocity.y) >> 8;

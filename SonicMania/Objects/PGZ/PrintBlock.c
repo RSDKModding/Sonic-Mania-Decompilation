@@ -57,11 +57,11 @@ void PrintBlock_Update(void)
 
     if (self->animator.frameID <= 2) {
         self->stateCollide = Platform_Collision_None;
-        self->collision    = PLATFORM_C_SOLID_NONE;
+        self->collision    = PLATFORM_C_NONE;
     }
     else {
-        self->stateCollide = Platform_Collision_AllSolid;
-        self->collision    = PLATFORM_C_SOLID_ALL;
+        self->stateCollide = Platform_Collision_Solid;
+        self->collision    = PLATFORM_C_SOLID;
     }
 
     Platform_Update();
@@ -88,7 +88,7 @@ void PrintBlock_Create(void *data)
 {
     RSDK_THIS(PrintBlock);
 
-    self->collision = PLATFORM_C_SOLID_ALL;
+    self->collision = PLATFORM_C_SOLID;
     Platform_Create(NULL);
 
     RSDK.SetSpriteAnimation(PrintBlock->aniFrames, self->letter, &self->animator, true, 0);

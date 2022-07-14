@@ -79,29 +79,8 @@ void UIText_EditorDraw(void)
 {
     RSDK_THIS(UIText);
 
-    uint16 frames = (!UIWidgets || UIText->aniFrames) ? UIText->aniFrames : UIWidgets->uiFrames;
-    if (!UIWidgets || UIText->aniFrames)
-        RSDK.SetSpriteAnimation(frames, self->highlighted + self->listID, &self->animator, true, 0);
-    else
-        RSDK.SetSpriteAnimation(frames, self->listID, &self->animator, true, 0);
-    RSDK.SetSpriteString(frames, self->listID, &self->text);
-
-
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-
-    int32 width = RSDK.GetStringWidth(frames, self->listID, &self->text, 0, self->text.length, 0);
-    switch (self->align) {
-        default:
-        case UITEXT_ALIGN_LEFT: break;
-
-        case UITEXT_ALIGN_CENTER: drawPos.x -= width << 15; break;
-
-        case UITEXT_ALIGN_RIGHT: drawPos.x -= width << 16; break;
-    }
-
-    RSDK.DrawText(&self->animator, &drawPos, &self->text, 0, 0, ALIGN_LEFT, 0, NULL, NULL, false);
+    RSDK.SetSpriteAnimation(UIText->aniFrames, self->listID, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, &self->position, false);
 }
 
 void UIText_EditorLoad(void)

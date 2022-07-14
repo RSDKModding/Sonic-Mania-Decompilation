@@ -16,6 +16,8 @@ DLLExport ModVersionInfo modInfo = { RETRO_REVISION, GAME_VERSION, RETRO_MOD_LOA
 const char *modID = "SonicMania";
 #endif
 
+int32 RSDKRevision = RETRO_REVISION;
+
 RSDKSceneInfo *SceneInfo = NULL;
 
 RSDKGameInfo *GameInfo = NULL;
@@ -54,8 +56,8 @@ void GlobalVariables_InitCB(GlobalVariables *globals)
     globals->presenceID = -1;
 
 #if MANIA_USE_PLUS
-    globals->replayTableID = 0xFFFF;
-    globals->taTableID     = 0xFFFF;
+    globals->replayTableID = (uint16)-1;
+    globals->taTableID     = (uint16)-1;
 
     globals->stock          = (ID_RAY << 16) | (ID_KNUCKLES << 8) | ID_TAILS;
     globals->characterFlags = ID_SONIC | ID_TAILS | ID_KNUCKLES | ID_MIGHTY | ID_RAY;
@@ -857,14 +859,17 @@ void InitGameLogic(void)
 #if RETRO_USE_MOD_LOADER
 #include "PublicFunctions.c"
 
-void InitModAPI(void) { 
+void InitModAPI(void)
+{
+    ModFunctionTable *m = &Mod;
+
     // Init Public Functions
-    InitPublicFunctions(); 
+    InitPublicFunctions();
 }
 
 bool32 LinkModLogic(EngineInfo *info, const char *id)
 {
-#if MANIA_USE_PLUS
+#if RETRO_REV02
     LinkGameLogicDLL(info);
 #else
     LinkGameLogicDLL(*info);

@@ -4,22 +4,22 @@
 #include "Game.h"
 
 typedef enum {
-    WATER_PALETTE,
-    WATER_TINT,
+    WATER_WATERLEVEL,
+    WATER_POOL,
     WATER_BUBBLER,
-    WATER_ADJUST,
-    WATER_HCZ_BUBBLER,
-    WATER_BUBBLE_SPAWNER,
+    WATER_HEIGHT_TRIGGER,
+    WATER_BIG_BUBBLER,
+    WATER_BTN_BIG_BUBBLE,
     WATER_SPLASH,
     WATER_BUBBLE,
-    WATER_COUNTDOWNBUBBLE,
+    WATER_COUNTDOWN,
 } WaterTypes;
 
 typedef enum {
-    WATER_PRIORITY_OBJECT_LOW,
-    WATER_PRIORITY_PLAYER_LOW,
-    WATER_PRIORITY_PLAYER_HIGH,
-    WATER_PRIORITY_HUD_LOW,
+    WATER_PRIORITY_LOWEST,
+    WATER_PRIORITY_LOW,
+    WATER_PRIORITY_HIGH,
+    WATER_PRIORITY_HIGHEST,
 } WaterPriorities;
 
 // Object Class
@@ -130,22 +130,22 @@ void Water_HandleBubbleMovement(void);
 void Water_HCZBubbleSpawner(void);
 void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut);
 
-void Water_State_Palette(void);
-void Water_State_Tint(void);
+void Water_State_Water(void);
+void Water_State_Pool(void);
 void Water_State_Splash(void);
 void Water_State_Bubble(void);
 void Water_State_ShrinkPlayerBubble(void);
 void Water_State_HCZBubble(void);
 void Water_State_Bubbler(void);
-void Water_State_CountDownBubble(void);
+void Water_State_Countdown(void);
 void Water_State_BubbleMove(void);
-void Water_State_Adjustable(void);
+void Water_State_HeightTrigger(void);
 
 // Draw States
-void Water_Draw_Palette(void);
-void Water_Draw_Tint(void);
+void Water_Draw_Water(void);
+void Water_Draw_Pool(void);
 void Water_Draw_Splash(void);
-void Water_Draw_CountDownBubble(void);
+void Water_Draw_Countdown(void);
 void Water_Draw_Bubbler(void);
 void Water_Draw_Bubble(void);
 

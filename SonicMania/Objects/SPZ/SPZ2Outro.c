@@ -143,8 +143,8 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 
     if (host->timer == 120) {
         Zone->playerBoundActiveR[0] = false;
-        if (!player2->onGround || player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn || player2->state == Player_State_None
-            || player2->state == Player_State_StartJumpIn) {
+        if (!player2->onGround || player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer || player2->state == Player_State_None
+            || player2->state == Player_State_HoldRespawn) {
             SPZ2Outro->ignoreP2 = true;
         }
         else {
@@ -212,7 +212,7 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
     EntityWeatherTV *weatherTV             = SPZ2Outro->weatherTV;
 
     if (!host->timer) {
-        RSDK.SetDrawLayerProperties(Zone->playerDrawLow, false, SPZ2Outro_DrawLayerCB_WeatherTV);
+        RSDK.SetDrawGroupProperties(Zone->playerDrawLow, false, SPZ2Outro_DrawLayerCB_WeatherTV);
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, true, 0);
         player1->drawOrder       = Zone->playerDrawLow;
         player1->state           = Player_State_None;

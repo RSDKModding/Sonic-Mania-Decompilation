@@ -66,8 +66,8 @@ void Newspaper_Create(void *data)
     }
 
 #else
-    self->collision = PLATFORM_C_SOLID_ALL;
-    self->type      = PLATFORM_CONTROLLED;
+    self->collision = PLATFORM_C_SOLID;
+    self->type      = PLATFORM_PATH;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Newspaper->aniFrames, 0, &self->animator, true, 0);
 #endif

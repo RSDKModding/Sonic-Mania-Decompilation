@@ -315,7 +315,7 @@ void LottoMachine_HandleMotor(void)
     for (int32 p = 0; p < self->playerCount; ++p) {
         EntityPlayer *player = self->playerPtrs[p];
         if (player) {
-            if (player->state != Player_State_Die) {
+            if (player->state != Player_State_Death) {
                 player->position.x = self->position.x;
                 Player_CheckCollisionPlatform(player, self, &LottoMachine->hitboxMotor);
                 player->direction        = self->playerDir;
@@ -414,7 +414,7 @@ void LottoMachine_GiveRings(void)
 
     for (int32 p = 0; p < self->playerCount; ++p) {
         EntityPlayer *player = self->playerPtrs[p];
-        if (player->state != Player_State_Die && !player->sidekick) {
+        if (player->state != Player_State_Death && !player->sidekick) {
             int32 rings = 0;
             int32 count = reward;
 
@@ -442,7 +442,7 @@ void LottoMachine_GiveRings(void)
                 pos.y = self->position.y + 0x540000;
                 Ring_FakeLoseRings(&pos, -ringCount, self->drawOrder);
                 RSDK.PlaySfx(Player->sfxLoseRings, false, 255);
-                player->state = Player_State_Hit;
+                player->state = Player_State_Hurt;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 player->velocity.y      = -0x40000;
                 player->onGround        = false;
@@ -485,7 +485,7 @@ void LottoMachine_State_Startup(void)
             for (int32 p = 0; p < self->playerCount; ++p) {
                 EntityPlayer *player = self->playerPtrs[p];
 
-                if (player && player->state != Player_State_Die) {
+                if (player && player->state != Player_State_Death) {
                     int32 playerID = RSDK.GetEntitySlot(player);
                     if (player->state == Player_State_None) {
                         player->state                = Player_State_Air;
@@ -671,7 +671,7 @@ void LottoMachine_State_DropPlayers(void)
             for (int32 p = 0; p < self->playerCount; ++p) {
                 EntityPlayer *player = self->playerPtrs[p];
 
-                if (player && player->state != Player_State_Die) {
+                if (player && player->state != Player_State_Death) {
                     player->state        = Player_State_None;
                     player->nextAirState = StateMachine_None;
                     player->velocity.x   = 0;
@@ -711,7 +711,7 @@ void LottoMachine_State_ReleasePlayers(void)
         for (int32 p = 0; p < self->playerCount; ++p) {
             EntityPlayer *player = self->playerPtrs[p];
 
-            if (player && player->state != Player_State_Die) {
+            if (player && player->state != Player_State_Death) {
                 player->state      = Player_State_Air;
                 player->velocity.y = 0x40000;
                 LottoMachine->activePlayers &= ~(1 << RSDK.GetEntitySlot(player));

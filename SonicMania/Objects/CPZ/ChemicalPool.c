@@ -281,7 +281,7 @@ void ChemicalPool_State_HarmfulBlue(void)
         if (player->velocity.y >= 0 && Player_CheckCollisionBox(player, self, &self->hitbox)) {
             ChemicalPool_SetDeform(player->position.x, (player->velocity.y >> 4) + 0x1000);
             if (player->shield != SHIELD_BUBBLE) {
-                if (player->state != Player_State_Hit && player->state != Player_State_Die && player->state != Player_State_Drown
+                if (player->state != Player_State_Hurt && player->state != Player_State_Death && player->state != Player_State_Drown
                     && !player->invincibleTimer && player->blinkTimer <= 0) {
                     if (player->position.x > self->position.x)
                         player->velocity.x = 0x20000;

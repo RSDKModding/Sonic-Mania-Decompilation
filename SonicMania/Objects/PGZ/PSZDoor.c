@@ -68,12 +68,17 @@ void PSZDoor_Update(void)
     bool32 autoOpen = false;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, &self->doorPos, &PSZDoor->hitboxes[self->doorAnimator.frameID]) == C_TOP) {
+        // this was a weird one where apparently it used doorPos directly which is very much undefined behavior lol
+        // so much so that it breaks as of v5U :]
+        Vector2 storePos = self->position;
+        self->position   = self->doorPos;
+        if (Player_CheckCollisionBox(player, self, &PSZDoor->hitboxes[self->doorAnimator.frameID]) == C_TOP) {
             if (self->orientation >= PSZDOOR_ORIENATION_L)
                 player->position.x += posX;
             else
                 player->position.y += posY;
         }
+        self->position = storePos;
 
         switch (self->automatic) {
             default:

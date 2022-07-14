@@ -27,7 +27,7 @@ void RotatingStair_Create(void *data)
     RSDK_THIS(RotatingStair);
 
     self->frameID   = 2;
-    self->collision = PLATFORM_C_SOLID_ALL;
+    self->collision = PLATFORM_C_SOLID;
     self->speed     = 3;
 
     if (self->direction)
@@ -37,7 +37,7 @@ void RotatingStair_Create(void *data)
         self->amplitude.x = -self->amplitude.x;
 
     int32 typeStore = self->mode;
-    self->mode      = (RotatingStairModes)PLATFORM_MOVING;
+    self->mode      = (RotatingStairModes)PLATFORM_LINEAR;
     Platform_Create(NULL);
     self->mode = typeStore;
 
@@ -142,7 +142,7 @@ void RotatingStair_EditorDraw(void)
     RSDK_THIS(RotatingStair);
 
     self->frameID   = 2;
-    self->collision = PLATFORM_C_SOLID_ALL;
+    self->collision = PLATFORM_C_SOLID;
     self->speed     = 3;
     if (self->direction)
         self->amplitude.x = -self->amplitude.x;
@@ -150,7 +150,7 @@ void RotatingStair_EditorDraw(void)
         self->amplitude.x = -self->amplitude.x;
 
     int32 typeStore = self->mode;
-    self->mode      = (RotatingStairModes)PLATFORM_MOVING;
+    self->mode      = (RotatingStairModes)PLATFORM_LINEAR;
     Platform_Create(NULL);
     self->mode = typeStore;
 

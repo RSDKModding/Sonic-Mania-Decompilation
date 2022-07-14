@@ -36,13 +36,13 @@ void FernParallax_Draw(void)
     thisHitbox.top    = -screen->centerY;
     thisHitbox.bottom = screen->centerY;
 
-    Vector2 *bufPos = (Vector2 *)&FernParallax->entityBuffer[0 * ENTITY_SIZE];
-    bufPos->x       = screenX;
-    bufPos->y       = screenY;
+    Entity *buffer     = (Entity *)&FernParallax->entityBuffer[0 * ENTITY_SIZE];
+    buffer->position.x = screenX;
+    buffer->position.y = screenY;
 
-    bufPos    = (Vector2 *)&FernParallax->entityBuffer[1 * ENTITY_SIZE];
-    bufPos->x = drawPos.x;
-    bufPos->y = drawPos.y;
+    buffer             = (Entity *)&FernParallax->entityBuffer[1 * ENTITY_SIZE];
+    buffer->position.x = drawPos.x;
+    buffer->position.y = drawPos.y;
 
     int32 bottom = ((screen->height + screen->position.y) << 16) - (otherHitbox->bottom << 16);
     if (RSDK.CheckObjectCollisionTouchBox(&FernParallax->entityBuffer[0], &thisHitbox, &FernParallax->entityBuffer[1], otherHitbox)

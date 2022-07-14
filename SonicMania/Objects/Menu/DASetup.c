@@ -153,7 +153,7 @@ void DASetup_SetupUI(void)
     EntityUIInfoLabel *trackSelLabel = DASetup->trackSelLabel;
     Localization_GetString(&buffer, STR_SELECTATRACK);
 #if MANIA_USE_PLUS
-    RSDK.PrintString(PRINT_NORMAL, &buffer);
+    LogHelpers_PrintString(&buffer);
 #endif
     UIInfoLabel_SetString(trackSelLabel, &buffer);
 }

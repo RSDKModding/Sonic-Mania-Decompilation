@@ -205,13 +205,13 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         player->velocity.y = -0x28000;
 
         player->blinkTimer = 60;
-        player->state      = Player_State_Hit;
+        player->state      = Player_State_Hurt;
         RSDK.StopSfx(Player->sfxMightyDrill);
         player->onGround         = false;
         player->applyJumpCap     = false;
         player->jumpAbilityState = 0;
 
-        if (player->state == Player_State_Hit) {
+        if (player->state == Player_State_Hurt) {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
         }
@@ -244,15 +244,21 @@ void Shiversaw_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Shiversaw);
     if (!Shiversaw->invincibilityTimer) {
+        Vector2 storePos = self->position;
+
         foreach_active(Player, player)
         {
             for (int32 i = 0; i < SHIVERSAW_SAW_COUNT; ++i) {
                 if (self->sawAnimator[i].animationID == 3) {
-                    if (Player_CheckCollisionTouch(player, &self->sawPos[i], &Shiversaw->hitboxSaw))
+                    self->position = self->sawPos[i];
+                    if (Player_CheckCollisionTouch(player, self, &Shiversaw->hitboxSaw)) {
+                        self->position = storePos;
                         Shiversaw_CheckSawHit(player, i);
+                    }
                 }
             }
 
+            self->position = storePos;
             if (Player_CheckBadnikTouch(player, self, &Shiversaw->hitboxBoss) && Player_CheckBossHit(player, self)) {
                 Shiversaw_Hit();
                 foreach_break;

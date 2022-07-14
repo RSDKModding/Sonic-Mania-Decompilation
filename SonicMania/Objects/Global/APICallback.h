@@ -20,13 +20,13 @@
 #define API_SetNoSave(status)                  API.SetNoSave(status)
 #define API_GetUserAuthStatus                  API.GetUserAuthStatus
 #define API_ClearPrerollErrors                 API.ClearPrerollErrors
-#define API_ControllerIDForInputID             RSDK.ControllerIDForInputID
-#define API_AssignControllerID                 RSDK.AssignControllerID
-#define API_GetAssignedControllerID(inputID)   RSDK.GetAssignedControllerID(id)
-#define API_ControllerIsAssigned(controllerID) RSDK.ControllerIsAssigned(controllerID)
-#define API_MostRecentActiveControllerID       RSDK.MostRecentActiveControllerID
-#define API_ResetControllerAssignments         RSDK.ResetControllerAssignments
-#define API_GetControllerType                  RSDK.GetControllerType
+#define API_ControllerIDForInputID             RSDK.GetInputDeviceID
+#define API_AssignControllerID                 RSDK.AssignInputSlotToDevice
+#define API_GetAssignedControllerID(inputID)   RSDK.IsInputDeviceAssigned(id)
+#define API_ControllerIsAssigned(controllerID) RSDK.IsInputSlotAssigned(controllerID)
+#define API_MostRecentActiveControllerID       RSDK.GetFilteredInputDeviceID
+#define API_ResetControllerAssignments         RSDK.ResetInputSlotAssignments
+#define API_GetControllerType                  RSDK.GetInputDeviceType
 #define API_GetUsername                        API.GetUsername
 #define API_ReadLeaderboardEntry               API.ReadLeaderboardEntry
 #else

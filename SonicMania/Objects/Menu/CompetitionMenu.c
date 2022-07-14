@@ -383,7 +383,7 @@ void CompetitionMenu_SetupSplitScreen(int32 mode)
     startVert_3P[(2 * 5) + 3] = 48;
     startVert_3P[(2 * 5) + 4] = 0;
 
-    RSDK.SetScreenRenderVertices(startVert_2P[mode], startVert_2P[5 + mode], startVert_3P[mode], startVert_3P[5 + mode], startVert_3P[10 + mode]);
+    RSDK.SetScreenVertices(startVert_2P[mode], startVert_2P[5 + mode], startVert_3P[mode], startVert_3P[5 + mode], startVert_3P[10 + mode]);
 
     switch (mode) {
         case 0: // 2P (Streched)

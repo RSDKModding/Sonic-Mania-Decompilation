@@ -202,10 +202,8 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
         rexon->position.x = rexon->positions[0].x;
         rexon->position.y = rexon->positions[0].y;
 
-        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), rexon->position.x, rexon->position.y);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), rexon->position.x, rexon->position.y)->drawOrder = Zone->objectDrawHigh;
+        BadnikHelpers_BadnikBreak(rexon, false, true);
 
-        RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         rexon->position.x = x;
         rexon->position.y = y;
 

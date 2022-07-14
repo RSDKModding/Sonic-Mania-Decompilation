@@ -239,7 +239,7 @@ bool32 Jellygnite_CheckInWater(EntityPlayer *player)
 
     foreach_active(Water, water)
     {
-        if (water->type == WATER_TINT) {
+        if (water->type == WATER_POOL) {
             if (Player_CheckCollisionTouch(player, self, &water->hitbox)
                 && RSDK.CheckObjectCollisionTouchBox(self, &Jellygnite->hitbox, water, &water->hitbox)) {
                 return true;
@@ -384,7 +384,7 @@ void Jellygnite_State_Explode(void)
         if (player && player->state == Player_State_None) {
             Player_CheckHit(player, self);
 
-            if (player->state != Player_State_Hit && Player_CheckValidState(player))
+            if (player->state != Player_State_Hurt && Player_CheckValidState(player))
                 player->state = Player_State_Air;
 
             self->grabbedPlayer = NULL;

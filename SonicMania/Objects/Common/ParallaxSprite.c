@@ -283,10 +283,10 @@ void ParallaxSprite_EditorLoad(void)
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZParallax.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(ParallaxSprite, attribute);
-    RSDK_ENUM_VAR("Basic", PARALLAXSPRITE_ATTR_NONE);
+    RSDK_ENUM_VAR("Standard", PARALLAXSPRITE_ATTR_NONE);
     RSDK_ENUM_VAR("Unused (same as Basic)", PARALLAXSPRITE_ATTR_UNUSED);
     RSDK_ENUM_VAR("Colors (SPZ Billboard)", PARALLAXSPRITE_ATTR_COLORS);
-    RSDK_ENUM_VAR("Spawner", PARALLAXSPRITE_ATTR_SPAWNER);
+    RSDK_ENUM_VAR("Emitter", PARALLAXSPRITE_ATTR_SPAWNER);
     RSDK_ENUM_VAR("Fade Out", PARALLAXSPRITE_ATTR_FADEOUT);
     RSDK_ENUM_VAR("Blend", PARALLAXSPRITE_ATTR_BLENDHIGH);
 }

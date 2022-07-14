@@ -39,7 +39,7 @@ void UIWaitSpinner_Serialize(void);
 // Extra Entity Functions
 void UIWaitSpinner_StartWait(void);
 void UIWaitSpinner_FinishWait(void);
-void UIWaitSpinner_State_Wait(void);
-void UIWaitSpinner_State_WaitAndDestroy(void);
+void UIWaitSpinner_State_Show(void);
+void UIWaitSpinner_State_Hide(void);
 
 #endif //! OBJ_UIWAITSPINNER_H

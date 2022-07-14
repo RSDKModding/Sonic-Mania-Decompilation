@@ -13,7 +13,7 @@ void SpiralPlatform_Update(void)
 {
     RSDK_THIS(SpiralPlatform);
 
-    self->collision = PLATFORM_C_USE_TILES;
+    self->collision = PLATFORM_C_TILED;
     Platform_Update();
 
     foreach_active(Player, player)

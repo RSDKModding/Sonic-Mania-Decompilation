@@ -131,8 +131,8 @@ void TMZ1Setup_StageLoad(void)
     BGSwitch->switchCallback[TMZ1_BG_CITY] = TMZ1Setup_BGCallback_ShowSky;
     BGSwitch->switchCallback[TMZ1_BG_LIFT] = TMZ1Setup_BGCallback_ShowLift;
 
-    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder - 1, false, 0);
-    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, 0);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, 0);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, 0);
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
         Zone->stageFinishCallback = TMZ1Setup_StageFinishCB;

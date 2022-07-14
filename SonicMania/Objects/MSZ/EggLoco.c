@@ -155,10 +155,7 @@ bool32 EggLoco_ChuggaCheckCB(void)
 
     foreach_all(EggLoco, eggLoco)
     {
-        int32 distX = abs(screenX - eggLoco->position.x) >> 16;
-        int32 distY = abs(screenY - eggLoco->position.y) >> 16;
-        int32 root  = MathHelpers_SquareRoot(distX * distX + distY * distY);
-        if (root <= 840)
+        if ((MathHelpers_Distance(eggLoco->position.x, eggLoco->position.y, screenX, screenY) >> 16) <= 840)
             count++;
     }
 
@@ -217,7 +214,7 @@ void EggLoco_State_Tooting(void)
 
     if (self->tootPullPos >= 0x10000 && !(Zone->timer & 3)) {
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, self->position.x - 0x240000, self->position.y - 0x4E0000);
-        dust->state      = Dust_State_MoveFriction;
+        dust->state      = Dust_State_DustPuff_Friction;
         dust->velocity.x = 0x20000;
         dust->velocity.y = -0x18000;
         dust->drawOrder  = Zone->objectDrawLow;

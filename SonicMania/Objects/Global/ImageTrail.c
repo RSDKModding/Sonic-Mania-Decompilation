@@ -108,7 +108,7 @@ void ImageTrail_Draw(void)
             alpha += inc;
             self->rotation  = self->stateRotation[id];
             self->direction = self->stateDirection[id];
-            RSDK.DrawSprite(&self->stateAnimator[id], &self->statePos[id], 0);
+            RSDK.DrawSprite(&self->stateAnimator[id], &self->statePos[id], false);
             self->drawFX &= ~FX_SCALE;
         }
     }

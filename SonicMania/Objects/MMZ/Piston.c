@@ -49,7 +49,7 @@ void Piston_Create(void *data)
 
     self->pistonType = self->type;
     self->type       = PLATFORM_FIXED;
-    self->collision  = PLATFORM_C_SOLID_ALL;
+    self->collision  = PLATFORM_C_SOLID;
     if (self->pistonType > PISTON_MOVE_DOWN_REVERSE)
         self->size += 3;
 
@@ -83,7 +83,7 @@ void Piston_Collide_Solid(void)
 {
     RSDK_THIS(Piston);
 
-    Platform_Collision_AllSolid();
+    Platform_Collision_Solid();
 
 #if MANIA_USE_PLUS
     for (int32 i = 0; i < Player->playerCount; ++i) {

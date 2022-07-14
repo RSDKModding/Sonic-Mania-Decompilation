@@ -21,11 +21,11 @@ void VanishPlatform_Update(void)
 
     if (self->scale.x <= 336) {
         self->stateCollide = Platform_Collision_None;
-        self->collision    = PLATFORM_C_SOLID_NONE;
+        self->collision    = PLATFORM_C_NONE;
     }
     else {
-        self->stateCollide = Platform_Collision_TopSolid;
-        self->collision    = PLATFORM_C_SOLID_TOP;
+        self->stateCollide = Platform_Collision_Platform;
+        self->collision    = PLATFORM_C_PLATFORM;
     }
 
     Platform_Update();
@@ -46,7 +46,7 @@ void VanishPlatform_Create(void *data)
 {
     RSDK_THIS(VanishPlatform);
 
-    self->collision = PLATFORM_C_SOLID_TOP;
+    self->collision = PLATFORM_C_PLATFORM;
     Platform_Create(NULL);
 
     RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 0);

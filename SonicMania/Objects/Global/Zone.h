@@ -45,7 +45,7 @@ struct ObjectZone {
     RSDK_OBJECT
     int32 actID;
     StateMachine(stageFinishCallback);
-    bool32 forcePlayerOnScreen; // a little misleading, forces the player on-screen before an act transition if enabled
+    bool32 shouldRecoverPlayers; // a little misleading, forces the player on-screen before an act transition if enabled
     StateMachine(vsSwapCB[0x10]);
     int32 vsSwapCBCount;
 #if MANIA_USE_PLUS
@@ -145,6 +145,7 @@ void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor);
 void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivot, int32 angle);
 void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
+void Zone_HandlePlayerBounds(void);
 void Zone_ApplyWorldBounds(void);
 
 bool32 Zone_IsZoneLastAct(void);
@@ -157,7 +158,7 @@ int32 Zone_GetManiaStageID(void);
 void Zone_Draw_Fade(void);
 
 // States & Stuff
-void Zone_State_Fadeout(void);
+void Zone_State_FadeOut(void);
 void Zone_State_FadeIn(void);
 void Zone_State_Fadeout_Competition(void);
 #if MANIA_USE_PLUS

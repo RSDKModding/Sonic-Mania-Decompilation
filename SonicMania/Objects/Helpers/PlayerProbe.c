@@ -65,7 +65,7 @@ void PlayerProbe_Create(void *data)
 {
     RSDK_THIS(PlayerProbe);
 
-    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(PlayerProbe->aniFrames, 0, &self->animator, true, 0);
 
     self->drawFX |= FX_FLIP;
     self->active           = ACTIVE_BOUNDS;
@@ -170,8 +170,8 @@ void PlayerProbe_EditorLoad(void)
     PlayerProbe->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(PlayerProbe, direction);
-    RSDK_ENUM_VAR("Right", FLIP_NONE);
-    RSDK_ENUM_VAR("Left", FLIP_X);
+    RSDK_ENUM_VAR("U/S", FLIP_NONE);
+    RSDK_ENUM_VAR("S/U", FLIP_X);
 }
 #endif
 

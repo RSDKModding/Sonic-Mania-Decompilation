@@ -228,12 +228,12 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
     RSDK_THIS(RollerMKII);
     bool32 collided = false;
 
-    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
+    if (platform->state != Platform_State_Falling2 && platform->state != Platform_State_Hold) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         if (platform->collision) {
-            if (platform->collision != PLATFORM_C_SOLID_ALL) {
-                if (platform->collision == PLATFORM_C_USE_TILES
+            if (platform->collision != PLATFORM_C_SOLID) {
+                if (platform->collision == PLATFORM_C_TILED
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &RollerMKII->hitboxObject)) {
                     if (self->collisionLayers & Zone->moveMask) {
                         TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
@@ -452,7 +452,7 @@ void RollerMKII_State_Rolling_Air(void)
 
                 EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y + 0xE0000);
                 RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
-                dust->state = Dust_State_Move;
+                dust->state = Dust_State_DustPuff;
                 dust->position.y += hitbox->bottom << 16;
                 dust->direction = self->direction;
                 dust->drawOrder = self->drawOrder;
@@ -497,7 +497,7 @@ void RollerMKII_State_Rolling_Ground(void)
                         RSDK.PlaySfx(RollerMKII->sfxSkidding, false, 255);
                         self->timer = (self->timer + 1) & 3;
                         if (!self->timer)
-                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_Move;
+                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_DustPuff;
                     }
                 }
             }
@@ -518,7 +518,7 @@ void RollerMKII_State_Rolling_Ground(void)
                         RSDK.PlaySfx(RollerMKII->sfxSkidding, false, 255);
                         self->timer = (self->timer + 1) & 3;
                         if (!self->timer)
-                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_Move;
+                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_DustPuff;
                     }
                 }
             }

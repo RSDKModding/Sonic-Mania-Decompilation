@@ -163,7 +163,7 @@ void PhantomRider_State_HandleBegin(void)
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->target       = (Entity *)child;
-        camera->state        = Camera_State_Follow;
+        camera->state        = Camera_State_FollowXY;
 
         player1->camera       = NULL;
         Zone->autoScrollSpeed = player1->velocity.x;

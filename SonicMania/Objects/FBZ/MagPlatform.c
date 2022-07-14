@@ -64,7 +64,7 @@ void MagPlatform_Collide_SolidAllHazardBottom(void)
             case C_TOP:
                 if (!groundStore) {
                     self->stood = true;
-                    if (self->state == Platform_State_Collapse && !self->timer)
+                    if (self->state == Platform_State_Fall && !self->timer)
                         self->timer = 30;
                     self->stoodPlayers |= 1 << playerID;
                     player->position.x += self->collisionOffset.x;

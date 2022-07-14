@@ -233,7 +233,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
 
     if (Tubinaut_CheckAttacking(player)) {
         EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
-        dust->state      = Dust_State_Move;
+        dust->state      = Dust_State_DustPuff;
         dust->drawOrder  = player->drawOrder;
         RSDK.PlaySfx(Tubinaut->sfxPowerdown, false, 255);
 #if MANIA_USE_PLUS

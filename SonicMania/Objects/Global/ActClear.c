@@ -326,7 +326,7 @@ void ActClear_Create(void *data)
 
         if (Zone_GetZoneID() > ZONE_INVALID) {
             StatInfo stat;
-            uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
+            uint16 time = TimeAttackData_GetPackedTime(SceneInfo->minutes, SceneInfo->seconds, SceneInfo->milliseconds);
 #if MANIA_USE_PLUS
             switch (GET_CHARACTER_ID(1)) {
                 case ID_SONIC: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score); break;
@@ -451,7 +451,7 @@ void ActClear_StageLoad(void)
 }
 
 #if MANIA_USE_PLUS
-void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs)
+void ActClear_DrawTime(Vector2 *drawPosPtr, int32 mins, int32 secs, int32 millisecs)
 {
     RSDK_THIS(ActClear);
 
@@ -463,13 +463,13 @@ void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs)
     }
 
     // The ":" thing
-    drawPos.x = pos->x + 0x320000;
-    drawPos.y = pos->y - 0x20000;
+    drawPos.x = drawPosPtr->x + 0x320000;
+    drawPos.y = drawPosPtr->y - 0x20000;
     RSDK.DrawSprite(&self->timeElementsAnimator, &drawPos, true);
 
     // Miliseconds
-    drawPos.x = 0x610000 + pos->x;
-    drawPos.y = pos->y + 0xE0000;
+    drawPos.x = drawPosPtr->x + 0x610000;
+    drawPos.y = drawPosPtr->y + 0xE0000;
     ActClear_DrawNumbers(&drawPos, millisecs, 2);
 
     // Seconds
@@ -527,12 +527,12 @@ void ActClear_CheckPlayerVictory(void)
 {
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn && player->state != Player_State_Victory
+        if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer && player->state != Player_State_Victory
             && player->onGround) {
             player->state           = Player_State_Victory;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
-            if (Zone->forcePlayerOnScreen)
+            if (Zone->shouldRecoverPlayers)
                 player->stateInput = StateMachine_None;
 
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_VICTORY, &player->animator, true, 0);
@@ -560,23 +560,23 @@ void ActClear_SetupForceOnScreenP2(void)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
     if (player2 && player2->sidekick) {
-        if (player2->state != Player_State_FlyIn && player2->state != Player_State_JumpIn) {
+        if (player2->state != Player_State_FlyToPlayer && player2->state != Player_State_ReturnToPlayer) {
             if (player2->position.x <= (ScreenInfo->width + ScreenInfo->position.x) << 16
                 || abs(player2->position.y - player1->position.y) > 0x100000) {
-                Player->jumpInTimer = 240;
+                Player->respawnTimer = 240;
 
                 Entity *entStore  = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)player2;
-                Player_P2JumpBackIn();
+                Player_HandleSidekickRespawn();
                 SceneInfo->entity = entStore;
 
-                if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn || player2->state == Player_State_StartJumpIn) {
+                if (player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer || player2->state == Player_State_HoldRespawn) {
                     player2->active     = ACTIVE_NORMAL;
                     player2->position.y = ((ScreenInfo->position.y - 16) << 16);
                 }
             }
             else {
-                Player->jumpInTimer = -3600;
+                Player->respawnTimer = -3600;
             }
         }
     }
@@ -592,7 +592,7 @@ void ActClear_State_EnterText(void)
     if (self->gotThroughPos.x < 0)
         self->gotThroughPos.x += 0x100000;
 
-    if (!self->timer && Zone->forcePlayerOnScreen)
+    if (!self->timer && Zone->shouldRecoverPlayers)
         ActClear_SetupForceOnScreenP2();
 
     if (++self->timer == 48) {
@@ -631,7 +631,10 @@ void ActClear_State_EnterResults(void)
     if (self->coolBonusPos.x > 0)
         self->coolBonusPos.x -= 0x100000;
 
-    if (self->totalScorePos.x >= -0x80000) {
+    if (self->totalScorePos.x < -0x80000) {
+        self->totalScorePos.x += 0x100000;
+    }
+    else {
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             if (ActClear->bufferMoveEnabled) {
@@ -650,9 +653,6 @@ void ActClear_State_EnterResults(void)
 #else
         self->state = ActClear_State_ScoreShownDelay;
 #endif
-    }
-    else {
-        self->totalScorePos.x += 0x100000;
     }
 
     ActClear_CheckPlayerVictory();
@@ -802,8 +802,8 @@ void ActClear_State_SaveGameProgress(void)
         if (ActClear->isSavingGame)
             UIWaitSpinner_StartWait();
 
-        self->state = ActClear_State_WaitForSaveFinish;
-        ActClear_State_WaitForSaveFinish();
+        self->state = ActClear_State_WaitForSave;
+        ActClear_State_WaitForSave();
     }
 }
 
@@ -851,13 +851,13 @@ void ActClear_State_ShowResultsTA(void)
         if (ControllerInfo->keyStart.press) {
             RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 
-            ActClear_State_WaitForSaveFinish();
+            ActClear_State_WaitForSave();
         }
     }
 }
 #endif
 
-void ActClear_State_WaitForSaveFinish(void)
+void ActClear_State_WaitForSave(void)
 {
     RSDK_THIS(ActClear);
 
@@ -894,18 +894,22 @@ void ActClear_State_ExitActClear(void)
     if (self->totalScorePos.x < -0x2000000) {
         if (ActClear->displayedActID <= 0) {
             if (Zone->stageFinishCallback) {
-                if (Zone->forcePlayerOnScreen) {
+                if (Zone->shouldRecoverPlayers) {
                     self->timer = 0;
-                    self->state = ActClear_State_ForcePlayerOnScreen;
+                    self->state = ActClear_State_RecoverPlayers;
                 }
                 else {
                     foreach_active(Animals, animal)
                     {
                         if (animal->behaviour == ANIMAL_BEHAVE_FOLLOW)
-                            animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
+                            animal->behaviour = ANIMAL_BEHAVE_FREE;
                     }
+#if RETRO_USE_MOD_LOADER
+                    StateMachine_Run(Zone->stageFinishCallback);
+#else
                     Zone->stageFinishCallback();
-                    Zone->stageFinishCallback = NULL;
+#endif
+                    Zone->stageFinishCallback = StateMachine_None;
                 }
             }
         }
@@ -922,12 +926,12 @@ void ActClear_State_ExitActClear(void)
             }
         }
 
-        if (self->state != ActClear_State_ForcePlayerOnScreen)
+        if (self->state != ActClear_State_RecoverPlayers)
             destroyEntity(self);
     }
 }
 
-void ActClear_State_ForcePlayerOnScreen(void)
+void ActClear_State_RecoverPlayers(void)
 {
     RSDK_THIS(ActClear);
 
@@ -973,7 +977,7 @@ void ActClear_State_ForcePlayerOnScreen(void)
         player2->jumpPress = false;
         player2->jumpHold  = false;
 
-        if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn) {
+        if (player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer) {
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
                     RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
@@ -1015,7 +1019,7 @@ void ActClear_State_ForcePlayerOnScreen(void)
     ++self->stageFinishTimer;
     if ((finishedP1 && finishedP2) || self->stageFinishTimer >= 900) {
         if (self->timer >= 10) {
-            Player->jumpInTimer = 0;
+            Player->respawnTimer = 0;
             StateMachine_Run(Zone->stageFinishCallback);
             Zone->stageFinishCallback = StateMachine_None;
             destroyEntity(self);

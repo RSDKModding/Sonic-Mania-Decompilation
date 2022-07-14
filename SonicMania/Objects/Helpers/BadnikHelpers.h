@@ -30,8 +30,10 @@ void BadnikHelpers_EditorLoad(void);
 void BadnikHelpers_Serialize(void);
 
 // Extra Entity Functions
-// 
+
 // Handles oscillations
-int BadnikHelpers_Oscillate(int origin, int speed, int amplitude);
+void BadnikHelpers_BadnikBreak(void *badnik, bool32 destroy, bool32 spawnAnimals);
+void BadnikHelpers_BadnikBreakUnseeded(void *badnik, bool32 destroy, bool32 spawnAnimals);
+int32 BadnikHelpers_Oscillate(int32 origin, int32 speed, int32 amplitude);
 
 #endif //! OBJ_BADNIKHELPERS_H

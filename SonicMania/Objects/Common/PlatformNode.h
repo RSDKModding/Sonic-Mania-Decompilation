@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectPlatformNode {
     RSDK_OBJECT
-    uint16 aniFrames;
+    uint16 aniFrames; // used only in-editor
 };
 
 // Entity Class

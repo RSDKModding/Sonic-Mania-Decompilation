@@ -68,10 +68,10 @@ void Camera_HandleVBounds(void);
 void Camera_SetupLerp(int32 type, int32 screen, int32 x, int32 y, int32 speed);
 
 // States
-void Camera_State_Roam(void);
-void Camera_State_Follow(void);
-void Camera_State_HLock(void);
-void Camera_State_VLock(void);
+void Camera_State_MapView(void);
+void Camera_State_FollowXY(void);
+void Camera_State_FollowX(void);
+void Camera_State_FollowY(void);
 void Camera_State_HandleLerp(void);
 
 #endif //! OBJ_CAMERA_H

@@ -96,7 +96,7 @@ void LRZ1Setup_StageLoad(void)
     LRZ1Setup->fgHigh = RSDK.GetTileLayer(Zone->fgHigh);
 #endif
 
-    RSDK.SetDrawLayerProperties(0, false, LRZ1Setup_DrawLayerCB);
+    RSDK.SetDrawGroupProperties(0, false, LRZ1Setup_DrawLayerCB);
 
     Animals->animalTypes[0] = ANIMAL_FLICKY;
 #if MANIA_USE_PLUS

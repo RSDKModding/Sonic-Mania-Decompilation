@@ -147,8 +147,10 @@ void SP500_CheckPlayerCollisions(void)
     int32 offsetX = (self->position.x & 0xFFFF0000) - (self->targetPos.x & 0xFFFF0000);
     int32 offsetY = (self->position.y & 0xFFFF0000) - (self->targetPos.y & 0xFFFF0000);
 
-    // weird but ok sure
-    Entity *collidePos = (Entity *)&self->targetPos;
+    // this was a weird one where apparently it used targetPos directly which is very much undefined behavior lol
+    // so much so that it breaks as of v5U :]
+    Vector2 storePos = self->position;
+    self->position   = self->targetPos;
 
     foreach_active(Player, player)
     {
@@ -157,12 +159,12 @@ void SP500_CheckPlayerCollisions(void)
         if (self->playerTimers[playerID]) {
             self->playerTimers[playerID]--;
         }
-        else if (Player_CheckCollisionBox(player, collidePos, &SP500->hitboxSideL) == C_TOP
-                 || Player_CheckCollisionBox(player, collidePos, &SP500->hitboxSideR) == C_TOP) {
+        else if (Player_CheckCollisionBox(player, self, &SP500->hitboxSideL) == C_TOP
+                 || Player_CheckCollisionBox(player, self, &SP500->hitboxSideR) == C_TOP) {
             player->position.x += offsetX;
             player->position.y += offsetY;
         }
-        else if (Player_CheckCollisionBox(player, collidePos, &SP500->hitboxBottom) == C_TOP) {
+        else if (Player_CheckCollisionBox(player, self, &SP500->hitboxBottom) == C_TOP) {
             if (self->state == SP500_State_WaitForEntry && !player->sidekick) {
                 if (!((1 << playerID) & self->activePlayers)) {
                     self->activePlayers |= (1 << playerID);
@@ -182,6 +184,8 @@ void SP500_CheckPlayerCollisions(void)
             self->activePlayers &= ~(1 << playerID);
         }
     }
+
+    self->position = storePos;
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         if ((1 << p) & self->activePlayers) {

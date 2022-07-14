@@ -89,9 +89,9 @@ void PBL_Setup_StageLoad(void)
     RSDK.GetTileLayer(PBL_Setup->tableHigh)->scanlineCallback = PBL_Setup_TableHigh_ScanlineCB;
     RSDK.GetTileLayer(1)->scanlineCallback                    = PBL_Setup_BG_ScanlineCallback;
 
-    RSDK.SetDrawLayerProperties(1, false, PBL_Setup_DrawLayer_Callback);
-    RSDK.SetDrawLayerProperties(3, false, PBL_Setup_DrawLayer_Callback);
-    RSDK.SetDrawLayerProperties(4, true, NULL);
+    RSDK.SetDrawGroupProperties(1, false, PBL_Setup_DrawLayer_Callback);
+    RSDK.SetDrawGroupProperties(3, false, PBL_Setup_DrawLayer_Callback);
+    RSDK.SetDrawGroupProperties(4, true, NULL);
 
     RSDK.SetLimitedFade(1, 0, 7, 36, 0, 255);
     RSDK.SetLimitedFade(2, 0, 7, 72, 0, 255);

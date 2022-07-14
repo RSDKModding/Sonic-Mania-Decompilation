@@ -196,7 +196,7 @@ void RPlaneShifter_State_AwaitPlayer(void)
                 if (player->jumpPress) {
                     self->activePlayers &= ~(1 << playerID);
                     self->stoodPlayers &= ~(1 << playerID);
-                    Player_StartJump(player);
+                    Player_Action_Jump(player);
                 }
 
                 if (!player->abilityValues[0] && player->left) {

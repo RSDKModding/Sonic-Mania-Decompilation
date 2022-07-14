@@ -53,8 +53,8 @@ void TMZ3Setup_StageLoad(void)
         Zone_StartFadeIn(10, 0xF0F0F0);
     }
 
-    RSDK.SetDrawLayerProperties(0, false, TMZ3Setup_DrawLayerCB_SetDynTilesPalette);
-    RSDK.SetDrawLayerProperties(1, false, TMZ3Setup_DrawLayerCB_UnsetDynTilesPalette);
+    RSDK.SetDrawGroupProperties(0, false, TMZ3Setup_DrawLayerCB_SetDynTilesPalette);
+    RSDK.SetDrawGroupProperties(1, false, TMZ3Setup_DrawLayerCB_UnsetDynTilesPalette);
 }
 
 void TMZ3Setup_DrawLayerCB_SetDynTilesPalette(void) { RSDK.SetActivePalette(1, 0, ScreenInfo->height); }

@@ -154,7 +154,7 @@ void MSHologram_State_Destroyed(void)
         foreach_active(Animals, animal)
         {
             if (animal->behaviour == ANIMAL_BEHAVE_FOLLOW)
-                animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
+                animal->behaviour = ANIMAL_BEHAVE_FREE;
         }
 
         destroyEntity(self);

@@ -202,7 +202,7 @@ void TornadoPath_State_ReturnCamera(void)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    TornadoPath->camera->state = Camera_State_Follow;
+    TornadoPath->camera->state = Camera_State_FollowXY;
     player1->camera            = TornadoPath->camera;
 }
 
@@ -225,7 +225,7 @@ void TornadoPath_State_ExitTornadoSequence(void)
     RSDK_THIS(TornadoPath);
 
     EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    TornadoPath->camera->state = Camera_State_Follow;
+    TornadoPath->camera->state = Camera_State_FollowXY;
 
     player1->camera         = TornadoPath->camera;
     player1->collisionPlane = 0;
@@ -234,7 +234,7 @@ void TornadoPath_State_ExitTornadoSequence(void)
     player1->drawOrder      = Zone->playerDrawLow;
 
     if (player1->groundedStore)
-        Player_StartJump(player1);
+        Player_Action_Jump(player1);
 
     foreach_active(Tornado, tornado)
     {

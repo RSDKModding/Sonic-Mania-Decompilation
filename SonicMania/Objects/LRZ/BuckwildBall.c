@@ -166,22 +166,14 @@ void BuckwildBall_HandleRollCrush(void)
     foreach_active(Iwamodoki, iwamodoki)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, iwamodoki, &crushHitbox)) {
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), iwamodoki->position.x, iwamodoki->position.y);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), iwamodoki->position.x, iwamodoki->position.y)->drawOrder = Zone->objectDrawHigh;
-
-            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-            destroyEntity(iwamodoki);
+            BadnikHelpers_BadnikBreak(iwamodoki, true, true);
         }
     }
 
     foreach_active(Fireworm, fireworm)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, fireworm, &crushHitbox)) {
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), fireworm->position.x, fireworm->position.y);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), fireworm->position.x, fireworm->position.y)->drawOrder = Zone->objectDrawHigh;
-
-            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-            destroyEntity(fireworm);
+            BadnikHelpers_BadnikBreak(fireworm, true, true);
         }
     }
 
@@ -189,12 +181,7 @@ void BuckwildBall_HandleRollCrush(void)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, toxomister, &crushHitbox)) {
             if (toxomister->state == Toxomister_State_CreateClouds) {
-                CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), toxomister->position.x, toxomister->position.y);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), toxomister->position.x, toxomister->position.y)->drawOrder =
-                    Zone->objectDrawHigh;
-
-                RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-                destroyEntity(toxomister);
+                BadnikHelpers_BadnikBreak(toxomister, true, true);
             }
             else if (!toxomister->grabbedPlayer) {
                 destroyEntity(toxomister);

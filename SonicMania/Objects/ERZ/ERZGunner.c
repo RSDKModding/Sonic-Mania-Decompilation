@@ -160,7 +160,7 @@ void ERZGunner_SpawnDust(void)
         int32 y          = self->position.y + RSDK.Rand(-0x280000, -0x180000);
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, x, y);
 
-        dust->state     = Dust_State_Move;
+        dust->state     = Dust_State_DustPuff;
         dust->drawOrder = Zone->objectDrawHigh;
     }
 }

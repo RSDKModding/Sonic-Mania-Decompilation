@@ -174,7 +174,7 @@ void Grabber_HandleExplode(void)
             EntityPlayer *player = self->grabbedPlayer;
             if (player && player->state == Player_State_None) {
                 Player_CheckHit(player, self);
-                if (player->state != Player_State_Hit && Player_CheckValidState(player))
+                if (player->state != Player_State_Hurt && Player_CheckValidState(player))
                     player->state = Player_State_Air;
                 self->grabbedPlayer = NULL;
             }

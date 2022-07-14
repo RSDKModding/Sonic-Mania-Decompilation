@@ -16,13 +16,13 @@ void ConveyorPlatform_Update(void)
     if (self->state == Platform_State_Controlled) {
         if (self->timer || self->flipTimer) {
             if (++self->flipTimer == 24) {
-                self->stateCollide = Platform_Collision_AllSolid;
-                self->collision    = PLATFORM_C_SOLID_ALL;
+                self->stateCollide = Platform_Collision_Solid;
+                self->collision    = PLATFORM_C_SOLID;
                 self->flipTimer    = 0;
             }
             else {
                 self->stateCollide = Platform_Collision_None;
-                self->collision    = PLATFORM_C_SOLID_NONE;
+                self->collision    = PLATFORM_C_NONE;
             }
 
             self->animator.frameID = ConveyorPlatform->frameIDs[self->flipTimer];
@@ -32,8 +32,8 @@ void ConveyorPlatform_Update(void)
     else {
         if (self->flipTimer) {
             if (++self->flipTimer >= self->flipCount) {
-                self->stateCollide = Platform_Collision_AllSolid;
-                self->collision    = PLATFORM_C_SOLID_ALL;
+                self->stateCollide = Platform_Collision_Solid;
+                self->collision    = PLATFORM_C_SOLID;
                 self->flipTimer    = 0;
             }
 
@@ -43,7 +43,7 @@ void ConveyorPlatform_Update(void)
 
         if (!((Zone->persistentTimer + self->intervalOffset) % self->interval) && !self->flipTimer) {
             self->stateCollide = Platform_Collision_None;
-            self->collision    = PLATFORM_C_SOLID_NONE;
+            self->collision    = PLATFORM_C_NONE;
             self->flipTimer    = 1;
         }
     }
@@ -67,15 +67,15 @@ void ConveyorPlatform_Create(void *data)
     RSDK_THIS(ConveyorPlatform);
 
     if (self->type)
-        self->type = PLATFORM_CONTROLLED;
+        self->type = PLATFORM_PATH;
 
     Platform_Create(NULL);
 
     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 0);
 
     self->drawFX |= FX_FLIP;
-    self->stateCollide = Platform_Collision_AllSolid;
-    self->collision    = PLATFORM_C_SOLID_ALL;
+    self->stateCollide = Platform_Collision_Solid;
+    self->collision    = PLATFORM_C_SOLID;
     self->flipTimer    = 0;
 
     if (!SceneInfo->inEditor)

@@ -525,7 +525,7 @@ void LaundroMobile_HandleEggmanAnimations(void)
     bool32 playerHurt = false;
     foreach_active(Player, player)
     {
-        if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == Player_State_Drown)
+        if (player->state == Player_State_Hurt || player->state == Player_State_Death || player->state == Player_State_Drown)
             playerHurt = true;
     }
 

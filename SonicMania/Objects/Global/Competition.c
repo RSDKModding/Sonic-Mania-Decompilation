@@ -89,7 +89,7 @@ void Competition_State_Manager(void)
         SceneInfo->timeEnabled = false;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->classID == Player->classID && player->state == Player_State_Die)
+            if (player->classID == Player->classID && player->state == Player_State_Death)
                 player->visible = true;
         }
         self->state = StateMachine_None;

@@ -32,7 +32,7 @@ void SpinBooster_Update(void)
         else if (x < self->position.x) {
             // Exit Tube
             if (((1 << playerID) & self->activePlayers) && !self->forwardOnly) {
-                if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
+                if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
 
@@ -325,7 +325,7 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
     }
 
     if (self->boostPower < 0 && !self->forwardOnly) {
-        if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
+        if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
 
@@ -457,7 +457,7 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
     player->tileCollisions = true;
     SpinBooster_HandleRollDir(player);
 
-    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
+    if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
         if (self->boostAlways)
             SpinBooster_ApplyRollVelocity(player);
     }
@@ -478,7 +478,7 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
         if (!self->allowTubeInput)
             player->controlLock = 0xFFFF;
 
-        player->state = player->onGround ? Player_State_ForceRoll_Ground : Player_State_ForceRoll_Air;
+        player->state = player->onGround ? Player_State_TubeRoll : Player_State_TubeAirRoll;
 
         if (abs(player->groundVel) < 0x10000)
             player->groundVel = (self->direction & FLIP_X) ? -0x40000 : 0x40000;

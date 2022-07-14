@@ -39,7 +39,7 @@ void Platform_Update(void)
         self->stood = false;
         self->collisionOffset.x += self->drawPos.x & 0xFFFF0000;
         self->collisionOffset.y += self->drawPos.y & 0xFFFF0000;
-        if (self->state != Platform_State_Collapse_Falling && self->state != Platform_State_Collapse_CheckReset) {
+        if (self->state != Platform_State_Falling2 && self->state != Platform_State_Hold) {
             StateMachine_Run(self->stateCollide);
         }
 
@@ -111,7 +111,7 @@ void Platform_Draw(void)
 
     if (self->frameID >= 0) {
         if ((self->state == Platform_State_Circular && self->hasTension)
-            || (self->state == Platform_State_Swing || self->state == Platform_State_Swing_Clack || self->type == PLATFORM_WAIT_ARC)) {
+            || (self->state == Platform_State_Swing || self->state == Platform_State_Clacker || self->type == PLATFORM_SWING_REACT)) {
             int32 ang = self->angle;
             if (self->state == Platform_State_Circular && self->hasTension)
                 ang = self->speed * Zone->timer + 4 * self->angle;
@@ -172,14 +172,14 @@ void Platform_Create(void *data)
             self->updateRange.y = 0x800000;
             break;
 
-        case PLATFORM_COLLAPSING:
-            self->state         = Platform_State_Collapse;
+        case PLATFORM_FALL:
+            self->state         = Platform_State_Fall;
             self->updateRange.x = 0x800000;
             self->updateRange.y = (abs(self->amplitude.y) + 0x2000) << 10;
             break;
 
-        case PLATFORM_MOVING:
-            self->state         = Platform_State_Moving;
+        case PLATFORM_LINEAR:
+            self->state         = Platform_State_Linear;
             self->updateRange.x = (abs(self->amplitude.x) + 0x2000) << 10;
             self->updateRange.y = (abs(self->amplitude.y) + 0x2000) << 10;
             self->rotation      = self->angle;
@@ -192,46 +192,46 @@ void Platform_Create(void *data)
             self->state         = Platform_State_Circular;
             break;
 
-        case PLATFORM_CONTROLLED:
-        case PLATFORM_CONT_ACTIVATER:
+        case PLATFORM_PATH:
+        case PLATFORM_PATH_REACT:
             self->active = ACTIVE_BOUNDS;
-            if (self->type == PLATFORM_CONTROLLED)
-                self->state = Platform_State_AwaitControlCommand;
+            if (self->type == PLATFORM_PATH)
+                self->state = Platform_State_PathStop;
             else
-                self->state = Platform_State_ActivateControlOnStood;
+                self->state = Platform_State_PathReact;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             break;
 
-        case PLATFORM_PUSHABLE:
+        case PLATFORM_PUSH:
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             if (!SceneInfo->inEditor) {
                 self->speed <<= 11;
                 self->position.x += 0x8000;
             }
-            self->state = Platform_State_StartPush;
+            self->state = Platform_State_Push_Init;
             break;
 
-        case PLATFORM_WAIT:
+        case PLATFORM_REACT:
             self->amplitude.x <<= 10;
             self->updateRange.x = 0x800000 + abs(self->amplitude.x);
             self->updateRange.y = 0x800000 + abs(self->amplitude.x);
             if (self->speed < 0)
                 self->direction = FLIP_X;
-            self->state = Platform_State_Wait;
+            self->state = Platform_State_React;
             break;
 
-        case PLATFORM_WAIT_OSC:
+        case PLATFORM_HOVER_REACT:
             self->amplitude.x <<= 10;
             self->updateRange.x = 0x800000 + abs(self->amplitude.x);
             self->updateRange.y = 0x800000 + abs(self->amplitude.x);
             if (self->speed < 0)
                 self->direction = FLIP_X;
-            self->state = Platform_State_WaitOscillating;
+            self->state = Platform_State_Hover_React;
             break;
 
-        case PLATFORM_ACTIVEABOVE:
+        case PLATFORM_DOORSLIDE:
             self->amplitude.x <<= 10;
             self->updateRange.x = 0x800000 + abs(self->amplitude.x);
             self->updateRange.y = 0x800000 + abs(self->amplitude.x);
@@ -240,13 +240,13 @@ void Platform_Create(void *data)
                 self->direction = FLIP_X;
                 self->speed     = -self->speed;
             }
-            self->state = Platform_State_ActiveFromAbove;
+            self->state = Platform_State_DoorSlide;
             break;
 
-        case PLATFORM_WAIT_ARC:
+        case PLATFORM_SWING_REACT:
             self->timer = 88;
             // [Fallthrough]
-        case PLATFORM_SWINGING:
+        case PLATFORM_SWING:
             self->updateRange.x = (abs(self->amplitude.y) + 512) << 14;
             self->updateRange.y = (abs(self->amplitude.y) + 512) << 14;
             RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
@@ -256,7 +256,7 @@ void Platform_Create(void *data)
             self->angle     = self->groundVel + 0x100 + (self->amplitude.x * RSDK.Sin1024(self->speed * self->timer) >> 14);
             self->drawPos.x = self->amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
             self->drawPos.y = self->amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
-            if (self->type == PLATFORM_SWINGING) {
+            if (self->type == PLATFORM_SWING) {
                 self->state = Platform_State_Swing;
             }
             else {
@@ -264,11 +264,11 @@ void Platform_Create(void *data)
                     self->drawPos.x -= 0x200000;
                 else
                     self->drawPos.x += 0x200000;
-                self->state = Platform_State_SwingMove_CheckStood;
+                self->state = Platform_State_SwingReact;
             }
             break;
 
-        case PLATFORM_STICKY:
+        case PLATFORM_TRACK_REACT:
             if (self->direction) {
                 self->drawPos.x = self->centerPos.x + (self->amplitude.x << 9);
                 self->drawPos.y = self->centerPos.y + (self->amplitude.y << 9);
@@ -287,10 +287,10 @@ void Platform_Create(void *data)
             if (self->type == PLATFORM_TRACK)
                 self->state = Platform_State_Track;
             else
-                self->state = Platform_State_Sticky_CheckRide;
+                self->state = Platform_State_TrackReact;
             break;
 
-        case PLATFORM_SWING_CLACK:
+        case PLATFORM_CLACKER:
             self->updateRange.x = (abs(self->amplitude.y) + 0x200) << 14;
             self->updateRange.y = (abs(self->amplitude.y) + 0x200) << 14;
             RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
@@ -299,23 +299,23 @@ void Platform_Create(void *data)
             self->angle     = self->groundVel + 0x100 + (self->amplitude.x * RSDK.Sin1024(self->speed * self->timer) >> 14);
             self->drawPos.x = self->amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
             self->drawPos.y = self->amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
-            self->state     = Platform_State_Swing_Clack;
+            self->state     = Platform_State_Clacker;
             break;
 
-        case PLATFORM_STATIC:
-            self->state         = Platform_State_Static;
+        case PLATFORM_CHILD:
+            self->state         = Platform_State_Child;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             break;
 
-        case PLATFORM_SINKER:
+        case PLATFORM_DIPROCK:
             self->updateRange.x = 0x800000;
             self->updateRange.y = (abs(self->amplitude.y) + 0x2000) << 10;
             if (!self->speed)
                 self->speed = 1;
             self->amplitude.y = self->amplitude.y << 10;
             self->velocity.y  = self->speed << 16;
-            self->state       = Platform_State_Sinker;
+            self->state       = Platform_State_DipRock;
             break;
     }
 
@@ -336,8 +336,8 @@ void Platform_Create(void *data)
     }
 
     if (!SceneInfo->inEditor) {
-        if (self->collision != PLATFORM_C_SOLID_NONE) {
-            Hitbox *hitbox = RSDK.GetHitbox(&self->animator, self->collision != PLATFORM_C_SOLID_TOP);
+        if (self->collision != PLATFORM_C_NONE) {
+            Hitbox *hitbox = RSDK.GetHitbox(&self->animator, self->collision != PLATFORM_C_PLATFORM);
             if (Platform->aniFrames != (uint16)-1 && hitbox) {
                 self->hitbox.left   = hitbox->left;
                 self->hitbox.top    = hitbox->top;
@@ -353,30 +353,30 @@ void Platform_Create(void *data)
         }
 
         switch (self->collision) {
-            case PLATFORM_C_SOLID_TOP:
-                self->stateCollide  = Platform_Collision_TopSolid;
+            case PLATFORM_C_PLATFORM:
+                self->stateCollide  = Platform_Collision_Platform;
                 self->hitbox.bottom = self->hitbox.top + 8;
                 break;
 
             default:
-            case PLATFORM_C_SOLID_ALL: self->stateCollide = Platform_Collision_AllSolid; break;
+            case PLATFORM_C_SOLID: self->stateCollide = Platform_Collision_Solid; break;
 
-            case PLATFORM_C_USE_TILES: self->stateCollide = Platform_Collision_Tiles; break;
-            case PLATFORM_C_HAZARD_ALL: self->stateCollide = Platform_Collision_AllHazard; break;
-            case PLATFORM_C_SOLID_NONE: self->stateCollide = Platform_Collision_None; break;
-            case PLATFORM_C_HAZARD_SIDES: self->stateCollide = Platform_Collision_LRHazard; break;
-            case PLATFORM_C_HAZARD_BOTTOM: self->stateCollide = Platform_Collision_BottomHazard; break;
-            case PLATFORM_C_HAZARD_TOP: self->stateCollide = Platform_Collision_TopHazard; break;
-            case PLATFORM_C_TWISTER: self->stateCollide = Platform_Collision_Twister; break;
+            case PLATFORM_C_TILED: self->stateCollide = Platform_Collision_Tiles; break;
+            case PLATFORM_C_HURT: self->stateCollide = Platform_Collision_Hurt; break;
+            case PLATFORM_C_NONE: self->stateCollide = Platform_Collision_None; break;
+            case PLATFORM_C_SOLID_HURT_SIDES: self->stateCollide = Platform_Collision_Solid_Hurt_Sides; break;
+            case PLATFORM_C_SOLID_HURT_BOTTOM: self->stateCollide = Platform_Collision_Solid_Hurt_Bottom; break;
+            case PLATFORM_C_SOLID_HURT_TOP: self->stateCollide = Platform_Collision_Solid_Hurt_Top; break;
+            case PLATFORM_C_SOLID_HOLD: self->stateCollide = Platform_Collision_Solid_Hold; break;
 
-            case PLATFORM_C_STICKY_ALL:
+            case PLATFORM_C_SOLID_STICKY:
             case PLATFORM_C_STICKY_TOP:
             case PLATFORM_C_STICKY_LEFT:
             case PLATFORM_C_STICKY_RIGHT:
             case PLATFORM_C_STICKY_BOTTOM: self->stateCollide = Platform_Collision_Sticky; break;
 
-            case PLATFORM_C_TURNTABLE: self->stateCollide = Platform_Collision_TurnTable; break;
-            case PLATFORM_C_SOLID_ALL_NOCRUSH: self->stateCollide = Platform_Collision_AllSolid_NoCrush; break;
+            case PLATFORM_C_SOLID_BARREL: self->stateCollide = Platform_Collision_Solid_Barrel; break;
+            case PLATFORM_C_SOLID_NOCRUSH: self->stateCollide = Platform_Collision_Solid_NoCrush; break;
         }
 
         for (int32 i = 0; i < self->childCount; ++i) {
@@ -467,13 +467,13 @@ void Platform_StageLoad(void)
     Platform->sfxClang   = RSDK.GetSfx("Stage/Clang.wav");
     Platform->sfxPush    = RSDK.GetSfx("Global/Push.wav");
 
-    if (Platform->playingPushSFX) {
+    if (Platform->playingPushSfx) {
         RSDK.StopSfx(Platform->sfxPush);
-        Platform->playingPushSFX = false;
+        Platform->playingPushSfx = false;
     }
 }
 
-void Platform_State_AwaitControlCommand(void)
+void Platform_State_PathStop(void)
 {
     RSDK_THIS(Platform);
 
@@ -493,7 +493,7 @@ void Platform_State_Fixed(void)
     self->velocity.y = 0;
 }
 
-void Platform_State_Moving(void)
+void Platform_State_Linear(void)
 {
     RSDK_THIS(Platform);
 
@@ -523,7 +523,7 @@ void Platform_State_Swing(void)
     self->velocity.y = self->drawPos.y + drawY;
 }
 
-void Platform_State_Wait(void)
+void Platform_State_React(void)
 {
     RSDK_THIS(Platform);
 
@@ -534,14 +534,14 @@ void Platform_State_Wait(void)
         self->tileOrigin.x = 0;
         self->tileOrigin.y = 0;
         self->active       = ACTIVE_NORMAL;
-        self->state        = Platform_State_PlayerMove_Starting;
+        self->state        = Platform_State_ReactMove;
     }
 
     self->velocity.y = 0;
     self->velocity.x = 0;
 }
 
-void Platform_State_WaitOscillating(void)
+void Platform_State_Hover_React(void)
 {
     RSDK_THIS(Platform);
 
@@ -555,32 +555,32 @@ void Platform_State_WaitOscillating(void)
         self->tileOrigin.y = RSDK.Sin1024(self->rotation) << 9;
         self->centerPos.y  = self->drawPos.y;
         self->active       = ACTIVE_NORMAL;
-        self->state        = Platform_State_PlayerMove_Starting;
+        self->state        = Platform_State_ReactMove;
     }
 
     self->velocity.y = 0;
     self->velocity.x = 0;
 }
 
-void Platform_State_StartPush(void)
+void Platform_State_Push_Init(void)
 {
     RSDK_THIS(Platform);
 
     self->active        = ACTIVE_NORMAL;
     self->updateRange.x = 0x2000000;
     self->updateRange.y = 0x2000000;
-    self->state         = Platform_State_Pushable;
+    self->state         = Platform_State_Push;
     self->velocity.x    = 0;
     self->velocity.y    = 0;
 }
 
-void Platform_State_Collapse_StartFall(void)
+void Platform_State_Falling(void)
 {
     RSDK_THIS(Platform);
 
     if (--self->timer <= 0) {
         self->timer = 0;
-        self->state = Platform_State_Collapse_Falling;
+        self->state = Platform_State_Falling2;
         foreach_active(Player, player)
         {
             if ((1 << RSDK.GetEntitySlot(player)) & self->stoodPlayers)
@@ -593,7 +593,7 @@ void Platform_State_Collapse_StartFall(void)
     self->velocity.x = 0;
 }
 
-void Platform_State_ActiveFromAbove(void)
+void Platform_State_DoorSlide(void)
 {
     RSDK_THIS(Platform);
 
@@ -655,7 +655,7 @@ void Platform_State_ActiveFromAbove(void)
     self->velocity.y = self->drawPos.y + drawY;
 }
 
-void Platform_State_PlayerMove_Starting(void)
+void Platform_State_ReactMove(void)
 {
     RSDK_THIS(Platform);
 
@@ -671,7 +671,7 @@ void Platform_State_PlayerMove_Starting(void)
         if (self->amplitude.y >= self->amplitude.x) {
             self->amplitude.y = self->amplitude.x;
             self->groundVel   = self->groundVel - (self->speed << 11);
-            self->state       = Platform_State_PlayerMove_Moving;
+            self->state       = Platform_State_ReactSlow;
         }
     }
     else {
@@ -688,7 +688,7 @@ void Platform_State_PlayerMove_Starting(void)
     self->velocity.y = self->drawPos.y + drawY;
 }
 
-void Platform_State_Pushable(void)
+void Platform_State_Push(void)
 {
     RSDK_THIS(Platform);
 
@@ -705,9 +705,9 @@ void Platform_State_Pushable(void)
     }
 
     if (self->velocity.x > 0 || self->velocity.x < 0) {
-        if (!Platform->playingPushSFX) {
+        if (!Platform->playingPushSfx) {
             RSDK.PlaySfx(Platform->sfxPush, true, 255);
-            Platform->playingPushSFX = true;
+            Platform->playingPushSfx = true;
         }
     }
 
@@ -718,9 +718,9 @@ void Platform_State_Pushable(void)
         }
     }
     else {
-        if (Platform->playingPushSFX) {
+        if (Platform->playingPushSfx) {
             RSDK.StopSfx(Platform->sfxPush);
-            Platform->playingPushSFX = false;
+            Platform->playingPushSfx = false;
         }
         if (self->timer < 4) {
             self->timer++;
@@ -757,13 +757,13 @@ void Platform_State_Pushable(void)
     if (!collided) {
         self->velocity.x <<= 1;
         if (!self->velocity.x) {
-            self->state = Platform_State_Pushable_Falling;
+            self->state = Platform_State_Push_Fall;
         }
         else {
             if (self->velocity.x > 0)
-                self->state = Platform_State_Pushable_FallingL;
+                self->state = Platform_State_Push_SlideOffL;
             else
-                self->state = Platform_State_Pushable_FallingR;
+                self->state = Platform_State_Push_SlideOffR;
         }
     }
 
@@ -781,15 +781,15 @@ void Platform_State_Pushable(void)
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->visible    = false;
-        if (Platform->playingPushSFX) {
+        if (Platform->playingPushSfx) {
             RSDK.StopSfx(Platform->sfxPush);
-            Platform->playingPushSFX = false;
+            Platform->playingPushSfx = false;
         }
-        self->state = Platform_State_Collapse_CheckReset;
+        self->state = Platform_State_Hold;
     }
 }
 
-void Platform_State_Collapse_CheckReset(void)
+void Platform_State_Hold(void)
 {
     RSDK_THIS(Platform);
 
@@ -828,7 +828,7 @@ void Platform_State_Track(void)
     self->velocity.y = self->drawPos.y + drawY;
 }
 
-void Platform_State_Collapse_Falling(void)
+void Platform_State_Falling2(void)
 {
     RSDK_THIS(Platform);
 
@@ -852,21 +852,21 @@ void Platform_State_Collapse_Falling(void)
             self->drawPos.y  = self->centerPos.y;
             self->velocity.y = 0;
             self->visible    = false;
-            self->state      = Platform_State_Collapse_CheckReset;
+            self->state      = Platform_State_Hold;
         }
 
         self->velocity.x = 0;
     }
 }
 
-void Platform_State_Collapse(void)
+void Platform_State_Fall(void)
 {
     RSDK_THIS(Platform);
 
     if (self->timer) {
         if (!--self->timer) {
             self->active = ACTIVE_NORMAL;
-            self->state  = Platform_State_Collapse_StartFall;
+            self->state  = Platform_State_Falling;
             self->timer  = 30;
         }
     }
@@ -892,7 +892,7 @@ void Platform_State_Circular(void)
     self->velocity.y = self->drawPos.y + drawY;
 }
 
-void Platform_State_SwingMove_CheckStood(void)
+void Platform_State_SwingReact(void)
 {
     RSDK_THIS(Platform);
 
@@ -900,10 +900,10 @@ void Platform_State_SwingMove_CheckStood(void)
     self->velocity.y = 0;
 
     if (self->stood)
-        self->state = Platform_State_SwingMove_MoveToDest;
+        self->state = Platform_State_Swing2;
 }
 
-void Platform_State_Sticky_CheckRide(void)
+void Platform_State_TrackReact(void)
 {
     RSDK_THIS(Platform);
 
@@ -911,10 +911,10 @@ void Platform_State_Sticky_CheckRide(void)
     self->velocity.y = 0;
 
     if (self->stood)
-        self->state = Platform_State_Sticky_MoveToDest;
+        self->state = Platform_State_Track2;
 }
 
-void Platform_State_Swing_Clack(void)
+void Platform_State_Clacker(void)
 {
     RSDK_THIS(Platform);
 
@@ -952,7 +952,7 @@ void Platform_State_Swing_Clack(void)
     self->velocity.y = self->drawPos.y + drawY;
 }
 
-void Platform_State_Static(void)
+void Platform_State_Child(void)
 {
     RSDK_THIS(Platform);
 
@@ -966,7 +966,7 @@ void Platform_State_Static(void)
     self->velocity.y = self->drawPos.y + drawY;
 }
 
-void Platform_State_Sinker(void)
+void Platform_State_DipRock(void)
 {
     RSDK_THIS(Platform);
 
@@ -982,7 +982,7 @@ void Platform_State_Sinker(void)
     }
 }
 
-void Platform_State_Pushable_FallingL(void)
+void Platform_State_Push_SlideOffL(void)
 {
     RSDK_THIS(Platform);
 
@@ -994,13 +994,13 @@ void Platform_State_Pushable_FallingL(void)
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
     if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, self->hitbox.left << 16, self->hitbox.bottom << 16, false))
-        self->state = Platform_State_Pushable_Falling;
+        self->state = Platform_State_Push_Fall;
 
     self->position.x = storeX;
     self->position.y = storeY;
 }
 
-void Platform_State_Pushable_FallingR(void)
+void Platform_State_Push_SlideOffR(void)
 {
     RSDK_THIS(Platform);
 
@@ -1013,13 +1013,13 @@ void Platform_State_Pushable_FallingR(void)
     self->position.y = self->drawPos.y;
 
     if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, self->hitbox.right << 16, self->hitbox.bottom << 16, false))
-        self->state = Platform_State_Pushable_Falling;
+        self->state = Platform_State_Push_Fall;
 
     self->position.x = storeX;
     self->position.y = storeY;
 }
 
-void Platform_State_Pushable_Falling(void)
+void Platform_State_Push_Fall(void)
 {
     RSDK_THIS(Platform);
 
@@ -1045,7 +1045,7 @@ void Platform_State_Pushable_Falling(void)
 
     if (collided) {
         self->velocity.y = 0;
-        self->state      = Platform_State_Pushable;
+        self->state      = Platform_State_Push;
     }
     else {
         self->position.y = y;
@@ -1085,7 +1085,7 @@ void Platform_State_Controlled(void)
     }
 }
 
-void Platform_State_PlayerMove_Moving(void)
+void Platform_State_ReactSlow(void)
 {
     RSDK_THIS(Platform);
 
@@ -1105,19 +1105,19 @@ void Platform_State_PlayerMove_Moving(void)
 
         if (self->timer == -1) {
             self->timer = 0;
-            if (self->type == PLATFORM_WAIT_OSC)
-                self->state = Platform_State_WaitOscillating;
+            if (self->type == PLATFORM_HOVER_REACT)
+                self->state = Platform_State_Hover_React;
             else
-                self->state = Platform_State_Wait;
+                self->state = Platform_State_React;
         }
         else {
             if (self->hasTension) {
-                self->state = Platform_State_PlayerMove_HandleRestart;
+                self->state = Platform_State_ReactWait;
             }
             else {
                 self->active = ACTIVE_BOUNDS;
-                if (self->type == PLATFORM_WAIT_OSC)
-                    self->state = Platform_State_PlayerMove_Rotate;
+                if (self->type == PLATFORM_HOVER_REACT)
+                    self->state = Platform_State_Hover;
                 else
                     self->state = Platform_State_Fixed;
             }
@@ -1131,7 +1131,7 @@ void Platform_State_PlayerMove_Moving(void)
     self->velocity.y = drawY + self->drawPos.y;
 }
 
-void Platform_State_PlayerMove_Rotate(void)
+void Platform_State_Hover(void)
 {
     RSDK_THIS(Platform);
 
@@ -1141,11 +1141,11 @@ void Platform_State_PlayerMove_Rotate(void)
     self->velocity.y = 0;
 }
 
-void Platform_State_PlayerMove_HandleRestart(void)
+void Platform_State_ReactWait(void)
 {
     RSDK_THIS(Platform);
 
-    if (self->type == PLATFORM_WAIT_OSC) {
+    if (self->type == PLATFORM_HOVER_REACT) {
         self->rotation += 4;
         self->drawPos.y = (RSDK.Sin1024(self->rotation) << 9) + self->centerPos.y;
     }
@@ -1163,14 +1163,14 @@ void Platform_State_PlayerMove_HandleRestart(void)
             self->timer        = -1;
             self->centerPos.y  = self->drawPos.y;
             self->active       = ACTIVE_NORMAL;
-            self->state        = Platform_State_PlayerMove_Starting;
+            self->state        = Platform_State_ReactMove;
         }
         self->velocity.x = 0;
         self->velocity.y = 0;
     }
 }
 
-void Platform_State_ActivateControlOnStood(void)
+void Platform_State_PathReact(void)
 {
     RSDK_THIS(Platform);
 
@@ -1202,7 +1202,7 @@ void Platform_State_ActivateControlOnStood(void)
     }
 }
 
-void Platform_State_SwingMove_MoveToDest(void)
+void Platform_State_Swing2(void)
 {
     RSDK_THIS(Platform);
 
@@ -1212,7 +1212,7 @@ void Platform_State_SwingMove_MoveToDest(void)
 
     if (self->timer++ == 256 && self->hasTension) {
         self->timer = 119;
-        self->state = Platform_State_SwingMove_WaitNotStood;
+        self->state = Platform_State_SwingWait;
     }
     self->drawPos.x = self->amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
     self->drawPos.y = self->amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
@@ -1226,7 +1226,7 @@ void Platform_State_SwingMove_MoveToDest(void)
     self->velocity.y = drawY + self->drawPos.y;
 }
 
-void Platform_State_SwingMove_WaitNotStood(void)
+void Platform_State_SwingWait(void)
 {
     RSDK_THIS(Platform);
 
@@ -1239,14 +1239,14 @@ void Platform_State_SwingMove_WaitNotStood(void)
         if (!--self->timer) {
             self->timer  = 257;
             self->active = ACTIVE_NORMAL;
-            self->state  = Platform_State_SwingMove_MoveToStart;
+            self->state  = Platform_State_SwingReturn;
         }
         self->velocity.x = 0;
         self->velocity.y = 0;
     }
 }
 
-void Platform_State_SwingMove_MoveToStart(void)
+void Platform_State_SwingReturn(void)
 {
     RSDK_THIS(Platform);
 
@@ -1256,7 +1256,7 @@ void Platform_State_SwingMove_MoveToStart(void)
     self->angle = self->groundVel + 0x100 + ((amp + 0x200) >> 14);
 
     if (self->timer == 88)
-        self->state = Platform_State_SwingMove_CheckStood;
+        self->state = Platform_State_SwingReact;
 
     self->drawPos.x = self->amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
     self->drawPos.y = self->amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
@@ -1268,7 +1268,7 @@ void Platform_State_SwingMove_MoveToStart(void)
     self->velocity.y = drawY + self->drawPos.y;
 }
 
-void Platform_State_Sticky_MoveToDest(void)
+void Platform_State_Track2(void)
 {
     RSDK_THIS(Platform);
 
@@ -1284,7 +1284,7 @@ void Platform_State_Sticky_MoveToDest(void)
         else {
             move        = 0x10000;
             self->timer = 120;
-            self->state = Platform_State_Sticky_WaitNotStood;
+            self->state = Platform_State_TrackWait;
         }
     }
 
@@ -1301,7 +1301,7 @@ void Platform_State_Sticky_MoveToDest(void)
     self->velocity.y = drawY + self->drawPos.y;
 }
 
-void Platform_State_Sticky_WaitNotStood(void)
+void Platform_State_TrackWait(void)
 {
     RSDK_THIS(Platform);
 
@@ -1313,14 +1313,14 @@ void Platform_State_Sticky_WaitNotStood(void)
     else {
         if (!--self->timer) {
             self->active = ACTIVE_NORMAL;
-            self->state  = Platform_State_Sticky_MoveToStart;
+            self->state  = Platform_State_TrackReturn;
         }
         self->velocity.x = 0;
         self->velocity.y = 0;
     }
 }
 
-void Platform_State_Sticky_MoveToStart(void)
+void Platform_State_TrackReturn(void)
 {
     RSDK_THIS(Platform);
 
@@ -1334,7 +1334,7 @@ void Platform_State_Sticky_MoveToStart(void)
     }
     else {
         move        = 0;
-        self->state = Platform_State_Sticky_CheckRide;
+        self->state = Platform_State_TrackReact;
     }
 
     if (((move >> 16) & 1) == self->direction) {
@@ -1351,7 +1351,7 @@ void Platform_State_Sticky_MoveToStart(void)
 }
 
 // Collision States
-void Platform_Collision_AllSolid(void)
+void Platform_Collision_Solid(void)
 {
     RSDK_THIS(Platform);
 
@@ -1370,7 +1370,7 @@ void Platform_Collision_AllSolid(void)
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP:
                 self->stood = true;
-                if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
+                if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
@@ -1435,7 +1435,7 @@ void Platform_Collision_AllSolid(void)
         }
     }
 }
-void Platform_Collision_AllHazard(void)
+void Platform_Collision_Hurt(void)
 {
     RSDK_THIS(Platform);
 
@@ -1452,7 +1452,7 @@ void Platform_Collision_AllHazard(void)
         }
     }
 }
-void Platform_Collision_BottomHazard(void)
+void Platform_Collision_Solid_Hurt_Bottom(void)
 {
     RSDK_THIS(Platform);
 
@@ -1472,7 +1472,7 @@ void Platform_Collision_BottomHazard(void)
             case C_TOP:
                 self->stood = true;
                 self->stoodPlayers |= 1 << playerID;
-                if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
+                if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
@@ -1540,7 +1540,7 @@ void Platform_Collision_BottomHazard(void)
         }
     }
 }
-void Platform_Collision_LRHazard(void)
+void Platform_Collision_Solid_Hurt_Sides(void)
 {
     RSDK_THIS(Platform);
 
@@ -1558,7 +1558,7 @@ void Platform_Collision_LRHazard(void)
                 self->stood = true;
                 self->stoodPlayers |= 1 << playerID;
 
-                if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
+                if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
@@ -1723,7 +1723,7 @@ void Platform_Collision_Tiles(void)
 
                 if (!player->sidekick) {
                     self->stood = true;
-                    if (self->state == Platform_State_Collapse && !self->timer) {
+                    if (self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                             self->timer = 1;
@@ -1757,7 +1757,7 @@ void Platform_Collision_Sticky(void)
         int32 side = Player_CheckCollisionBox(player, self, solidHitbox);
 
         bool32 isStuck = false;
-        if ((self->collision == PLATFORM_C_STICKY_ALL || self->collision == side + PLATFORM_C_STICKY_ALL) && side)
+        if ((self->collision == PLATFORM_C_SOLID_STICKY || self->collision == side + PLATFORM_C_SOLID_STICKY) && side)
             isStuck = true;
 
         if (player->state != Player_State_None && isStuck) {
@@ -1787,7 +1787,7 @@ void Platform_Collision_Sticky(void)
             player->tileCollisions = false;
             if (!player->sidekick) {
                 self->stood = true;
-                if (self->state == Platform_State_Collapse && !self->timer) {
+                if (self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
@@ -1816,7 +1816,7 @@ void Platform_Collision_Sticky(void)
 
                 if (player->jumpPress) {
                     player->tileCollisions = true;
-                    Player_StartJump(player);
+                    Player_Action_Jump(player);
                 }
             }
             else {
@@ -1839,7 +1839,7 @@ void Platform_Collision_Sticky(void)
         }
     }
 }
-void Platform_Collision_TopHazard(void)
+void Platform_Collision_Solid_Hurt_Top(void)
 {
     RSDK_THIS(Platform);
 
@@ -1856,7 +1856,7 @@ void Platform_Collision_TopHazard(void)
             case C_TOP:
                 self->stood = true;
                 self->stoodPlayers |= 1 << playerID;
-                if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
+                if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
@@ -1924,7 +1924,7 @@ void Platform_Collision_TopHazard(void)
         }
     }
 }
-void Platform_Collision_TopSolid(void)
+void Platform_Collision_Platform(void)
 {
     RSDK_THIS(Platform);
 
@@ -1942,7 +1942,7 @@ void Platform_Collision_TopSolid(void)
 
         if (Player_CheckCollisionPlatform(player, self, platformHitbox)) {
             self->stood = true;
-            if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
+            if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                     self->timer = 1;
@@ -1971,7 +1971,7 @@ void Platform_Collision_TopSolid(void)
         }
     }
 }
-void Platform_Collision_TurnTable(void)
+void Platform_Collision_Solid_Barrel(void)
 {
     RSDK_THIS(Platform);
 
@@ -2003,7 +2003,7 @@ void Platform_Collision_TurnTable(void)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
                         player->animator.speed = 64;
                         player->direction      = FLIP_NONE;
-                        if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
+                        if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                             if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                                 self->timer = 1;
@@ -2036,7 +2036,7 @@ void Platform_Collision_TurnTable(void)
                     player->position.y &= 0xFFFF0000;
 
                     if (player->jumpPress)
-                        Player_StartJump(player);
+                        Player_Action_Jump(player);
                     else if (self->velocity.y <= 0)
                         player->collisionFlagV |= 1;
 #if MANIA_USE_PLUS
@@ -2083,7 +2083,7 @@ void Platform_Collision_TurnTable(void)
         }
     }
 }
-void Platform_Collision_Twister(void)
+void Platform_Collision_Solid_Hold(void)
 {
     RSDK_THIS(Platform);
 
@@ -2128,7 +2128,7 @@ void Platform_Collision_Twister(void)
                         player->direction      = FLIP_X;
                         if (!player->sidekick) {
                             self->stood = true;
-                            if (self->state == Platform_State_Collapse && !self->timer) {
+                            if (self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                                     self->timer = 1;
@@ -2162,7 +2162,7 @@ void Platform_Collision_Twister(void)
                     player->position.y &= 0xFFFF0000;
 
                     if (player->jumpPress)
-                        Player_StartJump(player);
+                        Player_Action_Jump(player);
                     else if (self->velocity.y <= 0)
                         player->collisionFlagV |= 1;
 #if MANIA_USE_PLUS
@@ -2210,11 +2210,12 @@ void Platform_Collision_Twister(void)
         }
     }
 }
-void Platform_Collision_None(void) {
+void Platform_Collision_None(void)
+{
     // hehe
 }
 
-void Platform_Collision_AllSolid_NoCrush(void)
+void Platform_Collision_Solid_NoCrush(void)
 {
     RSDK_THIS(Platform);
 
@@ -2236,7 +2237,7 @@ void Platform_Collision_AllSolid_NoCrush(void)
 
             case C_TOP:
                 self->stood = true;
-                if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
+                if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Fall && !self->timer) {
 #if MANIA_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                         self->timer = 1;
@@ -2389,14 +2390,14 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Normal();
             break;
 
-        case PLATFORM_COLLAPSING:
+        case PLATFORM_FALL:
             self->updateRange.x = 0x800000;
             self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
 
             Platform_EditorDraw_Normal();
             break;
 
-        case PLATFORM_MOVING:
+        case PLATFORM_LINEAR:
             self->updateRange.x = (abs(amplitude.x) + 0x2000) << 10;
             self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
 
@@ -2461,12 +2462,12 @@ void Platform_EditorDraw(void)
             }
             break;
 
-        case PLATFORM_CONTROLLED:
-        case PLATFORM_CONT_ACTIVATER:
+        case PLATFORM_PATH:
+        case PLATFORM_PATH_REACT:
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
 
-            // PLATFORM_CONT_ACTIVATER activates control in prev slot
+            // PLATFORM_PATH_REACT activates control in prev slot
             // Note: will go back through platforms if not found
             // e.g. if entity is slot 3, and platform control is slot 0, with slot 1 and 2 being platform/platformNode, it'll work
             // if slot 1 or 2 ISNT a platform/platformNode, it will not work
@@ -2476,15 +2477,15 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Normal();
             break;
 
-        case PLATFORM_PUSHABLE:
+        case PLATFORM_PUSH:
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
 
             Platform_EditorDraw_Normal();
             break;
 
-        case PLATFORM_WAIT:
-        case PLATFORM_WAIT_OSC:
+        case PLATFORM_REACT:
+        case PLATFORM_HOVER_REACT:
             amplitude.x <<= 10;
             self->updateRange.x = 0x800000 + abs(amplitude.x);
             self->updateRange.y = 0x800000 + abs(amplitude.x);
@@ -2560,7 +2561,7 @@ void Platform_EditorDraw(void)
             }
             break;
 
-        case PLATFORM_ACTIVEABOVE:
+        case PLATFORM_DOORSLIDE:
             amplitude.x <<= 10;
             self->updateRange.x = 0x800000 + abs(amplitude.x);
             self->updateRange.y = 0x800000 + abs(amplitude.x);
@@ -2608,17 +2609,17 @@ void Platform_EditorDraw(void)
 
             break;
 
-        case PLATFORM_WAIT_ARC:
-        case PLATFORM_SWINGING: {
+        case PLATFORM_SWING_REACT:
+        case PLATFORM_SWING: {
             self->timer = 0;
-            if (self->type == PLATFORM_WAIT_ARC)
+            if (self->type == PLATFORM_SWING_REACT)
                 self->timer = 88;
 
             self->updateRange.x = (abs(amplitude.y) + 0x200) << 14;
             self->updateRange.y = (abs(amplitude.y) + 0x200) << 14;
             RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
             amplitude.y <<= 4;
-            if (self->type != PLATFORM_SWINGING) {
+            if (self->type != PLATFORM_SWING) {
                 if (self->groundVel >= 0)
                     self->drawPos.x -= 0x200000;
                 else
@@ -2635,7 +2636,7 @@ void Platform_EditorDraw(void)
             if (showGizmos() && (amplitude.x || amplitude.y)) {
                 RSDK_DRAWING_OVERLAY(true);
 
-                if (self->type == PLATFORM_SWINGING) {
+                if (self->type == PLATFORM_SWING) {
                     self->inkEffect = INK_BLEND;
 
                     // right max
@@ -2661,7 +2662,7 @@ void Platform_EditorDraw(void)
             break;
         }
 
-        case PLATFORM_STICKY:
+        case PLATFORM_TRACK_REACT:
             if (self->direction) {
                 self->drawPos.x = self->centerPos.x + (amplitude.x << 9);
                 self->drawPos.y = self->centerPos.y + (amplitude.y << 9);
@@ -2758,7 +2759,7 @@ void Platform_EditorDraw(void)
 
             break;
 
-        case PLATFORM_SWING_CLACK: {
+        case PLATFORM_CLACKER: {
             self->updateRange.x = (abs(amplitude.y) + 0x200) << 14;
             self->updateRange.y = (abs(amplitude.y) + 0x200) << 14;
             RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
@@ -2789,14 +2790,14 @@ void Platform_EditorDraw(void)
             break;
         }
 
-        case PLATFORM_STATIC:
+        case PLATFORM_CHILD:
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
 
             Platform_EditorDraw_Normal();
             break;
 
-        case PLATFORM_SINKER:
+        case PLATFORM_DIPROCK:
             self->updateRange.x = 0x800000;
             self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
 
@@ -2841,40 +2842,40 @@ void Platform_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(Platform, type);
     RSDK_ENUM_VAR("Fixed", PLATFORM_FIXED);
-    RSDK_ENUM_VAR("Collapsing", PLATFORM_COLLAPSING);
-    RSDK_ENUM_VAR("Moving (Smooth)", PLATFORM_MOVING);
+    RSDK_ENUM_VAR("Fall", PLATFORM_FALL);
+    RSDK_ENUM_VAR("Linear", PLATFORM_LINEAR);
     RSDK_ENUM_VAR("Circlular", PLATFORM_CIRCULAR);
-    RSDK_ENUM_VAR("Swinging", PLATFORM_SWINGING);
-    RSDK_ENUM_VAR("Controlled", PLATFORM_CONTROLLED);
-    RSDK_ENUM_VAR("Pushable", PLATFORM_PUSHABLE);
-    RSDK_ENUM_VAR("Moving (Static)", PLATFORM_TRACK);
-    RSDK_ENUM_VAR("Wait for Player", PLATFORM_WAIT);
-    RSDK_ENUM_VAR("Wait for Player (Oscillate)", PLATFORM_WAIT_OSC);
-    RSDK_ENUM_VAR("Activate when Above", PLATFORM_ACTIVEABOVE);
-    RSDK_ENUM_VAR("Controlled (Activates PlatformControl)", PLATFORM_CONT_ACTIVATER);
-    RSDK_ENUM_VAR("Wait for Player, then Move with Arc", PLATFORM_WAIT_ARC);
-    RSDK_ENUM_VAR("Sticky", PLATFORM_STICKY);
-    RSDK_ENUM_VAR("Swinging (Clackers)", PLATFORM_SWING_CLACK);
-    RSDK_ENUM_VAR("Static", PLATFORM_STATIC);
-    RSDK_ENUM_VAR("Wait for Player, then Sink", PLATFORM_SINKER);
+    RSDK_ENUM_VAR("Swing", PLATFORM_SWING);
+    RSDK_ENUM_VAR("Path", PLATFORM_PATH);
+    RSDK_ENUM_VAR("Push", PLATFORM_PUSH);
+    RSDK_ENUM_VAR("Track", PLATFORM_TRACK);
+    RSDK_ENUM_VAR("React", PLATFORM_REACT);
+    RSDK_ENUM_VAR("Hover-React", PLATFORM_HOVER_REACT);
+    RSDK_ENUM_VAR("Door Slide", PLATFORM_DOORSLIDE);
+    RSDK_ENUM_VAR("Path-React", PLATFORM_PATH_REACT);
+    RSDK_ENUM_VAR("Swing-React", PLATFORM_SWING_REACT);
+    RSDK_ENUM_VAR("Track-React", PLATFORM_TRACK_REACT);
+    RSDK_ENUM_VAR("Clacker", PLATFORM_CLACKER);
+    RSDK_ENUM_VAR("Child", PLATFORM_CHILD);
+    RSDK_ENUM_VAR("Dip Rock", PLATFORM_DIPROCK);
 
     RSDK_ACTIVE_VAR(Platform, collision);
-    RSDK_ENUM_VAR("Solid (Top)", PLATFORM_C_SOLID_TOP);
-    RSDK_ENUM_VAR("Solid (All)", PLATFORM_C_SOLID_ALL);
-    RSDK_ENUM_VAR("Use Tiles", PLATFORM_C_USE_TILES);
-    RSDK_ENUM_VAR("Hazard (All)", PLATFORM_C_HAZARD_ALL);
-    RSDK_ENUM_VAR("Not Solid", PLATFORM_C_SOLID_NONE);
-    RSDK_ENUM_VAR("Hazard (Sides)", PLATFORM_C_HAZARD_SIDES);
-    RSDK_ENUM_VAR("Hazard (Bottom)", PLATFORM_C_HAZARD_BOTTOM);
-    RSDK_ENUM_VAR("Hazard (Top)", PLATFORM_C_HAZARD_TOP);
-    RSDK_ENUM_VAR("Twister", PLATFORM_C_TWISTER);
-    RSDK_ENUM_VAR("Sticky (All)", PLATFORM_C_STICKY_ALL);
-    RSDK_ENUM_VAR("Sticky (Top)", PLATFORM_C_STICKY_TOP);
-    RSDK_ENUM_VAR("Sticky (Left)", PLATFORM_C_STICKY_LEFT);
-    RSDK_ENUM_VAR("Sticky (Right)", PLATFORM_C_STICKY_RIGHT);
-    RSDK_ENUM_VAR("Sticky (Bottom)", PLATFORM_C_STICKY_BOTTOM);
-    RSDK_ENUM_VAR("Turntable", PLATFORM_C_TURNTABLE);
-    RSDK_ENUM_VAR("Solid (All, No Crush)", PLATFORM_C_SOLID_ALL_NOCRUSH);
+    RSDK_ENUM_VAR("Platform", PLATFORM_C_PLATFORM);
+    RSDK_ENUM_VAR("Solid", PLATFORM_C_SOLID);
+    RSDK_ENUM_VAR("Tiled", PLATFORM_C_TILED);
+    RSDK_ENUM_VAR("Hurt", PLATFORM_C_HURT);
+    RSDK_ENUM_VAR("None", PLATFORM_C_NONE);
+    RSDK_ENUM_VAR("Solid Hurt Sides", PLATFORM_C_SOLID_HURT_SIDES);
+    RSDK_ENUM_VAR("Solid Hurt Bottom", PLATFORM_C_SOLID_HURT_BOTTOM);
+    RSDK_ENUM_VAR("Solid Hurt Top", PLATFORM_C_SOLID_HURT_TOP);
+    RSDK_ENUM_VAR("Solid Hold", PLATFORM_C_SOLID_HOLD);
+    RSDK_ENUM_VAR("Solid Sticky", PLATFORM_C_SOLID_STICKY);
+    RSDK_ENUM_VAR("Sticky Top", PLATFORM_C_STICKY_TOP);
+    RSDK_ENUM_VAR("Sticky Left", PLATFORM_C_STICKY_LEFT);
+    RSDK_ENUM_VAR("Sticky Right", PLATFORM_C_STICKY_RIGHT);
+    RSDK_ENUM_VAR("Sticky Bottom", PLATFORM_C_STICKY_BOTTOM);
+    RSDK_ENUM_VAR("Solid Barrel", PLATFORM_C_SOLID_BARREL);
+    RSDK_ENUM_VAR("Solid No Crush", PLATFORM_C_SOLID_NOCRUSH);
 }
 #endif
 

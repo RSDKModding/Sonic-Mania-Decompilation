@@ -320,8 +320,8 @@ void Current_State_WaterLeft(void)
 
             if (Player_CheckValidState(player)) {
                 if ((1 << playerID) & self->activePlayers) {
-                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_StartJumpIn) {
-                        if (player->state != Player_State_StartJumpIn)
+                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_HoldRespawn) {
+                        if (player->state != Player_State_HoldRespawn)
                             player->state = Player_State_Air;
 
                         int32 x = self->position.x + ((self->hitbox.right - 32) << 16);
@@ -345,7 +345,7 @@ void Current_State_WaterLeft(void)
                     if (Water)
                         inBubble = Water_GetPlayerBubble(player) != NULL;
 
-                    if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
+                    if (player->state != Player_State_Hurt && player->state != Player_State_HoldRespawn) {
                         int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;
@@ -405,8 +405,8 @@ void Current_State_WaterRight(void)
 
             if (Player_CheckValidState(player)) {
                 if ((1 << playerID) & self->activePlayers) {
-                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_StartJumpIn) {
-                        if (player->state != Player_State_StartJumpIn)
+                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_HoldRespawn) {
+                        if (player->state != Player_State_HoldRespawn)
                             player->state = Player_State_Air;
                         self->activePlayers &= ~(1 << playerID);
                     }
@@ -419,7 +419,7 @@ void Current_State_WaterRight(void)
                     if (Water)
                         inBubble = Water_GetPlayerBubble(player) != NULL;
 
-                    if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
+                    if (player->state != Player_State_Hurt && player->state != Player_State_HoldRespawn) {
                         int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;
@@ -479,8 +479,8 @@ void Current_State_WaterUp(void)
 
             if (Player_CheckValidState(player)) {
                 if ((1 << playerID) & self->activePlayers) {
-                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_StartJumpIn) {
-                        if (player->state != Player_State_StartJumpIn)
+                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_HoldRespawn) {
+                        if (player->state != Player_State_HoldRespawn)
                             player->state = Player_State_Air;
                         self->activePlayers &= ~(1 << playerID);
                     }
@@ -493,7 +493,7 @@ void Current_State_WaterUp(void)
                     if (Water)
                         inBubble = Water_GetPlayerBubble(player) != NULL;
 
-                    if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
+                    if (player->state != Player_State_Hurt && player->state != Player_State_HoldRespawn) {
                         int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;
@@ -557,8 +557,8 @@ void Current_State_WaterDown(void)
 
             if (Player_CheckValidState(player)) {
                 if ((1 << playerID) & self->activePlayers) {
-                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_StartJumpIn) {
-                        if (player->state != Player_State_StartJumpIn)
+                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->state == Player_State_HoldRespawn) {
+                        if (player->state != Player_State_HoldRespawn)
                             player->state = Player_State_Air;
 
                         self->activePlayers &= ~(1 << playerID);
@@ -572,7 +572,7 @@ void Current_State_WaterDown(void)
                     if (Water)
                         inBubble = Water_GetPlayerBubble(player) != NULL;
 
-                    if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
+                    if (player->state != Player_State_Hurt && player->state != Player_State_HoldRespawn) {
                         int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFT_SWING) {
                             player->onGround        = false;

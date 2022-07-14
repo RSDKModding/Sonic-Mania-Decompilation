@@ -67,11 +67,11 @@ void GasPlatform_Create(void *data)
         self->interval = 1;
 
     self->frameID   = 2;
-    self->collision = PLATFORM_C_SOLID_TOP;
+    self->collision = PLATFORM_C_PLATFORM;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->gasAnimator, true, 0);
 
-    self->stateCollide = Platform_Collision_AllSolid;
+    self->stateCollide = Platform_Collision_Solid;
     self->state        = Platform_State_Fixed;
 }
 

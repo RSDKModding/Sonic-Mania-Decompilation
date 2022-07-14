@@ -19,9 +19,9 @@ typedef enum {
 } AnimalTypes;
 
 typedef enum {
-    ANIMAL_BEHAVE_BOUNCEAROUND,
+    ANIMAL_BEHAVE_FREE,
     ANIMAL_BEHAVE_FOLLOW,
-    ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS,
+    ANIMAL_BEHAVE_FIXED,
 } AnimalBehaviours;
 
 // Object Class
@@ -65,12 +65,12 @@ void Animals_EditorLoad(void);
 void Animals_Serialize(void);
 
 // Extra Entity Functions
-void Animals_CheckPlayerPos(void);
+void Animals_CheckDirection(void);
 bool32 Animals_CheckPlatformCollision(void *platform);
 bool32 Animals_CheckGroundCollision(void);
 
-void Animals_State_Freed(void);
-void Animals_State_FollowPlayer_Normal(void);
-void Animals_State_FollowPlayer_Bird(void);
-void Animals_State_BounceAround(void);
+void Animals_State_Fall(void);
+void Animals_State_Bounce(void);
+void Animals_State_Fly(void);
+void Animals_State_Placed(void);
 #endif //!OBJ_ANIMALS_H

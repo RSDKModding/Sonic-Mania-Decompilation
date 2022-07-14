@@ -305,7 +305,7 @@ void MegaOctus_HandleEggmanAnim(void)
                     bool32 laughing = false;
                     foreach_active(Player, player)
                     {
-                        if (player->state == Player_State_Hit || player->state == Player_State_Die)
+                        if (player->state == Player_State_Hurt || player->state == Player_State_Death)
                             laughing = true;
                     }
 
@@ -324,7 +324,7 @@ void MegaOctus_HandleEggmanAnim(void)
                 bool32 laughing = false;
                 foreach_active(Player, player)
                 {
-                    if (player->state == Player_State_Hit || player->state == Player_State_Die)
+                    if (player->state == Player_State_Hurt || player->state == Player_State_Death)
                         laughing = true;
                 }
 
@@ -844,19 +844,24 @@ void MegaOctus_CheckPlayerCollisions_Cannon(void)
 {
     RSDK_THIS(MegaOctus);
 
-    Vector2 hitPos;
-    hitPos.x = (RSDK.Cos512(self->angle) << 10) + self->position.x;
-    hitPos.y = (RSDK.Sin512(self->angle) << 8) + self->position.y;
+    Vector2 storePos = self->position;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, &hitPos, &self->hitbox)) {
+        self->position.x = (RSDK.Cos512(self->angle) << 10) + storePos.x;
+        self->position.y = (RSDK.Sin512(self->angle) << 8) + storePos.y;
+
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
+            self->position = storePos;
+
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }
     }
+
+    self->position = storePos;
 }
 
 void MegaOctus_StateCannon_RiseUp(void)
@@ -980,9 +985,7 @@ void MegaOctus_CheckPlayerCollisions_Orb(void)
 {
     RSDK_THIS(MegaOctus);
 
-    Vector2 hitPos;
-    hitPos.x = (RSDK.Cos512(self->angle) << 10) + self->position.x;
-    hitPos.y = (RSDK.Sin512(self->angle) << 8) + self->position.y;
+    Vector2 storePos = self->position;
 
     if (self->invincibilityTimer) {
         self->invincibilityTimer--;
@@ -990,7 +993,11 @@ void MegaOctus_CheckPlayerCollisions_Orb(void)
     else {
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikTouch(player, &hitPos, &self->hitbox) && Player_CheckBossHit(player, self)) {
+            self->position.x = (RSDK.Cos512(self->angle) << 10) + storePos.x;
+            self->position.y = (RSDK.Sin512(self->angle) << 8) + storePos.y;
+            if (Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
+                self->position = storePos;
+
                 --self->health;
                 --MegaOctus->orbHealth[self->orbID];
 
@@ -1006,6 +1013,8 @@ void MegaOctus_CheckPlayerCollisions_Orb(void)
             }
         }
     }
+
+    self->position = storePos;
 }
 
 void MegaOctus_StateOrb_Wait(void)

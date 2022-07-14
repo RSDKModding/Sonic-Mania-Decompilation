@@ -63,7 +63,7 @@ void SSZ2Setup_StageLoad(void)
         SSZ2Setup->towerLayer                   = RSDK.GetTileLayer(SSZ2Setup->towerID);
         SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCB;
 
-        RSDK.SetDrawLayerProperties(1, false, SSZ2Setup_TowerDrawLayerCB);
+        RSDK.SetDrawGroupProperties(1, false, SSZ2Setup_TowerDrawLayerCB);
 
         RSDK.SetLimitedFade(3, 0, 4, 96, 0, 256);
         if (globals->suppressTitlecard >= true) {
@@ -170,11 +170,7 @@ void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void)
     foreach_active(HotaruMKII, hotaru)
     {
         if (!hotaru->type) {
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->objectDrawHigh;
-
-            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-            destroyEntity(hotaru);
+            BadnikHelpers_BadnikBreak(hotaru, true, true);
         }
     }
 }

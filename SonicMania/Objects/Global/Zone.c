@@ -20,87 +20,7 @@ void Zone_LateUpdate(void)
         StateMachine_Run(self->state);
     }
     else {
-        foreach_active(Player, player)
-        {
-            int32 playerID = SLOT_PLAYER1;
-            if (!player->sidekick)
-                playerID = RSDK.GetEntitySlot(player);
-
-            Hitbox *playerHitbox = Player_GetHitbox(player);
-
-            // Left Boundary
-            if (Zone->playerBoundActiveL[playerID]) {
-                int32 offset = -0x10000 * playerHitbox->left;
-                if (player->position.x - offset <= Zone->playerBoundsL[playerID]) {
-                    player->position.x = Zone->playerBoundsL[playerID] + offset;
-
-                    if (player->onGround) {
-                        if (player->groundVel < Zone->autoScrollSpeed) {
-                            player->velocity.x = Zone->autoScrollSpeed;
-                            player->groundVel  = Zone->autoScrollSpeed;
-                            player->pushing    = false;
-                        }
-                    }
-                    else if (player->velocity.x < Zone->autoScrollSpeed) {
-                        player->velocity.x = Zone->autoScrollSpeed;
-                        player->groundVel  = 0;
-                    }
-                }
-            }
-
-            // Right Boundary
-            if (Zone->playerBoundActiveR[playerID]) {
-                int32 offset = playerHitbox->right << 16;
-                if (player->position.x + offset >= Zone->playerBoundsR[playerID]) {
-                    player->position.x = Zone->playerBoundsR[playerID] - offset;
-
-                    if (player->onGround) {
-                        if (player->groundVel > Zone->autoScrollSpeed) {
-                            player->velocity.x = Zone->autoScrollSpeed;
-                            player->groundVel  = Zone->autoScrollSpeed;
-                            player->pushing    = false;
-                        }
-                    }
-                    else {
-                        if (player->velocity.x > Zone->autoScrollSpeed) {
-                            player->velocity.x = Zone->autoScrollSpeed;
-                            player->groundVel  = 0;
-                        }
-                    }
-                }
-            }
-
-            // Top Boundary
-            if (Zone->playerBoundActiveT[playerID]) {
-                if (player->position.y - 0x140000 < Zone->playerBoundsT[playerID]) {
-                    player->position.y = Zone->playerBoundsT[playerID] + 0x140000;
-                    player->velocity.y = 0;
-                }
-            }
-
-            // Death Boundary
-            if (player->state != Player_State_Die && !player->deathType) {
-                if (Zone->playerBoundsB[playerID] <= Zone->deathBoundary[playerID]) {
-                    if (player->position.y > Zone->deathBoundary[playerID]) {
-                        player->deathType                  = PLAYER_DEATH_DIE_NOSFX;
-                        Zone->playerBoundActiveB[playerID] = false;
-                    }
-                }
-                else if (player->position.y > Zone->playerBoundsB[playerID]) {
-                    player->deathType                  = PLAYER_DEATH_DIE_NOSFX;
-                    Zone->playerBoundActiveB[playerID] = false;
-                }
-            }
-
-            // Bottom Boundary
-            if (Zone->playerBoundActiveB[playerID]) {
-                if (player->position.y + 0x140000 > Zone->playerBoundsB[playerID]) {
-                    player->position.y = Zone->playerBoundsB[playerID] - 0x140000;
-                    player->velocity.y = 0;
-                    player->onGround   = true;
-                }
-            }
-        }
+        Zone_HandlePlayerBounds();
 
         // Handle States
         StateMachine_Run(self->state);
@@ -118,15 +38,15 @@ void Zone_LateUpdate(void)
             RSDK.PlaySfx(Player->sfxHurt, false, 0xFF);
 
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-            foreach_active(Player, playerLoop)
+            foreach_active(Player, player)
             {
                 bool32 canDie = true;
 #if MANIA_USE_PLUS
-                if (globals->gameMode == MODE_COMPETITION && (session->finishState[playerLoop->playerID]) == FINISHTYPE_PASSEDSIGNPOST)
+                if (globals->gameMode == MODE_COMPETITION && (session->finishState[player->playerID]) == FINISHTYPE_PASSEDSIGNPOST)
                     canDie = false;
 #endif
-                if (!playerLoop->sidekick && canDie)
-                    playerLoop->deathType = PLAYER_DEATH_DIE_USESFX;
+                if (!player->sidekick && canDie)
+                    player->deathType = PLAYER_DEATH_DIE_USESFX;
             }
 
             Zone->gotTimeOver = true;
@@ -143,9 +63,9 @@ void Zone_LateUpdate(void)
         // Ensure P1 is always on top
         if (Player->playerCount > 0) {
             EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-            if ((sidekick->state != Player_State_FlyIn && sidekick->state != Player_State_JumpIn) || sidekick->characterID == ID_TAILS
+            if ((sidekick->state != Player_State_FlyToPlayer && sidekick->state != Player_State_ReturnToPlayer) || sidekick->characterID == ID_TAILS
                 || sidekick->scale.x == 0x200) {
-                player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+                EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 RSDK.SwapDrawListEntries(player->drawOrder, SLOT_PLAYER1, SLOT_PLAYER2, Player->playerCount);
             }
         }
@@ -558,7 +478,7 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColor)
     zone->fadeSpeed = fadeSpeed;
     zone->screenID  = PLAYER_COUNT;
     zone->timer     = 0;
-    zone->state     = Zone_State_Fadeout;
+    zone->state     = Zone_State_FadeOut;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
     zone->drawOrder = DRAWGROUP_COUNT - 1;
@@ -580,16 +500,7 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor)
 
 void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor)
 {
-    EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-
-    zone->fadeColor = fadeColor;
-    zone->fadeSpeed = fadeSpeed;
-    zone->screenID  = PLAYER_COUNT;
-    zone->timer     = 0;
-    zone->state     = Zone_State_Fadeout;
-    zone->stateDraw = Zone_Draw_Fade;
-    zone->visible   = true;
-    zone->drawOrder = DRAWGROUP_COUNT - 1;
+    Zone_StartFadeOut(fadeSpeed, fadeColor);
     Music_FadeOut(0.025);
 }
 
@@ -658,6 +569,91 @@ void Zone_StartTeleportAction(void)
 #if MANIA_USE_PLUS
     Zone->teleportActionActive = true;
 #endif
+}
+
+void Zone_HandlePlayerBounds(void)
+{
+    foreach_active(Player, player)
+    {
+        int32 playerID = SLOT_PLAYER1;
+        if (!player->sidekick)
+            playerID = RSDK.GetEntitySlot(player);
+
+        Hitbox *playerHitbox = Player_GetHitbox(player);
+
+        // Left Boundary
+        if (Zone->playerBoundActiveL[playerID]) {
+            int32 offset = -0x10000 * playerHitbox->left;
+            if (player->position.x - offset <= Zone->playerBoundsL[playerID]) {
+                player->position.x = Zone->playerBoundsL[playerID] + offset;
+
+                if (player->onGround) {
+                    if (player->groundVel < Zone->autoScrollSpeed) {
+                        player->velocity.x = Zone->autoScrollSpeed;
+                        player->groundVel  = Zone->autoScrollSpeed;
+                        player->pushing    = false;
+                    }
+                }
+                else if (player->velocity.x < Zone->autoScrollSpeed) {
+                    player->velocity.x = Zone->autoScrollSpeed;
+                    player->groundVel  = 0;
+                }
+            }
+        }
+
+        // Right Boundary
+        if (Zone->playerBoundActiveR[playerID]) {
+            int32 offset = playerHitbox->right << 16;
+            if (player->position.x + offset >= Zone->playerBoundsR[playerID]) {
+                player->position.x = Zone->playerBoundsR[playerID] - offset;
+
+                if (player->onGround) {
+                    if (player->groundVel > Zone->autoScrollSpeed) {
+                        player->velocity.x = Zone->autoScrollSpeed;
+                        player->groundVel  = Zone->autoScrollSpeed;
+                        player->pushing    = false;
+                    }
+                }
+                else {
+                    if (player->velocity.x > Zone->autoScrollSpeed) {
+                        player->velocity.x = Zone->autoScrollSpeed;
+                        player->groundVel  = 0;
+                    }
+                }
+            }
+        }
+
+        // Top Boundary
+        if (Zone->playerBoundActiveT[playerID]) {
+            if (player->position.y - 0x140000 < Zone->playerBoundsT[playerID]) {
+                player->position.y = Zone->playerBoundsT[playerID] + 0x140000;
+                player->velocity.y = 0;
+            }
+        }
+
+        // Death Boundary
+        if (player->state != Player_State_Death && !player->deathType) {
+            if (Zone->playerBoundsB[playerID] <= Zone->deathBoundary[playerID]) {
+                if (player->position.y > Zone->deathBoundary[playerID]) {
+                    player->deathType                  = PLAYER_DEATH_DIE_NOSFX;
+                    Zone->playerBoundActiveB[playerID] = false;
+                }
+            }
+            else if (player->position.y > Zone->playerBoundsB[playerID]) {
+                player->deathType                  = PLAYER_DEATH_DIE_NOSFX;
+                Zone->playerBoundActiveB[playerID] = false;
+            }
+        }
+
+        // Bottom Boundary
+        if (Zone->playerBoundActiveB[playerID]) {
+            if (player->position.y + 0x140000 > Zone->playerBoundsB[playerID]) {
+                player->position.y = Zone->playerBoundsB[playerID] - 0x140000;
+                player->velocity.y = 0;
+                player->onGround   = true;
+            }
+        }
+    }
 }
 
 void Zone_ApplyWorldBounds(void)
@@ -793,7 +789,7 @@ void Zone_Draw_Fade(void)
     RSDK.FillScreen(self->fadeColor, self->timer, self->timer - 0x80, self->timer - 0x100);
 }
 
-void Zone_State_Fadeout(void)
+void Zone_State_FadeOut(void)
 {
     RSDK_THIS(Zone);
 
@@ -982,8 +978,8 @@ void Zone_HandlePlayerSwap(void)
         EntityPlayer *storedPlayer = (EntityPlayer *)Zone->entityStorage[p];
 
         void *state = storedPlayer->state;
-        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll_Ground
-            || state == Player_State_ForceRoll_Air) {
+        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_TubeRoll
+            || state == Player_State_TubeAirRoll) {
             player->state           = state;
             player->nextAirState    = storedPlayer->nextAirState;
             player->nextGroundState = storedPlayer->nextGroundState;
@@ -1114,8 +1110,8 @@ void Zone_HandlePlayerSwap(void)
         EntityPlayer *curPlayer = RSDK_GET_ENTITY(curPlayerID, Player);
 
         void *state = curPlayer->state;
-        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll_Ground
-            || state == Player_State_ForceRoll_Air) {
+        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_TubeRoll
+            || state == Player_State_TubeAirRoll) {
             newPlayer->state = state;
             newPlayer->nextAirState = curPlayer->nextAirState;
             newPlayer->nextGroundState = curPlayer->nextGroundState;
@@ -1203,8 +1199,8 @@ void Zone_HandlePlayerSwap(void)
         EntityPlayer *curPlayer = (EntityPlayer *)playerStorage;
 
         void *state = curPlayer->state;
-        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll_Ground
-            || state == Player_State_ForceRoll_Air) {
+        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_TubeRoll
+            || state == Player_State_TubeAirRoll) {
             newPlayer->state = state;
             newPlayer->nextAirState = curPlayer->nextAirState;
             newPlayer->nextGroundState = curPlayer->nextGroundState;
@@ -1373,7 +1369,7 @@ void Zone_State_SwapPlayers(void)
         Zone->playerSwapEnabled = true;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->state == Player_State_Drown || player->state == Player_State_None || player->state == Player_State_Die || !player->interaction
+            if (player->state == Player_State_Drown || player->state == Player_State_None || player->state == Player_State_Death || !player->interaction
                 || !player->tileCollisions)
                 Zone->playerSwapEnabled = false;
         }
@@ -1419,7 +1415,11 @@ void Zone_State_HandleSwapFadeIn(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Zone_EditorDraw(void) {}
+void Zone_EditorDraw(void)
+{
+    RSDK_THIS(Zone);
+    RSDK.DrawRect(self->position.x, self->position.y, 0x20, 0x20, 0xFFFF0000, 0xFF, INK_NONE, false);
+}
 
 void Zone_EditorLoad(void)
 {

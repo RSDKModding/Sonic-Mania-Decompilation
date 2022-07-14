@@ -213,7 +213,7 @@ void TetherBall_State_SwingBall(void)
             if (self->state == TetherBall_State_SwingBall) {
                 if (player->jumpPress) {
                     self->player = NULL;
-                    Player_StartJump(player);
+                    Player_Action_Jump(player);
                 }
             }
             else {

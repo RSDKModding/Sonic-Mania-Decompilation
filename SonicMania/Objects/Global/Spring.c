@@ -150,8 +150,8 @@ void Spring_State_Vertical(void)
                         player->animationReserve = player->animator.animationID;
 
                     if (player->state != Ice_State_FrozenPlayer) {
-                        if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
-                            player->state = Player_State_ForceRoll_Air;
+                        if (player->state == Player_State_TubeAirRoll || player->state == Player_State_TubeRoll) {
+                            player->state = Player_State_TubeAirRoll;
                         }
                         else {
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
@@ -181,8 +181,8 @@ void Spring_State_Vertical(void)
             if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
                     if (player->state != Ice_State_FrozenPlayer) {
-                        if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground)
-                            player->state = Player_State_ForceRoll_Air;
+                        if (player->state == Player_State_TubeAirRoll || player->state == Player_State_TubeRoll)
+                            player->state = Player_State_TubeAirRoll;
                         else
                             player->state = Player_State_Air;
                     }
@@ -223,8 +223,8 @@ void Spring_State_Horizontal(void)
                     }
 
                     if (player->state != Ice_State_FrozenPlayer) {
-                        if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air
-                            && player->state != Player_State_ForceRoll_Ground) {
+                        if (player->state != Player_State_Roll && player->state != Player_State_TubeAirRoll
+                            && player->state != Player_State_TubeRoll) {
                             player->state = player->onGround ? Player_State_Ground : Player_State_Air;
                         }
 
@@ -266,8 +266,8 @@ void Spring_State_Horizontal(void)
                     }
 
                     if (player->state != Ice_State_FrozenPlayer) {
-                        if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air
-                            && player->state != Player_State_ForceRoll_Ground) {
+                        if (player->state != Player_State_Roll && player->state != Player_State_TubeAirRoll
+                            && player->state != Player_State_TubeRoll) {
                             player->state = player->onGround ? Player_State_Ground : Player_State_Air;
                         }
 
@@ -310,8 +310,8 @@ void Spring_State_Diagonal(void)
 
                 if (collided) {
                     if (player->state != Ice_State_FrozenPlayer) {
-                        if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
-                            player->state = Player_State_ForceRoll_Air;
+                        if (player->state == Player_State_TubeAirRoll || player->state == Player_State_TubeRoll) {
+                            player->state = Player_State_TubeAirRoll;
                         }
                         else {
                             player->state = Player_State_Air;
@@ -323,7 +323,7 @@ void Spring_State_Diagonal(void)
                     }
 
                     if (self->direction < FLIP_Y) {
-                        if (player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
+                        if (player->state != Player_State_TubeAirRoll && player->state != Player_State_TubeRoll) {
                             int32 anim               = player->animator.animationID;
                             player->animationReserve = ANI_WALK;
                             if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))

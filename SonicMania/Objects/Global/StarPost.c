@@ -261,11 +261,8 @@ void StarPost_CheckCollisions(void)
                     StarPost->storedMinutes = SceneInfo->minutes;
                 }
 
-                int32 ballSpeed = 0;
-                if (player->onGround)
-                    ballSpeed = -12 * (player->groundVel >> 17);
-                else
-                    ballSpeed = -12 * (player->velocity.x >> 17);
+                int32 playerVelocity = player->onGround ? player->groundVel : player->velocity.x;
+                int32 ballSpeed      = -12 * (playerVelocity >> 17);
 
                 if (ballSpeed >= 0)
                     ballSpeed += 32;

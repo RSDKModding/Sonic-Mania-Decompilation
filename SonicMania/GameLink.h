@@ -322,7 +322,7 @@ typedef struct {
     InputState keySelect;
 
     // Rev01 hasn't split these into different structs yet
-#if !RETRO_REV02
+#if RETRO_REV01
     InputState bumperL;
     InputState bumperR;
     InputState keyTriggerL;
@@ -412,6 +412,11 @@ typedef struct {
     RSDKUnknownInfo *unknownInfo;
 
     RSDKScreenInfo *screenInfo;
+
+#if RETRO_REV0U
+    // only for origins, not technically needed for v5U if standalone I think
+    void *hedgehogLink;
+#endif
 
 #if RETRO_USE_MOD_LOADER
     void *modTable;
@@ -746,7 +751,7 @@ typedef enum {
     ACTIVE_DISABLED = 0xFF,
 } ActiveFlags;
 
-typedef enum { ROTSTYLE_NONE, ROTSTYLE_FULL, ROTFLAG_45DEG, ROTSTYLE_90DEG, ROTSTYLE_180DEG, ROTSTYLE_STATICFRAMES } RotationSyles;
+typedef enum { ROTSTYLE_NONE, ROTSTYLE_FULL, ROTSTYLE_45DEG, ROTSTYLE_90DEG, ROTSTYLE_180DEG, ROTSTYLE_STATICFRAMES } RotationSyles;
 
 typedef enum {
     LAYER_HSCROLL,
@@ -1352,7 +1357,7 @@ typedef struct {
     bool32 (*CheckPosOnScreen)(Vector2 *position, Vector2 *range);
     void (*AddDrawListRef)(uint8 drawGroup, uint16 entityID);
     void (*SwapDrawListEntries)(uint8 drawGroup, uint16 slot1, uint16 slot2, uint16 count);
-    void (*SetDrawLayerProperties)(uint8 drawGroup, bool32 sorted, void (*callback)(void));
+    void (*SetDrawGroupProperties)(uint8 drawGroup, bool32 sorted, void (*callback)(void));
 
     // Scene Management
     void (*SetScene)(const char *categoryName, const char *sceneName);
@@ -1396,8 +1401,8 @@ typedef struct {
     int32 (*ASin256)(int32 angle);
     int32 (*ACos256)(int32 angle);
     int32 (*Rand)(int32 min, int32 max);
-    int32 (*RandSeeded)(int32 min, int32 max, int32 *randSeed);
-    void (*SetRandSeed)(int32 key);
+    int32 (*RandSeeded)(int32 min, int32 max, int32 *seed);
+    void (*SetRandSeed)(int32 seed);
     uint8 (*ATan2)(int32 x, int32 y);
 
     // Matrices
@@ -1429,7 +1434,7 @@ typedef struct {
     int32 (*SetScreenSize)(uint8 screenID, uint16 width, uint16 height);
     void (*SetClipBounds)(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2);
 #if RETRO_REV02
-    void (*SetScreenRenderVertices)(uint8 startVert2P_S1, uint8 startVert2P_S2, uint8 startVert3P_S1, uint8 startVert3P_S2, uint8 startVert3P_S3);
+    void (*SetScreenVertices)(uint8 startVert2P_S1, uint8 startVert2P_S2, uint8 startVert3P_S1, uint8 startVert3P_S2, uint8 startVert3P_S3);
 #endif
 
     // Spritesheets
@@ -1447,7 +1452,7 @@ typedef struct {
     void (*SetActivePalette)(uint8 newActiveBank, int32 startLine, int32 endLine);
     void (*CopyPalette)(uint8 sourceBank, uint8 srcBankStart, uint8 destinationBank, uint8 destBankStart, uint16 count);
 #if RETRO_REV02
-    void (*LoadPalette)(uint8 bankID, const char *path, uint16 rowFlags);
+    void (*LoadPalette)(uint8 bankID, const char *path, uint16 disabledRows);
 #endif
     void (*RotatePalette)(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32 right);
     void (*SetLimitedFade)(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
@@ -1461,10 +1466,10 @@ typedef struct {
     void (*DrawCircle)(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, InkEffects inkEffect,
                               bool32 screenRelative);
-    void (*DrawFace)(Vector2 *verticies, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, InkEffects inkEffect);
-    void (*DrawBlendedFace)(Vector2 *verticies, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
+    void (*DrawFace)(Vector2 *vertices, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, InkEffects inkEffect);
+    void (*DrawBlendedFace)(Vector2 *vertices, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
-    void (*DrawDeformedSprite)(uint16 sheet, InkEffects inkEffect, bool32 screenRelative);
+    void (*DrawDeformedSprite)(uint16 sheetID, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawText)(Animator *animator, Vector2 *position, String *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
                      Vector2 *charOffsets, bool32 screenRelative);
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
@@ -1510,7 +1515,7 @@ typedef struct {
     void (*SetTileInfo)(uint16 layer, int32 x, int32 y, uint16 tile);
     int32 (*CopyTileLayer)(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
                            int32 countY);
-    void (*ProcessParallax)(TileLayer *TileLayer);
+    void (*ProcessParallax)(TileLayer *tileLayer);
     ScanlineInfo *(*GetScanlines)(void);
 
     // Object & Tile Collisions
@@ -1567,26 +1572,26 @@ typedef struct {
 
     // Input
 #if RETRO_REV02
-    int32 (*ControllerIDForInputID)(uint8 controllerID);
-    int32 (*MostRecentActiveControllerID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
-    int32 (*GetControllerType)(uint32 inputID);
-    int32 (*GetAssignedControllerID)(uint32 inputID);
+    int32 (*GetInputDeviceID)(uint8 controllerID);
+    int32 (*GetFilteredInputDeviceID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
+    int32 (*GetInputDeviceType)(uint32 inputID);
+    int32 (*IsInputDeviceAssigned)(uint32 inputID);
     int32 (*GetInputUnknown)(uint32 inputID);
     int32 (*InputUnknown1)(uint32 inputID, int32 unknown1, int32 unknown2);
     int32 (*InputUnknown2)(uint32 inputID, int32 unknown1, int32 unknown2);
     int32 (*GetControllerUnknown)(void);
     int32 (*ControllerUnknown1)(uint8 controllerID, int32 unknown1, int32 unknown2);
     int32 (*ControllerUnknown2)(uint8 controllerID, int32 unknown1, int32 unknown2);
-    void (*AssignControllerID)(uint8 controllerID, uint32 inputID);
-    bool32 (*ControllerIsAssigned)(uint8 controllerID);
-    void (*ResetControllerAssignments)(void);
+    void (*AssignInputSlotToDevice)(uint8 controllerID, uint32 inputID);
+    bool32 (*IsInputSlotAssigned)(uint8 controllerID);
+    void (*ResetInputSlotAssignments)(void);
 #endif
 #if !RETRO_REV02
     void (*GetUnknownInputValue)(int32 controllerID, int32 type, int32 *value);
 #endif
 
     // User File Management
-    int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size); // load user file from exe dir
+    int32 (*LoadUserFile)(const char *fileName, void *buffer, uint32 size); // load user file from exe dir
     int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir
 
     // Printing (Rev02)
@@ -1618,7 +1623,7 @@ typedef struct {
 
 #if RETRO_REV0U
     // Origins Extras
-    void (*NotifyStats)(int32 id, int32 param1, int32 param2, int32 param3);
+    void (*NotifyCallback)(int32 callbackID, int32 param1, int32 param2, int32 param3);
     void (*SetGameFinished)(void);
 #endif
 } RSDKFunctionTable;

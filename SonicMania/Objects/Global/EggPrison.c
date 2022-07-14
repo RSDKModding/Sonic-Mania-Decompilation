@@ -269,7 +269,7 @@ void EggPrison_State_Activated(void)
                 EntityAnimals *animals = CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[a & 1] + 1), x, y);
 
                 animals->timer     = 4 * a;
-                animals->state     = Animals_State_BounceAround;
+                animals->state     = Animals_State_Placed;
                 animals->behaviour = ANIMAL_BEHAVE_FOLLOW;
                 animals->direction = (a ^ (a >> 1)) & 1;
             }
@@ -423,7 +423,7 @@ void EggPrison_State_SetupActClear(void)
     if (++self->timer == 60) {
         self->timer               = 0;
         self->state               = StateMachine_None;
-        Zone->forcePlayerOnScreen = false;
+        Zone->shouldRecoverPlayers = false;
         Music_PlayTrack(TRACK_ACTCLEAR);
         RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->classID, NULL);
     }

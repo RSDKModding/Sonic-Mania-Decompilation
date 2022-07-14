@@ -377,7 +377,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host)
         player1->state          = Player_State_Ground;
         player1->camera         = camera;
         camera->target          = (Entity *)player1;
-        camera->state           = Camera_State_Follow;
+        camera->state           = Camera_State_FollowXY;
         if (player2->classID == Player->classID) {
             player2->stateInput     = Player_Input_P2_AI;
             player2->tileCollisions = true;

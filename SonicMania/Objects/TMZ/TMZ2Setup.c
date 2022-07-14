@@ -68,8 +68,8 @@ void TMZ2Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_TOCKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
 
-    RSDK.SetDrawLayerProperties(0, false, TMZ2Setup_DrawLayerCB_SetDynTilesPalette);
-    RSDK.SetDrawLayerProperties(1, false, TMZ2Setup_DrawLayerCB_UnsetDynTilesPalette);
+    RSDK.SetDrawGroupProperties(0, false, TMZ2Setup_DrawLayerCB_SetDynTilesPalette);
+    RSDK.SetDrawGroupProperties(1, false, TMZ2Setup_DrawLayerCB_UnsetDynTilesPalette);
 
     if (isMainGameMode()) {
         if (globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {

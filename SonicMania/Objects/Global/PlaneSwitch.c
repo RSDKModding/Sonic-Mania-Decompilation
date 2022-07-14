@@ -49,7 +49,7 @@ void PlaneSwitch_StageLoad(void) { PlaneSwitch->aniFrames = RSDK.LoadSpriteAnima
 void PlaneSwitch_DrawSprites(void)
 {
     RSDK_THIS(PlaneSwitch);
-
+        
     Vector2 drawPos;
 
     drawPos.x = self->position.x - 0x80000;
@@ -122,6 +122,12 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
 void PlaneSwitch_EditorDraw(void)
 {
     RSDK_THIS(PlaneSwitch);
+
+    self->angle &= 0xFF;
+    self->flags &= 0xF;
+    if (!self->size)
+        self->size = 1;
+
     self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
     self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
     self->visible       = false;

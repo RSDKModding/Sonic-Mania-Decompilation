@@ -28,8 +28,8 @@ void FarPlane_LateUpdate(void)
         FarPlane->position.x = self->position.x;
         FarPlane->position.y = self->position.y;
 
-        RSDK.SetDrawLayerProperties(1, false, FarPlane_DrawLayerCB_Low);
-        RSDK.SetDrawLayerProperties(3, false, FarPlane_DrawLayerCB_High);
+        RSDK.SetDrawGroupProperties(1, false, FarPlane_DrawLayerCB_Low);
+        RSDK.SetDrawGroupProperties(3, false, FarPlane_DrawLayerCB_High);
 
         FarPlane_SetEntityActivities(ACTIVE_NORMAL);
     }
@@ -37,8 +37,8 @@ void FarPlane_LateUpdate(void)
         self->active                                       = ACTIVE_BOUNDS;
         RSDK.GetTileLayer(FarPlane->layerID)->drawLayer[0] = DRAWGROUP_COUNT;
 
-        RSDK.SetDrawLayerProperties(1, false, NULL);
-        RSDK.SetDrawLayerProperties(3, false, NULL);
+        RSDK.SetDrawGroupProperties(1, false, NULL);
+        RSDK.SetDrawGroupProperties(3, false, NULL);
 
         FarPlane_SetEntityActivities(ACTIVE_NEVER);
     }
@@ -93,8 +93,8 @@ void FarPlane_StageLoad(void)
         RSDK.GetTileLayer(Zone->fgLow)->drawLayer[0]  = 2;
         RSDK.GetTileLayer(Zone->fgHigh)->drawLayer[0] = 7;
 
-        RSDK.SetDrawLayerProperties(1, false, NULL);
-        RSDK.SetDrawLayerProperties(2, false, NULL);
+        RSDK.SetDrawGroupProperties(1, false, NULL);
+        RSDK.SetDrawGroupProperties(2, false, NULL);
 
         RSDK.CopyPalette(0, 0, 3, 0, 128);
         RSDK.CopyPalette(0, 144, 3, 144, 112);

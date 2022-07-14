@@ -383,30 +383,30 @@ uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
     RSDK_THIS(Ring);
 
     int32 side = C_NONE;
-    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
+    if (platform->state != Platform_State_Falling2 && platform->state != Platform_State_Hold) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         switch (platform->collision) {
-            case PLATFORM_C_SOLID_TOP:
+            case PLATFORM_C_PLATFORM:
                 side = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &Ring->hitbox, true);
                 break;
 
-            case PLATFORM_C_SOLID_ALL:
-            case PLATFORM_C_HAZARD_SIDES:
-            case PLATFORM_C_HAZARD_BOTTOM:
-            case PLATFORM_C_HAZARD_TOP:
-            case PLATFORM_C_TWISTER:
-            case PLATFORM_C_STICKY_ALL:
+            case PLATFORM_C_SOLID:
+            case PLATFORM_C_SOLID_HURT_SIDES:
+            case PLATFORM_C_SOLID_HURT_BOTTOM:
+            case PLATFORM_C_SOLID_HURT_TOP:
+            case PLATFORM_C_SOLID_HOLD:
+            case PLATFORM_C_SOLID_STICKY:
             case PLATFORM_C_STICKY_TOP:
             case PLATFORM_C_STICKY_LEFT:
             case PLATFORM_C_STICKY_RIGHT:
             case PLATFORM_C_STICKY_BOTTOM:
-            case PLATFORM_C_TURNTABLE:
-            case PLATFORM_C_SOLID_ALL_NOCRUSH:
+            case PLATFORM_C_SOLID_BARREL:
+            case PLATFORM_C_SOLID_NOCRUSH:
                 side = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), self, &Ring->hitbox, true);
                 break;
 
-            case PLATFORM_C_USE_TILES:
+            case PLATFORM_C_TILED:
                 side = C_NONE;
                 if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Ring->hitbox) && self->collisionLayers & Zone->moveMask) {
                     TileLayer *moveLayer  = RSDK.GetTileLayer(Zone->moveLayer);
@@ -426,7 +426,7 @@ uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
     return side;
 }
 
-void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
+void Ring_CheckObjectCollisions(int32 x, int32 y)
 {
     RSDK_THIS(Ring);
 
@@ -486,18 +486,18 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
     }
 
     if (xVel <= 0) {
-        if (!(collisionSides & 8) && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, self->collisionPlane, -drawPosX, 0, true))
+        if (!(collisionSides & 8) && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, self->collisionPlane, -x, 0, true))
             self->velocity.x = -xVel;
     }
-    else if (!(collisionSides & 4) && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, self->collisionPlane, drawPosX, 0, true)) {
+    else if (!(collisionSides & 4) && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, self->collisionPlane, x, 0, true)) {
         self->velocity.x = -xVel;
     }
 
     if (yVel <= 0) {
-        if (collisionSides & 0x10 || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, self->collisionPlane, 0, -drawPosY, true))
+        if (collisionSides & 0x10 || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, self->collisionPlane, 0, -y, true))
             self->velocity.y = -yVel;
     }
-    else if (collisionSides & 2 || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, drawPosY, true)) {
+    else if (collisionSides & 2 || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, y, true)) {
         self->velocity.y = (yVel >> 2) - yVel;
         if (self->velocity.y > -0x10000)
             self->velocity.y = -0x10000;

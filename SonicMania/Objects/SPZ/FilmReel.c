@@ -337,7 +337,7 @@ void FilmReel_SpinLeft(void)
                     player->position.y += self->moveOffset.y;
                 }
                 else if (player->camera && self->moveCamera) {
-                    player->camera->state = Camera_State_Follow;
+                    player->camera->state = Camera_State_FollowXY;
                 }
             }
         }
@@ -415,7 +415,7 @@ void FilmReel_SpinRight(void)
                     }
                 }
                 else if (player->camera && self->moveCamera) {
-                    player->camera->state = Camera_State_Follow;
+                    player->camera->state = Camera_State_FollowXY;
                 }
             }
         }

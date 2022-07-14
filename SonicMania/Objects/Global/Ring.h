@@ -73,7 +73,7 @@ void Ring_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane);
 void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder);
 
 uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform);
-void Ring_CheckObjectCollisions(int32 offsetX, int32 offsetY);
+void Ring_CheckObjectCollisions(int32 x, int32 y);
 
 // States
 void Ring_State_Normal(void);

@@ -21,7 +21,7 @@ void NoSwap_Update(void)
 
             if (!Player_CheckValidState(player)) {
                 if (self->noDeathSwap) {
-                    if (player->state == Player_State_Die || player->state == Player_State_Drown) {
+                    if (player->state == Player_State_Death || player->state == Player_State_Drown) {
                         Player->cantSwap = true;
                         ++NoSwap->counter;
                     }

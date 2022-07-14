@@ -44,7 +44,7 @@ void Dust_Create(void *data)
 
 void Dust_StageLoad(void) { Dust->aniFrames = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE); }
 
-void Dust_State_Spindash(void)
+void Dust_State_SpinDash(void)
 {
     RSDK_THIS(Dust);
 
@@ -72,7 +72,7 @@ void Dust_State_Spindash(void)
             destroyEntity(self);
     }
 }
-void Dust_State_Skid(void)
+void Dust_State_DustTrail(void)
 {
     RSDK_THIS(Dust);
 
@@ -85,7 +85,7 @@ void Dust_State_Skid(void)
         if (!self->timer && player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y);
-            dust->state          = Dust_State_Move;
+            dust->state          = Dust_State_DustPuff;
             dust->position.y += playerHitbox->bottom << 16;
             dust->drawOrder = player->drawOrder;
         }
@@ -95,7 +95,7 @@ void Dust_State_Skid(void)
             destroyEntity(self);
     }
 }
-void Dust_State_GlideSlide(void)
+void Dust_State_GlideTrail(void)
 {
     RSDK_THIS(Dust);
 
@@ -108,7 +108,7 @@ void Dust_State_GlideSlide(void)
         if (!self->timer && player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y - 0x40000);
-            dust->state          = Dust_State_Move;
+            dust->state          = Dust_State_DustPuff;
             dust->position.y += playerHitbox->bottom << 16;
             dust->drawOrder = player->drawOrder;
         }
@@ -118,7 +118,7 @@ void Dust_State_GlideSlide(void)
             destroyEntity(self);
     }
 }
-void Dust_State_Move(void)
+void Dust_State_DustPuff(void)
 {
     RSDK_THIS(Dust);
 
@@ -130,7 +130,8 @@ void Dust_State_Move(void)
     if (self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 }
-void Dust_State_MoveCollide(void)
+#if MANIA_USE_PLUS
+void Dust_State_DustPuff_Collide(void)
 {
     RSDK_THIS(Dust);
 
@@ -144,7 +145,8 @@ void Dust_State_MoveCollide(void)
     if (self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 }
-void Dust_State_MoveFriction(void)
+#endif
+void Dust_State_DustPuff_Friction(void)
 {
     RSDK_THIS(Dust);
 

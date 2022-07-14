@@ -217,7 +217,7 @@ void BreakBar_State_Main(void)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
 
-        if ((player->sidekick && Player->jumpInTimer >= 239) || !Player_CheckValidState(player)) {
+        if ((player->sidekick && Player->respawnTimer >= 239) || !Player_CheckValidState(player)) {
             self->activePlayersReleased &= ~(1 << playerID);
             self->activePlayersGrabbed &= ~(1 << playerID);
             self->playerTimers[playerID] = 8;

@@ -23,4 +23,7 @@ DLLExport void LinkGameLogicDLL(EngineInfo info);
 DLLExport bool32 LinkModLogic(EngineInfo *info, const char *id);
 #endif
 
+// custom-added extra little bit of info to let the engine know what RSDK version it is
+DLLExport extern int32 RSDKRevision;
+
 #endif //! GAMEOBJECTS_H

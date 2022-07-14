@@ -101,7 +101,7 @@ void FBZSetup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         foreach_all(FBZ1Outro, outro)
         {
-            Zone->forcePlayerOnScreen = true;
+            Zone->shouldRecoverPlayers = true;
             FBZSetup->outro           = outro;
             foreach_break;
         }

@@ -211,8 +211,8 @@ void AIZSetup_StageLoad(void)
     BGSwitch->layerIDs[2]                   = AIZ_BG_JUNGLE;
     BGSwitch->layerIDs[3]                   = AIZ_BG_JUNGLE;
 
-    RSDK.SetDrawLayerProperties(0, false, Water_SetWaterLevel);
-    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
+    RSDK.SetDrawGroupProperties(0, false, Water_SetWaterLevel);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
     Water->waterPalette = 1;
 #endif
 }
@@ -247,8 +247,8 @@ void AIZSetup_PlayerState_P2Enter(void)
     self->active        = ACTIVE_NORMAL;
     self->visible       = true;
     self->stateInput    = Player_Input_P2_AI;
-    Player->jumpInTimer = 240;
-    Player_P2JumpBackIn();
+    Player->respawnTimer = 240;
+    Player_HandleSidekickRespawn();
 }
 
 void AIZSetup_HandleHeavyMovement(void)
@@ -754,7 +754,7 @@ bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
         foreach_active(Animals, animal)
         {
             animal->active    = ACTIVE_NORMAL;
-            animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
+            animal->behaviour = ANIMAL_BEHAVE_FREE;
         }
     }
 

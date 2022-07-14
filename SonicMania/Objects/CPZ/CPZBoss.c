@@ -69,8 +69,8 @@ void CPZBoss_StageLoad(void)
 
     CPZBoss->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 
-    RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, NULL);
-    RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, NULL);
+    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, NULL);
+    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, NULL);
 }
 
 void CPZBoss_DrawLayerCB_SetupPuyoHUD(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
@@ -109,8 +109,8 @@ bool32 CPZBoss_CheckMatchReset(void)
     RSDK_THIS(CPZBoss);
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, NULL);
-        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, NULL);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, NULL);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, NULL);
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
         PuyoBean->comboChainCount[0] = 0;
         PuyoBean->disableBeanLink[0] = 0;
@@ -280,8 +280,8 @@ void CPZBoss_State_SetupMatch(void)
         self->direction = FLIP_NONE;
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->characterAnimator, false, 0);
         self->state = CPZBoss_State_HandleMatch_Player;
-        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, CPZBoss_DrawLayerCB_SetupPuyoHUD);
-        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawLayerCB_RemovePuyoHUD);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, CPZBoss_DrawLayerCB_SetupPuyoHUD);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawLayerCB_RemovePuyoHUD);
     }
 }
 
@@ -562,7 +562,7 @@ void CPZBoss_State_Destroyed(void)
         for (int32 i = 0; i < Player->playerCount; ++i) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
             if (player->camera)
-                player->camera->state = Camera_State_Follow;
+                player->camera->state = Camera_State_FollowXY;
             if (!player->sidekick)
                 player->stateInput = Player_Input_P1;
         }

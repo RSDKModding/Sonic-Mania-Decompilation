@@ -531,7 +531,7 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
         player1->groundVel       = 0;
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
-        Player_StartJump(player1);
+        Player_Action_Jump(player1);
         player1->direction  = FLIP_NONE;
         player1->velocity.x = 0xE0000;
         host->values[2]     = true;

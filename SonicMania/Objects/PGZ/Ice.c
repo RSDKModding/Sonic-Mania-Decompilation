@@ -613,10 +613,10 @@ void Ice_BreakPlayerBlock(EntityPlayer *player)
     player->abilityTimer   = 0;
     player->spindashCharge = 0;
     player->visible        = true;
-    if (player->state != Player_State_Die) {
+    if (player->state != Player_State_Death) {
         player->outerbox = NULL;
         player->innerbox = NULL;
-        player->state    = Player_State_Hit;
+        player->state    = Player_State_Hurt;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, true, 0);
 
         player->velocity.y = -0x38000;
@@ -1063,7 +1063,7 @@ void Ice_State_IceBlockFall(void)
 
         foreach_all(ItemBox, itemBox)
         {
-            if ((itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling)
+            if ((itemBox->state == ItemBox_State_Idle || itemBox->state == ItemBox_State_Falling)
                 && RSDK.CheckObjectCollisionPlatform(itemBox, &ItemBox->hitboxItemBox, self, &self->hitboxBlock, true)) {
                 self->velocity.y = 0;
 
@@ -1186,7 +1186,7 @@ void Ice_State_PlayerBlock(void)
         }
     }
     else {
-        if (playerPtr->state != Player_State_FlyIn && playerPtr->state != Player_State_JumpIn) {
+        if (playerPtr->state != Player_State_FlyToPlayer && playerPtr->state != Player_State_ReturnToPlayer) {
             if (!Player_CheckValidState(playerPtr)) {
                 Ice_BreakPlayerBlock(self->playerPtr);
             }

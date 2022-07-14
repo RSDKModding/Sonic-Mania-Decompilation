@@ -89,7 +89,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
     if (host->timer >= 8) {
         if (host->timer == 8) {
             camera->target            = (Entity *)player1;
-            camera->state             = Camera_State_Follow;
+            camera->state             = Camera_State_FollowXY;
             player1->stateInput       = Player_Input_P1;
             player1->camera           = camera;
             Water->disableWaterSplash = 0;

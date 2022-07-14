@@ -836,7 +836,7 @@ void DERobot_State_SetupArena(void)
         self->timer = 0;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (player1->position.y <= self->position.y + 0x200000 && player1->state != Player_State_ForceRoll_Ground) {
+        if (player1->position.y <= self->position.y + 0x200000 && player1->state != Player_State_TubeRoll) {
             for (int32 i = 0; i < Player->playerCount; ++i) {
                 Zone->cameraBoundsL[i]      = (self->position.x >> 16) - ScreenInfo->centerX + 128;
                 Zone->cameraBoundsR[i]      = ScreenInfo->centerX + 128 + (self->position.x >> 16);
@@ -941,7 +941,7 @@ void DERobot_State_SetupBoss(void)
 
     foreach_active(Player, player)
     {
-        if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air)
+        if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll)
             player->state = Player_State_Air;
     }
 }

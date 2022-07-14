@@ -336,11 +336,11 @@ void AmoebaDroid_State_SetupWaterLevel(void)
         Water->waterMoveSpeed   = 0;
         foreach_active(Water, water)
         {
-            if (water->type == WATER_ADJUST)
+            if (water->type == WATER_HEIGHT_TRIGGER)
                 destroyEntity(water);
         }
-        RSDK.SetDrawLayerProperties(0, false, NULL);
-        RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, NULL);
+        RSDK.SetDrawGroupProperties(0, false, NULL);
+        RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, NULL);
     }
 }
 

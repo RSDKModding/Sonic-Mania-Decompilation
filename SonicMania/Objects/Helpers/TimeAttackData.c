@@ -314,6 +314,8 @@ void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, 
 }
 #endif
 
+TimeAttackRAM *TimeAttackData_GetTimeAttackRAM(void) { return (TimeAttackRAM *)&globals->saveRAM[0x800]; }
+
 void TimeAttackData_Clear(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
@@ -398,6 +400,8 @@ int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID
     return listPos;
 }
 
+uint32 TimeAttackData_GetPackedTime(int32 minutes, int32 seconds, int32 milliseconds) { return 6000 * minutes + 100 * seconds + milliseconds; }
+
 void TimeAttackData_GetUnpackedTime(int32 time, int32 *minutes, int32 *seconds, int32 *milliseconds)
 {
     if (minutes)
@@ -416,17 +420,13 @@ uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterI
     if (rank >= 3)
         return NULL;
 
-    uint16 *saveRAM = NULL;
+    TimeAttackRAM *recordsRAM = NULL;
     if (globals->saveLoaded == STATUS_OK)
-        saveRAM = (uint16 *)&globals->saveRAM[0x800];
+        recordsRAM = TimeAttackData_GetTimeAttackRAM();
     else
         return NULL;
 
-    // 72 = (12 * 6)
-    int32 pos = 72 * (characterID - 1) + 6 * zoneID + act * 3 + rank;
-    // not sure why theres an offset of 43 uint16's (86 bytes) but whatever ig
-    pos += 43;
-    return &saveRAM[pos];
+    return &recordsRAM->records[characterID - 1][zoneID][act][rank];
 }
 
 #if MANIA_USE_PLUS
@@ -505,7 +505,7 @@ void TimeAttackData_MigrateLegacySaves(void)
             for (int32 act = ACT_1; act <= ACT_2; ++act) {
                 for (int32 charID = CHAR_SONIC; charID <= CHAR_KNUX; ++charID) {
                     for (int32 rank = 0; rank < 3; ++rank) {
-                        uint16 *records = TimeAttackData_GetRecordedTime(zone, act, charID, rank);
+                        uint16 *records = TimeAttackData_GetRecordedTime(zone, act, charID, rank + 1);
                         if (records && *records) {
                             int32 score = *records;
                             LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID, rank, score);

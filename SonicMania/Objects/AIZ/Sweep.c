@@ -72,7 +72,7 @@ void Sweep_Create(void *data)
                 hitbox.top    = 64;
                 hitbox.right  = 1;
                 hitbox.bottom = 64;
-                if (water->type == WATER_TINT && RSDK.CheckObjectCollisionTouchBox(water, &hitboxWater, self, &hitbox)) {
+                if (water->type == WATER_POOL && RSDK.CheckObjectCollisionTouchBox(water, &hitboxWater, self, &hitbox)) {
                     self->water = water;
                 }
             }

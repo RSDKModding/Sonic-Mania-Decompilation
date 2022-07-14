@@ -100,7 +100,7 @@ void MMZSetup_StageLoad(void)
     }
     else {
         if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-            Zone->forcePlayerOnScreen = true;
+            Zone->shouldRecoverPlayers = true;
             Zone->stageFinishCallback = MMZSetup_StageFinishCB_Act1;
         }
 

@@ -65,7 +65,9 @@ void MonkeyDude_DebugSpawn(void);
 
 void MonkeyDude_State_Setup(void);
 void MonkeyDude_HandleBodyPart(void);
+#if MANIA_USE_PLUS
 void MonkeyDude_HandleStates(void);
+#endif
 void MonkeyDude_State_Laugh(void);
 void MonkeyDude_State_MoveArm(void);
 void MonkeyDude_State_MoveBody(void);

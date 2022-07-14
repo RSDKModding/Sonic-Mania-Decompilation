@@ -274,7 +274,7 @@ void Chopper_State_Charge(void)
         hitWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, true);
         foreach_active(Water, water)
         {
-            if (water->type == WATER_TINT)
+            if (water->type == WATER_POOL)
                 hitWall |= !RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Chopper->hitboxWater);
         }
     }

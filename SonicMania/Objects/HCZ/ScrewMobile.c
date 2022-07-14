@@ -288,7 +288,7 @@ void ScrewMobile_State_PlayerRiding(void)
     if (Player_CheckValidState(player1)) {
         if (player1->jumpPress) {
             if (!Zone->cameraBoundsT[0]) {
-                Player_StartJump(player1);
+                Player_Action_Jump(player1);
                 self->state = ScrewMobile_State_Idle;
                 return;
             }
@@ -423,7 +423,7 @@ void ScrewMobile_State_Idle(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->state == Player_State_None) {
         if (player1->jumpPress) {
-            Player_StartJump(player1);
+            Player_Action_Jump(player1);
         }
         else {
             player1->position.x = self->position.x;
@@ -456,7 +456,7 @@ void ScrewMobile_State_Idle(void)
 
         if (player2->state == Player_State_None) {
             if (player2->jumpPress) {
-                Player_StartJump(player2);
+                Player_Action_Jump(player2);
             }
             else {
                 player2->position.x = self->position.x;

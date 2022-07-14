@@ -27,7 +27,7 @@ void SpikeCrusher_Create(void *data)
 {
     RSDK_THIS(SpikeCrusher);
 
-    self->collision = PLATFORM_C_HAZARD_BOTTOM;
+    self->collision = PLATFORM_C_SOLID_HURT_BOTTOM;
     Platform_Create(NULL);
 
     if (!SceneInfo->inEditor) {

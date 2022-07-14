@@ -116,12 +116,12 @@ void BSS_Message_State_GetBSWait(void)
             self->state = BSS_Message_State_PerfectWait;
         }
 
-        if (!setup->globeTimer && setup->state == BSS_Setup_State_HandleStage) {
+        if (!setup->globeTimer && setup->state == BSS_Setup_State_GlobeMoveZ) {
             if (player->left)
-                setup->state = BSS_Setup_State_SpinLeft;
+                setup->state = BSS_Setup_State_GlobeTurnLeft;
 
             if (player->right)
-                setup->state = BSS_Setup_State_SpinRight;
+                setup->state = BSS_Setup_State_GlobeTurnRight;
         }
     }
 

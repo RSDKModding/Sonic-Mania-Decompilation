@@ -35,11 +35,13 @@ void Dust_EditorLoad(void);
 void Dust_Serialize(void);
 
 // Extra Entity Functions
-void Dust_State_Spindash(void);
-void Dust_State_Skid(void);
-void Dust_State_GlideSlide(void);
-void Dust_State_Move(void);
-void Dust_State_MoveCollide(void);
-void Dust_State_MoveFriction(void);
+void Dust_State_SpinDash(void);
+void Dust_State_DustTrail(void);
+void Dust_State_GlideTrail(void);
+void Dust_State_DustPuff(void);
+#if MANIA_USE_PLUS
+void Dust_State_DustPuff_Collide(void);
+#endif
+void Dust_State_DustPuff_Friction(void);
 
 #endif //! OBJ_DUST_H

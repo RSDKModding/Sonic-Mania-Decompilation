@@ -29,7 +29,7 @@ void ZipLine_Update(void)
             if (Player_CheckValidState(player)) {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
 
-                if (player->state != Player_State_Hit) {
+                if (player->state != Player_State_Hurt) {
                     if (player->velocity.x) {
                         self->groundVel = player->groundVel;
                         if ((uint8)(self->angle - 0x40) < 0x80)
@@ -84,7 +84,7 @@ void ZipLine_Update(void)
             }
             else {
                 self->activePlayers &= ~(1 << playerID);
-                if (player->state != Player_State_Die) {
+                if (player->state != Player_State_Death) {
                     player->tileCollisions = true;
                 }
             }

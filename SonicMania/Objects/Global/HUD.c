@@ -312,7 +312,7 @@ void HUD_Draw(void)
             for (stockFrameID = -1; charID > 0; ++stockFrameID) charID >>= 1;
             self->lifeIconAnimator.frameID = stockFrameID;
             if (stockFrameID >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
-                if ((sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
+                if ((sidekick->state != Player_State_Death && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
                     || !sidekick->abilityValues[0]) {
                     RSDK.DrawSprite(&self->lifeIconAnimator, &lifePos, true);
                 }

@@ -49,14 +49,14 @@ void PlatformControl_Update(void)
                     int32 nodeID = ++platform->speed - startNodeSlot;
                     if (nodeID >= self->nodeCount) {
                         switch (self->type) {
-                            case PLATFORMCONTROL_LOOP: platform->speed = startNodeSlot; break;
+                            case PLATFORMCONTROL_CIRCUIT: platform->speed = startNodeSlot; break;
 
-                            case PLATFORMCONTROL_PINGPONG:
+                            case PLATFORMCONTROL_REVERSE:
                                 --platform->speed;
                                 platform->direction = platform->direction ^ 4;
                                 break;
 
-                            case PLATFORMCONTROL_TOSTART: {
+                            case PLATFORMCONTROL_TELEPORT: {
                                 Entity *startNode   = RSDK_GET_ENTITY_GEN(startNodeSlot);
                                 platform->drawPos.x = startNode->position.x;
                                 platform->drawPos.y = startNode->position.y;
@@ -75,14 +75,14 @@ void PlatformControl_Update(void)
                             default:
                             case PLATFORMCONTROL_STOP: break;
 
-                            case PLATFORMCONTROL_LOOP: platform->speed = startNodeSlot + (self->nodeCount - 1); break;
+                            case PLATFORMCONTROL_CIRCUIT: platform->speed = startNodeSlot + (self->nodeCount - 1); break;
 
-                            case PLATFORMCONTROL_PINGPONG:
+                            case PLATFORMCONTROL_REVERSE:
                                 platform->direction = platform->direction ^ 4;
                                 platform->speed     = platform->speed + 1;
                                 break;
 
-                            case PLATFORMCONTROL_TOSTART: {
+                            case PLATFORMCONTROL_TELEPORT: {
                                 Entity *startNode   = RSDK_GET_ENTITY_GEN(startNodeSlot + self->nodeCount - 1);
                                 platform->drawPos.x = startNode->position.x;
                                 platform->drawPos.y = startNode->position.y;
@@ -108,10 +108,10 @@ void PlatformControl_Update(void)
         if (self->setActive) {
             for (int32 c = 0; c < self->childCount; ++c) {
                 EntityPlatform *platform = RSDK_GET_ENTITY(platformSlot, Platform);
-                if (platform->state == Platform_State_AwaitControlCommand)
+                if (platform->state == Platform_State_PathStop)
                     platform->state = Platform_State_Controlled;
 
-                if (platform->state == Platform_State_ActivateControlOnStood) {
+                if (platform->state == Platform_State_PathReact) {
                     self->setActive = false;
                     return;
                 }
@@ -134,7 +134,7 @@ void PlatformControl_Update(void)
             EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
             if (platform->state == Platform_State_Controlled) {
                 platform->speed -= startNodeSlot;
-                platform->state  = Platform_State_AwaitControlCommand;
+                platform->state  = Platform_State_PathStop;
                 platform->active = ACTIVE_BOUNDS;
             }
             slot += platform->childCount + 1;
@@ -274,7 +274,6 @@ void PlatformControl_EditorDraw(void)
     self->updateRange.y = 0x800000;
 
     if (showGizmos()) {
-
         self->taggedButton         = NULL;
         EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Button);
         if (self->buttonTag > 0) {
@@ -334,7 +333,7 @@ void PlatformControl_EditorDraw(void)
 
         int32 startNodeSlot = RSDK.GetEntitySlot(self) + 1;
 
-        EntityPlatformNode *lastNode = RSDK_GET_ENTITY(startNodeSlot, PlatformNode);
+        /*EntityPlatformNode *lastNode = RSDK_GET_ENTITY(startNodeSlot, PlatformNode);
         for (int32 n = 1; n < self->nodeCount; ++n) {
             EntityPlatformNode *node = RSDK_GET_ENTITY(startNodeSlot + n, PlatformNode);
 
@@ -349,7 +348,7 @@ void PlatformControl_EditorDraw(void)
             if (node && self->type != PLATFORMCONTROL_STOP) {
                 DrawHelpers_DrawArrow(lastNode->position.x, lastNode->position.y, node->position.x, node->position.y, 0xFF0000, INK_NONE, 0xFF);
             }
-        }
+        }*/
 
         int32 platformSlot  = startNodeSlot + self->nodeCount;
         for (int32 c = 0; c < self->childCount; ++c) {
@@ -371,9 +370,9 @@ void PlatformControl_EditorLoad(void)
 {
 
     RSDK_ACTIVE_VAR(PlatformControl, type);
-    RSDK_ENUM_VAR("Loop around", PLATFORMCONTROL_LOOP);
-    RSDK_ENUM_VAR("Ping-Pong back and forth", PLATFORMCONTROL_PINGPONG);
-    RSDK_ENUM_VAR("Goto Starting node", PLATFORMCONTROL_TOSTART);
+    RSDK_ENUM_VAR("Circuit", PLATFORMCONTROL_CIRCUIT);
+    RSDK_ENUM_VAR("Reverse", PLATFORMCONTROL_REVERSE);
+    RSDK_ENUM_VAR("Teleport", PLATFORMCONTROL_TELEPORT);
     RSDK_ENUM_VAR("Stop", PLATFORMCONTROL_STOP);
 }
 #endif

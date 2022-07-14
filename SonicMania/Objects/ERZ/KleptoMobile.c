@@ -142,7 +142,7 @@ void KleptoMobile_HandleAnimations(void)
     if (self->eggmanAnimator.animationID == 13) {
         foreach_active(Player, player)
         {
-            if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == ERZStart_State_PlayerRebound)
+            if (player->state == Player_State_Hurt || player->state == Player_State_Death || player->state == ERZStart_State_PlayerRebound)
                 laughing = true;
         }
 
@@ -152,7 +152,7 @@ void KleptoMobile_HandleAnimations(void)
     else if (self->eggmanAnimator.animationID == 14) {
         foreach_active(Player, player)
         {
-            if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == ERZStart_State_PlayerRebound)
+            if (player->state == Player_State_Hurt || player->state == Player_State_Death || player->state == ERZStart_State_PlayerRebound)
                 laughing = true;
         }
 

@@ -499,7 +499,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                         player->scale.y        = 0x200;
                         player->tileCollisions = true;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
-                        player->abilityPtrs[0] = Player_State_Hit;
+                        player->abilityPtrs[0] = Player_State_Hurt;
                         player->state          = SizeLaser_PlayerState_Grow;
                     }
                 }
@@ -549,7 +549,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(SizeLaser->sfxGrow2, false, 255);
                     player->tileCollisions = true;
-                    player->abilityPtrs[0] = Player_State_Hit;
+                    player->abilityPtrs[0] = Player_State_Hurt;
                     player->state          = SizeLaser_P2JumpInGrow;
                 }
             }
@@ -566,7 +566,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.PlaySfx(SizeLaser->sfxShrink2, false, 0xFF);
                 player->tileCollisions = true;
-                player->abilityPtrs[0] = Player_State_Hit;
+                player->abilityPtrs[0] = Player_State_Hurt;
                 player->state          = SizeLaser_P2JumpInShrink;
             }
         }

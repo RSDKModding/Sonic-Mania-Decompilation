@@ -41,6 +41,7 @@ void MathHelpers_LerpSin512(Vector2 *pos, int32 percent, int32 startX, int32 sta
 // Bezier/Sqrt
 Vector2 MathHelpers_GetBezierPoint(int32 percent, int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4);
 int32 MathHelpers_SquareRoot(uint32 num);
+int32 MathHelpers_Distance(int32 x1, int32 y1, int32 x2, int32 y2);
 int32 MathHelpers_GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4);
 
 // "Collisions"

@@ -105,7 +105,7 @@ void PhantomMissile_HandleExhaust(void)
         int32 y          = self->position.y + (RSDK.Cos512(self->rotation) << 11);
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, x, y);
 
-        dust->state     = Dust_State_Move;
+        dust->state     = Dust_State_DustPuff;
         dust->drawOrder = Zone->objectDrawHigh;
         dust->inkEffect = INK_BLEND;
     }

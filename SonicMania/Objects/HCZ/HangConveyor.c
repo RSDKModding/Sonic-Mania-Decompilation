@@ -295,7 +295,7 @@ void HangConveyor_HandlePlayerInteractions(void)
                             player->state = Player_State_Air;
                         }
                         else {
-                            Player_StartJump(player);
+                            Player_Action_Jump(player);
                         }
 
                         if ((1 << playerID) & self->activePlayersTop)

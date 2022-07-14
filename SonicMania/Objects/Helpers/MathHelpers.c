@@ -139,6 +139,14 @@ int32 MathHelpers_SquareRoot(uint32 num)
     return num <= root ? root : (root + 1);
 }
 
+int32 MathHelpers_Distance(int32 x1, int32 y1, int32 x2, int32 y2)
+{
+    int32 distanceX = abs(x2 - x1);
+    int32 distanceY = abs(y2 - y1);
+
+    return MathHelpers_SquareRoot((distanceX >> 16) * (distanceX >> 16) + (distanceY >> 16) * (distanceY >> 16)) << 16;
+}
+
 int32 MathHelpers_GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4)
 {
     int32 lastX = x1;
@@ -150,16 +158,14 @@ int32 MathHelpers_GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, i
     for (int32 percent = 0xCCC; percent <= 0x10000; percent += 0xCCC) {
         Vector2 point = MathHelpers_GetBezierPoint(percent, x1, y1, x2, y2, x3, y3, x4, y4);
 
-        int32 distX = abs(point.x - lastX);
-        int32 distY = abs(point.y - lastY);
-        length += MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16;
+        length += MathHelpers_Distance(lastX, lastY, point.x, point.y);
         lastX = point.x;
         lastY = point.y;
     }
     return length;
 }
 
-bool32 MathHelpers_PointInHitbox(int32 thisX1, int32 thisY1, int32 otherX1, int32 otherY1, int32 direction, Hitbox *hitbox)
+bool32 MathHelpers_PointInHitbox(int32 thisX, int32 thisY, int32 otherX, int32 otherY, int32 direction, Hitbox *hitbox)
 {
     int32 left, top, right, bottom;
 
@@ -193,8 +199,8 @@ bool32 MathHelpers_PointInHitbox(int32 thisX1, int32 thisY1, int32 otherX1, int3
         hitboxY2 = top;
     if (bottom > top)
         hitboxY1 = bottom;
-    return otherX1 >= thisX1 + (hitboxX2 << 16) && otherX1 <= thisX1 + (hitboxX1 << 16) && otherY1 >= thisY1 + (hitboxY2 << 16)
-           && otherY1 <= thisY1 + (hitboxY1 << 16);
+    return otherX >= thisX + (hitboxX2 << 16) && otherX <= thisX + (hitboxX1 << 16) && otherY >= thisY + (hitboxY2 << 16)
+           && otherY <= thisY + (hitboxY1 << 16);
 }
 
 bool32 MathHelpers_PositionBoxesIntersect(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2,

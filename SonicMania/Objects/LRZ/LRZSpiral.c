@@ -83,19 +83,19 @@ void LRZSpiral_StageLoad(void) {}
 
 void LRZSpiral_HandlePlayerExit(EntityPlayer *player)
 {
-    if (abs(player->groundVel) < player->maxRunSpeed) {
+    if (abs(player->groundVel) < player->minDashVelocity) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 1);
 
         player->animator.speed = (abs(player->groundVel) >> 12) + 96;
         if (player->animator.speed > 0x200)
             player->animator.speed = 0x200;
 
-        player->maxJogSpeed = 0x58000;
-        player->maxRunSpeed = 0xC0000;
+        player->minRunVelocity = 0x58000;
+        player->minDashVelocity = 0xC0000;
     }
     else {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_DASH, &player->animator, false, 1);
-        player->maxRunSpeed = 0xB8000;
+        player->minDashVelocity = 0xB8000;
     }
 }
 

@@ -292,9 +292,7 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
     Entity *badnik = (Entity *)b;
 
     if (RSDK.CheckObjectCollisionTouchBox(badnik, hitbox, self, &CheckerBall->hitboxBall)) {
-        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), badnik->position.x, badnik->position.y);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnik->position.x, badnik->position.y - 0x100000)->drawOrder = Zone->objectDrawHigh;
-        RSDK.PlaySfx(Explosion->sfxDestroy, false, 0xFF);
+        BadnikHelpers_BadnikBreakUnseeded(badnik, false, true);
 
         EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, badnik->position.x, badnik->position.y);
@@ -455,7 +453,7 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(Platform, platform)
     {
-        if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
+        if (platform->state != Platform_State_Falling2 && platform->state != Platform_State_Hold) {
             platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
 
             int32 side = C_NONE;
@@ -465,7 +463,7 @@ void CheckerBall_HandleObjectCollisions(void)
                 side = RSDK.CheckObjectCollisionPlatform(platform, &platform->hitbox, self, &CheckerBall->hitboxBall, true);
 
             if (side == C_TOP) {
-                if (platform->state == Platform_State_Collapse && !platform->timer)
+                if (platform->state == Platform_State_Fall && !platform->timer)
                     platform->timer = 30;
                 platform->stood = true;
                 self->position.x += platform->collisionOffset.x;
@@ -541,7 +539,7 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(ItemBox, itemBox)
     {
-        if ((itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling)
+        if ((itemBox->state == ItemBox_State_Idle || itemBox->state == ItemBox_State_Falling)
             && RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hitboxItemBox, self, &CheckerBall->hitboxBall)) {
 
             // This code is basically "ItemBox_Break"
@@ -554,7 +552,7 @@ void CheckerBall_HandleObjectCollisions(void)
             itemBox->contentsSpeed = -0x38000;
             itemBox->active        = ACTIVE_ALWAYS;
             itemBox->velocity.y    = -0x20000;
-            itemBox->state         = ItemBox_State_ContentsShown;
+            itemBox->state         = ItemBox_State_Break;
             RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
             itemBox->boxAnimator.frameID = ItemBox->brokenFrame++;
             ItemBox->brokenFrame %= 3;

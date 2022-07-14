@@ -9,11 +9,6 @@
 
 ObjectBadnikHelpers *BadnikHelpers = NULL;
 
-// NOTE:
-// I'm not actually sure *what* this object was for
-// BadnikHelpers_Oscillate was always inlined so I can't say for sure that it was a real func, though I assume it was?
-// I've never seen definitive proof of any funcs this object may have once had so be it what you will
-
 void BadnikHelpers_Update(void) {}
 
 void BadnikHelpers_LateUpdate(void) {}
@@ -26,7 +21,40 @@ void BadnikHelpers_Create(void *data) {}
 
 void BadnikHelpers_StageLoad(void) {}
 
-int BadnikHelpers_Oscillate(int origin, int speed, int amplitude)
+
+void BadnikHelpers_BadnikBreak(void *badnik, bool32 destroy, bool32 spawnAnimals)
+{
+    Entity *badnikEntity = badnik;
+
+    if (spawnAnimals) {
+        CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(ZONE_RAND(0, 32) >> 4)]) + 1), badnikEntity->position.x, badnikEntity->position.y);
+    }
+
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
+    explosion->drawOrder       = Zone->objectDrawHigh;
+    RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
+
+    if (destroy)
+        destroyEntity(badnikEntity);
+}
+
+void BadnikHelpers_BadnikBreakUnseeded(void *badnik, bool32 destroy, bool32 spawnAnimals)
+{
+    Entity *badnikEntity = badnik;
+
+    if (spawnAnimals) {
+        CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), badnikEntity->position.x, badnikEntity->position.y);
+    }
+
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
+    explosion->drawOrder       = Zone->objectDrawHigh;
+    RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
+
+    if (destroy)
+        destroyEntity(badnikEntity);
+}
+
+int32 BadnikHelpers_Oscillate(int32 origin, int32 speed, int32 amplitude)
 {
     RSDK_THIS_GEN(); // generic type
 

@@ -149,7 +149,7 @@ void Smog_StageLoad(void)
     RSDK.CopyPalette(0, 0, 2, 0, 128);
     RSDK.SetLimitedFade(2, 1, 3, 64, 0, 127);
     RSDK.SetLimitedFade(0, 1, 2, 0, 0, 255);
-    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder - 1, false, Smog_DrawLayerCB);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, Smog_DrawLayerCB);
 }
 
 void Smog_DrawLayerCB(void) { RSDK.CopyPalette(1, 0, 0, 0, 128); }

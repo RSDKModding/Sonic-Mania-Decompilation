@@ -32,10 +32,9 @@ void UIWaitSpinner_Update(void)
     }
 
     self->inkEffect = INK_ALPHA;
-    if (16 * self->timer >= 0x100)
+    self->alpha     = 16 * self->timer;
+    if (self->alpha >= 0x100)
         self->alpha = 0xFF;
-    else
-        self->alpha = 16 * self->timer;
 
     RSDK.ProcessAnimation(&self->animator);
 }
@@ -63,7 +62,7 @@ void UIWaitSpinner_Create(void *data)
     self->drawOrder = 15;
 
     RSDK.SetSpriteAnimation(UIWaitSpinner->aniFrames, 0, &self->animator, true, 0);
-    self->state = UIWaitSpinner_State_Wait;
+    self->state = UIWaitSpinner_State_Show;
 }
 
 void UIWaitSpinner_StageLoad(void)
@@ -82,7 +81,7 @@ void UIWaitSpinner_StartWait(void)
 
     if (UIWaitSpinner->timer <= 0) {
         if (spinner)
-            spinner->state = UIWaitSpinner_State_WaitAndDestroy;
+            spinner->state = UIWaitSpinner_State_Hide;
     }
     else {
         if (!spinner) {
@@ -92,7 +91,7 @@ void UIWaitSpinner_StartWait(void)
             UIWaitSpinner->activeSpinner = spinner;
         }
 
-        spinner->state = UIWaitSpinner_State_Wait;
+        spinner->state = UIWaitSpinner_State_Show;
     }
 }
 void UIWaitSpinner_FinishWait(void)
@@ -104,7 +103,7 @@ void UIWaitSpinner_FinishWait(void)
 
     if (UIWaitSpinner->timer <= 0) {
         if (spinner)
-            spinner->state = UIWaitSpinner_State_WaitAndDestroy;
+            spinner->state = UIWaitSpinner_State_Hide;
     }
     else {
         if (!spinner) {
@@ -114,10 +113,10 @@ void UIWaitSpinner_FinishWait(void)
             UIWaitSpinner->activeSpinner = spinner;
         }
 
-        spinner->state = UIWaitSpinner_State_Wait;
+        spinner->state = UIWaitSpinner_State_Show;
     }
 }
-void UIWaitSpinner_State_Wait(void)
+void UIWaitSpinner_State_Show(void)
 {
     RSDK_THIS(UIWaitSpinner);
 
@@ -129,7 +128,7 @@ void UIWaitSpinner_State_Wait(void)
         self->timer += 3;
     }
 }
-void UIWaitSpinner_State_WaitAndDestroy(void)
+void UIWaitSpinner_State_Hide(void)
 {
     RSDK_THIS(UIWaitSpinner);
 
@@ -140,12 +139,8 @@ void UIWaitSpinner_State_WaitAndDestroy(void)
     else if (self->fadedIn) {
         self->timer -= 3;
     }
-    else if (self->timer >= 16) {
-        self->timer   = 16;
-        self->fadedIn = true;
-    }
     else {
-        self->timer += 3;
+        UIWaitSpinner_State_Show();
     }
 }
 

@@ -199,7 +199,7 @@ void GiantPistol_State_SpinGun(void)
         {
             if (((1 << (player->playerID)) & self->activePlayers) > 0) {
                 if (player->camera)
-                    player->camera->state = Camera_State_Follow;
+                    player->camera->state = Camera_State_FollowXY;
             }
         }
     }

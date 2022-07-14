@@ -144,14 +144,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host)
     return false;
 }
 
-void SSZ1Outro_DestroyHotaru(EntityHotaruMKII *hotaru)
-{
-    CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
-    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->objectDrawHigh;
-
-    RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-    destroyEntity(hotaru);
-}
+void SSZ1Outro_DestroyHotaru(EntityHotaruMKII *hotaru) { BadnikHelpers_BadnikBreakUnseeded(hotaru, true, true); }
 
 void SSZ1Outro_DestroyLeftoverHotarus(void)
 {

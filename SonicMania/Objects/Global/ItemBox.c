@@ -30,7 +30,7 @@ void ItemBox_Update(void)
                             self->contentsAnimator.frameID = 0;
                         if (++id > 5) {
                             RSDK.SetSpriteAnimation(ItemBox->aniFrames, 8, &self->contentsAnimator, false, 0);
-                            RSDK.PrintLog(PRINT_NORMAL, "Bad Change Item State");
+                            LogHelpers_PrintText("Bad Change Item State");
                         }
                     }
                 }
@@ -170,7 +170,7 @@ void ItemBox_Create(void *data)
             self->state  = ItemBox_State_Conveyor;
         }
         else {
-            self->state = ItemBox_State_Normal;
+            self->state = ItemBox_State_Idle;
         }
     }
 }
@@ -205,7 +205,7 @@ void ItemBox_StageLoad(void)
     ItemBox->sfxHyperRing = RSDK.GetSfx("Global/HyperRing.wav");
 #if MANIA_USE_PLUS
     ItemBox->sfxPowerDown = RSDK.GetSfx("Stage/PowerDown.wav");
-    ItemBox->sfxRevovery  = RSDK.GetSfx("Global/Recovery.wav");
+    ItemBox->sfxRecovery  = RSDK.GetSfx("Global/Recovery.wav");
 #endif
 }
 
@@ -243,7 +243,7 @@ void ItemBox_State_Broken(void)
 
     ItemBox_HandleFallingCollision();
 }
-void ItemBox_State_ContentsShown(void)
+void ItemBox_State_Break(void)
 {
     RSDK_THIS(ItemBox);
 
@@ -263,11 +263,11 @@ void ItemBox_State_ContentsShown(void)
         ItemBox_GivePowerup();
 
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 5, &self->contentsAnimator, true, 0);
-        self->state = ItemBox_State_ContentsDisappear;
+        self->state = ItemBox_State_IconFinish;
     }
 }
 
-void ItemBox_State_ContentsDisappear(void)
+void ItemBox_State_IconFinish(void)
 {
     RSDK_THIS(ItemBox);
 
@@ -284,7 +284,7 @@ void ItemBox_State_ContentsDisappear(void)
     }
 }
 
-void ItemBox_State_Normal(void)
+void ItemBox_State_Idle(void)
 {
     RSDK_THIS(ItemBox);
 
@@ -326,7 +326,7 @@ void ItemBox_State_Falling(void)
     RSDK_THIS(ItemBox);
 
     if (ItemBox_HandleFallingCollision())
-        self->state = ItemBox_State_Normal;
+        self->state = ItemBox_State_Idle;
 
     self->contentsPos.x = self->position.x;
     if (self->direction == FLIP_NONE)
@@ -683,7 +683,7 @@ void ItemBox_GivePowerup(void)
 
         case ITEMBOX_SUPER:
             Player_GiveRings(player, 50, false);
-            Player_CheckGoSuper(player, 0x7F);
+            Player_TryTransform(player, 0x7F);
             break;
 
 #if MANIA_USE_PLUS
@@ -704,7 +704,7 @@ void ItemBox_GivePowerup(void)
                         }
                         else {
                             player2->classID    = Player->classID;
-                            Player->jumpInTimer = 0;
+                            Player->respawnTimer = 0;
                             EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
 
                             dust->visible         = false;
@@ -713,7 +713,7 @@ void ItemBox_GivePowerup(void)
                             dust->position.y      = (ScreenInfo->position.y - 128) << 16;
                             player2->playerID     = 1;
                             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-                            if (player1->state == Player_State_Die || player1->state == Player_State_Drown) {
+                            if (player1->state == Player_State_Death || player1->state == Player_State_Drown) {
                                 player2->state      = Player_State_EncoreRespawn;
                                 player2->velocity.x = 0;
                                 player2->velocity.y = 0;
@@ -730,10 +730,10 @@ void ItemBox_GivePowerup(void)
                                 player2->position.y = -0x400000;
                                 player2->angle      = 128;
                                 if (player2->characterID == ID_TAILS) {
-                                    player2->state = Player_State_FlyIn;
+                                    player2->state = Player_State_FlyToPlayer;
                                 }
                                 else {
-                                    player2->state            = Player_State_JumpIn;
+                                    player2->state            = Player_State_ReturnToPlayer;
                                     player2->abilityValues[0] = ((ScreenInfo->position.y + ScreenInfo->height + 16) << 16) - player->position.y;
                                     player2->drawFX |= FX_SCALE;
                                     player2->scale.x    = 0x400;
@@ -762,7 +762,7 @@ void ItemBox_GivePowerup(void)
                         }
                     }
 
-                    RSDK.PlaySfx(ItemBox->sfxRevovery, false, 255);
+                    RSDK.PlaySfx(ItemBox->sfxRecovery, false, 255);
                 }
                 else {
                     switch (self->contentsAnimator.frameID) {
@@ -824,7 +824,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
     itemBox->active        = ACTIVE_NORMAL;
     itemBox->velocity.y    = -0x20000;
     itemBox->isContents    = true;
-    itemBox->state         = ItemBox_State_ContentsShown;
+    itemBox->state         = ItemBox_State_Break;
     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
     itemBox->boxAnimator.frameID = ItemBox->brokenFrame++;
     ItemBox->brokenFrame %= 3;
@@ -927,7 +927,7 @@ bool32 ItemBox_HandleFallingCollision(void)
                 ? RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, true)
                 : RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true))) {
         self->velocity.y = 0;
-        if (self->state != ItemBox_State_ContentsDisappear && self->state != ItemBox_State_ContentsShown)
+        if (self->state != ItemBox_State_IconFinish && self->state != ItemBox_State_Break)
             self->active = ACTIVE_BOUNDS;
         self->moveOffset.x += self->position.x;
         self->moveOffset.y += self->position.y;
@@ -945,26 +945,26 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
     EntityPlatform *platform = (EntityPlatform *)plat;
 
     bool32 collided = false;
-    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
+    if (platform->state != Platform_State_Falling2 && platform->state != Platform_State_Hold) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
 
         switch (platform->collision) {
-            case PLATFORM_C_SOLID_TOP:
+            case PLATFORM_C_PLATFORM:
                 collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &ItemBox->hitboxItemBox, 1);
                 break;
-            case PLATFORM_C_SOLID_ALL:
+            case PLATFORM_C_SOLID:
                 collided = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), self, &ItemBox->hitboxItemBox, 1);
                 break;
 
-            case PLATFORM_C_USE_TILES:
+            case PLATFORM_C_TILED:
                 if (self->collisionLayers & Zone->moveMask) {
                     TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                     move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                     move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
                 }
 
-                if (self->state == ItemBox_State_Normal || self->velocity.y > 0x3800) {
+                if (self->state == ItemBox_State_Idle || self->velocity.y > 0x3800) {
                     platform->position.x = platform->centerPos.x;
                     platform->position.y = platform->centerPos.y;
                     return false;
@@ -998,9 +998,9 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
         self->updateRange.y = platform->updateRange.y;
 
         if (self->state == ItemBox_State_Falling)
-            self->state = ItemBox_State_Normal;
+            self->state = ItemBox_State_Idle;
 
-        if (platform->state == Platform_State_Collapse && !platform->timer)
+        if (platform->state == Platform_State_Fall && !platform->timer)
             platform->timer = 30;
 
         self->velocity.y     = 0;
@@ -1164,8 +1164,8 @@ void ItemBox_HandleObjectCollisions(void)
     foreach_active(ItemBox, itemBox)
     {
         if (itemBox != self) {
-            if (self->state == ItemBox_State_Normal || self->state == ItemBox_State_Falling) {
-                if (itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling) {
+            if (self->state == ItemBox_State_Idle || self->state == ItemBox_State_Falling) {
+                if (itemBox->state == ItemBox_State_Idle || itemBox->state == ItemBox_State_Falling) {
                     int32 storeX = itemBox->position.x;
                     int32 storeY = itemBox->position.y;
 
@@ -1221,25 +1221,25 @@ void ItemBox_EditorLoad(void)
     ItemBox->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(ItemBox, type);
-    RSDK_ENUM_VAR("Rings", ITEMBOX_RING);
+    RSDK_ENUM_VAR("Super Ring", ITEMBOX_RING);
     RSDK_ENUM_VAR("Blue Shield", ITEMBOX_BLUESHIELD);
     RSDK_ENUM_VAR("Bubble Shield", ITEMBOX_BUBBLESHIELD);
     RSDK_ENUM_VAR("Fire Shield", ITEMBOX_FIRESHIELD);
     RSDK_ENUM_VAR("Lightning Shield", ITEMBOX_LIGHTNINGSHIELD);
     RSDK_ENUM_VAR("Invincibility", ITEMBOX_INVINCIBLE);
-    RSDK_ENUM_VAR("Speed Shoes", ITEMBOX_SNEAKERS);
-    RSDK_ENUM_VAR("1UP (Sonic)", ITEMBOX_1UP_SONIC);
-    RSDK_ENUM_VAR("1UP (Tails)", ITEMBOX_1UP_TAILS);
-    RSDK_ENUM_VAR("1UP (Knux)", ITEMBOX_1UP_KNUX);
+    RSDK_ENUM_VAR("Sneakers", ITEMBOX_SNEAKERS);
+    RSDK_ENUM_VAR("1UP Sonic", ITEMBOX_1UP_SONIC);
+    RSDK_ENUM_VAR("1UP Tails", ITEMBOX_1UP_TAILS);
+    RSDK_ENUM_VAR("1UP Knux", ITEMBOX_1UP_KNUX);
     RSDK_ENUM_VAR("Eggman", ITEMBOX_EGGMAN);
     RSDK_ENUM_VAR("Hyper Ring", ITEMBOX_HYPERRING);
     RSDK_ENUM_VAR("Swap", ITEMBOX_SWAP);
     RSDK_ENUM_VAR("Random", ITEMBOX_RANDOM);
     RSDK_ENUM_VAR("Super", ITEMBOX_SUPER);
 #if MANIA_USE_PLUS
-    RSDK_ENUM_VAR("1UP (Mighty)", ITEMBOX_1UP_MIGHTY);
-    RSDK_ENUM_VAR("1UP (Ray)", ITEMBOX_1UP_RAY);
-    RSDK_ENUM_VAR("Extra Stock", ITEMBOX_STOCK);
+    RSDK_ENUM_VAR("1UP Mighty", ITEMBOX_1UP_MIGHTY);
+    RSDK_ENUM_VAR("1UP Ray", ITEMBOX_1UP_RAY);
+    RSDK_ENUM_VAR("Change", ITEMBOX_STOCK);
 #endif
 
     RSDK_ACTIVE_VAR(ItemBox, planeFilter);
@@ -1248,8 +1248,8 @@ void ItemBox_EditorLoad(void)
     RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 
     RSDK_ACTIVE_VAR(ItemBox, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip Y", FLIP_X);
+    RSDK_ENUM_VAR("Normal", FLIP_NONE);
+    RSDK_ENUM_VAR("Upside-Down", FLIP_X);
 }
 #endif
 

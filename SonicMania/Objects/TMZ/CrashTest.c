@@ -264,7 +264,7 @@ void CrashTest_CheckPlayerJump(void)
 
             if (player->jumpPress) {
                 self->activePlayers &= ~(1 << playerID);
-                Player_StartJump(player);
+                Player_Action_Jump(player);
                 player->velocity.x           = self->direction == FLIP_NONE ? -self->velocity.x : self->velocity.x;
                 self->playerTimers[playerID] = 10;
             }

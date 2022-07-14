@@ -160,11 +160,11 @@ void HangPoint_Update(void)
             }
         }
         else {
-            if (player->state == Player_State_Hit) {
+            if (player->state == Player_State_Hurt) {
                 player->tileCollisions = true;
                 self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_COUNT));
                 self->moveDistance[playerID] = 0;
-                if (player->left || player->right || player->down || player->state == Player_State_Hit)
+                if (player->left || player->right || player->down || player->state == Player_State_Hurt)
                     self->playerTimer[playerID] = 64;
                 else
                     self->playerTimer[playerID] = 16;
@@ -205,7 +205,7 @@ void HangPoint_Update(void)
                             player->tileCollisions   = true;
                             self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_COUNT));
 
-                            if (player->left || player->right || player->down || player->state == Player_State_Hit) {
+                            if (player->left || player->right || player->down || player->state == Player_State_Hurt) {
                                 self->playerTimer[playerID] = 64;
                                 HangPoint_HandlePlayerMovement(self, player, playerID);
                             }
@@ -439,7 +439,7 @@ void HangPoint_HandlePlayerMovement(EntityHangPoint *self, EntityPlayer *player,
             self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
             self->moveDistance[playerID] = 0;
 
-            if (player->left || player->right || player->down || player->state == Player_State_Hit)
+            if (player->left || player->right || player->down || player->state == Player_State_Hurt)
                 self->playerTimer[playerID] = 64;
             else
                 self->playerTimer[playerID] = 16;

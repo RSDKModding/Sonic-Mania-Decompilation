@@ -509,7 +509,7 @@ void Cylinder_State_InkRoller(void)
                 }
             }
             else {
-                if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn && player->state != Player_State_StartJumpIn) {
+                if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer && player->state != Player_State_HoldRespawn) {
                     if (player->onGround || player->velocity.y < 0 || player->state == Player_State_FlyCarried
                         || player->animator.animationID == ANI_SKID) {
                         if (player->onGround) {
@@ -750,7 +750,7 @@ void Cylinder_PlayerState_InkRoller_Stand(void)
     self->jumpAbilityState = 0;
 
     if (self->jumpPress) {
-        Player_StartJump(self);
+        Player_Action_Jump(self);
 
         if (self->abilityValue == 128)
             self->velocity.y = -self->velocity.y;
@@ -801,7 +801,7 @@ void Cylinder_PlayerState_InkRoller_Roll(void)
     self->angle            = angle;
 
     if (self->jumpPress) {
-        Player_StartJump(self);
+        Player_Action_Jump(self);
 
         if (self->abilityValue == 128)
             self->velocity.y = -self->velocity.y;

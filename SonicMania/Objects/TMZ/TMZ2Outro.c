@@ -613,7 +613,7 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
 
         SceneInfo->timeEnabled = true;
 
-        Player_CheckGoSuper(player1, 0xFF);
+        Player_TryTransform(player1, 0xFF);
         EntitySuperSparkle *sparkle = RSDK_GET_ENTITY(Player->playerCount, SuperSparkle);
         RSDK.ResetEntityPtr(sparkle, SuperSparkle->classID, player1);
 

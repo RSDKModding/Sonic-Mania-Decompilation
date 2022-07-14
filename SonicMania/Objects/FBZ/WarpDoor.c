@@ -53,7 +53,7 @@ void WarpDoor_Update(void)
                             player->nextAirState    = StateMachine_None;
                             player->nextGroundState = StateMachine_None;
                             player->onGround        = false;
-                            player->state           = Player_State_Hit;
+                            player->state           = Player_State_Hurt;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                         }
 
@@ -68,7 +68,7 @@ void WarpDoor_Update(void)
                             camera->position.y                      = newCamPos.y;
                             ScreenInfo[camera->screenID].position.x = (camera->position.x >> 16);
                             ScreenInfo[camera->screenID].position.y = (camera->position.y >> 16);
-                            camera->state                           = Camera_State_Follow;
+                            camera->state                           = Camera_State_FollowXY;
                             player->scrollDelay                     = 0;
                             WarpDoor_SetupBoundaries(boundID, &newPos);
 
@@ -254,7 +254,7 @@ void WarpDoor_SetupPlayerCamera(void)
     foreach_all(Player, player)
     {
         if (player->camera) {
-            player->camera->state      = Camera_State_Follow;
+            player->camera->state      = Camera_State_FollowXY;
             player->camera->position.x = player->position.x;
             player->camera->position.y = player->position.y;
             player->camera->offset.x   = 0;

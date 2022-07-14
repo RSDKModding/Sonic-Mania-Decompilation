@@ -571,7 +571,7 @@ void PBL_Crane_StatePrize_PrizeGet(void)
                 sector->active = ACTIVE_NORMAL;
         }
 
-        RSDK.PrintInt32(PRINT_NORMAL, "Sector", PBL_Setup->sectorID);
+        LogHelpers_PrintInt32("Sector", PBL_Setup->sectorID);
         camera->target    = self->cameraTarget;
         camera->rotationY = -96;
 

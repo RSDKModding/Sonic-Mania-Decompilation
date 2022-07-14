@@ -568,7 +568,7 @@ void ReplayRecorder_ConfigureGhost_CB(void)
     LogHelpers_Print("ConfigureGhost_CB()");
     LogHelpers_Print("Ghost Slot %d", self->playerID);
 
-    RSDK.PrintVector2(PRINT_NORMAL, "Ghost pos ", self->position);
+    LogHelpers_PrintVector2("Ghost pos ", self->position);
     self->isGhost        = true;
     self->stateInput     = StateMachine_None;
     self->state          = ReplayRecorder_PlayerState_PlaybackReplay;
@@ -612,31 +612,31 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[25] = Player_State_FlyCarried;
     ReplayRecorder->actions[26] = Player_State_KnuxWallClimb;
     ReplayRecorder->actions[27] = Player_State_Crouch;
-    ReplayRecorder->actions[28] = Player_State_Die;
+    ReplayRecorder->actions[28] = Player_State_Death;
     ReplayRecorder->actions[29] = Player_State_MightyHammerDrop;
     ReplayRecorder->actions[30] = Player_State_DropDash;
     ReplayRecorder->actions[31] = Player_State_Drown;
     ReplayRecorder->actions[32] = Player_State_TailsFlight;
-    ReplayRecorder->actions[33] = Player_State_FlyIn;
+    ReplayRecorder->actions[33] = Player_State_FlyToPlayer;
     ReplayRecorder->actions[34] = Player_State_KnuxGlideDrop;
     ReplayRecorder->actions[35] = Player_State_KnuxGlideLeft;
     ReplayRecorder->actions[36] = Player_State_KnuxGlideRight;
     ReplayRecorder->actions[37] = Player_State_GlideSlide;
     ReplayRecorder->actions[38] = Player_State_Ground;
-    ReplayRecorder->actions[39] = Player_State_StartJumpIn;
-    ReplayRecorder->actions[40] = Player_State_Hit;
+    ReplayRecorder->actions[39] = Player_State_HoldRespawn;
+    ReplayRecorder->actions[40] = Player_State_Hurt;
     ReplayRecorder->actions[41] = Player_State_KnuxLedgePullUp;
     ReplayRecorder->actions[42] = Player_State_LookUp;
     ReplayRecorder->actions[43] = Player_State_OuttaHere;
     ReplayRecorder->actions[44] = Player_State_Peelout;
     ReplayRecorder->actions[45] = Player_State_Roll;
     ReplayRecorder->actions[46] = Player_State_Spindash;
-    ReplayRecorder->actions[47] = Player_ForceSuperTransform;
+    ReplayRecorder->actions[47] = Player_State_StartSuper;
     ReplayRecorder->actions[48] = Player_State_None;
     ReplayRecorder->actions[49] = Player_State_Transform;
     ReplayRecorder->actions[50] = Player_State_TransportTube;
-    ReplayRecorder->actions[51] = Player_State_ForceRoll_Air;
-    ReplayRecorder->actions[52] = Player_State_ForceRoll_Ground;
+    ReplayRecorder->actions[51] = Player_State_TubeAirRoll;
+    ReplayRecorder->actions[52] = Player_State_TubeRoll;
     ReplayRecorder->actions[53] = Player_State_Victory;
 
     ReplayRecorder->actions[54] = SizeLaser_P2JumpInShrink;
@@ -695,12 +695,9 @@ void ReplayRecorder_DrawGhostDisplay(void)
             drawPos.x = 0;
             drawPos.y = 0;
 
-            int32 distX = abs(player->position.x - screenX);
-            int32 distY = abs(player->position.y - screenY);
-            int32 rad   = MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16));
-            rad         = clampVal(rad, 100, 2000);
+            int32 dist       = clampVal(MathHelpers_Distance(screenX, screenY, player->position.x, player->position.y) >> 16, 100, 2000);
 
-            int32 size    = 12 - 4 * (3 * rad - 300) / 2000;
+            int32 size    = 12 - 4 * (3 * dist - 300) / 2000;
             hitbox.right  = hitbox.right - 8 - (size + 24);
             hitbox.bottom = hitbox.bottom - 8 - (size + 24);
             hitbox.top += size + 24 + 8;
@@ -1218,7 +1215,7 @@ void ReplayRecorder_Late_Playback(void)
             else
                 WarpDoor_CheckAllBounds();
 
-            camera->state       = Camera_State_Follow;
+            camera->state       = Camera_State_FollowXY;
             player->scrollDelay = 0;
         }
     }
@@ -1239,9 +1236,7 @@ void ReplayRecorder_Late_Playback(void)
     if (!self->isGhostPlayback && framePtr->info) {
         if ((framePtr->info == REPLAY_INFO_STATECHANGE || framePtr->info == REPLAY_INFO_PASSEDGATE)
             || (framePtr->info == REPLAY_INFO_USEFLAGS && (framePtr->changedValues & REPLAY_CHANGED_POS))) {
-            int32 distX = abs(player->position.x - framePtr->position.x);
-            int32 distY = abs(player->position.y - framePtr->position.y);
-            if (MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16 >= 0x20000) {
+            if (MathHelpers_Distance(framePtr->position.x, framePtr->position.y, player->position.x, player->position.y) >= 0x20000) {
                 player->position.x += (framePtr->position.x - player->position.x) >> 1;
                 player->position.y += (framePtr->position.y - player->position.y) >> 1;
             }

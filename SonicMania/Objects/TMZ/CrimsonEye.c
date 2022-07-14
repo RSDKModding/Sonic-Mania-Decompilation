@@ -391,8 +391,8 @@ void CrimsonEye_SetupBG2Layer(void)
     bg2Layer->parallaxFactor = 0x200;
     CrimsonEye->bg2Layer     = bg2Layer;
 
-    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder - 1, false, CrimsonEye_DrawLayerCB_EnableFGSilhouette);
-    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, CrimsonEye_DrawLayerCB_DisableFGSilhouette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, CrimsonEye_DrawLayerCB_EnableFGSilhouette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, CrimsonEye_DrawLayerCB_DisableFGSilhouette);
 }
 
 // Manages the black strucures that move in the foreground
@@ -859,13 +859,17 @@ void CrimsonEye_CheckPlayerCollisions(void)
         CrimsonEye->invincibilityTimer--;
     }
     else {
+        Vector2 storePos = self->position;
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikTouch(player, &CrimsonEye->eyePositions[0], &CrimsonEye->hitboxEye) && Player_CheckBossHit(player, self)) {
+            self->position = CrimsonEye->eyePositions[0];
+            if (Player_CheckBadnikTouch(player, self, &CrimsonEye->hitboxEye) && Player_CheckBossHit(player, self)) {
+                self->position = storePos;
                 CrimsonEye_Hit();
                 foreach_break;
             }
         }
+        self->position = storePos;
     }
 }
 

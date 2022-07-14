@@ -181,7 +181,7 @@ void CollapsingSand_State_CollapseLeft(void)
             foreach_all(ItemBox, itembox)
             {
                 if (abs(itembox->position.x - self->position.x) < self->size.x >> 1) {
-                    if (abs(itembox->position.y - self->position.y >= 0) < self->size.y >> 1 && itembox->state == ItemBox_State_Normal)
+                    if (abs(itembox->position.y - self->position.y >= 0) < self->size.y >> 1 && itembox->state == ItemBox_State_Idle)
                         itembox->state = ItemBox_State_Falling;
                 }
             }
@@ -249,7 +249,7 @@ void CollapsingSand_State_CollapseRight(void)
             foreach_all(ItemBox, itembox)
             {
                 if (abs(itembox->position.x - self->position.x) < self->size.x >> 1) {
-                    if (abs(itembox->position.y - self->position.y >= 0) < self->size.y >> 1 && itembox->state == ItemBox_State_Normal)
+                    if (abs(itembox->position.y - self->position.y >= 0) < self->size.y >> 1 && itembox->state == ItemBox_State_Idle)
                         itembox->state = ItemBox_State_Falling;
                 }
             }

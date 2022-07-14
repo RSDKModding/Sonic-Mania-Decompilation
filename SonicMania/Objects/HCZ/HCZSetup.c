@@ -191,8 +191,8 @@ void HCZSetup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_ROCKY;
 
-    RSDK.SetDrawLayerProperties(0, false, Water_SetWaterLevel);
-    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
+    RSDK.SetDrawGroupProperties(0, false, Water_SetWaterLevel);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
 
     Water->waterPalette = 1;
 
@@ -211,7 +211,7 @@ void HCZSetup_StageLoad(void)
         Zone->stageFinishCallback = HCZSetup_StageFinishCB_Act2;
     }
     else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-        Zone->forcePlayerOnScreen = true;
+        Zone->shouldRecoverPlayers = true;
         Zone->stageFinishCallback = HCZSetup_HandleActTransition;
     }
 

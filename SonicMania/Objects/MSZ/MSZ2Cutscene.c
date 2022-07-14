@@ -129,7 +129,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
     }
     else {
         player1->position.x = pistol->position.x - 0xD00000;
-        Player_StartJump(player1);
+        Player_Action_Jump(player1);
         player1->velocity.x = 0x44000;
         player1->velocity.y = -0x80000;
         player1->jumpPress  = true;

@@ -21,7 +21,7 @@ void BSS_Collected_Update(void)
             ++BSS_Setup->ringID;
             BSS_Setup->ringID &= 0xF;
 
-            if (++self->timer >= 16 && setup->state == BSS_Setup_State_HandleStage) {
+            if (++self->timer >= 16 && setup->state == BSS_Setup_State_GlobeMoveZ) {
                 BSS_Setup->playField[fieldPos] = BSS_NONE;
                 destroyEntity(self);
             }
@@ -41,7 +41,7 @@ void BSS_Collected_Update(void)
             break;
 
         case BSS_COLLECTED_BLUE_STOOD:
-            if (setup->state == BSS_Setup_State_HandleStage) {
+            if (setup->state == BSS_Setup_State_GlobeMoveZ) {
                 if (setup->globeTimer > 32 && setup->globeTimer < 224) {
                     if (BSS_Setup->playField[fieldPos] == BSS_BLUE_STOOD)
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_RED;
@@ -59,7 +59,7 @@ void BSS_Collected_Update(void)
             break;
 
         case BSS_COLLECTED_GREEN_STOOD:
-            if (setup->state == BSS_Setup_State_HandleStage && --self->timer <= 0) {
+            if (setup->state == BSS_Setup_State_GlobeMoveZ && --self->timer <= 0) {
                 if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_GREEN_STOOD)
                     BSS_Setup->playField[fieldPos] = BSS_SPHERE_BLUE;
 
@@ -68,7 +68,7 @@ void BSS_Collected_Update(void)
             break;
 
         case BSS_COLLECTED_PINK:
-            if (setup->state == BSS_Setup_State_HandleStage) {
+            if (setup->state == BSS_Setup_State_GlobeMoveZ) {
                 if (setup->playerPos.x != self->position.x || setup->playerPos.y != self->position.y) {
                     if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_PINK_STOOD)
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_PINK;

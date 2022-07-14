@@ -620,7 +620,7 @@ bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
         if (ERZStart->timer >= 32) {
             if (ERZStart->timer == 32) {
                 Player_GiveRings(player1, 50, false);
-                Player_CheckGoSuper(player1, 0x7F);
+                Player_TryTransform(player1, 0x7F);
             }
         }
         else {
@@ -675,7 +675,7 @@ bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host)
         camera->target   = (Entity *)player1;
         camera->offset.x = 0;
         camera->offset.y = 0;
-        camera->state    = Camera_State_Follow;
+        camera->state    = Camera_State_FollowXY;
         player1->camera  = camera;
 
         foreach_all(RingField, field) { field->running = true; }

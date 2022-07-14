@@ -165,7 +165,7 @@ bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         camera->target      = (Entity *)player1;
-        camera->state       = Camera_State_Follow;
+        camera->state       = Camera_State_FollowXY;
         player1->stateInput = Player_Input_P1;
         player1->state      = Player_State_Ground;
         player1->camera     = camera;

@@ -231,7 +231,7 @@ void MSZSetup_StageLoad(void)
                         FXFade_StopAll();
 
                     if (PlayerHelpers_CheckAct1Regular()) {
-                        Zone->forcePlayerOnScreen = true;
+                        Zone->shouldRecoverPlayers = true;
                         Zone->stageFinishCallback = MSZSetup_StageFinishCB_K;
                     }
                 }
@@ -252,7 +252,7 @@ void MSZSetup_StageLoad(void)
                     FXFade_StopAll();
 
                 if (PlayerHelpers_CheckAct1Regular()) {
-                    Zone->forcePlayerOnScreen = true;
+                    Zone->shouldRecoverPlayers = true;
                     Zone->stageFinishCallback = MSZSetup_StageFinishCB_K;
                 }
             }
@@ -697,7 +697,7 @@ void MSZSetup_PlayerState_Pilot(void)
     self->stateInput    = StateMachine_None;
     self->position.x    = ScreenInfo->position.x << 16;
     self->position.y    = ScreenInfo->position.y << 16;
-    Player->jumpInTimer = 0;
+    Player->respawnTimer = 0;
 }
 
 void MSZSetup_PlayerState_PostCrashJumpIn(void)
@@ -707,9 +707,9 @@ void MSZSetup_PlayerState_PostCrashJumpIn(void)
     self->active        = ACTIVE_NORMAL;
     self->visible       = true;
     self->stateInput    = Player_Input_P2_AI;
-    Player->jumpInTimer = 240;
+    Player->respawnTimer = 240;
 
-    Player_P2JumpBackIn();
+    Player_HandleSidekickRespawn();
 }
 
 #if RETRO_INCLUDE_EDITOR

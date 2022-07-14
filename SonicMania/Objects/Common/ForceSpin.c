@@ -28,7 +28,7 @@ void ForceSpin_Update(void)
         if (xDif < 0x180000 && yDif < self->size << 19) {
             if (scanX + pos >= self->position.x) {
                 if (self->direction) {
-                    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
+                    if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
                         player->state = player->onGround ? Player_State_Roll : Player_State_Air;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
@@ -40,7 +40,7 @@ void ForceSpin_Update(void)
             }
             else {
                 if (!self->direction) {
-                    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
+                    if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
                         player->state           = player->onGround ? Player_State_Roll : Player_State_Air;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
@@ -100,7 +100,7 @@ void ForceSpin_SetPlayerState(EntityPlayer *player)
 {
     RSDK_THIS(ForceSpin);
 
-    if (player->state != Player_State_ForceRoll_Ground && player->state != Player_State_ForceRoll_Air) {
+    if (player->state != Player_State_TubeRoll && player->state != Player_State_TubeAirRoll) {
         if (player->animator.animationID != ANI_JUMP) {
             RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -110,7 +110,7 @@ void ForceSpin_SetPlayerState(EntityPlayer *player)
         }
 
         player->nextAirState = StateMachine_None;
-        player->state        = player->onGround ? Player_State_ForceRoll_Ground : Player_State_ForceRoll_Air;
+        player->state        = player->onGround ? Player_State_TubeRoll : Player_State_TubeAirRoll;
 
         player->nextGroundState = StateMachine_None;
         if (abs(player->groundVel) < 0x10000) {

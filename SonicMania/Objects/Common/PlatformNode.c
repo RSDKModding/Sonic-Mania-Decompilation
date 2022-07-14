@@ -26,11 +26,21 @@ void PlatformNode_EditorDraw(void)
 {
     RSDK_THIS(PlatformNode);
 
-    RSDK.SetSpriteAnimation(PlatformNode->aniFrames, 0, &self->animator, false, 7);
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+        EntityPlatformNode *next = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode);
+        if (next && next->classID == PlatformNode->classID) {
+            RSDK.DrawLine(self->position.x, self->position.y, next->position.x, next->position.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        }
+        RSDK_DRAWING_OVERLAY(false);
+    }
+
+
+    RSDK.SetSpriteAnimation(PlatformNode->aniFrames, 0, &self->animator, false, 0);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void PlatformNode_EditorLoad(void) { PlatformNode->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void PlatformNode_EditorLoad(void) { PlatformNode->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 #endif
 
 void PlatformNode_Serialize(void) { RSDK_EDITABLE_VAR(PlatformNode, VAR_ENUM, nodeFlag); }

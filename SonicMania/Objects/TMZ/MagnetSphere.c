@@ -105,7 +105,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                 self->playerTimers[playerID] = 30;
                 self->activePlayers &= ~(1 << playerID);
 
-                if (player->state != Player_State_Die)
+                if (player->state != Player_State_Death)
                     player->tileCollisions = true;
             }
             else if (!player->jumpPress) {

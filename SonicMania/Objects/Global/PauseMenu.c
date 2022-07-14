@@ -36,7 +36,7 @@ void PauseMenu_LateUpdate(void)
     else {
         StateMachine(state) = RSDK_GET_ENTITY(self->triggerPlayer, Player)->state;
 
-        if (state == Player_State_Die || state == Player_State_Drown) {
+        if (state == Player_State_Death || state == Player_State_Drown) {
             destroyEntity(self);
         }
         else {
@@ -86,7 +86,7 @@ void PauseMenu_StaticUpdate(void)
                 for (int32 i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
 #if MANIA_USE_PLUS
                     int32 id = API_ControllerIDForInputID(CONT_P1 + i);
-                    if (!RSDK.GetAssignedControllerID(id) && id != INPUT_AUTOASSIGN) {
+                    if (!RSDK.IsInputDeviceAssigned(id) && id != INPUT_AUTOASSIGN) {
                         PauseMenu->controllerDisconnect = true;
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         pauseMenu->triggerPlayer = i;

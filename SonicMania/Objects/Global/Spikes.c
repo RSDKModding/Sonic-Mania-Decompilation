@@ -306,7 +306,11 @@ void Spikes_Update(void)
 
 void Spikes_LateUpdate(void) {}
 
-void Spikes_StaticUpdate(void) {}
+void Spikes_StaticUpdate(void)
+{
+    RSDK.ProcessAnimation(&Spikes->verticalAnimator);
+    RSDK.ProcessAnimation(&Spikes->horizontalAnimator);
+}
 
 void Spikes_Draw(void) { StateMachine_Run(Spikes->stateDraw); }
 
@@ -502,7 +506,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 {
     RSDK_THIS(Spikes);
 
-    if (player->state == Player_State_Hit)
+    if (player->state == Player_State_Hurt)
         return;
     if (!Player_CheckValidState(player) || player->invincibleTimer || player->blinkTimer > 0)
         return;
@@ -530,7 +534,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                         else
                             player->velocity.x = 0x28000;
                         player->blinkTimer = 60;
-                        player->state      = Player_State_Hit;
+                        player->state      = Player_State_Hurt;
                         RSDK.StopSfx(Player->sfxMightyDrill);
                     }
 
@@ -558,7 +562,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
             player->onGround         = false;
             player->applyJumpCap     = false;
             player->jumpAbilityState = 0;
-            if (player->state == Player_State_Hit) {
+            if (player->state == Player_State_Hurt) {
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
             }
@@ -575,7 +579,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                 player->velocity.y >>= 1;
             }
         }
-        else if (self->type == 1) {
+        else if (self->type == C_TOP) {
             if (player->animator.animationID == ANI_HAMMERDROP) {
                 player->velocity.y = -0x48000;
                 if (!(player->direction & FLIP_X))
@@ -589,7 +593,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                 player->applyJumpCap     = false;
                 player->jumpAbilityState = 0;
 
-                if (player->state == Player_State_Hit) {
+                if (player->state == Player_State_Hurt) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
                 }
@@ -636,7 +640,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
         player->deathType = PLAYER_DEATH_DIE_NOSFX;
         RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
     }
-    else if (player->state == Player_State_Hit && (player->shield || player->sidekick)) {
+    else if (player->state == Player_State_Hurt && (player->shield || player->sidekick)) {
         RSDK.StopSfx(Player->sfxHurt);
         RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
     }

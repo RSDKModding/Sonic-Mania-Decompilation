@@ -109,7 +109,7 @@ void TitleBG_SetupFX(void)
 
     RSDK.SetPaletteEntry(0, 55, 0x00FF00);
     RSDK.SetPaletteMask(0x00FF00);
-    RSDK.SetDrawLayerProperties(2, true, NULL);
+    RSDK.SetDrawGroupProperties(2, true, NULL);
 }
 
 void TitleBG_ScanlineCB_Clouds(ScanlineInfo *scanlines)

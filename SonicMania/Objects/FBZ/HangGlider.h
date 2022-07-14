@@ -3,6 +3,8 @@
 
 #include "Game.h"
 
+#if MANIA_USE_PLUS
+
 // Object Class
 struct ObjectHangGlider {
     RSDK_OBJECT
@@ -45,5 +47,6 @@ void HangGlider_Serialize(void);
 void HangGlider_State_CheckGrab(void);
 void HangGlider_State_Glide(void);
 
+#endif
 
 #endif //!OBJ_HANGGLIDER_H

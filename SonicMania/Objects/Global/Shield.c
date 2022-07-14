@@ -138,7 +138,7 @@ void Shield_State_Generic(void)
     self->direction  = self->frameFlags & 3;
 }
 
-void Shield_State_StartBubbleBounce(void)
+void Shield_State_BubbleDrop(void)
 {
     RSDK_THIS(Shield);
 
@@ -178,11 +178,11 @@ void Shield_State_FireDash(void)
     }
 }
 
-void Shield_State_LightningJump(void)
+void Shield_State_LightningSparks(void)
 {
     RSDK_THIS(Shield);
 
-    RSDK.ProcessAnimation(&self->fxAnimator);
+    RSDK.ProcessAnimation(&self->shieldAnimator);
     self->frameFlags = RSDK.GetFrameID(&self->shieldAnimator) & 7;
     self->direction  = self->frameFlags & 3;
 

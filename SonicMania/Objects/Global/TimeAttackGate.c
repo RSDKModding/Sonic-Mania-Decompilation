@@ -404,7 +404,7 @@ void TimeAttackGate_State_Restarter(void)
         EntityPlayer *player = TimeAttackGate->triggerPlayer;
 
         if (player) {
-            if (player->state == Player_State_Die || player->state == Player_State_Drown) {
+            if (player->state == Player_State_Death || player->state == Player_State_Drown) {
                 self->restartTimer = 0;
             }
             else {
