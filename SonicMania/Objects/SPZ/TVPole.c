@@ -88,7 +88,7 @@ void TVPole_State_CheckGrab(void)
                 player->velocity.y      = 0;
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
             }
         }
 

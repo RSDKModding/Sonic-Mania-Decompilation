@@ -161,7 +161,7 @@ void LRZ3Outro_State_EnterLittlePlanet(void)
     }
 }
 
-void LRZ3Outro_StageFinishCB(void)
+void LRZ3Outro_StageFinish_EndAct2ST(void)
 {
     EntityLRZ3Outro *cutscene = NULL;
     foreach_all(LRZ3Outro, outro)
@@ -173,17 +173,18 @@ void LRZ3Outro_StageFinishCB(void)
     if (cutscene) {
         CutsceneSeq_StartSequence(cutscene, LRZ3Outro_Cutscene_StopPlayers, LRZ3Outro_Cutscene_LightUpLittlePlanet, StateMachine_None);
 
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#if MANIA_USE_PLUS
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+#endif
 
-        foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+        HUD_MoveOut();
         cutscene->active = ACTIVE_NEVER;
     }
 }
 
 bool32 LRZ3Outro_Cutscene_StopPlayers(EntityCutsceneSeq *host)
 {
-    foreach_active(Player, player) { player->state = Player_State_None; }
+    foreach_active(Player, player) { player->state = Player_State_Static; }
 
     return true;
 }

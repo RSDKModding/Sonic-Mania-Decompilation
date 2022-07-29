@@ -49,7 +49,7 @@ void BSS_Message_State_GetBS(void);
 void BSS_Message_State_GetBSWait(void);
 void BSS_Message_State_Finished(void);
 void BSS_Message_State_Perfect(void);
-void BSS_Message_State_PerfectWait(void);
+void BSS_Message_State_WaitPerfect(void);
 void BSS_Message_State_MsgFinished(void);
 
 #if MANIA_USE_PLUS

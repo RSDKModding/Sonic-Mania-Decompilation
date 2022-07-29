@@ -51,7 +51,7 @@ void SDashWheel_EditorLoad(void);
 void SDashWheel_Serialize(void);
 
 // Extra Entity Functions
-bool32 SDashWheel_CheckCB_SfxMGZDoor(void);
-void SDashWheel_UpdateCB_SfxMGZDoor(int32 sfx);
+bool32 SDashWheel_SfxCheck_MGZDoor(void);
+void SDashWheel_SfxUpdate_MGZDoor(int32 sfx);
 
 #endif //! OBJ_SDASHWHEEL_H

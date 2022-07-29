@@ -133,6 +133,6 @@ void SpiderMobile_State_Eggman(void);
 void SpiderMobile_StateOrb_Charge(void);
 void SpiderMobile_StateOrb_Fired(void);
 
-bool32 SpiderMobile_ElevatorCheckCB(void);
+bool32 SpiderMobile_SfxCheck_Elevator(void);
 
 #endif //! OBJ_SPIDERMOBILE_H

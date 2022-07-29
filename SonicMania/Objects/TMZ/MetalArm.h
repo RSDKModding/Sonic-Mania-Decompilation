@@ -51,7 +51,7 @@ void MetalArm_EditorLoad(void);
 void MetalArm_Serialize(void);
 
 // Extra Entity Functions
-bool32 MetalArm_SfxCheckCB(void);
+bool32 MetalArm_SfxCheck_MetalArm(void);
 Vector2 MetalArm_GetArmPosition(void);
 void MetalArm_CheckPlayerCollisions(void);
 void MetalArm_State_Idle(void);

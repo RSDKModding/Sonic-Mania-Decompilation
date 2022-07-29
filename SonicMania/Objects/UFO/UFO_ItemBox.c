@@ -185,7 +185,7 @@ void UFO_ItemBox_State_ShowContents(void)
                 if (!(self->timer & 3)) {
                     if (self->sfxTimer > 0) {
                         self->sfxTimer--;
-                        UFO_Ring_PlayRingSFX();
+                        UFO_Ring_PlayRingSfx();
                     }
                 }
                 break;

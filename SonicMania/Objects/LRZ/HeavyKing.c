@@ -490,7 +490,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->groundVel  = 0;
         player1->velocity.x = 0;
         player1->right      = false;
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
 
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOK_UP, &player1->animator, false, 0);
 
@@ -686,7 +686,7 @@ void HeavyKing_StateCutscene_GetHigherGround(void)
                     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
 #endif
                 player1->position.y -= player1->jumpOffset;
-                player1->state           = Player_State_None;
+                player1->state           = Player_State_Static;
                 player1->nextGroundState = StateMachine_None;
                 self->timer              = 0;
                 self->state              = HeavyKing_StateCutscene_Complaining;

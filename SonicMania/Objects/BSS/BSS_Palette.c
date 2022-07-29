@@ -30,23 +30,23 @@ void BSS_Palette_StageLoad(void)
     BSS_Palette->skyAlpha   = 0x100;
     BSS_Palette->globeAlpha = 0x80;
 
-    foreach_all(BSS_Palette, entity)
+    foreach_all(BSS_Palette, palette)
     {
-        if (entity->useStageConfig) {
+        if (palette->useStageConfig) {
             // Used for Randomized modes
-            BSS_Palette->startColorID = 16 * entity->paletteID;
+            BSS_Palette->startColorID = 16 * palette->paletteID;
         }
         else {
             // Used for the 32 Bonus Stages
-            RSDK.SetPaletteEntry(1, 0, entity->playfieldA);
-            RSDK.SetPaletteEntry(1, 1, entity->playfieldB);
-            RSDK.SetPaletteEntry(1, 2, entity->bgColor1);
-            RSDK.SetPaletteEntry(1, 3, entity->bgColor2);
-            RSDK.SetPaletteEntry(1, 4, entity->bgColor3);
+            RSDK.SetPaletteEntry(1, 0, palette->playfieldA);
+            RSDK.SetPaletteEntry(1, 1, palette->playfieldB);
+            RSDK.SetPaletteEntry(1, 2, palette->bgColor1);
+            RSDK.SetPaletteEntry(1, 3, palette->bgColor2);
+            RSDK.SetPaletteEntry(1, 4, palette->bgColor3);
         }
 
-        BSS_Palette->skyAlpha   = entity->skyAlpha;
-        BSS_Palette->globeAlpha = entity->globeAlpha;
+        BSS_Palette->skyAlpha   = palette->skyAlpha;
+        BSS_Palette->globeAlpha = palette->globeAlpha;
     }
 }
 

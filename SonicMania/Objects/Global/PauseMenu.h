@@ -95,7 +95,7 @@ void PauseMenu_ExitDialog_YesCB(void);
 void PauseMenu_RestartFadeCB(void);
 void PauseMenu_ExitFadeCB(void);
 
-void PauseMenu_ButtonActionCB(void);
+void PauseMenu_ActionCB_Button(void);
 
 //States
 void PauseMenu_State_SetupButtons(void);

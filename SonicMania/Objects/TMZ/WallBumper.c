@@ -175,6 +175,9 @@ void WallBumper_EditorDraw(void)
 {
     RSDK_THIS(WallBumper);
 
+    if (!self->size)
+        self->size = 1;
+
     int32 dir = self->direction;
     if (self->type == WALLBUMPER_H) {
         self->updateRange.y = (self->size + 4) << 20;
@@ -198,12 +201,12 @@ void WallBumper_EditorLoad(void)
     WallBumper->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/WallBumper.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(WallBumper, type);
-    RSDK_ENUM_VAR("Horizontal", WALLBUMPER_H);
-    RSDK_ENUM_VAR("Vertical", WALLBUMPER_V);
+    RSDK_ENUM_VAR("Wall", WALLBUMPER_H);
+    RSDK_ENUM_VAR("Ceiling/Floor", WALLBUMPER_V);
 
     RSDK_ACTIVE_VAR(WallBumper, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flipped", FLIP_X);
+    RSDK_ENUM_VAR("Left/Top", FLIP_NONE);
+    RSDK_ENUM_VAR("Right/Bottom", FLIP_X);
 }
 #endif
 

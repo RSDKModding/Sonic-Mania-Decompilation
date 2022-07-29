@@ -143,7 +143,7 @@ void StickyPlatform_Interact(void)
 
             if (Player_CheckValidState(player) && player->interaction) {
                 if (((1 << i) & self->activePlayers)) {
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (player->jumpPress) {
                             player->angle     = self->rotation;
                             player->groundVel = 0;
@@ -205,7 +205,7 @@ void StickyPlatform_Interact(void)
                     self->activePlayers |= 1 << i;
                     RSDK.SetSpriteAnimation(StickyPlatform->aniFrames, 3 * (self->type >> 1), &self->animator, true, 0);
                     self->animator.speed = 1;
-                    player->state                   = Player_State_None;
+                    player->state                   = Player_State_Static;
                     player->velocity.x              = 0;
                     player->velocity.y              = 0;
                     player->groundVel               = 0;

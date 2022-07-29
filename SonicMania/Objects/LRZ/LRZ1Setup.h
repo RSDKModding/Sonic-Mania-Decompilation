@@ -43,7 +43,7 @@ void LRZ1Setup_EditorLoad(void);
 void LRZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-void LRZ1Setup_StageFinishCB(void);
-void LRZ1Setup_DrawLayerCB(void);
+void LRZ1Setup_StageFinish_EndAct1(void);
+void LRZ1Setup_DrawHook_ApplyBGSmoothing(void);
 
 #endif //! OBJ_LRZ1SETUP_H

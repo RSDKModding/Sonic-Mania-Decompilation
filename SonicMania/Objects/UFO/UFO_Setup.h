@@ -60,17 +60,17 @@ void UFO_Setup_EditorLoad(void);
 void UFO_Setup_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Setup_DrawLayerCallback(void);
-void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines);
-void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines);
-void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines);
+void UFO_Setup_DrawHook_PrepareDrawingFX(void);
+void UFO_Setup_Scanline_Playfield(ScanlineInfo *scanlines);
+void UFO_Setup_Scanline_3DFloor(ScanlineInfo *scanlines);
+void UFO_Setup_Scanline_3DRoof(ScanlineInfo *scanlines);
 
 void UFO_Setup_PlaySphereSfx(void);
 void UFO_Setup_Finish_Win(void);
 void UFO_Setup_Finish_Fail(void);
-void UFO_Setup_DeformCB_UFO3(void);
-void UFO_Setup_DeformCB_UFO4(void);
-void UFO_Setup_DeformCB_UFO5(void);
+void UFO_Setup_Deform_UFO3(void);
+void UFO_Setup_Deform_UFO4(void);
+void UFO_Setup_Deform_UFO5(void);
 void UFO_Setup_State_ShowStartMessage(void);
 void UFO_Setup_State_FinishFadeout(void);
 void UFO_Setup_State_HandleRingDrain(void);

@@ -18,11 +18,10 @@ void PSZ2Outro_Update(void)
                               PSZ2Outro_Cutscene_LoadSSZ1, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
     self->active = ACTIVE_NEVER;
 }
 
@@ -158,7 +157,7 @@ bool32 PSZ2Outro_Cutscene_EnterRuby(EntityCutsceneSeq *host)
 
     if (self->ruby && self->ruby->state == PhantomRuby_State_Oscillate) {
         if (player2->classID == Player->classID) {
-            player2->state = Player_State_None;
+            player2->state = Player_State_Static;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, false, 0);
         }
 
@@ -178,7 +177,7 @@ bool32 PSZ2Outro_Cutscene_RubyActivated(EntityCutsceneSeq *host)
         PhantomRuby_SetupFlash(self->ruby);
 
     if (eggman->ruby) {
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         return true;
     }
 
@@ -213,17 +212,17 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
                 if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(4);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->storedTimer = host->timer;
-                    host->values[0]   = 1;
+                    host->values[0]   = true;
                 }
             }
             else {
@@ -246,7 +245,7 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
                     player->position.x += valX;
                     player->position.y += valY;
-                    player->state          = Player_State_None;
+                    player->state          = Player_State_Static;
                     player->tileCollisions = false;
                     player->onGround       = false;
                 }

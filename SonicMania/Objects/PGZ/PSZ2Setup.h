@@ -39,9 +39,9 @@ void PSZ2Setup_EditorLoad(void);
 void PSZ2Setup_Serialize(void);
 
 // Extra Entity Functions
-void PSZ2Setup_TriggerCB_ActivatePetalBehaviour(void);
-void PSZ2Setup_TriggerCB_DeactivatePetalBehaviour(void);
+void PSZ2Setup_Trigger_ActivatePetalBehaviour(void);
+void PSZ2Setup_Trigger_DeactivatePetalBehaviour(void);
 void PSZ2Setup_ActTransitionLoad(void);
-void PSZ2Setup_StageFinishCB(void);
+void PSZ2Setup_StageFinish_EndAct2(void);
 
 #endif //! OBJ_PSZ2SETUP_H

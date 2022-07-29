@@ -16,12 +16,11 @@ void SSZ1Outro_Update(void)
     if (!self->activated) {
         self->activated = true;
 
-#if MANIA_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
-#endif
-
         CutsceneSeq_StartSequence(self, SSZ1Outro_Cutscene_TimeWarpRunway, SSZ1Outro_Cutscene_TimeWarp, StateMachine_None);
+
+#if MANIA_USE_PLUS
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+#endif
     }
 }
 
@@ -146,7 +145,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host)
 
 void SSZ1Outro_DestroyHotaru(EntityHotaruMKII *hotaru) { BadnikHelpers_BadnikBreakUnseeded(hotaru, true, true); }
 
-void SSZ1Outro_DestroyLeftoverHotarus(void)
+void SSZ1Outro_Trigger_DestroyHotarus(void)
 {
     foreach_active(HotaruMKII, hotaru)
     {

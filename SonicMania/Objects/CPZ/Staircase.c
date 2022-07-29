@@ -63,11 +63,11 @@ void Staircase_StageLoad(void)
 
         // What a name tbh
         Staircase->sfxBlockStop = RSDK.GetSfx("CPZ/CPZ2HitBlocksStop.wav");
-        Soundboard_LoadSFX("CPZ/CPZ2HitBlocks.wav", true, Staircase_CheckCB, NULL);
+        Soundboard_LoadSfx("CPZ/CPZ2HitBlocks.wav", true, Staircase_SfxCheck_HitBlocks, StateMachine_None);
     }
 }
 
-bool32 Staircase_CheckCB(void)
+bool32 Staircase_SfxCheck_HitBlocks(void)
 {
     foreach_active(Staircase, entity)
     {

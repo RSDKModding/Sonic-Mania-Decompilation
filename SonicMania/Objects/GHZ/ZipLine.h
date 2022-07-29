@@ -42,7 +42,7 @@ void ZipLine_EditorLoad(void);
 void ZipLine_Serialize(void);
 
 // Extra Entity Functions
-void ZipLine_VSSwapCB(void);
+void ZipLine_VSSwap_CheckBusy(void);
 void ZipLine_GrabHandle(EntityPlayer *player, int32 playerID, Hitbox *playerHitbox);
 void ZipLine_ForceReleasePlayers(void);
 Vector2 ZipLine_GetJoinPos(void);

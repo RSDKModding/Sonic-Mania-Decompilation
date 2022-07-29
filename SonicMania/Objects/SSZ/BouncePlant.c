@@ -44,7 +44,7 @@ void BouncePlant_Update(void)
                     player->angle         = 0;
                     player->collisionMode = CMODE_FLOOR;
                     player->groundVel     = player->velocity.x;
-                    if (player->state == Player_State_GlideSlide || player->state == Player_State_KnuxGlideDrop)
+                    if (player->state == Player_State_KnuxGlideSlide || player->state == Player_State_KnuxGlideDrop)
                         player->state = Player_State_Ground;
                 }
             }
@@ -64,7 +64,7 @@ void BouncePlant_Update(void)
                         player->collisionMode = CMODE_FLOOR;
                         player->groundVel     = player->velocity.x;
 
-                        if (player->state == Player_State_GlideSlide || player->state == Player_State_KnuxGlideDrop
+                        if (player->state == Player_State_KnuxGlideSlide || player->state == Player_State_KnuxGlideDrop
 
 #if MANIA_USE_PLUS
                             || player->state == Player_State_MightyHammerDrop
@@ -93,7 +93,7 @@ void BouncePlant_Update(void)
                         player->collisionMode = CMODE_FLOOR;
                         player->groundVel     = player->velocity.x;
 
-                        if (player->state == Player_State_GlideSlide || player->state == Player_State_KnuxGlideDrop
+                        if (player->state == Player_State_KnuxGlideSlide || player->state == Player_State_KnuxGlideDrop
 #if MANIA_USE_PLUS
                             || player->state == Player_State_MightyHammerDrop
 #endif

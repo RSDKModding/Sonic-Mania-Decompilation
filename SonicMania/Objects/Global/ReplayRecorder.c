@@ -306,7 +306,7 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
                                              SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE));
     if (rowID == -1) {
         LogHelpers_Print("Table row ID invalid! %d", -1);
-        ReplayRecorder_ReplaySaveFinish_CB(false);
+        ReplayRecorder_SaveFile_Replay(false);
     }
     else {
         ReplayRecorder->replayID    = API.GetUserDBRowUUID(globals->replayTableID, rowID);
@@ -354,11 +354,11 @@ void ReplayRecorder_SaveReplay(void)
     }
 }
 
-void ReplayRecorder_ReplaySaveFinish_CB(bool32 success)
+void ReplayRecorder_SaveFile_Replay(bool32 success)
 {
     if (success) {
         LogHelpers_Print("Replay save successful!");
-        ReplayRecorder_SaveReplayDB(ReplayRecorder_ReplaySave_CB);
+        ReplayRecorder_SaveReplayDB(ReplayRecorder_SaveUserDB_ReplayDB);
     }
     else {
         if (ReplayRecorder->replayRowID != -1)
@@ -377,7 +377,7 @@ void ReplayRecorder_ReplaySaveFinish_CB(bool32 success)
     }
 }
 
-void ReplayRecorder_ReplaySave_CB(bool32 success)
+void ReplayRecorder_SaveUserDB_ReplayDB(bool32 success)
 {
     if (success) {
         if (TimeAttackData->rowID == -1) {
@@ -393,7 +393,7 @@ void ReplayRecorder_ReplaySave_CB(bool32 success)
         }
         else {
             API.SetUserDBValue(globals->taTableID, TimeAttackData->rowID, DBVAR_UINT32, "replayID", &ReplayRecorder->replayID);
-            TimeAttackData_SaveTimeAttackDB(ReplayRecorder_SaveTimeAttackDB_CB);
+            TimeAttackData_SaveTimeAttackDB(ReplayRecorder_SaveUserDB_TimeAttackDB);
         }
     }
     else {
@@ -418,7 +418,7 @@ void ReplayRecorder_ReplaySave_CB(bool32 success)
     }
 }
 
-void ReplayRecorder_SaveTimeAttackDB_CB(bool32 success)
+void ReplayRecorder_SaveUserDB_TimeAttackDB(bool32 success)
 {
     UIWaitSpinner_FinishWait();
 
@@ -522,12 +522,12 @@ void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer)
 
     Replay *replayPtr = (Replay *)buffer;
     if (replayPtr->header.isNotEmpty) {
-        ReplayRecorder->saveFinishPtr = ReplayRecorder_ReplaySaveFinish_CB;
+        ReplayRecorder->saveFinishPtr = ReplayRecorder_SaveFile_Replay;
         API_SaveUserFile(fileName, buffer, replayPtr->header.bufferSize, ReplayRecorder_SetReplayStatus, true);
     }
     else {
         LogHelpers_Print("Attempted to save an empty replay buffer");
-        ReplayRecorder_ReplaySaveFinish_CB(false);
+        ReplayRecorder_SaveFile_Replay(false);
     }
 }
 
@@ -548,10 +548,10 @@ void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*c
     ReplayRecorder->loadCallback = callback;
     strcpy(ReplayRecorder->filename, fileName);
 
-    API_LoadUserFile(fileName, buffer, REPLAY_BUFFER_SIZE, ReplayRecorder_Load_CB);
+    API_LoadUserFile(fileName, buffer, REPLAY_BUFFER_SIZE, ReplayRecorder_LoadFile_Replay);
 }
 
-void ReplayRecorder_Load_CB(int32 status)
+void ReplayRecorder_LoadFile_Replay(int32 status)
 {
     if (ReplayRecorder->loadCallback)
         ReplayRecorder->loadCallback(status == STATUS_OK);
@@ -583,10 +583,10 @@ void ReplayRecorder_SetupActions(void)
 {
     for (int32 i = 0; i < 64; ++i) ReplayRecorder->actions[i] = StateMachine_None;
 
-    ReplayRecorder->actions[3] = Current_PlayerState_CurrentDown;
-    ReplayRecorder->actions[4] = Current_PlayerState_CurrentLeft;
-    ReplayRecorder->actions[5] = Current_PlayerState_CurrentRight;
-    ReplayRecorder->actions[6] = Current_PlayerState_CurrentUp;
+    ReplayRecorder->actions[3] = Current_PState_Down;
+    ReplayRecorder->actions[4] = Current_PState_Left;
+    ReplayRecorder->actions[5] = Current_PState_Right;
+    ReplayRecorder->actions[6] = Current_PState_Up;
 
     ReplayRecorder->actions[7]  = Cylinder_PlayerState_InkRoller_Stand;
     ReplayRecorder->actions[8]  = Cylinder_PlayerState_InkRoller_Roll;
@@ -621,7 +621,7 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[34] = Player_State_KnuxGlideDrop;
     ReplayRecorder->actions[35] = Player_State_KnuxGlideLeft;
     ReplayRecorder->actions[36] = Player_State_KnuxGlideRight;
-    ReplayRecorder->actions[37] = Player_State_GlideSlide;
+    ReplayRecorder->actions[37] = Player_State_KnuxGlideSlide;
     ReplayRecorder->actions[38] = Player_State_Ground;
     ReplayRecorder->actions[39] = Player_State_HoldRespawn;
     ReplayRecorder->actions[40] = Player_State_Hurt;
@@ -632,7 +632,7 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[45] = Player_State_Roll;
     ReplayRecorder->actions[46] = Player_State_Spindash;
     ReplayRecorder->actions[47] = Player_State_StartSuper;
-    ReplayRecorder->actions[48] = Player_State_None;
+    ReplayRecorder->actions[48] = Player_State_Static;
     ReplayRecorder->actions[49] = Player_State_Transform;
     ReplayRecorder->actions[50] = Player_State_TransportTube;
     ReplayRecorder->actions[51] = Player_State_TubeAirRoll;
@@ -797,7 +797,7 @@ void ReplayRecorder_Play(EntityPlayer *player)
             Zone->timer              = replayPtr->header.oscillation;
             player->stateInputReplay = ReplayRecorder_PlayBackInput;
             player->controllerID     = CONT_P2;
-            API_AssignControllerID(CONT_P2, INPUT_UNASSIGNED);
+            API_AssignInputSlotToDevice(CONT_P2, INPUT_UNASSIGNED);
             ReplayRecorder->hasSetupGhostView = true;
         }
 
@@ -1421,7 +1421,7 @@ void ReplayRecorder_SaveReplayDB(void (*callback)(bool32 success))
         LogHelpers_Print("Saving Replay DB");
         ReplayDB->saveEntity   = SceneInfo->entity;
         ReplayDB->saveCallback = callback;
-        API.SaveUserDB(globals->replayTableID, ReplayRecorder_ReplaySaveFinish);
+        API.SaveUserDB(globals->replayTableID, ReplayRecorder_SaveUserDB_ReplayDBManager);
     }
 }
 
@@ -1549,7 +1549,7 @@ void ReplayRecorder_SetStatus(int32 status)
     }
 }
 
-void ReplayRecorder_ReplaySaveFinish(int32 status)
+void ReplayRecorder_SaveUserDB_ReplayDBManager(int32 status)
 {
     if (ReplayDB->saveCallback) {
         Entity *store = SceneInfo->entity;

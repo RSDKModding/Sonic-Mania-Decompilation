@@ -40,8 +40,8 @@ void WaterfallSound_EditorLoad(void);
 void WaterfallSound_Serialize(void);
 
 // Extra Entity Functions
-bool32 WaterfallSound_CheckCB(void);
-void WaterfallSound_UpdateCB(int32 sfxID);
+bool32 WaterfallSound_SfxCheck_WaterfallLoop(void);
+void WaterfallSound_SfxUpdate_WaterfallLoop(int32 sfxID);
 #endif
 
 #endif //! OBJ_WATERFALLSOUND_H

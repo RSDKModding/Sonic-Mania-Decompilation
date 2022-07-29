@@ -41,12 +41,8 @@ void Smog_Update(void)
         foreach_active(Player, player)
         {
             if (player->superState != SUPERSTATE_SUPER) {
-                foreach_all(HUD, hud)
-                {
-                    if (hud)
-                        hud->enableRingFlash = true;
-                    foreach_break;
-                }
+                HUD_EnableRingFlash();
+
                 if (self->timer == 60 && !player->sidekick && player->rings > 0)
                     Player_GiveRings(player, -1, true);
             }
@@ -149,10 +145,10 @@ void Smog_StageLoad(void)
     RSDK.CopyPalette(0, 0, 2, 0, 128);
     RSDK.SetLimitedFade(2, 1, 3, 64, 0, 127);
     RSDK.SetLimitedFade(0, 1, 2, 0, 0, 255);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, Smog_DrawLayerCB);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, Smog_DrawHook_ApplySmogPalette);
 }
 
-void Smog_DrawLayerCB(void) { RSDK.CopyPalette(1, 0, 0, 0, 128); }
+void Smog_DrawHook_ApplySmogPalette(void) { RSDK.CopyPalette(1, 0, 0, 0, 128); }
 
 #if RETRO_INCLUDE_EDITOR
 void Smog_EditorDraw(void) {}

@@ -142,40 +142,20 @@ void Zone_StageLoad(void)
         if (globals->characterFlags == ID_NONE) {
             globals->characterFlags = 0;
 
-            if (GET_CHARACTER_ID(1)) {
-                int32 charID = -1;
-                for (int32 i = GET_CHARACTER_ID(1); i > 0; ++charID) i >>= 1;
+            if (GET_CHARACTER_ID(1)) 
+                globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_CHARACTER_ID(1));
 
-                globals->characterFlags |= 1 << charID;
-            }
+            if (GET_CHARACTER_ID(2)) 
+                globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_CHARACTER_ID(2));
 
-            if (GET_CHARACTER_ID(2)) {
-                int32 charID = -1;
-                for (int32 i = GET_CHARACTER_ID(2); i > 0; ++charID) i >>= 1;
+            if (GET_STOCK_ID(1)) 
+                globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_STOCK_ID(1));
 
-                globals->characterFlags |= 1 << charID;
-            }
+            if (GET_STOCK_ID(2)) 
+                globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_STOCK_ID(2));
 
-            if ((globals->stock >> 0) & 0xFF) {
-                int32 charID = -1;
-                for (int32 i = ((globals->stock >> 0) & 0xFF); i > 0; ++charID) i >>= 1;
-
-                globals->characterFlags |= 1 << charID;
-            }
-
-            if ((globals->stock >> 8) & 0xFF) {
-                int32 charID = -1;
-                for (int32 i = ((globals->stock >> 8) & 0xFF); i > 0; ++charID) i >>= 1;
-
-                globals->characterFlags |= 1 << charID;
-            }
-
-            if ((globals->stock >> 16) & 0xFF) {
-                int32 charID = -1;
-                for (int32 i = ((globals->stock >> 16) & 0xFF); i > 0; ++charID) i >>= 1;
-
-                globals->characterFlags |= 1 << charID;
-            }
+            if (GET_STOCK_ID(3)) 
+                globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_STOCK_ID(3));
 
             saveRAM->playerID       = globals->playerID;
             saveRAM->characterFlags = globals->characterFlags;
@@ -432,7 +412,7 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
 
             if (player->shield && player->superState != SUPERSTATE_SUPER && player->invincibleTimer <= 0) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                RSDK.ResetEntityPtr(shield, Shield->classID, player);
+                RSDK.ResetEntity(shield, Shield->classID, player);
             }
         }
         else {
@@ -1369,7 +1349,7 @@ void Zone_State_SwapPlayers(void)
         Zone->playerSwapEnabled = true;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->state == Player_State_Drown || player->state == Player_State_None || player->state == Player_State_Death || !player->interaction
+            if (player->state == Player_State_Drown || player->state == Player_State_Static || player->state == Player_State_Death || !player->interaction
                 || !player->tileCollisions)
                 Zone->playerSwapEnabled = false;
         }

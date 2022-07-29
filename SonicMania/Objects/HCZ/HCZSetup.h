@@ -46,8 +46,8 @@ void HCZSetup_EditorLoad(void);
 void HCZSetup_Serialize(void);
 
 // Extra Entity Functions
-void HCZSetup_BGWaterLineScanlineCB(ScanlineInfo *scanlines);
-void HCZSetup_HandleActTransition(void);
-void HCZSetup_StageFinishCB_Act2(void);
+void HCZSetup_Scanline_WaterLine(ScanlineInfo *scanlines);
+void HCZSetup_StageFinish_EndAct1(void);
+void HCZSetup_StageFinish_EndAct2(void);
 
 #endif //! OBJ_HCZSETUP_H

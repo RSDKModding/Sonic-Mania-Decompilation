@@ -335,11 +335,11 @@ void Ice_StageLoad(void)
     Ice->sfxWindowShatter = RSDK.GetSfx("Stage/WindowShatter.wav");
     Ice->sfxStruggle      = RSDK.GetSfx("PSZ/Struggle.wav");
 
-    Zone->timeOverCallback = Ice_TimeOverCB;
-    Zone_AddVSSwapCallback(Ice_VSSwapCB);
+    Zone->timeOverCallback = Ice_TimeOver_CheckFrozen;
+    Zone_AddVSSwapCallback(Ice_VSSwap_CheckFrozen);
 }
 
-void Ice_VSSwapCB(void)
+void Ice_VSSwap_CheckFrozen(void)
 {
 #if MANIA_USE_PLUS
     EntityPlayer *player = RSDK_GET_ENTITY(Zone->swapPlayerID, Player);
@@ -708,7 +708,7 @@ EntityItemBox *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
     return itemBox;
 }
 
-void Ice_TimeOverCB(void)
+void Ice_TimeOver_CheckFrozen(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 

@@ -44,7 +44,7 @@ void JacobsLadder_Update(void)
             int32 playerID = RSDK.GetEntitySlot(player);
 
             if (((1 << playerID) & self->activePlayers)) {
-                if (player->state == Player_State_None && player->shield == SHIELD_LIGHTNING) {
+                if (player->state == Player_State_Static && player->shield == SHIELD_LIGHTNING) {
                     if (player->jumpPress) {
                         self->playerTimers[playerID] = 15;
                         self->activePlayers &= ~(1 << playerID);
@@ -71,9 +71,9 @@ void JacobsLadder_Update(void)
                 else {
                     if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                         if (player->shield == SHIELD_LIGHTNING) {
-                            if (player->state != Player_State_None) {
+                            if (player->state != Player_State_Static) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                                player->state           = Player_State_None;
+                                player->state           = Player_State_Static;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
 
@@ -108,7 +108,7 @@ void JacobsLadder_Update(void)
             if ((1 << playerID) & self->activePlayers) {
                 self->activePlayers &= ~(1 << playerID);
 
-                if (player->state == Player_State_None) {
+                if (player->state == Player_State_Static) {
                     player->velocity.x       = 0;
                     player->velocity.y       = 0;
                     player->groundVel        = 0;

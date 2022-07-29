@@ -123,7 +123,7 @@ void SPZ2Setup_StageLoad(void)
         foreach_all(SPZ2Outro, entity) { foreach_break; }
         SPZ2Setup->outro = entity;
 
-        Zone->stageFinishCallback = SPZ2Setup_SetupOutro;
+        Zone->stageFinishCallback = SPZ2Setup_StageFinish_EndAct2;
     }
 
 #if MANIA_USE_PLUS
@@ -138,7 +138,7 @@ void SPZ2Setup_StageLoad(void)
     SPZ2Setup->fgHigh->scrollInfo[0].deform = false;
 }
 
-void SPZ2Setup_SetupOutro(void) { SPZ2Setup->outro->active = ACTIVE_NORMAL; }
+void SPZ2Setup_StageFinish_EndAct2(void) { SPZ2Setup->outro->active = ACTIVE_NORMAL; }
 
 #if RETRO_INCLUDE_EDITOR
 void SPZ2Setup_EditorDraw(void) {}

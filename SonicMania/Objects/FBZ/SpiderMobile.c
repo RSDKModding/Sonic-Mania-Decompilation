@@ -157,7 +157,7 @@ void SpiderMobile_StageLoad(void)
     SpiderMobile->sfxRecovery  = RSDK.GetSfx("FBZ/SpiderRecovery.wav");
     SpiderMobile->sfxElevator  = RSDK.GetSfx("FBZ/Elevator.wav");
     SpiderMobile->sfxHullClose = RSDK.GetSfx("Stage/HullClose.wav");
-    Soundboard_LoadSFX("FBZ/Elevator.wav", true, SpiderMobile_ElevatorCheckCB, NULL);
+    Soundboard_LoadSfx("FBZ/Elevator.wav", true, SpiderMobile_SfxCheck_Elevator, StateMachine_None);
 }
 
 void SpiderMobile_HandleFallingMovement(void)
@@ -354,8 +354,8 @@ void SpiderMobile_HandlePlatformMovement(void)
         if (Player_CheckCollisionPlatform(player, self, &SpiderMobile->hitboxPlatform)) {
             player->collisionFlagV |= 1;
         }
-        else if ((player->groundedStore || player->state == Player_State_None) && offsetY == self->offsetY) {
-            if (player->state == Player_State_None)
+        else if ((player->groundedStore || player->state == Player_State_Static) && offsetY == self->offsetY) {
+            if (player->state == Player_State_Static)
                 player->position.y += offsetY >> 1;
         }
         else {
@@ -368,8 +368,8 @@ void SpiderMobile_HandlePlatformMovement(void)
             player->camera->boundsB += offsetY >> 16;
         }
 
-        if (player->state == Player_State_None) {
-            uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, player->position.y >> 20);
+        if (player->state == Player_State_Static) {
+            uint16 tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, player->position.y >> 20);
             if (tile == (uint16)-1 || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
                 player->drawOrder = Zone->playerDrawLow;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
@@ -713,7 +713,7 @@ void SpiderMobile_StateBody_AwaitPlayer(void)
             SpiderMobile->boundsB = (Zone->cameraBoundsB[0] - 8) << 16;
 
             self->state = SpiderMobile_StateBody_SetupArena;
-            FBZSetup_GenericTriggerCB_ShowInterior();
+            FBZSetup_Trigger_ShowInterior();
         }
         else {
             self->timer = 8;
@@ -775,8 +775,8 @@ void SpiderMobile_StateBody_SetupArena(void)
             self->armMoveAmplitude = 64;
             self->active           = ACTIVE_NORMAL;
             BGSwitch->screenID     = 0;
-            FBZSetup_BGSwitchCB_ShowInside2();
-            FBZSetup_BGSwitchCB_ShowInside1();
+            FBZSetup_BGSwitch_ShowInside2();
+            FBZSetup_BGSwitch_ShowInside1();
 
             TileLayer *overlay    = RSDK.GetTileLayer(RSDK.GetTileLayerID("Exterior Overlay"));
             overlay->drawLayer[0] = 0;
@@ -1210,7 +1210,7 @@ void SpiderMobile_StateOrb_Fired(void)
         destroyEntity(self);
 }
 
-bool32 SpiderMobile_ElevatorCheckCB(void)
+bool32 SpiderMobile_SfxCheck_Elevator(void)
 {
     bool32 elevatorActive = false;
     foreach_active(SpiderMobile, boss)

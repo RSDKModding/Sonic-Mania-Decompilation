@@ -123,7 +123,7 @@ void Grabber_CheckPlayerCollisions(void)
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
                     player->groundVel       = 0;
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
                     player->onGround        = false;
@@ -172,7 +172,7 @@ void Grabber_HandleExplode(void)
 
         if (!--self->timer) {
             EntityPlayer *player = self->grabbedPlayer;
-            if (player && player->state == Player_State_None) {
+            if (player && player->state == Player_State_Static) {
                 Player_CheckHit(player, self);
                 if (player->state != Player_State_Hurt && Player_CheckValidState(player))
                     player->state = Player_State_Air;

@@ -57,7 +57,7 @@ void KingAttack_EditorLoad(void);
 void KingAttack_Serialize(void);
 
 // Extra Entity Functions
-bool32 KingAttack_ElecIdleCheckCB(void);
+bool32 KingAttack_SfxCheck_ElecIdle(void);
 void KingAttack_CheckPlayerCollisions(void);
 void KingAttack_HandleLaserPositions(void);
 

@@ -33,8 +33,13 @@ typedef enum {
     ID_DEFAULT_PLAYER  = ID_SONIC | ID_TAILS_ASSIST,
 } PlayerIDs;
 
-#define GET_CHARACTER_ID(playerNum)            (((globals->playerID >> (8 * ((playerNum)-1))) & 0xFF))
-#define CHECK_CHARACTER_ID(characterID, plrID) (((globals->playerID >> (8 * ((plrID)-1))) & 0xFF) == (characterID))
+#define GET_CHARACTER_ID(playerNum)                (((globals->playerID >> (8 * ((playerNum)-1))) & 0xFF))
+#define CHECK_CHARACTER_ID(characterID, playerNum) (((globals->playerID >> (8 * ((playerNum)-1))) & 0xFF) == (characterID))
+
+#if MANIA_USE_PLUS
+#define GET_STOCK_ID(stockNum)                (((globals->stock >> (8 * ((stockNum)-1))) & 0xFF))
+#define CHECK_STOCK_ID(characterID, stockNum) (((globals->stock >> (8 * ((stockNum)-1))) & 0xFF) == (characterID))
+#endif
 
 typedef enum { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT } ItemModes;
 
@@ -121,11 +126,11 @@ typedef enum {
     SLOT_POPOVER_BUTTON3   = 30,
     SLOT_POPOVER_BUTTON4   = 31,
 #endif
-    SLOT_HCZBUBBLE_P1 = 32,
-    SLOT_HCZBUBBLE_P2 = 33,
+    SLOT_BIGBUBBLE_P1 = 32,
+    SLOT_BIGBUBBLE_P2 = 33,
 #if MANIA_USE_PLUS
-    SLOT_HCZBUBBLE_P3 = 34,
-    SLOT_HCZBUBBLE_P4 = 36,
+    SLOT_BIGBUBBLE_P3 = 34,
+    SLOT_BIGBUBBLE_P4 = 36,
 #endif
     SLOT_BSS_HORIZON    = 32,
     SLOT_UFO_SPEEDLINES = 34,

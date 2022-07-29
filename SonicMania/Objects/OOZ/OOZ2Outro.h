@@ -43,7 +43,7 @@ void OOZ2Outro_EditorLoad(void);
 void OOZ2Outro_Serialize(void);
 
 // Extra Entity Functions
-void OOZ2Outro_StageFinishCB_Act2(void);
+void OOZ2Outro_StageFinish_EndAct2(void);
 void OOZ2Outro_State_SubFloat(void);
 void OOZ2Outro_CheckSkip(void);
 void OOZ2Outro_State_BoardSub(void);

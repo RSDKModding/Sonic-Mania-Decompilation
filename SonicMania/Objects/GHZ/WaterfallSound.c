@@ -50,10 +50,10 @@ void WaterfallSound_Create(void *data)
 void WaterfallSound_StageLoad(void)
 {
     if (globals->gameMode != MODE_COMPETITION)
-        Soundboard_LoadSFX("Stage/WaterfallLoop.wav", 2820, WaterfallSound_CheckCB, WaterfallSound_UpdateCB);
+        Soundboard_LoadSfx("Stage/WaterfallLoop.wav", 2820, WaterfallSound_SfxCheck_WaterfallLoop, WaterfallSound_SfxUpdate_WaterfallLoop);
 }
 
-bool32 WaterfallSound_CheckCB(void)
+bool32 WaterfallSound_SfxCheck_WaterfallLoop(void)
 {
     int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
@@ -95,7 +95,7 @@ bool32 WaterfallSound_CheckCB(void)
     WaterfallSound->activeCount = count;
     return WaterfallSound->activeCount > 0;
 }
-void WaterfallSound_UpdateCB(int32 sfxID)
+void WaterfallSound_SfxUpdate_WaterfallLoop(int32 sfxID)
 {
     int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;

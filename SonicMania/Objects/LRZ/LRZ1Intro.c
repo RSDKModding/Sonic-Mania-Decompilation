@@ -131,7 +131,7 @@ void LRZ1Intro_State_SetupActors(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     Hitbox *playerHitbox = Player_GetHitbox(player1);
-    player1->state       = Player_State_None;
+    player1->state       = Player_State_Static;
     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE_2, &player1->animator, false, 0);
 
     self->playerOffset[0].x = 0x600000;
@@ -144,7 +144,7 @@ void LRZ1Intro_State_SetupActors(void)
             Hitbox *hitbox          = Player_GetHitbox(playerPtr);
             self->playerOffset[p].x = 0x400000;
             self->playerOffset[p].y = -0x10000 * hitbox->bottom;
-            playerPtr->state        = Player_State_None;
+            playerPtr->state        = Player_State_Static;
             RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_BALANCE_2, &playerPtr->animator, false, 0);
         }
     }

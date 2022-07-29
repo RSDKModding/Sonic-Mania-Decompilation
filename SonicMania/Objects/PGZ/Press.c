@@ -134,7 +134,7 @@ void Press_StageLoad(void)
     Press->hitbox.bottom = 16;
 
 #if MANIA_USE_PLUS
-    Player->canSuperCB = Press_SuperCheckCB;
+    Player->canSuperCB = Press_CheckCanSuper;
 #endif
 
     Press->sfxImpact = RSDK.GetSfx("Stage/Impact2.wav");
@@ -142,7 +142,7 @@ void Press_StageLoad(void)
 }
 
 #if MANIA_USE_PLUS
-bool32 Press_SuperCheckCB(bool32 isHUD) { return Press->canSuper; }
+bool32 Press_CheckCanSuper(bool32 isHUD) { return Press->canSuper; }
 #endif
 
 void Press_DrawHandle(void)

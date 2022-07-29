@@ -83,7 +83,7 @@ void OOZ2Outro_StageLoad(void)
     OOZ2Outro->sfxSubLaunch = RSDK.GetSfx("OOZ/SubLaunch.wav");
 }
 
-void OOZ2Outro_StageFinishCB_Act2(void)
+void OOZ2Outro_StageFinish_EndAct2(void)
 {
     Zone->cameraBoundsR[0] = 0x4000;
     foreach_active(Player, player)
@@ -101,7 +101,7 @@ void OOZ2Outro_StageFinishCB_Act2(void)
 
     foreach_active(OOZ2Outro, outro) { outro->state = OOZ2Outro_State_BoardSub; }
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 void OOZ2Outro_State_SubFloat(void)
@@ -177,7 +177,7 @@ void OOZ2Outro_State_BoardSub(void)
             player->groundVel  = 0;
             player->velocity.x = 0;
             player->right      = false;
-            player->state      = Player_State_None;
+            player->state      = Player_State_Static;
 
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1, &player->animator, false, 0);
             Zone->playerBoundActiveR[player->playerID] = 0;

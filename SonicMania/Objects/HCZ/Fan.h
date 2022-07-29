@@ -32,7 +32,7 @@ struct ObjectFan {
     Hitbox playerHitbox;
     uint16 aniFrames;
     uint16 sfxFan;
-    bool32 playingFanSFX;
+    bool32 playingFanSfx;
 };
 
 // Entity Class

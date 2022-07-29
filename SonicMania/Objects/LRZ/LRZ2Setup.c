@@ -141,9 +141,9 @@ void LRZ2Setup_StageLoad(void)
     LRZ2Setup->conveyorSrcPal = 2;
 
     if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION)
-        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = NULL;
+        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = StateMachine_None;
     else
-        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = LRZ2Setup_GenericTrigger_CB;
+        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = LRZ2Setup_Trigger_StartOutro;
 }
 
 void LRZ2Setup_HandleStageReload(void)
@@ -168,7 +168,7 @@ void LRZ2Setup_HandleStageReload(void)
     CREATE_ENTITY(LRZ1Outro, NULL, 0, 0);
 }
 
-void LRZ2Setup_GenericTrigger_CB(void)
+void LRZ2Setup_Trigger_StartOutro(void)
 {
     if (isMainGameMode()) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -257,8 +257,8 @@ EntityButton *LRZ2Setup_SetupTagLink(int32 tag, Entity *entity)
 
 void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, int32 *tile, uint8 *flags)
 {
-    int32 tileLow  = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
-    int32 tileHigh = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);
+    int32 tileLow  = RSDK.GetTile(Zone->fgLow, x >> 20, y >> 20);
+    int32 tileHigh = RSDK.GetTile(Zone->fgHigh, x >> 20, y >> 20);
 
     int32 flagsLow  = RSDK.GetTileFlags(tileLow, cPlane);
     int32 flagsHigh = RSDK.GetTileFlags(tileHigh, cPlane);
@@ -266,7 +266,7 @@ void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffset
     int32 tileMove  = 0;
     int32 flagsMove = 0;
     if (Zone->moveLayer) {
-        tileMove  = RSDK.GetTileInfo(Zone->moveLayer, (moveOffsetX + x) >> 20, (moveOffsetY + y) >> 20);
+        tileMove  = RSDK.GetTile(Zone->moveLayer, (moveOffsetX + x) >> 20, (moveOffsetY + y) >> 20);
         flagsMove = RSDK.GetTileFlags(tileMove, cPlane);
     }
 
@@ -274,28 +274,28 @@ void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffset
     int32 tileSolidHigh = 0;
     int32 tileSolidMove = 0;
     if (cPlane) {
-        tileSolidHigh = tileHigh >> 14;
-        tileSolidLow  = tileLow >> 14;
+        tileSolidHigh = (tileHigh >> 14) & 3;
+        tileSolidLow  = (tileLow >> 14) & 3;
     }
     else {
-        tileSolidHigh = tileHigh >> 12;
-        tileSolidLow  = tileLow >> 12;
+        tileSolidHigh = (tileHigh >> 12) & 3;
+        tileSolidLow  = (tileLow >> 12) & 3;
     }
 
     if (Zone->moveLayer)
-        tileSolidMove = tileMove >> 12;
+        tileSolidMove = (tileMove >> 12) & 3;
 
     *tile  = 0;
     *flags = LRZ2_TFLAGS_NORMAL;
-    if (flagsMove && (tileSolidMove & 3)) {
+    if (flagsMove && tileSolidMove) {
         *tile  = tileMove;
         *flags = flagsMove;
     }
-    else if (flagsHigh && (tileSolidHigh & 3)) {
+    else if (flagsHigh && tileSolidHigh) {
         *tile  = tileHigh;
         *flags = flagsHigh;
     }
-    else if (flagsLow && (tileSolidLow & 3)) {
+    else if (flagsLow && tileSolidLow) {
         *tile  = tileLow;
         *flags = flagsLow;
     }

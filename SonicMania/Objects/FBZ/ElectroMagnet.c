@@ -21,15 +21,15 @@ void ElectroMagnet_LateUpdate(void) {}
 void ElectroMagnet_StaticUpdate(void)
 {
     if (ElectroMagnet->magnetSfxTimer) {
-        if (!ElectroMagnet->playingMagnetSFX) {
+        if (!ElectroMagnet->playingMagnetSfx) {
             RSDK.PlaySfx(ElectroMagnet->sfxMagnet, true, 255);
-            ElectroMagnet->playingMagnetSFX = true;
+            ElectroMagnet->playingMagnetSfx = true;
         }
         ElectroMagnet->magnetSfxTimer = 0;
     }
-    else if (ElectroMagnet->playingMagnetSFX) {
+    else if (ElectroMagnet->playingMagnetSfx) {
         RSDK.StopSfx(ElectroMagnet->sfxMagnet);
-        ElectroMagnet->playingMagnetSFX = false;
+        ElectroMagnet->playingMagnetSfx = false;
     }
 }
 

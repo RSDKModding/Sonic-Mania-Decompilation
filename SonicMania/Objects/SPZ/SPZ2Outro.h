@@ -40,7 +40,7 @@ void SPZ2Outro_StartCutscene(void);
 bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host);
 bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host);
 
-void SPZ2Outro_DrawLayerCB_WeatherTV(void);
+void SPZ2Outro_DrawHook_PrepareWeatherTV(void);
 
 bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host);
 bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host);

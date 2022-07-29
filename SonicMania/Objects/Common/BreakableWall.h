@@ -4,12 +4,12 @@
 #include "Game.h"
 
 typedef enum {
-    BREAKWALL_TYPE_SIDES,
-    BREAKWALL_TYPE_TOP,
-    BREAKWALL_TYPE_TOPCHUNK,
-    BREAKWALL_TYPE_TOPCHUNK_B,
-    BREAKWALL_TYPE_BOTTOMCHUNK,
-    BREAKWALL_TYPE_BOTTOMFULL
+    BREAKWALL_TYPE_WALL,
+    BREAKWALL_TYPE_FLOOR,
+    BREAKWALL_TYPE_BURROWFLOOR,
+    BREAKWALL_TYPE_BURROWFLOOR_B,
+    BREAKWALL_TYPE_BURROWFLOORUP,
+    BREAKWALL_TYPE_CEILING
 } BreakableWallTypes;
 
 typedef enum {
@@ -51,7 +51,7 @@ struct EntityBreakableWall {
     BreakableWallPriorities priority;
     Vector2 size;
     uint16 tileInfo;
-    uint16 layerID;
+    uint16 targetLayer;
     int32 timer;
     Vector2 tilePos;
     int32 tileRotation;
@@ -78,25 +78,25 @@ void BreakableWall_Serialize(void);
 // Extra Entity Functions
 
 // States
-void BreakableWall_State_BottomChunks(void);
-void BreakableWall_State_BottomFull(void);
+void BreakableWall_State_BurrowFloorUp(void);
+void BreakableWall_State_Ceiling(void);
 void BreakableWall_State_FallingTile(void);
-void BreakableWall_State_BreakableSides(void);
+void BreakableWall_State_Wall(void);
 void BreakableWall_State_Tile(void);
-void BreakableWall_State_Top(void);
-void BreakableWall_State_TopChunks(void);
+void BreakableWall_State_Floor(void);
+void BreakableWall_State_BurrowFloor(void);
 
 // Draw States
-void BreakableWall_Draw_Outline_Sides(void);
-void BreakableWall_Draw_Outline(void);
+void BreakableWall_Draw_Wall(void);
+void BreakableWall_Draw_Floor(void);
 void BreakableWall_Draw_Tile(void);
 
 // Breaking
-void BreakableWall_HandleTopBreak_All(void);
-void BreakableWall_HandleTopBreak_Chunks(void);
-void BreakableWall_HandleSidesBreak(void);
-void BreakableWall_HandleBottomBreak_Chunks(void);
-void BreakableWall_HandleBottomBreak_All(void);
+void BreakableWall_CheckBreak_Floor(void);
+void BreakableWall_CheckBreak_BurrowFloor(void);
+void BreakableWall_CheckBreak_Wall(void);
+void BreakableWall_CheckBreak_BurrowFloorUp(void);
+void BreakableWall_CheckBreak_Ceiling(void);
 void BreakableWall_HandleBlockBreak_V(void);
 void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction);
 

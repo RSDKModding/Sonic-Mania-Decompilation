@@ -20,7 +20,7 @@ void UFO_Shadow_LateUpdate(void)
         self->position.x = parent->position.x;
         self->position.y = parent->position.y;
 
-        if (RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) == (uint16)-1 || parent->drawOrder != 4) {
+        if (RSDK.GetTile(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) == (uint16)-1 || parent->drawOrder != 4) {
             self->visible = false;
         }
         else {
@@ -85,7 +85,7 @@ void UFO_Shadow_StageLoad(void)
     foreach_all(UFO_Player, player)
     {
         EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
-        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
+        RSDK.ResetEntity(shadow, UFO_Shadow->classID, NULL);
         shadow->position.x  = player->position.x;
         shadow->position.y  = player->position.y;
         shadow->parent      = (Entity *)player;
@@ -96,7 +96,7 @@ void UFO_Shadow_StageLoad(void)
     {
         if (ufo->startNode) {
             EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
-            RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
+            RSDK.ResetEntity(shadow, UFO_Shadow->classID, NULL);
             shadow->position.x  = ufo->position.x;
             shadow->position.y  = ufo->position.y;
             shadow->parent      = (Entity *)ufo;
@@ -107,7 +107,7 @@ void UFO_Shadow_StageLoad(void)
     foreach_all(UFO_Ring, ring)
     {
         EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
-        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
+        RSDK.ResetEntity(shadow, UFO_Shadow->classID, NULL);
         shadow->position.x  = ring->position.x;
         shadow->position.y  = ring->position.y;
         shadow->parent      = (Entity *)ring;
@@ -117,7 +117,7 @@ void UFO_Shadow_StageLoad(void)
     foreach_all(UFO_Sphere, sphere)
     {
         EntityUFO_Shadow *shadow = RSDK_GET_ENTITY(slot--, UFO_Shadow);
-        RSDK.ResetEntityPtr(shadow, UFO_Shadow->classID, NULL);
+        RSDK.ResetEntity(shadow, UFO_Shadow->classID, NULL);
         shadow->position.x  = sphere->position.x;
         shadow->position.y  = sphere->position.y;
         shadow->parent      = (Entity *)sphere;

@@ -32,6 +32,6 @@ void TimeTravelSetup_EditorLoad(void);
 void TimeTravelSetup_Serialize(void);
 
 // Extra Entity Functions
-void TimeTravelSetup_Particle_CB(EntityDebris *debris);
+void TimeTravelSetup_Particle_TimeSparkle(EntityDebris *debris);
 
 #endif //! OBJ_TIMETRAVELSETUP_H

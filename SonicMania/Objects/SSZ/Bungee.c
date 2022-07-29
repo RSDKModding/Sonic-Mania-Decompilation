@@ -74,7 +74,7 @@ void Bungee_Update(void)
                     if (abs(player->position.x - self->position.x) < 0x180000 && self->playerY[player->playerID] <= self->position.y
                         && player->position.y >= self->position.y) {
                         if (abs(player->groundVel) > 0x20000 || player->velocity.y > 0x20000) {
-                            if (player->state != Player_State_None && !self->hasAttatchedPlayer && !self->timer) {
+                            if (player->state != Player_State_Static && !self->hasAttatchedPlayer && !self->timer) {
                                 self->stretchForce       = -0x2C00;
                                 self->timer              = 2;
                                 self->attatchedPlayer    = player;
@@ -99,7 +99,7 @@ void Bungee_Update(void)
                                 player->tileCollisions  = false;
 
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_BUNGEE, &player->animator, true, 0);
-                                player->state = Player_State_None;
+                                player->state = Player_State_Static;
                                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
 
                                 self->deathBoundary[player->playerID] = Zone->deathBoundary[player->playerID];

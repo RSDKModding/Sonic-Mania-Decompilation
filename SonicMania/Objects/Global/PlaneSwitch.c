@@ -84,19 +84,17 @@ void PlaneSwitch_DrawSprites(void)
 // (and also it means you can add planeswitches to basically anything with ease :P)
 void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
 {
-    Entity *other = (Entity *)o;
+    Entity *other    = (Entity *)o;
 
-    int32 x     = (other->position.x - self->position.x) >> 8;
-    int32 y     = (other->position.y - self->position.y) >> 8;
-    int32 scanX = (y * RSDK.Sin256(self->negAngle)) + (x * RSDK.Cos256(self->negAngle)) + self->position.x;
-    int32 scanY = (y * RSDK.Cos256(self->negAngle)) - (x * RSDK.Sin256(self->negAngle)) + self->position.y;
-    int32 pos   = ((other->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (other->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
-    RSDK.Cos256(self->negAngle);
-    RSDK.Sin256(self->negAngle);
+    Vector2 pivotPos = other->position;
+    Vector2 pivotVel = other->velocity;
+
+    Zone_RotateOnPivot(&pivotPos, &self->position, self->negAngle);
+    Zone_RotateOnPivot(&pivotVel, &self->velocity, self->negAngle);
 
     if (!self->onPath || other->onGround) {
-        if (abs(scanX - self->position.x) < 0x180000 && abs(scanY - self->position.y) < size << 19) {
-            if (scanX + pos >= self->position.x) {
+        if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < size << 19) {
+            if (pivotPos.x + pivotVel.x >= self->position.x) {
                 other->collisionPlane = (flags >> 3) & 1; // collision plane bit
                 if (switchDrawOrder) {
                     if (!(flags & 4)) // priority bit

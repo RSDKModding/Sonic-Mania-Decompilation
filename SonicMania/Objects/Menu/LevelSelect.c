@@ -28,7 +28,7 @@ void LevelSelect_LateUpdate(void) {}
 
 void LevelSelect_StaticUpdate(void)
 {
-    if (--LevelSelect->bgAniDuration < 1) {
+    if (--LevelSelect->bgAniDuration <= 0) {
         ++LevelSelect->bgAniFrame;
 
         LevelSelect->bgAniFrame &= 3;
@@ -54,7 +54,7 @@ void LevelSelect_Create(void *data)
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
         self->drawOrder = 12;
-        self->state     = LevelSelect_State_SetupEntities;
+        self->state     = LevelSelect_State_Init;
         self->stateDraw = LevelSelect_Draw_Fade;
         self->timer     = 640;
     }
@@ -193,7 +193,7 @@ void LevelSelect_Draw_Fade(void)
     RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
 }
 
-void LevelSelect_State_SetupEntities(void)
+void LevelSelect_State_Init(void)
 {
     RSDK_THIS(LevelSelect);
 
@@ -278,17 +278,12 @@ void LevelSelect_State_SetupEntities(void)
     {
         if (soundTestLabel->align == UITEXT_ALIGN_CENTER) {
             self->soundTestLabel  = soundTestLabel;
-            soundTestLabel->align = 0;
+            soundTestLabel->align = UITEXT_ALIGN_LEFT;
         }
     }
 
-    int32 id = 0;
-    for (int32 i = GET_CHARACTER_ID(1); i > 0; ++id) i >>= 1;
-    self->leaderCharacterID = id;
-
-    id = 0;
-    for (int32 i = GET_CHARACTER_ID(2); i > 0; ++id) i >>= 1;
-    self->sidekickCharacterID = id;
+    self->leaderCharacterID   = HUD_CharacterIndexFromID(GET_CHARACTER_ID(1));
+    self->sidekickCharacterID = HUD_CharacterIndexFromID(GET_CHARACTER_ID(2));
 
     foreach_all(UIPicture, picture)
     {
@@ -308,7 +303,7 @@ void LevelSelect_State_SetupEntities(void)
         }
     }
 
-    self->zoneNameLabels[self->labelCount + 31] = self->soundTestLabel;
+    self->stageIDLabels[self->labelCount - 1] = self->soundTestLabel;
 
     LevelSelect_ManagePlayerIcon();
 
@@ -321,7 +316,7 @@ void LevelSelect_State_FadeIn(void)
 
     if (self->timer <= 0) {
         self->timer     = 0;
-        self->state     = LevelSelect_State_HandleMenu;
+        self->state     = LevelSelect_State_Navigate;
         self->stateDraw = StateMachine_None;
     }
     else {
@@ -329,7 +324,7 @@ void LevelSelect_State_FadeIn(void)
     }
 }
 
-void LevelSelect_State_HandleMenu(void)
+void LevelSelect_State_Navigate(void)
 {
     RSDK_THIS(LevelSelect);
 
@@ -379,7 +374,7 @@ void LevelSelect_State_HandleMenu(void)
                 self->soundTestID = 0;
             }
 
-            EntityUIText *soundTest = self->soundTestLabel;
+            EntityUIText *soundTest  = self->soundTestLabel;
             soundTest->text.chars[0] = self->soundTestID >> 4;
             soundTest->text.chars[1] = self->soundTestID & 0xF;
         }

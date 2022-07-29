@@ -114,7 +114,7 @@ void TetherBall_State_CheckPlayerAttach(void)
                             if (player->rotation > 0x70 && player->rotation < 0x90) {
                                 self->swingSpeed        = 8 * player->velocity.y / self->chainCount;
                                 self->player            = player;
-                                player->state           = Player_State_None;
+                                player->state           = Player_State_Static;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
                                 self->state             = TetherBall_State_SwingBall;
@@ -127,7 +127,7 @@ void TetherBall_State_CheckPlayerAttach(void)
                             if (player->rotation > 0xF0 && player->rotation < 0x110) {
                                 self->swingSpeed        = 8 * -player->velocity.x / self->chainCount;
                                 self->player            = player;
-                                player->state           = Player_State_None;
+                                player->state           = Player_State_Static;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
                                 self->state             = TetherBall_State_SwingBall;
@@ -140,7 +140,7 @@ void TetherBall_State_CheckPlayerAttach(void)
                             if (player->rotation > 0x170 && player->rotation < 0x190) {
                                 self->swingSpeed        = 8 * -player->velocity.y / self->chainCount;
                                 self->player            = player;
-                                player->state           = Player_State_None;
+                                player->state           = Player_State_Static;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
                                 self->state             = TetherBall_State_SwingBall;
@@ -153,7 +153,7 @@ void TetherBall_State_CheckPlayerAttach(void)
                             if (player->rotation < 0x10 || player->rotation > 0x1F0) {
                                 self->swingSpeed        = 8 * player->velocity.x / self->chainCount;
                                 self->player            = player;
-                                player->state           = Player_State_None;
+                                player->state           = Player_State_Static;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
                                 self->state             = TetherBall_State_SwingBall;

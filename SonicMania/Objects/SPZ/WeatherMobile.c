@@ -697,7 +697,7 @@ void WeatherMobile_StateWindManager_StrongWind(void)
 
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None && !player->blinkTimer) {
+        if (player->state != Player_State_Static && !player->blinkTimer) {
             if (player->animator.animationID != ANI_JUMP)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
@@ -1001,7 +1001,7 @@ void WeatherMobile_State_Flee(void)
     self->origin.y -= 0x4000;
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.ResetEntityPtr(self, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
+        RSDK.ResetEntity(self, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
         self->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         self->position.y = (ScreenInfo->position.y - 48) << 16;
     }

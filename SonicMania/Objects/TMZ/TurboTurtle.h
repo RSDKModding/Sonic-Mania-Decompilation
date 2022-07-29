@@ -72,7 +72,7 @@ void TurboTurtle_SetupState(void);
 void TurboTurtle_HandleFans(void);
 void TurboTurtle_HandleFanParticles(uint8 type, int32 strength, int32 length);
 
-bool32 TurboTurtle_FanCheckCB(void);
+bool32 TurboTurtle_SfxCheck_SmallFan(void);
 
 void TurboTurtle_State_Setup(void);
 void TurboTurtle_State_Walking(void);

@@ -16,7 +16,7 @@ void ConveyorWheel_Update(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &ConveyorWheel->hitbox)) {
-            if (player->state == Player_State_KnuxGlideDrop || player->state == Player_State_GlideSlide)
+            if (player->state == Player_State_KnuxGlideDrop || player->state == Player_State_KnuxGlideSlide)
                 player->state = Player_State_Ground;
 
             if (self->direction)

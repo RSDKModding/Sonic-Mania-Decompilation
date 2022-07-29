@@ -48,7 +48,7 @@ void Staircase_EditorLoad(void);
 void Staircase_Serialize(void);
 
 // Extra Entity Functions
-bool32 Staircase_CheckCB(void);
+bool32 Staircase_SfxCheck_HitBlocks(void);
 
 void Staircase_State_Idle(void);
 void Staircase_State_Wait(void);

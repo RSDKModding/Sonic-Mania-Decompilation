@@ -39,10 +39,11 @@ void FBZ2Outro_StartCutscene(EntityFBZ2Outro *outro)
     CutsceneSeq_StartSequence(outro, FBZ2Outro_Cutscene_SetupGliders, FBZ2Outro_Cutscene_RunToGlider, FBZ2Outro_Cutscene_GlideAway,
                               StateMachine_None);
 
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#if MANIA_USE_PLUS
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+#endif
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 bool32 FBZ2Outro_Cutscene_SetupGliders(EntityCutsceneSeq *host)

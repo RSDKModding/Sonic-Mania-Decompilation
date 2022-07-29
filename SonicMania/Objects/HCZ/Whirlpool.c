@@ -108,19 +108,19 @@ void Whirlpool_StaticUpdate(void)
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID)
         Whirlpool->timer = 0;
 
-    if (Whirlpool->playingSFX)
+    if (Whirlpool->playingWhirlpoolSfx)
         RSDK.SetChannelAttributes(Whirlpool->sfxChannel, minVal(Whirlpool->timer, 30) / 30.0, 0.0, 1.0);
 
     if (Whirlpool->timer > 0) {
-        if (!Whirlpool->playingSFX) {
+        if (!Whirlpool->playingWhirlpoolSfx) {
             Whirlpool->sfxChannel = RSDK.PlaySfx(Whirlpool->sfxWhirlpool, 56284, 255);
-            Whirlpool->playingSFX = true;
+            Whirlpool->playingWhirlpoolSfx = true;
         }
     }
     else if (!Whirlpool->timer) {
-        if (Whirlpool->playingSFX) {
+        if (Whirlpool->playingWhirlpoolSfx) {
             RSDK.StopSfx(Whirlpool->sfxWhirlpool);
-            Whirlpool->playingSFX = false;
+            Whirlpool->playingWhirlpoolSfx = false;
         }
     }
 }

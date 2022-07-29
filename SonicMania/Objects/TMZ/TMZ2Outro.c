@@ -16,7 +16,7 @@ void TMZ2Outro_Update(void)
     TMZ2Outro_SetupCutscene();
     self->active = ACTIVE_NEVER;
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 void TMZ2Outro_LateUpdate(void) {}
@@ -72,6 +72,10 @@ void TMZ2Outro_SetupCutscene(void)
         }
         foreach_all(TMZFlames, flames) { destroyEntity(flames); }
     }
+#endif
+
+#if MANIA_USE_PLUS
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
 #endif
 }
 
@@ -392,7 +396,7 @@ bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             player->up    = false;
-            player->state = Player_State_None;
+            player->state = Player_State_Static;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1 + player->playerID, &player->animator, false, 0);
         }
 
@@ -482,7 +486,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
         fxFade->fadeOutBlack = true;
         fxFade->isPermanent  = true;
 
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
         return true;
     }
 
@@ -615,7 +619,7 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
 
         Player_TryTransform(player1, 0xFF);
         EntitySuperSparkle *sparkle = RSDK_GET_ENTITY(Player->playerCount, SuperSparkle);
-        RSDK.ResetEntityPtr(sparkle, SuperSparkle->classID, player1);
+        RSDK.ResetEntity(sparkle, SuperSparkle->classID, player1);
 
         Player->playerCount = 6;
         int offsetX         = 0;

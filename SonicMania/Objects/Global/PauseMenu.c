@@ -85,14 +85,14 @@ void PauseMenu_StaticUpdate(void)
             else {
                 for (int32 i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
 #if MANIA_USE_PLUS
-                    int32 id = API_ControllerIDForInputID(CONT_P1 + i);
+                    int32 id = API_GetInputDeviceID(CONT_P1 + i);
                     if (!RSDK.IsInputDeviceAssigned(id) && id != INPUT_AUTOASSIGN) {
                         PauseMenu->controllerDisconnect = true;
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         pauseMenu->triggerPlayer = i;
                     }
 #else
-                    if (!API_ControllerIsAssigned(CONT_P1 + i)) {
+                    if (!API_IsInputSlotAssigned(CONT_P1 + i)) {
                         PauseMenu->controllerDisconnect = true;
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->classID, NULL);
                         pauseMenu->triggerPlayer = i;
@@ -246,7 +246,7 @@ void PauseMenu_AddButton(uint8 id, void *action)
         button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         button->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &button->animator, true, id);
-        button->actionCB           = PauseMenu_ButtonActionCB;
+        button->actionCB           = PauseMenu_ActionCB_Button;
         button->size.x             = 0x3C0000;
         button->size.y             = 0x150000;
         button->bgEdgeSize         = 21;
@@ -367,23 +367,23 @@ void PauseMenu_CheckAndReassignControllers(void)
     EntityPauseMenu *entity = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
     // prolly a leftover from pre-plus
-    int32 inputID = API_ControllerIDForInputID(CONT_P1 + (entity->triggerPlayer ^ 1));
+    int32 inputID = API_GetInputDeviceID(CONT_P1 + (entity->triggerPlayer ^ 1));
 
 #if MANIA_USE_PLUS
     unused(inputID); // be quiet compiler I know it aint used!!
     
-    int32 id = API_MostRecentActiveControllerID(true, true, 5);
+    int32 id = API_GetFilteredInputDeviceID(true, true, 5);
 #else
-    int32 id = API_MostRecentActiveControllerID(inputID);
+    int32 id = API_GetFilteredInputDeviceID(inputID);
 #endif
 
     if (id)
-        API_AssignControllerID(CONT_P1 + entity->triggerPlayer, id);
+        API_AssignInputSlotToDevice(CONT_P1 + entity->triggerPlayer, id);
     else
-        API_AssignControllerID(CONT_P1 + entity->triggerPlayer, INPUT_AUTOASSIGN);
+        API_AssignInputSlotToDevice(CONT_P1 + entity->triggerPlayer, INPUT_AUTOASSIGN);
 
-    if (globals->gameMode < MODE_TIMEATTACK && !API_ControllerIDForInputID(CONT_P2))
-        API_AssignControllerID(CONT_P2, INPUT_AUTOASSIGN);
+    if (globals->gameMode < MODE_TIMEATTACK && !API_GetInputDeviceID(CONT_P2))
+        API_AssignInputSlotToDevice(CONT_P2, INPUT_AUTOASSIGN);
 
     PauseMenu->forcedDisconnect = true;
 }
@@ -392,10 +392,10 @@ bool32 PauseMenu_IsDisconnected(void)
 {
     RSDK_THIS(PauseMenu);
 
-    int32 id = API_ControllerIDForInputID(CONT_P1 + self->triggerPlayer);
+    int32 id = API_GetInputDeviceID(CONT_P1 + self->triggerPlayer);
 
 #if MANIA_USE_PLUS
-    return API_GetAssignedControllerID(id) != INPUT_NONE || PauseMenu->forcedDisconnect;
+    return API_IsInputDeviceAssigned(id) || PauseMenu->forcedDisconnect;
 #else
     return id != INPUT_NONE || PauseMenu->forcedDisconnect;
 #endif
@@ -533,7 +533,7 @@ void PauseMenu_ExitFadeCB(void)
     RSDK.LoadScene();
 }
 
-void PauseMenu_ButtonActionCB(void)
+void PauseMenu_ActionCB_Button(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
     EntityUIControl *manager   = pauseMenu->manager;
@@ -585,8 +585,8 @@ void PauseMenu_State_SetupButtons(void)
         self->stateDraw = PauseMenu_Draw_RegularPause;
 
 #if MANIA_USE_PLUS
-        if (globals->gameMode < MODE_TIMEATTACK && API_ControllerIDForInputID(CONT_P2) == INPUT_AUTOASSIGN)
-            API_AssignControllerID(CONT_P2, INPUT_NONE);
+        if (globals->gameMode < MODE_TIMEATTACK && API_GetInputDeviceID(CONT_P2) == INPUT_AUTOASSIGN)
+            API_AssignInputSlotToDevice(CONT_P2, INPUT_NONE);
 #endif
     }
 
@@ -705,8 +705,8 @@ void PauseMenu_State_ForcedPause(void)
             UIDialog_AddButton(DIALOG_CONTINUE, dialog, PauseMenu_CheckAndReassignControllers, 0);
             UIDialog_Setup(dialog);
 
-            if (globals->gameMode < MODE_TIMEATTACK && API_ControllerIDForInputID(2) == INPUT_AUTOASSIGN)
-                API_AssignControllerID(CONT_P2, INPUT_NONE);
+            if (globals->gameMode < MODE_TIMEATTACK && API_GetInputDeviceID(2) == INPUT_AUTOASSIGN)
+                API_AssignInputSlotToDevice(CONT_P2, INPUT_NONE);
         }
 #if MANIA_USE_PLUS
         else if (PauseMenu->signOutDetected || PauseMenu->plusChanged) {
@@ -800,8 +800,8 @@ void PauseMenu_State_Resume(void)
 {
     RSDK_THIS(PauseMenu);
 
-    if (!self->timer && globals->gameMode < MODE_TIMEATTACK && !API_ControllerIDForInputID(CONT_P2))
-        API_AssignControllerID(CONT_P2, INPUT_AUTOASSIGN);
+    if (!self->timer && globals->gameMode < MODE_TIMEATTACK && !API_GetInputDeviceID(CONT_P2))
+        API_AssignInputSlotToDevice(CONT_P2, INPUT_AUTOASSIGN);
 
     if (self->timer >= 8) {
         self->headerPos.y         = 0;

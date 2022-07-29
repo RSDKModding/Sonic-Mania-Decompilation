@@ -116,7 +116,7 @@ void HangPoint_Update(void)
             self->playerTimer[playerID]--;
 
         if (!((1 << playerID) & self->activePlayers)) {
-            if (player->state != Player_State_None && !self->playerTimer[playerID]) {
+            if (player->state != Player_State_Static && !self->playerTimer[playerID]) {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
 
                 Hitbox hitboxPlayer;
@@ -152,7 +152,7 @@ void HangPoint_Update(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, false, 0);
                     player->nextAirState     = StateMachine_None;
                     player->nextGroundState  = StateMachine_None;
-                    player->state            = Player_State_None;
+                    player->state            = Player_State_Static;
                     player->abilityValues[0] = RSDK.Rand(0, 2);
                     RSDK.PlaySfx(Player->sfxGrab, false, 255);
                     self->active = ACTIVE_NORMAL;
@@ -170,7 +170,7 @@ void HangPoint_Update(void)
                     self->playerTimer[playerID] = 16;
             }
             else {
-                if (player->state != Player_State_None || self->playerTimer[playerID]) {
+                if (player->state != Player_State_Static || self->playerTimer[playerID]) {
                     self->activePlayers &= ~(1 << playerID);
 
                     if (player->classID == Player->classID && Player_CheckValidState(player))

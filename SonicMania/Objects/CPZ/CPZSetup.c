@@ -55,8 +55,8 @@ void CPZSetup_StageLoad(void)
 {
     CPZSetup->aniTiles = RSDK.LoadSpriteSheet("CPZ/Objects.gif", SCOPE_STAGE);
 
-    RSDK.SetDrawGroupProperties(0, 0, Water_SetWaterLevel);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, 0, Water_RemoveWaterEffect);
+    RSDK.SetDrawGroupProperties(0, 0, Water_DrawHook_ApplyWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, 0, Water_DrawHook_RemoveWaterPalette);
     Water->waterPalette = 2;
 
     CPZSetup->chemLiquidPalIndex1 = 0;
@@ -83,8 +83,8 @@ void CPZSetup_StageLoad(void)
         RSDK.SetPaletteMask(0x00F000);
         RSDK.SetPaletteEntry(0, 0xFF, 0x00F000);
 
-        BGSwitch->switchCallback[CPZ_BG_CPZ2] = CPZSetup_BGSwitchCB_Act2BG;
-        BGSwitch->switchCallback[CPZ_BG_CPZ1] = CPZSetup_BGSwitchCB_Act1BG;
+        BGSwitch->switchCallback[CPZ_BG_CPZ2] = CPZSetup_BGSwitch_Act2BG;
+        BGSwitch->switchCallback[CPZ_BG_CPZ1] = CPZSetup_BGSwitch_Act1BG;
 
         BGSwitch->layerIDs[0] = CPZ_BG_CPZ1;
         BGSwitch->layerIDs[1] = CPZ_BG_CPZ1;
@@ -110,14 +110,14 @@ void CPZSetup_StageLoad(void)
             foreach_all(CPZ2Outro, outro)
             {
                 CPZSetup->outro           = outro;
-                Zone->stageFinishCallback = CPZSetup_StageFinishCB_Act2;
+                Zone->stageFinishCallback = CPZSetup_StageFinish_EndAct2;
                 foreach_break;
             }
         }
 
         BGSwitch->screenID = 0;
         if (setCPZ1BG) {
-            for (; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitchCB_Act1BG();
+            for (; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitch_Act1BG();
 
             BGSwitch->layerIDs[0] = CPZ_BG_CPZ1;
             BGSwitch->layerIDs[1] = CPZ_BG_CPZ1;
@@ -131,7 +131,7 @@ void CPZSetup_StageLoad(void)
                 backgroundAct1->scrollInfo[i].scrollPos += 0x470000 * backgroundAct1->scrollInfo[i].parallaxFactor;
         }
         else {
-            for (; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitchCB_Act2BG();
+            for (; BGSwitch->screenID < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); BGSwitch->screenID++) CPZSetup_BGSwitch_Act2BG();
 
             BGSwitch->layerIDs[0] = CPZ_BG_CPZ2;
             BGSwitch->layerIDs[1] = CPZ_BG_CPZ2;
@@ -151,7 +151,7 @@ void CPZSetup_StageLoad(void)
 
         if (isMainGameMode()) {
             if (PlayerHelpers_CheckAct1())
-                Zone->stageFinishCallback = CPZSetup_StageFinishCB_Act1;
+                Zone->stageFinishCallback = CPZSetup_StageFinish_EndAct1;
         }
 
         RSDK.SetPaletteEntry(0, 0xFF, 0xF0F0F0);
@@ -159,7 +159,7 @@ void CPZSetup_StageLoad(void)
     }
 }
 
-void CPZSetup_BGSwitchCB_Act2BG(void)
+void CPZSetup_BGSwitch_Act2BG(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
@@ -167,7 +167,7 @@ void CPZSetup_BGSwitchCB_Act2BG(void)
     RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 
-void CPZSetup_BGSwitchCB_Act1BG(void)
+void CPZSetup_BGSwitch_Act1BG(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
@@ -175,14 +175,14 @@ void CPZSetup_BGSwitchCB_Act1BG(void)
     RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = 0;
 }
 
-void CPZSetup_StageFinishCB_Act1(void)
+void CPZSetup_StageFinish_EndAct1(void)
 {
     RSDK.GetTileLayer(0);
     Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
 }
 
-void CPZSetup_StageFinishCB_Act2(void) { CPZSetup->outro->active = ACTIVE_NORMAL; }
+void CPZSetup_StageFinish_EndAct2(void) { CPZSetup->outro->active = ACTIVE_NORMAL; }
 
 #if RETRO_INCLUDE_EDITOR
 void CPZSetup_EditorDraw(void) {}

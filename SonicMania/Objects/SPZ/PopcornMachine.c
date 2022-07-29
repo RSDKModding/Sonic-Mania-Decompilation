@@ -184,7 +184,7 @@ void PopcornMachine_LinkPlayer(EntityPlayer *player)
 
     player->nextAirState    = StateMachine_None;
     player->nextGroundState = StateMachine_None;
-    player->state           = Player_State_None;
+    player->state           = Player_State_Static;
     player->onGround        = false;
     player->velocity.x      = player->position.x < self->position.x ? 0xA0000 : -0xA0000;
     player->tileCollisions  = false;
@@ -206,7 +206,7 @@ void PopcornMachine_CheckPlayerCollisions(void)
         Player_CheckCollisionBox(player, self, &self->hitboxSideR);
         Player_CheckCollisionPlatform(player, self, &self->hitboxTop);
 
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
 
             switch (self->type) {
                 case POPCORNMACHINE_LEFT:

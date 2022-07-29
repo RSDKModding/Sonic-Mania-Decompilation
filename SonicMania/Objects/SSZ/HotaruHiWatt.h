@@ -84,9 +84,9 @@ void HotaruHiWatt_EditorLoad(void);
 void HotaruHiWatt_Serialize(void);
 
 // Extra Entity Functions
-bool32 HotaruHiWatt_CheckCB_Zap(void);
-bool32 HotaruHiWatt_CheckCB_Laser(void);
-void HotaruHiWatt_UpdateCB_Laser(int sfx);
+bool32 HotaruHiWatt_SfxCheck_Zap(void);
+bool32 HotaruHiWatt_SfxCheck_HHWLaser(void);
+void HotaruHiWatt_SfxUpdate_HHWLaser(int sfx);
 
 void HotaruHiWatt_Hit(void);
 void HotaruHiWatt_Explode(void);

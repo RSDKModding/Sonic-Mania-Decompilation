@@ -33,7 +33,7 @@ void ERZSetup_StageLoad(void)
 {
     ERZSetup->aniTiles = RSDK.LoadSpriteSheet("Phantom/Sky.gif", SCOPE_STAGE);
 
-    RSDK.GetTileLayer(1)->scanlineCallback = ERZSetup_Sky_ScanlineCB;
+    RSDK.GetTileLayer(1)->scanlineCallback = ERZSetup_Scanline_Sky;
 
     // Animal Types in ERZ...? why is that? no animals would exist so it'd be safe to not define types
     Animals->animalTypes[0] = ANIMAL_POCKY;
@@ -44,7 +44,7 @@ void ERZSetup_StageLoad(void)
     Player->playerCount = 1;
 }
 
-void ERZSetup_Sky_ScanlineCB(ScanlineInfo *scanlines)
+void ERZSetup_Scanline_Sky(ScanlineInfo *scanlines)
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 

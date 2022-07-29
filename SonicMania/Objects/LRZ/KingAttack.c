@@ -171,12 +171,12 @@ void KingAttack_StageLoad(void)
     KingAttack->sfxElecPulse = RSDK.GetSfx("Stage/ElecPulse.wav");
     KingAttack->sfxTwinShot  = RSDK.GetSfx("LRZ/TwinShot.wav");
 
-    int32 sfxID = Soundboard_LoadSFX("LRZ/ElecIdle.wav", true, KingAttack_ElecIdleCheckCB, NULL);
+    int32 sfxID = Soundboard_LoadSfx("LRZ/ElecIdle.wav", true, KingAttack_SfxCheck_ElecIdle, StateMachine_None);
     if (sfxID >= 0)
         Soundboard->sfxFadeOutDuration[sfxID] = 30;
 }
 
-bool32 KingAttack_ElecIdleCheckCB(void)
+bool32 KingAttack_SfxCheck_ElecIdle(void)
 {
     int32 count = 0;
 

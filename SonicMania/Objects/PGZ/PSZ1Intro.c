@@ -17,6 +17,10 @@ void PSZ1Intro_Update(void)
     CutsceneSeq_StartSequence(self, PSZ1Intro_Cutscene_SetupGliders, PSZ1Intro_Cutscene_GlideAndJump, PSZ1Intro_Cutscene_HandleLanding,
                               StateMachine_None);
 
+#if MANIA_USE_PLUS
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
+
     self->active = ACTIVE_NEVER;
 }
 

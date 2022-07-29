@@ -102,7 +102,7 @@ void EscapeCar_StateMania_AwaitPlayer(void)
     bool32 allAboard = true;
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None && player->position.x > self->position.x - 0x400000 && player->sidekick) {
+        if (player->state != Player_State_Static && player->position.x > self->position.x - 0x400000 && player->sidekick) {
             player->velocity.x -= 0x1000;
         }
 #if MANIA_USE_PLUS
@@ -113,7 +113,7 @@ void EscapeCar_StateMania_AwaitPlayer(void)
             RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 3 + self->driver, &self->driverAnimator, true, 0);
 
         if (Player_CheckCollisionTouch(player, self, &EscapeCar->hitbox)) {
-            player->state      = Player_State_None;
+            player->state      = Player_State_Static;
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->position.x = self->position.x;
@@ -184,7 +184,7 @@ void EscapeCar_StateMania_Ride(void)
 
     foreach_active(Player, player)
     {
-        player->state      = Player_State_None;
+        player->state      = Player_State_Static;
         player->velocity.x = 0;
         player->velocity.y = 0;
         player->position.x = self->position.x;

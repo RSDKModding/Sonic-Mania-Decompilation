@@ -339,8 +339,8 @@ void AmoebaDroid_State_SetupWaterLevel(void)
             if (water->type == WATER_HEIGHT_TRIGGER)
                 destroyEntity(water);
         }
-        RSDK.SetDrawGroupProperties(0, false, NULL);
-        RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, NULL);
+        RSDK.SetDrawGroupProperties(0, false, StateMachine_None);
+        RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, StateMachine_None);
     }
 }
 

@@ -30,7 +30,7 @@ void Current_StaticUpdate(void)
 
         foreach_active(Water, water)
         {
-            if (water->state == Water_State_HCZBubble && water->activePlayers) {
+            if (water->state == Water_State_BigBubble && water->activePlayers) {
                 foreach_active(Current, current)
                 {
                     if (current->planeFilter <= 0 || water->collisionPlane == ((uint8)(current->planeFilter - 1) & 1)) {
@@ -359,7 +359,7 @@ void Current_State_WaterLeft(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PlayerState_CurrentLeft;
+                                player->state           = Current_PState_Left;
                             }
                         }
 
@@ -432,7 +432,7 @@ void Current_State_WaterRight(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PlayerState_CurrentRight;
+                                player->state           = Current_PState_Right;
                             }
                         }
 
@@ -505,7 +505,7 @@ void Current_State_WaterUp(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PlayerState_CurrentUp;
+                                player->state           = Current_PState_Up;
                             }
                         }
 
@@ -585,7 +585,7 @@ void Current_State_WaterDown(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PlayerState_CurrentDown;
+                                player->state           = Current_PState_Down;
                             }
                         }
 
@@ -757,7 +757,7 @@ void Current_State_Child(void)
         destroyEntity(self);
 }
 
-void Current_PlayerState_CurrentLeft(void)
+void Current_PState_Left(void)
 {
     RSDK_THIS(Player);
 
@@ -766,7 +766,7 @@ void Current_PlayerState_CurrentLeft(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->left << 16, hitbox->bottom << 16, true);
 }
 
-void Current_PlayerState_CurrentRight(void)
+void Current_PState_Right(void)
 {
     RSDK_THIS(Player);
 
@@ -775,7 +775,7 @@ void Current_PlayerState_CurrentRight(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->right << 16, hitbox->bottom << 16, true);
 }
 
-void Current_PlayerState_CurrentUp(void)
+void Current_PState_Up(void)
 {
     RSDK_THIS(Player);
 
@@ -784,7 +784,7 @@ void Current_PlayerState_CurrentUp(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, hitbox->top << 16, true);
 }
 
-void Current_PlayerState_CurrentDown(void)
+void Current_PState_Down(void)
 {
     RSDK_THIS(Player);
 

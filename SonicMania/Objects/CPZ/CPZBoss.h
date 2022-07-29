@@ -49,8 +49,8 @@ void CPZBoss_EditorLoad(void);
 void CPZBoss_Serialize(void);
 
 // Extra Entity Functions
-void CPZBoss_DrawLayerCB_SetupPuyoHUD(void);
-void CPZBoss_DrawLayerCB_RemovePuyoHUD(void);
+void CPZBoss_DrawHook_SetupPuyoHUD(void);
+void CPZBoss_DrawHook_RemovePuyoHUD(void);
 
 void CPZBoss_Explode_Eggman(void);
 void CPZBoss_Explode_Player(void);

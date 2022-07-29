@@ -215,6 +215,12 @@ void BSS_Player_Input_P2(void)
 {
     RSDK_THIS(BSS_Player);
 
+    // Bug Details:
+    // this uses "self->jumpPress" for the state rather than "player1->jumpPress" as intended
+    // this results in P2 never actually jumping
+    // Fix:
+    // replace "BSS_Player->jumpPressState |= self->jumpPress;" with "BSS_Player->jumpPressState |= player1->jumpPress;"
+
     // EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
     BSS_Player->jumpPressState <<= 1;
     BSS_Player->jumpPressState |= self->jumpPress;

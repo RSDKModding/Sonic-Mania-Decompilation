@@ -101,14 +101,14 @@ void BSS_Setup_StageLoad(void)
     if (playField->width <= BSS_PLAYFIELD_W) {
         for (int32 y = 0; y < BSS_PLAYFIELD_H; ++y) {
             for (int32 x = 0; x < BSS_PLAYFIELD_W; ++x) {
-                uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, x, y);
+                uint16 tile = RSDK.GetTile(BSS_Setup->playFieldLayer, x, y);
 
                 int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 24)
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
 
-                if ((RSDK.GetTileInfo(BSS_Setup->ringCountLayer, x, y) & 0x3FF) == BSS_RING)
+                if ((RSDK.GetTile(BSS_Setup->ringCountLayer, x, y) & 0x3FF) == BSS_RING)
                     ++BSS_Setup->ringCount;
             }
         }
@@ -131,14 +131,14 @@ void BSS_Setup_StageLoad(void)
                 int32 tx = px + (0x10 * (BSS_Setup->randomNumbers[0] & 0x0F));
                 int32 ty = py + BSS_PLAYFIELD_H + (BSS_Setup->randomNumbers[0] & 0xF0);
 
-                uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
+                uint16 tile = RSDK.GetTile(BSS_Setup->playFieldLayer, tx, ty);
 
                 int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 24)
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
 
-                if ((RSDK.GetTileInfo(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
+                if ((RSDK.GetTile(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
                     ++BSS_Setup->ringCount;
             }
         }
@@ -149,14 +149,14 @@ void BSS_Setup_StageLoad(void)
                 int32 tx = 0x10 * (BSS_Setup->randomNumbers[1] & 0x0F) - px + 0x0F;
                 int32 ty = py + BSS_PLAYFIELD_H + (BSS_Setup->randomNumbers[1] & 0xF0);
 
-                uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
+                uint16 tile = RSDK.GetTile(BSS_Setup->playFieldLayer, tx, ty);
 
                 int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 24)
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
 
-                if ((RSDK.GetTileInfo(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
+                if ((RSDK.GetTile(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
                     ++BSS_Setup->ringCount;
             }
         }
@@ -167,14 +167,14 @@ void BSS_Setup_StageLoad(void)
                 int32 tx = px + (0x10 * (BSS_Setup->randomNumbers[2] & 0x0F));
                 int32 ty = (BSS_Setup->randomNumbers[2] & 0xF0) - py + 0x2F;
 
-                uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
+                uint16 tile = RSDK.GetTile(BSS_Setup->playFieldLayer, tx, ty);
 
                 int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 24)
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
 
-                if ((RSDK.GetTileInfo(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
+                if ((RSDK.GetTile(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
                     ++BSS_Setup->ringCount;
             }
         }
@@ -185,14 +185,14 @@ void BSS_Setup_StageLoad(void)
                 int32 tx = 0x10 * (BSS_Setup->randomNumbers[3] & 0x0F) - px + 0x0F;
                 int32 ty = (BSS_Setup->randomNumbers[3] & 0xF0) - py + 0x2F;
 
-                uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
+                uint16 tile = RSDK.GetTile(BSS_Setup->playFieldLayer, tx, ty);
 
                 int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 24)
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
 
-                if ((RSDK.GetTileInfo(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
+                if ((RSDK.GetTile(BSS_Setup->ringCountLayer, tx, ty) & 0x3FF) == BSS_RING)
                     ++BSS_Setup->ringCount;
             }
         }
@@ -276,7 +276,7 @@ void BSS_Setup_SetupFrustum(void)
 
         for (int32 y = 0; y < frustum->height; ++y) {
             for (int32 x = 0; x < frustum->width; ++x) {
-                uint16 id = (RSDK.GetTileInfo(frustumID, x, y) & 0x3FF);
+                uint16 id = (RSDK.GetTile(frustumID, x, y) & 0x3FF);
                 if (id == BSS_SPHERE_BLUE || id == BSS_SPAWN_UP) {
                     BSS_Setup->offsetTable[count].x = x;
                     BSS_Setup->offsetTable[count].y = y;
@@ -445,7 +445,7 @@ void BSS_Setup_State_GlobeJettison(void)
         BSS_Setup_SetupFinishSequence();
 
         EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
-        player->stateInput       = false;
+        player->stateInput       = StateMachine_None;
         player->jumpPress        = false;
 
         self->state = BSS_Setup_State_GlobeEmerald;

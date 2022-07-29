@@ -183,7 +183,7 @@ void SaveGame_LoadFile(void)
     globals->saveLoaded     = STATUS_CONTINUE;
     SaveGame->loadEntityPtr = SceneInfo->entity;
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
-    API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
+    API_LoadUserFile("SaveData.bin", globals->saveRAM, sizeof(globals->saveRAM), SaveGame_LoadFile_CB);
 }
 
 #if MANIA_USE_PLUS
@@ -202,9 +202,9 @@ void SaveGame_SaveFile(void (*callback)(void))
         SaveGame->saveEntityPtr = SceneInfo->entity;
         SaveGame->saveCallback  = callback;
 #if MANIA_USE_PLUS
-        API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
+        API_SaveUserFile("SaveData.bin", globals->saveRAM, sizeof(globals->saveRAM), SaveGame_SaveFile_CB, false);
 #else
-        API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB);
+        API_SaveUserFile("SaveData.bin", globals->saveRAM, sizeof(globals->saveRAM), SaveGame_SaveFile_CB);
 #endif
     }
 }

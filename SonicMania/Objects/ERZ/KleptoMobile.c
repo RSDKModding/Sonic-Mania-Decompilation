@@ -367,19 +367,19 @@ void KleptoMobile_State_SetupArena(void)
     self->active = ACTIVE_NORMAL;
 
     EntityKleptoMobile *hand = RSDK_GET_ENTITY(SceneInfo->entitySlot - 2, KleptoMobile);
-    RSDK.ResetEntityPtr(hand, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_HAND));
+    RSDK.ResetEntity(hand, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_HAND));
     hand->position.x = self->position.x;
     hand->position.y = self->position.y;
     hand->parent     = self;
 
     EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
-    RSDK.ResetEntityPtr(arm2, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_R));
+    RSDK.ResetEntity(arm2, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_R));
     arm2->position.x = self->position.x;
     arm2->position.y = self->position.y;
     arm2->parent     = self;
 
     EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
-    RSDK.ResetEntityPtr(arm1, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_L));
+    RSDK.ResetEntity(arm1, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_L));
     arm1->position.x = self->position.x;
     arm1->position.y = self->position.y;
     arm1->parent     = self;
@@ -529,7 +529,7 @@ void KleptoMobile_State_Hover(void)
         self->timer      = 0;
         self->velocity.x = self->direction == FLIP_NONE ? -0xA0000 : 0xA0000;
 
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         RSDK.PlaySfx(KleptoMobile->sfxRocketJet, false, 255);
         self->state = KleptoMobile_State_FirstChargeAttack;
     }
@@ -562,7 +562,7 @@ void KleptoMobile_State_HandleChargeFinish(void)
 
     self->timer = 0;
 
-    PhantomRuby_PlaySFX(RSDK.Rand(RUBYSFX_ATTACK1, RUBYSFX_REDCUBE));
+    PhantomRuby_PlaySfx(RSDK.Rand(RUBYSFX_ATTACK1, RUBYSFX_REDCUBE));
     if (!RSDK.Rand(0, 2))
         self->position.x = player1->position.x - 0x1800000;
     else

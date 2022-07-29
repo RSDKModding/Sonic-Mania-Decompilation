@@ -39,10 +39,10 @@ void TMZ2Setup_EditorLoad(void);
 void TMZ2Setup_Serialize(void);
 
 // Extra Entity Functions
-void TMZ2Setup_DrawLayerCB_SetDynTilesPalette(void);
-void TMZ2Setup_DrawLayerCB_UnsetDynTilesPalette(void);
+void TMZ2Setup_DrawHook_ApplyDynTilesPalette(void);
+void TMZ2Setup_DrawHook_RemoveDynTilesPalette(void);
 
-void TMZ2_DrawDynTiles_Eggman(void);
-void TMZ2_DrawDynTiles_Ruby(void);
+void TMZ2Setup_DrawDynTiles_Eggman(void);
+void TMZ2Setup_DrawDynTiles_Ruby(void);
 
 #endif //! OBJ_TMZ2SETUP_H

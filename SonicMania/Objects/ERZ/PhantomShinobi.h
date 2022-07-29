@@ -64,6 +64,6 @@ void PhantomShinobi_State_ExtendFins(void);
 void PhantomShinobi_State_RetractFins(void);
 void PhantomShinobi_State_FinishedAttack(void);
 
-bool32 PhantomShinobi_BladeCheckCB(void);
+bool32 PhantomShinobi_SfxCheck_ShinobiBlade(void);
 
 #endif //! OBJ_PHANTOMSHINOBI_H

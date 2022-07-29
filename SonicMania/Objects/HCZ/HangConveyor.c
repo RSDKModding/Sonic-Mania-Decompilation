@@ -178,7 +178,7 @@ void HangConveyor_HandlePlayerInteractions(void)
                     self->grabDelayBottom[playerID]--;
 
                 if (!((1 << playerID) & self->movementActivePlayers) && !(self->checkableActivePlayers & (1 << playerID))) {
-                    if ((collidedTop || collidedBottom) && player->state != Player_State_None && player->animator.animationID != ANI_HURT) {
+                    if ((collidedTop || collidedBottom) && player->state != Player_State_Static && player->animator.animationID != ANI_HURT) {
                         self->movementActivePlayers |= (1 << playerID);
                         self->checkableActivePlayers |= (1 << playerID);
                         if (collidedTop) {
@@ -198,7 +198,7 @@ void HangConveyor_HandlePlayerInteractions(void)
                         player->velocity.x      = 0;
                         player->velocity.y      = 0;
                         player->rotation        = 0;
-                        player->state           = Player_State_None;
+                        player->state           = Player_State_Static;
                     }
                 }
 

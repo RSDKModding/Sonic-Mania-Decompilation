@@ -51,7 +51,7 @@ bool32 PlayerHelpers_CheckAct1Regular(void) { return isMainGameMode() && PlayerH
 
 bool32 PlayerHelpers_CheckStageReload(void)
 {
-    if (StarPost && Player->playerCount > 0) {
+    if (StarPost) {
         for (int32 p = 0; p < Player->playerCount; ++p) {
             if (StarPost->postIDs[p])
                 return true;

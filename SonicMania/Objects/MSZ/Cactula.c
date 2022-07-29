@@ -65,7 +65,7 @@ void Cactula_StageLoad(void)
     DEBUGMODE_ADD_OBJ(Cactula);
 
     Cactula->sfxCactDrop = RSDK.GetSfx("MSZ/CactDrop.wav");
-    Soundboard_LoadSFX("MSZ/CactChopper.wav", true, Cactula_CheckCB, NULL);
+    Soundboard_LoadSfx("MSZ/CactChopper.wav", true, Cactula_SfxChecK_CactChopper, StateMachine_None);
 }
 
 void Cactula_DebugSpawn(void)
@@ -92,7 +92,7 @@ void Cactula_CheckPlayerCollisions(void)
     }
 }
 
-bool32 Cactula_CheckCB(void)
+bool32 Cactula_SfxChecK_CactChopper(void)
 {
     int32 count = 0;
 
@@ -162,7 +162,7 @@ void Cactula_State_DropBomb(void)
             self->droppedBomb = true;
         }
 
-        if (RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == (uint16)-1)
+        if (RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == (uint16)-1)
             Cactula_CheckPlayerCollisions();
     }
     else {

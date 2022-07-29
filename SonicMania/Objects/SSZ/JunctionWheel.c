@@ -27,7 +27,7 @@ void JunctionWheel_Update(void)
 
     foreach_active(Player, player)
     {
-        if (player->state == Player_State_None) {
+        if (player->state == Player_State_Static) {
             if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxWheelRange)) {
                 player->position.x = player->groundVel * RSDK.Cos512(self->rotation) + self->position.x;
                 player->position.y = player->groundVel * RSDK.Sin512(self->rotation) + self->position.y;
@@ -64,7 +64,7 @@ void JunctionWheel_Update(void)
                     Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolidR);
 
                     if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxEntryR)) {
-                        player->state = Player_State_None;
+                        player->state = Player_State_Static;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->onGround  = false;
                         player->groundVel = -0x1C00;
@@ -95,7 +95,7 @@ void JunctionWheel_Update(void)
                         Player_CheckCollisionBox(player, self, &JunctionWheel->hitboxSolidL);
 
                         if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitboxEntryL)) {
-                            player->state = Player_State_None;
+                            player->state = Player_State_Static;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
                             player->onGround  = false;

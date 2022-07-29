@@ -61,11 +61,10 @@ void SPZ2Outro_StartCutscene(void)
                               SPZ2Outro_Cutscene_FBZFlyAway, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
@@ -143,7 +142,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 
     if (host->timer == 120) {
         Zone->playerBoundActiveR[0] = false;
-        if (!player2->onGround || player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer || player2->state == Player_State_None
+        if (!player2->onGround || player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer || player2->state == Player_State_Static
             || player2->state == Player_State_HoldRespawn) {
             SPZ2Outro->ignoreP2 = true;
         }
@@ -195,7 +194,7 @@ bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
     return false;
 }
 
-void SPZ2Outro_DrawLayerCB_WeatherTV(void)
+void SPZ2Outro_DrawHook_PrepareWeatherTV(void)
 {
     EntityWeatherTV *weatherTV = SPZ2Outro->weatherTV;
     int32 x                    = (weatherTV->position.x >> 16) - ScreenInfo->position.x;
@@ -212,10 +211,10 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
     EntityWeatherTV *weatherTV             = SPZ2Outro->weatherTV;
 
     if (!host->timer) {
-        RSDK.SetDrawGroupProperties(Zone->playerDrawLow, false, SPZ2Outro_DrawLayerCB_WeatherTV);
+        RSDK.SetDrawGroupProperties(Zone->playerDrawLow, false, SPZ2Outro_DrawHook_PrepareWeatherTV);
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, true, 0);
         player1->drawOrder       = Zone->playerDrawLow;
-        player1->state           = Player_State_None;
+        player1->state           = Player_State_Static;
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
         player1->position.x      = weatherTV->position.x - 0x700000;
@@ -232,7 +231,7 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
         if (player2 && player2->classID == Player->classID && !SPZ2Outro->ignoreP2) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->animator, true, 0);
             player2->drawOrder       = Zone->playerDrawLow;
-            player2->state           = Player_State_None;
+            player2->state           = Player_State_Static;
             player2->nextAirState    = StateMachine_None;
             player2->nextGroundState = StateMachine_None;
             player2->position.x      = player1->position.x - 0x100000;

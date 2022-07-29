@@ -17,6 +17,10 @@ void OOZ1Outro_Update(void)
         self->activated = true;
         CutsceneSeq_StartSequence(self, OOZ1Outro_Cutscene_FadeIn, OOZ1Outro_Cutscene_PostActClearSetup, OOZ1Outro_Cutscene_FallIntoAct2,
                                   OOZ1Outro_Cutscene_BeginAct, StateMachine_None);
+
+#if MANIA_USE_PLUS
+        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
     }
 
     self->active = ACTIVE_NEVER;

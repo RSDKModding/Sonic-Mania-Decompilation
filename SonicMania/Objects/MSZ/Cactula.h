@@ -44,7 +44,7 @@ void Cactula_DebugSpawn(void);
 void Cactula_DebugDraw(void);
 
 void Cactula_CheckPlayerCollisions(void);
-bool32 Cactula_CheckCB(void);
+bool32 Cactula_SfxChecK_CactChopper(void);
 
 void Cactula_State_CheckPlayerInRange(void);
 void Cactula_State_Rising(void);

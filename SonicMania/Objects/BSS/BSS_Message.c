@@ -113,7 +113,7 @@ void BSS_Message_State_GetBSWait(void)
             if (player->onGround)
                 RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->animator, false, 0);
 
-            self->state = BSS_Message_State_PerfectWait;
+            self->state = BSS_Message_State_WaitPerfect;
         }
 
         if (!setup->globeTimer && setup->state == BSS_Setup_State_GlobeMoveZ) {
@@ -155,10 +155,10 @@ void BSS_Message_State_Perfect(void)
 
     self->messageFinishTimer -= 16;
     if (self->messageFinishTimer <= 0)
-        self->state = BSS_Message_State_PerfectWait;
+        self->state = BSS_Message_State_WaitPerfect;
 }
 
-void BSS_Message_State_PerfectWait(void)
+void BSS_Message_State_WaitPerfect(void)
 {
     RSDK_THIS(BSS_Message);
 

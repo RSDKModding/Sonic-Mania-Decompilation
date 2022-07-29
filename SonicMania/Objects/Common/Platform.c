@@ -1760,8 +1760,8 @@ void Platform_Collision_Sticky(void)
         if ((self->collision == PLATFORM_C_SOLID_STICKY || self->collision == side + PLATFORM_C_SOLID_STICKY) && side)
             isStuck = true;
 
-        if (player->state != Player_State_None && isStuck) {
-            player->state           = Player_State_None;
+        if (player->state != Player_State_Static && isStuck) {
+            player->state           = Player_State_Static;
             player->nextGroundState = StateMachine_None;
             player->nextAirState    = StateMachine_None;
             player->velocity.x      = 0;
@@ -1800,7 +1800,7 @@ void Platform_Collision_Sticky(void)
             self->stoodPlayers |= 1 << playerID;
         }
         else if ((1 << playerID) & self->stoodPlayers) {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 if (Platform->stoodPos[playerID].x) {
                     player->position.x = Platform->stoodPos[playerID].x;
                     player->position.y = Platform->stoodPos[playerID].y;
@@ -1993,7 +1993,7 @@ void Platform_Collision_Solid_Barrel(void)
                 if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
 #endif
                     if (!((1 << playerID) & stoodPlayers)) {
-                        player->state           = Player_State_None;
+                        player->state           = Player_State_Static;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                         player->velocity.x      = 0;
@@ -2102,7 +2102,7 @@ void Platform_Collision_Solid_Hold(void)
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_NONE:
                 if ((1 << playerID) & stoodPlayers) {
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         player->state = Player_State_Air;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIR_WALK, &player->animator, false, 0);
                     }
@@ -2114,7 +2114,7 @@ void Platform_Collision_Solid_Hold(void)
                 if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
 #endif
                     if (!((1 << playerID) & stoodPlayers)) {
-                        player->state           = Player_State_None;
+                        player->state           = Player_State_Static;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                         player->velocity.x      = 0;

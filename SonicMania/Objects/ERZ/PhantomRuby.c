@@ -84,7 +84,7 @@ void PhantomRuby_StageLoad(void)
     PhantomRuby->sfxR[RUBYSFX_REDCUBE - 1] = RSDK.GetSfx("Ruby/RedCube_R.wav");
 }
 
-void PhantomRuby_PlaySFX(uint8 sfxID)
+void PhantomRuby_PlaySfx(uint8 sfxID)
 {
     if (sfxID) {
         int32 channel = RSDK.PlaySfx(PhantomRuby->sfxL[sfxID - 1], false, 0x00);
@@ -120,7 +120,7 @@ void PhantomRuby_State_PlaySfx(void)
     RSDK_THIS(PhantomRuby);
 
     if (self->timer == 38) {
-        PhantomRuby_PlaySFX(self->sfx);
+        PhantomRuby_PlaySfx(self->sfx);
 
         self->flashFinished = true;
         self->hasFlashed    = true;

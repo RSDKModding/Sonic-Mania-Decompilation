@@ -17,7 +17,7 @@ void SwitchDoor_Update(void)
     {
         if (Player_CheckCollisionTouch(player, self, &SwitchDoor->hitbox)) {
             if (self->go) {
-                FBZSetup_BGSwitchCB_ShowInside2();
+                FBZSetup_BGSwitch_ShowInside2();
 
                 if (self->reversible)
                     self->go = SWITCHDOOR_GO_INSIDE1;
@@ -25,7 +25,7 @@ void SwitchDoor_Update(void)
                 self->activated = true;
             }
             else {
-                FBZSetup_BGSwitchCB_ShowInside1();
+                FBZSetup_BGSwitch_ShowInside1();
 
                 if (self->reversible)
                     self->go = SWITCHDOOR_GO_INSIDE2;

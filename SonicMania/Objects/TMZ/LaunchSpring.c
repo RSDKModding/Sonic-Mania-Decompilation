@@ -170,7 +170,7 @@ void LaunchSpring_CheckPlayerCollisions(void *nextState)
                 player->velocity.y      = 0;
                 player->groundVel       = 0;
                 player->onGround        = false;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
 
@@ -189,7 +189,7 @@ void LaunchSpring_LaunchPlayer(void)
 
     EntityPlayer *player = self->playerPtr;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         RSDK.PlaySfx(LaunchSpring->sfxSpeedBooster, false, 0xFF);
 
         if (self->strict) {
@@ -236,7 +236,7 @@ void LaunchSpring_State_Spinning_ReadyToFire(void)
     RSDK_THIS(LaunchSpring);
     EntityPlayer *player = self->playerPtr;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         self->rotation = (self->rotation - self->rotSpeed) & 0x1FF;
 
         player->position.x = self->position.x + (RSDK.Cos512(self->rotation - 0x80) << 12);
@@ -292,7 +292,7 @@ void LaunchSpring_State_Cannon_Fire_Automatic(void)
 
     EntityPlayer *player = self->playerPtr;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         player->position.x = self->position.x + (RSDK.Cos512(self->rotation - 0x80) << 12);
         player->position.y = self->position.y + (RSDK.Sin512(self->rotation - 0x80) << 12);
 
@@ -314,7 +314,7 @@ void LaunchSpring_State_Cannon_Fire_Manual(void)
 
     EntityPlayer *player = self->playerPtr;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         player->position.x = self->position.x + (RSDK.Cos512(self->rotation - 0x80) << 12);
         player->position.y = self->position.y + (RSDK.Sin512(self->rotation - 0x80) << 12);
 
@@ -384,7 +384,7 @@ void LaunchSpring_State_Rotate_Fire_Automatic(void)
 
     EntityPlayer *player = self->playerPtr;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         if (self->strict)
             self->rotation = (self->rotation + 0x20) & 0xC0;
 
@@ -408,7 +408,7 @@ void LaunchSpring_State_Rotate_Fire_Manual(void)
     RSDK_THIS(LaunchSpring);
     EntityPlayer *player = self->playerPtr;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         if (self->rotDir) {
             self->rotation -= self->rotSpeed;
 

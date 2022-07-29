@@ -346,7 +346,7 @@ void LaundroMobile_HandleStageWrap(void)
 
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             if (player->position.x < boss->position.x)
                 player->position.x = boss->position.x;
 
@@ -356,7 +356,7 @@ void LaundroMobile_HandleStageWrap(void)
                     player->onGround        = false;
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
-                    player->state           = Current_PlayerState_CurrentRight;
+                    player->state           = Current_PState_Right;
                     if (player->animator.animationID != ANI_CLING && player->animator.animationID != ANI_SHAFT_SWING) {
                         if (player->position.x >= boss->position.x + 0xC00000) {
                             player->velocity.x = LaundroMobile->currentVelocity;
@@ -1092,7 +1092,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
         {
             int32 playerID = RSDK.GetEntitySlot(player);
             if (player->position.y > Water->waterLevel) {
-                if (player->state == Player_State_None) {
+                if (player->state == Player_State_Static) {
                     player->onGround        = false;
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
@@ -1139,7 +1139,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
                     LaundroMobile->playerRadius[playerID] >>= 8;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
-                    player->state = Player_State_None;
+                    player->state = Player_State_Static;
                 }
             }
         }
@@ -1148,7 +1148,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntitySlot(player);
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 player->velocity.x = player->position.x
                                      - LaundroMobile->playerRadius[playerID] * RSDK.Cos256(LaundroMobile->playerAngles[playerID] - 3)
                                      - self->position.x;
@@ -1195,7 +1195,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
 
-        if (player->state == Player_State_None) {
+        if (player->state == Player_State_Static) {
             player->velocity.x = player->position.x - LaundroMobile->playerRadius[playerID] * RSDK.Cos256(LaundroMobile->playerAngles[playerID] - 3)
                                  - self->position.x;
             player->drawOrder = Zone->playerDrawLow;
@@ -1262,7 +1262,7 @@ void LaundroMobile_StateBoss_Explode_Phase2(void)
                       (ScreenInfo->position.y - 48) << 16);
 
 #if MANIA_USE_PLUS
-        Zone->stageFinishCallback = LaundroMobile_StageFinishCB_Blank;
+        Zone->stageFinishCallback = LaundroMobile_StageFinish_Wait;
         self->state               = LaundroMobile_StateOutro_StartCutscene;
 #else
         destroyEntity(self);
@@ -1271,7 +1271,7 @@ void LaundroMobile_StateBoss_Explode_Phase2(void)
 }
 
 #if MANIA_USE_PLUS
-void LaundroMobile_StageFinishCB_Blank(void) {}
+void LaundroMobile_StageFinish_Wait(void) {}
 
 void LaundroMobile_StateOutro_StartCutscene(void)
 {
@@ -1422,7 +1422,7 @@ void LaundroMobile_StateOutro_ExitHCZ(void)
             player1->right = true;
 
         if (player1->position.x > (Zone->cameraBoundsR[0] + 64) << 16) {
-            HCZSetup_StageFinishCB_Act2();
+            HCZSetup_StageFinish_EndAct2();
             destroyEntity(self);
         }
     }

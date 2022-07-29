@@ -41,9 +41,9 @@ void MMZSetup_EditorLoad(void);
 void MMZSetup_Serialize(void);
 
 // Extra Entity Functions
-void MMZSetup_StageFinishCB_Act1(void);
+void MMZSetup_StageFinish_EndAct1(void);
 #if MANIA_USE_PLUS
-void MMZSetup_StageFinishCB_Act2(void);
+void MMZSetup_StageFinish_EndAct2(void);
 #endif
 
 #endif //! OBJ_MMZSETUP_H

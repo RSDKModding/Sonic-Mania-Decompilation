@@ -41,10 +41,10 @@ void PSZ2Setup_StaticUpdate(void)
             {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
 
-                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                uint16 tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                 bool32 isLowLayer = true;
                 if (tile == (uint16)-1) {
-                    tile       = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                    tile       = RSDK.GetTile(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                     isLowLayer = false;
                 }
 
@@ -80,8 +80,8 @@ void PSZ2Setup_StageLoad(void)
 {
     PSZ2Setup->petalBehaviourActive = false;
 
-    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSINACTIVE] = PSZ2Setup_TriggerCB_DeactivatePetalBehaviour;
-    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSACTIVE]   = PSZ2Setup_TriggerCB_ActivatePetalBehaviour;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSINACTIVE] = PSZ2Setup_Trigger_DeactivatePetalBehaviour;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSACTIVE]   = PSZ2Setup_Trigger_ActivatePetalBehaviour;
 
     PSZ2Setup->aniTiles1 = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
     PSZ2Setup->aniTiles2 = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
@@ -102,7 +102,7 @@ void PSZ2Setup_StageLoad(void)
     }
 
     if (isMainGameMode() && PlayerHelpers_CheckAct2())
-        Zone->stageFinishCallback = PSZ2Setup_StageFinishCB;
+        Zone->stageFinishCallback = PSZ2Setup_StageFinish_EndAct2;
 
 #if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE)
@@ -114,9 +114,9 @@ void PSZ2Setup_StageLoad(void)
 #endif
 }
 
-void PSZ2Setup_TriggerCB_ActivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = true; }
+void PSZ2Setup_Trigger_ActivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = true; }
 
-void PSZ2Setup_TriggerCB_DeactivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = false; }
+void PSZ2Setup_Trigger_DeactivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = false; }
 
 void PSZ2Setup_ActTransitionLoad(void)
 {
@@ -147,7 +147,7 @@ void PSZ2Setup_ActTransitionLoad(void)
     Zone->cameraBoundsB[3] = 1556;
 }
 
-void PSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(PSZ2Outro, NULL, 0, 0); }
+void PSZ2Setup_StageFinish_EndAct2(void) { CREATE_ENTITY(PSZ2Outro, NULL, 0, 0); }
 
 #if RETRO_INCLUDE_EDITOR
 void PSZ2Setup_EditorDraw(void) {}

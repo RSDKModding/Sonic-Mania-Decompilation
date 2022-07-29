@@ -133,12 +133,12 @@ void Firework_CheckPlayerCollisions(void)
         int32 playerID = RSDK.GetEntitySlot(player);
 
         if (!((1 << playerID) & self->activePlayers)) {
-            if (player->state != Player_State_None && !self->playerTimers[playerID]
+            if (player->state != Player_State_Static && !self->playerTimers[playerID]
                 && Player_CheckCollisionTouch(player, self, &Firework->hitboxFireworkGrab)) {
                 player->tileCollisions = false;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEY_HOLD, &player->animator, false, 0);
 
-                player->state = Player_State_None;
+                player->state = Player_State_Static;
                 self->activePlayers |= 1 << playerID;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
 
@@ -149,7 +149,7 @@ void Firework_CheckPlayerCollisions(void)
         }
 
         if ((1 << playerID) & self->activePlayers) {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->groundVel  = 0;

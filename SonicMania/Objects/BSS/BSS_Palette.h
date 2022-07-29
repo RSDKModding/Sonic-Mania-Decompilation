@@ -9,7 +9,7 @@ struct ObjectBSS_Palette {
     int32 startColorID;
     int32 skyAlpha;
     int32 globeAlpha;
-    int32 unused1;
+    uint16 aniFrames;
 };
 
 // Entity Class
@@ -24,6 +24,7 @@ struct EntityBSS_Palette {
     color bgColor1;
     color bgColor2;
     color bgColor3;
+    Animator animator;
 };
 
 // Object Struct

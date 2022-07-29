@@ -27,8 +27,8 @@ void InitPublicFunctions()
 
 #if MANIA_USE_PLUS
     // AIZ/AIZSetup
-    ADD_PUBLIC_FUNC(AIZSetup_BGSwitchCB_Jungle);
-    ADD_PUBLIC_FUNC(AIZSetup_BGSwitchCB_Sky);
+    ADD_PUBLIC_FUNC(AIZSetup_BGSwitch_Jungle);
+    ADD_PUBLIC_FUNC(AIZSetup_BGSwitch_Sky);
     ADD_PUBLIC_FUNC(AIZSetup_PlayerState_Static);
 #endif
     ADD_PUBLIC_FUNC(AIZSetup_PlayerState_P2Enter);
@@ -36,7 +36,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(AIZSetup_SetupObjects);
     ADD_PUBLIC_FUNC(AIZSetup_GetCutsceneSetupPtr);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(AIZSetup_SkipCB);
+    ADD_PUBLIC_FUNC(AIZSetup_Cutscene_SkipCB);
     ADD_PUBLIC_FUNC(AIZSetup_CutsceneST_Setup);
 #endif
     ADD_PUBLIC_FUNC(AIZSetup_CutsceneSonic_EnterAIZ);
@@ -186,7 +186,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BSS_Message_State_GetBSWait);
     ADD_PUBLIC_FUNC(BSS_Message_State_Finished);
     ADD_PUBLIC_FUNC(BSS_Message_State_Perfect);
-    ADD_PUBLIC_FUNC(BSS_Message_State_PerfectWait);
+    ADD_PUBLIC_FUNC(BSS_Message_State_WaitPerfect);
     ADD_PUBLIC_FUNC(BSS_Message_State_MsgFinished);
     ADD_PUBLIC_FUNC(BSS_Message_TrackProgressCB);
 #if MANIA_USE_PLUS
@@ -225,21 +225,21 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BSS_Setup_ProcessChain);
 
     // Common/BreakableWall
-    ADD_PUBLIC_FUNC(BreakableWall_State_BottomChunks);
-    ADD_PUBLIC_FUNC(BreakableWall_State_BottomFull);
+    ADD_PUBLIC_FUNC(BreakableWall_State_BurrowFloorUp);
+    ADD_PUBLIC_FUNC(BreakableWall_State_Ceiling);
     ADD_PUBLIC_FUNC(BreakableWall_State_FallingTile);
-    ADD_PUBLIC_FUNC(BreakableWall_State_BreakableSides);
+    ADD_PUBLIC_FUNC(BreakableWall_State_Wall);
     ADD_PUBLIC_FUNC(BreakableWall_State_Tile);
-    ADD_PUBLIC_FUNC(BreakableWall_State_Top);
-    ADD_PUBLIC_FUNC(BreakableWall_State_TopChunks);
-    ADD_PUBLIC_FUNC(BreakableWall_Draw_Outline_Sides);
-    ADD_PUBLIC_FUNC(BreakableWall_Draw_Outline);
+    ADD_PUBLIC_FUNC(BreakableWall_State_Floor);
+    ADD_PUBLIC_FUNC(BreakableWall_State_BurrowFloor);
+    ADD_PUBLIC_FUNC(BreakableWall_Draw_Wall);
+    ADD_PUBLIC_FUNC(BreakableWall_Draw_Floor);
     ADD_PUBLIC_FUNC(BreakableWall_Draw_Tile);
-    ADD_PUBLIC_FUNC(BreakableWall_HandleTopBreak_All);
-    ADD_PUBLIC_FUNC(BreakableWall_HandleTopBreak_Chunks);
-    ADD_PUBLIC_FUNC(BreakableWall_HandleSidesBreak);
-    ADD_PUBLIC_FUNC(BreakableWall_HandleBottomBreak_Chunks);
-    ADD_PUBLIC_FUNC(BreakableWall_HandleBottomBreak_All);
+    ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_Floor);
+    ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_BurrowFloor);
+    ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_Wall);
+    ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_BurrowFloorUp);
+    ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_Ceiling);
     ADD_PUBLIC_FUNC(BreakableWall_HandleBlockBreak_V);
     ADD_PUBLIC_FUNC(BreakableWall_HandleBlockBreak_H);
     ADD_PUBLIC_FUNC(BreakableWall_GiveScoreBonus);
@@ -256,8 +256,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(CollapsingPlatform_State_Left);
     ADD_PUBLIC_FUNC(CollapsingPlatform_State_Right);
     ADD_PUBLIC_FUNC(CollapsingPlatform_State_Center);
-    ADD_PUBLIC_FUNC(CollapsingPlatform_State_LeftOrRight);
-    ADD_PUBLIC_FUNC(CollapsingPlatform_State_PlayerPos);
+    ADD_PUBLIC_FUNC(CollapsingPlatform_State_LeftRight);
+    ADD_PUBLIC_FUNC(CollapsingPlatform_State_LeftRightCenter);
 
     // Common/Decoration
     ADD_PUBLIC_FUNC(Decoration_DrawSprite);
@@ -279,9 +279,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ForceUnstick_DrawSprites);
 
     // Common/ParallaxSprite
-    ADD_PUBLIC_FUNC(ParallaxSprite_State_RotateAndScroll);
-    ADD_PUBLIC_FUNC(ParallaxSprite_State_Spawner);
-    ADD_PUBLIC_FUNC(ParallaxSprite_State_FadeOutAndDestroy);
+    ADD_PUBLIC_FUNC(ParallaxSprite_State_Normal);
+    ADD_PUBLIC_FUNC(ParallaxSprite_State_Emitter);
+    ADD_PUBLIC_FUNC(ParallaxSprite_State_Particle);
     ADD_PUBLIC_FUNC(ParallaxSprite_State_FadeIntoHalf);
     ADD_PUBLIC_FUNC(ParallaxSprite_State_FadeOut);
 
@@ -351,24 +351,24 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SpinBooster_HandleForceRoll);
 
     // Common/Water
-    ADD_PUBLIC_FUNC(Water_SetWaterLevel);
-    ADD_PUBLIC_FUNC(Water_RemoveWaterEffect);
+    ADD_PUBLIC_FUNC(Water_DrawHook_ApplyWaterPalette);
+    ADD_PUBLIC_FUNC(Water_DrawHook_RemoveWaterPalette);
     ADD_PUBLIC_FUNC(Water_SetupTagLink);
     ADD_PUBLIC_FUNC(Water_SpawnBubble);
     ADD_PUBLIC_FUNC(Water_SpawnCountDownBubble);
     ADD_PUBLIC_FUNC(Water_GetPlayerBubble);
     ADD_PUBLIC_FUNC(Water_HandleBubbleMovement);
-    ADD_PUBLIC_FUNC(Water_HCZBubbleSpawner);
-    ADD_PUBLIC_FUNC(Water_HCZBubbleBurst);
+    ADD_PUBLIC_FUNC(Water_State_BtnBigBubble);
+    ADD_PUBLIC_FUNC(Water_PopBigBubble);
     ADD_PUBLIC_FUNC(Water_State_Water);
     ADD_PUBLIC_FUNC(Water_State_Pool);
     ADD_PUBLIC_FUNC(Water_State_Splash);
     ADD_PUBLIC_FUNC(Water_State_Bubble);
-    ADD_PUBLIC_FUNC(Water_State_ShrinkPlayerBubble);
-    ADD_PUBLIC_FUNC(Water_State_HCZBubble);
+    ADD_PUBLIC_FUNC(Water_State_BubbleBreathed);
+    ADD_PUBLIC_FUNC(Water_State_BigBubble);
     ADD_PUBLIC_FUNC(Water_State_Bubbler);
     ADD_PUBLIC_FUNC(Water_State_Countdown);
-    ADD_PUBLIC_FUNC(Water_State_BubbleMove);
+    ADD_PUBLIC_FUNC(Water_State_CountdownFollow);
     ADD_PUBLIC_FUNC(Water_State_HeightTrigger);
     ADD_PUBLIC_FUNC(Water_Draw_Water);
     ADD_PUBLIC_FUNC(Water_Draw_Pool);
@@ -471,7 +471,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ChemicalPool_State_Changing);
 
     // CPZ/CPZ1Intro
-    ADD_PUBLIC_FUNC(CPZ1Intro_Particle_CB);
+    ADD_PUBLIC_FUNC(CPZ1Intro_Particle_ChemDrop);
     ADD_PUBLIC_FUNC(CPZ1Intro_HandleRubyHover);
     ADD_PUBLIC_FUNC(CPZ1Intro_CheckSonicAnimFinish);
     ADD_PUBLIC_FUNC(CPZ1Intro_CheckTailsAnimFinish);
@@ -492,8 +492,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(CPZ2Outro_Cutscene_Outro);
 
     // CPZ/CPZBoss
-    ADD_PUBLIC_FUNC(CPZBoss_DrawLayerCB_SetupPuyoHUD);
-    ADD_PUBLIC_FUNC(CPZBoss_DrawLayerCB_RemovePuyoHUD);
+    ADD_PUBLIC_FUNC(CPZBoss_DrawHook_SetupPuyoHUD);
+    ADD_PUBLIC_FUNC(CPZBoss_DrawHook_RemovePuyoHUD);
     ADD_PUBLIC_FUNC(CPZBoss_Explode_Eggman);
     ADD_PUBLIC_FUNC(CPZBoss_Explode_Player);
     ADD_PUBLIC_FUNC(CPZBoss_CheckMatchReset);
@@ -512,10 +512,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(CPZBoss_State_Destroyed);
 
     // CPZ/CPZSetup
-    ADD_PUBLIC_FUNC(CPZSetup_BGSwitchCB_Act2BG);
-    ADD_PUBLIC_FUNC(CPZSetup_BGSwitchCB_Act1BG);
-    ADD_PUBLIC_FUNC(CPZSetup_StageFinishCB_Act1);
-    ADD_PUBLIC_FUNC(CPZSetup_StageFinishCB_Act2);
+    ADD_PUBLIC_FUNC(CPZSetup_BGSwitch_Act2BG);
+    ADD_PUBLIC_FUNC(CPZSetup_BGSwitch_Act1BG);
+    ADD_PUBLIC_FUNC(CPZSetup_StageFinish_EndAct1);
+    ADD_PUBLIC_FUNC(CPZSetup_StageFinish_EndAct2);
 
     // CPZ/CPZShutter
     ADD_PUBLIC_FUNC(CPZShutter_State_Open);
@@ -592,7 +592,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Springboard_DebugSpawn);
 
     // CPZ/Staircase
-    ADD_PUBLIC_FUNC(Staircase_CheckCB);
+    ADD_PUBLIC_FUNC(Staircase_SfxCheck_HitBlocks);
     ADD_PUBLIC_FUNC(Staircase_State_Idle);
     ADD_PUBLIC_FUNC(Staircase_State_Wait);
     ADD_PUBLIC_FUNC(Staircase_State_MoveBlocks);
@@ -656,7 +656,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(EncoreGoodEnd_Cutscene_KingAppear);
     ADD_PUBLIC_FUNC(EncoreGoodEnd_Cutscene_ThanksForPlaying);
     ADD_PUBLIC_FUNC(EncoreGoodEnd_Cutscene_FinishCutscene);
-    ADD_PUBLIC_FUNC(EncoreGoodEnd_SkipCB);
+    ADD_PUBLIC_FUNC(EncoreGoodEnd_Cutscene_SkipCB);
 #endif
 
     // Credits/TAEmerald
@@ -841,7 +841,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ERZRider_Draw_Rider);
 
     // ERZ/ERZSetup
-    ADD_PUBLIC_FUNC(ERZSetup_Sky_ScanlineCB);
+    ADD_PUBLIC_FUNC(ERZSetup_Scanline_Sky);
 
     // ERZ/ERZShinobi
     ADD_PUBLIC_FUNC(ERZShinobi_CheckPlayerCollisions);
@@ -910,10 +910,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PhantomEgg_Hit);
     ADD_PUBLIC_FUNC(PhantomEgg_Explode);
     ADD_PUBLIC_FUNC(PhantomEgg_HandleNextAttack);
-    ADD_PUBLIC_FUNC(PhantomEgg_SetupScanlineCB);
+    ADD_PUBLIC_FUNC(PhantomEgg_SetupWarpFX);
     ADD_PUBLIC_FUNC(PhantomEgg_HandlePhantomWarp);
     ADD_PUBLIC_FUNC(PhantomEgg_HandleReturnWarp);
-    ADD_PUBLIC_FUNC(PhantomEgg_ScanlineCB);
+    ADD_PUBLIC_FUNC(PhantomEgg_Scanline_WarpFX);
     ADD_PUBLIC_FUNC(PhantomEgg_Draw_Normal);
     ADD_PUBLIC_FUNC(PhantomEgg_Draw_Cracked);
     ADD_PUBLIC_FUNC(PhantomEgg_State_SetupArena);
@@ -1048,7 +1048,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PhantomRider_State_Jimmy);
 
     // ERZ/PhantomRuby
-    ADD_PUBLIC_FUNC(PhantomRuby_PlaySFX);
+    ADD_PUBLIC_FUNC(PhantomRuby_PlaySfx);
     ADD_PUBLIC_FUNC(PhantomRuby_SetupFlash);
     ADD_PUBLIC_FUNC(PhantomRuby_State_FinishedFlash);
     ADD_PUBLIC_FUNC(PhantomRuby_State_PlaySfx);
@@ -1079,7 +1079,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PhantomShinobi_State_ExtendFins);
     ADD_PUBLIC_FUNC(PhantomShinobi_State_RetractFins);
     ADD_PUBLIC_FUNC(PhantomShinobi_State_FinishedAttack);
-    ADD_PUBLIC_FUNC(PhantomShinobi_BladeCheckCB);
+    ADD_PUBLIC_FUNC(PhantomShinobi_SfxCheck_ShinobiBlade);
 
     // ERZ/PKingAttack
     ADD_PUBLIC_FUNC(PKingAttack_CheckPlayerCollisions);
@@ -1093,7 +1093,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(RingField_GetRingSpawnPos);
 
     // FBZ/BigSqueeze
-    ADD_PUBLIC_FUNC(BigSqueeze_RumbleCheckCB);
+    ADD_PUBLIC_FUNC(BigSqueeze_SfxCheck_Rumble);
     ADD_PUBLIC_FUNC(BigSqueeze_HandleWallCollisions);
     ADD_PUBLIC_FUNC(BigSqueeze_CheckPlayerCollisions_Vulnerable);
     ADD_PUBLIC_FUNC(BigSqueeze_CheckPlayerCollisions_Electrified);
@@ -1205,15 +1205,15 @@ void InitPublicFunctions()
     // FBZ/FBZSetup
     ADD_PUBLIC_FUNC(FBZSetup_ActTransitionLoad);
     ADD_PUBLIC_FUNC(FBZSetup_AddDynamicBG);
-    ADD_PUBLIC_FUNC(FBZSetup_ScanlineCB_BGInside);
-    ADD_PUBLIC_FUNC(FBZSetup_BGSwitchCB_ShowInside1);
-    ADD_PUBLIC_FUNC(FBZSetup_BGSwitchCB_ShowInside2);
-    ADD_PUBLIC_FUNC(FBZSetup_BGSwitchCB_ShowInside1_Dup);
-    ADD_PUBLIC_FUNC(FBZSetup_GenericTriggerCB_ShowExterior);
-    ADD_PUBLIC_FUNC(FBZSetup_GenericTriggerCB_ShowInterior);
-    ADD_PUBLIC_FUNC(FBZSetup_StageFinishCB_Act1);
+    ADD_PUBLIC_FUNC(FBZSetup_Scanline_BGInside);
+    ADD_PUBLIC_FUNC(FBZSetup_BGSwitch_ShowInside1);
+    ADD_PUBLIC_FUNC(FBZSetup_BGSwitch_ShowInside2);
+    ADD_PUBLIC_FUNC(FBZSetup_BGSwitch_ShowInside1_Dup);
+    ADD_PUBLIC_FUNC(FBZSetup_Trigger_ShowExterior);
+    ADD_PUBLIC_FUNC(FBZSetup_Trigger_ShowInterior);
+    ADD_PUBLIC_FUNC(FBZSetup_StageFinish_EndAct1);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(FBZSetup_StageFinishCB_Act2);
+    ADD_PUBLIC_FUNC(FBZSetup_StageFinish_EndAct2);
 #endif
 
     // FBZ/FBZStorm
@@ -1297,7 +1297,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SpiderMobile_State_Eggman);
     ADD_PUBLIC_FUNC(SpiderMobile_StateOrb_Charge);
     ADD_PUBLIC_FUNC(SpiderMobile_StateOrb_Fired);
-    ADD_PUBLIC_FUNC(SpiderMobile_ElevatorCheckCB);
+    ADD_PUBLIC_FUNC(SpiderMobile_SfxCheck_Elevator);
 
     // FBZ/SpiralPlatform
     ADD_PUBLIC_FUNC(SpiralPlatform_State_Move);
@@ -1502,7 +1502,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(GHZCutsceneST_SetupObjects);
     ADD_PUBLIC_FUNC(GHZCutsceneST_SetupKnuxCutscene);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(GHZCutsceneST_SkipCB);
+    ADD_PUBLIC_FUNC(GHZCutsceneST_Cutscene_SkipCB);
     ADD_PUBLIC_FUNC(GHZCutsceneST_Cutscene_FadeIn);
 #endif
     ADD_PUBLIC_FUNC(GHZCutsceneST_Cutscene_FinishRubyWarp);
@@ -1510,14 +1510,14 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(GHZCutsceneST_Cutscene_SetupGHZ1);
 
     // GHZ/GHZSetup
-    ADD_PUBLIC_FUNC(GHZSetup_SetupStartingBG);
-    ADD_PUBLIC_FUNC(GHZSetup_SetupActTransition);
+    ADD_PUBLIC_FUNC(GHZSetup_SetupAct1BG);
+    ADD_PUBLIC_FUNC(GHZSetup_StageFinish_EndAct1);
     ADD_PUBLIC_FUNC(GHZSetup_HandleActTransition);
-    ADD_PUBLIC_FUNC(GHZSetup_BGSwitchCB_Outside_Act2);
-    ADD_PUBLIC_FUNC(GHZSetup_BGSwitchCB_Caves_Act2);
-    ADD_PUBLIC_FUNC(GHZSetup_BGSwitchCB_Outside_Act1);
-    ADD_PUBLIC_FUNC(GHZSetup_BGSwitchCB_Caves_Act1);
-    ADD_PUBLIC_FUNC(GHZSetup_SpawnGHZ2Outro);
+    ADD_PUBLIC_FUNC(GHZSetup_BGSwitch_Outside_Act2);
+    ADD_PUBLIC_FUNC(GHZSetup_BGSwitch_Caves_Act2);
+    ADD_PUBLIC_FUNC(GHZSetup_BGSwitch_Outside_Act1);
+    ADD_PUBLIC_FUNC(GHZSetup_BGSwitch_Caves_Act1);
+    ADD_PUBLIC_FUNC(GHZSetup_StageFinish_EndAct2);
 
     // GHZ/Motobug
     ADD_PUBLIC_FUNC(Motobug_DebugSpawn);
@@ -1564,12 +1564,12 @@ void InitPublicFunctions()
 
     // GHZ/WaterfallSound
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(WaterfallSound_CheckCB);
-    ADD_PUBLIC_FUNC(WaterfallSound_UpdateCB);
+    ADD_PUBLIC_FUNC(WaterfallSound_SfxCheck_WaterfallLoop);
+    ADD_PUBLIC_FUNC(WaterfallSound_SfxUpdate_WaterfallLoop);
 #endif
 
     // GHZ/ZipLine
-    ADD_PUBLIC_FUNC(ZipLine_VSSwapCB);
+    ADD_PUBLIC_FUNC(ZipLine_VSSwap_CheckBusy);
     ADD_PUBLIC_FUNC(ZipLine_GrabHandle);
     ADD_PUBLIC_FUNC(ZipLine_ForceReleasePlayers);
     ADD_PUBLIC_FUNC(ZipLine_GetJoinPos);
@@ -1675,8 +1675,8 @@ void InitPublicFunctions()
 #endif
 
     // Global/BoundsMarker
-    ADD_PUBLIC_FUNC(BoundsMarker_CheckBounds);
-    ADD_PUBLIC_FUNC(BoundsMarker_CheckAllBounds);
+    ADD_PUBLIC_FUNC(BoundsMarker_ApplyBounds);
+    ADD_PUBLIC_FUNC(BoundsMarker_ApplyAllBounds);
 
     // Global/Camera
     ADD_PUBLIC_FUNC(Camera_SetCameraBounds);
@@ -1757,9 +1757,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(GameOver_SaveGameCallback);
     ADD_PUBLIC_FUNC(GameOver_State_EnterLetters);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(GameOver_State_HandleMultiplayer);
+    ADD_PUBLIC_FUNC(GameOver_State_WaitComp);
 #endif
-    ADD_PUBLIC_FUNC(GameOver_State_ShowMessage);
+    ADD_PUBLIC_FUNC(GameOver_State_Wait);
     ADD_PUBLIC_FUNC(GameOver_State_ExitLetters);
 
     // Global/HUD
@@ -1768,8 +1768,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HUD_DrawNumbersHyperRing);
     ADD_PUBLIC_FUNC(HUD_GetButtonFrame);
     ADD_PUBLIC_FUNC(HUD_GetActionButtonFrames);
-    ADD_PUBLIC_FUNC(HUD_State_ComeOnScreen);
-    ADD_PUBLIC_FUNC(HUD_State_GoOffScreen);
+    ADD_PUBLIC_FUNC(HUD_State_MoveIn);
+    ADD_PUBLIC_FUNC(HUD_State_MoveOut);
+    ADD_PUBLIC_FUNC(HUD_MoveIn);
+    ADD_PUBLIC_FUNC(HUD_MoveOut);
+    ADD_PUBLIC_FUNC(HUD_EnableRingFlash);
+    ADD_PUBLIC_FUNC(HUD_CharacterIndexFromID);
 
     // Global/InvisibleBlock
     ADD_PUBLIC_FUNC(InvisibleBlock_DrawSprites);
@@ -1846,7 +1850,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PauseMenu_ExitDialog_YesCB);
     ADD_PUBLIC_FUNC(PauseMenu_RestartFadeCB);
     ADD_PUBLIC_FUNC(PauseMenu_ExitFadeCB);
-    ADD_PUBLIC_FUNC(PauseMenu_ButtonActionCB);
+    ADD_PUBLIC_FUNC(PauseMenu_ActionCB_Button);
     ADD_PUBLIC_FUNC(PauseMenu_State_SetupButtons);
     ADD_PUBLIC_FUNC(PauseMenu_State_StartPause);
     ADD_PUBLIC_FUNC(PauseMenu_State_StartPauseCompetition);
@@ -1929,7 +1933,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_HandleFlyCarry);
     ADD_PUBLIC_FUNC(Player_HandleSidekickRespawn);
     ADD_PUBLIC_FUNC(Player_State_StartSuper);
-    ADD_PUBLIC_FUNC(Player_State_None);
+    ADD_PUBLIC_FUNC(Player_State_Static);
     ADD_PUBLIC_FUNC(Player_State_Ground);
     ADD_PUBLIC_FUNC(Player_State_Air);
     ADD_PUBLIC_FUNC(Player_State_Roll);
@@ -1951,7 +1955,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_State_KnuxGlideLeft);
     ADD_PUBLIC_FUNC(Player_State_KnuxGlideRight);
     ADD_PUBLIC_FUNC(Player_State_KnuxGlideDrop);
-    ADD_PUBLIC_FUNC(Player_State_GlideSlide);
+    ADD_PUBLIC_FUNC(Player_State_KnuxGlideSlide);
     ADD_PUBLIC_FUNC(Player_State_KnuxWallClimb);
     ADD_PUBLIC_FUNC(Player_State_KnuxLedgePullUp);
 #if MANIA_USE_PLUS
@@ -1976,10 +1980,10 @@ void InitPublicFunctions()
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(Player_JumpAbility_Mighty);
     ADD_PUBLIC_FUNC(Player_JumpAbility_Ray);
-    ADD_PUBLIC_FUNC(Player_CheckRayDiving);
-    ADD_PUBLIC_FUNC(Player_CheckRaySwooping);
-    ADD_PUBLIC_FUNC(Player_UpdateRayDiveSFX);
-    ADD_PUBLIC_FUNC(Player_UpdateRaySwoopSFX);
+    ADD_PUBLIC_FUNC(Player_SfxCheck_RayDive);
+    ADD_PUBLIC_FUNC(Player_SfxCheck_RaySwoop);
+    ADD_PUBLIC_FUNC(Player_SfxUpdate_RayDive);
+    ADD_PUBLIC_FUNC(Player_SfxUpdate_RaySwoop);
     ADD_PUBLIC_FUNC(Player_Input_P1);
     ADD_PUBLIC_FUNC(Player_Input_P2_Delay);
     ADD_PUBLIC_FUNC(Player_Input_P2_AI);
@@ -1999,15 +2003,15 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayDLG_YesCB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayDLG_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplay);
-    ADD_PUBLIC_FUNC(ReplayRecorder_ReplaySaveFinish_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_ReplaySave_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveTimeAttackDB_CB);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveFile_Replay);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_ReplayDB);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_TimeAttackDB);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_PackInPlace);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_Unpack);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_SaveFile);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetReplayStatus);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_LoadFile);
-    ADD_PUBLIC_FUNC(ReplayRecorder_Load_CB);
+    ADD_PUBLIC_FUNC(ReplayRecorder_LoadFile_Replay);
     ADD_PUBLIC_FUNC(ReplayRecorder_ConfigureGhost_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetupActions);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetupWriteBuffer);
@@ -2041,7 +2045,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplaySave_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplaySave2_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetStatus);
-    ADD_PUBLIC_FUNC(ReplayRecorder_ReplaySaveFinish);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_ReplayDBManager);
 #endif
 
     // Global/Ring
@@ -2112,7 +2116,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SignPost_State_Finish);
 
     // Global/Soundboard
-    ADD_PUBLIC_FUNC(Soundboard_LoadSFX);
+    ADD_PUBLIC_FUNC(Soundboard_LoadSfx);
 
     // Global/SpecialRing
     ADD_PUBLIC_FUNC(SpecialRing_DebugSpawn);
@@ -2151,7 +2155,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimeAttackGate_HandleStart);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(TimeAttackGate_AddRecord);
-    ADD_PUBLIC_FUNC(TimeAttackGate_LeaderboardCB);
+    ADD_PUBLIC_FUNC(TimeAttackGate_WaitSave_Leaderboards);
     ADD_PUBLIC_FUNC(TimeAttackGate_CheckTouch);
 #endif
     ADD_PUBLIC_FUNC(TimeAttackGate_State_Gate);
@@ -2252,10 +2256,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Current_State_PushUp);
     ADD_PUBLIC_FUNC(Current_State_PushDown);
     ADD_PUBLIC_FUNC(Current_State_Child);
-    ADD_PUBLIC_FUNC(Current_PlayerState_CurrentLeft);
-    ADD_PUBLIC_FUNC(Current_PlayerState_CurrentRight);
-    ADD_PUBLIC_FUNC(Current_PlayerState_CurrentUp);
-    ADD_PUBLIC_FUNC(Current_PlayerState_CurrentDown);
+    ADD_PUBLIC_FUNC(Current_PState_Left);
+    ADD_PUBLIC_FUNC(Current_PState_Right);
+    ADD_PUBLIC_FUNC(Current_PState_Up);
+    ADD_PUBLIC_FUNC(Current_PState_Down);
 
     // HCZ/DCEvent
     ADD_PUBLIC_FUNC(DCEvent_State_Collapse);
@@ -2333,9 +2337,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HCZOneWayDoor_DrawSprites);
 
     // HCZ/HCZSetup
-    ADD_PUBLIC_FUNC(HCZSetup_BGWaterLineScanlineCB);
-    ADD_PUBLIC_FUNC(HCZSetup_HandleActTransition);
-    ADD_PUBLIC_FUNC(HCZSetup_StageFinishCB_Act2);
+    ADD_PUBLIC_FUNC(HCZSetup_Scanline_WaterLine);
+    ADD_PUBLIC_FUNC(HCZSetup_StageFinish_EndAct1);
+    ADD_PUBLIC_FUNC(HCZSetup_StageFinish_EndAct2);
 
     // HCZ/HCZSpikeBall
     ADD_PUBLIC_FUNC(HCZSpikeBall_HandleConveyorSetup);
@@ -2392,7 +2396,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LaundroMobile_StateBoss_Destroyed_Phase2);
     ADD_PUBLIC_FUNC(LaundroMobile_StateBoss_Explode_Phase2);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(LaundroMobile_StageFinishCB_Blank);
+    ADD_PUBLIC_FUNC(LaundroMobile_StageFinish_Wait);
     ADD_PUBLIC_FUNC(LaundroMobile_StateOutro_StartCutscene);
     ADD_PUBLIC_FUNC(LaundroMobile_StateOutro_Rumble);
     ADD_PUBLIC_FUNC(LaundroMobile_StateOutro_WaterGush);
@@ -2592,17 +2596,17 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimeAttackData_GetRecordedTime);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(TimeAttackData_LoadTimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_LoadTimeAttackDB_CB);
+    ADD_PUBLIC_FUNC(TimeAttackData_LoadUserDB_TimeAttackDB);
     ADD_PUBLIC_FUNC(TimeAttackData_ResetTimeAttackDB);
     ADD_PUBLIC_FUNC(TimeAttackData_MigrateLegacySaves);
     ADD_PUBLIC_FUNC(TimeAttackData_AddTimeAttackDBEntry);
     ADD_PUBLIC_FUNC(TimeAttackData_AddTADBEntry);
     ADD_PUBLIC_FUNC(TimeAttackData_SaveTimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_SaveTimeAttackDB_CB);
+    ADD_PUBLIC_FUNC(TimeAttackData_SaveUserDB_TimeAttackDB);
     ADD_PUBLIC_FUNC(TimeAttackData_GetScore);
     ADD_PUBLIC_FUNC(TimeAttackData_GetReplayID);
     ADD_PUBLIC_FUNC(TimeAttackData_ConfigureTableView);
-    ADD_PUBLIC_FUNC(TimeAttackData_GetLeaderboardRank_CB);
+    ADD_PUBLIC_FUNC(TimeAttackData_Leaderboard_GetRank);
     ADD_PUBLIC_FUNC(TimeAttackData_AddLeaderboardEntry);
     ADD_PUBLIC_FUNC(TimeAttackData_GetLeaderboardInfo);
 #else
@@ -2836,7 +2840,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Iwamodoki_State_Debris);
 
     // LRZ/KingAttack
-    ADD_PUBLIC_FUNC(KingAttack_ElecIdleCheckCB);
+    ADD_PUBLIC_FUNC(KingAttack_SfxCheck_ElecIdle);
     ADD_PUBLIC_FUNC(KingAttack_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(KingAttack_HandleLaserPositions);
     ADD_PUBLIC_FUNC(KingAttack_State_Laser);
@@ -2902,12 +2906,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LRZ1Outro_CutsceneAct2_ExitDashLift);
 
     // LRZ/LRZ1Setup
-    ADD_PUBLIC_FUNC(LRZ1Setup_StageFinishCB);
-    ADD_PUBLIC_FUNC(LRZ1Setup_DrawLayerCB);
+    ADD_PUBLIC_FUNC(LRZ1Setup_StageFinish_EndAct1);
+    ADD_PUBLIC_FUNC(LRZ1Setup_DrawHook_ApplyBGSmoothing);
 
     // LRZ/LRZ2Setup
     ADD_PUBLIC_FUNC(LRZ2Setup_HandleStageReload);
-    ADD_PUBLIC_FUNC(LRZ2Setup_GenericTrigger_CB);
+    ADD_PUBLIC_FUNC(LRZ2Setup_Trigger_StartOutro);
     ADD_PUBLIC_FUNC(LRZ2Setup_SetupTagLink);
     ADD_PUBLIC_FUNC(LRZ2Setup_GetTileInfo);
 
@@ -2921,7 +2925,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LRZ3Outro_State_BlastOff);
     ADD_PUBLIC_FUNC(LRZ3Outro_State_RocketLaunch);
     ADD_PUBLIC_FUNC(LRZ3Outro_State_EnterLittlePlanet);
-    ADD_PUBLIC_FUNC(LRZ3Outro_StageFinishCB);
+    ADD_PUBLIC_FUNC(LRZ3Outro_StageFinish_EndAct2ST);
     ADD_PUBLIC_FUNC(LRZ3Outro_Cutscene_StopPlayers);
     ADD_PUBLIC_FUNC(LRZ3Outro_Cutscene_LightUpLittlePlanet);
 #endif
@@ -2934,7 +2938,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LRZ3OutroK_Cutscene_TeleporterActivated);
 
     // LRZ/LRZ3Setup
-    ADD_PUBLIC_FUNC(LRZ3Setup_StartCutscene);
+    ADD_PUBLIC_FUNC(LRZ3Setup_StageFinish_EndAct2K);
 
     // LRZ/LRZConvControl
     ADD_PUBLIC_FUNC(LRZConvControl_HandlePlayerTrigger);
@@ -3185,9 +3189,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LevelSelect_Cheat_UnlockAllMedals);
     ADD_PUBLIC_FUNC(LevelSelect_Draw_Fade);
 #endif
-    ADD_PUBLIC_FUNC(LevelSelect_State_SetupEntities);
+    ADD_PUBLIC_FUNC(LevelSelect_State_Init);
     ADD_PUBLIC_FUNC(LevelSelect_State_FadeIn);
-    ADD_PUBLIC_FUNC(LevelSelect_State_HandleMenu);
+    ADD_PUBLIC_FUNC(LevelSelect_State_Navigate);
     ADD_PUBLIC_FUNC(LevelSelect_State_FadeOut);
     ADD_PUBLIC_FUNC(LevelSelect_ManagePlayerIcon);
     ADD_PUBLIC_FUNC(LevelSelect_SetLabelHighlighted);
@@ -3939,8 +3943,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BladePole_State_BottomBladeActive);
 
     // MMZ/BuzzSaw
-    ADD_PUBLIC_FUNC(BuzzSaw_CheckCB);
-    ADD_PUBLIC_FUNC(BuzzSaw_UpdateCB);
+    ADD_PUBLIC_FUNC(BuzzSaw_SfxCheck_SawSus);
+    ADD_PUBLIC_FUNC(BuzzSaw_SfxUpdate_SawSus);
     ADD_PUBLIC_FUNC(BuzzSaw_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(BuzzSaw_State_Attatched);
     ADD_PUBLIC_FUNC(BuzzSaw_State_Stray_Waiting);
@@ -3984,9 +3988,9 @@ void InitPublicFunctions()
     // MMZ/FarPlane
     ADD_PUBLIC_FUNC(FarPlane_SetupEntities);
     ADD_PUBLIC_FUNC(FarPlane_SetEntityActivities);
-    ADD_PUBLIC_FUNC(FarPlane_DrawLayerCB_Low);
-    ADD_PUBLIC_FUNC(FarPlane_DrawLayerCB_High);
-    ADD_PUBLIC_FUNC(FarPlane_ScanlineCB);
+    ADD_PUBLIC_FUNC(FarPlane_DrawHook_ApplyFarPlane);
+    ADD_PUBLIC_FUNC(FarPlane_DrawHook_RemoveFarPlane);
+    ADD_PUBLIC_FUNC(FarPlane_Scanline_FarPlaneView);
 
     // MMZ/Gachapandora
     ADD_PUBLIC_FUNC(Gachapandora_CheckPlayerCollisions_Prize);
@@ -4081,9 +4085,9 @@ void InitPublicFunctions()
 #endif
 
     // MMZ/MMZSetup
-    ADD_PUBLIC_FUNC(MMZSetup_StageFinishCB_Act1);
+    ADD_PUBLIC_FUNC(MMZSetup_StageFinish_EndAct1);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(MMZSetup_StageFinishCB_Act2);
+    ADD_PUBLIC_FUNC(MMZSetup_StageFinish_EndAct2);
 #endif
 
     // MMZ/Piston
@@ -4140,7 +4144,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Scarab_State_Wait);
 
     // MMZ/SizeLaser
-    ADD_PUBLIC_FUNC(SizeLaser_LaserSfxCheck);
+    ADD_PUBLIC_FUNC(SizeLaser_SfxCheck_SizeLaser);
     ADD_PUBLIC_FUNC(SizeLaser_SetP2State);
     ADD_PUBLIC_FUNC(SizeLaser_P2JumpInResize);
     ADD_PUBLIC_FUNC(SizeLaser_P2JumpInGrow);
@@ -4197,7 +4201,7 @@ void InitPublicFunctions()
     // MSZ/Cactula
     ADD_PUBLIC_FUNC(Cactula_DebugSpawn);
     ADD_PUBLIC_FUNC(Cactula_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Cactula_CheckCB);
+    ADD_PUBLIC_FUNC(Cactula_SfxChecK_CactChopper);
     ADD_PUBLIC_FUNC(Cactula_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Cactula_State_Rising);
     ADD_PUBLIC_FUNC(Cactula_State_DropBomb);
@@ -4226,8 +4230,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(DBTower_State_BodyRolling);
 
     // MSZ/EggLoco
-    ADD_PUBLIC_FUNC(EggLoco_ChuggaCheckCB);
-    ADD_PUBLIC_FUNC(EggLoco_ChuggaUpdateCB);
+    ADD_PUBLIC_FUNC(EggLoco_SfxCheck_LocoChugga);
+    ADD_PUBLIC_FUNC(EggLoco_SfxUpdate_LocoChugga);
     ADD_PUBLIC_FUNC(EggLoco_State_TootDelay);
     ADD_PUBLIC_FUNC(EggLoco_State_Whistle);
     ADD_PUBLIC_FUNC(EggLoco_State_Tooting);
@@ -4255,7 +4259,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HeavyMystic_CheckPlayerCollisions_Bark);
     ADD_PUBLIC_FUNC(HeavyMystic_CheckPlayerCollisions_Bean);
     ADD_PUBLIC_FUNC(HeavyMystic_Explode);
-    ADD_PUBLIC_FUNC(HeavyMystic_ScanlineCB);
+    ADD_PUBLIC_FUNC(HeavyMystic_Scanline_Curtains);
     ADD_PUBLIC_FUNC(HeavyMystic_StateMischief_Setup);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_SetupArena);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_AwaitPlayer);
@@ -4334,7 +4338,7 @@ void InitPublicFunctions()
 
 #if MANIA_USE_PLUS
     // MSZ/MSZCutsceneK
-    ADD_PUBLIC_FUNC(MSZCutsceneK_SkipCB);
+    ADD_PUBLIC_FUNC(MSZCutsceneK_Cutscene_SkipCB);
     ADD_PUBLIC_FUNC(MSZCutsceneK_StartCutscene);
 #endif
     ADD_PUBLIC_FUNC(MSZCutsceneK_SetupP2);
@@ -4365,14 +4369,14 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MSZSetup_State_ManageFade_K);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(MSZSetup_State_ManageFade_E);
-    ADD_PUBLIC_FUNC(MSZSetup_StageFinishCB_ST);
+    ADD_PUBLIC_FUNC(MSZSetup_StageFinish_EndAct1ST);
 #endif
-    ADD_PUBLIC_FUNC(MSZSetup_StageFinishCB_K);
+    ADD_PUBLIC_FUNC(MSZSetup_StageFinish_EndAct1K);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(MSZSetup_StageFinishCB_E);
-    ADD_PUBLIC_FUNC(MSZSetup_StageFinishCB_MSZ2);
+    ADD_PUBLIC_FUNC(MSZSetup_StageFinish_EndAct1E);
+    ADD_PUBLIC_FUNC(MSZSetup_StageFinish_EndAct2);
 #endif
-    ADD_PUBLIC_FUNC(MSZSetup_GenericTriggerCB_GetAchievement);
+    ADD_PUBLIC_FUNC(MSZSetup_Trigger_AwardAchievement);
     ADD_PUBLIC_FUNC(MSZSetup_HandleRestart);
     ADD_PUBLIC_FUNC(MSZSetup_State_SwitchPalettes);
 #if MANIA_USE_PLUS
@@ -4640,7 +4644,7 @@ void InitPublicFunctions()
 
     // OOZ/OOZ2Outro
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(OOZ2Outro_StageFinishCB_Act2);
+    ADD_PUBLIC_FUNC(OOZ2Outro_StageFinish_EndAct2);
     ADD_PUBLIC_FUNC(OOZ2Outro_State_SubFloat);
     ADD_PUBLIC_FUNC(OOZ2Outro_CheckSkip);
     ADD_PUBLIC_FUNC(OOZ2Outro_State_BoardSub);
@@ -4653,13 +4657,13 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(OOZFlames_State_Rise);
 
     // OOZ/OOZSetup
-    ADD_PUBLIC_FUNC(OOZSetup_CheckCB_Flame);
-    ADD_PUBLIC_FUNC(OOZSetup_CheckCB_Slide);
-    ADD_PUBLIC_FUNC(OOZSetup_CheckCB_Swim);
+    ADD_PUBLIC_FUNC(OOZSetup_SfxCheck_Flame2);
+    ADD_PUBLIC_FUNC(OOZSetup_SfxCheck_Slide);
+    ADD_PUBLIC_FUNC(OOZSetup_SfxCheck_OilSwim);
     ADD_PUBLIC_FUNC(OOZSetup_Draw_Flames);
     ADD_PUBLIC_FUNC(OOZSetup_HandleActiveFlames);
     ADD_PUBLIC_FUNC(OOZSetup_StartFire);
-    ADD_PUBLIC_FUNC(OOZSetup_GenericTriggerCB);
+    ADD_PUBLIC_FUNC(OOZSetup_Trigger_AwardAchievement);
     ADD_PUBLIC_FUNC(OOZSetup_PlayerState_OilPool);
     ADD_PUBLIC_FUNC(OOZSetup_PlayerState_OilStrip);
     ADD_PUBLIC_FUNC(OOZSetup_PlayerState_OilSlide);
@@ -4679,7 +4683,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PushSpring_State_PushRecoil);
 
     // OOZ/Smog
-    ADD_PUBLIC_FUNC(Smog_DrawLayerCB);
+    ADD_PUBLIC_FUNC(Smog_DrawHook_ApplySmogPalette);
 
     // OOZ/Sol
     ADD_PUBLIC_FUNC(Sol_DebugSpawn);
@@ -4760,7 +4764,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HeavyShinobi_Draw_Bounds);
 
     // PGZ/Ice
-    ADD_PUBLIC_FUNC(Ice_VSSwapCB);
+    ADD_PUBLIC_FUNC(Ice_VSSwap_CheckFrozen);
     ADD_PUBLIC_FUNC(Ice_FreezePlayer);
     ADD_PUBLIC_FUNC(Ice_CheckPlayerBlockSmashH);
     ADD_PUBLIC_FUNC(Ice_CheckPlayerBlockSmashV);
@@ -4769,7 +4773,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Ice_FullShatter);
     ADD_PUBLIC_FUNC(Ice_BreakPlayerBlock);
     ADD_PUBLIC_FUNC(Ice_Shatter);
-    ADD_PUBLIC_FUNC(Ice_TimeOverCB);
+    ADD_PUBLIC_FUNC(Ice_TimeOver_CheckFrozen);
     ADD_PUBLIC_FUNC(Ice_UpdateBlockGravity);
     ADD_PUBLIC_FUNC(Ice_State_IceBlock);
     ADD_PUBLIC_FUNC(Ice_State_StartBlockFall);
@@ -4831,7 +4835,7 @@ void InitPublicFunctions()
 
     // PGZ/Press
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(Press_SuperCheckCB);
+    ADD_PUBLIC_FUNC(Press_CheckCanSuper);
 #endif
     ADD_PUBLIC_FUNC(Press_Move);
     ADD_PUBLIC_FUNC(Press_State_Crush);
@@ -4854,13 +4858,13 @@ void InitPublicFunctions()
 
 #if MANIA_USE_PLUS
     // PGZ/PSZ1Setup
-    ADD_PUBLIC_FUNC(PSZ1Setup_BGSwitch_CB_Inside);
-    ADD_PUBLIC_FUNC(PSZ1Setup_BGSwitch_CB_Outside);
-    ADD_PUBLIC_FUNC(PSZ1Setup_TriggerCB_DeactivatePetalBehaviour);
+    ADD_PUBLIC_FUNC(PSZ1Setup_BGSwitch_Inside);
+    ADD_PUBLIC_FUNC(PSZ1Setup_BGSwitch_Outside);
+    ADD_PUBLIC_FUNC(PSZ1Setup_Trigger_DeactivatePetalBehaviour);
 #endif
-    ADD_PUBLIC_FUNC(PSZ1Setup_TriggerCB_ActivatePetalBehaviour);
-    ADD_PUBLIC_FUNC(PSZ1Setup_TriggerCB_AchievementArea);
-    ADD_PUBLIC_FUNC(PSZ1Setup_StageFinishCB);
+    ADD_PUBLIC_FUNC(PSZ1Setup_Trigger_ActivatePetalBehaviour);
+    ADD_PUBLIC_FUNC(PSZ1Setup_Trigger_AwardAchievement);
+    ADD_PUBLIC_FUNC(PSZ1Setup_StageFinish_EndAct1);
     ADD_PUBLIC_FUNC(PSZ1Setup_LevelWrap_Top);
     ADD_PUBLIC_FUNC(PSZ1Setup_LevelWrap_Bottom);
 
@@ -4880,10 +4884,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PSZ2Outro_Cutscene_LoadSSZ1);
 
     // PGZ/PSZ2Setup
-    ADD_PUBLIC_FUNC(PSZ2Setup_TriggerCB_ActivatePetalBehaviour);
-    ADD_PUBLIC_FUNC(PSZ2Setup_TriggerCB_DeactivatePetalBehaviour);
+    ADD_PUBLIC_FUNC(PSZ2Setup_Trigger_ActivatePetalBehaviour);
+    ADD_PUBLIC_FUNC(PSZ2Setup_Trigger_DeactivatePetalBehaviour);
     ADD_PUBLIC_FUNC(PSZ2Setup_ActTransitionLoad);
-    ADD_PUBLIC_FUNC(PSZ2Setup_StageFinishCB);
+    ADD_PUBLIC_FUNC(PSZ2Setup_StageFinish_EndAct2);
 
     // PGZ/PSZDoor
     ADD_PUBLIC_FUNC(PSZDoor_GetRemainingDistance);
@@ -5067,10 +5071,10 @@ void InitPublicFunctions()
 
     // Pinball/PBL_Setup
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(PBL_Setup_TableLow_ScanlineCB);
-    ADD_PUBLIC_FUNC(PBL_Setup_TableHigh_ScanlineCB);
-    ADD_PUBLIC_FUNC(PBL_Setup_BG_ScanlineCallback);
-    ADD_PUBLIC_FUNC(PBL_Setup_DrawLayer_Callback);
+    ADD_PUBLIC_FUNC(PBL_Setup_Scanline_TableLow);
+    ADD_PUBLIC_FUNC(PBL_Setup_Scanline_TableHigh);
+    ADD_PUBLIC_FUNC(PBL_Setup_Scanline_PinballBG);
+    ADD_PUBLIC_FUNC(PBL_Setup_DrawHook_PrepareDrawingFX);
     ADD_PUBLIC_FUNC(PBL_Setup_ExitPinball);
     ADD_PUBLIC_FUNC(PBL_Setup_GiveScore);
     ADD_PUBLIC_FUNC(PBL_Setup_GiveLife);
@@ -5224,7 +5228,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(CircleBumper_Collide_Normal);
     ADD_PUBLIC_FUNC(CircleBumper_Collide_Bumped);
     ADD_PUBLIC_FUNC(CircleBumper_Move_Fixed);
-    ADD_PUBLIC_FUNC(CircleBumper_Move_Moving);
+    ADD_PUBLIC_FUNC(CircleBumper_Move_Linear);
     ADD_PUBLIC_FUNC(CircleBumper_Move_Circular);
     ADD_PUBLIC_FUNC(CircleBumper_Move_Path);
     ADD_PUBLIC_FUNC(CircleBumper_Move_Track);
@@ -5316,9 +5320,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(GreenScreen_DrawSprites);
 
     // SPZ/HeavyGunner
-    ADD_PUBLIC_FUNC(HeavyGunner_HelicopterCheckCB);
-    ADD_PUBLIC_FUNC(HeavyGunner_SurpriseCheckCB);
-    ADD_PUBLIC_FUNC(HeavyGunner_BurnCheckCB);
+    ADD_PUBLIC_FUNC(HeavyGunner_SfxCheck_HeliProp);
+    ADD_PUBLIC_FUNC(HeavyGunner_SfxCheck_HBHSurprise);
+    ADD_PUBLIC_FUNC(HeavyGunner_SfxCheck_RocketBurn);
     ADD_PUBLIC_FUNC(HeavyGunner_HandleBGWrap);
     ADD_PUBLIC_FUNC(HeavyGunner_DestroyAllMissiles);
     ADD_PUBLIC_FUNC(HeavyGunner_Draw_Heli);
@@ -5384,7 +5388,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LottoBall_State_ShowUIBall);
 
     // SPZ/LottoMachine
-    ADD_PUBLIC_FUNC(LottoMachine_VSSwapCB);
+    ADD_PUBLIC_FUNC(LottoMachine_VSSwap_CheckBusy);
     ADD_PUBLIC_FUNC(LottoMachine_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(LottoMachine_CheckPlayerCollisions_Bottom);
     ADD_PUBLIC_FUNC(LottoMachine_HandleMotor);
@@ -5505,18 +5509,18 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SPZ1Intro_Cutscene_BeginAct1);
 
     // SPZ/SPZ1Setup
-    ADD_PUBLIC_FUNC(SPZ1Setup_StageFinishCB);
+    ADD_PUBLIC_FUNC(SPZ1Setup_StageFinish_EndAct1);
 
     // SPZ/SPZ2Outro
     ADD_PUBLIC_FUNC(SPZ2Outro_StartCutscene);
     ADD_PUBLIC_FUNC(SPZ2Outro_Cutscene_SetupFBZTV);
     ADD_PUBLIC_FUNC(SPZ2Outro_Cutscene_ExitStageRight);
-    ADD_PUBLIC_FUNC(SPZ2Outro_DrawLayerCB_WeatherTV);
+    ADD_PUBLIC_FUNC(SPZ2Outro_DrawHook_PrepareWeatherTV);
     ADD_PUBLIC_FUNC(SPZ2Outro_Cutscene_AsSeenOnTV);
     ADD_PUBLIC_FUNC(SPZ2Outro_Cutscene_FBZFlyAway);
 
     // SPZ/SPZ2Setup
-    ADD_PUBLIC_FUNC(SPZ2Setup_SetupOutro);
+    ADD_PUBLIC_FUNC(SPZ2Setup_StageFinish_EndAct2);
 
     // SPZ/Tubinaut
     ADD_PUBLIC_FUNC(Tubinaut_DebugSpawn);
@@ -5790,9 +5794,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Hotaru_State_FinishedAttacking);
 
     // SSZ/HotaruHiWatt
-    ADD_PUBLIC_FUNC(HotaruHiWatt_CheckCB_Zap);
-    ADD_PUBLIC_FUNC(HotaruHiWatt_CheckCB_Laser);
-    ADD_PUBLIC_FUNC(HotaruHiWatt_UpdateCB_Laser);
+    ADD_PUBLIC_FUNC(HotaruHiWatt_SfxCheck_Zap);
+    ADD_PUBLIC_FUNC(HotaruHiWatt_SfxCheck_HHWLaser);
+    ADD_PUBLIC_FUNC(HotaruHiWatt_SfxUpdate_HHWLaser);
     ADD_PUBLIC_FUNC(HotaruHiWatt_Hit);
     ADD_PUBLIC_FUNC(HotaruHiWatt_Explode);
     ADD_PUBLIC_FUNC(HotaruHiWatt_CheckPlayerCollisions_Hotaru);
@@ -5983,8 +5987,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(RTeleporter_Draw_Destroyed);
 
     // SSZ/SDashWheel
-    ADD_PUBLIC_FUNC(SDashWheel_CheckCB_SfxMGZDoor);
-    ADD_PUBLIC_FUNC(SDashWheel_UpdateCB_SfxMGZDoor);
+    ADD_PUBLIC_FUNC(SDashWheel_SfxCheck_MGZDoor);
+    ADD_PUBLIC_FUNC(SDashWheel_SfxUpdate_MGZDoor);
 
     // SSZ/SilverSonic
     ADD_PUBLIC_FUNC(SilverSonic_HandleNextAttack);
@@ -6020,20 +6024,20 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SSZ1Outro_Cutscene_TimeWarpRunway);
     ADD_PUBLIC_FUNC(SSZ1Outro_Cutscene_TimeWarp);
     ADD_PUBLIC_FUNC(SSZ1Outro_DestroyHotaru);
-    ADD_PUBLIC_FUNC(SSZ1Outro_DestroyLeftoverHotarus);
+    ADD_PUBLIC_FUNC(SSZ1Outro_Trigger_DestroyHotarus);
 
     // SSZ/SSZ1Setup
-    ADD_PUBLIC_FUNC(SSZ1Setup_StageFinishCB);
+    ADD_PUBLIC_FUNC(SSZ1Setup_StageFinish_EndAct1);
 
 #if MANIA_USE_PLUS
     // SSZ/SSZ2Setup
-    ADD_PUBLIC_FUNC(SSZ2Setup_StageFinishCB);
-    ADD_PUBLIC_FUNC(SSZ2Setup_TowerDrawLayerCB);
+    ADD_PUBLIC_FUNC(SSZ2Setup_StageFinish_EndAct2);
+    ADD_PUBLIC_FUNC(SSZ2Setup_DrawHook_PrepareDrawingFX);
 #endif
-    ADD_PUBLIC_FUNC(SSZ2Setup_TowerScanlineCB);
-    ADD_PUBLIC_FUNC(SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII);
-    ADD_PUBLIC_FUNC(SSZ2Setup_GenericTriggerCB_CheckSSZAchievement);
-    ADD_PUBLIC_FUNC(SSZ2Setup_GenericTriggerCB_SSZ2BTransition);
+    ADD_PUBLIC_FUNC(SSZ2Setup_Scanline_BGTower);
+    ADD_PUBLIC_FUNC(SSZ2Setup_Trigger_DestroyHotaruMKII);
+    ADD_PUBLIC_FUNC(SSZ2Setup_Trigger_AwardAchievement);
+    ADD_PUBLIC_FUNC(SSZ2Setup_Trigger_SSZ2BTransition);
 
 #if MANIA_USE_PLUS
     // SSZ/SSZ3Cutscene
@@ -6072,7 +6076,7 @@ void InitPublicFunctions()
     // SSZ/TimePost
     ADD_PUBLIC_FUNC(TimePost_Spin);
     ADD_PUBLIC_FUNC(TimePost_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(TimePost_ParticleCB_TimeSparkles);
+    ADD_PUBLIC_FUNC(TimePost_Particle_TimeSparkle);
     ADD_PUBLIC_FUNC(TimePost_HandleTimeSparkles);
     ADD_PUBLIC_FUNC(TimePost_State_Setup);
     ADD_PUBLIC_FUNC(TimePost_State_CheckPlayerCollisions);
@@ -6080,12 +6084,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimePost_State_FinishedSpin);
 
     // SSZ/TimeTravelSetup
-    ADD_PUBLIC_FUNC(TimeTravelSetup_Particle_CB);
+    ADD_PUBLIC_FUNC(TimeTravelSetup_Particle_TimeSparkle);
 
     // SSZ/TTCutscene
     ADD_PUBLIC_FUNC(TTCutscene_StartCutscene);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(TTCutscene_SkipCB);
+    ADD_PUBLIC_FUNC(TTCutscene_Cutscene_SkipCB);
     ADD_PUBLIC_FUNC(TTCutscene_Cutscene_Setup);
 #endif
     ADD_PUBLIC_FUNC(TTCutscene_Cutscene_FlyIn);
@@ -6115,8 +6119,8 @@ void InitPublicFunctions()
 
     // Title/TitleBG
     ADD_PUBLIC_FUNC(TitleBG_SetupFX);
-    ADD_PUBLIC_FUNC(TitleBG_ScanlineCB_Clouds);
-    ADD_PUBLIC_FUNC(TitleBG_ScanlineCB_Island);
+    ADD_PUBLIC_FUNC(TitleBG_Scanline_Clouds);
+    ADD_PUBLIC_FUNC(TitleBG_Scanline_Island);
 
     // Title/TitleEggman
 #if MANIA_USE_PLUS
@@ -6185,8 +6189,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(CrimsonEye_Explode);
     ADD_PUBLIC_FUNC(CrimsonEye_Hit);
     ADD_PUBLIC_FUNC(CrimsonEye_SetupBG2Layer);
-    ADD_PUBLIC_FUNC(CrimsonEye_DrawLayerCB_DisableFGSilhouette);
-    ADD_PUBLIC_FUNC(CrimsonEye_DrawLayerCB_EnableFGSilhouette);
+    ADD_PUBLIC_FUNC(CrimsonEye_DrawHook_DisableFGSilhouette);
+    ADD_PUBLIC_FUNC(CrimsonEye_DrawHook_EnableFGSilhouette);
     ADD_PUBLIC_FUNC(CrimsonEye_SetArrowDir);
     ADD_PUBLIC_FUNC(CrimsonEye_StateContainer_SetupArena);
     ADD_PUBLIC_FUNC(CrimsonEye_StateContainer_AwaitPlayer);
@@ -6278,7 +6282,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MagnetSphere_MovePlayer);
 
     // TMZ/MetalArm
-    ADD_PUBLIC_FUNC(MetalArm_SfxCheckCB);
+    ADD_PUBLIC_FUNC(MetalArm_SfxCheck_MetalArm);
     ADD_PUBLIC_FUNC(MetalArm_GetArmPosition);
     ADD_PUBLIC_FUNC(MetalArm_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(MetalArm_State_Idle);
@@ -6321,9 +6325,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TMZ1Outro_CutsceneAct2_BeginAct2);
 
     // TMZ/TMZ1Setup
-    ADD_PUBLIC_FUNC(TMZ1Setup_BGCallback_ShowSky);
-    ADD_PUBLIC_FUNC(TMZ1Setup_BGCallback_ShowLift);
-    ADD_PUBLIC_FUNC(TMZ1Setup_StageFinishCB);
+    ADD_PUBLIC_FUNC(TMZ1Setup_BGSwitch_ShowSky);
+    ADD_PUBLIC_FUNC(TMZ1Setup_BGSwitch_ShowLift);
+    ADD_PUBLIC_FUNC(TMZ1Setup_StageFinish_EndAct1);
     ADD_PUBLIC_FUNC(TMZ1Setup_State_FadeToLift);
     ADD_PUBLIC_FUNC(TMZ1Setup_State_ShowOutsideBGs);
     ADD_PUBLIC_FUNC(TMZ1Setup_State_FadeOutCurrentBG);
@@ -6357,14 +6361,14 @@ void InitPublicFunctions()
 #endif
 
     // TMZ/TMZ2Setup
-    ADD_PUBLIC_FUNC(TMZ2Setup_DrawLayerCB_SetDynTilesPalette);
-    ADD_PUBLIC_FUNC(TMZ2Setup_DrawLayerCB_UnsetDynTilesPalette);
-    ADD_PUBLIC_FUNC(TMZ2_DrawDynTiles_Eggman);
-    ADD_PUBLIC_FUNC(TMZ2_DrawDynTiles_Ruby);
+    ADD_PUBLIC_FUNC(TMZ2Setup_DrawHook_ApplyDynTilesPalette);
+    ADD_PUBLIC_FUNC(TMZ2Setup_DrawHook_RemoveDynTilesPalette);
+    ADD_PUBLIC_FUNC(TMZ2Setup_DrawDynTiles_Eggman);
+    ADD_PUBLIC_FUNC(TMZ2Setup_DrawDynTiles_Ruby);
 
     // TMZ/TMZ3Setup
-    ADD_PUBLIC_FUNC(TMZ3Setup_DrawLayerCB_SetDynTilesPalette);
-    ADD_PUBLIC_FUNC(TMZ3Setup_DrawLayerCB_UnsetDynTilesPalette);
+    ADD_PUBLIC_FUNC(TMZ3Setup_DrawHook_ApplyDynTilesPalette);
+    ADD_PUBLIC_FUNC(TMZ3Setup_DrawHook_RemoveDynTilesPalette);
 
     // TMZ/TMZAlert
     ADD_PUBLIC_FUNC(TMZAlert_State_Activating);
@@ -6390,7 +6394,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TurboTurtle_SetupState);
     ADD_PUBLIC_FUNC(TurboTurtle_HandleFans);
     ADD_PUBLIC_FUNC(TurboTurtle_HandleFanParticles);
-    ADD_PUBLIC_FUNC(TurboTurtle_FanCheckCB);
+    ADD_PUBLIC_FUNC(TurboTurtle_SfxCheck_SmallFan);
     ADD_PUBLIC_FUNC(TurboTurtle_State_Setup);
     ADD_PUBLIC_FUNC(TurboTurtle_State_Walking);
     ADD_PUBLIC_FUNC(TurboTurtle_State_TurnFanUp);
@@ -6468,23 +6472,23 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UFO_Player_State_UFOCaught_Released);
 
     // UFO/UFO_Ring
-    ADD_PUBLIC_FUNC(UFO_Ring_PlayRingSFX);
+    ADD_PUBLIC_FUNC(UFO_Ring_PlayRingSfx);
     ADD_PUBLIC_FUNC(UFO_Ring_LoseRings);
     ADD_PUBLIC_FUNC(UFO_Ring_State_NormalRing);
     ADD_PUBLIC_FUNC(UFO_Ring_State_Sparkle);
     ADD_PUBLIC_FUNC(UFO_Ring_State_LoseRing);
 
     // UFO/UFO_Setup
-    ADD_PUBLIC_FUNC(UFO_Setup_DrawLayerCallback);
-    ADD_PUBLIC_FUNC(UFO_Setup_ScanlineCallback_Playfield);
-    ADD_PUBLIC_FUNC(UFO_Setup_ScanlineCallback_3DFloor);
-    ADD_PUBLIC_FUNC(UFO_Setup_ScanlineCallback_3DRoof);
+    ADD_PUBLIC_FUNC(UFO_Setup_DrawHook_PrepareDrawingFX);
+    ADD_PUBLIC_FUNC(UFO_Setup_Scanline_Playfield);
+    ADD_PUBLIC_FUNC(UFO_Setup_Scanline_3DFloor);
+    ADD_PUBLIC_FUNC(UFO_Setup_Scanline_3DRoof);
     ADD_PUBLIC_FUNC(UFO_Setup_PlaySphereSfx);
     ADD_PUBLIC_FUNC(UFO_Setup_Finish_Win);
     ADD_PUBLIC_FUNC(UFO_Setup_Finish_Fail);
-    ADD_PUBLIC_FUNC(UFO_Setup_DeformCB_UFO3);
-    ADD_PUBLIC_FUNC(UFO_Setup_DeformCB_UFO4);
-    ADD_PUBLIC_FUNC(UFO_Setup_DeformCB_UFO5);
+    ADD_PUBLIC_FUNC(UFO_Setup_Deform_UFO3);
+    ADD_PUBLIC_FUNC(UFO_Setup_Deform_UFO4);
+    ADD_PUBLIC_FUNC(UFO_Setup_Deform_UFO5);
     ADD_PUBLIC_FUNC(UFO_Setup_State_ShowStartMessage);
     ADD_PUBLIC_FUNC(UFO_Setup_State_FinishFadeout);
     ADD_PUBLIC_FUNC(UFO_Setup_State_HandleRingDrain);

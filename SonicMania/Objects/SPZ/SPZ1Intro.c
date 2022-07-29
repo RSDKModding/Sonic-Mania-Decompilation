@@ -20,6 +20,10 @@ void SPZ1Intro_Update(void)
         else {
             self->activated = true;
             CutsceneSeq_StartSequence(self, SPZ1Intro_Cutscene_SetupAct, SPZ1Intro_Cutscene_ExitPipe, SPZ1Intro_Cutscene_BeginAct1, NULL);
+
+#if MANIA_USE_PLUS
+            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
         }
     }
 }
@@ -60,7 +64,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         player1->camera         = StateMachine_None;
         player1->tileCollisions = false;
         player1->onGround       = false;
-        player1->state          = Player_State_None;
+        player1->state          = Player_State_Static;
         player1->stateInput     = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
@@ -71,7 +75,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
             player2->tileCollisions = false;
             player2->onGround       = false;
             player2->velocity.y     = -1;
-            player2->state          = Player_State_None;
+            player2->state          = Player_State_Static;
             player2->stateInput     = StateMachine_None;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->animator, false, 0);
         }

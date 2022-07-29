@@ -11,9 +11,9 @@ struct ObjectWoodChipper {
     Hitbox hitboxWood;
     Hitbox hitboxRazor;
     uint16 sfxChipperChips;
-    bool32 playingChipSFX;
+    bool32 playingChipSfx;
     uint16 sfxChipperWood;
-    bool32 playingWoodSFX;
+    bool32 playingWoodSfx;
 };
 
 // Entity Class

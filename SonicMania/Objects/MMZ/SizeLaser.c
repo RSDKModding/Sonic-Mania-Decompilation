@@ -169,10 +169,10 @@ void SizeLaser_StageLoad(void)
     SizeLaser->sfxShrink2 = RSDK.GetSfx("MMZ/Shrink2.wav");
     SizeLaser->sfxGrow2   = RSDK.GetSfx("MMZ/Grow2.wav");
 
-    Soundboard_LoadSFX("MMZ/SizeLaser.wav", true, SizeLaser_LaserSfxCheck, NULL);
+    Soundboard_LoadSfx("MMZ/SizeLaser.wav", true, SizeLaser_SfxCheck_SizeLaser, StateMachine_None);
 }
 
-bool32 SizeLaser_LaserSfxCheck(void)
+bool32 SizeLaser_SfxCheck_SizeLaser(void)
 {
     int32 activeCount = 0;
 

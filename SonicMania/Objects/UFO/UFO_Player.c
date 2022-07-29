@@ -275,19 +275,19 @@ void UFO_Player_HandleBumperTiles(void)
 
     int32 bumpDirMasks = 0;
 
-    uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
+    uint16 tile = RSDK.GetTile(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
         bumpDirMasks = 0b0001;
 
-    tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
+    tile = RSDK.GetTile(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
         bumpDirMasks |= 0b0010;
 
-    tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
+    tile = RSDK.GetTile(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
         bumpDirMasks |= 0b0100;
 
-    tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
+    tile = RSDK.GetTile(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
         bumpDirMasks |= 0b1000;
 
@@ -341,7 +341,7 @@ void UFO_Player_HandleSpeedUp(void)
 {
     RSDK_THIS(UFO_Player);
 
-    uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20);
+    uint16 tile = RSDK.GetTile(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20);
     if (tile == (uint16)-1) {
         if (++self->courseOutTimer >= 2) {
             self->interaction   = 0;

@@ -240,9 +240,9 @@ struct ObjectPlayer {
     uint16 sfxSkidding;
     uint16 sfxGrab;
     uint16 sfxFlying;
-    bool32 playingFlySFX;
+    bool32 playingFlySfx;
     uint16 sfxTired;
-    bool32 playingTiredSFX;
+    bool32 playingTiredSfx;
     uint16 sfxLand;
     uint16 sfxSlide;
     uint16 sfxOuttahere;
@@ -335,9 +335,9 @@ struct ObjectPlayer {
     uint16 sfxSkidding;
     uint16 sfxGrab;
     uint16 sfxFlying;
-    bool32 playingFlySFX;
+    bool32 playingFlySfx;
     uint16 sfxTired;
-    bool32 playingTiredSFX;
+    bool32 playingTiredSfx;
     uint16 sfxLand;
     uint16 sfxSlide;
     uint16 sfxOuttahere;
@@ -435,7 +435,7 @@ struct EntityPlayer {
     Vector2 flyCarrySidekickPos;
     Vector2 flyCarryLeaderPos;
     uint8 deathType;
-    bool32 forceJumpIn;
+    bool32 forceRespawn;
 #if MANIA_USE_PLUS
     bool32 isGhost;
 #endif
@@ -551,7 +551,7 @@ void Player_HandleSidekickRespawn(void);
 void Player_State_StartSuper(void);
 
 // States
-void Player_State_None(void);
+void Player_State_Static(void);
 void Player_State_Ground(void);
 void Player_State_Air(void);
 void Player_State_Roll(void);
@@ -573,7 +573,7 @@ void Player_State_FlyCarried(void);
 void Player_State_KnuxGlideLeft(void);
 void Player_State_KnuxGlideRight(void);
 void Player_State_KnuxGlideDrop(void);
-void Player_State_GlideSlide(void);
+void Player_State_KnuxGlideSlide(void);
 void Player_State_KnuxWallClimb(void);
 void Player_State_KnuxLedgePullUp(void);
 #if MANIA_USE_PLUS
@@ -605,10 +605,10 @@ void Player_JumpAbility_Knux(void);
 void Player_JumpAbility_Mighty(void);
 void Player_JumpAbility_Ray(void);
 
-bool32 Player_CheckRayDiving(void);
-bool32 Player_CheckRaySwooping(void);
-void Player_UpdateRayDiveSFX(int32 sfxID);
-void Player_UpdateRaySwoopSFX(int32 sfxID);
+bool32 Player_SfxCheck_RayDive(void);
+bool32 Player_SfxCheck_RaySwoop(void);
+void Player_SfxUpdate_RayDive(int32 sfxID);
+void Player_SfxUpdate_RaySwoop(int32 sfxID);
 #endif
 
 // Input States

@@ -46,7 +46,7 @@ void LRZ3Outro_State_BlastOff(void);
 void LRZ3Outro_State_RocketLaunch(void);
 void LRZ3Outro_State_EnterLittlePlanet(void);
 
-void LRZ3Outro_StageFinishCB(void);
+void LRZ3Outro_StageFinish_EndAct2ST(void);
 
 bool32 LRZ3Outro_Cutscene_StopPlayers(EntityCutsceneSeq *host);
 bool32 LRZ3Outro_Cutscene_LightUpLittlePlanet(EntityCutsceneSeq *host);

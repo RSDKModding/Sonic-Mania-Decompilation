@@ -85,13 +85,13 @@ void PBL_Setup_StageLoad(void)
     PBL_Setup->score       = 0;
     PBL_Setup->score1UP    = 10000;
 
-    RSDK.GetTileLayer(PBL_Setup->tableLow)->scanlineCallback  = PBL_Setup_TableLow_ScanlineCB;
-    RSDK.GetTileLayer(PBL_Setup->tableHigh)->scanlineCallback = PBL_Setup_TableHigh_ScanlineCB;
-    RSDK.GetTileLayer(1)->scanlineCallback                    = PBL_Setup_BG_ScanlineCallback;
+    RSDK.GetTileLayer(PBL_Setup->tableLow)->scanlineCallback  = PBL_Setup_Scanline_TableLow;
+    RSDK.GetTileLayer(PBL_Setup->tableHigh)->scanlineCallback = PBL_Setup_Scanline_TableHigh;
+    RSDK.GetTileLayer(1)->scanlineCallback                    = PBL_Setup_Scanline_PinballBG;
 
-    RSDK.SetDrawGroupProperties(1, false, PBL_Setup_DrawLayer_Callback);
-    RSDK.SetDrawGroupProperties(3, false, PBL_Setup_DrawLayer_Callback);
-    RSDK.SetDrawGroupProperties(4, true, NULL);
+    RSDK.SetDrawGroupProperties(1, false, PBL_Setup_DrawHook_PrepareDrawingFX);
+    RSDK.SetDrawGroupProperties(3, false, PBL_Setup_DrawHook_PrepareDrawingFX);
+    RSDK.SetDrawGroupProperties(4, true, StateMachine_None);
 
     RSDK.SetLimitedFade(1, 0, 7, 36, 0, 255);
     RSDK.SetLimitedFade(2, 0, 7, 72, 0, 255);
@@ -105,7 +105,7 @@ void PBL_Setup_StageLoad(void)
     PBL_Setup->sfxContinue = RSDK.GetSfx("Special/Continue.wav");
 }
 
-void PBL_Setup_TableLow_ScanlineCB(ScanlineInfo *scanlines)
+void PBL_Setup_Scanline_TableLow(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
@@ -135,7 +135,7 @@ void PBL_Setup_TableLow_ScanlineCB(ScanlineInfo *scanlines)
         scanlines++;
     }
 }
-void PBL_Setup_TableHigh_ScanlineCB(ScanlineInfo *scanlines)
+void PBL_Setup_Scanline_TableHigh(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
@@ -165,7 +165,7 @@ void PBL_Setup_TableHigh_ScanlineCB(ScanlineInfo *scanlines)
         scanlines++;
     }
 }
-void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines)
+void PBL_Setup_Scanline_PinballBG(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, 112);
 
@@ -192,7 +192,7 @@ void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines)
     }
 }
 
-void PBL_Setup_DrawLayer_Callback(void)
+void PBL_Setup_DrawHook_PrepareDrawingFX(void)
 {
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);

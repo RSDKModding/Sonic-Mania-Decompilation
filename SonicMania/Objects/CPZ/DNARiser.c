@@ -177,7 +177,7 @@ void DNARiser_State_HandleInteractions(void)
                 player->jumpAbilityState = 1;
                 player->onGround         = false;
                 player->tileCollisions   = false;
-                player->state            = Player_State_None;
+                player->state            = Player_State_Static;
                 player->nextAirState     = StateMachine_None;
                 player->nextGroundState  = StateMachine_None;
                 self->activePlayers |= 1 << playerID;
@@ -185,7 +185,7 @@ void DNARiser_State_HandleInteractions(void)
         }
 
         if (((1 << playerID) & self->activePlayers)) {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 player->position.x = self->position.x;
                 player->position.y = self->position.y;
                 player->velocity.x = 0;
@@ -306,7 +306,7 @@ void DNARiser_State_HelixRise(void)
                     player->jumpAbilityState = 1;
                     player->onGround         = false;
                     player->tileCollisions   = false;
-                    player->state            = Player_State_None;
+                    player->state            = Player_State_Static;
                     player->nextAirState     = StateMachine_None;
                     player->nextGroundState  = StateMachine_None;
                     player->velocity.x       = 0;

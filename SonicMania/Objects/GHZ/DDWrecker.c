@@ -143,27 +143,27 @@ void DDWrecker_State_InitChildren(void)
         self->timer++;
         if (self->timer == 60) {
             EntityDDWrecker *chain1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, DDWrecker);
-            RSDK.ResetEntityPtr(chain1, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
+            RSDK.ResetEntity(chain1, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
             chain1->position.x = self->position.x;
             chain1->position.y = self->position.y + 0x400000;
 
             EntityDDWrecker *chain2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, DDWrecker);
-            RSDK.ResetEntityPtr(chain2, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
+            RSDK.ResetEntity(chain2, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
             chain2->position.x = self->position.x;
             chain2->position.y = self->position.y + 0x400000;
 
             EntityDDWrecker *chain3 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, DDWrecker);
-            RSDK.ResetEntityPtr(chain3, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
+            RSDK.ResetEntity(chain3, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
             chain3->position.x = self->position.x;
             chain3->position.y = self->position.y + 0x400000;
 
             EntityDDWrecker *chain4 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 5, DDWrecker);
-            RSDK.ResetEntityPtr(chain4, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
+            RSDK.ResetEntity(chain4, DDWrecker->classID, intToVoid(DDWRECKER_CHAIN));
             chain4->position.x = self->position.x;
             chain4->position.y = self->position.y + 0x400000;
 
             EntityDDWrecker *core = RSDK_GET_ENTITY(SceneInfo->entitySlot + 3, DDWrecker);
-            RSDK.ResetEntityPtr(core, DDWrecker->classID, intToVoid(DDWRECKER_CORE));
+            RSDK.ResetEntity(core, DDWrecker->classID, intToVoid(DDWRECKER_CORE));
             core->position.x = self->position.x;
             core->position.y = self->position.y;
             core->position.y += 0x200000;
@@ -182,7 +182,7 @@ void DDWrecker_State_InitChildren(void)
             core->state           = DDWrecker_State_Assemble;
 
             EntityDDWrecker *ball1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker);
-            RSDK.ResetEntityPtr(ball1, DDWrecker->classID, intToVoid(DDWRECKER_BALL1));
+            RSDK.ResetEntity(ball1, DDWrecker->classID, intToVoid(DDWRECKER_BALL1));
             ball1->position.x = self->position.x;
             ball1->position.y = self->position.y;
             ball1->position.y += 0x400000;
@@ -197,7 +197,7 @@ void DDWrecker_State_InitChildren(void)
             ball1->radius          = 64;
 
             EntityDDWrecker *ball2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);
-            RSDK.ResetEntityPtr(ball2, DDWrecker->classID, intToVoid(DDWRECKER_BALL2));
+            RSDK.ResetEntity(ball2, DDWrecker->classID, intToVoid(DDWRECKER_BALL2));
             ball2->position.x = self->position.x;
             ball2->position.y = self->position.y;
             ball2->position.y += 0x400000;

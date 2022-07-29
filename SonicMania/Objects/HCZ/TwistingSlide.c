@@ -19,7 +19,7 @@ void TwistingSlide_Update(void)
         int32 storeX = player->position.x;
         int32 storeY = player->position.y;
 
-        if (player->state != Player_State_None)
+        if (player->state != Player_State_Static)
             self->activePlayers &= ~(1 << playerID);
 
         if (!Player_CheckCollisionTouch(player, self, &self->hitboxSlide) || (player->position.y < self->minY) || player->position.y > self->maxY) {
@@ -28,7 +28,7 @@ void TwistingSlide_Update(void)
         else if (self->direction) {
             switch (self->type) {
                 case TWISTINGSLIDE_START:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -52,7 +52,7 @@ void TwistingSlide_Update(void)
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel < 0) {
                         if (Player_CheckCollisionTouch(player, self, &self->hitboxSlideStart)) {
                             player->tileCollisions = false;
-                            player->state          = Player_State_None;
+                            player->state          = Player_State_Static;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -63,7 +63,7 @@ void TwistingSlide_Update(void)
                     break;
 
                 case TWISTINGSLIDE_STRIP:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -74,7 +74,7 @@ void TwistingSlide_Update(void)
                     break;
 
                 case TWISTINGSLIDE_TWIST:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -85,7 +85,7 @@ void TwistingSlide_Update(void)
                     break;
 
                 case TWISTINGSLIDE_END:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -103,7 +103,7 @@ void TwistingSlide_Update(void)
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel > 0
                              && Player_CheckCollisionTouch(player, self, &self->hitboxSlideEnd)) {
                         player->tileCollisions = false;
-                        player->state          = Player_State_None;
+                        player->state          = Player_State_Static;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -118,7 +118,7 @@ void TwistingSlide_Update(void)
         else {
             switch (self->type) {
                 case TWISTINGSLIDE_START:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -141,7 +141,7 @@ void TwistingSlide_Update(void)
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel > 0) {
                         if (Player_CheckCollisionTouch(player, self, &self->hitboxSlideStart)) {
                             player->tileCollisions = false;
-                            player->state          = Player_State_None;
+                            player->state          = Player_State_Static;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -152,7 +152,7 @@ void TwistingSlide_Update(void)
                     break;
 
                 case TWISTINGSLIDE_STRIP:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -164,7 +164,7 @@ void TwistingSlide_Update(void)
                     break;
 
                 case TWISTINGSLIDE_TWIST:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -176,7 +176,7 @@ void TwistingSlide_Update(void)
                     break;
 
                 case TWISTINGSLIDE_END:
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         if (!((1 << playerID) & self->activePlayers)) {
                             self->playerAngles[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
                             self->activePlayers |= 1 << playerID;
@@ -196,7 +196,7 @@ void TwistingSlide_Update(void)
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel < 0
                              && Player_CheckCollisionTouch(player, self, &self->hitboxSlideEnd)) {
                         player->tileCollisions = false;
-                        player->state          = Player_State_None;
+                        player->state          = Player_State_Static;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
 

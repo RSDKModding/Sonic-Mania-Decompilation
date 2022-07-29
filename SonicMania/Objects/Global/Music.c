@@ -136,7 +136,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
     for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         entity = RSDK_GET_ENTITY(slot, Music);
         if (entity->classID != Music->classID) {
-            RSDK.ResetEntityPtr(entity, Music->classID, NULL);
+            RSDK.ResetEntity(entity, Music->classID, NULL);
             break;
         }
     }
@@ -150,7 +150,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
         case TRACK_INVINCIBLE:
         case TRACK_SNEAKERS:
             Music_HandleMusicStack_Powerups(entity);
-            entity->trackPriority = TRACK_PRIORITY_SUPER;
+            entity->trackPriority = TRACK_PRIORITY_POWERUP;
             entity->restartTrack  = true;
             break;
 
@@ -202,7 +202,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
             Music->playing1UPTrack = true;
 
             EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-            RSDK.ResetEntityPtr(music, Music->classID, NULL);
+            RSDK.ResetEntity(music, Music->classID, NULL);
             music->state     = Music_State_1UPJingle;
             music->volume    = 0.0;
             music->fadeSpeed = 0.08;
@@ -270,7 +270,7 @@ void Music_PlayTrack(uint8 trackID)
     }
     else {
         EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-        RSDK.ResetEntityPtr(music, Music->classID, NULL);
+        RSDK.ResetEntity(music, Music->classID, NULL);
 
         if (!Music->playingRegularTrack)
             Music->prevTrack = Music->activeTrack;
@@ -547,7 +547,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
                 if (Music->trackStartPos) {
                     RSDK.SetChannelAttributes(Music->channelID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
                     music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-                    RSDK.ResetEntityPtr(music, Music->classID, NULL);
+                    RSDK.ResetEntity(music, Music->classID, NULL);
                     music->state     = Music_State_FadeTrackIn;
                     music->volume    = 0.0;
                     music->fadeSpeed = 0.08;
@@ -614,7 +614,7 @@ void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
 #endif
 
     if (music && (music->classID != Music->classID || music->state != Music_State_TransitionTrack)) {
-        RSDK.ResetEntityPtr(music, Music->classID, NULL);
+        RSDK.ResetEntity(music, Music->classID, NULL);
         music->state     = Music_State_TransitionTrack;
         music->volume    = 1.0;
         music->fadeSpeed = fadeSpeed;
@@ -625,7 +625,7 @@ void Music_FadeOut(float fadeSpeed)
 {
     if (Music->activeTrack != TRACK_DROWNING) {
         EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-        RSDK.ResetEntityPtr(music, Music->classID, NULL);
+        RSDK.ResetEntity(music, Music->classID, NULL);
         music->state     = Music_State_FadeOut;
         music->volume    = 1.0;
         music->fadeSpeed = fadeSpeed;

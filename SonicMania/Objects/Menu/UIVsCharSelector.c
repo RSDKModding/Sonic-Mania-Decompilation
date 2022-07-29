@@ -361,7 +361,7 @@ void UIVsCharSelector_State_CharSelect(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-    uint32 id = API_ControllerIDForInputID(CONT_P1 + self->playerID);
+    uint32 id = API_GetInputDeviceID(CONT_P1 + self->playerID);
     if (id == INPUT_NONE || id == INPUT_AUTOASSIGN) {
         self->state = UIVsCharSelector_State_WaitingForPlayer;
 #if MANIA_USE_PLUS
@@ -379,14 +379,14 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
     self->processButtonCB = StateMachine_None;
     self->isSelected      = false;
 
-    uint32 id = API_ControllerIDForInputID(CONT_P1 + self->playerID);
+    uint32 id = API_GetInputDeviceID(CONT_P1 + self->playerID);
 #if MANIA_USE_PLUS
     self->ready    = false;
-    int32 assigned = API_GetAssignedControllerID(id);
+    int32 assigned = API_IsInputDeviceAssigned(id);
 
     if (parent->active == ACTIVE_ALWAYS) {
         if (!id || (!assigned && id != INPUT_AUTOASSIGN)) {
-            API_AssignControllerID(CONT_P1 + self->playerID, INPUT_AUTOASSIGN);
+            API_AssignInputSlotToDevice(CONT_P1 + self->playerID, INPUT_AUTOASSIGN);
         }
         else if (id != INPUT_AUTOASSIGN) {
             self->playerBounceOffset   = 0;
@@ -411,8 +411,8 @@ void UIVsCharSelector_State_HandlePlayerJoin(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     self->isSelected = true;
-    int32 id         = API_ControllerIDForInputID(CONT_P1 + self->playerID);
-    int32 assigned   = API_GetAssignedControllerID(id);
+    int32 id         = API_GetInputDeviceID(CONT_P1 + self->playerID);
+    int32 assigned   = API_IsInputDeviceAssigned(id);
 
     if (parent->active == ACTIVE_ALWAYS) {
         if (id != INPUT_NONE && id != INPUT_AUTOASSIGN && assigned) {
@@ -426,7 +426,7 @@ void UIVsCharSelector_State_HandlePlayerJoin(void)
         }
     }
 #else
-    int32 id = API_ControllerIDForInputID(CONT_P1 + self->playerID);
+    int32 id = API_GetInputDeviceID(CONT_P1 + self->playerID);
 
     if (id != INPUT_NONE && id != INPUT_AUTOASSIGN) {
         if (self->timer > 0) {

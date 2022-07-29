@@ -153,15 +153,15 @@ void ReplayRecorder_SaveReplayDLG_NoCB(void);
 void ReplayRecorder_SaveReplayDLG_YesCB(void);
 void ReplayRecorder_SaveReplayDLG_CB(void);
 void ReplayRecorder_SaveReplay(void);
-void ReplayRecorder_ReplaySaveFinish_CB(bool32 success);
-void ReplayRecorder_ReplaySave_CB(bool32 success);
-void ReplayRecorder_SaveTimeAttackDB_CB(bool32 success);
+void ReplayRecorder_SaveFile_Replay(bool32 success);
+void ReplayRecorder_SaveUserDB_ReplayDB(bool32 success);
+void ReplayRecorder_SaveUserDB_TimeAttackDB(bool32 success);
 void ReplayRecorder_Buffer_PackInPlace(int32 *tempWriteBuffer);
 void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer);
 void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer);
 void ReplayRecorder_SetReplayStatus(int32 status);
 void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*callback)(bool32 success));
-void ReplayRecorder_Load_CB(int32 status);
+void ReplayRecorder_LoadFile_Replay(int32 status);
 void ReplayRecorder_ConfigureGhost_CB(void);
 void ReplayRecorder_SetupActions(void);
 void ReplayRecorder_SetupWriteBuffer(void);
@@ -195,7 +195,7 @@ void ReplayRecorder_DeleteReplay_CB(int32 status);
 void ReplayRecorder_DeleteReplaySave_CB(int32 status);
 void ReplayRecorder_DeleteReplaySave2_CB(int32 status);
 void ReplayRecorder_SetStatus(int32 status);
-void ReplayRecorder_ReplaySaveFinish(int32 status);
+void ReplayRecorder_SaveUserDB_ReplayDBManager(int32 status);
 #endif
 
 #endif //! OBJ_REPLAYRECORDER_H

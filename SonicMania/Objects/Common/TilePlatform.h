@@ -6,6 +6,8 @@
 // Object Class
 struct ObjectTilePlatform {
     RSDK_OBJECT
+    Animator animator;
+    uint16 aniFrames;
 };
 
 // Entity Class

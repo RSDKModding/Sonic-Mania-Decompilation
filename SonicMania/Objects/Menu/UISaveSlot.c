@@ -970,12 +970,12 @@ void UISaveSlot_SelectedCB(void)
         foreach_all(UIButtonPrompt, prompt) { prompt->visible = false; }
 
 #if MANIA_USE_PLUS
-        int32 id = API_MostRecentActiveControllerID(true, false, 5);
+        int32 id = API_GetFilteredInputDeviceID(true, false, 5);
 #else
-        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
+        int32 id = API_GetFilteredInputDeviceID(INPUT_NONE);
 #endif
-        API_ResetControllerAssignments();
-        API_AssignControllerID(CONT_P1, id);
+        API_ResetInputSlotAssignments();
+        API_AssignInputSlotToDevice(CONT_P1, id);
 
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         RSDK.StopChannel(Music->channelID);
@@ -1241,7 +1241,7 @@ void UISaveSlot_State_Selected(void)
             rubyY += 0x200000;
 
         if (self->timer == 32) {
-            PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+            PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
             fxRuby            = CREATE_ENTITY(FXRuby, NULL, self->position.x - offset, rubyY - offset);
             fxRuby->fadeWhite = 0;
             fxRuby->fadeBlack = 0;
@@ -1255,7 +1255,7 @@ void UISaveSlot_State_Selected(void)
         }
 
         if (self->timer == 152)
-            PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+            PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
 
         if (self->timer >= 92) {
             if (fxRuby->fadeWhite < 512) {

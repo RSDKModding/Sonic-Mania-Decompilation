@@ -123,10 +123,10 @@ void MetalArm_StageLoad(void)
 {
     MetalArm->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MetalArm.bin", SCOPE_STAGE);
 
-    Soundboard_LoadSFX("TMZ1/MetalArm.wav", true, MetalArm_SfxCheckCB, NULL);
+    Soundboard_LoadSfx("TMZ1/MetalArm.wav", true, MetalArm_SfxCheck_MetalArm, StateMachine_None);
 }
 
-bool32 MetalArm_SfxCheckCB(void)
+bool32 MetalArm_SfxCheck_MetalArm(void)
 {
     int32 activeCount = 0;
 

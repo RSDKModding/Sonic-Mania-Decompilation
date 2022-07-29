@@ -464,12 +464,12 @@ void PhantomMystic_State_MoveCupsToMystic(void)
     PhantomMystic_CheckPlayerCollisions();
 
     if (++self->timer == 60)
-        PhantomEgg_SetupScanlineCB();
+        PhantomEgg_SetupWarpFX();
 
     if (self->timer == 120) {
         int32 x = self->position.x;
         int32 y = self->position.y;
-        RSDK.ResetEntityPtr(self, PhantomMystic->classID, NULL);
+        RSDK.ResetEntity(self, PhantomMystic->classID, NULL);
 
         self->position.x = x;
         self->position.y = y;

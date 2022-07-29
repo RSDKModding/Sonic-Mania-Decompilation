@@ -139,9 +139,9 @@ void HeavyGunner_StageLoad(void)
     HeavyGunner->sfxFlip       = RSDK.GetSfx("SPZ1/RocketFlip.wav");
     HeavyGunner->sfxRumble     = RSDK.GetSfx("SPZ1/Rumble.wav");
 
-    Soundboard_LoadSFX("SPZ1/HBHSurprise.wav", true, HeavyGunner_SurpriseCheckCB, NULL);
-    Soundboard_LoadSFX("SPZ1/HeliProp.wav", true, HeavyGunner_HelicopterCheckCB, NULL);
-    Soundboard_LoadSFX("SPZ1/RocketBurn.wav", true, HeavyGunner_BurnCheckCB, NULL);
+    Soundboard_LoadSfx("SPZ1/HBHSurprise.wav", true, HeavyGunner_SfxCheck_HBHSurprise, StateMachine_None);
+    Soundboard_LoadSfx("SPZ1/HeliProp.wav", true, HeavyGunner_SfxCheck_HeliProp, StateMachine_None);
+    Soundboard_LoadSfx("SPZ1/RocketBurn.wav", true, HeavyGunner_SfxCheck_RocketBurn, StateMachine_None);
 
     // Absolutely zero clue what these are for
     HeavyGunner->unused1 = 0x470000;
@@ -162,7 +162,7 @@ void HeavyGunner_StageLoad(void)
     HeavyGunner->active = ACTIVE_NEVER;
 }
 
-bool32 HeavyGunner_HelicopterCheckCB(void)
+bool32 HeavyGunner_SfxCheck_HeliProp(void)
 {
     Vector2 range;
 
@@ -178,7 +178,7 @@ bool32 HeavyGunner_HelicopterCheckCB(void)
     return active;
 }
 
-bool32 HeavyGunner_SurpriseCheckCB(void)
+bool32 HeavyGunner_SfxCheck_HBHSurprise(void)
 {
     Vector2 range;
 
@@ -195,7 +195,7 @@ bool32 HeavyGunner_SurpriseCheckCB(void)
     return active;
 }
 
-bool32 HeavyGunner_BurnCheckCB(void)
+bool32 HeavyGunner_SfxCheck_RocketBurn(void)
 {
     Vector2 range;
 
@@ -602,7 +602,7 @@ void HeavyGunner_Input_LockedP1(void)
 
     Player_Input_P1();
 
-    if (self->state != Player_State_None) {
+    if (self->state != Player_State_Static) {
         self->up        = false;
         self->down      = false;
         self->jumpPress = false;

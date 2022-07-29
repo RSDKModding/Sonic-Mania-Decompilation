@@ -103,7 +103,7 @@ bool32 EncoreGoodEnd_Cutscene_KingAppear(EntityCutsceneSeq *host);
 bool32 EncoreGoodEnd_Cutscene_ThanksForPlaying(EntityCutsceneSeq *host);
 bool32 EncoreGoodEnd_Cutscene_FinishCutscene(EntityCutsceneSeq *host);
 
-void EncoreGoodEnd_SkipCB(void);
+void EncoreGoodEnd_Cutscene_SkipCB(void);
 
 #endif
 

@@ -33,6 +33,6 @@ void ERZSetup_EditorLoad(void);
 void ERZSetup_Serialize(void);
 
 // Extra Entity Functions
-void ERZSetup_Sky_ScanlineCB(ScanlineInfo *scanlines);
+void ERZSetup_Scanline_Sky(ScanlineInfo *scanlines);
 
 #endif //! OBJ_ERZSETUP_H

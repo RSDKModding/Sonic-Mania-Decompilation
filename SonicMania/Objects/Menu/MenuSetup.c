@@ -1956,8 +1956,8 @@ void MenuSetup_Options_LanguageMenuButton_ActionCB(void) { UIControl_MatchMenuTa
 
 void MenuSetup_Options_ControlsMenuButton_ActionCB(void)
 {
-    int32 id   = API_MostRecentActiveControllerID(INPUT_NONE);
-    int32 type = API_GetControllerType(id);
+    int32 id   = API_GetFilteredInputDeviceID(INPUT_NONE);
+    int32 type = API_GetInputDeviceType(id);
 
     switch (sku_platform) {
         case PLATFORM_DEV:

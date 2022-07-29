@@ -235,7 +235,7 @@ void PhantomKing_HandleAttacks(void)
     foreach_active(PKingAttack, attack)
     {
         if (attack->state == PKingAttack_State_Orbiting) {
-            PhantomRuby_PlaySFX(RSDK.Rand(RUBYSFX_ATTACK1, RUBYSFX_REDCUBE));
+            PhantomRuby_PlaySfx(RSDK.Rand(RUBYSFX_ATTACK1, RUBYSFX_REDCUBE));
             attack->type = PKINGATTACK_LAUNCHED;
             int32 angle  = RSDK.ATan2((player->position.x - attack->position.x) >> 16, (player->position.y - attack->position.y) >> 16);
 
@@ -407,7 +407,7 @@ void PhantomKing_State_SetupArms(void)
 
     if (++self->timer == 30) {
         EntityPhantomKing *armL = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, PhantomKing);
-        RSDK.ResetEntityPtr(armL, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_L));
+        RSDK.ResetEntity(armL, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_L));
         armL->position.x     = self->position.x;
         armL->position.y     = self->position.y;
         armL->parent         = self;
@@ -416,7 +416,7 @@ void PhantomKing_State_SetupArms(void)
         armL->armAngleOffset = 32;
 
         EntityPhantomKing *armR = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PhantomKing);
-        RSDK.ResetEntityPtr(armR, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_R));
+        RSDK.ResetEntity(armR, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_R));
         armR->position.x     = self->position.x;
         armR->position.y     = self->position.y;
         armR->parent         = self;

@@ -124,7 +124,7 @@ void Crane_HandlePlayerInteractions(void)
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
                     player->groundVel       = 0;
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
                     player->onGround        = false;

@@ -144,10 +144,10 @@ void EggLoco_StageLoad(void)
 
     EggLoco->sfxSmoke   = RSDK.GetSfx("MSZ/LocoSmoke.wav");
     EggLoco->sfxWhistle = RSDK.GetSfx("MSZ/LocoWhistle.wav");
-    Soundboard_LoadSFX("MSZ/LocoChugga.wav", true, EggLoco_ChuggaCheckCB, EggLoco_ChuggaUpdateCB);
+    Soundboard_LoadSfx("MSZ/LocoChugga.wav", true, EggLoco_SfxCheck_LocoChugga, EggLoco_SfxUpdate_LocoChugga);
 }
 
-bool32 EggLoco_ChuggaCheckCB(void)
+bool32 EggLoco_SfxCheck_LocoChugga(void)
 {
     int32 count   = 0;
     int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
@@ -162,7 +162,7 @@ bool32 EggLoco_ChuggaCheckCB(void)
     return count > 0;
 }
 
-void EggLoco_ChuggaUpdateCB(int32 sfx)
+void EggLoco_SfxUpdate_LocoChugga(int32 sfx)
 {
     int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     int32 screenY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;

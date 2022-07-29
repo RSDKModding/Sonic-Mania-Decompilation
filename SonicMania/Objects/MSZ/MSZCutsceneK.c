@@ -58,7 +58,7 @@ void MSZCutsceneK_StageLoad(void)
 }
 
 #if MANIA_USE_PLUS
-void MSZCutsceneK_SkipCB(void)
+void MSZCutsceneK_Cutscene_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
     SceneInfo->listPos += TimeAttackData_GetManiaListPos(ZONE_MSZ, ACT_1, CHAR_KNUX);
@@ -72,11 +72,7 @@ void MSZCutsceneK_StartCutscene(void)
     CutsceneSeq_StartSequence(self, MSZCutsceneK_Cutscene_RidingTornado, MSZCutsceneK_Cutscene_KnockedOffTornado, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (sequence->classID) {
-        sequence->skipType     = SKIPTYPE_CALLBACK;
-        sequence->skipCallback = MSZCutsceneK_SkipCB;
-    }
+    CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, MSZCutsceneK_Cutscene_SkipCB);
 #endif
 }
 
@@ -98,7 +94,7 @@ void MSZCutsceneK_SetupP2(int32 x, int32 y)
     player2->stateAbility = Player_JumpAbility_Sonic;
     player2->sensorY      = 0x140000;
     player2->stateInput   = StateMachine_None;
-    player2->state        = Player_State_None;
+    player2->state        = Player_State_Static;
     RSDK.SetSpriteAnimation(Player->sonicFrames, ANI_RIDE, &player2->animator, true, 0);
 }
 
@@ -113,7 +109,7 @@ bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host)
     if (!host->timer) {
         SceneInfo->timeEnabled  = false;
         SceneInfo->milliseconds = 0;
-        player1->state          = Player_State_None;
+        player1->state          = Player_State_Static;
         player1->stateInput     = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         player1->velocity.x = 0;

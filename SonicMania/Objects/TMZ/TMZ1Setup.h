@@ -55,10 +55,10 @@ void TMZ1Setup_EditorLoad(void);
 void TMZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-void TMZ1Setup_BGCallback_ShowSky(void);
-void TMZ1Setup_BGCallback_ShowLift(void);
+void TMZ1Setup_BGSwitch_ShowSky(void);
+void TMZ1Setup_BGSwitch_ShowLift(void);
 
-void TMZ1Setup_StageFinishCB(void);
+void TMZ1Setup_StageFinish_EndAct1(void);
 
 void TMZ1Setup_State_FadeToLift(void);
 void TMZ1Setup_State_ShowOutsideBGs(void);

@@ -38,7 +38,7 @@ void WaterGush_Update(void)
                 player->velocity.y      = 0;
                 player->tileCollisions  = false;
                 player->onGround        = false;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
             }
         }
 
@@ -72,7 +72,7 @@ void WaterGush_Update(void)
 
             player->position.x += (offsetX - player->position.x) >> 2;
             player->position.y += (offsetY - player->position.y) >> 2;
-            player->state = Player_State_None;
+            player->state = Player_State_Static;
 
             if ((!Player_CheckCollisionTouch(player, self, &self->hitboxRange) && !Player_CheckCollisionTouch(player, self, &self->hitboxGush))
                 || self->finishedExtending) {

@@ -292,13 +292,13 @@ void CompetitionMenu_ResetControllerAssignments(void)
 
     for (int32 p = 0; p < PLAYER_COUNT; ++p) {
         EntityUIVsCharSelector *selector = buttons[p];
-        int32 id                         = API_ControllerIDForInputID(p + 1);
+        int32 id                         = API_GetInputDeviceID(p + 1);
 
         if (id && id != INPUT_AUTOASSIGN) {
             if (playerID < p)
-                API_AssignControllerID(p, INPUT_NONE);
+                API_AssignInputSlotToDevice(p, INPUT_NONE);
 
-            API_AssignControllerID(CONT_P1 + playerID, id);
+            API_AssignInputSlotToDevice(CONT_P1 + playerID, id);
 
             buttons[playerID]->frameID = selector->frameID;
             if (playerID < p)
@@ -308,7 +308,7 @@ void CompetitionMenu_ResetControllerAssignments(void)
         }
     }
 
-    for (; playerID < PLAYER_COUNT; ++playerID) API_AssignControllerID(CONT_P1 + playerID, INPUT_NONE);
+    for (; playerID < PLAYER_COUNT; ++playerID) API_AssignInputSlotToDevice(CONT_P1 + playerID, INPUT_NONE);
 }
 
 void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount)
@@ -457,7 +457,7 @@ void CompetitionMenu_VS_ProcessInputCB(void)
             StateMachine_Run(charSel->processButtonCB);
             SceneInfo->entity = entStore;
 
-            API_ControllerIDForInputID(charSel->playerID + 1);
+            API_GetInputDeviceID(charSel->playerID + 1);
         }
 
         EntityUIButtonPrompt *goPrompt = NULL;
@@ -495,8 +495,8 @@ void CompetitionMenu_VS_MenuSetupCB(void)
         charSel->ready           = false;
         charSel->processButtonCB = UIVsCharSelector_ProcessButtonCB;
 
-        if (!API_ControllerIDForInputID(CONT_P1 + charSel->playerID))
-            API_AssignControllerID(CONT_P1 + charSel->playerID, INPUT_AUTOASSIGN);
+        if (!API_GetInputDeviceID(CONT_P1 + charSel->playerID))
+            API_AssignInputSlotToDevice(CONT_P1 + charSel->playerID, INPUT_AUTOASSIGN);
     }
 
     for (int32 i = 0; i < self->promptCount; ++i) {
@@ -594,7 +594,7 @@ void CompetitionMenu_RulesButton_ActionCB(void)
     session->playerCount = 0;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *charSel = (EntityUIVsCharSelector *)control->buttons[i];
-        int32 id                        = API_ControllerIDForInputID(CONT_P1 + i);
+        int32 id                        = API_GetInputDeviceID(CONT_P1 + i);
         if (id && id != INPUT_UNASSIGNED) {
             switch (charSel->frameID) {
                 case 0: session->playerID[i] = ID_SONIC; break;

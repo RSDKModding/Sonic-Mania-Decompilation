@@ -70,51 +70,51 @@ void BreakableWall_Create(void *data)
             self->size.y >>= 0x10;
 
             switch (self->type) {
-                case BREAKWALL_TYPE_SIDES:
+                case BREAKWALL_TYPE_WALL:
                     if (!self->size.x) {
                         self->size.x = 2;
                         self->size.y = 4;
                     }
 
-                    self->state     = BreakableWall_State_BreakableSides;
-                    self->stateDraw = BreakableWall_Draw_Outline_Sides;
+                    self->state     = BreakableWall_State_Wall;
+                    self->stateDraw = BreakableWall_Draw_Wall;
                     break;
 
-                case BREAKWALL_TYPE_TOP:
+                case BREAKWALL_TYPE_FLOOR:
                     if (!self->size.x) {
                         self->size.x = 2;
                         self->size.y = 2;
                     }
 
-                    self->state     = BreakableWall_State_Top;
-                    self->stateDraw = BreakableWall_Draw_Outline;
+                    self->state     = BreakableWall_State_Floor;
+                    self->stateDraw = BreakableWall_Draw_Floor;
                     break;
 
-                case BREAKWALL_TYPE_TOPCHUNK:
-                case BREAKWALL_TYPE_TOPCHUNK_B:
+                case BREAKWALL_TYPE_BURROWFLOOR:
+                case BREAKWALL_TYPE_BURROWFLOOR_B:
                     if (!self->size.x)
                         self->size.x = 2;
 
-                    self->state     = BreakableWall_State_TopChunks;
-                    self->stateDraw = BreakableWall_Draw_Outline;
+                    self->state     = BreakableWall_State_BurrowFloor;
+                    self->stateDraw = BreakableWall_Draw_Floor;
                     break;
 
-                case BREAKWALL_TYPE_BOTTOMCHUNK:
+                case BREAKWALL_TYPE_BURROWFLOORUP:
                     if (!self->size.x)
                         self->size.x = 2;
 
-                    self->state     = BreakableWall_State_BottomChunks;
-                    self->stateDraw = BreakableWall_Draw_Outline;
+                    self->state     = BreakableWall_State_BurrowFloorUp;
+                    self->stateDraw = BreakableWall_Draw_Floor;
                     break;
 
-                case BREAKWALL_TYPE_BOTTOMFULL:
+                case BREAKWALL_TYPE_CEILING:
                     if (!self->size.x) {
                         self->size.x = 2;
                         self->size.y = 2;
                     }
 
-                    self->state     = BreakableWall_State_BottomFull;
-                    self->stateDraw = BreakableWall_Draw_Outline;
+                    self->state     = BreakableWall_State_Ceiling;
+                    self->stateDraw = BreakableWall_Draw_Floor;
                     break;
 
                 default: break;
@@ -142,44 +142,44 @@ void BreakableWall_StageLoad(void)
 }
 
 // States
-void BreakableWall_State_BottomChunks(void)
+void BreakableWall_State_BurrowFloorUp(void)
 {
     RSDK_THIS(BreakableWall);
 
     self->visible = DebugMode->debugActive;
 
-    BreakableWall_HandleBottomBreak_Chunks();
+    BreakableWall_CheckBreak_BurrowFloorUp();
 }
-void BreakableWall_State_BottomFull(void)
+void BreakableWall_State_Ceiling(void)
 {
     RSDK_THIS(BreakableWall);
 
     self->visible = DebugMode->debugActive;
 
-    BreakableWall_HandleBottomBreak_All();
+    BreakableWall_CheckBreak_Ceiling();
 }
 void BreakableWall_State_FallingTile(void)
 {
     RSDK_THIS(BreakableWall);
 
     if (--self->timer <= 0) {
-        RSDK.SetTileInfo(self->layerID, self->tilePos.x, self->tilePos.y, -1);
+        RSDK.SetTile(self->targetLayer, self->tilePos.x, self->tilePos.y, -1);
 
         if (self->drawOrder < Zone->objectDrawLow && BreakableWall->farPlaneLayer != (uint16)-1) {
-            RSDK.SetTileInfo(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, -1);
+            RSDK.SetTile(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, -1);
         }
 
         self->state     = BreakableWall_State_Tile;
         self->stateDraw = BreakableWall_Draw_Tile;
     }
 }
-void BreakableWall_State_BreakableSides(void)
+void BreakableWall_State_Wall(void)
 {
     RSDK_THIS(BreakableWall);
 
     self->visible = DebugMode->debugActive;
 
-    BreakableWall_HandleSidesBreak();
+    BreakableWall_CheckBreak_Wall();
 }
 void BreakableWall_State_Tile(void)
 {
@@ -201,25 +201,25 @@ void BreakableWall_State_Tile(void)
             destroyEntity(self);
     }
 }
-void BreakableWall_State_Top(void)
+void BreakableWall_State_Floor(void)
 {
     RSDK_THIS(BreakableWall);
 
     self->visible = DebugMode->debugActive;
 
-    BreakableWall_HandleTopBreak_All();
+    BreakableWall_CheckBreak_Floor();
 }
-void BreakableWall_State_TopChunks(void)
+void BreakableWall_State_BurrowFloor(void)
 {
     RSDK_THIS(BreakableWall);
 
     self->visible = DebugMode->debugActive;
 
-    BreakableWall_HandleTopBreak_Chunks();
+    BreakableWall_CheckBreak_BurrowFloor();
 }
 
 // Draw States
-void BreakableWall_Draw_Outline_Sides(void)
+void BreakableWall_Draw_Wall(void)
 {
     RSDK_THIS(BreakableWall);
 
@@ -253,7 +253,7 @@ void BreakableWall_Draw_Outline_Sides(void)
 }
 
 // The... same function as above?
-void BreakableWall_Draw_Outline(void)
+void BreakableWall_Draw_Floor(void)
 {
     RSDK_THIS(BreakableWall);
 
@@ -294,7 +294,7 @@ void BreakableWall_Draw_Tile(void)
 }
 
 // Breaking
-void BreakableWall_HandleTopBreak_All(void)
+void BreakableWall_CheckBreak_Floor(void)
 {
     RSDK_THIS(BreakableWall);
 
@@ -342,16 +342,16 @@ void BreakableWall_HandleTopBreak_All(void)
                             for (int32 x = 0; x < self->size.x; ++x) {
                                 int32 posX                = tx >> 20;
                                 EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, ty);
-                                tile->tileInfo            = RSDK.GetTileInfo(self->priority, posX, posY);
+                                tile->tileInfo            = RSDK.GetTile(self->priority, posX, posY);
                                 tile->drawOrder           = self->drawOrder;
                                 int32 angle               = RSDK.ATan2(blockSpeedX, th);
                                 int32 spd                 = (speed + abs(offsetX)) >> 18;
                                 tile->velocity.x += 40 * spd * RSDK.Cos256(angle);
                                 tile->velocity.y += 40 * spd * RSDK.Sin256(angle);
-                                RSDK.SetTileInfo(self->priority, posX, posY, -1);
+                                RSDK.SetTile(self->priority, posX, posY, -1);
 
                                 if (self->drawOrder < Zone->objectDrawLow && BreakableWall->farPlaneLayer != (uint16)-1) {
-                                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
+                                    RSDK.SetTile(BreakableWall->farPlaneLayer, posX, posY, -1);
                                 }
 
                                 blockSpeedX += 0x200000;
@@ -382,7 +382,7 @@ void BreakableWall_HandleTopBreak_All(void)
         }
     }
 }
-void BreakableWall_HandleTopBreak_Chunks(void)
+void BreakableWall_CheckBreak_BurrowFloor(void)
 {
     RSDK_THIS(BreakableWall);
 
@@ -392,7 +392,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
         bool32 onGround = player->onGround;
 
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP && !player->sidekick
-            && ((player->collisionPlane == 1 && self->type == BREAKWALL_TYPE_TOPCHUNK_B) || self->type == BREAKWALL_TYPE_TOPCHUNK)) {
+            && ((player->collisionPlane == 1 && self->type == BREAKWALL_TYPE_BURROWFLOOR_B) || self->type == BREAKWALL_TYPE_BURROWFLOOR)) {
 #if MANIA_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)) {
 #endif
@@ -447,7 +447,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
         }
     }
 }
-void BreakableWall_HandleSidesBreak(void)
+void BreakableWall_CheckBreak_Wall(void)
 {
     RSDK_THIS(BreakableWall);
 
@@ -510,7 +510,7 @@ void BreakableWall_HandleSidesBreak(void)
         Player_CheckCollisionBox(player, self, &self->hitbox);
     }
 }
-void BreakableWall_HandleBottomBreak_Chunks(void)
+void BreakableWall_CheckBreak_BurrowFloorUp(void)
 {
     RSDK_THIS(BreakableWall);
 
@@ -551,7 +551,7 @@ void BreakableWall_HandleBottomBreak_Chunks(void)
         }
     }
 }
-void BreakableWall_HandleBottomBreak_All(void)
+void BreakableWall_CheckBreak_Ceiling(void)
 {
     RSDK_THIS(BreakableWall);
 
@@ -581,17 +581,17 @@ void BreakableWall_HandleBottomBreak_All(void)
                             int32 posX                = tx >> 20;
                             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, ty);
 
-                            tile->tileInfo  = RSDK.GetTileInfo(self->priority, posX, posY);
+                            tile->tileInfo  = RSDK.GetTile(self->priority, posX, posY);
                             tile->drawOrder = self->drawOrder;
                             int32 angle     = RSDK.ATan2(blockSpeedX, offsetY);
                             int32 spd       = (speed + abs(offsetX)) >> 18;
                             tile->velocity.x += 40 * spd * RSDK.Cos256(angle);
                             tile->velocity.y += 40 * spd * RSDK.Sin256(angle);
-                            RSDK.SetTileInfo(self->priority, posX, posY, -1);
+                            RSDK.SetTile(self->priority, posX, posY, -1);
 
                             if (self->drawOrder < Zone->objectDrawLow) {
                                 if (BreakableWall->farPlaneLayer != (uint16)-1)
-                                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
+                                    RSDK.SetTile(BreakableWall->farPlaneLayer, posX, posY, -1);
                             }
 
                             blockSpeedX += 0x200000;
@@ -623,7 +623,7 @@ void BreakableWall_HandleBlockBreak_V(void)
     int32 posX  = self->position.x;
     int32 posY  = self->position.y;
 
-    if (self->state == BreakableWall_State_BottomChunks) {
+    if (self->state == BreakableWall_State_BurrowFloorUp) {
         if (sizeY > 2)
             self->size.y = 2;
         self->position.y += (sizeY - self->size.y) << 19;
@@ -649,17 +649,17 @@ void BreakableWall_HandleBlockBreak_V(void)
         for (int32 x = 0; x < self->size.x; ++x) {
             int32 tileX               = tx >> 20;
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, curY);
-            tile->tileInfo            = RSDK.GetTileInfo(self->priority, tileX, tileY);
+            tile->tileInfo            = RSDK.GetTile(self->priority, tileX, tileY);
             tile->drawOrder           = self->drawOrder;
 
             int32 angle = RSDK.ATan2(angleX, distY);
             int32 spd   = (speed + abs(distX)) >> 18;
             tile->velocity.x += 40 * spd * RSDK.Cos256(angle);
             tile->velocity.y += 40 * spd * RSDK.Sin256(angle);
-            RSDK.SetTileInfo(self->priority, tileX, tileY, -1);
+            RSDK.SetTile(self->priority, tileX, tileY, -1);
             if (self->drawOrder < Zone->objectDrawLow) {
                 if (BreakableWall->farPlaneLayer != (uint16)-1)
-                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, -1);
+                    RSDK.SetTile(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
 
             tx += 0x100000;
@@ -701,7 +701,7 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction
         for (int32 x = 0; x < wall->size.x; ++x) {
             int32 tileX               = (curX + startX) >> 20;
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), curX + startX, curY + startY);
-            tile->tileInfo            = RSDK.GetTileInfo(wall->priority, tileX, tileY);
+            tile->tileInfo            = RSDK.GetTile(wall->priority, tileX, tileY);
             tile->drawOrder           = wall->drawOrder;
 
             switch (direction) {
@@ -734,10 +734,10 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction
                 }
             }
 
-            RSDK.SetTileInfo(wall->priority, tileX, tileY, -1);
+            RSDK.SetTile(wall->priority, tileX, tileY, -1);
             if (wall->drawOrder < Zone->objectDrawLow) {
                 if (BreakableWall->farPlaneLayer != (uint16)-1)
-                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, -1);
+                    RSDK.SetTile(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
 
             curX += 0x10 << 16;
@@ -793,32 +793,32 @@ void BreakableWall_EditorDraw(void)
     int32 sizeY = self->size.y;
 
     switch (self->type) {
-        case BREAKWALL_TYPE_SIDES:
+        case BREAKWALL_TYPE_WALL:
             if (!sizeX) {
                 sizeX = 2 << 16;
                 sizeY = 4 << 16;
             }
             break;
 
-        case BREAKWALL_TYPE_TOP:
+        case BREAKWALL_TYPE_FLOOR:
             if (!sizeX) {
                 sizeX = 2 << 16;
                 sizeY = 2 << 16;
             }
             break;
 
-        case BREAKWALL_TYPE_TOPCHUNK:
-        case BREAKWALL_TYPE_TOPCHUNK_B:
+        case BREAKWALL_TYPE_BURROWFLOOR:
+        case BREAKWALL_TYPE_BURROWFLOOR_B:
             if (!sizeX)
                 sizeX = 2 << 16;
             break;
 
-        case BREAKWALL_TYPE_BOTTOMCHUNK:
+        case BREAKWALL_TYPE_BURROWFLOORUP:
             if (!sizeX)
                 sizeX = 2 << 16;
             break;
 
-        case BREAKWALL_TYPE_BOTTOMFULL:
+        case BREAKWALL_TYPE_CEILING:
             if (!sizeX) {
                 sizeX = 2 << 16;
                 sizeY = 2 << 16;
@@ -864,12 +864,12 @@ void BreakableWall_EditorLoad(void)
     RSDK.SetSpriteAnimation(BreakableWall->aniFrames, 0, &BreakableWall->animator, true, 0);
 
     RSDK_ACTIVE_VAR(BreakableWall, type);
-    RSDK_ENUM_VAR("Sides", BREAKWALL_TYPE_SIDES);
-    RSDK_ENUM_VAR("Top", BREAKWALL_TYPE_TOP);
-    RSDK_ENUM_VAR("Top Chunks", BREAKWALL_TYPE_TOPCHUNK);
-    RSDK_ENUM_VAR("Top Chunks (Plane B Only)", BREAKWALL_TYPE_TOPCHUNK_B);
-    RSDK_ENUM_VAR("Bottom Chunks", BREAKWALL_TYPE_BOTTOMCHUNK);
-    RSDK_ENUM_VAR("Bottom", BREAKWALL_TYPE_BOTTOMFULL);
+    RSDK_ENUM_VAR("Wall", BREAKWALL_TYPE_WALL);
+    RSDK_ENUM_VAR("Floor", BREAKWALL_TYPE_FLOOR);
+    RSDK_ENUM_VAR("Burrow Floor", BREAKWALL_TYPE_BURROWFLOOR);
+    RSDK_ENUM_VAR("Burrow Floor (Plane B Only)", BREAKWALL_TYPE_BURROWFLOOR_B);
+    RSDK_ENUM_VAR("Burrow Floor Up", BREAKWALL_TYPE_BURROWFLOORUP);
+    RSDK_ENUM_VAR("Ceiling", BREAKWALL_TYPE_CEILING);
 
     RSDK_ACTIVE_VAR(BreakableWall, priority);
     RSDK_ENUM_VAR("FG High", BREAKWALL_PRIO_HIGH);

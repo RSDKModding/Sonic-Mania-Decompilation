@@ -116,7 +116,7 @@ void TurboTurtle_StageLoad(void)
     TurboTurtle->sfxWalk  = RSDK.GetSfx("TMZ1/TurtleWalk.wav");
     TurboTurtle->sfxWalk2 = RSDK.GetSfx("TMZ1/TurtleWalk2.wav");
 
-    Soundboard_LoadSFX("HCZ/SmallFan.wav", 37404, TurboTurtle_FanCheckCB, NULL);
+    Soundboard_LoadSfx("HCZ/SmallFan.wav", 37404, TurboTurtle_SfxCheck_SmallFan, StateMachine_None);
 }
 
 void TurboTurtle_DebugSpawn(void)
@@ -312,7 +312,7 @@ void TurboTurtle_HandleFanParticles(uint8 type, int strength, int length)
     }
 }
 
-bool32 TurboTurtle_FanCheckCB(void)
+bool32 TurboTurtle_SfxCheck_SmallFan(void)
 {
     int32 count = 0;
 

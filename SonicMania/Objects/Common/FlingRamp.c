@@ -78,6 +78,10 @@ void FlingRamp_EditorDraw(void)
 {
     RSDK_THIS(FlingRamp);
 
+    Animator animator;
+    RSDK.SetSpriteAnimation(FlingRamp->hitboxRamp.left, 0, &animator, true, 6);
+    RSDK.DrawSprite(&animator, NULL, false);
+
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
@@ -93,11 +97,12 @@ void FlingRamp_EditorDraw(void)
 
 void FlingRamp_EditorLoad(void)
 {
+    FlingRamp->hitboxRamp.left = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(FlingRamp, direction);
-    RSDK_ENUM_VAR("Flip From Both Sides", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip From Left Only", FLIP_X);
-    RSDK_ENUM_VAR("Flip From Right Only", FLIP_Y);
+    RSDK_ENUM_VAR("Omni", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_Y);
 }
 #endif
 

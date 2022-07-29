@@ -45,13 +45,13 @@ void GHZSetup_EditorLoad(void);
 void GHZSetup_Serialize(void);
 
 // Extra Entity Functions
-void GHZSetup_SetupStartingBG(void);
-void GHZSetup_SetupActTransition(void);
+void GHZSetup_SetupAct1BG(void);
+void GHZSetup_StageFinish_EndAct1(void);
 void GHZSetup_HandleActTransition(void);
-void GHZSetup_BGSwitchCB_Outside_Act2(void);
-void GHZSetup_BGSwitchCB_Caves_Act2(void);
-void GHZSetup_BGSwitchCB_Outside_Act1(void);
-void GHZSetup_BGSwitchCB_Caves_Act1(void);
-void GHZSetup_SpawnGHZ2Outro(void);
+void GHZSetup_BGSwitch_Outside_Act2(void);
+void GHZSetup_BGSwitch_Caves_Act2(void);
+void GHZSetup_BGSwitch_Outside_Act1(void);
+void GHZSetup_BGSwitch_Caves_Act1(void);
+void GHZSetup_StageFinish_EndAct2(void);
 
 #endif //! OBJ_GHZSETUP_H

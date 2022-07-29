@@ -44,7 +44,7 @@ void SwingRope_Update(void)
 
     foreach_active(Player, player)
     {
-        if (player->state == Player_State_None) {
+        if (player->state == Player_State_Static) {
             if (Player_CheckCollisionTouch(player, self, &SwingRope->hitboxHandle)) {
                 if (player->jumpPress) {
                     player->jumpAbilityState = 1;
@@ -81,7 +81,7 @@ void SwingRope_Update(void)
             if (RSDK.CheckObjectCollisionTouchBox(self, &SwingRope->hitboxGrabHandle, player, &otherHitbox)) {
                 self->playerLayers[player->playerID] = player->drawOrder;
                 player->drawOrder                    = Zone->objectDrawLow;
-                player->state                        = Player_State_None;
+                player->state                        = Player_State_Static;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, 0, 0);
                 player->velocity.x = 0;
                 player->velocity.y = 0;

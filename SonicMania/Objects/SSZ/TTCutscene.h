@@ -34,7 +34,7 @@ void TTCutscene_Serialize(void);
 // Extra Entity Functions
 void TTCutscene_StartCutscene(void);
 #if MANIA_USE_PLUS
-void TTCutscene_SkipCB(void);
+void TTCutscene_Cutscene_SkipCB(void);
 #endif
 
 bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host);

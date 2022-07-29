@@ -35,7 +35,7 @@ void TMZ3Setup_EditorLoad(void);
 void TMZ3Setup_Serialize(void);
 
 // Extra Entity Functions
-void TMZ3Setup_DrawLayerCB_SetDynTilesPalette(void);
-void TMZ3Setup_DrawLayerCB_UnsetDynTilesPalette(void);
+void TMZ3Setup_DrawHook_ApplyDynTilesPalette(void);
+void TMZ3Setup_DrawHook_RemoveDynTilesPalette(void);
 
 #endif //! OBJ_TMZ3SETUP_H

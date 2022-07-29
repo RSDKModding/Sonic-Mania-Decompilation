@@ -264,11 +264,11 @@ void DERobot_HandleTerrainDestruction(void)
         int32 spawnX = (tx << 20) + 0x80000;
         int32 spawnY = (ty << 20) + 0x80000;
 
-        bool32 playSFX = false;
+        bool32 playSfx = false;
         for (int32 i = 0; i < 32; ++i) {
-            uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+            uint16 tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
             if (tile != (uint16)-1) {
-                RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
+                RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
 
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawOrder           = Zone->objectDrawHigh;
@@ -277,13 +277,13 @@ void DERobot_HandleTerrainDestruction(void)
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
                 wall->velocity.y          = RSDK.Rand(-0x20000, 0x20000);
                 wall->drawFX              = FX_ROTATE | FX_FLIP;
-                playSFX                   = true;
+                playSfx                   = true;
             }
             ++ty;
             spawnY += 0x100000;
         }
 
-        if (playSFX)
+        if (playSfx)
             RSDK.PlaySfx(DERobot->sfxLedgeBreak, false, 255);
     }
 }
@@ -299,9 +299,9 @@ void DERobot_DestroyTerrainFinal(void)
     for (int32 y = 0; y < 8; ++y) {
         int32 spawnY = (ty << 20) + 0x80000;
         for (int32 x = 0; x < 32; ++x) {
-            uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+            uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
             if (tile != (uint16)-1) {
-                RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
+                RSDK.SetTile(Zone->fgLow, tx, ty, -1);
 
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawOrder           = Zone->objectDrawHigh;
@@ -325,9 +325,9 @@ void DERobot_DestroyTerrainFinal(void)
     for (int32 y = 0; y < 32; ++y) {
         int32 spawnY = (ty << 20) + 0x80000;
         for (int32 x = 0; x < 32; ++x) {
-            uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+            uint16 tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
             if (tile != (uint16)-1) {
-                RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
+                RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawOrder           = Zone->objectDrawHigh;
                 wall->visible             = true;
@@ -924,7 +924,7 @@ void DERobot_State_SetupBoss(void)
             handFront->visible       = true;
 
             EntityEggman *eggman = self->eggman;
-            RSDK.ResetEntityPtr(eggman, Eggman->classID, self);
+            RSDK.ResetEntity(eggman, Eggman->classID, self);
             eggman->state    = Eggman_State_ProcessAnimation;
             eggman->animID   = 0;
             eggman->offset.x = -0x40000;
@@ -1289,7 +1289,7 @@ void DERobot_State_Finish(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
         EntityEggPrison *prison = (EntityEggPrison *)self->eggman;
-        RSDK.ResetEntityPtr(prison, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
+        RSDK.ResetEntity(prison, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
         prison->position.x          = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         prison->checkTileCollisions = true;
         prison->position.y          = (ScreenInfo->position.y - 48) << 16;

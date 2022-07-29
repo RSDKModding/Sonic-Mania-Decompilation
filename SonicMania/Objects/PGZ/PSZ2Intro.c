@@ -18,6 +18,10 @@ void PSZ2Intro_Update(void)
     CutsceneSeq_StartSequence(self, PSZ2Intro_Cutscene_HandleAct1Finish, PSZ2Intro_Cutscene_ShowActClear, PSZ2Intro_Cutscene_RunToAct2,
                               PSZ2Intro_Cutscene_JogIntoPlace, StateMachine_None);
 
+#if MANIA_USE_PLUS
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
+
     self->active = ACTIVE_NEVER;
 }
 

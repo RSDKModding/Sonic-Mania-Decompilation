@@ -46,7 +46,7 @@ void TitleBG_Serialize(void);
 
 // Extra Entity Functions
 void TitleBG_SetupFX(void);
-void TitleBG_ScanlineCB_Clouds(ScanlineInfo *scanlines);
-void TitleBG_ScanlineCB_Island(ScanlineInfo *scanlines);
+void TitleBG_Scanline_Clouds(ScanlineInfo *scanlines);
+void TitleBG_Scanline_Island(ScanlineInfo *scanlines);
 
 #endif //! OBJ_TITLEBG_H

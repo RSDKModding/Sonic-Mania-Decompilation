@@ -8,7 +8,7 @@ typedef enum {
     COLLAPSEPLAT_RIGHT,
     COLLAPSEPLAT_CENTER,
     COLLAPSEPLAT_LR,
-    COLLAPSEPLAT_PLAYER,
+    COLLAPSEPLAT_LRC,
 } CollapsingPlatformTypes;
 
 typedef enum {
@@ -63,7 +63,7 @@ void CollapsingPlatform_Serialize(void);
 void CollapsingPlatform_State_Left(void);
 void CollapsingPlatform_State_Right(void);
 void CollapsingPlatform_State_Center(void);
-void CollapsingPlatform_State_LeftOrRight(void);
-void CollapsingPlatform_State_PlayerPos(void);
+void CollapsingPlatform_State_LeftRight(void);
+void CollapsingPlatform_State_LeftRightCenter(void);
 
 #endif //! OBJ_COLLAPSINGPLATFORM_H

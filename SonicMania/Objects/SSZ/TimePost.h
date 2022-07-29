@@ -49,7 +49,7 @@ void TimePost_Serialize(void);
 // Extra Entity Functions
 void TimePost_Spin(void);
 void TimePost_CheckPlayerCollisions(void);
-void TimePost_ParticleCB_TimeSparkles(EntityDebris *debris);
+void TimePost_Particle_TimeSparkle(EntityDebris *debris);
 void TimePost_HandleTimeSparkles(void);
 
 void TimePost_State_Setup(void);

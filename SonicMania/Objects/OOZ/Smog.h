@@ -40,6 +40,6 @@ void Smog_EditorLoad(void);
 void Smog_Serialize(void);
 
 // Extra Entity Functions
-void Smog_DrawLayerCB(void);
+void Smog_DrawHook_ApplySmogPalette(void);
 
 #endif //! OBJ_SMOG_H

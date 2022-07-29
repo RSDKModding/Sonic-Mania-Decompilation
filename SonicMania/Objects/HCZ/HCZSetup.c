@@ -80,10 +80,10 @@ void HCZSetup_StaticUpdate(void)
     foreach_active(Player, player)
     {
         RSDK.GetEntitySlot(player);
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             Hitbox *hitbox = Player_GetHitbox(player);
             uint16 tile =
-                RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
+                RSDK.GetTile(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
 
             if (((tile >= 226 && tile <= 224) || (tile >= 880 && tile <= 888)) && player->collisionPlane == 1) {
                 if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
@@ -136,7 +136,7 @@ void HCZSetup_StageLoad(void)
 
     // if Act 2, Setup the waterline effect
     if (Zone->actID == 1)
-        HCZSetup->background2Layer->scanlineCallback = HCZSetup_BGWaterLineScanlineCB;
+        HCZSetup->background2Layer->scanlineCallback = HCZSetup_Scanline_WaterLine;
 
     // All Layers between FG Low & FG High get foreground water deformation applied
     for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) {
@@ -191,8 +191,8 @@ void HCZSetup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_ROCKY;
 
-    RSDK.SetDrawGroupProperties(0, false, Water_SetWaterLevel);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
+    RSDK.SetDrawGroupProperties(0, false, Water_DrawHook_ApplyWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_DrawHook_RemoveWaterPalette);
 
     Water->waterPalette = 1;
 
@@ -208,11 +208,11 @@ void HCZSetup_StageLoad(void)
         if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload())
             Zone_ReloadStoredEntities(388 << 16, 1696 << 16, true);
 
-        Zone->stageFinishCallback = HCZSetup_StageFinishCB_Act2;
+        Zone->stageFinishCallback = HCZSetup_StageFinish_EndAct2;
     }
     else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         Zone->shouldRecoverPlayers = true;
-        Zone->stageFinishCallback = HCZSetup_HandleActTransition;
+        Zone->stageFinishCallback = HCZSetup_StageFinish_EndAct1;
     }
 
 #if MANIA_USE_PLUS
@@ -226,7 +226,7 @@ void HCZSetup_StageLoad(void)
 #endif
 }
 
-void HCZSetup_BGWaterLineScanlineCB(ScanlineInfo *scanlines)
+void HCZSetup_Scanline_WaterLine(ScanlineInfo *scanlines)
 {
     RSDK.ProcessParallax(HCZSetup->background2Layer);
 
@@ -269,13 +269,13 @@ void HCZSetup_BGWaterLineScanlineCB(ScanlineInfo *scanlines)
     }
 }
 
-void HCZSetup_HandleActTransition(void)
+void HCZSetup_StageFinish_EndAct1(void)
 {
     Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 
-void HCZSetup_StageFinishCB_Act2(void)
+void HCZSetup_StageFinish_EndAct2(void)
 {
     if (globals->gameMode == MODE_MANIA && CHECK_CHARACTER_ID(ID_KNUCKLES, 1))
         RSDK.SetScene("Cutscenes", "Mirage Saloon K Intro");

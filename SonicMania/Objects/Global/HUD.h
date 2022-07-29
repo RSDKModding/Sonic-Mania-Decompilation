@@ -108,7 +108,14 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value);
 void HUD_GetButtonFrame(Animator *animator, int32 buttonID);
 void HUD_GetActionButtonFrames(void);
 
-void HUD_State_ComeOnScreen(void);
-void HUD_State_GoOffScreen(void);
+void HUD_State_MoveIn(void);
+void HUD_State_MoveOut(void);
+
+void HUD_MoveIn(EntityHUD *hud);
+void HUD_MoveOut(void);
+
+void HUD_EnableRingFlash(void);
+
+int32 HUD_CharacterIndexFromID(int32 characterID);
 
 #endif //! OBJ_HUD_H

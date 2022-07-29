@@ -331,12 +331,12 @@ void TitleSetup_State_WaitForEnter(void)
         RSDK.SetScene("Presentation", nextScene);
 
 #if MANIA_USE_PLUS
-        int32 id = API_MostRecentActiveControllerID(false, false, 5);
+        int32 id = API_GetFilteredInputDeviceID(false, false, 5);
 #else
-        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
+        int32 id = API_GetFilteredInputDeviceID(INPUT_NONE);
 #endif
-        API_ResetControllerAssignments();
-        API_AssignControllerID(CONT_P1, id);
+        API_ResetInputSlotAssignments();
+        API_AssignInputSlotToDevice(CONT_P1, id);
 
         RSDK.StopChannel(Music->channelID);
         self->state     = TitleSetup_State_FadeToMenu;

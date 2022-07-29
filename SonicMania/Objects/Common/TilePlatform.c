@@ -25,7 +25,6 @@ void TilePlatform_Draw(void)
 void TilePlatform_Create(void *data)
 {
     RSDK_THIS(TilePlatform);
-
     self->collision = PLATFORM_C_TILED;
     Platform_Create(NULL);
 
@@ -33,10 +32,10 @@ void TilePlatform_Create(void *data)
         self->updateRange.x += 2 * self->size.x;
         self->updateRange.y += 2 * self->size.y;
 
-        self->hitbox.bottom = self->size.y >> 17;
-        self->hitbox.right  = self->size.x >> 17;
+        self->hitbox.left   = -(self->size.x >> 17);
         self->hitbox.top    = -(self->size.y >> 17);
-        self->hitbox.left   = -self->size.x >> 17;
+        self->hitbox.right  = self->size.x >> 17;
+        self->hitbox.bottom = self->size.y >> 17;
 
         self->size.x += 0x80000;
         self->size.y += 0x80000;
@@ -52,7 +51,7 @@ void TilePlatform_Create(void *data)
                 if ((self->size.x & 0xFFF00000) > 0) {
                     for (int32 x = 0; x < w; ++x) {
                         id              = x + y * (self->size.x >> 20);
-                        self->tiles[id] = RSDK.GetTileInfo(Zone->moveLayer, originX + x, originY + y);
+                        self->tiles[id] = RSDK.GetTile(Zone->moveLayer, originX + x, originY + y);
                     }
                 }
             }
@@ -85,22 +84,12 @@ void TilePlatform_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(TilePlatform, type);
     RSDK_ENUM_VAR("Fixed", PLATFORM_FIXED);
-    RSDK_ENUM_VAR("Collapsing", PLATFORM_FALL);
-    RSDK_ENUM_VAR("Moving (Smooth)", PLATFORM_LINEAR);
-    RSDK_ENUM_VAR("Circlular", PLATFORM_CIRCULAR);
-    RSDK_ENUM_VAR("Swinging", PLATFORM_SWING);
-    RSDK_ENUM_VAR("Controlled", PLATFORM_PATH);
-    RSDK_ENUM_VAR("Pushable", PLATFORM_PUSH);
-    RSDK_ENUM_VAR("Moving (Static)", PLATFORM_TRACK);
-    RSDK_ENUM_VAR("Wait for Player", PLATFORM_REACT);
-    RSDK_ENUM_VAR("Wait for Player (Oscillate)", PLATFORM_HOVER_REACT);
-    RSDK_ENUM_VAR("Activate when Above", PLATFORM_DOORSLIDE);
-    RSDK_ENUM_VAR("Controlled (Activates PlatformControl)", PLATFORM_PATH_REACT);
-    RSDK_ENUM_VAR("Wait for Player, then Move with Arc", PLATFORM_SWING_REACT);
-    RSDK_ENUM_VAR("Sticky", PLATFORM_TRACK_REACT);
-    RSDK_ENUM_VAR("Swinging (Clackers)", PLATFORM_CLACKER);
-    RSDK_ENUM_VAR("Static", PLATFORM_CHILD);
-    RSDK_ENUM_VAR("Wait for Player, then Sink", PLATFORM_DIPROCK);
+    RSDK_ENUM_VAR("Fall", PLATFORM_FALL);
+    RSDK_ENUM_VAR("Linear", PLATFORM_LINEAR);
+    RSDK_ENUM_VAR("Circular", PLATFORM_CIRCULAR);
+    RSDK_ENUM_VAR("Swing", PLATFORM_SWING);
+    RSDK_ENUM_VAR("Path", PLATFORM_PATH);
+    RSDK_ENUM_VAR("Push", PLATFORM_PUSH);
 }
 #endif
 

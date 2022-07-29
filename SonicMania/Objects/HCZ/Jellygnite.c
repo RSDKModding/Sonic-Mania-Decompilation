@@ -152,7 +152,7 @@ void Jellygnite_CheckPlayerCollisions(void)
                     EntityWater *bubble = Water_GetPlayerBubble(player);
                     if (bubble) {
                         bubble->timer = 0;
-                        Water_HCZBubbleBurst(bubble, false);
+                        Water_PopBigBubble(bubble, false);
                     }
                 }
 
@@ -161,7 +161,7 @@ void Jellygnite_CheckPlayerCollisions(void)
                 player->velocity.x      = 0;
                 player->velocity.y      = 0;
                 player->groundVel       = 0;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
                 player->onGround        = false;
@@ -381,7 +381,7 @@ void Jellygnite_State_Explode(void)
 
     if (++self->timer == 60) {
         EntityPlayer *player = self->grabbedPlayer;
-        if (player && player->state == Player_State_None) {
+        if (player && player->state == Player_State_Static) {
             Player_CheckHit(player, self);
 
             if (player->state != Player_State_Hurt && Player_CheckValidState(player))

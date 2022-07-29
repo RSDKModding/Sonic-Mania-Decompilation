@@ -96,11 +96,9 @@ void GameOver_Create(void *data)
         self->state     = GameOver_State_EnterLetters;
         self->drawOrder = Zone->hudDrawOrder + 1;
 
-        foreach_all(HUD, hud)
-        {
-            hud->state  = HUD_State_GoOffScreen;
-            hud->active = ACTIVE_ALWAYS;
-        }
+        HUD_MoveOut();
+
+        foreach_all(HUD, hud) { hud->active = ACTIVE_ALWAYS; }
     }
 }
 
@@ -212,15 +210,15 @@ void GameOver_State_EnterLetters(void)
         self->timer = 0;
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_COMPETITION || Zone->gotTimeOver)
-            self->state = GameOver_State_HandleMultiplayer;
+            self->state = GameOver_State_WaitComp;
         else
 #endif
-            self->state = GameOver_State_ShowMessage;
+            self->state = GameOver_State_Wait;
     }
 }
 
 #if MANIA_USE_PLUS
-void GameOver_State_HandleMultiplayer(void)
+void GameOver_State_WaitComp(void)
 {
     RSDK_THIS(GameOver);
 
@@ -242,11 +240,11 @@ void GameOver_State_HandleMultiplayer(void)
     }
 
     if (gameOverCount >= session->playerCount - 1 || deathCount == session->playerCount || Zone->gotTimeOver)
-        self->state = GameOver_State_ShowMessage;
+        self->state = GameOver_State_Wait;
 }
 #endif
 
-void GameOver_State_ShowMessage(void)
+void GameOver_State_Wait(void)
 {
     RSDK_THIS(GameOver);
 
@@ -335,11 +333,8 @@ void GameOver_State_ExitLetters(void)
 #if MANIA_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
-                    int32 id                = -1;
                     saveRAM->characterFlags = -1;
-                    for (int32 i = GET_CHARACTER_ID(1); i > 0; ++id, i >>= 1)
-                        ;
-                    globals->characterFlags = 1 << id;
+                    globals->characterFlags = 1 << HUD_CharacterIndexFromID(GET_CHARACTER_ID(1));
                     saveRAM->characterFlags = globals->characterFlags;
                     saveRAM->stock          = globals->stock;
                 }
@@ -353,11 +348,8 @@ void GameOver_State_ExitLetters(void)
 #if MANIA_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
-                    int32 id                = -1;
                     saveRAM->characterFlags = -1;
-                    for (int32 i = GET_CHARACTER_ID(1); i > 0; ++id, i >>= 1)
-                        ;
-                    globals->characterFlags = 1 << id;
+                    globals->characterFlags = 1 << HUD_CharacterIndexFromID(GET_CHARACTER_ID(1));
                     saveRAM->characterFlags = globals->characterFlags;
                     saveRAM->stock          = globals->stock;
                 }

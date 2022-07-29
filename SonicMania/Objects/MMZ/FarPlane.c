@@ -28,8 +28,8 @@ void FarPlane_LateUpdate(void)
         FarPlane->position.x = self->position.x;
         FarPlane->position.y = self->position.y;
 
-        RSDK.SetDrawGroupProperties(1, false, FarPlane_DrawLayerCB_Low);
-        RSDK.SetDrawGroupProperties(3, false, FarPlane_DrawLayerCB_High);
+        RSDK.SetDrawGroupProperties(1, false, FarPlane_DrawHook_ApplyFarPlane);
+        RSDK.SetDrawGroupProperties(3, false, FarPlane_DrawHook_RemoveFarPlane);
 
         FarPlane_SetEntityActivities(ACTIVE_NORMAL);
     }
@@ -37,8 +37,8 @@ void FarPlane_LateUpdate(void)
         self->active                                       = ACTIVE_BOUNDS;
         RSDK.GetTileLayer(FarPlane->layerID)->drawLayer[0] = DRAWGROUP_COUNT;
 
-        RSDK.SetDrawGroupProperties(1, false, NULL);
-        RSDK.SetDrawGroupProperties(3, false, NULL);
+        RSDK.SetDrawGroupProperties(1, false, StateMachine_None);
+        RSDK.SetDrawGroupProperties(3, false, StateMachine_None);
 
         FarPlane_SetEntityActivities(ACTIVE_NEVER);
     }
@@ -88,17 +88,18 @@ void FarPlane_StageLoad(void)
     if (FarPlane->layerID != (uint16)-1) {
         TileLayer *farPlane        = RSDK.GetTileLayer(FarPlane->layerID);
         farPlane->drawLayer[0]     = DRAWGROUP_COUNT;
-        farPlane->scanlineCallback = FarPlane_ScanlineCB;
+        farPlane->scanlineCallback = FarPlane_Scanline_FarPlaneView;
 
         RSDK.GetTileLayer(Zone->fgLow)->drawLayer[0]  = 2;
         RSDK.GetTileLayer(Zone->fgHigh)->drawLayer[0] = 7;
 
-        RSDK.SetDrawGroupProperties(1, false, NULL);
-        RSDK.SetDrawGroupProperties(2, false, NULL);
+        RSDK.SetDrawGroupProperties(1, false, StateMachine_None);
+        RSDK.SetDrawGroupProperties(2, false, StateMachine_None);
 
         RSDK.CopyPalette(0, 0, 3, 0, 128);
         RSDK.CopyPalette(0, 144, 3, 144, 112);
         RSDK.CopyPalette(3, 0, 4, 0, 255);
+
 #if MANIA_USE_PLUS
         if (SceneInfo->filter & FILTER_MANIA)
 #endif
@@ -150,11 +151,11 @@ void FarPlane_SetEntityActivities(uint8 active)
     }
 }
 
-void FarPlane_DrawLayerCB_Low(void)
+void FarPlane_DrawHook_ApplyFarPlane(void)
 {
     int32 id = 0;
     for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
-        Entity *entity = RSDK.GetDrawListRefPtr(1, i);
+        Entity *entity = RSDK.GetDrawListRef(1, i);
         if (!entity)
             break;
 
@@ -170,7 +171,7 @@ void FarPlane_DrawLayerCB_Low(void)
     }
 
     for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
-        Entity *entity = RSDK.GetDrawListRefPtr(2, i);
+        Entity *entity = RSDK.GetDrawListRef(2, i);
         if (!entity)
             break;
 
@@ -231,11 +232,11 @@ void FarPlane_DrawLayerCB_Low(void)
     }
 }
 
-void FarPlane_DrawLayerCB_High(void)
+void FarPlane_DrawHook_RemoveFarPlane(void)
 {
     int32 id = 0;
     for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
-        Entity *entity = RSDK.GetDrawListRefPtr(1, i);
+        Entity *entity = RSDK.GetDrawListRef(1, i);
         if (!entity)
             break;
 
@@ -245,7 +246,7 @@ void FarPlane_DrawLayerCB_High(void)
     }
 
     for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
-        Entity *entity = RSDK.GetDrawListRefPtr(2, i);
+        Entity *entity = RSDK.GetDrawListRef(2, i);
         if (!entity)
             break;
 
@@ -281,7 +282,7 @@ void FarPlane_DrawLayerCB_High(void)
     }
 }
 
-void FarPlane_ScanlineCB(ScanlineInfo *scanline)
+void FarPlane_Scanline_FarPlaneView(ScanlineInfo *scanline)
 {
     int32 x = FarPlane->screenPos.x - (ScreenInfo->centerX << 17);
     int32 y = FarPlane->screenPos.y - (ScreenInfo->centerY << 17);

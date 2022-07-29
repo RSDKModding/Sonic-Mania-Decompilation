@@ -208,10 +208,10 @@ void MSZSetup_StageLoad(void)
                     foreach_break;
                 }
 
-                Zone->stageFinishCallback = MSZSetup_StageFinishCB_MSZ2;
+                Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct2;
             }
 
-            GenericTrigger->callbacks[MSZ_GENERICTRIGGER_ACHIEVEMENT] = MSZSetup_GenericTriggerCB_GetAchievement;
+            GenericTrigger->callbacks[MSZ_GENERICTRIGGER_ACHIEVEMENT] = MSZSetup_Trigger_AwardAchievement;
         }
         else {
 #if MANIA_USE_PLUS
@@ -220,7 +220,7 @@ void MSZSetup_StageLoad(void)
 
                 if (isMainGameMode()) {
                     if (PlayerHelpers_CheckAct1())
-                        Zone->stageFinishCallback = MSZSetup_StageFinishCB_E;
+                        Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1E;
                 }
             }
             else {
@@ -232,7 +232,7 @@ void MSZSetup_StageLoad(void)
 
                     if (PlayerHelpers_CheckAct1Regular()) {
                         Zone->shouldRecoverPlayers = true;
-                        Zone->stageFinishCallback = MSZSetup_StageFinishCB_K;
+                        Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1K;
                     }
                 }
                 else {
@@ -241,7 +241,7 @@ void MSZSetup_StageLoad(void)
                     RSDK.ResetEntitySlot(32, MSZSetup->classID, MSZSetup_State_ManageFade_ST);
 
                     if (PlayerHelpers_CheckAct1Regular())
-                        Zone->stageFinishCallback = MSZSetup_StageFinishCB_ST;
+                        Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1ST;
                     GiantPistol->inCutscene = true;
                 }
             }
@@ -253,7 +253,7 @@ void MSZSetup_StageLoad(void)
 
                 if (PlayerHelpers_CheckAct1Regular()) {
                     Zone->shouldRecoverPlayers = true;
-                    Zone->stageFinishCallback = MSZSetup_StageFinishCB_K;
+                    Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1K;
                 }
             }
             else {
@@ -262,7 +262,7 @@ void MSZSetup_StageLoad(void)
                 RSDK.ResetEntitySlot(17, MSZSetup->classID, MSZSetup_State_ManageFade_ST);
 
                 if (PlayerHelpers_CheckAct1Regular())
-                    Zone->stageFinishCallback = MSZSetup_StageFinishCB_ST;
+                    Zone->stageFinishCallback = MSZSetup_StageFinish_EndAct1ST;
             }
 #endif
         }
@@ -399,21 +399,21 @@ void MSZSetup_State_ManageFade_E(void)
 }
 #endif
 
-void MSZSetup_StageFinishCB_ST(void) { MSZCutsceneST->finishedAct = true; }
+void MSZSetup_StageFinish_EndAct1ST(void) { MSZCutsceneST->finishedAct = true; }
 
-void MSZSetup_StageFinishCB_K(void)
+void MSZSetup_StageFinish_EndAct1K(void)
 {
     Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 
 #if MANIA_USE_PLUS
-void MSZSetup_StageFinishCB_E(void) {}
+void MSZSetup_StageFinish_EndAct1E(void) {}
 #endif
 
-void MSZSetup_StageFinishCB_MSZ2(void) { MSZSetup->msz2Cutscene->active = ACTIVE_NORMAL; }
+void MSZSetup_StageFinish_EndAct2(void) { MSZSetup->msz2Cutscene->active = ACTIVE_NORMAL; }
 
-void MSZSetup_GenericTriggerCB_GetAchievement(void)
+void MSZSetup_Trigger_AwardAchievement(void)
 {
     if (!MSZSetup->hasAchievement) {
         API_UnlockAchievement(&achievementList[ACH_MSZ]);

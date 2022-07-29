@@ -137,7 +137,7 @@ void MegaChopper_Input_GrabbedP1(void)
 
     Player_Input_P1();
 
-    if (self->state != Player_State_None) {
+    if (self->state != Player_State_Static) {
         self->up        = false;
         self->down      = false;
         self->jumpPress = false;

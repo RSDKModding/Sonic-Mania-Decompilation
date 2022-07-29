@@ -124,10 +124,10 @@ void SDashWheel_StageLoad(void)
     SDashWheel->sfxBumper = RSDK.GetSfx("Stage/Bumper3.wav");
 
     if (RSDK.CheckSceneFolder("SSZ1"))
-        Soundboard_LoadSFX("SSZ1/MGZDoor.wav", true, SDashWheel_CheckCB_SfxMGZDoor, SDashWheel_UpdateCB_SfxMGZDoor);
+        Soundboard_LoadSfx("SSZ1/MGZDoor.wav", true, SDashWheel_SfxCheck_MGZDoor, SDashWheel_SfxUpdate_MGZDoor);
 }
 
-bool32 SDashWheel_CheckCB_SfxMGZDoor(void)
+bool32 SDashWheel_SfxCheck_MGZDoor(void)
 {
     int32 count = 0;
     foreach_active(PlatformControl, control)
@@ -139,7 +139,7 @@ bool32 SDashWheel_CheckCB_SfxMGZDoor(void)
     return count > 0;
 }
 
-void SDashWheel_UpdateCB_SfxMGZDoor(int32 sfx)
+void SDashWheel_SfxUpdate_MGZDoor(int32 sfx)
 {
     if (!(Soundboard->sfxPlayingTimer[sfx] % 6))
         Camera_ShakeScreen(0, 0, 2);

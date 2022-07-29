@@ -108,8 +108,8 @@ void Turbine_State_Handles(void)
             self->playerTimers[playerID]--;
 
         if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID] && player->animator.animationID != ANI_HURT
-            && player->state != Player_State_None) {
-            if (player->animator.animationID != ANI_HURT && player->state != Player_State_None) {
+            && player->state != Player_State_Static) {
+            if (player->animator.animationID != ANI_HURT && player->state != Player_State_Static) {
                 if (Player_CheckCollisionTouch(player, self, &Turbine->hitboxHandle)) {
                     self->activePlayers |= 1 << playerID;
                     player->nextGroundState = StateMachine_None;
@@ -118,7 +118,7 @@ void Turbine_State_Handles(void)
                     player->velocity.y      = 0;
                     player->groundVel       = 0;
                     player->onGround        = false;
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
 
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLE_SWING_H, &player->animator, true, 0);
                     player->animator.speed = 0;
@@ -158,7 +158,7 @@ void Turbine_State_Handles(void)
                 player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;
             }
-            else if (player->animator.animationID != ANI_POLE_SWING_H || player->state != Player_State_None) {
+            else if (player->animator.animationID != ANI_POLE_SWING_H || player->state != Player_State_Static) {
                 self->activePlayers &= ~(1 << playerID);
                 player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;

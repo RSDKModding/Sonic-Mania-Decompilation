@@ -146,7 +146,7 @@ void AIZEncoreTutorial_State_ReturnToCutscene(void)
     EntityFXRuby *fxRuby           = CREATE_ENTITY(FXRuby, NULL, 0, 0);
     fxRuby->drawOrder              = Zone->playerDrawHigh + 1;
     EncoreIntro->fxRuby            = fxRuby;
-    PhantomRuby_PlaySFX(RUBYSFX_ATTACK3);
+    PhantomRuby_PlaySfx(RUBYSFX_ATTACK3);
     Music_FadeOut(0.012);
 
     cutsceneSeq->skipType = SKIPTYPE_DISABLED;

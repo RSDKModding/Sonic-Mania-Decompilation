@@ -28,7 +28,7 @@ struct ObjectAIZSetup {
 #endif
     bool32 hasSetupCutscene;
     bool32 playDrillSfx;
-    bool32 playingDrillSFX;
+    bool32 playingDrillSfx;
     TileLayer *background1;
     TileLayer *background2;
     TileLayer *background3;
@@ -78,8 +78,8 @@ void AIZSetup_Serialize(void);
 
 // Extra Entity Functions
 #if MANIA_USE_PLUS
-void AIZSetup_BGSwitchCB_Jungle(void);
-void AIZSetup_BGSwitchCB_Sky(void);
+void AIZSetup_BGSwitch_Jungle(void);
+void AIZSetup_BGSwitch_Sky(void);
 #endif
 
 void AIZSetup_PlayerState_Static(void);
@@ -91,7 +91,7 @@ void AIZSetup_SetupObjects(void);
 
 void AIZSetup_GetCutsceneSetupPtr(void);
 #if MANIA_USE_PLUS
-void AIZSetup_SkipCB(void);
+void AIZSetup_Cutscene_SkipCB(void);
 #endif
 
 void AIZSetup_CutsceneST_Setup(void);

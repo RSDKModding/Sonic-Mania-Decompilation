@@ -51,8 +51,8 @@ void FarPlane_Serialize(void);
 // Extra Entity Functions
 void FarPlane_SetupEntities(void);
 void FarPlane_SetEntityActivities(uint8 active);
-void FarPlane_DrawLayerCB_Low(void);
-void FarPlane_DrawLayerCB_High(void);
-void FarPlane_ScanlineCB(ScanlineInfo *scanline);
+void FarPlane_DrawHook_ApplyFarPlane(void);
+void FarPlane_DrawHook_RemoveFarPlane(void);
+void FarPlane_Scanline_FarPlaneView(ScanlineInfo *scanline);
 
 #endif //! OBJ_FARPLANE_H

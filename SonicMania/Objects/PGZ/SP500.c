@@ -176,7 +176,7 @@ void SP500_CheckPlayerCollisions(void)
                     player->velocity.y      = 0;
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
                 }
             }
         }
@@ -330,26 +330,26 @@ void SP500_State_Printing(void)
     uint16 tile = (uint16)-1;
     switch (self->inkColor) {
         default: break;
-        case INK_C: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcC.x + (self->rowPrintPos >> 20), self->srcC.y + self->printRowID); break;
-        case INK_M: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcM.x + (self->rowPrintPos >> 20), self->srcM.y + self->printRowID); break;
-        case INK_Y: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcY.x + (self->rowPrintPos >> 20), self->srcY.y + self->printRowID); break;
+        case INK_C: tile = RSDK.GetTile(SP500->printLayerID, self->srcC.x + (self->rowPrintPos >> 20), self->srcC.y + self->printRowID); break;
+        case INK_M: tile = RSDK.GetTile(SP500->printLayerID, self->srcM.x + (self->rowPrintPos >> 20), self->srcM.y + self->printRowID); break;
+        case INK_Y: tile = RSDK.GetTile(SP500->printLayerID, self->srcY.x + (self->rowPrintPos >> 20), self->srcY.y + self->printRowID); break;
     }
 
     if (tile != (uint16)-1) {
         self->position.y += 0x100000;
         self->showGreenLight = (Zone->timer >> 1) & 1;
-        RSDK.SetTileInfo(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, self->position.y >> 20, tile);
+        RSDK.SetTile(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, self->position.y >> 20, tile);
 
         int32 posY = self->position.y;
         if (self->position.y >= 0x1800000) {
             if (self->position.y > 0x8800000) {
                 posY -= 0xA000000;
-                RSDK.SetTileInfo(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
+                RSDK.SetTile(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
             }
         }
         else {
             posY += 0xA000000;
-            RSDK.SetTileInfo(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
+            RSDK.SetTile(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
         }
         self->velocity.x = 0x80000;
         self->position.y -= 0x100000;

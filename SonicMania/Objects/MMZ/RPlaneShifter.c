@@ -172,7 +172,7 @@ void RPlaneShifter_State_AwaitPlayer(void)
                 player->position.x = self->position.x;
 
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 player->onGround        = true;
@@ -292,7 +292,7 @@ void RPlaneShifter_State_Spinning(void)
             player->position.x = self->position.x;
 
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
-            player->state           = Player_State_None;
+            player->state           = Player_State_Static;
             player->nextGroundState = StateMachine_None;
             player->nextAirState    = StateMachine_None;
             player->onGround        = true;

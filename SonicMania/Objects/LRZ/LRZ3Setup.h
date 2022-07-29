@@ -34,6 +34,6 @@ void LRZ3Setup_EditorLoad(void);
 void LRZ3Setup_Serialize(void);
 
 // Extra Entity Functions
-void LRZ3Setup_StartCutscene(void);
+void LRZ3Setup_StageFinish_EndAct2K(void);
 
 #endif //! OBJ_LRZ3SETUP_H

@@ -137,7 +137,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void);
 void LaundroMobile_StateBoss_Explode_Phase2(void);
 
 #if MANIA_USE_PLUS
-void LaundroMobile_StageFinishCB_Blank(void);
+void LaundroMobile_StageFinish_Wait(void);
 
 // HCZ2 Outro
 void LaundroMobile_StateOutro_StartCutscene(void);

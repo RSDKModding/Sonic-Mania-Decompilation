@@ -128,20 +128,20 @@ void TMZ1Setup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_PICKY;
 
     // BGSwitch is used for Sky <-> Lift BGs, this object manages the city & sky BG changes itself
-    BGSwitch->switchCallback[TMZ1_BG_CITY] = TMZ1Setup_BGCallback_ShowSky;
-    BGSwitch->switchCallback[TMZ1_BG_LIFT] = TMZ1Setup_BGCallback_ShowLift;
+    BGSwitch->switchCallback[TMZ1_BG_CITY] = TMZ1Setup_BGSwitch_ShowSky;
+    BGSwitch->switchCallback[TMZ1_BG_LIFT] = TMZ1Setup_BGSwitch_ShowLift;
 
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, 0);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, 0);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, StateMachine_None);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, StateMachine_None);
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
-        Zone->stageFinishCallback = TMZ1Setup_StageFinishCB;
+        Zone->stageFinishCallback = TMZ1Setup_StageFinish_EndAct1;
 
     if (PlayerHelpers_CheckStageReload())
         TMZ1Setup->hasAchievement = true;
 }
 
-void TMZ1Setup_BGCallback_ShowSky(void)
+void TMZ1Setup_BGSwitch_ShowSky(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
@@ -154,7 +154,7 @@ void TMZ1Setup_BGCallback_ShowSky(void)
     TMZ1Setup->stageState = TMZ1_STAGESTATE_SKY;
 }
 
-void TMZ1Setup_BGCallback_ShowLift(void)
+void TMZ1Setup_BGSwitch_ShowLift(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
@@ -167,7 +167,7 @@ void TMZ1Setup_BGCallback_ShowLift(void)
     TMZ1Setup->stageState = TMZ1_STAGESTATE_LIFT;
 }
 
-void TMZ1Setup_StageFinishCB(void)
+void TMZ1Setup_StageFinish_EndAct1(void)
 {
     foreach_active(CrimsonEye, crimsonEye)
     {

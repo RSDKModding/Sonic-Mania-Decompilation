@@ -541,7 +541,7 @@ void TVVan_StateVan_Idle(void)
         }
 
         if (!player->sidekick && Player_CheckCollisionTouch(player, self, &TVVan->hitboxEntry)) {
-            player->state           = Player_State_None;
+            player->state           = Player_State_Static;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
             player->velocity.x      = 0;

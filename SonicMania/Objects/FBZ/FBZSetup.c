@@ -62,9 +62,9 @@ void FBZSetup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_RICKY;
 
-    BGSwitch->switchCallback[FBZ_BG_INSIDE1]     = FBZSetup_BGSwitchCB_ShowInside1;
-    BGSwitch->switchCallback[FBZ_BG_INSIDE2]     = FBZSetup_BGSwitchCB_ShowInside2;
-    BGSwitch->switchCallback[FBZ_BG_INSIDE1_DUP] = FBZSetup_BGSwitchCB_ShowInside1_Dup;
+    BGSwitch->switchCallback[FBZ_BG_INSIDE1]     = FBZSetup_BGSwitch_ShowInside1;
+    BGSwitch->switchCallback[FBZ_BG_INSIDE2]     = FBZSetup_BGSwitch_ShowInside2;
+    BGSwitch->switchCallback[FBZ_BG_INSIDE1_DUP] = FBZSetup_BGSwitch_ShowInside1_Dup;
 
     TileLayer *backgroundInside    = RSDK.GetTileLayer(0);
     backgroundInside->drawLayer[0] = 0;
@@ -72,7 +72,7 @@ void FBZSetup_StageLoad(void)
     backgroundInside->drawLayer[2] = 0;
     backgroundInside->drawLayer[3] = 0;
     if (!Zone->actID)
-        backgroundInside->scanlineCallback = FBZSetup_ScanlineCB_BGInside;
+        backgroundInside->scanlineCallback = FBZSetup_Scanline_BGInside;
 
     int32 ang       = -336;
     int32 scanlineY = 0;
@@ -91,8 +91,8 @@ void FBZSetup_StageLoad(void)
     RSDK_ENUM_VAR("Show Exterior", FBZ_GENERICTRIGGER_EXTERIOR);
     RSDK_ENUM_VAR("Show Interior", FBZ_GENERICTRIGGER_INTERIOR);
 
-    GenericTrigger->callbacks[FBZ_GENERICTRIGGER_EXTERIOR] = FBZSetup_GenericTriggerCB_ShowExterior;
-    GenericTrigger->callbacks[FBZ_GENERICTRIGGER_INTERIOR] = FBZSetup_GenericTriggerCB_ShowInterior;
+    GenericTrigger->callbacks[FBZ_GENERICTRIGGER_EXTERIOR] = FBZSetup_Trigger_ShowExterior;
+    GenericTrigger->callbacks[FBZ_GENERICTRIGGER_INTERIOR] = FBZSetup_Trigger_ShowInterior;
 
     if (globals->gameMode == MODE_COMPETITION) {
         foreach_all(ParallaxSprite, parallaxSprite) { destroyEntity(parallaxSprite); }
@@ -105,7 +105,7 @@ void FBZSetup_StageLoad(void)
             FBZSetup->outro           = outro;
             foreach_break;
         }
-        Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act1;
+        Zone->stageFinishCallback = FBZSetup_StageFinish_EndAct1;
     }
 
     if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
@@ -114,7 +114,7 @@ void FBZSetup_StageLoad(void)
 
 #if MANIA_USE_PLUS
     if (isMainGameMode() && PlayerHelpers_CheckAct2())
-        Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act2;
+        Zone->stageFinishCallback = FBZSetup_StageFinish_EndAct2;
 
     if ((SceneInfo->filter & FILTER_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreFBZ.act", 0b0000000011111111);
@@ -180,7 +180,7 @@ void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32
     }
 }
 
-void FBZSetup_ScanlineCB_BGInside(ScanlineInfo *scanlines)
+void FBZSetup_Scanline_BGInside(ScanlineInfo *scanlines)
 {
     RSDKScreenInfo *screen    = &ScreenInfo[SceneInfo->currentScreenID];
     int32 y                   = screen->position.y >> 3;
@@ -204,7 +204,7 @@ void FBZSetup_ScanlineCB_BGInside(ScanlineInfo *scanlines)
     FBZSetup_AddDynamicBG(scanlines, 160, 96, 512, 64, 704 << 16);
 }
 
-void FBZSetup_BGSwitchCB_ShowInside1(void)
+void FBZSetup_BGSwitch_ShowInside1(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
 
@@ -217,7 +217,7 @@ void FBZSetup_BGSwitchCB_ShowInside1(void)
     }
 }
 
-void FBZSetup_BGSwitchCB_ShowInside2(void)
+void FBZSetup_BGSwitch_ShowInside2(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
 
@@ -231,7 +231,7 @@ void FBZSetup_BGSwitchCB_ShowInside2(void)
     }
 }
 
-void FBZSetup_BGSwitchCB_ShowInside1_Dup(void)
+void FBZSetup_BGSwitch_ShowInside1_Dup(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
 
@@ -244,7 +244,7 @@ void FBZSetup_BGSwitchCB_ShowInside1_Dup(void)
     }
 }
 
-void FBZSetup_GenericTriggerCB_ShowExterior(void)
+void FBZSetup_Trigger_ShowExterior(void)
 {
     int32 id                                                        = (2 * (Zone->actID != 0) + 3);
     RSDK.GetTileLayer(id)->drawLayer[GenericTrigger->playerID]     = DRAWGROUP_COUNT;
@@ -259,7 +259,7 @@ void FBZSetup_GenericTriggerCB_ShowExterior(void)
     }
 }
 
-void FBZSetup_GenericTriggerCB_ShowInterior(void)
+void FBZSetup_Trigger_ShowInterior(void)
 {
     int32 id                                                        = (2 * (Zone->actID != 0) + 3);
     RSDK.GetTileLayer(id)->drawLayer[GenericTrigger->playerID]     = 6;
@@ -268,9 +268,9 @@ void FBZSetup_GenericTriggerCB_ShowInterior(void)
     foreach_active(ParallaxSprite, parallaxSprite) { parallaxSprite->state = ParallaxSprite_State_FadeOut; }
 }
 
-void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outro->active = ACTIVE_NORMAL; }
+void FBZSetup_StageFinish_EndAct1(void) { FBZSetup->outro->active = ACTIVE_NORMAL; }
 #if MANIA_USE_PLUS
-void FBZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(FBZ2Outro, NULL, 0, 0); }
+void FBZSetup_StageFinish_EndAct2(void) { CREATE_ENTITY(FBZ2Outro, NULL, 0, 0); }
 #endif
 
 #if RETRO_INCLUDE_EDITOR

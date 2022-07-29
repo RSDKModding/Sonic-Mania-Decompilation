@@ -174,7 +174,7 @@ bool32 Dango_HandleMovement(StateMachine(nextState), uint8 anim)
         collidedWall = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, Dango->hitboxBadnik.right << 16, 0, 4);
 
     if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, 2)) {
-        uint16 tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 16, (self->position.y + 0xD0000) >> 16);
+        uint16 tile = RSDK.GetTile(Zone->fgLow, self->position.x >> 16, (self->position.y + 0xD0000) >> 16);
         self->angle = RSDK.GetTileAngle(tile, 0, 0);
 
         if (self->groundVel <= 0) {

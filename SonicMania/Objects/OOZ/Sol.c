@@ -352,9 +352,9 @@ void Sol_State_ActiveFireball(void)
 
         int32 spawnX = self->position.x + offsetX;
         int32 spawnY = self->position.y + offsetY;
-        uint16 tile  = RSDK.GetTileInfo(Zone->fgHigh, spawnX >> 20, (spawnY - 0x10000) >> 20);
+        uint16 tile  = RSDK.GetTile(Zone->fgHigh, spawnX >> 20, (spawnY - 0x10000) >> 20);
         if (tile == (uint16)-1)
-            tile = RSDK.GetTileInfo(Zone->fgLow, spawnX >> 20, (spawnY - 0x10000) >> 20);
+            tile = RSDK.GetTile(Zone->fgLow, spawnX >> 20, (spawnY - 0x10000) >> 20);
 
         int32 tileFlags = RSDK.GetTileFlags(tile, 0);
         if (((tileFlags == OOZ_TFLAGS_OILSTRIP || tileFlags == OOZ_TFLAGS_OILSLIDE) && collided) || tileFlags == OOZ_TFLAGS_OILPOOL) {
@@ -413,16 +413,16 @@ void Sol_State_FireballOilFlame(void)
             collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 16);
 
         if (collided) {
-            uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
+            uint16 tile = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
             if (tile == (uint16)-1)
-                tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
+                tile = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
 
             self->rotation = 2 * RSDK.GetTileAngle(tile, 0, 0);
         }
 
-        uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x70000) >> 20);
+        uint16 tile = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x70000) >> 20);
         if (tile == (uint16)-1)
-            tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x70000) >> 20);
+            tile = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x70000) >> 20);
 
         int32 tileFlags = RSDK.GetTileFlags(tile, 0);
         if (tileFlags == OOZ_TFLAGS_NORMAL || tileFlags == OOZ_TFLAGS_OILFALL) {
@@ -459,9 +459,9 @@ void Sol_State_OilFlame(void)
     RSDK_THIS(Sol);
 
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
+        uint16 tile = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
         if (tile == (uint16)-1)
-            tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
+            tile = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
 
         if (RSDK.GetTileFlags(tile, 0) == OOZ_TFLAGS_OILPOOL) {
             if ((self->position.x & 0xF00000) != self->oscillateAngle)

@@ -52,8 +52,8 @@ void EggLoco_EditorLoad(void);
 void EggLoco_Serialize(void);
 
 // Extra Entity Functions
-bool32 EggLoco_ChuggaCheckCB(void);
-void EggLoco_ChuggaUpdateCB(int32 sfx);
+bool32 EggLoco_SfxCheck_LocoChugga(void);
+void EggLoco_SfxUpdate_LocoChugga(int32 sfx);
 
 void EggLoco_State_TootDelay(void);
 void EggLoco_State_Whistle(void);

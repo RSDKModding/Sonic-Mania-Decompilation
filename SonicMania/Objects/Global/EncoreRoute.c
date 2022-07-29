@@ -40,8 +40,8 @@ void EncoreRoute_Update(void)
 
     for (int32 y = 0; y < (self->size.y >> 16); ++y) {
         for (int32 x = 0; x < (self->size.x >> 16); ++x) {
-            uint16 tile = RSDK.GetTileInfo(layerSrc, srcX + x, srcY + y);
-            RSDK.SetTileInfo(layerDest, dstX + x, dstY + y, tile);
+            uint16 tile = RSDK.GetTile(layerSrc, srcX + x, srcY + y);
+            RSDK.SetTile(layerDest, dstX + x, dstY + y, tile);
         }
     }
 

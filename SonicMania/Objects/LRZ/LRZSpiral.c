@@ -107,7 +107,7 @@ void LRZSpiral_State_Cylinder(void)
         int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 self->playerSpiralPos[playerID] += player->groundVel;
 
                 if (self->playerSpiralPos[playerID] < 0) {
@@ -167,7 +167,7 @@ void LRZSpiral_State_Cylinder(void)
 
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPIRAL_RUN, &player->animator, false, 0);
                 player->animator.speed  = 0;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
                 player->tileCollisions  = false;
@@ -186,7 +186,7 @@ void LRZSpiral_State_J_Curve(void)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
         if ((1 << playerID) & self->activePlayers) {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 self->playerSpiralPos[playerID] += player->groundVel;
 
                 if (self->playerSpiralPos[playerID] < 0) {
@@ -238,7 +238,7 @@ void LRZSpiral_State_J_Curve(void)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWIST_RUN, &player->animator, false, 0);
 
                 player->animator.speed  = 0;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
                 player->tileCollisions  = false;
@@ -258,7 +258,7 @@ void LRZSpiral_State_C_Curve(void)
         int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 self->playerSpiralPos[playerID] -= player->groundVel;
 
                 if (self->playerSpiralPos[playerID] < 0) {
@@ -307,7 +307,7 @@ void LRZSpiral_State_C_Curve(void)
 
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWIST_RUN, &player->animator, false, 0);
                 player->animator.speed  = 0;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
                 player->tileCollisions  = false;

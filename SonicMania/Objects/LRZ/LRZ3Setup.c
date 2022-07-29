@@ -52,17 +52,17 @@ void LRZ3Setup_StageLoad(void)
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             if (!globals->tempFlags) {
-                Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;
+                Zone->stageFinishCallback = LRZ3Outro_StageFinish_EndAct2ST;
             }
         }
         else {
             if (!CHECK_CHARACTER_ID(ID_KNUCKLES, 1)) {
-                Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;
+                Zone->stageFinishCallback = LRZ3Outro_StageFinish_EndAct2ST;
             }
             else {
                 LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->classID);
                 if (LRZ3Setup->cutsceneOutroK)
-                    Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
+                    Zone->stageFinishCallback = LRZ3Setup_StageFinish_EndAct2K;
             }
         }
 #else
@@ -70,12 +70,12 @@ void LRZ3Setup_StageLoad(void)
             LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->classID);
 
         if (LRZ3Setup->cutsceneOutroK)
-            Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
+            Zone->stageFinishCallback = LRZ3Setup_StageFinish_EndAct2K;
 #endif
     }
 }
 
-void LRZ3Setup_StartCutscene(void) { LRZ3Setup->cutsceneOutroK->active = ACTIVE_NORMAL; }
+void LRZ3Setup_StageFinish_EndAct2K(void) { LRZ3Setup->cutsceneOutroK->active = ACTIVE_NORMAL; }
 
 #if RETRO_INCLUDE_EDITOR
 void LRZ3Setup_EditorDraw(void) {}

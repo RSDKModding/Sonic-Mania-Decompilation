@@ -26,7 +26,7 @@ void FBZFan_Update(void)
         int32 playerID = RSDK.GetEntitySlot(player);
         Player_CheckCollisionBox(player, self, &FBZFan->hitboxSolid);
 
-        if (player->state != Player_State_None && Player_CheckValidState(player) && player->animator.animationID != ANI_HURT
+        if (player->state != Player_State_Static && Player_CheckValidState(player) && player->animator.animationID != ANI_HURT
             && RSDK.CheckObjectCollisionTouchBox(self, &FBZFan->hitboxFan, player, &FBZFan->hitboxPlayer)) {
             isFanning = true;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);

@@ -351,7 +351,7 @@ void PhantomGunner_State_Idle(void)
     }
     else {
         if (++self->rocketLaunchCount == 2) {
-            PhantomEgg_SetupScanlineCB();
+            PhantomEgg_SetupWarpFX();
             self->timer = 0;
             self->state = PhantomGunner_State_ResetState;
         }

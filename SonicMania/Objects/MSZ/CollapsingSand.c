@@ -139,15 +139,15 @@ void CollapsingSand_State_CollapseLeft(void)
             for (int32 x = (tx << 20) + 0x80000, y = (ty << 20) + 0x80000; tx >= self->tileEndPos.x && ty >= self->tileEndPos.y; --tx, --ty) {
                 bool32 spawnSand = false;
 
-                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+                uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLow, tx, ty, -1);
                     spawnSand = true;
                 }
 
-                tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+                tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
                     spawnSand = true;
                 }
 
@@ -159,7 +159,7 @@ void CollapsingSand_State_CollapseLeft(void)
                     if (self->collapseDuration.x > 0) {
                         // Replace ground tile with a flat one
                         if (ty == self->tilePos.y)
-                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, (168 + (self->collapseDuration.x & 1)) | 0b1111000000000000);
+                            RSDK.SetTile(Zone->fgLow, tx, ty, (168 + (self->collapseDuration.x & 1)) | 0b1111000000000000);
                     }
                 }
 
@@ -206,15 +206,15 @@ void CollapsingSand_State_CollapseRight(void)
             for (int32 x = (tx << 20) + 0x80000, y = (ty << 20) + 0x80000; tx <= self->tileEndPos.x && ty >= self->tileEndPos.y; ++tx, --ty) {
                 bool32 spawnSand = false;
 
-                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+                uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLow, tx, ty, -1);
                     spawnSand = true;
                 }
 
-                tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+                tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
                     spawnSand = true;
                 }
 
@@ -226,7 +226,7 @@ void CollapsingSand_State_CollapseRight(void)
                     if (self->collapseDuration.x > 0) {
                         // Replace ground tile with a flat one
                         if (ty == self->tilePos.y)
-                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, (169 - (self->collapseDuration.x & 1)) | 0b1111000000000000);
+                            RSDK.SetTile(Zone->fgLow, tx, ty, (169 - (self->collapseDuration.x & 1)) | 0b1111000000000000);
                     }
                 }
 

@@ -89,14 +89,14 @@ void MSZSetup_State_ManageFade_K(void);
 void MSZSetup_State_ManageFade_E(void);
 #endif
 
-void MSZSetup_StageFinishCB_ST(void);
-void MSZSetup_StageFinishCB_K(void);
+void MSZSetup_StageFinish_EndAct1ST(void);
+void MSZSetup_StageFinish_EndAct1K(void);
 #if MANIA_USE_PLUS
-void MSZSetup_StageFinishCB_E(void);
+void MSZSetup_StageFinish_EndAct1E(void);
 #endif
 
-void MSZSetup_StageFinishCB_MSZ2(void);
-void MSZSetup_GenericTriggerCB_GetAchievement(void);
+void MSZSetup_StageFinish_EndAct2(void);
+void MSZSetup_Trigger_AwardAchievement(void);
 void MSZSetup_HandleRestart(void);
 void MSZSetup_State_SwitchPalettes(void);
 

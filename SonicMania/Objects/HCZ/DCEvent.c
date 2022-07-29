@@ -71,7 +71,7 @@ void DCEvent_Create(void *data)
                 EntityWater *water = (EntityWater *)self;
                 int32 x            = self->position.x;
                 int32 y            = self->position.y;
-                RSDK.ResetEntityPtr(water, Water->classID, intToVoid(WATER_BUBBLE));
+                RSDK.ResetEntity(water, Water->classID, intToVoid(WATER_BUBBLE));
 
                 water->position.x = x;
                 water->bubbleX    = x;

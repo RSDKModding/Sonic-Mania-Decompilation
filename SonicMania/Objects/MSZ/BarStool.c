@@ -38,7 +38,7 @@ void BarStool_Update(void)
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionPlatform(player, self, &BarStool->hitboxStool)) {
             bool32 canTurntable = true;
-            if (abs(player->velocity.x) <= 0x20000 && player->state != Player_State_None) {
+            if (abs(player->velocity.x) <= 0x20000 && player->state != Player_State_Static) {
                 if (abs(self->spinSpeed) <= 0x10000)
                     canTurntable = false;
             }
@@ -49,14 +49,14 @@ void BarStool_Update(void)
 
             if (canTurntable) {
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
-                if (player->state != Player_State_None) {
+                if (player->state != Player_State_Static) {
                     if (velY >= 0)
                         self->spinSpeed += player->velocity.x;
 
                     self->playerAngle[playerID] = 0;
                     self->playerPos[playerID]   = (player->position.x - self->position.x) >> 1;
 
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
                 }
@@ -118,7 +118,7 @@ void BarStool_Update(void)
                     }
                 }
 
-                if (player->jumpPress && player->state == Player_State_None) {
+                if (player->jumpPress && player->state == Player_State_Static) {
                     int32 speed = self->spinSpeed;
                     if (player->position.x <= self->position.x)
                         speed = -abs(speed);

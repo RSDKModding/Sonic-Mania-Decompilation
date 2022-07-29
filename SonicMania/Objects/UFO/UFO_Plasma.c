@@ -71,7 +71,7 @@ void UFO_Plasma_StageLoad(void)
 
     RSDK.SetPaletteMask(0x00F000);
     RSDK.ResetEntitySlot(SLOT_UFO_PLASMA, UFO_Plasma->classID, NULL);
-    RSDK.SetDrawGroupProperties(3, false, NULL);
+    RSDK.SetDrawGroupProperties(3, false, StateMachine_None);
 }
 
 #if RETRO_INCLUDE_EDITOR

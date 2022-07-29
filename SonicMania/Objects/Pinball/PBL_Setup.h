@@ -48,10 +48,10 @@ void PBL_Setup_EditorLoad(void);
 void PBL_Setup_Serialize(void);
 
 // Extra Entity Functions
-void PBL_Setup_TableLow_ScanlineCB(ScanlineInfo *scanlines);
-void PBL_Setup_TableHigh_ScanlineCB(ScanlineInfo *scanlines);
-void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines);
-void PBL_Setup_DrawLayer_Callback(void);
+void PBL_Setup_Scanline_TableLow(ScanlineInfo *scanlines);
+void PBL_Setup_Scanline_TableHigh(ScanlineInfo *scanlines);
+void PBL_Setup_Scanline_PinballBG(ScanlineInfo *scanlines);
+void PBL_Setup_DrawHook_PrepareDrawingFX(void);
 
 void PBL_Setup_ExitPinball(void);
 void PBL_Setup_GiveScore(int32 score);

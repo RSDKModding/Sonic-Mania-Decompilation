@@ -75,8 +75,7 @@ void FBZ1Outro_StartCutscene(void)
                               FBZ1Outro_Cutscene_PrepareFBZ2, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_DISABLED;
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
 #endif
 }
 
@@ -139,13 +138,13 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
         player1->stateInput = StateMachine_None;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE_1, &player1->animator, false, 0);
 
-        player1->state = Player_State_None;
+        player1->state = Player_State_Static;
         CutsceneSeq_LockPlayerControl(player1);
 
         if (player2->classID == Player->classID) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_BALANCE_1, &player2->animator, false, 0);
 
-            player2->state = Player_State_None;
+            player2->state = Player_State_Static;
             CutsceneSeq_LockPlayerControl(player2);
         }
     }

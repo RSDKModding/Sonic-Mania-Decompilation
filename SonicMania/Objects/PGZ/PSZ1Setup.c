@@ -170,10 +170,10 @@ void PSZ1Setup_StaticUpdate(void)
             {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
 
-                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                uint16 tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                 bool32 isLowLayer = true;
                 if (tile == (uint16)-1) {
-                    tile       = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                    tile       = RSDK.GetTile(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                     isLowLayer = false;
                 }
 
@@ -214,9 +214,9 @@ void PSZ1Setup_StageLoad(void)
     PSZ1Setup->petalBehaviourActive = false;
     PSZ1Setup->levelWrapType        = PSZ1_WRAP_TOP;
 
-    GenericTrigger->callbacks[GENERICTRIGGER_PSZ1_PETALSINACTIVE] = PSZ1Setup_TriggerCB_DeactivatePetalBehaviour;
-    GenericTrigger->callbacks[GENERICTRIGGER_PSZ1_PETALSACTIVE]   = PSZ1Setup_TriggerCB_ActivatePetalBehaviour;
-    GenericTrigger->callbacks[GENERICTRIGGER_PSZ1_ACHIEVEMENT]    = PSZ1Setup_TriggerCB_AchievementArea;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ1_PETALSINACTIVE] = PSZ1Setup_Trigger_DeactivatePetalBehaviour;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ1_PETALSACTIVE]   = PSZ1Setup_Trigger_ActivatePetalBehaviour;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ1_ACHIEVEMENT]    = PSZ1Setup_Trigger_AwardAchievement;
 
     PSZ1Setup->buttonFrontAniDuration = 12;
     PSZ1Setup->buttonFrontAniFrame    = 0;
@@ -239,7 +239,7 @@ void PSZ1Setup_StageLoad(void)
     RSDK.DrawAniTiles(PSZ1Setup->aniTiles1, 223, 0, 224, 16, 32);
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
-        Zone->stageFinishCallback = PSZ1Setup_StageFinishCB;
+        Zone->stageFinishCallback = PSZ1Setup_StageFinish_EndAct1;
 
 #if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE)
@@ -249,8 +249,9 @@ void PSZ1Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_BECKY;
 
-    BGSwitch->switchCallback[PSZ1_BG_INSIDE]  = PSZ1Setup_BGSwitch_CB_Inside;
-    BGSwitch->switchCallback[PSZ1_BG_OUTSIDE] = PSZ1Setup_BGSwitch_CB_Outside;
+    BGSwitch->switchCallback[PSZ1_BG_INSIDE]  = PSZ1Setup_BGSwitch_Inside;
+    BGSwitch->switchCallback[PSZ1_BG_OUTSIDE] = PSZ1Setup_BGSwitch_Outside;
+
     BGSwitch->layerIDs[0]                     = PSZ1_BG_INSIDE;
     BGSwitch->layerIDs[1]                     = PSZ1_BG_INSIDE;
     BGSwitch->layerIDs[2]                     = PSZ1_BG_INSIDE;
@@ -259,14 +260,14 @@ void PSZ1Setup_StageLoad(void)
 }
 
 #if MANIA_USE_PLUS
-void PSZ1Setup_BGSwitch_CB_Inside(void)
+void PSZ1Setup_BGSwitch_Inside(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0; // Background 1
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0; // Background 2
     RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0; // Background 3
 }
 
-void PSZ1Setup_BGSwitch_CB_Outside(void)
+void PSZ1Setup_BGSwitch_Outside(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;               // Background 1
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 2
@@ -274,11 +275,11 @@ void PSZ1Setup_BGSwitch_CB_Outside(void)
 }
 #endif
 
-void PSZ1Setup_TriggerCB_DeactivatePetalBehaviour(void) { PSZ1Setup->petalBehaviourActive = true; }
+void PSZ1Setup_Trigger_DeactivatePetalBehaviour(void) { PSZ1Setup->petalBehaviourActive = true; }
 
-void PSZ1Setup_TriggerCB_ActivatePetalBehaviour(void) { PSZ1Setup->petalBehaviourActive = false; }
+void PSZ1Setup_Trigger_ActivatePetalBehaviour(void) { PSZ1Setup->petalBehaviourActive = false; }
 
-void PSZ1Setup_TriggerCB_AchievementArea(void)
+void PSZ1Setup_Trigger_AwardAchievement(void)
 {
     RSDK_THIS(GenericTrigger);
 
@@ -299,7 +300,7 @@ void PSZ1Setup_TriggerCB_AchievementArea(void)
     }
 }
 
-void PSZ1Setup_StageFinishCB(void)
+void PSZ1Setup_StageFinish_EndAct1(void)
 {
     ++SceneInfo->listPos;
     globals->enableIntro       = true;

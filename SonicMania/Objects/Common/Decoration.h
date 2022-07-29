@@ -21,7 +21,7 @@ struct EntityDecoration {
     int32 rotSpeed;
     Vector2 repeatTimes;
     Vector2 repeatSpacing;
-    bool32 isTMZ;
+    bool32 additive;
 };
 
 // Object Struct

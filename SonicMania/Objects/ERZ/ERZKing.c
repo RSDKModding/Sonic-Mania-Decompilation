@@ -292,13 +292,13 @@ void ERZKing_State_SetupBody(void)
 
         if (++self->timer == 30) {
             EntityERZKing *leftArm = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ERZKing);
-            RSDK.ResetEntityPtr(leftArm, ERZKing->classID, intToVoid(ERZKING_ARM_L));
+            RSDK.ResetEntity(leftArm, ERZKing->classID, intToVoid(ERZKING_ARM_L));
             leftArm->position.x = self->position.x;
             leftArm->position.y = self->position.y;
             leftArm->parent     = self;
 
             EntityERZKing *rightArm = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, ERZKing);
-            RSDK.ResetEntityPtr(rightArm, ERZKing->classID, intToVoid(ERZKING_ARM_R));
+            RSDK.ResetEntity(rightArm, ERZKing->classID, intToVoid(ERZKING_ARM_R));
             rightArm->position.x = self->position.x;
             rightArm->position.y = self->position.y;
             rightArm->parent     = self;

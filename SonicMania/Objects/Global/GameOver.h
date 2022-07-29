@@ -54,9 +54,9 @@ void GameOver_SaveGameCallback(void);
 
 void GameOver_State_EnterLetters(void);
 #if MANIA_USE_PLUS
-void GameOver_State_HandleMultiplayer(void);
+void GameOver_State_WaitComp(void);
 #endif
-void GameOver_State_ShowMessage(void);
+void GameOver_State_Wait(void);
 void GameOver_State_ExitLetters(void);
 
 #endif //!OBJ_GAMEOVER_H

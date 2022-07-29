@@ -597,7 +597,7 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(BreakableWall, breakableWall)
     {
-        if (breakableWall->state == BreakableWall_State_BreakableSides
+        if (breakableWall->state == BreakableWall_State_Wall
             && RSDK.CheckObjectCollisionTouchBox(breakableWall, &breakableWall->hitbox, self, &CheckerBall->hitboxBall)) {
             int32 *offsets = BreakableWall->breakOffsets;
 
@@ -612,10 +612,10 @@ void CheckerBall_HandleObjectCollisions(void)
                     int32 tx                  = breakableWall->position.x + offsets[0];
                     int32 ty                  = breakableWall->position.y + offsets[1];
                     EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, ty);
-                    tile->tileInfo            = RSDK.GetTileInfo(Zone->fgHigh, tx >> 20, ty >> 20);
+                    tile->tileInfo            = RSDK.GetTile(Zone->fgHigh, tx >> 20, ty >> 20);
                     tile->velocity.x          = velocities[0];
                     tile->velocity.y          = velocities[1];
-                    RSDK.SetTileInfo(Zone->fgHigh, tx >> 20, ty >> 20, -1);
+                    RSDK.SetTile(Zone->fgHigh, tx >> 20, ty >> 20, -1);
                     offsets += 2;
                     velocities += 2;
                 }

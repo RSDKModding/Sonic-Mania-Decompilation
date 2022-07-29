@@ -96,7 +96,8 @@ void LRZ1Setup_StageLoad(void)
     LRZ1Setup->fgHigh = RSDK.GetTileLayer(Zone->fgHigh);
 #endif
 
-    RSDK.SetDrawGroupProperties(0, false, LRZ1Setup_DrawLayerCB);
+    // Slows the vScroll of the BG when the lava lake is visible to give a nicer effect :]
+    RSDK.SetDrawGroupProperties(0, false, LRZ1Setup_DrawHook_ApplyBGSmoothing);
 
     Animals->animalTypes[0] = ANIMAL_FLICKY;
 #if MANIA_USE_PLUS
@@ -106,7 +107,7 @@ void LRZ1Setup_StageLoad(void)
 #endif
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
-        Zone->stageFinishCallback = LRZ1Setup_StageFinishCB;
+        Zone->stageFinishCallback = LRZ1Setup_StageFinish_EndAct1;
 
 #if MANIA_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
@@ -133,9 +134,9 @@ void LRZ1Setup_StageLoad(void)
 #endif
 }
 
-void LRZ1Setup_StageFinishCB(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0); }
+void LRZ1Setup_StageFinish_EndAct1(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0); }
 
-void LRZ1Setup_DrawLayerCB(void)
+void LRZ1Setup_DrawHook_ApplyBGSmoothing(void)
 {
     int32 scroll = minVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
 

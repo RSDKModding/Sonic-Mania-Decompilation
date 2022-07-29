@@ -36,6 +36,10 @@ void EncoreIntro_Update(void)
                                   EncoreIntro_Cutscene_FadeOutAndReset, EncoreIntro_Cutscene_FadeInAndStart, EncoreIntro_Cutscene_SkipAndFadeOut,
                                   EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
         self->skipPart2 = false;
+
+#if MANIA_USE_PLUS
+        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
     }
 }
 
@@ -56,12 +60,7 @@ void EncoreIntro_Create(void *data)
         if (globals->enableIntro) {
             foreach_all(HUD, hud)
             {
-                hud->maxOffset = hud->scoreOffset.x;
-                hud->scoreOffset.x -= 0x1000000;
-                hud->timeOffset.x -= 0x1100000;
-                hud->ringsOffset.x -= 0x1200000;
-                hud->lifeOffset.x -= 0x1300000;
-                hud->state = HUD_State_ComeOnScreen;
+                HUD_MoveIn(hud);
                 hud->state = StateMachine_None;
             }
 
@@ -142,6 +141,10 @@ void EncoreIntro_SetupCutscene(void)
                               EncoreIntro_Cutscene_RubyWarp, EncoreIntro_Cutscene_LoadGHZ, EncoreIntro_Cutscene_AwaitSaveFinish,
                               EncoreIntro_Cutscene_FadeOutAndReset, EncoreIntro_Cutscene_FadeInAndStart, EncoreIntro_Cutscene_SkipAndFadeOut,
                               EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
+
+#if MANIA_USE_PLUS
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
 }
 
 void EncoreIntro_SetupCutscenePart2(void)
@@ -205,7 +208,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
             ruby->alpha         = 0;
             ruby->inkEffect     = INK_ALPHA;
             player1->position.y = ruby->position.y;
-            player1->state      = Player_State_None;
+            player1->state      = Player_State_Static;
             player1->stateInput = StateMachine_None;
             CutsceneSeq_LockAllPlayerControl();
             player1->groundVel  = 0;
@@ -218,7 +221,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
         else if (host->timer == 240) {
             fxRuby->delay = 32;
             fxRuby->state = FXRuby_State_IncreaseStageDeform;
-            PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+            PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
             Camera_ShakeScreen(0, 4, 4);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.01);
             foreach_active(Animals, animal)
@@ -232,7 +235,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FAN, &player1->animator, false, 0);
             player1->position.x += (player1->position.x - player1->position.x) >> 3;
             player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->storedTimer)) + ruby->position.y - player1->position.y) >> 3;
-            player1->state = Player_State_None;
+            player1->state = Player_State_Static;
         }
         else {
             ruby->alpha     = 0;
@@ -320,7 +323,7 @@ bool32 EncoreIntro_Cutscene_BeginAIZEncore(EntityCutsceneSeq *host)
         }
         foreach_all(HUD, hud)
         {
-            hud->vsStates[0] = HUD_State_ComeOnScreen;
+            hud->vsStates[0] = HUD_State_MoveIn;
             hud->state       = hud->vsStates[0];
         }
         Music_PlayTrack(TRACK_STAGE);
@@ -414,7 +417,7 @@ bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
     }
     player->state           = EncoreIntro_PlayerState_HandleAir;
     player->nextAirState    = StateMachine_None;
-    player->nextGroundState = Player_State_None;
+    player->nextGroundState = Player_State_Static;
     player->onGround        = false;
     globals->stock          = ID_NONE;
     if (globals->characterFlags == (ID_SONIC | ID_RAY)) {
@@ -434,7 +437,7 @@ bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
     buddy->drawOrder       = Zone->playerDrawHigh;
     buddy->state           = EncoreIntro_PlayerState_HandleAir;
     buddy->nextAirState    = StateMachine_None;
-    buddy->nextGroundState = Player_State_None;
+    buddy->nextGroundState = Player_State_Static;
     buddy->onGround        = false;
 
     if (globals->characterFlags == (ID_SONIC | ID_RAY)) {
@@ -722,7 +725,7 @@ bool32 EncoreIntro_Cutscene_AIZEncoreTutorial(EntityCutsceneSeq *host)
             cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
             cutsceneSeq->skipCallback      = AIZEncoreTutorial_State_ReturnToCutscene;
         }
-        foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+        HUD_MoveOut();
         return true;
     }
     return false;
@@ -899,7 +902,7 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
         fxRuby              = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder   = Zone->playerDrawHigh + 1;
         EncoreIntro->fxRuby = fxRuby;
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         Camera_ShakeScreen(0, 4, 4);
         player->drawOrder = Zone->playerDrawHigh + 1;
         if (buddy->classID == Player->classID)
@@ -915,13 +918,13 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
                 if (host->timer == host->storedTimer + 30) {
                     fxRuby->delay = 64;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(4);
+                    PhantomRuby_PlaySfx(4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedTimer + 210) {
                     fxRuby->delay = 32;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->storedTimer = host->timer;
@@ -949,7 +952,7 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
                     playerPtr->tileCollisions = false;
                     playerPtr->velocity.x     = 0;
                     playerPtr->velocity.y     = 0;
-                    playerPtr->state          = Player_State_None;
+                    playerPtr->state          = Player_State_Static;
                 }
             }
         }
@@ -1054,7 +1057,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
 
         foreach_all(HUD, hud)
         {
-            hud->vsStates[0] = HUD_State_ComeOnScreen;
+            hud->vsStates[0] = HUD_State_MoveIn;
             hud->state       = hud->vsStates[0];
         }
 

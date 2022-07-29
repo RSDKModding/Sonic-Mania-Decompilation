@@ -102,10 +102,10 @@ void PhantomEgg_CheckPlayerCollisions(void);
 void PhantomEgg_Hit(void);
 void PhantomEgg_Explode(Hitbox *hitbox);
 void PhantomEgg_HandleNextAttack(void);
-void PhantomEgg_SetupScanlineCB(void);
+void PhantomEgg_SetupWarpFX(void);
 void PhantomEgg_HandlePhantomWarp(uint8 phantomID);
 void PhantomEgg_HandleReturnWarp(void);
-void PhantomEgg_ScanlineCB(ScanlineInfo *scanlines);
+void PhantomEgg_Scanline_WarpFX(ScanlineInfo *scanlines);
 
 void PhantomEgg_Draw_Normal(void);
 void PhantomEgg_Draw_Cracked(void);

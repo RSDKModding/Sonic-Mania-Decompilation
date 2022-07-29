@@ -676,12 +676,12 @@ void GigaMetal_StateBody_Marching(void)
         int32 spawnY = (endY << 20) + 0x80000;
 
         for (int32 delay = 4; delay < 40; delay += 6) {
-            uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, endY);
+            uint16 tile = RSDK.GetTile(Zone->fgHigh, tileX, endY);
 
             if (tile != (uint16)-1) {
                 EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
                 block->drawOrder           = Zone->objectDrawHigh;
-                block->layerID             = Zone->fgHigh;
+                block->targetLayer             = Zone->fgHigh;
                 block->tileInfo            = tile;
                 block->tilePos.x           = tileX;
                 block->tilePos.y           = endY;
@@ -691,7 +691,7 @@ void GigaMetal_StateBody_Marching(void)
                 if (tileX > 224) {
                     block                = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) - 0xDF80000, spawnY);
                     block->drawOrder     = Zone->objectDrawHigh;
-                    block->layerID       = Zone->fgHigh;
+                    block->targetLayer       = Zone->fgHigh;
                     block->tileInfo      = tile;
                     block->tilePos.y     = endY;
                     block->tilePos.x     = tileX - 224;
@@ -796,10 +796,10 @@ void GigaMetal_StateBody_Destroyed(void)
             int32 spawnY = (tileY << 20) + 0x80000;
 
             for (int32 y = 0; y < 6; ++y) {
-                uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, tileY);
+                uint16 tile = RSDK.GetTile(Zone->fgHigh, tileX, tileY);
 
                 if (tile != (uint16)-1) {
-                    RSDK.SetTileInfo(Zone->fgHigh, tileX, tileY, -1);
+                    RSDK.SetTile(Zone->fgHigh, tileX, tileY, -1);
                     EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     block->drawOrder           = Zone->objectDrawHigh;
                     block->visible             = true;

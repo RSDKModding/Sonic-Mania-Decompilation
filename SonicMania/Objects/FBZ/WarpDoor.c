@@ -108,9 +108,9 @@ void WarpDoor_Update(void)
 
                                     tag->fadeTimer = 512;
                                     if (self->destinationTag == 99 || self->destinationTag == 100)
-                                        TMZ2_DrawDynTiles_Eggman();
+                                        TMZ2Setup_DrawDynTiles_Eggman();
                                     else
-                                        TMZ2_DrawDynTiles_Ruby();
+                                        TMZ2Setup_DrawDynTiles_Ruby();
                                 }
                             }
                             else if (RSDK.CheckSceneFolder("OOZ2")) {
@@ -311,7 +311,7 @@ void WarpDoor_CheckAllBounds(void)
 {
     foreach_all(BoundsMarker, marker)
     {
-        foreach_all(Player, player) { BoundsMarker_CheckBounds(player, marker, true); }
+        foreach_all(Player, player) { BoundsMarker_ApplyBounds(player, marker, true); }
     }
 }
 

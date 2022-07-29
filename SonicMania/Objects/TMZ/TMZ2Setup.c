@@ -68,8 +68,8 @@ void TMZ2Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_TOCKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
 
-    RSDK.SetDrawGroupProperties(0, false, TMZ2Setup_DrawLayerCB_SetDynTilesPalette);
-    RSDK.SetDrawGroupProperties(1, false, TMZ2Setup_DrawLayerCB_UnsetDynTilesPalette);
+    RSDK.SetDrawGroupProperties(0, false, TMZ2Setup_DrawHook_ApplyDynTilesPalette);
+    RSDK.SetDrawGroupProperties(1, false, TMZ2Setup_DrawHook_RemoveDynTilesPalette);
 
     if (isMainGameMode()) {
         if (globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
@@ -79,17 +79,17 @@ void TMZ2Setup_StageLoad(void)
     }
 }
 
-void TMZ2Setup_DrawLayerCB_SetDynTilesPalette(void) { RSDK.SetActivePalette(4, 0, ScreenInfo->height); }
-void TMZ2Setup_DrawLayerCB_UnsetDynTilesPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
+void TMZ2Setup_DrawHook_ApplyDynTilesPalette(void) { RSDK.SetActivePalette(4, 0, ScreenInfo->height); }
+void TMZ2Setup_DrawHook_RemoveDynTilesPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
 
-void TMZ2_DrawDynTiles_Eggman(void)
+void TMZ2Setup_DrawDynTiles_Eggman(void)
 {
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 604, 64, 0, 96, 128);
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 983, 16, 0, 48, 16);
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 986, 0, 16, 64, 96);
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 1010, 16, 112, 48, 16);
 }
-void TMZ2_DrawDynTiles_Ruby(void)
+void TMZ2Setup_DrawDynTiles_Ruby(void)
 {
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 604, 64, 128, 96, 128);
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 983, 16, 128, 48, 16);

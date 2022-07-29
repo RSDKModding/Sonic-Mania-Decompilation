@@ -87,10 +87,8 @@ void CollapsingPlatform_Draw(void)
     RSDK_THIS(CollapsingPlatform);
     Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
+    drawPos.x = self->position.x - (self->size.x >> 1);
+    drawPos.y = self->position.y - (self->size.y >> 1);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE, false);
@@ -143,15 +141,15 @@ void CollapsingPlatform_Create(void *data)
             int32 sy = self->size.y >> 20;
             for (int32 y = 0; y < sy; ++y) {
                 for (int32 x = 0; x < sx; ++x) {
-                    self->storedTiles[x + y * (self->size.x >> 20)] = RSDK.GetTileInfo(self->targetLayer, x + xOff, y + yOff);
+                    self->storedTiles[x + y * (self->size.x >> 20)] = RSDK.GetTile(self->targetLayer, x + xOff, y + yOff);
                 }
             }
         }
 
-        self->hitboxTrigger.right  = self->size.x >> 17;
         self->hitboxTrigger.left   = -(self->size.x >> 17);
+        self->hitboxTrigger.top    = -16 - (self->size.y >> 17);
+        self->hitboxTrigger.right  = self->size.x >> 17;
         self->hitboxTrigger.bottom = self->size.y >> 17;
-        self->hitboxTrigger.top    = -16 - self->hitboxTrigger.bottom;
     }
 
     switch (self->type) {
@@ -159,8 +157,8 @@ void CollapsingPlatform_Create(void *data)
         case COLLAPSEPLAT_LEFT: self->state = CollapsingPlatform_State_Left; break;
         case COLLAPSEPLAT_RIGHT: self->state = CollapsingPlatform_State_Right; break;
         case COLLAPSEPLAT_CENTER: self->state = CollapsingPlatform_State_Center; break;
-        case COLLAPSEPLAT_LR: self->state = CollapsingPlatform_State_LeftOrRight; break;
-        case COLLAPSEPLAT_PLAYER: self->state = CollapsingPlatform_State_PlayerPos; break;
+        case COLLAPSEPLAT_LR: self->state = CollapsingPlatform_State_LeftRight; break;
+        case COLLAPSEPLAT_LRC: self->state = CollapsingPlatform_State_LeftRightCenter; break;
     }
 }
 
@@ -197,7 +195,7 @@ void CollapsingPlatform_State_Left(void)
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
-            tile->layerID             = self->targetLayer;
+            tile->targetLayer             = self->targetLayer;
             tile->tileInfo            = *tiles;
             tile->drawOrder           = self->drawOrder;
             tile->tilePos.x           = x + startTX;
@@ -232,7 +230,7 @@ void CollapsingPlatform_State_Right(void)
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
-            tile->layerID             = self->targetLayer;
+            tile->targetLayer             = self->targetLayer;
             tile->tileInfo            = *tiles;
             tile->drawOrder           = self->drawOrder;
             tile->tilePos.x           = x + startTX;
@@ -268,7 +266,7 @@ void CollapsingPlatform_State_Center(void)
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
-            tile->layerID             = self->targetLayer;
+            tile->targetLayer             = self->targetLayer;
             tile->tileInfo            = *tiles;
             tile->drawOrder           = self->drawOrder;
             tile->tilePos.x           = x + startTX;
@@ -288,7 +286,7 @@ void CollapsingPlatform_State_Center(void)
         ty += 0x100000;
     }
 }
-void CollapsingPlatform_State_LeftOrRight(void)
+void CollapsingPlatform_State_LeftRight(void)
 {
     RSDK_THIS(CollapsingPlatform);
 
@@ -300,7 +298,7 @@ void CollapsingPlatform_State_LeftOrRight(void)
     else
         CollapsingPlatform_State_Right();
 }
-void CollapsingPlatform_State_PlayerPos(void)
+void CollapsingPlatform_State_LeftRightCenter(void)
 {
     RSDK_THIS(CollapsingPlatform);
 
@@ -352,7 +350,7 @@ void CollapsingPlatform_EditorLoad(void)
     RSDK_ENUM_VAR("Right", COLLAPSEPLAT_RIGHT);
     RSDK_ENUM_VAR("Center", COLLAPSEPLAT_CENTER);
     RSDK_ENUM_VAR("Left or Right", COLLAPSEPLAT_LR);
-    RSDK_ENUM_VAR("Base on Player Position", COLLAPSEPLAT_PLAYER);
+    RSDK_ENUM_VAR("Base on Player Position", COLLAPSEPLAT_LRC);
 
     RSDK_ACTIVE_VAR(CollapsingPlatform, targetLayer);
     RSDK_ENUM_VAR("Low", COLLAPSEPLAT_TARGET_LOW);

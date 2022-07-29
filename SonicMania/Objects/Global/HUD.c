@@ -307,11 +307,8 @@ void HUD_Draw(void)
         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (sidekick->classID) {
             // Draw Buddy Icon
-            int32 charID       = sidekick->characterID;
-            int32 stockFrameID = -1;
-            for (stockFrameID = -1; charID > 0; ++stockFrameID) charID >>= 1;
-            self->lifeIconAnimator.frameID = stockFrameID;
-            if (stockFrameID >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
+            self->lifeIconAnimator.frameID = HUD_CharacterIndexFromID(sidekick->characterID);
+            if (self->lifeIconAnimator.frameID >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
                 if ((sidekick->state != Player_State_Death && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
                     || !sidekick->abilityValues[0]) {
                     RSDK.DrawSprite(&self->lifeIconAnimator, &lifePos, true);
@@ -321,16 +318,9 @@ void HUD_Draw(void)
             // Draw Stock Icons
             lifePos.x += 0x140000;
             RSDK.SetSpriteAnimation(HUD->aniFrames, 12, &self->lifeIconAnimator, true, 0);
-            for (int32 i = 0; i < 3; ++i) {
-                stockFrameID = -1;
-                int32 stock  = (globals->stock >> (i * 8)) & 0xFF;
-                while (stock > 0) {
-                    stock >>= 1;
-                    ++stockFrameID;
-                }
-
-                self->lifeIconAnimator.frameID = stockFrameID;
-                if (stockFrameID >= 0 && !(HUD->stockFlashTimers[i + 1] & 4))
+            for (int32 i = 1; i < 4; ++i) {
+                self->lifeIconAnimator.frameID = HUD_CharacterIndexFromID(GET_STOCK_ID(i));
+                if (self->lifeIconAnimator.frameID >= 0 && !(HUD->stockFlashTimers[i] & 4))
                     RSDK.DrawSprite(&self->lifeIconAnimator, &lifePos, true);
 
                 lifePos.x += 0x100000;
@@ -596,7 +586,7 @@ void HUD_GetButtonFrame(Animator *animator, int32 buttonID)
         // Keyboard
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if MANIA_USE_PLUS
-        int32 id = API_ControllerIDForInputID(player->controllerID);
+        int32 id = API_GetInputDeviceID(player->controllerID);
 #else
         int32 id = INPUT_NONE;
 #endif
@@ -628,7 +618,7 @@ void HUD_GetActionButtonFrames(void)
 }
 #endif
 
-void HUD_State_ComeOnScreen(void)
+void HUD_State_MoveIn(void)
 {
     RSDK_THIS(HUD);
 #if MANIA_USE_PLUS
@@ -683,7 +673,7 @@ void HUD_State_ComeOnScreen(void)
 #endif
 }
 
-void HUD_State_GoOffScreen(void)
+void HUD_State_MoveOut(void)
 {
     RSDK_THIS(HUD);
 
@@ -724,11 +714,11 @@ void HUD_State_GoOffScreen(void)
             EntityCompetition *manager = Competition->sessionManager;
 
             if (!manager || manager->timer) {
-                RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(false));
+                RSDK.ResetEntity(gameOver, GameOver->classID, intToVoid(false));
                 gameOver->playerID = self->screenID;
             }
             else {
-                RSDK.ResetEntityPtr(gameOver, GameOver->classID, intToVoid(true));
+                RSDK.ResetEntity(gameOver, GameOver->classID, intToVoid(true));
                 RSDK.SetEngineState(ENGINESTATE_FROZEN);
                 SceneInfo->timeEnabled = false;
                 gameOver->playerID     = self->screenID;
@@ -753,6 +743,38 @@ void HUD_State_GoOffScreen(void)
     if (self->lifeOffset.x < -0x400000)
         destroyEntity(self);
 #endif
+}
+
+void HUD_MoveIn(EntityHUD* hud) {
+    hud->maxOffset = hud->scoreOffset.x;
+    hud->scoreOffset.x -= 0x1000000;
+    hud->timeOffset.x -= 0x1100000;
+    hud->ringsOffset.x -= 0x1200000;
+    hud->lifeOffset.x -= 0x1300000;
+    hud->state = HUD_State_MoveIn;
+}
+
+void HUD_MoveOut(void)
+{
+    foreach_active(HUD, hud) { hud->state = HUD_State_MoveOut; }
+}
+
+void HUD_EnableRingFlash(void)
+{
+    foreach_all(HUD, hud)
+    {
+        if (hud)
+            hud->enableRingFlash = true;
+        foreach_break;
+    }
+}
+
+int32 HUD_CharacterIndexFromID(int32 characterID)
+{
+    int32 id = -1;
+    for (int32 i = characterID; i > 0; ++id, i >>= 1)
+        ;
+    return id;
 }
 
 #if RETRO_INCLUDE_EDITOR

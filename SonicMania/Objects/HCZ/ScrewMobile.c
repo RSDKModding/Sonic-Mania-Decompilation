@@ -139,7 +139,7 @@ void ScrewMobile_State_CheckPlayerEnter(void)
 
         if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitboxCockpit)) {
             player2->direction      = FLIP_X;
-            player2->state          = Player_State_None;
+            player2->state          = Player_State_Static;
             player2->velocity.x     = 0;
             player2->velocity.y     = 0;
             player2->groundVel      = 0;
@@ -157,7 +157,7 @@ void ScrewMobile_State_CheckPlayerEnter(void)
         Zone->cameraBoundsR[0]      = 0x7FFF;
         Zone->playerBoundActiveR[0] = false;
 
-        player1->state          = Player_State_None;
+        player1->state          = Player_State_Static;
         player1->velocity.x     = 0;
         player1->velocity.y     = 0;
         player1->groundVel      = 0;
@@ -260,7 +260,7 @@ void ScrewMobile_State_PlayerRiding(void)
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
         if (Player_CheckValidState(player2)) {
-            if (player2->state == Player_State_None) {
+            if (player2->state == Player_State_Static) {
                 player2->position.x     = self->position.x;
                 player2->position.y     = self->position.y - 0x100000;
                 player2->velocity.x     = 0;
@@ -270,7 +270,7 @@ void ScrewMobile_State_PlayerRiding(void)
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             }
             else if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitboxCockpit)) {
-                player2->state          = Player_State_None;
+                player2->state          = Player_State_Static;
                 player2->velocity.x     = 0;
                 player2->velocity.y     = 0;
                 player2->groundVel      = 0;
@@ -421,7 +421,7 @@ void ScrewMobile_State_Idle(void)
     self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player1->state == Player_State_None) {
+    if (player1->state == Player_State_Static) {
         if (player1->jumpPress) {
             Player_Action_Jump(player1);
         }
@@ -437,7 +437,7 @@ void ScrewMobile_State_Idle(void)
         }
     }
     else if (player1->velocity.y >= 0 && Player_CheckCollisionTouch(player1, self, &ScrewMobile->hitboxCockpit)) {
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
         player1->groundVel  = 0;
@@ -454,7 +454,7 @@ void ScrewMobile_State_Idle(void)
     if (Player->playerCount >= 2) {
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
-        if (player2->state == Player_State_None) {
+        if (player2->state == Player_State_Static) {
             if (player2->jumpPress) {
                 Player_Action_Jump(player2);
             }
@@ -471,7 +471,7 @@ void ScrewMobile_State_Idle(void)
         }
         else if (player2->velocity.y >= 0) {
             if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitboxCockpit)) {
-                player2->state      = Player_State_None;
+                player2->state      = Player_State_Static;
                 player2->velocity.x = 0;
                 player2->velocity.y = 0;
                 player2->groundVel  = 0;

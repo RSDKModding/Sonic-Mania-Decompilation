@@ -109,7 +109,7 @@ void PhantomHand_CheckPlayerGrab(int playerX, int playerY)
 
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             int rx = (player->position.x - self->position.x) >> 16;
             int ry = (player->position.y - self->position.y) >> 16;
             if (rx * rx + ry * ry < 0x100) {
@@ -178,7 +178,7 @@ void PhantomHand_State_TryGrabPlayer(void)
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (player1->interaction == true && player1->state == Player_State_None) {
+    if (player1->interaction == true && player1->state == Player_State_Static) {
         self->state = PhantomHand_State_Disappear;
     }
     else {
@@ -199,7 +199,7 @@ void PhantomHand_State_TryGrabPlayers(void)
     for (int i = SLOT_PLAYER1; i < SLOT_PLAYER1 + 2; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
         if (player->classID == Player->classID)
-            playersActive = playersActive && player->interaction && player->state == Player_State_None;
+            playersActive = playersActive && player->interaction && player->state == Player_State_Static;
     }
 
     if (playersActive) {
@@ -212,7 +212,7 @@ void PhantomHand_State_TryGrabPlayers(void)
         if (self->direction == FLIP_NONE) {
             foreach_active(Player, player)
             {
-                if (player->state != Player_State_None && self->position.x - player->position.x < dist) {
+                if (player->state != Player_State_Static && self->position.x - player->position.x < dist) {
                     dist      = self->position.x - self->position.x;
                     playerPtr = player;
                 }
@@ -224,7 +224,7 @@ void PhantomHand_State_TryGrabPlayers(void)
         else {
             foreach_active(Player, player)
             {
-                if (player->state != Player_State_None && player->position.x - self->position.x < dist) {
+                if (player->state != Player_State_Static && player->position.x - self->position.x < dist) {
                     dist      = player->position.x - self->position.x;
                     playerPtr = player;
                 }
@@ -243,7 +243,7 @@ void PhantomHand_State_GrabbedPlayer(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &PhantomHand->hitbox)) {
-            player->state           = Player_State_None;
+            player->state           = Player_State_Static;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
             player->position.x      = self->position.x;
@@ -306,7 +306,7 @@ void PhantomHand_State_Shine(void)
         RSDK.SetSpriteAnimation(-1, 0, &self->shineAnimator, true, 0);
 
         if (self->doScanlineCB)
-            PhantomEgg_SetupScanlineCB();
+            PhantomEgg_SetupWarpFX();
 
         self->state = StateMachine_None;
     }

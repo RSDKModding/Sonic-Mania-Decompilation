@@ -10,7 +10,7 @@ struct ObjectElectroMagnet {
     Hitbox hitboxPlayer;
     Vector2 sfxRange;
     uint8 magnetSfxTimer;
-    bool32 playingMagnetSFX;
+    bool32 playingMagnetSfx;
     uint16 sfxMagnet;
 };
 

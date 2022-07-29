@@ -27,7 +27,7 @@ void GasPlatform_Update(void)
                     if ((1 << playerID) & self->stoodPlayers && !player->sidekick) {
                         if (abs(player->position.x - self->position.x) < 0x40000) {
                             player->position.x = self->position.x;
-                            player->state      = Player_State_None;
+                            player->state      = Player_State_Static;
                             player->velocity.x = 0;
                             player->groundVel  = 0;
 
@@ -159,7 +159,7 @@ void GasPlatform_State_Popped(void)
             else if ((1 << playerID) & self->stoodPlayers) {
                 if (abs(player->position.x - self->position.x) < 0x40000) {
                     player->position.x = self->position.x;
-                    player->state      = Player_State_None;
+                    player->state      = Player_State_Static;
                     player->velocity.x = 0;
                     player->groundVel  = 0;
                 }

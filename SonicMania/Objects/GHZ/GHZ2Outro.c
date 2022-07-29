@@ -19,11 +19,7 @@ void GHZ2Outro_Update(void)
                                   GHZ2Outro_Cutscene_LoadCPZ1, StateMachine_None);
 
 #if MANIA_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
-            EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            seq->skipType          = SKIPTYPE_CALLBACK;
-            seq->skipCallback      = GHZ2Outro_Cutscene_SkipCB;
-        }
+        CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, GHZ2Outro_Cutscene_SkipCB);
 #endif
 
         self->active = ACTIVE_NEVER;
@@ -32,11 +28,10 @@ void GHZ2Outro_Update(void)
         CutsceneSeq_StartSequence(self, GHZ2Outro_Cutscene_FinishActClear, GHZ2Outro_Cutscene_JumpIntoHole, StateMachine_None);
 
 #if MANIA_USE_PLUS
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
-        foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+        HUD_MoveOut();
         self->active = ACTIVE_NEVER;
     }
 }
@@ -201,7 +196,7 @@ bool32 GHZ2Outro_Cutscene_SpyOnEggman(EntityCutsceneSeq *host)
             else {
                 player->groundVel = 0;
                 if (player->onGround && player->groundedStore) {
-                    player->state = Player_State_None;
+                    player->state = Player_State_Static;
                     if (player->characterID == ID_TAILS)
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_2, &player->animator, false, 0);
                     else
@@ -345,7 +340,7 @@ bool32 GHZ2Outro_Cutscene_RubyHover(EntityCutsceneSeq *host)
     if (ruby) {
         if (ruby->state == PhantomRuby_State_Oscillate) {
             if (player2->classID == Player->classID && player2->characterID == ID_TAILS) {
-                player2->state = Player_State_None;
+                player2->state = Player_State_Static;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, false, 0);
             }
             return true;
@@ -363,7 +358,7 @@ bool32 GHZ2Outro_Cutscene_StartRubyWarp(EntityCutsceneSeq *host)
         PhantomRuby_SetupFlash(ruby);
 
     if (ruby->flashFinished) {
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         return true;
     }
 
@@ -397,13 +392,13 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
                 if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->storedTimer = host->timer;
@@ -427,7 +422,7 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
 
                     player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->storedTimer)) << 12) + valX) >> 5;
                     player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) << 12) + valY) >> 5;
-                    player->state          = Player_State_None;
+                    player->state          = Player_State_Static;
                     player->tileCollisions = false;
                     player->onGround       = false;
                 }

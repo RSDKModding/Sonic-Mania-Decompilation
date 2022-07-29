@@ -49,10 +49,10 @@ void CircleBumper_Create(void *data)
             self->stateMove = CircleBumper_Move_Fixed;
             break;
 
-        case CIRCLEBUMPER_MOVING:
+        case CIRCLEBUMPER_LINEAR:
             self->updateRange.x = (abs(self->amplitude.x) + 0x1000) << 10;
             self->updateRange.y = (abs(self->amplitude.y) + 0x1000) << 10;
-            self->stateMove     = CircleBumper_Move_Moving;
+            self->stateMove     = CircleBumper_Move_Linear;
             break;
 
         case CIRCLEBUMPER_CIRCLE:
@@ -201,7 +201,7 @@ void CircleBumper_Move_Fixed(void)
     self->drawPos.y = self->position.y;
 }
 
-void CircleBumper_Move_Moving(void)
+void CircleBumper_Move_Linear(void)
 {
     RSDK_THIS(CircleBumper);
 
@@ -272,7 +272,7 @@ void CircleBumper_EditorDraw(void)
             self->updateRange.y = 0x400000;
             break;
 
-        case CIRCLEBUMPER_MOVING:
+        case CIRCLEBUMPER_LINEAR:
             self->updateRange.x = (abs(amplitude.x) + 0x1000) << 10;
             self->updateRange.y = (abs(amplitude.y) + 0x1000) << 10;
             break;
@@ -303,7 +303,7 @@ void CircleBumper_EditorDraw(void)
 
         Vector2 pos;
         switch (self->type) {
-            case CIRCLEBUMPER_MOVING:
+            case CIRCLEBUMPER_LINEAR:
                 self->updateRange.x = (abs(amplitude.x) + 0x1000) << 10;
                 self->updateRange.y = (abs(amplitude.y) + 0x1000) << 10;
 
@@ -384,7 +384,7 @@ void CircleBumper_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(CircleBumper, type);
     RSDK_ENUM_VAR("Fixed", CIRCLEBUMPER_FIXED);
-    RSDK_ENUM_VAR("Moving", CIRCLEBUMPER_MOVING);
+    RSDK_ENUM_VAR("Linear", CIRCLEBUMPER_LINEAR);
     RSDK_ENUM_VAR("Circle", CIRCLEBUMPER_CIRCLE);
     RSDK_ENUM_VAR("Track", CIRCLEBUMPER_TRACK);
     RSDK_ENUM_VAR("Path", CIRCLEBUMPER_PATH);

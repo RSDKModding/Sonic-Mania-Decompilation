@@ -56,7 +56,7 @@ void LottoMachine_EditorLoad(void);
 void LottoMachine_Serialize(void);
 
 // Extra Entity Functions
-void LottoMachine_VSSwapCB(void);
+void LottoMachine_VSSwap_CheckBusy(void);
 void LottoMachine_CheckPlayerCollisions(void);
 void LottoMachine_CheckPlayerCollisions_Bottom(void);
 void LottoMachine_HandleMotor(void);

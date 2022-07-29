@@ -53,16 +53,12 @@ void TTCutscene_StartCutscene(void)
                               TTCutscene_Cutscene_NextScene, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (cutsceneSeq->classID != TYPE_BLANK) {
-        cutsceneSeq->skipType     = SKIPTYPE_CALLBACK;
-        cutsceneSeq->skipCallback = TTCutscene_SkipCB;
-    }
+    CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, TTCutscene_Cutscene_SkipCB);
 #endif
 }
 
 #if MANIA_USE_PLUS
-void TTCutscene_SkipCB(void)
+void TTCutscene_Cutscene_SkipCB(void)
 {
     if (globals->gameMode == MODE_ENCORE)
         RSDK.SetScene("Encore Mode", "Stardust Speedway Zone+ 1");
@@ -93,7 +89,7 @@ bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
 
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
         player1->position.x = player1->position.x;
         player1->position.y = (ScreenInfo->position.y + 32 + ScreenInfo->height) << 16;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SPRING_TWIRL, &player1->animator, false, 0);
@@ -104,7 +100,7 @@ bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
 
             player2->position.x = player1->position.x - 0x200000;
             player2->position.y = player1->position.y;
-            player2->state      = Player_State_None;
+            player2->state      = Player_State_Static;
 
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SPRING_TWIRL, &player2->animator, false, 0);
         }

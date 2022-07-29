@@ -21,12 +21,10 @@ void EncoreGoodEnd_Update(void)
                 CutsceneSeq_StartSequence(self, EncoreGoodEnd_Cutscene_MoveToPlace, EncoreGoodEnd_Cutscene_WaitForMovementFinish,
                                           EncoreGoodEnd_Cutscene_ClinkGlasses, EncoreGoodEnd_Cutscene_KingAppear,
                                           EncoreGoodEnd_Cutscene_ThanksForPlaying, EncoreGoodEnd_Cutscene_FinishCutscene, StateMachine_None);
+#if MANIA_USE_PLUS
+                CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, EncoreGoodEnd_Cutscene_SkipCB);
+#endif
 
-                EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-                if (seq->classID) {
-                    seq->skipType     = SKIPTYPE_CALLBACK;
-                    seq->skipCallback = EncoreGoodEnd_SkipCB;
-                }
                 self->activated = true;
             }
         }
@@ -111,8 +109,7 @@ void EncoreGoodEnd_StatePlayer_MoveToPos(void)
     self->velocity.x = 0x18000;
     self->groundVel  = 0x18000;
 
-    int32 playerID = -1;
-    for (int32 id = self->characterID; id > 0; ++playerID) id >>= 1;
+    int32 playerID = HUD_CharacterIndexFromID(self->characterID);
 
     if (self->position.x >= EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.x) {
         self->position.x = EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.x;
@@ -140,7 +137,7 @@ void EncoreGoodEnd_StatePlayer_MoveToPos(void)
                 self->jumpPress       = false;
                 self->state           = EncoreGoodEnd_StatePlayer_EndingIdle;
                 self->nextAirState    = EncoreGoodEnd_StatePlayer_EndingIdle;
-                self->nextGroundState = Player_State_None;
+                self->nextGroundState = Player_State_Static;
                 break;
 
             default: break;
@@ -158,8 +155,7 @@ void EncoreGoodEnd_StatePlayer_EndingIdle(void)
     Player_State_Air();
 
     if (self->velocity.y > 0) {
-        int32 playerID = -1;
-        for (int32 id = self->characterID; id > 0; ++playerID) id >>= 1;
+        int32 playerID = HUD_CharacterIndexFromID(self->characterID);
 
         if (self->position.y >= (EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.y - 0x80000)) {
             self->position.y = (EncoreGoodEnd->decorations[playerID + E_END_SONIC]->position.y - 0x80000);
@@ -169,13 +165,13 @@ void EncoreGoodEnd_StatePlayer_EndingIdle(void)
             EncoreGoodEnd->decorations[playerID + E_END_SONIC]->visible = true;
             switch (self->characterID) {
                 default:
-                case ID_SONIC: self->state = Player_State_None; break;
+                case ID_SONIC: self->state = Player_State_Static; break;
 
                 case ID_TAILS:
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_TAILSSPIN,
                                             &EncoreGoodEnd->decorations[playerID + E_END_SONIC]->animator, true, 0);
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_STOOL, &EncoreGoodEnd->decorations[E_END_STOOLT]->animator, true, 0);
-                    self->state = Player_State_None;
+                    self->state = Player_State_Static;
                     break;
 
                 case ID_KNUCKLES:
@@ -185,7 +181,7 @@ void EncoreGoodEnd_StatePlayer_EndingIdle(void)
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_KNUXSITDOWNG, &EncoreGoodEnd->decorations[E_END_GLASSK]->animator,
                                             true, 0);
                     EncoreGoodEnd->decorations[E_END_GLASSK]->animator.speed = 0;
-                    self->state                                              = Player_State_None;
+                    self->state                                              = Player_State_Static;
                     break;
 
                 case ID_MIGHTY:
@@ -195,14 +191,14 @@ void EncoreGoodEnd_StatePlayer_EndingIdle(void)
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_MIGHTYSITDOWNG, &EncoreGoodEnd->decorations[E_END_GLASSM]->animator,
                                             true, 0);
                     EncoreGoodEnd->decorations[E_END_GLASSM]->animator.speed = 0;
-                    self->state                                              = Player_State_None;
+                    self->state                                              = Player_State_Static;
                     break;
 
                 case ID_RAY:
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_RAYSPIN, &EncoreGoodEnd->decorations[playerID + E_END_SONIC]->animator,
                                             true, 0);
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_STOOL, &EncoreGoodEnd->decorations[E_END_STOOLR]->animator, true, 0);
-                    self->state = Player_State_None;
+                    self->state = Player_State_Static;
                     break;
             }
         }
@@ -254,7 +250,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
 
         case 4:
             if (EncoreGoodEnd->decorations[E_END_SONIC]->animator.frameID >= 22)
-                self->state = Player_State_None;
+                self->state = Player_State_Static;
             break;
 
         default: break;
@@ -352,7 +348,7 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
         player1->stateInput = StateMachine_None;
 
         CutsceneSeq_LockAllPlayerControl();
@@ -398,7 +394,7 @@ bool32 EncoreGoodEnd_Cutscene_WaitForMovementFinish(EntityCutsceneSeq *host)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
-    return player1->state == Player_State_None && (player2->state == Player_State_None || player2->classID != Player->classID);
+    return player1->state == Player_State_Static && (player2->state == Player_State_Static || player2->classID != Player->classID);
 }
 
 bool32 EncoreGoodEnd_Cutscene_ClinkGlasses(EntityCutsceneSeq *host)
@@ -513,7 +509,7 @@ bool32 EncoreGoodEnd_Cutscene_FinishCutscene(EntityCutsceneSeq *host)
     return true;
 }
 
-void EncoreGoodEnd_SkipCB(void) { EncoreGoodEnd_Cutscene_FinishCutscene(NULL); }
+void EncoreGoodEnd_Cutscene_SkipCB(void) { EncoreGoodEnd_Cutscene_FinishCutscene(NULL); }
 
 #if RETRO_INCLUDE_EDITOR
 void EncoreGoodEnd_EditorDraw(void) {}

@@ -191,7 +191,7 @@ void Hatch_State_SubEntryHatch(void)
         // this entire block of code should have a Player_CheckValidState call to make sure the player isn't dead or some other "invalid" state
 
         // Extra notes: if you manage to die and fall into the hatch, you'll be brought back (sorta, this is because it changes your state from
-        // Player_State_Death to Player_State_None) though the death state stuff will still be applied so you'll be on the highest layer (until its
+        // Player_State_Death to Player_State_Static) though the death state stuff will still be applied so you'll be on the highest layer (until its
         // changed) and the player->active var will be set to ACTIVE_ALWAYS this means you can do really weird stuff such as move during the pause
         // menu
 
@@ -217,7 +217,7 @@ void Hatch_State_SubEntryHatch(void)
                         RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
 
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                    player->state = Player_State_None;
+                    player->state = Player_State_Static;
                     RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 0);
                     self->state = Hatch_State_PlayerEntered;
                     entered     = 2;
@@ -446,7 +446,7 @@ void Hatch_State_SubExit(void)
             player->nextGroundState = StateMachine_None;
             player->interaction     = false;
             player->tileCollisions  = false;
-            player->state           = Player_State_None;
+            player->state           = Player_State_Static;
 
             self->state = Hatch_State_FadeOut;
             foreach_break;
@@ -523,7 +523,7 @@ void Hatch_State_SubExitHatch(void)
                     player->interaction     = false;
                     player->tileCollisions  = false;
                     player->visible         = false;
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
 
                     RSDK.PlaySfx(Hatch->sfxSurface, false, 255);
                     self->state = Hatch_State_Surfacing;

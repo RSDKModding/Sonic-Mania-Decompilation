@@ -97,18 +97,18 @@ uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterI
 
 #if MANIA_USE_PLUS
 uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success));
-void TimeAttackData_LoadTimeAttackDB_CB(int32 statusCode);
+void TimeAttackData_LoadUserDB_TimeAttackDB(int32 statusCode);
 void TimeAttackData_ResetTimeAttackDB(void);
 void TimeAttackData_MigrateLegacySaves(void);
 int32 TimeAttackData_AddTimeAttackDBEntry(uint8 zoneID, uint8 act, uint8 characterID, uint8 encore, int32 score);
 int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score, void (*callback)(bool32 success));
 void TimeAttackData_SaveTimeAttackDB(void (*callback)(bool32 success));
-void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode);
+void TimeAttackData_SaveUserDB_TimeAttackDB(int32 statusCode);
 int32 TimeAttackData_GetScore(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 rank);
 int32 TimeAttackData_GetReplayID(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 rank);
 void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore);
 
-void TimeAttackData_GetLeaderboardRank_CB(bool32 success, int32 rank);
+void TimeAttackData_Leaderboard_GetRank(bool32 success, int32 rank);
 void TimeAttackData_AddLeaderboardEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore, int32 score);
 LeaderboardID *TimeAttackData_GetLeaderboardInfo(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore);
 #else

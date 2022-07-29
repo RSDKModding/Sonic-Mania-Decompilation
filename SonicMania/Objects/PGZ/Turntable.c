@@ -42,7 +42,7 @@ void Turntable_Update(void)
                 player->velocity.y      = 0;
                 player->groundVel       = 0;
                 player->onGround        = true;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
 
                 int32 dist = abs(player->position.x - self->position.x) >> 0x10;
 
@@ -98,7 +98,7 @@ void Turntable_Update(void)
 
             if (player->jumpPress)
                 Player_Action_Jump(player);
-            else if (player->animator.animationID == ANI_TWISTER && player->state == Player_State_None)
+            else if (player->animator.animationID == ANI_TWISTER && player->state == Player_State_Static)
                 continue;
 
             self->activePlayers &= ~(1 << playerID);

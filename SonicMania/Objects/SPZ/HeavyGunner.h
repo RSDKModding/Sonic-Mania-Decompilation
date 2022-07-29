@@ -88,9 +88,9 @@ void HeavyGunner_EditorLoad(void);
 void HeavyGunner_Serialize(void);
 
 // Extra Entity Functions
-bool32 HeavyGunner_HelicopterCheckCB(void);
-bool32 HeavyGunner_SurpriseCheckCB(void);
-bool32 HeavyGunner_BurnCheckCB(void);
+bool32 HeavyGunner_SfxCheck_HeliProp(void);
+bool32 HeavyGunner_SfxCheck_HBHSurprise(void);
+bool32 HeavyGunner_SfxCheck_RocketBurn(void);
 
 void HeavyGunner_HandleBGWrap(int multiplier);
 void HeavyGunner_DestroyAllMissiles(void);

@@ -276,7 +276,7 @@ void PhantomRider_State_RacePlayer(void)
         self->timer           = 0;
         Zone->autoScrollSpeed = 0;
 
-        PhantomEgg_SetupScanlineCB();
+        PhantomEgg_SetupWarpFX();
         self->state = PhantomRider_State_ExitRider;
 
         foreach_active(PopOut, popOut) { popOut->shouldAppear = false; }

@@ -26,11 +26,7 @@ void GHZCutsceneST_Update(void)
                                           GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
 
 #if MANIA_USE_PLUS
-                if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID) {
-                    EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-                    cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
-                    cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
-                }
+                CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, GHZCutsceneST_Cutscene_SkipCB);
 #endif
 
                 self->activated = true;
@@ -124,7 +120,7 @@ void GHZCutsceneST_SetupKnuxCutscene(void)
 }
 
 #if MANIA_USE_PLUS
-void GHZCutsceneST_SkipCB(void)
+void GHZCutsceneST_Cutscene_SkipCB(void)
 {
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
@@ -147,7 +143,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
         if (host->timer >= 60) {
             if (fxRuby->fadeBlack <= 0) {
                 if (fxRuby->fadeWhite <= 0) {
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
                     return true;
                 }
                 fxRuby->fadeWhite -= 16;
@@ -159,12 +155,12 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
     }
     else {
         player1->position.y = ruby->position.y;
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         if (player2->classID == Player->classID) {
             player2->position.y = ruby->position.y;
-            player2->state      = Player_State_None;
+            player2->state      = Player_State_Static;
             player2->stateInput = StateMachine_None;
         }
     }
@@ -177,7 +173,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
         player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
-        player->state = Player_State_None;
+        player->state = Player_State_Static;
     }
 
     return false;
@@ -223,7 +219,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
             player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
-            player->state = Player_State_None;
+            player->state = Player_State_Static;
             ++curPlayer;
         }
         return false;

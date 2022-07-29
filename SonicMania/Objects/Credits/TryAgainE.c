@@ -93,16 +93,10 @@ void TryAgainE_Create(void *data)
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &self->handUpAnimator, true, 4);
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &self->handDownAnimator, true, 3);
 
-        int32 playerID = -1;
-        for (int32 id = GET_CHARACTER_ID(1); id > 0; ++playerID) id >>= 1;
-        RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * playerID, &self->player1Animator, true, 3);
+        RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * HUD_CharacterIndexFromID(GET_CHARACTER_ID(1)), &self->player1Animator, true, 3);
 
-        if (GET_CHARACTER_ID(2) != ID_NONE) {
-            int32 playerID = -1;
-            for (int32 id = GET_CHARACTER_ID(2); id > 0; ++playerID) id >>= 1;
-
-            RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * playerID, &self->player2Animator, true, 3);
-        }
+        if (GET_CHARACTER_ID(2) != ID_NONE) 
+            RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * HUD_CharacterIndexFromID(GET_CHARACTER_ID(2)), &self->player2Animator, true, 3);
     }
 }
 
@@ -181,7 +175,7 @@ void TryAgainE_State_Stinger(void)
         self->timer = 600;
 
     if (self->timer == 600) {
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
 
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), self->position.x, self->position.y);
         fxFade->speedIn      = 24;

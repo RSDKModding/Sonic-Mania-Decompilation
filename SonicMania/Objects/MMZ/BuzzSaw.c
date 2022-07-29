@@ -1,4 +1,4 @@
-// ---------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------
 // RSDK Project: Sonic Mania
 // Object Description: BuzzSaw Object
 // Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
@@ -68,10 +68,11 @@ void BuzzSaw_StageLoad(void)
     BuzzSaw->hitbox.right  = 24;
     BuzzSaw->hitbox.bottom = 24;
 
-    Soundboard_LoadSFX("MMZ/SawSus.wav", true, BuzzSaw_CheckCB, BuzzSaw_UpdateCB);
+    // ඞ
+    Soundboard_LoadSfx("MMZ/SawSus.wav", true, BuzzSaw_SfxCheck_SawSus, BuzzSaw_SfxUpdate_SawSus);
 }
 
-bool32 BuzzSaw_CheckCB(void)
+bool32 BuzzSaw_SfxCheck_SawSus(void)
 {
     int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
@@ -87,16 +88,13 @@ bool32 BuzzSaw_CheckCB(void)
     return count > 0;
 }
 
-void BuzzSaw_UpdateCB(int32 sfx)
+void BuzzSaw_SfxUpdate_SawSus(int32 sfx)
 {
     int32 dist   = 0x7FFF0000;
     int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
-    foreach_all(BuzzSaw, saw)
-    {
-        dist = minVal(MathHelpers_Distance(saw->position.x, saw->position.y, worldX, worldY), dist);
-    }
+    foreach_all(BuzzSaw, saw) { dist = minVal(MathHelpers_Distance(saw->position.x, saw->position.y, worldX, worldY), dist); }
 
     RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (minVal(dist >> 16, 640) / 640.0), 0.0, 1.0);
 }
@@ -221,8 +219,8 @@ void BuzzSaw_EditorDraw(void)
 
         Vector2 pos;
         Vector2 amplitude;
-        amplitude.x         = self->amplitude.x >> 10;
-        amplitude.y         = self->amplitude.y >> 10;
+        amplitude.x = self->amplitude.x >> 10;
+        amplitude.y = self->amplitude.y >> 10;
 
         self->updateRange.x = (abs(self->speed * self->amplitude.x) + 0x40) << 17;
         self->updateRange.y = (abs(self->speed * self->amplitude.y) + 0x40) << 17;

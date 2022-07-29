@@ -107,7 +107,7 @@ bool32 TubeSpring_HandleInteractions(bool32 setState)
             }
 
             sprung = true;
-            if (player->state == Player_State_None || player->state == Player_State_TransportTube) {
+            if (player->state == Player_State_Static || player->state == Player_State_TransportTube) {
                 player->drawOrder      = Zone->playerDrawLow;
                 player->tileCollisions = true;
                 player->interaction    = true;

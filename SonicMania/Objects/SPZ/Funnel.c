@@ -24,7 +24,7 @@ void Funnel_Update(void)
                         RSDK.StopSfx(Funnel->sfxFunnel);
                 }
                 else {
-                    if (Player_CheckValidState(player) && player->state == Player_State_None) {
+                    if (Player_CheckValidState(player) && player->state == Player_State_Static) {
                         if (player->sidekick == false && ++self->playerScoreTimer[p] >= 30) {
                             self->playerScoreTimer[p] = 0;
                             EntityScoreBonus *bonus   = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y - 0x180000);
@@ -150,7 +150,7 @@ void Funnel_Update(void)
 
                         player->interaction     = false;
                         player->tileCollisions  = false;
-                        player->state           = Player_State_None;
+                        player->state           = Player_State_Static;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                     }

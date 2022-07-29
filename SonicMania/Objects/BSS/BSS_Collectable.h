@@ -3,7 +3,7 @@
 
 #include "Game.h"
 
-enum BSSCollectableTypes {
+typedef enum {
     BSS_NONE          = 0,
     BSS_SPHERE_BLUE   = 1,
     BSS_SPHERE_RED    = 2,
@@ -29,10 +29,10 @@ enum BSSCollectableTypes {
     BSS_UNUSED_6      = 22,
     BSS_UNUSED_7      = 23,
 
-    BSS_SPHERE_GREEN_STOOD = 1 | 0x80,
-    BSS_BLUE_STOOD         = 2 | 0x80,
-    BSS_SPHERE_PINK_STOOD  = 6 | 0x80,
-};
+    BSS_SPHERE_GREEN_STOOD = 0x80 | 1,
+    BSS_BLUE_STOOD         = 0x80 | 2,
+    BSS_SPHERE_PINK_STOOD  = 0x80 | 6,
+} BSSCollectableTypes;
 
 // Object Class
 struct ObjectBSS_Collectable {

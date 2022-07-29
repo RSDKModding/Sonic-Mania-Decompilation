@@ -45,7 +45,7 @@ void PullSwitch_Update(void)
             player->position.y = self->position.y - (playerHitbox->top << 16) + 0x1A0000;
             self->activated    = true;
 
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 if (player->jumpPress) {
                     self->activePlayers &= ~(1 << playerID);
                     self->playerTimers[playerID] = 60;
@@ -66,7 +66,7 @@ void PullSwitch_Update(void)
         else {
             if (Player_CheckCollisionTouch(player, self, &PullSwitch->hitbox)) {
                 self->activePlayers |= 1 << playerID;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, false, 0);

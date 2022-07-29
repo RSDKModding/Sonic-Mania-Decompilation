@@ -40,6 +40,6 @@ void SPZ1Setup_EditorLoad(void);
 void SPZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-void SPZ1Setup_StageFinishCB(void);
+void SPZ1Setup_StageFinish_EndAct1(void);
 
 #endif //! OBJ_SPZ1SETUP_H

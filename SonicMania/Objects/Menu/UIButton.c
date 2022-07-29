@@ -785,16 +785,16 @@ void UIButton_SelectedCB(void)
 
     if (self->assignsP1) {
 #if MANIA_USE_PLUS
-        int32 id = API_MostRecentActiveControllerID(false, false, 0);
+        int32 id = API_GetFilteredInputDeviceID(false, false, 0);
 #else
-        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
+        int32 id = API_GetFilteredInputDeviceID(INPUT_NONE);
 #endif
-        API_ResetControllerAssignments();
-        API_AssignControllerID(CONT_P1, id);
+        API_ResetInputSlotAssignments();
+        API_AssignInputSlotToDevice(CONT_P1, id);
     }
 
     if (self->freeBindP2)
-        API_AssignControllerID(CONT_P2, INPUT_AUTOASSIGN);
+        API_AssignInputSlotToDevice(CONT_P2, INPUT_AUTOASSIGN);
 
     parent->backoutTimer = 30;
 

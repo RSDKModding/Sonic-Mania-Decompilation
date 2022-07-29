@@ -67,11 +67,11 @@ void UFO_Setup_StageLoad(void)
     UFO_Setup->timedOut     = 0;
     UFO_Setup->resetToTitle = false;
 
-    RSDK.GetTileLayer(UFO_Setup->playFieldLayer)->scanlineCallback = UFO_Setup_ScanlineCallback_Playfield;
+    RSDK.GetTileLayer(UFO_Setup->playFieldLayer)->scanlineCallback = UFO_Setup_Scanline_Playfield;
 
-    RSDK.SetDrawGroupProperties(1, false, UFO_Setup_DrawLayerCallback);
-    RSDK.SetDrawGroupProperties(3, false, UFO_Setup_DrawLayerCallback);
-    RSDK.SetDrawGroupProperties(4, true, NULL);
+    RSDK.SetDrawGroupProperties(1, false, UFO_Setup_DrawHook_PrepareDrawingFX);
+    RSDK.SetDrawGroupProperties(3, false, UFO_Setup_DrawHook_PrepareDrawingFX);
+    RSDK.SetDrawGroupProperties(4, true, StateMachine_None);
 
     UFO_Setup->sfxBlueSphere = RSDK.GetSfx("Special/BlueSphere2.wav");
     UFO_Setup->sfxSSExit     = RSDK.GetSfx("Special/SSExit.wav");
@@ -93,7 +93,7 @@ void UFO_Setup_StageLoad(void)
         TileLayer *floor3D = RSDK.GetTileLayer(floor3DLayer);
         if (floor3D) {
             floor3D->drawLayer[0]     = 0;
-            floor3D->scanlineCallback = UFO_Setup_ScanlineCallback_3DFloor;
+            floor3D->scanlineCallback = UFO_Setup_Scanline_3DFloor;
         }
     }
 
@@ -102,12 +102,12 @@ void UFO_Setup_StageLoad(void)
         TileLayer *roof3D = RSDK.GetTileLayer(roof3DLayer);
         if (roof3D) {
             roof3D->drawLayer[0]     = 0;
-            roof3D->scanlineCallback = UFO_Setup_ScanlineCallback_3DRoof;
+            roof3D->scanlineCallback = UFO_Setup_Scanline_3DRoof;
         }
     }
 
     if (RSDK.CheckSceneFolder("UFO3")) {
-        UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO3;
+        UFO_Setup->deformCB = UFO_Setup_Deform_UFO3;
 
         int32 *deformData = RSDK.GetTileLayer(0)->deformationData;
         for (int32 i = 0; i < 0x200; i += 0x10) {
@@ -137,34 +137,30 @@ void UFO_Setup_StageLoad(void)
         }
         memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int32)));
     }
-    else {
-        if (RSDK.CheckSceneFolder("UFO4")) {
-            UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO4;
+    else if (RSDK.CheckSceneFolder("UFO4")) {
+        UFO_Setup->deformCB = UFO_Setup_Deform_UFO4;
 
-            TileLayer *background = RSDK.GetTileLayer(0);
+        TileLayer *background = RSDK.GetTileLayer(0);
 
-            int32 angle = 0;
-            for (int32 i = 0; i < 0x200; ++i) {
-                background->deformationData[i] = 8 * RSDK.Sin1024(angle) >> 10;
-                angle += 8;
-            }
-
-            memcpy(&background->deformationData[0x200], &background->deformationData[0], 0x200 * sizeof(int32));
+        int32 angle = 0;
+        for (int32 i = 0; i < 0x200; ++i) {
+            background->deformationData[i] = 8 * RSDK.Sin1024(angle) >> 10;
+            angle += 8;
         }
-        else {
-            if (RSDK.CheckSceneFolder("UFO5")) {
-                UFO_Setup->deformCB   = UFO_Setup_DeformCB_UFO5;
-                TileLayer *background = RSDK.GetTileLayer(0);
 
-                int32 angle = 0;
-                for (int32 i = 0; i < 0x200; ++i) {
-                    background->deformationData[i] = 8 * RSDK.Sin1024(angle) >> 10;
-                    angle += 16;
-                }
+        memcpy(&background->deformationData[0x200], &background->deformationData[0], 0x200 * sizeof(int32));
+    }
+    else if (RSDK.CheckSceneFolder("UFO5")) {
+        UFO_Setup->deformCB   = UFO_Setup_Deform_UFO5;
+        TileLayer *background = RSDK.GetTileLayer(0);
 
-                memcpy(&background->deformationData[0x200], &background->deformationData[0], 0x200 * sizeof(int32));
-            }
+        int32 angle = 0;
+        for (int32 i = 0; i < 0x200; ++i) {
+            background->deformationData[i] = 8 * RSDK.Sin1024(angle) >> 10;
+            angle += 16;
         }
+
+        memcpy(&background->deformationData[0x200], &background->deformationData[0], 0x200 * sizeof(int32));
     }
 
     int32 listPos = SceneInfo->listPos;
@@ -181,13 +177,13 @@ void UFO_Setup_StageLoad(void)
     SceneInfo->listPos = listPos;
 }
 
-void UFO_Setup_DrawLayerCallback(void)
+void UFO_Setup_DrawHook_PrepareDrawingFX(void)
 {
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
-void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines)
+void UFO_Setup_Scanline_Playfield(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
 
@@ -218,7 +214,7 @@ void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines)
     }
 }
 
-void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines)
+void UFO_Setup_Scanline_3DFloor(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
 
@@ -248,7 +244,7 @@ void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines)
         cosVal += cosX;
     }
 }
-void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
+void UFO_Setup_Scanline_3DRoof(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
 
@@ -335,7 +331,7 @@ void UFO_Setup_Finish_Fail(void)
     PauseMenu->disableEvents = true;
 }
 
-void UFO_Setup_DeformCB_UFO3(void)
+void UFO_Setup_Deform_UFO3(void)
 {
     if (!(UFO_Setup->timer & 1)) {
         ++RSDK.GetTileLayer(0)->deformationOffset;
@@ -343,13 +339,13 @@ void UFO_Setup_DeformCB_UFO3(void)
     }
 }
 
-void UFO_Setup_DeformCB_UFO4(void)
+void UFO_Setup_Deform_UFO4(void)
 {
     if (!(UFO_Setup->timer & 1))
         ++RSDK.GetTileLayer(0)->deformationOffset;
 }
 
-void UFO_Setup_DeformCB_UFO5(void)
+void UFO_Setup_Deform_UFO5(void)
 {
     if (!(UFO_Setup->timer & 1))
         ++RSDK.GetTileLayer(0)->deformationOffset;

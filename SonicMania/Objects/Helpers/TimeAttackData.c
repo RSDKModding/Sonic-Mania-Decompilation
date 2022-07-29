@@ -437,7 +437,7 @@ uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success))
 
     TimeAttackData->loadEntityPtr = SceneInfo->entity;
     TimeAttackData->loadCallback  = callback;
-    globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadTimeAttackDB_CB);
+    globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadUserDB_TimeAttackDB);
 
     if (globals->taTableID == -1) {
         LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
@@ -447,7 +447,7 @@ uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success))
     return globals->taTableID;
 }
 
-void TimeAttackData_LoadTimeAttackDB_CB(int32 statusCode)
+void TimeAttackData_LoadUserDB_TimeAttackDB(int32 statusCode)
 {
     if (statusCode == STATUS_OK) {
         globals->taTableLoaded = STATUS_OK;
@@ -605,11 +605,11 @@ void TimeAttackData_SaveTimeAttackDB(void (*callback)(bool32 success))
         TimeAttackData->saveEntityPtr = SceneInfo->entity;
         TimeAttackData->saveCallback  = callback;
 
-        API.SaveUserDB(globals->taTableID, TimeAttackData_SaveTimeAttackDB_CB);
+        API.SaveUserDB(globals->taTableID, TimeAttackData_SaveUserDB_TimeAttackDB);
     }
 }
 
-void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode)
+void TimeAttackData_SaveUserDB_TimeAttackDB(int32 statusCode)
 {
     if (TimeAttackData->saveCallback) {
         Entity *entStore = SceneInfo->entity;
@@ -689,7 +689,7 @@ void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 act, uint8 characterI
     TimeAttackData->encore      = encore & 1;
 }
 
-void TimeAttackData_GetLeaderboardRank_CB(bool32 success, int32 rank)
+void TimeAttackData_Leaderboard_GetRank(bool32 success, int32 rank)
 {
     if (success) {
         LogHelpers_Print("Got back leaderboard rank: %d. Not bad!", rank);
@@ -705,7 +705,7 @@ void TimeAttackData_AddLeaderboardEntry(uint8 zoneID, uint8 act, uint8 character
 
     LeaderboardID *leaderboardInfo = TimeAttackData_GetLeaderboardInfo(zoneID, act, characterID, isEncore);
 
-    API.TrackScore(leaderboardInfo, score, TimeAttackData_GetLeaderboardRank_CB);
+    API.TrackScore(leaderboardInfo, score, TimeAttackData_Leaderboard_GetRank);
 }
 
 LeaderboardID *TimeAttackData_GetLeaderboardInfo(uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore)

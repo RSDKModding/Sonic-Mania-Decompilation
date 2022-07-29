@@ -113,9 +113,9 @@ void LevelSelect_Cheat_UnlockAllMedals(void);
 
 void LevelSelect_Draw_Fade(void);
 
-void LevelSelect_State_SetupEntities(void);
+void LevelSelect_State_Init(void);
 void LevelSelect_State_FadeIn(void);
-void LevelSelect_State_HandleMenu(void);
+void LevelSelect_State_Navigate(void);
 void LevelSelect_State_FadeOut(void);
 
 void LevelSelect_ManagePlayerIcon(void);

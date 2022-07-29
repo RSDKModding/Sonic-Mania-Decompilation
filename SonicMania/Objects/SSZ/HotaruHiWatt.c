@@ -165,11 +165,11 @@ void HotaruHiWatt_StageLoad(void)
     HotaruHiWatt->sfxFlyUp     = RSDK.GetSfx("SSZ1/HHWFlyUp.wav");
     HotaruHiWatt->sfxCharge    = RSDK.GetSfx("SSZ1/HHWCharge.wav");
 
-    Soundboard_LoadSFX("Stage/Zap.wav", true, HotaruHiWatt_CheckCB_Zap, NULL);
-    Soundboard_LoadSFX("SSZ1/HHWLaser.wav", 32606, HotaruHiWatt_CheckCB_Laser, HotaruHiWatt_UpdateCB_Laser);
+    Soundboard_LoadSfx("Stage/Zap.wav", true, HotaruHiWatt_SfxCheck_Zap, StateMachine_None);
+    Soundboard_LoadSfx("SSZ1/HHWLaser.wav", 32606, HotaruHiWatt_SfxCheck_HHWLaser, HotaruHiWatt_SfxUpdate_HHWLaser);
 }
 
-bool32 HotaruHiWatt_CheckCB_Zap(void)
+bool32 HotaruHiWatt_SfxCheck_Zap(void)
 {
     int32 count = 0;
     foreach_active(HotaruHiWatt, boss)
@@ -181,7 +181,7 @@ bool32 HotaruHiWatt_CheckCB_Zap(void)
     return count > 1;
 }
 
-bool32 HotaruHiWatt_CheckCB_Laser(void)
+bool32 HotaruHiWatt_SfxCheck_HHWLaser(void)
 {
     int32 count = 0;
     foreach_active(HotaruHiWatt, boss)
@@ -192,7 +192,7 @@ bool32 HotaruHiWatt_CheckCB_Laser(void)
     return count > 0;
 }
 
-void HotaruHiWatt_UpdateCB_Laser(int sfx)
+void HotaruHiWatt_SfxUpdate_HHWLaser(int sfx)
 {
     if (!(Soundboard->sfxPlayingTimer[sfx] % 6))
         Camera_ShakeScreen(0, 0, 2);

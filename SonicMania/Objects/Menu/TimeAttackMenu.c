@@ -428,9 +428,9 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    int32 id = API_MostRecentActiveControllerID(false, false, 0);
-    API_ResetControllerAssignments();
-    API_AssignControllerID(CONT_P1, id);
+    int32 id = API_GetFilteredInputDeviceID(false, false, 0);
+    API_ResetInputSlotAssignments();
+    API_AssignInputSlotToDevice(CONT_P1, id);
 
     uint32 uuid = API.GetUserDBRowUUID(globals->replayTableID, row);
     LogHelpers_Print("Go_Replay(%d, %d)", row, showGhost);

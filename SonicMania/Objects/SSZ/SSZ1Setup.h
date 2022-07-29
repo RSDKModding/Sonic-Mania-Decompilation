@@ -39,6 +39,6 @@ void SSZ1Setup_EditorLoad(void);
 void SSZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-void SSZ1Setup_StageFinishCB(void);
+void SSZ1Setup_StageFinish_EndAct1(void);
 
 #endif //! OBJ_SSZ1SETUP_H

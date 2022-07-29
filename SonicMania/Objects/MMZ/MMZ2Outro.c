@@ -46,6 +46,10 @@ void MMZ2Outro_StartCutscene(void)
                               MMZ2Outro_Cutscene_PlayerMoveToWindow, MMZ2Outro_Cutscene_EnterMonarchEyes, MMZ2Outro_Cutscene_ViewMonarch,
                               StateMachine_None);
 
+#if MANIA_USE_PLUS
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+#endif
+
     RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
 
     for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0x000000);
@@ -57,10 +61,7 @@ void MMZ2Outro_StartCutscene(void)
     RSDK.GetTileLayer(3)->drawLayer[0] = 0;
     RSDK.GetTileLayer(4)->drawLayer[0] = 0;
 
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
-
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
@@ -76,7 +77,7 @@ bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
             player->stateInput = StateMachine_None;
 
             if (player->onGround) {
-                player->state = Player_State_None;
+                player->state = Player_State_Static;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1, &player->animator, false, 0);
             }
             else {
@@ -111,8 +112,8 @@ bool32 MMZ2Outro_Cutscene_Rumble(EntityCutsceneSeq *host)
     else {
         foreach_active(Player, player)
         {
-            if (player->onGround && player->state != Player_State_None) {
-                player->state     = Player_State_None;
+            if (player->onGround && player->state != Player_State_Static) {
+                player->state     = Player_State_Static;
                 player->groundVel = 0;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE_1, &player->animator, false, 0);
             }

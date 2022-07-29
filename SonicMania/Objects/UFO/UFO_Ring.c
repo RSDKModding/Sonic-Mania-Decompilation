@@ -81,7 +81,7 @@ void UFO_Ring_StageLoad(void)
     UFO_Ring->sfxRing = RSDK.GetSfx("Global/Ring.wav");
 }
 
-void UFO_Ring_PlayRingSFX(void)
+void UFO_Ring_PlayRingSfx(void)
 {
     if (UFO_Setup->rings < 999)
         UFO_Setup->rings++;
@@ -134,7 +134,7 @@ void UFO_Ring_State_NormalRing(void)
             RSDK.SetSpriteAnimation(UFO_Ring->aniFrames, 2, &self->animator, true, 4);
             ++self->drawOrder;
             self->state = UFO_Ring_State_Sparkle;
-            UFO_Ring_PlayRingSFX();
+            UFO_Ring_PlayRingSfx();
         }
     }
 }

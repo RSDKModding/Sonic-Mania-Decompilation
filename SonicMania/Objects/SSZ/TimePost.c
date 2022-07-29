@@ -147,7 +147,7 @@ void TimePost_CheckPlayerCollisions(void)
     }
 }
 
-void TimePost_ParticleCB_TimeSparkles(EntityDebris *debris)
+void TimePost_Particle_TimeSparkle(EntityDebris *debris)
 {
     RSDK.SetSpriteAnimation(TimePost->sparkleFrames, 0, &debris->animator, true, 0);
 
@@ -171,7 +171,7 @@ void TimePost_HandleTimeSparkles(void)
             if (abs(player->groundVel) >= 0x80000) {
                 if (RSDK.CheckOnScreen(player, &onScreenRange)) {
                     spawnedDebris = false;
-                    ParticleHelpers_SetupParticleFX(Debris_State_Move, TimePost_ParticleCB_TimeSparkles, 0, player->position.x, player->position.y,
+                    ParticleHelpers_SetupParticleFX(Debris_State_Move, TimePost_Particle_TimeSparkle, 0, player->position.x, player->position.y,
                                                     0x200000, 0x200000);
                 }
             }

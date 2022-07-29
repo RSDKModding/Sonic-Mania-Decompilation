@@ -68,14 +68,14 @@ void AIZSetup_StaticUpdate(void)
     }
 
     if (!AIZSetup->playDrillSfx || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID) {
-        if (AIZSetup->playingDrillSFX) {
+        if (AIZSetup->playingDrillSfx) {
             RSDK.StopSfx(AIZSetup->sfxDrill);
-            AIZSetup->playingDrillSFX = false;
+            AIZSetup->playingDrillSfx = false;
         }
     }
-    else if (!AIZSetup->playingDrillSFX) {
+    else if (!AIZSetup->playingDrillSfx) {
         RSDK.PlaySfx(AIZSetup->sfxDrill, 1, 255);
-        AIZSetup->playingDrillSFX = true;
+        AIZSetup->playingDrillSfx = true;
     }
 
 #if MANIA_USE_PLUS
@@ -204,27 +204,28 @@ void AIZSetup_StageLoad(void)
     }
 
 #if MANIA_USE_PLUS
-    BGSwitch->switchCallback[AIZ_BG_JUNGLE] = AIZSetup_BGSwitchCB_Jungle;
-    BGSwitch->switchCallback[AIZ_BG_SKY]    = AIZSetup_BGSwitchCB_Sky;
+    BGSwitch->switchCallback[AIZ_BG_JUNGLE] = AIZSetup_BGSwitch_Jungle;
+    BGSwitch->switchCallback[AIZ_BG_SKY]    = AIZSetup_BGSwitch_Sky;
+
     BGSwitch->layerIDs[0]                   = AIZ_BG_JUNGLE;
     BGSwitch->layerIDs[1]                   = AIZ_BG_JUNGLE;
     BGSwitch->layerIDs[2]                   = AIZ_BG_JUNGLE;
     BGSwitch->layerIDs[3]                   = AIZ_BG_JUNGLE;
 
-    RSDK.SetDrawGroupProperties(0, false, Water_SetWaterLevel);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
+    RSDK.SetDrawGroupProperties(0, false, Water_DrawHook_ApplyWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_DrawHook_RemoveWaterPalette);
     Water->waterPalette = 1;
 #endif
 }
 
 #if MANIA_USE_PLUS
-void AIZSetup_BGSwitchCB_Jungle(void)
+void AIZSetup_BGSwitch_Jungle(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 
-void AIZSetup_BGSwitchCB_Sky(void)
+void AIZSetup_BGSwitch_Sky(void)
 {
     RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
     RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
@@ -324,7 +325,7 @@ void AIZSetup_GetCutsceneSetupPtr(void)
 }
 
 #if MANIA_USE_PLUS
-void AIZSetup_SkipCB(void)
+void AIZSetup_Cutscene_SkipCB(void)
 {
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
@@ -344,11 +345,7 @@ void AIZSetup_CutsceneST_Setup(void)
                               AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (seq->classID) {
-        seq->skipType     = SKIPTYPE_CALLBACK;
-        seq->skipCallback = AIZSetup_SkipCB;
-    }
+    CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, AIZSetup_Cutscene_SkipCB);
 #endif
 }
 
@@ -414,7 +411,7 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
         }
     }
     else {
-        player1->state = Player_State_None;
+        player1->state = Player_State_Static;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SKID, &player1->animator, false, 0);
         player1->groundVel  = host->storedValue;
         player1->velocity.x = host->storedValue;
@@ -441,7 +438,7 @@ bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host)
             player2->stateInput = StateMachine_None;
             player2->direction  = FLIP_NONE;
             RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->animator, true, 0);
-            player2->state = Player_State_None;
+            player2->state = Player_State_Static;
             return true;
         }
         else {
@@ -481,7 +478,7 @@ bool32 AIZSetup_CutsceneSonic_EnterClaw(EntityCutsceneSeq *host)
         else {
             player1->up = true;
             if (player2->classID == Player->classID) {
-                player2->state = Player_State_None;
+                player2->state = Player_State_Static;
             }
         }
     }
@@ -616,13 +613,13 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
                 if (host->timer == host->storedTimer + 30) {
                     fxRuby->delay = 64;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedTimer + 210) {
                     fxRuby->delay = 32;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->storedTimer = host->timer;
@@ -646,7 +643,7 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
 
                     player->position.x += valX;
                     player->position.y += valY;
-                    player->state          = Player_State_None;
+                    player->state          = Player_State_Static;
                     player->tileCollisions = false;
                     player->onGround       = false;
                 }
@@ -678,11 +675,7 @@ void AIZSetup_CutsceneK_Setup(void)
                               AIZSetup_CutsceneKnux_RubyImpact, AIZSetup_CutsceneKnux_RubyFX, AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (seq->classID) {
-        seq->skipType     = SKIPTYPE_CALLBACK;
-        seq->skipCallback = AIZSetup_SkipCB;
-    }
+    CutsceneSeq_SetSkipType(SKIPTYPE_CALLBACK, AIZSetup_Cutscene_SkipCB);
 #endif
 }
 
@@ -693,7 +686,7 @@ bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
     unused(camera);
 
     if (!host->timer) {
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
         player1->stateInput = StateMachine_None;
         player1->direction  = FLIP_X;
         player1->drawFX     = FX_FLIP;
@@ -779,7 +772,7 @@ bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
         }
     }
     else {
-        player1->state = Player_State_None;
+        player1->state = Player_State_Static;
     }
     return false;
 }
@@ -818,7 +811,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         RSDK.PlaySfx(AIZSetup->sfxImpact, false, 0x00);
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         Music_TransitionTrack(TRACK_EGGMAN1, 1.0);
 
         EntityFXRuby *fxRuby     = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
@@ -828,7 +821,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         player1->velocity.y      = -0x40000;
         player1->nextGroundState = StateMachine_None;
         player1->nextAirState    = StateMachine_None;
-        player1->state           = Player_State_None;
+        player1->state           = Player_State_Static;
         player1->onGround        = false;
         player1->drawOrder       = Zone->playerDrawHigh + 1;
 
@@ -845,7 +838,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
             player1->velocity.x -= 0x2000;
         if (player1->velocity.x < 0)
             player1->velocity.x = 0;
-        player1->state = Player_State_None;
+        player1->state = Player_State_Static;
         RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 5, &player1->animator, false, 0);
         return true;
     }
@@ -880,7 +873,7 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host)
         fxRuby->delay = 32;
         fxRuby->state = FXRuby_State_IncreaseStageDeform;
 
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
         Camera_ShakeScreen(0, 4, 4);
         Music_FadeOut(0.025);
 

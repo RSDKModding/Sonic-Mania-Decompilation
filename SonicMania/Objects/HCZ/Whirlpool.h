@@ -8,7 +8,7 @@ struct ObjectWhirlpool {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxWhirlpool;
-    bool32 playingSFX;
+    bool32 playingWhirlpoolSfx;
     int32 sfxChannel;
     int32 timer;
 };

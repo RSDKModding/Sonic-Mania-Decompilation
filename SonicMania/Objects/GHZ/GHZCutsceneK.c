@@ -20,6 +20,11 @@ void GHZCutsceneK_Update(void)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
                 CutsceneSeq_StartSequence(self, GHZCutsceneK_Cutscene_None, StateMachine_None);
+
+#if MANIA_USE_PLUS
+                CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
+
                 self->activated = true;
             }
         }

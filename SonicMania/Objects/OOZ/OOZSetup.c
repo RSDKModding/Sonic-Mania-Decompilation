@@ -55,12 +55,12 @@ void OOZSetup_StaticUpdate(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             uint16 tile =
-                RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+                RSDK.GetTile(Zone->fgLow, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == (uint16)-1)
-                tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+                tile = RSDK.GetTile(Zone->fgHigh, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
             int32 tileFlags = RSDK.GetTileFlags(tile, player->collisionPlane);
             if (tileFlags != OOZ_TFLAGS_NORMAL) {
@@ -179,9 +179,9 @@ void OOZSetup_StaticUpdate(void)
     foreach_active(Ring, ring)
     {
         if (ring->state == Ring_State_Bounce) {
-            uint16 tile = RSDK.GetTileInfo(Zone->fgLow, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
+            uint16 tile = RSDK.GetTile(Zone->fgLow, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
             if (tile == (uint16)-1)
-                tile = RSDK.GetTileInfo(Zone->fgHigh, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
+                tile = RSDK.GetTile(Zone->fgHigh, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
 
             if (RSDK.GetTileFlags(tile, ring->collisionPlane) == OOZ_TFLAGS_OILPOOL) {
                 ring->velocity.x -= ring->velocity.x >> 4;
@@ -268,7 +268,8 @@ void OOZSetup_StageLoad(void)
             foreach_break;
         }
 
-        GenericTrigger->callbacks[0] = OOZSetup_GenericTriggerCB;
+        GenericTrigger->callbacks[OOZ_GENERICTRIGGER_ACHIEVEMENT] = OOZSetup_Trigger_AwardAchievement;
+
         if (!StarPost->postIDs[0])
             Zone->cameraBoundsB[0] = 1600;
 
@@ -282,7 +283,7 @@ void OOZSetup_StageLoad(void)
 
 #if MANIA_USE_PLUS
         if (isMainGameMode() && PlayerHelpers_CheckAct2())
-            Zone->stageFinishCallback = OOZ2Outro_StageFinishCB_Act2;
+            Zone->stageFinishCallback = OOZ2Outro_StageFinish_EndAct2;
 
         if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreOOZ2.act", 0b0000000011111111);
@@ -307,20 +308,20 @@ void OOZSetup_StageLoad(void)
     }
 #endif
 
-    int32 sfxID = Soundboard_LoadSFX("OOZ/Slide.wav", 12382, OOZSetup_CheckCB_Slide, NULL);
+    int32 sfxID = Soundboard_LoadSfx("OOZ/Slide.wav", 12382, OOZSetup_SfxCheck_Slide, StateMachine_None);
     if (sfxID >= 0)
         Soundboard->sfxFadeOutDuration[sfxID] = 30;
 
-    sfxID = Soundboard_LoadSFX("OOZ/OilSwim.wav", true, OOZSetup_CheckCB_Swim, NULL);
+    sfxID = Soundboard_LoadSfx("OOZ/OilSwim.wav", true, OOZSetup_SfxCheck_OilSwim, StateMachine_None);
     if (sfxID >= 0)
         Soundboard->sfxFadeOutDuration[sfxID] = 30;
 
-    sfxID = Soundboard_LoadSFX("Stage/Flame2.wav", true, OOZSetup_CheckCB_Flame, NULL);
+    sfxID = Soundboard_LoadSfx("Stage/Flame2.wav", true, OOZSetup_SfxCheck_Flame2, StateMachine_None);
     if (sfxID >= 0)
         Soundboard->sfxFadeOutDuration[sfxID] = 30;
 }
 
-bool32 OOZSetup_CheckCB_Flame(void)
+bool32 OOZSetup_SfxCheck_Flame2(void)
 {
     int32 count = 0;
 
@@ -338,7 +339,7 @@ bool32 OOZSetup_CheckCB_Flame(void)
     return count > 0;
 }
 
-bool32 OOZSetup_CheckCB_Slide(void)
+bool32 OOZSetup_SfxCheck_Slide(void)
 {
     int32 count = 0;
 
@@ -353,7 +354,7 @@ bool32 OOZSetup_CheckCB_Slide(void)
     return count > 0;
 }
 
-bool32 OOZSetup_CheckCB_Swim(void) { return OOZSetup->swimmingPlayerCount > 0; }
+bool32 OOZSetup_SfxCheck_OilSwim(void) { return OOZSetup->swimmingPlayerCount > 0; }
 
 void OOZSetup_Draw_Flames(void)
 {
@@ -450,7 +451,7 @@ bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle)
     return false;
 }
 
-void OOZSetup_GenericTriggerCB(void)
+void OOZSetup_Trigger_AwardAchievement(void)
 {
     if (!OOZSetup->hasAchievement) {
         API_UnlockAchievement(&achievementList[ACH_OOZ]);
@@ -655,6 +656,9 @@ void OOZSetup_EditorLoad(void)
     RSDK_ENUM_VAR("None", WARPDOOR_EFFECT_NONE);
     RSDK_ENUM_VAR("To Sub", OOZ_WARPDOOR_EFFECT_TO_SUB);
     RSDK_ENUM_VAR("From Sub", OOZ_WARPDOOR_EFFECT_FROM_SUB);
+
+    RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
+    RSDK_ENUM_VAR("Award Achievement", OOZ_GENERICTRIGGER_ACHIEVEMENT);
 }
 #endif
 

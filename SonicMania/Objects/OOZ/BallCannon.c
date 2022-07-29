@@ -138,7 +138,7 @@ void BallCannon_CheckPlayerEntry(void)
                 }
                 else {
                     if ((1 << playerID) & self->activePlayers) {
-                        if (player->state != Player_State_None)
+                        if (player->state != Player_State_Static)
                             self->activePlayers &= ~(1 << playerID);
                     }
                     else {
@@ -154,7 +154,7 @@ void BallCannon_CheckPlayerEntry(void)
                             player->interaction    = false;
                             player->blinkTimer     = 0;
                             player->visible        = false;
-                            player->state          = Player_State_None;
+                            player->state          = Player_State_Static;
                             self->activePlayers |= 1 << playerID;
                             self->active   = ACTIVE_NORMAL;
                             self->rotation = (self->angle + self->direction + 1) << 7;
@@ -309,7 +309,7 @@ void BallCannon_State_CorkOpened(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     RSDK.PlaySfx(BallCannon->sfxFire, false, 0xFF);
 
-                    player->state                = Player_State_None;
+                    player->state                = Player_State_Static;
                     player->nextGroundState      = StateMachine_None;
                     player->nextAirState         = StateMachine_None;
                     player->position             = self->position;

@@ -52,7 +52,7 @@ void PullChain_Update(void)
                         int32 x = abs(player->position.x - self->position.x);
                         int32 y = abs((player->position.y - 0x180000) - self->position.y);
 
-                        if (MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) <= 8 && player->state != Player_State_None
+                        if (MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) <= 8 && player->state != Player_State_Static
                             && !self->grabDelay[playerID]) {
                             self->activePlayers |= 1 << playerID;
                             self->releasedPlayers |= 1 << playerID;
@@ -67,7 +67,7 @@ void PullChain_Update(void)
                             player->nextAirState    = StateMachine_None;
                             player->velocity.x      = 0;
                             player->velocity.y      = 0;
-                            player->state           = Player_State_None;
+                            player->state           = Player_State_Static;
 
                             // Reset the dunky code inputs if a proper player grabs it
                             if (!player->sidekick) {

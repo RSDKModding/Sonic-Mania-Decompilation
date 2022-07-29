@@ -52,7 +52,7 @@ void GHZCutsceneST_Serialize(void);
 void GHZCutsceneST_SetupObjects(void);
 void GHZCutsceneST_SetupKnuxCutscene(void);
 #if MANIA_USE_PLUS
-void GHZCutsceneST_SkipCB(void);
+void GHZCutsceneST_Cutscene_SkipCB(void);
 #endif
 
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host);

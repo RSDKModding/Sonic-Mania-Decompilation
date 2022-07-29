@@ -71,9 +71,9 @@ void RubyPortal_Create(void *data)
             self->state = RubyPortal_State_AwaitOpenTMZ2;
 
             if (StarPost->postIDs[0])
-                TMZ2_DrawDynTiles_Ruby();
+                TMZ2Setup_DrawDynTiles_Ruby();
             else
-                TMZ2_DrawDynTiles_Eggman();
+                TMZ2Setup_DrawDynTiles_Eggman();
         }
         else {
             self->state = RubyPortal_State_Opening;
@@ -95,9 +95,9 @@ void RubyPortal_Create(void *data)
             self->state = RubyPortal_State_AwaitOpenTMZ2;
 
             if (StarPost->postIDs[0])
-                TMZ2_DrawDynTiles_Ruby();
+                TMZ2Setup_DrawDynTiles_Ruby();
             else
-                TMZ2_DrawDynTiles_Eggman();
+                TMZ2Setup_DrawDynTiles_Eggman();
         }
 #endif
     }
@@ -141,12 +141,12 @@ void RubyPortal_HandleTileDestruction(void)
             int32 spawnY = (ty << 20) + 0x80000;
 
             for (int32 y = 4; y < 52; y += 3) {
-                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+                uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
                     wall->drawOrder       = Zone->objectDrawLow + 1;
-                    wall->layerID         = Zone->fgLow;
+                    wall->targetLayer         = Zone->fgLow;
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
                     wall->tilePos.x       = tx;
@@ -159,15 +159,15 @@ void RubyPortal_HandleTileDestruction(void)
                     wall->gravityStrength = 0;
                     wall->active          = ACTIVE_NORMAL;
 
-                    RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLow, tx, ty, -1);
                 }
 
-                tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+                tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
                     wall->drawOrder       = Zone->objectDrawHigh;
-                    wall->layerID         = Zone->fgHigh;
+                    wall->targetLayer         = Zone->fgHigh;
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
                     wall->tilePos.x       = tx;
@@ -180,7 +180,7 @@ void RubyPortal_HandleTileDestruction(void)
                     wall->gravityStrength = 0;
                     wall->active          = ACTIVE_NORMAL;
 
-                    RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
                 }
 
                 spawnY += 0x100000;
@@ -350,7 +350,7 @@ void RubyPortal_State_EncoreEnd(void)
             fade->wait         = 16;
             fade->speedOut     = 16;
 
-            PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+            PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
         }
     }
     else {

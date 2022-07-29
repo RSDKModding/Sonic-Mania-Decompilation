@@ -50,7 +50,7 @@ void Water_StaticUpdate(void)
         }
     }
 
-    if (Water->playingWaterLevelSFX) {
+    if (Water->playingWaterLevelSfx) {
         if (Water->waterLevelVolume > 30)
             Water->waterLevelVolume = 30;
         float volume = Water->waterLevelVolume / 30.0;
@@ -59,20 +59,20 @@ void Water_StaticUpdate(void)
     }
 
     if (Water->waterLevelVolume > 0) {
-        if (!Water->playingWaterLevelSFX) {
+        if (!Water->playingWaterLevelSfx) {
             Water->waterLevelChannelL = RSDK.PlaySfx(Water->sfxWaterLevelL, 1, 255);
             RSDK.SetChannelAttributes(Water->waterLevelChannelL, 0.0, -1.0, 1.0);
 
             Water->waterLevelChannelR = RSDK.PlaySfx(Water->sfxWaterLevelR, 1, 255);
             RSDK.SetChannelAttributes(Water->waterLevelChannelR, 0.0, 1.0, 1.0);
 
-            Water->playingWaterLevelSFX = true;
+            Water->playingWaterLevelSfx = true;
         }
     }
-    else if (!Water->waterLevelVolume && Water->playingWaterLevelSFX) {
+    else if (!Water->waterLevelVolume && Water->playingWaterLevelSfx) {
         RSDK.StopSfx(Water->sfxWaterLevelL);
         RSDK.StopSfx(Water->sfxWaterLevelR);
-        Water->playingWaterLevelSFX = false;
+        Water->playingWaterLevelSfx = false;
     }
 
     bool32 wakeActive = false;
@@ -82,14 +82,14 @@ void Water_StaticUpdate(void)
         if (pauseMenu->classID != PauseMenu->classID)
             RSDK.ProcessAnimation(&Water->wakeAnimator);
 
-        if (!Water->playingSkimSFX) {
+        if (!Water->playingSkimSfx) {
             RSDK.PlaySfx(Water->sfxSkim, 3570, 0xFF);
-            Water->playingSkimSFX = true;
+            Water->playingSkimSfx = true;
         }
     }
-    else if (Water->playingSkimSFX) {
+    else if (Water->playingSkimSfx) {
         RSDK.StopSfx(Water->sfxSkim);
-        Water->playingSkimSFX = false;
+        Water->playingSkimSfx = false;
     }
 }
 
@@ -186,7 +186,7 @@ void Water_Create(void *data)
                 self->updateRange.x = 0x100000;
                 self->updateRange.y = 0x100000;
 
-                self->state     = Water_HCZBubbleSpawner;
+                self->state     = Water_State_BtnBigBubble;
                 self->stateDraw = StateMachine_None;
 
                 Water_SetupTagLink();
@@ -283,7 +283,7 @@ void Water_StageLoad(void)
     }
 }
 
-void Water_SetWaterLevel(void)
+void Water_DrawHook_ApplyWaterPalette(void)
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     int32 waterDrawPos     = clampVal((Water->waterLevel >> 0x10) - screen->position.y, 0, screen->height);
@@ -292,7 +292,7 @@ void Water_SetWaterLevel(void)
     ScreenInfo[SceneInfo->currentScreenID].waterDrawPos = waterDrawPos;
 }
 
-void Water_RemoveWaterEffect(void) { RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height); }
+void Water_DrawHook_RemoveWaterPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height); }
 
 void Water_SetupTagLink(void)
 {
@@ -405,20 +405,20 @@ void Water_State_Water(void)
         }
 
         if (canEnterWater) {
-            EntityWater *waterPtr = NULL;
+            EntityWater *currentPool = NULL;
             uint16 underwater     = 0;
-            foreach_active(Water, water)
+            foreach_active(Water, pool)
             {
-                if (water->type == WATER_POOL) {
-                    if (RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, player, &Water->hitboxPoint)) {
-                        waterPtr        = water;
-                        water->childPtr = player;
-                        underwater      = RSDK.GetEntitySlot(water);
+                if (pool->type == WATER_POOL) {
+                    if (RSDK.CheckObjectCollisionTouchBox(pool, &pool->hitbox, player, &Water->hitboxPoint)) {
+                        currentPool        = pool;
+                        pool->childPtr = player;
+                        underwater      = RSDK.GetEntitySlot(pool);
                     }
-                    else if (water->childPtr == player) {
-                        water->childPtr = NULL;
-                        if (!waterPtr)
-                            waterPtr = water;
+                    else if (pool->childPtr == player) {
+                        pool->childPtr = NULL;
+                        if (!currentPool)
+                            currentPool = pool;
                     }
                 }
             }
@@ -496,11 +496,11 @@ void Water_State_Water(void)
                     Player_UpdatePhysicsState(player);
                     if (player->velocity.y && (!Current || !((1 << RSDK.GetEntitySlot(player)) & Current->activePlayers))) {
                         if (!Water->disableWaterSplash) {
-                            if (waterPtr) {
+                            if (currentPool) {
                                 EntityWater *splash =
-                                    CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, waterPtr->position.y - (waterPtr->size.x >> 1));
+                                    CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, currentPool->position.y - (currentPool->size.x >> 1));
                                 splash->drawOrder = player->drawOrder;
-                                splash->childPtr  = waterPtr;
+                                splash->childPtr  = currentPool;
                             }
                             else {
                                 CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, Water->waterLevel);
@@ -604,7 +604,7 @@ void Water_State_Water(void)
 
                             case 1800:
                                 player->deathType = PLAYER_DEATH_DROWN;
-                                if (!water)
+                                if (!pool)
                                     player->drawOrder = Zone->playerDrawHigh;
                                 playAlertSfx = true;
                                 break;
@@ -632,7 +632,7 @@ void Water_State_Water(void)
 
 void Water_State_Pool(void)
 {
-    // nothing, its handled by a "master" palette state
+    // nothing, its handled by the water level type
 }
 
 void Water_State_Splash(void)
@@ -692,7 +692,7 @@ void Water_HandleBubbleMovement(void)
                 }
             }
             else if (self->animator.animationID == 7) {
-                Water_HCZBubbleBurst(self, false);
+                Water_PopBigBubble(self, false);
             }
             else {
                 destroyEntity(self);
@@ -701,7 +701,7 @@ void Water_HandleBubbleMovement(void)
     }
 }
 
-void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut)
+void Water_PopBigBubble(EntityWater *self, bool32 jumpedOut)
 {
     if (self->timer <= 0) {
         RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, true, 0);
@@ -718,7 +718,7 @@ void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                 }
                 else {
-                    if (player->state != Player_State_None || player->animator.animationID != ANI_BREATHE) {
+                    if (player->state != Player_State_Static || player->animator.animationID != ANI_BREATHE) {
                         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + playerID, Shield);
                         if (shield)
                             shield->visible = true;
@@ -775,20 +775,20 @@ void Water_State_Bubble(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID >= 13 || self->animator.animationID == 7) {
-        if (self->isHCZBubble) {
-            if (self->hczBubbleTimer == 16) {
+        if (self->isBigBubble) {
+            if (self->bigBubbleTimer == 16) {
                 RSDK.SetSpriteAnimation(Water->bigBubbleFrames, 7, &self->animator, true, 0);
                 self->scale.x = 0x180;
                 self->scale.y = 0x180;
             }
 
-            if (self->hczBubbleTimer <= 0) {
+            if (self->bigBubbleTimer <= 0) {
                 self->activePlayers   = 0;
                 self->releasedPlayers = 0;
-                self->state           = Water_State_HCZBubble;
+                self->state           = Water_State_BigBubble;
             }
             else {
-                self->hczBubbleTimer--;
+                self->bigBubbleTimer--;
             }
         }
         else {
@@ -817,14 +817,14 @@ void Water_State_Bubble(void)
 
                             if (!player->sidekick || inBubble) {
                                 if (!inBubble) {
-                                    self->state       = Water_State_ShrinkPlayerBubble;
+                                    self->state       = Water_State_BubbleBreathed;
                                     self->countdownID = 0;
                                     self->velocity.y  = 0;
                                     self->childPtr    = player;
                                 }
 
-                                if (player->state != Current_PlayerState_CurrentRight && player->state != Current_PlayerState_CurrentLeft
-                                    && player->state != Current_PlayerState_CurrentUp && player->state != Current_PlayerState_CurrentDown) {
+                                if (player->state != Current_PState_Right && player->state != Current_PState_Left
+                                    && player->state != Current_PState_Up && player->state != Current_PState_Down) {
                                     player->velocity.x = 0;
                                     player->velocity.y = 0;
                                     player->groundVel  = 0;
@@ -877,7 +877,7 @@ void Water_State_Bubble(void)
     }
 }
 
-void Water_State_ShrinkPlayerBubble(void)
+void Water_State_BubbleBreathed(void)
 {
     RSDK_THIS(Water);
 
@@ -915,14 +915,14 @@ EntityWater *Water_GetPlayerBubble(EntityPlayer *player)
 
     foreach_active(Water, water)
     {
-        if (water->state == Water_State_HCZBubble && ((1 << playerID) & water->activePlayers)) {
+        if (water->state == Water_State_BigBubble && ((1 << playerID) & water->activePlayers)) {
             foreach_return water;
         }
     }
     return NULL;
 }
 
-void Water_State_HCZBubble(void)
+void Water_State_BigBubble(void)
 {
     RSDK_THIS(Water);
 
@@ -959,7 +959,7 @@ void Water_State_HCZBubble(void)
 
                 if (Player_CheckCollisionTouch(player, self, &Water->hitboxPlayerBubble) && !Water_GetPlayerBubble(player)) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_BREATHE, &player->animator, true, 0);
-                    player->state        = Player_State_None;
+                    player->state        = Player_State_Static;
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
                     if (shield)
                         shield->visible = false;
@@ -972,13 +972,13 @@ void Water_State_HCZBubble(void)
                     self->activePlayers |= 1 << playerID;
                     self->releasedPlayers |= 1 << playerID;
                     if (RSDK.GetEntitySlot(self) >= RESERVE_ENTITY_COUNT) {
-                        int32 id = SLOT_HCZBUBBLE_P1;
-                        for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_COUNT; ++id) {
+                        int32 id = SLOT_BIGBUBBLE_P1;
+                        for (; id < SLOT_BIGBUBBLE_P1 + PLAYER_COUNT; ++id) {
                             if (RSDK_GET_ENTITY_GEN(id)->classID == TYPE_BLANK)
                                 break;
                         }
 
-                        if (id >= 0 && id < SLOT_HCZBUBBLE_P1 + PLAYER_COUNT) {
+                        if (id >= 0 && id < SLOT_BIGBUBBLE_P1 + PLAYER_COUNT) {
                             RSDK.AddDrawListRef(self->drawOrder, id);
                             RSDK.CopyEntity(RSDK_GET_ENTITY(id, Water), self, true);
                             foreach_return;
@@ -990,7 +990,7 @@ void Water_State_HCZBubble(void)
             if ((1 << playerID) & self->activePlayers) {
                 if (self->timer > 0) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_BREATHE, &player->animator, false, 0);
-                    player->state = Player_State_None;
+                    player->state = Player_State_Static;
                 }
 
                 player->drownTimer = 0;
@@ -1014,8 +1014,8 @@ void Water_State_HCZBubble(void)
                 else {
                     self->drawOrder      = player->drawOrder;
                     self->collisionPlane = player->collisionPlane;
-                    if (player->state != Player_State_None && player->animator.animationID != ANI_BREATHE) {
-                        Water_HCZBubbleBurst(self, false);
+                    if (player->state != Player_State_Static && player->animator.animationID != ANI_BREATHE) {
+                        Water_PopBigBubble(self, false);
                         foreach_return;
                     }
 
@@ -1042,7 +1042,7 @@ void Water_State_HCZBubble(void)
                         self->velocity.y += (2 * ((yVel - self->velocity.y) > 0) - 1) << 11;
 
                     if (player->jumpPress) {
-                        Water_HCZBubbleBurst(self, true);
+                        Water_PopBigBubble(self, true);
                         foreach_return;
                     }
                 }
@@ -1066,7 +1066,7 @@ void Water_State_HCZBubble(void)
         foreach_active(Spikes, spikes)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &hitboxSpike, spikes, &spikes->hitbox)) {
-                Water_HCZBubbleBurst(self, false);
+                Water_PopBigBubble(self, false);
                 foreach_return;
             }
         }
@@ -1074,12 +1074,12 @@ void Water_State_HCZBubble(void)
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x180000, true)
             || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x180000, 0, true)
             || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
-            Water_HCZBubbleBurst(self, false);
+            Water_PopBigBubble(self, false);
         }
     }
 }
 
-void Water_HCZBubbleSpawner(void)
+void Water_State_BtnBigBubble(void)
 {
     RSDK_THIS(Water);
 
@@ -1099,9 +1099,9 @@ void Water_HCZBubbleSpawner(void)
                             EntityWater *bigBubble = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
                             RSDK.SetSpriteAnimation(Water->bigBubbleFrames, 7, &bigBubble->animator, true, 0);
 
-                            bigBubble->state          = Water_State_HCZBubble;
-                            bigBubble->isHCZBubble    = true;
-                            bigBubble->hczBubbleTimer = 0;
+                            bigBubble->state          = Water_State_BigBubble;
+                            bigBubble->isBigBubble    = true;
+                            bigBubble->bigBubbleTimer = 0;
                             bigBubble->velocity.y     = -0x8800;
                             bigBubble->childPtr       = 0;
                             bigBubble->bubbleX        = bigBubble->position.x;
@@ -1155,8 +1155,8 @@ void Water_State_Bubbler(void)
             bubble->animator.loopIndex  = bubbleSize;
             bubble->animator.frameCount = bubbleSize + 1;
             if (self->type == WATER_BIG_BUBBLER) {
-                bubble->isHCZBubble    = true;
-                bubble->hczBubbleTimer = 16;
+                bubble->isBigBubble    = true;
+                bubble->bigBubbleTimer = 16;
             }
             bubble->position.x += RSDK.Rand(-8, 9) << 16;
             bubble->velocity.y = -0x8800;
@@ -1226,11 +1226,11 @@ void Water_State_Countdown(void)
             self->size.y = (self->position.y & 0xFFFF0000) - (player->position.y & 0xFFFF0000);
         }
 
-        self->state = Water_State_BubbleMove;
+        self->state = Water_State_CountdownFollow;
     }
 }
 
-void Water_State_BubbleMove(void)
+void Water_State_CountdownFollow(void)
 {
     RSDK_THIS(Water);
 
@@ -1322,7 +1322,7 @@ void Water_Draw_Pool(void)
     RSDK_THIS(Water);
 
     RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y,
-                  self->b + ((self->g + (self->r << 8)) << 8), 0x100, INK_SUB, false);
+                  (self->r << 16) | (self->g << 8) | self->b, 0x100, INK_SUB, false);
 }
 
 void Water_Draw_Splash(void)

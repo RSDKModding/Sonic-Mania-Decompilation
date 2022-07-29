@@ -5,7 +5,7 @@
 
 typedef enum {
     CIRCLEBUMPER_FIXED,
-    CIRCLEBUMPER_MOVING,
+    CIRCLEBUMPER_LINEAR,
     CIRCLEBUMPER_CIRCLE,
     CIRCLEBUMPER_TRACK,
     CIRCLEBUMPER_PATH,
@@ -59,7 +59,7 @@ void CircleBumper_Collide_Normal(void);
 void CircleBumper_Collide_Bumped(void);
 
 void CircleBumper_Move_Fixed(void);
-void CircleBumper_Move_Moving(void);
+void CircleBumper_Move_Linear(void);
 void CircleBumper_Move_Circular(void);
 void CircleBumper_Move_Path(void);
 void CircleBumper_Move_Track(void);

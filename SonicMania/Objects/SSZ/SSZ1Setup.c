@@ -37,7 +37,8 @@ void SSZ1Setup_StageLoad(void)
 
     Animals->animalTypes[0]      = ANIMAL_FLICKY;
     Animals->animalTypes[1]      = ANIMAL_RICKY;
-    GenericTrigger->callbacks[0] = SSZ1Outro_DestroyLeftoverHotarus;
+
+    GenericTrigger->callbacks[GENERICTRIGGER_SSZ1_DESTROYHOTARUMKII] = SSZ1Outro_Trigger_DestroyHotarus;
 
     if (isMainGameMode()) {
         if (globals->enableIntro) {
@@ -54,7 +55,7 @@ void SSZ1Setup_StageLoad(void)
             SSZ1Setup->outro = outro;
             foreach_break;
         }
-        Zone->stageFinishCallback = SSZ1Setup_StageFinishCB;
+        Zone->stageFinishCallback = SSZ1Setup_StageFinish_EndAct1;
     }
 
 #if MANIA_USE_PLUS
@@ -65,7 +66,7 @@ void SSZ1Setup_StageLoad(void)
 #endif
 }
 
-void SSZ1Setup_StageFinishCB(void) { SSZ1Setup->outro->active = ACTIVE_NORMAL; }
+void SSZ1Setup_StageFinish_EndAct1(void) { SSZ1Setup->outro->active = ACTIVE_NORMAL; }
 
 #if RETRO_INCLUDE_EDITOR
 void SSZ1Setup_EditorDraw(void) {}

@@ -371,7 +371,7 @@ void HeavyMystic_Explode(void)
     }
 }
 
-void HeavyMystic_ScanlineCB(ScanlineInfo *scanlines)
+void HeavyMystic_Scanline_Curtains(ScanlineInfo *scanlines)
 {
     int32 curtainPos = HeavyMystic->curtainLinePos;
     int32 moveY      = (0x1100000 - curtainPos) >> 6;
@@ -445,7 +445,7 @@ void HeavyMystic_StateBoss_AwaitPlayer(void)
             self->visible   = true;
 
             self->state                                       = HeavyMystic_StateBoss_BeginShow;
-            RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = HeavyMystic_ScanlineCB;
+            RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = HeavyMystic_Scanline_Curtains;
 
             foreach_active(MSZSpotlight, spotlight) { spotlight->state = MSZSpotlight_State_Appear; }
         }
@@ -724,8 +724,8 @@ void HeavyMystic_StateBoss_CloseCurtains(void)
     if (HeavyMystic->curtainLinePos >= 0xD00000) {
         HeavyMystic->curtainLinePos = 0xD00000;
 
-        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = 0;
-        Zone->cameraBoundsR[0] += 0x350;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = StateMachine_None;
+        Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE * 2;
         destroyEntity(self);
     }
     else {

@@ -99,6 +99,10 @@ void MSZCutsceneST_SetupCutscene(void)
                               MSZCutsceneST_Cutscene_EnterMystic, MSZCutsceneST_Cutscene_PrepareAmbush, MSZCutsceneST_Cutscene_RougesAmbush,
                               MSZCutsceneST_Cutscene_Mayday, MSZCutsceneST_Cutscene_SetPlayerMSZ2SpawnPos, MSZCutsceneST_Cutscene_PanCameraToPlayer,
                               MSZCutsceneST_Cutscene_SetupMSZ2, StateMachine_None);
+
+#if MANIA_USE_PLUS
+    CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
 }
 
 bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host)
@@ -490,7 +494,7 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
         tornado->drawFX |= FX_ROTATE;
         tornado->state     = Tornado_State_Mayday;
         tornado->rotation  = 48;
-        player1->state     = Player_State_None;
+        player1->state     = Player_State_Static;
         player1->direction = FLIP_X;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_CLING, &player1->animator, true, 0);
         player1->rotation = tornado->rotation;

@@ -21,6 +21,10 @@ void SSZ1Intro_Update(void)
             self->activated = true;
             CutsceneSeq_StartSequence(self, SSZ1Intro_Cutscene_FinishRubyWarp, SSZ1Intro_Cutscene_HandeLanding, SSZ1Intro_Cutscene_BeginAct1,
                                       StateMachine_None);
+
+#if MANIA_USE_PLUS
+            CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
         }
     }
 }
@@ -59,7 +63,7 @@ void SSZ1Intro_HandleRubyHover(EntityCutsceneSeq *host, EntityPlayer *player1, E
         RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_FAN, &playerPtr->animator, false, 0);
         playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
         playerPtr->position.y += (offset + 0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) - playerPtr->position.y) >> 3;
-        playerPtr->state = Player_State_None;
+        playerPtr->state = Player_State_Static;
     }
 }
 
@@ -98,7 +102,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
     }
     else {
         if (!host->values[0]) {
-            PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+            PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
             host->values[0] = true;
             fxRuby->state   = FXRuby_State_Shrinking;
         }

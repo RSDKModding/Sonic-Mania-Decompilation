@@ -509,7 +509,7 @@ void ItemBox_GivePowerup(void)
         case ITEMBOX_INVINCIBLE:
             if (player->superState == SUPERSTATE_NONE) {
                 EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), InvincibleStars);
-                RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->classID, player);
+                RSDK.ResetEntity(invincibleStars, InvincibleStars->classID, player);
                 player->invincibleTimer = 1260;
                 Music_PlayQueuedTrack(TRACK_INVINCIBLE);
             }
@@ -521,7 +521,7 @@ void ItemBox_GivePowerup(void)
             if (player->superState == SUPERSTATE_NONE) {
                 Music_PlayQueuedTrack(TRACK_SNEAKERS);
                 EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntitySlot(player), ImageTrail);
-                RSDK.ResetEntityPtr(powerup, ImageTrail->classID, player);
+                RSDK.ResetEntity(powerup, ImageTrail->classID, player);
             }
             break;
 
@@ -550,12 +550,12 @@ void ItemBox_GivePowerup(void)
                 }
                 else {
                     int32 charID = player->characterID;
-                    Player_ChangeCharacter(player, (uint8)globals->stock);
+                    Player_ChangeCharacter(player, GET_STOCK_ID(1));
                     globals->stock >>= 8;
 
-                    if (globals->stock) {
+                    if (GET_STOCK_ID(1)) {
                         charID <<= 8;
-                        if (globals->stock & 0xFF00)
+                        if (GET_STOCK_ID(2))
                             charID <<= 8;
                     }
                     globals->stock |= charID;
@@ -588,28 +588,20 @@ void ItemBox_GivePowerup(void)
                 EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
-                int32 charID = -1;
-                for (int32 i = player1->characterID; i > 0; ++charID) i >>= 1;
-                playerIDs[0] = charID;
-
-                charID = -1;
-                for (int32 i = player2->characterID; i > 0; ++charID) i >>= 1;
-                playerIDs[1] = charID;
+                playerIDs[0] = HUD_CharacterIndexFromID(player1->characterID);
+                playerIDs[1] = HUD_CharacterIndexFromID(player2->characterID);
 
                 if (playerIDs[1] == 0xFF) {
                     RSDK.PlaySfx(Player->sfxSwapFail, false, 255);
                 }
                 else {
-                    for (int32 i = 0; i < 3; ++i) {
-                        if (globals->stock & (0xFF << (8 * i))) {
-                            int32 characterID = (globals->stock >> (8 * i)) & 0xFF;
-
-                            playerIDs[i + 2] = -1;
-                            for (int32 c = characterID; c > 0; ++playerIDs[i + 2]) c >>= 1;
+                    for (int32 i = 1; i < 4; ++i) {
+                        if (GET_STOCK_ID(i)) {
+                            playerIDs[1 + i] = HUD_CharacterIndexFromID(GET_STOCK_ID(i));
                         }
                     }
 
-                    globals->stock = 0;
+                    globals->stock = ID_NONE;
 
                     int32 tempStock = 0;
                     int32 p         = 0;
@@ -690,16 +682,13 @@ void ItemBox_GivePowerup(void)
         case ITEMBOX_STOCK: {
             if (self->contentsAnimator.animationID == 7) {
                 if (globals->gameMode == MODE_ENCORE) {
-                    if (!((1 << self->contentsAnimator.frameID) & globals->characterFlags) && globals->characterFlags != 31
-                        && !(globals->stock & 0xFF0000)) {
+                    if (!((1 << self->contentsAnimator.frameID) & globals->characterFlags) && globals->characterFlags != 0x1F && !GET_STOCK_ID(3)) {
                         globals->characterFlags |= (1 << self->contentsAnimator.frameID);
                         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (player2->classID) {
+                            int32 id = HUD_CharacterIndexFromID(GET_STOCK_ID(1));
 
-                            int32 id = 0;
-                            while ((globals->stock >> id) & 0xFF) id += 8;
-
-                            globals->stock |= (1 << self->contentsAnimator.frameID << id);
+                            globals->stock |= 1 << self->contentsAnimator.frameID << id;
                             HUD->stockFlashTimers[(id >> 3) + 1] = 120;
                         }
                         else {

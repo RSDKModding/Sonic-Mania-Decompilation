@@ -65,7 +65,7 @@ void Bridge_Draw(void)
     id = size;
 
     drawPos.y = self->bridgeDepth + self->position.y;
-    RSDK.DrawSprite(&self->animator, &drawPos, 0);
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
     drawPos.x += 0x100000;
     ++id;
 
@@ -84,8 +84,7 @@ void Bridge_Create(void *data)
 {
     RSDK_THIS(Bridge);
     self->visible = true;
-    if (!SceneInfo->inEditor)
-        ++self->length;
+    ++self->length;
     self->drawOrder     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     int32 len           = self->length << 19;
@@ -179,7 +178,7 @@ bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox
                 }
                 else {
                     hitboxBridge.bottom = (hitY >> 16);
-                    hitboxBridge.top    = (hitY >> 16) - 8;
+                    hitboxBridge.top    = hitboxBridge.bottom - 8;
                 }
 
                 bool32 collided = false;
@@ -249,7 +248,7 @@ bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox
             if (entity->position.y > self->position.y - 0x300000) {
                 if (entity->velocity.y >= 0) {
                     ++self->stoodEntityCount;
-                    entity->position.y = self->bridgeDepth + self->position.y - ((entityHitbox->bottom + 8) << 16);
+                    entity->position.y = self->position.y + self->bridgeDepth - ((entityHitbox->bottom + 8) << 16);
 
                     if (!entity->onGround) {
                         entity->onGround  = true;

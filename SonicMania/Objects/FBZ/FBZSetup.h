@@ -61,18 +61,18 @@ void FBZSetup_Serialize(void);
 void FBZSetup_ActTransitionLoad(void);
 
 void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32 parallaxFactorY, int32 startLine, int32 lineCount, int32 sourcePosY);
-void FBZSetup_ScanlineCB_BGInside(ScanlineInfo *scanlines);
+void FBZSetup_Scanline_BGInside(ScanlineInfo *scanlines);
 
-void FBZSetup_BGSwitchCB_ShowInside1(void);
-void FBZSetup_BGSwitchCB_ShowInside2(void);
-void FBZSetup_BGSwitchCB_ShowInside1_Dup(void);
+void FBZSetup_BGSwitch_ShowInside1(void);
+void FBZSetup_BGSwitch_ShowInside2(void);
+void FBZSetup_BGSwitch_ShowInside1_Dup(void);
 
-void FBZSetup_GenericTriggerCB_ShowExterior(void);
-void FBZSetup_GenericTriggerCB_ShowInterior(void);
+void FBZSetup_Trigger_ShowExterior(void);
+void FBZSetup_Trigger_ShowInterior(void);
 
-void FBZSetup_StageFinishCB_Act1(void);
+void FBZSetup_StageFinish_EndAct1(void);
 #if MANIA_USE_PLUS
-void FBZSetup_StageFinishCB_Act2(void);
+void FBZSetup_StageFinish_EndAct2(void);
 #endif
 
 #endif //!OBJ_FBZSETUP_H

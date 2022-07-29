@@ -101,7 +101,7 @@ void MagnetSphere_CheckPlayerCollision(void)
         int32 playerID = RSDK.GetEntitySlot(player);
 
         if ((1 << playerID) & self->activePlayers) {
-            if (player->state != Player_State_None) {
+            if (player->state != Player_State_Static) {
                 self->playerTimers[playerID] = 30;
                 self->activePlayers &= ~(1 << playerID);
 
@@ -134,7 +134,7 @@ void MagnetSphere_CheckPlayerCollision(void)
             }
         }
         else {
-            if (!self->playerTimers[playerID] && player->state != Player_State_None) {
+            if (!self->playerTimers[playerID] && player->state != Player_State_Static) {
                 if (Player_CheckCollisionTouch(player, self, &MagnetSphere->hitbox)) {
                     int32 angle = RSDK.ATan2(self->position.x - player->position.x, self->position.y - player->position.y);
 
@@ -155,7 +155,7 @@ void MagnetSphere_CheckPlayerCollision(void)
 
                     player->onGround        = false;
                     player->tileCollisions  = false;
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
 

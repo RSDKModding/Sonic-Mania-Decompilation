@@ -95,13 +95,13 @@ void MMZSetup_StageLoad(void)
 
 #if MANIA_USE_PLUS
         if (isMainGameMode() && PlayerHelpers_CheckAct2())
-            Zone->stageFinishCallback = MMZSetup_StageFinishCB_Act2;
+            Zone->stageFinishCallback = MMZSetup_StageFinish_EndAct2;
 #endif
     }
     else {
         if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
             Zone->shouldRecoverPlayers = true;
-            Zone->stageFinishCallback = MMZSetup_StageFinishCB_Act1;
+            Zone->stageFinishCallback = MMZSetup_StageFinish_EndAct1;
         }
 
         Zone->cameraBoundsB[0] = 5120;
@@ -119,14 +119,14 @@ void MMZSetup_StageLoad(void)
 #endif
 }
 
-void MMZSetup_StageFinishCB_Act1(void)
+void MMZSetup_StageFinish_EndAct1(void)
 {
     Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 
 #if MANIA_USE_PLUS
-void MMZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(MMZ2Outro, NULL, 0, 0); }
+void MMZSetup_StageFinish_EndAct2(void) { CREATE_ENTITY(MMZ2Outro, NULL, 0, 0); }
 #endif
 
 #if RETRO_INCLUDE_EDITOR

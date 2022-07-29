@@ -26,14 +26,14 @@ void Decoration_Draw(void)
 {
     RSDK_THIS(Decoration);
 
-    if (self->isTMZ) {
+    if (self->additive) {
         RSDK.CopyPalette(0, 160, 1, 160, 16);
         RSDK.CopyPalette(2, 160, 0, 160, 16);
     }
 
     Decoration_DrawSprite();
 
-    if (self->isTMZ)
+    if (self->additive)
         RSDK.CopyPalette(1, 160, 0, 160, 16);
 }
 
@@ -50,9 +50,9 @@ void Decoration_Create(void *data)
             self->drawFX |= FX_ROTATE;
 
         if (RSDK.CheckSceneFolder("TMZ1") || RSDK.CheckSceneFolder("TMZ2"))
-            self->isTMZ = true;
+            self->additive = true;
 
-        if (self->isTMZ) {
+        if (self->additive) {
             self->inkEffect |= INK_ADD;
             self->alpha = 0xE0;
         }

@@ -3,7 +3,7 @@
 
 #include "Game.h"
 
-typedef enum { BUCKWILDBALL_PATROLLING, BUCKWILDBALL_FALLING } BuckwildBallModes;
+typedef enum { BUCKWILDBALL_PATROLLING, BUCKWILDBALL_ROLLING } BuckwildBallModes;
 
 // Object Class
 struct ObjectBuckwildBall {

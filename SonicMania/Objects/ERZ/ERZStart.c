@@ -24,6 +24,10 @@ void ERZStart_Update(void)
                                           ERZStart_Cutscene_PreparePlayerTransform, ERZStart_Cutscene_PlayerTransform, ERZStart_Cutscene_StartFight,
                                           ERZStart_Cutscene_Fight, StateMachine_None);
 
+#if MANIA_USE_PLUS
+                CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
+
                 self->activated = true;
             }
         }
@@ -41,12 +45,7 @@ void ERZStart_Update(void)
 #if !MANIA_USE_PLUS
     if (ERZStart->superDashCooldown > 0) {
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        foreach_all(HUD, hud)
-        {
-            if (hud)
-                hud->enableRingFlash = true;
-            foreach_break;
-        }
+        HUD_EnableRingFlash();
         --ERZStart->superDashCooldown;
     }
 #endif
@@ -120,7 +119,7 @@ void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, in
     player->position.x = 0x300000;
     player->position.x += (player->position.x - player->position.x) >> 3;
     player->position.y += (posY + 0xA00 * RSDK.Sin256(2 * (seq->timer - seq->storedTimer + 64)) - player->position.y) >> 3;
-    player->state = Player_State_None;
+    player->state = Player_State_Static;
 
     for (int32 e = 0; e < 7; ++e) {
         EntityChaosEmerald *emerald = ERZStart->emeralds[e];
@@ -140,7 +139,7 @@ bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         player1->position.y = ruby->position.y;
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         camera->position.x = 0;
@@ -183,7 +182,7 @@ bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
                 fxRuby->fadeWhite -= 16;
             }
             else {
-                PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+                PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
                 return true;
             }
         }
@@ -471,7 +470,7 @@ bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 172) {
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
         fxRuby->position.x = king->position.x;
         fxRuby->position.y = king->position.y;
         fxRuby->fadeWhite  = 0x300;

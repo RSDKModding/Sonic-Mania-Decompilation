@@ -98,21 +98,21 @@ void TitleBG_SetupFX(void)
 
     TileLayer *cloudLayer        = RSDK.GetTileLayer(2);
     cloudLayer->drawLayer[0]     = 0;
-    cloudLayer->scanlineCallback = TitleBG_ScanlineCB_Clouds;
+    cloudLayer->scanlineCallback = TitleBG_Scanline_Clouds;
 
     TileLayer *islandLayer        = RSDK.GetTileLayer(3);
     islandLayer->drawLayer[0]     = 1;
-    islandLayer->scanlineCallback = TitleBG_ScanlineCB_Island;
+    islandLayer->scanlineCallback = TitleBG_Scanline_Island;
 
     foreach_all(TitleBG, titleBG) { titleBG->visible = true; }
     foreach_all(Title3DSprite, title3DSprite) { title3DSprite->visible = true; }
 
     RSDK.SetPaletteEntry(0, 55, 0x00FF00);
     RSDK.SetPaletteMask(0x00FF00);
-    RSDK.SetDrawGroupProperties(2, true, NULL);
+    RSDK.SetDrawGroupProperties(2, true, StateMachine_None);
 }
 
-void TitleBG_ScanlineCB_Clouds(ScanlineInfo *scanlines)
+void TitleBG_Scanline_Clouds(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, SCREEN_YSIZE / 2);
 
@@ -135,7 +135,7 @@ void TitleBG_ScanlineCB_Clouds(ScanlineInfo *scanlines)
     }
 }
 
-void TitleBG_ScanlineCB_Island(ScanlineInfo *scanlines)
+void TitleBG_Scanline_Island(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 168, ScreenInfo->width, SCREEN_YSIZE);
 

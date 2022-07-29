@@ -17,6 +17,11 @@ void ERZOutro_Update(void)
         CutsceneSeq_StartSequence(self, ERZOutro_Cutscene_AttackEggman, ERZOutro_Cutscene_AttackRecoil, ERZOutro_Cutscene_LoseEmeralds,
                                   ERZOutro_Cutscene_OpenPortal, ERZOutro_Cutscene_EnterPortal, ERZOutro_Cutscene_FadeOut,
                                   ERZOutro_Cutscene_ShowEnding, StateMachine_None);
+
+#if MANIA_USE_PLUS
+        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
+
         self->activated = true;
     }
 }
@@ -129,7 +134,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
         player1->onGround        = false;
         player1->stateInput      = StateMachine_None;
 
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
         fxRuby->fadeWhite = 768;
 
         Zone->playerBoundActiveT[0] = false;
@@ -231,7 +236,7 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
             player1->position.x = eggman->position.x - 0x200000;
             player1->velocity.x = -0x40000;
             player1->velocity.y = -0x40000;
-            player1->state      = Player_State_None;
+            player1->state      = Player_State_Static;
             player1->superState = SUPERSTATE_FADEOUT;
             player1->shield     = SHIELD_NONE;
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, true, 0);
@@ -334,7 +339,7 @@ bool32 ERZOutro_Cutscene_OpenPortal(EntityCutsceneSeq *host)
         portal->state     = RubyPortal_State_Opened;
         portal->drawOrder = Zone->objectDrawLow;
         portal->visible   = true;
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
     }
 
     if (host->timer >= 90) {
@@ -388,7 +393,7 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
             ruby->drawFX |= FX_SCALE;
             ruby->scale.x = 0x200;
             ruby->scale.y = 0x200;
-            PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+            PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
 
             Music_FadeOut(0.2);
         }

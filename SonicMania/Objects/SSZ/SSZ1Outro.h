@@ -37,6 +37,6 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host);
 bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host);
 
 void SSZ1Outro_DestroyHotaru(EntityHotaruMKII *hotaru);
-void SSZ1Outro_DestroyLeftoverHotarus(void);
+void SSZ1Outro_Trigger_DestroyHotarus(void);
 
 #endif //! OBJ_SSZ1OUTRO_H

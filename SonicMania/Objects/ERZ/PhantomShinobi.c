@@ -96,7 +96,7 @@ void PhantomShinobi_StageLoad(void)
     PhantomShinobi->sfxBlade = RSDK.GetSfx("TMZ3/ShinobiBlade.wav");
     PhantomShinobi->sfxHit   = RSDK.GetSfx("TMZ3/ShinobiHit.wav");
 
-    Soundboard_LoadSFX("TMZ3/ShinobiBlade.wav", true, PhantomShinobi_BladeCheckCB, NULL);
+    Soundboard_LoadSfx("TMZ3/ShinobiBlade.wav", true, PhantomShinobi_SfxCheck_ShinobiBlade, StateMachine_None);
 }
 
 void PhantomShinobi_CheckPlayerCollisions(void)
@@ -332,7 +332,7 @@ void PhantomShinobi_State_RetractFins(void)
         self->finRadius = 0x1600;
 
         if (++self->attackCount == 2) {
-            PhantomEgg_SetupScanlineCB();
+            PhantomEgg_SetupWarpFX();
             self->timer = 0;
             self->state = PhantomShinobi_State_FinishedAttack;
         }
@@ -357,7 +357,7 @@ void PhantomShinobi_State_FinishedAttack(void)
     }
 }
 
-bool32 PhantomShinobi_BladeCheckCB(void)
+bool32 PhantomShinobi_SfxCheck_ShinobiBlade(void)
 {
     foreach_active(PhantomShinobi, shinobi)
     {

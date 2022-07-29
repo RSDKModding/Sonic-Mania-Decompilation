@@ -251,7 +251,7 @@ void BreakBar_State_Main(void)
                         player->onGround        = false;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
-                        player->state           = Player_State_None;
+                        player->state           = Player_State_Static;
                     }
 
                     if (!player->sidekick && globals->gameMode != MODE_COMPETITION)
@@ -270,7 +270,7 @@ void BreakBar_State_Main(void)
                 }
 
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-                player->state = Player_State_None;
+                player->state = Player_State_Static;
             }
         }
     }

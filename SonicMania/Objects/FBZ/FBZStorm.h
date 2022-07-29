@@ -11,7 +11,7 @@ struct ObjectFBZStorm {
     Vector2 raindropPositions[0x100];
     uint16 aniFrames;
     uint16 sfxRain;
-    uint8 playingRainSFX;
+    uint8 playingRainSfx;
     uint16 sfxThunder;
     STATIC(uint8 outsideBank, 1);
 };

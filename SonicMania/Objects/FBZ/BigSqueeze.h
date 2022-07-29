@@ -64,7 +64,7 @@ void BigSqueeze_EditorLoad(void);
 void BigSqueeze_Serialize(void);
 
 // Extra Entity Functions
-bool32 BigSqueeze_RumbleCheckCB(void);
+bool32 BigSqueeze_SfxCheck_Rumble(void);
 
 void BigSqueeze_HandleWallCollisions(void);
 void BigSqueeze_CheckPlayerCollisions_Vulnerable(void);

@@ -88,7 +88,7 @@ void HeavyMystic_CheckPlayerCollisions_Bark(void);
 void HeavyMystic_CheckPlayerCollisions_Bean(void);
 void HeavyMystic_Explode(void);
 
-void HeavyMystic_ScanlineCB(ScanlineInfo *scanlines);
+void HeavyMystic_Scanline_Curtains(ScanlineInfo *scanlines);
 
 void HeavyMystic_StateMischief_Setup(void);
 void HeavyMystic_StateBoss_SetupArena(void);

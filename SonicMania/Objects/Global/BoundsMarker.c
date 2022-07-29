@@ -15,7 +15,7 @@ void BoundsMarker_Update(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-        BoundsMarker_CheckBounds(player, self, false);
+        BoundsMarker_ApplyBounds(player, self, false);
     }
 }
 
@@ -40,7 +40,7 @@ void BoundsMarker_Create(void *data)
 
             for (int32 p = 0; p < Player->playerCount; ++p) {
                 EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-                BoundsMarker_CheckBounds(player, self, true);
+                BoundsMarker_ApplyBounds(player, self, true);
             }
         }
     }
@@ -48,20 +48,20 @@ void BoundsMarker_Create(void *data)
 
 void BoundsMarker_StageLoad(void) {}
 
-void BoundsMarker_CheckBounds(EntityPlayer *player, EntityBoundsMarker *marker, bool32 setPos)
+void BoundsMarker_ApplyBounds(EntityPlayer *player, EntityBoundsMarker *marker, bool32 setPos)
 {
     uint16 playerID = RSDK.GetEntitySlot(player);
 
     if (Player_CheckValidState(player) || player->classID == DebugMode->classID) {
         if (abs(marker->position.x - player->position.x) < marker->width) {
             switch (marker->type) {
-                case BOUNDSMARKER_BOTTOM: // bottom
+                case BOUNDSMARKER_ANY_Y:
                     Zone->playerBoundsB[playerID] = marker->position.y;
                     Zone->cameraBoundsB[playerID] = Zone->playerBoundsB[playerID] >> 0x10;
                     Zone->deathBoundary[playerID] = marker->position.y;
                     break;
 
-                case BOUNDSMARKER_BOTTOM_OFFSET: // bottom (offset)
+                case BOUNDSMARKER_ABOVE_Y:
                     if (player->position.y < marker->position.y - (marker->offset << 16)) {
                         Zone->playerBoundsB[playerID] = marker->position.y;
                         Zone->cameraBoundsB[playerID] = Zone->playerBoundsB[playerID] >> 0x10;
@@ -69,14 +69,14 @@ void BoundsMarker_CheckBounds(EntityPlayer *player, EntityBoundsMarker *marker, 
                     }
                     break;
 
-                case BOUNDSMARKER_TOP_OFFSET: // top (offset)
+                case BOUNDSMARKER_BELOW_Y: 
                     if (player->position.y > marker->position.y + (marker->offset << 16)) {
                         Zone->playerBoundsT[playerID] = marker->position.y;
                         Zone->cameraBoundsT[playerID] = Zone->playerBoundsT[playerID] >> 0x10;
                     }
                     break;
 
-                case BOUNDSMARKER_TOP: // top
+                case BOUNDSMARKER_BELOW_Y_ANY: 
                     Zone->playerBoundsT[playerID] = marker->position.y;
                     Zone->cameraBoundsT[playerID] = Zone->playerBoundsT[playerID] >> 0x10;
                     break;
@@ -96,10 +96,10 @@ void BoundsMarker_CheckBounds(EntityPlayer *player, EntityBoundsMarker *marker, 
         }
     }
 }
-void BoundsMarker_CheckAllBounds(EntityPlayer *player, bool32 setPos)
+void BoundsMarker_ApplyAllBounds(EntityPlayer *player, bool32 setPos)
 {
     if (Player_CheckValidState(player) || player->classID == DebugMode->classID) {
-        foreach_all(BoundsMarker, entity) { BoundsMarker_CheckBounds(player, entity, setPos); }
+        foreach_all(BoundsMarker, entity) { BoundsMarker_ApplyBounds(player, entity, setPos); }
     }
 }
 
@@ -119,11 +119,11 @@ void BoundsMarker_EditorDraw(void)
     RSDK_DRAWING_OVERLAY(true);
 
     RSDK.DrawLine(self->position.x - w, self->position.y, self->position.x + w, self->position.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    if (self->type == BOUNDSMARKER_BOTTOM_OFFSET) {
+    if (self->type == BOUNDSMARKER_ABOVE_Y) {
         RSDK.DrawLine(self->position.x + w, self->position.y - (self->offset << 16), self->position.x + w, self->position.y - (self->offset << 16),
                       0xFFFF00, 0x80, INK_BLEND, false);
     }
-    else if (self->type == BOUNDSMARKER_TOP_OFFSET) {
+    else if (self->type == BOUNDSMARKER_BELOW_Y) {
         RSDK.DrawLine(self->position.x + w, self->position.y + (self->offset << 16), self->position.x + w, self->position.y + (self->offset << 16),
                       0xFFFF00, 0x80, INK_BLEND, false);
     }
@@ -136,10 +136,10 @@ void BoundsMarker_EditorLoad(void)
     BoundsMarker->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(BoundsMarker, type);
-    RSDK_ENUM_VAR("Bottom", BOUNDSMARKER_BOTTOM);
-    RSDK_ENUM_VAR("Bottom (Use Offset)", BOUNDSMARKER_BOTTOM_OFFSET);
-    RSDK_ENUM_VAR("Top (Use Offset)", BOUNDSMARKER_TOP_OFFSET);
-    RSDK_ENUM_VAR("Top", BOUNDSMARKER_TOP);
+    RSDK_ENUM_VAR("Any Y", BOUNDSMARKER_ANY_Y);
+    RSDK_ENUM_VAR("Above Y", BOUNDSMARKER_ABOVE_Y);
+    RSDK_ENUM_VAR("Below Y", BOUNDSMARKER_BELOW_Y);
+    RSDK_ENUM_VAR("Below Y Any", BOUNDSMARKER_BELOW_Y_ANY);
 }
 #endif
 

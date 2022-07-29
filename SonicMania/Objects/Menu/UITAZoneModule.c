@@ -805,9 +805,9 @@ void UITAZoneModule_TouchCB_Left(void)
     if (self->zoneID != 7 || self->characterID == 3) {
         self->actID = 0;
 
-        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
-        API_ResetControllerAssignments();
-        API_AssignControllerID(CONT_P1, id);
+        int32 id = API_GetFilteredInputDeviceID(INPUT_NONE);
+        API_ResetInputSlotAssignments();
+        API_AssignInputSlotToDevice(CONT_P1, id);
 
         parent->state = StateMachine_None;
         self->timer   = 0;
@@ -823,9 +823,9 @@ void UITAZoneModule_TouchCB_Right(void)
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
-    API_ResetControllerAssignments();
-    API_AssignControllerID(CONT_P1, id);
+    int32 id = API_GetFilteredInputDeviceID(INPUT_NONE);
+    API_ResetInputSlotAssignments();
+    API_AssignInputSlotToDevice(CONT_P1, id);
 
     parent->state = StateMachine_None;
     self->timer   = 0;
@@ -856,9 +856,9 @@ void UITAZoneModule_ProcessButtonCB_Expanded(void)
         self->expandTimer = 0;
     }
     else if (UIControl->anyConfirmPress) {
-        int32 id = API_MostRecentActiveControllerID(INPUT_NONE);
-        API_ResetControllerAssignments();
-        API_AssignControllerID(CONT_P1, id);
+        int32 id = API_GetFilteredInputDeviceID(INPUT_NONE);
+        API_ResetInputSlotAssignments();
+        API_AssignInputSlotToDevice(CONT_P1, id);
 
         parent->state = StateMachine_None;
         self->timer   = 0;

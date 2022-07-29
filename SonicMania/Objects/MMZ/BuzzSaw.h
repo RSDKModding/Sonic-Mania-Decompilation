@@ -46,8 +46,8 @@ void BuzzSaw_EditorLoad(void);
 void BuzzSaw_Serialize(void);
 
 // Extra Entity Functions
-bool32 BuzzSaw_CheckCB(void);
-void BuzzSaw_UpdateCB(int32 sfx);
+bool32 BuzzSaw_SfxCheck_SawSus(void);
+void BuzzSaw_SfxUpdate_SawSus(int32 sfx);
 
 void BuzzSaw_CheckPlayerCollisions(void);
 

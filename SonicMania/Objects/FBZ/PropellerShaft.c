@@ -71,7 +71,7 @@ void PropellerShaft_Update(void)
                     player->groundedStore   = false;
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
-                    player->state           = Player_State_None;
+                    player->state           = Player_State_Static;
                 }
             }
         }

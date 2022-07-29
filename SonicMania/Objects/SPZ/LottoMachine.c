@@ -171,10 +171,10 @@ void LottoMachine_StageLoad(void)
     LottoMachine->sfxPimPom = RSDK.GetSfx("Stage/PimPom.wav");
     LottoMachine->sfxFail   = RSDK.GetSfx("Stage/Fail.wav");
 
-    Zone_AddVSSwapCallback(LottoMachine_VSSwapCB);
+    Zone_AddVSSwapCallback(LottoMachine_VSSwap_CheckBusy);
 }
 
-void LottoMachine_VSSwapCB(void)
+void LottoMachine_VSSwap_CheckBusy(void)
 {
 #if MANIA_USE_PLUS
     if ((1 << Zone->swapPlayerID) & LottoMachine->activePlayers)
@@ -288,7 +288,7 @@ void LottoMachine_CheckPlayerCollisions_Bottom(void)
                             self->playerDir = player->direction;
 
                         self->playerPtrs[self->playerCount++] = player;
-                        player->state                         = Player_State_None;
+                        player->state                         = Player_State_Static;
                         player->position.x                    = self->position.x;
                         player->position.y                    = self->position.y + 0x980000;
                         player->velocity.x                    = 0;
@@ -487,7 +487,7 @@ void LottoMachine_State_Startup(void)
 
                 if (player && player->state != Player_State_Death) {
                     int32 playerID = RSDK.GetEntitySlot(player);
-                    if (player->state == Player_State_None) {
+                    if (player->state == Player_State_Static) {
                         player->state                = Player_State_Air;
                         player->velocity.x           = 0;
                         player->velocity.y           = -0x98000;
@@ -672,7 +672,7 @@ void LottoMachine_State_DropPlayers(void)
                 EntityPlayer *player = self->playerPtrs[p];
 
                 if (player && player->state != Player_State_Death) {
-                    player->state        = Player_State_None;
+                    player->state        = Player_State_Static;
                     player->nextAirState = StateMachine_None;
                     player->velocity.x   = 0;
                     player->velocity.y   = 0;

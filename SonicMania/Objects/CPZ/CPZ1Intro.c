@@ -25,9 +25,7 @@ void CPZ1Intro_Update(void)
                                       StateMachine_None);
 
 #if MANIA_USE_PLUS
-            EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            if (seq->classID)
-                seq->skipType = SKIPTYPE_RELOADSCN;
+            CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
         }
     }
@@ -63,7 +61,7 @@ void CPZ1Intro_StageLoad(void)
     CPZ1Intro->sfxDNABurst = RSDK.GetSfx("CPZ/DNABurst.wav");
 }
 
-void CPZ1Intro_Particle_CB(EntityDebris *debris)
+void CPZ1Intro_Particle_ChemDrop(EntityDebris *debris)
 {
     debris->velocity.y += RSDK.Rand(-0x28000, -0x20000);
     RSDK.SetSpriteAnimation(CPZ1Intro->particleFrames, 1, &debris->animator, true, 0);
@@ -86,7 +84,7 @@ void CPZ1Intro_HandleRubyHover(EntityCutsceneSeq *cutsceneSequence, EntityPlayer
         player->position.x += velX;
         player->position.y += velY;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-        player->state = Player_State_None;
+        player->state = Player_State_Static;
     }
 }
 
@@ -185,7 +183,7 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
         }
         else {
             if (!host->values[0]) {
-                PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+                PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
                 host->values[0] = 1;
                 fxRuby->state   = FXRuby_State_Shrinking;
             }
@@ -229,9 +227,9 @@ bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host)
     unused(camera);
 
     if (!host->timer) {
-        player1->state = Player_State_None;
+        player1->state = Player_State_Static;
         if (player2->classID == Player->classID) {
-            player2->state = Player_State_None;
+            player2->state = Player_State_Static;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
         }
     }
@@ -270,7 +268,7 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host)
     int32 playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
     if (debris->position.y >= playerY) {
         RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, false, 255);
-        ParticleHelpers_SetupFallingParticles(debris->position.x, playerY, CPZ1Intro_Particle_CB);
+        ParticleHelpers_SetupFallingParticles(debris->position.x, playerY, CPZ1Intro_Particle_ChemDrop);
         destroyEntity(debris);
 
         if (CHECK_CHARACTER_ID(ID_TAILS, 2))
@@ -291,14 +289,14 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
         switch (GET_CHARACTER_ID(1)) {
             case ID_SONIC:
                 CPZ1Intro->playerAnimID = 0;
-                player1->state          = Player_State_None;
+                player1->state          = Player_State_Static;
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
 
             case ID_TAILS: CPZ1Intro->playerAnimID = 1;
 #if MANIA_USE_PLUS
-                player1->state          = Player_State_None;
+                player1->state          = Player_State_Static;
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 RSDK.SetSpriteAnimation(-1, 0, &player1->tailAnimator, true, 0);
@@ -314,7 +312,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
                 break;
             case ID_KNUCKLES:
                 CPZ1Intro->playerAnimID = 2;
-                player1->state          = Player_State_None;
+                player1->state          = Player_State_Static;
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
@@ -322,7 +320,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
 #if MANIA_USE_PLUS
             case ID_MIGHTY:
                 CPZ1Intro->playerAnimID = 3;
-                player1->state          = Player_State_None;
+                player1->state          = Player_State_Static;
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
@@ -330,7 +328,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
             case ID_RAY:
                 CPZ1Intro->playerAnimID = 4;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
-                player1->state          = Player_State_None;
+                player1->state          = Player_State_Static;
                 player1->tileCollisions = false;
                 break;
 #endif

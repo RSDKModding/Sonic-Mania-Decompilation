@@ -60,11 +60,10 @@ void MSZ2Cutscene_SetupCutscene(void)
                               MSZ2Cutscene_Cutscene_AppearInBG, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 void MSZ2Cutscene_GetPistolPtr(void)
@@ -160,7 +159,7 @@ bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host)
             player2->position.x      = player1->position.x;
             player2->position.y      = player1->position.y;
             player2->stateInput      = StateMachine_None;
-            player2->state           = Player_State_None;
+            player2->state           = Player_State_Static;
             player2->nextAirState    = StateMachine_None;
             player2->nextGroundState = StateMachine_None;
             player2->velocity.x      = 0;
@@ -190,14 +189,14 @@ bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
     }
 
     if (player1->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
-        player1->state      = Player_State_None;
+        player1->state      = Player_State_Static;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
         player1->position.y = 0;
     }
 
     if (player2->classID == Player->classID && player2->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
-        player2->state      = Player_State_None;
+        player2->state      = Player_State_Static;
         player2->velocity.x = 0;
         player2->velocity.y = 0;
         player2->position.y = 0;
@@ -232,7 +231,7 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
         player1->animator.speed = 60;
         player1->scale.x        = 0x40;
         player1->scale.y        = 0x40;
-        player1->state          = Player_State_None;
+        player1->state          = Player_State_Static;
         player1->position.x     = camera->position.x;
         player1->position.y     = camera->position.y - 0x700000;
 
@@ -240,7 +239,7 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
             player2->drawFX |= FX_SCALE;
             player2->scale.x    = 0x40;
             player2->scale.y    = 0x40;
-            player2->state      = Player_State_None;
+            player2->state      = Player_State_Static;
             player2->position.x = player1->position.x - 0x63000;
             player2->position.y = player1->position.y - 0x24000;
             player2->velocity.x = 0;
@@ -255,7 +254,7 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
         player1->velocity.y = host->storedTimer;
 
         if (player2->classID == Player->classID) {
-            player2->state      = Player_State_None;
+            player2->state      = Player_State_Static;
             player2->velocity.x = 0xB000;
             player2->velocity.y = player1->velocity.y;
         }

@@ -1206,7 +1206,7 @@ typedef struct {
 
     // Achievements
     void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
-    void (*GetAchievementInfo)(uint32 id, String *name, String *description, String *identifer, bool32 *achieved);
+    void (*GetAchievementInfo)(uint32 id, String *name, String *description, String *identifier, bool32 *achieved);
     int32 (*GetAchievementIndexByID)(const char *identifier);
     int32 (*GetAchievementCount)(void);
 
@@ -1347,17 +1347,17 @@ typedef struct {
     void *(*GetEntity)(uint16 slot);
     int32 (*GetEntitySlot)(void *entity);
     int32 (*GetEntityCount)(uint16 classID, bool32 isActive);
-    int32 (*GetDrawListRef)(uint8 drawGroup, uint16 entitySlot);
-    void *(*GetDrawListRefPtr)(uint8 drawGroup, uint16 entitySlot);
-    void (*ResetEntityPtr)(void *entity, uint16 classID, void *data);
+    int32 (*GetDrawListRefSlot)(uint8 drawGroup, uint16 entitySlot);
+    void *(*GetDrawListRef)(uint8 drawGroup, uint16 entitySlot);
+    void (*ResetEntity)(void *entity, uint16 classID, void *data);
     void (*ResetEntitySlot)(uint16 slot, uint16 classID, void *data);
     Entity *(*CreateEntity)(uint16 classID, void *data, int32 x, int32 y);
     void (*CopyEntity)(void *destEntity, void *srcEntity, bool32 clearSrcEntity);
     bool32 (*CheckOnScreen)(void *entity, Vector2 *range);
     bool32 (*CheckPosOnScreen)(Vector2 *position, Vector2 *range);
-    void (*AddDrawListRef)(uint8 drawGroup, uint16 entityID);
+    void (*AddDrawListRef)(uint8 drawGroup, uint16 entitySlot);
     void (*SwapDrawListEntries)(uint8 drawGroup, uint16 slot1, uint16 slot2, uint16 count);
-    void (*SetDrawGroupProperties)(uint8 drawGroup, bool32 sorted, void (*callback)(void));
+    void (*SetDrawGroupProperties)(uint8 drawGroup, bool32 sorted, void (*hookCB)(void));
 
     // Scene Management
     void (*SetScene)(const char *categoryName, const char *sceneName);
@@ -1472,7 +1472,7 @@ typedef struct {
     void (*DrawDeformedSprite)(uint16 sheetID, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawText)(Animator *animator, Vector2 *position, String *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
                      Vector2 *charOffsets, bool32 screenRelative);
-    void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
+    void (*DrawTile)(uint16 *tiles, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(uint16 dest, uint16 src, uint16 count);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
 #if RETRO_REV0U
@@ -1511,8 +1511,8 @@ typedef struct {
     int32 (*GetTileLayerID)(const char *name);
     TileLayer *(*GetTileLayer)(int32 layerID);
     void (*GetLayerSize)(uint16 layer, Vector2 *size, bool32 usePixelUnits);
-    uint16 (*GetTileInfo)(uint16 layer, int32 x, int32 y);
-    void (*SetTileInfo)(uint16 layer, int32 x, int32 y, uint16 tile);
+    uint16 (*GetTile)(uint16 layer, int32 x, int32 y);
+    void (*SetTile)(uint16 layer, int32 x, int32 y, uint16 tile);
     int32 (*CopyTileLayer)(uint16 dstLayerID, int32 dstStartX, int32 dstStartY, uint16 srcLayerID, int32 srcStartX, int32 srcStartY, int32 countX,
                            int32 countY);
     void (*ProcessParallax)(TileLayer *tileLayer);
@@ -1541,10 +1541,10 @@ typedef struct {
     void (*RoofCollision)(CollisionSensor *sensor);
     void (*RWallCollision)(CollisionSensor *sensor);
 #endif
-    int32 (*GetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode);
-    void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 angle);
-    uint8 (*GetTileFlags)(uint16 tileID, uint8 cPlane);
-    void (*SetTileFlags)(uint16 tileID, uint8 cPlane, uint8 flag);
+    int32 (*GetTileAngle)(uint16 tile, uint8 cPlane, uint8 cMode);
+    void (*SetTileAngle)(uint16 tile, uint8 cPlane, uint8 cMode, uint8 angle);
+    uint8 (*GetTileFlags)(uint16 tile, uint8 cPlane);
+    void (*SetTileFlags)(uint16 tile, uint8 cPlane, uint8 flag);
 #if RETRO_REV0U
     void (*CopyCollisionMask)(uint16 dst, uint16 src, uint8 cPlane, uint8 cMode);
     void (*GetCollisionInfo)(CollisionMask **masks, TileInfo **tileInfo);
@@ -1774,7 +1774,7 @@ typedef struct {
     RSDK.BreakForeachLoop();                                                                                                                         \
     return
 
-#define destroyEntity(entity)   RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL)
+#define destroyEntity(entity)   RSDK.ResetEntity(entity, TYPE_BLANK, NULL)
 #define destroyEntitySlot(slot) RSDK.ResetEntitySlot(slot, TYPE_BLANK, NULL)
 
 #if RETRO_INCLUDE_EDITOR

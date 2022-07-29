@@ -68,13 +68,13 @@ void PSZ1Setup_Serialize(void);
 
 // Extra Entity Functions
 #if MANIA_USE_PLUS
-void PSZ1Setup_BGSwitch_CB_Inside(void);
-void PSZ1Setup_BGSwitch_CB_Outside(void);
+void PSZ1Setup_BGSwitch_Inside(void);
+void PSZ1Setup_BGSwitch_Outside(void);
 #endif
-void PSZ1Setup_TriggerCB_DeactivatePetalBehaviour(void);
-void PSZ1Setup_TriggerCB_ActivatePetalBehaviour(void);
-void PSZ1Setup_TriggerCB_AchievementArea(void);
-void PSZ1Setup_StageFinishCB(void);
+void PSZ1Setup_Trigger_DeactivatePetalBehaviour(void);
+void PSZ1Setup_Trigger_ActivatePetalBehaviour(void);
+void PSZ1Setup_Trigger_AwardAchievement(void);
+void PSZ1Setup_StageFinish_EndAct1(void);
 void PSZ1Setup_LevelWrap_Top(void);
 void PSZ1Setup_LevelWrap_Bottom(void);
 

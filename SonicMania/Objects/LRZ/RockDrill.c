@@ -340,8 +340,8 @@ void RockDrill_State_Falling(void)
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;
 
-        uint16 tileLow  = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
-        uint16 tileHigh = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
+        uint16 tileLow  = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
+        uint16 tileHigh = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
 
         if (RSDK.GetTileFlags(tileLow, 0) == LRZ2_TFLAGS_LAVA || RSDK.GetTileFlags(tileHigh, 0) == LRZ2_TFLAGS_LAVA) {
             self->timer      = 0;

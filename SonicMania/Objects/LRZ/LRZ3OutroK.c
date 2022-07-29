@@ -66,12 +66,10 @@ void LRZ3OutroK_StartCutscene(void)
                               LRZ3OutroK_Cutscene_TeleporterActivated, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-    if (sequence->classID)
-        sequence->skipType = SKIPTYPE_RELOADSCN;
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
@@ -150,7 +148,7 @@ bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
     if (host->timer == 30) {
         foreach_active(Player, player)
         {
-            player->state           = Player_State_None;
+            player->state           = Player_State_Static;
             player->nextGroundState = StateMachine_None;
             player->nextAirState    = StateMachine_None;
 

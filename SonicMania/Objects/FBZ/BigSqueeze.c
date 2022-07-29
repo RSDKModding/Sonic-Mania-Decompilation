@@ -118,10 +118,10 @@ void BigSqueeze_StageLoad(void)
     BigSqueeze->crushTimer = 0;
     BigSqueeze->isCrushing = false;
 
-    Soundboard_LoadSFX("Stage/Rumble.wav", true, BigSqueeze_RumbleCheckCB, NULL);
+    Soundboard_LoadSfx("Stage/Rumble.wav", true, BigSqueeze_SfxCheck_Rumble, StateMachine_None);
 }
 
-bool32 BigSqueeze_RumbleCheckCB(void) { return BigSqueeze->isCrushing && SceneInfo->state == ENGINESTATE_REGULAR; }
+bool32 BigSqueeze_SfxCheck_Rumble(void) { return BigSqueeze->isCrushing && SceneInfo->state == ENGINESTATE_REGULAR; }
 
 void BigSqueeze_HandleWallCollisions(void)
 {

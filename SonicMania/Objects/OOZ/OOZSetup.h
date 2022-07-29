@@ -8,6 +8,8 @@ typedef enum { OOZSETUP_FLAMES, OOZSETUP_FADE } OOZSetupTypes;
 
 typedef enum { OOZ_TFLAGS_NORMAL, OOZ_TFLAGS_OILPOOL, OOZ_TFLAGS_OILSTRIP, OOZ_TFLAGS_OILSLIDE, OOZ_TFLAGS_OILFALL } TileFlagsOOZ;
 
+typedef enum { OOZ_GENERICTRIGGER_ACHIEVEMENT } GenericTriggerTypesOOZ;
+
 // Object Class
 struct ObjectOOZSetup {
     RSDK_OBJECT
@@ -64,15 +66,15 @@ void OOZSetup_EditorLoad(void);
 void OOZSetup_Serialize(void);
 
 // Extra Entity Functions
-bool32 OOZSetup_CheckCB_Flame(void);
-bool32 OOZSetup_CheckCB_Slide(void);
-bool32 OOZSetup_CheckCB_Swim(void);
+bool32 OOZSetup_SfxCheck_Flame2(void);
+bool32 OOZSetup_SfxCheck_Slide(void);
+bool32 OOZSetup_SfxCheck_OilSwim(void);
 
 void OOZSetup_Draw_Flames(void);
 void OOZSetup_HandleActiveFlames(void);
 bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle);
 
-void OOZSetup_GenericTriggerCB(void);
+void OOZSetup_Trigger_AwardAchievement(void);
 
 void OOZSetup_PlayerState_OilPool(void);
 void OOZSetup_PlayerState_OilStrip(void);

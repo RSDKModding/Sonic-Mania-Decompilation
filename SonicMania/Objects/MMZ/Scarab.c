@@ -161,7 +161,7 @@ void Scarab_CheckPlayerCollisions(void)
                         player->groundVel       = 0;
                         player->onGround        = false;
                         player->tileCollisions  = false;
-                        player->state           = Player_State_None;
+                        player->state           = Player_State_Static;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
                         self->isPermanent       = true;
@@ -195,7 +195,7 @@ void Scarab_HandlePlayerGrab(void)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
         if ((1 << playerID) & self->grabbedPlayers) {
-            if (self->playerTimers[playerID] < 60 && player->interaction && player->state == Player_State_None) {
+            if (self->playerTimers[playerID] < 60 && player->interaction && player->state == Player_State_Static) {
                 player->position.x = self->position.x + ((2 * (self->direction != FLIP_NONE) - 1) << 21);
                 player->position.y = self->position.y - 0xA0000;
                 player->velocity.x = self->state == Scarab_State_Move ? (0x6000 * self->moveDir) : 0;

@@ -548,7 +548,7 @@ void SignPost_State_Fall(void)
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hitboxHidden, self, &SignPost->hitboxItemBox)) {
                     RSDK.PlaySfx(SignPost->sfxBubbleBounce, false, 255);
                     itemBox->velocity.y = -0x50000;
-                    itemBox->hidden     = 0;
+                    itemBox->hidden     = false;
                     itemBox->state      = ItemBox_State_Falling;
                     self->itemBounceCount++;
                     self->velocity.y = -0x20000;

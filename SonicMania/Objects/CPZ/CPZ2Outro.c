@@ -52,11 +52,10 @@ void CPZ2Outro_SetupCutscene(void)
     CutsceneSeq_StartSequence(self, CPZ2Outro_Cutscene_Outro, StateMachine_None);
 
 #if MANIA_USE_PLUS
-    if (seq->classID)
-        seq->skipType = SKIPTYPE_RELOADSCN;
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
-    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+    HUD_MoveOut();
 }
 
 bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)

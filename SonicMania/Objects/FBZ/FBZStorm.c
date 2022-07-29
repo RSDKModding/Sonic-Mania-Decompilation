@@ -83,9 +83,9 @@ void FBZStorm_StaticUpdate(void)
     }
 
     if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID) {
-        if (FBZStorm->playingRainSFX) {
+        if (FBZStorm->playingRainSfx) {
             RSDK.StopSfx(FBZStorm->sfxRain);
-            FBZStorm->playingRainSFX = false;
+            FBZStorm->playingRainSfx = false;
         }
     }
 }
@@ -174,15 +174,15 @@ void FBZStorm_State_StormStart(void)
             enabled = true;
     }
 
-    if (FBZStorm->playingRainSFX) {
+    if (FBZStorm->playingRainSfx) {
         if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->classID == PauseMenu->classID) {
             RSDK.StopSfx(FBZStorm->sfxRain);
-            FBZStorm->playingRainSFX = false;
+            FBZStorm->playingRainSfx = false;
         }
     }
     else {
         RSDK.PlaySfx(FBZStorm->sfxRain, true, 0xFF);
-        FBZStorm->playingRainSFX = true;
+        FBZStorm->playingRainSfx = true;
     }
 }
 
@@ -192,7 +192,7 @@ void FBZStorm_State_StormFinish(void)
 
     if (self->alpha <= 0) {
         self->visible = false;
-        if (FBZStorm->playingRainSFX) {
+        if (FBZStorm->playingRainSfx) {
             RSDK.StopSfx(FBZStorm->sfxRain);
         }
         self->state = FBZStorm_State_WaitForActive;

@@ -30,7 +30,7 @@ void YoyoPulley_Update(void)
         int32 playerID = RSDK.GetEntitySlot(player);
 
         if (((1 << playerID) & self->activePlayers) || self->playerTimers[playerID]) {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 // ???
                 RSDK.GetHitbox(&player->animator, 0);
 
@@ -63,7 +63,7 @@ void YoyoPulley_Update(void)
                 player->tileCollisions = true;
             }
         }
-        else if (player->state != Player_State_None && player->down == false && player->velocity.y >= 0) {
+        else if (player->state != Player_State_Static && player->down == false && player->velocity.y >= 0) {
             Hitbox *playerHitbox = RSDK.GetHitbox(&player->animator, 0);
 
             Hitbox hitboxPlayer;
@@ -88,7 +88,7 @@ void YoyoPulley_Update(void)
                 player->tileCollisions = false;
 
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEY_HOLD, &player->animator, true, 0);
-                player->state = Player_State_None;
+                player->state = Player_State_Static;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
             }
         }

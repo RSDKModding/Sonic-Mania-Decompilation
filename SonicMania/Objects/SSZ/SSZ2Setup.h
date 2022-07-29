@@ -40,14 +40,14 @@ void SSZ2Setup_Serialize(void);
 
 // Extra Entity Functions
 #if MANIA_USE_PLUS
-void SSZ2Setup_StageFinishCB(void);
+void SSZ2Setup_StageFinish_EndAct2(void);
 #endif
 
-void SSZ2Setup_TowerDrawLayerCB(void);
-void SSZ2Setup_TowerScanlineCB(ScanlineInfo *scanlines);
+void SSZ2Setup_DrawHook_PrepareDrawingFX(void);
+void SSZ2Setup_Scanline_BGTower(ScanlineInfo *scanlines);
 
-void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void);
-void SSZ2Setup_GenericTriggerCB_CheckSSZAchievement(void);
-void SSZ2Setup_GenericTriggerCB_SSZ2BTransition(void);
+void SSZ2Setup_Trigger_DestroyHotaruMKII(void);
+void SSZ2Setup_Trigger_AwardAchievement(void);
+void SSZ2Setup_Trigger_SSZ2BTransition(void);
 
 #endif //! OBJ_SSZ2SETUP_H

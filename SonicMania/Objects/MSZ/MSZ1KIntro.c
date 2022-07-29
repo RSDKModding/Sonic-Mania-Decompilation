@@ -21,9 +21,10 @@ void MSZ1KIntro_Update(void)
             self->activated = true;
             CutsceneSeq_StartSequence(self, MSZ1KIntro_Cutscene_SetupPlane, MSZ1KIntro_Cutscene_MagicianMischief, MSZ1KIntro_Cutscene_StartAct,
                                       StateMachine_None);
+
+
 #if MANIA_USE_PLUS
-            if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-                RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+            CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
         }
     }
@@ -75,7 +76,7 @@ bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
 
     if (player1->onGround) {
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
-        player1->state = Player_State_None;
+        player1->state = Player_State_Static;
         return true;
     }
 
@@ -90,7 +91,7 @@ bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
-        player1->state          = Player_State_None;
+        player1->state          = Player_State_Static;
         player1->tileCollisions = false;
     }
 

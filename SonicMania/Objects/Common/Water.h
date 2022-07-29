@@ -51,7 +51,7 @@ struct ObjectWater {
     int32 waterLevelChannelL;
     int32 waterLevelChannelR;
     int32 unused2;
-    bool32 playingWaterLevelSFX;
+    bool32 playingWaterLevelSfx;
     bool32 moveWaterLevel;
     int32 waterLevelVolume;
     int32 waterPalette;
@@ -60,7 +60,7 @@ struct ObjectWater {
     uint8 wakeDir[PLAYER_COUNT];
     Animator wakeAnimator;
     int32 unused3;
-    bool32 playingSkimSFX;
+    bool32 playingSkimSfx;
 };
 
 // Entity Class
@@ -88,8 +88,8 @@ struct EntityWater {
     uint8 priority;
     bool32 destroyOnTrigger;
     Hitbox hitbox;
-    bool32 isHCZBubble;
-    int32 hczBubbleTimer;
+    bool32 isBigBubble;
+    int32 bigBubbleTimer;
     int32 timer;
     uint8 activePlayers;
     uint8 releasedPlayers;
@@ -118,8 +118,8 @@ void Water_Serialize(void);
 // Extra Entity Functions
 
 // Palette stuff
-void Water_SetWaterLevel(void);
-void Water_RemoveWaterEffect(void);
+void Water_DrawHook_ApplyWaterPalette(void);
+void Water_DrawHook_RemoveWaterPalette(void);
 
 // Utils
 void Water_SetupTagLink(void);
@@ -127,18 +127,18 @@ void Water_SpawnBubble(EntityPlayer *player, int32 id);
 void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID);
 EntityWater *Water_GetPlayerBubble(EntityPlayer *entityPtr);
 void Water_HandleBubbleMovement(void);
-void Water_HCZBubbleSpawner(void);
-void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut);
+void Water_PopBigBubble(EntityWater *self, bool32 jumpedOut);
 
 void Water_State_Water(void);
 void Water_State_Pool(void);
 void Water_State_Splash(void);
 void Water_State_Bubble(void);
-void Water_State_ShrinkPlayerBubble(void);
-void Water_State_HCZBubble(void);
+void Water_State_BubbleBreathed(void);
+void Water_State_BigBubble(void);
+void Water_State_BtnBigBubble(void);
 void Water_State_Bubbler(void);
 void Water_State_Countdown(void);
-void Water_State_BubbleMove(void);
+void Water_State_CountdownFollow(void);
 void Water_State_HeightTrigger(void);
 
 // Draw States

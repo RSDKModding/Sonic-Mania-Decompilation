@@ -89,7 +89,7 @@ void ZipLine_Update(void)
                 }
             }
         }
-        else if (!self->grabDelay[playerID] && player->state != Player_State_None && !player->down) {
+        else if (!self->grabDelay[playerID] && player->state != Player_State_Static && !player->down) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             Hitbox otherHitbox;
             otherHitbox.top    = playerHitbox->top - 4;
@@ -206,10 +206,10 @@ void ZipLine_StageLoad(void)
     ZipLine->hitboxHandle.bottom = 24;
     ZipLine->hitboxHandle.right  = 8;
 
-    Zone_AddVSSwapCallback(ZipLine_VSSwapCB);
+    Zone_AddVSSwapCallback(ZipLine_VSSwap_CheckBusy);
 }
 
-void ZipLine_VSSwapCB(void)
+void ZipLine_VSSwap_CheckBusy(void)
 {
     foreach_active(ZipLine, zipline)
     {
@@ -242,7 +242,7 @@ void ZipLine_GrabHandle(EntityPlayer *player, int32 playerID, Hitbox *playerHitb
         ((ZipLine->hitboxHandle.top - playerHitbox->top) << 16) + (((ZipLine->hitboxHandle.bottom - ZipLine->hitboxHandle.top) << 15) & 0xFFFF0000);
     player->tileCollisions = false;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
-    player->state           = Player_State_None;
+    player->state           = Player_State_Static;
     player->nextAirState    = StateMachine_None;
     player->nextGroundState = StateMachine_None;
     RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);

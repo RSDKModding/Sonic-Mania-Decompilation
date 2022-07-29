@@ -19,16 +19,22 @@ void SSZ3Cutscene_Update(void)
                                   SSZ3Cutscene_CutsceneOutro_EnterRuby, SSZ3Cutscene_CutsceneOutro_RubyActivate, SSZ3Cutscene_CutsceneOutro_RubyWarp,
                                   SSZ3Cutscene_CutsceneOutro_LoadHCZ1, StateMachine_None);
 
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#if MANIA_USE_PLUS
+        CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
+#endif
 
-        foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+        HUD_MoveOut();
 
         self->active = ACTIVE_NEVER;
     }
     else {
 #endif
         CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
+
+#if MANIA_USE_PLUS
+        CutsceneSeq_SetSkipType(SKIPTYPE_DISABLED, StateMachine_None);
+#endif
+
         self->active = ACTIVE_NEVER;
 #if MANIA_USE_PLUS
     }
@@ -216,7 +222,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyActivate(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             if (player->sidekick) {
-                player->state = Player_State_None;
+                player->state = Player_State_Static;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SKID, &player->animator, false, 0);
             }
             else {
@@ -227,7 +233,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyActivate(EntityCutsceneSeq *host)
     else {
         foreach_active(Player, player)
         {
-            if (player->state == Player_State_None) {
+            if (player->state == Player_State_Static) {
                 player->groundVel -= player->groundVel >> 3;
                 player->velocity.x -= player->velocity.x >> 3;
             }
@@ -237,14 +243,14 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyActivate(EntityCutsceneSeq *host)
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->groundVel  = 0;
-                player->state      = Player_State_None;
+                player->state      = Player_State_Static;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
             }
         }
     }
 
     if (ruby->flashFinished) {
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         foreach_active(Player, player)
         {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
@@ -254,7 +260,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyActivate(EntityCutsceneSeq *host)
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->groundVel  = 0;
-            player->state      = Player_State_None;
+            player->state      = Player_State_Static;
         }
 
         return true;
@@ -298,13 +304,13 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
                 if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
-                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+                    PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->storedTimer = host->timer;
@@ -330,7 +336,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
                         ((0xA00 * RSDK.Cos256(2 * (angle + host->timer - host->storedTimer)) + player->position.x) - player->position.x) >> 3;
                     player->position.y +=
                         (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
-                    player->state          = Player_State_None;
+                    player->state          = Player_State_Static;
                     player->tileCollisions = false;
                     player->onGround       = false;
                 }

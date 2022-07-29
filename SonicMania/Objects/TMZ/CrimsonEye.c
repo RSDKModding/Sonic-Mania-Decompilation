@@ -373,12 +373,12 @@ void CrimsonEye_Hit(void)
 void CrimsonEye_SetupBG2Layer(void)
 {
     for (int y = 0; y < 48; ++y) {
-        uint16 tile = RSDK.GetTileInfo(1, 0, y + 24 * (2 - y / 24));
+        uint16 tile = RSDK.GetTile(1, 0, y + 24 * (2 - y / 24));
 
-        RSDK.SetTileInfo(1, 0, y, tile);
-        RSDK.SetTileInfo(1, 31, y, tile);
+        RSDK.SetTile(1, 0, y, tile);
+        RSDK.SetTile(1, 31, y, tile);
 
-        for (int32 x = 1; x < 31; ++x) RSDK.SetTileInfo(1, x, y, -1);
+        for (int32 x = 1; x < 31; ++x) RSDK.SetTile(1, x, y, -1);
     }
 
     TileLayer *bg2Layer = RSDK.GetTileLayer(1);
@@ -391,13 +391,13 @@ void CrimsonEye_SetupBG2Layer(void)
     bg2Layer->parallaxFactor = 0x200;
     CrimsonEye->bg2Layer     = bg2Layer;
 
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, CrimsonEye_DrawLayerCB_EnableFGSilhouette);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, CrimsonEye_DrawLayerCB_DisableFGSilhouette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder - 1, false, CrimsonEye_DrawHook_EnableFGSilhouette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, CrimsonEye_DrawHook_DisableFGSilhouette);
 }
 
 // Manages the black strucures that move in the foreground
-void CrimsonEye_DrawLayerCB_DisableFGSilhouette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
-void CrimsonEye_DrawLayerCB_EnableFGSilhouette(void) { RSDK.SetActivePalette(5, 0, ScreenInfo->height); }
+void CrimsonEye_DrawHook_DisableFGSilhouette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
+void CrimsonEye_DrawHook_EnableFGSilhouette(void) { RSDK.SetActivePalette(5, 0, ScreenInfo->height); }
 
 void CrimsonEye_SetArrowDir(int type)
 {

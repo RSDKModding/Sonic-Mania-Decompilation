@@ -59,7 +59,7 @@ void BuckwildBall_Create(void *data)
         self->updateRange.y = 0x800000;
         self->bossBallSlot  = -1;
 
-        if (self->mode != BUCKWILDBALL_FALLING)
+        if (self->mode != BUCKWILDBALL_ROLLING)
             self->updateRange.x = (self->amplitude + 0x80) << 16;
 
         self->state = BuckwildBall_State_Setup;
@@ -233,7 +233,7 @@ void BuckwildBall_State_Setup(void)
     switch (self->mode) {
         case BUCKWILDBALL_PATROLLING: self->state = BuckwildBall_State_Patrolling; break;
 
-        case BUCKWILDBALL_FALLING:
+        case BUCKWILDBALL_ROLLING:
             self->visible   = false;
             self->state     = BuckwildBall_State_AwaitDetection;
             self->drawOrder = Zone->objectDrawLow;
@@ -404,7 +404,7 @@ void BuckwildBall_EditorDraw(void)
                 self->inkEffect = INK_NONE;
                 break;
 
-            case BUCKWILDBALL_FALLING:
+            case BUCKWILDBALL_ROLLING:
                 self->detectHitbox.left   = -(self->detectSize.x >> 17);
                 self->detectHitbox.top    = -(self->detectSize.y >> 17);
                 self->detectHitbox.right  = self->detectSize.x >> 17;
@@ -435,7 +435,7 @@ void BuckwildBall_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(BuckwildBall, mode);
     RSDK_ENUM_VAR("Patrolling", BUCKWILDBALL_PATROLLING);
-    RSDK_ENUM_VAR("Rolling", BUCKWILDBALL_FALLING);
+    RSDK_ENUM_VAR("Rolling", BUCKWILDBALL_ROLLING);
 }
 #endif
 

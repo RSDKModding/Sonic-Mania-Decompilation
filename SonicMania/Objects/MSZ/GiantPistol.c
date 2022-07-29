@@ -100,7 +100,7 @@ void GiantPistol_State_AwaitPlayerEntry(void)
         int32 side = Player_CheckCollisionBox(player, self, &GiantPistol->hitboxEntry);
 
         if (side == C_TOP && (!player->sidekick || self->state == GiantPistol_State_CloseChamber)) {
-            player->state           = Player_State_None;
+            player->state           = Player_State_Static;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
             player->velocity.x      = 0;

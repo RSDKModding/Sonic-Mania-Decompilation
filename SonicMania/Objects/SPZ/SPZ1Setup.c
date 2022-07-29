@@ -97,7 +97,7 @@ void SPZ1Setup_StageLoad(void)
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         Zone->shouldRecoverPlayers = true;
-        Zone->stageFinishCallback = SPZ1Setup_StageFinishCB;
+        Zone->stageFinishCallback = SPZ1Setup_StageFinish_EndAct1;
     }
 
 #if MANIA_USE_PLUS
@@ -110,7 +110,7 @@ void SPZ1Setup_StageLoad(void)
 #endif
 }
 
-void SPZ1Setup_StageFinishCB(void)
+void SPZ1Setup_StageFinish_EndAct1(void)
 {
     Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();

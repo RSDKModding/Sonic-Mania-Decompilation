@@ -68,7 +68,7 @@ void TimeAttackGate_HandleSpin(void);
 void TimeAttackGate_HandleStart(void);
 #if MANIA_USE_PLUS
 void TimeAttackGate_AddRecord(void);
-void TimeAttackGate_LeaderboardCB(bool32 success);
+void TimeAttackGate_WaitSave_Leaderboards(bool32 success);
 #endif
 void TimeAttackGate_CheckTouch(void);
 

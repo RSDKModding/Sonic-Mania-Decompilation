@@ -60,6 +60,8 @@ void CutsceneSeq_Serialize(void);
 // Initializes a new state with ID of `nextState`
 void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq);
 #if MANIA_USE_PLUS
+// Sets the cutscene's skip type (and callback if applicable)
+void CutsceneSeq_SetSkipType(uint8 type, void (*callback)(void));
 // Checks if the cutscene was skipped
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void));
 #endif

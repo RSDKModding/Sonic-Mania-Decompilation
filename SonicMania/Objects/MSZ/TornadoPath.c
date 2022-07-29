@@ -324,7 +324,7 @@ void TornadoPath_State_CatchPlayer(void)
         player1->groundVel  = 0;
     }
 
-    if (!player1->velocity.y && player1->state != Player_State_None) {
+    if (!player1->velocity.y && player1->state != Player_State_Static) {
         player1->stateInput = Player_Input_P1;
         self->timer         = 0;
 

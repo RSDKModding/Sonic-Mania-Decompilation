@@ -20,9 +20,9 @@ void SSZ2Setup_StaticUpdate(void)
         {
             Hitbox *hitbox = Player_GetHitbox(player);
 
-            uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+            uint16 tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == (uint16)-1)
-                tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+                tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
             if (RSDK.GetTileFlags(tile, player->collisionPlane) != SSZ2_TFLAGS_NORMAL && (abs(player->groundVel) > 0x80000 && player->onGround)) {
                 int32 x              = player->position.x;
@@ -61,9 +61,9 @@ void SSZ2Setup_StageLoad(void)
     SSZ2Setup->towerID = RSDK.GetTileLayerID("Tower");
     if (SSZ2Setup->towerID < LAYER_COUNT) {
         SSZ2Setup->towerLayer                   = RSDK.GetTileLayer(SSZ2Setup->towerID);
-        SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCB;
+        SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_Scanline_BGTower;
 
-        RSDK.SetDrawGroupProperties(1, false, SSZ2Setup_TowerDrawLayerCB);
+        RSDK.SetDrawGroupProperties(1, false, SSZ2Setup_DrawHook_PrepareDrawingFX);
 
         RSDK.SetLimitedFade(3, 0, 4, 96, 0, 256);
         if (globals->suppressTitlecard >= true) {
@@ -74,7 +74,7 @@ void SSZ2Setup_StageLoad(void)
         CREATE_ENTITY(SSZ3Cutscene, intToVoid(false), 0, 0);
 
 #if MANIA_USE_PLUS
-        Zone->stageFinishCallback = SSZ2Setup_StageFinishCB;
+        Zone->stageFinishCallback = SSZ2Setup_StageFinish_EndAct2;
 #endif
     }
 
@@ -83,23 +83,23 @@ void SSZ2Setup_StageLoad(void)
         RSDK.LoadPalette(0, "EncoreSSZ2.act", 0b0000000011111111);
 #endif
 
-    GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII;
-    GenericTrigger->callbacks[1] = SSZ2Setup_GenericTriggerCB_CheckSSZAchievement;
-    GenericTrigger->callbacks[2] = SSZ2Setup_GenericTriggerCB_SSZ2BTransition;
+    GenericTrigger->callbacks[GENERICTRIGGER_SSZ2_DESTROYHOTARUMKII] = SSZ2Setup_Trigger_DestroyHotaruMKII;
+    GenericTrigger->callbacks[GENERICTRIGGER_SSZ2_ACHIEVEMENT]       = SSZ2Setup_Trigger_AwardAchievement;
+    GenericTrigger->callbacks[GENERICTRIGGER_SSZ2_ACTTRANSITION]     = SSZ2Setup_Trigger_SSZ2BTransition;
 }
 
 #if MANIA_USE_PLUS
-void SSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
+void SSZ2Setup_StageFinish_EndAct2(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
 #endif
 
-void SSZ2Setup_TowerDrawLayerCB(void)
+void SSZ2Setup_DrawHook_PrepareDrawingFX(void)
 {
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
-void SSZ2Setup_TowerScanlineCB(ScanlineInfo *scanlines)
+void SSZ2Setup_Scanline_BGTower(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, ScreenInfo->centerX - 144, 0, ScreenInfo->centerX + 144, ScreenInfo->height);
     RSDK.ProcessParallax(SSZ2Setup->towerLayer);
@@ -165,7 +165,7 @@ void SSZ2Setup_TowerScanlineCB(ScanlineInfo *scanlines)
     }
 }
 
-void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void)
+void SSZ2Setup_Trigger_DestroyHotaruMKII(void)
 {
     foreach_active(HotaruMKII, hotaru)
     {
@@ -175,7 +175,7 @@ void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void)
     }
 }
 
-void SSZ2Setup_GenericTriggerCB_CheckSSZAchievement(void)
+void SSZ2Setup_Trigger_AwardAchievement(void)
 {
     if (!SSZ2Setup->hasAchievement) {
         if (!SceneInfo->minutes) {
@@ -185,7 +185,7 @@ void SSZ2Setup_GenericTriggerCB_CheckSSZAchievement(void)
     }
 }
 
-void SSZ2Setup_GenericTriggerCB_SSZ2BTransition(void)
+void SSZ2Setup_Trigger_SSZ2BTransition(void)
 {
     RSDK_THIS(GenericTrigger);
 

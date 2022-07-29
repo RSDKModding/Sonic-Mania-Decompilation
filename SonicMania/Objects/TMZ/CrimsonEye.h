@@ -101,8 +101,8 @@ void CrimsonEye_Explode(void);
 void CrimsonEye_Hit(void);
 
 void CrimsonEye_SetupBG2Layer(void);
-void CrimsonEye_DrawLayerCB_DisableFGSilhouette(void);
-void CrimsonEye_DrawLayerCB_EnableFGSilhouette(void);
+void CrimsonEye_DrawHook_DisableFGSilhouette(void);
+void CrimsonEye_DrawHook_EnableFGSilhouette(void);
 
 void CrimsonEye_SetArrowDir(int type);
 

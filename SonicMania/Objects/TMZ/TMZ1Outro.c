@@ -23,8 +23,7 @@ void TMZ1Outro_Update(void)
     }
 
 #if MANIA_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
     self->active = ACTIVE_NEVER;

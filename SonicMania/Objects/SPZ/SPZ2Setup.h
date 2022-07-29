@@ -69,6 +69,6 @@ void SPZ2Setup_EditorLoad(void);
 void SPZ2Setup_Serialize(void);
 
 // Extra Entity Functions
-void SPZ2Setup_SetupOutro(void);
+void SPZ2Setup_StageFinish_EndAct2(void);
 
 #endif //! OBJ_SPZ2SETUP_H

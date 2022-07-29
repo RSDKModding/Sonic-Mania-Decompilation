@@ -252,17 +252,17 @@ void PhantomEgg_HandleNextAttack(void)
     self->attackTimer %= 32;
 }
 
-void PhantomEgg_SetupScanlineCB(void)
+void PhantomEgg_SetupWarpFX(void)
 {
     foreach_all(PhantomEgg, phantomEgg)
     {
         PhantomEgg->startScanline = ScreenInfo->centerY;
         PhantomEgg->endScanline   = ScreenInfo->height;
 
-        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = PhantomEgg_ScanlineCB;
-        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = PhantomEgg_ScanlineCB;
+        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = PhantomEgg_Scanline_WarpFX;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = PhantomEgg_Scanline_WarpFX;
 
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
 
         phantomEgg->timer = 0;
         phantomEgg->state = PhantomEgg_State_Attack_HandleWarp;
@@ -419,7 +419,7 @@ void PhantomEgg_HandleReturnWarp(void)
     foreach_all(TMZCable, cable) { cable->active = ACTIVE_NORMAL; }
 }
 
-void PhantomEgg_ScanlineCB(ScanlineInfo *scanlines)
+void PhantomEgg_Scanline_WarpFX(ScanlineInfo *scanlines)
 {
     TileLayer *fgLow = RSDK.GetTileLayer(Zone->fgLow);
     RSDK.ProcessParallax(fgLow);
@@ -636,7 +636,7 @@ void PhantomEgg_State_IntroHover(void)
         SceneInfo->seconds      = 0;
         SceneInfo->minutes      = 0;
 
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
     }
 
     if (self->timer == 4092) {
@@ -951,8 +951,8 @@ void PhantomEgg_State_Attack_WarpAway(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->height) {
-        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = NULL;
-        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = NULL;
+        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = StateMachine_None;
 
         self->timer   = 0;
         self->visible = false;
@@ -974,8 +974,8 @@ void PhantomEgg_State_Attack_WarpReturn(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->height) {
-        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = NULL;
-        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = NULL;
+        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = StateMachine_None;
 
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
         self->timer = 0;
@@ -1179,7 +1179,7 @@ void PhantomEgg_State_StartGoodEnd(void)
 
     if (++self->timer == 120) {
         CREATE_ENTITY(FXRuby, NULL, self->position.x, self->position.y + 0x100000)->radiusSpeed = 3;
-        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
+        PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
     }
 
     if (self->timer == 320) {
@@ -1188,7 +1188,7 @@ void PhantomEgg_State_StartGoodEnd(void)
         fxFade->wait         = 32;
         fxFade->fadeOutBlack = 1;
         fxFade->speedOut     = 16;
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
+        PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
     }
 
     if (self->timer >= 512) {

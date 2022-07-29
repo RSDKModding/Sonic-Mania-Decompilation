@@ -147,7 +147,7 @@ void CableWarp_State_CheckPlayerEntry(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionBox(player, self, &CableWarp->hitboxTransport) == C_TOP && !self->type) {
-            player->state           = Player_State_None;
+            player->state           = Player_State_Static;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
             player->tileCollisions  = false;
@@ -188,7 +188,7 @@ void CableWarp_StateTransport_BeginEnter(void)
     RSDK_THIS(CableWarp);
     EntityPlayer *player = (EntityPlayer *)self->player;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         int32 x = self->position.x;
         int32 y = self->position.y - 0x200000;
 
@@ -218,7 +218,7 @@ void CableWarp_StateTransport_Enter(void)
     RSDK_THIS(CableWarp);
 
     EntityPlayer *player = self->player;
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         RSDK.ProcessAnimation(&self->animator);
 
         if (self->animator.frameID == 20) {
@@ -249,7 +249,7 @@ void CableWarp_StateTransport_MoveToNextNode(void)
     RSDK_THIS(CableWarp);
 
     EntityPlayer *player = self->player;
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         RSDK.ProcessAnimation(&self->animator);
         self->position.x = player->position.x;
         self->position.y = player->position.y;
@@ -291,7 +291,7 @@ void CableWarp_StateTransport_EndNode(void)
     RSDK_THIS(CableWarp);
     EntityPlayer *player = (EntityPlayer *)self->player;
 
-    if (player->state == Player_State_None) {
+    if (player->state == Player_State_Static) {
         RSDK.ProcessAnimation(&self->animator);
         self->position.x = player->position.x;
         self->position.y = player->position.y;

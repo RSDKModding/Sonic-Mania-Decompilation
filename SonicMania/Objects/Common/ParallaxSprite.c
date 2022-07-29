@@ -70,14 +70,14 @@ void ParallaxSprite_Create(void *data)
         self->attribute = voidToInt(data);
 
     switch (self->attribute) {
-        case PARALLAXSPRITE_ATTR_NONE:
-        case PARALLAXSPRITE_ATTR_UNUSED:
         default:
+        case PARALLAXSPRITE_ATTR_STANDARD:
+        case PARALLAXSPRITE_ATTR_UNUSED:
             self->parallaxFactor.x >>= 8;
             self->parallaxFactor.y >>= 8;
             self->drawFX  = FX_ROTATE;
             self->visible = !self->hiddenAtStart;
-            self->state   = ParallaxSprite_State_RotateAndScroll;
+            self->state   = ParallaxSprite_State_Normal;
             break;
 
         case PARALLAXSPRITE_ATTR_COLORS:
@@ -97,20 +97,20 @@ void ParallaxSprite_Create(void *data)
             self->parallaxFactor.y >>= 8;
             self->drawFX  = FX_ROTATE;
             self->visible = !self->hiddenAtStart;
-            self->state   = ParallaxSprite_State_RotateAndScroll;
+            self->state   = ParallaxSprite_State_Normal;
             break;
 
-        case PARALLAXSPRITE_ATTR_SPAWNER:
+        case PARALLAXSPRITE_ATTR_EMITTER:
             self->parallaxFactor.x >>= 8;
             self->parallaxFactor.y >>= 8;
-            self->state = ParallaxSprite_State_Spawner;
+            self->state = ParallaxSprite_State_Emitter;
             break;
 
-        case PARALLAXSPRITE_ATTR_FADEOUT:
+        case PARALLAXSPRITE_ATTR_PARTICLE:
             self->inkEffect = INK_ALPHA;
             self->visible   = true;
             self->alpha     = 0x100;
-            self->state     = ParallaxSprite_State_FadeOutAndDestroy;
+            self->state     = ParallaxSprite_State_Particle;
             break;
 
         case PARALLAXSPRITE_ATTR_BLENDHIGH:
@@ -119,7 +119,7 @@ void ParallaxSprite_Create(void *data)
             self->visible   = true;
             self->inkEffect = INK_BLEND;
             self->drawOrder = Zone->objectDrawHigh + 1;
-            self->state     = ParallaxSprite_State_RotateAndScroll;
+            self->state     = ParallaxSprite_State_Normal;
             break;
 
         case PARALLAXSPRITE_ATTR_SHIFT:
@@ -155,23 +155,24 @@ void ParallaxSprite_StageLoad(void)
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZParallax.bin", SCOPE_STAGE);
 }
 
-void ParallaxSprite_State_RotateAndScroll(void)
+void ParallaxSprite_State_Normal(void)
 {
     RSDK_THIS(ParallaxSprite);
 
     RSDK.ProcessAnimation(&self->animator);
 
     self->rotation = (self->rotation + 2) & 0x1FF;
+
     self->scrollPos.x += self->scrollSpeed.x;
     self->scrollPos.y += self->scrollSpeed.y;
 }
 
-void ParallaxSprite_State_Spawner(void)
+void ParallaxSprite_State_Emitter(void)
 {
     RSDK_THIS(ParallaxSprite);
 
     if (!(Zone->timer & 3)) {
-        EntityParallaxSprite *sprite = CREATE_ENTITY(ParallaxSprite, intToVoid(PARALLAXSPRITE_ATTR_FADEOUT), self->position.x, self->position.y);
+        EntityParallaxSprite *sprite = CREATE_ENTITY(ParallaxSprite, intToVoid(PARALLAXSPRITE_ATTR_PARTICLE), self->position.x, self->position.y);
         sprite->parallaxFactor.x     = self->parallaxFactor.x;
         sprite->parallaxFactor.y     = self->parallaxFactor.y;
         sprite->loopPoint.x          = self->loopPoint.x;
@@ -181,7 +182,7 @@ void ParallaxSprite_State_Spawner(void)
     }
 }
 
-void ParallaxSprite_State_FadeOutAndDestroy(void)
+void ParallaxSprite_State_Particle(void)
 {
     RSDK_THIS(ParallaxSprite);
 
@@ -209,7 +210,7 @@ void ParallaxSprite_State_FadeIntoHalf(void)
     if (self->alpha >= 0x80) {
         self->inkEffect = INK_BLEND;
         self->visible   = true;
-        self->state     = ParallaxSprite_State_RotateAndScroll;
+        self->state     = ParallaxSprite_State_Normal;
     }
     else {
         self->inkEffect = INK_ALPHA;
@@ -228,7 +229,7 @@ void ParallaxSprite_State_FadeOut(void)
 
     if (self->alpha <= 0) {
         self->visible = false;
-        self->state   = ParallaxSprite_State_RotateAndScroll;
+        self->state   = ParallaxSprite_State_Normal;
     }
     else {
         self->inkEffect = INK_ALPHA;
@@ -242,10 +243,8 @@ void ParallaxSprite_EditorDraw(void)
     RSDK_THIS(ParallaxSprite);
 
     RSDK.SetSpriteAnimation(ParallaxSprite->aniFrames, self->aniID, &self->animator, true, 0);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
 
     if (self->attribute == PARALLAXSPRITE_ATTR_COLORS) {
         int32 x = (drawPos.x >> 16) - 56;
@@ -283,11 +282,11 @@ void ParallaxSprite_EditorLoad(void)
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZParallax.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(ParallaxSprite, attribute);
-    RSDK_ENUM_VAR("Standard", PARALLAXSPRITE_ATTR_NONE);
-    RSDK_ENUM_VAR("Unused (same as Basic)", PARALLAXSPRITE_ATTR_UNUSED);
+    RSDK_ENUM_VAR("Standard", PARALLAXSPRITE_ATTR_STANDARD);
+    RSDK_ENUM_VAR("(Unused)", PARALLAXSPRITE_ATTR_UNUSED);
     RSDK_ENUM_VAR("Colors (SPZ Billboard)", PARALLAXSPRITE_ATTR_COLORS);
-    RSDK_ENUM_VAR("Emitter", PARALLAXSPRITE_ATTR_SPAWNER);
-    RSDK_ENUM_VAR("Fade Out", PARALLAXSPRITE_ATTR_FADEOUT);
+    RSDK_ENUM_VAR("Emitter", PARALLAXSPRITE_ATTR_EMITTER);
+    RSDK_ENUM_VAR("Particle", PARALLAXSPRITE_ATTR_PARTICLE);
     RSDK_ENUM_VAR("Blend", PARALLAXSPRITE_ATTR_BLENDHIGH);
 }
 #endif

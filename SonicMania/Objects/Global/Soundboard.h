@@ -42,6 +42,6 @@ void Soundboard_EditorLoad(void);
 void Soundboard_Serialize(void);
 
 // Extra Entity Functions
-uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int32 sfxID));
+uint8 Soundboard_LoadSfx(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int32 sfxID));
 
 #endif //! OBJ_SOUNDBOARD_H

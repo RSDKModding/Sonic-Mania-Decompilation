@@ -227,7 +227,7 @@ void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick)
                     player->velocity.x >>= 15;
                     player->velocity.y >>= 15;
                     player->onGround = false;
-                    player->state    = Player_State_None;
+                    player->state    = Player_State_Static;
 
                     if (!self->playerPtr) {
                         self->playerPtr = player;
@@ -243,7 +243,7 @@ void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->position.x += (self->position.x - player->position.x) >> 1;
                 player->position.y += (self->position.y + 0x10000 - player->position.y) >> 1;
-                player->state = Player_State_None;
+                player->state = Player_State_Static;
 
                 if (self->matchingFinished) {
                     self->activePlayers &= ~(1 << playerID);

@@ -12,21 +12,17 @@ ObjectForceSpin *ForceSpin;
 void ForceSpin_Update(void)
 {
     RSDK_THIS(ForceSpin);
+
     foreach_active(Player, player)
     {
-        int32 x     = (player->position.x - self->position.x) >> 8;
-        int32 y     = (player->position.y - self->position.y) >> 8;
-        int32 scanX = (y * RSDK.Sin256(self->negAngle)) + (x * RSDK.Cos256(self->negAngle)) + self->position.x;
-        int32 scanY = (y * RSDK.Cos256(self->negAngle)) - (x * RSDK.Sin256(self->negAngle)) + self->position.y;
-        int32 pos   = ((player->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
-        RSDK.Cos256(self->negAngle);
-        RSDK.Sin256(self->negAngle);
+        Vector2 pivotPos = player->position;
+        Vector2 pivotVel = player->velocity;
 
-        int32 xDif = abs(scanX - self->position.x);
-        int32 yDif = abs(scanY - self->position.y);
+        Zone_RotateOnPivot(&pivotPos, &self->position, self->negAngle);
+        Zone_RotateOnPivot(&pivotVel, &self->velocity, self->negAngle);
 
-        if (xDif < 0x180000 && yDif < self->size << 19) {
-            if (scanX + pos >= self->position.x) {
+        if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < self->size << 19) {
+            if (pivotPos.x >= self->position.x) {
                 if (self->direction) {
                     if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
                         player->state = player->onGround ? Player_State_Roll : Player_State_Air;
@@ -52,6 +48,7 @@ void ForceSpin_Update(void)
             }
         }
     }
+
     self->visible = DebugMode->debugActive;
 }
 
@@ -109,10 +106,10 @@ void ForceSpin_SetPlayerState(EntityPlayer *player)
             player->pushing = 0;
         }
 
-        player->nextAirState = StateMachine_None;
-        player->state        = player->onGround ? Player_State_TubeRoll : Player_State_TubeAirRoll;
-
+        player->state           = player->onGround ? Player_State_TubeRoll : Player_State_TubeAirRoll;
         player->nextGroundState = StateMachine_None;
+        player->nextAirState    = StateMachine_None;
+
         if (abs(player->groundVel) < 0x10000) {
             if (self->direction & FLIP_X)
                 player->groundVel = -0x40000;

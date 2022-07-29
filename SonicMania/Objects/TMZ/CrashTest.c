@@ -228,7 +228,7 @@ void CrashTest_CheckPlayerRide(void)
 
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
-                player->state           = Player_State_None;
+                player->state           = Player_State_Static;
             }
         }
 

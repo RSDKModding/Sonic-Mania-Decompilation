@@ -46,8 +46,7 @@ void LRZ1Outro_StartCutscene(void)
     }
 
 #if MANIA_USE_PLUS
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->classID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+    CutsceneSeq_SetSkipType(SKIPTYPE_RELOADSCN, StateMachine_None);
 #endif
 
     for (int32 i = 0; i < 0x100; ++i) RSDK.SetPaletteEntry(5, i, 0x000000);

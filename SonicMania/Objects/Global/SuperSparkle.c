@@ -25,14 +25,15 @@ void SuperSparkle_Update(void)
         if (self->canSpawnSparkle) {
             if (++self->timer == 12) {
                 self->timer          = 0;
-                EntityDebris *debris = CREATE_ENTITY(Debris, NULL, player->position.x, player->position.y);
-                debris->state        = Debris_State_Move;
-                debris->timer        = 16;
-                debris->inkEffect    = INK_ADD;
-                debris->alpha        = 256;
-                debris->drawOrder    = Zone->objectDrawHigh;
-                debris->drawOrder    = player->drawOrder;
-                RSDK.SetSpriteAnimation(SuperSparkle->aniFrames, 0, &debris->animator, true, 0);
+
+                EntityDebris *sparkle = CREATE_ENTITY(Debris, NULL, player->position.x, player->position.y);
+                sparkle->state        = Debris_State_Move;
+                sparkle->timer        = 16;
+                sparkle->inkEffect    = INK_ADD;
+                sparkle->alpha        = 0x100;
+                sparkle->drawOrder    = Zone->objectDrawHigh;
+                sparkle->drawOrder    = player->drawOrder;
+                RSDK.SetSpriteAnimation(SuperSparkle->aniFrames, 0, &sparkle->animator, true, 0);
             }
         }
         else {

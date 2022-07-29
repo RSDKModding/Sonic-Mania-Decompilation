@@ -4,11 +4,11 @@
 #include "Game.h"
 
 typedef enum {
-    PARALLAXSPRITE_ATTR_NONE,
+    PARALLAXSPRITE_ATTR_STANDARD,
     PARALLAXSPRITE_ATTR_UNUSED,
     PARALLAXSPRITE_ATTR_COLORS,
-    PARALLAXSPRITE_ATTR_SPAWNER,
-    PARALLAXSPRITE_ATTR_FADEOUT,
+    PARALLAXSPRITE_ATTR_EMITTER,
+    PARALLAXSPRITE_ATTR_PARTICLE,
     PARALLAXSPRITE_ATTR_BLENDHIGH,
     PARALLAXSPRITE_ATTR_SHIFT,
 } ParallaxSpriteAttributes;
@@ -60,9 +60,9 @@ void ParallaxSprite_EditorLoad(void);
 void ParallaxSprite_Serialize(void);
 
 // Extra Entity Functions
-void ParallaxSprite_State_RotateAndScroll(void);
-void ParallaxSprite_State_Spawner(void);
-void ParallaxSprite_State_FadeOutAndDestroy(void);
+void ParallaxSprite_State_Normal(void);
+void ParallaxSprite_State_Emitter(void);
+void ParallaxSprite_State_Particle(void);
 void ParallaxSprite_State_FadeIntoHalf(void);
 void ParallaxSprite_State_FadeOut(void);
 

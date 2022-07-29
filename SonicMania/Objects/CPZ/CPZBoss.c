@@ -69,12 +69,12 @@ void CPZBoss_StageLoad(void)
 
     CPZBoss->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 
-    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, NULL);
-    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, NULL);
+    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, StateMachine_None);
+    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, StateMachine_None);
 }
 
-void CPZBoss_DrawLayerCB_SetupPuyoHUD(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
-void CPZBoss_DrawLayerCB_RemovePuyoHUD(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height); }
+void CPZBoss_DrawHook_SetupPuyoHUD(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
+void CPZBoss_DrawHook_RemovePuyoHUD(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height); }
 
 void CPZBoss_Explode_Eggman(void)
 {
@@ -109,8 +109,8 @@ bool32 CPZBoss_CheckMatchReset(void)
     RSDK_THIS(CPZBoss);
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, NULL);
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, NULL);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, StateMachine_None);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, StateMachine_None);
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
         PuyoBean->comboChainCount[0] = 0;
         PuyoBean->disableBeanLink[0] = 0;
@@ -146,8 +146,9 @@ void CPZBoss_State_SetupArena(void)
         foreach_active(HUD, hud)
         {
             CPZBoss->hudSlotID = RSDK.GetEntitySlot(hud);
-            hud->state         = HUD_State_GoOffScreen;
         }
+
+        HUD_MoveOut();
 
         foreach_active(Player, player)
         {
@@ -280,8 +281,8 @@ void CPZBoss_State_SetupMatch(void)
         self->direction = FLIP_NONE;
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->characterAnimator, false, 0);
         self->state = CPZBoss_State_HandleMatch_Player;
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, CPZBoss_DrawLayerCB_SetupPuyoHUD);
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawLayerCB_RemovePuyoHUD);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, CPZBoss_DrawHook_SetupPuyoHUD);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawHook_RemovePuyoHUD);
     }
 }
 
@@ -490,13 +491,8 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
             }
 
             EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
-            RSDK.ResetEntityPtr(hud, HUD->classID, NULL);
-            hud->maxOffset = hud->scoreOffset.x;
-            hud->scoreOffset.x -= 0x1000000;
-            hud->timeOffset.x -= 0x1100000;
-            hud->ringsOffset.x -= 0x1200000;
-            hud->lifeOffset.x -= 0x1300000;
-            hud->state = HUD_State_ComeOnScreen;
+            RSDK.ResetEntity(hud, HUD->classID, NULL);
+            HUD_MoveIn(hud);
         }
     }
 }
@@ -541,13 +537,8 @@ void CPZBoss_State_PlayerExit(void)
         TransportTube_SetupDirections(tube);
 
         EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
-        RSDK.ResetEntityPtr(hud, HUD->classID, NULL);
-        hud->maxOffset = hud->scoreOffset.x;
-        hud->scoreOffset.x -= 0x1000000;
-        hud->timeOffset.x -= 0x1100000;
-        hud->ringsOffset.x -= 0x1200000;
-        hud->lifeOffset.x -= 0x1300000;
-        hud->state = HUD_State_ComeOnScreen;
+        RSDK.ResetEntity(hud, HUD->classID, NULL);
+        HUD_MoveIn(hud);
 
         self->active = ACTIVE_NORMAL;
         self->state  = CPZBoss_State_Destroyed;

@@ -40,7 +40,7 @@ void MSZCutsceneK_Serialize(void);
 
 // Extra Entity Functions
 #if MANIA_USE_PLUS
-void MSZCutsceneK_SkipCB(void);
+void MSZCutsceneK_Cutscene_SkipCB(void);
 #endif
 void MSZCutsceneK_StartCutscene(void);
 void MSZCutsceneK_SetupP2(int32 x, int32 y);

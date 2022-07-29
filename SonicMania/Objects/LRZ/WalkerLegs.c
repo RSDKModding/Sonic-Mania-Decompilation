@@ -311,10 +311,10 @@ void WalkerLegs_CheckTileCollisions(void)
         ++self->stepCount;
         self->state        = WalkerLegs_State_Idle;
         self->finishedStep = true;
-        uint16 tile        = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+        uint16 tile        = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         if (tile == (uint16)-1)
-            tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+            tile = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         uint8 tileFlags = RSDK.GetTileFlags(tile, self->collisionPlane);
         // whats up here? why is it lava & conveyor??
@@ -350,10 +350,10 @@ void WalkerLegs_CheckStoodLava(void)
 
         self->position.x = x;
         self->position.y = y;
-        uint16 tile      = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+        uint16 tile      = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         if (tile == (uint16)-1)
-            tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+            tile = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         uint8 tileFlags = RSDK.GetTileFlags(tile, self->collisionPlane);
         // whats up here? why is it lava AND conveyor L only???

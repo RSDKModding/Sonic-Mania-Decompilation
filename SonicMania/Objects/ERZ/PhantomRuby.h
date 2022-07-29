@@ -12,7 +12,7 @@ typedef enum {
     RUBYSFX_ATTACK5,
     RUBYSFX_ATTACK6,
     RUBYSFX_REDCUBE,
-} RubySFX;
+} RubySfxIDs;
 
 // Object Class
 struct ObjectPhantomRuby {
@@ -54,7 +54,7 @@ void PhantomRuby_EditorLoad(void);
 void PhantomRuby_Serialize(void);
 
 // Extra Entity Functions
-void PhantomRuby_PlaySFX(uint8 sfxID);
+void PhantomRuby_PlaySfx(uint8 sfxID);
 void PhantomRuby_SetupFlash(EntityPhantomRuby *ruby);
 void PhantomRuby_State_FinishedFlash(void);
 void PhantomRuby_State_PlaySfx(void);

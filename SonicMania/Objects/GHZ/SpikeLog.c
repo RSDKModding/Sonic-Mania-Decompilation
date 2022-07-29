@@ -105,7 +105,7 @@ void SpikeLog_State_Main(void)
                 SpikeLog->hasAchievement = true;
             }
             CREATE_ENTITY(BurningLog, intToVoid(16), self->position.x, self->position.y);
-            RSDK.SetTileInfo(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, -1);
+            RSDK.SetTile(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, -1);
             self->frame = 8;
             self->state = SpikeLog_State_Burn;
         }
@@ -121,7 +121,7 @@ void SpikeLog_State_Burn(void)
             if (other->state == SpikeLog_State_Main
                 && RSDK.CheckObjectCollisionTouchBox(other, &SpikeLog->hitboxBurnLog, self, &SpikeLog->hitboxBurnLog)) {
                 CREATE_ENTITY(BurningLog, intToVoid(16), other->position.x, other->position.y);
-                RSDK.SetTileInfo(Zone->fgLow, other->position.x >> 20, other->position.y >> 20, -1);
+                RSDK.SetTile(Zone->fgLow, other->position.x >> 20, other->position.y >> 20, -1);
                 other->frame  = 8;
                 other->state  = SpikeLog_State_Burn;
                 other->active = ACTIVE_NORMAL;

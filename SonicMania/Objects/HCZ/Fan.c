@@ -33,7 +33,7 @@ void Fan_StaticUpdate(void)
 
         foreach_active(Water, water)
         {
-            if (water->state == Water_State_HCZBubble && water->activePlayers) {
+            if (water->state == Water_State_BigBubble && water->activePlayers) {
                 foreach_active(Fan, fan)
                 {
                     Fan->hitboxTop.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
@@ -140,22 +140,22 @@ void Fan_StaticUpdate(void)
             Vector2 range = { 0x400000, 0x400000 };
             foreach_active(Fan, fan)
             {
-                uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, fan->position.x >> 20, fan->position.y >> 20);
+                uint16 tile = RSDK.GetTile(Zone->fgHigh, fan->position.x >> 20, fan->position.y >> 20);
                 if (fan->state && fan->state != Fan_State_Stopped && tile == 0xFFFF && RSDK.CheckOnScreen(fan, &range))
                     ++count;
             }
 
             if (count) {
-                if (!Fan->playingFanSFX) {
+                if (!Fan->playingFanSfx) {
                     RSDK.PlaySfx(Fan->sfxFan, 37404, 0xFF);
-                    Fan->playingFanSFX = true;
+                    Fan->playingFanSfx = true;
                 }
             }
         }
 
-        if (!count && Fan->playingFanSFX) {
+        if (!count && Fan->playingFanSfx) {
             RSDK.StopSfx(Fan->sfxFan);
-            Fan->playingFanSFX = false;
+            Fan->playingFanSfx = false;
         }
     }
 }
@@ -323,7 +323,7 @@ void Fan_HandlePlayerInteractions_Top(void)
     int32 playerID = 1;
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
                 && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitboxTop, player, &Fan->playerHitbox)) {
@@ -381,7 +381,7 @@ void Fan_HandlePlayerInteractions_Bottom(void)
 
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             int32 anim = player->animator.animationID;
 
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
@@ -404,7 +404,7 @@ void Fan_HandlePlayerInteractions_Left(void)
 
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             int32 anim = player->animator.animationID;
 
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN && player->collisionMode != CMODE_LWALL
@@ -425,7 +425,7 @@ void Fan_HandlePlayerInteractions_Right(void)
 
     foreach_active(Player, player)
     {
-        if (player->state != Player_State_None) {
+        if (player->state != Player_State_Static) {
             int32 anim = player->animator.animationID;
 
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN) {

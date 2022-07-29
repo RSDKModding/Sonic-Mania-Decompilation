@@ -122,7 +122,7 @@ void HandLauncher_CheckPlayerCollisions(void)
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                         player->rotation        = 0;
-                        player->state           = Player_State_None;
+                        player->state           = Player_State_Static;
                     }
                 }
             }
