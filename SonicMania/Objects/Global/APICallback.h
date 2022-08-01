@@ -22,8 +22,8 @@
 #define API_ClearPrerollErrors                API.ClearPrerollErrors
 #define API_GetInputDeviceID                  RSDK.GetInputDeviceID
 #define API_AssignInputSlotToDevice           RSDK.AssignInputSlotToDevice
-#define API_IsInputDeviceAssigned(inputID)    RSDK.IsInputDeviceAssigned(id)
-#define API_IsInputSlotAssigned(controllerID) RSDK.IsInputSlotAssigned(controllerID)
+#define API_IsInputDeviceAssigned(deviceID)   RSDK.IsInputDeviceAssigned(deviceID)
+#define API_IsInputSlotAssigned(inputSlot)    RSDK.IsInputSlotAssigned(inputSlot)
 #define API_GetFilteredInputDeviceID          RSDK.GetFilteredInputDeviceID
 #define API_ResetInputSlotAssignments         RSDK.ResetInputSlotAssignments
 #define API_GetInputDeviceType                RSDK.GetInputDeviceType
@@ -48,8 +48,8 @@
 #define API_ClearPrerollErrors                APICallback_ClearPrerollErrors
 #define API_GetInputDeviceID                  APICallback_ControllerIDForInputID
 #define API_AssignInputSlotToDevice           APICallback_AssignControllerID
-#define API_IsInputSlotAssigned(controllerID) !APICallback_InputIDIsDisconnected(controllerID)
-#define API_IsInputDeviceAssigned(inputID)    ; // doesn't exist in preplus afaik
+#define API_IsInputDeviceAssigned(deviceID)   ; // doesn't exist in preplus afaik
+#define API_IsInputSlotAssigned(inputSlot)    !APICallback_InputIDIsDisconnected(inputSlot)
 #define API_GetFilteredInputDeviceID          APICallback_MostRecentActiveControllerID
 #define API_ResetInputSlotAssignments         APICallback_ResetControllerAssignments
 #define API_GetInputDeviceType                APICallback_GetControllerType
@@ -86,13 +86,13 @@ struct ObjectAPICallback {
     int32 (*GetUsername)(String *userName);
     int32 (*TryInitStorage)(void);
     int32 (*GetStorageStatus)(int32);
-    int32 (*ControllerIDForInputID)(int32 controllerID);
-    int32 (*MostRecentActiveControllerID)(int32 controllerID);
-    void (*AssignControllerID)(uint32 controllerID, uint32 inputID);
+    int32 (*ControllerIDForInputID)(uint8 inputSlot);
+    int32 (*MostRecentActiveControllerID)(uint8 inputSlot);
+    void (*AssignControllerID)(uint8 inputSlot, uint32 deviceID);
     void (*ResetControllerAssignments)(void);
-    int32 (*InputIDIsDisconnected)(int32 controllerID);
+    int32 (*InputIDIsDisconnected)(uint8 inputSlot);
     void *GetInputType;
-    int32 (*GetControllerType)(int32 inputID);
+    int32 (*GetControllerType)(int32 deviceID);
     int32 (*ShowSteamControllerOverlay)(int32 overlay);
     int32 saveStatus;
     bool32 authForbidden;
@@ -107,7 +107,7 @@ struct ObjectAPICallback {
     int32 prevIsUser;
     int32 prevRank;
     LeaderboardEntry leaderboardEntry;
-    int32 controllerIDs[PLAYER_COUNT];
+    int32 inputSlots[PLAYER_COUNT];
     int32 controllerCount;
     Entity *activeEntity;
     int32 authStatus;
@@ -127,7 +127,7 @@ struct EntityAPICallback {
     void (*fileCallback)(int32);
     int32 unused;
     int32 minVelocity;
-    int32 inputID;
+    int32 deviceID;
     int32 unused3;
     int32 status;
 };
@@ -176,10 +176,10 @@ int32 APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int32 playerID
 void APICallback_ExitGame(void);
 void APICallback_ClearPrerollErrors(void);
 bool32 APICallback_CheckInputDisconnected(void);
-bool32 APICallback_InputIDIsDisconnected(int32 controllerID);
-int32 APICallback_ControllerIDForInputID(int32 controllerID);
-int32 APICallback_MostRecentActiveControllerID(int32 controllerID);
-void APICallback_AssignControllerID(int32 controllerID, int32 inputID);
+bool32 APICallback_InputIDIsDisconnected(uint8 inputSlot);
+int32 APICallback_ControllerIDForInputID(uint8 inputSlot);
+int32 APICallback_MostRecentActiveControllerID(uint8 inputSlot);
+void APICallback_AssignControllerID(uint8 inputSlot, int32 deviceID);
 void APICallback_ResetControllerAssignments(void);
 void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time, int32 rings, int32 score);
 void APICallback_TrackTAClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time);

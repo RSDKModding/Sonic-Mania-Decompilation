@@ -40,7 +40,7 @@ typedef enum {
 struct ObjectUIButtonPrompt {
     RSDK_OBJECT
     int32 type;
-    int32 inputID;
+    int32 inputSlot;
     uint16 aniFrames;
 };
 

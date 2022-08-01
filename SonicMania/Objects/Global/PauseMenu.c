@@ -367,14 +367,14 @@ void PauseMenu_CheckAndReassignControllers(void)
     EntityPauseMenu *entity = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
     // prolly a leftover from pre-plus
-    int32 inputID = API_GetInputDeviceID(CONT_P1 + (entity->triggerPlayer ^ 1));
+    int32 deviceID = API_GetInputDeviceID(CONT_P1 + (entity->triggerPlayer ^ 1));
 
 #if MANIA_USE_PLUS
-    unused(inputID); // be quiet compiler I know it aint used!!
+    unused(deviceID); // be quiet compiler I know it aint used!!
     
     int32 id = API_GetFilteredInputDeviceID(true, true, 5);
 #else
-    int32 id = API_GetFilteredInputDeviceID(inputID);
+    int32 id = API_GetFilteredInputDeviceID(deviceID);
 #endif
 
     if (id)

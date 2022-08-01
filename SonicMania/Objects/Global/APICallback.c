@@ -69,10 +69,10 @@ void APICallback_StageLoad(void)
     APICallback->GetControllerType            = RSDK.GetAPIFunction("GetControllerType");
     APICallback->ShowSteamControllerOverlay   = RSDK.GetAPIFunction("ShowSteamControllerOverlay");
 
-    APICallback->controllerIDs[0] = CONT_P1;
-    APICallback->controllerIDs[1] = CONT_P2;
-    APICallback->controllerIDs[2] = CONT_P3;
-    APICallback->controllerIDs[3] = CONT_P4;
+    APICallback->inputSlots[0] = CONT_P1;
+    APICallback->inputSlots[1] = CONT_P2;
+    APICallback->inputSlots[2] = CONT_P3;
+    APICallback->inputSlots[3] = CONT_P4;
     APICallback->controllerCount  = 4;
 }
 
@@ -481,10 +481,10 @@ int32 APICallback_GetSaveStatus(void)
         return APICallback->saveStatus;
 }
 
-int32 APICallback_GetControllerType(int32 inputID)
+int32 APICallback_GetControllerType(int32 deviceID)
 {
     if (APICallback->GetControllerType)
-        return APICallback->GetControllerType(inputID);
+        return APICallback->GetControllerType(deviceID);
     else
         return sku_platform == PLATFORM_DEV;
 }
@@ -551,50 +551,50 @@ bool32 APICallback_CheckInputDisconnected(void)
 {
     RSDK_THIS(APICallback);
 
-    return APICallback_InputIDIsDisconnected(self->inputID) || PauseMenu->forcedDisconnect;
+    return APICallback_InputIDIsDisconnected(self->deviceID) || PauseMenu->forcedDisconnect;
 }
 
-bool32 APICallback_InputIDIsDisconnected(int32 controllerID)
+bool32 APICallback_InputIDIsDisconnected(int32 inputSlot)
 {
     RSDK_THIS(APICallback);
 
     if (APICallback->InputIDIsDisconnected) {
-        return APICallback->InputIDIsDisconnected(controllerID);
+        return APICallback->InputIDIsDisconnected(inputSlot);
     }
     else {
         LogHelpers_Print("DUMMY InputIDIsDisconnected()");
-        return APICallback->controllerIDs[controllerID];
+        return APICallback->inputSlots[inputSlot];
     }
 }
 
-int32 APICallback_ControllerIDForInputID(int32 controllerID)
+int32 APICallback_ControllerIDForInputID(int32 inputSlot)
 {
     if (APICallback->ControllerIDForInputID) {
-        return APICallback->ControllerIDForInputID(controllerID);
+        return APICallback->ControllerIDForInputID(inputSlot);
     }
     else {
         LogHelpers_Print("DUMMY ControllerIDForInputID()");
         return 1;
     }
 }
-int32 APICallback_MostRecentActiveControllerID(int32 controllerID)
+int32 APICallback_MostRecentActiveControllerID(int32 inputSlot)
 {
     if (APICallback->MostRecentActiveControllerID) {
-        return APICallback->MostRecentActiveControllerID(controllerID);
+        return APICallback->MostRecentActiveControllerID(inputSlot);
     }
     else {
         LogHelpers_Print("DUMMY MostRecentActiveControllerID()");
         return 1;
     }
 }
-void APICallback_AssignControllerID(int32 controllerID, int32 inputID)
+void APICallback_AssignControllerID(int32 inputSlot, int32 deviceID)
 {
     if (APICallback->AssignControllerID) {
-        APICallback->AssignControllerID(controllerID, inputID);
+        APICallback->AssignControllerID(inputSlot, deviceID);
     }
     else {
         LogHelpers_Print("DUMMY AssignControllerID()");
-        APICallback->controllerIDs[controllerID] = inputID;
+        APICallback->inputSlots[inputSlot] = deviceID;
     }
 }
 void APICallback_ResetControllerAssignments(void)
@@ -604,10 +604,10 @@ void APICallback_ResetControllerAssignments(void)
     }
     else {
         LogHelpers_Print("DUMMY ResetControllerAssignments()");
-        APICallback->controllerIDs[0] = 0;
-        APICallback->controllerIDs[1] = 0;
-        APICallback->controllerIDs[2] = 0;
-        APICallback->controllerIDs[3] = 0;
+        APICallback->inputSlots[0] = 0;
+        APICallback->inputSlots[1] = 0;
+        APICallback->inputSlots[2] = 0;
+        APICallback->inputSlots[3] = 0;
     }
 }
 

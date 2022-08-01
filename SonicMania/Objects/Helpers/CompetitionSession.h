@@ -71,7 +71,7 @@ struct EntityCompetitionSession {
 #if MANIA_USE_PLUS
     int32 screenBorderType[SCREEN_COUNT];
     int32 displayMode;
-    int32 controllerIDs[PLAYER_COUNT];
+    int32 inputSlots[PLAYER_COUNT];
     int32 prevMatchID;
 #endif
 };

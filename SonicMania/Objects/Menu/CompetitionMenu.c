@@ -607,7 +607,7 @@ void CompetitionMenu_RulesButton_ActionCB(void)
                 default: break;
             }
 
-            session->controllerIDs[i] = id;
+            session->inputSlots[i] = id;
             session->playerCount++;
         }
     }

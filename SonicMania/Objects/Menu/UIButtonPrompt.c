@@ -53,7 +53,7 @@ void UIButtonPrompt_Update(void)
     }
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
-        int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, button);
+        int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputSlot, button);
         if (textChanged || self->mappings != mappings) {
             UIButtonPrompt_SetButtonSprites();
             self->mappings = mappings;
@@ -110,7 +110,7 @@ void UIButtonPrompt_StaticUpdate(void)
     int32 gamepadType = API_GetInputDeviceType(id);
     int32 deviceType  = (gamepadType >> 8) & 0xFF;
 
-    UIButtonPrompt->inputID = deviceType == DEVICE_TYPE_KEYBOARD ? (gamepadType & 0xFF) : CONT_P1;
+    UIButtonPrompt->inputSlot = deviceType == DEVICE_TYPE_KEYBOARD ? (gamepadType & 0xFF) : CONT_P1;
 }
 
 void UIButtonPrompt_Draw(void)
@@ -164,7 +164,7 @@ void UIButtonPrompt_Create(void *data)
 void UIButtonPrompt_StageLoad(void)
 {
     UIButtonPrompt->type    = UIBUTTONPROMPT_KEYBOARD;
-    UIButtonPrompt->inputID = CONT_P1;
+    UIButtonPrompt->inputSlot = CONT_P1;
 
     UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
 }
@@ -334,7 +334,7 @@ void UIButtonPrompt_SetButtonSprites(void)
         }
         else {
             // despite different languages existing here, the english one is always the one used
-            int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, buttonID);
+            int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputSlot, buttonID);
             int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
             RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIBUTTONPROMPT_KEYBOARD, &self->buttonAnimator, true, frame);
         }

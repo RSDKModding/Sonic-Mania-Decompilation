@@ -626,7 +626,7 @@ typedef enum {
     INPUT_UNASSIGNED = -2,
     INPUT_AUTOASSIGN = -1,
     INPUT_NONE       = 0,
-} InputIds;
+} InputIDs;
 
 typedef enum {
     CONT_ANY,
@@ -634,7 +634,7 @@ typedef enum {
     CONT_P2,
     CONT_P3,
     CONT_P4,
-} ControllerIDs;
+} InputSlotIDs;
 
 typedef enum {
     DEVICE_TYPE_NONE,
@@ -1237,7 +1237,7 @@ typedef struct {
 #if RETRO_REV0U
     int32 (*GetDefaultGamepadType)(void);
 #endif
-    bool32 (*IsOverlayEnabled)(uint32 inputID);
+    bool32 (*IsOverlayEnabled)(uint32 deviceID);
     bool32 (*CheckDLC)(int32 dlc);
 #if MANIA_USE_EGS
     bool32 (*SetupExtensionOverlay)(void);
@@ -1569,7 +1569,7 @@ typedef struct {
     void (*StopChannel)(uint32 channel);
     void (*PauseChannel)(uint32 channel);
     void (*ResumeChannel)(uint32 channel);
-    bool32 (*IsSfxPlaying)(uint16 sfxID);
+    bool32 (*IsSfxPlaying)(uint16 sfx);
     bool32 (*ChannelActive)(uint32 channel);
     uint32 (*GetChannelPos)(uint32 channel);
 
@@ -1579,27 +1579,27 @@ typedef struct {
 
     // Input
 #if RETRO_REV02
-    int32 (*GetInputDeviceID)(uint8 controllerID);
+    int32 (*GetInputDeviceID)(uint8 inputSlot);
     int32 (*GetFilteredInputDeviceID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
-    int32 (*GetInputDeviceType)(uint32 inputID);
-    int32 (*IsInputDeviceAssigned)(uint32 inputID);
-    int32 (*GetInputUnknown)(uint32 inputID);
-    int32 (*InputUnknown1)(uint32 inputID, int32 unknown1, int32 unknown2);
-    int32 (*InputUnknown2)(uint32 inputID, int32 unknown1, int32 unknown2);
-    int32 (*GetControllerUnknown)(void);
-    int32 (*ControllerUnknown1)(uint8 controllerID, int32 unknown1, int32 unknown2);
-    int32 (*ControllerUnknown2)(uint8 controllerID, int32 unknown1, int32 unknown2);
-    void (*AssignInputSlotToDevice)(uint8 controllerID, uint32 inputID);
-    bool32 (*IsInputSlotAssigned)(uint8 controllerID);
+    int32 (*GetInputDeviceType)(uint32 deviceID);
+    int32 (*IsInputDeviceAssigned)(uint32 deviceID);
+    int32 (*GetInputDeviceUnknown)(uint32 deviceID);
+    int32 (*InputDeviceUnknown1)(uint32 deviceID, int32 unknown1, int32 unknown2);
+    int32 (*InputDeviceUnknown2)(uint32 deviceID, int32 unknown1, int32 unknown2);
+    int32 (*GetInputSlotUnknown)(uint8 inputSlot);
+    int32 (*InputSlotUnknown1)(uint8 inputSlot, int32 unknown1, int32 unknown2);
+    int32 (*InputSlotUnknown2)(uint8 inputSlot, int32 unknown1, int32 unknown2);
+    void (*AssignInputSlotToDevice)(uint8 inputSlot, uint32 deviceID);
+    bool32 (*IsInputSlotAssigned)(uint8 inputSlot);
     void (*ResetInputSlotAssignments)(void);
 #endif
 #if !RETRO_REV02
-    void (*GetUnknownInputValue)(int32 controllerID, int32 type, int32 *value);
+    void (*GetUnknownInputValue)(int32 inputSlot, int32 type, int32 *value);
 #endif
 
     // User File Management
     int32 (*LoadUserFile)(const char *fileName, void *buffer, uint32 size); // load user file from exe dir
-    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir
+    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save user file to exe dir
 
     // Printing (Rev02)
 #if RETRO_REV02
