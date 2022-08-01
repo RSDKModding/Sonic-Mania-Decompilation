@@ -621,7 +621,7 @@ void Platform_State_DoorSlide(void)
             self->amplitude.y -= (self->speed << 16);
             if (self->amplitude.y <= 0) {
                 self->amplitude.y = 0;
-                if (self->activeScreens && Platform->useClack)
+                if (self->onScreen && Platform->useClack)
                     RSDK.PlaySfx(Platform->sfxClack, false, 0xFF);
             }
         }
@@ -631,7 +631,7 @@ void Platform_State_DoorSlide(void)
             self->amplitude.y += (self->speed << 16);
             if (self->amplitude.y >= self->amplitude.x) {
                 self->amplitude.y = self->amplitude.x;
-                if (self->activeScreens && Platform->useClack)
+                if (self->onScreen && Platform->useClack)
                     RSDK.PlaySfx(Platform->sfxClack, false, 0xFF);
             }
         }
@@ -813,7 +813,7 @@ void Platform_State_Track(void)
     }
 
     if (((move >> 16) & 1) != self->hasTension) {
-        if (self->activeScreens)
+        if (self->onScreen)
             RSDK.PlaySfx(Platform->sfxClang, false, 255);
 
         self->hasTension = (move >> 16) & 1;
@@ -922,7 +922,7 @@ void Platform_State_Clacker(void)
 
     if (!self->hasTension) {
         if (self->angle >= maxAngle) {
-            if (!self->activeScreens || prevAngle >= maxAngle) {
+            if (!self->onScreen || prevAngle >= maxAngle) {
                 self->angle = self->groundVel + 0x100;
             }
             else {
@@ -932,7 +932,7 @@ void Platform_State_Clacker(void)
         }
     }
     else if (self->angle <= maxAngle) {
-        if (!self->activeScreens || prevAngle <= maxAngle) {
+        if (!self->onScreen || prevAngle <= maxAngle) {
             self->angle = self->groundVel + 0x100;
         }
         else {

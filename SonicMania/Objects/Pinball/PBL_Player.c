@@ -34,7 +34,7 @@ void PBL_Player_LateUpdate(void)
 
     Matrix *mat = &PBL_Camera->matWorld;
 
-    self->depth3D = mat->values[2][3] + mat->values[2][0] * (self->position.x >> 0x10) + mat->values[2][2] * (self->position.y >> 0x10)
+    self->zdepth = mat->values[2][3] + mat->values[2][0] * (self->position.x >> 0x10) + mat->values[2][2] * (self->position.y >> 0x10)
                     + mat->values[2][1] * (self->height >> 0x10);
 }
 
@@ -44,7 +44,7 @@ void PBL_Player_Draw(void)
 {
     RSDK_THIS(PBL_Player);
 
-    if (self->depth3D >= 0x4000) {
+    if (self->zdepth >= 0x4000) {
         RSDK.Prepare3DScene(PBL_Player->sceneIndex);
 
         RSDK.MatrixTranslateXYZ(&self->matTranslate, self->position.x, self->height + 0x100000, self->position.y, true);

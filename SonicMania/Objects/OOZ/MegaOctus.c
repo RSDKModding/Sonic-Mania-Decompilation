@@ -1452,7 +1452,7 @@ void MegaOctus_State_Laser(void)
             Player_Hurt(player, self);
     }
 
-    if (self->activeScreens == 1) {
+    if (self->onScreen == 1) {
         if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, 8)) {
             if (self->shotCount != self->position.x >> 20) {
                 self->shotCount = self->position.x >> 20;

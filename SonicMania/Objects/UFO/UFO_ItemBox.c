@@ -30,12 +30,12 @@ void UFO_ItemBox_LateUpdate(void)
 
         self->worldX  = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
         self->worldY  = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
-        self->depth3D = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+        self->zdepth = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 
-        if (self->depth3D >= 0x2000) {
+        if (self->zdepth >= 0x2000) {
             int32 depth = (int32)((mat->values[0][3] << 8) + (y * mat->values[0][1] & 0xFFFFFF00) + (z * mat->values[0][2] & 0xFFFFFF00)
                                   + (x * mat->values[0][0] & 0xFFFFFF00))
-                          / self->depth3D;
+                          / self->zdepth;
 
             self->visible = abs(depth) < 0x100;
         }
@@ -69,10 +69,10 @@ void UFO_ItemBox_Draw(void)
 
         RSDK.Draw3DScene(UFO_ItemBox->sceneIndex);
 
-        self->drawPos.x = (ScreenInfo->center.x + (self->worldX << 8) / self->depth3D) << 16;
-        self->drawPos.y = (ScreenInfo->center.y - (self->worldY << 8) / self->depth3D) << 16;
-        self->scale.x   = 0x2000000 / self->depth3D;
-        self->scale.y   = 0x2000000 / self->depth3D;
+        self->drawPos.x = (ScreenInfo->center.x + (self->worldX << 8) / self->zdepth) << 16;
+        self->drawPos.y = (ScreenInfo->center.y - (self->worldY << 8) / self->zdepth) << 16;
+        self->scale.x   = 0x2000000 / self->zdepth;
+        self->scale.y   = 0x2000000 / self->zdepth;
     }
 
     RSDK.DrawSprite(&self->contentsAnimator, &self->drawPos, true);

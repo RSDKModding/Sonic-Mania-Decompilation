@@ -260,7 +260,7 @@ void FlasherMKII_State_Moving(void)
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
 
-        if (self->activeScreens == 1)
+        if (self->onScreen == 1)
             RSDK.PlaySfx(FlasherMKII->sfxFlop, false, 255);
     }
 

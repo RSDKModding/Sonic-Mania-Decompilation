@@ -21,7 +21,7 @@ void Spikes_Update(void)
             if (self->stagger << 6 == (Zone->timer & 0x40)) {
                 if ((Zone->timer & 0x3F) == self->timer) {
                     self->stateMove++;
-                    if (self->activeScreens == 1)
+                    if (self->onScreen == 1)
                         RSDK.PlaySfx(Spikes->sfxMove, false, 255);
                 }
             }
@@ -41,7 +41,7 @@ void Spikes_Update(void)
         case SPIKES_MOVE_SHOWN:
             if ((Zone->timer & 0x3F) == self->timer) {
                 self->stateMove++;
-                if (self->activeScreens == 1)
+                if (self->onScreen == 1)
                     RSDK.PlaySfx(Spikes->sfxMove, false, 255);
             }
             break;

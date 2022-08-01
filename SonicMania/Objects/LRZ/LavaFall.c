@@ -123,7 +123,7 @@ void LavaFall_State_Lava(void)
             Player_ElementHurt(player, self, SHIELD_FIRE);
     }
 
-    if (self->activeScreens)
+    if (self->onScreen)
         ++LavaFall->lavaSfxTimer;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))

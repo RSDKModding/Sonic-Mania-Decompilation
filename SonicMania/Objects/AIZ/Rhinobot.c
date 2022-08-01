@@ -201,7 +201,7 @@ void Rhinobot_State_Moving(void)
                 self->timer      = 32;
                 self->stateDelay = Rhinobot_Delay_Charge;
                 self->drawDust   = true;
-                if (self->activeScreens)
+                if (self->onScreen)
                     RSDK.PlaySfx(Rhinobot->sfxHuff, false, 255);
                 isRevingUp = true;
             }
@@ -237,7 +237,7 @@ void Rhinobot_State_Moving(void)
         if (((self->moveDir && !self->skidDir && self->velocity.x < 0x28000) || (!self->moveDir && self->skidDir && self->velocity.x > -0x28000))
             && !self->drawDust) {
             self->drawDust = true;
-            if (self->activeScreens)
+            if (self->onScreen)
                 RSDK.PlaySfx(Rhinobot->sfxHuff, false, 0xFF);
         }
     }
@@ -305,7 +305,7 @@ void Rhinobot_State_Fall(void)
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->bodyAnimator, true, 0);
         self->drawDust = true;
-        if (self->activeScreens)
+        if (self->onScreen)
             RSDK.PlaySfx(Rhinobot->sfxHuff, false, 255);
         self->state = Rhinobot_State_Moving;
         Rhinobot_State_Moving();

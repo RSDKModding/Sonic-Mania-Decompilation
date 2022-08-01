@@ -16,7 +16,7 @@ void Title3DSprite_Update(void)
     self->relativePos.x = (-((self->position.y >> 8) * RSDK.Sin1024(TitleBG->angle)) - (self->position.x >> 8) * RSDK.Cos1024(TitleBG->angle)) >> 10;
     self->relativePos.y = (+((self->position.y >> 8) * RSDK.Cos1024(TitleBG->angle)) - (self->position.x >> 8) * RSDK.Sin1024(TitleBG->angle)) >> 10;
 
-    self->depth3D = self->relativePos.y;
+    self->zdepth = self->relativePos.y;
 }
 
 void Title3DSprite_LateUpdate(void) {}
@@ -27,7 +27,7 @@ void Title3DSprite_Draw(void)
 {
     RSDK_THIS(Title3DSprite);
 
-    int32 depth = self->depth3D + Title3DSprite->baseDepth;
+    int32 depth = self->zdepth + Title3DSprite->baseDepth;
     if (depth && depth >= 0x100) {
         self->scale.x = minVal(0x18000 * Title3DSprite->islandSize / depth, 0x200);
         self->scale.y = self->scale.x;

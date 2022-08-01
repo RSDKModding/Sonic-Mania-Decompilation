@@ -28,12 +28,12 @@ void UFO_Circuit_LateUpdate(void)
 
     Matrix *m = &UFO_Camera->matWorld;
 
-    self->depth3D = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
+    self->zdepth = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
 
-    if (self->depth3D >= 0x400) {
+    if (self->zdepth >= 0x400) {
         int32 depth = (int32)((m->values[0][3] << 8) + (m->values[0][2] * (z >> 8) & 0xFFFFFF00) + (m->values[0][0] * (x >> 8) & 0xFFFFFF00)
                               + (m->values[0][1] * (y >> 8) & 0xFFFFFF00))
-                      / self->depth3D;
+                      / self->zdepth;
 
         self->visible = abs(depth) < 0x100;
     }
@@ -45,7 +45,7 @@ void UFO_Circuit_Draw(void)
 {
     RSDK_THIS(UFO_Circuit);
 
-    if (self->depth3D >= 0x4000) {
+    if (self->zdepth >= 0x4000) {
         RSDK.Prepare3DScene(UFO_Circuit->sceneIndex);
 
         RSDK.MatrixScaleXYZ(&self->matTransform, 0x200, 0x200, 0x200);

@@ -96,7 +96,7 @@ void SpikeCrusher_State_MovingDown(void)
 
     self->position = self->drawPos;
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
-        if (self->activeScreens)
+        if (self->onScreen)
             RSDK.PlaySfx(SpikeCrusher->sfxImpact, false, 0xFF);
 
         self->timer      = 0;
@@ -168,7 +168,7 @@ void SpikeCrusher_State_MovingUp(void)
     // Animate Flames
     self->animator.frameID = 4 * (!(self->timer & 1));
 
-    if (self->activeScreens && !(self->timer & 0x1F))
+    if (self->onScreen && !(self->timer & 0x1F))
         RSDK.PlaySfx(SpikeCrusher->sfxHuff, false, 255);
 
     ++self->timer;

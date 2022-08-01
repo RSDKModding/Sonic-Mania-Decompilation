@@ -26,12 +26,12 @@ void PBL_TargetBumper_LateUpdate(void)
     int32 z = self->position.y;
 
     Matrix *m     = &PBL_Camera->matWorld;
-    self->depth3D = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
+    self->zdepth = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
 
-    if (self->depth3D >= 0x4000) {
+    if (self->zdepth >= 0x4000) {
         int32 depth = ((m->values[0][3] << 8) + ((m->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((m->values[0][0] * (x >> 8)) & 0xFFFFFF00)
                        + ((m->values[0][1] * (self->height >> 8)) & 0xFFFFFF00));
-        depth /= self->depth3D;
+        depth /= self->zdepth;
     }
 }
 
@@ -41,7 +41,7 @@ void PBL_TargetBumper_Draw(void)
 {
     RSDK_THIS(PBL_TargetBumper);
 
-    if (self->depth3D >= 0x4000) {
+    if (self->zdepth >= 0x4000) {
         uint32 color = RSDK.GetPaletteEntry(0, (self->color & 0xFF) - 80);
         RSDK.SetDiffuseColor(PBL_TargetBumper->sceneIndex, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 

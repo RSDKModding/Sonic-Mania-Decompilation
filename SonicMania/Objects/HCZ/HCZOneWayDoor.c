@@ -51,7 +51,7 @@ void HCZOneWayDoor_Update(void)
             }
 
             if (++self->movePos >= self->duration) {
-                if (self->activeScreens)
+                if (self->onScreen)
                     RSDK.PlaySfx(HCZOneWayDoor->sfxClack, false, 255);
             }
         }
@@ -66,7 +66,7 @@ void HCZOneWayDoor_Update(void)
             }
 
             if (--self->movePos <= 0) {
-                if (self->activeScreens)
+                if (self->onScreen)
                     RSDK.PlaySfx(HCZOneWayDoor->sfxClack, false, 255);
             }
         }

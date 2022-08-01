@@ -109,10 +109,10 @@ typedef struct {
     int32 alpha;
     int32 rotation;
     int32 groundVel;
-    int32 depth;
+    int32 zdepth;
     uint16 group;
     uint16 classID;
-    bool32 inBounds;
+    bool32 inRange;
     bool32 isPermanent;
     bool32 tileCollisions;
     bool32 interaction;
@@ -129,7 +129,7 @@ typedef struct {
     uint8 drawFX;
     uint8 inkEffect;
     uint8 visible;
-    uint8 activeScreens;
+    uint8 onScreen;
 } Entity;
 
 typedef struct {
@@ -152,10 +152,10 @@ typedef struct {
     int32 alpha;                                                                                                                                     \
     int32 rotation;                                                                                                                                  \
     int32 groundVel;                                                                                                                                 \
-    int32 depth3D;                                                                                                                                   \
+    int32 zdepth;                                                                                                                                    \
     uint16 group;                                                                                                                                    \
     uint16 classID;                                                                                                                                  \
-    bool32 inBounds;                                                                                                                                 \
+    bool32 inRange;                                                                                                                                  \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
@@ -170,7 +170,7 @@ typedef struct {
     uint8 drawFX;                                                                                                                                    \
     uint8 inkEffect;                                                                                                                                 \
     uint8 visible;                                                                                                                                   \
-    uint8 activeScreens;
+    uint8 onScreen;
 #elif RETRO_REV02
 #define RSDK_ENTITY                                                                                                                                  \
     Vector2 position;                                                                                                                                \
@@ -181,10 +181,10 @@ typedef struct {
     int32 alpha;                                                                                                                                     \
     int32 rotation;                                                                                                                                  \
     int32 groundVel;                                                                                                                                 \
-    int32 depth3D;                                                                                                                                   \
+    int32 zdepth;                                                                                                                                    \
     uint16 group;                                                                                                                                    \
     uint16 classID;                                                                                                                                  \
-    bool32 inBounds;                                                                                                                                 \
+    bool32 inRange;                                                                                                                                  \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
@@ -199,7 +199,7 @@ typedef struct {
     uint8 drawFX;                                                                                                                                    \
     uint8 inkEffect;                                                                                                                                 \
     uint8 visible;                                                                                                                                   \
-    uint8 activeScreens;
+    uint8 onScreen;
 #else
 #define RSDK_ENTITY                                                                                                                                  \
     Vector2 position;                                                                                                                                \
@@ -210,10 +210,10 @@ typedef struct {
     int32 alpha;                                                                                                                                     \
     int32 rotation;                                                                                                                                  \
     int32 groundVel;                                                                                                                                 \
-    int32 depth3D;                                                                                                                                   \
+    int32 zdepth;                                                                                                                                    \
     uint16 group;                                                                                                                                    \
     uint16 classID;                                                                                                                                  \
-    bool32 inBounds;                                                                                                                                 \
+    bool32 inRange;                                                                                                                                  \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
@@ -227,7 +227,7 @@ typedef struct {
     uint8 drawFX;                                                                                                                                    \
     uint8 inkEffect;                                                                                                                                 \
     uint8 visible;                                                                                                                                   \
-    uint8 activeScreens;
+    uint8 onScreen;
 #endif
 
 #define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
@@ -505,7 +505,7 @@ typedef struct {
 } ScanlineInfo;
 
 typedef struct {
-    uint8 behaviour;
+    uint8 type;
     uint8 drawGroup[4];
     uint8 widthShift;
     uint8 heightShift;
@@ -772,6 +772,14 @@ typedef enum {
     C_RIGHT,
     C_BOTTOM,
 } CSides;
+
+typedef enum {
+    TILECOLLISION_NONE, // no tile collisions
+    TILECOLLISION_DOWN, // downwards tile collisions
+#if RETRO_REV0U
+    TILECOLLISION_UP, // upwards tile collisions
+#endif
+} TileCollisionModes;
 
 typedef enum {
     S3D_WIREFRAME,
@@ -1116,13 +1124,14 @@ typedef enum {
 
 #if RETRO_USE_MOD_LOADER
 typedef enum {
-    MODCB_GAME_STARTUP,
-    MODCB_STAGELOAD,
+    MODCB_ONGAMESTARTUP,
+    MODCB_ONSTATICLOAD,
+    MODCB_ONSTAGELOAD,
     MODCB_ONUPDATE,
     MODCB_ONLATEUPDATE,
     MODCB_ONSTATICUPDATE,
     MODCB_ONDRAW,
-    MODCB_STAGEUNLOAD,
+    MODCB_ONSTAGEUNLOAD,
     MODCB_ONSHADERLOAD,
     MODCB_ONVIDEOSKIPCB,
     MODCB_ONSCANLINECB,
@@ -1339,7 +1348,7 @@ typedef struct {
 
     // Entities & Objects
     bool32 (*GetActiveEntities)(uint16 group, Entity **entity);
-    bool32 (*GetEntities)(uint16 classID, Entity **entity);
+    bool32 (*GetAllEntities)(uint16 classID, Entity **entity);
     void (*BreakForeachLoop)(void);
     void (*SetEditableVar)(uint8 type, const char *name, uint8 classID, int32 storeOffset);
     void *(*GetEntity)(uint16 slot);
@@ -1481,15 +1490,15 @@ typedef struct {
     // Meshes & 3D Scenes
     uint16 (*LoadMesh)(const char *filename, uint8 scope);
     uint16 (*Create3DScene)(const char *identifier, uint16 faceCount, uint8 scope);
-    void (*Prepare3DScene)(uint16 index);
-    void (*SetDiffuseColor)(uint16 index, int32 x, int32 y, int32 z);
-    void (*SetDiffuseIntensity)(uint16 index, int32 x, int32 y, int32 z);
-    void (*SetSpecularIntensity)(uint16 index, int32 x, int32 y, int32 z);
+    void (*Prepare3DScene)(uint16 sceneIndex);
+    void (*SetDiffuseColor)(uint16 sceneIndex, int32 x, int32 y, int32 z);
+    void (*SetDiffuseIntensity)(uint16 sceneIndex, int32 x, int32 y, int32 z);
+    void (*SetSpecularIntensity)(uint16 sceneIndex, int32 x, int32 y, int32 z);
     void (*AddModelTo3DScene)(uint16 modelFrames, uint16 sceneIndex, uint8 drawMode, Matrix *matWorld, Matrix *matNormal, color color);
     void (*SetModelAnimation)(uint16 modelFrames, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
     void (*AddMeshFrameTo3DScene)(uint16 modelFrames, uint16 sceneIndex, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
                                   color color);
-    void (*Draw3DScene)(uint16 index);
+    void (*Draw3DScene)(uint16 sceneIndex);
 
     // Sprite Animations & Frames
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
@@ -1691,6 +1700,10 @@ typedef struct {
 #if RETRO_REV0U
 #define RSDK_REGISTER_OBJECT(object)                                                                                                                 \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize, NULL)
+
+#define RSDK_REGISTER_OBJECT_STATICLOAD(object)                                                                                                      \
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize,                   \
                         object##_StaticLoad)
 #else
@@ -1703,16 +1716,55 @@ typedef struct {
 
 #if RETRO_USE_MOD_LOADER
 
+// dear god.
+
 #if RETRO_REV0U
-#define MOD_REGISTER_OBJECT(object, inherit)                                                                                                         \
-    Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
-                       object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
-                       object##_Serialize, object##_StaticLoad, inherit)
+
+#define MOD_REGISTER_OBJECT(object, inherit, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize,           \
+                            staticLoad)                                                                                                              \
+    Mod.RegisterObject((Object **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
+                       create, stageLoad, editorDraw, editorLoad, serialize, staticLoad, inherit)
+
+#define MOD_REGISTER_OBJ_OVERLOAD(object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, staticLoad)  \
+    MOD_REGISTER_OBJECT(object, #object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, staticLoad)
+
+#define MOD_REGISTER_OBJ_OVERLOAD_NOCLASS(object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize,      \
+                                          staticLoad)                                                                                                \
+    Mod.RegisterObject(NULL, NULL, #object, sizeof(Entity##object), 0, 0, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,     \
+                       editorLoad, serialize, staticLoad, NULL)
+
+#define MOD_REGISTER_OBJ_OVERLOAD_MSV(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,           \
+                                      serialize, staticLoad)                                                                                         \
+    Mod.RegisterObject((Object **)&object, (Object **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
+                       update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, staticLoad, NULL)
+
+#define MOD_REGISTER_OBJ_OVERLOAD_MSV_NOCLASS(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,   \
+                                              serialize, staticLoad)                                                                                 \
+    Mod.RegisterObject(NULL, (Object **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
+                       draw, create, stageLoad, editorDraw, editorLoad, serialize, staticLoad, NULL)
+
 #else
-#define MOD_REGISTER_OBJECT(object, inherit)                                                                                                         \
-    Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
-                       object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
-                       object##_Serialize, inherit)
+
+#define MOD_REGISTER_OBJECT(object, inherit, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)           \
+    Mod.RegisterObject((Object **)&object, NULL, #object, sizeof(Entity##object), sizeof(Object##object), 0, update, lateUpdate, staticUpdate, draw, \
+                       create, stageLoad, editorDraw, editorLoad, serialize, inherit)
+
+#define MOD_REGISTER_OBJ_OVERLOAD(object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)              \
+    MOD_REGISTER_OBJECT(object, #object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)
+
+#define MOD_REGISTER_OBJ_OVERLOAD_NOCLASS(object, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize)      \
+    Mod.RegisterObject(NULL, NULL, #object, sizeof(Entity##object), 0, 0, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,     \
+                       editorLoad, serialize, NULL)
+
+#define MOD_REGISTER_OBJ_OVERLOAD_MSV(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,           \
+                                      serialize)                                                                                                     \
+    Mod.RegisterObject((Object **)&object, (Object **)&modSVars, #object, sizeof(Entity##object), sizeof(Object##object), sizeof(ModObject##object), \
+                       update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, NULL)
+
+#define MOD_REGISTER_OBJ_OVERLOAD_MSV_NOCLASS(object, modSVars, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,   \
+                                              serialize)                                                                                             \
+    Mod.RegisterObject(NULL, (Object **)&modSVars, #object, sizeof(Entity##object), 0, sizeof(ModObject##object), update, lateUpdate, staticUpdate,  \
+                       draw, create, stageLoad, editorDraw, editorLoad, serialize, NULL)
 #endif
 
 #define MOD_REGISTER_OBJECT_HOOK(object) Mod.RegisterObjectHook((Object **)&object, #object)
@@ -1747,14 +1799,14 @@ typedef struct {
     while (RSDK.GetActiveEntities(type->classID, (Entity **)&entityOut))
 #define foreach_all(type, entityOut)                                                                                                                 \
     Entity##type *entityOut = NULL;                                                                                                                  \
-    while (RSDK.GetEntities(type->classID, (Entity **)&entityOut))
+    while (RSDK.GetAllEntities(type->classID, (Entity **)&entityOut))
 
 #define foreach_active_group(group, entityOut)                                                                                                       \
     Entity *entityOut = NULL;                                                                                                                        \
     while (RSDK.GetActiveEntities(group, (Entity **)&entityOut))
 #define foreach_all_group(group, entityOut)                                                                                                          \
     Entity *entityOut = NULL;                                                                                                                        \
-    while (RSDK.GetEntities(group, (Entity **)&entityOut))
+    while (RSDK.GetAllEntities(group, (Entity **)&entityOut))
 
 #if RETRO_USE_MOD_LOADER
 #define foreach_config(text)                                                                                                                         \

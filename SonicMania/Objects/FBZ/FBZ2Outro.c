@@ -131,7 +131,7 @@ bool32 FBZ2Outro_Cutscene_GlideAway(EntityCutsceneSeq *host)
                 glider->velocity.y -= 0x3000;
         }
 
-        if (glider->attachedPlayer == player1 && !glider->activeScreens) {
+        if (glider->attachedPlayer == player1 && !glider->onScreen) {
             Zone_StartFadeOut(10, 0x000000);
 
             return true;

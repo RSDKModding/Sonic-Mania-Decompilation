@@ -183,13 +183,13 @@ void MechaBu_State_Moving(void)
 
     self->sawTimer++;
     if (self->sawTimer == 60) {
-        if (self->activeScreens == 1)
+        if (self->onScreen == 1)
             RSDK.PlaySfx(MechaBu->sfxSawUp, false, 255);
 
         RSDK.SetSpriteAnimation(MechaBu->aniFrames, 6, &self->hornAnimator, true, 0);
     }
     else if (self->sawTimer == 120) {
-        if (self->activeScreens == 1)
+        if (self->onScreen == 1)
             RSDK.PlaySfx(MechaBu->sfxSawDown, false, 255);
 
         self->sawTimer = 0;

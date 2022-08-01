@@ -178,7 +178,7 @@ bool32 SizeLaser_SfxCheck_SizeLaser(void)
 
     foreach_active(SizeLaser, entity)
     {
-        if (entity->activeScreens)
+        if (entity->onScreen)
             ++activeCount;
     }
 

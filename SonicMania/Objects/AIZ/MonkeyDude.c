@@ -296,7 +296,7 @@ void MonkeyDude_HandleStates(void)
                 if (target->position.x < self->position.x) {
                     if (abs(self->position.x - target->position.x) <= 0x800000) {
                         if (target->position.y > self->position.y - 0x200000 && target->position.y - self->position.y <= 0x800000
-                            && self->activeScreens == 1) {
+                            && self->onScreen == 1) {
                             self->throwCount   = 1;
                             self->currentAngle = self->armAngles[0];
                         }

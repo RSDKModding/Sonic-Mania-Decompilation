@@ -144,7 +144,7 @@ bool32 PSZ1Intro_Cutscene_HandleLanding(EntityCutsceneSeq *host)
 {
     foreach_active(HangGlider, glider)
     {
-        if (!glider->activeScreens)
+        if (!glider->onScreen)
             destroyEntity(glider);
     }
 

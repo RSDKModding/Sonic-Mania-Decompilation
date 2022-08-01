@@ -180,7 +180,7 @@ void Toxomister_State_CreateClouds(void)
     else
         self->direction &= ~FLIP_X;
 
-    if (!self->parent && self->activeScreens) {
+    if (!self->parent && self->onScreen) {
         EntityToxomister *cloud = CREATE_ENTITY(Toxomister, intToVoid(true), self->position.x, self->position.y);
 
         if (self->direction & FLIP_X)

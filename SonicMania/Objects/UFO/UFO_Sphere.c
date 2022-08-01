@@ -30,7 +30,7 @@ void UFO_Sphere_LateUpdate(void)
 
     self->worldPos.x = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
     self->worldPos.y = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
-    self->depth3D    = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+    self->zdepth    = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 }
 
 void UFO_Sphere_StaticUpdate(void) {}
@@ -39,12 +39,12 @@ void UFO_Sphere_Draw(void)
 {
     RSDK_THIS(UFO_Sphere);
 
-    if (self->drawGroup == 4 && self->depth3D >= 0x100) {
+    if (self->drawGroup == 4 && self->zdepth >= 0x100) {
         self->direction = self->animator.frameID > 8;
-        self->drawPos.x = (ScreenInfo->center.x + (self->worldPos.x << 8) / self->depth3D) << 16;
-        self->drawPos.y = (ScreenInfo->center.y - (self->worldPos.y << 8) / self->depth3D) << 16;
-        self->scale.x   = self->scaleFactor / self->depth3D;
-        self->scale.y   = self->scaleFactor / self->depth3D;
+        self->drawPos.x = (ScreenInfo->center.x + (self->worldPos.x << 8) / self->zdepth) << 16;
+        self->drawPos.y = (ScreenInfo->center.y - (self->worldPos.y << 8) / self->zdepth) << 16;
+        self->scale.x   = self->scaleFactor / self->zdepth;
+        self->scale.y   = self->scaleFactor / self->zdepth;
     }
 
     RSDK.DrawSprite(&self->animator, &self->drawPos, true);

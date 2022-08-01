@@ -608,7 +608,7 @@ void MetalSonic_State_Hovering(void)
     MetalSonic_HandleVelocity();
     MetalSonic_HandleAnimDir();
 
-    if (!self->activeScreens) {
+    if (!self->onScreen) {
         if (self->velocity.x <= 0) {
             if (player1->velocity.x < self->targetVelocity.x)
                 self->targetVelocity.x = player1->velocity.x;
@@ -929,7 +929,7 @@ void MetalSonic_State_BallAttack_Phase1(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (!self->activeScreens && --self->attackTimer <= 0) {
+    if (!self->onScreen && --self->attackTimer <= 0) {
         self->targetPos   = player1->position;
         self->velocity.x  = 0;
         self->velocity.y  = 0;
@@ -986,7 +986,7 @@ void MetalSonic_State_ElectricAttack_Phase1(void)
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x3800;
 
-    if (self->position.y < player1->position.y && !self->activeScreens && --self->attackTimer <= 0) {
+    if (self->position.y < player1->position.y && !self->onScreen && --self->attackTimer <= 0) {
         self->targetPos   = player1->position;
         self->velocity.x  = 0;
         self->velocity.y  = 0;
@@ -1063,7 +1063,7 @@ void MetalSonic_State_DashAttack_Phase1(void)
     }
 
     if (finished) {
-        if (!self->activeScreens && --self->attackTimer <= 0) {
+        if (!self->onScreen && --self->attackTimer <= 0) {
             self->targetPos   = player1->position;
             self->velocity.x  = 0;
             self->velocity.y  = 0;

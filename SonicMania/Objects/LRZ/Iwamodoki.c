@@ -210,7 +210,7 @@ void Iwamodoki_State_Explode(void)
     if (!--self->timer) {
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
-        if (self->activeScreens == 1)
+        if (self->onScreen == 1)
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
         EntityIwamodoki *debris = CREATE_ENTITY(Iwamodoki, intToVoid(1), self->position.x, self->position.y);

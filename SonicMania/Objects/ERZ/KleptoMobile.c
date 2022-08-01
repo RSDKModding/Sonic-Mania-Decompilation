@@ -620,7 +620,7 @@ void KleptoMobile_State_NextChargeAttacks(void)
 
     KleptoMobile_CheckPlayerCollisions();
 
-    if (self->activeScreens) {
+    if (self->onScreen) {
         if (self->circleRadius > 0)
             self->circleRadius -= 8;
     }

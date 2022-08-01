@@ -566,7 +566,7 @@ void PhantomKing_State_FlyAround(void)
             PhantomKing_HandleAttacks();
         }
     }
-    else if (self->activeScreens == 1) {
+    else if (self->onScreen == 1) {
         self->canLaunchAttacks = true;
     }
 

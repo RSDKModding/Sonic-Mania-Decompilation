@@ -102,8 +102,10 @@ void Bloominator_CheckOffScreen(void)
 void Bloominator_State_Setup(void)
 {
     RSDK_THIS(Bloominator);
+
     self->active = ACTIVE_NORMAL;
     self->timer  = 0;
+
     self->state  = Bloominator_State_Idle;
     Bloominator_State_Idle();
 }
@@ -111,7 +113,8 @@ void Bloominator_State_Setup(void)
 void Bloominator_State_Idle(void)
 {
     RSDK_THIS(Bloominator);
-    if (self->activeScreens) {
+
+    if (self->onScreen) {
         if (++self->timer >= 60) {
             self->timer = 0;
             RSDK.SetSpriteAnimation(Bloominator->aniFrames, 1, &self->animator, true, 0);

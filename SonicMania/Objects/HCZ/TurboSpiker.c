@@ -327,6 +327,7 @@ void TurboSpiker_State_Falling(void)
 void TurboSpiker_State_FireShell(void)
 {
     RSDK_THIS(TurboSpiker);
+
     if (!--self->timer) {
         if (Player_GetNearestPlayer())
             self->direction = Player_GetNearestPlayer()->position.x < self->position.x;
@@ -347,7 +348,9 @@ void TurboSpiker_State_FireShell(void)
         self->shellAnimator.speed = 2;
         TurboSpiker_HandleMovement();
     }
+
     RSDK.ProcessAnimation(&self->shellAnimator);
+
     TurboSpiker_Hermit_Collide();
     TurboSpiker_Hermit_CheckOffScreen();
 }
@@ -355,6 +358,7 @@ void TurboSpiker_State_FireShell(void)
 void TurboSpiker_HandleSpikeCollisions(void)
 {
     RSDK_THIS(TurboSpiker);
+
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &TurboSpiker->hitboxSpike)) {
@@ -369,12 +373,13 @@ void TurboSpiker_HandleSpikeCollisions(void)
 void TurboSpiker_State_Spike(void)
 {
     RSDK_THIS(TurboSpiker);
+
     if (!self->playedLaunchSfx) {
         RSDK.PlaySfx(TurboSpiker->sfxLaunch, false, 0xFF);
         self->playedLaunchSfx = true;
     }
 
-    if (!self->activeScreens) {
+    if (!self->onScreen) {
         RSDK.StopSfx(TurboSpiker->sfxLaunch);
         self->playedLaunchSfx = false;
     }

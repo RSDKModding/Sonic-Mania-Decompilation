@@ -62,12 +62,12 @@ void PBL_Flipper_LateUpdate(void)
     int32 x = self->position.x;
 
     Matrix *m     = &PBL_Camera->matWorld;
-    self->depth3D = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
+    self->zdepth = m->values[2][1] * (y >> 16) + m->values[2][2] * (z >> 16) + m->values[2][0] * (x >> 16) + m->values[2][3];
 
-    if (self->depth3D >= 0x4000) {
+    if (self->zdepth >= 0x4000) {
         int32 depth = ((m->values[0][3] << 8) + ((m->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((m->values[0][0] * (x >> 8)) & 0xFFFFFF00)
                        + ((m->values[0][1] * (self->height >> 8)) & 0xFFFFFF00));
-        depth /= self->depth3D;
+        depth /= self->zdepth;
         self->visible = abs(depth) < 0x100;
     }
 }
@@ -78,7 +78,7 @@ void PBL_Flipper_Draw(void)
 {
     RSDK_THIS(PBL_Flipper);
 
-    if (self->depth3D >= 0x4000 && self->minCraneID <= PBL_Setup->sectorID) {
+    if (self->zdepth >= 0x4000 && self->minCraneID <= PBL_Setup->sectorID) {
         RSDK.Prepare3DScene(PBL_Flipper->sceneIndex);
 
         RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.y, 0x100);

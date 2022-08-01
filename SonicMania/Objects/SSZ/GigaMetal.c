@@ -466,7 +466,7 @@ void GigaMetal_StateBody_AwaitPlayer(void)
 
         EntityMetalSonic *metal = self->metalSonic;
         if (metal) {
-            if (!metal->activeScreens) {
+            if (!metal->onScreen) {
                 metal->position.x = self->position.x - 0xC00000;
                 metal->position.y = self->position.y + 0x400000;
             }

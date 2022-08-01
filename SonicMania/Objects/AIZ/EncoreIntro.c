@@ -351,7 +351,7 @@ bool32 EncoreIntro_Cutscene_AIZEncore(EntityCutsceneSeq *host)
         Zone->playerBoundsT[0] = 0;
     }
 
-    if (ruby->activeScreens) {
+    if (ruby->onScreen) {
         Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
         Zone->playerBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
         Music_TransitionTrack(TRACK_EGGMAN1, 0.05);
@@ -689,7 +689,7 @@ bool32 EncoreIntro_Cutscene_MysticEscape(EntityCutsceneSeq *host)
         mystic->velocity.x += 0x1800;
         if (mystic->velocity.x > 0x30000)
             mystic->velocity.x = 0x30000;
-        if (mystic->activeScreens == 1)
+        if (mystic->onScreen == 1)
             --host->timer;
         mystic->position.x += mystic->velocity.x;
         self->position.x = mystic->position.x;

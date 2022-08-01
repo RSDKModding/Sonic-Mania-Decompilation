@@ -29,7 +29,7 @@ void UFO_Dust_LateUpdate(void)
 
         self->worldX  = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
         self->worldY  = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
-        self->depth3D = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+        self->zdepth = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
     }
 }
 
@@ -39,13 +39,13 @@ void UFO_Dust_Draw(void)
 {
     RSDK_THIS(UFO_Dust);
 
-    if (self->depth3D >= 0x400) {
+    if (self->zdepth >= 0x400) {
         Vector2 drawPos;
-        drawPos.x = (ScreenInfo->center.x + (self->worldX << 8) / self->depth3D) << 16;
-        drawPos.y = (ScreenInfo->center.y - (self->worldY << 8) / self->depth3D) << 16;
+        drawPos.x = (ScreenInfo->center.x + (self->worldX << 8) / self->zdepth) << 16;
+        drawPos.y = (ScreenInfo->center.y - (self->worldY << 8) / self->zdepth) << 16;
 
-        self->scale.x = 0x1000000 / self->depth3D;
-        self->scale.y = 0x1000000 / self->depth3D;
+        self->scale.x = 0x1000000 / self->zdepth;
+        self->scale.y = 0x1000000 / self->zdepth;
         RSDK.DrawSprite(&self->animator, &drawPos, true);
     }
 }

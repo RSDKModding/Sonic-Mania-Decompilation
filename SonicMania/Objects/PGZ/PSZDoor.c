@@ -110,7 +110,7 @@ void PSZDoor_Update(void)
 
     EntityDoorTrigger *trigger = self->trigger;
     if (trigger && ((trigger->classID == DoorTrigger->classID && trigger->bulbAnimator.frameID == 1) || autoOpen)) {
-        if (self->activeScreens)
+        if (self->onScreen)
             RSDK.PlaySfx(PSZDoor->sfxOpen, false, 255);
 
         self->startPos    = self->doorPos;

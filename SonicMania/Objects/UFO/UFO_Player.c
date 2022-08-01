@@ -30,7 +30,7 @@ void UFO_Player_LateUpdate(void)
     int32 y = self->height >> 16;
     int32 z = self->position.y >> 16;
 
-    self->depth3D = mat->values[2][3] + mat->values[2][0] * x + mat->values[2][1] * y + mat->values[2][2] * z;
+    self->zdepth = mat->values[2][3] + mat->values[2][0] * x + mat->values[2][1] * y + mat->values[2][2] * z;
 }
 
 void UFO_Player_StaticUpdate(void) {}
@@ -39,7 +39,7 @@ void UFO_Player_Draw(void)
 {
     RSDK_THIS(UFO_Player);
 
-    if (self->depth3D >= 1) {
+    if (self->zdepth >= 1) {
         RSDK.Prepare3DScene(UFO_Player->sceneIndex);
 
         int32 anim = self->animator.animationID;

@@ -16,7 +16,7 @@ void SpikeFlail_Update(void)
     self->angle = (self->phase512 + 3 * Zone->timer) & 0x1FF;
 
     if (self->angle <= 336) {
-        if (self->angle > 80 && !self->playingFlailSfx && self->activeScreens == 1) {
+        if (self->angle > 80 && !self->playingFlailSfx && self->onScreen == 1) {
             RSDK.PlaySfx(SpikeFlail->sfxFlail, false, 255);
             self->playingFlailSfx = true;
         }

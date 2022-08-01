@@ -27,7 +27,9 @@
 
 // Controls whether EditorLoad & EditorDraw should be included in the final product or not
 // This is a copy of what the original game likely had, as the original game does not include EditorLoad or EditorDraw funcs for any objects
+#ifndef RETRO_INCLUDE_EDITOR
 #define RETRO_INCLUDE_EDITOR (1)
+#endif
 
 #ifndef RETRO_USE_MOD_LOADER
 #define RETRO_USE_MOD_LOADER (1)
@@ -63,8 +65,6 @@
 
 #define MANIA_USE_PLUS (GAME_VERSION >= VER_105)
 #define MANIA_USE_EGS  (GAME_VERSION == VER_107)
-
-#define MANIA_USE_TOUCH_CONTROLS (0)
 
 // -------------------------
 // GAME LOGIC

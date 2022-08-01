@@ -216,7 +216,7 @@ void Splats_State_InkJarSpawner(void)
     RSDK_THIS(Splats);
 
     if (!self->isOnScreen) {
-        if (!self->activeScreens)
+        if (!self->onScreen)
             return;
         self->isOnScreen = true;
     }

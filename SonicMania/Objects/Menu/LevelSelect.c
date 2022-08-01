@@ -415,26 +415,21 @@ void LevelSelect_State_Navigate(void)
 #endif
         }
     }
-#if GAME_VERSION == VER_100 || MANIA_USE_TOUCH_CONTROLS
+#if GAME_VERSION == VER_100
     else if (TouchInfo->count) {
 
         self->timer = (self->timer + 1) & 0xF;
         if (self->timer == 1) {
-            int selectedLabel = -1;
+            int32 selectedLabel = -1;
 
-            int labelID = self->labelCount - 1;
-            for (int l = 0; l < self->labelCount; ++l, labelID--) {
+            int32 labelID = self->labelCount - 1;
+            for (int32 l = 0; l < self->labelCount; ++l, labelID--) {
                 EntityUIText *label = self->zoneNameLabels[labelID];
 
                 if (label && labelID != self->labelID) {
-#if MANIA_USE_TOUCH_CONTROLS && MANIA_USE_PLUS
-                    if (labelID == 28 && !API.CheckDLC(DLC_PLUS))
-                        continue;
-#endif
+                    int32 xOff = 5 * (label->text.length * 0.5);
 
-                    int xOff = 5 * (label->text.length * 0.5);
-
-                    for (int f = 0; f < TouchInfo->count; ++f) {
+                    for (int32 f = 0; f < TouchInfo->count; ++f) {
                         float tx = TouchInfo->x[f] * ScreenInfo->size.x;
                         float ty = TouchInfo->y[f] * ScreenInfo->size.y;
 
@@ -448,18 +443,13 @@ void LevelSelect_State_Navigate(void)
 
             if (selectedLabel == -1) {
                 labelID = self->labelCount - 1;
-                for (int l = 0; l < self->labelCount; ++l) {
+                for (int32 l = 0; l < self->labelCount; ++l) {
                     EntityUIText *label = self->stageIDLabels[labelID];
 
                     if (label && labelID != self->labelID) {
-#if MANIA_USE_TOUCH_CONTROLS && MANIA_USE_PLUS
-                        if (labelID == 28 && !API.CheckDLC(DLC_PLUS))
-                            continue;
-#endif
+                        int32 xOff = 5 * (label->text.length * 0.5);
 
-                        int xOff = 5 * (label->text.length * 0.5);
-
-                        for (int f = 0; f < TouchInfo->count; ++f) {
+                        for (int32 f = 0; f < TouchInfo->count; ++f) {
                             float tx = TouchInfo->x[f] * ScreenInfo->size.x;
                             float ty = TouchInfo->y[f] * ScreenInfo->size.y;
 
@@ -473,25 +463,13 @@ void LevelSelect_State_Navigate(void)
                 }
             }
 
-            for (int f = 0; f < TouchInfo->count; ++f) {
+            for (int32 f = 0; f < TouchInfo->count; ++f) {
                 float tx = TouchInfo->x[f] * ScreenInfo->size.x;
                 float ty = TouchInfo->y[f] * ScreenInfo->size.y;
 
                 if (tx > 250.0 && ty > 170.0 && tx < 310.0 && ty < 230.0)
                     LevelSelect_HandleNewStagePos();
             }
-
-#if MANIA_USE_TOUCH_CONTROLS
-            for (int f = 0; f < TouchInfo->count; ++f) {
-                float tx = TouchInfo->x[f] * ScreenInfo->size.x;
-                float ty = TouchInfo->y[f] * ScreenInfo->size.y;
-
-                if (tx > 311.0 && ty > 184.0 && tx < 335.0 && ty < 216.0) {
-                    ++self->leaderCharacterID;
-                    LevelSelect_ManagePlayerIcon();
-                }
-            }
-#endif
 
             if (selectedLabel != -1) {
                 LevelSelect_SetLabelHighlighted(false);
