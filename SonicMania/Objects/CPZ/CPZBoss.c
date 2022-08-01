@@ -73,8 +73,8 @@ void CPZBoss_StageLoad(void)
     RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, StateMachine_None);
 }
 
-void CPZBoss_DrawHook_SetupPuyoHUD(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
-void CPZBoss_DrawHook_RemovePuyoHUD(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height); }
+void CPZBoss_DrawHook_SetupPuyoHUD(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->size.x, ScreenInfo->size.y); }
+void CPZBoss_DrawHook_RemovePuyoHUD(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y); }
 
 void CPZBoss_Explode_Eggman(void)
 {
@@ -369,7 +369,7 @@ void CPZBoss_State_HandleMatch_Eggman(void)
                 PuyoBean_DestroyPuyoBeans();
                 self->state          = CPZBoss_State_HandleMatchFinish_EggmanLose;
                 self->explosionPos.x = self->position.x + 0x400000;
-                self->explosionPos.y = (ScreenInfo->height + ScreenInfo->position.y) << 16;
+                self->explosionPos.y = (ScreenInfo->size.y + ScreenInfo->position.y) << 16;
                 RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->characterAnimator, false, 0);
             }
         }

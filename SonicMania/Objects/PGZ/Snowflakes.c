@@ -17,8 +17,8 @@ void Snowflakes_Update(void)
         for (int32 i = 0; i < 0x40; ++i) {
             if (!self->positions[i].x && !self->positions[i].y && (i & 0x8000) == 0) {
                 int32 screenY = ScreenInfo->position.y;
-                int32 scrX    = ScreenInfo->position.x % ScreenInfo->width;
-                int32 posX    = (scrX + ZONE_RAND(0, ScreenInfo->width)) % ScreenInfo->width;
+                int32 scrX    = ScreenInfo->position.x % ScreenInfo->size.x;
+                int32 posX    = (scrX + ZONE_RAND(0, ScreenInfo->size.x)) % ScreenInfo->size.x;
 
                 self->positions[i].y = (screenY - 5) << 16;
                 self->positions[i].x = posX << 16;
@@ -160,18 +160,18 @@ Vector2 Snowflakes_HandleWrap(int32 id)
         mult = 64;
 
     int32 newX = x - (ScreenInfo->position.x << 8) * mult;
-    while (newX < 0) newX += ScreenInfo->width << 16;
+    while (newX < 0) newX += ScreenInfo->size.x << 16;
 
-    int32 posX = ScreenInfo->position.x / ScreenInfo->width;
-    if ((newX % (ScreenInfo->width << 16)) >> 16 < ScreenInfo->position.x % ScreenInfo->width)
-        posX = ScreenInfo->position.x / ScreenInfo->width + 1;
+    int32 posX = ScreenInfo->position.x / ScreenInfo->size.x;
+    if ((newX % (ScreenInfo->size.x << 16)) >> 16 < ScreenInfo->position.x % ScreenInfo->size.x)
+        posX = ScreenInfo->position.x / ScreenInfo->size.x + 1;
 
     int32 posY = 0;
-    if (y > (ScreenInfo->height + ScreenInfo->position.y) << 16)
-        posY = -ScreenInfo->height;
+    if (y > (ScreenInfo->size.y + ScreenInfo->position.y) << 16)
+        posY = -ScreenInfo->size.y;
 
     Vector2 pos;
-    pos.x = (posX * ScreenInfo->width << 16) + (newX % (ScreenInfo->width << 16));
+    pos.x = (posX * ScreenInfo->size.x << 16) + (newX % (ScreenInfo->size.x << 16));
     pos.y = (posY << 16) + y;
     return pos;
 }

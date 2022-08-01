@@ -188,14 +188,14 @@ bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host)
         player1->jumpHold  = false;
     }
 
-    if (player1->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
+    if (player1->position.y < (curEntity->position.y - (ScreenInfo->center.y << 16) - 0x100000)) {
         player1->state      = Player_State_Static;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
         player1->position.y = 0;
     }
 
-    if (player2->classID == Player->classID && player2->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
+    if (player2->classID == Player->classID && player2->position.y < (curEntity->position.y - (ScreenInfo->center.y << 16) - 0x100000)) {
         player2->state      = Player_State_Static;
         player2->velocity.x = 0;
         player2->velocity.y = 0;

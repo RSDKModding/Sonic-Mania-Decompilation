@@ -269,7 +269,7 @@ void LottoBall_State_Collected(void)
                                     self->rightNumAnimator.frameID);
 
             self->position.x = self->bounds.x - 0x1880000;
-            self->position.y = ((ScreenInfo->height - 160) << 16);
+            self->position.y = ((ScreenInfo->size.y - 160) << 16);
             self->velocity.x = 0x80000;
             self->velocity.y = 0x40000;
         }
@@ -305,7 +305,7 @@ void LottoBall_State_SetupUIBall(void)
     RSDK_THIS(LottoBall);
 
     ++self->timer;
-    self->position.x += ((ScreenInfo->centerX << 16) - self->position.x) >> 3;
+    self->position.x += ((ScreenInfo->center.x << 16) - self->position.x) >> 3;
 
     if (self->timer > 24) {
         self->scale.x -= (self->scale.x >> 3);

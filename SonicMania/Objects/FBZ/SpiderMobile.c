@@ -703,7 +703,7 @@ void SpiderMobile_StateBody_AwaitPlayer(void)
             Zone->playerBoundActiveR[0] = true;
             Zone->cameraBoundsL[0]      = (self->position.x >> 16) - WIDE_SCR_XCENTER;
             Zone->cameraBoundsR[0]      = (self->position.x >> 16) + WIDE_SCR_XCENTER;
-            Zone->cameraBoundsT[0]      = (self->position.y >> 16) - ScreenInfo->height;
+            Zone->cameraBoundsT[0]      = (self->position.y >> 16) - ScreenInfo->size.y;
             Zone->cameraBoundsB[0]      = (self->position.y >> 16);
 
             SpiderMobile->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
@@ -771,7 +771,7 @@ void SpiderMobile_StateBody_SetupArena(void)
 
             self->origin.y -= 0x1200000;
             self->offsetY = -0x10000;
-            self->position.y += -0x800000 - (ScreenInfo->height << 16);
+            self->position.y += -0x800000 - (ScreenInfo->size.y << 16);
             self->armMoveAmplitude = 64;
             self->active           = ACTIVE_NORMAL;
             BGSwitch->screenID     = 0;

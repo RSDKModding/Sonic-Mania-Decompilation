@@ -66,9 +66,9 @@ void MSFactory_State_SetupFactory(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->height + 44;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x;
+        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->size.y + 44;
         Zone->cameraBoundsB[0] = (self->position.y >> 16) + 44;
 
         self->state = MSFactory_State_SetupMetalSonic;

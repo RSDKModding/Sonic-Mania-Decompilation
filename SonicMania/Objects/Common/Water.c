@@ -286,13 +286,13 @@ void Water_StageLoad(void)
 void Water_DrawHook_ApplyWaterPalette(void)
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
-    int32 waterDrawPos     = clampVal((Water->waterLevel >> 0x10) - screen->position.y, 0, screen->height);
+    int32 waterDrawPos     = clampVal((Water->waterLevel >> 0x10) - screen->position.y, 0, screen->size.y);
 
-    RSDK.SetActivePalette(Water->waterPalette, waterDrawPos, screen->height);
+    RSDK.SetActivePalette(Water->waterPalette, waterDrawPos, screen->size.y);
     ScreenInfo[SceneInfo->currentScreenID].waterDrawPos = waterDrawPos;
 }
 
-void Water_DrawHook_RemoveWaterPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height); }
+void Water_DrawHook_RemoveWaterPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].size.y); }
 
 void Water_SetupTagLink(void)
 {
@@ -1300,7 +1300,7 @@ void Water_Draw_Water(void)
     Vector2 drawPos;
     drawPos.x = ((screen->position.x & 0xFFFFFFC0) + 32) << 16;
     drawPos.y = Water->waterLevel;
-    for (int32 i = (screen->width >> 6) + 2; i > 0; --i) {
+    for (int32 i = (screen->size.x >> 6) + 2; i > 0; --i) {
         RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += 0x400000;
     }

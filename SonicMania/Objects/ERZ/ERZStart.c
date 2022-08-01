@@ -93,7 +93,7 @@ void ERZStart_SetupObjects(void)
         fxRuby->state       = StateMachine_None;
         fxRuby->fadeBlack   = 0x200;
         fxRuby->fadeWhite   = 0x200;
-        fxRuby->outerRadius = ScreenInfo->width;
+        fxRuby->outerRadius = ScreenInfo->size.x;
         fxRuby->timer       = 64;
         foreach_break;
     }
@@ -150,7 +150,7 @@ bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host)
         Zone->playerBoundsT[0] = 0;
         Zone->cameraBoundsT[0] = 0;
         camera->boundsT        = 0;
-        Zone->playerBoundsB[0] = ScreenInfo->height;
+        Zone->playerBoundsB[0] = ScreenInfo->size.y;
         Zone->cameraBoundsB[0] = Zone->playerBoundsB[0];
         camera->boundsB        = Zone->cameraBoundsB[0];
         ruby->state            = ERZStart_RubyHover;
@@ -319,7 +319,7 @@ bool32 ERZStart_Cutscene_SetupEggmanReveal(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (host->timer == 30)
-        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, camera->position.x - (ScreenInfo->width << 16), camera->position.y, 3);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, camera->position.x - (ScreenInfo->size.x << 16), camera->position.y, 3);
 
     if (host->timer == 45)
         RSDK.PlaySfx(ERZStart->sfxFlyIn, false, 255);
@@ -361,8 +361,8 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
 
         eggman->state = KleptoMobile_State_CutsceneControlled;
         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 11, &eggmanHand->handAnimator, true, 0);
-        eggman->position.x  = camera->position.x - (ScreenInfo->width << 16);
-        eggman->originPos.x = camera->position.x - (ScreenInfo->width << 16);
+        eggman->position.x  = camera->position.x - (ScreenInfo->size.x << 16);
+        eggman->originPos.x = camera->position.x - (ScreenInfo->size.x << 16);
         eggman->position.y  = king->originPos.y + 0x100000;
         eggman->originPos.y = king->originPos.y + 0x100000;
         eggman->direction   = FLIP_X;
@@ -548,10 +548,10 @@ bool32 ERZStart_Cutscene_ReturnCamToSonic(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (host->timer == 30)
-        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, ScreenInfo->centerX << 16, camera->position.y, 2);
+        Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, ScreenInfo->center.x << 16, camera->position.y, 2);
 
     if (!host->values[0]) {
-        if (camera->position.x == ScreenInfo->centerX << 16) {
+        if (camera->position.x == ScreenInfo->center.x << 16) {
             host->values[0]   = 1;
             host->storedTimer = host->timer;
         }

@@ -274,8 +274,8 @@ void SignPost_HandleCamBounds(void)
                 if (Player_CheckCollisionTouch(player, self, &hitbox)) {
                     self->position.x            = storeX;
                     self->position.y            = storeY;
-                    Zone->cameraBoundsL[p]      = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
-                    Zone->cameraBoundsR[p]      = ScreenInfo[p].centerX + (self->position.x >> 0x10);
+                    Zone->cameraBoundsL[p]      = (self->position.x >> 0x10) - ScreenInfo[p].center.x;
+                    Zone->cameraBoundsR[p]      = ScreenInfo[p].center.x + (self->position.x >> 0x10);
                     Zone->playerBoundActiveR[p] = true;
                 }
                 else {
@@ -285,8 +285,8 @@ void SignPost_HandleCamBounds(void)
             }
             else {
                 if (self->position.x - player->position.x < 0x1000000 || self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
-                    Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
-                    Zone->cameraBoundsR[p] = ScreenInfo[p].centerX + (self->position.x >> 0x10);
+                    Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].center.x;
+                    Zone->cameraBoundsR[p] = ScreenInfo[p].center.x + (self->position.x >> 0x10);
                 }
             }
         }
@@ -524,7 +524,7 @@ void SignPost_State_Fall(void)
     self->spinCount = 16;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 32) << 16) {
+        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 32) << 16) {
             self->velocity.x = -self->velocity.x;
         }
         else if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {

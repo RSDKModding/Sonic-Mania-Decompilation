@@ -288,8 +288,8 @@ void Hotaru_State_FlyOnScreen(void)
     EntityPlayer *player   = self->playerPtr;
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
-    int32 screenX = (screen->position.x + screen->centerX) << 16;
-    int32 screenY = (screen->position.y + screen->centerY) << 16;
+    int32 screenX = (screen->position.x + screen->center.x) << 16;
+    int32 screenY = (screen->position.y + screen->center.y) << 16;
 
     if (self->position.x <= screenX) {
         self->position.x += player->velocity.x + 0x20000;
@@ -328,8 +328,8 @@ void Hotaru_State_AttachedToScreen(void)
 
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
-    self->position.x = (screen->position.x + screen->centerX) << 16;
-    self->position.y = (screen->position.y + screen->centerY) << 16;
+    self->position.x = (screen->position.x + screen->center.x) << 16;
+    self->position.y = (screen->position.y + screen->center.y) << 16;
 
     if (++self->rotation == 128) {
         self->rotation             = 0;

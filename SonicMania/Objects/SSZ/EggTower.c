@@ -19,12 +19,12 @@ void EggTower_Draw(void)
 {
     RSDK_THIS(EggTower);
 
-    int32 y = self->position.y - 160 * ((self->position.y - ((ScreenInfo->position.y + ScreenInfo->centerY) << 16)) >> 8);
+    int32 y = self->position.y - 160 * ((self->position.y - ((ScreenInfo->position.y + ScreenInfo->center.y) << 16)) >> 8);
     if (y > (ScreenInfo->position.y + 288) << 16)
         y -= (y - (ScreenInfo->position.y << 16) - 0x1200000) >> 1;
 
     RSDK.MatrixScaleXYZ(&self->matWorld, self->scale.x, -self->scale.x, self->scale.x);
-    RSDK.MatrixTranslateXYZ(&self->matWorld, (ScreenInfo->position.x + ScreenInfo->centerX) << 16, y, 0, false);
+    RSDK.MatrixTranslateXYZ(&self->matWorld, (ScreenInfo->position.x + ScreenInfo->center.x) << 16, y, 0, false);
     RSDK.MatrixRotateY(&self->matTemp, (self->rotationX + ScreenInfo->position.x) / -6);
     RSDK.MatrixMultiply(&self->matWorld, &self->matTemp, &self->matWorld);
 

@@ -165,7 +165,7 @@ bool32 TMZ1Outro_CutsceneAct1_EnterMonarch(EntityCutsceneSeq *host)
         globals->suppressTitlecard = true;
         globals->suppressAutoMusic = true;
 
-        Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
+        Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->center.x) << 16, (ScreenInfo->size.y + ScreenInfo->position.y) << 16);
         RSDK.LoadScene();
 
         return true;

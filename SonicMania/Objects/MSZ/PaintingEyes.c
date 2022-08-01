@@ -52,12 +52,12 @@ void PaintingEyes_Draw(void)
     RSDK_THIS(PaintingEyes);
 
     Vector2 drawPos;
-    drawPos.x = self->position.x + clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 10) - (self->position.x >> 6), -0x10000, 0x10000);
-    drawPos.y = self->position.y + clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 10) - (self->position.y >> 6), -0x10000, 0x10000);
+    drawPos.x = self->position.x + clampVal(((ScreenInfo->position.x + ScreenInfo->center.x) << 10) - (self->position.x >> 6), -0x10000, 0x10000);
+    drawPos.y = self->position.y + clampVal(((ScreenInfo->position.y + ScreenInfo->center.y) << 10) - (self->position.y >> 6), -0x10000, 0x10000);
     RSDK.DrawSprite(&self->irisAnimator, &drawPos, false);
 
-    drawPos.x = self->position.x + clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 11) - (self->position.x >> 5), -0x20000, 0x20000);
-    drawPos.y = self->position.y + clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 11) - (self->position.y >> 5), -0x20000, 0x20000);
+    drawPos.x = self->position.x + clampVal(((ScreenInfo->position.x + ScreenInfo->center.x) << 11) - (self->position.x >> 5), -0x20000, 0x20000);
+    drawPos.y = self->position.y + clampVal(((ScreenInfo->position.y + ScreenInfo->center.y) << 11) - (self->position.y >> 5), -0x20000, 0x20000);
     RSDK.DrawSprite(&self->pupilAnimator, &drawPos, false);
 
     drawPos.x = self->position.x;

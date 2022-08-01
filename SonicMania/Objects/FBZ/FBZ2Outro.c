@@ -111,7 +111,7 @@ bool32 FBZ2Outro_Cutscene_RunToGlider(EntityCutsceneSeq *host)
         }
     }
     else {
-        for (int32 p = 0; p < Player->playerCount; ++p) Zone->cameraBoundsT[p] = Zone->cameraBoundsB[p] - ScreenInfo->height;
+        for (int32 p = 0; p < Player->playerCount; ++p) Zone->cameraBoundsT[p] = Zone->cameraBoundsB[p] - ScreenInfo->size.y;
 
         return true;
     }

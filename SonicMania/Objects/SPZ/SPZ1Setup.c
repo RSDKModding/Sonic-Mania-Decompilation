@@ -112,7 +112,7 @@ void SPZ1Setup_StageLoad(void)
 
 void SPZ1Setup_StageFinish_EndAct1(void)
 {
-    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->center.x) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 

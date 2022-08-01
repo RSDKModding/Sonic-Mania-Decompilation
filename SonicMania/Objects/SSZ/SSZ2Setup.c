@@ -94,18 +94,18 @@ void SSZ2Setup_StageFinish_EndAct2(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid
 
 void SSZ2Setup_DrawHook_PrepareDrawingFX(void)
 {
-    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 }
 
 void SSZ2Setup_Scanline_BGTower(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, ScreenInfo->centerX - 144, 0, ScreenInfo->centerX + 144, ScreenInfo->height);
+    RSDK.SetClipBounds(0, ScreenInfo->center.x - 144, 0, ScreenInfo->center.x + 144, ScreenInfo->size.y);
     RSDK.ProcessParallax(SSZ2Setup->towerLayer);
-    RSDK.SetActivePalette(3, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(3, 0, ScreenInfo->size.y);
 
-    ScanlineInfo *scanlinePtr = &scanlines[ScreenInfo->centerX - 64];
+    ScanlineInfo *scanlinePtr = &scanlines[ScreenInfo->center.x - 64];
     int32 x1                  = scanlinePtr->position.x;
     int32 offset              = 0x10000;
     for (int32 i = 2; i - 2 < 80;) {
@@ -134,7 +134,7 @@ void SSZ2Setup_Scanline_BGTower(ScanlineInfo *scanlines)
         i += 5;
     }
 
-    scanlinePtr = &scanlines[ScreenInfo->centerX + 64];
+    scanlinePtr = &scanlines[ScreenInfo->center.x + 64];
     x1          = scanlinePtr->position.x;
     offset      = 0x10000;
 
@@ -196,11 +196,11 @@ void SSZ2Setup_Trigger_SSZ2BTransition(void)
             player1->left       = false;
             player1->right      = true;
 
-            Zone->cameraBoundsR[0] = ScreenInfo->centerX + (self->position.x >> 16);
-            Zone->cameraBoundsR[1] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->cameraBoundsR[0] = ScreenInfo->center.x + (self->position.x >> 16);
+            Zone->cameraBoundsR[1] = ScreenInfo->center.x + (self->position.x >> 16);
 #if MANIA_USE_PLUS
-            Zone->cameraBoundsR[2] = ScreenInfo->centerX + (self->position.x >> 16);
-            Zone->cameraBoundsR[3] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->cameraBoundsR[2] = ScreenInfo->center.x + (self->position.x >> 16);
+            Zone->cameraBoundsR[3] = ScreenInfo->center.x + (self->position.x >> 16);
 #endif
 
             for (int32 p = 0; p < Player->playerCount; ++p) StarPost->postIDs[p] = 0;

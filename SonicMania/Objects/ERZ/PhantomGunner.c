@@ -24,7 +24,7 @@ void PhantomGunner_Draw(void)
 {
     RSDK_THIS(PhantomGunner);
 
-    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 
     if (self->stateDraw) {
         StateMachine_Run(self->stateDraw);
@@ -33,7 +33,7 @@ void PhantomGunner_Draw(void)
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     }
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 }
 
 void PhantomGunner_Create(void *data)
@@ -58,8 +58,8 @@ void PhantomGunner_Create(void *data)
                 RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 1, &self->fxAnimator, true, 0);
 
                 self->originPos   = self->position;
-                self->screenPos.x = (self->position.x >> 16) - ScreenInfo->centerX;
-                self->screenPos.y = (self->position.y >> 16) - ScreenInfo->centerY;
+                self->screenPos.x = (self->position.x >> 16) - ScreenInfo->center.x;
+                self->screenPos.y = (self->position.y >> 16) - ScreenInfo->center.y;
 
                 self->stateDraw = PhantomGunner_Draw_Gunner;
                 self->state     = PhantomGunner_State_Idle;
@@ -283,14 +283,14 @@ void PhantomGunner_Draw_RocketLaunch(void)
 
     EntityPhantomGunner *parent = self->parent;
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ((self->originPos.y + parent->position.y) >> 16) - ScreenInfo->position.y);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ((self->originPos.y + parent->position.y) >> 16) - ScreenInfo->position.y);
 
     Vector2 drawPos;
     drawPos.x = parent->position.x + self->originPos.x;
     drawPos.y = self->position.y;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 
     drawPos.y = parent->position.y + self->originPos.y;
     RSDK.DrawSprite(&self->fxAnimator, &drawPos, false);
@@ -324,8 +324,8 @@ void PhantomGunner_State_ResetState(void)
         self->originPos         = self->startPos;
         self->timer             = 0;
         self->rocketLaunchCount = 0;
-        self->screenPos.x       = (self->position.x >> 16) - ScreenInfo->centerX;
-        self->screenPos.y       = (self->position.y >> 16) - ScreenInfo->centerY;
+        self->screenPos.x       = (self->position.x >> 16) - ScreenInfo->center.x;
+        self->screenPos.y       = (self->position.y >> 16) - ScreenInfo->center.y;
         self->stateDraw         = PhantomGunner_Draw_Gunner;
         self->state             = PhantomGunner_State_Idle;
         self->active            = ACTIVE_NEVER;
@@ -694,8 +694,8 @@ void PhantomGunner_EditorDraw(void)
     RSDK.SetSpriteAnimation(PhantomGunner->aniFrames, 1, &self->fxAnimator, false, 0);
 
     self->originPos   = self->position;
-    self->screenPos.x = (self->position.x >> 16) - ScreenInfo->centerX;
-    self->screenPos.y = (self->position.y >> 16) - ScreenInfo->centerY;
+    self->screenPos.x = (self->position.x >> 16) - ScreenInfo->center.x;
+    self->screenPos.y = (self->position.y >> 16) - ScreenInfo->center.y;
 
     PhantomGunner_Draw_Gunner();
 }

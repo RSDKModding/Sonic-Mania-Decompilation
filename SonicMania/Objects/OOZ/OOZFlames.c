@@ -27,7 +27,7 @@ void OOZFlames_Draw(void)
     RSDK_THIS(OOZFlames);
 
     Vector2 drawPos;
-    drawPos.x = (ScreenInfo[SceneInfo->currentScreenID].centerX - 240) << 16;
+    drawPos.x = (ScreenInfo[SceneInfo->currentScreenID].center.x - 240) << 16;
 
     for (int32 angle = 0; angle < 0x100; angle += 0x10) {
         drawPos.y = (RSDK.Sin256(4 * (angle + Zone->timer)) << 11) + self->flamePos;

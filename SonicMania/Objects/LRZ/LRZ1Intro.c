@@ -25,11 +25,11 @@ void LRZ1Intro_Draw(void)
 {
     RSDK_THIS(LRZ1Intro);
 
-    RSDK.SetActivePalette(6, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(6, 0, ScreenInfo->size.y);
 
     RSDK.DrawSprite(&self->animator, NULL, false);
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
 }
 
 void LRZ1Intro_Create(void *data)

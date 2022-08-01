@@ -117,8 +117,8 @@ void Announcer_Draw_Countdown(void)
     RSDK_THIS(Announcer);
 
     Vector2 drawPos;
-    drawPos.y = (ScreenInfo->centerY - 32) << 16;
-    drawPos.x = ScreenInfo->centerX << 16;
+    drawPos.y = (ScreenInfo->center.y - 32) << 16;
+    drawPos.x = ScreenInfo->center.x << 16;
     drawPos.x += self->drawOffset.x;
     drawPos.y += self->drawOffset.y;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
@@ -140,8 +140,8 @@ void Announcer_Draw_Countdown(void)
         }
         RSDK.SetSpriteAnimation(Announcer->aniFrames, 2, &self->playerIconAnimator, true, frame);
 
-        drawPos.x = ScreenInfo->centerX << 16;
-        drawPos.y = (ScreenInfo->centerY + 48) << 16;
+        drawPos.x = ScreenInfo->center.x << 16;
+        drawPos.y = (ScreenInfo->center.y + 48) << 16;
         RSDK.DrawSprite(&self->playerIconAnimator, &drawPos, true);
         self->inkEffect = INK_ALPHA;
     }
@@ -152,8 +152,8 @@ void Announcer_Draw_Finished(void)
 
     Vector2 drawPos;
     if (SceneInfo->currentScreenID == self->screen) {
-        drawPos.x = ScreenInfo->centerX << 16;
-        drawPos.y = (ScreenInfo->centerY - 32) << 16;
+        drawPos.x = ScreenInfo->center.x << 16;
+        drawPos.y = (ScreenInfo->center.y - 32) << 16;
         drawPos.x += self->drawOffset.x;
         drawPos.y += self->drawOffset.y;
         RSDK.DrawSprite(&self->animator, &drawPos, true);
@@ -233,7 +233,7 @@ void Announcer_State_Finished(void)
             }
             else {
                 self->visible = true;
-                MathHelpers_Lerp(&self->drawOffset, ((self->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
+                MathHelpers_Lerp(&self->drawOffset, ((self->timer - 76) << 8) / 16, 0, 0, ScreenInfo->size.x << 16, 0);
                 ++self->timer;
             }
         }
@@ -246,7 +246,7 @@ void Announcer_State_Finished(void)
     else {
         self->visible = true;
         int32 t       = 16 * self->timer;
-        int32 xOffset = -0x10000 * ScreenInfo->width;
+        int32 xOffset = -0x10000 * ScreenInfo->size.x;
         if (t > 0) {
             if (t < 256)
                 self->drawOffset.x = xOffset + t * (-xOffset >> 8);

@@ -176,8 +176,8 @@ void SchrodingersCapsule_State_HandleBounds(void)
                 if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
-                    Zone->cameraBoundsL[p]      = (self->position.x >> 16) - ScreenInfo[p].centerX;
-                    Zone->cameraBoundsR[p]      = (self->position.x >> 16) + ScreenInfo[p].centerX;
+                    Zone->cameraBoundsL[p]      = (self->position.x >> 16) - ScreenInfo[p].center.x;
+                    Zone->cameraBoundsR[p]      = (self->position.x >> 16) + ScreenInfo[p].center.x;
                 }
             }
         }

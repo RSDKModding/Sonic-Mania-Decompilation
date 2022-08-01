@@ -51,7 +51,7 @@ void UFO_HUD_Draw(void)
 
     Vector2 drawPos;
     drawPos.y = 0x240000;
-    drawPos.x = ScreenInfo->centerX << 16;
+    drawPos.x = ScreenInfo->center.x << 16;
     if (self->scale.x > 0x200)
         self->drawFX = FX_SCALE;
 
@@ -62,7 +62,7 @@ void UFO_HUD_Draw(void)
         drawPos.x += 0xA0000;
     }
 
-    drawPos.x = ScreenInfo->centerX << 16;
+    drawPos.x = ScreenInfo->center.x << 16;
     if (!(self->timer & 4) && self->timer) {
         self->machAnimator.frameID = 3;
         RSDK.DrawSprite(&self->machAnimator, &drawPos, true);

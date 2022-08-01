@@ -167,7 +167,7 @@ void EncoreIntro_SetupCutscenePart2(void)
     Zone->cameraBoundsR[0]      = size.x;
     Zone->playerBoundsR[0]      = size.x << 16;
     Zone->playerBoundActiveR[0] = true;
-    Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+    Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
     Zone->playerBoundsL[0]      = Zone->cameraBoundsL[0] << 16;
     Zone->playerBoundActiveL[0] = true;
 

@@ -50,7 +50,7 @@ void PuyoGame_Create(void *data)
     self->updateRange.y = 0x800000;
 
     if (!SceneInfo->inEditor)
-        RSDK.AddCamera(&self->position, ScreenInfo->centerX << 16, ScreenInfo->centerY << 16, true);
+        RSDK.AddCamera(&self->position, ScreenInfo->center.x << 16, ScreenInfo->center.y << 16, true);
 
     self->state = PuyoGame_State_Setup;
 }
@@ -74,8 +74,8 @@ void PuyoGame_SetupStartingEntities(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
-    ScreenInfo->position.x = (self->position.x >> 16) - ScreenInfo->centerX;
-    ScreenInfo->position.y = (self->position.y >> 16) - ScreenInfo->centerY;
+    ScreenInfo->position.x = (self->position.x >> 16) - ScreenInfo->center.x;
+    ScreenInfo->position.y = (self->position.y >> 16) - ScreenInfo->center.y;
 
     foreach_all(PuyoScore, score)
     {

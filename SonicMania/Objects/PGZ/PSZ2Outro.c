@@ -87,7 +87,7 @@ bool32 PSZ2Outro_Cutscene_HandleCameraMovement(EntityCutsceneSeq *host)
     if (host->timer == 180) {
         foreach_active(Player, player)
         {
-            player->position.x = camera->position.x - (ScreenInfo->centerX << 16) - 0x400000;
+            player->position.x = camera->position.x - (ScreenInfo->center.x << 16) - 0x400000;
             player->position.y = eggman->position.y;
             player->state      = Player_State_Ground;
 

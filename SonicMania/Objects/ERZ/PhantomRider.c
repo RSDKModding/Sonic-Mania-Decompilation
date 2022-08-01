@@ -27,7 +27,7 @@ void PhantomRider_Draw(void)
 {
     RSDK_THIS(PhantomRider);
 
-    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 
     if (self->invincibilityTimer & 1)
         RSDK.CopyPalette(6, 128, 4, 128, 128);
@@ -42,7 +42,7 @@ void PhantomRider_Draw(void)
     if (self->invincibilityTimer & 1)
         RSDK.CopyPalette(5, 128, 4, 128, 128);
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 }
 
 void PhantomRider_Create(void *data)
@@ -343,11 +343,11 @@ void PhantomRider_State_Jimmy(void)
 
     foreach_active(Player, player)
     {
-        int32 x = self->position.x - (ScreenInfo->centerX << 16) + 0x100000;
+        int32 x = self->position.x - (ScreenInfo->center.x << 16) + 0x100000;
         if (player->position.x < x)
             player->position.x = x;
 
-        int32 y = ((ScreenInfo->centerX - 16) << 16) + self->position.x;
+        int32 y = ((ScreenInfo->center.x - 16) << 16) + self->position.x;
         if (player->position.x > y)
             player->position.x = y;
     }

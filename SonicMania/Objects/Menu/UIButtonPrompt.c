@@ -355,8 +355,8 @@ bool32 UIButtonPrompt_CheckTouch(void)
 
             bool32 wasTouched = false;
             for (int32 i = 0; i < TouchInfo->count; ++i) {
-                int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
-                int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
+                int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->size.x) * -65536.0f);
+                int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->size.y) * -65536.0f);
 
                 int32 touchX = abs(self->touchPos.x + self->position.x - x);
                 int32 touchY = abs(self->touchPos.y + self->position.y - y);

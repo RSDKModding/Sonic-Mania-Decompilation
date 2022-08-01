@@ -335,13 +335,13 @@ void LaundroMobile_HandleStageWrap(void)
 
     if (!(Zone->timer & 3)) {
         EntityCurrent *current = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), ScreenInfo->position.x << 16,
-                                               (8 * RSDK.Rand(0, ScreenInfo->height >> 3) + ScreenInfo->position.y) << 16);
+                                               (8 * RSDK.Rand(0, ScreenInfo->size.y >> 3) + ScreenInfo->position.y) << 16);
 
         current->drawGroup = Zone->playerDrawLow;
         current->strength  = 6;
         current->type      = CURRENT_C_RIGHT;
         current->alpha     = 0xF0;
-        current->size.x    = (ScreenInfo->position.x + ScreenInfo->width + 0x1000) << 16;
+        current->size.x    = (ScreenInfo->position.x + ScreenInfo->size.x + 0x1000) << 16;
     }
 
     foreach_active(Player, player)
@@ -1258,7 +1258,7 @@ void LaundroMobile_StateBoss_Explode_Phase2(void)
 
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-        CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
+        CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
                       (ScreenInfo->position.y - 48) << 16);
 
 #if MANIA_USE_PLUS
@@ -1532,7 +1532,7 @@ void LaundroMobile_StateBomb_Spawner(void)
 
     if (self->active == ACTIVE_BOUNDS) {
         if (self->position.x + 0x200000 > ScreenInfo->position.x << 16) {
-            if (self->position.x - 0x200000 <= (ScreenInfo->position.x + ScreenInfo->width) << 16) {
+            if (self->position.x - 0x200000 <= (ScreenInfo->position.x + ScreenInfo->size.x) << 16) {
                 self->visible             = false;
                 EntityLaundroMobile *bomb = CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_BOMB), self->position.x, self->position.y);
                 bomb->velocity.x          = LaundroMobile->currentVelocity - 0x20000;
@@ -1665,7 +1665,7 @@ void LaundroMobile_StateBlock_Spawner(void)
 
     if (self->active == ACTIVE_BOUNDS) {
         if (self->position.x + 0x200000 > ScreenInfo->position.x << 16) {
-            if (self->position.x - 0x200000 <= (ScreenInfo->position.x + ScreenInfo->width) << 16) {
+            if (self->position.x - 0x200000 <= (ScreenInfo->position.x + ScreenInfo->size.x) << 16) {
                 self->visible = false;
 
                 EntityLaundroMobile *block = CREATE_ENTITY(LaundroMobile, intToVoid(self->type), self->position.x, self->position.y);
@@ -1802,7 +1802,7 @@ void LaundroMobile_State_Laundry(void)
     Zone->playerBoundActiveL[0] = true;
     Zone->playerBoundActiveR[0] = true;
     Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
-    Zone->cameraBoundsR[0]      = ScreenInfo->centerX + (self->position.x >> 16);
+    Zone->cameraBoundsR[0]      = ScreenInfo->center.x + (self->position.x >> 16);
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x - 0xC00000)
         Zone->cameraBoundsT[0] = ScreenInfo->position.y;

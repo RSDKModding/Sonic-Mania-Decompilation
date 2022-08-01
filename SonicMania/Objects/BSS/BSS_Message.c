@@ -25,11 +25,11 @@ void BSS_Message_Draw(void)
     RSDK_THIS(BSS_Message);
     Vector2 drawPos;
 
-    drawPos.x = (ScreenInfo->centerX - self->messageFinishTimer) << 16;
+    drawPos.x = (ScreenInfo->center.x - self->messageFinishTimer) << 16;
     drawPos.y = 0x680000;
     RSDK.DrawSprite(&self->leftAnimator, &drawPos, true);
 
-    drawPos.x = (ScreenInfo->centerX + self->messageFinishTimer) << 16;
+    drawPos.x = (ScreenInfo->center.x + self->messageFinishTimer) << 16;
     RSDK.DrawSprite(&self->rightAnimator, &drawPos, true);
 
     if (self->fadeEnabled)

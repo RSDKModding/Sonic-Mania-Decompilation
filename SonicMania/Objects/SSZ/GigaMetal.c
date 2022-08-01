@@ -96,8 +96,8 @@ void GigaMetal_Create(void *data)
                     self->frontArm = RSDK_GET_ENTITY(slot - 1, GigaMetal);
 
                     self->stateDraw      = GigaMetal_Draw_Shoulder;
-                    self->componentPos.x = -0x240000;
                     self->componentPos.y = -0x2C0000;
+                    self->componentPos.x = -0x240000;
                     self->drawGroup      = Zone->objectDrawHigh;
 
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->mainAnimator, true, 0);
@@ -459,8 +459,8 @@ void GigaMetal_StateBody_AwaitPlayer(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX + 32;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX + 32;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x + 32;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x + 32;
         Zone->cameraBoundsB[0] = (self->position.y >> 16) + 16;
         Zone->deathBoundary[0] = (self->position.y >> 16) + 16;
 
@@ -665,8 +665,8 @@ void GigaMetal_StateBody_Marching(void)
     GigaMetal_CheckPlayerCollisions();
 
     if ((Zone->timer & 7) == 2) {
-        int32 endX = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 1;
-        int32 endY = (ScreenInfo->height + ScreenInfo->position.y) >> 4;
+        int32 endX = ((ScreenInfo->size.x + ScreenInfo->position.x) >> 4) + 1;
+        int32 endY = (ScreenInfo->size.y + ScreenInfo->position.y) >> 4;
 
         RSDK.CopyTileLayer(Zone->fgHigh, endX, endY - 5, Zone->fgHigh, endX, endY - 5 + 8, 1, 6);
         if (endX > 224)
@@ -789,7 +789,7 @@ void GigaMetal_StateBody_Destroyed(void)
         dango->state       = Dango_StateTaunt_Setup;
 
         int32 tileX = ScreenInfo->position.x >> 4;
-        int32 tileY = ((ScreenInfo->height + ScreenInfo->position.y) >> 4) - 5;
+        int32 tileY = ((ScreenInfo->size.y + ScreenInfo->position.y) >> 4) - 5;
 
         int32 spawnX = (tileX << 20) + 0x80000;
         for (int32 x = 0; x < 32; ++x) {

@@ -25,8 +25,8 @@ void MonarchBG_Draw(void)
     RSDK_THIS(MonarchBG);
 
     Vector2 drawPos;
-    drawPos.x = self->position.x - ((self->position.x - ((ScreenInfo->position.x + ScreenInfo->centerX) << 16)) >> 1);
-    drawPos.y = self->position.y - 208 * ((self->position.y - ((ScreenInfo->position.y + ScreenInfo->centerY) << 16)) >> 8);
+    drawPos.x = self->position.x - ((self->position.x - ((ScreenInfo->position.x + ScreenInfo->center.x) << 16)) >> 1);
+    drawPos.y = self->position.y - 208 * ((self->position.y - ((ScreenInfo->position.y + ScreenInfo->center.y) << 16)) >> 8);
 
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&self->animatorTop, &drawPos, false);

@@ -419,8 +419,8 @@ bool32 UIButton_ProcessTouchCB_Multi(void)
             int32 screenY = ScreenInfo->position.y << 16;
 
             for (int32 t = 0; t < TouchInfo->count; ++t) {
-                int32 x  = abs(touchPosOffset.x + self->position.x - (screenX - (int32)((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f)));
-                int32 y  = abs(touchPosOffset.y + self->position.y - (screenY - (int32)((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f)));
+                int32 x  = abs(touchPosOffset.x + self->position.x - (screenX - (int32)((TouchInfo->x[t] * ScreenInfo->size.x) * -65536.0f)));
+                int32 y  = abs(touchPosOffset.y + self->position.y - (screenY - (int32)((TouchInfo->y[t] * ScreenInfo->size.y) * -65536.0f)));
                 int32 x1 = touchPosSize.x >> 1;
                 int32 y1 = touchPosSize.y >> 1;
 
@@ -464,8 +464,8 @@ bool32 UIButton_ProcessTouchCB_Single(void)
             int32 sizeY   = self->touchPosSizeS.y >> 1;
 
             for (int32 i = 0; i < TouchInfo->count; ++i) {
-                int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
-                int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
+                int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->size.x) * -65536.0f);
+                int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->size.y) * -65536.0f);
 
                 int32 touchX = abs(self->touchPosOffsetS.x + self->position.x - x);
                 int32 touchY = abs(self->touchPosOffsetS.y + self->position.y - y);

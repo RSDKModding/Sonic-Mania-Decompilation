@@ -140,11 +140,11 @@ bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
 
     FXRuby_SetupLayerDeformation();
 
-    int32 screenBoundsR = ((ScreenInfo->position.x + ScreenInfo->width) >> 4) + 2;
+    int32 screenBoundsR = ((ScreenInfo->position.x + ScreenInfo->size.x) >> 4) + 2;
     int32 cutscenePos   = 0;
     if (screenBoundsR < 220) {
-        cutscenePos            = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 2;
-        Zone->cameraBoundsR[0] = 16 * (((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 38);
+        cutscenePos            = ((ScreenInfo->size.x + ScreenInfo->position.x) >> 4) + 2;
+        Zone->cameraBoundsR[0] = 16 * (((ScreenInfo->size.x + ScreenInfo->position.x) >> 4) + 38);
     }
     else {
         screenBoundsR          = 0;

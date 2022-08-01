@@ -224,8 +224,8 @@ void MeterDroid_Explode(void)
         }
 
         if (Zone->timer & 4) {
-            int32 x                    = (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16;
-            int32 y                    = (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16;
+            int32 x                    = (RSDK.Rand(-208, 208) + ScreenInfo->center.x + ScreenInfo->position.x) << 16;
+            int32 y                    = (RSDK.Rand(-112, 112) + ScreenInfo->center.y + ScreenInfo->position.y) << 16;
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
@@ -318,9 +318,9 @@ void MeterDroid_State_Setup(void)
 
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height - 64;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->size.y - 64;
 
         MeterDroid->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
         MeterDroid->boundsR = (Zone->cameraBoundsR[0] - 64) << 16;

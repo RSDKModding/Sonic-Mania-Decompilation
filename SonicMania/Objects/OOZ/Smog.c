@@ -75,7 +75,7 @@ void Smog_Draw(void)
     uint8 defPos = ((ScreenInfo->position.y >> 1) + 2 * Zone->timer);
 
     ScanlineInfo *scanline = NULL;
-    for (int32 i = 0; i < ScreenInfo->height; ++i) {
+    for (int32 i = 0; i < ScreenInfo->size.y; ++i) {
         scanline                = (ScanlineInfo *)&Smog->scanlineData[defPos++ * sizeof(ScanlineInfo)];
         scanlinePtr->position.x = scanline->position.x + (ScreenInfo->position.x << 16);
         scanlinePtr->position.y = y;
@@ -136,7 +136,7 @@ void Smog_StageLoad(void)
     for (int32 i = 0; i < 0x100; ++i) {
         scanline[i].deform.x   = (RSDK.Sin256(angle >> 1) << 6) + 0x10000;
         scanline[i].deform.y   = (RSDK.Sin256(angle >> 1) << 5) + 0x10000;
-        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * ScreenInfo->centerX;
+        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * ScreenInfo->center.x;
         scanline[i].position.y = 0;
         angle += 2;
     }

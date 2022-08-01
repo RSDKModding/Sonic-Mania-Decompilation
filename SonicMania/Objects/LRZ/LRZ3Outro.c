@@ -50,8 +50,8 @@ void LRZ3Outro_HandleExplosions(void)
 {
     RSDK_THIS(LRZ3Outro);
 
-    int32 x                    = (RSDK.Rand(-ScreenInfo->centerX, ScreenInfo->centerX) + ScreenInfo->centerX + ScreenInfo->position.x);
-    int32 y                    = ScreenInfo->position.y + 32 + ScreenInfo->height;
+    int32 x                    = (RSDK.Rand(-ScreenInfo->center.x, ScreenInfo->center.x) + ScreenInfo->center.x + ScreenInfo->position.x);
+    int32 y                    = ScreenInfo->position.y + 32 + ScreenInfo->size.y;
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x << 16, y << 16);
 
     explosion->velocity.x = RSDK.Rand(-0x20000, 0x20000);

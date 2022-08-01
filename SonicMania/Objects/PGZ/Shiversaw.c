@@ -870,7 +870,7 @@ void Shiversaw_State_Explode(void)
         foreach_all(SignPost, signPost)
         {
             signPost->active     = ACTIVE_NORMAL;
-            signPost->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+            signPost->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
             signPost->position.y = (ScreenInfo->position.y - 64) << 16;
         }
 

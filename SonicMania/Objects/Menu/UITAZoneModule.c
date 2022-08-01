@@ -102,7 +102,7 @@ void UITAZoneModule_Draw(void)
 
         UITAZoneModule_DrawExpandedView();
 
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
     }
 #endif
 }
@@ -709,7 +709,7 @@ void UITAZoneModule_DrawExpandedView(void)
 
     uint16 *records = TimeAttackData_GetRecordedTime(self->zoneID, self->actID, self->characterID, 1);
 
-    RSDK.DrawRect(drawX - 0x990000, drawY + 0x240000, 0x1320000, 0x4D0000, 0x000000, 255, INK_NONE, false);
+    RSDK.DrawRect(drawX - 0x990000, drawY + 0x240000, 0x1320000, 0x4D0000, 0x000000, 0xFF, INK_NONE, false);
 
     UITAZoneModule_DrawActInfo_Expanded();
     UIWidgets_DrawParallelogram(self->position.x - 0x40000, drawY + 0x448000, 0xE0, 0x17, 0x17, 0xD9, 0xAD, 0x4);
@@ -918,8 +918,8 @@ void UITAZoneModule_SetStartupModule(EntityUIControl *control, uint8 characterID
     control->position.y = module->startPos.y;
     control->targetPos  = module->startPos;
 
-    ScreenInfo->position.x = (module->startPos.x >> 16) - ScreenInfo->centerX;
-    ScreenInfo->position.y = (control->position.y >> 16) - ScreenInfo->centerY;
+    ScreenInfo->position.x = (module->startPos.x >> 16) - ScreenInfo->center.x;
+    ScreenInfo->position.y = (control->position.y >> 16) - ScreenInfo->center.y;
     RSDK.CopyPalette((zoneID >> 3) + 1, 32 * zoneID, 0LL, 0xE0, 0x20);
 
     module->actID                = actID;
@@ -940,7 +940,7 @@ void UITAZoneModule_SetStartupModule(EntityUIControl *control, uint8 characterID
             button->state       = UITAZoneModule_State_Inactive;
             button->isExpanding = false;
             button->isSelected  = false;
-            button->position.x  = button->startPos.x + (ScreenInfo->width << 16);
+            button->position.x  = button->startPos.x + (ScreenInfo->size.x << 16);
         }
     }
 
@@ -1173,13 +1173,13 @@ void UITAZoneModule_State_MoveOffScreen(void)
     self->fuzzDir    = self->fuzzAnimator.frameID & 3;
     self->velocity.x = 0x200000;
 
-    if ((self->position.x - self->startPos.x) >> 16 < ScreenInfo->width) {
+    if ((self->position.x - self->startPos.x) >> 16 < ScreenInfo->size.x) {
         self->position.x += 0x200000;
         self->position.y += self->velocity.y;
     }
 
-    if ((self->position.x - self->startPos.x) >> 16 >= ScreenInfo->width) {
-        self->position.x = self->startPos.x + (ScreenInfo->width << 16);
+    if ((self->position.x - self->startPos.x) >> 16 >= ScreenInfo->size.x) {
+        self->position.x = self->startPos.x + (ScreenInfo->size.x << 16);
         self->state      = UITAZoneModule_State_Inactive;
     }
 }
@@ -1188,7 +1188,7 @@ void UITAZoneModule_State_Inactive(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    self->position.x = self->startPos.x + (ScreenInfo->width << 16);
+    self->position.x = self->startPos.x + (ScreenInfo->size.x << 16);
 }
 
 void UITAZoneModule_State_ComeBackOnScreen(void)

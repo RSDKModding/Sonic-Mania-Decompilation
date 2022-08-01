@@ -681,14 +681,14 @@ void ReplayRecorder_DrawGhostDisplay(void)
 
     if (!SceneInfo->currentScreenID && self->ghostAlpha) {
         self->inkEffect = INK_NONE;
-        int32 screenX   = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-        int32 screenY   = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+        int32 screenX   = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+        int32 screenY   = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
         Hitbox hitbox;
-        hitbox.left   = -(ScreenInfo->width >> 1);
-        hitbox.right  = ScreenInfo->width >> 1;
-        hitbox.top    = -(ScreenInfo->height >> 1);
-        hitbox.bottom = ScreenInfo->height >> 1;
+        hitbox.left   = -(ScreenInfo->size.x >> 1);
+        hitbox.right  = ScreenInfo->size.x >> 1;
+        hitbox.top    = -(ScreenInfo->size.y >> 1);
+        hitbox.bottom = ScreenInfo->size.y >> 1;
         if (!MathHelpers_PointInHitbox(screenX, screenY, player->position.x, player->position.y, FLIP_NONE, &hitbox)) {
             // Draw Player Preview (when ghost is off screen)
             Vector2 drawPos;
@@ -1130,8 +1130,8 @@ void ReplayRecorder_PlayerState_PlaybackReplay(void)
         }
 
         if (FarPlane) {
-            int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-            int32 screenY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+            int32 screenX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+            int32 screenY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
             self->scale.x   = 0x200;
             self->scale.y   = 0x200;

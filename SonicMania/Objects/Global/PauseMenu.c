@@ -15,8 +15,8 @@ void PauseMenu_Update(void)
 
     StateMachine_Run(self->state);
 
-    self->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    self->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    self->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    self->position.y = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
     if (self->manager) {
         self->manager->position.x = self->position.x;
@@ -169,14 +169,14 @@ void PauseMenu_SetupMenu(void)
     RSDK_THIS(PauseMenu);
 
     Vector2 size;
-    size.x = ScreenInfo->width << 16;
-    size.y = ScreenInfo->height << 16;
+    size.x = ScreenInfo->size.x << 16;
+    size.y = ScreenInfo->size.y << 16;
     RSDK.ResetEntitySlot(SLOT_PAUSEMENU_UICONTROL, UIControl->classID, &size);
 
     EntityUIControl *control = RSDK_GET_ENTITY(SLOT_PAUSEMENU_UICONTROL, UIControl);
 
-    control->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    control->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    control->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    control->position.y = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
     // Bug Details:
     // control->rowCount is slightly bugged, if `pauseMenu->disableRestart` is enabled then wrapping by pressing down is broken and wont work
@@ -243,8 +243,8 @@ void PauseMenu_AddButton(uint8 id, void *action)
         RSDK.ResetEntitySlot(buttonSlot, UIButton->classID, NULL);
         EntityUIButton *button = RSDK_GET_ENTITY(buttonSlot, UIButton);
 
-        button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-        button->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+        button->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+        button->position.y = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &button->animator, true, id);
         button->actionCB           = PauseMenu_ActionCB_Button;
         button->size.x             = 0x3C0000;
@@ -276,7 +276,7 @@ void PauseMenu_HandleButtonPositions(void)
     RSDK_THIS(PauseMenu);
 
     Vector2 pos;
-    pos.x = ((ScreenInfo->centerX - 69) << 16) + self->position.x + self->yellowTrianglePos.x;
+    pos.x = ((ScreenInfo->center.x - 69) << 16) + self->position.x + self->yellowTrianglePos.x;
     pos.y = (self->position.y + 0x380000) + self->yellowTrianglePos.y - 0x240000;
     if (self->buttonCount == (PAUSEMENU_BUTTON_COUNT - 1)) {
         pos.x -= 0x240000;
@@ -473,8 +473,8 @@ void PauseMenu_RestartDialog_YesCB(void)
     }
     RSDK.StopChannel(Music->channelID);
 
-    int32 x                  = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 y                  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 x                  = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 y                  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
     EntityPauseMenu *fadeout = CREATE_ENTITY(PauseMenu, intToVoid(true), x, y);
     fadeout->fadeoutCB       = PauseMenu_RestartFadeCB;
     fadeout->state           = PauseMenu_State_HandleFadeout;
@@ -496,8 +496,8 @@ void PauseMenu_ExitDialog_YesCB(void)
     }
     RSDK.StopChannel(Music->channelID);
 
-    int32 x                  = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 y                  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 x                  = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 y                  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
     EntityPauseMenu *fadeout = CREATE_ENTITY(PauseMenu, intToVoid(true), x, y);
     fadeout->fadeoutCB       = PauseMenu_ExitFadeCB;
     fadeout->state           = PauseMenu_State_HandleFadeout;
@@ -952,7 +952,7 @@ void PauseMenu_DrawPauseMenu(void)
     RSDK_THIS(PauseMenu);
     Vector2 drawPos;
 
-    drawPos.x = self->position.x + 0x640000 + self->headerPos.x + -0x10000 * ScreenInfo->centerX;
+    drawPos.x = self->position.x + 0x640000 + self->headerPos.x + -0x10000 * ScreenInfo->center.x;
     drawPos.y = self->position.y - 0x600000 + self->headerPos.y;
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 200, 68, 68, 0xE8, 0x28, 0x58);
 
@@ -963,8 +963,8 @@ void PauseMenu_DrawPauseMenu(void)
     // "PAUSED" text
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->centerX << 16) + self->position.x,
-                                self->yellowTrianglePos.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 0xF0, 0xD8, 0x08);
+    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->center.x << 16) + self->position.x,
+                                self->yellowTrianglePos.y + (ScreenInfo->center.y << 16) + self->position.y, -232, 0xF0, 0xD8, 0x08);
 }
 
 void PauseMenu_Draw_RegularPause(void)
@@ -975,7 +975,7 @@ void PauseMenu_Draw_RegularPause(void)
 #if MANIA_USE_PLUS
         RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->tintAlpha, INK_TINT, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->size.x, ScreenInfo->size.y, 0, self->tintAlpha, INK_TINT, true);
 
         PauseMenu_DrawPauseMenu();
     }
@@ -989,7 +989,7 @@ void PauseMenu_Draw_ForcePause(void)
 #if MANIA_USE_PLUS
         RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->tintAlpha, INK_TINT, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->size.x, ScreenInfo->size.y, 0, self->tintAlpha, INK_TINT, true);
     }
 }
 

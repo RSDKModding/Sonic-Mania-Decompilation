@@ -29,7 +29,7 @@ void TMZFlames_Draw(void)
     RSDK_THIS(TMZFlames);
 
     Vector2 drawPos;
-    drawPos.y = (ScreenInfo[SceneInfo->currentScreenID].centerY - 112) << 16;
+    drawPos.y = (ScreenInfo[SceneInfo->currentScreenID].center.y - 112) << 16;
     for (int32 i = 0; i < 0x80; i += 0x10) {
         drawPos.x = (RSDK.Sin256(4 * (i + Zone->timer)) << 11) + self->offset;
         RSDK.DrawSprite(&self->animator, &drawPos, true);

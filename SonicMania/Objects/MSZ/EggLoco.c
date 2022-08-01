@@ -150,8 +150,8 @@ void EggLoco_StageLoad(void)
 bool32 EggLoco_SfxCheck_LocoChugga(void)
 {
     int32 count   = 0;
-    int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 screenY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 screenX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 screenY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
     foreach_all(EggLoco, eggLoco)
     {
@@ -164,8 +164,8 @@ bool32 EggLoco_SfxCheck_LocoChugga(void)
 
 void EggLoco_SfxUpdate_LocoChugga(int32 sfx)
 {
-    int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 screenY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 screenX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 screenY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
     foreach_all(EggLoco, eggLoco)
     {

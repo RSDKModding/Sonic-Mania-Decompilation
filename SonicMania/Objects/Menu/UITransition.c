@@ -97,8 +97,8 @@ void UITransition_DrawShapes(void)
     colors[1] = 0x1888F0;
     colors[2] = 0xE82858;
 
-    int32 screenCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 screenCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 screenCenterX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 screenCenterY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
     positions[0].x      = screenCenterX + self->drawPos[0].x - 0xF00000;
     positions[0].y      = screenCenterY + self->drawPos[0].y;
     positions[1].x      = screenCenterX + self->drawPos[1].x;

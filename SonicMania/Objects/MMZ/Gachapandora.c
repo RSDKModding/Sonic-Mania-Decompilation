@@ -493,7 +493,7 @@ void Gachapandora_StateBoss_SetupArena(void)
 
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 128;
 
         self->position.y = (ScreenInfo->position.y - 192) << 16;
@@ -512,7 +512,7 @@ void Gachapandora_StateBoss_AwaitPlayer(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
 
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
         self->health = 9;
@@ -561,7 +561,7 @@ void Gachapandora_StateBoss_FloatAround(void)
         }
     }
     else {
-        if (self->position.x < (ScreenInfo->position.x + 64) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 64) << 16)
+        if (self->position.x < (ScreenInfo->position.x + 64) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 64) << 16)
             self->velocity.x = -self->velocity.x;
 
         self->position.x += self->velocity.x;
@@ -789,7 +789,7 @@ void Gachapandora_StateBoss_PanicFlee(void)
 
     if (self->position.y < (ScreenInfo->position.y - 192) << 16) {
         self->position.y = (ScreenInfo->position.y - 192) << 16;
-        self->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        self->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         self->state      = Gachapandora_StateBoss_EnsureAllCapsulesDestroyed;
     }
 }
@@ -830,7 +830,7 @@ void Gachapandora_StateBoss_LastDitchAttack(void)
 
     Gachapandora_HandleSparksAndDebris();
 
-    if (self->position.x < (ScreenInfo->position.x + 32) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 32) << 16)
+    if (self->position.x < (ScreenInfo->position.x + 32) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 32) << 16)
         self->velocity.x = -self->velocity.x;
 
     self->position.x = self->position.x + self->velocity.x;
@@ -944,7 +944,7 @@ void Gachapandora_StateBoss_Finish(void)
         self->position.y += self->velocity.y;
         self->velocity.y += 0x1800;
 
-        if (self->position.y > (ScreenInfo->position.y + ScreenInfo->height + 128) << 16) {
+        if (self->position.y > (ScreenInfo->position.y + ScreenInfo->size.y + 128) << 16) {
             Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
             self->state = StateMachine_None;
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
@@ -1234,7 +1234,7 @@ void Gachapandora_StatePrize_DrillerMove(void)
     self->position.y += self->velocity.y;
     self->position.x += self->velocity.x;
 
-    if (self->position.x < (ScreenInfo->position.x - 64) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->width + 64) << 16) {
+    if (self->position.x < (ScreenInfo->position.x - 64) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x + 64) << 16) {
         self->direction ^= FLIP_X;
         self->velocity.x = -self->velocity.x;
     }
@@ -1268,7 +1268,7 @@ void Gachapandora_StatePrize_FireDropperMove(void)
         self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 4, 9);
     }
 
-    if (self->position.x < (ScreenInfo->position.x + 16) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16) {
+    if (self->position.x < (ScreenInfo->position.x + 16) << 16 || self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 16) << 16) {
         self->startY = 1;
         self->direction ^= FLIP_X;
         self->velocity.y = 0x18000;
@@ -1307,7 +1307,7 @@ void Gachapandora_StatePrize_AmyWalk(void)
 
     EntityPlayer *player = Player_GetNearestPlayer();
 
-    if (self->position.x < (ScreenInfo->position.x + 8) << 16 || self->position.x > (ScreenInfo->width + ScreenInfo->position.x - 8) << 16
+    if (self->position.x < (ScreenInfo->position.x + 8) << 16 || self->position.x > (ScreenInfo->size.x + ScreenInfo->position.x - 8) << 16
         || Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxAmyRange)) {
         if (abs(player->position.x - self->position.x) > 0x80000)
             self->direction = player->position.x > self->position.x;
@@ -1475,7 +1475,7 @@ void Gachapandora_StatePrize_AmyJump(void)
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
             self->velocity.y     = 0;
             EntityPlayer *player = Player_GetNearestPlayer();
-            if (self->position.x < (ScreenInfo->position.x + 8) << 16 || self->position.x > (ScreenInfo->width + ScreenInfo->position.x - 8) << 16
+            if (self->position.x < (ScreenInfo->position.x + 8) << 16 || self->position.x > (ScreenInfo->size.x + ScreenInfo->position.x - 8) << 16
                 || Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxAmyRange)) {
                 RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 9, &self->mainAnimator, true, 0);
                 self->state = Gachapandora_StatePrize_AmyWalk;

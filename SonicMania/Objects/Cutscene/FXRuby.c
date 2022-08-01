@@ -45,14 +45,14 @@ void FXRuby_Draw(void)
             RSDK.FillScreen(0, self->fadeBlack, self->fadeBlack - 0x80, self->fadeBlack - 0x100);
     }
     else {
-        if (self->outerRadius <= ScreenInfo->width) {
+        if (self->outerRadius <= ScreenInfo->size.x) {
             if (self->innerRadius)
                 RSDK.DrawCircleOutline(self->position.x, self->position.y, self->innerRadius, self->outerRadius, 0x000000, 0xFF, INK_TINT, false);
             else
                 RSDK.DrawCircle(self->position.x, self->position.y, self->outerRadius, 0x000000, 0xFF, INK_TINT, false);
         }
         else {
-            RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0x000000, 0xFF, INK_TINT, true);
+            RSDK.DrawRect(0, 0, ScreenInfo->size.x, ScreenInfo->size.y, 0x000000, 0xFF, INK_TINT, true);
         }
     }
 }
@@ -140,7 +140,7 @@ void FXRuby_State_Expanding(void)
 
     self->outerRadius += self->radiusSpeed;
 
-    if (self->outerRadius > ScreenInfo->width) {
+    if (self->outerRadius > ScreenInfo->size.x) {
         self->fullyExpanded = true;
         self->state         = FXRuby_State_None;
     }

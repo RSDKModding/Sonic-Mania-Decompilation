@@ -15,10 +15,10 @@ void AnimalHBH_Update(void)
 
     self->position.x -= 0x10000;
 
-    int32 pos = self->position.x - (ScreenInfo->position.x << 16) - (ScreenInfo->centerX << 16);
+    int32 pos = self->position.x - (ScreenInfo->position.x << 16) - (ScreenInfo->center.x << 16);
 
     if (pos < 0)
-        pos = ((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - self->position.x;
+        pos = ((ScreenInfo->position.x + ScreenInfo->center.x) << 16) - self->position.x;
 
     if (pos < 0x800000)
         AnimalHBH->colorCount = 0x20 * self->type;
@@ -55,16 +55,16 @@ void AnimalHBH_Draw(void)
     RSDK_THIS(AnimalHBH);
 
     Vector2 drawPos;
-    drawPos.x = 2 * (self->position.x - ((ScreenInfo->position.x + ScreenInfo->centerX) << 15));
+    drawPos.x = 2 * (self->position.x - ((ScreenInfo->position.x + ScreenInfo->center.x) << 15));
     drawPos.y = self->position.y;
 
-    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->size.y);
     RSDK.DrawSprite(&self->silhouetteAnimator, &drawPos, false);
 
-    RSDK.SetActivePalette(4, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo->size.y);
     RSDK.DrawSprite(&self->animalHBHAnimator, NULL, false);
 
-    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->size.y);
 }
 
 void AnimalHBH_Create(void *data)

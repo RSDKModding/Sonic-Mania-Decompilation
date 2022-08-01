@@ -40,7 +40,7 @@ void AIZTornadoPath_Create(void *data)
                     foreach_all(Player, player) { player->camera = NULL; }
 
                     foreach_all(AIZTornado, tornado) { AIZTornadoPath->tornado = tornado; }
-                    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->centerY;
+                    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->center.y;
                     self->speed            = self->targetSpeed;
                     self->state            = AIZTornadoPath_State_SetTornadoSpeed;
                 }
@@ -102,7 +102,7 @@ void AIZTornadoPath_HandleMoveSpeed(void)
     EntityAIZTornado *tornado = AIZTornadoPath->tornado;
 
     int32 x = 0, y = 0;
-    if (camera && camera->position.x >= ScreenInfo->width << 16) {
+    if (camera && camera->position.x >= ScreenInfo->size.x << 16) {
         x           = camera->position.x;
         y           = camera->position.y;
         usingCamPos = true;

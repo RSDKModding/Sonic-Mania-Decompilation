@@ -24,16 +24,16 @@ void TryAgain_Draw(void)
 {
     RSDK_THIS(TryAgain);
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, (self->position.y >> 16));
+    RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, (self->position.y >> 16));
 
     RSDK.DrawSprite(&self->eggmanAnimator, &self->eggmanPos, false);
     RSDK.DrawSprite(&self->rubyAnimator, &self->rubyPos, false);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
     RSDK.DrawSprite(&self->debrisAnimator, NULL, false);
 
-    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->size.y);
 }
 
 void TryAgain_Create(void *data)

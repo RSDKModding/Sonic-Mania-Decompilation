@@ -95,8 +95,8 @@ void FBZStorm_Draw(void)
     RSDK_THIS(FBZStorm);
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    int32 centerX  = screen->centerX << 16;
-    int32 centerY  = screen->centerY << 16;
+    int32 centerX  = screen->center.x << 16;
+    int32 centerY  = screen->center.y << 16;
     self->rotation = self->stormAngle[SceneInfo->currentScreenID];
 
     Vector2 *raindropPos = &FBZStorm->raindropPositions[0x40 * SceneInfo->currentScreenID];

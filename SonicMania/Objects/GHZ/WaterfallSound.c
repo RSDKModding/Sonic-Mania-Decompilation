@@ -55,8 +55,8 @@ void WaterfallSound_StageLoad(void)
 
 bool32 WaterfallSound_SfxCheck_WaterfallLoop(void)
 {
-    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
     WaterfallSound->activeCount = 0;
     int32 count                 = 0;
@@ -97,10 +97,10 @@ bool32 WaterfallSound_SfxCheck_WaterfallLoop(void)
 }
 void WaterfallSound_SfxUpdate_WaterfallLoop(int32 sfxID)
 {
-    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-    int32 worldLeft    = worldCenterX - (ScreenInfo->centerX << 16);
-    int32 worldRight   = worldCenterX + (ScreenInfo->centerX << 16);
+    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
+    int32 worldLeft    = worldCenterX - (ScreenInfo->center.x << 16);
+    int32 worldRight   = worldCenterX + (ScreenInfo->center.x << 16);
 
     float pan        = 0.0f;
     float volDivisor = 0.0f;
@@ -115,7 +115,7 @@ void WaterfallSound_SfxUpdate_WaterfallLoop(int32 sfxID)
             if (sound->sfxPos.x > worldLeft) {
                 distance = 1.0;
                 if (sound->sfxPos.x < worldRight) {
-                    distance = (((sound->sfxPos.x - worldCenterX) >> 16) / (float)ScreenInfo->centerX);
+                    distance = (((sound->sfxPos.x - worldCenterX) >> 16) / (float)ScreenInfo->center.x);
                 }
             }
             volDivisor += volume;

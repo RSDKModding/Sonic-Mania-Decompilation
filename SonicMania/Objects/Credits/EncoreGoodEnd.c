@@ -489,8 +489,8 @@ bool32 EncoreGoodEnd_Cutscene_ThanksForPlaying(EntityCutsceneSeq *host)
             }
         }
 
-        RSDK.SetActivePalette(0, 0, ScreenInfo->height);
-        RSDK.SetActivePalette(1, 2 * host->timer, ScreenInfo->height - 2 * host->timer);
+        RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
+        RSDK.SetActivePalette(1, 2 * host->timer, ScreenInfo->size.y - 2 * host->timer);
     }
 
     return host->timer == 240;

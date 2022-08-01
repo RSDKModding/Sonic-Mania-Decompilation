@@ -38,7 +38,7 @@ void TitleLogo_Draw(void)
 
     switch (self->type) {
         case TITLELOGO_EMBLEM:
-            RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+            RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 
             self->direction = FLIP_NONE;
             RSDK.DrawSprite(&self->mainAnimator, NULL, false);

@@ -92,7 +92,7 @@ void Hatterkiller_Update(void)
             }
 
             CREATE_ENTITY(UberCaterkiller, NULL, self->bodyPositions[HATTERKILLER_SEGMENT_COUNT - 1].x,
-                          (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16);
+                          (ScreenInfo->position.y + 64 + ScreenInfo->size.y) << 16);
 
             destroyEntity(self);
         }

@@ -44,7 +44,7 @@ void PBL_Crane_Create(void *data)
 
         switch (self->type) {
             case PBL_CRANE_MANAGER:
-                self->position.x = ScreenInfo->centerX << 16;
+                self->position.x = ScreenInfo->center.x << 16;
                 self->position.y = 0;
 
                 self->alpha   = 0xFF;
@@ -209,7 +209,7 @@ void PBL_Crane_Draw_CraneMachine(void)
 {
     RSDK_THIS(PBL_Crane);
 
-    self->position.x = ScreenInfo->centerX << 16;
+    self->position.x = ScreenInfo->center.x << 16;
     if (SceneInfo->currentDrawGroup == self->drawGroup) {
         self->displayAnimator.frameID = 1;
         self->inkEffect               = INK_NONE;
@@ -218,10 +218,10 @@ void PBL_Crane_Draw_CraneMachine(void)
 
         RSDK.AddDrawListRef(11, SceneInfo->entitySlot);
 
-        RSDK.SetClipBounds(0, ScreenInfo->centerX - 96, 0, ScreenInfo->centerX + 96, (self->position.y >> 16) + 64);
+        RSDK.SetClipBounds(0, ScreenInfo->center.x - 96, 0, ScreenInfo->center.x + 96, (self->position.y >> 16) + 64);
     }
     else {
-        RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+        RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 
         self->displayAnimator.frameID = 0;
         RSDK.DrawSprite(&self->displayAnimator, NULL, true);

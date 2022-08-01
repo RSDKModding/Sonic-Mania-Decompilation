@@ -64,8 +64,8 @@ EntityUIPopover *UIPopover_CreatePopover(void)
             RSDK.ResetEntitySlot(SLOT_POPOVER, UIPopover->classID, NULL);
 
             EntityUIPopover *popover = RSDK_GET_ENTITY(SLOT_POPOVER, UIPopover);
-            popover->position.x      = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-            popover->position.y      = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+            popover->position.x      = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+            popover->position.y      = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
             UIPopover->activePopover = popover;
 
             return popover;
@@ -86,8 +86,8 @@ void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callbac
         RSDK.ResetEntitySlot(slot, UIButton->classID, 0);
         EntityUIButton *button = RSDK_GET_ENTITY(slot, UIButton);
 
-        button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-        button->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+        button->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+        button->position.y = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &button->animator, true, frameID);
 
         button->textFrames = UIWidgets->textFrames;
@@ -115,8 +115,8 @@ void UIPopover_Setup(EntityUIPopover *popover, int32 x, int32 y)
 {
     if (popover) {
         Vector2 size;
-        size.x = ScreenInfo->width << 16;
-        size.y = ScreenInfo->height << 16;
+        size.x = ScreenInfo->size.x << 16;
+        size.y = ScreenInfo->size.y << 16;
 
         bool32 tookFocus = false;
         foreach_all(UIControl, controlPtr)
@@ -134,8 +134,8 @@ void UIPopover_Setup(EntityUIPopover *popover, int32 x, int32 y)
 
         EntityUIControl *control   = RSDK_GET_ENTITY(SLOT_POPOVER_UICONTROL, UIControl);
         control->menuWasSetup      = true;
-        control->position.x        = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-        control->position.y        = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+        control->position.x        = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+        control->position.y        = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
         control->rowCount          = popover->buttonCount;
         control->columnCount       = 1;
         control->buttonID          = 0;

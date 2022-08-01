@@ -318,7 +318,7 @@ void HeavyShinobi_State_Setup(void)
         self->timer = 0;
 
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsR[0]      = ScreenInfo->centerX + 80 + (self->position.x >> 16);
+        Zone->cameraBoundsR[0]      = ScreenInfo->center.x + 80 + (self->position.x >> 16);
         Zone->playerBoundActiveB[0] = true;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 68;
 
@@ -339,7 +339,7 @@ void HeavyShinobi_State_SetupArena(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x - 80;
 
         int32 y = (Zone->cameraBoundsB[0] - 376) << 16;
 
@@ -363,7 +363,7 @@ void HeavyShinobi_State_StartFight(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x - 80;
 
         Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
         self->visible = true;

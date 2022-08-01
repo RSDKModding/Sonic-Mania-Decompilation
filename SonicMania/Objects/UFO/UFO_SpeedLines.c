@@ -73,8 +73,8 @@ void UFO_SpeedLines_Draw(void)
             int32 drawY = m->values[1][3] + (y * m->values[1][1] >> 8) + (z * m->values[1][2] >> 8) + (x * m->values[1][0] >> 8);
             int32 drawX = m->values[0][3] + (y * m->values[0][1] >> 8) + (z * m->values[0][2] >> 8) + (x * m->values[0][0] >> 8);
 
-            RSDK.DrawLine(ScreenInfo->centerX + (drawX << 8) / depth, ScreenInfo->centerY - (drawY << 8) / depth,
-                          ScreenInfo->centerX + (drawX << 8) / (depth + 0x2000), ScreenInfo->centerY - (drawY << 8) / (depth + 0x2000), 0xD0E0F0,
+            RSDK.DrawLine(ScreenInfo->center.x + (drawX << 8) / depth, ScreenInfo->center.y - (drawY << 8) / depth,
+                          ScreenInfo->center.x + (drawX << 8) / (depth + 0x2000), ScreenInfo->center.y - (drawY << 8) / (depth + 0x2000), 0xD0E0F0,
                           self->lineAlpha[l], INK_ALPHA, true);
         }
     }

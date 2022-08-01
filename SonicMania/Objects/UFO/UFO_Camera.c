@@ -64,10 +64,10 @@ void UFO_Camera_HandleCamPos(void)
         ScreenInfo->position.x -= 2 * angle;
 
     int32 offset           = ((RSDK.Sin1024(-self->angleX) << 12) << 8) / cos;
-    ScreenInfo->position.y = offset - ScreenInfo->centerY + 512;
+    ScreenInfo->position.y = offset - ScreenInfo->center.y + 512;
     self->prevAngle        = self->angle;
 
-    self->clipY = clampVal(ScreenInfo->centerY - offset + 8, -0x40, ScreenInfo->height);
+    self->clipY = clampVal(ScreenInfo->center.y - offset + 8, -0x40, ScreenInfo->size.y);
 }
 
 void UFO_Camera_State_Normal(void)

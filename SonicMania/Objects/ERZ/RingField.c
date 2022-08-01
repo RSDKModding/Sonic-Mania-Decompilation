@@ -35,10 +35,10 @@ void RingField_Update(void)
                 ring->moveType       = RING_MOVE_FIXED;
                 RSDK.SetSpriteAnimation(RingField->aniFrames, 0, &ring->animator, true, 0);
 
-                int32 sx = (ScreenInfo->centerX + ScreenInfo->position.x) << 16;
-                int32 sy = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-                int32 x  = sx + (RSDK.Rand(-ScreenInfo->centerX, ScreenInfo->centerX) << 15);
-                int32 y  = sy + (RSDK.Rand(-ScreenInfo->centerY, ScreenInfo->centerY) << 15);
+                int32 sx = (ScreenInfo->center.x + ScreenInfo->position.x) << 16;
+                int32 sy = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
+                int32 x  = sx + (RSDK.Rand(-ScreenInfo->center.x, ScreenInfo->center.x) << 15);
+                int32 y  = sy + (RSDK.Rand(-ScreenInfo->center.y, ScreenInfo->center.y) << 15);
 
                 int32 angle      = RSDK.ATan2(x - pos.x, y - pos.y);
                 ring->velocity.x = RSDK.Cos256(angle) << 9;
@@ -113,26 +113,26 @@ void RingField_GetRingSpawnPos(Vector2 *pos)
     switch (rand) {
         case 0:
         case 1:
-            y = RSDK.Rand(-ScreenInfo->height, ScreenInfo->height) << 15;
+            y = RSDK.Rand(-ScreenInfo->size.y, ScreenInfo->size.y) << 15;
 
             switch (rand) {
-                case 0: x += -0x100000 - (ScreenInfo->centerX << 16); break;
-                case 1: x += (ScreenInfo->centerX + 16) << 16; break;
-                case 2: y += -0x100000 - (ScreenInfo->centerY << 16); break;
-                case 3: y += (ScreenInfo->centerY + 16) << 16; break;
+                case 0: x += -0x100000 - (ScreenInfo->center.x << 16); break;
+                case 1: x += (ScreenInfo->center.x + 16) << 16; break;
+                case 2: y += -0x100000 - (ScreenInfo->center.y << 16); break;
+                case 3: y += (ScreenInfo->center.y + 16) << 16; break;
                 default: break;
             }
             break;
 
         case 2:
         case 3:
-            x = RSDK.Rand(-ScreenInfo->width, ScreenInfo->width) << 15;
+            x = RSDK.Rand(-ScreenInfo->size.x, ScreenInfo->size.x) << 15;
 
             switch (rand) {
-                case 0: x += -0x100000 - (ScreenInfo->centerX << 16); break;
-                case 1: x += (ScreenInfo->centerX + 16) << 16; break;
-                case 2: y += -0x100000 - (ScreenInfo->centerY << 16); break;
-                case 3: y += (ScreenInfo->centerY + 16) << 16; break;
+                case 0: x += -0x100000 - (ScreenInfo->center.x << 16); break;
+                case 1: x += (ScreenInfo->center.x + 16) << 16; break;
+                case 2: y += -0x100000 - (ScreenInfo->center.y << 16); break;
+                case 3: y += (ScreenInfo->center.y + 16) << 16; break;
                 default: break;
             }
             break;
@@ -140,8 +140,8 @@ void RingField_GetRingSpawnPos(Vector2 *pos)
         default: break;
     }
 
-    pos->x = x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16);
-    pos->y = y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16);
+    pos->x = x + ((ScreenInfo->position.x + ScreenInfo->center.x) << 16);
+    pos->y = y + ((ScreenInfo->position.y + ScreenInfo->center.y) << 16);
 }
 
 #if RETRO_INCLUDE_EDITOR

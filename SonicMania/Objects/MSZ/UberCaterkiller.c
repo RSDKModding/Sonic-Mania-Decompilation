@@ -35,7 +35,7 @@ void UberCaterkiller_Draw(void)
 
         // Draw Head
         if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->height);
+            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->size.y);
             self->scale.x            = self->bodyScales[0];
             self->scale.y            = self->bodyScales[0];
             RSDK.DrawSprite(self->bodyAnimators[0], self->bodyPositions, false);
@@ -46,7 +46,7 @@ void UberCaterkiller_Draw(void)
         // Draw Body Segments
         self->direction ^= FLIP_X;
         for (int32 i = 1; i < UBERCATERKILLER_SEGMENT_COUNT; ++i) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->height);
+            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->size.y);
 
             self->rotation = (2 * self->bodyAngles[i] - 15) & 0x1E;
             if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
@@ -65,7 +65,7 @@ void UberCaterkiller_Draw(void)
 
         // Draw Body Segments
         for (int32 i = UBERCATERKILLER_SEGMENT_COUNT - 1; i > 0; --i) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->height);
+            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->size.y);
             self->rotation           = (2 * self->bodyAngles[i] - 15) & 0x1E;
             if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
                 self->scale.x              = self->bodyScales[i];
@@ -83,7 +83,7 @@ void UberCaterkiller_Draw(void)
 
         // Draw Head
         if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->height);
+            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->size.y);
             self->scale.x            = self->bodyScales[0];
             self->scale.y            = self->bodyScales[0];
             RSDK.DrawSprite(self->bodyAnimators[0], &self->bodyPositions[0], false);
@@ -439,7 +439,7 @@ void UberCaterkiller_State_PrepareHorizontalJump(void)
             self->bodyVelocity[i].y  = -0x80000;
             self->bodyTimers[i]      = delay;
             self->bodyPositions[i].x = self->targetBodyPos;
-            self->bodyPositions[i].y = (ScreenInfo->position.y + 240) << 16;
+            self->bodyPositions[i].y = (ScreenInfo->position.y + SCREEN_YSIZE) << 16;
             self->bodyScales[i]      = 0x200;
 
             delay++;
@@ -449,7 +449,7 @@ void UberCaterkiller_State_PrepareHorizontalJump(void)
         self->position.y    = self->bodyPositions[0].y;
         self->targetBodyPos = 0;
 
-        if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
+        if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->center.x) << 16)
             UberCaterkiller_SetupBodySegments(0x40000, -0x60000);
         else
             UberCaterkiller_SetupBodySegments(-0x40000, -0x60000);
@@ -483,7 +483,7 @@ void UberCaterkiller_State_HorizontalJump(void)
 
     UberCaterkiller_CheckPlayerCollisions();
 
-    if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].y > (ScreenInfo->position.y + ScreenInfo->height + 64) << 16) {
+    if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].y > (ScreenInfo->position.y + ScreenInfo->size.y + 64) << 16) {
         self->targetScale = 0x100;
         UberCaterkiller_PrepareMoveIntoBG();
 
@@ -497,7 +497,7 @@ void UberCaterkiller_State_HorizontalJump(void)
                 break;
 
             case 2: // jump from right
-                self->targetBodyPos = (ScreenInfo->position.x + ScreenInfo->width + 32) << 16;
+                self->targetBodyPos = (ScreenInfo->position.x + ScreenInfo->size.x + 32) << 16;
                 break;
         }
     }
@@ -527,7 +527,7 @@ void UberCaterkiller_State_PrepareBGJump(void)
         self->position.y  = self->bodyPositions[0].y;
         self->jumpsRemain = RSDK.Rand(0, 2);
 
-        if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
+        if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->center.x) << 16)
             UberCaterkiller_SetupBodySegments(0x18000, -0x80000);
         else
             UberCaterkiller_SetupBodySegments(-0x18000, -0x80000);
@@ -561,7 +561,7 @@ void UberCaterkiller_State_FirstJump(void)
 
     UberCaterkiller_CheckPlayerCollisions();
 
-    if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].y > (ScreenInfo->position.y + ScreenInfo->height + 64) << 16) {
+    if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].y > (ScreenInfo->position.y + ScreenInfo->size.y + 64) << 16) {
         RSDK.PlaySfx(UberCaterkiller->sfxSandSwim, false, 255);
 
         int32 x                    = self->bodyPositions[0].x;
@@ -575,8 +575,8 @@ void UberCaterkiller_State_FirstJump(void)
         explosion->drawGroup = self->drawGroup + 1;
 
         if (self->jumpsRemain) {
-            self->position.y = (ScreenInfo->position.y + ScreenInfo->height + 64) << 16;
-            if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
+            self->position.y = (ScreenInfo->position.y + ScreenInfo->size.y + 64) << 16;
+            if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->center.x) << 16)
                 UberCaterkiller_SetupBodySegments(0x18000, -0xB8000);
             else
                 UberCaterkiller_SetupBodySegments(-0x18000, -0xB8000);
@@ -628,13 +628,13 @@ void UberCaterkiller_State_RepeatedJumps(void)
 
     UberCaterkiller_CheckPlayerCollisions();
 
-    if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].y > (ScreenInfo->height + ScreenInfo->position.y + 64) << 16) {
+    if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].y > (ScreenInfo->size.y + ScreenInfo->position.y + 64) << 16) {
         if (!self->aniID)
             --self->jumpsRemain;
 
         if (self->jumpsRemain) {
-            self->position.y = (ScreenInfo->height + ScreenInfo->position.y + 64) << 16;
-            if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
+            self->position.y = (ScreenInfo->size.y + ScreenInfo->position.y + 64) << 16;
+            if (self->bodyPositions[UBERCATERKILLER_SEGMENT_COUNT - 1].x <= (ScreenInfo->position.x + ScreenInfo->center.x) << 16)
                 UberCaterkiller_SetupBodySegments(0x18000, -0xB8000);
             else
                 UberCaterkiller_SetupBodySegments(-0x18000, -0xB8000);
@@ -656,7 +656,7 @@ void UberCaterkiller_State_RepeatedJumps(void)
                     break;
 
                 case 2: // jump from right
-                    self->targetBodyPos = (ScreenInfo->position.x + ScreenInfo->width + 32) << 16;
+                    self->targetBodyPos = (ScreenInfo->position.x + ScreenInfo->size.x + 32) << 16;
                     break;
             }
         }

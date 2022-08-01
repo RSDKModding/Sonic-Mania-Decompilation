@@ -28,8 +28,8 @@ void Constellation_Draw(void)
     Vector2 drawPos;
 
     drawPos.y = self->originPos.y - ((screen->position.y * Constellation->background1->parallaxFactor / 256) << 16);
-    drawPos.x = ((((self->position.x >> 16) - screen->position.x - (screen->width >> 1)) << 7) / (256 - self->scrollInfo->parallaxFactor)) << 16;
-    drawPos.x += screen->width << 15;
+    drawPos.x = ((((self->position.x >> 16) - screen->position.x - (screen->size.x >> 1)) << 7) / (256 - self->scrollInfo->parallaxFactor)) << 16;
+    drawPos.x += screen->size.x << 15;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 }
 
@@ -70,7 +70,7 @@ void Constellation_SetupInfo(void)
     if (self->scrollInfo) {
         int32 factor = self->scrollInfo->parallaxFactor;
         if (factor > 0)
-            self->updateRange.x += ((ScreenInfo->width << 8) / factor) << 16;
+            self->updateRange.x += ((ScreenInfo->size.x << 8) / factor) << 16;
     }
 }
 

@@ -41,8 +41,8 @@ void UFO_Sphere_Draw(void)
 
     if (self->drawGroup == 4 && self->depth3D >= 0x100) {
         self->direction = self->animator.frameID > 8;
-        self->drawPos.x = (ScreenInfo->centerX + (self->worldPos.x << 8) / self->depth3D) << 16;
-        self->drawPos.y = (ScreenInfo->centerY - (self->worldPos.y << 8) / self->depth3D) << 16;
+        self->drawPos.x = (ScreenInfo->center.x + (self->worldPos.x << 8) / self->depth3D) << 16;
+        self->drawPos.y = (ScreenInfo->center.y - (self->worldPos.y << 8) / self->depth3D) << 16;
         self->scale.x   = self->scaleFactor / self->depth3D;
         self->scale.y   = self->scaleFactor / self->depth3D;
     }
@@ -230,7 +230,7 @@ void UFO_Sphere_State_Collected(void)
 {
     RSDK_THIS(UFO_Sphere);
 
-    self->drawPos.x += ((((ScreenInfo->centerX - 38) << 16) - self->drawPos.x) >> 3);
+    self->drawPos.x += ((((ScreenInfo->center.x - 38) << 16) - self->drawPos.x) >> 3);
     self->drawPos.y += ((0x1C0000 - self->drawPos.y) >> 3);
 
     self->scale.x = self->scale.x + ((0x80 - self->scale.x) >> 3);

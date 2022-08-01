@@ -55,7 +55,7 @@ void TVFlyingBattery_Draw(void)
     RSDK.SetClipBounds(0, x - 96, y - 64, x + 96, y + 64);
 
     TVFlyingBattery_DrawSprites();
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 }
 
 void TVFlyingBattery_Create(void *data)

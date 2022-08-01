@@ -191,7 +191,7 @@ void FBZSetup_Scanline_BGInside(ScanlineInfo *scanlines)
         int32 pos               = (i + y) & 0x3FF;
         scanlinePtr->deform.x   = FBZSetup->scanlineDeformX[pos];
         scanlinePtr->deform.y   = 0;
-        scanlinePtr->position.x = ((screen->position.x << 14) - FBZSetup->scanlineDeformX[pos] * screen->centerX) & 0xFFFF8000;
+        scanlinePtr->position.x = ((screen->position.x << 14) - FBZSetup->scanlineDeformX[pos] * screen->center.x) & 0xFFFF8000;
         scanlinePtr->position.y = FBZSetup->scanlinePosY[pos];
         ++scanlinePtr;
     }

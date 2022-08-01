@@ -48,7 +48,7 @@ void ERZSetup_Scanline_Sky(ScanlineInfo *scanlines)
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    RSDK.SetClipBounds(0, 0, 0, screen->width, 136);
+    RSDK.SetClipBounds(0, 0, 0, screen->size.x, 136);
 
     int32 a           = 0x1000000;
     int32 sineAngle   = RSDK.Sin256(0);
@@ -61,8 +61,8 @@ void ERZSetup_Scanline_Sky(ScanlineInfo *scanlines)
 
         scanlines->deform.y   = sin >> 7;
         scanlines->deform.x   = -cos >> 7;
-        scanlines->position.x = sin - screen->centerX * (-cos >> 7) - (screen->position.x << 14);
-        scanlines->position.y = ERZSetup->timer + 2 * cos - screen->centerX * (sin >> 7);
+        scanlines->position.x = sin - screen->center.x * (-cos >> 7) - (screen->position.x << 14);
+        scanlines->position.y = ERZSetup->timer + 2 * cos - screen->center.x * (sin >> 7);
 
         a -= 0xC000;
         scanlines++;

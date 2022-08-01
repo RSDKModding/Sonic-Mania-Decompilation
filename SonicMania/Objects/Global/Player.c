@@ -807,7 +807,7 @@ void Player_LoadSprites(void)
             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             RSDK.CopyEntity(player1, spawn, true);
             player1->camera = Camera_SetTargetEntity(0, player1);
-            RSDK.AddCamera(&player1->position, ScreenInfo->centerX << 16, ScreenInfo->centerY << 16, true);
+            RSDK.AddCamera(&player1->position, ScreenInfo->center.x << 16, ScreenInfo->center.y << 16, true);
         }
         else {
             destroyEntity(spawn);
@@ -825,7 +825,7 @@ void Player_LoadSprites(void)
         sidekick->position.y = leader->position.y;
 
         if (globals->gameMode != MODE_TIMEATTACK) {
-            RSDK.AddCamera(&sidekick->position, ScreenInfo->centerX << 16, ScreenInfo->centerY << 16, true);
+            RSDK.AddCamera(&sidekick->position, ScreenInfo->center.x << 16, ScreenInfo->center.y << 16, true);
             sidekick->position.x -= 0x100000;
         }
 
@@ -3615,10 +3615,10 @@ void Player_HandleSidekickRespawn(void)
 
     EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (leader->classID == Player->classID && (leader->drawGroup != 2 || self->drawGroup != 2)) {
-        int32 rx = abs((self->position.x >> 0x10) - ScreenInfo->position.x - ScreenInfo->centerX);
-        int32 ry = abs((self->position.y >> 0x10) - ScreenInfo->position.y - ScreenInfo->centerY);
+        int32 rx = abs((self->position.x >> 0x10) - ScreenInfo->position.x - ScreenInfo->center.x);
+        int32 ry = abs((self->position.y >> 0x10) - ScreenInfo->position.y - ScreenInfo->center.y);
 
-        if (rx >= ScreenInfo->centerX + 96 || ry >= ScreenInfo->centerY + 96)
+        if (rx >= ScreenInfo->center.x + 96 || ry >= ScreenInfo->center.y + 96)
             ++Player->respawnTimer;
         else
             Player->respawnTimer = 0;
@@ -5494,8 +5494,8 @@ void Player_State_FlyToPlayer(void)
         self->drawGroup = Zone->playerDrawHigh;
 
     Entity *parent = self->abilityPtrs[0];
-    int32 screenX  = (ScreenInfo->width + ScreenInfo->centerX) << 16;
-    int32 screenY  = (ScreenInfo->height + ScreenInfo->centerY) << 16;
+    int32 screenX  = (ScreenInfo->size.x + ScreenInfo->center.x) << 16;
+    int32 screenY  = (ScreenInfo->size.y + ScreenInfo->center.y) << 16;
     if (parent->position.x < leader->position.x - screenX || parent->position.x > screenX + leader->position.x
         || parent->position.y < leader->position.y - screenY || parent->position.y > leader->position.y + screenY) {
         parent->position   = leader->position;
@@ -5578,8 +5578,8 @@ void Player_State_FlyToPlayer(void)
     else {
         self->drawGroup    = Zone->playerDrawHigh;
         parent->position.x = Player->targetLeaderPosition.x;
-        parent->position.y = (ScreenInfo->position.y + ScreenInfo->centerY + 32) << 16;
-        parent->position.y += (ScreenInfo->centerY - 32) * RSDK.Sin512(self->angle) << 8;
+        parent->position.y = (ScreenInfo->position.y + ScreenInfo->center.y + 32) << 16;
+        parent->position.y += (ScreenInfo->center.y - 32) * RSDK.Sin512(self->angle) << 8;
         self->drawFX |= FX_SCALE;
         self->scale.x = 0x2000 - 16 * self->angle - 8 * self->angle;
         self->scale.y = 0x2000 - 16 * self->angle - 8 * self->angle;
@@ -5676,7 +5676,7 @@ void Player_State_HoldRespawn(void)
                 self->scale.x = 0x400;
                 self->scale.y = 0x400;
 
-                self->abilityValues[0] = 0x100000 - leader->position.y + ((ScreenInfo->height + ScreenInfo->position.y) << 16);
+                self->abilityValues[0] = 0x100000 - leader->position.y + ((ScreenInfo->size.y + ScreenInfo->position.y) << 16);
                 if (self->abilityValues[0] < 0xA80000) {
                     self->velocity.y = self->abilityValues[0] / -12;
                 }

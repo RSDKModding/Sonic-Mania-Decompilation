@@ -166,8 +166,8 @@ void UIWinSize_ApplySettings(void)
 
     UIWinSize_SetupText(self);
 
-    RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, self->selection * ScreenInfo->width);
-    RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, self->selection * ScreenInfo->height);
+    RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, self->selection * ScreenInfo->size.x);
+    RSDK.SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, self->selection * ScreenInfo->size.y);
 
 #if MANIA_USE_PLUS
     RSDK.SetVideoSetting(VIDEOSETTING_CHANGED, true);
@@ -220,8 +220,8 @@ bool32 UIWinSize_ProcessTouchCB(void)
             int32 sizeY = touchStart[i].y >> 1;
 
             for (int32 t = 0; t < TouchInfo->count; ++t) {
-                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f);
-                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f);
+                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[t] * ScreenInfo->size.x) * -65536.0f);
+                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[t] * ScreenInfo->size.y) * -65536.0f);
 
                 int32 touchX = abs(touchEnd[i].x + self->position.x - x);
                 int32 touchY = abs(touchEnd[i].y + self->position.y - y);

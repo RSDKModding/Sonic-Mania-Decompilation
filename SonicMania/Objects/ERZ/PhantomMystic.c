@@ -29,7 +29,7 @@ void PhantomMystic_Draw(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 
     if (self->stateDraw) {
         StateMachine_Run(self->stateDraw);
@@ -38,7 +38,7 @@ void PhantomMystic_Draw(void)
         RSDK.DrawSprite(&self->mysticAnimator, NULL, false);
     }
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 }
 
 void PhantomMystic_Create(void *data)

@@ -20,9 +20,9 @@ void COverlay_Draw(void)
     RSDK_THIS(COverlay);
 
     int32 tileX = 0;
-    for (self->position.x = (ScreenInfo->position.x & 0xFFFFFFF0) << 16; tileX < (ScreenInfo->width >> 4) + 2; ++tileX) {
+    for (self->position.x = (ScreenInfo->position.x & 0xFFFFFFF0) << 16; tileX < (ScreenInfo->size.x >> 4) + 2; ++tileX) {
         int32 tileY = 0;
-        for (self->position.y = (ScreenInfo->position.y & 0xFFFFFFF0) << 16; tileY < (ScreenInfo->height >> 4) + 2; ++tileY) {
+        for (self->position.y = (ScreenInfo->position.y & 0xFFFFFFF0) << 16; tileY < (ScreenInfo->size.y >> 4) + 2; ++tileY) {
             COverlay_DrawTile();
             self->position.y += 16 << 0x10;
         }

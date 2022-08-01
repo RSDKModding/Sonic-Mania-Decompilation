@@ -233,7 +233,7 @@ void EggJanken_HandleMovement(void)
     RSDK_THIS(EggJanken);
 
     if (self->velocity.x >= 0) {
-        if (self->origin.x >= (ScreenInfo->position.x + ScreenInfo->width - 48) << 16)
+        if (self->origin.x >= (ScreenInfo->position.x + ScreenInfo->size.x - 48) << 16)
             self->velocity.x = -self->velocity.x;
     }
     else if (self->origin.x <= (ScreenInfo->position.x + 48) << 16)
@@ -345,7 +345,7 @@ void EggJanken_State_SetupArena(void)
 
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 208;
 
         self->origin.y -= 0x1000000;
@@ -364,7 +364,7 @@ void EggJanken_State_StartFight(void)
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         self->visible               = true;
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
 
         self->state     = EggJanken_State_EnterJanken;
         self->stateDraw = EggJanken_Draw_Closed;

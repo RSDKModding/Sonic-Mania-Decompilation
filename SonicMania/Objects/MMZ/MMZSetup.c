@@ -77,7 +77,7 @@ void MMZSetup_StageLoad(void)
         RSDK.GetTileLayer(1)->scrollPos = 384 << 16;
 
 #if MANIA_USE_PLUS
-        for (int32 l = 3; l < 5; ++l) RSDK.GetTileLayer(l)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
+        for (int32 l = 3; l < 5; ++l) RSDK.GetTileLayer(l)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->center.x) << 16;
 #endif
 
         MMZSetup->panelAniDuration = 16;
@@ -121,7 +121,7 @@ void MMZSetup_StageLoad(void)
 
 void MMZSetup_StageFinish_EndAct1(void)
 {
-    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->center.x) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 

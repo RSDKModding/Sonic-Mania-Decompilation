@@ -16,7 +16,7 @@ void Summary_Update(void)
 
     StateMachine_Run(self->state);
 
-    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->center.x;
 }
 
 void Summary_LateUpdate(void) {}

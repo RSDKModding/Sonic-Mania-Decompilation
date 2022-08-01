@@ -33,7 +33,7 @@ void Title3DSprite_Draw(void)
         self->scale.y = self->scale.x;
 
         Vector2 drawPos;
-        drawPos.x = (Title3DSprite->islandSize * self->relativePos.x / depth + ScreenInfo->centerX) << 16;
+        drawPos.x = (Title3DSprite->islandSize * self->relativePos.x / depth + ScreenInfo->center.x) << 16;
         drawPos.y = (Title3DSprite->islandSize * Title3DSprite->height / depth + 152) << 16;
         RSDK.DrawSprite(&self->animator, &drawPos, true);
     }

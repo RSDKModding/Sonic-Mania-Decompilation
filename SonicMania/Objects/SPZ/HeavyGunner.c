@@ -416,8 +416,8 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
             }
         }
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x;
         Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
         Zone->playerBoundsR[0] = Zone->cameraBoundsR[0] << 16;
 
@@ -429,15 +429,15 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
             if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 self->position.y += 0x80000;
             Zone->cameraBoundsB[0] = (self->position.y >> 16) + 168;
-            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
+            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
         }
         else {
             self->flyInTimer++;
         }
     }
     else if (self->position.x < 0x49800000) {
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x;
         Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
         Zone->playerBoundsR[0] = Zone->cameraBoundsR[0] << 16;
 
@@ -449,7 +449,7 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
             if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 self->position.y += 0x80000;
             Zone->cameraBoundsB[0] = (self->position.y >> 16) + 168;
-            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
+            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
         }
         else {
             self->flyInTimer++;
@@ -1280,7 +1280,7 @@ void HeavyGunner_StateHeli_WooshIn(void)
         self->rotation = 0;
 
     RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
-    if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16))
+    if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->center.x - 16) << 16))
         self->state = HeavyGunner_StateHeli_FindFloor;
 }
 
@@ -1308,7 +1308,7 @@ void HeavyGunner_StateHeli_FindFloor(void)
         self->rotation = 0;
 
     bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
-    if (self->velocity.x < 0 && collided && self->position.x < Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
+    if (self->velocity.x < 0 && collided && self->position.x < Zone->playerBoundsL[0] + ((ScreenInfo->center.x - 16) << 16)) {
         self->velocity.x = 0;
         self->drawFX     = FX_NONE;
         if (self->nextRoboID > 0)
@@ -1408,7 +1408,7 @@ void HeavyGunner_StateHeli_ShotsFired(void)
     if (self->rotation > 0)
         self->rotation = 0;
 
-    if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
+    if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->center.x - 16) << 16)) {
         self->velocity.x = 0;
         self->drawFX     = FX_NONE;
         self->state      = HeavyGunner_StateHeli_HandleAttacks;

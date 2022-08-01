@@ -59,15 +59,15 @@ void TitleCard_Create(void *data)
             self->stateDraw = TitleCard_Draw_SlideIn;
         }
 
-        self->stripPos[0] = (ScreenInfo->centerX - 152) << 16;
-        self->stripPos[1] = (ScreenInfo->centerX - 152) << 16;
-        self->stripPos[2] = (ScreenInfo->centerX - 160) << 16;
-        self->stripPos[3] = (ScreenInfo->centerX + 20) << 16;
+        self->stripPos[0] = (ScreenInfo->center.x - 152) << 16;
+        self->stripPos[1] = (ScreenInfo->center.x - 152) << 16;
+        self->stripPos[2] = (ScreenInfo->center.x - 160) << 16;
+        self->stripPos[3] = (ScreenInfo->center.x + 20) << 16;
         TitleCard_SetupTitleWords();
         TitleCard_SetupVertices();
 
         self->decorationPos.y = -0x340000;
-        self->decorationPos.x = (ScreenInfo->width - 160) << 16;
+        self->decorationPos.x = (ScreenInfo->size.x - 160) << 16;
 
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &self->decorationAnimator, true, 0);
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 1, &self->nameLetterAnimator, true, 0);
@@ -79,7 +79,7 @@ void TitleCard_Create(void *data)
 
         self->actNumbersAnimator.frameID = self->actID;
         self->actNumPos.y                = 0xA80000;
-        self->actNumPos.x                = (ScreenInfo->centerX + 106) << 16;
+        self->actNumPos.x                = (ScreenInfo->center.x + 106) << 16;
         self->actNumScale                = -0x400;
         if (self->word2XPos - self->word2Width < 0x100000) {
             int32 dist = (self->word2XPos - self->word2Width) - 0x100000;
@@ -184,7 +184,7 @@ void TitleCard_SetupVertices(void)
     self->word1DecorVerts[3].x = -self->word2Width;
     self->word1DecorVerts[3].y = 0xCA0000;
 
-    self->zoneDecorVerts[0].x = ScreenInfo->width << 16;
+    self->zoneDecorVerts[0].x = ScreenInfo->size.x << 16;
     self->zoneDecorVerts[0].y = 0x9A0000;
     self->zoneDecorVerts[1].x = 0x780000 + self->zoneDecorVerts[0].x;
     self->zoneDecorVerts[1].y = 0x9A0000;
@@ -240,9 +240,9 @@ void TitleCard_SetupVertices(void)
 
     self->bgRCurtainVerts[0].x = (self->stripVertsBlue[1].x + self->stripVertsBlue[0].x) >> 1;
     self->bgRCurtainVerts[0].y = 0;
-    self->bgRCurtainVerts[1].x = ScreenInfo->width << 16;
+    self->bgRCurtainVerts[1].x = ScreenInfo->size.x << 16;
     self->bgRCurtainVerts[1].y = 0;
-    self->bgRCurtainVerts[2].x = ScreenInfo->width << 16;
+    self->bgRCurtainVerts[2].x = ScreenInfo->size.x << 16;
     self->bgRCurtainVerts[2].y = 0xF00000;
     self->bgRCurtainVerts[3].x = (self->stripVertsBlue[3].x + self->stripVertsBlue[2].x) >> 1;
     self->bgRCurtainVerts[3].y = 0xF00000;
@@ -282,8 +282,8 @@ void TitleCard_SetupTitleWords(void)
         self->word2Width = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &self->zoneName, 0, 0, 1) + 24) << 16;
     }
 
-    self->zoneXPos  = (ScreenInfo->centerX - ((ScreenInfo->centerX - 160) >> 3) + 72) << 16;
-    self->word2XPos = (ScreenInfo->centerX - ((ScreenInfo->centerX - 160) >> 3) + 72) << 16;
+    self->zoneXPos  = (ScreenInfo->center.x - ((ScreenInfo->center.x - 160) >> 3) + 72) << 16;
+    self->word2XPos = (ScreenInfo->center.x - ((ScreenInfo->center.x - 160) >> 3) + 72) << 16;
 
     if (self->word2Width < 0x800000)
         self->word2XPos -= 0x280000;
@@ -683,32 +683,32 @@ void TitleCard_Draw_SlideIn(void)
     // The big ol' BG
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
         if (self->timer < 256)
-            RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, 0, ScreenInfo->size.x, ScreenInfo->size.y, 0, 0xFF, INK_NONE, true);
 
         // Blue
         int32 height = self->timer;
         if (self->timer < 512)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[3], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->center.y - (height >> 1), ScreenInfo->size.x, height, colors[3], 0xFF, INK_NONE, true);
 
         // Red
         height = self->timer - 128;
         if (self->timer > 128 && self->timer < 640)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[2], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->center.y - (height >> 1), ScreenInfo->size.x, height, colors[2], 0xFF, INK_NONE, true);
 
         // Orange
         height = self->timer - 256;
         if (self->timer > 256 && self->timer < 768)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[0], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->center.y - (height >> 1), ScreenInfo->size.x, height, colors[0], 0xFF, INK_NONE, true);
 
         // Green
         height = self->timer - 384;
         if (self->timer > 384 && self->timer < 896)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[1], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->center.y - (height >> 1), ScreenInfo->size.x, height, colors[1], 0xFF, INK_NONE, true);
 
         // Yellow
         height = self->timer - 512;
         if (self->timer > 512)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, colors[4], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->center.y - (height >> 1), ScreenInfo->size.x, height, colors[4], 0xFF, INK_NONE, true);
     }
 
     // Draw the BG thingos
@@ -746,9 +746,11 @@ void TitleCard_Draw_ShowTitleCard(void)
     colors[4] = 0xF0C800; // yellow
 #endif
 
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
+
     // Draw Yellow BG
     if (!globals->atlEnabled && !globals->suppressTitlecard)
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, colors[4], 0xFF, INK_NONE, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->size.x, ScreenInfo->size.y, colors[4], 0xFF, INK_NONE, true);
 
     // Draw Orange Strip
     if (self->vertMovePos[1].x < 0xF00000)
@@ -784,7 +786,7 @@ void TitleCard_Draw_ShowTitleCard(void)
     RSDK.DrawFace(self->zoneDecorVerts, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 
     // Draw "ZONE"
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 170, ScreenInfo[SceneInfo->currentScreenID].width, 240);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 170, screen->size.x, SCREEN_YSIZE);
 
     Vector2 drawPos;
     drawPos.x = self->zoneXPos;
@@ -796,19 +798,19 @@ void TitleCard_Draw_ShowTitleCard(void)
 
     // Draw TitleCard Word 1 (if there are 2 words)
     if (self->titleCardWord2 > 0) {
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 130);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, 130);
         drawPos.y = 0x720000;
         drawPos.x = self->word1XPos - 0x140000;
         RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->titleCardWord2, ALIGN_CENTER, 1, 0, self->charPos, true);
     }
 
     // Draw TitleCard Word 2 (if there are 2 words, otherwise draw the entire zoneName)
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 170);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, 170);
     drawPos.y = 0x9A0000;
     drawPos.x = self->word2XPos - 0x140000;
     RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_CENTER, 1, 0, self->charPos, true);
 
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
 
     // Draw Act Number
     if (self->actID != 3) {

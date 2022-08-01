@@ -192,7 +192,7 @@ void HUD_Draw(void)
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->classID == DebugMode->classID) {
         if (player->camera) {
             // Draw Camera YPos
-            lifePos.x = (ScreenInfo[player->camera->screenID].width - 16) << 16;
+            lifePos.x = (ScreenInfo[player->camera->screenID].size.x - 16) << 16;
             lifePos.y = 0x180000;
             HUD_DrawNumbersBase16(&lifePos, ScreenInfo[player->camera->screenID].position.y);
 
@@ -201,7 +201,7 @@ void HUD_Draw(void)
             HUD_DrawNumbersBase16(&lifePos, ScreenInfo[player->camera->screenID].position.x);
 
             // Draw Player YPos
-            lifePos.x = (ScreenInfo[player->camera->screenID].width - 16) << 16;
+            lifePos.x = (ScreenInfo[player->camera->screenID].size.x - 16) << 16;
             lifePos.y += 0x100000;
             HUD_DrawNumbersBase16(&lifePos, player->position.y >> 0x10);
 
@@ -212,7 +212,7 @@ void HUD_Draw(void)
     }
 #if MANIA_USE_PLUS
     else if (self->superButtonPos > -0x400000 && globals->gameMode == MODE_TIMEATTACK) {
-        lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].width << 16) - self->superButtonPos;
+        lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].size.x << 16) - self->superButtonPos;
         lifePos.y = 0x140000;
 
         if (API.CheckDLC(DLC_PLUS)) {
@@ -231,7 +231,7 @@ void HUD_Draw(void)
                 self->inkEffect = INK_NONE;
             }
 
-            lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].width << 16) - self->superButtonPos;
+            lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].size.x << 16) - self->superButtonPos;
             lifePos.y += 0x1C0000;
         }
         // Draw Thumbs Up Icon
@@ -245,7 +245,7 @@ void HUD_Draw(void)
 #if GAME_VERSION != VER_100
     else if (self->superButtonPos > -0x200000) {
         // Draw Super Icon
-        lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].width << 16) - self->superButtonPos;
+        lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].size.x << 16) - self->superButtonPos;
         lifePos.y = 0x140000;
         RSDK.DrawSprite(&self->superIconAnimator, &lifePos, true);
 
@@ -361,40 +361,40 @@ void HUD_Draw(void)
 
             case VS_BORDER_BOTTOMRIGHT:
                 // Along right edge
-                RSDK.DrawRect(ScreenInfo->width - 1, 0, 1, ScreenInfo->height, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(ScreenInfo->size.x - 1, 0, 1, ScreenInfo->size.y, 0x000000, 0xFF, INK_NONE, true);
                 // Along bottom edge
-                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
             case VS_BORDER_BOTTOM:
                 // Along bottom edge
-                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
                 break;
 
             case VS_BORDER_BOTTOMLEFT:
                 // Along left edge (on screen 2)
-                RSDK.DrawRect(0, 0, 1, ScreenInfo[1].height, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(0, 0, 1, ScreenInfo[1].size.y, 0x000000, 0xFF, INK_NONE, true);
                 // Along bottom edge
-                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
             case VS_BORDER_TOPRIGHT:
                 // Along right edge
-                RSDK.DrawRect(ScreenInfo->width - 1, 0, 1, ScreenInfo->height, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(ScreenInfo->size.x - 1, 0, 1, ScreenInfo->size.y, 0x000000, 0xFF, INK_NONE, true);
                 // Along top edge (on screen 2 or 3)
-                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
             case VS_BORDER_TOP:
                 // Along top edge (on screen 2)
-                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
                 break;
 
             case VS_BORDER_TOPLEFT:
                 // Along left edge (on screen 3 or 4)
-                RSDK.DrawRect(0, 0, 1, ScreenInfo[1].height, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(0, 0, 1, ScreenInfo[1].size.y, 0x000000, 0xFF, INK_NONE, true);
                 // Along top edge (on screen 3 or 4)
-                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true);
+                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
         }
@@ -402,12 +402,12 @@ void HUD_Draw(void)
         switch (SceneInfo->currentScreenID) {
             case 0:
                 // Along right edge (on screen 1)
-                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
                 break;
 
             case 1:
                 // Along left edge (on screen 2)
-                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
                 break;
 
             default: break;
@@ -436,7 +436,7 @@ void HUD_Create(void *data)
         self->ringsOffset.x = 0x100000;
         self->ringsOffset.y = 0x2C0000;
         self->lifeOffset.x  = 0x100000;
-        self->lifeOffset.y  = (ScreenInfo->height - 12) << 16;
+        self->lifeOffset.y  = (ScreenInfo->size.y - 12) << 16;
 #if GAME_VERSION != VER_100
         self->superButtonPos = -0x200000;
 #endif

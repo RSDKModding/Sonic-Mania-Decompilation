@@ -436,9 +436,9 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
         camera->position.y     = yOffset;
         camera->state          = 0;
         camera->target         = NULL;
-        camera->boundsL        = (xOffset >> 16) - ScreenInfo->centerX;
-        camera->boundsR        = (xOffset >> 16) + ScreenInfo->centerX;
-        camera->boundsT        = (yOffset >> 16) - ScreenInfo->height;
+        camera->boundsL        = (xOffset >> 16) - ScreenInfo->center.x;
+        camera->boundsR        = (xOffset >> 16) + ScreenInfo->center.x;
+        camera->boundsT        = (yOffset >> 16) - ScreenInfo->size.y;
         camera->boundsB        = yOffset >> 16;
         Camera->centerBounds.x = 0x80000;
         Camera->centerBounds.y = 0x40000;

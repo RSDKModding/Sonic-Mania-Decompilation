@@ -254,7 +254,7 @@ bool32 TMZ2Outro_Cutscene_HurryToCar(EntityCutsceneSeq *host)
         Zone->cameraBoundsR[0] = 0x2000;
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->position.x   = (camera->boundsR - ScreenInfo->centerX) << 16;
+        camera->position.x   = (camera->boundsR - ScreenInfo->center.x) << 16;
         camera->boundsR      = 0x2000;
         camera->state        = StateMachine_None;
 
@@ -314,7 +314,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
         {
             int pos           = ScreenInfo->position.x + (SaveGame->saveRAM->chaosEmeralds == 0b01111111 ? 64 : 96);
             ruby->startPos.x  = pos << 16;
-            ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+            ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
             ruby->velocity.y  = 0;
             ruby->isPermanent = true;
             ruby->drawGroup   = Zone->objectDrawHigh;
@@ -326,7 +326,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
     if (host->timer > 60) {
         foreach_active(Player, player)
         {
-            if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
+            if (player->position.x >= (ScreenInfo->center.x - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
 
@@ -353,7 +353,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
 
         if (SaveGame->saveRAM->chaosEmeralds == 0b01111111) {
             CREATE_ENTITY(RubyPortal, RubyPortal_State_EncoreEnd, (ScreenInfo->position.x + 64) << 16,
-                          (ScreenInfo->position.y + ScreenInfo->centerY) << 16);
+                          (ScreenInfo->position.y + ScreenInfo->center.y) << 16);
         }
 
         return true;
@@ -377,7 +377,7 @@ bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
     if (host->timer < 120) {
         foreach_active(Player, player)
         {
-            if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
+            if (player->position.x >= (ScreenInfo->center.x - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
 
@@ -522,7 +522,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
     else {
         foreach_active(Player, player)
         {
-            if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
+            if (player->position.x >= (ScreenInfo->center.x - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
 

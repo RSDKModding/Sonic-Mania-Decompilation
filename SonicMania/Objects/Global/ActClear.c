@@ -38,7 +38,7 @@ void ActClear_Draw(void)
     verts[2].y = drawPos.y - 0x40000;
     verts[3].y = drawPos.y - 0x40000;
     if ((GET_CHARACTER_ID(1)) == ID_KNUCKLES) {
-        int32 center = (ScreenInfo->centerX << 16) + 0x100000;
+        int32 center = (ScreenInfo->center.x << 16) + 0x100000;
 
         drawPos.x  = 2 * self->gotThroughPos.x + center;
         verts[0].x = drawPos.x - 0x910000;
@@ -75,7 +75,7 @@ void ActClear_Draw(void)
         offset = center - 0xA0000;
     }
     else {
-        int32 center = (ScreenInfo->centerX << 16) + 0x100000;
+        int32 center = (ScreenInfo->center.x << 16) + 0x100000;
 
         drawPos.x  = 2 * self->gotThroughPos.x + center;
         verts[0].x = drawPos.x - 0x6D0000;
@@ -561,7 +561,7 @@ void ActClear_SetupForceOnScreenP2(void)
 
     if (player2 && player2->sidekick) {
         if (player2->state != Player_State_FlyToPlayer && player2->state != Player_State_ReturnToPlayer) {
-            if (player2->position.x <= (ScreenInfo->width + ScreenInfo->position.x) << 16
+            if (player2->position.x <= (ScreenInfo->size.x + ScreenInfo->position.x) << 16
                 || abs(player2->position.y - player1->position.y) > 0x100000) {
                 Player->respawnTimer = 240;
 
@@ -940,7 +940,7 @@ void ActClear_State_RecoverPlayers(void)
 
     bool32 finishedP2  = false;
     bool32 finishedP1  = false;
-    int32 screenOffX   = (ScreenInfo->position.x + ScreenInfo->width - 16) << 16;
+    int32 screenOffX   = (ScreenInfo->position.x + ScreenInfo->size.x - 16) << 16;
     player1->up        = false;
     player1->down      = false;
     player1->jumpPress = false;
@@ -954,7 +954,7 @@ void ActClear_State_RecoverPlayers(void)
         player1->right      = false;
     }
     else {
-        if ((!player1->onGround || player1->groundVel) && player1->position.x < screenOffX - (ScreenInfo->centerX << 15)) {
+        if ((!player1->onGround || player1->groundVel) && player1->position.x < screenOffX - (ScreenInfo->center.x << 15)) {
             player1->right = true;
             if (!player1->skidding) {
                 if (!player1->left)

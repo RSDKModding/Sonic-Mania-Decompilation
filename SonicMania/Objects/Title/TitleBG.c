@@ -49,7 +49,7 @@ void TitleBG_Draw(void)
 {
     RSDK_THIS(TitleBG);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -114,7 +114,7 @@ void TitleBG_SetupFX(void)
 
 void TitleBG_Scanline_Clouds(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, SCREEN_YSIZE / 2);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, SCREEN_YSIZE / 2);
 
     int32 sine   = RSDK.Sin256(0);
     int32 cosine = RSDK.Cos256(0);
@@ -127,8 +127,8 @@ void TitleBG_Scanline_Clouds(ScanlineInfo *scanlines)
 
         scanlines->deform.x   = (-cos >> 7);
         scanlines->deform.y   = sin >> 7;
-        scanlines->position.x = sin - ScreenInfo->centerX * (-cos >> 7);
-        scanlines->position.y = TitleBG->timer + 2 * cos - ScreenInfo->centerX * (sin >> 7);
+        scanlines->position.x = sin - ScreenInfo->center.x * (-cos >> 7);
+        scanlines->position.y = TitleBG->timer + 2 * cos - ScreenInfo->center.x * (sin >> 7);
 
         off -= 0x4000;
         scanlines++;
@@ -137,7 +137,7 @@ void TitleBG_Scanline_Clouds(ScanlineInfo *scanlines)
 
 void TitleBG_Scanline_Island(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, 0, 168, ScreenInfo->width, SCREEN_YSIZE);
+    RSDK.SetClipBounds(0, 0, 168, ScreenInfo->size.x, SCREEN_YSIZE);
 
     int32 sine   = RSDK.Sin1024(-TitleBG->angle) >> 2;
     int32 cosine = RSDK.Cos1024(-TitleBG->angle) >> 2;
@@ -150,8 +150,8 @@ void TitleBG_Scanline_Island(ScanlineInfo *scanlines)
 
         scanlinePtr->deform.y   = sin >> 7;
         scanlinePtr->deform.x   = -cos >> 7;
-        scanlinePtr->position.y = cos - ScreenInfo->centerX * scanlinePtr->deform.y - 0xA000 * cosine + 0x2000000;
-        scanlinePtr->position.x = sin - ScreenInfo->centerX * scanlinePtr->deform.x - 0xA000 * sine + 0x2000000;
+        scanlinePtr->position.y = cos - ScreenInfo->center.x * scanlinePtr->deform.y - 0xA000 * cosine + 0x2000000;
+        scanlinePtr->position.x = sin - ScreenInfo->center.x * scanlinePtr->deform.x - 0xA000 * sine + 0x2000000;
         ++scanlinePtr;
     }
 }

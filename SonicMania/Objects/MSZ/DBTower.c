@@ -79,7 +79,7 @@ void DBTower_Create(void *data)
                     self->bodyAngles[i]       = 0xC0;
                 }
                 self->segmentAnimators[0] = &self->headAnimator;
-                self->bodyPositions[0].x  = self->position.x + ((ScreenInfo->centerX - 64) << 16);
+                self->bodyPositions[0].x  = self->position.x + ((ScreenInfo->center.x - 64) << 16);
                 self->bodyPositions[0].y  = self->position.y + 0xA20000;
 
                 self->originPos             = self->position;
@@ -211,12 +211,12 @@ void DBTower_State_SetupArena(void)
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x;
 
         self->active = ACTIVE_NORMAL;
         self->timer  = 0;
-        self->position.x += (ScreenInfo->centerX - 64) << 16;
+        self->position.x += (ScreenInfo->center.x - 64) << 16;
 
         self->originPos.x = self->position.x;
         self->originPos.y += 0xA20000;

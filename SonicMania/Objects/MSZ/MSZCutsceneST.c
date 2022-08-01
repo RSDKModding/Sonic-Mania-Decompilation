@@ -208,8 +208,8 @@ bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host)
     signPost->position.y = mystic->position.y - 0x3D0000 + MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID];
 
     Vector2 range;
-    range.x = ScreenInfo->width << 16;
-    range.y = ScreenInfo->height << 16;
+    range.x = ScreenInfo->size.x << 16;
+    range.y = ScreenInfo->size.y << 16;
     if (!RSDK.CheckOnScreen(mystic, &range)) {
         host->values[2] = true;
         destroyEntity(mystic);

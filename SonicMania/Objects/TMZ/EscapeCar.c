@@ -206,7 +206,7 @@ void EscapeCar_StateEncore_Setup(void)
 {
     RSDK_THIS(EscapeCar);
 
-    if (self->position.x - 0x800000 < (ScreenInfo->position.x + ScreenInfo->centerX) << 16) {
+    if (self->position.x - 0x800000 < (ScreenInfo->position.x + ScreenInfo->center.x) << 16) {
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 1, &self->thrustAnimator, true, 0);
 
         self->velocity.x = 0x6000;

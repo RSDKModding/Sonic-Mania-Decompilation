@@ -85,7 +85,7 @@ void BSS_Player_Draw(void)
     RSDK_THIS(BSS_Player);
 
     Vector2 drawPos;
-    drawPos.x = ScreenInfo->centerX << 16;
+    drawPos.x = ScreenInfo->center.x << 16;
     drawPos.y = self->position.y;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 

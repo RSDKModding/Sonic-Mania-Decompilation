@@ -107,7 +107,7 @@ void Jawz_State_CheckPlayerTrigger(void)
                     else if (player->position.x <= self->position.x) {
                         self->direction  = FLIP_NONE;
                         self->velocity.x = -0x20000;
-                        self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
+                        self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].size.x + 64) << 16;
                     }
                     break;
 
@@ -115,7 +115,7 @@ void Jawz_State_CheckPlayerTrigger(void)
                     if (player->position.x < self->position.x) {
                         self->direction  = FLIP_NONE;
                         self->velocity.x = -0x20000;
-                        self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
+                        self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].size.x + 64) << 16;
                     }
                     break;
 

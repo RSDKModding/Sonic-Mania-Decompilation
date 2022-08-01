@@ -25,11 +25,11 @@ void MMZLightning_Draw(void)
 {
     RSDK_THIS(MMZLightning);
 
-    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->size.y);
 
     RSDK.DrawSprite(&self->animator, NULL, true);
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
 }
 
 void MMZLightning_Create(void *data)
@@ -74,7 +74,7 @@ void MMZLightning_State_SetupLightningBig(void)
 
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 0, &self->animator, true, 0);
 
-    self->position.x = (ScreenInfo->centerX + RSDK.Rand(-140, 140)) << 16;
+    self->position.x = (ScreenInfo->center.x + RSDK.Rand(-140, 140)) << 16;
     self->position.y = RSDK.Rand(0x200000, 0x400000);
     self->visible    = true;
     self->drawFX     = FX_FLIP;
@@ -112,7 +112,7 @@ void MMZLightning_State_SetupLightningSmall(void)
 
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 4));
 
-    self->position.x = (ScreenInfo->centerX + RSDK.Rand(-64, 64)) << 16;
+    self->position.x = (ScreenInfo->center.x + RSDK.Rand(-64, 64)) << 16;
     self->position.y = RSDK.Rand(0x400000, 0x600000);
     self->visible    = true;
     self->drawFX     = FX_FLIP;

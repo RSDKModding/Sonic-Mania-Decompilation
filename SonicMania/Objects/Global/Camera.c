@@ -60,10 +60,10 @@ void Camera_Create(void *data)
 
     int32 screen   = voidToInt(data);
     self->offset.x = 0x80000;
-    self->centerY  = ScreenInfo->centerY - 16;
+    self->centerY  = ScreenInfo->center.y - 16;
     if (self->active != ACTIVE_NORMAL) {
         self->screenID = screen;
-        RSDK.AddCamera(&self->center, ScreenInfo[screen].centerX << 16, ScreenInfo[screen].centerY << 16, false);
+        RSDK.AddCamera(&self->center, ScreenInfo[screen].center.x << 16, ScreenInfo[screen].center.y << 16, false);
     }
 
     self->boundsOffset.x = 3;
@@ -103,26 +103,26 @@ void Camera_StageLoad(void)
 void Camera_SetCameraBounds(EntityCamera *entity)
 {
     RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
-    screen->position.x     = (entity->position.x >> 0x10) + entity->lookPos.x - screen->centerX;
+    screen->position.x     = (entity->position.x >> 0x10) + entity->lookPos.x - screen->center.x;
     screen->position.y     = (entity->position.y >> 0x10) + entity->lookPos.y - entity->centerY;
 
     if (screen->position.x < entity->boundsL)
         screen->position.x = entity->boundsL;
 
-    if (screen->width + screen->position.x > entity->boundsR)
-        screen->position.x = entity->boundsR - screen->width;
+    if (screen->size.x + screen->position.x > entity->boundsR)
+        screen->position.x = entity->boundsR - screen->size.x;
 
     if (screen->position.y < entity->boundsT)
         screen->position.y = entity->boundsT;
 
-    if (screen->height + screen->position.y > entity->boundsB)
-        screen->position.y = entity->boundsB - screen->height;
+    if (screen->size.y + screen->position.y > entity->boundsB)
+        screen->position.y = entity->boundsB - screen->size.y;
 
     screen->position.x += entity->shakePos.x;
     screen->position.y += entity->shakePos.y;
 
-    entity->center.x = screen->position.x + screen->centerX;
-    entity->center.y = screen->position.y + screen->centerY;
+    entity->center.x = screen->position.x + screen->center.x;
+    entity->center.y = screen->position.y + screen->center.y;
 }
 EntityCamera *Camera_SetTargetEntity(int32 screen, void *t)
 {
@@ -179,14 +179,14 @@ void Camera_HandleHBounds(void)
     }
 
     if (Zone->cameraBoundsR[self->screenID] < self->boundsR) {
-        if (screen->width + screen->position.x < Zone->cameraBoundsR[self->screenID])
+        if (screen->size.x + screen->position.x < Zone->cameraBoundsR[self->screenID])
             self->boundsR = Zone->cameraBoundsR[self->screenID];
         else
-            self->boundsR = screen->width + screen->position.x;
+            self->boundsR = screen->size.x + screen->position.x;
     }
 
     if (Zone->cameraBoundsR[self->screenID] > self->boundsR) {
-        if (screen->width + screen->position.x >= self->boundsR) {
+        if (screen->size.x + screen->position.x >= self->boundsR) {
             self->boundsR += self->boundsOffset.x;
             if (self->velocity.x > 0) {
                 self->boundsR = (self->velocity.x >> 0x10) + self->boundsR;
@@ -231,14 +231,14 @@ void Camera_HandleVBounds(void)
     }
 
     if (Zone->cameraBoundsB[self->screenID] < self->boundsB) {
-        if (screen->height + screen->position.y >= self->boundsB)
+        if (screen->size.y + screen->position.y >= self->boundsB)
             self->boundsB -= 2;
         else
-            self->boundsB = screen->height + screen->position.y;
+            self->boundsB = screen->size.y + screen->position.y;
     }
 
     if (Zone->cameraBoundsB[self->screenID] > self->boundsB) {
-        if (screen->height + screen->position.y >= self->boundsB) {
+        if (screen->size.y + screen->position.y >= self->boundsB) {
             self->boundsB += self->boundsOffset.y;
 
             if (self->velocity.y > 0) {
@@ -295,20 +295,20 @@ void Camera_State_MapView(void)
     self->position.y       = self->position.y >> 0x10;
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
-    if (self->position.x >= screen->centerX) {
-        if (self->position.x > Zone->cameraBoundsR[self->screenID] - screen->centerX)
-            self->position.x = Zone->cameraBoundsR[self->screenID] - screen->centerX;
+    if (self->position.x >= screen->center.x) {
+        if (self->position.x > Zone->cameraBoundsR[self->screenID] - screen->center.x)
+            self->position.x = Zone->cameraBoundsR[self->screenID] - screen->center.x;
     }
     else {
-        self->position.x = screen->centerX;
+        self->position.x = screen->center.x;
     }
 
-    if (self->position.y >= screen->centerY) {
-        if (self->position.y > Zone->cameraBoundsB[self->screenID] - screen->centerY)
-            self->position.y = Zone->cameraBoundsB[self->screenID] - screen->centerY;
+    if (self->position.y >= screen->center.y) {
+        if (self->position.y > Zone->cameraBoundsB[self->screenID] - screen->center.y)
+            self->position.y = Zone->cameraBoundsB[self->screenID] - screen->center.y;
     }
     else {
-        self->position.y = screen->centerY;
+        self->position.y = screen->center.y;
     }
 
     self->position.x <<= 0x10;

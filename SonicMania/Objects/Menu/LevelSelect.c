@@ -21,7 +21,7 @@ void LevelSelect_Update(void)
 
     StateMachine_Run(self->state);
 
-    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->center.x;
 }
 
 void LevelSelect_LateUpdate(void) {}
@@ -435,8 +435,8 @@ void LevelSelect_State_Navigate(void)
                     int xOff = 5 * (label->text.length * 0.5);
 
                     for (int f = 0; f < TouchInfo->count; ++f) {
-                        float tx = TouchInfo->x[f] * ScreenInfo->width;
-                        float ty = TouchInfo->y[f] * ScreenInfo->height;
+                        float tx = TouchInfo->x[f] * ScreenInfo->size.x;
+                        float ty = TouchInfo->y[f] * ScreenInfo->size.y;
 
                         if (tx > ((label->position.x >> 16) - xOff) && tx < (xOff + (label->position.x >> 16))) {
                             if (ty < ((label->position.y >> 16) + 10) && ty > ((label->position.y >> 16) - 10))
@@ -460,8 +460,8 @@ void LevelSelect_State_Navigate(void)
                         int xOff = 5 * (label->text.length * 0.5);
 
                         for (int f = 0; f < TouchInfo->count; ++f) {
-                            float tx = TouchInfo->x[f] * ScreenInfo->width;
-                            float ty = TouchInfo->y[f] * ScreenInfo->height;
+                            float tx = TouchInfo->x[f] * ScreenInfo->size.x;
+                            float ty = TouchInfo->y[f] * ScreenInfo->size.y;
 
                             if (tx > ((label->position.x >> 16) - xOff) && tx < (xOff + (label->position.x >> 16))) {
                                 if (ty < ((label->position.y >> 16) + 10) && ty > ((label->position.y >> 16) - 10))
@@ -474,8 +474,8 @@ void LevelSelect_State_Navigate(void)
             }
 
             for (int f = 0; f < TouchInfo->count; ++f) {
-                float tx = TouchInfo->x[f] * ScreenInfo->width;
-                float ty = TouchInfo->y[f] * ScreenInfo->height;
+                float tx = TouchInfo->x[f] * ScreenInfo->size.x;
+                float ty = TouchInfo->y[f] * ScreenInfo->size.y;
 
                 if (tx > 250.0 && ty > 170.0 && tx < 310.0 && ty < 230.0)
                     LevelSelect_HandleNewStagePos();
@@ -483,8 +483,8 @@ void LevelSelect_State_Navigate(void)
 
 #if MANIA_USE_TOUCH_CONTROLS
             for (int f = 0; f < TouchInfo->count; ++f) {
-                float tx = TouchInfo->x[f] * ScreenInfo->width;
-                float ty = TouchInfo->y[f] * ScreenInfo->height;
+                float tx = TouchInfo->x[f] * ScreenInfo->size.x;
+                float ty = TouchInfo->y[f] * ScreenInfo->size.y;
 
                 if (tx > 311.0 && ty > 184.0 && tx < 335.0 && ty < 216.0) {
                     ++self->leaderCharacterID;

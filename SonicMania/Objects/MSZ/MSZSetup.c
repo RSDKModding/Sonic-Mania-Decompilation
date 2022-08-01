@@ -370,7 +370,7 @@ void MSZSetup_State_ManageFade_ST(void)
 {
     RSDK_THIS(MSZSetup);
 
-    if (ScreenInfo->position.x + ScreenInfo->centerX > 0x1980) {
+    if (ScreenInfo->position.x + ScreenInfo->center.x > 0x1980) {
         self->state = MSZSetup_State_SwitchPalettes;
     }
 }
@@ -403,7 +403,7 @@ void MSZSetup_StageFinish_EndAct1ST(void) { MSZCutsceneST->finishedAct = true; }
 
 void MSZSetup_StageFinish_EndAct1K(void)
 {
-    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->center.x) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 
@@ -601,7 +601,7 @@ void MSZSetup_State_MoveToMSZ2Start(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player1->right        = true;
 
-    if (player1->position.x < (Zone->cameraBoundsR[0] - ScreenInfo->centerX) << 16) {
+    if (player1->position.x < (Zone->cameraBoundsR[0] - ScreenInfo->center.x) << 16) {
         foreach_active(Player, player)
         {
             if (player->groundVel > 0x30000)
@@ -655,7 +655,7 @@ void MSZSetup_State_StoreMSZ1ScrollPos_E(void)
                 ((sprite->scrollPos.x + sprite->parallaxFactor.x * ScreenInfo->position.x) & 0x7FFF0000) % sprite->loopPoint.x;
         }
 
-        Zone_StoreEntities((ScreenInfo->centerX + 16640) << 16, 1440 << 16);
+        Zone_StoreEntities((ScreenInfo->center.x + 16640) << 16, 1440 << 16);
         globals->atlEnabled = true;
         RSDK.LoadScene();
 
@@ -680,7 +680,7 @@ void MSZSetup_State_StoreMSZ1ScrollPos_ST(void)
 
     foreach_all(ParallaxSprite, sprite) { globals->parallaxOffset[id++] = sprite->scrollPos.x; }
 
-    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, 1440 << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->center.x) << 16, 1440 << 16);
     ++SceneInfo->listPos;
     globals->atlEnabled = true;
     RSDK.LoadScene();

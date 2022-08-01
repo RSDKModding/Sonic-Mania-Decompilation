@@ -300,7 +300,7 @@ void WeatherMobile_HandleDefeat(void)
             case WEATHERMOBILE_WIND_MANAGER:
             case WEATHERMOBILE_RAIN_MANAGER:
                 destroyEntity(weatherMobile);
-                Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
+                Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
                 break;
 
             case WEATHERMOBILE_CLOUD:
@@ -359,7 +359,7 @@ void WeatherMobile_Draw_Lights(void)
     self->alpha     = 3 * self->lightsTimer;
 
     drawPos.y = self->position.y;
-    for (drawPos.x = 0x200000; drawPos.x < (ScreenInfo->width + 32) << 16; drawPos.x += 0x400000) {
+    for (drawPos.x = 0x200000; drawPos.x < (ScreenInfo->size.x + 32) << 16; drawPos.x += 0x400000) {
         self->inkEffect            = INK_NONE;
         self->mainAnimator.frameID = 0;
         RSDK.DrawSprite(&self->mainAnimator, &drawPos, true);
@@ -378,13 +378,13 @@ void WeatherMobile_Draw_Lights(void)
     color color = RSDK.GetPaletteEntry(0, 151);
 
     if (self->direction) {
-        RSDK.DrawRect(0, 0, drawPos.x - 36, ScreenInfo->height, color, self->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x + 28, 0, ScreenInfo->width, ScreenInfo->height, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(0, 0, drawPos.x - 36, ScreenInfo->size.y, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x + 28, 0, ScreenInfo->size.x, ScreenInfo->size.y, color, self->alpha, INK_ADD, true);
         RSDK.DrawRect(drawPos.x - 36, 0, 64, drawPos.y - 29, color, self->alpha, INK_ADD, true);
     }
     else {
-        RSDK.DrawRect(0, 0, drawPos.x - 28, ScreenInfo->height, color, self->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x + 36, 0, ScreenInfo->width, ScreenInfo->height, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(0, 0, drawPos.x - 28, ScreenInfo->size.y, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x + 36, 0, ScreenInfo->size.x, ScreenInfo->size.y, color, self->alpha, INK_ADD, true);
         RSDK.DrawRect(drawPos.x - 28, 0, 64, drawPos.y - 29, color, self->alpha, INK_ADD, true);
     }
 }
@@ -406,9 +406,9 @@ void WeatherMobile_State_SetupArena(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0] = ScreenInfo->centerX + (self->position.x >> 16);
-        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0] = ScreenInfo->center.x + (self->position.x >> 16);
+        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->size.y;
         Zone->cameraBoundsB[0] = (self->position.y >> 16);
 
         WeatherMobile->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
@@ -431,7 +431,7 @@ void WeatherMobile_State_StartBoss(void)
             self->timer   = 0;
             self->visible = true;
             self->state   = WeatherMobile_State_EnterEggman;
-            self->position.y += -0x400000 - (ScreenInfo->height << 16);
+            self->position.y += -0x400000 - (ScreenInfo->size.y << 16);
 
             foreach_active(WeatherTV, weatherTV)
             {
@@ -1002,7 +1002,7 @@ void WeatherMobile_State_Flee(void)
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         RSDK.ResetEntity(self, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
-        self->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        self->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         self->position.y = (ScreenInfo->position.y - 48) << 16;
     }
 }

@@ -263,7 +263,7 @@ void AIZSetup_HandleHeavyMovement(void)
             x = robo->position.x;
     }
 
-    if (x < (ScreenInfo->position.x + ScreenInfo->width + 32) << 16) {
+    if (x < (ScreenInfo->position.x + ScreenInfo->size.x + 32) << 16) {
         foreach_all(AIZEggRobo, robo)
         {
             if (robo->forKnux)
@@ -363,8 +363,8 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host)
     if (player2->classID == Player->classID)
         player2->state = AIZSetup_PlayerState_Static;
 
-    if (tornado->position.x < ScreenInfo->width << 16)
-        camera->position.x = ScreenInfo->width << 16;
+    if (tornado->position.x < ScreenInfo->size.x << 16)
+        camera->position.x = ScreenInfo->size.x << 16;
 
     return tornado->disableInteractions;
 }

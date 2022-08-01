@@ -25,11 +25,11 @@ void UFO_Message_Draw(void)
     RSDK_THIS(UFO_Message);
 
     Vector2 drawPos;
-    drawPos.x = (ScreenInfo->centerX - self->timer) << 16;
+    drawPos.x = (ScreenInfo->center.x - self->timer) << 16;
     drawPos.y = 0x580000;
     RSDK.DrawSprite(&self->leftAnimator, &drawPos, true);
 
-    drawPos.x = (self->timer + ScreenInfo->centerX) << 16;
+    drawPos.x = (self->timer + ScreenInfo->center.x) << 16;
     RSDK.DrawSprite(&self->rightAnimator, &drawPos, true);
 }
 

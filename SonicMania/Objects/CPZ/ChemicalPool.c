@@ -73,13 +73,13 @@ void ChemicalPool_Draw(void)
         RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + (self->size.x >> 16), y + (self->size.y >> 16));
 
         Vector2 drawPos;
-        drawPos.x = self->position.x - ((self->position.x - (screen->position.x << 16) - (ScreenInfo->centerX << 16)) >> 1);
+        drawPos.x = self->position.x - ((self->position.x - (screen->position.x << 16) - (ScreenInfo->center.x << 16)) >> 1);
 
         int32 offset = clampVal(0x800000 - self->size.y, 0, 0x400000);
-        drawPos.y    = offset + self->position.y + self->maxDeform - ((self->position.y - (screen->centerY << 16) - (screen->position.y << 16)) >> 4);
+        drawPos.y = offset + self->position.y + self->maxDeform - ((self->position.y - (screen->center.y << 16) - (screen->position.y << 16)) >> 4);
         RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
     }
 }
 

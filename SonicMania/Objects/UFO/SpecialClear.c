@@ -28,7 +28,7 @@ void SpecialClear_Draw(void)
     Vector2 drawPos;
     SaveRAM *saveRAM = SaveGame->saveRAM;
 
-    int32 centerX = ScreenInfo->centerX << 16;
+    int32 centerX = ScreenInfo->center.x << 16;
     drawPos.x     = centerX - 0x600000;
 
     // Draw Emeralds

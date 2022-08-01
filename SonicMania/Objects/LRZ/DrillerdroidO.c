@@ -318,9 +318,9 @@ void DrillerdroidO_State_SetupArena(void)
 
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 96;
-        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - 240;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
 
         self->startY     = self->position.y;
         self->active     = ACTIVE_NORMAL;
@@ -339,7 +339,7 @@ void DrillerdroidO_State_AwaitPlayer(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         self->health = 6;
@@ -700,7 +700,7 @@ void DrillerdroidO_State_MoveToNextLevel(void)
 
     Zone->cameraBoundsT[0] = ScreenInfo->position.y;
 
-    if (Zone->cameraBoundsT[0] == Zone->cameraBoundsB[0] - 240) {
+    if (Zone->cameraBoundsT[0] == Zone->cameraBoundsB[0] - SCREEN_YSIZE) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = player1;
 

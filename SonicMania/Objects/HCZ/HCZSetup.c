@@ -237,8 +237,8 @@ void HCZSetup_Scanline_WaterLine(ScanlineInfo *scanlines)
     int32 distance       = maxVal(1, abs(screenY - waterLevel));
     int32 scanlineHeight = maxVal(0x10000, 0x640000 / distance);
 
-    screenY    = clampVal(screenY, 0, screen->height);
-    waterLevel = clampVal(waterLevel, 0, screen->height);
+    screenY    = clampVal(screenY, 0, screen->size.y);
+    waterLevel = clampVal(waterLevel, 0, screen->size.y);
 
     ScanlineInfo *scanlinePtr = &scanlines[screenY];
 
@@ -271,7 +271,7 @@ void HCZSetup_Scanline_WaterLine(ScanlineInfo *scanlines)
 
 void HCZSetup_StageFinish_EndAct1(void)
 {
-    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->center.x) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 

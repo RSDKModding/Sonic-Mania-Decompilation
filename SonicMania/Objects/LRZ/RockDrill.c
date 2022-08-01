@@ -240,8 +240,8 @@ void RockDrill_State_Setup(void)
         self->boundsT = Zone->cameraBoundsT[0];
         self->boundsB = Zone->cameraBoundsB[0];
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX - 96;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX - 96;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x - 96;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x - 96;
         Zone->cameraBoundsB[0] = (self->position.y >> 16) + 96;
     }
 

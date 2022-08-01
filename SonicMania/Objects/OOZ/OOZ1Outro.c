@@ -75,10 +75,10 @@ bool32 OOZ1Outro_Cutscene_FadeIn(EntityCutsceneSeq *host)
         self->boundsR          = Zone->cameraBoundsR[0];
         self->boundsT          = Zone->cameraBoundsT[0];
         self->boundsB          = Zone->cameraBoundsB[0];
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->centerY;
-        Zone->cameraBoundsB[0] = (self->position.y >> 16) + ScreenInfo->centerY;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x;
+        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->center.y;
+        Zone->cameraBoundsB[0] = (self->position.y >> 16) + ScreenInfo->center.y;
         EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->boundsL        = Zone->cameraBoundsL[0];
         camera->boundsR        = Zone->cameraBoundsR[0];

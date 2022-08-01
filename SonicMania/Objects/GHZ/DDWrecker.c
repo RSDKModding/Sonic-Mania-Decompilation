@@ -32,7 +32,7 @@ void DDWrecker_Draw(void)
 {
     RSDK_THIS(DDWrecker);
     if (self->type == DDWRECKER_BALL1 || self->type == DDWRECKER_BALL2) {
-        RSDK.SetActivePalette(1, 0, ScreenInfo->height);
+        RSDK.SetActivePalette(1, 0, ScreenInfo->size.y);
 
         self->direction = self->animator.frameID >= 16;
         if (!(self->invincibilityTimer & 2)) {
@@ -46,7 +46,7 @@ void DDWrecker_Draw(void)
     }
     RSDK.DrawSprite(&self->animator, NULL, false);
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
 }
 
 void DDWrecker_Create(void *data)
@@ -117,17 +117,17 @@ void DDWrecker_State_SetupArena(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 0x10) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 0x10) + ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 0x10) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 0x10) + ScreenInfo->center.x;
         Zone->cameraBoundsB[0]      = (self->position.y >> 0x10);
 
-        DDWrecker->camBoundL  = self->position.x + ((160 - ScreenInfo->centerX) << 16);
-        DDWrecker->camBoundR  = self->position.x + ((ScreenInfo->centerX - 160) << 16);
-        DDWrecker->bossBoundL = self->position.x + ((32 - ScreenInfo->centerX) << 16);
-        DDWrecker->bossBoundR = self->position.x + ((ScreenInfo->centerX - 32) << 16);
+        DDWrecker->camBoundL  = self->position.x + ((160 - ScreenInfo->center.x) << 16);
+        DDWrecker->camBoundR  = self->position.x + ((ScreenInfo->center.x - 160) << 16);
+        DDWrecker->bossBoundL = self->position.x + ((32 - ScreenInfo->center.x) << 16);
+        DDWrecker->bossBoundR = self->position.x + ((ScreenInfo->center.x - 32) << 16);
         DDWrecker->bossBoundT = self->position.y - 0xC00000;
 
-        DDWrecker->attackVelocities[0] = clampVal(ScreenInfo->centerX - 168, 0, 24);
+        DDWrecker->attackVelocities[0] = clampVal(ScreenInfo->center.x - 168, 0, 24);
         DDWrecker->attackVelocities[0] = (DDWrecker->attackVelocities[0] + 32) << 11;
         DDWrecker->attackVelocities[1] = DDWrecker->attackVelocities[0] >> 2;
         DDWrecker->attackVelocities[2] = 288 * DDWrecker->attackVelocities[0] >> 8;

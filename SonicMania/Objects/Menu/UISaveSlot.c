@@ -255,7 +255,7 @@ void UISaveSlot_Draw(void)
         }
     }
 
-    RSDK.DrawCircle(ScreenInfo->centerX, ScreenInfo->centerY, self->fxRadius, 0x000000, self->alpha, INK_ALPHA, true);
+    RSDK.DrawCircle(ScreenInfo->center.x, ScreenInfo->center.y, self->fxRadius, 0x000000, self->alpha, INK_ALPHA, true);
 }
 
 void UISaveSlot_Create(void *data)

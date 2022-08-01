@@ -30,7 +30,7 @@ void PhantomShinobi_Draw(void)
 {
     RSDK_THIS(PhantomShinobi);
 
-    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 
     if (self->invincibilityTimer & 1)
         RSDK.CopyPalette(6, 128, 4, 128, 128);
@@ -57,7 +57,7 @@ void PhantomShinobi_Draw(void)
     if (self->invincibilityTimer & 1)
         RSDK.CopyPalette(5, 128, 4, 128, 128);
 
-    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].size.y);
 }
 
 void PhantomShinobi_Create(void *data)

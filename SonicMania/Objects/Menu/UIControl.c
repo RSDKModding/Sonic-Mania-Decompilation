@@ -49,8 +49,8 @@ void UIControl_Draw(void)
 {
     RSDK_THIS(UIControl);
 
-    ScreenInfo->position.x = (self->position.x >> 0x10) - ScreenInfo->centerX;
-    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->centerY;
+    ScreenInfo->position.x = (self->position.x >> 0x10) - ScreenInfo->center.x;
+    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->center.y;
 }
 
 void UIControl_Create(void *data)
@@ -368,10 +368,10 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
         EntityUIButton *entity = RSDK_GET_ENTITY(i, UIButton);
 
         if (entity) {
-            int32 left   = minVal(-ScreenInfo->width >> 1, ScreenInfo->width >> 1) << 16;
-            int32 right  = maxVal(-ScreenInfo->width >> 1, ScreenInfo->width >> 1) << 16;
-            int32 top    = minVal(-ScreenInfo->height >> 1, ScreenInfo->height >> 1) << 16;
-            int32 bottom = maxVal(-ScreenInfo->height >> 1, ScreenInfo->height >> 1) << 16;
+            int32 left   = minVal(-ScreenInfo->size.x >> 1, ScreenInfo->size.x >> 1) << 16;
+            int32 right  = maxVal(-ScreenInfo->size.x >> 1, ScreenInfo->size.x >> 1) << 16;
+            int32 top    = minVal(-ScreenInfo->size.y >> 1, ScreenInfo->size.y >> 1) << 16;
+            int32 bottom = maxVal(-ScreenInfo->size.y >> 1, ScreenInfo->size.y >> 1) << 16;
 
             if (entity->position.x >= control->position.x + left && entity->position.x <= control->position.x + right) {
                 if (entity->position.y >= control->position.y + top && entity->position.y <= control->position.y + bottom) {
@@ -452,7 +452,7 @@ void UIControl_SetActiveMenu(EntityUIControl *entity)
     }
 
     RSDK.ClearCameras();
-    RSDK.AddCamera(&entity->position, ScreenInfo->width << 16, ScreenInfo->height << 16, true);
+    RSDK.AddCamera(&entity->position, ScreenInfo->size.x << 16, ScreenInfo->size.y << 16, true);
 
     UIControl_MenuChangeButtonInit(entity);
 
@@ -720,10 +720,10 @@ void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y)
     if (!entity->noClamp) {
         int32 startX = entity->startPos.x - entity->cameraOffset.x;
         int32 startY = entity->startPos.y - entity->cameraOffset.y;
-        int32 x1     = startX + (ScreenInfo->width << 15) - (entity->size.x >> 1);
-        int32 x2     = startX + (entity->size.x >> 1) - (ScreenInfo->width << 15);
-        int32 y1     = startY + (ScreenInfo->height << 15) - (entity->size.y >> 1);
-        int32 y2     = startY + (entity->size.y >> 1) - (ScreenInfo->height << 15);
+        int32 x1     = startX + (ScreenInfo->size.x << 15) - (entity->size.x >> 1);
+        int32 x2     = startX + (entity->size.x >> 1) - (ScreenInfo->size.x << 15);
+        int32 y1     = startY + (ScreenInfo->size.y << 15) - (entity->size.y >> 1);
+        int32 y2     = startY + (entity->size.y >> 1) - (ScreenInfo->size.y << 15);
 
         if (x < x2)
             x2 = x;

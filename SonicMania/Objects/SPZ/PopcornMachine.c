@@ -98,21 +98,21 @@ void PopcornMachine_Draw(void)
 
     self->inkEffect        = INK_ADD;
     self->animator.frameID = 8;
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, (storeY1 >> 16) - screen->position.y, screen->width, (storeY2 >> 16) - screen->position.y + 1);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, (storeY1 >> 16) - screen->position.y, screen->size.x, (storeY2 >> 16) - screen->position.y + 1);
 
     drawPos = self->position;
     drawPos.x -= 0x600000;
-    drawPos.y = (self->position.y + ((screen->centerY - 160 + screen->position.y) << 16)) >> 1;
+    drawPos.y = (self->position.y + ((screen->center.y - 160 + screen->position.y) << 16)) >> 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
     drawPos.x += 0xC00000;
-    drawPos.y       = (self->position.y + ((screen->centerY - 384 + screen->position.y) << 16)) >> 1;
+    drawPos.y       = (self->position.y + ((screen->center.y - 384 + screen->position.y) << 16)) >> 1;
     self->direction = FLIP_XY;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
     self->direction = FLIP_NONE;
     self->inkEffect = INK_NONE;
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
 }
 
 void PopcornMachine_Create(void *data)

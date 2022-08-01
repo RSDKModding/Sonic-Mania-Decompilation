@@ -247,17 +247,17 @@ void HotaruMKII_State_CheckPlayerInRange(void)
                 self->position.y       = RSDK.Sin256(self->origin) << 17;
                 RSDKScreenInfo *screen = &ScreenInfo[screenID];
 
-                if (self->position.x > (screen->width & 0xFFFFFFFE) << 15)
-                    self->position.x = (screen->width & 0xFFFFFFFE) << 15;
+                if (self->position.x > (screen->size.x & 0xFFFFFFFE) << 15)
+                    self->position.x = (screen->size.x & 0xFFFFFFFE) << 15;
 
-                if (self->position.x < -((int32)(screen->width & 0xFFFFFFFE) << 15))
-                    self->position.x = -((int32)(screen->width & 0xFFFFFFFE) << 15);
+                if (self->position.x < -((int32)(screen->size.x & 0xFFFFFFFE) << 15))
+                    self->position.x = -((int32)(screen->size.x & 0xFFFFFFFE) << 15);
 
-                if (self->position.y > (screen->height & 0xFFFFFFFE) << 15)
-                    self->position.y = (screen->height & 0xFFFFFFFE) << 15;
+                if (self->position.y > (screen->size.y & 0xFFFFFFFE) << 15)
+                    self->position.y = (screen->size.y & 0xFFFFFFFE) << 15;
 
-                if (self->position.y < -((int32)(screen->height & 0xFFFFFFFE) << 15))
-                    self->position.y = -((int32)(screen->height & 0xFFFFFFFE) << 15);
+                if (self->position.y < -((int32)(screen->size.y & 0xFFFFFFFE) << 15))
+                    self->position.y = -((int32)(screen->size.y & 0xFFFFFFFE) << 15);
 
                 if (self->position.x >= 0)
                     self->position.x += 0x100000;
@@ -269,8 +269,8 @@ void HotaruMKII_State_CheckPlayerInRange(void)
                 else
                     self->position.y -= 0x100000;
 
-                self->position.x += ((screen->width & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
-                self->position.y += ((screen->height & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
+                self->position.x += ((screen->size.x & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
+                self->position.y += ((screen->size.y & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
                 HotaruMKII_HandleDistances(player);
 
                 self->inkEffect = INK_ALPHA;

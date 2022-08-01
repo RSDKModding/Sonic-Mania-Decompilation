@@ -91,7 +91,7 @@ bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
 
         player1->state      = Player_State_Static;
         player1->position.x = player1->position.x;
-        player1->position.y = (ScreenInfo->position.y + 32 + ScreenInfo->height) << 16;
+        player1->position.y = (ScreenInfo->position.y + 32 + ScreenInfo->size.y) << 16;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SPRING_TWIRL, &player1->animator, false, 0);
 
         if (player2->classID == Player->classID) {
@@ -114,8 +114,8 @@ bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    int32 targetY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-    int32 startY  = (ScreenInfo->position.y + ScreenInfo->height + 32) << 16;
+    int32 targetY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
+    int32 startY  = (ScreenInfo->position.y + ScreenInfo->size.y + 32) << 16;
 
     if (host->timer) {
         if (host->timer >= 60) {
@@ -164,9 +164,9 @@ bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    player1->position.y = (ScreenInfo->centerY + ScreenInfo->position.y) << 16;
+    player1->position.y = (ScreenInfo->center.y + ScreenInfo->position.y) << 16;
     if (player2->classID == Player->classID)
-        player2->position.y = (ScreenInfo->centerY + ScreenInfo->position.y) << 16;
+        player2->position.y = (ScreenInfo->center.y + ScreenInfo->position.y) << 16;
 
     return host->timer == 100;
 }
@@ -176,7 +176,7 @@ bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
     MANIA_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    int32 startY  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 startY  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
     int32 targetY = (ScreenInfo->position.y - 32) << 16;
 
     if (host->timer) {

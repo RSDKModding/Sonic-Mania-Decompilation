@@ -179,15 +179,15 @@ void UFO_Setup_StageLoad(void)
 
 void UFO_Setup_DrawHook_PrepareDrawingFX(void)
 {
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
-    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
 }
 
 void UFO_Setup_Scanline_Playfield(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
 
-    RSDK.SetClipBounds(0, 0, camera->clipY, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, camera->clipY, ScreenInfo->size.x, ScreenInfo->size.y);
 
     int32 sin  = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos  = RSDK.Cos1024(camera->angle) >> 2;
@@ -206,8 +206,8 @@ void UFO_Setup_Scanline_Playfield(ScanlineInfo *scanlines)
         int32 pos = ((cosX * h) >> 8) - (sinX * ((i * h) >> 8) >> 8);
         RSDK.SetActivePalette(clampVal(abs(pos) >> 15, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        scanlines->position.x = (sin * pos - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
-        scanlines->position.y = (cos * pos - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
+        scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
 
         scanlines++;
         cosVal += cosX;
@@ -218,7 +218,7 @@ void UFO_Setup_Scanline_3DFloor(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
 
-    RSDK.SetClipBounds(0, 0, camera->clipY + 24, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, camera->clipY + 24, ScreenInfo->size.x, ScreenInfo->size.y);
 
     int32 sin  = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos  = RSDK.Cos1024(camera->angle) >> 2;
@@ -237,8 +237,8 @@ void UFO_Setup_Scanline_3DFloor(ScanlineInfo *scanlines)
         int32 pos = ((cosX * h) >> 8) - (sinX * ((i * h) >> 8) >> 8);
         RSDK.SetActivePalette(clampVal((abs(pos) >> 15) - 8, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        scanlines->position.x = (sin * pos - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
-        scanlines->position.y = (cos * pos - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
+        scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
 
         scanlines++;
         cosVal += cosX;
@@ -248,7 +248,7 @@ void UFO_Setup_Scanline_3DRoof(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, camera->clipY - 48);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, camera->clipY - 48);
 
     int32 sin  = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos  = RSDK.Cos1024(camera->angle) >> 2;
@@ -268,8 +268,8 @@ void UFO_Setup_Scanline_3DRoof(ScanlineInfo *scanlines)
         int32 pos = ((cosX * h) >> 8) - (sinX * ((i * h) >> 8) >> 8);
         RSDK.SetActivePalette(clampVal(abs(pos) >> 14, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        scanlines->position.x = (sin * pos - ScreenInfo->centerX * scanlines->deform.x) + (camera->position.x >> 3);
-        scanlines->position.y = (cos * pos - ScreenInfo->centerX * scanlines->deform.y) + (camera->position.y >> 3);
+        scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + (camera->position.x >> 3);
+        scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + (camera->position.y >> 3);
 
         scanlines++;
         cosVal += cosX;

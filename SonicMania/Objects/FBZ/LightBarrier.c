@@ -21,7 +21,7 @@ void LightBarrier_LateUpdate(void)
 
         foreach_active(Player, player)
         {
-            if (self->position.x > (ScreenInfo->position.x + ScreenInfo->centerX) << 16 || player->velocity.x < 0)
+            if (self->position.x > (ScreenInfo->position.x + ScreenInfo->center.x) << 16 || player->velocity.x < 0)
                 Player_CheckCollisionBox(player, self, &self->hitboxBarrier);
         }
 

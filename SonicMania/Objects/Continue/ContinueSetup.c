@@ -52,7 +52,7 @@ void ContinueSetup_Draw(void)
 
     Vector2 drawPos;
     drawPos.y = 0x600000;
-    drawPos.x = ((ScreenInfo->centerX + 4) << 16) - (globals->continues << 19);
+    drawPos.x = ((ScreenInfo->center.x + 4) << 16) - (globals->continues << 19);
     if (self->showContinues && globals->continues > 0) {
         RSDK.DrawSprite(&ContinueSetup->animator, &drawPos, true);
     }
@@ -91,7 +91,7 @@ void ContinueSetup_Create(void *data)
             case ID_RAY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 4); break;
 #endif
         }
-        RSDK.SetActivePalette(1, 0, ScreenInfo->height);
+        RSDK.SetActivePalette(1, 0, ScreenInfo->size.y);
     }
 }
 

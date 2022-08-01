@@ -20,7 +20,7 @@ void BSS_HUD_Draw(void)
     RSDK_THIS(BSS_HUD);
 
     Vector2 drawPos;
-    drawPos.x = (ScreenInfo->centerX - 141) << 16;
+    drawPos.x = (ScreenInfo->center.x - 141) << 16;
     drawPos.y = 0xD0000;
     RSDK.DrawSprite(&self->sphereAnimator, &drawPos, true);
 
@@ -28,7 +28,7 @@ void BSS_HUD_Draw(void)
     drawPos.y = 0x110000;
     BSS_HUD_DrawNumbers(BSS_Setup->sphereCount, &drawPos);
 
-    drawPos.x = (ScreenInfo->centerX + 64) << 16;
+    drawPos.x = (ScreenInfo->center.x + 64) << 16;
     drawPos.y = 0xD0000;
     RSDK.DrawSprite(&self->ringAnimator, &drawPos, true);
 

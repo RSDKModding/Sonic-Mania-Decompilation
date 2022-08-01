@@ -277,14 +277,14 @@ void ERZGunner_Draw_RocketLaunch(void)
 
     EntityERZGunner *parent = self->parent;
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ((self->originPos.y + parent->position.y) >> 16) - ScreenInfo->position.y);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ((self->originPos.y + parent->position.y) >> 16) - ScreenInfo->position.y);
 
     Vector2 drawPos;
     drawPos.x = parent->position.x + self->originPos.x;
     drawPos.y = self->position.y;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 
     drawPos.y = self->originPos.y + parent->position.y;
     RSDK.DrawSprite(&self->fxAnimator, &drawPos, false);

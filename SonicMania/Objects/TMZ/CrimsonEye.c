@@ -396,8 +396,8 @@ void CrimsonEye_SetupBG2Layer(void)
 }
 
 // Manages the black strucures that move in the foreground
-void CrimsonEye_DrawHook_DisableFGSilhouette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
-void CrimsonEye_DrawHook_EnableFGSilhouette(void) { RSDK.SetActivePalette(5, 0, ScreenInfo->height); }
+void CrimsonEye_DrawHook_DisableFGSilhouette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->size.y); }
+void CrimsonEye_DrawHook_EnableFGSilhouette(void) { RSDK.SetActivePalette(5, 0, ScreenInfo->size.y); }
 
 void CrimsonEye_SetArrowDir(int type)
 {
@@ -417,9 +417,9 @@ void CrimsonEye_StateContainer_SetupArena(void)
 
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX + 80;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x + 80;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 124;
-        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
 
         self->active = ACTIVE_NORMAL;
         CREATE_ENTITY(TMZ1Setup, NULL, 0, 0);
@@ -447,14 +447,14 @@ void CrimsonEye_StateContainer_AwaitPlayer(void)
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (!self->timer && ScreenInfo->position.x + ScreenInfo->centerX > (self->position.x >> 16) - 256) {
+    if (!self->timer && ScreenInfo->position.x + ScreenInfo->center.x > (self->position.x >> 16) - 256) {
         CrimsonEye_SetupBG2Layer();
         self->timer = 1;
     }
 
     if (player1->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x - 80;
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.PlaySfx(CrimsonEye->sfxElevator, false, 255);

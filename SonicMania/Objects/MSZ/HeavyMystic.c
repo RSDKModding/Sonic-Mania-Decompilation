@@ -435,7 +435,7 @@ void HeavyMystic_StateBoss_AwaitPlayer(void)
 
     if (self->timer) {
         if (++self->timer == 120) {
-            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
+            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
             MSZSetup_SetBGScrollOrigin(self->position.x + 0x4000000, 0);
 
             self->position.y += 0x500000;
@@ -457,8 +457,8 @@ void HeavyMystic_StateBoss_AwaitPlayer(void)
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
 
-            Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-            Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
+            Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+            Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x;
             Zone->cameraBoundsB[0] = (self->position.y >> 16) + 256;
 
             ++self->timer;
@@ -1075,7 +1075,7 @@ void HeavyMystic_StateBoss_FangHop(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
+        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 16) << 16)
             self->velocity.x = -self->velocity.x;
     }
     else {
@@ -1128,7 +1128,7 @@ void HeavyMystic_StateBoss_RougeHit(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
+        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 16) << 16)
             self->velocity.x = 0;
     }
     else {
@@ -1211,7 +1211,7 @@ void HeavyMystic_StateBoss_BarkPounding(void)
             Camera_ShakeScreen(0, 0, 2);
 
         if (!(Zone->timer & 0xF)) {
-            int32 x                   = ScreenInfo->position.x + 16 + 32 * RSDK.Rand(0, ScreenInfo->width >> 5);
+            int32 x                   = ScreenInfo->position.x + 16 + 32 * RSDK.Rand(0, ScreenInfo->size.x >> 5);
             EntityHeavyMystic *debris = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_DEBRIS), x << 16, (ScreenInfo->position.y - 16) << 16);
             debris->animator.frameID  = RSDK.Rand(0, 6);
         }
@@ -1232,7 +1232,7 @@ void HeavyMystic_StateBoss_BarkJump(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
+        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 16) << 16)
             self->velocity.x = -self->velocity.x;
     }
     else {
@@ -1359,7 +1359,7 @@ void HeavyMystic_StateBoss_BeanJump(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
+        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 16) << 16)
             self->velocity.x = -self->velocity.x;
     }
     else {

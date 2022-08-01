@@ -350,9 +350,9 @@ void EggPistonsMKII_State_SetupArena(void)
 
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 71;
-        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
 
         self->active = ACTIVE_NORMAL;
         self->state  = EggPistonsMKII_State_EnterBoss;
@@ -387,7 +387,7 @@ void EggPistonsMKII_State_EnterBoss(void)
         if (player1->position.x > (self->position.x - 0x80000)) {
 #endif
             Zone->playerBoundActiveL[0] = true;
-            Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+            Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
             Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
             EggPistonsMKII->health = 8;
 

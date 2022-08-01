@@ -27,10 +27,10 @@ void TitleSonic_Draw(void)
 {
     RSDK_THIS(TitleSonic);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, 160);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, 160);
     RSDK.DrawSprite(&self->animatorSonic, NULL, false);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 
     if (self->animatorSonic.frameID == self->animatorSonic.frameCount - 1)
         RSDK.DrawSprite(&self->animatorFinger, NULL, false);

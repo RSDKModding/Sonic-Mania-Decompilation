@@ -186,10 +186,10 @@ void DERobot_StageLoad(void)
 void DERobot_HandleScreenBounds(void)
 {
     RSDK_THIS(DERobot);
-    int32 x = (self->position.x >> 16) - ScreenInfo->centerX + 128;
+    int32 x = (self->position.x >> 16) - ScreenInfo->center.x + 128;
     if (x > Zone->cameraBoundsL[0]) {
         Zone->cameraBoundsL[0]                         = x;
-        Zone->cameraBoundsR[0]                         = ScreenInfo->width + 96 + x;
+        Zone->cameraBoundsR[0]                         = ScreenInfo->size.x + 96 + x;
         Zone->playerBoundsL[0]                         = Zone->cameraBoundsL[0] << 16;
         Zone->playerBoundsR[0]                         = Zone->cameraBoundsR[0] << 16;
         Zone->playerBoundActiveB[0]                    = 0;
@@ -838,8 +838,8 @@ void DERobot_State_SetupArena(void)
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.y <= self->position.y + 0x200000 && player1->state != Player_State_TubeRoll) {
             for (int32 i = 0; i < Player->playerCount; ++i) {
-                Zone->cameraBoundsL[i]      = (self->position.x >> 16) - ScreenInfo->centerX + 128;
-                Zone->cameraBoundsR[i]      = ScreenInfo->centerX + 128 + (self->position.x >> 16);
+                Zone->cameraBoundsL[i]      = (self->position.x >> 16) - ScreenInfo->center.x + 128;
+                Zone->cameraBoundsR[i]      = ScreenInfo->center.x + 128 + (self->position.x >> 16);
                 Zone->cameraBoundsB[i]      = self->position.y >> 16;
                 Zone->playerBoundsB[i]      = Zone->cameraBoundsB[i] << 16;
                 Zone->playerBoundActiveL[i] = true;
@@ -1290,7 +1290,7 @@ void DERobot_State_Finish(void)
 
         EntityEggPrison *prison = (EntityEggPrison *)self->eggman;
         RSDK.ResetEntity(prison, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
-        prison->position.x          = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        prison->position.x          = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         prison->checkTileCollisions = true;
         prison->position.y          = (ScreenInfo->position.y - 48) << 16;
 

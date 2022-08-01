@@ -38,12 +38,12 @@ void UICreditsText_Draw(void)
         RSDK.DrawSprite(&self->animator, 0, false);
     }
     else {
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width,
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->size.x,
                            (self->position.y >> 16) + self->clipY2 - ScreenInfo[SceneInfo->currentScreenID].position.y);
 
         RSDK.DrawText(&self->animator, &drawPos, &self->text, 0, 0, ALIGN_LEFT, 0, NULL, self->charPositions, false);
 
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
     }
 }
 
@@ -90,7 +90,7 @@ void UICreditsText_State_Setup(void)
 {
     RSDK_THIS(UICreditsText);
 
-    if ((self->position.y >> 16) - ScreenInfo->position.y - ScreenInfo->centerY < ScreenInfo->centerY - 16) {
+    if ((self->position.y >> 16) - ScreenInfo->position.y - ScreenInfo->center.y < ScreenInfo->center.y - 16) {
         self->active  = ACTIVE_NORMAL;
         self->visible = true;
 

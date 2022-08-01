@@ -269,7 +269,7 @@ void ERZKing_State_SetupArena(void)
         Zone->playerBoundActiveR[0] = true;
         Zone->cameraBoundsL[0]      = (self->position.x >> 16) - 320;
         Zone->cameraBoundsR[0]      = (self->position.x >> 16) + 320;
-        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
 
         ERZKing->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
         ERZKing->boundsR = (Zone->cameraBoundsR[0] - 64) << 16;

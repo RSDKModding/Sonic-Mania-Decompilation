@@ -506,9 +506,9 @@ void HotaruHiWatt_StateBoss_SetupArena(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x;
+        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->size.y;
         Zone->cameraBoundsB[0] = (self->position.y >> 16);
 
         HotaruHiWatt->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
@@ -532,7 +532,7 @@ void HotaruHiWatt_StateBoss_AwaitPlayer(void)
     RSDK_THIS(HotaruHiWatt);
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
-        self->position.y += -0x100000 - (ScreenInfo->centerY << 16);
+        self->position.y += -0x100000 - (ScreenInfo->center.y << 16);
         HotaruHiWatt->startY = self->position.y;
 
         self->state     = HotaruHiWatt_StateBoss_DimScreen;

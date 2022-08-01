@@ -57,8 +57,8 @@ void TMZ3Setup_StageLoad(void)
     RSDK.SetDrawGroupProperties(1, false, TMZ3Setup_DrawHook_RemoveDynTilesPalette);
 }
 
-void TMZ3Setup_DrawHook_ApplyDynTilesPalette(void) { RSDK.SetActivePalette(1, 0, ScreenInfo->height); }
-void TMZ3Setup_DrawHook_RemoveDynTilesPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
+void TMZ3Setup_DrawHook_ApplyDynTilesPalette(void) { RSDK.SetActivePalette(1, 0, ScreenInfo->size.y); }
+void TMZ3Setup_DrawHook_RemoveDynTilesPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->size.y); }
 
 #if RETRO_INCLUDE_EDITOR
 void TMZ3Setup_EditorDraw(void) {}

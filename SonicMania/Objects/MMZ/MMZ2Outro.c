@@ -146,10 +146,10 @@ bool32 MMZ2Outro_Cutscene_CameraMoveToWindow(EntityCutsceneSeq *host)
         Zone->playerBoundsR[p] += 0x2400000;
     }
 
-    self->position.x = (Zone->cameraBoundsR[0] - ScreenInfo->centerX) << 16;
-    self->position.y = (Zone->cameraBoundsB[0] - ScreenInfo->centerY) << 16;
+    self->position.x = (Zone->cameraBoundsR[0] - ScreenInfo->center.x) << 16;
+    self->position.y = (Zone->cameraBoundsB[0] - ScreenInfo->center.y) << 16;
 
-    RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
     Camera_SetupLerp(CAMERA_LERP_SIN512, 0, self->position.x, self->position.y, 2);
 
     return true;

@@ -55,7 +55,7 @@ void TMZ1Setup_StaticUpdate(void)
     }
 
     if (TMZ1Setup->stageState < TMZ1_STAGESTATE_LIFT) {
-        int32 posY = ScreenInfo->centerY + ScreenInfo->position.y;
+        int32 posY = ScreenInfo->center.y + ScreenInfo->position.y;
 
         // Dunno what the data param is for here, it goes unused, maybe an earlier version of what "stageState" does?
         if (posY > 4528 && TMZ1Setup->stageState != TMZ1_STAGESTATE_CITY && !RSDK.GetEntityCount(TMZ1Setup->classID, true)) {
@@ -196,7 +196,7 @@ void TMZ1Setup_State_ShowOutsideBGs(void)
     RSDK_THIS(TMZ1Setup);
 
     if (++self->timer >= 2) {
-        if (ScreenInfo->position.y + ScreenInfo->centerY > 4192)
+        if (ScreenInfo->position.y + ScreenInfo->center.y > 4192)
             self->state = TMZ1Setup_State_ShowCityBG;
         else
             self->state = TMZ1Setup_State_ShowSkyBG;

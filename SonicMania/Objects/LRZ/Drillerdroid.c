@@ -285,7 +285,7 @@ void Drillerdroid_State_SetupArena(void)
         Zone->playerBoundActiveB[0] = true;
         Zone->cameraBoundsR[0]      = (self->position.x >> 16) + 324;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 96;
-        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - 240;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
 
         self->startY     = self->position.y;
         self->active     = ACTIVE_NORMAL;
@@ -578,7 +578,7 @@ void Drillerdroid_State_Drilling(void)
 
     if (!(Zone->timer & 7)) {
         if (Zone->timer & 0xF) {
-            int32 x              = (32 * RSDK.Rand(0, ScreenInfo->width >> 5) + ScreenInfo->position.x) << 16;
+            int32 x              = (32 * RSDK.Rand(0, ScreenInfo->size.x >> 5) + ScreenInfo->position.x) << 16;
             int32 y              = (ScreenInfo->position.y + 24) << 16;
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
 
@@ -589,7 +589,7 @@ void Drillerdroid_State_Drilling(void)
             debris->updateRange.y   = 0x400000;
         }
         else {
-            int32 x                      = (48 * RSDK.Rand(0, ScreenInfo->width / 48) + Drillerdroid->stalatiteOffset + ScreenInfo->position.x) << 16;
+            int32 x                      = (48 * RSDK.Rand(0, ScreenInfo->size.x / 48) + Drillerdroid->stalatiteOffset + ScreenInfo->position.x) << 16;
             int32 y                      = (ScreenInfo->position.y + 24) << 16;
             EntityStalactite *stalactite = CREATE_ENTITY(Stalactite, Stalactite_State_Falling_Boss, x, y);
 

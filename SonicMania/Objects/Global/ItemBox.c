@@ -723,7 +723,7 @@ void ItemBox_GivePowerup(void)
                                 }
                                 else {
                                     player2->state            = Player_State_ReturnToPlayer;
-                                    player2->abilityValues[0] = ((ScreenInfo->position.y + ScreenInfo->height + 16) << 16) - player->position.y;
+                                    player2->abilityValues[0] = ((ScreenInfo->position.y + ScreenInfo->size.y + 16) << 16) - player->position.y;
                                     player2->drawFX |= FX_SCALE;
                                     player2->scale.x    = 0x400;
                                     player2->scale.y    = 0x400;

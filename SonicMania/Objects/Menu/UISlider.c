@@ -229,8 +229,8 @@ bool32 UISlider_TouchCB(void)
             int32 sizeY = self->touchPosSizeS.y >> 1;
 
             for (int32 i = 0; i < TouchInfo->count; ++i) {
-                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
-                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
+                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[i] * ScreenInfo->size.x) * -65536.0f);
+                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[i] * ScreenInfo->size.y) * -65536.0f);
 
                 int32 touchX = abs(self->touchPosOffsetS.x + self->position.x - x);
                 int32 touchY = abs(self->touchPosOffsetS.y + self->position.y - y);

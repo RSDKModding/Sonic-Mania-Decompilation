@@ -79,8 +79,8 @@ void TMZ2Setup_StageLoad(void)
     }
 }
 
-void TMZ2Setup_DrawHook_ApplyDynTilesPalette(void) { RSDK.SetActivePalette(4, 0, ScreenInfo->height); }
-void TMZ2Setup_DrawHook_RemoveDynTilesPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
+void TMZ2Setup_DrawHook_ApplyDynTilesPalette(void) { RSDK.SetActivePalette(4, 0, ScreenInfo->size.y); }
+void TMZ2Setup_DrawHook_RemoveDynTilesPalette(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->size.y); }
 
 void TMZ2Setup_DrawDynTiles_Eggman(void)
 {

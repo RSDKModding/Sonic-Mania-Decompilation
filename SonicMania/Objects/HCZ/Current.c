@@ -241,15 +241,15 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
     }
     else {
         x = (self->size.x >> 1) + self->position.x + 0x200000;
-        if ((ScreenInfo->position.x + 64 + ScreenInfo->width) << 16 < x)
-            x = (ScreenInfo->position.x + 64 + ScreenInfo->width) << 16;
+        if ((ScreenInfo->position.x + 64 + ScreenInfo->size.x) << 16 < x)
+            x = (ScreenInfo->position.x + 64 + ScreenInfo->size.x) << 16;
     }
 
     int32 maxY = self->position.y - (self->size.y >> 1) - 0x200000;
     if ((ScreenInfo->position.y - 64) << 16 > maxY)
         maxY = (ScreenInfo->position.y - 64) << 16;
 
-    int32 screenY = (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16;
+    int32 screenY = (ScreenInfo->position.y + 64 + ScreenInfo->size.y) << 16;
     int32 minY    = (self->size.y >> 1) + self->position.y + 0x200000;
     if (screenY < minY)
         minY = screenY;
@@ -279,15 +279,15 @@ Vector2 Current_GetBubbleSpawnPosVertical(uint8 down)
     }
     else {
         y = (self->size.y >> 1) + self->position.y + 0x200000;
-        if ((ScreenInfo->position.y + 64 + ScreenInfo->height) << 16 < y)
-            y = (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16;
+        if ((ScreenInfo->position.y + 64 + ScreenInfo->size.y) << 16 < y)
+            y = (ScreenInfo->position.y + 64 + ScreenInfo->size.y) << 16;
     }
 
     int32 maxX = self->position.x - (self->size.x >> 1) - 0x200000;
     if ((ScreenInfo->position.x - 64) << 16 > maxX)
         maxX = (ScreenInfo->position.x - 64) << 16;
 
-    int32 screenX = (ScreenInfo->position.x + 64 + ScreenInfo->width) << 16;
+    int32 screenX = (ScreenInfo->position.x + 64 + ScreenInfo->size.x) << 16;
     int32 minX    = (self->size.x >> 1) + self->position.x + 0x200000;
     if (screenX < minX)
         minX = screenX;

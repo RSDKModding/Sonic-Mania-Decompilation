@@ -177,7 +177,7 @@ bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
         }
     }
 
-    int32 posX = ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x100000;
+    int32 posX = ((ScreenInfo->size.x + ScreenInfo->position.x) << 16) + 0x100000;
     if (player1->position.x > posX) {
         player1->right = false;
         if (player2->classID != Player->classID || SPZ2Outro->ignoreP2 || player2->position.x > posX) {

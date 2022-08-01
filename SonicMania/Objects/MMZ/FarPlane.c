@@ -51,11 +51,11 @@ void FarPlane_Draw(void)
     RSDK_THIS(FarPlane);
 
     if (SceneInfo->currentDrawGroup) {
-        RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+        RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
     }
     else {
-        int32 x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-        int32 y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+        int32 x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+        int32 y = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
         FarPlane->screenPos.x = (x + self->origin.x - self->position.x) & 0xFFFE0000;
         FarPlane->screenPos.y = (y + self->origin.y - self->position.y) & 0xFFFE0000;
@@ -121,7 +121,7 @@ void FarPlane_StageLoad(void)
         RSDK.ClearCameras();
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        RSDK.AddCamera(&camera->center, ScreenInfo[camera->screenID].centerX << 16, ScreenInfo[camera->screenID].centerY << 16, 0);
+        RSDK.AddCamera(&camera->center, ScreenInfo[camera->screenID].center.x << 16, ScreenInfo[camera->screenID].center.y << 16, 0);
     }
 }
 
@@ -284,10 +284,10 @@ void FarPlane_DrawHook_RemoveFarPlane(void)
 
 void FarPlane_Scanline_FarPlaneView(ScanlineInfo *scanline)
 {
-    int32 x = FarPlane->screenPos.x - (ScreenInfo->centerX << 17);
-    int32 y = FarPlane->screenPos.y - (ScreenInfo->centerY << 17);
+    int32 x = FarPlane->screenPos.x - (ScreenInfo->center.x << 17);
+    int32 y = FarPlane->screenPos.y - (ScreenInfo->center.y << 17);
 
-    for (int32 h = 0; h < ScreenInfo->height; ++h) {
+    for (int32 h = 0; h < ScreenInfo->size.y; ++h) {
         scanline->position.x = x;
         scanline->position.y = y;
 
@@ -299,7 +299,7 @@ void FarPlane_Scanline_FarPlaneView(ScanlineInfo *scanline)
     }
 
     RSDK.CopyPalette(0, 0, 4, 0, 128);
-    RSDK.SetActivePalette(4, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo->size.y);
 }
 
 #if RETRO_INCLUDE_EDITOR

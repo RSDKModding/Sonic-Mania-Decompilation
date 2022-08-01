@@ -229,7 +229,7 @@ void EggPrison_HandleMovement(void)
 
     if (self->state != EggPrison_State_FlyOffScreen) {
         if (self->velocity.x > 0) {
-            if (self->position.x <= (ScreenInfo->position.x + ScreenInfo->width - 48) << 16) {
+            if (self->position.x <= (ScreenInfo->position.x + ScreenInfo->size.x - 48) << 16) {
                 if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x400000, 0, true))
                     self->velocity.x = -self->velocity.x;
             }
@@ -383,8 +383,8 @@ void EggPrison_State_HandleBounds(void)
                     Zone->playerBoundActiveR[p] = true;
 
                     if (self->type == EGGPRISON_NORMAL) {
-                        Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
-                        Zone->cameraBoundsR[p] = (self->position.x >> 0x10) + ScreenInfo[p].centerX;
+                        Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].center.x;
+                        Zone->cameraBoundsR[p] = (self->position.x >> 0x10) + ScreenInfo[p].center.x;
                     }
                 }
             }

@@ -25,7 +25,7 @@ void PBL_HUD_Draw(void)
 {
     RSDK_THIS(PBL_HUD);
 
-    self->position.x = ScreenInfo->centerX << 16;
+    self->position.x = ScreenInfo->center.x << 16;
 
     if (self->stateDraw) {
         StateMachine_Run(self->stateDraw);
@@ -260,11 +260,11 @@ void PBL_HUD_Draw_Message(void)
     position.x = self->position.x + self->offset.x;
     position.y = self->position.y + self->offset.y;
 
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, ScreenInfo->centerX - 55, 40, ScreenInfo->centerX + 56, 58);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, ScreenInfo->center.x - 55, 40, ScreenInfo->center.x + 56, 58);
 
     RSDK.DrawText(&self->textAnimator, &position, &self->text, 0, 0, 0, 1, 0, 0, true);
 
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 }
 
 void PBL_HUD_Draw_Score(void)

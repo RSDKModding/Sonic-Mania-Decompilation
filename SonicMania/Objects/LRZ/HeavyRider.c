@@ -429,7 +429,7 @@ void HeavyRider_HandleTurn_ScreenEdges(void)
         }
     }
     else {
-        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 48) << 16) {
+        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 48) << 16) {
             HeavyRider_DecideNextAttack();
 
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
@@ -957,7 +957,7 @@ void HeavyRider_State_Finish(void)
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-        self->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        self->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         self->position.y = (ScreenInfo->position.y - 48) << 16;
 
         EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), self->position.x, self->position.y);

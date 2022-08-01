@@ -63,10 +63,10 @@ void Fireflies_State_Spawner(void)
             Vector2 startPos;
 
             RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
-            int32 x                = ((screen->width & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
-            int32 y                = ((screen->height & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
-            int32 w                = ZONE_RAND(-screen->width, screen->width);
-            int32 h                = ZONE_RAND(-screen->height, screen->height);
+            int32 x                = ((screen->size.x & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
+            int32 y                = ((screen->size.y & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
+            int32 w                = ZONE_RAND(-screen->size.x, screen->size.x);
+            int32 h                = ZONE_RAND(-screen->size.y, screen->size.y);
 
             startPos.x     = x + (w << 16);
             startPos.y     = y + (h << 16);

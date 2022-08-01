@@ -395,7 +395,7 @@ void BigSqueeze_StateManager_SetupArena(void)
 
         Zone->cameraBoundsR[0] = (self->position.x >> 16) + WIDE_SCR_XCENTER;
         Zone->cameraBoundsB[0] = 1792;
-        Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
 
         BigSqueeze->boundsB = (Zone->cameraBoundsB[0] - 16) << 16;
         eggman->state       = Eggman_State_ProcessThenSet;

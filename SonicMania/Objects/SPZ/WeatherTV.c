@@ -59,7 +59,7 @@ void WeatherTV_Draw(void)
 
     StateMachine_Run(self->stateDraw);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 }
 
 void WeatherTV_Create(void *data)

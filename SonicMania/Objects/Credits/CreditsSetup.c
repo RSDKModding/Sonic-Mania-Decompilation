@@ -111,7 +111,7 @@ void CreditsSetup_LoadCreditsStrings(void)
     RSDK.LoadStringList(&stringList, "Credits.txt", 8);
     RSDK.InitString(&string, "", 0x80);
 
-    int32 offset = (ScreenInfo->height + 128) << 16;
+    int32 offset = (ScreenInfo->size.y + 128) << 16;
     for (int32 i = 0; RSDK.SplitStringList(&string, &stringList, i, 1); ++i) {
         if (string.length <= 4) {
             offset += 0x200000;
@@ -138,7 +138,7 @@ void CreditsSetup_LoadCreditsStrings(void)
         }
     }
 
-    CreditsSetup->creditsSize = offset + (ScreenInfo->height << 15);
+    CreditsSetup->creditsSize = offset + (ScreenInfo->size.y << 15);
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -133,7 +133,7 @@ void MetalSonic_HandleStageWrap(void)
     EntityMetalSonic *marker = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, MetalSonic);
     EntityPlatform *wall     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
     if (player->position.y < marker->position.y && !player->collisionPlane) {
-        Zone->cameraBoundsT[0] = (marker->position.y >> 16) + 16 - ScreenInfo->height;
+        Zone->cameraBoundsT[0] = (marker->position.y >> 16) + 16 - ScreenInfo->size.y;
         Zone->cameraBoundsB[0] = (marker->position.y >> 16) + 16;
         Zone->deathBoundary[0] = (marker->position.y >> 16) + 16;
         marker->position.y     = -0x200000;
@@ -423,9 +423,9 @@ void MetalSonic_State_SetupArena(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
 
-        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->height + 52;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->center.x;
+        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->size.y + 52;
         Zone->cameraBoundsB[0] = (self->position.y >> 16) + 52;
 
         self->state = MetalSonic_State_AwaitPlayer;
@@ -704,17 +704,17 @@ void MetalSonic_State_Hovering(void)
 
             case MS_ATTACK_DASH:
                 if (RSDK.Rand(0, 2) != 0)
-                    self->targetPos.x = (ScreenInfo->width + 72) << 16;
+                    self->targetPos.x = (ScreenInfo->size.x + 72) << 16;
                 else
                     self->targetPos.x = -0x480000;
-                self->targetPos.y = ScreenInfo->centerY << 16;
+                self->targetPos.y = ScreenInfo->center.y << 16;
                 self->state       = MetalSonic_State_PrepareAttack;
                 break;
 
             case MS_ATTACK_ELECTRIC:
                 if (player1->velocity.x >= 0) {
                     self->targetPos.y = 0x200000;
-                    self->targetPos.x = (ScreenInfo->width - 32) << 16;
+                    self->targetPos.x = (ScreenInfo->size.x - 32) << 16;
                 }
                 else {
                     self->targetPos.x = 0x200000;
@@ -1445,7 +1445,7 @@ void MetalSonic_State_Defeated(void)
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
+        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
                                                 (ScreenInfo->position.y - 48) << 16);
         prison->velocity.x      = 0x10000;
         prison->active          = ACTIVE_NORMAL;
@@ -1742,7 +1742,7 @@ void MetalSonic_State_SetupElectricAttack_Phase2(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (self->position.y <= (ScreenInfo->centerY + ScreenInfo->position.y) << 16) {
+    if (self->position.y <= (ScreenInfo->center.y + ScreenInfo->position.y) << 16) {
         if (self->velocity.y < 0x10000)
             self->velocity.y += 0x1000;
     }
@@ -1756,7 +1756,7 @@ void MetalSonic_State_SetupElectricAttack_Phase2(void)
     if (self->position.x < wall->position.x + 0x410000)
         self->position.x = wall->position.x + 0x410000;
 
-    if (self->position.x > ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x400000) {
+    if (self->position.x > ((ScreenInfo->size.x + ScreenInfo->position.x) << 16) + 0x400000) {
         self->direction = FLIP_X;
         self->state = MetalSonic_State_StartElectricAttack_Phase2;
     }
@@ -1778,7 +1778,7 @@ void MetalSonic_State_StartElectricAttack_Phase2(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (self->position.y <= (ScreenInfo->centerY + ScreenInfo->position.y) << 16) {
+    if (self->position.y <= (ScreenInfo->center.y + ScreenInfo->position.y) << 16) {
         if (self->velocity.y < 0x10000)
             self->velocity.y += 0x1000;
     }
@@ -1792,9 +1792,9 @@ void MetalSonic_State_StartElectricAttack_Phase2(void)
     if (self->position.x < wall->position.x + 0x410000)
         self->position.x = wall->position.x + 0x410000;
 
-    if (self->position.x < ((ScreenInfo->position.x + ScreenInfo->width) << 16) - 0x180000) {
+    if (self->position.x < ((ScreenInfo->position.x + ScreenInfo->size.x) << 16) - 0x180000) {
         self->attackTimer = 120;
-        self->position.x = ((ScreenInfo->position.x + ScreenInfo->width) << 16) - 0x180000;
+        self->position.x = ((ScreenInfo->position.x + ScreenInfo->size.x) << 16) - 0x180000;
         self->state = MetalSonic_State_ElectricAttack_Phase2;
     }
 
@@ -1811,10 +1811,10 @@ void MetalSonic_State_ElectricAttack_Phase2(void)
     EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
     self->velocity.x = player1->velocity.x;
-    self->position.x = ((ScreenInfo->position.x + ScreenInfo->width) << 16) - 0x180000;
+    self->position.x = ((ScreenInfo->position.x + ScreenInfo->size.x) << 16) - 0x180000;
     self->position.y += self->velocity.y;
 
-    if (self->position.y <= (ScreenInfo->centerY + ScreenInfo->position.y) << 16) {
+    if (self->position.y <= (ScreenInfo->center.y + ScreenInfo->position.y) << 16) {
         if (self->velocity.y < 0x10000)
             self->velocity.y += 0x1000;
     }
@@ -1904,7 +1904,7 @@ void MetalSonic_State_BallAttack_Phase2(void)
     self->velocity.y += 0x3800;
 
     if (self->position.y >= 0x1F00000) {
-        if (self->position.x > ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x400000 || !--self->attackTimer) {
+        if (self->position.x > ((ScreenInfo->size.x + ScreenInfo->position.x) << 16) + 0x400000 || !--self->attackTimer) {
             self->attackTimer = 120;
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_HOVER, &self->metalSonicAnimator, false, 2);
             self->state = MetalSonic_State_FinishAttack_Phase2;
@@ -2062,11 +2062,11 @@ void MetalSonic_State_Finish(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
         Zone->cameraBoundsL[0] = ScreenInfo->position.x;
-        Zone->cameraBoundsR[0] = ScreenInfo->width + ScreenInfo->position.x;
-        Zone->playerBoundsR[0] = (ScreenInfo->width + ScreenInfo->position.x) << 16;
+        Zone->cameraBoundsR[0] = ScreenInfo->size.x + ScreenInfo->position.x;
+        Zone->playerBoundsR[0] = (ScreenInfo->size.x + ScreenInfo->position.x) << 16;
         Zone->playerBoundsL[0] = ScreenInfo->position.x << 16;
 
-        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
+        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
                                                 (ScreenInfo->position.y - 48) << 16);
 
         prison->velocity.x = 0x10000;

@@ -38,7 +38,7 @@ void UIModeButton_Draw(void)
     RSDK_THIS(UIModeButton);
 
     Vector2 drawPos;
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, (self->position.y >> 16) - ScreenInfo->position.y);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, (self->position.y >> 16) - ScreenInfo->position.y);
 
     drawPos = self->position;
     drawPos.y += self->iconBounceOffset;
@@ -56,7 +56,7 @@ void UIModeButton_Draw(void)
     drawPos.y += self->buttonBounceOffset >> 1;
     RSDK.DrawSprite(&self->iconAnimator, &drawPos, false);
 
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
 
     drawPos = self->position;
     drawPos.x -= self->buttonBounceOffset;

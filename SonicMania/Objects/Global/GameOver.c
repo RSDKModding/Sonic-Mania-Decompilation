@@ -82,16 +82,16 @@ void GameOver_Create(void *data)
             self->letterPosMove[i].x = -(self->finalOffsets[i].x >> 4);
             self->letterPosMove[i].y = 0x2000;
 
-            self->finalOffsets[i].y = (ScreenInfo->centerY - 4) << 16;
+            self->finalOffsets[i].y = (ScreenInfo->center.y - 4) << 16;
 
-            self->letterPositions[i].x = 8 * ((ScreenInfo->centerX << 13) + self->finalOffsets[i].x);
+            self->letterPositions[i].x = 8 * ((ScreenInfo->center.x << 13) + self->finalOffsets[i].x);
             self->letterPositions[i].y = posY;
 
             posY -= 0x100000;
         }
 
         self->barPos.x  = 0x1000000;
-        self->barPos.y  = ScreenInfo->centerY << 16;
+        self->barPos.y  = ScreenInfo->center.y << 16;
         self->scale.x   = 0x800;
         self->state     = GameOver_State_EnterLetters;
         self->drawGroup = Zone->huddrawGroup + 1;
@@ -130,17 +130,17 @@ void GameOver_State_EnterLetters(void)
     if (self->barPos.x > 0)
         self->barPos.x -= 0x40000;
 
-    self->verts[0].x = self->barPos.x + ((ScreenInfo->centerX - 104) << 16);
-    self->verts[1].x = self->barPos.x + ((ScreenInfo->centerX + 88) << 16);
-    self->verts[2].x = self->barPos.x + ((ScreenInfo->centerX + 104) << 16);
-    self->verts[3].x = self->barPos.x + ((ScreenInfo->centerX - 88) << 16);
+    self->verts[0].x = self->barPos.x + ((ScreenInfo->center.x - 104) << 16);
+    self->verts[1].x = self->barPos.x + ((ScreenInfo->center.x + 88) << 16);
+    self->verts[2].x = self->barPos.x + ((ScreenInfo->center.x + 104) << 16);
+    self->verts[3].x = self->barPos.x + ((ScreenInfo->center.x - 88) << 16);
     self->verts[0].y = self->barPos.y - 0x80000;
     self->verts[1].y = self->barPos.y - 0x80000;
     self->verts[2].y = self->barPos.y + 0x80000;
     self->verts[3].y = self->barPos.y + 0x80000;
 
     for (int32 i = 0; i < GAMEOVER_LETTER_COUNT; ++i) {
-        self->letterPositions[i].x = (ScreenInfo->centerX << 16) + self->scale.x * (self->finalOffsets[i].x >> 9);
+        self->letterPositions[i].x = (ScreenInfo->center.x << 16) + self->scale.x * (self->finalOffsets[i].x >> 9);
         if (self->letterBounceCount[i] < 3) {
             self->letterPosMove[i].y += 0x4000;
             self->letterPositions[i].y += self->letterPosMove[i].y;

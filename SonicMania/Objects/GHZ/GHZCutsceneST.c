@@ -87,7 +87,7 @@ void GHZCutsceneST_SetupObjects(void)
         fxRuby->state         = StateMachine_None;
         fxRuby->fadeBlack     = 0x200;
         fxRuby->fadeWhite     = 0x200;
-        fxRuby->outerRadius   = ScreenInfo->width;
+        fxRuby->outerRadius   = ScreenInfo->size.x;
         fxRuby->timer         = 64;
         foreach_break;
     }
@@ -322,7 +322,7 @@ bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host)
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;
     player->state              = Player_State_Ground;
-    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
+    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->center.x) << 16, (ScreenInfo->size.y + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
     return true;
 }

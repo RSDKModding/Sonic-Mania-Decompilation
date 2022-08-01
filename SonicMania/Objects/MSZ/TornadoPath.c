@@ -45,7 +45,7 @@ void TornadoPath_Create(void *data)
 
                     foreach_all(Player, player) { player->camera = NULL; }
 
-                    ScreenInfo->position.y = (self->position.y >> 16) - ScreenInfo->centerY;
+                    ScreenInfo->position.y = (self->position.y >> 16) - ScreenInfo->center.y;
                     self->state            = TornadoPath_State_SetTornadoSpeed;
                     self->currentSpeed     = self->targetSpeed;
                 }

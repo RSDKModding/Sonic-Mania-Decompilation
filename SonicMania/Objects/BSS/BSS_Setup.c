@@ -16,7 +16,7 @@ void BSS_Setup_Update(void)
 
     StateMachine_Run(self->state);
 
-    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->center.x;
 
     if (self->palettePage) {
         RSDK.CopyPalette(2, 16 * self->paletteLine, 0, 128, 16);
@@ -784,7 +784,7 @@ void BSS_Setup_HandleCollectableMovement(void)
 
                     int32 worldX = (finalX <= 0 ? (finalX + distX) : (finalX - distX)) >> 4;
 
-                    collectable->position.x = (worldX + ScreenInfo->centerX) << 16;
+                    collectable->position.x = (worldX + ScreenInfo->center.x) << 16;
                     collectable->position.y = (BSS_Setup->screenYTable[y] + worldX * worldX / self->divisor) << 16;
 
                     ++slot;
@@ -1217,7 +1217,7 @@ void BSS_Setup_LaunchSpheres(void)
     collectable = RSDK_GET_ENTITY(slot++, BSS_Collectable);
     while (collectable->classID != TYPE_BLANK) {
         int32 ix                = (collectable->position.x >> 16);
-        collectable->position.x = ((x * (ix - screen->centerX) >> 8) + screen->centerX) << 16;
+        collectable->position.x = ((x * (ix - screen->center.x) >> 8) + screen->center.x) << 16;
         collectable->position.y -= y;
         collectable = RSDK_GET_ENTITY(slot++, BSS_Collectable);
     }

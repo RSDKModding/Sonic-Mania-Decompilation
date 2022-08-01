@@ -108,15 +108,15 @@ void PBL_Setup_StageLoad(void)
 void PBL_Setup_Scanline_TableLow(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
-    RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->size.x, ScreenInfo->size.y);
 
     int32 sin    = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos    = RSDK.Cos1024(camera->angle) >> 2;
     int32 negSin = RSDK.Sin1024(-camera->rotationY) >> 2;
     int32 negCos = RSDK.Cos1024(-camera->rotationY) >> 2;
-    int32 cosVal = -ScreenInfo->centerY * negCos;
+    int32 cosVal = -ScreenInfo->center.y * negCos;
 
-    for (int32 i = -ScreenInfo->centerY; i < ScreenInfo->centerY; ++i) {
+    for (int32 i = -ScreenInfo->center.y; i < ScreenInfo->center.y; ++i) {
         int32 div = negSin + (cosVal >> 8);
         if (!div)
             div = 1;
@@ -128,8 +128,8 @@ void PBL_Setup_Scanline_TableLow(ScanlineInfo *scanlines)
         int32 pos = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
         RSDK.SetActivePalette(clampVal((abs(pos) >> 12) - 27, 0, 7), i + 120, i + 121);
 
-        scanlines->position.x = (sin * pos - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
-        scanlines->position.y = (cos * pos - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
+        scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
 
         cosVal += negCos;
         scanlines++;
@@ -138,15 +138,15 @@ void PBL_Setup_Scanline_TableLow(ScanlineInfo *scanlines)
 void PBL_Setup_Scanline_TableHigh(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
-    RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->size.x, ScreenInfo->size.y);
 
     int32 sin    = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos    = RSDK.Cos1024(camera->angle) >> 2;
     int32 negSin = RSDK.Sin1024(-camera->rotationY) >> 2;
     int32 negCos = RSDK.Cos1024(-camera->rotationY) >> 2;
-    int32 cosVal = -ScreenInfo->centerY * negCos;
+    int32 cosVal = -ScreenInfo->center.y * negCos;
 
-    for (int32 i = -ScreenInfo->centerY; i < ScreenInfo->centerY; ++i) {
+    for (int32 i = -ScreenInfo->center.y; i < ScreenInfo->center.y; ++i) {
         int32 div = negSin + (cosVal >> 8);
         if (!div)
             div = 1;
@@ -158,8 +158,8 @@ void PBL_Setup_Scanline_TableHigh(ScanlineInfo *scanlines)
         int32 pos = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
         RSDK.SetActivePalette(clampVal((abs(pos) >> 12) - 24, 0, 7), i + 120, i + 121);
 
-        scanlines->position.x = (sin * pos - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
-        scanlines->position.y = (cos * pos - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
+        scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
 
         cosVal += negCos;
         scanlines++;
@@ -167,10 +167,10 @@ void PBL_Setup_Scanline_TableHigh(ScanlineInfo *scanlines)
 }
 void PBL_Setup_Scanline_PinballBG(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, 112);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, 112);
 
     int32 x       = 116 << 16;
-    int32 centerX = ScreenInfo->centerX;
+    int32 centerX = ScreenInfo->center.x;
     int32 sin     = RSDK.Sin256(32);
     int32 cos     = RSDK.Cos256(32);
     int32 timer   = PBL_Setup->scanlineTimer >> 1;
@@ -194,8 +194,8 @@ void PBL_Setup_Scanline_PinballBG(ScanlineInfo *scanlines)
 
 void PBL_Setup_DrawHook_PrepareDrawingFX(void)
 {
-    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
-    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->size.x, ScreenInfo->size.y);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
 }
 
 void PBL_Setup_ExitPinball(void)

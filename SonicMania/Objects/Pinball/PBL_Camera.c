@@ -79,9 +79,9 @@ void PBL_Camera_HandleScreenPos(void)
         ScreenInfo->position.x -= 2 * ang;
 
     int32 height           = ((RSDK.Sin1024(-self->rotationY) << 12) << 8) / angle;
-    ScreenInfo->position.y = height - ScreenInfo->centerY + 512;
+    ScreenInfo->position.y = height - ScreenInfo->center.y + 512;
     self->prevAngle        = self->angle;
-    self->centerY          = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
+    self->centerY          = clampVal(ScreenInfo->center.y - height + 8, -64, ScreenInfo->size.y);
 }
 
 void PBL_Camera_State_Normal(void)

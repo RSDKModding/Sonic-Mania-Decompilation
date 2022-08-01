@@ -256,8 +256,8 @@ void PhantomEgg_SetupWarpFX(void)
 {
     foreach_all(PhantomEgg, phantomEgg)
     {
-        PhantomEgg->startScanline = ScreenInfo->centerY;
-        PhantomEgg->endScanline   = ScreenInfo->height;
+        PhantomEgg->startScanline = ScreenInfo->center.y;
+        PhantomEgg->endScanline   = ScreenInfo->size.y;
 
         RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = PhantomEgg_Scanline_WarpFX;
         RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = PhantomEgg_Scanline_WarpFX;
@@ -407,7 +407,7 @@ void PhantomEgg_HandleReturnWarp(void)
     camera->boundsT      = Zone->cameraBoundsT[0];
     camera->boundsB      = Zone->cameraBoundsB[0];
     camera->position.x   = PhantomEgg->boundsM;
-    camera->position.y   = PhantomEgg->boundsStoreB1 - (ScreenInfo->centerY << 16);
+    camera->position.y   = PhantomEgg->boundsStoreB1 - (ScreenInfo->center.y << 16);
 
     foreach_active(Player, player)
     {
@@ -432,11 +432,11 @@ void PhantomEgg_Scanline_WarpFX(ScanlineInfo *scanlines)
     for (int32 l = 0; l < line; ++l) scanlines[l].position.y = lineY;
 
     line = PhantomEgg->startScanline + PhantomEgg->endScanline;
-    if (line > ScreenInfo->height)
-        line = ScreenInfo->height;
+    if (line > ScreenInfo->size.y)
+        line = ScreenInfo->size.y;
 
     lineY = scanlines[line].position.y;
-    for (int32 l = line; l < ScreenInfo->height; ++l) scanlines[l].position.y = lineY;
+    for (int32 l = line; l < ScreenInfo->size.y; ++l) scanlines[l].position.y = lineY;
 }
 
 void PhantomEgg_Draw_Normal(void)
@@ -514,9 +514,9 @@ void PhantomEgg_State_SetupArena(void)
 
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->center.x;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->center.x;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->size.y;
 
         PhantomEgg->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
         PhantomEgg->boundsR = (Zone->cameraBoundsR[0] - 64) << 16;
@@ -950,7 +950,7 @@ void PhantomEgg_State_Attack_WarpAway(void)
 {
     RSDK_THIS(PhantomEgg);
 
-    if (PhantomEgg->endScanline >= ScreenInfo->height) {
+    if (PhantomEgg->endScanline >= ScreenInfo->size.y) {
         RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = StateMachine_None;
         RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = StateMachine_None;
 
@@ -973,7 +973,7 @@ void PhantomEgg_State_Attack_WarpReturn(void)
 {
     RSDK_THIS(PhantomEgg);
 
-    if (PhantomEgg->endScanline >= ScreenInfo->height) {
+    if (PhantomEgg->endScanline >= ScreenInfo->size.y) {
         RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = StateMachine_None;
         RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = StateMachine_None;
 

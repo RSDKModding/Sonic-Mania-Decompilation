@@ -178,7 +178,7 @@ void CPZSetup_BGSwitch_Act1BG(void)
 void CPZSetup_StageFinish_EndAct1(void)
 {
     RSDK.GetTileLayer(0);
-    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
+    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->center.x) << 16, (ScreenInfo->size.y + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
 }
 

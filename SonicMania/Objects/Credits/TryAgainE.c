@@ -31,13 +31,13 @@ void TryAgainE_Draw(void)
     if (SceneInfo->currentDrawGroup == self->drawGroup) {
         Vector2 drawPos;
 
-        RSDK.SetActivePalette(3, 0, ScreenInfo->height);
+        RSDK.SetActivePalette(3, 0, ScreenInfo->size.y);
         self->mainAnimator.frameID = 0;
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
         self->mainAnimator.frameID = 1;
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
-        RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+        RSDK.SetActivePalette(0, 0, ScreenInfo->size.y);
 
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + 0x2E0000;

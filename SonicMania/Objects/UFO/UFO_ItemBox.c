@@ -69,8 +69,8 @@ void UFO_ItemBox_Draw(void)
 
         RSDK.Draw3DScene(UFO_ItemBox->sceneIndex);
 
-        self->drawPos.x = (ScreenInfo->centerX + (self->worldX << 8) / self->depth3D) << 16;
-        self->drawPos.y = (ScreenInfo->centerY - (self->worldY << 8) / self->depth3D) << 16;
+        self->drawPos.x = (ScreenInfo->center.x + (self->worldX << 8) / self->depth3D) << 16;
+        self->drawPos.y = (ScreenInfo->center.y - (self->worldY << 8) / self->depth3D) << 16;
         self->scale.x   = 0x2000000 / self->depth3D;
         self->scale.y   = 0x2000000 / self->depth3D;
     }
@@ -167,8 +167,8 @@ void UFO_ItemBox_State_ShowContents(void)
 {
     RSDK_THIS(UFO_ItemBox);
 
-    self->drawPos.x += ((ScreenInfo->centerX << 16) - self->drawPos.x) >> 3;
-    self->drawPos.y += (((ScreenInfo->centerX - 4) << 16) - self->drawPos.y) >> 3;
+    self->drawPos.x += ((ScreenInfo->center.x << 16) - self->drawPos.x) >> 3;
+    self->drawPos.y += (((ScreenInfo->center.x - 4) << 16) - self->drawPos.y) >> 3;
 
     int32 scale   = self->scale.x + ((0x200 - self->scale.x) >> 3);
     self->scale.x = scale;

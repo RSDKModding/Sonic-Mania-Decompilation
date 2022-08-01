@@ -74,8 +74,8 @@ void BuzzSaw_StageLoad(void)
 
 bool32 BuzzSaw_SfxCheck_SawSus(void)
 {
-    int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 worldX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 worldY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
     int32 count = 0;
 
@@ -91,8 +91,8 @@ bool32 BuzzSaw_SfxCheck_SawSus(void)
 void BuzzSaw_SfxUpdate_SawSus(int32 sfx)
 {
     int32 dist   = 0x7FFF0000;
-    int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-    int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 worldX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
+    int32 worldY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
     foreach_all(BuzzSaw, saw) { dist = minVal(MathHelpers_Distance(saw->position.x, saw->position.y, worldX, worldY), dist); }
 

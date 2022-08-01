@@ -216,16 +216,16 @@ void Tornado_HandlePlayerCollisions(void)
 
     EntityCamera *camera = TornadoPath->camera;
     if (camera) {
-        int32 screenX = camera->position.x - (ScreenInfo->centerX << 16) + 0xC0000;
+        int32 screenX = camera->position.x - (ScreenInfo->center.x << 16) + 0xC0000;
         if (player1->position.x < screenX)
             player1->position.x = screenX;
 
-        int32 screenY = ((ScreenInfo->centerX - 12) << 16) + camera->position.x;
+        int32 screenY = ((ScreenInfo->center.x - 12) << 16) + camera->position.x;
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 
         if (player1->classID == Player->classID) {
-            int32 deathBounds = (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16));
+            int32 deathBounds = (camera->position.y + ((ScreenInfo[camera->screenID].center.y + 16) << 16));
             if (player1->position.y > deathBounds)
                 player1->deathType = PLAYER_DEATH_DIE_USESFX;
         }
@@ -330,8 +330,8 @@ void Tornado_State_PlayerControlled(void)
 
     if (self->position.y < (ScreenInfo->position.y + 72) << 16)
         self->position.y = (ScreenInfo->position.y + 72) << 16;
-    if (self->position.y > (ScreenInfo->height + ScreenInfo->position.y - 32) << 16)
-        self->position.y = (ScreenInfo->height + ScreenInfo->position.y - 32) << 16;
+    if (self->position.y > (ScreenInfo->size.y + ScreenInfo->position.y - 32) << 16)
+        self->position.y = (ScreenInfo->size.y + ScreenInfo->position.y - 32) << 16;
 
     int32 storeX  = self->position.x;
     int32 storeY  = self->position.y + self->velocity.y;
@@ -382,16 +382,16 @@ void Tornado_State_PlayerControlled(void)
 
     EntityCamera *camera = TornadoPath->camera;
     if (camera) {
-        int32 screenX = camera->position.x - (ScreenInfo->centerX << 16) + 0xC0000;
+        int32 screenX = camera->position.x - (ScreenInfo->center.x << 16) + 0xC0000;
         if (player1->position.x < screenX)
             player1->position.x = screenX;
 
-        int32 screenY = ((ScreenInfo->centerX - 12) << 16) + camera->position.x;
+        int32 screenY = ((ScreenInfo->center.x - 12) << 16) + camera->position.x;
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 
         if (player1->classID == Player->classID) {
-            if (player1->position.y > (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16)))
+            if (player1->position.y > (camera->position.y + ((ScreenInfo[camera->screenID].center.y + 16) << 16)))
                 player1->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }

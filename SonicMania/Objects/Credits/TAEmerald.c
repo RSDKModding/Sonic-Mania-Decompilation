@@ -24,7 +24,7 @@ void TAEmerald_Draw(void)
 {
     RSDK_THIS(TAEmerald);
 
-    RSDK.SetActivePalette(3, 0, ScreenInfo->height);
+    RSDK.SetActivePalette(3, 0, ScreenInfo->size.y);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 

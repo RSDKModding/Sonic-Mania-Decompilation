@@ -145,7 +145,7 @@ void GHZSetup_StageFinish_EndAct1(void)
 }
 void GHZSetup_HandleActTransition(void)
 {
-    Zone->cameraBoundsL[0] = 256 - ScreenInfo->centerX;
+    Zone->cameraBoundsL[0] = 256 - ScreenInfo->center.x;
     Zone->cameraBoundsB[0] = 1412;
 
     Zone_ReloadStoredEntities(256 << 16, 1412 << 16, true);

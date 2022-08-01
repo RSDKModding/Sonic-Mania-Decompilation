@@ -450,7 +450,7 @@ void LottoMachine_GiveRings(void)
                 player->nextGroundState = StateMachine_None;
             }
 
-            EntityLottoBall *ball             = CREATE_ENTITY(LottoBall, NULL, ScreenInfo->centerX << 16, (ScreenInfo->height - 48) << 16);
+            EntityLottoBall *ball             = CREATE_ENTITY(LottoBall, NULL, ScreenInfo->center.x << 16, (ScreenInfo->size.y - 48) << 16);
             ball->type                        = LOTTOBALL_BIG;
             ball->isUIBall                    = true;
             ball->ringCount                   = ringCount;
@@ -608,8 +608,8 @@ void LottoMachine_State_CollectBall(void)
             ballPtr->velocity.y   = 0;
             ballPtr->angle        = 0;
             ballPtr->angleVel     = 0;
-            ballPtr->bounds.x     = (ScreenInfo->centerX - (self->collectedBallCount << 6) + 96) << 16;
-            ballPtr->bounds.y     = (ScreenInfo->height - 48) << 16;
+            ballPtr->bounds.x     = (ScreenInfo->center.x - (self->collectedBallCount << 6) + 96) << 16;
+            ballPtr->bounds.y     = (ScreenInfo->size.y - 48) << 16;
             ballPtr->timer        = 0;
             ballPtr->isVisible[0] = false;
 

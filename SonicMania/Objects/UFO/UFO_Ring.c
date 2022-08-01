@@ -40,8 +40,8 @@ void UFO_Ring_Draw(void)
         self->direction = self->animator.frameID > 8;
 
         Vector2 drawPos;
-        drawPos.x = (ScreenInfo->centerX + (self->worldX << 8) / self->depth3D) << 16;
-        drawPos.y = (ScreenInfo->centerY - (self->worldY << 8) / self->depth3D) << 16;
+        drawPos.x = (ScreenInfo->center.x + (self->worldX << 8) / self->depth3D) << 16;
+        drawPos.y = (ScreenInfo->center.y - (self->worldY << 8) / self->depth3D) << 16;
 
         self->scale.x = 0x1000000 / self->depth3D;
         self->scale.y = 0x1000000 / self->depth3D;

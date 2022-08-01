@@ -65,9 +65,9 @@ void SkyTeleporter_DrawTeleportBeam(void)
         int32 x     = self->position.x - (self->timer << 15);
         int32 alpha = 0x7F + (RSDK.Sin256(16 * Zone->timer) >> 3);
 
-        RSDK.DrawRect(x - 0x20000, ScreenInfo->position.y << 16, 0x20000, ScreenInfo->height << 16, 0xF080A0, alpha, INK_ADD, false);
-        RSDK.DrawRect(x, ScreenInfo->position.y << 16, self->timer << 16, ScreenInfo->height << 16, 0xF0F0F0, alpha, INK_ADD, false);
-        RSDK.DrawRect(x + (self->timer << 16), ScreenInfo->position.y << 16, 0x20000, ScreenInfo->height << 16, 0xF080A0, alpha, INK_ADD, false);
+        RSDK.DrawRect(x - 0x20000, ScreenInfo->position.y << 16, 0x20000, ScreenInfo->size.y << 16, 0xF080A0, alpha, INK_ADD, false);
+        RSDK.DrawRect(x, ScreenInfo->position.y << 16, self->timer << 16, ScreenInfo->size.y << 16, 0xF0F0F0, alpha, INK_ADD, false);
+        RSDK.DrawRect(x + (self->timer << 16), ScreenInfo->position.y << 16, 0x20000, ScreenInfo->size.y << 16, 0xF080A0, alpha, INK_ADD, false);
     }
 }
 

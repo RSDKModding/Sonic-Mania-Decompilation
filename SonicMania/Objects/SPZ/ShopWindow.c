@@ -223,7 +223,7 @@ void ShopWindow_Draw_Normal(void)
         self->inkEffect = INK_ADD;
     }
 
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
 }
 
 void ShopWindow_Draw_Shard(void)
