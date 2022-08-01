@@ -43,7 +43,7 @@ void PhantomKing_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x1000000;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->type          = voidToInt(data);
 
@@ -81,7 +81,7 @@ void PhantomKing_Create(void *data)
                     RSDK.SetSpriteAnimation(PhantomKing->aniFrames, 6, &self->handAnimator, true, 0);
                 }
                 else {
-                    self->drawOrder = Zone->playerDrawLow;
+                    self->drawGroup = Zone->playerDrawLow;
                     RSDK.SetSpriteAnimation(PhantomKing->aniFrames, 5, &self->handAnimator, true, 0);
                 }
 
@@ -161,7 +161,7 @@ void PhantomKing_Explode(void)
         if (Zone->timer & 8) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -241,7 +241,7 @@ void PhantomKing_HandleAttacks(void)
 
             attack->targetVelocity.x = 0x600 * RSDK.Cos256(angle);
             attack->targetVelocity.y = 0x600 * RSDK.Sin256(angle);
-            attack->drawOrder        = Zone->objectDrawLow;
+            attack->drawGroup        = Zone->objectDrawLow;
             attack->state            = PKingAttack_State_OrbitLaunched;
             launchedAttack           = true;
             foreach_break;

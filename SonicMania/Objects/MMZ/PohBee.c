@@ -21,7 +21,7 @@ void PohBee_Update(void)
     PohBee_SetupHitboxes();
     PohBee_CheckPlayerCollisions();
 
-    if (self->drawOrder != 1 && self->state != PohBee_State_Setup)
+    if (self->drawGroup != 1 && self->state != PohBee_State_Setup)
         PohBee_CheckOffScreen();
 }
 
@@ -38,9 +38,9 @@ void PohBee_Create(void *data)
     self->visible = true;
 
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
     self->startPos      = self->position;
     self->startDir      = self->direction;
@@ -101,9 +101,9 @@ void PohBee_CheckPlayerCollisions(void)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
             if (Player_CheckBadnikTouch(player, self, &PohBee->hitbox)) {
-                if (self->drawOrder == 1) {
+                if (self->drawGroup == 1) {
                     if (Player_CheckBadnikBreak(player, self, false)) {
-                        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = 1;
+                        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = 1;
                         destroyEntity(self);
                     }
                 }
@@ -117,10 +117,10 @@ void PohBee_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
                     int32 storeX   = self->position.x;
                     int32 storeY   = self->position.y;
-                    self->position = PohBee_GetSpikePos(i, (self->drawOrder != 1) + 6);
+                    self->position = PohBee_GetSpikePos(i, (self->drawGroup != 1) + 6);
                     if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer)) {
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
 #if MANIA_USE_PLUS
                     }
                     self->position.x = storeX;
@@ -140,7 +140,7 @@ void PohBee_DrawSprites(void)
 
     int32 offsetY = 16;
     int32 shift   = 7;
-    if (self->drawOrder == 1) {
+    if (self->drawGroup == 1) {
         offsetY = 15;
         shift   = 6;
         self->drawFX |= FX_SCALE;
@@ -188,7 +188,7 @@ Vector2 PohBee_GetSpikePos(uint8 spikeID, uint8 shift)
     RSDK_THIS(PohBee);
 
     Vector2 spikePos = self->position;
-    spikePos.y       = self->position.y + (self->drawOrder == 1 ? 0x100000 : 0x80000);
+    spikePos.y       = self->position.y + (self->drawGroup == 1 ? 0x100000 : 0x80000);
 
     switch (spikeID) {
         default: break;
@@ -234,7 +234,7 @@ void PohBee_State_Setup(void)
 {
     RSDK_THIS(PohBee);
 
-    if (self->drawOrder != 1)
+    if (self->drawGroup != 1)
         self->active = ACTIVE_NORMAL;
 
     self->position      = self->startPos;

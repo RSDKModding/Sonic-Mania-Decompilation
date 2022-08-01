@@ -57,7 +57,7 @@ void ElectroMagnet_Create(void *data)
     self->updateRange.x = 0x800000;
     self->visible       = !self->invisible;
     self->updateRange.y = (self->height + 64) << 16;
-    self->drawOrder     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawHigh;
 
     self->hitboxMagnetRange.left   = -64;
     self->hitboxMagnetRange.top    = 0;

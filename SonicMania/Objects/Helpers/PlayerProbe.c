@@ -18,19 +18,14 @@ void PlayerProbe_Update(void)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
 
-        int32 x     = (player->position.x - self->position.x) >> 8;
-        int32 y     = (player->position.y - self->position.y) >> 8;
-        int32 scanX = (y * RSDK.Sin256(self->negAngle)) + (x * RSDK.Cos256(self->negAngle)) + self->position.x;
-        int32 scanY = (y * RSDK.Cos256(self->negAngle)) - (x * RSDK.Sin256(self->negAngle)) + self->position.y;
-        int32 pos   = ((player->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
-        RSDK.Cos256(self->negAngle);
-        RSDK.Sin256(self->negAngle);
+        Vector2 pivotPos = player->position;
+        Vector2 pivotVel = player->velocity;
 
-        int32 xDif = scanX - self->position.x >= 0 ? scanX - self->position.x : self->position.x - scanX;
-        int32 yDif = scanY - self->position.y >= 0 ? scanY - self->position.y : self->position.y - scanY;
+        Zone_RotateOnPivot(&pivotPos, &self->position, self->negAngle);
+        Zone_RotateOnPivot(&pivotVel, &self->velocity, self->negAngle);
 
-        if (xDif < 0x180000 && yDif < self->size << 19) {
-            if (scanX + pos >= self->position.x) {
+        if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < self->size << 19) {
+            if (pivotPos.x >= self->position.x) {
                 if (!self->direction) {
                     if (!((1 << playerID) & self->activePlayers))
                         PlayerProbe_Print(player);
@@ -74,7 +69,7 @@ void PlayerProbe_Create(void *data)
     self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
     self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
     self->visible       = false;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->activePlayers = 0;
     self->negAngle      = (uint8) - (self->angle & 0xFF);
 }
@@ -160,7 +155,7 @@ void PlayerProbe_EditorDraw(void)
     self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
     self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
     self->visible       = true;
-    self->drawOrder     = Zone ? Zone->objectDrawLow : 2;
+    self->drawGroup     = Zone ? Zone->objectDrawLow : 2;
 
     PlayerProbe_DrawSprites();
 }

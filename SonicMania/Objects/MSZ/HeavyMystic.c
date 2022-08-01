@@ -72,7 +72,7 @@ void HeavyMystic_Create(void *data)
                 case MYSTIC_MISCHIEF:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = false;
-                    self->drawOrder = Zone->objectDrawLow + 2;
+                    self->drawGroup = Zone->objectDrawLow + 2;
                     self->drawFX    = FX_FLIP;
                     self->health    = 6;
 
@@ -88,7 +88,7 @@ void HeavyMystic_Create(void *data)
                     else {
                         self->active    = ACTIVE_BOUNDS;
                         self->visible   = false;
-                        self->drawOrder = Zone->objectDrawLow + 1;
+                        self->drawGroup = Zone->objectDrawLow + 1;
                         self->drawFX    = FX_FLIP;
 
                         self->hitbox.left   = -22;
@@ -113,7 +113,7 @@ void HeavyMystic_Create(void *data)
                         self->scale.y   = 0x200;
                         self->active    = ACTIVE_BOUNDS;
                         self->visible   = true;
-                        self->drawOrder = Zone->objectDrawLow;
+                        self->drawGroup = Zone->objectDrawLow;
                         self->targetPos = self->position;
                         self->drawFX    = FX_SCALE | FX_ROTATE | FX_FLIP;
 
@@ -126,7 +126,7 @@ void HeavyMystic_Create(void *data)
                 case MYSTIC_CORK:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
                     self->drawFX    = FX_FLIP;
 
                     RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 4, &self->animator, true, 0);
@@ -141,7 +141,7 @@ void HeavyMystic_Create(void *data)
                 case MYSTIC_BOMB:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
                     self->drawFX    = FX_FLIP;
 
                     RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 11, &self->animator, true, 0);
@@ -156,7 +156,7 @@ void HeavyMystic_Create(void *data)
                 case MYSTIC_DEBRIS:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
                     self->drawFX    = FX_FLIP;
 
                     RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 16, &self->animator, true, 0);
@@ -210,7 +210,7 @@ void HeavyMystic_SpawnParticleFX(int32 x, int32 y)
     int32 velY = RSDK.Rand(-0xC000, 0xC000);
 
     EntityDebris *particles = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
-    particles->drawOrder    = Zone->objectDrawLow;
+    particles->drawGroup    = Zone->objectDrawLow;
     particles->drawFX       = FX_FLIP;
     particles->direction    = RSDK.Rand(0, 4);
     particles->velocity.x   = velX;
@@ -223,7 +223,7 @@ void HeavyMystic_SpawnParticleFX(int32 x, int32 y)
     particles             = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
     particles->velocity.x = velX;
     particles->velocity.y = velY;
-    particles->drawOrder  = Zone->objectDrawLow;
+    particles->drawGroup  = Zone->objectDrawLow;
     particles->inkEffect  = INK_ADD;
     particles->alpha      = 0xFF;
     RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, RSDK.Rand(0, 2) + 7, &particles->animator, true, 0);
@@ -314,7 +314,7 @@ void HeavyMystic_CheckPlayerCollisions_Bark(void)
                     && ((self->direction == FLIP_NONE && player->position.x > self->position.x)
                         || (self->direction == FLIP_X && player->position.x < self->position.x))) {
                     if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
                 else
 #endif
@@ -366,7 +366,7 @@ void HeavyMystic_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -670,7 +670,7 @@ void HeavyMystic_StateMischief_Disappear(void)
         }
 
         RSDK.PlaySfx(HeavyMystic->sfxPoof, false, 255);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
         destroyEntity(self);
     }
@@ -997,7 +997,7 @@ void HeavyMystic_StateBoss_TransformBackIntoRouge(void)
         RSDK.PlaySfx(HeavyMystic->sfxTransform, false, 255);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         self->velocity.x                                                                                   = 0;
         self->velocity.y                                                                                   = -0x20000;
         RSDK.PlaySfx(HeavyMystic->sfxPoof, false, 255);
@@ -1142,7 +1142,7 @@ void HeavyMystic_StateBoss_RougeHit(void)
     if (self->velocity.y > 0) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x240000, true)) {
             RSDK.PlaySfx(HeavyMystic->sfxPowerDown, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
             self->direction ^= FLIP_X;
             self->timer       = 90;
             self->attackID    = 0;
@@ -1404,10 +1404,10 @@ void HeavyMystic_StateCork_Fired(void)
                 self->state = HeavyMystic_StateCork_MightyRebound;
             else
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
 
             RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
             destroyEntity(self);
             foreach_break;
         }
@@ -1451,9 +1451,9 @@ void HeavyMystic_State_Bomb(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, false, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
             destroyEntity(self);
             foreach_break;
         }
@@ -1478,7 +1478,7 @@ void HeavyMystic_State_BarkDebris(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, false, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 
@@ -1541,7 +1541,7 @@ void HeavyMystic_StateBox_Transforming(void)
         RSDK.PlaySfx(HeavyMystic->sfxMagicBox, false, 255);
         int32 x                                                               = self->position.x + (RSDK.Rand(-24, 25) << 16);
         int32 y                                                               = self->position.y + (RSDK.Rand(-24, 25) << 16);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawOrder = Zone->objectDrawHigh + 2;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawHigh + 2;
     }
 
     self->scale.x = 0x200 + RSDK.Cos256(self->angle + 0x40);
@@ -1583,7 +1583,7 @@ void HeavyMystic_StateBox_Dropping(void)
         RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
 
         EntityDebris *debris    = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
-        debris->drawOrder       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawLow;
         debris->drawFX          = FX_FLIP;
         debris->direction       = FLIP_NONE;
         debris->velocity.y      = -0x40000;
@@ -1592,7 +1592,7 @@ void HeavyMystic_StateBox_Dropping(void)
         debris->animator.frameID = 0;
 
         debris                  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x280000, self->position.y);
-        debris->drawOrder       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawHigh;
         debris->drawFX          = FX_FLIP;
         debris->direction       = FLIP_NONE;
         debris->velocity.x      = -0x20000;
@@ -1602,7 +1602,7 @@ void HeavyMystic_StateBox_Dropping(void)
         debris->animator.frameID = 2;
 
         debris                  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x280000, self->position.y);
-        debris->drawOrder       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawHigh;
         debris->drawFX          = FX_FLIP;
         debris->direction       = FLIP_X;
         debris->velocity.x      = 0x20000;
@@ -1623,7 +1623,7 @@ void HeavyMystic_StateBox_ShowContents(void)
     RSDK_THIS(HeavyMystic);
 
     if (++self->timer > 96) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
         self->visible                                                                                       = true;
         self->scale.x                                                                                       = 0;
         self->scale.y                                                                                       = 0;
@@ -1661,7 +1661,7 @@ void HeavyMystic_Draw_BoxOpened(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         self->drawFX           = FX_NONE;
         self->animator.frameID = 0;
         RSDK.DrawSprite(&self->animator, NULL, false);
@@ -1685,7 +1685,7 @@ void HeavyMystic_Draw_BoxTransforming(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         self->drawFX = FX_NONE;
         if (self->state != HeavyMystic_StateBox_Transforming) {
             self->animator.frameID = 0;
@@ -1716,7 +1716,7 @@ void HeavyMystic_Draw_BoxClosed(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         self->drawFX           = FX_SCALE | FX_ROTATE;
         self->animator.frameID = 3;
         RSDK.DrawSprite(&self->animator, NULL, false);

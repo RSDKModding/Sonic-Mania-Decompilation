@@ -225,23 +225,22 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BSS_Setup_ProcessChain);
 
     // Common/BreakableWall
-    ADD_PUBLIC_FUNC(BreakableWall_State_BurrowFloorUp);
-    ADD_PUBLIC_FUNC(BreakableWall_State_Ceiling);
+    ADD_PUBLIC_FUNC(BreakableWall_State_Tile);
     ADD_PUBLIC_FUNC(BreakableWall_State_FallingTile);
     ADD_PUBLIC_FUNC(BreakableWall_State_Wall);
-    ADD_PUBLIC_FUNC(BreakableWall_State_Tile);
     ADD_PUBLIC_FUNC(BreakableWall_State_Floor);
     ADD_PUBLIC_FUNC(BreakableWall_State_BurrowFloor);
+    ADD_PUBLIC_FUNC(BreakableWall_State_BurrowFloorUp);
+    ADD_PUBLIC_FUNC(BreakableWall_State_Ceiling);
     ADD_PUBLIC_FUNC(BreakableWall_Draw_Wall);
     ADD_PUBLIC_FUNC(BreakableWall_Draw_Floor);
     ADD_PUBLIC_FUNC(BreakableWall_Draw_Tile);
+    ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_Wall);
     ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_Floor);
     ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_BurrowFloor);
-    ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_Wall);
     ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_BurrowFloorUp);
     ADD_PUBLIC_FUNC(BreakableWall_CheckBreak_Ceiling);
-    ADD_PUBLIC_FUNC(BreakableWall_HandleBlockBreak_V);
-    ADD_PUBLIC_FUNC(BreakableWall_HandleBlockBreak_H);
+    ADD_PUBLIC_FUNC(BreakableWall_Break);
     ADD_PUBLIC_FUNC(BreakableWall_GiveScoreBonus);
 
     // Common/Button
@@ -312,7 +311,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Platform_State_Push_SlideOffL);
     ADD_PUBLIC_FUNC(Platform_State_Push_SlideOffR);
     ADD_PUBLIC_FUNC(Platform_State_Push_Fall);
-    ADD_PUBLIC_FUNC(Platform_State_Controlled);
+    ADD_PUBLIC_FUNC(Platform_State_Path);
     ADD_PUBLIC_FUNC(Platform_State_PathStop);
     ADD_PUBLIC_FUNC(Platform_State_Track);
     ADD_PUBLIC_FUNC(Platform_State_React);
@@ -1903,14 +1902,14 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_CheckCollisionTouch);
     ADD_PUBLIC_FUNC(Player_CheckCollisionBox);
     ADD_PUBLIC_FUNC(Player_CheckCollisionPlatform);
-    ADD_PUBLIC_FUNC(Player_CheckHit);
-    ADD_PUBLIC_FUNC(Player_CheckHitFlip);
-    ADD_PUBLIC_FUNC(Player_CheckElementalHit);
+    ADD_PUBLIC_FUNC(Player_Hurt);
+    ADD_PUBLIC_FUNC(Player_HurtFlip);
+    ADD_PUBLIC_FUNC(Player_ElementHurt);
     ADD_PUBLIC_FUNC(Player_CheckAttacking);
     ADD_PUBLIC_FUNC(Player_CheckBadnikTouch);
     ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
     ADD_PUBLIC_FUNC(Player_CheckBossHit);
-    ADD_PUBLIC_FUNC(Player_CheckProjectileHit);
+    ADD_PUBLIC_FUNC(Player_ProjectileHurt);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(Player_CheckMightyShellHit);
 #endif
@@ -2256,10 +2255,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Current_State_PushUp);
     ADD_PUBLIC_FUNC(Current_State_PushDown);
     ADD_PUBLIC_FUNC(Current_State_Child);
-    ADD_PUBLIC_FUNC(Current_PState_Left);
-    ADD_PUBLIC_FUNC(Current_PState_Right);
-    ADD_PUBLIC_FUNC(Current_PState_Up);
-    ADD_PUBLIC_FUNC(Current_PState_Down);
+    ADD_PUBLIC_FUNC(Current_PlayerState_Left);
+    ADD_PUBLIC_FUNC(Current_PlayerState_Right);
+    ADD_PUBLIC_FUNC(Current_PlayerState_Up);
+    ADD_PUBLIC_FUNC(Current_PlayerState_Down);
 
     // HCZ/DCEvent
     ADD_PUBLIC_FUNC(DCEvent_State_Collapse);
@@ -4145,11 +4144,11 @@ void InitPublicFunctions()
 
     // MMZ/SizeLaser
     ADD_PUBLIC_FUNC(SizeLaser_SfxCheck_SizeLaser);
-    ADD_PUBLIC_FUNC(SizeLaser_SetP2State);
-    ADD_PUBLIC_FUNC(SizeLaser_P2JumpInResize);
-    ADD_PUBLIC_FUNC(SizeLaser_P2JumpInGrow);
-    ADD_PUBLIC_FUNC(SizeLaser_P2JumpInShrink);
-    ADD_PUBLIC_FUNC(SizeLaser_PlayerState_Grow);
+    ADD_PUBLIC_FUNC(SizeLaser_SetPlayerSize);
+    ADD_PUBLIC_FUNC(SizeLaser_PlayerState_Resize);
+    ADD_PUBLIC_FUNC(SizeLaser_PlayerState_GrowNormal);
+    ADD_PUBLIC_FUNC(SizeLaser_PlayerState_ShrinkChibi);
+    ADD_PUBLIC_FUNC(SizeLaser_PlayerState_GrowGiant);
     ADD_PUBLIC_FUNC(SizeLaser_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(SizeLaser_State_Emitter);
     ADD_PUBLIC_FUNC(SizeLaser_State_Laser);
@@ -4768,7 +4767,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Ice_FreezePlayer);
     ADD_PUBLIC_FUNC(Ice_CheckPlayerBlockSmashH);
     ADD_PUBLIC_FUNC(Ice_CheckPlayerBlockSmashV);
-    ADD_PUBLIC_FUNC(Ice_State_FrozenPlayer);
+    ADD_PUBLIC_FUNC(Ice_PlayerState_Frozen);
     ADD_PUBLIC_FUNC(Ice_ShatterGenerator);
     ADD_PUBLIC_FUNC(Ice_FullShatter);
     ADD_PUBLIC_FUNC(Ice_BreakPlayerBlock);

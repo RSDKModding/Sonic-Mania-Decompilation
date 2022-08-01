@@ -78,20 +78,6 @@ void Platform_Serialize(void);
 
 // Extra Entity Functions
 
-// Collision States
-void Platform_Collision_Platform(void);
-void Platform_Collision_Solid(void);
-void Platform_Collision_Solid_NoCrush(void);
-void Platform_Collision_Solid_Hurt_Sides(void);
-void Platform_Collision_Solid_Hurt_Bottom(void);
-void Platform_Collision_Solid_Hurt_Top(void);
-void Platform_Collision_Solid_Hold(void);
-void Platform_Collision_Solid_Barrel(void);
-void Platform_Collision_Sticky(void);
-void Platform_Collision_Tiles(void);
-void Platform_Collision_Hurt(void);
-void Platform_Collision_None(void);
-
 //States
 void Platform_State_Fixed(void);
 void Platform_State_Fall(void);
@@ -107,7 +93,7 @@ void Platform_State_Push(void);
 void Platform_State_Push_SlideOffL(void);
 void Platform_State_Push_SlideOffR(void);
 void Platform_State_Push_Fall(void);
-void Platform_State_Controlled(void);
+void Platform_State_Path(void);
 void Platform_State_PathStop(void);
 void Platform_State_Track(void);
 void Platform_State_React(void);
@@ -128,5 +114,26 @@ void Platform_State_Track2(void);
 void Platform_State_TrackWait(void);
 void Platform_State_TrackReturn(void);
 void Platform_State_DipRock(void);
+
+// Collision States
+void Platform_Collision_Platform(void);
+void Platform_Collision_Solid(void);
+void Platform_Collision_Solid_NoCrush(void);
+void Platform_Collision_Solid_Hurt_Sides(void);
+void Platform_Collision_Solid_Hurt_Bottom(void);
+void Platform_Collision_Solid_Hurt_Top(void);
+void Platform_Collision_Solid_Hold(void);
+void Platform_Collision_Solid_Barrel(void);
+void Platform_Collision_Sticky(void);
+void Platform_Collision_Tiles(void);
+void Platform_Collision_Hurt(void);
+void Platform_Collision_None(void);
+
+// Collision Helpers
+void Platform_HandleStood(EntityPlatform *self, EntityPlayer *player, int32 playerID, int32 stoodPlayers);
+void Platform_HandleStood_Tiles(EntityPlatform *self, EntityPlayer *player, int32 playerID);
+void Platform_HandleStood_Hold(EntityPlatform *self, EntityPlayer *player, int32 playerID, int32 stoodPlayers);
+void Platform_HandleStood_Barrel(EntityPlatform *self, EntityPlayer *player, int32 playerID, int32 stoodPlayers);
+void Platform_HandleStood_Sticky(EntityPlatform *self, EntityPlayer *player, int32 playerID, uint8 cSide);
 
 #endif //!OBJ_PLATFORM_H

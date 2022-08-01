@@ -31,7 +31,7 @@ void BallCannon_Create(void *data)
 {
     RSDK_THIS(BallCannon);
 
-    self->drawOrder = Zone->playerDrawLow;
+    self->drawGroup = Zone->playerDrawLow;
     self->visible   = true;
 
     if (!SceneInfo->inEditor) {

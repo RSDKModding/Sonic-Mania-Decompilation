@@ -40,7 +40,7 @@ void UIButtonLabel_Create(void *data)
     RSDK_THIS(UIButtonLabel);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
@@ -59,7 +59,7 @@ void UIButtonLabel_EditorDraw(void)
 {
     RSDK_THIS(UIButtonLabel);
 
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;

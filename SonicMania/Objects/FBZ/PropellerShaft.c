@@ -40,7 +40,7 @@ void PropellerShaft_Update(void)
                     player->velocity.x           = player->left ? -0x100000 : 0x100000;
                     player->velocity.y           = -0x18000;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                    player->drawOrder = Zone->playerDrawLow;
+                    player->drawGroup = Zone->playerDrawLow;
                     player->state     = Player_State_Air;
                 }
             }
@@ -86,9 +86,9 @@ void PropellerShaft_LateUpdate(void)
     {
         if (((1 << RSDK.GetEntitySlot(player)) & self->activePlayers)) {
             if (player->animator.frameID > 5)
-                player->drawOrder = Zone->playerDrawLow - 3;
+                player->drawGroup = Zone->playerDrawLow - 3;
             else
-                player->drawOrder = Zone->playerDrawLow;
+                player->drawGroup = Zone->playerDrawLow;
         }
     }
 }
@@ -104,7 +104,7 @@ void PropellerShaft_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->updateRange.x = 0x400000;
         self->updateRange.y = self->size << 16;
 
@@ -121,7 +121,7 @@ void PropellerShaft_StageLoad(void) {}
 void PropellerShaft_EditorDraw(void)
 {
     RSDK_THIS(PropellerShaft);
-    self->drawOrder = Zone->objectDrawHigh;
+    self->drawGroup = Zone->objectDrawHigh;
 
     DrawHelpers_DrawRectOutline(self->position.x, self->position.y, 16 << 16, self->size << 17, 0xFFFF00);
 }

@@ -179,7 +179,7 @@ void DialogRunner_CheckUserAuth_CB()
                     fxFade->speedIn         = 16;
                     fxFade->speedOut        = 16;
                     fxFade->state           = FXFade_State_FadeIn;
-                    fxFade->drawOrder       = DRAWGROUP_COUNT - 1;
+                    fxFade->drawGroup       = DRAWGROUP_COUNT - 1;
                     fxFade->isPermanent     = true;
                     fxFade->oneWay          = true;
                     fxFade->transitionScene = true;

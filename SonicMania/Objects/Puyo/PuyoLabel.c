@@ -27,7 +27,7 @@ void PuyoLabel_Create(void *data)
     RSDK_THIS(PuyoLabel);
 
     self->active        = ACTIVE_NORMAL;
-    self->drawOrder     = 10;
+    self->drawGroup     = 10;
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

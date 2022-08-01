@@ -112,9 +112,9 @@ bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
 
     BGSwitch->screenID = 0;
 
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;               // Background 1
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 2
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 3
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0;               // Background 1
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 2
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 3
 
     return true;
 }

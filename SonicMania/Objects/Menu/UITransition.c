@@ -33,7 +33,7 @@ void UITransition_Create(void *data)
     RSDK_THIS(UITransition);
 
     self->active       = ACTIVE_ALWAYS;
-    self->drawOrder    = 13;
+    self->drawGroup    = 13;
     self->drawPos[0].x = 0;
     self->drawPos[0].y = 0;
     self->drawPos[1].x = 0;

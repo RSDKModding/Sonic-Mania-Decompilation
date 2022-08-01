@@ -32,7 +32,7 @@ void Tuesday_Draw(void)
 {
     RSDK_THIS(Tuesday);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         RSDK.DrawSprite(&self->nodeAnimator, &self->drawPos, false);
 
         if (self->type == TUESDAY_GONDOLA)
@@ -49,7 +49,7 @@ void Tuesday_Create(void *data)
 
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawLow + 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -320,7 +320,7 @@ void Tuesday_Explode(void)
             int32 x                    = self->drawPos.x + (xOffset << 16);
             int32 y                    = self->drawPos.y + (yOffset << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(data), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
 }
@@ -528,7 +528,7 @@ void Tuesday_State_Node(void)
             if (hit) {
                 if (!player->invincibleTimer && player->shield != SHIELD_LIGHTNING && player->blinkTimer <= 0 && self->timer && self->timer <= 60
                     && (self->type != TUESDAY_GONDOLA || Player_CheckCollisionTouch(player, self, &Tuesday->hitboxNode))) {
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 }
                 else if (Player_CheckBossHit(player, self)) {
                     Tuesday_Hit();
@@ -544,7 +544,7 @@ void Tuesday_State_Node(void)
                             hitbox.left   = (child->drawPos.x - self->position.x) >> 16;
                             hitbox.right  = 0;
                             if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-                                Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                             }
                         }
 
@@ -555,7 +555,7 @@ void Tuesday_State_Node(void)
                             hitbox.bottom = 2;
                             hitbox.right  = (child->drawPos.x - self->position.x) >> 16;
                             if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-                                Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                             }
                         }
                     }
@@ -572,7 +572,7 @@ void Tuesday_State_Node(void)
                                         int32 distX = abs((player->position.x - self->position.x) >> 16);
                                         int32 distY = abs((player->position.y - self->position.y) >> 16);
                                         if (abs(distX - distY) < 13) {
-                                            Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                            Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                                         }
                                     }
                                 }
@@ -587,7 +587,7 @@ void Tuesday_State_Node(void)
                                             int32 distX = abs((player->position.x - self->position.x) >> 16);
                                             int32 distY = abs((player->position.y - self->position.y) >> 16);
                                             if (abs(distX - distY) < 13) {
-                                                Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                                Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                                             }
                                         }
                                     }
@@ -602,7 +602,7 @@ void Tuesday_State_Node(void)
                                                 int32 distX = abs((player->position.x - self->position.x) >> 16);
                                                 int32 distY = abs((player->position.y - self->position.y) >> 16);
                                                 if (abs(distX - distY) < 13) {
-                                                    Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                                    Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                                                 }
                                             }
                                         }
@@ -617,7 +617,7 @@ void Tuesday_State_Node(void)
                                                     int32 distX = abs((player->position.x - self->position.x) >> 16);
                                                     int32 distY = abs((player->position.y - self->position.y) >> 16);
                                                     if (abs(distX - distY) < 13) {
-                                                        Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                                        Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                                                     }
                                                 }
                                             }
@@ -634,7 +634,7 @@ void Tuesday_State_Node(void)
                                 hitbox.right  = 2;
                                 hitbox.bottom = (child->drawPos.y - self->position.y) >> 16;
                                 if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-                                    Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                    Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                                 }
                             }
 
@@ -645,7 +645,7 @@ void Tuesday_State_Node(void)
                                 hitbox.top    = (child->drawPos.y - self->position.y) >> 16;
                                 hitbox.bottom = 0;
                                 if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-                                    Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                                    Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                                 }
                             }
                         }

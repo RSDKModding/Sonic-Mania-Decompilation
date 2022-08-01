@@ -41,7 +41,7 @@ void LottoMachine_StaticUpdate(void)
     {
         int32 slot = RSDK.GetEntitySlot(lottoMachine);
         RSDK.AddDrawListRef(Zone->objectDrawLow, slot);
-        RSDK.AddDrawListRef(lottoMachine->drawOrderHigh, slot);
+        RSDK.AddDrawListRef(lottoMachine->drawGroupHigh, slot);
     }
 }
 
@@ -50,7 +50,7 @@ void LottoMachine_Draw(void)
     RSDK_THIS(LottoMachine);
 
     Vector2 drawPos;
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         self->direction = FLIP_NONE;
         self->rotation  = self->angle >> 16;
         RSDK.DrawSprite(&self->supportAnimator, NULL, false);
@@ -99,7 +99,7 @@ void LottoMachine_Draw(void)
             RSDK.DrawSprite(&self->machineAnimator, NULL, false);
         }
     }
-    else if (SceneInfo->currentDrawGroup == self->drawOrderHigh) {
+    else if (SceneInfo->currentDrawGroup == self->drawGroupHigh) {
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + 0x6C0000 + self->chutePos;
         RSDK.DrawSprite(&self->chuteAnimator, &drawPos, false);
@@ -140,12 +140,12 @@ void LottoMachine_Create(void *data)
         self->updateRange.x       = 0x1000000;
         self->updateRange.y       = 0x1000000;
         self->visible             = true;
-        self->drawOrder           = Zone->objectDrawHigh + 1;
+        self->drawGroup           = Zone->objectDrawHigh + 1;
         self->alpha               = 160;
         self->drawFX              = FX_ROTATE | FX_FLIP;
         self->chuteTargetPos      = 0x180000;
         self->chutePos            = 0x180000;
-        self->drawOrderHigh       = Zone->objectDrawHigh;
+        self->drawGroupHigh       = Zone->objectDrawHigh;
         self->motorAnimator.speed = 0;
         self->state               = LottoMachine_State_Startup;
     }
@@ -440,7 +440,7 @@ void LottoMachine_GiveRings(void)
                 Vector2 pos;
                 pos.x = self->position.x;
                 pos.y = self->position.y + 0x540000;
-                Ring_FakeLoseRings(&pos, -ringCount, self->drawOrder);
+                Ring_FakeLoseRings(&pos, -ringCount, self->drawGroup);
                 RSDK.PlaySfx(Player->sfxLoseRings, false, 255);
                 player->state = Player_State_Hurt;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
@@ -454,7 +454,7 @@ void LottoMachine_GiveRings(void)
             ball->type                        = LOTTOBALL_BIG;
             ball->isUIBall                    = true;
             ball->ringCount                   = ringCount;
-            ball->drawOrder                   = Zone->hudDrawOrder;
+            ball->drawGroup                   = Zone->huddrawGroup;
             ball->active                      = ACTIVE_NORMAL;
             ball->drawFX                      = FX_SCALE;
             ball->state                       = LottoBall_State_ShowUIBall;
@@ -527,7 +527,7 @@ void LottoMachine_State_HandleBallCollect(void)
                 self->timer          = 0;
                 self->chuteVel       = 0x20000;
                 self->chuteTargetPos = -0x180000;
-                self->drawOrderHigh  = Zone->objectDrawLow + 1;
+                self->drawGroupHigh  = Zone->objectDrawLow + 1;
                 self->state          = LottoMachine_State_CollectBall;
             }
             break;
@@ -564,7 +564,7 @@ void LottoMachine_State_HandleBallCollect(void)
                 self->timer          = 0;
                 self->chuteVel       = 0x20000;
                 self->chuteTargetPos = -0x180000;
-                self->drawOrderHigh  = Zone->objectDrawHigh;
+                self->drawGroupHigh  = Zone->objectDrawHigh;
                 self->state          = LottoMachine_State_DropPlayers;
             }
             break;

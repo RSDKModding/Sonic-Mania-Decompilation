@@ -32,7 +32,7 @@ void SpikeCorridor_Create(void *data)
     RSDK_THIS(SpikeCorridor);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->active    = ACTIVE_BOUNDS;
 
     if (SceneInfo->inEditor) {
@@ -180,7 +180,7 @@ void SpikeCorridor_CheckPlayerCollisions(void)
             int32 side = Player_CheckCollisionBox(player, self, &self->hitboxes[i]);
 
             if (side == C_BOTTOM) {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
                 player->collisionFlagV |= 2;
             }
             else if (side == C_TOP) {
@@ -271,7 +271,7 @@ void SpikeCorridor_StateDropper_SpawnSpikes(void)
     fallRow->storedRowID         = self->rowID;
     fallRow->size                = self->size;
     fallRow->parent              = self;
-    fallRow->drawOrder           = self->drawOrder;
+    fallRow->drawGroup           = self->drawGroup;
     fallRow->colWidth            = self->colWidth;
     fallRow->yOffset             = 0;
     fallRow->fallOffset          = (self->yOffset + 24 * (self->rowHeight - self->rowID++ - 1)) << 16;

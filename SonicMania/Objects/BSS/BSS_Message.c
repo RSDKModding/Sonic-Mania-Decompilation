@@ -43,7 +43,7 @@ void BSS_Message_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 15;
+        self->drawGroup = 15;
 
         switch (voidToInt(data)) {
             case BSS_MESSAGE_GETSPHERES:

@@ -39,7 +39,7 @@ void PhantomMissile_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->drawFX        = FX_ROTATE;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -106,7 +106,7 @@ void PhantomMissile_HandleExhaust(void)
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, x, y);
 
         dust->state     = Dust_State_DustPuff;
-        dust->drawOrder = Zone->objectDrawHigh;
+        dust->drawGroup = Zone->objectDrawHigh;
         dust->inkEffect = INK_BLEND;
     }
 }
@@ -172,7 +172,7 @@ void PhantomMissile_State_Launched(void)
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 2, &self->targetInsideAnimator, true, 0);
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 3, &self->targetNumbersAnimator, true, self->id);
 
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
         self->state     = PhantomMissile_State_Attacking;
     }
 
@@ -219,7 +219,7 @@ void PhantomMissile_State_Attacking(void)
     self->position.y -= self->targetRadius * RSDK.Cos512(self->rotation);
 
     if (rx * rx + ry * ry < 64) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->targetPos.x, self->targetPos.y - 0x80000)->drawOrder = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->targetPos.x, self->targetPos.y - 0x80000)->drawGroup = Zone->objectDrawHigh;
 
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->missileAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 1, &self->targetOutsideAnimator, true, 0);
@@ -228,7 +228,7 @@ void PhantomMissile_State_Attacking(void)
 
         self->timer          = 0;
         self->reattachRadius = 0;
-        self->drawOrder      = Zone->objectDrawLow;
+        self->drawGroup      = Zone->objectDrawLow;
         self->visible        = false;
         self->state          = PhantomMissile_State_Explode;
 
@@ -246,7 +246,7 @@ void PhantomMissile_State_Explode(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &PhantomMissile->hitbox)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 

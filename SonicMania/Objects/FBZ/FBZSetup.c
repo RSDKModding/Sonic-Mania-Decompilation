@@ -67,10 +67,10 @@ void FBZSetup_StageLoad(void)
     BGSwitch->switchCallback[FBZ_BG_INSIDE1_DUP] = FBZSetup_BGSwitch_ShowInside1_Dup;
 
     TileLayer *backgroundInside    = RSDK.GetTileLayer(0);
-    backgroundInside->drawLayer[0] = 0;
-    backgroundInside->drawLayer[1] = 0;
-    backgroundInside->drawLayer[2] = 0;
-    backgroundInside->drawLayer[3] = 0;
+    backgroundInside->drawGroup[0] = 0;
+    backgroundInside->drawGroup[1] = 0;
+    backgroundInside->drawGroup[2] = 0;
+    backgroundInside->drawGroup[3] = 0;
     if (!Zone->actID)
         backgroundInside->scanlineCallback = FBZSetup_Scanline_BGInside;
 
@@ -206,49 +206,49 @@ void FBZSetup_Scanline_BGInside(ScanlineInfo *scanlines)
 
 void FBZSetup_BGSwitch_ShowInside1(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
 
     if (Zone->actID == 1) {
-        RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-        RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = 0;
+        RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+        RSDK.GetTileLayer(3)->drawGroup[BGSwitch->screenID] = 0;
     }
     else {
-        RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+        RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
     }
 }
 
 void FBZSetup_BGSwitch_ShowInside2(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0;
 
     if (Zone->actID == 1) {
-        RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
-        RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-        RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+        RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
+        RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+        RSDK.GetTileLayer(3)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
     }
     else {
-        RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+        RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
     }
 }
 
 void FBZSetup_BGSwitch_ShowInside1_Dup(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
 
     if (Zone->actID == 1) {
-        RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-        RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0;
+        RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+        RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = 0;
     }
     else {
-        RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+        RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
     }
 }
 
 void FBZSetup_Trigger_ShowExterior(void)
 {
     int32 id                                                        = (2 * (Zone->actID != 0) + 3);
-    RSDK.GetTileLayer(id)->drawLayer[GenericTrigger->playerID]     = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(id + 1)->drawLayer[GenericTrigger->playerID] = 6;
+    RSDK.GetTileLayer(id)->drawGroup[GenericTrigger->playerID]     = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(id + 1)->drawGroup[GenericTrigger->playerID] = 6;
 
     foreach_active(ParallaxSprite, parallaxSprite)
     {
@@ -262,8 +262,8 @@ void FBZSetup_Trigger_ShowExterior(void)
 void FBZSetup_Trigger_ShowInterior(void)
 {
     int32 id                                                        = (2 * (Zone->actID != 0) + 3);
-    RSDK.GetTileLayer(id)->drawLayer[GenericTrigger->playerID]     = 6;
-    RSDK.GetTileLayer(id + 1)->drawLayer[GenericTrigger->playerID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(id)->drawGroup[GenericTrigger->playerID]     = 6;
+    RSDK.GetTileLayer(id + 1)->drawGroup[GenericTrigger->playerID] = DRAWGROUP_COUNT;
 
     foreach_active(ParallaxSprite, parallaxSprite) { parallaxSprite->state = ParallaxSprite_State_FadeOut; }
 }

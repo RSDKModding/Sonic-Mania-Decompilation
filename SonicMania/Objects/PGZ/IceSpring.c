@@ -33,7 +33,7 @@ void IceSpring_Update(void)
                     int32 storeY = player->position.y;
 
                     int32 collided = false;
-                    if (player->state == Ice_State_FrozenPlayer)
+                    if (player->state == Ice_PlayerState_Frozen)
                         collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
                     else
                         collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);
@@ -59,7 +59,7 @@ void IceSpring_Update(void)
                         }
 
                         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                        if (player->state != Ice_State_FrozenPlayer && shield->shieldAnimator.animationID != 2
+                        if (player->state != Ice_PlayerState_Frozen && shield->shieldAnimator.animationID != 2
 #if MANIA_USE_PLUS
                             && player->state != Player_State_MightyHammerDrop
 #endif
@@ -158,9 +158,9 @@ void IceSpring_Create(void *data)
         self->visible        = true;
 
         if (self->planeFilter && ((uint8)(self->planeFilter - 1) & 2))
-            self->drawOrder = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
 
         switch (self->type) {
             case ICESPRING_VERTICAL:

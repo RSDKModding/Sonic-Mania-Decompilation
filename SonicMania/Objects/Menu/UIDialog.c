@@ -91,7 +91,7 @@ void UIDialog_Create(void *data)
     RSDK_THIS(UIDialog);
 
     self->active    = ACTIVE_ALWAYS;
-    self->drawOrder = 15;
+    self->drawGroup = 15;
     self->visible   = true;
 
     if (data)
@@ -179,7 +179,7 @@ void UIDialog_AddButton(uint8 frame, EntityUIDialog *dialog, void (*callback)(vo
         button->bgEdgeSize                     = 24;
         button->align                          = UIBUTTON_ALIGN_CENTER;
         button->active                         = ACTIVE_ALWAYS;
-        button->drawOrder                      = dialog->drawOrder;
+        button->drawGroup                      = dialog->drawGroup;
         dialog->buttons[dialog->buttonCount++] = button;
 
         EntityUIControl *parent = dialog->parent;

@@ -50,7 +50,7 @@ void MagnetSphere_Create(void *data)
 
     self->drawFX        = FX_FLIP;
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawHigh;
     self->active        = ACTIVE_BOUNDS;
     self->alpha         = 0xFF;
     self->updateRange.x = 0x400000;
@@ -181,10 +181,10 @@ void MagnetSphere_MovePlayer(EntityPlayer *player, int32 playerID)
     player->position.y = self->position.y + (ang * RSDK.Cos256(MagnetSphere->playerAngles[playerID]) << 8);
 
     if (MagnetSphere->sphereAngle[playerID] >= 0x80) {
-        player->drawOrder = Zone->playerDrawHigh;
+        player->drawGroup = Zone->playerDrawHigh;
     }
     else {
-        player->drawOrder  = Zone->playerDrawLow;
+        player->drawGroup  = Zone->playerDrawLow;
         player->velocity.x = -player->velocity.x;
         player->velocity.y = -player->velocity.y;
     }

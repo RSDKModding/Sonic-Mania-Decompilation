@@ -53,7 +53,7 @@ void Iwamodoki_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
 
     if (data) {
         self->active = ACTIVE_NORMAL;
@@ -208,7 +208,7 @@ void Iwamodoki_State_Explode(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (!--self->timer) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
         if (self->activeScreens == 1)
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
@@ -250,7 +250,7 @@ void Iwamodoki_State_Debris(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Iwamodoki->hitboxProjectile)) {
-            Player_CheckProjectileHit(player, self);
+            Player_ProjectileHurt(player, self);
         }
     }
 

@@ -42,7 +42,7 @@ void Gachapandora_Create(void *data)
             switch (self->type) {
                 case GACHAPANDORA_MAIN:
                     self->visible   = false;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
 
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(Gachapandora->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
@@ -120,7 +120,7 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawOrder     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawLow;
                     break;
 
                 case GACHAPANDORA_PRIZE:
@@ -133,7 +133,7 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawOrder     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawLow;
                     break;
 
                 case GACHAPANDORA_AMY:
@@ -153,13 +153,13 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawOrder     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawLow;
                     break;
 
                 case GACHAPANDORA_DEBRIS:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
 
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 0, &self->mainAnimator, true, 0);
 
@@ -173,7 +173,7 @@ void Gachapandora_Create(void *data)
                 case GACHAPANDORA_SPARK:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawHigh;
+                    self->drawGroup = Zone->objectDrawHigh;
 
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 13, &self->mainAnimator, true, 0);
 
@@ -284,7 +284,7 @@ void Gachapandora_CheckPlayerCollisions_Prize(void)
             else {
                 if (self->type == GACHAPANDORA_DRILLER) {
                     if (Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxDrill))
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
             }
         }
@@ -303,7 +303,7 @@ void Gachapandora_Explode(int xMin, int xMax, int yMin, int yMax)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(xMin, xMax) << 16);
             int32 y = self->position.y + (RSDK.Rand(yMin, yMax) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -735,14 +735,14 @@ void Gachapandora_StateBoss_HandleSpun(void)
             debris->velocity.y           = -0x20000;
 
             debris = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
-            ++debris->drawOrder;
+            ++debris->drawGroup;
             debris->mainAnimator.frameID = 2;
             debris->timer                = 90;
             debris->velocity.x           = -0x20000;
             debris->velocity.y           = -0x20000;
 
             debris = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
-            ++debris->drawOrder;
+            ++debris->drawGroup;
             debris->mainAnimator.frameID = 3;
             debris->timer                = 90;
             debris->velocity.x           = 0x20000;
@@ -1065,7 +1065,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
         debris->velocity.x      = RSDK.Rand(-1, 2) << 16;
         debris->velocity.y      = -0x48000;
         debris->gravityStrength = 0x3800;
-        debris->drawOrder       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawHigh;
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1077,7 +1077,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
         debris->velocity.x      = RSDK.Rand(-1, 2) << 15;
         debris->velocity.y      = -0x30000;
         debris->gravityStrength = 0x3800;
-        debris->drawOrder       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawHigh;
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1114,7 +1114,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
         self->drawFX |= FX_SCALE;
         self->scale.x   = 0x20;
         self->scale.y   = 0x20;
-        self->drawOrder = Zone->objectDrawHigh + 1;
+        self->drawGroup = Zone->objectDrawHigh + 1;
         if (++Gachapandora->activeToys >= 8 && !Gachapandora->destroyedToys)
             Gachapandora->awardAchievement = true;
 
@@ -1518,7 +1518,7 @@ void Gachapandora_StatePrize_AmyRebound(void)
     if (self->mainAnimator.animationID == 7) {
         if (!--self->timer) {
             RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
 
             self->invincibilityTimer = 30;
             self->state              = Gachapandora_StatePrize_Destroyed;
@@ -1593,10 +1593,10 @@ void Gachapandora_StatePrize_AmyGrabbed(void)
             else if (parent->stateInput == Gachapandora_Player_StateInput_P2AIGrabbed)
                 parent->stateInput = Player_Input_P2_AI;
 
-            Player_CheckHit(parent, self);
+            Player_Hurt(parent, self);
 
             RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
 
             self->invincibilityTimer = 30;
             self->state              = Gachapandora_StatePrize_Destroyed;
@@ -1639,7 +1639,7 @@ void Gachapandora_StateFireball_Falling(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxFireball)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 
@@ -1682,7 +1682,7 @@ void Gachapandora_StateFireball_BurnGround(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxFireball)) {
-                Player_CheckElementalHit(player, self, SHIELD_FIRE);
+                Player_ElementHurt(player, self, SHIELD_FIRE);
             }
         }
     }
@@ -1764,7 +1764,7 @@ void Gachapandora_StateSpark_Attatched(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxSpark)) {
-                Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                Player_ElementHurt(player, self, SHIELD_LIGHTNING);
             }
         }
     }
@@ -1788,7 +1788,7 @@ void Gachapandora_StateSpark_Detatched(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Gachapandora->hitboxSpark)) {
-            Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+            Player_ElementHurt(player, self, SHIELD_LIGHTNING);
         }
     }
 

@@ -36,7 +36,7 @@ void TAEmerald_Create(void *data)
         self->originPos     = self->position;
         self->angle         = 16 * self->color;
         self->visible       = true;
-        self->drawOrder     = 1;
+        self->drawGroup     = 1;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

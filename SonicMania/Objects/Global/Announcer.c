@@ -30,7 +30,7 @@ void Announcer_Create(void *data)
     RSDK_THIS(Announcer);
 
     self->active        = ACTIVE_NORMAL;
-    self->drawOrder     = 13;
+    self->drawGroup     = 13;
     self->visible       = true;
     self->drawFX        = FX_FLIP | FX_SCALE;
     self->isPermanent   = true;

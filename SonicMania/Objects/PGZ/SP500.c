@@ -89,7 +89,7 @@ void SP500_Create(void *data)
             self->visible = true;
             self->offL <<= 20;
             self->offR <<= 20;
-            self->drawOrder     = Zone->objectDrawHigh;
+            self->drawGroup     = Zone->objectDrawHigh;
             self->updateRange.x = (self->len + 4) << 20;
             self->updateRange.y = 0x800000;
 

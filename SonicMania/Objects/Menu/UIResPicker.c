@@ -102,7 +102,7 @@ void UIResPicker_Create(void *data)
         self->selection = -2;
 
         self->visible       = true;
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x400000;
@@ -346,7 +346,7 @@ void UIResPicker_EditorDraw(void)
     int sizeY = self->size.y;
 
     self->selection     = -2;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x400000;
     self->bgEdgeSize    = self->size.y >> 16;

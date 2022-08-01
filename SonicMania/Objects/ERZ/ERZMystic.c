@@ -45,7 +45,7 @@ void ERZMystic_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -97,7 +97,7 @@ void ERZMystic_CheckPlayerCollisions(void)
                 if (i != self->correctCup) {
                     self->position.x = storeX + self->cupPos[i];
                     if (abs(self->position.x - player->position.x) < 0x400000 && player->position.y > self->position.y)
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
             }
         }

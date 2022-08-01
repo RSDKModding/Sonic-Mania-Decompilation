@@ -40,9 +40,9 @@ void Explosion_Create(void *data)
     self->active  = ACTIVE_NORMAL;
     self->visible = true;
     if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
     RSDK.SetSpriteAnimation(Explosion->aniFrames, voidToInt(data), &self->animator, true, 0);
 }

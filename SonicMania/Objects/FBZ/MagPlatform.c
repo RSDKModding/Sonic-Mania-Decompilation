@@ -88,17 +88,17 @@ void MagPlatform_Collide_SolidAllHazardBottom(void)
 #if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer)) 
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
                 else if (player->collisionMode) {
                     if (self->velocity.y > 0) {
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                     }
                     else {
 #if MANIA_USE_PLUS
                         if (!Player_CheckMightyUnspin(player, 0x300, true, &player->uncurlTimer)) 
 #endif
-                            Player_CheckHit(player, self);
+                            Player_Hurt(player, self);
                     }
                 }
                 else {

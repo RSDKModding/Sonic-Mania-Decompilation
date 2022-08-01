@@ -57,7 +57,7 @@ void MeterDroid_Create(void *data)
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             self->health        = 6;
-            self->drawOrder     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawLow;
             self->state         = MeterDroid_State_Setup;
 
             RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
@@ -110,7 +110,7 @@ void MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip(void)
 #if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
             }
         }
@@ -138,7 +138,7 @@ void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void)
 #if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
             }
         }
@@ -150,7 +150,7 @@ void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
 
         self->position.x = storeX;
@@ -174,7 +174,7 @@ void MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip(void)
 #if MANIA_USE_PLUS
                     if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
             }
         }
@@ -193,7 +193,7 @@ void MeterDroid_Hit(void)
             int32 x = RSDK.Rand(MeterDroid->hitboxBoss.left, MeterDroid->hitboxBoss.right) << 16;
             int32 y = RSDK.Rand(MeterDroid->hitboxBoss.top, MeterDroid->hitboxBoss.bottom) << 16;
 
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawGroup = Zone->objectDrawHigh;
             self->stateDraw                                                                                              = MeterDroid_Draw_Normal;
         }
 
@@ -227,7 +227,7 @@ void MeterDroid_Explode(void)
             int32 x                    = (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16;
             int32 y                    = (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16;
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
 }
@@ -588,7 +588,7 @@ void MeterDroid_State_MoveToValve(void)
 
     if (rx * rx + ry * ry < 96) {
         self->direction = self->targetValve->direction;
-        self->drawOrder = Zone->objectDrawLow - 1;
+        self->drawGroup = Zone->objectDrawLow - 1;
         self->state     = MeterDroid_State_MoveIntoBG;
     }
 
@@ -681,7 +681,7 @@ void MeterDroid_State_WatchPlatformsPopUp(void)
 
         self->origin.x  = self->position.x;
         self->origin.y  = self->position.y;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
         self->state     = MeterDroid_State_PickMoveDir;
         self->stateDraw = MeterDroid_Draw_Normal;
     }

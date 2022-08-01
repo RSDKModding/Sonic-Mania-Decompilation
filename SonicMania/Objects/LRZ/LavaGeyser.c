@@ -56,7 +56,7 @@ void LavaGeyser_Create(void *data)
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->force <<= 12;
         self->state = LavaGeyser_State_Setup;
     }
@@ -88,7 +88,7 @@ void LavaGeyser_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 }

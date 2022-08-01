@@ -57,7 +57,7 @@ void UICreditsText_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->state         = UICreditsText_State_Setup;
 
         if (!self->text.chars)

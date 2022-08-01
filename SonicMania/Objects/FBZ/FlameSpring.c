@@ -37,7 +37,7 @@ void FlameSpring_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow + 1;
+        self->drawGroup     = Zone->objectDrawLow + 1;
 
         if (data) {
             RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 2, &self->mainAnimator, true, 0);
@@ -150,7 +150,7 @@ void FlameSpring_State_Spring(void)
             switch (self->type) {
                 case FLAMESPRING_BOTH:
                     flame             = CREATE_ENTITY(FlameSpring, intToVoid(true), self->flamePosL.x, self->flamePosL.y);
-                    flame->drawOrder  = Zone->objectDrawLow;
+                    flame->drawGroup  = Zone->objectDrawLow;
                     flame->velocity.x = -0x100 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 0x100);
 
                     flame             = CREATE_ENTITY(FlameSpring, intToVoid(1), self->flamePosR.x, self->flamePosR.y);
@@ -159,7 +159,7 @@ void FlameSpring_State_Spring(void)
 
                 case FLAMESPRING_RIGHT:
                     flame            = CREATE_ENTITY(FlameSpring, intToVoid(true), self->flamePosR.x, self->flamePosR.y);
-                    flame->drawOrder = Zone->objectDrawLow;
+                    flame->drawGroup = Zone->objectDrawLow;
                     if (0xC00 * RSDK.Sin1024((timer & 0x1FF) + 0x100) >= 0)
                         flame->velocity.x = (0x44000 - 0xC0 * RSDK.Sin1024((timer & 0x1FF) + 0x100));
                     else
@@ -168,7 +168,7 @@ void FlameSpring_State_Spring(void)
 
                 case FLAMESPRING_LEFT:
                     flame            = CREATE_ENTITY(FlameSpring, intToVoid(true), self->flamePosL.x, self->flamePosL.y);
-                    flame->drawOrder = Zone->objectDrawLow;
+                    flame->drawGroup = Zone->objectDrawLow;
                     if (-0xC0 * RSDK.Sin1024((timer & 0x1FF) + 0x100) >= 0)
                         flame->velocity.x = (-0xC0 * RSDK.Sin1024((timer & 0x1FF) + 0x100) - 0x44000);
                     else
@@ -187,7 +187,7 @@ void FlameSpring_State_Flame(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &FlameSpring->hitboxFlame)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 

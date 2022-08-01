@@ -42,7 +42,7 @@ void EscapeCar_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -252,7 +252,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
         debris->drawFX          = FX_SCALE | FX_ROTATE;
         debris->scale.x         = 0x200;
         debris->scale.y         = 0x200;
-        debris->drawOrder       = Zone->objectDrawLow + 1;
+        debris->drawGroup       = Zone->objectDrawLow + 1;
         debris->rotSpeed        = 2;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 7, &debris->animator, true, 0);
         debris->animator.rotationStyle = ROTSTYLE_FULL;
@@ -264,7 +264,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
         debris->velocity.x             = 0x40000;
         debris->velocity.y             = -0x48000;
         debris->drawFX                 = FX_ROTATE;
-        debris->drawOrder              = Zone->objectDrawLow + 1;
+        debris->drawGroup              = Zone->objectDrawLow + 1;
         debris->rotSpeed               = -4;
         debris->animator               = self->carAnimator;
         debris->isPermanent            = true;
@@ -281,7 +281,7 @@ void EscapeCar_EditorDraw(void)
 {
     RSDK_THIS(EscapeCar);
 
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 

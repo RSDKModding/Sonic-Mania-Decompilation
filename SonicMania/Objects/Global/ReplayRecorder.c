@@ -141,7 +141,7 @@ void ReplayRecorder_Create(void *data)
     RSDK_THIS(ReplayRecorder);
 
     self->active          = ACTIVE_NEVER;
-    self->drawOrder       = 13;
+    self->drawGroup       = 13;
     self->inkEffect       = INK_NONE;
     self->replayStopDelay = -1;
     self->drawFX          = FX_FLIP;
@@ -583,10 +583,10 @@ void ReplayRecorder_SetupActions(void)
 {
     for (int32 i = 0; i < 64; ++i) ReplayRecorder->actions[i] = StateMachine_None;
 
-    ReplayRecorder->actions[3] = Current_PState_Down;
-    ReplayRecorder->actions[4] = Current_PState_Left;
-    ReplayRecorder->actions[5] = Current_PState_Right;
-    ReplayRecorder->actions[6] = Current_PState_Up;
+    ReplayRecorder->actions[3] = Current_PlayerState_Down;
+    ReplayRecorder->actions[4] = Current_PlayerState_Left;
+    ReplayRecorder->actions[5] = Current_PlayerState_Right;
+    ReplayRecorder->actions[6] = Current_PlayerState_Up;
 
     ReplayRecorder->actions[7]  = Cylinder_PlayerState_InkRoller_Stand;
     ReplayRecorder->actions[8]  = Cylinder_PlayerState_InkRoller_Roll;
@@ -597,7 +597,7 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[14] = GymBar_PlayerState_SwingV;
     ReplayRecorder->actions[15] = GymBar_PlayerState_SwingH;
 
-    ReplayRecorder->actions[16] = Ice_State_FrozenPlayer;
+    ReplayRecorder->actions[16] = Ice_PlayerState_Frozen;
 
     ReplayRecorder->actions[17] = OOZSetup_PlayerState_OilFall;
     ReplayRecorder->actions[18] = OOZSetup_PlayerState_OilPool;
@@ -639,9 +639,9 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[52] = Player_State_TubeRoll;
     ReplayRecorder->actions[53] = Player_State_Victory;
 
-    ReplayRecorder->actions[54] = SizeLaser_P2JumpInShrink;
-    ReplayRecorder->actions[55] = SizeLaser_PlayerState_Grow;
-    ReplayRecorder->actions[56] = SizeLaser_P2JumpInGrow;
+    ReplayRecorder->actions[54] = SizeLaser_PlayerState_ShrinkChibi;
+    ReplayRecorder->actions[55] = SizeLaser_PlayerState_GrowGiant;
+    ReplayRecorder->actions[56] = SizeLaser_PlayerState_GrowNormal;
 }
 
 void ReplayRecorder_SetupWriteBuffer(void)
@@ -990,7 +990,7 @@ bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *recorder)
         return player->isChibi;
 
     if (RSDK.CheckSceneFolder("PSZ2"))
-        return player->state == Ice_State_FrozenPlayer;
+        return player->state == Ice_PlayerState_Frozen;
 
     return false;
 }
@@ -1135,7 +1135,7 @@ void ReplayRecorder_PlayerState_PlaybackReplay(void)
 
             self->scale.x   = 0x200;
             self->scale.y   = 0x200;
-            self->drawOrder = Zone->playerDrawLow;
+            self->drawGroup = Zone->playerDrawLow;
             foreach_all(FarPlane, farPlane)
             {
                 Hitbox hitbox;
@@ -1151,7 +1151,7 @@ void ReplayRecorder_PlayerState_PlaybackReplay(void)
                     self->drawFX |= FX_SCALE;
                     self->scale.x   = 0x100;
                     self->scale.y   = 0x100;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
                     foreach_break;
                 }
             }
@@ -1278,7 +1278,7 @@ void ReplayRecorder_Late_RecordFrames(void)
         EntityIce *ice = player->abilityPtrs[1];
 
         Animator *animator = &player->animator;
-        if (isGimmickState && RSDK.CheckSceneFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && ice->classID == Ice->classID)
+        if (isGimmickState && RSDK.CheckSceneFolder("PSZ2") && player->state == Ice_PlayerState_Frozen && ice->classID == Ice->classID)
             animator = &ice->contentsAnimator;
 
         self->animID  = animator->animationID;

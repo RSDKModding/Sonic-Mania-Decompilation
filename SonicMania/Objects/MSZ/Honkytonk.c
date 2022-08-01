@@ -118,7 +118,7 @@ void Honkytonk_Create(void *data)
         self->updateRange.y = 0x800000;
         self->visible       = true;
         self->angle &= 0xFF;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
         self->negAngle  = 0x100 - self->angle;
         self->drawFX    = FX_SCALE | FX_ROTATE;
         self->scale.x   = 0x200;

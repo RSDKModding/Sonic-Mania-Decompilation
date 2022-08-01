@@ -142,7 +142,7 @@ void SchrodingersCapsule_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
     }
 }
 
@@ -204,7 +204,7 @@ void SchrodingersCapsule_State_Explode(void)
     if (!(self->timer % 3)) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY)),
                                                    (RSDK.Rand(-24, 24) << 16) + self->position.x, (RSDK.Rand(-24, 24) << 16) + self->position.y);
-        explosion->drawOrder       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawHigh;
 
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, false, 0xFF);
     }
@@ -227,7 +227,7 @@ void SchrodingersCapsule_State_Explode(void)
         buddy1->interaction     = true;
         buddy1->visible         = true;
         buddy1->controllerID    = buddy1->playerID + 1;
-        buddy1->drawOrder       = Zone->playerDrawLow;
+        buddy1->drawGroup       = Zone->playerDrawLow;
         buddy1->scale.x         = 0x200;
         buddy1->scale.y         = 0x200;
         buddy1->state           = Player_State_Ground;
@@ -249,7 +249,7 @@ void SchrodingersCapsule_State_Explode(void)
         buddy2->interaction     = true;
         buddy2->visible         = true;
         buddy2->controllerID    = buddy2->playerID + 1;
-        buddy2->drawOrder       = Zone->playerDrawLow;
+        buddy2->drawGroup       = Zone->playerDrawLow;
         buddy2->scale.x         = 0x200;
         buddy2->scale.y         = 0x200;
         buddy2->state           = Player_State_Ground;

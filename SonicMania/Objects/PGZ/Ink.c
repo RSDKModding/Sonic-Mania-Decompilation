@@ -79,7 +79,7 @@ void Ink_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->alpha         = 0x180;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

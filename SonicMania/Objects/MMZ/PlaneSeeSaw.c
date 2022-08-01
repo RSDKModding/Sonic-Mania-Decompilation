@@ -43,7 +43,7 @@ void PlaneSeeSaw_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -152,7 +152,7 @@ void PlaneSeeSaw_State_Launch(void)
 
                     player->groundVel  = 0;
                     player->velocity.x = 0;
-                    player->drawOrder  = Zone->playerDrawLow;
+                    player->drawGroup  = Zone->playerDrawLow;
                     player->state      = PlaneSeeSaw_PlayerState_ToFG;
                     player->velocity.y = -0x60000;
                 }
@@ -204,7 +204,7 @@ void PlaneSeeSaw_PlayerState_ToBG(void)
     if (self->scale.x <= 0x100) {
         self->interaction    = true;
         self->tileCollisions = true;
-        self->drawOrder      = 2;
+        self->drawGroup      = 2;
 
         self->position.x -= FarPlane->position.x;
         self->position.y -= FarPlane->position.y;

@@ -41,7 +41,7 @@ void EggTower_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = 1;
+        self->drawGroup     = 1;
         self->scale.x       = 0x37C;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;

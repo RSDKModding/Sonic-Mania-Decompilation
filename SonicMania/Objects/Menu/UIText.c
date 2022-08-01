@@ -60,7 +60,7 @@ void UIText_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 2;
+        self->drawGroup = 2;
 
         if (!self->text.chars)
             RSDK.InitString(&self->text, "UNTITLED", false);

@@ -51,7 +51,7 @@ void BuckwildBall_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->startPos      = self->position;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
@@ -126,7 +126,7 @@ void BuckwildBall_SpawnDebris(void)
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
     RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 1, &debris->animator, true, 0);
-    debris->drawOrder       = Zone->objectDrawHigh;
+    debris->drawGroup       = Zone->objectDrawHigh;
     debris->gravityStrength = 0x3800;
     debris->velocity.x      = 0x180 * (abs(spawnX - x) >> 8) / sizeX;
 
@@ -148,7 +148,7 @@ void BuckwildBall_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -204,7 +204,7 @@ void BuckwildBall_HandleRollCrush(void)
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
 
                 RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 4, &debris->animator, true, spikes->type >> 1);
-                debris->drawOrder = Zone->objectDrawHigh;
+                debris->drawGroup = Zone->objectDrawHigh;
                 debris->direction = spikes->direction;
                 debris->drawFX |= FX_ROTATE;
                 debris->gravityStrength = 0x3800;
@@ -236,7 +236,7 @@ void BuckwildBall_State_Setup(void)
         case BUCKWILDBALL_ROLLING:
             self->visible   = false;
             self->state     = BuckwildBall_State_AwaitDetection;
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
 
             self->detectHitbox.left   = -(self->detectSize.x >> 17);
             self->detectHitbox.top    = -(self->detectSize.y >> 17);
@@ -301,7 +301,7 @@ void BuckwildBall_State_Falling(void)
             self->velocity.x     = 0;
             self->velocity.y     = -0x40000;
             self->animator.speed = 0;
-            self->drawOrder      = Zone->objectDrawHigh;
+            self->drawGroup      = Zone->objectDrawHigh;
         }
         else {
             int32 slot                                                                        = RSDK.GetEntitySlot(Drillerdroid->boss);
@@ -350,7 +350,7 @@ void BuckwildBall_State_Rolling(void)
         self->velocity.x     = 0;
         self->velocity.y     = -0x40000;
         self->animator.speed = 0;
-        self->drawOrder      = Zone->objectDrawHigh;
+        self->drawGroup      = Zone->objectDrawHigh;
     }
 
     if (self->bossBallSlot > -1)

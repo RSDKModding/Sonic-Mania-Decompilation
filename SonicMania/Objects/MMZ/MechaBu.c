@@ -39,9 +39,9 @@ void MechaBu_Create(void *data)
 
     self->visible = true;
     if (self->planeFilter > 0 && (((uint8)self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
@@ -102,7 +102,7 @@ void MechaBu_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
             else if (Player_CheckBadnikTouch(player, self, &MechaBu->hitboxSaw) && Player_CheckBadnikBreak(player, self, false)) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->sawPos.x, self->sawPos.y);
@@ -110,7 +110,7 @@ void MechaBu_CheckPlayerCollisions(void)
                 debris->velocity.x      = RSDK.Rand(-2, 3) << 16;
                 debris->velocity.y      = RSDK.Rand(-4, -1) << 16;
                 debris->gravityStrength = 0x3800;
-                debris->drawOrder       = self->drawOrder;
+                debris->drawGroup       = self->drawGroup;
                 debris->updateRange.x   = 0x200000;
                 debris->updateRange.y   = 0x200000;
                 destroyEntity(self);

@@ -49,7 +49,7 @@ void AIZTornado_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->drawFX        = FX_FLIP;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->movePos.x     = self->position.x;
         self->movePos.y     = self->position.y;
         self->turnAngle     = 48;
@@ -112,9 +112,9 @@ void AIZTornado_HandlePlayerCollisions(void)
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     Hitbox *hitbox       = RSDK.GetHitbox(&self->animatorTornado, 0);
     if (self->turnAngle >= 32)
-        player->drawOrder = self->drawOrder + 1;
+        player->drawGroup = self->drawGroup + 1;
     else
-        player->drawOrder = self->drawOrder;
+        player->drawGroup = self->drawGroup;
     int32 x = self->position.x;
     int32 y = self->position.y;
     self->prevPos.x &= 0xFFFF0000;

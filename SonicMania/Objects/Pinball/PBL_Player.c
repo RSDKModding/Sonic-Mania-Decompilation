@@ -72,7 +72,7 @@ void PBL_Player_Create(void *data)
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
 
         self->stateInput   = PBL_Player_Input_P1;
         self->state        = PBL_Player_State_Launcher;

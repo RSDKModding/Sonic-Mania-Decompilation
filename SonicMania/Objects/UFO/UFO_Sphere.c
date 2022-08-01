@@ -39,7 +39,7 @@ void UFO_Sphere_Draw(void)
 {
     RSDK_THIS(UFO_Sphere);
 
-    if (self->drawOrder == 4 && self->depth3D >= 0x100) {
+    if (self->drawGroup == 4 && self->depth3D >= 0x100) {
         self->direction = self->animator.frameID > 8;
         self->drawPos.x = (ScreenInfo->centerX + (self->worldPos.x << 8) / self->depth3D) << 16;
         self->drawPos.y = (ScreenInfo->centerY - (self->worldPos.y << 8) / self->depth3D) << 16;
@@ -57,7 +57,7 @@ void UFO_Sphere_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_SCALE | FX_FLIP;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_RBOUNDS;
         self->updateRange.x = 0x400;
         self->updateRange.y = 0x400;
@@ -119,7 +119,7 @@ void UFO_Sphere_State_Fixed(void)
                 int32 rz = (self->position.y - player->position.y) >> 16;
 
                 if (rx * rx + ry * ry + rz * rz < UFO_Player->maxSpeed >> 9) {
-                    self->drawOrder = 12;
+                    self->drawGroup = 12;
 
                     self->state = UFO_Sphere_State_Collected;
                     UFO_Setup_PlaySphereSfx();
@@ -252,7 +252,7 @@ void UFO_Sphere_State_HandleRespawn(void)
 
     if (abs(self->timer - UFO_Setup->timer) > 240) {
         self->visible   = true;
-        self->drawOrder = 4;
+        self->drawGroup = 4;
 
         switch (self->behavior) {
             default:

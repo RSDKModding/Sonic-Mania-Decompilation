@@ -62,7 +62,7 @@ void ERZShinobi_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible         = true;
         self->drawFX          = FX_ROTATE | FX_FLIP;
-        self->drawOrder       = Zone->objectDrawLow;
+        self->drawGroup       = Zone->objectDrawLow;
         self->active          = ACTIVE_NORMAL;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;
@@ -108,7 +108,7 @@ void ERZShinobi_CheckPlayerCollisions(void)
             self->position.x = storeX + self->finRadius * RSDK.Sin512(angle);
             self->position.y = storeY - self->finRadius * RSDK.Cos512(angle);
             if (RSDK.CheckObjectCollisionTouchCircle(player, 0xC0000, self, 0x80000)) {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
             angle += 0x40;
         }

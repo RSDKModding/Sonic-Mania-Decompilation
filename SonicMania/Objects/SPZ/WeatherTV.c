@@ -68,7 +68,7 @@ void WeatherTV_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->drawFX        = FX_FLIP;
         self->updateRange.x = 0x800000;

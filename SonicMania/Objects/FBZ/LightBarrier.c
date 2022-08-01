@@ -79,7 +79,7 @@ void LightBarrier_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->updateRange.x = 0x800000;
         self->updateRange.y = self->size << 15;
 

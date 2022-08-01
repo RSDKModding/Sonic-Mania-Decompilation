@@ -50,7 +50,7 @@ void RisingLava_State_CheckRiseStart(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
             TileLayer *move               = RSDK.GetTileLayer(Zone->moveLayer);
-            move->drawLayer[0]            = 5;
+            move->drawGroup[0]            = 5;
             move->scrollInfo[0].scrollPos = -self->offset.x;
             move->scrollPos               = -self->offset.y;
             self->active                  = ACTIVE_NORMAL;

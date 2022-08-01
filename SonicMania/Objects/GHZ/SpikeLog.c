@@ -35,7 +35,7 @@ void SpikeLog_Create(void *data)
     self->updateRange.y = 0x400000;
     if (!SceneInfo->inEditor)
         self->frame *= 4;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(SpikeLog->aniFrames, 0, &self->animator, true, 0);
     self->state = SpikeLog_State_Main;
 }
@@ -88,11 +88,11 @@ void SpikeLog_State_Main(void)
                         }
                     }
                     else if (player->animator.animationID != ANI_UNSPIN)
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
                 else {
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
 #if MANIA_USE_PLUS
                 }
 #endif

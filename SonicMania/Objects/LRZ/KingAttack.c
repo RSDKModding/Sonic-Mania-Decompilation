@@ -65,7 +65,7 @@ void KingAttack_Create(void *data)
     RSDK_THIS(KingAttack);
 
     if (!SceneInfo->inEditor) {
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -109,7 +109,7 @@ void KingAttack_Create(void *data)
                 break;
 
             case KINGATTACK_TRAIL:
-                self->drawOrder = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawLow;
                 self->inkEffect = INK_ADD;
                 self->visible   = true;
                 self->alpha     = 0xC0;
@@ -130,7 +130,7 @@ void KingAttack_Create(void *data)
                 break;
 
             case KINGATTACK_ENERGYLINE:
-                self->drawOrder = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawLow;
                 self->visible   = true;
 
                 self->state = KingAttack_State_EnergyLine;
@@ -141,7 +141,7 @@ void KingAttack_Create(void *data)
                 break;
 
             case KINGATTACK_SMALLBULLET:
-                self->drawOrder = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawLow;
                 self->drawFX    = FX_ROTATE;
                 self->visible   = true;
 
@@ -196,7 +196,7 @@ void KingAttack_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
         }
     }
 }
@@ -390,9 +390,9 @@ void KingAttack_State_Orbiting(void)
     KingAttack_CheckPlayerCollisions();
 
     if (self->angle < 512)
-        self->drawOrder = Zone->objectDrawLow - 1;
+        self->drawGroup = Zone->objectDrawLow - 1;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 }
 
 void KingAttack_State_OrbitLaunched(void)

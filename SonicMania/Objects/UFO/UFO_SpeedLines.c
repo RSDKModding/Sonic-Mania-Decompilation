@@ -86,7 +86,7 @@ void UFO_SpeedLines_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible   = true;
         self->drawFX    = FX_SCALE | FX_FLIP;
-        self->drawOrder = 5;
+        self->drawGroup = 5;
         self->active    = ACTIVE_NORMAL;
 
         EntityUFO_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, UFO_Player);

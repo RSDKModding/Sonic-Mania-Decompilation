@@ -90,7 +90,7 @@ void SpinBooster_Create(void *data)
         self->updateRange.y = self->size * abs(RSDK.Cos256(self->angle)) << 11;
         self->updateRange.y += 0x200000;
         self->visible   = false;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
     }
 }
 

@@ -67,7 +67,7 @@ void Whirlpool_Update(void)
                         int32 newY         = player->position.y + (self->yVel << 15);
                         player->velocity.x = newX - player->position.x;
                         player->velocity.y = newY - player->position.y;
-                        player->drawOrder  = self->playerAngle[playerID] <= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
+                        player->drawGroup  = self->playerAngle[playerID] <= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
 
                         if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->animator.animationID != ANI_FAN) {
                             self->activePlayers &= ~(1 << playerID);
@@ -132,7 +132,7 @@ void Whirlpool_Create(void *data)
     RSDK_THIS(Whirlpool);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->inkEffect     = INK_ADD;
     self->visible       = true;

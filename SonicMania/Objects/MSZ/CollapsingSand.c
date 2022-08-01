@@ -57,7 +57,7 @@ void CollapsingSand_Create(void *data)
     RSDK_THIS(CollapsingSand);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->position.x &= 0xFFF80000;
     self->position.y &= 0xFFF80000;
@@ -154,7 +154,7 @@ void CollapsingSand_State_CollapseLeft(void)
                 if (spawnSand) {
                     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                     RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                    debris->drawOrder = Zone->objectDrawHigh;
+                    debris->drawGroup = Zone->objectDrawHigh;
                     debris->timer     = 44;
                     if (self->collapseDuration.x > 0) {
                         // Replace ground tile with a flat one
@@ -221,7 +221,7 @@ void CollapsingSand_State_CollapseRight(void)
                 if (spawnSand) {
                     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                     RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                    debris->drawOrder = Zone->objectDrawHigh;
+                    debris->drawGroup = Zone->objectDrawHigh;
                     debris->timer     = 44;
                     if (self->collapseDuration.x > 0) {
                         // Replace ground tile with a flat one

@@ -52,7 +52,7 @@ void BSS_Horizon_Create(void *data)
         self->active    = ACTIVE_NORMAL;
         self->inkEffect = INK_ADD;
         self->visible   = true;
-        self->drawOrder = 2;
+        self->drawGroup = 2;
         self->drawFX    = FX_FLIP;
 
         RSDK.SetSpriteAnimation(BSS_Horizon->aniFrames, 0, &self->horizonAnimator, true, 0);

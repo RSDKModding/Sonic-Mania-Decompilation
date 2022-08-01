@@ -46,7 +46,7 @@ void TitleSonic_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible   = false;
         self->active    = ACTIVE_NEVER;
-        self->drawOrder = 4;
+        self->drawGroup = 4;
     }
 }
 

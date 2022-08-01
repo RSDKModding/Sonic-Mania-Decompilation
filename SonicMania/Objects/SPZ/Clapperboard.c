@@ -104,7 +104,7 @@ void Clapperboard_Create(void *data)
         self->amplitudeR.y = -0x40000;
         self->state        = Clapperboard_State_Idle;
         self->visible      = true;
-        self->drawOrder    = Zone->objectDrawLow;
+        self->drawGroup    = Zone->objectDrawLow;
     }
 }
 

@@ -80,7 +80,7 @@ void Spikes_Update(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                if (!Ice || (player->state != Ice_State_FrozenPlayer && shield->shieldAnimator.animationID != 2) || Press) {
+                if (!Ice || (player->state != Ice_PlayerState_Frozen && shield->shieldAnimator.animationID != 2) || Press) {
                     int32 playerVelX = player->velocity.x;
                     int32 playerVelY = player->velocity.y;
 
@@ -164,23 +164,23 @@ void Spikes_Update(void)
                                     if (!player->velocity.y) {
                                         player->position.x += self->collisionOffset.x;
                                         player->position.y += self->collisionOffset.y;
-                                        Player_CheckHit(player, self);
+                                        Player_Hurt(player, self);
                                     }
                                     break;
 
                                 case C_LEFT:
                                     if (!player->velocity.x)
-                                        Player_CheckHit(player, self);
+                                        Player_Hurt(player, self);
                                     break;
 
                                 case C_RIGHT:
                                     if (!player->velocity.x)
-                                        Player_CheckHit(player, self);
+                                        Player_Hurt(player, self);
                                     break;
 
                                 case C_BOTTOM:
                                     if (!player->velocity.y)
-                                        Player_CheckHit(player, self);
+                                        Player_Hurt(player, self);
                                     break;
 
                                 default: break;
@@ -200,7 +200,7 @@ void Spikes_Update(void)
                     int32 storedY = player->position.y;
 
                     uint8 side = C_NONE;
-                    if (player->state == Ice_State_FrozenPlayer)
+                    if (player->state == Ice_PlayerState_Frozen)
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
                     else
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);
@@ -331,9 +331,9 @@ void Spikes_Create(void *data)
         self->visible = true;
         self->type    = (self->type >> 1) & 1;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-            self->drawOrder = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
         self->alpha = 0x80;
 
         switch (self->type) {

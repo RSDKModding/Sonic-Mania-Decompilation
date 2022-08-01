@@ -34,7 +34,7 @@ void TitleCard_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active      = ACTIVE_ALWAYS;
         self->visible     = true;
-        self->drawOrder   = Zone->hudDrawOrder;
+        self->drawGroup   = Zone->huddrawGroup;
 #if MANIA_USE_PLUS
         self->enableIntro = globals->enableIntro;
 

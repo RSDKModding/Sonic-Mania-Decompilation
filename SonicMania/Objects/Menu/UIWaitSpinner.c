@@ -59,7 +59,7 @@ void UIWaitSpinner_Create(void *data)
 
     self->active    = ACTIVE_ALWAYS;
     self->visible   = true;
-    self->drawOrder = 15;
+    self->drawGroup = 15;
 
     RSDK.SetSpriteAnimation(UIWaitSpinner->aniFrames, 0, &self->animator, true, 0);
     self->state = UIWaitSpinner_State_Show;

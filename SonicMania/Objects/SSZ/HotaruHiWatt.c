@@ -45,7 +45,7 @@ void HotaruHiWatt_Create(void *data)
             self->updateRange.x = 0xC00000;
             self->updateRange.y = 0xC00000;
             self->type          = voidToInt(data);
-            self->drawOrder     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawLow;
 
             switch (self->type) {
                 case HHW_BOSS:
@@ -65,7 +65,7 @@ void HotaruHiWatt_Create(void *data)
 
                 case HHW_SINGLE_HOTARU:
                     RSDK.SetSpriteAnimation(HotaruHiWatt->hotaruFrames, 1, &self->mainAnimator, true, 3);
-                    ++self->drawOrder;
+                    ++self->drawGroup;
 
                     self->inkEffect = INK_ADD;
                     self->visible   = true;
@@ -225,7 +225,7 @@ void HotaruHiWatt_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -276,7 +276,7 @@ void HotaruHiWatt_CheckPlayerCollisions_MiniLaser(void)
     {
         if (!self->invincibilityTimer) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -294,14 +294,14 @@ void HotaruHiWatt_CheckPlayerCollisions_BossLaser(void)
         if (Player_CheckBadnikTouch(player, self, &hitbox)) {
             if (self->invincibilityTimer) {
                 if (player->position.y > self->position.y)
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
             else if (player->position.y < self->position.y || player->invincibleTimer || player->blinkTimer) {
                 if (Player_CheckBossHit(player, self))
                     HotaruHiWatt_Hit();
             }
             else {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
         }
     }
@@ -777,7 +777,7 @@ void HotaruHiWatt_State_MiniLaser(void)
         else {
             RSDK.SetSpriteAnimation(HotaruHiWatt->hotaruFrames, 3, &self->mainAnimator, true, 0);
             self->position.y += 0x80000;
-            self->drawOrder                  = Zone->objectDrawHigh;
+            self->drawGroup                  = Zone->objectDrawHigh;
             self->state                      = HotaruHiWatt_State_MiniLaserStrike;
             HotaruHiWatt->spawnedLaserStrike = true;
         }

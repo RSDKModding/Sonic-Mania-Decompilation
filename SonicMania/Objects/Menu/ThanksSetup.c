@@ -36,7 +36,7 @@ void ThanksSetup_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
-        self->drawOrder = 12;
+        self->drawGroup = 12;
         self->drawFX    = FX_FLIP;
         self->state     = ThanksSetup_State_ThanksForPlaying;
         self->stateDraw = ThanksSetup_Draw_Fade;

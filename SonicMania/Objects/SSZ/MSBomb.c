@@ -36,7 +36,7 @@ void MSBomb_Create(void *data)
 
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (data) {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 1, &self->animator, true, 0);
@@ -167,7 +167,7 @@ void MSBomb_State_Bouncing(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                if (Player_CheckHit(player, self))
+                if (Player_Hurt(player, self))
                     player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
 
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
@@ -188,7 +188,7 @@ void MSBomb_State_Projectile(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
         }
     }
 

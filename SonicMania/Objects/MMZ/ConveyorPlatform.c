@@ -13,7 +13,7 @@ void ConveyorPlatform_Update(void)
 {
     RSDK_THIS(ConveyorPlatform);
 
-    if (self->state == Platform_State_Controlled) {
+    if (self->state == Platform_State_Path) {
         if (self->timer || self->flipTimer) {
             if (++self->flipTimer == 24) {
                 self->stateCollide = Platform_Collision_Solid;

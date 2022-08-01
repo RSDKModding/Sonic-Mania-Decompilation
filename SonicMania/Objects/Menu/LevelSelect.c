@@ -53,7 +53,7 @@ void LevelSelect_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
-        self->drawOrder = 12;
+        self->drawGroup = 12;
         self->state     = LevelSelect_State_Init;
         self->stateDraw = LevelSelect_Draw_Fade;
         self->timer     = 640;

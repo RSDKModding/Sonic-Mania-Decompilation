@@ -150,9 +150,9 @@ void ItemBox_Create(void *data)
         self->updateRange.y = 0x400000;
         self->visible       = true;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-            self->drawOrder = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
 
         self->alpha = 0xFF;
         if (self->state == ItemBox_State_Broken) {
@@ -417,7 +417,7 @@ void ItemBox_CheckHit(void)
 
             int32 anim = player->animator.animationID;
             bool32 attacking =
-                anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || self->direction || player->state == Ice_State_FrozenPlayer);
+                anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || self->direction || player->state == Ice_PlayerState_Frozen);
             switch (player->characterID) {
                 case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
                 case ID_KNUCKLES: attacking |= anim == ANI_GLIDE || anim == ANI_GLIDE_SLIDE; break;
@@ -535,7 +535,7 @@ void ItemBox_GivePowerup(void)
             Player_GiveLife(player);
             break;
 
-        case ITEMBOX_EGGMAN: Player_CheckHit(player, self); break;
+        case ITEMBOX_EGGMAN: Player_Hurt(player, self); break;
 
         case ITEMBOX_HYPERRING:
             RSDK.PlaySfx(ItemBox->sfxHyperRing, false, 255);
@@ -560,7 +560,7 @@ void ItemBox_GivePowerup(void)
                     }
                     globals->stock |= charID;
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player->position.x, player->position.y);
-                    explosion->drawOrder       = Zone->objectDrawHigh;
+                    explosion->drawGroup       = Zone->objectDrawHigh;
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
             }
@@ -661,10 +661,10 @@ void ItemBox_GivePowerup(void)
                     }
 
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player1->position.x, player1->position.y);
-                    explosion->drawOrder       = Zone->objectDrawHigh;
+                    explosion->drawGroup       = Zone->objectDrawHigh;
 
                     explosion            = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player2->position.x, player2->position.y);
-                    explosion->drawOrder = Zone->objectDrawHigh;
+                    explosion->drawGroup = Zone->objectDrawHigh;
 
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
@@ -736,7 +736,7 @@ void ItemBox_GivePowerup(void)
                                 player2->stateInput       = Player_Input_P2_Delay;
                                 player2->tileCollisions   = false;
                                 player2->interaction      = false;
-                                player2->drawOrder        = Zone->playerDrawHigh;
+                                player2->drawGroup        = Zone->playerDrawHigh;
                                 player2->drownTimer       = 0;
                                 player2->active           = ACTIVE_NORMAL;
                                 player2->collisionPlane   = 0;
@@ -764,7 +764,7 @@ void ItemBox_GivePowerup(void)
                     }
 
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player->position.x, player->position.y);
-                    explosion->drawOrder       = Zone->objectDrawHigh;
+                    explosion->drawGroup       = Zone->objectDrawHigh;
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
             }
@@ -821,7 +821,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
     RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
 
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - 0x100000);
-    explosion->drawOrder       = Zone->objectDrawHigh;
+    explosion->drawGroup       = Zone->objectDrawHigh;
 
     for (int32 d = 0; d < 6; ++d) {
         EntityDebris *debris =
@@ -834,7 +834,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
         debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
         debris->drawFX     = FX_FLIP;
         debris->direction  = d & 3;
-        debris->drawOrder  = Zone->objectDrawHigh;
+        debris->drawGroup  = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
     }
 

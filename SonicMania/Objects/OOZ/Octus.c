@@ -32,7 +32,7 @@ void Octus_Create(void *data)
     RSDK_THIS(Octus);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos = self->position;
     self->startDir = self->direction;
@@ -243,7 +243,7 @@ void Octus_State_Shot(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Octus->hitboxProjectile))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
     }
     else {

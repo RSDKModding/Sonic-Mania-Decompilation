@@ -85,7 +85,7 @@ void MetalArm_Create(void *data)
     RSDK_THIS(MetalArm);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawHigh;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->visible       = true;

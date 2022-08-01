@@ -32,7 +32,7 @@ void Staircase_Create(void *data)
     RSDK_THIS(Staircase);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;

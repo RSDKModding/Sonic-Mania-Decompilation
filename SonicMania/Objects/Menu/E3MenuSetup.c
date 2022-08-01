@@ -49,7 +49,7 @@ void E3MenuSetup_Create(void *data)
 
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawOrder = 14;
+    self->drawGroup = 14;
 }
 
 void E3MenuSetup_StageLoad(void) { RSDK.SetVideoSetting(VIDEOSETTING_SHADERID, 1); }

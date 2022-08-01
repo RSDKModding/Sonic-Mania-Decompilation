@@ -25,7 +25,7 @@ void HangGlider_Draw(void)
 {
     RSDK_THIS(HangGlider);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         RSDK.DrawSprite(&self->sailAnimator, NULL, false);
         RSDK.DrawSprite(&self->handleBackAnimator, NULL, false);
 
@@ -45,7 +45,7 @@ void HangGlider_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible         = true;
-        self->drawOrder       = Zone->objectDrawLow;
+        self->drawGroup       = Zone->objectDrawLow;
         self->active          = ACTIVE_BOUNDS;
         self->updateRange.x   = 0x400000;
         self->updateRange.y   = 0x400000;

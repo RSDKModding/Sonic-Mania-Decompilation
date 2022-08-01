@@ -43,7 +43,7 @@ void TVVan_Create(void *data)
         switch (self->type) {
             case TVVAN_SATELLITE_NE_SW:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_NE_SW;
 
                 self->targetAngles1[0] = 0xE0;
@@ -54,7 +54,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_NW_SE:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_NW_SE;
 
                 self->targetAngles1[0] = 0x20;
@@ -65,7 +65,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_NW_SW:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_NW_SW;
 
                 self->targetAngles1[0] = 0x20;
@@ -76,7 +76,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_NE_SE:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_NE_SE;
 
                 self->targetAngles1[0] = 0x60;
@@ -87,7 +87,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_NE_NW:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_NE_NW;
 
                 self->targetAngles1[0] = 0x20;
@@ -98,7 +98,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_SE_SW:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_SE_SW;
 
                 self->targetAngles1[0] = 0xE0;
@@ -109,7 +109,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_SW_N:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_SW_N;
 
                 self->targetAngles1[0] = 0xA0;
@@ -120,7 +120,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_NW_S:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_NW_S;
 
                 self->targetAngles1[0] = 0x20;
@@ -131,7 +131,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_SE_N:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_SE_N;
 
                 self->targetAngles1[0] = 0xA0;
@@ -142,7 +142,7 @@ void TVVan_Create(void *data)
 
             case TVVAN_SATELLITE_NE_S:
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-                self->drawOrder                       = Zone->objectDrawHigh;
+                self->drawGroup                       = Zone->objectDrawHigh;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Satellite_NE_S;
 
                 self->targetAngles1[0] = 0xC0;
@@ -155,7 +155,7 @@ void TVVan_Create(void *data)
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->tvVanAnimator, true, 9);
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->tvAnimator, true, 0);
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->tvSnowAnimator, true, 0);
-                self->drawOrder     = Zone->objectDrawLow;
+                self->drawGroup     = Zone->objectDrawLow;
                 self->updateRange.x = 0x1000000;
                 self->updateRange.y = 0x1000000;
 
@@ -167,14 +167,14 @@ void TVVan_Create(void *data)
                 RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->radioAnimator, true, 0);
                 self->active    = ACTIVE_NORMAL;
                 self->visible   = false;
-                self->drawOrder = Zone->objectDrawHigh;
+                self->drawGroup = Zone->objectDrawHigh;
 
                 self->state                           = TVVan_StateRadio_StartBroadcast;
                 self->stateDraw[Zone->objectDrawHigh] = TVVan_Draw_Radio;
                 break;
 
             default:
-                self->drawOrder = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawLow;
                 self->state     = TVVan_StateVan_Idle;
                 self->direction = self->type == TVVAN_VAN_RIGHT ? FLIP_X : FLIP_NONE;
                 self->vanPos    = self->position;
@@ -665,7 +665,7 @@ void TVVan_StateRadio_HandleMovement(void)
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
     debris->timer        = 16;
-    debris->drawOrder    = self->drawOrder;
+    debris->drawGroup    = self->drawGroup;
     debris->drawFX       = FX_ROTATE;
     debris->inkEffect    = INK_ALPHA;
     debris->alpha        = (RSDK.Sin256(32 * Zone->timer) >> 3) + 192;
@@ -943,7 +943,7 @@ void TVVan_StateRadio_EnterTV(void)
         debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
         debris->drawFX     = FX_FLIP;
         debris->direction  = i & 3;
-        debris->drawOrder  = Zone->objectDrawHigh;
+        debris->drawGroup  = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
     }
 
@@ -968,7 +968,7 @@ void TVVan_EditorDraw(void)
     switch (self->type) {
         case TVVAN_SATELLITE_NE_SW:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0xE0;
             self->targetAngles1[1] = 0xE0;
             self->targetAngles2[0] = 0x60;
@@ -978,7 +978,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_NW_SE:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0x20;
             self->targetAngles1[1] = 0x20;
             self->targetAngles2[0] = 0xA0;
@@ -988,7 +988,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_NW_SW:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0x20;
             self->targetAngles1[1] = 0x20;
             self->targetAngles2[0] = 0xE0;
@@ -998,7 +998,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_NE_SE:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0x60;
             self->targetAngles1[1] = 0x60;
             self->targetAngles2[0] = 0xA0;
@@ -1008,7 +1008,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_NE_NW:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0x20;
             self->targetAngles1[1] = 0x20;
             self->targetAngles2[0] = 0x60;
@@ -1018,7 +1018,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_SE_SW:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0xE0;
             self->targetAngles1[1] = 0xE0;
             self->targetAngles2[0] = 0xA0;
@@ -1028,7 +1028,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_SW_N:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0xA0;
             self->targetAngles1[1] = 0xA0;
             self->targetAngles2[0] = 0x00;
@@ -1038,7 +1038,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_NW_S:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0x20;
             self->targetAngles1[1] = 0x20;
             self->targetAngles2[0] = 0xC0;
@@ -1048,7 +1048,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_SE_N:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0xA0;
             self->targetAngles1[1] = 0xA0;
             self->targetAngles2[0] = 0x40;
@@ -1058,7 +1058,7 @@ void TVVan_EditorDraw(void)
 
         case TVVAN_SATELLITE_NE_S:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
-            self->drawOrder        = Zone->objectDrawHigh;
+            self->drawGroup        = Zone->objectDrawHigh;
             self->targetAngles1[0] = 0xC0;
             self->targetAngles1[1] = 0xC0;
             self->targetAngles2[0] = 0x40;
@@ -1070,19 +1070,19 @@ void TVVan_EditorDraw(void)
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->tvVanAnimator, true, 9);
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->tvAnimator, true, 0);
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->tvSnowAnimator, true, 0);
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
             TVVan_Draw_ExitTV_Active();
             break;
 
         case TVVAN_RADIO:
             RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->radioAnimator, true, 0);
             self->active    = ACTIVE_NORMAL;
-            self->drawOrder = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawHigh;
             TVVan_Draw_Radio();
             break;
 
         default:
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
             self->state     = TVVan_StateVan_Idle;
             self->direction = self->type == TVVAN_VAN_RIGHT ? FLIP_X : FLIP_NONE;
             self->vanPos    = self->position;

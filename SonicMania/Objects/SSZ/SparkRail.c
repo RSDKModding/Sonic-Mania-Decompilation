@@ -24,7 +24,7 @@ void SparkRail_Update(void)
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &spark->animator, true, 0);
                 spark->drawFX     = FX_FLIP;
                 spark->direction  = player->direction != FLIP_NONE;
-                spark->drawOrder  = Zone->objectDrawLow;
+                spark->drawGroup  = Zone->objectDrawLow;
                 spark->position.x = player->position.x;
                 spark->position.y = posY;
                 spark->timer      = 30;

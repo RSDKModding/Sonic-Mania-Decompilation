@@ -67,7 +67,7 @@ void PBL_Setup_Create(void *data)
 
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawOrder = DRAWGROUP_COUNT - 1;
+    self->drawGroup = DRAWGROUP_COUNT - 1;
     self->color     = 0xF0F0F0;
     self->timer     = 512;
 

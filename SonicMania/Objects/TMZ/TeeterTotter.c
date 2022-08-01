@@ -49,7 +49,7 @@ void TeeterTotter_Create(void *data)
 
     self->length        = clampVal(self->length, 1, TEETERTOTTER_SEGMENT_COUNT / 2);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->origin        = self->position;
     self->updateRange.x = (self->length + 2) << 22;
     self->visible       = true;

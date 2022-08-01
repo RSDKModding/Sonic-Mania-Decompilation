@@ -41,7 +41,7 @@ void PauseMenu_LateUpdate(void)
         }
         else {
             self->visible   = true;
-            self->drawOrder = DRAWGROUP_COUNT - 1;
+            self->drawGroup = DRAWGROUP_COUNT - 1;
             RSDK.SetEngineState(ENGINESTATE_FROZEN);
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &self->animator, true, 3);
             PauseMenu_PauseSound();
@@ -125,7 +125,7 @@ void PauseMenu_Create(void *data)
 
         if (data == intToVoid(true)) {
             self->visible   = true;
-            self->drawOrder = DRAWGROUP_COUNT - 1;
+            self->drawGroup = DRAWGROUP_COUNT - 1;
             self->state     = PauseMenu_State_HandleFadeout;
         }
         else {
@@ -251,7 +251,7 @@ void PauseMenu_AddButton(uint8 id, void *action)
         button->size.y             = 0x150000;
         button->bgEdgeSize         = 21;
         button->align              = ALIGN_LEFT;
-        button->drawOrder          = self->drawOrder;
+        button->drawGroup          = self->drawGroup;
         button->active             = ACTIVE_ALWAYS;
         self->buttonPtrs[buttonID] = button;
         ++self->buttonCount;

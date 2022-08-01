@@ -48,7 +48,7 @@ void PhantomShield_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->parent        = (Entity *)data;
         self->active        = ACTIVE_NORMAL;
         self->drawFX        = FX_FLIP;
@@ -139,7 +139,7 @@ void PhantomShield_State_Active(void)
                 player->tileCollisions = true;
             }
             else {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
         }
     }

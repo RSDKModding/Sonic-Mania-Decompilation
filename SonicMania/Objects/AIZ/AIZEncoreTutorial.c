@@ -57,7 +57,7 @@ void AIZEncoreTutorial_Create(void *data)
     RSDK_THIS(AIZEncoreTutorial);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -130,7 +130,7 @@ void AIZEncoreTutorial_State_ExitTutorial(void)
             debris->direction  = i & 3;
             debris->scale.x    = RSDK.Rand(0x200, 0x400);
             debris->scale.y    = debris->scale.x;
-            debris->drawOrder  = Zone->objectDrawHigh;
+            debris->drawGroup  = Zone->objectDrawHigh;
             RSDK.SetSpriteAnimation(AIZEncoreTutorial->dustFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
         }
         destroyEntity(self);
@@ -144,7 +144,7 @@ void AIZEncoreTutorial_State_ReturnToCutscene(void)
 {
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     EntityFXRuby *fxRuby           = CREATE_ENTITY(FXRuby, NULL, 0, 0);
-    fxRuby->drawOrder              = Zone->playerDrawHigh + 1;
+    fxRuby->drawGroup              = Zone->playerDrawHigh + 1;
     EncoreIntro->fxRuby            = fxRuby;
     PhantomRuby_PlaySfx(RUBYSFX_ATTACK3);
     Music_FadeOut(0.012);

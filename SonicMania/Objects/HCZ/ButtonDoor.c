@@ -59,7 +59,7 @@ void ButtonDoor_Create(void *data)
         self->length = 2 - (RSDK.CheckSceneFolder("HCZ") != true);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

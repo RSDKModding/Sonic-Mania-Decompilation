@@ -42,7 +42,7 @@ void BuzzBomber_Create(void *data)
     RSDK_THIS(BuzzBomber);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder      = Zone->objectDrawLow;
+    self->drawGroup      = Zone->objectDrawLow;
     self->startPos.x     = self->position.x;
     self->startPos.y     = self->position.y;
     self->startDir       = self->direction;
@@ -271,7 +271,7 @@ void BuzzBomber_State_ProjectileShot(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &BuzzBomber->hitboxProjectile))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
     }
     else {

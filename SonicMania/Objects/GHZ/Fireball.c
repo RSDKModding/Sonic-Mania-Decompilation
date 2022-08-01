@@ -34,7 +34,7 @@ void Fireball_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(Fireball->aniFrames, 0, &self->animator, true, 0);
 
     if (!SceneInfo->inEditor)
@@ -76,7 +76,7 @@ void Fireball_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Fireball->hitboxFireball)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 }

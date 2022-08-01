@@ -102,7 +102,7 @@ void BSS_Collectable_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
-        self->drawOrder     = 3;
+        self->drawGroup     = 3;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

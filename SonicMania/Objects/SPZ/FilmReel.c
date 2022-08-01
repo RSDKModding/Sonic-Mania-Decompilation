@@ -242,7 +242,7 @@ void FilmReel_Create(void *data)
         self->pathDir   = self->angle >> 6;
         self->pathFlags = 1;
         self->visible   = true;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
     }
 }
 
@@ -441,7 +441,7 @@ void FilmReel_EditorDraw(void)
     self->pathDir   = self->angle >> 6;
     self->pathFlags = 1;
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     FilmReel_Draw();
 

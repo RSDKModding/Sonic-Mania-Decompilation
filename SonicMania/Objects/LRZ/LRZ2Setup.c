@@ -87,7 +87,7 @@ void LRZ2Setup_StaticUpdate(void)
                         solid = 1 << 12;
 
                     if ((solid & tileInfo) && player->shield != SHIELD_FIRE)
-                        Player_CheckHitFlip(player);
+                        Player_HurtFlip(player);
                     break;
                 }
 

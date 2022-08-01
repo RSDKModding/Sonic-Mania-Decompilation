@@ -22,7 +22,7 @@ struct EntityKingClaw {
     Vector2 chainPos[KINGCLAW_CHAIN_COUNT];
     Vector2 drawPos;
     EntityHPZEmerald *masterEmerald;
-    bool32 forceHighDrawOrder;
+    bool32 forceHighdrawGroup;
     Animator chainAnimator;
     Animator hingeAnimator;
     Animator clawBackAnimator;

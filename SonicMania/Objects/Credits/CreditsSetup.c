@@ -73,7 +73,7 @@ void CreditsSetup_StaticUpdate(void)
 
         foreach_all(UICreditsText, text)
         {
-            text->drawOrder = Zone->playerDrawHigh;
+            text->drawGroup = Zone->playerDrawHigh;
             text->position.y -= scrollSpeed;
         }
 

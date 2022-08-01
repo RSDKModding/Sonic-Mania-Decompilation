@@ -32,7 +32,7 @@ void RotatingSpikes_Update(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
             radius += 2 * self->spikeRadius;
         }
@@ -73,7 +73,7 @@ void RotatingSpikes_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->angleOffset &= 0x3FF;
-        self->drawOrder = self->priority == ROTSPIKES_PRIO_LOW ? Zone->objectDrawLow : Zone->objectDrawHigh;
+        self->drawGroup = self->priority == ROTSPIKES_PRIO_LOW ? Zone->objectDrawLow : Zone->objectDrawHigh;
 
         RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &self->pivotAnimator, true, 0);
         RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &self->spikeBallAnimator, true, 0);
@@ -96,7 +96,7 @@ void RotatingSpikes_EditorDraw(void)
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &self->pivotAnimator, true, 0);
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &self->spikeBallAnimator, true, 0);
 
-    self->drawOrder = self->priority == ROTSPIKES_PRIO_LOW ? Zone->objectDrawLow : Zone->objectDrawHigh;
+    self->drawGroup = self->priority == ROTSPIKES_PRIO_LOW ? Zone->objectDrawLow : Zone->objectDrawHigh;
 
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &self->pivotAnimator, true, 0);
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &self->spikeBallAnimator, true, 0);

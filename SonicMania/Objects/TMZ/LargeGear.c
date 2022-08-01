@@ -123,7 +123,7 @@ void LargeGear_Create(void *data)
     RSDK_THIS(LargeGear);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->origin        = self->position;
     self->visible       = true;
     self->drawFX        = FX_ROTATE | FX_FLIP;

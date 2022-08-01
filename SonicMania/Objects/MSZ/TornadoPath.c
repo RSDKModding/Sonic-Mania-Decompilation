@@ -170,7 +170,7 @@ void TornadoPath_State_SetTornadoSpeed(void)
     RSDK_THIS(TornadoPath);
 
     if (self->type == TORNADOPATH_SETSPEED_HIGH) {
-        foreach_active(Tornado, tornado) { tornado->drawOrder = Zone->playerDrawHigh; }
+        foreach_active(Tornado, tornado) { tornado->drawGroup = Zone->playerDrawHigh; }
     }
 
     if (self->currentSpeed >= self->targetSpeed) {
@@ -214,7 +214,7 @@ void TornadoPath_State_DisablePlayerInteractions(void)
     player1->collisionPlane = 1;
     player1->interaction    = false;
 
-    foreach_active(Tornado, tornado) { tornado->drawOrder = Zone->playerDrawHigh; }
+    foreach_active(Tornado, tornado) { tornado->drawGroup = Zone->playerDrawHigh; }
 
     TornadoPath_HandleMoveSpeed();
     self->state = TornadoPath_State_SetTornadoSpeed;
@@ -231,7 +231,7 @@ void TornadoPath_State_ExitTornadoSequence(void)
     player1->collisionPlane = 0;
     player1->interaction    = true;
     player1->applyJumpCap   = false;
-    player1->drawOrder      = Zone->playerDrawLow;
+    player1->drawGroup      = Zone->playerDrawLow;
 
     if (player1->groundedStore)
         Player_Action_Jump(player1);
@@ -239,12 +239,12 @@ void TornadoPath_State_ExitTornadoSequence(void)
     foreach_active(Tornado, tornado)
     {
         if (self->type == TORNADOPATH_EXITTORNADO_STOPAUTOSCROLL) {
-            tornado->drawOrder = Zone->objectDrawHigh;
+            tornado->drawGroup = Zone->objectDrawHigh;
             MSZSetup_ReloadBGParallax_Multiply(0x000);
             tornado->state = Tornado_State_FlyAway_Right;
         }
         else {
-            tornado->drawOrder = Zone->objectDrawLow;
+            tornado->drawGroup = Zone->objectDrawLow;
             tornado->state     = Tornado_State_FlyAway_Left;
         }
     }

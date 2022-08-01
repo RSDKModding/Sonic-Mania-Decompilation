@@ -31,8 +31,8 @@ void SuperSparkle_Update(void)
                 sparkle->timer        = 16;
                 sparkle->inkEffect    = INK_ADD;
                 sparkle->alpha        = 0x100;
-                sparkle->drawOrder    = Zone->objectDrawHigh;
-                sparkle->drawOrder    = player->drawOrder;
+                sparkle->drawGroup    = Zone->objectDrawHigh;
+                sparkle->drawGroup    = player->drawGroup;
                 RSDK.SetSpriteAnimation(SuperSparkle->aniFrames, 0, &sparkle->animator, true, 0);
             }
         }
@@ -50,7 +50,7 @@ void SuperSparkle_Update(void)
             sparkle->active     = ACTIVE_NORMAL;
             sparkle->visible    = false;
             sparkle->velocity.y = -0x10000;
-            sparkle->drawOrder  = player->drawOrder;
+            sparkle->drawGroup  = player->drawGroup;
             RSDK.SetSpriteAnimation(Ring->aniFrames, Zone->timer % 3 + 2, &sparkle->animator, true, 0);
             int32 cnt = sparkle->animator.frameCount;
             if (sparkle->animator.animationID == 2) {

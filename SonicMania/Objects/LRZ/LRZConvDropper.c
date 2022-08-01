@@ -91,7 +91,7 @@ void LRZConvDropper_Create(void *data)
     RSDK_THIS(LRZConvDropper);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;

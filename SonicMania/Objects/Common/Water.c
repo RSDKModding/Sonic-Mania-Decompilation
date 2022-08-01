@@ -117,7 +117,7 @@ void Water_Create(void *data)
                 else {
                     self->active    = ACTIVE_NORMAL;
                     self->inkEffect = INK_ADD;
-                    self->drawOrder = Zone->hudDrawOrder - 1;
+                    self->drawGroup = Zone->huddrawGroup - 1;
                     self->alpha     = RSDK.CheckSceneFolder("AIZ") ? 0x60 : 0xE0;
                     RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
                     self->state     = Water_State_Water;
@@ -132,10 +132,10 @@ void Water_Create(void *data)
                 self->active = ACTIVE_BOUNDS;
                 self->drawFX = FX_FLIP;
                 switch (self->priority) {
-                    case WATER_PRIORITY_LOWEST: self->drawOrder = Zone->objectDrawLow - 1; break;
-                    case WATER_PRIORITY_LOW: self->drawOrder = Zone->playerDrawLow; break;
-                    case WATER_PRIORITY_HIGH: self->drawOrder = Zone->playerDrawHigh; break;
-                    case WATER_PRIORITY_HIGHEST: self->drawOrder = Zone->hudDrawOrder - 1; break;
+                    case WATER_PRIORITY_LOWEST: self->drawGroup = Zone->objectDrawLow - 1; break;
+                    case WATER_PRIORITY_LOW: self->drawGroup = Zone->playerDrawLow; break;
+                    case WATER_PRIORITY_HIGH: self->drawGroup = Zone->playerDrawHigh; break;
+                    case WATER_PRIORITY_HIGHEST: self->drawGroup = Zone->huddrawGroup - 1; break;
                     default: break;
                 }
 
@@ -153,7 +153,7 @@ void Water_Create(void *data)
 
             case WATER_BUBBLER:
             case WATER_BIG_BUBBLER:
-                self->drawOrder     = Zone->objectDrawLow;
+                self->drawGroup     = Zone->objectDrawLow;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
                 self->active        = ACTIVE_BOUNDS;
@@ -181,7 +181,7 @@ void Water_Create(void *data)
                 break;
 
             case WATER_BTN_BIG_BUBBLE:
-                self->drawOrder     = Zone->objectDrawLow;
+                self->drawGroup     = Zone->objectDrawLow;
                 self->active        = ACTIVE_BOUNDS;
                 self->updateRange.x = 0x100000;
                 self->updateRange.y = 0x100000;
@@ -194,7 +194,7 @@ void Water_Create(void *data)
 
             case WATER_SPLASH:
                 self->active    = ACTIVE_NORMAL;
-                self->drawOrder = Zone->hudDrawOrder - 2;
+                self->drawGroup = Zone->huddrawGroup - 2;
                 RSDK.SetSpriteAnimation(Water->aniFrames, 1, &self->animator, true, 0);
 
                 self->state     = Water_State_Splash;
@@ -203,7 +203,7 @@ void Water_Create(void *data)
 
             case WATER_BUBBLE:
                 self->active        = ACTIVE_NORMAL;
-                self->drawOrder     = Zone->playerDrawHigh;
+                self->drawGroup     = Zone->playerDrawHigh;
                 self->drawFX        = FX_SCALE;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
@@ -221,7 +221,7 @@ void Water_Create(void *data)
 
             case WATER_COUNTDOWN:
                 self->active        = ACTIVE_NORMAL;
-                self->drawOrder     = Zone->playerDrawHigh;
+                self->drawGroup     = Zone->playerDrawHigh;
                 self->drawFX        = FX_SCALE;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
@@ -359,7 +359,7 @@ void Water_SpawnBubble(EntityPlayer *player, int32 id)
     bubble->childPtr   = player;
     bubble->bubbleX    = bubble->position.x;
     bubble->velocity.y = -0x8800;
-    bubble->drawOrder  = player->drawOrder + 1;
+    bubble->drawGroup  = player->drawGroup + 1;
 }
 
 void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID)
@@ -376,7 +376,7 @@ void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID)
     bubble->velocity.y  = -0x8800;
     bubble->childPtr    = player;
     bubble->countdownID = bubbleID;
-    bubble->drawOrder   = Zone->playerDrawHigh + 1;
+    bubble->drawGroup   = Zone->playerDrawHigh + 1;
 }
 
 void Water_State_Water(void)
@@ -452,7 +452,7 @@ void Water_State_Water(void)
                                 EntityWater *splash = CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x,
                                                                     waterSection->position.y - (waterSection->size.y >> 1));
                                 splash->childPtr    = waterSection;
-                                splash->drawOrder   = player->drawOrder;
+                                splash->drawGroup   = player->drawGroup;
                             }
                             else {
                                 CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, Water->waterLevel);
@@ -499,7 +499,7 @@ void Water_State_Water(void)
                             if (currentPool) {
                                 EntityWater *splash =
                                     CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, currentPool->position.y - (currentPool->size.x >> 1));
-                                splash->drawOrder = player->drawOrder;
+                                splash->drawGroup = player->drawGroup;
                                 splash->childPtr  = currentPool;
                             }
                             else {
@@ -605,7 +605,7 @@ void Water_State_Water(void)
                             case 1800:
                                 player->deathType = PLAYER_DEATH_DROWN;
                                 if (!pool)
-                                    player->drawOrder = Zone->playerDrawHigh;
+                                    player->drawGroup = Zone->playerDrawHigh;
                                 playAlertSfx = true;
                                 break;
                         }
@@ -823,8 +823,8 @@ void Water_State_Bubble(void)
                                     self->childPtr    = player;
                                 }
 
-                                if (player->state != Current_PState_Right && player->state != Current_PState_Left
-                                    && player->state != Current_PState_Up && player->state != Current_PState_Down) {
+                                if (player->state != Current_PlayerState_Right && player->state != Current_PlayerState_Left
+                                    && player->state != Current_PlayerState_Up && player->state != Current_PlayerState_Down) {
                                     player->velocity.x = 0;
                                     player->velocity.y = 0;
                                     player->groundVel  = 0;
@@ -979,7 +979,7 @@ void Water_State_BigBubble(void)
                         }
 
                         if (id >= 0 && id < SLOT_BIGBUBBLE_P1 + PLAYER_COUNT) {
-                            RSDK.AddDrawListRef(self->drawOrder, id);
+                            RSDK.AddDrawListRef(self->drawGroup, id);
                             RSDK.CopyEntity(RSDK_GET_ENTITY(id, Water), self, true);
                             foreach_return;
                         }
@@ -1012,7 +1012,7 @@ void Water_State_BigBubble(void)
                     }
                 }
                 else {
-                    self->drawOrder      = player->drawOrder;
+                    self->drawGroup      = player->drawGroup;
                     self->collisionPlane = player->collisionPlane;
                     if (player->state != Player_State_Static && player->animator.animationID != ANI_BREATHE) {
                         Water_PopBigBubble(self, false);

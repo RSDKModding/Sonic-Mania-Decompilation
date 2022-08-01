@@ -38,14 +38,14 @@ void LRZFireball_Create(void *data)
     self->updateRange.y = 0x800000;
 
     if (data) {
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(LRZFireball->aniFrames, 3, &self->animator, true, 0);
         self->state     = data;
         self->active    = ACTIVE_NORMAL;
         self->stateDraw = LRZFireball_Draw_Simple;
     }
     else {
-        self->drawOrder = Zone->objectDrawLow + 1;
+        self->drawGroup = Zone->objectDrawLow + 1;
 
         switch (self->type) {
             case LRZFIREBALL_SPAWNER: self->state = LRZFireball_State_Spawner; break;
@@ -88,7 +88,7 @@ void LRZFireball_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &LRZFireball->hitboxFireball)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 }

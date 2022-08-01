@@ -39,7 +39,7 @@ void FlasherMKII_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->startPos      = self->position;
 
         switch (self->orientation) {
@@ -118,7 +118,7 @@ void FlasherMKII_HandlePlayerCollisions(void)
                         RSDK.StopSfx(FlasherMKII->sfxZap);
                 }
                 else {
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 }
             }
             else {
@@ -142,7 +142,7 @@ void FlasherMKII_HandleHarmPlayerCollisions(void)
         else {
             Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 1);
             if (Player_CheckCollisionTouch(player, self, hitbox))
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }

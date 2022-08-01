@@ -47,7 +47,7 @@ void AIZEggRobo_Create(void *data)
 {
     RSDK_THIS(AIZEggRobo);
     self->active          = ACTIVE_BOUNDS;
-    self->drawOrder       = Zone->objectDrawLow;
+    self->drawGroup       = Zone->objectDrawLow;
     self->rotation        = self->angle;
     self->startPos        = self->position;
     self->movePos.x       = self->position.x;

@@ -49,7 +49,7 @@ void SwingRope_Update(void)
                 if (player->jumpPress) {
                     player->jumpAbilityState = 1;
                     player->state            = Player_State_Air;
-                    player->drawOrder        = self->playerLayers[player->playerID];
+                    player->drawGroup        = self->playerLayers[player->playerID];
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
                     player->velocity.x = self->velocity.x >> 1;
@@ -79,8 +79,8 @@ void SwingRope_Update(void)
             otherHitbox.bottom = 0;
 
             if (RSDK.CheckObjectCollisionTouchBox(self, &SwingRope->hitboxGrabHandle, player, &otherHitbox)) {
-                self->playerLayers[player->playerID] = player->drawOrder;
-                player->drawOrder                    = Zone->objectDrawLow;
+                self->playerLayers[player->playerID] = player->drawGroup;
+                player->drawGroup                    = Zone->objectDrawLow;
                 player->state                        = Player_State_Static;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, 0, 0);
                 player->velocity.x = 0;
@@ -140,7 +140,7 @@ void SwingRope_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

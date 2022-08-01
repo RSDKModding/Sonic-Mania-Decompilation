@@ -83,7 +83,7 @@ void Clucker_Create(void *data)
         self->active  = ACTIVE_BOUNDS;
 
         if (data) {
-            self->drawOrder     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawLow;
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             self->active        = ACTIVE_NORMAL;
@@ -93,7 +93,7 @@ void Clucker_Create(void *data)
         else {
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            self->drawOrder     = Zone->objectDrawLow + 1;
+            self->drawGroup     = Zone->objectDrawLow + 1;
             if (!self->delay)
                 self->delay = 68;
             RSDK.SetSpriteAnimation(Clucker->aniFrames, 0, &self->animator, true, 0);
@@ -346,7 +346,7 @@ void Clucker_State_Egg(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Clucker->hitboxEgg))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
 
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, false))

@@ -65,7 +65,7 @@ void DemoMenu_Create(void *data)
 
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 4;
+        self->drawGroup = 4;
         self->state     = DemoMenu_State_Appear;
     }
 }

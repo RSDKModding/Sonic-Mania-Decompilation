@@ -49,7 +49,7 @@ void Propeller_Update(void)
         }
 
         if (Player_CheckCollisionTouch(player, self, hitboxHurt))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -71,7 +71,7 @@ void Propeller_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

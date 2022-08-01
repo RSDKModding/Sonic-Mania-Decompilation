@@ -136,7 +136,7 @@ void UIButtonPrompt_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->startPos      = self->position;
         self->visible       = true;
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->scaleMax      = 0x200;
         self->scaleSpeed    = 0x10;
         self->scale.x       = 0x200;
@@ -424,7 +424,7 @@ void UIButtonPrompt_EditorDraw(void)
     RSDK_THIS(UIButtonPrompt);
 
     self->startPos      = self->position;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->disableScale  = false;
     self->updateRange.x = 0x2000000;
     self->updateRange.y = 0x800000;

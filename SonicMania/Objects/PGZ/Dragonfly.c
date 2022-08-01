@@ -49,7 +49,7 @@ void Dragonfly_Create(void *data)
     RSDK_THIS(Dragonfly);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (!SceneInfo->inEditor) {
         if (!self->speed) {
@@ -147,7 +147,7 @@ void Dragonfly_CheckPlayerCollisions(void)
             for (int32 i = 0; i < DRAGONFLY_SPINE_COUNT; ++i) {
                 self->position = self->positions[i];
                 if (Player_CheckCollisionTouch(player, self, &Dragonfly->hitboxSpine))
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
 
             self->position = storePos;

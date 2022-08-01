@@ -74,7 +74,7 @@ void Turbine_Create(void *data)
             case TURBINE_WALLDECOR: self->state = StateMachine_None; break;
         }
 
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     }
 }
 
@@ -141,9 +141,9 @@ void Turbine_State_Handles(void)
             player->position.y = self->position.y + (0x1700 * RSDK.Sin512(self->playerAngles[playerID]) + 0x20000);
 
             if ((uint32)(self->playerAngles[playerID] - 0x81) > 0xFF)
-                player->drawOrder = Zone->playerDrawLow;
+                player->drawGroup = Zone->playerDrawLow;
             else
-                player->drawOrder = Zone->playerDrawHigh;
+                player->drawGroup = Zone->playerDrawHigh;
 
             player->animator.frameID = (((self->playerAngles[playerID] >> 1) / 21) + 9) % 12;
 
@@ -177,7 +177,7 @@ void Turbine_State_Spikes(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }

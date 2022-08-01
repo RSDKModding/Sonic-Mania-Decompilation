@@ -49,7 +49,7 @@ void Title3DSprite_Create(void *data)
         self->position.y -= 0x2000000;
         self->active    = ACTIVE_NORMAL;
         self->visible   = false;
-        self->drawOrder = 2;
+        self->drawGroup = 2;
         self->drawFX    = FX_NONE;
     }
 }

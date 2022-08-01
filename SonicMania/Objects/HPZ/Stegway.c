@@ -41,7 +41,7 @@ void Stegway_Create(void *data)
 {
     RSDK_THIS(Stegway);
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;
@@ -233,7 +233,7 @@ void Stegway_State_RevRelease(void)
         RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
         dust->state     = Dust_State_DustPuff;
         dust->direction = FLIP_X - self->direction;
-        dust->drawOrder = self->drawOrder;
+        dust->drawGroup = self->drawGroup;
         Stegway_SetupAnims(1, false);
         self->showJet = true;
         self->velocity.x *= 12;

@@ -68,7 +68,7 @@ void ImageTrail_LateUpdate(void)
     memcpy(&self->stateAnimator[0], &self->currentAnimator, sizeof(Animator));
 
     // Record Player
-    self->drawOrder        = player->drawOrder - 1;
+    self->drawGroup        = player->drawGroup - 1;
     self->currentPos.x     = player->position.x;
     self->currentPos.y     = player->position.y;
     self->currentRotation  = player->rotation;

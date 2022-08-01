@@ -32,7 +32,7 @@ void BallHog_Create(void *data)
     RSDK_THIS(BallHog);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -267,7 +267,7 @@ void BallHog_State_Bomb(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x100, 2, &player->uncurlTimer)) {
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                     shouldExplode = true;
                     foreach_break;
 #if MANIA_USE_PLUS
@@ -278,7 +278,7 @@ void BallHog_State_Bomb(void)
 
         if (shouldExplode || !--self->timer) {
             RSDK.PlaySfx(BallHog->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
             destroyEntity(self);
         }

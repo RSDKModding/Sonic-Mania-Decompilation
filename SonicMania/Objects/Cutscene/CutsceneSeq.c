@@ -91,7 +91,7 @@ void CutsceneSeq_Create(void *data)
     self->visible   = false;
     self->fadeWhite = 0;
     self->fadeBlack = 0;
-    self->drawOrder = Zone->hudDrawOrder + 1;
+    self->drawGroup = Zone->huddrawGroup + 1;
 
 #if MANIA_USE_PLUS
     CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);

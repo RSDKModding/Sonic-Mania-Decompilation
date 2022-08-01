@@ -92,7 +92,7 @@ void ChemicalPool_Create(void *data)
         self->visible       = true;
         self->alpha         = 0xFF;
         self->active        = ACTIVE_BOUNDS;
-        self->drawOrder     = Zone->objectDrawHigh - 2;
+        self->drawGroup     = Zone->objectDrawHigh - 2;
         self->updateRange.x = self->size.x >> 1;
         self->updateRange.y = self->size.y >> 1;
         self->tileSizeX     = self->size.x >> 20;
@@ -221,7 +221,7 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
         if (debris->position.x < x)
             debris->velocity.x = -debris->velocity.x;
         debris->velocity.y = ZONE_RAND(-0x40000, -0x10000);
-        debris->drawOrder  = Zone->objectDrawHigh;
+        debris->drawGroup  = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &debris->animator, true, ZONE_RAND(0, 2));
     }
 }

@@ -146,7 +146,7 @@ void WaterGush_Create(void *data)
     RSDK_THIS(WaterGush);
 
     self->active     = ACTIVE_BOUNDS;
-    self->drawOrder  = Zone->objectDrawLow;
+    self->drawGroup  = Zone->objectDrawLow;
     self->startPos.x = self->position.x;
     self->startPos.y = self->position.y;
     self->visible    = true;
@@ -394,7 +394,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->velocity.y      = brickVel[0].y >> i;
         brick->direction       = brickDir[0];
         brick->drawFX          = FX_FLIP;
-        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->drawGroup       = Zone->objectDrawHigh;
         brick->gravityStrength = 0x3800;
 
         brick = CREATE_ENTITY(Debris, Debris_State_Fall, brickPos[1].x, brickPos[1].y);
@@ -405,7 +405,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->velocity.y      = brickVel[1].y >> i;
         brick->direction       = brickDir[1];
         brick->drawFX          = FX_SCALE | FX_FLIP;
-        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->drawGroup       = Zone->objectDrawHigh;
         brick->gravityStrength = 0x3800;
         brick->scale.x         = 0x200;
         brick->scale.y         = 0x200;
@@ -420,7 +420,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->velocity.y      = brickVel[2].y >> i;
         brick->direction       = brickDir[2];
         brick->drawFX          = FX_SCALE | FX_FLIP;
-        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->drawGroup       = Zone->objectDrawHigh;
         brick->gravityStrength = 0x3800;
         brick->scale.x         = 512;
         brick->scale.y         = 512;
@@ -435,7 +435,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->velocity.y      = brickVel[3].y >> i;
         brick->direction       = brickDir[3];
         brick->drawFX          = FX_FLIP;
-        brick->drawOrder       = Zone->objectDrawHigh;
+        brick->drawGroup       = Zone->objectDrawHigh;
         brick->gravityStrength = 0x3800;
     }
 }

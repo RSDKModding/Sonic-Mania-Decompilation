@@ -20,7 +20,7 @@ void FarPlane_LateUpdate(void)
     }
     else if (self->active == ACTIVE_BOUNDS) {
         self->active                                       = ACTIVE_NORMAL;
-        RSDK.GetTileLayer(FarPlane->layerID)->drawLayer[0] = 0;
+        RSDK.GetTileLayer(FarPlane->layerID)->drawGroup[0] = 0;
 
         FarPlane->originPos.x = self->origin.x;
         FarPlane->originPos.y = self->origin.y;
@@ -35,7 +35,7 @@ void FarPlane_LateUpdate(void)
     }
     else if (!RSDK.CheckOnScreen(self, NULL)) {
         self->active                                       = ACTIVE_BOUNDS;
-        RSDK.GetTileLayer(FarPlane->layerID)->drawLayer[0] = DRAWGROUP_COUNT;
+        RSDK.GetTileLayer(FarPlane->layerID)->drawGroup[0] = DRAWGROUP_COUNT;
 
         RSDK.SetDrawGroupProperties(1, false, StateMachine_None);
         RSDK.SetDrawGroupProperties(3, false, StateMachine_None);
@@ -77,7 +77,7 @@ void FarPlane_Create(void *data)
         self->updateRange.y = self->size.y + (self->size.y >> 1);
         self->active        = ACTIVE_ALWAYS;
         self->visible       = true;
-        self->drawOrder     = 0;
+        self->drawGroup     = 0;
     }
 }
 
@@ -87,11 +87,11 @@ void FarPlane_StageLoad(void)
 
     if (FarPlane->layerID != (uint16)-1) {
         TileLayer *farPlane        = RSDK.GetTileLayer(FarPlane->layerID);
-        farPlane->drawLayer[0]     = DRAWGROUP_COUNT;
+        farPlane->drawGroup[0]     = DRAWGROUP_COUNT;
         farPlane->scanlineCallback = FarPlane_Scanline_FarPlaneView;
 
-        RSDK.GetTileLayer(Zone->fgLow)->drawLayer[0]  = 2;
-        RSDK.GetTileLayer(Zone->fgHigh)->drawLayer[0] = 7;
+        RSDK.GetTileLayer(Zone->fgLow)->drawGroup[0]  = 2;
+        RSDK.GetTileLayer(Zone->fgHigh)->drawGroup[0] = 7;
 
         RSDK.SetDrawGroupProperties(1, false, StateMachine_None);
         RSDK.SetDrawGroupProperties(2, false, StateMachine_None);
@@ -135,7 +135,7 @@ void FarPlane_SetupEntities(void)
         if (abs(self->origin.x - child->position.x) < self->size.x && abs(self->origin.y - child->position.y) < self->size.y) {
             self->entitySlots[self->entityCount++] = i;
             child->active                          = ACTIVE_NEVER;
-            child->drawOrder                       = 1;
+            child->drawGroup                       = 1;
         }
     }
 
@@ -187,7 +187,7 @@ void FarPlane_DrawHook_ApplyFarPlane(void)
 
     foreach_active(InvincibleStars, invincibleStars)
     {
-        if (invincibleStars->drawOrder < 3 && id < 0x200) {
+        if (invincibleStars->drawGroup < 3 && id < 0x200) {
             invincibleStars->starOffset = 10;
             invincibleStars->drawFX     = FX_SCALE;
             invincibleStars->scale.x    = 0x100;
@@ -207,7 +207,7 @@ void FarPlane_DrawHook_ApplyFarPlane(void)
 
     foreach_active(ImageTrail, imageTrail)
     {
-        if (imageTrail->drawOrder < 3 && id < 0x200) {
+        if (imageTrail->drawGroup < 3 && id < 0x200) {
             imageTrail->scale.x = 0x100;
             imageTrail->scale.y = 0x100;
 
@@ -257,7 +257,7 @@ void FarPlane_DrawHook_RemoveFarPlane(void)
 
     foreach_active(InvincibleStars, invincibleStars)
     {
-        if (invincibleStars->drawOrder == 1 && id < 0x200) {
+        if (invincibleStars->drawGroup == 1 && id < 0x200) {
             for (int32 s = 0; s < 8; ++s) {
                 invincibleStars->starPos[s].x = FarPlane->positionList[id].x;
                 invincibleStars->starPos[s].y = FarPlane->positionList[id].y;
@@ -268,7 +268,7 @@ void FarPlane_DrawHook_RemoveFarPlane(void)
 
     foreach_active(ImageTrail, imageTrail)
     {
-        if (imageTrail->drawOrder == 1 && id < 0x200) {
+        if (imageTrail->drawGroup == 1 && id < 0x200) {
             imageTrail->currentPos.x = FarPlane->positionList[id].x;
             imageTrail->currentPos.y = FarPlane->positionList[id].y;
             id++;

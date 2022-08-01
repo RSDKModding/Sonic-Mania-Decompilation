@@ -36,7 +36,7 @@ void LogoSetup_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
-        self->drawOrder = 12;
+        self->drawGroup = 12;
         self->state     = sku_region == REGION_JP ? LogoSetup_State_CESAScreen : LogoSetup_State_ShowLogos;
         self->stateDraw = LogoSetup_Draw_Fade;
         self->timer     = 1024;

@@ -57,7 +57,7 @@ void UFO_Dust_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_SCALE | FX_FLIP;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_RBOUNDS;
         self->updateRange.x = 0x400;
         self->updateRange.y = 0x400;

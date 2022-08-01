@@ -83,7 +83,7 @@ void DDWrecker_Create(void *data)
             }
 
             self->visible   = true;
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
         }
         else {
             self->active        = ACTIVE_BOUNDS;
@@ -715,7 +715,7 @@ void DDWrecker_StateBall_Spiked(void)
                 }
             }
             else {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
         }
     }
@@ -757,7 +757,7 @@ void DDWrecker_StateBall_Partnerless(void)
                 }
             }
             else {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
         }
     }
@@ -870,7 +870,7 @@ void DDWrecker_Explode(void)
             int32 y                    = self->position.y + (RSDK.Rand(-20, 20) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
-            explosion->drawOrder = Zone->objectDrawHigh;
+            explosion->drawGroup = Zone->objectDrawHigh;
         }
     }
 }

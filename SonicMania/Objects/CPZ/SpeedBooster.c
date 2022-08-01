@@ -38,9 +38,9 @@ void SpeedBooster_Create(void *data)
 
     self->visible = true;
     if (RSDK.CheckSceneFolder("SSZ1") || RSDK.CheckSceneFolder("SSZ2"))
-        self->drawOrder = Zone->playerDrawLow;
+        self->drawGroup = Zone->playerDrawLow;
     else
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
 
     self->drawPos       = self->position;
     self->updateRange.x = 0x400000;

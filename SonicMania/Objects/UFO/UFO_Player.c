@@ -87,7 +87,7 @@ void UFO_Player_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_FLIP;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
 
         if (!self->machQuota1)
             self->machQuota1 = 32;
@@ -606,7 +606,7 @@ void UFO_Player_State_CourseOut(void)
     self->height += self->gravityStrength;
 
     if (self->height < 0)
-        self->drawOrder = 2;
+        self->drawGroup = 2;
 
     if (RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup)->state == UFO_Setup_State_HandleRingDrain) {
         ++self->timer;

@@ -81,7 +81,7 @@ void MonkeyDude_Create(void *data)
 {
     RSDK_THIS(MonkeyDude);
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;
@@ -433,7 +433,7 @@ void MonkeyDude_State_Coconut(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &MonkeyDude->hitboxCoconut))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
     }
     else {

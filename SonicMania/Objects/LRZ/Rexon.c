@@ -61,7 +61,7 @@ void Rexon_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->type          = voidToInt(data);
 
     switch (self->type) {
@@ -182,7 +182,7 @@ void Rexon_CheckPlayerCollisions(void)
                         self->position.x = self->positions[i].x;
                         self->position.y = self->positions[i].y;
                         if (Player_CheckCollisionTouch(player, self, &Rexon->hitboxBadnik))
-                            Player_CheckHit(player, self);
+                            Player_Hurt(player, self);
                     }
                 }
 
@@ -349,7 +349,7 @@ void Rexon_State_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(Rexon->hitboxShell.left, Rexon->hitboxShell.right) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(Rexon->hitboxShell.top, Rexon->hitboxShell.bottom) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
 
@@ -383,7 +383,7 @@ void Rexon_State_Projectile(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Rexon->hitboxProjectile)) {
-            Player_CheckProjectileHit(player, self);
+            Player_ProjectileHurt(player, self);
         }
     }
 

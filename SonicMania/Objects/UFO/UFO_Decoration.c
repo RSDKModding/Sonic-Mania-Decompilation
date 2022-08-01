@@ -87,7 +87,7 @@ void UFO_Decoration_Create(void *data)
             self->size = 0x400;
 
         self->visible       = true;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x4000000;
         self->updateRange.y = 0x4000000;

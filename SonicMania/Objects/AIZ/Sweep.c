@@ -39,7 +39,7 @@ void Sweep_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible = true;
         self->drawFX |= FX_FLIP;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
         self->startPos  = self->position;
         self->startDir  = self->direction;
         self->timer     = 128;
@@ -159,7 +159,7 @@ void Sweep_CheckPlayerCollisions(void)
         if (side) {
             if (self->state != Sweep_State_Turn
                 && ((self->direction == FLIP_NONE && side == C_LEFT) || (self->direction == FLIP_X && side == C_RIGHT)))
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             else
                 Player_CheckBadnikBreak(player, self, true);
         }
@@ -331,7 +331,7 @@ void Sweep_State_Projectile(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Sweep->hitboxProjectile)) {
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
             }
         }
     }

@@ -99,7 +99,7 @@ void UIWinSize_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x400000;
@@ -358,7 +358,7 @@ void UIWinSize_EditorDraw(void)
     int32 sizeY = self->size.y;
 
     self->visible       = true;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x400000;

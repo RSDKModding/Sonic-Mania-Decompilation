@@ -45,7 +45,7 @@ void Tubinaut_Create(void *data)
     RSDK_THIS(Tubinaut);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (data) {
         self->active        = ACTIVE_NORMAL;
@@ -141,7 +141,7 @@ void Tubinaut_CheckPlayerCollisions(void)
         }
         else if (self->orbState == Tubinaut_Orb_Attack && self->orbCount > 1) {
             if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitboxSpin)
-                && (self->orbCount == 2 || (self->orbCount == 3 && !Player_CheckHit(player, self)))) {
+                && (self->orbCount == 2 || (self->orbCount == 3 && !Player_Hurt(player, self)))) {
                 Tubinaut_HandleRepel(player, playerID);
             }
         }
@@ -222,7 +222,7 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
 #endif
 
     if (!isAttacking)
-        Player_CheckHit(player, self);
+        Player_Hurt(player, self);
 
     return isAttacking;
 }
@@ -234,7 +234,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
     if (Tubinaut_CheckAttacking(player)) {
         EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
         dust->state      = Dust_State_DustPuff;
-        dust->drawOrder  = player->drawOrder;
+        dust->drawGroup  = player->drawGroup;
         RSDK.PlaySfx(Tubinaut->sfxPowerdown, false, 255);
 #if MANIA_USE_PLUS
         if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_HAMMERDROP) {

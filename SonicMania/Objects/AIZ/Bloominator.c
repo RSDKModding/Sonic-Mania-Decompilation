@@ -31,13 +31,13 @@ void Bloominator_Create(void *data)
     RSDK_THIS(Bloominator);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
     if (data) {
-        --self->drawOrder;
+        --self->drawGroup;
         RSDK.SetSpriteAnimation(Bloominator->aniFrames, 2, &self->animator, true, 0);
         self->state = Bloominator_State_Spikeball;
     }
@@ -172,7 +172,7 @@ void Bloominator_State_Spikeball(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Bloominator->hitboxProjectile)) {
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
             }
         }
     }

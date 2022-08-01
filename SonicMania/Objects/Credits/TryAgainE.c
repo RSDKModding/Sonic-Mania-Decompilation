@@ -28,7 +28,7 @@ void TryAgainE_Draw(void)
 {
     RSDK_THIS(TryAgainE);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         Vector2 drawPos;
 
         RSDK.SetActivePalette(3, 0, ScreenInfo->height);
@@ -82,7 +82,7 @@ void TryAgainE_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = 1;
+        self->drawGroup     = 1;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

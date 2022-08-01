@@ -55,7 +55,7 @@ void HandLauncher_Create(void *data)
     RSDK_THIS(HandLauncher);
 
     self->active    = ACTIVE_BOUNDS;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->visible   = true;
     self->drawFX    = FX_FLIP;
 

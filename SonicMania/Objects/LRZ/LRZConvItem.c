@@ -37,7 +37,7 @@ void LRZConvItem_Create(void *data)
         self->type = voidToInt(data);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -295,7 +295,7 @@ void LRZConvItem_State_SpikeBall(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }

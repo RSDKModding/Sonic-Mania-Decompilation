@@ -30,7 +30,7 @@ void Crabmeat_Create(void *data)
     RSDK_THIS(Crabmeat);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (data) {
         self->inkEffect     = INK_ADD;
@@ -199,7 +199,7 @@ void Crabmeat_State_Projectile(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Crabmeat->hitboxProjectile))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
     }
 }

@@ -47,7 +47,7 @@ void Summary_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
-        self->drawOrder = 12;
+        self->drawGroup = 12;
         self->state     = Summary_State_SetupText;
         self->stateDraw = Summary_State_Draw;
         self->timer     = 640;

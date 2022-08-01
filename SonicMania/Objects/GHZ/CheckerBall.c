@@ -38,7 +38,7 @@ void CheckerBall_Create(void *data)
 {
     RSDK_THIS(CheckerBall);
     self->visible         = true;
-    self->drawOrder       = Zone->objectDrawLow;
+    self->drawGroup       = Zone->objectDrawLow;
     self->active          = ACTIVE_BOUNDS;
     self->updateRange.x   = 0x400000;
     self->updateRange.y   = 0x400000;
@@ -296,7 +296,7 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
 
         EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, badnik->position.x, badnik->position.y);
-        bonus->drawOrder        = Zone->objectDrawHigh;
+        bonus->drawGroup        = Zone->objectDrawHigh;
         bonus->animator.frameID = player1->scoreBonus;
         switch (player1->scoreBonus) {
             case 0: Player_GiveScore(player1, 100); break;
@@ -571,7 +571,7 @@ void CheckerBall_HandleObjectCollisions(void)
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
-                debris->drawOrder  = Zone->objectDrawHigh;
+                debris->drawGroup  = Zone->objectDrawHigh;
                 RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 

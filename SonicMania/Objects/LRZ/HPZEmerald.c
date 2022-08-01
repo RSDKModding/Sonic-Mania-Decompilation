@@ -74,16 +74,16 @@ void HPZEmerald_Create(void *data)
 
         switch (self->type) {
             default:
-            case HPZEMERALD_MASTER: self->drawOrder = 1; break;
+            case HPZEMERALD_MASTER: self->drawGroup = 1; break;
 
             case HPZEMERALD_EMERALD_LOW:
                 self->solid     = true;
-                self->drawOrder = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawLow;
                 break;
 
             case HPZEMERALD_EMERALD_HIGH:
                 self->solid     = true;
-                self->drawOrder = Zone->objectDrawHigh;
+                self->drawGroup = Zone->objectDrawHigh;
                 break;
         }
 

@@ -20,7 +20,7 @@ void PuyoMatch_LateUpdate(void) {}
 
 void PuyoMatch_StaticUpdate(void)
 {
-    foreach_active(PuyoMatch, match) { RSDK.AddDrawListRef(Zone->hudDrawOrder, RSDK.GetEntitySlot(match)); }
+    foreach_active(PuyoMatch, match) { RSDK.AddDrawListRef(Zone->huddrawGroup, RSDK.GetEntitySlot(match)); }
 }
 
 void PuyoMatch_Draw(void)
@@ -28,7 +28,7 @@ void PuyoMatch_Draw(void)
     RSDK_THIS(PuyoMatch);
 
     Vector2 drawPos;
-    if (SceneInfo->currentDrawGroup != Zone->hudDrawOrder) {
+    if (SceneInfo->currentDrawGroup != Zone->huddrawGroup) {
         drawPos.x = self->position.x;
         drawPos.y = self->position.y - 0x80000;
         RSDK.DrawSprite(&self->beanLAnimator, &drawPos, false);
@@ -48,7 +48,7 @@ void PuyoMatch_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

@@ -359,7 +359,7 @@ void Current_State_WaterLeft(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PState_Left;
+                                player->state           = Current_PlayerState_Left;
                             }
                         }
 
@@ -383,10 +383,10 @@ void Current_State_WaterLeft(void)
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(false);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
-            child->drawOrder = Zone->objectDrawHigh;
+            child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
             child->size.x    = self->position.x - (self->size.x >> 1) + 0x400000;
-            child->drawOrder = Zone->playerDrawLow;
+            child->drawGroup = Zone->playerDrawLow;
             if (child->position.x < (self->position.x + (self->size.x >> 1)))
                 child->alpha = 0xF0;
         }
@@ -432,7 +432,7 @@ void Current_State_WaterRight(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PState_Right;
+                                player->state           = Current_PlayerState_Right;
                             }
                         }
 
@@ -456,11 +456,11 @@ void Current_State_WaterRight(void)
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(true);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
-            child->drawOrder = Zone->objectDrawHigh;
+            child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
             child->size.x    = (self->size.x >> 1) + self->position.x - 0x400000;
             child->type      = CURRENT_C_RIGHT;
-            child->drawOrder = Zone->playerDrawLow;
+            child->drawGroup = Zone->playerDrawLow;
             if (child->position.x > (self->position.x - (self->size.x >> 1)))
                 child->alpha = 0xF0;
         }
@@ -505,7 +505,7 @@ void Current_State_WaterUp(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PState_Up;
+                                player->state           = Current_PlayerState_Up;
                             }
                         }
 
@@ -534,11 +534,11 @@ void Current_State_WaterUp(void)
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(false);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
-            child->drawOrder = Zone->objectDrawHigh;
+            child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
             child->size.y    = (self->position.y - (self->size.y >> 1)) + 0x400000;
             child->type      = CURRENT_C_UP;
-            child->drawOrder = Zone->playerDrawLow;
+            child->drawGroup = Zone->playerDrawLow;
             if (child->position.y < (self->position.y + (self->size.y >> 1)))
                 child->alpha = 0xF0;
         }
@@ -585,7 +585,7 @@ void Current_State_WaterDown(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_PState_Down;
+                                player->state           = Current_PlayerState_Down;
                             }
                         }
 
@@ -614,11 +614,11 @@ void Current_State_WaterDown(void)
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(true);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
-            child->drawOrder = Zone->objectDrawHigh;
+            child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
             child->size.y    = (self->size.y >> 1) + self->position.y - 0x400000;
             child->type      = CURRENT_C_DOWN;
-            child->drawOrder = Zone->playerDrawLow;
+            child->drawGroup = Zone->playerDrawLow;
             if (child->position.y > (self->position.y - (self->size.y >> 1)))
                 child->alpha = 0xF0;
         }
@@ -644,7 +644,7 @@ void Current_State_PushLeft(void)
         Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(0);
         EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_WIND), pos.x, pos.y);
 
-        child->drawOrder = Zone->objectDrawHigh;
+        child->drawGroup = Zone->objectDrawHigh;
         child->strength  = 4 * self->strength + RSDK.Rand(1 - self->strength, 5);
         child->size.x    = self->position.x - (self->size.x >> 1) + 0x400000;
         if (child->position.x < (self->position.x + (self->size.x >> 1)))
@@ -757,7 +757,7 @@ void Current_State_Child(void)
         destroyEntity(self);
 }
 
-void Current_PState_Left(void)
+void Current_PlayerState_Left(void)
 {
     RSDK_THIS(Player);
 
@@ -766,7 +766,7 @@ void Current_PState_Left(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->left << 16, hitbox->bottom << 16, true);
 }
 
-void Current_PState_Right(void)
+void Current_PlayerState_Right(void)
 {
     RSDK_THIS(Player);
 
@@ -775,7 +775,7 @@ void Current_PState_Right(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->right << 16, hitbox->bottom << 16, true);
 }
 
-void Current_PState_Up(void)
+void Current_PlayerState_Up(void)
 {
     RSDK_THIS(Player);
 
@@ -784,7 +784,7 @@ void Current_PState_Up(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, hitbox->top << 16, true);
 }
 
-void Current_PState_Down(void)
+void Current_PlayerState_Down(void)
 {
     RSDK_THIS(Player);
 

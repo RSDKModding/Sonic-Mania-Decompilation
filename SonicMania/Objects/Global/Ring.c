@@ -32,9 +32,9 @@ void Ring_Create(void *data)
     RSDK_THIS(Ring);
     self->visible = true;
 
-    self->drawOrder = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawLow + 1;
     if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-        self->drawOrder = Zone->objectDrawHigh + 1;
+        self->drawGroup = Zone->objectDrawHigh + 1;
 
     if (self->type == RING_TYPE_BIG) {
         self->drawFX |= FX_FLIP;
@@ -161,10 +161,10 @@ void Ring_Collect(void)
                     sparkle->stateDraw = Ring_Draw_Sparkle;
                     sparkle->active    = ACTIVE_NORMAL;
                     sparkle->visible   = false;
-                    if (self->drawOrder == 1)
-                        sparkle->drawOrder = 1;
+                    if (self->drawGroup == 1)
+                        sparkle->drawGroup = 1;
                     else
-                        sparkle->drawOrder = Zone->objectDrawHigh;
+                        sparkle->drawGroup = Zone->objectDrawHigh;
 
                     RSDK.SetSpriteAnimation(Ring->aniFrames, RING_TYPE_SPARKLE1 + (i % 3), &sparkle->animator, true, 0);
                     int32 frameCount = sparkle->animator.frameCount;
@@ -220,7 +220,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         ring->isPermanent    = true;
         ring->state          = Ring_State_Bounce;
         ring->stateDraw      = Ring_Draw_Normal;
-        ring->drawOrder      = self->drawOrder;
+        ring->drawGroup      = self->drawGroup;
         ring->moveType       = RING_MOVE_MOVING;
         angle += 0x10;
     }
@@ -241,7 +241,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         ring->isPermanent    = true;
         ring->state          = Ring_State_Bounce;
         ring->stateDraw      = Ring_Draw_Normal;
-        ring->drawOrder      = self->drawOrder;
+        ring->drawGroup      = self->drawGroup;
         angle += 0x10;
     }
 
@@ -292,7 +292,7 @@ void Ring_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         angle += 0x20;
     }
 }
-void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder)
+void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
 {
     int32 ringCount2 = ringCount - 16;
     int32 ringCount3 = ringCount2 - 16;
@@ -331,7 +331,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder)
         ring->scale.x        = scale;
         ring->scale.y        = scale;
         ring->drawFX         = FX_FLIP | FX_SCALE;
-        ring->drawOrder      = drawOrder;
+        ring->drawGroup      = drawGroup;
         ring->state          = Ring_State_Grow;
         ring->stateDraw      = Ring_Draw_Normal;
         angle += 0x10;
@@ -351,7 +351,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder)
         ring->scale.x        = scale + 0x40;
         ring->scale.y        = scale + 0x40;
         ring->drawFX         = FX_FLIP | FX_SCALE;
-        ring->drawOrder      = drawOrder;
+        ring->drawGroup      = drawGroup;
         ring->state          = Ring_State_Grow;
         ring->stateDraw      = Ring_Draw_Normal;
         angle += 0x10;
@@ -371,7 +371,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder)
         ringGrow->scale.x        = scale + 0x80;
         ringGrow->scale.y        = scale + 0x80;
         ringGrow->drawFX         = FX_FLIP | FX_SCALE;
-        ringGrow->drawOrder      = drawOrder;
+        ringGrow->drawGroup      = drawGroup;
         ringGrow->state          = Ring_State_Grow;
         ringGrow->stateDraw      = Ring_Draw_Normal;
         angle += 0x10;

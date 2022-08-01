@@ -10,7 +10,9 @@
 // ENGINE VERSIONS
 // -------------------------
 
+#ifndef RETRO_REVISION
 #define RETRO_REVISION (3)
+#endif
 
 #define RETRO_REV01 (RETRO_REVISION == 1)
 

@@ -30,7 +30,7 @@ struct EntityLottoMachine {
     int32 chutePos;
     int32 chuteTargetPos;
     int32 chuteVel;
-    uint8 drawOrderHigh;
+    uint8 drawGroupHigh;
     int32 playerAngles[PLAYER_COUNT];
     Animator machineAnimator;
     Animator supportAnimator;

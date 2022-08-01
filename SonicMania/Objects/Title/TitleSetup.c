@@ -38,7 +38,7 @@ void TitleSetup_Create(void *data)
 
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
-        self->drawOrder = 12;
+        self->drawGroup = 12;
         self->drawFX    = FX_FLIP;
         self->state     = TitleSetup_State_Wait;
         self->stateDraw = TitleSetup_Draw_FadeBlack;

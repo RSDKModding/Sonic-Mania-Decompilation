@@ -29,7 +29,7 @@ void Cylinder_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_BOUNDS;
         self->visible   = false;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
         switch (self->type) {
             case CYLINDER_TUBE_H:
@@ -61,7 +61,7 @@ void Cylinder_Create(void *data)
                 self->state = Cylinder_State_TubeV;
                 break;
 
-            case CYLINDER_SPIRAL:
+            case CYLINDER_SPIRAL_LR:
                 self->updateRange.x = (self->radius + 112) << 16;
                 self->updateRange.y = self->length << 16;
 
@@ -83,7 +83,7 @@ void Cylinder_Create(void *data)
                 self->state = Cylinder_State_Spiral;
                 break;
 
-            case CYLINDER_SPIRAL_FLIPPED:
+            case CYLINDER_SPIRAL_RL:
                 self->updateRange.x = (self->radius + 112) << 16;
                 self->updateRange.y = self->length << 16;
 
@@ -497,7 +497,7 @@ void Cylinder_State_InkRoller(void)
                     }
 
                     if (collided) {
-                        player->drawOrder                    = angle >= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
+                        player->drawGroup                    = angle >= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
                         self->playerAngles[player->playerID] = angle;
                         player->position.y                   = radius * RSDK.Cos1024(angle) + self->position.y;
                         player->abilityValue                 = player->position.y < self->position.y ? 0 : 0x80;
@@ -634,7 +634,7 @@ void Cylinder_State_Pillar(void)
 
                     player->position.x                   = radius * RSDK.Cos1024(angle) + self->position.x;
                     self->playerAngles[player->playerID] = angle;
-                    player->drawOrder                    = angle >= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
+                    player->drawGroup                    = angle >= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
 
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
                     player->animator.rotationStyle = ROTSTYLE_FULL;
@@ -854,7 +854,7 @@ void Cylinder_EditorDraw(void)
             self->hitboxRange.bottom = self->length;
             break;
 
-        case CYLINDER_SPIRAL:
+        case CYLINDER_SPIRAL_LR:
             self->updateRange.x = (self->radius + 112) << 16;
             self->updateRange.y = self->length << 16;
 
@@ -874,7 +874,7 @@ void Cylinder_EditorDraw(void)
             self->hitboxR.bottom = self->length;
             break;
 
-        case CYLINDER_SPIRAL_FLIPPED:
+        case CYLINDER_SPIRAL_RL:
             self->updateRange.x = (self->radius + 112) << 16;
             self->updateRange.y = self->length << 16;
 
@@ -922,7 +922,7 @@ void Cylinder_EditorDraw(void)
 
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxRange, FLIP_NONE, 0xFFFF00);
 
-        if (self->type == CYLINDER_SPIRAL || self->type == CYLINDER_SPIRAL_FLIPPED) {
+        if (self->type == CYLINDER_SPIRAL_LR || self->type == CYLINDER_SPIRAL_RL) {
             DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxL, FLIP_NONE, 0xFF0000);
             DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxR, FLIP_NONE, 0xFF0000);
         }
@@ -939,11 +939,11 @@ void Cylinder_EditorLoad(void)
     RSDK_ACTIVE_VAR(Cylinder, type);
     RSDK_ENUM_VAR("Tube H", CYLINDER_TUBE_H);
     RSDK_ENUM_VAR("Tube V", CYLINDER_TUBE_V);
-    RSDK_ENUM_VAR("FBZ Spiral", CYLINDER_SPIRAL);
-    RSDK_ENUM_VAR("FBZ Spiral (Flipped)", CYLINDER_SPIRAL_FLIPPED);
+    RSDK_ENUM_VAR("FBZ Spiral - LR", CYLINDER_SPIRAL_LR);
+    RSDK_ENUM_VAR("FBZ Spiral - RL", CYLINDER_SPIRAL_RL);
     RSDK_ENUM_VAR("Ink Roller", CYLINDER_INKROLLER);
-    RSDK_ENUM_VAR("(Unused)", CYLINDER_UNUSED1);
-    RSDK_ENUM_VAR("(Unused)", CYLINDER_UNUSED2);
+    RSDK_ENUM_VAR("Fixed V - L (Unused)", CYLINDER_FIXED_V_L);
+    RSDK_ENUM_VAR("Fixed V - R (Unused)", CYLINDER_FIXED_V_R);
     RSDK_ENUM_VAR("SSZ1 Pillar", CYLINDER_PILLAR);
 }
 #endif

@@ -243,7 +243,7 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
 
             host->values[0]   = true;
             fxRuby->state     = FXRuby_State_Expanding;
-            fxRuby->drawOrder = Zone->objectDrawLow - 1;
+            fxRuby->drawGroup = Zone->objectDrawLow - 1;
             player1->camera   = 0;
             camera->target    = 0;
             Camera_SetupLerp(CAMERA_LERP_NORMAL, 0, x, y, 3);
@@ -337,7 +337,7 @@ bool32 ERZOutro_Cutscene_OpenPortal(EntityCutsceneSeq *host)
 
     if (host->timer == 90) {
         portal->state     = RubyPortal_State_Opened;
-        portal->drawOrder = Zone->objectDrawLow;
+        portal->drawGroup = Zone->objectDrawLow;
         portal->visible   = true;
         PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
     }

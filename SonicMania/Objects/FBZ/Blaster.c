@@ -32,7 +32,7 @@ void Blaster_Create(void *data)
     RSDK_THIS(Blaster);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -301,7 +301,7 @@ void Blaster_State_Shot(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Blaster->hitboxProjectile)) {
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
             }
         }
     }

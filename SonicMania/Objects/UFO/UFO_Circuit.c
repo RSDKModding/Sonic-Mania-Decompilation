@@ -105,7 +105,7 @@ void UFO_Circuit_Create(void *data)
         if (self->startNode) {
             self->active    = ACTIVE_NORMAL;
             self->visible   = true;
-            self->drawOrder = 4;
+            self->drawGroup = 4;
             self->curNode   = self->reverse ? self->prevNode : self->nextNode;
             self->groundVel = 0x70000;
             self->topSpeed  = 0x70000;

@@ -37,9 +37,9 @@ void Orbinaut_Create(void *data)
 
     self->visible = true;
     if (self->planeFilter > 0 && ((self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;
@@ -111,7 +111,7 @@ void Orbinaut_HandlePlayerInteractions(void)
             {
                 if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
                     if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitboxOrb)) {
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                     }
                 }
             }
@@ -282,7 +282,7 @@ void Orbinaut_State_Orb(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitboxOrb)) {
-                    Player_CheckElementalHit(player, self, SHIELD_FIRE);
+                    Player_ElementHurt(player, self, SHIELD_FIRE);
                 }
             }
         }

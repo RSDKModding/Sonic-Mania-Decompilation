@@ -51,7 +51,7 @@ void PhantomRider_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->type          = voidToInt(data);
@@ -177,7 +177,7 @@ void PhantomRider_State_HandleBegin(void)
         foreach_active(PopOut, popOut)
         {
             popOut->active    = ACTIVE_NORMAL;
-            popOut->drawOrder = 2;
+            popOut->drawGroup = 2;
         }
         foreach_active(Button, button) { button->active = ACTIVE_NORMAL; }
         RSDK.PlaySfx(PhantomRider->sfxRiderLaunch, false, 255);

@@ -85,7 +85,7 @@ void UFO_ItemBox_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_SCALE;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_RBOUNDS;
         self->updateRange.x = 0x400;
         self->updateRange.y = 0x400;
@@ -150,7 +150,7 @@ void UFO_ItemBox_State_HasContents(void)
                     else {
 #endif
                         RSDK.PlaySfx(UFO_ItemBox->sfxDestroy, false, 255);
-                        self->drawOrder = 12;
+                        self->drawGroup = 12;
                         self->active    = 2;
                         self->state     = UFO_ItemBox_State_ShowContents;
 #if MANIA_USE_PLUS

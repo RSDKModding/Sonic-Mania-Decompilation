@@ -54,7 +54,7 @@ void FBZStorm_Update(void)
     }
 
     // BGStorm layer
-    if (RSDK.GetTileLayer(3)->drawLayer[0] < DRAWGROUP_COUNT) {
+    if (RSDK.GetTileLayer(3)->drawGroup[0] < DRAWGROUP_COUNT) {
         self->enabled = true;
         if (self->blendAmount < 0x100) {
             self->blendAmount += 8;
@@ -115,7 +115,7 @@ void FBZStorm_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->active     = ACTIVE_NORMAL;
-        self->drawOrder  = Zone->objectDrawHigh;
+        self->drawGroup  = Zone->objectDrawHigh;
         self->drawFX     = FX_ROTATE;
         self->inkEffect  = INK_ALPHA;
         self->velocity.x = -0x40000;

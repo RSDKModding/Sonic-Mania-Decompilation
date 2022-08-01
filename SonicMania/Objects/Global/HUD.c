@@ -427,7 +427,7 @@ void HUD_Create(void *data)
 
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = Zone->hudDrawOrder;
+        self->drawGroup = Zone->huddrawGroup;
 
         self->scoreOffset.x = 0x100000;
         self->scoreOffset.y = 0xC0000;

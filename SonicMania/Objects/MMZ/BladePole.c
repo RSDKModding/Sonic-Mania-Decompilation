@@ -31,7 +31,7 @@ void BladePole_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -130,7 +130,7 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
 
             self->position.x = storeX;
             self->position.y = storeY;

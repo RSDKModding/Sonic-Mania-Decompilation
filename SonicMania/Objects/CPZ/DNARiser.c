@@ -48,7 +48,7 @@ void DNARiser_Create(void *data)
     RSDK_THIS(DNARiser);
     self->visible   = true;
     self->active    = ACTIVE_BOUNDS;
-    self->drawOrder = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawLow + 1;
     self->amplitude = 0x2E0000;
 
     if (SceneInfo->inEditor) {
@@ -173,7 +173,7 @@ void DNARiser_State_HandleInteractions(void)
                 self->sfxTimer   = 30;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->groundVel        = 0;
-                player->drawOrder        = 1;
+                player->drawGroup        = 1;
                 player->jumpAbilityState = 1;
                 player->onGround         = false;
                 player->tileCollisions   = false;
@@ -250,7 +250,7 @@ void DNARiser_State_HelixRise(void)
                 child->parent         = self;
                 child->angle          = (((0x57262 * (4 * self->helixPos)) >> 16) + 100) & 0x3FF;
                 child->amplitude      = 0x2E0000;
-                child->drawOrder      = self->drawOrder - 1;
+                child->drawGroup      = self->drawGroup - 1;
                 if (!self->firstChild)
                     self->firstChild = child;
 
@@ -302,7 +302,7 @@ void DNARiser_State_HelixRise(void)
                 else {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->groundVel        = 0;
-                    player->drawOrder        = 1;
+                    player->drawGroup        = 1;
                     player->jumpAbilityState = 1;
                     player->onGround         = false;
                     player->tileCollisions   = false;
@@ -323,7 +323,7 @@ void DNARiser_State_HelixRise(void)
         {
             int32 playerID = RSDK.GetEntitySlot(player);
             if (((1 << playerID) & self->activePlayers)) {
-                player->drawOrder      = Zone->playerDrawLow;
+                player->drawGroup      = Zone->playerDrawLow;
                 player->tileCollisions = true;
                 player->state          = Player_State_Air;
                 player->velocity.x     = self->speed.x;

@@ -26,8 +26,8 @@ struct EntityScarab {
     int32 amplitude;
     uint8 childCount;
     PlaneFilterTypes planeFilter;
-    uint8 drawOrderLow;
-    uint8 drawOrderHigh;
+    uint8 drawGroupLow;
+    uint8 drawGroupHigh;
     uint8 pullCount;
     int8 moveDir;
     uint8 grabbedPlayers;

@@ -47,7 +47,7 @@ void LavaFall_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x1000000;
 
@@ -120,7 +120,7 @@ void LavaFall_State_Lava(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &LavaFall->hitbox))
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
     }
 
     if (self->activeScreens)

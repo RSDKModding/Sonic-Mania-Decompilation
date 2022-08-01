@@ -33,7 +33,7 @@ void UIUsernamePopup_Create(void *data)
     RSDK_THIS(UIUsernamePopup);
 
     self->active    = ACTIVE_ALWAYS;
-    self->drawOrder = 13;
+    self->drawGroup = 13;
     self->drawPos.x = 0;
     self->drawPos.y = 0;
     self->size.y    = 0x180000;
@@ -148,7 +148,7 @@ void UIUsernamePopup_EditorDraw(void)
 {
     RSDK_THIS(UIUsernamePopup);
 
-    self->drawOrder = 13;
+    self->drawGroup = 13;
     self->drawPos.x = 0;
     self->drawPos.y = 0;
     self->size.x    = 0;

@@ -49,7 +49,7 @@ void UFO_Setup_Create(void *data)
 
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawOrder = 15;
+    self->drawGroup = 15;
     self->fadeColor = 0xF0F0F0;
     self->timer     = 512;
     self->state     = UFO_Setup_State_ShowStartMessage;
@@ -92,7 +92,7 @@ void UFO_Setup_StageLoad(void)
     if (floor3DLayer != (uint16)-1) {
         TileLayer *floor3D = RSDK.GetTileLayer(floor3DLayer);
         if (floor3D) {
-            floor3D->drawLayer[0]     = 0;
+            floor3D->drawGroup[0]     = 0;
             floor3D->scanlineCallback = UFO_Setup_Scanline_3DFloor;
         }
     }
@@ -101,7 +101,7 @@ void UFO_Setup_StageLoad(void)
     if (roof3DLayer != (uint16)-1) {
         TileLayer *roof3D = RSDK.GetTileLayer(roof3DLayer);
         if (roof3D) {
-            roof3D->drawLayer[0]     = 0;
+            roof3D->drawGroup[0]     = 0;
             roof3D->scanlineCallback = UFO_Setup_Scanline_3DRoof;
         }
     }
@@ -380,7 +380,7 @@ void UFO_Setup_State_FinishFadeout(void)
             for (int32 l = 0; l < LAYER_COUNT; ++l) {
                 TileLayer *layer = RSDK.GetTileLayer(l);
                 if (layer)
-                    layer->drawLayer[0] = DRAWGROUP_COUNT;
+                    layer->drawGroup[0] = DRAWGROUP_COUNT;
             }
 
             for (int32 l = 0; l < SCENEENTITY_COUNT; ++l) {

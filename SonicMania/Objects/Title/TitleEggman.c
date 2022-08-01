@@ -56,7 +56,7 @@ void TitleEggman_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible   = true;
-        self->drawOrder = 3;
+        self->drawGroup = 3;
         self->active    = ACTIVE_NORMAL;
 
         if (data) {

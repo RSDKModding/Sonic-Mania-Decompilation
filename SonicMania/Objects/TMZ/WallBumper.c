@@ -52,7 +52,7 @@ void WallBumper_Create(void *data)
 
     self->drawFX        = FX_FLIP;
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;

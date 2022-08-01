@@ -31,7 +31,7 @@ void BadnikHelpers_BadnikBreak(void *badnik, bool32 destroy, bool32 spawnAnimals
     }
 
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
-    explosion->drawOrder       = Zone->objectDrawHigh;
+    explosion->drawGroup       = Zone->objectDrawHigh;
     RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
     if (destroy)
@@ -47,7 +47,7 @@ void BadnikHelpers_BadnikBreakUnseeded(void *badnik, bool32 destroy, bool32 spaw
     }
 
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
-    explosion->drawOrder       = Zone->objectDrawHigh;
+    explosion->drawGroup       = Zone->objectDrawHigh;
     RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
     if (destroy)

@@ -38,7 +38,7 @@ void CableWarp_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->alpha         = 0x100;
 
         switch (self->type) {
@@ -121,14 +121,14 @@ void CableWarp_State_CablePlug(void)
                 debris->velocity.x      = -0x20000;
                 debris->velocity.y      = -0x20000;
                 debris->gravityStrength = 0x3800;
-                debris->drawOrder       = Zone->playerDrawHigh;
+                debris->drawGroup       = Zone->playerDrawHigh;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 3);
 
                 debris                  = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x + 0x80000, self->position.y - 0x80000);
                 debris->velocity.x      = 0x20000;
                 debris->velocity.y      = -0x20000;
                 debris->gravityStrength = 0x3800;
-                debris->drawOrder       = Zone->playerDrawHigh;
+                debris->drawGroup       = Zone->playerDrawHigh;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 4);
                 RSDK.PlaySfx(CableWarp->sfxLedgeBreak, false, 0xFF);
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &self->animator, true, 1);
@@ -311,14 +311,14 @@ void CableWarp_StateTransport_EndNode(void)
                 debris->velocity.x      = -0x20000;
                 debris->velocity.y      = -0x20000;
                 debris->gravityStrength = 0x3800;
-                debris->drawOrder       = Zone->playerDrawHigh;
+                debris->drawGroup       = Zone->playerDrawHigh;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 3);
 
                 debris                  = CREATE_ENTITY(Debris, Debris_State_Fall, nextNode->position.x + 0x80000, nextNode->position.y - 0x80000);
                 debris->velocity.x      = 0x20000;
                 debris->velocity.y      = -0x20000;
                 debris->gravityStrength = 0x3800;
-                debris->drawOrder       = Zone->playerDrawHigh;
+                debris->drawGroup       = Zone->playerDrawHigh;
 
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 4);
                 RSDK.PlaySfx(CableWarp->sfxLedgeBreak, false, 255);

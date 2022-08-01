@@ -85,7 +85,7 @@ void Bridge_Create(void *data)
     RSDK_THIS(Bridge);
     self->visible = true;
     ++self->length;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     int32 len           = self->length << 19;
     self->startPos      = self->position.x - len;

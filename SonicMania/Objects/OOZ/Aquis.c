@@ -38,7 +38,7 @@ void Aquis_Create(void *data)
     RSDK_THIS(Aquis);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;
@@ -362,7 +362,7 @@ void Aquis_State_Shot(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Aquis->hitboxProjectile))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
     }
     else {

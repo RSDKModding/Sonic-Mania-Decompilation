@@ -60,7 +60,7 @@ void Tornado_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->drawFX        = FX_FLIP;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->movePos       = self->position;
         self->turnAngle     = 48;
         self->isStood       = true;
@@ -194,7 +194,7 @@ void Tornado_HandlePlayerCollisions(void)
 
     self->prevPosY     = self->position.y;
     self->turnAngle    = 32;
-    player1->drawOrder = self->drawOrder + 1;
+    player1->drawGroup = self->drawGroup + 1;
     self->prevPosY &= 0xFFFF0000;
     self->moveVelocityY = (self->position.y & 0xFFFF0000) - self->prevPosY;
     self->position.y    = self->prevPosY;
@@ -240,7 +240,7 @@ void Tornado_State_PlayerControlled(void)
     Hitbox *hitbox        = RSDK.GetHitbox(&self->animatorTornado, TornadoPath->hitboxID);
 
     self->prevPosY     = self->position.y;
-    player1->drawOrder = self->turnAngle < 0x20 ? self->drawOrder : (self->drawOrder + 1);
+    player1->drawGroup = self->turnAngle < 0x20 ? self->drawGroup : (self->drawGroup + 1);
 
     if (player1->state == Player_State_Roll) {
         player1->groundVel  = clampVal(player1->groundVel, -self->offsetX, self->offsetX);
@@ -418,7 +418,7 @@ void Tornado_State_Mayday(void)
         if (Zone->timer & 4) {
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
                                                        (RSDK.Rand(-32, 32) << 16) + self->position.x, (RSDK.Rand(-16, 16) << 16) + self->position.y);
-            explosion->drawOrder       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
 }

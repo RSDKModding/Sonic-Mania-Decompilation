@@ -30,7 +30,7 @@ void TargetBumper_Create(void *data)
     RSDK_THIS(TargetBumper);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;

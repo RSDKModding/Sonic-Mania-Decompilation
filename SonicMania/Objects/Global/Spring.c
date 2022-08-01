@@ -56,9 +56,9 @@ void Spring_Create(void *data)
         self->visible        = true;
 
         if (self->planeFilter && ((uint8)self->planeFilter - 1) & 2)
-            self->drawOrder = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
 
         switch (self->type >> 1) {
             case 0: // vertical
@@ -149,7 +149,7 @@ void Spring_State_Vertical(void)
                     if (anim == ANI_WALK || (anim > ANI_AIR_WALK && anim <= ANI_DASH))
                         player->animationReserve = player->animator.animationID;
 
-                    if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Ice_PlayerState_Frozen) {
                         if (player->state == Player_State_TubeAirRoll || player->state == Player_State_TubeRoll) {
                             player->state = Player_State_TubeAirRoll;
                         }
@@ -180,7 +180,7 @@ void Spring_State_Vertical(void)
         {
             if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
-                    if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Ice_PlayerState_Frozen) {
                         if (player->state == Player_State_TubeAirRoll || player->state == Player_State_TubeRoll)
                             player->state = Player_State_TubeAirRoll;
                         else
@@ -222,7 +222,7 @@ void Spring_State_Horizontal(void)
                         player->groundVel  = player->velocity.x;
                     }
 
-                    if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Ice_PlayerState_Frozen) {
                         if (player->state != Player_State_Roll && player->state != Player_State_TubeAirRoll
                             && player->state != Player_State_TubeRoll) {
                             player->state = player->onGround ? Player_State_Ground : Player_State_Air;
@@ -265,7 +265,7 @@ void Spring_State_Horizontal(void)
                         player->groundVel  = player->velocity.x;
                     }
 
-                    if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Ice_PlayerState_Frozen) {
                         if (player->state != Player_State_Roll && player->state != Player_State_TubeAirRoll
                             && player->state != Player_State_TubeRoll) {
                             player->state = player->onGround ? Player_State_Ground : Player_State_Air;
@@ -309,7 +309,7 @@ void Spring_State_Diagonal(void)
                     collided = abs(player->velocity.x) > -player->velocity.y;
 
                 if (collided) {
-                    if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Ice_PlayerState_Frozen) {
                         if (player->state == Player_State_TubeAirRoll || player->state == Player_State_TubeRoll) {
                             player->state = Player_State_TubeAirRoll;
                         }

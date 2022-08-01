@@ -23,7 +23,7 @@ void FXRuby_StaticUpdate(void)
     if (Zone) {
         foreach_active(FXRuby, fxRuby)
         {
-            RSDK.AddDrawListRef(Zone->hudDrawOrder + 1, RSDK.GetEntitySlot(fxRuby));
+            RSDK.AddDrawListRef(Zone->huddrawGroup + 1, RSDK.GetEntitySlot(fxRuby));
             foreach_break;
         }
     }
@@ -37,7 +37,7 @@ void FXRuby_Draw(void)
     RSDK.SetTintLookupTable(FXRuby->tintLookupTable);
 #endif
 
-    if (self->fadeWhite >= 512 || self->fadeBlack >= 512 || SceneInfo->currentDrawGroup != self->drawOrder) {
+    if (self->fadeWhite >= 512 || self->fadeBlack >= 512 || SceneInfo->currentDrawGroup != self->drawGroup) {
         if (self->fadeWhite > 0)
             RSDK.FillScreen(0xFFF0F0, self->fadeWhite, self->fadeWhite - 0x100, self->fadeWhite - 0x100);
 
@@ -64,7 +64,7 @@ void FXRuby_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible   = true;
         self->active    = ACTIVE_NORMAL;
-        self->drawOrder = Zone ? Zone->objectDrawHigh : (DRAWGROUP_COUNT - 1);
+        self->drawGroup = Zone ? Zone->objectDrawHigh : (DRAWGROUP_COUNT - 1);
 
         self->radiusSpeed = 4;
 
@@ -97,7 +97,7 @@ void FXRuby_SetupLayerDeformation(void)
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = RSDK.GetTileLayer(l);
 
-        if (layer->width && layer->drawLayer[0] != DRAWGROUP_COUNT) {
+        if (layer->width && layer->drawGroup[0] != DRAWGROUP_COUNT) {
             for (int32 s = 0; s < layer->scrollInfoCount; ++s) layer->scrollInfo[s].deform = true;
         }
     }
@@ -112,7 +112,7 @@ void FXRuby_HandleLayerDeform(void)
     int32 *deformationData = NULL;
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = RSDK.GetTileLayer(l);
-        if (layer->width && layer->drawLayer[0] != DRAWGROUP_COUNT) {
+        if (layer->width && layer->drawGroup[0] != DRAWGROUP_COUNT) {
             layer->deformationOffset += 3;
 
             if (deformationData) {

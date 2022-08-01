@@ -75,7 +75,7 @@ void DAControl_Create(void *data)
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -98,7 +98,7 @@ void DAControl_EditorDraw(void)
     RSDK_THIS(DAControl);
 
     self->visible       = true;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

@@ -88,7 +88,7 @@ void JacobsLadder_Update(void)
                             }
                         }
                         else {
-                            Player_CheckHit(player, self);
+                            Player_Hurt(player, self);
                         }
                     }
                 }
@@ -177,7 +177,7 @@ void JacobsLadder_Create(void *data)
     RSDK_THIS(JacobsLadder);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->updateRange.x = 0x800000;

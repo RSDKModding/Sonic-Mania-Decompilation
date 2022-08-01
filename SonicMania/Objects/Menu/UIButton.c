@@ -98,7 +98,7 @@ void UIButton_Create(void *data)
     RSDK_THIS(UIButton);
 
     if (!SceneInfo->inEditor) {
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->visible       = !self->invisible;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -896,7 +896,7 @@ void UIButton_EditorDraw(void)
     self->startListID  = self->listID;
     self->startFrameID = self->frameID;
 
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x400000;
     self->bgEdgeSize    = self->size.y >> 16;

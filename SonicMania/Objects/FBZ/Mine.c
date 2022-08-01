@@ -45,7 +45,7 @@ void Mine_Update(void)
 
                     int32 x                                                                  = self->position.x;
                     int32 y                                                                  = self->position.y + 0x30000;
-                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y)->drawOrder = Zone->objectDrawHigh;
+                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(self);
                     foreach_return;
@@ -60,11 +60,11 @@ void Mine_Update(void)
                         player->onGround = false;
                     else
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
             }
 
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y - 0x30000)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y - 0x30000)->drawGroup = Zone->objectDrawHigh;
             RSDK.PlaySfx(Mine->sfxExplosion, false, 255);
 #if MANIA_USE_PLUS
             Mine_CheckMightyHit();
@@ -92,7 +92,7 @@ void Mine_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
 
@@ -130,7 +130,7 @@ void Mine_CheckMightyHit(void)
 void Mine_EditorDraw(void)
 {
     RSDK_THIS(Mine);
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(Mine->aniFrames, 0, &self->animator, true, 0);
 
     Mine_Draw();

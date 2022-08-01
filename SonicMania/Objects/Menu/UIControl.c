@@ -417,7 +417,7 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
                     }
 
                     if (entity->visible)
-                        RSDK.AddDrawListRef(entity->drawOrder, slot);
+                        RSDK.AddDrawListRef(entity->drawGroup, slot);
 
                     SceneInfo->entity = storeEntity;
                 }

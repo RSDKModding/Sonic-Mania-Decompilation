@@ -35,7 +35,7 @@ void ContinuePlayer_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible   = true;
-        self->drawOrder = 1;
+        self->drawGroup = 1;
         self->active    = ACTIVE_NORMAL;
 
         if (!self->isPlayer2) {

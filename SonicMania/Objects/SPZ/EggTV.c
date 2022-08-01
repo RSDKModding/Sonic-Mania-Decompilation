@@ -36,7 +36,7 @@ void EggTV_Create(void *data)
     RSDK_THIS(EggTV);
     
     self->active    = ACTIVE_BOUNDS;
-    self->drawOrder = self->drawOverTV ? Zone->objectDrawLow : (Zone->fgLayerLow + 1);
+    self->drawGroup = self->drawOverTV ? Zone->objectDrawLow : (Zone->fgLayerLow + 1);
 
     self->visible       = true;
     self->drawFX        = FX_NONE;

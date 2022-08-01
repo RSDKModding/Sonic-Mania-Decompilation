@@ -71,7 +71,7 @@ bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
         Camera_ShakeScreen(0, 0, 6);
         CrimsonEye->targetElevatorSpeed    = -0x10000;
         TileLayer *moveLayer               = RSDK.GetTileLayer(Zone->moveLayer);
-        moveLayer->drawLayer[0]            = 0;
+        moveLayer->drawGroup[0]            = 0;
         moveLayer->scrollPos               = 0x5000000;
         moveLayer->scrollInfo[0].scrollPos = -0x4D00000;
         RSDK.PlaySfx(CrimsonEye->sfxHullClose, false, 255);

@@ -77,7 +77,7 @@ void TwistedTubes_Create(void *data)
         }
         else {
             self->visible       = true;
-            self->drawOrder     = Zone->objectDrawHigh;
+            self->drawGroup     = Zone->objectDrawHigh;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = (self->height + 4) << 21;
@@ -140,7 +140,7 @@ void TwistedTubes_State_HandleInteractions(void)
 
             if (entered) {
                 player->state                        = Player_State_TransportTube;
-                player->drawOrder                    = 1;
+                player->drawGroup                    = 1;
                 player->interaction                  = false;
                 player->tileCollisions               = false;
                 player->onGround                     = false;

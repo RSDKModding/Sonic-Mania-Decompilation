@@ -64,7 +64,7 @@ void Jellygnite_Create(void *data)
 {
     RSDK_THIS(Jellygnite);
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;
@@ -382,7 +382,7 @@ void Jellygnite_State_Explode(void)
     if (++self->timer == 60) {
         EntityPlayer *player = self->grabbedPlayer;
         if (player && player->state == Player_State_Static) {
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
 
             if (player->state != Player_State_Hurt && Player_CheckValidState(player))
                 player->state = Player_State_Air;
@@ -390,7 +390,7 @@ void Jellygnite_State_Explode(void)
             self->grabbedPlayer = NULL;
         }
 
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         destroyEntity(self);
     }

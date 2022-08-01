@@ -66,11 +66,11 @@ void SizeLaser_Serialize(void);
 // Extra Entity Functions
 bool32 SizeLaser_SfxCheck_SizeLaser(void);
 
-void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag);
-void SizeLaser_P2JumpInResize(void);
-void SizeLaser_P2JumpInGrow(void);
-void SizeLaser_P2JumpInShrink(void);
-void SizeLaser_PlayerState_Grow(void);
+void SizeLaser_SetPlayerSize(EntityPlayer *player, bool32 chibiFlag);
+void SizeLaser_PlayerState_Resize(void);
+void SizeLaser_PlayerState_GrowNormal(void);
+void SizeLaser_PlayerState_ShrinkChibi(void);
+void SizeLaser_PlayerState_GrowGiant(void);
 
 void SizeLaser_CheckPlayerCollisions(void);
 

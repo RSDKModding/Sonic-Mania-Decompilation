@@ -110,7 +110,7 @@ void UFO_Springboard_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x5000000;
         self->updateRange.y = 0x5000000;

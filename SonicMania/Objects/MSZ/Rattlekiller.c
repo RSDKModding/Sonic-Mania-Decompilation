@@ -200,7 +200,7 @@ void Rattlekiller_Update(void)
                 debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
                 debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
                 debris->gravityStrength = 0x4800;
-                debris->drawOrder       = Zone->objectDrawHigh;
+                debris->drawGroup       = Zone->objectDrawHigh;
                 debris->updateRange.x   = 0x400000;
                 debris->updateRange.y   = 0x400000;
             }
@@ -218,7 +218,7 @@ void Rattlekiller_Update(void)
 #if MANIA_USE_PLUS
                         if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
-                            Player_CheckHit(player, self);
+                            Player_Hurt(player, self);
                     }
                 }
             }
@@ -242,7 +242,7 @@ void Rattlekiller_Draw(void)
 {
     RSDK_THIS(Rattlekiller);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         for (int32 i = 0; i < RATTLEKILLER_SEGMENT_COUNT; ++i) {
             int32 id = self->bodyIDs[i];
 
@@ -276,7 +276,7 @@ void Rattlekiller_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->topBounds     = self->position;
         self->bottomBounds  = self->position;
         self->active        = ACTIVE_BOUNDS;
@@ -384,17 +384,17 @@ void Rattlekiller_EditorDraw(void)
 
     Rattlekiller_HandleSorting();
 
-    int32 drawOrder = self->drawOrder;
+    int32 drawGroup = self->drawGroup;
 
     // Draw Lower Depth
-    self->drawOrder = -1;
+    self->drawGroup = -1;
     Rattlekiller_Draw();
 
     // Draw Higher Depth
-    self->drawOrder = SceneInfo->currentDrawGroup;
+    self->drawGroup = SceneInfo->currentDrawGroup;
     Rattlekiller_Draw();
 
-    self->drawOrder = drawOrder;
+    self->drawGroup = drawGroup;
 
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);

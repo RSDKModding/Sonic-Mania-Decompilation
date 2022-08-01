@@ -32,13 +32,13 @@ void Spiny_Create(void *data)
     RSDK_THIS(Spiny);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
     if (data) {
-        self->drawOrder = Zone->objectDrawLow - 1;
+        self->drawGroup = Zone->objectDrawLow - 1;
         RSDK.SetSpriteAnimation(Spiny->aniFrames, 4, &self->animator, true, 0);
         self->state = Spiny_State_Shot;
     }
@@ -295,7 +295,7 @@ void Spiny_State_Shot(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Spiny->hitboxShot))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
     }
     else {

@@ -46,7 +46,7 @@ void PuyoBean_Create(void *data)
     RSDK_THIS(PuyoBean);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = PuyoGame ? Zone->objectDrawLow : Zone->objectDrawHigh;
+        self->drawGroup     = PuyoGame ? Zone->objectDrawLow : Zone->objectDrawHigh;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -920,7 +920,7 @@ void PuyoBean_State_Falling(void)
                     }
 
                     self->velocity.y = 0;
-                    RSDK.AddDrawListRef(self->drawOrder, entitySlot);
+                    RSDK.AddDrawListRef(self->drawGroup, entitySlot);
                     RSDK.CopyEntity(RSDK_GET_ENTITY(entitySlot, PuyoBean), self, true);
                 }
             }
@@ -1087,7 +1087,7 @@ void PuyoBean_State_BeanPop(void)
             debris->timer           = 14;
             debris->velocity.x      = RSDK.Cos256(angle) << 9;
             debris->velocity.y      = RSDK.Sin256(angle) << 9;
-            debris->drawOrder       = Zone->objectDrawHigh + 1;
+            debris->drawGroup       = Zone->objectDrawHigh + 1;
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_DEBRIS, &debris->animator, true, 0);
         }
 

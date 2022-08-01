@@ -49,7 +49,7 @@ void UIDiorama_StaticUpdate(void)
     if (!(UIWidgets->timer & 3))
         RSDK.RotatePalette(0, 60, 63, true);
 
-    foreach_all(UIDiorama, diorama) { RSDK.AddDrawListRef(diorama->drawOrder + 1, RSDK.GetEntitySlot(diorama)); }
+    foreach_all(UIDiorama, diorama) { RSDK.AddDrawListRef(diorama->drawGroup + 1, RSDK.GetEntitySlot(diorama)); }
 }
 
 void UIDiorama_Draw(void)
@@ -57,7 +57,7 @@ void UIDiorama_Draw(void)
     RSDK_THIS(UIDiorama);
 
     if (self->timer <= 0) {
-        if (SceneInfo->currentDrawGroup == self->drawOrder) {
+        if (SceneInfo->currentDrawGroup == self->drawGroup) {
             RSDK.DrawSprite(&self->maskAnimator, NULL, false);
 
             self->dioramaPos.x  = self->position.x;
@@ -90,7 +90,7 @@ void UIDiorama_Create(void *data)
 
         self->active    = ACTIVE_BOUNDS;
         self->visible   = true;
-        self->drawOrder = 2;
+        self->drawGroup = 2;
     }
 }
 
@@ -596,7 +596,7 @@ void UIDiorama_Draw_ManiaMode(void)
     int32 frameWidths[] = { 0x400, 0x200, 0x200, 0x200, 0x200, 0x129 };
     int32 frameSpeeds[] = { 0x100, 0x30, 0x30, 0x30, 0x60, 0x80 };
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         drawPos.x = self->position.x + 0x380000;
         drawPos.y = self->position.y + 0x1D0000;
         drawPos.x = info->playerPos.x + self->position.x + 0x380000;
@@ -644,7 +644,7 @@ void UIDiorama_Draw_PlusUpsell(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         RSDK.DrawSprite(&info->dioramaAnimator, &drawPos, false);
 
         drawPos.x = self->position.x + 0x500000;
@@ -718,7 +718,7 @@ void UIDiorama_Draw_EncoreMode(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         info->dioramaAnimator.frameID = 0;
         RSDK.DrawSprite(&info->dioramaAnimator, &drawPos, false);
     }
@@ -759,7 +759,7 @@ void UIDiorama_Draw_TimeAttack(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         info->dioramaAnimator.frameID = 0;
         RSDK.DrawSprite(&info->dioramaAnimator, &drawPos, false);
     }
@@ -830,7 +830,7 @@ void UIDiorama_Draw_Competition(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         drawPos.x = self->position.x + 0xAB0000;
         drawPos.y = self->position.y - 0x190000;
         for (int32 i = 0; i < 3; ++i) {
@@ -886,7 +886,7 @@ void UIDiorama_Draw_Options(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (SceneInfo->currentDrawGroup != self->drawOrder) {
+    if (SceneInfo->currentDrawGroup != self->drawGroup) {
         Vector2 *positions[]  = { &info->itemPos, &info->contPos, &info->audioPos };
         Vector2 *offsets[]    = { &info->itemOffset, &info->contOffset, &info->audioOffset };
         int32 alpha[]         = { info->itemAlpha, info->contAlpha, info->audioAlpha };
@@ -936,7 +936,7 @@ void UIDiorama_Draw_Extras(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (SceneInfo->currentDrawGroup != self->drawOrder) {
+    if (SceneInfo->currentDrawGroup != self->drawGroup) {
         self->inkEffect = INK_NONE;
         drawPos.x       = self->position.x + 0x520000;
         drawPos.y       = self->position.y - 0x150000;
@@ -961,7 +961,7 @@ void UIDiorama_Draw_Exit(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (SceneInfo->currentDrawGroup != self->drawOrder) {
+    if (SceneInfo->currentDrawGroup != self->drawGroup) {
         self->inkEffect = INK_NONE;
         drawPos.x += 0x480000;
         drawPos.y += 0xD0000;

@@ -31,7 +31,7 @@ void Pinata_Create(void *data)
 {
     RSDK_THIS(Pinata);
 
-    self->drawOrder     = self->priority != PINATA_PRIO_HIGH ? Zone->objectDrawLow : Zone->objectDrawHigh;
+    self->drawGroup     = self->priority != PINATA_PRIO_HIGH ? Zone->objectDrawLow : Zone->objectDrawHigh;
     self->visible       = true;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;
@@ -109,7 +109,7 @@ void Pinata_State_CheckPlayerCollisions(void)
 #endif
             CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y)->animator.frameID = 16;
             Player_GiveScore(player, 10);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawOrder =
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawGroup =
                 Zone->objectDrawHigh;
 
             for (int32 i = 0; i < 6; ++i) {
@@ -126,7 +126,7 @@ void Pinata_State_CheckPlayerCollisions(void)
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
-                debris->drawOrder  = Zone->objectDrawHigh;
+                debris->drawGroup  = Zone->objectDrawHigh;
                 RSDK.SetSpriteAnimation(Pinata->aniFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
             }
 

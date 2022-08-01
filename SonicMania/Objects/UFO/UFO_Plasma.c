@@ -46,7 +46,7 @@ void UFO_Plasma_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 3;
+        self->drawGroup = 3;
     }
 }
 

@@ -22,7 +22,7 @@ void UIInfoLabel_Create(void *data)
     RSDK_THIS(UIInfoLabel);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;

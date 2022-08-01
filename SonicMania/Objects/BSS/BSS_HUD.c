@@ -44,7 +44,7 @@ void BSS_HUD_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
-        self->drawOrder     = DRAWGROUP_COUNT - 1;
+        self->drawGroup     = DRAWGROUP_COUNT - 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

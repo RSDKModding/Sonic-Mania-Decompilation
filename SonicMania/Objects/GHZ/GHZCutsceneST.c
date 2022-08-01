@@ -63,7 +63,7 @@ void GHZCutsceneST_SetupObjects(void)
     foreach_all(Platform, platform)
     {
         if (!platform->frameID) {
-            platform->drawOrder     = Zone->objectDrawHigh - 1;
+            platform->drawGroup     = Zone->objectDrawHigh - 1;
             GHZCutsceneST->platform = platform;
             foreach_break;
         }

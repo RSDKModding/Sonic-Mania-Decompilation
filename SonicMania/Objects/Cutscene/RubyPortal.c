@@ -44,7 +44,7 @@ void RubyPortal_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
@@ -145,7 +145,7 @@ void RubyPortal_HandleTileDestruction(void)
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
-                    wall->drawOrder       = Zone->objectDrawLow + 1;
+                    wall->drawGroup       = Zone->objectDrawLow + 1;
                     wall->targetLayer         = Zone->fgLow;
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
@@ -166,7 +166,7 @@ void RubyPortal_HandleTileDestruction(void)
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
-                    wall->drawOrder       = Zone->objectDrawHigh;
+                    wall->drawGroup       = Zone->objectDrawHigh;
                     wall->targetLayer         = Zone->fgHigh;
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
@@ -426,7 +426,7 @@ void RubyPortal_EditorDraw(void)
     RSDK_THIS(RubyPortal);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->scale.x   = 0x200;
     self->scale.y   = 0x200;
     self->alpha     = 0xFF;

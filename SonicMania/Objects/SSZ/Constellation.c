@@ -39,7 +39,7 @@ void Constellation_Create(void *data)
 
     self->originPos     = self->position;
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = 1;
+    self->drawGroup     = 1;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;

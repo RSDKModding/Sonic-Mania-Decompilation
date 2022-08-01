@@ -31,7 +31,7 @@ void SpikeCrusher_Create(void *data)
     Platform_Create(NULL);
 
     if (!SceneInfo->inEditor) {
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 4);
         RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->spikeAnimator, true, 5);
 

@@ -37,7 +37,7 @@ void UIPopover_Create(void *data)
     RSDK_THIS(UIPopover);
 
     self->active      = ACTIVE_ALWAYS;
-    self->drawOrder   = 14;
+    self->drawGroup   = 14;
     self->visible     = true;
     self->buttonCount = 0;
 }
@@ -97,7 +97,7 @@ void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callbac
         button->bgEdgeSize = 16;
         button->align      = UIBUTTON_ALIGN_CENTER;
         button->active     = ACTIVE_ALWAYS;
-        button->drawOrder  = popover->drawOrder;
+        button->drawGroup  = popover->drawGroup;
 
         popover->buttons[id] = button;
         ++popover->buttonCount;

@@ -42,7 +42,7 @@ void PBL_HUD_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible    = true;
-        self->drawOrder  = 12;
+        self->drawGroup  = 12;
         self->active     = ACTIVE_NORMAL;
         self->position.y = 0;
         self->scale.x    = 0x200;

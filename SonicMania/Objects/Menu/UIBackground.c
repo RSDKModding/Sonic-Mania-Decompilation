@@ -34,7 +34,7 @@ void UIBackground_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 0;
+        self->drawGroup = 0;
         self->stateDraw = UIBackground_DrawNormal;
     }
 }

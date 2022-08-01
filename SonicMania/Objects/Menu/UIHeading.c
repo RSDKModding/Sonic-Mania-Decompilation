@@ -40,7 +40,7 @@ void UIHeading_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->startPos      = self->position;
         self->visible       = true;
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x300000;
@@ -78,7 +78,7 @@ void UIHeading_EditorDraw(void)
     RSDK_THIS(UIHeading);
 
     self->startPos      = self->position;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
 

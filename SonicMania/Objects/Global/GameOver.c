@@ -94,7 +94,7 @@ void GameOver_Create(void *data)
         self->barPos.y  = ScreenInfo->centerY << 16;
         self->scale.x   = 0x800;
         self->state     = GameOver_State_EnterLetters;
-        self->drawOrder = Zone->hudDrawOrder + 1;
+        self->drawGroup = Zone->huddrawGroup + 1;
 
         HUD_MoveOut();
 

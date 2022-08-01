@@ -54,7 +54,7 @@ void CaterkillerJr_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible           = true;
-        self->drawOrder         = Zone->objectDrawHigh;
+        self->drawGroup         = Zone->objectDrawHigh;
         self->startPos          = self->position;
         self->drawFX            = FX_FLIP;
         self->updateRange.x     = 0x800000;
@@ -222,7 +222,7 @@ void CaterkillerJr_State_Move(void)
                 debris->velocity.x      = RSDK.Rand(-16, 16) << 14;
                 debris->velocity.y      = RSDK.Rand(-8, 8) << 14;
                 debris->gravityStrength = 0x3800;
-                debris->drawOrder       = Zone->objectDrawLow;
+                debris->drawGroup       = Zone->objectDrawLow;
                 debris->updateRange.x   = 0x400000;
                 debris->updateRange.y   = 0x400000;
             }
@@ -237,7 +237,7 @@ void CaterkillerJr_State_Move(void)
                 self->position.x = self->bodyPosition[i].x;
                 self->position.y = self->bodyPosition[i].y;
                 if (Player_CheckCollisionTouch(player, self, &CaterkillerJr->hitbox)) {
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 }
             }
             self->position.x = self->bodyPosition[0].x;

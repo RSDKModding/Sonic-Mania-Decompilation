@@ -33,9 +33,9 @@ void Caterkiller_Create(void *data)
 
     self->visible = true;
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
@@ -195,7 +195,7 @@ void Caterkiller_HandlePlayerInteractions(void)
                     self->position.y = self->bodyPosition[i].y;
 
                     if (Player_CheckCollisionTouch(player, self, &Caterkiller->hitbox)) {
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
 
                         for (int32 d = 0; d < CATERKILLER_BODY_COUNT + 1; ++d) {
                             int32 spawnX             = storeX;
@@ -225,7 +225,7 @@ void Caterkiller_HandlePlayerInteractions(void)
                                 debris->headAnimator.frameID = self->headAnimator.frameID;
 
                             debris->planeFilter = self->planeFilter;
-                            debris->drawOrder   = self->drawOrder;
+                            debris->drawGroup   = self->drawGroup;
                         }
 
                         destroyEntity(self);
@@ -408,7 +408,7 @@ void Caterkiller_StateSplit_Body(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == ((self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, self, &Caterkiller->hitbox))
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
         }
     }

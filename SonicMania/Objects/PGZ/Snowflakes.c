@@ -90,13 +90,13 @@ void Snowflakes_Draw(void)
 {
     RSDK_THIS(Snowflakes);
     int32 drawHigh  = Zone->objectDrawHigh;
-    int32 drawLayer = SceneInfo->currentDrawGroup;
+    int32 drawGroup = SceneInfo->currentDrawGroup;
 
     for (int32 i = 0; i < 0x40; ++i) {
         if (self->positions[i].x || self->positions[i].y) {
             int32 priority = self->priority[i];
 
-            if ((priority || drawLayer != drawHigh) && (priority != 1 || drawLayer == drawHigh)) {
+            if ((priority || drawGroup != drawHigh) && (priority != 1 || drawGroup == drawHigh)) {
                 Vector2 drawPos = Snowflakes_HandleWrap(i);
                 self->direction = FLIP_NONE;
                 int32 angle     = RSDK.Sin256(self->angles[i]) << 6;
@@ -134,7 +134,7 @@ void Snowflakes_Create(void *data)
     RSDK_THIS(Snowflakes);
 
     self->active        = ACTIVE_NORMAL;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;

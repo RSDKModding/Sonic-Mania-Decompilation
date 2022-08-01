@@ -42,9 +42,9 @@ void MatryoshkaBom_Create(void *data)
     self->visible = true;
 
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->objectDrawHigh + 2;
+        self->drawGroup = Zone->objectDrawHigh + 2;
     else
-        self->drawOrder = Zone->objectDrawLow + 2;
+        self->drawGroup = Zone->objectDrawLow + 2;
 
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -181,7 +181,7 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
         }
     }
@@ -334,28 +334,28 @@ void MatryoshkaBom_State_FuseLit(void)
         shrapnel->velocity.x          = -0x20000;
         shrapnel->velocity.y          = -0x30000;
         shrapnel->planeFilter         = self->planeFilter;
-        shrapnel->drawOrder           = self->drawOrder;
+        shrapnel->drawGroup           = self->drawGroup;
 
         shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = -0x10000;
         shrapnel->velocity.y  = -0x20000;
         shrapnel->planeFilter = self->planeFilter;
-        shrapnel->drawOrder   = self->drawOrder;
+        shrapnel->drawGroup   = self->drawGroup;
 
         shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x20000;
         shrapnel->velocity.y  = -0x30000;
         shrapnel->planeFilter = self->planeFilter;
-        shrapnel->drawOrder   = self->drawOrder;
+        shrapnel->drawGroup   = self->drawGroup;
 
         shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x10000;
         shrapnel->velocity.y  = -0x20000;
         shrapnel->planeFilter = self->planeFilter;
-        shrapnel->drawOrder   = self->drawOrder;
+        shrapnel->drawGroup   = self->drawGroup;
 
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
-        explosion->drawOrder       = self->drawOrder + 1;
+        explosion->drawGroup       = self->drawGroup + 1;
         explosion->planeFilter     = self->planeFilter;
 
         destroyEntity(self);
@@ -377,7 +377,7 @@ void MatryoshkaBom_State_ReleaseSmallerBuddy(void)
         child->velocity.y = -0x40000;
 
         child->planeFilter      = self->planeFilter;
-        child->drawOrder        = self->drawOrder - 1;
+        child->drawGroup        = self->drawGroup - 1;
         child->active           = ACTIVE_NORMAL;
         child->direction        = self->direction;
         child->destroyOffscreen = true;
@@ -444,7 +444,7 @@ void MatryoshkaBom_State_Shrapnel(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxShrapnel)) {
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 }
             }
         }

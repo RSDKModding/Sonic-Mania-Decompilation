@@ -39,7 +39,7 @@ void Ice_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->drawFX    = FX_FLIP;
-        self->drawOrder = Zone->playerDrawLow + 1;
+        self->drawGroup = Zone->playerDrawLow + 1;
         self->visible   = true;
 
         if (data) {
@@ -347,7 +347,7 @@ void Ice_VSSwap_CheckFrozen(void)
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #endif
 
-    if (player->state == Ice_State_FrozenPlayer) {
+    if (player->state == Ice_PlayerState_Frozen) {
 #if MANIA_USE_PLUS
         Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
@@ -360,7 +360,7 @@ void Ice_FreezePlayer(EntityPlayer *player)
 {
     RSDK_THIS(Ice);
 
-    if (!Zone->gotTimeOver && player->state != Ice_State_FrozenPlayer && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
+    if (!Zone->gotTimeOver && player->state != Ice_PlayerState_Frozen && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
         EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PLAYER), player->position.x, player->position.y);
         ice->playerPtr = player;
 
@@ -393,7 +393,7 @@ void Ice_FreezePlayer(EntityPlayer *player)
         player->visible         = false;
         player->nextAirState    = StateMachine_None;
         player->nextGroundState = StateMachine_None;
-        player->state           = Ice_State_FrozenPlayer;
+        player->state           = Ice_PlayerState_Frozen;
         player->velocity.y      = 0;
 
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -447,7 +447,7 @@ bool32 Ice_CheckPlayerBlockSmashV(void)
     return false;
 }
 
-void Ice_State_FrozenPlayer(void)
+void Ice_PlayerState_Frozen(void)
 {
     RSDK_THIS(Player);
 
@@ -528,7 +528,7 @@ void Ice_State_FrozenPlayer(void)
             }
         }
 
-        if (self->state == Ice_State_FrozenPlayer) {
+        if (self->state == Ice_PlayerState_Frozen) {
             if (self->onGround) {
                 int32 rollFric        = self->rollingFriction;
                 self->left            = false;
@@ -546,7 +546,7 @@ void Ice_State_FrozenPlayer(void)
                 self->rollingFriction  = rollFric;
 
                 if (self->state == Player_State_Ground)
-                    self->state = Ice_State_FrozenPlayer;
+                    self->state = Ice_PlayerState_Frozen;
             }
             else {
                 self->velocity.y += 0x3800;
@@ -712,7 +712,7 @@ void Ice_TimeOver_CheckFrozen(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (player->state == Ice_State_FrozenPlayer)
+    if (player->state == Ice_PlayerState_Frozen)
         Ice_BreakPlayerBlock(player);
 }
 
@@ -739,7 +739,7 @@ void Ice_State_IceBlock(void)
         int32 playerX      = player->position.x;
         int32 playerY      = player->position.y;
 
-        if (player->state == Ice_State_FrozenPlayer) {
+        if (player->state == Ice_PlayerState_Frozen) {
             int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitboxPlayerBlockCheck, player, &Ice->hitboxPlayerBlockOuter, false);
             switch (side) {
                 case C_TOP:
@@ -934,7 +934,7 @@ void Ice_State_IceBlock(void)
                 }
                 else if (side == C_TOP && player->velocity.y >= 0) {
                     if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                     }
                     else {
                         if ((player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash) && !player->sidekick) {
@@ -1109,7 +1109,7 @@ void Ice_State_PlayerBlock(void)
     RSDK.ProcessAnimation(&self->contentsAnimator);
     EntityPlayer *playerPtr = self->playerPtr;
 
-    if (playerPtr->state == Ice_State_FrozenPlayer) {
+    if (playerPtr->state == Ice_PlayerState_Frozen) {
         RSDK.ProcessAnimation(&self->altContentsAnimator);
 
 #if MANIA_USE_PLUS
@@ -1138,7 +1138,7 @@ void Ice_State_PlayerBlock(void)
 
             self->position.x = playerPtr->position.x;
             self->position.y = playerPtr->position.y;
-            self->drawOrder  = playerPtr->drawOrder + 1;
+            self->drawGroup  = playerPtr->drawGroup + 1;
         }
         else {
             if (playerPtr->jumpPress) {
@@ -1182,7 +1182,7 @@ void Ice_State_PlayerBlock(void)
 
             self->position.x = playerPtr->position.x;
             self->position.y = playerPtr->position.y;
-            self->drawOrder  = playerPtr->drawOrder + 1;
+            self->drawGroup  = playerPtr->drawGroup + 1;
         }
     }
     else {
@@ -1221,7 +1221,7 @@ void Ice_State_PlayerBlock(void)
 
         self->position.x = playerPtr->position.x;
         self->position.y = playerPtr->position.y;
-        self->drawOrder  = playerPtr->drawOrder + 1;
+        self->drawGroup  = playerPtr->drawGroup + 1;
     }
     else {
         playerPtr->outerbox = NULL;
@@ -1234,7 +1234,7 @@ void Ice_State_PlayerBlock(void)
 
     foreach_active(Player, player)
     {
-        if (player != self->playerPtr && player->stateInput != Player_Input_P2_AI && player->state != Ice_State_FrozenPlayer
+        if (player != self->playerPtr && player->stateInput != Player_Input_P2_AI && player->state != Ice_PlayerState_Frozen
             && player->velocity.y > 0 && !player->onGround && player->position.y < self->position.y - 0x200000
             && Player_CheckBadnikTouch(player, self, &self->hitboxBlock)) {
             if (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_DROPDASH) {
@@ -1354,7 +1354,7 @@ void Ice_EditorDraw(void)
     RSDK_THIS(Ice);
 
     self->drawFX        = FX_FLIP;
-    self->drawOrder     = Zone->playerDrawLow + 1;
+    self->drawGroup     = Zone->playerDrawLow + 1;
     self->visible       = true;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;

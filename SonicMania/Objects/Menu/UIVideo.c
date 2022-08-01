@@ -29,7 +29,7 @@ void UIVideo_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 0;
+        self->drawGroup = 0;
 
         UIVideo->playing = false;
         self->state      = UIVideo_State_PlayVideo1;

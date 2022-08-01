@@ -34,7 +34,7 @@ void CPZShutter_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->active        = ACTIVE_BOUNDS;
-        self->drawOrder     = Zone->objectDrawHigh - 2;
+        self->drawGroup     = Zone->objectDrawHigh - 2;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(CPZShutter->aniFrames, 0, &self->animator, true, 0);

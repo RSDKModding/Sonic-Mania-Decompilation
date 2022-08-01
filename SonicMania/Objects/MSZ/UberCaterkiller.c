@@ -34,7 +34,7 @@ void UberCaterkiller_Draw(void)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
 
         // Draw Head
-        if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawOrder)) {
+        if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
             ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->height);
             self->scale.x            = self->bodyScales[0];
             self->scale.y            = self->bodyScales[0];
@@ -49,7 +49,7 @@ void UberCaterkiller_Draw(void)
             ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->height);
 
             self->rotation = (2 * self->bodyAngles[i] - 15) & 0x1E;
-            if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawOrder)) {
+            if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
                 self->scale.x              = self->bodyScales[1];
                 self->scale.y              = self->bodyScales[1];
                 self->bodyAnimator.frameID = self->bodyAngles[i] >> 4;
@@ -67,7 +67,7 @@ void UberCaterkiller_Draw(void)
         for (int32 i = UBERCATERKILLER_SEGMENT_COUNT - 1; i > 0; --i) {
             ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->height);
             self->rotation           = (2 * self->bodyAngles[i] - 15) & 0x1E;
-            if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawOrder)) {
+            if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
                 self->scale.x              = self->bodyScales[i];
                 self->scale.y              = self->bodyScales[i];
                 self->bodyAnimator.frameID = self->bodyAngles[i] >> 4;
@@ -82,7 +82,7 @@ void UberCaterkiller_Draw(void)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
 
         // Draw Head
-        if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawOrder)) {
+        if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
             ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->height);
             self->scale.x            = self->bodyScales[0];
             self->scale.y            = self->bodyScales[0];
@@ -102,7 +102,7 @@ void UberCaterkiller_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = false;
         self->drawFX        = FX_SCALE | FX_ROTATE | FX_FLIP;
-        self->drawOrder     = Zone->objectDrawLow - 1;
+        self->drawGroup     = Zone->objectDrawLow - 1;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
@@ -203,7 +203,7 @@ void UberCaterkiller_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
                                     if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
 #endif
-                                        Player_CheckHit(player, self);
+                                        Player_Hurt(player, self);
                                 }
                                 else if (Player_CheckBossHit(player, self)) {
                                     RSDK.PlaySfx(UberCaterkiller->sfxBumper3, false, 255);
@@ -250,7 +250,7 @@ void UberCaterkiller_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -273,7 +273,7 @@ void UberCaterkiller_HandleSegmentMoveFX(int32 segmentID)
                 sandParticles->drawFX     = FX_SCALE;
                 sandParticles->scale.x    = self->bodyScales[segmentID];
                 sandParticles->scale.y    = self->bodyScales[segmentID];
-                sandParticles->drawOrder  = self->drawOrder;
+                sandParticles->drawGroup  = self->drawGroup;
                 sandParticles->velocity.x = -0x10000;
 
                 self->bodyInAir[segmentID] = false;
@@ -293,7 +293,7 @@ void UberCaterkiller_HandleSegmentMoveFX(int32 segmentID)
             sandParticles->drawFX      = FX_SCALE;
             sandParticles->scale.x     = self->bodyScales[segmentID];
             sandParticles->scale.y     = self->bodyScales[segmentID];
-            sandParticles->drawOrder   = self->drawOrder;
+            sandParticles->drawGroup   = self->drawGroup;
             sandParticles->velocity.x  = -0x10000;
             self->bodyInAir[segmentID] = true;
         }
@@ -360,7 +360,7 @@ void UberCaterkiller_State_MoveIntoBG(void)
         explosion->drawFX     = FX_SCALE;
         explosion->scale.x    = self->bodyScales[0];
         explosion->scale.y    = self->bodyScales[0];
-        explosion->drawOrder  = Zone->objectDrawLow - 1;
+        explosion->drawGroup  = Zone->objectDrawLow - 1;
         explosion->velocity.x = -0x10000;
     }
 
@@ -402,7 +402,7 @@ void UberCaterkiller_State_MoveToTargetPos(void)
         explosion->drawFX     = FX_SCALE;
         explosion->scale.x    = self->bodyScales[0];
         explosion->scale.y    = self->bodyScales[0];
-        explosion->drawOrder  = Zone->objectDrawLow - 1;
+        explosion->drawGroup  = Zone->objectDrawLow - 1;
         explosion->velocity.x = -0x10000;
     }
 
@@ -572,7 +572,7 @@ void UberCaterkiller_State_FirstJump(void)
         explosion->drawFX    = FX_SCALE;
         explosion->scale.x   = 0x80;
         explosion->scale.y   = 0x80;
-        explosion->drawOrder = self->drawOrder + 1;
+        explosion->drawGroup = self->drawGroup + 1;
 
         if (self->jumpsRemain) {
             self->position.y = (ScreenInfo->position.y + ScreenInfo->height + 64) << 16;
@@ -689,7 +689,7 @@ void UberCaterkiller_State_Destroyed(void)
             debris->velocity.x      = 4 * RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = 4 * RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x4800;
-            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawHigh;
             debris->drawFX |= FX_SCALE;
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;

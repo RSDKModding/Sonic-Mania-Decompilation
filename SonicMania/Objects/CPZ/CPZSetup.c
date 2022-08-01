@@ -56,7 +56,7 @@ void CPZSetup_StageLoad(void)
     CPZSetup->aniTiles = RSDK.LoadSpriteSheet("CPZ/Objects.gif", SCOPE_STAGE);
 
     RSDK.SetDrawGroupProperties(0, 0, Water_DrawHook_ApplyWaterPalette);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, 0, Water_DrawHook_RemoveWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->huddrawGroup, 0, Water_DrawHook_RemoveWaterPalette);
     Water->waterPalette = 2;
 
     CPZSetup->chemLiquidPalIndex1 = 0;
@@ -161,18 +161,18 @@ void CPZSetup_StageLoad(void)
 
 void CPZSetup_BGSwitch_Act2BG(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(3)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 
 void CPZSetup_BGSwitch_Act1BG(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(3)->drawGroup[BGSwitch->screenID] = 0;
 }
 
 void CPZSetup_StageFinish_EndAct1(void)

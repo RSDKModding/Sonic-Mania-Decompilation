@@ -186,7 +186,7 @@ void OOZSetup_StaticUpdate(void)
             if (RSDK.GetTileFlags(tile, ring->collisionPlane) == OOZ_TFLAGS_OILPOOL) {
                 ring->velocity.x -= ring->velocity.x >> 4;
                 ring->velocity.y = 0x2800;
-                ring->drawOrder  = Zone->objectDrawHigh;
+                ring->drawGroup  = Zone->objectDrawHigh;
                 if (ring->alpha > 0x40) {
                     ring->alpha     = 0x40;
                     ring->inkEffect = INK_ALPHA;
@@ -208,7 +208,7 @@ void OOZSetup_Draw(void)
     RSDK_THIS(OOZSetup);
 
 #if MANIA_USE_PLUS
-    if (SceneInfo->currentDrawGroup != self->drawOrder) {
+    if (SceneInfo->currentDrawGroup != self->drawGroup) {
         foreach_active(Player, player)
         {
             if ((1 << RSDK.GetEntitySlot(player)) & OOZSetup->activePlayers)
@@ -230,7 +230,7 @@ void OOZSetup_Create(void *data)
     self->active    = ACTIVE_ALWAYS;
     self->visible   = true;
     self->drawFX    = FX_ROTATE;
-    self->drawOrder = self->type ? 14 : Zone->objectDrawLow;
+    self->drawGroup = self->type ? 14 : Zone->objectDrawLow;
 }
 
 void OOZSetup_StageLoad(void)
@@ -409,7 +409,7 @@ void OOZSetup_HandleActiveFlames(void)
                 self->position = OOZSetup->flamePositions[i];
                 if (Player_CheckCollisionTouch(player, self, &Sol->hitboxBadnik)) {
                     self->position = storePos;
-                    Player_CheckElementalHit(player, self, SHIELD_FIRE);
+                    Player_ElementHurt(player, self, SHIELD_FIRE);
                 }
             }
         }
@@ -442,7 +442,7 @@ bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle)
                 OOZSetup->flameCount = i + 1;
 
             OOZSetup->flameTimers[pos]                                                                                   = 0xF0;
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y - 0x60000)->drawOrder = self->drawOrder;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y - 0x60000)->drawGroup = self->drawGroup;
 
             return true;
         }

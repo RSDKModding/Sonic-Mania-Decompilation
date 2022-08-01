@@ -32,7 +32,7 @@ void RollerMKII_Create(void *data)
     RSDK_THIS(RollerMKII);
 
     self->visible         = true;
-    self->drawOrder       = Zone->objectDrawLow;
+    self->drawGroup       = Zone->objectDrawLow;
     self->startPos        = self->position;
     self->startDir        = self->direction;
     self->drawFX          = FX_FLIP;
@@ -191,7 +191,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                     self->direction     = player->position.x < self->position.x;
                 }
                 else {
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 }
 #if MANIA_USE_PLUS
             }
@@ -455,7 +455,7 @@ void RollerMKII_State_Rolling_Air(void)
                 dust->state = Dust_State_DustPuff;
                 dust->position.y += hitbox->bottom << 16;
                 dust->direction = self->direction;
-                dust->drawOrder = self->drawOrder;
+                dust->drawGroup = self->drawGroup;
                 dust->position.x += self->direction ? 0x90000 : -0x90000;
             }
             else if (self->velocity.y <= 0x10000) {

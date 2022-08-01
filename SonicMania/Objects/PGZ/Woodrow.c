@@ -33,7 +33,7 @@ void Woodrow_Create(void *data)
 
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->objectDrawLow - 1;
+    self->drawGroup     = Zone->objectDrawLow - 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -51,7 +51,7 @@ void Woodrow_Create(void *data)
             self->state = Woodrow_State_Bomb;
         }
         else {
-            self->drawOrder = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawHigh;
             self->bombCount = 0;
 
             int32 slot               = SceneInfo->entitySlot + 1;
@@ -134,7 +134,7 @@ void Woodrow_CheckPlayerCollisions(void)
         if (Player_CheckBadnikTouch(player, self, &Woodrow->hitboxBadnik)) {
             Player_CheckBadnikBreak(player, self, true);
         }
-        else if (player->state != Ice_State_FrozenPlayer) {
+        else if (player->state != Ice_PlayerState_Frozen) {
             if (Player_CheckCollisionTouch(player, self, &Woodrow->hitboxBombRange)) {
                 if (self->rangeMask == 1)
                     self->bombFallDelay = 30;
@@ -330,7 +330,7 @@ void Woodrow_State_Bomb(void)
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
             RSDK.PlaySfx(Woodrow->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
             destroyEntity(self);
         }
 
@@ -342,10 +342,10 @@ void Woodrow_State_Bomb(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 RSDK.PlaySfx(Woodrow->sfxExplosion, false, 0xFF);
 
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
                 destroyEntity(self);
                 foreach_break;
             }
@@ -402,11 +402,11 @@ void Woodrow_EditorDraw(void)
     RSDK_THIS(Woodrow);
 
     if (self->type == WOODROW_BOMB) {
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 2, &self->animator, true, 0);
     }
     else {
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, true, 0);
     }
 

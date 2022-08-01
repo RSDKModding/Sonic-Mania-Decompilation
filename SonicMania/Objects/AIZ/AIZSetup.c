@@ -34,12 +34,12 @@ void AIZSetup_StaticUpdate(void)
             AIZSetup->background2->scrollPos = 0x1000000;
 
         if (ScreenInfo->position.x <= 8704) {
-            AIZSetup->background2->drawLayer[0] = 0;
-            AIZSetup->background3->drawLayer[0] = DRAWGROUP_COUNT;
+            AIZSetup->background2->drawGroup[0] = 0;
+            AIZSetup->background3->drawGroup[0] = DRAWGROUP_COUNT;
         }
         else {
-            AIZSetup->background2->drawLayer[0] = DRAWGROUP_COUNT;
-            AIZSetup->background3->drawLayer[0] = 0;
+            AIZSetup->background2->drawGroup[0] = DRAWGROUP_COUNT;
+            AIZSetup->background3->drawGroup[0] = 0;
         }
 #if MANIA_USE_PLUS
     }
@@ -213,7 +213,7 @@ void AIZSetup_StageLoad(void)
     BGSwitch->layerIDs[3]                   = AIZ_BG_JUNGLE;
 
     RSDK.SetDrawGroupProperties(0, false, Water_DrawHook_ApplyWaterPalette);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_DrawHook_RemoveWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->huddrawGroup, false, Water_DrawHook_RemoveWaterPalette);
     Water->waterPalette = 1;
 #endif
 }
@@ -221,14 +221,14 @@ void AIZSetup_StageLoad(void)
 #if MANIA_USE_PLUS
 void AIZSetup_BGSwitch_Jungle(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 
 void AIZSetup_BGSwitch_Sky(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
 }
 #endif
 
@@ -285,7 +285,7 @@ void AIZSetup_SetupObjects(void)
     foreach_all(Platform, platform)
     {
         if (!platform->frameID) {
-            platform->drawOrder = Zone->objectDrawHigh - 1;
+            platform->drawGroup = Zone->objectDrawHigh - 1;
             AIZSetup->platform  = platform;
             foreach_break;
         }
@@ -599,12 +599,12 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawOrder = Zone->playerDrawHigh;
+        fxRuby->drawGroup = Zone->playerDrawHigh;
         AIZSetup->fxRuby  = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
-        player1->drawOrder = Zone->playerDrawHigh + 1;
+        player1->drawGroup = Zone->playerDrawHigh + 1;
         if (player2->classID == Player->classID)
-            player2->drawOrder = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawHigh + 1;
     }
 
     if (!host->values[0]) {
@@ -794,7 +794,7 @@ bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
         claw->position.x         = 0x2F9C0000;
         ruby->sfx                = 0;
         PhantomRuby_SetupFlash(ruby);
-        player1->drawOrder = Zone->playerDrawHigh + 2;
+        player1->drawGroup = Zone->playerDrawHigh + 2;
         RSDK.PlaySfx(AIZSetup->sfxHeliWoosh, false, 0);
     }
 
@@ -815,7 +815,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         Music_TransitionTrack(TRACK_EGGMAN1, 1.0);
 
         EntityFXRuby *fxRuby     = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawOrder        = Zone->playerDrawHigh;
+        fxRuby->drawGroup        = Zone->playerDrawHigh;
         AIZSetup->fxRuby         = fxRuby;
         player1->velocity.x      = 0x20000;
         player1->velocity.y      = -0x40000;
@@ -823,10 +823,10 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         player1->nextAirState    = StateMachine_None;
         player1->state           = Player_State_Static;
         player1->onGround        = false;
-        player1->drawOrder       = Zone->playerDrawHigh + 1;
+        player1->drawGroup       = Zone->playerDrawHigh + 1;
 
         if (player2->classID == Player->classID)
-            player2->drawOrder = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawHigh + 1;
 
         Camera_ShakeScreen(0, 4, 4);
     }

@@ -51,7 +51,7 @@ void MagSpikeBall_Update(void)
 #if MANIA_USE_PLUS
             if (player->onGround && (self->velocity.y > 0 || !Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer)))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -75,7 +75,7 @@ void MagSpikeBall_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
 
     RSDK.SetSpriteAnimation(MagSpikeBall->aniFrames, 0, &self->animator, true, 0);
 }

@@ -32,7 +32,7 @@ void SSZ2Setup_StaticUpdate(void)
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = player->velocity.x < 0;
-                debris->drawOrder  = Zone->objectDrawLow;
+                debris->drawGroup  = Zone->objectDrawLow;
                 debris->position.x = player->position.x;
                 debris->position.y = player->position.y + (hitbox->bottom << 16);
                 debris->timer      = 30;

@@ -43,7 +43,7 @@ void KleptoMobile_Create(void *data)
             self->updateRange.x   = 0x800000;
             self->updateRange.y   = 0x800000;
             self->visible         = true;
-            self->drawOrder       = Zone->objectDrawLow;
+            self->drawGroup       = Zone->objectDrawLow;
             self->drawFX          = FX_FLIP;
             self->explosionVolume = 0x200;
 
@@ -86,7 +86,7 @@ void KleptoMobile_Create(void *data)
                         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 10, &self->finger2Animator, true, 0);
                     }
                     else {
-                        self->drawOrder = Zone->playerDrawLow;
+                        self->drawGroup = Zone->playerDrawLow;
                         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 3, &self->orbAnimator, true, 0);
                         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 4, &self->handAnimator, true, 0);
                         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 5, &self->finger1Animator, true, 0);
@@ -236,7 +236,7 @@ void KleptoMobile_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -793,7 +793,7 @@ void KleptoMobile_CheckPlayerCollisions_Arm(void)
                 }
             }
             else {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
         }
     }

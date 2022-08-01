@@ -128,13 +128,13 @@ void TitleLogo_Create(void *data)
 #endif
                 self->visible   = false;
                 self->active    = ACTIVE_NEVER;
-                self->drawOrder = 4;
+                self->drawGroup = 4;
                 break;
 
             default:
                 self->active    = ACTIVE_NORMAL;
                 self->visible   = true;
-                self->drawOrder = 4;
+                self->drawGroup = 4;
                 break;
         }
     }

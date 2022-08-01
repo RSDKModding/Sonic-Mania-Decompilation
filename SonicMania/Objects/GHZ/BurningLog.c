@@ -24,7 +24,7 @@ void BurningLog_Update(void)
                 Player_CheckCollisionPlatform(player, self, &BurningLog->hitboxPlatform);
 
             if (Player_CheckCollisionTouch(player, self, &BurningLog->hitboxFlame)) {
-                Player_CheckElementalHit(player, self, SHIELD_FIRE);
+                Player_ElementHurt(player, self, SHIELD_FIRE);
             }
         }
     }
@@ -50,7 +50,7 @@ void BurningLog_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x10000000;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
 
     if (data)
         self->timer = voidToInt(data);

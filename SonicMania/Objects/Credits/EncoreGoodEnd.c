@@ -266,7 +266,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
             self->direction = FLIP_Y;
         }
         else {
-            EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->drawOrder = Zone->playerDrawHigh;
+            EncoreGoodEnd->decorations[E_END_ICECREAM_CONE]->drawGroup = Zone->playerDrawHigh;
             self->direction                                            = FLIP_NONE;
         }
 
@@ -286,7 +286,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
             self->direction = FLIP_Y;
         }
         else {
-            EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->drawOrder = Zone->playerDrawHigh;
+            EncoreGoodEnd->decorations[E_END_ICECREAM_PINK]->drawGroup = Zone->playerDrawHigh;
             self->direction                                            = FLIP_NONE;
         }
 
@@ -306,7 +306,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
             self->direction = FLIP_Y;
         }
         else {
-            EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->drawOrder = Zone->playerDrawHigh;
+            EncoreGoodEnd->decorations[E_END_ICECREAM_GREEN]->drawGroup = Zone->playerDrawHigh;
             self->direction                                             = FLIP_NONE;
         }
 
@@ -326,7 +326,7 @@ void EncoreGoodEnd_StatePlayer_EndingSonic(void)
             self->direction = FLIP_Y;
         }
         else {
-            EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->drawOrder = Zone->playerDrawHigh;
+            EncoreGoodEnd->decorations[E_END_ICECREAM_PINK2]->drawGroup = Zone->playerDrawHigh;
             self->direction                                             = FLIP_NONE;
         }
 
@@ -367,14 +367,14 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
         player1->position.x = 0x300000;
         player1->velocity.x = 0x30000;
         player1->groundVel  = 0x30000;
-        player1->drawOrder  = Zone->playerDrawHigh;
+        player1->drawGroup  = Zone->playerDrawHigh;
         player1->state      = Player_State_Ground;
 
         if (player2->classID == Player->classID) {
             player2->position.x = -0x800000;
             player2->velocity.x = 0x30000;
             player2->groundVel  = 0x30000;
-            player2->drawOrder  = Zone->playerDrawHigh;
+            player2->drawGroup  = Zone->playerDrawHigh;
             player2->state      = Player_State_Ground;
             player2->stateInput = StateMachine_None;
         }
@@ -457,13 +457,13 @@ bool32 EncoreGoodEnd_Cutscene_KingAppear(EntityCutsceneSeq *host)
             {
                 label->active    = ACTIVE_NORMAL;
                 label->state     = UICreditsText_State_SetupCharPos;
-                label->drawOrder = Zone->hudDrawOrder;
+                label->drawGroup = Zone->huddrawGroup;
             }
 
             EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
             fxFade->speedIn      = 256;
             fxFade->speedOut     = 64;
-            fxFade->drawOrder    = Zone->objectDrawHigh;
+            fxFade->drawGroup    = Zone->objectDrawHigh;
             RSDK.PlaySfx(EncoreGoodEnd->sfxSnap, false, 255);
             return true;
         }
@@ -480,7 +480,7 @@ bool32 EncoreGoodEnd_Cutscene_ThanksForPlaying(EntityCutsceneSeq *host)
         foreach_active(Decoration, decor)
         {
             if (decor->type >= 25) {
-                decor->drawOrder = Zone->objectDrawHigh + 1;
+                decor->drawGroup = Zone->objectDrawHigh + 1;
 
                 if (decor->position.y >= self->position.y)
                     decor->position.y -= 0x20000;

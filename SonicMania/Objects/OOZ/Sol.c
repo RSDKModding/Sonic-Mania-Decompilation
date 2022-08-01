@@ -37,7 +37,7 @@ void Sol_Create(void *data)
     RSDK_THIS(Sol);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX    = FX_FLIP;
 
     if (data) {
@@ -157,7 +157,7 @@ void Sol_HandlePlayerHurt(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Sol->hitboxOrb)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 }

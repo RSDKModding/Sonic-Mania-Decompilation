@@ -131,7 +131,7 @@ void GasPlatform_State_Popped(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &GasPlatform->hitboxGas))
-                Player_CheckElementalHit(player, self, SHIELD_FIRE);
+                Player_ElementHurt(player, self, SHIELD_FIRE);
         }
 
         self->position.x = storeX;
@@ -184,7 +184,7 @@ void GasPlatform_State_SpringCooldown(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &GasPlatform->hitboxGas))
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
     }
 
     self->position.x = storeX;

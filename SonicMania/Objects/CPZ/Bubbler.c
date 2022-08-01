@@ -37,7 +37,7 @@ void Bubbler_Create(void *data)
     RSDK_THIS(Bubbler);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -120,7 +120,7 @@ void Bubbler_HandleProjectileInteractions(void)
         }
 
         if (Player_CheckCollisionTouch(player, self, &Bubbler->hitboxProjectile))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 

@@ -40,7 +40,7 @@ void UFO_Message_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 12;
+        self->drawGroup = 12;
         self->state     = UFO_Message_State_Appear;
 
         int32 type = voidToInt(data);

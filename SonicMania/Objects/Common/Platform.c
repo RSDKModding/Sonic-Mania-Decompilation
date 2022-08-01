@@ -155,14 +155,14 @@ void Platform_Create(void *data)
     self->amplitude.y >>= 10;
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawLow + 1;
     self->centerPos = self->position;
     self->drawPos   = self->position;
     RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &self->animator, true, 0);
     self->animator.frameID = self->frameID;
 
     if (!SceneInfo->inEditor && RSDK.GetFrameID(&self->animator) == 'l')
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
     switch (self->type) {
         default:
@@ -604,17 +604,12 @@ void Platform_State_DoorSlide(void)
     foreach_active(Player, player)
     {
         if (!player->sidekick) {
-            int32 angle = (uint8)((uint8)(self->angle) + -0x80);
-            int32 xOff  = (player->position.x - self->centerPos.x) >> 8;
-            int32 yOff  = (player->position.y - self->centerPos.y) >> 8;
-            RSDK.Sin256(angle);
-            RSDK.Cos256(angle);
-
-            int32 cy = (yOff * RSDK.Cos256(angle)) - xOff * RSDK.Sin256(angle);
+            Vector2 pivotPos = player->position;
+            Zone_RotateOnPivot(&pivotPos, &self->centerPos, ((self->angle & 0xFF) + 0x80) & 0xFF);
 
             if (abs(player->position.x - self->centerPos.x) <= 0x4000000) {
-                if (abs(player->position.y - self->centerPos.y) <= 0x4000000 && (cy + self->centerPos.y) < self->centerPos.y) {
-                    if (self->centerPos.y - (cy + self->centerPos.y) < 0x1000000)
+                if (abs(player->position.y - self->centerPos.y) <= 0x4000000) {
+                    if (pivotPos.y < self->centerPos.y && self->centerPos.y - pivotPos.y < 0x1000000)
                         activated = true;
                 }
             }
@@ -1058,7 +1053,7 @@ void Platform_State_Push_Fall(void)
     self->velocity.x = 0;
 }
 
-void Platform_State_Controlled(void)
+void Platform_State_Path(void)
 {
     RSDK_THIS(Platform);
 
@@ -1183,7 +1178,7 @@ void Platform_State_PathReact(void)
         EntityPlatformControl *controller = RSDK_GET_ENTITY(slot, PlatformControl);
         if (controller->classID == PlatformControl->classID) {
             controller->setActive = true;
-            self->state           = Platform_State_Controlled;
+            self->state           = Platform_State_Path;
             self->velocity.x      = 0;
             self->velocity.y      = 0;
         }
@@ -1192,7 +1187,7 @@ void Platform_State_PathReact(void)
                 controller = RSDK_GET_ENTITY(slot--, PlatformControl);
                 if (controller->classID == PlatformControl->classID) {
                     controller->setActive = true;
-                    self->state           = Platform_State_Controlled;
+                    self->state           = Platform_State_Path;
                     self->velocity.x      = 0;
                     self->velocity.y      = 0;
                     break;
@@ -1369,30 +1364,7 @@ void Platform_Collision_Solid(void)
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP:
-                self->stood = true;
-                if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                        self->timer = 1;
-                    else
-#endif
-                        self->timer = 30;
-                }
-
-                self->stoodPlayers |= 1 << playerID;
-
-                if (Platform->stoodPos[playerID].x) {
-                    player->position.x = Platform->stoodPos[playerID].x;
-                    player->position.y = Platform->stoodPos[playerID].y;
-                }
-                else {
-                    Platform->stoodPos[playerID].x = player->position.x;
-                    Platform->stoodPos[playerID].y = player->position.y;
-                }
-
-                player->position.x += self->collisionOffset.x;
-                player->position.y += self->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                Platform_HandleStood(self, player, playerID, stoodPlayers);
 
                 if (self->velocity.y <= 0)
                     player->collisionFlagV |= 1;
@@ -1448,7 +1420,7 @@ void Platform_Collision_Hurt(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, self->type == PLATFORM_CIRCULAR, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -1470,29 +1442,7 @@ void Platform_Collision_Solid_Hurt_Bottom(void)
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP:
-                self->stood = true;
-                self->stoodPlayers |= 1 << playerID;
-                if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                        self->timer = 1;
-                    else
-#endif
-                        self->timer = 30;
-                }
-
-                if (Platform->stoodPos[playerID].x) {
-                    player->position.x = Platform->stoodPos[playerID].x;
-                    player->position.y = Platform->stoodPos[playerID].y;
-                }
-                else {
-                    Platform->stoodPos[playerID].x = player->position.x;
-                    Platform->stoodPos[playerID].y = player->position.y;
-                }
-
-                player->position.x += self->collisionOffset.x;
-                player->position.y += self->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                Platform_HandleStood(self, player, playerID, 0xFF);
 
                 if (self->velocity.y <= 0)
                     player->collisionFlagV |= 1;
@@ -1533,7 +1483,7 @@ void Platform_Collision_Solid_Hurt_Bottom(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x400, 0, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 break;
 
             default: break;
@@ -1555,30 +1505,7 @@ void Platform_Collision_Solid_Hurt_Sides(void)
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP:
-                self->stood = true;
-                self->stoodPlayers |= 1 << playerID;
-
-                if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                        self->timer = 1;
-                    else
-#endif
-                        self->timer = 30;
-                }
-
-                if (Platform->stoodPos[playerID].x) {
-                    player->position.x = Platform->stoodPos[playerID].x;
-                    player->position.y = Platform->stoodPos[playerID].y;
-                }
-                else {
-                    Platform->stoodPos[playerID].x = player->position.x;
-                    Platform->stoodPos[playerID].y = player->position.y;
-                }
-
-                player->position.x += self->collisionOffset.x;
-                player->position.y += self->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                Platform_HandleStood(self, player, playerID, 0xFF);
 
                 if (self->velocity.y <= 0)
                     player->collisionFlagV |= 1;
@@ -1589,7 +1516,7 @@ void Platform_Collision_Solid_Hurt_Sides(void)
 #if MANIA_USE_PLUS
                     Player_CheckMightyUnspin(player, 1024, 0, &player->uncurlTimer) ||
 #endif
-                    Player_CheckHit(player, self)) {
+                    Player_Hurt(player, self)) {
                     player->velocity.x += self->velocity.x;
                 }
 
@@ -1613,7 +1540,7 @@ void Platform_Collision_Solid_Hurt_Sides(void)
 #if MANIA_USE_PLUS
                     Player_CheckMightyUnspin(player, 0x400, 0, &player->uncurlTimer) ||
 #endif
-                    Player_CheckHit(player, self)) {
+                    Player_Hurt(player, self)) {
                     player->velocity.x += self->velocity.x;
                 }
 
@@ -1719,23 +1646,7 @@ void Platform_Collision_Tiles(void)
             }
 
             if (Player_CheckCollisionTouch(player, self, &hitbox) && (player->onGround || isClimbing)) {
-                self->stoodPlayers |= 1 << playerID;
-
-                if (!player->sidekick) {
-                    self->stood = true;
-                    if (self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                        if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                            self->timer = 1;
-                        else
-#endif
-                            self->timer = 30;
-                    }
-                }
-
-                player->position.x += self->collisionOffset.x;
-                player->position.y += self->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                Platform_HandleStood_Tiles(self, player, playerID);
             }
         }
     }
@@ -1756,87 +1667,7 @@ void Platform_Collision_Sticky(void)
 
         int32 side = Player_CheckCollisionBox(player, self, solidHitbox);
 
-        bool32 isStuck = false;
-        if ((self->collision == PLATFORM_C_SOLID_STICKY || self->collision == side + PLATFORM_C_SOLID_STICKY) && side)
-            isStuck = true;
-
-        if (player->state != Player_State_Static && isStuck) {
-            player->state           = Player_State_Static;
-            player->nextGroundState = StateMachine_None;
-            player->nextAirState    = StateMachine_None;
-            player->velocity.x      = 0;
-            player->velocity.y      = 0;
-            player->groundVel       = 0;
-            player->animator.speed  = 0;
-
-            switch (side) {
-                case C_TOP: player->angle = 0x00; break;
-
-                case C_LEFT:
-                    player->angle    = 0xC0;
-                    player->onGround = false;
-                    break;
-
-                case C_RIGHT: player->angle = 0x40; break;
-
-                case C_BOTTOM: player->angle = 0x80; break;
-
-                default: break;
-            }
-
-            player->tileCollisions = false;
-            if (!player->sidekick) {
-                self->stood = true;
-                if (self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                        self->timer = 1;
-                    else
-#endif
-                        self->timer = 30;
-                }
-            }
-
-            self->stoodPlayers |= 1 << playerID;
-        }
-        else if ((1 << playerID) & self->stoodPlayers) {
-            if (player->state == Player_State_Static) {
-                if (Platform->stoodPos[playerID].x) {
-                    player->position.x = Platform->stoodPos[playerID].x;
-                    player->position.y = Platform->stoodPos[playerID].y;
-                }
-                else {
-                    Platform->stoodPos[playerID].x = player->position.x;
-                    Platform->stoodPos[playerID].y = player->position.y;
-                }
-
-                player->position.x += self->collisionOffset.x;
-                player->position.y += self->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
-
-                if (player->jumpPress) {
-                    player->tileCollisions = true;
-                    Player_Action_Jump(player);
-                }
-            }
-            else {
-                self->stoodPlayers = self->stoodPlayers & ~(1 << playerID);
-            }
-        }
-        else if (side == C_TOP) {
-            if (Platform->stoodPos[playerID].x) {
-                player->position.x = Platform->stoodPos[playerID].x;
-                player->position.y = Platform->stoodPos[playerID].y;
-            }
-            else {
-                Platform->stoodPos[playerID].x = player->position.x;
-                Platform->stoodPos[playerID].y = player->position.y;
-            }
-
-            player->position.x += self->collisionOffset.x;
-            player->position.y += self->collisionOffset.y;
-            player->position.y &= 0xFFFF0000;
-        }
+        Platform_HandleStood_Sticky(self, player, playerID, side);
     }
 }
 void Platform_Collision_Solid_Hurt_Top(void)
@@ -1854,34 +1685,12 @@ void Platform_Collision_Solid_Hurt_Top(void)
 
         switch (Player_CheckCollisionBox(player, self, solidHitbox)) {
             case C_TOP:
-                self->stood = true;
-                self->stoodPlayers |= 1 << playerID;
-                if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                        self->timer = 1;
-                    else
-#endif
-                        self->timer = 30;
-                }
-
-                if (Platform->stoodPos[playerID].x) {
-                    player->position.x = Platform->stoodPos[playerID].x;
-                    player->position.y = Platform->stoodPos[playerID].y;
-                }
-                else {
-                    Platform->stoodPos[playerID].x = player->position.x;
-                    Platform->stoodPos[playerID].y = player->position.y;
-                }
-
-                player->position.x += self->collisionOffset.x;
-                player->position.y += self->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                Platform_HandleStood(self, player, playerID, 0xFF);
 
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x400, 0, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
 
                 if (self->velocity.y <= 0)
                     player->collisionFlagV |= 1;
@@ -1941,30 +1750,7 @@ void Platform_Collision_Platform(void)
             player->velocity.y -= self->collisionOffset.y;
 
         if (Player_CheckCollisionPlatform(player, self, platformHitbox)) {
-            self->stood = true;
-            if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                    self->timer = 1;
-                else
-#endif
-                    self->timer = 30;
-            }
-
-            self->stoodPlayers |= 1 << playerID;
-
-            if (Platform->stoodPos[playerID].x) {
-                player->position.x = Platform->stoodPos[playerID].x;
-                player->position.y = Platform->stoodPos[playerID].y;
-            }
-            else {
-                Platform->stoodPos[playerID].x = player->position.x;
-                Platform->stoodPos[playerID].y = player->position.y;
-            }
-
-            player->position.x += self->collisionOffset.x;
-            player->position.y += self->collisionOffset.y;
-            player->position.y &= 0xFFFF0000;
+            Platform_HandleStood(self, player, playerID, stoodPlayers);
         }
         else {
             player->velocity.y = yVel;
@@ -1992,52 +1778,10 @@ void Platform_Collision_Solid_Barrel(void)
 #if MANIA_USE_PLUS
                 if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
 #endif
-                    if (!((1 << playerID) & stoodPlayers)) {
-                        player->state           = Player_State_Static;
-                        player->nextGroundState = StateMachine_None;
-                        player->nextAirState    = StateMachine_None;
-                        player->velocity.x      = 0;
-                        player->velocity.y      = 0;
-                        player->groundVel       = 0;
-                        if (self->classID == Platform->classID)
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
-                        player->animator.speed = 64;
-                        player->direction      = FLIP_NONE;
-                        if (!player->sidekick && self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                            if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                                self->timer = 1;
-                            else
-#endif
-                                self->timer = 30;
-                        }
-                    }
 
-                    self->stoodPlayers |= 1 << playerID;
+                    Platform_HandleStood_Barrel(self, player, playerID, stoodPlayers);
 
-                    if (Platform->stoodPos[playerID].x) {
-                        player->position.x = Platform->stoodPos[playerID].x;
-                        player->position.y = Platform->stoodPos[playerID].y;
-                    }
-                    else {
-                        Platform->stoodPos[playerID].x = player->position.x;
-                        Platform->stoodPos[playerID].y = player->position.y;
-                    }
-
-                    if ((player->position.x ^ self->position.x) & 0xFFFF0000) {
-                        if (player->position.x >= self->position.x)
-                            player->position.x -= 0x10000;
-                        else
-                            player->position.x += 0x10000;
-                    }
-
-                    player->position.x += self->collisionOffset.x;
-                    player->position.y += self->collisionOffset.y;
-                    player->position.y &= 0xFFFF0000;
-
-                    if (player->jumpPress)
-                        Player_Action_Jump(player);
-                    else if (self->velocity.y <= 0)
+                    if (self->velocity.y <= 0)
                         player->collisionFlagV |= 1;
 #if MANIA_USE_PLUS
                 }
@@ -2113,57 +1857,10 @@ void Platform_Collision_Solid_Hold(void)
 #if MANIA_USE_PLUS
                 if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
 #endif
-                    if (!((1 << playerID) & stoodPlayers)) {
-                        player->state           = Player_State_Static;
-                        player->nextGroundState = StateMachine_None;
-                        player->nextAirState    = StateMachine_None;
-                        player->velocity.x      = 0;
-                        player->velocity.y      = 0;
-                        player->groundVel       = 0;
 
-                        if (self->classID == Platform->classID)
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, false, 0);
+                    Platform_HandleStood_Hold(self, player, playerID, stoodPlayers);
 
-                        player->animator.speed = 64;
-                        player->direction      = FLIP_X;
-                        if (!player->sidekick) {
-                            self->stood = true;
-                            if (self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                                    self->timer = 1;
-                                else
-#endif
-                                    self->timer = 30;
-                            }
-                        }
-                    }
-
-                    self->stoodPlayers |= 1 << playerID;
-
-                    if (Platform->stoodPos[playerID].x) {
-                        player->position.x = Platform->stoodPos[playerID].x;
-                        player->position.y = Platform->stoodPos[playerID].y;
-                    }
-                    else {
-                        Platform->stoodPos[playerID].x = player->position.x;
-                        Platform->stoodPos[playerID].y = player->position.y;
-                    }
-
-                    if ((player->position.x ^ self->position.x) & 0xFFFF0000) {
-                        if (player->position.x >= self->position.x)
-                            player->position.x -= 0x10000;
-                        else
-                            player->position.x += 0x10000;
-                    }
-
-                    player->position.x += self->collisionOffset.x;
-                    player->position.y += self->collisionOffset.y;
-                    player->position.y &= 0xFFFF0000;
-
-                    if (player->jumpPress)
-                        Player_Action_Jump(player);
-                    else if (self->velocity.y <= 0)
+                    if (self->velocity.y <= 0)
                         player->collisionFlagV |= 1;
 #if MANIA_USE_PLUS
                 }
@@ -2214,7 +1911,6 @@ void Platform_Collision_None(void)
 {
     // hehe
 }
-
 void Platform_Collision_Solid_NoCrush(void)
 {
     RSDK_THIS(Platform);
@@ -2235,32 +1931,7 @@ void Platform_Collision_Solid_NoCrush(void)
             default:
             case C_NONE: break;
 
-            case C_TOP:
-                self->stood = true;
-                if (!((1 << playerID) & stoodPlayers) && !player->sidekick && self->state == Platform_State_Fall && !self->timer) {
-#if MANIA_USE_PLUS
-                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                        self->timer = 1;
-                    else
-#endif
-                        self->timer = 30;
-                }
-
-                self->stoodPlayers |= 1 << playerID;
-
-                if (Platform->stoodPos[playerID].x) {
-                    player->position.x = Platform->stoodPos[playerID].x;
-                    player->position.y = Platform->stoodPos[playerID].y;
-                }
-                else {
-                    Platform->stoodPos[playerID].x = player->position.x;
-                    Platform->stoodPos[playerID].y = player->position.y;
-                }
-
-                player->position.x += self->collisionOffset.x;
-                player->position.y += self->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
-                break;
+            case C_TOP: Platform_HandleStood(self, player, playerID, stoodPlayers); break;
 
             case C_LEFT:
                 if (player->onGround && player->right)
@@ -2288,6 +1959,206 @@ void Platform_Collision_Solid_NoCrush(void)
 
             case C_BOTTOM: break;
         }
+    }
+}
+
+void Platform_HandleStood(EntityPlatform *self, EntityPlayer *player, int32 playerID, int32 stoodPlayers)
+{
+    self->stood = true;
+
+    // if stoodPlayers is 0xFF thats the "ignore stoodPlayers" flag
+    bool32 isStood = ((1 << playerID) & stoodPlayers) != 0;
+    isStood &= stoodPlayers != 0xFF;
+
+    if (!isStood && !player->sidekick && self->state == Platform_State_Fall && !self->timer) {
+#if MANIA_USE_PLUS
+        if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+            self->timer = 1;
+        else
+#endif
+            self->timer = 30;
+    }
+
+    self->stoodPlayers |= 1 << playerID;
+
+    if (Platform->stoodPos[playerID].x) {
+        player->position.x = Platform->stoodPos[playerID].x;
+        player->position.y = Platform->stoodPos[playerID].y;
+    }
+    else {
+        Platform->stoodPos[playerID].x = player->position.x;
+        Platform->stoodPos[playerID].y = player->position.y;
+    }
+
+    player->position.x += self->collisionOffset.x;
+    player->position.y += self->collisionOffset.y;
+    player->position.y &= 0xFFFF0000;
+}
+void Platform_HandleStood_Tiles(EntityPlatform *self, EntityPlayer *player, int32 playerID)
+{
+    if (!player->sidekick) {
+        self->stood = true;
+        if (self->state == Platform_State_Fall && !self->timer) {
+#if MANIA_USE_PLUS
+            if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                self->timer = 1;
+            else
+#endif
+                self->timer = 30;
+        }
+    }
+
+    self->stoodPlayers |= 1 << playerID;
+
+    player->position.x += self->collisionOffset.x;
+    player->position.y += self->collisionOffset.y;
+    player->position.y &= 0xFFFF0000;
+}
+void Platform_HandleStood_Hold(EntityPlatform *self, EntityPlayer *player, int32 playerID, int32 stoodPlayers)
+{
+    if (!((1 << playerID) & stoodPlayers)) {
+        player->state           = Player_State_Static;
+        player->nextGroundState = StateMachine_None;
+        player->nextAirState    = StateMachine_None;
+        player->velocity.x      = 0;
+        player->velocity.y      = 0;
+        player->groundVel       = 0;
+
+        if (self->classID == Platform->classID)
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, false, 0);
+
+        player->animator.speed = 64;
+        player->direction      = FLIP_X;
+        if (!player->sidekick) {
+            self->stood = true;
+        }
+    }
+
+    bool32 stoodStore = self->stood;
+    Platform_HandleStood(self, player, playerID, stoodPlayers);
+    self->stood = stoodStore;
+
+    if ((player->position.x ^ self->position.x) & 0xFFFF0000) {
+        if (player->position.x >= self->position.x)
+            player->position.x -= 0x10000;
+        else
+            player->position.x += 0x10000;
+    }
+
+    if (player->jumpPress)
+        Player_Action_Jump(player);
+}
+void Platform_HandleStood_Barrel(EntityPlatform *self, EntityPlayer *player, int32 playerID, int32 stoodPlayers)
+{
+    if (!((1 << playerID) & stoodPlayers)) {
+        player->state           = Player_State_Static;
+        player->nextGroundState = StateMachine_None;
+        player->nextAirState    = StateMachine_None;
+        player->velocity.x      = 0;
+        player->velocity.y      = 0;
+        player->groundVel       = 0;
+
+        if (self->classID == Platform->classID)
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
+
+        player->animator.speed = 64;
+        player->direction      = FLIP_NONE;
+    }
+
+    Platform_HandleStood(self, player, playerID, stoodPlayers);
+
+    if ((player->position.x ^ self->position.x) & 0xFFFF0000) {
+        if (player->position.x >= self->position.x)
+            player->position.x -= 0x10000;
+        else
+            player->position.x += 0x10000;
+    }
+
+    if (player->jumpPress)
+        Player_Action_Jump(player);
+}
+void Platform_HandleStood_Sticky(EntityPlatform* self, EntityPlayer* player, int32 playerID, uint8 cSide) {
+
+    bool32 isStuck = false;
+    if ((self->collision == PLATFORM_C_SOLID_STICKY || self->collision == PLATFORM_C_SOLID_STICKY + cSide) && cSide)
+        isStuck = true;
+
+    if (player->state != Player_State_Static && isStuck) {
+        player->state           = Player_State_Static;
+        player->nextGroundState = StateMachine_None;
+        player->nextAirState    = StateMachine_None;
+        player->velocity.x      = 0;
+        player->velocity.y      = 0;
+        player->groundVel       = 0;
+        player->animator.speed  = 0;
+
+        switch (cSide) {
+            case C_TOP: player->angle = 0x00; break;
+
+            case C_LEFT:
+                player->angle    = 0xC0;
+                player->onGround = false;
+                break;
+
+            case C_RIGHT: player->angle = 0x40; break;
+
+            case C_BOTTOM: player->angle = 0x80; break;
+
+            default: break;
+        }
+
+        player->tileCollisions = false;
+        if (!player->sidekick) {
+            self->stood = true;
+            if (self->state == Platform_State_Fall && !self->timer) {
+#if MANIA_USE_PLUS
+                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                    self->timer = 1;
+                else
+#endif
+                    self->timer = 30;
+            }
+        }
+
+        self->stoodPlayers |= 1 << playerID;
+    }
+    else if ((1 << playerID) & self->stoodPlayers) {
+        if (player->state == Player_State_Static) {
+            if (Platform->stoodPos[playerID].x) {
+                player->position.x = Platform->stoodPos[playerID].x;
+                player->position.y = Platform->stoodPos[playerID].y;
+            }
+            else {
+                Platform->stoodPos[playerID].x = player->position.x;
+                Platform->stoodPos[playerID].y = player->position.y;
+            }
+
+            player->position.x += self->collisionOffset.x;
+            player->position.y += self->collisionOffset.y;
+            player->position.y &= 0xFFFF0000;
+
+            if (player->jumpPress) {
+                player->tileCollisions = true;
+                Player_Action_Jump(player);
+            }
+        }
+        else {
+            self->stoodPlayers &= ~(1 << playerID);
+        }
+    }
+    else if (cSide == C_TOP) {
+        if (Platform->stoodPos[playerID].x) {
+            player->position.x = Platform->stoodPos[playerID].x;
+            player->position.y = Platform->stoodPos[playerID].y;
+        }
+        else {
+            Platform->stoodPos[playerID].x = player->position.x;
+            Platform->stoodPos[playerID].y = player->position.y;
+        }
+
+        player->position.x += self->collisionOffset.x;
+        player->position.y += self->collisionOffset.y;
+        player->position.y &= 0xFFFF0000;
     }
 }
 

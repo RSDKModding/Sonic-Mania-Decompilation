@@ -55,11 +55,11 @@ void MMZ2Outro_StartCutscene(void)
     for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0x000000);
     for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
 
-    RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(1)->drawLayer[0] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(2)->drawLayer[0] = 0;
-    RSDK.GetTileLayer(3)->drawLayer[0] = 0;
-    RSDK.GetTileLayer(4)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(0)->drawGroup[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawGroup[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawGroup[0] = 0;
+    RSDK.GetTileLayer(3)->drawGroup[0] = 0;
+    RSDK.GetTileLayer(4)->drawGroup[0] = 0;
 
     HUD_MoveOut();
 }

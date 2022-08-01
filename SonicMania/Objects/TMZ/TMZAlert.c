@@ -47,7 +47,7 @@ void TMZAlert_Create(void *data)
         self->inkEffect     = INK_ALPHA;
         self->visible       = true;
         self->drawFX        = FX_SCALE;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

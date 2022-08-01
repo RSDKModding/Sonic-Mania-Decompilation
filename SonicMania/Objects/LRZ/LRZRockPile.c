@@ -36,9 +36,9 @@ void LRZRockPile_Create(void *data)
 
     self->active = ACTIVE_BOUNDS;
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->playerDrawHigh;
+        self->drawGroup = Zone->playerDrawHigh;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
     self->startPos      = self->position;
     self->visible       = true;
@@ -338,7 +338,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
             EntityDebris *rock = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
 
             RSDK.SetSpriteAnimation(LRZRockPile->particleFrames, animationID, &rock->animator, true, frameID);
-            rock->drawOrder       = self->drawOrder;
+            rock->drawGroup       = self->drawGroup;
             rock->delay           = delay;
             rock->direction       = direction;
             rock->gravityStrength = 0x3800;
@@ -362,7 +362,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, spawnY);
         RSDK.SetSpriteAnimation(LRZRockPile->aniFrames, 0, &debris->animator, true, 1);
         debris->drawFX          = FX_ROTATE | FX_FLIP;
-        debris->drawOrder       = self->drawOrder;
+        debris->drawGroup       = self->drawGroup;
         debris->gravityStrength = 0x3800;
         debris->direction       = self->direction;
         debris->updateRange.x   = 0x800000;
@@ -384,7 +384,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
         debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, spawnY);
         RSDK.SetSpriteAnimation(LRZRockPile->aniFrames, 0, &debris->animator, true, 2);
         debris->drawFX          = FX_ROTATE | FX_FLIP;
-        debris->drawOrder       = self->drawOrder;
+        debris->drawGroup       = self->drawGroup;
         debris->gravityStrength = 0x3800;
         debris->direction       = self->direction;
         debris->updateRange.x   = 0x800000;

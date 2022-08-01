@@ -32,7 +32,7 @@ void Pointdexter_Create(void *data)
     RSDK_THIS(Pointdexter);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;
@@ -100,7 +100,7 @@ void Pointdexter_CheckPlayerCollisions(void)
 #else
             else
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }

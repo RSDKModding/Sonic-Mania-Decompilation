@@ -41,7 +41,7 @@ void Buggernaut_Create(void *data)
     RSDK_THIS(Buggernaut);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawLow + 1;
 
     if (!SceneInfo->inEditor) {
         self->drawFX |= FX_FLIP;
@@ -171,7 +171,7 @@ void Buggernaut_State_Setup(void)
     RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 1, &child->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 3, &child->wingAnimator, true, 0);
     child->active      = ACTIVE_NORMAL;
-    child->drawOrder   = self->drawOrder - 1;
+    child->drawGroup   = self->drawGroup - 1;
     child->parent      = self;
     child->passThrough = self->passThrough;
     child->isPermanent = true;

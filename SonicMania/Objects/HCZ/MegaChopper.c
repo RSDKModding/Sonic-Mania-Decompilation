@@ -33,7 +33,7 @@ void MegaChopper_Create(void *data)
 
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->playerDrawLow + 1;
+    self->drawGroup     = Zone->playerDrawLow + 1;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -97,7 +97,7 @@ void MegaChopper_CheckPlayerCollisions(void)
                 else if (player->stateInput == Player_Input_P2_AI)
                     player->stateInput = MegaChopper_Input_GrabbedP2_AI;
 
-                self->drawOrder   = player->drawOrder + 1;
+                self->drawGroup   = player->drawGroup + 1;
                 self->isPermanent = true;
                 self->state       = MegaChopper_State_Chopping;
             }

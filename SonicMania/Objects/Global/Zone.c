@@ -66,7 +66,7 @@ void Zone_LateUpdate(void)
             if ((sidekick->state != Player_State_FlyToPlayer && sidekick->state != Player_State_ReturnToPlayer) || sidekick->characterID == ID_TAILS
                 || sidekick->scale.x == 0x200) {
                 EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-                RSDK.SwapDrawListEntries(player->drawOrder, SLOT_PLAYER1, SLOT_PLAYER2, Player->playerCount);
+                RSDK.SwapDrawListEntries(player->drawGroup, SLOT_PLAYER1, SLOT_PLAYER2, Player->playerCount);
             }
         }
     }
@@ -126,7 +126,7 @@ void Zone_Create(void *data)
 
     if (!self->stateDraw) {
         self->visible   = false;
-        self->drawOrder = -1;
+        self->drawGroup = -1;
     }
 }
 
@@ -182,7 +182,7 @@ void Zone_StageLoad(void)
     Zone->fgLayerHigh    = 6;
     Zone->objectDrawHigh = 8;
     Zone->playerDrawHigh = 12;
-    Zone->hudDrawOrder   = 14;
+    Zone->huddrawGroup   = 14;
 
     // Layer IDs
     Zone->fgLow     = RSDK.GetTileLayerID("FG Low");
@@ -461,7 +461,7 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColor)
     zone->state     = Zone_State_FadeOut;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
-    zone->drawOrder = DRAWGROUP_COUNT - 1;
+    zone->drawGroup = DRAWGROUP_COUNT - 1;
 }
 
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor)
@@ -475,7 +475,7 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor)
     zone->state     = Zone_State_FadeIn;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
-    zone->drawOrder = DRAWGROUP_COUNT - 1;
+    zone->drawGroup = DRAWGROUP_COUNT - 1;
 }
 
 void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor)
@@ -495,7 +495,7 @@ void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor)
     zone->state     = Zone_State_Fadeout_Competition;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
-    zone->drawOrder = DRAWGROUP_COUNT - 1;
+    zone->drawGroup = DRAWGROUP_COUNT - 1;
     Music_FadeOut(0.025);
 }
 
@@ -522,14 +522,14 @@ void Zone_ReloadScene(int32 screen)
         entity->state     = Zone_State_Fadeout_Destroy;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
-        entity->drawOrder = DRAWGROUP_COUNT - 1;
+        entity->drawGroup = DRAWGROUP_COUNT - 1;
 #if MANIA_USE_PLUS
     }
     else {
         entity->state     = Zone_State_ReloadScene;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
-        entity->drawOrder = DRAWGROUP_COUNT - 1;
+        entity->drawGroup = DRAWGROUP_COUNT - 1;
     }
 #endif
 }
@@ -545,7 +545,7 @@ void Zone_StartTeleportAction(void)
     entity->state     = Zone_State_SwapPlayers;
     entity->stateDraw = Zone_Draw_Fade;
     entity->visible   = true;
-    entity->drawOrder = DRAWGROUP_COUNT - 1;
+    entity->drawGroup = DRAWGROUP_COUNT - 1;
 #if MANIA_USE_PLUS
     Zone->teleportActionActive = true;
 #endif
@@ -863,7 +863,7 @@ void Zone_TitleCard_SupressCB(void)
     zone->state      = Zone_State_Fadeout_Destroy;
     zone->stateDraw  = Zone_Draw_Fade;
     zone->visible    = true;
-    zone->drawOrder  = 15;
+    zone->drawGroup  = 15;
 
     globals->suppressTitlecard = false;
     TitleCard->suppressCB      = StateMachine_None;
@@ -939,7 +939,7 @@ void Zone_HandlePlayerSwap(void)
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
             if (layer)
-                layerPlanes[l] = layer->drawLayer[Zone->preSwapPlayerIDs[p]];
+                layerPlanes[l] = layer->drawGroup[Zone->preSwapPlayerIDs[p]];
             else
                 layerPlanes[l] = DRAWGROUP_COUNT;
         }
@@ -1015,7 +1015,7 @@ void Zone_HandlePlayerSwap(void)
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer                            = RSDK.GetTileLayer(l);
-            layer->drawLayer[Zone->swappedPlayerIDs[p]] = layerPlanes[l];
+            layer->drawGroup[Zone->swappedPlayerIDs[p]] = layerPlanes[l];
         }
 
         EntityCamera *camera = player->camera;
@@ -1069,7 +1069,7 @@ void Zone_HandlePlayerSwap(void)
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
             if (layer)
-                layerPlanes[l] = layer->drawLayer[p];
+                layerPlanes[l] = layer->drawGroup[p];
             else
                 layerPlanes[l] = DRAWGROUP_COUNT;
         }
@@ -1147,7 +1147,7 @@ void Zone_HandlePlayerSwap(void)
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * curPlayerID];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
-            layer->drawLayer[newPlayerID] = layerPlanes[l];
+            layer->drawGroup[newPlayerID] = layerPlanes[l];
         }
         EntityCamera *newCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + newPlayerID, Camera);
         EntityCamera *curCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + curPlayerID, Camera);
@@ -1236,7 +1236,7 @@ void Zone_HandlePlayerSwap(void)
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * curPlayerID];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetTileLayer(l);
-            layer->drawLayer[newPlayerID] = layerPlanes[l];
+            layer->drawGroup[newPlayerID] = layerPlanes[l];
         }
         EntityCamera *curCamera = &camStore;
         EntityCamera *newCamera = RSDK_GET_ENTITY(SLOT_CAMERA1 + newPlayerID, Camera);
@@ -1410,7 +1410,7 @@ void Zone_EditorLoad(void)
     Zone->fgLayerHigh    = 6;
     Zone->objectDrawHigh = 8;
     Zone->playerDrawHigh = 12;
-    Zone->hudDrawOrder   = 14;
+    Zone->huddrawGroup   = 14;
 }
 #endif
 

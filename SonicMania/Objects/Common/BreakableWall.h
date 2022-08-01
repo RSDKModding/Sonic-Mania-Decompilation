@@ -78,13 +78,13 @@ void BreakableWall_Serialize(void);
 // Extra Entity Functions
 
 // States
-void BreakableWall_State_BurrowFloorUp(void);
-void BreakableWall_State_Ceiling(void);
 void BreakableWall_State_FallingTile(void);
-void BreakableWall_State_Wall(void);
 void BreakableWall_State_Tile(void);
+void BreakableWall_State_Wall(void);
 void BreakableWall_State_Floor(void);
 void BreakableWall_State_BurrowFloor(void);
+void BreakableWall_State_BurrowFloorUp(void);
+void BreakableWall_State_Ceiling(void);
 
 // Draw States
 void BreakableWall_Draw_Wall(void);
@@ -92,13 +92,13 @@ void BreakableWall_Draw_Floor(void);
 void BreakableWall_Draw_Tile(void);
 
 // Breaking
+void BreakableWall_CheckBreak_Wall(void);
 void BreakableWall_CheckBreak_Floor(void);
 void BreakableWall_CheckBreak_BurrowFloor(void);
-void BreakableWall_CheckBreak_Wall(void);
 void BreakableWall_CheckBreak_BurrowFloorUp(void);
 void BreakableWall_CheckBreak_Ceiling(void);
-void BreakableWall_HandleBlockBreak_V(void);
-void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *wall, uint8 direction);
+
+void BreakableWall_Break(EntityBreakableWall *self, uint8 direction);
 
 // Misc
 void BreakableWall_GiveScoreBonus(EntityPlayer *player);

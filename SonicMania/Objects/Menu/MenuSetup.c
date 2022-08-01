@@ -141,7 +141,7 @@ void MenuSetup_Create(void *data)
 
     self->active    = ACTIVE_ALWAYS;
     self->visible   = true;
-    self->drawOrder = 14;
+    self->drawGroup = 14;
 }
 
 void MenuSetup_StageLoad(void)

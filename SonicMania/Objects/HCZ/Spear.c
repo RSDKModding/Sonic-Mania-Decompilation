@@ -39,7 +39,7 @@ void Spear_Update(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -94,7 +94,7 @@ void Spear_Create(void *data)
     }
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

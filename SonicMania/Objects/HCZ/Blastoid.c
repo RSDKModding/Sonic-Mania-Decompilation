@@ -32,7 +32,7 @@ void Blastoid_Create(void *data)
     RSDK_THIS(Blastoid);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
 
     if (!SceneInfo->inEditor) {
@@ -197,7 +197,7 @@ void Blastoid_State_Projectile(void)
                     player->shield = SHIELD_BUBBLE;
 
                 if (Player_CheckCollisionTouch(player, self, &Blastoid->hitboxProjectile))
-                    Player_CheckProjectileHit(player, self);
+                    Player_ProjectileHurt(player, self);
                 player->shield = shield;
             }
         }

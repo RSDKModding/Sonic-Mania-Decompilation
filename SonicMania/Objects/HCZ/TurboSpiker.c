@@ -40,7 +40,7 @@ void TurboSpiker_Create(void *data)
     self->playedLaunchSfx = false;
     self->visible         = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawLow + 1;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -148,7 +148,7 @@ void TurboSpiker_State_Setup(void)
     if (self->type == TURBOSPIKER_HIDDEN) {
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->animator, true, 0);
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 3, &self->shellAnimator, true, 0);
-        self->drawOrder = Zone->fgLayerLow + 1;
+        self->drawGroup = Zone->fgLayerLow + 1;
         if (Player_GetNearestPlayer())
             self->direction = Player_GetNearestPlayer()->position.x >= self->position.x;
     }
@@ -156,7 +156,7 @@ void TurboSpiker_State_Setup(void)
     EntityTurboSpiker *spike = CREATE_ENTITY(TurboSpiker, intToVoid(true), self->position.x, self->position.y);
     spike->isPermanent       = true;
     spike->direction         = self->direction;
-    spike->drawOrder         = self->drawOrder - 1;
+    spike->drawGroup         = self->drawGroup - 1;
     RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 3, &spike->shellAnimator, true, 0);
     spike->state = TurboSpiker_HandleSpikeCollisions;
     self->spike  = spike;
@@ -218,13 +218,13 @@ void TurboSpiker_State_Hidden(void)
             RSDK.PlaySfx(TurboSpiker->sfxSplash, false, 0xFF);
             RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
             RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
-            self->drawOrder = Zone->objectDrawLow + 1;
+            self->drawGroup = Zone->objectDrawLow + 1;
             if (self->spike)
-                self->spike->drawOrder = Zone->objectDrawLow;
+                self->spike->drawGroup = Zone->objectDrawLow;
 
             EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(true), self->position.x, self->position.y);
             ember->direction         = self->direction;
-            ember->drawOrder         = self->drawOrder + 1;
+            ember->drawGroup         = self->drawGroup + 1;
             RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 6, &ember->shellAnimator, true, 0);
             ember->state = TurboSpiker_State_Ember;
             self->timer  = 60;
@@ -361,7 +361,7 @@ void TurboSpiker_HandleSpikeCollisions(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -388,7 +388,7 @@ void TurboSpiker_State_Spike(void)
         int32 y                  = self->position.y + (RSDK.Rand(-2, 3) << 16);
         EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(true), x, y);
         ember->direction         = self->direction;
-        ember->drawOrder         = self->drawOrder - 1;
+        ember->drawGroup         = self->drawGroup - 1;
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 5, &ember->shellAnimator, true, 0);
         ember->state = TurboSpiker_State_Ember;
     }

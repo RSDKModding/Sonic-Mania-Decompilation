@@ -30,7 +30,7 @@ void Crane_Draw(void)
 {
     RSDK_THIS(Crane);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         SpriteFrame *frame = RSDK.GetFrame(Crane->aniFrames, 4, 0);
         int32 height       = (self->position.y - self->startPos.y) >> 16;
         frame->sprY        = 230 - height;
@@ -49,7 +49,7 @@ void Crane_Create(void *data)
     RSDK_THIS(Crane);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->active        = ACTIVE_BOUNDS;

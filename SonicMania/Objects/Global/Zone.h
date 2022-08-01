@@ -95,7 +95,7 @@ struct ObjectZone {
     uint8 objectDrawHigh;
     uint8 playerDrawLow;
     uint8 playerDrawHigh;
-    uint8 hudDrawOrder;
+    uint8 huddrawGroup;
     uint16 sfxFail;
 #if MANIA_USE_PLUS
     uint8 entityStorage[16][ENTITY_SIZE];

@@ -81,7 +81,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         }
 
         EntityDebris *lid  = CREATE_ENTITY(Debris, NULL, curEnt->position.x, curEnt->position.y + 0x390000);
-        lid->drawOrder     = Zone->playerDrawHigh;
+        lid->drawGroup     = Zone->playerDrawHigh;
         lid->state         = StateMachine_None;
         lid->drawFX        = FX_SCALE | FX_ROTATE;
         lid->scale.x       = 0x200;

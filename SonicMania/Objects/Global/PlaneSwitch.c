@@ -39,7 +39,7 @@ void PlaneSwitch_Create(void *data)
         self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
         self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
         self->visible       = false;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->negAngle      = (uint8) - (self->angle & 0xFF);
     }
 }
@@ -82,7 +82,7 @@ void PlaneSwitch_DrawSprites(void)
 // Custom function, but it allows me to majorly shrink any planeSwitch code 
 // it's based on all the repeated planeswitch code, just made more modular
 // (and also it means you can add planeswitches to basically anything with ease :P)
-void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
+void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, int32 size, bool32 switchdrawGroup, uint8 low, uint8 high)
 {
     Entity *other    = (Entity *)o;
 
@@ -96,20 +96,20 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
         if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < size << 19) {
             if (pivotPos.x + pivotVel.x >= self->position.x) {
                 other->collisionPlane = (flags >> 3) & 1; // collision plane bit
-                if (switchDrawOrder) {
+                if (switchdrawGroup) {
                     if (!(flags & 4)) // priority bit
-                        other->drawOrder = low;
+                        other->drawGroup = low;
                     else
-                        other->drawOrder = high;
+                        other->drawGroup = high;
                 }
             }
             else {
                 other->collisionPlane = (flags >> 1) & 1; // collision plane bit
-                if (switchDrawOrder) {
+                if (switchdrawGroup) {
                     if (!(flags & 1)) // priority bit
-                        other->drawOrder = low;
+                        other->drawGroup = low;
                     else
-                        other->drawOrder = high;
+                        other->drawGroup = high;
                 }
             }
         }
@@ -129,7 +129,7 @@ void PlaneSwitch_EditorDraw(void)
     self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
     self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
     self->visible       = false;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->negAngle      = (uint8) - (uint8)self->angle;
 
     PlaneSwitch_DrawSprites();

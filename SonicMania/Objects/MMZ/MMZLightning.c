@@ -81,7 +81,7 @@ void MMZLightning_State_SetupLightningBig(void)
     self->direction  = RSDK.Rand(0, 2);
     self->alpha      = 0x200;
     self->inkEffect  = INK_ADD;
-    self->drawOrder  = 1;
+    self->drawGroup  = 1;
 
     self->state = MMZLightning_State_ShowLightningBig;
 }
@@ -119,7 +119,7 @@ void MMZLightning_State_SetupLightningSmall(void)
     self->direction  = RSDK.Rand(0, 4);
     self->alpha      = 320;
     self->inkEffect  = INK_ADD;
-    self->drawOrder  = 1;
+    self->drawGroup  = 1;
 
     self->state = MMZLightning_State_LightningSmallFadeOut;
 }

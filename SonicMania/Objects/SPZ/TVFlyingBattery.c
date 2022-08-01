@@ -63,7 +63,7 @@ void TVFlyingBattery_Create(void *data)
     RSDK_THIS(TVFlyingBattery);
 
     self->active        = ACTIVE_NEVER;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

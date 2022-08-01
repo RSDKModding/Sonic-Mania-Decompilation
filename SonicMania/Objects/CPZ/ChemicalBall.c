@@ -35,7 +35,7 @@ void ChemicalBall_Create(void *data)
     RSDK_THIS(ChemicalBall);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x1000000;
@@ -81,7 +81,7 @@ void ChemicalBall_CheckHit(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, &self->drawPos, &ChemicalBall->hitboxBall))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 

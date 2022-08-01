@@ -82,7 +82,7 @@ void MetalSonic_Create(void *data)
             self->collisionLayers = Zone->collisionLayers;
 
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &self->metalSonicAnimator, true, 0);
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
             self->state     = MetalSonic_State_SetupArena;
         }
     }
@@ -407,7 +407,7 @@ void MetalSonic_Explode(void)
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -917,7 +917,7 @@ void MetalSonic_State_SetupBallAttack_Phase1(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -944,7 +944,7 @@ void MetalSonic_State_BallAttack_Phase1(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -972,7 +972,7 @@ void MetalSonic_State_SetupElectricAttack_Phase1(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -1002,7 +1002,7 @@ void MetalSonic_State_ElectricAttack_Phase1(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -1039,7 +1039,7 @@ void MetalSonic_State_SetupDashAttack_Phase1(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -1080,7 +1080,7 @@ void MetalSonic_State_DashAttack_Phase1(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -1764,7 +1764,7 @@ void MetalSonic_State_SetupElectricAttack_Phase2(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 void MetalSonic_State_StartElectricAttack_Phase2(void)
@@ -1801,7 +1801,7 @@ void MetalSonic_State_StartElectricAttack_Phase2(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 void MetalSonic_State_ElectricAttack_Phase2(void)
@@ -1853,7 +1853,7 @@ void MetalSonic_State_ElectricAttack_Phase2(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 void MetalSonic_State_SetupBallAttack_Phase2(void)
@@ -1890,7 +1890,7 @@ void MetalSonic_State_SetupBallAttack_Phase2(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 void MetalSonic_State_BallAttack_Phase2(void)
@@ -1923,7 +1923,7 @@ void MetalSonic_State_BallAttack_Phase2(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 void MetalSonic_State_DashAttack_Phase2(void)
@@ -1956,7 +1956,7 @@ void MetalSonic_State_DashAttack_Phase2(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxHover))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 void MetalSonic_State_FinishAttack_Phase2(void)
@@ -2020,7 +2020,7 @@ void MetalSonic_State_Explode(void)
             debris->velocity.x = RSDK.Rand(6, 11) << 16;
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x4800;
-            debris->drawOrder = wall->drawOrder;
+            debris->drawGroup = wall->drawGroup;
             debris->updateRange.x = 0x800000;
             debris->updateRange.x = 0x800000;
 

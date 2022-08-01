@@ -36,7 +36,7 @@ void FXTrail_LateUpdate(void)
         memcpy(&self->stateAnim[0], &self->currentAnim, sizeof(Animator));
 
         // Record Parent
-        self->drawOrder        = parent->drawOrder - 1;
+        self->drawGroup        = parent->drawGroup - 1;
         self->currentPos.x     = parent->position.x;
         self->currentPos.y     = parent->position.y;
         self->currentRotation  = parent->rotation;

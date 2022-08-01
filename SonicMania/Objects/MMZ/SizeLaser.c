@@ -73,7 +73,7 @@ void SizeLaser_Create(void *data)
 
         if (!type) {
             self->active    = ACTIVE_BOUNDS;
-            self->drawOrder = Zone->objectDrawLow + 1;
+            self->drawGroup = Zone->objectDrawLow + 1;
 
             self->state = SizeLaser_State_Emitter;
             switch (self->orientation) {
@@ -92,7 +92,7 @@ void SizeLaser_Create(void *data)
         else {
             type--;
             self->active      = ACTIVE_NORMAL;
-            self->drawOrder   = Zone->objectDrawLow;
+            self->drawGroup   = Zone->objectDrawLow;
             self->orientation = type >> 2;
             self->type        = type & 1;
 
@@ -185,7 +185,7 @@ bool32 SizeLaser_SfxCheck_SizeLaser(void)
     return activeCount > 0;
 }
 
-void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
+void SizeLaser_SetPlayerSize(EntityPlayer *player, bool32 isChibi)
 {
     if (isChibi) {
         switch (player->characterID) {
@@ -261,15 +261,16 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
     }
 }
 
-void SizeLaser_P2JumpInResize(void)
+// used to have a sidekick resize to match the leader's size
+void SizeLaser_PlayerState_Resize(void)
 {
     // ???
     EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    self->position.x = player1->position.x;
-    self->position.y = player1->position.y;
+    self->position.x = leader->position.x;
+    self->position.y = leader->position.y;
 
     self->position.x += self->abilityValues[0];
     self->position.y += self->abilityValues[1];
@@ -304,19 +305,19 @@ void SizeLaser_P2JumpInResize(void)
             self->abilityValues[1] = 0;
     }
 
-    if (player1->state == SizeLaser_P2JumpInShrink) {
-        if (player1->state == SizeLaser_P2JumpInGrow || !player1->isChibi) {
-            self->state       = SizeLaser_P2JumpInGrow;
+    if (leader->state == SizeLaser_PlayerState_ShrinkChibi) {
+        if (leader->state == SizeLaser_PlayerState_GrowNormal || !leader->isChibi) {
+            self->state       = SizeLaser_PlayerState_GrowNormal;
             self->interaction = false;
         }
     }
-    else if (player1->isChibi) {
-        self->state       = SizeLaser_P2JumpInShrink;
+    else if (leader->isChibi) {
+        self->state       = SizeLaser_PlayerState_ShrinkChibi;
         self->interaction = false;
     }
 }
 
-void SizeLaser_P2JumpInGrow(void)
+void SizeLaser_PlayerState_GrowNormal(void)
 {
     // ???
     EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
@@ -335,13 +336,13 @@ void SizeLaser_P2JumpInGrow(void)
         self->jumpOffset = self->characterID == ID_TAILS ? 0 : 0x50000;
     }
     else {
-        self->state = SizeLaser_P2JumpInGrow;
+        self->state = SizeLaser_PlayerState_GrowNormal;
         self->scale.x += 6;
         self->scale.y = self->scale.x;
     }
 }
 
-void SizeLaser_P2JumpInShrink(void)
+void SizeLaser_PlayerState_ShrinkChibi(void)
 {
     // ???
     EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
@@ -392,13 +393,13 @@ void SizeLaser_P2JumpInShrink(void)
         Player_UpdatePhysicsState(self);
     }
     else {
-        self->state = SizeLaser_P2JumpInShrink;
+        self->state = SizeLaser_PlayerState_ShrinkChibi;
         self->scale.x -= 6;
         self->scale.y = self->scale.x;
     }
 }
 
-void SizeLaser_PlayerState_Grow(void)
+void SizeLaser_PlayerState_GrowGiant(void)
 {
     EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
 
@@ -413,7 +414,7 @@ void SizeLaser_PlayerState_Grow(void)
         Player_UpdatePhysicsState(self);
     }
     else {
-        self->state = SizeLaser_PlayerState_Grow;
+        self->state = SizeLaser_PlayerState_GrowGiant;
         self->scale.x += 8;
         self->scale.y = self->scale.x;
     }
@@ -486,8 +487,8 @@ void SizeLaser_CheckPlayerCollisions(void)
                                                 player->position.y, extendX1[1], extendY1[1], extendX2[1], extendY2[1])) {
 
             if (self->type) {
-                if (player->state == SizeLaser_P2JumpInShrink || player->state == SizeLaser_P2JumpInGrow || !player->isChibi) {
-                    if (player->state != SizeLaser_PlayerState_Grow && player->scale.x > 0x400) {
+                if (player->state == SizeLaser_PlayerState_ShrinkChibi || player->state == SizeLaser_PlayerState_GrowNormal || !player->isChibi) {
+                    if (player->state != SizeLaser_PlayerState_GrowGiant && player->scale.x > 0x400) {
                         player->onGround        = false;
                         player->interaction     = false;
                         player->velocity.y      = -0x40000;
@@ -500,7 +501,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                         player->tileCollisions = true;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                         player->abilityPtrs[0] = Player_State_Hurt;
-                        player->state          = SizeLaser_PlayerState_Grow;
+                        player->state          = SizeLaser_PlayerState_GrowGiant;
                     }
                 }
                 else {
@@ -550,10 +551,10 @@ void SizeLaser_CheckPlayerCollisions(void)
                     RSDK.PlaySfx(SizeLaser->sfxGrow2, false, 255);
                     player->tileCollisions = true;
                     player->abilityPtrs[0] = Player_State_Hurt;
-                    player->state          = SizeLaser_P2JumpInGrow;
+                    player->state          = SizeLaser_PlayerState_GrowNormal;
                 }
             }
-            else if (player->state != SizeLaser_P2JumpInShrink && player->state != SizeLaser_P2JumpInGrow && !player->isChibi) {
+            else if (player->state != SizeLaser_PlayerState_ShrinkChibi && player->state != SizeLaser_PlayerState_GrowNormal && !player->isChibi) {
                 player->onGround        = false;
                 player->interaction     = false;
                 player->velocity.y      = -0x40000;
@@ -567,7 +568,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                 RSDK.PlaySfx(SizeLaser->sfxShrink2, false, 0xFF);
                 player->tileCollisions = true;
                 player->abilityPtrs[0] = Player_State_Hurt;
-                player->state          = SizeLaser_P2JumpInShrink;
+                player->state          = SizeLaser_PlayerState_ShrinkChibi;
             }
         }
     }

@@ -166,7 +166,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
         ruby->startPos.x = (cutscenePos << 20) + 0x1D00000;
         ruby->startPos.y = 0x1A00000;
         ruby->position   = ruby->startPos;
-        ruby->drawOrder  = Zone->objectDrawLow;
+        ruby->drawGroup  = Zone->objectDrawLow;
         self->ruby       = ruby;
     }
 
@@ -288,14 +288,14 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawOrder = Zone->playerDrawHigh;
+        fxRuby->drawGroup = Zone->playerDrawHigh;
         self->fxRuby      = fxRuby;
 
         Camera_ShakeScreen(0, 4, 4);
 
-        player1->drawOrder = Zone->playerDrawHigh + 1;
+        player1->drawGroup = Zone->playerDrawHigh + 1;
         if (player2->classID == Player->classID)
-            player2->drawOrder = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawHigh + 1;
     }
 
     if (!host->values[0]) {

@@ -119,7 +119,7 @@ void SpikeFlail_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_SCALE;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->origin        = self->position;
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x800000;
@@ -172,7 +172,7 @@ void SpikeFlail_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x500, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
 
                 self->position.x = storeX;
                 self->position.y = storeY;
@@ -211,7 +211,7 @@ void SpikeFlail_EditorDraw(void)
         SpikeFlail_Draw();
     }
 
-    self->drawOrder = group;
+    self->drawGroup = group;
 }
 
 void SpikeFlail_EditorLoad(void) { SpikeFlail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpikeFlail.bin", SCOPE_STAGE); }

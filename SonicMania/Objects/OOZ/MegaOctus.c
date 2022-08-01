@@ -48,7 +48,7 @@ void MegaOctus_Create(void *data)
             switch (self->type) {
                 case MEGAOCTUS_BODY:
                     self->visible   = false;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
 
                     RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 0, &self->animator, true, 0);
                     RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 1, &MegaOctus->eggmanAnimator, true, 0);
@@ -78,7 +78,7 @@ void MegaOctus_Create(void *data)
                 case MEGAOCTUS_HARPOON:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
 
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -8;
@@ -99,7 +99,7 @@ void MegaOctus_Create(void *data)
                     self->visible       = true;
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
-                    self->drawOrder     = Zone->objectDrawLow + 1;
+                    self->drawGroup     = Zone->objectDrawLow + 1;
 
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -8;
@@ -124,7 +124,7 @@ void MegaOctus_Create(void *data)
                     self->visible       = true;
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
-                    self->drawOrder     = Zone->objectDrawLow + 1;
+                    self->drawGroup     = Zone->objectDrawLow + 1;
 
                     self->hitbox.left   = -16;
                     self->hitbox.top    = -16;
@@ -146,7 +146,7 @@ void MegaOctus_Create(void *data)
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
                     self->updateRange.x = 0x800000;
-                    self->drawOrder     = Zone->objectDrawLow + 1;
+                    self->drawGroup     = Zone->objectDrawLow + 1;
 
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -8;
@@ -167,7 +167,7 @@ void MegaOctus_Create(void *data)
                 case MEGAOCTUS_LASER:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
 
                     self->hitbox.left   = -16;
                     self->hitbox.top    = -1;
@@ -186,7 +186,7 @@ void MegaOctus_Create(void *data)
                 case MEGAOCTUS_ORBSHOT:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
 
                     self->hitbox.left   = -3;
                     self->hitbox.top    = -3;
@@ -207,7 +207,7 @@ void MegaOctus_Create(void *data)
                 case MEGAOCTUS_LASERFIRE:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawLow;
 
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -4;
@@ -387,7 +387,7 @@ void MegaOctus_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-48, 48) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-48, 48) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -452,7 +452,7 @@ void MegaOctus_State_SetupArena(void)
     Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->origin.x) {
-        RSDK.GetTileLayer(Zone->fgLow)->drawLayer[0] = 2;
+        RSDK.GetTileLayer(Zone->fgLow)->drawGroup[0] = 2;
         Zone->playerBoundActiveL[0]                  = true;
         Zone->cameraBoundsL[0]                       = (self->position.x >> 16) - 192;
 
@@ -672,7 +672,7 @@ void MegaOctus_State_Finish(void)
         int32 x                    = self->position.x + (RSDK.Rand(-48, 48) << 16);
         int32 y                    = self->position.y + (RSDK.Rand(-48, 48) << 16);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawOrder       = self->drawOrder;
+        explosion->drawGroup       = self->drawGroup;
     }
 
     if (++self->timer > 120) {
@@ -765,7 +765,7 @@ void MegaOctus_CheckPlayerCollisions_Harpoon(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -857,7 +857,7 @@ void MegaOctus_CheckPlayerCollisions_Cannon(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 
@@ -1125,7 +1125,7 @@ void MegaOctus_StateOrb_Destroyed(void)
             int32 x                    = self->position.x + (RSDK.Cos512(self->angle) << 10) + (RSDK.Rand(-16, 16) << 16);
             int32 y                    = self->position.y + (RSDK.Sin512(self->angle) << 9) + (RSDK.Rand(-16, 16) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
 
@@ -1140,7 +1140,7 @@ void MegaOctus_StateOrb_Destroyed(void)
             debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
             debris->gravityStrength = 0x3800;
-            debris->drawOrder       = Zone->objectDrawLow + 1;
+            debris->drawGroup       = Zone->objectDrawLow + 1;
             debris->updateRange.x   = 0x400000;
             debris->updateRange.y   = 0x400000;
 
@@ -1153,7 +1153,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->velocity.x      = -0x20000;
         debris->velocity.y      = -0x40000;
         debris->gravityStrength = 0x3800;
-        debris->drawOrder       = Zone->objectDrawLow + 1;
+        debris->drawGroup       = Zone->objectDrawLow + 1;
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1162,7 +1162,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->velocity.x      = 0x20000;
         debris->velocity.y      = -0x40000;
         debris->gravityStrength = 0x3800;
-        debris->drawOrder       = Zone->objectDrawLow + 1;
+        debris->drawGroup       = Zone->objectDrawLow + 1;
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1171,7 +1171,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->velocity.x      = -0x10000;
         debris->velocity.y      = -0x20000;
         debris->gravityStrength = 0x3800;
-        debris->drawOrder       = Zone->objectDrawLow + 1;
+        debris->drawGroup       = Zone->objectDrawLow + 1;
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1180,7 +1180,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->velocity.x      = 0x10000;
         debris->velocity.y      = -0x20000;
         debris->gravityStrength = 0x3800;
-        debris->drawOrder       = Zone->objectDrawLow + 1;
+        debris->drawGroup       = Zone->objectDrawLow + 1;
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1449,7 +1449,7 @@ void MegaOctus_State_Laser(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 
     if (self->activeScreens == 1) {
@@ -1475,7 +1475,7 @@ void MegaOctus_State_LaserFire(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 
     if (self->animator.frameID == self->animator.frameCount - 1)
@@ -1505,7 +1505,7 @@ void MegaOctus_State_Shot(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-                Player_CheckProjectileHit(player, self);
+                Player_ProjectileHurt(player, self);
         }
     }
 }

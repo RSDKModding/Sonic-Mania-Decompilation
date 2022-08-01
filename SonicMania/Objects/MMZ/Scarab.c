@@ -49,14 +49,14 @@ void Scarab_LateUpdate(void) {}
 
 void Scarab_StaticUpdate(void)
 {
-    foreach_active(Scarab, scarab) { RSDK.AddDrawListRef(scarab->drawOrderHigh, RSDK.GetEntitySlot(scarab)); }
+    foreach_active(Scarab, scarab) { RSDK.AddDrawListRef(scarab->drawGroupHigh, RSDK.GetEntitySlot(scarab)); }
 }
 
 void Scarab_Draw(void)
 {
     RSDK_THIS(Scarab);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrderHigh) {
+    if (SceneInfo->currentDrawGroup == self->drawGroupHigh) {
         RSDK.DrawSprite(&self->frontLegAnimator, NULL, false);
     }
     else {
@@ -70,20 +70,20 @@ void Scarab_Create(void *data)
     RSDK_THIS(Scarab);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (!self->planeFilter) {
-        self->drawOrderLow  = Zone->objectDrawLow;
-        self->drawOrderHigh = Zone->playerDrawHigh;
+        self->drawGroupLow  = Zone->objectDrawLow;
+        self->drawGroupHigh = Zone->playerDrawHigh;
     }
 
     if ((uint8)(self->planeFilter - 1) & 2) {
-        self->drawOrderLow  = Zone->objectDrawHigh;
-        self->drawOrderHigh = Zone->playerDrawHigh;
+        self->drawGroupLow  = Zone->objectDrawHigh;
+        self->drawGroupHigh = Zone->playerDrawHigh;
     }
     else {
-        self->drawOrderLow  = Zone->objectDrawLow;
-        self->drawOrderHigh = Zone->playerDrawLow;
+        self->drawGroupLow  = Zone->objectDrawLow;
+        self->drawGroupHigh = Zone->playerDrawLow;
     }
 
     self->drawFX        = FX_FLIP;

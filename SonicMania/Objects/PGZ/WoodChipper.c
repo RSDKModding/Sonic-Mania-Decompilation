@@ -128,11 +128,11 @@ void WoodChipper_Create(void *data)
 
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (!SceneInfo->inEditor) {
         if (data) {
-            --self->drawOrder;
+            --self->drawGroup;
             self->active        = ACTIVE_NORMAL;
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
@@ -194,7 +194,7 @@ void WoodChipper_HandlePlayerCollisions(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
 
         if (WoodChipper->hitboxWood.top > -48) {

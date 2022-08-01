@@ -41,7 +41,7 @@ void HotaruMKII_Create(void *data)
     RSDK_THIS(HotaruMKII);
 
     if (!SceneInfo->inEditor) {
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->startPos      = self->position;
         self->startDir      = self->direction;
         self->updateRange.x = 0x1000000;
@@ -79,7 +79,7 @@ void HotaruMKII_Create(void *data)
                 break;
 
             case HOTARUMKII_LASER:
-                --self->drawOrder;
+                --self->drawGroup;
                 self->active    = ACTIVE_NORMAL;
                 self->inkEffect = INK_ALPHA;
                 self->visible   = true;
@@ -496,13 +496,13 @@ void HotaruMKII_State_Laser(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &HotaruMKII->hitboxLaser)) {
-            Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+            Player_ElementHurt(player, self, SHIELD_LIGHTNING);
         }
     }
 
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
         if (self->childCount == 1) {
-            ++self->drawOrder;
+            ++self->drawGroup;
             self->position.y += 0x80000;
             self->inkEffect = INK_NONE;
             RSDK.SetSpriteAnimation(HotaruMKII->aniFrames, 3, &self->mainAnimator, true, 0);
@@ -527,7 +527,7 @@ void HotaruMKII_State_LaserStrike(void)
 void HotaruMKII_EditorDraw(void)
 {
     RSDK_THIS(HotaruMKII);
-    self->drawOrder     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawHigh;
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
     self->drawFX        = FX_FLIP;

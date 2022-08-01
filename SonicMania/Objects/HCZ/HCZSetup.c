@@ -192,7 +192,7 @@ void HCZSetup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_ROCKY;
 
     RSDK.SetDrawGroupProperties(0, false, Water_DrawHook_ApplyWaterPalette);
-    RSDK.SetDrawGroupProperties(Zone->hudDrawOrder, false, Water_DrawHook_RemoveWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->huddrawGroup, false, Water_DrawHook_RemoveWaterPalette);
 
     Water->waterPalette = 1;
 

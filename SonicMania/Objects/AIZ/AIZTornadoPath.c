@@ -180,7 +180,7 @@ void AIZTornadoPath_State_DisablePlayerInteractions(void)
     player->collisionPlane = 1;
     player->interaction    = false;
 
-    foreach_active(Player, playerPtr) { playerPtr->drawOrder = Zone->playerDrawHigh; }
+    foreach_active(Player, playerPtr) { playerPtr->drawGroup = Zone->playerDrawHigh; }
 
     AIZTornadoPath_HandleMoveSpeed();
     self->state = AIZTornadoPath_State_SetTornadoSpeed;
@@ -188,7 +188,7 @@ void AIZTornadoPath_State_DisablePlayerInteractions(void)
 
 void AIZTornadoPath_State_ExitTornadoSequence(void)
 {
-    foreach_active(AIZTornado, tornado) { tornado->drawOrder = Zone->objectDrawLow; }
+    foreach_active(AIZTornado, tornado) { tornado->drawGroup = Zone->objectDrawLow; }
 
     if (!tornado->disableInteractions) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -200,7 +200,7 @@ void AIZTornadoPath_State_ExitTornadoSequence(void)
             player->collisionPlane = 0;
             player->interaction    = true;
             player->applyJumpCap   = false;
-            player->drawOrder      = Zone->playerDrawLow;
+            player->drawGroup      = Zone->playerDrawLow;
             AIZTornadoPath->camera = NULL;
         }
         player->groundVel = AIZTornadoPath->moveVel.x;

@@ -53,7 +53,7 @@ void Hatch_Draw(void)
 {
     RSDK_THIS(Hatch);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         RSDK.DrawSprite(&self->hatchAnimator, NULL, false);
     }
     else {
@@ -71,7 +71,7 @@ void Hatch_Create(void *data)
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_BOUNDS;
-        self->drawOrder = Zone->objectDrawLow + 1;
+        self->drawGroup = Zone->objectDrawLow + 1;
 
         self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
         self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));
@@ -276,7 +276,7 @@ void Hatch_State_PlayerEntered(void)
         EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
         zone->fadeColor  = 0;
         zone->timer      = 0;
-        zone->drawOrder  = 15;
+        zone->drawGroup  = 15;
         zone->visible    = true;
         zone->stateDraw  = Zone_Draw_Fade;
     }
@@ -539,7 +539,7 @@ void Hatch_EditorDraw(void)
 {
     RSDK_THIS(Hatch);
 
-    self->drawOrder = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawLow + 1;
 
     self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
     self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));

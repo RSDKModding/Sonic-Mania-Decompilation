@@ -262,16 +262,16 @@ void PSZ1Setup_StageLoad(void)
 #if MANIA_USE_PLUS
 void PSZ1Setup_BGSwitch_Inside(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0; // Background 1
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0; // Background 2
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0; // Background 3
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0; // Background 1
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0; // Background 2
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = 0; // Background 3
 }
 
 void PSZ1Setup_BGSwitch_Outside(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;               // Background 1
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 2
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 3
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0;               // Background 1
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 2
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT; // Background 3
 }
 #endif
 

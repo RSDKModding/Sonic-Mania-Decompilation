@@ -20,7 +20,7 @@ void UFO_Shadow_LateUpdate(void)
         self->position.x = parent->position.x;
         self->position.y = parent->position.y;
 
-        if (RSDK.GetTile(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) == (uint16)-1 || parent->drawOrder != 4) {
+        if (RSDK.GetTile(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) == (uint16)-1 || parent->drawGroup != 4) {
             self->visible = false;
         }
         else {
@@ -69,7 +69,7 @@ void UFO_Shadow_Create(void *data)
         self->inkEffect     = INK_BLEND;
         self->visible       = true;
         self->drawFX        = FX_SCALE;
-        self->drawOrder     = 3;
+        self->drawGroup     = 3;
         self->active        = ACTIVE_RBOUNDS;
         self->updateRange.x = 0x300;
         self->updateRange.y = 0x300;

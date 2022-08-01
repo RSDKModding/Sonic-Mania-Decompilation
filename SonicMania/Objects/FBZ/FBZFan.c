@@ -88,7 +88,7 @@ void FBZFan_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow + 1;
+        self->drawGroup     = Zone->objectDrawLow + 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

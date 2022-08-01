@@ -62,7 +62,7 @@ void LRZ1Setup_StaticUpdate(void)
                                   player->moveLayerPosition.y, player->collisionPlane, &tileInfo, &behaviour);
 
             if (behaviour == LRZ1_TFLAGS_LAVA && player->shield != SHIELD_FIRE && !LRZ1Setup->fadeTimer) {
-                Player_CheckHitFlip(player);
+                Player_HurtFlip(player);
             }
         }
     }

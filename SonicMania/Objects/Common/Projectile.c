@@ -55,16 +55,16 @@ void Projectile_CheckPlayerCollisions(void)
 
                 case PROJECTILE_FIRE:
                     if (self->isProjectile)
-                        Player_CheckProjectileHit(player, self);
+                        Player_ProjectileHurt(player, self);
                     else
-                        Player_CheckElementalHit(player, self, SHIELD_FIRE);
+                        Player_ElementHurt(player, self, SHIELD_FIRE);
                     break;
 
                 case PROJECTILE_ELECTRIC:
                     if (self->isProjectile)
-                        Player_CheckProjectileHit(player, self);
+                        Player_ProjectileHurt(player, self);
                     else
-                        Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                        Player_ElementHurt(player, self, SHIELD_LIGHTNING);
                     break;
 
                 case PROJECTILE_UNUSED1: break;
@@ -82,13 +82,13 @@ void Projectile_CheckPlayerCollisions(void)
                             && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_HAMMERDROP))
 #endif
                     ) {
-                        if (Player_CheckProjectileHit(player, self)) {
+                        if (Player_ProjectileHurt(player, self)) {
                             self->gravityStrength = 0x3800;
                             self->state           = Projectile_State_MoveGravity;
                         }
                     }
                     else {
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                     }
                     break;
                 }

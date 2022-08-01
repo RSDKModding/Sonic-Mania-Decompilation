@@ -209,7 +209,7 @@ void SeeSaw_Update(void)
 #if MANIA_USE_PLUS
                 if (!Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
         }
 
@@ -246,7 +246,7 @@ void SeeSaw_Create(void *data)
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
 
         if (self->side == FLIP_X) {
             self->targetTilt = SEESAW_TILT_R;

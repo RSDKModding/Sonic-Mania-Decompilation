@@ -38,7 +38,7 @@ void Bumpalo_Create(void *data)
     RSDK_THIS(Bumpalo);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawLow + 1;
     self->drawFX        = FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;
@@ -192,7 +192,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                     }
                     else
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
             }
             else if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBumper)) {
@@ -216,7 +216,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                 }
                 else
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
             else if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBadnik)) {
                 Player_CheckBadnikBreak(player, self, true);
@@ -251,7 +251,7 @@ void Bumpalo_CheckPlayerCollisions(void)
                         }
                         else
 #endif
-                            Player_CheckHit(player, self);
+                            Player_Hurt(player, self);
                     }
                 }
             }

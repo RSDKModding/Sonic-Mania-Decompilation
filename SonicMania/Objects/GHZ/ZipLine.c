@@ -180,7 +180,7 @@ void ZipLine_Create(void *data)
     self->visible = true;
     self->drawFX  = FX_FLIP;
     RSDK.SetSpriteAnimation(ZipLine->aniFrames, 0, &self->animator, true, 0);
-    self->drawOrder = Zone->playerDrawLow;
+    self->drawGroup = Zone->playerDrawLow;
 
     self->handlePos = self->position;
     self->startPos  = self->position;

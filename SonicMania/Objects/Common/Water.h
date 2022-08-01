@@ -31,7 +31,7 @@ struct ObjectWater {
     int32 waterMoveSpeed;
     int32 constBubbleTimer[PLAYER_COUNT];
     int32 randBubbleTimer[PLAYER_COUNT];
-    int32 unused1[PLAYER_COUNT]; // unused but set to 0 on bubble timer sets. maybe an old bubble timer?
+    int32 unused1[PLAYER_COUNT]; // unused but set to 0 on bubble timer sets. maybe an old bubble/drowning timer?
     TABLE(int32 bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
     uint16 aniFrames;
     uint16 bigBubbleFrames;

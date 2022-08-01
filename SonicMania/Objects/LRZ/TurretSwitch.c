@@ -43,7 +43,7 @@ void TurretSwitch_Create(void *data)
     if (voidToInt(data) == true) {
         RSDK.SetSpriteAnimation(TurretSwitch->aniFrames, 1, &self->animator, true, 0);
         self->state     = TurretSwitch_State_Projectile;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
     }
     else {
         self->hitbox.left   = -12;
@@ -57,7 +57,7 @@ void TurretSwitch_Create(void *data)
         self->hitboxRange.bottom = 140;
 
         self->state     = TurretSwitch_State_Setup;
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     }
 }
 
@@ -80,7 +80,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &ItemBox->hitboxItemBox)) {
-            if (Player_CheckAttacking(player, self) || player->state == Ice_State_FrozenPlayer) {
+            if (Player_CheckAttacking(player, self) || player->state == Ice_PlayerState_Frozen) {
                 TurretSwitch_Break(self, player);
                 foreach_break;
             }
@@ -88,7 +88,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
                 if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_CROUCH)
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 foreach_break;
             }
         }
@@ -98,7 +98,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
 void TurretSwitch_Break(EntityTurretSwitch *turret, EntityPlayer *player)
 {
     player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
-    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), turret->position.x, turret->position.y)->drawOrder = Zone->objectDrawHigh;
+    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), turret->position.x, turret->position.y)->drawGroup = Zone->objectDrawHigh;
 
     RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
 
@@ -175,7 +175,7 @@ void TurretSwitch_State_Projectile(void)
             foreach_active(Player, player)
             {
                 if (Player_CheckCollisionTouch(player, self, &TurretSwitch->hitboxProjectile))
-                    Player_CheckProjectileHit(player, self);
+                    Player_ProjectileHurt(player, self);
             }
         }
     }

@@ -65,7 +65,7 @@ void MMZWheel_Create(void *data)
 
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     if (SceneInfo->inEditor && !self->speed)
         self->speed = 1;
 

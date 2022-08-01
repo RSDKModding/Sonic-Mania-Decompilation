@@ -209,7 +209,7 @@ bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host)
     EntityPhantomKing *king = ERZStart->king;
     if (fxRuby->outerRadius <= 0) {
         ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
-        ruby->drawOrder = Zone->objectDrawLow + 1;
+        ruby->drawGroup = Zone->objectDrawLow + 1;
         king->state     = PhantomKing_State_SetupArms;
         return true;
     }
@@ -356,7 +356,7 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
         king->state                = PhantomKing_State_WrestleEggman;
         king->rotation             = -4;
         king->rubyAnimator.frameID = 0;
-        king->drawOrder            = eggman->drawOrder + 1;
+        king->drawGroup            = eggman->drawGroup + 1;
         king->rubyAnimator.speed   = 0;
 
         eggman->state = KleptoMobile_State_CutsceneControlled;
@@ -378,7 +378,7 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
     eggmanHand->position.y = eggman->originPos.y;
     eggmanHand->position.x += 0x3C0000;
     eggmanHand->position.y -= 0x3E0000;
-    eggmanHand->drawOrder = eggmanArmL->drawOrder + 1;
+    eggmanHand->drawGroup = eggmanArmL->drawGroup + 1;
 
     eggmanArmL->position.x = eggman->originPos.x;
     eggmanArmL->position.x -= 0x40000;
@@ -412,7 +412,7 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
     kingArmL->armBezierPos.x       = king->originPos.x + 0x100000;
     kingArmL->armBezierPos.y       = king->originPos.y - 0x2A0000;
     kingArmL->handAnimator.frameID = 1;
-    kingArmL->drawOrder            = eggmanArmL->drawOrder + 1;
+    kingArmL->drawGroup            = eggmanArmL->drawGroup + 1;
     kingArmL->handAnimator.speed   = 0;
 
     kingArmR->position.x           = king->originPos.x - 0x3E0000;
@@ -420,7 +420,7 @@ bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host)
     kingArmR->armBezierPos.x       = king->originPos.x + 0x380000;
     kingArmR->armBezierPos.y       = king->originPos.y + 0x380000;
     kingArmR->handAnimator.frameID = 1;
-    kingArmR->drawOrder            = eggmanArmR->drawOrder + 1;
+    kingArmR->drawGroup            = eggmanArmR->drawGroup + 1;
     kingArmR->handAnimator.speed   = 0;
 
     if (eggman->position.x >= king->originPos.x - 0x580000) {
@@ -522,14 +522,14 @@ bool32 ERZStart_Cutscene_PostWrestleFadeIn(EntityCutsceneSeq *host)
         eggmanArmL->state  = KleptoMobile_StateArm_Cutscene;
         eggmanArmR->state  = KleptoMobile_StateArm_Cutscene;
 
-        eggmanHand->drawOrder = Zone->objectDrawLow;
+        eggmanHand->drawGroup = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 12, &eggmanHand->handAnimator, true, 5);
 
         kingArmL->state     = PhantomKing_StateArm_Idle;
         kingArmR->state     = PhantomKing_StateArm_Idle;
-        king->drawOrder     = Zone->objectDrawLow;
-        kingArmL->drawOrder = Zone->objectDrawLow;
-        kingArmR->drawOrder = Zone->objectDrawLow;
+        king->drawGroup     = Zone->objectDrawLow;
+        kingArmL->drawGroup = Zone->objectDrawLow;
+        kingArmR->drawGroup = Zone->objectDrawLow;
     }
 
     if (fxRuby->fadeWhite > 0)
@@ -605,7 +605,7 @@ bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
     else {
         for (int32 i = 0; i < 7; ++i) {
             EntityChaosEmerald *emerald = ERZStart->emeralds[i];
-            emerald->drawOrder          = Zone->objectDrawLow;
+            emerald->drawGroup          = Zone->objectDrawLow;
             emerald->radius -= 0x60;
 
             if (emerald->radius <= 0)

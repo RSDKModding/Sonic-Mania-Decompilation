@@ -28,7 +28,7 @@ void SummaryEmerald_Create(void *data)
     RSDK_THIS(SummaryEmerald);
 
     self->active        = ACTIVE_NORMAL;
-    self->drawOrder     = 3;
+    self->drawGroup     = 3;
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

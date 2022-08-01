@@ -24,7 +24,7 @@ void Grabber_Draw(void)
 {
     RSDK_THIS(Grabber);
 
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         RSDK.DrawLine(self->position.x, self->startPos.y - 0x100000, self->position.x, self->position.y, 0x202020, 0x00, INK_NONE, false);
         RSDK.DrawLine(self->position.x - 0x10000, self->startPos.y - 0x100000, self->position.x - 0x10000, self->position.y, 0xE0E0E0, 0x00, INK_NONE,
                       false);
@@ -52,7 +52,7 @@ void Grabber_Create(void *data)
     RSDK_THIS(Grabber);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->startPos  = self->position;
     self->startDir  = self->direction;
     self->active    = ACTIVE_BOUNDS;
@@ -173,13 +173,13 @@ void Grabber_HandleExplode(void)
         if (!--self->timer) {
             EntityPlayer *player = self->grabbedPlayer;
             if (player && player->state == Player_State_Static) {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
                 if (player->state != Player_State_Hurt && Player_CheckValidState(player))
                     player->state = Player_State_Air;
                 self->grabbedPlayer = NULL;
             }
 
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(self);
         }

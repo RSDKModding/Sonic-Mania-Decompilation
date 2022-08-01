@@ -70,7 +70,7 @@ void Ring_DebugDraw(void);
 void Ring_Collect(void);
 void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane);
 void Ring_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane);
-void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder);
+void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup);
 
 uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform);
 void Ring_CheckObjectCollisions(int32 x, int32 y);

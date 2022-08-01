@@ -59,7 +59,7 @@ void UFO_Ring_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_FLIP | FX_SCALE;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_RBOUNDS;
         self->updateRange.x = 0x400;
         self->updateRange.y = 0x400;
@@ -132,7 +132,7 @@ void UFO_Ring_State_NormalRing(void)
 
         if (rx * rx + ry * ry + rz * rz < UFO_Player->maxSpeed >> 9) {
             RSDK.SetSpriteAnimation(UFO_Ring->aniFrames, 2, &self->animator, true, 4);
-            ++self->drawOrder;
+            ++self->drawGroup;
             self->state = UFO_Ring_State_Sparkle;
             UFO_Ring_PlayRingSfx();
         }

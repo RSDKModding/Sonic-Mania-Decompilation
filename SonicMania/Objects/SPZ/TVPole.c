@@ -47,7 +47,7 @@ void TVPole_Create(void *data)
     RSDK_THIS(TVPole);
 
     self->active    = ACTIVE_BOUNDS;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->visible   = true;
     self->drawFX    = FX_FLIP;
     if (!SceneInfo->inEditor) {

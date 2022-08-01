@@ -63,7 +63,7 @@ void TimeAttackGate_Create(void *data)
 
         if (!SceneInfo->inEditor) {
             if (data == intToVoid(true)) {
-                self->drawOrder = 14;
+                self->drawGroup = 14;
                 self->active    = ACTIVE_ALWAYS;
                 self->state     = TimeAttackGate_State_Restarter;
                 self->stateDraw = TimeAttackGate_Draw_Restarter;
@@ -72,7 +72,7 @@ void TimeAttackGate_Create(void *data)
                 self->active        = ACTIVE_NORMAL;
                 self->updateRange.x = 0x400000;
                 self->updateRange.y = 0x400000;
-                self->drawOrder     = Zone->playerDrawLow + 1;
+                self->drawGroup     = Zone->playerDrawLow + 1;
 
                 int32 left   = self->boundsOffset.x - (self->boundsSize.x >> 1);
                 int32 top    = self->boundsOffset.y - (self->boundsSize.y >> 1);

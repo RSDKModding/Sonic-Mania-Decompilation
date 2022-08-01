@@ -47,7 +47,7 @@ void TryAgain_Create(void *data)
         self->rubyPos.y   = self->eggmanPos.y;
 
         self->visible       = true;
-        self->drawOrder     = 1;
+        self->drawGroup     = 1;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

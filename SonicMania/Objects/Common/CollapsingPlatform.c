@@ -118,15 +118,15 @@ void CollapsingPlatform_Create(void *data)
     self->position.x &= 0xFFF80000;
     self->position.y &= 0xFFF80000;
     self->drawFX |= FX_FLIP;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (self->targetLayer == COLLAPSEPLAT_TARGET_LOW) {
         self->targetLayer = Zone->fgLow;
-        self->drawOrder   = Zone->objectDrawLow;
+        self->drawGroup   = Zone->objectDrawLow;
     }
     else {
         self->targetLayer = Zone->fgHigh;
-        self->drawOrder   = Zone->objectDrawHigh;
+        self->drawGroup   = Zone->objectDrawHigh;
     }
 
     if (!SceneInfo->inEditor) {
@@ -197,7 +197,7 @@ void CollapsingPlatform_State_Left(void)
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
             tile->targetLayer             = self->targetLayer;
             tile->tileInfo            = *tiles;
-            tile->drawOrder           = self->drawOrder;
+            tile->drawGroup           = self->drawGroup;
             tile->tilePos.x           = x + startTX;
             tile->tilePos.y           = y + startTY;
             int32 timerX              = x >> CollapsingPlatform->shift;
@@ -232,7 +232,7 @@ void CollapsingPlatform_State_Right(void)
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
             tile->targetLayer             = self->targetLayer;
             tile->tileInfo            = *tiles;
-            tile->drawOrder           = self->drawOrder;
+            tile->drawGroup           = self->drawGroup;
             tile->tilePos.x           = x + startTX;
             tile->tilePos.y           = y + startTY;
             int32 timerX              = x >> CollapsingPlatform->shift;
@@ -268,7 +268,7 @@ void CollapsingPlatform_State_Center(void)
             EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
             tile->targetLayer             = self->targetLayer;
             tile->tileInfo            = *tiles;
-            tile->drawOrder           = self->drawOrder;
+            tile->drawGroup           = self->drawGroup;
             tile->tilePos.x           = x + startTX;
             tile->tilePos.y           = y + startTY;
             int32 timerX              = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));

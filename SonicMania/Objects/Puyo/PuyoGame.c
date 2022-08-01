@@ -42,7 +42,7 @@ void PuyoGame_Create(void *data)
     RSDK_THIS(PuyoGame);
 
     self->active        = ACTIVE_NORMAL;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = false;
     self->drawFX        = FX_FLIP;
@@ -359,7 +359,7 @@ void PuyoGame_State_ShowMatchResults(void)
             EntityFXFade *fxFade = PuyoGame->fxFade;
             fxFade->timer        = 0;
             fxFade->speedIn      = 16;
-            fxFade->drawOrder    = 15;
+            fxFade->drawGroup    = 15;
             fxFade->state        = FXFade_State_FadeIn;
             self->state          = PuyoGame_State_FadeToMenu;
         }

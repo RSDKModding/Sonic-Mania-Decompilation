@@ -44,7 +44,7 @@ void BSS_Setup_Draw(void)
 
     TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     self->inkEffect  = INK_NONE;
-    if (globe->drawLayer[0] == DRAWGROUP_COUNT)
+    if (globe->drawGroup[0] == DRAWGROUP_COUNT)
         RSDK.DrawSprite(&self->globeSpinAnimator, NULL, false);
 
     Vector2 drawPos;
@@ -61,7 +61,7 @@ void BSS_Setup_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active          = ACTIVE_BOUNDS;
         self->visible         = true;
-        self->drawOrder       = 2;
+        self->drawGroup       = 2;
         self->drawFX          = FX_FLIP;
         self->position.x      = 0x1000000;
         self->updateRange.x   = 0x800000;
@@ -410,7 +410,7 @@ void BSS_Setup_State_GlobeJettison(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
+    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawGroup[0] = 1;
 
     self->globeTimer += self->globeSpeed;
     if (self->globeSpeed <= 0 && self->globeTimer < 0) {
@@ -805,7 +805,7 @@ void BSS_Setup_State_GlobeEmerald(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
+    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawGroup[0] = 1;
 
     self->globeTimer += self->globeSpeed;
     if (++self->spinTimer == 120)
@@ -944,7 +944,7 @@ void BSS_Setup_State_GlobeExit(void)
 
     TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     if (self->spinTimer & 0xF) {
-        globe->drawLayer[0] = DRAWGROUP_COUNT;
+        globe->drawGroup[0] = DRAWGROUP_COUNT;
 
         int32 timer                     = self->spinTimer & 0xF;
         self->globeSpinAnimator.frameID = BSS_Setup->globeFrameTable[timer - 1];
@@ -953,7 +953,7 @@ void BSS_Setup_State_GlobeExit(void)
     else {
         if (self->spinTimer > 0) {
             self->palettePage ^= 1;
-            globe->drawLayer[0] = 1;
+            globe->drawGroup[0] = 1;
         }
     }
 
@@ -972,7 +972,7 @@ void BSS_Setup_State_GlobeMoveZ(void)
         self->maxSpeed += 4;
     }
 
-    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
+    RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawGroup[0] = 1;
 
     if (self->playerWasBumped) {
         if (!self->disableBumpers && player1->up)
@@ -1078,7 +1078,7 @@ void BSS_Setup_State_GlobeTurnLeft(void)
 
     TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     if (self->spinTimer == 15) {
-        globe->drawLayer[0] = 1;
+        globe->drawGroup[0] = 1;
 
         self->spinTimer = 0;
         self->palettePage ^= 1;
@@ -1090,7 +1090,7 @@ void BSS_Setup_State_GlobeTurnLeft(void)
         BSS_Setup_HandleCollectableMovement();
     }
     else {
-        globe->drawLayer[0] = DRAWGROUP_COUNT;
+        globe->drawGroup[0] = DRAWGROUP_COUNT;
 
         self->globeSpinAnimator.frameID = BSS_Setup->globeFrameTable[self->spinTimer];
         self->direction                 = BSS_Setup->globeDirTableL[self->spinTimer];
@@ -1119,7 +1119,7 @@ void BSS_Setup_State_GlobeTurnRight(void)
 
     TileLayer *globe = RSDK.GetTileLayer(BSS_Setup->globeLayer);
     if (self->spinTimer == 15) {
-        globe->drawLayer[0] = 1;
+        globe->drawGroup[0] = 1;
 
         self->spinTimer = 0;
         if (!self->timer)
@@ -1130,7 +1130,7 @@ void BSS_Setup_State_GlobeTurnRight(void)
         BSS_Setup_HandleCollectableMovement();
     }
     else {
-        globe->drawLayer[0] = DRAWGROUP_COUNT;
+        globe->drawGroup[0] = DRAWGROUP_COUNT;
 
         if (!self->spinTimer)
             self->palettePage ^= 1;
@@ -1240,8 +1240,8 @@ void BSS_Setup_SetupFinishSequence(void)
     else
         BSS_Setup->playField[fieldPos] = BSS_MEDAL_GOLD;
 
-    RSDK_GET_ENTITY(RESERVE_ENTITY_COUNT, BSS_Collectable)->drawOrder     = 3;
-    RSDK_GET_ENTITY(RESERVE_ENTITY_COUNT + 1, BSS_Collectable)->drawOrder = 3;
+    RSDK_GET_ENTITY(RESERVE_ENTITY_COUNT, BSS_Collectable)->drawGroup     = 3;
+    RSDK_GET_ENTITY(RESERVE_ENTITY_COUNT + 1, BSS_Collectable)->drawGroup = 3;
 }
 
 bool32 BSS_Setup_ScanSphereChain_Up(uint8 x, uint8 y)

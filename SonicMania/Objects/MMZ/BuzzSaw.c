@@ -46,7 +46,7 @@ void BuzzSaw_Create(void *data)
         self->amplitude.x >>= 10;
         self->amplitude.y >>= 10;
         self->visible   = true;
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
         self->startPos  = self->position;
 
         if (self->type == BUZZSAW_ATTACHED)
@@ -112,7 +112,7 @@ void BuzzSaw_CheckPlayerCollisions(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 

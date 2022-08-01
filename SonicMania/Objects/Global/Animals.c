@@ -43,7 +43,7 @@ void Animals_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
 
     int32 type = ANIMAL_POCKY;
 #if MANIA_USE_PLUS

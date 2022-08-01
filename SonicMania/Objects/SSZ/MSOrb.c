@@ -38,7 +38,7 @@ void MSOrb_Create(void *data)
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
         self->alpha         = 0xC0;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
 
         RSDK.SetSpriteAnimation(MSOrb->aniFrames, 15, &self->animator, true, 0);
         self->state     = MSOrb_State_Orb;
@@ -64,7 +64,7 @@ void MSOrb_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &MSOrb->hitboxOrb))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 
@@ -97,7 +97,7 @@ void MSOrb_EditorDraw(void)
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     self->alpha         = 0xC0;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(MSOrb->aniFrames, 15, &self->animator, true, 0);
 
     MSOrb_Draw_Orb();

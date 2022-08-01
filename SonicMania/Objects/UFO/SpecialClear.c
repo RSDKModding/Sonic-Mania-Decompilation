@@ -226,7 +226,7 @@ void SpecialClear_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawOrder = 14;
+        self->drawGroup = 14;
         self->timer     = 512;
         self->fillColor = 0xF0F0F0;
         self->showFade  = true;

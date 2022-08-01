@@ -62,7 +62,7 @@ void TitleBG_Create(void *data)
 
         self->active    = ACTIVE_NORMAL;
         self->visible   = false;
-        self->drawOrder = 1;
+        self->drawGroup = 1;
         self->alpha     = 0xFF;
         self->drawFX    = FX_FLIP;
 
@@ -76,7 +76,7 @@ void TitleBG_Create(void *data)
                 break;
 
             case TITLEBG_WINGSHINE:
-                self->drawOrder = 4;
+                self->drawGroup = 4;
                 self->inkEffect = INK_MASKED;
                 break;
             default: break;
@@ -93,15 +93,15 @@ void TitleBG_StageLoad(void)
 
 void TitleBG_SetupFX(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[0] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(1)->drawLayer[0] = 0;
+    RSDK.GetTileLayer(0)->drawGroup[0] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawGroup[0] = 0;
 
     TileLayer *cloudLayer        = RSDK.GetTileLayer(2);
-    cloudLayer->drawLayer[0]     = 0;
+    cloudLayer->drawGroup[0]     = 0;
     cloudLayer->scanlineCallback = TitleBG_Scanline_Clouds;
 
     TileLayer *islandLayer        = RSDK.GetTileLayer(3);
-    islandLayer->drawLayer[0]     = 1;
+    islandLayer->drawGroup[0]     = 1;
     islandLayer->scanlineCallback = TitleBG_Scanline_Island;
 
     foreach_all(TitleBG, titleBG) { titleBG->visible = true; }
@@ -176,7 +176,7 @@ void TitleBG_EditorDraw(void)
             break;
 
         case TITLEBG_WINGSHINE:
-            self->drawOrder = 4;
+            self->drawGroup = 4;
             self->inkEffect = INK_MASKED;
             break;
 

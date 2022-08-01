@@ -51,8 +51,8 @@ void InvincibleStars_Update(void)
         if (player->invincibleTimer < 32)
             self->alpha = 8 * player->invincibleTimer;
 
-        self->drawOrder  = player->drawOrder;
-        self->visible    = player->visible || (player->state == Ice_State_FrozenPlayer);
+        self->drawGroup  = player->drawGroup;
+        self->visible    = player->visible || (player->state == Ice_PlayerState_Frozen);
         self->starOffset = 11;
     }
     else {

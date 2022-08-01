@@ -43,7 +43,7 @@ void WaterfallSound_Create(void *data)
         self->active        = ACTIVE_NEVER;
         self->sfxPos.x      = 0;
         self->sfxPos.y      = 0;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
     }
 }
 

@@ -24,7 +24,7 @@ void SSZSpikeBall_Update(void)
 #if MANIA_USE_PLUS
             if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 }
@@ -61,7 +61,7 @@ void SSZSpikeBall_Create(void *data)
         self->updateRange.x = 0x600000;
         self->updateRange.y = 0x600000;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->speed <<= 15;
         self->dist           = (self->dist << 16) / self->speed;
         self->spikeBallPos.x = self->position.x;

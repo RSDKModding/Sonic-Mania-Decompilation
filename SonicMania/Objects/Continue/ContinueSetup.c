@@ -71,7 +71,7 @@ void ContinueSetup_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
-        self->drawOrder     = 1;
+        self->drawGroup     = 1;
         self->rotationX     = 240;
         self->angle         = 256;
         self->countTimer    = 10;

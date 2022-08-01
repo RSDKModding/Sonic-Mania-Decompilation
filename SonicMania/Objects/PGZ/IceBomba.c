@@ -45,7 +45,7 @@ void IceBomba_Create(void *data)
     RSDK_THIS(IceBomba);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     if (!SceneInfo->inEditor) {
         self->dip <<= 7;
@@ -156,7 +156,7 @@ void IceBomba_HandlePlayerCollisions(void)
 
             if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
                 RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
                 RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
                 self->state = IceBomba_State_FlyAway;
                 Ice_FreezePlayer(player);
@@ -306,7 +306,7 @@ void IceBomba_State_Bomb(void)
     if (RSDK.CheckOnScreen(self, NULL)) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             RSDK.PlaySfx(IceBomba->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
             CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PILLAR), self->position.x, self->position.y + 0x100000);
             RSDK.PlaySfx(IceBomba->sfxFreeze, false, 0xFF);
@@ -317,7 +317,7 @@ void IceBomba_State_Bomb(void)
         {
             if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
                 RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
                 Ice_FreezePlayer(player);
                 destroyEntity(self);

@@ -44,7 +44,7 @@ void MonarchBG_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_FLIP;
-        self->drawOrder     = 1;
+        self->drawGroup     = 1;
         self->scale.x       = 0xE00;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;

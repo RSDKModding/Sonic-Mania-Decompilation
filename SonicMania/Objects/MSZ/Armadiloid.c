@@ -34,7 +34,7 @@ void Armadiloid_Create(void *data)
     RSDK_THIS(Armadiloid);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->drawFX        = FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
@@ -186,7 +186,7 @@ void Armadiloid_State_PlatformShoot(void)
 
         EntityProjectile *projectile = CREATE_ENTITY(Projectile, Projectile_State_Move, self->position.x - 0x120000, self->position.y + 0x90000);
         projectile->velocity.x       = -0x18000;
-        projectile->drawOrder        = Zone->objectDrawLow;
+        projectile->drawGroup        = Zone->objectDrawLow;
         projectile->hitbox.left      = -4;
         projectile->hitbox.top       = -4;
         projectile->hitbox.right     = 4;

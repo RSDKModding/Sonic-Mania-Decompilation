@@ -50,14 +50,14 @@ void Toxomister_Create(void *data)
 
         if (data) {
             self->active    = ACTIVE_NORMAL;
-            self->drawOrder = Zone->playerDrawLow + 1;
+            self->drawGroup = Zone->playerDrawLow + 1;
             self->inkEffect = INK_ADD;
             self->alpha     = 0xE0;
             RSDK.SetSpriteAnimation(Toxomister->aniFrames, 2, &self->animator, true, 0);
             self->state = Toxomister_StateCloud_FallDelay;
         }
         else {
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
             self->direction *= FLIP_Y;
             RSDK.SetSpriteAnimation(Toxomister->aniFrames, 0, &self->animator, true, 0);
             self->state = Toxomister_State_Setup;
@@ -152,7 +152,7 @@ void Toxomister_CheckPlayerCloudCollisions(void)
     {
         if (Player_CheckCollisionTouch(player, self, &Toxomister->hitboxCloud)) {
             self->grabbedPlayer = player;
-            self->drawOrder     = player->drawOrder + 1;
+            self->drawGroup     = player->drawGroup + 1;
             self->state         = Toxomister_StateCloud_GrabbedPlayer;
             foreach_break;
         }

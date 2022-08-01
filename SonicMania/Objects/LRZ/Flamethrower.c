@@ -60,12 +60,12 @@ void Flamethrower_Create(void *data)
 
     if (!RSDK.CheckSceneFolder("LRZ3")) {
         if (Flamethrower->hitboxMouthH.left)
-            self->drawOrder = Zone->playerDrawLow;
+            self->drawGroup = Zone->playerDrawLow;
         else
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
     }
     else {
-        self->drawOrder = Zone->playerDrawLow;
+        self->drawGroup = Zone->playerDrawLow;
     }
 
     self->origin        = self->position;
@@ -262,7 +262,7 @@ void Flamethrower_CheckFlameCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 }
@@ -300,12 +300,12 @@ void Flamethrower_State_Setup(void)
     Flamethrower_SetupOrientation(self->orientation);
     if (!RSDK.CheckSceneFolder("LRZ3")) {
         if (Flamethrower->hitboxMouthH.left)
-            self->drawOrder = Zone->playerDrawLow;
+            self->drawGroup = Zone->playerDrawLow;
         else
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
     }
     else {
-        self->drawOrder = Zone->playerDrawLow;
+        self->drawGroup = Zone->playerDrawLow;
     }
 
     self->state = Flamethrower_State_AwaitInterval;
@@ -345,9 +345,9 @@ void Flamethrower_State_EmittingFlames(void)
         flame->active             = ACTIVE_NORMAL;
         flame->visible            = true;
         if (RSDK.CheckSceneFolder("LRZ3"))
-            flame->drawOrder = Zone->objectDrawLow - 1;
+            flame->drawGroup = Zone->objectDrawLow - 1;
         else
-            flame->drawOrder = Zone->objectDrawLow;
+            flame->drawGroup = Zone->objectDrawLow;
         flame->maxDist     = self->maxDist;
         flame->state       = Flamethrower_State_SetupFireball;
         flame->angle       = self->angle;
@@ -392,9 +392,9 @@ void Flamethrower_State_SetupFireball(void)
     }
 
     if (RSDK.CheckSceneFolder("LRZ3"))
-        self->drawOrder = Zone->objectDrawLow - 1;
+        self->drawGroup = Zone->objectDrawLow - 1;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
 
     self->state         = Flamethrower_State_Fireball;
     self->lastPos.x     = 0;
@@ -415,14 +415,14 @@ void Flamethrower_State_Fireball(void)
         self->lastYVelocity = self->velocity.y;
 
     // Check for flipping downwards after going upwards
-    if (self->currentDist > 12 && self->lastYVelocity < 0 && self->velocity.y > 0 && self->drawOrder == Zone->objectDrawLow)
-        self->drawOrder = Zone->objectDrawHigh;
+    if (self->currentDist > 12 && self->lastYVelocity < 0 && self->velocity.y > 0 && self->drawGroup == Zone->objectDrawLow)
+        self->drawGroup = Zone->objectDrawHigh;
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
     if (HeavyRider && self->velocity.y > 0)
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
 
     if (self->lastPos.x && self->lastPos.y) {
         int32 rx = (self->position.x - self->lastPos.x) >> 8;

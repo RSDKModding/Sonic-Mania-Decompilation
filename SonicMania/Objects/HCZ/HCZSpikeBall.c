@@ -36,7 +36,7 @@ void HCZSpikeBall_Create(void *data)
     RSDK_THIS(HCZSpikeBall);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -159,7 +159,7 @@ void HCZSpikeBall_HandlePlayerInteractions(void)
         // Due to this object being unused, it didn't get updated with mighty collision checks
         // It's not 100% certain that it would've, but since the rest of the game's spiked objects do, this one could've too
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-            Player_CheckHit(player, self);
+            Player_Hurt(player, self);
     }
 }
 

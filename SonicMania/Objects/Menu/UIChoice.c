@@ -123,7 +123,7 @@ void UIChoice_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = 2;
+        self->drawGroup     = 2;
         self->active        = ACTIVE_NEVER;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x400000;
@@ -323,7 +323,7 @@ void UIChoice_EditorDraw(void)
 
     int32 sizeY = self->size.y;
 
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x400000;
     self->bgEdgeSize    = self->size.y >> 16;

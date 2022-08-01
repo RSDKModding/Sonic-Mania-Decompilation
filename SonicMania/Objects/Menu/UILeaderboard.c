@@ -47,7 +47,7 @@ void UILeaderboard_Create(void *data)
     self->startPos.x      = self->position.x;
     self->startPos.y      = self->position.y;
     self->active          = ACTIVE_BOUNDS;
-    self->drawOrder       = 2;
+    self->drawGroup       = 2;
     self->visible         = true;
     self->drawFX          = FX_FLIP;
     self->updateRange.x   = 0x800000;

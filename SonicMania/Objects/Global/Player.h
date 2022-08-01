@@ -505,11 +505,11 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *entity, Hitbox *enti
 bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 
 //Hits the player if not invulnerable, returns true if player was hit
-bool32 Player_CheckHit(EntityPlayer *player, void *entity);
+bool32 Player_Hurt(EntityPlayer *player, void *entity);
 // the same as above, though the knockback dir is gotten from the player dir rather the direction of the distance
-bool32 Player_CheckHitFlip(EntityPlayer *player);
+bool32 Player_HurtFlip(EntityPlayer *player);
 // Hits the player if not invulnerable and the player's shield doesn't match shield, returns true if player was hit
-bool32 Player_CheckElementalHit(EntityPlayer *player, void *entity, int32 shield);
+bool32 Player_ElementHurt(EntityPlayer *player, void *entity, int32 shield);
 //returns true if the player is in an "attacking" state
 bool32 Player_CheckAttacking(EntityPlayer *player, void *e);
 //checks if the player collided with an entity, this collision differs from the touch one above since it uses hammerdrop & instashield if appropriate
@@ -519,7 +519,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *entity, bool32 destro
 //similar to checkBadnikTouch, this time for bosses, handles rebounds and stuff properly, does NOT check for hammerdrop/instashield hitboxes. returns true if player hit the boss, otherwise the player is hit and returns false
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
 //similar to checkHit, but for projectiles, handles the rebound effect when using shields or crouching as mighty, returns true if deflected, otherwise the player is hit and returns false
-bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
+bool32 Player_ProjectileHurt(EntityPlayer *player, void *projectile);
 #if MANIA_USE_PLUS
 // similar to checkHit, but for objects that should bounce off mighty's shell, returns true if deflected, otherwise the player is hit and returns
 // false

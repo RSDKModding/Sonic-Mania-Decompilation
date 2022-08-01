@@ -60,7 +60,7 @@ void DBTower_Create(void *data)
 
             if (data) {
                 self->active    = ACTIVE_NORMAL;
-                self->drawOrder = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawLow;
                 RSDK.SetSpriteAnimation(DBTower->aniFrames, 2, &self->bodyAnimator, true, 0);
                 self->segmentAnimators[0] = &self->bodyAnimator;
                 self->bodyPositions[0].x  = self->position.x;
@@ -69,7 +69,7 @@ void DBTower_Create(void *data)
             }
             else {
                 self->active    = ACTIVE_BOUNDS;
-                self->drawOrder = Zone->objectDrawLow + 1;
+                self->drawGroup = Zone->objectDrawLow + 1;
                 self->timer     = 0;
                 self->direction = FLIP_X;
 
@@ -170,7 +170,7 @@ void DBTower_CheckPlayerCollisions_Head(void)
 #if MANIA_USE_PLUS
                                 if (!Player_CheckMightyUnspin(player, 0x300, true, &player->uncurlTimer))
 #endif
-                                    Player_CheckHit(player, self);
+                                    Player_Hurt(player, self);
                             }
                             else if (Player_CheckBossHit(player, self)) {
                                 RSDK.PlaySfx(DBTower->sfxBumper3, false, 255);
@@ -199,7 +199,7 @@ void DBTower_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -364,7 +364,7 @@ void DBTower_State_Destroyed(void)
             debris->velocity.x       = 4 * RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y       = 4 * RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength  = 0x4800;
-            debris->drawOrder        = Zone->objectDrawHigh;
+            debris->drawGroup        = Zone->objectDrawHigh;
             debris->updateRange.x    = 0x400000;
             debris->updateRange.y    = 0x400000;
             self->bodyPositions[i].x = -0x800000;
@@ -445,7 +445,7 @@ void DBTower_CheckPlayerCollisions_Body(void)
                         self->playerTimers[playerID] = 30;
                     else
 #endif
-                        Player_CheckHit(player, self);
+                        Player_Hurt(player, self);
                 }
                 else if (
 #if MANIA_USE_PLUS

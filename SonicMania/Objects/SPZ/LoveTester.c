@@ -41,7 +41,7 @@ void LoveTester_Create(void *data)
     RSDK_THIS(LoveTester);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -54,7 +54,7 @@ void LoveTester_Create(void *data)
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
         self->active        = ACTIVE_NORMAL;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->state         = LoveTester_State_HeartParticles;
     }
     else {
@@ -265,7 +265,7 @@ void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick)
 void LoveTester_GiveScore(EntityPlayer *player)
 {
     EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, player->position.x, player->position.y);
-    bonus->drawOrder        = Zone->objectDrawHigh;
+    bonus->drawGroup        = Zone->objectDrawHigh;
     bonus->animator.frameID = 0;
 
     Player_GiveScore(player, 100);

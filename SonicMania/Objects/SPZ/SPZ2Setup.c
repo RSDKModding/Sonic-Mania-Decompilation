@@ -90,7 +90,7 @@ void SPZ2Setup_Create(void *data)
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->fadeTimer = 384;
-    self->drawOrder = Zone->hudDrawOrder + 1;
+    self->drawGroup = Zone->huddrawGroup + 1;
 }
 
 void SPZ2Setup_StageLoad(void)

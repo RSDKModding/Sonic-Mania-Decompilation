@@ -21,9 +21,9 @@ void Shield_Update(void)
         // if bit 2 is set, draw on player draw order (draw above player), else draw behind player
         // bits 3-7 aren't used, the values are stored as 0-9 in ASCII because thats how RSDK anim editor treats it
         if (self->frameFlags < 0 || !(self->frameFlags & ~3))
-            self->drawOrder = player->drawOrder - 1;
+            self->drawGroup = player->drawGroup - 1;
         else
-            self->drawOrder = player->drawOrder;
+            self->drawGroup = player->drawGroup;
         self->visible      = self->forceVisible & player->visible;
         self->forceVisible = true;
     }
@@ -195,7 +195,7 @@ void Shield_State_LightningSparks(void)
     debris->timer        = 22;
     debris->velocity.x   = -0x20000;
     debris->velocity.y   = -0x20000;
-    debris->drawOrder    = Zone->playerDrawHigh;
+    debris->drawGroup    = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -207,7 +207,7 @@ void Shield_State_LightningSparks(void)
     debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = -0x20000;
-    debris->drawOrder  = Zone->playerDrawHigh;
+    debris->drawGroup  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -219,7 +219,7 @@ void Shield_State_LightningSparks(void)
     debris->timer      = 22;
     debris->velocity.x = -0x20000;
     debris->velocity.y = 0x20000;
-    debris->drawOrder  = Zone->playerDrawHigh;
+    debris->drawGroup  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -231,7 +231,7 @@ void Shield_State_LightningSparks(void)
     debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = 0x20000;
-    debris->drawOrder  = Zone->playerDrawHigh;
+    debris->drawGroup  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;

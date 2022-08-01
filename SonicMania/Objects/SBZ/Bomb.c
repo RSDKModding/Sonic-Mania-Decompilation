@@ -38,9 +38,9 @@ void Bomb_Create(void *data)
 
     self->visible = true;
     if (self->planeFilter > 0 && (((uint8)self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -125,7 +125,7 @@ void Bomb_CheckPlayerCollisions(void)
                 }
             }
             if (Player_CheckCollisionTouch(player, self, &Bomb->hitboxHurt)) {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
         }
     }
@@ -201,29 +201,29 @@ void Bomb_State_Explode(void)
         debris->velocity.x  = -0x20000;
         debris->velocity.y  = -0x30000;
         debris->planeFilter = self->planeFilter;
-        debris->drawOrder   = self->drawOrder;
+        debris->drawGroup   = self->drawGroup;
 
         debris              = CREATE_ENTITY(Bomb, intToVoid(true), self->position.x, self->position.y);
         debris->velocity.x  = -0x10000;
         debris->velocity.y  = -0x20000;
         debris->planeFilter = self->planeFilter;
-        debris->drawOrder   = self->drawOrder;
+        debris->drawGroup   = self->drawGroup;
 
         debris              = CREATE_ENTITY(Bomb, intToVoid(true), self->position.x, self->position.y);
         debris->velocity.x  = 0x20000;
         debris->velocity.y  = -0x30000;
         debris->planeFilter = self->planeFilter;
-        debris->drawOrder   = self->drawOrder;
+        debris->drawGroup   = self->drawGroup;
 
         debris              = CREATE_ENTITY(Bomb, intToVoid(true), self->position.x, self->position.y);
         debris->velocity.x  = 0x10000;
         debris->velocity.y  = -0x20000;
         debris->planeFilter = self->planeFilter;
-        debris->drawOrder   = self->drawOrder;
+        debris->drawGroup   = self->drawGroup;
 
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y);
         explosion->planeFilter     = self->planeFilter;
-        explosion->drawOrder       = self->drawOrder + 1;
+        explosion->drawGroup       = self->drawGroup + 1;
 
         destroyEntity(self);
     }
@@ -242,7 +242,7 @@ void Bomb_State_Shrapnel(void)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == ((self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, self, &Bomb->hitboxShrapnel)) {
-                    Player_CheckProjectileHit(player, self);
+                    Player_ProjectileHurt(player, self);
                 }
             }
         }

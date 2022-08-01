@@ -71,7 +71,7 @@ void GigaMetal_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            self->drawOrder     = Zone->objectDrawLow - 1;
+            self->drawGroup     = Zone->objectDrawLow - 1;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             int32 slot          = RSDK.GetEntitySlot(self);
@@ -98,7 +98,7 @@ void GigaMetal_Create(void *data)
                     self->stateDraw      = GigaMetal_Draw_Shoulder;
                     self->componentPos.x = -0x240000;
                     self->componentPos.y = -0x2C0000;
-                    self->drawOrder      = Zone->objectDrawHigh;
+                    self->drawGroup      = Zone->objectDrawHigh;
 
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->mainAnimator, true, 0);
                     break;
@@ -137,7 +137,7 @@ void GigaMetal_Create(void *data)
                     self->stateDraw      = GigaMetal_Draw_Arm;
                     self->componentPos.x = -0x1C0000;
                     self->componentPos.y = -0x2C0000;
-                    self->drawOrder      = Zone->objectDrawHigh;
+                    self->drawGroup      = Zone->objectDrawHigh;
 
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->jointAnimator, true, 1);
@@ -183,7 +183,7 @@ void GigaMetal_Create(void *data)
 
                     self->active     = ACTIVE_NORMAL;
                     self->visible    = true;
-                    self->drawOrder  = Zone->objectDrawHigh;
+                    self->drawGroup  = Zone->objectDrawHigh;
                     self->velocity.x = RSDK.Rand(-0x10000, 0x10000);
                     self->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                     self->groundVel  = RSDK.Rand(-16, 16);
@@ -505,7 +505,7 @@ void GigaMetal_StateBody_SetupComponents(void)
         EntityPhantomRuby *ruby = self->ruby;
         ruby->startPos.x        = self->position.x + 0x200000;
         ruby->startPos.y        = self->position.y + 0x100000;
-        ruby->drawOrder         = self->drawOrder;
+        ruby->drawGroup         = self->drawGroup;
         ruby->position.x        = ruby->startPos.x;
         ruby->position.y        = ruby->startPos.y;
 
@@ -680,7 +680,7 @@ void GigaMetal_StateBody_Marching(void)
 
             if (tile != (uint16)-1) {
                 EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
-                block->drawOrder           = Zone->objectDrawHigh;
+                block->drawGroup           = Zone->objectDrawHigh;
                 block->targetLayer             = Zone->fgHigh;
                 block->tileInfo            = tile;
                 block->tilePos.x           = tileX;
@@ -690,7 +690,7 @@ void GigaMetal_StateBody_Marching(void)
 
                 if (tileX > 224) {
                     block                = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) - 0xDF80000, spawnY);
-                    block->drawOrder     = Zone->objectDrawHigh;
+                    block->drawGroup     = Zone->objectDrawHigh;
                     block->targetLayer       = Zone->fgHigh;
                     block->tileInfo      = tile;
                     block->tilePos.y     = endY;
@@ -735,7 +735,7 @@ void GigaMetal_StateBody_Destroyed(void)
     if (!(Zone->timer & 7)) {
         int32 x = self->position.x + RSDK.Rand(-0x600000, 0x600000);
         int32 y = self->position.y + RSDK.Rand(-0x600000, 0x600000);
-        CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
     }
 
     if (!(Zone->timer % 6))
@@ -801,7 +801,7 @@ void GigaMetal_StateBody_Destroyed(void)
                 if (tile != (uint16)-1) {
                     RSDK.SetTile(Zone->fgHigh, tileX, tileY, -1);
                     EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                    block->drawOrder           = Zone->objectDrawHigh;
+                    block->drawGroup           = Zone->objectDrawHigh;
                     block->visible             = true;
                     block->tileInfo            = tile;
                     block->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
@@ -891,7 +891,7 @@ void GigaMetal_State_Laser(void)
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitboxLaser) && Player_CheckElementalHit(player, self, SHIELD_LIGHTNING))
+            if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitboxLaser) && Player_ElementHurt(player, self, SHIELD_LIGHTNING))
                 player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
         }
 
@@ -1138,7 +1138,7 @@ void GigaMetal_HandleArmCollisions(void)
         {
             if (!GigaMetal->invincibleTimer) {
                 if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitboxHand)
-                    && !Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer) && Player_CheckHit(player, self)) {
+                    && !Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer) && Player_Hurt(player, self)) {
                     player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
                 }
             }
@@ -1214,7 +1214,7 @@ void GigaMetal_EditorDraw(void)
         case GIGAMETAL_SHOULDER:
             self->componentPos.x = -0x240000;
             self->componentPos.y = -0x2C0000;
-            self->drawOrder      = Zone->objectDrawHigh;
+            self->drawGroup      = Zone->objectDrawHigh;
             RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->mainAnimator, true, 0);
 
             RSDK.DrawSprite(&self->mainAnimator, NULL, false);
@@ -1246,7 +1246,7 @@ void GigaMetal_EditorDraw(void)
         case GIGAMETAL_ARMFRONT:
             self->componentPos.x = -0x1C0000;
             self->componentPos.y = -0x2C0000;
-            self->drawOrder      = Zone->objectDrawHigh;
+            self->drawGroup      = Zone->objectDrawHigh;
 
             RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->jointAnimator, true, 1);

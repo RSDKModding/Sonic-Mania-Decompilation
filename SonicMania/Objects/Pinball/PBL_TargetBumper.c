@@ -68,7 +68,7 @@ void PBL_TargetBumper_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;

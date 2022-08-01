@@ -168,29 +168,29 @@ void GHZSetup_HandleActTransition(void)
 }
 void GHZSetup_BGSwitch_Outside_Act2(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(3)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 void GHZSetup_BGSwitch_Caves_Act2(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(3)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(3)->drawGroup[BGSwitch->screenID] = 0;
 }
 void GHZSetup_BGSwitch_Outside_Act1(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
 }
 void GHZSetup_BGSwitch_Caves_Act1(void)
 {
-    RSDK.GetTileLayer(0)->drawLayer[BGSwitch->screenID] = DRAWGROUP_COUNT;
-    RSDK.GetTileLayer(1)->drawLayer[BGSwitch->screenID] = 0;
-    RSDK.GetTileLayer(2)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(0)->drawGroup[BGSwitch->screenID] = DRAWGROUP_COUNT;
+    RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
+    RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = 0;
 }
 void GHZSetup_StageFinish_EndAct2(void) { CREATE_ENTITY(GHZ2Outro, intToVoid(true), 0, 0); }
 

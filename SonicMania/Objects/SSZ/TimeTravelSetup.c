@@ -64,11 +64,11 @@ void TimeTravelSetup_Create(void *data) {}
 void TimeTravelSetup_StageLoad(void)
 {
     TileLayer *background1    = RSDK.GetTileLayer(0);
-    background1->drawLayer[0] = 0;
+    background1->drawGroup[0] = 0;
     background1->scrollSpeed  = -0x60000;
 
     TileLayer *background2    = RSDK.GetTileLayer(1);
-    background2->drawLayer[0] = 0;
+    background2->drawGroup[0] = 0;
     background2->scrollSpeed  = -0xA0000;
 
     TimeTravelSetup->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/TTSparkle.bin", SCOPE_STAGE);
@@ -80,7 +80,7 @@ void TimeTravelSetup_Particle_TimeSparkle(EntityDebris *debris)
 
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
-    debris->drawOrder     = Zone->objectDrawHigh;
+    debris->drawGroup     = Zone->objectDrawHigh;
 }
 
 #if RETRO_INCLUDE_EDITOR

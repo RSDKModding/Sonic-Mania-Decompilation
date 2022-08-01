@@ -99,7 +99,7 @@ void FilmProjector_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
 
         self->filmPos = self->position;
         if (self->direction == FLIP_NONE)

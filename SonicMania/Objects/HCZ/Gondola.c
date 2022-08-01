@@ -44,7 +44,7 @@ void Gondola_Update(void)
     self->position.y = self->drawPos.y & 0xFFFF0000;
     Gondola_HandleTileCollisions();
 
-    self->drawOrder = self->onGround ? Zone->objectDrawLow : Zone->playerDrawLow;
+    self->drawGroup = self->onGround ? Zone->objectDrawLow : Zone->playerDrawLow;
     self->collisionOffset.x += self->position.x;
     self->collisionOffset.y += self->position.y;
     Gondola_HandlePlayerInteractions();
@@ -66,7 +66,7 @@ void Gondola_Create(void *data)
     RSDK_THIS(Gondola);
 
     self->active    = ACTIVE_NORMAL;
-    self->drawOrder = Zone->playerDrawHigh;
+    self->drawGroup = Zone->playerDrawHigh;
 
     self->startPos  = self->position;
     self->drawPos   = self->position;
@@ -76,7 +76,7 @@ void Gondola_Create(void *data)
     self->drawFX        = FX_ROTATE | FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawOrder     = Zone->playerDrawLow;
+    self->drawGroup     = Zone->playerDrawLow;
 
     self->hitbox.left   = -76;
     self->hitbox.top    = -12;

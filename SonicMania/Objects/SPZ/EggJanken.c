@@ -95,7 +95,7 @@ void EggJanken_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->visible       = false;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->drawFX |= FX_ROTATE | FX_FLIP;
     self->origin.x               = self->position.x;
     self->origin.y               = self->position.y;
@@ -218,7 +218,7 @@ void EggJanken_CheckPlayerCollisions(void)
 
                 if (Player_CheckCollisionTouch(player, self, &EggJanken->hitboxArm)) {
                     // This object goes unused so it wasn't updated for plus, but if it was there'd likely be a Plaer_CheckMightyUnspin call here
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
                 }
             }
 
@@ -255,7 +255,7 @@ void EggJanken_Explode(void)
         if (Zone->timer & 4) {
             int32 x                                                               = self->position.x + (RSDK.Rand(-24, 24) << 16);
             int32 y                                                               = self->position.y + (RSDK.Rand(-24, 24) << 16);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawOrder = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -415,7 +415,7 @@ void EggJanken_State_AwaitButtonPress(void)
         part->velocity.y = -0x10000;
         part->angle      = 1;
 
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
     }

@@ -38,7 +38,7 @@ void PBL_Crane_Create(void *data)
     RSDK_THIS(PBL_Crane);
 
     if (!SceneInfo->inEditor) {
-        self->drawOrder = 9;
+        self->drawGroup = 9;
         self->active    = ACTIVE_NORMAL;
         self->type      = voidToInt(data);
 
@@ -82,7 +82,7 @@ void PBL_Crane_Create(void *data)
                 break;
 
             case PBL_CRANE_PRIZE:
-                self->drawOrder = 12;
+                self->drawGroup = 12;
                 self->visible   = true;
                 self->scale.x   = 0x180;
                 self->scale.y   = 0x180;
@@ -210,7 +210,7 @@ void PBL_Crane_Draw_CraneMachine(void)
     RSDK_THIS(PBL_Crane);
 
     self->position.x = ScreenInfo->centerX << 16;
-    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawGroup) {
         self->displayAnimator.frameID = 1;
         self->inkEffect               = INK_NONE;
         RSDK.DrawSprite(&self->displayAnimator, NULL, true);

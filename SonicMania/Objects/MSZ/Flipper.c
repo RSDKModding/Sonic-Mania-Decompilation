@@ -155,7 +155,7 @@ void Flipper_Create(void *data)
         self->hitbox.left   = Flipper->hitbox.left;
         self->hitbox.right  = Flipper->hitbox.right;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
     }
 }
 

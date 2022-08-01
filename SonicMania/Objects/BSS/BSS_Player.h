@@ -7,7 +7,7 @@
 struct ObjectBSS_Player {
     RSDK_OBJECT
     uint16 jumpPressState;
-    uint16 unused1;
+    uint16 unused1; // set to 4 when hitting a yellow sphere, never *used* though
     uint16 sonicFrames;
     uint16 tailsFrames;
     uint16 knuxFrames;

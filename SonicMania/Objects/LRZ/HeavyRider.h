@@ -112,7 +112,7 @@ void HeavyRider_EditorLoad(void);
 void HeavyRider_Serialize(void);
 
 // Extra Entity Functions
-void HeavyRider_SpawnDebris(int32 frame, uint8 drawOrder, int32 x, int32 y);
+void HeavyRider_SpawnDebris(int32 frame, uint8 drawGroup, int32 x, int32 y);
 void HeavyRider_CheckObjectCollisions(void);
 void HeavyRider_Hit(void);
 void HeavyRider_Explode(void);

@@ -69,7 +69,7 @@ void TetherBall_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
 
         // Another static hitbox being initialized in Create...
         TetherBall->hitbox.top    = -40;

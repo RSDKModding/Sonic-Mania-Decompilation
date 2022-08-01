@@ -70,7 +70,7 @@ void Kabasira_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->startPos      = self->position;
         self->startDir      = self->direction;
         self->active        = ACTIVE_BOUNDS;
@@ -280,14 +280,14 @@ void Kabasira_State_LaunchedAttack(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Kabasira->hitboxBadnik)) {
             if (Player_CheckAttacking(player, self)) {
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
                 RSDK.PlaySfx(Kabasira->sfxExplosion2, false, 255);
 
                 destroyEntity(self);
                 foreach_break;
             }
             else {
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
             }
         }
     }

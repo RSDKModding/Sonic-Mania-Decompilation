@@ -37,7 +37,7 @@ void MSFactory_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = false;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->drawPos       = self->position;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;

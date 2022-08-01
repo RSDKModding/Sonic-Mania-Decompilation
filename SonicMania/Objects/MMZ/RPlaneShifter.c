@@ -35,7 +35,7 @@ void RPlaneShifter_Create(void *data)
     RSDK_THIS(RPlaneShifter);
 
     self->visible   = true;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
     self->active    = ACTIVE_BOUNDS;
     self->angle     = 0;
 
@@ -117,16 +117,16 @@ void RPlaneShifter_HandlePlaneShift(EntityPlayer *player)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player->sidekick && (!player->sidekick || (self->prevActivePlayers & 1))) {
         player->collisionPlane = player1->collisionPlane;
-        player->drawOrder      = player1->drawOrder - 1;
+        player->drawGroup      = player1->drawGroup - 1;
         player->direction      = player->direction == FLIP_NONE;
     }
     else {
         if (self->flags) {
-            player->drawOrder      = player->collisionPlane ? Zone->playerDrawLow : Zone->playerDrawHigh;
+            player->drawGroup      = player->collisionPlane ? Zone->playerDrawLow : Zone->playerDrawHigh;
             player->collisionPlane = player->collisionPlane ? 0 : 1;
         }
         else {
-            player->drawOrder      = player->collisionPlane ? Zone->playerDrawHigh : Zone->playerDrawLow;
+            player->drawGroup      = player->collisionPlane ? Zone->playerDrawHigh : Zone->playerDrawLow;
             player->collisionPlane = player->collisionPlane ? 0 : 1;
         }
 

@@ -41,7 +41,7 @@ void Redz_Create(void *data)
 {
     RSDK_THIS(Redz);
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;
@@ -224,7 +224,7 @@ void Redz_Flame_State(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Redz->hitboxFlame)) {
-            Player_CheckElementalHit(player, self, SHIELD_FIRE);
+            Player_ElementHurt(player, self, SHIELD_FIRE);
         }
     }
 

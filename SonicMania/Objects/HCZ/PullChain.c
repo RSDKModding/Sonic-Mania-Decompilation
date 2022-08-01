@@ -158,7 +158,7 @@ void PullChain_Create(void *data)
     RSDK_THIS(PullChain);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = self->decorMode ? Zone->objectDrawLow : Zone->playerDrawLow;
+    self->drawGroup     = self->decorMode ? Zone->objectDrawLow : Zone->playerDrawLow;
     self->basePos       = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -230,7 +230,7 @@ void PullChain_EditorDraw(void)
 {
     RSDK_THIS(PullChain);
 
-    self->drawOrder = self->decorMode ? Zone->objectDrawLow : Zone->playerDrawLow;
+    self->drawGroup = self->decorMode ? Zone->objectDrawLow : Zone->playerDrawLow;
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 0, &self->hookAnimator, true, self->decorMode);
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 1, &self->chainAnimator, true, self->decorMode);
 

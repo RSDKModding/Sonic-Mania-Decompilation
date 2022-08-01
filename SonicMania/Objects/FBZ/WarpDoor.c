@@ -215,7 +215,7 @@ void WarpDoor_Create(void *data)
         self->drawFX        = FX_NONE;
         self->inkEffect     = INK_NONE;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
     }
 }
 

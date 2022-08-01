@@ -134,7 +134,7 @@ void JunctionWheel_Create(void *data)
 {
     RSDK_THIS(JunctionWheel);
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

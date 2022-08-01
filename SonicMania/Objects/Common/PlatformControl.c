@@ -109,7 +109,7 @@ void PlatformControl_Update(void)
             for (int32 c = 0; c < self->childCount; ++c) {
                 EntityPlatform *platform = RSDK_GET_ENTITY(platformSlot, Platform);
                 if (platform->state == Platform_State_PathStop)
-                    platform->state = Platform_State_Controlled;
+                    platform->state = Platform_State_Path;
 
                 if (platform->state == Platform_State_PathReact) {
                     self->setActive = false;
@@ -132,7 +132,7 @@ void PlatformControl_Update(void)
         int32 slot = startNodeSlot + self->nodeCount;
         for (int32 c = 0; c < self->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
-            if (platform->state == Platform_State_Controlled) {
+            if (platform->state == Platform_State_Path) {
                 platform->speed -= startNodeSlot;
                 platform->state  = Platform_State_PathStop;
                 platform->active = ACTIVE_BOUNDS;

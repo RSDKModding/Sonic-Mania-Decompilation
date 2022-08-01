@@ -101,7 +101,7 @@ void Shiversaw_Create(void *data)
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->active    = ACTIVE_BOUNDS;
             self->visible   = false;
-            self->drawOrder = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawLow;
 
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 0, &self->tanksAnimator, true, 0);
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 1, &self->bellowsAnimator, true, 7);
@@ -194,7 +194,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
     if (player->characterID == ID_MIGHTY) {
         int32 anim = player->animator.animationID;
         if (anim != ANI_JUMP && anim != ANI_SPINDASH && anim != ANI_HAMMERDROP)
-            return Player_CheckHit(player, &self->sawPos[sawID]);
+            return Player_Hurt(player, &self->sawPos[sawID]);
         if (anim != ANI_HAMMERDROP)
             return Player_CheckMightyUnspin(player, 768, true, &player->uncurlTimer);
 
@@ -237,7 +237,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
     }
 #endif
 
-    return Player_CheckHit(player, &self->sawPos[sawID]);
+    return Player_Hurt(player, &self->sawPos[sawID]);
 }
 
 void Shiversaw_CheckPlayerCollisions(void)
@@ -351,7 +351,7 @@ void Shiversaw_Explode(void)
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -832,7 +832,7 @@ void Shiversaw_State_Destroyed(void)
             Music_SetMusicTrack("ShiversawExplosion.ogg", TRACK_EGGMAN1, false);
             Music_PlayTrack(TRACK_EGGMAN1);
             self->timer     = 0;
-            self->drawOrder = Zone->playerDrawHigh;
+            self->drawGroup = Zone->playerDrawHigh;
             self->state     = Shiversaw_State_Explode;
         }
         else {
@@ -1184,7 +1184,7 @@ void Shiversaw_StateSaw_Destroyed(void)
         dust->velocity.x = RSDK.Rand(-4, 5) << 15;
         dust->velocity.y = RSDK.Rand(-4, 5) << 15;
         dust->inkEffect  = INK_ALPHA;
-        dust->drawOrder  = self->drawOrder - 1;
+        dust->drawGroup  = self->drawGroup - 1;
         dust->alpha      = 128;
         dust->state      = Shiversaw_StateDust_Debris;
     }
@@ -1195,7 +1195,7 @@ void Shiversaw_StateSaw_Destroyed(void)
         ice->velocity.y          = RSDK.Rand(-10, 2) << 15;
         ice->direction           = RSDK.Rand(0, 4);
         ice->blockAnimator.speed = RSDK.Rand(1, 4);
-        ice->drawOrder           = self->drawOrder - 1;
+        ice->drawGroup           = self->drawGroup - 1;
     }
 
     --self->sawTimers[sawID];
@@ -1275,7 +1275,7 @@ void Shiversaw_EditorDraw(void)
 
     self->active    = ACTIVE_BOUNDS;
     self->visible   = false;
-    self->drawOrder = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawLow;
 
     RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 0, &self->tanksAnimator, true, 0);
     RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 1, &self->bellowsAnimator, true, 7);

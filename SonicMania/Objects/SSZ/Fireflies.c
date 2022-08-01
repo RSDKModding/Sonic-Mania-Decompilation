@@ -33,7 +33,7 @@ void Fireflies_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
         self->updateRange.x = 0x800000;
@@ -74,7 +74,7 @@ void Fireflies_State_Spawner(void)
 
             EntityFireflies *fireflies = CREATE_ENTITY(Fireflies, intToVoid(true), startPos.x, startPos.y);
             RSDK.SetSpriteAnimation(Fireflies->aniFrames, isLarge ? 3 : 0, &fireflies->animator, true, 0);
-            fireflies->drawOrder = isLarge ? Zone->objectDrawHigh : 1;
+            fireflies->drawGroup = isLarge ? Zone->objectDrawHigh : 1;
 
             fireflies->duration      = ZONE_RAND(45, 75);
             fireflies->updateRange.x = 0x800000;
@@ -102,7 +102,7 @@ void Fireflies_State_Firefly(void)
             frame    = 0;
             animLow  = 2;
             animHigh = 5;
-            if (self->drawOrder == Zone->objectDrawHigh)
+            if (self->drawGroup == Zone->objectDrawHigh)
                 animLow = animHigh;
 
             RSDK.SetSpriteAnimation(Fireflies->aniFrames, animLow, &self->animator, true, frame);
@@ -112,7 +112,7 @@ void Fireflies_State_Firefly(void)
         frame    = self->animator.animationID % 3;
         animLow  = 1;
         animHigh = 4;
-        if (self->drawOrder == Zone->objectDrawHigh)
+        if (self->drawGroup == Zone->objectDrawHigh)
             animLow = animHigh;
 
         RSDK.SetSpriteAnimation(Fireflies->aniFrames, animLow, &self->animator, true, frame);

@@ -45,7 +45,7 @@ void EggJankenPart_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawLow + 1;
     self->drawFX |= FX_ROTATE | FX_FLIP;
 
     self->animator.frameID = voidToInt(data);

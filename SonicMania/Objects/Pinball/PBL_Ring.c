@@ -62,7 +62,7 @@ void PBL_Ring_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_SCALE | FX_FLIP;
-        self->drawOrder     = 4;
+        self->drawGroup     = 4;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
@@ -114,7 +114,7 @@ void PBL_Ring_State_Ring(void)
 
         if (rx * rx + rz * rz + ry * ry < 0x100) {
             RSDK.SetSpriteAnimation(PBL_Ring->aniFrames, 2, &self->animator, true, 4);
-            ++self->drawOrder;
+            ++self->drawGroup;
 
             self->state = PBL_Ring_State_RingSparkle;
             PBL_Ring_GiveRing();

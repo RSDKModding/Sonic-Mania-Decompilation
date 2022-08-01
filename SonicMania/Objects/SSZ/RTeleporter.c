@@ -36,7 +36,7 @@ void RTeleporter_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawHigh;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
@@ -97,7 +97,7 @@ void RTeleporter_State_Destroyed(void)
             int32 x                    = self->position.x + (RSDK.Rand(-32, 32) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-32, 32) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS)), x, y);
-            explosion->drawOrder       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
 

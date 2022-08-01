@@ -91,7 +91,7 @@ void Hotaru_Create(void *data)
         self->offset2.y     = -self->dist.y;
         self->offset1       = self->dist;
         self->visible       = true;
-        self->drawOrder     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = maxVal(self->distX1, self->distX2) + 0x400000;
         self->updateRange.y = self->dist.y + 0x400000;
@@ -418,7 +418,7 @@ void Hotaru_State_Attacking(void)
                 self->position.y += self->electricityOffset.y;
 
                 if (Player_CheckCollisionTouch(player, self, &Hotaru->hitboxElectricity))
-                    Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
+                    Player_ElementHurt(player, self, SHIELD_LIGHTNING);
             }
 
             self->position.x = storeX;
@@ -444,7 +444,7 @@ void Hotaru_EditorDraw(void)
 {
     RSDK_THIS(Hotaru);
 
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = maxVal(self->distX1 << 16, self->distX2 << 16) + 0x400000;
     self->updateRange.y = self->dist.y + 0x400000;

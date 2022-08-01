@@ -128,7 +128,7 @@ void YoyoPulley_Create(void *data)
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->handleAnimator, true, 0);
 
         // ideally use 'h' (for "high")
-        self->drawOrder = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
+        self->drawGroup = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
 
         if (self->pullDir == FLIP_X) {
             self->pulleyLength = self->length << 8;
@@ -273,7 +273,7 @@ void YoyoPulley_EditorDraw(void)
     RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->handleAnimator, false, 0);
 
     // ideally use 'h' (for "high")
-    self->drawOrder = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
+    self->drawGroup = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
 
     self->pulleyLength = 0;
     if (self->pullDir == FLIP_NONE) {

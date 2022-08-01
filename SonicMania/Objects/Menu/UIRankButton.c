@@ -90,7 +90,7 @@ void UIRankButton_Create(void *data)
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->visible       = true;
-    self->drawOrder     = 2;
+    self->drawGroup     = 2;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x400000;

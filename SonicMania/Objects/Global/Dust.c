@@ -37,7 +37,7 @@ void Dust_Create(void *data)
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
         self->drawFX    = FX_FLIP | FX_ROTATE;
-        self->drawOrder = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawHigh;
         self->parent    = (Entity *)data;
     }
 }
@@ -63,7 +63,7 @@ void Dust_State_SpinDash(void)
         else
             self->position.y += bottom;
         self->direction = player->direction;
-        self->drawOrder = player->drawOrder;
+        self->drawGroup = player->drawGroup;
         self->rotation  = player->rotation;
 
         RSDK.ProcessAnimation(&self->animator);
@@ -87,7 +87,7 @@ void Dust_State_DustTrail(void)
             EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y);
             dust->state          = Dust_State_DustPuff;
             dust->position.y += playerHitbox->bottom << 16;
-            dust->drawOrder = player->drawOrder;
+            dust->drawGroup = player->drawGroup;
         }
 
         self->timer = (self->timer + 1) & 7;
@@ -110,7 +110,7 @@ void Dust_State_GlideTrail(void)
             EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y - 0x40000);
             dust->state          = Dust_State_DustPuff;
             dust->position.y += playerHitbox->bottom << 16;
-            dust->drawOrder = player->drawOrder;
+            dust->drawGroup = player->drawGroup;
         }
 
         self->timer = (self->timer + 1) & 7;

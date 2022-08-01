@@ -34,7 +34,7 @@ void JuggleSaw_Create(void *data)
 
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0xC00000;
     self->updateRange.y = 0xC00000;
@@ -158,7 +158,7 @@ void JuggleSaw_CheckPlayerCollisions(void)
                 debris->velocity.x      = RSDK.Rand(minVelX, maxVelX) << 16;
                 debris->velocity.y      = RSDK.Rand(minVelY, maxVelY) << 16;
                 debris->gravityStrength = 0x3800;
-                debris->drawOrder       = self->drawOrder;
+                debris->drawGroup       = self->drawGroup;
                 debris->updateRange.x   = 0x400000;
                 debris->updateRange.y   = 0x400000;
             }
@@ -406,7 +406,7 @@ void JuggleSaw_StateSaw_Handle(void)
                 }
                 else
 #endif
-                    Player_CheckHit(player, self);
+                    Player_Hurt(player, self);
             }
         }
     }

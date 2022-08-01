@@ -57,7 +57,7 @@ void MicDrop_Create(void *data)
     RSDK_THIS(MicDrop);
 
     self->visible       = true;
-    self->drawOrder     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -121,7 +121,7 @@ void MicDrop_CheckPlayerCollisions(void)
             if (self->bodyAnimator.animationID != 3 || player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer)
                 Player_CheckBadnikBreak(player, self, true);
             else
-                Player_CheckHit(player, self);
+                Player_Hurt(player, self);
         }
     }
 

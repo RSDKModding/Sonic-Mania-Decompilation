@@ -64,7 +64,7 @@ void ParallaxSprite_Create(void *data)
     RSDK_THIS(ParallaxSprite);
 
     self->active    = ACTIVE_NORMAL;
-    self->drawOrder = Zone->fgLayerLow + 1;
+    self->drawGroup = Zone->fgLayerLow + 1;
 
     if (data)
         self->attribute = voidToInt(data);
@@ -72,7 +72,7 @@ void ParallaxSprite_Create(void *data)
     switch (self->attribute) {
         default:
         case PARALLAXSPRITE_ATTR_STANDARD:
-        case PARALLAXSPRITE_ATTR_UNUSED:
+        case PARALLAXSPRITE_ATTR_WINDMILL:
             self->parallaxFactor.x >>= 8;
             self->parallaxFactor.y >>= 8;
             self->drawFX  = FX_ROTATE;
@@ -118,7 +118,7 @@ void ParallaxSprite_Create(void *data)
             self->parallaxFactor.y >>= 8;
             self->visible   = true;
             self->inkEffect = INK_BLEND;
-            self->drawOrder = Zone->objectDrawHigh + 1;
+            self->drawGroup = Zone->objectDrawHigh + 1;
             self->state     = ParallaxSprite_State_Normal;
             break;
 
@@ -283,7 +283,7 @@ void ParallaxSprite_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(ParallaxSprite, attribute);
     RSDK_ENUM_VAR("Standard", PARALLAXSPRITE_ATTR_STANDARD);
-    RSDK_ENUM_VAR("(Unused)", PARALLAXSPRITE_ATTR_UNUSED);
+    RSDK_ENUM_VAR("Windmill (Unused)", PARALLAXSPRITE_ATTR_WINDMILL);
     RSDK_ENUM_VAR("Colors (SPZ Billboard)", PARALLAXSPRITE_ATTR_COLORS);
     RSDK_ENUM_VAR("Emitter", PARALLAXSPRITE_ATTR_EMITTER);
     RSDK_ENUM_VAR("Particle", PARALLAXSPRITE_ATTR_PARTICLE);
