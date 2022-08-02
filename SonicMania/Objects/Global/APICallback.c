@@ -554,7 +554,7 @@ bool32 APICallback_CheckInputDisconnected(void)
     return APICallback_InputIDIsDisconnected(self->deviceID) || PauseMenu->forcedDisconnect;
 }
 
-bool32 APICallback_InputIDIsDisconnected(int32 inputSlot)
+bool32 APICallback_InputIDIsDisconnected(uint8 inputSlot)
 {
     RSDK_THIS(APICallback);
 
@@ -567,7 +567,7 @@ bool32 APICallback_InputIDIsDisconnected(int32 inputSlot)
     }
 }
 
-int32 APICallback_ControllerIDForInputID(int32 inputSlot)
+int32 APICallback_ControllerIDForInputID(uint8 inputSlot)
 {
     if (APICallback->ControllerIDForInputID) {
         return APICallback->ControllerIDForInputID(inputSlot);
@@ -577,7 +577,7 @@ int32 APICallback_ControllerIDForInputID(int32 inputSlot)
         return 1;
     }
 }
-int32 APICallback_MostRecentActiveControllerID(int32 inputSlot)
+int32 APICallback_MostRecentActiveControllerID(uint8 inputSlot)
 {
     if (APICallback->MostRecentActiveControllerID) {
         return APICallback->MostRecentActiveControllerID(inputSlot);
@@ -587,7 +587,7 @@ int32 APICallback_MostRecentActiveControllerID(int32 inputSlot)
         return 1;
     }
 }
-void APICallback_AssignControllerID(int32 inputSlot, int32 deviceID)
+void APICallback_AssignControllerID(uint8 inputSlot, int32 deviceID)
 {
     if (APICallback->AssignControllerID) {
         APICallback->AssignControllerID(inputSlot, deviceID);

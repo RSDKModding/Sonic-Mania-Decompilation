@@ -685,11 +685,9 @@ void Water_HandleBubbleMovement(void)
         }
 
         if (!inWater) {
-            if (self->animator.animationID == 3) {
-                if (self->animator.frameID > 12) {
-                    RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, false, 0);
-                    self->velocity.y = 0;
-                }
+            if (self->animator.animationID == 3 && self->animator.frameID > 12) {
+                RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, false, 0);
+                self->velocity.y = 0;
             }
             else if (self->animator.animationID == 7) {
                 Water_PopBigBubble(self, false);

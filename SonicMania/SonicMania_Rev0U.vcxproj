@@ -1849,9 +1849,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e179ba4d-fee4-49dc-b5a0-14a7af1fbb06}</ProjectGuid>
+    <ProjectGuid>{32D6986C-F062-437C-A8F4-F1E0CD3B8B16}</ProjectGuid>
     <RootNamespace>SonicMania</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>SonicMania (v5U)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -1926,7 +1927,7 @@
     <ClCompile>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=2;RETRO_STANDALONE=1;WIN32;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=3;RETRO_STANDALONE=1;WIN32;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -1951,7 +1952,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=2;RETRO_STANDALONE=1;WIN32;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=3;RETRO_STANDALONE=1;WIN32;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -1976,7 +1977,7 @@
     <ClCompile>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=2;RETRO_STANDALONE=1;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=3;RETRO_STANDALONE=1;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -2001,7 +2002,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=2;RETRO_STANDALONE=1;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RETRO_REVISION=3;RETRO_STANDALONE=1;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;RETRO_STANDALONE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
