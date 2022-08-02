@@ -95,10 +95,20 @@ void Music_EditorLoad(void);
 void Music_Serialize(void);
 
 // Extra Entity Functions
+
+// Adds a new music track
 void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint);
-void Music_State_PlayOnLoad(void);
-// Plays a track, and manages the music stack so it can be returned to
-void Music_PlayQueuedTrack(uint8 trackID);
+// stops the currently playing music stream
+void Music_Stop(void);
+// pauses the currently playing music stream
+void Music_Pause(void);
+// resumes the currently playing music stream
+void Music_Resume(void);
+// checks if there is music currently playing
+bool32 Music_IsPlaying(void);
+
+// Plays a jingle
+void Music_PlayJingle(uint8 trackID);
 // Plays a track, doesn't use the music stack at all
 void Music_PlayTrack(uint8 trackID);
 // Play a track using the info from a music entity
@@ -110,21 +120,22 @@ void Music_HandleMusicStack_Powerups(EntityMusic *entity);
 bool32 Music_CheckMusicStack_Active(void);
 void Music_GetNextTrackStartPos(EntityMusic *entity);
 #endif
-void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade);
+void Music_JingleFadeOut(uint8 trackID, bool32 transitionFade);
 #if MANIA_USE_PLUS
-void Music_HandleMusicStackTrackRemoval(EntityMusic *entity);
+void Music_FinishJingle(EntityMusic *entity);
 void Music_ClearMusicStack(void);
 #endif
 void Music_TransitionTrack(uint8 trackID, float fadeSpeed);
 void Music_FadeOut(float fadeSpeed);
 
+void Music_State_PlayOnLoad(void);
 #if MANIA_USE_PLUS
-void Music_State_HandleQueuedTrack(void);
-void Music_State_FadeTrackOut(void);
+void Music_State_Jingle(void);
+void Music_State_JingleFade(void);
 #endif
 void Music_State_FadeTrackIn(void);
-void Music_State_FadeOut(void);
-void Music_State_TransitionTrack(void);
+void Music_State_StopOnFade(void);
+void Music_State_PlayOnFade(void);
 #if !MANIA_USE_PLUS
 void Music_State_1UPJingle(void);
 #endif

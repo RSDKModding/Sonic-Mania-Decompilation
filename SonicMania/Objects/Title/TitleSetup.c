@@ -127,7 +127,7 @@ void TitleSetup_CheckCheatCode(void)
 bool32 TitleSetup_VideoSkipCB(void)
 {
     if (ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyStart.press) {
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
         return true;
     }
 
@@ -338,7 +338,7 @@ void TitleSetup_State_WaitForEnter(void)
         API_ResetInputSlotAssignments();
         API_AssignInputSlotToDevice(CONT_P1, id);
 
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
         self->state     = TitleSetup_State_FadeToMenu;
         self->stateDraw = TitleSetup_Draw_FadeBlack;
     }
@@ -365,7 +365,7 @@ void TitleSetup_State_FadeToVideo(void)
 
     if (self->timer >= 1024) {
         RSDK.LoadScene();
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
 
         if (TitleSetup->useAltIntroMusic) {
             RSDK.PlayStream("IntroTee.ogg", Music->channelID, 0, 0, false);

@@ -978,7 +978,7 @@ void UISaveSlot_SelectedCB(void)
         API_AssignInputSlotToDevice(CONT_P1, id);
 
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
     }
 }
 

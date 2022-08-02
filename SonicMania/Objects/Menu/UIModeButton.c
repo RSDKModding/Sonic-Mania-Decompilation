@@ -208,7 +208,7 @@ void UIModeButton_SelectedCB(void)
     UITransition_StartTransition(self->actionCB, 14);
 
     if (self->stopMusic)
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
 
     self->isSelected     = false;
     self->state          = UIModeButton_State_Selected;

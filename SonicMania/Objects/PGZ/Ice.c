@@ -671,7 +671,7 @@ EntityItemBox *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
                 ring->collisionPlane = 0;
                 ring->inkEffect      = INK_ALPHA;
                 ring->alpha          = 256;
-                ring->state          = Ring_State_Bounce;
+                ring->state          = Ring_State_Lost;
                 ring->position.y += (0x50000 * ice->type) - 0x50000;
                 ring->animator.speed = 512;
                 ring->stateDraw      = Ring_Draw_Normal;

@@ -139,7 +139,7 @@ void BigSqueeze_HandleWallCollisions(void)
 
     foreach_active(SignPost, signPost)
     {
-        if (signPost->state == SignPost_State_Fall) {
+        if (signPost->state == SignPost_State_Falling) {
             if (signPost->velocity.x >= 0) {
                 if (signPost->position.x > self->position.x + ((self->hitbox.left - 24) << 16) && signPost->position.x < self->position.x)
                     signPost->velocity.x = -signPost->velocity.x;
@@ -542,7 +542,7 @@ void BigSqueeze_StateBoss_DropSignPost(void)
         {
             signPost->position.x = self->position.x;
             signPost->active     = ACTIVE_NORMAL;
-            signPost->state      = SignPost_State_Fall;
+            signPost->state      = SignPost_State_Falling;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
 

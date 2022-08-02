@@ -61,7 +61,7 @@ void Player_Update(void)
                         }
 
                         if (stopPlaying)
-                            Music_EndQueuedTrack(TRACK_INVINCIBLE, true);
+                            Music_JingleFadeOut(TRACK_INVINCIBLE, true);
                     }
                 }
             }
@@ -80,7 +80,7 @@ void Player_Update(void)
                 }
 
                 if (stopPlaying)
-                    Music_EndQueuedTrack(TRACK_SNEAKERS, true);
+                    Music_JingleFadeOut(TRACK_SNEAKERS, true);
             }
         }
 
@@ -266,7 +266,7 @@ void Player_LateUpdate(void)
 
                 if (!self->sidekick) {
                     if (globals->gameMode == MODE_COMPETITION) {
-                        Music_EndQueuedTrack(TRACK_DROWNING, false);
+                        Music_JingleFadeOut(TRACK_DROWNING, false);
                     }
 #if MANIA_USE_PLUS
                     else if (globals->gameMode == MODE_ENCORE) {
@@ -953,7 +953,7 @@ void Player_GiveLife(EntityPlayer *entity)
         if (entity->lives < 99)
             entity->lives++;
 
-        Music_PlayQueuedTrack(TRACK_1UP);
+        Music_PlayJingle(TRACK_1UP);
     }
 }
 void Player_ApplyShield(EntityPlayer *player)
@@ -1700,7 +1700,7 @@ void Player_HandleSuperForm(void)
             }
 
             if (stopPlaying)
-                Music_EndQueuedTrack(TRACK_SUPER, true);
+                Music_JingleFadeOut(TRACK_SUPER, true);
 
             if (self->state == ERZStart_State_PlayerSuperFly || self->state == ERZStart_State_PlayerRebound)
                 self->state = Player_State_Air;
@@ -4211,7 +4211,7 @@ void Player_State_Transform(void)
 #else
                 if (!ERZStart)
 #endif
-                    Music_PlayQueuedTrack(TRACK_SUPER);
+                    Music_PlayJingle(TRACK_SUPER);
             }
         }
     }
@@ -4239,7 +4239,7 @@ void Player_State_Transform(void)
 #else
                 if (!ERZStart)
 #endif
-                    Music_PlayQueuedTrack(TRACK_SUPER);
+                    Music_PlayJingle(TRACK_SUPER);
             }
         }
         else {
@@ -4247,7 +4247,7 @@ void Player_State_Transform(void)
             self->interaction    = true;
             self->state          = Player_State_Air;
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 3);
-            Music_PlayQueuedTrack(TRACK_SUPER);
+            Music_PlayJingle(TRACK_SUPER);
         }
     }
 }

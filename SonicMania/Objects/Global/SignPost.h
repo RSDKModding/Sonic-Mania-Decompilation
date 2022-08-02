@@ -90,10 +90,10 @@ void SignPost_CheckTouch(void);
 // States
 void SignPost_State_Init(void);
 void SignPost_State_AwaitTouch(void);
-void SignPost_State_Land(void);
-void SignPost_State_SpunVS(void);
+void SignPost_State_Spin(void);
+void SignPost_State_SpinVS(void);
 void SignPost_State_Launched(void);
-void SignPost_State_Fall(void);
-void SignPost_State_Finish(void);
+void SignPost_State_Falling(void);
+void SignPost_State_Done(void);
 
 #endif //!OBJ_SIGNPOST_H

@@ -112,7 +112,7 @@ bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         RSDK.PlaySfx(SignPost->sfxTwinkle, false, 0xFF);
-        signPost->state = SignPost_State_Fall;
+        signPost->state = SignPost_State_Falling;
         mystic->visible = true;
         foreach_all(ParallaxSprite, sprite) { sprite->visible = true; }
     }
@@ -121,7 +121,7 @@ bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host)
 
     if (signPost->position.y >= MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID] + mystic->position.y - 0x3D0000) {
         signPost->position.y = MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID] + mystic->position.y - 0x3D0000;
-        signPost->state      = SignPost_State_Land;
+        signPost->state      = SignPost_State_Spin;
         RSDK.PlaySfx(SignPost->sfxSlide, false, 255);
         signPost->spinCount  = 4;
         signPost->velocity.y = 0;
@@ -142,7 +142,7 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
     EntityCutsceneHBH *mystic = MSZCutsceneST->mystic;
 
     signPost->position.y = MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID] + mystic->position.y - 0x3D0000;
-    if (signPost->state == SignPost_State_Finish) {
+    if (signPost->state == SignPost_State_Done) {
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         player1->right     = false;

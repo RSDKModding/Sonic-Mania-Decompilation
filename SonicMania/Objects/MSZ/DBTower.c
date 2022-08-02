@@ -417,7 +417,7 @@ void DBTower_State_SpawnSignPost(void)
         foreach_all(SignPost, signPost)
         {
             signPost->position.x = self->position.x;
-            signPost->state      = SignPost_State_Fall;
+            signPost->state      = SignPost_State_Falling;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
         destroyEntity(self);

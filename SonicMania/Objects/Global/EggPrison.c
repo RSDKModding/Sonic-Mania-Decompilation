@@ -28,11 +28,11 @@ void EggPrison_Update(void)
                     player->position.y += 0x10000;
                 }
 
-                if (self->state == EggPrison_State_HandleBounds) {
+                if (self->state == EggPrison_State_Idle) {
                     if (Player_CheckCollisionBox(player, self, &self->hitboxButton) == C_BOTTOM) {
                         self->velocity.x = 0;
                         self->active     = ACTIVE_NORMAL;
-                        self->state      = EggPrison_State_Activated;
+                        self->state      = EggPrison_State_Opened;
                         self->buttonPos  = -0x80000;
                     }
                     else {
@@ -60,7 +60,7 @@ void EggPrison_Update(void)
             {
                 Player_CheckCollisionBox(player, self, &self->hitboxSolid);
 
-                if (self->state == EggPrison_State_HandleBounds) {
+                if (self->state == EggPrison_State_Idle) {
                     if (Player_CheckCollisionBox(player, self, &self->hitboxButton) == C_TOP) {
                         self->buttonPos = 0x80000;
 
@@ -81,7 +81,7 @@ void EggPrison_Update(void)
                         }
                         else {
                             self->active = ACTIVE_NORMAL;
-                            self->state  = EggPrison_State_Activated;
+                            self->state  = EggPrison_State_Opened;
                         }
                     }
                     else {
@@ -250,7 +250,7 @@ void EggPrison_HandleMovement(void)
     self->position.y = BadnikHelpers_Oscillate(self->originY, 4, 10);
 }
 
-void EggPrison_State_Activated(void)
+void EggPrison_State_Opened(void)
 {
     RSDK_THIS(EggPrison);
 
@@ -292,7 +292,7 @@ void EggPrison_State_Activated(void)
                 else
                     angle = 0xD0;
                 ring->alpha     = 0x100;
-                ring->state     = Ring_State_Bounce;
+                ring->state     = Ring_State_Lost;
                 ring->stateDraw = Ring_Draw_Normal;
             }
             break;
@@ -367,10 +367,10 @@ void EggPrison_State_Init(void)
     RSDK_THIS(EggPrison);
 
     self->originY = self->position.y;
-    self->state   = EggPrison_State_HandleBounds;
+    self->state   = EggPrison_State_Idle;
 }
 
-void EggPrison_State_HandleBounds(void)
+void EggPrison_State_Idle(void)
 {
     RSDK_THIS(EggPrison);
 

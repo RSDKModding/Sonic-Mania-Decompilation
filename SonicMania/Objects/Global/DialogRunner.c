@@ -211,7 +211,7 @@ void DialogRunner_CheckUserAuth_CB()
             }
 
             RSDK.SetEngineState(ENGINESTATE_FROZEN);
-            RSDK.StopChannel(Music->channelID);
+            Music_Stop();
             self->timer = 1;
         }
     }

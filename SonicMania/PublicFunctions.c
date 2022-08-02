@@ -1745,9 +1745,9 @@ void InitPublicFunctions()
 
     // Global/EggPrison
     ADD_PUBLIC_FUNC(EggPrison_HandleMovement);
-    ADD_PUBLIC_FUNC(EggPrison_State_Activated);
+    ADD_PUBLIC_FUNC(EggPrison_State_Opened);
     ADD_PUBLIC_FUNC(EggPrison_State_Init);
-    ADD_PUBLIC_FUNC(EggPrison_State_HandleBounds);
+    ADD_PUBLIC_FUNC(EggPrison_State_Idle);
     ADD_PUBLIC_FUNC(EggPrison_State_Explode);
     ADD_PUBLIC_FUNC(EggPrison_State_SetupActClear);
     ADD_PUBLIC_FUNC(EggPrison_State_FlyOffScreen);
@@ -1801,7 +1801,7 @@ void InitPublicFunctions()
     // Global/Music
     ADD_PUBLIC_FUNC(Music_SetMusicTrack);
     ADD_PUBLIC_FUNC(Music_State_PlayOnLoad);
-    ADD_PUBLIC_FUNC(Music_PlayQueuedTrack);
+    ADD_PUBLIC_FUNC(Music_PlayJingle);
     ADD_PUBLIC_FUNC(Music_PlayTrack);
     ADD_PUBLIC_FUNC(Music_PlayTrackPtr);
 #if MANIA_USE_PLUS
@@ -1809,21 +1809,21 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Music_HandleMusicStack_Powerups);
     ADD_PUBLIC_FUNC(Music_CheckMusicStack_Active);
     ADD_PUBLIC_FUNC(Music_GetNextTrackStartPos);
-    ADD_PUBLIC_FUNC(Music_EndQueuedTrack);
+    ADD_PUBLIC_FUNC(Music_JingleFadeOut);
 #endif
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(Music_HandleMusicStackTrackRemoval);
+    ADD_PUBLIC_FUNC(Music_FinishJingle);
     ADD_PUBLIC_FUNC(Music_ClearMusicStack);
     ADD_PUBLIC_FUNC(Music_TransitionTrack);
 #endif
     ADD_PUBLIC_FUNC(Music_FadeOut);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(Music_State_HandleQueuedTrack);
-    ADD_PUBLIC_FUNC(Music_State_FadeTrackOut);
+    ADD_PUBLIC_FUNC(Music_State_Jingle);
+    ADD_PUBLIC_FUNC(Music_State_JingleFade);
     ADD_PUBLIC_FUNC(Music_State_FadeTrackIn);
 #endif
-    ADD_PUBLIC_FUNC(Music_State_FadeOut);
-    ADD_PUBLIC_FUNC(Music_State_TransitionTrack);
+    ADD_PUBLIC_FUNC(Music_State_StopOnFade);
+    ADD_PUBLIC_FUNC(Music_State_PlayOnFade);
 #if !MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(Music_State_1UPJingle);
 #endif
@@ -2056,14 +2056,14 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Ring_CheckPlatformCollisions);
     ADD_PUBLIC_FUNC(Ring_CheckObjectCollisions);
     ADD_PUBLIC_FUNC(Ring_State_Normal);
-    ADD_PUBLIC_FUNC(Ring_State_Move);
+    ADD_PUBLIC_FUNC(Ring_State_Linear);
     ADD_PUBLIC_FUNC(Ring_State_Circular);
     ADD_PUBLIC_FUNC(Ring_State_Path);
     ADD_PUBLIC_FUNC(Ring_State_Track);
-    ADD_PUBLIC_FUNC(Ring_State_Bounce);
-    ADD_PUBLIC_FUNC(Ring_State_Grow);
+    ADD_PUBLIC_FUNC(Ring_State_Lost);
+    ADD_PUBLIC_FUNC(Ring_State_LostFX);
     ADD_PUBLIC_FUNC(Ring_State_Big);
-    ADD_PUBLIC_FUNC(Ring_State_Attract);
+    ADD_PUBLIC_FUNC(Ring_State_Attracted);
     ADD_PUBLIC_FUNC(Ring_State_Sparkle);
     ADD_PUBLIC_FUNC(Ring_Draw_Normal);
     ADD_PUBLIC_FUNC(Ring_Draw_Oscillating);
@@ -2093,7 +2093,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SaveGame_SaveFile_CB);
 
     // Global/Shield
-    ADD_PUBLIC_FUNC(Shield_State_Generic);
+    ADD_PUBLIC_FUNC(Shield_State_Default);
     ADD_PUBLIC_FUNC(Shield_State_BubbleDrop);
     ADD_PUBLIC_FUNC(Shield_State_BubbleBounced);
     ADD_PUBLIC_FUNC(Shield_State_FireDash);
@@ -2108,20 +2108,20 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SignPost_CheckTouch);
     ADD_PUBLIC_FUNC(SignPost_State_Init);
     ADD_PUBLIC_FUNC(SignPost_State_AwaitTouch);
-    ADD_PUBLIC_FUNC(SignPost_State_Land);
-    ADD_PUBLIC_FUNC(SignPost_State_SpunVS);
+    ADD_PUBLIC_FUNC(SignPost_State_Spin);
+    ADD_PUBLIC_FUNC(SignPost_State_SpinVS);
     ADD_PUBLIC_FUNC(SignPost_State_Launched);
-    ADD_PUBLIC_FUNC(SignPost_State_Fall);
-    ADD_PUBLIC_FUNC(SignPost_State_Finish);
+    ADD_PUBLIC_FUNC(SignPost_State_Falling);
+    ADD_PUBLIC_FUNC(SignPost_State_Done);
 
     // Global/Soundboard
     ADD_PUBLIC_FUNC(Soundboard_LoadSfx);
 
     // Global/SpecialRing
     ADD_PUBLIC_FUNC(SpecialRing_DebugSpawn);
-    ADD_PUBLIC_FUNC(SpecialRing_State_StartWarp);
     ADD_PUBLIC_FUNC(SpecialRing_State_Warp);
-    ADD_PUBLIC_FUNC(SpecialRing_State_Normal);
+    ADD_PUBLIC_FUNC(SpecialRing_State_Flash);
+    ADD_PUBLIC_FUNC(SpecialRing_State_Idle);
 
     // Global/SpeedGate
     ADD_PUBLIC_FUNC(SpeedGate_State_WaitForStart);
@@ -2147,7 +2147,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(StarPost_CheckBonusStageEntry);
     ADD_PUBLIC_FUNC(StarPost_CheckCollisions);
     ADD_PUBLIC_FUNC(StarPost_State_Idle);
-    ADD_PUBLIC_FUNC(StarPost_State_BallSpin);
+    ADD_PUBLIC_FUNC(StarPost_State_Spinning);
 
     // Global/TimeAttackGate
     ADD_PUBLIC_FUNC(TimeAttackGate_HandleSpin);

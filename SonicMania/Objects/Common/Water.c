@@ -485,7 +485,7 @@ void Water_State_Water(void)
 
                 if (!player->sidekick && player->drownTimer >= 1080) {
                     player->drownTimer = 0;
-                    Music_EndQueuedTrack(TRACK_DROWNING, false);
+                    Music_JingleFadeOut(TRACK_DROWNING, false);
                 }
             }
             else {
@@ -558,7 +558,7 @@ void Water_State_Water(void)
                                 if (globals->gameMode != MODE_COMPETITION) {
 #endif
                                     if (!player->sidekick)
-                                        Music_PlayQueuedTrack(TRACK_DROWNING);
+                                        Music_PlayJingle(TRACK_DROWNING);
                                 }
 
                                 Water_SpawnCountDownBubble(player, playerID, 5);
@@ -860,7 +860,7 @@ void Water_State_Bubble(void)
 
                                 player->drownTimer = 0;
                                 if (!player->sidekick)
-                                    Music_EndQueuedTrack(TRACK_DROWNING, false);
+                                    Music_JingleFadeOut(TRACK_DROWNING, false);
 
                                 RSDK.PlaySfx(Water->sfxBreathe, false, 255);
                             }
@@ -966,7 +966,7 @@ void Water_State_BigBubble(void)
 
                     player->drownTimer = 0;
                     if (!player->sidekick)
-                        Music_EndQueuedTrack(TRACK_DROWNING, false);
+                        Music_JingleFadeOut(TRACK_DROWNING, false);
 
                     RSDK.PlaySfx(Water->sfxDNAGrab, false, 255);
                     self->activePlayers |= 1 << playerID;

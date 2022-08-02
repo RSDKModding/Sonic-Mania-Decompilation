@@ -243,7 +243,7 @@ void PBL_Setup_GiveLife(void)
         if (saveRAM->lives < 99)
             saveRAM->lives++;
 
-        Music_PlayQueuedTrack(TRACK_1UP);
+        Music_PlayJingle(TRACK_1UP);
     }
 }
 

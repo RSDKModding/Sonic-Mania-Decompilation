@@ -807,7 +807,7 @@ void UIButton_SelectedCB(void)
     }
 
     if (self->stopMusic)
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
 
     self->timer = 0;
     self->state = UIButton_State_Selected;

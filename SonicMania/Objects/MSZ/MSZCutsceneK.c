@@ -138,7 +138,7 @@ bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
     EntityTornado *tornado = MSZCutsceneK->tornado;
 
     if (!host->timer) {
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
         RSDK.PlaySfx(MSZCutsceneK->sfxImpact, false, 0xFF);
         tornado->velocity.y = -0x10000;
         if (!host->values[0]) {

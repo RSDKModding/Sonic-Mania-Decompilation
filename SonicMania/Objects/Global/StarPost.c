@@ -215,7 +215,7 @@ void StarPost_CheckBonusStageEntry(void)
                     SaveGame->saveRAM->storedStageID = SceneInfo->listPos;
                     RSDK.SetScene("Pinball", "");
                     Zone_StartFadeOut(10, 0xF0F0F0);
-                    RSDK.StopChannel(Music->channelID);
+                    Music_Stop();
                 }
                 else {
 #endif
@@ -223,7 +223,7 @@ void StarPost_CheckBonusStageEntry(void)
                     RSDK.SetScene("Blue Spheres", "");
                     SceneInfo->listPos += globals->blueSpheresID;
                     Zone_StartFadeOut(10, 0xF0F0F0);
-                    RSDK.StopChannel(Music->channelID);
+                    Music_Stop();
 #if MANIA_USE_PLUS
                 }
 #endif
@@ -240,7 +240,7 @@ void StarPost_CheckCollisions(void)
         int32 playerID = RSDK.GetEntitySlot(player);
         if (!((1 << playerID) & self->interactedPlayers) && !player->sidekick) {
             if (Player_CheckCollisionTouch(player, self, &StarPost->hitbox)) {
-                self->state = StarPost_State_BallSpin;
+                self->state = StarPost_State_Spinning;
                 if (!TMZ2Setup) {
                     foreach_all(StarPost, starPost)
                     {
@@ -334,7 +334,7 @@ void StarPost_State_Idle(void)
 
     RSDK.ProcessAnimation(&self->ballAnimator);
 }
-void StarPost_State_BallSpin(void)
+void StarPost_State_Spinning(void)
 {
     RSDK_THIS(StarPost);
 

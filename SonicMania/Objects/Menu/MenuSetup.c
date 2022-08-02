@@ -158,11 +158,11 @@ void MenuSetup_StageLoad(void)
     MenuSetup->fxFade                = NULL;
 
     if (!globals->suppressAutoMusic) {
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
         Music->activeTrack = TRACK_NONE;
     }
 #else
-    RSDK.StopChannel(Music->channelID);
+    Music_Stop();
     Music->activeTrack      = TRACK_NONE;
 #endif
 
@@ -1000,7 +1000,7 @@ void MenuSetup_ChangeMenuTrack(void)
         case MAINMENU_SAVESELECT: trackID = 3; break;
     }
 
-    if (!RSDK.ChannelActive(Music->channelID))
+    if (!Music_IsPlaying())
         Music_PlayTrack(trackID);
     else if (Music->activeTrack != trackID)
         Music_TransitionTrack(trackID, 0.12);

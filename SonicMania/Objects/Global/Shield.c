@@ -92,7 +92,7 @@ void Shield_Create(void *data)
     }
 
     self->drawFX = FX_FLIP;
-    self->state  = Shield_State_Generic;
+    self->state  = Shield_State_Default;
     switch (self->type) {
         case SHIELD_BLUE:
             RSDK.SetSpriteAnimation(Shield->aniFrames, 0, &self->shieldAnimator, true, 0);
@@ -128,7 +128,7 @@ void Shield_StageLoad(void)
     Shield->sfxLightningJump   = RSDK.GetSfx("Global/LightningJump.wav");
 }
 
-void Shield_State_Generic(void)
+void Shield_State_Default(void)
 {
     RSDK_THIS(Shield);
 
@@ -142,7 +142,7 @@ void Shield_State_BubbleDrop(void)
 {
     RSDK_THIS(Shield);
 
-    Shield_State_Generic();
+    Shield_State_Default();
 
     if (self->fxAnimator.frameID == self->fxAnimator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &self->fxAnimator, true, 0);
@@ -155,12 +155,12 @@ void Shield_State_BubbleBounced(void)
 {
     RSDK_THIS(Shield);
 
-    Shield_State_Generic();
+    Shield_State_Default();
 
     if (self->fxAnimator.frameID == self->fxAnimator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Shield->aniFrames, 5, &self->fxAnimator, true, 0);
         RSDK.SetSpriteAnimation(Shield->aniFrames, 6, &self->shieldAnimator, true, 0);
-        self->state = Shield_State_Generic;
+        self->state = Shield_State_Default;
     }
 }
 
@@ -174,7 +174,7 @@ void Shield_State_FireDash(void)
     if (++self->timer > 24) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(Shield->aniFrames, 1, &self->shieldAnimator, true, 0);
-        self->state = Shield_State_Generic;
+        self->state = Shield_State_Default;
     }
 }
 
@@ -239,7 +239,7 @@ void Shield_State_LightningSparks(void)
         debris->scale.y = self->scale.y;
     }
 
-    self->state = Shield_State_Generic;
+    self->state = Shield_State_Default;
 }
 
 void Shield_State_Insta(void)

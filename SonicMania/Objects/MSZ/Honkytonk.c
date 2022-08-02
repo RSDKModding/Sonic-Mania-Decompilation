@@ -23,13 +23,10 @@ void Honkytonk_Update(void)
         int32 startXVel = player->velocity.x;
         int32 startYVel = player->velocity.y;
 
-        int32 distX        = (player->position.x - self->position.x) >> 8;
-        int32 distY        = (player->position.y - self->position.y) >> 8;
-        player->position.x = (distY * RSDK.Sin256(self->negAngle)) + (distX * RSDK.Cos256(self->negAngle)) + self->position.x;
-        player->position.y = (distY * RSDK.Cos256(self->negAngle)) - (distX * RSDK.Sin256(self->negAngle)) + self->position.y;
+        Zone_RotateOnPivot(&player->position, &self->position, self->negAngle);
 
-        player->velocity.x = ((player->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + ((player->velocity.x >> 8) * RSDK.Cos256(self->negAngle));
-        player->velocity.y = ((player->velocity.y >> 8) * RSDK.Cos256(self->negAngle)) - ((player->velocity.x >> 8) * RSDK.Sin256(self->negAngle));
+        Vector2 pivotCenter = { 0, 0 };
+        Zone_RotateOnPivot(&player->velocity, &pivotCenter, self->negAngle);
 
         if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitboxTrigger)) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
@@ -46,16 +43,8 @@ void Honkytonk_Update(void)
 
             player->velocity.y = clampVal(player->velocity.y, -0x80000, -0x20000);
 
-            distX              = (player->position.x - self->position.x) >> 8;
-            distY              = (player->position.y - self->position.y) >> 8;
-            player->position.x = self->position.x + distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle);
-            player->position.y = self->position.y - distX * RSDK.Sin256(self->angle) + distY * RSDK.Cos256(self->angle);
-
-            int32 velX = player->velocity.x;
-            int32 velY = player->velocity.y;
-
-            player->velocity.x = (velY >> 8) * RSDK.Sin256(self->angle) + (velX >> 8) * RSDK.Cos256(self->angle);
-            player->velocity.y = (velY >> 8) * RSDK.Cos256(self->angle) - (velX >> 8) * RSDK.Sin256(self->angle);
+            Zone_RotateOnPivot(&player->position, &self->position, self->angle);
+            Zone_RotateOnPivot(&player->velocity, &pivotCenter, self->angle);
 
             float speeds[] = { 1.0, 1.25, 1.5, 0.75 };
             int32 channel  = RSDK.PlaySfx(Honkytonk->sfxPiano, false, 0xFF);

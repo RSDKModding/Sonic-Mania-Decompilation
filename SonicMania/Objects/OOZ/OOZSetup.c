@@ -178,7 +178,7 @@ void OOZSetup_StaticUpdate(void)
 #if MANIA_USE_PLUS
     foreach_active(Ring, ring)
     {
-        if (ring->state == Ring_State_Bounce) {
+        if (ring->state == Ring_State_Lost) {
             uint16 tile = RSDK.GetTile(Zone->fgLow, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
             if (tile == (uint16)-1)
                 tile = RSDK.GetTile(Zone->fgHigh, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);

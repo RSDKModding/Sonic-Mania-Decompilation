@@ -52,8 +52,8 @@ void SpecialRing_Serialize(void);
 void SpecialRing_DebugDraw(void);
 void SpecialRing_DebugSpawn(void);
 
-void SpecialRing_State_StartWarp(void);
+void SpecialRing_State_Idle(void);
+void SpecialRing_State_Flash(void);
 void SpecialRing_State_Warp(void);
-void SpecialRing_State_Normal(void);
 
 #endif //!OBJ_SPECIALRING_H

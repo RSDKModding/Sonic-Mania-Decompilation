@@ -1021,7 +1021,7 @@ void CrimsonEye_StateCore_SpawnSignPost(void)
         {
             signPost->position.x = self->position.x;
             signPost->position.y = (ScreenInfo->position.y - 64) << 16;
-            signPost->state      = SignPost_State_Fall;
+            signPost->state      = SignPost_State_Falling;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
 

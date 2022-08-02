@@ -812,7 +812,7 @@ void UITAZoneModule_TouchCB_Left(void)
         parent->state = StateMachine_None;
         self->timer   = 0;
         self->state   = UITAZoneModule_State_StartTimeAttackAttempt;
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     }
 }
@@ -831,7 +831,7 @@ void UITAZoneModule_TouchCB_Right(void)
     self->timer   = 0;
     self->state   = UITAZoneModule_State_StartTimeAttackAttempt;
 
-    RSDK.StopChannel(Music->channelID);
+    Music_Stop();
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
 }
 
@@ -864,7 +864,7 @@ void UITAZoneModule_ProcessButtonCB_Expanded(void)
         self->timer   = 0;
         self->state   = UITAZoneModule_State_StartTimeAttackAttempt;
 
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     }
     else {

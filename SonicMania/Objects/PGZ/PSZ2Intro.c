@@ -76,7 +76,7 @@ bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host)
     if (host->values[0]) {
         if (host->timer - host->storedTimer == 30) {
             ActClear->displayedActID = 1;
-            post->state              = SignPost_State_Fall;
+            post->state              = SignPost_State_Falling;
             post->active             = ACTIVE_NORMAL;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 0xFF);
 

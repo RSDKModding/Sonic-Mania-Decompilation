@@ -50,10 +50,10 @@ void Ring_Create(void *data)
             self->active = ACTIVE_BOUNDS;
 
             switch (self->moveType) {
-                case RING_MOVE_MOVING:
+                case RING_MOVE_LINEAR:
                     self->updateRange.x = (abs(self->amplitude.x) + 0x1000) << 10;
                     self->updateRange.y = (abs(self->amplitude.y) + 0x1000) << 10;
-                    self->state         = Ring_State_Move;
+                    self->state         = Ring_State_Linear;
                     self->stateDraw     = Ring_Draw_Oscillating;
                     break;
 
@@ -182,10 +182,10 @@ void Ring_Collect(void)
                 foreach_return;
             }
         }
-        else if (self->state != Ring_State_Attract && player->shield == SHIELD_LIGHTNING
+        else if (self->state != Ring_State_Attracted && player->shield == SHIELD_LIGHTNING
                  && RSDK.CheckObjectCollisionTouchCircle(self, 0x500000, player, 0x10000)) {
             self->drawPos.x    = 0;
-            self->state        = Ring_State_Attract;
+            self->state        = Ring_State_Attracted;
             self->stateDraw    = Ring_Draw_Normal;
             self->active       = ACTIVE_NORMAL;
             self->storedPlayer = player;
@@ -218,10 +218,10 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         ring->inkEffect      = INK_ALPHA;
         ring->alpha          = 0x100;
         ring->isPermanent    = true;
-        ring->state          = Ring_State_Bounce;
+        ring->state          = Ring_State_Lost;
         ring->stateDraw      = Ring_Draw_Normal;
         ring->drawGroup      = self->drawGroup;
-        ring->moveType       = RING_MOVE_MOVING;
+        ring->moveType       = RING_MOVE_LINEAR;
         angle += 0x10;
     }
 
@@ -239,7 +239,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         ring->inkEffect      = INK_ALPHA;
         ring->alpha          = 0x100;
         ring->isPermanent    = true;
-        ring->state          = Ring_State_Bounce;
+        ring->state          = Ring_State_Lost;
         ring->stateDraw      = Ring_Draw_Normal;
         ring->drawGroup      = self->drawGroup;
         angle += 0x10;
@@ -259,7 +259,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         ringGrow->scale.y        = 0x100;
         ringGrow->animator.speed = 0x200;
         ringGrow->drawFX         = FX_FLIP | FX_ROTATE | FX_SCALE;
-        ringGrow->state          = Ring_State_Grow;
+        ringGrow->state          = Ring_State_LostFX;
         ringGrow->stateDraw      = Ring_Draw_Normal;
         angle += 0x10;
     }
@@ -332,7 +332,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
         ring->scale.y        = scale;
         ring->drawFX         = FX_FLIP | FX_SCALE;
         ring->drawGroup      = drawGroup;
-        ring->state          = Ring_State_Grow;
+        ring->state          = Ring_State_LostFX;
         ring->stateDraw      = Ring_Draw_Normal;
         angle += 0x10;
     }
@@ -352,7 +352,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
         ring->scale.y        = scale + 0x40;
         ring->drawFX         = FX_FLIP | FX_SCALE;
         ring->drawGroup      = drawGroup;
-        ring->state          = Ring_State_Grow;
+        ring->state          = Ring_State_LostFX;
         ring->stateDraw      = Ring_Draw_Normal;
         angle += 0x10;
     }
@@ -372,7 +372,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
         ringGrow->scale.y        = scale + 0x80;
         ringGrow->drawFX         = FX_FLIP | FX_SCALE;
         ringGrow->drawGroup      = drawGroup;
-        ringGrow->state          = Ring_State_Grow;
+        ringGrow->state          = Ring_State_LostFX;
         ringGrow->stateDraw      = Ring_Draw_Normal;
         angle += 0x10;
     }
@@ -512,7 +512,7 @@ void Ring_State_Normal(void)
 
     self->animator.frameID = Zone->ringFrame;
 }
-void Ring_State_Move(void)
+void Ring_State_Linear(void)
 {
     RSDK_THIS(Ring);
 
@@ -583,7 +583,7 @@ void Ring_State_Track(void)
 
     self->animator.frameID = Zone->ringFrame;
 }
-void Ring_State_Bounce(void)
+void Ring_State_Lost(void)
 {
     RSDK_THIS(Ring);
 
@@ -619,7 +619,7 @@ void Ring_State_Bounce(void)
     else if (self->timer >= 0xF0)
         self->alpha -= 0x10;
 }
-void Ring_State_Grow(void)
+void Ring_State_LostFX(void)
 {
     RSDK_THIS(Ring);
 
@@ -694,7 +694,7 @@ void Ring_State_Big(void)
     if (self->timer > 0xFF)
         destroyEntity(self);
 }
-void Ring_State_Attract(void)
+void Ring_State_Attracted(void)
 {
     RSDK_THIS(Ring);
 
@@ -733,7 +733,7 @@ void Ring_State_Attract(void)
         self->position.y = startY + self->velocity.y;
     }
     else {
-        self->state          = Ring_State_Bounce;
+        self->state          = Ring_State_Lost;
         self->animator.speed = 0x80;
         self->alpha          = 0x100;
         self->inkEffect      = INK_ALPHA;
@@ -811,7 +811,7 @@ void Ring_EditorDraw(void)
         amplitude.y = self->amplitude.y >> 10;
 
         switch (self->moveType) {
-            case RING_MOVE_MOVING:
+            case RING_MOVE_LINEAR:
                 self->updateRange.x = (abs(amplitude.x) + 0x1000) << 10;
                 self->updateRange.y = (abs(amplitude.y) + 0x1000) << 10;
 
@@ -892,7 +892,7 @@ void Ring_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(Ring, moveType);
     RSDK_ENUM_VAR("Fixed", RING_MOVE_FIXED);
-    RSDK_ENUM_VAR("Moving", RING_MOVE_MOVING);
+    RSDK_ENUM_VAR("Linear", RING_MOVE_LINEAR);
     RSDK_ENUM_VAR("Circle", RING_MOVE_CIRCLE);
     RSDK_ENUM_VAR("Track", RING_MOVE_TRACK);
     RSDK_ENUM_VAR("Path", RING_MOVE_PATH);

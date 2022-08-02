@@ -47,7 +47,7 @@ void Shield_EditorLoad(void);
 void Shield_Serialize(void);
 
 // Extra Entity Functions
-void Shield_State_Generic(void);
+void Shield_State_Default(void);
 void Shield_State_BubbleDrop(void);
 void Shield_State_BubbleBounced(void);
 void Shield_State_FireDash(void);

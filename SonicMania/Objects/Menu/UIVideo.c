@@ -55,7 +55,7 @@ void UIVideo_State_PlayVideo1(void)
     RSDK_THIS(UIVideo);
 
     if (!self->timer)
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
 
     if (++self->timer >= 16) {
         char videoFile1[64];

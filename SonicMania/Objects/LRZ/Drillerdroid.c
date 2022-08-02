@@ -1128,7 +1128,7 @@ void Drillerdroid_State_DropSignPost(void)
         foreach_all(SignPost, signPost)
         {
             signPost->active = ACTIVE_NORMAL;
-            signPost->state  = SignPost_State_Fall;
+            signPost->state  = SignPost_State_Falling;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
 

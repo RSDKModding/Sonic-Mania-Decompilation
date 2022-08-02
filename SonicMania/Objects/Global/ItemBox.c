@@ -491,7 +491,7 @@ void ItemBox_GivePowerup(void)
             Player_ApplyShield(player);
             RSDK.PlaySfx(Shield->sfxBubbleShield, false, 255);
             player->drownTimer = 0;
-            Music_EndQueuedTrack(TRACK_DROWNING, false);
+            Music_JingleFadeOut(TRACK_DROWNING, false);
             break;
 
         case ITEMBOX_FIRESHIELD:
@@ -511,7 +511,7 @@ void ItemBox_GivePowerup(void)
                 EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), InvincibleStars);
                 RSDK.ResetEntity(invincibleStars, InvincibleStars->classID, player);
                 player->invincibleTimer = 1260;
-                Music_PlayQueuedTrack(TRACK_INVINCIBLE);
+                Music_PlayJingle(TRACK_INVINCIBLE);
             }
             break;
 
@@ -519,7 +519,7 @@ void ItemBox_GivePowerup(void)
             player->speedShoesTimer = 1320;
             Player_UpdatePhysicsState(player);
             if (player->superState == SUPERSTATE_NONE) {
-                Music_PlayQueuedTrack(TRACK_SNEAKERS);
+                Music_PlayJingle(TRACK_SNEAKERS);
                 EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntitySlot(player), ImageTrail);
                 RSDK.ResetEntity(powerup, ImageTrail->classID, player);
             }

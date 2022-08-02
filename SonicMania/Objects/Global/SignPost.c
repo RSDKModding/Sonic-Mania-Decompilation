@@ -157,7 +157,7 @@ void SignPost_Create(void *data)
                 case SIGNPOST_DECOR: // Decoration
                     if (globals->gameMode != MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
-                        self->state  = SignPost_State_Finish;
+                        self->state  = SignPost_State_Done;
                         destroy      = false;
                     }
                     break;
@@ -374,7 +374,7 @@ void SignPost_CheckTouch(void)
                         self->activePlayers |= (1 << p);
                         if (self->activePlayers == SignPost->maxPlayerCount)
                             Music_FadeOut(0.025);
-                        self->state = SignPost_State_SpunVS;
+                        self->state = SignPost_State_SpinVS;
                     }
                     else {
 #if MANIA_USE_PLUS
@@ -408,7 +408,7 @@ void SignPost_CheckTouch(void)
                         }
                         else {
                             Music_FadeOut(0.025);
-                            self->state = SignPost_State_Land;
+                            self->state = SignPost_State_Spin;
                         }
                     }
                 }
@@ -423,6 +423,7 @@ void SignPost_CheckTouch(void)
 void SignPost_State_Init(void)
 {
     RSDK_THIS(SignPost);
+
     self->state = SignPost_State_AwaitTouch;
 }
 void SignPost_State_AwaitTouch(void)
@@ -430,20 +431,23 @@ void SignPost_State_AwaitTouch(void)
     SignPost_HandleCamBounds();
     SignPost_CheckTouch();
 }
-void SignPost_State_Land(void)
+void SignPost_State_Spin(void)
 {
     RSDK_THIS(SignPost);
+
     SignPost_HandleSpin();
     SignPost_HandleSparkles();
+
     RSDK.ProcessAnimation(&self->facePlateAnimator);
+
     if (!self->spinCount) {
         self->type  = SIGNPOST_DECOR;
-        self->state = SignPost_State_Finish;
+        self->state = SignPost_State_Done;
         Music_PlayTrack(TRACK_ACTCLEAR);
         RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->classID, NULL);
     }
 }
-void SignPost_State_SpunVS(void)
+void SignPost_State_SpinVS(void)
 {
     RSDK_THIS(SignPost);
     SignPost_HandleSpin();
@@ -454,7 +458,7 @@ void SignPost_State_SpunVS(void)
     if (!self->spinCount) {
         if (self->activePlayers >= SignPost->maxPlayerCount) {
             self->type             = SIGNPOST_DECOR;
-            self->state            = SignPost_State_Finish;
+            self->state            = SignPost_State_Done;
             SceneInfo->timeEnabled = false;
             Zone_StartFadeOut_Competition(10, 0x000000);
         }
@@ -469,20 +473,26 @@ void SignPost_State_SpunVS(void)
 void SignPost_State_Launched(void)
 {
     RSDK_THIS(SignPost);
+
     SignPost_HandleSpin();
     SignPost_HandleSparkles();
+
     RSDK.ProcessAnimation(&self->facePlateAnimator);
+
     self->spinCount = 16;
     self->position.y += self->velocity.y;
     self->velocity.y += self->gravityStrength;
+
     if (self->velocity.y >= 0)
-        self->state = SignPost_State_Fall;
+        self->state = SignPost_State_Falling;
 }
-void SignPost_State_Fall(void)
+void SignPost_State_Falling(void)
 {
     RSDK_THIS(SignPost);
+
     self->active           = ACTIVE_NORMAL;
     SceneInfo->timeEnabled = false;
+
     if (self->type == SIGNPOST_DROP) {
         self->type = SIGNPOST_RUNPAST;
         if (globals->gameMode < MODE_COMPETITION) {
@@ -562,11 +572,11 @@ void SignPost_State_Fall(void)
             self->spinCount  = 4;
             self->velocity.y = 0;
             Music_FadeOut(0.025);
-            self->state = SignPost_State_Land;
+            self->state = SignPost_State_Spin;
         }
     }
 }
-void SignPost_State_Finish(void)
+void SignPost_State_Done(void)
 {
     RSDK_THIS(SignPost);
     RSDK.ProcessAnimation(&self->facePlateAnimator);

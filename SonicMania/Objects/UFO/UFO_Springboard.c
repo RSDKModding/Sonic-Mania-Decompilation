@@ -15,22 +15,13 @@ void UFO_Springboard_Update(void)
     foreach_active(UFO_Player, player)
     {
         if (player->bumperTimer <= 12 && player->stateInput) {
-            int32 distX = (player->position.x - self->position.x) >> 8;
-            int32 distY = (player->position.y - self->position.y) >> 8;
+            Vector2 pivotPos = player->position;
+            Zone_RotateOnPivot(&pivotPos, &self->position, self->angle >> 2);
 
-            int32 posX = self->position.x + distY * RSDK.Sin256(self->angle >> 2) + distX * RSDK.Cos256(self->angle >> 2);
-            int32 posZ = self->position.y - distX * RSDK.Sin256(self->angle >> 2) + distY * RSDK.Cos256(self->angle >> 2);
-
-            // ???
-            RSDK.Sin256(self->angle >> 2);
-            RSDK.Cos256(self->angle >> 2);
-            RSDK.Cos256(self->angle >> 2);
-            RSDK.Sin256(self->angle >> 2);
-
-            if (abs(self->position.x - posX) < 0x180000 && abs(self->position.y - posZ) < 0x180000) {
-                int32 posY = 32 * ((posZ - self->position.y + 0x180000) / 48);
-                if (player->height < posY) {
-                    if (posY - player->height <= 0xC0000) {
+            if (abs(self->position.x - pivotPos.x) < 0x180000 && abs(self->position.y - pivotPos.y) < 0x180000) {
+                int32 height = 32 * ((pivotPos.y - self->position.y + 0x180000) / 48);
+                if (player->height < height) {
+                    if (height - player->height <= 0xC0000) {
                         player->gravityStrength = 0xC0000;
                         player->onGround        = false;
                         player->state           = UFO_Player_State_Springboard;

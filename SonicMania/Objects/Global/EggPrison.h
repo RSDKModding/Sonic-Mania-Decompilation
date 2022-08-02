@@ -59,8 +59,8 @@ void EggPrison_Serialize(void);
 void EggPrison_HandleMovement(void);
 
 void EggPrison_State_Init(void);
-void EggPrison_State_Activated(void);
-void EggPrison_State_HandleBounds(void);
+void EggPrison_State_Idle(void);
+void EggPrison_State_Opened(void);
 void EggPrison_State_Explode(void);
 void EggPrison_State_SetupActClear(void);
 void EggPrison_State_FlyOffScreen(void);

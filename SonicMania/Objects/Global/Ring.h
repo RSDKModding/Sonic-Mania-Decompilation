@@ -13,7 +13,7 @@ typedef enum {
 
 typedef enum {
     RING_MOVE_FIXED,
-    RING_MOVE_MOVING,
+    RING_MOVE_LINEAR,
     RING_MOVE_CIRCLE,
     RING_MOVE_TRACK,
     RING_MOVE_PATH,
@@ -77,14 +77,14 @@ void Ring_CheckObjectCollisions(int32 x, int32 y);
 
 // States
 void Ring_State_Normal(void);
-void Ring_State_Move(void);
+void Ring_State_Linear(void);
 void Ring_State_Circular(void);
 void Ring_State_Path(void);
 void Ring_State_Track(void);
-void Ring_State_Bounce(void);
-void Ring_State_Grow(void);
+void Ring_State_Lost(void);
+void Ring_State_LostFX(void);
 void Ring_State_Big(void);
-void Ring_State_Attract(void);
+void Ring_State_Attracted(void);
 void Ring_State_Sparkle(void);
 
 // Draw States

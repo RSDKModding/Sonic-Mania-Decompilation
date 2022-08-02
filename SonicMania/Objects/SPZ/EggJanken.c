@@ -555,7 +555,7 @@ void EggJanken_State_Destroyed(void)
 
             EntitySignPost *signPost = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, SignPost);
             signPost->position.x     = self->position.x;
-            signPost->state          = SignPost_State_Fall;
+            signPost->state          = SignPost_State_Falling;
 
             self->state = EggJanken_State_None;
             break;

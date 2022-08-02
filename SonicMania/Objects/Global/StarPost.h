@@ -66,6 +66,6 @@ void StarPost_CheckCollisions(void);
 
 // States
 void StarPost_State_Idle(void);
-void StarPost_State_BallSpin(void);
+void StarPost_State_Spinning(void);
 
 #endif //!OBJ_STARPOST_H

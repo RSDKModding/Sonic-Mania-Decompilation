@@ -24,7 +24,7 @@ void SpecialRing_Draw(void)
 {
     RSDK_THIS(SpecialRing);
 
-    if (self->state == SpecialRing_State_Warp) {
+    if (self->state == SpecialRing_State_Flash) {
         self->direction = self->warpAnimator.frameID > 8;
         RSDK.DrawSprite(&self->warpAnimator, NULL, false);
     }
@@ -54,7 +54,7 @@ void SpecialRing_Create(void *data)
             self->drawGroup = Zone->objectDrawHigh;
         else
             self->drawGroup = Zone->objectDrawLow;
-        self->state = SpecialRing_State_Normal;
+        self->state = SpecialRing_State_Idle;
 
         RSDK.SetSpriteAnimation(SpecialRing->aniFrames, 0, &self->warpAnimator, true, 0);
     }
@@ -139,28 +139,71 @@ void SpecialRing_DebugSpawn(void)
     specialRing->enabled           = true;
 }
 
-void SpecialRing_State_StartWarp(void)
+
+void SpecialRing_State_Idle(void)
 {
     RSDK_THIS(SpecialRing);
 
-    if (++self->warpTimer == 30) {
-        SaveGame_SaveGameState();
-        RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 0xFE);
-        destroyEntity(self);
+    self->angleZ = (self->angleZ + 4) & 0x3FF;
+    self->angleY = (self->angleY + 4) & 0x3FF;
 
-        SaveRAM *saveRAM      = SaveGame->saveRAM;
-        saveRAM->storedStageID  = SceneInfo->listPos;
-        RSDK.SetScene("Special Stage", "");
-        SceneInfo->listPos += saveRAM->nextSpecialStage;
-#if MANIA_USE_PLUS
-        if (globals->gameMode == MODE_ENCORE)
-            SceneInfo->listPos += 7;
+    Vector2 range;
+    range.x = 0x800000;
+    range.y = 0x800000;
+    if (!RSDK.CheckOnScreen(self, &range))
+        self->scale.x = 0;
+
+    if (self->scale.x >= 0x140)
+        self->scale.x = 0x140;
+    else
+        self->scale.x += ((0x168 - self->scale.x) >> 5);
+
+    RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.x, self->scale.x);
+    RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->position.y, 0, false);
+    RSDK.MatrixRotateXYZ(&self->matWorld, 0, self->angleY, self->angleZ);
+    RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &self->matTransform);
+    RSDK.MatrixRotateX(&self->matTempRot, 0x1E0);
+    RSDK.MatrixRotateXYZ(&self->matNormal, 0, self->angleY, self->angleZ);
+    RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &self->matTempRot);
+
+    if (self->enabled && self->scale.x > 0x100) {
+        foreach_active(Player, player)
+        {
+            if ((self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) && !player->sidekick) {
+                if (Player_CheckCollisionTouch(player, self, &SpecialRing->hitbox) && SceneInfo->timeEnabled) {
+                    self->sparkleRadius = 0x100000;
+                    self->state         = SpecialRing_State_Flash;
+
+                    SaveRAM *saveRAM = SaveGame->saveRAM;
+#if GAME_VERSION != VER_100
+                    // rings spawned via debug mode give you 50 rings, always
+                    if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {
+#else
+                    // rings spawned via debug mode take you to special stage, always
+                    if (saveRAM->chaosEmeralds != 0b01111111) {
 #endif
-        Zone_StartFadeOut(10, 0xF0F0F0);
-        RSDK.StopChannel(Music->channelID);
+                        player->visible        = false;
+                        player->active         = ACTIVE_NEVER;
+                        SceneInfo->timeEnabled = false;
+                    }
+                    else {
+                        Player_GiveRings(player, 50, true);
+                    }
+
+                    if (self->id > 0) {
+                        if (saveRAM->chaosEmeralds != 0b01111111)
+                            globals->specialRingID = self->id;
+
+                        saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + self->id);
+                    }
+
+                    RSDK.PlaySfx(SpecialRing->sfxSpecialRing, false, 0xFE);
+                }
+            }
+        }
     }
 }
-void SpecialRing_State_Warp(void)
+void SpecialRing_State_Flash(void)
 {
     RSDK_THIS(SpecialRing);
 
@@ -197,70 +240,28 @@ void SpecialRing_State_Warp(void)
     else if (self->warpAnimator.frameID == self->warpAnimator.frameCount - 1) {
         self->warpTimer = 0;
         self->visible   = false;
-        self->state     = SpecialRing_State_StartWarp;
+        self->state     = SpecialRing_State_Warp;
     }
 }
-void SpecialRing_State_Normal(void)
+void SpecialRing_State_Warp(void)
 {
     RSDK_THIS(SpecialRing);
 
-    self->angleZ = (self->angleZ + 4) & 0x3FF;
-    self->angleY = (self->angleY + 4) & 0x3FF;
+    if (++self->warpTimer == 30) {
+        SaveGame_SaveGameState();
+        RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 0xFE);
+        destroyEntity(self);
 
-    Vector2 range;
-    range.x = 0x800000;
-    range.y = 0x800000;
-    if (!RSDK.CheckOnScreen(self, &range))
-        self->scale.x = 0;
-
-    if (self->scale.x >= 0x140)
-        self->scale.x = 0x140;
-    else
-        self->scale.x += ((0x168 - self->scale.x) >> 5);
-
-    RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.x, self->scale.x);
-    RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->position.y, 0, false);
-    RSDK.MatrixRotateXYZ(&self->matWorld, 0, self->angleY, self->angleZ);
-    RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &self->matTransform);
-    RSDK.MatrixRotateX(&self->matTempRot, 0x1E0);
-    RSDK.MatrixRotateXYZ(&self->matNormal, 0, self->angleY, self->angleZ);
-    RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &self->matTempRot);
-
-    if (self->enabled && self->scale.x > 0x100) {
-        foreach_active(Player, player)
-        {
-            if ((self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) && !player->sidekick) {
-                if (Player_CheckCollisionTouch(player, self, &SpecialRing->hitbox) && SceneInfo->timeEnabled) {
-                    self->sparkleRadius = 0x100000;
-                    self->state         = SpecialRing_State_Warp;
-
-                    SaveRAM *saveRAM = SaveGame->saveRAM;
-#if GAME_VERSION != VER_100
-                    // rings spawned via debug mode give you 50 rings, always
-                    if (saveRAM->chaosEmeralds != 0b01111111 && self->id) {
-#else
-                    // rings spawned via debug mode take you to special stage, always
-                    if (saveRAM->chaosEmeralds != 0b01111111) {
+        SaveRAM *saveRAM      = SaveGame->saveRAM;
+        saveRAM->storedStageID  = SceneInfo->listPos;
+        RSDK.SetScene("Special Stage", "");
+        SceneInfo->listPos += saveRAM->nextSpecialStage;
+#if MANIA_USE_PLUS
+        if (globals->gameMode == MODE_ENCORE)
+            SceneInfo->listPos += 7;
 #endif
-                        player->visible        = false;
-                        player->active         = ACTIVE_NEVER;
-                        SceneInfo->timeEnabled = false;
-                    }
-                    else {
-                        Player_GiveRings(player, 50, true);
-                    }
-
-                    if (self->id > 0) {
-                        if (saveRAM->chaosEmeralds != 0b01111111)
-                            globals->specialRingID = self->id;
-
-                        saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + self->id);
-                    }
-
-                    RSDK.PlaySfx(SpecialRing->sfxSpecialRing, false, 0xFE);
-                }
-            }
-        }
+        Zone_StartFadeOut(10, 0xF0F0F0);
+        Music_Stop();
     }
 }
 

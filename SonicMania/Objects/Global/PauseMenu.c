@@ -30,8 +30,8 @@ void PauseMenu_LateUpdate(void)
     RSDK_THIS(PauseMenu);
 
     if (self->state) {
-        if (RSDK.ChannelActive(Music->channelID))
-            RSDK.PauseChannel(Music->channelID);
+        if (Music_IsPlaying())
+            Music_Pause();
     }
     else {
         StateMachine(state) = RSDK_GET_ENTITY(self->triggerPlayer, Player)->state;
@@ -471,7 +471,7 @@ void PauseMenu_RestartDialog_YesCB(void)
         StarPost->postIDs[2] = 0;
         StarPost->postIDs[3] = 0;
     }
-    RSDK.StopChannel(Music->channelID);
+    Music_Stop();
 
     int32 x                  = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
     int32 y                  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
@@ -494,7 +494,7 @@ void PauseMenu_ExitDialog_YesCB(void)
         StarPost->postIDs[2] = 0;
         StarPost->postIDs[3] = 0;
     }
-    RSDK.StopChannel(Music->channelID);
+    Music_Stop();
 
     int32 x                  = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
     int32 y                  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;

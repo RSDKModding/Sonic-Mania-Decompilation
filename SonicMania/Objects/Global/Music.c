@@ -94,6 +94,11 @@ void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint)
     Music->trackLoops[track]         = loopPoint;
 }
 
+void Music_Stop(void) { RSDK.StopChannel(Music->channelID); }
+void Music_Pause(void) { RSDK.PauseChannel(Music->channelID); }
+void Music_Resume(void) { RSDK.ResumeChannel(Music->channelID); }
+bool32 Music_IsPlaying(void) { return RSDK.ChannelActive(Music->channelID); }
+
 void Music_State_PlayOnLoad(void)
 {
     RSDK_THIS(Music);
@@ -118,7 +123,7 @@ void Music_State_PlayOnLoad(void)
     destroyEntity(self);
 }
 
-void Music_PlayQueuedTrack(uint8 trackID)
+void Music_PlayJingle(uint8 trackID)
 {
     trackID &= 0xF;
 
@@ -142,7 +147,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
     }
 
     entity->trackID       = trackID;
-    entity->state         = Music_State_HandleQueuedTrack;
+    entity->state         = Music_State_Jingle;
     entity->trackPriority = TRACK_PRIORITY_NONE;
     entity->fadeSpeed     = 0.08;
 
@@ -185,7 +190,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
         }
     }
 
-    RSDK.StopChannel(Music->channelID);
+    Music_Stop();
     Music->activeTrack = trackID;
     Music->channelID   = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 
@@ -207,13 +212,13 @@ void Music_PlayQueuedTrack(uint8 trackID)
             music->volume    = 0.0;
             music->fadeSpeed = 0.08;
 
-            bool32 active = RSDK.ChannelActive(Music->channelID);
+            bool32 active = Music_IsPlaying();
             if (Music->activeTrack != TRACK_1UP) {
                 Music->trackStartPos = RSDK.GetChannelPos(Music->channelID);
                 Music->queuedTrack   = Music->activeTrack;
             }
 
-            RSDK.StopChannel(Music->channelID);
+            Music_Stop();
             Music->activeTrack = TRACK_1UP;
             Music->channelID   = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
             break;
@@ -225,7 +230,7 @@ void Music_PlayQueuedTrack(uint8 trackID)
             }
             else {
                 destroyEntitySlot(SLOT_MUSIC);
-                RSDK.StopChannel(Music->channelID);
+                Music_Stop();
 
                 if (!Music->playingRegularTrack)
                     Music->nextTrack = Music->activeTrack;
@@ -255,7 +260,7 @@ void Music_PlayTrack(uint8 trackID)
             Music_ClearMusicStack();
 
         destroyEntitySlot(SLOT_MUSIC);
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
 
         Music->activeTrack   = trackID;
         Music->trackStartPos = 0;
@@ -304,7 +309,7 @@ void Music_PlayTrackPtr(EntityMusic *entity)
     Music->trackLoops[0] = entity->trackLoop;
 
     destroyEntitySlot(SLOT_MUSIC);
-    RSDK.StopChannel(Music->channelID);
+    Music_Stop();
 
     Music->activeTrack   = 0;
     Music->trackStartPos = 0;
@@ -341,7 +346,7 @@ void Music_PlayAutoMusicQueuedTrack(uint8 trackID)
     }
 
     entity->trackID       = trackID;
-    entity->state         = Music_State_HandleQueuedTrack;
+    entity->state         = Music_State_Jingle;
     entity->trackPriority = TRACK_PRIORITY_NONE;
     entity->volume        = 1.0;
     entity->fadeSpeed     = 0.08;
@@ -423,7 +428,7 @@ void Music_GetNextTrackStartPos(EntityMusic *entity)
 }
 #endif
 
-void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade)
+void Music_JingleFadeOut(uint8 trackID, bool32 transitionFade)
 {
     trackID &= 0xF;
 
@@ -432,7 +437,7 @@ void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade)
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->classID == Music->classID && music->trackID == trackID) {
             if (transitionFade) {
-                music->state     = Music_State_FadeTrackOut;
+                music->state     = Music_State_JingleFade;
                 music->fadeSpeed = 0.05;
             }
             else {
@@ -475,7 +480,7 @@ void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade)
                         Music->nextTrack   = TRACK_NONE;
                     }
 
-                    RSDK.StopChannel(Music->channelID);
+                    Music_Stop();
                     Music->channelID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                 }
             }
@@ -485,11 +490,11 @@ void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade)
 }
 
 #if MANIA_USE_PLUS
-void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
+void Music_FinishJingle(EntityMusic *entity)
 {
     if (entity) {
         EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-        if (music->classID != Music->classID || music->state != Music_State_TransitionTrack) {
+        if (music->classID != Music->classID || music->state != Music_State_PlayOnFade) {
             destroyEntity(music);
 
             // remove all of these buggers that have higher priority and thus wont be played
@@ -515,7 +520,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
                 }
             }
 
-            RSDK.StopChannel(Music->channelID);
+            Music_Stop();
             if (trackPtr) { // another track is on the music stack still
                 if (trackPtr->trackID == Music->activeTrack) {
                     trackPtr->trackStartPos = 0;
@@ -613,9 +618,9 @@ void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
     }
 #endif
 
-    if (music && (music->classID != Music->classID || music->state != Music_State_TransitionTrack)) {
+    if (music && (music->classID != Music->classID || music->state != Music_State_PlayOnFade)) {
         RSDK.ResetEntity(music, Music->classID, NULL);
-        music->state     = Music_State_TransitionTrack;
+        music->state     = Music_State_PlayOnFade;
         music->volume    = 1.0;
         music->fadeSpeed = fadeSpeed;
     }
@@ -626,14 +631,15 @@ void Music_FadeOut(float fadeSpeed)
     if (Music->activeTrack != TRACK_DROWNING) {
         EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
         RSDK.ResetEntity(music, Music->classID, NULL);
-        music->state     = Music_State_FadeOut;
+        music->state     = Music_State_StopOnFade;
         music->volume    = 1.0;
         music->fadeSpeed = fadeSpeed;
     }
 }
 
+
 #if MANIA_USE_PLUS
-void Music_State_HandleQueuedTrack(void)
+void Music_State_Jingle(void)
 {
     RSDK_THIS(Music);
 
@@ -649,10 +655,10 @@ void Music_State_HandleQueuedTrack(void)
 
     if (self->timer > 0) {
         if (!--self->timer)
-            Music_HandleMusicStackTrackRemoval(self);
+            Music_FinishJingle(self);
     }
 }
-void Music_State_FadeTrackOut(void)
+void Music_State_JingleFade(void)
 {
     RSDK_THIS(Music);
 
@@ -663,7 +669,7 @@ void Music_State_FadeTrackOut(void)
             RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
 
         if (self->volume <= -0.5)
-            Music_HandleMusicStackTrackRemoval(self);
+            Music_FinishJingle(self);
     }
 }
 #endif
@@ -692,7 +698,7 @@ void Music_State_FadeTrackIn(void)
     }
 #endif
 }
-void Music_State_FadeOut(void)
+void Music_State_StopOnFade(void)
 {
     RSDK_THIS(Music);
 
@@ -700,12 +706,12 @@ void Music_State_FadeOut(void)
     RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
 
     if (self->volume < -0.5) {
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
         destroyEntity(self);
     }
 }
 
-void Music_State_TransitionTrack(void)
+void Music_State_PlayOnFade(void)
 {
     RSDK_THIS(Music);
 
@@ -714,7 +720,7 @@ void Music_State_TransitionTrack(void)
 
     if (self->volume < -0.5) {
 #if MANIA_USE_PLUS
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
 
         Music->activeTrack   = Music->nextTrack;
         Music->trackStartPos = 0;
@@ -729,7 +735,7 @@ void Music_State_TransitionTrack(void)
         }
         else {
             destroyEntitySlot(SLOT_MUSIC);
-            RSDK.StopChannel(Music->channelID);
+            Music_Stop();
 
             if (!Music->playingRegularTrack)
                 Music->prevTrack = Music->activeTrack;
@@ -768,7 +774,7 @@ void Music_State_1UPJingle(void)
 
     self->timer++;
     if (self->timer == 224) {
-        RSDK.StopChannel(Music->channelID);
+        Music_Stop();
 
         if (Music->nextTrack == TRACK_NONE) {
             Music->activeTrack = Music->queuedTrack;

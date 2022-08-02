@@ -182,7 +182,7 @@ void DASetup_State_ManageControl(void)
 
     if (UIControl->anyConfirmPress) {
         if (DASetup->activeTrack == DASetup->trackID) {
-            RSDK.StopChannel(Music->channelID);
+            Music_Stop();
             DASetup->activeTrack = TRACK_NONE;
         }
         else {
@@ -194,7 +194,7 @@ void DASetup_State_ManageControl(void)
                 }
                 else {
                     DASetup->activeTrack = TRACK_NONE;
-                    RSDK.StopChannel(Music->channelID);
+                    Music_Stop();
                 }
             }
         }

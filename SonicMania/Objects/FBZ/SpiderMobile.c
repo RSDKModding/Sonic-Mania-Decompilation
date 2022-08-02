@@ -381,7 +381,7 @@ void SpiderMobile_HandlePlatformMovement(void)
 
     foreach_active(Ring, ring)
     {
-        if (ring->state == Ring_State_Bounce) {
+        if (ring->state == Ring_State_Lost) {
             ring->position.y += offsetY;
             if (ring->velocity.y >= 0) {
                 int32 velY = ring->velocity.y;

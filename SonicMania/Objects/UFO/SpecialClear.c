@@ -391,7 +391,7 @@ void SpecialClear_GiveScoreBonus(int32 score)
         if (self->lives < 99)
             self->lives++;
 
-        Music_PlayQueuedTrack(TRACK_1UP);
+        Music_PlayJingle(TRACK_1UP);
 
         Music->nextTrack = TRACK_NONE;
         while (self->score <= self->score1UP) self->score1UP += 50000;

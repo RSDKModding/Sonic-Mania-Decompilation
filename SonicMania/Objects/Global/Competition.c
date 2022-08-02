@@ -100,7 +100,7 @@ void Competition_State_Manager(void)
 
             self->timer--;
             if (self->timer == 12) {
-                Music_PlayQueuedTrack(TRACK_DROWNING);
+                Music_PlayJingle(TRACK_DROWNING);
             }
             else if (!self->timer) {
                 Zone->gotTimeOver      = true;

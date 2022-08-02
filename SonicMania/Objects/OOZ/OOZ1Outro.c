@@ -92,7 +92,7 @@ bool32 OOZ1Outro_Cutscene_FadeIn(EntityCutsceneSeq *host)
 
         foreach_active(SignPost, signpost)
         {
-            signpost->state  = SignPost_State_Fall;
+            signpost->state  = SignPost_State_Falling;
             signpost->active = ACTIVE_NORMAL;
         }
 

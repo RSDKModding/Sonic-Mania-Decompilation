@@ -124,13 +124,13 @@ void FBZSinkTrash_Update(void)
 
             foreach_active(SignPost, signPost)
             {
-                if (signPost->state == SignPost_State_Fall && signPost->position.y + 0x180000 > self->position.y - (self->size.y >> 1)) {
+                if (signPost->state == SignPost_State_Falling && signPost->position.y + 0x180000 > self->position.y - (self->size.y >> 1)) {
                     RSDK.PlaySfx(SignPost->sfxSlide, false, 255);
                     signPost->spinCount  = 4;
                     signPost->position.y = self->position.y - (self->size.y >> 1) - 0x180000;
                     signPost->velocity.y = 0;
                     Music_FadeOut(0.025);
-                    signPost->state = SignPost_State_Land;
+                    signPost->state = SignPost_State_Spin;
                 }
             }
             break;
