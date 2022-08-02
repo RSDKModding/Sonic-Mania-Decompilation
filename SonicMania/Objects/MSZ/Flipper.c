@@ -54,7 +54,7 @@ void Flipper_Update(void)
                     RSDK.PlaySfx(Flipper->sfxFlipper, false, 255);
                 }
                 else {
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->state          = Player_State_Air;
 
                     if (player->groundVel >= 0x10000) {
@@ -109,7 +109,7 @@ void Flipper_Update(void)
                     RSDK.PlaySfx(Flipper->sfxFlipper, false, 255);
                 }
                 else {
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->state          = Player_State_Air;
                     if (player->groundVel <= -0x10000) {
                         if (player->groundVel < -0x20000)

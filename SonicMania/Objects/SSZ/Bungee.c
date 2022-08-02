@@ -47,7 +47,7 @@ void Bungee_Update(void)
                 self->hasAttatchedPlayer = false;
 
                 if (self->attatchedPlayer) {
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->velocity       = self->velocity;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
 
@@ -96,7 +96,7 @@ void Bungee_Update(void)
                                 player->onGround        = false;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
-                                player->tileCollisions  = false;
+                                player->tileCollisions  = TILECOLLISION_NONE;
 
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_BUNGEE, &player->animator, true, 0);
                                 player->state = Player_State_Static;

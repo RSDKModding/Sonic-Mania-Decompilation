@@ -168,7 +168,7 @@ void TMZ2Outro_PlayerStateInput_Escape(void)
     if (self->position.x >= (2760 << 16)) {
         self->visible        = false;
         self->interaction    = false;
-        self->tileCollisions = false;
+        self->tileCollisions = TILECOLLISION_NONE;
         self->right          = false;
     }
 }

@@ -153,7 +153,7 @@ void SpeedBooster_HandleInteractions(void)
             self->playerTimer[playerID] = 30;
             player->controlLock         = 16;
             player->pushing             = false;
-            player->tileCollisions      = true;
+            player->tileCollisions      = TILECOLLISION_DOWN;
             if (player->state != Player_State_Roll)
                 player->state = Player_State_Ground;
             self->playerPos[playerID] = player->position.x;

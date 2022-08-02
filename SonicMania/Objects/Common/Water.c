@@ -759,7 +759,7 @@ void Water_State_Bubble(void)
 
         Water_HandleBubbleMovement();
 
-        if (self->tileCollisions) {
+        if (self->tileCollisions != TILECOLLISION_NONE) {
             if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, false)) {
                 while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, false)
                        && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, false)) {

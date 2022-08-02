@@ -161,7 +161,7 @@ void Spring_State_Vertical(void)
 
                     player->onGround       = false;
                     player->velocity.y     = self->velocity.y;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
 
                     self->animator.speed   = 0x80;
                     self->animator.timer   = 0;
@@ -189,7 +189,7 @@ void Spring_State_Vertical(void)
 
                     player->onGround       = false;
                     player->velocity.y     = self->velocity.y;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
 
                     self->animator.speed   = 0x80;
                     self->animator.timer   = 0;
@@ -237,7 +237,7 @@ void Spring_State_Horizontal(void)
                     player->skidding       = false;
                     player->pushing        = false;
                     player->direction      = FLIP_NONE;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
 
                     self->animator.speed   = 0x80;
                     self->animator.timer   = 0;
@@ -280,7 +280,7 @@ void Spring_State_Horizontal(void)
                     player->skidding       = 0;
                     player->pushing        = false;
                     player->direction      = FLIP_X;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
 
                     self->animator.speed   = 0x80;
                     self->animator.timer   = 0;
@@ -336,7 +336,7 @@ void Spring_State_Diagonal(void)
                     player->onGround       = false;
                     player->velocity.x     = self->velocity.x;
                     player->velocity.y     = self->velocity.y;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
 
                     self->animator.speed   = 0x80;
                     self->animator.timer   = 0;

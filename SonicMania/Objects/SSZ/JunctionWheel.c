@@ -38,7 +38,7 @@ void JunctionWheel_Update(void)
                 if (player->groundVel == -0x1000) {
                     if (self->rotation == 0x180) {
                         player->state          = Player_State_Air;
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                         player->groundVel      = 0;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0x80000;
@@ -48,7 +48,7 @@ void JunctionWheel_Update(void)
 
                     if (self->spinDir == 1 && self->rotation == 0x11C) {
                         player->state          = Player_State_Air;
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                         player->groundVel      = 0x80000;
                         player->velocity.x     = 0x80000;
                         player->velocity.y     = 0x40000;
@@ -69,7 +69,7 @@ void JunctionWheel_Update(void)
                         player->onGround  = false;
                         player->groundVel = -0x1C00;
 
-                        player->tileCollisions  = false;
+                        player->tileCollisions  = TILECOLLISION_NONE;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
                         player->velocity.x      = 0;
@@ -101,7 +101,7 @@ void JunctionWheel_Update(void)
                             player->onGround  = false;
                             player->groundVel = -0x1800;
 
-                            player->tileCollisions  = false;
+                            player->tileCollisions  = TILECOLLISION_NONE;
                             player->nextAirState    = StateMachine_None;
                             player->nextGroundState = StateMachine_None;
                             player->velocity.x      = 0;

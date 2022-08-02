@@ -114,7 +114,7 @@ typedef struct {
     uint16 classID;
     bool32 inRange;
     bool32 isPermanent;
-    bool32 tileCollisions;
+    int32 tileCollisions;
     bool32 interaction;
     bool32 onGround;
     uint8 active;

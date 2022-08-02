@@ -75,7 +75,7 @@ void PhantomRider_Create(void *data)
             self->collisionPlane  = 1;
             self->collisionLayers = Zone->collisionLayers;
             self->startPos        = self->position;
-            self->tileCollisions  = true;
+            self->tileCollisions  = TILECOLLISION_DOWN;
 
             self->hitbox.left   = -24;
             self->hitbox.top    = 0;

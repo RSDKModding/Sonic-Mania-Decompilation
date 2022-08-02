@@ -38,7 +38,7 @@ void Springboard_Update(void)
 
                     playerPtr->state          = Player_State_Air;
                     playerPtr->onGround       = false;
-                    playerPtr->tileCollisions = true;
+                    playerPtr->tileCollisions = TILECOLLISION_DOWN;
                     RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRING_CS, &playerPtr->animator, true, 1);
                     playerPtr->groundVel    = playerPtr->velocity.x;
                     playerPtr->velocity.y   = Springboard->springPower[minVal(2 * pos - 16, 39)] - playerPtr->gravityStrength - self->force;

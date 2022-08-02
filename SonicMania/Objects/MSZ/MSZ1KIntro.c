@@ -92,7 +92,7 @@ bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
     if (!host->timer) {
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
         player1->state          = Player_State_Static;
-        player1->tileCollisions = false;
+        player1->tileCollisions = TILECOLLISION_NONE;
     }
 
     if (player1->animator.animationID == 5 && player1->animator.frameID == 1 && !host->values[0]) {
@@ -122,7 +122,7 @@ bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
 
     if (host->timer == 30) {
         player1->stateInput     = Player_Input_P1;
-        player1->tileCollisions = true;
+        player1->tileCollisions = TILECOLLISION_DOWN;
         player1->onGround       = true;
         player1->state          = Player_State_Ground;
 

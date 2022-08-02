@@ -547,7 +547,7 @@ void TVVan_StateVan_Idle(void)
             player->velocity.x      = 0;
             player->velocity.y      = 0;
             player->groundVel       = 0;
-            player->tileCollisions  = false;
+            player->tileCollisions  = TILECOLLISION_NONE;
             player->interaction     = false;
             player->visible         = false;
             player->blinkTimer      = 0;
@@ -917,7 +917,7 @@ void TVVan_StateRadio_EnterTV(void)
         player->animator.speed = 120;
         player->velocity.y     = -0x80000;
         player->onGround       = false;
-        player->tileCollisions = true;
+        player->tileCollisions = TILECOLLISION_DOWN;
         player->interaction    = true;
         player->visible        = true;
         player->applyJumpCap   = false;

@@ -979,7 +979,7 @@ void Zone_HandlePlayerSwap(void)
         else {
             player->state = Player_State_Air;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             player->interaction    = true;
         }
 
@@ -1111,7 +1111,7 @@ void Zone_HandlePlayerSwap(void)
         else {
             newPlayer->state = Player_State_Air;
             RSDK.SetSpriteAnimation(newPlayer->aniFrames, ANI_JUMP, &newPlayer->animator, false, 0);
-            newPlayer->tileCollisions = true;
+            newPlayer->tileCollisions = TILECOLLISION_DOWN;
             newPlayer->interaction = true;
         }
 
@@ -1200,7 +1200,7 @@ void Zone_HandlePlayerSwap(void)
         else {
             newPlayer->state = Player_State_Air;
             RSDK.SetSpriteAnimation(newPlayer->aniFrames, ANI_JUMP, &newPlayer->animator, false, 0);
-            newPlayer->tileCollisions = true;
+            newPlayer->tileCollisions = TILECOLLISION_DOWN;
             newPlayer->interaction = true;
         }
 
@@ -1283,7 +1283,7 @@ void Zone_State_SwapPlayers(void)
             Zone->playerSwapEnabled[Zone->swapPlayerID] = true;
             EntityPlayer *player                        = RSDK_GET_ENTITY(Zone->swapPlayerID, Player);
 
-            if (!Player_CheckValidState(player) || !player->interaction || !player->tileCollisions)
+            if (!Player_CheckValidState(player) || !player->interaction || player->tileCollisions == TILECOLLISION_NONE)
                 Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 
             EntityCompetition *manager = Competition->sessionManager;
@@ -1349,8 +1349,7 @@ void Zone_State_SwapPlayers(void)
         Zone->playerSwapEnabled = true;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->state == Player_State_Drown || player->state == Player_State_Static || player->state == Player_State_Death || !player->interaction
-                || !player->tileCollisions)
+            if (player->state == Player_State_Drown || player->state == Player_State_Static || player->state == Player_State_Death || !player->interaction || player->tileCollisions == TILECOLLISION_NONE)
                 Zone->playerSwapEnabled = false;
         }
 

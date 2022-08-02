@@ -75,7 +75,7 @@ void PathInverter_HandlePathSwitch(EntityPlayer *player)
             player->direction ^= FLIP_X;
 
         self->playerPtrs[player->playerID]     = player;
-        player->tileCollisions                 = false;
+        player->tileCollisions                 = TILECOLLISION_NONE;
         player->velocity.x                     = player->groundVel * RSDK.Cos256(player->angle) >> 8;
         player->velocity.y                     = player->groundVel * RSDK.Sin256(player->angle) >> 8;
         self->groundVelStore[player->playerID] = player->groundVel;
@@ -147,7 +147,7 @@ void PathInverter_State_Horizontal(void)
                         player->rotation = player->angle << 1;
                     }
 
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                 }
             }
             else if (player->state == Player_State_Static) {

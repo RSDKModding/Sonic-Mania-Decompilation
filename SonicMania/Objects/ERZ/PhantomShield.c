@@ -136,7 +136,7 @@ void PhantomShield_State_Active(void)
                 player->velocity.y     = velY;
                 player->applyJumpCap   = false;
                 player->onGround       = false;
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
             }
             else {
                 Player_Hurt(player, self);

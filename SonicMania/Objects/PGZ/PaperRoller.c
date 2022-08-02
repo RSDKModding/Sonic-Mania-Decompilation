@@ -315,7 +315,7 @@ void PaperRoller_HandleRollerCollisions(void)
                 player->nextGroundState  = StateMachine_None;
                 player->onGround         = false;
                 player->groundVel        = 0;
-                player->tileCollisions   = true;
+                player->tileCollisions   = TILECOLLISION_DOWN;
                 player->applyJumpCap     = false;
                 player->jumpAbilityState = 0;
 
@@ -396,7 +396,7 @@ void PaperRoller_HandlePrintCollisions(void)
                     player->nextGroundState  = StateMachine_None;
                     player->onGround         = false;
                     player->groundVel        = 0;
-                    player->tileCollisions   = true;
+                    player->tileCollisions   = TILECOLLISION_DOWN;
                     player->applyJumpCap     = false;
                     player->jumpAbilityState = 0;
                     RSDK.PlaySfx(PaperRoller->sfxPaper, false, 0xFF);
@@ -452,7 +452,7 @@ void PaperRoller_HandlePrintCollisions(void)
                     player->nextGroundState  = StateMachine_None;
                     player->onGround         = false;
                     player->groundVel        = 0;
-                    player->tileCollisions   = true;
+                    player->tileCollisions   = TILECOLLISION_DOWN;
                     player->applyJumpCap     = false;
                     player->jumpAbilityState = 0;
                     RSDK.PlaySfx(PaperRoller->sfxPaper, false, 0xFF);

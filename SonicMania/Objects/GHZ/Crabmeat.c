@@ -88,7 +88,8 @@ void Crabmeat_CheckOffScreen(void)
 {
     RSDK_THIS(Crabmeat);
 
-    if (self->tileCollisions && !RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+    if (self->tileCollisions != TILECOLLISION_NONE && !RSDK.CheckOnScreen(self, NULL)
+        && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
         self->direction  = self->startDir;

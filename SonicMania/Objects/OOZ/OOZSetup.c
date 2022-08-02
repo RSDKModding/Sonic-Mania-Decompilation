@@ -108,7 +108,7 @@ void OOZSetup_StaticUpdate(void)
                         }
                         else {
                             player->interaction    = true;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                             player->state          = OOZSetup_PlayerState_OilPool;
                         }
                         break;
@@ -122,7 +122,7 @@ void OOZSetup_StaticUpdate(void)
                             OOZSetup->activePlayers &= ~(1 << playerID);
                             if (player->onGround) {
                                 player->interaction    = true;
-                                player->tileCollisions = true;
+                                player->tileCollisions = TILECOLLISION_DOWN;
                                 player->state          = OOZSetup_PlayerState_OilStrip;
                             }
                         }
@@ -137,7 +137,7 @@ void OOZSetup_StaticUpdate(void)
                             OOZSetup->activePlayers &= ~(1 << playerID);
                             if (player->onGround) {
                                 player->interaction    = true;
-                                player->tileCollisions = true;
+                                player->tileCollisions = TILECOLLISION_DOWN;
                                 if (!player->angle)
                                     player->state = OOZSetup_PlayerState_OilStrip;
                                 else
@@ -152,7 +152,7 @@ void OOZSetup_StaticUpdate(void)
 
                         OOZSetup->activePlayers |= 1 << playerID;
                         player->interaction    = true;
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                         if (player->velocity.y < 0)
                             player->velocity.y += 0xC000;
                         else

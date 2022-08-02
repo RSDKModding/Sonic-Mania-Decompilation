@@ -50,7 +50,7 @@ void YoyoPulley_Update(void)
 
                     self->activePlayers &= ~(1 << playerID);
                     self->playerTimers[playerID] = 30;
-                    player->tileCollisions       = true;
+                    player->tileCollisions       = TILECOLLISION_DOWN;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->animator.speed = 48;
 
@@ -60,7 +60,7 @@ void YoyoPulley_Update(void)
             }
             else {
                 self->activePlayers &= ~(1 << playerID);
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
             }
         }
         else if (player->state != Player_State_Static && player->down == false && player->velocity.y >= 0) {
@@ -85,7 +85,7 @@ void YoyoPulley_Update(void)
                 player->position.x     = self->position.x + (0xE0000 * (2 * (self->direction == FLIP_NONE) - 1));
                 player->position.y     = self->position.y + 0xC0000;
                 player->direction      = self->direction ^ FLIP_X;
-                player->tileCollisions = false;
+                player->tileCollisions = TILECOLLISION_NONE;
 
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEY_HOLD, &player->animator, true, 0);
                 player->state = Player_State_Static;

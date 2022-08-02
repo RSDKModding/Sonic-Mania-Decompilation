@@ -169,7 +169,7 @@ void PlaneSeeSaw_State_Launch(void)
                 player->nextAirState     = StateMachine_None;
                 player->nextGroundState  = StateMachine_None;
                 player->interaction      = false;
-                player->tileCollisions   = false;
+                player->tileCollisions   = TILECOLLISION_NONE;
                 player->jumpAbilityState = 0;
                 player->drawFX |= FX_SCALE;
                 player->applyJumpCap = false;
@@ -200,10 +200,10 @@ void PlaneSeeSaw_PlayerState_ToBG(void)
     ControllerInfo[self->controllerID].keyY.press = false;
     Player_State_Air();
 
-    self->tileCollisions = false;
+    self->tileCollisions = TILECOLLISION_NONE;
     if (self->scale.x <= 0x100) {
         self->interaction    = true;
-        self->tileCollisions = true;
+        self->tileCollisions = TILECOLLISION_DOWN;
         self->drawGroup      = 2;
 
         self->position.x -= FarPlane->position.x;
@@ -240,10 +240,10 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
     ControllerInfo[self->controllerID].keyY.press = false;
     Player_State_Air();
 
-    self->tileCollisions = false;
+    self->tileCollisions = TILECOLLISION_NONE;
     if (self->scale.x >= 0x200) {
         self->interaction    = true;
-        self->tileCollisions = true;
+        self->tileCollisions = TILECOLLISION_DOWN;
         Zone->deathBoundary[0] -= 0x8000000;
 
         self->drawFX &= ~FX_SCALE;

@@ -263,7 +263,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
 
             player->velocity.y     = velY;
             player->onGround       = false;
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
 #if MANIA_USE_PLUS
         }
 #endif
@@ -319,7 +319,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int32 playerID)
 
             player->velocity.y           = velY;
             player->onGround             = false;
-            player->tileCollisions       = true;
+            player->tileCollisions       = TILECOLLISION_DOWN;
             self->playerTimers[playerID] = 15;
             RSDK.PlaySfx(Tubinaut->sfxRepel, false, 0xFF);
         }

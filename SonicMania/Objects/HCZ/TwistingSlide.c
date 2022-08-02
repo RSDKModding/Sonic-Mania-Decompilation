@@ -45,13 +45,13 @@ void TwistingSlide_Update(void)
                             self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_ROOF;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                             player->angle          = 144;
                         }
                     }
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel < 0) {
                         if (Player_CheckCollisionTouch(player, self, &self->hitboxSlideStart)) {
-                            player->tileCollisions = false;
+                            player->tileCollisions = TILECOLLISION_NONE;
                             player->state          = Player_State_Static;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
@@ -96,13 +96,13 @@ void TwistingSlide_Update(void)
                             self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_RWALL;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                             player->angle          = 216;
                         }
                     }
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel > 0
                              && Player_CheckCollisionTouch(player, self, &self->hitboxSlideEnd)) {
-                        player->tileCollisions = false;
+                        player->tileCollisions = TILECOLLISION_NONE;
                         player->state          = Player_State_Static;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
@@ -134,13 +134,13 @@ void TwistingSlide_Update(void)
                             self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_ROOF;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                             player->angle          = 0x70;
                         }
                     }
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel > 0) {
                         if (Player_CheckCollisionTouch(player, self, &self->hitboxSlideStart)) {
-                            player->tileCollisions = false;
+                            player->tileCollisions = TILECOLLISION_NONE;
                             player->state          = Player_State_Static;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
@@ -189,13 +189,13 @@ void TwistingSlide_Update(void)
                             self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_RWALL;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                             player->angle          = 40;
                         }
                     }
                     else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel < 0
                              && Player_CheckCollisionTouch(player, self, &self->hitboxSlideEnd)) {
-                        player->tileCollisions = false;
+                        player->tileCollisions = TILECOLLISION_NONE;
                         player->state          = Player_State_Static;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;

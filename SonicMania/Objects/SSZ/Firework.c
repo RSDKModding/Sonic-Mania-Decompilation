@@ -135,7 +135,7 @@ void Firework_CheckPlayerCollisions(void)
         if (!((1 << playerID) & self->activePlayers)) {
             if (player->state != Player_State_Static && !self->playerTimers[playerID]
                 && Player_CheckCollisionTouch(player, self, &Firework->hitboxFireworkGrab)) {
-                player->tileCollisions = false;
+                player->tileCollisions = TILECOLLISION_NONE;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEY_HOLD, &player->animator, false, 0);
 
                 player->state = Player_State_Static;
@@ -208,7 +208,7 @@ void Firework_HandlePlayerRemoval(EntityPlayer *player, bool32 crashed)
     if ((1 << playerID) & self->activePlayers) {
         player->state          = Player_State_Air;
         player->onGround       = false;
-        player->tileCollisions = true;
+        player->tileCollisions = TILECOLLISION_DOWN;
         player->velocity       = self->velocity;
 
         self->playerTimers[playerID] = 30;
@@ -238,7 +238,7 @@ void Firework_HandlePlayerJump(void)
             if ((1 << playerID) & self->activePlayers) {
                 player->state                = Player_State_Air;
                 player->onGround             = false;
-                player->tileCollisions       = true;
+                player->tileCollisions       = TILECOLLISION_DOWN;
                 player->velocity.x           = self->velocity.x;
                 player->velocity.y           = self->velocity.y;
                 self->playerTimers[playerID] = 30;

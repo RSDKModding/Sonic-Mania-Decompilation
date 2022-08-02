@@ -187,7 +187,7 @@ void PopcornMachine_LinkPlayer(EntityPlayer *player)
     player->state           = Player_State_Static;
     player->onGround        = false;
     player->velocity.x      = player->position.x < self->position.x ? 0xA0000 : -0xA0000;
-    player->tileCollisions  = false;
+    player->tileCollisions  = TILECOLLISION_NONE;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
     EntityPopcornMachine *machine = CREATE_ENTITY(PopcornMachine, player, self->position.x, self->position.y);
@@ -433,7 +433,7 @@ void PopcornMachine_StateController_HandleFinish(void)
 
     if (Player_CheckValidState(player)) {
         if (player->position.y < parent->position.y - 0xA00000 * parent->height + 0xD00000) {
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             Player_UpdatePhysicsState(player);
         }
     }

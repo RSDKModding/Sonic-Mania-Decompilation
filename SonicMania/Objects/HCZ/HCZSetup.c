@@ -90,7 +90,7 @@ void HCZSetup_StaticUpdate(void)
                     if (player->onGround) {
                         if (player->state != Player_State_WaterSlide) {
                             player->interaction    = true;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                             player->position.y += player->jumpOffset;
                             player->nextGroundState = StateMachine_None;
                             player->state           = Player_State_WaterSlide;

@@ -106,7 +106,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                 self->activePlayers &= ~(1 << playerID);
 
                 if (player->state != Player_State_Death)
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
             }
             else if (!player->jumpPress) {
                 if (player->left)
@@ -125,7 +125,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                 player->velocity.y           = -(ang * RSDK.Cos256(MagnetSphere->playerAngles[playerID]));
                 player->applyJumpCap         = false;
                 player->jumpAbilityState     = 1;
-                player->tileCollisions       = true;
+                player->tileCollisions       = TILECOLLISION_DOWN;
                 player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;
                 self->activePlayers &= ~(1 << playerID);
@@ -154,7 +154,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
                     player->onGround        = false;
-                    player->tileCollisions  = false;
+                    player->tileCollisions  = TILECOLLISION_NONE;
                     player->state           = Player_State_Static;
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;

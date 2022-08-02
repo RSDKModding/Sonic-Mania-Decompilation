@@ -39,7 +39,7 @@ void SpinBooster_Update(void)
                     if (!self->allowTubeInput)
                         player->controlLock = 0;
 
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->state          = player->onGround ? Player_State_Roll : Player_State_Air;
                 }
             }
@@ -332,7 +332,7 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
             if (!self->allowTubeInput)
                 player->controlLock = 0;
 
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             player->state          = player->onGround ? Player_State_Roll : Player_State_Air;
         }
     }
@@ -454,7 +454,7 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
 {
     RSDK_THIS(SpinBooster);
 
-    player->tileCollisions = true;
+    player->tileCollisions = TILECOLLISION_DOWN;
     SpinBooster_HandleRollDir(player);
 
     if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {

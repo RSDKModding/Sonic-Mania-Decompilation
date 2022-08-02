@@ -36,7 +36,7 @@ void WaterGush_Update(void)
                 player->nextAirState    = StateMachine_None;
                 player->velocity.x      = 0;
                 player->velocity.y      = 0;
-                player->tileCollisions  = false;
+                player->tileCollisions  = TILECOLLISION_NONE;
                 player->onGround        = false;
                 player->state           = Player_State_Static;
             }
@@ -78,7 +78,7 @@ void WaterGush_Update(void)
                 || self->finishedExtending) {
                 self->activePlayers &= ~(1 << playerID);
                 player->state          = Player_State_Air;
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 player->onGround       = false;
                 player->velocity.x     = xDir * (abs(self->speed) << 15);
                 player->velocity.y     = yDir * (abs(self->speed) << 15);

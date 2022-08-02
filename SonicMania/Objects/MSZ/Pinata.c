@@ -103,7 +103,7 @@ void Pinata_State_CheckPlayerCollisions(void)
                     player->velocity.y = -0x80000;
 
                 player->onGround       = false;
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
 #if MANIA_USE_PLUS
             }
 #endif

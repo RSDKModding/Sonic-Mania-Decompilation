@@ -62,7 +62,7 @@ void SilverSonic_Create(void *data)
         self->updateRange.y   = 0x800000;
         self->collisionLayers = Zone->collisionLayers;
         self->velocity.y      = 0x10000;
-        self->tileCollisions  = true;
+        self->tileCollisions  = TILECOLLISION_DOWN;
         RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_IDLE, &self->animator, true, 0);
 
         self->drawFX    = FX_FLIP;

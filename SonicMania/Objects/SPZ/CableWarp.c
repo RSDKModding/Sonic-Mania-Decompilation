@@ -150,7 +150,7 @@ void CableWarp_State_CheckPlayerEntry(void)
             player->state           = Player_State_Static;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
-            player->tileCollisions  = false;
+            player->tileCollisions  = TILECOLLISION_NONE;
             player->interaction     = false;
             player->onGround        = false;
             player->velocity.x      = 0;
@@ -347,7 +347,7 @@ void CableWarp_StateTransport_Exit(void)
     if (self->animator.frameID == self->animator.frameCount - 1) {
         player->state          = Player_State_Air;
         player->visible        = true;
-        player->tileCollisions = true;
+        player->tileCollisions = TILECOLLISION_DOWN;
         player->interaction    = true;
         player->applyJumpCap   = false;
         player->velocity.y     = -0xA0000;

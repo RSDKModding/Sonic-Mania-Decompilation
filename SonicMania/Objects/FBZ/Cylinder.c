@@ -286,7 +286,7 @@ void Cylinder_State_Spiral(void)
                     else {
                         if (player->position.x <= self->position.x) {
                             self->playerAngles[player->playerID] = 768;
-                            player->tileCollisions               = false;
+                            player->tileCollisions               = TILECOLLISION_NONE;
                             self->playerStatus[player->playerID] = 2;
                         }
 
@@ -306,7 +306,7 @@ void Cylinder_State_Spiral(void)
                 else {
                     if (player->position.x >= self->position.x) {
                         self->playerAngles[player->playerID] = 768;
-                        player->tileCollisions               = false;
+                        player->tileCollisions               = TILECOLLISION_NONE;
                         self->playerStatus[player->playerID] = 2;
                     }
 
@@ -348,7 +348,7 @@ void Cylinder_State_Spiral(void)
 
                 if (player->velocity.y < -0x40000) {
                     self->playerStatus[player->playerID] = 0;
-                    player->tileCollisions               = true;
+                    player->tileCollisions               = TILECOLLISION_DOWN;
                 }
                 else {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame % 24);
@@ -359,7 +359,7 @@ void Cylinder_State_Spiral(void)
                     if (player->groundVel <= 0) {
                         if (player->groundVel >= -0x30000) {
                             self->playerStatus[player->playerID] = 0;
-                            player->tileCollisions               = true;
+                            player->tileCollisions               = TILECOLLISION_DOWN;
                         }
                         else {
                             if (self->hitboxL.top < self->hitboxR.top) {
@@ -367,33 +367,33 @@ void Cylinder_State_Spiral(void)
                                 if (player->position.y <= maxY) {
                                     player->position.y                   = maxY;
                                     self->playerStatus[player->playerID] = 3;
-                                    player->tileCollisions               = true;
+                                    player->tileCollisions               = TILECOLLISION_DOWN;
                                 }
                             }
                             else if (player->position.y >= self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y) {
                                 player->position.y                   = self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y;
                                 self->playerStatus[player->playerID] = 3;
-                                player->tileCollisions               = true;
+                                player->tileCollisions               = TILECOLLISION_DOWN;
                             }
                         }
                     }
                     else {
                         if (player->groundVel <= 0x30000) {
                             self->playerStatus[player->playerID] = 0;
-                            player->tileCollisions               = true;
+                            player->tileCollisions               = TILECOLLISION_DOWN;
                         }
                         else if (self->hitboxL.top >= self->hitboxR.top) {
                             int32 maxY = self->position.y - (playerHitbox->bottom << 16) - self->updateRange.y + 0x400000;
                             if (player->position.y <= maxY) {
                                 player->position.y                   = maxY;
                                 self->playerStatus[player->playerID] = 3;
-                                player->tileCollisions               = true;
+                                player->tileCollisions               = TILECOLLISION_DOWN;
                             }
                         }
                         else if (player->position.y >= self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y) {
                             player->position.y                   = self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y;
                             self->playerStatus[player->playerID] = 3;
-                            player->tileCollisions               = true;
+                            player->tileCollisions               = TILECOLLISION_DOWN;
                         }
                     }
                 }
@@ -654,7 +654,7 @@ void Cylinder_State_Pillar(void)
                 if (!player->onGround && player->state != Player_State_FlyCarried) {
                     player->state          = Player_State_Air;
                     player->onGround       = false;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                 }
                 else if (player->onGround) {
                     player->state = Player_State_Ground;
@@ -690,7 +690,7 @@ void Cylinder_State_Pillar(void)
                     }
 
                     player->onGround       = true;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                 }
 
                 self->playerStatus[player->playerID] = 0;
@@ -719,7 +719,7 @@ void Cylinder_State_Pillar(void)
                 player->nextAirState                 = 0;
                 player->nextGroundState              = 0;
                 player->state                        = Cylinder_PlayerState_Pillar;
-                player->tileCollisions               = false;
+                player->tileCollisions               = TILECOLLISION_NONE;
 
                 if (abs(player->groundVel) > 0x18000) {
                     if (abs(player->groundVel) >= 0x38000)

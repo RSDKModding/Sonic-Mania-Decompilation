@@ -142,7 +142,7 @@ void TwistedTubes_State_HandleInteractions(void)
                 player->state                        = Player_State_TransportTube;
                 player->drawGroup                    = 1;
                 player->interaction                  = false;
-                player->tileCollisions               = false;
+                player->tileCollisions               = TILECOLLISION_NONE;
                 player->onGround                     = false;
                 player->velocity.x                   = 0;
                 player->velocity.y                   = 0;

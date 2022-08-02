@@ -150,7 +150,7 @@ void BallCannon_CheckPlayerEntry(void)
                             player->position.y     = self->position.y;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
-                            player->tileCollisions = false;
+                            player->tileCollisions = TILECOLLISION_NONE;
                             player->interaction    = false;
                             player->blinkTimer     = 0;
                             player->visible        = false;
@@ -230,7 +230,7 @@ void BallCannon_State_EjectPlayer(void)
                         player->onGround       = false;
                         player->applyJumpCap   = false;
                         player->state          = Player_State_Air;
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                         player->interaction    = true;
                     }
 
@@ -314,7 +314,7 @@ void BallCannon_State_CorkOpened(void)
                     player->nextAirState         = StateMachine_None;
                     player->position             = self->position;
                     player->velocity             = self->velocity;
-                    player->tileCollisions       = false;
+                    player->tileCollisions       = TILECOLLISION_NONE;
                     player->interaction          = false;
                     player->onGround             = false;
                     self->playerTimers[playerID] = 15;

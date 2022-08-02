@@ -145,7 +145,7 @@ void Bumpalo_BumpPlayer(EntityPlayer *player)
 
     player->velocity.y     = velY;
     player->onGround       = false;
-    player->tileCollisions = true;
+    player->tileCollisions = TILECOLLISION_DOWN;
 
     if (self->badnikAnimator.animationID == 3)
         self->velocity.x >>= 1;

@@ -79,7 +79,7 @@ void PBL_Player_Create(void *data)
         self->controllerID = 1;
 
         self->onGround        = false;
-        self->tileCollisions  = true;
+        self->tileCollisions  = TILECOLLISION_DOWN;
         self->collisionLayers = 1 << PBL_Setup->tableHigh;
 
         RSDK.SetModelAnimation(PBL_Player->jumpFrames, &self->animator, 128, 0, true, 0);

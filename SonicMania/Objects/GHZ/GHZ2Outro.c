@@ -423,7 +423,7 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
                     player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->storedTimer)) << 12) + valX) >> 5;
                     player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) << 12) + valY) >> 5;
                     player->state          = Player_State_Static;
-                    player->tileCollisions = false;
+                    player->tileCollisions = TILECOLLISION_NONE;
                     player->onGround       = false;
                 }
             }

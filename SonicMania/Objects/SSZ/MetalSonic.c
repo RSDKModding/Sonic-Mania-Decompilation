@@ -78,7 +78,7 @@ void MetalSonic_Create(void *data)
             self->visible         = false;
             self->updateRange.x   = 0x800000;
             self->updateRange.y   = 0x800000;
-            self->tileCollisions  = true;
+            self->tileCollisions  = TILECOLLISION_DOWN;
             self->collisionLayers = Zone->collisionLayers;
 
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &self->metalSonicAnimator, true, 0);
@@ -2164,7 +2164,7 @@ void MetalSonic_EditorDraw(void)
     self->drawFX         = FX_FLIP | FX_ROTATE;
     self->updateRange.x  = 0x800000;
     self->updateRange.y  = 0x800000;
-    self->tileCollisions = true;
+    self->tileCollisions = TILECOLLISION_DOWN;
     RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_IDLE, &self->metalSonicAnimator, false, 0);
 
     RSDK.DrawSprite(&self->boosterAnimator, NULL, false);

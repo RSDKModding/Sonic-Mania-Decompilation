@@ -155,7 +155,7 @@ void EncoreIntro_SetupCutscenePart2(void)
 
     player1->camera         = camera;
     player1->stateInput     = Player_Input_P1;
-    player1->tileCollisions = true;
+    player1->tileCollisions = TILECOLLISION_DOWN;
     player1->onGround       = true;
     player1->state          = Player_State_Ground;
     camera->target          = (Entity *)player1;
@@ -750,7 +750,7 @@ bool32 EncoreIntro_Cutscene_CameraPanToHBHPile(EntityCutsceneSeq *host)
             buddy->drawFX &= ~FX_SCALE;
             buddy->position.y     = player->position.y;
             buddy->state          = Player_State_Ground;
-            buddy->tileCollisions = true;
+            buddy->tileCollisions = TILECOLLISION_DOWN;
             buddy->stateInput     = StateMachine_None;
             buddy->scale.x        = 0;
             buddy->scale.y        = 0;
@@ -949,7 +949,7 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
                     playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
                     playerPtr->position.y +=
                         (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - playerPtr->position.y) >> 3;
-                    playerPtr->tileCollisions = false;
+                    playerPtr->tileCollisions = TILECOLLISION_NONE;
                     playerPtr->velocity.x     = 0;
                     playerPtr->velocity.y     = 0;
                     playerPtr->state          = Player_State_Static;
@@ -1027,7 +1027,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
         player->camera         = NULL;
         host->values[0]        = true;
         player->stateInput     = Player_Input_P1;
-        player->tileCollisions = true;
+        player->tileCollisions = TILECOLLISION_DOWN;
         player->onGround       = true;
         player->state          = Player_State_Ground;
         player->camera         = camera;

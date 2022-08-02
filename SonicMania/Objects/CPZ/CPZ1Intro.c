@@ -290,14 +290,14 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
             case ID_SONIC:
                 CPZ1Intro->playerAnimID = 0;
                 player1->state          = Player_State_Static;
-                player1->tileCollisions = false;
+                player1->tileCollisions = TILECOLLISION_NONE;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
 
             case ID_TAILS: CPZ1Intro->playerAnimID = 1;
 #if MANIA_USE_PLUS
                 player1->state          = Player_State_Static;
-                player1->tileCollisions = false;
+                player1->tileCollisions = TILECOLLISION_NONE;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 RSDK.SetSpriteAnimation(-1, 0, &player1->tailAnimator, true, 0);
                 player1->animator.animationID     = 0xFF;
@@ -313,7 +313,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
             case ID_KNUCKLES:
                 CPZ1Intro->playerAnimID = 2;
                 player1->state          = Player_State_Static;
-                player1->tileCollisions = false;
+                player1->tileCollisions = TILECOLLISION_NONE;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
 
@@ -321,7 +321,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
             case ID_MIGHTY:
                 CPZ1Intro->playerAnimID = 3;
                 player1->state          = Player_State_Static;
-                player1->tileCollisions = false;
+                player1->tileCollisions = TILECOLLISION_NONE;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 break;
 
@@ -329,7 +329,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
                 CPZ1Intro->playerAnimID = 4;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
                 player1->state          = Player_State_Static;
-                player1->tileCollisions = false;
+                player1->tileCollisions = TILECOLLISION_NONE;
                 break;
 #endif
         }
@@ -370,7 +370,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host)
 
     if (host->timer == 30) {
         player1->stateInput     = Player_Input_P1;
-        player1->tileCollisions = true;
+        player1->tileCollisions = TILECOLLISION_DOWN;
         player1->onGround       = true;
         player1->state          = Player_State_Ground;
         player1->camera         = camera;
@@ -378,7 +378,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host)
         camera->state           = Camera_State_FollowXY;
         if (player2->classID == Player->classID) {
             player2->stateInput     = Player_Input_P2_AI;
-            player2->tileCollisions = true;
+            player2->tileCollisions = TILECOLLISION_DOWN;
             player2->onGround       = true;
             player2->state          = Player_State_Ground;
         }

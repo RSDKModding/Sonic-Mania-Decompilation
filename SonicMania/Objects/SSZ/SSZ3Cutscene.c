@@ -337,7 +337,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
                     player->position.y +=
                         (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
                     player->state          = Player_State_Static;
-                    player->tileCollisions = false;
+                    player->tileCollisions = TILECOLLISION_NONE;
                     player->onGround       = false;
                 }
             }

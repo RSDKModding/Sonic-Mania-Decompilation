@@ -170,7 +170,7 @@ void SP500_CheckPlayerCollisions(void)
                     self->activePlayers |= (1 << playerID);
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->interaction     = false;
-                    player->tileCollisions  = false;
+                    player->tileCollisions  = TILECOLLISION_NONE;
                     player->groundVel       = 0;
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
@@ -279,7 +279,7 @@ void SP500_State_PrintFailed(void)
                 EntityPlayer *player     = RSDK_GET_ENTITY(p, Player);
                 player->visible          = true;
                 player->interaction      = true;
-                player->tileCollisions   = true;
+                player->tileCollisions   = TILECOLLISION_DOWN;
                 player->applyJumpCap     = false;
                 player->jumpAbilityState = 0;
                 player->onGround         = false;
@@ -442,7 +442,7 @@ void SP500_State_PrintFinished(void)
                     EntityPlayer *player     = RSDK_GET_ENTITY(i, Player);
                     player->visible          = true;
                     player->interaction      = true;
-                    player->tileCollisions   = true;
+                    player->tileCollisions   = TILECOLLISION_DOWN;
                     player->applyJumpCap     = false;
                     player->jumpAbilityState = 0;
                     player->onGround         = false;

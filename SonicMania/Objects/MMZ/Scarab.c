@@ -160,7 +160,7 @@ void Scarab_CheckPlayerCollisions(void)
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->groundVel       = 0;
                         player->onGround        = false;
-                        player->tileCollisions  = false;
+                        player->tileCollisions  = TILECOLLISION_NONE;
                         player->state           = Player_State_Static;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
@@ -207,7 +207,7 @@ void Scarab_HandlePlayerGrab(void)
                 self->playerTimers[playerID] = -10;
 
                 if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer) {
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->state          = Player_State_Air;
                     player->velocity.x     = 0xA0000 * (2 * (self->direction != FLIP_NONE) - 1);
                     player->velocity.y     = 0;
@@ -236,7 +236,7 @@ void Scarab_HandlePlayerRelease(void)
             self->playerTimers[playerID] = -10;
 
             if (player->state != Player_State_FlyToPlayer && player->state != Player_State_ReturnToPlayer) {
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 player->state          = Player_State_Air;
                 player->velocity.x     = 0xA0000 * (2 * (self->direction != FLIP_NONE) - 1);
                 player->velocity.y     = 0;

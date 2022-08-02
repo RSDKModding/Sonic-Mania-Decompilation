@@ -89,7 +89,7 @@ void DebugMode_Update(void)
         self->velocity.y     = 0;
         self->state          = Player_State_Air;
         self->collisionPlane = 0;
-        self->tileCollisions = true;
+        self->tileCollisions = TILECOLLISION_DOWN;
         self->interaction    = true;
         self->visible        = true;
         self->drawGroup      = Zone->playerDrawLow;

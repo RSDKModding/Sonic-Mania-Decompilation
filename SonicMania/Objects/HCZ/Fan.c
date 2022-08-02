@@ -333,7 +333,7 @@ void Fan_HandlePlayerInteractions_Top(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, false, 1);
 
                 player->state          = Player_State_Air;
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 player->onGround       = false;
 
                 int32 velocity = maxVal((self->position.y + (Fan->hitboxTop.top << 16) - player->position.y) >> 4, Fan->minVelocity);

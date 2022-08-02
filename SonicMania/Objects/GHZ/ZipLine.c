@@ -62,7 +62,7 @@ void ZipLine_Update(void)
                             self->activePlayers &= ~(1 << playerID);
                             player->onGround       = false;
                             player->groundedStore  = false;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                         }
                     }
                     else {
@@ -71,7 +71,7 @@ void ZipLine_Update(void)
                         self->activePlayers &= ~(1 << playerID);
                         player->onGround       = false;
                         player->groundedStore  = false;
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                     }
                 }
                 else {
@@ -79,13 +79,13 @@ void ZipLine_Update(void)
                     self->activePlayers &= ~(1 << playerID);
                     player->onGround       = false;
                     player->groundedStore  = false;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                 }
             }
             else {
                 self->activePlayers &= ~(1 << playerID);
                 if (player->state != Player_State_Death) {
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                 }
             }
         }
@@ -240,7 +240,7 @@ void ZipLine_GrabHandle(EntityPlayer *player, int32 playerID, Hitbox *playerHitb
     player->position.y    = self->position.y;
     player->position.y +=
         ((ZipLine->hitboxHandle.top - playerHitbox->top) << 16) + (((ZipLine->hitboxHandle.bottom - ZipLine->hitboxHandle.top) << 15) & 0xFFFF0000);
-    player->tileCollisions = false;
+    player->tileCollisions = TILECOLLISION_NONE;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
     player->state           = Player_State_Static;
     player->nextAirState    = StateMachine_None;
@@ -265,7 +265,7 @@ void ZipLine_ForceReleasePlayers(void)
             self->activePlayers &= ~(1 << playerID);
             player->onGround       = false;
             player->groundedStore  = false;
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             player->state          = Player_State_Air;
         }
     }

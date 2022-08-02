@@ -36,7 +36,7 @@ void Honkytonk_Update(void)
             self->depression     = maxVal(self->depression, player->position.y + ((playerHitbox->bottom + 12) << 16) - self->position.y);
         }
 
-        if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitboxRebound) && player->tileCollisions) {
+        if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitboxRebound) && player->tileCollisions != TILECOLLISION_NONE) {
             player->state        = Player_State_Air;
             player->onGround     = false;
             player->applyJumpCap = false;

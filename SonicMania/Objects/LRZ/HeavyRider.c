@@ -585,7 +585,7 @@ void HeavyRider_State_SetupRider(void)
         self->position.y -= 0x400000;
         self->position.x      = (Zone->cameraBoundsL[0] - 64) << 16;
         self->onGround        = false;
-        self->tileCollisions  = true;
+        self->tileCollisions  = TILECOLLISION_DOWN;
         self->collisionPlane  = 0;
         self->collisionLayers = (1 << Zone->fgLow) | (1 << Zone->fgHigh);
 
@@ -920,7 +920,7 @@ void HeavyRider_State_Destroyed(void)
         EntityHeavyRider *child = CREATE_ENTITY(HeavyRider, intToVoid(HEAVYRIDER_JIMMY), self->position.x, self->position.y);
         child->direction        = self->direction;
         child->onGround         = false;
-        child->tileCollisions   = true;
+        child->tileCollisions   = TILECOLLISION_DOWN;
         child->collisionLayers  = (1 << Zone->fgLow) | (1 << Zone->fgHigh);
         child->collisionPlane   = 0;
         self->velocity.y        = -0x60000;

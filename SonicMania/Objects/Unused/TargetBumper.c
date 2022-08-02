@@ -177,7 +177,7 @@ void TargetBumper_CheckPlayerCollisions(void)
                 player->groundVel = player->velocity.x;
 
             player->onGround       = false;
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             if (self->hitCount < 3) {
                 self->hitTimer = 0;
 

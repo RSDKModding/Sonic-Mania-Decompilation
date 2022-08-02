@@ -62,7 +62,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         camera->position.x  = self->position.x;
         player1->position.y += 0x250000;
         player1->camera         = StateMachine_None;
-        player1->tileCollisions = false;
+        player1->tileCollisions = TILECOLLISION_NONE;
         player1->onGround       = false;
         player1->state          = Player_State_Static;
         player1->stateInput     = StateMachine_None;
@@ -72,7 +72,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
         if (player2->classID == Player->classID) {
             player2->position.x     = player1->position.x;
             player2->position.y     = player1->position.y;
-            player2->tileCollisions = false;
+            player2->tileCollisions = TILECOLLISION_NONE;
             player2->onGround       = false;
             player2->velocity.y     = -1;
             player2->state          = Player_State_Static;
@@ -139,7 +139,7 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
     }
 
     if (player1->velocity.y > 0)
-        player1->tileCollisions = true;
+        player1->tileCollisions = TILECOLLISION_DOWN;
 
     if (player2->classID == Player->classID) {
         if (host->timer == 10) {
@@ -151,7 +151,7 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
         }
 
         if (player2->velocity.y > 0)
-            player2->tileCollisions = true;
+            player2->tileCollisions = TILECOLLISION_DOWN;
 
         if (player1->onGround && player2->onGround)
             return true;

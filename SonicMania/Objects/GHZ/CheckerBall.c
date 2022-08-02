@@ -43,7 +43,7 @@ void CheckerBall_Create(void *data)
     self->updateRange.x   = 0x400000;
     self->updateRange.y   = 0x400000;
     self->onGround        = false;
-    self->tileCollisions  = true;
+    self->tileCollisions  = TILECOLLISION_DOWN;
     self->collisionLayers = Zone->collisionLayers;
     self->roundedPos.x    = self->position.x;
     self->roundedPos.y    = self->position.y;

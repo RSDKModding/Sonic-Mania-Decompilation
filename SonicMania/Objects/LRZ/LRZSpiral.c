@@ -137,7 +137,7 @@ void LRZSpiral_State_Cylinder(void)
                     player->direction        = (player->animator.frameID + 6) % 24 > 12;
                 }
                 else {
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->collisionPlane = 1;
                     player->controlLock    = 16;
                     player->direction      = FLIP_X;
@@ -170,7 +170,7 @@ void LRZSpiral_State_Cylinder(void)
                 player->state           = Player_State_Static;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
-                player->tileCollisions  = false;
+                player->tileCollisions  = TILECOLLISION_NONE;
                 self->activePlayers |= 1 << playerID;
                 self->playerSpiralPos[playerID] = 0;
                 self->active                    = ACTIVE_NORMAL;
@@ -203,7 +203,7 @@ void LRZSpiral_State_J_Curve(void)
                     player->position.y = self->position.y - 0xB00000 + 0x15800 * ((256 - RSDK.Cos256(self->playerSpiralPos[playerID] >> 18)) >> 1);
 
                     if (self->playerSpiralPos[playerID] < 0 || self->playerSpiralPos[playerID] >= 0x2000000) {
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                         player->collisionPlane = 1;
                         player->controlLock    = 16;
                         player->direction      = FLIP_X;
@@ -241,7 +241,7 @@ void LRZSpiral_State_J_Curve(void)
                 player->state           = Player_State_Static;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
-                player->tileCollisions  = false;
+                player->tileCollisions  = TILECOLLISION_NONE;
 
                 self->activePlayers |= 1 << playerID;
                 self->playerSpiralPos[playerID] = 0;
@@ -274,7 +274,7 @@ void LRZSpiral_State_C_Curve(void)
                     player->position.y = self->position.y - 0xB40000 + 0x14200 * ((0x100 - RSDK.Cos256(self->playerSpiralPos[playerID] >> 18)) >> 1);
 
                     if (self->playerSpiralPos[playerID] < 0 || self->playerSpiralPos[playerID] >= 0x2000000) {
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                         player->collisionPlane = 1;
                         player->controlLock    = 16;
                         player->direction      = FLIP_NONE;
@@ -310,7 +310,7 @@ void LRZSpiral_State_C_Curve(void)
                 player->state           = Player_State_Static;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
-                player->tileCollisions  = false;
+                player->tileCollisions  = TILECOLLISION_NONE;
 
                 self->activePlayers |= 1 << playerID;
                 self->playerSpiralPos[playerID] = 0;

@@ -109,7 +109,7 @@ bool32 TubeSpring_HandleInteractions(bool32 setState)
             sprung = true;
             if (player->state == Player_State_Static || player->state == Player_State_TransportTube) {
                 player->drawGroup      = Zone->playerDrawLow;
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 player->interaction    = true;
                 player->applyJumpCap   = false;
                 player->state          = Player_State_Air;

@@ -176,7 +176,7 @@ void DNARiser_State_HandleInteractions(void)
                 player->drawGroup        = 1;
                 player->jumpAbilityState = 1;
                 player->onGround         = false;
-                player->tileCollisions   = false;
+                player->tileCollisions   = TILECOLLISION_NONE;
                 player->state            = Player_State_Static;
                 player->nextAirState     = StateMachine_None;
                 player->nextGroundState  = StateMachine_None;
@@ -305,7 +305,7 @@ void DNARiser_State_HelixRise(void)
                     player->drawGroup        = 1;
                     player->jumpAbilityState = 1;
                     player->onGround         = false;
-                    player->tileCollisions   = false;
+                    player->tileCollisions   = TILECOLLISION_NONE;
                     player->state            = Player_State_Static;
                     player->nextAirState     = StateMachine_None;
                     player->nextGroundState  = StateMachine_None;
@@ -324,7 +324,7 @@ void DNARiser_State_HelixRise(void)
             int32 playerID = RSDK.GetEntitySlot(player);
             if (((1 << playerID) & self->activePlayers)) {
                 player->drawGroup      = Zone->playerDrawLow;
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 player->state          = Player_State_Air;
                 player->velocity.x     = self->speed.x;
                 player->velocity.y     = self->speed.y;

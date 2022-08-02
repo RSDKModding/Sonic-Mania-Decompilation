@@ -638,13 +638,13 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
                         break;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
-                    int32 valX = (player->position.x - player->position.x) >> 3;
-                    int32 valY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
+                    int32 moveX = (player->position.x - player->position.x) >> 3;
+                    int32 moveY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
 
-                    player->position.x += valX;
-                    player->position.y += valY;
+                    player->position.x += moveX;
+                    player->position.y += moveY;
                     player->state          = Player_State_Static;
-                    player->tileCollisions = false;
+                    player->tileCollisions = TILECOLLISION_NONE;
                     player->onGround       = false;
                 }
             }

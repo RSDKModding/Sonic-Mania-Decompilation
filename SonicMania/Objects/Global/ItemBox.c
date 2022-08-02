@@ -734,7 +734,7 @@ void ItemBox_GivePowerup(void)
                                 player2->nextAirState     = StateMachine_None;
                                 player2->nextGroundState  = StateMachine_None;
                                 player2->stateInput       = Player_Input_P2_Delay;
-                                player2->tileCollisions   = false;
+                                player2->tileCollisions   = TILECOLLISION_NONE;
                                 player2->interaction      = false;
                                 player2->drawGroup        = Zone->playerDrawHigh;
                                 player2->drownTimer       = 0;

@@ -246,7 +246,7 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
                     player->position.x += valX;
                     player->position.y += valY;
                     player->state          = Player_State_Static;
-                    player->tileCollisions = false;
+                    player->tileCollisions = TILECOLLISION_NONE;
                     player->onGround       = false;
                 }
             }

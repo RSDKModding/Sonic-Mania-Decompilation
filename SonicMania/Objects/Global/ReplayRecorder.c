@@ -574,7 +574,7 @@ void ReplayRecorder_ConfigureGhost_CB(void)
     self->state          = ReplayRecorder_PlayerState_PlaybackReplay;
     self->sidekick       = false;
     self->interaction    = false;
-    self->tileCollisions = false;
+    self->tileCollisions = TILECOLLISION_NONE;
     self->visible        = true;
     self->alpha          = 0xFF;
 }

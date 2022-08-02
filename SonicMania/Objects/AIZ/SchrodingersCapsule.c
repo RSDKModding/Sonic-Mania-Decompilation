@@ -223,7 +223,7 @@ void SchrodingersCapsule_State_Explode(void)
         buddy1->position.y      = self->position.y;
         buddy1->playerID        = RSDK.GetEntitySlot(buddy1);
         buddy1->active          = ACTIVE_NORMAL;
-        buddy1->tileCollisions  = true;
+        buddy1->tileCollisions  = TILECOLLISION_DOWN;
         buddy1->interaction     = true;
         buddy1->visible         = true;
         buddy1->controllerID    = buddy1->playerID + 1;
@@ -245,7 +245,7 @@ void SchrodingersCapsule_State_Explode(void)
         buddy2->position.y      = self->position.y;
         buddy2->playerID        = RSDK.GetEntitySlot(buddy2);
         buddy2->active          = ACTIVE_NORMAL;
-        buddy2->tileCollisions  = true;
+        buddy2->tileCollisions  = TILECOLLISION_DOWN;
         buddy2->interaction     = true;
         buddy2->visible         = true;
         buddy2->controllerID    = buddy2->playerID + 1;

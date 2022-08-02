@@ -73,7 +73,7 @@ void PhantomShinobi_Create(void *data)
         self->updateRange.y   = 0x800000;
         self->collisionLayers = Zone->collisionLayers;
         self->startPos        = self->position;
-        self->tileCollisions  = true;
+        self->tileCollisions  = TILECOLLISION_DOWN;
         self->finRadius       = 0x1600;
 
         PhantomShinobi_ResetStates();

@@ -260,7 +260,7 @@ void Hatch_State_PlayerEntered(void)
         self->visible          = false;
         player->visible        = false;
         player->blinkTimer     = 0;
-        player->tileCollisions = false;
+        player->tileCollisions = TILECOLLISION_NONE;
 
         RSDK.CopyTileLayer(Zone->moveLayer, (self->position.x >> 20) - 2, (self->position.y >> 20) - 1, Zone->moveLayer, 1, 7, 4, 2);
         RSDK.CopyTileLayer(Zone->fgHigh, (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6, 2);
@@ -308,7 +308,7 @@ void Hatch_State_Descend(void)
                 Zone->cameraBoundsB[RSDK.GetEntitySlot(player)] = 0x7FFF;
                 warpDoor->hitbox                              = self->hitboxWarpDoor;
                 warpDoor->position.y                          = self->position.y;
-                player->tileCollisions                        = true;
+                player->tileCollisions                          = TILECOLLISION_DOWN;
                 player->interaction                           = true;
                 player->visible                               = true;
             }
@@ -386,7 +386,7 @@ void Hatch_State_OpenHatchReleasePlayer(void)
         player->state          = Player_State_Air;
         player->velocity.y     = -0xA0000;
         player->onGround       = false;
-        player->tileCollisions = true;
+        player->tileCollisions = TILECOLLISION_DOWN;
         player->interaction    = true;
         player->applyJumpCap   = false;
         player->visible        = true;
@@ -445,7 +445,7 @@ void Hatch_State_SubExit(void)
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
             player->interaction     = false;
-            player->tileCollisions  = false;
+            player->tileCollisions  = TILECOLLISION_NONE;
             player->state           = Player_State_Static;
 
             self->state = Hatch_State_FadeOut;
@@ -521,7 +521,7 @@ void Hatch_State_SubExitHatch(void)
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
                     player->interaction     = false;
-                    player->tileCollisions  = false;
+                    player->tileCollisions  = TILECOLLISION_NONE;
                     player->visible         = false;
                     player->state           = Player_State_Static;
 

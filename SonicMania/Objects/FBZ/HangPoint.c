@@ -135,7 +135,7 @@ void HangPoint_Update(void)
                     player->position.y = self->position.y;
                     player->position.y += ((HangPoint->hitboxGrab.top - playerHitbox->top) << 16)
                                           + (((HangPoint->hitboxGrab.bottom - HangPoint->hitboxGrab.top) << 15) & 0xFFFF0000);
-                    player->tileCollisions       = false;
+                    player->tileCollisions       = TILECOLLISION_NONE;
                     self->moveDistance[playerID] = 0;
 
                     if (!self->activePlayers) {
@@ -161,7 +161,7 @@ void HangPoint_Update(void)
         }
         else {
             if (player->state == Player_State_Hurt) {
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_COUNT));
                 self->moveDistance[playerID] = 0;
                 if (player->left || player->right || player->down || player->state == Player_State_Hurt)
@@ -174,7 +174,7 @@ void HangPoint_Update(void)
                     self->activePlayers &= ~(1 << playerID);
 
                     if (player->classID == Player->classID && Player_CheckValidState(player))
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                 }
                 else {
                     Hitbox *playerHitbox = Player_GetHitbox(player);
@@ -202,7 +202,7 @@ void HangPoint_Update(void)
                             player->applyJumpCap     = false;
                             player->jumpAbilityState = 1;
                             player->state            = Player_State_Air;
-                            player->tileCollisions   = true;
+                            player->tileCollisions   = TILECOLLISION_DOWN;
                             self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + PLAYER_COUNT));
 
                             if (player->left || player->right || player->down || player->state == Player_State_Hurt) {
@@ -435,7 +435,7 @@ void HangPoint_HandlePlayerMovement(EntityHangPoint *self, EntityPlayer *player,
             player->animator.speed   = 48;
             player->jumpAbilityState = 1;
             player->state            = Player_State_Air;
-            player->tileCollisions   = true;
+            player->tileCollisions   = TILECOLLISION_DOWN;
             self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
             self->moveDistance[playerID] = 0;
 

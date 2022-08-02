@@ -161,7 +161,7 @@ void CircleBumper_CheckPlayerCollisions(void)
 
             player->velocity.y     = yVel;
             player->onGround       = false;
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
 
             if (self->hitCount) {
                 EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);

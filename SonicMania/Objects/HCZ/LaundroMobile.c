@@ -98,7 +98,7 @@ void LaundroMobile_Create(void *data)
                     LaundroMobile->rocketSpeeds[1] = 0;
                     LaundroMobile->isUnderwater    = false;
 
-                    self->tileCollisions  = true;
+                    self->tileCollisions  = TILECOLLISION_DOWN;
                     self->collisionLayers = Zone->collisionLayers;
                     self->collisionPlane  = 0;
                     self->state           = LaundroMobile_StateBoss_AwaitPlayer_Phase1;
@@ -1633,7 +1633,7 @@ void LaundroMobile_StateBomb_Bomb_Activated(void)
             water->bubbleX     = water->position.x;
             water->childPtr    = 0;
             RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, false, 5);
-            water->tileCollisions = true;
+            water->tileCollisions = TILECOLLISION_DOWN;
 
             if (!LaundroMobile->invincibilityTimer) {
                 --LaundroMobile->health;

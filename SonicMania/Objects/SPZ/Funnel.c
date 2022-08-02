@@ -60,7 +60,7 @@ void Funnel_Update(void)
                             self->activePlayers &= ~(1 << p);
                             player->drawFX &= ~FX_SCALE;
                             player->interaction    = true;
-                            player->tileCollisions = true;
+                            player->tileCollisions = TILECOLLISION_DOWN;
                             player->scale.x        = 0x200;
                             player->scale.y        = 0x200;
                             player->position.x     = self->position.x;
@@ -81,7 +81,7 @@ void Funnel_Update(void)
                         self->activePlayers &= ~(1 << p);
                         player->drawFX &= ~FX_SCALE;
                         player->interaction    = true;
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
                         player->scale.x        = 0x200;
                         player->scale.y        = 0x200;
                         player->position.x     = self->position.x;
@@ -149,7 +149,7 @@ void Funnel_Update(void)
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
                         player->interaction     = false;
-                        player->tileCollisions  = false;
+                        player->tileCollisions  = TILECOLLISION_NONE;
                         player->state           = Player_State_Static;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;

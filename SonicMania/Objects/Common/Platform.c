@@ -381,7 +381,7 @@ void Platform_Create(void *data)
 
         for (int32 i = 0; i < self->childCount; ++i) {
             EntityPlatform *child = RSDK_GET_ENTITY((i + RSDK.GetEntitySlot(self) + 1), Platform);
-            child->tileCollisions = false;
+            child->tileCollisions = TILECOLLISION_NONE;
             if (HangPoint && child->classID == HangPoint->classID) {
                 EntityHangPoint *hang = (EntityHangPoint *)child;
                 if (self->updateRange.y < 0x800000 + abs(self->position.y - (hang->length << 16) - hang->position.y))
@@ -2107,7 +2107,7 @@ void Platform_HandleStood_Sticky(EntityPlatform* self, EntityPlayer* player, int
             default: break;
         }
 
-        player->tileCollisions = false;
+        player->tileCollisions = TILECOLLISION_NONE;
         if (!player->sidekick) {
             self->stood = true;
             if (self->state == Platform_State_Fall && !self->timer) {
@@ -2138,7 +2138,7 @@ void Platform_HandleStood_Sticky(EntityPlatform* self, EntityPlayer* player, int
             player->position.y &= 0xFFFF0000;
 
             if (player->jumpPress) {
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 Player_Action_Jump(player);
             }
         }

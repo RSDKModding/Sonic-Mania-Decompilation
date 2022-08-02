@@ -248,7 +248,7 @@ void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick)
                 if (self->matchingFinished) {
                     self->activePlayers &= ~(1 << playerID);
                     player->state          = Player_State_Air;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->onGround       = false;
                     player->velocity.x     = 0;
                     player->velocity.y     = 0;

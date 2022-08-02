@@ -46,7 +46,7 @@ void Whirlpool_Update(void)
                         player->velocity.y              = 0;
                         player->groundVel               = 0;
                         player->onGround                = false;
-                        player->tileCollisions          = true;
+                        player->tileCollisions          = TILECOLLISION_DOWN;
                         player->state                   = Player_State_Air;
                         self->playerAmplitude[playerID] = abs(player->position.x - self->position.x) >> 16;
 

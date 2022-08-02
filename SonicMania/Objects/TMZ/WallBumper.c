@@ -158,7 +158,7 @@ void WallBumper_HandleInteractions(void)
 
             player->applyJumpCap   = false;
             player->onGround       = false;
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             player->onGround       = false;
             player->state          = Player_State_Air;
 

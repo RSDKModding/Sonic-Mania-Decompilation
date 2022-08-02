@@ -134,7 +134,7 @@ void TransportTube_State_Entry(void)
                 player->position.y = self->position.y;
                 if (player->state == Player_State_TransportTube) {
                     player->drawGroup      = Zone->playerDrawLow;
-                    player->tileCollisions = true;
+                    player->tileCollisions = TILECOLLISION_DOWN;
                     player->interaction    = true;
                     player->state          = Player_State_Air;
                     if (player->velocity.x)
@@ -147,7 +147,7 @@ void TransportTube_State_Entry(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->drawGroup          = 1;
                     player->onGround           = false;
-                    player->tileCollisions     = false;
+                    player->tileCollisions     = TILECOLLISION_NONE;
                     player->interaction        = false;
                     player->state              = Player_State_TransportTube;
                     player->nextAirState       = StateMachine_None;
@@ -282,7 +282,7 @@ void TransportTube_State_Exit(void)
                 player->position.x     = self->position.x;
                 player->position.y     = self->position.y;
                 player->drawGroup      = Zone->playerDrawLow;
-                player->tileCollisions = true;
+                player->tileCollisions = TILECOLLISION_DOWN;
                 player->interaction    = true;
                 player->state          = Player_State_Air;
                 self->playerTimers[i]  = 2;

@@ -40,7 +40,7 @@ void RollerMKII_Create(void *data)
     self->updateRange.x   = 0x1000000;
     self->updateRange.y   = 0x1000000;
     self->onGround        = false;
-    self->tileCollisions  = true;
+    self->tileCollisions  = TILECOLLISION_DOWN;
     self->collisionLayers = Zone->collisionLayers;
     self->collisionPlane  = 0;
     RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 5);
@@ -176,7 +176,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                         }
                         player->velocity.y     = velY;
                         player->onGround       = false;
-                        player->tileCollisions = true;
+                        player->tileCollisions = TILECOLLISION_DOWN;
 #if MANIA_USE_PLUS
                     }
 #endif

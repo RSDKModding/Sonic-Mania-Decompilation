@@ -196,7 +196,7 @@ void Player_LateUpdate(void)
         self->nextGroundState = StateMachine_None;
         self->nextAirState    = StateMachine_None;
         self->interaction     = false;
-        self->tileCollisions  = false;
+        self->tileCollisions  = TILECOLLISION_NONE;
 
         if (globals->gameMode != MODE_COMPETITION)
             self->active = ACTIVE_ALWAYS;
@@ -610,7 +610,7 @@ void Player_Create(void *data)
         self->sensorX[4] = -0xA0000;
 
         self->active         = ACTIVE_NORMAL;
-        self->tileCollisions = true;
+        self->tileCollisions = TILECOLLISION_DOWN;
         self->visible        = true;
         self->drawGroup      = Zone->playerDrawLow;
         self->scale.x        = 0x200;
@@ -1855,7 +1855,7 @@ void Player_HandleDeath(EntityPlayer *player)
             player->velocity.x       = 0;
             player->velocity.y       = 0;
             player->groundVel        = 0;
-            player->tileCollisions   = false;
+            player->tileCollisions   = TILECOLLISION_NONE;
             player->interaction      = false;
             player->drawGroup        = Zone->playerDrawHigh;
             player->drownTimer       = 0;
@@ -1881,7 +1881,7 @@ void Player_HandleDeath(EntityPlayer *player)
         player->velocity.x = 0;
         player->velocity.y = 0;
         player->groundVel = 0;
-        player->tileCollisions = false;
+        player->tileCollisions = TILECOLLISION_NONE;
         player->interaction = false;
         player->drawGroup = Zone->playerDrawHigh;
         player->drownTimer = 0;
@@ -2138,7 +2138,7 @@ void Player_HandleQuickRespawn(EntityPlayer *player)
 {
     player->drawGroup      = Zone->playerDrawLow;
     player->stateInput     = player->sidekick ? Player_Input_P2_AI : Player_Input_P1;
-    player->tileCollisions = true;
+    player->tileCollisions = TILECOLLISION_DOWN;
     player->interaction    = true;
     player->collisionPlane = 0;
     player->onGround       = false;
@@ -2964,7 +2964,7 @@ void Player_HandleGroundAnimation(void)
                 if (++self->outtaHereTimer >= 72000000) {
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_OUTTA_HERE, &self->animator, false, 0);
                     self->state           = Player_State_OuttaHere;
-                    self->tileCollisions  = false;
+                    self->tileCollisions  = TILECOLLISION_NONE;
                     self->interaction     = false;
                     self->nextAirState    = StateMachine_None;
                     self->nextGroundState = StateMachine_None;
@@ -3476,7 +3476,7 @@ void Player_Hit(EntityPlayer *player)
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             player->velocity.y     = -0x40000;
             player->onGround       = false;
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             player->blinkTimer     = 120;
             if (player->underwater) {
                 player->velocity.x >>= 1;
@@ -3490,7 +3490,7 @@ void Player_Hit(EntityPlayer *player)
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             player->velocity.y     = -0x40000;
             player->onGround       = false;
-            player->tileCollisions = true;
+            player->tileCollisions = TILECOLLISION_DOWN;
             player->blinkTimer     = 120;
             if (player->underwater) {
                 player->velocity.x >>= 1;
@@ -3639,7 +3639,7 @@ void Player_HandleSidekickRespawn(void)
             self->velocity.x      = 0;
             self->velocity.y      = 0;
             self->groundVel       = 0;
-            self->tileCollisions  = false;
+            self->tileCollisions  = TILECOLLISION_NONE;
             self->interaction     = false;
             self->blinkTimer      = 0;
             self->visible         = true;
@@ -3759,7 +3759,7 @@ void Player_State_Air(void)
 {
     RSDK_THIS(Player);
 
-    self->tileCollisions = true;
+    self->tileCollisions = TILECOLLISION_DOWN;
     Player_HandleAirFriction();
 
     if (self->onGround) {
@@ -5059,7 +5059,7 @@ void Player_State_KnuxWallClimb(void)
                 self->position.x     = storeX;
                 self->state          = Player_State_KnuxLedgePullUp;
                 self->timer          = 1;
-                self->tileCollisions = false;
+                self->tileCollisions = TILECOLLISION_NONE;
                 self->velocity.y     = 0;
             }
         }
@@ -5100,7 +5100,7 @@ void Player_State_KnuxLedgePullUp(void)
 
     if (self->animator.frameID == 6) {
         self->onGround       = true;
-        self->tileCollisions = true;
+        self->tileCollisions = TILECOLLISION_DOWN;
     }
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
@@ -5200,7 +5200,7 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
     dust->collisionPlane  = self->collisionPlane;
     dust->collisionMode   = 0;
     dust->collisionLayers = self->collisionLayers;
-    dust->tileCollisions  = 1;
+    dust->tileCollisions  = TILECOLLISION_DOWN;
     dust->animator.frameDuration += 4 * (4 - (abs(speed) >> 15));
     dust->velocity.x = dust->groundVel = self->velocity.x * (Zone->autoScrollSpeed != 0) + (speed >> self->isChibi);
     if (self->isChibi) {
@@ -5449,7 +5449,7 @@ void Player_State_FlyToPlayer(void)
 #endif
 
     Player->respawnTimer  = 0;
-    self->tileCollisions = false;
+    self->tileCollisions = TILECOLLISION_NONE;
     self->interaction    = false;
 
 #if GAME_VERSION != VER_100
@@ -5664,7 +5664,7 @@ void Player_State_HoldRespawn(void)
             dust->isPermanent = true;
             dust->position.y  = (ScreenInfo->position.y - 128) << 16;
 #if MANIA_USE_PLUS
-            self->tileCollisions = false;
+            self->tileCollisions  = TILECOLLISION_NONE;
             self->interaction    = false;
             self->forceRespawn    = false;
             self->drawGroup      = Zone->playerDrawHigh + 1;
@@ -5769,7 +5769,7 @@ void Player_FinishedReturnToPlayer(EntityPlayer *player, EntityPlayer *leader)
 
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
     player->onGround       = false;
-    player->tileCollisions = true;
+    player->tileCollisions = TILECOLLISION_DOWN;
     player->interaction    = true;
     player->controlLock    = 0;
     player->angle          = 0;
@@ -5841,7 +5841,7 @@ void Player_State_EncoreRespawn(void)
             self->velocity.x       = 0;
             self->velocity.y       = 0;
             self->groundVel        = 0;
-            self->tileCollisions   = false;
+            self->tileCollisions   = TILECOLLISION_NONE;
             self->interaction      = false;
             self->drawGroup        = Zone->playerDrawHigh;
             self->drownTimer       = 0;

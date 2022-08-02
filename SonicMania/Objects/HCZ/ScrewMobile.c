@@ -145,7 +145,7 @@ void ScrewMobile_State_CheckPlayerEnter(void)
             player2->groundVel      = 0;
             player2->position.x     = self->position.x;
             player2->position.y     = self->position.y - 0x100000;
-            player2->tileCollisions = true;
+            player2->tileCollisions = TILECOLLISION_DOWN;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
         }
     }
@@ -164,7 +164,7 @@ void ScrewMobile_State_CheckPlayerEnter(void)
         player1->direction      = FLIP_X;
         player1->position.x     = self->position.x;
         player1->position.y     = self->position.y - 0x100000;
-        player1->tileCollisions = true;
+        player1->tileCollisions = TILECOLLISION_DOWN;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
@@ -278,7 +278,7 @@ void ScrewMobile_State_PlayerRiding(void)
                 player2->position.x     = self->position.x;
                 player2->position.y     = self->position.y - 0x100000;
                 player2->drawGroup      = Zone->playerDrawLow;
-                player2->tileCollisions = true;
+                player2->tileCollisions = TILECOLLISION_DOWN;
                 player2->direction      = self->direction ^ FLIP_X;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             }
@@ -446,7 +446,7 @@ void ScrewMobile_State_Idle(void)
         player1->position.y = self->position.y;
         player1->position.y -= 0x100000;
         player1->drawGroup      = Zone->playerDrawLow;
-        player1->tileCollisions = true;
+        player1->tileCollisions = TILECOLLISION_DOWN;
         player1->direction      = self->direction ^ FLIP_X;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
     }
@@ -480,7 +480,7 @@ void ScrewMobile_State_Idle(void)
                 player2->position.y = self->position.y;
                 player2->position.y -= 0x100000;
                 player2->drawGroup      = Zone->playerDrawLow;
-                player2->tileCollisions = true;
+                player2->tileCollisions = TILECOLLISION_DOWN;
                 player2->direction      = self->direction ^ FLIP_X;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             }

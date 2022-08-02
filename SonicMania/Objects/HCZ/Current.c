@@ -356,7 +356,7 @@ void Current_State_WaterLeft(void)
 
                             if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-                                player->tileCollisions  = true;
+                                player->tileCollisions  = TILECOLLISION_DOWN;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->state           = Current_PlayerState_Left;
@@ -429,7 +429,7 @@ void Current_State_WaterRight(void)
                             player->groundVel       = player->velocity.x;
                             if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-                                player->tileCollisions  = true;
+                                player->tileCollisions  = TILECOLLISION_DOWN;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->state           = Current_PlayerState_Right;
@@ -502,7 +502,7 @@ void Current_State_WaterUp(void)
                             player->velocity.y      = -(self->strength << 15);
                             if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-                                player->tileCollisions  = true;
+                                player->tileCollisions  = TILECOLLISION_DOWN;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->state           = Current_PlayerState_Up;
@@ -582,7 +582,7 @@ void Current_State_WaterDown(void)
 
                             if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-                                player->tileCollisions  = true;
+                                player->tileCollisions  = TILECOLLISION_DOWN;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->state           = Current_PlayerState_Down;
