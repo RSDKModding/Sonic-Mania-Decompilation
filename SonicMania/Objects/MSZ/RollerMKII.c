@@ -44,7 +44,7 @@ void RollerMKII_Create(void *data)
     self->collisionLayers = Zone->collisionLayers;
     self->collisionPlane  = 0;
     RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 5);
-    self->state = RollerMKII_State_Setup;
+    self->state = RollerMKII_State_Init;
 }
 
 void RollerMKII_StageLoad(void)
@@ -292,7 +292,7 @@ void RollerMKII_HandleCollisions(void)
     }
 }
 
-void RollerMKII_State_Setup(void)
+void RollerMKII_State_Init(void)
 {
     RSDK_THIS(RollerMKII);
 

@@ -60,7 +60,7 @@ void Shuriken_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = Shuriken_State_Setup;
+    self->state         = Shuriken_State_Init;
 }
 
 void Shuriken_StageLoad(void)
@@ -131,7 +131,7 @@ void Shuriken_HandleSolidCollisions(void)
     }
 }
 
-void Shuriken_State_Setup(void)
+void Shuriken_State_Init(void)
 {
     RSDK_THIS(Shuriken);
 
@@ -250,7 +250,7 @@ void Shuriken_State_Deactivate(void)
     RSDK_THIS(Shuriken);
 
     if (self->timer >= 10)
-        self->state = Shuriken_State_Setup;
+        self->state = Shuriken_State_Init;
     else
         self->timer++;
 }

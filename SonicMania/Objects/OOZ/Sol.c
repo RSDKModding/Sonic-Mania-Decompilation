@@ -58,7 +58,7 @@ void Sol_Create(void *data)
 
         RSDK.SetSpriteAnimation(Sol->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(Sol->aniFrames, 1, &self->ballAnimator, true, 0);
-        self->state      = Sol_State_Setup;
+        self->state      = Sol_State_Init;
         self->velocity.x = self->direction == FLIP_NONE ? -0x4000 : 0x4000;
     }
 }
@@ -193,7 +193,7 @@ void Sol_CheckOffScreen(void)
     }
 }
 
-void Sol_State_Setup(void)
+void Sol_State_Init(void)
 {
     RSDK_THIS(Sol);
 

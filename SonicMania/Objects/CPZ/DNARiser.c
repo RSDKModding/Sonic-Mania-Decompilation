@@ -61,7 +61,7 @@ void DNARiser_Create(void *data)
 
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = DNARiser_State_Setup;
+    self->state         = DNARiser_State_Init;
 }
 
 void DNARiser_StageLoad(void)
@@ -130,7 +130,7 @@ Vector2 DNARiser_CalculateScale(Vector2 *scalePtr)
     return scale;
 }
 
-void DNARiser_State_Setup(void)
+void DNARiser_State_Init(void)
 {
     RSDK_THIS(DNARiser);
 
@@ -381,11 +381,11 @@ void DNARiser_State_ResetRiser(void)
         if (self->timer <= 0) {
             if (RSDK.CheckOnScreen(self, &self->updateRange)) {
                 DNARiser_State_BubbleBurst();
-                DNARiser_State_Setup();
+                DNARiser_State_Init();
                 self->scaleTimer = 30;
             }
             else {
-                self->state = DNARiser_State_Setup;
+                self->state = DNARiser_State_Init;
             }
         }
         else {

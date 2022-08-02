@@ -66,7 +66,7 @@ void CrashTest_CheckPlayerRide(void);
 void CrashTest_CheckPlayerJump(void);
 void CrashTest_HandleLightAnims(void);
 
-void CrashTest_State_Setup(void);
+void CrashTest_State_Init(void);
 void CrashTest_State_AwaitPlayer(void);
 void CrashTest_State_Rev(void);
 void CrashTest_State_Move(void);

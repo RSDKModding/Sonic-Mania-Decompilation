@@ -48,7 +48,7 @@ void SchrodingersCapsule_EditorLoad(void);
 void SchrodingersCapsule_Serialize(void);
 
 // Extra Entity Functions
-void SchrodingersCapsule_State_Setup(void);
+void SchrodingersCapsule_State_Init(void);
 void SchrodingersCapsule_State_HandleBounds(void);
 void SchrodingersCapsule_State_Activated(void);
 void SchrodingersCapsule_State_Explode(void);

@@ -76,7 +76,7 @@ void Sweep_Create(void *data)
                     self->water = water;
                 }
             }
-            self->state = Sweep_State_Setup;
+            self->state = Sweep_State_Init;
         }
     }
 }
@@ -192,7 +192,7 @@ void Sweep_CheckShoot(void)
     }
 }
 
-void Sweep_State_Setup(void)
+void Sweep_State_Init(void)
 {
     RSDK_THIS(Sweep);
 

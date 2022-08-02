@@ -69,7 +69,7 @@ void Caterkiller_Create(void *data)
         self->timer = 0;
         RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &self->headAnimator, true, 0);
         RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &self->bodyAnimator, true, 0);
-        self->state     = Caterkiller_State_Setup;
+        self->state     = Caterkiller_State_Init;
         self->stateDraw = Caterkiller_Draw_Body;
     }
 }
@@ -264,7 +264,7 @@ bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir)
     return false;
 }
 
-void Caterkiller_State_Setup(void)
+void Caterkiller_State_Init(void)
 {
     RSDK_THIS(Caterkiller);
 

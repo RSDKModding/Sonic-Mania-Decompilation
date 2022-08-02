@@ -53,7 +53,7 @@ void MechaBu_CheckPlayerCollisions(void);
 void MechaBu_CheckOffScreen(void);
 Vector2 MechaBu_GetSawOffset(void);
 
-void MechaBu_State_Setup(void);
+void MechaBu_State_Init(void);
 void MechaBu_State_Moving(void);
 void MechaBu_State_Stopped(void);
 void MechaBu_State_Falling(void);

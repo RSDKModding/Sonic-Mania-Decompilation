@@ -15,7 +15,7 @@ void BuckwildBall_Update(void)
 
     StateMachine_Run(self->state);
 
-    if (self->state != BuckwildBall_State_AwaitDetection && self->state != BuckwildBall_State_Debris && self->state != BuckwildBall_State_Setup) {
+    if (self->state != BuckwildBall_State_AwaitDetection && self->state != BuckwildBall_State_Debris && self->state != BuckwildBall_State_Init) {
         if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x1C0000, 2)) {
             if (self->particleDelay-- <= 0) {
                 BuckwildBall_SpawnDebris();
@@ -62,7 +62,7 @@ void BuckwildBall_Create(void *data)
         if (self->mode != BUCKWILDBALL_ROLLING)
             self->updateRange.x = (self->amplitude + 0x80) << 16;
 
-        self->state = BuckwildBall_State_Setup;
+        self->state = BuckwildBall_State_Init;
 
         if (!self->speed)
             self->speed = 2;
@@ -103,7 +103,7 @@ void BuckwildBall_CheckOffScreen(void)
     if (!RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange) && !RSDK.CheckPosOnScreen(&self->position, &self->updateRange)) {
         if (self->respawn) {
             self->position = self->startPos;
-            self->state    = BuckwildBall_State_Setup;
+            self->state    = BuckwildBall_State_Init;
             self->active   = ACTIVE_BOUNDS;
             self->visible  = false;
         }
@@ -222,7 +222,7 @@ void BuckwildBall_HandleRollCrush(void)
     }
 }
 
-void BuckwildBall_State_Setup(void)
+void BuckwildBall_State_Init(void)
 {
     RSDK_THIS(BuckwildBall);
 

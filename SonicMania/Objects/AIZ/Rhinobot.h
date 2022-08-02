@@ -58,7 +58,7 @@ void Rhinobot_Delay_Charge(void);
 void Rhinobot_Delay_Skidding(void);
 void Rhinobot_Delay_SkidFinish(void);
 
-void Rhinobot_State_Setup(void);
+void Rhinobot_State_Init(void);
 void Rhinobot_State_Moving(void);
 void Rhinobot_State_Skidding(void);
 void Rhinobot_State_Idle(void);

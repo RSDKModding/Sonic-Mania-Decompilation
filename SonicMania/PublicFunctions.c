@@ -80,7 +80,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Bloominator_CheckOffScreen);
     ADD_PUBLIC_FUNC(Bloominator_State_Idle);
     ADD_PUBLIC_FUNC(Bloominator_State_Firing);
-    ADD_PUBLIC_FUNC(Bloominator_State_Setup);
+    ADD_PUBLIC_FUNC(Bloominator_State_Init);
     ADD_PUBLIC_FUNC(Bloominator_State_Spikeball);
 #endif
 
@@ -126,7 +126,7 @@ void InitPublicFunctions()
 
     // AIZ/MonkeyDude
     ADD_PUBLIC_FUNC(MonkeyDude_DebugSpawn);
-    ADD_PUBLIC_FUNC(MonkeyDude_State_Setup);
+    ADD_PUBLIC_FUNC(MonkeyDude_State_Init);
     ADD_PUBLIC_FUNC(MonkeyDude_HandleBodyPart);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(MonkeyDude_HandleStates);
@@ -149,7 +149,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Rhinobot_Delay_Charge);
     ADD_PUBLIC_FUNC(Rhinobot_Delay_Skidding);
     ADD_PUBLIC_FUNC(Rhinobot_Delay_SkidFinish);
-    ADD_PUBLIC_FUNC(Rhinobot_State_Setup);
+    ADD_PUBLIC_FUNC(Rhinobot_State_Init);
     ADD_PUBLIC_FUNC(Rhinobot_State_Moving);
     ADD_PUBLIC_FUNC(Rhinobot_State_Skidding);
     ADD_PUBLIC_FUNC(Rhinobot_State_Idle);
@@ -158,7 +158,7 @@ void InitPublicFunctions()
 
     // AIZ/SchrodingersCapsule
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(SchrodingersCapsule_State_Setup);
+    ADD_PUBLIC_FUNC(SchrodingersCapsule_State_Init);
     ADD_PUBLIC_FUNC(SchrodingersCapsule_State_HandleBounds);
     ADD_PUBLIC_FUNC(SchrodingersCapsule_State_Activated);
     ADD_PUBLIC_FUNC(SchrodingersCapsule_State_Explode);
@@ -170,7 +170,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Sweep_CheckOffScreen);
     ADD_PUBLIC_FUNC(Sweep_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Sweep_CheckShoot);
-    ADD_PUBLIC_FUNC(Sweep_State_Setup);
+    ADD_PUBLIC_FUNC(Sweep_State_Init);
     ADD_PUBLIC_FUNC(Sweep_State_Idle);
     ADD_PUBLIC_FUNC(Sweep_State_Dash);
     ADD_PUBLIC_FUNC(Sweep_State_Stop);
@@ -422,7 +422,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Ball_HandleInteractions);
     ADD_PUBLIC_FUNC(Ball_CheckOffScreen);
     ADD_PUBLIC_FUNC(Ball_SpawnSplashes);
-    ADD_PUBLIC_FUNC(Ball_State_Setup);
+    ADD_PUBLIC_FUNC(Ball_State_Init);
     ADD_PUBLIC_FUNC(Ball_State_AwaitPlayer);
     ADD_PUBLIC_FUNC(Ball_State_TargetingPlayer);
     ADD_PUBLIC_FUNC(Ball_State_ChemicalDrop);
@@ -435,7 +435,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Bubbler_HandleInteractions);
     ADD_PUBLIC_FUNC(Bubbler_HandleProjectileInteractions);
     ADD_PUBLIC_FUNC(Bubbler_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Bubbler_State_Setup);
+    ADD_PUBLIC_FUNC(Bubbler_State_Init);
     ADD_PUBLIC_FUNC(Bubbler_State_MotherPatrol);
     ADD_PUBLIC_FUNC(Bubbler_State_FoundPlayer);
     ADD_PUBLIC_FUNC(Bubbler_State_AttackPlayer);
@@ -524,7 +524,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(DNARiser_State_BubbleBurst);
     ADD_PUBLIC_FUNC(DNARiser_SetupBurst);
     ADD_PUBLIC_FUNC(DNARiser_CalculateScale);
-    ADD_PUBLIC_FUNC(DNARiser_State_Setup);
+    ADD_PUBLIC_FUNC(DNARiser_State_Init);
     ADD_PUBLIC_FUNC(DNARiser_State_HandleInteractions);
     ADD_PUBLIC_FUNC(DNARiser_State_HelixRise);
     ADD_PUBLIC_FUNC(DNARiser_State_HelixBurst);
@@ -540,7 +540,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Grabber_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Grabber_CheckOffScreen);
     ADD_PUBLIC_FUNC(Grabber_HandleExplode);
-    ADD_PUBLIC_FUNC(Grabber_State_Setup);
+    ADD_PUBLIC_FUNC(Grabber_State_Init);
     ADD_PUBLIC_FUNC(Grabber_State_CheckForGrab);
     ADD_PUBLIC_FUNC(Grabber_State_GrabDelay);
     ADD_PUBLIC_FUNC(Grabber_State_HandleTurn);
@@ -579,7 +579,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Spiny_DebugSpawn);
     ADD_PUBLIC_FUNC(Spiny_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Spiny_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Spiny_State_Setup);
+    ADD_PUBLIC_FUNC(Spiny_State_Init);
     ADD_PUBLIC_FUNC(Spiny_State_Floor);
     ADD_PUBLIC_FUNC(Spiny_State_Shoot_Floor);
     ADD_PUBLIC_FUNC(Spiny_State_Wall);
@@ -663,7 +663,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TAEmerald_State_MoveCircle);
 
     // Credits/TryAgain
-    ADD_PUBLIC_FUNC(TryAgain_State_Setup);
+    ADD_PUBLIC_FUNC(TryAgain_State_Init);
     ADD_PUBLIC_FUNC(TryAgain_State_EnterEggman);
     ADD_PUBLIC_FUNC(TryAgain_State_EggmanLaugh);
     ADD_PUBLIC_FUNC(TryAgain_State_Stinger);
@@ -809,7 +809,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ERZMystic_SetupNewCupSwap);
     ADD_PUBLIC_FUNC(ERZMystic_Draw_CupSetup);
     ADD_PUBLIC_FUNC(ERZMystic_Draw_CupSwap);
-    ADD_PUBLIC_FUNC(ERZMystic_State_Setup);
+    ADD_PUBLIC_FUNC(ERZMystic_State_Init);
     ADD_PUBLIC_FUNC(ERZMystic_State_SetupInitialCupPos);
     ADD_PUBLIC_FUNC(ERZMystic_State_MoveCupsDownwards);
     ADD_PUBLIC_FUNC(ERZMystic_State_RotateMiddleCup);
@@ -1024,7 +1024,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PhantomMystic_SetupNewCupSwap);
     ADD_PUBLIC_FUNC(PhantomMystic_Draw_CupSetup);
     ADD_PUBLIC_FUNC(PhantomMystic_Draw_CupSwap);
-    ADD_PUBLIC_FUNC(PhantomMystic_State_Setup);
+    ADD_PUBLIC_FUNC(PhantomMystic_State_Init);
     ADD_PUBLIC_FUNC(PhantomMystic_State_SetupInitialCupPos);
     ADD_PUBLIC_FUNC(PhantomMystic_State_MoveCupsDownwards);
     ADD_PUBLIC_FUNC(PhantomMystic_State_RotateMiddleCup);
@@ -1119,7 +1119,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Blaster_DebugSpawn);
     ADD_PUBLIC_FUNC(Blaster_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(Blaster_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Blaster_State_Setup);
+    ADD_PUBLIC_FUNC(Blaster_State_Init);
     ADD_PUBLIC_FUNC(Blaster_State_Move);
     ADD_PUBLIC_FUNC(Blaster_State_HandleTurn);
     ADD_PUBLIC_FUNC(Blaster_State_AttackPlayer);
@@ -1134,7 +1134,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Clucker_DebugSpawn);
     ADD_PUBLIC_FUNC(Clucker_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(Clucker_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Clucker_State_Setup);
+    ADD_PUBLIC_FUNC(Clucker_State_Init);
     ADD_PUBLIC_FUNC(Clucker_State_CheckForPlayer);
     ADD_PUBLIC_FUNC(Clucker_State_Appear);
     ADD_PUBLIC_FUNC(Clucker_State_ShootDelay);
@@ -1148,7 +1148,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Crane_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(Crane_CheckOffScreen);
     ADD_PUBLIC_FUNC(Crane_State_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Crane_State_Setup);
+    ADD_PUBLIC_FUNC(Crane_State_Init);
     ADD_PUBLIC_FUNC(Crane_State_CheckForPlayers);
     ADD_PUBLIC_FUNC(Crane_State_LowerToGrab);
     ADD_PUBLIC_FUNC(Crane_State_CheckGrab);
@@ -1308,7 +1308,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Technosqueek_DebugSpawn);
     ADD_PUBLIC_FUNC(Technosqueek_HandlePlayerCollisions);
     ADD_PUBLIC_FUNC(Technosqueek_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Technosqueek_State_Setup);
+    ADD_PUBLIC_FUNC(Technosqueek_State_Init);
     ADD_PUBLIC_FUNC(Technosqueek_State_MoveHorizontal);
     ADD_PUBLIC_FUNC(Technosqueek_State_TurnHorizontal);
     ADD_PUBLIC_FUNC(Technosqueek_State_MoveVertical);
@@ -1348,7 +1348,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Batbrain_DebugSpawn);
     ADD_PUBLIC_FUNC(Batbrain_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Batbrain_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Batbrain_State_Setup);
+    ADD_PUBLIC_FUNC(Batbrain_State_Init);
     ADD_PUBLIC_FUNC(Batbrain_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Batbrain_State_DropToPlayer);
     ADD_PUBLIC_FUNC(Batbrain_State_Fly);
@@ -1362,7 +1362,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BuzzBomber_DebugSpawn);
     ADD_PUBLIC_FUNC(BuzzBomber_CheckOffScreen);
     ADD_PUBLIC_FUNC(BuzzBomber_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(BuzzBomber_State_Setup);
+    ADD_PUBLIC_FUNC(BuzzBomber_State_Init);
     ADD_PUBLIC_FUNC(BuzzBomber_State_Flying);
     ADD_PUBLIC_FUNC(BuzzBomber_State_Idle);
     ADD_PUBLIC_FUNC(BuzzBomber_State_DetectedPlayer);
@@ -1382,7 +1382,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Chopper_CheckOffScreen);
     ADD_PUBLIC_FUNC(Chopper_CheckPlayerCollisions_Jump);
     ADD_PUBLIC_FUNC(Chopper_CheckPlayerCollisions_Swim);
-    ADD_PUBLIC_FUNC(Chopper_State_Setup);
+    ADD_PUBLIC_FUNC(Chopper_State_Init);
     ADD_PUBLIC_FUNC(Chopper_State_Jump);
     ADD_PUBLIC_FUNC(Chopper_State_Swim);
     ADD_PUBLIC_FUNC(Chopper_State_ChargeDelay);
@@ -1392,7 +1392,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Crabmeat_DebugSpawn);
     ADD_PUBLIC_FUNC(Crabmeat_CheckOffScreen);
     ADD_PUBLIC_FUNC(Crabmeat_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Crabmeat_State_Setup);
+    ADD_PUBLIC_FUNC(Crabmeat_State_Init);
     ADD_PUBLIC_FUNC(Crabmeat_State_Moving);
     ADD_PUBLIC_FUNC(Crabmeat_State_Shoot);
     ADD_PUBLIC_FUNC(Crabmeat_State_Projectile);
@@ -1525,7 +1525,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Motobug_State_Fall);
     ADD_PUBLIC_FUNC(Motobug_State_Move);
     ADD_PUBLIC_FUNC(Motobug_State_Idle);
-    ADD_PUBLIC_FUNC(Motobug_State_Setup);
+    ADD_PUBLIC_FUNC(Motobug_State_Init);
     ADD_PUBLIC_FUNC(Motobug_State_Smoke);
     ADD_PUBLIC_FUNC(Motobug_State_Turn);
 
@@ -1534,7 +1534,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Newtron_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Newtron_CheckOffScreen);
     ADD_PUBLIC_FUNC(Newtron_GetTargetDir);
-    ADD_PUBLIC_FUNC(Newtron_State_Setup);
+    ADD_PUBLIC_FUNC(Newtron_State_Init);
     ADD_PUBLIC_FUNC(Newtron_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Newtron_State_Appear);
     ADD_PUBLIC_FUNC(Newtron_State_StartFly);
@@ -1551,7 +1551,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Splats_DebugSpawn);
     ADD_PUBLIC_FUNC(Splats_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Splats_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Splats_State_Setup);
+    ADD_PUBLIC_FUNC(Splats_State_Init);
     ADD_PUBLIC_FUNC(Splats_State_BounceAround);
     ADD_PUBLIC_FUNC(Splats_State_SetupInkJar);
     ADD_PUBLIC_FUNC(Splats_State_InkJarSpawner);
@@ -1746,7 +1746,7 @@ void InitPublicFunctions()
     // Global/EggPrison
     ADD_PUBLIC_FUNC(EggPrison_HandleMovement);
     ADD_PUBLIC_FUNC(EggPrison_State_Activated);
-    ADD_PUBLIC_FUNC(EggPrison_State_Setup);
+    ADD_PUBLIC_FUNC(EggPrison_State_Init);
     ADD_PUBLIC_FUNC(EggPrison_State_HandleBounds);
     ADD_PUBLIC_FUNC(EggPrison_State_Explode);
     ADD_PUBLIC_FUNC(EggPrison_State_SetupActClear);
@@ -2106,7 +2106,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SignPost_HandleSparkles);
     ADD_PUBLIC_FUNC(SignPost_HandleCamBounds);
     ADD_PUBLIC_FUNC(SignPost_CheckTouch);
-    ADD_PUBLIC_FUNC(SignPost_State_Setup);
+    ADD_PUBLIC_FUNC(SignPost_State_Init);
     ADD_PUBLIC_FUNC(SignPost_State_AwaitTouch);
     ADD_PUBLIC_FUNC(SignPost_State_Land);
     ADD_PUBLIC_FUNC(SignPost_State_SpunVS);
@@ -2214,7 +2214,7 @@ void InitPublicFunctions()
     // HCZ/Blastoid
     ADD_PUBLIC_FUNC(Blastoid_DebugSpawn);
     ADD_PUBLIC_FUNC(Blastoid_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Blastoid_State_Setup);
+    ADD_PUBLIC_FUNC(Blastoid_State_Init);
     ADD_PUBLIC_FUNC(Blastoid_State_Body);
     ADD_PUBLIC_FUNC(Blastoid_State_Projectile);
 
@@ -2222,7 +2222,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BreakBar_DrawSprites);
     ADD_PUBLIC_FUNC(BreakBar_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(BreakBar_HandlePlayerInteractions);
-    ADD_PUBLIC_FUNC(BreakBar_State_Setup);
+    ADD_PUBLIC_FUNC(BreakBar_State_Init);
     ADD_PUBLIC_FUNC(BreakBar_State_Main);
 
     // HCZ/Buggernaut
@@ -2231,7 +2231,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Buggernaut_CheckOffScreen);
     ADD_PUBLIC_FUNC(Buggernaut_HandleTileCollisionsX);
     ADD_PUBLIC_FUNC(Buggernaut_HandleTileCollisionsY);
-    ADD_PUBLIC_FUNC(Buggernaut_State_Setup);
+    ADD_PUBLIC_FUNC(Buggernaut_State_Init);
     ADD_PUBLIC_FUNC(Buggernaut_State_Idle);
     ADD_PUBLIC_FUNC(Buggernaut_State_FlyTowardTarget);
     ADD_PUBLIC_FUNC(Buggernaut_State_FlyAway);
@@ -2318,7 +2318,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HandLauncher_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(HandLauncher_ReleasePlayers);
     ADD_PUBLIC_FUNC(HandLauncher_HandleGrabbedPlayers);
-    ADD_PUBLIC_FUNC(HandLauncher_State_Setup);
+    ADD_PUBLIC_FUNC(HandLauncher_State_Init);
     ADD_PUBLIC_FUNC(HandLauncher_State_AwaitPlayer);
     ADD_PUBLIC_FUNC(HandLauncher_State_TryGrabPlayer);
     ADD_PUBLIC_FUNC(HandLauncher_State_GrabbedPlayer);
@@ -2360,7 +2360,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Jellygnite_CheckInWater);
     ADD_PUBLIC_FUNC(Jellygnite_DrawBackTentacle);
     ADD_PUBLIC_FUNC(Jellygnite_DrawFrontTentacle);
-    ADD_PUBLIC_FUNC(Jellygnite_State_Setup);
+    ADD_PUBLIC_FUNC(Jellygnite_State_Init);
     ADD_PUBLIC_FUNC(Jellygnite_State_Swimming);
     ADD_PUBLIC_FUNC(Jellygnite_State_GrabbedPlayer);
     ADD_PUBLIC_FUNC(Jellygnite_State_Explode);
@@ -2420,7 +2420,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MegaChopper_Input_GrabbedP1);
     ADD_PUBLIC_FUNC(MegaChopper_Input_GrabbedP2);
     ADD_PUBLIC_FUNC(MegaChopper_Input_GrabbedP2_AI);
-    ADD_PUBLIC_FUNC(MegaChopper_State_Setup);
+    ADD_PUBLIC_FUNC(MegaChopper_State_Init);
     ADD_PUBLIC_FUNC(MegaChopper_State_InWater);
     ADD_PUBLIC_FUNC(MegaChopper_State_OutOfWater);
     ADD_PUBLIC_FUNC(MegaChopper_State_Chopping);
@@ -2430,7 +2430,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Pointdexter_DebugSpawn);
     ADD_PUBLIC_FUNC(Pointdexter_CheckOffScreen);
     ADD_PUBLIC_FUNC(Pointdexter_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Pointdexter_State_Setup);
+    ADD_PUBLIC_FUNC(Pointdexter_State_Init);
     ADD_PUBLIC_FUNC(Pointdexter_State_Swimming);
 
 #if GAME_VERSION == VER_100
@@ -2457,7 +2457,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TurboSpiker_Hermit_Collide);
     ADD_PUBLIC_FUNC(TurboSpiker_Hermit_CheckOffScreen);
     ADD_PUBLIC_FUNC(TurboSpiker_HandleMovement);
-    ADD_PUBLIC_FUNC(TurboSpiker_State_Setup);
+    ADD_PUBLIC_FUNC(TurboSpiker_State_Init);
     ADD_PUBLIC_FUNC(TurboSpiker_State_Idle);
     ADD_PUBLIC_FUNC(TurboSpiker_State_Hidden);
     ADD_PUBLIC_FUNC(TurboSpiker_State_Moving);
@@ -2615,7 +2615,7 @@ void InitPublicFunctions()
     // HPZ/Batbot
     ADD_PUBLIC_FUNC(Batbot_DebugSpawn);
     ADD_PUBLIC_FUNC(Batbot_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Batbot_State_Setup);
+    ADD_PUBLIC_FUNC(Batbot_State_Init);
     ADD_PUBLIC_FUNC(Batbot_State_Idle);
     ADD_PUBLIC_FUNC(Batbot_State_Attack);
     ADD_PUBLIC_FUNC(Batbot_State_SwoopLeft);
@@ -2624,7 +2624,7 @@ void InitPublicFunctions()
     // HPZ/Redz
     ADD_PUBLIC_FUNC(Redz_DebugSpawn);
     ADD_PUBLIC_FUNC(Redz_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Redz_State_Setup);
+    ADD_PUBLIC_FUNC(Redz_State_Init);
     ADD_PUBLIC_FUNC(Redz_State_Walk);
     ADD_PUBLIC_FUNC(Redz_State_Turn);
     ADD_PUBLIC_FUNC(Redz_State_PrepareAttack);
@@ -2637,7 +2637,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Stegway_CheckOffScreen);
     ADD_PUBLIC_FUNC(Stegway_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(Stegway_SetupAnims);
-    ADD_PUBLIC_FUNC(Stegway_State_Setup);
+    ADD_PUBLIC_FUNC(Stegway_State_Init);
     ADD_PUBLIC_FUNC(Stegway_State_Moving);
     ADD_PUBLIC_FUNC(Stegway_State_Turn);
     ADD_PUBLIC_FUNC(Stegway_State_RevUp);
@@ -2650,7 +2650,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BuckwildBall_SpawnDebris);
     ADD_PUBLIC_FUNC(BuckwildBall_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(BuckwildBall_HandleRollCrush);
-    ADD_PUBLIC_FUNC(BuckwildBall_State_Setup);
+    ADD_PUBLIC_FUNC(BuckwildBall_State_Init);
     ADD_PUBLIC_FUNC(BuckwildBall_State_Patrolling);
     ADD_PUBLIC_FUNC(BuckwildBall_State_AwaitDetection);
     ADD_PUBLIC_FUNC(BuckwildBall_State_Falling);
@@ -2659,7 +2659,7 @@ void InitPublicFunctions()
 
     // LRZ/DashLift
     ADD_PUBLIC_FUNC(DashLift_CheckOffScreen);
-    ADD_PUBLIC_FUNC(DashLift_State_Setup);
+    ADD_PUBLIC_FUNC(DashLift_State_Init);
     ADD_PUBLIC_FUNC(DashLift_State_HandleDash);
 
     // LRZ/Drillerdroid
@@ -2732,7 +2732,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Fireworm_DebugSpawn);
     ADD_PUBLIC_FUNC(Fireworm_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Fireworm_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Fireworm_State_Setup);
+    ADD_PUBLIC_FUNC(Fireworm_State_Init);
     ADD_PUBLIC_FUNC(Fireworm_State_AwaitPlayer);
     ADD_PUBLIC_FUNC(Fireworm_State_HeadAppear);
     ADD_PUBLIC_FUNC(Fireworm_State_BodyAppear);
@@ -2748,7 +2748,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Flamethrower_CheckOutOfBounds);
     ADD_PUBLIC_FUNC(Flamethrower_CheckFlameCollisions);
     ADD_PUBLIC_FUNC(Flamethrower_CheckMouthCollisions);
-    ADD_PUBLIC_FUNC(Flamethrower_State_Setup);
+    ADD_PUBLIC_FUNC(Flamethrower_State_Init);
     ADD_PUBLIC_FUNC(Flamethrower_State_AwaitInterval);
     ADD_PUBLIC_FUNC(Flamethrower_State_EmittingFlames);
     ADD_PUBLIC_FUNC(Flamethrower_State_SetupFireball);
@@ -2831,7 +2831,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Iwamodoki_DebugSpawn);
     ADD_PUBLIC_FUNC(Iwamodoki_HandlePlayerCollisions);
     ADD_PUBLIC_FUNC(Iwamodoki_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Iwamodoki_State_Setup);
+    ADD_PUBLIC_FUNC(Iwamodoki_State_Init);
     ADD_PUBLIC_FUNC(Iwamodoki_State_AwaitPlayer);
     ADD_PUBLIC_FUNC(Iwamodoki_State_Appear);
     ADD_PUBLIC_FUNC(Iwamodoki_State_Charging);
@@ -2873,7 +2873,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LavaGeyser_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(LavaGeyser_HandleSetup);
     ADD_PUBLIC_FUNC(LavaGeyser_State_Intervals);
-    ADD_PUBLIC_FUNC(LavaGeyser_State_Setup);
+    ADD_PUBLIC_FUNC(LavaGeyser_State_Init);
     ADD_PUBLIC_FUNC(LavaGeyser_State_ShowPlume);
     ADD_PUBLIC_FUNC(LavaGeyser_State_Erupting);
     ADD_PUBLIC_FUNC(LavaGeyser_State_Erupted);
@@ -2988,7 +2988,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LRZSpikeBall_GetBaseFrameID);
     ADD_PUBLIC_FUNC(LRZSpikeBall_CheckPlayerBaseCollisions);
     ADD_PUBLIC_FUNC(LRZSpikeBall_CheckPlayerBallCollisions);
-    ADD_PUBLIC_FUNC(LRZSpikeBall_State_Setup);
+    ADD_PUBLIC_FUNC(LRZSpikeBall_State_Init);
     ADD_PUBLIC_FUNC(LRZSpikeBall_State_AwaitInterval);
     ADD_PUBLIC_FUNC(LRZSpikeBall_State_ChargeUp);
     ADD_PUBLIC_FUNC(LRZSpikeBall_State_LaunchedBall);
@@ -3004,7 +3004,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Rexon_CheckOffScreen);
     ADD_PUBLIC_FUNC(Rexon_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Rexon_Destroy);
-    ADD_PUBLIC_FUNC(Rexon_State_Setup);
+    ADD_PUBLIC_FUNC(Rexon_State_Init);
     ADD_PUBLIC_FUNC(Rexon_State_Hidden);
     ADD_PUBLIC_FUNC(Rexon_State_Rising);
     ADD_PUBLIC_FUNC(Rexon_State_Shooting);
@@ -3023,7 +3023,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(RockDrill_Hit);
     ADD_PUBLIC_FUNC(RockDrill_Explode);
     ADD_PUBLIC_FUNC(RockDrill_SpawnDebris);
-    ADD_PUBLIC_FUNC(RockDrill_State_Setup);
+    ADD_PUBLIC_FUNC(RockDrill_State_Init);
     ADD_PUBLIC_FUNC(RockDrill_State_Drilling);
     ADD_PUBLIC_FUNC(RockDrill_State_Falling);
     ADD_PUBLIC_FUNC(RockDrill_State_Explode);
@@ -3033,7 +3033,7 @@ void InitPublicFunctions()
 
     // LRZ/SpikeCrusher
     ADD_PUBLIC_FUNC(SpikeCrusher_CheckOffScreen);
-    ADD_PUBLIC_FUNC(SpikeCrusher_State_Setup);
+    ADD_PUBLIC_FUNC(SpikeCrusher_State_Init);
     ADD_PUBLIC_FUNC(SpikeCrusher_State_MovingDown);
     ADD_PUBLIC_FUNC(SpikeCrusher_State_Crushing);
     ADD_PUBLIC_FUNC(SpikeCrusher_State_CrushBounce);
@@ -3060,7 +3060,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Toxomister_CheckOffScreen);
     ADD_PUBLIC_FUNC(Toxomister_CheckCloudOnScreen);
     ADD_PUBLIC_FUNC(Toxomister_CheckPlayerCloudCollisions);
-    ADD_PUBLIC_FUNC(Toxomister_State_Setup);
+    ADD_PUBLIC_FUNC(Toxomister_State_Init);
     ADD_PUBLIC_FUNC(Toxomister_State_CreateClouds);
     ADD_PUBLIC_FUNC(Toxomister_StateCloud_FallDelay);
     ADD_PUBLIC_FUNC(Toxomister_StateCloud_FallToFloor);
@@ -3075,7 +3075,7 @@ void InitPublicFunctions()
     // LRZ/TurretSwitch
     ADD_PUBLIC_FUNC(TurretSwitch_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(TurretSwitch_Break);
-    ADD_PUBLIC_FUNC(TurretSwitch_State_Setup);
+    ADD_PUBLIC_FUNC(TurretSwitch_State_Init);
     ADD_PUBLIC_FUNC(TurretSwitch_State_Turret);
     ADD_PUBLIC_FUNC(TurretSwitch_State_Projectile);
 
@@ -3089,7 +3089,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(WalkerLegs_CheckStoodLava);
     ADD_PUBLIC_FUNC(WalkerLegs_CreateDebris);
     ADD_PUBLIC_FUNC(WalkerLegs_CreateSmoke);
-    ADD_PUBLIC_FUNC(WalkerLegs_State_Setup);
+    ADD_PUBLIC_FUNC(WalkerLegs_State_Init);
     ADD_PUBLIC_FUNC(WalkerLegs_State_Idle);
     ADD_PUBLIC_FUNC(WalkerLegs_State_Stepping);
     ADD_PUBLIC_FUNC(WalkerLegs_State_TryToReset);
@@ -3524,7 +3524,7 @@ void InitPublicFunctions()
 
     // Menu/UICreditsText
     ADD_PUBLIC_FUNC(UICreditsText_SetText);
-    ADD_PUBLIC_FUNC(UICreditsText_State_Setup);
+    ADD_PUBLIC_FUNC(UICreditsText_State_Init);
     ADD_PUBLIC_FUNC(UICreditsText_State_SetupCharPos);
     ADD_PUBLIC_FUNC(UICreditsText_State_MoveChars);
     ADD_PUBLIC_FUNC(UICreditsText_State_ScaleIn);
@@ -3612,7 +3612,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UILeaderboard_DrawZonePreview);
     ADD_PUBLIC_FUNC(UILeaderboard_DrawTime);
     ADD_PUBLIC_FUNC(UILeaderboard_DrawRank);
-    ADD_PUBLIC_FUNC(UILeaderboard_State_Setup);
+    ADD_PUBLIC_FUNC(UILeaderboard_State_Init);
     ADD_PUBLIC_FUNC(UILeaderboard_State_Unselected);
     ADD_PUBLIC_FUNC(UILeaderboard_State_Selected);
     ADD_PUBLIC_FUNC(UILeaderboard_ProcessButtonCB);
@@ -3685,7 +3685,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIReplayCarousel_Draw_Loading);
     ADD_PUBLIC_FUNC(UIReplayCarousel_Draw_NoReplays);
     ADD_PUBLIC_FUNC(UIReplayCarousel_Draw_Carousel);
-    ADD_PUBLIC_FUNC(UIReplayCarousel_State_Setup);
+    ADD_PUBLIC_FUNC(UIReplayCarousel_State_Init);
     ADD_PUBLIC_FUNC(UIReplayCarousel_State_Unselected);
     ADD_PUBLIC_FUNC(UIReplayCarousel_State_Selected);
     ADD_PUBLIC_FUNC(UIReplayCarousel_State_StartAction);
@@ -3797,7 +3797,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UITAZoneModule_ButtonLeaveCB);
     ADD_PUBLIC_FUNC(UITAZoneModule_TransitionCB);
     ADD_PUBLIC_FUNC(UITAZoneModule_ShowLeaderboards_CB);
-    ADD_PUBLIC_FUNC(UITAZoneModule_State_Setup);
+    ADD_PUBLIC_FUNC(UITAZoneModule_State_Init);
     ADD_PUBLIC_FUNC(UITAZoneModule_State_NotSelected);
     ADD_PUBLIC_FUNC(UITAZoneModule_State_Selected);
     ADD_PUBLIC_FUNC(UITAZoneModule_State_HasBeenSelected);
@@ -3824,14 +3824,14 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UITransition_MatchNewTag);
     ADD_PUBLIC_FUNC(UITransition_SetNewTag);
     ADD_PUBLIC_FUNC(UITransition_DrawShapes);
-    ADD_PUBLIC_FUNC(UITransition_State_Setup);
+    ADD_PUBLIC_FUNC(UITransition_State_Init);
     ADD_PUBLIC_FUNC(UITransition_State_TransitionIn);
     ADD_PUBLIC_FUNC(UITransition_State_TransitionOut);
 
     // Menu/UIUsernamePopup
     ADD_PUBLIC_FUNC(UIUsernamePopup_ShowPopup);
     ADD_PUBLIC_FUNC(UIUsernamePopup_DrawSprites);
-    ADD_PUBLIC_FUNC(UIUsernamePopup_State_Setup);
+    ADD_PUBLIC_FUNC(UIUsernamePopup_State_Init);
     ADD_PUBLIC_FUNC(UIUsernamePopup_State_Appear);
     ADD_PUBLIC_FUNC(UIUsernamePopup_State_Shown);
     ADD_PUBLIC_FUNC(UIUsernamePopup_State_Disappear);
@@ -4042,7 +4042,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MatryoshkaBom_DebugSpawn);
     ADD_PUBLIC_FUNC(MatryoshkaBom_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(MatryoshkaBom_CheckOffScreen);
-    ADD_PUBLIC_FUNC(MatryoshkaBom_State_Setup);
+    ADD_PUBLIC_FUNC(MatryoshkaBom_State_Init);
     ADD_PUBLIC_FUNC(MatryoshkaBom_State_Walk);
     ADD_PUBLIC_FUNC(MatryoshkaBom_State_Stopped);
     ADD_PUBLIC_FUNC(MatryoshkaBom_State_Turn);
@@ -4056,7 +4056,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MechaBu_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(MechaBu_CheckOffScreen);
     ADD_PUBLIC_FUNC(MechaBu_GetSawOffset);
-    ADD_PUBLIC_FUNC(MechaBu_State_Setup);
+    ADD_PUBLIC_FUNC(MechaBu_State_Init);
     ADD_PUBLIC_FUNC(MechaBu_State_Moving);
     ADD_PUBLIC_FUNC(MechaBu_State_Stopped);
     ADD_PUBLIC_FUNC(MechaBu_State_Falling);
@@ -4121,13 +4121,13 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PohBee_DrawSprites);
     ADD_PUBLIC_FUNC(PohBee_GetSpikePos);
     ADD_PUBLIC_FUNC(PohBee_SetupHitboxes);
-    ADD_PUBLIC_FUNC(PohBee_State_Setup);
+    ADD_PUBLIC_FUNC(PohBee_State_Init);
     ADD_PUBLIC_FUNC(PohBee_State_Move);
 
     // MMZ/RPlaneShifter
     ADD_PUBLIC_FUNC(RPlaneShifter_DrawSprites);
     ADD_PUBLIC_FUNC(RPlaneShifter_HandlePlaneShift);
-    ADD_PUBLIC_FUNC(RPlaneShifter_State_Setup);
+    ADD_PUBLIC_FUNC(RPlaneShifter_State_Init);
     ADD_PUBLIC_FUNC(RPlaneShifter_State_AwaitPlayer);
     ADD_PUBLIC_FUNC(RPlaneShifter_State_Spinning);
     ADD_PUBLIC_FUNC(RPlaneShifter_State_FinishSpin);
@@ -4138,7 +4138,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Scarab_HandleChildMove);
     ADD_PUBLIC_FUNC(Scarab_HandlePlayerGrab);
     ADD_PUBLIC_FUNC(Scarab_HandlePlayerRelease);
-    ADD_PUBLIC_FUNC(Scarab_State_Setup);
+    ADD_PUBLIC_FUNC(Scarab_State_Init);
     ADD_PUBLIC_FUNC(Scarab_State_Move);
     ADD_PUBLIC_FUNC(Scarab_State_Wait);
 
@@ -4176,7 +4176,7 @@ void InitPublicFunctions()
 
     // MSZ/Armadiloid
     ADD_PUBLIC_FUNC(Armadiloid_DebugSpawn);
-    ADD_PUBLIC_FUNC(Armadiloid_State_Setup);
+    ADD_PUBLIC_FUNC(Armadiloid_State_Init);
     ADD_PUBLIC_FUNC(Armadiloid_State_PlatformFlying);
     ADD_PUBLIC_FUNC(Armadiloid_PlatformShootDelay);
     ADD_PUBLIC_FUNC(Armadiloid_State_PlatformShoot);
@@ -4189,7 +4189,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Bumpalo_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Bumpalo_HandlePlatformCollisions);
     ADD_PUBLIC_FUNC(Bumpalo_HandleObjectCollisions);
-    ADD_PUBLIC_FUNC(Bumpalo_State_Setup);
+    ADD_PUBLIC_FUNC(Bumpalo_State_Init);
     ADD_PUBLIC_FUNC(Bumpalo_State_Moving);
     ADD_PUBLIC_FUNC(Bumpalo_State_Idle);
     ADD_PUBLIC_FUNC(Bumpalo_State_Charging);
@@ -4418,7 +4418,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(RollerMKII_HandleObjectCollisions);
     ADD_PUBLIC_FUNC(RollerMKII_HandlePlatformCollisions);
     ADD_PUBLIC_FUNC(RollerMKII_HandleCollisions);
-    ADD_PUBLIC_FUNC(RollerMKII_State_Setup);
+    ADD_PUBLIC_FUNC(RollerMKII_State_Init);
     ADD_PUBLIC_FUNC(RollerMKII_State_Idle);
     ADD_PUBLIC_FUNC(RollerMKII_State_SpinUp);
     ADD_PUBLIC_FUNC(RollerMKII_State_RollDelay);
@@ -4446,7 +4446,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SwingRope_DebugSpawn);
 
     // MSZ/Tornado
-    ADD_PUBLIC_FUNC(Tornado_State_Setup);
+    ADD_PUBLIC_FUNC(Tornado_State_Init);
     ADD_PUBLIC_FUNC(Tornado_State_SetupMSZ1Intro);
     ADD_PUBLIC_FUNC(Tornado_State_MSZ1Intro);
     ADD_PUBLIC_FUNC(Tornado_State_KnuxKnockedOff);
@@ -4494,7 +4494,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Vultron_DebugSpawn);
     ADD_PUBLIC_FUNC(Vultron_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Vultron_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Vultron_State_Setup);
+    ADD_PUBLIC_FUNC(Vultron_State_Init);
     ADD_PUBLIC_FUNC(Vultron_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Vultron_State_Hop);
     ADD_PUBLIC_FUNC(Vultron_State_Dive);
@@ -4507,7 +4507,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Aquis_DebugSpawn);
     ADD_PUBLIC_FUNC(Aquis_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Aquis_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Aquis_State_Setup);
+    ADD_PUBLIC_FUNC(Aquis_State_Init);
     ADD_PUBLIC_FUNC(Aquis_State_Idle);
     ADD_PUBLIC_FUNC(Aquis_State_Moving);
     ADD_PUBLIC_FUNC(Aquis_State_Shoot);
@@ -4606,7 +4606,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MeterDroid_Draw_Normal);
     ADD_PUBLIC_FUNC(MeterDroid_Draw_SpinningValve);
     ADD_PUBLIC_FUNC(MeterDroid_Draw_ThrownWrench);
-    ADD_PUBLIC_FUNC(MeterDroid_State_Setup);
+    ADD_PUBLIC_FUNC(MeterDroid_State_Init);
     ADD_PUBLIC_FUNC(MeterDroid_State_StartFight);
     ADD_PUBLIC_FUNC(MeterDroid_State_Idle);
     ADD_PUBLIC_FUNC(MeterDroid_State_PickMoveDir);
@@ -4627,7 +4627,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Octus_DebugSpawn);
     ADD_PUBLIC_FUNC(Octus_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Octus_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Octus_State_Setup);
+    ADD_PUBLIC_FUNC(Octus_State_Init);
     ADD_PUBLIC_FUNC(Octus_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Octus_State_JumpDelay);
     ADD_PUBLIC_FUNC(Octus_State_Jump);
@@ -4690,7 +4690,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Sol_HandlePlayerHurt);
     ADD_PUBLIC_FUNC(Sol_HandleRotation);
     ADD_PUBLIC_FUNC(Sol_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Sol_State_Setup);
+    ADD_PUBLIC_FUNC(Sol_State_Init);
     ADD_PUBLIC_FUNC(Sol_State_Moving);
     ADD_PUBLIC_FUNC(Sol_State_ShootingOrbs);
     ADD_PUBLIC_FUNC(Sol_State_NoOrbs);
@@ -4722,7 +4722,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Dragonfly_DebugSpawn);
     ADD_PUBLIC_FUNC(Dragonfly_DebugDraw);
     ADD_PUBLIC_FUNC(Dragonfly_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Dragonfly_State_Setup);
+    ADD_PUBLIC_FUNC(Dragonfly_State_Init);
     ADD_PUBLIC_FUNC(Dragonfly_State_Move);
     ADD_PUBLIC_FUNC(Dragonfly_State_Debris);
 
@@ -4740,7 +4740,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HeavyShinobi_HandleSlash);
     ADD_PUBLIC_FUNC(HeavyShinobi_StartJump);
     ADD_PUBLIC_FUNC(HeavyShinobi_Explode);
-    ADD_PUBLIC_FUNC(HeavyShinobi_State_Setup);
+    ADD_PUBLIC_FUNC(HeavyShinobi_State_Init);
     ADD_PUBLIC_FUNC(HeavyShinobi_State_SetupArena);
     ADD_PUBLIC_FUNC(HeavyShinobi_State_StartFight);
     ADD_PUBLIC_FUNC(HeavyShinobi_State_Idle);
@@ -4789,7 +4789,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(IceBomba_DebugSpawn);
     ADD_PUBLIC_FUNC(IceBomba_CheckOffScreen);
     ADD_PUBLIC_FUNC(IceBomba_HandlePlayerCollisions);
-    ADD_PUBLIC_FUNC(IceBomba_State_Setup);
+    ADD_PUBLIC_FUNC(IceBomba_State_Init);
     ADD_PUBLIC_FUNC(IceBomba_State_Flying);
     ADD_PUBLIC_FUNC(IceBomba_State_Turning);
     ADD_PUBLIC_FUNC(IceBomba_State_FlyAway);
@@ -4822,7 +4822,7 @@ void InitPublicFunctions()
 
     // PGZ/PetalPile
     ADD_PUBLIC_FUNC(PetalPile_GetLeafPattern);
-    ADD_PUBLIC_FUNC(PetalPile_State_Setup);
+    ADD_PUBLIC_FUNC(PetalPile_State_Init);
     ADD_PUBLIC_FUNC(PetalPile_State_HandleInteractions);
     ADD_PUBLIC_FUNC(PetalPile_State_SetupEmitter);
     ADD_PUBLIC_FUNC(PetalPile_State_Emitter);
@@ -4898,7 +4898,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PSZLauncher_DebugSpawn);
     ADD_PUBLIC_FUNC(PSZLauncher_HandlePlayerCollisions);
     ADD_PUBLIC_FUNC(PSZLauncher_HandlePlayerInteractions);
-    ADD_PUBLIC_FUNC(PSZLauncher_State_Setup);
+    ADD_PUBLIC_FUNC(PSZLauncher_State_Init);
     ADD_PUBLIC_FUNC(PSZLauncher_State_Active);
 
     // PGZ/Shiversaw
@@ -4935,7 +4935,7 @@ void InitPublicFunctions()
     // PGZ/Shuriken
     ADD_PUBLIC_FUNC(Shuriken_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Shuriken_HandleSolidCollisions);
-    ADD_PUBLIC_FUNC(Shuriken_State_Setup);
+    ADD_PUBLIC_FUNC(Shuriken_State_Init);
     ADD_PUBLIC_FUNC(Shuriken_State_AwaitActivate);
     ADD_PUBLIC_FUNC(Shuriken_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Shuriken_State_ShootDelay);
@@ -4970,7 +4970,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SP500MkII_DrawPrinter);
     ADD_PUBLIC_FUNC(SP500MkII_DrawRails);
     ADD_PUBLIC_FUNC(SP500MkII_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(SP500MkII_State_Setup);
+    ADD_PUBLIC_FUNC(SP500MkII_State_Init);
     ADD_PUBLIC_FUNC(SP500MkII_State_AwaitActivation);
     ADD_PUBLIC_FUNC(SP500MkII_State_PrintRow);
     ADD_PUBLIC_FUNC(SP500MkII_State_NextPrintRow);
@@ -4987,7 +4987,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Woodrow_DebugSpawn);
     ADD_PUBLIC_FUNC(Woodrow_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Woodrow_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Woodrow_State_Setup);
+    ADD_PUBLIC_FUNC(Woodrow_State_Init);
     ADD_PUBLIC_FUNC(Woodrow_State_Idle);
     ADD_PUBLIC_FUNC(Woodrow_State_MoveUp);
     ADD_PUBLIC_FUNC(Woodrow_State_MoveDown);
@@ -5130,8 +5130,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(PuyoGame_DestroyPuyoBeans);
     ADD_PUBLIC_FUNC(PuyoGame_SetupGameState);
     ADD_PUBLIC_FUNC(PuyoGame_CheckMatchFinish);
-    ADD_PUBLIC_FUNC(PuyoGame_State_Setup);
-    ADD_PUBLIC_FUNC(PuyoGame_State_None);
+    ADD_PUBLIC_FUNC(PuyoGame_State_Init);
+    ADD_PUBLIC_FUNC(PuyoGame_State_Wait);
     ADD_PUBLIC_FUNC(PuyoGame_State_SelectingLevel);
     ADD_PUBLIC_FUNC(PuyoGame_State_SetupRound);
     ADD_PUBLIC_FUNC(PuyoGame_State_SetupEntities);
@@ -5167,7 +5167,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Bomb_DebugSpawn);
     ADD_PUBLIC_FUNC(Bomb_CheckOffScreen);
     ADD_PUBLIC_FUNC(Bomb_CheckPlayerCollisions);
-    ADD_PUBLIC_FUNC(Bomb_State_Setup);
+    ADD_PUBLIC_FUNC(Bomb_State_Init);
     ADD_PUBLIC_FUNC(Bomb_State_Walk);
     ADD_PUBLIC_FUNC(Bomb_State_Idle);
     ADD_PUBLIC_FUNC(Bomb_State_Explode);
@@ -5181,7 +5181,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Caterkiller_Draw_Segment);
     ADD_PUBLIC_FUNC(Caterkiller_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(Caterkiller_CheckTileAngle);
-    ADD_PUBLIC_FUNC(Caterkiller_State_Setup);
+    ADD_PUBLIC_FUNC(Caterkiller_State_Init);
     ADD_PUBLIC_FUNC(Caterkiller_State_Contract);
     ADD_PUBLIC_FUNC(Caterkiller_State_LiftHead);
     ADD_PUBLIC_FUNC(Caterkiller_State_Uncontract);
@@ -5194,7 +5194,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Orbinaut_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(Orbinaut_HandleRotation);
     ADD_PUBLIC_FUNC(Orbinaut_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Orbinaut_State_Setup);
+    ADD_PUBLIC_FUNC(Orbinaut_State_Init);
     ADD_PUBLIC_FUNC(Orbinaut_State_Moving);
     ADD_PUBLIC_FUNC(Orbinaut_State_ReleasingOrbs);
     ADD_PUBLIC_FUNC(Orbinaut_State_Orbless);
@@ -5214,7 +5214,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Canista_DebugSpawn);
     ADD_PUBLIC_FUNC(Canista_CheckPlayerBadnikCollisions);
     ADD_PUBLIC_FUNC(Canista_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Canista_State_Setup);
+    ADD_PUBLIC_FUNC(Canista_State_Init);
     ADD_PUBLIC_FUNC(Canista_State_Moving);
     ADD_PUBLIC_FUNC(Canista_State_Idle);
     ADD_PUBLIC_FUNC(Canista_CheckPlayerProjectileCollisions);
@@ -5411,7 +5411,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(LoveTester_CheckPlayerCollisions_Entry);
     ADD_PUBLIC_FUNC(LoveTester_GiveScore);
     ADD_PUBLIC_FUNC(LoveTester_CreateHeartParticles);
-    ADD_PUBLIC_FUNC(LoveTester_State_Setup);
+    ADD_PUBLIC_FUNC(LoveTester_State_Init);
     ADD_PUBLIC_FUNC(LoveTester_State_WaitForActivated);
     ADD_PUBLIC_FUNC(LoveTester_State_SetupTopDisplay);
     ADD_PUBLIC_FUNC(LoveTester_State_SetupMatching);
@@ -5428,7 +5428,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MicDrop_DebugSpawn);
     ADD_PUBLIC_FUNC(MicDrop_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(MicDrop_CheckOffScreen);
-    ADD_PUBLIC_FUNC(MicDrop_State_Setup);
+    ADD_PUBLIC_FUNC(MicDrop_State_Init);
     ADD_PUBLIC_FUNC(MicDrop_State_CheckForPlayer);
     ADD_PUBLIC_FUNC(MicDrop_State_DropDown);
     ADD_PUBLIC_FUNC(MicDrop_State_DropRecoil);
@@ -5483,7 +5483,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Shutterbug_DebugSpawn);
     ADD_PUBLIC_FUNC(Shutterbug_DebugDraw);
     ADD_PUBLIC_FUNC(Shutterbug_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Shutterbug_State_Setup);
+    ADD_PUBLIC_FUNC(Shutterbug_State_Init);
     ADD_PUBLIC_FUNC(Shutterbug_State_FlyAround);
     ADD_PUBLIC_FUNC(Shutterbug_State_ShakeFly);
     ADD_PUBLIC_FUNC(Shutterbug_State_FlyAway);
@@ -5529,7 +5529,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Tubinaut_HandleRepel);
     ADD_PUBLIC_FUNC(Tubinaut_HandleOrbs);
     ADD_PUBLIC_FUNC(Tubinaut_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Tubinaut_State_Setup);
+    ADD_PUBLIC_FUNC(Tubinaut_State_Init);
     ADD_PUBLIC_FUNC(Tubinaut_State_Move);
     ADD_PUBLIC_FUNC(Tubinaut_Orb_Relax);
     ADD_PUBLIC_FUNC(Tubinaut_Orb_PrepareAttack);
@@ -5662,7 +5662,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Beanstalk_HandleNodeAppear);
     ADD_PUBLIC_FUNC(Beanstalk_CheckPlayerCollisions_Platform);
     ADD_PUBLIC_FUNC(Beanstalk_CheckPlayerCollisions_Chomper);
-    ADD_PUBLIC_FUNC(Beanstalk_State_Setup);
+    ADD_PUBLIC_FUNC(Beanstalk_State_Init);
     ADD_PUBLIC_FUNC(Beanstalk_StateDirt_WaitForStart);
     ADD_PUBLIC_FUNC(Beanstalk_StateDirt_GrowthDelay);
     ADD_PUBLIC_FUNC(Beanstalk_StateDirt_Grow);
@@ -5683,7 +5683,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Dango_CheckOffScreen);
     ADD_PUBLIC_FUNC(Dango_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Dango_HandleMovement);
-    ADD_PUBLIC_FUNC(Dango_State_Setup);
+    ADD_PUBLIC_FUNC(Dango_State_Init);
     ADD_PUBLIC_FUNC(Dango_State_Walking);
     ADD_PUBLIC_FUNC(Dango_State_Turning);
     ADD_PUBLIC_FUNC(Dango_State_Falling_Uncurled);
@@ -5717,7 +5717,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Firework_HandleRideEnd);
     ADD_PUBLIC_FUNC(Firework_CheckOffScreen);
     ADD_PUBLIC_FUNC(Firework_HandleSparkAnimations);
-    ADD_PUBLIC_FUNC(Firework_State_Setup);
+    ADD_PUBLIC_FUNC(Firework_State_Init);
     ADD_PUBLIC_FUNC(Firework_State_AwaitPlayerRide);
     ADD_PUBLIC_FUNC(Firework_State_PlayerGrabDelay);
     ADD_PUBLIC_FUNC(Firework_State_Riding);
@@ -5783,7 +5783,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Hotaru_DebugSpawn);
     ADD_PUBLIC_FUNC(Hotaru_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Hotaru_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Hotaru_State_Setup);
+    ADD_PUBLIC_FUNC(Hotaru_State_Init);
     ADD_PUBLIC_FUNC(Hotaru_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(Hotaru_State_FoundPlayer);
     ADD_PUBLIC_FUNC(Hotaru_State_FlyOnScreen);
@@ -5851,7 +5851,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HotaruMKII_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(HotaruMKII_CheckOffScreen);
     ADD_PUBLIC_FUNC(HotaruMKII_HandleDistances);
-    ADD_PUBLIC_FUNC(HotaruMKII_State_Setup);
+    ADD_PUBLIC_FUNC(HotaruMKII_State_Init);
     ADD_PUBLIC_FUNC(HotaruMKII_State_CheckPlayerInRange);
     ADD_PUBLIC_FUNC(HotaruMKII_State_FlyAway);
     ADD_PUBLIC_FUNC(HotaruMKII_State_FlyOnScreen);
@@ -5868,7 +5868,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Kabasira_DrawSegment);
     ADD_PUBLIC_FUNC(Kabasira_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Kabasira_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Kabasira_State_Setup);
+    ADD_PUBLIC_FUNC(Kabasira_State_Init);
     ADD_PUBLIC_FUNC(Kabasira_State_Moving);
     ADD_PUBLIC_FUNC(Kabasira_State_LaunchedAttack);
 
@@ -5877,7 +5877,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Kanabun_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(Kanabun_CheckOffScreen);
     ADD_PUBLIC_FUNC(Kanabun_HandleMovement);
-    ADD_PUBLIC_FUNC(Kanabun_State_Setup);
+    ADD_PUBLIC_FUNC(Kanabun_State_Init);
     ADD_PUBLIC_FUNC(Kanabun_State_Moving);
     ADD_PUBLIC_FUNC(Kanabun_State_Turning);
 
@@ -6055,7 +6055,7 @@ void InitPublicFunctions()
 
     // SSZ/SSZEggman
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(SSZEggman_State_Setup);
+    ADD_PUBLIC_FUNC(SSZEggman_State_Init);
     ADD_PUBLIC_FUNC(SSZEggman_State_HoldingRuby);
     ADD_PUBLIC_FUNC(SSZEggman_State_ThrownRuby);
     ADD_PUBLIC_FUNC(SSZEggman_State_WatchMetalTransform);
@@ -6077,7 +6077,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimePost_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(TimePost_Particle_TimeSparkle);
     ADD_PUBLIC_FUNC(TimePost_HandleTimeSparkles);
-    ADD_PUBLIC_FUNC(TimePost_State_Setup);
+    ADD_PUBLIC_FUNC(TimePost_State_Init);
     ADD_PUBLIC_FUNC(TimePost_State_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(TimePost_State_Spinning);
     ADD_PUBLIC_FUNC(TimePost_State_FinishedSpin);
@@ -6163,7 +6163,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(BallHog_DebugSpawn);
     ADD_PUBLIC_FUNC(BallHog_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(BallHog_CheckOffScreen);
-    ADD_PUBLIC_FUNC(BallHog_State_Setup);
+    ADD_PUBLIC_FUNC(BallHog_State_Init);
     ADD_PUBLIC_FUNC(BallHog_State_Idle);
     ADD_PUBLIC_FUNC(BallHog_State_Jump);
     ADD_PUBLIC_FUNC(BallHog_State_Land);
@@ -6178,7 +6178,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(CrashTest_CheckPlayerRide);
     ADD_PUBLIC_FUNC(CrashTest_CheckPlayerJump);
     ADD_PUBLIC_FUNC(CrashTest_HandleLightAnims);
-    ADD_PUBLIC_FUNC(CrashTest_State_Setup);
+    ADD_PUBLIC_FUNC(CrashTest_State_Init);
     ADD_PUBLIC_FUNC(CrashTest_State_AwaitPlayer);
     ADD_PUBLIC_FUNC(CrashTest_State_Rev);
     ADD_PUBLIC_FUNC(CrashTest_State_Move);
@@ -6312,7 +6312,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TeeterTotter_CheckPlayerCollisions);
     ADD_PUBLIC_FUNC(TeeterTotter_ProcessSegmentGravity);
     ADD_PUBLIC_FUNC(TeeterTotter_HandleSegmentPositions);
-    ADD_PUBLIC_FUNC(TeeterTotter_State_Setup);
+    ADD_PUBLIC_FUNC(TeeterTotter_State_Init);
     ADD_PUBLIC_FUNC(TeeterTotter_State_Teeter);
     ADD_PUBLIC_FUNC(TeeterTotter_State_Fall);
 
@@ -6394,7 +6394,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TurboTurtle_HandleFans);
     ADD_PUBLIC_FUNC(TurboTurtle_HandleFanParticles);
     ADD_PUBLIC_FUNC(TurboTurtle_SfxCheck_SmallFan);
-    ADD_PUBLIC_FUNC(TurboTurtle_State_Setup);
+    ADD_PUBLIC_FUNC(TurboTurtle_State_Init);
     ADD_PUBLIC_FUNC(TurboTurtle_State_Walking);
     ADD_PUBLIC_FUNC(TurboTurtle_State_TurnFanUp);
     ADD_PUBLIC_FUNC(TurboTurtle_State_FanTop);
@@ -6520,7 +6520,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(WallCrawl_DebugSpawn);
     ADD_PUBLIC_FUNC(WallCrawl_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(WallCrawl_CheckOffScreen);
-    ADD_PUBLIC_FUNC(WallCrawl_State_Setup);
+    ADD_PUBLIC_FUNC(WallCrawl_State_Init);
     ADD_PUBLIC_FUNC(WallCrawl_State_Moving);
     ADD_PUBLIC_FUNC(WallCrawl_State_Idle);
     ADD_PUBLIC_FUNC(WallCrawl_State_Projectile);
@@ -6529,7 +6529,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Wisp_DebugSpawn);
     ADD_PUBLIC_FUNC(Wisp_HandlePlayerInteractions);
     ADD_PUBLIC_FUNC(Wisp_CheckOffScreen);
-    ADD_PUBLIC_FUNC(Wisp_State_Setup);
+    ADD_PUBLIC_FUNC(Wisp_State_Init);
     ADD_PUBLIC_FUNC(Wisp_State_Idle);
     ADD_PUBLIC_FUNC(Wisp_State_FlyTowardTarget);
     ADD_PUBLIC_FUNC(Wisp_State_FlyAway);

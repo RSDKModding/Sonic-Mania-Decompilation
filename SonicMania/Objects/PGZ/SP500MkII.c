@@ -52,7 +52,7 @@ void SP500MkII_Create(void *data)
     self->visible       = true;
     self->updateRange.x = (self->length + 16) << 19;
     self->updateRange.y = (self->printRows + 4) << 21;
-    self->state         = SP500MkII_State_Setup;
+    self->state         = SP500MkII_State_Init;
 }
 
 void SP500MkII_StageLoad(void)
@@ -225,7 +225,7 @@ void SP500MkII_CheckPlayerCollisions(void)
     self->position.y = storeY;
 }
 
-void SP500MkII_State_Setup(void)
+void SP500MkII_State_Init(void)
 {
     RSDK_THIS(SP500MkII);
 
@@ -353,7 +353,7 @@ void SP500MkII_EditorDraw(void)
     self->updateRange.y = (self->printRows + 4) << 21;
 
     self->inkEffect = INK_NONE;
-    SP500MkII_State_Setup();
+    SP500MkII_State_Init();
 
     SP500MkII_DrawRails();
     SP500MkII_DrawPrinter();

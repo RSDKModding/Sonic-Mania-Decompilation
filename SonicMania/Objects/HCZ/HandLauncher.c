@@ -65,7 +65,7 @@ void HandLauncher_Create(void *data)
     self->startPos      = self->position;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = HandLauncher_State_Setup;
+    self->state         = HandLauncher_State_Init;
 }
 
 void HandLauncher_StageLoad(void)
@@ -193,7 +193,7 @@ void HandLauncher_HandleGrabbedPlayers(void)
     }
 }
 
-void HandLauncher_State_Setup(void)
+void HandLauncher_State_Init(void)
 {
     RSDK_THIS(HandLauncher);
 

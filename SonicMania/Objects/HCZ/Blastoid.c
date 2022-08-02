@@ -48,7 +48,7 @@ void Blastoid_Create(void *data)
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &self->animator, true, 1);
-            self->state = Blastoid_State_Setup;
+            self->state = Blastoid_State_Init;
         }
     }
 }
@@ -104,7 +104,7 @@ void Blastoid_CheckPlayerCollisions(void)
     }
 }
 
-void Blastoid_State_Setup(void)
+void Blastoid_State_Init(void)
 {
     RSDK_THIS(Blastoid);
 

@@ -66,7 +66,7 @@ void Tornado_Create(void *data)
         self->isStood       = true;
         self->offsetX       = 0x80000;
         self->active        = ACTIVE_BOUNDS;
-        self->state         = Tornado_State_Setup;
+        self->state         = Tornado_State_Init;
         self->knuxPos.x     = -0x140000;
         self->knuxPos.y     = -0x160000;
 
@@ -106,7 +106,7 @@ void Tornado_StageLoad(void)
     Tornado->sfxImpact    = RSDK.GetSfx("Stage/Impact5.wav");
 }
 
-void Tornado_State_Setup(void)
+void Tornado_State_Init(void)
 {
     RSDK_THIS(Tornado);
 

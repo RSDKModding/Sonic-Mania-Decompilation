@@ -58,7 +58,7 @@ void UICreditsText_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->drawGroup     = 2;
-        self->state         = UICreditsText_State_Setup;
+        self->state         = UICreditsText_State_Init;
 
         if (!self->text.chars)
             RSDK.InitString(&self->text, "UNTITLED", 0);
@@ -86,7 +86,7 @@ void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, String *tex
         label->clipY2 = frame->pivotY + frame->height + 2;
 }
 
-void UICreditsText_State_Setup(void)
+void UICreditsText_State_Init(void)
 {
     RSDK_THIS(UICreditsText);
 

@@ -75,7 +75,7 @@ void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick);
 void LoveTester_GiveScore(EntityPlayer *player);
 void LoveTester_CreateHeartParticles(void);
 
-void LoveTester_State_Setup(void);
+void LoveTester_State_Init(void);
 void LoveTester_State_WaitForActivated(void);
 void LoveTester_State_SetupTopDisplay(void);
 void LoveTester_State_SetupMatching(void);

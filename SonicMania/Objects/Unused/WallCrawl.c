@@ -46,7 +46,7 @@ void WallCrawl_Create(void *data)
     else {
         self->drawGroup = Zone->objectDrawLow + 1;
         RSDK.SetSpriteAnimation(WallCrawl->aniFrames, 2, &self->animator, true, 0);
-        self->state = WallCrawl_State_Setup;
+        self->state = WallCrawl_State_Init;
     }
 }
 
@@ -122,7 +122,7 @@ void WallCrawl_CheckOffScreen(void)
     }
 }
 
-void WallCrawl_State_Setup(void)
+void WallCrawl_State_Init(void)
 {
     RSDK_THIS(WallCrawl);
 

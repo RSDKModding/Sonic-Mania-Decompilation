@@ -64,7 +64,7 @@ void ERZMystic_SetupNewCupSwap(void);
 void ERZMystic_Draw_CupSetup(void);
 void ERZMystic_Draw_CupSwap(void);
 
-void ERZMystic_State_Setup(void);
+void ERZMystic_State_Init(void);
 void ERZMystic_State_SetupInitialCupPos(void);
 void ERZMystic_State_MoveCupsDownwards(void);
 void ERZMystic_State_RotateMiddleCup(void);

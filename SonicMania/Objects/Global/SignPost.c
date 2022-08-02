@@ -133,7 +133,7 @@ void SignPost_Create(void *data)
                 case SIGNPOST_RUNPAST: // Normal (Main Game Only)
                     if (globals->gameMode != MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
-                        self->state  = SignPost_State_Setup;
+                        self->state  = SignPost_State_Init;
                         destroy      = false;
                     }
                     break;
@@ -149,7 +149,7 @@ void SignPost_Create(void *data)
                 case SIGNPOST_COMP: // Normal (Competition Only)
                     if (globals->gameMode == MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
-                        self->state  = SignPost_State_Setup;
+                        self->state  = SignPost_State_Init;
                         destroy      = false;
                     }
                     break;
@@ -420,7 +420,7 @@ void SignPost_CheckTouch(void)
     }
 }
 
-void SignPost_State_Setup(void)
+void SignPost_State_Init(void)
 {
     RSDK_THIS(SignPost);
     self->state = SignPost_State_AwaitTouch;

@@ -61,7 +61,7 @@ void TeeterTotter_Create(void *data)
     self->hitbox.right  = 16;
     self->hitbox.bottom = 16;
 
-    self->state = TeeterTotter_State_Setup;
+    self->state = TeeterTotter_State_Init;
 }
 
 void TeeterTotter_StageLoad(void)
@@ -149,7 +149,7 @@ void TeeterTotter_HandleSegmentPositions(void)
     }
 }
 
-void TeeterTotter_State_Setup(void)
+void TeeterTotter_State_Init(void)
 {
     RSDK_THIS(TeeterTotter);
 
@@ -212,7 +212,7 @@ void TeeterTotter_State_Fall(void)
             self->position = self->origin;
             self->visible  = false;
             self->active   = ACTIVE_BOUNDS;
-            self->state    = TeeterTotter_State_Setup;
+            self->state    = TeeterTotter_State_Init;
         }
     }
 }

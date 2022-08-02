@@ -54,7 +54,7 @@ void Octus_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Octus->aniFrames, 0, &self->animator, true, 0);
-        self->state = Octus_State_Setup;
+        self->state = Octus_State_Init;
         self->alpha = 0xC0;
     }
 }
@@ -121,7 +121,7 @@ void Octus_CheckOffScreen(void)
     }
 }
 
-void Octus_State_Setup(void)
+void Octus_State_Init(void)
 {
     RSDK_THIS(Octus);
 

@@ -65,7 +65,7 @@ void Splats_DebugSpawn(void);
 void Splats_CheckPlayerCollisions(void);
 void Splats_CheckOffScreen(void);
 
-void Splats_State_Setup(void);
+void Splats_State_Init(void);
 void Splats_State_BounceAround(void);
 void Splats_State_SetupInkJar(void);
 void Splats_State_InkJarSpawner(void);

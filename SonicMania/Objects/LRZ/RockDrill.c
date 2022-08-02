@@ -111,7 +111,7 @@ void RockDrill_Create(void *data)
         RSDK.SetSpriteAnimation(RockDrill->aniFrames, 0, &self->animator, true, 0);
 
         self->drawGroup = Zone->objectDrawLow;
-        self->state     = RockDrill_State_Setup;
+        self->state     = RockDrill_State_Init;
     }
 }
 
@@ -220,7 +220,7 @@ void RockDrill_SpawnDebris(int offset)
     debris->updateRange.y   = 0x400000;
 }
 
-void RockDrill_State_Setup(void)
+void RockDrill_State_Init(void)
 {
     RSDK_THIS(RockDrill);
 
@@ -307,7 +307,7 @@ void RockDrill_State_Drilling(void)
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = RockDrill_State_Setup;
+        self->state  = RockDrill_State_Init;
     }
 
     if (--self->timer <= 0) {

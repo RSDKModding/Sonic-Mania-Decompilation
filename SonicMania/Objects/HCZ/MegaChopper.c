@@ -40,7 +40,7 @@ void MegaChopper_Create(void *data)
     self->updateRange.y = 0x800000;
 
     RSDK.SetSpriteAnimation(MegaChopper->aniFrames, 0, &self->animator, true, 0);
-    self->state = MegaChopper_State_Setup;
+    self->state = MegaChopper_State_Init;
 }
 
 void MegaChopper_StageLoad(void)
@@ -175,7 +175,7 @@ void MegaChopper_Input_GrabbedP2_AI(void)
         self->stateInput = MegaChopper_Input_GrabbedP2;
 }
 
-void MegaChopper_State_Setup(void)
+void MegaChopper_State_Init(void)
 {
     RSDK_THIS(MegaChopper);
 

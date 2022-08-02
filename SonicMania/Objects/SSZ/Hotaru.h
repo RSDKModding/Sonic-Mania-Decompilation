@@ -76,7 +76,7 @@ void Hotaru_DebugDraw(void);
 void Hotaru_CheckPlayerCollisions(void);
 void Hotaru_CheckOffScreen(void);
 
-void Hotaru_State_Setup(void);
+void Hotaru_State_Init(void);
 void Hotaru_State_CheckPlayerInRange(void);
 void Hotaru_State_FoundPlayer(void);
 void Hotaru_State_FlyOnScreen(void);

@@ -58,7 +58,7 @@ void LavaGeyser_Create(void *data)
         self->updateRange.y = 0x800000;
         self->drawGroup     = Zone->objectDrawHigh;
         self->force <<= 12;
-        self->state = LavaGeyser_State_Setup;
+        self->state = LavaGeyser_State_Init;
     }
 }
 
@@ -116,7 +116,7 @@ void LavaGeyser_State_Intervals(void)
         LavaGeyser_HandleSetup();
 }
 
-void LavaGeyser_State_Setup(void) { LavaGeyser_HandleSetup(); }
+void LavaGeyser_State_Init(void) { LavaGeyser_HandleSetup(); }
 
 void LavaGeyser_State_ShowPlume(void)
 {
@@ -209,7 +209,7 @@ void LavaGeyser_State_HandleFinish(void)
             if (!self->type)
                 self->state = LavaGeyser_State_Intervals;
             else
-                self->state = LavaGeyser_State_Setup;
+                self->state = LavaGeyser_State_Init;
 
             self->active = ACTIVE_BOUNDS;
         }

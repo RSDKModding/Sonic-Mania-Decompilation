@@ -59,7 +59,7 @@ void Bomb_Create(void *data)
         self->timer = 1536;
         RSDK.SetSpriteAnimation(Bomb->aniFrames, 1, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(Bomb->aniFrames, 3, &self->fuseAnimator, true, 0);
-        self->state = Bomb_State_Setup;
+        self->state = Bomb_State_Init;
     }
 }
 
@@ -131,7 +131,7 @@ void Bomb_CheckPlayerCollisions(void)
     }
 }
 
-void Bomb_State_Setup(void)
+void Bomb_State_Init(void)
 {
     RSDK_THIS(Bomb);
     self->active = ACTIVE_NORMAL;

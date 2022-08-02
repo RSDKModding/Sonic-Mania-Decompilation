@@ -57,7 +57,7 @@ void Fireworm_DebugDraw(void);
 void Fireworm_CheckPlayerCollisions(void);
 void Fireworm_CheckOffScreen(void);
 
-void Fireworm_State_Setup(void);
+void Fireworm_State_Init(void);
 void Fireworm_State_AwaitPlayer(void);
 void Fireworm_State_HeadAppear(void);
 

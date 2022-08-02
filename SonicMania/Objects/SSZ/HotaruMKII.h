@@ -71,7 +71,7 @@ void HotaruMKII_CheckPlayerCollisions(void);
 void HotaruMKII_CheckOffScreen(void);
 void HotaruMKII_HandleDistances(EntityPlayer *player);
 
-void HotaruMKII_State_Setup(void);
+void HotaruMKII_State_Init(void);
 void HotaruMKII_State_CheckPlayerInRange(void);
 void HotaruMKII_State_FlyAway(void);
 void HotaruMKII_State_FlyOnScreen(void);

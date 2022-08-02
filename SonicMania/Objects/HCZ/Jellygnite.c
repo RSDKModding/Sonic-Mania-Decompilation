@@ -19,7 +19,7 @@ void Jellygnite_Update(void)
 
     StateMachine_Run(self->state);
 
-    if (self->state != Jellygnite_State_Setup && self->classID == Jellygnite->classID) {
+    if (self->state != Jellygnite_State_Init && self->classID == Jellygnite->classID) {
         if (self->grabDelay > 0)
             self->grabDelay--;
 
@@ -71,7 +71,7 @@ void Jellygnite_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = Jellygnite_State_Setup;
+    self->state         = Jellygnite_State_Init;
 }
 
 void Jellygnite_StageLoad(void)
@@ -292,7 +292,7 @@ void Jellygnite_DrawFrontTentacle(void)
     }
 }
 
-void Jellygnite_State_Setup(void)
+void Jellygnite_State_Init(void)
 {
     RSDK_THIS(Jellygnite);
 

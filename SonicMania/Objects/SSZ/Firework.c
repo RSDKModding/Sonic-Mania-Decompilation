@@ -99,7 +99,7 @@ void Firework_Create(void *data)
 
     self->startPos = self->position;
 
-    self->state = Firework_State_Setup;
+    self->state = Firework_State_Init;
 }
 
 void Firework_StageLoad(void)
@@ -392,7 +392,7 @@ void Firework_CheckOffScreen(void)
     }
 }
 
-void Firework_HandleSparkAnimations(int sparkID, int16 angle, Animator *fireworkAnimator, Animator *sparkAnimator, uint8 *direction)
+void Firework_HandleSparkAnimations(int32 sparkID, int16 angle, Animator *fireworkAnimator, Animator *sparkAnimator, uint8 *direction)
 {
     uint16 ang = angle & 0x3FF;
     int32 anim = 4 * (sparkID != 0) + 3;
@@ -457,7 +457,7 @@ void Firework_HandleSparkAnimations(int sparkID, int16 angle, Animator *firework
         RSDK.SetSpriteAnimation(Firework->aniFrames, anim + 3, sparkAnimator, true, 0);
 }
 
-void Firework_State_Setup(void)
+void Firework_State_Init(void)
 {
     RSDK_THIS(Firework);
 
@@ -549,7 +549,7 @@ void Firework_State_ResetOffScreen(void)
     RSDK_THIS(Firework);
 
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        self->state = Firework_State_Setup;
+        self->state = Firework_State_Init;
         Firework_Create(NULL);
     }
 }

@@ -59,7 +59,7 @@ void Caterkiller_HandlePlayerInteractions(void);
 bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir);
 
 // Body States
-void Caterkiller_State_Setup(void);
+void Caterkiller_State_Init(void);
 void Caterkiller_State_Contract(void);
 void Caterkiller_State_LiftHead(void);
 void Caterkiller_State_Uncontract(void);

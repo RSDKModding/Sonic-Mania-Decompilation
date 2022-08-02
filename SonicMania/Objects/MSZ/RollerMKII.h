@@ -60,7 +60,7 @@ int RollerMKII_HandleObjectCollisions(Entity *otherEntity, Hitbox *hitbox);
 bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform);
 void RollerMKII_HandleCollisions(void);
 
-void RollerMKII_State_Setup(void);
+void RollerMKII_State_Init(void);
 void RollerMKII_State_Idle(void);
 void RollerMKII_State_SpinUp(void);
 void RollerMKII_State_RollDelay(void);

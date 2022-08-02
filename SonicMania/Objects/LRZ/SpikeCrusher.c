@@ -43,7 +43,7 @@ void SpikeCrusher_Create(void *data)
             self->drawPos.y = self->position.y;
 
         self->position.y = self->centerPos.y;
-        self->state      = SpikeCrusher_State_Setup;
+        self->state      = SpikeCrusher_State_Init;
     }
 }
 
@@ -67,7 +67,7 @@ void SpikeCrusher_CheckOffScreen(void)
     }
 }
 
-void SpikeCrusher_State_Setup(void)
+void SpikeCrusher_State_Init(void)
 {
     RSDK_THIS(SpikeCrusher);
 

@@ -65,9 +65,9 @@ void Firework_HandleDebrisSpawn(void);
 void Firework_HandleTileCollisions(void);
 void Firework_HandleRideEnd(bool32 crashed);
 void Firework_CheckOffScreen(void);
-void Firework_HandleSparkAnimations(int sparkID, int16 angle, Animator *fireworkAnimator, Animator *sparkAnimator, uint8 *direction);
+void Firework_HandleSparkAnimations(int32 sparkID, int16 angle, Animator *fireworkAnimator, Animator *sparkAnimator, uint8 *direction);
 
-void Firework_State_Setup(void);
+void Firework_State_Init(void);
 void Firework_State_AwaitPlayerRide(void);
 void Firework_State_PlayerGrabDelay(void);
 void Firework_State_Riding(void);

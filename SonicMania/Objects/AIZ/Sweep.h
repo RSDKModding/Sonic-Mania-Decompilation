@@ -50,7 +50,7 @@ void Sweep_CheckOffScreen(void);
 void Sweep_CheckPlayerCollisions(void);
 void Sweep_CheckShoot(void);
 
-void Sweep_State_Setup(void);
+void Sweep_State_Init(void);
 void Sweep_State_Idle(void);
 void Sweep_State_Dash(void);
 void Sweep_State_Stop(void);

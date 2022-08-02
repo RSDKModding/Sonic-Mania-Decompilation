@@ -50,7 +50,7 @@ void RPlaneShifter_DrawSprites(void);
 
 void RPlaneShifter_HandlePlaneShift(EntityPlayer *player);
 
-void RPlaneShifter_State_Setup(void);
+void RPlaneShifter_State_Init(void);
 void RPlaneShifter_State_AwaitPlayer(void);
 void RPlaneShifter_State_Spinning(void);
 void RPlaneShifter_State_FinishSpin(void);

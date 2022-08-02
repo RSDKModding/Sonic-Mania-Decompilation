@@ -67,7 +67,7 @@ void PhantomMystic_SetupNewCupSwap(void);
 void PhantomMystic_Draw_CupSetup(void);
 void PhantomMystic_Draw_CupSwap(void);
 
-void PhantomMystic_State_Setup(void);
+void PhantomMystic_State_Init(void);
 void PhantomMystic_State_SetupInitialCupPos(void);
 void PhantomMystic_State_MoveCupsDownwards(void);
 void PhantomMystic_State_RotateMiddleCup(void);

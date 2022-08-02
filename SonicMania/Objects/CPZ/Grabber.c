@@ -64,7 +64,7 @@ void Grabber_Create(void *data)
     RSDK.SetSpriteAnimation(Grabber->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Grabber->aniFrames, 1, &self->clampAnimator, true, 0);
     RSDK.SetSpriteAnimation(Grabber->aniFrames, 4, &self->wheelAnimator, true, 0);
-    self->state = Grabber_State_Setup;
+    self->state = Grabber_State_Init;
 }
 
 void Grabber_StageLoad(void)
@@ -186,7 +186,7 @@ void Grabber_HandleExplode(void)
     }
 }
 
-void Grabber_State_Setup(void)
+void Grabber_State_Init(void)
 {
     RSDK_THIS(Grabber);
 

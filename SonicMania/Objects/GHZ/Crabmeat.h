@@ -45,7 +45,7 @@ void Crabmeat_DebugSpawn(void);
 void Crabmeat_CheckOffScreen(void);
 void Crabmeat_CheckPlayerCollisions(void);
 
-void Crabmeat_State_Setup(void);
+void Crabmeat_State_Init(void);
 void Crabmeat_State_Moving(void);
 void Crabmeat_State_Shoot(void);
 void Crabmeat_State_Projectile(void);

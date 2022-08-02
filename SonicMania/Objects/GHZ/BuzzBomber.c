@@ -76,7 +76,7 @@ void BuzzBomber_Create(void *data)
         RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &self->animator, true, 0);
         RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 2, &self->wingAnimator, true, 0);
         RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &self->thrustAnimator, true, 0);
-        self->state = BuzzBomber_State_Setup;
+        self->state = BuzzBomber_State_Init;
         self->alpha = 0xC0;
     }
 }
@@ -152,7 +152,7 @@ void BuzzBomber_CheckPlayerCollisions(void)
     }
 }
 
-void BuzzBomber_State_Setup(void)
+void BuzzBomber_State_Init(void)
 {
     RSDK_THIS(BuzzBomber);
 

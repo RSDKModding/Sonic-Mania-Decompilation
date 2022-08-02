@@ -48,7 +48,7 @@ void Kanabun_CheckPlayerCollisions(void);
 void Kanabun_CheckOffScreen(void);
 void Kanabun_HandleMovement(void);
 
-void Kanabun_State_Setup(void);
+void Kanabun_State_Init(void);
 void Kanabun_State_Moving(void);
 void Kanabun_State_Turning(void);
 

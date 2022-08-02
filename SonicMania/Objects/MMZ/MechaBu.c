@@ -54,7 +54,7 @@ void MechaBu_Create(void *data)
     RSDK.SetSpriteAnimation(MechaBu->aniFrames, 3, &self->hornAnimator, true, 0);
     RSDK.SetSpriteAnimation(MechaBu->aniFrames, 7, &self->sawAnimator, true, 0);
 
-    self->state = MechaBu_State_Setup;
+    self->state = MechaBu_State_Init;
 }
 
 void MechaBu_StageLoad(void)
@@ -160,7 +160,7 @@ Vector2 MechaBu_GetSawOffset(void)
     return offset;
 }
 
-void MechaBu_State_Setup(void)
+void MechaBu_State_Init(void)
 {
     RSDK_THIS(MechaBu);
 

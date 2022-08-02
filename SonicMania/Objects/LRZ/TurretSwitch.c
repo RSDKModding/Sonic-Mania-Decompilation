@@ -56,7 +56,7 @@ void TurretSwitch_Create(void *data)
         self->hitboxRange.right  = 140;
         self->hitboxRange.bottom = 140;
 
-        self->state     = TurretSwitch_State_Setup;
+        self->state     = TurretSwitch_State_Init;
         self->drawGroup = Zone->objectDrawHigh;
     }
 }
@@ -111,7 +111,7 @@ void TurretSwitch_Break(EntityTurretSwitch *turret, EntityPlayer *player)
     turret->activated       = true;
 }
 
-void TurretSwitch_State_Setup(void)
+void TurretSwitch_State_Init(void)
 {
     RSDK_THIS(TurretSwitch);
 

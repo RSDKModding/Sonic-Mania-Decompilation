@@ -50,7 +50,7 @@ void Wisp_Create(void *data)
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 1, &self->wingAnimator, true, 0);
 
-    self->state = Wisp_State_Setup;
+    self->state = Wisp_State_Init;
 }
 
 void Wisp_StageLoad(void)
@@ -109,7 +109,7 @@ void Wisp_CheckOffScreen(void)
     }
 }
 
-void Wisp_State_Setup(void)
+void Wisp_State_Init(void)
 {
     RSDK_THIS(Wisp);
 

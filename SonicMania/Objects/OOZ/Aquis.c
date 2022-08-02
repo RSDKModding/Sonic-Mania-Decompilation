@@ -59,7 +59,7 @@ void Aquis_Create(void *data)
         self->remainingTurns = 3;
         RSDK.SetSpriteAnimation(Aquis->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(Aquis->aniFrames, 3, &self->wingAnimator, true, 0);
-        self->state = Aquis_State_Setup;
+        self->state = Aquis_State_Init;
     }
 }
 
@@ -125,7 +125,7 @@ void Aquis_CheckOffScreen(void)
     }
 }
 
-void Aquis_State_Setup(void)
+void Aquis_State_Init(void)
 {
     RSDK_THIS(Aquis);
 

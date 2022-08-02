@@ -78,7 +78,7 @@ void TimePost_Create(void *data)
         self->maxAngle  = 0x10000;
         self->scale.y   = 0x200;
         self->active    = ACTIVE_BOUNDS;
-        self->state     = TimePost_State_Setup;
+        self->state     = TimePost_State_Init;
     }
 }
 
@@ -179,7 +179,7 @@ void TimePost_HandleTimeSparkles(void)
     }
 }
 
-void TimePost_State_Setup(void)
+void TimePost_State_Init(void)
 {
     RSDK_THIS(TimePost);
 

@@ -54,7 +54,7 @@ void Ball_HandleInteractions(void);
 void Ball_CheckOffScreen(void);
 void Ball_SpawnSplashes(void);
 
-void Ball_State_Setup(void);
+void Ball_State_Init(void);
 void Ball_State_AwaitPlayer(void);
 void Ball_State_TargetingPlayer(void);
 void Ball_State_ChemicalDrop(void);

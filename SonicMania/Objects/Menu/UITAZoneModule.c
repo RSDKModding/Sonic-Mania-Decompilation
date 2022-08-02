@@ -121,7 +121,7 @@ void UITAZoneModule_Create(void *data)
     self->updateRange.y = 0x300000;
 
     self->processButtonCB = UIButton_ProcessButtonCB_Scroll;
-    self->state           = UITAZoneModule_State_Setup;
+    self->state           = UITAZoneModule_State_Init;
 
     if (!SceneInfo->inEditor) {
         RSDK.InitString(&self->text1Store, "", false);
@@ -472,7 +472,7 @@ void UITAZoneModule_TransitionCB(void) { UIControl_MatchMenuTag("Leaderboards");
 
 void UITAZoneModule_ShowLeaderboards_CB(void) { UITransition_StartTransition(UITAZoneModule_TransitionCB, 0); }
 
-void UITAZoneModule_State_Setup(void)
+void UITAZoneModule_State_Init(void)
 {
     RSDK_THIS(UITAZoneModule);
 

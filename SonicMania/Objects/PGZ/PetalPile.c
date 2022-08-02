@@ -57,7 +57,7 @@ void PetalPile_Create(void *data)
     }
 
     RSDK.SetSpriteAnimation(PetalPile->aniFrames, 0, &self->animator, true, 0);
-    self->state = PetalPile_State_Setup;
+    self->state = PetalPile_State_Init;
 }
 
 void PetalPile_StageLoad(void)
@@ -95,7 +95,7 @@ int32 PetalPile_GetLeafPattern(Vector2 *patternPtr)
     return count;
 }
 
-void PetalPile_State_Setup(void)
+void PetalPile_State_Init(void)
 {
     RSDK_THIS(PetalPile);
 
@@ -263,7 +263,7 @@ void PetalPile_State_Emitter(void)
     }
 
     if (!collided)
-        self->state = PetalPile_State_Setup;
+        self->state = PetalPile_State_Init;
 }
 
 void PetalPile_StateLeaf_Setup(void)

@@ -58,7 +58,7 @@ void PohBee_DrawSprites(void);
 Vector2 PohBee_GetSpikePos(uint8 spikeID, uint8 shift);
 void PohBee_SetupHitboxes(void);
 
-void PohBee_State_Setup(void);
+void PohBee_State_Init(void);
 void PohBee_State_Move(void);
 
 #endif //! OBJ_POHBEE_H

@@ -64,7 +64,7 @@ void ERZMystic_Create(void *data)
         self->hitbox.bottom = 12;
 
         self->correctCup = 1;
-        self->state      = ERZMystic_State_Setup;
+        self->state      = ERZMystic_State_Init;
         self->stateDraw  = ERZMystic_Draw_CupSetup;
 
         RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 2, &self->mysticAnimator, true, 0);
@@ -210,7 +210,7 @@ void ERZMystic_Draw_CupSwap(void)
     }
 }
 
-void ERZMystic_State_Setup(void)
+void ERZMystic_State_Init(void)
 {
     RSDK_THIS(ERZMystic);
 

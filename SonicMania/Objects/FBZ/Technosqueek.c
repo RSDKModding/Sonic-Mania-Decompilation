@@ -69,7 +69,7 @@ void Technosqueek_Create(void *data)
             RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 5, &self->tailAnimator, true, 0);
         }
 
-        self->state = Technosqueek_State_Setup;
+        self->state = Technosqueek_State_Init;
         self->distance <<= 1;
     }
 }
@@ -123,7 +123,7 @@ void Technosqueek_CheckOffScreen(void)
     }
 }
 
-void Technosqueek_State_Setup(void)
+void Technosqueek_State_Init(void)
 {
     RSDK_THIS(Technosqueek);
 
@@ -293,7 +293,7 @@ void Technosqueek_State_Fall(void)
         self->startDir   = self->direction;
         self->velocity.y = 0;
         self->speed      = 16;
-        self->state      = Technosqueek_State_Setup;
+        self->state      = Technosqueek_State_Init;
     }
 
     RSDK.ProcessAnimation(&self->tailAnimator);

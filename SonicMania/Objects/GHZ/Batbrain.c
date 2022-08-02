@@ -37,7 +37,7 @@ void Batbrain_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &self->animator, true, 0);
-    self->state = Batbrain_State_Setup;
+    self->state = Batbrain_State_Init;
 }
 
 void Batbrain_StageLoad(void)
@@ -88,7 +88,7 @@ void Batbrain_CheckOffScreen(void)
     }
 }
 
-void Batbrain_State_Setup(void)
+void Batbrain_State_Init(void)
 {
     RSDK_THIS(Batbrain);
     self->active     = ACTIVE_NORMAL;

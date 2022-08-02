@@ -56,7 +56,7 @@ int32 TeeterTotter_CheckPlayerCollisions(void);
 void TeeterTotter_ProcessSegmentGravity(void);
 void TeeterTotter_HandleSegmentPositions(void);
 
-void TeeterTotter_State_Setup(void);
+void TeeterTotter_State_Init(void);
 void TeeterTotter_State_Teeter(void);
 void TeeterTotter_State_Fall(void);
 

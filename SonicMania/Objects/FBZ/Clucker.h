@@ -49,7 +49,7 @@ void Clucker_DebugDraw(void);
 void Clucker_HandlePlayerInteractions(void);
 void Clucker_CheckOffScreen(void);
 
-void Clucker_State_Setup(void);
+void Clucker_State_Init(void);
 void Clucker_State_CheckForPlayer(void);
 void Clucker_State_Appear(void);
 void Clucker_State_ShootDelay(void);

@@ -43,7 +43,7 @@ void TurretSwitch_Serialize(void);
 void TurretSwitch_CheckPlayerCollisions(void);
 void TurretSwitch_Break(EntityTurretSwitch *turret, EntityPlayer *player);
 
-void TurretSwitch_State_Setup(void);
+void TurretSwitch_State_Init(void);
 void TurretSwitch_State_Turret(void);
 void TurretSwitch_State_Projectile(void);
 

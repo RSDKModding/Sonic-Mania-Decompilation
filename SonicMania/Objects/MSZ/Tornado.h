@@ -62,7 +62,7 @@ void Tornado_EditorLoad(void);
 void Tornado_Serialize(void);
 
 // Extra Entity Functions
-void Tornado_State_Setup(void);
+void Tornado_State_Init(void);
 void Tornado_State_SetupMSZ1Intro(void);
 void Tornado_State_MSZ1Intro(void);
 void Tornado_State_KnuxKnockedOff(void);

@@ -73,7 +73,7 @@ void Woodrow_Create(void *data)
             self->moveDelay     = RSDK.Rand(15, 120);
 
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, true, 0);
-            self->state = Woodrow_State_Setup;
+            self->state = Woodrow_State_Init;
         }
     }
 }
@@ -174,7 +174,7 @@ void Woodrow_CheckOffScreen(void)
     }
 }
 
-void Woodrow_State_Setup(void)
+void Woodrow_State_Init(void)
 {
     RSDK_THIS(Woodrow);
 

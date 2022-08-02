@@ -52,7 +52,7 @@ void Kanabun_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &self->animator, true, 0);
-        self->state = Kanabun_State_Setup;
+        self->state = Kanabun_State_Init;
     }
 }
 
@@ -124,7 +124,7 @@ void Kanabun_HandleMovement(void)
         self->drawGroup = Zone->objectDrawLow;
 }
 
-void Kanabun_State_Setup(void)
+void Kanabun_State_Init(void)
 {
     RSDK_THIS(Kanabun);
 

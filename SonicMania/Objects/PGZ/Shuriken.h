@@ -52,7 +52,7 @@ void Shuriken_CheckPlayerCollisions(void);
 void Shuriken_HandleSolidCollisions(void);
 
 // Shooter States
-void Shuriken_State_Setup(void);
+void Shuriken_State_Init(void);
 void Shuriken_State_AwaitActivate(void);
 void Shuriken_State_CheckPlayerInRange(void);
 void Shuriken_State_ShootDelay(void);

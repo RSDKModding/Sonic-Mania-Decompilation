@@ -57,7 +57,7 @@ void Batbot_DebugDraw(void);
 
 void Batbot_CheckPlayerCollisions(void);
 
-void Batbot_State_Setup(void);
+void Batbot_State_Init(void);
 void Batbot_State_Idle(void);
 void Batbot_State_Attack(void);
 void Batbot_State_SwoopLeft(void);

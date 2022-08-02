@@ -58,7 +58,7 @@ void TurboSpiker_Hermit_Collide(void);
 void TurboSpiker_Hermit_CheckOffScreen(void);
 void TurboSpiker_HandleMovement(void);
 
-void TurboSpiker_State_Setup(void);
+void TurboSpiker_State_Init(void);
 void TurboSpiker_State_Idle(void);
 void TurboSpiker_State_Hidden(void);
 void TurboSpiker_State_Moving(void);

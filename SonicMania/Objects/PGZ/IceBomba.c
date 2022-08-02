@@ -79,7 +79,7 @@ void IceBomba_Create(void *data)
                 self->bombAnimator.frameID = 0;
             }
 
-            self->state = IceBomba_State_Setup;
+            self->state = IceBomba_State_Init;
         }
     }
 }
@@ -169,7 +169,7 @@ void IceBomba_HandlePlayerCollisions(void)
     self->direction = storeDir;
 }
 
-void IceBomba_State_Setup(void)
+void IceBomba_State_Init(void)
 {
     RSDK_THIS(IceBomba);
 

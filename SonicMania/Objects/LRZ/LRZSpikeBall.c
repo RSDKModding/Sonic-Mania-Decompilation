@@ -64,7 +64,7 @@ void LRZSpikeBall_Create(void *data)
     self->hitboxBall.right  = 10;
     self->hitboxBall.bottom = 10;
 
-    self->state = LRZSpikeBall_State_Setup;
+    self->state = LRZSpikeBall_State_Init;
 }
 
 void LRZSpikeBall_StageLoad(void)
@@ -135,7 +135,7 @@ void LRZSpikeBall_CheckPlayerBallCollisions(void)
     self->position.y = storeY;
 }
 
-void LRZSpikeBall_State_Setup(void)
+void LRZSpikeBall_State_Init(void)
 {
     RSDK_THIS(LRZSpikeBall);
 

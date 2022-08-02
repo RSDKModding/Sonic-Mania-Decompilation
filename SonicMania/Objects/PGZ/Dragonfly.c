@@ -74,7 +74,7 @@ void Dragonfly_Create(void *data)
 
             RSDK.SetSpriteAnimation(Dragonfly->aniFrames, 2, &self->wingAnimator, true, 0);
             RSDK.SetSpriteAnimation(Dragonfly->aniFrames, 3, &self->bodyAnimator, true, 0);
-            self->state = Dragonfly_State_Setup;
+            self->state = Dragonfly_State_Init;
         }
     }
 }
@@ -155,7 +155,7 @@ void Dragonfly_CheckPlayerCollisions(void)
     }
 }
 
-void Dragonfly_State_Setup(void)
+void Dragonfly_State_Init(void)
 {
     RSDK_THIS(Dragonfly);
     self->active = ACTIVE_NORMAL;

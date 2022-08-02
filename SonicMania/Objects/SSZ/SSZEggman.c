@@ -57,7 +57,7 @@ void SSZEggman_Create(void *data)
         }
         else {
             self->offset.y = -0x100000;
-            self->state    = SSZEggman_State_Setup;
+            self->state    = SSZEggman_State_Init;
             RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 4, &self->seatAnimator, true, 0);
             RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 5, &self->mobileAnimator, true, 0);
         }
@@ -66,7 +66,7 @@ void SSZEggman_Create(void *data)
 
 void SSZEggman_StageLoad(void) { SSZEggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanSSZ.bin", SCOPE_STAGE); }
 
-void SSZEggman_State_Setup(void)
+void SSZEggman_State_Init(void)
 {
     RSDK_THIS(SSZEggman);
 

@@ -91,7 +91,7 @@ void UIReplayCarousel_Create(void *data)
     self->updateRange.y   = 0x300000;
     self->processButtonCB = UIReplayCarousel_ProcessButtonCB;
     self->touchCB         = UIButton_ProcessTouchCB_Multi;
-    self->state           = UIReplayCarousel_State_Setup;
+    self->state           = UIReplayCarousel_State_Init;
     self->sortedRowCount  = 0;
     UIReplayCarousel_HandlePositions();
     if (!SceneInfo->inEditor) {
@@ -554,7 +554,7 @@ void UIReplayCarousel_Draw_Carousel(void)
     }
 }
 
-void UIReplayCarousel_State_Setup(void)
+void UIReplayCarousel_State_Init(void)
 {
     RSDK_THIS(UIReplayCarousel);
     EntityUIControl *parent = (EntityUIControl *)self->parent;

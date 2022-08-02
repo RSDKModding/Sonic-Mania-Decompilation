@@ -62,7 +62,7 @@ void Iwamodoki_Create(void *data)
     }
     else {
         RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 0, &self->animator, true, 0);
-        self->state = Iwamodoki_State_Setup;
+        self->state = Iwamodoki_State_Init;
     }
 }
 
@@ -134,7 +134,7 @@ void Iwamodoki_CheckOffScreen(void)
     }
 }
 
-void Iwamodoki_State_Setup(void)
+void Iwamodoki_State_Init(void)
 {
     RSDK_THIS(Iwamodoki);
 

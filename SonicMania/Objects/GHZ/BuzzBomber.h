@@ -51,7 +51,7 @@ void BuzzBomber_CheckOffScreen(void);
 void BuzzBomber_CheckPlayerCollisions(void);
 
 // States
-void BuzzBomber_State_Setup(void);
+void BuzzBomber_State_Init(void);
 void BuzzBomber_State_Flying(void);
 void BuzzBomber_State_Idle(void);
 void BuzzBomber_State_DetectedPlayer(void);

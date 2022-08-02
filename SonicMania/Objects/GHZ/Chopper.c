@@ -36,7 +36,7 @@ void Chopper_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x1200000;
     self->drawFX        = FX_FLIP;
-    self->state         = Chopper_State_Setup;
+    self->state         = Chopper_State_Init;
 }
 
 void Chopper_StageLoad(void)
@@ -113,7 +113,7 @@ void Chopper_CheckPlayerCollisions_Swim(void)
     }
 }
 
-void Chopper_State_Setup(void)
+void Chopper_State_Init(void)
 {
     RSDK_THIS(Chopper);
 

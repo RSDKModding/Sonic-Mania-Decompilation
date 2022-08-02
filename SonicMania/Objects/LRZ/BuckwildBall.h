@@ -58,7 +58,7 @@ void BuckwildBall_SpawnDebris(void);
 void BuckwildBall_CheckPlayerCollisions(void);
 void BuckwildBall_HandleRollCrush(void);
 
-void BuckwildBall_State_Setup(void);
+void BuckwildBall_State_Init(void);
 void BuckwildBall_State_Patrolling(void);
 void BuckwildBall_State_AwaitDetection(void);
 void BuckwildBall_State_Falling(void);

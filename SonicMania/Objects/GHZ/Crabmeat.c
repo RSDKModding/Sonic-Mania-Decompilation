@@ -50,7 +50,7 @@ void Crabmeat_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 0, &self->animator, true, 0);
-        self->state = Crabmeat_State_Setup;
+        self->state = Crabmeat_State_Init;
     }
 }
 
@@ -109,7 +109,7 @@ void Crabmeat_CheckPlayerCollisions(void)
     }
 }
 
-void Crabmeat_State_Setup(void)
+void Crabmeat_State_Init(void)
 {
     RSDK_THIS(Crabmeat);
 

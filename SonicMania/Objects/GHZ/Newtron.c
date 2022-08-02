@@ -67,7 +67,7 @@ void Newtron_Create(void *data)
             self->drawGroup = Zone->objectDrawHigh;
         }
         RSDK.SetSpriteAnimation(Newtron->aniFrames, 5, &self->flameAnimator, true, 0);
-        self->state = Newtron_State_Setup;
+        self->state = Newtron_State_Init;
     }
 }
 
@@ -159,7 +159,7 @@ void Newtron_GetTargetDir(void)
         self->direction = targetPlayer->position.x < self->position.x;
 }
 
-void Newtron_State_Setup(void)
+void Newtron_State_Init(void)
 {
     RSDK_THIS(Newtron);
 

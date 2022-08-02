@@ -43,7 +43,7 @@ void TryAgain_EditorLoad(void);
 void TryAgain_Serialize(void);
 
 // Extra Entity Functions
-void TryAgain_State_Setup(void);
+void TryAgain_State_Init(void);
 void TryAgain_State_EnterEggman(void);
 void TryAgain_State_EggmanLaugh(void);
 void TryAgain_State_Stinger(void);

@@ -42,7 +42,7 @@ void Blastoid_DebugDraw(void);
 
 void Blastoid_CheckPlayerCollisions(void);
 
-void Blastoid_State_Setup(void);
+void Blastoid_State_Init(void);
 void Blastoid_State_Body(void);
 void Blastoid_State_Projectile(void);
 

@@ -51,7 +51,7 @@ void Rhinobot_Create(void *data)
     self->updateRange.y = 0x800000;
     RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 2, &self->dustAnimator, true, 0);
-    self->state = Rhinobot_State_Setup;
+    self->state = Rhinobot_State_Init;
 }
 
 void Rhinobot_StageLoad(void)
@@ -164,7 +164,7 @@ void Rhinobot_Delay_SkidFinish(void)
     self->stateDelay = Rhinobot_Delay_Skidding;
 }
 
-void Rhinobot_State_Setup(void)
+void Rhinobot_State_Init(void)
 {
     RSDK_THIS(Rhinobot);
 

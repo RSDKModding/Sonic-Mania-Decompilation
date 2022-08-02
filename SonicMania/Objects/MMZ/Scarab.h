@@ -58,7 +58,7 @@ void Scarab_HandleChildMove(void);
 void Scarab_HandlePlayerGrab(void);
 void Scarab_HandlePlayerRelease(void);
 
-void Scarab_State_Setup(void);
+void Scarab_State_Init(void);
 void Scarab_State_Move(void);
 void Scarab_State_Wait(void);
 

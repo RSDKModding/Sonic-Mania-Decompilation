@@ -54,7 +54,7 @@ void Kabasira_DrawSegment(int32 angle, int32 alpha);
 void Kabasira_CheckPlayerCollisions(void);
 void Kabasira_CheckOffScreen(void);
 
-void Kabasira_State_Setup(void);
+void Kabasira_State_Init(void);
 void Kabasira_State_Moving(void);
 void Kabasira_State_LaunchedAttack(void);
 

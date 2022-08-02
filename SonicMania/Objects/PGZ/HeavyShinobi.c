@@ -46,7 +46,7 @@ void HeavyShinobi_Create(void *data)
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->fxAnimator, true, 0);
 
-                    self->state         = HeavyShinobi_State_Setup;
+                    self->state         = HeavyShinobi_State_Init;
                     self->stateDraw     = HeavyShinobi_Draw_Shinobi;
                     self->updateRange.y = 0x800000;
                     self->updateRange.x = 0x800000;
@@ -310,7 +310,7 @@ void HeavyShinobi_Explode(void)
     }
 }
 
-void HeavyShinobi_State_Setup(void)
+void HeavyShinobi_State_Init(void)
 {
     RSDK_THIS(HeavyShinobi);
 

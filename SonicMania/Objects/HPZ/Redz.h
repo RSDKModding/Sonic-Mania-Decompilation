@@ -47,7 +47,7 @@ void Redz_DebugDraw(void);
 
 void Redz_CheckPlayerCollisions(void);
 
-void Redz_State_Setup(void);
+void Redz_State_Init(void);
 void Redz_State_Walk(void);
 void Redz_State_Turn(void);
 void Redz_State_PrepareAttack(void);

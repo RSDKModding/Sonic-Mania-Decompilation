@@ -45,7 +45,7 @@ void UITransition_SetNewTag(const char *text);
 
 void UITransition_DrawShapes(void);
 
-void UITransition_State_Setup(void);
+void UITransition_State_Init(void);
 void UITransition_State_TransitionIn(void);
 void UITransition_State_TransitionOut(void);
 

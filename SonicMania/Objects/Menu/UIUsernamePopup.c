@@ -38,7 +38,7 @@ void UIUsernamePopup_Create(void *data)
     self->drawPos.y = 0;
     self->size.y    = 0x180000;
     self->visible   = true;
-    self->state     = UIUsernamePopup_State_Setup;
+    self->state     = UIUsernamePopup_State_Init;
 }
 
 void UIUsernamePopup_StageLoad(void)
@@ -49,7 +49,7 @@ void UIUsernamePopup_StageLoad(void)
 void UIUsernamePopup_ShowPopup(void)
 {
     EntityUIUsernamePopup *entity = (EntityUIUsernamePopup *)UIUsernamePopup->popup;
-    if (entity->state == UIUsernamePopup_State_Setup) {
+    if (entity->state == UIUsernamePopup_State_Init) {
         if (API_GetUsername(&entity->username)) {
 #if MANIA_USE_PLUS
             LogHelpers_PrintString(&entity->username);
@@ -80,7 +80,7 @@ void UIUsernamePopup_DrawSprites(void)
     RSDK.DrawText(&self->animator, &drawPos, &self->username, 0, self->username.length, ALIGN_LEFT, 0, 0, 0, false);
 }
 
-void UIUsernamePopup_State_Setup(void)
+void UIUsernamePopup_State_Init(void)
 {
     RSDK_THIS(UIUsernamePopup);
 
@@ -133,7 +133,7 @@ void UIUsernamePopup_State_Disappear(void)
         self->timer     = 0;
         self->isVisible = false;
         self->drawPos.x = -self->size.y;
-        self->state     = UIUsernamePopup_State_Setup;
+        self->state     = UIUsernamePopup_State_Init;
     }
     else {
         self->isVisible = true;

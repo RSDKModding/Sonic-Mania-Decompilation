@@ -43,7 +43,7 @@ void PSZLauncher_DebugDraw(void);
 
 void PSZLauncher_HandlePlayerCollisions(void);
 void PSZLauncher_HandlePlayerInteractions(void);
-void PSZLauncher_State_Setup(void);
+void PSZLauncher_State_Init(void);
 void PSZLauncher_State_Active(void);
 
 #endif //! OBJ_PSZLAUNCHER_H

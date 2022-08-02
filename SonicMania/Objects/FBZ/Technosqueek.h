@@ -56,7 +56,7 @@ void Technosqueek_DebugDraw(void);
 void Technosqueek_HandlePlayerCollisions(void);
 void Technosqueek_CheckOffScreen(void);
 
-void Technosqueek_State_Setup(void);
+void Technosqueek_State_Init(void);
 void Technosqueek_State_MoveHorizontal(void);
 void Technosqueek_State_TurnHorizontal(void);
 void Technosqueek_State_MoveVertical(void);

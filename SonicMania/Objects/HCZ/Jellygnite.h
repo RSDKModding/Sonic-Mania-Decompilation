@@ -68,7 +68,7 @@ bool32 Jellygnite_CheckInWater(EntityPlayer *player);
 void Jellygnite_DrawBackTentacle(void);
 void Jellygnite_DrawFrontTentacle(void);
 
-void Jellygnite_State_Setup(void);
+void Jellygnite_State_Init(void);
 void Jellygnite_State_Swimming(void);
 void Jellygnite_State_GrabbedPlayer(void);
 void Jellygnite_State_Explode(void);

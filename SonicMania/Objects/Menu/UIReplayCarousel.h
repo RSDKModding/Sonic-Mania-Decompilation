@@ -80,7 +80,7 @@ void UIReplayCarousel_Draw_Loading(void);
 void UIReplayCarousel_Draw_NoReplays(void);
 void UIReplayCarousel_Draw_Carousel(void);
 
-void UIReplayCarousel_State_Setup(void);
+void UIReplayCarousel_State_Init(void);
 void UIReplayCarousel_State_Unselected(void);
 void UIReplayCarousel_State_Selected(void);
 void UIReplayCarousel_State_StartAction(void);

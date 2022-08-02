@@ -63,7 +63,7 @@ void MonkeyDude_Serialize(void);
 void MonkeyDude_DebugDraw(void);
 void MonkeyDude_DebugSpawn(void);
 
-void MonkeyDude_State_Setup(void);
+void MonkeyDude_State_Init(void);
 void MonkeyDude_HandleBodyPart(void);
 #if MANIA_USE_PLUS
 void MonkeyDude_HandleStates(void);

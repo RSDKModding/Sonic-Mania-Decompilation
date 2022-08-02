@@ -36,7 +36,7 @@ void SpikeCrusher_Serialize(void);
 // Extra Entity Functions
 void SpikeCrusher_CheckOffScreen(void);
 
-void SpikeCrusher_State_Setup(void);
+void SpikeCrusher_State_Init(void);
 void SpikeCrusher_State_MovingDown(void);
 void SpikeCrusher_State_Crushing(void);
 void SpikeCrusher_State_CrushBounce(void);

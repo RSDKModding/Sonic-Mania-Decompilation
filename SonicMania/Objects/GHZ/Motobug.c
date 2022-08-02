@@ -45,7 +45,7 @@ void Motobug_Create(void *data)
     else {
         self->timer = 16;
         RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &self->animator, true, 0);
-        self->state = Motobug_State_Setup;
+        self->state = Motobug_State_Init;
     }
 }
 
@@ -185,7 +185,7 @@ void Motobug_State_Idle(void)
     Motobug_CheckPlayerCollisions();
     Motobug_CheckOffScreen();
 }
-void Motobug_State_Setup(void)
+void Motobug_State_Init(void)
 {
     RSDK_THIS(Motobug);
 

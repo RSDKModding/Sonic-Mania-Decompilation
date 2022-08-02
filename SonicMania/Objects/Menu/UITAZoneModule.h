@@ -92,7 +92,7 @@ void UITAZoneModule_ButtonEnterCB(void);
 void UITAZoneModule_ButtonLeaveCB(void);
 void UITAZoneModule_TransitionCB(void);
 void UITAZoneModule_ShowLeaderboards_CB(void);
-void UITAZoneModule_State_Setup(void);
+void UITAZoneModule_State_Init(void);
 void UITAZoneModule_State_NotSelected(void);
 void UITAZoneModule_State_Selected(void);
 void UITAZoneModule_State_HasBeenSelected(void);

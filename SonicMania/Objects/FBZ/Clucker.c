@@ -97,7 +97,7 @@ void Clucker_Create(void *data)
             if (!self->delay)
                 self->delay = 68;
             RSDK.SetSpriteAnimation(Clucker->aniFrames, 0, &self->animator, true, 0);
-            self->state = Clucker_State_Setup;
+            self->state = Clucker_State_Init;
         }
     }
 }
@@ -182,7 +182,7 @@ void Clucker_CheckOffScreen(void)
     }
 }
 
-void Clucker_State_Setup(void)
+void Clucker_State_Init(void)
 {
     RSDK_THIS(Clucker);
 

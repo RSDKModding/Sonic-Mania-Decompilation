@@ -66,7 +66,7 @@ void Canista_DebugDraw(void);
 void Canista_CheckPlayerBadnikCollisions(void);
 void Canista_CheckOffScreen(void);
 
-void Canista_State_Setup(void);
+void Canista_State_Init(void);
 void Canista_State_Moving(void);
 void Canista_State_Idle(void);
 

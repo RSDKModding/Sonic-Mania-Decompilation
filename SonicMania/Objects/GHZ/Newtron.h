@@ -53,16 +53,18 @@ void Newtron_DebugSpawn(void);
 // Helpers
 void Newtron_CheckPlayerCollisions(void);
 void Newtron_CheckOffScreen(void);
+void Newtron_GetTargetDir(void);
 
 // States
-void Newtron_GetTargetDir(void);
-void Newtron_State_Setup(void);
+void Newtron_State_Init(void);
 void Newtron_State_CheckPlayerInRange(void);
 void Newtron_State_Appear(void);
 void Newtron_State_StartFly(void);
 void Newtron_State_Fly(void);
+
 void Newtron_State_Shoot(void);
 void Newtron_State_FadeAway(void);
+
 void Newtron_State_Projectile(void);
 
 #endif //! OBJ_NEWTRON_H

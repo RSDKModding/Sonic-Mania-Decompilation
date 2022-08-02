@@ -54,7 +54,7 @@ void Blaster_Create(void *data)
         self->startPos = self->position;
         self->startDir = self->direction;
         RSDK.SetSpriteAnimation(Blaster->aniFrames, 1, &self->animator, true, 0);
-        self->state = Blaster_State_Setup;
+        self->state = Blaster_State_Init;
     }
 }
 
@@ -124,7 +124,7 @@ void Blaster_CheckOffScreen(void)
     }
 }
 
-void Blaster_State_Setup(void)
+void Blaster_State_Init(void)
 {
     RSDK_THIS(Blaster);
     self->active     = ACTIVE_NORMAL;
@@ -323,7 +323,7 @@ void Blaster_State_Fall(void)
         self->startPos.y = self->position.y;
         self->direction  = self->direction;
         self->velocity.y = 0;
-        self->state      = Blaster_State_Setup;
+        self->state      = Blaster_State_Init;
     }
 
     Blaster_HandlePlayerInteractions();

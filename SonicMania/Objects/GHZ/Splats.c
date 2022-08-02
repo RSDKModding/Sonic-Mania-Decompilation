@@ -45,7 +45,7 @@ void Splats_Create(void *data)
         self->drawFX |= FX_FLIP;
         self->drawGroup = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
-        self->state = Splats_State_Setup;
+        self->state = Splats_State_Init;
     }
     else {
         switch (voidToInt(data)) {
@@ -53,7 +53,7 @@ void Splats_Create(void *data)
                 self->drawGroup = Zone->objectDrawHigh;
                 self->delay     = 0;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->mainAnimator, true, 0);
-                self->state = Splats_State_Setup;
+                self->state = Splats_State_Init;
                 break;
 
             case SPLATS_INKSPLATS:
@@ -165,7 +165,7 @@ void Splats_CheckOffScreen(void)
     }
 }
 
-void Splats_State_Setup(void)
+void Splats_State_Init(void)
 {
     RSDK_THIS(Splats);
     self->active     = ACTIVE_NORMAL;

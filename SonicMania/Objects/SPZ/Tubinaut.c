@@ -78,7 +78,7 @@ void Tubinaut_Create(void *data)
         RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &self->fieldAnimator, true, 0);
 
-        self->state    = Tubinaut_State_Setup;
+        self->state    = Tubinaut_State_Init;
         self->orbState = Tubinaut_Orb_Relax;
     }
 }
@@ -381,7 +381,7 @@ void Tubinaut_CheckOffScreen(void)
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position = self->startPos;
         self->visible  = false;
-        self->state    = Tubinaut_State_Setup;
+        self->state    = Tubinaut_State_Init;
         self->active   = ACTIVE_BOUNDS;
 
         if (self->orbCount > 1) {
@@ -391,7 +391,7 @@ void Tubinaut_CheckOffScreen(void)
     }
 }
 
-void Tubinaut_State_Setup(void)
+void Tubinaut_State_Init(void)
 {
     RSDK_THIS(Tubinaut);
 
@@ -546,7 +546,7 @@ void Tubinaut_EditorDraw(void)
     self->attackTimer = 64;
     RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &self->fieldAnimator, true, 0);
-    self->state    = Tubinaut_State_Setup;
+    self->state    = Tubinaut_State_Init;
     self->orbState = Tubinaut_Orb_Relax;
 
     for (int32 i = 0; i < TUBINAUT_ORB_COUNT; ++i) {

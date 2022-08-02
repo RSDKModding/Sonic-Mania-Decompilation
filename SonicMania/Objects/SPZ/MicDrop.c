@@ -66,7 +66,7 @@ void MicDrop_Create(void *data)
 
     RSDK.SetSpriteAnimation(MicDrop->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(MicDrop->aniFrames, 1, &self->wireAnimator, true, 0);
-    self->state = MicDrop_State_Setup;
+    self->state = MicDrop_State_Init;
 }
 
 void MicDrop_StageLoad(void)
@@ -140,7 +140,7 @@ void MicDrop_CheckOffScreen(void)
     }
 }
 
-void MicDrop_State_Setup(void)
+void MicDrop_State_Init(void)
 {
     RSDK_THIS(MicDrop);
 

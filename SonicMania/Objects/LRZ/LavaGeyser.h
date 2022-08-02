@@ -57,7 +57,7 @@ void LavaGeyser_CheckPlayerCollisions(void);
 void LavaGeyser_HandleSetup(void);
 void LavaGeyser_State_Intervals(void);
 
-void LavaGeyser_State_Setup(void);
+void LavaGeyser_State_Init(void);
 void LavaGeyser_State_ShowPlume(void);
 void LavaGeyser_State_Erupting(void);
 void LavaGeyser_State_Erupted(void);

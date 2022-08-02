@@ -48,7 +48,7 @@ void Bubbler_HandleInteractions(void);
 void Bubbler_HandleProjectileInteractions(void);
 void Bubbler_CheckOffScreen(void);
 
-void Bubbler_State_Setup(void);
+void Bubbler_State_Init(void);
 void Bubbler_State_MotherPatrol(void);
 void Bubbler_State_FoundPlayer(void);
 void Bubbler_State_AttackPlayer(void);

@@ -67,7 +67,7 @@ void PhantomMystic_Create(void *data)
         self->hitbox.bottom = 12;
 
         self->correctCup = 1;
-        self->state      = PhantomMystic_State_Setup;
+        self->state      = PhantomMystic_State_Init;
         self->stateDraw  = PhantomMystic_Draw_CupSetup;
 
         RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 2, &self->mysticAnimator, true, 0);
@@ -220,7 +220,7 @@ void PhantomMystic_Draw_CupSwap(void)
     }
 }
 
-void PhantomMystic_State_Setup(void)
+void PhantomMystic_State_Init(void)
 {
     RSDK_THIS(PhantomMystic);
 

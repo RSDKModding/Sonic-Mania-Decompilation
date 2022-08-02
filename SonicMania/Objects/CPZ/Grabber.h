@@ -56,7 +56,7 @@ void Grabber_CheckPlayerCollisions(void);
 void Grabber_CheckOffScreen(void);
 void Grabber_HandleExplode(void);
 
-void Grabber_State_Setup(void);
+void Grabber_State_Init(void);
 void Grabber_State_CheckForGrab(void);
 void Grabber_State_GrabDelay(void);
 void Grabber_State_HandleTurn(void);

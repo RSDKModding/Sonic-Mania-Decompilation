@@ -48,7 +48,7 @@ void Dango_CheckOffScreen(void);
 void Dango_CheckPlayerCollisions(void);
 bool32 Dango_HandleMovement(StateMachine(nextState), uint8 anim);
 
-void Dango_State_Setup(void);
+void Dango_State_Init(void);
 void Dango_State_Walking(void);
 void Dango_State_Turning(void);
 void Dango_State_Falling_Uncurled(void);

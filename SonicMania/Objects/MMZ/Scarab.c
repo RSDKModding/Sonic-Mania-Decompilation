@@ -29,7 +29,7 @@ void Scarab_Update(void)
     Scarab_HandleChildMove();
     Scarab_HandlePlayerGrab();
 
-    if (self->state != Scarab_State_Setup) {
+    if (self->state != Scarab_State_Init) {
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
             int32 x = -self->position.x;
             int32 y = -self->position.y;
@@ -96,7 +96,7 @@ void Scarab_Create(void *data)
 
     self->startPos = self->position;
     self->startDir = self->direction;
-    self->state    = Scarab_State_Setup;
+    self->state    = Scarab_State_Init;
 }
 
 void Scarab_StageLoad(void)
@@ -247,7 +247,7 @@ void Scarab_HandlePlayerRelease(void)
     }
 }
 
-void Scarab_State_Setup(void)
+void Scarab_State_Init(void)
 {
     RSDK_THIS(Scarab);
 

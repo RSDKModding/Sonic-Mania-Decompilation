@@ -88,7 +88,7 @@ void Flamethrower_Create(void *data)
             self->interval = 60;
     }
 
-    self->state = Flamethrower_State_Setup;
+    self->state = Flamethrower_State_Init;
 }
 
 void Flamethrower_StageLoad(void)
@@ -282,7 +282,7 @@ void Flamethrower_CheckMouthCollisions(void)
     }
 }
 
-void Flamethrower_State_Setup(void)
+void Flamethrower_State_Init(void)
 {
     RSDK_THIS(Flamethrower);
 

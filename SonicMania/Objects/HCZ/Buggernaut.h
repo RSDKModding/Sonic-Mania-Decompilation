@@ -49,7 +49,7 @@ void Buggernaut_CheckOffScreen(void);
 bool32 Buggernaut_HandleTileCollisionsX(void);
 bool32 Buggernaut_HandleTileCollisionsY(void);
 
-void Buggernaut_State_Setup(void);
+void Buggernaut_State_Init(void);
 void Buggernaut_State_Idle(void);
 void Buggernaut_State_FlyTowardTarget(void);
 void Buggernaut_State_FlyAway(void);

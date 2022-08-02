@@ -49,7 +49,7 @@ void Bomb_DebugDraw(void);
 void Bomb_CheckOffScreen(void);
 void Bomb_CheckPlayerCollisions(void);
 
-void Bomb_State_Setup(void);
+void Bomb_State_Init(void);
 void Bomb_State_Walk(void);
 void Bomb_State_Idle(void);
 void Bomb_State_Explode(void);

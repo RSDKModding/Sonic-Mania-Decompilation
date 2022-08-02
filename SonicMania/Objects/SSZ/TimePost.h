@@ -52,7 +52,7 @@ void TimePost_CheckPlayerCollisions(void);
 void TimePost_Particle_TimeSparkle(EntityDebris *debris);
 void TimePost_HandleTimeSparkles(void);
 
-void TimePost_State_Setup(void);
+void TimePost_State_Init(void);
 void TimePost_State_CheckPlayerCollisions(void);
 void TimePost_State_Spinning(void);
 void TimePost_State_FinishedSpin(void);

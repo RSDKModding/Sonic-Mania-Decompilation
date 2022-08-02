@@ -51,7 +51,7 @@ bool32 HandLauncher_CheckPlayerInRange(void);
 void HandLauncher_ReleasePlayers(void);
 void HandLauncher_HandleGrabbedPlayers(void);
 
-void HandLauncher_State_Setup(void);
+void HandLauncher_State_Init(void);
 void HandLauncher_State_AwaitPlayer(void);
 void HandLauncher_State_TryGrabPlayer(void);
 void HandLauncher_State_GrabbedPlayer(void);

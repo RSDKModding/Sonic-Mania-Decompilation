@@ -43,7 +43,7 @@ void Pointdexter_DebugDraw(void);
 void Pointdexter_CheckOffScreen(void);
 void Pointdexter_CheckPlayerCollisions(void);
 
-void Pointdexter_State_Setup(void);
+void Pointdexter_State_Init(void);
 void Pointdexter_State_Swimming(void);
 
 #endif //! OBJ_POINTDEXTER_H

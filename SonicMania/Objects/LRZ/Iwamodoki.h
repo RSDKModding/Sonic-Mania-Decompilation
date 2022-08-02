@@ -50,7 +50,7 @@ void Iwamodoki_DebugDraw(void);
 void Iwamodoki_HandlePlayerCollisions(void);
 void Iwamodoki_CheckOffScreen(void);
 
-void Iwamodoki_State_Setup(void);
+void Iwamodoki_State_Init(void);
 void Iwamodoki_State_AwaitPlayer(void);
 void Iwamodoki_State_Appear(void);
 void Iwamodoki_State_Charging(void);

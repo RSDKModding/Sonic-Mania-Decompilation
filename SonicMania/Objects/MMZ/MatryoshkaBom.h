@@ -64,7 +64,7 @@ void MatryoshkaBom_DebugDraw(void);
 void MatryoshkaBom_CheckPlayerCollisions(void);
 void MatryoshkaBom_CheckOffScreen(void);
 
-void MatryoshkaBom_State_Setup(void);
+void MatryoshkaBom_State_Init(void);
 void MatryoshkaBom_State_Walk(void);
 void MatryoshkaBom_State_Stopped(void);
 void MatryoshkaBom_State_Turn(void);

@@ -44,13 +44,13 @@ void Dragonfly_EditorLoad(void);
 #endif
 void Dragonfly_Serialize(void);
 
+// Extra Entity Functions
 void Dragonfly_DebugDraw(void);
 void Dragonfly_DebugSpawn(void);
 
-// Extra Entity Functions
 void Dragonfly_CheckPlayerCollisions(void);
 
-void Dragonfly_State_Setup(void);
+void Dragonfly_State_Init(void);
 void Dragonfly_State_Move(void);
 void Dragonfly_State_Debris(void);
 

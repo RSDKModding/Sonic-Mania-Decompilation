@@ -53,7 +53,7 @@ void UILeaderboard_Create(void *data)
     self->updateRange.x   = 0x800000;
     self->updateRange.y   = 0x300000;
     self->processButtonCB = UILeaderboard_ProcessButtonCB;
-    self->state           = UILeaderboard_State_Setup;
+    self->state           = UILeaderboard_State_Init;
 
     UILeaderboard_SetupEntrySprites(self);
     self->textFrames = UIWidgets->textFrames;
@@ -413,7 +413,7 @@ void UILeaderboard_DrawRank(int32 id)
     }
 }
 
-void UILeaderboard_State_Setup(void)
+void UILeaderboard_State_Init(void)
 {
     RSDK_THIS(UILeaderboard);
 

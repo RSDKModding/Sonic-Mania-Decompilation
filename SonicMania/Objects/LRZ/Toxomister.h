@@ -51,7 +51,7 @@ void Toxomister_CheckOffScreen(void);
 void Toxomister_CheckCloudOnScreen(void);
 void Toxomister_CheckPlayerCloudCollisions(void);
 
-void Toxomister_State_Setup(void);
+void Toxomister_State_Init(void);
 void Toxomister_State_CreateClouds(void);
 
 void Toxomister_StateCloud_FallDelay(void);

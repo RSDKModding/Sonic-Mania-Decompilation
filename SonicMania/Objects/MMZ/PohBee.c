@@ -21,7 +21,7 @@ void PohBee_Update(void)
     PohBee_SetupHitboxes();
     PohBee_CheckPlayerCollisions();
 
-    if (self->drawGroup != 1 && self->state != PohBee_State_Setup)
+    if (self->drawGroup != 1 && self->state != PohBee_State_Init)
         PohBee_CheckOffScreen();
 }
 
@@ -48,7 +48,7 @@ void PohBee_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = PohBee_State_Setup;
+    self->state         = PohBee_State_Init;
 }
 
 void PohBee_StageLoad(void)
@@ -230,7 +230,7 @@ void PohBee_SetupHitboxes(void)
     }
 }
 
-void PohBee_State_Setup(void)
+void PohBee_State_Init(void)
 {
     RSDK_THIS(PohBee);
 

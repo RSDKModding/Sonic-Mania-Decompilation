@@ -44,7 +44,7 @@ void Batbrain_DebugSpawn(void);
 void Batbrain_CheckPlayerCollisions(void);
 void Batbrain_CheckOffScreen(void);
 //States
-void Batbrain_State_Setup(void);
+void Batbrain_State_Init(void);
 void Batbrain_State_CheckPlayerInRange(void);
 void Batbrain_State_DropToPlayer(void);
 void Batbrain_State_Fly(void);

@@ -40,7 +40,7 @@ void DashLift_Create(void *data)
         self->amplitude.y = self->position.y + (self->length << 15);
 
         self->updateRange.x = 0x800000;
-        self->state         = DashLift_State_Setup;
+        self->state         = DashLift_State_Init;
     }
 }
 
@@ -59,7 +59,7 @@ void DashLift_CheckOffScreen(void)
     }
 }
 
-void DashLift_State_Setup(void)
+void DashLift_State_Init(void)
 {
     RSDK_THIS(DashLift);
 

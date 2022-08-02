@@ -47,7 +47,7 @@ void Bumpalo_Create(void *data)
     self->updateRange.y = 0x800000;
 
     RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 1, &self->badnikAnimator, true, 0);
-    self->state = Bumpalo_State_Setup;
+    self->state = Bumpalo_State_Init;
 }
 
 void Bumpalo_StageLoad(void)
@@ -384,7 +384,7 @@ void Bumpalo_HandleObjectCollisions(void)
         self->wallCollided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x140000, 0, true);
 }
 
-void Bumpalo_State_Setup(void)
+void Bumpalo_State_Init(void)
 {
     RSDK_THIS(Bumpalo);
 

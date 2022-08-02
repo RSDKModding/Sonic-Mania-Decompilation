@@ -80,7 +80,7 @@ void HeavyShinobi_StartJump(void);
 void HeavyShinobi_Explode(void);
 
 // Shinobi States
-void HeavyShinobi_State_Setup(void);
+void HeavyShinobi_State_Init(void);
 void HeavyShinobi_State_SetupArena(void);
 void HeavyShinobi_State_StartFight(void);
 void HeavyShinobi_State_Idle(void);

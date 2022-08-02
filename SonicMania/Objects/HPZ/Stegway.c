@@ -20,7 +20,7 @@ void Stegway_Update(void)
     StateMachine_Run(self->state);
 
     Stegway_HandlePlayerInteractions();
-    if (self->state != Stegway_State_Setup)
+    if (self->state != Stegway_State_Init)
         Stegway_CheckOffScreen();
 }
 
@@ -48,7 +48,7 @@ void Stegway_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = Stegway_State_Setup;
+    self->state         = Stegway_State_Init;
 }
 
 void Stegway_StageLoad(void)
@@ -146,7 +146,7 @@ void Stegway_SetupAnims(char type, bool32 force)
     }
 }
 
-void Stegway_State_Setup(void)
+void Stegway_State_Init(void)
 {
     RSDK_THIS(Stegway);
 

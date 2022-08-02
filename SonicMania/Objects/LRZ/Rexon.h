@@ -67,7 +67,7 @@ void Rexon_CheckOffScreen(void);
 void Rexon_CheckPlayerCollisions(void);
 void Rexon_Destroy(EntityRexon *rexon, bool32 crushed);
 
-void Rexon_State_Setup(void);
+void Rexon_State_Init(void);
 void Rexon_State_Hidden(void);
 void Rexon_State_Rising(void);
 void Rexon_State_Shooting(void);

@@ -52,7 +52,7 @@ void TryAgain_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
-        self->state = TryAgain_State_Setup;
+        self->state = TryAgain_State_Init;
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 0, &self->debrisAnimator, true, 0);
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 2, &self->eggmanAnimator, true, 0);
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 4, &self->rubyAnimator, true, 0);
@@ -66,7 +66,7 @@ void TryAgain_StageLoad(void)
     RSDK.CopyPalette(0, 0, 1, 0, 128);
 }
 
-void TryAgain_State_Setup(void)
+void TryAgain_State_Init(void)
 {
     RSDK_THIS(TryAgain);
 

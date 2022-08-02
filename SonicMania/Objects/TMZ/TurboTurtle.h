@@ -74,7 +74,7 @@ void TurboTurtle_HandleFanParticles(uint8 type, int32 strength, int32 length);
 
 bool32 TurboTurtle_SfxCheck_SmallFan(void);
 
-void TurboTurtle_State_Setup(void);
+void TurboTurtle_State_Init(void);
 void TurboTurtle_State_Walking(void);
 void TurboTurtle_State_TurnFanUp(void);
 void TurboTurtle_State_FanTop(void);

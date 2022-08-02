@@ -67,7 +67,8 @@ void DNARiser_Serialize(void);
 void DNARiser_State_BubbleBurst(void);
 void DNARiser_SetupBurst(void);
 Vector2 DNARiser_CalculateScale(Vector2 *scalePtr);
-void DNARiser_State_Setup(void);
+
+void DNARiser_State_Init(void);
 void DNARiser_State_HandleInteractions(void);
 void DNARiser_State_HelixRise(void);
 void DNARiser_State_HelixBurst(void);

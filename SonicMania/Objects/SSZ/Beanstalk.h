@@ -82,7 +82,7 @@ void Beanstalk_HandleNodeAppear(void);
 void Beanstalk_CheckPlayerCollisions_Platform(void);
 void Beanstalk_CheckPlayerCollisions_Chomper(void);
 
-void Beanstalk_State_Setup(void);
+void Beanstalk_State_Init(void);
 void Beanstalk_StateDirt_WaitForStart(void);
 void Beanstalk_StateDirt_GrowthDelay(void);
 void Beanstalk_StateDirt_Grow(void);

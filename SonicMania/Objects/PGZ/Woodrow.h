@@ -58,7 +58,7 @@ void Woodrow_DebugDraw(void);
 void Woodrow_CheckPlayerCollisions(void);
 void Woodrow_CheckOffScreen(void);
 
-void Woodrow_State_Setup(void);
+void Woodrow_State_Init(void);
 void Woodrow_State_Idle(void);
 void Woodrow_State_MoveUp(void);
 void Woodrow_State_MoveDown(void);

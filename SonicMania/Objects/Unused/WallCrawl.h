@@ -48,7 +48,7 @@ void WallCrawl_DebugDraw(void);
 void WallCrawl_HandlePlayerInteractions(void);
 void WallCrawl_CheckOffScreen(void);
 
-void WallCrawl_State_Setup(void);
+void WallCrawl_State_Init(void);
 void WallCrawl_State_Moving(void);
 void WallCrawl_State_Idle(void);
 

@@ -62,7 +62,7 @@ void Crane_Create(void *data)
     RSDK.SetSpriteAnimation(Crane->aniFrames, 2, &self->frontAnimator, true, 3);
     RSDK.SetSpriteAnimation(Crane->aniFrames, 3, &self->backAnimator, true, 3);
     RSDK.SetSpriteAnimation(Crane->aniFrames, 4, &self->chainAnimator, true, 0);
-    self->state = Crane_State_Setup;
+    self->state = Crane_State_Init;
 }
 
 void Crane_StageLoad(void)
@@ -166,12 +166,12 @@ void Crane_State_CheckOffScreen(void)
     RSDK_THIS(Crane);
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
-        self->state = Crane_State_Setup;
+        self->state = Crane_State_Init;
         Crane_Create(NULL);
     }
 }
 
-void Crane_State_Setup(void)
+void Crane_State_Init(void)
 {
     RSDK_THIS(Crane);
 

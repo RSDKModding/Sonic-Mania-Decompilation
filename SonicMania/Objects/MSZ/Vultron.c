@@ -50,7 +50,7 @@ void Vultron_Create(void *data)
                 self->startDir      = self->direction;
 
                 RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->bodyAnimator, true, 0);
-                self->state = Vultron_State_Setup;
+                self->state = Vultron_State_Init;
                 break;
 
             case VULTRON_TARGET:
@@ -141,7 +141,7 @@ void Vultron_CheckOffScreen(void)
     }
 }
 
-void Vultron_State_Setup(void)
+void Vultron_State_Init(void)
 {
     RSDK_THIS(Vultron);
 

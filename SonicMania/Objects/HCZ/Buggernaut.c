@@ -57,7 +57,7 @@ void Buggernaut_Create(void *data)
         RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->wingAnimator, true, 0);
 
-        self->state = Buggernaut_State_Setup;
+        self->state = Buggernaut_State_Init;
     }
 }
 
@@ -157,7 +157,7 @@ bool32 Buggernaut_HandleTileCollisionsY(void)
     return collided;
 }
 
-void Buggernaut_State_Setup(void)
+void Buggernaut_State_Init(void)
 {
     RSDK_THIS(Buggernaut);
 
@@ -368,7 +368,7 @@ void Buggernaut_State_Child(void)
 
     RSDK.ProcessAnimation(&self->wingAnimator);
 
-    if (parent->state == Buggernaut_State_Setup)
+    if (parent->state == Buggernaut_State_Init)
         destroyEntity(self);
 }
 

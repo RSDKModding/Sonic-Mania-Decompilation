@@ -66,7 +66,7 @@ void Fireworm_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->drawGroup     = Zone->objectDrawLow;
-        self->state         = Fireworm_State_Setup;
+        self->state         = Fireworm_State_Init;
     }
 }
 
@@ -176,7 +176,7 @@ void Fireworm_CheckOffScreen(void)
     }
 }
 
-void Fireworm_State_Setup(void)
+void Fireworm_State_Init(void)
 {
     RSDK_THIS(Fireworm);
 

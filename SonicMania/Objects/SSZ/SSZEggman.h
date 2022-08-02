@@ -42,7 +42,7 @@ void SSZEggman_EditorLoad(void);
 void SSZEggman_Serialize(void);
 
 // Extra Entity Functions
-void SSZEggman_State_Setup(void);
+void SSZEggman_State_Init(void);
 void SSZEggman_State_HoldingRuby(void);
 void SSZEggman_State_ThrownRuby(void);
 void SSZEggman_State_WatchMetalTransform(void);

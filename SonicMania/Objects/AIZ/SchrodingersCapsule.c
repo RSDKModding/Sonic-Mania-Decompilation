@@ -137,7 +137,7 @@ void SchrodingersCapsule_Create(void *data)
         self->hitboxButtonTrigger.right  = 15;
         self->hitboxButtonTrigger.bottom = -30;
 
-        self->state         = SchrodingersCapsule_State_Setup;
+        self->state         = SchrodingersCapsule_State_Init;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -154,7 +154,7 @@ void SchrodingersCapsule_StageLoad(void)
     SchrodingersCapsule->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
 }
 
-void SchrodingersCapsule_State_Setup(void)
+void SchrodingersCapsule_State_Init(void)
 {
     RSDK_THIS(SchrodingersCapsule);
 

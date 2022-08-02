@@ -58,7 +58,7 @@ void MeterDroid_Create(void *data)
             self->updateRange.y = 0x800000;
             self->health        = 6;
             self->drawGroup     = Zone->objectDrawLow;
-            self->state         = MeterDroid_State_Setup;
+            self->state         = MeterDroid_State_Init;
 
             RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 8, &self->propellorAnimator, true, 0);
@@ -309,7 +309,7 @@ void MeterDroid_Draw_ThrownWrench(void)
     RSDK.DrawSprite(&self->wrenchAnimator, &self->wrenchPos, false);
 }
 
-void MeterDroid_State_Setup(void)
+void MeterDroid_State_Init(void)
 {
     RSDK_THIS(MeterDroid);
 

@@ -46,11 +46,11 @@ void Motobug_CheckOffScreen(void);
 void Motobug_CheckPlayerCollisions(void);
 
 //States
-void Motobug_State_Fall(void);
+void Motobug_State_Init(void);
 void Motobug_State_Move(void);
 void Motobug_State_Idle(void);
-void Motobug_State_Setup(void);
-void Motobug_State_Smoke(void);
+void Motobug_State_Fall(void);
 void Motobug_State_Turn(void);
+void Motobug_State_Smoke(void);
 
 #endif //!OBJ_MOTOBUG_H

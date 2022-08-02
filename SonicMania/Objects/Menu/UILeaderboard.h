@@ -80,7 +80,7 @@ void UILeaderboard_DrawZonePreview(void);
 void UILeaderboard_DrawTime(int32 mins, int32 secs, int32 millisecs, int32 x, int32 y);
 void UILeaderboard_DrawRank(int32 id);
 
-void UILeaderboard_State_Setup(void);
+void UILeaderboard_State_Init(void);
 void UILeaderboard_State_Unselected(void);
 void UILeaderboard_State_Selected(void);
 

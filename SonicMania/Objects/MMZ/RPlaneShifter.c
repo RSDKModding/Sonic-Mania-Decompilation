@@ -47,7 +47,7 @@ void RPlaneShifter_Create(void *data)
 
     RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 1, &self->baseAnimator, true, 0);
     RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 2, &RPlaneShifter->barAnimator, true, 0);
-    self->state = RPlaneShifter_State_Setup;
+    self->state = RPlaneShifter_State_Init;
 }
 
 void RPlaneShifter_StageLoad(void)
@@ -134,7 +134,7 @@ void RPlaneShifter_HandlePlaneShift(EntityPlayer *player)
     }
 }
 
-void RPlaneShifter_State_Setup(void)
+void RPlaneShifter_State_Init(void)
 {
     RSDK_THIS(RPlaneShifter);
 

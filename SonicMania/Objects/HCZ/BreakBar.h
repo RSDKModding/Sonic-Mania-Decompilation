@@ -53,7 +53,7 @@ void BreakBar_DrawSprites(void);
 void BreakBar_CheckPlayerCollisions(void);
 void BreakBar_HandlePlayerInteractions(EntityPlayer *player);
 
-void BreakBar_State_Setup(void);
+void BreakBar_State_Init(void);
 void BreakBar_State_Main(void);
 
 #endif //! OBJ_BREAKBAR_H

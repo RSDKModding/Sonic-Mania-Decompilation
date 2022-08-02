@@ -46,7 +46,7 @@ void Bloominator_CheckOffScreen(void);
 
 void Bloominator_State_Idle(void);
 void Bloominator_State_Firing(void);
-void Bloominator_State_Setup(void);
+void Bloominator_State_Init(void);
 void Bloominator_State_Spikeball(void);
 #endif
 

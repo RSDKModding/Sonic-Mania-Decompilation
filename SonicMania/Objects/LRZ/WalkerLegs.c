@@ -48,7 +48,7 @@ void WalkerLegs_Create(void *data)
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
 
-    self->state = WalkerLegs_State_Setup;
+    self->state = WalkerLegs_State_Init;
 }
 
 void WalkerLegs_StageLoad(void)
@@ -429,7 +429,7 @@ void WalkerLegs_CreateSmoke(bool32 isRightLeg)
     }
 }
 
-void WalkerLegs_State_Setup(void)
+void WalkerLegs_State_Init(void)
 {
     RSDK_THIS(WalkerLegs);
 
@@ -512,7 +512,7 @@ void WalkerLegs_State_TryToReset(void)
     RSDK_THIS(WalkerLegs);
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
-        self->state = WalkerLegs_State_Setup;
+        self->state = WalkerLegs_State_Init;
 }
 
 #if RETRO_INCLUDE_EDITOR

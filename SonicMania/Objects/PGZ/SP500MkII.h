@@ -59,7 +59,7 @@ void SP500MkII_DrawRails(void);
 
 void SP500MkII_CheckPlayerCollisions(void);
 
-void SP500MkII_State_Setup(void);
+void SP500MkII_State_Init(void);
 void SP500MkII_State_AwaitActivation(void);
 void SP500MkII_State_PrintRow(void);
 void SP500MkII_State_NextPrintRow(void);

@@ -50,7 +50,7 @@ void MicDrop_DebugDraw(void);
 void MicDrop_CheckPlayerCollisions(void);
 void MicDrop_CheckOffScreen(void);
 
-void MicDrop_State_Setup(void);
+void MicDrop_State_Init(void);
 void MicDrop_State_CheckForPlayer(void);
 void MicDrop_State_DropDown(void);
 void MicDrop_State_DropRecoil(void);

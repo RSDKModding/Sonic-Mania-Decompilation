@@ -63,7 +63,7 @@ void WalkerLegs_CheckStoodLava(void);
 void WalkerLegs_CreateDebris(bool32 isRightLeg, bool32 isMagma);
 void WalkerLegs_CreateSmoke(bool32 isRightLeg);
 
-void WalkerLegs_State_Setup(void);
+void WalkerLegs_State_Init(void);
 void WalkerLegs_State_Idle(void);
 void WalkerLegs_State_Stepping(void);
 void WalkerLegs_State_TryToReset(void);

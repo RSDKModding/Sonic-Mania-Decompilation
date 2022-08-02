@@ -47,7 +47,7 @@ void BreakBar_Create(void *data)
         self->hitbox.right = ((8 * self->length) >> 1) + 8;
     }
 
-    self->state = BreakBar_State_Setup;
+    self->state = BreakBar_State_Init;
 }
 
 void BreakBar_StageLoad(void)
@@ -199,7 +199,7 @@ void BreakBar_HandlePlayerInteractions(EntityPlayer *player)
     }
 }
 
-void BreakBar_State_Setup(void)
+void BreakBar_State_Init(void)
 {
     RSDK_THIS(BreakBar);
 

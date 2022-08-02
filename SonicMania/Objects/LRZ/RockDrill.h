@@ -60,7 +60,7 @@ void RockDrill_Hit(void);
 void RockDrill_Explode(void);
 void RockDrill_SpawnDebris(int32 offset);
 
-void RockDrill_State_Setup(void);
+void RockDrill_State_Init(void);
 void RockDrill_State_Drilling(void);
 void RockDrill_State_Falling(void);
 void RockDrill_State_Explode(void);

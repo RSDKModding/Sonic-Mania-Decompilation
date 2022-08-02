@@ -47,7 +47,7 @@ void UICreditsText_Serialize(void);
 // Extra Entity Functions
 void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, String *text);
 
-void UICreditsText_State_Setup(void);
+void UICreditsText_State_Init(void);
 void UICreditsText_State_SetupCharPos(void);
 void UICreditsText_State_MoveChars(void);
 void UICreditsText_State_ScaleIn(void);

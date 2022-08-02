@@ -55,7 +55,7 @@ void Spiny_DebugDraw(void);
 void Spiny_CheckPlayerCollisions(void);
 void Spiny_CheckOffScreen(void);
 
-void Spiny_State_Setup(void);
+void Spiny_State_Init(void);
 void Spiny_State_Floor(void);
 void Spiny_State_Shoot_Floor(void);
 void Spiny_State_Wall(void);

@@ -53,7 +53,7 @@ void Sol_HandlePlayerHurt(void);
 void Sol_HandleRotation(void);
 void Sol_CheckOffScreen(void);
 
-void Sol_State_Setup(void);
+void Sol_State_Init(void);
 void Sol_State_Moving(void);
 void Sol_State_ShootingOrbs(void);
 void Sol_State_NoOrbs(void);

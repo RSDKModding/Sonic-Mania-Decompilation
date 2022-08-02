@@ -53,7 +53,7 @@ void Stegway_CheckOffScreen(void);
 void Stegway_HandlePlayerInteractions(void);
 void Stegway_SetupAnims(char type, bool32 force);
 
-void Stegway_State_Setup(void);
+void Stegway_State_Init(void);
 void Stegway_State_Moving(void);
 void Stegway_State_Turn(void);
 void Stegway_State_RevUp(void);

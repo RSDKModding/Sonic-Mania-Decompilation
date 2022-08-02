@@ -47,7 +47,7 @@ void Armadiloid_Serialize(void);
 void Armadiloid_DebugSpawn(void);
 void Armadiloid_DebugDraw(void);
 
-void Armadiloid_State_Setup(void);
+void Armadiloid_State_Init(void);
 
 void Armadiloid_State_PlatformFlying(void);
 void Armadiloid_PlatformShootDelay(void);

@@ -53,7 +53,7 @@ void TurboSpiker_Create(void *data)
     else {
         self->unused = 16;
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
-        self->state = TurboSpiker_State_Setup;
+        self->state = TurboSpiker_State_Init;
     }
 }
 
@@ -139,7 +139,7 @@ void TurboSpiker_HandleMovement(void)
     }
 }
 
-void TurboSpiker_State_Setup(void)
+void TurboSpiker_State_Init(void)
 {
     RSDK_THIS(TurboSpiker);
 

@@ -50,7 +50,7 @@ int LRZSpikeBall_GetBaseFrameID(void);
 void LRZSpikeBall_CheckPlayerBaseCollisions(void);
 void LRZSpikeBall_CheckPlayerBallCollisions(void);
 
-void LRZSpikeBall_State_Setup(void);
+void LRZSpikeBall_State_Init(void);
 void LRZSpikeBall_State_AwaitInterval(void);
 void LRZSpikeBall_State_ChargeUp(void);
 void LRZSpikeBall_State_LaunchedBall(void);

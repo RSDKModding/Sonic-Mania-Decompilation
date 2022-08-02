@@ -77,7 +77,7 @@ void Flamethrower_CheckOutOfBounds(uint8 orientation);
 void Flamethrower_CheckFlameCollisions(void);
 void Flamethrower_CheckMouthCollisions(void);
 
-void Flamethrower_State_Setup(void);
+void Flamethrower_State_Init(void);
 void Flamethrower_State_AwaitInterval(void);
 void Flamethrower_State_EmittingFlames(void);
 

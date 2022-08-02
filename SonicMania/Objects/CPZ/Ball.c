@@ -45,7 +45,7 @@ void Ball_Create(void *data)
         self->startPos = self->position;
         if (!self->type) {
             RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &self->animator, true, 0);
-            self->state = Ball_State_Setup;
+            self->state = Ball_State_Init;
         }
         else {
             self->state = Ball_State_Spawner;
@@ -140,7 +140,7 @@ void Ball_SpawnSplashes(void)
     destroyEntity(self);
 }
 
-void Ball_State_Setup(void)
+void Ball_State_Init(void)
 {
     RSDK_THIS(Ball);
 

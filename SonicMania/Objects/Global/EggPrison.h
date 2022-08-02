@@ -58,8 +58,8 @@ void EggPrison_Serialize(void);
 // Extra Entity Functions
 void EggPrison_HandleMovement(void);
 
+void EggPrison_State_Init(void);
 void EggPrison_State_Activated(void);
-void EggPrison_State_Setup(void);
 void EggPrison_State_HandleBounds(void);
 void EggPrison_State_Explode(void);
 void EggPrison_State_SetupActClear(void);

@@ -53,7 +53,7 @@ void MegaChopper_Input_GrabbedP1(void);
 void MegaChopper_Input_GrabbedP2(void);
 void MegaChopper_Input_GrabbedP2_AI(void);
 
-void MegaChopper_State_Setup(void);
+void MegaChopper_State_Init(void);
 void MegaChopper_State_InWater(void);
 void MegaChopper_State_OutOfWater(void);
 void MegaChopper_State_Chopping(void);

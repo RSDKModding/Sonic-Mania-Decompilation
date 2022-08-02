@@ -44,7 +44,7 @@ void Dango_Create(void *data)
     self->updateRange.y = 0x800000;
 
     RSDK.SetSpriteAnimation(Dango->aniFrames, 1, &self->animator, true, 0);
-    self->state = Dango_State_Setup;
+    self->state = Dango_State_Init;
 }
 
 void Dango_StageLoad(void)
@@ -212,7 +212,7 @@ bool32 Dango_HandleMovement(StateMachine(nextState), uint8 anim)
     return changeState;
 }
 
-void Dango_State_Setup(void)
+void Dango_State_Init(void)
 {
     RSDK_THIS(Dango);
 

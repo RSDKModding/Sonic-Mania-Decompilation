@@ -78,7 +78,7 @@ void CrashTest_Create(void *data)
         self->debrisOffsets[i].y = positions[i].y;
     }
 
-    self->state = CrashTest_State_Setup;
+    self->state = CrashTest_State_Init;
 }
 
 void CrashTest_StageLoad(void)
@@ -136,7 +136,7 @@ void CrashTest_CheckOffScreen(void)
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position = self->startPos;
         self->active   = ACTIVE_BOUNDS;
-        self->state    = CrashTest_State_Setup;
+        self->state    = CrashTest_State_Init;
     }
 }
 
@@ -296,7 +296,7 @@ void CrashTest_HandleLightAnims(void)
     RSDK.ProcessAnimation(&self->lightAnimator);
 }
 
-void CrashTest_State_Setup(void)
+void CrashTest_State_Init(void)
 {
     RSDK_THIS(CrashTest);
 
@@ -421,7 +421,7 @@ void CrashTest_State_Crashed(void)
         Vector2 range = { 0x200000, 0x200000 };
 
         if (!RSDK.CheckPosOnScreen(&self->startPos, &range))
-            self->state = CrashTest_State_Setup;
+            self->state = CrashTest_State_Init;
     }
     else {
         int32 startX = self->travelDistance * (2 * (self->direction != FLIP_NONE) - 1) + self->startPos.x;

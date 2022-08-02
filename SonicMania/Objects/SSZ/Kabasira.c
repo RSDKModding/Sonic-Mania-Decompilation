@@ -89,7 +89,7 @@ void Kabasira_Create(void *data)
             self->wingsAnimator.frameCount = 3;
             self->wingsAnimator.loopIndex  = 0;
 
-            self->state = Kabasira_State_Setup;
+            self->state = Kabasira_State_Init;
         }
     }
 }
@@ -223,7 +223,7 @@ void Kabasira_CheckOffScreen(void)
     }
 }
 
-void Kabasira_State_Setup(void)
+void Kabasira_State_Init(void)
 {
     RSDK_THIS(Kabasira);
 

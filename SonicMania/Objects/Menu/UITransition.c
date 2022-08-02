@@ -42,7 +42,7 @@ void UITransition_Create(void *data)
     self->drawPos[2].y = 0;
 
     self->visible = true;
-    self->state   = UITransition_State_Setup;
+    self->state   = UITransition_State_Init;
 }
 
 void UITransition_StageLoad(void)
@@ -54,7 +54,7 @@ void UITransition_StartTransition(void (*callback)(void), int32 delay)
 {
     EntityUITransition *transition = (EntityUITransition *)UITransition->activeTransition;
 
-    if (transition->state == UITransition_State_Setup && !UIDialog->activeDialog) {
+    if (transition->state == UITransition_State_Init && !UIDialog->activeDialog) {
         transition->state      = UITransition_State_TransitionIn;
         transition->timer      = 0;
         transition->delay      = delay;
@@ -78,7 +78,7 @@ void UITransition_SetNewTag(const char *text)
 {
     EntityUITransition *transition = (EntityUITransition *)UITransition->activeTransition;
 
-    if (transition->state == UITransition_State_Setup) {
+    if (transition->state == UITransition_State_Init) {
         if (!UIDialog->activeDialog) {
             UITransition->newTag = (char *)text;
             UITransition_StartTransition(UITransition_MatchNewTag, 0);
@@ -112,7 +112,7 @@ void UITransition_DrawShapes(void)
     }
 }
 
-void UITransition_State_Setup(void)
+void UITransition_State_Init(void)
 {
     RSDK_THIS(UITransition);
 
@@ -220,7 +220,7 @@ void UITransition_State_TransitionOut(void)
             if (control)
                 control->selectionDisabled = false;
 
-            self->state = UITransition_State_Setup;
+            self->state = UITransition_State_Init;
         }
         else {
             self->isTransitioning = true;

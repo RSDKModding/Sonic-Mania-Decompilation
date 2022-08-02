@@ -63,7 +63,7 @@ void Armadiloid_Create(void *data)
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 1, &self->headAnimator, true, 0);
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 3, &self->boosterAnimator, true, 0);
     }
-    self->state = Armadiloid_State_Setup;
+    self->state = Armadiloid_State_Init;
 }
 
 void Armadiloid_StageLoad(void)
@@ -87,7 +87,7 @@ void Armadiloid_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Armadiloid_State_Setup(void)
+void Armadiloid_State_Init(void)
 {
     RSDK_THIS(Armadiloid);
 

@@ -31,7 +31,7 @@ void TurboTurtle_Update(void)
 
     TurboTurtle_CheckPlayerCollisions();
 
-    if (self->state != TurboTurtle_State_Setup) {
+    if (self->state != TurboTurtle_State_Init) {
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
             self->direction = self->startDir;
             self->position  = self->startPos;
@@ -99,7 +99,7 @@ void TurboTurtle_Create(void *data)
     self->hitboxFanL.right  = -20;
     self->hitboxFanL.bottom = 24;
 
-    self->state = TurboTurtle_State_Setup;
+    self->state = TurboTurtle_State_Init;
 }
 
 void TurboTurtle_StageLoad(void)
@@ -325,7 +325,7 @@ bool32 TurboTurtle_SfxCheck_SmallFan(void)
     return count > 0;
 }
 
-void TurboTurtle_State_Setup(void)
+void TurboTurtle_State_Init(void)
 {
     RSDK_THIS(TurboTurtle);
 

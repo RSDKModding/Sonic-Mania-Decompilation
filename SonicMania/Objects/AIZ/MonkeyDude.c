@@ -101,7 +101,7 @@ void MonkeyDude_Create(void *data)
 #endif
         RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 3, &self->handAnimator, true, 0);
-        self->state = MonkeyDude_State_Setup;
+        self->state = MonkeyDude_State_Init;
 #if MANIA_USE_PLUS
     }
 #endif
@@ -163,7 +163,7 @@ void MonkeyDude_DebugSpawn(void)
 #endif
 }
 
-void MonkeyDude_State_Setup(void)
+void MonkeyDude_State_Init(void)
 {
     RSDK_THIS(MonkeyDude);
     self->armY           = self->position.y;

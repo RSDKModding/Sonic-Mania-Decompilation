@@ -78,7 +78,7 @@ void MeterDroid_Draw_Normal(void);
 void MeterDroid_Draw_SpinningValve(void);
 void MeterDroid_Draw_ThrownWrench(void);
 
-void MeterDroid_State_Setup(void);
+void MeterDroid_State_Init(void);
 void MeterDroid_State_StartFight(void);
 void MeterDroid_State_Idle(void);
 void MeterDroid_State_PickMoveDir(void);

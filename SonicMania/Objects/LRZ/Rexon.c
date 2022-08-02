@@ -80,7 +80,7 @@ void Rexon_Create(void *data)
             RSDK.SetSpriteAnimation(Rexon->aniFrames, 3, &self->bodyAnimator, true, 0);
             RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &self->headAnimator, true, 2);
             RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &self->neckAnimator, true, 0);
-            self->state = Rexon_State_Setup;
+            self->state = Rexon_State_Init;
             break;
 
         case REXON_DEBRIS:
@@ -225,7 +225,7 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
     }
 }
 
-void Rexon_State_Setup(void)
+void Rexon_State_Init(void)
 {
     RSDK_THIS(Rexon);
 

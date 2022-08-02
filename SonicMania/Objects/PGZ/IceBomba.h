@@ -53,7 +53,7 @@ void IceBomba_CheckOffScreen(void);
 
 void IceBomba_HandlePlayerCollisions(void);
 
-void IceBomba_State_Setup(void);
+void IceBomba_State_Init(void);
 void IceBomba_State_Flying(void);
 void IceBomba_State_Turning(void);
 void IceBomba_State_FlyAway(void);

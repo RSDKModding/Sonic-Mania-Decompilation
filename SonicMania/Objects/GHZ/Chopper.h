@@ -52,7 +52,7 @@ void Chopper_CheckPlayerCollisions_Jump(void);
 void Chopper_CheckPlayerCollisions_Swim(void);
 
 // States
-void Chopper_State_Setup(void);
+void Chopper_State_Init(void);
 void Chopper_State_Jump(void);
 void Chopper_State_Swim(void);
 void Chopper_State_ChargeDelay(void);

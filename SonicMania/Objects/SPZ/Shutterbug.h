@@ -54,7 +54,7 @@ void Shutterbug_DebugDraw(void);
 
 void Shutterbug_CheckOffScreen(void);
 
-void Shutterbug_State_Setup(void);
+void Shutterbug_State_Init(void);
 void Shutterbug_State_FlyAround(void);
 void Shutterbug_State_ShakeFly(void);
 void Shutterbug_State_FlyAway(void);

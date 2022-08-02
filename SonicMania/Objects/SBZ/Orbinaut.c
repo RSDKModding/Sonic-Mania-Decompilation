@@ -54,7 +54,7 @@ void Orbinaut_Create(void *data)
     else {
         RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 0, &self->animatorFace, true, 0);
         RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 1, &self->animatorOrb, true, 0);
-        self->state = Orbinaut_State_Setup;
+        self->state = Orbinaut_State_Init;
         if (self->fireOrbs) {
             self->velocity.x = 0;
         }
@@ -171,7 +171,7 @@ void Orbinaut_CheckOffScreen(void)
     }
 }
 
-void Orbinaut_State_Setup(void)
+void Orbinaut_State_Init(void)
 {
     RSDK_THIS(Orbinaut);
     self->active = ACTIVE_NORMAL;

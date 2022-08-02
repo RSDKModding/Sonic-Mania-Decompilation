@@ -49,7 +49,7 @@ void Spiny_Create(void *data)
 
         if (self->type == SPINY_FLOOR) {
             RSDK.SetSpriteAnimation(Spiny->aniFrames, 0, &self->animator, true, 0);
-            self->state = Spiny_State_Setup;
+            self->state = Spiny_State_Init;
 
             if (!(self->direction & FLIP_X))
                 self->velocity.x = -0x4000;
@@ -58,7 +58,7 @@ void Spiny_Create(void *data)
         }
         else {
             RSDK.SetSpriteAnimation(Spiny->aniFrames, 2, &self->animator, true, 0);
-            self->state = Spiny_State_Setup;
+            self->state = Spiny_State_Init;
 
             if (!(self->direction & FLIP_Y))
                 self->velocity.y = -0x4000;
@@ -130,7 +130,7 @@ void Spiny_CheckOffScreen(void)
     }
 }
 
-void Spiny_State_Setup(void)
+void Spiny_State_Init(void)
 {
     RSDK_THIS(Spiny);
 

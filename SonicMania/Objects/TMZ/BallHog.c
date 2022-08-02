@@ -57,7 +57,7 @@ void BallHog_Create(void *data)
 
         RSDK.SetSpriteAnimation(BallHog->aniFrames, 0, &self->animator, true, 0);
 
-        self->state = BallHog_State_Setup;
+        self->state = BallHog_State_Init;
     }
 }
 
@@ -119,7 +119,7 @@ void BallHog_CheckOffScreen(void)
     }
 }
 
-void BallHog_State_Setup(void)
+void BallHog_State_Init(void)
 {
     RSDK_THIS(BallHog);
 

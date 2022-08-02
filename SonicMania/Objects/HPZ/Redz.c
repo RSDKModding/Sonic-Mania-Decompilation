@@ -16,7 +16,7 @@ void Redz_Update(void)
 
     StateMachine_Run(self->state);
 
-    if (self->state != Redz_State_Setup && self->state != Redz_Flame_State && self->state != Redz_Flame_Setup) {
+    if (self->state != Redz_State_Init && self->state != Redz_Flame_State && self->state != Redz_Flame_Setup) {
         Redz_CheckPlayerCollisions();
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
             self->direction  = self->startDir;
@@ -48,7 +48,7 @@ void Redz_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = Redz_State_Setup;
+    self->state         = Redz_State_Init;
 }
 
 void Redz_StageLoad(void)
@@ -106,7 +106,7 @@ void Redz_CheckPlayerCollisions(void)
     }
 }
 
-void Redz_State_Setup(void)
+void Redz_State_Init(void)
 {
     RSDK_THIS(Redz);
 

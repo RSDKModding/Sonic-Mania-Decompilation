@@ -19,7 +19,7 @@ void Batbot_Update(void)
     StateMachine_Run(self->state);
 
     Batbot_CheckPlayerCollisions();
-    if (self->state != Batbot_State_Setup) {
+    if (self->state != Batbot_State_Init) {
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
             self->direction = self->startDir;
             self->position  = self->startPos;
@@ -51,7 +51,7 @@ void Batbot_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = Batbot_State_Setup;
+    self->state         = Batbot_State_Init;
 }
 
 void Batbot_StageLoad(void)
@@ -113,7 +113,7 @@ void Batbot_CheckPlayerCollisions(void)
     }
 }
 
-void Batbot_State_Setup(void)
+void Batbot_State_Init(void)
 {
     RSDK_THIS(Batbot);
     self->timer   = 0;

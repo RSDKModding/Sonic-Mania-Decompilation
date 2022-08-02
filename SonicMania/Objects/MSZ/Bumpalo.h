@@ -58,7 +58,7 @@ void Bumpalo_CheckPlayerCollisions(void);
 void Bumpalo_HandlePlatformCollisions(EntityPlatform *platform);
 void Bumpalo_HandleObjectCollisions(void);
 
-void Bumpalo_State_Setup(void);
+void Bumpalo_State_Init(void);
 void Bumpalo_State_Moving(void);
 void Bumpalo_State_Idle(void);
 void Bumpalo_State_Charging(void);

@@ -66,7 +66,7 @@ void HotaruMKII_Create(void *data)
                 self->inkEffect = INK_NONE;
                 self->visible   = true;
                 RSDK.SetSpriteAnimation(HotaruMKII->aniFrames, 1, &self->flashAnimator, true, 0);
-                self->state = HotaruMKII_State_Setup;
+                self->state = HotaruMKII_State_Init;
                 break;
 
             case HOTARUMKII_FLASH:
@@ -216,7 +216,7 @@ void HotaruMKII_HandleDistances(EntityPlayer *player)
     }
 }
 
-void HotaruMKII_State_Setup(void)
+void HotaruMKII_State_Init(void)
 {
     RSDK_THIS(HotaruMKII);
 

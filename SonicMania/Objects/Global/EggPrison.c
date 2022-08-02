@@ -188,7 +188,7 @@ void EggPrison_Create(void *data)
             self->hitboxSolid.right  = 32;
             self->hitboxSolid.bottom = 32;
 
-            self->state         = EggPrison_State_Setup;
+            self->state         = EggPrison_State_Init;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
@@ -362,7 +362,7 @@ void EggPrison_State_Activated(void)
     debris->updateRange.y   = 0x800000;
 }
 
-void EggPrison_State_Setup(void)
+void EggPrison_State_Init(void)
 {
     RSDK_THIS(EggPrison);
 

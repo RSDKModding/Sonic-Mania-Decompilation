@@ -43,7 +43,7 @@ void UIUsernamePopup_ShowPopup(void);
 
 void UIUsernamePopup_DrawSprites(void);
 
-void UIUsernamePopup_State_Setup(void);
+void UIUsernamePopup_State_Init(void);
 void UIUsernamePopup_State_Appear(void);
 void UIUsernamePopup_State_Shown(void);
 void UIUsernamePopup_State_Disappear(void);

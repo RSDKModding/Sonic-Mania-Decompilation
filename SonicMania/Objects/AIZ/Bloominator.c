@@ -43,7 +43,7 @@ void Bloominator_Create(void *data)
     }
     else {
         RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &self->animator, true, 0);
-        self->state = Bloominator_State_Setup;
+        self->state = Bloominator_State_Init;
     }
 }
 
@@ -99,7 +99,7 @@ void Bloominator_CheckOffScreen(void)
         Bloominator_Create(NULL);
 }
 
-void Bloominator_State_Setup(void)
+void Bloominator_State_Init(void)
 {
     RSDK_THIS(Bloominator);
 

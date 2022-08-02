@@ -95,7 +95,7 @@ void MatryoshkaBom_Create(void *data)
                 break;
         }
 
-        self->state = MatryoshkaBom_State_Setup;
+        self->state = MatryoshkaBom_State_Init;
     }
     else {
         self->active = ACTIVE_NORMAL;
@@ -203,7 +203,7 @@ void MatryoshkaBom_CheckOffScreen(void)
     }
 }
 
-void MatryoshkaBom_State_Setup(void)
+void MatryoshkaBom_State_Init(void)
 {
     RSDK_THIS(MatryoshkaBom);
 

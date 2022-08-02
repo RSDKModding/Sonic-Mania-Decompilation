@@ -104,7 +104,7 @@ void Hotaru_Create(void *data)
         RSDK.SetSpriteAnimation(Hotaru->aniFrames, 2, &self->bulbAnimator, true, 0);
         RSDK.SetSpriteAnimation(Hotaru->aniFrames, 3, &self->electricityAnimator, true, 0);
 
-        self->state = Hotaru_State_Setup;
+        self->state = Hotaru_State_Init;
     }
 }
 
@@ -195,7 +195,7 @@ void Hotaru_CheckOffScreen(void)
     }
 }
 
-void Hotaru_State_Setup(void)
+void Hotaru_State_Init(void)
 {
     RSDK_THIS(Hotaru);
 

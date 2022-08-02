@@ -56,7 +56,7 @@ void Bubbler_Create(void *data)
         self->spawnTimer = 32;
         RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &self->bodyHitbox, true, 0);
         RSDK.SetSpriteAnimation(Bubbler->aniFrames, 1, &self->flameAnimator, true, 0);
-        self->state = Bubbler_State_Setup;
+        self->state = Bubbler_State_Init;
     }
 }
 
@@ -135,7 +135,7 @@ void Bubbler_CheckOffScreen(void)
     }
 }
 
-void Bubbler_State_Setup(void)
+void Bubbler_State_Init(void)
 {
     RSDK_THIS(Bubbler);
 

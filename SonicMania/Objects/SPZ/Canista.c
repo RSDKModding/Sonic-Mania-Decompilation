@@ -71,7 +71,7 @@ void Canista_Create(void *data)
         RSDK.SetSpriteAnimation(Canista->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(Canista->aniFrames, 1, &self->tapeAnimator, true, 0);
         RSDK.SetSpriteAnimation(Canista->aniFrames, 2, &self->cannonAnimator, true, 0);
-        self->state = Canista_State_Setup;
+        self->state = Canista_State_Init;
     }
 }
 
@@ -179,7 +179,7 @@ void Canista_CheckOffScreen(void)
     }
 }
 
-void Canista_State_Setup(void)
+void Canista_State_Init(void)
 {
     RSDK_THIS(Canista);
 

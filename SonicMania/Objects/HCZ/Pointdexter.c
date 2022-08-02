@@ -41,7 +41,7 @@ void Pointdexter_Create(void *data)
     self->updateRange.y = 0x800000;
 
     RSDK.SetSpriteAnimation(Pointdexter->aniFrames, 0, &self->animator, true, 0);
-    self->state = Pointdexter_State_Setup;
+    self->state = Pointdexter_State_Init;
 }
 
 void Pointdexter_StageLoad(void)
@@ -105,7 +105,7 @@ void Pointdexter_CheckPlayerCollisions(void)
     }
 }
 
-void Pointdexter_State_Setup(void)
+void Pointdexter_State_Init(void)
 {
     RSDK_THIS(Pointdexter);
 

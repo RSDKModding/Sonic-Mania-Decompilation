@@ -60,7 +60,7 @@ void Toxomister_Create(void *data)
             self->drawGroup = Zone->objectDrawLow;
             self->direction *= FLIP_Y;
             RSDK.SetSpriteAnimation(Toxomister->aniFrames, 0, &self->animator, true, 0);
-            self->state = Toxomister_State_Setup;
+            self->state = Toxomister_State_Init;
         }
     }
 }
@@ -159,7 +159,7 @@ void Toxomister_CheckPlayerCloudCollisions(void)
     }
 }
 
-void Toxomister_State_Setup(void)
+void Toxomister_State_Init(void)
 {
     RSDK_THIS(Toxomister);
 

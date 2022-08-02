@@ -58,7 +58,7 @@ void LoveTester_Create(void *data)
         self->state         = LoveTester_State_HeartParticles;
     }
     else {
-        self->state = LoveTester_State_Setup;
+        self->state = LoveTester_State_Init;
     }
 }
 
@@ -283,7 +283,7 @@ void LoveTester_CreateHeartParticles(void)
     }
 }
 
-void LoveTester_State_Setup(void)
+void LoveTester_State_Init(void)
 {
     RSDK_THIS(LoveTester);
 
@@ -527,7 +527,7 @@ void LoveTester_State_ReleasePlayers(void)
         if (player == self->playerPtr) {
             if (!Player_CheckCollisionTouch(player, self, &LoveTester->hitboxEntry)) {
                 self->activePlayers = 0;
-                self->state         = LoveTester_State_Setup;
+                self->state         = LoveTester_State_Init;
             }
         }
     }

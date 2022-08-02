@@ -58,7 +58,7 @@ void DashLift_Serialize(void);
 // Extra Entity Functions
 void DashLift_CheckOffScreen(void);
 
-void DashLift_State_Setup(void);
+void DashLift_State_Init(void);
 void DashLift_State_HandleDash(void);
 
 #endif //! OBJ_DASHLIFT_H

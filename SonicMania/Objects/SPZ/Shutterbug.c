@@ -67,7 +67,7 @@ void Shutterbug_Create(void *data)
 
         RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 0, &self->animator, true, 0);
         RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &self->overlayAnimator, true, 0);
-        self->state = Shutterbug_State_Setup;
+        self->state = Shutterbug_State_Init;
     }
 }
 
@@ -118,7 +118,7 @@ void Shutterbug_CheckOffScreen(void)
     }
 }
 
-void Shutterbug_State_Setup(void)
+void Shutterbug_State_Init(void)
 {
     RSDK_THIS(Shutterbug);
 

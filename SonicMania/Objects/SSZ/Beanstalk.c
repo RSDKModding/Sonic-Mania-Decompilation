@@ -73,7 +73,7 @@ void Beanstalk_Create(void *data)
     self->stoodAngle    = 0;
     self->timer         = 0;
     self->chomperOffset = 0;
-    self->state         = Beanstalk_State_Setup;
+    self->state         = Beanstalk_State_Init;
 }
 
 void Beanstalk_StageLoad(void)
@@ -390,7 +390,7 @@ void Beanstalk_CheckPlayerCollisions_Chomper(void)
     }
 }
 
-void Beanstalk_State_Setup(void)
+void Beanstalk_State_Init(void)
 {
     RSDK_THIS(Beanstalk);
 

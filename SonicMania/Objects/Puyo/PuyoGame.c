@@ -52,7 +52,7 @@ void PuyoGame_Create(void *data)
     if (!SceneInfo->inEditor)
         RSDK.AddCamera(&self->position, ScreenInfo->center.x << 16, ScreenInfo->center.y << 16, true);
 
-    self->state = PuyoGame_State_Setup;
+    self->state = PuyoGame_State_Init;
 }
 
 void PuyoGame_StageLoad(void)
@@ -192,14 +192,14 @@ void PuyoGame_CheckMatchFinish(void)
     }
 }
 
-void PuyoGame_State_Setup(void)
+void PuyoGame_State_Init(void)
 {
     RSDK_THIS(PuyoGame);
 
-    self->state = PuyoGame_State_None;
+    self->state = PuyoGame_State_Wait;
 }
 
-void PuyoGame_State_None(void) {
+void PuyoGame_State_Wait(void) {
     // Gaming(?)
 }
 

@@ -41,7 +41,7 @@ void PSZLauncher_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = PSZLauncher_State_Setup;
+    self->state         = PSZLauncher_State_Init;
 }
 
 void PSZLauncher_StageLoad(void)
@@ -70,7 +70,7 @@ void PSZLauncher_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void PSZLauncher_State_Setup(void)
+void PSZLauncher_State_Init(void)
 {
     RSDK_THIS(PSZLauncher);
 
