@@ -56,7 +56,7 @@ void FXRuby_HandleLayerDeform(void);
 
 void FXRuby_State_Expanding(void);
 void FXRuby_State_Shrinking(void);
-void FXRuby_State_None(void);
+void FXRuby_State_Idle(void);
 void FXRuby_State_IncreaseStageDeform(void);
 void FXRuby_State_DecreaseStageDeform(void);
 void FXRuby_State_ShrinkAndDestroy(void);

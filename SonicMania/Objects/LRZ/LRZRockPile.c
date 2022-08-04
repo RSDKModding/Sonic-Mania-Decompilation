@@ -562,9 +562,11 @@ void LRZRockPile_EditorLoad(void)
     RSDK_ENUM_VAR("Floor (All Solid)", LRZROCKPILE_FLOOR_ALLSOLID);
 
     RSDK_ACTIVE_VAR(LRZRockPile, planeFilter);
-    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
-    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
-    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+    RSDK_ENUM_VAR("None", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("AL", PLANEFILTER_AL);
+    RSDK_ENUM_VAR("BL", PLANEFILTER_BL);
+    RSDK_ENUM_VAR("AH", PLANEFILTER_AH);
+    RSDK_ENUM_VAR("BH", PLANEFILTER_BH);
 
     // No idea what "debugParticles" is, assuming it was an editor-only thing to preview what the rock particles were like???
 }

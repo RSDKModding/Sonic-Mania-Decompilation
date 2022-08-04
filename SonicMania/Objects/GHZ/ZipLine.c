@@ -32,7 +32,7 @@ void ZipLine_Update(void)
                 if (player->state != Player_State_Hurt) {
                     if (player->velocity.x) {
                         self->groundVel = player->groundVel;
-                        if ((uint8)(self->angle - 0x40) < 0x80)
+                        if (self->angle >= 0x40 && self->angle <= 0xC0)
                             self->groundVel = -player->groundVel;
 
                         self->groundVel = clampVal(self->groundVel, -0xA0000, 0xA0000);
@@ -103,7 +103,7 @@ void ZipLine_Update(void)
                 }
                 else if (!self->state) {
                     self->groundVel = player->groundVel;
-                    if ((uint8)(self->angle - 0x40) < 0x80)
+                    if (self->angle >= 0x40 && self->angle <= 0xC0)
                         self->groundVel = -player->groundVel;
 
                     self->groundVel = clampVal(self->groundVel, -0xA0000, 0xA0000);

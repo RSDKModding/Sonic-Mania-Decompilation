@@ -72,12 +72,11 @@ void Scarab_Create(void *data)
     self->visible   = true;
     self->drawGroup = Zone->objectDrawLow;
 
-    if (!self->planeFilter) {
+    if (self->planeFilter == PLANEFILTER_NONE) {
         self->drawGroupLow  = Zone->objectDrawLow;
         self->drawGroupHigh = Zone->playerDrawHigh;
     }
-
-    if ((uint8)(self->planeFilter - 1) & 2) {
+    else if ((uint8)(self->planeFilter - 1) & 2) {
         self->drawGroupLow  = Zone->objectDrawHigh;
         self->drawGroupHigh = Zone->playerDrawHigh;
     }
@@ -346,9 +345,11 @@ void Scarab_EditorLoad(void)
     Scarab->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Scarab.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Scarab, planeFilter);
-    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
-    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
-    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+    RSDK_ENUM_VAR("None", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("AL", PLANEFILTER_AL);
+    RSDK_ENUM_VAR("BL", PLANEFILTER_BL);
+    RSDK_ENUM_VAR("AH", PLANEFILTER_AH);
+    RSDK_ENUM_VAR("BH", PLANEFILTER_BH);
 
     RSDK_ACTIVE_VAR(Scarab, direction);
     RSDK_ENUM_VAR("Left", FLIP_NONE);

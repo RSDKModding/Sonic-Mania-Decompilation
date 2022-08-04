@@ -55,7 +55,7 @@ void FXFade_Create(void *data)
 #if MANIA_USE_PLUS
             self->transitionScene = false;
 #endif
-            self->state = self->timer <= 0 ? FXFade_State_FadeIn : FXFade_State_FadeOut;
+            self->state = self->timer <= 0 ? FXFade_State_FadeOut : FXFade_State_FadeIn;
         }
     }
 }
@@ -67,7 +67,7 @@ void FXFade_StopAll(void)
     foreach_all(FXFade, entity) { destroyEntity(entity); }
 }
 
-void FXFade_State_FadeIn(void)
+void FXFade_State_FadeOut(void)
 {
     RSDK_THIS(FXFade);
 
@@ -81,7 +81,7 @@ void FXFade_State_FadeIn(void)
 #endif
         }
         else if (self->wait <= 0) {
-            self->state = self->fadeOutBlack ? FXFade_State_FadeOutBlack : FXFade_State_FadeOut;
+            self->state = self->fadeOutBlack ? FXFade_State_FadeInBlack : FXFade_State_FadeIn;
         }
         else {
             self->state = FXFade_State_Wait;
@@ -96,10 +96,10 @@ void FXFade_State_Wait(void)
     RSDK_THIS(FXFade);
 
     if (--self->wait <= 0) {
-        self->state = self->fadeOutBlack ? FXFade_State_FadeOutBlack : FXFade_State_FadeOut;
+        self->state = self->fadeOutBlack ? FXFade_State_FadeInBlack : FXFade_State_FadeIn;
     }
 }
-void FXFade_State_FadeOut(void)
+void FXFade_State_FadeIn(void)
 {
     RSDK_THIS(FXFade);
 
@@ -113,7 +113,7 @@ void FXFade_State_FadeOut(void)
         self->timer -= self->speedOut;
     }
 }
-void FXFade_State_FadeOutBlack(void)
+void FXFade_State_FadeInBlack(void)
 {
     RSDK_THIS(FXFade);
 

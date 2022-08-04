@@ -109,7 +109,7 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
 
     int32 count = (self->length / 4) + ((self->length % 4) > 0);
     if (count) {
-        int32 negAngle = -(uint8)(self->angle);
+        int32 negAngle = -self->angle & 0xFF;
 
         int32 currentX = startX;
         int32 currentY = startY;

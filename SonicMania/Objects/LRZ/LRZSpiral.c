@@ -117,7 +117,8 @@ void LRZSpiral_State_Cylinder(void)
                     if (player->groundVel < 0x100000)
                         player->groundVel += 0x1000;
 
-                    if ((uint8)((self->playerSpiralPos[playerID] >> 17) + 64) < 0x80)
+                    uint8 spiralPos = self->playerSpiralPos[playerID] >> 17;
+                    if (spiralPos < 0x40 || spiralPos >= 0xC0)
                         player->drawGroup = Zone->playerDrawHigh;
                     else
                         player->drawGroup = Zone->playerDrawLow;

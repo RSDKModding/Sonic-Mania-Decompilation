@@ -492,19 +492,19 @@ void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor)
     zone->fadeSpeed = fadeSpeed;
     zone->screenID  = PLAYER_COUNT;
     zone->timer     = 0;
-    zone->state     = Zone_State_Fadeout_Competition;
+    zone->state     = Zone_State_FadeOut_Competition;
     zone->stateDraw = Zone_Draw_Fade;
     zone->visible   = true;
     zone->drawGroup = DRAWGROUP_COUNT - 1;
     Music_FadeOut(0.025);
 }
 
-void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivot, int32 angle)
+void Zone_RotateOnPivot(Vector2 *pivotPos, Vector2 *originPos, int32 angle)
 {
-    int32 x     = (position->x - pivot->x) >> 8;
-    int32 y     = (position->y - pivot->y) >> 8;
-    position->x = pivot->x + (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle);
-    position->y = pivot->y + (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle);
+    int32 x     = (pivotPos->x - originPos->x) >> 8;
+    int32 y     = (pivotPos->y - originPos->y) >> 8;
+    pivotPos->x = originPos->x + y * RSDK.Sin256(angle) + x * RSDK.Cos256(angle);
+    pivotPos->y = originPos->y + y * RSDK.Cos256(angle) - x * RSDK.Sin256(angle);
 }
 
 void Zone_ReloadScene(int32 screen)
@@ -519,7 +519,7 @@ void Zone_ReloadScene(int32 screen)
 #if MANIA_USE_PLUS
     if (globals->gameMode != MODE_ENCORE || EncoreIntro) {
 #endif
-        entity->state     = Zone_State_Fadeout_Destroy;
+        entity->state     = Zone_State_FadeOut_Destroy;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
         entity->drawGroup = DRAWGROUP_COUNT - 1;
@@ -825,7 +825,7 @@ void Zone_State_FadeIn(void)
     }
 }
 
-void Zone_State_Fadeout_Competition(void)
+void Zone_State_FadeOut_Competition(void)
 {
     RSDK_THIS(Zone);
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -860,7 +860,7 @@ void Zone_TitleCard_SupressCB(void)
     zone->timer      = 640;
     zone->fadeSpeed  = 16;
     zone->fadeColor  = 0xF0F0F0;
-    zone->state      = Zone_State_Fadeout_Destroy;
+    zone->state      = Zone_State_FadeOut_Destroy;
     zone->stateDraw  = Zone_Draw_Fade;
     zone->visible    = true;
     zone->drawGroup  = 15;
@@ -889,7 +889,7 @@ void Zone_State_ReloadScene(void)
 }
 #endif
 
-void Zone_State_Fadeout_Destroy(void)
+void Zone_State_FadeOut_Destroy(void)
 {
     RSDK_THIS(Zone);
 

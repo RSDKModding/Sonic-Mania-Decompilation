@@ -210,22 +210,22 @@ void Caterkiller_HandlePlayerInteractions(void)
                                 spawnState = Caterkiller_StateSplit_Body;
                             }
 
-                            EntityCaterkiller *debris = CREATE_ENTITY(Caterkiller, spawnState, spawnX, spawnY);
-                            debris->direction         = spawnDir;
-                            if (!debris->direction)
-                                debris->velocity.x = (d & 1) ? -0x18000 : -0x20000;
+                            EntityCaterkiller *segment = CREATE_ENTITY(Caterkiller, spawnState, spawnX, spawnY);
+                            segment->direction         = spawnDir;
+                            if (!segment->direction)
+                                segment->velocity.x = (d & 1) ? -0x18000 : -0x20000;
                             else
-                                debris->velocity.x = (d & 1) ? 0x18000 : 0x20000;
+                                segment->velocity.x = (d & 1) ? 0x18000 : 0x20000;
 
                             if ((d & 3) >= 2)
-                                debris->velocity.x = -debris->velocity.x;
-                            debris->velocity.y = -0x40000;
+                                segment->velocity.x = -segment->velocity.x;
+                            segment->velocity.y = -0x40000;
 
                             if (!d)
-                                debris->headAnimator.frameID = self->headAnimator.frameID;
+                                segment->headAnimator.frameID = self->headAnimator.frameID;
 
-                            debris->planeFilter = self->planeFilter;
-                            debris->drawGroup   = self->drawGroup;
+                            segment->planeFilter = self->planeFilter;
+                            segment->drawGroup   = self->drawGroup;
                         }
 
                         destroyEntity(self);
@@ -253,11 +253,11 @@ bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir)
     uint8 angle = RSDK.GetTileAngle(tile, 0, CMODE_FLOOR);
 
     if (dir) {
-        if ((uint8)(angle + 127) <= 0x66)
+        if (angle > 0x80 && angle < 0xE8)
             return true;
     }
     else {
-        if ((uint8)(angle - 25) <= 0x66)
+        if (angle > 0x18 && angle < 0x80)
             return true;
     }
 
@@ -446,9 +446,11 @@ void Caterkiller_EditorLoad(void)
     Caterkiller->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Caterkiller.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Caterkiller, planeFilter);
-    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
-    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
-    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+    RSDK_ENUM_VAR("None", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("AL", PLANEFILTER_AL);
+    RSDK_ENUM_VAR("BL", PLANEFILTER_BL);
+    RSDK_ENUM_VAR("AH", PLANEFILTER_AH);
+    RSDK_ENUM_VAR("BH", PLANEFILTER_BH);
 }
 #endif
 

@@ -219,7 +219,7 @@ bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 75)
-        TTCutscene->fxFade->state = FXFade_State_FadeIn;
+        TTCutscene->fxFade->state = FXFade_State_FadeOut;
 
     return host->timer == 75;
 }

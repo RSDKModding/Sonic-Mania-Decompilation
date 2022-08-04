@@ -23,7 +23,7 @@ void Summary_LateUpdate(void) {}
 
 void Summary_StaticUpdate(void)
 {
-    if (--Summary->bgAniDuration < 1) {
+    if (--Summary->bgAniDuration <= 0) {
         ++Summary->bgAniFrame;
         Summary->bgAniFrame &= 3;
         Summary->bgAniDuration = Summary->bgAniDurationTable[Summary->bgAniFrame];
@@ -42,8 +42,8 @@ void Summary_Draw(void)
 
 void Summary_Create(void *data)
 {
-
     RSDK_THIS(Summary);
+
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
@@ -56,7 +56,7 @@ void Summary_Create(void *data)
 
 void Summary_StageLoad(void)
 {
-    RSDK.ResetEntitySlot(0, Summary->classID, 0);
+    RSDK.ResetEntitySlot(0, Summary->classID, NULL);
 
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
     UIText->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);

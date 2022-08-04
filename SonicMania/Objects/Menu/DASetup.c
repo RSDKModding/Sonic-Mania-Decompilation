@@ -204,7 +204,7 @@ void DASetup_State_ManageControl(void)
         DASetup->returnToMenu = true;
         
         EntityFXFade *fade    = DASetup->fxFade;
-        fade->state           = FXFade_State_FadeIn;
+        fade->state           = FXFade_State_FadeOut;
         fade->timer           = 0;
     }
 }

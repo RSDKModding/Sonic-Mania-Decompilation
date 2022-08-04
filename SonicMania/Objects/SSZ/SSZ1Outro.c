@@ -132,7 +132,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
 bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host)
 {
     if (host->timer == 10)
-        SSZ1Outro->fxFade->state = FXFade_State_FadeIn;
+        SSZ1Outro->fxFade->state = FXFade_State_FadeOut;
 
     if (SSZ1Outro->fxFade->timer == 512) {
         RSDK.SetScene("Cutscenes", "SSZ Time Warp");

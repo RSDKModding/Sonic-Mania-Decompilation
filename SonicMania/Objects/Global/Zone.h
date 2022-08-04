@@ -136,13 +136,20 @@ void Zone_Serialize(void);
 
 // Extra Entity Functions
 int32 Zone_GetZoneID(void);
+// Stores entities (in preparation for an act transition)
 void Zone_StoreEntities(int32 xOffset, int32 yOffset);
+// Reloads stored entities (used after an act transition)
 void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds);
+// Fades out & loads the active stage
 void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColor);
+// Fades in
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor);
+// Does the same as Zone_StartFadeOut, but also fades out the music
 void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor);
+// Basically the same as Zone_StartFadeOut, but used for competition stages
 void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor);
-void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivot, int32 angle);
+// rotates 'pivotPos' around 'originPos'
+void Zone_RotateOnPivot(Vector2 *pivotPos, Vector2 *originPos, int32 angle);
 void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
 void Zone_HandlePlayerBounds(void);
@@ -160,12 +167,12 @@ void Zone_Draw_Fade(void);
 // States & Stuff
 void Zone_State_FadeOut(void);
 void Zone_State_FadeIn(void);
-void Zone_State_Fadeout_Competition(void);
+void Zone_State_FadeOut_Competition(void);
 #if MANIA_USE_PLUS
 void Zone_TitleCard_SupressCB(void);
 void Zone_State_ReloadScene(void);
 #endif
-void Zone_State_Fadeout_Destroy(void);
+void Zone_State_FadeOut_Destroy(void);
 void Zone_HandlePlayerSwap(void);
 void Zone_State_SwapPlayers(void);
 void Zone_State_HandleSwapFadeIn(void);

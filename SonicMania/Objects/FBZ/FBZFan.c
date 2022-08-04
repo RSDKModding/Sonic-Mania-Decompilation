@@ -127,6 +127,7 @@ void FBZFan_EditorDraw(void) { FBZFan_Draw(); }
 void FBZFan_EditorLoad(void)
 {
     FBZFan->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FBZFan.bin", SCOPE_STAGE);
+
     RSDK.SetSpriteAnimation(FBZFan->aniFrames, 0, &FBZFan->baseAnimator, true, 0);
     RSDK.SetSpriteAnimation(FBZFan->aniFrames, 1, &FBZFan->fanAnimator, true, 0);
     RSDK.SetSpriteAnimation(FBZFan->aniFrames, 2, &FBZFan->fan2Animator, true, 0);

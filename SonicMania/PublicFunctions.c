@@ -722,17 +722,17 @@ void InitPublicFunctions()
 
     // Cutscene/FXFade
     ADD_PUBLIC_FUNC(FXFade_StopAll);
-    ADD_PUBLIC_FUNC(FXFade_State_FadeIn);
-    ADD_PUBLIC_FUNC(FXFade_State_Wait);
     ADD_PUBLIC_FUNC(FXFade_State_FadeOut);
-    ADD_PUBLIC_FUNC(FXFade_State_FadeOutBlack);
+    ADD_PUBLIC_FUNC(FXFade_State_Wait);
+    ADD_PUBLIC_FUNC(FXFade_State_FadeIn);
+    ADD_PUBLIC_FUNC(FXFade_State_FadeInBlack);
 
     // Cutscene/FXRuby
     ADD_PUBLIC_FUNC(FXRuby_SetupLayerDeformation);
     ADD_PUBLIC_FUNC(FXRuby_HandleLayerDeform);
     ADD_PUBLIC_FUNC(FXRuby_State_Expanding);
     ADD_PUBLIC_FUNC(FXRuby_State_Shrinking);
-    ADD_PUBLIC_FUNC(FXRuby_State_None);
+    ADD_PUBLIC_FUNC(FXRuby_State_Idle);
     ADD_PUBLIC_FUNC(FXRuby_State_IncreaseStageDeform);
     ADD_PUBLIC_FUNC(FXRuby_State_DecreaseStageDeform);
     ADD_PUBLIC_FUNC(FXRuby_State_ShrinkAndDestroy);
@@ -2201,11 +2201,11 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Zone_Draw_Fade);
     ADD_PUBLIC_FUNC(Zone_State_FadeOut);
     ADD_PUBLIC_FUNC(Zone_State_FadeIn);
-    ADD_PUBLIC_FUNC(Zone_State_Fadeout_Competition);
+    ADD_PUBLIC_FUNC(Zone_State_FadeOut_Competition);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(Zone_TitleCard_SupressCB);
     ADD_PUBLIC_FUNC(Zone_State_ReloadScene);
-    ADD_PUBLIC_FUNC(Zone_State_Fadeout_Destroy);
+    ADD_PUBLIC_FUNC(Zone_State_FadeOut_Destroy);
 #endif
     ADD_PUBLIC_FUNC(Zone_HandlePlayerSwap);
     ADD_PUBLIC_FUNC(Zone_State_SwapPlayers);

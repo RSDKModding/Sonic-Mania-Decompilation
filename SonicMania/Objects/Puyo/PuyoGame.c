@@ -360,7 +360,7 @@ void PuyoGame_State_ShowMatchResults(void)
             fxFade->timer        = 0;
             fxFade->speedIn      = 16;
             fxFade->drawGroup    = 15;
-            fxFade->state        = FXFade_State_FadeIn;
+            fxFade->state        = FXFade_State_FadeOut;
             self->state          = PuyoGame_State_FadeToMenu;
         }
     }

@@ -1223,6 +1223,10 @@ typedef struct {
     // StateMachine
     void (*StateMachineRun)(void (*state)(void));
     void (*RegisterStateHook)(void (*state)(void), bool32 (*hook)(bool32 skippedState), bool32 priority);
+    // runs all high priority state hooks hooked to the address of 'state', returns if the main state should be skipped or not
+    bool32 (*HandleRunState_HighPriority)(void *state);
+    // runs all low priority state hooks hooked to the address of 'state'
+    void (*HandleRunState_LowPriority)(void *state, bool32 skipState);
 } ModFunctionTable;
 #endif
 

@@ -44,9 +44,9 @@ void FXFade_Serialize(void);
 
 // Extra Entity Functions
 void FXFade_StopAll(void);
-void FXFade_State_FadeIn(void);
-void FXFade_State_Wait(void);
 void FXFade_State_FadeOut(void);
-void FXFade_State_FadeOutBlack(void);
+void FXFade_State_Wait(void);
+void FXFade_State_FadeIn(void);
+void FXFade_State_FadeInBlack(void);
 
 #endif //! OBJ_FXFADE_H

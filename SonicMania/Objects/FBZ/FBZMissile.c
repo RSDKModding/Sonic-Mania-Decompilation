@@ -356,8 +356,8 @@ void FBZMissile_EditorLoad(void)
     RSDK_ENUM_VAR("Hull", FBZMISSILE_HULL);
 
     RSDK_ACTIVE_VAR(FBZMissile, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flipped", FLIP_X);
+    RSDK_ENUM_VAR("Up/Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Down/Right", FLIP_X);
 }
 #endif
 

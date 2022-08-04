@@ -28,7 +28,7 @@ void CreditsSetup_StaticUpdate(void)
             if (ControllerInfo->keyStart.press || (CreditsSetup->creditsSize && CreditsSetup->creditsPos >= CreditsSetup->creditsSize)) {
                 CreditsSetup->skipped = true;
 
-                fade->state    = FXFade_State_FadeIn;
+                fade->state    = FXFade_State_FadeOut;
                 fade->speedIn  = 8;
                 fade->wait     = 64;
                 fade->speedOut = 8;

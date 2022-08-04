@@ -254,9 +254,9 @@ void FlameSpring_EditorLoad(void)
     FlameSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FlameSpring.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(FlameSpring, type);
-    RSDK_ENUM_VAR("Both Sides", FLAMESPRING_BOTH);
-    RSDK_ENUM_VAR("Right Only", FLAMESPRING_RIGHT);
-    RSDK_ENUM_VAR("Left Only", FLAMESPRING_LEFT);
+    RSDK_ENUM_VAR("Circle", FLAMESPRING_BOTH);
+    RSDK_ENUM_VAR("Right", FLAMESPRING_RIGHT);
+    RSDK_ENUM_VAR("Left", FLAMESPRING_LEFT);
     RSDK_ENUM_VAR("Both Sides (No Spring)", FLAMESPRING_BOTH_NOSPRING);
     RSDK_ENUM_VAR("Right Only (No Spring)", FLAMESPRING_RIGHT_NOSPRING);
     RSDK_ENUM_VAR("Left Only (No Spring)", FLAMESPRING_LEFT_NOSPRING);

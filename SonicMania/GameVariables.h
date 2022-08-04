@@ -69,8 +69,10 @@ typedef enum { DLC_PLUS } GameDLC;
 
 typedef enum {
     PLANEFILTER_NONE,
-    PLANEFILTER_A,
-    PLANEFILTER_B,
+    PLANEFILTER_AL,     // - Plane A, Low Layer
+    PLANEFILTER_BL,     // - Plane B, Low Layer
+    PLANEFILTER_AH,     // - Plane A, High Layer
+    PLANEFILTER_BH,     // - Plane B, High Layer
 } PlaneFilterTypes;
 
 typedef enum {

@@ -276,8 +276,12 @@ void TwistingDoor_EditorLoad(void)
     RSDK_ENUM_VAR("Vertical (Long)", TWISTINGDOOR_V_LONG);
 
     RSDK_ACTIVE_VAR(TwistingDoor, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flipped", FLIP_X);
+    RSDK_ENUM_VAR("Right/Up", FLIP_NONE);
+    RSDK_ENUM_VAR("Left/Down", FLIP_X);
+
+    RSDK_ACTIVE_VAR(TwistingDoor, autoOpen);
+    RSDK_ENUM_VAR("False", false);
+    RSDK_ENUM_VAR("True", true);
 }
 #endif
 

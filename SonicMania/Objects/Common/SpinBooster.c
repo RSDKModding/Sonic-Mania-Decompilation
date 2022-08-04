@@ -13,42 +13,45 @@ void SpinBooster_Update(void)
 {
     RSDK_THIS(SpinBooster);
 
-    int32 negAngle = -self->angle;
+    int32 negAngle = -self->angle & 0xFF;
 
     foreach_active(Player, player)
     {
-        int32 playerID = RSDK.GetEntitySlot(player);
-        int32 distX    = (player->position.x - self->position.x) >> 8;
-        int32 distY    = (player->position.y - self->position.y) >> 8;
-        int32 x        = (distY * RSDK.Sin256(negAngle)) + distX * RSDK.Cos256(negAngle) + self->position.x;
-        int32 y        = (distY * RSDK.Cos256(negAngle)) - distX * RSDK.Sin256(negAngle) + self->position.y;
+        int32 playerID = 1 << RSDK.GetEntitySlot(player);
 
-        if (abs(x - self->position.x) >= 0x180000 || abs(y - self->position.y) >= self->size << 19) {
-            if (x < self->position.x)
-                self->activePlayers &= ~(1 << playerID);
-            else
-                self->activePlayers |= 1 << playerID;
-        }
-        else if (x < self->position.x) {
-            // Exit Tube
-            if (((1 << playerID) & self->activePlayers) && !self->forwardOnly) {
-                if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
-                    player->nextAirState    = StateMachine_None;
-                    player->nextGroundState = StateMachine_None;
+        Vector2 pivotPos = player->position;
+        Zone_RotateOnPivot(&pivotPos, &self->position, negAngle);
 
-                    if (!self->allowTubeInput)
-                        player->controlLock = 0;
-
-                    player->tileCollisions = TILECOLLISION_DOWN;
-                    player->state          = player->onGround ? Player_State_Roll : Player_State_Air;
+        if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < self->size << 19) {
+            if (pivotPos.x >= self->position.x) {
+                if (!(playerID & self->activePlayers)) {
+                    SpinBooster_HandleForceRoll(player);
+                    self->activePlayers |= playerID;
                 }
             }
+            else {
+                // Exit Tube
+                if ((playerID & self->activePlayers) && !self->forwardOnly) {
+                    if (player->state == Player_State_TubeRoll || player->state == Player_State_TubeAirRoll) {
+                        player->nextAirState    = StateMachine_None;
+                        player->nextGroundState = StateMachine_None;
 
-            self->activePlayers &= ~(1 << playerID);
+                        if (!self->allowTubeInput)
+                            player->controlLock = 0;
+
+                        player->tileCollisions = TILECOLLISION_DOWN;
+                        player->state          = player->onGround ? Player_State_Roll : Player_State_Air;
+                    }
+                }
+
+                self->activePlayers &= ~playerID;
+            }
         }
-        else if (!((1 << playerID) & self->activePlayers)) {
-            SpinBooster_HandleForceRoll(player);
-            self->activePlayers |= (1 << playerID);
+        else {
+            if (pivotPos.x >= self->position.x)
+                self->activePlayers |= playerID;
+            else
+                self->activePlayers &= ~playerID;
         }
     }
 
@@ -361,7 +364,7 @@ void SpinBooster_DrawSprites(void)
     }
 
     if (SceneInfo->inEditor) {
-        uint8 negAngle = -(self->angle & 0xFF);
+        uint8 negAngle = -self->angle & 0xFF;
         int32 power    = self->boostPower;
         int32 x        = self->position.x;
         int32 y        = self->position.y;

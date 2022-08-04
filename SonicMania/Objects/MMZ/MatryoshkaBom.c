@@ -495,9 +495,11 @@ void MatryoshkaBom_EditorLoad(void)
     RSDK_ENUM_VAR("Right (Upside down)", FLIP_XY);
 
     RSDK_ACTIVE_VAR(MatryoshkaBom, planeFilter);
-    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
-    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
-    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+    RSDK_ENUM_VAR("None", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("AL", PLANEFILTER_AL);
+    RSDK_ENUM_VAR("BL", PLANEFILTER_BL);
+    RSDK_ENUM_VAR("AH", PLANEFILTER_AH);
+    RSDK_ENUM_VAR("BH", PLANEFILTER_BH);
 
     RSDK_ACTIVE_VAR(MatryoshkaBom, size);
     RSDK_ENUM_VAR("Big", MATRYOSHKA_SIZE_BIG);

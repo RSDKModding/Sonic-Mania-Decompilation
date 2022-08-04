@@ -71,7 +71,7 @@ void PlayerProbe_Create(void *data)
     self->visible       = false;
     self->drawGroup     = Zone->objectDrawLow;
     self->activePlayers = 0;
-    self->negAngle      = (uint8) - (self->angle & 0xFF);
+    self->negAngle      = -self->angle & 0xFF;
 }
 
 void PlayerProbe_StageLoad(void) { PlayerProbe->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }

@@ -42,7 +42,7 @@ void FXRuby_Draw(void)
             RSDK.FillScreen(0xFFF0F0, self->fadeWhite, self->fadeWhite - 0x100, self->fadeWhite - 0x100);
 
         if (self->fadeBlack > 0)
-            RSDK.FillScreen(0, self->fadeBlack, self->fadeBlack - 0x80, self->fadeBlack - 0x100);
+            RSDK.FillScreen(0x000000, self->fadeBlack, self->fadeBlack - 0x80, self->fadeBlack - 0x100);
     }
     else {
         if (self->outerRadius <= ScreenInfo->size.x) {
@@ -142,7 +142,7 @@ void FXRuby_State_Expanding(void)
 
     if (self->outerRadius > ScreenInfo->size.x) {
         self->fullyExpanded = true;
-        self->state         = FXRuby_State_None;
+        self->state         = FXRuby_State_Idle;
     }
 }
 void FXRuby_State_Shrinking(void)
@@ -153,11 +153,11 @@ void FXRuby_State_Shrinking(void)
 
     if (self->outerRadius <= 0) {
         self->fullyExpanded = false;
-        self->state         = FXRuby_State_None;
+        self->state         = FXRuby_State_Idle;
     }
 }
 
-void FXRuby_State_None(void)
+void FXRuby_State_Idle(void)
 {
     // do nothin, just chill
 }

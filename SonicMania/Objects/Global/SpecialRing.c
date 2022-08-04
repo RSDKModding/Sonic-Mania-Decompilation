@@ -279,9 +279,11 @@ void SpecialRing_EditorLoad(void)
     SpecialRing->aniFrames = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(SpecialRing, planeFilter);
-    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
-    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
-    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+    RSDK_ENUM_VAR("None", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("AL", PLANEFILTER_AL);
+    RSDK_ENUM_VAR("BL", PLANEFILTER_BL);
+    RSDK_ENUM_VAR("AH", PLANEFILTER_AH);
+    RSDK_ENUM_VAR("BH", PLANEFILTER_BH);
 }
 #endif
 
