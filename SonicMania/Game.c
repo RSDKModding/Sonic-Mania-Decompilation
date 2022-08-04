@@ -142,7 +142,7 @@ void LinkGameLogicDLL(EngineInfo info)
 void InitGameLogic(void)
 {
 #if RETRO_REV0U
-    RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables), GlobalVariables_InitCB);
+    RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables), (void(*)(void*))GlobalVariables_InitCB);
 #else
     RSDK.RegisterGlobalVariables((void **)&globals, sizeof(GlobalVariables));
 #endif
