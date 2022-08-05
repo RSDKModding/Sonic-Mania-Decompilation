@@ -1,4 +1,3 @@
-![image](https://user-images.githubusercontent.com/29069561/168206128-6d777967-3a07-42b5-8162-b821bbce4736.png)
 # **SUPPORT THE OFFICIAL RELEASE OF SONIC MANIA (PLUS)**
 + Without assets from the official releases, this decompilation will not run.
 
