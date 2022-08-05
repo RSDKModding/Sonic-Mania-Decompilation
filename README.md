@@ -18,31 +18,32 @@ We do not condone using this project as a means for piracy in any form, this pro
 If you want to transfer your save from the official PC versions, you can just copy your savedata into the folder containing the decompilation!
 
 # Additional Tweaks
-* Added a built-in mod loader and API allowing to easily create and play mods with features such as save file redirection and XML Asset loading.
-* Added a built-in shader compiler for backends/platforms that support it.
-* Added various other backends to windows aside from the usual DirectX 9 backends
+* Added a built-in mod loader and API calls to enable a much smoother modding experience.
+* Added support for targeting RSDKv5U rather than standalone RSDKv5
+* Added all content from all released versions of the game. Including: 1.00 (Console initial release), 1.03 (PC initial release) & 1.06 (Plus update)
 
 
 # How to build
 firstly, follow the steps in [the common dependency readme](./dependencies/all/README.md) to install the common dependencies, then follow the steps for your platform of choice.
 
-## [Windows](./dependencies/windows/README.md)
+## Windows:
+- TODO
 
-## [Linux](./dependencies/linux/README.md)
+## Linux:
+- TODO
 
-## [Mac](./dependencies/linux/README.md)
+## Mac:
+- TODO
 
-## [Android](./dependencies/android/README.md)
+## Android:
+- TODO
 
 ## Other platforms
-Currently the only supported platforms are the ones listed above, however the backend is very modular, so the codebase is very multiplatform.
+Currently the only supported platforms are the ones listed above, however the codebase has no major dependencies, so anything RSDKv5 can be built for, this can be built for.
 
 # FAQ
-### Q: The screen is tearing, how do I fix it?
-A: Try turning on VSync in settings.ini.
-
 ### Q: I found a bug/I have a feature request!
-A: Submit an issue in the issues tab and we _might_ fix it in the main branch. Don't expect any future releases, however.
+A: Submit an issue in the issues tab and we _might_ fix it in the main branch. Don't expect any major future releases, however.
 
 ### Q: Will you do a decompilation for Sonic CD (2011) and/or Sonic 1/2 (2013)?
 A: I already have! You can find Sonic CD [here](https://github.com/Rubberduckycooly/Sonic-CD-11-Decompilation) and Sonic 1/2 [here](https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation).
