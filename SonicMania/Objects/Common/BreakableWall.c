@@ -308,7 +308,7 @@ void BreakableWall_CheckBreak_Wall(void)
 
                 if (player->shield == SHIELD_FIRE) {
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                    canBreak |= shield->shieldAnimator.animationID == 2;
+                    canBreak |= shield->shieldAnimator.animationID == SHIELDANI_FIREATTACK;
                 }
 
                 switch (player->characterID) {

@@ -95,20 +95,20 @@ void Shield_Create(void *data)
     self->state  = Shield_State_Default;
     switch (self->type) {
         case SHIELD_BLUE:
-            RSDK.SetSpriteAnimation(Shield->aniFrames, 0, &self->shieldAnimator, true, 0);
+            RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_BLUE, &self->shieldAnimator, true, 0);
             self->inkEffect = INK_ADD;
             self->alpha     = 0x80;
             break;
 
         case SHIELD_BUBBLE:
-            RSDK.SetSpriteAnimation(Shield->aniFrames, 5, &self->fxAnimator, true, 0);
-            RSDK.SetSpriteAnimation(Shield->aniFrames, 6, &self->shieldAnimator, true, 0);
+            RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_BUBBLEADD, &self->fxAnimator, true, 0);
+            RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_BUBBLE, &self->shieldAnimator, true, 0);
             self->alpha = 0x100;
             break;
 
-        case SHIELD_FIRE: RSDK.SetSpriteAnimation(Shield->aniFrames, 1, &self->shieldAnimator, true, 0); break;
+        case SHIELD_FIRE: RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_FIRE, &self->shieldAnimator, true, 0); break;
 
-        case SHIELD_LIGHTNING: RSDK.SetSpriteAnimation(Shield->aniFrames, 3, &self->shieldAnimator, true, 0); break;
+        case SHIELD_LIGHTNING: RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_LIGHTNING, &self->shieldAnimator, true, 0); break;
 
         default: break;
     }
@@ -145,7 +145,7 @@ void Shield_State_BubbleDrop(void)
     Shield_State_Default();
 
     if (self->fxAnimator.frameID == self->fxAnimator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &self->fxAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_BUBBLEATTACKUPADD, &self->fxAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->shieldAnimator, true, 0);
         self->state = Shield_State_BubbleBounced;
     }
@@ -158,8 +158,8 @@ void Shield_State_BubbleBounced(void)
     Shield_State_Default();
 
     if (self->fxAnimator.frameID == self->fxAnimator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Shield->aniFrames, 5, &self->fxAnimator, true, 0);
-        RSDK.SetSpriteAnimation(Shield->aniFrames, 6, &self->shieldAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_BUBBLEADD, &self->fxAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_BUBBLE, &self->shieldAnimator, true, 0);
         self->state = Shield_State_Default;
     }
 }
@@ -173,7 +173,7 @@ void Shield_State_FireDash(void)
 
     if (++self->timer > 24) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(Shield->aniFrames, 1, &self->shieldAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, SHIELDANI_FIRE, &self->shieldAnimator, true, 0);
         self->state = Shield_State_Default;
     }
 }

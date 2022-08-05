@@ -83,7 +83,7 @@ struct EntityBSS_Setup {
     int32 unused1;
     int32 xMultiplier;
     int32 divisor;
-    int32 maxSpeed;
+    int32 speedupLevel;
     int32 globeSpeed;
     bool32 playerWasBumped;
     int32 globeSpeedInc;

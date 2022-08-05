@@ -115,19 +115,27 @@ void SaveGame_LoadSaveData(void)
 
             LogHelpers_Print("RecallCollectedEntities");
 
-            for (int32 e = 0x40; e < 0x840; ++e) {
-                if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
-                    Entity *entity   = RSDK_GET_ENTITY_GEN(e);
-                    entity->classID  = TYPE_BLANK;
-                    entity->active   = ACTIVE_DISABLED;
-                }
-                else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
-                    EntityItemBox *itemBox = RSDK_GET_ENTITY(e, ItemBox);
-                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
-                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
-                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
-                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->contentsAnimator, true, 0);
-                    itemBox->state = ItemBox_State_Broken;
+            for (int32 e = RESERVE_ENTITY_COUNT; e < RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT; ++e) {
+                switch (globals->atlEntityData[(0x200 * 1) + e]) {
+                    default:
+                    case SAVERECALL_NORMAL: break;
+
+                    case SAVERECALL_DISABLED: {
+                        Entity *entity  = RSDK_GET_ENTITY_GEN(e);
+                        entity->classID = TYPE_BLANK;
+                        entity->active  = ACTIVE_DISABLED;
+                        break;
+                    }
+
+                    case SAVERECALL_BROKENITEMBOX: {
+                        EntityItemBox *itemBox = RSDK_GET_ENTITY(e, ItemBox);
+                        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(-1, 0, &itemBox->contentsAnimator, true, 0);
+                        itemBox->state = ItemBox_State_Broken;
+                        break;
+                    }
                 }
             }
 
@@ -135,7 +143,7 @@ void SaveGame_LoadSaveData(void)
             globals->restartMilliseconds = 0;
             globals->restartSeconds      = 0;
             globals->restartMinutes      = 0;
-            memset(globals->atlEntityData, 0, 0x800 * sizeof(int32));
+            memset(globals->atlEntityData, 0, SCENEENTITY_COUNT * sizeof(int32));
         }
     }
     else if (!Zone || Zone->listPos != Zone->prevListPos) {
@@ -277,19 +285,12 @@ void SaveGame_SaveGameState(void)
 
     for (int32 i = RESERVE_ENTITY_COUNT; i < RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT; ++i) {
         EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);
-        if (itemBox->classID || (itemBox->active != ACTIVE_DISABLED)) {
-            if (itemBox->classID == ItemBox->classID) {
-                if (itemBox->state == ItemBox_State_Broken) {
-                    globals->atlEntityData[(0x200 * 1) + i] = 2;
-                }
-            }
-            else {
-                globals->atlEntityData[(0x200 * 1) + i] = 0;
-            }
-        }
-        else {
-            globals->atlEntityData[(0x200 * 1) + i] = 1;
-        }
+
+        globals->atlEntityData[(0x200 * 1) + i] = SAVERECALL_NORMAL;
+        if (!itemBox->classID && itemBox->active == ACTIVE_DISABLED)
+            globals->atlEntityData[(0x200 * 1) + i] = SAVERECALL_DISABLED;
+        else if (itemBox->classID == ItemBox->classID && itemBox->state == ItemBox_State_Broken)
+            globals->atlEntityData[(0x200 * 1) + i] = SAVERECALL_BROKENITEMBOX;
     }
 }
 void SaveGame_SaveProgress(void)

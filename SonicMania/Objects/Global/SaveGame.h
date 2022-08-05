@@ -9,6 +9,12 @@ typedef enum {
     SAVEGAME_COMPLETE,
 } SaveGameStates;
 
+typedef enum {
+    SAVERECALL_NORMAL,
+    SAVERECALL_DISABLED,
+    SAVERECALL_BROKENITEMBOX,
+} SaveRecallStates;
+
 // Using a seperate SaveRAM struct
 // Normally (and officially) the EntitySaveGame struct was used here
 // but due to v5U updating the entity (and thus the SaveGame "spec")

@@ -427,7 +427,7 @@ void LRZRockPile_State_Wall(void)
                 bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
                 if (player->shield == SHIELD_FIRE) {
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                    canBreak |= shield->shieldAnimator.animationID == 2;
+                    canBreak |= shield->shieldAnimator.animationID == SHIELDANI_FIREATTACK;
                 }
 
                 canBreak |= player->characterID == ID_KNUCKLES;

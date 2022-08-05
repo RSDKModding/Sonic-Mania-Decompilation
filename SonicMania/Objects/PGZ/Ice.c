@@ -870,7 +870,7 @@ void Ice_State_IceBlock(void)
                         foreach_return;
                     }
                     else if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0) {
-                        if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield)->shieldAnimator.animationID == 2) {
+                        if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield)->shieldAnimator.animationID == SHIELDANI_FIREATTACK) {
                             if (player->position.x >= self->position.x) {
                                 if (player->velocity.x <= -0x78000) {
                                     Ice_FullShatter(player, player->velocity.x, 0);

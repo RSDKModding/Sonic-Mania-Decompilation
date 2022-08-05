@@ -28,7 +28,7 @@ void BSS_Player_Update(void)
     else {
         self->gravityStrength += self->velocity.y;
 
-        int32 speed = !setup->maxSpeed ? 16 : setup->maxSpeed;
+        int32 speed = !setup->speedupLevel ? 16 : setup->speedupLevel;
         self->velocity.y += (speed << 12);
         if (self->gravityStrength >= 0) {
             self->gravityStrength = 0;
@@ -41,7 +41,7 @@ void BSS_Player_Update(void)
                 setup->globeSpeedInc = 2;
             }
 
-            if (setup->maxSpeed)
+            if (setup->speedupLevel)
                 RSDK.SetSpriteAnimation(self->aniFrames, 1, &self->animator, false, 0);
             else
                 RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, false, 0);
@@ -68,11 +68,11 @@ void BSS_Player_Update(void)
         }
     }
     else if (self->animator.animationID >= 2) {
-        self->animator.speed = maxVal(abs(setup->maxSpeed), 0x10);
+        self->animator.speed = maxVal(abs(setup->speedupLevel), 0x10);
         RSDK.ProcessAnimation(&self->animator);
     }
 
-    self->tailAnimator.speed = abs(setup->maxSpeed) + 40;
+    self->tailAnimator.speed = abs(setup->speedupLevel) + 40;
     RSDK.ProcessAnimation(&self->tailAnimator);
 }
 

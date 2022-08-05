@@ -36,7 +36,7 @@ void AIZRockPile_Update(void)
                             bool32 canBreak = jumping && player->onGround && abs(groundVel) >= 0x48000;
                             if (player->shield == SHIELD_FIRE) {
                                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(player), Shield);
-                                canBreak |= shield->shieldAnimator.animationID == 2; // fire dash
+                                canBreak |= shield->shieldAnimator.animationID == SHIELDANI_FIREATTACK;
                             }
 
                             canBreak |= player->characterID == ID_SONIC && player->superState == SUPERSTATE_SUPER;

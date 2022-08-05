@@ -66,7 +66,7 @@ void BSS_Setup_Create(void *data)
         self->position.x      = 0x1000000;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;
-        self->speedupInterval = 1800;
+        self->speedupInterval = 30 * 60; // speed up every 30 seconds
         self->stopMovement    = false;
 
         RSDK.SetSpriteAnimation(BSS_Setup->globeFrames, 0, &self->globeSpinAnimator, true, 0);
@@ -440,7 +440,7 @@ void BSS_Setup_State_GlobeJettison(void)
 
     if (++self->spinTimer == 128) {
         self->spinTimer  = 0;
-        self->maxSpeed   = 8;
+        self->speedupLevel   = 8;
         self->globeSpeed = 8;
         BSS_Setup_SetupFinishSequence();
 
@@ -928,7 +928,7 @@ void BSS_Setup_State_GlobeExit(void)
     RSDK_THIS(BSS_Setup);
 
     PauseMenu->disableEvents = true;
-    self->maxSpeed           = 0;
+    self->speedupLevel           = 0;
 
     if (self->spinTimer <= 0) {
         CREATE_ENTITY(BSS_Message, intToVoid(BSS_MESSAGE_FINISHED), self->position.x, self->position.y);
@@ -967,9 +967,9 @@ void BSS_Setup_State_GlobeMoveZ(void)
 
     EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
 
-    if (self->maxSpeed < 32 && ++self->speedupTimer >= self->speedupInterval) {
+    if (self->speedupLevel < 32 && ++self->speedupTimer >= self->speedupInterval) {
         self->speedupTimer = 0;
-        self->maxSpeed += 4;
+        self->speedupLevel += 4;
     }
 
     RSDK.GetTileLayer(BSS_Setup->globeLayer)->drawGroup[0] = 1;
@@ -979,7 +979,7 @@ void BSS_Setup_State_GlobeMoveZ(void)
             self->playerWasBumped = false;
     }
     else {
-        if (self->globeSpeed < self->maxSpeed)
+        if (self->globeSpeed < self->speedupLevel)
             self->globeSpeed += self->globeSpeedInc;
     }
 
@@ -1065,9 +1065,9 @@ void BSS_Setup_State_GlobeTurnLeft(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    if (self->maxSpeed < 32 && ++self->speedupTimer >= self->speedupInterval) {
+    if (self->speedupLevel < 32 && ++self->speedupTimer >= self->speedupInterval) {
         self->speedupTimer = 0;
-        self->maxSpeed += 4;
+        self->speedupLevel += 4;
     }
 
     TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
@@ -1107,9 +1107,9 @@ void BSS_Setup_State_GlobeTurnRight(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    if (self->maxSpeed < 32 && ++self->speedupTimer >= self->speedupInterval) {
+    if (self->speedupLevel < 32 && ++self->speedupTimer >= self->speedupInterval) {
         self->speedupTimer = 0;
-        self->maxSpeed += 4;
+        self->speedupLevel += 4;
     }
     TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
     background->scrollInfo[0].scrollPos += 0x100000;

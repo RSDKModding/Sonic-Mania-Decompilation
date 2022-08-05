@@ -104,9 +104,9 @@ void BSS_Message_State_GetBSWait(void)
     EntityBSS_Setup *setup   = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
     EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
 
-    if (!setup->maxSpeed) {
+    if (!setup->speedupLevel) {
         if (player->up) {
-            setup->maxSpeed      = 16;
+            setup->speedupLevel      = 16;
             setup->globeSpeed    = 16;
             setup->globeSpeedInc = 2;
 
@@ -128,7 +128,7 @@ void BSS_Message_State_GetBSWait(void)
     if (++self->timer >= 180) {
         self->timer = 0;
 
-        setup->maxSpeed      = 16;
+        setup->speedupLevel      = 16;
         setup->globeSpeed    = 16;
         setup->globeSpeedInc = 2;
 
