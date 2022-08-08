@@ -47,7 +47,7 @@ void KleptoMobile_Create(void *data)
             self->drawFX          = FX_FLIP;
             self->explosionVolume = 0x200;
 
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
             switch (self->type) {
                 case KLEPTOMOBILE_EGGMAN:
                     self->hitbox.left   = -22;
@@ -236,7 +236,7 @@ void KleptoMobile_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -294,7 +294,7 @@ void KleptoMobile_SwitchToKing(void)
             king->drawRuby   = true;
 
             for (int i = 0; i < 0x3FC; i += 0xAA) {
-                EntityPKingAttack *attack = CREATE_ENTITY(PKingAttack, intToVoid(1), king->rubyPos.x, king->rubyPos.y);
+                EntityPKingAttack *attack = CREATE_ENTITY(PKingAttack, INT_TO_VOID(1), king->rubyPos.x, king->rubyPos.y);
                 attack->angle             = i;
                 attack->target            = (Entity *)king;
             }
@@ -367,19 +367,19 @@ void KleptoMobile_State_SetupArena(void)
     self->active = ACTIVE_NORMAL;
 
     EntityKleptoMobile *hand = RSDK_GET_ENTITY(SceneInfo->entitySlot - 2, KleptoMobile);
-    RSDK.ResetEntity(hand, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_HAND));
+    RSDK.ResetEntity(hand, KleptoMobile->classID, INT_TO_VOID(KLEPTOMOBILE_HAND));
     hand->position.x = self->position.x;
     hand->position.y = self->position.y;
     hand->parent     = self;
 
     EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
-    RSDK.ResetEntity(arm2, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_R));
+    RSDK.ResetEntity(arm2, KleptoMobile->classID, INT_TO_VOID(KLEPTOMOBILE_ARM_R));
     arm2->position.x = self->position.x;
     arm2->position.y = self->position.y;
     arm2->parent     = self;
 
     EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
-    RSDK.ResetEntity(arm1, KleptoMobile->classID, intToVoid(KLEPTOMOBILE_ARM_L));
+    RSDK.ResetEntity(arm1, KleptoMobile->classID, INT_TO_VOID(KLEPTOMOBILE_ARM_L));
     arm1->position.x = self->position.x;
     arm1->position.y = self->position.y;
     arm1->parent     = self;

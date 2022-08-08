@@ -48,7 +48,7 @@ void Splats_Create(void *data)
         self->state = Splats_State_Init;
     }
     else {
-        switch (voidToInt(data)) {
+        switch (VOID_TO_INT(data)) {
             case SPLATS_SPAWNER:
                 self->drawGroup = Zone->objectDrawHigh;
                 self->delay     = 0;
@@ -240,7 +240,7 @@ void Splats_State_InkJarSpawner(void)
             self->delay = self->minDelay;
             RSDK.PlaySfx(Splats->sfxSplatsSpawn, false, 0xFF);
 
-            EntitySplats *splats = CREATE_ENTITY(Splats, intToVoid(SPLATS_INKSPLATS), self->position.x, self->position.y - 0x60000);
+            EntitySplats *splats = CREATE_ENTITY(Splats, INT_TO_VOID(SPLATS_INKSPLATS), self->position.x, self->position.y - 0x60000);
             splats->parent       = self;
             splats->bounceCount  = self->bounceCount;
             splats->direction    = self->direction;
@@ -277,7 +277,7 @@ void Splats_State_JumpOutOfJar(void)
         self->mainAnimator.frameCount = 5;
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, 0, 0, 0, 0x120000, true)) {
             RSDK.PlaySfx(Splats->sfxSplatsLand, false, 255);
-            EntitySplats *splat = CREATE_ENTITY(Splats, intToVoid(SPLATS_SPLAT), self->position.x, self->position.y);
+            EntitySplats *splat = CREATE_ENTITY(Splats, INT_TO_VOID(SPLATS_SPLAT), self->position.x, self->position.y);
             splat->direction    = self->direction;
             self->delay         = 4;
             self->state         = Splats_State_HandleLanding;
@@ -312,7 +312,7 @@ void Splats_State_HandleBouncing(void)
                 }
             }
 
-            EntitySplats *splat = CREATE_ENTITY(Splats, intToVoid(SPLATS_SPLAT), self->position.x, self->position.y);
+            EntitySplats *splat = CREATE_ENTITY(Splats, INT_TO_VOID(SPLATS_SPLAT), self->position.x, self->position.y);
             splat->direction    = self->direction;
         }
     }

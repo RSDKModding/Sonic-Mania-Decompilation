@@ -229,14 +229,14 @@ void UIRankButton_DrawSprites(void)
 
             int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->rankText, 0, self->rankText.length, 0);
             drawPos.x -= width << 15;
-            RSDK.DrawText(&self->fontAnimator, &drawPos, &self->rankText, 0, self->rankText.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
+            RSDK.DrawText(&self->fontAnimator, &drawPos, &self->rankText, 0, self->rankText.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
         }
 
         if (self->showsName && !SceneInfo->inEditor) {
             drawPos.x = drawX - (width >> 1) + 0x20000 + self->buttonBounceOffset;
             drawPos.y = drawY + self->buttonBounceOffset + self->textBounceOffset;
-            int32 len = minVal(self->nameTimeText.length, 20);
-            RSDK.DrawText(&self->fontAnimator, &drawPos, &self->nameTimeText, 0, len, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
+            int32 len = MIN(self->nameTimeText.length, 20);
+            RSDK.DrawText(&self->fontAnimator, &drawPos, &self->nameTimeText, 0, len, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
         }
 
         drawPos.x = (drawX + self->buttonBounceOffset) - 0x200000;

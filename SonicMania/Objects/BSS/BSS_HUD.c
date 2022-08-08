@@ -20,20 +20,20 @@ void BSS_HUD_Draw(void)
     RSDK_THIS(BSS_HUD);
 
     Vector2 drawPos;
-    drawPos.x = (ScreenInfo->center.x - 141) << 16;
-    drawPos.y = 0xD0000;
+    drawPos.x = TO_FIXED(ScreenInfo->center.x - 141);
+    drawPos.y = TO_FIXED(13);
     RSDK.DrawSprite(&self->sphereAnimator, &drawPos, true);
 
-    drawPos.x += 0x250000;
-    drawPos.y = 0x110000;
+    drawPos.x += TO_FIXED(37);
+    drawPos.y = TO_FIXED(17);
     BSS_HUD_DrawNumbers(BSS_Setup->sphereCount, &drawPos);
 
-    drawPos.x = (ScreenInfo->center.x + 64) << 16;
-    drawPos.y = 0xD0000;
+    drawPos.x = TO_FIXED(ScreenInfo->center.x + 64);
+    drawPos.y = TO_FIXED(13);
     RSDK.DrawSprite(&self->ringAnimator, &drawPos, true);
 
-    drawPos.x += 0x380000;
-    drawPos.y = 0x110000;
+    drawPos.x += TO_FIXED(56);
+    drawPos.y = TO_FIXED(17);
     BSS_HUD_DrawNumbers(BSS_Setup->ringCount, &drawPos);
 }
 
@@ -45,8 +45,8 @@ void BSS_HUD_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
         self->drawGroup     = DRAWGROUP_COUNT - 1;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
+        self->updateRange.x = TO_FIXED(128);
+        self->updateRange.y = TO_FIXED(128);
 
         RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->sphereAnimator, true, 0);
         RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->ringAnimator, true, 1);
@@ -69,7 +69,7 @@ void BSS_HUD_DrawNumbers(int32 value, Vector2 *drawPos)
     for (int32 i = 0; i < 3; ++i) {
         self->numbersAnimator.frameID = value / mult % 10;
         RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
-        drawPos->x -= 0x100000;
+        drawPos->x -= TO_FIXED(16);
         mult *= 10;
     }
 }

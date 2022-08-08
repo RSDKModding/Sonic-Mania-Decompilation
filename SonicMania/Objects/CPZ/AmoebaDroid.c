@@ -42,7 +42,7 @@ void AmoebaDroid_Create(void *data)
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
 
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
             switch (self->type) {
                 case AMOEBADROID_BOSS:
                     self->visible   = false;
@@ -203,7 +203,7 @@ void AmoebaDroid_Explode(void)
         if (Zone->timer & 4) {
             int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
             int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -369,7 +369,7 @@ void AmoebaDroid_State_DropIntoPool(void)
         self->velocity.y = self->velocity.y >> 2;
         self->state      = AmoebaDroid_State_SurfaceFromPool;
         ChemicalPool_SetDeform(self->position.x, 0x100000);
-        CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_POOLSPLASH), self->position.x, self->position.y);
+        CREATE_ENTITY(AmoebaDroid, INT_TO_VOID(AMOEBADROID_POOLSPLASH), self->position.x, self->position.y);
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
     }
     AmoebaDroid_CheckHit();
@@ -404,7 +404,7 @@ void AmoebaDroid_State_ChooseAttack(void)
         else
             self->state = AmoebaDroid_State_SwimRight;
 
-        EntityAmoebaDroid *part = CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_BLOB_BIG), self->position.x, self->position.y);
+        EntityAmoebaDroid *part = CREATE_ENTITY(AmoebaDroid, INT_TO_VOID(AMOEBADROID_BLOB_BIG), self->position.x, self->position.y);
         part->parent            = self;
         self->blobs[0]          = part;
     }
@@ -431,7 +431,7 @@ void AmoebaDroid_State_SwimLeft(void)
             self->velocity.y = 0;
             self->state      = AmoebaDroid_State_ExitPool;
             ChemicalPool_SetDeform(self->position.x, -0xC0000);
-            CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_POOLSPLASH_DELAY), self->position.x, self->position.y);
+            CREATE_ENTITY(AmoebaDroid, INT_TO_VOID(AMOEBADROID_POOLSPLASH_DELAY), self->position.x, self->position.y);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
         }
     }
@@ -466,7 +466,7 @@ void AmoebaDroid_State_SwimRight(void)
             self->velocity.y = 0;
             self->state      = AmoebaDroid_State_ExitPool;
             ChemicalPool_SetDeform(self->position.x, -0xC0000);
-            CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_POOLSPLASH_DELAY), self->position.x, self->position.y);
+            CREATE_ENTITY(AmoebaDroid, INT_TO_VOID(AMOEBADROID_POOLSPLASH_DELAY), self->position.x, self->position.y);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
         }
     }
@@ -524,7 +524,7 @@ void AmoebaDroid_State_BounceAttack(void)
 
             self->state = StateMachine_None;
             for (int32 i = 0; i < AMOEBADROID_BLOB_COUNT; ++i) {
-                self->blobs[i] = CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_BLOB_SMALL), self->position.x, self->position.y);
+                self->blobs[i] = CREATE_ENTITY(AmoebaDroid, INT_TO_VOID(AMOEBADROID_BLOB_SMALL), self->position.x, self->position.y);
             }
 
             self->timer         = 0;
@@ -534,7 +534,7 @@ void AmoebaDroid_State_BounceAttack(void)
             RSDK.PlaySfx(AmoebaDroid->sfxRelease, false, 255);
         }
         else {
-            self->velocity.y = minVal(-self->velocity.y, -0x20000);
+            self->velocity.y = MIN(-self->velocity.y, -0x20000);
             for (int32 i = 0; i < AMOEBADROID_BLOB_COUNT; ++i) {
                 int32 x              = self->position.x + RSDK.Rand(-0x200000, 0x200000);
                 int32 y              = self->position.y + RSDK.Rand(0x100000, 0x180000);

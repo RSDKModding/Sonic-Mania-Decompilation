@@ -235,8 +235,8 @@ void SentryBug_StateOrbs_ReturnToSlots(void)
         offsets = (Vector2 *)&SentryBug->orbOffsets_Attatched[-12 * self->bugAnimator.frameID + 72];
 
     for (int32 i = 0; i < 6; ++i) {
-        self->orbVelocities[i].x = clampVal((self->position.x + offsets[i].x - self->orbPositions[i].x) >> 3, -0xC0000, 0xC0000);
-        self->orbVelocities[i].y = clampVal((self->position.y + offsets[i].y - self->orbPositions[i].y) >> 3, -0xC0000, 0xC0000);
+        self->orbVelocities[i].x = CLAMP((self->position.x + offsets[i].x - self->orbPositions[i].x) >> 3, -0xC0000, 0xC0000);
+        self->orbVelocities[i].y = CLAMP((self->position.y + offsets[i].y - self->orbPositions[i].y) >> 3, -0xC0000, 0xC0000);
 
         self->orbPositions[i].x += self->orbVelocities[i].x;
         self->orbPositions[i].y += self->orbVelocities[i].y;

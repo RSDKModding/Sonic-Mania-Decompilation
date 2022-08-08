@@ -50,7 +50,7 @@ void BSS_Setup_Draw(void)
     Vector2 drawPos;
     self->inkEffect = INK_BLEND;
     drawPos.x       = self->position.x;
-    drawPos.y       = 0x9E0000;
+    drawPos.y       = TO_FIXED(158);
     RSDK.DrawSprite(&self->shadowAnimator, &drawPos, false);
 }
 
@@ -63,9 +63,9 @@ void BSS_Setup_Create(void *data)
         self->visible         = true;
         self->drawGroup       = 2;
         self->drawFX          = FX_FLIP;
-        self->position.x      = 0x1000000;
-        self->updateRange.x   = 0x800000;
-        self->updateRange.y   = 0x800000;
+        self->position.x      = TO_FIXED(256);
+        self->updateRange.x   = TO_FIXED(128);
+        self->updateRange.y   = TO_FIXED(128);
         self->speedupInterval = 30 * 60; // speed up every 30 seconds
         self->stopMovement    = false;
 
@@ -337,7 +337,7 @@ void BSS_Setup_CollectRing(void)
         BSS_Setup->ringCount--;
 
         if (!BSS_Setup->ringCount) {
-            CREATE_ENTITY(BSS_Message, intToVoid(BSS_MESSAGE_PERFECT), self->position.x, self->position.y);
+            CREATE_ENTITY(BSS_Message, INT_TO_VOID(BSS_MESSAGE_PERFECT), self->position.x, self->position.y);
             RSDK.PlaySfx(BSS_Setup->sfxEvent, false, 0xFF);
         }
     }
@@ -473,7 +473,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 --BSS_Setup->sphereCount;
 
                 if (!self->completedRingLoop) {
-                    CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_BLUE), self->playerPos.x, self->playerPos.y);
+                    CREATE_ENTITY(BSS_Collected, INT_TO_VOID(BSS_COLLECTED_BLUE), self->playerPos.x, self->playerPos.y);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
 
@@ -525,7 +525,7 @@ void BSS_Setup_HandleSteppedObjects(void)
         case BSS_SPHERE_YELLOW:
             if (self->globeTimer < 128) {
                 EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
-                player->velocity.y       = -0x180000;
+                player->velocity.y       = -TO_FIXED(24);
                 player->onGround         = 0;
                 RSDK.SetSpriteAnimation(player->aniFrames, 3, &player->animator, false, 0);
                 BSS_Player->unused1 = 4;
@@ -539,7 +539,7 @@ void BSS_Setup_HandleSteppedObjects(void)
 
         case BSS_SPHERE_GREEN:
             if (self->globeTimer > 128) {
-                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_GREEN), self->playerPos.x, self->playerPos.y);
+                CREATE_ENTITY(BSS_Collected, INT_TO_VOID(BSS_COLLECTED_GREEN), self->playerPos.x, self->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
                 RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
             }
@@ -552,7 +552,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 self->globeTimer = 0;
                 RSDK.PlaySfx(BSS_Setup->sfxTeleport, false, 255);
 
-                EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+                EntityFXFade *fade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
                 fade->speedIn      = 32;
                 fade->speedOut     = 32;
                 fade->wait         = 48;
@@ -561,7 +561,7 @@ void BSS_Setup_HandleSteppedObjects(void)
 
         case BSS_RING:
             if (self->globeTimer < 128) {
-                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_RING), self->playerPos.x, self->playerPos.y);
+                CREATE_ENTITY(BSS_Collected, INT_TO_VOID(BSS_COLLECTED_RING), self->playerPos.x, self->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_RING_SPARKLE;
                 BSS_Setup_CollectRing();
             }
@@ -584,7 +584,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 --BSS_Setup->sphereCount;
 
                 if (!self->completedRingLoop) {
-                    CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_BLUE), posX, posY);
+                    CREATE_ENTITY(BSS_Collected, INT_TO_VOID(BSS_COLLECTED_BLUE), posX, posY);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
 
@@ -645,7 +645,7 @@ void BSS_Setup_HandleSteppedObjects(void)
         case BSS_SPHERE_YELLOW:
             if (self->globeTimer > 128) {
                 EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
-                player->velocity.y       = -0x180000;
+                player->velocity.y       = -TO_FIXED(24);
                 player->onGround         = 0;
                 RSDK.SetSpriteAnimation(player->aniFrames, 3, &player->animator, 0, 0);
                 BSS_Player->unused1 = 4;
@@ -659,7 +659,7 @@ void BSS_Setup_HandleSteppedObjects(void)
 
         case BSS_SPHERE_GREEN:
             if (self->globeTimer > 128) {
-                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_GREEN), posX, posY);
+                CREATE_ENTITY(BSS_Collected, INT_TO_VOID(BSS_COLLECTED_GREEN), posX, posY);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
                 RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
             }
@@ -667,7 +667,7 @@ void BSS_Setup_HandleSteppedObjects(void)
 
         case BSS_RING:
             if (self->globeTimer > 128) {
-                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_RING), posX, posY);
+                CREATE_ENTITY(BSS_Collected, INT_TO_VOID(BSS_COLLECTED_RING), posX, posY);
                 BSS_Setup->playField[fieldPos] = BSS_RING_SPARKLE;
                 BSS_Setup_CollectRing();
             }
@@ -914,7 +914,7 @@ void BSS_Setup_State_StartGlobeTeleport(void)
 
         self->angle = dir << 6;
 
-        CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_PINK), self->playerPos.x, self->playerPos.y);
+        CREATE_ENTITY(BSS_Collected, INT_TO_VOID(BSS_COLLECTED_PINK), self->playerPos.x, self->playerPos.y);
         BSS_Setup->playField[self->playerPos.y + (BSS_PLAYFIELD_H * self->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
 
         self->timer = 100;
@@ -931,12 +931,12 @@ void BSS_Setup_State_GlobeExit(void)
     self->speedupLevel           = 0;
 
     if (self->spinTimer <= 0) {
-        CREATE_ENTITY(BSS_Message, intToVoid(BSS_MESSAGE_FINISHED), self->position.x, self->position.y);
+        CREATE_ENTITY(BSS_Message, INT_TO_VOID(BSS_MESSAGE_FINISHED), self->position.x, self->position.y);
         foreach_active(BSS_Player, player) { player->stateInput = StateMachine_None; }
     }
     else {
         TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
-        background->scrollInfo[0].scrollPos -= 0x200000;
+        background->scrollInfo[0].scrollPos -= TO_FIXED(32);
 
         self->angle -= 8;
         self->angle &= 0xFF;
@@ -1071,7 +1071,7 @@ void BSS_Setup_State_GlobeTurnLeft(void)
     }
 
     TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
-    background->scrollInfo[0].scrollPos -= 0x100000;
+    background->scrollInfo[0].scrollPos -= TO_FIXED(16);
 
     self->angle -= 4;
     self->angle &= 0xFF;
@@ -1112,7 +1112,7 @@ void BSS_Setup_State_GlobeTurnRight(void)
         self->speedupLevel += 4;
     }
     TileLayer *background = RSDK.GetTileLayer(BSS_Setup->bgLayer);
-    background->scrollInfo[0].scrollPos += 0x100000;
+    background->scrollInfo[0].scrollPos += TO_FIXED(16);
 
     self->angle += 4;
     self->angle &= 0xFF;

@@ -192,7 +192,7 @@ void GHZSetup_BGSwitch_Caves_Act1(void)
     RSDK.GetTileLayer(1)->drawGroup[BGSwitch->screenID] = 0;
     RSDK.GetTileLayer(2)->drawGroup[BGSwitch->screenID] = 0;
 }
-void GHZSetup_StageFinish_EndAct2(void) { CREATE_ENTITY(GHZ2Outro, intToVoid(true), 0, 0); }
+void GHZSetup_StageFinish_EndAct2(void) { CREATE_ENTITY(GHZ2Outro, INT_TO_VOID(true), 0, 0); }
 
 #if RETRO_INCLUDE_EDITOR
 void GHZSetup_EditorDraw(void) {}

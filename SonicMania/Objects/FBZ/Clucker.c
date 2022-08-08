@@ -261,7 +261,7 @@ void Clucker_State_Shoot(void)
         else
             spawnY -= 0xD0000;
 
-        EntityClucker *projectile = CREATE_ENTITY(Clucker, intToVoid(true), self->position.x, spawnY);
+        EntityClucker *projectile = CREATE_ENTITY(Clucker, INT_TO_VOID(true), self->position.x, spawnY);
         if (self->direction & FLIP_X) {
             projectile->position.x += 0x100000;
             projectile->velocity.x = 0x20000;

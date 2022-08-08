@@ -263,7 +263,7 @@ void Aquis_State_Shoot(void)
 
     if (--self->timer) {
         if (self->timer == 33) {
-            EntityAquis *shot = CREATE_ENTITY(Aquis, intToVoid(true), self->position.x, self->position.y);
+            EntityAquis *shot = CREATE_ENTITY(Aquis, INT_TO_VOID(true), self->position.x, self->position.y);
 
             if (self->direction) {
                 shot->position.x += 0x100000;

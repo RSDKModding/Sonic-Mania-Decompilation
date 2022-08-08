@@ -79,7 +79,7 @@ void DirectorChair_Create(void *data)
         self->state         = DirectorChair_State_Idle;
         self->stateCollide  = DirectorChair_Collide_Chair;
         self->speed <<= 7;
-        self->initExtendVel = maxVal(32 - 2 * self->size, 1);
+        self->initExtendVel = MAX(32 - 2 * self->size, 1);
     }
 }
 
@@ -332,7 +332,7 @@ void DirectorChair_EditorDraw(void)
     self->minRetract    = (self->size >> 2) - 16;
     self->rotation      = self->type == DIRECTORCHAIR_CLOSED ? self->minRetract : -96;
     self->angle         = self->rotation << 8;
-    self->initExtendVel = maxVal(32 - 2 * self->size, 1);
+    self->initExtendVel = MAX(32 - 2 * self->size, 1);
 
     int32 sin       = RSDK.Sin512(self->rotation);
     self->drawPos.x = self->centerPos.x;
@@ -345,7 +345,7 @@ void DirectorChair_EditorDraw(void)
 
         self->rotation      = self->type != DIRECTORCHAIR_CLOSED ? self->minRetract : -96;
         self->angle         = self->rotation << 8;
-        self->initExtendVel = maxVal(32 - 2 * self->size, 1);
+        self->initExtendVel = MAX(32 - 2 * self->size, 1);
 
         int32 sin       = RSDK.Sin512(self->rotation);
         self->drawPos.x = self->centerPos.x;

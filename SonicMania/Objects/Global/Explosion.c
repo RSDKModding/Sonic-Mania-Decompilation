@@ -44,7 +44,7 @@ void Explosion_Create(void *data)
     else
         self->drawGroup = Zone->objectDrawLow;
 
-    RSDK.SetSpriteAnimation(Explosion->aniFrames, voidToInt(data), &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(Explosion->aniFrames, VOID_TO_INT(data), &self->animator, true, 0);
 }
 
 void Explosion_StageLoad(void)

@@ -75,7 +75,7 @@ void Acetone_DrawGustFX(void)
 
     int32 pos = 0;
     for (int32 i = 0; i < 4; ++i) {
-        int32 count = minVal(self->gustCount[i], 3);
+        int32 count = MIN(self->gustCount[i], 3);
 
         RSDK.SetSpriteAnimation(Acetone->aniFrames, 1, &self->gustAnimator, true, i);
         for (int32 p = 0; p < count; ++p) {

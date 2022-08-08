@@ -132,7 +132,7 @@ void GymBar_HandlePlayerInteractions(void)
                     }
                     else {
                         player->rotation   = 0;
-                        player->position.x = clampVal(player->position.x, self->maxX, self->minX);
+                        player->position.x = CLAMP(player->position.x, self->maxX, self->minX);
                         player->position.y = self->position.y;
 
                         if (abs(player->velocity.y) < 0x40000 || self->noSwing) {

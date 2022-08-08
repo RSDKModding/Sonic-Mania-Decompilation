@@ -552,9 +552,9 @@ void Player_Create(void *data)
             case ID_SONIC:
                 self->aniFrames    = Player->sonicFrames;
                 self->tailFrames   = -1;
-                self->jumpOffset   = 0x50000;
+                self->jumpOffset   = TO_FIXED(5);
                 self->stateAbility = Player_JumpAbility_Sonic;
-                self->sensorY      = 0x140000;
+                self->sensorY      = TO_FIXED(20);
 
                 if (globals->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT)) {
                     self->statePeelout = Player_Action_Peelout;
@@ -570,44 +570,44 @@ void Player_Create(void *data)
             case ID_TAILS:
                 self->aniFrames    = Player->tailsFrames;
                 self->tailFrames   = Player->tailsTailsFrames;
-                self->jumpOffset   = 0;
+                self->jumpOffset   = TO_FIXED(0);
                 self->stateAbility = Player_JumpAbility_Tails;
-                self->sensorY      = 0x100000;
+                self->sensorY      = TO_FIXED(16);
                 break;
 
             case ID_KNUCKLES:
                 self->aniFrames    = Player->knuxFrames;
                 self->tailFrames   = -1;
-                self->jumpOffset   = 0x50000;
+                self->jumpOffset   = TO_FIXED(5);
                 self->stateAbility = Player_JumpAbility_Knux;
-                self->sensorY      = 0x140000;
+                self->sensorY      = TO_FIXED(20);
                 break;
 
 #if MANIA_USE_PLUS
             case ID_MIGHTY:
                 self->aniFrames    = Player->mightyFrames;
                 self->tailFrames   = -1;
-                self->jumpOffset   = 0x50000;
+                self->jumpOffset   = TO_FIXED(5);
                 self->stateAbility = Player_JumpAbility_Mighty;
-                self->sensorY      = 0x140000;
+                self->sensorY      = TO_FIXED(20);
                 break;
 
             case ID_RAY:
                 self->aniFrames    = Player->rayFrames;
                 self->tailFrames   = -1;
-                self->jumpOffset   = 0x50000;
+                self->jumpOffset   = TO_FIXED(5);
                 self->stateAbility = Player_JumpAbility_Ray;
-                self->sensorY      = 0x140000;
+                self->sensorY      = TO_FIXED(20);
                 break;
 #endif
         }
 
         // Handle Sensor setup
-        self->sensorX[0] = 0xA0000;
-        self->sensorX[1] = 0x50000;
-        self->sensorX[2] = 0;
-        self->sensorX[3] = -0x50000;
-        self->sensorX[4] = -0xA0000;
+        self->sensorX[0] = TO_FIXED(10);
+        self->sensorX[1] = TO_FIXED(5);
+        self->sensorX[2] = TO_FIXED(0);
+        self->sensorX[3] = -TO_FIXED(5);
+        self->sensorX[4] = -TO_FIXED(10);
 
         self->active         = ACTIVE_NORMAL;
         self->tileCollisions = TILECOLLISION_DOWN;
@@ -633,7 +633,7 @@ void Player_Create(void *data)
             self->sidekick   = true;
         }
 
-        AnalogStickInfoL[self->controllerID].deadzone = 0.3;
+        AnalogStickInfoL[self->controllerID].deadzone = 0.3f;
 
         // Handle Powerups
         self->rings           = Player->rings;
@@ -680,9 +680,9 @@ void Player_Create(void *data)
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->animator, true, 0);
 
         Player_UpdatePhysicsState(self);
-        self->minJogVelocity = 0x40000;
+        self->minJogVelocity  = 0x40000;
         self->minRunVelocity  = 0x60000;
-        self->minDashVelocity  = 0xC0000;
+        self->minDashVelocity = 0xC0000;
     }
 }
 
@@ -920,7 +920,7 @@ void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx)
     if (globals->gameMode == MODE_COMPETITION)
         session->totalRings[player->playerID] += amount;
 
-    player->rings = clampVal(player->rings + amount, 0, 999);
+    player->rings = CLAMP(player->rings + amount, 0, 999);
 
     if (player->rings >= player->ringExtraLife) {
         Player_GiveLife(player);
@@ -980,16 +980,16 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
 
             if (entity->isChibi) {
                 entity->aniFrames  = SizeLaser->sonicFrames;
-                entity->jumpOffset = 0x40000;
+                entity->jumpOffset = TO_FIXED(4);
             }
             else {
                 entity->aniFrames  = Player->sonicFrames;
-                entity->jumpOffset = 0x50000;
+                entity->jumpOffset = TO_FIXED(5);
             }
 
             entity->tailFrames   = -1;
             entity->stateAbility = Player_JumpAbility_Sonic;
-            entity->sensorY      = 0x140000;
+            entity->sensorY      = TO_FIXED(20);
 
             if (globals->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT)) {
                 entity->statePeelout = Player_Action_Peelout;
@@ -1013,16 +1013,16 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
             if (entity->isChibi) {
                 entity->aniFrames  = SizeLaser->tailsFrames;
                 entity->tailFrames = SizeLaser->tailFrames;
-                entity->jumpOffset = 0x40000;
+                entity->jumpOffset = TO_FIXED(4);
             }
             else {
                 entity->aniFrames  = Player->tailsFrames;
                 entity->tailFrames = Player->tailsTailsFrames;
-                entity->jumpOffset = 0;
+                entity->jumpOffset = TO_FIXED(0);
             }
 
             entity->stateAbility = Player_JumpAbility_Tails;
-            entity->sensorY      = 0x100000;
+            entity->sensorY      = TO_FIXED(16);
             break;
 
         case ID_KNUCKLES:
@@ -1032,16 +1032,16 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
 
             if (entity->isChibi) {
                 entity->aniFrames  = SizeLaser->knuxFrames;
-                entity->jumpOffset = 0x40000;
+                entity->jumpOffset = TO_FIXED(4);
             }
             else {
                 entity->aniFrames  = Player->knuxFrames;
-                entity->jumpOffset = 0x50000;
+                entity->jumpOffset = TO_FIXED(5);
             }
 
             entity->tailFrames   = -1;
             entity->stateAbility = Player_JumpAbility_Knux;
-            entity->sensorY      = 0x140000;
+            entity->sensorY      = TO_FIXED(20);
             break;
 
 #if MANIA_USE_PLUS
@@ -1052,16 +1052,16 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
 
             if (entity->isChibi) {
                 entity->aniFrames  = SizeLaser->mightyFrames;
-                entity->jumpOffset = 0x40000;
+                entity->jumpOffset = TO_FIXED(4);
             }
             else {
                 entity->aniFrames  = Player->mightyFrames;
-                entity->jumpOffset = 0x50000;
+                entity->jumpOffset = TO_FIXED(5);
             }
 
             entity->tailFrames   = -1;
             entity->stateAbility = Player_JumpAbility_Mighty;
-            entity->sensorY      = 0x140000;
+            entity->sensorY      = TO_FIXED(20);
             break;
 
         case ID_RAY:
@@ -1071,25 +1071,25 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
 
             if (entity->isChibi) {
                 entity->aniFrames  = SizeLaser->rayFrames;
-                entity->jumpOffset = 0x40000;
+                entity->jumpOffset = TO_FIXED(4);
             }
             else {
                 entity->aniFrames  = Player->rayFrames;
-                entity->jumpOffset = 0x50000;
+                entity->jumpOffset = TO_FIXED(5);
             }
 
             entity->tailFrames   = -1;
             entity->stateAbility = Player_JumpAbility_Ray;
-            entity->sensorY      = 0x140000;
+            entity->sensorY      = TO_FIXED(20);
             break;
 #endif
     }
 
-    entity->sensorX[0] = 0xA0000;
-    entity->sensorX[1] = 0x50000;
-    entity->sensorX[2] = 0;
-    entity->sensorX[3] = -0x50000;
-    entity->sensorX[4] = -0xA0000;
+    entity->sensorX[0] = TO_FIXED(10);
+    entity->sensorX[1] = TO_FIXED(5);
+    entity->sensorX[2] = TO_FIXED(0);
+    entity->sensorX[3] = -TO_FIXED(5);
+    entity->sensorX[4] = -TO_FIXED(10);
 
     if (entity->state == Player_State_KnuxWallClimb || entity->state == Player_State_DropDash || entity->state == Player_State_TailsFlight
         || entity->state == Player_State_KnuxGlideDrop || entity->state == Player_State_KnuxGlideLeft || entity->state == Player_State_KnuxGlideRight
@@ -1833,7 +1833,7 @@ void Player_HandleDeath(EntityPlayer *player)
     if (player->sidekick) {
         Player->respawnTimer = 0;
 
-        EntityDust *dust  = CREATE_ENTITY(Dust, intToVoid(1), player->position.x, player->position.y);
+        EntityDust *dust  = CREATE_ENTITY(Dust, INT_TO_VOID(1), player->position.x, player->position.y);
         dust->visible     = false;
         dust->active      = ACTIVE_NEVER;
         dust->isPermanent = true;
@@ -1950,7 +1950,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     if (Zone->gotTimeOver) {
                         // Time Over!!
                         player->classID = TYPE_BLANK;
-                        RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, intToVoid(true));
+                        RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, INT_TO_VOID(true));
 
                         SaveRAM *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
@@ -2049,7 +2049,7 @@ void Player_HandleDeath(EntityPlayer *player)
 
                     if (showGameOver) {
                         EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
-                        RSDK.ResetEntity(gameOver, GameOver->classID, intToVoid(false));
+                        RSDK.ResetEntity(gameOver, GameOver->classID, INT_TO_VOID(false));
                         gameOver->playerID = RSDK.GetEntitySlot(player);
                         GameOver->activeScreens |= 1 << screenID;
                         RSDK.SetEngineState(ENGINESTATE_FROZEN);
@@ -2079,7 +2079,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
 
                     EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
-                    RSDK.ResetEntity(gameOver, GameOver->classID, intToVoid(false));
+                    RSDK.ResetEntity(gameOver, GameOver->classID, INT_TO_VOID(false));
                     gameOver->playerID = RSDK.GetEntitySlot(player);
                     GameOver->activeScreens |= 1 << screenID;
                     RSDK.SetEngineState(ENGINESTATE_FROZEN);
@@ -2438,10 +2438,10 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
             StatInfo info;
 #if MANIA_USE_PLUS
             TimeAttackData_TrackEnemyDefeat(&info, Zone_GetZoneID(), Zone->actID, characterID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE),
-                                            (badnik->position.x >> 0x10), (badnik->position.y >> 0x10));
+                                            FROM_FIXED(badnik->position.x), FROM_FIXED(badnik->position.y));
             API.TryTrackStat(&info);
 #else
-            APICallback_TrackEnemyDefeat(Zone_GetZoneID(), Zone->actID, characterID, (badnik->position.x >> 0x10), (badnik->position.y >> 0x10));
+            APICallback_TrackEnemyDefeat(Zone_GetZoneID(), Zone->actID, characterID, FROM_FIXED(badnik->position.x), FROM_FIXED(badnik->position.y));
 #endif
         }
 
@@ -2897,7 +2897,7 @@ void Player_HandleGroundAnimation(void)
                     else
                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 0);
 
-                    self->animator.speed = minVal((velocity >> 12) + 0x60, 0x200);
+                    self->animator.speed = MIN((velocity >> 12) + 0x60, 0x200);
                     self->minRunVelocity    = 0x58000;
                     self->minDashVelocity    = 0xC0000;
                 }
@@ -2961,6 +2961,7 @@ void Player_HandleGroundAnimation(void)
                     default: Player_HandleIdleAnimation(); break;
                 }
 
+                // Wait for ~333 hours to do outta here (sonic is has gotten surprisingly patient since CD...)
                 if (++self->outtaHereTimer >= 72000000) {
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_OUTTA_HERE, &self->animator, false, 0);
                     self->state           = Player_State_OuttaHere;
@@ -2975,7 +2976,7 @@ void Player_HandleGroundAnimation(void)
             }
         }
         else {
-            self->pushing = clampVal(self->pushing, -3, 3);
+            self->pushing = CLAMP(self->pushing, -3, 3);
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_PUSH, &self->animator, false, 0);
         }
     }
@@ -3615,8 +3616,8 @@ void Player_HandleSidekickRespawn(void)
 
     EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (leader->classID == Player->classID && (leader->drawGroup != 2 || self->drawGroup != 2)) {
-        int32 rx = abs((self->position.x >> 0x10) - ScreenInfo->position.x - ScreenInfo->center.x);
-        int32 ry = abs((self->position.y >> 0x10) - ScreenInfo->position.y - ScreenInfo->center.y);
+        int32 rx = abs(FROM_FIXED(self->position.x) - ScreenInfo->position.x - ScreenInfo->center.x);
+        int32 ry = abs(FROM_FIXED(self->position.y) - ScreenInfo->position.y - ScreenInfo->center.y);
 
         if (rx >= ScreenInfo->center.x + 96 || ry >= ScreenInfo->center.y + 96)
             ++Player->respawnTimer;
@@ -4183,7 +4184,7 @@ void Player_State_OuttaHere(void)
     else {
         Player_HandleAirMovement();
         if (self->velocity.y > 0x100000) {
-            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, intToVoid(false));
+            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, INT_TO_VOID(false));
             destroyEntity(self);
         }
     }
@@ -5130,7 +5131,7 @@ void Player_State_MightyHammerDrop(void)
 
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
 
-        self->animator.speed = minVal((abs(self->groundVel) >> 12) + 0x30, 0xF0);
+        self->animator.speed = MIN((abs(self->groundVel) >> 12) + 0x30, 0xF0);
 
         RSDK.StopSfx(Player->sfxMightyDrill);
         RSDK.PlaySfx(Player->sfxMightyLand, false, 0xFF);
@@ -5658,7 +5659,7 @@ void Player_State_HoldRespawn(void)
         EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         if (leader->classID == Player->classID) {
-            EntityDust *dust  = CREATE_ENTITY(Dust, intToVoid(1), leader->position.x, leader->position.y);
+            EntityDust *dust  = CREATE_ENTITY(Dust, INT_TO_VOID(1), leader->position.x, leader->position.y);
             dust->visible     = false;
             dust->active      = ACTIVE_NEVER;
             dust->isPermanent = true;
@@ -5824,7 +5825,7 @@ void Player_State_EncoreRespawn(void)
         if (globals->stock) {
             Player_ChangeCharacter(self, GET_STOCK_ID(1));
             globals->stock >>= 8;
-            EntityDust *dust       = CREATE_ENTITY(Dust, intToVoid(1), leader->position.x, leader->position.y);
+            EntityDust *dust       = CREATE_ENTITY(Dust, INT_TO_VOID(1), leader->position.x, leader->position.y);
             dust->visible          = false;
             dust->active           = ACTIVE_NEVER;
             dust->isPermanent      = true;
@@ -6221,9 +6222,9 @@ void Player_JumpAbility_Ray(void)
 
             int32 newXVel = self->velocity.x - (self->velocity.x >> 3);
             if (self->direction)
-                self->velocity.x = minVal(newXVel, self->underwater ? -0x18000 : -0x30000);
+                self->velocity.x = MIN(newXVel, self->underwater ? -0x18000 : -0x30000);
             else
-                self->velocity.x = maxVal(newXVel, self->underwater ? 0x18000 : 0x30000);
+                self->velocity.x = MAX(newXVel, self->underwater ? 0x18000 : 0x30000);
 
             if ((self->direction || !self->right) && (self->direction != FLIP_X || !self->left)) {
                 if (!self->underwater)
@@ -6234,7 +6235,7 @@ void Player_JumpAbility_Ray(void)
 
                 self->velocity.x >>= 1;
                 int32 vel          = abs(self->velocity.x);
-                self->abilitySpeed = minVal(-((vel >> 1) + (vel >> 2) + (vel >> 4)) >> (uint8)(self->underwater != 0), 0x40000);
+                self->abilitySpeed = MIN(-((vel >> 1) + (vel >> 2) + (vel >> 4)) >> (uint8)(self->underwater != 0), 0x40000);
             }
             else {
                 if (!self->underwater)

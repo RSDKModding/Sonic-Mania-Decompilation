@@ -51,7 +51,7 @@ void UFO_Camera_HandleCamPos(void)
 {
     RSDK_THIS(UFO_Camera);
 
-    int32 cos = maxVal(RSDK.Cos1024(-self->angleX) << 12, 0x3C0000);
+    int32 cos = MAX(RSDK.Cos1024(-self->angleX) << 12, 0x3C0000);
 
     int32 angle  = self->angle - self->prevAngle;
     int32 angle2 = angle - 0x400;
@@ -67,7 +67,7 @@ void UFO_Camera_HandleCamPos(void)
     ScreenInfo->position.y = offset - ScreenInfo->center.y + 512;
     self->prevAngle        = self->angle;
 
-    self->clipY = clampVal(ScreenInfo->center.y - offset + 8, -0x40, ScreenInfo->size.y);
+    self->clipY = CLAMP(ScreenInfo->center.y - offset + 8, -0x40, ScreenInfo->size.y);
 }
 
 void UFO_Camera_State_Normal(void)

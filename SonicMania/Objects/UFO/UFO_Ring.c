@@ -100,7 +100,7 @@ void UFO_Ring_PlayRingSfx(void)
 
 void UFO_Ring_LoseRings(EntityUFO_Player *player)
 {
-    int32 ringCount = clampVal(UFO_Setup->rings, 0, 10);
+    int32 ringCount = CLAMP(UFO_Setup->rings, 0, 10);
 
     UFO_Setup->rings -= 10;
     if (UFO_Setup->rings < 0)

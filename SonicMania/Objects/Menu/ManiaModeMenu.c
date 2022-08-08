@@ -221,7 +221,7 @@ void ManiaModeMenu_State_HandleTransition(void)
 {
     RSDK_THIS(MenuSetup);
 
-    self->fadeTimer = clampVal(self->timer << ((self->fadeShift & 0xFF) - 1), 0, 0x200);
+    self->fadeTimer = CLAMP(self->timer << ((self->fadeShift & 0xFF) - 1), 0, 0x200);
 }
 
 void ManiaModeMenu_HandleUnlocks(void)
@@ -236,7 +236,7 @@ void ManiaModeMenu_HandleUnlocks(void)
     EntityUIVsRoundPicker *vsRoundPicker = (EntityUIVsRoundPicker *)UIButton_GetChoicePtr(compRules->buttons[1], compRules->buttons[1]->selection);
     if (vsRoundPicker) {
         vsRoundPicker->maxVal = maxRounds;
-        vsRoundPicker->val    = minVal(vsRoundPicker->val, maxRounds);
+        vsRoundPicker->val    = MIN(vsRoundPicker->val, maxRounds);
     }
 
     OptionsMenu_HandleUnlocks();

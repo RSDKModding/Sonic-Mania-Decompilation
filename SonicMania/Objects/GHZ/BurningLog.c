@@ -53,7 +53,7 @@ void BurningLog_Create(void *data)
     self->drawGroup     = Zone->objectDrawLow;
 
     if (data)
-        self->timer = voidToInt(data);
+        self->timer = VOID_TO_INT(data);
 
     RSDK.SetSpriteAnimation(BurningLog->aniFrames, 0, &self->animator, true, 0);
 }

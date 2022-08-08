@@ -28,7 +28,7 @@ void Water_StaticUpdate(void)
 
             if (Water->waterLevelVolume > 0)
                 Water->waterLevelVolume--;
-            Water->waterLevelVolume = clampVal(Water->waterLevelVolume, 0, 30);
+            Water->waterLevelVolume = CLAMP(Water->waterLevelVolume, 0, 30);
         }
         else {
             if (RSDK.CheckSceneFolder("HCZ") && Water->moveWaterLevel) {
@@ -107,7 +107,7 @@ void Water_Create(void *data)
     self->visible = true;
     if (!SceneInfo->inEditor) {
         if (data)
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
 
         switch (self->type) {
             case WATER_WATERLEVEL:
@@ -157,8 +157,8 @@ void Water_Create(void *data)
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
                 self->active        = ACTIVE_BOUNDS;
-                self->updateRange.x = 0x100000;
-                self->updateRange.y = 0x100000;
+                self->updateRange.x = TO_FIXED(16);
+                self->updateRange.y = TO_FIXED(16);
 
                 RSDK.SetSpriteAnimation(Water->aniFrames, 2, &self->animator, true, 0);
 
@@ -183,8 +183,8 @@ void Water_Create(void *data)
             case WATER_BTN_BIG_BUBBLE:
                 self->drawGroup     = Zone->objectDrawLow;
                 self->active        = ACTIVE_BOUNDS;
-                self->updateRange.x = 0x100000;
-                self->updateRange.y = 0x100000;
+                self->updateRange.x = TO_FIXED(16);
+                self->updateRange.y = TO_FIXED(16);
 
                 self->state     = Water_State_BtnBigBubble;
                 self->stateDraw = StateMachine_None;
@@ -207,8 +207,8 @@ void Water_Create(void *data)
                 self->drawFX        = FX_SCALE;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = 0x800000;
+                self->updateRange.x = TO_FIXED(128);
+                self->updateRange.y = TO_FIXED(128);
                 self->isPermanent   = true;
 
                 self->scale.x = 0x200;
@@ -225,8 +225,8 @@ void Water_Create(void *data)
                 self->drawFX        = FX_SCALE;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = 0x800000;
+                self->updateRange.x = TO_FIXED(128);
+                self->updateRange.y = TO_FIXED(128);
 
                 self->scale.x = 0x200;
                 self->scale.y = 0x200;
@@ -286,7 +286,7 @@ void Water_StageLoad(void)
 void Water_DrawHook_ApplyWaterPalette(void)
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
-    int32 waterDrawPos     = clampVal((Water->waterLevel >> 0x10) - screen->position.y, 0, screen->size.y);
+    int32 waterDrawPos     = CLAMP(FROM_FIXED(Water->waterLevel) - screen->position.y, 0, screen->size.y);
 
     RSDK.SetActivePalette(Water->waterPalette, waterDrawPos, screen->size.y);
     ScreenInfo[SceneInfo->currentScreenID].waterDrawPos = waterDrawPos;
@@ -321,11 +321,11 @@ void Water_SetupTagLink(void)
         }
 
         if (self->taggedButton) {
-            if (self->updateRange.x < 0x800000 + abs(self->position.x - self->taggedButton->position.x))
-                self->updateRange.x = 0x800000 + abs(self->position.x - self->taggedButton->position.x);
+            if (self->updateRange.x < TO_FIXED(128) + abs(self->position.x - self->taggedButton->position.x))
+                self->updateRange.x = TO_FIXED(128) + abs(self->position.x - self->taggedButton->position.x);
 
-            if (self->updateRange.y < 0x800000 + abs(self->position.y - self->taggedButton->position.y))
-                self->updateRange.y = 0x800000 + abs(self->position.y - self->taggedButton->position.y);
+            if (self->updateRange.y < TO_FIXED(128) + abs(self->position.y - self->taggedButton->position.y))
+                self->updateRange.y = TO_FIXED(128) + abs(self->position.y - self->taggedButton->position.y);
         }
     }
 }
@@ -347,13 +347,13 @@ void Water_SpawnBubble(EntityPlayer *player, int32 id)
             return;
     }
 
-    EntityWater *bubble = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), player->position.x, player->position.y);
+    EntityWater *bubble = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), player->position.x, player->position.y);
     if (player->direction) {
-        bubble->position.x -= 0x60000;
+        bubble->position.x -= TO_FIXED(6);
         bubble->angle = 0x100;
     }
     else {
-        bubble->position.x += 0x60000;
+        bubble->position.x += TO_FIXED(6);
     }
 
     bubble->childPtr   = player;
@@ -364,13 +364,13 @@ void Water_SpawnBubble(EntityPlayer *player, int32 id)
 
 void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID)
 {
-    EntityWater *bubble = CREATE_ENTITY(Water, intToVoid(WATER_COUNTDOWN), player->position.x, player->position.y);
+    EntityWater *bubble = CREATE_ENTITY(Water, INT_TO_VOID(WATER_COUNTDOWN), player->position.x, player->position.y);
     if (player->direction) {
-        bubble->position.x -= 0x60000;
+        bubble->position.x -= TO_FIXED(6);
         bubble->angle = 0x100;
     }
     else {
-        bubble->position.x += 0x60000;
+        bubble->position.x += TO_FIXED(6);
     }
     bubble->bubbleX     = bubble->position.x;
     bubble->velocity.y  = -0x8800;
@@ -449,22 +449,22 @@ void Water_State_Water(void)
                         && (Player_CheckValidState(player) || player->state == Player_State_FlyToPlayer)) {
                         if (!Water->disableWaterSplash) {
                             if (waterSection) {
-                                EntityWater *splash = CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x,
+                                EntityWater *splash = CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), player->position.x,
                                                                     waterSection->position.y - (waterSection->size.y >> 1));
                                 splash->childPtr    = waterSection;
                                 splash->drawGroup   = player->drawGroup;
                             }
                             else {
-                                CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, Water->waterLevel);
+                                CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), player->position.x, Water->waterLevel);
                             }
 
                             RSDK.PlaySfx(Water->sfxSplash, false, 0xFF);
                         }
 
-                        if (player->velocity.y >= -0x40000) {
+                        if (player->velocity.y >= -TO_FIXED(4)) {
                             player->velocity.y <<= 1;
-                            if (player->velocity.y < -0x100000)
-                                player->velocity.y = -0x100000;
+                            if (player->velocity.y < -TO_FIXED(16))
+                                player->velocity.y = -TO_FIXED(16);
                         }
                     }
                 }
@@ -498,12 +498,12 @@ void Water_State_Water(void)
                         if (!Water->disableWaterSplash) {
                             if (currentPool) {
                                 EntityWater *splash =
-                                    CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, currentPool->position.y - (currentPool->size.x >> 1));
+                                    CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), player->position.x, currentPool->position.y - (currentPool->size.x >> 1));
                                 splash->drawGroup = player->drawGroup;
                                 splash->childPtr  = currentPool;
                             }
                             else {
-                                CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, Water->waterLevel);
+                                CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), player->position.x, Water->waterLevel);
                             }
 
                             RSDK.PlaySfx(Water->sfxSplash, false, 255);
@@ -758,14 +758,14 @@ void Water_State_Bubble(void)
         Water_HandleBubbleMovement();
 
         if (self->tileCollisions != TILECOLLISION_NONE) {
-            if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, false)) {
-                while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, false)
-                       && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, false)) {
-                    self->position.y += 0x10000;
-                }
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(16), false)) {
+                while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(16), 0)) self->position.y -= TO_FIXED(1);
             }
             else {
-                while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 0)) self->position.y -= 0x10000;
+                while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -TO_FIXED(16), false)
+                       && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -TO_FIXED(16), false)) {
+                    self->position.y += TO_FIXED(1);
+                }
             }
         }
     }
@@ -794,16 +794,16 @@ void Water_State_Bubble(void)
             {
                 if (Player_CheckValidState(player) || player->state == Player_State_FlyToPlayer) {
                     if (player->shield != SHIELD_BUBBLE && player->underwater && !Water_GetPlayerBubble(player)
-                        && player->position.x >= self->position.x - 0x100000 && player->position.x <= self->position.x + 0x100000) {
+                        && player->position.x >= self->position.x - TO_FIXED(16) && player->position.x <= self->position.x + TO_FIXED(16)) {
 
                         bool32 inWater = false;
                         if (player->animator.animationID == ANI_FAN) {
-                            if (player->position.y >= self->position.y - 0x100000)
-                                inWater = (player->position.y <= self->position.y + 0x100000);
+                            if (player->position.y >= self->position.y - TO_FIXED(16))
+                                inWater = (player->position.y <= self->position.y + TO_FIXED(16));
                         }
                         else {
                             if (player->position.y > self->position.y)
-                                inWater = (player->position.y <= self->position.y + 0x100000);
+                                inWater = (player->position.y <= self->position.y + TO_FIXED(16));
                         }
 
                         if (inWater) {
@@ -1069,9 +1069,9 @@ void Water_State_BigBubble(void)
             }
         }
 
-        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x180000, true)
-            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x180000, 0, true)
-            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -TO_FIXED(24), true)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -TO_FIXED(24), 0, true)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, TO_FIXED(24), 0, true)) {
             Water_PopBigBubble(self, false);
         }
     }
@@ -1094,7 +1094,7 @@ void Water_State_BtnBigBubble(void)
                 {
                     if (Player_CheckCollisionTouch(player, self, &hitbox)) {
                         if (player->animator.animationID != ANI_BREATHE) {
-                            EntityWater *bigBubble = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
+                            EntityWater *bigBubble = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y);
                             RSDK.SetSpriteAnimation(Water->bigBubbleFrames, 7, &bigBubble->animator, true, 0);
 
                             bigBubble->state          = Water_State_BigBubble;
@@ -1148,7 +1148,7 @@ void Water_State_Bubbler(void)
 
             self->countdownID = RSDK.Rand(0, 32);
 
-            EntityWater *bubble         = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y - 0x20000);
+            EntityWater *bubble         = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y - 0x20000);
             int32 bubbleSize            = Water->bubbleSizes[self->bubbleType1 + self->bubbleType2];
             bubble->animator.loopIndex  = bubbleSize;
             bubble->animator.frameCount = bubbleSize + 1;
@@ -1300,7 +1300,7 @@ void Water_Draw_Water(void)
     drawPos.y = Water->waterLevel;
     for (int32 i = (screen->size.x >> 6) + 2; i > 0; --i) {
         RSDK.DrawSprite(&self->animator, &drawPos, false);
-        drawPos.x += 0x400000;
+        drawPos.x += TO_FIXED(64);
     }
 
     self->drawFX |= FX_FLIP;
@@ -1373,8 +1373,8 @@ void Water_EditorDraw(void)
 {
     RSDK_THIS(Water);
 
-    self->updateRange.x = 0x800000;
-    self->updateRange.y = 0x800000;
+    self->updateRange.x = TO_FIXED(128);
+    self->updateRange.y = TO_FIXED(128);
 
     self->inkEffect = INK_NONE;
     switch (self->type) {
@@ -1390,7 +1390,7 @@ void Water_EditorDraw(void)
             drawPos.y = self->position.y;
             for (int32 i = (WIDE_SCR_XSIZE >> 6) + 2; i > 0; --i) {
                 RSDK.DrawSprite(&self->animator, &drawPos, false);
-                drawPos.x += 0x400000;
+                drawPos.x += TO_FIXED(64);
             }
             break;
 
@@ -1401,7 +1401,7 @@ void Water_EditorDraw(void)
 
             self->inkEffect = INK_BLEND;
             RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y,
-                          self->b + ((self->g + (self->r << 8)) << 8), 0x20, INK_ALPHA, false);
+                          (self->r << 16) | (self->g << 8) | self->b, 0x20, INK_ALPHA, false);
             if (showGizmos()) {
                 self->inkEffect = INK_NONE;
                 DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);

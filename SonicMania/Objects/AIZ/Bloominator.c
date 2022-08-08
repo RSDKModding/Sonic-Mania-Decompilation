@@ -135,14 +135,14 @@ void Bloominator_State_Firing(void)
 
     switch (++self->timer) {
         case 15:
-            spikeBall             = CREATE_ENTITY(Bloominator, intToVoid(true), self->position.x - 0x10000, self->position.y - 0x160000);
+            spikeBall             = CREATE_ENTITY(Bloominator, INT_TO_VOID(true), self->position.x - 0x10000, self->position.y - 0x160000);
             spikeBall->velocity.x = -0x10000;
             spikeBall->velocity.y = -0x50000;
             RSDK.PlaySfx(Bloominator->sfxShot, false, 255);
             break;
 
         case 45:
-            spikeBall             = CREATE_ENTITY(Bloominator, intToVoid(true), self->position.x - 0x10000, self->position.y - 0x160000);
+            spikeBall             = CREATE_ENTITY(Bloominator, INT_TO_VOID(true), self->position.x - 0x10000, self->position.y - 0x160000);
             spikeBall->velocity.x = 0x10000;
             spikeBall->velocity.y = -0x50000;
             RSDK.PlaySfx(Bloominator->sfxShot, false, 255);

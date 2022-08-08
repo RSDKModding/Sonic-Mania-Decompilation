@@ -72,7 +72,7 @@ void CutsceneSeq_Draw(void)
 #if MANIA_USE_PLUS
             LogHelpers_PrintVector2("Draw poi ", *point);
 #endif
-            DrawHelpers_DrawCross(point->x, point->y, 0x200000, 0x200000, colors[p]);
+            DrawHelpers_DrawCross(point->x, point->y, TO_FIXED(32), TO_FIXED(32), colors[p]);
         }
     }
 

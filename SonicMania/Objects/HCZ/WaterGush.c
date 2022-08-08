@@ -99,7 +99,7 @@ void WaterGush_Update(void)
                 if (self->gushPos > 0)
                     self->gushPos -= self->gravityStrength;
 
-                self->gushPos = maxVal(self->gushPos, 0);
+                self->gushPos = MAX(self->gushPos, 0);
                 if (!self->gushPos) {
                     self->activated         = false;
                     self->finishedExtending = false;
@@ -111,7 +111,7 @@ void WaterGush_Update(void)
             if (self->gushPos < self->length << 22)
                 self->gushPos += (abs(self->speed) << 15);
 
-            self->gushPos = minVal(self->length << 22, self->gushPos);
+            self->gushPos = MIN(self->length << 22, self->gushPos);
             if (self->gushPos == self->length << 22)
                 self->finishedExtending = true;
         }

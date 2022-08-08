@@ -109,23 +109,23 @@ void COverlay_DrawTile(void)
                 default: break;
 
                 case 1:
-                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + TO_FIXED(ty), self->position.x + tx, self->position.y + TO_FIXED(th),
                                   0xE0E000, 0xFF, INK_NONE, false);
                     break;
 
                 case 2:
-                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + TO_FIXED(ty), self->position.x + tx, self->position.y + TO_FIXED(th),
                                   0xE00000, 0xFF, INK_NONE, false);
                     break;
 
                 case 3:
-                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + TO_FIXED(ty), self->position.x + tx, self->position.y + TO_FIXED(th),
                                   0xE0E0E0, 0xFF, INK_NONE, false);
                     break;
             }
         }
 
-        tx += 0x10000;
+        tx += TO_FIXED(1);
     }
 }
 

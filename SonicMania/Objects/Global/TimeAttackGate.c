@@ -29,7 +29,7 @@ void TimeAttackGate_StaticUpdate(void)
             player->drownTimer = 0;
 
         if (TimeAttackGate->suppressedTitlecard) {
-            EntityTimeAttackGate *entity        = CREATE_ENTITY(TimeAttackGate, intToVoid(true), 0, 0);
+            EntityTimeAttackGate *entity        = CREATE_ENTITY(TimeAttackGate, INT_TO_VOID(true), 0, 0);
             entity->state                       = TimeAttackGate_State_Fadeout;
             entity->fadeTimer                   = 532;
             TimeAttackGate->suppressedTitlecard = false;
@@ -62,7 +62,7 @@ void TimeAttackGate_Create(void *data)
             RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &self->finAnimator, true, 0);
 
         if (!SceneInfo->inEditor) {
-            if (data == intToVoid(true)) {
+            if (data == INT_TO_VOID(true)) {
                 self->drawGroup = 14;
                 self->active    = ACTIVE_ALWAYS;
                 self->state     = TimeAttackGate_State_Restarter;
@@ -70,8 +70,8 @@ void TimeAttackGate_Create(void *data)
             }
             else {
                 self->active        = ACTIVE_NORMAL;
-                self->updateRange.x = 0x400000;
-                self->updateRange.y = 0x400000;
+                self->updateRange.x = TO_FIXED(64);
+                self->updateRange.y = TO_FIXED(64);
                 self->drawGroup     = Zone->playerDrawLow + 1;
 
                 int32 left   = self->boundsOffset.x - (self->boundsSize.x >> 1);
@@ -91,12 +91,15 @@ void TimeAttackGate_Create(void *data)
                 if (abs(left) > right)
                     self->updateRange.x = abs(left);
                 else
-                    self->updateRange.x = right + 0x400000;
+                    self->updateRange.x = right;
 
                 if (abs(top) > bottom)
-                    self->updateRange.y = abs(top) + 0x400000;
+                    self->updateRange.y = abs(top);
                 else
-                    self->updateRange.y = bottom + 0x400000;
+                    self->updateRange.y = bottom;
+
+                self->updateRange.x += TO_FIXED(64);
+                self->updateRange.y += TO_FIXED(64);
 
                 self->scale.y   = 0x200;
                 self->state     = TimeAttackGate_State_Gate;
@@ -218,7 +221,7 @@ void TimeAttackGate_HandleStart(void)
                 TimeAttackGate->started       = true;
                 SceneInfo->timeEnabled        = true;
 
-                EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(true), self->position.x, self->position.y);
+                EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, INT_TO_VOID(true), self->position.x, self->position.y);
                 TimeAttackGate->restartManager  = restarter;
                 restarter->isPermanent          = true;
 
@@ -303,7 +306,7 @@ void TimeAttackGate_CheckTouch(void)
 
         bool32 passedGate = false;
         if (self->boundsSize.x <= 0 || self->boundsSize.y <= 0) {
-            passedGate = self->position.x - player->position.x < 0x1000000;
+            passedGate = self->position.x - player->position.x < TO_FIXED(256);
         }
         else {
             int32 storeX     = self->position.x;
@@ -476,12 +479,12 @@ void TimeAttackGate_Draw_Gate(void)
     drawPos.y    = self->position.y;
 
     self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
-    drawPos.x                 = self->position.x + 0x30000;
+    drawPos.x                 = self->position.x + TO_FIXED(3);
     self->finAnimator.frameID = 1;
     RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
     self->scale.x             = abs(RSDK.Cos512(self->angle & 0x7F));
-    drawPos.x                 = self->position.x - 0x30000;
+    drawPos.x                 = self->position.x - TO_FIXED(3);
     self->finAnimator.frameID = 0;
     RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
@@ -540,12 +543,12 @@ void TimeAttackGate_EditorDraw(void)
     self->scale.y = 0x200;
 
     self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
-    drawPos.x                 = self->position.x + 0x30000;
+    drawPos.x                 = self->position.x + TO_FIXED(3);
     self->finAnimator.frameID = 1;
     RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
     self->scale.x             = abs(RSDK.Cos512(self->angle & 0x7F));
-    drawPos.x                 = self->position.x - 0x30000;
+    drawPos.x                 = self->position.x - TO_FIXED(3);
     self->finAnimator.frameID = 0;
     RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
@@ -568,8 +571,8 @@ void TimeAttackGate_EditorDraw(void)
     self->finAnimator.frameID = 2;
     RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    self->updateRange.x = 0x400000;
-    self->updateRange.y = 0x400000;
+    self->updateRange.x = TO_FIXED(64);
+    self->updateRange.y = TO_FIXED(64);
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
@@ -590,14 +593,17 @@ void TimeAttackGate_EditorDraw(void)
         if (abs(left) > right)
             self->updateRange.x = abs(left);
         else
-            self->updateRange.x = right + 0x400000;
+            self->updateRange.x = right;
 
         if (abs(top) > bottom)
-            self->updateRange.y = abs(top) + 0x400000;
+            self->updateRange.y = abs(top);
         else
-            self->updateRange.y = bottom + 0x400000;
+            self->updateRange.y = bottom;
 
-        DrawHelpers_DrawArenaBounds(left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16, 1 | 2 | 4 | 8, 0xFFFF00);
+        self->updateRange.x += TO_FIXED(64);
+        self->updateRange.y += TO_FIXED(64);
+
+        DrawHelpers_DrawArenaBounds(FROM_FIXED(left), FROM_FIXED(top), FROM_FIXED(right + 64), FROM_FIXED(bottom + 64), 1 | 2 | 4 | 8, 0xFFFF00);
 
         Hitbox hitbox = TimeAttackGate->hitboxGate;
         hitbox.top    = TimeAttackGate->hitboxGate.top - self->extendTop;

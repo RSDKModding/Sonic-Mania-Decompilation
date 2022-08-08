@@ -167,11 +167,11 @@ void Crabmeat_State_Shoot(void)
             case 1:
                 self->shootState = 2;
 
-                EntityCrabmeat *projectile = CREATE_ENTITY(Crabmeat, intToVoid(true), self->position.x - 0x100000, self->position.y);
+                EntityCrabmeat *projectile = CREATE_ENTITY(Crabmeat, INT_TO_VOID(true), self->position.x - 0x100000, self->position.y);
                 projectile->velocity.x     = -0x10000;
                 projectile->velocity.y     = -0x40000;
 
-                projectile             = CREATE_ENTITY(Crabmeat, intToVoid(true), self->position.x + 0x100000, self->position.y);
+                projectile             = CREATE_ENTITY(Crabmeat, INT_TO_VOID(true), self->position.x + 0x100000, self->position.y);
                 projectile->velocity.x = 0x10000;
                 projectile->velocity.y = -0x40000;
                 break;

@@ -19,7 +19,7 @@ void BSS_Player_Update(void)
 
     if (self->onGround) {
         if (self->jumpPress) {
-            self->velocity.y = -0x100000;
+            self->velocity.y = -TO_FIXED(16);
             self->onGround   = false;
             RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->animator, false, 0);
             RSDK.PlaySfx(BSS_Player->sfxJump, false, 255);
@@ -49,7 +49,7 @@ void BSS_Player_Update(void)
     }
 
     self->position.y = (self->gravityStrength >> 1) - (self->gravityStrength >> 4);
-    self->position.y += SceneInfo->entitySlot ? 0xBA0000 : 0xAA0000;
+    self->position.y += SceneInfo->entitySlot ? TO_FIXED(186) : TO_FIXED(170);
 
     if (self->animator.animationID == 1) {
         self->animator.timer += abs(setup->globeSpeed);
@@ -68,7 +68,7 @@ void BSS_Player_Update(void)
         }
     }
     else if (self->animator.animationID >= 2) {
-        self->animator.speed = maxVal(abs(setup->speedupLevel), 0x10);
+        self->animator.speed = MAX(abs(setup->speedupLevel), 0x10);
         RSDK.ProcessAnimation(&self->animator);
     }
 
@@ -85,7 +85,7 @@ void BSS_Player_Draw(void)
     RSDK_THIS(BSS_Player);
 
     Vector2 drawPos;
-    drawPos.x = ScreenInfo->center.x << 16;
+    drawPos.x = TO_FIXED(ScreenInfo->center.x);
     drawPos.y = self->position.y;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 
@@ -107,8 +107,8 @@ void BSS_Player_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
         self->drawGroup     = 4;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
+        self->updateRange.x = TO_FIXED(128);
+        self->updateRange.y = TO_FIXED(128);
 
         switch (GET_CHARACTER_ID(1)) {
             default:

@@ -101,7 +101,7 @@ void UIUsernamePopup_State_Appear(void)
         }
         else {
             self->isVisible = true;
-            MathHelpers_Lerp(&self->drawPos, 32 * clampVal(self->timer - self->delay, 0, 8), -self->size.y, self->size.y, 0, 0);
+            MathHelpers_Lerp(&self->drawPos, 32 * CLAMP(self->timer - self->delay, 0, 8), -self->size.y, self->size.y, 0, 0);
             ++self->timer;
         }
     }
@@ -138,7 +138,7 @@ void UIUsernamePopup_State_Disappear(void)
     else {
         self->isVisible = true;
 
-        int32 percent = 0x20 * maxVal(self->timer++, 0);
+        int32 percent = 0x20 * MAX(self->timer++, 0);
         MathHelpers_LerpToPos(&self->drawPos, percent, -self->size.y, self->size.y);
     }
 }

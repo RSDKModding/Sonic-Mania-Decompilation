@@ -58,7 +58,7 @@ void RockemSockem_Update(void)
                     self->velocity.y -= 0x2000;
                 }
 
-                self->velocity.x = clampVal(self->velocity.x, -0x40000, 0x40000);
+                self->velocity.x = CLAMP(self->velocity.x, -0x40000, 0x40000);
                 player->velocity.x -= player->velocity.x >> 4;
                 if (player->velocity.y <= 0)
                     player->velocity.y -= player->velocity.y >> 5;

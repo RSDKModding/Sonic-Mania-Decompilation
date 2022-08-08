@@ -34,8 +34,8 @@ void Announcer_Create(void *data)
     self->visible       = true;
     self->drawFX        = FX_FLIP | FX_SCALE;
     self->isPermanent   = true;
-    self->updateRange.x = 0x800000;
-    self->updateRange.y = 0x800000;
+    self->updateRange.x = TO_FIXED(128);
+    self->updateRange.y = TO_FIXED(128);
 }
 
 void Announcer_StageLoad(void)
@@ -246,7 +246,7 @@ void Announcer_State_Finished(void)
     else {
         self->visible = true;
         int32 t       = 16 * self->timer;
-        int32 xOffset = -0x10000 * ScreenInfo->size.x;
+        int32 xOffset = -TO_FIXED(1) * ScreenInfo->size.x;
         if (t > 0) {
             if (t < 256)
                 self->drawOffset.x = xOffset + t * (-xOffset >> 8);

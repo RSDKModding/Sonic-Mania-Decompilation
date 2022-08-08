@@ -287,7 +287,7 @@ bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host)
     if (host->timer == 30)
         Zone_StartFadeOut(10, 0x000000);
 
-    int32 volume = maxVal(30 - host->timer, 0);
+    int32 volume = MAX(30 - host->timer, 0);
     if (host->timer - 30 > 90)
         volume = -90;
 

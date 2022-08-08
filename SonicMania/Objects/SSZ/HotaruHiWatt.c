@@ -44,7 +44,7 @@ void HotaruHiWatt_Create(void *data)
             self->active        = ACTIVE_XBOUNDS;
             self->updateRange.x = 0xC00000;
             self->updateRange.y = 0xC00000;
-            self->type          = voidToInt(data);
+            self->type          = VOID_TO_INT(data);
             self->drawGroup     = Zone->objectDrawLow;
 
             switch (self->type) {
@@ -225,7 +225,7 @@ void HotaruHiWatt_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -468,11 +468,11 @@ void HotaruHiWatt_SpawnPairHotarus(void)
     if (boss->state != HotaruHiWatt_StateBoss_HiddenDimScreen)
         boss->state = HotaruHiWatt_StateBoss_HiddenDimScreen;
 
-    EntityHotaruHiWatt *pairHotaru1 = CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_PAIR_HOTARU), player1->position.x, HotaruHiWatt->startY + 0x200000);
+    EntityHotaruHiWatt *pairHotaru1 = CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_PAIR_HOTARU), player1->position.x, HotaruHiWatt->startY + 0x200000);
     pairHotaru1->isPermanent        = true;
     pairHotaru1->parents[0]         = boss;
 
-    EntityHotaruHiWatt *pairHotaru2 = CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_PAIR_HOTARU), player1->position.x, HotaruHiWatt->startY + 0x200000);
+    EntityHotaruHiWatt *pairHotaru2 = CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_PAIR_HOTARU), player1->position.x, HotaruHiWatt->startY + 0x200000);
     pairHotaru2->angle += 0x800000;
     pairHotaru2->isPermanent = true;
     pairHotaru2->parents[0]  = boss;
@@ -576,7 +576,7 @@ void HotaruHiWatt_StateBoss_FlyUp(void)
         self->state      = self->nextState;
         self->visible    = false;
 
-        EntityHotaruHiWatt *hotaru = CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_SINGLE_HOTARU), self->position.x, self->position.y);
+        EntityHotaruHiWatt *hotaru = CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_SINGLE_HOTARU), self->position.x, self->position.y);
         hotaru->isPermanent        = true;
         hotaru->parents[0]         = self;
     }
@@ -590,7 +590,7 @@ void HotaruHiWatt_StateHotaru_MoveToTarget(void)
     self->position.y += self->velocity.y;
 
     if (!(Zone->timer & 3))
-        CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_FLASH), self->position.x, self->position.y);
+        CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_FLASH), self->position.x, self->position.y);
 
     if (!((self->position.x ^ self->targetPos.x) & 0xFFF80000)) {
         if (!((self->position.y ^ self->targetPos.y) & 0xFFF80000)) {
@@ -708,7 +708,7 @@ void HotaruHiWatt_StateHotaru_Attacking(void)
 
     ++self->timer;
     if (!(self->timer & 1))
-        CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_MINILASER), self->position.x, self->position.y + 0x40000);
+        CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_MINILASER), self->position.x, self->position.y + 0x40000);
 
     if (self->timer == 24) {
         self->timer     = 0;
@@ -849,7 +849,7 @@ void HotaruHiWatt_StateHotaruPair_PrepareAttack(void)
     self->position.y = self->formationCircleRadius * RSDK.Sin1024(self->angle >> 14) + self->originPos.y;
 
     if (!(Zone->timer & 3))
-        CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_FLASH), self->position.x, self->position.y);
+        CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_FLASH), self->position.x, self->position.y);
 
     if (self->timer == 128) {
         self->timer = 0;
@@ -884,7 +884,7 @@ void HotaruHiWatt_StateHotaruPair_Charging(void)
 
         if (self->parents[1]) {
             for (int32 i = 30; i < 254; i += 28) {
-                EntityHotaruHiWatt *orb = CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_ELECTRICORB), self->position.x, self->position.y);
+                EntityHotaruHiWatt *orb = CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_ELECTRICORB), self->position.x, self->position.y);
                 orb->scale.x            = i;
                 orb->angle              = RSDK.Rand(0, 256);
                 orb->parents[1]         = self;
@@ -1016,7 +1016,7 @@ void HotaruHiWatt_StateBoss_CreateSmallHHWs(void)
 
     if (++self->timer == 224) {
         for (int32 angle = 0x20; angle < 0x120; angle += 0x40) {
-            EntityHotaruHiWatt *hotaru = CREATE_ENTITY(HotaruHiWatt, intToVoid(HHW_SMALL_HOTARU), self->position.x, self->position.y - 0xC0000);
+            EntityHotaruHiWatt *hotaru = CREATE_ENTITY(HotaruHiWatt, INT_TO_VOID(HHW_SMALL_HOTARU), self->position.x, self->position.y - 0xC0000);
             hotaru->position.x += RSDK.Cos256(angle) << 16;
             hotaru->position.y += RSDK.Sin256(angle) << 16;
             hotaru->velocity.x = (hotaru->targetPos.x - hotaru->position.x) >> 6;
@@ -1048,7 +1048,7 @@ void HotaruHiWatt_StateBoss_FormingHHW(void)
             RSDK.StopSfx(HotaruHiWatt->sfxHHWAppear);
             RSDK.PlaySfx(HotaruHiWatt->sfxFlash, false, 255);
 
-            EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+            EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
             fxFade->speedIn      = 128;
             fxFade->speedOut     = 16;
         }

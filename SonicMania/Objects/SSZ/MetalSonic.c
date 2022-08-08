@@ -406,7 +406,7 @@ void MetalSonic_Explode(void)
             int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
@@ -1297,7 +1297,7 @@ void MetalSonic_State_PrepareFinalChase(void)
     }
 
     if (++self->timer == 120) {
-        EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fade->speedIn      = 256;
         fade->wait         = 32;
         fade->speedOut     = 8;
@@ -1399,7 +1399,7 @@ void MetalSonic_State_Transform(void)
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_ELECTRICATTACK, &self->metalSonicAnimator, true, 0);
     }
 
-    int32 timer = minVal(self->timer >> 1, 96);
+    int32 timer = MIN(self->timer >> 1, 96);
 
     if ((self->timer & 0x1F) == 30) {
         EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
@@ -1425,7 +1425,7 @@ void MetalSonic_State_Transform(void)
         self->timer  = 0;
         self->active = ACTIVE_NEVER;
 
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;
         fxFade->wait         = 32;
         fxFade->speedOut     = 8;
@@ -1445,7 +1445,7 @@ void MetalSonic_State_Defeated(void)
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
+        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, INT_TO_VOID(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
                                                 (ScreenInfo->position.y - 48) << 16);
         prison->velocity.x      = 0x10000;
         prison->active          = ACTIVE_NORMAL;
@@ -2066,7 +2066,7 @@ void MetalSonic_State_Finish(void)
         Zone->playerBoundsR[0] = (ScreenInfo->size.x + ScreenInfo->position.x) << 16;
         Zone->playerBoundsL[0] = ScreenInfo->position.x << 16;
 
-        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
+        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, INT_TO_VOID(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
                                                 (ScreenInfo->position.y - 48) << 16);
 
         prison->velocity.x = 0x10000;

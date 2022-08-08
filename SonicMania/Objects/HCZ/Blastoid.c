@@ -127,7 +127,7 @@ void Blastoid_State_Body(void)
         case 1:
         case 16:
         case 31: {
-            EntityBlastoid *projectile = CREATE_ENTITY(Blastoid, intToVoid(true), self->position.x, self->position.y);
+            EntityBlastoid *projectile = CREATE_ENTITY(Blastoid, INT_TO_VOID(true), self->position.x, self->position.y);
 
             if (self->direction & FLIP_X) {
                 projectile->position.x += 0x100000;

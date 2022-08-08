@@ -39,12 +39,12 @@ void Blaster_Create(void *data)
     self->updateRange.y = 0x800000;
 
     if (data) {
-        if (data == intToVoid(BLASTER_SHOT)) {
+        if (data == INT_TO_VOID(BLASTER_SHOT)) {
             self->active = ACTIVE_NORMAL;
             RSDK.SetSpriteAnimation(Blaster->aniFrames, 4, &self->animator, true, 0);
             self->state = Blaster_State_BeginShot;
         }
-        else if (data == intToVoid(BLASTER_SHELL)) {
+        else if (data == INT_TO_VOID(BLASTER_SHELL)) {
             self->active = ACTIVE_NORMAL;
             RSDK.SetSpriteAnimation(Blaster->aniFrames, 5, &self->animator, true, 0);
             self->state = Blaster_State_Shell;
@@ -198,11 +198,11 @@ void Blaster_State_AttackPlayer(void)
         case 18: {
             EntityBlaster *shot = NULL;
             if (self->direction) {
-                shot             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHOT), self->position.x + 0x170000, self->position.y - 0x150000);
+                shot             = CREATE_ENTITY(Blaster, INT_TO_VOID(BLASTER_SHOT), self->position.x + 0x170000, self->position.y - 0x150000);
                 shot->velocity.x = 0x20000;
             }
             else {
-                shot             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHOT), self->position.x - 0x170000, self->position.y - 0x150000);
+                shot             = CREATE_ENTITY(Blaster, INT_TO_VOID(BLASTER_SHOT), self->position.x - 0x170000, self->position.y - 0x150000);
                 shot->velocity.x = -0x20000;
             }
             shot->velocity.y = -0x48000;
@@ -214,11 +214,11 @@ void Blaster_State_AttackPlayer(void)
         case 24: {
             EntityBlaster *shell = NULL;
             if (self->direction) {
-                shell             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHELL), self->position.x + 0x60000, self->position.y - 0x30000);
+                shell             = CREATE_ENTITY(Blaster, INT_TO_VOID(BLASTER_SHELL), self->position.x + 0x60000, self->position.y - 0x30000);
                 shell->velocity.x = -0x10000;
             }
             else {
-                shell             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHELL), self->position.x - 0x60000, self->position.y - 0x30000);
+                shell             = CREATE_ENTITY(Blaster, INT_TO_VOID(BLASTER_SHELL), self->position.x - 0x60000, self->position.y - 0x30000);
                 shell->velocity.x = 0x10000;
             }
             shell->velocity.y = -0x20000;

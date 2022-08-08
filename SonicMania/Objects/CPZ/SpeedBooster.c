@@ -169,7 +169,7 @@ void SpeedBooster_State_SSZFire(void)
     self->drawPos.x  = self->position.x;
     self->drawPos.y  = self->position.y;
 
-    EntitySpeedBooster *child = CREATE_ENTITY(SpeedBooster, intToVoid(true), self->position.x, self->position.y);
+    EntitySpeedBooster *child = CREATE_ENTITY(SpeedBooster, INT_TO_VOID(true), self->position.x, self->position.y);
     int32 newVel              = 0x10000;
     child->velocity.y         = -0x70000;
     if (self->velocity.x > 0)

@@ -243,8 +243,8 @@ int32 BoucePlant_GetNodeStandY(int32 x)
             pos = (x - left) / 3;
     }
 
-    dist = clampVal(dist, -0x320000, 0x320000);
-    pos  = clampVal(pos + 0x200000, -0x320000, 0x320000);
+    dist = CLAMP(dist, -0x320000, 0x320000);
+    pos  = CLAMP(pos + 0x200000, -0x320000, 0x320000);
     return dist + ((self->depression * (pos - dist)) >> 8);
 }
 

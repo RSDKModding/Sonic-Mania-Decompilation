@@ -523,7 +523,7 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
     }
 
     if (!host->values[0]) {
-        host->fadeWhite = clampVal(512 - ((host->timer - 45) << 9) / 60, 0, 512);
+        host->fadeWhite = CLAMP(512 - ((host->timer - 45) << 9) / 60, 0, 512);
         if (!host->fadeWhite)
             host->values[0] = 1;
     }

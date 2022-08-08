@@ -567,9 +567,9 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 #endif
 
     int32 retries[2];
-    retries[0] = minVal(self->saveLives, 99);
+    retries[0] = MIN(self->saveLives, 99);
 #if MANIA_USE_PLUS
-    retries[1] = minVal(self->saveContinues, 99);
+    retries[1] = MIN(self->saveContinues, 99);
 #else
     retries[1] = 0;
 #endif

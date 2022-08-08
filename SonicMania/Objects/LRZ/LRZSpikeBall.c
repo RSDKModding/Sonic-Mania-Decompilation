@@ -89,7 +89,7 @@ int LRZSpikeBall_GetBaseFrameID(void)
         inc = nextInc;
         if (useOnFrames) {
             useOnFrames = false;
-            nextInc     = maxVal(nextInc - 2, 1);
+            nextInc     = MAX(nextInc - 2, 1);
         }
         else
             useOnFrames = true;

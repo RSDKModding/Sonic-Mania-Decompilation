@@ -52,7 +52,7 @@ void LRZ3Outro_HandleExplosions(void)
 
     int32 x                    = (RSDK.Rand(-ScreenInfo->center.x, ScreenInfo->center.x) + ScreenInfo->center.x + ScreenInfo->position.x);
     int32 y                    = ScreenInfo->position.y + 32 + ScreenInfo->size.y;
-    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x << 16, y << 16);
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), x << 16, y << 16);
 
     explosion->velocity.x = RSDK.Rand(-0x20000, 0x20000);
     explosion->velocity.y = self->velocity.y - 0x40000;
@@ -192,7 +192,7 @@ bool32 LRZ3Outro_Cutscene_StopPlayers(EntityCutsceneSeq *host)
 bool32 LRZ3Outro_Cutscene_LightUpLittlePlanet(EntityCutsceneSeq *host)
 {
     if (host->timer > 60) {
-        int32 frame = 23 - minVal((host->timer - 60) >> 2, 6);
+        int32 frame = 23 - MIN((host->timer - 60) >> 2, 6);
         foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, true, frame); }
     }
 

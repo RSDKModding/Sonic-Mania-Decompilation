@@ -212,7 +212,7 @@ void PimPom_State_Single(void)
             if (Player_CheckBadnikTouch(player, self, &self->hitbox)) {
                 int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
-                int32 vel = maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x600);
+                int32 vel = MAX(abs(player->velocity.y + player->velocity.x) >> 8, 0x600);
 
                 int32 power = RSDK.Rand(0x400, vel);
                 angle += RSDK.Rand(-6, 6);
@@ -305,10 +305,10 @@ void PimPom_State_Horizontal(void)
                     player->velocity.y = playerVelY;
                     break;
 
-                case C_TOP: player->velocity.y = clampVal(-(storedVelY + (storedVelY >> 4)), -0xE0000, -0x40000); break;
-                case C_LEFT: player->velocity.x = clampVal(-storedVelX, -0x80000, -0x20000); break;
-                case C_RIGHT: player->velocity.x = clampVal(-storedVelX, 0x20000, 0x80000); break;
-                case C_BOTTOM: player->velocity.y = clampVal(-(storedVelY + (storedVelY >> 4)), 0x40000, 0xE0000); break;
+                case C_TOP: player->velocity.y = CLAMP(-(storedVelY + (storedVelY >> 4)), -0xE0000, -0x40000); break;
+                case C_LEFT: player->velocity.x = CLAMP(-storedVelX, -0x80000, -0x20000); break;
+                case C_RIGHT: player->velocity.x = CLAMP(-storedVelX, 0x20000, 0x80000); break;
+                case C_BOTTOM: player->velocity.y = CLAMP(-(storedVelY + (storedVelY >> 4)), 0x40000, 0xE0000); break;
 
                 default: break;
             }

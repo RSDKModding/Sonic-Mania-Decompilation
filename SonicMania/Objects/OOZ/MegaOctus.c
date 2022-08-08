@@ -43,7 +43,7 @@ void MegaOctus_Create(void *data)
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->active = ACTIVE_BOUNDS;
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case MEGAOCTUS_BODY:
@@ -386,7 +386,7 @@ void MegaOctus_Explode(void)
         if (Zone->timer & 4) {
             int32 x                    = self->position.x + (RSDK.Rand(-48, 48) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-48, 48) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
@@ -463,11 +463,11 @@ void MegaOctus_State_SetupArena(void)
         self->health            = 8;
         self->timer             = 60;
 
-        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x + 0x800000, self->origin.y + 0x400000);
+        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ARM), self->position.x + 0x800000, self->origin.y + 0x400000);
         arm->direction       = self->direction;
         arm->angle           = 128;
 
-        arm            = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x - 0x800000, self->origin.y + 0x400000);
+        arm            = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ARM), self->position.x - 0x800000, self->origin.y + 0x400000);
         arm->direction = self->direction;
         arm->angle     = 128;
 
@@ -563,7 +563,7 @@ void MegaOctus_State_SpawnWeapons(void)
 
     if (--self->timer == 240) {
         MegaOctus->spawnHarpoon  = false;
-        EntityMegaOctus *harpoon = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_HARPOON), self->position.x, self->origin.y + 0x300000);
+        EntityMegaOctus *harpoon = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_HARPOON), self->position.x, self->origin.y + 0x300000);
         harpoon->direction       = self->direction;
         RSDK.PlaySfx(MegaOctus->sfxHarpoon, false, 255);
 
@@ -580,7 +580,7 @@ void MegaOctus_State_SpawnWeapons(void)
     }
     else if (self->timer <= 0) {
         self->timer                                                                                                   = 480;
-        CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_CANNON), self->position.x, self->origin.y + 0x400000)->direction = self->direction;
+        CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_CANNON), self->position.x, self->origin.y + 0x400000)->direction = self->direction;
         self->state = MegaOctus_State_CannonThenSpawnOrbs;
     }
 
@@ -602,16 +602,16 @@ void MegaOctus_State_CannonThenSpawnOrbs(void)
     MegaOctus_CheckPlayerCollisions_Body();
 
     if (--self->timer <= 0) {
-        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x + 0x800000, self->origin.y + 0x400000);
+        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ARM), self->position.x + 0x800000, self->origin.y + 0x400000);
         arm->direction       = self->direction;
         arm->angle           = 128;
 
-        arm            = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x - 0x800000, self->origin.y + 0x400000);
+        arm            = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ARM), self->position.x - 0x800000, self->origin.y + 0x400000);
         arm->direction = self->direction;
         arm->angle     = 128;
 
         if (MegaOctus->orbHealth[0] > 0) {
-            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORB), self->position.x + 0x380000, self->origin.y + 0x780000);
+            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ORB), self->position.x + 0x380000, self->origin.y + 0x780000);
             orb->direction       = self->direction;
             orb->health          = MegaOctus->orbHealth[0];
             orb->orbID           = 0;
@@ -619,7 +619,7 @@ void MegaOctus_State_CannonThenSpawnOrbs(void)
         }
 
         if (MegaOctus->orbHealth[1] > 0) {
-            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORB), self->position.x - 0x380000, self->origin.y + 0x780000);
+            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ORB), self->position.x - 0x380000, self->origin.y + 0x780000);
             orb->direction       = self->direction;
             orb->health          = MegaOctus->orbHealth[1];
             orb->orbID           = 1;
@@ -671,7 +671,7 @@ void MegaOctus_State_Finish(void)
     if (!(Zone->timer & 7)) {
         int32 x                    = self->position.x + (RSDK.Rand(-48, 48) << 16);
         int32 y                    = self->position.y + (RSDK.Rand(-48, 48) << 16);
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawGroup       = self->drawGroup;
     }
 
@@ -932,7 +932,7 @@ void MegaOctus_StateCannon_FireLaser(void)
         self->timer            = 40;
         int32 x                = (RSDK.Cos512(self->angle) << 10) + self->position.x;
         int32 y                = (RSDK.Sin512(self->angle) << 9) + self->position.y;
-        EntityMegaOctus *child = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_LASER), x, y);
+        EntityMegaOctus *child = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_LASER), x, y);
         child->direction       = self->direction;
         child->velocity.x      = self->direction ? 0x40000 : -0x40000;
         child->position.x += child->velocity.x;
@@ -1070,14 +1070,14 @@ void MegaOctus_StateOrb_FireShot(void)
             angle = 3 * self->shotCount;
         angle *= 4;
 
-        EntityMegaOctus *shot = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORBSHOT), x, y);
+        EntityMegaOctus *shot = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ORBSHOT), x, y);
         shot->velocity.x      = 0x300 * RSDK.Sin256(angle);
         shot->velocity.y      = 0x300 * RSDK.Cos256(angle);
 #else
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         angle                 = RSDK.ATan2(player1->position.x - x, player1->position.y - y);
 
-        EntityMegaOctus *shot = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORBSHOT), x, y);
+        EntityMegaOctus *shot = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ORBSHOT), x, y);
         shot->velocity.x      = 0x300 * RSDK.Cos256(angle);
         shot->velocity.y      = 0x300 * RSDK.Sin256(angle);
 #endif
@@ -1124,7 +1124,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         if (Zone->timer & 4) {
             int32 x                    = self->position.x + (RSDK.Cos512(self->angle) << 10) + (RSDK.Rand(-16, 16) << 16);
             int32 y                    = self->position.y + (RSDK.Sin512(self->angle) << 9) + (RSDK.Rand(-16, 16) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + 2), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
@@ -1229,7 +1229,7 @@ void MegaOctus_StateArm_WrapAroundPlatform(void)
         if (!self->targetPos) {
             // Create another arm to grab the other platform
             self->targetPos      = 1;
-            EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x, self->position.y + 0x40000);
+            EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_ARM), self->position.x, self->position.y + 0x40000);
             arm->direction       = self->direction;
             arm->state           = MegaOctus_StateArm_GrabPlatform;
             arm->stateDraw       = MegaOctus_Draw_Arm_WrapAroundPlatformTop;
@@ -1457,7 +1457,7 @@ void MegaOctus_State_Laser(void)
             if (self->shotCount != self->position.x >> 20) {
                 self->shotCount = self->position.x >> 20;
                 RSDK.PlaySfx(MegaOctus->sfxLaserSplash, false, 255);
-                CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_LASERFIRE), (self->position.x & 0xFFF00000) + 0x80000, self->position.y);
+                CREATE_ENTITY(MegaOctus, INT_TO_VOID(MEGAOCTUS_LASERFIRE), (self->position.x & 0xFFF00000) + 0x80000, self->position.y);
             }
         }
     }

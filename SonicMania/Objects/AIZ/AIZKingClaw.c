@@ -14,7 +14,7 @@ void AIZKingClaw_Update(void)
     RSDK_THIS(AIZKingClaw);
     StateMachine_Run(self->state);
 
-    for (int32 i = 0; i < minVal(self->grabCount, 8); ++i) {
+    for (int32 i = 0; i < MIN(self->grabCount, 8); ++i) {
         Entity *grabbed = self->grabbedEntities[i];
         if (grabbed) {
             grabbed->position.x = self->clawPos.x;

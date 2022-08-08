@@ -44,7 +44,7 @@ void Turntable_Update(void)
                 player->onGround        = true;
                 player->state           = Player_State_Static;
 
-                int32 dist = abs(player->position.x - self->position.x) >> 0x10;
+                int32 dist = FROM_FIXED(abs(player->position.x - self->position.x));
 
                 if (dist >= 0x10) {
                     if (player->position.x <= self->position.x) {

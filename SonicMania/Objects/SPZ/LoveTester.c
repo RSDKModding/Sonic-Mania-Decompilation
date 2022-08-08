@@ -277,7 +277,7 @@ void LoveTester_CreateHeartParticles(void)
     RSDK_THIS(LoveTester);
 
     for (int32 velX = 0, frame = 0; velX < 0x10000; velX += 0x4000, ++frame) {
-        EntityLoveTester *child = CREATE_ENTITY(LoveTester, intToVoid(true), self->position.x, self->position.y);
+        EntityLoveTester *child = CREATE_ENTITY(LoveTester, INT_TO_VOID(true), self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(LoveTester->aniFrames, 4, &child->mainAnimator, true, frame & 1);
         child->velocity.x = velX - 0x6000;
     }

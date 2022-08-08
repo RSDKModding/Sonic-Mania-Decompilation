@@ -110,7 +110,7 @@ void TitleEggman_State_Move(void)
 
     ++self->timer;
     if (!(self->timer & 0xF))
-        CREATE_ENTITY(TitleEggman, intToVoid(true), self->position.x - 0xE0000, self->position.y + 0x80000);
+        CREATE_ENTITY(TitleEggman, INT_TO_VOID(true), self->position.x - 0xE0000, self->position.y + 0x80000);
 
     RSDK.ProcessAnimation(&self->eggmanAnimator);
     RSDK.ProcessAnimation(&self->capsuleAnimator);

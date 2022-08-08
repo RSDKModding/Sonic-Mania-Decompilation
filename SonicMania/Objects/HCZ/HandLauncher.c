@@ -218,7 +218,7 @@ void HandLauncher_State_AwaitPlayer(void)
 
     // Out of range, lower "Hand Position" to hide it
     self->position = self->hiddenPos;
-    self->position.y -= ((self->hiddenPos.y - self->playerPos.y) >> 3) * minVal(self->timer, 8);
+    self->position.y -= ((self->hiddenPos.y - self->playerPos.y) >> 3) * MIN(self->timer, 8);
 
     if (self->timer > 0)
         self->timer--;
@@ -236,7 +236,7 @@ void HandLauncher_State_TryGrabPlayer(void)
 
     // In Range, raise "Hand Position" to show it
     self->position = self->hiddenPos;
-    self->position.y -= ((self->hiddenPos.y - self->playerPos.y) >> 3) * minVal(self->timer, 8);
+    self->position.y -= ((self->hiddenPos.y - self->playerPos.y) >> 3) * MIN(self->timer, 8);
 
     if (self->timer < 8)
         self->timer++;
@@ -279,7 +279,7 @@ void HandLauncher_State_GrabbedPlayer(void)
         else if (self->timer < 66) {
             self->position = self->playerPos;
             int32 dist     = (self->playerPos.y - self->startPos.y) / 3;
-            self->position.y -= dist * minVal(66 - self->timer, 3);
+            self->position.y -= dist * MIN(66 - self->timer, 3);
         }
         else {
             HandLauncher_ReleasePlayers();

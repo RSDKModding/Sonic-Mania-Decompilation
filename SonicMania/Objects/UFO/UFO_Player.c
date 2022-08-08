@@ -617,7 +617,7 @@ void UFO_Player_State_CourseOut(void)
         else if (self->timer == 16) {
             if (!UFO_Setup->timedOut) {
                 UFO_Setup->timedOut = true;
-                CREATE_ENTITY(UFO_Message, intToVoid(UFO_MESSAGE_COURSEOUT), self->position.x, self->position.y);
+                CREATE_ENTITY(UFO_Message, INT_TO_VOID(UFO_MESSAGE_COURSEOUT), self->position.x, self->position.y);
             }
         }
     }

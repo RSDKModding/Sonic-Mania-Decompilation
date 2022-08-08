@@ -49,7 +49,7 @@ void FXFade_Create(void *data)
             self->speedOut = 32;
 
         if (!self->color)
-            self->color = voidToInt(data);
+            self->color = VOID_TO_INT(data);
 
         if (!self->eventOnly) {
 #if MANIA_USE_PLUS
@@ -130,7 +130,7 @@ void FXFade_State_FadeInBlack(void)
     else
         self->state = StateMachine_None;
 
-    self->color = (maxVal(r, 0) << 16) | (maxVal(g, 0) << 8) | (maxVal(b, 0) << 0);
+    self->color = (MAX(r, 0) << 16) | (MAX(g, 0) << 8) | (MAX(b, 0) << 0);
 }
 
 #if RETRO_INCLUDE_EDITOR

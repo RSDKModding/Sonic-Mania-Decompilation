@@ -71,10 +71,10 @@ void ForceUnstick_DrawSprites(void)
     for (int32 y = 0; y < self->height + 1; ++y) {
         for (int32 x = 0; x < self->width + 1; ++x) {
             RSDK.DrawSprite(&ForceUnstick->animator, &drawPos, false);
-            drawPos.x += 0x100000;
+            drawPos.x += TO_FIXED(16);
         }
-        drawPos.x += -0x100000 - (self->width << 20);
-        drawPos.y += 0x100000;
+        drawPos.x += -TO_FIXED(16) - (self->width << 20);
+        drawPos.y += TO_FIXED(16);
     }
 }
 

@@ -202,7 +202,7 @@ void SchrodingersCapsule_State_Explode(void)
     RSDK.ProcessAnimation(&self->mightyAnimator);
     RSDK.ProcessAnimation(&self->rayAnimator);
     if (!(self->timer % 3)) {
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY)),
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY)),
                                                    (RSDK.Rand(-24, 24) << 16) + self->position.x, (RSDK.Rand(-24, 24) << 16) + self->position.y);
         explosion->drawGroup       = Zone->objectDrawHigh;
 
@@ -281,7 +281,7 @@ void SchrodingersCapsule_State_Explode(void)
         self->timer = 0;
         self->state = SchrodingersCapsule_State_SetupActClear;
 
-        EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fade->speedIn      = 256;
         fade->speedOut     = 32;
     }

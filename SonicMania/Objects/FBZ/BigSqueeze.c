@@ -226,7 +226,7 @@ void BigSqueeze_Explode(void)
         if (Zone->timer & 4) {
             int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
             int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -519,7 +519,7 @@ void BigSqueeze_StateBoss_Destroyed(void)
                 foreach_active(FBZTrash, trash)
                 {
                     if (trash->state != FBZTrash_State_LooseTrash) {
-                        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), trash->position.x, trash->position.y)->drawGroup = Zone->objectDrawHigh;
+                        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), trash->position.x, trash->position.y)->drawGroup = Zone->objectDrawHigh;
                         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                         destroyEntity(trash);
                     }

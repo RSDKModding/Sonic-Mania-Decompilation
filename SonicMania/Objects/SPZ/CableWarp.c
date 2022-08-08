@@ -33,7 +33,7 @@ void CableWarp_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         if (data)
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
 
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x400000;
@@ -157,7 +157,7 @@ void CableWarp_State_CheckPlayerEntry(void)
             player->velocity.y      = 0;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
-            EntityCableWarp *warp = CREATE_ENTITY(CableWarp, intToVoid(CABLEWARP_TRANSPORT), self->position.x, self->position.y);
+            EntityCableWarp *warp = CREATE_ENTITY(CableWarp, INT_TO_VOID(CABLEWARP_TRANSPORT), self->position.x, self->position.y);
             warp->isPermanent     = true;
             warp->player          = player;
 

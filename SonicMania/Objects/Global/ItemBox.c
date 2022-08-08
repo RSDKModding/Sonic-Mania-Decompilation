@@ -88,7 +88,7 @@ void ItemBox_Create(void *data)
     RSDK_THIS(ItemBox);
 
     if (data)
-        self->type = voidToInt(data);
+        self->type = VOID_TO_INT(data);
 
     if (self->state != ItemBox_State_Broken) {
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->boxAnimator, true, 0);
@@ -146,8 +146,8 @@ void ItemBox_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->direction *= FLIP_Y;
         self->active        = ACTIVE_BOUNDS;
-        self->updateRange.x = 0x400000;
-        self->updateRange.y = 0x400000;
+        self->updateRange.x = TO_FIXED(64);
+        self->updateRange.y = TO_FIXED(64);
         self->visible       = true;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
             self->drawGroup = Zone->objectDrawHigh;
@@ -222,7 +222,7 @@ void ItemBox_DebugDraw(void)
 
     Vector2 drawPos;
     drawPos.x = self->position.x;
-    drawPos.y = self->position.y - 0x30000;
+    drawPos.y = self->position.y - TO_FIXED(3);
     RSDK.DrawSprite(&DebugMode->animator, &drawPos, false);
 }
 void ItemBox_DebugSpawn(void)
@@ -291,9 +291,9 @@ void ItemBox_State_Idle(void)
     self->contentsPos.x = self->position.x;
 
     if (self->direction == FLIP_NONE)
-        self->contentsPos.y = self->position.y - 0x30000;
+        self->contentsPos.y = self->position.y - TO_FIXED(3);
     else
-        self->contentsPos.y = self->position.y + 0x30000;
+        self->contentsPos.y = self->position.y + TO_FIXED(3);
 
     ItemBox_HandleObjectCollisions();
     ItemBox_CheckHit();
@@ -330,9 +330,9 @@ void ItemBox_State_Falling(void)
 
     self->contentsPos.x = self->position.x;
     if (self->direction == FLIP_NONE)
-        self->contentsPos.y = self->position.y - 0x30000;
+        self->contentsPos.y = self->position.y - TO_FIXED(3);
     else
-        self->contentsPos.y = self->position.y + 0x30000;
+        self->contentsPos.y = self->position.y + TO_FIXED(3);
 
     ItemBox_CheckHit();
     RSDK.ProcessAnimation(&self->overlayAnimator);
@@ -365,9 +365,9 @@ void ItemBox_State_Conveyor(void)
     self->moveOffset    = LRZConvItem_HandleLRZConvPhys(self);
     self->contentsPos.x = self->position.x;
     if (self->direction == FLIP_NONE)
-        self->contentsPos.y = self->position.y - 0x30000;
+        self->contentsPos.y = self->position.y - TO_FIXED(3);
     else
-        self->contentsPos.y = self->position.y + 0x30000;
+        self->contentsPos.y = self->position.y + TO_FIXED(3);
 
     ItemBox_CheckHit();
 
@@ -404,12 +404,12 @@ void ItemBox_CheckHit(void)
         if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
 #if MANIA_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1 && !self->parent) {
-                if (RSDK.CheckObjectCollisionTouchCircle(player, 0x1000000, self, 0x100000)) {
-                    if (self->position.y - 0x800000 < player->position.y && self->state != ItemBox_State_Falling) {
+                if (RSDK.CheckObjectCollisionTouchCircle(player, TO_FIXED(256), self, TO_FIXED(16))) {
+                    if (self->position.y - TO_FIXED(128) < player->position.y && self->state != ItemBox_State_Falling) {
                         self->active = ACTIVE_NORMAL;
                         if (!self->lrzConvPhys)
                             self->state = ItemBox_State_Falling;
-                        self->velocity.y = -0x20000;
+                        self->velocity.y = -TO_FIXED(2);
                     }
                 }
             }
@@ -451,10 +451,10 @@ void ItemBox_CheckHit(void)
                     if (!self->lrzConvPhys)
                         self->state = ItemBox_State_Falling;
 
-                    self->velocity.y = -0x20000;
+                    self->velocity.y = -TO_FIXED(2);
 
                     if (!player->onGround)
-                        player->velocity.y = 0x20000;
+                        player->velocity.y = TO_FIXED(2);
                 }
                 else if (side == C_TOP) {
                     player->position.x += self->moveOffset.x;
@@ -559,7 +559,7 @@ void ItemBox_GivePowerup(void)
                             charID <<= 8;
                     }
                     globals->stock |= charID;
-                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player->position.x, player->position.y);
+                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player->position.x, player->position.y);
                     explosion->drawGroup       = Zone->objectDrawHigh;
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
@@ -660,10 +660,10 @@ void ItemBox_GivePowerup(void)
                         }
                     }
 
-                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player1->position.x, player1->position.y);
+                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player1->position.x, player1->position.y);
                     explosion->drawGroup       = Zone->objectDrawHigh;
 
-                    explosion            = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player2->position.x, player2->position.y);
+                    explosion            = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player2->position.x, player2->position.y);
                     explosion->drawGroup = Zone->objectDrawHigh;
 
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
@@ -694,20 +694,20 @@ void ItemBox_GivePowerup(void)
                         else {
                             player2->classID    = Player->classID;
                             Player->respawnTimer = 0;
-                            EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
+                            EntityDust *dust    = CREATE_ENTITY(Dust, INT_TO_VOID(1), player2->position.x, player2->position.y);
 
                             dust->visible         = false;
                             dust->active          = ACTIVE_NEVER;
                             dust->isPermanent     = true;
-                            dust->position.y      = (ScreenInfo->position.y - 128) << 16;
+                            dust->position.y      = TO_FIXED(ScreenInfo->position.y - 128);
                             player2->playerID     = 1;
                             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                             if (player1->state == Player_State_Death || player1->state == Player_State_Drown) {
                                 player2->state      = Player_State_EncoreRespawn;
                                 player2->velocity.x = 0;
                                 player2->velocity.y = 0;
-                                player2->position.x = -0x200000;
-                                player2->position.y = -0x200000;
+                                player2->position.x = -TO_FIXED(32);
+                                player2->position.y = -TO_FIXED(32);
                                 break;
                             }
                             else {
@@ -715,9 +715,9 @@ void ItemBox_GivePowerup(void)
                                 player2->velocity.x = 0;
                                 player2->velocity.y = 0;
                                 player2->groundVel  = 0;
-                                player2->position.x = -0x400000;
-                                player2->position.y = -0x400000;
-                                player2->angle      = 128;
+                                player2->position.x = -TO_FIXED(64);
+                                player2->position.y = -TO_FIXED(64);
+                                player2->angle      = 0x80;
                                 if (player2->characterID == ID_TAILS) {
                                     player2->state = Player_State_FlyToPlayer;
                                 }
@@ -727,7 +727,7 @@ void ItemBox_GivePowerup(void)
                                     player2->drawFX |= FX_SCALE;
                                     player2->scale.x    = 0x400;
                                     player2->scale.y    = 0x400;
-                                    player2->velocity.y = clampVal(player2->abilityValues[0] / -12, -0xE0000, -0x68000);
+                                    player2->velocity.y = CLAMP(player2->abilityValues[0] / -12, -0xE0000, -0x68000);
                                 }
                                 player2->abilityPtrs[0]   = dust;
                                 player2->abilityValues[0] = 0;
@@ -763,7 +763,7 @@ void ItemBox_GivePowerup(void)
                         default: break;
                     }
 
-                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player->position.x, player->position.y);
+                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player->position.x, player->position.y);
                     explosion->drawGroup       = Zone->objectDrawHigh;
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
@@ -802,16 +802,16 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 
 #if MANIA_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_HAMMERDROP)
-        player->velocity.y -= 0x10000;
+        player->velocity.y -= TO_FIXED(1);
     else
 #endif
         player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
 
     itemBox->storedEntity  = (Entity *)player;
     itemBox->alpha         = 0x100;
-    itemBox->contentsSpeed = -0x30000;
+    itemBox->contentsSpeed = -TO_FIXED(3);
     itemBox->active        = ACTIVE_NORMAL;
-    itemBox->velocity.y    = -0x20000;
+    itemBox->velocity.y    = -TO_FIXED(2);
     itemBox->isContents    = true;
     itemBox->state         = ItemBox_State_Break;
     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
@@ -820,18 +820,18 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
     RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
     RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
 
-    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - 0x100000);
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - TO_FIXED(16));
     explosion->drawGroup       = Zone->objectDrawHigh;
 
     for (int32 d = 0; d < 6; ++d) {
         EntityDebris *debris =
-            CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000), itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
+            CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000), itemBox->position.y + RSDK.Rand(-TO_FIXED(8), TO_FIXED(8)));
         debris->state           = Debris_State_Fall;
         debris->gravityStrength = 0x4000;
-        debris->velocity.x      = RSDK.Rand(0, 0x20000);
+        debris->velocity.x      = RSDK.Rand(0, TO_FIXED(2));
         if (debris->position.x < itemBox->position.x)
             debris->velocity.x = -debris->velocity.x;
-        debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
+        debris->velocity.y = RSDK.Rand(-TO_FIXED(4), -TO_FIXED(1));
         debris->drawFX     = FX_FLIP;
         debris->direction  = d & 3;
         debris->drawGroup  = Zone->objectDrawHigh;
@@ -913,8 +913,8 @@ bool32 ItemBox_HandleFallingCollision(void)
 
     if (self->velocity.y >= 0
         && (self->direction == FLIP_Y && self->boxAnimator.animationID == 1
-                ? RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, true)
-                : RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true))) {
+                ? RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(0), true)
+                : RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(16), true))) {
         self->velocity.y = 0;
         if (self->state != ItemBox_State_IconFinish && self->state != ItemBox_State_Break)
             self->active = ACTIVE_BOUNDS;
@@ -1192,9 +1192,9 @@ void ItemBox_EditorDraw(void)
 
     self->contentsPos.x = self->position.x;
     if (self->direction == FLIP_NONE)
-        self->contentsPos.y = self->position.y - 0x30000;
+        self->contentsPos.y = self->position.y - TO_FIXED(3);
     else
-        self->contentsPos.y = self->position.y + 0x30000;
+        self->contentsPos.y = self->position.y + TO_FIXED(3);
 
     self->inkEffect = INK_ALPHA;
     self->alpha     = self->hidden ? 0x80 : 0x100;

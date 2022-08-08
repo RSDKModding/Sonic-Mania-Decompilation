@@ -36,7 +36,7 @@ void SDashWheel_Update(void)
             self->rotateOffset = player->direction == FLIP_NONE ? -32 : 32;
         }
 
-        int32 stoodPos = minVal(abs(self->position.x - player->position.x) >> 16, 31);
+        int32 stoodPos = MIN(abs(self->position.x - player->position.x) >> 16, 31);
 
         hitboxSolid.top    = SDashWheel->heightTable[stoodPos] - 36;
         hitboxSolid.bottom = -4 - hitboxSolid.top;

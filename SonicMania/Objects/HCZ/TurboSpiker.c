@@ -153,7 +153,7 @@ void TurboSpiker_State_Init(void)
             self->direction = Player_GetNearestPlayer()->position.x >= self->position.x;
     }
 
-    EntityTurboSpiker *spike = CREATE_ENTITY(TurboSpiker, intToVoid(true), self->position.x, self->position.y);
+    EntityTurboSpiker *spike = CREATE_ENTITY(TurboSpiker, INT_TO_VOID(true), self->position.x, self->position.y);
     spike->isPermanent       = true;
     spike->direction         = self->direction;
     spike->drawGroup         = self->drawGroup - 1;
@@ -214,7 +214,7 @@ void TurboSpiker_State_Hidden(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &TurboSpiker->hitboxRange)) {
-            CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, self->position.y + 0x80000)->childPtr = intToVoid(true);
+            CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, self->position.y + 0x80000)->childPtr = INT_TO_VOID(true);
             RSDK.PlaySfx(TurboSpiker->sfxSplash, false, 0xFF);
             RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
             RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
@@ -222,7 +222,7 @@ void TurboSpiker_State_Hidden(void)
             if (self->spike)
                 self->spike->drawGroup = Zone->objectDrawLow;
 
-            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(true), self->position.x, self->position.y);
+            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, INT_TO_VOID(true), self->position.x, self->position.y);
             ember->direction         = self->direction;
             ember->drawGroup         = self->drawGroup + 1;
             RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 6, &ember->shellAnimator, true, 0);
@@ -391,7 +391,7 @@ void TurboSpiker_State_Spike(void)
     if (!(Zone->timer & 3)) {
         int32 x                  = self->position.x + (RSDK.Rand(-4, 4) << 16);
         int32 y                  = self->position.y + (RSDK.Rand(-2, 3) << 16);
-        EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(true), x, y);
+        EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, INT_TO_VOID(true), x, y);
         ember->direction         = self->direction;
         ember->drawGroup         = self->drawGroup - 1;
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 5, &ember->shellAnimator, true, 0);

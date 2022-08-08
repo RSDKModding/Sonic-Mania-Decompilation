@@ -15,7 +15,7 @@ void Soundboard_LateUpdate(void) {}
 
 void Soundboard_StaticUpdate(void)
 {
-    for (int32 s = 0; s < minVal(Soundboard->sfxCount, SOUNDBOARD_SFX_COUNT); ++s) {
+    for (int32 s = 0; s < MIN(Soundboard->sfxCount, SOUNDBOARD_SFX_COUNT); ++s) {
         bool32 shouldStopSfx = true;
 
         if (Soundboard->sfxCheckCallback[s] && SceneInfo->state == ENGINESTATE_REGULAR) {

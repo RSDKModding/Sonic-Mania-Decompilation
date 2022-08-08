@@ -44,7 +44,7 @@ void DiveEggman_Create(void *data)
         if (!SceneInfo->inEditor) {
             self->visible = true;
             if (data) {
-                switch (voidToInt(data)) {
+                switch (VOID_TO_INT(data)) {
                     default: break;
 
                     case DIVEEGGMAN_BOMB:
@@ -128,7 +128,7 @@ void DiveEggman_Explode(void)
         if (!(Zone->timer & 0xF)) {
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
             if (self->timer <= 40)
                 explosion->drawGroup = self->drawGroup;
@@ -295,7 +295,7 @@ void DiveEggman_StateEggman_Falling(void)
 
     if (self->position.y >= Water->waterLevel) {
         self->velocity.y >>= 2;
-        CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
+        CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, Water->waterLevel);
 
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
         self->velocity.x = self->direction == FLIP_NONE ? -0x10000 : 0x10000;
@@ -314,7 +314,7 @@ void DiveEggman_StateEggman_PlaceBomb(void)
         self->invincibilityTimer--;
 
     if (self->animator.frameID >= self->animator.frameCount - 1) {
-        EntityDiveEggman *bomb = CREATE_ENTITY(DiveEggman, intToVoid(DIVEEGGMAN_BOMB), self->position.x, self->position.y + 0x20000);
+        EntityDiveEggman *bomb = CREATE_ENTITY(DiveEggman, INT_TO_VOID(DIVEEGGMAN_BOMB), self->position.x, self->position.y + 0x20000);
         bomb->position.x += self->direction ? 0x1A0000 : -0x1A0000;
 
         RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 1, &self->animator, false, 0);
@@ -362,7 +362,7 @@ void DiveEggman_StateEggman_Finish(void)
         self->velocity.y >>= 2;
         self->timer = 0x1000;
 
-        CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
+        CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, Water->waterLevel);
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
     }
 
@@ -380,10 +380,10 @@ bool32 DiveEggman_CheckNoBombExplode(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (!--self->timer) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
 
-        EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
+        EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y);
         water->velocity.y  = -0x8800;
         water->angle       = 2 * RSDK.Rand(0, 256);
         water->bubbleX     = water->position.x;
@@ -535,7 +535,7 @@ void DiveEggman_StateBomb_Falling(void)
         if (self->position.y >= Water->waterLevel) {
             self->velocity.y >>= 2;
 
-            CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
+            CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, Water->waterLevel);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
 
             self->state = DiveEggman_StateBomb_Idle;

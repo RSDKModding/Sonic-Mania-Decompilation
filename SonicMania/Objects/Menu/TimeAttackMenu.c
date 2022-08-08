@@ -361,8 +361,8 @@ void TimeAttackMenu_MenuUpdateCB_LB(void)
 
         // Load the new entry count after (possibly) reloading new entries
         avail               = API.LeaderboardEntryViewSize();
-        carousel->minOffset = maxVal(avail.start, 1);
-        carousel->maxOffset = maxVal(avail.start + avail.length, carousel->minOffset + 5);
+        carousel->minOffset = MAX(avail.start, 1);
+        carousel->maxOffset = MAX(avail.start + avail.length, carousel->minOffset + 5);
 
         for (int32 i = 0; i < control->buttonCount; ++i) {
             EntityUIRankButton *button = (EntityUIRankButton *)control->buttons[i];
@@ -983,8 +983,8 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel)
     EntityUIControl *parent = (EntityUIControl *)carousel->parent;
 
     LeaderboardAvail avail = API.LeaderboardEntryViewSize();
-    carousel->minOffset    = maxVal(avail.start, 1);
-    carousel->maxOffset    = maxVal(avail.start + avail.length, carousel->minOffset + 5);
+    carousel->minOffset    = MAX(avail.start, 1);
+    carousel->maxOffset    = MAX(avail.start + avail.length, carousel->minOffset + 5);
 
     if (TimeAttackMenu->prevIsUser && avail.length) {
         int32 userID = 0;

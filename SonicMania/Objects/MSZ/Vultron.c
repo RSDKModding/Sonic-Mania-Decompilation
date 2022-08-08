@@ -38,7 +38,7 @@ void Vultron_Create(void *data)
         self->drawFX    = FX_FLIP;
 
         if (data)
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
 
         self->active = ACTIVE_BOUNDS;
 

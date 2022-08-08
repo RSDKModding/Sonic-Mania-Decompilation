@@ -26,7 +26,7 @@ void BSS_Message_Draw(void)
     Vector2 drawPos;
 
     drawPos.x = (ScreenInfo->center.x - self->messageFinishTimer) << 16;
-    drawPos.y = 0x680000;
+    drawPos.y = TO_FIXED(104);
     RSDK.DrawSprite(&self->leftAnimator, &drawPos, true);
 
     drawPos.x = (ScreenInfo->center.x + self->messageFinishTimer) << 16;
@@ -45,7 +45,7 @@ void BSS_Message_Create(void *data)
         self->visible   = true;
         self->drawGroup = 15;
 
-        switch (voidToInt(data)) {
+        switch (VOID_TO_INT(data)) {
             case BSS_MESSAGE_GETSPHERES:
                 self->fadeEnabled = true;
                 self->color       = 0xF0F0F0;
@@ -75,7 +75,7 @@ void BSS_Message_StageLoad(void)
 {
     BSS_Message->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
 
-    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->classID, intToVoid(BSS_MESSAGE_GETSPHERES));
+    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->classID, INT_TO_VOID(BSS_MESSAGE_GETSPHERES));
 }
 
 void BSS_Message_State_GetBS(void)

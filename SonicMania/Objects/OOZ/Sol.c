@@ -131,7 +131,7 @@ void Sol_HandlePlayerInteractions(void)
                     self->position.x = self->positions[i].x;
                     self->position.y = self->positions[i].y;
 
-                    EntitySol *sol = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
+                    EntitySol *sol = CREATE_ENTITY(Sol, INT_TO_VOID(true), self->positions[i].x, self->positions[i].y);
 
                     sol->state = Sol_State_ActiveFireball;
 #if MANIA_USE_PLUS
@@ -273,7 +273,7 @@ void Sol_State_ShootingOrbs(void)
         if (angle == 0x40) {
             if ((1 << i) & self->activeOrbs) {
                 self->activeOrbs &= ~(1 << i);
-                EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
+                EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), self->positions[i].x, self->positions[i].y);
                 sol->velocity.x = self->direction == FLIP_NONE ? -0x20000 : 0x20000;
             }
 
@@ -366,7 +366,7 @@ void Sol_State_ActiveFireball(void)
             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &self->mainAnimator, true, 0);
             self->state = Sol_State_FireballOilFlame;
 
-            EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(true), spawnX, spawnY - 0x80000);
+            EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), spawnX, spawnY - 0x80000);
             sol->velocity.x = 0x40000;
             sol->velocity.y = 0;
             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);

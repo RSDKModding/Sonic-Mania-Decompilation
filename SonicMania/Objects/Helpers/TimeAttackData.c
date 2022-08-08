@@ -283,9 +283,9 @@ void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 c
     stat->data[1] = (void *)actNames[act];
     stat->data[2] = (void *)playerNames[characterID];
     stat->data[3] = 0;
-    stat->data[4] = intToVoid(time);
-    stat->data[5] = intToVoid(rings);
-    stat->data[6] = intToVoid(score);
+    stat->data[4] = INT_TO_VOID(time);
+    stat->data[5] = INT_TO_VOID(rings);
+    stat->data[6] = INT_TO_VOID(score);
 }
 void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 characterID, int32 gameMode, int32 time)
 {
@@ -297,7 +297,7 @@ void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 
     stat->data[1] = (void *)actNames[actID];
     stat->data[2] = (void *)playerNames[characterID];
     stat->data[3] = (void *)modeNames[gameMode];
-    stat->data[4] = intToVoid(time);
+    stat->data[4] = INT_TO_VOID(time);
 }
 void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, uint8 characterID, bool32 encore, int32 x, int32 y)
 {
@@ -308,9 +308,9 @@ void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, 
     stat->data[0] = (void *)zoneNames[zoneID];
     stat->data[1] = (void *)actNames[actID];
     stat->data[2] = (void *)playerNames[characterID];
-    stat->data[3] = intToVoid(encore);
-    stat->data[4] = intToVoid(x);
-    stat->data[5] = intToVoid(y);
+    stat->data[3] = INT_TO_VOID(encore);
+    stat->data[4] = INT_TO_VOID(x);
+    stat->data[5] = INT_TO_VOID(y);
 }
 #endif
 

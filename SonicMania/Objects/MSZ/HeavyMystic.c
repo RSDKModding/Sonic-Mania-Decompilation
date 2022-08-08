@@ -66,7 +66,7 @@ void HeavyMystic_Create(void *data)
             self->updateRange.y = 0x800000;
 
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case MYSTIC_MISCHIEF:
@@ -365,7 +365,7 @@ void HeavyMystic_Explode(void)
         if (!(Zone->timer & 7)) {
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
@@ -375,7 +375,7 @@ void HeavyMystic_Scanline_Curtains(ScanlineInfo *scanlines)
 {
     int32 curtainPos = HeavyMystic->curtainLinePos;
     int32 moveY      = (0x1100000 - curtainPos) >> 6;
-    int32 max        = maxVal(curtainPos - 0x400000, 0x100000);
+    int32 max        = MAX(curtainPos - 0x400000, 0x100000);
 
     int32 posY = (ScreenInfo->position.y + 207) << 16;
     if (curtainPos > max) {
@@ -642,7 +642,7 @@ void HeavyMystic_StateMischief_ConjureHatterkiller(void)
 
     if (self->animator.frameID == 8 && !self->timer) {
         RSDK.PlaySfx(HeavyMystic->sfxHatNode, false, 255);
-        CREATE_ENTITY(Hatterkiller, intToVoid(RSDK.Rand(-0x20000, 0x20000)), self->position.x + 0x320000, self->position.y);
+        CREATE_ENTITY(Hatterkiller, INT_TO_VOID(RSDK.Rand(-0x20000, 0x20000)), self->position.x + 0x320000, self->position.y);
         self->timer = 1;
     }
 
@@ -665,12 +665,12 @@ void HeavyMystic_StateMischief_Disappear(void)
         if (!HeavyMystic->curtainLinePos) {
             HeavyMystic->curtainLinePos = 1;
 
-            CREATE_ENTITY(Vultron, intToVoid(VULTRON_TARGET), self->position.x, self->position.y);
-            CREATE_ENTITY(Vultron, intToVoid(VULTRON_TARGET), self->position.x, self->position.y);
+            CREATE_ENTITY(Vultron, INT_TO_VOID(VULTRON_TARGET), self->position.x, self->position.y);
+            CREATE_ENTITY(Vultron, INT_TO_VOID(VULTRON_TARGET), self->position.x, self->position.y);
         }
 
         RSDK.PlaySfx(HeavyMystic->sfxPoof, false, 255);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
         destroyEntity(self);
     }
@@ -997,7 +997,7 @@ void HeavyMystic_StateBoss_TransformBackIntoRouge(void)
         RSDK.PlaySfx(HeavyMystic->sfxTransform, false, 255);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         self->velocity.x                                                                                   = 0;
         self->velocity.y                                                                                   = -0x20000;
         RSDK.PlaySfx(HeavyMystic->sfxPoof, false, 255);
@@ -1103,7 +1103,7 @@ void HeavyMystic_StateBoss_FangHop(void)
 
     if (self->attackID && !(Zone->timer & 0x3F)) {
         RSDK.PlaySfx(HeavyMystic->sfxPon, false, 255);
-        EntityHeavyMystic *cork = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_CORK), self->position.x, self->position.y - 0x40000);
+        EntityHeavyMystic *cork = CREATE_ENTITY(HeavyMystic, INT_TO_VOID(MYSTIC_CORK), self->position.x, self->position.y - 0x40000);
         if (self->direction == FLIP_NONE) {
             cork->position.x += 0x180000;
             cork->velocity.x = 0x20000;
@@ -1142,7 +1142,7 @@ void HeavyMystic_StateBoss_RougeHit(void)
     if (self->velocity.y > 0) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x240000, true)) {
             RSDK.PlaySfx(HeavyMystic->sfxPowerDown, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
             self->direction ^= FLIP_X;
             self->timer       = 90;
             self->attackID    = 0;
@@ -1212,7 +1212,7 @@ void HeavyMystic_StateBoss_BarkPounding(void)
 
         if (!(Zone->timer & 0xF)) {
             int32 x                   = ScreenInfo->position.x + 16 + 32 * RSDK.Rand(0, ScreenInfo->size.x >> 5);
-            EntityHeavyMystic *debris = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_DEBRIS), x << 16, (ScreenInfo->position.y - 16) << 16);
+            EntityHeavyMystic *debris = CREATE_ENTITY(HeavyMystic, INT_TO_VOID(MYSTIC_DEBRIS), x << 16, (ScreenInfo->position.y - 16) << 16);
             debris->animator.frameID  = RSDK.Rand(0, 6);
         }
     }
@@ -1288,7 +1288,7 @@ void HeavyMystic_StateBoss_BeanBomb1Throw(void)
         self->attackID = 2;
         RSDK.PlaySfx(HeavyMystic->sfxDrop, false, 255);
 
-        EntityHeavyMystic *bomb = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_BOMB), self->position.x, self->position.y + 0x130000);
+        EntityHeavyMystic *bomb = CREATE_ENTITY(HeavyMystic, INT_TO_VOID(MYSTIC_BOMB), self->position.x, self->position.y + 0x130000);
         if (self->direction) {
             bomb->position.x += 0xB0000;
             bomb->velocity.x = -0x40000;
@@ -1321,7 +1321,7 @@ void HeavyMystic_StateBoss_BeanBomb2Throw(void)
         self->attackID = 2;
         RSDK.PlaySfx(HeavyMystic->sfxDrop, false, 255);
 
-        EntityHeavyMystic *bomb = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_BOMB), self->position.x, self->position.y - 0x130000);
+        EntityHeavyMystic *bomb = CREATE_ENTITY(HeavyMystic, INT_TO_VOID(MYSTIC_BOMB), self->position.x, self->position.y - 0x130000);
         if (self->direction) {
             bomb->position.x += 0xB0000;
             bomb->velocity.x = -0x40000;
@@ -1407,7 +1407,7 @@ void HeavyMystic_StateCork_Fired(void)
                 Player_Hurt(player, self);
 
             RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
             destroyEntity(self);
             foreach_break;
         }
@@ -1453,7 +1453,7 @@ void HeavyMystic_State_Bomb(void)
 #endif
                 Player_Hurt(player, self);
             RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
             destroyEntity(self);
             foreach_break;
         }
@@ -1541,7 +1541,7 @@ void HeavyMystic_StateBox_Transforming(void)
         RSDK.PlaySfx(HeavyMystic->sfxMagicBox, false, 255);
         int32 x                                                               = self->position.x + (RSDK.Rand(-24, 25) << 16);
         int32 y                                                               = self->position.y + (RSDK.Rand(-24, 25) << 16);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawHigh + 2;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawHigh + 2;
     }
 
     self->scale.x = 0x200 + RSDK.Cos256(self->angle + 0x40);
@@ -1623,7 +1623,7 @@ void HeavyMystic_StateBox_ShowContents(void)
     RSDK_THIS(HeavyMystic);
 
     if (++self->timer > 96) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
         self->visible                                                                                       = true;
         self->scale.x                                                                                       = 0;
         self->scale.y                                                                                       = 0;

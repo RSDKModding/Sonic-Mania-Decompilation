@@ -219,7 +219,7 @@ void PhantomMissile_State_Attacking(void)
     self->position.y -= self->targetRadius * RSDK.Cos512(self->rotation);
 
     if (rx * rx + ry * ry < 64) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->targetPos.x, self->targetPos.y - 0x80000)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), self->targetPos.x, self->targetPos.y - 0x80000)->drawGroup = Zone->objectDrawHigh;
 
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->missileAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 1, &self->targetOutsideAnimator, true, 0);

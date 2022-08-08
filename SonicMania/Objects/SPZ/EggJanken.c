@@ -255,7 +255,7 @@ void EggJanken_Explode(void)
         if (Zone->timer & 4) {
             int32 x                                                               = self->position.x + (RSDK.Rand(-24, 24) << 16);
             int32 y                                                               = self->position.y + (RSDK.Rand(-24, 24) << 16);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -395,27 +395,27 @@ void EggJanken_State_AwaitButtonPress(void)
         RSDK.SetSpriteAnimation(EggJanken->aniFrames, 8, &self->bodyAnimator, true, 0);
         self->state = EggJanken_State_Opened;
 
-        EntityEggJankenPart *part = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_FACEPLATE_TL), self->position.x, self->position.y);
+        EntityEggJankenPart *part = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_FACEPLATE_TL), self->position.x, self->position.y);
         part->velocity.x          = -0x20000;
         part->velocity.y          = -0x20000;
         part->angle               = -1;
 
-        part             = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_FACEPLATE_TR), self->position.x, self->position.y);
+        part             = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_FACEPLATE_TR), self->position.x, self->position.y);
         part->velocity.x = 0x20000;
         part->velocity.y = -0x20000;
         part->angle      = 1;
 
-        part             = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_FACEPLATE_BL), self->position.x, self->position.y);
+        part             = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_FACEPLATE_BL), self->position.x, self->position.y);
         part->velocity.x = -0x10000;
         part->velocity.y = -0x10000;
         part->angle      = -1;
 
-        part             = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_FACEPLATE_BR), self->position.x, self->position.y);
+        part             = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_FACEPLATE_BR), self->position.x, self->position.y);
         part->velocity.x = 0x10000;
         part->velocity.y = -0x10000;
         part->angle      = 1;
 
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
     }
@@ -437,23 +437,23 @@ void EggJanken_State_Opened(void)
             self->stateArm[self->armID] = EggJanken_Arm_StretchRetractArm;
         }
 
-        EntityEggJankenPart *part = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_SIDE_L), self->position.x, self->position.y);
+        EntityEggJankenPart *part = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_SIDE_L), self->position.x, self->position.y);
         part->velocity.x          = -0x40000;
         part->velocity.y          = -0x20000;
         part->angle               = -3;
 
-        part             = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_SIDE_R), self->position.x, self->position.y);
+        part             = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_SIDE_R), self->position.x, self->position.y);
         part->velocity.x = -0x30000;
         part->velocity.y = -0x10000;
         part->angle      = -3;
 
-        part             = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_SIDE_L), self->position.x, self->position.y);
+        part             = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_SIDE_L), self->position.x, self->position.y);
         part->direction  = FLIP_X;
         part->velocity.x = 0x40000;
         part->velocity.y = -0x20000;
         part->angle      = 3;
 
-        part             = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_SIDE_R), self->position.x, self->position.y);
+        part             = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_SIDE_R), self->position.x, self->position.y);
         part->direction  = FLIP_X;
         part->velocity.x = 0x30000;
         part->velocity.y = -0x10000;
@@ -515,7 +515,7 @@ void EggJanken_State_Destroyed(void)
     EntityEggJankenPart *part = NULL;
     switch (++self->timer) {
         case 60:
-            part                         = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_BUTTON), self->position.x, self->position.y);
+            part                         = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_BUTTON), self->position.x, self->position.y);
             self->buttonAnimator.frameID = 2;
             break;
 
@@ -524,19 +524,19 @@ void EggJanken_State_Destroyed(void)
             self->armID     = 0;
 
             for (self->armID = 0; self->armID < EGGJANKEN_ARM_COUNT; ++self->armID) {
-                part = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_BALL_TL), self->armPos[self->armID].x, self->armPos[self->armID].y);
+                part = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_BALL_TL), self->armPos[self->armID].x, self->armPos[self->armID].y);
                 part->velocity.x = -0x20000;
                 part->velocity.y = -0x20000;
 
-                part = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_BALL_TR), self->armPos[self->armID].x, self->armPos[self->armID].y);
+                part = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_BALL_TR), self->armPos[self->armID].x, self->armPos[self->armID].y);
                 part->velocity.x = 0x20000;
                 part->velocity.y = -0x20000;
 
-                part = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_BALL_BL), self->armPos[self->armID].x, self->armPos[self->armID].y);
+                part = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_BALL_BL), self->armPos[self->armID].x, self->armPos[self->armID].y);
                 part->velocity.x = -0x10000;
                 part->velocity.y = -0x10000;
 
-                part = CREATE_ENTITY(EggJankenPart, intToVoid(EGGJANKENPART_BALL_BR), self->armPos[self->armID].x, self->armPos[self->armID].y);
+                part = CREATE_ENTITY(EggJankenPart, INT_TO_VOID(EGGJANKENPART_BALL_BR), self->armPos[self->armID].x, self->armPos[self->armID].y);
                 part->velocity.x = 0x10000;
                 part->velocity.y = -0x10000;
 

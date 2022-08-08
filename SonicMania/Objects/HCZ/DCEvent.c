@@ -35,7 +35,7 @@ void DCEvent_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible = true;
 
-        int32 type = voidToInt(data);
+        int32 type = VOID_TO_INT(data);
         if (self->type == DCEVENT_BUBBLE)
             type = DCEVENT_BUBBLE;
 
@@ -71,7 +71,7 @@ void DCEvent_Create(void *data)
                 EntityWater *water = (EntityWater *)self;
                 int32 x            = self->position.x;
                 int32 y            = self->position.y;
-                RSDK.ResetEntity(water, Water->classID, intToVoid(WATER_BUBBLE));
+                RSDK.ResetEntity(water, Water->classID, INT_TO_VOID(WATER_BUBBLE));
 
                 water->position.x = x;
                 water->bubbleX    = x;
@@ -269,7 +269,7 @@ void DCEvent_StateEggmanBomber_PlaceBomb(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID >= self->animator.frameCount - 1) {
-        EntityDCEvent *bomb = CREATE_ENTITY(DCEvent, intToVoid(DCEVENT_BOMB), self->position.x, self->position.y + 0x20000);
+        EntityDCEvent *bomb = CREATE_ENTITY(DCEvent, INT_TO_VOID(DCEVENT_BOMB), self->position.x, self->position.y + 0x20000);
         if (self->direction)
             bomb->position.x += 0x1A0000;
         else
@@ -349,12 +349,12 @@ void DCEvent_State_Bomb(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (DCEvent->canExplodeBombs) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         RSDK.PlaySfx(DCEvent->sfxImpact6, false, 255);
         RSDK.PlaySfx(DCEvent->sfxExplosion, false, 255);
         Camera_ShakeScreen(0, 4, 0);
 
-        EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
+        EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y);
         water->velocity.y  = -0x8800;
         water->childPtr    = 0;
         water->angle       = 2 * RSDK.Rand(0, 256);
@@ -399,7 +399,7 @@ void DCEvent_State_BombExplode(void)
 
     if (!(Zone->timer & 3)) {
         self->position.y -= 0x100000;
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), (RSDK.Rand(-16, 17) << 17) + self->position.x, self->position.y)->drawGroup =
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), (RSDK.Rand(-16, 17) << 17) + self->position.x, self->position.y)->drawGroup =
             Zone->objectDrawHigh;
 
         RSDK.PlaySfx(DCEvent->sfxExplosion, false, 255);

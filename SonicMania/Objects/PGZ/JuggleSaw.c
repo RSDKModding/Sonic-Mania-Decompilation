@@ -298,7 +298,7 @@ void JuggleSaw_StateCrab_ThrowSaw(void)
             reciever->hasSaw = JUGGLESAW_AWAITING_SAW;
             reciever->active = ACTIVE_NORMAL;
 
-            EntityJuggleSaw *saw = CREATE_ENTITY(JuggleSaw, intToVoid(true), self->position.x, self->position.y);
+            EntityJuggleSaw *saw = CREATE_ENTITY(JuggleSaw, INT_TO_VOID(true), self->position.x, self->position.y);
             int32 sx = 0x2C0000, sy = -0xE0000;
             if (self->startDir >= FLIP_Y) {
                 sx = 0xE0000;

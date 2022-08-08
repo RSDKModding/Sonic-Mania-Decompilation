@@ -179,7 +179,7 @@ void TMZCable_State_Destroyed(void)
         if (Zone->timer & 4) {
             int32 y = self->jointPos[id].y + RSDK.Rand(-0x100000, 0x100000);
             int32 x = self->jointPos[id].x + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 

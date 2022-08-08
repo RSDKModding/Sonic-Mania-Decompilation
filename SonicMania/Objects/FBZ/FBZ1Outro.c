@@ -93,7 +93,7 @@ void FBZ1Outro_HandleTrash(void)
         int32 boundsL = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x180000;
         int32 boundsR = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x180000;
 
-        signPost->position.x = clampVal(signPost->position.x, boundsL, boundsR);
+        signPost->position.x = CLAMP(signPost->position.x, boundsL, boundsR);
     }
 }
 

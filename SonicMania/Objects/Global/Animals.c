@@ -41,19 +41,19 @@ void Animals_Create(void *data)
 
     self->drawFX |= FX_FLIP;
     self->visible       = true;
-    self->updateRange.x = 0x400000;
-    self->updateRange.y = 0x400000;
+    self->updateRange.x = TO_FIXED(64);
+    self->updateRange.y = TO_FIXED(64);
     self->drawGroup     = Zone->objectDrawLow;
 
     int32 type = ANIMAL_POCKY;
 #if MANIA_USE_PLUS
     if (!(globals->secrets & GET_MEDAL_MOD(SECRET_RICKYMODE)))
 #endif
-        type = voidToInt(data);
+        type = VOID_TO_INT(data);
 
     if (!self->type && ZONE_RAND(0, 256) == 21) {
         type                      = ANIMAL_POCKY;
-        self->velocity.y          = -0x40000;
+        self->velocity.y          = -TO_FIXED(4);
         self->type                = type - 1;
         self->state               = Animals_State_Fall;
         self->hitboxAnimal.top    = -Animals->hitboxes[self->type] >> 16;
@@ -63,14 +63,14 @@ void Animals_Create(void *data)
         RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * self->type, &self->animator, true, 0);
     }
     else if (type) {
-        self->velocity.y = -0x40000;
+        self->velocity.y = -TO_FIXED(4);
         self->type       = type - 1;
         self->state      = Animals_State_Fall;
 
-        self->hitboxAnimal.top    = -Animals->hitboxes[self->type] >> 16;
+        self->hitboxAnimal.top    = -FROM_FIXED(Animals->hitboxes[self->type]);
         self->hitboxAnimal.left   = -4;
         self->hitboxAnimal.right  = 4;
-        self->hitboxAnimal.bottom = Animals->hitboxes[self->type] >> 16;
+        self->hitboxAnimal.bottom = FROM_FIXED(Animals->hitboxes[self->type]);
 
         RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * self->type, &self->animator, true, 0);
     }

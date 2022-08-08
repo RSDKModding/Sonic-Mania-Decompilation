@@ -80,7 +80,7 @@ void ImageTrail_LateUpdate(void)
         self->currentScale = player->scale.x;
 
     // Check if we have enough speed to be visible
-    if (abs(player->velocity.x) >= 0x10000 || abs(player->velocity.y) >= 0x10000)
+    if (abs(player->velocity.x) >= TO_FIXED(1) || abs(player->velocity.y) >= TO_FIXED(1))
         self->currentVisible = player->visible;
     else
         self->currentVisible = false;

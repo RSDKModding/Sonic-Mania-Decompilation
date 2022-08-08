@@ -59,15 +59,15 @@ void TitleCard_Create(void *data)
             self->stateDraw = TitleCard_Draw_SlideIn;
         }
 
-        self->stripPos[0] = (ScreenInfo->center.x - 152) << 16;
-        self->stripPos[1] = (ScreenInfo->center.x - 152) << 16;
-        self->stripPos[2] = (ScreenInfo->center.x - 160) << 16;
-        self->stripPos[3] = (ScreenInfo->center.x + 20) << 16;
+        self->stripPos[0] = TO_FIXED(ScreenInfo->center.x - 152);
+        self->stripPos[1] = TO_FIXED(ScreenInfo->center.x - 152);
+        self->stripPos[2] = TO_FIXED(ScreenInfo->center.x - 160);
+        self->stripPos[3] = TO_FIXED(ScreenInfo->center.x + 20);
         TitleCard_SetupTitleWords();
         TitleCard_SetupVertices();
 
-        self->decorationPos.y = -0x340000;
-        self->decorationPos.x = (ScreenInfo->size.x - 160) << 16;
+        self->decorationPos.y = -TO_FIXED(52);
+        self->decorationPos.x = TO_FIXED(ScreenInfo->size.x - 160);
 
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &self->decorationAnimator, true, 0);
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 1, &self->nameLetterAnimator, true, 0);
@@ -78,11 +78,11 @@ void TitleCard_Create(void *data)
             self->actID = ACT_NONE;
 
         self->actNumbersAnimator.frameID = self->actID;
-        self->actNumPos.y                = 0xA80000;
-        self->actNumPos.x                = (ScreenInfo->center.x + 106) << 16;
+        self->actNumPos.y                = TO_FIXED(168);
+        self->actNumPos.x                = TO_FIXED(ScreenInfo->center.x + 106);
         self->actNumScale                = -0x400;
-        if (self->word2XPos - self->word2Width < 0x100000) {
-            int32 dist = (self->word2XPos - self->word2Width) - 0x100000;
+        if (self->word2XPos - self->word2Width < TO_FIXED(16)) {
+            int32 dist = (self->word2XPos - self->word2Width) - TO_FIXED(16);
             self->word1XPos -= dist;
             self->zoneXPos -= dist;
             self->actNumPos.x -= dist;
@@ -154,98 +154,98 @@ void TitleCard_SetupVertices(void)
 {
     RSDK_THIS(TitleCard);
 
-    self->vertMovePos[0].x = 0xF00000;
-    self->vertMovePos[0].y = 0x1F00000;
-    self->vertMovePos[1].x = 0x2F00000;
-    self->vertMovePos[1].y = 0x3F00000;
+    self->vertMovePos[0].x = TO_FIXED(240);
+    self->vertMovePos[0].y = TO_FIXED(496);
+    self->vertMovePos[1].x = TO_FIXED(752);
+    self->vertMovePos[1].y = TO_FIXED(1008);
 
-    self->vertTargetPos[0].x = 0;
-    self->vertTargetPos[0].y = 0x8A0000;
-    self->vertTargetPos[1].x = 0x4A0000;
-    self->vertTargetPos[1].y = 0x700000;
+    self->vertTargetPos[0].x = TO_FIXED(0);
+    self->vertTargetPos[0].y = TO_FIXED(138);
+    self->vertTargetPos[1].x = TO_FIXED(74);
+    self->vertTargetPos[1].y = TO_FIXED(112);
 
     if (self->titleCardWord2 > 0) {
         self->word2DecorVerts[0].x = -self->word1Width;
-        self->word2DecorVerts[0].y = 0x520000;
-        self->word2DecorVerts[1].x = 0;
-        self->word2DecorVerts[1].y = 0x520000;
-        self->word2DecorVerts[2].x = 0;
-        self->word2DecorVerts[2].y = 0x620000;
+        self->word2DecorVerts[0].y = TO_FIXED(82);
+        self->word2DecorVerts[1].x = TO_FIXED(0);
+        self->word2DecorVerts[1].y = TO_FIXED(82);
+        self->word2DecorVerts[2].x = TO_FIXED(0);
+        self->word2DecorVerts[2].y = TO_FIXED(98);
         self->word2DecorVerts[3].x = -self->word1Width;
-        self->word2DecorVerts[3].y = 0x620000;
+        self->word2DecorVerts[3].y = TO_FIXED(98);
     }
 
     self->word1DecorVerts[0].x = -self->word2Width;
-    self->word1DecorVerts[0].y = 0xBA0000;
-    self->word1DecorVerts[1].x = 0;
-    self->word1DecorVerts[1].y = 0xBA0000;
-    self->word1DecorVerts[2].x = 0;
-    self->word1DecorVerts[2].y = 0xCA0000;
+    self->word1DecorVerts[0].y = TO_FIXED(186);
+    self->word1DecorVerts[1].x = TO_FIXED(0);
+    self->word1DecorVerts[1].y = TO_FIXED(186);
+    self->word1DecorVerts[2].x = TO_FIXED(0);
+    self->word1DecorVerts[2].y = TO_FIXED(202);
     self->word1DecorVerts[3].x = -self->word2Width;
-    self->word1DecorVerts[3].y = 0xCA0000;
+    self->word1DecorVerts[3].y = TO_FIXED(202);
 
-    self->zoneDecorVerts[0].x = ScreenInfo->size.x << 16;
-    self->zoneDecorVerts[0].y = 0x9A0000;
-    self->zoneDecorVerts[1].x = 0x780000 + self->zoneDecorVerts[0].x;
-    self->zoneDecorVerts[1].y = 0x9A0000;
-    self->zoneDecorVerts[2].x = 0x780000 + self->zoneDecorVerts[0].x;
-    self->zoneDecorVerts[2].y = 0xA20000;
+    self->zoneDecorVerts[0].x = TO_FIXED(ScreenInfo->size.x);
+    self->zoneDecorVerts[0].y = TO_FIXED(154);
+    self->zoneDecorVerts[1].x = TO_FIXED(120) + self->zoneDecorVerts[0].x;
+    self->zoneDecorVerts[1].y = TO_FIXED(154);
+    self->zoneDecorVerts[2].x = TO_FIXED(120) + self->zoneDecorVerts[0].x;
+    self->zoneDecorVerts[2].y = TO_FIXED(162);
     self->zoneDecorVerts[3].x = self->zoneDecorVerts[0].x;
-    self->zoneDecorVerts[3].y = 0xA20000;
+    self->zoneDecorVerts[3].y = TO_FIXED(162);
 
     self->stripVertsBlue[0].x = self->stripPos[0];
-    self->stripVertsBlue[0].y = 0xF00000;
-    self->stripVertsBlue[1].x = self->stripVertsBlue[0].x + 0x400000;
-    self->stripVertsBlue[1].y = 0xF00000;
-    self->stripVertsBlue[2].x = self->stripVertsBlue[0].x + 0x1300000;
-    self->stripVertsBlue[2].y = 0xF00000;
-    self->stripVertsBlue[3].x = self->stripVertsBlue[0].x + 0xF00000;
-    self->stripVertsBlue[3].y = 0xF00000;
+    self->stripVertsBlue[0].y = TO_FIXED(240);
+    self->stripVertsBlue[1].x = TO_FIXED(64) + self->stripVertsBlue[0].x;
+    self->stripVertsBlue[1].y = TO_FIXED(240);
+    self->stripVertsBlue[2].x = TO_FIXED(304) + self->stripVertsBlue[0].x;
+    self->stripVertsBlue[2].y = TO_FIXED(240);
+    self->stripVertsBlue[3].x = TO_FIXED(240) + self->stripVertsBlue[0].x;
+    self->stripVertsBlue[3].y = TO_FIXED(240);
 
     self->stripVertsRed[0].x = self->stripPos[1];
-    self->stripVertsRed[0].y = 0xF00000;
-    self->stripVertsRed[1].x = 0x800000 + self->stripVertsRed[0].x;
-    self->stripVertsRed[1].y = 0xF00000;
-    self->stripVertsRed[2].x = 0xE60000 + self->stripVertsRed[0].x;
-    self->stripVertsRed[2].y = 0xF00000;
-    self->stripVertsRed[3].x = 0x660000 + self->stripVertsRed[0].x;
-    self->stripVertsRed[3].y = 0xF00000;
+    self->stripVertsRed[0].y = TO_FIXED(240);
+    self->stripVertsRed[1].x = TO_FIXED(128) + self->stripVertsRed[0].x;
+    self->stripVertsRed[1].y = TO_FIXED(240);
+    self->stripVertsRed[2].x = TO_FIXED(230) + self->stripVertsRed[0].x;
+    self->stripVertsRed[2].y = TO_FIXED(240);
+    self->stripVertsRed[3].x = TO_FIXED(102) + self->stripVertsRed[0].x;
+    self->stripVertsRed[3].y = TO_FIXED(240);
 
     self->stripVertsOrange[0].x = self->stripPos[2];
-    self->stripVertsOrange[0].y = 0xF00000;
-    self->stripVertsOrange[1].x = 0x600000 + self->stripVertsOrange[0].x;
-    self->stripVertsOrange[1].y = 0xF00000;
-    self->stripVertsOrange[2].x = self->stripVertsOrange[0].x + 0x1060000;
-    self->stripVertsOrange[2].y = 0xF00000;
-    self->stripVertsOrange[3].x = 0xA60000 + self->stripVertsOrange[0].x;
-    self->stripVertsOrange[3].y = 0xF00000;
+    self->stripVertsOrange[0].y = TO_FIXED(240);
+    self->stripVertsOrange[1].x = TO_FIXED(240) + self->stripVertsOrange[0].x;
+    self->stripVertsOrange[1].y = TO_FIXED(240);
+    self->stripVertsOrange[2].x = TO_FIXED(262) + self->stripVertsOrange[0].x;
+    self->stripVertsOrange[2].y = TO_FIXED(240);
+    self->stripVertsOrange[3].x = TO_FIXED(166) + self->stripVertsOrange[0].x;
+    self->stripVertsOrange[3].y = TO_FIXED(240);
 
     self->stripVertsGreen[0].x = self->stripPos[3];
-    self->stripVertsGreen[0].y = 0xF00000;
-    self->stripVertsGreen[1].x = self->stripVertsGreen[0].x + 0x200000;
-    self->stripVertsGreen[1].y = 0xF00000;
-    self->stripVertsGreen[2].x = 0xA00000 + self->stripVertsGreen[0].x;
-    self->stripVertsGreen[2].y = 0xF00000;
-    self->stripVertsGreen[3].x = 0x800000 + self->stripVertsGreen[0].x;
-    self->stripVertsGreen[3].y = 0xF00000;
+    self->stripVertsGreen[0].y = TO_FIXED(240);
+    self->stripVertsGreen[1].x = TO_FIXED(32) + self->stripVertsGreen[0].x;
+    self->stripVertsGreen[1].y = TO_FIXED(240);
+    self->stripVertsGreen[2].x = TO_FIXED(160) + self->stripVertsGreen[0].x;
+    self->stripVertsGreen[2].y = TO_FIXED(240);
+    self->stripVertsGreen[3].x = TO_FIXED(128) + self->stripVertsGreen[0].x;
+    self->stripVertsGreen[3].y = TO_FIXED(240);
 
-    self->bgLCurtainVerts[0].x = 0;
-    self->bgLCurtainVerts[0].y = 0;
+    self->bgLCurtainVerts[0].x = TO_FIXED(0);
+    self->bgLCurtainVerts[0].y = TO_FIXED(0);
     self->bgLCurtainVerts[1].x = (self->stripVertsBlue[1].x + self->stripVertsBlue[0].x) >> 1;
-    self->bgLCurtainVerts[1].y = 0;
+    self->bgLCurtainVerts[1].y = TO_FIXED(0);
     self->bgLCurtainVerts[2].x = (self->stripVertsBlue[3].x + self->stripVertsBlue[2].x) >> 1;
-    self->bgLCurtainVerts[2].y = 0xF00000;
-    self->bgLCurtainVerts[3].x = 0;
-    self->bgLCurtainVerts[3].y = 0xF00000;
+    self->bgLCurtainVerts[2].y = TO_FIXED(240);
+    self->bgLCurtainVerts[3].x = TO_FIXED(0);
+    self->bgLCurtainVerts[3].y = TO_FIXED(240);
 
     self->bgRCurtainVerts[0].x = (self->stripVertsBlue[1].x + self->stripVertsBlue[0].x) >> 1;
-    self->bgRCurtainVerts[0].y = 0;
-    self->bgRCurtainVerts[1].x = ScreenInfo->size.x << 16;
-    self->bgRCurtainVerts[1].y = 0;
-    self->bgRCurtainVerts[2].x = ScreenInfo->size.x << 16;
-    self->bgRCurtainVerts[2].y = 0xF00000;
+    self->bgRCurtainVerts[0].y = TO_FIXED(0);
+    self->bgRCurtainVerts[1].x = TO_FIXED(ScreenInfo->size.x);
+    self->bgRCurtainVerts[1].y = TO_FIXED(0);
+    self->bgRCurtainVerts[2].x = TO_FIXED(ScreenInfo->size.x);
+    self->bgRCurtainVerts[2].y = TO_FIXED(240);
     self->bgRCurtainVerts[3].x = (self->stripVertsBlue[3].x + self->stripVertsBlue[2].x) >> 1;
-    self->bgRCurtainVerts[3].y = 0xF00000;
+    self->bgRCurtainVerts[3].y = TO_FIXED(240);
 }
 
 void TitleCard_SetupTitleWords(void)
@@ -257,16 +257,16 @@ void TitleCard_SetupTitleWords(void)
 
     RSDK.SetSpriteString(TitleCard->aniFrames, 1, &self->zoneName);
 
-    int32 offset = 0x280000;
+    int32 offset = TO_FIXED(40);
     for (int32 c = 0; c < self->zoneName.length; ++c) {
         self->charPos[c].y = offset;
-        self->charVel[c]   = -0x80000;
-        offset += 0x100000;
+        self->charVel[c]   = -TO_FIXED(8);
+        offset += TO_FIXED(16);
     }
 
     for (int32 i = 0; i < 4; ++i) {
         self->zoneCharPos[i] = ((2 - self->zoneName.length) << 19) - ((i * 2) << 19);
-        self->zoneCharVel[i] = 0x40000;
+        self->zoneCharVel[i] = TO_FIXED(4);
     }
 
     for (int32 c = 0; c < self->zoneName.length; ++c) {
@@ -275,20 +275,20 @@ void TitleCard_SetupTitleWords(void)
     }
 
     if (self->titleCardWord2) {
-        self->word1Width = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &self->zoneName, 0, self->titleCardWord2 - 1, 1) + 24) << 16;
-        self->word2Width = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &self->zoneName, self->titleCardWord2, 0, 1) + 24) << 16;
+        self->word1Width = TO_FIXED(RSDK.GetStringWidth(TitleCard->aniFrames, 1, &self->zoneName, 0, self->titleCardWord2 - 1, 1) + 24);
+        self->word2Width = TO_FIXED(RSDK.GetStringWidth(TitleCard->aniFrames, 1, &self->zoneName, self->titleCardWord2, 0, 1) + 24);
     }
     else {
-        self->word2Width = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &self->zoneName, 0, 0, 1) + 24) << 16;
+        self->word2Width = TO_FIXED(RSDK.GetStringWidth(TitleCard->aniFrames, 1, &self->zoneName, 0, 0, 1) + 24);
     }
 
-    self->zoneXPos  = (ScreenInfo->center.x - ((ScreenInfo->center.x - 160) >> 3) + 72) << 16;
-    self->word2XPos = (ScreenInfo->center.x - ((ScreenInfo->center.x - 160) >> 3) + 72) << 16;
+    self->zoneXPos  = TO_FIXED(ScreenInfo->center.x - ((ScreenInfo->center.x - 160) >> 3) + 72);
+    self->word2XPos = TO_FIXED(ScreenInfo->center.x - ((ScreenInfo->center.x - 160) >> 3) + 72);
 
-    if (self->word2Width < 0x800000)
-        self->word2XPos -= 0x280000;
+    if (self->word2Width < TO_FIXED(128))
+        self->word2XPos -= TO_FIXED(40);
 
-    self->word1XPos = self->word1Width - self->word2Width + self->word2XPos - 0x200000;
+    self->word1XPos = self->word1Width - self->word2Width + self->word2XPos - TO_FIXED(32);
 }
 
 void TitleCard_HandleWordMovement(void)
@@ -296,11 +296,11 @@ void TitleCard_HandleWordMovement(void)
     RSDK_THIS(TitleCard);
 
     if (self->titleCardWord2 > 0) {
-        self->word2DecorVerts[1].x -= 0x200000;
-        if (self->word2DecorVerts[1].x < self->word1XPos - 0x100000)
-            self->word2DecorVerts[1].x = self->word1XPos - 0x100000;
+        self->word2DecorVerts[1].x -= TO_FIXED(32);
+        if (self->word2DecorVerts[1].x < self->word1XPos - TO_FIXED(16))
+            self->word2DecorVerts[1].x = self->word1XPos - TO_FIXED(16);
 
-        self->word2DecorVerts[2].x -= 0x200000;
+        self->word2DecorVerts[2].x -= TO_FIXED(32);
         self->word2DecorVerts[0].x = self->word2DecorVerts[1].x - self->word1Width;
         if (self->word2DecorVerts[2].x < self->word1XPos)
             self->word2DecorVerts[2].x = self->word1XPos;
@@ -308,30 +308,30 @@ void TitleCard_HandleWordMovement(void)
         self->word2DecorVerts[3].x = self->word2DecorVerts[2].x - self->word1Width;
     }
 
-    self->word1DecorVerts[1].x -= 0x200000;
-    if (self->word1DecorVerts[1].x < self->word2XPos - 0x100000)
-        self->word1DecorVerts[1].x = self->word2XPos - 0x100000;
+    self->word1DecorVerts[1].x -= TO_FIXED(32);
+    if (self->word1DecorVerts[1].x < self->word2XPos - TO_FIXED(16))
+        self->word1DecorVerts[1].x = self->word2XPos - TO_FIXED(16);
 
-    self->word1DecorVerts[2].x -= 0x200000;
+    self->word1DecorVerts[2].x -= TO_FIXED(32);
     self->word1DecorVerts[0].x = self->word1DecorVerts[1].x - self->word2Width;
     if (self->word1DecorVerts[2].x < self->word2XPos)
         self->word1DecorVerts[2].x = self->word2XPos;
 
-    self->zoneDecorVerts[1].x += 0x200000;
+    self->zoneDecorVerts[1].x += TO_FIXED(32);
     self->word1DecorVerts[3].x = self->word1DecorVerts[2].x - self->word2Width;
-    if (self->zoneDecorVerts[1].x > self->zoneXPos - 0x80000)
-        self->zoneDecorVerts[1].x = self->zoneXPos - 0x80000;
+    if (self->zoneDecorVerts[1].x > self->zoneXPos - TO_FIXED(8))
+        self->zoneDecorVerts[1].x = self->zoneXPos - TO_FIXED(8);
 
-    self->zoneDecorVerts[2].x += 0x200000;
-    self->zoneDecorVerts[0].x = self->zoneDecorVerts[1].x - 0x780000;
+    self->zoneDecorVerts[2].x += TO_FIXED(32);
+    self->zoneDecorVerts[0].x = self->zoneDecorVerts[1].x - TO_FIXED(120);
     if (self->zoneDecorVerts[2].x > self->zoneXPos)
         self->zoneDecorVerts[2].x = self->zoneXPos;
 
-    self->zoneDecorVerts[3].x = self->zoneDecorVerts[2].x - 0x780000;
+    self->zoneDecorVerts[3].x = self->zoneDecorVerts[2].x - TO_FIXED(120);
 
-    if (self->decorationPos.y < 0xC0000) {
-        self->decorationPos.x += 0x20000;
-        self->decorationPos.y += 0x20000;
+    if (self->decorationPos.y < TO_FIXED(12)) {
+        self->decorationPos.x += TO_FIXED(2);
+        self->decorationPos.y += TO_FIXED(2);
     }
 }
 
@@ -383,38 +383,38 @@ void TitleCard_State_SetupBGElements(void)
 
     self->timer += 24;
     if (self->timer >= 512) {
-        self->word2DecorVerts[0].y += 0x200000;
-        self->word2DecorVerts[1].y += 0x200000;
-        self->word2DecorVerts[2].y += 0x200000;
-        self->word2DecorVerts[3].y += 0x200000;
+        self->word2DecorVerts[0].y += TO_FIXED(32);
+        self->word2DecorVerts[1].y += TO_FIXED(32);
+        self->word2DecorVerts[2].y += TO_FIXED(32);
+        self->word2DecorVerts[3].y += TO_FIXED(32);
 
-        self->word1DecorVerts[0].y -= 0x200000;
-        self->word1DecorVerts[1].y -= 0x200000;
-        self->word1DecorVerts[2].y -= 0x200000;
-        self->word1DecorVerts[3].y -= 0x200000;
+        self->word1DecorVerts[0].y -= TO_FIXED(32);
+        self->word1DecorVerts[1].y -= TO_FIXED(32);
+        self->word1DecorVerts[2].y -= TO_FIXED(32);
+        self->word1DecorVerts[3].y -= TO_FIXED(32);
 
-        self->zoneDecorVerts[0].y += 0x200000;
-        self->zoneDecorVerts[1].y += 0x200000;
-        self->zoneDecorVerts[2].y += 0x200000;
-        self->zoneDecorVerts[3].y += 0x200000;
+        self->zoneDecorVerts[0].y += TO_FIXED(32);
+        self->zoneDecorVerts[1].y += TO_FIXED(32);
+        self->zoneDecorVerts[2].y += TO_FIXED(32);
+        self->zoneDecorVerts[3].y += TO_FIXED(32);
 
         self->state = TitleCard_State_OpeningBG;
     }
 
-    self->word2DecorVerts[0].x += 0x280000;
-    self->word2DecorVerts[1].x += 0x280000;
-    self->word2DecorVerts[2].x += 0x280000;
-    self->word2DecorVerts[3].x += 0x280000;
+    self->word2DecorVerts[0].x += TO_FIXED(40);
+    self->word2DecorVerts[1].x += TO_FIXED(40);
+    self->word2DecorVerts[2].x += TO_FIXED(40);
+    self->word2DecorVerts[3].x += TO_FIXED(40);
 
-    self->word1DecorVerts[0].x += 0x280000;
-    self->word1DecorVerts[1].x += 0x280000;
-    self->word1DecorVerts[2].x += 0x280000;
-    self->word1DecorVerts[3].x += 0x280000;
+    self->word1DecorVerts[0].x += TO_FIXED(40);
+    self->word1DecorVerts[1].x += TO_FIXED(40);
+    self->word1DecorVerts[2].x += TO_FIXED(40);
+    self->word1DecorVerts[3].x += TO_FIXED(40);
 
-    self->zoneDecorVerts[0].x -= 0x280000;
-    self->zoneDecorVerts[1].x -= 0x280000;
-    self->zoneDecorVerts[2].x -= 0x280000;
-    self->zoneDecorVerts[3].x -= 0x280000;
+    self->zoneDecorVerts[0].x -= TO_FIXED(40);
+    self->zoneDecorVerts[1].x -= TO_FIXED(40);
+    self->zoneDecorVerts[2].x -= TO_FIXED(40);
+    self->zoneDecorVerts[3].x -= TO_FIXED(40);
 }
 
 void TitleCard_State_OpeningBG(void)
@@ -440,40 +440,40 @@ void TitleCard_State_EnterTitle(void)
 
     Zone_ApplyWorldBounds();
 
-    self->vertMovePos[0].x += (self->vertTargetPos[0].x - self->vertMovePos[0].x - 0x100000) / 6;
+    self->vertMovePos[0].x += (self->vertTargetPos[0].x - self->vertMovePos[0].x - TO_FIXED(16)) / 6;
     if (self->vertMovePos[0].x < self->vertTargetPos[0].x)
         self->vertMovePos[0].x = self->vertTargetPos[0].x;
 
-    self->vertMovePos[0].y += (self->vertTargetPos[0].y - self->vertMovePos[0].y - 0x100000) / 6;
+    self->vertMovePos[0].y += (self->vertTargetPos[0].y - self->vertMovePos[0].y - TO_FIXED(16)) / 6;
     if (self->vertMovePos[0].y < self->vertTargetPos[0].y)
         self->vertMovePos[0].y = self->vertTargetPos[0].y;
 
-    self->vertMovePos[1].x += (self->vertTargetPos[1].x - self->vertMovePos[1].x - 0x100000) / 6;
+    self->vertMovePos[1].x += (self->vertTargetPos[1].x - self->vertMovePos[1].x - TO_FIXED(16)) / 6;
     if (self->vertMovePos[1].x < self->vertTargetPos[1].x)
         self->vertMovePos[1].x = self->vertTargetPos[1].x;
 
-    self->vertMovePos[1].y += (self->vertTargetPos[1].y - self->vertMovePos[1].y - 0x100000) / 6;
+    self->vertMovePos[1].y += (self->vertTargetPos[1].y - self->vertMovePos[1].y - TO_FIXED(16)) / 6;
     if (self->vertMovePos[1].y < self->vertTargetPos[1].y)
         self->vertMovePos[1].y = self->vertTargetPos[1].y;
 
-    self->stripVertsBlue[0].x = (self->vertMovePos[0].x - 0xF00000) + self->stripVertsBlue[3].x;
+    self->stripVertsBlue[0].x = (self->vertMovePos[0].x - TO_FIXED(240)) + self->stripVertsBlue[3].x;
     self->stripVertsBlue[0].y = self->vertMovePos[0].x;
-    self->stripVertsBlue[1].x = (self->vertMovePos[0].x - 0xF00000) + self->stripVertsBlue[2].x;
+    self->stripVertsBlue[1].x = (self->vertMovePos[0].x - TO_FIXED(240)) + self->stripVertsBlue[2].x;
     self->stripVertsBlue[1].y = self->vertMovePos[0].x;
 
-    self->stripVertsRed[0].x = (self->vertMovePos[0].y - 0xF00000) + self->stripVertsRed[3].x;
+    self->stripVertsRed[0].x = (self->vertMovePos[0].y - TO_FIXED(240)) + self->stripVertsRed[3].x;
     self->stripVertsRed[0].y = self->vertMovePos[0].y;
-    self->stripVertsRed[1].x = (self->vertMovePos[0].y - 0xF00000) + self->stripVertsRed[2].x;
+    self->stripVertsRed[1].x = (self->vertMovePos[0].y - TO_FIXED(240)) + self->stripVertsRed[2].x;
     self->stripVertsRed[1].y = self->vertMovePos[0].y;
 
-    self->stripVertsOrange[0].x = (self->vertMovePos[1].x - 0xF00000) + self->stripVertsOrange[3].x;
+    self->stripVertsOrange[0].x = (self->vertMovePos[1].x - TO_FIXED(240)) + self->stripVertsOrange[3].x;
     self->stripVertsOrange[0].y = self->vertMovePos[1].x;
-    self->stripVertsOrange[1].x = (self->vertMovePos[1].x - 0xF00000) + self->stripVertsOrange[2].x;
+    self->stripVertsOrange[1].x = (self->vertMovePos[1].x - TO_FIXED(240)) + self->stripVertsOrange[2].x;
     self->stripVertsOrange[1].y = self->vertMovePos[1].x;
 
-    self->stripVertsGreen[0].x = (self->vertMovePos[1].y - 0xF00000) + self->stripVertsGreen[3].x;
+    self->stripVertsGreen[0].x = (self->vertMovePos[1].y - TO_FIXED(240)) + self->stripVertsGreen[3].x;
     self->stripVertsGreen[0].y = self->vertMovePos[1].y;
-    self->stripVertsGreen[1].x = (self->vertMovePos[1].y - 0xF00000) + self->stripVertsGreen[2].x;
+    self->stripVertsGreen[1].x = (self->vertMovePos[1].y - TO_FIXED(240)) + self->stripVertsGreen[2].x;
     self->stripVertsGreen[1].y = self->vertMovePos[1].y;
 
     TitleCard_HandleWordMovement();
@@ -510,8 +510,8 @@ void TitleCard_State_ShowingTitle(void)
                 player->camera         = camera;
                 camera->target         = (Entity *)player;
                 camera->state          = Camera_State_FollowXY;
-                Camera->centerBounds.x = 0x20000;
-                Camera->centerBounds.y = 0x20000;
+                Camera->centerBounds.x = TO_FIXED(2);
+                Camera->centerBounds.y = TO_FIXED(2);
             }
             Zone->setATLBounds = false;
         }
@@ -587,7 +587,7 @@ void TitleCard_State_SlideAway(void)
     }
 
     if (self->actionTimer > 60) {
-        speed = 0x200000;
+        speed = TO_FIXED(32);
         self->zoneXPos -= speed;
         self->word1XPos -= speed;
         self->word2XPos += speed;
@@ -753,19 +753,19 @@ void TitleCard_Draw_ShowTitleCard(void)
         RSDK.DrawRect(0, 0, ScreenInfo->size.x, ScreenInfo->size.y, colors[4], 0xFF, INK_NONE, true);
 
     // Draw Orange Strip
-    if (self->vertMovePos[1].x < 0xF00000)
+    if (self->vertMovePos[1].x < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Green Strip
-    if (self->vertMovePos[1].y < 0xF00000)
+    if (self->vertMovePos[1].y < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Red Strip
-    if (self->vertMovePos[0].y < 0xF00000)
+    if (self->vertMovePos[0].y < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw Blue Strip
-    if (self->vertMovePos[0].x < 0xF00000)
+    if (self->vertMovePos[0].x < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw "Sonic Mania"
@@ -792,22 +792,22 @@ void TitleCard_Draw_ShowTitleCard(void)
     drawPos.x = self->zoneXPos;
     for (int32 i = 0; i < 4; ++i) {
         self->zoneLetterAnimator.frameID = i;
-        drawPos.y                        = 0xBA0000 + self->zoneCharPos[i];
+        drawPos.y                        = TO_FIXED(186) + self->zoneCharPos[i];
         RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
     }
 
     // Draw TitleCard Word 1 (if there are 2 words)
     if (self->titleCardWord2 > 0) {
         RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, 130);
-        drawPos.y = 0x720000;
-        drawPos.x = self->word1XPos - 0x140000;
+        drawPos.x = self->word1XPos - TO_FIXED(20);
+        drawPos.y = TO_FIXED(114);
         RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->titleCardWord2, ALIGN_CENTER, 1, 0, self->charPos, true);
     }
 
     // Draw TitleCard Word 2 (if there are 2 words, otherwise draw the entire zoneName)
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, 170);
-    drawPos.y = 0x9A0000;
-    drawPos.x = self->word2XPos - 0x140000;
+    drawPos.y = TO_FIXED(154);
+    drawPos.x = self->word2XPos - TO_FIXED(20);
     RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_CENTER, 1, 0, self->charPos, true);
 
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
@@ -816,7 +816,7 @@ void TitleCard_Draw_ShowTitleCard(void)
     if (self->actID != 3) {
         if (self->actNumScale > 0) {
             self->drawFX  = FX_SCALE;
-            self->scale.x = minVal(self->actNumScale, 0x200);
+            self->scale.x = MIN(self->actNumScale, 0x200);
             self->scale.y = 0x200;
 
 #if MANIA_USE_PLUS
@@ -826,7 +826,7 @@ void TitleCard_Draw_ShowTitleCard(void)
 #endif
             RSDK.DrawSprite(&self->decorationAnimator, &self->actNumPos, true);
 
-            self->scale.x = clampVal(self->actNumScale - 0x100, 0, 0x200);
+            self->scale.x = CLAMP(self->actNumScale - 0x100, 0, 0x200);
             RSDK.DrawSprite(&self->actNumbersAnimator, &self->actNumPos, true);
             self->drawFX = FX_NONE;
         }
@@ -859,19 +859,19 @@ void TitleCard_Draw_SlideAway(void)
     }
 
     // Orange Strip
-    if (self->vertMovePos[1].x < 0xF00000)
+    if (self->vertMovePos[1].x < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsOrange, 4, (colors[0] >> 16) & 0xFF, (colors[0] >> 8) & 0xFF, (colors[0] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Green Strip
-    if (self->vertMovePos[1].y < 0xF00000)
+    if (self->vertMovePos[1].y < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsGreen, 4, (colors[1] >> 16) & 0xFF, (colors[1] >> 8) & 0xFF, (colors[1] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Red Strip
-    if (self->vertMovePos[0].y < 0xF00000)
+    if (self->vertMovePos[0].y < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsRed, 4, (colors[2] >> 16) & 0xFF, (colors[2] >> 8) & 0xFF, (colors[2] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Blue Strip
-    if (self->vertMovePos[0].x < 0xF00000)
+    if (self->vertMovePos[0].x < TO_FIXED(240))
         RSDK.DrawFace(self->stripVertsBlue, 4, (colors[3] >> 16) & 0xFF, (colors[3] >> 8) & 0xFF, (colors[3] >> 0) & 0xFF, 0xFF, INK_NONE);
 
     // Draw "Sonic Mania"
@@ -905,7 +905,7 @@ void TitleCard_Draw_SlideAway(void)
     // Draw "ZONE"
     Vector2 drawPos;
     drawPos.x = self->zoneXPos;
-    drawPos.y = 0xBA0000;
+    drawPos.y = TO_FIXED(186);
     for (int32 i = 0; i < 4; ++i) {
         self->zoneLetterAnimator.frameID = i;
         RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
@@ -913,14 +913,14 @@ void TitleCard_Draw_SlideAway(void)
 
     // Draw TitleCard Word 1 (if there are 2 words)
     if (self->titleCardWord2 > 0) {
-        drawPos.y = 0x720000;
-        drawPos.x = self->word1XPos - 0x140000;
+        drawPos.y = TO_FIXED(114);
+        drawPos.x = self->word1XPos - TO_FIXED(20);
         RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->titleCardWord2, ALIGN_CENTER, 1, 0, 0, true);
     }
 
     // Draw TitleCard Word 2 (if there are 2 words, otherwise draw the entire zoneName)
-    drawPos.y = 0x9A0000;
-    drawPos.x = self->word2XPos - 0x140000;
+    drawPos.y = TO_FIXED(154);
+    drawPos.x = self->word2XPos - TO_FIXED(20);
     RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_CENTER, 1, 0, 0, true);
 }
 

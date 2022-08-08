@@ -129,7 +129,7 @@ void Orbinaut_HandlePlayerInteractions(void)
                 if ((1 << i) & self->activeOrbs) {
                     self->position.x = self->orbPositions[i].x;
                     self->position.y = self->orbPositions[i].y;
-                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, intToVoid(true), self->orbPositions[i].x, self->orbPositions[i].y);
+                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, INT_TO_VOID(true), self->orbPositions[i].x, self->orbPositions[i].y);
 
                     orb->state = Orbinaut_State_OrbDebris;
                     orb->velocity.x = 0x380 * RSDK.Cos256(angle);
@@ -237,7 +237,7 @@ void Orbinaut_State_ReleasingOrbs(void)
         if (angle == 64) {
             if ((1 << i) & self->activeOrbs) {
                 self->activeOrbs &= ~(1 << i);
-                EntityOrbinaut *sol = CREATE_ENTITY(Orbinaut, intToVoid(true), self->orbPositions[i].x, self->orbPositions[i].y);
+                EntityOrbinaut *sol = CREATE_ENTITY(Orbinaut, INT_TO_VOID(true), self->orbPositions[i].x, self->orbPositions[i].y);
                 if (self->direction == FLIP_NONE)
                     sol->velocity.x = -0x20000;
                 else

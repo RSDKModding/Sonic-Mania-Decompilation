@@ -221,7 +221,7 @@ void LottoBall_State_InMachine(void)
                     break;
 
                 case 3:
-                    self->velocity.y = maxVal(-self->velocity.y >> 1, 0x10000);
+                    self->velocity.y = MAX(-self->velocity.y >> 1, 0x10000);
                     self->velocity.x += parent->spinSpeed;
                     break;
             }
@@ -357,7 +357,7 @@ void LottoBall_State_ShowUIBall(void)
 
     self->timer += 8;
 
-    int32 scale   = minVal(self->scale.x + ((0x214 - self->scale.x) >> 3), 0x200);
+    int32 scale   = MIN(self->scale.x + ((0x214 - self->scale.x) >> 3), 0x200);
     self->scale.x = scale;
     self->scale.y = scale;
 

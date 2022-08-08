@@ -137,7 +137,7 @@ void IceBomba_HandlePlayerCollisions(void)
         if (Player_CheckBadnikTouch(player, self, &IceBomba->hitboxBadnik)) {
             if (Player_CheckBadnikBreak(player, self, false)) {
                 if (self->state != IceBomba_State_FlyAway) {
-                    EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(true), self->position.x, self->position.y);
+                    EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, INT_TO_VOID(true), self->position.x, self->position.y);
                     if (self->direction)
                         bomb->position.x -= 0x40000;
                     else
@@ -156,7 +156,7 @@ void IceBomba_HandlePlayerCollisions(void)
 
             if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
                 RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
                 RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
                 self->state = IceBomba_State_FlyAway;
                 Ice_FreezePlayer(player);
@@ -213,7 +213,7 @@ void IceBomba_State_Flying(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxRange)) {
-            EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(true), self->position.x, self->position.y);
+            EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, INT_TO_VOID(true), self->position.x, self->position.y);
             bomb->position.x += 0x40000 * (self->direction ? -1 : 1);
             bomb->position.y += 0x1A0000;
             bomb->direction = self->direction;
@@ -306,9 +306,9 @@ void IceBomba_State_Bomb(void)
     if (RSDK.CheckOnScreen(self, NULL)) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             RSDK.PlaySfx(IceBomba->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
-            CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PILLAR), self->position.x, self->position.y + 0x100000);
+            CREATE_ENTITY(Ice, INT_TO_VOID(ICE_CHILD_PILLAR), self->position.x, self->position.y + 0x100000);
             RSDK.PlaySfx(IceBomba->sfxFreeze, false, 0xFF);
             destroyEntity(self);
         }
@@ -317,7 +317,7 @@ void IceBomba_State_Bomb(void)
         {
             if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
                 RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
                 Ice_FreezePlayer(player);
                 destroyEntity(self);

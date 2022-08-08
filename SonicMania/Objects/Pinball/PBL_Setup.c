@@ -126,7 +126,7 @@ void PBL_Setup_Scanline_TableLow(ScanlineInfo *scanlines)
         scanlines->deform.y = sin * mult >> 8;
 
         int32 pos = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal((abs(pos) >> 12) - 27, 0, 7), i + 120, i + 121);
+        RSDK.SetActivePalette(CLAMP((abs(pos) >> 12) - 27, 0, 7), i + 120, i + 121);
 
         scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
         scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
@@ -156,7 +156,7 @@ void PBL_Setup_Scanline_TableHigh(ScanlineInfo *scanlines)
         scanlines->deform.y = sin * mult >> 8;
 
         int32 pos = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal((abs(pos) >> 12) - 24, 0, 7), i + 120, i + 121);
+        RSDK.SetActivePalette(CLAMP((abs(pos) >> 12) - 24, 0, 7), i + 120, i + 121);
 
         scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
         scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
@@ -185,7 +185,7 @@ void PBL_Setup_Scanline_PinballBG(ScanlineInfo *scanlines)
         scanlines->position.x = timer + sin * id - centerX * scanlines->deform.x;
         scanlines->position.y = timer + cos * id - centerX * (sin * id >> 7);
 
-        RSDK.SetActivePalette(clampVal((abs(id) >> 11) - 16, 0, 7), clr, clr + 1);
+        RSDK.SetActivePalette(CLAMP((abs(id) >> 11) - 16, 0, 7), clr, clr + 1);
 
         scanlines++;
         ++clr;

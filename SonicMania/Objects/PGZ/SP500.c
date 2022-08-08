@@ -243,7 +243,7 @@ void SP500_State_Activate(void)
             self->active      = ACTIVE_NORMAL;
             self->state       = SP500_State_PrintDelay;
 
-            EntitySP500 *controller  = CREATE_ENTITY(SP500, intToVoid(true), self->position.x, self->position.y);
+            EntitySP500 *controller  = CREATE_ENTITY(SP500, INT_TO_VOID(true), self->position.x, self->position.y);
             controller->targetPos.x      = self->position.x + ((self->len - 3) << 19);
             if (self->printDir)
                 controller->targetPos.y = self->position.y + (self->height << 19);

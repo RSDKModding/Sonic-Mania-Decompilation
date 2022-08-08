@@ -134,7 +134,7 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
         EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(slot + seqPos, LRZConvItem);
 
         if (seqEnt->classID == LRZConvItem->classID) {
-            EntityLRZConvItem *item = CREATE_ENTITY(LRZConvItem, intToVoid(seqEnt->type), entity->position.x, entity->position.y);
+            EntityLRZConvItem *item = CREATE_ENTITY(LRZConvItem, INT_TO_VOID(seqEnt->type), entity->position.x, entity->position.y);
             item->active            = ACTIVE_NORMAL;
             item->velocity.x        = 0;
             item->velocity.y        = 0;
@@ -150,7 +150,7 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
         else if (seqEnt->classID == ItemBox->classID) {
             EntityItemBox *seqBox = (EntityItemBox *)seqEnt;
 
-            EntityItemBox *itembox = CREATE_ENTITY(ItemBox, intToVoid(seqBox->type), entity->position.x, entity->position.y);
+            EntityItemBox *itembox = CREATE_ENTITY(ItemBox, INT_TO_VOID(seqBox->type), entity->position.x, entity->position.y);
             itembox->active        = ACTIVE_NORMAL;
             itembox->velocity.x    = 0;
             itembox->velocity.y    = 0;

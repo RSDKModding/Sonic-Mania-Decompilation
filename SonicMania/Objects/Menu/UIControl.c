@@ -49,8 +49,8 @@ void UIControl_Draw(void)
 {
     RSDK_THIS(UIControl);
 
-    ScreenInfo->position.x = (self->position.x >> 0x10) - ScreenInfo->center.x;
-    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->center.y;
+    ScreenInfo->position.x = FROM_FIXED(self->position.x) - ScreenInfo->center.x;
+    ScreenInfo->position.y = FROM_FIXED(self->position.y) - ScreenInfo->center.y;
 }
 
 void UIControl_Create(void *data)
@@ -368,10 +368,10 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
         EntityUIButton *entity = RSDK_GET_ENTITY(i, UIButton);
 
         if (entity) {
-            int32 left   = minVal(-ScreenInfo->size.x >> 1, ScreenInfo->size.x >> 1) << 16;
-            int32 right  = maxVal(-ScreenInfo->size.x >> 1, ScreenInfo->size.x >> 1) << 16;
-            int32 top    = minVal(-ScreenInfo->size.y >> 1, ScreenInfo->size.y >> 1) << 16;
-            int32 bottom = maxVal(-ScreenInfo->size.y >> 1, ScreenInfo->size.y >> 1) << 16;
+            int32 left   = MIN(-ScreenInfo->size.x >> 1, ScreenInfo->size.x >> 1) << 16;
+            int32 right  = MAX(-ScreenInfo->size.x >> 1, ScreenInfo->size.x >> 1) << 16;
+            int32 top    = MIN(-ScreenInfo->size.y >> 1, ScreenInfo->size.y >> 1) << 16;
+            int32 bottom = MAX(-ScreenInfo->size.y >> 1, ScreenInfo->size.y >> 1) << 16;
 
             if (entity->position.x >= control->position.x + left && entity->position.x <= control->position.x + right) {
                 if (entity->position.y >= control->position.y + top && entity->position.y <= control->position.y + bottom) {

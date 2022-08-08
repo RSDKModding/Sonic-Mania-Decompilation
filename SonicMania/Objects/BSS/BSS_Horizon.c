@@ -20,7 +20,7 @@ void BSS_Horizon_Draw(void)
     RSDK_THIS(BSS_Horizon);
 
     Vector2 drawPos;
-    drawPos.x = ScreenInfo->center.x << 16;
+    drawPos.x = TO_FIXED(ScreenInfo->center.x);
     drawPos.y = 0;
 
     // Draw Sky Horizon (Left)

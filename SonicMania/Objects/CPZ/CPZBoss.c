@@ -85,7 +85,7 @@ void CPZBoss_Explode_Eggman(void)
         if (Zone->timer & 4) {
             int32 x = self->explosionPos.x + RSDK.Rand(-0x300000, 0x300000);
             int32 y = self->explosionPos.y + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->huddrawGroup;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->huddrawGroup;
         }
     }
 }
@@ -99,7 +99,7 @@ void CPZBoss_Explode_Player(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + RSDK.Rand(-0x100000, 0x100000);
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->huddrawGroup;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->huddrawGroup;
         }
     }
 }

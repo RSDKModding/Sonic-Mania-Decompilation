@@ -175,7 +175,7 @@ void Sweep_CheckShoot(void)
         {
             if (Player_CheckCollisionTouch(player, self, &Sweep->hitboxRange)) {
                 RSDK.SetSpriteAnimation(Sweep->aniFrames, 3, &self->animator, true, 0);
-                EntitySweep *projectile = CREATE_ENTITY(Sweep, intToVoid(true), self->position.x, self->position.y);
+                EntitySweep *projectile = CREATE_ENTITY(Sweep, INT_TO_VOID(true), self->position.x, self->position.y);
                 if (!self->direction)
                     projectile->velocity.x = -0x30000;
                 else

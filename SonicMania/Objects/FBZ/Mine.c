@@ -45,7 +45,7 @@ void Mine_Update(void)
 
                     int32 x                                                                  = self->position.x;
                     int32 y                                                                  = self->position.y + 0x30000;
-                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawHigh;
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(self);
                     foreach_return;
@@ -64,7 +64,7 @@ void Mine_Update(void)
                 }
             }
 
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y - 0x30000)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y - 0x30000)->drawGroup = Zone->objectDrawHigh;
             RSDK.PlaySfx(Mine->sfxExplosion, false, 255);
 #if MANIA_USE_PLUS
             Mine_CheckMightyHit();

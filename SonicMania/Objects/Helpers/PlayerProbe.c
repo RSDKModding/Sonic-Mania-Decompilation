@@ -24,7 +24,7 @@ void PlayerProbe_Update(void)
         Zone_RotateOnPivot(&pivotPos, &self->position, self->negAngle);
         Zone_RotateOnPivot(&pivotVel, &self->velocity, self->negAngle);
 
-        if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < self->size << 19) {
+        if (abs(pivotPos.x - self->position.x) < TO_FIXED(24) && abs(pivotPos.y - self->position.y) < self->size << 19) {
             if (pivotPos.x >= self->position.x) {
                 if (!self->direction) {
                     if (!((1 << playerID) & self->activePlayers))
@@ -66,8 +66,8 @@ void PlayerProbe_Create(void *data)
     self->active           = ACTIVE_BOUNDS;
     self->animator.frameID = 4;
 
-    self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
-    self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+    self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
+    self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
     self->visible       = false;
     self->drawGroup     = Zone->objectDrawLow;
     self->activePlayers = 0;
@@ -152,8 +152,8 @@ void PlayerProbe_EditorDraw(void)
 {
     RSDK_THIS(PlayerProbe);
 
-    self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
-    self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+    self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
+    self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
     self->visible       = true;
     self->drawGroup     = Zone ? Zone->objectDrawLow : 2;
 

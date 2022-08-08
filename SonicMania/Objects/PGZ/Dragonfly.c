@@ -133,7 +133,7 @@ void Dragonfly_CheckPlayerCollisions(void)
         if (Player_CheckBadnikTouch(player, self, &Dragonfly->hitboxBadnik)) {
             if (Player_CheckBadnikBreak(player, self, false)) {
                 for (int32 i = 0; i < DRAGONFLY_SPINE_COUNT; ++i) {
-                    EntityDragonfly *child  = CREATE_ENTITY(Dragonfly, intToVoid(true), self->positions[i].x, self->positions[i].y);
+                    EntityDragonfly *child  = CREATE_ENTITY(Dragonfly, INT_TO_VOID(true), self->positions[i].x, self->positions[i].y);
                     child->animator.frameID = i == 0;
                     child->velocity.x       = RSDK.Rand(-4, 4) << 15;
                     child->velocity.y       = RSDK.Rand(-5, 1) << 15;

@@ -21,8 +21,9 @@ void FlingRamp_Update(void)
 
             if (left && !(player->direction & FLIP_X) && player->velocity.x >= 0x40000) {
                 if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitboxRamp)) {
-                    player->velocity.x += 0x40000;
-                    player->velocity.y = -0x70000;
+                    player->velocity.x += TO_FIXED(4);
+                    player->velocity.y = -TO_FIXED(7);
+
                     // Bug Details:
                     // this one's the same bug I detailed in SPZ/RockemSockem and was shown off in SDCC 2017
                     // if you glide into the fling ramp as knux the state wont be set to air so you'll be gliding with SPRINGCS anim playing
@@ -34,8 +35,9 @@ void FlingRamp_Update(void)
             }
             else if (right && (player->direction & FLIP_X) && player->velocity.x <= -0x40000) {
                 if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitboxRamp)) {
-                    player->velocity.x -= 0x40000;
-                    player->velocity.y = -0x70000;
+                    player->velocity.x -= TO_FIXED(4);
+                    player->velocity.y = -TO_FIXED(7);
+
                     // Bug Details:
                     // this one's the same bug I detailed in SPZ/RockemSockem and was shown off in SDCC 2017
                     // if you glide into the fling ramp as knux the state wont be set to air so you'll be gliding with SPRINGCS anim playing

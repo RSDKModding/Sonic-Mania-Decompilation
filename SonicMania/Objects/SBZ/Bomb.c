@@ -197,31 +197,31 @@ void Bomb_State_Explode(void)
     }
     else {
         RSDK.PlaySfx(Bomb->sfxExplosion, false, 255);
-        EntityBomb *debris  = CREATE_ENTITY(Bomb, intToVoid(true), self->position.x, self->position.y);
+        EntityBomb *debris  = CREATE_ENTITY(Bomb, INT_TO_VOID(true), self->position.x, self->position.y);
         debris->velocity.x  = -0x20000;
         debris->velocity.y  = -0x30000;
         debris->planeFilter = self->planeFilter;
         debris->drawGroup   = self->drawGroup;
 
-        debris              = CREATE_ENTITY(Bomb, intToVoid(true), self->position.x, self->position.y);
+        debris              = CREATE_ENTITY(Bomb, INT_TO_VOID(true), self->position.x, self->position.y);
         debris->velocity.x  = -0x10000;
         debris->velocity.y  = -0x20000;
         debris->planeFilter = self->planeFilter;
         debris->drawGroup   = self->drawGroup;
 
-        debris              = CREATE_ENTITY(Bomb, intToVoid(true), self->position.x, self->position.y);
+        debris              = CREATE_ENTITY(Bomb, INT_TO_VOID(true), self->position.x, self->position.y);
         debris->velocity.x  = 0x20000;
         debris->velocity.y  = -0x30000;
         debris->planeFilter = self->planeFilter;
         debris->drawGroup   = self->drawGroup;
 
-        debris              = CREATE_ENTITY(Bomb, intToVoid(true), self->position.x, self->position.y);
+        debris              = CREATE_ENTITY(Bomb, INT_TO_VOID(true), self->position.x, self->position.y);
         debris->velocity.x  = 0x10000;
         debris->velocity.y  = -0x20000;
         debris->planeFilter = self->planeFilter;
         debris->drawGroup   = self->drawGroup;
 
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(1), self->position.x, self->position.y);
         explosion->planeFilter     = self->planeFilter;
         explosion->drawGroup       = self->drawGroup + 1;
 

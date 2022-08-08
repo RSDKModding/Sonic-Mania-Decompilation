@@ -193,8 +193,8 @@ void Shield_State_LightningSparks(void)
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
     debris->timer        = 22;
-    debris->velocity.x   = -0x20000;
-    debris->velocity.y   = -0x20000;
+    debris->velocity.x   = -TO_FIXED(2);
+    debris->velocity.y   = -TO_FIXED(2);
     debris->drawGroup    = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
@@ -205,8 +205,8 @@ void Shield_State_LightningSparks(void)
 
     debris             = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
     debris->timer      = 22;
-    debris->velocity.x = 0x20000;
-    debris->velocity.y = -0x20000;
+    debris->velocity.x = TO_FIXED(2);
+    debris->velocity.y = -TO_FIXED(2);
     debris->drawGroup  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
@@ -217,8 +217,8 @@ void Shield_State_LightningSparks(void)
 
     debris             = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
     debris->timer      = 22;
-    debris->velocity.x = -0x20000;
-    debris->velocity.y = 0x20000;
+    debris->velocity.x = -TO_FIXED(2);
+    debris->velocity.y = TO_FIXED(2);
     debris->drawGroup  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
@@ -229,8 +229,8 @@ void Shield_State_LightningSparks(void)
 
     debris             = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
     debris->timer      = 22;
-    debris->velocity.x = 0x20000;
-    debris->velocity.y = 0x20000;
+    debris->velocity.x = TO_FIXED(2);
+    debris->velocity.y = TO_FIXED(2);
     debris->drawGroup  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {

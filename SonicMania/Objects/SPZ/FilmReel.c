@@ -153,7 +153,7 @@ void FilmReel_Update(void)
     else
         FilmReel_SpinRight();
 
-    self->spinSpeed = clampVal(self->spinSpeed, -0x80000, 0x80000);
+    self->spinSpeed = CLAMP(self->spinSpeed, -0x80000, 0x80000);
 
     self->position = self->lastPos;
     if (!self->pathFlags) {
@@ -166,12 +166,12 @@ void FilmReel_Update(void)
     }
 
     if (abs(self->pathSize.x) <= abs(self->pathSize.y)) {
-        int32 scale   = minVal((abs(self->endPos.y - self->position.y) >> 8) / (abs(self->pathSize.x) >> 16) + 0x100, 0x200);
+        int32 scale   = MIN((abs(self->endPos.y - self->position.y) >> 8) / (abs(self->pathSize.x) >> 16) + 0x100, 0x200);
         self->scale.x = scale;
         self->scale.y = scale;
     }
     else {
-        int32 scale   = minVal((abs(self->endPos.x - self->position.x) >> 8) / (abs(self->pathSize.x) >> 16) + 0x100, 0x200);
+        int32 scale   = MIN((abs(self->endPos.x - self->position.x) >> 8) / (abs(self->pathSize.x) >> 16) + 0x100, 0x200);
         self->scale.x = scale;
         self->scale.y = scale;
     }

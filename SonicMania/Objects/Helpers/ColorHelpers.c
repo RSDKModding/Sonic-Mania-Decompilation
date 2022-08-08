@@ -40,8 +40,8 @@ void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *sa
             *luminance = 0;
     }
 
-    uint8 min = minVal(minVal(r, g), b);
-    uint8 max = maxVal(maxVal(r, g), b);
+    uint8 min = MIN(MIN(r, g), b);
+    uint8 max = MAX(MAX(r, g), b);
 
     int32 delta = max - min;
     if (max) {

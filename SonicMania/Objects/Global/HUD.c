@@ -42,16 +42,17 @@ void HUD_LateUpdate(void)
 #if GAME_VERSION != VER_100
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (SceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER && SaveGame->saveRAM->chaosEmeralds >= 0b01111111) {
+        if (SceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER
+            && SaveGame->saveRAM->chaosEmeralds >= 0b01111111) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV)
                 HUD_GetActionButtonFrames();
 
-            if (self->superButtonPos < TO_FIXED(24))
-                self->superButtonPos += TO_FIXED(8);
+            if (self->actionPromptPos < TO_FIXED(24))
+                self->actionPromptPos += TO_FIXED(8);
         }
         else {
-            if (self->superButtonPos > -TO_FIXED(24))
-                self->superButtonPos -= TO_FIXED(8);
+            if (self->actionPromptPos > -TO_FIXED(32))
+                self->actionPromptPos -= TO_FIXED(8);
         }
     }
 #if MANIA_USE_PLUS
@@ -63,12 +64,12 @@ void HUD_LateUpdate(void)
                 HUD_GetButtonFrame(&self->thumbsUpButtonAnimator, KEY_START);
             }
 
-            if (self->superButtonPos < TO_FIXED(24))
-                self->superButtonPos += TO_FIXED(8);
+            if (self->actionPromptPos < TO_FIXED(24))
+                self->actionPromptPos += TO_FIXED(8);
         }
         else {
-            if (self->superButtonPos > -TO_FIXED(64))
-                self->superButtonPos -= TO_FIXED(8);
+            if (self->actionPromptPos > -TO_FIXED(64))
+                self->actionPromptPos -= TO_FIXED(8);
         }
     }
 #endif
@@ -85,24 +86,24 @@ void HUD_Draw(void)
     Vector2 drawPos;
     Vector2 scorePos, timePos, ringPos, lifePos;
 
-    scorePos.x = self->scoreOffset.x;
-    scorePos.y = self->scoreOffset.y;
-    timePos.x  = self->timeOffset.x;
-    timePos.y  = self->timeOffset.y;
-    ringPos.x = self->ringsOffset.x;
-    ringPos.y = self->ringsOffset.y;
-    lifePos.x  = self->lifeOffset.x;
-    lifePos.y  = self->lifeOffset.y;
+    scorePos.x = self->scorePos.x;
+    scorePos.y = self->scorePos.y;
+    timePos.x  = self->timePos.x;
+    timePos.y  = self->timePos.y;
+    ringPos.x  = self->ringsPos.x;
+    ringPos.y  = self->ringsPos.y;
+    lifePos.x  = self->lifePos.x;
+    lifePos.y  = self->lifePos.y;
     if (globals->gameMode == MODE_COMPETITION) {
 #if MANIA_USE_PLUS
-        scorePos.x = self->vsScoreOffsets[SceneInfo->currentScreenID].x;
-        scorePos.y = self->vsScoreOffsets[SceneInfo->currentScreenID].y;
-        timePos.x  = self->vsTimeOffsets[SceneInfo->currentScreenID].x;
-        timePos.y  = self->vsTimeOffsets[SceneInfo->currentScreenID].y;
-        ringPos.x = self->vsRingsOffsets[SceneInfo->currentScreenID].x;
-        ringPos.y = self->vsRingsOffsets[SceneInfo->currentScreenID].y;
-        lifePos.x  = self->vsLifeOffsets[SceneInfo->currentScreenID].x;
-        lifePos.y  = self->vsLifeOffsets[SceneInfo->currentScreenID].y;
+        scorePos.x = self->vsScorePos[SceneInfo->currentScreenID].x;
+        scorePos.y = self->vsScorePos[SceneInfo->currentScreenID].y;
+        timePos.x  = self->vsTimePos[SceneInfo->currentScreenID].x;
+        timePos.y  = self->vsTimePos[SceneInfo->currentScreenID].y;
+        ringPos.x  = self->vsRingsPos[SceneInfo->currentScreenID].x;
+        ringPos.y  = self->vsRingsPos[SceneInfo->currentScreenID].y;
+        lifePos.x  = self->vsLifePos[SceneInfo->currentScreenID].x;
+        lifePos.y  = self->vsLifePos[SceneInfo->currentScreenID].y;
 #endif
 
         foreach_active(Player, plr)
@@ -201,18 +202,18 @@ void HUD_Draw(void)
             HUD_DrawNumbersBase16(&drawPos, ScreenInfo[player->camera->screenID].position.x);
 
             // Draw Player YPos
-            drawPos.x = (ScreenInfo[player->camera->screenID].size.x - 16) << 16;
+            drawPos.x = TO_FIXED(ScreenInfo[player->camera->screenID].size.x - 16);
             drawPos.y += TO_FIXED(16);
-            HUD_DrawNumbersBase16(&drawPos, player->position.y >> 0x10);
+            HUD_DrawNumbersBase16(&drawPos, FROM_FIXED(player->position.y));
 
             // Draw Player XPos
             drawPos.x -= TO_FIXED(9);
-            HUD_DrawNumbersBase16(&drawPos, player->position.x >> 0x10);
+            HUD_DrawNumbersBase16(&drawPos, FROM_FIXED(player->position.x));
         }
     }
 #if MANIA_USE_PLUS
-    else if (self->superButtonPos > -TO_FIXED(64) && globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->superButtonPos;
+    else if (self->actionPromptPos > -TO_FIXED(64) && globals->gameMode == MODE_TIMEATTACK) {
+        drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->actionPromptPos;
         drawPos.y = TO_FIXED(20);
 
         if (API.CheckDLC(DLC_PLUS)) {
@@ -231,7 +232,7 @@ void HUD_Draw(void)
                 self->inkEffect = INK_NONE;
             }
 
-            drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->superButtonPos;
+            drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->actionPromptPos;
             drawPos.y += TO_FIXED(28);
         }
         // Draw Thumbs Up Icon
@@ -243,9 +244,9 @@ void HUD_Draw(void)
     }
 #endif
 #if GAME_VERSION != VER_100
-    else if (self->superButtonPos > -TO_FIXED(32)) {
+    else if (self->actionPromptPos > -TO_FIXED(32)) {
         // Draw Super Icon
-        drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->superButtonPos;
+        drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->actionPromptPos;
         drawPos.y = TO_FIXED(20);
         RSDK.DrawSprite(&self->superIconAnimator, &drawPos, true);
 
@@ -368,7 +369,7 @@ void HUD_Draw(void)
 
             case VS_BORDER_BOTTOM:
                 // Along bottom edge
-                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
             case VS_BORDER_BOTTOMLEFT:
@@ -387,7 +388,7 @@ void HUD_Draw(void)
 
             case VS_BORDER_TOP:
                 // Along top edge (on screen 2)
-                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
             case VS_BORDER_TOPLEFT:
@@ -396,18 +397,17 @@ void HUD_Draw(void)
                 // Along top edge (on screen 3 or 4)
                 RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
-
         }
 #else
         switch (SceneInfo->currentScreenID) {
             case 0:
                 // Along right edge (on screen 1)
-                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, ScreenInfo->size.y - 1, ScreenInfo->size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
             case 1:
                 // Along left edge (on screen 2)
-                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true); 
+                RSDK.DrawRect(0, 0, ScreenInfo[1].size.x, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
             default: break;
@@ -429,28 +429,28 @@ void HUD_Create(void *data)
         self->visible   = true;
         self->drawGroup = Zone->huddrawGroup;
 
-        self->scoreOffset.x = TO_FIXED(16);
-        self->scoreOffset.y = TO_FIXED(12);
-        self->timeOffset.x  = TO_FIXED(16);
-        self->timeOffset.y  = TO_FIXED(28);
-        self->ringsOffset.x = TO_FIXED(16);
-        self->ringsOffset.y = TO_FIXED(44);
-        self->lifeOffset.x  = TO_FIXED(16);
-        self->lifeOffset.y  = TO_FIXED(ScreenInfo->size.y - 12);
+        self->scorePos.x = TO_FIXED(16);
+        self->scorePos.y = TO_FIXED(12);
+        self->timePos.x  = TO_FIXED(16);
+        self->timePos.y  = TO_FIXED(28);
+        self->ringsPos.x = TO_FIXED(16);
+        self->ringsPos.y = TO_FIXED(44);
+        self->lifePos.x  = TO_FIXED(16);
+        self->lifePos.y  = TO_FIXED(ScreenInfo->size.y - 12);
 #if GAME_VERSION != VER_100
-        self->superButtonPos = -TO_FIXED(32);
+        self->actionPromptPos = -TO_FIXED(32);
 #endif
 
 #if MANIA_USE_PLUS
         for (int32 i = 0; i < SCREEN_COUNT; ++i) {
-            self->vsScoreOffsets[i].x = self->scoreOffset.x;
-            self->vsScoreOffsets[i].y = self->scoreOffset.y;
-            self->vsTimeOffsets[i].x  = self->timeOffset.x;
-            self->vsTimeOffsets[i].y  = self->timeOffset.y;
-            self->vsRingsOffsets[i].x = self->ringsOffset.x;
-            self->vsRingsOffsets[i].y = self->ringsOffset.y;
-            self->vsLifeOffsets[i].x  = self->lifeOffset.x;
-            self->vsLifeOffsets[i].y  = self->lifeOffset.y;
+            self->vsScorePos[i].x = self->scorePos.x;
+            self->vsScorePos[i].y = self->scorePos.y;
+            self->vsTimePos[i].x  = self->timePos.x;
+            self->vsTimePos[i].y  = self->timePos.y;
+            self->vsRingsPos[i].x = self->ringsPos.x;
+            self->vsRingsPos[i].y = self->ringsPos.y;
+            self->vsLifePos[i].x  = self->lifePos.x;
+            self->vsLifePos[i].y  = self->lifePos.y;
         }
 #endif
 
@@ -503,7 +503,7 @@ void HUD_StageLoad(void)
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 digitCount)
 {
     RSDK_THIS(HUD);
-    
+
     if (!digitCount && value > 0) {
         int32 v = value;
         while (v > 0) {
@@ -588,7 +588,7 @@ void HUD_GetButtonFrame(Animator *animator, int32 buttonID)
 #if MANIA_USE_PLUS
         int32 id = API_GetInputDeviceID(player->controllerID);
 #else
-        int32 id = INPUT_NONE;
+        int32 id             = INPUT_NONE;
 #endif
         int32 contID = id == INPUT_UNASSIGNED ? CONT_P1 : player->controllerID;
 
@@ -623,52 +623,52 @@ void HUD_State_MoveIn(void)
     RSDK_THIS(HUD);
 
 #if MANIA_USE_PLUS
-    void **state         = NULL;
-    Vector2 *scoreOffset = NULL, *timeOffset = NULL, *ringsOffset = NULL, *lifeOffset = NULL;
-    int32 *max = NULL;
+    StateMachine(*state) = NULL;
+    Vector2 *scorePos = NULL, *timePos = NULL, *ringsPos = NULL, *lifePos = NULL;
+    int32 *targetPos = NULL;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        state       = (void **)&self->vsStates[SceneInfo->currentScreenID];
-        scoreOffset = &self->vsScoreOffsets[SceneInfo->currentScreenID];
-        timeOffset  = &self->vsTimeOffsets[SceneInfo->currentScreenID];
-        ringsOffset = &self->vsRingsOffsets[SceneInfo->currentScreenID];
-        lifeOffset  = &self->vsLifeOffsets[SceneInfo->currentScreenID];
-        max         = &self->vsMaxOffsets[SceneInfo->currentScreenID];
+        state     = (void **)&self->vsStates[SceneInfo->currentScreenID];
+        scorePos  = &self->vsScorePos[SceneInfo->currentScreenID];
+        timePos   = &self->vsTimePos[SceneInfo->currentScreenID];
+        ringsPos  = &self->vsRingsPos[SceneInfo->currentScreenID];
+        lifePos   = &self->vsLifePos[SceneInfo->currentScreenID];
+        targetPos = &self->vsMaxOffsets[SceneInfo->currentScreenID];
     }
     else {
-        state       = (void **)&self->state;
-        scoreOffset = &self->scoreOffset;
-        timeOffset  = &self->timeOffset;
-        ringsOffset = &self->ringsOffset;
-        lifeOffset  = &self->lifeOffset;
-        max         = &self->maxOffset;
+        state     = (void **)&self->state;
+        scorePos  = &self->scorePos;
+        timePos   = &self->timePos;
+        ringsPos  = &self->ringsPos;
+        lifePos   = &self->lifePos;
+        targetPos = &self->targetPos;
     }
 
-    if (scoreOffset->x < *max)
-        scoreOffset->x += TO_FIXED(8);
+    if (scorePos->x < *targetPos)
+        scorePos->x += TO_FIXED(8);
 
-    if (timeOffset->x < *max)
-        timeOffset->x += TO_FIXED(8);
+    if (timePos->x < *targetPos)
+        timePos->x += TO_FIXED(8);
 
-    if (ringsOffset->x < *max)
-        ringsOffset->x += TO_FIXED(8);
+    if (ringsPos->x < *targetPos)
+        ringsPos->x += TO_FIXED(8);
 
-    if (lifeOffset->x < *max)
-        lifeOffset->x += TO_FIXED(8);
+    if (lifePos->x < *targetPos)
+        lifePos->x += TO_FIXED(8);
     else
         *state = StateMachine_None;
 #else
-    if (self->scoreOffset.x < self->maxOffset)
-        self->scoreOffset.x += TO_FIXED(8);
+    if (self->scorePos.x < self->targetPos)
+        self->scorePos.x += TO_FIXED(8);
 
-    if (self->timeOffset.x < self->maxOffset)
-        self->timeOffset.x += TO_FIXED(8);
+    if (self->timePos.x < self->targetPos)
+        self->timePos.x += TO_FIXED(8);
 
-    if (self->ringsOffset.x < self->maxOffset)
-        self->ringsOffset.x += TO_FIXED(8);
+    if (self->ringsPos.x < self->targetPos)
+        self->ringsPos.x += TO_FIXED(8);
 
-    if (self->lifeOffset.x < self->maxOffset)
-        self->lifeOffset.x += TO_FIXED(8);
+    if (self->lifePos.x < self->targetPos)
+        self->lifePos.x += TO_FIXED(8);
     else
         self->state = StateMachine_None;
 #endif
@@ -679,48 +679,48 @@ void HUD_State_MoveOut(void)
     RSDK_THIS(HUD);
 
 #if MANIA_USE_PLUS
-    Vector2 *scoreOffset = NULL, *timeOffset = NULL, *ringsOffset = NULL, *lifeOffset = NULL;
-    void **statePtr = NULL;
+    Vector2 *scorePos = NULL, *timePos = NULL, *ringsPos = NULL, *lifePos = NULL;
+    StateMachine(*state) = NULL;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        statePtr    = (void **)&self->vsStates[self->screenID];
-        scoreOffset = &self->vsScoreOffsets[self->screenID];
-        timeOffset  = &self->vsTimeOffsets[self->screenID];
-        ringsOffset = &self->vsRingsOffsets[self->screenID];
-        lifeOffset  = &self->vsLifeOffsets[self->screenID];
+        state    = &self->vsStates[self->screenID];
+        scorePos = &self->vsScorePos[self->screenID];
+        timePos  = &self->vsTimePos[self->screenID];
+        ringsPos = &self->vsRingsPos[self->screenID];
+        lifePos  = &self->vsLifePos[self->screenID];
     }
     else {
-        statePtr    = (void **)&self->state;
-        scoreOffset = &self->scoreOffset;
-        timeOffset  = &self->timeOffset;
-        ringsOffset = &self->ringsOffset;
-        lifeOffset  = &self->lifeOffset;
+        state    = &self->state;
+        scorePos = &self->scorePos;
+        timePos  = &self->timePos;
+        ringsPos = &self->ringsPos;
+        lifePos  = &self->lifePos;
     }
 
-    scoreOffset->x -= TO_FIXED(8);
+    scorePos->x -= TO_FIXED(8);
 
-    if (timeOffset->x - scoreOffset->x > TO_FIXED(16))
-        timeOffset->x -= TO_FIXED(8);
+    if (timePos->x - scorePos->x > TO_FIXED(16))
+        timePos->x -= TO_FIXED(8);
 
-    if (ringsOffset->x - timeOffset->x > TO_FIXED(16))
-        ringsOffset->x -= TO_FIXED(8);
+    if (ringsPos->x - timePos->x > TO_FIXED(16))
+        ringsPos->x -= TO_FIXED(8);
 
-    if (lifeOffset->x - ringsOffset->x > TO_FIXED(16))
-        lifeOffset->x -= TO_FIXED(8);
+    if (lifePos->x - ringsPos->x > TO_FIXED(16))
+        lifePos->x -= TO_FIXED(8);
 
-    if (lifeOffset->x < -TO_FIXED(80)) {
+    if (lifePos->x < -TO_FIXED(80)) {
         if (globals->gameMode == MODE_COMPETITION) {
-            *statePtr = StateMachine_None;
+            *state = StateMachine_None;
             CompSession_DeriveWinner(self->screenID, FINISHTYPE_GAMEOVER);
             EntityGameOver *gameOver   = RSDK_GET_ENTITY(self->screenID + Player->playerCount, GameOver);
             EntityCompetition *manager = Competition->sessionManager;
 
             if (!manager || manager->timer) {
-                RSDK.ResetEntity(gameOver, GameOver->classID, intToVoid(false));
+                RSDK.ResetEntity(gameOver, GameOver->classID, INT_TO_VOID(false));
                 gameOver->playerID = self->screenID;
             }
             else {
-                RSDK.ResetEntity(gameOver, GameOver->classID, intToVoid(true));
+                RSDK.ResetEntity(gameOver, GameOver->classID, INT_TO_VOID(true));
                 RSDK.SetEngineState(ENGINESTATE_FROZEN);
                 SceneInfo->timeEnabled = false;
                 gameOver->playerID     = self->screenID;
@@ -731,28 +731,29 @@ void HUD_State_MoveOut(void)
         }
     }
 #else
-    self->scoreOffset.x -= TO_FIXED(8);
+    self->scorePos.x -= TO_FIXED(8);
 
-    if (self->timeOffset.x - self->scoreOffset.x > TO_FIXED(16))
-        self->timeOffset.x -= TO_FIXED(8);
+    if (self->timePos.x - self->scorePos.x > TO_FIXED(16))
+        self->timePos.x -= TO_FIXED(8);
 
-    if (self->ringsOffset.x - self->timeOffset.x > TO_FIXED(16))
-        self->ringsOffset.x -= TO_FIXED(8);
+    if (self->ringsPos.x - self->timePos.x > TO_FIXED(16))
+        self->ringsPos.x -= TO_FIXED(8);
 
-    if (self->lifeOffset.x - self->ringsOffset.x > TO_FIXED(16))
-        self->lifeOffset.x -= TO_FIXED(8);
+    if (self->lifePos.x - self->ringsPos.x > TO_FIXED(16))
+        self->lifePos.x -= TO_FIXED(8);
 
-    if (self->lifeOffset.x < -TO_FIXED(64))
+    if (self->lifePos.x < -TO_FIXED(64))
         destroyEntity(self);
 #endif
 }
 
-void HUD_MoveIn(EntityHUD* hud) {
-    hud->maxOffset = hud->scoreOffset.x;
-    hud->scoreOffset.x -= TO_FIXED(0x100);
-    hud->timeOffset.x -= TO_FIXED(0x110);
-    hud->ringsOffset.x -= TO_FIXED(0x120);
-    hud->lifeOffset.x -= TO_FIXED(0x130);
+void HUD_MoveIn(EntityHUD *hud)
+{
+    hud->targetPos = hud->scorePos.x;
+    hud->scorePos.x -= TO_FIXED(0x100);
+    hud->timePos.x -= TO_FIXED(0x110);
+    hud->ringsPos.x -= TO_FIXED(0x120);
+    hud->lifePos.x -= TO_FIXED(0x130);
     hud->state = HUD_State_MoveIn;
 }
 

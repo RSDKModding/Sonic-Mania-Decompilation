@@ -20,7 +20,7 @@ void SuperSparkle_Update(void)
     }
     else {
         if (player->groundedStore)
-            self->canSpawnSparkle = abs(player->velocity.y) + abs(player->velocity.x) > 0x60000;
+            self->canSpawnSparkle = abs(player->velocity.y) + abs(player->velocity.x) > TO_FIXED(6);
 
         if (self->canSpawnSparkle) {
             if (++self->timer == 12) {
@@ -41,15 +41,15 @@ void SuperSparkle_Update(void)
         }
 
         if (player->characterID == ID_SONIC && !(Zone->timer & 7)) {
-            int32 x = player->position.x + RSDK.Rand(-0xC0000, 0xC0000);
-            int32 y = player->position.y + RSDK.Rand(-0x120000, 0x120000);
+            int32 x = player->position.x + RSDK.Rand(-TO_FIXED(12), TO_FIXED(12));
+            int32 y = player->position.y + RSDK.Rand(-TO_FIXED(18), TO_FIXED(18));
 
             EntityRing *sparkle = CREATE_ENTITY(Ring, NULL, x, y);
             sparkle->state      = Ring_State_Sparkle;
             sparkle->stateDraw  = Ring_Draw_Sparkle;
             sparkle->active     = ACTIVE_NORMAL;
             sparkle->visible    = false;
-            sparkle->velocity.y = -0x10000;
+            sparkle->velocity.y = -TO_FIXED(1);
             sparkle->drawGroup  = player->drawGroup;
             RSDK.SetSpriteAnimation(Ring->aniFrames, Zone->timer % 3 + 2, &sparkle->animator, true, 0);
             int32 cnt = sparkle->animator.frameCount;

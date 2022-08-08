@@ -90,12 +90,12 @@ void PhantomHand_CheckPlayerGrab(int playerX, int playerY)
 
     if (self->position.x >= playerX) {
         if (self->position.x > playerX) {
-            int dist = minVal((self->position.x - playerX) >> 5, 0x10000);
+            int dist = MIN((self->position.x - playerX) >> 5, 0x10000);
             self->position.x -= dist;
         }
     }
     else {
-        int32 dist = minVal((playerX - self->position.x) >> 5, 0x10000);
+        int32 dist = MIN((playerX - self->position.x) >> 5, 0x10000);
         self->position.x += dist;
     }
 

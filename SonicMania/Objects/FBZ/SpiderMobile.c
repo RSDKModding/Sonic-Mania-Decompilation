@@ -49,7 +49,7 @@ void SpiderMobile_Create(void *data)
             }
             else {
                 self->alpha = 0xFF;
-                switch (voidToInt(data)) {
+                switch (VOID_TO_INT(data)) {
                     case SPIDERMOBILE_BOSS:
                         self->visible           = false;
                         self->drawGroup         = Zone->objectDrawHigh;
@@ -246,12 +246,12 @@ void SpiderMobile_CheckPlayerCollisions(void)
             int32 amp = (abs(player->velocity.x) + abs(player->velocity.y)) >> 9;
             if (!self->knockbackCooldown && !player->sidekick && (amp > 0x600 || self->state != SpiderMobile_StateBody_HandleOrbAttack)) {
                 self->velocity.x        = (3 * player->velocity.x) >> 2;
-                self->velocity.y        = minVal((3 * player->velocity.y) >> 2, -0x10000);
+                self->velocity.y        = MIN((3 * player->velocity.y) >> 2, -0x10000);
                 self->knockbackCooldown = 4;
                 self->onGround          = false;
             }
 
-            amp                = maxVal((abs(player->velocity.x) + abs(player->velocity.y)) >> 9, 0x600);
+            amp                = MAX((abs(player->velocity.x) + abs(player->velocity.y)) >> 9, 0x600);
             player->velocity.x = amp * RSDK.Cos256(angle);
             player->velocity.y = amp * RSDK.Sin256(angle);
 
@@ -315,7 +315,7 @@ void SpiderMobile_Explode(void)
         if (Zone->timer & 4) {
             int32 x                    = self->headPos.x + (RSDK.Rand(-48, 48) << 16);
             int32 y                    = self->headPos.y + (RSDK.Rand(-48, 48) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
@@ -932,7 +932,7 @@ void SpiderMobile_StateBody_HandleOrbAttack(void)
         RSDK.ProcessAnimation(&self->electricAnimator);
 
         if (!(self->timer % 60))
-            CREATE_ENTITY(SpiderMobile, intToVoid(SPIDERMOBILE_ORB), self->position.x, self->position.y)->parent = self;
+            CREATE_ENTITY(SpiderMobile, INT_TO_VOID(SPIDERMOBILE_ORB), self->position.x, self->position.y)->parent = self;
     }
     else {
         self->pincerRotation++;
@@ -1049,7 +1049,7 @@ void SpiderMobile_StateBody_Destroyed(void)
         RSDK.SetSpriteAnimation(-1, 0, &self->orbAnimator, true, 0);
     }
     else if (self->timer == 90) {
-        CREATE_ENTITY(SpiderMobile, intToVoid(SPIDERMOBILE_BUMPERDEBRIS), self->position.x, self->position.y)->rotation = self->angle;
+        CREATE_ENTITY(SpiderMobile, INT_TO_VOID(SPIDERMOBILE_BUMPERDEBRIS), self->position.x, self->position.y)->rotation = self->angle;
         RSDK.SetSpriteAnimation(-1, 0, &self->bumperAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->starAnimator, true, 0);
         self->position.x = self->headPos.x - 0xC80 * RSDK.Sin512(self->angle + self->headRotation);
@@ -1085,7 +1085,7 @@ void SpiderMobile_StateBody_CockpitExplode(void)
         self->timer               = 0;
         self->visible             = false;
         self->state               = SpiderMobile_StateBody_MovePlatformToEnd;
-        EntitySpiderMobile *child = CREATE_ENTITY(SpiderMobile, intToVoid(SPIDERMOBILE_EGGMAN), self->origin.x, self->origin.y + 0x1400000);
+        EntitySpiderMobile *child = CREATE_ENTITY(SpiderMobile, INT_TO_VOID(SPIDERMOBILE_EGGMAN), self->origin.x, self->origin.y + 0x1400000);
         child->parent             = self;
     }
 }

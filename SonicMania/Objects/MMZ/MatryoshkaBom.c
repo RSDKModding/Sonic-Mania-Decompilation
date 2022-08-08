@@ -49,7 +49,7 @@ void MatryoshkaBom_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
-    int32 size = voidToInt(data);
+    int32 size = VOID_TO_INT(data);
     if (size < MATRYOSHKA_SIZE_SHRAPNEL) {
         self->active = ACTIVE_BOUNDS;
         if (size)
@@ -330,31 +330,31 @@ void MatryoshkaBom_State_FuseLit(void)
     else {
         RSDK.PlaySfx(MatryoshkaBom->sfxExplosion, false, 255);
 
-        EntityMatryoshkaBom *shrapnel = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
+        EntityMatryoshkaBom *shrapnel = CREATE_ENTITY(MatryoshkaBom, INT_TO_VOID(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x          = -0x20000;
         shrapnel->velocity.y          = -0x30000;
         shrapnel->planeFilter         = self->planeFilter;
         shrapnel->drawGroup           = self->drawGroup;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, INT_TO_VOID(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = -0x10000;
         shrapnel->velocity.y  = -0x20000;
         shrapnel->planeFilter = self->planeFilter;
         shrapnel->drawGroup   = self->drawGroup;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, INT_TO_VOID(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x20000;
         shrapnel->velocity.y  = -0x30000;
         shrapnel->planeFilter = self->planeFilter;
         shrapnel->drawGroup   = self->drawGroup;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, INT_TO_VOID(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x10000;
         shrapnel->velocity.y  = -0x20000;
         shrapnel->planeFilter = self->planeFilter;
         shrapnel->drawGroup   = self->drawGroup;
 
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y);
         explosion->drawGroup       = self->drawGroup + 1;
         explosion->planeFilter     = self->planeFilter;
 
@@ -371,7 +371,7 @@ void MatryoshkaBom_State_ReleaseSmallerBuddy(void)
     if (!--self->timer) {
         RSDK.PlaySfx(MatryoshkaBom->sfxPon, false, 255);
 
-        EntityMatryoshkaBom *child = CREATE_ENTITY(MatryoshkaBom, intToVoid(self->size + 1), self->position.x, self->position.y);
+        EntityMatryoshkaBom *child = CREATE_ENTITY(MatryoshkaBom, INT_TO_VOID(self->size + 1), self->position.x, self->position.y);
 
         child->velocity.x = self->direction == FLIP_NONE ? -0x18000 : 0x18000;
         child->velocity.y = -0x40000;

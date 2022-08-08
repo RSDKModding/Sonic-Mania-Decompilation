@@ -319,7 +319,7 @@ void Tuesday_Explode(void)
 
             int32 x                    = self->drawPos.x + (xOffset << 16);
             int32 y                    = self->drawPos.y + (yOffset << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(data), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(data), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
@@ -754,7 +754,7 @@ void Tuesday_State_Destroyed(void)
             child->linkMask &= ~8;
         }
 
-        child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
+        child                       = CREATE_ENTITY(Tuesday, INT_TO_VOID(true), self->drawPos.x, self->drawPos.y);
         child->drawPos.x            = child->position.x;
         child->drawPos.y            = child->position.y;
         child->nodeAnimator.frameID = 0;
@@ -762,7 +762,7 @@ void Tuesday_State_Destroyed(void)
         child->velocity.y           = -0x40000;
         child->type                 = TUESDAY_NODE;
 
-        child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
+        child                       = CREATE_ENTITY(Tuesday, INT_TO_VOID(true), self->drawPos.x, self->drawPos.y);
         child->drawPos.x            = child->position.x;
         child->drawPos.y            = child->position.y;
         child->nodeAnimator.frameID = 1;
@@ -770,7 +770,7 @@ void Tuesday_State_Destroyed(void)
         child->velocity.y           = -0x40000;
         child->type                 = TUESDAY_NODE;
 
-        child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
+        child                       = CREATE_ENTITY(Tuesday, INT_TO_VOID(true), self->drawPos.x, self->drawPos.y);
         child->drawPos.x            = child->position.x;
         child->drawPos.y            = child->position.y;
         child->nodeAnimator.frameID = 2;
@@ -778,7 +778,7 @@ void Tuesday_State_Destroyed(void)
         child->velocity.y           = -0x20000;
         child->type                 = TUESDAY_NODE;
 
-        child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
+        child                       = CREATE_ENTITY(Tuesday, INT_TO_VOID(true), self->drawPos.x, self->drawPos.y);
         child->drawPos.x            = child->position.x;
         child->drawPos.y            = child->position.y;
         child->nodeAnimator.frameID = 3;
@@ -788,7 +788,7 @@ void Tuesday_State_Destroyed(void)
 
         if (self->type == TUESDAY_GONDOLA) {
             RSDK.SetSpriteAnimation(-1, 0, &self->gondolaAnimator, true, 0);
-            child = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
+            child = CREATE_ENTITY(Tuesday, INT_TO_VOID(true), self->drawPos.x, self->drawPos.y);
             RSDK.SetSpriteAnimation(Tuesday->aniFrames, 0, &child->nodeAnimator, true, 0);
             child->drawPos.x  = child->position.x;
             child->drawPos.y  = child->position.y;

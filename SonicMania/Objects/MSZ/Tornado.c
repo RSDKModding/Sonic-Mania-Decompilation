@@ -243,7 +243,7 @@ void Tornado_State_PlayerControlled(void)
     player1->drawGroup = self->turnAngle < 0x20 ? self->drawGroup : (self->drawGroup + 1);
 
     if (player1->state == Player_State_Roll) {
-        player1->groundVel  = clampVal(player1->groundVel, -self->offsetX, self->offsetX);
+        player1->groundVel  = CLAMP(player1->groundVel, -self->offsetX, self->offsetX);
         player1->velocity.x = player1->groundVel;
     }
 
@@ -416,7 +416,7 @@ void Tornado_State_Mayday(void)
             RSDK.PlaySfx(Tornado->sfxExplosion, false, 255);
 
         if (Zone->timer & 4) {
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + 2),
                                                        (RSDK.Rand(-32, 32) << 16) + self->position.x, (RSDK.Rand(-16, 16) << 16) + self->position.y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }

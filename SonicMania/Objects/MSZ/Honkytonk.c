@@ -14,7 +14,7 @@ void Honkytonk_Update(void)
     RSDK_THIS(Honkytonk);
 
     if (self->depression > 0)
-        self->depression = maxVal(self->depression - 0x20000, 0);
+        self->depression = MAX(self->depression - 0x20000, 0);
 
     foreach_active(Player, player)
     {
@@ -30,7 +30,7 @@ void Honkytonk_Update(void)
 
         if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitboxTrigger)) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            self->depression     = maxVal(self->depression, player->position.y + ((playerHitbox->bottom + 12) << 16) - self->position.y);
+            self->depression     = MAX(self->depression, player->position.y + ((playerHitbox->bottom + 12) << 16) - self->position.y);
         }
 
         if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitboxRebound) && player->tileCollisions != TILECOLLISION_NONE) {
@@ -41,7 +41,7 @@ void Honkytonk_Update(void)
             if (player->animator.animationID != ANI_JUMP)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, 0);
 
-            player->velocity.y = clampVal(player->velocity.y, -0x80000, -0x20000);
+            player->velocity.y = CLAMP(player->velocity.y, -0x80000, -0x20000);
 
             Zone_RotateOnPivot(&player->position, &self->position, self->angle);
             Zone_RotateOnPivot(&player->velocity, &pivotCenter, self->angle);

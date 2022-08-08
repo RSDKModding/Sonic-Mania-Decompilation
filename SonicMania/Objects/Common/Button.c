@@ -116,8 +116,8 @@ void Button_Create(void *data)
         }
 
         self->active        = ACTIVE_BOUNDS;
-        self->updateRange.x = 0x200000;
-        self->updateRange.y = 0x200000;
+        self->updateRange.x = TO_FIXED(32);
+        self->updateRange.y = TO_FIXED(32);
         self->visible       = true;
         self->drawGroup     = Zone->objectDrawLow;
     }
@@ -127,49 +127,49 @@ void Button_StageLoad(void)
 {
     if (RSDK.CheckSceneFolder("MMZ")) {
         Button->aniFrames    = RSDK.LoadSpriteAnimation("MMZ/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x80000;
-        Button->buttonOffset = 0x50000;
+        Button->activatePos  = TO_FIXED(8);
+        Button->buttonOffset = TO_FIXED(5);
         Button->hitboxOffset = 13;
         Button->unused1      = 5;
     }
     else if (RSDK.CheckSceneFolder("FBZ")) {
         Button->aniFrames    = RSDK.LoadSpriteAnimation("FBZ/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x80000;
-        Button->buttonOffset = 0x50000;
+        Button->activatePos  = TO_FIXED(8);
+        Button->buttonOffset = TO_FIXED(5);
         Button->hitboxOffset = 13;
         Button->unused1      = 5;
     }
     else if (RSDK.CheckSceneFolder("LRZ1")) {
         Button->aniFrames    = RSDK.LoadSpriteAnimation("LRZ1/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x40000;
-        Button->buttonOffset = 0x30000;
+        Button->activatePos  = TO_FIXED(4);
+        Button->buttonOffset = TO_FIXED(3);
         Button->hitboxOffset = 7;
         Button->unused1      = 3;
     }
     else if (RSDK.CheckSceneFolder("LRZ2")) {
         Button->aniFrames    = RSDK.LoadSpriteAnimation("LRZ2/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x40000;
-        Button->buttonOffset = 0x30000;
+        Button->activatePos  = TO_FIXED(4);
+        Button->buttonOffset = TO_FIXED(3);
         Button->hitboxOffset = 7;
         Button->unused1      = 3;
     }
     else if (RSDK.CheckSceneFolder("HCZ")) {
         Button->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x30000;
-        Button->buttonOffset = 0x30000;
+        Button->activatePos  = TO_FIXED(3);
+        Button->buttonOffset = TO_FIXED(3);
         Button->hitboxOffset = 9;
         Button->unused1      = 6;
     }
     else if (RSDK.CheckSceneFolder("TMZ3")) {
         Button->aniFrames    = RSDK.LoadSpriteAnimation("TMZ1/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x30000;
-        Button->buttonOffset = 0x30000;
+        Button->activatePos  = TO_FIXED(3);
+        Button->buttonOffset = TO_FIXED(3);
         Button->hitboxOffset = 9;
         Button->unused1      = 6;
     }
     else {
-        Button->activatePos  = 0x80000;
-        Button->buttonOffset = 0x50000;
+        Button->activatePos  = TO_FIXED(8);
+        Button->buttonOffset = TO_FIXED(5);
         Button->hitboxOffset = 13;
         Button->unused1      = 5;
     }
@@ -287,7 +287,7 @@ void Button_HandleFloor(void)
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxButton)) {
                     Hitbox *playerHitbox = Player_GetHitbox(player);
                     self->pressPos       = Button->buttonOffset + (player->position.y & 0xFFFF0000) + (playerHitbox->bottom << 16) - self->position.y;
-                    self->pressPos       = clampVal(self->pressPos, 0, Button->activatePos) & 0xFFFF0000;
+                    self->pressPos       = CLAMP(self->pressPos, 0, Button->activatePos) & 0xFFFF0000;
                 }
 
                 self->position.y += Button->activatePos;
@@ -361,7 +361,7 @@ void Button_HandleRoof(void)
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxButton)) {
                     Hitbox *playerHitbox = Player_GetHitbox(player);
                     self->pressPos       = (player->position.y & 0xFFFF0000) + (playerHitbox->top << 16) - Button->buttonOffset - self->position.y;
-                    self->pressPos       = clampVal(self->pressPos, -Button->activatePos, 0) & 0xFFFF0000;
+                    self->pressPos       = CLAMP(self->pressPos, -Button->activatePos, 0) & 0xFFFF0000;
                 }
 
                 self->position.y -= Button->activatePos;
@@ -434,7 +434,7 @@ void Button_HandleRWall(void)
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxButton)) {
                     Hitbox *playerHitbox = Player_GetHitbox(player);
                     self->pressPos       = Button->buttonOffset - (playerHitbox->left << 16) - (player->position.x & 0xFFFF0000) + self->position.x;
-                    self->pressPos       = clampVal(self->pressPos, 0, Button->activatePos) & 0xFFFF0000;
+                    self->pressPos       = CLAMP(self->pressPos, 0, Button->activatePos) & 0xFFFF0000;
                 }
                 self->position.x -= Button->activatePos;
             }
@@ -505,7 +505,7 @@ void Button_HandleLWall(void)
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxButton)) {
                     Hitbox *playerHitbox = Player_GetHitbox(player);
                     self->pressPos       = self->position.x - (playerHitbox->right << 16) - (player->position.x & 0xFFFF0000) - Button->buttonOffset;
-                    self->pressPos       = clampVal(self->pressPos, -Button->activatePos, 0) & 0xFFFF0000;
+                    self->pressPos       = CLAMP(self->pressPos, -Button->activatePos, 0) & 0xFFFF0000;
                 }
 
                 self->position.x += Button->activatePos;

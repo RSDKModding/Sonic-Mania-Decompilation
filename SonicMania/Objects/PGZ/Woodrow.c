@@ -251,7 +251,7 @@ void Woodrow_State_Idle(void)
                     bombSpawn = RSDK_GET_ENTITY(bombSlot + RSDK.Rand(0, self->bombCount), Woodrow);
                 }
 
-                EntityWoodrow *bomb = CREATE_ENTITY(Woodrow, intToVoid(true), bombSpawn->position.x, bombSpawn->position.y);
+                EntityWoodrow *bomb = CREATE_ENTITY(Woodrow, INT_TO_VOID(true), bombSpawn->position.x, bombSpawn->position.y);
                 bombSpawn->position.y -= 0x100000;
                 bombSpawn->bombFallDelay   = 120;
                 bombSpawn->activeBombCount = 32;
@@ -330,7 +330,7 @@ void Woodrow_State_Bomb(void)
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
             RSDK.PlaySfx(Woodrow->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
             destroyEntity(self);
         }
 
@@ -345,7 +345,7 @@ void Woodrow_State_Bomb(void)
                     Player_Hurt(player, self);
                 RSDK.PlaySfx(Woodrow->sfxExplosion, false, 0xFF);
 
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
                 destroyEntity(self);
                 foreach_break;
             }

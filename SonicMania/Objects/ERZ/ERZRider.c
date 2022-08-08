@@ -42,9 +42,9 @@ void ERZRider_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->isJimmy       = voidToInt(data);
+        self->isJimmy       = VOID_TO_INT(data);
 
-        if (!voidToInt(data)) {
+        if (!VOID_TO_INT(data)) {
             self->drawFX = FX_FLIP;
 
             RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &self->mainAnimator, true, 0);

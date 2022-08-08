@@ -279,7 +279,7 @@ void MonkeyDude_HandleStates(void)
                     spawnY += (RSDK.Cos256(self->armAngles[i]) << 11);
                 }
 
-                EntityMonkeyDude *coconut = CREATE_ENTITY(MonkeyDude, intToVoid(1), spawnX, spawnY);
+                EntityMonkeyDude *coconut = CREATE_ENTITY(MonkeyDude, INT_TO_VOID(1), spawnX, spawnY);
                 if (!self->direction)
                     coconut->velocity.x = -0x20000;
                 else

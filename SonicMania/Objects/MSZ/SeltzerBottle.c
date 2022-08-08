@@ -24,7 +24,7 @@ void SeltzerBottle_Update(void)
             self->active                 = ACTIVE_NORMAL;
             self->state                  = SeltzerBottle_State_Spraying;
             RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 6, &self->sprayAnimator, false, 0);
-            player->groundVel = clampVal(player->groundVel, -0xC0000, 0xC0000);
+            player->groundVel = CLAMP(player->groundVel, -0xC0000, 0xC0000);
 
             for (int32 p = 0; p < Player->playerCount; ++p) RSDK_GET_ENTITY(p, Player)->collisionLayers |= SeltzerBottle->seltzerPathLayerMask;
 
@@ -124,7 +124,7 @@ void SeltzerBottle_State_Spraying(void)
 {
     RSDK_THIS(SeltzerBottle);
 
-    self->waterLevel = maxVal(((self->timer << 14) / self->sprayTime) << 8, 0x40000);
+    self->waterLevel = MAX(((self->timer << 14) / self->sprayTime) << 8, 0x40000);
 
     EntitySeltzerWater *spray = CREATE_ENTITY(SeltzerWater, NULL, self->position.x, self->position.y - 0x4C0000);
     spray->position.x += self->direction == FLIP_X ? 0x300000 : -0x300000;

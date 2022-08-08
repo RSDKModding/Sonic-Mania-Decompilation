@@ -81,7 +81,7 @@ void PathInverter_HandlePathSwitch(EntityPlayer *player)
         self->groundVelStore[player->playerID] = player->groundVel;
 
         int32 topSpeed     = player->state == Player_State_Roll ? 0xC0000 : 0x80000;
-        player->velocity.x = clampVal(player->velocity.x, -topSpeed, topSpeed);
+        player->velocity.x = CLAMP(player->velocity.x, -topSpeed, topSpeed);
 
         player->state           = Player_State_Static;
         player->nextAirState    = StateMachine_None;

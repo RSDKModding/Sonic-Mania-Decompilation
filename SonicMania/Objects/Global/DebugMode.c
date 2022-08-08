@@ -63,8 +63,8 @@ void DebugMode_Update(void)
     }
     else {
         self->velocity.y += 0xC00;
-        if (self->velocity.y > 0x100000)
-            self->velocity.y = 0x100000;
+        if (self->velocity.y > TO_FIXED(16))
+            self->velocity.y = TO_FIXED(16);
     }
 
 #if GAME_VERSION != VER_100

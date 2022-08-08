@@ -46,7 +46,7 @@ void ERZKing_Create(void *data)
         self->updateRange.y = 0x1000000;
         self->drawGroup     = Zone->objectDrawLow;
         self->drawFX        = FX_ROTATE | FX_FLIP;
-        self->type          = voidToInt(data);
+        self->type          = VOID_TO_INT(data);
 
         switch (self->type) {
             case ERZKING_KING:
@@ -139,7 +139,7 @@ void ERZKing_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -292,13 +292,13 @@ void ERZKing_State_SetupBody(void)
 
         if (++self->timer == 30) {
             EntityERZKing *leftArm = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ERZKing);
-            RSDK.ResetEntity(leftArm, ERZKing->classID, intToVoid(ERZKING_ARM_L));
+            RSDK.ResetEntity(leftArm, ERZKing->classID, INT_TO_VOID(ERZKING_ARM_L));
             leftArm->position.x = self->position.x;
             leftArm->position.y = self->position.y;
             leftArm->parent     = self;
 
             EntityERZKing *rightArm = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, ERZKing);
-            RSDK.ResetEntity(rightArm, ERZKing->classID, intToVoid(ERZKING_ARM_R));
+            RSDK.ResetEntity(rightArm, ERZKing->classID, INT_TO_VOID(ERZKING_ARM_R));
             rightArm->position.x = self->position.x;
             rightArm->position.y = self->position.y;
             rightArm->parent     = self;

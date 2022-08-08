@@ -292,7 +292,7 @@ bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host)
         RSDK.PlaySfx(PhantomEgg->sfxExplosion3, false, 255);
 
     if (host->timer == 320) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 32;
         fxFade->wait         = 90;
         fxFade->speedOut     = 16;
@@ -479,7 +479,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 420) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 32;
         fxFade->wait         = 90;
         fxFade->speedOut     = 16;
@@ -647,7 +647,7 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
 
     if (host->timer == 512) {
 
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 32;
         fxFade->wait         = 90;
         fxFade->speedOut     = 16;

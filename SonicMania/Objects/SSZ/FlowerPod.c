@@ -73,7 +73,7 @@ void FlowerPod_SpawnSeeds(void)
     RSDK_THIS(FlowerPod);
 
     for (int32 v = -0x10000; v < 0x18000; v += 0x8000) {
-        EntityFlowerPod *seed = CREATE_ENTITY(FlowerPod, intToVoid(true), self->position.x, self->position.y);
+        EntityFlowerPod *seed = CREATE_ENTITY(FlowerPod, INT_TO_VOID(true), self->position.x, self->position.y);
         seed->isPermanent     = true;
         seed->velocity.x      = v;
         seed->velocity.y      = -0x30000;
@@ -104,7 +104,7 @@ void FlowerPod_State_Exploding(void)
         if ((Zone->timer & 4)) {
             int32 x                    = self->position.x + (RSDK.Rand(-32, 32) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-32, 0) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + 2), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }

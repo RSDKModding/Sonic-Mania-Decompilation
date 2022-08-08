@@ -93,20 +93,20 @@ void UIWidgets_DrawRectOutline_Black(int32 x, int32 y, int32 width, int32 height
     int32 w = width << 16 >> 1;
     int32 h = height << 16 >> 1;
 
-    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, 0x000000, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, 0x000000, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, width << 16, TO_FIXED(3), 0x000000, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, TO_FIXED(3), height << 16, 0x000000, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, h + y - TO_FIXED(3), width << 16, TO_FIXED(3), 0x000000, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x + w - TO_FIXED(3), y - h, TO_FIXED(3), height << 16, 0x000000, 0xFF, INK_NONE, false);
 }
 void UIWidgets_DrawRectOutline_Blended(int32 x, int32 y, int32 width, int32 height)
 {
     int32 w = width << 16 >> 1;
     int32 h = height << 16 >> 1;
 
-    RSDK.DrawRect(x - w + 0x30000, y - h, (width << 16) - 0x60000, 0x30000, 0x000000, 0xFF, INK_BLEND, false);
-    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_BLEND, false);
-    RSDK.DrawRect(x - w + 0x30000, h + y - 0x30000, (width << 16) - 0x60000, 0x30000, 0x000000, 0xFF, INK_BLEND, false);
-    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_BLEND, false);
+    RSDK.DrawRect(x - w + TO_FIXED(3), y - h, (width << 16) - TO_FIXED(6), TO_FIXED(3), 0x000000, 0xFF, INK_BLEND, false);
+    RSDK.DrawRect(x - w, y - h, TO_FIXED(3), height << 16, 0x000000, 0xFF, INK_BLEND, false);
+    RSDK.DrawRect(x - w + TO_FIXED(3), h + y - TO_FIXED(3), (width << 16) - TO_FIXED(6), TO_FIXED(3), 0x000000, 0xFF, INK_BLEND, false);
+    RSDK.DrawRect(x + w - TO_FIXED(3), y - h, TO_FIXED(3), height << 16, 0x000000, 0xFF, INK_BLEND, false);
 }
 void UIWidgets_DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 height)
 {
@@ -114,10 +114,10 @@ void UIWidgets_DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 height
     int32 h     = height << 16 >> 1;
     color color = RSDK.GetPaletteEntry(3, (UIWidgets->timer >> 1) & 0xF);
 
-    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, color, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, color, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, color, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, color, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, width << 16, TO_FIXED(3), color, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, TO_FIXED(3), height << 16, color, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, h + y - TO_FIXED(3), width << 16, TO_FIXED(3), color, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x + w - TO_FIXED(3), y - h, TO_FIXED(3), height << 16, color, 0xFF, INK_NONE, false);
 }
 void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue)
 {
@@ -276,11 +276,11 @@ void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color rightColor)
 {
     Vector2 newPos;
-    newPos.x = x + 0xE0000;
+    newPos.x = x + TO_FIXED(14);
     newPos.y = y;
 
     UIWidgets_DrawRightTriangle(x, newPos.y, 13, (leftColor >> 16) & 0xFF, (leftColor >> 8) & 0xFF, leftColor & 0xFF);
-    UIWidgets_DrawRightTriangle(newPos.x, newPos.y + 0xC0000, -13, (rightColor >> 16) & 0xFF, (rightColor >> 8) & 0xFF, rightColor & 0xFF);
+    UIWidgets_DrawRightTriangle(newPos.x, newPos.y + TO_FIXED(12), -13, (rightColor >> 16) & 0xFF, (rightColor >> 8) & 0xFF, rightColor & 0xFF);
 
     return newPos;
 }
@@ -297,13 +297,13 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
     memset(&arrowsAnimator, 0, sizeof(Animator));
 
     drawPos.x = x;
-    drawPos.y = y + 0x20000;
+    drawPos.y = y + TO_FIXED(2);
 
     RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 9, &arrowsAnimator, true, 9);
     RSDK.DrawSprite(&arrowsAnimator, &drawPos, false);
 
-    drawPos.x += 0x100000;
-    drawPos.y -= 0x20000;
+    drawPos.x += TO_FIXED(16);
+    drawPos.y -= TO_FIXED(2);
     if (minutes) {
         if (minutes != 99 || seconds != 99 || milliseconds != 99)
             sprintf_s(strBuf, (int32)sizeof(strBuf), "%02d:%02d;%02d", minutes, seconds, milliseconds);
@@ -324,7 +324,7 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
         RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 8, &animator, true, (uint8)(strBuf[i] - '0'));
         RSDK.DrawSprite(&animator, &drawPos, false);
 
-        drawPos.x += 0x80000;
+        drawPos.x += TO_FIXED(8);
     }
 }
 #endif

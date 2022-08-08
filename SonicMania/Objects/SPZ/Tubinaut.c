@@ -51,7 +51,7 @@ void Tubinaut_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
-        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, voidToInt(data), &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, VOID_TO_INT(data), &self->bodyAnimator, true, 0);
         self->state = Tubinaut_Orb_BodyDeath;
     }
     else {
@@ -189,7 +189,7 @@ void Tubinaut_CheckPlayerCollisions(void)
             if (!repelled && Player_CheckBadnikTouch(player, self, &Tubinaut->hitboxFace) && Player_CheckBadnikBreak(player, self, false)) {
                 for (int32 i = 0; i < TUBINAUT_ORB_COUNT; ++i) {
                     if (self->ballsVisible[i]) {
-                        EntityTubinaut *orb = CREATE_ENTITY(Tubinaut, intToVoid(i + 1), self->orbPositions[i].x, self->orbPositions[i].y);
+                        EntityTubinaut *orb = CREATE_ENTITY(Tubinaut, INT_TO_VOID(i + 1), self->orbPositions[i].x, self->orbPositions[i].y);
                         orb->velocity.x     = 0x380 * RSDK.Cos256(self->orbAngles[i] >> 4);
                         orb->velocity.y     = 0x380 * RSDK.Sin256(self->orbAngles[i] >> 4);
                     }

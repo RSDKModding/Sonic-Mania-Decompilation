@@ -123,7 +123,7 @@ void HCZSetup_StageLoad(void)
     for (int32 i = 0; i < 0x200; i += 0x10) {
         int32 deformation = RSDK.Rand(0, 4);
 
-        int32 *deformDataW = &HCZSetup->background2Layer->deformationDataW[clampVal(i, 0, 0x200)];
+        int32 *deformDataW = &HCZSetup->background2Layer->deformationDataW[CLAMP(i, 0, 0x200)];
 
         int32 angle = 0;
         for (int32 d = 0; d < 0x10; ++d) {
@@ -232,13 +232,13 @@ void HCZSetup_Scanline_WaterLine(ScanlineInfo *scanlines)
 
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     int32 screenY          = 0x210 - (screen->position.y >> 2);
-    int32 waterLevel       = (Water->waterLevel >> 0x10) - screen->position.y;
+    int32 waterLevel       = FROM_FIXED(Water->waterLevel) - screen->position.y;
 
-    int32 distance       = maxVal(1, abs(screenY - waterLevel));
-    int32 scanlineHeight = maxVal(0x10000, 0x640000 / distance);
+    int32 distance       = MAX(1, abs(screenY - waterLevel));
+    int32 scanlineHeight = MAX(0x10000, 0x640000 / distance);
 
-    screenY    = clampVal(screenY, 0, screen->size.y);
-    waterLevel = clampVal(waterLevel, 0, screen->size.y);
+    screenY    = CLAMP(screenY, 0, screen->size.y);
+    waterLevel = CLAMP(waterLevel, 0, screen->size.y);
 
     ScanlineInfo *scanlinePtr = &scanlines[screenY];
 

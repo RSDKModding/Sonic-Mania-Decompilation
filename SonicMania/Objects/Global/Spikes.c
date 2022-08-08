@@ -28,11 +28,11 @@ void Spikes_Update(void)
             break;
 
         case SPIKES_MOVE_APPEAR:
-            if (self->moveOffset >= 0x200000) {
+            if (self->moveOffset >= TO_FIXED(32)) {
                 self->stateMove++;
             }
             else {
-                self->moveOffset += 0x80000;
+                self->moveOffset += TO_FIXED(8);
                 self->position.x += self->velocity.x;
                 self->position.y += self->velocity.y;
             }
@@ -51,7 +51,7 @@ void Spikes_Update(void)
                 self->stateMove = SPIKES_MOVE_HIDDEN;
             }
             else {
-                self->moveOffset -= 0x80000;
+                self->moveOffset -= TO_FIXED(8);
                 self->position.x -= self->velocity.x;
                 self->position.y -= self->velocity.y;
             }
@@ -59,11 +59,11 @@ void Spikes_Update(void)
 
         // Used by FBZ/SpiderMobile to hide the spikes on the arena
         case SPIKES_MOVE_DISAPPEAR_FOREVER:
-            if (self->moveOffset >= 0x280000) {
+            if (self->moveOffset >= TO_FIXED(40)) {
                 self->stateMove = SPIKES_MOVE_HIDDEN_FOREVER;
             }
             else {
-                self->moveOffset += 0x80000;
+                self->moveOffset += TO_FIXED(8);
                 self->position.x -= self->velocity.x;
                 self->position.y -= self->velocity.y;
             }
@@ -99,7 +99,7 @@ void Spikes_Update(void)
                         else {
                             if (side == C_TOP) {
                                 player->collisionFlagV |= 1;
-                                if (self->moveOffset == 0x80000)
+                                if (self->moveOffset == TO_FIXED(8))
                                     player->onGround = false;
                             }
                             shouldShatter = false;
@@ -207,7 +207,7 @@ void Spikes_Update(void)
 
                     switch (side) {
                         case C_TOP:
-                            if (player->velocity.y < 0x40000) {
+                            if (player->velocity.y < TO_FIXED(4)) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
                                     player->position.x += self->collisionOffset.x;
                                     player->position.y += self->collisionOffset.y;
@@ -222,7 +222,7 @@ void Spikes_Update(void)
                             break;
 
                         case C_LEFT:
-                            if (player->velocity.x >= 0x20000) {
+                            if (player->velocity.x >= TO_FIXED(2)) {
                                 Spikes_Shatter(player->velocity.x, 0);
                                 player->position.x = storedX;
                                 player->position.y = storedY;
@@ -237,7 +237,7 @@ void Spikes_Update(void)
                             break;
 
                         case C_RIGHT:
-                            if (player->velocity.x > -0x20000) {
+                            if (player->velocity.x > -TO_FIXED(2)) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
                                     player->position.x += self->collisionOffset.x;
                                     player->position.y += self->collisionOffset.y;
@@ -252,7 +252,7 @@ void Spikes_Update(void)
                             break;
 
                         case C_BOTTOM:
-                            if (player->velocity.y > -0x40000) {
+                            if (player->velocity.y > -TO_FIXED(4)) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
                                     player->position.x += self->collisionOffset.x;
                                     player->position.y += self->collisionOffset.y;
@@ -324,7 +324,7 @@ void Spikes_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         if (data)
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
 
         self->active  = ACTIVE_BOUNDS;
         int32 dir     = self->type & 1;
@@ -339,14 +339,14 @@ void Spikes_Create(void *data)
         switch (self->type) {
             case 0: // vertical
                 self->updateRange.x = (self->count + 6) << 20;
-                self->updateRange.y = 0x600000;
+                self->updateRange.y = TO_FIXED(96);
                 self->direction     = FLIP_Y * dir;
                 if (self->direction) {
-                    self->velocity.y = 0x80000;
+                    self->velocity.y = TO_FIXED(8);
                     self->type       = C_BOTTOM;
                 }
                 else {
-                    self->velocity.y = -0x80000;
+                    self->velocity.y = -TO_FIXED(8);
                     self->type       = C_TOP;
                 }
                 self->hitbox.left   = -8 * self->count;
@@ -356,15 +356,15 @@ void Spikes_Create(void *data)
                 break;
 
             case 1: // horizontal
-                self->updateRange.x = 0x600000;
+                self->updateRange.x = TO_FIXED(96);
                 self->updateRange.y = (self->count + 6) << 20;
                 self->direction     = dir;
                 if (self->direction) {
-                    self->velocity.x = -0x80000;
+                    self->velocity.x = -TO_FIXED(8);
                     self->type       = C_LEFT;
                 }
                 else {
-                    self->velocity.x = 0x80000;
+                    self->velocity.x = TO_FIXED(8);
                     self->type       = C_RIGHT;
                 }
                 self->hitbox.left   = -16;
@@ -400,8 +400,8 @@ void Spikes_StageLoad(void)
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 0, &Spikes->verticalAnimator, true, 0);
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 1, &Spikes->horizontalAnimator, true, 0);
 
-    Spikes->unused1 = 0x100000;
-    Spikes->unused2 = 0x100000;
+    Spikes->unused1 = TO_FIXED(16);
+    Spikes->unused2 = TO_FIXED(16);
 
     Spikes->sfxMove  = RSDK.GetSfx("Global/SpikesMove.wav");
     Spikes->sfxSpike = RSDK.GetSfx("Global/Spike.wav");
@@ -409,37 +409,35 @@ void Spikes_StageLoad(void)
 
 void Spikes_Draw_Global(void)
 {
-    Vector2 drawPos;
-
     RSDK_THIS(Spikes);
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+
+    Vector2 drawPos = self->position;
     int32 cnt = self->count >> 1;
     switch (self->type) {
         case C_TOP:
         case C_BOTTOM:
-            drawPos.x = 0x100000 - (self->count << 19) + self->position.x;
+            drawPos.x = TO_FIXED(16) - (self->count << 19) + self->position.x;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
-                drawPos.x += 0x200000;
+                drawPos.x += TO_FIXED(32);
             }
 
             if (self->count & 1) {
-                drawPos.x -= 0x100000;
+                drawPos.x -= TO_FIXED(16);
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
             }
             break;
 
         case C_LEFT:
         case C_RIGHT:
-            drawPos.y = 0x100000 - (self->count << 19) + self->position.y;
+            drawPos.y = TO_FIXED(16) - (self->count << 19) + self->position.y;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
-                drawPos.y += 0x200000;
+                drawPos.y += TO_FIXED(32);
             }
 
             if (self->count & 1) {
-                drawPos.y -= 0x100000;
+                drawPos.y -= TO_FIXED(16);
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
             }
             break;
@@ -455,35 +453,36 @@ void Spikes_Draw_Global(void)
 
 void Spikes_Draw_Stage(void)
 {
-    Vector2 drawPos;
-
     RSDK_THIS(Spikes);
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+
+    Vector2 drawPos = self->position;
     int32 cnt = self->count >> 1;
+
     switch (self->type) {
         case C_TOP:
         case C_BOTTOM:
-            drawPos.x = (0x100000 - (self->count << 19)) + self->position.x;
+            drawPos.x = (TO_FIXED(16) - (self->count << 19)) + self->position.x;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
-                drawPos.x += 0x200000;
+                drawPos.x += TO_FIXED(32);
             }
+
             if (self->count & 1) {
-                drawPos.x -= 0x100000;
+                drawPos.x -= TO_FIXED(16);
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
             }
             break;
 
         case C_LEFT:
         case C_RIGHT:
-            drawPos.y = (0x100000 - (self->count << 19)) + self->position.y;
+            drawPos.y = (TO_FIXED(16) - (self->count << 19)) + self->position.y;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
-                drawPos.y += 0x200000;
+                drawPos.y += TO_FIXED(32);
             }
+
             if (self->count & 1) {
-                drawPos.y -= 0x100000;
+                drawPos.y -= TO_FIXED(16);
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
             }
             break;
@@ -675,35 +674,34 @@ void Spikes_EditorDraw(void)
             break;
     }
 
-    Vector2 drawPos;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
+    Vector2 drawPos = self->position;
     int32 cnt = self->count >> 1;
+
     switch (type) {
         case C_TOP:
         case C_BOTTOM:
-            drawPos.x = 0x100000 - (self->count << 19) + self->position.x;
+            drawPos.x = TO_FIXED(16) - (self->count << 19) + self->position.x;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
-                drawPos.x += 0x200000;
+                drawPos.x += TO_FIXED(32);
             }
 
             if (self->count & 1) {
-                drawPos.x -= 0x100000;
+                drawPos.x -= TO_FIXED(16);
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
             }
             break;
 
         case C_LEFT:
         case C_RIGHT:
-            drawPos.y = 0x100000 - (self->count << 19) + self->position.y;
+            drawPos.y = TO_FIXED(16) - (self->count << 19) + self->position.y;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
-                drawPos.y += 0x200000;
+                drawPos.y += TO_FIXED(32);
             }
 
             if (self->count & 1) {
-                drawPos.y -= 0x100000;
+                drawPos.y -= TO_FIXED(16);
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
             }
             break;

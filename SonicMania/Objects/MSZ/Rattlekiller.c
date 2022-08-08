@@ -284,7 +284,7 @@ void Rattlekiller_Create(void *data)
         self->updateRange.y = 0x800000;
 
         if (data)
-            self->length = voidToInt(data);
+            self->length = VOID_TO_INT(data);
         else if (!self->length)
             self->length = 128;
 
@@ -327,7 +327,7 @@ void Rattlekiller_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
 
-    EntityRattlekiller *rattlekiller = CREATE_ENTITY(Rattlekiller, intToVoid(0x80), self->position.x, self->position.y);
+    EntityRattlekiller *rattlekiller = CREATE_ENTITY(Rattlekiller, INT_TO_VOID(0x80), self->position.x, self->position.y);
     rattlekiller->direction          = FLIP_NONE;
 }
 

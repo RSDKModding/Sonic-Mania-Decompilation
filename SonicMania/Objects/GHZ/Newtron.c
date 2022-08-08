@@ -35,7 +35,7 @@ void Newtron_Create(void *data)
         self->startPos = self->position;
         self->visible  = true;
 
-        if (data == intToVoid(NEWTRON_FLY)) {
+        if (data == INT_TO_VOID(NEWTRON_FLY)) {
             self->type          = NEWTRON_FLY;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
@@ -255,9 +255,9 @@ void Newtron_State_Shoot(void)
         case 30:
             RSDK.SetSpriteAnimation(Newtron->aniFrames, 1, &self->animator, true, 0);
             if (self->direction)
-                CREATE_ENTITY(Newtron, intToVoid(NEWTRON_PROJECTILE), self->position.x - 0x140000, self->position.y - 0x80000)->velocity.x = -0x20000;
+                CREATE_ENTITY(Newtron, INT_TO_VOID(NEWTRON_PROJECTILE), self->position.x - 0x140000, self->position.y - 0x80000)->velocity.x = -0x20000;
             else
-                CREATE_ENTITY(Newtron, intToVoid(NEWTRON_PROJECTILE), self->position.x + 0x140000, self->position.y - 0x80000)->velocity.x = 0x20000;
+                CREATE_ENTITY(Newtron, INT_TO_VOID(NEWTRON_PROJECTILE), self->position.x + 0x140000, self->position.y - 0x80000)->velocity.x = 0x20000;
             break;
 
         case 45: RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator, true, 0); break;

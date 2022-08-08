@@ -124,7 +124,7 @@ void MSHologram_State_Explode(void)
         if (Zone->timer & 4) {
             int32 x                    = RSDK.Rand(-8, 8) << 16;
             int32 y                    = RSDK.Rand(-8, 8) << 16;
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
@@ -138,7 +138,7 @@ void MSHologram_State_Explode(void)
         for (int32 i = 0; i < 16; ++i) {
             int32 x               = self->position.x + RSDK.Rand(0x800000, 0xE00000);
             int32 y               = self->position.y - RSDK.Rand(0x200000, 0x800000);
-            EntityAnimals *animal = CREATE_ENTITY(Animals, intToVoid(RSDK.Rand(1, 12)), x, y);
+            EntityAnimals *animal = CREATE_ENTITY(Animals, INT_TO_VOID(RSDK.Rand(1, 12)), x, y);
             animal->updateRange.x = 0x1000000;
             animal->updateRange.y = 0x1000000;
             animal->behaviour     = ANIMAL_BEHAVE_FOLLOW;

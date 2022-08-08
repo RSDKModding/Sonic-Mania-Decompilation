@@ -44,7 +44,7 @@ void FBZMissile_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         if (data)
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
 
         switch (self->type) {
             case FBZMISSILE_LAUNCHER_V:
@@ -136,7 +136,7 @@ void FBZMissile_StateLauncherV_Launch(void)
         case 25:
         case 41: {
             RSDK.PlaySfx(FBZMissile->sfxPush, false, 255);
-            EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(FBZMISSILE_VERTICAL), self->position.x, self->position.y);
+            EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, INT_TO_VOID(FBZMISSILE_VERTICAL), self->position.x, self->position.y);
             missile->isPermanent      = true;
             missile->velocity.y       = -0x60000;
             missile->drawGroup        = self->drawGroup - 1;
@@ -156,7 +156,7 @@ void FBZMissile_StateLauncherH_Fire(void)
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
         RSDK.PlaySfx(FBZMissile->sfxPush2, false, 255);
 
-        EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(FBZMISSILE_HORIZONTAL), self->position.x, self->position.y);
+        EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, INT_TO_VOID(FBZMISSILE_HORIZONTAL), self->position.x, self->position.y);
         missile->drawGroup        = self->drawGroup;
         missile->direction        = self->direction;
         if (self->direction) {
@@ -232,7 +232,7 @@ void FBZMissile_StateVertical_Fall(void)
 #endif
                     Player_Hurt(player, self);
 
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup =
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup =
                     Zone->objectDrawHigh;
                 RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                 destroyEntity(self);
@@ -242,7 +242,7 @@ void FBZMissile_StateVertical_Fall(void)
         }
 
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup = Zone->objectDrawHigh;
             RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
             destroyEntity(self);
         }
@@ -256,7 +256,7 @@ void FBZMissile_StateVertical_Fall(void)
                         RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
 
-                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup =
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawGroup =
                         Zone->objectDrawHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(self);

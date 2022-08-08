@@ -460,7 +460,7 @@ bool32 EncoreGoodEnd_Cutscene_KingAppear(EntityCutsceneSeq *host)
                 label->drawGroup = Zone->huddrawGroup;
             }
 
-            EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+            EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
             fxFade->speedIn      = 256;
             fxFade->speedOut     = 64;
             fxFade->drawGroup    = Zone->objectDrawHigh;

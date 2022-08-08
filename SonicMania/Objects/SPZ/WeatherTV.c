@@ -839,7 +839,7 @@ void WeatherTV_State_BeginLightAttack(void)
             self->state     = WeatherTV_State_HeatingUp;
 
             if (self->eggman->health > 0) {
-                EntityWeatherMobile *lights = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_LIGHTS), self->position.x, self->position.y);
+                EntityWeatherMobile *lights = CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_LIGHTS), self->position.x, self->position.y);
                 lights->isPermanent         = true;
                 lights->parent              = self->eggman;
             }
@@ -927,7 +927,7 @@ void WeatherTV_State_BeginWindAttack(void)
     if (self->cluckoidAnimator.frameID == 2) {
         self->state = WeatherTV_State_WindyWeather;
         if (self->eggman->health > 0) {
-            EntityWeatherMobile *wind = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND_MANAGER), self->position.x, self->position.y);
+            EntityWeatherMobile *wind = CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_WIND_MANAGER), self->position.x, self->position.y);
             wind->isPermanent         = true;
             wind->parent              = self->eggman;
         }
@@ -1003,7 +1003,7 @@ void WeatherTV_State_BeginRainAttack(void)
         RSDK.SetSpriteAnimation(WeatherTV->aniFrames, 5, &self->cluckoidAnimator, true, 0);
 
         if (self->eggman->health > 0) {
-            EntityWeatherMobile *rain = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_RAIN_MANAGER), self->position.x, self->position.y);
+            EntityWeatherMobile *rain = CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_RAIN_MANAGER), self->position.x, self->position.y);
             rain->isPermanent         = true;
             rain->parent              = self->eggman;
         }

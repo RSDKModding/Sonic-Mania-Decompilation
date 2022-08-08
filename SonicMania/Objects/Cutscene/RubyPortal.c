@@ -45,8 +45,8 @@ void RubyPortal_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawGroup     = Zone->objectDrawLow;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
+        self->updateRange.x = TO_FIXED(128);
+        self->updateRange.y = TO_FIXED(128);
 
         RSDK.SetSpriteAnimation(RubyPortal->aniFrames, 0, &self->animator, true, 0);
 
@@ -143,7 +143,7 @@ void RubyPortal_HandleTileDestruction(void)
             for (int32 y = 4; y < 52; y += 3) {
                 uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
                 if (tile != (uint16)-1) {
-                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
+                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
                     wall->drawGroup       = Zone->objectDrawLow + 1;
                     wall->targetLayer         = Zone->fgLow;
@@ -164,7 +164,7 @@ void RubyPortal_HandleTileDestruction(void)
 
                 tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
                 if (tile != (uint16)-1) {
-                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
+                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
                     wall->drawGroup       = Zone->objectDrawHigh;
                     wall->targetLayer         = Zone->fgHigh;
@@ -345,7 +345,7 @@ void RubyPortal_State_EncoreEnd(void)
             self->timer = 0;
             self->state = RubyPortal_State_EncoreRampage;
 
-            EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+            EntityFXFade *fade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
             fade->speedIn      = 512;
             fade->wait         = 16;
             fade->speedOut     = 16;

@@ -49,7 +49,7 @@ void Drillerdroid_Create(void *data)
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->visible = true;
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case DRILLERDROIDO_MAIN:
@@ -246,7 +246,7 @@ void Drillerdroid_Explode(void)
         if (!(Zone->timer & 3)) {
             int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -310,7 +310,7 @@ void Drillerdroid_State_AwaitPlayer(void)
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         self->health                                                                                        = 6;
-        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), self->position.x, self->startY)->target = player1;
+        CREATE_ENTITY(Drillerdroid, INT_TO_VOID(DRILLERDROID_TARGET), self->position.x, self->startY)->target = player1;
         self->position.x                                                                                    = 0;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
         self->state = Drillerdroid_State_DecidingDropPos;
@@ -825,7 +825,7 @@ void Drillerdroid_State_JumpTargeting(void)
         self->position.x = 0;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = player1;
+        CREATE_ENTITY(Drillerdroid, INT_TO_VOID(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = player1;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
         self->state = Drillerdroid_State_DecidingDropPos;
     }
@@ -873,7 +873,7 @@ void Drillerdroid_State_DropFailReset(void)
 
     if (--self->timer <= 0) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = player1;
+        CREATE_ENTITY(Drillerdroid, INT_TO_VOID(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = player1;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
         self->state = Drillerdroid_State_DecidingDropPos;
     }

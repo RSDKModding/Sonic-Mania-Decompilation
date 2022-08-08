@@ -36,8 +36,8 @@ void PlaneSwitch_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_BOUNDS;
 
-        self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
-        self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+        self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
+        self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
         self->visible       = false;
         self->drawGroup     = Zone->objectDrawLow;
         self->negAngle      = -self->angle & 0xFF;
@@ -52,7 +52,7 @@ void PlaneSwitch_DrawSprites(void)
         
     Vector2 drawPos;
 
-    drawPos.x = self->position.x - 0x80000;
+    drawPos.x = self->position.x - TO_FIXED(8);
     drawPos.y = self->position.y - (self->size << 19);
     Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
@@ -63,13 +63,9 @@ void PlaneSwitch_DrawSprites(void)
         drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
 
-    drawPos.x = self->position.x + 0x80000;
+    drawPos.x = self->position.x + TO_FIXED(8);
     drawPos.y = self->position.y - (self->size << 19);
-
-    int32 dx  = (drawPos.x - self->position.x) >> 8;
-    int32 dy  = (drawPos.y - self->position.y) >> 8;
-    drawPos.x = self->position.x + (dy * RSDK.Sin256(self->angle) + dx * RSDK.Cos256(self->angle));
-    drawPos.y = self->position.y + (dy * RSDK.Cos256(self->angle) - dx * RSDK.Sin256(self->angle));
+    Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     self->animator.frameID = (self->flags >> 2) & 3;
     for (int32 i = 0; i < self->size; ++i) {
@@ -93,7 +89,7 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
     Zone_RotateOnPivot(&pivotVel, &self->velocity, self->negAngle);
 
     if (!self->onPath || other->onGround) {
-        if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < size << 19) {
+        if (abs(pivotPos.x - self->position.x) < TO_FIXED(24) && abs(pivotPos.y - self->position.y) < size << 19) {
             if (pivotPos.x + pivotVel.x >= self->position.x) {
                 other->collisionPlane = (flags >> 3) & 1; // collision plane bit
                 if (switchdrawGroup) {
@@ -126,8 +122,8 @@ void PlaneSwitch_EditorDraw(void)
     if (!self->size)
         self->size = 1;
 
-    self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
-    self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+    self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
+    self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
     self->visible       = false;
     self->drawGroup     = Zone->objectDrawLow;
     self->negAngle      = -self->angle & 0xFF;

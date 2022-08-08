@@ -206,15 +206,15 @@ bool32 MathHelpers_PointInHitbox(int32 thisX, int32 thisY, int32 otherX, int32 o
 bool32 MathHelpers_PositionBoxesIntersect(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2,
                                           int32 thisY2)
 {
-    int32 left_other   = minVal(otherX1, otherX2);
-    int32 top_other    = minVal(otherY1, otherY2);
-    int32 right_other  = maxVal(otherX1, otherX2);
-    int32 bottom_other = maxVal(otherY1, otherY2);
+    int32 left_other   = MIN(otherX1, otherX2);
+    int32 top_other    = MIN(otherY1, otherY2);
+    int32 right_other  = MAX(otherX1, otherX2);
+    int32 bottom_other = MAX(otherY1, otherY2);
 
-    int32 left_this   = minVal(thisX1, thisX2);
-    int32 top_this    = minVal(thisY1, thisY2);
-    int32 right_this  = maxVal(thisX1, thisX2);
-    int32 bottom_this = maxVal(thisY1, thisY2);
+    int32 left_this   = MIN(thisX1, thisX2);
+    int32 top_this    = MIN(thisY1, thisY2);
+    int32 right_this  = MAX(thisX1, thisX2);
+    int32 bottom_this = MAX(thisY1, thisY2);
 
     return left_other <= right_this && right_other >= left_this && top_other <= bottom_this && bottom_other >= top_this;
 }
@@ -327,10 +327,10 @@ int32 MathHelpers_GetEdgeDistance(int32 distance, int32 radius)
 
 bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos, Hitbox hitbox)
 {
-    int32 left   = minVal(hitbox.left, hitbox.right);
-    int32 right  = maxVal(hitbox.right, hitbox.left);
-    int32 top    = minVal(hitbox.top, hitbox.bottom);
-    int32 bottom = maxVal(hitbox.bottom, hitbox.top);
+    int32 left   = MIN(hitbox.left, hitbox.right);
+    int32 right  = MAX(hitbox.right, hitbox.left);
+    int32 top    = MIN(hitbox.top, hitbox.bottom);
+    int32 bottom = MAX(hitbox.bottom, hitbox.top);
 
     int32 boxPosLeft   = boxPos.x + (left << 16);
     int32 boxPosTop    = boxPos.y + (top << 16);

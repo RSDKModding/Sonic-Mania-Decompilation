@@ -27,7 +27,7 @@ void UIInfoLabel_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
-    self->width         = self->size.y >> 0x10;
+    self->width         = FROM_FIXED(self->size.y);
 
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
@@ -65,9 +65,9 @@ void UIInfoLabel_DrawSprites(void)
     Vector2 drawPos;
     int32 size = (self->size.y + self->size.x) >> 16;
 
-    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, self->size.y >> 0x10, self->width, 0xF0, 0xF0, 0xF0);
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, FROM_FIXED(self->size.y), self->width, 0xF0, 0xF0, 0xF0);
 
-    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, self->size.y >> 0x10, self->width, 0x00, 0x00, 0x00);
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, FROM_FIXED(self->size.y), self->width, 0x00, 0x00, 0x00);
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;

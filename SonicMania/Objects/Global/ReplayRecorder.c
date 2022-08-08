@@ -695,7 +695,7 @@ void ReplayRecorder_DrawGhostDisplay(void)
             drawPos.x = 0;
             drawPos.y = 0;
 
-            int32 dist       = clampVal(MathHelpers_Distance(screenX, screenY, player->position.x, player->position.y) >> 16, 100, 2000);
+            int32 dist       = CLAMP(MathHelpers_Distance(screenX, screenY, player->position.x, player->position.y) >> 16, 100, 2000);
 
             int32 size    = 12 - 4 * (3 * dist - 300) / 2000;
             hitbox.right  = hitbox.right - 8 - (size + 24);

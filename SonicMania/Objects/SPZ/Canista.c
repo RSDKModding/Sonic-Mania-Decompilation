@@ -309,19 +309,19 @@ void Canista_State_Idle(void)
         if (self->stopTimer == 30) {
             int32 offsetX = !(self->direction & FLIP_X) ? 0x180000 : -0x180000;
 
-            EntityCanista *shot = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
+            EntityCanista *shot = CREATE_ENTITY(Canista, INT_TO_VOID(true), offsetX + self->position.x, self->position.y);
             shot->direction     = self->direction;
             shot->velocity.x    = shot->direction == FLIP_X ? 0x40000 : -0x40000;
 
-            shot             = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
+            shot             = CREATE_ENTITY(Canista, INT_TO_VOID(true), offsetX + self->position.x, self->position.y);
             shot->direction  = self->direction;
             shot->velocity.x = shot->direction == FLIP_X ? 0x4C000 : -0x4C000;
 
-            shot             = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
+            shot             = CREATE_ENTITY(Canista, INT_TO_VOID(true), offsetX + self->position.x, self->position.y);
             shot->direction  = self->direction;
             shot->velocity.x = shot->direction == FLIP_X ? 0x58000 : -0x58000;
 
-            shot             = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
+            shot             = CREATE_ENTITY(Canista, INT_TO_VOID(true), offsetX + self->position.x, self->position.y);
             shot->direction  = self->direction;
             shot->velocity.x = shot->direction == FLIP_X ? 0x64000 : -0x64000;
 

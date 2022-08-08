@@ -69,7 +69,7 @@ void KingAttack_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->type          = voidToInt(data);
+        self->type          = VOID_TO_INT(data);
 
         switch (self->type) {
             case KINGATTACK_LASER:
@@ -254,7 +254,7 @@ void KingAttack_State_Laser(void)
     }
 
     if (!(self->timer & 3)) {
-        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_LASERBLAST), self->position.x, self->position.y);
+        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_LASERBLAST), self->position.x, self->position.y);
         attack->direction        = (self->timer >> 3) & 1;
     }
 
@@ -403,7 +403,7 @@ void KingAttack_State_OrbitLaunched(void)
 
     ++self->timer;
     if (!(self->timer & 3))
-        CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_TRAIL), self->position.x, self->position.y);
+        CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_TRAIL), self->position.x, self->position.y);
 
     if (self->scale.x < 512) {
         self->scale.x += 0x20;
@@ -457,7 +457,7 @@ void KingAttack_State_LargeBullet_Appear(void)
     self->position.y -= 0x300000;
 
     if (!(self->timer & 3)) {
-        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_ENERGYLINE), self->position.x, self->position.y);
+        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_ENERGYLINE), self->position.x, self->position.y);
         attack->parent           = (Entity *)self;
     }
 
@@ -513,12 +513,12 @@ void KingAttack_State_LargeBullet_TwinShot(void)
         RSDK.PlaySfx(KingAttack->sfxTwinShot, false, 255);
 
     if (!(self->timer & 3)) {
-        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_SMALLBULLET), self->position.x, self->position.y);
+        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_SMALLBULLET), self->position.x, self->position.y);
         attack->velocity.x       = RSDK.Sin1024(self->angle) << 9;
         attack->velocity.y       = RSDK.Cos1024(self->angle) << 9;
         attack->rotation         = self->angle >> 1;
 
-        attack             = CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_SMALLBULLET), self->position.x, self->position.y);
+        attack             = CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_SMALLBULLET), self->position.x, self->position.y);
         attack->velocity.x = RSDK.Sin1024(self->angle + 0x200) << 9;
         attack->velocity.y = RSDK.Cos1024(self->angle + 0x200) << 9;
         attack->rotation   = self->angle >> 1;

@@ -27,10 +27,10 @@ void BadnikHelpers_BadnikBreak(void *badnik, bool32 destroy, bool32 spawnAnimals
     Entity *badnikEntity = badnik;
 
     if (spawnAnimals) {
-        CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(ZONE_RAND(0, 32) >> 4)]) + 1), badnikEntity->position.x, badnikEntity->position.y);
+        CREATE_ENTITY(Animals, INT_TO_VOID((Animals->animalTypes[(ZONE_RAND(0, 32) >> 4)]) + 1), badnikEntity->position.x, badnikEntity->position.y);
     }
 
-    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
     explosion->drawGroup       = Zone->objectDrawHigh;
     RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
@@ -43,10 +43,10 @@ void BadnikHelpers_BadnikBreakUnseeded(void *badnik, bool32 destroy, bool32 spaw
     Entity *badnikEntity = badnik;
 
     if (spawnAnimals) {
-        CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), badnikEntity->position.x, badnikEntity->position.y);
+        CREATE_ENTITY(Animals, INT_TO_VOID((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), badnikEntity->position.x, badnikEntity->position.y);
     }
 
-    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), badnikEntity->position.x, badnikEntity->position.y);
     explosion->drawGroup       = Zone->objectDrawHigh;
     RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 

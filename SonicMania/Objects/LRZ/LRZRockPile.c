@@ -353,7 +353,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
             if (velY)
                 rock->velocity.y += ((RSDK.Rand(0, 16) + 8) * (2 * (velY > 1) - 1)) << 12;
 
-            destroyDelay = maxVal(destroyDelay, delay);
+            destroyDelay = MAX(destroyDelay, delay);
         }
     }
     else if (RSDK.CheckSceneFolder("LRZ2")) {

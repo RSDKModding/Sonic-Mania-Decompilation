@@ -192,7 +192,7 @@ void Octus_State_Shoot(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (--self->timer == 51) {
-        EntityOctus *shot = CREATE_ENTITY(Octus, intToVoid(true), self->position.x, self->position.y);
+        EntityOctus *shot = CREATE_ENTITY(Octus, INT_TO_VOID(true), self->position.x, self->position.y);
         if (self->direction) {
             shot->position.x += 0xE0000;
             shot->velocity.x = 0x20000;

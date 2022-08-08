@@ -108,7 +108,7 @@ void TimePost_Spin(void)
 
     if (self->angle >= self->maxAngle) {
         self->maxAngle += 0x20000;
-        self->spinSpeed = minVal(0x600 * self->spinCount, 0x3000);
+        self->spinSpeed = MIN(0x600 * self->spinCount, 0x3000);
 
         if (!--self->spinCount) {
             self->spinSpeed = 0;

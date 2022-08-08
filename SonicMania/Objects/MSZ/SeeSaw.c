@@ -278,7 +278,7 @@ void SeeSaw_SetupHitbox(int32 playerX, int32 tilt)
         SeeSaw->hitboxPlank.right = 48;
     }
     else {
-        int32 distance = clampVal((((playerX - self->position.x) >> 16) + 48) >> 1, 0, 47);
+        int32 distance = CLAMP((((playerX - self->position.x) >> 16) + 48) >> 1, 0, 47);
 
         if (tilt != SEESAW_TILT_L)
             SeeSaw->hitboxPlank.top = SeeSaw->tiltHeightTable[distance] + 12;

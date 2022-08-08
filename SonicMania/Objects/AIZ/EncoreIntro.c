@@ -454,9 +454,9 @@ bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
     RSDK.PlaySfx(EncoreIntro->sfxHighFive, false, 0xFF);
 
     if (globals->characterFlags == (ID_SONIC | ID_RAY))
-        CREATE_ENTITY(AIZEncoreTutorial, intToVoid(5), (buddy->position.x >> 1) + (player->position.x >> 1), player->position.y - 0x480000);
+        CREATE_ENTITY(AIZEncoreTutorial, INT_TO_VOID(5), (buddy->position.x >> 1) + (player->position.x >> 1), player->position.y - 0x480000);
     else
-        CREATE_ENTITY(AIZEncoreTutorial, intToVoid(6), (buddy->position.x >> 1) + (player->position.x >> 1), player->position.y - 0x480000);
+        CREATE_ENTITY(AIZEncoreTutorial, INT_TO_VOID(6), (buddy->position.x >> 1) + (player->position.x >> 1), player->position.y - 0x480000);
 
     return true;
 }
@@ -533,7 +533,7 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
             destroyEntity(otherBuddy);
 
             RSDK.PlaySfx(EncoreIntro->sfxMysticPoof, false, 0xFF);
-            CREATE_ENTITY(Explosion, intToVoid(2), mystic->position.x, mystic->position.y)->drawGroup = Zone->playerDrawHigh - 1;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(2), mystic->position.x, mystic->position.y)->drawGroup = Zone->playerDrawHigh - 1;
             Music_PlayTrack(TRACK_HBHMISCHIEF);
 
             for (int32 i = 0; i < 2; ++i) {
@@ -1185,7 +1185,7 @@ void EncoreIntro_PhantomRuby_CapsuleFallDown(void)
 void EncoreIntro_PlayerState_BuddySel(void)
 {
     RSDK_THIS(Player);
-    self->groundVel = clampVal(self->groundVel, -0x20000, 0x20000);
+    self->groundVel = CLAMP(self->groundVel, -0x20000, 0x20000);
     Player_State_Ground();
 }
 

@@ -34,7 +34,7 @@ void CrimsonEye_Create(void *data)
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case CRIMSONEYE_CONTAINER:
@@ -221,7 +221,7 @@ void CrimsonEye_Explode(void)
             y += RSDK.Rand(-24, 25) << 16;
         }
 
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS)), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS)), x, y);
         explosion->drawGroup       = Zone->objectDrawHigh + 2;
     }
 }
@@ -629,7 +629,7 @@ void CrimsonEye_StateContainer_Explode(void)
 
             int32 x                    = self->position.x + RSDK.Rand(-0x200000, 0x200000);
             int32 y                    = self->position.y + RSDK.Rand(-0x800000, 0x800000);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), x, y);
 
             explosion->drawGroup = Zone->objectDrawHigh + 2;
         }
@@ -803,12 +803,12 @@ void CrimsonEye_ShootShot(void)
 {
     RSDK_THIS(CrimsonEye);
 
-    EntityCrimsonEye *child = CREATE_ENTITY(CrimsonEye, intToVoid(CRIMSONEYE_SHOT), self->position.x + 0x260000, self->position.y);
+    EntityCrimsonEye *child = CREATE_ENTITY(CrimsonEye, INT_TO_VOID(CRIMSONEYE_SHOT), self->position.x + 0x260000, self->position.y);
     child->velocity.x       = 0x280 * RSDK.Cos512(self->rotation);
     child->velocity.y       = -0x280 * RSDK.Sin512(self->rotation);
     child->position.y += self->rotation < 0x100 ? -0x110000 : 0x110000;
 
-    child             = CREATE_ENTITY(CrimsonEye, intToVoid(CRIMSONEYE_SHOT), self->position.x - 0x260000, self->position.y);
+    child             = CREATE_ENTITY(CrimsonEye, INT_TO_VOID(CRIMSONEYE_SHOT), self->position.x - 0x260000, self->position.y);
     child->velocity.x = -0x280 * RSDK.Cos512(self->rotation);
     child->velocity.y = -0x280 * RSDK.Sin512(self->rotation);
     child->position.y += self->rotation < 0x100 ? -0x110000 : 0x110000;
@@ -825,7 +825,7 @@ void CrimsonEye_SetupEyePositions(void)
     CrimsonEye->eyePositions[0].x = self->position.x;
     CrimsonEye->eyePositions[0].y = self->position.y;
 
-    CrimsonEye->eyePositions[0].x += clampVal(10 * ((player1->position.x - self->position.x) >> 8), -0xC0000, 0xC0000);
+    CrimsonEye->eyePositions[0].x += CLAMP(10 * ((player1->position.x - self->position.x) >> 8), -0xC0000, 0xC0000);
     CrimsonEye->eyePositions[0].x &= 0xFFFF0000;
 
     // Eye shine
@@ -833,7 +833,7 @@ void CrimsonEye_SetupEyePositions(void)
 
     // Iris thingy
     CrimsonEye->eyePositions[1] = CrimsonEye->eyePositions[0];
-    CrimsonEye->eyePositions[1].x += clampVal(3 * ((player1->position.x - self->position.x) >> 8), -0x30000, 0x30000);
+    CrimsonEye->eyePositions[1].x += CLAMP(3 * ((player1->position.x - self->position.x) >> 8), -0x30000, 0x30000);
     CrimsonEye->eyePositions[1].x &= 0xFFFF0000;
 }
 
@@ -1125,11 +1125,11 @@ void CrimsonEye_StateBall_Destroyed(void)
 
     if (--self->timer <= 0) {
         RSDK.PlaySfx(CrimsonEye->sfxExplosion, false, 255);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
 
         int32 angle = 0;
         for (int32 i = 0; i < 8; ++i) {
-            EntityCrimsonEye *spike = CREATE_ENTITY(CrimsonEye, intToVoid(CRIMSONEYE_SPIKE), self->position.x, self->position.y);
+            EntityCrimsonEye *spike = CREATE_ENTITY(CrimsonEye, INT_TO_VOID(CRIMSONEYE_SPIKE), self->position.x, self->position.y);
             spike->animator.frameID = i + 2;
             spike->velocity.x       = RSDK.Cos256(angle) << 9;
             spike->velocity.y       = RSDK.Sin256(angle) << 9;

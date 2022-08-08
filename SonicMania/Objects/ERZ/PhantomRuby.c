@@ -57,8 +57,8 @@ void PhantomRuby_Create(void *data)
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
-    self->updateRange.x = 0x800000;
-    self->updateRange.y = 0x800000;
+    self->updateRange.x = TO_FIXED(128);
+    self->updateRange.y = TO_FIXED(128);
     self->state         = PhantomRuby_State_FinishedFlash;
 
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->rubyAnimator, true, 0);
@@ -168,9 +168,9 @@ void PhantomRuby_State_MoveRotateGravity_CheckGround(void)
 
     PhantomRuby_State_MoveRotateGravity();
 
-    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(8), true)) {
         self->velocity.x >>= 1;
-        if (-(self->velocity.y >> 1) > -0x10000)
+        if (-(self->velocity.y >> 1) > -TO_FIXED(1))
             self->velocity.y = 0;
         else
             self->velocity.y = -(self->velocity.y >> 1);

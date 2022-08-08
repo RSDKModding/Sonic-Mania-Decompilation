@@ -40,15 +40,15 @@ void Camera_LateUpdate(void)
     }
 
     if (!self->disableYOffset)
-        self->offset.y = maxVal(self->offset.y - (self->offset.y >> 3), 0);
+        self->offset.y = MAX(self->offset.y - (self->offset.y >> 3), 0);
 }
 
 void Camera_StaticUpdate(void)
 {
-    if (Camera->centerBounds.x < 0x100000)
+    if (Camera->centerBounds.x < TO_FIXED(16))
         Camera->centerBounds.x += 0x4000;
 
-    if (Camera->centerBounds.y < 0x180000)
+    if (Camera->centerBounds.y < TO_FIXED(24))
         Camera->centerBounds.y += 0x8000;
 }
 
@@ -58,12 +58,12 @@ void Camera_Create(void *data)
 {
     RSDK_THIS(Camera);
 
-    int32 screen   = voidToInt(data);
-    self->offset.x = 0x80000;
+    int32 screen   = VOID_TO_INT(data);
+    self->offset.x = TO_FIXED(8);
     self->centerY  = ScreenInfo->center.y - 16;
     if (self->active != ACTIVE_NORMAL) {
         self->screenID = screen;
-        RSDK.AddCamera(&self->center, ScreenInfo[screen].center.x << 16, ScreenInfo[screen].center.y << 16, false);
+        RSDK.AddCamera(&self->center, TO_FIXED(ScreenInfo[screen].center.x), TO_FIXED(ScreenInfo[screen].center.y), false);
     }
 
     self->boundsOffset.x = 3;
@@ -93,18 +93,18 @@ void Camera_StageLoad(void)
     // Likely a holdover from the earlier credits revision
     if (!RSDK.CheckSceneFolder("Credits")) {
         for (int32 i = 0; i < RSDK.GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++i)
-            RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->classID, intToVoid(i));
+            RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->classID, INT_TO_VOID(i));
 
-        Camera->centerBounds.x = 0x100000;
-        Camera->centerBounds.y = 0x180000;
+        Camera->centerBounds.x = TO_FIXED(16);
+        Camera->centerBounds.y = TO_FIXED(24);
     }
 }
 
 void Camera_SetCameraBounds(EntityCamera *entity)
 {
     RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
-    screen->position.x     = (entity->position.x >> 0x10) + entity->lookPos.x - screen->center.x;
-    screen->position.y     = (entity->position.y >> 0x10) + entity->lookPos.y - entity->centerY;
+    screen->position.x     = FROM_FIXED(entity->position.x) + entity->lookPos.x - screen->center.x;
+    screen->position.y     = FROM_FIXED(entity->position.y) + entity->lookPos.y - entity->centerY;
 
     if (screen->position.x < entity->boundsL)
         screen->position.x = entity->boundsL;
@@ -168,7 +168,7 @@ void Camera_HandleHBounds(void)
             int32 off     = self->boundsL - self->boundsOffset.x;
             self->boundsL = off;
             if (self->velocity.x < 0) {
-                self->boundsL += (self->velocity.x >> 0x10);
+                self->boundsL += FROM_FIXED(self->velocity.x);
                 if (self->boundsL < Zone->cameraBoundsL[self->screenID])
                     self->boundsL = Zone->cameraBoundsL[self->screenID];
             }
@@ -189,7 +189,7 @@ void Camera_HandleHBounds(void)
         if (screen->size.x + screen->position.x >= self->boundsR) {
             self->boundsR += self->boundsOffset.x;
             if (self->velocity.x > 0) {
-                self->boundsR = (self->velocity.x >> 0x10) + self->boundsR;
+                self->boundsR = FROM_FIXED(self->velocity.x) + self->boundsR;
                 if (self->boundsR > Zone->cameraBoundsR[self->screenID])
                     self->boundsR = Zone->cameraBoundsR[self->screenID];
             }
@@ -220,7 +220,7 @@ void Camera_HandleVBounds(void)
             self->boundsT = self->boundsT - self->boundsOffset.y;
 
             if (self->velocity.y < 0) {
-                self->boundsT += self->velocity.y >> 0x10;
+                self->boundsT += FROM_FIXED(self->velocity.y);
                 if (self->boundsT < Zone->cameraBoundsT[self->screenID])
                     self->boundsT = Zone->cameraBoundsT[self->screenID];
             }
@@ -242,7 +242,7 @@ void Camera_HandleVBounds(void)
             self->boundsB += self->boundsOffset.y;
 
             if (self->velocity.y > 0) {
-                self->boundsB += self->velocity.y >> 0x10;
+                self->boundsB += FROM_FIXED(self->velocity.y);
                 if (self->boundsB > Zone->cameraBoundsB[self->screenID])
                     self->boundsB = Zone->cameraBoundsB[self->screenID];
             }
@@ -278,9 +278,9 @@ void Camera_State_MapView(void)
 {
     RSDK_THIS(Camera);
 
-    int32 speed = 0x100000;
-    if (!ControllerInfo[CONT_P1].keyA.down)
-        speed = 0x40000;
+    int32 speed = TO_FIXED(4);
+    if (ControllerInfo[CONT_P1].keyA.down)
+        speed = TO_FIXED(16);
 
     if (ControllerInfo[CONT_P1].keyUp.down)
         self->position.y -= speed;
@@ -291,8 +291,8 @@ void Camera_State_MapView(void)
     else if (ControllerInfo[CONT_P1].keyRight.down)
         self->position.x += speed;
 
-    self->position.x       = self->position.x >> 0x10;
-    self->position.y       = self->position.y >> 0x10;
+    self->position.x       = FROM_FIXED(self->position.x);
+    self->position.y       = FROM_FIXED(self->position.y);
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
     if (self->position.x >= screen->center.x) {
@@ -464,7 +464,7 @@ void Camera_EditorDraw(void)
     // Camera preview :)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
-        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, WIDE_SCR_XSIZE << 16, SCREEN_YSIZE << 16, 0xFF0000);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, TO_FIXED(WIDE_SCR_XSIZE), TO_FIXED(SCREEN_YSIZE), 0xFF0000);
         RSDK_DRAWING_OVERLAY(false);
     }
 }

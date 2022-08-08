@@ -55,12 +55,15 @@ void BSS_Palette_EditorDraw(void)
 {
     RSDK_THIS(BSS_Palette);
 
-    RSDK.DrawRect(self->position.x - 0x100000, self->position.y - 0x80000, 0x100000, 0x100000, self->playfieldA, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(self->position.x + 0x000000, self->position.y - 0x80000, 0x100000, 0x100000, self->playfieldB, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(self->position.x - TO_FIXED(16), self->position.y - TO_FIXED(8), TO_FIXED(16), TO_FIXED(16), self->playfieldA, 0xFF, INK_NONE,
+                  false);
+    RSDK.DrawRect(self->position.x + TO_FIXED(0), self->position.y - TO_FIXED(8), TO_FIXED(16), TO_FIXED(16), self->playfieldB, 0xFF, INK_NONE,
+                  false);
 
-    RSDK.DrawRect(self->position.x - 0x120000, self->position.y + 0xC0000, 0xC0000, 0xC0000, self->bgColor1, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(self->position.x - 0x060000, self->position.y + 0xC0000, 0xC0000, 0xC0000, self->bgColor2, 0xFF, INK_NONE, false);
-    RSDK.DrawRect(self->position.x + 0x060000, self->position.y + 0xC0000, 0xC0000, 0xC0000, self->bgColor3, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(self->position.x - TO_FIXED(18), self->position.y + TO_FIXED(12), TO_FIXED(12), TO_FIXED(12), self->bgColor1, 0xFF, INK_NONE,
+                  false);
+    RSDK.DrawRect(self->position.x - TO_FIXED(6), self->position.y + TO_FIXED(12), TO_FIXED(12), TO_FIXED(12), self->bgColor2, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(self->position.x + TO_FIXED(6), self->position.y + TO_FIXED(12), TO_FIXED(12), TO_FIXED(12), self->bgColor3, 0xFF, INK_NONE, false);
 }
 
 void BSS_Palette_EditorLoad(void) {}
