@@ -60,7 +60,9 @@
 #undef RETRO_REV02
 #define RETRO_REV02 (0)
 #else
+#ifndef GAME_VERSION
 #define GAME_VERSION VER_106
+#endif
 #endif
 
 #define MANIA_USE_PLUS (GAME_VERSION >= VER_105)

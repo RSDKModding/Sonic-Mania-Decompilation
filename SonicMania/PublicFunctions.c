@@ -2486,8 +2486,8 @@ void InitPublicFunctions()
 
     // Helpers/ColorHelpers
     ADD_PUBLIC_FUNC(ColorHelpers_PackRGB);
-    ADD_PUBLIC_FUNC(ColorHelpers_Unknown1);
-    ADD_PUBLIC_FUNC(ColorHelpers_Unknown2);
+    ADD_PUBLIC_FUNC(ColorHelpers_RGBToHSL);
+    ADD_PUBLIC_FUNC(ColorHelpers_HSLToRGB);
 
 #if !MANIA_USE_PLUS
     // Helpers/CompetitionSession

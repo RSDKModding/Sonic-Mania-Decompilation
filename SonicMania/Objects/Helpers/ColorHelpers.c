@@ -11,7 +11,7 @@ ObjectColorHelpers *ColorHelpers = NULL;
 
 // NOTE:
 // I'm not actually sure *what* this object was for
-// ColorHelpers_Unknown1 && ColorHelpers_Unknown2 were only in PC 1.03, and not in 1.06 so idk what happened
+// ColorHelpers_RGBToHSL && ColorHelpers_HSLToRGB were only in PC 1.03, and not in 1.06 so idk what happened
 // ColorHelpers_PackRGB is a helper func that allows me to easily pack RGB888 into RGB565 format
 // I've never seen definitive proof of any funcs this object may have once had so be it what you will
 
@@ -29,121 +29,122 @@ void ColorHelpers_StageLoad(void) {}
 
 uint16 ColorHelpers_PackRGB(uint8 r, uint8 g, uint8 b) { return (b >> 3) | ((g >> 2) << 5) | ((r >> 3) << 11); }
 
-void ColorHelpers_Unknown1(int32 r, int32 g, int32 b, uint32 *rPtr, uint32 *gPtr, uint32 *bPtr)
+void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *saturation, uint32 *luminance)
 {
     if (!r && !g && !b) {
-        if (rPtr)
-            *rPtr = 0;
-        if (gPtr)
-            *gPtr = 0;
-        if (bPtr)
-            *bPtr = 0;
+        if (hue)
+            *hue = 0;
+        if (saturation)
+            *saturation = 0;
+        if (luminance)
+            *luminance = 0;
     }
 
-    uint8 val1 = (g < r ? g : r) >= b ? b : (g < r ? g : r);
-    uint8 val2 = (g > r ? g : r) <= b ? b : (g > r ? g : r);
+    uint8 min = minVal(minVal(r, g), b);
+    uint8 max = maxVal(maxVal(r, g), b);
 
-    int div = val2 - val1;
-    if (val2) {
-        int32 newR = 0;
+    int32 delta = max - min;
+    if (max) {
+        if (max == min) {
+            if (hue)
+                *hue = 0;
 
-        if (val2 == val1) {
-            if (rPtr)
-                *rPtr = 0;
+            if (saturation)
+                *saturation = 0;
 
-            if (gPtr)
-                *gPtr = 0;
-
-            if (bPtr)
-                *bPtr = val1;
+            if (luminance)
+                *luminance = min;
         }
         else {
-            if (g == val2)
-                newR = 60 * (r - b) / div;
-            else if (r == val2)
-                newR = 60 * (b - g) / div + 120;
-            else
-                newR = 60 * (g - r) / div + 240;
+            if (hue) {
+                int32 h = 0;
 
-            if (rPtr) {
-                if (newR >= 0)
-                    *rPtr = newR;
+                if (r == max)
+                    h = 60 * (g - b) / delta;
+                else if (g == max)
+                    h = 60 * (b - r) / delta + 120;
                 else
-                    *rPtr = newR + 360;
+                    h = 60 * (r - g) / delta + 240;
+
+                if (h < 0)
+                    h += 360;
+
+                *hue = h;
             }
 
-            if (gPtr)
-                *gPtr = 255 * div / val2;
+            if (saturation)
+                *saturation = 255 * delta / max;
 
-            if (bPtr)
-                *bPtr = val2;
+            if (luminance)
+                *luminance = max;
         }
     }
 }
 
-void ColorHelpers_Unknown2(int32 a1, int32 a2, int32 brightness, uint32 *r, uint32 *g, uint32 *b)
+void ColorHelpers_HSLToRGB(uint32 hue, uint32 saturation, uint32 luminance, uint32 *r, uint32 *g, uint32 *b)
 {
-    uint32 newR = 0, newG = 0, newB = 0;
+    // Assumes H, S & L are all valid values
 
-    if (a1) {
-        int32 val = brightness * a1 / 255;
+    uint32 green = 0, red = 0, blue = 0;
 
-        switch (a2 / 60) {
+    if (saturation) {
+        int32 s = luminance * saturation / 255;
+
+        int32 p = luminance - s;
+        int32 q = luminance - hue % 60 * s / 60;
+        int32 t = luminance - (s * (60 - hue % 60)) / 60;
+
+        switch (hue / 60) {
             case 0:
-                newR = brightness;
-                newG = brightness - (val * (60 - a2 % 60)) / 60;
-                newB = brightness - val;
+                red   = luminance;
+                green = t;
+                blue  = p;
                 break;
 
             case 1:
-                newR = brightness - a2 % 60 * val / 60;
-                newG = brightness;
-                newB = brightness - val;
+                red   = q;
+                green = luminance;
+                blue  = p;
                 break;
 
             case 2:
-                newR = brightness - val;
-                newG = brightness;
-                newB = brightness - (val * (60 - a2 % 60)) / 60;
+                red   = p;
+                green = luminance;
+                blue  = t;
                 break;
 
             case 3:
-                newG = brightness - a2 % 60 * val / 60;
-                newR = (brightness - val);
-                newB = brightness;
+                red   = p;
+                green = q;
+                blue  = luminance;
                 break;
 
             case 4:
-                newG = brightness - val;
-                newB = brightness;
-                newR = *g;
+                red   = t;
+                green = p;
+                blue  = luminance;
                 break;
 
             case 5:
-                newG = brightness - val;
-                newR = brightness;
-                newB = brightness - a2 % 60 * val / 60;
-                break;
-
             default:
-                newG = *g;
-                newB = *g;
-                newR = *g;
+                red   = luminance;
+                green = p;
+                blue  = q;
                 break;
         }
     }
     else {
-        newR = brightness;
-        newG = brightness;
-        newB = brightness;
+        red   = luminance;
+        green = luminance;
+        blue  = luminance;
     }
 
     if (r)
-        *r = newG;
+        *r = red;
     if (g)
-        *g = newR;
+        *g = green;
     if (b)
-        *b = newB;
+        *b = blue;
 }
 
 #if RETRO_INCLUDE_EDITOR

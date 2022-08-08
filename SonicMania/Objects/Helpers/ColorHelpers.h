@@ -32,7 +32,7 @@ void ColorHelpers_Serialize(void);
 // Extra Entity Functions
 uint16 ColorHelpers_PackRGB(uint8 r, uint8 g, uint8 b);
 
-void ColorHelpers_Unknown1(int32 r, int32 g, int32 b, uint32 *rPtr, uint32 *gPtr, uint32 *bPtr);
-void ColorHelpers_Unknown2(int32 a1, int32 a2, int32 brightness, uint32 *r, uint32 *g, uint32 *b);
+void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *saturation, uint32 *luminance);
+void ColorHelpers_HSLToRGB(uint32 hue, uint32 saturation, uint32 luminance, uint32 *r, uint32 *g, uint32 *b);
 
 #endif //!OBJ_COLORHELPERS_H

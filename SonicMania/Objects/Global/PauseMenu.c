@@ -203,27 +203,24 @@ void PauseMenu_SetupTintTable(void)
 {
 #if MANIA_USE_PLUS
     for (int32 i = 0; i < 0x10000; ++i) {
-        int32 brightness =
-            ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
-        brightness                    = minVal(0xFF, brightness);
+        uint32 r = (0x20F * (i >> 11) + 23) >> 6;
+        uint32 g = (0x103 * ((i >> 5) & 0x3F) + 33) >> 6;
+        uint32 b = (0x20F * (i & 0x1F) + 23) >> 6;
+
+        int32 brightness = minVal(((b + g + r) << 8) / 680, 0xFF);
 
         PauseMenu->tintLookupTable[i] = ColorHelpers_PackRGB(brightness, brightness, brightness);
     }
 #else
     uint16 *tintLookupTable = RSDK.GetTintLookupTable();
     for (int32 i = 0; i < 0x10000; ++i) {
-        uint32 r = (527 * (i >> 11) + 23) >> 6;
-        uint32 g = (527 * (i & 0x1F) + 23) >> 7;
-        uint32 b = (259 * ((i >> 5) & 0x3F) + 33) >> 6;
+        uint32 r = (0x20F * (i >> 11) + 23) >> 6;
+        uint32 g = (0x103 * ((i >> 5) & 0x3F) + 33) >> 6;
+        uint32 b = (0x20F * (i & 0x1F) + 23) >> 7;
 
-        int32 rVal = 0, gVal = 0, bVal = 0;
-        ColorHelpers_Unknown1(r, g, b, &rVal, &gVal, &bVal);
-
-        uint32 brightness = 13 * bVal / 16;
-        if (brightness > 255)
-            brightness = 255;
-
-        ColorHelpers_Unknown2(0, rVal, brightness, &r, &g, &b);
+        uint32 hue = 0, saturation = 0, luminance = 0;
+        ColorHelpers_RGBToHSL(r, g, b, &hue, &saturation, &luminance);
+        ColorHelpers_HSLToRGB(hue, 0, minVal(13 * luminance / 16, 255), &r, &g, &b);
 
         tintLookupTable[i] = ColorHelpers_PackRGB(r, g, b);
     }
