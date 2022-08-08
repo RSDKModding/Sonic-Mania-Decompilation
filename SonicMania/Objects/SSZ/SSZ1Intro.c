@@ -123,7 +123,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (player2->classID == Player->classID) {
         if (player1 && player2->onGround)

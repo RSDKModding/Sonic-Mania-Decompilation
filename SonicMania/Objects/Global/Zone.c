@@ -220,12 +220,12 @@ void Zone_StageLoad(void)
             Zone->cameraBoundsT[s] = 0;
             Zone->cameraBoundsB[s] = layerSize.y;
 
-            Zone->playerBoundsL[s] = Zone->cameraBoundsL[s] << 0x10;
-            Zone->playerBoundsR[s] = Zone->cameraBoundsR[s] << 0x10;
-            Zone->playerBoundsT[s] = Zone->cameraBoundsT[s] << 0x10;
-            Zone->playerBoundsB[s] = Zone->cameraBoundsB[s] << 0x10;
+            Zone->playerBoundsL[s] = TO_FIXED(Zone->cameraBoundsL[s]);
+            Zone->playerBoundsR[s] = TO_FIXED(Zone->cameraBoundsR[s]);
+            Zone->playerBoundsT[s] = TO_FIXED(Zone->cameraBoundsT[s]);
+            Zone->playerBoundsB[s] = TO_FIXED(Zone->cameraBoundsB[s]);
 
-            Zone->deathBoundary[s]      = Zone->cameraBoundsB[s] << 0x10;
+            Zone->deathBoundary[s]      = TO_FIXED(Zone->cameraBoundsB[s]);
             Zone->playerBoundActiveL[s] = true;
             Zone->playerBoundActiveB[s] = false;
         }

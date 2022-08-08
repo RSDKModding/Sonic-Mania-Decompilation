@@ -82,7 +82,7 @@ void MSZ2Cutscene_GetPistolPtr(void)
 bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityParallaxSprite *parallaxSprite = MSZ2Cutscene->oozPeek;
     EntityEggPrison *prison              = MSZ2Cutscene->prison;

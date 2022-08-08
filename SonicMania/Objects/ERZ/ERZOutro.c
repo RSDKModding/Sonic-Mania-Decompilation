@@ -218,7 +218,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
 bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
+    UNUSED(player2);
 
     EntityKleptoMobile *eggman = ERZOutro->eggman;
     EntityFXRuby *fxRuby       = ERZOutro->fxRuby;

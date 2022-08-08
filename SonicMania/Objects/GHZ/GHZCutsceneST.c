@@ -134,7 +134,7 @@ void GHZCutsceneST_Cutscene_SkipCB(void)
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityFXRuby *fxRuby    = GHZCutsceneST->fxRuby;
     EntityPhantomRuby *ruby = GHZCutsceneST->phantomRuby;
@@ -181,7 +181,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
 bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
+    UNUSED(player2);
 
     EntityPhantomRuby *ruby = GHZCutsceneST->phantomRuby;
     EntityFXRuby *fxRuby    = GHZCutsceneST->fxRuby;
@@ -229,7 +229,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
+    UNUSED(player2);
 
     EntityPhantomRuby *ruby  = GHZCutsceneST->phantomRuby;
     EntityAIZKingClaw *claw  = GHZCutsceneST->claw;

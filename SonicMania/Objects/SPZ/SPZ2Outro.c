@@ -159,7 +159,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (!host->timer) {
         RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->animator, true, 0);
@@ -206,7 +206,7 @@ void SPZ2Outro_DrawHook_PrepareWeatherTV(void)
 bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
     EntityTVFlyingBattery *tvFlyingBattery = SPZ2Outro->tvFlyingBattery;
     EntityWeatherTV *weatherTV             = SPZ2Outro->weatherTV;
 
@@ -280,7 +280,7 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
 bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityTVFlyingBattery *tvFlyingBattery = SPZ2Outro->tvFlyingBattery;
 

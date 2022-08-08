@@ -291,7 +291,7 @@ void PuyoMatch_State_HandleCombos(void)
     // Bonus for getting multiple combos in one go
     self->concurrentBonus = 0;
     for (int32 b = 0; b < 5; ++b) {
-        if (getBit(comboColors, b))
+        if (GET_BIT(comboColors, b))
             ++self->concurrentBonus;
     }
 

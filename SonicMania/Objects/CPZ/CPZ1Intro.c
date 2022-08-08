@@ -91,8 +91,8 @@ void CPZ1Intro_HandleRubyHover(EntityCutsceneSeq *cutsceneSequence, EntityPlayer
 bool32 CPZ1Intro_CheckSonicAnimFinish(void)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 30;
 }
@@ -100,8 +100,8 @@ bool32 CPZ1Intro_CheckSonicAnimFinish(void)
 bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
 #if MANIA_USE_PLUS
     if (player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4) {
@@ -124,8 +124,8 @@ bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
 bool32 CPZ1Intro_CheckKnuxAnimFinish(void)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4;
 }
@@ -134,8 +134,8 @@ bool32 CPZ1Intro_CheckKnuxAnimFinish(void)
 bool32 CPZ1Intro_CheckMightyAnimFinish(void)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4;
 }
@@ -143,8 +143,8 @@ bool32 CPZ1Intro_CheckMightyAnimFinish(void)
 bool32 CPZ1Intro_CheckRayAnimFinish(void)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4;
 }
@@ -206,8 +206,8 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 bool32 CPZ1Intro_Cutscene_PostWarpDrop(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(host);
-    unused(camera);
+    UNUSED(host);
+    UNUSED(camera);
 
     if (player2->classID == Player->classID) {
         if (player1->onGround && player2->onGround)
@@ -224,7 +224,7 @@ bool32 CPZ1Intro_Cutscene_PostWarpDrop(EntityCutsceneSeq *host)
 bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (!host->timer) {
         player1->state = Player_State_Static;
@@ -247,7 +247,7 @@ bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host)
 bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (!host->timer) {
         RSDK.PlaySfx(CPZ1Intro->sfxChemDrop, false, 255);
@@ -283,7 +283,7 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host)
 bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (!host->timer) {
         switch (GET_CHARACTER_ID(1)) {

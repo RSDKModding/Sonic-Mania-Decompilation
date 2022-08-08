@@ -58,8 +58,8 @@ void MSZ1KIntro_StageLoad(void)
 bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     if (!host->timer) {
         player1->position.y -= 0x4000000;
@@ -86,8 +86,8 @@ bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
 bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     if (!host->timer) {
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
@@ -117,8 +117,8 @@ bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
 bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     if (host->timer == 30) {
         player1->stateInput     = Player_Input_P1;

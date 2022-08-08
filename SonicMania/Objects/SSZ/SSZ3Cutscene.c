@@ -274,9 +274,9 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
 
     // lmao
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player1);
-    unused(player2);
-    unused(camera);
+    UNUSED(player1);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityPhantomRuby *ruby = self->ruby;
 

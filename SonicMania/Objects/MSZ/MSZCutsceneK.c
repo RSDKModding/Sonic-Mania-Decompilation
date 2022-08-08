@@ -101,8 +101,8 @@ void MSZCutsceneK_SetupP2(int32 x, int32 y)
 bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityHeavyMystic *mystic = MSZCutsceneK->mystic;
     EntityTornado *tornado    = MSZCutsceneK->tornado;
@@ -132,8 +132,8 @@ bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host)
 bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityTornado *tornado = MSZCutsceneK->tornado;
 

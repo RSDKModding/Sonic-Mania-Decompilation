@@ -1108,11 +1108,11 @@ void ItemBox_HandleObjectCollisions(void)
                 if (RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &ItemBox->hitboxItemBox, true) == C_TOP) {
                     self->position.x += ice->playerMoveOffset.x;
                     self->position.y += ice->playerMoveOffset.y;
-                    self->position.y = self->position.y >> 0x10 << 0x10;
+                    self->position.y = TO_FIXED(self->position.y >> 16);
 
                     self->contentsPos.x += ice->playerMoveOffset.x;
                     self->contentsPos.y += ice->playerMoveOffset.y;
-                    self->contentsPos.y = self->contentsPos.y >> 0x10 << 0x10;
+                    self->contentsPos.y = TO_FIXED(self->contentsPos.y >> 16);
 
                     self->moveOffset.x = ice->playerMoveOffset.x;
                     self->moveOffset.y = ice->playerMoveOffset.y;
@@ -1163,11 +1163,11 @@ void ItemBox_HandleObjectCollisions(void)
                     if (RSDK.CheckObjectCollisionBox(itemBox, &ItemBox->hitboxItemBox, self, &ItemBox->hitboxItemBox, true) == C_TOP) {
                         self->position.x += itemBox->moveOffset.x;
                         self->position.y += itemBox->moveOffset.y;
-                        self->position.y = self->position.y >> 0x10 << 0x10;
+                        self->position.y = TO_FIXED(self->position.y >> 16);
 
                         self->contentsPos.x += itemBox->moveOffset.x;
                         self->contentsPos.y += itemBox->moveOffset.y;
-                        self->contentsPos.y = self->contentsPos.y >> 0x10 << 0x10;
+                        self->contentsPos.y = TO_FIXED(self->contentsPos.y >> 16);
 
                         self->moveOffset.x = itemBox->moveOffset.x;
                         self->moveOffset.y = itemBox->moveOffset.y;

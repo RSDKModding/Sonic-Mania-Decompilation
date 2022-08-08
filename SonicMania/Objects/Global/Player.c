@@ -156,8 +156,8 @@ void Player_LateUpdate(void)
         Player_TryTransform(self, 0x7F);
 
     if (self->state == Player_State_FlyCarried) {
-        self->flyCarryLeaderPos.x = self->position.x >> 0x10 << 0x10;
-        self->flyCarryLeaderPos.y = self->position.y >> 0x10 << 0x10;
+        self->flyCarryLeaderPos.x = TO_FIXED(self->position.x >> 16);
+        self->flyCarryLeaderPos.y = TO_FIXED(self->position.y >> 16);
     }
 
     if (self->deathType) {

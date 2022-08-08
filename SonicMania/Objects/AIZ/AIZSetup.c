@@ -371,8 +371,8 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     if (player1->position.x >= 0x27100000) {
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.01);
@@ -389,7 +389,7 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (player1->position.x >= 0x2A300000) {
         if (player1->groundVel <= 0) {
@@ -431,7 +431,7 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (player2->classID == Player->classID) {
         if (player2->onGround) {
@@ -507,8 +507,8 @@ bool32 AIZSetup_CutsceneSonic_WatchClaw(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player1);
-    unused(camera);
+    UNUSED(player1);
+    UNUSED(camera);
 
     EntityAIZKingClaw *claw  = AIZSetup->claw;
     EntityPlatform *platform = AIZSetup->platform;
@@ -589,7 +589,7 @@ bool32 AIZSetup_CutsceneSonic_RubyAppear(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
 
@@ -682,8 +682,8 @@ void AIZSetup_CutsceneK_Setup(void)
 bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     if (!host->timer) {
         player1->state      = Player_State_Static;
@@ -698,8 +698,8 @@ bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     switch (host->timer) {
         case 0: RSDK.PlaySfx(AIZKingClaw->sfxClack, false, 0); break;
@@ -735,8 +735,8 @@ bool32 AIZSetup_CutsceneKnux_Drillin(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     if (player1->animator.animationID == 3 && player1->animator.frameID == player1->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 0, &player1->animator, true, 0);
@@ -756,7 +756,7 @@ bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
+    UNUSED(player2);
 
     if (!host->timer) {
         player1->camera = NULL;
@@ -779,8 +779,8 @@ bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityAIZKingClaw *claw = AIZSetup->claw;
     EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
@@ -805,7 +805,7 @@ bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
 
@@ -858,8 +858,8 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityFXRuby *fxRuby = AIZSetup->fxRuby;
 
@@ -901,7 +901,7 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host)
 
 bool32 AIZSetup_Cutscene_LoadGHZ(EntityCutsceneSeq *host)
 {
-    unused(host);
+    UNUSED(host);
 
     RSDK.SetScene("Cutscenes", "Green Hill Zone");
     RSDK.LoadScene();

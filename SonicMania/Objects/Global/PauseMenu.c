@@ -244,8 +244,8 @@ void PauseMenu_AddButton(uint8 id, void *action)
         button->position.y = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &button->animator, true, id);
         button->actionCB           = PauseMenu_ActionCB_Button;
-        button->size.x             = 0x3C0000;
-        button->size.y             = 0x150000;
+        button->size.x             = 60 << 16;
+        button->size.y             = 21 << 16;
         button->bgEdgeSize         = 21;
         button->align              = ALIGN_LEFT;
         button->drawGroup          = self->drawGroup;
@@ -367,7 +367,7 @@ void PauseMenu_CheckAndReassignControllers(void)
     int32 deviceID = API_GetInputDeviceID(CONT_P1 + (entity->triggerPlayer ^ 1));
 
 #if MANIA_USE_PLUS
-    unused(deviceID); // be quiet compiler I know it aint used!!
+    UNUSED(deviceID); // be quiet compiler I know it aint used!!
     
     int32 id = API_GetFilteredInputDeviceID(true, true, 5);
 #else

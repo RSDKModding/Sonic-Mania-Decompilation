@@ -553,7 +553,7 @@ bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host)
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-    unused(camera);
+    UNUSED(camera);
 
     RSDK_THIS(EncoreIntro);
     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);

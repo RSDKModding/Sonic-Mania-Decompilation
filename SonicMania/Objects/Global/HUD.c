@@ -46,12 +46,12 @@ void HUD_LateUpdate(void)
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV)
                 HUD_GetActionButtonFrames();
 
-            if (self->superButtonPos < 0x180000)
-                self->superButtonPos += 0x80000;
+            if (self->superButtonPos < TO_FIXED(24))
+                self->superButtonPos += TO_FIXED(8);
         }
         else {
-            if (self->superButtonPos > -0x200000)
-                self->superButtonPos -= 0x80000;
+            if (self->superButtonPos > -TO_FIXED(24))
+                self->superButtonPos -= TO_FIXED(8);
         }
     }
 #if MANIA_USE_PLUS
@@ -63,12 +63,12 @@ void HUD_LateUpdate(void)
                 HUD_GetButtonFrame(&self->thumbsUpButtonAnimator, KEY_START);
             }
 
-            if (self->superButtonPos < 0x180000)
-                self->superButtonPos += 0x80000;
+            if (self->superButtonPos < TO_FIXED(24))
+                self->superButtonPos += TO_FIXED(8);
         }
         else {
-            if (self->superButtonPos > -0x400000)
-                self->superButtonPos -= 0x80000;
+            if (self->superButtonPos > -TO_FIXED(64))
+                self->superButtonPos -= TO_FIXED(8);
         }
     }
 #endif
@@ -82,27 +82,27 @@ void HUD_Draw(void)
     RSDK_THIS(HUD);
     EntityPlayer *player = RSDK_GET_ENTITY(SceneInfo->currentScreenID, Player);
 
-    Vector2 lifePos;
-    Vector2 scoreOffset, timeOffset, ringsOffset, lifeOffset;
+    Vector2 drawPos;
+    Vector2 scorePos, timePos, ringPos, lifePos;
 
-    scoreOffset.x = self->scoreOffset.x;
-    scoreOffset.y = self->scoreOffset.y;
-    timeOffset.x  = self->timeOffset.x;
-    timeOffset.y  = self->timeOffset.y;
-    ringsOffset.x = self->ringsOffset.x;
-    ringsOffset.y = self->ringsOffset.y;
-    lifeOffset.x  = self->lifeOffset.x;
-    lifeOffset.y  = self->lifeOffset.y;
+    scorePos.x = self->scoreOffset.x;
+    scorePos.y = self->scoreOffset.y;
+    timePos.x  = self->timeOffset.x;
+    timePos.y  = self->timeOffset.y;
+    ringPos.x = self->ringsOffset.x;
+    ringPos.y = self->ringsOffset.y;
+    lifePos.x  = self->lifeOffset.x;
+    lifePos.y  = self->lifeOffset.y;
     if (globals->gameMode == MODE_COMPETITION) {
 #if MANIA_USE_PLUS
-        scoreOffset.x = self->vsScoreOffsets[SceneInfo->currentScreenID].x;
-        scoreOffset.y = self->vsScoreOffsets[SceneInfo->currentScreenID].y;
-        timeOffset.x  = self->vsTimeOffsets[SceneInfo->currentScreenID].x;
-        timeOffset.y  = self->vsTimeOffsets[SceneInfo->currentScreenID].y;
-        ringsOffset.x = self->vsRingsOffsets[SceneInfo->currentScreenID].x;
-        ringsOffset.y = self->vsRingsOffsets[SceneInfo->currentScreenID].y;
-        lifeOffset.x  = self->vsLifeOffsets[SceneInfo->currentScreenID].x;
-        lifeOffset.y  = self->vsLifeOffsets[SceneInfo->currentScreenID].y;
+        scorePos.x = self->vsScoreOffsets[SceneInfo->currentScreenID].x;
+        scorePos.y = self->vsScoreOffsets[SceneInfo->currentScreenID].y;
+        timePos.x  = self->vsTimeOffsets[SceneInfo->currentScreenID].x;
+        timePos.y  = self->vsTimeOffsets[SceneInfo->currentScreenID].y;
+        ringPos.x = self->vsRingsOffsets[SceneInfo->currentScreenID].x;
+        ringPos.y = self->vsRingsOffsets[SceneInfo->currentScreenID].y;
+        lifePos.x  = self->vsLifeOffsets[SceneInfo->currentScreenID].x;
+        lifePos.y  = self->vsLifeOffsets[SceneInfo->currentScreenID].y;
 #endif
 
         foreach_active(Player, plr)
@@ -138,118 +138,118 @@ void HUD_Draw(void)
 
     // Draw "Score"
     self->hudElementsAnimator.frameID = 0;
-    RSDK.DrawSprite(&self->hudElementsAnimator, &scoreOffset, true);
+    RSDK.DrawSprite(&self->hudElementsAnimator, &scorePos, true);
 
     // Draw Score
-    lifePos.x = scoreOffset.x + 0x610000;
-    lifePos.y = scoreOffset.y + 0xE0000;
-    HUD_DrawNumbersBase10(&lifePos, player->score, 0);
+    drawPos.x = scorePos.x + TO_FIXED(97);
+    drawPos.y = scorePos.y + TO_FIXED(14);
+    HUD_DrawNumbersBase10(&drawPos, player->score, 0);
 
     // Draw "Time"
     self->hudElementsAnimator.frameID = self->timeFlashFrame + 1;
-    RSDK.DrawSprite(&self->hudElementsAnimator, &timeOffset, true);
+    RSDK.DrawSprite(&self->hudElementsAnimator, &timePos, true);
 
     if (!self->enableTimeFlash || Zone->persistentTimer & 8) {
         // Draw ":"
-        lifePos.x                         = timeOffset.x + 0x340000;
-        lifePos.y                         = timeOffset.y - 0x20000;
+        drawPos.x                         = timePos.x + TO_FIXED(52);
+        drawPos.y                         = timePos.y - TO_FIXED(2);
         self->hudElementsAnimator.frameID = 12;
-        RSDK.DrawSprite(&self->hudElementsAnimator, &lifePos, true);
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         // Draw Milliseconds
-        lifePos.x = timeOffset.x + 0x610000;
-        lifePos.y = timeOffset.y + 0xE0000;
-        HUD_DrawNumbersBase10(&lifePos, SceneInfo->milliseconds, 2);
+        drawPos.x = timePos.x + TO_FIXED(97);
+        drawPos.y = timePos.y + TO_FIXED(14);
+        HUD_DrawNumbersBase10(&drawPos, SceneInfo->milliseconds, 2);
 
         // Draw Seconds
-        lifePos.x -= 0x90000;
-        HUD_DrawNumbersBase10(&lifePos, SceneInfo->seconds, 2);
+        drawPos.x -= TO_FIXED(9);
+        HUD_DrawNumbersBase10(&drawPos, SceneInfo->seconds, 2);
 
         // Draw Minutes
-        lifePos.x -= 0x90000;
+        drawPos.x -= TO_FIXED(9);
 #if MANIA_USE_PLUS
         if (SceneInfo->minutes > 9 && globals->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER))
-            HUD_DrawNumbersBase10(&lifePos, SceneInfo->minutes, 2);
+            HUD_DrawNumbersBase10(&drawPos, SceneInfo->minutes, 2);
         else
 #endif
-            HUD_DrawNumbersBase10(&lifePos, SceneInfo->minutes, 1);
+            HUD_DrawNumbersBase10(&drawPos, SceneInfo->minutes, 1);
     }
 
     // Draw "Rings"
     self->hudElementsAnimator.frameID = self->ringFlashFrame + 3;
-    RSDK.DrawSprite(&self->hudElementsAnimator, &ringsOffset, true);
+    RSDK.DrawSprite(&self->hudElementsAnimator, &ringPos, true);
 
     if (!self->enableRingFlash || Zone->persistentTimer & 8) {
         // Draw Rings
-        lifePos.x = ringsOffset.x + 0x610000;
-        lifePos.y = ringsOffset.y + 0xE0000;
+        drawPos.x = ringPos.x + TO_FIXED(97);
+        drawPos.y = ringPos.y + TO_FIXED(14);
         if (player->hyperRing)
-            HUD_DrawNumbersHyperRing(&lifePos, player->rings);
+            HUD_DrawNumbersHyperRing(&drawPos, player->rings);
         else
-            HUD_DrawNumbersBase10(&lifePos, player->rings, 0);
+            HUD_DrawNumbersBase10(&drawPos, player->rings, 0);
     }
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->classID == DebugMode->classID) {
         if (player->camera) {
             // Draw Camera YPos
-            lifePos.x = (ScreenInfo[player->camera->screenID].size.x - 16) << 16;
-            lifePos.y = 0x180000;
-            HUD_DrawNumbersBase16(&lifePos, ScreenInfo[player->camera->screenID].position.y);
+            drawPos.x = TO_FIXED(ScreenInfo[player->camera->screenID].size.x - 16);
+            drawPos.y = TO_FIXED(24);
+            HUD_DrawNumbersBase16(&drawPos, ScreenInfo[player->camera->screenID].position.y);
 
             // Draw Camera XPos
-            lifePos.x -= 0x90000;
-            HUD_DrawNumbersBase16(&lifePos, ScreenInfo[player->camera->screenID].position.x);
+            drawPos.x -= TO_FIXED(9);
+            HUD_DrawNumbersBase16(&drawPos, ScreenInfo[player->camera->screenID].position.x);
 
             // Draw Player YPos
-            lifePos.x = (ScreenInfo[player->camera->screenID].size.x - 16) << 16;
-            lifePos.y += 0x100000;
-            HUD_DrawNumbersBase16(&lifePos, player->position.y >> 0x10);
+            drawPos.x = (ScreenInfo[player->camera->screenID].size.x - 16) << 16;
+            drawPos.y += TO_FIXED(16);
+            HUD_DrawNumbersBase16(&drawPos, player->position.y >> 0x10);
 
             // Draw Player XPos
-            lifePos.x -= 0x90000;
-            HUD_DrawNumbersBase16(&lifePos, player->position.x >> 0x10);
+            drawPos.x -= TO_FIXED(9);
+            HUD_DrawNumbersBase16(&drawPos, player->position.x >> 0x10);
         }
     }
 #if MANIA_USE_PLUS
-    else if (self->superButtonPos > -0x400000 && globals->gameMode == MODE_TIMEATTACK) {
-        lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].size.x << 16) - self->superButtonPos;
-        lifePos.y = 0x140000;
+    else if (self->superButtonPos > -TO_FIXED(64) && globals->gameMode == MODE_TIMEATTACK) {
+        drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->superButtonPos;
+        drawPos.y = TO_FIXED(20);
 
         if (API.CheckDLC(DLC_PLUS)) {
             // Draw Replay Save Icon
-            RSDK.DrawSprite(&self->replayClapAnimator, &lifePos, true);
+            RSDK.DrawSprite(&self->replayClapAnimator, &drawPos, true);
 
             // Draw Replay Save Button
-            lifePos.x -= 0x1C0000;
+            drawPos.x -= TO_FIXED(28);
             if (HUD->replaySaveEnabled) {
-                RSDK.DrawSprite(&self->saveReplayButtonAnimator, &lifePos, true);
+                RSDK.DrawSprite(&self->saveReplayButtonAnimator, &drawPos, true);
             }
             else {
                 self->inkEffect = INK_BLEND;
-                RSDK.DrawSprite(&self->saveReplayButtonAnimator, &lifePos, true);
+                RSDK.DrawSprite(&self->saveReplayButtonAnimator, &drawPos, true);
 
                 self->inkEffect = INK_NONE;
             }
 
-            lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].size.x << 16) - self->superButtonPos;
-            lifePos.y += 0x1C0000;
+            drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->superButtonPos;
+            drawPos.y += TO_FIXED(28);
         }
         // Draw Thumbs Up Icon
-        RSDK.DrawSprite(&self->thumbsUpIconAnimator, &lifePos, true);
+        RSDK.DrawSprite(&self->thumbsUpIconAnimator, &drawPos, true);
 
         // Draw Thumbs Up Button
-        lifePos.x -= 0x1C0000;
-        RSDK.DrawSprite(&self->thumbsUpButtonAnimator, &lifePos, true);
+        drawPos.x -= TO_FIXED(28);
+        RSDK.DrawSprite(&self->thumbsUpButtonAnimator, &drawPos, true);
     }
 #endif
 #if GAME_VERSION != VER_100
-    else if (self->superButtonPos > -0x200000) {
+    else if (self->superButtonPos > -TO_FIXED(32)) {
         // Draw Super Icon
-        lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].size.x << 16) - self->superButtonPos;
-        lifePos.y = 0x140000;
-        RSDK.DrawSprite(&self->superIconAnimator, &lifePos, true);
+        drawPos.x = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].size.x) - self->superButtonPos;
+        drawPos.y = TO_FIXED(20);
+        RSDK.DrawSprite(&self->superIconAnimator, &drawPos, true);
 
-        lifePos.x -= 0x140000;
+        drawPos.x -= TO_FIXED(20);
         bool32 canSuper = true;
 #if MANIA_USE_PLUS
         if (Player->canSuperCB)
@@ -257,11 +257,11 @@ void HUD_Draw(void)
 #endif
         // Draw Super Button
         if (player->state == Player_State_Air && player->jumpAbilityState == 1 && canSuper) {
-            RSDK.DrawSprite(&self->superButtonAnimator, &lifePos, true);
+            RSDK.DrawSprite(&self->superButtonAnimator, &drawPos, true);
         }
         else {
             self->inkEffect = INK_BLEND;
-            RSDK.DrawSprite(&self->superButtonAnimator, &lifePos, true);
+            RSDK.DrawSprite(&self->superButtonAnimator, &drawPos, true);
 
             self->inkEffect = INK_NONE;
         }
@@ -270,8 +270,8 @@ void HUD_Draw(void)
 
     // Draw Life Icon (aka the Leader Icon if in encore mode)
     int32 lifeIconFrame = -1;
-    lifePos.x           = lifeOffset.x;
-    lifePos.y           = lifeOffset.y;
+    drawPos.x           = lifePos.x;
+    drawPos.y           = lifePos.y;
     int32 charID        = player->characterID;
 #if MANIA_USE_PLUS
     int32 lives = self->lives[player->playerID];
@@ -294,7 +294,7 @@ void HUD_Draw(void)
         case ID_KNUCKLES: self->lifeIconAnimator.frameID = 2; break;
     }
 #endif
-    RSDK.DrawSprite(&self->lifeIconAnimator, &lifePos, true);
+    RSDK.DrawSprite(&self->lifeIconAnimator, &drawPos, true);
 
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
@@ -303,7 +303,7 @@ void HUD_Draw(void)
                 HUD->stockFlashTimers[p]--;
         }
 
-        lifePos.x += 0x140000;
+        drawPos.x += TO_FIXED(20);
         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (sidekick->classID) {
             // Draw Buddy Icon
@@ -311,19 +311,19 @@ void HUD_Draw(void)
             if (self->lifeIconAnimator.frameID >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
                 if ((sidekick->state != Player_State_Death && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
                     || !sidekick->abilityValues[0]) {
-                    RSDK.DrawSprite(&self->lifeIconAnimator, &lifePos, true);
+                    RSDK.DrawSprite(&self->lifeIconAnimator, &drawPos, true);
                 }
             }
 
             // Draw Stock Icons
-            lifePos.x += 0x140000;
+            drawPos.x += TO_FIXED(20);
             RSDK.SetSpriteAnimation(HUD->aniFrames, 12, &self->lifeIconAnimator, true, 0);
             for (int32 i = 1; i < 4; ++i) {
                 self->lifeIconAnimator.frameID = HUD_CharacterIndexFromID(GET_STOCK_ID(i));
                 if (self->lifeIconAnimator.frameID >= 0 && !(HUD->stockFlashTimers[i] & 4))
-                    RSDK.DrawSprite(&self->lifeIconAnimator, &lifePos, true);
+                    RSDK.DrawSprite(&self->lifeIconAnimator, &drawPos, true);
 
-                lifePos.x += 0x100000;
+                drawPos.x += TO_FIXED(16);
             }
 
             RSDK.SetSpriteAnimation(HUD->aniFrames, 2, &self->lifeIconAnimator, true, 0);
@@ -332,24 +332,24 @@ void HUD_Draw(void)
     else {
         // Draw Life Icon "X"
         self->hudElementsAnimator.frameID = 14;
-        RSDK.DrawSprite(&self->hudElementsAnimator, &lifePos, true);
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         // Draw Lives
-        lifePos.x += 0x300000;
+        drawPos.x += TO_FIXED(48);
         if (player->lives < 10)
-            lifePos.x -= 0x80000;
-        HUD_DrawNumbersBase10(&lifePos, lives, 0);
+            drawPos.x -= TO_FIXED(8);
+        HUD_DrawNumbersBase10(&drawPos, lives, 0);
     }
 #else
     // Draw Life Icon "X"
     self->hudElementsAnimator.frameID = 14;
-    RSDK.DrawSprite(&self->hudElementsAnimator, &lifePos, true);
+    RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
     // Draw Lives
-    lifePos.x += 0x300000;
+    drawPos.x += TO_FIXED(48);
     if (player->lives < 10)
-        lifePos.x -= 0x80000;
-    HUD_DrawNumbersBase10(&lifePos, player->lives, 0);
+        drawPos.x -= TO_FIXED(8);
+    HUD_DrawNumbersBase10(&drawPos, player->lives, 0);
 #endif
 
     if (globals->gameMode == MODE_COMPETITION) {
@@ -429,16 +429,16 @@ void HUD_Create(void *data)
         self->visible   = true;
         self->drawGroup = Zone->huddrawGroup;
 
-        self->scoreOffset.x = 0x100000;
-        self->scoreOffset.y = 0xC0000;
-        self->timeOffset.x  = 0x100000;
-        self->timeOffset.y  = 0x1C0000;
-        self->ringsOffset.x = 0x100000;
-        self->ringsOffset.y = 0x2C0000;
-        self->lifeOffset.x  = 0x100000;
-        self->lifeOffset.y  = (ScreenInfo->size.y - 12) << 16;
+        self->scoreOffset.x = TO_FIXED(16);
+        self->scoreOffset.y = TO_FIXED(12);
+        self->timeOffset.x  = TO_FIXED(16);
+        self->timeOffset.y  = TO_FIXED(28);
+        self->ringsOffset.x = TO_FIXED(16);
+        self->ringsOffset.y = TO_FIXED(44);
+        self->lifeOffset.x  = TO_FIXED(16);
+        self->lifeOffset.y  = TO_FIXED(ScreenInfo->size.y - 12);
 #if GAME_VERSION != VER_100
-        self->superButtonPos = -0x200000;
+        self->superButtonPos = -TO_FIXED(32);
 #endif
 
 #if MANIA_USE_PLUS
@@ -521,7 +521,7 @@ void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 digitCount)
         self->numbersAnimator.frameID = value / digit % 10;
         RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
         digit *= 10;
-        drawPos->x -= 0x80000;
+        drawPos->x -= TO_FIXED(8);
     }
 }
 
@@ -533,7 +533,7 @@ void HUD_DrawNumbersBase16(Vector2 *drawPos, int32 value)
     for (int32 i = 4; i; --i) {
         self->numbersAnimator.frameID = value / mult & 0xF;
         RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
-        drawPos->x -= 0x80000;
+        drawPos->x -= TO_FIXED(8);
         mult *= 16;
     }
 }
@@ -560,14 +560,14 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value)
         while (cnt--) {
             self->hyperNumbersAnimator.frameID = value / mult % 10;
             RSDK.DrawSprite(&self->hyperNumbersAnimator, drawPos, true);
-            drawPos->x -= 0x80000;
+            drawPos->x -= TO_FIXED(8);
             mult = 10 * mult2;
             mult2 *= 10;
         }
     }
 
     self->hyperNumbersAnimator.frameID = 10;
-    drawPos->x -= 0x40000;
+    drawPos->x -= TO_FIXED(4);
     RSDK.DrawSprite(&self->hyperNumbersAnimator, drawPos, true);
 }
 
@@ -621,6 +621,7 @@ void HUD_GetActionButtonFrames(void)
 void HUD_State_MoveIn(void)
 {
     RSDK_THIS(HUD);
+
 #if MANIA_USE_PLUS
     void **state         = NULL;
     Vector2 *scoreOffset = NULL, *timeOffset = NULL, *ringsOffset = NULL, *lifeOffset = NULL;
@@ -644,30 +645,30 @@ void HUD_State_MoveIn(void)
     }
 
     if (scoreOffset->x < *max)
-        scoreOffset->x += 0x80000;
+        scoreOffset->x += TO_FIXED(8);
 
     if (timeOffset->x < *max)
-        timeOffset->x += 0x80000;
+        timeOffset->x += TO_FIXED(8);
 
     if (ringsOffset->x < *max)
-        ringsOffset->x += 0x80000;
+        ringsOffset->x += TO_FIXED(8);
 
     if (lifeOffset->x < *max)
-        lifeOffset->x += 0x80000;
+        lifeOffset->x += TO_FIXED(8);
     else
         *state = StateMachine_None;
 #else
     if (self->scoreOffset.x < self->maxOffset)
-        self->scoreOffset.x += 0x80000;
+        self->scoreOffset.x += TO_FIXED(8);
 
     if (self->timeOffset.x < self->maxOffset)
-        self->timeOffset.x += 0x80000;
+        self->timeOffset.x += TO_FIXED(8);
 
     if (self->ringsOffset.x < self->maxOffset)
-        self->ringsOffset.x += 0x80000;
+        self->ringsOffset.x += TO_FIXED(8);
 
     if (self->lifeOffset.x < self->maxOffset)
-        self->lifeOffset.x += 0x80000;
+        self->lifeOffset.x += TO_FIXED(8);
     else
         self->state = StateMachine_None;
 #endif
@@ -696,17 +697,18 @@ void HUD_State_MoveOut(void)
         lifeOffset  = &self->lifeOffset;
     }
 
-    scoreOffset->x -= 0x80000;
-    if (timeOffset->x - scoreOffset->x > 0x100000)
-        timeOffset->x -= 0x80000;
+    scoreOffset->x -= TO_FIXED(8);
 
-    if (ringsOffset->x - timeOffset->x > 0x100000)
-        ringsOffset->x -= 0x80000;
+    if (timeOffset->x - scoreOffset->x > TO_FIXED(16))
+        timeOffset->x -= TO_FIXED(8);
 
-    if (lifeOffset->x - ringsOffset->x > 0x100000)
-        lifeOffset->x -= 0x80000;
+    if (ringsOffset->x - timeOffset->x > TO_FIXED(16))
+        ringsOffset->x -= TO_FIXED(8);
 
-    if (lifeOffset->x < -0x500000) {
+    if (lifeOffset->x - ringsOffset->x > TO_FIXED(16))
+        lifeOffset->x -= TO_FIXED(8);
+
+    if (lifeOffset->x < -TO_FIXED(80)) {
         if (globals->gameMode == MODE_COMPETITION) {
             *statePtr = StateMachine_None;
             CompSession_DeriveWinner(self->screenID, FINISHTYPE_GAMEOVER);
@@ -729,28 +731,28 @@ void HUD_State_MoveOut(void)
         }
     }
 #else
-    self->scoreOffset.x -= 0x80000;
+    self->scoreOffset.x -= TO_FIXED(8);
 
-    if (self->timeOffset.x - self->scoreOffset.x > 0x100000)
-        self->timeOffset.x -= 0x80000;
+    if (self->timeOffset.x - self->scoreOffset.x > TO_FIXED(16))
+        self->timeOffset.x -= TO_FIXED(8);
 
-    if (self->ringsOffset.x - self->timeOffset.x > 0x100000)
-        self->ringsOffset.x -= 0x80000;
+    if (self->ringsOffset.x - self->timeOffset.x > TO_FIXED(16))
+        self->ringsOffset.x -= TO_FIXED(8);
 
-    if (self->lifeOffset.x - self->ringsOffset.x > 0x100000)
-        self->lifeOffset.x -= 0x80000;
+    if (self->lifeOffset.x - self->ringsOffset.x > TO_FIXED(16))
+        self->lifeOffset.x -= TO_FIXED(8);
 
-    if (self->lifeOffset.x < -0x400000)
+    if (self->lifeOffset.x < -TO_FIXED(64))
         destroyEntity(self);
 #endif
 }
 
 void HUD_MoveIn(EntityHUD* hud) {
     hud->maxOffset = hud->scoreOffset.x;
-    hud->scoreOffset.x -= 0x1000000;
-    hud->timeOffset.x -= 0x1100000;
-    hud->ringsOffset.x -= 0x1200000;
-    hud->lifeOffset.x -= 0x1300000;
+    hud->scoreOffset.x -= TO_FIXED(0x100);
+    hud->timeOffset.x -= TO_FIXED(0x110);
+    hud->ringsOffset.x -= TO_FIXED(0x120);
+    hud->lifeOffset.x -= TO_FIXED(0x130);
     hud->state = HUD_State_MoveIn;
 }
 
