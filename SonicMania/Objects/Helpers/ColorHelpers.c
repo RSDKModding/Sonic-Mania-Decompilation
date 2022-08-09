@@ -43,7 +43,7 @@ void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *sa
     uint8 min = MIN(MIN(r, g), b);
     uint8 max = MAX(MAX(r, g), b);
 
-    uint8 chroma = max - min;
+    int32 chroma = max - min;
     if (max) {
         if (max == min) {
             if (hue)
