@@ -95,7 +95,7 @@ void WeatherMobile_Create(void *data)
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            self->type          = voidToInt(data);
+            self->type          = VOID_TO_INT(data);
 
             switch (self->type) {
                 case WEATHERMOBILE_EGGMAN:
@@ -274,7 +274,7 @@ void WeatherMobile_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -652,7 +652,7 @@ void WeatherMobile_StateWindManager_SetupWind(void)
         for (int32 i = 0; i < 4; ++i) {
             int32 x                    = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
             int32 y                    = self->position.y + 0xD00000;
-            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND), x, y);
+            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_WIND), x, y);
 
             if (child->mainAnimator.animationID == 13)
                 child->velocity.y = self->velocity.y;
@@ -686,7 +686,7 @@ void WeatherMobile_StateWindManager_StrongWind(void)
         for (int32 i = 0; i < 4; ++i) {
             int32 x                    = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
             int32 y                    = self->position.y + 0xD00000;
-            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND), x, y);
+            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_WIND), x, y);
 
             if (child->mainAnimator.animationID == 13)
                 child->velocity.y = self->velocity.y;
@@ -722,7 +722,7 @@ void WeatherMobile_StateWindManager_FinishWind(void)
         for (int32 i = 0; i < 4; ++i) {
             int32 x                    = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
             int32 y                    = self->position.y + 0xD00000;
-            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND), x, y);
+            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_WIND), x, y);
 
             if (child->mainAnimator.animationID == 13)
                 child->velocity.y = self->velocity.y;
@@ -762,7 +762,7 @@ void WeatherMobile_State_RainManager(void)
         for (int32 i = 0; i < 4; ++i) {
             int32 x                    = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
             int32 y                    = self->position.y - 0x800000;
-            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_RAIN), x, y);
+            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_RAIN), x, y);
             child->angle               = self->angle;
             child->rotation            = -2 * self->angle;
         }
@@ -770,7 +770,7 @@ void WeatherMobile_State_RainManager(void)
 
     if (!(self->timer % 112)) {
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_CLOUD), RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x,
+        CREATE_ENTITY(WeatherMobile, INT_TO_VOID(WEATHERMOBILE_CLOUD), RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x,
                       WeatherMobile->boundsB - 0x480000);
     }
 
@@ -855,7 +855,7 @@ void WeatherMobile_StateCloud_Strike(void)
     self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 9);
 
     if (++self->timer == 4) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;
         fxFade->speedOut     = 256;
     }
@@ -1001,7 +1001,7 @@ void WeatherMobile_State_Flee(void)
     self->origin.y -= 0x4000;
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.ResetEntity(self, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
+        RSDK.ResetEntity(self, EggPrison->classID, INT_TO_VOID(EGGPRISON_FLYING));
         self->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         self->position.y = (ScreenInfo->position.y - 48) << 16;
     }

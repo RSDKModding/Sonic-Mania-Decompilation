@@ -243,12 +243,12 @@ bool32 UISlider_TouchCB(void)
                     touchPressed           = true;
                     UISlider->activeEntity = (Entity *)self;
 
-                    self->sliderPosTouch = maxVal(x + sizeX - self->position.x - self->touchPosOffsetS.x, 0x70000);
+                    self->sliderPosTouch = MAX(x + sizeX - self->position.x - self->touchPosOffsetS.x, 0x70000);
                     if (self->touchPosSizeS.x - 0x70000 < self->sliderPosTouch)
                         self->sliderPosTouch = self->touchPosSizeS.x - 0x70000;
 
                     int32 sliderPos = 16
-                                      * (minVal(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosSizeS.x - 0xE0000) + 2, UISLIDER_MAX)
+                                      * (MIN(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosSizeS.x - 0xE0000) + 2, UISLIDER_MAX)
                                          & -(UISLIDER_INCREMENT / 0x10));
                     if (sliderPos != self->sliderPos) {
                         self->sliderPos = sliderPos;

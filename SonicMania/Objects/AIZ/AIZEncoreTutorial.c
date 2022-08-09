@@ -65,7 +65,7 @@ void AIZEncoreTutorial_Create(void *data)
 
         RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 7, &self->bubbleAnimator, true, 0);
         RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 4, &self->playerAnimator, true, 0);
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, voidToInt(data), &self->buddyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, VOID_TO_INT(data), &self->buddyAnimator, true, 0);
         RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 8, &self->buttonPressAnimator, true, 0);
     }
 }

@@ -22,7 +22,7 @@ void SpinBooster_Update(void)
         Vector2 pivotPos = player->position;
         Zone_RotateOnPivot(&pivotPos, &self->position, negAngle);
 
-        if (abs(pivotPos.x - self->position.x) < 0x180000 && abs(pivotPos.y - self->position.y) < self->size << 19) {
+        if (abs(pivotPos.x - self->position.x) < TO_FIXED(24) && abs(pivotPos.y - self->position.y) < self->size << 19) {
             if (pivotPos.x >= self->position.x) {
                 if (!(playerID & self->activePlayers)) {
                     SpinBooster_HandleForceRoll(player);
@@ -79,7 +79,7 @@ void SpinBooster_Create(void *data)
     }
     else {
         switch (self->direction) {
-            case FLIP_NONE: self->angle = 0; break;
+            case FLIP_NONE: self->angle = 0x00; break;
             case FLIP_X: self->angle = 0x40; break;
             case FLIP_Y: self->angle = 0x80; break;
             case FLIP_XY: self->angle = 0xC0; break;
@@ -483,8 +483,8 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
 
         player->state = player->onGround ? Player_State_TubeRoll : Player_State_TubeAirRoll;
 
-        if (abs(player->groundVel) < 0x10000)
-            player->groundVel = (self->direction & FLIP_X) ? -0x40000 : 0x40000;
+        if (abs(player->groundVel) < TO_FIXED(1))
+            player->groundVel = (self->direction & FLIP_X) ? -TO_FIXED(4) : TO_FIXED(4);
 
         SpinBooster_ApplyRollVelocity(player);
     }
@@ -504,8 +504,8 @@ void SpinBooster_EditorLoad(void)
     RSDK_ENUM_VAR("Flip XY", FLIP_XY);
 
     RSDK_ACTIVE_VAR(SpinBooster, bias);
-    RSDK_ENUM_VAR("No Bias", 0);
-    RSDK_ENUM_VAR("Has Bias", 1);
+    RSDK_ENUM_VAR("No Bias", false);
+    RSDK_ENUM_VAR("Has Bias", true);
 }
 #endif
 

@@ -57,7 +57,7 @@ void Iwamodoki_Create(void *data)
 
     if (data) {
         self->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, voidToInt(data) + 2, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, VOID_TO_INT(data) + 2, &self->animator, true, 0);
         self->state = Iwamodoki_State_Debris;
     }
     else {
@@ -208,24 +208,24 @@ void Iwamodoki_State_Explode(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (!--self->timer) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
         if (self->onScreen == 1)
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
-        EntityIwamodoki *debris = CREATE_ENTITY(Iwamodoki, intToVoid(1), self->position.x, self->position.y);
+        EntityIwamodoki *debris = CREATE_ENTITY(Iwamodoki, INT_TO_VOID(1), self->position.x, self->position.y);
         debris->velocity.x      = -0x20000;
         debris->velocity.y      = -0x40000;
 
-        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(1), self->position.x, self->position.y);
+        debris             = CREATE_ENTITY(Iwamodoki, INT_TO_VOID(1), self->position.x, self->position.y);
         debris->velocity.x = 0x20000;
         debris->velocity.y = -0x40000;
 
-        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(2), self->position.x, self->position.y);
+        debris             = CREATE_ENTITY(Iwamodoki, INT_TO_VOID(2), self->position.x, self->position.y);
         debris->velocity.x = -0x40000;
         debris->velocity.y = -0x20000;
 
-        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(2), self->position.x, self->position.y);
+        debris             = CREATE_ENTITY(Iwamodoki, INT_TO_VOID(2), self->position.x, self->position.y);
         debris->velocity.x = 0x40000;
         debris->velocity.y = -0x20000;
 

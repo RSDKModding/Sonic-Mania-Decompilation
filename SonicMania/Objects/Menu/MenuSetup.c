@@ -800,7 +800,7 @@ void MenuSetup_HandleUnlocks(void)
 
         if (vsRoundPicker->classID == UIVsRoundPicker->classID) {
             vsRoundPicker->maxVal = maxRounds;
-            vsRoundPicker->val    = minVal(vsRoundPicker->val, maxRounds);
+            vsRoundPicker->val    = MIN(vsRoundPicker->val, maxRounds);
         }
     }
 
@@ -1100,7 +1100,7 @@ void MenuSetup_State_HandleTransition(void)
 {
     RSDK_THIS(MenuSetup);
 
-    self->fadeTimer = clampVal(self->timer << ((self->fadeShift & 0xFF) - 1), 0, 512);
+    self->fadeTimer = CLAMP(self->timer << ((self->fadeShift & 0xFF) - 1), 0, 512);
 }
 
 // Save Select

@@ -43,7 +43,7 @@ void UFO_Message_Create(void *data)
         self->drawGroup = 12;
         self->state     = UFO_Message_State_Appear;
 
-        int32 type = voidToInt(data);
+        int32 type = VOID_TO_INT(data);
         RSDK.SetSpriteAnimation(UFO_Message->aniFrames, 4, &self->leftAnimator, true, 2 * type);
         RSDK.SetSpriteAnimation(UFO_Message->aniFrames, 4, &self->rightAnimator, true, 2 * type + 1);
         self->timer = 320;

@@ -61,7 +61,7 @@ void ScrewMobile_Create(void *data)
             self->visible = true;
 
             if (data) {
-                switch (voidToInt(data)) {
+                switch (VOID_TO_INT(data)) {
                     default: break;
 
                     case 1:
@@ -366,7 +366,7 @@ void ScrewMobile_State_PlayerRiding(void)
     if (self->rackAnimator.frameID == 2 && !self->timer) {
         self->timer = 60;
 
-        EntityScrewMobile *bomb = CREATE_ENTITY(ScrewMobile, intToVoid(SCREWMOBILE_BOMB), self->position.x, self->position.y + 0x130000);
+        EntityScrewMobile *bomb = CREATE_ENTITY(ScrewMobile, INT_TO_VOID(SCREWMOBILE_BOMB), self->position.x, self->position.y + 0x130000);
         if (self->direction)
             bomb->position.x -= 0x350000;
         else
@@ -561,7 +561,7 @@ void ScrewMobile_StateDepthCharge_Active(void)
         if (self->whirlpoolHeight == 0x3800 && self->position.y >= Water->waterLevel) {
             self->velocity.y      = self->velocity.y >> 2;
             self->whirlpoolHeight = 0;
-            CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
+            CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, Water->waterLevel);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
         }
 
@@ -572,10 +572,10 @@ void ScrewMobile_StateDepthCharge_Active(void)
             if (eggman->state == DiveEggman_StateBomb_Idle || eggman->state == DiveEggman_StateBomb_InWhirlpool
                 || eggman->state == DiveEggman_StateBomb_WhirlpoolRise || eggman->state == DiveEggman_StateBomb_Falling) {
                 if (RSDK.CheckObjectCollisionTouchBox(self, &ScrewMobile->hitboxDepthCharge, eggman, &DiveEggman->hitboxBomb)) {
-                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), eggman->position.x, eggman->position.y)->drawGroup = Zone->objectDrawHigh;
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), eggman->position.x, eggman->position.y)->drawGroup = Zone->objectDrawHigh;
                     RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
 
-                    EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), eggman->position.x, eggman->position.y);
+                    EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), eggman->position.x, eggman->position.y);
                     water->velocity.y  = -0x8800;
                     water->angle       = 2 * RSDK.Rand(0, 256);
                     water->bubbleX     = water->position.x;

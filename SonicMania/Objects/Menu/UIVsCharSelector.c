@@ -56,8 +56,8 @@ void UIVsCharSelector_Update(void)
         }
     }
 
-    self->triBounceOffset    = minVal(self->triBounceOffset, 0x13600);
-    self->playerBounceOffset = minVal(self->playerBounceOffset, 0x11800);
+    self->triBounceOffset    = MIN(self->triBounceOffset, 0x13600);
+    self->playerBounceOffset = MIN(self->playerBounceOffset, 0x11800);
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if ((

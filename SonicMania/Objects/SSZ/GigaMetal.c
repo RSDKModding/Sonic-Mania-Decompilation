@@ -77,7 +77,7 @@ void GigaMetal_Create(void *data)
             int32 slot          = RSDK.GetEntitySlot(self);
 
             if (data)
-                self->aniID = voidToInt(data);
+                self->aniID = VOID_TO_INT(data);
 
             switch (self->aniID) {
                 case GIGAMETAL_HEAD:
@@ -278,7 +278,7 @@ void GigaMetal_Draw_Shoulder(void)
     self->position.x = self->body->position.x + self->componentPos.x;
     self->position.y = self->body->position.y + self->componentPos.y;
 
-    self->position.x = minVal(3 * (self->position.x >> 2) + ((self->frontArm->position.x - 0xC0000) >> 2), self->position.x);
+    self->position.x = MIN(3 * (self->position.x >> 2) + ((self->frontArm->position.x - 0xC0000) >> 2), self->position.x);
 
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
@@ -679,7 +679,7 @@ void GigaMetal_StateBody_Marching(void)
             uint16 tile = RSDK.GetTile(Zone->fgHigh, tileX, endY);
 
             if (tile != (uint16)-1) {
-                EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
+                EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
                 block->drawGroup           = Zone->objectDrawHigh;
                 block->targetLayer             = Zone->fgHigh;
                 block->tileInfo            = tile;
@@ -689,7 +689,7 @@ void GigaMetal_StateBody_Marching(void)
                 block->active              = ACTIVE_NORMAL;
 
                 if (tileX > 224) {
-                    block                = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) - 0xDF80000, spawnY);
+                    block                = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_DYNAMIC), (tileX << 20) - 0xDF80000, spawnY);
                     block->drawGroup     = Zone->objectDrawHigh;
                     block->targetLayer       = Zone->fgHigh;
                     block->tileInfo      = tile;
@@ -735,7 +735,7 @@ void GigaMetal_StateBody_Destroyed(void)
     if (!(Zone->timer & 7)) {
         int32 x = self->position.x + RSDK.Rand(-0x600000, 0x600000);
         int32 y = self->position.y + RSDK.Rand(-0x600000, 0x600000);
-        CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
     }
 
     if (!(Zone->timer % 6))
@@ -774,10 +774,10 @@ void GigaMetal_StateBody_Destroyed(void)
         for (int32 i = 0; i < 0x40; ++i) {
             int32 x = metal->position.x + RSDK.Rand(-0x600000, 0x400000);
             int32 y = metal->position.y + RSDK.Rand(-0x600000, 0x600000);
-            CREATE_ENTITY(GigaMetal, intToVoid(GIGAMETAL_SHARD), x, y);
+            CREATE_ENTITY(GigaMetal, INT_TO_VOID(GIGAMETAL_SHARD), x, y);
         }
 
-        EntityFXFade *fxFade  = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade  = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn       = 256;
         fxFade->speedOut      = 64;
         Zone->autoScrollSpeed = 0;
@@ -800,7 +800,7 @@ void GigaMetal_StateBody_Destroyed(void)
 
                 if (tile != (uint16)-1) {
                     RSDK.SetTile(Zone->fgHigh, tileX, tileY, -1);
-                    EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
+                    EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     block->drawGroup           = Zone->objectDrawHigh;
                     block->visible             = true;
                     block->tileInfo            = tile;
@@ -996,7 +996,7 @@ void GigaMetal_StateHead_ChargeLaser(void)
     if (++self->timer == 120) {
         self->timer                                                                                        = 0;
         self->state                                                                                        = GigaMetal_StateHead_FiringLaser;
-        CREATE_ENTITY(GigaMetal, intToVoid(GIGAMETAL_LASEREDGE), self->position.x, self->position.y)->body = self;
+        CREATE_ENTITY(GigaMetal, INT_TO_VOID(GIGAMETAL_LASEREDGE), self->position.x, self->position.y)->body = self;
         RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 255);
     }
 }

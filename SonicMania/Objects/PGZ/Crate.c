@@ -76,7 +76,7 @@ void Crate_Break(EntityCrate *create)
         // ice is used to create a shattering effect
         int32 x        = create->position.x + (RSDK.Rand(-24, 25) << 16);
         int32 y        = create->position.y + (RSDK.Rand(-24, 25) << 16);
-        EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), x, y);
+        EntityIce *ice = CREATE_ENTITY(Ice, INT_TO_VOID(ICE_CHILD_SHARD), x, y);
 
         ice->velocity.x          = RSDK.Rand(-6, 8) << 15;
         ice->velocity.y          = RSDK.Rand(-10, 2) << 15;

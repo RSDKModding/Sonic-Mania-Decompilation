@@ -198,7 +198,7 @@ void UIPopover_SetupButtonPositions(void)
     int32 posX    = self->position.x;
     int32 offsetY = offsets[self->buttonCount] << 16;
 
-    int32 posY = self->position.y - ((offsetY * maxVal(self->buttonCount - 1, 0)) >> 1);
+    int32 posY = self->position.y - ((offsetY * MAX(self->buttonCount - 1, 0)) >> 1);
     for (int32 b = 0; b < UIPOPOVER_OPTION_COUNT; ++b) {
         if (!self->buttons[b])
             break;

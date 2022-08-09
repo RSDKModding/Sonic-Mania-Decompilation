@@ -13,7 +13,7 @@ void ScoreBonus_Update(void)
 {
     RSDK_THIS(ScoreBonus);
 
-    self->position.y -= 0x20000;
+    self->position.y -= TO_FIXED(2);
 
     if (!--self->timer)
         destroyEntity(self);

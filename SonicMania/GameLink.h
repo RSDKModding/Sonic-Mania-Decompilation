@@ -72,20 +72,23 @@ typedef uint32 color;
 // MACROS
 // -------------------------
 
-#define minVal(a, b)                      ((a) < (b) ? (a) : (b))
-#define maxVal(a, b)                      ((a) > (b) ? (a) : (b))
-#define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
-#define fabs(a)                           ((a) > 0 ? (a) : -(a))
+#define MIN(a, b)                      ((a) < (b) ? (a) : (b))
+#define MAX(a, b)                      ((a) > (b) ? (a) : (b))
+#define CLAMP(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
+#define FABS(a)                        ((a) > 0 ? (a) : -(a))
 
-#define setBit(value, set, pos) ((value) ^= (-(int32)(set) ^ (value)) & (1 << (pos)))
-#define getBit(b, pos)          ((b) >> (pos)&1)
+#define SET_BIT(value, set, pos) ((value) ^= (-(int32)(set) ^ (value)) & (1 << (pos)))
+#define GET_BIT(b, pos)          ((b) >> (pos)&1)
 
-#define intToVoid(x)   (void *)(size_t)(x)
-#define floatToVoid(x) intToVoid(*(int32 *)&(x))
-#define voidToInt(x)   (int32)(size_t)(x)
-#define voidToFloat(x) *(float *)&(x)
+#define INT_TO_VOID(x)   (void *)(size_t)(x)
+#define FLOAT_TO_VOID(x) INT_TO_VOID(*(int32 *)&(x))
+#define VOID_TO_INT(x)   (int32)(size_t)(x)
+#define VOID_TO_FLOAT(x) *(float *)&(x)
 
-#define unused(x) (void)x
+#define UNUSED(x) (void)x
+
+#define TO_FIXED(x)   ((x) << 16)
+#define FROM_FIXED(x) ((x) >> 16)
 
 // -------------------------
 // STRUCTS
@@ -1817,8 +1820,8 @@ typedef struct {
 #define INIT_ENTITY(entity)                                                                                                                          \
     (entity)->active        = ACTIVE_BOUNDS;                                                                                                         \
     (entity)->visible       = false;                                                                                                                 \
-    (entity)->updateRange.x = 0x800000;                                                                                                              \
-    (entity)->updateRange.y = 0x800000;
+    (entity)->updateRange.x = TO_FIXED(128);                                                                                                         \
+    (entity)->updateRange.y = TO_FIXED(128);
 
 #define foreach_active(type, entityOut)                                                                                                              \
     Entity##type *entityOut = NULL;                                                                                                                  \

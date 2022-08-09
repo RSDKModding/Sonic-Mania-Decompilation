@@ -71,7 +71,7 @@ void SSZ2Setup_StageLoad(void)
             Zone_StartFadeIn(10, 0x000000);
         }
 
-        CREATE_ENTITY(SSZ3Cutscene, intToVoid(false), 0, 0);
+        CREATE_ENTITY(SSZ3Cutscene, INT_TO_VOID(false), 0, 0);
 
 #if MANIA_USE_PLUS
         Zone->stageFinishCallback = SSZ2Setup_StageFinish_EndAct2;
@@ -89,7 +89,7 @@ void SSZ2Setup_StageLoad(void)
 }
 
 #if MANIA_USE_PLUS
-void SSZ2Setup_StageFinish_EndAct2(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
+void SSZ2Setup_StageFinish_EndAct2(void) { CREATE_ENTITY(SSZ3Cutscene, INT_TO_VOID(true), 0, 0); }
 #endif
 
 void SSZ2Setup_DrawHook_PrepareDrawingFX(void)

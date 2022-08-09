@@ -35,7 +35,7 @@ void UberCaterkiller_Draw(void)
 
         // Draw Head
         if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->size.y);
+            ScreenInfo->clipBound_Y2 = MIN(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->size.y);
             self->scale.x            = self->bodyScales[0];
             self->scale.y            = self->bodyScales[0];
             RSDK.DrawSprite(self->bodyAnimators[0], self->bodyPositions, false);
@@ -46,7 +46,7 @@ void UberCaterkiller_Draw(void)
         // Draw Body Segments
         self->direction ^= FLIP_X;
         for (int32 i = 1; i < UBERCATERKILLER_SEGMENT_COUNT; ++i) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->size.y);
+            ScreenInfo->clipBound_Y2 = MIN(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->size.y);
 
             self->rotation = (2 * self->bodyAngles[i] - 15) & 0x1E;
             if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
@@ -65,7 +65,7 @@ void UberCaterkiller_Draw(void)
 
         // Draw Body Segments
         for (int32 i = UBERCATERKILLER_SEGMENT_COUNT - 1; i > 0; --i) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->size.y);
+            ScreenInfo->clipBound_Y2 = MIN(((self->bodyScales[i] - 0x100) >> 1) + 160, ScreenInfo->size.y);
             self->rotation           = (2 * self->bodyAngles[i] - 15) & 0x1E;
             if (self->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
                 self->scale.x              = self->bodyScales[i];
@@ -83,7 +83,7 @@ void UberCaterkiller_Draw(void)
 
         // Draw Head
         if (self->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == self->drawGroup)) {
-            ScreenInfo->clipBound_Y2 = minVal(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->size.y);
+            ScreenInfo->clipBound_Y2 = MIN(((self->bodyScales[0] - 0x100) >> 1) + 160, ScreenInfo->size.y);
             self->scale.x            = self->bodyScales[0];
             self->scale.y            = self->bodyScales[0];
             RSDK.DrawSprite(self->bodyAnimators[0], &self->bodyPositions[0], false);
@@ -146,7 +146,7 @@ void UberCaterkiller_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
 
-    CREATE_ENTITY(UberCaterkiller, intToVoid(-0x20000), self->position.x, self->position.y);
+    CREATE_ENTITY(UberCaterkiller, INT_TO_VOID(-0x20000), self->position.x, self->position.y);
 }
 
 void UberCaterkiller_DebugDraw(void)
@@ -249,7 +249,7 @@ void UberCaterkiller_Explode(void)
         if (!(Zone->timer & 7)) {
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
@@ -261,7 +261,7 @@ void UberCaterkiller_HandleSegmentMoveFX(int32 segmentID)
 
     if (self->bodyVelocity[segmentID].y >= 0) {
         if (self->bodyInAir[segmentID]) {
-            int32 targetY = minVal(((self->bodyScales[segmentID] - 0x100) >> 1) + 0xA0, 0x100);
+            int32 targetY = MIN(((self->bodyScales[segmentID] - 0x100) >> 1) + 0xA0, 0x100);
 
             if ((self->bodyPositions[segmentID].y >> 16) - ScreenInfo->position.y > targetY) {
                 RSDK.PlaySfx(UberCaterkiller->sfxSandSwim, false, 0xFF);
@@ -281,7 +281,7 @@ void UberCaterkiller_HandleSegmentMoveFX(int32 segmentID)
         }
     }
     else if (!self->bodyInAir[segmentID]) {
-        int32 targetY = minVal(((self->bodyScales[segmentID] - 0x100) >> 1) + 0xA0, 0x100);
+        int32 targetY = MIN(((self->bodyScales[segmentID] - 0x100) >> 1) + 0xA0, 0x100);
 
         if ((self->bodyPositions[segmentID].y >> 16) - ScreenInfo->position.y < targetY) {
             RSDK.PlaySfx(UberCaterkiller->sfxSandSwim, false, 0xFF);
@@ -676,7 +676,7 @@ void UberCaterkiller_State_Destroyed(void)
     self->position.x -= 0x10000;
 
     if (--self->timer <= 0) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;
         fxFade->speedOut     = 32;
 

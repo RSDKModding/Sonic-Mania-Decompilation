@@ -42,12 +42,12 @@ void ParallaxSprite_Draw(void)
         drawPos.y += self->loopPoint.y;
 
     if (self->attribute == PARALLAXSPRITE_ATTR_COLORS) {
-        int32 y = (drawPos.y >> 16) - 32;
-        int32 x = (drawPos.x >> 16) - 56;
+        int32 x = FROM_FIXED(drawPos.x) - 56;
+        int32 y = FROM_FIXED(drawPos.y) - 32;
         RSDK.DrawRect(x, y, 112, 64, self->color1, 255, INK_NONE, true);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
-            int32 height = minVal((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
+            int32 height = MIN((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
             RSDK.DrawRect(x, y - height + 64, 16, height, self->color2, 255, INK_NONE, true);
             x += 16;
         }
@@ -67,7 +67,7 @@ void ParallaxSprite_Create(void *data)
     self->drawGroup = Zone->fgLayerLow + 1;
 
     if (data)
-        self->attribute = voidToInt(data);
+        self->attribute = VOID_TO_INT(data);
 
     switch (self->attribute) {
         default:
@@ -172,7 +172,7 @@ void ParallaxSprite_State_Emitter(void)
     RSDK_THIS(ParallaxSprite);
 
     if (!(Zone->timer & 3)) {
-        EntityParallaxSprite *sprite = CREATE_ENTITY(ParallaxSprite, intToVoid(PARALLAXSPRITE_ATTR_PARTICLE), self->position.x, self->position.y);
+        EntityParallaxSprite *sprite = CREATE_ENTITY(ParallaxSprite, INT_TO_VOID(PARALLAXSPRITE_ATTR_PARTICLE), self->position.x, self->position.y);
         sprite->parallaxFactor.x     = self->parallaxFactor.x;
         sprite->parallaxFactor.y     = self->parallaxFactor.y;
         sprite->loopPoint.x          = self->loopPoint.x;
@@ -247,12 +247,12 @@ void ParallaxSprite_EditorDraw(void)
     Vector2 drawPos = self->position;
 
     if (self->attribute == PARALLAXSPRITE_ATTR_COLORS) {
-        int32 x = (drawPos.x >> 16) - 56;
-        int32 y = (drawPos.y >> 16) - 32;
+        int32 x = FROM_FIXED(drawPos.x) - 56;
+        int32 y = FROM_FIXED(drawPos.y) - 32;
         RSDK.DrawRect(x << 16, y << 16, 112 << 16, 64 << 16, self->color1, 255, 0, false);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
-            int32 height = minVal((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
+            int32 height = MIN((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
             RSDK.DrawRect(x << 16, (y - height + 64) << 16, 16 << 16, height << 16, self->color2, 255, 0, false);
             x += 16;
         }

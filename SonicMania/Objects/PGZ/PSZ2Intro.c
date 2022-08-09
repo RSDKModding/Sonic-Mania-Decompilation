@@ -58,7 +58,7 @@ void PSZ2Intro_StageLoad(void)
 bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityFXFade *fxFade = PSZ2Intro->fxFade;
     EntitySignPost *post = PSZ2Intro->signPost;
@@ -114,7 +114,7 @@ bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host)
 bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (!host->timer) {
         Vector2 size;
@@ -165,7 +165,7 @@ bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
 bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (ScreenInfo->position.x < Zone->cameraBoundsL[0]) {
         // Bug Details:

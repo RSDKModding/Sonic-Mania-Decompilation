@@ -36,7 +36,7 @@ void Gachapandora_Create(void *data)
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->active = ACTIVE_BOUNDS;
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             int32 capsuleOffset = 0;
             switch (self->type) {
@@ -303,7 +303,7 @@ void Gachapandora_Explode(int xMin, int xMax, int yMin, int yMax)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(xMin, xMax) << 16);
             int32 y = self->position.y + (RSDK.Rand(yMin, yMax) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -319,8 +319,8 @@ void Gachapandora_Player_StateInput_P1Grabbed(void)
     self->jumpPress = false;
     self->jumpHold  = false;
 
-    self->velocity.x = clampVal(self->velocity.x, -0x20000, 0x20000);
-    self->groundVel  = clampVal(self->groundVel, -0x20000, 0x20000);
+    self->velocity.x = CLAMP(self->velocity.x, -0x20000, 0x20000);
+    self->groundVel  = CLAMP(self->groundVel, -0x20000, 0x20000);
 }
 
 void Gachapandora_Player_StateInput_P2PlayerGrabbed(void)
@@ -334,8 +334,8 @@ void Gachapandora_Player_StateInput_P2PlayerGrabbed(void)
     self->jumpPress = false;
     self->jumpHold  = false;
 
-    self->velocity.x = clampVal(self->velocity.x, -0x40000, 0x40000);
-    self->groundVel  = clampVal(self->groundVel, -0x40000, 0x40000);
+    self->velocity.x = CLAMP(self->velocity.x, -0x40000, 0x40000);
+    self->groundVel  = CLAMP(self->groundVel, -0x40000, 0x40000);
 
     if (self->stateInput == Player_Input_P2_AI)
         self->stateInput = Gachapandora_Player_StateInput_P2AIGrabbed;
@@ -352,8 +352,8 @@ void Gachapandora_Player_StateInput_P2AIGrabbed(void)
     self->jumpPress = false;
     self->jumpHold  = false;
 
-    self->velocity.x = clampVal(self->velocity.x, -0x40000, 0x40000);
-    self->groundVel  = clampVal(self->groundVel, -0x40000, 0x40000);
+    self->velocity.x = CLAMP(self->velocity.x, -0x40000, 0x40000);
+    self->groundVel  = CLAMP(self->groundVel, -0x40000, 0x40000);
 
     if (self->stateInput == Player_Input_P2_Player)
         self->stateInput = Gachapandora_Player_StateInput_P2PlayerGrabbed;
@@ -392,7 +392,7 @@ void Gachapandora_HandleSparksAndDebris(void)
             case 2:
             case 0: {
                 int off                    = RSDK.Rand(-12, 12);
-                EntityGachapandora *debris = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_DEBRIS),
+                EntityGachapandora *debris = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_DEBRIS),
                                                            self->position.x + (off << 16) + self->velocity.x, self->position.y + 0x300000);
 
                 RSDK.SetSpriteAnimation(Gachapandora->aniFrames, RSDK.Rand(0, 4) + 18, &debris->mainAnimator, true, 0);
@@ -405,7 +405,7 @@ void Gachapandora_HandleSparksAndDebris(void)
             }
 
             case 1: {
-                EntityGachapandora *spark = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_SPARK), self->position.x, self->position.y);
+                EntityGachapandora *spark = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_SPARK), self->position.x, self->position.y);
                 spark->parent             = self;
 
                 if (RSDK.Rand(0, 2))
@@ -425,7 +425,7 @@ void Gachapandora_HandleSparksAndDebris(void)
             if (!--Gachapandora->sideSparkTimer[i]) {
                 Gachapandora->sideSparkTimer[i] = RSDK.Rand(16, 30);
 
-                EntityGachapandora *spark = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_SPARK), self->position.x, self->position.y);
+                EntityGachapandora *spark = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_SPARK), self->position.x, self->position.y);
                 spark->parent             = self;
 
                 if (i) {
@@ -703,7 +703,7 @@ void Gachapandora_StateBoss_HandleSpun(void)
         }
     }
     else {
-        EntityGachapandora *prize = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_PRIZE), self->position.x, self->position.y + 0x1A0000);
+        EntityGachapandora *prize = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_PRIZE), self->position.x, self->position.y + 0x1A0000);
         prize->type               = Gachapandora->nextPrizeType;
 
         switch (prize->type) {
@@ -722,26 +722,26 @@ void Gachapandora_StateBoss_HandleSpun(void)
         Gachapandora->handleSpinTimer = 0x7FFF;
 
         if (--self->health == 1) {
-            EntityGachapandora *debris   = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
+            EntityGachapandora *debris   = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
             debris->mainAnimator.frameID = 4;
             debris->timer                = 30;
             debris->velocity.x           = 0x20000;
             debris->velocity.y           = -0x20000;
 
-            debris                       = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
+            debris                       = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
             debris->mainAnimator.frameID = 5;
             debris->timer                = 30;
             debris->velocity.x           = -0x20000;
             debris->velocity.y           = -0x20000;
 
-            debris = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
+            debris = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
             ++debris->drawGroup;
             debris->mainAnimator.frameID = 2;
             debris->timer                = 90;
             debris->velocity.x           = -0x20000;
             debris->velocity.y           = -0x20000;
 
-            debris = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
+            debris = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_DEBRIS), self->position.x, self->position.y);
             ++debris->drawGroup;
             debris->mainAnimator.frameID = 3;
             debris->timer                = 90;
@@ -841,7 +841,7 @@ void Gachapandora_StateBoss_LastDitchAttack(void)
     if (--self->timer <= 0) {
         self->timer = 60;
         for (int32 i = 0; i < 2; ++i) {
-            EntityGachapandora *spark = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_SPARK), self->position.x, self->position.y);
+            EntityGachapandora *spark = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_SPARK), self->position.x, self->position.y);
             RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 15, &spark->mainAnimator, true, 0);
 
             if (i) {
@@ -896,7 +896,7 @@ void Gachapandora_StateBoss_Defeated(void)
 
     self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 10);
     if (!--self->invincibilityTimer) {
-        CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_EGGMAN), self->position.x, self->position.y - 0x100000)->parent = self;
+        CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_EGGMAN), self->position.x, self->position.y - 0x100000)->parent = self;
         RSDK.SetSpriteAnimation(-1, 0, &self->eggmanAnimator, true, 0);
         self->invincibilityTimer = 60;
         self->state              = Gachapandora_StateBoss_EggmanFallOut;
@@ -1280,7 +1280,7 @@ void Gachapandora_StatePrize_FireDropperMove(void)
         RSDK.PlaySfx(Gachapandora->sfxFireball, false, 255);
         RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 10, &self->eggmanAnimator, true, 0);
 
-        EntityGachapandora *fireball = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_FIREBALL), self->position.x, self->position.y);
+        EntityGachapandora *fireball = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_FIREBALL), self->position.x, self->position.y);
         fireball->parent             = self;
         fireball->timer              = 12;
     }
@@ -1518,7 +1518,7 @@ void Gachapandora_StatePrize_AmyRebound(void)
     if (self->mainAnimator.animationID == 7) {
         if (!--self->timer) {
             RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
 
             self->invincibilityTimer = 30;
             self->state              = Gachapandora_StatePrize_Destroyed;
@@ -1596,7 +1596,7 @@ void Gachapandora_StatePrize_AmyGrabbed(void)
             Player_Hurt(parent, self);
 
             RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
 
             self->invincibilityTimer = 30;
             self->state              = Gachapandora_StatePrize_Destroyed;
@@ -1661,7 +1661,7 @@ void Gachapandora_StateFireball_BurnGround(void)
     if (self->timer) {
         if (!--self->timer) {
             EntityGachapandora *fireball =
-                CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_FIREBALL), self->position.x + 0x40000, self->position.y);
+                CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_FIREBALL), self->position.x + 0x40000, self->position.y);
             RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 12, &fireball->mainAnimator, true, 0);
             fireball->state = Gachapandora_StateFireball_BurnGround;
             if (self->health) {
@@ -1669,7 +1669,7 @@ void Gachapandora_StateFireball_BurnGround(void)
                 fireball->health = self->health - 1;
             }
 
-            fireball = CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_FIREBALL), self->position.x - 0x40000, self->position.y);
+            fireball = CREATE_ENTITY(Gachapandora, INT_TO_VOID(GACHAPANDORA_FIREBALL), self->position.x - 0x40000, self->position.y);
             RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 12, &fireball->mainAnimator, true, 0);
             fireball->state = Gachapandora_StateFireball_BurnGround;
             if (self->health) {

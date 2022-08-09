@@ -34,7 +34,7 @@ void LRZConvItem_Create(void *data)
     RSDK_THIS(LRZConvItem);
 
     if (data)
-        self->type = voidToInt(data);
+        self->type = VOID_TO_INT(data);
 
     self->active        = ACTIVE_BOUNDS;
     self->drawGroup     = Zone->objectDrawLow;

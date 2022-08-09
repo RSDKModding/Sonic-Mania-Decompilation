@@ -375,7 +375,7 @@ void Beanstalk_CheckPlayerCollisions_Chomper(void)
         if (Player_CheckCollisionTouch(player, self, &Beanstalk->hitboxPlant)) {
 #if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
                 RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                 self->state = Beanstalk_State_Node;
                 RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->plantAnimator, true, 0);

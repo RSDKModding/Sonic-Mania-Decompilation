@@ -35,7 +35,7 @@ void ZipLine_Update(void)
                         if (self->angle >= 0x40 && self->angle <= 0xC0)
                             self->groundVel = -player->groundVel;
 
-                        self->groundVel = clampVal(self->groundVel, -0xA0000, 0xA0000);
+                        self->groundVel = CLAMP(self->groundVel, -0xA0000, 0xA0000);
 
                         self->velocity.x   = self->groundVel * RSDK.Cos256(self->angle) >> 8;
                         self->velocity.y   = self->groundVel * RSDK.Sin256(self->angle) >> 8;
@@ -106,7 +106,7 @@ void ZipLine_Update(void)
                     if (self->angle >= 0x40 && self->angle <= 0xC0)
                         self->groundVel = -player->groundVel;
 
-                    self->groundVel = clampVal(self->groundVel, -0xA0000, 0xA0000);
+                    self->groundVel = CLAMP(self->groundVel, -0xA0000, 0xA0000);
 
                     self->velocity.x = self->groundVel * RSDK.Cos256(self->angle) >> 8;
                     self->velocity.y = self->groundVel * RSDK.Sin256(self->angle) >> 8;

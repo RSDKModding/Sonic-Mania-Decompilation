@@ -58,7 +58,7 @@ void HotaruMKII_Create(void *data)
         self->hitboxTrigger.bottom = self->triggerSize.y >> 17;
         self->hitboxTrigger.top    = -self->hitboxTrigger.bottom;
 
-        self->type = voidToInt(data);
+        self->type = VOID_TO_INT(data);
         switch (self->type) {
             default: break;
             case HOTARUMKII_MAIN:
@@ -313,7 +313,7 @@ void HotaruMKII_State_FlyOnScreen(void)
     }
     else {
         if (!(Zone->timer & 7)) {
-            EntityHotaruMKII *flash = CREATE_ENTITY(HotaruMKII, intToVoid(HOTARUMKII_FLASH), self->position.x, self->position.y);
+            EntityHotaruMKII *flash = CREATE_ENTITY(HotaruMKII, INT_TO_VOID(HOTARUMKII_FLASH), self->position.x, self->position.y);
             flash->playerPtr        = self->playerPtr;
             flash->curOffset.x      = self->position.x - player->position.x;
             flash->curOffset.y      = self->position.y - player->position.y;
@@ -440,7 +440,7 @@ void HotaruMKII_State_LaserAttack(void)
 
                 self->alpha -= 3;
                 if (!(self->timer & 3)) {
-                    EntityHotaruMKII *laser = CREATE_ENTITY(HotaruMKII, intToVoid(HOTARUMKII_LASER), self->position.x, self->position.y + 0xE0000);
+                    EntityHotaruMKII *laser = CREATE_ENTITY(HotaruMKII, INT_TO_VOID(HOTARUMKII_LASER), self->position.x, self->position.y + 0xE0000);
 
                     if (!self->childCount) {
                         self->childCount            = 1;

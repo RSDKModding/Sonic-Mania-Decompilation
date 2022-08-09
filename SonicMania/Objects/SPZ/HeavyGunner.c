@@ -34,7 +34,7 @@ void HeavyGunner_Create(void *data)
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             if (data) {
-                self->type      = voidToInt(data);
+                self->type      = VOID_TO_INT(data);
                 self->active    = ACTIVE_NORMAL;
                 self->visible   = true;
                 self->drawGroup = Zone->objectDrawLow - 1;
@@ -347,7 +347,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *robo1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, HeavyGunner);
             int32 x                  = robo1->position.x;
             int32 y                  = robo1->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 1, HeavyGunner->classID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 1, HeavyGunner->classID, INT_TO_VOID(HEAVYGUNNER_EGGROBO));
             robo1->position.x = x;
             robo1->position.y = y;
             robo1->parent     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
@@ -357,7 +357,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *robo2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, HeavyGunner);
             x                        = robo2->position.x;
             y                        = robo2->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 2, HeavyGunner->classID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 2, HeavyGunner->classID, INT_TO_VOID(HEAVYGUNNER_EGGROBO));
             robo2->position.x = x;
             robo2->position.y = y;
             robo2->parent     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
@@ -367,7 +367,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *robo3 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 3, HeavyGunner);
             x                        = robo3->position.x;
             y                        = robo3->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 3, HeavyGunner->classID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 3, HeavyGunner->classID, INT_TO_VOID(HEAVYGUNNER_EGGROBO));
             robo3->position.x = x;
             robo3->position.y = y;
             robo3->parent     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
@@ -379,7 +379,7 @@ void HeavyGunner_StateManager_SetupArena(void)
             EntityHeavyGunner *heli = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
             x                       = heli->position.x;
             y                       = heli->position.y;
-            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 4, HeavyGunner->classID, intToVoid(HEAVYGUNNER_HELI));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 4, HeavyGunner->classID, INT_TO_VOID(HEAVYGUNNER_HELI));
             heli->position.x = x;
             heli->position.y = y;
 
@@ -729,7 +729,7 @@ void HeavyGunner_StateEggRobo_ThrowGun(void)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 21, &self->armAnimator, true, 0);
         self->state = HeavyGunner_StateEggRobo_ThrownGun;
 
-        EntityHeavyGunner *child = CREATE_ENTITY(HeavyGunner, intToVoid(HEAVYGUNNER_GUN), self->position.x + 0x80000, self->position.y - 0x80000);
+        EntityHeavyGunner *child = CREATE_ENTITY(HeavyGunner, INT_TO_VOID(HEAVYGUNNER_GUN), self->position.x + 0x80000, self->position.y - 0x80000);
         child->velocity.x        = -0x34000;
         child->velocity.y        = -0x80000;
         child->parent            = self->parent;
@@ -838,7 +838,7 @@ void HeavyGunner_StateMissile_BlastOff(void)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 25, &self->exhaustAnimator, true, 0);
 
     if (!(Zone->timer & 3)) {
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x - 0x180000, self->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x - 0x180000, self->position.y);
         explosion->drawGroup       = Zone->objectDrawLow - 1;
         explosion->drawFX          = FX_ROTATE;
         explosion->rotation        = 128;
@@ -934,7 +934,7 @@ void HeavyGunner_StateMissile_Malfunction(void)
     if (!(Zone->timer & 3)) {
         int32 x = RSDK.Cos512(self->rotation) << 11;
         int32 y = RSDK.Sin512(self->rotation) << 11;
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x - x, self->position.y - y);
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x - x, self->position.y - y);
     }
 
     if (self->rotation == 0x400) {
@@ -1356,18 +1356,18 @@ void HeavyGunner_StateHeli_HandleAttacks(void)
         int32 dudID = RSDK.Rand(0, 3);
 
         EntityHeavyGunner *child =
-            CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 0) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
+            CREATE_ENTITY(HeavyGunner, INT_TO_VOID((dudID == 0) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
         child->velocity.y -= 0x10000;
         child->parent    = self;
         child->missileID = 0;
         ++self->missileID;
 
-        child = CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 1) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
+        child = CREATE_ENTITY(HeavyGunner, INT_TO_VOID((dudID == 1) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
         child->parent    = self;
         child->missileID = 15 * ((dudID != 1) + 1);
         ++self->missileID;
 
-        child = CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 2) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
+        child = CREATE_ENTITY(HeavyGunner, INT_TO_VOID((dudID == 2) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
         child->velocity.y += 0x10000;
         child->parent    = self;
         child->missileID = 30 * ((dudID != 2) + 1);
@@ -1459,7 +1459,7 @@ void HeavyGunner_StateHeli_IncomingMissile(void)
     if (!self->timer) {
         self->timer = 1;
         RSDK.SetSpriteAnimation(-1, 0, &self->gunnerAnimator, true, 0);
-        CREATE_ENTITY(HeavyGunner, intToVoid(HEAVYGUNNER_ESCAPE_HBH), self->position.x - 0x80000, self->position.y - 0x20000);
+        CREATE_ENTITY(HeavyGunner, INT_TO_VOID(HEAVYGUNNER_ESCAPE_HBH), self->position.x - 0x80000, self->position.y - 0x20000);
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x - 0x300000, self->position.y - 0x240000);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 20, &debris->animator, true, 0);
@@ -1499,7 +1499,7 @@ void HeavyGunner_StateHeli_Exploding(void)
         int32 x = self->position.x + RSDK.Rand(-0x300000, 0x300000);
         int32 y = self->position.y + RSDK.Rand(-0x300000, 0x300000);
 
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(RSDK.Rand(EXPLOSION_BOSS, EXPLOSION_BOSSPUFF + 1)), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(RSDK.Rand(EXPLOSION_BOSS, EXPLOSION_BOSSPUFF + 1)), x, y);
         explosion->drawGroup       = Zone->objectDrawHigh;
         explosion->drawFX          = FX_SCALE;
         explosion->scale.x         = RSDK.Rand(0x100, 0x300);
@@ -1552,7 +1552,7 @@ void HeavyGunner_StateHeli_ExplodeAndFall(void)
     if (!(self->timer & 3)) {
         int32 x                    = self->position.x + RSDK.Rand(-0x300000, 0x300000);
         int32 y                    = self->position.y + RSDK.Rand(-0x300000, 0x300000);
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(RSDK.Rand(EXPLOSION_BOSS, EXPLOSION_BOSSPUFF + 1)), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(RSDK.Rand(EXPLOSION_BOSS, EXPLOSION_BOSSPUFF + 1)), x, y);
 
         explosion->drawGroup = Zone->objectDrawHigh;
         explosion->drawFX    = FX_SCALE;

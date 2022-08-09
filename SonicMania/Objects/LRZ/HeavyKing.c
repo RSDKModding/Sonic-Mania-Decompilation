@@ -178,7 +178,7 @@ void HeavyKing_Explode(void)
         if (!(Zone->timer & 0xF)) {
             int32 x = self->position.x + RSDK.Rand(-0x180000, 0x180000);
             int32 y = self->position.y + RSDK.Rand(-0x180000, 0x180000);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -259,7 +259,7 @@ void HeavyKing_HandleHoverMovement(void)
     self->rotation &= 0x1FF;
 
     int32 rx         = (self->position.x - HeavyKing->boundsM) >> 16;
-    self->velocity.x = clampVal(self->velocity.x + (8 * RSDK.Cos512(self->rotation)), -0x20000, 0x20000);
+    self->velocity.x = CLAMP(self->velocity.x + (8 * RSDK.Cos512(self->rotation)), -0x20000, 0x20000);
     self->position.x += self->velocity.x;
     self->originPos.y = HeavyKing->startY + 96 * abs(rx * rx);
     self->direction   = self->position.x <= player->position.x;
@@ -406,7 +406,7 @@ void HeavyKing_CreateLaser(void)
 {
     RSDK_THIS(HeavyKing);
 
-    EntityKingAttack *attack = CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_LASER), self->position.x, HeavyKing->spinRaySpawnPos);
+    EntityKingAttack *attack = CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_LASER), self->position.x, HeavyKing->spinRaySpawnPos);
     attack->parent           = (Entity *)self;
 
     if (self->direction) {
@@ -424,7 +424,7 @@ void HeavyKing_CreateExpandRing(void)
     RSDK_THIS(HeavyKing);
 
     for (int32 angle = 0; angle < 1020; angle += 170) {
-        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_ORBIT), self->position.x, self->position.y);
+        EntityKingAttack *attack = CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_ORBIT), self->position.x, self->position.y);
         attack->angle            = angle;
         attack->parent           = (Entity *)self;
     }
@@ -1062,7 +1062,7 @@ void HeavyKing_State_Hovering(void)
 
             case 2:
                 --self->attacksRemaining;
-                CREATE_ENTITY(KingAttack, intToVoid(KINGATTACK_LARGEBULLET), self->position.x, self->position.y)->parent = (Entity *)self;
+                CREATE_ENTITY(KingAttack, INT_TO_VOID(KINGATTACK_LARGEBULLET), self->position.x, self->position.y)->parent = (Entity *)self;
                 RSDK.PlaySfx(HeavyKing->sfxTwinCharge, false, 255);
                 self->state = HeavyKing_State_TwinChargeAttack;
                 break;
@@ -1206,7 +1206,7 @@ void HeavyKing_State_Escape(void)
     if (!(Zone->timer & 0x1F)) {
         int x                                                                    = self->position.x + RSDK.Rand(-0x180000, 0x180000);
         int y                                                                    = self->position.y + RSDK.Rand(-0x180000, 0x180000);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawHigh;
     }
 
     if ((Zone->timer & 0xF) == 4) {
@@ -1214,7 +1214,7 @@ void HeavyKing_State_Escape(void)
         if (self->direction == FLIP_NONE)
             x = self->position.x + 0x2C0000;
 
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, self->position.y - 0x300000)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, self->position.y - 0x300000)->drawGroup = Zone->objectDrawHigh;
     }
 
     EntityKingClaw *claw = self->claw;

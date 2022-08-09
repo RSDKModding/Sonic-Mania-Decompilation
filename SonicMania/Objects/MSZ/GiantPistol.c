@@ -308,7 +308,7 @@ void GiantPistol_State_Aiming(void)
                 self->activePlayers &= ~(1 << player->playerID);
                 self->timer = 16;
 
-                player->velocity.x = clampVal(player->velocity.x, -0x120000, 0x120000);
+                player->velocity.x = CLAMP(player->velocity.x, -0x120000, 0x120000);
                 player->visible    = true;
                 Camera_ShakeScreen(player->playerID, -8, -8);
                 RSDK.PlaySfx(GiantPistol->sfxCannonFire, false, 255);

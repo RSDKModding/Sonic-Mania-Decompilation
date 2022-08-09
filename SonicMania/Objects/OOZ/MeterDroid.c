@@ -193,7 +193,7 @@ void MeterDroid_Hit(void)
             int32 x = RSDK.Rand(MeterDroid->hitboxBoss.left, MeterDroid->hitboxBoss.right) << 16;
             int32 y = RSDK.Rand(MeterDroid->hitboxBoss.top, MeterDroid->hitboxBoss.bottom) << 16;
 
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawGroup = Zone->objectDrawHigh;
             self->stateDraw                                                                                              = MeterDroid_Draw_Normal;
         }
 
@@ -226,7 +226,7 @@ void MeterDroid_Explode(void)
         if (Zone->timer & 4) {
             int32 x                    = (RSDK.Rand(-208, 208) + ScreenInfo->center.x + ScreenInfo->position.x) << 16;
             int32 y                    = (RSDK.Rand(-112, 112) + ScreenInfo->center.y + ScreenInfo->position.y) << 16;
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }

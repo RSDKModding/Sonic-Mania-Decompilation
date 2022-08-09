@@ -43,7 +43,7 @@ void ERZGunner_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
-        self->type = voidToInt(data);
+        self->type = VOID_TO_INT(data);
         switch (self->type) {
             case ERZGUNNER_BOSS:
                 self->drawFX = FX_FLIP;
@@ -205,7 +205,7 @@ void ERZGunner_CheckPlayerMissileCollisions(void)
             if (Player_CheckBadnikTouch(player, self, &ERZGunner->hitboxNapalm)) {
                 int32 anim = player->animator.animationID;
                 if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
-                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
+                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y);
                     explosion->interaction     = false;
                     explosion->drawGroup       = Zone->objectDrawHigh;
 
@@ -349,7 +349,7 @@ void ERZGunner_State_LaunchRockets(void)
     RSDK.ProcessAnimation(&self->fxAnimator);
 
     if (++self->timer == 8) {
-        EntityERZGunner *rocket = CREATE_ENTITY(ERZGunner, intToVoid(ERZGUNNER_LAUNCHROCKET), self->position.x, self->position.y);
+        EntityERZGunner *rocket = CREATE_ENTITY(ERZGunner, INT_TO_VOID(ERZGUNNER_LAUNCHROCKET), self->position.x, self->position.y);
         rocket->parent          = self;
         rocket->originPos.x     = ERZGunner->rocketOffsets[self->rocketOffsetID] << 16;
         rocket->originPos.y     = ERZGunner->rocketOffsets[self->rocketOffsetID + 1] << 16;
@@ -472,13 +472,13 @@ void ERZGunner_State_Mortar(void)
     if (self->classID) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == ERZGUNNER_NAPALM) {
-                EntityERZGunner *napalm = CREATE_ENTITY(ERZGunner, intToVoid(ERZGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
+                EntityERZGunner *napalm = CREATE_ENTITY(ERZGunner, INT_TO_VOID(ERZGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
                 napalm->velocity.x      = self->velocity.y > 0x20000 ? 0x80000 : 0x40000;
 
                 destroyEntity(self);
             }
             else {
-                CREATE_ENTITY(ERZGunner, intToVoid(ERZGUNNER_MORTAR_EXPLOSION), self->position.x, self->position.y);
+                CREATE_ENTITY(ERZGunner, INT_TO_VOID(ERZGUNNER_MORTAR_EXPLOSION), self->position.x, self->position.y);
 
                 destroyEntity(self);
             }
@@ -502,13 +502,13 @@ void ERZGunner_State_Napalm(void)
     if (self->classID) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (self->type == ERZGUNNER_NAPALM) {
-                EntityERZGunner *napalm = CREATE_ENTITY(ERZGunner, intToVoid(ERZGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
+                EntityERZGunner *napalm = CREATE_ENTITY(ERZGunner, INT_TO_VOID(ERZGUNNER_NAPALM_EXPLOSION), self->position.x, self->position.y);
                 napalm->velocity.x      = self->velocity.y > 0x20000 ? 0x80000 : 0x40000;
 
                 destroyEntity(self);
             }
             else {
-                CREATE_ENTITY(ERZGunner, intToVoid(ERZGUNNER_MORTAR_EXPLOSION), self->position.x, self->position.y);
+                CREATE_ENTITY(ERZGunner, INT_TO_VOID(ERZGUNNER_MORTAR_EXPLOSION), self->position.x, self->position.y);
 
                 destroyEntity(self);
             }
@@ -545,7 +545,7 @@ void ERZGunner_State_Dud_Active(void)
     ERZGunner_HandleRotations(2 * angle);
 
     if (self->timer == 320) {
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
         explosion->interaction     = false;
         explosion->drawGroup       = Zone->objectDrawHigh;
         destroyEntity(self);
@@ -618,7 +618,7 @@ void ERZGunner_State_Dud_Explode(void)
     if (!(Zone->timer % 3) && !(Zone->timer & 4)) {
         int32 x                    = self->position.x + RSDK.Rand(-0x100000, 0x100000);
         int32 y                    = self->position.y + RSDK.Rand(-0x100000, 0x100000);
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
         explosion->interaction = false;
         explosion->drawGroup   = 1;
@@ -634,8 +634,8 @@ void ERZGunner_State_NapalmExplosion(void)
     RSDK_THIS(ERZGunner);
 
     if (!(Zone->timer & 3)) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->originPos.x - self->napalmExplosionPos, self->position.y);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->originPos.x + self->napalmExplosionPos, self->position.y);
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->originPos.x - self->napalmExplosionPos, self->position.y);
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->originPos.x + self->napalmExplosionPos, self->position.y);
     }
 
     self->napalmExplosionPos += self->velocity.x;
@@ -649,7 +649,7 @@ void ERZGunner_State_MortarExplosion(void)
     RSDK_THIS(ERZGunner);
 
     if (!(Zone->timer & 3))
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
 
     self->position.y -= 0x40000;
 

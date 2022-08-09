@@ -33,7 +33,7 @@ void TVVan_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         if (data)
-            self->type = voidToInt(data);
+            self->type = VOID_TO_INT(data);
 
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -245,7 +245,7 @@ void TVVan_HandleVanTilt(void)
     else if (self->stoodAngle < 64)
         self->stoodAngle += 4;
 
-    self->angle = clampVal(self->angle + self->stoodPos, -8, 8);
+    self->angle = CLAMP(self->angle + self->stoodPos, -8, 8);
 
     self->position.x  = self->movePos.x;
     self->position.y  = self->movePos.y;
@@ -530,7 +530,7 @@ void TVVan_StateVan_Idle(void)
         else
             TVVan->hitboxFloor.top = (self->position.x - player->position.x) >> 17;
 
-        TVVan->hitboxFloor.top = clampVal(TVVan->hitboxFloor.top, 22, 32);
+        TVVan->hitboxFloor.top = CLAMP(TVVan->hitboxFloor.top, 22, 32);
 
         if (Player_CheckCollisionPlatform(player, self, &TVVan->hitboxFloor) == C_TOP) {
             player->position.y += self->moveOffsetY;
@@ -609,14 +609,14 @@ void TVVan_StateVan_BroadcastRadio(void)
         RSDK.SetSpriteAnimation(TVVan->aniFrames, 7, &self->radioAnimator, true, 0);
 
         if (self->direction) {
-            EntityTVVan *van = CREATE_ENTITY(TVVan, intToVoid(TVVAN_RADIO), self->position.x + 0x80000, self->position.y - 0x420000);
+            EntityTVVan *van = CREATE_ENTITY(TVVan, INT_TO_VOID(TVVAN_RADIO), self->position.x + 0x80000, self->position.y - 0x420000);
             van->isPermanent = true;
             van->player      = self->player;
             van->angle       = 0xA0;
             van->nextNode    = self;
         }
         else {
-            EntityTVVan *van = CREATE_ENTITY(TVVan, intToVoid(TVVAN_RADIO), self->position.x - 0x80000, self->position.y - 0x420000);
+            EntityTVVan *van = CREATE_ENTITY(TVVan, INT_TO_VOID(TVVAN_RADIO), self->position.x - 0x80000, self->position.y - 0x420000);
             van->isPermanent = true;
             van->player      = self->player;
             van->angle       = 0xE0;
@@ -925,7 +925,7 @@ void TVVan_StateRadio_EnterTV(void)
 
     RSDK.PlaySfx(TVVan->sfxExplosion, false, 255);
 
-    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y - 0x100000);
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), self->position.x, self->position.y - 0x100000);
     explosion->drawFX          = FX_SCALE;
     explosion->scale.x         = 0x300;
     explosion->scale.y         = 0x300;

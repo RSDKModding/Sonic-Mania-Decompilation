@@ -93,7 +93,7 @@ void Hotaru_Create(void *data)
         self->visible       = true;
         self->drawGroup     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
-        self->updateRange.x = maxVal(self->distX1, self->distX2) + 0x400000;
+        self->updateRange.x = MAX(self->distX1, self->distX2) + 0x400000;
         self->updateRange.y = self->dist.y + 0x400000;
 
         self->drawFX     = FX_ROTATE | FX_FLIP;
@@ -446,7 +446,7 @@ void Hotaru_EditorDraw(void)
 
     self->drawGroup     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
-    self->updateRange.x = maxVal(self->distX1 << 16, self->distX2 << 16) + 0x400000;
+    self->updateRange.x = MAX(self->distX1 << 16, self->distX2 << 16) + 0x400000;
     self->updateRange.y = self->dist.y + 0x400000;
 
     self->drawFX    = FX_ROTATE | FX_FLIP;

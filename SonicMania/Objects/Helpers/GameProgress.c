@@ -149,10 +149,10 @@ float GameProgress_GetCompletionPercent(ProgressRAM *progress)
     // then multiply by its completion weight (in this case zones are worth 55% of completion percent)
     // then finally divide by the maximum count to normalize it
 
-    float zonePercent    = ((minVal(completeZones, GAMEPROGRESS_ZONE_COUNT) * 0.55) / (float)GAMEPROGRESS_ZONE_COUNT);
-    float medalPercent   = ((minVal(medalsGotten, GAMEPROGRESS_MEDAL_COUNT * 2) * 0.35) / (float)(GAMEPROGRESS_MEDAL_COUNT * 2));
-    float specialPercent = ((minVal(emeraldsGotten, GAMEPROGRESS_EMERALD_COUNT) * 0.05) / (float)GAMEPROGRESS_EMERALD_COUNT);
-    float endingPercent  = ((minVal(progress->unlockedEndingID, GAMEPROGRESS_ENDING_GOOD) * 0.05) / (float)GAMEPROGRESS_ENDING_GOOD);
+    float zonePercent    = ((MIN(completeZones, GAMEPROGRESS_ZONE_COUNT) * 0.55) / (float)GAMEPROGRESS_ZONE_COUNT);
+    float medalPercent   = ((MIN(medalsGotten, GAMEPROGRESS_MEDAL_COUNT * 2) * 0.35) / (float)(GAMEPROGRESS_MEDAL_COUNT * 2));
+    float specialPercent = ((MIN(emeraldsGotten, GAMEPROGRESS_EMERALD_COUNT) * 0.05) / (float)GAMEPROGRESS_EMERALD_COUNT);
+    float endingPercent  = ((MIN(progress->unlockedEndingID, GAMEPROGRESS_ENDING_GOOD) * 0.05) / (float)GAMEPROGRESS_ENDING_GOOD);
     return zonePercent + medalPercent + specialPercent + endingPercent;
 }
 
@@ -174,7 +174,7 @@ void GameProgress_TrackGameProgress(void (*callback)(void))
             memset(&stat, 0, sizeof(StatInfo));
             stat.statID  = 3;
             stat.name    = "GAME_PROGRESS";
-            stat.data[0] = floatToVoid(percent);
+            stat.data[0] = FLOAT_TO_VOID(percent);
             API.TryTrackStat(&stat);
 #else
             APICallback_TrackGameProgress(percent);

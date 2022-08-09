@@ -45,7 +45,7 @@ void Ice_Create(void *data)
         if (data) {
             self->active = ACTIVE_NORMAL;
 
-            switch (voidToInt(data)) {
+            switch (VOID_TO_INT(data)) {
                 case ICE_CHILD_PLAYER:
                     self->hitboxBlock.left   = -24;
                     self->hitboxBlock.top    = -24;
@@ -361,7 +361,7 @@ void Ice_FreezePlayer(EntityPlayer *player)
     RSDK_THIS(Ice);
 
     if (!Zone->gotTimeOver && player->state != Ice_PlayerState_Frozen && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
-        EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PLAYER), player->position.x, player->position.y);
+        EntityIce *ice = CREATE_ENTITY(Ice, INT_TO_VOID(ICE_CHILD_PLAYER), player->position.x, player->position.y);
         ice->playerPtr = player;
 
 #if MANIA_USE_PLUS
@@ -562,10 +562,10 @@ void Ice_ShatterGenerator(int32 count, int32 sizeX, int32 sizeY, int32 velX, int
     if (canBreak > 0)
         count >>= 1;
 
-    for (int32 i = 0; i < maxVal(0, count); ++i) {
+    for (int32 i = 0; i < MAX(0, count); ++i) {
         int32 x        = self->position.x + (RSDK.Rand(-sizeX, sizeX + 1) << 16);
         int32 y        = self->position.y + (RSDK.Rand(-sizeY, sizeY + 1) << 16);
-        EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), x, y);
+        EntityIce *ice = CREATE_ENTITY(Ice, INT_TO_VOID(ICE_CHILD_SHARD), x, y);
 
         ice->velocity.x          = velX + (RSDK.Rand(-6, 8) << 15);
         ice->velocity.y          = velY + (RSDK.Rand(-10, 2) << 15);
@@ -662,7 +662,7 @@ EntityItemBox *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
 
             int32 angle = 16 * (12 - (count >> 1));
             for (int32 i = 0; i < count; ++i) {
-                EntityRing *ring = CREATE_ENTITY(Ring, intToVoid(1), ice->position.x, ice->position.y);
+                EntityRing *ring = CREATE_ENTITY(Ring, INT_TO_VOID(1), ice->position.x, ice->position.y);
                 ring->velocity.x = velX + 640 * RSDK.Cos256(angle);
                 ring->velocity.y = velY + 640 * RSDK.Sin256(angle);
                 ring->position.x += ring->velocity.x * (3 * ice->type - 3);
@@ -681,21 +681,21 @@ EntityItemBox *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
         }
 
         case ICE_SPIKES:
-            CREATE_ENTITY(Spikes, intToVoid(self->subType), ice->position.x + self->contentsOffset.x, ice->position.y + self->contentsOffset.y);
+            CREATE_ENTITY(Spikes, INT_TO_VOID(self->subType), ice->position.x + self->contentsOffset.x, ice->position.y + self->contentsOffset.y);
             break;
 
         case ICE_SPRING:
             if (self->subType >= 3)
-                CREATE_ENTITY(Spring, intToVoid((self->subFlip << 8) - 3 + self->subType), ice->position.x + self->contentsOffset.x,
+                CREATE_ENTITY(Spring, INT_TO_VOID((self->subFlip << 8) - 3 + self->subType), ice->position.x + self->contentsOffset.x,
                               ice->position.y + self->contentsOffset.y);
             else
-                CREATE_ENTITY(IceSpring, intToVoid(self->subType + (self->subFlip << 8)), ice->position.x + self->contentsOffset.x,
+                CREATE_ENTITY(IceSpring, INT_TO_VOID(self->subType + (self->subFlip << 8)), ice->position.x + self->contentsOffset.x,
                               ice->position.y + self->contentsOffset.y);
             break;
 
         default: {
             int32 type          = ice->type - ICE_ITEMBOX_RINGS;
-            itemBox             = CREATE_ENTITY(ItemBox, intToVoid(type + (ice->type > ICE_ITEMBOX_1UP ? 2 : 0)), ice->position.x, ice->position.y);
+            itemBox             = CREATE_ENTITY(ItemBox, INT_TO_VOID(type + (ice->type > ICE_ITEMBOX_1UP ? 2 : 0)), ice->position.x, ice->position.y);
             itemBox->velocity.y = -0x18000;
             itemBox->state      = ItemBox_State_Falling;
             break;

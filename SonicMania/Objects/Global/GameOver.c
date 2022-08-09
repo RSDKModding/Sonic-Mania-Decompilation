@@ -68,30 +68,30 @@ void GameOver_Create(void *data)
         else
             RSDK.SetSpriteAnimation(GameOver->aniFrames, 6, &self->animator, true, 0);
 
-        self->finalOffsets[0].x = -0x480000;
-        self->finalOffsets[1].x = -0x370000;
-        self->finalOffsets[2].x = -0x260000;
-        self->finalOffsets[3].x = -0x150000;
-        self->finalOffsets[4].x = 0x0C0000;
-        self->finalOffsets[5].x = 0x1D0000;
-        self->finalOffsets[6].x = 0x2E0000;
-        self->finalOffsets[7].x = 0x3F0000;
+        self->finalOffsets[0].x = -TO_FIXED(72);
+        self->finalOffsets[1].x = -TO_FIXED(55);
+        self->finalOffsets[2].x = -TO_FIXED(38);
+        self->finalOffsets[3].x = -TO_FIXED(21);
+        self->finalOffsets[4].x = TO_FIXED(12);
+        self->finalOffsets[5].x = TO_FIXED(29);
+        self->finalOffsets[6].x = TO_FIXED(46);
+        self->finalOffsets[7].x = TO_FIXED(63);
 
-        int32 posY = -0x200000;
+        int32 posY = -TO_FIXED(32);
         for (int32 i = 0; i < GAMEOVER_LETTER_COUNT; ++i) {
             self->letterPosMove[i].x = -(self->finalOffsets[i].x >> 4);
             self->letterPosMove[i].y = 0x2000;
 
-            self->finalOffsets[i].y = (ScreenInfo->center.y - 4) << 16;
+            self->finalOffsets[i].y = TO_FIXED(ScreenInfo->center.y - 4);
 
             self->letterPositions[i].x = 8 * ((ScreenInfo->center.x << 13) + self->finalOffsets[i].x);
             self->letterPositions[i].y = posY;
 
-            posY -= 0x100000;
+            posY -= TO_FIXED(16);
         }
 
-        self->barPos.x  = 0x1000000;
-        self->barPos.y  = ScreenInfo->center.y << 16;
+        self->barPos.x  = TO_FIXED(256);
+        self->barPos.y  = TO_FIXED(ScreenInfo->center.y);
         self->scale.x   = 0x800;
         self->state     = GameOver_State_EnterLetters;
         self->drawGroup = Zone->huddrawGroup + 1;
@@ -128,19 +128,19 @@ void GameOver_State_EnterLetters(void)
     RSDK_THIS(GameOver);
 
     if (self->barPos.x > 0)
-        self->barPos.x -= 0x40000;
+        self->barPos.x -= TO_FIXED(4);
 
-    self->verts[0].x = self->barPos.x + ((ScreenInfo->center.x - 104) << 16);
-    self->verts[1].x = self->barPos.x + ((ScreenInfo->center.x + 88) << 16);
-    self->verts[2].x = self->barPos.x + ((ScreenInfo->center.x + 104) << 16);
-    self->verts[3].x = self->barPos.x + ((ScreenInfo->center.x - 88) << 16);
-    self->verts[0].y = self->barPos.y - 0x80000;
-    self->verts[1].y = self->barPos.y - 0x80000;
-    self->verts[2].y = self->barPos.y + 0x80000;
-    self->verts[3].y = self->barPos.y + 0x80000;
+    self->verts[0].x = self->barPos.x + TO_FIXED(ScreenInfo->center.x - 104);
+    self->verts[1].x = self->barPos.x + TO_FIXED(ScreenInfo->center.x + 88);
+    self->verts[2].x = self->barPos.x + TO_FIXED(ScreenInfo->center.x + 104);
+    self->verts[3].x = self->barPos.x + TO_FIXED(ScreenInfo->center.x - 88);
+    self->verts[0].y = self->barPos.y - TO_FIXED(8);
+    self->verts[1].y = self->barPos.y - TO_FIXED(8);
+    self->verts[2].y = self->barPos.y + TO_FIXED(8);
+    self->verts[3].y = self->barPos.y + TO_FIXED(8);
 
     for (int32 i = 0; i < GAMEOVER_LETTER_COUNT; ++i) {
-        self->letterPositions[i].x = (ScreenInfo->center.x << 16) + self->scale.x * (self->finalOffsets[i].x >> 9);
+        self->letterPositions[i].x = TO_FIXED(ScreenInfo->center.x) + self->scale.x * (self->finalOffsets[i].x >> 9);
         if (self->letterBounceCount[i] < 3) {
             self->letterPosMove[i].y += 0x4000;
             self->letterPositions[i].y += self->letterPosMove[i].y;
@@ -287,14 +287,14 @@ void GameOver_State_ExitLetters(void)
             self->letterPositions[i].y += self->letterPosMove[i].y;
             self->letterRotations[i] += self->letterRotateSpeed[i];
         }
-        self->verts[0].x -= 0x100000;
-        self->verts[0].y -= 0x80000;
-        self->verts[1].x += 0x100000;
-        self->verts[1].y -= 0x80000;
-        self->verts[2].x += 0x100000;
-        self->verts[2].y += 0x80000;
-        self->verts[3].x -= 0x100000;
-        self->verts[3].y += 0x80000;
+        self->verts[0].x -= TO_FIXED(16);
+        self->verts[0].y -= TO_FIXED(8);
+        self->verts[1].x += TO_FIXED(16);
+        self->verts[1].y -= TO_FIXED(8);
+        self->verts[2].x += TO_FIXED(16);
+        self->verts[2].y += TO_FIXED(8);
+        self->verts[3].x -= TO_FIXED(16);
+        self->verts[3].y += TO_FIXED(8);
         self->scale.x += 0x20;
         self->scale.y += 0x20;
         ++self->timer;

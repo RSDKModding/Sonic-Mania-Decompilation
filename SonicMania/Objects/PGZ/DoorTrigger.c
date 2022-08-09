@@ -116,7 +116,7 @@ void DoorTrigger_Update(void)
                         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &shard->animator, true, RSDK.Rand(0, 4));
                     }
 
-                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), spawnX, spawnY)->drawGroup = Zone->objectDrawHigh;
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), spawnX, spawnY)->drawGroup = Zone->objectDrawHigh;
                 }
             }
             else {

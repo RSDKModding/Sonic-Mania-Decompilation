@@ -44,8 +44,8 @@ void Eggman_Create(void *data)
             self->drawFX        = FX_FLIP;
             self->drawGroup     = Zone->objectDrawLow;
             self->parent        = (Entity *)data;
-            self->updateRange.x = 0x400000;
-            self->updateRange.y = 0x800000;
+            self->updateRange.x = TO_FIXED(64);
+            self->updateRange.y = TO_FIXED(128);
             self->hitbox.left   = -10;
             self->hitbox.top    = -24;
             self->hitbox.right  = 10;
@@ -142,7 +142,7 @@ void Eggman_State_FallAndCollide(void)
 
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
-    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x100000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, TO_FIXED(16), true)) {
         self->onGround = true;
         self->state    = Eggman_State_ProcessAnimation;
     }

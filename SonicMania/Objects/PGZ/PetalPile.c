@@ -85,8 +85,8 @@ int32 PetalPile_GetLeafPattern(Vector2 *patternPtr)
         default: return 0;
     }
 
-    int32 sizeX = maxVal(self->pileSize.x, 0x20000);
-    int32 sizeY = maxVal(self->pileSize.y, 0x20000);
+    int32 sizeX = MAX(self->pileSize.x, 0x20000);
+    int32 sizeY = MAX(self->pileSize.y, 0x20000);
     for (int32 i = 0; i < count; ++i) {
         patternPtr[i].x = pattern[(i * 2) + 0] * (sizeX >> 17);
         patternPtr[i].y = pattern[(i * 2) + 1] * (sizeY >> 17);
@@ -201,7 +201,7 @@ void PetalPile_State_SetupEmitter(void)
     }
 
     int32 pos = 0;
-    for (int32 i = 0; i < count; ++i) pos = maxVal(pos, abs((self->position.x - offsetX) + pattern[i].x));
+    for (int32 i = 0; i < count; ++i) pos = MAX(pos, abs((self->position.x - offsetX) + pattern[i].x));
 
     for (int32 i = 0; i < count; ++i) {
         int32 spawnX = pattern[i].x + self->position.x;
@@ -319,9 +319,9 @@ void PetalPile_StateLeaf_HandleVelocity(void)
     self->position.x += self->petalVel;
 
     if (self->velocity.x <= 0)
-        self->velocity.x += minVal(abs(self->velocity.x), 0x8000);
+        self->velocity.x += MIN(abs(self->velocity.x), 0x8000);
     else
-        self->velocity.x -= minVal(abs(self->velocity.x), 0x8000);
+        self->velocity.x -= MIN(abs(self->velocity.x), 0x8000);
     self->velocity.y += 0x4000;
 
     if (self->velocity.y > 0)

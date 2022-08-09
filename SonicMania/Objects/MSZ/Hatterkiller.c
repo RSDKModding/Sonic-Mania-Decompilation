@@ -37,7 +37,7 @@ void Hatterkiller_Update(void)
 
             CREATE_ENTITY(FXSpinRay, NULL, self->position.x, self->position.y)->parent = (Entity *)self;
 
-            EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+            EntityFXFade *fade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
             fade->speedIn      = 8;
             fade->speedOut     = 8;
         }
@@ -129,7 +129,7 @@ void Hatterkiller_Create(void *data)
 
         int32 delay = 0;
         for (int32 s = 0; s < HATTERKILLER_SEGMENT_COUNT; ++s) {
-            self->bodyVelocities[s].x = voidToInt(data);
+            self->bodyVelocities[s].x = VOID_TO_INT(data);
             self->bodyVelocities[s].y = -0x40000;
             self->bodyAnimators[s]    = &self->bodyAnimator;
             self->bodyDelays[s]       = delay;
@@ -139,7 +139,7 @@ void Hatterkiller_Create(void *data)
 
         self->bodyAnimators[0] = &self->headAnimator;
 
-        if (voidToInt(data) >= 0)
+        if (VOID_TO_INT(data) >= 0)
             RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 3, &self->headAnimator, true, 0);
         else
             RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 2, &self->headAnimator, true, 0);
@@ -175,7 +175,7 @@ void Hatterkiller_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
 
-    CREATE_ENTITY(Hatterkiller, intToVoid(-0x20000), self->position.x, self->position.y);
+    CREATE_ENTITY(Hatterkiller, INT_TO_VOID(-0x20000), self->position.x, self->position.y);
 }
 
 #if RETRO_INCLUDE_EDITOR

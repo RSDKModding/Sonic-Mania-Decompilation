@@ -90,7 +90,7 @@ void SSZSpikeBall_Create(void *data)
         }
 
         self->state                = SSZSpikeBall_State_AwaitInterval;
-        self->baseAnimator.frameID = minVal(self->type, 4);
+        self->baseAnimator.frameID = MIN(self->type, 4);
     }
 }
 
@@ -313,7 +313,7 @@ void SSZSpikeBall_EditorDraw(void)
         default: break;
     }
 
-    self->baseAnimator.frameID = minVal(self->type, 4);
+    self->baseAnimator.frameID = MIN(self->type, 4);
 
     SSZSpikeBall_Draw();
 

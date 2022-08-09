@@ -61,7 +61,7 @@ void CPZ2Outro_SetupCutscene(void)
 bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);

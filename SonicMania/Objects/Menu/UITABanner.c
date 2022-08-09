@@ -221,7 +221,7 @@ void UITABanner_DrawBannerInfo(uint8 actID, uint8 zoneID, uint8 characterID, boo
         else
             RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->zoneNameAnimator, true, 0);
 
-        RSDK.DrawText(&self->zoneNameAnimator, &drawPos, &self->zoneName, 0, self->zoneName.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
+        RSDK.DrawText(&self->zoneNameAnimator, &drawPos, &self->zoneName, 0, self->zoneName.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
     }
 }
 

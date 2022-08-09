@@ -45,7 +45,7 @@ void PhantomKing_Create(void *data)
         self->updateRange.y = 0x1000000;
         self->drawGroup     = Zone->objectDrawLow;
         self->drawFX        = FX_ROTATE | FX_FLIP;
-        self->type          = voidToInt(data);
+        self->type          = VOID_TO_INT(data);
 
         switch (self->type) {
             case PHANTOMKING_KING:
@@ -161,7 +161,7 @@ void PhantomKing_Explode(void)
         if (Zone->timer & 8) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -251,7 +251,7 @@ void PhantomKing_HandleAttacks(void)
     if (!launchedAttack) {
         // No More Attacks, lets make more
         for (int32 i = 0; i < 0x3FC; i += 0xAA) {
-            EntityPKingAttack *attack = CREATE_ENTITY(PKingAttack, intToVoid(PKINGATTACK_ORBIT), self->position.x, self->position.y);
+            EntityPKingAttack *attack = CREATE_ENTITY(PKingAttack, INT_TO_VOID(PKINGATTACK_ORBIT), self->position.x, self->position.y);
             attack->angle             = i;
             attack->target            = (Entity *)self;
         }
@@ -407,7 +407,7 @@ void PhantomKing_State_SetupArms(void)
 
     if (++self->timer == 30) {
         EntityPhantomKing *armL = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, PhantomKing);
-        RSDK.ResetEntity(armL, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_L));
+        RSDK.ResetEntity(armL, PhantomKing->classID, INT_TO_VOID(PHANTOMKING_ARM_L));
         armL->position.x     = self->position.x;
         armL->position.y     = self->position.y;
         armL->parent         = self;
@@ -416,7 +416,7 @@ void PhantomKing_State_SetupArms(void)
         armL->armAngleOffset = 32;
 
         EntityPhantomKing *armR = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PhantomKing);
-        RSDK.ResetEntity(armR, PhantomKing->classID, intToVoid(PHANTOMKING_ARM_R));
+        RSDK.ResetEntity(armR, PhantomKing->classID, INT_TO_VOID(PHANTOMKING_ARM_R));
         armR->position.x     = self->position.x;
         armR->position.y     = self->position.y;
         armR->parent         = self;

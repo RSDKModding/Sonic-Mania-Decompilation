@@ -17,7 +17,7 @@ void Syringe_Update(void)
         if (self->offsetY < 0x280000) {
             self->offsetY += 0x8000;
             if (!(Zone->timer & 3))
-                CREATE_ENTITY(Reagent, intToVoid(self->type), self->position.x, self->position.y + 0x680000);
+                CREATE_ENTITY(Reagent, INT_TO_VOID(self->type), self->position.x, self->position.y + 0x680000);
         }
 
         self->active = ACTIVE_NORMAL;
@@ -40,7 +40,7 @@ void Syringe_Update(void)
             if (camera) {
                 if (camera->lookPos.y < 96) {
                     camera->lookPos.y += 8;
-                    camera->lookPos.y = minVal(camera->lookPos.y, 80);
+                    camera->lookPos.y = MIN(camera->lookPos.y, 80);
                 }
             }
         }

@@ -136,7 +136,7 @@ void ShopWindow_State_Shattered(void)
             int32 posX = self->position.x - (self->size.x << 16) + 0x80000;
             for (int32 x = 0; x < cntX; ++x) {
                 EntityShopWindow *shard =
-                    CREATE_ENTITY(ShopWindow, intToVoid(true), posX + ((RSDK.Rand(0, 8) - 4) << 16), posY + ((RSDK.Rand(0, 8) - 4) << 16));
+                    CREATE_ENTITY(ShopWindow, INT_TO_VOID(true), posX + ((RSDK.Rand(0, 8) - 4) << 16), posY + ((RSDK.Rand(0, 8) - 4) << 16));
 
                 if (RSDK.Rand(0, 3) == 1)
                     RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 3, &shard->animator, 0, RSDK.Rand(0, 18));
@@ -192,8 +192,8 @@ void ShopWindow_Draw_Normal(void)
     Vector2 drawPos;
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    int32 x = (self->position.x >> 0x10) - screen->position.x - self->size.x;
-    int32 y = (self->position.y >> 0x10) - screen->position.y - self->size.y;
+    int32 x = FROM_FIXED(self->position.x) - screen->position.x - self->size.x;
+    int32 y = FROM_FIXED(self->position.y) - screen->position.y - self->size.y;
     RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + 2 * self->size.x, y + 2 * self->size.y + 1);
 
     drawPos.x = (x - (uint8)(x + (screen->position.x >> 1))) << 16;
@@ -237,7 +237,7 @@ void ShopWindow_Draw_Shattered(void)
     RSDK_THIS(ShopWindow);
 
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
-    RSDK.DrawRect((self->position.x >> 0x10) - screen->position.x - self->size.x, (self->position.y >> 0x10) - screen->position.y - self->size.y,
+    RSDK.DrawRect(FROM_FIXED(self->position.x) - screen->position.x - self->size.x, FROM_FIXED(self->position.y) - screen->position.y - self->size.y,
                   2 * self->size.x, 2 * self->size.y, 0xF0F0F0, 0xFF, INK_NONE, true);
 }
 

@@ -66,7 +66,7 @@ void BarStool_Update(void)
 
                 int32 ang = self->playerAngle[playerID] >> 16;
 
-                player->position.x = clampVal((self->playerPos[playerID] >> 8) * RSDK.Cos256(ang), -0x100000, 0x100000);
+                player->position.x = CLAMP((self->playerPos[playerID] >> 8) * RSDK.Cos256(ang), -0x100000, 0x100000);
                 ang &= 0xFF;
 
                 int32 frame = (ang / 21) % 12;

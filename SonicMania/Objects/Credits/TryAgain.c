@@ -153,12 +153,12 @@ void TryAgain_State_Stinger(void)
     if (self->timer == 600) {
 #if MANIA_USE_PLUS
         PhantomRuby_PlaySfx(RUBYSFX_ATTACK4);
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xFFFFFF), self->position.x, self->position.y);
         fxFade->speedIn      = 24;
         fxFade->speedOut     = 24;
         fxFade->fadeOutBlack = true;
 #else
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0x000000), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0x000000), self->position.x, self->position.y);
         fxFade->speedIn      = 12;
         fxFade->wait         = 240;
 #endif

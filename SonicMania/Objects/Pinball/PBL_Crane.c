@@ -40,7 +40,7 @@ void PBL_Crane_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->drawGroup = 9;
         self->active    = ACTIVE_NORMAL;
-        self->type      = voidToInt(data);
+        self->type      = VOID_TO_INT(data);
 
         switch (self->type) {
             case PBL_CRANE_MANAGER:
@@ -145,7 +145,7 @@ void PBL_Crane_HandlePrizes(void)
 
         case PBL_CRANE_PRIZE_RINGS:
             globals->restartRings += PBL_Setup->rings;
-            globals->restartRings = clampVal(globals->restartRings, 0, 999);
+            globals->restartRings = CLAMP(globals->restartRings, 0, 999);
 
             if (globals->gameMode == MODE_MANIA && globals->restartRings >= globals->restart1UP) {
                 PBL_Setup_GiveLife();
@@ -281,7 +281,7 @@ void PBL_Crane_State_CreatePrizes(void)
     self->state  = PBL_Crane_State_DisplayPrizes;
 
     for (int32 i = 1; i < 6; ++i) {
-        EntityPBL_Crane *prize = CREATE_ENTITY(PBL_Crane, intToVoid(PBL_CRANE_PRIZEDISPLAY), spawnX, spawnY);
+        EntityPBL_Crane *prize = CREATE_ENTITY(PBL_Crane, INT_TO_VOID(PBL_CRANE_PRIZEDISPLAY), spawnX, spawnY);
         if (globals->gameMode == MODE_ENCORE) {
             if (!((1 << i) & globals->characterFlags) || i == PBL_CRANE_PRIZE_EGGMAN) {
                 prize->displayAnimator.frameID = i;
@@ -303,7 +303,7 @@ void PBL_Crane_State_CreatePrizes(void)
         prize->parent = self;
     }
 
-    CREATE_ENTITY(PBL_Crane, intToVoid(PBL_CRANE_CRANE), self->position.x, -0x180000)->parent = self;
+    CREATE_ENTITY(PBL_Crane, INT_TO_VOID(PBL_CRANE_CRANE), self->position.x, -0x180000)->parent = self;
 
     if (PBL_Setup->sectorID < PBL_Setup->sectorCount)
         PBL_Setup->sectorID++;
@@ -474,7 +474,7 @@ void PBL_Crane_StateCrane_Rise(void)
 
     if (self->position.y <= 0x100000) {
         if (self->displayAnimator.animationID == 6) {
-            EntityPBL_Crane *crane = CREATE_ENTITY(PBL_Crane, intToVoid(PBL_CRANE_PRIZE), self->position.x, self->position.y + 0x1A0000);
+            EntityPBL_Crane *crane = CREATE_ENTITY(PBL_Crane, INT_TO_VOID(PBL_CRANE_PRIZE), self->position.x, self->position.y + 0x1A0000);
             crane->displayAnimator = self->displayAnimator;
             crane->parent          = self->parent;
             RSDK.SetSpriteAnimation(-1, 0, &self->displayAnimator, false, 0);

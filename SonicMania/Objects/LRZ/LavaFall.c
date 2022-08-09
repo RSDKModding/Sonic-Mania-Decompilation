@@ -107,7 +107,7 @@ void LavaFall_State_LavaFall(void)
     ++LavaFall->lavaSfxTimer;
     if (++self->animator.timer == 8) {
         self->animator.timer = 0;
-        CREATE_ENTITY(LavaFall, intToVoid(true), self->position.x, self->position.y);
+        CREATE_ENTITY(LavaFall, INT_TO_VOID(true), self->position.x, self->position.y);
     }
 }
 

@@ -54,10 +54,10 @@ void PhantomRider_Create(void *data)
         self->drawGroup     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->type          = voidToInt(data);
+        self->type          = VOID_TO_INT(data);
 
         if (data) {
-            if (voidToInt(data) == PHANTOMRIDER_JIMMY) {
+            if (VOID_TO_INT(data) == PHANTOMRIDER_JIMMY) {
                 self->active = ACTIVE_NORMAL;
                 self->state  = PhantomRider_State_Jimmy;
             }
@@ -159,7 +159,7 @@ void PhantomRider_State_HandleBegin(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (player1->position.x > self->position.x) {
-        EntityPhantomRider *child = CREATE_ENTITY(PhantomRider, intToVoid(PHANTOMRIDER_JIMMY), player1->position.x, player1->position.y);
+        EntityPhantomRider *child = CREATE_ENTITY(PhantomRider, INT_TO_VOID(PHANTOMRIDER_JIMMY), player1->position.x, player1->position.y);
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->target       = (Entity *)child;

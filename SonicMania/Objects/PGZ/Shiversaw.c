@@ -350,7 +350,7 @@ void Shiversaw_Explode(void)
             int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh + 2;
         }
     }
@@ -1190,7 +1190,7 @@ void Shiversaw_StateSaw_Destroyed(void)
     }
 
     if (!(Zone->timer & 0xF)) {
-        EntityIce *ice           = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), self->sawPos[self->sawID].x, self->sawPos[self->sawID].y);
+        EntityIce *ice           = CREATE_ENTITY(Ice, INT_TO_VOID(ICE_CHILD_SHARD), self->sawPos[self->sawID].x, self->sawPos[self->sawID].y);
         ice->velocity.x          = RSDK.Rand(-6, 8) << 15;
         ice->velocity.y          = RSDK.Rand(-10, 2) << 15;
         ice->direction           = RSDK.Rand(0, 4);

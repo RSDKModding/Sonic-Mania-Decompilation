@@ -40,24 +40,24 @@ struct ObjectHUD {
 struct EntityHUD {
     RSDK_ENTITY
     StateMachine(state);
-    Vector2 scoreOffset;
-    Vector2 timeOffset;
-    Vector2 ringsOffset;
-    Vector2 lifeOffset;
+    Vector2 scorePos;
+    Vector2 timePos;
+    Vector2 ringsPos;
+    Vector2 lifePos;
 #if MANIA_USE_PLUS
     int32 lifeFrameIDs[PLAYER_COUNT];
     int32 lives[PLAYER_COUNT];
 #endif
-    int32 maxOffset;
+    int32 targetPos;
 #if GAME_VERSION != VER_100
-    int32 superButtonPos;
+    int32 actionPromptPos;
 #endif
 #if MANIA_USE_PLUS
     StateMachine(vsStates[PLAYER_COUNT]);
-    Vector2 vsScoreOffsets[PLAYER_COUNT];
-    Vector2 vsTimeOffsets[PLAYER_COUNT];
-    Vector2 vsRingsOffsets[PLAYER_COUNT];
-    Vector2 vsLifeOffsets[PLAYER_COUNT];
+    Vector2 vsScorePos[PLAYER_COUNT];
+    Vector2 vsTimePos[PLAYER_COUNT];
+    Vector2 vsRingsPos[PLAYER_COUNT];
+    Vector2 vsLifePos[PLAYER_COUNT];
     int32 vsMaxOffsets[PLAYER_COUNT];
     int32 screenID;
 #endif

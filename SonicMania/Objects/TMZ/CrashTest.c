@@ -432,7 +432,7 @@ void CrashTest_State_Crashed(void)
             if (Zone->timer & 4) {
                 int32 x                    = startX + (RSDK.Rand(-16, 16) << 16);
                 int32 y                    = self->startPos.y + (RSDK.Rand(-22, 0) << 16);
-                EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
+                EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + 2), x, y);
                 explosion->drawGroup       = Zone->objectDrawHigh;
             }
         }

@@ -171,7 +171,7 @@ void EggLoco_SfxUpdate_LocoChugga(int32 sfx)
     {
         int32 distX = abs(screenX - eggLoco->position.x) >> 16;
         int32 distY = abs(screenY - eggLoco->position.y) >> 16;
-        int32 vol   = minVal(MathHelpers_SquareRoot(distX * distX + distY * distY), 840);
+        int32 vol   = MIN(MathHelpers_SquareRoot(distX * distX + distY * distY), 840);
 
         RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (vol / 840.0), 0.0, 1.0);
         foreach_break;

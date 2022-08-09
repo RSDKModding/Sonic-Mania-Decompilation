@@ -113,7 +113,7 @@ void UFO_Setup_StageLoad(void)
         for (int32 i = 0; i < 0x200; i += 0x10) {
             int32 deform = RSDK.Rand(0, 4);
 
-            int32 deformPos = clampVal(i, 0, 0x200);
+            int32 deformPos = CLAMP(i, 0, 0x200);
 
             int32 angle = 0;
             for (int32 d = 0; d < 0x10; ++d) {
@@ -127,7 +127,7 @@ void UFO_Setup_StageLoad(void)
         for (int32 i = 0; i < 0x200; i += 0x10) {
             int32 deform = RSDK.Rand(0, 4);
 
-            int32 deformPos = clampVal(i, 0, 0x200);
+            int32 deformPos = CLAMP(i, 0, 0x200);
 
             int32 angle = 0;
             for (int32 d = 0; d < 0x10; ++d) {
@@ -197,14 +197,14 @@ void UFO_Setup_Scanline_Playfield(ScanlineInfo *scanlines)
     int32 cosVal = -SCREEN_YCENTER * cosX;
 
     for (int32 i = -SCREEN_YCENTER; i < SCREEN_YCENTER; ++i) {
-        int32 div = maxVal(sinX + (cosVal >> 8), 1);
+        int32 div = MAX(sinX + (cosVal >> 8), 1);
 
         int32 h             = camera->height / div;
         scanlines->deform.x = (-cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
 
         int32 pos = ((cosX * h) >> 8) - (sinX * ((i * h) >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal(abs(pos) >> 15, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
+        RSDK.SetActivePalette(CLAMP(abs(pos) >> 15, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
         scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
         scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
@@ -228,14 +228,14 @@ void UFO_Setup_Scanline_3DFloor(ScanlineInfo *scanlines)
     int32 cosVal = -SCREEN_YCENTER * cosX;
 
     for (int32 i = -SCREEN_YCENTER; i < SCREEN_YCENTER; ++i) {
-        int32 div = maxVal(sinX + (cosVal >> 8), 1);
+        int32 div = MAX(sinX + (cosVal >> 8), 1);
 
         int32 h             = (camera->height + 0x1000000) / div;
         scanlines->deform.x = -(cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
 
         int32 pos = ((cosX * h) >> 8) - (sinX * ((i * h) >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal((abs(pos) >> 15) - 8, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
+        RSDK.SetActivePalette(CLAMP((abs(pos) >> 15) - 8, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
         scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + camera->position.x;
         scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + camera->position.y;
@@ -259,14 +259,14 @@ void UFO_Setup_Scanline_3DRoof(ScanlineInfo *scanlines)
     int32 height = (camera->height >> 2) - 0x600000;
 
     for (int32 i = -SCREEN_YCENTER; i < SCREEN_YCENTER; ++i) {
-        int32 div = maxVal(sinX + (cosVal >> 8), 1);
+        int32 div = MAX(sinX + (cosVal >> 8), 1);
 
         int32 h             = height / div;
         scanlines->deform.x = -(cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
 
         int32 pos = ((cosX * h) >> 8) - (sinX * ((i * h) >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal(abs(pos) >> 14, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
+        RSDK.SetActivePalette(CLAMP(abs(pos) >> 14, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
         scanlines->position.x = (sin * pos - ScreenInfo->center.x * scanlines->deform.x) + (camera->position.x >> 3);
         scanlines->position.y = (cos * pos - ScreenInfo->center.x * scanlines->deform.y) + (camera->position.y >> 3);
@@ -360,7 +360,7 @@ void UFO_Setup_State_ShowStartMessage(void)
         self->state   = UFO_Setup_State_HandleRingDrain;
 
         SceneInfo->timeEnabled = true;
-        CREATE_ENTITY(UFO_Message, intToVoid(UFO_MESSAGE_CATCHUFO), self->position.x, self->position.y);
+        CREATE_ENTITY(UFO_Message, INT_TO_VOID(UFO_MESSAGE_CATCHUFO), self->position.x, self->position.y);
     }
     else {
         self->timer -= 0x10;
@@ -421,7 +421,7 @@ void UFO_Setup_State_HandleRingDrain(void)
         if (!UFO_Setup->rings && !UFO_Setup->timedOut) {
             UFO_Setup->timedOut = true;
 
-            CREATE_ENTITY(UFO_Message, intToVoid(UFO_MESSAGE_TIMEOVER), self->position.x, self->position.y);
+            CREATE_ENTITY(UFO_Message, INT_TO_VOID(UFO_MESSAGE_TIMEOVER), self->position.x, self->position.y);
 
             self->state = UFO_Setup_State_TimedOver;
         }

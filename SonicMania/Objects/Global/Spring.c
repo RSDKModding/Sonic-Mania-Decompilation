@@ -43,7 +43,7 @@ void Spring_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->type %= 6;
         if (data) {
-            int32 propertyVal = voidToInt(data);
+            int32 propertyVal = VOID_TO_INT(data);
             self->type        = (propertyVal >> 0) & 0xFF;
             self->flipFlag    = (propertyVal >> 8) & 0xFF;
         }
@@ -51,8 +51,8 @@ void Spring_Create(void *data)
         RSDK.SetSpriteAnimation(Spring->aniFrames, self->type, &self->animator, true, 0);
         self->active         = ACTIVE_BOUNDS;
         self->animator.speed = 0;
-        self->updateRange.x  = 0x600000;
-        self->updateRange.y  = 0x600000;
+        self->updateRange.x  = TO_FIXED(96);
+        self->updateRange.y  = TO_FIXED(96);
         self->visible        = true;
 
         if (self->planeFilter && ((uint8)self->planeFilter - 1) & 2)
@@ -64,9 +64,9 @@ void Spring_Create(void *data)
             case 0: // vertical
                 self->direction = self->flipFlag;
                 if (self->type & 1)
-                    self->velocity.y = 0x100000;
+                    self->velocity.y = TO_FIXED(16);
                 else
-                    self->velocity.y = 0xA0000;
+                    self->velocity.y = TO_FIXED(10);
 
                 if (!self->flipFlag)
                     self->velocity.y = -self->velocity.y;
@@ -82,9 +82,10 @@ void Spring_Create(void *data)
             case 1: // horizontal
                 self->direction = self->flipFlag;
                 if (self->type & 1)
-                    self->velocity.x = 0x100000;
+                    self->velocity.x = TO_FIXED(16);
                 else
-                    self->velocity.x = 0xA0000;
+                    self->velocity.x = TO_FIXED(10);
+
                 if (self->flipFlag)
                     self->velocity.x = -self->velocity.x;
 

@@ -94,7 +94,7 @@ void BSS_Collected_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_NORMAL;
-        self->type   = voidToInt(data);
+        self->type   = VOID_TO_INT(data);
     }
 }
 

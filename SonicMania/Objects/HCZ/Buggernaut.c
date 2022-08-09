@@ -167,7 +167,7 @@ void Buggernaut_State_Init(void)
     self->velocity.x = 0;
     self->velocity.y = 0;
 
-    EntityBuggernaut *child = CREATE_ENTITY(Buggernaut, intToVoid(true), x, y);
+    EntityBuggernaut *child = CREATE_ENTITY(Buggernaut, INT_TO_VOID(true), x, y);
     RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 1, &child->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 3, &child->wingAnimator, true, 0);
     child->active      = ACTIVE_NORMAL;

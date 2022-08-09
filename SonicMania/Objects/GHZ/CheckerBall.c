@@ -338,7 +338,7 @@ void CheckerBall_HandleObjectCollisions(void)
     foreach_active(CheckerBall, checkerBall)
     {
         if (checkerBall != self && self->collisionPlane == checkerBall->collisionPlane) {
-            int32 pos = minVal(abs(self->position.x - checkerBall->position.x) >> 17, 23);
+            int32 pos = MIN(abs(self->position.x - checkerBall->position.x) >> 17, 23);
 
             Hitbox hitboxBall;
             hitboxBall.top    = CheckerBall->heightArray[pos] - 22 + (CheckerBall->heightArray[pos] >> 1);
@@ -558,7 +558,7 @@ void CheckerBall_HandleObjectCollisions(void)
             ItemBox->brokenFrame %= 3;
             RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
             RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - 0x100000);
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - 0x100000);
 
             for (int32 i = 0; i < 6; ++i) {
                 EntityDebris *debris    = CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
@@ -611,7 +611,7 @@ void CheckerBall_HandleObjectCollisions(void)
                 for (int32 x = 0; x < 2; ++x) {
                     int32 tx                  = breakableWall->position.x + offsets[0];
                     int32 ty                  = breakableWall->position.y + offsets[1];
-                    EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, ty);
+                    EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), tx, ty);
                     tile->tileInfo            = RSDK.GetTile(Zone->fgHigh, tx >> 20, ty >> 20);
                     tile->velocity.x          = velocities[0];
                     tile->velocity.y          = velocities[1];

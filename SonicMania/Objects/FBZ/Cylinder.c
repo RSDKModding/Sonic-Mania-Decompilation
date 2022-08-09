@@ -616,7 +616,7 @@ void Cylinder_State_Pillar(void)
 
                     player->position.y += player->velocity.y;
 
-                    int32 len   = minVal(abs(player->position.y - top) >> 16, self->length);
+                    int32 len   = MIN(abs(player->position.y - top) >> 16, self->length);
                     int32 frame = 0;
 
                     int32 angle = ((len << 10) / 0xC0 + (((uint32)player->groundVel >> 22) & 0x200)) & 0x3FF;

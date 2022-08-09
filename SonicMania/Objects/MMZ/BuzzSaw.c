@@ -94,9 +94,9 @@ void BuzzSaw_SfxUpdate_SawSus(int32 sfx)
     int32 worldX = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
     int32 worldY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
 
-    foreach_all(BuzzSaw, saw) { dist = minVal(MathHelpers_Distance(saw->position.x, saw->position.y, worldX, worldY), dist); }
+    foreach_all(BuzzSaw, saw) { dist = MIN(MathHelpers_Distance(saw->position.x, saw->position.y, worldX, worldY), dist); }
 
-    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (minVal(dist >> 16, 640) / 640.0), 0.0, 1.0);
+    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (MIN(dist >> 16, 640) / 640.0), 0.0, 1.0);
 }
 
 void BuzzSaw_CheckPlayerCollisions(void)

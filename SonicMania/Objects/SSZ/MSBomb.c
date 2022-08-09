@@ -103,30 +103,30 @@ void MSBomb_State_SilverSonicExplode(void)
 
         foreach_active(MetalSonic, metal)
         {
-            xVel = maxVal(abs(self->position.x - metal->position.x) >> 6, 0x20000);
+            xVel = MAX(abs(self->position.x - metal->position.x) >> 6, 0x20000);
             yVel = abs(self->position.y - metal->position.y) >> 6;
         }
 
-        EntityMSBomb *bomb = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
+        EntityMSBomb *bomb = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
         yVel               = -yVel;
         bomb->velocity.x   = -xVel;
         bomb->velocity.y   = yVel;
 
-        bomb             = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
+        bomb             = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
         bomb->velocity.x = xVel;
         bomb->velocity.y = yVel;
 
-        bomb             = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
+        bomb             = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
         yVel             = -(yVel >> 1);
         bomb->velocity.x = -xVel;
         bomb->velocity.y = yVel;
 
-        bomb             = CREATE_ENTITY(MSBomb, intToVoid(true), self->position.x, self->position.y);
+        bomb             = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
         bomb->velocity.x = xVel;
         bomb->velocity.y = yVel;
 
         RSDK.PlaySfx(MSBomb->sfxExplosion, false, 0xFF);
-        RSDK.ResetEntity(self, Explosion->classID, intToVoid(EXPLOSION_BOSS));
+        RSDK.ResetEntity(self, Explosion->classID, INT_TO_VOID(EXPLOSION_BOSS));
         self->position.x = bomb->position.x;
         self->position.y = bomb->position.y;
     }
@@ -152,7 +152,7 @@ void MSBomb_State_Bouncing(void)
             if (!--self->timer) {
                 int32 storeX = self->position.x;
                 int32 storeY = self->position.y;
-                RSDK.ResetEntity(self, Explosion->classID, intToVoid(EXPLOSION_BOSS));
+                RSDK.ResetEntity(self, Explosion->classID, INT_TO_VOID(EXPLOSION_BOSS));
                 self->position.x = storeX;
                 self->position.y = storeY;
                 RSDK.PlaySfx(MSBomb->sfxExplosion, false, 255);
@@ -170,7 +170,7 @@ void MSBomb_State_Bouncing(void)
                 if (Player_Hurt(player, self))
                     player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
 
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y);
                 RSDK.PlaySfx(MSBomb->sfxExplosion, false, 255);
                 destroyEntity(self);
             }

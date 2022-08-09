@@ -112,7 +112,7 @@ bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
 bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     int32 targetY = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
     int32 startY  = (ScreenInfo->position.y + ScreenInfo->size.y + 32) << 16;
@@ -162,7 +162,7 @@ bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host)
 bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     player1->position.y = (ScreenInfo->center.y + ScreenInfo->position.y) << 16;
     if (player2->classID == Player->classID)
@@ -174,7 +174,7 @@ bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host)
 bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     int32 startY  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
     int32 targetY = (ScreenInfo->position.y - 32) << 16;
@@ -227,9 +227,9 @@ bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
 bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player1);
-    unused(player2);
-    unused(camera);
+    UNUSED(player1);
+    UNUSED(player2);
+    UNUSED(camera);
 
     if (host->timer >= 64) {
 

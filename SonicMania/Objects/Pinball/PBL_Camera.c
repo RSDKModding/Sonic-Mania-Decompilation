@@ -81,7 +81,7 @@ void PBL_Camera_HandleScreenPos(void)
     int32 height           = ((RSDK.Sin1024(-self->rotationY) << 12) << 8) / angle;
     ScreenInfo->position.y = height - ScreenInfo->center.y + 512;
     self->prevAngle        = self->angle;
-    self->centerY          = clampVal(ScreenInfo->center.y - height + 8, -64, ScreenInfo->size.y);
+    self->centerY          = CLAMP(ScreenInfo->center.y - height + 8, -64, ScreenInfo->size.y);
 }
 
 void PBL_Camera_State_Normal(void)
@@ -91,23 +91,23 @@ void PBL_Camera_State_Normal(void)
     Entity *target = self->target;
     if (target) {
         if (target->position.y < self->position.y - 0x1500000) {
-            self->position.y += maxVal(target->position.y - self->position.y + 0x1500000, -0x100000);
+            self->position.y += MAX(target->position.y - self->position.y + 0x1500000, -0x100000);
         }
         else if (target->position.y > self->position.y - 0xF00000) {
-            self->position.y += minVal(target->position.y - self->position.y + 0xF00000, 0x100000);
+            self->position.y += MIN(target->position.y - self->position.y + 0xF00000, 0x100000);
         }
 
         if (self->position.y < self->curCamBoundaryT + 0x2000000)
             self->position.y = self->curCamBoundaryT + 0x2000000;
 
         if (self->curCamBoundaryT != self->newCamBoundaryT)
-            self->curCamBoundaryT += clampVal(self->newCamBoundaryT - self->curCamBoundaryT, -0x100000, 0x100000);
+            self->curCamBoundaryT += CLAMP(self->newCamBoundaryT - self->curCamBoundaryT, -0x100000, 0x100000);
 
         if (self->position.y > self->curCamBoundaryB + 0x900000)
             self->position.y = self->curCamBoundaryB + 0x900000;
 
         if (self->curCamBoundaryB != self->newCamBoundaryB)
-            self->curCamBoundaryB += clampVal(self->newCamBoundaryB - self->curCamBoundaryB, -0x100000, 0x100000);
+            self->curCamBoundaryB += CLAMP(self->newCamBoundaryB - self->curCamBoundaryB, -0x100000, 0x100000);
     }
 
     RSDK.MatrixTranslateXYZ(&self->matTransform, -self->position.x, -self->worldY, -self->position.y, true);

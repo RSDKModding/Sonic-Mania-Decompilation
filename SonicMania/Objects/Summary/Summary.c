@@ -191,7 +191,7 @@ void Summary_GetPlayTime(char *buffer, int32 time)
 
         while (packedTime >= 6000) {
             ++seconds;
-            packedTime -= minVal(packedTime, 6025);
+            packedTime -= MIN(packedTime, 6025);
         }
 
         if (seconds >= 60) {

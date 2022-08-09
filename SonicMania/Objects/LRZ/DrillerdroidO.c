@@ -50,7 +50,7 @@ void DrillerdroidO_Create(void *data)
             self->visible = true;
 
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case DRILLERDROIDO_MAIN:
@@ -281,7 +281,7 @@ void DrillerdroidO_Explode(void)
         if (!(Zone->timer & 3)) {
             int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -344,7 +344,7 @@ void DrillerdroidO_State_AwaitPlayer(void)
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         self->health = 6;
 
-        CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), self->position.x, self->startY);
+        CREATE_ENTITY(DrillerdroidO, INT_TO_VOID(DRILLERDROIDO_TARGET), self->position.x, self->startY);
         self->position.x = 0;
 
         RSDK.PlaySfx(DrillerdroidO->sfxTargeting, false, 255);
@@ -649,7 +649,7 @@ void DrillerdroidO_State_JumpTargeting(void)
         }
         else {
             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = player1;
+            CREATE_ENTITY(DrillerdroidO, INT_TO_VOID(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = player1;
 
             RSDK.PlaySfx(DrillerdroidO->sfxTargeting, false, 255);
             self->state = DrillerdroidO_State_DecidingDropPos;
@@ -702,7 +702,7 @@ void DrillerdroidO_State_MoveToNextLevel(void)
 
     if (Zone->cameraBoundsT[0] == Zone->cameraBoundsB[0] - SCREEN_YSIZE) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = player1;
+        CREATE_ENTITY(DrillerdroidO, INT_TO_VOID(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = player1;
 
         RSDK.PlaySfx(DrillerdroidO->sfxTargeting, false, 255);
         DrillerdroidO->emitFireballs = true;

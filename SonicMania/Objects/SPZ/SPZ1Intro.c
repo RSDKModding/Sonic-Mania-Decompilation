@@ -115,7 +115,7 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
 bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (!host->timer) {
         player1->velocity.x      = 0;

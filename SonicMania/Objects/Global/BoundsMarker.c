@@ -57,14 +57,14 @@ void BoundsMarker_ApplyBounds(EntityPlayer *player, EntityBoundsMarker *marker, 
             switch (marker->type) {
                 case BOUNDSMARKER_ANY_Y:
                     Zone->playerBoundsB[playerID] = marker->position.y;
-                    Zone->cameraBoundsB[playerID] = Zone->playerBoundsB[playerID] >> 0x10;
+                    Zone->cameraBoundsB[playerID] = FROM_FIXED(Zone->playerBoundsB[playerID]);
                     Zone->deathBoundary[playerID] = marker->position.y;
                     break;
 
                 case BOUNDSMARKER_ABOVE_Y:
                     if (player->position.y < marker->position.y - (marker->offset << 16)) {
                         Zone->playerBoundsB[playerID] = marker->position.y;
-                        Zone->cameraBoundsB[playerID] = Zone->playerBoundsB[playerID] >> 0x10;
+                        Zone->cameraBoundsB[playerID] = FROM_FIXED(Zone->playerBoundsB[playerID]);
                         Zone->deathBoundary[playerID] = marker->position.y;
                     }
                     break;
@@ -72,13 +72,13 @@ void BoundsMarker_ApplyBounds(EntityPlayer *player, EntityBoundsMarker *marker, 
                 case BOUNDSMARKER_BELOW_Y: 
                     if (player->position.y > marker->position.y + (marker->offset << 16)) {
                         Zone->playerBoundsT[playerID] = marker->position.y;
-                        Zone->cameraBoundsT[playerID] = Zone->playerBoundsT[playerID] >> 0x10;
+                        Zone->cameraBoundsT[playerID] = FROM_FIXED(Zone->playerBoundsT[playerID]);
                     }
                     break;
 
                 case BOUNDSMARKER_BELOW_Y_ANY: 
                     Zone->playerBoundsT[playerID] = marker->position.y;
-                    Zone->cameraBoundsT[playerID] = Zone->playerBoundsT[playerID] >> 0x10;
+                    Zone->cameraBoundsT[playerID] = FROM_FIXED(Zone->playerBoundsT[playerID]);
                     break;
 
                 default: break;

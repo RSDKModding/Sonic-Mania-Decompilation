@@ -96,7 +96,7 @@ void PSZLauncher_HandlePlayerCollisions(void)
     {
         int32 playerID = RSDK.GetEntitySlot(player);
 
-        int32 standPos = 31 - clampVal(abs(player->position.x - self->position.x) >> 16, 0, 31);
+        int32 standPos = 31 - CLAMP(abs(player->position.x - self->position.x) >> 16, 0, 31);
         if ((self->direction == FLIP_NONE && player->position.x > self->position.x)
             || (self->direction == FLIP_X && player->position.x < self->position.x))
             standPos = 31;

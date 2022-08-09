@@ -57,8 +57,8 @@ void Decoration_Create(void *data)
             self->alpha = 0xE0;
         }
 
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
+        self->updateRange.x = TO_FIXED(128);
+        self->updateRange.y = TO_FIXED(128);
         RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
 
         if (RSDK.GetFrameID(&self->animator)) // ideally use 'h'
@@ -104,14 +104,14 @@ void Decoration_DrawSprite(void)
 
     Vector2 drawPos, repeat;
 
-    repeat.x  = self->repeatTimes.x >> 16;
-    repeat.y  = self->repeatTimes.y >> 16;
+    repeat.x  = FROM_FIXED(self->repeatTimes.x);
+    repeat.y  = FROM_FIXED(self->repeatTimes.y);
     drawPos.x = self->position.x - ((repeat.x * self->repeatSpacing.x) >> 1);
     drawPos.y = self->position.y - ((repeat.y * self->repeatSpacing.y) >> 1);
 
-    for (int32 y = 0; y < repeat.y + 1; ++y) {
+    for (int32 y = 0; y <= repeat.y; ++y) {
         drawPos.x = self->position.x - (repeat.x * self->repeatSpacing.x >> 1);
-        for (int32 x = 0; x < repeat.x + 1; ++x) {
+        for (int32 x = 0; x <= repeat.x; ++x) {
             RSDK.DrawSprite(&self->animator, &drawPos, false);
             drawPos.x += self->repeatSpacing.x;
         }

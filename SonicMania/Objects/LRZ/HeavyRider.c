@@ -36,7 +36,7 @@ void HeavyRider_Create(void *data)
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             if (!self->type)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case HEAVYRIDER_RIDER:
@@ -409,7 +409,7 @@ void HeavyRider_Explode(void)
         if (!(Zone->timer & 0xF)) {
             int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -726,7 +726,7 @@ void HeavyRider_State_Moving(void)
             if (HeavyRider->spawnFireballs && self->onGround) {
                 if (!--HeavyRider->spawnDelay) {
                     HeavyRider->spawnDelay = 10;
-                    CREATE_ENTITY(HeavyRider, intToVoid(HEAVYRIDER_FIREBALL), self->position.x, self->position.y);
+                    CREATE_ENTITY(HeavyRider, INT_TO_VOID(HEAVYRIDER_FIREBALL), self->position.x, self->position.y);
                 }
             }
         }
@@ -738,7 +738,7 @@ void HeavyRider_State_Moving(void)
 
             if (!--HeavyRider->spawnDelay) {
                 HeavyRider->spawnDelay  = 16;
-                EntityHeavyRider *child = CREATE_ENTITY(HeavyRider, intToVoid(HEAVYRIDER_PUFF), self->position.x, self->position.y + 0x1C0000);
+                EntityHeavyRider *child = CREATE_ENTITY(HeavyRider, INT_TO_VOID(HEAVYRIDER_PUFF), self->position.x, self->position.y + 0x1C0000);
                 if (self->direction == FLIP_X)
                     child->position.x += 0x110000;
                 else
@@ -917,7 +917,7 @@ void HeavyRider_State_Destroyed(void)
     HeavyRider_Explode();
 
     if (--self->timer <= 0) {
-        EntityHeavyRider *child = CREATE_ENTITY(HeavyRider, intToVoid(HEAVYRIDER_JIMMY), self->position.x, self->position.y);
+        EntityHeavyRider *child = CREATE_ENTITY(HeavyRider, INT_TO_VOID(HEAVYRIDER_JIMMY), self->position.x, self->position.y);
         child->direction        = self->direction;
         child->onGround         = false;
         child->tileCollisions   = TILECOLLISION_DOWN;
@@ -960,7 +960,7 @@ void HeavyRider_State_Finish(void)
         self->position.x = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         self->position.y = (ScreenInfo->position.y - 48) << 16;
 
-        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), self->position.x, self->position.y);
+        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, INT_TO_VOID(EGGPRISON_FLYING), self->position.x, self->position.y);
         prison->isPermanent     = true;
         prison->drawGroup       = Zone->objectDrawHigh;
 

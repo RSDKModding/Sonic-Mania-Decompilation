@@ -107,7 +107,7 @@ void Dust_State_GlideTrail(void)
         self->visible = false;
         if (!self->timer && player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y - 0x40000);
+            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y - TO_FIXED(4));
             dust->state          = Dust_State_DustPuff;
             dust->position.y += playerHitbox->bottom << 16;
             dust->drawGroup = player->drawGroup;

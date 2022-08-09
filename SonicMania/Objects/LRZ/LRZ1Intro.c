@@ -94,7 +94,7 @@ void LRZ1Intro_HandleLavaContact(void)
     if (!(Zone->timer & 3)) {
         int32 x                                                              = self->position.x + 0xE00000;
         int32 y                                                              = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
     }
 
     if (self->velocity.y <= 0x10000) {
@@ -120,7 +120,7 @@ void LRZ1Intro_HandleExplosions(void)
     if (!(Zone->timer & 3)) {
         int32 x = self->position.x + RSDK.Rand(-0xE00000, 0xE00000);
         int32 y = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
     }
 }
 

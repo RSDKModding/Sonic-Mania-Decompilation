@@ -138,7 +138,7 @@ void LRZ1Setup_StageFinish_EndAct1(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0);
 
 void LRZ1Setup_DrawHook_ApplyBGSmoothing(void)
 {
-    int32 scroll = minVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
+    int32 scroll = MIN(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
 
     LRZ1Setup->background1->scrollPos = scroll;
     LRZ1Setup->background2->scrollPos = scroll;

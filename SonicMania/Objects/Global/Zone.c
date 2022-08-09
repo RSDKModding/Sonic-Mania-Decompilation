@@ -220,12 +220,12 @@ void Zone_StageLoad(void)
             Zone->cameraBoundsT[s] = 0;
             Zone->cameraBoundsB[s] = layerSize.y;
 
-            Zone->playerBoundsL[s] = Zone->cameraBoundsL[s] << 0x10;
-            Zone->playerBoundsR[s] = Zone->cameraBoundsR[s] << 0x10;
-            Zone->playerBoundsT[s] = Zone->cameraBoundsT[s] << 0x10;
-            Zone->playerBoundsB[s] = Zone->cameraBoundsB[s] << 0x10;
+            Zone->playerBoundsL[s] = TO_FIXED(Zone->cameraBoundsL[s]);
+            Zone->playerBoundsR[s] = TO_FIXED(Zone->cameraBoundsR[s]);
+            Zone->playerBoundsT[s] = TO_FIXED(Zone->cameraBoundsT[s]);
+            Zone->playerBoundsB[s] = TO_FIXED(Zone->cameraBoundsB[s]);
 
-            Zone->deathBoundary[s]      = Zone->cameraBoundsB[s] << 0x10;
+            Zone->deathBoundary[s]      = TO_FIXED(Zone->cameraBoundsB[s]);
             Zone->playerBoundActiveL[s] = true;
             Zone->playerBoundActiveB[s] = false;
         }
@@ -264,7 +264,7 @@ void Zone_StageLoad(void)
             }
         }
         else {
-            session->playerCount = clampVal(session->playerCount, 2, PLAYER_COUNT);
+            session->playerCount = CLAMP(session->playerCount, 2, PLAYER_COUNT);
             RSDK.SetVideoSetting(VIDEOSETTING_SCREENCOUNT, session->playerCount);
         }
     }
@@ -440,8 +440,8 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
         camera->boundsR        = (xOffset >> 16) + ScreenInfo->center.x;
         camera->boundsT        = (yOffset >> 16) - ScreenInfo->size.y;
         camera->boundsB        = yOffset >> 16;
-        Camera->centerBounds.x = 0x80000;
-        Camera->centerBounds.y = 0x40000;
+        Camera->centerBounds.x = TO_FIXED(8);
+        Camera->centerBounds.y = TO_FIXED(4);
     }
 
     Player->savedLives      = globals->restartLives[0];
@@ -563,7 +563,7 @@ void Zone_HandlePlayerBounds(void)
 
         // Left Boundary
         if (Zone->playerBoundActiveL[playerID]) {
-            int32 offset = -0x10000 * playerHitbox->left;
+            int32 offset = -TO_FIXED(1) * playerHitbox->left;
             if (player->position.x - offset <= Zone->playerBoundsL[playerID]) {
                 player->position.x = Zone->playerBoundsL[playerID] + offset;
 
@@ -605,8 +605,8 @@ void Zone_HandlePlayerBounds(void)
 
         // Top Boundary
         if (Zone->playerBoundActiveT[playerID]) {
-            if (player->position.y - 0x140000 < Zone->playerBoundsT[playerID]) {
-                player->position.y = Zone->playerBoundsT[playerID] + 0x140000;
+            if (player->position.y - TO_FIXED(20) < Zone->playerBoundsT[playerID]) {
+                player->position.y = Zone->playerBoundsT[playerID] + TO_FIXED(20);
                 player->velocity.y = 0;
             }
         }
@@ -627,8 +627,8 @@ void Zone_HandlePlayerBounds(void)
 
         // Bottom Boundary
         if (Zone->playerBoundActiveB[playerID]) {
-            if (player->position.y + 0x140000 > Zone->playerBoundsB[playerID]) {
-                player->position.y = Zone->playerBoundsB[playerID] - 0x140000;
+            if (player->position.y + TO_FIXED(20) > Zone->playerBoundsB[playerID]) {
+                player->position.y = Zone->playerBoundsB[playerID] - TO_FIXED(20);
                 player->velocity.y = 0;
                 player->onGround   = true;
             }
@@ -644,8 +644,8 @@ void Zone_ApplyWorldBounds(void)
         foreach_active(Player, player)
         {
             int32 camWorldL = camera->boundsL << 16;
-            if (player->position.x - 0xA0000 <= camWorldL) {
-                player->position.x = camWorldL + 0xA0000;
+            if (player->position.x - TO_FIXED(10) <= camWorldL) {
+                player->position.x = camWorldL + TO_FIXED(10);
                 if (player->onGround) {
                     if (player->groundVel < 0) {
                         player->velocity.x = 0;
@@ -660,8 +660,8 @@ void Zone_ApplyWorldBounds(void)
             }
 
             int32 camWorldR = camera->boundsR << 16;
-            if (player->position.x + 0xA0000 >= camWorldR) {
-                player->position.x = camWorldR - 0xA0000;
+            if (player->position.x + TO_FIXED(10) >= camWorldR) {
+                player->position.x = camWorldR - TO_FIXED(10);
                 if (player->onGround) {
                     if (player->groundVel > 0) {
                         player->velocity.x = 0;

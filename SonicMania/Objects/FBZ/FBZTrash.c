@@ -37,7 +37,7 @@ void FBZTrash_Create(void *data)
         self->drawFX  = FX_FLIP;
 
         if (data) {
-            self->type      = voidToInt(data);
+            self->type      = VOID_TO_INT(data);
             self->drawGroup = Zone->objectDrawLow;
 
             self->hitbox.left   = -8;
@@ -66,7 +66,7 @@ void FBZTrash_StageLoad(void) { FBZTrash->aniFrames = RSDK.LoadSpriteAnimation("
 
 void FBZTrash_SummonOrbinautOrbs(EntityFBZTrash *trashPtr, int32 angle)
 {
-    EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, intToVoid(FBZTRASH_ORB), trashPtr->position.x, trashPtr->position.y);
+    EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, INT_TO_VOID(FBZTRASH_ORB), trashPtr->position.x, trashPtr->position.y);
 
     trash->position.x += RSDK.Cos1024(angle) << 10;
     trash->position.y += RSDK.Sin1024(angle) << 10;
@@ -85,7 +85,7 @@ void FBZTrash_SummonOrbinautOrbs(EntityFBZTrash *trashPtr, int32 angle)
 
 void FBZTrash_SummonOrbinaut(int32 x, int32 y)
 {
-    EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, intToVoid(FBZTRASH_ORBINAUT), x, y);
+    EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, INT_TO_VOID(FBZTRASH_ORBINAUT), x, y);
     FBZTrash_SummonOrbinautOrbs(trash, 0);
     FBZTrash_SummonOrbinautOrbs(trash, 512);
 
@@ -127,8 +127,8 @@ void FBZTrash_State_LooseTrash(void)
                     }
                     else {
                         int32 angle      = RSDK.ATan2(rx, ry);
-                        self->velocity.x = minVal(self->rumbleMove << 6, 640) * RSDK.Cos256(angle);
-                        self->velocity.y = minVal(self->rumbleMove << 6, 640) * RSDK.Sin256(angle + RSDK.Rand(-32, 32));
+                        self->velocity.x = MIN(self->rumbleMove << 6, 640) * RSDK.Cos256(angle);
+                        self->velocity.y = MIN(self->rumbleMove << 6, 640) * RSDK.Sin256(angle + RSDK.Rand(-32, 32));
                         self->onGround   = false;
                     }
                 }

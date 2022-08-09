@@ -80,12 +80,12 @@ void SpeedGate_Draw(void)
     self->drawFX = FX_SCALE;
 
     self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
-    drawPos.x                  = self->position.x + 0x30000;
+    drawPos.x                  = self->position.x + TO_FIXED(3);
     self->finsAnimator.frameID = 1;
     RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
     self->scale.x              = abs(RSDK.Cos512(self->angle & 0x7F));
-    drawPos.x                  = self->position.x - 0x30000;
+    drawPos.x                  = self->position.x - TO_FIXED(3);
     self->finsAnimator.frameID = 0;
     RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
     drawPos.x                  = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
@@ -129,20 +129,20 @@ void SpeedGate_Create(void *data)
         self->visible       = true;
         self->drawGroup     = Zone->playerDrawHigh;
         self->active        = ACTIVE_BOUNDS;
-        self->updateRange.x = 0x400000;
-        self->updateRange.y = 0x400000;
+        self->updateRange.x = TO_FIXED(64);
+        self->updateRange.y = TO_FIXED(64);
         self->scale.y       = 0x200;
 
         if (self->timer <= 0) { // timer == 0 means finish line
             RSDK.SetSpriteAnimation(-1, 0, &self->timerAnimator, true, 0);
             RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 4, &self->finsAnimator, true, 0);
             self->timerPos.x = self->position.x;
-            self->timerPos.y = self->position.y - 0x200000;
+            self->timerPos.y = self->position.y - TO_FIXED(32);
         }
         else { // otherwise its a start line
             RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 3, &self->finsAnimator, true, 0);
             self->timerPos.x = self->position.x;
-            self->timerPos.y = self->position.y - 0x200000;
+            self->timerPos.y = self->position.y - TO_FIXED(32);
             self->state      = SpeedGate_State_WaitForStart;
         }
     }
@@ -209,8 +209,8 @@ void SpeedGate_State_ProcessGate(void)
 
         EntityPlayer *player = self->triggerPlayer;
         if (self->triggerPlayer) {
-            int32 velX = self->triggerPlayer->direction == FLIP_X ? -0x100000 : 0x100000;
-            int32 velY = -0x200000;
+            int32 velX = self->triggerPlayer->direction == FLIP_X ? -TO_FIXED(16) : TO_FIXED(16);
+            int32 velY = -TO_FIXED(32);
 
             self->velocity.x += ((velX - self->playerDistance.x) >> 6) - (self->velocity.x >> 4);
             self->velocity.y += ((velY - self->playerDistance.y) >> 6) - (self->velocity.y >> 4);
@@ -228,7 +228,7 @@ void SpeedGate_State_ProcessGate(void)
                 self->active = ACTIVE_BOUNDS;
 
                 finishLine->velocity.x    = player->velocity.x;
-                finishLine->velocity.y    = -0x40000;
+                finishLine->velocity.y    = -TO_FIXED(4);
                 finishLine->timerPos.x    = self->timerPos.x;
                 finishLine->timerPos.y    = self->timerPos.y;
                 finishLine->timerRotation = self->timerRotation;
@@ -251,7 +251,7 @@ void SpeedGate_State_HandleFinished(void)
     RSDK_THIS(SpeedGate);
 
     int32 x = self->position.x;
-    int32 y = self->position.y - 0x200000;
+    int32 y = self->position.y - TO_FIXED(32);
 
     self->velocity.x += ((x - self->timerPos.x) >> 5) - (self->velocity.x >> 3);
     self->velocity.y += ((y - self->timerPos.y) >> 5) - (self->velocity.y >> 3);
@@ -297,12 +297,12 @@ void SpeedGate_EditorDraw(void)
     self->drawFX = FX_SCALE;
 
     self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
-    drawPos.x                  = self->position.x + 0x30000;
+    drawPos.x                  = self->position.x + TO_FIXED(3);
     self->finsAnimator.frameID = 1;
     RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
     self->scale.x              = abs(RSDK.Cos512(self->angle & 0x7F));
-    drawPos.x                  = self->position.x - 0x30000;
+    drawPos.x                  = self->position.x - TO_FIXED(3);
     self->finsAnimator.frameID = 0;
     RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
     drawPos.x                  = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;

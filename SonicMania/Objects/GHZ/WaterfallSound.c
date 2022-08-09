@@ -109,7 +109,7 @@ void WaterfallSound_SfxUpdate_WaterfallLoop(int32 sfxID)
     foreach_all(WaterfallSound, sound)
     {
         if (sound->sfxActive) {
-            int16 sqRoot   = minVal(MathHelpers_Distance(sound->sfxPos.x, sound->sfxPos.y, worldCenterX, worldCenterY) >> 16, 640);
+            int16 sqRoot   = MIN(MathHelpers_Distance(sound->sfxPos.x, sound->sfxPos.y, worldCenterX, worldCenterY) >> 16, 640);
             float volume   = (sqRoot / -640.0f) + 1.0f;
             float distance = -1.0;
             if (sound->sfxPos.x > worldLeft) {
@@ -125,12 +125,12 @@ void WaterfallSound_SfxUpdate_WaterfallLoop(int32 sfxID)
         }
     }
 
-    float div = fabs(volDivisor);
+    float div = FABS(volDivisor);
     if (div > 0)
         pan /= volDivisor;
 
-    float volume = minVal(dist >> 16, 640);
-    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (volume / -640.0f) + 1.0, clampVal(pan, -1.0, 1.0), 1.0f);
+    float volume = MIN(dist >> 16, 640);
+    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (volume / -640.0f) + 1.0, CLAMP(pan, -1.0, 1.0), 1.0f);
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -72,8 +72,8 @@ void Ring_Create(void *data)
                     break;
 
                 case RING_MOVE_PATH:
-                    self->updateRange.x = 0x400000;
-                    self->updateRange.y = 0x400000;
+                    self->updateRange.x = TO_FIXED(64);
+                    self->updateRange.y = TO_FIXED(64);
                     self->active        = ACTIVE_NEVER;
                     self->state         = Ring_State_Path;
                     self->stateDraw     = Ring_Draw_Oscillating;
@@ -81,8 +81,8 @@ void Ring_Create(void *data)
 
                 default:
                 case RING_MOVE_FIXED:
-                    self->updateRange.x = 0x400000;
-                    self->updateRange.y = 0x400000;
+                    self->updateRange.x = TO_FIXED(64);
+                    self->updateRange.y = TO_FIXED(64);
                     self->state         = Ring_State_Normal;
                     self->stateDraw     = Ring_Draw_Normal;
                     break;
@@ -146,9 +146,9 @@ void Ring_Collect(void)
                 }
                 Player_GiveRings(player, ringAmount, true);
 
-                int32 max = 0x100000;
-                if (self->type != RING_TYPE_BIG)
-                    max = 0x80000;
+                int32 max = TO_FIXED(8);
+                if (self->type == RING_TYPE_BIG)
+                    max = TO_FIXED(16);
 
                 int32 cnt = 4 * (self->type == RING_TYPE_BIG) + 4;
                 int32 min = -max;
@@ -183,7 +183,7 @@ void Ring_Collect(void)
             }
         }
         else if (self->state != Ring_State_Attracted && player->shield == SHIELD_LIGHTNING
-                 && RSDK.CheckObjectCollisionTouchCircle(self, 0x500000, player, 0x10000)) {
+                 && RSDK.CheckObjectCollisionTouchCircle(self, TO_FIXED(80), player, TO_FIXED(1))) {
             self->drawPos.x    = 0;
             self->state        = Ring_State_Attracted;
             self->stateDraw    = Ring_Draw_Normal;
@@ -200,9 +200,9 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
 {
     RSDK_THIS(Player);
 
-    int32 outerRingCount = clampVal(rings, 0, 16);
-    int32 innerRingCount = clampVal(rings - 16, 0, 16);
-    int32 bigRingCount   = clampVal(rings - 32, 0, 16);
+    int32 outerRingCount = CLAMP(rings, 0, 16);
+    int32 innerRingCount = CLAMP(rings - 16, 0, 16);
+    int32 bigRingCount   = CLAMP(rings - 32, 0, 16);
 
     int32 angleStart = 0xC0 - 8 * (innerRingCount & -2);
     int32 angle      = angleStart + 8;
@@ -266,7 +266,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
 }
 void Ring_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane)
 {
-    int32 ringCount = clampVal(rings >> 2, 1, 8);
+    int32 ringCount = CLAMP(rings >> 2, 1, 8);
     int32 ringValue = rings / ringCount;
 
     int32 startAngle = 0xC0 - 0x10 * (ringCount & 0xFFFFFFFE);
@@ -315,7 +315,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
         scale -= 0x40;
     }
 
-    ringCount3 = clampVal(ringCount3, 0, 16);
+    ringCount3 = CLAMP(ringCount3, 0, 16);
 
     int32 angleVal = 0xC0 - 8 * (ringCount2 & 0xFFFFFFFE);
     int32 angle    = angleVal + 8;
@@ -462,13 +462,13 @@ void Ring_CheckObjectCollisions(int32 x, int32 y)
     if (BigSqueeze) {
         foreach_active(BigSqueeze, bigSqueeze)
         {
-            if (self->position.x < BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x200000)
+            if (self->position.x < BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + TO_FIXED(32))
                 collisionSides |= 8;
 
-            if (self->position.x > BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x200000)
+            if (self->position.x > BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - TO_FIXED(32))
                 collisionSides |= 4;
 
-            if (self->position.y > BigSqueeze->boundsB - 0x80000)
+            if (self->position.y > BigSqueeze->boundsB - TO_FIXED(8))
                 collisionSides |= 2;
         }
     }
@@ -499,8 +499,8 @@ void Ring_CheckObjectCollisions(int32 x, int32 y)
     }
     else if (collisionSides & 2 || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, y, true)) {
         self->velocity.y = (yVel >> 2) - yVel;
-        if (self->velocity.y > -0x10000)
-            self->velocity.y = -0x10000;
+        if (self->velocity.y > -TO_FIXED(1))
+            self->velocity.y = -TO_FIXED(1);
     }
 }
 
@@ -593,15 +593,14 @@ void Ring_State_Lost(void)
     self->position.y += self->velocity.y;
 
     if (self->moveType != RING_MOVE_FIXED) {
-        if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x80000, true)) {
-            int32 yvel = (self->velocity.y >> 2) - self->velocity.y;
-            if (yvel > -0x10000)
-                yvel = -0x10000;
-            self->velocity.y = yvel;
+        if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, TO_FIXED(8), true)) {
+            self->velocity.y = (self->velocity.y >> 2) - self->velocity.y;
+            if (self->velocity.y > -TO_FIXED(1))
+                self->velocity.y = -TO_FIXED(1);
         }
     }
     else {
-        Ring_CheckObjectCollisions(0x80000, 0x80000);
+        Ring_CheckObjectCollisions(TO_FIXED(8), TO_FIXED(8));
     }
 
     RSDK.ProcessAnimation(&self->animator);
@@ -800,8 +799,8 @@ void Ring_EditorDraw(void)
     RSDK.SetSpriteAnimation(Ring->aniFrames, self->type, &self->animator, true, 0);
     RSDK.DrawSprite(&self->animator, NULL, false);
 
-    self->updateRange.x = 0x800000;
-    self->updateRange.y = 0x800000;
+    self->updateRange.x = TO_FIXED(128);
+    self->updateRange.y = TO_FIXED(128);
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 

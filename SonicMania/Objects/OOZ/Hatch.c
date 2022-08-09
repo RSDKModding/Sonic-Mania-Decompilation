@@ -73,8 +73,8 @@ void Hatch_Create(void *data)
         self->active    = ACTIVE_BOUNDS;
         self->drawGroup = Zone->objectDrawLow + 1;
 
-        self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
-        self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));
+        self->updateRange.x = 16 * MAX(abs(self->subOff1.x), abs(self->subOff2.x));
+        self->updateRange.y = 16 * MAX(abs(self->subOff1.y), abs(self->subOff2.y));
 
         RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &self->baseAnimator, true, 0);
         RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, true, 4);
@@ -541,8 +541,8 @@ void Hatch_EditorDraw(void)
 
     self->drawGroup = Zone->objectDrawLow + 1;
 
-    self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
-    self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));
+    self->updateRange.x = 16 * MAX(abs(self->subOff1.x), abs(self->subOff2.x));
+    self->updateRange.y = 16 * MAX(abs(self->subOff1.y), abs(self->subOff2.y));
 
     RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &self->baseAnimator, false, 0);
     RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 4);

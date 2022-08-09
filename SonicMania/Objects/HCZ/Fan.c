@@ -67,8 +67,8 @@ void Fan_StaticUpdate(void)
                     }
                 }
 
-                offsetH = clampVal(offsetH, -0x20000, 0x20000);
-                offsetV = clampVal(offsetV, -0x20000, 0x20000);
+                offsetH = CLAMP(offsetH, -0x20000, 0x20000);
+                offsetV = CLAMP(offsetV, -0x20000, 0x20000);
 
                 if (water->bubbleOffset.x < offsetH) {
                     water->bubbleOffset.x += 0x800;
@@ -336,7 +336,7 @@ void Fan_HandlePlayerInteractions_Top(void)
                 player->tileCollisions = TILECOLLISION_DOWN;
                 player->onGround       = false;
 
-                int32 velocity = maxVal((self->position.y + (Fan->hitboxTop.top << 16) - player->position.y) >> 4, Fan->minVelocity);
+                int32 velocity = MAX((self->position.y + (Fan->hitboxTop.top << 16) - player->position.y) >> 4, Fan->minVelocity);
                 if (player->velocity.y <= velocity) {
                     player->velocity.y = velocity;
                 }
@@ -360,7 +360,7 @@ void Fan_HandlePlayerInteractions_Top(void)
 
     if (Water) {
         if (self->position.y > Water->waterLevel && !(Zone->timer & 3)) {
-            EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y - 0x100000);
+            EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y - 0x100000);
 
             water->isPermanent = false;
             water->position.x += ZONE_RAND(-6, 7) << 16;

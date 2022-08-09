@@ -382,15 +382,15 @@ void UITAZoneModule_DrawModuleInfo(void)
 
             if (self->text2.length) {
                 drawPos.y = self->drawPos.y - 0x160000;
-                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
+                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
 
                 drawPos.y += 0x1C0000;
                 drawPos.x += 0x200000;
-                RSDK.DrawText(&self->medLetterAnimator2, &drawPos, &self->text2, 0, self->text2.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
+                RSDK.DrawText(&self->medLetterAnimator2, &drawPos, &self->text2, 0, self->text2.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
             }
             else {
                 drawPos.y = self->drawPos.y - 0x60000;
-                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
+                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, INT_TO_VOID(2), NULL, false);
             }
         }
     }
@@ -602,7 +602,7 @@ void UITAZoneModule_DrawActInfo_Expanded(void)
 
     RSDK.DrawRect(drawPos.x - 0x990000, drawPos.y + 0x240000, 0x860000, 0x150000, color1, 0xFF, INK_NONE, false);
 
-    int32 offset = abs(RSDK.Sin256(8 * minVal(self->expandTimer, 16))) >> 6;
+    int32 offset = abs(RSDK.Sin256(8 * MIN(self->expandTimer, 16))) >> 6;
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->textAnimator, true, 0);
     drawPos.x -= 0x630000;
     drawPos.y += 0x2E0000;

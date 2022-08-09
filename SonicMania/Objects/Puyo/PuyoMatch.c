@@ -95,8 +95,8 @@ void PuyoMatch_DropNextBeans(void)
     if (!self->beanLAnimator.frameDuration)
         PuyoMatch_SetupNextBeans(self);
 
-    EntityPuyoBean *partnerBean = CREATE_ENTITY(PuyoBean, intToVoid(self->beanLAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
-    EntityPuyoBean *bean        = CREATE_ENTITY(PuyoBean, intToVoid(self->beanRAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
+    EntityPuyoBean *partnerBean = CREATE_ENTITY(PuyoBean, INT_TO_VOID(self->beanLAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
+    EntityPuyoBean *bean        = CREATE_ENTITY(PuyoBean, INT_TO_VOID(self->beanRAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
 
     PuyoMatch_SetupNextBeans(self);
 
@@ -137,7 +137,7 @@ void PuyoMatch_DropJunkBeans(void)
         }
     }
 
-    count = clampVal(count, 30, self->junkBeanCount);
+    count = CLAMP(count, 30, self->junkBeanCount);
     self->junkBeanCount -= count;
     self->junkDropCount -= count << 8;
 
@@ -147,7 +147,7 @@ void PuyoMatch_DropJunkBeans(void)
     for (int32 i = 0; i < count; ++i) {
         int32 column = PuyoMatch->beanDropColumnIDs[id];
         if (beanColumnColount[column] > 0) {
-            EntityPuyoBean *junkBean = CREATE_ENTITY(PuyoBean, intToVoid(30), self->beanDropPos.x - 0x200000 + (column << 20), spawnY);
+            EntityPuyoBean *junkBean = CREATE_ENTITY(PuyoBean, INT_TO_VOID(30), self->beanDropPos.x - 0x200000 + (column << 20), spawnY);
             junkBean->playerID       = self->playerID;
             junkBean->origin.x       = self->beanDropPos.x - 0x280000;
             junkBean->origin.y       = self->beanDropPos.y - 0x80000;
@@ -291,16 +291,16 @@ void PuyoMatch_State_HandleCombos(void)
     // Bonus for getting multiple combos in one go
     self->concurrentBonus = 0;
     for (int32 b = 0; b < 5; ++b) {
-        if (getBit(comboColors, b))
+        if (GET_BIT(comboColors, b))
             ++self->concurrentBonus;
     }
 
     self->concurrentBonus = PuyoMatch->concurrentBonusTable[self->concurrentBonus];
 
     // Bonus for chaining multiple combos together
-    int32 chainBonus = self->comboBonusTable[minVal(PuyoBean->comboChainCount[self->playerID], 23)];
+    int32 chainBonus = self->comboBonusTable[MIN(PuyoBean->comboChainCount[self->playerID], 23)];
 
-    int32 comboBonus = clampVal(self->beanBonus + self->concurrentBonus + chainBonus, 1, 999);
+    int32 comboBonus = CLAMP(self->beanBonus + self->concurrentBonus + chainBonus, 1, 999);
     self->comboScore = 10 * comboBonus * self->comboBeanCount;
 
     if (PuyoBean->comboChainCount[self->playerID] < 23)
@@ -312,7 +312,7 @@ void PuyoMatch_State_HandleCombos(void)
 
     EntityPuyoMatch *match = RSDK_GET_ENTITY(SceneInfo->entitySlot + slot, PuyoMatch);
 
-    EntityPuyoAttack *attack = CREATE_ENTITY(PuyoAttack, intToVoid(self->playerID ^ 1), targetBean->position.x, targetBean->position.y);
+    EntityPuyoAttack *attack = CREATE_ENTITY(PuyoAttack, INT_TO_VOID(self->playerID ^ 1), targetBean->position.x, targetBean->position.y);
     attack->targetPos.x      = match->beanDropPos.x - 0x100000;
     attack->targetPos.y      = match->beanDropPos.y + 0xC0000;
     attack->score            = self->comboScore;

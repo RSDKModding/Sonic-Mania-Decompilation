@@ -505,15 +505,15 @@ void UIDiorama_State_Options(void)
         self->needsSetup = false;
     }
     else {
-        info->itemAlpha    = clampVal(info->itemAlpha + RSDK.Rand(0, 20) - 10, 0xC8, 0xFF);
+        info->itemAlpha    = CLAMP(info->itemAlpha + RSDK.Rand(0, 20) - 10, 0xC8, 0xFF);
         info->itemOffset.y = RSDK.Sin256(info->itemAngle) << 10;
         info->itemAngle    = (info->itemAngle + 1) & 0xFF;
 
-        info->contAlpha    = clampVal(info->contAlpha + RSDK.Rand(0, 20) - 10, 0xC8, 0xFF);
+        info->contAlpha    = CLAMP(info->contAlpha + RSDK.Rand(0, 20) - 10, 0xC8, 0xFF);
         info->contOffset.y = RSDK.Sin256(info->contAngle) << 10;
         info->contAngle    = (info->contAngle + 1) & 0xFF;
 
-        info->audioAlpha    = clampVal(info->audioAlpha + RSDK.Rand(0, 20) - 10, 0xC8, 0xFF);
+        info->audioAlpha    = CLAMP(info->audioAlpha + RSDK.Rand(0, 20) - 10, 0xC8, 0xFF);
         info->audioOffset.y = RSDK.Sin256(info->audioAngle) << 10;
         info->audioAngle    = (info->audioAngle + 1) & 0xFF;
 

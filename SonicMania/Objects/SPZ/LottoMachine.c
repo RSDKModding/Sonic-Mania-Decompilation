@@ -234,7 +234,7 @@ void LottoMachine_CheckPlayerCollisions(void)
             }
             else if (RSDK.CheckObjectCollisionTouchCircle(self, 0x730000, player, 0x100000)) { // Outside of the machine
                 int32 angle  = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-                int32 vel    = maxVal((abs(player->velocity.x) + abs(player->velocity.y)) >> 8, 0x400);
+                int32 vel    = MAX((abs(player->velocity.x) + abs(player->velocity.y)) >> 8, 0x400);
                 int32 radius = RSDK.Rand(512, vel);
 
                 angle += RSDK.Rand(-6, 6);

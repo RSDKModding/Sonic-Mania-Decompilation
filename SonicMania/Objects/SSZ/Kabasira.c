@@ -253,7 +253,7 @@ void Kabasira_State_Moving(void)
             if (player) {
                 RSDK.PlaySfx(Kabasira->sfxPon, false, 255);
 
-                EntityKabasira *attack = CREATE_ENTITY(Kabasira, intToVoid(true), self->position.x, self->position.y);
+                EntityKabasira *attack = CREATE_ENTITY(Kabasira, INT_TO_VOID(true), self->position.x, self->position.y);
                 int32 angle            = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
                 attack->velocity.x     = RSDK.Cos256(angle) << 9;
                 attack->velocity.y     = RSDK.Sin256(angle) << 9;
@@ -280,7 +280,7 @@ void Kabasira_State_LaunchedAttack(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Kabasira->hitboxBadnik)) {
             if (Player_CheckAttacking(player, self)) {
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
                 RSDK.PlaySfx(Kabasira->sfxExplosion2, false, 255);
 
                 destroyEntity(self);

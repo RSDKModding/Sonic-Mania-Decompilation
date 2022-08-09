@@ -72,7 +72,7 @@ void Fireflies_State_Spawner(void)
             startPos.y     = y + (h << 16);
             bool32 isLarge = ZONE_RAND(0, 10) > 7;
 
-            EntityFireflies *fireflies = CREATE_ENTITY(Fireflies, intToVoid(true), startPos.x, startPos.y);
+            EntityFireflies *fireflies = CREATE_ENTITY(Fireflies, INT_TO_VOID(true), startPos.x, startPos.y);
             RSDK.SetSpriteAnimation(Fireflies->aniFrames, isLarge ? 3 : 0, &fireflies->animator, true, 0);
             fireflies->drawGroup = isLarge ? Zone->objectDrawHigh : 1;
 

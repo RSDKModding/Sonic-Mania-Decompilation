@@ -93,7 +93,7 @@ void FBZ1Outro_HandleTrash(void)
         int32 boundsL = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x180000;
         int32 boundsR = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x180000;
 
-        signPost->position.x = clampVal(signPost->position.x, boundsL, boundsR);
+        signPost->position.x = CLAMP(signPost->position.x, boundsL, boundsR);
     }
 }
 
@@ -126,7 +126,7 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
     RSDK_THIS(FBZ1Outro);
 
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityBigSqueeze *bossBorderL = FBZ1Outro->bossBorderL;
     EntityBigSqueeze *bossBorderR = FBZ1Outro->bossBorderR;
@@ -204,7 +204,7 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
     RSDK_THIS(FBZ1Outro);
 
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityBigSqueeze *bossBorderL = FBZ1Outro->bossBorderL;
     EntityBigSqueeze *bossBorderR = FBZ1Outro->bossBorderR;
@@ -241,7 +241,7 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
 bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     FBZ1Outro_DispenseTrash();
 

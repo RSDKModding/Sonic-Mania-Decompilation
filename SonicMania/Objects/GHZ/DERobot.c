@@ -35,7 +35,7 @@ void DERobot_Create(void *data)
             self->updateRange.y = 0x800000;
             int32 slotID        = RSDK.GetEntitySlot(self);
             if (data)
-                self->aniID = voidToInt(data);
+                self->aniID = VOID_TO_INT(data);
 
             switch (self->aniID) {
                 case DEROBOT_BODY:
@@ -208,7 +208,7 @@ void DERobot_HandleLegMovement(int32 offset)
     knee->position.y = 0x440 * RSDK.Cos1024(knee->angle) + self->position.y + 0x190000;
     leg->position.x  = knee->position.x;
     leg->position.y  = knee->position.y;
-    leg->angle       = maxVal(knee->angle >> 2, 0);
+    leg->angle       = MAX(knee->angle >> 2, 0);
     leg->rotation    = -(leg->angle >> 1);
     foot->position.x = 0xA00 * RSDK.Sin1024(leg->angle) + leg->position.x;
     foot->position.y = 0xA00 * RSDK.Cos1024(leg->angle) + leg->position.y;
@@ -249,8 +249,8 @@ void DERobot_HandleArmMovement(int32 offset)
     EntityDERobot *hand = self->arms[offset + 1];
     arm->position.x     = 0x600 * (RSDK.Sin1024(arm->angle) - 0x200) + self->position.x;
     arm->position.y     = 0x600 * (RSDK.Cos1024(arm->angle) - 0x300) + self->position.y;
-    hand->position.x    = arm->position.x + 0x600 * RSDK.Cos1024(minVal(arm->angle, 0));
-    hand->position.y    = arm->position.y - 0x600 * RSDK.Sin1024(minVal(arm->angle, 0));
+    hand->position.x    = arm->position.x + 0x600 * RSDK.Cos1024(MIN(arm->angle, 0));
+    hand->position.y    = arm->position.y - 0x600 * RSDK.Sin1024(MIN(arm->angle, 0));
 }
 
 void DERobot_HandleTerrainDestruction(void)
@@ -270,7 +270,7 @@ void DERobot_HandleTerrainDestruction(void)
             if (tile != (uint16)-1) {
                 RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
 
-                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
+                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawGroup           = Zone->objectDrawHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
@@ -303,7 +303,7 @@ void DERobot_DestroyTerrainFinal(void)
             if (tile != (uint16)-1) {
                 RSDK.SetTile(Zone->fgLow, tx, ty, -1);
 
-                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
+                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawGroup           = Zone->objectDrawHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
@@ -328,7 +328,7 @@ void DERobot_DestroyTerrainFinal(void)
             uint16 tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
             if (tile != (uint16)-1) {
                 RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
-                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
+                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawGroup           = Zone->objectDrawHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
@@ -382,7 +382,7 @@ void DERobot_Explode(void)
         if ((Zone->timer & 4)) {
             int32 x                    = self->position.x + (RSDK.Rand(-48, 48) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-48, 48) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
@@ -798,7 +798,7 @@ void DERobot_State_BombLanded(void)
     if (self->mainAnimator.speed >= 0x80) {
         self->visible              = false;
         self->state                = DERobot_State_BombExplode;
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x80000);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x80000);
         explosion->drawGroup       = Zone->objectDrawHigh;
         RSDK.PlaySfx(DERobot->sfxExplosion, false, 255);
     }
@@ -820,7 +820,7 @@ void DERobot_State_BombExplode(void)
         DERobot_CheckPlayerCollisions_Bomb();
 
     if (!(self->timer & 7)) {
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y);
         explosion->drawGroup       = Zone->objectDrawHigh;
     }
 
@@ -862,7 +862,7 @@ void DERobot_State_SetupBoss(void)
     if (self->timer) {
         self->timer++;
         if (self->timer == 60) {
-            CREATE_ENTITY(DERobot, intToVoid(DEROBOT_TARGET_EDGE), self->position.x, 0x3080000);
+            CREATE_ENTITY(DERobot, INT_TO_VOID(DEROBOT_TARGET_EDGE), self->position.x, 0x3080000);
             RSDK.PlaySfx(DERobot->sfxTargeting, false, 255);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.125);
         }
@@ -1055,7 +1055,7 @@ void DERobot_State_Walk(void)
 
     ++self->timer;
     if (self->timer == 240) {
-        EntityDERobot *robotPart = CREATE_ENTITY(DERobot, intToVoid(DEROBOT_TARGET_EDGE), self->position.x, 0x3080000);
+        EntityDERobot *robotPart = CREATE_ENTITY(DERobot, INT_TO_VOID(DEROBOT_TARGET_EDGE), self->position.x, 0x3080000);
         robotPart->parent        = (Entity *)player1;
         RSDK.PlaySfx(DERobot->sfxTargeting, false, 0xFF);
     }
@@ -1066,7 +1066,7 @@ void DERobot_State_Walk(void)
             self->state          = DERobot_State_ArmAttack;
         }
         else {
-            EntityDERobot *robotPart = CREATE_ENTITY(DERobot, intToVoid(DEROBOT_BOMB), self->position.x - 0x360000, self->position.y - 0x60000);
+            EntityDERobot *robotPart = CREATE_ENTITY(DERobot, INT_TO_VOID(DEROBOT_BOMB), self->position.x - 0x360000, self->position.y - 0x60000);
             robotPart->offset.x      = (self->offset.x >> 1) + ((self->position.x - 0x360000) >> 1);
             robotPart->offset.y      = robotPart->position.y;
             robotPart->scale.y       = 0x2000;
@@ -1085,8 +1085,8 @@ void DERobot_State_Walk(void)
             if (armAngle > 0x200)
                 armAngle = armAngle - 0x400;
 
-            armAngle        = clampVal(armAngle, -0x60, 0x80);
-            int32 armAngle2 = minVal(self->arms[2]->angle + (-(self->arms[2]->angle + armAngle) >> 3), 0x80);
+            armAngle        = CLAMP(armAngle, -0x60, 0x80);
+            int32 armAngle2 = MIN(self->arms[2]->angle + (-(self->arms[2]->angle + armAngle) >> 3), 0x80);
 
             self->arms[2]->angle = armAngle2;
             self->arms[3]->angle += (armAngle - self->arms[3]->angle) >> 3;
@@ -1104,9 +1104,9 @@ void DERobot_State_Walk(void)
                 4 * RSDK.ATan2((player1->position.x - self->arms[3]->position.x) >> 16, (player1->position.y - self->arms[3]->position.y) >> 16);
             if (armAngle > 0x200)
                 armAngle = armAngle - 0x400;
-            armAngle = minVal(armAngle, 0x80);
+            armAngle = MIN(armAngle, 0x80);
 
-            int32 armAngle2 = minVal(self->arms[2]->angle + (-(self->arms[2]->angle + armAngle) >> 3), 0x80);
+            int32 armAngle2 = MIN(self->arms[2]->angle + (-(self->arms[2]->angle + armAngle) >> 3), 0x80);
 
             self->arms[2]->angle = armAngle2;
             self->arms[3]->angle += (armAngle - self->arms[3]->angle) >> 3;
@@ -1289,7 +1289,7 @@ void DERobot_State_Finish(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
         EntityEggPrison *prison = (EntityEggPrison *)self->eggman;
-        RSDK.ResetEntity(prison, EggPrison->classID, intToVoid(EGGPRISON_FLYING));
+        RSDK.ResetEntity(prison, EggPrison->classID, INT_TO_VOID(EGGPRISON_FLYING));
         prison->position.x          = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
         prison->checkTileCollisions = true;
         prison->position.y          = (ScreenInfo->position.y - 48) << 16;
@@ -1301,7 +1301,7 @@ void DERobot_State_Finish(void)
     if (!(Zone->timer & 7)) {
         int32 x                    = (RSDK.Rand(-48, 48) << 16) + self->position.x;
         int32 y                    = (RSDK.Rand(-48, 48) << 16) + self->position.y;
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawGroup       = Zone->objectDrawHigh;
     }
 
@@ -1359,7 +1359,7 @@ void DERobot_State_CutsceneExplode(void)
     if (!(Zone->timer & 0x3F)) {
         int32 x                    = (RSDK.Rand(-32, 32) << 16) + self->position.x;
         int32 y                    = (RSDK.Rand(-32, 32) << 16) + self->position.y;
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawGroup       = Zone->objectDrawHigh;
     }
 }

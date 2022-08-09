@@ -24,9 +24,9 @@ void COverlay_Draw(void)
         int32 tileY = 0;
         for (self->position.y = (ScreenInfo->position.y & 0xFFFFFFF0) << 16; tileY < (ScreenInfo->size.y >> 4) + 2; ++tileY) {
             COverlay_DrawTile();
-            self->position.y += 16 << 0x10;
+            self->position.y += TO_FIXED(16);
         }
-        self->position.x += 16 << 0x10;
+        self->position.x += TO_FIXED(16);
     }
 }
 
@@ -84,14 +84,14 @@ void COverlay_DrawTile(void)
         uint8 th    = -1;
         uint8 solid = 0;
         for (int32 y = 0; y < 0x10; ++y) {
-            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, player->collisionPlane, x << 0x10, y << 0x10, false)) {
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, player->collisionPlane, TO_FIXED(x), TO_FIXED(y), false)) {
                 solid |= 1;
                 th2 = y + 1;
                 if (ty == 0xFF)
                     ty = y;
             }
 
-            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, player->collisionPlane, x << 0x10, y << 0x10, false)) {
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, player->collisionPlane, TO_FIXED(x), TO_FIXED(y), false)) {
                 solid |= 2;
                 th = y + 1;
                 if (ty2 == 0xFF)
@@ -109,23 +109,23 @@ void COverlay_DrawTile(void)
                 default: break;
 
                 case 1:
-                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + TO_FIXED(ty), self->position.x + tx, self->position.y + TO_FIXED(th),
                                   0xE0E000, 0xFF, INK_NONE, false);
                     break;
 
                 case 2:
-                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + TO_FIXED(ty), self->position.x + tx, self->position.y + TO_FIXED(th),
                                   0xE00000, 0xFF, INK_NONE, false);
                     break;
 
                 case 3:
-                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + TO_FIXED(ty), self->position.x + tx, self->position.y + TO_FIXED(th),
                                   0xE0E0E0, 0xFF, INK_NONE, false);
                     break;
             }
         }
 
-        tx += 0x10000;
+        tx += TO_FIXED(1);
     }
 }
 

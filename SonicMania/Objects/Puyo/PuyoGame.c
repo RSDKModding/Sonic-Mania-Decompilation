@@ -182,7 +182,7 @@ void PuyoGame_CheckMatchFinish(void)
     EntityPuyoScore *scoreP1 = PuyoGame->score2[0];
     EntityPuyoScore *scoreP2 = PuyoGame->score2[1];
 
-    int32 score = maxVal(scoreP1->score, scoreP2->score);
+    int32 score = MAX(scoreP1->score, scoreP2->score);
 
     if (score >= 2) {
         self->matchWinner                                  = scoreP1->score <= scoreP2->score;

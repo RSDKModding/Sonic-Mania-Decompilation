@@ -20,9 +20,9 @@ void ConveyorWheel_Update(void)
                 player->state = Player_State_Ground;
 
             if (self->direction)
-                player->groundVel = clampVal(player->groundVel, -0xF0000, -0x40000);
+                player->groundVel = CLAMP(player->groundVel, -0xF0000, -0x40000);
             else
-                player->groundVel = clampVal(player->groundVel, 0x40000, 0xF0000);
+                player->groundVel = CLAMP(player->groundVel, 0x40000, 0xF0000);
         }
     }
 

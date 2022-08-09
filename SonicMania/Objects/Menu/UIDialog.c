@@ -275,7 +275,7 @@ void UIDialog_HandleButtonPositions(void)
     int32 offsets[] = { 0, 0, 0x80, 0x70 };
 
     int32 offset = offsets[self->buttonCount] << 16;
-    int32 x      = self->position.x - 0x240000 + self->dialogPos.x - ((offset * maxVal(self->buttonCount - 1, 0)) >> 1);
+    int32 x      = self->position.x - 0x240000 + self->dialogPos.x - ((offset * MAX(self->buttonCount - 1, 0)) >> 1);
     int32 y      = self->position.y + 0x2C0000 + self->dialogPos.y;
 
     for (int32 i = 0; i < UIDIALOG_OPTION_COUNT; ++i) {
@@ -386,7 +386,7 @@ void UIDialog_State_Appear(void)
             else {
                 self->bgRectSize.x = ScreenInfo->size.x << 16;
                 self->bgRectSize.y = 0x900000;
-                MathHelpers_Lerp2Sin1024(&pos, maxVal(((self->timer - 16) << 8) / 10, 0), -0x400000 - (ScreenInfo->size.x << 16), 0, 0, 0);
+                MathHelpers_Lerp2Sin1024(&pos, MAX(((self->timer - 16) << 8) / 10, 0), -0x400000 - (ScreenInfo->size.x << 16), 0, 0, 0);
                 self->dialogPos = pos;
 
                 if (self->timer - 16 == 1 && self->playEventSfx)
@@ -398,7 +398,7 @@ void UIDialog_State_Appear(void)
         else {
             self->dialogPos.x = -0x400000 - (ScreenInfo->size.x << 16);
             self->dialogPos.y = 0;
-            MathHelpers_Lerp(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->size.x << 16, 0x10000, ScreenInfo->size.x << 16, 0x900000);
+            MathHelpers_Lerp(&pos, MAX(((self->timer - 8) << 8) / 8, 0), ScreenInfo->size.x << 16, 0x10000, ScreenInfo->size.x << 16, 0x900000);
             self->bgRectSize = pos;
 
             self->timer++;
@@ -407,7 +407,7 @@ void UIDialog_State_Appear(void)
     else {
         self->dialogPos.x = -0x400000 - (ScreenInfo->size.x << 16);
         self->dialogPos.y = 0;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0x10000, ScreenInfo->size.x << 16, 0x10000);
+        MathHelpers_Lerp2Sin1024(&pos, MAX((self->timer << 8) / 8, 0), 0, 0x10000, ScreenInfo->size.x << 16, 0x10000);
         self->bgRectSize = pos;
 
         ++self->timer;
@@ -435,7 +435,7 @@ void UIDialog_State_Close(void)
         else {
             self->dialogPos.x = (ScreenInfo->size.x + 64) << 16;
             self->dialogPos.y = 0;
-            MathHelpers_Lerp2Sin1024(&self->bgRectSize, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->size.x << 16, 0x900000,
+            MathHelpers_Lerp2Sin1024(&self->bgRectSize, MAX(((self->timer - 8) << 8) / 8, 0), ScreenInfo->size.x << 16, 0x900000,
                                      ScreenInfo->size.x << 16, 0);
 
             ++self->timer;
@@ -444,7 +444,7 @@ void UIDialog_State_Close(void)
     else {
         self->bgRectSize.x = ScreenInfo->size.x << 16;
         self->bgRectSize.y = 0x900000;
-        MathHelpers_LerpSin1024(&self->dialogPos, maxVal((self->timer << 8) / 8, 0), 0, 0, (ScreenInfo->size.x + 64) << 16, 0);
+        MathHelpers_LerpSin1024(&self->dialogPos, MAX((self->timer << 8) / 8, 0), 0, 0, (ScreenInfo->size.x + 64) << 16, 0);
 
         ++self->timer;
     }

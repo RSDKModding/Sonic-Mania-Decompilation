@@ -72,7 +72,7 @@ void PuyoAttack_Create(void *data)
         self->radius    = 512;
         self->drawGroup = Zone->huddrawGroup;
 
-        self->playerID = voidToInt(data);
+        self->playerID = VOID_TO_INT(data);
         self->rotation = self->playerID ? 0x140 : 0x40;
         self->active   = ACTIVE_NORMAL;
         RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, self->playerID ^ 1, &self->animator, true, 0);

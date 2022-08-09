@@ -64,7 +64,7 @@ void Constellation_SetupInfo(void)
 
     TileLayer *background1 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 1"));
 
-    int32 id         = minVal(self->originPos.y >> 3, 20);
+    int32 id         = MIN(self->originPos.y >> 3, 20);
     self->scrollInfo = &background1->scrollInfo[id];
 
     if (self->scrollInfo) {

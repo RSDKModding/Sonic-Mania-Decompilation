@@ -49,7 +49,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
     RSDK_THIS(SSZ1Outro);
 
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     if (!host->timer) {
         foreach_all(FXFade, fxFade)

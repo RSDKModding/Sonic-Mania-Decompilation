@@ -123,7 +123,7 @@ void PauseMenu_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_ALWAYS;
 
-        if (data == intToVoid(true)) {
+        if (data == INT_TO_VOID(true)) {
             self->visible   = true;
             self->drawGroup = DRAWGROUP_COUNT - 1;
             self->state     = PauseMenu_State_HandleFadeout;
@@ -207,7 +207,7 @@ void PauseMenu_SetupTintTable(void)
         uint32 g = (0x103 * ((i >> 5) & 0x3F) + 33) >> 6;
         uint32 b = (0x20F * (i & 0x1F) + 23) >> 6;
 
-        int32 brightness = minVal(((b + g + r) << 8) / 680, 0xFF);
+        int32 brightness = MIN(((b + g + r) << 8) / 680, 0xFF);
 
         PauseMenu->tintLookupTable[i] = ColorHelpers_PackRGB(brightness, brightness, brightness);
     }
@@ -220,7 +220,7 @@ void PauseMenu_SetupTintTable(void)
 
         uint32 hue = 0, saturation = 0, luminance = 0;
         ColorHelpers_RGBToHSL(r, g, b, &hue, &saturation, &luminance);
-        ColorHelpers_HSLToRGB(hue, 0, minVal(13 * luminance / 16, 255), &r, &g, &b);
+        ColorHelpers_HSLToRGB(hue, 0, MIN(13 * luminance / 16, 255), &r, &g, &b);
 
         tintLookupTable[i] = ColorHelpers_PackRGB(r, g, b);
     }
@@ -244,8 +244,8 @@ void PauseMenu_AddButton(uint8 id, void *action)
         button->position.y = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &button->animator, true, id);
         button->actionCB           = PauseMenu_ActionCB_Button;
-        button->size.x             = 0x3C0000;
-        button->size.y             = 0x150000;
+        button->size.x             = 60 << 16;
+        button->size.y             = 21 << 16;
         button->bgEdgeSize         = 21;
         button->align              = ALIGN_LEFT;
         button->drawGroup          = self->drawGroup;
@@ -273,11 +273,11 @@ void PauseMenu_HandleButtonPositions(void)
     RSDK_THIS(PauseMenu);
 
     Vector2 pos;
-    pos.x = ((ScreenInfo->center.x - 69) << 16) + self->position.x + self->yellowTrianglePos.x;
-    pos.y = (self->position.y + 0x380000) + self->yellowTrianglePos.y - 0x240000;
+    pos.x = TO_FIXED(ScreenInfo->center.x - 69) + self->position.x + self->yellowTrianglePos.x;
+    pos.y = (self->position.y + TO_FIXED(56)) + self->yellowTrianglePos.y - TO_FIXED(36);
     if (self->buttonCount == (PAUSEMENU_BUTTON_COUNT - 1)) {
-        pos.x -= 0x240000;
-        pos.y += 0x240000;
+        pos.x -= TO_FIXED(36);
+        pos.y += TO_FIXED(36);
     }
 
     for (int32 i = 0; i < self->buttonCount; ++i) {
@@ -289,8 +289,8 @@ void PauseMenu_HandleButtonPositions(void)
         button->startPos.y     = pos.y;
         button->position.x     = pos.x;
         button->position.y     = pos.y;
-        pos.x -= 0x240000;
-        pos.y += 0x240000;
+        pos.x -= TO_FIXED(36);
+        pos.y += TO_FIXED(36);
     }
 }
 
@@ -367,7 +367,7 @@ void PauseMenu_CheckAndReassignControllers(void)
     int32 deviceID = API_GetInputDeviceID(CONT_P1 + (entity->triggerPlayer ^ 1));
 
 #if MANIA_USE_PLUS
-    unused(deviceID); // be quiet compiler I know it aint used!!
+    UNUSED(deviceID); // be quiet compiler I know it aint used!!
     
     int32 id = API_GetFilteredInputDeviceID(true, true, 5);
 #else
@@ -472,7 +472,7 @@ void PauseMenu_RestartDialog_YesCB(void)
 
     int32 x                  = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
     int32 y                  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
-    EntityPauseMenu *fadeout = CREATE_ENTITY(PauseMenu, intToVoid(true), x, y);
+    EntityPauseMenu *fadeout = CREATE_ENTITY(PauseMenu, INT_TO_VOID(true), x, y);
     fadeout->fadeoutCB       = PauseMenu_RestartFadeCB;
     fadeout->state           = PauseMenu_State_HandleFadeout;
 }
@@ -495,7 +495,7 @@ void PauseMenu_ExitDialog_YesCB(void)
 
     int32 x                  = (ScreenInfo->position.x + ScreenInfo->center.x) << 16;
     int32 y                  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
-    EntityPauseMenu *fadeout = CREATE_ENTITY(PauseMenu, intToVoid(true), x, y);
+    EntityPauseMenu *fadeout = CREATE_ENTITY(PauseMenu, INT_TO_VOID(true), x, y);
     fadeout->fadeoutCB       = PauseMenu_ExitFadeCB;
     fadeout->state           = PauseMenu_State_HandleFadeout;
 }
@@ -611,11 +611,11 @@ void PauseMenu_State_StartPause(void)
         Vector2 pos;
 
         int32 alpha = 32 * self->timer;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, alpha), -0xF00000, 0, 0, 0);
+        MathHelpers_Lerp2Sin1024(&pos, MAX(0, alpha), -TO_FIXED(240), 0, 0, 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, alpha), 0xE80000, 0, 0, 0);
+        MathHelpers_Lerp2Sin1024(&pos, MAX(0, alpha), TO_FIXED(232), 0, 0, 0);
 
         ++self->timer;
         self->yellowTrianglePos.x = pos.x;
@@ -634,10 +634,10 @@ void PauseMenu_State_StartPauseCompetition(void)
     }
 
     if (self->timer >= 8) {
-        self->headerPos.x         = 0x000000;
-        self->headerPos.y         = 0x000000;
-        self->yellowTrianglePos.x = 0x000000;
-        self->yellowTrianglePos.y = 0x000000;
+        self->headerPos.x         = TO_FIXED(0);
+        self->headerPos.y         = TO_FIXED(0);
+        self->yellowTrianglePos.x = TO_FIXED(0);
+        self->yellowTrianglePos.y = TO_FIXED(0);
         if (self->timer >= 16) {
             self->paused = false;
             self->timer  = 0;
@@ -655,10 +655,10 @@ void PauseMenu_State_StartPauseCompetition(void)
         }
     }
     else {
-        self->headerPos.x         = 0xFFF0000;
-        self->headerPos.y         = 0xFFF0000;
-        self->yellowTrianglePos.x = 0xFFF0000;
-        self->yellowTrianglePos.y = 0xFFF0000;
+        self->headerPos.x         = TO_FIXED(0xFFF);
+        self->headerPos.y         = TO_FIXED(0xFFF);
+        self->yellowTrianglePos.x = TO_FIXED(0xFFF);
+        self->yellowTrianglePos.y = TO_FIXED(0xFFF);
         self->paused              = true;
         self->fadeTimer           = self->timer << 6;
         self->timer               = self->timer + 1;
@@ -801,10 +801,10 @@ void PauseMenu_State_Resume(void)
         API_AssignInputSlotToDevice(CONT_P2, INPUT_AUTOASSIGN);
 
     if (self->timer >= 8) {
+        self->headerPos.x         = -TO_FIXED(240);
         self->headerPos.y         = 0;
-        self->headerPos.x         = -0xF00000;
+        self->yellowTrianglePos.x = TO_FIXED(232);
         self->yellowTrianglePos.y = 0;
-        self->yellowTrianglePos.x = 0xE80000;
         self->timer               = 0;
         RSDK.SetEngineState(ENGINESTATE_REGULAR);
         PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
@@ -814,11 +814,11 @@ void PauseMenu_State_Resume(void)
         Vector2 pos;
 
         int32 percent = 0x20 * self->timer;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, percent), 0, 0, -0xF00000, 0);
+        MathHelpers_Lerp2Sin1024(&pos, MAX(0, percent), 0, 0, -TO_FIXED(240), 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, percent), 0, 0, 0xE80000, 0);
+        MathHelpers_Lerp2Sin1024(&pos, MAX(0, percent), 0, 0, TO_FIXED(232), 0);
 
         self->yellowTrianglePos.x = pos.x;
         self->yellowTrianglePos.y = pos.y;
@@ -947,21 +947,21 @@ void PauseMenu_State_HandleFadeout(void)
 void PauseMenu_DrawPauseMenu(void)
 {
     RSDK_THIS(PauseMenu);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x + 0x640000 + self->headerPos.x + -0x10000 * ScreenInfo->center.x;
-    drawPos.y = self->position.y - 0x600000 + self->headerPos.y;
+    Vector2 drawPos;
+    drawPos.x = self->position.x + TO_FIXED(100) + self->headerPos.x + -TO_FIXED(1) * ScreenInfo->center.x;
+    drawPos.y = self->position.y - TO_FIXED(96) + self->headerPos.y;
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 200, 68, 68, 0xE8, 0x28, 0x58);
 
-    drawPos.y += 0x60000;
-    drawPos.x += 0xA0000;
+    drawPos.x += TO_FIXED(10);
+    drawPos.y += TO_FIXED(6);
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 115, 24, 24, 0x00, 0x00, 0x00);
 
     // "PAUSED" text
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->center.x << 16) + self->position.x,
-                                self->yellowTrianglePos.y + (ScreenInfo->center.y << 16) + self->position.y, -232, 0xF0, 0xD8, 0x08);
+    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + TO_FIXED(ScreenInfo->center.x) + self->position.x,
+                                self->yellowTrianglePos.y + TO_FIXED(ScreenInfo->center.y) + self->position.y, -232, 0xF0, 0xD8, 0x08);
 }
 
 void PauseMenu_Draw_RegularPause(void)

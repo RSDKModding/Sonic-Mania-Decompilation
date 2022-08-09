@@ -63,7 +63,7 @@ void LaundroMobile_Create(void *data)
         self->drawFX = FX_FLIP;
         if (!SceneInfo->inEditor) {
             if (!self->type)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case LAUNDROMOBILE_BOSS:
@@ -320,7 +320,7 @@ void LaundroMobile_Explode(void)
         if (Zone->timer & 4) {
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
             explosion->drawGroup = Zone->objectDrawHigh + 2;
             if (LaundroMobile->health > 8)
@@ -334,7 +334,7 @@ void LaundroMobile_HandleStageWrap(void)
     EntityLaundroMobile *boss = LaundroMobile->laundroMobile;
 
     if (!(Zone->timer & 3)) {
-        EntityCurrent *current = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), ScreenInfo->position.x << 16,
+        EntityCurrent *current = CREATE_ENTITY(Current, INT_TO_VOID(CURRENT_CHILD_BUBBLE), ScreenInfo->position.x << 16,
                                                (8 * RSDK.Rand(0, ScreenInfo->size.y >> 3) + ScreenInfo->position.y) << 16);
 
         current->drawGroup = Zone->playerDrawLow;
@@ -959,9 +959,9 @@ void LaundroMobile_StateBoss_Attacking(void)
         if (LaundroMobile->isUnderwater) {
             LaundroMobile->isUnderwater = false;
 
-            CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
-            CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x - 0x100000, Water->waterLevel);
-            CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x + 0x100000, Water->waterLevel);
+            CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, Water->waterLevel);
+            CREATE_ENTITY(LaundroMobile, INT_TO_VOID(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x - 0x100000, Water->waterLevel);
+            CREATE_ENTITY(LaundroMobile, INT_TO_VOID(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x + 0x100000, Water->waterLevel);
 
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
             if (--LaundroMobile->attackCount <= 0) {
@@ -974,9 +974,9 @@ void LaundroMobile_StateBoss_Attacking(void)
     else if (!LaundroMobile->isUnderwater) {
         LaundroMobile->isUnderwater = true;
 
-        CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
-        CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x - 0x100000, Water->waterLevel);
-        CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x + 0x100000, Water->waterLevel);
+        CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, Water->waterLevel);
+        CREATE_ENTITY(LaundroMobile, INT_TO_VOID(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x - 0x100000, Water->waterLevel);
+        CREATE_ENTITY(LaundroMobile, INT_TO_VOID(LAUNDROMOBILE_DELAYEDSPLASH), self->position.x + 0x100000, Water->waterLevel);
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
     }
 
@@ -1258,7 +1258,7 @@ void LaundroMobile_StateBoss_Explode_Phase2(void)
 
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-        CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
+        CREATE_ENTITY(EggPrison, INT_TO_VOID(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->center.x) << 16,
                       (ScreenInfo->position.y - 48) << 16);
 
 #if MANIA_USE_PLUS
@@ -1534,7 +1534,7 @@ void LaundroMobile_StateBomb_Spawner(void)
         if (self->position.x + 0x200000 > ScreenInfo->position.x << 16) {
             if (self->position.x - 0x200000 <= (ScreenInfo->position.x + ScreenInfo->size.x) << 16) {
                 self->visible             = false;
-                EntityLaundroMobile *bomb = CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_BOMB), self->position.x, self->position.y);
+                EntityLaundroMobile *bomb = CREATE_ENTITY(LaundroMobile, INT_TO_VOID(LAUNDROMOBILE_BOMB), self->position.x, self->position.y);
                 bomb->velocity.x          = LaundroMobile->currentVelocity - 0x20000;
                 bomb->active              = ACTIVE_NORMAL;
                 bomb->state               = LaundroMobile_StateBomb_Bomb_Idle;
@@ -1620,12 +1620,12 @@ void LaundroMobile_StateBomb_Bomb_Activated(void)
 
         EntityLaundroMobile *boss = LaundroMobile->laundroMobile;
         if (RSDK.CheckObjectCollisionTouchBox(boss, &LaundroMobile->hitboxBoss, self, &LaundroMobile->hitboxBox)) {
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y);
             explosion->drawGroup       = Zone->objectDrawHigh;
             explosion->velocity.x      = LaundroMobile->currentVelocity - 0x10000;
             RSDK.PlaySfx(LaundroMobile->sfxExplosion, false, 255);
 
-            EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
+            EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y);
             water->drawGroup   = Zone->objectDrawLow + 1;
             water->angle       = 2 * RSDK.Rand(0, 256);
             water->speed       = -0x1400;
@@ -1668,7 +1668,7 @@ void LaundroMobile_StateBlock_Spawner(void)
             if (self->position.x - 0x200000 <= (ScreenInfo->position.x + ScreenInfo->size.x) << 16) {
                 self->visible = false;
 
-                EntityLaundroMobile *block = CREATE_ENTITY(LaundroMobile, intToVoid(self->type), self->position.x, self->position.y);
+                EntityLaundroMobile *block = CREATE_ENTITY(LaundroMobile, INT_TO_VOID(self->type), self->position.x, self->position.y);
                 block->velocity.x          = LaundroMobile->currentVelocity - 0x20000;
                 block->active              = ACTIVE_NORMAL;
                 block->state               = LaundroMobile_StateBlock_Block;
@@ -1838,7 +1838,7 @@ void LaundroMobile_State_DelayedSplash(void)
     RSDK_THIS(LaundroMobile);
 
     if (--self->timer <= 0) {
-        CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
+        CREATE_ENTITY(Water, INT_TO_VOID(WATER_SPLASH), self->position.x, Water->waterLevel);
         destroyEntity(self);
     }
 }

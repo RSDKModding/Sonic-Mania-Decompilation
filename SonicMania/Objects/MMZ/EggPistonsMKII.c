@@ -43,7 +43,7 @@ void EggPistonsMKII_Create(void *data)
             self->active = ACTIVE_BOUNDS;
 
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             switch (self->type) {
                 case EGGPISTON_PISTON:
@@ -262,7 +262,7 @@ void EggPistonsMKII_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(-24, 24) << 16);
             int32 y = self->position.y + (RSDK.Rand(-48, 48) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -301,7 +301,7 @@ void EggPistonsMKII_SpawnElecBall(void)
     int32 offset                  = 0;
 
     for (int32 i = 0; i < 4; ++i) {
-        EntityEggPistonsMKII *child = CREATE_ENTITY(EggPistonsMKII, intToVoid(EGGPISTON_PLASMABALL), spawner->position.x, spawner->position.y);
+        EntityEggPistonsMKII *child = CREATE_ENTITY(EggPistonsMKII, INT_TO_VOID(EGGPISTON_PLASMABALL), spawner->position.x, spawner->position.y);
         child->pistonID             = offset + spawner->position.x + ((RSDK.Rand(0, 48) - 48) << 16);
         child->inkEffect            = INK_ADD;
         child->velocity.x           = (child->pistonID - child->position.x) >> 4;
@@ -492,11 +492,11 @@ void EggPistonsMKII_State_StartPinchMode(void)
     RSDK_THIS(EggPistonsMKII);
 
     if (--self->timer <= 0) {
-        CREATE_ENTITY(EggPistonsMKII, intToVoid(EGGPISTON_ALARM), self->position.x, self->position.y);
+        CREATE_ENTITY(EggPistonsMKII, INT_TO_VOID(EGGPISTON_ALARM), self->position.x, self->position.y);
 
         EntityEggPistonsMKII *orbSpawner = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, EggPistonsMKII);
         RSDK.PlaySfx(EggPistonsMKII->sfxExplosion, false, 255);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), orbSpawner->position.x, orbSpawner->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), orbSpawner->position.x, orbSpawner->position.y)->drawGroup = Zone->objectDrawHigh;
 
         EggPistonsMKII->isPhase2 = true;
         destroyEntity(orbSpawner);

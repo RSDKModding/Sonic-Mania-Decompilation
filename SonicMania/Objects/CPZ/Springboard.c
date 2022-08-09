@@ -20,7 +20,7 @@ void Springboard_Update(void)
     foreach_active(Player, playerPtr)
     {
         if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntitySlot(playerPtr)) & self->activePlayers)) {
-            int32 pos = clampVal((playerPtr->position.x - self->position.x + 0x1C0000) >> 17, 0, 28);
+            int32 pos = CLAMP((playerPtr->position.x - self->position.x + 0x1C0000) >> 17, 0, 28);
 
             if ((self->direction & FLIP_X))
                 pos = 28 - pos;
@@ -41,7 +41,7 @@ void Springboard_Update(void)
                     playerPtr->tileCollisions = TILECOLLISION_DOWN;
                     RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRING_CS, &playerPtr->animator, true, 1);
                     playerPtr->groundVel    = playerPtr->velocity.x;
-                    playerPtr->velocity.y   = Springboard->springPower[minVal(2 * pos - 16, 39)] - playerPtr->gravityStrength - self->force;
+                    playerPtr->velocity.y   = Springboard->springPower[MIN(2 * pos - 16, 39)] - playerPtr->gravityStrength - self->force;
                     playerPtr->applyJumpCap = false;
 
                     RSDK.PlaySfx(Springboard->sfxSpring, false, 0xFF);
@@ -56,7 +56,7 @@ void Springboard_Update(void)
 
         int32 playerGndVel = player->groundVel;
         int32 playerVelX   = player->velocity.x;
-        int32 springPos  = clampVal((player->position.x - self->position.x + 0x1C0000) >> 17, 0, 27);
+        int32 springPos  = CLAMP((player->position.x - self->position.x + 0x1C0000) >> 17, 0, 27);
         bool32 bounced   = false;
 
         if (!self->direction) {

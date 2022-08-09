@@ -29,12 +29,12 @@ void Competition_Draw(void)
 #endif
         if (!self->playerFinished[SceneInfo->currentScreenID]) {
             Vector2 drawPos;
-            drawPos.x              = (ScreenInfo[SceneInfo->currentScreenID].center.x - 4) << 16;
-            drawPos.y              = 0x1A0000;
+            drawPos.x              = TO_FIXED(ScreenInfo[SceneInfo->currentScreenID].center.x - 4);
+            drawPos.y              = TO_FIXED(26);
             self->animator.frameID = self->timer / 10;
             RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-            drawPos.x += 0x80000;
+            drawPos.x += TO_FIXED(8);
             self->animator.frameID = self->timer % 10;
             RSDK.DrawSprite(&self->animator, &drawPos, true);
         }

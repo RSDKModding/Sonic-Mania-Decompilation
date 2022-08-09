@@ -74,7 +74,7 @@ void SPZ1Setup_StageLoad(void)
 
     int32 pos = 0;
     for (int32 i = 0; i < 0x200; ++i) {
-        int32 off    = clampVal(pos, 0, 0x200);
+        int32 off    = CLAMP(pos, 0, 0x200);
         int32 deform = RSDK.Rand(0, 4);
 
         int32 angle = 0;

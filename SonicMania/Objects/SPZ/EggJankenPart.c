@@ -48,7 +48,7 @@ void EggJankenPart_Create(void *data)
     self->drawGroup     = Zone->objectDrawLow + 1;
     self->drawFX |= FX_ROTATE | FX_FLIP;
 
-    self->animator.frameID = voidToInt(data);
+    self->animator.frameID = VOID_TO_INT(data);
 }
 
 void EggJankenPart_StageLoad(void) { EggJankenPart->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/EggJanken.bin", SCOPE_STAGE); }

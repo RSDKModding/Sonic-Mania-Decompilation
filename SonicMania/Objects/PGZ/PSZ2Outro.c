@@ -189,7 +189,7 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
     RSDK_THIS(PSZ2Outro);
 
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityPSZEggman *eggman = self->eggman;
     EntityFXRuby *fxRuby    = NULL;

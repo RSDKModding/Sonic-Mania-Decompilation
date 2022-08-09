@@ -75,7 +75,7 @@ void Launcher_Collide_Normal(void)
                 player->position.x     = self->drawPos.x;
                 player->direction      = self->direction;
                 player->velocity.x     = 0;
-                player->groundVel      = clampVal(self->velocity.x, -0x60000, 0x60000);
+                player->groundVel      = CLAMP(self->velocity.x, -0x60000, 0x60000);
                 player->pushing        = false;
                 player->tileCollisions = TILECOLLISION_DOWN;
                 if (player->state != Player_State_Roll)

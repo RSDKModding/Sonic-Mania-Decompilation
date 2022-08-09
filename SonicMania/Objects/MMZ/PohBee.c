@@ -103,7 +103,7 @@ void PohBee_CheckPlayerCollisions(void)
             if (Player_CheckBadnikTouch(player, self, &PohBee->hitbox)) {
                 if (self->drawGroup == 1) {
                     if (Player_CheckBadnikBreak(player, self, false)) {
-                        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = 1;
+                        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = 1;
                         destroyEntity(self);
                     }
                 }

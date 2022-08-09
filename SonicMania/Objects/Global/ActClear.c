@@ -26,37 +26,37 @@ void ActClear_Draw(void)
 
     Vector2 drawPos;
     Vector2 verts[4];
-    int32 millisecsPtr = 0;
-    int32 secsPtr      = 0;
-    int32 minsPtr      = 0;
+    int32 milliseconds = 0;
+    int32 seconds      = 0;
+    int32 minutes      = 0;
     int32 offset       = 0;
 
     drawPos.x  = self->gotThroughPos.x;
     drawPos.y  = self->gotThroughPos.y;
-    verts[0].y = drawPos.y - 0x140000;
-    verts[1].y = drawPos.y - 0x140000;
-    verts[2].y = drawPos.y - 0x40000;
-    verts[3].y = drawPos.y - 0x40000;
+    verts[0].y = drawPos.y - TO_FIXED(20);
+    verts[1].y = drawPos.y - TO_FIXED(20);
+    verts[2].y = drawPos.y - TO_FIXED(4);
+    verts[3].y = drawPos.y - TO_FIXED(4);
     if ((GET_CHARACTER_ID(1)) == ID_KNUCKLES) {
-        int32 center = (ScreenInfo->center.x << 16) + 0x100000;
+        int32 center = TO_FIXED(ScreenInfo->center.x + 16);
 
         drawPos.x  = 2 * self->gotThroughPos.x + center;
-        verts[0].x = drawPos.x - 0x910000;
-        verts[1].x = drawPos.x + 0x340000;
-        verts[2].x = drawPos.x + 0x440000;
-        verts[3].x = drawPos.x - 0x810000;
+        verts[0].x = drawPos.x - TO_FIXED(145);
+        verts[1].x = drawPos.x + TO_FIXED(52);
+        verts[2].x = drawPos.x + TO_FIXED(68);
+        verts[3].x = drawPos.x - TO_FIXED(129);
         RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x  = 2 * self->playerNamePos.x + center;
         drawPos.y  = self->playerNamePos.y;
-        verts[0].x = drawPos.x - 0x7C0000;
-        verts[0].y = drawPos.y + 0x1C0000;
-        verts[1].x = 0x500000 + drawPos.x;
-        verts[2].x = 0x600000 + drawPos.x;
-        verts[3].x = drawPos.x - 0x6C0000;
-        verts[1].y = drawPos.y + 0x1C0000;
-        verts[2].y = drawPos.y + 0x2C0000;
-        verts[3].y = drawPos.y + 0x2C0000;
+        verts[0].x = drawPos.x - TO_FIXED(124);
+        verts[0].y = drawPos.y + TO_FIXED(28);
+        verts[1].x = drawPos.x + TO_FIXED(80);
+        verts[2].x = drawPos.x + TO_FIXED(96);
+        verts[3].x = drawPos.x - TO_FIXED(108);
+        verts[1].y = drawPos.y + TO_FIXED(28);
+        verts[2].y = drawPos.y + TO_FIXED(44);
+        verts[3].y = drawPos.y + TO_FIXED(44);
         RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x = self->playerNamePos.x + center;
@@ -72,28 +72,28 @@ void ActClear_Draw(void)
         RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
         RSDK.DrawSprite(&self->actNumAnimator, &drawPos, true);
 
-        offset = center - 0xA0000;
+        offset = center - TO_FIXED(10);
     }
     else {
-        int32 center = (ScreenInfo->center.x << 16) + 0x100000;
+        int32 center = TO_FIXED(ScreenInfo->center.x + 16);
 
         drawPos.x  = 2 * self->gotThroughPos.x + center;
-        verts[0].x = drawPos.x - 0x6D0000;
-        verts[1].x = drawPos.x + 0x340000;
-        verts[2].x = drawPos.x + 0x440000;
-        verts[3].x = drawPos.x - 0x5D0000;
+        verts[0].x = drawPos.x - TO_FIXED(109);
+        verts[1].x = drawPos.x + TO_FIXED(52);
+        verts[2].x = drawPos.x + TO_FIXED(68);
+        verts[3].x = drawPos.x - TO_FIXED(93);
         RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x  = 2 * self->playerNamePos.x + center;
         drawPos.y  = self->playerNamePos.y;
-        verts[0].x = drawPos.x - 0x580000;
-        verts[0].y = drawPos.y + 0x1C0000;
-        verts[1].x = 0x500000 + drawPos.x;
-        verts[2].x = 0x600000 + drawPos.x + 2;
-        verts[3].x = drawPos.x - 0x480000;
-        verts[1].y = drawPos.y + 0x1C0000;
-        verts[2].y = drawPos.y + 0x2C0000;
-        verts[3].y = drawPos.y + 0x2C0000;
+        verts[0].x = drawPos.x - TO_FIXED(88);
+        verts[0].y = drawPos.y + TO_FIXED(28);
+        verts[1].x = drawPos.x + TO_FIXED(80);
+        verts[2].x = drawPos.x + TO_FIXED(96);
+        verts[3].x = drawPos.x - TO_FIXED(72);
+        verts[1].y = drawPos.y + TO_FIXED(28);
+        verts[2].y = drawPos.y + TO_FIXED(44);
+        verts[3].y = drawPos.y + TO_FIXED(44);
         RSDK.DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x = self->playerNamePos.x + center;
@@ -114,17 +114,17 @@ void ActClear_Draw(void)
         RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
         RSDK.DrawSprite(&self->actNumAnimator, &drawPos, true);
 
-        offset = center + 0x60000;
+        offset = center + TO_FIXED(6);
     }
 
     // Draw "Time" Bonus Sprite
-    drawPos.x                         = offset + self->timeBonusPos.x - 0x5C0000;
+    drawPos.x                         = offset + self->timeBonusPos.x - TO_FIXED(92);
     drawPos.y                         = self->timeBonusPos.y;
     self->hudElementsAnimator.frameID = 1;
     RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
     // Draw "Bonus" Sprite
-    drawPos.x += 0x320000;
+    drawPos.x += TO_FIXED(50);
 #if MANIA_USE_PLUS
     if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
@@ -136,18 +136,16 @@ void ActClear_Draw(void)
 
     // Draw Time Bonus BG thingy
     self->hudElementsAnimator.frameID = 10;
-    drawPos.x += 0x340000;
+    drawPos.x += TO_FIXED(52);
     RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-    int32 dx = 0x430000 + drawPos.x;
-    int32 dy = drawPos.y + 0xE0000;
-    drawPos.x += 0x430000;
-    drawPos.y += 0xE0000;
+    drawPos.x += TO_FIXED(67);
+    drawPos.y += TO_FIXED(14);
 
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.x = dx - 0x620000;
-        drawPos.y = dy - 0xE0000;
+        drawPos.x -= TO_FIXED(98);
+        drawPos.y -= TO_FIXED(14);
         // Draw Current Time
         ActClear_DrawTime(&drawPos, SceneInfo->minutes, SceneInfo->seconds, SceneInfo->milliseconds);
     }
@@ -159,7 +157,7 @@ void ActClear_Draw(void)
 #endif
 
     // Draw Ring Bonus
-    drawPos.x = offset + self->ringBonusPos.x - 0x5C0000;
+    drawPos.x = offset + self->ringBonusPos.x - TO_FIXED(92);
     drawPos.y = self->ringBonusPos.y;
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK)
@@ -169,14 +167,13 @@ void ActClear_Draw(void)
         self->hudElementsAnimator.frameID = 5; // "Ring"
     RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-    dx = drawPos.x + 0x320000;
-    drawPos.x += 0x320000;
+    drawPos.x += TO_FIXED(50);
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.x                         = dx - 0xA0000;
+        drawPos.x -= TO_FIXED(10);
         self->hudElementsAnimator.frameID = 1; // "Time"
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
-        drawPos.x += 0xA0000;
+        drawPos.x += TO_FIXED(10);
     }
     else {
 #endif
@@ -188,18 +185,18 @@ void ActClear_Draw(void)
 
     // Draw Ring Bonus BG thingy
     self->hudElementsAnimator.frameID = 10;
-    drawPos.x += 0x340000;
+    drawPos.x += TO_FIXED(52);
     RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-    drawPos.x += 0x430000;
-    drawPos.y += 0xE0000;
+    drawPos.x += TO_FIXED(67);
+    drawPos.y += TO_FIXED(14);
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) { // Draw Best Time
-        TimeAttackData_GetUnpackedTime(self->time, &minsPtr, &secsPtr, &millisecsPtr);
-        drawPos.x -= 0x620000;
-        drawPos.y -= 0xE0000;
+        TimeAttackData_GetUnpackedTime(self->time, &minutes, &seconds, &milliseconds);
+        drawPos.x -= TO_FIXED(98);
+        drawPos.y -= TO_FIXED(14);
         if (!self->isNewRecord || (self->isNewRecord && (Zone->timer & 8)))
-            ActClear_DrawTime(&drawPos, minsPtr, secsPtr, millisecsPtr);
+            ActClear_DrawTime(&drawPos, minutes, seconds, milliseconds);
     }
     else {
 #endif
@@ -209,7 +206,7 @@ void ActClear_Draw(void)
 #endif
 
     if (self->showCoolBonus) { // Draw Cool Bonus
-        drawPos.x = offset + self->coolBonusPos.x - 0x5C0000;
+        drawPos.x = offset + self->coolBonusPos.x - TO_FIXED(92);
         drawPos.y = self->coolBonusPos.y;
 #if MANIA_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK)
@@ -219,7 +216,7 @@ void ActClear_Draw(void)
             self->hudElementsAnimator.frameID = 15; // "Cool"
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-        drawPos.x += 0x320000;
+        drawPos.x += TO_FIXED(50);
 #if MANIA_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
@@ -231,11 +228,11 @@ void ActClear_Draw(void)
 
         // Draw Cool Bonus BG thingy
         self->hudElementsAnimator.frameID = 10;
-        drawPos.x += 0x340000;
+        drawPos.x += TO_FIXED(52);
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-        drawPos.x += 0x430000;
-        drawPos.y += 0xE0000;
+        drawPos.x += TO_FIXED(67);
+        drawPos.y += TO_FIXED(14);
 #if MANIA_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
@@ -248,7 +245,7 @@ void ActClear_Draw(void)
                 self->numbersAnimator.frameID = 16;
                 RSDK.DrawSprite(&self->numbersAnimator, &drawPos, true);
 
-                drawPos.x -= 0x90000;
+                drawPos.x -= TO_FIXED(9);
             }
             else if (!self->achievedRank || (self->achievedRank && (Zone->timer & 8)))
                 ActClear_DrawNumbers(&drawPos, TimeAttackData->personalRank, 0);
@@ -262,21 +259,21 @@ void ActClear_Draw(void)
 #if MANIA_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         // Draw World Rank
-        drawPos.x                         = offset + self->totalScorePos.x - 0x5C0000;
+        drawPos.x                         = offset + self->totalScorePos.x - TO_FIXED(92);
         self->hudElementsAnimator.frameID = 19; // "World"
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-        drawPos.x += 0x320000;
+        drawPos.x += TO_FIXED(50);
         self->hudElementsAnimator.frameID = 18; // "Rank"
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         // Draw World Rank BG thingy
         self->hudElementsAnimator.frameID = 10;
-        drawPos.x += 0x340000;
+        drawPos.x += TO_FIXED(52);
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-        drawPos.x += 0x430000;
-        drawPos.y += 0xE0000;
+        drawPos.x += TO_FIXED(67);
+        drawPos.y += TO_FIXED(14);
         if (!TimeAttackData->leaderboardRank) {
             self->numbersAnimator.frameID = 16; // "-" (no rank)
             RSDK.DrawSprite(&self->numbersAnimator, &drawPos, true);
@@ -289,18 +286,18 @@ void ActClear_Draw(void)
     else {
 #endif
         // Draw Total Score
-        drawPos.x                         = offset + self->totalScorePos.x - 0x440000;
+        drawPos.x                         = offset + self->totalScorePos.x - TO_FIXED(68);
         self->hudElementsAnimator.frameID = 9; // "Total"
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         // Draw Total Score BG thingy
         self->hudElementsAnimator.frameID = 10;
-        drawPos.x += 0x340000;
+        drawPos.x += TO_FIXED(52);
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         // Draw Total Score
-        drawPos.x += 0x430000;
-        drawPos.y += 0xE0000;
+        drawPos.x += TO_FIXED(67);
+        drawPos.y += TO_FIXED(14);
         ActClear_DrawNumbers(&drawPos, self->totalScore, 0);
 #if MANIA_USE_PLUS
     }
@@ -397,18 +394,18 @@ void ActClear_Create(void *data)
         }
 #endif
         self->showCoolBonus   = true;
-        self->playerNamePos.x = 0xE00000;
-        self->playerNamePos.y = 0x580000;
-        self->gotThroughPos.x = -0xE00000;
-        self->gotThroughPos.y = 0x700000;
-        self->timeBonusPos.x  = 0x1E80000;
-        self->timeBonusPos.y  = 0x780000;
-        self->ringBonusPos.x  = 0x3080000;
-        self->ringBonusPos.y  = 0x880000;
-        self->coolBonusPos.x  = 0x4280000;
-        self->coolBonusPos.y  = 0x980000;
-        self->totalScorePos.x = -0x5480000;
-        self->totalScorePos.y = 0xC00000;
+        self->playerNamePos.x = TO_FIXED(224);
+        self->playerNamePos.y = TO_FIXED(88);
+        self->gotThroughPos.x = -TO_FIXED(224);
+        self->gotThroughPos.y = TO_FIXED(112);
+        self->timeBonusPos.x  = TO_FIXED(488);
+        self->timeBonusPos.y  = TO_FIXED(120);
+        self->ringBonusPos.x  = TO_FIXED(776);
+        self->ringBonusPos.y  = TO_FIXED(136);
+        self->coolBonusPos.x  = TO_FIXED(1064);
+        self->coolBonusPos.y  = TO_FIXED(152);
+        self->totalScorePos.x = -TO_FIXED(1352);
+        self->totalScorePos.y = TO_FIXED(192);
 
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &self->hudElementsAnimator, true, 0);
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 1, &self->numbersAnimator, true, 0);
@@ -463,23 +460,23 @@ void ActClear_DrawTime(Vector2 *drawPosPtr, int32 mins, int32 secs, int32 millis
     }
 
     // The ":" thing
-    drawPos.x = drawPosPtr->x + 0x320000;
-    drawPos.y = drawPosPtr->y - 0x20000;
+    drawPos.x = drawPosPtr->x + TO_FIXED(50);
+    drawPos.y = drawPosPtr->y - TO_FIXED(2);
     RSDK.DrawSprite(&self->timeElementsAnimator, &drawPos, true);
 
     // Miliseconds
-    drawPos.x = drawPosPtr->x + 0x610000;
-    drawPos.y = drawPosPtr->y + 0xE0000;
+    drawPos.x = drawPosPtr->x + TO_FIXED(97);
+    drawPos.y = drawPosPtr->y + TO_FIXED(14);
     ActClear_DrawNumbers(&drawPos, millisecs, 2);
 
     // Seconds
-    drawPos.x -= 0x90000;
+    drawPos.x -= TO_FIXED(9);
     if (!mins && !secs && !millisecs)
         secs = -1;
     ActClear_DrawNumbers(&drawPos, secs, 2);
 
     // Minutes
-    drawPos.x -= 0x90000;
+    drawPos.x -= TO_FIXED(9);
     if (!mins && !secs && !millisecs)
         mins = -1;
     ActClear_DrawNumbers(&drawPos, mins, 1);
@@ -509,7 +506,7 @@ void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount)
                 self->numbersAnimator.frameID = value / digit % 10;
                 RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
 
-                drawPos->x -= 0x90000;
+                drawPos->x -= TO_FIXED(9);
                 digit *= 10;
             } 
         }
@@ -519,7 +516,7 @@ void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 digitCount)
             self->numbersAnimator.frameID = 16;
             RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
 
-            drawPos->x -= 0x90000;
+            drawPos->x -= TO_FIXED(9);
         }
     }
 }
@@ -561,8 +558,8 @@ void ActClear_SetupForceOnScreenP2(void)
 
     if (player2 && player2->sidekick) {
         if (player2->state != Player_State_FlyToPlayer && player2->state != Player_State_ReturnToPlayer) {
-            if (player2->position.x <= (ScreenInfo->size.x + ScreenInfo->position.x) << 16
-                || abs(player2->position.y - player1->position.y) > 0x100000) {
+            if (player2->position.x <= TO_FIXED(ScreenInfo->size.x + ScreenInfo->position.x)
+                || abs(player2->position.y - player1->position.y) > TO_FIXED(16)) {
                 Player->respawnTimer = 240;
 
                 Entity *entStore  = SceneInfo->entity;
@@ -572,7 +569,7 @@ void ActClear_SetupForceOnScreenP2(void)
 
                 if (player2->state == Player_State_FlyToPlayer || player2->state == Player_State_ReturnToPlayer || player2->state == Player_State_HoldRespawn) {
                     player2->active     = ACTIVE_NORMAL;
-                    player2->position.y = ((ScreenInfo->position.y - 16) << 16);
+                    player2->position.y = TO_FIXED(ScreenInfo->position.y - 16);
                 }
             }
             else {
@@ -587,10 +584,10 @@ void ActClear_State_EnterText(void)
     RSDK_THIS(ActClear);
 
     if (self->playerNamePos.x > 0)
-        self->playerNamePos.x -= 0x100000;
+        self->playerNamePos.x -= TO_FIXED(16);
 
     if (self->gotThroughPos.x < 0)
-        self->gotThroughPos.x += 0x100000;
+        self->gotThroughPos.x += TO_FIXED(16);
 
     if (!self->timer && Zone->shouldRecoverPlayers)
         ActClear_SetupForceOnScreenP2();
@@ -623,16 +620,16 @@ void ActClear_State_EnterResults(void)
     RSDK_THIS(ActClear);
 
     if (self->timeBonusPos.x > 0)
-        self->timeBonusPos.x -= 0x100000;
+        self->timeBonusPos.x -= TO_FIXED(16);
 
     if (self->ringBonusPos.x > 0)
-        self->ringBonusPos.x -= 0x100000;
+        self->ringBonusPos.x -= TO_FIXED(16);
 
     if (self->coolBonusPos.x > 0)
-        self->coolBonusPos.x -= 0x100000;
+        self->coolBonusPos.x -= TO_FIXED(16);
 
-    if (self->totalScorePos.x < -0x80000) {
-        self->totalScorePos.x += 0x100000;
+    if (self->totalScorePos.x < -TO_FIXED(8)) {
+        self->totalScorePos.x += TO_FIXED(16);
     }
     else {
 #if MANIA_USE_PLUS
@@ -876,22 +873,22 @@ void ActClear_State_ExitActClear(void)
 {
     RSDK_THIS(ActClear);
 
-    self->playerNamePos.x += 0x200000;
-    self->gotThroughPos.x -= 0x200000;
+    self->playerNamePos.x += TO_FIXED(32);
+    self->gotThroughPos.x -= TO_FIXED(32);
 
-    if (self->playerNamePos.x > 0x400000)
-        self->timeBonusPos.x += 0x200000;
+    if (self->playerNamePos.x > TO_FIXED(64))
+        self->timeBonusPos.x += TO_FIXED(32);
 
-    if (self->timeBonusPos.x > 0x400000)
-        self->ringBonusPos.x += 0x200000;
+    if (self->timeBonusPos.x > TO_FIXED(64))
+        self->ringBonusPos.x += TO_FIXED(32);
 
-    if (self->ringBonusPos.x > 0x400000)
-        self->coolBonusPos.x += 0x200000;
+    if (self->ringBonusPos.x > TO_FIXED(64))
+        self->coolBonusPos.x += TO_FIXED(32);
 
-    if (self->coolBonusPos.x > 0x400000)
-        self->totalScorePos.x -= 0x200000;
+    if (self->coolBonusPos.x > TO_FIXED(64))
+        self->totalScorePos.x -= TO_FIXED(32);
 
-    if (self->totalScorePos.x < -0x2000000) {
+    if (self->totalScorePos.x < -TO_FIXED(512)) {
         if (ActClear->displayedActID <= 0) {
             if (Zone->stageFinishCallback) {
                 if (Zone->shouldRecoverPlayers) {
@@ -940,7 +937,7 @@ void ActClear_State_RecoverPlayers(void)
 
     bool32 finishedP2  = false;
     bool32 finishedP1  = false;
-    int32 screenOffX   = (ScreenInfo->position.x + ScreenInfo->size.x - 16) << 16;
+    int32 screenOffX   = TO_FIXED(ScreenInfo->position.x + ScreenInfo->size.x - 16);
     player1->up        = false;
     player1->down      = false;
     player1->jumpPress = false;
@@ -990,7 +987,7 @@ void ActClear_State_RecoverPlayers(void)
             player2->stateInput = Player_Input_P2_AI;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->animator, false, 0);
             player2->state     = Player_State_Ground;
-            player2->groundVel = -0x40000;
+            player2->groundVel = -TO_FIXED(4);
             player2->left      = true;
             player2->right     = false;
 

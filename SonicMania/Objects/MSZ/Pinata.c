@@ -109,7 +109,7 @@ void Pinata_State_CheckPlayerCollisions(void)
 #endif
             CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y)->animator.frameID = 16;
             Player_GiveScore(player, 10);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawGroup =
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawGroup =
                 Zone->objectDrawHigh;
 
             for (int32 i = 0; i < 6; ++i) {

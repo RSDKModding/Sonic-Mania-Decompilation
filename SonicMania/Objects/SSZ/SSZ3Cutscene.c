@@ -53,7 +53,7 @@ void SSZ3Cutscene_Create(void *data)
 
     self->active = ACTIVE_NORMAL;
 #if MANIA_USE_PLUS
-    self->playTransformCutscene = voidToInt(data);
+    self->playTransformCutscene = VOID_TO_INT(data);
 #endif
 }
 
@@ -157,7 +157,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
 
 #if MANIA_USE_PLUS
     CREATE_ENTITY(MonarchPlans, NULL, (cutscenePos << 20) + 0xF00000, 0x1A80000);
-    CREATE_ENTITY(SSZEggman, intToVoid(true), (cutscenePos << 20) + 0x2000000, 0x1C50000);
+    CREATE_ENTITY(SSZEggman, INT_TO_VOID(true), (cutscenePos << 20) + 0x2000000, 0x1C50000);
 #endif
 
     foreach_all(PhantomRuby, ruby)
@@ -274,9 +274,9 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
 
     // lmao
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player1);
-    unused(player2);
-    unused(camera);
+    UNUSED(player1);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityPhantomRuby *ruby = self->ruby;
 

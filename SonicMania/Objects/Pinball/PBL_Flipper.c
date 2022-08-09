@@ -181,7 +181,7 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                 distance = self->position.x - player->position.x;
             else
                 distance = player->position.x - self->position.x;
-            int32 force = clampVal((distance + 0x80000) >> 13, 16, 256);
+            int32 force = CLAMP((distance + 0x80000) >> 13, 16, 256);
 
             switch (RSDK.CheckObjectCollisionBox(self, &PBL_Flipper->hitbox, player, &PBL_Player->outerBox, true)) {
                 case C_NONE:

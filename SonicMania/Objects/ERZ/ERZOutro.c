@@ -218,7 +218,7 @@ bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
 bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
+    UNUSED(player2);
 
     EntityKleptoMobile *eggman = ERZOutro->eggman;
     EntityFXRuby *fxRuby       = ERZOutro->fxRuby;
@@ -423,14 +423,14 @@ bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
         int32 ry   = abs(portal->position.y - player1->position.y) >> 16;
         int32 dist = MathHelpers_SquareRoot(rx * rx + ry * ry);
 
-        player1->scale.x = 8 * minVal(dist, 0x40);
-        player1->scale.y = 8 * minVal(dist, 0x40);
+        player1->scale.x = 8 * MIN(dist, 0x40);
+        player1->scale.y = 8 * MIN(dist, 0x40);
 
         rx            = abs(portal->position.x - ruby->position.x) >> 16;
         ry            = abs(portal->position.y - ruby->position.y) >> 16;
         dist          = MathHelpers_SquareRoot(rx * rx + ry * ry);
-        ruby->scale.x = 8 * minVal(dist, 0x40);
-        ruby->scale.y = 8 * minVal(dist, 0x40);
+        ruby->scale.x = 8 * MIN(dist, 0x40);
+        ruby->scale.y = 8 * MIN(dist, 0x40);
 
         if (ERZOutro->rubyPortalRadius > 0)
             ERZOutro->rubyPortalRadius -= 0x8000;

@@ -69,12 +69,12 @@ void OOZSetup_StaticUpdate(void)
                     int32 ty = ((playerHitbox->bottom + 8) << 16) + player->position.y;
                     if (tileFlags == OOZ_TFLAGS_OILPOOL) {
                         if (OOZSetup_StartFire(tx, (ty & 0xFFF00000) - 0xC0000, player->angle)) {
-                            EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(true), tx - 0x10000, (ty & 0xFFF00000) - 0xC0000);
+                            EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx - 0x10000, (ty & 0xFFF00000) - 0xC0000);
                             sol->velocity.x = -0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_OilFlame;
 
-                            sol             = CREATE_ENTITY(Sol, intToVoid(true), tx + 0x10000, (ty & 0xFFF00000) - 0xC0000);
+                            sol             = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx + 0x10000, (ty & 0xFFF00000) - 0xC0000);
                             sol->velocity.x = 0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_OilFlame;
@@ -82,12 +82,12 @@ void OOZSetup_StaticUpdate(void)
                     }
                     else if (player->onGround) {
                         if (OOZSetup_StartFire(tx, ty & 0xFFFF0000, player->angle)) {
-                            EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(true), tx - 0x10000, (ty & 0xFFFF0000) - 0x80000);
+                            EntitySol *sol  = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx - 0x10000, (ty & 0xFFFF0000) - 0x80000);
                             sol->velocity.x = -0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_FireballOilFlame;
 
-                            sol             = CREATE_ENTITY(Sol, intToVoid(true), tx + 0x10000, (ty & 0xFFFF0000) - 0x80000);
+                            sol             = CREATE_ENTITY(Sol, INT_TO_VOID(true), tx + 0x10000, (ty & 0xFFFF0000) - 0x80000);
                             sol->velocity.x = 0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->mainAnimator, true, 0);
                             sol->state = Sol_State_FireballOilFlame;
@@ -379,7 +379,7 @@ void OOZSetup_HandleActiveFlames(void)
 
             if (!*OOZSetup->flameTimerPtrs[i]) {
                 OOZSetup->flameTimerPtrs[i] = NULL;
-                EntitySol *sol              = CREATE_ENTITY(Sol, intToVoid(1), OOZSetup->flamePositions[i].x, OOZSetup->flamePositions[i].y);
+                EntitySol *sol              = CREATE_ENTITY(Sol, INT_TO_VOID(1), OOZSetup->flamePositions[i].x, OOZSetup->flamePositions[i].y);
                 sol->isFlameFX              = true;
                 sol->rotation               = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
                 RSDK.SetSpriteAnimation(Sol->aniFrames, 2, &sol->mainAnimator, true, 0);
@@ -442,7 +442,7 @@ bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle)
                 OOZSetup->flameCount = i + 1;
 
             OOZSetup->flameTimers[pos]                                                                                   = 0xF0;
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y - 0x60000)->drawGroup = self->drawGroup;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y - 0x60000)->drawGroup = self->drawGroup;
 
             return true;
         }

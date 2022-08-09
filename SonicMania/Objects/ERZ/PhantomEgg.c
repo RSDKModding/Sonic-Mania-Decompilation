@@ -43,7 +43,7 @@ void PhantomEgg_Create(void *data)
         self->updateRange.x    = 0x800000;
         self->updateRange.y    = 0x1000000;
         self->attackStateTable = PhantomEgg->attackStateTable1;
-        self->type             = voidToInt(data);
+        self->type             = VOID_TO_INT(data);
 
         if (!data) {
             self->visible   = false;
@@ -200,7 +200,7 @@ void PhantomEgg_Explode(Hitbox *hitbox)
         if (!(Zone->timer & 8)) {
             int32 x = self->position.x + (RSDK.Rand(hitbox->left, hitbox->right) << 16);
             int32 y = self->position.y + (RSDK.Rand(hitbox->top, hitbox->bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 }
@@ -640,7 +640,7 @@ void PhantomEgg_State_IntroHover(void)
     }
 
     if (self->timer == 4092) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 32;
         fxFade->speedOut     = 32;
     }
@@ -685,7 +685,7 @@ void PhantomEgg_State_MoveAround(void)
         self->velocity.x += 0x1800;
     }
 
-    self->velocity.x = clampVal(self->velocity.x, -0x50000, 0x50000);
+    self->velocity.x = CLAMP(self->velocity.x, -0x50000, 0x50000);
     self->position.x += self->velocity.x;
 
     if (startX >= self->targetPos.x - 0x100000) {
@@ -914,7 +914,7 @@ void PhantomEgg_State_Attack_HandleWarp(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline == 96) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 16;
         fxFade->speedOut     = 16;
     }
@@ -1109,7 +1109,7 @@ void PhantomEgg_State_CrackOpen(void)
     RSDK.ProcessAnimation(&self->crackAnimator);
 
     if (++self->timer == 60) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 512;
         fxFade->wait         = 16;
         fxFade->speedOut     = 16;
@@ -1148,14 +1148,14 @@ void PhantomEgg_State_CrackedExploding(void)
     if (!(Zone->timer & 0xF)) {
         int32 x                    = self->position.x + RSDK.Rand(-0x380000, -0x180000);
         int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawGroup       = Zone->objectDrawHigh;
     }
 
     if ((Zone->timer & 0xF) == 8) {
         int32 x                    = self->position.x + RSDK.Rand(0x180000, 0x380000);
         int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawGroup       = Zone->objectDrawHigh;
     }
 
@@ -1173,7 +1173,7 @@ void PhantomEgg_State_StartGoodEnd(void)
         if (Zone->timer & 8) {
             int32 x = self->position.x + RSDK.Rand(-0x800000, 0x800000);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom + 64) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
         }
     }
 
@@ -1183,7 +1183,7 @@ void PhantomEgg_State_StartGoodEnd(void)
     }
 
     if (self->timer == 320) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, INT_TO_VOID(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 16;
         fxFade->wait         = 32;
         fxFade->fadeOutBlack = 1;

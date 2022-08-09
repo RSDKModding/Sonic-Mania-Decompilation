@@ -136,7 +136,7 @@ void Clapperboard_Collide_Left(void)
 
     foreach_active(Player, player)
     {
-        int32 standPos      = self->hitbox.right - clampVal((player->position.x - self->position.x) >> 16, self->hitbox.left, self->hitbox.right);
+        int32 standPos      = self->hitbox.right - CLAMP((player->position.x - self->position.x) >> 16, self->hitbox.left, self->hitbox.right);
         int32 top           = (ampR >> 16) + ((ampR >> 16) - (ampL >> 16)) * standPos / clapStartPos - (self->clapSpeed & 0xFFFF);
         self->hitbox.top    = top;
         self->hitbox.bottom = top + 24;
@@ -198,7 +198,7 @@ void Clapperboard_Collide_Right(void)
 
     foreach_active(Player, player)
     {
-        int32 standPos      = clampVal((player->position.x - self->position.x) >> 16, self->hitbox.left, self->hitbox.right) - self->hitbox.left;
+        int32 standPos      = CLAMP((player->position.x - self->position.x) >> 16, self->hitbox.left, self->hitbox.right) - self->hitbox.left;
         int32 top           = (ampL >> 16) + ((ampL >> 16) - (ampR >> 16)) * standPos / clapStartPos - (self->clapSpeed & 0xFFFF);
         self->hitbox.top    = top;
         self->hitbox.bottom = top + 24;

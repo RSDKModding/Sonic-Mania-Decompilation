@@ -135,8 +135,8 @@ bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host)
 bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntitySignPost *signPost  = MSZCutsceneST->signPost;
     EntityCutsceneHBH *mystic = MSZCutsceneST->mystic;
@@ -174,8 +174,8 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
 bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityTornado *tornado    = MSZCutsceneST->tornado;
     EntitySignPost *signPost  = MSZCutsceneST->signPost;
@@ -221,8 +221,8 @@ bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host)
 bool32 MSZCutsceneST_Cutscene_PrepareAmbush(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(player2);
-    unused(camera);
+    UNUSED(player2);
+    UNUSED(camera);
 
     EntityTornado *tornado      = MSZCutsceneST->tornado;
     EntityTornadoPath *pathNode = MSZCutsceneST->tornadoPath;
@@ -480,7 +480,7 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
 bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
 {
     MANIA_GET_PLAYER(player1, player2, camera);
-    unused(camera);
+    UNUSED(camera);
 
     EntityTornado *tornado      = MSZCutsceneST->tornado;
     EntityTornadoPath *pathNode = MSZCutsceneST->tornadoPath;
@@ -523,7 +523,7 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
     }
 
     if (!host->values[0]) {
-        host->fadeWhite = clampVal(512 - ((host->timer - 45) << 9) / 60, 0, 512);
+        host->fadeWhite = CLAMP(512 - ((host->timer - 45) << 9) / 60, 0, 512);
         if (!host->fadeWhite)
             host->values[0] = 1;
     }

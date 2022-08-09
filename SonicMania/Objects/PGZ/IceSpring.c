@@ -146,8 +146,8 @@ void IceSpring_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->type %= 3;
         if (data) {
-            self->type     = (voidToInt(data) >> 0) & 0xFF;
-            self->flipFlag = (voidToInt(data) >> 8) & 0xFF;
+            self->type     = (VOID_TO_INT(data) >> 0) & 0xFF;
+            self->flipFlag = (VOID_TO_INT(data) >> 8) & 0xFF;
         }
 
         RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->type, &self->animator, true, 0);

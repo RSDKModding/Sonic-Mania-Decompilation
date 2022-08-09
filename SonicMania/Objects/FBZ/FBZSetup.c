@@ -158,7 +158,7 @@ void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32
     int32 end   = start + lineCount;
 
     if (start < SCREEN_YSIZE && end > 0) {
-        end     = minVal(end, SCREEN_YSIZE);
+        end     = MIN(end, SCREEN_YSIZE);
 
         // sourcePosY = start layer line
         int32 scanlineY = sourcePosY;

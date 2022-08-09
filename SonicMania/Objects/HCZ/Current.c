@@ -129,7 +129,7 @@ void Current_Create(void *data)
             self->updateRange.x = 0x2000000;
             self->updateRange.y = 0x1000000;
 
-            if (voidToInt(data) == CURRENT_CHILD_WIND) {
+            if (VOID_TO_INT(data) == CURRENT_CHILD_WIND) {
                 self->drawFX  = FX_SCALE | FX_FLIP;
                 self->scale.x = 0x400;
                 self->scale.y = 0x100;
@@ -381,7 +381,7 @@ void Current_State_WaterLeft(void)
     if (Water) {
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(false);
-            EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
+            EntityCurrent *child = CREATE_ENTITY(Current, INT_TO_VOID(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
             child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
@@ -454,7 +454,7 @@ void Current_State_WaterRight(void)
     if (Water) {
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(true);
-            EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
+            EntityCurrent *child = CREATE_ENTITY(Current, INT_TO_VOID(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
             child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
@@ -532,7 +532,7 @@ void Current_State_WaterUp(void)
     if (Water) {
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(false);
-            EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
+            EntityCurrent *child = CREATE_ENTITY(Current, INT_TO_VOID(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
             child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
@@ -612,7 +612,7 @@ void Current_State_WaterDown(void)
     if (Water) {
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(true);
-            EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
+            EntityCurrent *child = CREATE_ENTITY(Current, INT_TO_VOID(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
 
             child->drawGroup = Zone->objectDrawHigh;
             child->strength  = (self->strength + (self->strength >> 3)) >> 1;
@@ -642,7 +642,7 @@ void Current_State_PushLeft(void)
 
     if (!(Zone->timer & 7)) {
         Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(0);
-        EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_WIND), pos.x, pos.y);
+        EntityCurrent *child = CREATE_ENTITY(Current, INT_TO_VOID(CURRENT_CHILD_WIND), pos.x, pos.y);
 
         child->drawGroup = Zone->objectDrawHigh;
         child->strength  = 4 * self->strength + RSDK.Rand(1 - self->strength, 5);

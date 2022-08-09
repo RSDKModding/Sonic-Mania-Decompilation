@@ -203,7 +203,7 @@ void Bubbler_State_AttackPlayer(void)
         int32 spawnX     = self->position.x + 0x60000;
         if (self->direction)
             spawnX = self->position.x - 0x60000;
-        CREATE_ENTITY(Bubbler, intToVoid(true), spawnX, self->position.y + 0xA0000)->active = ACTIVE_NORMAL;
+        CREATE_ENTITY(Bubbler, INT_TO_VOID(true), spawnX, self->position.y + 0xA0000)->active = ACTIVE_NORMAL;
     }
 
     Bubbler_HandleInteractions();

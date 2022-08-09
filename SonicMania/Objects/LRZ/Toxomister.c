@@ -181,7 +181,7 @@ void Toxomister_State_CreateClouds(void)
         self->direction &= ~FLIP_X;
 
     if (!self->parent && self->onScreen) {
-        EntityToxomister *cloud = CREATE_ENTITY(Toxomister, intToVoid(true), self->position.x, self->position.y);
+        EntityToxomister *cloud = CREATE_ENTITY(Toxomister, INT_TO_VOID(true), self->position.x, self->position.y);
 
         if (self->direction & FLIP_X)
             cloud->position.x += 0x120000;
@@ -287,10 +287,10 @@ void Toxomister_StateCloud_GrabbedPlayer(void)
             self->position.y = player->position.y;
 
             if (player->onGround) {
-                player->groundVel = clampVal(player->groundVel, -0x20000, 0x20000);
+                player->groundVel = CLAMP(player->groundVel, -0x20000, 0x20000);
             }
             else {
-                player->velocity.x = clampVal(player->velocity.x, -0x20000, 0x20000);
+                player->velocity.x = CLAMP(player->velocity.x, -0x20000, 0x20000);
 
                 if (player->velocity.y >= 0) {
                     if (player->velocity.y > 0x20000)

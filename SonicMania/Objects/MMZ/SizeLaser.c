@@ -66,7 +66,7 @@ void SizeLaser_Create(void *data)
 
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        int32 type          = voidToInt(data);
+        int32 type          = VOID_TO_INT(data);
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -579,7 +579,7 @@ void SizeLaser_State_Emitter(void)
     RSDK_THIS(SizeLaser);
 
     if (self->timer < 24 && !(self->timer & 1))
-        CREATE_ENTITY(SizeLaser, intToVoid(self->type + (self->orientation << 2) + 1), self->position.x, self->position.y);
+        CREATE_ENTITY(SizeLaser, INT_TO_VOID(self->type + (self->orientation << 2) + 1), self->position.x, self->position.y);
     SizeLaser_CheckPlayerCollisions();
 
     self->timer = (self->timer + 1) & 0x1F;

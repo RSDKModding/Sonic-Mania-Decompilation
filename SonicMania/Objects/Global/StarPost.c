@@ -27,7 +27,7 @@ void StarPost_Draw(void)
     RSDK.DrawSprite(&self->poleAnimator, &self->position, false);
 
     self->ballPos.x = self->position.x - 0x280 * RSDK.Cos1024(self->angle);
-    self->ballPos.y = self->position.y - 0x280 * RSDK.Sin1024(self->angle) - 0xE0000;
+    self->ballPos.y = self->position.y - 0x280 * RSDK.Sin1024(self->angle) - TO_FIXED(14);
     RSDK.DrawSprite(&self->ballAnimator, &self->ballPos, false);
 
     Vector2 drawPos;
@@ -36,7 +36,7 @@ void StarPost_Draw(void)
         int32 amplitude = 3 * RSDK.Sin512(self->starAngleY);
         for (int32 i = 0; i < 4; ++i) {
             drawPos.x = self->position.x + ((RSDK.Sin512(angleX) << 12) * self->starRadius >> 7);
-            drawPos.y = (((amplitude * RSDK.Sin512(angleX)) + (RSDK.Cos512(angleX) << 10)) * self->starRadius >> 7) + self->position.y - 0x320000;
+            drawPos.y = (((amplitude * RSDK.Sin512(angleX)) + (RSDK.Cos512(angleX) << 10)) * self->starRadius >> 7) + self->position.y - TO_FIXED(50);
             RSDK.DrawSprite(&self->starAnimator, &drawPos, false);
             angleX += 128;
         }
@@ -55,8 +55,8 @@ void StarPost_Create(void *data)
             self->visible       = true;
             self->drawGroup     = Zone->objectDrawLow;
             self->active        = ACTIVE_BOUNDS;
-            self->updateRange.x = 0x400000;
-            self->updateRange.y = 0x400000;
+            self->updateRange.x = TO_FIXED(64);
+            self->updateRange.y = TO_FIXED(64);
             self->state         = StarPost_State_Idle;
             self->angle         = 256;
         }
@@ -71,7 +71,7 @@ void StarPost_Create(void *data)
         }
         RSDK.SetSpriteAnimation(StarPost->aniFrames, 3, &self->starAnimator, true, 0);
         self->ballPos.x = self->position.x;
-        self->ballPos.y = self->position.y - 0x180000;
+        self->ballPos.y = self->position.y - TO_FIXED(24);
     }
 }
 
@@ -117,7 +117,7 @@ void StarPost_StageLoad(void)
                 }
 
                 player->position.x = StarPost->playerPositions[p].x;
-                player->position.y = StarPost->playerPositions[p].y + 0x100000;
+                player->position.y = StarPost->playerPositions[p].y + TO_FIXED(16);
                 player->direction  = StarPost->playerDirections[p];
 
                 if (!p) {
@@ -127,9 +127,9 @@ void StarPost_StageLoad(void)
                         sidekick->position.y = player->position.y;
                         sidekick->direction  = player->direction;
                         if (player->direction)
-                            sidekick->position.x += 0x100000;
+                            sidekick->position.x += TO_FIXED(16);
                         else
-                            sidekick->position.x -= 0x100000;
+                            sidekick->position.x -= TO_FIXED(16);
 
                         for (int32 p = 0; p < 0x10; ++p) {
                             Player->leaderPositionBuffer[p].x = player->position.x;
@@ -148,7 +148,7 @@ void StarPost_StageLoad(void)
 #endif
             EntityPlayer *player           = RSDK_GET_ENTITY(p, Player);
             StarPost->playerPositions[p].x = player->position.x;
-            StarPost->playerPositions[p].y = player->position.y - 0x100000;
+            StarPost->playerPositions[p].y = player->position.y - TO_FIXED(16);
             StarPost->playerDirections[p]  = player->direction;
         }
     }

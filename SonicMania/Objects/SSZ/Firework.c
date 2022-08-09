@@ -325,7 +325,7 @@ void Firework_HandleRideEnd(bool32 crashed)
 
     if (crashed) {
         // Watch out! you're gonna crash! ah!
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
         RSDK.PlaySfx(Firework->sfxExplosion2, false, 255);
 
         Firework_RemovePlayers(true);

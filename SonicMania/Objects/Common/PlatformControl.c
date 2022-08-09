@@ -171,8 +171,8 @@ void PlatformControl_Create(void *data)
         if (!self->speed)
             self->speed = 4;
 
-        self->updateRange.x += 0x800000;
-        self->updateRange.y += 0x800000;
+        self->updateRange.x += TO_FIXED(128);
+        self->updateRange.y += TO_FIXED(128);
 
         self->taggedButton         = NULL;
         EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntitySlot(self) - 1, Button);
@@ -216,12 +216,11 @@ void PlatformControl_Create(void *data)
             if ((Button && taggedButton->classID == Button->classID) || (SDashWheel && taggedButton->classID == SDashWheel->classID)
                 || (PullChain && taggedButton->classID == PullChain->classID)) {
                 self->taggedButton = taggedButton;
-                if (self->updateRange.y < 0x800000 + abs(self->position.x - taggedButton->position.x)) {
-                    self->updateRange.y = 0x800000 + abs(self->position.x - taggedButton->position.x);
-                }
-                if (self->updateRange.y < 0x800000 + abs(self->position.y - taggedButton->position.y)) {
-                    self->updateRange.y = 0x800000 + abs(self->position.y - taggedButton->position.y);
-                }
+                if (self->updateRange.x < TO_FIXED(128) + abs(self->position.x - taggedButton->position.x)) 
+                    self->updateRange.x = TO_FIXED(128) + abs(self->position.x - taggedButton->position.x);
+
+                if (self->updateRange.y < TO_FIXED(128) + abs(self->position.y - taggedButton->position.y)) 
+                    self->updateRange.y = TO_FIXED(128) + abs(self->position.y - taggedButton->position.y);
             }
         }
     }
@@ -270,8 +269,8 @@ void PlatformControl_EditorDraw(void)
         RSDK.DrawSprite(&animator, NULL, false);
     }
 
-    self->updateRange.x = 0x800000;
-    self->updateRange.y = 0x800000;
+    self->updateRange.x = TO_FIXED(128);
+    self->updateRange.y = TO_FIXED(128);
 
     if (showGizmos()) {
         self->taggedButton         = NULL;
@@ -316,12 +315,11 @@ void PlatformControl_EditorDraw(void)
             if ((Button && taggedButton->classID == Button->classID) || (SDashWheel && taggedButton->classID == SDashWheel->classID)
                 || (PullChain && taggedButton->classID == PullChain->classID)) {
                 self->taggedButton = taggedButton;
-                if (self->updateRange.y < 0x800000 + abs(self->position.x - taggedButton->position.x)) {
-                    self->updateRange.y = 0x800000 + abs(self->position.x - taggedButton->position.x);
-                }
-                if (self->updateRange.y < 0x800000 + abs(self->position.y - taggedButton->position.y)) {
-                    self->updateRange.y = 0x800000 + abs(self->position.y - taggedButton->position.y);
-                }
+                if (self->updateRange.x < TO_FIXED(128) + abs(self->position.x - taggedButton->position.x)) 
+                    self->updateRange.x = TO_FIXED(128) + abs(self->position.x - taggedButton->position.x);
+
+                if (self->updateRange.y < TO_FIXED(128) + abs(self->position.y - taggedButton->position.y)) 
+                    self->updateRange.y = TO_FIXED(128) + abs(self->position.y - taggedButton->position.y);
             }
         }
 

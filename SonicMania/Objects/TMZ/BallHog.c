@@ -210,7 +210,7 @@ void BallHog_State_DropBomb(void)
         self->timer = 18;
         RSDK.PlaySfx(BallHog->sfxDrop, false, 0xFF);
 
-        EntityBallHog *bomb = CREATE_ENTITY(BallHog, intToVoid(true), self->position.x, self->position.y);
+        EntityBallHog *bomb = CREATE_ENTITY(BallHog, INT_TO_VOID(true), self->position.x, self->position.y);
         if (self->direction) {
             bomb->position.x += 0x40000;
             bomb->velocity.x = 0x10000;
@@ -278,7 +278,7 @@ void BallHog_State_Bomb(void)
 
         if (shouldExplode || !--self->timer) {
             RSDK.PlaySfx(BallHog->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
 
             destroyEntity(self);
         }

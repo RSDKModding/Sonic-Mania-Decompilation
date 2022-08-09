@@ -220,7 +220,7 @@ void BuzzBomber_State_DetectedPlayer(void)
         RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 1, &self->animator, true, 0);
     }
     else if (self->timer == 45) {
-        EntityBuzzBomber *projectile = CREATE_ENTITY(BuzzBomber, intToVoid(true), self->position.x, self->position.y);
+        EntityBuzzBomber *projectile = CREATE_ENTITY(BuzzBomber, INT_TO_VOID(true), self->position.x, self->position.y);
         if (self->direction) {
             projectile->position.x += 0x180000;
             projectile->velocity.x = 0x20000;

@@ -25,7 +25,7 @@ void EggPrison_Update(void)
             {
                 if (Player_CheckCollisionBox(player, self, &self->hitboxSolid) == C_TOP) {
                     player->position.x += self->velocity.x;
-                    player->position.y += 0x10000;
+                    player->position.y += TO_FIXED(1);
                 }
 
                 if (self->state == EggPrison_State_Idle) {
@@ -33,17 +33,17 @@ void EggPrison_Update(void)
                         self->velocity.x = 0;
                         self->active     = ACTIVE_NORMAL;
                         self->state      = EggPrison_State_Opened;
-                        self->buttonPos  = -0x80000;
+                        self->buttonPos  = -TO_FIXED(8);
                     }
                     else {
                         if (!Player_CheckCollisionTouch(player, self, &self->hitboxButtonTrigger)) {
                             if (self->buttonPos < 0)
-                                self->buttonPos += 0x10000;
+                                self->buttonPos += TO_FIXED(1);
                         }
                         else {
                             Hitbox *playerHitbox = Player_GetHitbox(player);
-                            self->buttonPos      = ((playerHitbox->top - 48) << 16) - self->position.y + player->position.y;
-                            self->buttonPos      = clampVal(self->buttonPos, -0x80000, 0);
+                            self->buttonPos      = TO_FIXED(playerHitbox->top - 48) - self->position.y + player->position.y;
+                            self->buttonPos      = CLAMP(self->buttonPos, -TO_FIXED(8), 0);
                             self->buttonPos &= 0xFFFF0000;
                         }
                     }
@@ -62,7 +62,7 @@ void EggPrison_Update(void)
 
                 if (self->state == EggPrison_State_Idle) {
                     if (Player_CheckCollisionBox(player, self, &self->hitboxButton) == C_TOP) {
-                        self->buttonPos = 0x80000;
+                        self->buttonPos = TO_FIXED(8);
 
                         if (self->type < EGGPRISON_DUD)
                             SceneInfo->timeEnabled = false;
@@ -75,7 +75,7 @@ void EggPrison_Update(void)
                                 player->animationReserve = ANI_WALK;
                             player->state      = Player_State_Air;
                             player->onGround   = false;
-                            player->velocity.y = -0xA0000;
+                            player->velocity.y = -TO_FIXED(10);
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_TWIRL, &player->animator, true, 0);
                             RSDK.PlaySfx(EggPrison->sfxSpring, false, 255);
                         }
@@ -88,12 +88,12 @@ void EggPrison_Update(void)
                         if (Player_CheckCollisionTouch(player, self, &self->hitboxButtonTrigger)) {
                             Hitbox *playerHitbox = Player_GetHitbox(player);
 
-                            self->buttonPos = ((playerHitbox->bottom + 48) << 16) - self->position.y + player->position.y;
-                            self->buttonPos = clampVal(self->buttonPos, 0, 0x80000);
+                            self->buttonPos = TO_FIXED(playerHitbox->bottom + 48) - self->position.y + player->position.y;
+                            self->buttonPos = CLAMP(self->buttonPos, 0, TO_FIXED(8));
                             self->buttonPos &= 0xFFFF0000;
                         }
                         else if (self->buttonPos > 0)
-                            self->buttonPos -= 0x10000;
+                            self->buttonPos -= TO_FIXED(1);
                     }
                 }
                 else {
@@ -147,7 +147,7 @@ void EggPrison_Create(void *data)
 
         if (!SceneInfo->inEditor) {
             if (data)
-                self->type = voidToInt(data);
+                self->type = VOID_TO_INT(data);
 
             if (self->type == EGGPRISON_FLYING) {
                 RSDK.SetSpriteAnimation(EggPrison->aniFrames, 0, &self->capsuleAnimator, true, 1);
@@ -190,8 +190,8 @@ void EggPrison_Create(void *data)
 
             self->state         = EggPrison_State_Init;
             self->active        = ACTIVE_BOUNDS;
-            self->updateRange.x = 0x800000;
-            self->updateRange.y = 0x800000;
+            self->updateRange.x = TO_FIXED(128);
+            self->updateRange.y = TO_FIXED(128);
             self->visible       = true;
             self->drawGroup     = Zone->objectDrawLow;
         }
@@ -215,8 +215,8 @@ void EggPrison_HandleMovement(void)
 
     bool32 hitFloor = false;
     if (self->checkTileCollisions) {
-        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x300000, 0x900000, false)
-            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x300000, 0x900000, false)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -TO_FIXED(48), TO_FIXED(144), false)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, TO_FIXED(48), TO_FIXED(144), false)) {
             self->originY -= self->velocity.y;
             hitFloor = true;
         }
@@ -229,19 +229,19 @@ void EggPrison_HandleMovement(void)
 
     if (self->state != EggPrison_State_FlyOffScreen) {
         if (self->velocity.x > 0) {
-            if (self->position.x <= (ScreenInfo->position.x + ScreenInfo->size.x - 48) << 16) {
-                if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x400000, 0, true))
+            if (self->position.x <= TO_FIXED(ScreenInfo->position.x + ScreenInfo->size.x - 48)) {
+                if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, TO_FIXED(64), 0, true))
                     self->velocity.x = -self->velocity.x;
             }
             else {
                 self->velocity.x = -self->velocity.x;
             }
         }
-        else if (self->position.x < (ScreenInfo->position.x + 48) << 16) {
+        else if (self->position.x < TO_FIXED(ScreenInfo->position.x + 48)) {
             self->velocity.x = -self->velocity.x;
         }
         else {
-            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x400000, 0, true))
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -TO_FIXED(64), 0, true))
                 self->velocity.x = -self->velocity.x;
         }
     }
@@ -264,9 +264,9 @@ void EggPrison_State_Opened(void)
         case EGGPRISON_DUD:
         case EGGPRISON_SPRING:
             for (int32 a = 0; a < 10; ++a) {
-                int32 x                = self->position.x + (((RSDK.Rand(0, 48) & -4) - 24) << 16);
-                int32 y                = self->position.y + 0x40000;
-                EntityAnimals *animals = CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[a & 1] + 1), x, y);
+                int32 x                = self->position.x + TO_FIXED((RSDK.Rand(0, 48) & -4) - 24);
+                int32 y                = self->position.y + TO_FIXED(4);
+                EntityAnimals *animals = CREATE_ENTITY(Animals, INT_TO_VOID(Animals->animalTypes[a & 1] + 1), x, y);
 
                 animals->timer     = 4 * a;
                 animals->state     = Animals_State_Placed;
@@ -278,7 +278,7 @@ void EggPrison_State_Opened(void)
         case EGGPRISON_RINGS: {
             int32 angle = 0x90;
             for (int32 r = 0; r < 6; ++r) {
-                int32 x          = self->position.x + (((RSDK.Rand(0, 48) & -4) - 24) << 16);
+                int32 x          = self->position.x + TO_FIXED((RSDK.Rand(0, 48) & -4) - 24);
                 int32 y          = self->position.y;
                 EntityRing *ring = CREATE_ENTITY(Ring, self, x, y);
 
@@ -299,67 +299,67 @@ void EggPrison_State_Opened(void)
         }
 
         case EGGPRISON_TRAP: {
-            EntityTechnosqueek *technosqueek = CREATE_ENTITY(Technosqueek, NULL, self->position.x - 0x80000, self->position.y);
-            technosqueek->velocity.x         = -0x30000;
-            technosqueek->velocity.y         = -0x40000;
+            EntityTechnosqueek *technosqueek = CREATE_ENTITY(Technosqueek, NULL, self->position.x - TO_FIXED(8), self->position.y);
+            technosqueek->velocity.x         = -TO_FIXED(3);
+            technosqueek->velocity.y         = -TO_FIXED(4);
             technosqueek->active             = ACTIVE_NORMAL;
             technosqueek->state              = Technosqueek_State_Fall;
 
-            technosqueek             = CREATE_ENTITY(Technosqueek, NULL, self->position.x + 0x80000, self->position.y);
-            technosqueek->velocity.x = 0x30000;
-            technosqueek->velocity.y = -0x40000;
+            technosqueek             = CREATE_ENTITY(Technosqueek, NULL, self->position.x + TO_FIXED(8), self->position.y);
+            technosqueek->velocity.x = TO_FIXED(3);
+            technosqueek->velocity.y = -TO_FIXED(4);
             technosqueek->active     = ACTIVE_NORMAL;
             technosqueek->direction  = FLIP_X;
             technosqueek->state      = Technosqueek_State_Fall;
 
-            EntityBlaster *blaster = CREATE_ENTITY(Blaster, NULL, self->position.x - 0x180000, self->position.y);
-            blaster->velocity.x    = -0x30000;
-            blaster->velocity.y    = -0x30000;
+            EntityBlaster *blaster = CREATE_ENTITY(Blaster, NULL, self->position.x - TO_FIXED(24), self->position.y);
+            blaster->velocity.x    = -TO_FIXED(3);
+            blaster->velocity.y    = -TO_FIXED(3);
             blaster->active        = ACTIVE_NORMAL;
             blaster->state         = Blaster_State_Fall;
 
-            blaster             = CREATE_ENTITY(Blaster, NULL, self->position.x + 0x180000, self->position.y);
-            blaster->velocity.x = 0x30000;
-            blaster->velocity.y = -0x30000;
+            blaster             = CREATE_ENTITY(Blaster, NULL, self->position.x + TO_FIXED(24), self->position.y);
+            blaster->velocity.x = TO_FIXED(3);
+            blaster->velocity.y = -TO_FIXED(3);
             blaster->active     = ACTIVE_NORMAL;
-            blaster->direction  = 1;
+            blaster->direction  = FLIP_X;
             blaster->state      = Blaster_State_Fall;
             break;
         }
     }
 
-    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x160000, self->position.y);
+    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - TO_FIXED(22), self->position.y);
     RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 2);
-    debris->velocity.x      = -0x20000;
-    debris->velocity.y      = -0x20000;
+    debris->velocity.x      = -TO_FIXED(2);
+    debris->velocity.y      = -TO_FIXED(2);
     debris->gravityStrength = 0x3800;
     debris->rotSpeed        = -4;
     debris->drawFX          = FX_ROTATE;
     debris->drawGroup       = Zone->objectDrawHigh;
-    debris->updateRange.x   = 0x800000;
-    debris->updateRange.y   = 0x800000;
+    debris->updateRange.x   = TO_FIXED(128);
+    debris->updateRange.y   = TO_FIXED(128);
 
     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
     RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 3);
-    debris->velocity.x      = 0;
-    debris->velocity.y      = -0x30000;
+    debris->velocity.x      = TO_FIXED(0);
+    debris->velocity.y      = -TO_FIXED(3);
     debris->gravityStrength = 0x3800;
     debris->rotSpeed        = 8;
     debris->drawFX          = FX_ROTATE;
     debris->drawGroup       = Zone->objectDrawHigh;
-    debris->updateRange.x   = 0x800000;
-    debris->updateRange.y   = 0x800000;
+    debris->updateRange.x   = TO_FIXED(128);
+    debris->updateRange.y   = TO_FIXED(128);
 
-    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x160000, self->position.y);
+    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + TO_FIXED(22), self->position.y);
     RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 4);
-    debris->velocity.x      = 0x20000;
-    debris->velocity.y      = -0x20000;
+    debris->velocity.x      = TO_FIXED(2);
+    debris->velocity.y      = -TO_FIXED(2);
     debris->gravityStrength = 0x3800;
     debris->rotSpeed        = 4;
     debris->drawFX          = FX_ROTATE;
     debris->drawGroup       = Zone->objectDrawHigh;
-    debris->updateRange.x   = 0x800000;
-    debris->updateRange.y   = 0x800000;
+    debris->updateRange.x   = TO_FIXED(128);
+    debris->updateRange.y   = TO_FIXED(128);
 }
 
 void EggPrison_State_Init(void)
@@ -377,14 +377,14 @@ void EggPrison_State_Idle(void)
     for (int32 p = 0; p < Player->playerCount && self->type < EGGPRISON_DUD; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!player->sidekick) {
-            if (abs(self->position.x - player->position.x) < 0x1000000) {
-                if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
+            if (abs(self->position.x - player->position.x) < TO_FIXED(256)) {
+                if (abs(self->position.y - player->position.y) < TO_FIXED(256) && self->position.x - (Zone->cameraBoundsR[p] << 16) < TO_FIXED(256)) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
 
                     if (self->type == EGGPRISON_NORMAL) {
-                        Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].center.x;
-                        Zone->cameraBoundsR[p] = (self->position.x >> 0x10) + ScreenInfo[p].center.x;
+                        Zone->cameraBoundsL[p] = FROM_FIXED(self->position.x) - ScreenInfo[p].center.x;
+                        Zone->cameraBoundsR[p] = FROM_FIXED(self->position.x) + ScreenInfo[p].center.x;
                     }
                 }
             }
@@ -399,7 +399,7 @@ void EggPrison_State_Explode(void)
     if (!(self->timer % 3)) {
         int32 x                    = self->position.x + (RSDK.Rand(-24, 24) << 16);
         int32 y                    = self->position.y + (RSDK.Rand(-24, 24) << 16);
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY), x, y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY), x, y);
         explosion->drawGroup       = Zone->objectDrawHigh;
         RSDK.PlaySfx(EggPrison->sfxDestroy, false, 255);
     }
@@ -433,7 +433,7 @@ void EggPrison_State_FlyOffScreen(void)
 {
     RSDK_THIS(EggPrison);
 
-    if (self->velocity.x > -0x30000)
+    if (self->velocity.x > -TO_FIXED(3))
         self->velocity.x -= 0x1000;
 
     if (!RSDK.CheckOnScreen(self, NULL))

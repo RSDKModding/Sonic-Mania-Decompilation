@@ -50,7 +50,7 @@ void PuyoAI_PrepareAction(int32 playerID)
     }
 
     int32 lastBeanY             = PuyoAI->lastBeanY[playerID];
-    int32 beanY                 = minVal(bean->stillPos.y, partner->stillPos.y);
+    int32 beanY                 = MIN(bean->stillPos.y, partner->stillPos.y);
     PuyoAI->lastBeanY[playerID] = beanY;
 
     if (lastBeanY > beanY) {
@@ -59,10 +59,10 @@ void PuyoAI_PrepareAction(int32 playerID)
 
         for (int32 x = 0; x < PUYO_PLAYFIELD_W; ++x) columnHeights[x] = (PUYO_PLAYFIELD_H - 1) - PuyoBean_GetColumnHeight(playerID, x, bean, partner);
 
-        beanY = maxVal(bean->stillPos.y, partner->stillPos.y);
+        beanY = MAX(bean->stillPos.y, partner->stillPos.y);
 
-        int32 startX = minVal(bean->stillPos.x, partner->stillPos.x);
-        int32 endX   = maxVal(bean->stillPos.x, partner->stillPos.x);
+        int32 startX = MIN(bean->stillPos.x, partner->stillPos.x);
+        int32 endX   = MAX(bean->stillPos.x, partner->stillPos.x);
 
         while ((bean->stillPos.x == startX || partner->stillPos.x == startX || columnHeights[startX] > beanY) && startX > 0) startX--;
 
@@ -134,7 +134,7 @@ void PuyoAI_PrepareAction(int32 playerID)
 
                     for (; linkCount; --linkCount) chainComboSize = (0x30000 * chainComboSize) >> 18;
 
-                    int32 newBeanY = (chainComboSize * ((minVal(beanY, partnerY) << 16) / 4 + 1)) >> 16;
+                    int32 newBeanY = (chainComboSize * ((MIN(beanY, partnerY) << 16) / 4 + 1)) >> 16;
                     if (newBeanY > lastY || (newBeanY == lastY && RSDK.Rand(0, 10) > 5)) {
                         lastY                             = newBeanY;
                         PuyoAI->desiredColumn[playerID]   = beanX;

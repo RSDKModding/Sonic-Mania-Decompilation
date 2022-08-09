@@ -40,7 +40,7 @@ void PKingAttack_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->drawGroup     = Zone->objectDrawHigh;
-        self->type          = voidToInt(data);
+        self->type          = VOID_TO_INT(data);
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -109,8 +109,8 @@ void PKingAttack_CheckPlayerCollisions(void)
 
                     if (self->state == PKingAttack_State_OrbitLaunched) {
                         player->blinkTimer = 120;
-                        Ring_LoseRings(player, minVal(player->rings, 8), player->collisionPlane);
-                        player->rings -= minVal(player->rings, 8);
+                        Ring_LoseRings(player, MIN(player->rings, 8), player->collisionPlane);
+                        player->rings -= MIN(player->rings, 8);
                         RSDK.PlaySfx(Player->sfxLoseRings, false, 255);
                     }
                     else {
@@ -189,8 +189,8 @@ void PKingAttack_State_Orbiting(void)
         self->velocity.y -= 0x3800;
     }
 
-    self->velocity.x = clampVal(self->velocity.x, -0x50000, 0x50000);
-    self->velocity.y = clampVal(self->velocity.y, -0x50000, 0x50000);
+    self->velocity.x = CLAMP(self->velocity.x, -0x50000, 0x50000);
+    self->velocity.y = CLAMP(self->velocity.y, -0x50000, 0x50000);
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -218,7 +218,7 @@ void PKingAttack_State_OrbitLaunched(void)
 
     ++self->timer;
     if (!(self->timer & 3))
-        CREATE_ENTITY(PKingAttack, intToVoid(PKINGATTACK_TRAIL), self->position.x, self->position.y);
+        CREATE_ENTITY(PKingAttack, INT_TO_VOID(PKINGATTACK_TRAIL), self->position.x, self->position.y);
 
     if (self->scale.x < 512) {
         self->scale.x += 0x20;

@@ -65,9 +65,9 @@ void SignPost_Create(void *data)
     RSDK_THIS(SignPost);
 
     if (!self->vsBoundsSize.x)
-        self->vsBoundsSize.x = 512 << 16;
+        self->vsBoundsSize.x = TO_FIXED(512);
     if (!self->vsBoundsSize.y)
-        self->vsBoundsSize.y = SCREEN_YSIZE << 16;
+        self->vsBoundsSize.y = TO_FIXED(SCREEN_YSIZE);
     if (!self->vsExtendTop)
         self->vsExtendTop = 120;
     if (!self->vsExtendBottom)
@@ -93,16 +93,17 @@ void SignPost_Create(void *data)
             RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &self->postTopAnimator, true, 0);
             RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &self->sidebarAnimator, true, 1);
             RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &self->standAnimator, true, 2);
-            self->updateRange.x = 0x400000;
-            self->updateRange.y = 0x400000;
+
+            self->updateRange.x = TO_FIXED(64);
+            self->updateRange.y = TO_FIXED(64);
             if (globals->gameMode == MODE_COMPETITION) {
                 int32 left   = self->vsBoundsOffset.x - (self->vsBoundsSize.x >> 1);
                 int32 top    = self->vsBoundsOffset.y - (self->vsBoundsSize.y >> 1);
                 int32 right  = self->vsBoundsOffset.x + (self->vsBoundsSize.x >> 1);
                 int32 bottom = self->vsBoundsOffset.y + (self->vsBoundsSize.y >> 1);
 
-                int32 extendTop    = -(self->vsExtendTop << 16);
-                int32 extendBottom = (self->vsExtendBottom << 16);
+                int32 extendTop    = -TO_FIXED(self->vsExtendTop);
+                int32 extendBottom = TO_FIXED(self->vsExtendBottom);
 
                 if (extendTop < top)
                     top = extendTop;
@@ -113,12 +114,15 @@ void SignPost_Create(void *data)
                 if (abs(left) > right)
                     self->updateRange.x = abs(left);
                 else
-                    self->updateRange.x = right + 0x400000;
+                    self->updateRange.x = right;
 
                 if (abs(top) > bottom)
-                    self->updateRange.y = abs(top) + 0x400000;
+                    self->updateRange.y = abs(top);
                 else
-                    self->updateRange.y = bottom + 0x400000;
+                    self->updateRange.y = bottom;
+
+                self->updateRange.x += TO_FIXED(64);
+                self->updateRange.y += TO_FIXED(64);
             }
             self->visible   = true;
             self->drawGroup = Zone->objectDrawLow;
@@ -220,7 +224,7 @@ void SignPost_HandleSpin(void)
 
     if (self->angle >= self->maxAngle) {
         self->maxAngle += 0x20000;
-        self->spinSpeed = minVal(0x600 * self->spinCount, 0x3000);
+        self->spinSpeed = MIN(0x600 * self->spinCount, 0x3000);
         if (!--self->spinCount) {
             self->spinSpeed               = 0;
             self->angle                   = 0x10000;
@@ -233,9 +237,10 @@ void SignPost_HandleSparkles(void)
 {
     RSDK_THIS(SignPost);
     if (!(Zone->timer & 3)) {
-        int32 x          = self->position.x + RSDK.Rand(-0x180000, 0x180000);
-        int32 y          = self->position.y + RSDK.Rand(-0x200000, 0x80000);
+        int32 x          = self->position.x + RSDK.Rand(-TO_FIXED(24), TO_FIXED(24));
+        int32 y          = self->position.y + RSDK.Rand(-TO_FIXED(32), TO_FIXED(8));
         EntityRing *ring = CREATE_ENTITY(Ring, NULL, x, y);
+
         ring->state      = Ring_State_Sparkle;
         ring->stateDraw  = Ring_Draw_Sparkle;
         ring->active     = ACTIVE_NORMAL;
@@ -243,7 +248,7 @@ void SignPost_HandleSparkles(void)
         RSDK.SetSpriteAnimation(Ring->aniFrames, self->sparkleType + 2, &ring->animator, true, 0);
         int32 cnt = ring->animator.frameCount;
         if (ring->animator.animationID == 2) {
-            ring->alpha = 224;
+            ring->alpha = 0xE0;
             cnt >>= 1;
         }
         ring->maxFrameCount  = cnt - 1;
@@ -274,8 +279,8 @@ void SignPost_HandleCamBounds(void)
                 if (Player_CheckCollisionTouch(player, self, &hitbox)) {
                     self->position.x            = storeX;
                     self->position.y            = storeY;
-                    Zone->cameraBoundsL[p]      = (self->position.x >> 0x10) - ScreenInfo[p].center.x;
-                    Zone->cameraBoundsR[p]      = ScreenInfo[p].center.x + (self->position.x >> 0x10);
+                    Zone->cameraBoundsL[p]      = FROM_FIXED(self->position.x) - ScreenInfo[p].center.x;
+                    Zone->cameraBoundsR[p]      = FROM_FIXED(self->position.x) + ScreenInfo[p].center.x;
                     Zone->playerBoundActiveR[p] = true;
                 }
                 else {
@@ -284,9 +289,9 @@ void SignPost_HandleCamBounds(void)
                 }
             }
             else {
-                if (self->position.x - player->position.x < 0x1000000 || self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
-                    Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].center.x;
-                    Zone->cameraBoundsR[p] = ScreenInfo[p].center.x + (self->position.x >> 0x10);
+                if (self->position.x - player->position.x < TO_FIXED(256) || self->position.x - (Zone->cameraBoundsR[p] << 16) < TO_FIXED(256)) {
+                    Zone->cameraBoundsL[p] = FROM_FIXED(self->position.x) - ScreenInfo[p].center.x;
+                    Zone->cameraBoundsR[p] = FROM_FIXED(self->position.x) + ScreenInfo[p].center.x;
                 }
             }
         }
@@ -403,7 +408,7 @@ void SignPost_CheckTouch(void)
 #endif
 
                         SceneInfo->timeEnabled = false;
-                        if (vel >= 0x40000) {
+                        if (vel >= TO_FIXED(4)) {
                             self->state = SignPost_State_Launched;
                         }
                         else {
@@ -515,7 +520,7 @@ void SignPost_State_Falling(void)
             if (player->velocity.y < 0 && player->animator.animationID == ANI_JUMP && !player->onGround) {
                 if (Player_CheckCollisionTouch(player, self, &SignPost->hitboxSignPost)) {
                     self->velocity.x = (self->position.x - player->position.x) >> 4;
-                    self->velocity.y = -0x20000;
+                    self->velocity.y = -TO_FIXED(2);
                     RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
                     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
                     scoreBonus->drawGroup        = Zone->objectDrawHigh;
@@ -534,39 +539,40 @@ void SignPost_State_Falling(void)
     self->spinCount = 16;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (ScreenInfo->position.x + ScreenInfo->size.x - 32) << 16) {
+        if (self->position.x > TO_FIXED(ScreenInfo->position.x + ScreenInfo->size.x - 32)) {
             self->velocity.x = -self->velocity.x;
         }
-        else if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
+        else if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, TO_FIXED(24), 0, true)) {
             self->velocity.x = -self->velocity.x;
         }
     }
     else {
-        if (self->position.x < (ScreenInfo->position.x + 32) << 16) {
+        if (self->position.x < TO_FIXED(ScreenInfo->position.x + 32)) {
             self->velocity.x = -self->velocity.x;
         }
-        else if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x180000, 0, true)) {
+        else if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -TO_FIXED(24), 0, true)) {
             self->velocity.x = -self->velocity.x;
         }
     }
 
     self->velocity.y += 0xC00;
-    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, TO_FIXED(24), true)) {
         foreach_active(ItemBox, itemBox)
         {
             if (itemBox->hidden) {
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hitboxHidden, self, &SignPost->hitboxItemBox)) {
                     RSDK.PlaySfx(SignPost->sfxBubbleBounce, false, 255);
-                    itemBox->velocity.y = -0x50000;
+                    itemBox->velocity.y = -TO_FIXED(5);
                     itemBox->hidden     = false;
                     itemBox->state      = ItemBox_State_Falling;
                     self->itemBounceCount++;
-                    self->velocity.y = -0x20000;
+                    self->velocity.y = -TO_FIXED(2);
                     if (self->itemBounceCount == 2) 
                         API_UnlockAchievement(&achievementList[ACH_SIGNPOST]);
                 }
             }
         }
+
         if (self->velocity.y >= 0) {
             RSDK.PlaySfx(SignPost->sfxSlide, false, 255);
             self->spinCount  = 4;
@@ -579,7 +585,9 @@ void SignPost_State_Falling(void)
 void SignPost_State_Done(void)
 {
     RSDK_THIS(SignPost);
+
     RSDK.ProcessAnimation(&self->facePlateAnimator);
+
     if (self->spawnedByDebugMode) {
         Zone->stageFinishCallback  = StateMachine_None;
         globals->atlEnabled        = false;
@@ -613,6 +621,7 @@ void SignPost_EditorDraw(void)
             RSDK.DrawSprite(&self->eggPlateAnimator, &drawPos, false);
             drawPos.x += -0xC00 * self->scale.x - (scale << 9);
             break;
+
         case 1:
         case 3:
             drawPos.x = self->position.x - (scale << 9);
@@ -628,8 +637,8 @@ void SignPost_EditorDraw(void)
     RSDK.DrawSprite(&self->postTopAnimator, NULL, false);
     RSDK.DrawSprite(&self->standAnimator, NULL, false);
 
-    self->updateRange.x = 0x400000;
-    self->updateRange.y = 0x400000;
+    self->updateRange.x = TO_FIXED(64);
+    self->updateRange.y = TO_FIXED(64);
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
@@ -638,8 +647,8 @@ void SignPost_EditorDraw(void)
         int32 right  = self->vsBoundsOffset.x + (self->vsBoundsSize.x >> 1);
         int32 bottom = self->vsBoundsOffset.y + (self->vsBoundsSize.y >> 1);
 
-        int32 extendTop    = -(self->vsExtendTop << 16);
-        int32 extendBottom = (self->vsExtendBottom << 16);
+        int32 extendTop    = -TO_FIXED(self->vsExtendTop);
+        int32 extendBottom = TO_FIXED(self->vsExtendBottom);
 
         if (extendTop < top)
             top = extendTop;
@@ -650,14 +659,17 @@ void SignPost_EditorDraw(void)
         if (abs(left) > right)
             self->updateRange.x = abs(left);
         else
-            self->updateRange.x = right + 0x400000;
+            self->updateRange.x = right;
 
         if (abs(top) > bottom)
-            self->updateRange.y = abs(top) + 0x400000;
+            self->updateRange.y = abs(top);
         else
-            self->updateRange.y = bottom + 0x400000;
+            self->updateRange.y = bottom;
 
-        DrawHelpers_DrawArenaBounds(left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16, 1 | 2 | 4 | 8, 0xFFFF00);
+        self->updateRange.x += TO_FIXED(64);
+        self->updateRange.y += TO_FIXED(64);
+
+        DrawHelpers_DrawArenaBounds(FROM_FIXED(left), FROM_FIXED(top), FROM_FIXED(right + 64), FROM_FIXED(bottom + 64), 1 | 2 | 4 | 8, 0xFFFF00);
 
         RSDK_DRAWING_OVERLAY(false);
     }

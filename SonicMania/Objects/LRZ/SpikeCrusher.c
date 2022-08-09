@@ -134,7 +134,7 @@ void SpikeCrusher_State_CrushBounce(void)
     --self->timer;
     self->drawPos.y -= 0x8000;
 
-    self->spikeAnimator.frameID = maxVal((self->timer >> 1) + 4, 5);
+    self->spikeAnimator.frameID = MAX((self->timer >> 1) + 4, 5);
 
     if (self->timer <= 0)
         self->state = SpikeCrusher_State_ActivateFlames;

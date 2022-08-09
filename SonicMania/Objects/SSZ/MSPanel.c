@@ -104,7 +104,7 @@ void MSPanel_State_Explode(void)
             int32 x = self->position.x + RSDK.Rand(-0x300000, 0x300000);
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x400000);
 
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }
@@ -120,7 +120,7 @@ void MSPanel_State_Rumbling(void)
         if (!(Zone->timer & 4)) {
             int32 x                    = self->position.x + RSDK.Rand(-0x600000, 0x600000);
             int32 y                    = self->position.y + RSDK.Rand(-0x200000, 0x600000);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }

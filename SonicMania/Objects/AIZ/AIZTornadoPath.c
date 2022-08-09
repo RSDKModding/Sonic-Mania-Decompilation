@@ -40,7 +40,7 @@ void AIZTornadoPath_Create(void *data)
                     foreach_all(Player, player) { player->camera = NULL; }
 
                     foreach_all(AIZTornado, tornado) { AIZTornadoPath->tornado = tornado; }
-                    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->center.y;
+                    ScreenInfo->position.y = FROM_FIXED(self->position.y) - ScreenInfo->center.y;
                     self->speed            = self->targetSpeed;
                     self->state            = AIZTornadoPath_State_SetTornadoSpeed;
                 }

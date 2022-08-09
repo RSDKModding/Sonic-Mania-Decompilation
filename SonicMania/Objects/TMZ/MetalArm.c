@@ -16,11 +16,11 @@ void MetalArm_Update(void)
     self->moveOffset.x = -self->armPosition.x;
     self->moveOffset.y = -self->armPosition.y;
 
-    int32 timerA       = minVal(self->durationA, self->moveTimer);
+    int32 timerA       = MIN(self->durationA, self->moveTimer);
     int32 interpolateA = ((self->endAngleA - self->startAngleA) << 16) / self->durationA;
     self->armAngle.x   = (self->startAngleA << 16) + interpolateA * timerA;
 
-    int32 timerB       = minVal(self->durationB, self->moveTimer);
+    int32 timerB       = MIN(self->durationB, self->moveTimer);
     int32 interpolateB = ((self->endAngleB - self->startAngleB) << 16) / self->durationB;
     self->armAngle.y   = (self->startAngleB << 16) + interpolateB * timerB;
 
@@ -190,7 +190,7 @@ void MetalArm_State_MoveToHold(void)
 {
     RSDK_THIS(MetalArm);
 
-    if (self->moveTimer >= maxVal(self->durationA, self->durationB)) {
+    if (self->moveTimer >= MAX(self->durationA, self->durationB)) {
         self->holdTimer = 0;
         self->state     = MetalArm_State_Holding;
     }

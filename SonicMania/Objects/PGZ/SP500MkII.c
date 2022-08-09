@@ -201,12 +201,12 @@ void SP500MkII_CheckPlayerCollisions(void)
         }
 
         if (touched) {
-            int32 distY = minVal(bottom - (self->position.y + top), 0xD0000);
+            int32 distY = MIN(bottom - (self->position.y + top), 0xD0000);
 
             if (buttonPos <= distY)
                 buttonPos = distY;
 
-            buttonPos = minVal(buttonPos, 0xD0000);
+            buttonPos = MIN(buttonPos, 0xD0000);
 
             if (side == C_TOP)
                 self->activePlayers |= 1 << playerID;

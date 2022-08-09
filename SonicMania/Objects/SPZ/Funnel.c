@@ -35,7 +35,7 @@ void Funnel_Update(void)
 
                         self->playerYVel[p] += 64 + (self->playerYVel[p] >> 8);
 
-                        int32 distX = maxVal(((self->position.y - player->position.y) >> 8) - 0xA00, 0x400);
+                        int32 distX = MAX(((self->position.y - player->position.y) >> 8) - 0xA00, 0x400);
 
                         player->position.x = distX * RSDK.Cos256(self->playerAngle[p]) + self->position.x;
                         self->playerAngle[p] -= self->playerXVel[p] >> 16;
@@ -123,7 +123,7 @@ void Funnel_Update(void)
                             player->velocity.y >>= 2;
                         }
 
-                        self->playerXVel[p] = clampVal(player->velocity.x, -0x100000, 0x100000);
+                        self->playerXVel[p] = CLAMP(player->velocity.x, -0x100000, 0x100000);
 
                         int32 x = ((player->position.x - self->position.x) >> 16) * ((player->position.x - self->position.x) >> 16);
                         int32 y = dy * dy - x;
@@ -133,7 +133,7 @@ void Funnel_Update(void)
                         self->playerAngle[p] = RSDK.ATan2(x, y);
 
                         player->velocity.y -= abs(9 * (player->velocity.x >> 4));
-                        player->velocity.y = clampVal(player->velocity.y, 0x1000, 0x10000);
+                        player->velocity.y = CLAMP(player->velocity.y, 0x1000, 0x10000);
 
 #if MANIA_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop)
@@ -167,7 +167,7 @@ void Funnel_Update(void)
                         }
 
                         if (distX < max) {
-                            int32 x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
+                            int32 x = RSDK.Rand(0x20000, MAX(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
                             int32 y = x;
                             if (player->position.y >= self->position.y + 0x160000) {
                                 x = player->velocity.x;
@@ -219,7 +219,7 @@ void Funnel_Update(void)
                         }
 
                         if (distX < max) {
-                            int32 x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
+                            int32 x = RSDK.Rand(0x20000, MAX(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
                             int32 y = x;
                             if (player->position.y >= self->position.y + 0x160000) {
                                 x = player->velocity.x;

@@ -75,7 +75,7 @@ void ChemicalPool_Draw(void)
         Vector2 drawPos;
         drawPos.x = self->position.x - ((self->position.x - (screen->position.x << 16) - (ScreenInfo->center.x << 16)) >> 1);
 
-        int32 offset = clampVal(0x800000 - self->size.y, 0, 0x400000);
+        int32 offset = CLAMP(0x800000 - self->size.y, 0, 0x400000);
         drawPos.y = offset + self->position.y + self->maxDeform - ((self->position.y - (screen->center.y << 16) - (screen->position.y << 16)) >> 4);
         RSDK.DrawSprite(&self->animator, &drawPos, false);
 
@@ -167,8 +167,8 @@ void ChemicalPool_ProcessDeformations(void)
     }
 
     for (int32 i = self->leftEdge; i < self->rightEdge; ++i) {
-        int32 prev = maxVal(i - 1, self->leftEdge);
-        int32 next = minVal(i + 1, self->rightEdge);
+        int32 prev = MAX(i - 1, self->leftEdge);
+        int32 next = MIN(i + 1, self->rightEdge);
 
         ChemicalPool->surfaceDeformation[i] = (self->impactPower * ChemicalPool->deformTable[i] >> 8)
                                               + (self->impactPowerSides * (ChemicalPool->deformTable[prev] + ChemicalPool->deformTable[next]) >> 9);
@@ -199,8 +199,8 @@ void ChemicalPool_SetDeform(int32 impactX, int32 impactVelocity)
     foreach_active(ChemicalPool, chemPool)
     {
         if (bounceX > chemPool->leftEdge && bounceX < chemPool->rightEdge) {
-            int32 prev = maxVal(bounceX - 1, chemPool->leftEdge + 1);
-            int32 next = minVal(bounceX + 2, chemPool->rightEdge);
+            int32 prev = MAX(bounceX - 1, chemPool->leftEdge + 1);
+            int32 next = MIN(bounceX + 2, chemPool->rightEdge);
 
             for (int32 i = 0; i < next - prev; ++i) ChemicalPool->impactTable[prev + i] += impactVelocity;
 

@@ -58,7 +58,7 @@ void PuyoBean_Create(void *data)
         self->origin.y     = self->position.y - 0x80000;
         self->controllerID = CONT_P1;
 
-        self->type = voidToInt(data);
+        self->type = VOID_TO_INT(data);
         if (self->type == PUYOBEAN_JUNK)
             self->isJunk = true;
 
@@ -1063,7 +1063,7 @@ void PuyoBean_State_BeginBeanPop(void)
         RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_POP, &self->beanAnimator, true, 0);
 
         self->state = PuyoBean_State_BeanPop;
-        RSDK.PlaySfx(PuyoBean->chainFrames[minVal(PuyoBean->comboChainCount[self->playerID], 5)], false, 255);
+        RSDK.PlaySfx(PuyoBean->chainFrames[MIN(PuyoBean->comboChainCount[self->playerID], 5)], false, 255);
     }
 }
 

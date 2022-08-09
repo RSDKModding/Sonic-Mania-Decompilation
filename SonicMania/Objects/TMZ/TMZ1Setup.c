@@ -59,10 +59,10 @@ void TMZ1Setup_StaticUpdate(void)
 
         // Dunno what the data param is for here, it goes unused, maybe an earlier version of what "stageState" does?
         if (posY > 4528 && TMZ1Setup->stageState != TMZ1_STAGESTATE_CITY && !RSDK.GetEntityCount(TMZ1Setup->classID, true)) {
-            CREATE_ENTITY(TMZ1Setup, intToVoid(1), 0, 0);
+            CREATE_ENTITY(TMZ1Setup, INT_TO_VOID(1), 0, 0);
         }
         else if (posY < 4192 && TMZ1Setup->stageState != TMZ1_STAGESTATE_SKY && !RSDK.GetEntityCount(TMZ1Setup->classID, true)) {
-            CREATE_ENTITY(TMZ1Setup, intToVoid(0), 0, 0);
+            CREATE_ENTITY(TMZ1Setup, INT_TO_VOID(0), 0, 0);
         }
     }
 

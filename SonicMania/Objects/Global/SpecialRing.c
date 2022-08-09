@@ -47,8 +47,8 @@ void SpecialRing_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->updateRange.x = 0x900000;
-        self->updateRange.y = 0x900000;
+        self->updateRange.x = TO_FIXED(144);
+        self->updateRange.y = TO_FIXED(144);
         self->drawFX        = FX_FLIP;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
             self->drawGroup = Zone->objectDrawHigh;
@@ -96,7 +96,7 @@ void SpecialRing_StageLoad(void)
                     EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
                     player->position.x = ring->position.x;
-                    player->position.y = ring->position.y + 0x100000;
+                    player->position.y = ring->position.y + TO_FIXED(16);
                     if (!p) {
                         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (globals->gameMode != MODE_COMPETITION) {
@@ -104,9 +104,9 @@ void SpecialRing_StageLoad(void)
                             player2->position.y = player->position.y;
                             player2->direction  = player->direction;
                             if (player->direction)
-                                player2->position.x += 0x100000;
+                                player2->position.x += TO_FIXED(16);
                             else
-                                player2->position.x -= 0x100000;
+                                player2->position.x -= TO_FIXED(16);
 
                             for (int32 f = 0; f < 0x10; ++f) {
                                 Player->leaderPositionBuffer[f].x = player->position.x;
@@ -148,8 +148,8 @@ void SpecialRing_State_Idle(void)
     self->angleY = (self->angleY + 4) & 0x3FF;
 
     Vector2 range;
-    range.x = 0x800000;
-    range.y = 0x800000;
+    range.x = TO_FIXED(128);
+    range.y = TO_FIXED(128);
     if (!RSDK.CheckOnScreen(self, &range))
         self->scale.x = 0;
 
@@ -171,7 +171,7 @@ void SpecialRing_State_Idle(void)
         {
             if ((self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) && !player->sidekick) {
                 if (Player_CheckCollisionTouch(player, self, &SpecialRing->hitbox) && SceneInfo->timeEnabled) {
-                    self->sparkleRadius = 0x100000;
+                    self->sparkleRadius = TO_FIXED(16);
                     self->state         = SpecialRing_State_Flash;
 
                     SaveRAM *saveRAM = SaveGame->saveRAM;
@@ -211,8 +211,8 @@ void SpecialRing_State_Flash(void)
 
     if (!(Zone->timer & 3)) {
         for (int32 i = 0; i < 3; ++i) {
-            int32 x             = self->position.x + (RSDK.Rand(-0x200000, 0x20000) + self->sparkleRadius);
-            int32 y             = self->position.y + RSDK.Rand(-0x200000, 0x200000);
+            int32 x             = self->position.x + RSDK.Rand(-TO_FIXED(32), TO_FIXED(2)) + self->sparkleRadius;
+            int32 y             = self->position.y + RSDK.Rand(-TO_FIXED(32), TO_FIXED(32));
             EntityRing *sparkle = CREATE_ENTITY(Ring, NULL, x, y);
 
             sparkle->state     = Ring_State_Sparkle;
@@ -231,7 +231,7 @@ void SpecialRing_State_Flash(void)
             sparkle->timer          = 2 * i;
         }
 
-        self->sparkleRadius -= 0x80000;
+        self->sparkleRadius -= TO_FIXED(8);
     }
 
     if (SaveGame->saveRAM->chaosEmeralds == 0b01111111 || !self->id) {

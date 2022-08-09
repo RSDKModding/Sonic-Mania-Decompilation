@@ -62,7 +62,7 @@ void Rexon_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->drawGroup     = Zone->objectDrawLow;
-    self->type          = voidToInt(data);
+    self->type          = VOID_TO_INT(data);
 
     switch (self->type) {
         case REXON_MAIN:
@@ -209,7 +209,7 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
 
         int32 velocities[] = { -0x8000, 0x10000, -0x10000, 0x8000 };
         for (int32 i = 1; i < REXON_SEGMENT_COUNT; ++i) {
-            EntityRexon *debris = CREATE_ENTITY(Rexon, intToVoid(REXON_DEBRIS), rexon->positions[i].x, rexon->positions[i].y);
+            EntityRexon *debris = CREATE_ENTITY(Rexon, INT_TO_VOID(REXON_DEBRIS), rexon->positions[i].x, rexon->positions[i].y);
             debris->direction   = rexon->direction;
             debris->velocity.x  = velocities[(i - 1) & 3];
         }
@@ -304,7 +304,7 @@ void Rexon_State_Shooting(void)
     if (self->segmentAmplitude[0] == 0x160) {
         RSDK.PlaySfx(Rexon->sfxShot, false, 255);
 
-        EntityRexon *shot = CREATE_ENTITY(Rexon, intToVoid(REXON_SHOT), self->positions[0].x, self->positions[0].y);
+        EntityRexon *shot = CREATE_ENTITY(Rexon, INT_TO_VOID(REXON_SHOT), self->positions[0].x, self->positions[0].y);
         if (self->direction) {
             shot->position.x += 0xE0000;
             shot->velocity.x = 0x10000;
@@ -348,7 +348,7 @@ void Rexon_State_Explode(void)
         if (Zone->timer & 4) {
             int32 x                    = self->position.x + (RSDK.Rand(Rexon->hitboxShell.left, Rexon->hitboxShell.right) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(Rexon->hitboxShell.top, Rexon->hitboxShell.bottom) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawGroup       = Zone->objectDrawHigh;
         }
     }

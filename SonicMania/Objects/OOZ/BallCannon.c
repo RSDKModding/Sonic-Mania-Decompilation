@@ -41,7 +41,7 @@ void BallCannon_Create(void *data)
             self->active        = ACTIVE_NORMAL;
             self->rotationSpeed = RSDK.Rand(-8, 8);
 
-            RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &self->animator, true, voidToInt(data));
+            RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &self->animator, true, VOID_TO_INT(data));
             self->state = BallCannon_State_CorkDebris;
         }
         else {
@@ -267,7 +267,7 @@ void BallCannon_State_CorkBlocked(void)
                 if (storeVelY >= 0 && !player->groundedStore) {
                     for (int32 i = 0; i < 16; ++i) {
                         EntityBallCannon *debris =
-                            CREATE_ENTITY(BallCannon, intToVoid((i & 3) + 1), self->position.x + BallCannon->corkDebrisOffset[(i * 2) + 0],
+                            CREATE_ENTITY(BallCannon, INT_TO_VOID((i & 3) + 1), self->position.x + BallCannon->corkDebrisOffset[(i * 2) + 0],
                                           self->position.y + BallCannon->corkDebrisVelocity[(i * 2) + 1]);
                         debris->velocity.x = BallCannon->corkDebrisVelocity[(i * 2) + 0];
                         debris->velocity.y = BallCannon->corkDebrisVelocity[(i * 2) + 1];

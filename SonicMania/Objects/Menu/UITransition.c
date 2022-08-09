@@ -145,9 +145,9 @@ void UITransition_State_TransitionIn(void)
             RSDK.PlaySfx(UIWidgets->sfxWoosh, false, 255);
 
         int32 offsets[3];
-        offsets[0] = clampVal(remain, 0, 8);
-        offsets[1] = clampVal(remain - 4, 0, 8);
-        offsets[2] = clampVal(remain - 8, 0, 8);
+        offsets[0] = CLAMP(remain, 0, 8);
+        offsets[1] = CLAMP(remain - 4, 0, 8);
+        offsets[2] = CLAMP(remain - 8, 0, 8);
 
         int32 percent = 32 * offsets[0];
         if (percent > 0) {
@@ -226,9 +226,9 @@ void UITransition_State_TransitionOut(void)
             self->isTransitioning = true;
             int32 offsets[3];
 
-            offsets[0] = clampVal(self->timer - 1, 0, 8);
-            offsets[1] = clampVal(self->timer - 4, 0, 8);
-            offsets[2] = clampVal(self->timer - 1, 0, 8);
+            offsets[0] = CLAMP(self->timer - 1, 0, 8);
+            offsets[1] = CLAMP(self->timer - 4, 0, 8);
+            offsets[2] = CLAMP(self->timer - 1, 0, 8);
 
             int32 percent = 32 * offsets[0];
             if (percent > 0) {

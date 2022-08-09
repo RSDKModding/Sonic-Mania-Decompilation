@@ -190,7 +190,7 @@ void E3MenuSetup_State_FadeOut(void)
 {
     RSDK_THIS(E3MenuSetup);
 
-    self->fadeTimer = clampVal(self->timer << (self->fadeSpeed - 1), 0, 0x200);
+    self->fadeTimer = CLAMP(self->timer << (self->fadeSpeed - 1), 0, 0x200);
 }
 
 #if RETRO_INCLUDE_EDITOR

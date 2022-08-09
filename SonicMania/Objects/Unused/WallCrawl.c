@@ -167,7 +167,7 @@ void WallCrawl_State_Moving(void)
                 if (!(self->direction & FLIP_X))
                     offsetX = 0x180000;
                 self->idleTimer                                                                                       = 30;
-                CREATE_ENTITY(WallCrawl, intToVoid(true), self->position.x + offsetX, self->position.y)->direction = self->direction;
+                CREATE_ENTITY(WallCrawl, INT_TO_VOID(true), self->position.x + offsetX, self->position.y)->direction = self->direction;
                 self->timer                                                                                          = 180;
                 self->playerPtr                                                                                      = NULL;
             }
