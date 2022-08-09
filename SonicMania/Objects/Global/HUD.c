@@ -628,7 +628,7 @@ void HUD_State_MoveIn(void)
     int32 *targetPos = NULL;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        state     = (void **)&self->vsStates[SceneInfo->currentScreenID];
+        state     = &self->vsStates[SceneInfo->currentScreenID];
         scorePos  = &self->vsScorePos[SceneInfo->currentScreenID];
         timePos   = &self->vsTimePos[SceneInfo->currentScreenID];
         ringsPos  = &self->vsRingsPos[SceneInfo->currentScreenID];
@@ -636,7 +636,7 @@ void HUD_State_MoveIn(void)
         targetPos = &self->vsMaxOffsets[SceneInfo->currentScreenID];
     }
     else {
-        state     = (void **)&self->state;
+        state     = &self->state;
         scorePos  = &self->scorePos;
         timePos   = &self->timePos;
         ringsPos  = &self->ringsPos;
