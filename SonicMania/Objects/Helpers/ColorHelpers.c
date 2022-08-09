@@ -43,7 +43,7 @@ void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *sa
     uint8 min = minVal(minVal(r, g), b);
     uint8 max = maxVal(maxVal(r, g), b);
 
-    int32 delta = max - min;
+    uint8 chroma = max - min;
     if (max) {
         if (max == min) {
             if (hue)
@@ -60,12 +60,12 @@ void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *sa
                 int32 h = 0;
 
                 if (r == max)
-                    h = 60 * (g - b) / delta;
+                    h = 60 * (int32)(g - b) / chroma;
                 else if (g == max)
-                    h = 60 * (b - r) / delta + 120;
+                    h = 60 * (int32)(b - r) / chroma + 120;
                 else
-                    h = 60 * (r - g) / delta + 240;
-
+                    h = 60 * (int32)(r - g) / chroma + 240;
+    
                 if (h < 0)
                     h += 360;
 
@@ -73,7 +73,7 @@ void ColorHelpers_RGBToHSL(uint32 r, uint32 g, uint32 b, uint32 *hue, uint32 *sa
             }
 
             if (saturation)
-                *saturation = 255 * delta / max;
+                *saturation = 255 * chroma / max;
 
             if (luminance)
                 *luminance = max;
@@ -91,7 +91,7 @@ void ColorHelpers_HSLToRGB(uint32 hue, uint32 saturation, uint32 luminance, uint
         int32 s = luminance * saturation / 255;
 
         int32 p = luminance - s;
-        int32 q = luminance - hue % 60 * s / 60;
+        int32 q = luminance - (s * (hue & 60)) / 60;
         int32 t = luminance - (s * (60 - hue % 60)) / 60;
 
         switch (hue / 60) {
@@ -124,7 +124,6 @@ void ColorHelpers_HSLToRGB(uint32 hue, uint32 saturation, uint32 luminance, uint
                 green = p;
                 blue  = luminance;
                 break;
-
             case 5:
             default:
                 red   = luminance;
