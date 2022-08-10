@@ -9,6 +9,7 @@
 
 ObjectTimeAttackData *TimeAttackData;
 
+#if MANIA_USE_PLUS
 static const char *playerNames[] = { "Invalid", "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };
 static const char *actNames[]    = { "Act 1", "Act 2", "Act 3", "" };
 static const char *zoneNames[]   = { "GHZ", "CPZ", "SPZ", "FBZ", "PGZ", "SSZ", "HCZ", "MSZ", "OOZ", "LRZ", "MMZ", "TMZ", "ERZ", "AIZ" };
@@ -259,6 +260,7 @@ static LeaderboardID leaderboardInfo[] = {
     { .idPS4 = 239, .idUnknown = 236, .idSwitch = 306, .idXbox = "PlusTMZ2RayEncore",       .idPC = "TMZ2_R_ENCORE" },
 };
 // clang-format on
+#endif
 
 void TimeAttackData_Update(void) {}
 

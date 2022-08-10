@@ -400,12 +400,12 @@ void UISaveSlot_DrawPlayerIcons(int32 drawX, int32 drawY)
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 1, &self->playersAnimator, true, 3);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 2, &self->shadowsAnimator, true, 3);
 
+#if MANIA_USE_PLUS
     uint8 friendIDs[3];
     int32 playerID    = 0;
     int32 buddyID     = 0;
     int32 friendCount = 0;
 
-#if MANIA_USE_PLUS
     if (!self->encoreMode) {
 #endif
         int32 frames[]                = { 3, 0, 1, 2, 4, 5 };

@@ -59,7 +59,7 @@ void LogHelpers_Print(const char *message, ...)
 #if MANIA_USE_PLUS
         RSDK.PrintText(PRINT_NORMAL, messageText);
 #else
-        int32 len            = strlen(messageText);
+        int32 len            = (int32)strlen(messageText);
         messageText[len]     = '\n';
         messageText[len + 1] = 0;
 

@@ -36,8 +36,11 @@ void Zone_LateUpdate(void)
             SceneInfo->milliseconds = 99;
             SceneInfo->timeEnabled  = false;
             RSDK.PlaySfx(Player->sfxHurt, false, 0xFF);
-
+            
+#if MANIA_USE_PLUS
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+#endif
+            
             foreach_active(Player, player)
             {
                 bool32 canDie = true;

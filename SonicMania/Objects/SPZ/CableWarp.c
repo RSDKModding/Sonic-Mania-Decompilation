@@ -93,7 +93,10 @@ void CableWarp_State_CablePlug(void)
 
     foreach_active(Player, player)
     {
+#if MANIA_USE_PLUS
         int32 velY = player->velocity.y;
+#endif
+        
         if (Player_CheckCollisionBox(player, self, &CableWarp->hitboxPlug) == C_TOP) {
 #if MANIA_USE_PLUS
             if (player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash

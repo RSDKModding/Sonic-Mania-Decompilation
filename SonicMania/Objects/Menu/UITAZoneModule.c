@@ -1031,7 +1031,7 @@ void UITAZoneModule_State_ExpandModule(void)
                         if (16 * self->timer < 0x100)
                             pos += (RSDK.Sin1024(16 * self->timer) >> 2) * (((ScreenInfo->position.y << 16) + offset1 - pos) >> 8);
                         else
-                            pos = (ScreenInfo->position.y) << 16 + offset1;
+                            pos = TO_FIXED(ScreenInfo->position.y) + offset1;
                     }
 
                     prompt->position.y = pos;
@@ -1143,7 +1143,7 @@ void UITAZoneModule_State_ContractModule(void)
                         if (16 * self->timer < 0x100)
                             pos += (RSDK.Sin1024(16 * self->timer) >> 2) * (((ScreenInfo->position.y << 16) + offset1 - pos) >> 8);
                         else
-                            pos = (ScreenInfo->position.y) << 16 + offset1;
+                            pos = TO_FIXED(ScreenInfo->position.y) + offset1;
                     }
 
                     prompt->position.y = pos;

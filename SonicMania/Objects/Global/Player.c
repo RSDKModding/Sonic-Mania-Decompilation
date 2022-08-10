@@ -2435,8 +2435,8 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
                     break;
             }
 
-            StatInfo info;
 #if MANIA_USE_PLUS
+            StatInfo info;
             TimeAttackData_TrackEnemyDefeat(&info, Zone_GetZoneID(), Zone->actID, characterID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE),
                                             FROM_FIXED(badnik->position.x), FROM_FIXED(badnik->position.y));
             API.TryTrackStat(&info);
@@ -2611,8 +2611,10 @@ bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int32 velX, int
 bool32 Player_CheckItemBreak(EntityPlayer *player, void *e, bool32 hitIfNotAttacking)
 {
     Entity *entity  = (Entity *)e;
+#if MANIA_USE_PLUS
     int32 anim      = player->animator.animationID;
     int32 character = player->characterID;
+#endif
 
     if (Player_CheckAttacking(player, entity)) {
         if (player->velocity.y <= 0) {
@@ -5817,11 +5819,12 @@ void Player_FinishedReturnToPlayer(EntityPlayer *player, EntityPlayer *leader)
 }
 void Player_State_EncoreRespawn(void)
 {
-    RSDK_THIS(Player);
-
     EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    
     if (leader->state != Player_State_Death && leader->state != Player_State_Drown) {
 #if MANIA_USE_PLUS
+        RSDK_THIS(Player);
+        
         if (globals->stock) {
             Player_ChangeCharacter(self, GET_STOCK_ID(1));
             globals->stock >>= 8;

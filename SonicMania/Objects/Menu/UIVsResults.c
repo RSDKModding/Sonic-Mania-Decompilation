@@ -32,9 +32,9 @@ void UIVsResults_StaticUpdate(void) {}
 
 void UIVsResults_Draw(void)
 {
+#if MANIA_USE_PLUS
     RSDK_THIS(UIVsResults);
 
-#if MANIA_USE_PLUS
     RSDK.DrawRect(self->position.x - 0x300000, self->position.y - 0x208000, 0x600000, self->size.y, 0xFFFFFF, 0x7F, INK_BLEND, false);
 #endif
 

@@ -900,8 +900,10 @@ void Ice_State_IceBlock(void)
             player->position.y = playerY;
             self->position.x -= self->playerMoveOffset.x;
             self->position.y -= self->playerMoveOffset.y;
-
+            
+#if MANIA_USE_PLUS
             int32 prevVel = player->velocity.y;
+#endif
             side          = Player_CheckCollisionBox(player, self, &self->hitboxBlock);
             if (side) {
                 if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->glintTimer) {

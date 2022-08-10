@@ -861,8 +861,6 @@ void InitGameLogic(void)
 
 void InitModAPI(void)
 {
-    ModFunctionTable *m = &Mod;
-
     // Init Public Functions
     InitPublicFunctions();
 }

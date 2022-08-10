@@ -75,7 +75,10 @@ void Projectile_CheckPlayerCollisions(void)
 
                 case PROJECTILE_BASIC:
                 case PROJECTILE_BASIC2: {
+#if MANIA_USE_PLUS
                     int32 anim = player->animator.animationID;
+#endif
+                    
                     if (self->isProjectile
 #if MANIA_USE_PLUS
                         || (player->characterID == ID_MIGHTY

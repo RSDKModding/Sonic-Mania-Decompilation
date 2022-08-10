@@ -531,14 +531,14 @@ void UIControl_SetMenuLostFocus(EntityUIControl *entity)
 
 void UIControl_SetInactiveMenu(EntityUIControl *control)
 {
-    RSDK_THIS(UIControl);
-
     UIControl->hasTouchInput = false;
     control->active          = ACTIVE_NEVER;
     control->visible         = false;
     control->state           = StateMachine_None;
 
 #if MANIA_USE_PLUS
+    RSDK_THIS(UIControl);
+    
     if (self->promptCount) {
         for (int32 p = 0; p < control->promptCount; ++p) control->prompts[p]->active = ACTIVE_BOUNDS;
     }

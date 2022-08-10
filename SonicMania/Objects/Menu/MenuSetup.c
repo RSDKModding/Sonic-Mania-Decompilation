@@ -146,9 +146,8 @@ void MenuSetup_Create(void *data)
 
 void MenuSetup_StageLoad(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-
 #if MANIA_USE_PLUS
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     LogHelpers_Print("Menu recall ctrl: %s", param->menuTag);
 
     MenuSetup->initializedMenuReturn = false;
@@ -1152,9 +1151,6 @@ void MenuSetup_SaveFileCB(void)
 void MenuSetup_SaveSlot_ActionCB(void)
 {
     RSDK_THIS(UISaveSlot);
-
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
-    EntityUIControl *control = (EntityUIControl *)self->parent;
 
     SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID);
 

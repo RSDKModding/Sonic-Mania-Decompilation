@@ -164,8 +164,6 @@ void Spear_SetupHitboxes(void)
 #if RETRO_INCLUDE_EDITOR
 void Spear_EditorDraw(void)
 {
-    RSDK_THIS(Spear);
-
     Spear_Create(NULL);
     Spear_Draw();
 }

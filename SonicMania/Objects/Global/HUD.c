@@ -270,11 +270,11 @@ void HUD_Draw(void)
 #endif
 
     // Draw Life Icon (aka the Leader Icon if in encore mode)
-    int32 lifeIconFrame = -1;
     drawPos.x           = lifePos.x;
     drawPos.y           = lifePos.y;
-    int32 charID        = player->characterID;
 #if MANIA_USE_PLUS
+    int32 lifeIconFrame = -1;
+    int32 charID        = player->characterID;
     int32 lives = self->lives[player->playerID];
     for (; charID > 0; ++lifeIconFrame) charID >>= 1;
     self->lifeIconAnimator.frameID = lifeIconFrame;

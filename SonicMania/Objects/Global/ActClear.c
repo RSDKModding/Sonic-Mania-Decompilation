@@ -26,9 +26,11 @@ void ActClear_Draw(void)
 
     Vector2 drawPos;
     Vector2 verts[4];
+#if MANIA_USE_PLUS
     int32 milliseconds = 0;
     int32 seconds      = 0;
     int32 minutes      = 0;
+#endif
     int32 offset       = 0;
 
     drawPos.x  = self->gotThroughPos.x;
@@ -322,9 +324,10 @@ void ActClear_Create(void *data)
         self->targetPlayer    = player1;
 
         if (Zone_GetZoneID() > ZONE_INVALID) {
-            StatInfo stat;
             uint16 time = TimeAttackData_GetPackedTime(SceneInfo->minutes, SceneInfo->seconds, SceneInfo->milliseconds);
+            
 #if MANIA_USE_PLUS
+            StatInfo stat;
             switch (GET_CHARACTER_ID(1)) {
                 case ID_SONIC: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score); break;
                 case ID_TAILS: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 2, time, player1->rings, player1->score); break;

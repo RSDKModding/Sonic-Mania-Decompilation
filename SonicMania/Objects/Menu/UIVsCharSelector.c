@@ -374,13 +374,13 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-    EntityUIControl *parent = (EntityUIControl *)self->parent;
-
     self->processButtonCB = StateMachine_None;
     self->isSelected      = false;
 
     uint32 id = API_GetInputDeviceID(CONT_P1 + self->playerID);
 #if MANIA_USE_PLUS
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
+    
     self->ready    = false;
     int32 assigned = API_IsInputDeviceAssigned(id);
 

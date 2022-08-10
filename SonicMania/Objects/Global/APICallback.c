@@ -323,7 +323,7 @@ void APICallback_LoadUserFile(const char *name, void *buffer, int32 size, void (
     }
 }
 
-int32 APICallback_LoadCB(void)
+void APICallback_LoadCB(void)
 {
     RSDK_THIS(APICallback);
 
@@ -331,9 +331,7 @@ int32 APICallback_LoadCB(void)
     LogHelpers_Print("DUMMY DummyLoadCB(%s, %x, %d) -> %d", self->fileName, self->fileBuffer, self->fileSize, loadResult);
 
     if (self->fileCallback)
-        self->fileCallback(1);
-
-    return 1;
+        self->fileCallback(true);
 }
 
 int32 APICallback_LeaderboardStatus(void)
@@ -556,8 +554,6 @@ bool32 APICallback_CheckInputDisconnected(void)
 
 bool32 APICallback_InputIDIsDisconnected(uint8 inputSlot)
 {
-    RSDK_THIS(APICallback);
-
     if (APICallback->InputIDIsDisconnected) {
         return APICallback->InputIDIsDisconnected(inputSlot);
     }

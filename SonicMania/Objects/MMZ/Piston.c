@@ -81,11 +81,11 @@ void Piston_StageLoad(void)
 
 void Piston_Collide_Solid(void)
 {
-    RSDK_THIS(Piston);
-
     Platform_Collision_Solid();
 
 #if MANIA_USE_PLUS
+    RSDK_THIS(Piston);
+    
     for (int32 i = 0; i < Player->playerCount; ++i) {
         if (((1 << i) & self->stoodPlayers) != 0) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);

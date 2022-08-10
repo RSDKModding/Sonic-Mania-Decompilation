@@ -47,7 +47,6 @@ void CPZ2Outro_StageLoad(void)
 void CPZ2Outro_SetupCutscene(void)
 {
     RSDK_THIS(CPZ2Outro);
-    EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
 
     CutsceneSeq_StartSequence(self, CPZ2Outro_Cutscene_Outro, StateMachine_None);
 

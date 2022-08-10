@@ -212,7 +212,6 @@ void Music_PlayJingle(uint8 trackID)
             music->volume    = 0.0;
             music->fadeSpeed = 0.08;
 
-            bool32 active = Music_IsPlaying();
             if (Music->activeTrack != TRACK_1UP) {
                 Music->trackStartPos = RSDK.GetChannelPos(Music->channelID);
                 Music->queuedTrack   = Music->activeTrack;

@@ -11,9 +11,9 @@ ObjectNewspaper *Newspaper;
 
 void Newspaper_Update(void)
 {
-    RSDK_THIS(Newspaper);
-
 #if MANIA_USE_PLUS
+    RSDK_THIS(Newspaper);
+    
     StateMachine_Run(self->state);
 #else
     Platform_Update();
