@@ -56,7 +56,7 @@ void CPZSetup_StageLoad(void)
     CPZSetup->aniTiles = RSDK.LoadSpriteSheet("CPZ/Objects.gif", SCOPE_STAGE);
 
     RSDK.SetDrawGroupProperties(0, 0, Water_DrawHook_ApplyWaterPalette);
-    RSDK.SetDrawGroupProperties(Zone->huddrawGroup, 0, Water_DrawHook_RemoveWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawGroup, 0, Water_DrawHook_RemoveWaterPalette);
     Water->waterPalette = 2;
 
     CPZSetup->chemLiquidPalIndex1 = 0;

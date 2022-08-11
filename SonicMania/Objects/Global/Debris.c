@@ -86,7 +86,7 @@ void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *entries, int32 animatio
             debris->velocity.x      = entry[2];
             debris->velocity.y      = entry[3];
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->updateRange.x   = TO_FIXED(128);
             debris->updateRange.y   = TO_FIXED(128);
 
@@ -125,7 +125,7 @@ void Debris_FallFlickerSetup(int32 aniFrames, int32 *entries)
             debris->velocity.x      = entry[2];
             debris->velocity.y      = entry[3];
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->updateRange.x   = TO_FIXED(128);
             debris->updateRange.y   = TO_FIXED(128);
 

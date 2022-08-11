@@ -53,7 +53,7 @@ void Iwamodoki_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
 
     if (data) {
         self->active = ACTIVE_NORMAL;
@@ -208,7 +208,7 @@ void Iwamodoki_State_Explode(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (!--self->timer) {
-        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
 
         if (self->onScreen == 1)
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);

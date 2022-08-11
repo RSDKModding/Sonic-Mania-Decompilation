@@ -110,7 +110,7 @@ void RockDrill_Create(void *data)
 
         RSDK.SetSpriteAnimation(RockDrill->aniFrames, 0, &self->animator, true, 0);
 
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         self->state     = RockDrill_State_Init;
     }
 }
@@ -192,7 +192,7 @@ void RockDrill_Explode(void)
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
-            explosion->drawGroup = Zone->objectDrawHigh + 2;
+            explosion->drawGroup = Zone->objectDrawGroup[1] + 2;
         }
     }
 }
@@ -206,7 +206,7 @@ void RockDrill_SpawnDebris(int offset)
     debris->velocity.x      = RSDK.Rand(0, 6) << 15;
     debris->velocity.y      = RSDK.Rand(-12, -8) << 15;
     debris->gravityStrength = 0x3800;
-    debris->drawGroup       = Zone->objectDrawLow;
+    debris->drawGroup       = Zone->objectDrawGroup[0];
     debris->updateRange.x   = 0x400000;
     debris->updateRange.y   = 0x400000;
 
@@ -215,7 +215,7 @@ void RockDrill_SpawnDebris(int offset)
     debris->velocity.x      = RSDK.Rand(-6, 0) << 15;
     debris->velocity.y      = RSDK.Rand(-12, -8) << 15;
     debris->gravityStrength = 0x3800;
-    debris->drawGroup       = Zone->objectDrawLow;
+    debris->drawGroup       = Zone->objectDrawGroup[0];
     debris->updateRange.x   = 0x400000;
     debris->updateRange.y   = 0x400000;
 }
@@ -340,13 +340,13 @@ void RockDrill_State_Falling(void)
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;
 
-        uint16 tileLow  = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
-        uint16 tileHigh = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
+        uint16 tileLow  = RSDK.GetTile(Zone->fgLayer[0], self->position.x >> 20, (self->position.y + 0x200000) >> 20);
+        uint16 tileHigh = RSDK.GetTile(Zone->fgLayer[1], self->position.x >> 20, (self->position.y + 0x200000) >> 20);
 
         if (RSDK.GetTileFlags(tileLow, 0) == LRZ2_TFLAGS_LAVA || RSDK.GetTileFlags(tileHigh, 0) == LRZ2_TFLAGS_LAVA) {
             self->timer      = 0;
             self->velocity.y = 0x8000;
-            self->drawGroup  = Zone->objectDrawLow - 1;
+            self->drawGroup  = Zone->objectDrawGroup[0] - 1;
             self->state      = RockDrill_State_Explode;
         }
         else {
@@ -370,7 +370,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -379,7 +379,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -388,7 +388,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -397,7 +397,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -406,7 +406,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -415,7 +415,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -424,7 +424,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -433,7 +433,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -442,7 +442,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -451,7 +451,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x      = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y      = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawLow;
+        debris->drawGroup       = Zone->objectDrawGroup[0];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 

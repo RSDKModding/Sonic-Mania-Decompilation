@@ -69,7 +69,7 @@ void LaundroMobile_Create(void *data)
                 case LAUNDROMOBILE_BOSS:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = false;
-                    self->drawGroup = Zone->objectDrawLow + 1;
+                    self->drawGroup = Zone->objectDrawGroup[0] + 1;
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 3, &self->propellerAnimator, true, 0);
                     RSDK.SetSpriteAnimation(LaundroMobile->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
@@ -108,7 +108,7 @@ void LaundroMobile_Create(void *data)
                 case LAUNDROMOBILE_BOMB:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawGroup[0];
                     self->originPos = self->position;
 
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 7, &self->mainAnimator, true, 0);
@@ -122,7 +122,7 @@ void LaundroMobile_Create(void *data)
                 case LAUNDROMOBILE_LAUNDRY:
                     self->active    = ACTIVE_XBOUNDS;
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawLow + 1;
+                    self->drawGroup = Zone->objectDrawGroup[0] + 1;
 
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 1, &self->propellerAnimator, true, 0);
@@ -139,7 +139,7 @@ void LaundroMobile_Create(void *data)
                 case LAUNDROMOBILE_BLOCK:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawGroup[0];
                     self->originPos = self->position;
 
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &self->mainAnimator, true, RSDK.Rand(0, 3));
@@ -154,7 +154,7 @@ void LaundroMobile_Create(void *data)
                 case LAUNDROMOBILE_SPIKES:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawGroup[0];
                     self->originPos = self->position;
 
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &self->mainAnimator, true, RSDK.Rand(0, 3) + 3);
@@ -322,7 +322,7 @@ void LaundroMobile_Explode(void)
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
-            explosion->drawGroup = Zone->objectDrawHigh + 2;
+            explosion->drawGroup = Zone->objectDrawGroup[1] + 2;
             if (LaundroMobile->health > 8)
                 explosion->velocity.x = 0x24000;
         }
@@ -337,7 +337,7 @@ void LaundroMobile_HandleStageWrap(void)
         EntityCurrent *current = CREATE_ENTITY(Current, INT_TO_VOID(CURRENT_CHILD_BUBBLE), ScreenInfo->position.x << 16,
                                                (8 * RSDK.Rand(0, ScreenInfo->size.y >> 3) + ScreenInfo->position.y) << 16);
 
-        current->drawGroup = Zone->playerDrawLow;
+        current->drawGroup = Zone->playerDrawGroup[0];
         current->strength  = 6;
         current->type      = CURRENT_C_RIGHT;
         current->alpha     = 0xF0;
@@ -778,7 +778,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase1(void)
         debris->velocity.x      = 0x50000;
         debris->velocity.y      = -0x28000;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawGroup[1];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
         RSDK.SetSpriteAnimation(-1, 0, &self->propellerAnimator, true, 0);
@@ -1071,7 +1071,7 @@ void LaundroMobile_StateBoss_StartupWhirlpool(void)
             whirlpool->activePlayers = 0xFF;
             whirlpool->angVel        = 10;
             whirlpool->alpha         = 0;
-            whirlpool->drawGroup     = Zone->objectDrawLow + 1;
+            whirlpool->drawGroup     = Zone->objectDrawGroup[0] + 1;
             whirlpool->isPermanent   = true;
             self->whirlpool          = whirlpool;
 
@@ -1112,7 +1112,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
                     }
 
                     if ((LaundroMobile->playerAngles[playerID] & 0xFF) >= 0x80)
-                        player->drawGroup = Zone->playerDrawLow;
+                        player->drawGroup = Zone->playerDrawGroup[0];
                     else
                         player->drawGroup = self->drawGroup - 1;
 
@@ -1152,7 +1152,7 @@ void LaundroMobile_StateBoss_WhirlpoolActive(void)
                 player->velocity.x = player->position.x
                                      - LaundroMobile->playerRadius[playerID] * RSDK.Cos256(LaundroMobile->playerAngles[playerID] - 3)
                                      - self->position.x;
-                player->drawGroup = Zone->playerDrawLow;
+                player->drawGroup = Zone->playerDrawGroup[0];
                 player->state     = Player_State_Air;
             }
         }
@@ -1198,7 +1198,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void)
         if (player->state == Player_State_Static) {
             player->velocity.x = player->position.x - LaundroMobile->playerRadius[playerID] * RSDK.Cos256(LaundroMobile->playerAngles[playerID] - 3)
                                  - self->position.x;
-            player->drawGroup = Zone->playerDrawLow;
+            player->drawGroup = Zone->playerDrawGroup[0];
             player->state     = Player_State_Air;
         }
     }
@@ -1226,7 +1226,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void)
                 }
 
                 debris->gravityStrength             = 0x3800;
-                debris->drawGroup                   = Zone->objectDrawHigh;
+                debris->drawGroup                   = Zone->objectDrawGroup[1];
                 debris->updateRange.x               = 0x400000;
                 debris->updateRange.y               = 0x400000;
                 LaundroMobile->rocketPositions[i].x = 0;
@@ -1284,7 +1284,7 @@ void LaundroMobile_StateOutro_StartCutscene(void)
             self->timer = 0;
 
             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            player1->drawGroup    = Zone->playerDrawLow;
+            player1->drawGroup    = Zone->playerDrawGroup[0];
             player1->state        = Player_State_Ground;
             player1->direction    = FLIP_NONE;
             player1->stateInput   = StateMachine_None;
@@ -1292,7 +1292,7 @@ void LaundroMobile_StateOutro_StartCutscene(void)
 
             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
             if (player2->classID == Player->classID) {
-                player2->drawGroup  = Zone->playerDrawLow;
+                player2->drawGroup  = Zone->playerDrawGroup[0];
                 player2->state      = Player_State_Ground;
                 player2->direction  = FLIP_NONE;
                 player2->stateInput = StateMachine_None;
@@ -1333,7 +1333,7 @@ void LaundroMobile_StateOutro_Rumble(void)
                 gush->activated = true;
                 gush->inkEffect = INK_ALPHA;
                 gush->alpha     = 256;
-                gush->drawGroup = Zone->playerDrawLow;
+                gush->drawGroup = Zone->playerDrawGroup[0];
             }
         }
 
@@ -1349,11 +1349,11 @@ void LaundroMobile_StateOutro_Rumble(void)
             debris->velocity.y      = RSDK.Rand(-8, 5) << 16;
             debris->direction       = RSDK.Rand(0, 4);
             debris->drawFX          = FX_FLIP;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->gravityStrength = 0x3800;
         }
 
-        RSDK.CopyTileLayer(Zone->fgHigh, 1763, 172, Zone->fgHigh, 1919, 172, 11, 4);
+        RSDK.CopyTileLayer(Zone->fgLayer[1], 1763, 172, Zone->fgLayer[1], 1919, 172, 11, 4);
 
         RSDK.PlaySfx(LaundroMobile->sfxImpact, false, 255);
         RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
@@ -1587,7 +1587,7 @@ void LaundroMobile_StateBomb_Bomb_Idle(void)
                 debris->velocity.y      = -0x28000;
                 debris->velocity.x      = LaundroMobile->currentVelocity + 0x28000;
                 debris->gravityStrength = 0x3800;
-                debris->drawGroup       = Zone->objectDrawHigh;
+                debris->drawGroup       = Zone->objectDrawGroup[1];
                 debris->updateRange.x   = 0x400000;
                 debris->updateRange.y   = 0x400000;
 
@@ -1621,12 +1621,12 @@ void LaundroMobile_StateBomb_Bomb_Activated(void)
         EntityLaundroMobile *boss = LaundroMobile->laundroMobile;
         if (RSDK.CheckObjectCollisionTouchBox(boss, &LaundroMobile->hitboxBoss, self, &LaundroMobile->hitboxBox)) {
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
             explosion->velocity.x      = LaundroMobile->currentVelocity - 0x10000;
             RSDK.PlaySfx(LaundroMobile->sfxExplosion, false, 255);
 
             EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y);
-            water->drawGroup   = Zone->objectDrawLow + 1;
+            water->drawGroup   = Zone->objectDrawGroup[0] + 1;
             water->angle       = 2 * RSDK.Rand(0, 256);
             water->speed       = -0x1400;
             water->velocity.x  = (LaundroMobile->currentVelocity + (LaundroMobile->currentVelocity >> 2)) + (LaundroMobile->currentVelocity >> 1);
@@ -1725,7 +1725,7 @@ void LaundroMobile_StateBlock_Block(void)
                         debris->velocity.y      = -0x28000;
                         debris->gravityStrength = 0x3800;
                         debris->rotSpeed        = RSDK.Rand(-8, 8);
-                        debris->drawGroup       = Zone->objectDrawHigh;
+                        debris->drawGroup       = Zone->objectDrawGroup[1];
                         debris->updateRange.x   = 0x400000;
                         debris->updateRange.y   = 0x400000;
 
@@ -1736,7 +1736,7 @@ void LaundroMobile_StateBlock_Block(void)
                         debris->velocity.y      = -0x20000;
                         debris->gravityStrength = 0x3800;
                         debris->rotSpeed        = RSDK.Rand(-8, 8);
-                        debris->drawGroup       = Zone->objectDrawHigh;
+                        debris->drawGroup       = Zone->objectDrawGroup[1];
                         debris->updateRange.x   = 0x400000;
                         debris->updateRange.y   = 0x400000;
                         self->position.x += 0x100000;
@@ -1747,7 +1747,7 @@ void LaundroMobile_StateBlock_Block(void)
                     debris->velocity.y      = -0x28000;
                     debris->velocity.x      = LaundroMobile->currentVelocity + 0x20000;
                     debris->gravityStrength = 0x3800;
-                    debris->drawGroup       = Zone->objectDrawHigh;
+                    debris->drawGroup       = Zone->objectDrawGroup[1];
                     debris->updateRange.x   = 0x400000;
                     debris->updateRange.y   = 0x400000;
 
@@ -1756,7 +1756,7 @@ void LaundroMobile_StateBlock_Block(void)
                     debris->velocity.y      = -0x28000;
                     debris->velocity.x      = LaundroMobile->currentVelocity + 0x28000;
                     debris->gravityStrength = 0x3800;
-                    debris->drawGroup       = Zone->objectDrawHigh;
+                    debris->drawGroup       = Zone->objectDrawGroup[1];
                     debris->updateRange.x   = 0x400000;
                     debris->updateRange.y   = 0x400000;
 
@@ -1765,7 +1765,7 @@ void LaundroMobile_StateBlock_Block(void)
                     debris->velocity.y      = -0x20000;
                     debris->velocity.x      = LaundroMobile->currentVelocity + 0x20000;
                     debris->gravityStrength = 0x3800;
-                    debris->drawGroup       = Zone->objectDrawHigh;
+                    debris->drawGroup       = Zone->objectDrawGroup[1];
                     debris->updateRange.x   = 0x400000;
                     debris->updateRange.y   = 0x400000;
 
@@ -1774,7 +1774,7 @@ void LaundroMobile_StateBlock_Block(void)
                     debris->velocity.y      = -0x20000;
                     debris->velocity.x      = LaundroMobile->currentVelocity + 0x28000;
                     debris->gravityStrength = 0x3800;
-                    debris->drawGroup       = Zone->objectDrawHigh;
+                    debris->drawGroup       = Zone->objectDrawGroup[1];
                     debris->updateRange.x   = 0x400000;
                     debris->updateRange.y   = 0x400000;
 

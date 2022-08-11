@@ -246,7 +246,7 @@ void SeeSaw_Create(void *data)
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawGroup[1];
 
         if (self->side == FLIP_X) {
             self->targetTilt = SEESAW_TILT_R;

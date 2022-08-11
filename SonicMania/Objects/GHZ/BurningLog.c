@@ -50,7 +50,7 @@ void BurningLog_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x10000000;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
 
     if (data)
         self->timer = VOID_TO_INT(data);

@@ -32,7 +32,7 @@ void PSZLauncher_Create(void *data)
     RSDK_THIS(PSZLauncher);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawHigh - 1;
+    self->drawGroup = Zone->objectDrawGroup[1] - 1;
     self->drawFX    = FX_FLIP;
 
     if (SceneInfo->inEditor && !self->power)

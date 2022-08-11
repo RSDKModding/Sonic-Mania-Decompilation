@@ -58,7 +58,7 @@ void BigSqueeze_Create(void *data)
                     self->updateRange.x = 0x8000000;
                     self->updateRange.y = 0x1000000;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawHigh;
+                    self->drawGroup     = Zone->objectDrawGroup[1];
 
                     self->hitbox.left   = -32;
                     self->hitbox.top    = -16;
@@ -83,7 +83,7 @@ void BigSqueeze_Create(void *data)
                     self->updateRange.x = 0x8000000;
                     self->updateRange.y = 0x1000000;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawHigh;
+                    self->drawGroup     = Zone->objectDrawGroup[1];
 
                     RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 0, &self->animator, true, 0);
 
@@ -226,7 +226,7 @@ void BigSqueeze_Explode(void)
         if (Zone->timer & 4) {
             int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
             int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -274,7 +274,7 @@ void BigSqueeze_SpawnDebris(int32 *debrisInfo)
             debris->velocity.x      = debrisInfo[1];
             debris->velocity.y      = debrisInfo[2];
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->updateRange.x   = 0x800000;
             debris->updateRange.y   = 0x800000;
 
@@ -519,7 +519,7 @@ void BigSqueeze_StateBoss_Destroyed(void)
                 foreach_active(FBZTrash, trash)
                 {
                     if (trash->state != FBZTrash_State_LooseTrash) {
-                        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), trash->position.x, trash->position.y)->drawGroup = Zone->objectDrawHigh;
+                        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), trash->position.x, trash->position.y)->drawGroup = Zone->objectDrawGroup[1];
                         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                         destroyEntity(trash);
                     }
@@ -575,7 +575,7 @@ void BigSqueeze_StateManager_HandleBoss(void)
                 debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
                 debris->velocity.y      = -0x20000;
                 debris->gravityStrength = 0x3800;
-                debris->drawGroup       = Zone->objectDrawLow;
+                debris->drawGroup       = Zone->objectDrawGroup[0];
                 debris->updateRange.x   = 0x200000;
                 debris->updateRange.y   = 0x200000;
             }
@@ -647,7 +647,7 @@ void BigSqueeze_EditorDraw(void)
         case BIGSQUEEZE_BOSS:
             self->updateRange.x = 0x8000000;
             self->updateRange.y = 0x1000000;
-            self->drawGroup     = Zone->objectDrawHigh;
+            self->drawGroup     = Zone->objectDrawGroup[1];
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 1, &self->animator, true, 0);
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 2, &self->domeAnimator, true, 0);
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 3, &self->prongsAnimator, true, 0);
@@ -663,7 +663,7 @@ void BigSqueeze_EditorDraw(void)
             }
             self->updateRange.x = 0x8000000;
             self->updateRange.y = 0x1000000;
-            self->drawGroup     = Zone->objectDrawHigh;
+            self->drawGroup     = Zone->objectDrawGroup[1];
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 0, &self->animator, true, 0);
             BigSqueeze_Draw_Crusher();
             break;

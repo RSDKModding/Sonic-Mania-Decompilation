@@ -50,14 +50,14 @@ void Toxomister_Create(void *data)
 
         if (data) {
             self->active    = ACTIVE_NORMAL;
-            self->drawGroup = Zone->playerDrawLow + 1;
+            self->drawGroup = Zone->playerDrawGroup[0] + 1;
             self->inkEffect = INK_ADD;
             self->alpha     = 0xE0;
             RSDK.SetSpriteAnimation(Toxomister->aniFrames, 2, &self->animator, true, 0);
             self->state = Toxomister_StateCloud_FallDelay;
         }
         else {
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
             self->direction *= FLIP_Y;
             RSDK.SetSpriteAnimation(Toxomister->aniFrames, 0, &self->animator, true, 0);
             self->state = Toxomister_State_Init;

@@ -36,9 +36,9 @@ void LRZRockPile_Create(void *data)
 
     self->active = ACTIVE_BOUNDS;
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawGroup = Zone->playerDrawHigh;
+        self->drawGroup = Zone->playerDrawGroup[1];
     else
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 
     self->startPos      = self->position;
     self->visible       = true;

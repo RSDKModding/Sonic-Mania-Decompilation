@@ -51,9 +51,9 @@ void SpecialRing_Create(void *data)
         self->updateRange.y = TO_FIXED(144);
         self->drawFX        = FX_FLIP;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
         else
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
         self->state = SpecialRing_State_Idle;
 
         RSDK.SetSpriteAnimation(SpecialRing->aniFrames, 0, &self->warpAnimator, true, 0);
@@ -219,7 +219,7 @@ void SpecialRing_State_Flash(void)
             sparkle->stateDraw = Ring_Draw_Sparkle;
             sparkle->active    = ACTIVE_NORMAL;
             sparkle->visible   = false;
-            sparkle->drawGroup = Zone->objectDrawLow;
+            sparkle->drawGroup = Zone->objectDrawGroup[0];
             RSDK.SetSpriteAnimation(Ring->aniFrames, i % 3 + 2, &sparkle->animator, true, 0);
             int32 cnt = sparkle->animator.frameCount;
             if (sparkle->animator.animationID == 2) {

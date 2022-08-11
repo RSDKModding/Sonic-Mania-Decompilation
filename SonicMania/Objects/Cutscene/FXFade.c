@@ -38,7 +38,7 @@ void FXFade_Create(void *data)
         if (RSDK.CheckSceneFolder("Menu"))
             self->drawGroup = 14;
         else if (Zone)
-            self->drawGroup = self->overHUD ? Zone->huddrawGroup : Zone->huddrawGroup - 1;
+            self->drawGroup = self->overHUD ? Zone->hudDrawGroup : Zone->hudDrawGroup - 1;
         else
             self->drawGroup = 15;
 

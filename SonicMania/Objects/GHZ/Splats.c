@@ -43,14 +43,14 @@ void Splats_Create(void *data)
 
     if (Splats->initialState == Splats_State_BounceAround) {
         self->drawFX |= FX_FLIP;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
         self->state = Splats_State_Init;
     }
     else {
         switch (VOID_TO_INT(data)) {
             case SPLATS_SPAWNER:
-                self->drawGroup = Zone->objectDrawHigh;
+                self->drawGroup = Zone->objectDrawGroup[1];
                 self->delay     = 0;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->mainAnimator, true, 0);
                 self->state = Splats_State_Init;
@@ -58,7 +58,7 @@ void Splats_Create(void *data)
 
             case SPLATS_INKSPLATS:
                 self->drawFX |= FX_FLIP;
-                self->drawGroup = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawGroup[0];
                 self->active    = ACTIVE_NORMAL;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
                 self->mainAnimator.loopIndex  = 1;
@@ -70,7 +70,7 @@ void Splats_Create(void *data)
                 self->drawFX |= FX_FLIP;
                 self->inkEffect |= INK_ALPHA;
                 self->alpha     = 256;
-                self->drawGroup = Zone->objectDrawHigh;
+                self->drawGroup = Zone->objectDrawGroup[1];
                 self->active    = ACTIVE_NORMAL;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 3, &self->mainAnimator, true, 0);
                 self->state = Splats_State_InkSplat;
@@ -405,12 +405,12 @@ void Splats_EditorDraw(void)
 
     if (RSDK.CheckSceneFolder("GHZ")) {
         self->drawFX |= FX_FLIP;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
     }
     else {
         self->drawFX    = FX_NONE;
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
         RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->mainAnimator, true, 0);
     }
 

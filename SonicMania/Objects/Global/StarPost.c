@@ -53,7 +53,7 @@ void StarPost_Create(void *data)
     else {
         if (!SceneInfo->inEditor) {
             self->visible       = true;
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = TO_FIXED(64);
             self->updateRange.y = TO_FIXED(64);

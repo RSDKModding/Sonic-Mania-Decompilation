@@ -198,12 +198,12 @@ bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, eggman->position.x, eggman->position.y);
-        fxRuby->drawGroup = Zone->playerDrawHigh;
+        fxRuby->drawGroup = Zone->playerDrawGroup[1];
         self->fxRuby      = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
-        player1->drawGroup = Zone->playerDrawHigh + 1;
+        player1->drawGroup = Zone->playerDrawGroup[1] + 1;
         if (player2->classID == Player->classID)
-            player2->drawGroup = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawGroup[1] + 1;
     }
 
     if (!host->values[0]) {

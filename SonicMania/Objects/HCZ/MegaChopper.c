@@ -33,7 +33,7 @@ void MegaChopper_Create(void *data)
 
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawGroup     = Zone->playerDrawLow + 1;
+    self->drawGroup     = Zone->playerDrawGroup[0] + 1;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;

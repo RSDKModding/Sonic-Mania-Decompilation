@@ -39,7 +39,7 @@ void CPZBoss_Create(void *data)
             destroyEntity(self);
         }
         else {
-            self->drawGroup     = Zone->playerDrawLow;
+            self->drawGroup     = Zone->playerDrawGroup[0];
             self->startPos      = self->position;
             self->active        = ACTIVE_BOUNDS;
             self->visible       = true;
@@ -69,8 +69,8 @@ void CPZBoss_StageLoad(void)
 
     CPZBoss->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 
-    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, StateMachine_None);
-    RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, StateMachine_None);
+    RSDK.SetDrawGroupProperties(Zone->objectDrawGroup[1], false, StateMachine_None);
+    RSDK.SetDrawGroupProperties(Zone->objectDrawGroup[1] + 1, false, StateMachine_None);
 }
 
 void CPZBoss_DrawHook_SetupPuyoHUD(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->size.x, ScreenInfo->size.y); }
@@ -85,7 +85,7 @@ void CPZBoss_Explode_Eggman(void)
         if (Zone->timer & 4) {
             int32 x = self->explosionPos.x + RSDK.Rand(-0x300000, 0x300000);
             int32 y = self->explosionPos.y + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->huddrawGroup;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->hudDrawGroup;
         }
     }
 }
@@ -99,7 +99,7 @@ void CPZBoss_Explode_Player(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + RSDK.Rand(-0x100000, 0x100000);
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->huddrawGroup;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->hudDrawGroup;
         }
     }
 }
@@ -109,8 +109,8 @@ bool32 CPZBoss_CheckMatchReset(void)
     RSDK_THIS(CPZBoss);
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, StateMachine_None);
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, StateMachine_None);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawGroup[1], false, StateMachine_None);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawGroup[1] + 1, false, StateMachine_None);
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
         PuyoBean->comboChainCount[0] = 0;
         PuyoBean->disableBeanLink[0] = 0;
@@ -281,8 +281,8 @@ void CPZBoss_State_SetupMatch(void)
         self->direction = FLIP_NONE;
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->characterAnimator, false, 0);
         self->state = CPZBoss_State_HandleMatch_Player;
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh, false, CPZBoss_DrawHook_SetupPuyoHUD);
-        RSDK.SetDrawGroupProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawHook_RemovePuyoHUD);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawGroup[1], false, CPZBoss_DrawHook_SetupPuyoHUD);
+        RSDK.SetDrawGroupProperties(Zone->objectDrawGroup[1] + 1, false, CPZBoss_DrawHook_RemovePuyoHUD);
     }
 }
 
@@ -474,11 +474,11 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
                 player->active     = ACTIVE_NORMAL;
                 player->position.x = self->position.x;
                 player->position.y = self->position.y;
-                player->drawGroup  = Zone->playerDrawLow;
+                player->drawGroup  = Zone->playerDrawGroup[0];
                 player->state      = Player_State_Air;
                 player->onGround   = false;
                 player->velocity.y = -0x20000;
-                RSDK.AddDrawListRef(Zone->playerDrawLow, RSDK.GetEntitySlot(&player));
+                RSDK.AddDrawListRef(Zone->playerDrawGroup[0], RSDK.GetEntitySlot(&player));
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.SetSpriteAnimation(-1, 0, &self->characterAnimator, false, 0);
                 RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);

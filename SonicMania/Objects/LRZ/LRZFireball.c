@@ -38,14 +38,14 @@ void LRZFireball_Create(void *data)
     self->updateRange.y = 0x800000;
 
     if (data) {
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         RSDK.SetSpriteAnimation(LRZFireball->aniFrames, 3, &self->animator, true, 0);
         self->state     = data;
         self->active    = ACTIVE_NORMAL;
         self->stateDraw = LRZFireball_Draw_Simple;
     }
     else {
-        self->drawGroup = Zone->objectDrawLow + 1;
+        self->drawGroup = Zone->objectDrawGroup[0] + 1;
 
         switch (self->type) {
             case LRZFIREBALL_SPAWNER: self->state = LRZFireball_State_Spawner; break;

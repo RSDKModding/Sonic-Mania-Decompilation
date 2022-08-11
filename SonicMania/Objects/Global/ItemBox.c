@@ -57,7 +57,7 @@ void ItemBox_Draw(void)
 
     if (!self->hidden) {
         if (self->isContents) {
-            if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
+            if (SceneInfo->currentDrawGroup == Zone->playerDrawGroup[1]) {
                 self->drawFX = FX_NONE;
                 RSDK.DrawSprite(&self->contentsAnimator, &self->contentsPos, false);
             }
@@ -66,7 +66,7 @@ void ItemBox_Draw(void)
                 self->inkEffect = INK_NONE;
                 RSDK.DrawSprite(&self->boxAnimator, NULL, false);
 
-                RSDK.AddDrawListRef(Zone->playerDrawHigh, SceneInfo->entitySlot);
+                RSDK.AddDrawListRef(Zone->playerDrawGroup[1], SceneInfo->entitySlot);
             }
         }
         else {
@@ -150,9 +150,9 @@ void ItemBox_Create(void *data)
         self->updateRange.y = TO_FIXED(64);
         self->visible       = true;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
         else
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
 
         self->alpha = 0xFF;
         if (self->state == ItemBox_State_Broken) {
@@ -560,7 +560,7 @@ void ItemBox_GivePowerup(void)
                     }
                     globals->stock |= charID;
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player->position.x, player->position.y);
-                    explosion->drawGroup       = Zone->objectDrawHigh;
+                    explosion->drawGroup       = Zone->objectDrawGroup[1];
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
             }
@@ -661,10 +661,10 @@ void ItemBox_GivePowerup(void)
                     }
 
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player1->position.x, player1->position.y);
-                    explosion->drawGroup       = Zone->objectDrawHigh;
+                    explosion->drawGroup       = Zone->objectDrawGroup[1];
 
                     explosion            = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player2->position.x, player2->position.y);
-                    explosion->drawGroup = Zone->objectDrawHigh;
+                    explosion->drawGroup = Zone->objectDrawGroup[1];
 
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
@@ -683,13 +683,17 @@ void ItemBox_GivePowerup(void)
             if (self->contentsAnimator.animationID == 7) {
                 if (globals->gameMode == MODE_ENCORE) {
                     if (!((1 << self->contentsAnimator.frameID) & globals->characterFlags) && globals->characterFlags != 0x1F && !GET_STOCK_ID(3)) {
-                        globals->characterFlags |= (1 << self->contentsAnimator.frameID);
+                        globals->characterFlags |= 1 << self->contentsAnimator.frameID;
                         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (player2->classID) {
-                            int32 id = HUD_CharacterIndexFromID(GET_STOCK_ID(1));
-
-                            globals->stock |= 1 << self->contentsAnimator.frameID << id;
-                            HUD->stockFlashTimers[(id >> 3) + 1] = 120;
+                            for (int32 s = 0; s < 3; ++s) {
+                                int32 id = HUD_CharacterIndexFromID(GET_STOCK_ID(1 + s));
+                                if (id < 0) {
+                                    globals->stock |= (1 << self->contentsAnimator.frameID) << (8 * s);
+                                    HUD->stockFlashTimers[1 + s] = 2 * 60;
+                                    break;
+                                }
+                            }
                         }
                         else {
                             player2->classID    = Player->classID;
@@ -736,7 +740,7 @@ void ItemBox_GivePowerup(void)
                                 player2->stateInput       = Player_Input_P2_Delay;
                                 player2->tileCollisions   = TILECOLLISION_NONE;
                                 player2->interaction      = false;
-                                player2->drawGroup        = Zone->playerDrawHigh;
+                                player2->drawGroup        = Zone->playerDrawGroup[1];
                                 player2->drownTimer       = 0;
                                 player2->active           = ACTIVE_NORMAL;
                                 player2->collisionPlane   = 0;
@@ -746,7 +750,7 @@ void ItemBox_GivePowerup(void)
                                 player2->sidekick         = true;
                                 player2->drawFX           = FX_FLIP | FX_ROTATE;
                                 player2->visible          = true;
-                                HUD->stockFlashTimers[0]  = 120;
+                                HUD->stockFlashTimers[0]  = 2 * 60;
                             }
                         }
                     }
@@ -764,7 +768,7 @@ void ItemBox_GivePowerup(void)
                     }
 
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), player->position.x, player->position.y);
-                    explosion->drawGroup       = Zone->objectDrawHigh;
+                    explosion->drawGroup       = Zone->objectDrawGroup[1];
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
                 }
             }
@@ -821,7 +825,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
     RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
 
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - TO_FIXED(16));
-    explosion->drawGroup       = Zone->objectDrawHigh;
+    explosion->drawGroup       = Zone->objectDrawGroup[1];
 
     for (int32 d = 0; d < 6; ++d) {
         EntityDebris *debris =
@@ -834,7 +838,7 @@ void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
         debris->velocity.y = RSDK.Rand(-TO_FIXED(4), -TO_FIXED(1));
         debris->drawFX     = FX_FLIP;
         debris->direction  = d & 3;
-        debris->drawGroup  = Zone->objectDrawHigh;
+        debris->drawGroup  = Zone->objectDrawGroup[1];
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
     }
 
@@ -947,7 +951,7 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
                 break;
 
             case PLATFORM_C_TILED:
-                if (self->collisionLayers & Zone->moveMask) {
+                if (self->collisionLayers & Zone->moveLayerMask) {
                     TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                     move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                     move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;

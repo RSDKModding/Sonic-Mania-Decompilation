@@ -44,7 +44,7 @@ void ERZKing_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x1000000;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->type          = VOID_TO_INT(data);
 
@@ -80,7 +80,7 @@ void ERZKing_Create(void *data)
                     RSDK.SetSpriteAnimation(ERZKing->aniFrames, 6, &self->handAnimator, true, 0);
                 }
                 else {
-                    self->drawGroup = Zone->playerDrawLow;
+                    self->drawGroup = Zone->playerDrawGroup[0];
                     RSDK.SetSpriteAnimation(ERZKing->aniFrames, 5, &self->handAnimator, true, 0);
                 }
 
@@ -139,7 +139,7 @@ void ERZKing_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 }

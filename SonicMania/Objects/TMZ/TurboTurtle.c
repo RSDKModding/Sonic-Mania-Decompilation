@@ -56,7 +56,7 @@ void TurboTurtle_Create(void *data)
     RSDK_THIS(TurboTurtle);
 
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;
@@ -306,7 +306,7 @@ void TurboTurtle_HandleFanParticles(uint8 type, int strength, int length)
             RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, anim, &debris->animator, true, frame);
             debris->velocity.x = velX;
             debris->velocity.y = velY;
-            debris->drawGroup  = Zone->objectDrawLow - 1;
+            debris->drawGroup  = Zone->objectDrawGroup[0] - 1;
             debris->timer      = timer;
         }
     }
@@ -470,7 +470,7 @@ void TurboTurtle_EditorDraw(void)
     RSDK_THIS(TurboTurtle);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->startPos  = self->position;
     self->direction = self->initialSide ^ FLIP_X;
     self->startDir  = self->direction;

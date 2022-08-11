@@ -28,7 +28,7 @@ void Funnel_Update(void)
                         if (player->sidekick == false && ++self->playerScoreTimer[p] >= 30) {
                             self->playerScoreTimer[p] = 0;
                             EntityScoreBonus *bonus   = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y - 0x180000);
-                            bonus->drawGroup          = Zone->objectDrawHigh;
+                            bonus->drawGroup          = Zone->objectDrawGroup[1];
                             bonus->animator.frameID   = 0;
                             Player_GiveScore(player, 100);
                         }
@@ -271,7 +271,7 @@ void Funnel_LateUpdate(void) {}
 
 void Funnel_StaticUpdate(void)
 {
-    foreach_all(Funnel, funnel) { RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntitySlot(funnel)); }
+    foreach_all(Funnel, funnel) { RSDK.AddDrawListRef(Zone->objectDrawGroup[0], RSDK.GetEntitySlot(funnel)); }
 }
 
 void Funnel_Draw(void)
@@ -293,7 +293,7 @@ void Funnel_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawHigh + 1;
+        self->drawGroup     = Zone->objectDrawGroup[1] + 1;
         self->state         = Funnel_State_None;
     }
 }

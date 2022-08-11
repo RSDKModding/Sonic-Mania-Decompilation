@@ -53,7 +53,7 @@ void MonarchPlans_Create(void *data)
         self->updateRange.y = 0x900000;
         self->scale.x       = 0xA0;
         self->scale.y       = 0xA0;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
     }
 }
 

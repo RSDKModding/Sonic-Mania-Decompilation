@@ -168,7 +168,7 @@ void RockemSockem_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->drawFX        = FX_ROTATE | FX_FLIP;
     }
 }
@@ -248,7 +248,7 @@ void RockemSockem_EditorDraw(void)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->drawFX        = FX_ROTATE | FX_FLIP;
 
     self->angleVel = 0;

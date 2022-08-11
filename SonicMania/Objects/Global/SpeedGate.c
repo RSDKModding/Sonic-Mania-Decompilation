@@ -127,7 +127,7 @@ void SpeedGate_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawGroup     = Zone->playerDrawHigh;
+        self->drawGroup     = Zone->playerDrawGroup[1];
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = TO_FIXED(64);
         self->updateRange.y = TO_FIXED(64);

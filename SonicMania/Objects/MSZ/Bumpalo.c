@@ -38,7 +38,7 @@ void Bumpalo_Create(void *data)
     RSDK_THIS(Bumpalo);
 
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawGroup[0] + 1;
     self->drawFX        = FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;
@@ -272,7 +272,7 @@ void Bumpalo_HandlePlatformCollisions(EntityPlatform *platform)
             if (platform->collision != PLATFORM_C_SOLID) {
                 if (platform->collision == PLATFORM_C_TILED
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Bumpalo->hitboxBadnik)) {
-                    if ((self->collisionLayers & Zone->moveMask) != 0) {
+                    if ((self->collisionLayers & Zone->moveLayerMask) != 0) {
                         TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                         move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                         move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;

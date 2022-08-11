@@ -156,7 +156,7 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
     if (MSZCutsceneST->finishedAct) {
         mystic->oscillate = false;
 
-        TileLayer *fgLow = RSDK.GetTileLayer(Zone->fgLow);
+        TileLayer *fgLow = RSDK.GetTileLayer(Zone->fgLayer[0]);
         for (int32 i = 0; i < fgLow->scrollInfoCount; ++i) {
             fgLow->scrollInfo[i].parallaxFactor = 0x100;
             fgLow->scrollInfo[i].scrollSpeed    = 0;
@@ -200,11 +200,11 @@ bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host)
         }
     }
 
-    tornado->drawGroup = Zone->playerDrawLow;
-    player1->drawGroup = Zone->playerDrawHigh;
+    tornado->drawGroup = Zone->playerDrawGroup[0];
+    player1->drawGroup = Zone->playerDrawGroup[1];
     mystic->velocity.y -= 0x800;
     mystic->position.y += mystic->velocity.y;
-    mystic->drawGroup    = Zone->objectDrawLow;
+    mystic->drawGroup    = Zone->objectDrawGroup[0];
     signPost->position.y = mystic->position.y - 0x3D0000 + MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID];
 
     Vector2 range;
@@ -270,7 +270,7 @@ bool32 MSZCutsceneST_Cutscene_RougesAmbush(EntityCutsceneSeq *host)
     }
 
     EntityArmadiloid *armadiloid      = MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID];
-    armadiloid->drawGroup             = Zone->objectDrawHigh;
+    armadiloid->drawGroup             = Zone->objectDrawGroup[1];
     armadiloid->boosterAnimator.speed = 1;
     armadiloid->velocity.x            = 0;
 
@@ -315,7 +315,7 @@ bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host)
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rouge->position.x, rouge->position.y - 0x40000);
             debris->position.x -= 0x180000;
             debris->velocity.x = -0x20000;
-            debris->drawGroup  = Zone->playerDrawHigh;
+            debris->drawGroup  = Zone->playerDrawGroup[1];
             debris->state      = Debris_State_Move;
             debris->direction  = FLIP_X;
             debris->drawFX     = FX_FLIP;
@@ -388,7 +388,7 @@ bool32 MSZCutsceneST_Cutscene_ShowBean(EntityCutsceneSeq *host)
                 debris->velocity.x      = -0x48000;
                 debris->velocity.y      = -0x40000;
                 debris->gravityStrength = 0x3800;
-                debris->drawGroup       = Zone->playerDrawHigh;
+                debris->drawGroup       = Zone->playerDrawGroup[1];
                 debris->state           = Debris_State_Fall;
                 RSDK.SetSpriteAnimation(rouge->aniFrames, 11, &debris->animator, true, 0);
                 MSZCutsceneST->projectile = (Entity *)debris;
@@ -461,7 +461,7 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
         foreach_active(Projectile, projectile)
         {
             MSZCutsceneST->projectile = (Entity *)projectile;
-            projectile->drawGroup     = Zone->playerDrawHigh;
+            projectile->drawGroup     = Zone->playerDrawGroup[1];
             foreach_break;
         }
     }
@@ -563,7 +563,7 @@ bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host)
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, tornado->position.x, tornado->position.y);
         debris->position.x += 0x2C0000;
         debris->position.y += 0xC0000;
-        debris->drawGroup = Zone->objectDrawLow;
+        debris->drawGroup = Zone->objectDrawGroup[0];
         debris->state     = Debris_State_Move;
         debris->timer     = 53;
         RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &debris->animator, true, 0);

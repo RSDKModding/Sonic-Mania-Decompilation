@@ -17,12 +17,12 @@ void OrbitSpike_Update(void)
 
     if (self->amplitude.x) {
         if (angle >= 0x80) {
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
             self->scale.x   = 386 + (abs(angle - 0xC0) << 1);
             self->scale.y   = 386 + (abs(angle - 0xC0) << 1);
         }
         else {
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
             self->scale.x   = (319 - abs(angle - 0x40)) << 1;
             self->scale.y   = (319 - abs(angle - 0x40)) << 1;
         }
@@ -30,12 +30,12 @@ void OrbitSpike_Update(void)
     else {
         int32 newAngle = (angle + 0x40) & 0xFF;
         if (newAngle >= 0x80) {
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
             self->scale.x   = 386 + (abs(newAngle - 0xC0) << 1);
             self->scale.y   = 386 + (abs(newAngle - 0xC0) << 1);
         }
         else {
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
             self->scale.x   = (319 - abs(newAngle - 0x40)) << 1;
             self->scale.y   = (319 - abs(newAngle - 0x40)) << 1;
         }
@@ -44,7 +44,7 @@ void OrbitSpike_Update(void)
     self->position.x = (self->amplitude.x >> 8) * RSDK.Cos256(angle) + self->center.x;
     self->position.y = (self->amplitude.y >> 8) * RSDK.Sin256(angle) + self->center.y;
 
-    if (self->drawGroup == Zone->objectDrawHigh) {
+    if (self->drawGroup == Zone->objectDrawGroup[1]) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &OrbitSpike->hitbox)) {
@@ -81,7 +81,7 @@ void OrbitSpike_Create(void *data)
         self->drawFX        = FX_SCALE;
 
         RSDK.SetSpriteAnimation(OrbitSpike->aniFrames, 0, &self->animator, true, 0);
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     }
 }
 

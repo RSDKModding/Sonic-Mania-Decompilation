@@ -83,7 +83,7 @@ void DDWrecker_Create(void *data)
             }
 
             self->visible   = true;
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
         }
         else {
             self->active        = ACTIVE_BOUNDS;
@@ -870,7 +870,7 @@ void DDWrecker_Explode(void)
             int32 y                    = self->position.y + (RSDK.Rand(-20, 20) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
-            explosion->drawGroup = Zone->objectDrawHigh;
+            explosion->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 }

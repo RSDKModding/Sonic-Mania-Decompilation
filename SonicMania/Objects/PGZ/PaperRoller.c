@@ -63,7 +63,7 @@ void PaperRoller_Create(void *data)
     RSDK_THIS(PaperRoller);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->visible       = true;
@@ -479,7 +479,7 @@ void PaperRoller_EditorDraw(void)
 {
     RSDK_THIS(PaperRoller);
 
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_NONE;

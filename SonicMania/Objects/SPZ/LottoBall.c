@@ -102,7 +102,7 @@ void LottoBall_Create(void *data)
         self->updateRange.y   = 0xE00000;
         self->gravityStrength = 0x3800;
         self->visible         = true;
-        self->drawGroup       = Zone->objectDrawLow;
+        self->drawGroup       = Zone->objectDrawGroup[0];
         self->startPos        = self->position;
     }
 }
@@ -258,7 +258,7 @@ void LottoBall_State_Collected(void)
             self->isUIBall  = true;
             self->scale.x   = 0x200;
             self->scale.y   = 0x200;
-            self->drawGroup = Zone->huddrawGroup;
+            self->drawGroup = Zone->hudDrawGroup;
             self->active    = ACTIVE_NORMAL;
             self->state     = LottoBall_State_CollectFall;
 
@@ -320,7 +320,7 @@ void LottoBall_State_SetupUIBall(void)
             self->velocity.y   = 0;
             self->active       = ACTIVE_BOUNDS;
             self->isUIBall     = false;
-            self->drawGroup    = Zone->objectDrawLow;
+            self->drawGroup    = Zone->objectDrawGroup[0];
             self->isVisible[0] = false;
             self->isVisible[1] = false;
             self->isVisible[2] = false;
@@ -398,7 +398,7 @@ void LottoBall_EditorDraw(void)
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0xE00000;
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
 
     LottoBall_Draw();
 }

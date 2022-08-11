@@ -113,7 +113,7 @@ void ERZGunner_HandleDudExhaust(void)
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(self->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(self->rotation) << 4;
-        debris->drawGroup  = Zone->objectDrawLow;
+        debris->drawGroup  = Zone->objectDrawGroup[0];
         debris->timer      = 41;
     }
 }
@@ -129,7 +129,7 @@ void ERZGunner_HandleMalfunctionDudExhaust(void)
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
 
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
-            debris->drawGroup = Zone->objectDrawHigh;
+            debris->drawGroup = Zone->objectDrawGroup[1];
             debris->drawFX    = FX_SCALE;
             debris->timer     = 52;
             debris->scale.x   = (self->scale.x * RSDK.Rand(128, 384)) >> 9;
@@ -144,7 +144,7 @@ void ERZGunner_HandleMalfunctionDudExhaust(void)
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(self->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(self->rotation) << 4;
-        debris->drawGroup  = Zone->objectDrawLow;
+        debris->drawGroup  = Zone->objectDrawGroup[0];
         debris->drawFX     = FX_SCALE;
         debris->timer      = 41;
         debris->scale.y    = self->scale.x;
@@ -161,7 +161,7 @@ void ERZGunner_SpawnDust(void)
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, x, y);
 
         dust->state     = Dust_State_DustPuff;
-        dust->drawGroup = Zone->objectDrawHigh;
+        dust->drawGroup = Zone->objectDrawGroup[1];
     }
 }
 
@@ -207,7 +207,7 @@ void ERZGunner_CheckPlayerMissileCollisions(void)
                 if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y);
                     explosion->interaction     = false;
-                    explosion->drawGroup       = Zone->objectDrawHigh;
+                    explosion->drawGroup       = Zone->objectDrawGroup[1];
 
                     if (self->parachuteAnimator.animationID == 12 && self->parachuteAnimator.frameID > 0)
                         ERZGunner_SpawnDust();
@@ -398,7 +398,7 @@ void ERZGunner_State_LaunchedRocket(void)
 
         ++ERZGunner->launchedRocketID;
 
-        self->drawGroup  = Zone->objectDrawLow;
+        self->drawGroup  = Zone->objectDrawGroup[0];
         self->position.y = (ScreenInfo->position.y - 64) << 16;
 
         bool32 canFire = false;
@@ -547,7 +547,7 @@ void ERZGunner_State_Dud_Active(void)
     if (self->timer == 320) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
         explosion->interaction     = false;
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
         destroyEntity(self);
     }
     else {

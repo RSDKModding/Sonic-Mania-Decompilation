@@ -49,7 +49,7 @@ void ForceUnstick_Create(void *data)
 
         self->visible   = false;
         self->active    = ACTIVE_BOUNDS;
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     }
 }
 

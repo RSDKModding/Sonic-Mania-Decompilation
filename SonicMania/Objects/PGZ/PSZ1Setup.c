@@ -170,10 +170,10 @@ void PSZ1Setup_StaticUpdate(void)
             {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
 
-                uint16 tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                uint16 tile = RSDK.GetTile(Zone->fgLayer[0], player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                 bool32 isLowLayer = true;
                 if (tile == (uint16)-1) {
-                    tile       = RSDK.GetTile(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                    tile       = RSDK.GetTile(Zone->fgLayer[1], player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                     isLowLayer = false;
                 }
 

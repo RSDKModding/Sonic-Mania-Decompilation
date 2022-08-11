@@ -36,11 +36,11 @@ void Zone_LateUpdate(void)
             SceneInfo->milliseconds = 99;
             SceneInfo->timeEnabled  = false;
             RSDK.PlaySfx(Player->sfxHurt, false, 0xFF);
-            
+
 #if MANIA_USE_PLUS
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 #endif
-            
+
             foreach_active(Player, player)
             {
                 bool32 canDie = true;
@@ -125,6 +125,7 @@ void Zone_Draw(void)
 void Zone_Create(void *data)
 {
     RSDK_THIS(Zone);
+
     self->active = ACTIVE_ALWAYS;
 
     if (!self->stateDraw) {
@@ -145,19 +146,19 @@ void Zone_StageLoad(void)
         if (globals->characterFlags == ID_NONE) {
             globals->characterFlags = 0;
 
-            if (GET_CHARACTER_ID(1)) 
+            if (GET_CHARACTER_ID(1))
                 globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_CHARACTER_ID(1));
 
-            if (GET_CHARACTER_ID(2)) 
+            if (GET_CHARACTER_ID(2))
                 globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_CHARACTER_ID(2));
 
-            if (GET_STOCK_ID(1)) 
+            if (GET_STOCK_ID(1))
                 globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_STOCK_ID(1));
 
-            if (GET_STOCK_ID(2)) 
+            if (GET_STOCK_ID(2))
                 globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_STOCK_ID(2));
 
-            if (GET_STOCK_ID(3)) 
+            if (GET_STOCK_ID(3))
                 globals->characterFlags |= 1 << HUD_CharacterIndexFromID(GET_STOCK_ID(3));
 
             saveRAM->playerID       = globals->playerID;
@@ -178,18 +179,18 @@ void Zone_StageLoad(void)
     Zone->gotTimeOver     = false;
     Zone->vsSwapCBCount   = 0;
 
-    // Setup draw order "constants" (shouldn't be changed after this, but can be if really needed)
-    Zone->fgLayerLow     = 0;
-    Zone->objectDrawLow  = 2;
-    Zone->playerDrawLow  = 4;
-    Zone->fgLayerHigh    = 6;
-    Zone->objectDrawHigh = 8;
-    Zone->playerDrawHigh = 12;
-    Zone->huddrawGroup   = 14;
+    // Setup draw group ids (shouldn't be changed after this, but can be if needed)
+    Zone->fgDrawGroup[0]     = 0;
+    Zone->objectDrawGroup[0] = 2;
+    Zone->playerDrawGroup[0] = 4;
+    Zone->fgDrawGroup[1]     = 6;
+    Zone->objectDrawGroup[1] = 8;
+    Zone->playerDrawGroup[1] = 12;
+    Zone->hudDrawGroup       = 14;
 
     // Layer IDs
-    Zone->fgLow     = RSDK.GetTileLayerID("FG Low");
-    Zone->fgHigh    = RSDK.GetTileLayerID("FG High");
+    Zone->fgLayer[0] = RSDK.GetTileLayerID("FG Low");
+    Zone->fgLayer[1] = RSDK.GetTileLayerID("FG High");
     Zone->moveLayer = RSDK.GetTileLayerID("Move");
 #if MANIA_USE_PLUS
     Zone->scratchLayer = RSDK.GetTileLayerID("Scratch");
@@ -198,21 +199,21 @@ void Zone_StageLoad(void)
     // Layer Masks
 
     // (Not sure why this one is different from the two below, but whatever works)
-    if (Zone->fgLowMask)
-        Zone->fgLowMask = 1 << Zone->fgLow;
+    // Update: I don't think this works
+    if (Zone->fgLayerMask[0])
+        Zone->fgLayerMask[0] = 1 << Zone->fgLayer[0];
 
-    if (Zone->fgHigh)
-        Zone->fgHighMask = 1 << Zone->fgHigh;
+    if (Zone->fgLayerMask[1])
+        Zone->fgLayerMask[1] = 1 << Zone->fgLayer[1];
 
     if (Zone->moveLayer)
-        Zone->moveMask = 1 << Zone->moveLayer;
+        Zone->moveLayerMask = 1 << Zone->moveLayer;
 
-    Zone->collisionLayers = 1 << Zone->fgLow;
-    Zone->collisionLayers |= 1 << Zone->fgHigh;
+    Zone->collisionLayers = (1 << Zone->fgLayer[0]) | (1 << Zone->fgLayer[1]);
 
     // Get Layer size and setup default bounds
     Vector2 layerSize;
-    RSDK.GetLayerSize(Zone->fgLow, &layerSize, true);
+    RSDK.GetLayerSize(Zone->fgLayer[0], &layerSize, true);
 
 #if MANIA_USE_PLUS
     if (!Zone->swapGameMode) {
@@ -703,7 +704,7 @@ bool32 Zone_IsZoneLastAct(void)
 }
 
 #if MANIA_USE_PLUS
-int32 Zone_GetEncoreStageID(void)
+int32 Zone_GetListPos_EncoreMode(void)
 {
     int32 maniaListPos = SceneInfo->listPos;
 
@@ -732,7 +733,7 @@ int32 Zone_GetEncoreStageID(void)
 
     return encoreListPos;
 }
-int32 Zone_GetManiaStageID(void)
+int32 Zone_GetListPos_ManiaMode(void)
 {
     int32 encoreListPos = SceneInfo->listPos;
 
@@ -782,13 +783,13 @@ void Zone_State_FadeOut(void)
         if (Zone->swapGameMode) {
             if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA)) {
                 if (RSDK.CheckValidScene())
-                    SceneInfo->listPos = Zone_GetEncoreStageID();
+                    SceneInfo->listPos = Zone_GetListPos_EncoreMode();
 
                 globals->gameMode = MODE_ENCORE;
             }
             else if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
                 if (RSDK.CheckValidScene())
-                    SceneInfo->listPos = Zone_GetManiaStageID();
+                    SceneInfo->listPos = Zone_GetListPos_ManiaMode();
 
                 globals->gameMode = MODE_MANIA;
             }
@@ -1352,7 +1353,8 @@ void Zone_State_SwapPlayers(void)
         Zone->playerSwapEnabled = true;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->state == Player_State_Drown || player->state == Player_State_Static || player->state == Player_State_Death || !player->interaction || player->tileCollisions == TILECOLLISION_NONE)
+            if (player->state == Player_State_Drown || player->state == Player_State_Static || player->state == Player_State_Death
+                || !player->interaction || player->tileCollisions == TILECOLLISION_NONE)
                 Zone->playerSwapEnabled = false;
         }
 
@@ -1400,19 +1402,19 @@ void Zone_State_HandleSwapFadeIn(void)
 void Zone_EditorDraw(void)
 {
     RSDK_THIS(Zone);
+
     RSDK.DrawRect(self->position.x, self->position.y, 0x20, 0x20, 0xFFFF0000, 0xFF, INK_NONE, false);
 }
 
 void Zone_EditorLoad(void)
 {
-
-    Zone->fgLayerLow     = 0;
-    Zone->objectDrawLow  = 2;
-    Zone->playerDrawLow  = 4;
-    Zone->fgLayerHigh    = 6;
-    Zone->objectDrawHigh = 8;
-    Zone->playerDrawHigh = 12;
-    Zone->huddrawGroup   = 14;
+    Zone->fgDrawGroup[0]     = 0;
+    Zone->objectDrawGroup[0] = 2;
+    Zone->playerDrawGroup[0] = 4;
+    Zone->fgDrawGroup[1]     = 6;
+    Zone->objectDrawGroup[1] = 8;
+    Zone->playerDrawGroup[1] = 12;
+    Zone->hudDrawGroup       = 14;
 }
 #endif
 

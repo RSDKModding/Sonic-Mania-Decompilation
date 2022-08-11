@@ -75,9 +75,9 @@ void SSZSpotlight_Create(void *data)
         switch (self->drawFlag) {
             default: break;
 
-            case SSZSPOTLIGHT_DRAW_LOW: self->drawGroup = Zone->objectDrawLow; break;
-            case SSZSPOTLIGHT_DRAW_HIGH: self->drawGroup = Zone->objectDrawHigh; break;
-            case SSZSPOTLIGHT_DRAW_LOWER: self->drawGroup = Zone->objectDrawLow - 1; break;
+            case SSZSPOTLIGHT_DRAW_LOW: self->drawGroup = Zone->objectDrawGroup[0]; break;
+            case SSZSPOTLIGHT_DRAW_HIGH: self->drawGroup = Zone->objectDrawGroup[1]; break;
+            case SSZSPOTLIGHT_DRAW_LOWER: self->drawGroup = Zone->objectDrawGroup[0] - 1; break;
         }
 
         self->angle = self->offset;

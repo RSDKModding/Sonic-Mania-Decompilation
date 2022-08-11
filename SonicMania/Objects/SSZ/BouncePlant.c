@@ -158,7 +158,7 @@ void BouncePlant_Create(void *data)
     RSDK_THIS(BouncePlant);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -288,7 +288,7 @@ void BouncePlant_EditorDraw(void)
 {
     RSDK_THIS(BouncePlant);
 
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     BoucePlant_SetupNodePositions();

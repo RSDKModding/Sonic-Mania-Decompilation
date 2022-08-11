@@ -50,7 +50,7 @@ void CutsceneHBH_Create(void *data)
     RSDK_THIS(CutsceneHBH);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawGroup[1];
     self->visible       = !self->hiddenAtStart;
     self->aniFrames     = 0;
     self->startPos      = self->position;
@@ -316,7 +316,7 @@ void CutsceneHBH_ShinobiJumpSetup(void)
         hbh->velocity.x = 0x10000;
         hbh->velocity.y = -0x60000;
         hbh->direction ^= FLIP_X;
-        hbh->drawGroup = Zone->objectDrawHigh + 2;
+        hbh->drawGroup = Zone->objectDrawGroup[1] + 2;
         hbh->state     = CutsceneHBH_State_ShinobiJump;
 
         EntityFXTrail *trail = CREATE_ENTITY(FXTrail, hbh, hbh->position.x, hbh->position.y);

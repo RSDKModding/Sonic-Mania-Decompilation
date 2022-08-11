@@ -15,7 +15,7 @@ void PlaneSwitch_Update(void)
 
     foreach_active(Player, player)
     {
-        PlaneSwitch_CheckCollisions(self, player, self->flags, self->size, true, Zone->playerDrawLow, Zone->playerDrawHigh);
+        PlaneSwitch_CheckCollisions(self, player, self->flags, self->size, true, Zone->playerDrawGroup[0], Zone->playerDrawGroup[1]);
     }
 
     self->visible = DebugMode->debugActive;
@@ -39,7 +39,7 @@ void PlaneSwitch_Create(void *data)
         self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
         self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
         self->visible       = false;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->negAngle      = -self->angle & 0xFF;
     }
 }
@@ -125,7 +125,7 @@ void PlaneSwitch_EditorDraw(void)
     self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
     self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
     self->visible       = false;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->negAngle      = -self->angle & 0xFF;
 
     PlaneSwitch_DrawSprites();

@@ -44,7 +44,7 @@ void LRZConveyor_Create(void *data)
     RSDK_THIS(LRZConveyor);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->updateRange.x = (self->length + 0x80) << 16;
     self->updateRange.y = (self->length * (self->slope << 8)) + 0x800000;

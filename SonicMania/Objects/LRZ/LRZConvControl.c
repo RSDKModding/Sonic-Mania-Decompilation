@@ -47,7 +47,7 @@ void LRZConvControl_Create(void *data)
     RSDK_THIS(LRZConvControl);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;

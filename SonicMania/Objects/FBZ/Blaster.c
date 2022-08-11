@@ -32,7 +32,7 @@ void Blaster_Create(void *data)
     RSDK_THIS(Blaster);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;

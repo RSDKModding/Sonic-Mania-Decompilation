@@ -155,14 +155,14 @@ void Platform_Create(void *data)
     self->amplitude.y >>= 10;
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawGroup[0] + 1;
     self->centerPos = self->position;
     self->drawPos   = self->position;
     RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &self->animator, true, 0);
     self->animator.frameID = self->frameID;
 
     if (!SceneInfo->inEditor && RSDK.GetFrameID(&self->animator) == 'l')
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 
     switch (self->type) {
         default:
@@ -1587,7 +1587,7 @@ void Platform_Collision_Tiles(void)
         hitbox.bottom = self->hitbox.bottom + 16;
 
         if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-            player->collisionLayers |= Zone->moveMask;
+            player->collisionLayers |= Zone->moveLayerMask;
             player->moveLayerPosition.x = self->tileOrigin.x - self->drawPos.x;
             player->moveLayerPosition.y = self->tileOrigin.y - self->drawPos.y;
             if (player->animator.animationID == ANI_PUSH && player->onGround) {

@@ -163,7 +163,7 @@ void EncoreIntro_SetupCutscenePart2(void)
     camera->position.x      = player1->position.x;
 
     Vector2 size;
-    RSDK.GetLayerSize(Zone->fgLow, &size, true);
+    RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
     Zone->cameraBoundsR[0]      = size.x;
     Zone->playerBoundsR[0]      = size.x << 16;
     Zone->playerBoundActiveR[0] = true;
@@ -214,7 +214,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
             player1->groundVel  = 0;
             player1->velocity.x = 0;
             player1->direction  = FLIP_NONE;
-            foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawGroup = Zone->objectDrawLow; }
+            foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawGroup = Zone->objectDrawGroup[0]; }
             Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
             Zone->playerBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
         }
@@ -403,7 +403,7 @@ bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    player->drawGroup      = Zone->playerDrawHigh;
+    player->drawGroup      = Zone->playerDrawGroup[1];
     EntityPlayer *selBuddy = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
     if (player->position.x > selBuddy->position.x - 0x380000) {
         globals->characterFlags = ID_SONIC | ID_MIGHTY;
@@ -434,7 +434,7 @@ bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
 
     EntityPlayer *buddy = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     RSDK.CopyEntity(buddy, selBuddy, true);
-    buddy->drawGroup       = Zone->playerDrawHigh;
+    buddy->drawGroup       = Zone->playerDrawGroup[1];
     buddy->state           = EncoreIntro_PlayerState_HandleAir;
     buddy->nextAirState    = StateMachine_None;
     buddy->nextGroundState = Player_State_Static;
@@ -529,11 +529,11 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
             mystic->position.x = otherBuddy->position.x;
             mystic->position.y = otherBuddy->position.y;
             mystic->direction  = otherBuddy->direction ^ 1;
-            mystic->drawGroup  = Zone->playerDrawHigh - 1;
+            mystic->drawGroup  = Zone->playerDrawGroup[1] - 1;
             destroyEntity(otherBuddy);
 
             RSDK.PlaySfx(EncoreIntro->sfxMysticPoof, false, 0xFF);
-            CREATE_ENTITY(Explosion, INT_TO_VOID(2), mystic->position.x, mystic->position.y)->drawGroup = Zone->playerDrawHigh - 1;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(2), mystic->position.x, mystic->position.y)->drawGroup = Zone->playerDrawGroup[1] - 1;
             Music_PlayTrack(TRACK_HBHMISCHIEF);
 
             for (int32 i = 0; i < 2; ++i) {
@@ -644,8 +644,8 @@ bool32 EncoreIntro_Cutscene_MysticStealRuby(EntityCutsceneSeq *host)
         }
         else if (host->timer == 75) {
             RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->mainAnimator, true, 0);
-            Zone->cameraBoundsR[0] = 16 * RSDK.GetTileLayer(Zone->fgLow)->width;
-            Zone->playerBoundsR[0] = 16 * RSDK.GetTileLayer(Zone->fgLow)->width;
+            Zone->cameraBoundsR[0] = 16 * RSDK.GetTileLayer(Zone->fgLayer[0])->width;
+            Zone->playerBoundsR[0] = 16 * RSDK.GetTileLayer(Zone->fgLayer[0])->width;
             Zone->cameraBoundsT[0] = 784;
             Zone->playerBoundsT[0] = 784;
             mystic->direction      = FLIP_NONE;
@@ -831,7 +831,7 @@ bool32 EncoreIntro_Cutscene_MysticPassRuby(EntityCutsceneSeq *host)
             ruby->state      = EncoreIntro_PhantomRuby_Fall;
             Music_TransitionTrack(TRACK_EGGMAN1, 0.025);
             break;
-        case 40: mystic->drawGroup = Zone->playerDrawLow; break;
+        case 40: mystic->drawGroup = Zone->playerDrawGroup[0]; break;
         case 75:
             RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->mainAnimator, true, 0);
             player->up = false;
@@ -864,7 +864,7 @@ bool32 EncoreIntro_Cutscene_KingActivate(EntityCutsceneSeq *host)
         buddy->velocity.x = player->velocity.x;
 
     switch (host->timer) {
-        case 9: ruby->drawGroup = Zone->objectDrawLow; break;
+        case 9: ruby->drawGroup = Zone->objectDrawGroup[0]; break;
 
         case 42: RSDK.SetSpriteAnimation(king->aniFrames, 2, &king->mainAnimator, true, 0); break;
 
@@ -900,13 +900,13 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
     EntityFXRuby *fxRuby = NULL;
     if (!host->timer) {
         fxRuby              = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawGroup   = Zone->playerDrawHigh + 1;
+        fxRuby->drawGroup   = Zone->playerDrawGroup[1] + 1;
         EncoreIntro->fxRuby = fxRuby;
         PhantomRuby_PlaySfx(RUBYSFX_REDCUBE);
         Camera_ShakeScreen(0, 4, 4);
-        player->drawGroup = Zone->playerDrawHigh + 1;
+        player->drawGroup = Zone->playerDrawGroup[1] + 1;
         if (buddy->classID == Player->classID)
-            buddy->drawGroup = Zone->playerDrawHigh + 1;
+            buddy->drawGroup = Zone->playerDrawGroup[1] + 1;
     }
     else {
         fxRuby = EncoreIntro->fxRuby;
@@ -1050,7 +1050,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
         }
 
         Vector2 size;
-        RSDK.GetLayerSize(Zone->fgLow, &size, true);
+        RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
         Zone->playerBoundsR[0]      = size.x;
         Zone->cameraBoundsR[0]      = size.x;
         Zone->playerBoundActiveR[0] = true;

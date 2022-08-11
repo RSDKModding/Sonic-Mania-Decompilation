@@ -23,7 +23,7 @@ void Tuesday_StaticUpdate(void)
     foreach_all(Tuesday, tuesday)
     {
         if (!tuesday->velocity.y) {
-            RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntitySlot(tuesday));
+            RSDK.AddDrawListRef(Zone->objectDrawGroup[0], RSDK.GetEntitySlot(tuesday));
         }
     }
 }
@@ -49,7 +49,7 @@ void Tuesday_Create(void *data)
 
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawGroup     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawGroup[0] + 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -320,7 +320,7 @@ void Tuesday_Explode(void)
             int32 x                    = self->drawPos.x + (xOffset << 16);
             int32 y                    = self->drawPos.y + (yOffset << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(data), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 }

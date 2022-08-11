@@ -49,7 +49,7 @@ void Newtron_Create(void *data)
             self->active        = ACTIVE_NORMAL;
             self->updateRange.x = 0x200000;
             self->updateRange.y = 0x200000;
-            self->drawGroup     = Zone->objectDrawHigh;
+            self->drawGroup     = Zone->objectDrawGroup[1];
             return;
         }
 
@@ -60,11 +60,11 @@ void Newtron_Create(void *data)
         self->updateRange.y = 0x800000;
         if (self->type == NEWTRON_FLY) {
             RSDK.SetSpriteAnimation(Newtron->aniFrames, 2, &self->animator, true, 0);
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
         }
         else {
             RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator, true, 0);
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
         }
         RSDK.SetSpriteAnimation(Newtron->aniFrames, 5, &self->flameAnimator, true, 0);
         self->state = Newtron_State_Init;

@@ -83,7 +83,7 @@ void Clucker_Create(void *data)
         self->active  = ACTIVE_BOUNDS;
 
         if (data) {
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             self->active        = ACTIVE_NORMAL;
@@ -93,7 +93,7 @@ void Clucker_Create(void *data)
         else {
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            self->drawGroup     = Zone->objectDrawLow + 1;
+            self->drawGroup     = Zone->objectDrawGroup[0] + 1;
             if (!self->delay)
                 self->delay = 68;
             RSDK.SetSpriteAnimation(Clucker->aniFrames, 0, &self->animator, true, 0);

@@ -61,7 +61,7 @@ void Rexon_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->type          = VOID_TO_INT(data);
 
     switch (self->type) {
@@ -349,7 +349,7 @@ void Rexon_State_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(Rexon->hitboxShell.left, Rexon->hitboxShell.right) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(Rexon->hitboxShell.top, Rexon->hitboxShell.bottom) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 

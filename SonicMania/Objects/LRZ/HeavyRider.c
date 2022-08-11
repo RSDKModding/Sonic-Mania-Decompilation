@@ -42,7 +42,7 @@ void HeavyRider_Create(void *data)
                 case HEAVYRIDER_RIDER:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = false;
-                    self->drawGroup = Zone->objectDrawHigh;
+                    self->drawGroup = Zone->objectDrawGroup[1];
 
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->thrustAnimator, true, 0);
@@ -72,7 +72,7 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = (self->size + 0x400) << 11;
                     self->visible       = false;
-                    self->drawGroup     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawGroup[0];
 
                     self->state     = HeavyRider_State_PlaneSwitch;
                     self->stateDraw = HeavyRider_Draw_PlaneSwitch;
@@ -88,7 +88,7 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = 0x200000;
                     self->visible       = false;
-                    self->drawGroup     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawGroup[0];
 
                     self->state     = HeavyRider_State_ChargeTrigger;
                     self->stateDraw = HeavyRider_Draw_Simple;
@@ -101,7 +101,7 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x100000;
                     self->updateRange.y = 0x100000;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawHigh - 1;
+                    self->drawGroup     = Zone->objectDrawGroup[1] - 1;
 
                     self->state     = HeavyRider_State_Puff;
                     self->stateDraw = HeavyRider_Draw_Simple;
@@ -114,7 +114,7 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = 0x200000;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawHigh;
+                    self->drawGroup     = Zone->objectDrawGroup[1];
 
                     self->state     = HeavyRider_State_Fireball;
                     self->stateDraw = HeavyRider_Draw_Simple;
@@ -123,12 +123,12 @@ void HeavyRider_Create(void *data)
                 case HEAVYRIDER_JIMMY:
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 4, &self->mainAnimator, true, 0);
 
-                    self->drawGroup     = Zone->objectDrawHigh;
+                    self->drawGroup     = Zone->objectDrawGroup[1];
                     self->active        = ACTIVE_NORMAL;
                     self->updateRange.x = 0x1800000;
                     self->updateRange.y = 0x1800000;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawHigh;
+                    self->drawGroup     = Zone->objectDrawGroup[1];
 
                     self->state     = HeavyRider_StateJimmy_Idle;
                     self->stateDraw = HeavyRider_Draw_Simple;
@@ -371,11 +371,11 @@ void HeavyRider_Hit(void)
             int32 angle = 0x400;
             int32 cos   = RSDK.Cos256(HeavyRider->spikeBallAngle);
             for (int32 i = 0; i < 8; ++i) {
-                HeavyRider_SpawnDebris(1, Zone->objectDrawHigh, spawnX + angle * cos, self->position.y - 0x210000);
+                HeavyRider_SpawnDebris(1, Zone->objectDrawGroup[1], spawnX + angle * cos, self->position.y - 0x210000);
                 angle += 0x800;
             }
 
-            HeavyRider_SpawnDebris(2, Zone->objectDrawHigh, spawnX + angle * cos, self->position.y - 0x210000);
+            HeavyRider_SpawnDebris(2, Zone->objectDrawGroup[1], spawnX + angle * cos, self->position.y - 0x210000);
             HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_NONE;
 
             RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
@@ -385,7 +385,7 @@ void HeavyRider_Hit(void)
             RSDK.SetSpriteAnimation(-1, 0, &self->fireballAnimator, true, 0);
         }
         else if (HeavyRider->spikeBallState == HEAVYRIDER_SPIKEBALL_THROWN) {
-            HeavyRider_SpawnDebris(2, Zone->objectDrawHigh, HeavyRider->spikeBallPos.x, HeavyRider->spikeBallPos.y);
+            HeavyRider_SpawnDebris(2, Zone->objectDrawGroup[1], HeavyRider->spikeBallPos.x, HeavyRider->spikeBallPos.y);
             HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_NONE;
         }
 
@@ -409,7 +409,7 @@ void HeavyRider_Explode(void)
         if (!(Zone->timer & 0xF)) {
             int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1] + 2;
         }
     }
 }
@@ -587,7 +587,7 @@ void HeavyRider_State_SetupRider(void)
         self->onGround        = false;
         self->tileCollisions  = TILECOLLISION_DOWN;
         self->collisionPlane  = 0;
-        self->collisionLayers = (1 << Zone->fgLow) | (1 << Zone->fgHigh);
+        self->collisionLayers = (1 << Zone->fgLayer[0]) | (1 << Zone->fgLayer[1]);
 
         Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
 
@@ -845,7 +845,7 @@ void HeavyRider_State_ChargeDash(void)
             debris->velocity.y      = RSDK.Rand(-2, 2) << 16;
             debris->drawFX          = FX_FLIP;
             debris->direction       = i & 3;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
 
             int32 frame = RSDK.Rand(0, 4);
             int32 anim  = RSDK.Rand(12, 15);
@@ -921,7 +921,7 @@ void HeavyRider_State_Destroyed(void)
         child->direction        = self->direction;
         child->onGround         = false;
         child->tileCollisions   = TILECOLLISION_DOWN;
-        child->collisionLayers  = (1 << Zone->fgLow) | (1 << Zone->fgHigh);
+        child->collisionLayers  = (1 << Zone->fgLayer[0]) | (1 << Zone->fgLayer[1]);
         child->collisionPlane   = 0;
         self->velocity.y        = -0x60000;
 
@@ -952,7 +952,7 @@ void HeavyRider_State_Finish(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.y > 0)
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
@@ -962,7 +962,7 @@ void HeavyRider_State_Finish(void)
 
         EntityEggPrison *prison = CREATE_ENTITY(EggPrison, INT_TO_VOID(EGGPRISON_FLYING), self->position.x, self->position.y);
         prison->isPermanent     = true;
-        prison->drawGroup       = Zone->objectDrawHigh;
+        prison->drawGroup       = Zone->objectDrawGroup[1];
 
         destroyEntity(self);
     }
@@ -1098,24 +1098,24 @@ void HeavyRider_State_PlaneSwitch(void)
                     player->collisionPlane = (self->flags >> 3) & 1;
 
                     if (!(self->flags & 4)) {
-                        player->collisionLayers = 1 << Zone->fgLow;
-                        Zone->collisionLayers   = 1 << Zone->fgLow;
+                        player->collisionLayers = 1 << Zone->fgLayer[0];
+                        Zone->collisionLayers   = 1 << Zone->fgLayer[0];
                     }
                     else {
-                        player->collisionLayers = 1 << Zone->fgHigh;
-                        Zone->collisionLayers   = 1 << Zone->fgHigh;
+                        player->collisionLayers = 1 << Zone->fgLayer[1];
+                        Zone->collisionLayers   = 1 << Zone->fgLayer[1];
                     }
                 }
                 else {
                     player->collisionPlane = (self->flags >> 1) & 1;
 
                     if (!(self->flags & 1)) {
-                        player->collisionLayers = 1 << Zone->fgLow;
-                        Zone->collisionLayers   = 1 << Zone->fgLow;
+                        player->collisionLayers = 1 << Zone->fgLayer[0];
+                        Zone->collisionLayers   = 1 << Zone->fgLayer[0];
                     }
                     else {
-                        player->collisionLayers = 1 << Zone->fgHigh;
-                        Zone->collisionLayers   = 1 << Zone->fgHigh;
+                        player->collisionLayers = 1 << Zone->fgLayer[1];
+                        Zone->collisionLayers   = 1 << Zone->fgLayer[1];
                     }
                 }
             }

@@ -315,7 +315,7 @@ void ActClear_Create(void *data)
 #endif
         self->active           = ACTIVE_NORMAL;
         self->visible          = true;
-        self->drawGroup        = Zone->huddrawGroup;
+        self->drawGroup        = Zone->hudDrawGroup;
         self->state            = ActClear_State_EnterText;
         self->stageFinishTimer = 0;
         self->newRecordTimer   = 0;

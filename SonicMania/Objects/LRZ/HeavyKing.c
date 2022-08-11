@@ -57,7 +57,7 @@ void HeavyKing_Create(void *data)
             destroyEntity(self);
         }
         else {
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
             self->drawFX        = FX_FLIP;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0xC00000;
@@ -178,7 +178,7 @@ void HeavyKing_Explode(void)
         if (!(Zone->timer & 0xF)) {
             int32 x = self->position.x + RSDK.Rand(-0x180000, 0x180000);
             int32 y = self->position.y + RSDK.Rand(-0x180000, 0x180000);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -338,7 +338,7 @@ void HeavyKing_StartLeap(int32 startFrame)
                 int32 angle = RSDK.ATan2((player->position.x - attack->position.x) >> 16, (player->position.y - attack->position.y) >> 16);
                 attack->targetVelocity.x = 0x600 * RSDK.Cos256(angle);
                 attack->targetVelocity.y = 0x600 * RSDK.Sin256(angle);
-                attack->drawGroup        = Zone->objectDrawLow;
+                attack->drawGroup        = Zone->objectDrawGroup[0];
                 attack->state            = KingAttack_State_OrbitLaunched;
                 RSDK.PlaySfx(KingAttack->sfxElecPulse, false, 255);
                 foreach_break;
@@ -1170,7 +1170,7 @@ void HeavyKing_State_Destroyed(void)
             debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
             debris->drawFX     = FX_FLIP;
             debris->direction  = i & 3;
-            debris->drawGroup  = Zone->objectDrawHigh;
+            debris->drawGroup  = Zone->objectDrawGroup[1];
             debris->timer      = 120;
 
             RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 19, &debris->animator, true, RSDK.Rand(0, 3));
@@ -1193,8 +1193,8 @@ void HeavyKing_State_Destroyed(void)
         claw->forceHighdrawGroup = true;
         claw->targetY            = self->position.y - 0xA00000;
         claw->position.y         = claw->targetY - 0xE00000;
-        claw->drawGroup          = Zone->objectDrawHigh;
-        self->drawGroup          = Zone->objectDrawHigh;
+        claw->drawGroup          = Zone->objectDrawGroup[1];
+        self->drawGroup          = Zone->objectDrawGroup[1];
         KingClaw->active         = ACTIVE_NEVER;
     }
 }
@@ -1206,7 +1206,7 @@ void HeavyKing_State_Escape(void)
     if (!(Zone->timer & 0x1F)) {
         int x                                                                    = self->position.x + RSDK.Rand(-0x180000, 0x180000);
         int y                                                                    = self->position.y + RSDK.Rand(-0x180000, 0x180000);
-        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y)->drawGroup = Zone->objectDrawGroup[1];
     }
 
     if ((Zone->timer & 0xF) == 4) {
@@ -1214,7 +1214,7 @@ void HeavyKing_State_Escape(void)
         if (self->direction == FLIP_NONE)
             x = self->position.x + 0x2C0000;
 
-        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, self->position.y - 0x300000)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, self->position.y - 0x300000)->drawGroup = Zone->objectDrawGroup[1];
     }
 
     EntityKingClaw *claw = self->claw;

@@ -37,7 +37,7 @@ void FlameSpring_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow + 1;
+        self->drawGroup     = Zone->objectDrawGroup[0] + 1;
 
         if (data) {
             RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 2, &self->mainAnimator, true, 0);
@@ -150,7 +150,7 @@ void FlameSpring_State_Spring(void)
             switch (self->type) {
                 case FLAMESPRING_BOTH:
                     flame             = CREATE_ENTITY(FlameSpring, INT_TO_VOID(true), self->flamePosL.x, self->flamePosL.y);
-                    flame->drawGroup  = Zone->objectDrawLow;
+                    flame->drawGroup  = Zone->objectDrawGroup[0];
                     flame->velocity.x = -0x100 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 0x100);
 
                     flame             = CREATE_ENTITY(FlameSpring, INT_TO_VOID(1), self->flamePosR.x, self->flamePosR.y);
@@ -159,7 +159,7 @@ void FlameSpring_State_Spring(void)
 
                 case FLAMESPRING_RIGHT:
                     flame            = CREATE_ENTITY(FlameSpring, INT_TO_VOID(true), self->flamePosR.x, self->flamePosR.y);
-                    flame->drawGroup = Zone->objectDrawLow;
+                    flame->drawGroup = Zone->objectDrawGroup[0];
                     if (0xC00 * RSDK.Sin1024((timer & 0x1FF) + 0x100) >= 0)
                         flame->velocity.x = (0x44000 - 0xC0 * RSDK.Sin1024((timer & 0x1FF) + 0x100));
                     else
@@ -168,7 +168,7 @@ void FlameSpring_State_Spring(void)
 
                 case FLAMESPRING_LEFT:
                     flame            = CREATE_ENTITY(FlameSpring, INT_TO_VOID(true), self->flamePosL.x, self->flamePosL.y);
-                    flame->drawGroup = Zone->objectDrawLow;
+                    flame->drawGroup = Zone->objectDrawGroup[0];
                     if (-0xC0 * RSDK.Sin1024((timer & 0x1FF) + 0x100) >= 0)
                         flame->velocity.x = (-0xC0 * RSDK.Sin1024((timer & 0x1FF) + 0x100) - 0x44000);
                     else

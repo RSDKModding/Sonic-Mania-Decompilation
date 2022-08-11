@@ -25,7 +25,7 @@ void RPlaneShifter_LateUpdate(void) {}
 
 void RPlaneShifter_StaticUpdate(void)
 {
-    foreach_active(RPlaneShifter, shifter) { RSDK.AddDrawListRef(Zone->playerDrawHigh + 1, RSDK.GetEntitySlot(shifter)); }
+    foreach_active(RPlaneShifter, shifter) { RSDK.AddDrawListRef(Zone->playerDrawGroup[1] + 1, RSDK.GetEntitySlot(shifter)); }
 }
 
 void RPlaneShifter_Draw(void) { RPlaneShifter_DrawSprites(); }
@@ -35,7 +35,7 @@ void RPlaneShifter_Create(void *data)
     RSDK_THIS(RPlaneShifter);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->active    = ACTIVE_BOUNDS;
     self->angle     = 0;
 
@@ -64,7 +64,7 @@ void RPlaneShifter_DrawSprites(void)
     RSDK_THIS(RPlaneShifter);
 
     Vector2 drawPos = self->position;
-    if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
+    if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawGroup[1] + 1)
         RSDK.DrawSprite(&self->baseAnimator, &drawPos, false);
 
     drawPos.y -= 0x80000;
@@ -83,8 +83,8 @@ void RPlaneShifter_DrawSprites(void)
                 drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
                 RSDK.DrawSprite(&RPlaneShifter->barAnimator, &drawPos, false);
             }
-            else if (SceneInfo->currentDrawGroup != Zone->playerDrawHigh + 1) {
-                if ((poleAngles[p] >= 0 && poleAngles[p] < 0x80) || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1) {
+            else if (SceneInfo->currentDrawGroup != Zone->playerDrawGroup[1] + 1) {
+                if ((poleAngles[p] >= 0 && poleAngles[p] < 0x80) || SceneInfo->currentDrawGroup == Zone->playerDrawGroup[1] + 1) {
                     drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
                     RSDK.DrawSprite(&RPlaneShifter->barAnimator, &drawPos, false);
                 }
@@ -98,7 +98,7 @@ void RPlaneShifter_DrawSprites(void)
 
     drawPos.x = self->position.x;
     drawPos.y -= 0x80000;
-    if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
+    if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawGroup[1] + 1)
         RSDK.DrawSprite(&self->baseAnimator, &drawPos, false);
 }
 
@@ -122,11 +122,11 @@ void RPlaneShifter_HandlePlaneShift(EntityPlayer *player)
     }
     else {
         if (self->flags) {
-            player->drawGroup      = player->collisionPlane ? Zone->playerDrawLow : Zone->playerDrawHigh;
+            player->drawGroup      = player->collisionPlane ? Zone->playerDrawGroup[0] : Zone->playerDrawGroup[1];
             player->collisionPlane = player->collisionPlane ? 0 : 1;
         }
         else {
-            player->drawGroup      = player->collisionPlane ? Zone->playerDrawHigh : Zone->playerDrawLow;
+            player->drawGroup      = player->collisionPlane ? Zone->playerDrawGroup[1] : Zone->playerDrawGroup[0];
             player->collisionPlane = player->collisionPlane ? 0 : 1;
         }
 

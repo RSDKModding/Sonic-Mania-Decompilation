@@ -90,8 +90,8 @@ void FarPlane_StageLoad(void)
         farPlane->drawGroup[0]     = DRAWGROUP_COUNT;
         farPlane->scanlineCallback = FarPlane_Scanline_FarPlaneView;
 
-        RSDK.GetTileLayer(Zone->fgLow)->drawGroup[0]  = 2;
-        RSDK.GetTileLayer(Zone->fgHigh)->drawGroup[0] = 7;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->drawGroup[0]  = 2;
+        RSDK.GetTileLayer(Zone->fgLayer[1])->drawGroup[0] = 7;
 
         RSDK.SetDrawGroupProperties(1, false, StateMachine_None);
         RSDK.SetDrawGroupProperties(2, false, StateMachine_None);
@@ -105,18 +105,18 @@ void FarPlane_StageLoad(void)
 #endif
             RSDK.SetLimitedFade(4, 0, 3, 96, 128, 143);
 
-        RSDK.CopyTileLayer(FarPlane->layerID, 0, 192, Zone->fgLow, 0, 192, 1024, 208);
+        RSDK.CopyTileLayer(FarPlane->layerID, 0, 192, Zone->fgLayer[0], 0, 192, 1024, 208);
 
         for (int32 s = 0; s < PLAYER_COUNT; ++s) {
             Zone->cameraBoundsB[s] -= 2048;
             Zone->deathBoundary[s] -= 2048 << 16;
         }
 
-        ++Zone->objectDrawLow;
-        ++Zone->playerDrawLow;
-        ++Zone->fgLayerHigh;
-        ++Zone->objectDrawHigh;
-        ++Zone->playerDrawHigh;
+        ++Zone->objectDrawGroup[0];
+        ++Zone->playerDrawGroup[0];
+        ++Zone->fgDrawGroup[1];
+        ++Zone->objectDrawGroup[1];
+        ++Zone->playerDrawGroup[1];
 
         RSDK.ClearCameras();
 

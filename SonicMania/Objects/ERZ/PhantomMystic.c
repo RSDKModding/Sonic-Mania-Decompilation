@@ -48,7 +48,7 @@ void PhantomMystic_Create(void *data)
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->active        = ACTIVE_NEVER;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

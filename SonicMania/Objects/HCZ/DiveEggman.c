@@ -49,7 +49,7 @@ void DiveEggman_Create(void *data)
 
                     case DIVEEGGMAN_BOMB:
                         self->active    = ACTIVE_NORMAL;
-                        self->drawGroup = Zone->playerDrawLow + 1;
+                        self->drawGroup = Zone->playerDrawGroup[0] + 1;
                         self->timer     = 480;
                         RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 5, &self->animator, true, 0);
                         self->state = DiveEggman_StateBomb_Idle;
@@ -58,7 +58,7 @@ void DiveEggman_Create(void *data)
             }
             else {
                 self->active            = ACTIVE_BOUNDS;
-                self->drawGroup         = Zone->playerDrawLow + 2;
+                self->drawGroup         = Zone->playerDrawGroup[0] + 2;
                 self->updateRange.x     = 0x800000;
                 self->startY            = self->position.y;
                 self->updateRange.y     = 0x800000;
@@ -111,7 +111,7 @@ void DiveEggman_Hit(void)
 
     if (!self->health) {
         self->timer            = 120;
-        self->drawGroup        = Zone->huddrawGroup - 1;
+        self->drawGroup        = Zone->hudDrawGroup - 1;
         self->state            = DiveEggman_StateEggman_Destroyed;
         SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
@@ -227,9 +227,9 @@ void DiveEggman_StateEggman_InWhirlpool(void)
 
             self->angle = RSDK.ATan2(x, y);
             if (self->angle < 0x80)
-                self->drawGroup = Zone->playerDrawLow + 2;
+                self->drawGroup = Zone->playerDrawGroup[0] + 2;
             else
-                self->drawGroup = Zone->huddrawGroup - 1;
+                self->drawGroup = Zone->hudDrawGroup - 1;
             RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 3, &self->animator, false, 0);
             self->state = DiveEggman_StateEggman_WhirlpoolRise;
         }
@@ -260,9 +260,9 @@ void DiveEggman_StateEggman_WhirlpoolRise(void)
     self->position.y -= 0x10000;
 
     if ((self->angle & 0xFF) < 0x80)
-        self->drawGroup = Zone->playerDrawLow + 2;
+        self->drawGroup = Zone->playerDrawGroup[0] + 2;
     else
-        self->drawGroup = Zone->huddrawGroup - 1;
+        self->drawGroup = Zone->hudDrawGroup - 1;
     self->angle += 4;
 
     if (screwMobile->propellerAnimator.speed >= 0x100) {
@@ -380,7 +380,7 @@ bool32 DiveEggman_CheckNoBombExplode(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (!--self->timer) {
-        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
         RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
 
         EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), self->position.x, self->position.y);
@@ -442,9 +442,9 @@ void DiveEggman_StateBomb_InWhirlpool(void)
 
                 self->angle = RSDK.ATan2(x, y);
                 if (self->angle < 0x80)
-                    self->drawGroup = Zone->playerDrawLow + 2;
+                    self->drawGroup = Zone->playerDrawGroup[0] + 2;
                 else
-                    self->drawGroup = Zone->huddrawGroup - 1;
+                    self->drawGroup = Zone->hudDrawGroup - 1;
 
                 self->state = DiveEggman_StateBomb_WhirlpoolRise;
             }
@@ -466,9 +466,9 @@ void DiveEggman_StateBomb_WhirlpoolRise(void)
         self->position.y -= 0x10000;
 
         if ((self->angle & 0xFF) < 0x80)
-            self->drawGroup = Zone->playerDrawLow + 2;
+            self->drawGroup = Zone->playerDrawGroup[0] + 2;
         else
-            self->drawGroup = Zone->huddrawGroup - 1;
+            self->drawGroup = Zone->hudDrawGroup - 1;
         self->angle += 4;
 
         if (screwMobile->propellerAnimator.speed >= 0x100) {

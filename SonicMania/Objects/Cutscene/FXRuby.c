@@ -23,7 +23,7 @@ void FXRuby_StaticUpdate(void)
     if (Zone) {
         foreach_active(FXRuby, fxRuby)
         {
-            RSDK.AddDrawListRef(Zone->huddrawGroup + 1, RSDK.GetEntitySlot(fxRuby));
+            RSDK.AddDrawListRef(Zone->hudDrawGroup + 1, RSDK.GetEntitySlot(fxRuby));
             foreach_break;
         }
     }
@@ -64,7 +64,7 @@ void FXRuby_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible   = true;
         self->active    = ACTIVE_NORMAL;
-        self->drawGroup = Zone ? Zone->objectDrawHigh : (DRAWGROUP_COUNT - 1);
+        self->drawGroup = Zone ? Zone->objectDrawGroup[1] : (DRAWGROUP_COUNT - 1);
 
         self->radiusSpeed = 4;
 

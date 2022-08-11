@@ -41,7 +41,7 @@ void ChaosEmerald_Create(void *data)
     RSDK_THIS(ChaosEmerald);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawGroup[1];
     self->originPos     = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

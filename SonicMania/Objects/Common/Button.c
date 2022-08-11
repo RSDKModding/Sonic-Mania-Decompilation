@@ -119,7 +119,7 @@ void Button_Create(void *data)
         self->updateRange.x = TO_FIXED(32);
         self->updateRange.y = TO_FIXED(32);
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
     }
 }
 

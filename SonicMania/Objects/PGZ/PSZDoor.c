@@ -162,7 +162,7 @@ void PSZDoor_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->updateRange.y = 0x800000;
         self->updateRange.x = 0x800000;
         RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 0, &self->doorAnimator, true, 0);

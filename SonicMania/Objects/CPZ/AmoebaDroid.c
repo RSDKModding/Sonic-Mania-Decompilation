@@ -46,7 +46,7 @@ void AmoebaDroid_Create(void *data)
             switch (self->type) {
                 case AMOEBADROID_BOSS:
                     self->visible   = false;
-                    self->drawGroup = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawGroup[0];
                     self->drawFX    = FX_FLIP;
                     self->health    = 6;
 
@@ -65,7 +65,7 @@ void AmoebaDroid_Create(void *data)
 
                 case AMOEBADROID_BLOB_BIG:
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawHigh;
+                    self->drawGroup = Zone->objectDrawGroup[1];
 
                     self->hitbox.left   = -40;
                     self->hitbox.top    = -40;
@@ -84,7 +84,7 @@ void AmoebaDroid_Create(void *data)
                 case AMOEBADROID_BLOB_SMALL:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawHigh;
+                    self->drawGroup = Zone->objectDrawGroup[1];
 
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -8;
@@ -102,7 +102,7 @@ void AmoebaDroid_Create(void *data)
                 case AMOEBADROID_POOLSPLASH:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawGroup = Zone->huddrawGroup - 2;
+                    self->drawGroup = Zone->hudDrawGroup - 2;
 
                     RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator, true, 0);
 
@@ -111,7 +111,7 @@ void AmoebaDroid_Create(void *data)
 
                 case AMOEBADROID_POOLSPLASH_DELAY:
                     self->active    = ACTIVE_NORMAL;
-                    self->drawGroup = Zone->huddrawGroup - 2;
+                    self->drawGroup = Zone->hudDrawGroup - 2;
                     RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator, true, 0);
 
                     self->state = AmoebaDroid_State_PoolSplash_Delayed;
@@ -154,9 +154,9 @@ void AmoebaDroid_HandleSmallBlobMovement(void)
         smallBlob->position.y = self->blobRadius * RSDK.Sin256(angle) + self->position.y;
         smallBlob->velocity.y = (self->blobRadius * RSDK.Sin256(angle) + self->position.y) - smallBlob->velocity.y;
         if ((self->blobAngleX & 0x7F) && angle < 0x80)
-            smallBlob->drawGroup = Zone->objectDrawLow - 1;
+            smallBlob->drawGroup = Zone->objectDrawGroup[0] - 1;
         else
-            smallBlob->drawGroup = Zone->objectDrawLow;
+            smallBlob->drawGroup = Zone->objectDrawGroup[0];
         angle = (angle + 32) & 0xFF;
     }
 }
@@ -203,7 +203,7 @@ void AmoebaDroid_Explode(void)
         if (Zone->timer & 4) {
             int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
             int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -340,7 +340,7 @@ void AmoebaDroid_State_SetupWaterLevel(void)
                 destroyEntity(water);
         }
         RSDK.SetDrawGroupProperties(0, false, StateMachine_None);
-        RSDK.SetDrawGroupProperties(Zone->huddrawGroup, false, StateMachine_None);
+        RSDK.SetDrawGroupProperties(Zone->hudDrawGroup, false, StateMachine_None);
     }
 }
 
@@ -545,7 +545,7 @@ void AmoebaDroid_State_BounceAttack(void)
                 debris->velocity.y      = RSDK.Rand(-0x40000, -0x20000);
                 debris->gravityStrength = 0x3800;
                 debris->inkEffect       = INK_BLEND;
-                debris->drawGroup       = Zone->objectDrawLow;
+                debris->drawGroup       = Zone->objectDrawGroup[0];
                 debris->updateRange.x   = 0x200000;
                 debris->updateRange.y   = 0x200000;
             }
@@ -676,7 +676,7 @@ void AmoebaDroid_State_SmallBlob(void)
                 debris->velocity.y      = -0x20000;
                 debris->gravityStrength = 0x3800;
                 debris->inkEffect       = INK_BLEND;
-                debris->drawGroup       = Zone->objectDrawLow;
+                debris->drawGroup       = Zone->objectDrawGroup[0];
                 debris->updateRange.x   = 0x200000;
                 debris->updateRange.y   = 0x200000;
             }
@@ -686,7 +686,7 @@ void AmoebaDroid_State_SmallBlob(void)
     }
 
     if (self->classID == AmoebaDroid->classID) {
-        if (self->interaction && self->drawGroup == Zone->objectDrawLow)
+        if (self->interaction && self->drawGroup == Zone->objectDrawGroup[0])
             AmoebaDroid_CheckPlayerHit();
 
         if (!RSDK.CheckOnScreen(self, NULL))

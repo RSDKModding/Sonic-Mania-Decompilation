@@ -32,7 +32,7 @@ void Jawz_Create(void *data)
     RSDK_THIS(Jawz);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
@@ -76,7 +76,7 @@ void Jawz_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Jawz->hitboxBadnik) && !Player_CheckBadnikBreak(player, self, true)) {
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(self);
         }

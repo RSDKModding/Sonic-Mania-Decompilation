@@ -68,7 +68,7 @@ void RisingLava_State_RiseShake(void)
     move->scrollPos += 0x8000;
     foreach_active(Player, player)
     {
-        player->collisionLayers |= Zone->moveMask;
+        player->collisionLayers |= Zone->moveLayerMask;
         player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
         player->moveLayerPosition.y = move->scrollPos;
     }
@@ -89,7 +89,7 @@ void RisingLava_State_StoppedRising(void)
 
     foreach_active(Player, player)
     {
-        player->collisionLayers |= Zone->moveMask;
+        player->collisionLayers |= Zone->moveLayerMask;
         player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
         player->moveLayerPosition.y = move->scrollPos;
     }

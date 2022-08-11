@@ -92,8 +92,8 @@ void LRZ1Setup_StageLoad(void)
     LRZ1Setup->background2 = RSDK.GetTileLayer(RSDK.GetTileLayerID("Background 2"));
 
 #if MANIA_USE_PLUS
-    LRZ1Setup->fgLow  = RSDK.GetTileLayer(Zone->fgLow);
-    LRZ1Setup->fgHigh = RSDK.GetTileLayer(Zone->fgHigh);
+    LRZ1Setup->fgLow  = RSDK.GetTileLayer(Zone->fgLayer[0]);
+    LRZ1Setup->fgHigh = RSDK.GetTileLayer(Zone->fgLayer[1]);
 #endif
 
     // Slows the vScroll of the BG when the lava lake is visible to give a nicer effect :]

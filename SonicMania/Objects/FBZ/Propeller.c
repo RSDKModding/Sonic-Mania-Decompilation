@@ -71,7 +71,7 @@ void Propeller_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawGroup[1];
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

@@ -255,7 +255,7 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host)
         debris->updateRange.x   = 0x800000;
         debris->updateRange.y   = 0x800000;
         debris->active          = ACTIVE_NORMAL;
-        debris->drawGroup       = Zone->playerDrawHigh;
+        debris->drawGroup       = Zone->playerDrawGroup[1];
         debris->state           = Debris_State_Fall;
         debris->gravityStrength = 0x3800;
         RSDK.SetSpriteAnimation(CPZ1Intro->particleFrames, 0, &debris->animator, true, 0);

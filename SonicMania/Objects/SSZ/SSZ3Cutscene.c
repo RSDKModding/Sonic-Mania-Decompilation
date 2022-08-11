@@ -153,7 +153,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
     }
 
     Zone->playerBoundActiveR[0] = false;
-    RSDK.CopyTileLayer(Zone->fgLow, screenBoundsR, 16, Zone->fgLow, 187, 160, 36, 14);
+    RSDK.CopyTileLayer(Zone->fgLayer[0], screenBoundsR, 16, Zone->fgLayer[0], 187, 160, 36, 14);
 
 #if MANIA_USE_PLUS
     CREATE_ENTITY(MonarchPlans, NULL, (cutscenePos << 20) + 0xF00000, 0x1A80000);
@@ -166,7 +166,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
         ruby->startPos.x = (cutscenePos << 20) + 0x1D00000;
         ruby->startPos.y = 0x1A00000;
         ruby->position   = ruby->startPos;
-        ruby->drawGroup  = Zone->objectDrawLow;
+        ruby->drawGroup  = Zone->objectDrawGroup[0];
         self->ruby       = ruby;
     }
 
@@ -288,14 +288,14 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawGroup = Zone->playerDrawHigh;
+        fxRuby->drawGroup = Zone->playerDrawGroup[1];
         self->fxRuby      = fxRuby;
 
         Camera_ShakeScreen(0, 4, 4);
 
-        player1->drawGroup = Zone->playerDrawHigh + 1;
+        player1->drawGroup = Zone->playerDrawGroup[1] + 1;
         if (player2->classID == Player->classID)
-            player2->drawGroup = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawGroup[1] + 1;
     }
 
     if (!host->values[0]) {

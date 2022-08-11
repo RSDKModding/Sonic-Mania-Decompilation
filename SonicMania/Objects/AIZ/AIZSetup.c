@@ -49,7 +49,7 @@ void AIZSetup_StaticUpdate(void)
         }
 
         if (!(Zone->timer & 1)) {
-            for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
+            for (int32 i = Zone->fgLayer[0]; i <= Zone->fgLayer[1]; ++i) {
                 RSDK.GetTileLayer(i)->deformationOffsetW++;
             }
         }
@@ -137,7 +137,7 @@ void AIZSetup_StageLoad(void)
         // AIZSetup->background4 = NULL;
         // (though you should prolly clear the other 3 as well)
 
-        for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
+        for (int32 i = Zone->fgLayer[0]; i <= Zone->fgLayer[1]; ++i) {
             int32 *deformData = RSDK.GetTileLayer(i)->deformationDataW;
 
             int32 id = 0;
@@ -213,7 +213,7 @@ void AIZSetup_StageLoad(void)
     BGSwitch->layerIDs[3]                   = AIZ_BG_JUNGLE;
 
     RSDK.SetDrawGroupProperties(0, false, Water_DrawHook_ApplyWaterPalette);
-    RSDK.SetDrawGroupProperties(Zone->huddrawGroup, false, Water_DrawHook_RemoveWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawGroup, false, Water_DrawHook_RemoveWaterPalette);
     Water->waterPalette = 1;
 #endif
 }
@@ -285,7 +285,7 @@ void AIZSetup_SetupObjects(void)
     foreach_all(Platform, platform)
     {
         if (!platform->frameID) {
-            platform->drawGroup = Zone->objectDrawHigh - 1;
+            platform->drawGroup = Zone->objectDrawGroup[1] - 1;
             AIZSetup->platform  = platform;
             foreach_break;
         }
@@ -599,12 +599,12 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawGroup = Zone->playerDrawHigh;
+        fxRuby->drawGroup = Zone->playerDrawGroup[1];
         AIZSetup->fxRuby  = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
-        player1->drawGroup = Zone->playerDrawHigh + 1;
+        player1->drawGroup = Zone->playerDrawGroup[1] + 1;
         if (player2->classID == Player->classID)
-            player2->drawGroup = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawGroup[1] + 1;
     }
 
     if (!host->values[0]) {
@@ -794,7 +794,7 @@ bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
         claw->position.x         = 0x2F9C0000;
         ruby->sfx                = 0;
         PhantomRuby_SetupFlash(ruby);
-        player1->drawGroup = Zone->playerDrawHigh + 2;
+        player1->drawGroup = Zone->playerDrawGroup[1] + 2;
         RSDK.PlaySfx(AIZSetup->sfxHeliWoosh, false, 0);
     }
 
@@ -815,7 +815,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         Music_TransitionTrack(TRACK_EGGMAN1, 1.0);
 
         EntityFXRuby *fxRuby     = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawGroup        = Zone->playerDrawHigh;
+        fxRuby->drawGroup        = Zone->playerDrawGroup[1];
         AIZSetup->fxRuby         = fxRuby;
         player1->velocity.x      = 0x20000;
         player1->velocity.y      = -0x40000;
@@ -823,10 +823,10 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         player1->nextAirState    = StateMachine_None;
         player1->state           = Player_State_Static;
         player1->onGround        = false;
-        player1->drawGroup       = Zone->playerDrawHigh + 1;
+        player1->drawGroup       = Zone->playerDrawGroup[1] + 1;
 
         if (player2->classID == Player->classID)
-            player2->drawGroup = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawGroup[1] + 1;
 
         Camera_ShakeScreen(0, 4, 4);
     }

@@ -101,7 +101,7 @@ void Smog_Create(void *data)
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
         self->inkEffect = INK_ALPHA;
-        self->drawGroup = Zone->huddrawGroup - 1;
+        self->drawGroup = Zone->hudDrawGroup - 1;
 
         OOZSetup->smogTimer = 0;
 
@@ -145,7 +145,7 @@ void Smog_StageLoad(void)
     RSDK.CopyPalette(0, 0, 2, 0, 128);
     RSDK.SetLimitedFade(2, 1, 3, 64, 0, 127);
     RSDK.SetLimitedFade(0, 1, 2, 0, 0, 255);
-    RSDK.SetDrawGroupProperties(Zone->huddrawGroup - 1, false, Smog_DrawHook_ApplySmogPalette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawGroup - 1, false, Smog_DrawHook_ApplySmogPalette);
 }
 
 void Smog_DrawHook_ApplySmogPalette(void) { RSDK.CopyPalette(1, 0, 0, 0, 128); }

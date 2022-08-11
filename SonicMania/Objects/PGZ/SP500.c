@@ -89,7 +89,7 @@ void SP500_Create(void *data)
             self->visible = true;
             self->offL <<= 20;
             self->offR <<= 20;
-            self->drawGroup     = Zone->objectDrawHigh;
+            self->drawGroup     = Zone->objectDrawGroup[1];
             self->updateRange.x = (self->len + 4) << 20;
             self->updateRange.y = 0x800000;
 
@@ -338,18 +338,18 @@ void SP500_State_Printing(void)
     if (tile != (uint16)-1) {
         self->position.y += 0x100000;
         self->showGreenLight = (Zone->timer >> 1) & 1;
-        RSDK.SetTile(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, self->position.y >> 20, tile);
+        RSDK.SetTile(Zone->fgLayer[0], (self->position.x + self->rowPrintPos) >> 20, self->position.y >> 20, tile);
 
         int32 posY = self->position.y;
         if (self->position.y >= 0x1800000) {
             if (self->position.y > 0x8800000) {
                 posY -= 0xA000000;
-                RSDK.SetTile(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
+                RSDK.SetTile(Zone->fgLayer[0], (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
             }
         }
         else {
             posY += 0xA000000;
-            RSDK.SetTile(Zone->fgLow, (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
+            RSDK.SetTile(Zone->fgLayer[0], (self->position.x + self->rowPrintPos) >> 20, posY >> 20, tile);
         }
         self->velocity.x = 0x80000;
         self->position.y -= 0x100000;

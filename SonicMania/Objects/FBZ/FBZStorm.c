@@ -115,7 +115,7 @@ void FBZStorm_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->active     = ACTIVE_NORMAL;
-        self->drawGroup  = Zone->objectDrawHigh;
+        self->drawGroup  = Zone->objectDrawGroup[1];
         self->drawFX     = FX_ROTATE;
         self->inkEffect  = INK_ALPHA;
         self->velocity.x = -0x40000;

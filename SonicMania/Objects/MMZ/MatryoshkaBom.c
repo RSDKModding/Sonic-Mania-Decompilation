@@ -42,9 +42,9 @@ void MatryoshkaBom_Create(void *data)
     self->visible = true;
 
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawGroup = Zone->objectDrawHigh + 2;
+        self->drawGroup = Zone->objectDrawGroup[1] + 2;
     else
-        self->drawGroup = Zone->objectDrawLow + 2;
+        self->drawGroup = Zone->objectDrawGroup[0] + 2;
 
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

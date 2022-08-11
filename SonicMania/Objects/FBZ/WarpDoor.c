@@ -215,7 +215,7 @@ void WarpDoor_Create(void *data)
         self->drawFX        = FX_NONE;
         self->inkEffect     = INK_NONE;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawGroup[1];
     }
 }
 
@@ -266,7 +266,7 @@ void WarpDoor_SetupPlayerCamera(void)
 void WarpDoor_SetStageBounds(void)
 {
     Vector2 size;
-    RSDK.GetLayerSize(Zone->fgLow, &size, true);
+    RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
 
     Zone->cameraBoundsL[0] = 0;
     Zone->cameraBoundsR[0] = size.x;

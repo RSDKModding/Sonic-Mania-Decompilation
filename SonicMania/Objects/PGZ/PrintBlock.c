@@ -94,7 +94,7 @@ void PrintBlock_Create(void *data)
     RSDK.SetSpriteAnimation(PrintBlock->aniFrames, self->letter, &self->animator, true, 0);
 
     self->alpha     = 128;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->state     = Platform_State_Fixed;
 }
 

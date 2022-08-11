@@ -18,7 +18,7 @@ void Gachapandora_Update(void)
 
 void Gachapandora_LateUpdate(void) {}
 
-void Gachapandora_StaticUpdate(void) { RSDK.AddDrawListRef(Zone->objectDrawLow + 1, RSDK.GetEntitySlot(Gachapandora->eggman)); }
+void Gachapandora_StaticUpdate(void) { RSDK.AddDrawListRef(Zone->objectDrawGroup[0] + 1, RSDK.GetEntitySlot(Gachapandora->eggman)); }
 
 void Gachapandora_Draw(void)
 {
@@ -42,7 +42,7 @@ void Gachapandora_Create(void *data)
             switch (self->type) {
                 case GACHAPANDORA_MAIN:
                     self->visible   = false;
-                    self->drawGroup = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawGroup[0];
 
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(Gachapandora->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
@@ -120,7 +120,7 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawGroup[0];
                     break;
 
                 case GACHAPANDORA_PRIZE:
@@ -133,7 +133,7 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawGroup[0];
                     break;
 
                 case GACHAPANDORA_AMY:
@@ -153,13 +153,13 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawGroup     = Zone->objectDrawLow;
+                    self->drawGroup     = Zone->objectDrawGroup[0];
                     break;
 
                 case GACHAPANDORA_DEBRIS:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawGroup[0];
 
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 0, &self->mainAnimator, true, 0);
 
@@ -173,7 +173,7 @@ void Gachapandora_Create(void *data)
                 case GACHAPANDORA_SPARK:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawGroup = Zone->objectDrawHigh;
+                    self->drawGroup = Zone->objectDrawGroup[1];
 
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 13, &self->mainAnimator, true, 0);
 
@@ -303,7 +303,7 @@ void Gachapandora_Explode(int xMin, int xMax, int yMin, int yMax)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(xMin, xMax) << 16);
             int32 y = self->position.y + (RSDK.Rand(yMin, yMax) << 16);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1] + 2;
         }
     }
 }
@@ -541,7 +541,7 @@ void Gachapandora_StateBoss_EnterEggman(void)
         self->state       = Gachapandora_StateBoss_FloatAround;
     }
 
-    RSDK.AddDrawListRef(Zone->objectDrawLow + 1, SceneInfo->entitySlot);
+    RSDK.AddDrawListRef(Zone->objectDrawGroup[0] + 1, SceneInfo->entitySlot);
 }
 
 void Gachapandora_StateBoss_FloatAround(void)
@@ -957,7 +957,7 @@ void Gachapandora_Draw_Boss(void)
     RSDK_THIS(Gachapandora);
 
     Vector2 drawPos = self->position;
-    if (SceneInfo->currentDrawGroup == Zone->objectDrawLow) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawGroup[0]) {
         self->mainAnimator.frameID = 4;
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
@@ -1023,7 +1023,7 @@ void Gachapandora_Draw_BossDestroyed(void)
 
     int storeDir    = self->direction;
     Vector2 drawPos = self->position;
-    if (SceneInfo->currentDrawGroup == Zone->objectDrawLow) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawGroup[0]) {
         self->mainAnimator.frameID = 0;
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
@@ -1065,7 +1065,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
         debris->velocity.x      = RSDK.Rand(-1, 2) << 16;
         debris->velocity.y      = -0x48000;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawGroup[1];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1077,7 +1077,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
         debris->velocity.x      = RSDK.Rand(-1, 2) << 15;
         debris->velocity.y      = -0x30000;
         debris->gravityStrength = 0x3800;
-        debris->drawGroup       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawGroup[1];
         debris->updateRange.x   = 0x400000;
         debris->updateRange.y   = 0x400000;
 
@@ -1114,7 +1114,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
         self->drawFX |= FX_SCALE;
         self->scale.x   = 0x20;
         self->scale.y   = 0x20;
-        self->drawGroup = Zone->objectDrawHigh + 1;
+        self->drawGroup = Zone->objectDrawGroup[1] + 1;
         if (++Gachapandora->activeToys >= 8 && !Gachapandora->destroyedToys)
             Gachapandora->awardAchievement = true;
 
@@ -1518,7 +1518,7 @@ void Gachapandora_StatePrize_AmyRebound(void)
     if (self->mainAnimator.animationID == 7) {
         if (!--self->timer) {
             RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1] + 2;
 
             self->invincibilityTimer = 30;
             self->state              = Gachapandora_StatePrize_Destroyed;
@@ -1596,7 +1596,7 @@ void Gachapandora_StatePrize_AmyGrabbed(void)
             Player_Hurt(parent, self);
 
             RSDK.PlaySfx(Gachapandora->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh + 2;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1] + 2;
 
             self->invincibilityTimer = 30;
             self->state              = Gachapandora_StatePrize_Destroyed;

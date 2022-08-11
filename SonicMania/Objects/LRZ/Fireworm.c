@@ -65,7 +65,7 @@ void Fireworm_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->state         = Fireworm_State_Init;
     }
 }
@@ -122,7 +122,7 @@ void Fireworm_CheckPlayerCollisions(void)
                 debris->velocity.x      = RSDK.Rand(-0x40000, 0x40000);
                 debris->velocity.y      = RSDK.Rand(-0x40000, 0x40000);
                 debris->gravityStrength = 0x3800;
-                debris->drawGroup       = Zone->objectDrawLow;
+                debris->drawGroup       = Zone->objectDrawGroup[0];
                 debris->updateRange.x   = 0x400000;
                 debris->updateRange.y   = 0x400000;
             }

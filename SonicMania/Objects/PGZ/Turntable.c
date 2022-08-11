@@ -60,7 +60,7 @@ void Turntable_Update(void)
                     int32 distY = 16 * (0x10000 - dist / 16);
                     int32 angY  = -16 * (0x10000 - dist / 16);
 
-                    if (player->drawGroup != Zone->playerDrawLow)
+                    if (player->drawGroup != Zone->playerDrawGroup[0])
                         angY = distY;
 
                     int32 distX = player->position.x - self->position.x;
@@ -92,7 +92,7 @@ void Turntable_Update(void)
             else
                 frame = self->playerAngles[playerID] / 42 % 24;
 
-            player->drawGroup = self->playerAngles[playerID] < 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
+            player->drawGroup = self->playerAngles[playerID] < 0x200 ? Zone->playerDrawGroup[1] : Zone->playerDrawGroup[0];
 
             player->animator.frameID = (self->playerFrames[playerID] + frame) % -24;
 
@@ -124,7 +124,7 @@ void Turntable_Create(void *data)
     RSDK_THIS(Turntable);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->origin        = self->position;
     self->visible       = true;
     self->updateRange.x = 0x800000;

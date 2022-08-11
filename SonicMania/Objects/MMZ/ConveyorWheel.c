@@ -44,7 +44,7 @@ void ConveyorWheel_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
-    self->drawGroup     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawGroup[1];
 
     RSDK.SetSpriteAnimation(ConveyorWheel->aniFrames, 0, &self->animator, true, 0);
 }

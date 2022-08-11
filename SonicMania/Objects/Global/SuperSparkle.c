@@ -31,7 +31,7 @@ void SuperSparkle_Update(void)
                 sparkle->timer        = 16;
                 sparkle->inkEffect    = INK_ADD;
                 sparkle->alpha        = 0x100;
-                sparkle->drawGroup    = Zone->objectDrawHigh;
+                sparkle->drawGroup    = Zone->objectDrawGroup[1];
                 sparkle->drawGroup    = player->drawGroup;
                 RSDK.SetSpriteAnimation(SuperSparkle->aniFrames, 0, &sparkle->animator, true, 0);
             }

@@ -2196,8 +2196,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Zone_ApplyWorldBounds);
     ADD_PUBLIC_FUNC(Zone_IsZoneLastAct);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(Zone_GetEncoreStageID);
-    ADD_PUBLIC_FUNC(Zone_GetManiaStageID);
+    ADD_PUBLIC_FUNC(Zone_GetListPos_EncoreMode);
+    ADD_PUBLIC_FUNC(Zone_GetListPos_ManiaMode);
     ADD_PUBLIC_FUNC(Zone_Draw_Fade);
     ADD_PUBLIC_FUNC(Zone_State_FadeOut);
     ADD_PUBLIC_FUNC(Zone_State_FadeIn);

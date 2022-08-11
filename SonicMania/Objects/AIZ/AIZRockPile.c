@@ -126,7 +126,7 @@ void AIZRockPile_Create(void *data)
 
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
     }
@@ -149,7 +149,7 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
         RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 1, &debris->animator, true, 0);
         debris->velocity.x    = speeds[2 * i];
         debris->velocity.y    = speeds[(2 * i) + 1];
-        debris->drawGroup     = Zone->objectDrawHigh;
+        debris->drawGroup     = Zone->objectDrawGroup[1];
         debris->updateRange.x = 0x800000;
         debris->updateRange.y = 0x800000;
         debris->gravityStrength       = 0x1800;

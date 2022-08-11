@@ -33,9 +33,9 @@ void Caterkiller_Create(void *data)
 
     self->visible = true;
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     else
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
@@ -246,9 +246,9 @@ bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir)
     int32 ty = (y >> 16) + 8;
     int32 tx = x >> 16;
 
-    uint16 tile = RSDK.GetTile(Zone->fgHigh, x >> 16, ty);
+    uint16 tile = RSDK.GetTile(Zone->fgLayer[1], x >> 16, ty);
     if (tile == (uint16)-1)
-        tile = RSDK.GetTile(Zone->fgLow, tx, ty);
+        tile = RSDK.GetTile(Zone->fgLayer[0], tx, ty);
 
     uint8 angle = RSDK.GetTileAngle(tile, 0, CMODE_FLOOR);
 

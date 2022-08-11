@@ -101,7 +101,7 @@ void Shiversaw_Create(void *data)
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->active    = ACTIVE_BOUNDS;
             self->visible   = false;
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
 
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 0, &self->tanksAnimator, true, 0);
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 1, &self->bellowsAnimator, true, 7);
@@ -351,7 +351,7 @@ void Shiversaw_Explode(void)
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawGroup[1] + 2;
         }
     }
 }
@@ -832,7 +832,7 @@ void Shiversaw_State_Destroyed(void)
             Music_SetMusicTrack("ShiversawExplosion.ogg", TRACK_EGGMAN1, false);
             Music_PlayTrack(TRACK_EGGMAN1);
             self->timer     = 0;
-            self->drawGroup = Zone->playerDrawHigh;
+            self->drawGroup = Zone->playerDrawGroup[1];
             self->state     = Shiversaw_State_Explode;
         }
         else {
@@ -1275,7 +1275,7 @@ void Shiversaw_EditorDraw(void)
 
     self->active    = ACTIVE_BOUNDS;
     self->visible   = false;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
 
     RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 0, &self->tanksAnimator, true, 0);
     RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 1, &self->bellowsAnimator, true, 7);

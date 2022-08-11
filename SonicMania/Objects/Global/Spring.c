@@ -56,9 +56,9 @@ void Spring_Create(void *data)
         self->visible        = true;
 
         if (self->planeFilter && ((uint8)self->planeFilter - 1) & 2)
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
         else
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
 
         switch (self->type >> 1) {
             case 0: // vertical

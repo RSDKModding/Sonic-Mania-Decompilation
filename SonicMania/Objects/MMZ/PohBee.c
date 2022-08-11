@@ -38,9 +38,9 @@ void PohBee_Create(void *data)
     self->visible = true;
 
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     else
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 
     self->startPos      = self->position;
     self->startDir      = self->direction;

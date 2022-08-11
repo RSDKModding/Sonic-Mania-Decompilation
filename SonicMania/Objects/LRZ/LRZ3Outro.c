@@ -56,7 +56,7 @@ void LRZ3Outro_HandleExplosions(void)
 
     explosion->velocity.x = RSDK.Rand(-0x20000, 0x20000);
     explosion->velocity.y = self->velocity.y - 0x40000;
-    explosion->drawGroup  = Zone->objectDrawHigh;
+    explosion->drawGroup  = Zone->objectDrawGroup[1];
     explosion->drawFX     = FX_SCALE;
     explosion->inkEffect  = INK_BLEND;
     explosion->scale.x    = RSDK.Rand(0x200, 0x400);

@@ -36,7 +36,7 @@ void TMZCable_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible   = true;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         self->cableID &= 3;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -179,7 +179,7 @@ void TMZCable_State_Destroyed(void)
         if (Zone->timer & 4) {
             int32 y = self->jointPos[id].y + RSDK.Rand(-0x100000, 0x100000);
             int32 x = self->jointPos[id].x + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 
@@ -194,7 +194,7 @@ void TMZCable_State_Destroyed(void)
             debris->gravityStrength = 0x4000;
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x40000, -0x10000);
-            debris->drawGroup       = Zone->objectDrawLow;
+            debris->drawGroup       = Zone->objectDrawGroup[0];
             RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &debris->animator, true, 0);
         }
     }

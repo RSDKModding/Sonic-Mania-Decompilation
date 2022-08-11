@@ -96,7 +96,7 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
         prison->notSolid        = true;
 
         Vector2 size;
-        RSDK.GetLayerSize(Zone->fgLow, &size, true);
+        RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
         Zone->cameraBoundsT[0] = 0;
         Zone->cameraBoundsT[1] = 0;
         Zone->cameraBoundsR[0] = size.x;

@@ -40,9 +40,9 @@ void PopcornKernel_Create(void *data)
 
         RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 7));
         if (self->animator.frameID >= 0 && (self->animator.frameID <= 1 || self->animator.frameID == 5))
-            self->drawGroup = Zone->objectDrawLow - 1;
+            self->drawGroup = Zone->objectDrawGroup[0] - 1;
         else
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
 
         self->active          = ACTIVE_NORMAL;
         self->updateRange.x   = 0x800000;

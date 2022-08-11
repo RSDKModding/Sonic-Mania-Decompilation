@@ -72,7 +72,7 @@ void TimeAttackGate_Create(void *data)
                 self->active        = ACTIVE_NORMAL;
                 self->updateRange.x = TO_FIXED(64);
                 self->updateRange.y = TO_FIXED(64);
-                self->drawGroup     = Zone->playerDrawLow + 1;
+                self->drawGroup     = Zone->playerDrawGroup[0] + 1;
 
                 int32 left   = self->boundsOffset.x - (self->boundsSize.x >> 1);
                 int32 top    = self->boundsOffset.y - (self->boundsSize.y >> 1);

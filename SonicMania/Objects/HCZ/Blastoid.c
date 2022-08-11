@@ -32,7 +32,7 @@ void Blastoid_Create(void *data)
     RSDK_THIS(Blastoid);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->drawFX |= FX_FLIP;
 
     if (!SceneInfo->inEditor) {

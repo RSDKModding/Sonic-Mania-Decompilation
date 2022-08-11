@@ -1135,7 +1135,7 @@ void ReplayRecorder_PlayerState_PlaybackReplay(void)
 
             self->scale.x   = 0x200;
             self->scale.y   = 0x200;
-            self->drawGroup = Zone->playerDrawLow;
+            self->drawGroup = Zone->playerDrawGroup[0];
             foreach_all(FarPlane, farPlane)
             {
                 Hitbox hitbox;
@@ -1151,7 +1151,7 @@ void ReplayRecorder_PlayerState_PlaybackReplay(void)
                     self->drawFX |= FX_SCALE;
                     self->scale.x   = 0x100;
                     self->scale.y   = 0x100;
-                    self->drawGroup = Zone->objectDrawLow;
+                    self->drawGroup = Zone->objectDrawGroup[0];
                     foreach_break;
                 }
             }

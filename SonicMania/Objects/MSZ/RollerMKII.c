@@ -32,7 +32,7 @@ void RollerMKII_Create(void *data)
     RSDK_THIS(RollerMKII);
 
     self->visible         = true;
-    self->drawGroup       = Zone->objectDrawLow;
+    self->drawGroup       = Zone->objectDrawGroup[0];
     self->startPos        = self->position;
     self->startDir        = self->direction;
     self->drawFX          = FX_FLIP;
@@ -235,7 +235,7 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
             if (platform->collision != PLATFORM_C_SOLID) {
                 if (platform->collision == PLATFORM_C_TILED
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &RollerMKII->hitboxObject)) {
-                    if (self->collisionLayers & Zone->moveMask) {
+                    if (self->collisionLayers & Zone->moveLayerMask) {
                         TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                         move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                         move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
@@ -267,7 +267,7 @@ void RollerMKII_HandleCollisions(void)
 
     foreach_all(PlaneSwitch, planeSwitch)
     {
-        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawLow, Zone->playerDrawHigh);
+        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawGroup[0], Zone->playerDrawGroup[1]);
     }
 
     foreach_all(Platform, platform) { RollerMKII_HandlePlatformCollisions(platform); }

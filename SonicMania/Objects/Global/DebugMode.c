@@ -92,7 +92,7 @@ void DebugMode_Update(void)
         self->tileCollisions = TILECOLLISION_DOWN;
         self->interaction    = true;
         self->visible        = true;
-        self->drawGroup      = Zone->playerDrawLow;
+        self->drawGroup      = Zone->playerDrawGroup[0];
 
         SceneInfo->timeEnabled = true;
         if (SceneInfo->minutes == 9 && SceneInfo->seconds == 59 && SceneInfo->milliseconds == 99) {

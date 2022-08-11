@@ -37,7 +37,7 @@ void COverlay_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     }
 }
 

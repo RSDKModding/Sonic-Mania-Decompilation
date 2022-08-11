@@ -36,7 +36,7 @@ void WalkerLegs_Create(void *data)
     RSDK_THIS(WalkerLegs);
 
     self->active    = ACTIVE_BOUNDS;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->startPos  = self->position;
 
     self->legPos[0] = self->position;
@@ -213,7 +213,7 @@ void WalkerLegs_CheckObjectCrush(void)
 
                     RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 4, &debris->animator, true, spikes->type >> 1);
 
-                    debris->drawGroup = Zone->objectDrawHigh;
+                    debris->drawGroup = Zone->objectDrawGroup[1];
                     debris->direction = spikes->direction;
                     debris->drawFX |= FX_ROTATE;
                     debris->gravityStrength = 0x3800;
@@ -311,10 +311,10 @@ void WalkerLegs_CheckTileCollisions(void)
         ++self->stepCount;
         self->state        = WalkerLegs_State_Idle;
         self->finishedStep = true;
-        uint16 tile        = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+        uint16 tile        = RSDK.GetTile(Zone->fgLayer[0], self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         if (tile == (uint16)-1)
-            tile = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+            tile = RSDK.GetTile(Zone->fgLayer[1], self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         uint8 tileFlags = RSDK.GetTileFlags(tile, self->collisionPlane);
         // whats up here? why is it lava & conveyor??
@@ -350,10 +350,10 @@ void WalkerLegs_CheckStoodLava(void)
 
         self->position.x = x;
         self->position.y = y;
-        uint16 tile      = RSDK.GetTile(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+        uint16 tile      = RSDK.GetTile(Zone->fgLayer[0], self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         if (tile == (uint16)-1)
-            tile = RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
+            tile = RSDK.GetTile(Zone->fgLayer[1], self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         uint8 tileFlags = RSDK.GetTileFlags(tile, self->collisionPlane);
         // whats up here? why is it lava AND conveyor L only???
@@ -390,7 +390,7 @@ void WalkerLegs_CreateDebris(bool32 isRightLeg, bool32 isMagma)
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
 
             RSDK.SetSpriteAnimation(WalkerLegs->particleFrames, !isMagma, &debris->animator, true, 0);
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->gravityStrength = 0x3800;
             debris->velocity.x      = 0x180 * (abs(spawnX - x) >> 8) / size;
             if (debris->position.x < self->position.x) {
@@ -422,7 +422,7 @@ void WalkerLegs_CreateSmoke(bool32 isRightLeg)
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
                 debris->velocity.x = 0;
                 debris->velocity.y = -0x1000 * RSDK.Rand(0, 4);
-                debris->drawGroup  = Zone->objectDrawHigh - 1;
+                debris->drawGroup  = Zone->objectDrawGroup[1] - 1;
                 debris->timer      = 30;
             }
         }

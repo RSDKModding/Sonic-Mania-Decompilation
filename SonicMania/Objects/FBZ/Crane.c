@@ -23,7 +23,7 @@ void Crane_LateUpdate(void) {}
 
 void Crane_StaticUpdate(void)
 {
-    foreach_active(Crane, crane) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntitySlot(crane)); }
+    foreach_active(Crane, crane) { RSDK.AddDrawListRef(Zone->playerDrawGroup[0] + 1, RSDK.GetEntitySlot(crane)); }
 }
 
 void Crane_Draw(void)
@@ -49,7 +49,7 @@ void Crane_Create(void *data)
     RSDK_THIS(Crane);
 
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->active        = ACTIVE_BOUNDS;

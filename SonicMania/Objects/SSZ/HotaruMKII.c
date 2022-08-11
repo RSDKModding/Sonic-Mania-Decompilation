@@ -41,7 +41,7 @@ void HotaruMKII_Create(void *data)
     RSDK_THIS(HotaruMKII);
 
     if (!SceneInfo->inEditor) {
-        self->drawGroup     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawGroup[1];
         self->startPos      = self->position;
         self->startDir      = self->direction;
         self->updateRange.x = 0x1000000;
@@ -527,7 +527,7 @@ void HotaruMKII_State_LaserStrike(void)
 void HotaruMKII_EditorDraw(void)
 {
     RSDK_THIS(HotaruMKII);
-    self->drawGroup     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawGroup[1];
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
     self->drawFX        = FX_FLIP;

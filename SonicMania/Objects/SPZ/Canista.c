@@ -37,7 +37,7 @@ void Canista_Create(void *data)
     RSDK_THIS(Canista);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawGroup[0] + 1;
 
     if (data) {
         self->drawFX |= FX_FLIP;
@@ -47,7 +47,7 @@ void Canista_Create(void *data)
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
         self->active        = ACTIVE_NORMAL;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         RSDK.SetSpriteAnimation(Canista->aniFrames, 3, &self->mainAnimator, true, 0);
         self->state = Canista_StateProjectile_Shot;
     }

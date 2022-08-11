@@ -27,7 +27,7 @@ void ParticleHelpers_SetupFallingParticles(int32 x, int32 y, void (*callback)(En
     for (int32 i = 0; i < 5; ++i) {
         int32 spawnX            = pos + (i << 18);
         EntityDebris *debris    = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, y);
-        debris->drawGroup       = Zone->objectDrawHigh;
+        debris->drawGroup       = Zone->objectDrawGroup[1];
         debris->gravityStrength = 0x3800;
         debris->velocity.y      = 0;
         debris->velocity.x      = 0x30 * ((spawnX - x) >> 8);
@@ -47,7 +47,7 @@ void ParticleHelpers_SetupParticleFX(void *debrisState, void (*callback)(EntityD
     int32 y              = ZONE_RAND(-(maxY >> 1), maxY >> 1) + yOffset;
     EntityDebris *debris = CREATE_ENTITY(Debris, debrisState, x, y);
 
-    debris->drawGroup       = Zone->objectDrawHigh;
+    debris->drawGroup       = Zone->objectDrawGroup[1];
     debris->gravityStrength = 0x3800;
     debris->velocity.x      = ((x - xOffset) >> 8) * (speed >> 8);
     debris->velocity.y      = ((y - yOffset) >> 8) * (speed >> 8);

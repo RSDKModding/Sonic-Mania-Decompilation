@@ -83,13 +83,13 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 
         EntityEggPrison *prison     = SPZ2Outro->prison;
         prison->notSolid            = true;
-        prison->drawGroup           = Zone->playerDrawHigh;
+        prison->drawGroup           = Zone->playerDrawGroup[1];
         tvFlyingBattery->position.y = 0x81E0000;
         tvFlyingBattery->active     = ACTIVE_NORMAL;
         weatherTV->stateDraw        = WeatherTV_Draw_Outro;
         weatherTV->state            = WeatherTV_State_Outro;
         weatherTV->timer            = 0;
-        RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(weatherTV));
+        RSDK.AddDrawListRef(Zone->objectDrawGroup[1], RSDK.GetEntitySlot(weatherTV));
         WeatherTV->useHighLayer = true;
         camera->target          = NULL;
         player1->camera         = NULL;
@@ -211,9 +211,9 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
     EntityWeatherTV *weatherTV             = SPZ2Outro->weatherTV;
 
     if (!host->timer) {
-        RSDK.SetDrawGroupProperties(Zone->playerDrawLow, false, SPZ2Outro_DrawHook_PrepareWeatherTV);
+        RSDK.SetDrawGroupProperties(Zone->playerDrawGroup[0], false, SPZ2Outro_DrawHook_PrepareWeatherTV);
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, true, 0);
-        player1->drawGroup       = Zone->playerDrawLow;
+        player1->drawGroup       = Zone->playerDrawGroup[0];
         player1->state           = Player_State_Static;
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
@@ -230,7 +230,7 @@ bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
 
         if (player2 && player2->classID == Player->classID && !SPZ2Outro->ignoreP2) {
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->animator, true, 0);
-            player2->drawGroup       = Zone->playerDrawLow;
+            player2->drawGroup       = Zone->playerDrawGroup[0];
             player2->state           = Player_State_Static;
             player2->nextAirState    = StateMachine_None;
             player2->nextGroundState = StateMachine_None;

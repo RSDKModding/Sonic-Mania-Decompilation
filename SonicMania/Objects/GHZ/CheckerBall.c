@@ -38,7 +38,7 @@ void CheckerBall_Create(void *data)
 {
     RSDK_THIS(CheckerBall);
     self->visible         = true;
-    self->drawGroup       = Zone->objectDrawLow;
+    self->drawGroup       = Zone->objectDrawGroup[0];
     self->active          = ACTIVE_BOUNDS;
     self->updateRange.x   = 0x400000;
     self->updateRange.y   = 0x400000;
@@ -296,7 +296,7 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
 
         EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, badnik->position.x, badnik->position.y);
-        bonus->drawGroup        = Zone->objectDrawHigh;
+        bonus->drawGroup        = Zone->objectDrawGroup[1];
         bonus->animator.frameID = player1->scoreBonus;
         switch (player1->scoreBonus) {
             case 0: Player_GiveScore(player1, 100); break;
@@ -332,7 +332,7 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(PlaneSwitch, planeSwitch)
     {
-        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawLow, Zone->playerDrawHigh);
+        PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, true, Zone->playerDrawGroup[0], Zone->playerDrawGroup[1]);
     }
 
     foreach_active(CheckerBall, checkerBall)
@@ -571,7 +571,7 @@ void CheckerBall_HandleObjectCollisions(void)
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
-                debris->drawGroup  = Zone->objectDrawHigh;
+                debris->drawGroup  = Zone->objectDrawGroup[1];
                 RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
@@ -612,10 +612,10 @@ void CheckerBall_HandleObjectCollisions(void)
                     int32 tx                  = breakableWall->position.x + offsets[0];
                     int32 ty                  = breakableWall->position.y + offsets[1];
                     EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), tx, ty);
-                    tile->tileInfo            = RSDK.GetTile(Zone->fgHigh, tx >> 20, ty >> 20);
+                    tile->tileInfo            = RSDK.GetTile(Zone->fgLayer[1], tx >> 20, ty >> 20);
                     tile->velocity.x          = velocities[0];
                     tile->velocity.y          = velocities[1];
-                    RSDK.SetTile(Zone->fgHigh, tx >> 20, ty >> 20, -1);
+                    RSDK.SetTile(Zone->fgLayer[1], tx >> 20, ty >> 20, -1);
                     offsets += 2;
                     velocities += 2;
                 }

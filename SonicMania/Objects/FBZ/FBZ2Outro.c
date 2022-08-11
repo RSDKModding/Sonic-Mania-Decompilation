@@ -58,7 +58,7 @@ bool32 FBZ2Outro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
     }
 
     Vector2 size;
-    RSDK.GetLayerSize(Zone->fgLow, &size, true);
+    RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
     size.x -= 128;
 
     for (int32 p = 0; p < Player->playerCount; ++p) {

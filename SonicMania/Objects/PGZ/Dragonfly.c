@@ -49,7 +49,7 @@ void Dragonfly_Create(void *data)
     RSDK_THIS(Dragonfly);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
 
     if (!SceneInfo->inEditor) {
         if (!self->speed) {

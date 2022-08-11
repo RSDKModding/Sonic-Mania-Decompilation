@@ -52,7 +52,7 @@ void PhantomRuby_Create(void *data)
 
     self->active = ACTIVE_BOUNDS;
     if (!SceneInfo->inEditor)
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
 
     self->startPos      = self->position;
     self->visible       = true;

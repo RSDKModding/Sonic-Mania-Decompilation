@@ -40,7 +40,7 @@ void TurboSpiker_Create(void *data)
     self->playedLaunchSfx = false;
     self->visible         = true;
     self->drawFX |= FX_FLIP;
-    self->drawGroup     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawGroup[0] + 1;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -148,7 +148,7 @@ void TurboSpiker_State_Init(void)
     if (self->type == TURBOSPIKER_HIDDEN) {
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->animator, true, 0);
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 3, &self->shellAnimator, true, 0);
-        self->drawGroup = Zone->fgLayerLow + 1;
+        self->drawGroup = Zone->fgDrawGroup[0] + 1;
         if (Player_GetNearestPlayer())
             self->direction = Player_GetNearestPlayer()->position.x >= self->position.x;
     }
@@ -218,9 +218,9 @@ void TurboSpiker_State_Hidden(void)
             RSDK.PlaySfx(TurboSpiker->sfxSplash, false, 0xFF);
             RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
             RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
-            self->drawGroup = Zone->objectDrawLow + 1;
+            self->drawGroup = Zone->objectDrawGroup[0] + 1;
             if (self->spike)
-                self->spike->drawGroup = Zone->objectDrawLow;
+                self->spike->drawGroup = Zone->objectDrawGroup[0];
 
             EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, INT_TO_VOID(true), self->position.x, self->position.y);
             ember->direction         = self->direction;

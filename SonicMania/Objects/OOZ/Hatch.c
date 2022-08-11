@@ -29,7 +29,7 @@ void Hatch_Update(void)
                     moveLayer->scrollInfo[0].scrollPos = -self->hScrollPos;
                 }
 
-                player->collisionLayers |= Zone->moveMask;
+                player->collisionLayers |= Zone->moveLayerMask;
                 player->moveLayerPosition.x = moveLayer->scrollInfo[0].scrollPos;
                 player->moveLayerPosition.y = moveLayer->scrollPos;
             }
@@ -46,7 +46,7 @@ void Hatch_LateUpdate(void) {}
 
 void Hatch_StaticUpdate(void)
 {
-    foreach_all(Hatch, hatch) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(hatch)); }
+    foreach_all(Hatch, hatch) { RSDK.AddDrawListRef(Zone->objectDrawGroup[1], RSDK.GetEntitySlot(hatch)); }
 }
 
 void Hatch_Draw(void)
@@ -71,7 +71,7 @@ void Hatch_Create(void *data)
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_BOUNDS;
-        self->drawGroup = Zone->objectDrawLow + 1;
+        self->drawGroup = Zone->objectDrawGroup[0] + 1;
 
         self->updateRange.x = 16 * MAX(abs(self->subOff1.x), abs(self->subOff2.x));
         self->updateRange.y = 16 * MAX(abs(self->subOff1.y), abs(self->subOff2.y));
@@ -116,7 +116,7 @@ void Hatch_Create(void *data)
                 if (self->go == HATCH_GO_SUBEXITHATCH_COPYTILES) {
                     RSDK.CopyTileLayer(Zone->moveLayer, (self->position.x >> 20) - 2, (self->position.y >> 20) - 1, Zone->moveLayer, 1, 7, 4,
                                        2); // Copy Hatch Tiles
-                    RSDK.CopyTileLayer(Zone->fgHigh, (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6,
+                    RSDK.CopyTileLayer(Zone->fgLayer[1], (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6,
                                        2); // Copy [???] Tiles (There's nothing there in the scene)
                 }
                 self->visible      = false;
@@ -263,7 +263,7 @@ void Hatch_State_PlayerEntered(void)
         player->tileCollisions = TILECOLLISION_NONE;
 
         RSDK.CopyTileLayer(Zone->moveLayer, (self->position.x >> 20) - 2, (self->position.y >> 20) - 1, Zone->moveLayer, 1, 7, 4, 2);
-        RSDK.CopyTileLayer(Zone->fgHigh, (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6, 2);
+        RSDK.CopyTileLayer(Zone->fgLayer[1], (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6, 2);
 
         Zone->deathBoundary[0] = 0x7FFF0000;
         Zone->deathBoundary[1] = 0x7FFF0000;
@@ -539,7 +539,7 @@ void Hatch_EditorDraw(void)
 {
     RSDK_THIS(Hatch);
 
-    self->drawGroup = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawGroup[0] + 1;
 
     self->updateRange.x = 16 * MAX(abs(self->subOff1.x), abs(self->subOff2.x));
     self->updateRange.y = 16 * MAX(abs(self->subOff1.y), abs(self->subOff2.y));

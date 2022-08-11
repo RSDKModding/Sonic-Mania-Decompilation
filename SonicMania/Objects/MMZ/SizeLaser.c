@@ -73,7 +73,7 @@ void SizeLaser_Create(void *data)
 
         if (!type) {
             self->active    = ACTIVE_BOUNDS;
-            self->drawGroup = Zone->objectDrawLow + 1;
+            self->drawGroup = Zone->objectDrawGroup[0] + 1;
 
             self->state = SizeLaser_State_Emitter;
             switch (self->orientation) {
@@ -92,7 +92,7 @@ void SizeLaser_Create(void *data)
         else {
             type--;
             self->active      = ACTIVE_NORMAL;
-            self->drawGroup   = Zone->objectDrawLow;
+            self->drawGroup   = Zone->objectDrawGroup[0];
             self->orientation = type >> 2;
             self->type        = type & 1;
 

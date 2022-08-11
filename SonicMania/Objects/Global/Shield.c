@@ -195,7 +195,7 @@ void Shield_State_LightningSparks(void)
     debris->timer        = 22;
     debris->velocity.x   = -TO_FIXED(2);
     debris->velocity.y   = -TO_FIXED(2);
-    debris->drawGroup    = Zone->playerDrawHigh;
+    debris->drawGroup    = Zone->playerDrawGroup[1];
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -207,7 +207,7 @@ void Shield_State_LightningSparks(void)
     debris->timer      = 22;
     debris->velocity.x = TO_FIXED(2);
     debris->velocity.y = -TO_FIXED(2);
-    debris->drawGroup  = Zone->playerDrawHigh;
+    debris->drawGroup  = Zone->playerDrawGroup[1];
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -219,7 +219,7 @@ void Shield_State_LightningSparks(void)
     debris->timer      = 22;
     debris->velocity.x = -TO_FIXED(2);
     debris->velocity.y = TO_FIXED(2);
-    debris->drawGroup  = Zone->playerDrawHigh;
+    debris->drawGroup  = Zone->playerDrawGroup[1];
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -231,7 +231,7 @@ void Shield_State_LightningSparks(void)
     debris->timer      = 22;
     debris->velocity.x = TO_FIXED(2);
     debris->velocity.y = TO_FIXED(2);
-    debris->drawGroup  = Zone->playerDrawHigh;
+    debris->drawGroup  = Zone->playerDrawGroup[1];
     RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (self->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;

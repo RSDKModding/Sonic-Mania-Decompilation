@@ -20,9 +20,9 @@ void SSZ2Setup_StaticUpdate(void)
         {
             Hitbox *hitbox = Player_GetHitbox(player);
 
-            uint16 tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+            uint16 tile = RSDK.GetTile(Zone->fgLayer[0], player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == (uint16)-1)
-                tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+                tile = RSDK.GetTile(Zone->fgLayer[0], player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
             if (RSDK.GetTileFlags(tile, player->collisionPlane) != SSZ2_TFLAGS_NORMAL && (abs(player->groundVel) > 0x80000 && player->onGround)) {
                 int32 x              = player->position.x;
@@ -32,7 +32,7 @@ void SSZ2Setup_StaticUpdate(void)
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = player->velocity.x < 0;
-                debris->drawGroup  = Zone->objectDrawLow;
+                debris->drawGroup  = Zone->objectDrawGroup[0];
                 debris->position.x = player->position.x;
                 debris->position.y = player->position.y + (hitbox->bottom << 16);
                 debris->timer      = 30;

@@ -31,7 +31,7 @@ void BladePole_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;

@@ -30,7 +30,7 @@ void Batbrain_Create(void *data)
     RSDK_THIS(Batbrain);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->active        = ACTIVE_BOUNDS;

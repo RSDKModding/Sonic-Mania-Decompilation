@@ -32,7 +32,7 @@ void Ball_Create(void *data)
     RSDK_THIS(Ball);
 
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -95,7 +95,7 @@ void Ball_HandleInteractions(void)
         if (Player_CheckCollisionTouch(player, self, &Ball->hitboxBall)) {
             Player_Hurt(player, self);
 
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
             self->velocity.y = 0;
@@ -126,7 +126,7 @@ void Ball_SpawnSplashes(void)
 
     for (int32 i = 0; i < 5; ++i) {
         EntityBall *ball = CREATE_ENTITY(Ball, INT_TO_VOID(true), self->position.x, self->position.y);
-        ball->drawGroup  = Zone->objectDrawHigh;
+        ball->drawGroup  = Zone->objectDrawGroup[1];
         ball->velocity.x = RSDK.Rand(-0x100, 0x100) << 10;
         if (ball->velocity.x < 0)
             ball->velocity.x += 0x20000;
@@ -212,7 +212,7 @@ void Ball_State_TargetingPlayer(void)
 
     if (abs(self->position.x - targetPlayer->position.x) < 0x100000 && abs(0x500000 + self->position.y - targetPlayer->position.y) < 0x100000) {
         if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
             self->velocity.y = 0;

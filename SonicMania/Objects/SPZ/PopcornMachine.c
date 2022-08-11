@@ -131,7 +131,7 @@ void PopcornMachine_Create(void *data)
             self->updateRange.x        = 0xB00000;
             self->visible              = true;
             self->updateRange.y        = 0xA00000 * self->height + 0x1000000;
-            self->drawGroup            = Zone->objectDrawHigh;
+            self->drawGroup            = Zone->objectDrawGroup[1];
             self->drawFX               = FX_FLIP;
             self->alpha                = 0xE0;
             self->dispenserHolderPos.y = -0x100000;
@@ -450,7 +450,7 @@ void PopcornMachine_EditorDraw(void)
     self->updateRange.x        = 0xB00000;
     self->visible              = true;
     self->updateRange.y        = 0xA00000 * self->height + 0x1000000;
-    self->drawGroup            = Zone->objectDrawHigh;
+    self->drawGroup            = Zone->objectDrawGroup[1];
     self->drawFX               = FX_FLIP;
     self->alpha                = 0xE0;
     self->dispenserHolderPos.y = -0x100000;

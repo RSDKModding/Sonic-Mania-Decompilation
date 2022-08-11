@@ -122,15 +122,15 @@ void CollapsingPlatform_Create(void *data)
     self->position.x &= 0xFFF80000;
     self->position.y &= 0xFFF80000;
     self->drawFX |= FX_FLIP;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
 
     if (self->targetLayer == COLLAPSEPLAT_TARGET_LOW) {
-        self->targetLayer = Zone->fgLow;
-        self->drawGroup   = Zone->objectDrawLow;
+        self->targetLayer = Zone->fgLayer[0];
+        self->drawGroup   = Zone->objectDrawGroup[0];
     }
     else {
-        self->targetLayer = Zone->fgHigh;
-        self->drawGroup   = Zone->objectDrawHigh;
+        self->targetLayer = Zone->fgLayer[1];
+        self->drawGroup   = Zone->objectDrawGroup[1];
     }
 
     if (!SceneInfo->inEditor) {

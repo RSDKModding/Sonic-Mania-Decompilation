@@ -63,7 +63,7 @@ bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host)
     UNUSED(camera);
 
     Vector2 size;
-    RSDK.GetLayerSize(Zone->fgLow, &size, true);
+    RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
 
     if (!host->timer) {
         CPZ2Outro->eggPrison->notSolid = true;

@@ -24,11 +24,11 @@ void GiantPistol_Draw(void)
 {
     RSDK_THIS(GiantPistol);
 
-    if (SceneInfo->currentDrawGroup == Zone->objectDrawLow) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawGroup[0]) {
         RSDK.DrawSprite(&self->pistolEntryAnimator, NULL, false);
         RSDK.DrawSprite(&self->handLowAnimator, NULL, false);
 
-        RSDK.AddDrawListRef(Zone->objectDrawHigh, SceneInfo->entitySlot);
+        RSDK.AddDrawListRef(Zone->objectDrawGroup[1], SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&self->triggerAnimator, NULL, false);
@@ -59,7 +59,7 @@ void GiantPistol_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->startPos      = self->position;
 
         self->pivot.x = self->position.x + (self->direction == FLIP_NONE ? 0x300000 : -0x300000);

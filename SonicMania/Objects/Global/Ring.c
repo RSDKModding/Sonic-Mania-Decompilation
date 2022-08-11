@@ -32,9 +32,9 @@ void Ring_Create(void *data)
     RSDK_THIS(Ring);
     self->visible = true;
 
-    self->drawGroup = Zone->objectDrawLow + 1;
+    self->drawGroup = Zone->objectDrawGroup[0] + 1;
     if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-        self->drawGroup = Zone->objectDrawHigh + 1;
+        self->drawGroup = Zone->objectDrawGroup[1] + 1;
 
     if (self->type == RING_TYPE_BIG) {
         self->drawFX |= FX_FLIP;
@@ -164,7 +164,7 @@ void Ring_Collect(void)
                     if (self->drawGroup == 1)
                         sparkle->drawGroup = 1;
                     else
-                        sparkle->drawGroup = Zone->objectDrawHigh;
+                        sparkle->drawGroup = Zone->objectDrawGroup[1];
 
                     RSDK.SetSpriteAnimation(Ring->aniFrames, RING_TYPE_SPARKLE1 + (i % 3), &sparkle->animator, true, 0);
                     int32 frameCount = sparkle->animator.frameCount;
@@ -408,7 +408,7 @@ uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
 
             case PLATFORM_C_TILED:
                 side = C_NONE;
-                if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Ring->hitbox) && self->collisionLayers & Zone->moveMask) {
+                if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Ring->hitbox) && self->collisionLayers & Zone->moveLayerMask) {
                     TileLayer *moveLayer  = RSDK.GetTileLayer(Zone->moveLayer);
                     moveLayer->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                     moveLayer->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;

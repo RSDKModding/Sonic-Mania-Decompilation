@@ -37,7 +37,7 @@ void LRZConvItem_Create(void *data)
         self->type = VOID_TO_INT(data);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

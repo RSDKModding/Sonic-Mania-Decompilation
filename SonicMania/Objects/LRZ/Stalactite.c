@@ -32,7 +32,7 @@ void Stalactite_Create(void *data)
 
     self->active        = ACTIVE_NORMAL;
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     RSDK.SetSpriteAnimation(Stalactite->aniFrames, 0, &self->animator, true, 0);

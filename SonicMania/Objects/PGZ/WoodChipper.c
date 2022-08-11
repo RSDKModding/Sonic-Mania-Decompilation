@@ -128,7 +128,7 @@ void WoodChipper_Create(void *data)
 
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
 
     if (!SceneInfo->inEditor) {
         if (data) {

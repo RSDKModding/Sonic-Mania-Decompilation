@@ -54,7 +54,7 @@ void MSPanel_Create(void *data)
         RSDK.SetSpriteAnimation(MSPanel->aniFrames, 0, &self->cablesAnimator, true, 0);
 
         self->state     = MSPanel_State_SetupPanel;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
     }
 }
 
@@ -105,7 +105,7 @@ void MSPanel_State_Explode(void)
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x400000);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -121,7 +121,7 @@ void MSPanel_State_Rumbling(void)
             int32 x                    = self->position.x + RSDK.Rand(-0x600000, 0x600000);
             int32 y                    = self->position.y + RSDK.Rand(-0x200000, 0x600000);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 

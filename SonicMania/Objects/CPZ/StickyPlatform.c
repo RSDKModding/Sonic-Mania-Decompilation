@@ -61,7 +61,7 @@ void StickyPlatform_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->active        = ACTIVE_BOUNDS;
-        self->drawGroup     = Zone->objectDrawHigh - 2;
+        self->drawGroup     = Zone->objectDrawGroup[1] - 2;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

@@ -32,7 +32,7 @@ void SpikeCorridor_Create(void *data)
     RSDK_THIS(SpikeCorridor);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->active    = ACTIVE_BOUNDS;
 
     if (SceneInfo->inEditor) {

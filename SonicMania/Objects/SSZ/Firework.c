@@ -84,7 +84,7 @@ void Firework_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_ROTATE | FX_FLIP;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
@@ -298,7 +298,7 @@ void Firework_HandleDebrisSpawn(void)
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->position.x -= 0x600 * RSDK.Cos1024(self->angle);
         debris->position.y -= 0x600 * RSDK.Sin1024(self->angle);
-        debris->drawGroup = Zone->objectDrawLow;
+        debris->drawGroup = Zone->objectDrawGroup[0];
         debris->timer     = 52;
     }
 }
@@ -325,7 +325,7 @@ void Firework_HandleRideEnd(bool32 crashed)
 
     if (crashed) {
         // Watch out! you're gonna crash! ah!
-        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
         RSDK.PlaySfx(Firework->sfxExplosion2, false, 255);
 
         Firework_RemovePlayers(true);
@@ -358,7 +358,7 @@ void Firework_HandleRideEnd(bool32 crashed)
         }
 
         self->timer     = 512;
-        self->drawGroup = Zone->huddrawGroup;
+        self->drawGroup = Zone->hudDrawGroup;
         RSDK.PlaySfx(Firework->sfxExplosion, false, 255);
 
         Firework_RemovePlayers(false);
@@ -471,7 +471,7 @@ void Firework_State_Init(void)
     self->activated     = false;
     self->moveVelocity  = 0;
     self->ridePos       = 0;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
 
     RSDK.SetSpriteAnimation(Firework->aniFrames, 0, &self->mainAnimator, true, 0);
     self->state = Firework_State_AwaitPlayerRide;

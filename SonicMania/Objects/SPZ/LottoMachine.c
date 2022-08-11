@@ -40,7 +40,7 @@ void LottoMachine_StaticUpdate(void)
     foreach_all(LottoMachine, lottoMachine)
     {
         int32 slot = RSDK.GetEntitySlot(lottoMachine);
-        RSDK.AddDrawListRef(Zone->objectDrawLow, slot);
+        RSDK.AddDrawListRef(Zone->objectDrawGroup[0], slot);
         RSDK.AddDrawListRef(lottoMachine->drawGroupHigh, slot);
     }
 }
@@ -140,12 +140,12 @@ void LottoMachine_Create(void *data)
         self->updateRange.x       = 0x1000000;
         self->updateRange.y       = 0x1000000;
         self->visible             = true;
-        self->drawGroup           = Zone->objectDrawHigh + 1;
+        self->drawGroup           = Zone->objectDrawGroup[1] + 1;
         self->alpha               = 160;
         self->drawFX              = FX_ROTATE | FX_FLIP;
         self->chuteTargetPos      = 0x180000;
         self->chutePos            = 0x180000;
-        self->drawGroupHigh       = Zone->objectDrawHigh;
+        self->drawGroupHigh       = Zone->objectDrawGroup[1];
         self->motorAnimator.speed = 0;
         self->state               = LottoMachine_State_Startup;
     }
@@ -454,7 +454,7 @@ void LottoMachine_GiveRings(void)
             ball->type                        = LOTTOBALL_BIG;
             ball->isUIBall                    = true;
             ball->ringCount                   = ringCount;
-            ball->drawGroup                   = Zone->huddrawGroup;
+            ball->drawGroup                   = Zone->hudDrawGroup;
             ball->active                      = ACTIVE_NORMAL;
             ball->drawFX                      = FX_SCALE;
             ball->state                       = LottoBall_State_ShowUIBall;
@@ -527,7 +527,7 @@ void LottoMachine_State_HandleBallCollect(void)
                 self->timer          = 0;
                 self->chuteVel       = 0x20000;
                 self->chuteTargetPos = -0x180000;
-                self->drawGroupHigh  = Zone->objectDrawLow + 1;
+                self->drawGroupHigh  = Zone->objectDrawGroup[0] + 1;
                 self->state          = LottoMachine_State_CollectBall;
             }
             break;
@@ -564,7 +564,7 @@ void LottoMachine_State_HandleBallCollect(void)
                 self->timer          = 0;
                 self->chuteVel       = 0x20000;
                 self->chuteTargetPos = -0x180000;
-                self->drawGroupHigh  = Zone->objectDrawHigh;
+                self->drawGroupHigh  = Zone->objectDrawGroup[1];
                 self->state          = LottoMachine_State_DropPlayers;
             }
             break;

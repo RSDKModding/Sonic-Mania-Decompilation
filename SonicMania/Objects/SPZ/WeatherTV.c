@@ -25,7 +25,7 @@ void WeatherTV_LateUpdate(void) {}
 void WeatherTV_StaticUpdate(void)
 {
     if (WeatherTV->useHighLayer) {
-        foreach_active(WeatherTV, weatherTV) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(weatherTV)); }
+        foreach_active(WeatherTV, weatherTV) { RSDK.AddDrawListRef(Zone->objectDrawGroup[1], RSDK.GetEntitySlot(weatherTV)); }
     }
 
     int32 count = 0;
@@ -68,7 +68,7 @@ void WeatherTV_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->active        = ACTIVE_BOUNDS;
         self->drawFX        = FX_FLIP;
         self->updateRange.x = 0x800000;
@@ -490,7 +490,7 @@ void WeatherTV_Draw_Outro(void)
     RSDK_THIS(WeatherTV);
     Vector2 drawPos;
 
-    if (SceneInfo->currentDrawGroup == Zone->objectDrawHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawGroup[1]) {
         drawPos.x                   = self->position.x + 0x400000;
         drawPos.y                   = self->position.y - 0x180000;
         self->logosAnimator.frameID = 4;

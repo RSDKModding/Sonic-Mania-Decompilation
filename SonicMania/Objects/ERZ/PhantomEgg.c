@@ -47,7 +47,7 @@ void PhantomEgg_Create(void *data)
 
         if (!data) {
             self->visible   = false;
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
 
             self->hitbox.left   = -24;
             self->hitbox.top    = -24;
@@ -200,7 +200,7 @@ void PhantomEgg_Explode(Hitbox *hitbox)
         if (!(Zone->timer & 8)) {
             int32 x = self->position.x + (RSDK.Rand(hitbox->left, hitbox->right) << 16);
             int32 y = self->position.y + (RSDK.Rand(hitbox->top, hitbox->bottom) << 16);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -259,8 +259,8 @@ void PhantomEgg_SetupWarpFX(void)
         PhantomEgg->startScanline = ScreenInfo->center.y;
         PhantomEgg->endScanline   = ScreenInfo->size.y;
 
-        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = PhantomEgg_Scanline_WarpFX;
-        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = PhantomEgg_Scanline_WarpFX;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback  = PhantomEgg_Scanline_WarpFX;
+        RSDK.GetTileLayer(Zone->fgLayer[1])->scanlineCallback = PhantomEgg_Scanline_WarpFX;
 
         PhantomRuby_PlaySfx(RUBYSFX_ATTACK1);
 
@@ -421,7 +421,7 @@ void PhantomEgg_HandleReturnWarp(void)
 
 void PhantomEgg_Scanline_WarpFX(ScanlineInfo *scanlines)
 {
-    TileLayer *fgLow = RSDK.GetTileLayer(Zone->fgLow);
+    TileLayer *fgLow = RSDK.GetTileLayer(Zone->fgLayer[0]);
     RSDK.ProcessParallax(fgLow);
 
     int32 line = 0;
@@ -951,8 +951,8 @@ void PhantomEgg_State_Attack_WarpAway(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->size.y) {
-        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = StateMachine_None;
-        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback  = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgLayer[1])->scanlineCallback = StateMachine_None;
 
         self->timer   = 0;
         self->visible = false;
@@ -974,8 +974,8 @@ void PhantomEgg_State_Attack_WarpReturn(void)
     RSDK_THIS(PhantomEgg);
 
     if (PhantomEgg->endScanline >= ScreenInfo->size.y) {
-        RSDK.GetTileLayer(Zone->fgLow)->scanlineCallback  = StateMachine_None;
-        RSDK.GetTileLayer(Zone->fgHigh)->scanlineCallback = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgLayer[0])->scanlineCallback  = StateMachine_None;
+        RSDK.GetTileLayer(Zone->fgLayer[1])->scanlineCallback = StateMachine_None;
 
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
         self->timer = 0;
@@ -1119,7 +1119,7 @@ void PhantomEgg_State_CrackOpen(void)
     if (self->timer == 64) {
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 2, &self->crackAnimator, false, 0);
 
-        self->drawGroup = Zone->objectDrawLow + 1;
+        self->drawGroup = Zone->objectDrawGroup[0] + 1;
         self->stateDraw = StateMachine_None;
 
         EntityEggman *eggman = CREATE_ENTITY(Eggman, NULL, self->position.x, self->position.y + 0x100000);
@@ -1149,14 +1149,14 @@ void PhantomEgg_State_CrackedExploding(void)
         int32 x                    = self->position.x + RSDK.Rand(-0x380000, -0x180000);
         int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
     }
 
     if ((Zone->timer & 0xF) == 8) {
         int32 x                    = self->position.x + RSDK.Rand(0x180000, 0x380000);
         int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
     }
 
     if (++self->timer == 120)
@@ -1173,7 +1173,7 @@ void PhantomEgg_State_StartGoodEnd(void)
         if (Zone->timer & 8) {
             int32 x = self->position.x + RSDK.Rand(-0x800000, 0x800000);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom + 64) << 16);
-            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawGroup = Zone->objectDrawGroup[1];
         }
     }
 

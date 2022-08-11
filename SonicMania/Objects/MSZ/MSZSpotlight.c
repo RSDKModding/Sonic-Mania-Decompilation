@@ -33,7 +33,7 @@ void MSZSpotlight_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible   = true;
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
         self->startPos  = self->position;
         self->inkEffect = INK_ADD;
         self->angle     = RSDK.Rand(0, 256);

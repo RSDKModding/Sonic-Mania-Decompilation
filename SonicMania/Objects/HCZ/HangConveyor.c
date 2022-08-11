@@ -42,7 +42,7 @@ void HangConveyor_Create(void *data)
     RSDK_THIS(HangConveyor);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

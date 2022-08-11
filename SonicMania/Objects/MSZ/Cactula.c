@@ -38,7 +38,7 @@ void Cactula_Create(void *data)
     RSDK_THIS(Cactula);
 
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow + 1;
+    self->drawGroup     = Zone->objectDrawGroup[0] + 1;
     self->drawFX        = FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -151,7 +151,7 @@ void Cactula_State_DropBomb(void)
             RSDK.PlaySfx(Cactula->sfxCactDrop, false, 255);
             EntityProjectile *projectile = CREATE_ENTITY(Projectile, Projectile_State_MoveGravity, self->position.x, self->position.y);
             projectile->gravityStrength  = 0x3800;
-            projectile->drawGroup        = Zone->objectDrawLow;
+            projectile->drawGroup        = Zone->objectDrawGroup[0];
             projectile->hitbox.left      = -6;
             projectile->hitbox.top       = -6;
             projectile->hitbox.right     = 6;
@@ -162,7 +162,7 @@ void Cactula_State_DropBomb(void)
             self->droppedBomb = true;
         }
 
-        if (RSDK.GetTile(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == (uint16)-1)
+        if (RSDK.GetTile(Zone->fgLayer[1], self->position.x >> 20, self->position.y >> 20) == (uint16)-1)
             Cactula_CheckPlayerCollisions();
     }
     else {

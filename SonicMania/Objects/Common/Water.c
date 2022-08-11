@@ -117,7 +117,7 @@ void Water_Create(void *data)
                 else {
                     self->active    = ACTIVE_NORMAL;
                     self->inkEffect = INK_ADD;
-                    self->drawGroup = Zone->huddrawGroup - 1;
+                    self->drawGroup = Zone->hudDrawGroup - 1;
                     self->alpha     = RSDK.CheckSceneFolder("AIZ") ? 0x60 : 0xE0;
                     RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
                     self->state     = Water_State_Water;
@@ -132,10 +132,10 @@ void Water_Create(void *data)
                 self->active = ACTIVE_BOUNDS;
                 self->drawFX = FX_FLIP;
                 switch (self->priority) {
-                    case WATER_PRIORITY_LOWEST: self->drawGroup = Zone->objectDrawLow - 1; break;
-                    case WATER_PRIORITY_LOW: self->drawGroup = Zone->playerDrawLow; break;
-                    case WATER_PRIORITY_HIGH: self->drawGroup = Zone->playerDrawHigh; break;
-                    case WATER_PRIORITY_HIGHEST: self->drawGroup = Zone->huddrawGroup - 1; break;
+                    case WATER_PRIORITY_LOWEST: self->drawGroup = Zone->objectDrawGroup[0] - 1; break;
+                    case WATER_PRIORITY_LOW: self->drawGroup = Zone->playerDrawGroup[0]; break;
+                    case WATER_PRIORITY_HIGH: self->drawGroup = Zone->playerDrawGroup[1]; break;
+                    case WATER_PRIORITY_HIGHEST: self->drawGroup = Zone->hudDrawGroup - 1; break;
                     default: break;
                 }
 
@@ -153,7 +153,7 @@ void Water_Create(void *data)
 
             case WATER_BUBBLER:
             case WATER_BIG_BUBBLER:
-                self->drawGroup     = Zone->objectDrawLow;
+                self->drawGroup     = Zone->objectDrawGroup[0];
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
                 self->active        = ACTIVE_BOUNDS;
@@ -181,7 +181,7 @@ void Water_Create(void *data)
                 break;
 
             case WATER_BTN_BIG_BUBBLE:
-                self->drawGroup     = Zone->objectDrawLow;
+                self->drawGroup     = Zone->objectDrawGroup[0];
                 self->active        = ACTIVE_BOUNDS;
                 self->updateRange.x = TO_FIXED(16);
                 self->updateRange.y = TO_FIXED(16);
@@ -194,7 +194,7 @@ void Water_Create(void *data)
 
             case WATER_SPLASH:
                 self->active    = ACTIVE_NORMAL;
-                self->drawGroup = Zone->huddrawGroup - 2;
+                self->drawGroup = Zone->hudDrawGroup - 2;
                 RSDK.SetSpriteAnimation(Water->aniFrames, 1, &self->animator, true, 0);
 
                 self->state     = Water_State_Splash;
@@ -203,7 +203,7 @@ void Water_Create(void *data)
 
             case WATER_BUBBLE:
                 self->active        = ACTIVE_NORMAL;
-                self->drawGroup     = Zone->playerDrawHigh;
+                self->drawGroup     = Zone->playerDrawGroup[1];
                 self->drawFX        = FX_SCALE;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
@@ -221,7 +221,7 @@ void Water_Create(void *data)
 
             case WATER_COUNTDOWN:
                 self->active        = ACTIVE_NORMAL;
-                self->drawGroup     = Zone->playerDrawHigh;
+                self->drawGroup     = Zone->playerDrawGroup[1];
                 self->drawFX        = FX_SCALE;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
@@ -376,7 +376,7 @@ void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID)
     bubble->velocity.y  = -0x8800;
     bubble->childPtr    = player;
     bubble->countdownID = bubbleID;
-    bubble->drawGroup   = Zone->playerDrawHigh + 1;
+    bubble->drawGroup   = Zone->playerDrawGroup[1] + 1;
 }
 
 void Water_State_Water(void)
@@ -605,7 +605,7 @@ void Water_State_Water(void)
                             case 1800:
                                 player->deathType = PLAYER_DEATH_DROWN;
                                 if (!pool)
-                                    player->drawGroup = Zone->playerDrawHigh;
+                                    player->drawGroup = Zone->playerDrawGroup[1];
                                 playAlertSfx = true;
                                 break;
                         }

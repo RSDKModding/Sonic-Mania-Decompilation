@@ -200,7 +200,7 @@ void Rattlekiller_Update(void)
                 debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
                 debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
                 debris->gravityStrength = 0x4800;
-                debris->drawGroup       = Zone->objectDrawHigh;
+                debris->drawGroup       = Zone->objectDrawGroup[1];
                 debris->updateRange.x   = 0x400000;
                 debris->updateRange.y   = 0x400000;
             }
@@ -235,7 +235,7 @@ void Rattlekiller_LateUpdate(void) {}
 
 void Rattlekiller_StaticUpdate(void)
 {
-    foreach_active(Rattlekiller, rattlekiller) { RSDK.AddDrawListRef(Zone->objectDrawLow - 1, RSDK.GetEntitySlot(rattlekiller)); }
+    foreach_active(Rattlekiller, rattlekiller) { RSDK.AddDrawListRef(Zone->objectDrawGroup[0] - 1, RSDK.GetEntitySlot(rattlekiller)); }
 }
 
 void Rattlekiller_Draw(void)
@@ -276,7 +276,7 @@ void Rattlekiller_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->topBounds     = self->position;
         self->bottomBounds  = self->position;
         self->active        = ACTIVE_BOUNDS;

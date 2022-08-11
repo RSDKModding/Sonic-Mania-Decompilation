@@ -80,22 +80,17 @@ struct ObjectZone {
     bool32 gotTimeOver;
     StateMachine(timeOverCallback);
     uint16 collisionLayers;
-    uint16 fgLow;
-    uint16 fgHigh;
+    uint16 fgLayer[2]; // { lowPriority, highPriority }
     uint16 moveLayer;
 #if MANIA_USE_PLUS
     uint16 scratchLayer;
 #endif
-    uint16 fgLowMask;
-    uint16 fgHighMask;
-    uint16 moveMask;
-    uint8 fgLayerLow;
-    uint8 fgLayerHigh;
-    uint8 objectDrawLow;
-    uint8 objectDrawHigh;
-    uint8 playerDrawLow;
-    uint8 playerDrawHigh;
-    uint8 huddrawGroup;
+    uint16 fgLayerMask[2]; // { lowPriority, highPriority }
+    uint16 moveLayerMask;
+    uint8 fgDrawGroup[2];     // { lowPriority, highPriority }
+    uint8 objectDrawGroup[2]; // { lowPriority, highPriority }
+    uint8 playerDrawGroup[2]; // { lowPriority, highPriority }
+    uint8 hudDrawGroup;
     uint16 sfxFail;
 #if MANIA_USE_PLUS
     uint8 entityStorage[16][ENTITY_SIZE];
@@ -157,8 +152,8 @@ void Zone_ApplyWorldBounds(void);
 
 bool32 Zone_IsZoneLastAct(void);
 #if MANIA_USE_PLUS
-int32 Zone_GetEncoreStageID(void);
-int32 Zone_GetManiaStageID(void);
+int32 Zone_GetListPos_EncoreMode(void);
+int32 Zone_GetListPos_ManiaMode(void);
 #endif
 
 // Draw States

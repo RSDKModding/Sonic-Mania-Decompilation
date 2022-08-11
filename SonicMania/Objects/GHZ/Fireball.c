@@ -34,7 +34,7 @@ void Fireball_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     RSDK.SetSpriteAnimation(Fireball->aniFrames, 0, &self->animator, true, 0);
 
     if (!SceneInfo->inEditor)

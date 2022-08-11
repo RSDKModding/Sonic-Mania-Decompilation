@@ -32,7 +32,7 @@ void Pointdexter_Create(void *data)
     RSDK_THIS(Pointdexter);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;

@@ -57,7 +57,7 @@ void CollapsingSand_Create(void *data)
     RSDK_THIS(CollapsingSand);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->drawFX |= FX_FLIP;
     self->position.x &= 0xFFF80000;
     self->position.y &= 0xFFF80000;
@@ -139,27 +139,27 @@ void CollapsingSand_State_CollapseLeft(void)
             for (int32 x = (tx << 20) + 0x80000, y = (ty << 20) + 0x80000; tx >= self->tileEndPos.x && ty >= self->tileEndPos.y; --tx, --ty) {
                 bool32 spawnSand = false;
 
-                uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
+                uint16 tile = RSDK.GetTile(Zone->fgLayer[0], tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTile(Zone->fgLow, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLayer[0], tx, ty, -1);
                     spawnSand = true;
                 }
 
-                tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
+                tile = RSDK.GetTile(Zone->fgLayer[1], tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLayer[1], tx, ty, -1);
                     spawnSand = true;
                 }
 
                 if (spawnSand) {
                     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                     RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                    debris->drawGroup = Zone->objectDrawHigh;
+                    debris->drawGroup = Zone->objectDrawGroup[1];
                     debris->timer     = 44;
                     if (self->collapseDuration.x > 0) {
                         // Replace ground tile with a flat one
                         if (ty == self->tilePos.y)
-                            RSDK.SetTile(Zone->fgLow, tx, ty, (168 + (self->collapseDuration.x & 1)) | 0b1111000000000000);
+                            RSDK.SetTile(Zone->fgLayer[0], tx, ty, (168 + (self->collapseDuration.x & 1)) | 0b1111000000000000);
                     }
                 }
 
@@ -206,27 +206,27 @@ void CollapsingSand_State_CollapseRight(void)
             for (int32 x = (tx << 20) + 0x80000, y = (ty << 20) + 0x80000; tx <= self->tileEndPos.x && ty >= self->tileEndPos.y; ++tx, --ty) {
                 bool32 spawnSand = false;
 
-                uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
+                uint16 tile = RSDK.GetTile(Zone->fgLayer[0], tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTile(Zone->fgLow, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLayer[0], tx, ty, -1);
                     spawnSand = true;
                 }
 
-                tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
+                tile = RSDK.GetTile(Zone->fgLayer[1], tx, ty);
                 if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                    RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLayer[1], tx, ty, -1);
                     spawnSand = true;
                 }
 
                 if (spawnSand) {
                     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                     RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                    debris->drawGroup = Zone->objectDrawHigh;
+                    debris->drawGroup = Zone->objectDrawGroup[1];
                     debris->timer     = 44;
                     if (self->collapseDuration.x > 0) {
                         // Replace ground tile with a flat one
                         if (ty == self->tilePos.y)
-                            RSDK.SetTile(Zone->fgLow, tx, ty, (169 - (self->collapseDuration.x & 1)) | 0b1111000000000000);
+                            RSDK.SetTile(Zone->fgLayer[0], tx, ty, (169 - (self->collapseDuration.x & 1)) | 0b1111000000000000);
                     }
                 }
 

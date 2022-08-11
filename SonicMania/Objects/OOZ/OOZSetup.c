@@ -15,7 +15,7 @@ void OOZSetup_LateUpdate(void) {}
 
 void OOZSetup_StaticUpdate(void)
 {
-    foreach_all(OOZSetup, setup) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntitySlot(setup)); }
+    foreach_all(OOZSetup, setup) { RSDK.AddDrawListRef(Zone->playerDrawGroup[0] + 1, RSDK.GetEntitySlot(setup)); }
 
     OOZSetup->palTimer += 128;
     if (OOZSetup->palTimer >= 256) {
@@ -58,9 +58,9 @@ void OOZSetup_StaticUpdate(void)
         if (player->state != Player_State_Static) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             uint16 tile =
-                RSDK.GetTile(Zone->fgLow, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+                RSDK.GetTile(Zone->fgLayer[0], player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == (uint16)-1)
-                tile = RSDK.GetTile(Zone->fgHigh, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+                tile = RSDK.GetTile(Zone->fgLayer[1], player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
             int32 tileFlags = RSDK.GetTileFlags(tile, player->collisionPlane);
             if (tileFlags != OOZ_TFLAGS_NORMAL) {
@@ -179,14 +179,14 @@ void OOZSetup_StaticUpdate(void)
     foreach_active(Ring, ring)
     {
         if (ring->state == Ring_State_Lost) {
-            uint16 tile = RSDK.GetTile(Zone->fgLow, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
+            uint16 tile = RSDK.GetTile(Zone->fgLayer[0], ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
             if (tile == (uint16)-1)
-                tile = RSDK.GetTile(Zone->fgHigh, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
+                tile = RSDK.GetTile(Zone->fgLayer[1], ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
 
             if (RSDK.GetTileFlags(tile, ring->collisionPlane) == OOZ_TFLAGS_OILPOOL) {
                 ring->velocity.x -= ring->velocity.x >> 4;
                 ring->velocity.y = 0x2800;
-                ring->drawGroup  = Zone->objectDrawHigh;
+                ring->drawGroup  = Zone->objectDrawGroup[1];
                 if (ring->alpha > 0x40) {
                     ring->alpha     = 0x40;
                     ring->inkEffect = INK_ALPHA;
@@ -230,7 +230,7 @@ void OOZSetup_Create(void *data)
     self->active    = ACTIVE_ALWAYS;
     self->visible   = true;
     self->drawFX    = FX_ROTATE;
-    self->drawGroup = self->type ? 14 : Zone->objectDrawLow;
+    self->drawGroup = self->type ? 14 : Zone->objectDrawGroup[0];
 }
 
 void OOZSetup_StageLoad(void)

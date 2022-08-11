@@ -140,7 +140,7 @@ void Fan_StaticUpdate(void)
             Vector2 range = { 0x400000, 0x400000 };
             foreach_active(Fan, fan)
             {
-                uint16 tile = RSDK.GetTile(Zone->fgHigh, fan->position.x >> 20, fan->position.y >> 20);
+                uint16 tile = RSDK.GetTile(Zone->fgLayer[1], fan->position.x >> 20, fan->position.y >> 20);
                 if (fan->state && fan->state != Fan_State_Stopped && tile == 0xFFFF && RSDK.CheckOnScreen(fan, &range))
                     ++count;
             }
@@ -176,7 +176,7 @@ void Fan_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow + 1;
+        self->drawGroup     = Zone->objectDrawGroup[0] + 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 

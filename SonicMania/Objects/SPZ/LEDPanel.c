@@ -59,7 +59,7 @@ void LEDPanel_Create(void *data)
 
     self->active      = ACTIVE_BOUNDS;
     self->visible     = true;
-    self->drawGroup   = Zone->objectDrawLow;
+    self->drawGroup   = Zone->objectDrawGroup[0];
     self->updateRange = self->size;
     RSDK.SetSpriteAnimation(LEDPanel->aniFrames, 0, &self->animatorText, true, 0);
 

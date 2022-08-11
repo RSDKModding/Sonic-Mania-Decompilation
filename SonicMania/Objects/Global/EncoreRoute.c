@@ -18,16 +18,16 @@ void EncoreRoute_Update(void)
     uint8 layerDest = -1;
 
     switch (self->layerSrc) {
-        case EROUTE_LAYER_FGLOW: layerSrc = Zone->fgLow; break;
-        case EROUTE_LAYER_FGHIGH: layerSrc = Zone->fgHigh; break;
+        case EROUTE_LAYER_FGLOW: layerSrc = Zone->fgLayer[0]; break;
+        case EROUTE_LAYER_FGHIGH: layerSrc = Zone->fgLayer[1]; break;
         case EROUTE_LAYER_MOVE: layerSrc = Zone->moveLayer; break;
         case EROUTE_LAYER_SCRATCH: layerSrc = Zone->scratchLayer; break;
         default: break;
     }
 
     switch (self->layerDest) {
-        case EROUTE_LAYER_FGLOW: layerDest = Zone->fgLow; break;
-        case EROUTE_LAYER_FGHIGH: layerDest = Zone->fgHigh; break;
+        case EROUTE_LAYER_FGLOW: layerDest = Zone->fgLayer[0]; break;
+        case EROUTE_LAYER_FGHIGH: layerDest = Zone->fgLayer[1]; break;
         case EROUTE_LAYER_MOVE: layerDest = Zone->moveLayer; break;
         case EROUTE_LAYER_SCRATCH: layerDest = Zone->scratchLayer; break;
         default: break;

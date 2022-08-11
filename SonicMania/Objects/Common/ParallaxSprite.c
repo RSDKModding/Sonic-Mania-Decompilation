@@ -64,7 +64,7 @@ void ParallaxSprite_Create(void *data)
     RSDK_THIS(ParallaxSprite);
 
     self->active    = ACTIVE_NORMAL;
-    self->drawGroup = Zone->fgLayerLow + 1;
+    self->drawGroup = Zone->fgDrawGroup[0] + 1;
 
     if (data)
         self->attribute = VOID_TO_INT(data);
@@ -118,7 +118,7 @@ void ParallaxSprite_Create(void *data)
             self->parallaxFactor.y >>= 8;
             self->visible   = true;
             self->inkEffect = INK_BLEND;
-            self->drawGroup = Zone->objectDrawHigh + 1;
+            self->drawGroup = Zone->objectDrawGroup[1] + 1;
             self->state     = ParallaxSprite_State_Normal;
             break;
 

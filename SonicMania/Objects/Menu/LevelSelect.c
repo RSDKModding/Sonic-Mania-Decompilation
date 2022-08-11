@@ -661,7 +661,7 @@ void LevelSelect_HandleNewStagePos(void)
         else if (self->labelID == self->labelCount - 3)
             SceneInfo->listPos += self->offsetBSS;
         else if (globals->gameMode == MODE_ENCORE)
-            SceneInfo->listPos = Zone_GetEncoreStageID();
+            SceneInfo->listPos = Zone_GetListPos_EncoreMode();
 #endif
 
         int32 leaderID = 0;

@@ -383,7 +383,7 @@ void HangPoint_Create(void *data)
     self->updateRange.x = 0x400000;
     self->visible       = true;
     self->updateRange.y = (self->length + 64) << 16;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     if (!SceneInfo->inEditor) {
         self->length = self->length << 16;
         self->maxVel = self->speed << 15;

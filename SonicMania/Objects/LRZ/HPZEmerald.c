@@ -78,12 +78,12 @@ void HPZEmerald_Create(void *data)
 
             case HPZEMERALD_EMERALD_LOW:
                 self->solid     = true;
-                self->drawGroup = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawGroup[0];
                 break;
 
             case HPZEMERALD_EMERALD_HIGH:
                 self->solid     = true;
-                self->drawGroup = Zone->objectDrawHigh;
+                self->drawGroup = Zone->objectDrawGroup[1];
                 break;
         }
 

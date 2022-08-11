@@ -43,7 +43,7 @@ void Animals_Create(void *data)
     self->visible       = true;
     self->updateRange.x = TO_FIXED(64);
     self->updateRange.y = TO_FIXED(64);
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
 
     int32 type = ANIMAL_POCKY;
 #if MANIA_USE_PLUS
@@ -164,7 +164,7 @@ bool32 Animals_CheckPlatformCollision(void *p)
         }
         else if (platform->collision == PLATFORM_C_TILED
                  && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &self->hitboxAnimal)) {
-            if (self->collisionLayers & Zone->moveMask) {
+            if (self->collisionLayers & Zone->moveLayerMask) {
                 TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                 move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                 move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;

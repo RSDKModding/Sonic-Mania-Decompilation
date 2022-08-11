@@ -70,7 +70,7 @@ void FXSpinRay_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible   = true;
         self->active    = ACTIVE_NORMAL;
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
         self->size      = 0x600000;
 
         self->vertexPos[0].x = -0xC0000;

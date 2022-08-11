@@ -45,7 +45,7 @@ void Kanabun_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->startPos      = self->position;
         self->startDir      = self->direction;
         self->active        = ACTIVE_BOUNDS;
@@ -119,9 +119,9 @@ void Kanabun_HandleMovement(void)
     self->scale.y = self->scale.x;
 
     if (((uint32)(self->angle - 0x80) & 0x1FF) >= 0x100)
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     else
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 }
 
 void Kanabun_State_Init(void)
@@ -163,7 +163,7 @@ void Kanabun_State_Moving(void)
 
     RSDK.ProcessAnimation(&self->animator);
 
-    if (self->drawGroup == Zone->objectDrawHigh)
+    if (self->drawGroup == Zone->objectDrawGroup[1])
         Kanabun_CheckPlayerCollisions();
 
     Kanabun_CheckOffScreen();
@@ -185,7 +185,7 @@ void Kanabun_State_Turning(void)
         self->state = Kanabun_State_Moving;
     }
     else {
-        if (self->drawGroup == Zone->objectDrawHigh)
+        if (self->drawGroup == Zone->objectDrawGroup[1])
             Kanabun_CheckPlayerCollisions();
 
         Kanabun_CheckOffScreen();

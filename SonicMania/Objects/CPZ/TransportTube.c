@@ -133,7 +133,7 @@ void TransportTube_State_Entry(void)
                 player->position.x = self->position.x;
                 player->position.y = self->position.y;
                 if (player->state == Player_State_TransportTube) {
-                    player->drawGroup      = Zone->playerDrawLow;
+                    player->drawGroup      = Zone->playerDrawGroup[0];
                     player->tileCollisions = TILECOLLISION_DOWN;
                     player->interaction    = true;
                     player->state          = Player_State_Air;
@@ -281,7 +281,7 @@ void TransportTube_State_Exit(void)
             else if (rx * rx + ry * ry < 0xC0) {
                 player->position.x     = self->position.x;
                 player->position.y     = self->position.y;
-                player->drawGroup      = Zone->playerDrawLow;
+                player->drawGroup      = Zone->playerDrawGroup[0];
                 player->tileCollisions = TILECOLLISION_DOWN;
                 player->interaction    = true;
                 player->state          = Player_State_Air;

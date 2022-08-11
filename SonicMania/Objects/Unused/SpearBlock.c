@@ -36,7 +36,7 @@ void SpearBlock_Create(void *data)
 {
     RSDK_THIS(SpearBlock);
     self->visible          = true;
-    self->drawGroup        = Zone->objectDrawLow;
+    self->drawGroup        = Zone->objectDrawGroup[0];
     self->spearPos.x       = self->position.x;
     self->spearPos.y       = self->position.y;
     self->active           = ACTIVE_BOUNDS;

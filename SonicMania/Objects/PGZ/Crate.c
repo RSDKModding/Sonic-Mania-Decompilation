@@ -56,7 +56,7 @@ void Crate_Create(void *data)
         self->drawFX    = FX_SCALE | FX_FLIP;
         self->scale.x   = 0x200;
         self->scale.y   = 0x200;
-        self->drawGroup = frameID == 3 ? Zone->objectDrawLow : Zone->objectDrawHigh;
+        self->drawGroup = frameID == 3 ? Zone->objectDrawGroup[0] : Zone->objectDrawGroup[1];
         RSDK.SetSpriteAnimation(Crate->aniFrames, 0, &self->animator, true, frameID);
         self->state = Crate_State_None;
     }
@@ -82,7 +82,7 @@ void Crate_Break(EntityCrate *create)
         ice->velocity.y          = RSDK.Rand(-10, 2) << 15;
         ice->direction           = RSDK.Rand(0, 4);
         ice->blockAnimator.speed = RSDK.Rand(1, 4);
-        ice->drawGroup           = Zone->objectDrawLow + 1;
+        ice->drawGroup           = Zone->objectDrawGroup[0] + 1;
 
         switch (create->animator.frameID) {
             case 0:

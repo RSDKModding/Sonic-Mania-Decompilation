@@ -47,7 +47,7 @@ void ShopWindow_Create(void *data)
 
         if (data) {
             self->active        = ACTIVE_NORMAL;
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             self->drawFX        = FX_FLIP;
@@ -60,7 +60,7 @@ void ShopWindow_Create(void *data)
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = self->size.x;
             self->updateRange.y = self->size.y;
-            self->drawGroup     = !self->silhouette ? Zone->objectDrawLow : Zone->objectDrawHigh;
+            self->drawGroup     = !self->silhouette ? Zone->objectDrawGroup[0] : Zone->objectDrawGroup[1];
 
             self->inkEffect = INK_ADD;
             self->alpha     = 0x80;
@@ -90,7 +90,7 @@ void ShopWindow_Create(void *data)
         foreach_all(CircleBumper, bumper)
         {
             if (RSDK.CheckObjectCollisionTouchBox(bumper, &CircleBumper->hitboxBumper, self, &self->hitboxItem))
-                bumper->drawGroup = Zone->objectDrawLow;
+                bumper->drawGroup = Zone->objectDrawGroup[0];
         }
     }
 }
@@ -249,7 +249,7 @@ void ShopWindow_EditorDraw(void)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = self->size.x;
     self->updateRange.y = self->size.y;
-    self->drawGroup     = !self->silhouette ? Zone->objectDrawLow : Zone->objectDrawHigh;
+    self->drawGroup     = !self->silhouette ? Zone->objectDrawGroup[0] : Zone->objectDrawGroup[1];
 
     RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 1, &self->animator, false, 0);
 

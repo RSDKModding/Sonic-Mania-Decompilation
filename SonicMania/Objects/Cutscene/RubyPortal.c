@@ -44,7 +44,7 @@ void RubyPortal_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->updateRange.x = TO_FIXED(128);
         self->updateRange.y = TO_FIXED(128);
 
@@ -141,12 +141,12 @@ void RubyPortal_HandleTileDestruction(void)
             int32 spawnY = (ty << 20) + 0x80000;
 
             for (int32 y = 4; y < 52; y += 3) {
-                uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
+                uint16 tile = RSDK.GetTile(Zone->fgLayer[0], tx, ty);
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
-                    wall->drawGroup       = Zone->objectDrawLow + 1;
-                    wall->targetLayer         = Zone->fgLow;
+                    wall->drawGroup       = Zone->objectDrawGroup[0] + 1;
+                    wall->targetLayer         = Zone->fgLayer[0];
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
                     wall->tilePos.x       = tx;
@@ -159,15 +159,15 @@ void RubyPortal_HandleTileDestruction(void)
                     wall->gravityStrength = 0;
                     wall->active          = ACTIVE_NORMAL;
 
-                    RSDK.SetTile(Zone->fgLow, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLayer[0], tx, ty, -1);
                 }
 
-                tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
+                tile = RSDK.GetTile(Zone->fgLayer[1], tx, ty);
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
 
-                    wall->drawGroup       = Zone->objectDrawHigh;
-                    wall->targetLayer         = Zone->fgHigh;
+                    wall->drawGroup       = Zone->objectDrawGroup[1];
+                    wall->targetLayer         = Zone->fgLayer[1];
                     wall->tileInfo        = tile;
                     wall->drawFX          = FX_SCALE | FX_ROTATE | FX_FLIP;
                     wall->tilePos.x       = tx;
@@ -180,7 +180,7 @@ void RubyPortal_HandleTileDestruction(void)
                     wall->gravityStrength = 0;
                     wall->active          = ACTIVE_NORMAL;
 
-                    RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
+                    RSDK.SetTile(Zone->fgLayer[1], tx, ty, -1);
                 }
 
                 spawnY += 0x100000;
@@ -426,7 +426,7 @@ void RubyPortal_EditorDraw(void)
     RSDK_THIS(RubyPortal);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->scale.x   = 0x200;
     self->scale.y   = 0x200;
     self->alpha     = 0xFF;

@@ -38,7 +38,7 @@ void ScoreBonus_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         self->timer     = 24;
     }
 }

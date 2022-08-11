@@ -91,7 +91,7 @@ void Hotaru_Create(void *data)
         self->offset2.y     = -self->dist.y;
         self->offset1       = self->dist;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = MAX(self->distX1, self->distX2) + 0x400000;
         self->updateRange.y = self->dist.y + 0x400000;
@@ -444,7 +444,7 @@ void Hotaru_EditorDraw(void)
 {
     RSDK_THIS(Hotaru);
 
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = MAX(self->distX1 << 16, self->distX2 << 16) + 0x400000;
     self->updateRange.y = self->dist.y + 0x400000;

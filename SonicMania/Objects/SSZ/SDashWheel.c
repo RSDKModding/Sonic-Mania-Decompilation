@@ -108,7 +108,7 @@ void SDashWheel_Create(void *data)
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->knobAnimator, true, 0);
 
         // ideally use 'h' (for "high")
-        self->drawGroup = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
+        self->drawGroup = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawGroup[1] : Zone->objectDrawGroup[0];
     }
 }
 
@@ -155,7 +155,7 @@ void SDashWheel_EditorDraw(void)
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->knobAnimator, false, 0);
 
     // ideally use 'h' (for "high")
-    self->drawGroup = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
+    self->drawGroup = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawGroup[1] : Zone->objectDrawGroup[0];
 
     SDashWheel_Draw();
 }

@@ -33,7 +33,7 @@ void Woodrow_Create(void *data)
 
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawGroup     = Zone->objectDrawLow - 1;
+    self->drawGroup     = Zone->objectDrawGroup[0] - 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -51,7 +51,7 @@ void Woodrow_Create(void *data)
             self->state = Woodrow_State_Bomb;
         }
         else {
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
             self->bombCount = 0;
 
             int32 slot               = SceneInfo->entitySlot + 1;
@@ -330,7 +330,7 @@ void Woodrow_State_Bomb(void)
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
             RSDK.PlaySfx(Woodrow->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
             destroyEntity(self);
         }
 
@@ -345,7 +345,7 @@ void Woodrow_State_Bomb(void)
                     Player_Hurt(player, self);
                 RSDK.PlaySfx(Woodrow->sfxExplosion, false, 0xFF);
 
-                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
                 destroyEntity(self);
                 foreach_break;
             }
@@ -402,11 +402,11 @@ void Woodrow_EditorDraw(void)
     RSDK_THIS(Woodrow);
 
     if (self->type == WOODROW_BOMB) {
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 2, &self->animator, true, 0);
     }
     else {
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, true, 0);
     }
 

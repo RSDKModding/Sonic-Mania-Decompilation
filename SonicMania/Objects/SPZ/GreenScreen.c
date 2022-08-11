@@ -19,7 +19,7 @@ void GreenScreen_StaticUpdate(void)
 
     foreach_active(GreenScreen, screen)
     {
-        RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(screen));
+        RSDK.AddDrawListRef(Zone->objectDrawGroup[1], RSDK.GetEntitySlot(screen));
         ++count;
     }
 
@@ -33,7 +33,7 @@ void GreenScreen_Create(void *data)
     RSDK_THIS(GreenScreen);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -122,10 +122,10 @@ void GreenScreen_DrawSprites(void)
 {
     RSDK_THIS(GreenScreen);
 
-    if ((SceneInfo->currentDrawGroup != Zone->objectDrawHigh && self->showBG) || (SceneInfo->inEditor && self->paraPreview))
+    if ((SceneInfo->currentDrawGroup != Zone->objectDrawGroup[1] && self->showBG) || (SceneInfo->inEditor && self->paraPreview))
         GreenScreen_DrawBackgrounds();
 
-    if (SceneInfo->currentDrawGroup == Zone->objectDrawHigh || SceneInfo->inEditor) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawGroup[1] || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 0, &self->animator, true, 0);
         RSDK.DrawSprite(&self->animator, NULL, false);
     }

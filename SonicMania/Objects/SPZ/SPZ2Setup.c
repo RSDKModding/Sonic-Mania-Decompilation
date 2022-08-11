@@ -90,7 +90,7 @@ void SPZ2Setup_Create(void *data)
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->fadeTimer = 384;
-    self->drawGroup = Zone->huddrawGroup + 1;
+    self->drawGroup = Zone->hudDrawGroup + 1;
 }
 
 void SPZ2Setup_StageLoad(void)
@@ -98,8 +98,8 @@ void SPZ2Setup_StageLoad(void)
     SPZ2Setup->aniTiles1 = RSDK.LoadSpriteSheet("SPZ2/AniTiles1.gif", SCOPE_STAGE);
     SPZ2Setup->aniTiles2 = RSDK.LoadSpriteSheet("SPZ2/AniTiles2.gif", SCOPE_STAGE);
 
-    SPZ2Setup->fgLow  = RSDK.GetTileLayer(Zone->fgLow);
-    SPZ2Setup->fgHigh = RSDK.GetTileLayer(Zone->fgHigh);
+    SPZ2Setup->fgLow  = RSDK.GetTileLayer(Zone->fgLayer[0]);
+    SPZ2Setup->fgHigh = RSDK.GetTileLayer(Zone->fgLayer[1]);
 
     // Sun Attack Deform
     for (int32 i = 0; i < 0x400; ++i) {

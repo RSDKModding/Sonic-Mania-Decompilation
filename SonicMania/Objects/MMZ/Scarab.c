@@ -70,19 +70,19 @@ void Scarab_Create(void *data)
     RSDK_THIS(Scarab);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
 
     if (self->planeFilter == PLANEFILTER_NONE) {
-        self->drawGroupLow  = Zone->objectDrawLow;
-        self->drawGroupHigh = Zone->playerDrawHigh;
+        self->drawGroupLow  = Zone->objectDrawGroup[0];
+        self->drawGroupHigh = Zone->playerDrawGroup[1];
     }
     else if ((uint8)(self->planeFilter - 1) & 2) {
-        self->drawGroupLow  = Zone->objectDrawHigh;
-        self->drawGroupHigh = Zone->playerDrawHigh;
+        self->drawGroupLow  = Zone->objectDrawGroup[1];
+        self->drawGroupHigh = Zone->playerDrawGroup[1];
     }
     else {
-        self->drawGroupLow  = Zone->objectDrawLow;
-        self->drawGroupHigh = Zone->playerDrawLow;
+        self->drawGroupLow  = Zone->objectDrawGroup[0];
+        self->drawGroupHigh = Zone->playerDrawGroup[0];
     }
 
     self->drawFX        = FX_FLIP;

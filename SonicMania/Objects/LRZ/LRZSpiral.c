@@ -29,7 +29,7 @@ void LRZSpiral_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_BOUNDS;
         self->visible   = false;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 
         switch (self->type) {
             default: break;
@@ -119,9 +119,9 @@ void LRZSpiral_State_Cylinder(void)
 
                     uint8 spiralPos = self->playerSpiralPos[playerID] >> 17;
                     if (spiralPos < 0x40 || spiralPos >= 0xC0)
-                        player->drawGroup = Zone->playerDrawHigh;
+                        player->drawGroup = Zone->playerDrawGroup[1];
                     else
-                        player->drawGroup = Zone->playerDrawLow;
+                        player->drawGroup = Zone->playerDrawGroup[0];
 
                     player->position.x = 0x4800 * RSDK.Sin256(self->playerSpiralPos[playerID] >> 17) + self->position.x;
                     player->position.y = self->playerSpiralPos[playerID] >> 2;

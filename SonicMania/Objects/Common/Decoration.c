@@ -62,9 +62,9 @@ void Decoration_Create(void *data)
         RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
 
         if (RSDK.GetFrameID(&self->animator)) // ideally use 'h'
-            self->drawGroup = Zone->objectDrawHigh;
+            self->drawGroup = Zone->objectDrawGroup[1];
         else
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
     }
 }
 

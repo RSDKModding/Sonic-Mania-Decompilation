@@ -52,7 +52,7 @@ void SpiderMobile_Create(void *data)
                 switch (VOID_TO_INT(data)) {
                     case SPIDERMOBILE_BOSS:
                         self->visible           = false;
-                        self->drawGroup         = Zone->objectDrawHigh;
+                        self->drawGroup         = Zone->objectDrawGroup[1];
                         self->drawFX            = FX_ROTATE | FX_FLIP;
                         self->webCurveDirection = 1;
                         self->health            = 6;
@@ -78,7 +78,7 @@ void SpiderMobile_Create(void *data)
                         self->updateRange.x = 0x300000;
                         self->updateRange.y = 0x300000;
                         self->visible       = true;
-                        self->drawGroup     = Zone->objectDrawHigh;
+                        self->drawGroup     = Zone->objectDrawGroup[1];
 
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 14, &self->partAnimator, true, 0);
 
@@ -87,7 +87,7 @@ void SpiderMobile_Create(void *data)
 
                     case SPIDERMOBILE_BUMPERDEBRIS:
                         self->visible       = true;
-                        self->drawGroup     = Zone->objectDrawHigh;
+                        self->drawGroup     = Zone->objectDrawGroup[1];
                         self->drawFX        = FX_ROTATE | FX_FLIP;
                         self->active        = ACTIVE_NORMAL;
                         self->updateRange.x = 0x800000;
@@ -103,7 +103,7 @@ void SpiderMobile_Create(void *data)
 
                     case SPIDERMOBILE_EGGMAN:
                         self->visible       = true;
-                        self->drawGroup     = Zone->objectDrawLow;
+                        self->drawGroup     = Zone->objectDrawGroup[0];
                         self->active        = ACTIVE_NORMAL;
                         self->updateRange.x = 0x800000;
                         self->updateRange.y = 0x800000;
@@ -316,7 +316,7 @@ void SpiderMobile_Explode(void)
             int32 x                    = self->headPos.x + (RSDK.Rand(-48, 48) << 16);
             int32 y                    = self->headPos.y + (RSDK.Rand(-48, 48) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -333,7 +333,7 @@ void SpiderMobile_HandlePlatformMovement(void)
     Zone->cameraBoundsB[0] += offsetY >> 16;
     Zone->deathBoundary[0] += offsetY;
     Zone->playerBoundsB[0] += offsetY;
-    RSDK.GetTileLayer(Zone->fgHigh)->scrollPos -= offsetY;
+    RSDK.GetTileLayer(Zone->fgLayer[1])->scrollPos -= offsetY;
 
     self->position.y += offsetY;
     self->origin.y += offsetY;
@@ -369,9 +369,9 @@ void SpiderMobile_HandlePlatformMovement(void)
         }
 
         if (player->state == Player_State_Static) {
-            uint16 tile = RSDK.GetTile(Zone->fgLow, player->position.x >> 20, player->position.y >> 20);
+            uint16 tile = RSDK.GetTile(Zone->fgLayer[0], player->position.x >> 20, player->position.y >> 20);
             if (tile == (uint16)-1 || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
-                player->drawGroup = Zone->playerDrawLow;
+                player->drawGroup = Zone->playerDrawGroup[0];
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                 player->state      = Player_State_Air;
                 player->velocity.y = -0x20000;
@@ -978,7 +978,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->drawFX          = FX_ROTATE | FX_FLIP;
         }
 
@@ -991,7 +991,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->drawFX          = FX_ROTATE | FX_FLIP;
 
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i].x, self->legPositions[i].y);
@@ -1001,7 +1001,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->drawFX          = FX_ROTATE | FX_FLIP;
         }
 
@@ -1014,7 +1014,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->drawFX          = FX_ROTATE | FX_FLIP;
 
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i].x, self->legPositions[i].y);
@@ -1024,7 +1024,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->drawFX          = FX_ROTATE | FX_FLIP;
         }
 
@@ -1035,14 +1035,14 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
 
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i + 1].x, self->legPositions[i + 1].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &debris->animator, false, 1);
             debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x3800;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
         }
 
         RSDK.SetSpriteAnimation(-1, 0, &self->legsAnimator, true, 0);
@@ -1117,7 +1117,7 @@ void SpiderMobile_StateBody_MovePlatformToEnd(void)
         self->visible = false;
         RSDK.PlaySfx(SpiderMobile->sfxHullClose, false, 255);
         self->state       = SpiderMobile_StateBody_FinishedMovingPlatform;
-        TileLayer *fgHigh = RSDK.GetTileLayer(Zone->fgHigh);
+        TileLayer *fgHigh = RSDK.GetTileLayer(Zone->fgLayer[1]);
         fgHigh->scrollPos = 0x9200000;
         self->origin.y    = 0x13600000;
     }

@@ -44,7 +44,7 @@ void Batbot_Create(void *data)
 {
     RSDK_THIS(Batbot);
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;

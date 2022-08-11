@@ -138,7 +138,7 @@ void Shuriken_State_Init(void)
     self->timer  = 0;
     self->active = ACTIVE_BOUNDS;
     RSDK.SetSpriteAnimation(Shuriken->aniFrames, 0, &self->animator, true, 0);
-    self->drawGroup = Zone->objectDrawHigh;
+    self->drawGroup = Zone->objectDrawGroup[1];
 
     self->state = Shuriken_State_AwaitActivate;
     Shuriken_State_AwaitActivate();
@@ -262,7 +262,7 @@ void Shuriken_State_ArrowSetup(void)
     self->timer     = 0;
     self->dropTimer = 0;
     self->active    = ACTIVE_NORMAL;
-    self->drawGroup = Zone->objectDrawHigh - 1;
+    self->drawGroup = Zone->objectDrawGroup[1] - 1;
     RSDK.SetSpriteAnimation(Shuriken->aniFrames, 5, &self->animator, true, 0);
 
     self->state = Shuriken_State_ArrowInAir;
@@ -368,7 +368,7 @@ void Shuriken_EditorDraw(void)
     RSDK_THIS(Shuriken);
 
     RSDK.SetSpriteAnimation(Shuriken->aniFrames, 0, &self->animator, true, 0);
-    self->drawGroup = Zone->objectDrawHigh;
+    self->drawGroup = Zone->objectDrawGroup[1];
 
     Shuriken_Draw();
 }

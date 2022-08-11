@@ -242,7 +242,7 @@ void FilmReel_Create(void *data)
         self->pathDir   = self->angle >> 6;
         self->pathFlags = 1;
         self->visible   = true;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
     }
 }
 
@@ -272,7 +272,7 @@ void FilmReel_SpinLeft(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &FilmReel->hitboxWheel)) {
-            player->collisionLayers |= Zone->moveMask;
+            player->collisionLayers |= Zone->moveLayerMask;
             player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
             player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
 
@@ -351,7 +351,7 @@ void FilmReel_SpinRight(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &FilmReel->hitboxWheel)) {
-            player->collisionLayers |= Zone->moveMask;
+            player->collisionLayers |= Zone->moveLayerMask;
             player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
             player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
             if (!player->sidekick) {
@@ -441,7 +441,7 @@ void FilmReel_EditorDraw(void)
     self->pathDir   = self->angle >> 6;
     self->pathFlags = 1;
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
 
     FilmReel_Draw();
 

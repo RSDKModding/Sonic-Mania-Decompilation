@@ -71,7 +71,7 @@ void TimePost_Create(void *data)
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
 
         self->spinSpeed = 0x3000;
         self->spinCount = 8;
@@ -153,7 +153,7 @@ void TimePost_Particle_TimeSparkle(EntityDebris *debris)
 
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
-    debris->drawGroup     = Zone->objectDrawHigh;
+    debris->drawGroup     = Zone->objectDrawGroup[1];
     debris->timer         = 180;
 }
 

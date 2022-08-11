@@ -36,7 +36,7 @@ void FlowerPod_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
@@ -77,7 +77,7 @@ void FlowerPod_SpawnSeeds(void)
         seed->isPermanent     = true;
         seed->velocity.x      = v;
         seed->velocity.y      = -0x30000;
-        seed->drawGroup       = Zone->objectDrawLow;
+        seed->drawGroup       = Zone->objectDrawGroup[0];
     }
 }
 
@@ -105,7 +105,7 @@ void FlowerPod_State_Exploding(void)
             int32 x                    = self->position.x + (RSDK.Rand(-32, 32) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-32, 0) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + 2), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 

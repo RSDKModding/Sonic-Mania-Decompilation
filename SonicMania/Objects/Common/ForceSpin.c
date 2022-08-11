@@ -71,7 +71,7 @@ void ForceSpin_Create(void *data)
         self->updateRange.x = TO_FIXED(32) + abs(self->size * RSDK.Sin256(self->angle) << 11);
         self->updateRange.y = TO_FIXED(32) + abs(self->size * RSDK.Cos256(self->angle) << 11);
         self->visible       = false;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->negAngle      = -self->angle & 0xFF;
     }
 }

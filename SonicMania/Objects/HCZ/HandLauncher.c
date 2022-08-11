@@ -32,14 +32,14 @@ void HandLauncher_LateUpdate(void) {}
 
 void HandLauncher_StaticUpdate(void)
 {
-    foreach_active(HandLauncher, launcher) { RSDK.AddDrawListRef(Zone->playerDrawHigh, RSDK.GetEntitySlot(launcher)); }
+    foreach_active(HandLauncher, launcher) { RSDK.AddDrawListRef(Zone->playerDrawGroup[1], RSDK.GetEntitySlot(launcher)); }
 }
 
 void HandLauncher_Draw(void)
 {
     RSDK_THIS(HandLauncher);
 
-    if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->playerDrawGroup[1]) {
         if (self->state == HandLauncher_State_GrabbedPlayer)
             RSDK.DrawSprite(&self->handAnimator, NULL, false);
     }
@@ -55,7 +55,7 @@ void HandLauncher_Create(void *data)
     RSDK_THIS(HandLauncher);
 
     self->active    = ACTIVE_BOUNDS;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->visible   = true;
     self->drawFX    = FX_FLIP;
 

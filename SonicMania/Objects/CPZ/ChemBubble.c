@@ -34,7 +34,7 @@ void ChemBubble_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible   = true;
         self->active    = ACTIVE_NORMAL;
-        self->drawGroup = Zone->objectDrawHigh - 2;
+        self->drawGroup = Zone->objectDrawGroup[1] - 2;
         self->startPos  = self->position;
 
         self->velocity.y = ZONE_RAND(-0x20000, 0);

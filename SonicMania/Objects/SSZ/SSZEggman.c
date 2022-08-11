@@ -44,7 +44,7 @@ void SSZEggman_Create(void *data)
     if (!SceneInfo->inEditor) {
 
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->drawFX        = FX_FLIP;
         self->alpha         = 0x40;
         self->active        = ACTIVE_BOUNDS;

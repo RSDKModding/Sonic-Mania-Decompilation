@@ -38,7 +38,7 @@ void PuyoIndicator_Create(void *data)
     RSDK_THIS(PuyoIndicator);
 
     self->active    = ACTIVE_NORMAL;
-    self->drawGroup = Zone->objectDrawHigh;
+    self->drawGroup = Zone->objectDrawGroup[1];
     self->startPos  = self->position;
     self->visible   = true;
     self->drawFX    = FX_SCALE | FX_FLIP;

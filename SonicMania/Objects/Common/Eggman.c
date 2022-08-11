@@ -42,7 +42,7 @@ void Eggman_Create(void *data)
             self->active        = ACTIVE_NORMAL;
             self->visible       = true;
             self->drawFX        = FX_FLIP;
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
             self->parent        = (Entity *)data;
             self->updateRange.x = TO_FIXED(64);
             self->updateRange.y = TO_FIXED(128);

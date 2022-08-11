@@ -70,7 +70,7 @@ void PuyoAttack_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->delay     = 16;
         self->radius    = 512;
-        self->drawGroup = Zone->huddrawGroup;
+        self->drawGroup = Zone->hudDrawGroup;
 
         self->playerID = VOID_TO_INT(data);
         self->rotation = self->playerID ? 0x140 : 0x40;

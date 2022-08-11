@@ -62,7 +62,7 @@ void ERZShinobi_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible         = true;
         self->drawFX          = FX_ROTATE | FX_FLIP;
-        self->drawGroup       = Zone->objectDrawLow;
+        self->drawGroup       = Zone->objectDrawGroup[0];
         self->active          = ACTIVE_NORMAL;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;

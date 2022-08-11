@@ -82,7 +82,7 @@ void MetalSonic_Create(void *data)
             self->collisionLayers = Zone->collisionLayers;
 
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &self->metalSonicAnimator, true, 0);
-            self->drawGroup = Zone->objectDrawLow;
+            self->drawGroup = Zone->objectDrawGroup[0];
             self->state     = MetalSonic_State_SetupArena;
         }
     }
@@ -407,7 +407,7 @@ void MetalSonic_Explode(void)
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh + 2;
+            explosion->drawGroup       = Zone->objectDrawGroup[1] + 2;
         }
     }
 }
@@ -539,7 +539,7 @@ void MetalSonic_State_Ready(void)
         self->state = MetalSonic_State_Start;
 
         Vector2 size;
-        RSDK.GetLayerSize(Zone->fgLow, &size, true);
+        RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
         Zone->cameraBoundsR[0] = size.x;
         Zone->cameraBoundsT[0] = 0;
     }
@@ -1134,14 +1134,14 @@ void MetalSonic_State_StartPanelSequence(void)
 #if MANIA_USE_PLUS
         for (int32 i = 48; i < 82; i += 2) {
             if (id > 0)
-                RSDK.CopyTileLayer(Zone->fgLow, 167, i, Zone->fgHigh, 222, 218, 2, 2);
+                RSDK.CopyTileLayer(Zone->fgLayer[0], 167, i, Zone->fgLayer[1], 222, 218, 2, 2);
 
-            RSDK.CopyTileLayer(Zone->fgLow, 169, i, Zone->fgHigh, 222, 138, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 171, i, Zone->fgHigh, 222, 138, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 173, i, Zone->fgHigh, 222, 138, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 175, i, Zone->fgHigh, 222, 138, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 177, i, Zone->fgHigh, 222, 138, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 179, i, Zone->fgHigh, 222, 138, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 169, i, Zone->fgLayer[1], 222, 138, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 171, i, Zone->fgLayer[1], 222, 138, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 173, i, Zone->fgLayer[1], 222, 138, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 175, i, Zone->fgLayer[1], 222, 138, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 177, i, Zone->fgLayer[1], 222, 138, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 179, i, Zone->fgLayer[1], 222, 138, 2, 2);
             ++id;
         }
 #else
@@ -1149,15 +1149,15 @@ void MetalSonic_State_StartPanelSequence(void)
             int32 y = i;
             if (id > 0) {
                 y = 2 * id + 128;
-                RSDK.CopyTileLayer(Zone->fgLow, 167, i, Zone->fgHigh, 222, 218, 2, 2);
+                RSDK.CopyTileLayer(Zone->fgLayer[0], 167, i, Zone->fgLayer[1], 222, 218, 2, 2);
             }
 
-            RSDK.CopyTileLayer(Zone->fgLow, 169, y, Zone->fgHigh, 222, 218, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 171, y, Zone->fgHigh, 222, 218, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 173, y, Zone->fgHigh, 222, 218, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 175, y, Zone->fgHigh, 222, 218, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 177, y, Zone->fgHigh, 222, 218, 2, 2);
-            RSDK.CopyTileLayer(Zone->fgLow, 179, y, Zone->fgHigh, 222, 218, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 169, y, Zone->fgLayer[1], 222, 218, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 171, y, Zone->fgLayer[1], 222, 218, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 173, y, Zone->fgLayer[1], 222, 218, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 175, y, Zone->fgLayer[1], 222, 218, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 177, y, Zone->fgLayer[1], 222, 218, 2, 2);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], 179, y, Zone->fgLayer[1], 222, 218, 2, 2);
             ++id;
         }
 #endif
@@ -1319,7 +1319,7 @@ void MetalSonic_State_PrepareFinalChase(void)
         }
 
         Vector2 size;
-        RSDK.GetLayerSize(Zone->fgLow, &size, true);
+        RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
 
         Zone->cameraBoundsL[0] = 0;
         Zone->cameraBoundsR[0] = size.x;
@@ -1596,7 +1596,7 @@ void MetalSonic_State_Ready_Phase2(void)
         self->state = MetalSonic_State_StartSpikeWallMovement;
 
         Vector2 size;
-        RSDK.GetLayerSize(Zone->fgLow, &size, true);
+        RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
     }
 
     MetalSonic_HandleStageWrap();
@@ -1632,7 +1632,7 @@ void MetalSonic_State_AccelerateSpikeWall(void)
 
     if (wall->velocity.x >= 0x1C000) {
         Vector2 size;
-        RSDK.GetLayerSize(Zone->fgLow, &size, true);
+        RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
 
         for (int i = 0; i < PLAYER_COUNT; ++i) {
             Zone->cameraBoundsL[i] = 0;

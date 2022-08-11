@@ -118,7 +118,7 @@ bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         Vector2 size;
-        RSDK.GetLayerSize(Zone->fgLow, &size, true);
+        RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
         Zone->cameraBoundsR[0] = size.x;
         Zone->cameraBoundsR[1] = size.x;
 

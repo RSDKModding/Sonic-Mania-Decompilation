@@ -60,11 +60,11 @@ void BreakableWall_Create(void *data)
 
         if (!SceneInfo->inEditor) {
             self->visible       = false;
-            self->drawGroup     = Zone->objectDrawHigh;
+            self->drawGroup     = Zone->objectDrawGroup[1];
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = TO_FIXED(128);
             self->updateRange.y = TO_FIXED(128);
-            self->priority      = self->priority == BREAKWALL_PRIO_HIGH ? Zone->fgHigh : Zone->fgLow;
+            self->priority      = self->priority == BREAKWALL_PRIO_HIGH ? Zone->fgLayer[1] : Zone->fgLayer[0];
 
             self->size.x >>= 0x10;
             self->size.y >>= 0x10;
@@ -165,7 +165,7 @@ void BreakableWall_State_FallingTile(void)
     if (--self->timer <= 0) {
         RSDK.SetTile(self->targetLayer, self->tilePos.x, self->tilePos.y, -1);
 
-        if (self->drawGroup < Zone->objectDrawLow && BreakableWall->farPlaneLayer != (uint16)-1) {
+        if (self->drawGroup < Zone->objectDrawGroup[0] && BreakableWall->farPlaneLayer != (uint16)-1) {
             RSDK.SetTile(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, -1);
         }
 
@@ -192,7 +192,7 @@ void BreakableWall_State_Tile(void)
     if (self->velocity.x)
         self->rotation += self->tileRotation;
 
-    if (self->drawGroup >= Zone->objectDrawLow) {
+    if (self->drawGroup >= Zone->objectDrawGroup[0]) {
         if (!RSDK.CheckOnScreen(self, &self->updateRange))
             destroyEntity(self);
     }
@@ -638,20 +638,22 @@ void BreakableWall_Break(EntityBreakableWall *self, uint8 direction)
 
                 case FLIP_Y: {
                     int32 angle = RSDK.ATan2(angleX, curY);
-                    tile->velocity.x += 40 * ((abs(curX) + 3 * abs(curY)) >> 18) * RSDK.Cos256(angle);
-                    tile->velocity.y += 40 * ((abs(curX) + 3 * abs(curY)) >> 18) * RSDK.Sin256(angle);
+                    int32 velocity = (abs(curX) + 3 * abs(curY)) >> 18;
+
+                    tile->velocity.x += 40 * velocity * RSDK.Cos256(angle);
+                    tile->velocity.y += 40 * velocity * RSDK.Sin256(angle);
                     break;
                 }
             }
 
             RSDK.SetTile(self->priority, tileX, tileY, -1);
-            if (self->drawGroup < Zone->objectDrawLow) {
+            if (self->drawGroup < Zone->objectDrawGroup[0]) {
                 if (BreakableWall->farPlaneLayer != (uint16)-1)
                     RSDK.SetTile(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
 
             curX += TO_FIXED(16);
-            angleX += 32;
+            angleX += TO_FIXED(32);
         }
 
         curY += TO_FIXED(16);
@@ -664,7 +666,7 @@ void BreakableWall_GiveScoreBonus(EntityPlayer *player)
     RSDK_THIS(BreakableWall);
 
     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
-    scoreBonus->drawGroup        = Zone->objectDrawHigh;
+    scoreBonus->drawGroup        = Zone->objectDrawGroup[1];
     scoreBonus->animator.frameID = player->scoreBonus;
 
     switch (player->scoreBonus) {

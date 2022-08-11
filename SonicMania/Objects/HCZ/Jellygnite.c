@@ -47,7 +47,7 @@ void Jellygnite_LateUpdate(void) {}
 
 void Jellygnite_StaticUpdate(void)
 {
-    foreach_active(Jellygnite, jellygnite) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntitySlot(jellygnite)); }
+    foreach_active(Jellygnite, jellygnite) { RSDK.AddDrawListRef(Zone->objectDrawGroup[1], RSDK.GetEntitySlot(jellygnite)); }
 }
 
 void Jellygnite_Draw(void)
@@ -64,7 +64,7 @@ void Jellygnite_Create(void *data)
 {
     RSDK_THIS(Jellygnite);
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;
@@ -390,7 +390,7 @@ void Jellygnite_State_Explode(void)
             self->grabbedPlayer = NULL;
         }
 
-        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+        CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         destroyEntity(self);
     }

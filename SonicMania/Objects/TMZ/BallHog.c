@@ -32,7 +32,7 @@ void BallHog_Create(void *data)
     RSDK_THIS(BallHog);
 
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -278,7 +278,7 @@ void BallHog_State_Bomb(void)
 
         if (shouldExplode || !--self->timer) {
             RSDK.PlaySfx(BallHog->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
 
             destroyEntity(self);
         }

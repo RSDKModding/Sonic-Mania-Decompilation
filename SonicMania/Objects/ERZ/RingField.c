@@ -30,7 +30,7 @@ void RingField_Update(void)
                 EntityRing *ring     = CREATE_ENTITY(Ring, &pos, pos.x, pos.y);
                 ring->animator.speed = 512;
                 ring->state          = Ring_State_Normal;
-                ring->drawGroup      = Zone->objectDrawLow;
+                ring->drawGroup      = Zone->objectDrawGroup[0];
                 ring->stateDraw      = Ring_Draw_Normal;
                 ring->moveType       = RING_MOVE_FIXED;
                 RSDK.SetSpriteAnimation(RingField->aniFrames, 0, &ring->animator, true, 0);
@@ -77,7 +77,7 @@ void RingField_Create(void *data)
     RSDK_THIS(RingField);
 
     self->active        = ACTIVE_NORMAL;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = false;
     self->drawFX        = FX_FLIP;

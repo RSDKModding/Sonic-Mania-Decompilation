@@ -23,7 +23,7 @@ void ScrewMobile_StaticUpdate(void)
     foreach_active(ScrewMobile, screwMobile)
     {
         if (screwMobile->state != ScrewMobile_StateDepthCharge_Active) {
-            RSDK.AddDrawListRef(Zone->playerDrawLow - 1, RSDK.GetEntitySlot(screwMobile));
+            RSDK.AddDrawListRef(Zone->playerDrawGroup[0] - 1, RSDK.GetEntitySlot(screwMobile));
         }
     }
 
@@ -66,7 +66,7 @@ void ScrewMobile_Create(void *data)
 
                     case 1:
                         self->active          = ACTIVE_NORMAL;
-                        self->drawGroup       = Zone->huddrawGroup - 2;
+                        self->drawGroup       = Zone->hudDrawGroup - 2;
                         self->updateRange.x   = 0x800000;
                         self->updateRange.y   = 0x800000;
                         self->whirlpoolHeight = 0x3800;
@@ -78,7 +78,7 @@ void ScrewMobile_Create(void *data)
             }
             else {
                 self->active        = ACTIVE_BOUNDS;
-                self->drawGroup     = Zone->huddrawGroup - 1;
+                self->drawGroup     = Zone->hudDrawGroup - 1;
                 self->updateRange.x = 0x800000;
                 self->updateRange.y = 0x800000;
                 self->startPos      = self->position;
@@ -277,7 +277,7 @@ void ScrewMobile_State_PlayerRiding(void)
                 player2->direction      = FLIP_X;
                 player2->position.x     = self->position.x;
                 player2->position.y     = self->position.y - 0x100000;
-                player2->drawGroup      = Zone->playerDrawLow;
+                player2->drawGroup      = Zone->playerDrawGroup[0];
                 player2->tileCollisions = TILECOLLISION_DOWN;
                 player2->direction      = self->direction ^ FLIP_X;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
@@ -445,7 +445,7 @@ void ScrewMobile_State_Idle(void)
         player1->position.x = self->position.x;
         player1->position.y = self->position.y;
         player1->position.y -= 0x100000;
-        player1->drawGroup      = Zone->playerDrawLow;
+        player1->drawGroup      = Zone->playerDrawGroup[0];
         player1->tileCollisions = TILECOLLISION_DOWN;
         player1->direction      = self->direction ^ FLIP_X;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
@@ -479,7 +479,7 @@ void ScrewMobile_State_Idle(void)
                 player2->position.x = self->position.x;
                 player2->position.y = self->position.y;
                 player2->position.y -= 0x100000;
-                player2->drawGroup      = Zone->playerDrawLow;
+                player2->drawGroup      = Zone->playerDrawGroup[0];
                 player2->tileCollisions = TILECOLLISION_DOWN;
                 player2->direction      = self->direction ^ FLIP_X;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
@@ -492,7 +492,7 @@ void ScrewMobile_Draw_ScrewMobile(void)
 {
     RSDK_THIS(ScrewMobile);
 
-    if (SceneInfo->currentDrawGroup == Zone->playerDrawLow - 1) {
+    if (SceneInfo->currentDrawGroup == Zone->playerDrawGroup[0] - 1) {
         self->mobileAnimator.frameID = 1;
         RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
     }
@@ -572,7 +572,7 @@ void ScrewMobile_StateDepthCharge_Active(void)
             if (eggman->state == DiveEggman_StateBomb_Idle || eggman->state == DiveEggman_StateBomb_InWhirlpool
                 || eggman->state == DiveEggman_StateBomb_WhirlpoolRise || eggman->state == DiveEggman_StateBomb_Falling) {
                 if (RSDK.CheckObjectCollisionTouchBox(self, &ScrewMobile->hitboxDepthCharge, eggman, &DiveEggman->hitboxBomb)) {
-                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), eggman->position.x, eggman->position.y)->drawGroup = Zone->objectDrawHigh;
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), eggman->position.x, eggman->position.y)->drawGroup = Zone->objectDrawGroup[1];
                     RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
 
                     EntityWater *water = CREATE_ENTITY(Water, INT_TO_VOID(WATER_BUBBLE), eggman->position.x, eggman->position.y);

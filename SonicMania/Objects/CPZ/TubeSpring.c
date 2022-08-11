@@ -38,7 +38,7 @@ void TubeSpring_Create(void *data)
 
     Spring_Create(NULL);
     RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
-    self->drawGroup      = Zone->objectDrawHigh;
+    self->drawGroup      = Zone->objectDrawGroup[1];
     self->velocity.y     = !self->type ? -0x100000 : -0xA8000;
     self->type           = SPRING_TUBESPRING;
     self->animator.speed = 0;
@@ -108,7 +108,7 @@ bool32 TubeSpring_HandleInteractions(bool32 setState)
 
             sprung = true;
             if (player->state == Player_State_Static || player->state == Player_State_TransportTube) {
-                player->drawGroup      = Zone->playerDrawLow;
+                player->drawGroup      = Zone->playerDrawGroup[0];
                 player->tileCollisions = TILECOLLISION_DOWN;
                 player->interaction    = true;
                 player->applyJumpCap   = false;

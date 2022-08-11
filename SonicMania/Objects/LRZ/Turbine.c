@@ -74,7 +74,7 @@ void Turbine_Create(void *data)
             case TURBINE_WALLDECOR: self->state = StateMachine_None; break;
         }
 
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     }
 }
 
@@ -141,9 +141,9 @@ void Turbine_State_Handles(void)
             player->position.y = self->position.y + (0x1700 * RSDK.Sin512(self->playerAngles[playerID]) + 0x20000);
 
             if ((uint32)(self->playerAngles[playerID] - 0x81) > 0xFF)
-                player->drawGroup = Zone->playerDrawLow;
+                player->drawGroup = Zone->playerDrawGroup[0];
             else
-                player->drawGroup = Zone->playerDrawHigh;
+                player->drawGroup = Zone->playerDrawGroup[1];
 
             player->animator.frameID = (((self->playerAngles[playerID] >> 1) / 21) + 9) % 12;
 

@@ -257,8 +257,8 @@ EntityButton *LRZ2Setup_SetupTagLink(int32 tag, Entity *entity)
 
 void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, int32 *tile, uint8 *flags)
 {
-    int32 tileLow  = RSDK.GetTile(Zone->fgLow, x >> 20, y >> 20);
-    int32 tileHigh = RSDK.GetTile(Zone->fgHigh, x >> 20, y >> 20);
+    int32 tileLow  = RSDK.GetTile(Zone->fgLayer[0], x >> 20, y >> 20);
+    int32 tileHigh = RSDK.GetTile(Zone->fgLayer[1], x >> 20, y >> 20);
 
     int32 flagsLow  = RSDK.GetTileFlags(tileLow, cPlane);
     int32 flagsHigh = RSDK.GetTileFlags(tileHigh, cPlane);

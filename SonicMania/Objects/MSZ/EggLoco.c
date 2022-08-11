@@ -116,7 +116,7 @@ void EggLoco_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0xA00000;
         self->updateRange.y = 0x600000;
@@ -217,7 +217,7 @@ void EggLoco_State_Tooting(void)
         dust->state      = Dust_State_DustPuff_Friction;
         dust->velocity.x = 0x20000;
         dust->velocity.y = -0x18000;
-        dust->drawGroup  = Zone->objectDrawLow;
+        dust->drawGroup  = Zone->objectDrawGroup[0];
     }
 
     if (self->eggmanAnimator.animationID == 11 && self->eggmanAnimator.frameID == self->eggmanAnimator.frameCount - 1)

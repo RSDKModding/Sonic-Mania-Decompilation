@@ -78,7 +78,7 @@ void PaintingEyes_Create(void *data)
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow - 1;
+        self->drawGroup     = Zone->objectDrawGroup[0] - 1;
     }
 }
 

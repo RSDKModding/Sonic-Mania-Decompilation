@@ -39,7 +39,7 @@ void PKingAttack_Create(void *data)
     RSDK_THIS(PKingAttack);
 
     if (!SceneInfo->inEditor) {
-        self->drawGroup     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawGroup[1];
         self->type          = VOID_TO_INT(data);
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
@@ -62,7 +62,7 @@ void PKingAttack_Create(void *data)
                 break;
 
             case PKINGATTACK_TRAIL:
-                self->drawGroup = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawGroup[0];
                 self->visible   = true;
                 self->inkEffect = INK_ADD;
                 self->alpha     = 0xC0;
@@ -74,7 +74,7 @@ void PKingAttack_Create(void *data)
             case PKINGATTACK_ENERGYLINE: break;
 
             case PKINGATTACK_SMALLBULLET:
-                self->drawGroup = Zone->objectDrawLow;
+                self->drawGroup = Zone->objectDrawGroup[0];
                 self->drawFX    = FX_ROTATE;
                 self->visible   = true;
                 RSDK.SetSpriteAnimation(PKingAttack->aniFrames, 11, &self->animator, true, 0);
@@ -205,9 +205,9 @@ void PKingAttack_State_Orbiting(void)
     PKingAttack_CheckPlayerCollisions();
 
     if (self->angle < 0x200)
-        self->drawGroup = Zone->objectDrawLow - 1;
+        self->drawGroup = Zone->objectDrawGroup[0] - 1;
     else
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 }
 
 void PKingAttack_State_OrbitLaunched(void)

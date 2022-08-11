@@ -39,7 +39,7 @@ void Ice_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->drawFX    = FX_FLIP;
-        self->drawGroup = Zone->playerDrawLow + 1;
+        self->drawGroup = Zone->playerDrawGroup[0] + 1;
         self->visible   = true;
 
         if (data) {
@@ -1356,7 +1356,7 @@ void Ice_EditorDraw(void)
     RSDK_THIS(Ice);
 
     self->drawFX        = FX_FLIP;
-    self->drawGroup     = Zone->playerDrawLow + 1;
+    self->drawGroup     = Zone->playerDrawGroup[0] + 1;
     self->visible       = true;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;

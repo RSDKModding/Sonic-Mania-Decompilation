@@ -25,7 +25,7 @@ void CrashTest_LateUpdate(void) {}
 
 void CrashTest_StaticUpdate(void)
 {
-    foreach_active(CrashTest, crashtest) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntitySlot(crashtest)); }
+    foreach_active(CrashTest, crashtest) { RSDK.AddDrawListRef(Zone->playerDrawGroup[0] + 1, RSDK.GetEntitySlot(crashtest)); }
 }
 
 void CrashTest_Draw(void)
@@ -43,7 +43,7 @@ void CrashTest_Draw(void)
         (2 * (self->direction != FLIP_NONE) - 1) * (self->length << 16) + self->startPos.x + 0x340000 * (2 * (self->direction != FLIP_NONE) - 1);
     stopperPos.y = self->startPos.y;
 
-    if (SceneInfo->currentDrawGroup == Zone->playerDrawLow + 1) {
+    if (SceneInfo->currentDrawGroup == Zone->playerDrawGroup[0] + 1) {
         if (self->state != CrashTest_State_Crashed)
             RSDK.DrawSprite(&self->carAnimator, &carPos, false);
     }
@@ -61,7 +61,7 @@ void CrashTest_Create(void *data)
     RSDK_THIS(CrashTest);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -398,7 +398,7 @@ void CrashTest_State_Move(void)
             debris->drawFX |= FX_ROTATE;
 
             debris->rotSpeed        = self->direction == FLIP_NONE ? -8 : 8;
-            debris->drawGroup       = Zone->objectDrawHigh;
+            debris->drawGroup       = Zone->objectDrawGroup[1];
             debris->gravityStrength = 0x3800;
             debris->direction       = self->direction;
             debris->velocity.x      = (RSDK.Rand(-32, 32) << 12) + (self->velocity.x >> 1) * (2 * (self->direction != FLIP_NONE) - 1);
@@ -433,7 +433,7 @@ void CrashTest_State_Crashed(void)
                 int32 x                    = startX + (RSDK.Rand(-16, 16) << 16);
                 int32 y                    = self->startPos.y + (RSDK.Rand(-22, 0) << 16);
                 EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + 2), x, y);
-                explosion->drawGroup       = Zone->objectDrawHigh;
+                explosion->drawGroup       = Zone->objectDrawGroup[1];
             }
         }
 

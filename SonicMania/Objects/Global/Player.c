@@ -111,7 +111,7 @@ void Player_Update(void)
 
         self->collisionFlagH = 0;
         self->collisionFlagV = 0;
-        if (self->collisionLayers & Zone->moveMask) {
+        if (self->collisionLayers & Zone->moveLayerMask) {
             TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
             move->position.x = -self->moveLayerPosition.x >> 16;
             move->position.y = -self->moveLayerPosition.y >> 16;
@@ -141,7 +141,7 @@ void Player_Update(void)
                 self->outerbox = NULL;
             }
 
-            self->collisionLayers &= ~Zone->moveMask;
+            self->collisionLayers &= ~Zone->moveLayerMask;
             if (self->onGround && !self->collisionMode)
                 self->collisionFlagV |= 1;
         }
@@ -221,7 +221,7 @@ void Player_LateUpdate(void)
                 self->state      = Player_State_Death;
 
                 if (!(self->drawFX & FX_SCALE) || self->scale.x == 0x200)
-                    self->drawGroup = Zone->playerDrawHigh;
+                    self->drawGroup = Zone->playerDrawGroup[1];
 
                 if (self->sidekick || globals->gameMode == MODE_COMPETITION) {
                     if (self->camera) {
@@ -612,7 +612,7 @@ void Player_Create(void *data)
         self->active         = ACTIVE_NORMAL;
         self->tileCollisions = TILECOLLISION_DOWN;
         self->visible        = true;
-        self->drawGroup      = Zone->playerDrawLow;
+        self->drawGroup      = Zone->playerDrawGroup[0];
         self->scale.x        = 0x200;
         self->scale.y        = 0x200;
         self->controllerID   = self->playerID + 1;
@@ -1807,7 +1807,7 @@ void Player_ResetBoundaries(EntityPlayer *player)
     Vector2 size;
 
     int32 screen = RSDK.GetEntitySlot(player);
-    RSDK.GetLayerSize(Zone->fgLow, &size, true);
+    RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
 
     Zone->cameraBoundsL[screen]      = 0;
     Zone->cameraBoundsR[screen]      = size.x;
@@ -1857,7 +1857,7 @@ void Player_HandleDeath(EntityPlayer *player)
             player->groundVel        = 0;
             player->tileCollisions   = TILECOLLISION_NONE;
             player->interaction      = false;
-            player->drawGroup        = Zone->playerDrawHigh;
+            player->drawGroup        = Zone->playerDrawGroup[1];
             player->drownTimer       = 0;
             player->active           = ACTIVE_NORMAL;
         }
@@ -1883,7 +1883,7 @@ void Player_HandleDeath(EntityPlayer *player)
         player->groundVel = 0;
         player->tileCollisions = TILECOLLISION_NONE;
         player->interaction = false;
-        player->drawGroup = Zone->playerDrawHigh;
+        player->drawGroup = Zone->playerDrawGroup[1];
         player->drownTimer = 0;
         player->active = ACTIVE_NORMAL;
 #endif
@@ -2136,7 +2136,7 @@ void Player_HandleDeath(EntityPlayer *player)
 }
 void Player_HandleQuickRespawn(EntityPlayer *player)
 {
-    player->drawGroup      = Zone->playerDrawLow;
+    player->drawGroup      = Zone->playerDrawGroup[0];
     player->stateInput     = player->sidekick ? Player_Input_P2_AI : Player_Input_P1;
     player->tileCollisions = TILECOLLISION_DOWN;
     player->interaction    = true;
@@ -2465,7 +2465,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
             player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, badnik->position.x, badnik->position.y);
-        scoreBonus->drawGroup        = Zone->objectDrawHigh;
+        scoreBonus->drawGroup        = Zone->objectDrawGroup[1];
         scoreBonus->animator.frameID = player->scoreBonus;
 
         switch (player->scoreBonus) {
@@ -3569,7 +3569,7 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
 
         Hitbox *sidekickOuterBox = RSDK.GetHitbox(&self->animator, 0);
         Hitbox *sidekickInnerBox = RSDK.GetHitbox(&self->animator, 1);
-        if (self->collisionLayers & Zone->moveMask) {
+        if (self->collisionLayers & Zone->moveLayerMask) {
             TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
             move->position.x = -self->moveLayerPosition.x >> 16;
             move->position.y = -self->moveLayerPosition.y >> 16;
@@ -3595,7 +3595,7 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
 
         Hitbox *leaderOuterBox = Player_GetHitbox(leader);
         Hitbox *leaderInnerBox = Player_GetAltHitbox(leader);
-        if (leader->collisionLayers & Zone->moveMask) {
+        if (leader->collisionLayers & Zone->moveLayerMask) {
             TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
             move->position.x = -leader->moveLayerPosition.x >> 16;
             move->position.y = -leader->moveLayerPosition.y >> 16;
@@ -3652,7 +3652,7 @@ void Player_HandleSidekickRespawn(void)
                 self->drownTimer = 0;
             }
             else {
-                self->drawGroup  = Zone->playerDrawHigh;
+                self->drawGroup  = Zone->playerDrawGroup[1];
                 self->drownTimer = 0;
             }
         }
@@ -5494,7 +5494,7 @@ void Player_State_FlyToPlayer(void)
     if (leader->underwater && leader->position.y < Water->waterLevel)
         self->drawGroup = leader->drawGroup;
     else
-        self->drawGroup = Zone->playerDrawHigh;
+        self->drawGroup = Zone->playerDrawGroup[1];
 
     Entity *parent = self->abilityPtrs[0];
     int32 screenX  = (ScreenInfo->size.x + ScreenInfo->center.x) << 16;
@@ -5579,7 +5579,7 @@ void Player_State_FlyToPlayer(void)
         parent->position.y &= 0xFFFF0000;
     }
     else {
-        self->drawGroup    = Zone->playerDrawHigh;
+        self->drawGroup    = Zone->playerDrawGroup[1];
         parent->position.x = Player->targetLeaderPosition.x;
         parent->position.y = (ScreenInfo->position.y + ScreenInfo->center.y + 32) << 16;
         parent->position.y += (ScreenInfo->center.y - 32) * RSDK.Sin512(self->angle) << 8;
@@ -5670,7 +5670,7 @@ void Player_State_HoldRespawn(void)
             self->tileCollisions  = TILECOLLISION_NONE;
             self->interaction    = false;
             self->forceRespawn    = false;
-            self->drawGroup      = Zone->playerDrawHigh + 1;
+            self->drawGroup      = Zone->playerDrawGroup[1] + 1;
             self->angle          = 128;
 
             if ((self->characterID != ID_TAILS && self->characterID != ID_KNUCKLES) || globals->gameMode == MODE_ENCORE) {
@@ -5847,7 +5847,7 @@ void Player_State_EncoreRespawn(void)
             self->groundVel        = 0;
             self->tileCollisions   = TILECOLLISION_NONE;
             self->interaction      = false;
-            self->drawGroup        = Zone->playerDrawHigh;
+            self->drawGroup        = Zone->playerDrawGroup[1];
             self->drownTimer       = 0;
             self->active           = ACTIVE_NORMAL;
         }
@@ -6330,7 +6330,7 @@ void Player_Input_P1(void)
                     self->velocity.x = 0;
                     self->velocity.y = 0;
                     self->groundVel  = 0;
-                    self->drawGroup  = Zone->playerDrawHigh;
+                    self->drawGroup  = Zone->playerDrawGroup[1];
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIR_WALK, &self->animator, true, 0);
                     RSDK.SetEngineState(ENGINESTATE_REGULAR);
                     self->jumpHold         = false;

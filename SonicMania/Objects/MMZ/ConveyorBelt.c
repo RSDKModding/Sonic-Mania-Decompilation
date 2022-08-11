@@ -36,7 +36,7 @@ void ConveyorBelt_Create(void *data)
     self->visible       = false;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
-    self->drawGroup     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawGroup[1];
 
     if (SceneInfo->inEditor) {
         if (!self->speed)

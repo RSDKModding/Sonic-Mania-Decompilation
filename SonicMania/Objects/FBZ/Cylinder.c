@@ -29,7 +29,7 @@ void Cylinder_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_BOUNDS;
         self->visible   = false;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
 
         switch (self->type) {
             case CYLINDER_TUBE_H:
@@ -497,7 +497,7 @@ void Cylinder_State_InkRoller(void)
                     }
 
                     if (collided) {
-                        player->drawGroup                    = angle >= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
+                        player->drawGroup                    = angle >= 0x200 ? Zone->playerDrawGroup[1] : Zone->playerDrawGroup[0];
                         self->playerAngles[player->playerID] = angle;
                         player->position.y                   = radius * RSDK.Cos1024(angle) + self->position.y;
                         player->abilityValue                 = player->position.y < self->position.y ? 0 : 0x80;
@@ -634,7 +634,7 @@ void Cylinder_State_Pillar(void)
 
                     player->position.x                   = radius * RSDK.Cos1024(angle) + self->position.x;
                     self->playerAngles[player->playerID] = angle;
-                    player->drawGroup                    = angle >= 0x200 ? Zone->playerDrawHigh : Zone->playerDrawLow;
+                    player->drawGroup                    = angle >= 0x200 ? Zone->playerDrawGroup[1] : Zone->playerDrawGroup[0];
 
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRING_CS, &player->animator, true, frame);
                     player->animator.rotationStyle = ROTSTYLE_FULL;

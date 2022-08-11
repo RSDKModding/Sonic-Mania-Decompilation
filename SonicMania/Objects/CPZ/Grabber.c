@@ -40,7 +40,7 @@ void Grabber_Draw(void)
         RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
         if (!SceneInfo->currentScreenID)
-            RSDK.AddDrawListRef(Zone->objectDrawHigh, SceneInfo->entitySlot);
+            RSDK.AddDrawListRef(Zone->objectDrawGroup[1], SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&self->clampAnimator, NULL, false);
@@ -52,7 +52,7 @@ void Grabber_Create(void *data)
     RSDK_THIS(Grabber);
 
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawLow;
+    self->drawGroup = Zone->objectDrawGroup[0];
     self->startPos  = self->position;
     self->startDir  = self->direction;
     self->active    = ACTIVE_BOUNDS;
@@ -179,7 +179,7 @@ void Grabber_HandleExplode(void)
                 self->grabbedPlayer = NULL;
             }
 
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(self);
         }

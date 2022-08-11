@@ -42,7 +42,7 @@ void PuyoGame_Create(void *data)
     RSDK_THIS(PuyoGame);
 
     self->active        = ACTIVE_NORMAL;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = false;
     self->drawFX        = FX_FLIP;

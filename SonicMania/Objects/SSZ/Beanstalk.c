@@ -54,7 +54,7 @@ void Beanstalk_Create(void *data)
     self->active       = ACTIVE_BOUNDS;
     self->visible      = true;
     self->drawFX       = FX_FLIP;
-    self->drawGroup    = Zone->objectDrawLow;
+    self->drawGroup    = Zone->objectDrawGroup[0];
     self->bezCtrlAngle = self->bezCtrlAngle & 0xFF;
 
     self->updateRange.x = 0x1000000;
@@ -375,7 +375,7 @@ void Beanstalk_CheckPlayerCollisions_Chomper(void)
         if (Player_CheckCollisionTouch(player, self, &Beanstalk->hitboxPlant)) {
 #if MANIA_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawHigh;
+                CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawGroup = Zone->objectDrawGroup[1];
                 RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                 self->state = Beanstalk_State_Node;
                 RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->plantAnimator, true, 0);

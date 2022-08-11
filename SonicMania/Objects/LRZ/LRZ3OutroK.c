@@ -82,7 +82,7 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
     EntitySkyTeleporter *teleporter = LRZ3OutroK->teleporter;
 
     Vector2 size;
-    RSDK.GetLayerSize(Zone->fgLow, &size, true);
+    RSDK.GetLayerSize(Zone->fgLayer[0], &size, true);
     if (!host->timer) {
         LRZ3OutroK->prison->notSolid = true;
 

@@ -43,7 +43,7 @@ void TurretSwitch_Create(void *data)
     if (VOID_TO_INT(data) == true) {
         RSDK.SetSpriteAnimation(TurretSwitch->aniFrames, 1, &self->animator, true, 0);
         self->state     = TurretSwitch_State_Projectile;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
     }
     else {
         self->hitbox.left   = -12;
@@ -57,7 +57,7 @@ void TurretSwitch_Create(void *data)
         self->hitboxRange.bottom = 140;
 
         self->state     = TurretSwitch_State_Init;
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
     }
 }
 
@@ -98,7 +98,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
 void TurretSwitch_Break(EntityTurretSwitch *turret, EntityPlayer *player)
 {
     player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
-    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), turret->position.x, turret->position.y)->drawGroup = Zone->objectDrawHigh;
+    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ITEMBOX), turret->position.x, turret->position.y)->drawGroup = Zone->objectDrawGroup[1];
 
     RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
 

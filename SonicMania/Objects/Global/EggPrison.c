@@ -193,7 +193,7 @@ void EggPrison_Create(void *data)
             self->updateRange.x = TO_FIXED(128);
             self->updateRange.y = TO_FIXED(128);
             self->visible       = true;
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
         }
     }
     else {
@@ -335,7 +335,7 @@ void EggPrison_State_Opened(void)
     debris->gravityStrength = 0x3800;
     debris->rotSpeed        = -4;
     debris->drawFX          = FX_ROTATE;
-    debris->drawGroup       = Zone->objectDrawHigh;
+    debris->drawGroup       = Zone->objectDrawGroup[1];
     debris->updateRange.x   = TO_FIXED(128);
     debris->updateRange.y   = TO_FIXED(128);
 
@@ -346,7 +346,7 @@ void EggPrison_State_Opened(void)
     debris->gravityStrength = 0x3800;
     debris->rotSpeed        = 8;
     debris->drawFX          = FX_ROTATE;
-    debris->drawGroup       = Zone->objectDrawHigh;
+    debris->drawGroup       = Zone->objectDrawGroup[1];
     debris->updateRange.x   = TO_FIXED(128);
     debris->updateRange.y   = TO_FIXED(128);
 
@@ -357,7 +357,7 @@ void EggPrison_State_Opened(void)
     debris->gravityStrength = 0x3800;
     debris->rotSpeed        = 4;
     debris->drawFX          = FX_ROTATE;
-    debris->drawGroup       = Zone->objectDrawHigh;
+    debris->drawGroup       = Zone->objectDrawGroup[1];
     debris->updateRange.x   = TO_FIXED(128);
     debris->updateRange.y   = TO_FIXED(128);
 }
@@ -400,7 +400,7 @@ void EggPrison_State_Explode(void)
         int32 x                    = self->position.x + (RSDK.Rand(-24, 24) << 16);
         int32 y                    = self->position.y + (RSDK.Rand(-24, 24) << 16);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY), x, y);
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
         RSDK.PlaySfx(EggPrison->sfxDestroy, false, 255);
     }
 

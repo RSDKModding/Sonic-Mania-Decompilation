@@ -317,7 +317,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
             ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->center.y) << 16;
             ruby->velocity.y  = 0;
             ruby->isPermanent = true;
-            ruby->drawGroup   = Zone->objectDrawHigh;
+            ruby->drawGroup   = Zone->objectDrawGroup[1];
             ruby->active      = ACTIVE_NORMAL;
             ruby->state       = PhantomRuby_State_MoveToPos;
         }
@@ -515,7 +515,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
                 player->right     = true;
                 player->groundVel = 0x40000;
                 player->topSpeed  = 0x50000;
-                player->drawGroup = Zone->playerDrawHigh;
+                player->drawGroup = Zone->playerDrawGroup[1];
             }
         }
     }

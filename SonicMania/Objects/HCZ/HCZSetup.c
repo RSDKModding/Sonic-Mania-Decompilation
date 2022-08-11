@@ -54,7 +54,7 @@ void HCZSetup_StaticUpdate(void)
         RSDK.DrawAniTiles(HCZSetup->pendulumAniTiles, 874, 0, 16 * pendulumAniTileFrame, 32, 16);
 
     if (!(Zone->timer & 1)) {
-        for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) RSDK.GetTileLayer(layerID)->deformationOffsetW++;
+        for (int32 layerID = Zone->fgLayer[0]; layerID <= Zone->fgLayer[1]; ++layerID) RSDK.GetTileLayer(layerID)->deformationOffsetW++;
     }
 
 #if MANIA_USE_PLUS
@@ -83,7 +83,7 @@ void HCZSetup_StaticUpdate(void)
         if (player->state != Player_State_Static) {
             Hitbox *hitbox = Player_GetHitbox(player);
             uint16 tile =
-                RSDK.GetTile(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
+                RSDK.GetTile(Zone->fgLayer[1], player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
 
             if (((tile >= 226 && tile <= 224) || (tile >= 880 && tile <= 888)) && player->collisionPlane == 1) {
                 if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
@@ -139,7 +139,7 @@ void HCZSetup_StageLoad(void)
         HCZSetup->background2Layer->scanlineCallback = HCZSetup_Scanline_WaterLine;
 
     // All Layers between FG Low & FG High get foreground water deformation applied
-    for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) {
+    for (int32 layerID = Zone->fgLayer[0]; layerID <= Zone->fgLayer[1]; ++layerID) {
         TileLayer *layer   = RSDK.GetTileLayer(layerID);
         int32 *deformDataW = layer->deformationDataW;
 
@@ -192,7 +192,7 @@ void HCZSetup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_ROCKY;
 
     RSDK.SetDrawGroupProperties(0, false, Water_DrawHook_ApplyWaterPalette);
-    RSDK.SetDrawGroupProperties(Zone->huddrawGroup, false, Water_DrawHook_RemoveWaterPalette);
+    RSDK.SetDrawGroupProperties(Zone->hudDrawGroup, false, Water_DrawHook_RemoveWaterPalette);
 
     Water->waterPalette = 1;
 

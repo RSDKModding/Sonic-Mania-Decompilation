@@ -53,7 +53,7 @@ void SpinSign_Create(void *data)
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_SCALE;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->scale.x       = 0x200;
         self->scale.y       = 0x200;
         self->state         = SpinSign_State_Spinning;

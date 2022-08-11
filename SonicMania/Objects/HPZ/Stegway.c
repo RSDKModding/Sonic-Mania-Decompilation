@@ -41,7 +41,7 @@ void Stegway_Create(void *data)
 {
     RSDK_THIS(Stegway);
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->drawFX        = FX_FLIP;

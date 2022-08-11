@@ -46,7 +46,7 @@ void PhantomHand_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible            = true;
-        self->drawGroup          = Zone->objectDrawLow;
+        self->drawGroup          = Zone->objectDrawGroup[0];
         self->parent             = (Entity *)data;
         self->targetPos          = self->position;
         self->active             = ACTIVE_NORMAL;
@@ -274,7 +274,7 @@ void PhantomHand_State_Clasp(void)
     RSDK.ProcessAnimation(&self->handAnimator);
 
     if (self->handAnimator.frameID == 5)
-        self->drawGroup = Zone->objectDrawHigh;
+        self->drawGroup = Zone->objectDrawGroup[1];
 
     if (self->handAnimator.frameID == 10) {
         RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 2, &self->crystalAnimator, true, 0);

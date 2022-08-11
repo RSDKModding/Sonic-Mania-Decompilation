@@ -37,7 +37,7 @@ void DoorTrigger_Update(void)
             shard->state     = Debris_State_Move;
             shard->drawFX    = FX_FLIP;
             shard->direction = self->direction;
-            shard->drawGroup = Zone->objectDrawHigh - 1;
+            shard->drawGroup = Zone->objectDrawGroup[1] - 1;
             RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, anim, &shard->animator, true, 0);
         }
     }
@@ -112,11 +112,11 @@ void DoorTrigger_Update(void)
                         shard->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                         shard->drawFX     = FX_FLIP;
                         shard->direction  = i & 3;
-                        shard->drawGroup  = Zone->objectDrawHigh;
+                        shard->drawGroup  = Zone->objectDrawGroup[1];
                         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &shard->animator, true, RSDK.Rand(0, 4));
                     }
 
-                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), spawnX, spawnY)->drawGroup = Zone->objectDrawHigh;
+                    CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_ENEMY), spawnX, spawnY)->drawGroup = Zone->objectDrawGroup[1];
                 }
             }
             else {
@@ -160,7 +160,7 @@ void DoorTrigger_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawGroup[1];
         self->updateRange.y = 0x800000;
         self->updateRange.x = 0x800000;
         RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 0, &self->baseAnimator, true, 0);
@@ -204,7 +204,7 @@ void DoorTrigger_EditorDraw(void)
 
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawHigh;
+    self->drawGroup     = Zone->objectDrawGroup[1];
     self->updateRange.y = 0x800000;
     self->updateRange.x = 0x800000;
     RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 0, &self->baseAnimator, true, 0);

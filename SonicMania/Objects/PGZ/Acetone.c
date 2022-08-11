@@ -40,7 +40,7 @@ void Acetone_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
-    self->drawGroup     = Zone->playerDrawLow + 1;
+    self->drawGroup     = Zone->playerDrawGroup[0] + 1;
     self->updateRange.x = 0x100000;
     self->updateRange.y = 0x100000;
 

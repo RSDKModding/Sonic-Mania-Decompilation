@@ -29,7 +29,7 @@ void OOZ2Outro_Update(void)
                 layer->scrollInfo[0].scrollPos = -self->scrollOffset.x;
             }
 
-            player->collisionLayers |= Zone->moveMask;
+            player->collisionLayers |= Zone->moveLayerMask;
             player->moveLayerPosition.x = -(int32)(self->moveOffset.x & 0xFFFF0000);
             player->moveLayerPosition.y = -(int32)(self->moveOffset.y & 0xFFFF0000);
         }

@@ -30,7 +30,7 @@ void DERobot_Create(void *data)
     RSDK_THIS(DERobot);
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             int32 slotID        = RSDK.GetEntitySlot(self);
@@ -106,7 +106,7 @@ void DERobot_Create(void *data)
                     self->active     = ACTIVE_NORMAL;
                     self->visible    = true;
                     self->drawFX     = FX_FLIP;
-                    self->drawGroup  = Zone->objectDrawHigh;
+                    self->drawGroup  = Zone->objectDrawGroup[1];
                     self->velocity.x = 0x20000;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &self->altAnimator, true, 0);
                     self->state     = DERobot_State_Target;
@@ -266,12 +266,12 @@ void DERobot_HandleTerrainDestruction(void)
 
         bool32 playSfx = false;
         for (int32 i = 0; i < 32; ++i) {
-            uint16 tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
+            uint16 tile = RSDK.GetTile(Zone->fgLayer[1], tx, ty);
             if (tile != (uint16)-1) {
-                RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
+                RSDK.SetTile(Zone->fgLayer[1], tx, ty, -1);
 
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                wall->drawGroup           = Zone->objectDrawHigh;
+                wall->drawGroup           = Zone->objectDrawGroup[1];
                 wall->visible             = true;
                 wall->tileInfo            = tile;
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
@@ -299,12 +299,12 @@ void DERobot_DestroyTerrainFinal(void)
     for (int32 y = 0; y < 8; ++y) {
         int32 spawnY = (ty << 20) + 0x80000;
         for (int32 x = 0; x < 32; ++x) {
-            uint16 tile = RSDK.GetTile(Zone->fgLow, tx, ty);
+            uint16 tile = RSDK.GetTile(Zone->fgLayer[0], tx, ty);
             if (tile != (uint16)-1) {
-                RSDK.SetTile(Zone->fgLow, tx, ty, -1);
+                RSDK.SetTile(Zone->fgLayer[0], tx, ty, -1);
 
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                wall->drawGroup           = Zone->objectDrawHigh;
+                wall->drawGroup           = Zone->objectDrawGroup[1];
                 wall->visible             = true;
                 wall->tileInfo            = tile;
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
@@ -325,11 +325,11 @@ void DERobot_DestroyTerrainFinal(void)
     for (int32 y = 0; y < 32; ++y) {
         int32 spawnY = (ty << 20) + 0x80000;
         for (int32 x = 0; x < 32; ++x) {
-            uint16 tile = RSDK.GetTile(Zone->fgHigh, tx, ty);
+            uint16 tile = RSDK.GetTile(Zone->fgLayer[1], tx, ty);
             if (tile != (uint16)-1) {
-                RSDK.SetTile(Zone->fgHigh, tx, ty, -1);
+                RSDK.SetTile(Zone->fgLayer[1], tx, ty, -1);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, INT_TO_VOID(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                wall->drawGroup           = Zone->objectDrawHigh;
+                wall->drawGroup           = Zone->objectDrawGroup[1];
                 wall->visible             = true;
                 wall->tileInfo            = tile;
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
@@ -383,7 +383,7 @@ void DERobot_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-48, 48) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-48, 48) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -503,7 +503,7 @@ bool32 DERobot_CheckRubyGrabbed(void)
                 grabbedRuby      = true;
                 ruby->position.x = self->position.x;
                 ruby->position.y = self->position.y;
-                ruby->drawGroup  = Zone->objectDrawLow;
+                ruby->drawGroup  = Zone->objectDrawGroup[0];
                 ruby->state      = PhantomRuby_State_RotateToOrigin;
             }
         }
@@ -799,7 +799,7 @@ void DERobot_State_BombLanded(void)
         self->visible              = false;
         self->state                = DERobot_State_BombExplode;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x80000);
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
         RSDK.PlaySfx(DERobot->sfxExplosion, false, 255);
     }
     else {
@@ -821,7 +821,7 @@ void DERobot_State_BombExplode(void)
 
     if (!(self->timer & 7)) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), self->position.x, self->position.y);
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
     }
 
     if (self->timer == 32)
@@ -1302,7 +1302,7 @@ void DERobot_State_Finish(void)
         int32 x                    = (RSDK.Rand(-48, 48) << 16) + self->position.x;
         int32 y                    = (RSDK.Rand(-48, 48) << 16) + self->position.y;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
     }
 
     foreach_active(Player, player)
@@ -1360,7 +1360,7 @@ void DERobot_State_CutsceneExplode(void)
         int32 x                    = (RSDK.Rand(-32, 32) << 16) + self->position.x;
         int32 y                    = (RSDK.Rand(-32, 32) << 16) + self->position.y;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawGroup       = Zone->objectDrawHigh;
+        explosion->drawGroup       = Zone->objectDrawGroup[1];
     }
 }
 

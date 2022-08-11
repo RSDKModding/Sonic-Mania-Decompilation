@@ -32,13 +32,13 @@ void Spiny_Create(void *data)
     RSDK_THIS(Spiny);
 
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
     if (data) {
-        self->drawGroup = Zone->objectDrawLow - 1;
+        self->drawGroup = Zone->objectDrawGroup[0] - 1;
         RSDK.SetSpriteAnimation(Spiny->aniFrames, 4, &self->animator, true, 0);
         self->state = Spiny_State_Shot;
     }

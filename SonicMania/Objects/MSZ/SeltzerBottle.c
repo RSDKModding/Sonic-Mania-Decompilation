@@ -92,7 +92,7 @@ void SeltzerBottle_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawGroup     = Zone->objectDrawHigh;
+        self->drawGroup     = Zone->objectDrawGroup[1];
         self->alpha         = 0xFF;
         self->timer         = self->sprayTime;
         self->waterLevel    = 0x400000;
@@ -130,7 +130,7 @@ void SeltzerBottle_State_Spraying(void)
     spray->position.x += self->direction == FLIP_X ? 0x300000 : -0x300000;
     spray->oscillateRadius = RSDK.Rand(0xA00, 0xC00);
     spray->offsetAngle     = RSDK.Rand(0, 0x100);
-    spray->drawGroup       = Zone->playerDrawLow;
+    spray->drawGroup       = Zone->playerDrawGroup[0];
     spray->nodeSlot        = SceneInfo->entitySlot + 1;
 
     int32 storeX = self->position.x;

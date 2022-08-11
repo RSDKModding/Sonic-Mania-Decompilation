@@ -29,7 +29,7 @@ void Chopper_Create(void *data)
 {
     RSDK_THIS(Chopper);
     self->visible       = true;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->active        = ACTIVE_BOUNDS;

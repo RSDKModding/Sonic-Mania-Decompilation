@@ -57,7 +57,7 @@ void FernParallax_Create(void *data)
     RSDK_THIS(FernParallax);
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawGroup = Zone->objectDrawHigh + 1;
+    self->drawGroup = Zone->objectDrawGroup[1] + 1;
     RSDK.SetSpriteAnimation(FernParallax->aniFrames, self->aniID, &self->animator, true, 0);
 }
 

@@ -22,14 +22,14 @@ void SkyTeleporter_LateUpdate(void) {}
 
 void SkyTeleporter_StaticUpdate(void)
 {
-    foreach_active(SkyTeleporter, teleporter) { RSDK.AddDrawListRef(Zone->playerDrawHigh + 1, RSDK.GetEntitySlot(teleporter)); }
+    foreach_active(SkyTeleporter, teleporter) { RSDK.AddDrawListRef(Zone->playerDrawGroup[1] + 1, RSDK.GetEntitySlot(teleporter)); }
 }
 
 void SkyTeleporter_Draw(void)
 {
     RSDK_THIS(SkyTeleporter);
 
-    if (SceneInfo->currentDrawGroup == Zone->objectDrawLow)
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawGroup[0])
         RSDK.DrawSprite(&self->animator, NULL, false);
     else
         SkyTeleporter_DrawTeleportBeam();
@@ -40,7 +40,7 @@ void SkyTeleporter_Create(void *data)
     RSDK_THIS(SkyTeleporter);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawGroup     = Zone->objectDrawLow;
+    self->drawGroup     = Zone->objectDrawGroup[0];
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

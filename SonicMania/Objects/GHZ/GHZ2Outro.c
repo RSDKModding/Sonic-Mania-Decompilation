@@ -146,7 +146,7 @@ bool32 GHZ2Outro_Cutscene_HoleSceneFadeIn(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         }
 
-        foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawGroup = Zone->objectDrawLow; }
+        foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawGroup = Zone->objectDrawGroup[0]; }
 
         foreach_all(DERobot, robot)
         {
@@ -378,12 +378,12 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
-        fxRuby->drawGroup = Zone->playerDrawHigh;
+        fxRuby->drawGroup = Zone->playerDrawGroup[1];
         self->fxRuby      = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
-        player1->drawGroup = Zone->playerDrawHigh + 1;
+        player1->drawGroup = Zone->playerDrawGroup[1] + 1;
         if (player2->classID == Player->classID)
-            player2->drawGroup = Zone->playerDrawHigh + 1;
+            player2->drawGroup = Zone->playerDrawGroup[1] + 1;
     }
 
     if (!host->values[0]) {

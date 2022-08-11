@@ -80,7 +80,7 @@ void TimeTravelSetup_Particle_TimeSparkle(EntityDebris *debris)
 
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
-    debris->drawGroup     = Zone->objectDrawHigh;
+    debris->drawGroup     = Zone->objectDrawGroup[1];
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -17,9 +17,9 @@ void TMZBarrier_Update(void)
         TMZBarrier->clearedBarriers |= 1 << self->iD;
 
         if (self->type)
-            RSDK.CopyTileLayer(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], self->position.x >> 20, self->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
         else
-            RSDK.CopyTileLayer(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
+            RSDK.CopyTileLayer(Zone->fgLayer[0], self->position.x >> 20, self->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
 
         destroyEntity(self);
     }
@@ -63,9 +63,9 @@ void TMZBarrier_StageLoad(void)
         {
             if ((1 << barrier->iD) & TMZBarrier->clearedBarriers) {
                 if (barrier->type)
-                    RSDK.CopyTileLayer(Zone->fgLow, barrier->position.x >> 20, barrier->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
+                    RSDK.CopyTileLayer(Zone->fgLayer[0], barrier->position.x >> 20, barrier->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
                 else
-                    RSDK.CopyTileLayer(Zone->fgLow, barrier->position.x >> 20, barrier->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
+                    RSDK.CopyTileLayer(Zone->fgLayer[0], barrier->position.x >> 20, barrier->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
 
                 destroyEntity(barrier);
             }

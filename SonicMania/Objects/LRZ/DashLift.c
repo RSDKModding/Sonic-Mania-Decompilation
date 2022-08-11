@@ -30,7 +30,7 @@ void DashLift_Create(void *data)
     Platform_Create(NULL);
 
     if (!SceneInfo->inEditor) {
-        self->drawGroup = Zone->playerDrawHigh;
+        self->drawGroup = Zone->playerDrawGroup[1];
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 4);
 
         self->drawPos.y += self->startOff << 15;

@@ -57,7 +57,7 @@ void MeterDroid_Create(void *data)
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             self->health        = 6;
-            self->drawGroup     = Zone->objectDrawLow;
+            self->drawGroup     = Zone->objectDrawGroup[0];
             self->state         = MeterDroid_State_Init;
 
             RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
@@ -193,7 +193,7 @@ void MeterDroid_Hit(void)
             int32 x = RSDK.Rand(MeterDroid->hitboxBoss.left, MeterDroid->hitboxBoss.right) << 16;
             int32 y = RSDK.Rand(MeterDroid->hitboxBoss.top, MeterDroid->hitboxBoss.bottom) << 16;
 
-            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawGroup = Zone->objectDrawHigh;
+            CREATE_ENTITY(Explosion, INT_TO_VOID(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawGroup = Zone->objectDrawGroup[1];
             self->stateDraw                                                                                              = MeterDroid_Draw_Normal;
         }
 
@@ -227,7 +227,7 @@ void MeterDroid_Explode(void)
             int32 x                    = (RSDK.Rand(-208, 208) + ScreenInfo->center.x + ScreenInfo->position.x) << 16;
             int32 y                    = (RSDK.Rand(-112, 112) + ScreenInfo->center.y + ScreenInfo->position.y) << 16;
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, INT_TO_VOID(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawGroup       = Zone->objectDrawHigh;
+            explosion->drawGroup       = Zone->objectDrawGroup[1];
         }
     }
 }
@@ -588,7 +588,7 @@ void MeterDroid_State_MoveToValve(void)
 
     if (rx * rx + ry * ry < 96) {
         self->direction = self->targetValve->direction;
-        self->drawGroup = Zone->objectDrawLow - 1;
+        self->drawGroup = Zone->objectDrawGroup[0] - 1;
         self->state     = MeterDroid_State_MoveIntoBG;
     }
 
@@ -681,7 +681,7 @@ void MeterDroid_State_WatchPlatformsPopUp(void)
 
         self->origin.x  = self->position.x;
         self->origin.y  = self->position.y;
-        self->drawGroup = Zone->objectDrawLow;
+        self->drawGroup = Zone->objectDrawGroup[0];
         self->state     = MeterDroid_State_PickMoveDir;
         self->stateDraw = MeterDroid_Draw_Normal;
     }

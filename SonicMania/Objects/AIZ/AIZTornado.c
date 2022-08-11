@@ -49,7 +49,7 @@ void AIZTornado_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->drawFX        = FX_FLIP;
-        self->drawGroup     = Zone->objectDrawLow;
+        self->drawGroup     = Zone->objectDrawGroup[0];
         self->movePos.x     = self->position.x;
         self->movePos.y     = self->position.y;
         self->turnAngle     = 48;
