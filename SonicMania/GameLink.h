@@ -267,8 +267,8 @@ typedef struct {
 #endif
 
 typedef struct {
-    char engineInfo[0x40];
-    char gameSubname[0x100];
+    char gameTitle[0x40];
+    char gameSubtitle[0x100];
     char version[0x10];
 #if !RETRO_REV02
     uint8 platform;
@@ -326,12 +326,12 @@ typedef struct {
 
     // Rev01 hasn't split these into different structs yet
 #if RETRO_REV01
-    InputState bumperL;
-    InputState bumperR;
+    InputState keyBumperL;
+    InputState keyBumperR;
     InputState keyTriggerL;
     InputState keyTriggerR;
-    InputState stickL;
-    InputState stickR;
+    InputState keyStickL;
+    InputState keyStickR;
 #endif
 } RSDKControllerState;
 
@@ -540,8 +540,8 @@ typedef struct {
 typedef struct {
     uint8 floorMasks[TILE_SIZE];
     uint8 lWallMasks[TILE_SIZE];
-    uint8 roofMasks[TILE_SIZE];
     uint8 rWallMasks[TILE_SIZE];
+    uint8 roofMasks[TILE_SIZE];
 } CollisionMask;
 
 typedef struct {
@@ -551,6 +551,25 @@ typedef struct {
     uint8 roofAngle;
     uint8 flag;
 } TileInfo;
+#endif
+
+#if RETRO_REV02
+typedef enum {
+    LEADERBOARD_LOAD_INIT,
+    LEADERBOARD_LOAD_PREV,
+    LEADERBOARD_LOAD_NEXT,
+} LeaderboardLoadTypes;
+
+typedef struct {
+    int32 start;
+    int32 length;
+} LeaderboardAvail;
+
+typedef struct {
+    uint8 statID;
+    const char *name;
+    void *data[64];
+} StatInfo;
 #endif
 
 typedef struct {
@@ -568,11 +587,6 @@ typedef struct {
 } LeaderboardID;
 
 typedef struct {
-    int32 start;
-    int32 length;
-} LeaderboardAvail;
-
-typedef struct {
     String username;
 #if RETRO_REV02
     String userID;
@@ -582,12 +596,6 @@ typedef struct {
     bool32 isUser;
     int32 status;
 } LeaderboardEntry;
-
-typedef struct {
-    uint8 statID;
-    const char *name;
-    void *data[64];
-} StatInfo;
 
 // -------------------------
 // ENUMS
@@ -1163,15 +1171,16 @@ typedef struct {
     // Registration & Core
 #if RETRO_REV0U
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size, void (*initCB)(void *globals));
-    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
-                           void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
-                           void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), void (*staticLoad)(void *staticVars),
-                           const char *inherited);
+    void (*RegisterObject)(Object **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
+                           uint32 modClassSize, void (*update)(void), void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void),
+                           void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void),
+                           void (*serialize)(void), void (*staticLoad)(void *staticVars), const char *inherited);
 #else
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint32 size);
-    void (*RegisterObject)(Object **staticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize, void (*update)(void),
-                           void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void),
-                           void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
+    void (*RegisterObject)(Object **staticVars, void **modStaticVars, const char *name, uint32 entityClassSize, uint32 staticClassSize,
+                           uint32 modClassSize, void (*update)(void), void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void),
+                           void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void),
+                           void (*serialize)(void), const char *inherited);
 #endif
     void *RegisterObject_STD;
     void (*RegisterObjectHook)(Object **staticVars, const char *staticName);
@@ -1358,8 +1367,8 @@ typedef struct {
     void *(*GetEntity)(uint16 slot);
     int32 (*GetEntitySlot)(void *entity);
     int32 (*GetEntityCount)(uint16 classID, bool32 isActive);
-    int32 (*GetDrawListRefSlot)(uint8 drawGroup, uint16 entitySlot);
-    void *(*GetDrawListRef)(uint8 drawGroup, uint16 entitySlot);
+    int32 (*GetDrawListRefSlot)(uint8 drawGroup, uint16 listPos);
+    void *(*GetDrawListRef)(uint8 drawGroup, uint16 listPos);
     void (*ResetEntity)(void *entity, uint16 classID, void *data);
     void (*ResetEntitySlot)(uint16 slot, uint16 classID, void *data);
     Entity *(*CreateEntity)(uint16 classID, void *data, int32 x, int32 y);
@@ -1378,7 +1387,7 @@ typedef struct {
 #endif
     bool32 (*CheckValidScene)(void);
     int32 (*CheckSceneFolder)(const char *folderName);
-    int32 (*LoadScene)(void);
+    void (*LoadScene)(void);
     int32 (*FindObject)(const char *name);
 
     // Cameras
@@ -1420,11 +1429,11 @@ typedef struct {
     void (*SetIdentityMatrix)(Matrix *matrix);
     void (*MatrixMultiply)(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
     void (*MatrixTranslateXYZ)(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity);
-    void (*MatrixScaleXYZ)(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ);
+    void (*MatrixScaleXYZ)(Matrix *matrix, int32 x, int32 y, int32 z);
     void (*MatrixRotateX)(Matrix *matrix, int32 angle);
     void (*MatrixRotateY)(Matrix *matrix, int32 angle);
     void (*MatrixRotateZ)(Matrix *matrix, int32 angle);
-    void (*MatrixRotateXYZ)(Matrix *matrix, int32 angleX, int32 angleY, int32 angleZ);
+    void (*MatrixRotateXYZ)(Matrix *matrix, int32 x, int32 y, int32 z);
     void (*MatrixInverse)(Matrix *dest, Matrix *matrix);
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
 
@@ -1449,7 +1458,7 @@ typedef struct {
 #endif
 
     // Spritesheets
-    int16 (*LoadSpriteSheet)(const char *path, Scopes scope);
+    uint16 (*LoadSpriteSheet)(const char *filePath, Scopes scope);
 
     // Palettes & Colors
 #if RETRO_REV02
@@ -1468,7 +1477,7 @@ typedef struct {
     void (*RotatePalette)(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32 right);
     void (*SetLimitedFade)(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
-    void (*BlendColors)(uint8 destBankID, uint32 *srcColorsA, uint32 *srcColorsB, int32 blendAmount, int32 startIndex, int32 count);
+    void (*BlendColors)(uint8 destBankID, color *srcColorsA, color *srcColorsB, int32 blendAmount, int32 startIndex, int32 count);
 #endif
 
     // Drawing
@@ -1481,7 +1490,7 @@ typedef struct {
     void (*DrawBlendedFace)(Vector2 *vertices, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheetID, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *animator, Vector2 *position, String *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
+    void (*DrawText)(Animator *animator, Vector2 *position, String *string, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
                      Vector2 *charOffsets, bool32 screenRelative);
     void (*DrawTile)(uint16 *tiles, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(uint16 dest, uint16 src, uint16 count);
@@ -1505,17 +1514,17 @@ typedef struct {
     void (*Draw3DScene)(uint16 sceneIndex);
 
     // Sprite Animations & Frames
-    uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
-    uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 listCount, Scopes scope);
+    uint16 (*LoadSpriteAnimation)(const char *filePath, Scopes scope);
+    uint16 (*CreateSpriteAnimation)(const char *filePath, uint32 frameCount, uint32 listCount, Scopes scope);
     void (*SetSpriteAnimation)(uint16 aniFrames, uint16 listID, Animator *animator, bool32 forceApply, int16 frameID);
     void (*EditSpriteAnimation)(uint16 aniFrames, uint16 listID, const char *name, int32 frameOffset, uint16 frameCount, int16 speed, uint8 loopIndex,
-                                uint8 rotationFlag);
-    void (*SetSpriteString)(uint16 aniFrames, uint16 listID, String *info);
+                                uint8 rotationStyle);
+    void (*SetSpriteString)(uint16 aniFrames, uint16 listID, String *string);
     uint16 (*FindSpriteAnimation)(uint16 aniFrames, const char *name);
     SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 listID, int32 frameID);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);
     int16 (*GetFrameID)(Animator *animator);
-    int32 (*GetStringWidth)(uint16 aniFrames, uint16 listID, String *info, int32 startIndex, int32 length, int32 spacing);
+    int32 (*GetStringWidth)(uint16 aniFrames, uint16 listID, String *string, int32 startIndex, int32 length, int32 spacing);
     void (*ProcessAnimation)(Animator *animator);
 
     // Tile Layers
@@ -1531,7 +1540,7 @@ typedef struct {
 
     // Object & Tile Collisions
     bool32 (*CheckObjectCollisionTouchBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox);
-    bool32 (*CheckObjectCollisionTouchCircle)(void *thisEntity, int32 thisOffset, void *otherEntity, int32 otherOffset);
+    bool32 (*CheckObjectCollisionTouchCircle)(void *thisEntity, int32 thisRadius, void *otherEntity, int32 otherRadius);
     uint8 (*CheckObjectCollisionBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
     bool32 (*CheckObjectCollisionPlatform)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
     bool32 (*ObjectTileCollision)(void *entity, uint16 collisionLayers, uint8 collisionMode, uint8 collisionPlane, int32 xOffset, int32 yOffset,
@@ -1578,15 +1587,15 @@ typedef struct {
     uint32 (*GetChannelPos)(uint32 channel);
 
     // Videos & "HD Images"
-    void (*LoadVideo)(const char *filename, double startDelay, bool32 (*skipCallback)(void));
-    bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
+    bool32 (*LoadVideo)(const char *filename, double startDelay, bool32 (*skipCallback)(void));
+    bool32 (*LoadImage)(const char *filename, double displayLength, double fadeSpeed, bool32 (*skipCallback)(void));
 
     // Input
 #if RETRO_REV02
-    int32 (*GetInputDeviceID)(uint8 inputSlot);
-    int32 (*GetFilteredInputDeviceID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
+    uint32 (*GetInputDeviceID)(uint8 inputSlot);
+    uint32 (*GetFilteredInputDeviceID)(bool32 confirmOnly, bool32 unassignedOnly, uint32 maxInactiveTimer);
     int32 (*GetInputDeviceType)(uint32 deviceID);
-    int32 (*IsInputDeviceAssigned)(uint32 deviceID);
+    bool32 (*IsInputDeviceAssigned)(uint32 deviceID);
     int32 (*GetInputDeviceUnknown)(uint32 deviceID);
     int32 (*InputDeviceUnknown1)(uint32 deviceID, int32 unknown1, int32 unknown2);
     int32 (*InputDeviceUnknown2)(uint32 deviceID, int32 unknown1, int32 unknown2);
@@ -1602,8 +1611,8 @@ typedef struct {
 #endif
 
     // User File Management
-    int32 (*LoadUserFile)(const char *fileName, void *buffer, uint32 size); // load user file from exe dir
-    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save user file to exe dir
+    bool32 (*LoadUserFile)(const char *fileName, void *buffer, uint32 size); // load user file from exe dir
+    bool32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save user file to exe dir
 
     // Printing (Rev02)
 #if RETRO_REV02

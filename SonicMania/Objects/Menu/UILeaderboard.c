@@ -470,12 +470,12 @@ void UILeaderboard_ProcessButtonCB(void)
         if (avail.start <= 1 || newID >= avail.start + 2) {
             if (newID > (avail.start + avail.length - 7)) {
                 LogHelpers_Print("Load down");
-                API.LoadLeaderboardEntries(avail.start, avail.length + 20, 2);
+                API.LoadLeaderboardEntries(avail.start, avail.length + 20, LEADERBOARD_LOAD_NEXT);
             }
         }
         else {
             LogHelpers_Print("Load up");
-            API.LoadLeaderboardEntries(avail.start - 20, avail.length + 20, 1);
+            API.LoadLeaderboardEntries(avail.start - 20, avail.length + 20, LEADERBOARD_LOAD_PREV);
         }
     }
 

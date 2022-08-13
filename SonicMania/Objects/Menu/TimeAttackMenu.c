@@ -351,12 +351,12 @@ void TimeAttackMenu_MenuUpdateCB_LB(void)
         if (avail.start <= 1 || carousel->scrollOffset >= avail.start + 2) {
             if (carousel->scrollOffset > avail.length - control->buttonCount + avail.start - 2) {
                 // Load Down
-                API.LoadLeaderboardEntries(avail.start, avail.length + 20, 2);
+                API.LoadLeaderboardEntries(avail.start, avail.length + 20, LEADERBOARD_LOAD_NEXT);
             }
         }
         else {
             // Load Up
-            API.LoadLeaderboardEntries(avail.start - 20, avail.length + 20, 1);
+            API.LoadLeaderboardEntries(avail.start - 20, avail.length + 20, LEADERBOARD_LOAD_PREV);
         }
 
         // Load the new entry count after (possibly) reloading new entries
